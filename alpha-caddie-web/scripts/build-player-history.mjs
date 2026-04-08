@@ -1,0 +1,394 @@
+#!/usr/bin/env node
+/**
+ * Builds player_round_history.json for the static web app from:
+ *   - historical_rounds_all.csv (PGA + LIV rows; refresh with npm run update:rounds / fetch:dg)
+ *   - optional hole_data.csv (hole-by-hole rows; joined by player + event + round)
+ *
+ * Only players present in projections.json (unique dg_id) are included to keep the file small.
+ *
+ * Env:
+ *   GOLF_MODEL_DIR   - repo root (parent of alpha-caddie-web). Default: parent of this package.
+ *   HISTORICAL_ROUNDS_CSV - override rounds path
+ *   HOLE_DATA_CSV    - override hole_data path; set empty to skip holes pass
+ *
+ * Run from alpha-caddie-web: npm run build:history
+ *
+ * Optional pgatouR-only JSON (overwrites CSV build): npm run build:history:pga.
+ * npm run fetch:dg refreshes data/historical_rounds_all.csv then runs this script; set
+ * ALPHA_CADDIE_PGA_HISTORY=1 on fetch:dg to run the PGA builder after the CSV build.
+ *
+ * CSV path: prefer golfModel/data/historical_rounds_all.csv and golfModel/data/hole_data.csv
+ * (same files as the R model). Falls back to alpha-caddie-web/data/ or repo root only if missing.
+ * all_shots_2021_2026.csv is not parsed here (too large for the static bundle); its mtime/size
+ * are recorded in meta so the UI can show the model shots file is in sync.
+ */
+
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { createReadStream } from "fs";
+import { parse } from "csv-parse";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const WEB_ROOT = path.resolve(__dirname, "..");
+const MODEL_ROOT = process.env.GOLF_MODEL_DIR
+  ? path.resolve(process.env.GOLF_MODEL_DIR)
+  : path.resolve(WEB_ROOT, "..");
+
+function resolveRoundsCsvPath() {
+  if (process.env.HISTORICAL_ROUNDS_CSV) {
+    return path.resolve(process.env.HISTORICAL_ROUNDS_CSV);
+  }
+  const candidates = [];
+  const dataDir = path.join(MODEL_ROOT, "data");
+  const webDataDir = path.join(WEB_ROOT, "data");
+  for (const dir of [dataDir, webDataDir]) {
+    if (!fs.existsSync(dir)) continue;
+    const files = fs
+      .readdirSync(dir)
+      .filter((f) => /^historical_rounds_all_with_tournament_metadata(_\d{8}_\d{6})?\.csv$/i.test(f))
+      .map((f) => path.join(dir, f));
+    for (const p of files) {
+      try {
+        const st = fs.statSync(p);
+        candidates.push({ p, mtimeMs: st.mtimeMs });
+      } catch (_) {
+        // ignore
+      }
+    }
+  }
+  if (candidates.length) {
+    candidates.sort((a, b) => b.mtimeMs - a.mtimeMs);
+    return candidates[0].p;
+  }
+  const canonical = path.join(MODEL_ROOT, "data", "historical_rounds_all.csv");
+  if (fs.existsSync(canonical)) return canonical;
+  const inWebData = path.join(WEB_ROOT, "data", "historical_rounds_all.csv");
+  if (fs.existsSync(inWebData)) return inWebData;
+  const inRoot = path.join(MODEL_ROOT, "historical_rounds_all.csv");
+  if (fs.existsSync(inRoot)) return inRoot;
+  return canonical;
+}
+
+function resolveHoleDataCsv() {
+  if (process.env.HOLE_DATA_CSV === "") return null;
+  if (process.env.HOLE_DATA_CSV) return path.resolve(process.env.HOLE_DATA_CSV);
+  const inData = path.join(MODEL_ROOT, "data", "hole_data.csv");
+  if (fs.existsSync(inData)) return inData;
+  const inRoot = path.join(MODEL_ROOT, "hole_data.csv");
+  if (fs.existsSync(inRoot)) return inRoot;
+  const inWebData = path.join(WEB_ROOT, "data", "hole_data.csv");
+  return fs.existsSync(inWebData) ? inWebData : null;
+}
+
+function relUnderModel(absPath) {
+  const rel = path.relative(MODEL_ROOT, absPath);
+  if (rel.startsWith("..") || path.isAbsolute(rel)) return path.basename(absPath);
+  return rel.split(path.sep).join("/");
+}
+
+function shotsModelCsvMeta() {
+  const p = path.join(MODEL_ROOT, "data", "all_shots_2021_2026.csv");
+  if (!fs.existsSync(p)) {
+    return { name: "all_shots_2021_2026.csv", present: false };
+  }
+  const st = fs.statSync(p);
+  return {
+    name: "all_shots_2021_2026.csv",
+    present: true,
+    mtime: new Date(st.mtimeMs).toISOString(),
+    size_bytes: st.size,
+  };
+}
+
+const ROUNDS_CSV = resolveRoundsCsvPath();
+const HOLES_CSV = resolveHoleDataCsv();
+const PROJECTIONS_JSON = path.join(WEB_ROOT, "projections.json");
+const OUT_JSON = path.join(WEB_ROOT, "player_round_history.json");
+
+const MIN_YEAR = new Date().getFullYear() - 4;
+/** Max rounds stored per player (newest wins). UI shows up to 100; extra buffer for course filter. */
+const MAX_ROUNDS_PER_PLAYER = 200;
+/** Only attach hole-by-hole rows for this many most recent rounds per player (keeps JSON small). */
+const HOLE_JOIN_TAIL = 28;
+
+function num(x) {
+  const n = Number(x);
+  return Number.isFinite(n) ? n : NaN;
+}
+
+function normEvt(s) {
+  return String(s || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+/** "Fleetwood, Tommy" -> fleetwood|tommy */
+function playerKeyHistorical(name) {
+  const s = String(name || "").trim();
+  const m = s.match(/^(.+),\s*(.+)$/);
+  if (m) return `${m[1].trim().toLowerCase()}|${m[2].trim().toLowerCase()}`;
+  return s.toLowerCase();
+}
+
+/** "Tommy Fleetwood" -> fleetwood|tommy */
+function playerKeyHole(name) {
+  const parts = String(name || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  if (parts.length < 2) return parts.join(" ").toLowerCase();
+  const last = parts[parts.length - 1].toLowerCase();
+  const first = parts.slice(0, -1).join(" ").toLowerCase();
+  return `${last}|${first}`;
+}
+
+function parseUsDateSortKey(s) {
+  if (!s) return 0;
+  const p = String(s).split("/");
+  if (p.length !== 3) return 0;
+  const mo = parseInt(p[0], 10);
+  const d = parseInt(p[1], 10);
+  const y = parseInt(p[2], 10);
+  if (!Number.isFinite(y)) return 0;
+  return y * 10000 + (mo || 0) * 100 + (d || 0);
+}
+
+function loadAllowedDgIds() {
+  if (!fs.existsSync(PROJECTIONS_JSON)) {
+    console.warn("No projections.json — export will include no players (add projections or run fetch:dg).");
+    return new Set();
+  }
+  const raw = JSON.parse(fs.readFileSync(PROJECTIONS_JSON, "utf8"));
+  const ids = new Set();
+  for (const p of raw.players || []) {
+    const id = Math.round(num(p.dg_id));
+    if (Number.isFinite(id)) ids.add(id);
+  }
+  return ids;
+}
+
+function metricFields(row) {
+  const gir = num(row.gir);
+  const fa = num(row.driving_acc);
+  const girCount = Number.isFinite(gir) ? (gir <= 2 ? Math.round(gir * 18) : Math.round(gir)) : null;
+  const fwCount = Number.isFinite(fa) ? (fa <= 1 ? Math.round(fa * 14) : Math.round(fa)) : null;
+  return {
+    round_score: num(row.round_score),
+    birdies: num(row.birdies),
+    pars: num(row.pars),
+    bogies: num(row.bogies),
+    gir: girCount,
+    fairways: fwCount,
+    eagles_or_better: num(row.eagles_or_better),
+    doubles_or_worse: num(row.doubles_or_worse),
+  };
+}
+
+function weatherFields(row) {
+  const maybeNum = (v) => {
+    const s = String(v ?? "").trim();
+    if (!s) return NaN;
+    const n = Number(s);
+    return Number.isFinite(n) ? n : NaN;
+  };
+  const tempF = maybeNum(row.pga_meta_weather_temp_f ?? row.weather_temp_f);
+  const windMph = maybeNum(row.pga_meta_weather_wind_mph ?? row.weather_wind_mph);
+  const humidityRaw = row.pga_meta_weather_humidity ?? row.weather_humidity;
+  const humidity = Number.isFinite(maybeNum(humidityRaw))
+    ? maybeNum(humidityRaw)
+    : maybeNum(String(humidityRaw ?? "").replace(/[^0-9.-]+/g, ""));
+  const condition = String(row.pga_meta_weather_condition ?? row.weather_condition ?? "").trim();
+  return {
+    weather_temp_f: Number.isFinite(tempF) ? tempF : null,
+    weather_wind_mph: Number.isFinite(windMph) ? windMph : null,
+    weather_humidity: Number.isFinite(humidity) ? humidity : null,
+    weather_condition: condition || "",
+  };
+}
+
+/** Strokes-gained columns for Skill focus pricing mode (from historical_rounds_all.csv). */
+function sgFields(row) {
+  const f = (k) => {
+    const v = num(row[k]);
+    return Number.isFinite(v) ? v : null;
+  };
+  return {
+    sg_putt: f("sg_putt"),
+    sg_app: f("sg_app"),
+    sg_arg: f("sg_arg"),
+    sg_ott: f("sg_ott"),
+    sg_t2g: f("sg_t2g"),
+    sg_total: f("sg_total"),
+  };
+}
+
+async function streamRounds(allowedDgIds) {
+  const byDgId = new Map();
+
+  if (!fs.existsSync(ROUNDS_CSV)) {
+    console.error("Missing rounds CSV:", ROUNDS_CSV);
+    return { byDgId, allowedTriples: new Set() };
+  }
+
+  const parser = createReadStream(ROUNDS_CSV).pipe(
+    parse({
+      columns: true,
+      relax_quotes: true,
+      relax_column_count: true,
+      skip_records_with_error: true,
+    })
+  );
+
+  for await (const row of parser) {
+    const tour = String(row.tour || "").toLowerCase();
+    if (tour !== "pga" && tour !== "liv") continue;
+    const yr = parseInt(row.year, 10);
+    if (Number.isFinite(yr) && yr < MIN_YEAR) continue;
+    const dg = Math.round(num(row.dg_id));
+    if (!Number.isFinite(dg) || !allowedDgIds.has(dg)) continue;
+    const rs = num(row.round_score);
+    if (!Number.isFinite(rs)) continue;
+
+    const sortKey = parseUsDateSortKey(row.event_completed) * 10 + (parseInt(row.round_num, 10) || 1);
+    const eventName = String(row.event_name || "").trim();
+    const courseRaw = String(
+      row.course_name ||
+        row.Course_Name ||
+        row.course ||
+        row.Course ||
+        row.venue ||
+        ""
+    ).trim();
+    const rec = {
+      sortKey,
+      event_completed: String(row.event_completed || ""),
+      year: yr,
+      event_name: eventName,
+      event_id: String(row.event_id || ""),
+      course_name: courseRaw || eventName,
+      round_num: parseInt(row.round_num, 10) || 1,
+      fin_text: String(row.fin_text || ""),
+      ...metricFields(row),
+      ...weatherFields(row),
+      ...sgFields(row),
+    };
+
+    if (!byDgId.has(dg)) byDgId.set(dg, { dg_id: dg, player_name: String(row.player_name || ""), rounds: [] });
+    const bucket = byDgId.get(dg);
+    if (!bucket.player_name) bucket.player_name = String(row.player_name || "");
+    bucket.rounds.push(rec);
+  }
+
+  for (const [, bucket] of byDgId) {
+    bucket.rounds.sort((a, b) => a.sortKey - b.sortKey);
+    if (bucket.rounds.length > MAX_ROUNDS_PER_PLAYER) bucket.rounds = bucket.rounds.slice(-MAX_ROUNDS_PER_PLAYER);
+  }
+
+  const allowedTriples = new Set();
+  for (const [, bucket] of byDgId) {
+    const pk = playerKeyHistorical(bucket.player_name);
+    const tail = bucket.rounds.slice(-HOLE_JOIN_TAIL);
+    for (const r of tail) {
+      allowedTriples.add(`${pk}|||${normEvt(r.event_name)}|||${r.round_num}`);
+    }
+  }
+
+  return { byDgId, allowedTriples };
+}
+
+async function streamHoles(allowedTriples) {
+  const holesByPlayerKey = {};
+  if (!allowedTriples || allowedTriples.size === 0 || !HOLES_CSV || !fs.existsSync(HOLES_CSV)) {
+    return holesByPlayerKey;
+  }
+
+  const parser = createReadStream(HOLES_CSV).pipe(
+    parse({
+      columns: true,
+      relax_quotes: true,
+      relax_column_count: true,
+      skip_records_with_error: true,
+    })
+  );
+
+  for await (const row of parser) {
+    const pk = playerKeyHole(row.player_name);
+    const ev = normEvt(row.tournament_name);
+    const rn = parseInt(row.round, 10) || 1;
+    const triple = `${pk}|||${ev}|||${rn}`;
+    if (!allowedTriples.has(triple)) continue;
+
+    const uid = `${row.tournament_name || ""}\tR${rn}`;
+    holesByPlayerKey[pk] ??= {};
+    holesByPlayerKey[pk][uid] ??= [];
+    holesByPlayerKey[pk][uid].push({
+      hole: parseInt(row.hole, 10),
+      par: parseInt(row.par, 10),
+      score: parseInt(row.score, 10),
+      score_type: String(row.score_type || ""),
+    });
+  }
+
+  for (const pk of Object.keys(holesByPlayerKey)) {
+    for (const uid of Object.keys(holesByPlayerKey[pk])) {
+      holesByPlayerKey[pk][uid].sort((a, b) => a.hole - b.hole);
+    }
+  }
+
+  return holesByPlayerKey;
+}
+
+async function main() {
+  console.log("Rounds CSV:", ROUNDS_CSV);
+  console.log("Holes CSV:", HOLES_CSV || "(skip)");
+  const allowed = loadAllowedDgIds();
+  console.log("Allowed dg_ids from projections:", allowed.size);
+
+  const { byDgId, allowedTriples } = await streamRounds(allowed);
+  console.log("Players with rounds:", byDgId.size);
+
+  const holesByPlayerKey = await streamHoles(allowedTriples);
+  const holePlayerCount = Object.keys(holesByPlayerKey).length;
+  console.log("Players with hole rows matched:", holePlayerCount);
+
+  const out = {
+    meta: {
+      updated_at: new Date().toISOString(),
+      source_csv: path.basename(ROUNDS_CSV),
+      rounds_csv_relpath: relUnderModel(ROUNDS_CSV),
+      rounds_csv_mtime: fs.existsSync(ROUNDS_CSV)
+        ? new Date(fs.statSync(ROUNDS_CSV).mtimeMs).toISOString()
+        : null,
+      holes_csv: HOLES_CSV ? path.basename(HOLES_CSV) : null,
+      holes_csv_relpath: HOLES_CSV ? relUnderModel(HOLES_CSV) : null,
+      holes_csv_mtime:
+        HOLES_CSV && fs.existsSync(HOLES_CSV)
+          ? new Date(fs.statSync(HOLES_CSV).mtimeMs).toISOString()
+          : null,
+      /** Same repo file as the shot model; mirrored to alpha-caddie-web/data/ — not loaded in the browser. */
+      shots_model_csv: shotsModelCsvMeta(),
+      min_year: MIN_YEAR,
+      max_rounds_per_player: MAX_ROUNDS_PER_PLAYER,
+      players: byDgId.size,
+    },
+    byDgId: Object.fromEntries(
+      [...byDgId.entries()].map(([k, v]) => [
+        String(k),
+        { dg_id: v.dg_id, player_name: v.player_name, rounds: v.rounds },
+      ])
+    ),
+    holesByPlayerKey,
+  };
+
+  fs.writeFileSync(OUT_JSON, JSON.stringify(out), "utf8");
+  const st = fs.statSync(OUT_JSON);
+  console.log("Wrote", OUT_JSON, `(${(st.size / 1024).toFixed(1)} KB)`);
+}
+
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

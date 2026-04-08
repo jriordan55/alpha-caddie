@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>AlphaCaddie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-nav">
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <span class="nav-title">AlphaCaddie</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="content-wrapper">
+    <nav class="tabs" role="tablist" aria-label="Main">
+      <button type="button" class="tab active" data-tab="ou" role="tab" aria-selected="true">Model O/U</button>
+      <button type="button" class="tab" data-tab="props" role="tab">Historical Trends</button>
+      <button type="button" class="tab" data-tab="ev" role="tab">+EV Bets</button>
+      <button type="button" class="tab" data-tab="hangout" role="tab">Hole Hangout</button>
+    </nav>
+
+    <p id="data-status-primary" class="note text-muted" aria-live="polite"></p>
+    <p id="file-protocol-banner" class="note text-warn" hidden style="background:#2a1f18;border:1px solid #a65;border-radius:8px;padding:12px 14px;">
+      <strong>Opened as a local file (<code>file://</code>).</strong> Browsers block loading <code>projections.json</code> from disk, so the app uses <strong>bundled demo data</strong> only.
+      To use live DataGolf output: in this folder run <code>npm run fetch:dg</code> then <code>npm start</code> and open <code>http://localhost:5173</code> (not the file path).
+    </p>
+    <p id="boot-error" class="note text-warn" hidden style="font-weight:600;"></p>
+
+    <!-- Model O/U -->
+    <section id="panel-ou" class="panel active" role="tabpanel">
+      <div class="ev-panel-head">
+        <h2 class="section-heading ev-panel-heading">Model O/U</h2>
+        <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="ou" aria-label="Help: Model O/U tab">?</button>
+      </div>
+      <div class="ou-panel-head">
+        <div class="toolbar ou-toolbar">
+          <span class="toolbar-label muted" id="auto-round">—</span>
+          <label class="toolbar-label">Round
+            <select id="lb-round" title="Round">
+              <option value="1">R1</option>
+              <option value="2">R2</option>
+              <option value="3">R3</option>
+              <option value="4">R4</option>
+            </select>
+          </label>
+        </div>
+        <div class="ou-view-toggle-wrap" aria-label="O/U display mode">
+          <div class="ou-view-toggle" role="tablist">
+            <button type="button" class="ou-toggle-btn active" id="ou-mode-prob" role="tab" aria-selected="true" data-ou-mode="prob">Prob</button>
+            <button type="button" class="ou-toggle-btn" id="ou-mode-price" role="tab" aria-selected="false" data-ou-mode="price">Price</button>
+          </div>
+        </div>
+      </div>
+      <div class="ou-filters toolbar" aria-label="O/U filters">
+        <label class="toolbar-label">Market
+          <select id="ou-market-filter">
+            <option value="Total score">Round score</option>
+            <option>Birdies</option>
+            <option>Pars</option>
+            <option>Bogeys</option>
+            <option>GIR</option>
+            <option>Fairways hit</option>
+          </select>
+        </label>
+        <label class="toolbar-label">Golfer
+          <select id="ou-player-filter">
+            <option value="">All</option>
+          </select>
+        </label>
+        <label class="toolbar-label">Line
+          <input id="ou-line-filter" type="number" step="0.5" value="70.5" inputmode="decimal" />
+        </label>
+        <label class="toolbar-label">Over odds
+          <input id="ou-odds-over-filter" type="text" inputmode="text" value="-110" />
+        </label>
+        <label class="toolbar-label">Under odds
+          <input id="ou-odds-under-filter" type="text" inputmode="text" value="-110" />
+        </label>
+      </div>
+      <div class="toolbar weather-toolbar" aria-label="Weather adjustments">
+        <span class="weather-toolbar-title">Weather</span>
+        <label class="toolbar-label">Temp (F)
+          <input id="ou-weather-temp" type="number" value="72" min="20" max="120" step="1" />
+        </label>
+        <label class="toolbar-label">Wind (mph)
+          <input id="ou-weather-wind" type="number" value="8" min="0" max="60" step="1" />
+        </label>
+        <label class="toolbar-label">Humidity (%)
+          <input id="ou-weather-humidity" type="number" value="55" min="0" max="100" step="1" />
+        </label>
+        <label class="toolbar-label">Condition
+          <select id="ou-weather-condition">
+            <option value="default" selected>Default</option>
+            <option value="clear">Clear</option>
+            <option value="cloudy">Cloudy</option>
+            <option value="windy">Windy</option>
+            <option value="rain">Rain</option>
+            <option value="storm">Storm</option>
+          </select>
+        </label>
+      </div>
+      <div class="toolbar weather-toolbar pricing-toolbar" aria-label="Pricing mode">
+        <span class="weather-toolbar-title">Pricing</span>
+        <label class="toolbar-label">Mode
+          <select id="ou-pricing-mode">
+            <option value="default" selected>Default</option>
+            <option value="recent">Recent form (hot / cold)</option>
+            <option value="course">Course history</option>
+            <option value="skill">Skill focus</option>
+          </select>
+        </label>
+        <label class="toolbar-label pricing-skill-label" id="ou-pricing-skill-label" hidden>Skill
+          <select id="ou-pricing-skill">
+            <option value="sg_total" selected>Total SG</option>
+            <option value="sg_ott">Off the tee</option>
+            <option value="sg_app">Approach</option>
+            <option value="sg_arg">Around the green</option>
+            <option value="sg_putt">Putting</option>
+          </select>
+        </label>
+      </div>
+      <div class="table-wrap leaderboard-card ou-table-card">
+        <table class="data-table" id="table-ou">
+          <thead></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="ou-chart-card leaderboard-card" id="ou-chart-card" hidden>
+        <div class="ou-chart-head">
+          <div class="ou-chart-head-text">
+            <span class="ou-chart-title">P(over) by line</span>
+          </div>
+        </div>
+        <div class="ou-chart-wrap">
+          <canvas id="ou-chart-canvas" width="800" height="240" aria-label="P(over) by line"></canvas>
+          <div id="ou-chart-tooltip" class="ou-chart-tooltip" hidden></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Historical trends (round history chart) -->
+    <section id="panel-props" class="panel props-viewport" role="tabpanel" hidden>
+      <div class="props-viewport-inner props-shell">
+      <div class="props-trends-header" id="props-trends-header">
+        <img id="props-flag" class="props-country-flag" width="72" height="54" alt="" decoding="async" />
+        <div class="props-trends-head-text">
+          <h2 class="props-trends-title" id="props-trends-title">—</h2>
+          <p class="props-trends-sub" id="props-trends-sub"></p>
+        </div>
+        <button type="button" class="ev-help-btn tab-help-btn props-tab-help-btn" data-tab-help="props" aria-label="Help: Historical Trends tab">?</button>
+      </div>
+      <div class="props-trends-layout">
+        <div class="props-trends-chart-wrap">
+          <canvas id="props-trend-canvas" width="800" height="220" aria-label="Historical round bar chart"></canvas>
+          <div id="props-chart-tooltip" class="props-chart-tooltip" hidden></div>
+          <p class="text-muted props-chart-empty" id="props-chart-empty" hidden>No history file.</p>
+        </div>
+        <aside class="props-trends-sidebar">
+          <div class="toolbar weather-toolbar weather-toolbar-compact" aria-label="Historical trend filters">
+            <span class="weather-toolbar-title">Filters</span>
+            <label class="toolbar-label">Temp
+              <select id="props-filter-temp-range">
+                <option value="">All</option>
+                <option value="lt60">&lt; 60F</option>
+                <option value="60_69">60-69F</option>
+                <option value="70_79">70-79F</option>
+                <option value="80_89">80-89F</option>
+                <option value="gte90">90F+</option>
+              </select>
+            </label>
+            <label class="toolbar-label">Wind
+              <select id="props-filter-wind-range">
+                <option value="">All</option>
+                <option value="0_5">0-5 mph</option>
+                <option value="6_10">6-10 mph</option>
+                <option value="11_15">11-15 mph</option>
+                <option value="16_20">16-20 mph</option>
+                <option value="gte21">21+ mph</option>
+              </select>
+            </label>
+            <label class="toolbar-label">Humidity
+              <select id="props-filter-humidity-range">
+                <option value="">All</option>
+                <option value="lt40">&lt; 40%</option>
+                <option value="40_59">40-59%</option>
+                <option value="60_79">60-79%</option>
+                <option value="gte80">80%+</option>
+              </select>
+            </label>
+            <label class="toolbar-label">Course
+              <select id="props-filter-course">
+                <option value="">All</option>
+              </select>
+            </label>
+          </div>
+          <label class="props-sidebar-label">Golfer
+            <select id="prop-golfer"></select>
+          </label>
+          <label class="props-sidebar-label">Market
+            <select id="prop-stat">
+              <option value="total">Round score</option>
+              <option value="birdies">Birdies</option>
+              <option value="pars">Pars</option>
+              <option value="bogeys">Bogeys</option>
+            </select>
+          </label>
+          <label class="props-sidebar-label props-filter-course">
+            <span class="props-filter-row">
+              <input type="checkbox" id="props-filter-current-course" />
+              <span>Current course only</span>
+            </span>
+          </label>
+          <div class="props-stepper-block">
+            <span class="props-sidebar-label">Rounds</span>
+            <div class="props-stepper">
+              <button type="button" class="props-step-btn" id="props-win-minus" aria-label="Fewer rounds">−</button>
+              <input type="number" id="props-window-n" min="1" max="100" step="1" value="20" />
+              <button type="button" class="props-step-btn" id="props-win-plus" aria-label="More rounds">+</button>
+            </div>
+          </div>
+          <div class="props-stepper-block">
+            <span class="props-sidebar-label">Line</span>
+            <div class="props-stepper">
+              <button type="button" class="props-step-btn" id="props-line-minus" aria-label="Lower line">−</button>
+              <input type="number" id="prop-line" class="props-line-input" value="70.5" step="0.5" min="0" inputmode="decimal" />
+              <button type="button" class="props-step-btn" id="props-line-plus" aria-label="Raise line">+</button>
+            </div>
+          </div>
+          <div class="props-hit-rate-block props-ou-split" id="props-hit-rate-block" hidden>
+            <div class="props-ou-col">
+              <span class="props-ou-h">Under</span>
+              <p class="props-ou-val props-ou-under" id="props-hit-under-val">—</p>
+            </div>
+            <div class="props-ou-col">
+              <span class="props-ou-h">Over</span>
+              <p class="props-ou-val props-ou-over" id="props-hit-over-val">—</p>
+            </div>
+          </div>
+        </aside>
+      </div>
+      <div class="props-top-hits-section">
+        <div class="props-top-hits-head-row" aria-live="polite">
+          <button type="button" class="props-top-hits-emoji-toggle" id="props-top-hits-emoji-toggle">
+            <span class="props-top-hits-emoji" id="props-top-hits-emoji">🔥🔥🔥</span>
+          </button>
+          <div class="props-top-hits-meta">
+            <span id="props-top-hits-market" class="props-top-hits-market">Round score</span>
+            <span class="props-top-hits-meta-dot" aria-hidden="true">·</span>
+            <span id="props-top-hits-line-text" class="props-top-hits-line-text">Line 70.5</span>
+          </div>
+        </div>
+        <div class="table-wrap leaderboard-card props-top-hits-table-wrap">
+          <table class="data-table props-top-hits-table" id="table-props-top-hits" aria-label="Top hit rates by player">
+            <thead>
+              <tr>
+                <th class="num">#</th>
+                <th class="sortable props-top-sort-th" data-props-sort="name" scope="col" role="columnheader">Golfer<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span></th>
+                <th class="num sortable props-top-sort-th" data-props-sort="overRate" scope="col" role="columnheader">Over %<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span></th>
+                <th class="num sortable props-top-sort-th" data-props-sort="over" scope="col" role="columnheader">Overs / R<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span></th>
+                <th class="num sortable props-top-sort-th" data-props-sort="underRate" scope="col" role="columnheader">Under %<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span></th>
+                <th class="num sortable props-top-sort-th" data-props-sort="under" scope="col" role="columnheader">Unders / R<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <!-- +EV -->
+    <section id="panel-ev" class="panel" role="tabpanel" hidden>
+      <div class="ev-panel-head">
+        <h2 class="section-heading ev-panel-heading" id="ev-panel-heading">+EV Bets</h2>
+        <button
+          type="button"
+          class="ev-help-btn"
+          id="btn-ev-help"
+          title="Help: full +EV tab (table, weather, pricing, devig)"
+          aria-label="Help: +EV Bets tab"
+        >
+          ?
+        </button>
+      </div>
+      <div class="toolbar outrights-toolbar">
+        <label class="toolbar-label">Golfer
+          <select id="ev-filter-golfer">
+            <option value="">All</option>
+          </select>
+        </label>
+        <label class="toolbar-label">Market
+          <select id="ev-filter-market">
+            <option value="">All</option>
+          </select>
+        </label>
+        <label class="toolbar-label">Best book
+          <select id="ev-filter-book">
+            <option value="">All</option>
+          </select>
+        </label>
+        <label class="toolbar-label">Bankroll ($)
+          <input id="ev-bankroll" type="number" min="1" step="1" value="1000" title="Kelly is capped at 1 unit = 1% of bankroll (bankroll ÷ 100)" />
+        </label>
+        <label class="toolbar-label">Boost
+          <select id="ev-boost" title="Profit boost on winnings (e.g. sportsbook promo)">
+            <option value="none">None</option>
+            <option value="10">10%</option>
+            <option value="20">20%</option>
+            <option value="25">25%</option>
+            <option value="30">30%</option>
+            <option value="50">50%</option>
+            <option value="nosweat">No Sweat (~25%)</option>
+            <option value="custom">Custom…</option>
+          </select>
+        </label>
+        <label class="toolbar-label">Boost %
+          <input id="ev-boost-pct" type="number" min="0" max="500" step="1" value="25" disabled title="Used when Boost is Custom" />
+        </label>
+        <button type="button" class="ev-devig-btn-toolbar" id="btn-ev-devig" title="Consensus &amp; two-way devig for the CS column">Devig</button>
+      </div>
+      <div class="toolbar weather-toolbar" aria-label="Weather adjustments">
+        <span class="weather-toolbar-title">Weather</span>
+        <label class="toolbar-label">Temp (F)
+          <input id="ev-weather-temp" type="number" value="72" min="20" max="120" step="1" />
+        </label>
+        <label class="toolbar-label">Wind (mph)
+          <input id="ev-weather-wind" type="number" value="8" min="0" max="60" step="1" />
+        </label>
+        <label class="toolbar-label">Humidity (%)
+          <input id="ev-weather-humidity" type="number" value="55" min="0" max="100" step="1" />
+        </label>
+        <label class="toolbar-label">Condition
+          <select id="ev-weather-condition">
+            <option value="default" selected>Default</option>
+            <option value="clear">Clear</option>
+            <option value="cloudy">Cloudy</option>
+            <option value="windy">Windy</option>
+            <option value="rain">Rain</option>
+            <option value="storm">Storm</option>
+          </select>
+        </label>
+      </div>
+      <div class="toolbar weather-toolbar pricing-toolbar" aria-label="Pricing mode">
+        <span class="weather-toolbar-title">Pricing</span>
+        <label class="toolbar-label">Mode
+          <select id="ev-pricing-mode">
+            <option value="default" selected>Default</option>
+            <option value="recent">Recent form</option>
+            <option value="course">Course history</option>
+            <option value="skill">Skill focus</option>
+          </select>
+        </label>
+        <label class="toolbar-label pricing-skill-label" id="ev-pricing-skill-label" hidden>Skill
+          <select id="ev-pricing-skill">
+            <option value="sg_total" selected>Total SG</option>
+            <option value="sg_ott">OTT</option>
+            <option value="sg_app">APP</option>
+            <option value="sg_arg">ARG</option>
+            <option value="sg_putt">PUTT</option>
+          </select>
+        </label>
+      </div>
+      <div class="table-wrap leaderboard-card">
+        <table class="data-table data-table-outrights" id="table-ev">
+          <thead>
+            <tr>
+              <th class="num">Model EV</th>
+              <th class="num">Kelly</th>
+              <th>Best book</th>
+              <th>Golfer</th>
+              <th class="num" title="Fair US odds implied by your model">Fair</th>
+              <th class="num" title="CS: market consensus — average of posted decimal odds (all books), fair US odds from that">CS</th>
+              <th class="num">Implied</th>
+              <th class="num" title="Model win % minus book implied %">Δ</th>
+              <th>Market</th>
+              <th>Bet</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Round Matchups: data from projections.json → matchups (npm run fetch:dg) -->
+    <section id="panel-matchups" class="panel" role="tabpanel" hidden>
+      <div class="ev-panel-head">
+        <h2 class="section-heading ev-panel-heading">Round Matchups</h2>
+        <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="matchups" aria-label="Help: Round Matchups tab">?</button>
+      </div>
+      <p class="text-muted">Prices are decimal odds from the loaded matchups board. The <strong>Model</strong> column follows the <strong>round</strong> you pick on Model O/U so it stays aligned with the rest of the sheet.</p>
+      <p class="text-muted" id="matchups-source-note" hidden></p>
+      <div class="toolbar outrights-toolbar">
+        <label class="toolbar-label">Market
+          <select id="matchups-market">
+            <option value="tournament_matchups">Tournament Matchups</option>
+            <option value="round_matchups" selected>Round Matchups</option>
+            <option value="3_balls">3 Balls</option>
+          </select>
+        </label>
+      </div>
+      <div class="toolbar weather-toolbar pricing-toolbar" aria-label="Pricing mode">
+        <span class="weather-toolbar-title">Pricing</span>
+        <label class="toolbar-label">Mode
+          <select id="matchups-pricing-mode">
+            <option value="default" selected>Default</option>
+            <option value="recent">Recent form</option>
+            <option value="course">Course history</option>
+            <option value="skill">Skill focus</option>
+          </select>
+        </label>
+        <label class="toolbar-label pricing-skill-label" id="matchups-pricing-skill-label" hidden>Skill
+          <select id="matchups-pricing-skill">
+            <option value="sg_total" selected>Total SG</option>
+            <option value="sg_ott">OTT</option>
+            <option value="sg_app">APP</option>
+            <option value="sg_arg">ARG</option>
+            <option value="sg_putt">PUTT</option>
+          </select>
+        </label>
+      </div>
+      <div class="table-wrap leaderboard-card outrights-table-wrap">
+        <table class="data-table data-table-outrights" id="table-matchups">
+          <thead><tr><th>Matchup</th><th>Player</th><th class="num">Model</th><th class="num">EV</th><th class="num">Best Book</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Outrights: model vs sportsbooks (needs outrights in projections.json from npm run fetch:dg) -->
+    <section id="panel-outrights" class="panel" role="tabpanel" hidden>
+      <div class="ev-panel-head">
+        <h2 class="section-heading ev-panel-heading">Outrights</h2>
+        <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="outrights" aria-label="Help: Outrights tab">?</button>
+      </div>
+      <p class="outrights-eyebrow">Outrights: model vs sportsbooks</p>
+      <p class="text-muted outrights-intro">Compare your model prices to current sportsbook odds for each market. Odds are for the loaded tournament field.</p>
+      <p class="outrights-tournament" id="outrights-tournament">Tournament: —</p>
+      <p class="text-muted" id="outrights-source-note" hidden></p>
+      <div class="toolbar outrights-toolbar">
+        <label class="toolbar-label">Market
+          <select id="outright-market">
+            <option value="win">Win</option>
+            <option value="top_5">Top 5</option>
+            <option value="top_10">Top 10</option>
+            <option value="top_20">Top 20</option>
+            <option value="make_cut">Make cut</option>
+            <option value="mc">Miss cut</option>
+          </select>
+        </label>
+        <button type="button" class="btn-primary" id="btn-refresh-outrights">Refresh projections</button>
+      </div>
+      <div class="toolbar weather-toolbar pricing-toolbar" aria-label="Pricing mode">
+        <span class="weather-toolbar-title">Pricing</span>
+        <label class="toolbar-label">Mode
+          <select id="outrights-pricing-mode">
+            <option value="default" selected>Default</option>
+            <option value="recent">Recent form</option>
+            <option value="course">Course history</option>
+            <option value="skill">Skill focus</option>
+          </select>
+        </label>
+        <label class="toolbar-label pricing-skill-label" id="outrights-pricing-skill-label" hidden>Skill
+          <select id="outrights-pricing-skill">
+            <option value="sg_total" selected>Total SG</option>
+            <option value="sg_ott">OTT</option>
+            <option value="sg_app">APP</option>
+            <option value="sg_arg">ARG</option>
+            <option value="sg_putt">PUTT</option>
+          </select>
+        </label>
+      </div>
+      <div class="table-wrap leaderboard-card outrights-table-wrap">
+        <table class="data-table data-table-outrights" id="table-outrights">
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th class="num">Model</th>
+              <th class="num">EV</th>
+              <th class="num">Best Book</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Hole Hangout -->
+    <section id="panel-hangout" class="panel" role="tabpanel" hidden>
+      <div class="ev-panel-head">
+        <h2 class="section-heading ev-panel-heading">Hole Hangout</h2>
+        <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="hh" aria-label="Help: Hole Hangout tab">?</button>
+      </div>
+      <p class="text-muted hangout-intro">Pick a hole and player, then simulate to see outcome chances and a sample hole for this course. Use <strong>Live inputs</strong> on the green to set putt length; weather and pricing follow the same controls as the rest of the app.</p>
+      <div class="props-card hangout-course-card">
+        <h3>Course</h3>
+        <p class="hangout-course-line" id="hh-course-line">—</p>
+        <p class="text-muted hangout-results-hint" id="hh-hole-par-hint"></p>
+      </div>
+      <div class="props-card">
+        <h3>Hole &amp; player</h3>
+        <div class="toolbar weather-toolbar weather-toolbar-compact" aria-label="Weather adjustments">
+          <span class="weather-toolbar-title">Weather</span>
+          <label class="toolbar-label">Temp
+            <input id="hh-weather-temp" type="number" value="72" min="20" max="120" step="1" />
+          </label>
+          <label class="toolbar-label">Wind
+            <input id="hh-weather-wind" type="number" value="8" min="0" max="60" step="1" />
+          </label>
+          <label class="toolbar-label">Humidity
+            <input id="hh-weather-humidity" type="number" value="55" min="0" max="100" step="1" />
+          </label>
+          <label class="toolbar-label">Cond
+            <select id="hh-weather-condition">
+              <option value="default" selected>Default</option>
+              <option value="clear">Clear</option>
+              <option value="cloudy">Cloudy</option>
+              <option value="windy">Windy</option>
+              <option value="rain">Rain</option>
+              <option value="storm">Storm</option>
+            </select>
+          </label>
+        </div>
+        <div class="toolbar weather-toolbar weather-toolbar-compact pricing-toolbar" aria-label="Pricing mode">
+          <span class="weather-toolbar-title">Pricing</span>
+          <label class="toolbar-label">Mode
+            <select id="hh-pricing-mode">
+              <option value="default" selected>Default</option>
+              <option value="recent">Recent form</option>
+              <option value="course">Course history</option>
+              <option value="skill">Skill focus</option>
+            </select>
+          </label>
+          <label class="toolbar-label pricing-skill-label" id="hh-pricing-skill-label" hidden>Skill
+            <select id="hh-pricing-skill">
+              <option value="sg_total" selected>Total SG</option>
+              <option value="sg_ott">OTT</option>
+              <option value="sg_app">APP</option>
+              <option value="sg_arg">ARG</option>
+              <option value="sg_putt">PUTT</option>
+            </select>
+          </label>
+        </div>
+        <div class="props-grid hangout-grid">
+          <label>Hole
+            <select id="hh-hole" title="Par from venue scorecard (hole_pars)"></select>
+          </label>
+          <label>Player
+            <select id="hh-player" title="Field for the round selected on Model O/U"></select>
+          </label>
+          <div class="hangout-sim-actions">
+            <button type="button" class="btn-primary" id="hh-sim-run">Simulate hole</button>
+          </div>
+        </div>
+      </div>
+      <div class="props-card hangout-live-card">
+        <h3>Live inputs</h3>
+        <div class="props-grid hangout-live-grid">
+          <label class="check hangout-live-check"><input type="checkbox" id="hh-use-live" /> Live inputs?</label>
+          <label>Shot #
+            <input type="number" id="hh-shot-num" min="1" max="18" value="2" />
+          </label>
+          <label>Yds to hole <span class="hangout-yds-hint">(0 on green)</span>
+            <input type="number" id="hh-dist-yds" min="0" max="600" value="150" />
+          </label>
+          <label>Lie
+            <select id="hh-lie">
+              <option>Fairway</option>
+              <option>Rough</option>
+              <option>Sand</option>
+              <option>Green</option>
+            </select>
+          </label>
+          <label>Putt (ft)
+            <input type="number" id="hh-putt-ft" min="0" max="120" value="15" />
+          </label>
+        </div>
+      </div>
+      <div class="hole-sim-top-bar" id="hh-top-bar" hidden></div>
+      <div class="hangout-sim-columns" role="region" aria-label="Hole simulation results">
+        <div class="hole-sim-panel hangout-panel-outcomes" id="hh-panel-outcomes">
+          <div class="hangout-out-toolbar" id="hh-out-toolbar" hidden>
+            <h4>Hole result</h4>
+            <div class="ou-toggle hangout-ou-toggle" role="group" aria-label="Prob or price">
+              <button type="button" class="ou-toggle-btn active" id="hh-odds-mode-prob" aria-selected="true">Prob</button>
+              <button type="button" class="ou-toggle-btn" id="hh-odds-mode-price" aria-selected="false">Price</button>
+            </div>
+          </div>
+          <div id="hh-outcomes-rows"></div>
+        </div>
+        <div class="hole-sim-panel hangout-panel-hole" id="hh-panel-hole">
+          <div id="hh-hole-viz" class="hangout-hole-viz" hidden>
+            <h4 class="hangout-viz-eyebrow">Hole</h4>
+            <div class="hangout-canvas-wrap">
+              <canvas id="hh-hole-canvas" width="560" height="320" aria-label="Schematic hole and shot path"></canvas>
+            </div>
+          </div>
+          <div id="hh-hole-card-body"></div>
+        </div>
+        <div class="hole-sim-panel hangout-panel-sequence" id="hh-panel-sequence"></div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="ev-devig-dialog" class="ev-devig-dialog" aria-labelledby="ev-devig-title">
+    <div class="ev-devig-dialog-inner">
+      <header class="ev-devig-head">
+        <h3 class="ev-devig-title" id="ev-devig-title">Select Devig Books</h3>
+        <button type="button" class="ev-devig-close-x" id="ev-devig-close-x" aria-label="Close">×</button>
+      </header>
+      <p class="ev-devig-lede text-muted">
+        Choose which sportsbooks count toward the <strong>CS</strong> (consensus) column and how strongly each one weighs in. For head-to-head markets you can also pick a <strong>method</strong> that changes how tight the “fair” price sits versus the posted lines. <strong>Apply &amp; rescan</strong> updates the +EV table.
+      </p>
+      <div class="ev-devig-toolbar-row">
+        <input
+          type="search"
+          id="ev-devig-search"
+          class="ev-devig-search"
+          placeholder="Search by book or percentage…"
+          autocomplete="off"
+        />
+        <label class="ev-devig-method-field">
+          <span class="ev-devig-method-label">Method</span>
+          <select id="ev-devig-method" class="ev-devig-select">
+            <option value="none">None (avg. decimals)</option>
+            <option value="multiplicative">Multiplicative</option>
+            <option value="additive">Additive</option>
+            <option value="power">Power</option>
+            <option value="probit">Probit</option>
+            <option value="shin">Shin</option>
+            <option value="worst">Worst case</option>
+            <option value="average">Average</option>
+          </select>
+        </label>
+      </div>
+      <details class="ev-devig-method-help">
+        <summary>Picking a method</summary>
+        <div class="ev-devig-method-help-body text-muted">
+          <p>Methods only affect <strong>two-way</strong> matchups (not win/top-N outrights). They change how the app turns posted odds into a single fair price for the <strong>CS</strong> column—more or less conservative.</p>
+          <p><strong>Tip:</strong> Start with <strong>Multiplicative</strong> or <strong>Average</strong>. Use <strong>Worst case</strong> when you want the stingiest fair price for your side. If unsure, compare a couple of methods and see which <strong>CS</strong> lines up with how you read the market.</p>
+        </div>
+      </details>
+
+      <section class="ev-devig-section" aria-labelledby="ev-devig-sec-default">
+        <h4 class="ev-devig-section-title" id="ev-devig-sec-default">Default</h4>
+        <label class="ev-devig-market-row">
+          <input type="radio" name="ev-consensus-mode" value="market" id="ev-cm-market" class="ev-devig-sr-only" checked />
+          <span class="ev-devig-radio-dot" aria-hidden="true"></span>
+          <span>Market Avg</span>
+        </label>
+      </section>
+
+      <section class="ev-devig-section" aria-labelledby="ev-devig-sec-full">
+        <h4 class="ev-devig-section-title" id="ev-devig-sec-full">100% weight</h4>
+        <p class="ev-devig-section-hint text-muted">One book carries full consensus weight.</p>
+        <input type="radio" name="ev-consensus-mode" value="single" id="ev-cm-single" class="ev-devig-sr-only" tabindex="-1" aria-hidden="true" />
+        <input type="hidden" id="ev-devig-single-key" value="" />
+        <div id="ev-devig-tiles" class="ev-devig-tiles" role="group" aria-label="Books at 100% weight"></div>
+      </section>
+
+      <section class="ev-devig-section" aria-labelledby="ev-devig-sec-split">
+        <h4 class="ev-devig-section-title" id="ev-devig-sec-split">Split weights</h4>
+        <label class="ev-devig-split-mode-row">
+          <input type="radio" name="ev-consensus-mode" value="split" id="ev-cm-split" class="ev-devig-sr-only" />
+          <span class="ev-devig-radio-dot" aria-hidden="true"></span>
+          <span>Custom — use checkboxes below</span>
+        </label>
+        <div class="ev-devig-split-quick">
+          <button type="button" class="ev-devig-pill" id="ev-devig-quick-market">Market avg</button>
+          <button type="button" class="ev-devig-pill ev-devig-pill-accent" id="ev-devig-quick-fddk">FD / DK 50% – Equal</button>
+        </div>
+        <div id="ev-devig-split-list" class="ev-devig-split-list"></div>
+      </section>
+
+      <p class="ev-devig-footnote text-muted">Apply saves preferences and rescans the +EV table.</p>
+      <footer class="ev-devig-actions">
+        <button type="button" class="ev-devig-btn-secondary" id="ev-devig-clear">Clear weights</button>
+        <button type="button" class="ev-devig-btn-apply" id="ev-devig-apply">Apply &amp; rescan</button>
+        <button type="button" class="ev-devig-btn-secondary" id="ev-devig-dismiss">Close</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog id="ev-help-dialog" class="ev-devig-dialog ev-help-dialog" aria-labelledby="ev-help-title">
+    <div class="ev-devig-dialog-inner ev-help-dialog-inner">
+      <header class="ev-devig-head">
+        <h3 class="ev-devig-title" id="ev-help-title">+EV Bets</h3>
+        <button type="button" class="ev-devig-close-x" id="ev-help-close-x" aria-label="Close help">×</button>
+      </header>
+      <p class="ev-help-intro text-muted">
+        Scan matchup and outright bets in one place, sorted by <strong>Model EV</strong> so the biggest model edges float to the top. Narrow the list with the filters, then compare model prices to book prices column by column.
+      </p>
+
+      <section class="ev-help-section" aria-labelledby="ev-help-weather-h">
+        <h4 class="ev-devig-section-title" id="ev-help-weather-h">Weather</h4>
+        <p class="text-muted ev-help-devig-lede">
+          Use the same weather controls as Model O/U and Hole Hangout. Set temp, wind, humidity, and <strong>Condition</strong> to match the expected day; that updates fair win chances on every row here. Choosing <strong>Default</strong> for condition resets the numbers to the baseline weather snapshot (then adjust sliders again if needed).
+        </p>
+      </section>
+
+      <section class="ev-help-section" aria-labelledby="ev-help-pricing-h">
+        <h4 class="ev-devig-section-title" id="ev-help-pricing-h">Pricing</h4>
+        <p class="text-muted ev-help-devig-lede">
+          <strong>Mode</strong> and <strong>Skill</strong> match the rest of the app: switch them when the goal is to weight recent form, this course, or a specific part of the game. Model % and Model EV update to reflect that choice.
+        </p>
+      </section>
+
+      <section class="ev-help-section" aria-labelledby="ev-help-toolbar-h">
+        <h4 class="ev-devig-section-title" id="ev-help-toolbar-h">Toolbar</h4>
+        <dl class="ev-help-dl">
+          <dt>Golfer</dt>
+          <dd>Limit the table to one player.</dd>
+          <dt>Market</dt>
+          <dd>Show only one product type (for example round matchups, tournament matchups, win, top 10).</dd>
+          <dt>Best book</dt>
+          <dd>Keep rows where that sportsbook posts the strongest price for the listed side.</dd>
+          <dt>Bankroll ($)</dt>
+          <dd>Your bankroll for the <strong>Kelly</strong> dollar suggestion (subject to the app’s stake caps).</dd>
+          <dt>Boost / Boost %</dt>
+          <dd>Turn on when a promo boosts profit on winning bets; Model EV and displayed odds follow the boost.</dd>
+          <dt>Devig</dt>
+          <dd>Opens book selection, weights, and the consensus style for the <strong>CS</strong> column. Tap <strong>Apply &amp; rescan</strong> after changes.</dd>
+        </dl>
+      </section>
+
+      <section class="ev-help-section" aria-labelledby="ev-help-cols-h">
+        <h4 class="ev-devig-section-title" id="ev-help-cols-h">Table columns</h4>
+        <dl class="ev-help-dl">
+          <dt>Model EV</dt>
+          <dd>Edge vs the best available price at a glance: green for positive, red for negative.</dd>
+          <dt>Kelly</dt>
+          <dd>Suggested stake in dollars from the bankroll above, using the boosted best price.</dd>
+          <dt>Best book</dt>
+          <dd>Where that best price lives; American odds (boosted when a boost is on).</dd>
+          <dt>Golfer</dt>
+          <dd>Who the bet is on.</dd>
+          <dt>Fair</dt>
+          <dd>Fair American odds implied by the model win chance (no sportsbook margin).</dd>
+          <dt>CS</dt>
+          <dd>Consensus “market fair” odds built from the books and weights in <strong>Devig</strong>. Use it to see how the model compares to the books you care about.</dd>
+          <dt>Implied</dt>
+          <dd>Win probability implied by the actual best price (after boost).</dd>
+          <dt>Δ (delta)</dt>
+          <dd>How far the model win % sits above or below that implied win %.</dd>
+          <dt>Market</dt>
+          <dd>Whether the row is a matchup type or an outright market.</dd>
+          <dt>Bet</dt>
+          <dd>The exact matchup wording or outright label.</dd>
+        </dl>
+      </section>
+
+      <section class="ev-help-section" aria-labelledby="ev-help-devig-h">
+        <h4 class="ev-devig-section-title" id="ev-help-devig-h">Devig settings</h4>
+        <p class="text-muted ev-help-devig-lede">
+          Open <strong>Devig</strong> to choose which books feed <strong>CS</strong>, split weights between them, and (for head-to-heads) pick a <strong>method</strong> that nudges consensus tighter or looser versus the board. Win and place markets use the selected books without that matchup-only control.
+        </p>
+        <p class="text-muted ev-help-devig-lede">
+          <strong>Tip:</strong> Try <strong>Average</strong> or <strong>Multiplicative</strong> first. Use <strong>Worst case</strong> when you want a cautious read on an edge.
+        </p>
+      </section>
+
+      <footer class="ev-help-actions">
+        <button type="button" class="ev-devig-btn-apply" id="ev-help-dismiss">Close</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog id="tab-help-dialog-ou" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-ou">
+    <div class="ev-devig-dialog-inner ev-help-dialog-inner">
+      <header class="ev-devig-head">
+        <h3 class="ev-devig-title" id="tab-help-title-ou">Model O/U</h3>
+        <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
+      </header>
+      <p class="ev-help-intro text-muted">
+        Pick a <strong>Market</strong> (round score, props, and so on), then read each golfer’s model edge at the listed <strong>lines</strong>. Use <strong>Round</strong> to match Thursday through Sunday. Switch <strong>Prob / Price</strong> to read edges as percentages or as fair American odds. Set <strong>Line</strong> and the over and under odds to mirror a ticket; that column highlights when the line matches.
+      </p>
+      <section class="ev-help-section" aria-labelledby="tab-help-ou-sort-h">
+        <h4 class="ev-devig-section-title" id="tab-help-ou-sort-h">Table and chart</h4>
+        <p class="text-muted ev-help-devig-lede">Tap column headers to sort. Green and red cells flag where the model disagrees with the book’s implied price. Choose one golfer in <strong>Golfer</strong> to open the bar chart and scan over probability across lines.</p>
+      </section>
+      <section class="ev-help-section" aria-labelledby="tab-help-ou-weather-h">
+        <h4 class="ev-devig-section-title" id="tab-help-ou-weather-h">Weather</h4>
+        <p class="text-muted ev-help-devig-lede">Dial in temp, wind, humidity, and <strong>Condition</strong> to match the forecast. <strong>Default</strong> condition resets the sliders to the baseline snapshot; then nudge again for a custom day. These controls update fair numbers together with <strong>Pricing</strong>.</p>
+      </section>
+      <section class="ev-help-section" aria-labelledby="tab-help-ou-pricing-h">
+        <h4 class="ev-devig-section-title" id="tab-help-ou-pricing-h">Pricing</h4>
+        <dl class="ev-help-dl">
+          <dt>How to use it</dt>
+          <dd><strong>Default</strong> keeps the sheet as loaded. <strong>Recent form</strong> favors players trending up or down. <strong>Course history</strong> favors players with a strong record at this event. <strong>Skill focus</strong> plus <strong>Skill</strong> stresses putting, approach, or other pillars. The same Mode appears anywhere Pricing is shown so comparisons stay consistent.</dd>
+        </dl>
+      </section>
+      <footer class="ev-help-actions">
+        <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog id="tab-help-dialog-props" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-props">
+    <div class="ev-devig-dialog-inner ev-help-dialog-inner">
+      <header class="ev-devig-head">
+        <h3 class="ev-devig-title" id="tab-help-title-props">Historical Trends</h3>
+        <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
+      </header>
+      <p class="ev-help-intro text-muted">
+        Compare past rounds to the model line for one golfer and stat. The header shows who and which event. <strong>Filters</strong> hide rounds that do not match chosen weather bands or course (optional <strong>Current course only</strong> for this venue).
+      </p>
+      <section class="ev-help-section" aria-labelledby="tab-help-props-sidebar-h">
+        <h4 class="ev-devig-section-title" id="tab-help-props-sidebar-h">How to use the sidebar</h4>
+        <dl class="ev-help-dl">
+          <dt>Golfer and market</dt>
+          <dd>Select who to study and which stat the bars represent.</dd>
+          <dt>Rounds and line</dt>
+          <dd>Set how many recent rounds to include and which <strong>Line</strong> to use for over or under hit rates and the small EV readout.</dd>
+          <dt>Hit rates and top table</dt>
+          <dd>See over and under frequency in the window, then scroll the league table for the same line.</dd>
+        </dl>
+      </section>
+      <footer class="ev-help-actions">
+        <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog id="tab-help-dialog-matchups" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-matchups">
+    <div class="ev-devig-dialog-inner ev-help-dialog-inner">
+      <header class="ev-devig-head">
+        <h3 class="ev-devig-title" id="tab-help-title-matchups">Round Matchups</h3>
+        <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
+      </header>
+      <p class="ev-help-intro text-muted">
+        Browse head-to-head and three-ball markets. Each row lists both players, a model win percentage, estimated EV, and the best posted price on the board.
+      </p>
+      <section class="ev-help-section" aria-labelledby="tab-help-matchups-model-h">
+        <h4 class="ev-devig-section-title" id="tab-help-matchups-model-h">Market and round</h4>
+        <p class="text-muted ev-help-devig-lede">Use <strong>Market</strong> to switch tournament, single-round, or three-ball lists. Set <strong>Round</strong> on the Model O/U tab first; this table follows that choice. Adjust <strong>Weather</strong> and <strong>Pricing</strong> on other tabs to update fair win chances here.</p>
+      </section>
+      <section class="ev-help-section" aria-labelledby="tab-help-matchups-pricing-h">
+        <h4 class="ev-devig-section-title" id="tab-help-matchups-pricing-h">Pricing</h4>
+        <p class="text-muted ev-help-devig-lede">The Pricing row mirrors the rest of the app: pick a mode when the read should lean on form, this course, or a skill pillar.</p>
+      </section>
+      <footer class="ev-help-actions">
+        <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog id="tab-help-dialog-outrights" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-outrights">
+    <div class="ev-devig-dialog-inner ev-help-dialog-inner">
+      <header class="ev-devig-head">
+        <h3 class="ev-devig-title" id="tab-help-title-outrights">Outrights</h3>
+        <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
+      </header>
+      <p class="ev-help-intro text-muted">
+        Choose a market (win, places, cut, and so on), then compare the <strong>Model</strong> column to each book. Tap headers to sort. Use <strong>Refresh projections</strong> after updating odds outside the app so the table matches the latest file.
+      </p>
+      <section class="ev-help-section" aria-labelledby="tab-help-outrights-global-h">
+        <h4 class="ev-devig-section-title" id="tab-help-outrights-global-h">Weather and pricing</h4>
+        <p class="text-muted ev-help-devig-lede">Weather lives on Model O/U, +EV, or Hole Hangout but still moves fair chances here. Use the <strong>Pricing</strong> row to align with form, course, or skill the same way as on other tabs.</p>
+      </section>
+      <footer class="ev-help-actions">
+        <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog id="tab-help-dialog-hh" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-hh">
+    <div class="ev-devig-dialog-inner ev-help-dialog-inner">
+      <header class="ev-devig-head">
+        <h3 class="ev-devig-title" id="tab-help-title-hh">Hole Hangout</h3>
+        <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
+      </header>
+      <p class="ev-help-intro text-muted">
+        Pick a <strong>Hole</strong> and <strong>Player</strong> (field follows the round on Model O/U), then tap <strong>Simulate hole</strong> to see outcome chances and a sample hole sequence. The course line at the top shows where the sim is anchored.
+      </p>
+      <section class="ev-help-section" aria-labelledby="tab-help-hh-live-h">
+        <h4 class="ev-devig-section-title" id="tab-help-hh-live-h">Live inputs</h4>
+        <p class="text-muted ev-help-devig-lede">Turn on <strong>Live inputs</strong> to set lie, yards to the hole, which shot it is, and putt length. Use it to mimic standing in a specific spot instead of a generic tee shot.</p>
+      </section>
+      <section class="ev-help-section" aria-labelledby="tab-help-hh-weather-h">
+        <h4 class="ev-devig-section-title" id="tab-help-hh-weather-h">Weather</h4>
+        <p class="text-muted ev-help-devig-lede">These sliders stay in sync with the rest of the app; change them the same way as on Model O/U to reflect wind and conditions.</p>
+      </section>
+      <section class="ev-help-section" aria-labelledby="tab-help-hh-pricing-h">
+        <h4 class="ev-devig-section-title" id="tab-help-hh-pricing-h">Pricing</h4>
+        <p class="text-muted ev-help-devig-lede">Pricing mode shifts how bullish the sim is on birdies versus mistakes, using the same Mode and Skill as everywhere else.</p>
+      </section>
+      <footer class="ev-help-actions">
+        <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <script src="embedded-player-round-history.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

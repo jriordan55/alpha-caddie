@@ -1,0 +1,24 @@
+{
+  "name": "alpha-caddie-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "fetch:dg": "node scripts/fetch-datagolf.mjs",
+    "update:rounds": "node scripts/run-update-historical-rounds.mjs",
+    "sync:rounds-csv": "node scripts/sync-historical-csv.mjs",
+    "sync:data-to-web": "node scripts/sync-historical-csv.mjs",
+    "build:shots-web": "node scripts/build-player-shots-web.mjs",
+    "build:history": "node scripts/build-player-history.mjs && node scripts/embed-player-history.mjs && node scripts/build-player-shots-web.mjs",
+    "build:history:pga": "node scripts/run-build-history-pga.mjs",
+    "embed:history": "node scripts/embed-player-history.mjs",
+    "refresh:web": "npm run fetch:dg",
+    "refresh:shots": "node scripts/run-update-latest-shots.mjs",
+    "refresh:daily": "node scripts/fetch-datagolf.mjs && node scripts/run-update-latest-shots.mjs",
+    "start": "node scripts/serve-with-refresh.mjs",
+    "dev": "node scripts/serve-with-refresh.mjs",
+    "serve:only": "npx --yes serve . -p 5173"
+  },
+  "dependencies": {
+    "csv-parse": "^5.6.0"
+  }
+}

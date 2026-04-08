@@ -1,0 +1,2046 @@
+:root {
+  --golf-bg: #050608;
+  --golf-elevated: #111216;
+  --golf-elevated-soft: #191b22;
+  --golf-border: #2b2e36;
+  --golf-card-border: #343742;
+  --golf-green: #00c46b;
+  --golf-green-soft: #00a85b;
+  --golf-text: #f5f7fb;
+  --golf-text-muted: #8b8f9c;
+  --golf-danger: #ff4d4f;
+  --golf-ou-over: #ff8a8a;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--golf-bg);
+  color: var(--golf-text);
+  min-height: 100vh;
+}
+
+.app-nav {
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--golf-border);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9);
+}
+.nav-inner { max-width: 1200px; margin: 0 auto; }
+.nav-title {
+  display: block;
+  font-weight: 700;
+  font-size: 1.75rem;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+.nav-subtitle {
+  margin: 4px 0 0;
+  font-size: 0.8125rem;
+  color: var(--golf-text-muted);
+}
+
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 24px 48px;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  border-bottom: 2px solid var(--golf-border);
+  margin-bottom: 22px;
+}
+.tab {
+  background: transparent;
+  border: none;
+  color: var(--golf-text-muted);
+  font-weight: 600;
+  font-family: inherit;
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+.tab:hover { color: var(--golf-text); }
+.tab.active {
+  color: var(--golf-green);
+  border-bottom-color: var(--golf-green);
+}
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  background: var(--golf-elevated);
+  border: 1px solid var(--golf-border);
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+.toolbar-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--golf-text-muted);
+}
+.toolbar-label.muted {
+  font-weight: 500;
+  opacity: 0.85;
+}
+.toolbar select {
+  margin-left: 8px;
+  background: var(--golf-elevated-soft);
+  color: var(--golf-text);
+  border: 1px solid var(--golf-border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-family: inherit;
+}
+.toolbar input {
+  margin-left: 8px;
+  background: var(--golf-elevated-soft);
+  color: var(--golf-text);
+  border: 1px solid var(--golf-border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-family: inherit;
+}
+
+/* Model O/U — toolbar + Projections/Odds-style view toggle */
+.ou-panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.ou-toolbar {
+  flex: 1 1 280px;
+  margin-bottom: 0;
+}
+.ou-view-toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  padding: 10px 14px;
+  background: var(--golf-elevated);
+  border: 1px solid var(--golf-border);
+  border-radius: 12px;
+}
+.ou-view-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--golf-text-muted);
+}
+.ou-view-toggle {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 3px;
+  background: var(--golf-elevated-soft);
+  border: 1px solid var(--golf-border);
+  gap: 2px;
+}
+.ou-toggle-btn {
+  border: none;
+  background: transparent;
+  color: var(--golf-text-muted);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.ou-toggle-btn:hover {
+  color: var(--golf-text);
+}
+.ou-toggle-btn.active {
+  background: var(--golf-text);
+  color: var(--golf-bg);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+.ou-toggle-btn.active:hover {
+  color: var(--golf-bg);
+}
+.ou-filters {
+  margin-bottom: 14px;
+  gap: 10px;
+}
+.ou-filters .toolbar-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.ou-filters select,
+.ou-filters input {
+  margin-left: 0;
+}
+.ou-filters #ou-market-filter {
+  width: 128px;
+}
+.ou-filters #ou-player-filter {
+  width: 230px;
+  min-width: 180px;
+  max-width: 260px;
+}
+.ou-filters #ou-line-filter {
+  width: 92px;
+}
+.ou-filters #ou-odds-over-filter,
+.ou-filters #ou-odds-under-filter {
+  width: 110px;
+}
+.weather-toolbar {
+  margin-top: -4px;
+  margin-bottom: 14px;
+  gap: 10px;
+}
+.weather-toolbar .toolbar-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.weather-toolbar .toolbar-label input,
+.weather-toolbar .toolbar-label select {
+  margin-left: 0;
+}
+.weather-toolbar-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--golf-green);
+  margin-right: 6px;
+}
+.props-trends-header .props-tab-help-btn {
+  margin-left: auto;
+  align-self: flex-start;
+  flex-shrink: 0;
+}
+.weather-toolbar-compact {
+  padding: 10px 12px;
+  margin-bottom: 10px;
+}
+.weather-toolbar-compact .toolbar-label {
+  font-size: 0.68rem;
+}
+@media (max-width: 1120px) {
+  .ou-filters #ou-player-filter {
+    width: 180px;
+    max-width: 180px;
+  }
+}
+.ou-table-card {
+  margin-top: 0;
+}
+
+.ou-chart-wrap {
+  position: relative;
+}
+.ou-chart-tooltip {
+  position: absolute;
+  z-index: 6;
+  min-width: 10rem;
+  max-width: min(18rem, calc(100% - 16px));
+  padding: 10px 12px;
+  background: var(--golf-elevated-soft);
+  border: 1px solid var(--golf-card-border);
+  border-radius: 10px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  pointer-events: none;
+  color: var(--golf-text);
+}
+.ou-chart-tooltip .ou-tip-row {
+  margin-top: 8px;
+}
+.ou-chart-tooltip .ou-tip-row:first-child {
+  margin-top: 0;
+}
+.ou-chart-tooltip .ou-tip-row strong {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--golf-text-muted);
+  margin-bottom: 2px;
+}
+.ou-chart-tooltip .ou-tip-value {
+  display: block;
+  word-break: break-word;
+}
+.ou-chart-card {
+  margin-top: 18px;
+  padding: 14px 16px 16px;
+}
+.ou-chart-head {
+  margin-bottom: 10px;
+}
+.ou-chart-head-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ou-chart-title {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--golf-text-muted);
+}
+.ou-chart-subtitle {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--golf-text-muted);
+  font-weight: 500;
+}
+#ou-chart-canvas {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  max-height: min(36vh, 280px);
+  height: auto;
+}
+#table-ou tbody tr {
+  cursor: pointer;
+}
+#table-ou tbody tr:hover {
+  background: rgba(0, 196, 107, 0.06);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--golf-green), var(--golf-green-soft));
+  border: 1px solid rgba(0, 196, 107, 0.8);
+  color: #fff;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.btn-primary:hover { filter: brightness(1.08); }
+
+.text-muted { color: var(--golf-text-muted); font-size: 0.9rem; }
+.text-warn { color: #f5a623; font-size: 0.9rem; }
+.note { margin-bottom: 12px; }
+.note code { font-size: 0.85em; background: var(--golf-elevated-soft); padding: 2px 6px; border-radius: 4px; }
+
+.data-status-wrap {
+  margin-bottom: 18px;
+}
+.data-status-primary {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--golf-text-muted);
+  line-height: 1.5;
+}
+.data-status-details {
+  margin-top: 6px;
+  font-size: 0.8125rem;
+}
+.data-status-details summary {
+  cursor: pointer;
+  color: var(--golf-text-muted);
+  list-style: none;
+  user-select: none;
+  width: fit-content;
+}
+.data-status-details summary::-webkit-details-marker {
+  display: none;
+}
+.data-status-details summary::before {
+  content: "";
+  display: inline-block;
+  width: 0.28em;
+  height: 0.28em;
+  border-right: 1.5px solid var(--golf-text-muted);
+  border-bottom: 1.5px solid var(--golf-text-muted);
+  transform: rotate(-45deg);
+  margin-right: 0.45em;
+  vertical-align: 0.12em;
+  opacity: 0.85;
+  transition: transform 0.15s ease;
+}
+.data-status-details[open] summary::before {
+  transform: rotate(45deg);
+  vertical-align: 0.04em;
+}
+.data-status-details summary:hover {
+  color: var(--golf-text);
+}
+.data-status-detail {
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  background: var(--golf-elevated-soft);
+  border-radius: 8px;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  border: 1px solid var(--golf-border);
+  color: var(--golf-text-muted);
+}
+
+.leaderboard-card {
+  background: var(--golf-elevated);
+  border: 1px solid var(--golf-card-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.table-wrap { overflow-x: auto; }
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+.data-table thead th {
+  background: #181a20;
+  text-align: left;
+  padding: 14px 16px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--golf-border);
+}
+.data-table tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--golf-border);
+}
+.data-table tbody tr:nth-child(even) td { background: #0d0e12; }
+.data-table tbody tr:nth-child(odd) td { background: #101116; }
+.data-table tbody tr:hover td { background: rgba(0, 196, 107, 0.08); }
+.data-table .num { text-align: center; font-variant-numeric: tabular-nums; }
+.data-table .ou-cell { font-size: 0.78rem; line-height: 1.4; text-align: center; }
+.data-table .ou-o { color: var(--golf-text); font-weight: 600; }
+.data-table .ou-u { color: var(--golf-text); font-weight: 600; }
+.data-table .ou-edge {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.data-table .ou-edge.pos { color: var(--golf-green); }
+.data-table .ou-edge.neg { color: var(--golf-danger); }
+
+#table-ou thead th.sortable {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+#table-ou thead th.sortable:hover {
+  color: var(--golf-green);
+}
+#table-ou .sort-ind {
+  display: inline-flex;
+  flex-direction: column;
+  margin-left: 6px;
+  font-size: 0.55rem;
+  line-height: 0.85;
+  opacity: 0.35;
+  vertical-align: middle;
+}
+#table-ou .sort-ind .sort-up.active,
+#table-ou .sort-ind .sort-down.active {
+  opacity: 1;
+  color: var(--golf-green);
+}
+#table-ou .ou-cell-edge {
+  text-align: left;
+  min-width: 9.5rem;
+}
+#table-ou .ou-edge-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+#table-ou .ou-edge-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.72rem;
+  line-height: 1.25;
+}
+#table-ou .ou-edge-row .ou-edge {
+  flex-shrink: 0;
+  min-width: 3.25rem;
+  text-align: left;
+}
+#table-ou .ou-edge-meta {
+  color: var(--golf-text);
+  font-weight: 500;
+  text-align: right;
+  white-space: nowrap;
+}
+#table-ou .ou-edge-meta .ou-edge-odds {
+  font-variant-numeric: tabular-nums;
+}
+#table-ou .ou-model-line {
+  font-size: 0.68rem;
+  color: var(--golf-text-muted);
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+#table-ou td.ou-line-col-highlight {
+  box-shadow: inset 0 0 0 1px rgba(0, 196, 107, 0.35);
+  background: rgba(0, 196, 107, 0.06) !important;
+}
+
+.props-card {
+  background: var(--golf-elevated);
+  border: 1px solid var(--golf-card-border);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+.props-card h3 {
+  margin: 0 0 12px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--golf-text-muted);
+}
+.props-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+.props-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--golf-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.props-grid input,
+.props-grid select {
+  background: var(--golf-elevated-soft);
+  color: var(--golf-text);
+  border: 1px solid var(--golf-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: inherit;
+}
+.check { flex-direction: row !important; align-items: center; text-transform: none !important; }
+.check input { width: auto; margin-right: 8px; }
+
+.ev-box { font-size: 1.1rem; }
+.ev-pos { color: var(--golf-green); font-weight: 700; }
+.ev-neg { color: var(--golf-danger); font-weight: 700; }
+
+.section-heading {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--golf-text-muted);
+  margin: 0 0 12px;
+}
+
+.hangout-intro { max-width: 52rem; margin-bottom: 16px; }
+.hangout-course-card .hangout-course-line {
+  margin: 0 0 8px;
+  font-weight: 600;
+  font-size: 1rem;
+}
+.hangout-course-card .hangout-results-hint {
+  margin: 0;
+  font-size: 0.85rem;
+}
+.hangout-grid {
+  align-items: end;
+}
+.hangout-sim-actions {
+  display: flex;
+  align-items: flex-end;
+}
+.hangout-sim-actions .btn-primary {
+  width: 100%;
+  justify-content: center;
+}
+.hangout-live-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px 16px;
+  align-items: end;
+}
+.hangout-live-check {
+  grid-column: 1 / -1;
+  flex-direction: row !important;
+  align-items: center !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  font-weight: 500 !important;
+}
+.hangout-live-check input {
+  width: auto;
+  margin-right: 10px;
+  accent-color: var(--golf-green);
+}
+.hangout-live-footnote {
+  margin: 12px 0 0;
+  font-size: 0.8rem;
+}
+
+.hole-sim-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 14px 20px;
+  background: var(--golf-elevated);
+  border-radius: 12px;
+  border: 1px solid var(--golf-border);
+  margin-bottom: 16px;
+}
+.hole-sim-top-bar .hh-top-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+.hole-sim-top-bar .hh-top-note {
+  font-size: 0.85rem;
+  color: var(--golf-text-muted);
+}
+
+.hangout-out-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.hangout-out-toolbar h4 {
+  margin: 0;
+}
+.hangout-ou-toggle {
+  flex-shrink: 0;
+}
+.hangout-yds-hint {
+  font-weight: 400;
+  color: var(--golf-text-muted);
+  font-size: 0.78rem;
+}
+.hangout-hole-viz {
+  margin: 0 0 16px;
+}
+.hangout-hole-viz[hidden] {
+  display: none !important;
+}
+.hangout-viz-eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--golf-text-muted);
+  margin: 0 0 10px;
+}
+.hangout-canvas-wrap {
+  position: relative;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--golf-border);
+  background: #0a0c0f;
+}
+#hh-hole-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  vertical-align: middle;
+}
+
+.hangout-sim-columns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+@media (max-width: 960px) {
+  .hangout-sim-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hole-sim-panel {
+  min-height: 280px;
+  padding: 16px 18px;
+  background: var(--golf-elevated);
+  border: 1px solid var(--golf-border);
+  border-radius: 12px;
+}
+.hole-sim-panel h4 {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--golf-text-muted);
+  margin: 0 0 12px;
+}
+.hole-sim-shot {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--golf-border);
+  font-size: 0.9rem;
+}
+.hole-sim-shot:last-child {
+  border-bottom: none;
+}
+.hangout-shot-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 14px;
+}
+.hangout-shot-line .hangout-shot-main {
+  font-weight: 600;
+  color: var(--golf-green);
+}
+.hangout-shot-line .hangout-shot-sub {
+  font-size: 0.85rem;
+  color: var(--golf-text-muted);
+}
+.hangout-shot-title {
+  min-width: 5.5rem;
+  font-weight: 600;
+  color: var(--golf-text);
+}
+.hole-sim-outcome-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+.hole-sim-outcome-bar {
+  flex: 1;
+  height: 8px;
+  background: var(--golf-elevated-soft);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.hole-sim-outcome-fill {
+  height: 100%;
+  border-radius: 4px;
+}
+.hangout-pred-score {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+.hangout-seq-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.hangout-seq-head h4 {
+  margin: 0;
+}
+.hangout-seq-score {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.hangout-seq-score.good { color: var(--golf-green); }
+.hangout-seq-score.bad { color: var(--golf-danger); }
+
+/* ---- Outrights (dense table, book logos) ---- */
+.outrights-eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--golf-text-muted);
+}
+.outrights-intro { margin: 0 0 10px; max-width: 52rem; }
+.outrights-tournament {
+  margin: 0 0 14px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--golf-text);
+}
+.outrights-toolbar { margin-bottom: 12px; }
+.outrights-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.data-table-outrights {
+  font-size: 0.8125rem;
+  min-width: 720px;
+}
+.data-table-outrights thead th {
+  padding: 8px 10px;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.data-table-outrights tbody td {
+  padding: 6px 10px;
+}
+.data-table-outrights tbody tr.outrights-data-row.outrights-row-alt {
+  background: rgba(255, 255, 255, 0.028);
+}
+.data-table-outrights .book-col-th {
+  text-align: center;
+  min-width: 56px;
+}
+.book-th-inner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 26px;
+}
+.book-th-img {
+  height: 22px;
+  width: auto;
+  max-width: 56px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+.book-logo-cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+}
+.book-logo-img {
+  height: 18px;
+  width: auto;
+  max-width: 44px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+.book-badge-inline {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 4px;
+  border-radius: 4px;
+  background: var(--golf-elevated-soft);
+  color: var(--golf-text-muted);
+}
+.book-logo-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 6px 2px 2px;
+  border: 1px solid var(--golf-border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+}
+.book-logo-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #101722;
+  color: #cfd8ea;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.book-logo-img-inline {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #0f131b;
+}
+.book-logo-name {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--golf-text);
+}
+.best-book-td {
+  white-space: nowrap;
+}
+.best-book-td .book-logo-cell { margin-right: 4px; }
+.best-book-odds { font-variant-numeric: tabular-nums; }
+.data-table-outrights th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+.data-table-outrights th.sortable:hover { color: var(--golf-green); }
+.sort-ind {
+  display: inline-flex;
+  flex-direction: column;
+  margin-left: 6px;
+  font-size: 0.55rem;
+  line-height: 0.85;
+  opacity: 0.35;
+  vertical-align: middle;
+}
+.sort-ind .sort-up.active,
+.sort-ind .sort-down.active { opacity: 1; color: var(--golf-green); }
+.outrights-note-row td {
+  background: rgba(0, 0, 0, 0.2) !important;
+  border-bottom: 1px solid var(--golf-border);
+}
+.outrights-note code { font-size: 0.85em; }
+#panel-ev .data-table {
+  min-width: 780px;
+}
+
+/* ---- Historical trends (round history chart) ---- */
+/* Let the page scroll as one column; nested max-height + flex was clipping the top-10 table. */
+#panel-props.panel.active {
+  display: block !important;
+  overflow-x: hidden;
+  overflow-y: visible;
+  max-height: none;
+}
+.props-viewport-inner {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: 10px;
+}
+.props-shell.props-viewport-inner {
+  gap: 0;
+  background: var(--golf-elevated);
+  border: 1px solid var(--golf-card-border);
+  border-radius: 14px;
+  overflow-x: hidden;
+  overflow-y: visible;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+}
+.props-shell .props-trends-header {
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid var(--golf-border);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent);
+  padding: 14px 18px;
+}
+.props-shell .props-trends-layout {
+  padding: 16px 18px 18px;
+  gap: 0 20px;
+}
+.props-shell .props-trends-chart-wrap {
+  position: relative;
+  z-index: 0;
+  border: none;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.32);
+  padding: 12px 14px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+  max-width: 100%;
+}
+.props-shell .props-footer-row {
+  border: none;
+  border-radius: 0;
+  border-top: 1px solid var(--golf-border);
+  padding: 12px 18px;
+  background: rgba(0, 0, 0, 0.2);
+}
+.props-trends-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  background: var(--golf-elevated);
+  border: 1px solid var(--golf-border);
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+.props-country-flag {
+  width: 72px;
+  height: 54px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 2px solid var(--golf-card-border);
+  background: var(--golf-elevated-soft);
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+.props-filter-course {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--golf-text);
+  cursor: pointer;
+  margin-bottom: 0;
+}
+.props-filter-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.props-filter-course input {
+  accent-color: var(--golf-green);
+}
+.props-trends-head-text {
+  min-width: 0;
+  flex: 1;
+}
+.props-trends-title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.props-trends-sub {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: var(--golf-text-muted);
+}
+.props-trends-layout {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px;
+  min-height: 0;
+  flex: 0 0 auto;
+  min-width: 0;
+  width: 100%;
+}
+@media (max-width: 1024px) {
+  .props-trends-layout {
+    flex-direction: column;
+    overflow-y: visible;
+    max-height: none;
+  }
+  .props-shell .props-trends-sidebar {
+    flex: none;
+    width: 100%;
+    border-left: none;
+    padding-left: 0;
+    margin-left: 0;
+    border-top: 1px solid var(--golf-border);
+    padding-top: 18px;
+    margin-top: 18px;
+  }
+  .props-shell .props-trends-layout {
+    padding-top: 14px;
+  }
+}
+.props-trends-chart-wrap {
+  position: relative;
+  z-index: 0;
+  background: var(--golf-elevated);
+  border: 1px solid var(--golf-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  min-height: 0;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  max-height: min(52vh, 480px);
+}
+.props-chart-tooltip {
+  position: absolute;
+  z-index: 6;
+  min-width: 10rem;
+  max-width: min(18rem, calc(100% - 16px));
+  padding: 10px 12px;
+  background: var(--golf-elevated-soft);
+  border: 1px solid var(--golf-card-border);
+  border-radius: 10px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  pointer-events: none;
+  color: var(--golf-text);
+}
+.props-chart-tooltip .props-tip-row {
+  margin-top: 8px;
+}
+.props-chart-tooltip .props-tip-row:first-child {
+  margin-top: 0;
+}
+.props-chart-tooltip .props-tip-row strong {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--golf-text-muted);
+  margin-bottom: 2px;
+}
+.props-chart-tooltip .props-tip-value {
+  display: block;
+  word-break: break-word;
+}
+#props-trend-canvas {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  max-height: min(48vh, 440px);
+  height: auto;
+  vertical-align: top;
+  box-sizing: border-box;
+}
+.props-chart-empty {
+  margin: 12px 0 0;
+  font-size: 0.85rem;
+}
+.props-trends-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 0 0 278px;
+  width: 278px;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-height: 0;
+  overflow: visible;
+  padding-right: 4px;
+  margin-right: 0;
+  border-left: 1px solid var(--golf-border);
+  padding-left: 16px;
+  position: relative;
+  z-index: 5;
+  isolation: isolate;
+  background: var(--golf-elevated);
+}
+.props-trends-sidebar select {
+  width: 100%;
+  margin-top: 6px;
+  background: var(--golf-elevated-soft);
+  color: var(--golf-text);
+  border: 1px solid var(--golf-border);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+.props-trends-sidebar select:hover,
+.props-trends-sidebar select:focus {
+  border-color: #3d424d;
+  outline: none;
+}
+.props-trends-sidebar select:focus {
+  border-color: rgba(0, 196, 107, 0.45);
+  box-shadow: 0 0 0 2px rgba(0, 196, 107, 0.12);
+}
+.props-sidebar-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--golf-text-muted);
+  margin-bottom: 6px;
+}
+.props-stepper-block {
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid var(--golf-border);
+  border-radius: 10px;
+}
+.props-stepper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.props-step-btn {
+  position: relative;
+  z-index: 6;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--golf-border);
+  background: var(--golf-elevated-soft);
+  color: var(--golf-text);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1;
+  transition: border-color 0.12s ease, color 0.12s ease, background 0.12s ease;
+}
+.props-step-btn:hover {
+  border-color: var(--golf-green);
+  color: var(--golf-green);
+  background: rgba(0, 196, 107, 0.08);
+}
+.props-hit-rate-block {
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.props-ou-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.props-ou-col {
+  text-align: center;
+  min-width: 0;
+}
+.props-ou-h {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--golf-text-muted);
+  margin-bottom: 6px;
+}
+.props-ou-val {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+.props-ou-under {
+  color: var(--golf-danger);
+}
+.props-ou-over {
+  color: var(--golf-green);
+}
+/* Round score & bogeys: under line is good (green), over is bad (red). */
+.props-hit-rate-block.props-ou-lower-is-better .props-ou-under {
+  color: var(--golf-green);
+}
+.props-hit-rate-block.props-ou-lower-is-better .props-ou-over {
+  color: var(--golf-danger);
+}
+.props-top-hits-section {
+  margin-top: 12px;
+  padding: 0 18px 14px;
+  flex-shrink: 0;
+}
+#table-props-top-hits thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: #181a20;
+  box-shadow: 0 1px 0 var(--golf-border);
+}
+.props-top-hits-head-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 18px;
+  margin-bottom: 12px;
+}
+.props-top-hits-emoji-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  margin: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 12px;
+  line-height: 1;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+.props-top-hits-emoji-toggle:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+.props-top-hits-emoji-toggle:focus-visible {
+  outline: 2px solid rgba(0, 196, 107, 0.55);
+  outline-offset: 2px;
+}
+.props-top-hits-emoji-toggle:active {
+  transform: scale(0.97);
+}
+.props-top-hits-emoji {
+  font-size: 1.4rem;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+.props-top-hits-meta {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  font-size: 0.9375rem;
+  line-height: 1.35;
+  color: var(--golf-text-muted);
+}
+.props-top-hits-market {
+  font-weight: 600;
+  color: var(--golf-text);
+  letter-spacing: -0.02em;
+}
+.props-top-hits-meta-dot {
+  opacity: 0.4;
+  user-select: none;
+  font-weight: 500;
+}
+.props-top-hits-line-text {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--golf-text-muted);
+}
+.props-top-hits-table thead th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+.props-top-hits-table thead th.sortable:hover {
+  color: var(--golf-green);
+}
+.props-top-hits-table thead th.sortable .sort-ind {
+  margin-left: 6px;
+}
+.props-top-hits-table-wrap {
+  margin-top: 0;
+  overflow-x: auto;
+  overflow-y: visible;
+}
+.props-top-hits-table-wrap.leaderboard-card {
+  overflow-x: auto;
+  overflow-y: visible;
+}
+.props-top-hits-table {
+  font-size: 0.875rem;
+}
+.props-top-hits-table th.num,
+.props-top-hits-table td.num {
+  text-align: right;
+}
+.props-top-hits-table th:not(.num),
+.props-top-hits-table td:not(.num) {
+  text-align: left;
+}
+#table-props-top-hits tbody tr.props-top-hit-current {
+  background: rgba(0, 196, 107, 0.1);
+}
+#table-props-top-hits tbody tr.props-top-hit-current td {
+  font-weight: 600;
+}
+
+.props-stepper input[type="number"]::-webkit-outer-spin-button,
+.props-stepper input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.props-stepper input[type="number"] {
+  flex: 1;
+  min-width: 48px;
+  text-align: center;
+  background: var(--golf-elevated-soft);
+  color: var(--golf-text);
+  border: 1px solid var(--golf-border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-family: inherit;
+  font-weight: 600;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+.props-ou-summary {
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--golf-border);
+  border-radius: 10px;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+.props-ou-summary .ou-over { color: var(--golf-green); font-weight: 700; }
+.props-ou-summary .ou-under { color: var(--golf-danger); font-weight: 700; }
+.props-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.props-summary-row + .props-summary-row {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--golf-border);
+}
+.props-summary-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--golf-text-muted);
+}
+.props-summary-value {
+  font-size: 0.94rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.props-summary-sub {
+  font-weight: 600;
+  font-size: 0.82rem;
+  opacity: 0.75;
+}
+.props-trend-table-wrap {
+  flex: 1;
+  min-height: 80px;
+  max-height: 200px;
+  overflow: auto;
+}
+.props-trend-table {
+  font-size: 0.72rem;
+  table-layout: fixed;
+  width: 100%;
+}
+.props-trend-table thead th {
+  padding: 8px 5px;
+  font-size: 0.62rem;
+  line-height: 1.25;
+  white-space: normal;
+  word-break: break-word;
+  vertical-align: bottom;
+}
+.props-trend-table .num {
+  font-variant-numeric: tabular-nums;
+}
+.props-trend-table .props-th-date {
+  width: 19%;
+  min-width: 3.2rem;
+}
+.props-trend-table .props-th-course {
+  width: 36%;
+}
+.props-trend-table .props-th-metric {
+  width: 17%;
+}
+.props-trend-table .props-th-delta {
+  width: 11%;
+}
+.props-trend-table tbody td {
+  padding: 8px 5px;
+}
+.props-trend-table td.props-col-course {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.props-hole-card {
+  padding: 8px 10px;
+  background: var(--golf-elevated);
+  border: 1px solid var(--golf-border);
+  border-radius: 8px;
+  flex-shrink: 0;
+  max-height: 160px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.props-hole-heading {
+  margin: 0 0 6px;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--golf-text-muted);
+}
+.props-hole-selects {
+  margin-bottom: 6px;
+}
+.props-hole-card > .table-wrap {
+  flex: 1;
+  min-height: 0;
+  max-height: 88px;
+  overflow: auto;
+}
+.props-footer-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  padding: 8px 12px;
+  background: var(--golf-elevated);
+  border: 1px solid var(--golf-border);
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.props-footer-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--golf-text-muted);
+}
+.props-footer-item input {
+  width: 88px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--golf-border);
+  background: var(--golf-elevated-soft);
+  color: var(--golf-text);
+  font-family: inherit;
+}
+.props-footer-ev {
+  flex: 1;
+  min-width: 200px;
+  margin: 0;
+  font-size: 0.88rem;
+}
+.props-footer-ev p {
+  margin: 0.2em 0;
+}
+#props-hole-table td.good { color: var(--golf-green); font-weight: 600; }
+#props-hole-table td.bad { color: var(--golf-danger); font-weight: 600; }
+
+.props-shot-wrap {
+  margin-top: 14px;
+}
+.props-shots-table-wrap {
+  max-height: 280px;
+  overflow: auto;
+}
+.props-shot-meta {
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+}
+#props-shots-table .props-shot-pbp {
+  max-width: min(42vw, 280px);
+  word-break: break-word;
+  font-size: 0.78rem;
+  color: var(--golf-text-muted);
+}
+
+/* +EV Devig — electric blue accent (#007bff) to match reference */
+.ev-devig-btn-toolbar {
+  align-self: center;
+  background: #007bff;
+  border: 1px solid rgba(0, 123, 255, 0.95);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 8px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  margin-left: 6px;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.25);
+}
+.ev-devig-btn-toolbar:hover {
+  filter: brightness(1.08);
+}
+
+.ev-panel-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.ev-panel-heading {
+  margin-bottom: 0;
+  flex: 1;
+  min-width: 0;
+}
+.ev-help-btn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 123, 255, 0.85);
+  background: rgba(0, 123, 255, 0.15);
+  color: #4da3ff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  font-family: inherit;
+}
+.ev-help-btn:hover {
+  background: rgba(0, 123, 255, 0.28);
+  color: #fff;
+}
+.ev-help-dialog {
+  max-width: min(560px, calc(100vw - 24px));
+  max-height: min(88vh, 760px);
+}
+.ev-help-dialog-inner {
+  box-sizing: border-box;
+  max-height: min(calc(88vh - 24px), 736px);
+  overflow-y: auto;
+  padding-bottom: 4px;
+}
+.ev-help-intro {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  margin: 0 0 18px;
+}
+.ev-help-section {
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.ev-help-section:last-of-type {
+  border-bottom: none;
+  margin-bottom: 10px;
+  padding-bottom: 0;
+}
+.ev-help-dl {
+  margin: 0;
+}
+.ev-help-dl dt {
+  margin-top: 10px;
+  font-weight: 700;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #c5ccdc;
+}
+.ev-help-dl dt:first-child {
+  margin-top: 0;
+}
+.ev-help-dl dd {
+  margin: 5px 0 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: #8b93a5;
+}
+.ev-help-dl dd code {
+  font-size: 0.9em;
+  color: #b8c0d0;
+}
+.ev-help-devig-lede {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  margin: 0 0 12px;
+}
+.ev-help-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ev-devig-dialog {
+  max-width: min(520px, calc(100vw - 24px));
+  width: 100%;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: #12161c;
+  color: #e8eaef;
+  box-shadow: 0 28px 56px rgba(0, 0, 0, 0.55);
+}
+.ev-devig-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.72);
+}
+.ev-devig-dialog-inner {
+  padding: 20px 22px 18px;
+}
+.ev-devig-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.ev-devig-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.ev-devig-close-x {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #007bff;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 300;
+}
+.ev-devig-close-x:hover {
+  color: #4da3ff;
+  background: rgba(0, 123, 255, 0.12);
+}
+.ev-devig-lede {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  margin: 0 0 16px;
+  color: #8b93a5;
+}
+.ev-devig-toolbar-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-end;
+  margin-bottom: 18px;
+}
+.ev-devig-search {
+  flex: 1 1 200px;
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #0d1014;
+  color: #fff;
+  font-size: 0.875rem;
+  font-family: inherit;
+}
+.ev-devig-search::placeholder {
+  color: #5c6575;
+}
+.ev-devig-method-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 0 0 auto;
+  min-width: 160px;
+}
+.ev-devig-method-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7588;
+}
+.ev-devig-select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #0d1014;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.875rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.ev-devig-method-help {
+  margin: -8px 0 18px;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: #8b93a5;
+}
+.ev-devig-method-help summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #a8b0c4;
+  list-style-position: outside;
+}
+.ev-devig-method-help summary:hover {
+  color: #c5ccdc;
+}
+.ev-devig-method-help-body {
+  margin-top: 10px;
+  padding-left: 12px;
+  border-left: 2px solid rgba(255, 255, 255, 0.08);
+}
+.ev-devig-method-help-body p {
+  margin: 0 0 10px;
+}
+.ev-devig-method-help-body dl {
+  margin: 0;
+}
+.ev-devig-method-help-body dt {
+  margin-top: 8px;
+  font-weight: 700;
+  color: #c5ccdc;
+  font-size: 0.72rem;
+}
+.ev-devig-method-help-body dt:first-child {
+  margin-top: 0;
+}
+.ev-devig-method-help-body dd {
+  margin: 4px 0 0;
+}
+
+.ev-devig-section {
+  margin-bottom: 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.ev-devig-section:last-of-type {
+  border-bottom: none;
+  margin-bottom: 12px;
+  padding-bottom: 0;
+}
+.ev-devig-section-title {
+  margin: 0 0 10px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #5a6a85;
+}
+.ev-devig-section-hint {
+  font-size: 0.72rem;
+  margin: -4px 0 10px;
+}
+.ev-devig-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ev-devig-market-row,
+.ev-devig-split-mode-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #e8eaef;
+  margin: 0;
+}
+.ev-devig-radio-dot {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #3d4654;
+  background: #0d1014;
+  box-sizing: border-box;
+}
+.ev-devig-market-row input:checked + .ev-devig-radio-dot,
+.ev-devig-split-mode-row input:checked + .ev-devig-radio-dot {
+  border-color: #007bff;
+  background: #007bff;
+  box-shadow: inset 0 0 0 3px #0d1014;
+}
+
+.ev-devig-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 2px;
+}
+.ev-devig-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 72px;
+  padding: 8px 4px;
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  background: #0d1014;
+  color: #e8eaef;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.ev-devig-tile:hover {
+  border-color: rgba(0, 123, 255, 0.45);
+}
+.ev-devig-tile.selected {
+  border-color: #007bff;
+  box-shadow: 0 0 0 1px #007bff;
+}
+.ev-devig-tile-logo-wrap {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+.ev-devig-tile-logo {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+.ev-devig-tile-fallback {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 24px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #8b93a5;
+}
+.ev-devig-tile-short {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.ev-devig-split-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 14px;
+}
+.ev-devig-pill {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #1c222a;
+  color: #c5cad6;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+.ev-devig-pill:hover {
+  background: #252c36;
+}
+.ev-devig-pill-accent {
+  background: rgba(0, 123, 255, 0.2);
+  border-color: rgba(0, 123, 255, 0.55);
+  color: #7eb8ff;
+}
+.ev-devig-pill-accent:hover {
+  background: rgba(0, 123, 255, 0.3);
+}
+
+.ev-devig-split-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0d1014;
+}
+.ev-devig-split-row {
+  display: grid;
+  grid-template-columns: 1fr minmax(52px, 64px);
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.ev-devig-split-row:last-child {
+  border-bottom: none;
+}
+.ev-devig-split-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  margin: 0;
+  min-width: 0;
+}
+.ev-devig-split-check input {
+  width: 16px;
+  height: 16px;
+  accent-color: #007bff;
+  flex-shrink: 0;
+}
+.ev-devig-split-logo {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.ev-devig-split-logo img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+.ev-devig-split-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #e8eaef;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ev-devig-split-pct {
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #12161c;
+  color: #fff;
+  font-size: 0.8rem;
+  text-align: right;
+  font-family: inherit;
+}
+.ev-devig-split-pct::placeholder {
+  color: #5c6575;
+}
+
+.ev-devig-footnote {
+  font-size: 0.72rem;
+  margin: 16px 0 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  color: #6b7588;
+}
+.ev-devig-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+}
+.ev-devig-btn-apply {
+  background: #007bff;
+  border: 1px solid rgba(0, 123, 255, 0.95);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: 0 2px 10px rgba(0, 123, 255, 0.3);
+}
+.ev-devig-btn-apply:hover {
+  filter: brightness(1.08);
+}
+.ev-devig-btn-secondary {
+  background: #2d333d;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e8eaef;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.ev-devig-btn-secondary:hover {
+  filter: brightness(1.12);
+}
+
+@media (max-width: 768px) {
+  .content-wrapper { padding: 16px 12px 32px; }
+  .nav-title { font-size: 1.25rem; }
+}
