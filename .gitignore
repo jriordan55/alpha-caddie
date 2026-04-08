@@ -1,0 +1,25 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+node_modules/
+website/node_modules/
+website/dist/
+website/.env
+website/datagolf.local.json
+
+alpha-caddie-web/datagolf.local.json
+alpha-caddie-web/course_holes.local.json
+alpha-caddie-web/player_round_history.json
+alpha-caddie-web/player_shots_web.json
+alpha-caddie-web/logs/
+
+# Raw / huge CSVs — exceed GitHub 100MB limit (regenerate locally or use Git LFS)
+**/all_shots_2021_2026.csv
+**/hole_data.csv
+**/historical_rounds_all_with_tournament_metadata.csv
+**/historical_rounds_all_with_tournament_metadata_*.csv
+
+java/alphacaddie/target/
+java/alphacaddie/.mvn-tools/
