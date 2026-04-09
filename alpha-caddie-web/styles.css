@@ -1451,6 +1451,60 @@ body {
   font-weight: 600;
 }
 
+.props-top-hit-name-td {
+  vertical-align: middle;
+  min-width: 12rem;
+}
+.props-top-hit-name-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px 12px;
+}
+.props-top-hit-name-text {
+  font-weight: 600;
+  flex: 0 1 auto;
+}
+.props-top-hit-line-inline {
+  color: #fff;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+.props-top-hit-market-inline {
+  color: var(--golf-text-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.props-top-hit-ou-mini {
+  flex: 1 1 9rem;
+  min-width: min(11rem, 100%);
+  max-width: 13rem;
+}
+.props-top-hit-ou-mini.props-ou-split {
+  gap: 8px;
+}
+.props-top-hit-ou-mini .props-ou-h {
+  font-size: 0.65rem;
+  margin-bottom: 2px;
+}
+.props-top-hit-ou-mini .props-ou-val {
+  font-size: 0.95rem;
+}
+.props-top-hit-ou-mini .props-ou-under {
+  color: var(--golf-danger);
+}
+.props-top-hit-ou-mini .props-ou-over {
+  color: var(--golf-green);
+}
+.props-top-hit-ou-mini.props-ou-lower-is-better .props-ou-under {
+  color: var(--golf-green);
+}
+.props-top-hit-ou-mini.props-ou-lower-is-better .props-ou-over {
+  color: var(--golf-danger);
+}
+
 .props-stepper input[type="number"]::-webkit-outer-spin-button,
 .props-stepper input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;

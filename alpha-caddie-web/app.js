@@ -859,7 +859,7 @@ function getOuMarket() {
   return el && el.value ? el.value : "Total score";
 }
 
-/** Round score & bogeys: lower is better — bar chart uses P(under) height and green when that share is strong. */
+/** Round score & bogeys: chart shows P(over) (falls as line rises). Birdies/pars: P(under) (rises as line rises). */
 function ouMarketLowerIsBetter(market) {
   return market === "Total score" || market === "Bogeys";
 }
@@ -1144,7 +1144,7 @@ function showOuChartTooltip(ev, hit) {
   tip.style.top = `${top}px`;
 }
 
-/** Bar chart: P(over) or P(under) by market at each line — same Market + Golfer filters as the table. */
+/** Bar chart: P(over) for score/bogeys (declining vs line); P(under) for birdies/pars (rising vs line). */
 function drawOuLineDistributionChart() {
   const canvas = document.getElementById("ou-chart-canvas");
   if (!canvas || !canvas.getContext) return;
@@ -1154,11 +1154,11 @@ function drawOuLineDistributionChart() {
   const lowerBetter = ouMarketLowerIsBetter(market);
   const titleEl = document.getElementById("ou-chart-title");
   if (titleEl) {
-    titleEl.textContent = lowerBetter ? "P(under) by line" : "P(over) by line";
+    titleEl.textContent = lowerBetter ? "P(over) by line" : "P(under) by line";
   }
   canvas.setAttribute(
     "aria-label",
-    lowerBetter ? "P(under) by line" : "P(over) by line"
+    lowerBetter ? "P(over) by line" : "P(under) by line"
   );
   const lines = OU_LINE_RANGES[market] || OU_LINE_RANGES["Total score"];
   const round = getOuRound();
@@ -1232,14 +1232,14 @@ function drawOuLineDistributionChart() {
     const L = lines[i];
     const pOverRaw = modelProbOverMarket(market, row, L);
     const pOver = clampProb01(pOverRaw);
-    const pChart = lowerBetter ? 1 - pOver : pOver;
+    const pChart = lowerBetter ? pOver : 1 - pOver;
     const pct = Number.isFinite(pChart) ? pChart * 100 : NaN;
     const cx = pad.l + (i + 0.5) * slotW;
     const x0 = cx - barW / 2;
     if (!Number.isFinite(pct)) continue;
     const y0 = yPct(pct);
     const yBase = yPct(0);
-    const highIsGood = lowerBetter ? pct >= 50 : pct < 50;
+    const highIsGood = lowerBetter ? pct < 50 : pct >= 50;
     ctx.fillStyle = highIsGood ? "rgba(0, 196, 107, 0.82)" : "rgba(255, 138, 138, 0.88)";
     ctx.fillRect(x0, y0, barW, yBase - y0);
     ctx.strokeStyle = "rgba(255,255,255,0.12)";
@@ -3361,6 +3361,56 @@ function propsTopTableSortInPlace(rows, statKey) {
   });
 }
 
+/** Golfer column: name, line (white), market, compact Under/Over counts (same coloring as sidebar). */
+function propsTopHitsAppendNameCell(tr, r, statKey, line) {
+  const td = document.createElement("td");
+  td.className = "props-top-hit-name-td";
+  const row = document.createElement("div");
+  row.className = "props-top-hit-name-row";
+
+  const nameSpan = document.createElement("span");
+  nameSpan.className = "props-top-hit-name-text";
+  nameSpan.textContent = r.name;
+
+  const lineSpan = document.createElement("span");
+  lineSpan.className = "props-top-hit-line-inline";
+  lineSpan.textContent = Number.isFinite(line) ? formatPropLineValueForInput(line) : "—";
+
+  const marketSpan = document.createElement("span");
+  marketSpan.className = "props-top-hit-market-inline";
+  marketSpan.textContent = propMarketLabelFromKey(statKey);
+
+  const ouWrap = document.createElement("div");
+  const lowerBetter = statKey === "total" || statKey === "bogeys";
+  ouWrap.className = `props-top-hit-ou-mini props-ou-split${lowerBetter ? " props-ou-lower-is-better" : ""}`;
+
+  function ouCol(label, valClass, count, rate, valid) {
+    const col = document.createElement("div");
+    col.className = "props-ou-col";
+    const h = document.createElement("span");
+    h.className = "props-ou-h";
+    h.textContent = label;
+    const p = document.createElement("p");
+    p.className = `props-ou-val ${valClass}`;
+    if (valid > 0 && Number.isFinite(rate)) {
+      p.textContent = `${count}/${valid} (${Math.round(rate * 100)}%)`;
+    } else {
+      p.textContent = "—";
+    }
+    col.append(h, p);
+    return col;
+  }
+
+  ouWrap.append(
+    ouCol("Under", "props-ou-under", r.under, r.underRate, r.valid),
+    ouCol("Over", "props-ou-over", r.over, r.overRate, r.valid)
+  );
+
+  row.append(nameSpan, lineSpan, marketSpan, ouWrap);
+  td.appendChild(row);
+  tr.appendChild(td);
+}
+
 function paintPropsTopTableSortHeaders() {
   document.querySelectorAll("#table-props-top-hits thead th[data-props-sort]").forEach((th) => {
     const k = th.getAttribute("data-props-sort");
@@ -3485,7 +3535,7 @@ function renderPropsHitRateAndTopTable(statKey, line, winN) {
       return td;
     };
     tr.appendChild(mk(String(i + 1), "num"));
-    tr.appendChild(mk(r.name));
+    propsTopHitsAppendNameCell(tr, r, statKey, line);
     tr.appendChild(mk(`${(r.overRate * 100).toFixed(1)}%`, "num"));
     tr.appendChild(mk(`${r.over} / ${r.valid}`, "num"));
     tr.appendChild(mk(`${(r.underRate * 100).toFixed(1)}%`, "num"));
