@@ -1,4 +1,5 @@
 :root {
+  color-scheme: dark;
   --golf-bg: #050608;
   --golf-elevated: #111216;
   --golf-elevated-soft: #191b22;
@@ -13,16 +14,29 @@
 }
 
 * { box-sizing: border-box; }
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overflow-x: clip;
+  max-width: 100%;
+}
 body {
   margin: 0;
   font-family: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
   background: var(--golf-bg);
   color: var(--golf-text);
   min-height: 100vh;
+  min-height: 100dvh;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 .app-nav {
   padding: 14px 24px;
+  padding-left: max(24px, env(safe-area-inset-left, 0px));
+  padding-right: max(24px, env(safe-area-inset-right, 0px));
+  padding-top: max(14px, env(safe-area-inset-top, 0px));
   border-bottom: 1px solid var(--golf-border);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9);
 }
@@ -44,6 +58,8 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 28px 24px 48px;
+  padding-left: max(24px, env(safe-area-inset-left, 0px));
+  padding-right: max(24px, env(safe-area-inset-right, 0px));
 }
 
 .tabs {
@@ -63,6 +79,7 @@ body {
   cursor: pointer;
   border-bottom: 2px solid transparent;
   margin-bottom: -2px;
+  touch-action: manipulation;
 }
 .tab:hover { color: var(--golf-text); }
 .tab.active {
@@ -219,6 +236,10 @@ body {
 .weather-toolbar .toolbar-label select {
   margin-left: 0;
 }
+.pricing-toolbar select:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
 .weather-toolbar-title {
   font-size: 0.72rem;
   font-weight: 700;
@@ -245,6 +266,20 @@ body {
     max-width: 180px;
   }
 }
+
+/* Model O/U — wrapper groups controls; inner grids use display:contents on desktop */
+.ou-filter-card {
+  margin-bottom: 0;
+}
+.ou-odds-pair,
+.ou-weather-grid,
+.ou-pricing-row {
+  display: contents;
+}
+.ou-block-heading {
+  display: inline;
+}
+
 .ou-table-card {
   margin-top: 0;
 }
@@ -347,9 +382,10 @@ body {
 }
 .data-status-primary {
   margin: 0;
-  font-size: 0.875rem;
-  color: var(--golf-text-muted);
-  line-height: 1.5;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--golf-text);
+  line-height: 1.45;
 }
 .data-status-details {
   margin-top: 6px;
@@ -402,7 +438,11 @@ body {
   border-radius: 12px;
   overflow: hidden;
 }
-.table-wrap { overflow-x: auto; }
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
 
 .data-table {
   width: 100%;
@@ -500,6 +540,73 @@ body {
   background: rgba(0, 196, 107, 0.06) !important;
 }
 
+/* Model O/U grid: fit viewport width — no horizontal scroll inside card */
+#panel-ou .ou-table-card.table-wrap {
+  overflow-x: clip;
+}
+#table-ou {
+  table-layout: fixed;
+  width: 100%;
+}
+#table-ou thead th {
+  padding: 8px 3px;
+  font-size: 0.58rem;
+  letter-spacing: 0.03em;
+  word-break: break-word;
+  white-space: normal;
+  vertical-align: bottom;
+  line-height: 1.15;
+}
+#table-ou thead th.sortable {
+  white-space: normal;
+}
+#table-ou tbody td {
+  padding: 5px 3px;
+  vertical-align: top;
+}
+#table-ou thead th:first-child,
+#table-ou tbody td:first-child {
+  width: 22%;
+  max-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#table-ou .ou-cell-edge {
+  min-width: 0;
+}
+#table-ou .ou-cell {
+  font-size: 0.6rem;
+  line-height: 1.2;
+}
+#table-ou .ou-edge-stack {
+  gap: 2px;
+}
+#table-ou .ou-edge-row {
+  flex-wrap: wrap;
+  gap: 2px 4px;
+  font-size: 0.58rem;
+  line-height: 1.2;
+}
+#table-ou .ou-edge-row .ou-edge {
+  min-width: 0;
+  flex-shrink: 1;
+}
+#table-ou .ou-edge-meta {
+  white-space: normal;
+  text-align: right;
+  font-size: 0.55rem;
+  line-height: 1.15;
+}
+#table-ou .ou-model-line {
+  font-size: 0.55rem;
+  margin-bottom: 2px;
+}
+#table-ou .sort-ind {
+  margin-left: 2px;
+  font-size: 0.45rem;
+}
+
 .props-card {
   background: var(--golf-elevated);
   border: 1px solid var(--golf-card-border);
@@ -553,15 +660,22 @@ body {
   margin: 0 0 12px;
 }
 
-.hangout-intro { max-width: 52rem; margin-bottom: 16px; }
-.hangout-course-card .hangout-course-line {
-  margin: 0 0 8px;
-  font-weight: 600;
-  font-size: 1rem;
+#panel-hangout .hangout-controls-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
-.hangout-course-card .hangout-results-hint {
+#panel-hangout .hangout-results-stack {
+  margin-top: 22px;
+}
+.hangout-controls-card h3,
+.hangout-live-card h3 {
+  margin-top: 0;
+}
+.hangout-cleared-msg {
   margin: 0;
-  font-size: 0.85rem;
+  font-size: 0.88rem;
+  line-height: 1.4;
 }
 .hangout-grid {
   align-items: end;
@@ -633,11 +747,6 @@ body {
 .hangout-ou-toggle {
   flex-shrink: 0;
 }
-.hangout-yds-hint {
-  font-weight: 400;
-  color: var(--golf-text-muted);
-  font-size: 0.78rem;
-}
 .hangout-hole-viz {
   margin: 0 0 16px;
 }
@@ -669,8 +778,8 @@ body {
 .hangout-sim-columns {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  align-items: start;
+  gap: 16px;
+  align-items: stretch;
 }
 @media (max-width: 960px) {
   .hangout-sim-columns {
@@ -679,11 +788,17 @@ body {
 }
 
 .hole-sim-panel {
-  min-height: 280px;
-  padding: 16px 18px;
+  min-height: 260px;
+  padding: 18px 20px;
   background: var(--golf-elevated);
   border: 1px solid var(--golf-border);
   border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+}
+.hangout-panel-outcomes #hh-outcomes-rows {
+  flex: 1;
+  min-height: 100px;
 }
 .hole-sim-panel h4 {
   font-size: 0.75rem;
@@ -770,22 +885,21 @@ body {
   color: var(--golf-text-muted);
 }
 .outrights-intro { margin: 0 0 10px; max-width: 52rem; }
-.outrights-tournament {
-  margin: 0 0 14px;
-  font-weight: 600;
-  font-size: 1rem;
-  color: var(--golf-text);
-}
 .outrights-toolbar { margin-bottom: 12px; }
-.outrights-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.outrights-table-wrap { overflow-x: clip; -webkit-overflow-scrolling: touch; }
 .data-table-outrights {
-  font-size: 0.8125rem;
-  min-width: 720px;
+  font-size: 0.75rem;
+  min-width: 0;
+  width: 100%;
+  table-layout: fixed;
 }
 .data-table-outrights thead th {
-  padding: 8px 10px;
-  white-space: nowrap;
+  padding: 6px 4px;
+  white-space: normal;
   vertical-align: middle;
+  word-break: break-word;
+  line-height: 1.2;
+  font-size: 0.62rem;
 }
 .data-table-outrights tbody td {
   padding: 6px 10px;
@@ -795,7 +909,7 @@ body {
 }
 .data-table-outrights .book-col-th {
   text-align: center;
-  min-width: 56px;
+  min-width: 0;
 }
 .book-th-inner {
   display: inline-flex;
@@ -867,7 +981,7 @@ body {
   color: var(--golf-text);
 }
 .best-book-td {
-  white-space: nowrap;
+  white-space: normal;
 }
 .best-book-td .book-logo-cell { margin-right: 4px; }
 .best-book-odds { font-variant-numeric: tabular-nums; }
@@ -893,7 +1007,7 @@ body {
 }
 .outrights-note code { font-size: 0.85em; }
 #panel-ev .data-table {
-  min-width: 780px;
+  min-width: 0;
 }
 
 /* ---- Historical trends (round history chart) ---- */
@@ -926,9 +1040,8 @@ body {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent);
   padding: 14px 18px;
 }
-.props-shell .props-trends-layout {
+.props-shell .props-trends-body {
   padding: 16px 18px 18px;
-  gap: 0 20px;
 }
 .props-shell .props-trends-chart-wrap {
   position: relative;
@@ -938,7 +1051,7 @@ body {
   background: rgba(0, 0, 0, 0.32);
   padding: 12px 14px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  overflow: hidden;
+  overflow: visible;
   max-width: 100%;
 }
 .props-shell .props-footer-row {
@@ -968,27 +1081,6 @@ body {
   flex-shrink: 0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
 }
-.props-filter-course {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  text-transform: none;
-  letter-spacing: normal;
-  color: var(--golf-text);
-  cursor: pointer;
-  margin-bottom: 0;
-}
-.props-filter-row {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-.props-filter-course input {
-  accent-color: var(--golf-green);
-}
 .props-trends-head-text {
   min-width: 0;
   flex: 1;
@@ -1004,35 +1096,30 @@ body {
   font-size: 0.8rem;
   color: var(--golf-text-muted);
 }
-.props-trends-layout {
+/* Single column: chart → filters → top-hits table (all widths). */
+.props-trends-body {
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
+  flex-direction: column;
   gap: 16px;
-  min-height: 0;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
   flex: 0 0 auto;
+}
+.props-trends-body .props-trends-chart-wrap {
   min-width: 0;
   width: 100%;
 }
-@media (max-width: 1024px) {
-  .props-trends-layout {
-    flex-direction: column;
-    overflow-y: visible;
-    max-height: none;
-  }
-  .props-shell .props-trends-sidebar {
-    flex: none;
-    width: 100%;
-    border-left: none;
-    padding-left: 0;
-    margin-left: 0;
-    border-top: 1px solid var(--golf-border);
-    padding-top: 18px;
-    margin-top: 18px;
-  }
-  .props-shell .props-trends-layout {
-    padding-top: 14px;
-  }
+.props-trends-body .props-trends-sidebar {
+  width: 100%;
+  max-width: 100%;
+}
+.props-trends-body .props-top-hits-section {
+  margin-top: 0;
+  padding-left: 0;
+  padding-right: 0;
+  min-width: 0;
+  width: 100%;
 }
 .props-trends-chart-wrap {
   position: relative;
@@ -1042,11 +1129,40 @@ body {
   border-radius: 10px;
   padding: 10px 12px;
   min-height: 0;
-  flex: 1 1 0;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  max-height: min(52vh, 480px);
+}
+
+@media (min-width: 1025px) {
+  .props-trends-body .props-trends-chart-wrap {
+    max-height: min(52vh, 520px);
+  }
+}
+
+@media (max-width: 1024px) {
+  .props-trends-body .props-trends-sidebar {
+    border-left: none;
+    padding-left: 0;
+    margin-left: 0;
+    padding-top: 12px;
+    padding-bottom: 4px;
+    border-top: 1px solid var(--golf-border);
+    z-index: auto;
+    isolation: auto;
+    position: relative;
+  }
+  .props-shell .props-trends-body {
+    padding-top: 14px;
+    padding-bottom: 16px;
+  }
+  .props-trends-body .props-trends-chart-wrap {
+    max-height: none;
+    min-height: 240px;
+    overflow: visible;
+    z-index: 2;
+    padding-bottom: max(14px, calc(12px + env(safe-area-inset-bottom, 0px)));
+  }
 }
 .props-chart-tooltip {
   position: absolute;
@@ -1082,13 +1198,11 @@ body {
   display: block;
   word-break: break-word;
 }
+/* Width/height set in JS to match bitmap so the chart is not stretched (was: width:100% + height:auto + max-height). */
 #props-trend-canvas {
   display: block;
-  width: 100%;
   max-width: 100%;
   min-width: 0;
-  max-height: min(48vh, 440px);
-  height: auto;
   vertical-align: top;
   box-sizing: border-box;
 }
@@ -1100,21 +1214,27 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  flex: 0 0 278px;
-  width: 278px;
+  flex: 0 0 auto;
+  width: 100%;
   max-width: 100%;
   box-sizing: border-box;
   min-height: 0;
   overflow: visible;
-  padding-right: 4px;
-  margin-right: 0;
-  border-left: 1px solid var(--golf-border);
-  padding-left: 16px;
+  padding: 12px 0 0;
+  margin: 0;
+  border: none;
+  border-top: 1px solid var(--golf-border);
   position: relative;
-  z-index: 5;
-  isolation: isolate;
-  background: var(--golf-elevated);
+  background: transparent;
 }
+
+@media (min-width: 1025px) {
+  .props-trends-sidebar {
+    z-index: 1;
+    isolation: isolate;
+  }
+}
+
 .props-trends-sidebar select {
   width: 100%;
   margin-top: 6px;
@@ -1154,7 +1274,10 @@ body {
 .props-stepper {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 8px;
+  width: fit-content;
+  max-width: 100%;
 }
 .props-step-btn {
   position: relative;
@@ -1221,8 +1344,8 @@ body {
   color: var(--golf-danger);
 }
 .props-top-hits-section {
-  margin-top: 12px;
-  padding: 0 18px 14px;
+  margin-top: 0;
+  padding: 0 0 14px;
   flex-shrink: 0;
 }
 #table-props-top-hits thead th {
@@ -1334,18 +1457,46 @@ body {
   margin: 0;
 }
 .props-stepper input[type="number"] {
-  flex: 1;
-  min-width: 48px;
+  flex: 0 0 auto;
+  width: 4.75rem;
+  min-width: 4.75rem;
+  max-width: 6rem;
   text-align: center;
   background: var(--golf-elevated-soft);
   color: var(--golf-text);
   border: 1px solid var(--golf-border);
   border-radius: 8px;
-  padding: 8px 10px;
+  padding: 8px 6px;
   font-family: inherit;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
   appearance: textfield;
   -moz-appearance: textfield;
+}
+.props-stepper input#props-window-n {
+  width: 5.25rem;
+  min-width: 5.25rem;
+}
+.props-stepper input.props-line-input {
+  width: 5rem;
+  min-width: 5rem;
+}
+.props-filter-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.props-current-course-option {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--golf-text);
+  cursor: pointer;
+  margin-bottom: 0;
+}
+.props-current-course-option input {
+  accent-color: var(--golf-green);
 }
 .props-ou-summary {
   padding: 12px 14px;
@@ -1539,13 +1690,9 @@ body {
 .ev-panel-head {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 10px;
   margin-bottom: 12px;
-}
-.ev-panel-heading {
-  margin-bottom: 0;
-  flex: 1;
-  min-width: 0;
 }
 .ev-help-btn {
   flex-shrink: 0;
@@ -2041,6 +2188,296 @@ body {
 }
 
 @media (max-width: 768px) {
-  .content-wrapper { padding: 16px 12px 32px; }
+  .content-wrapper {
+    padding: 16px 12px 32px;
+    padding-bottom: max(32px, env(safe-area-inset-bottom, 0px));
+    padding-left: max(12px, env(safe-area-inset-left, 0px));
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+  }
   .nav-title { font-size: 1.25rem; }
+  .app-nav {
+    padding: 12px 14px;
+    padding-left: max(14px, env(safe-area-inset-left, 0px));
+    padding-right: max(14px, env(safe-area-inset-right, 0px));
+  }
+
+  /* One row of scrollable tabs — avoids awkward wraps on narrow phones */
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    gap: 2px;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    min-height: 44px;
+    padding: 10px 12px;
+    font-size: 0.8125rem;
+  }
+
+  .ou-panel-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .ou-view-toggle-wrap {
+    align-self: stretch;
+    justify-content: center;
+  }
+
+  /* Model O/U — one card, stacked sections, compact weather grid */
+  .ou-filter-card {
+    background: var(--golf-elevated);
+    border: 1px solid var(--golf-border);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .ou-filter-card > * + * {
+    border-top: 1px solid var(--golf-border);
+    padding-top: 14px;
+    margin-top: 14px;
+  }
+  .ou-filter-card .toolbar,
+  .ou-filter-card .ou-panel-head {
+    background: transparent;
+    border: none;
+    margin-bottom: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+  .ou-filter-card .ou-view-toggle-wrap {
+    background: var(--golf-elevated-soft);
+  }
+  .ou-auto-round-line {
+    display: block;
+    width: 100%;
+    margin-bottom: 8px;
+    white-space: normal;
+    line-height: 1.35;
+    font-size: 0.8125rem;
+  }
+  .ou-odds-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    width: 100%;
+  }
+  .ou-weather-block.weather-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .ou-weather-block .ou-block-heading {
+    display: block;
+    margin-bottom: 2px;
+  }
+  .ou-weather-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    width: 100%;
+  }
+  .ou-weather-grid .toolbar-label.ou-filter-span-full {
+    grid-column: 1 / -1;
+  }
+  .ou-pricing-block.weather-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .ou-pricing-block .ou-block-heading {
+    display: block;
+    margin-bottom: 2px;
+  }
+  .ou-pricing-row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+  #panel-ou .ou-filters.toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  #panel-ou .ou-filter-card .ou-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  #panel-ou .ou-filter-card .ou-toolbar .toolbar-label {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    width: 100%;
+    white-space: normal;
+  }
+  #panel-ou .ou-filter-card .ou-toolbar select {
+    width: 100%;
+    min-height: 44px;
+    font-size: 16px;
+    margin-left: 0;
+  }
+  .ou-filter-card .ou-view-toggle {
+    width: 100%;
+    justify-content: center;
+  }
+  .ou-filter-card .ou-toggle-btn {
+    flex: 1;
+    text-align: center;
+  }
+  #panel-ou .ou-filters .toolbar-label,
+  #panel-ou .ou-weather-grid .toolbar-label,
+  #panel-ou .ou-pricing-row .toolbar-label {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
+  }
+  #panel-ou .ou-filters .toolbar-label input,
+  #panel-ou .ou-filters .toolbar-label select,
+  #panel-ou .ou-weather-grid .toolbar-label input,
+  #panel-ou .ou-weather-grid .toolbar-label select,
+  #panel-ou .ou-pricing-row .toolbar-label select {
+    margin-left: 0;
+    width: 100%;
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .ev-panel-head {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .ev-help-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1rem;
+  }
+
+  .props-trends-header {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .props-trends-title {
+    font-size: 1.05rem;
+    line-height: 1.25;
+  }
+  .props-country-flag {
+    width: 56px;
+    height: 42px;
+  }
+
+  .hole-sim-top-bar {
+    flex-direction: column;
+    text-align: center;
+    padding: 12px 14px;
+  }
+
+  .ou-toggle-btn {
+    min-height: 40px;
+    padding: 10px 18px;
+  }
+
+  .data-table {
+    font-size: 0.875rem;
+  }
+  .data-table thead th,
+  .data-table tbody td {
+    padding: 10px 12px;
+  }
+
+}
+
+#panel-ev .table-wrap,
+#panel-matchups .table-wrap,
+#panel-outrights .table-wrap {
+  overflow-x: clip;
+}
+
+/* Stack dense filter rows; 16px inputs reduce iOS zoom-on-focus */
+@media (max-width: 640px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 12px 14px;
+  }
+  .toolbar-label {
+    display: flex !important;
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 6px;
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
+  }
+  .toolbar select,
+  .toolbar input {
+    margin-left: 0 !important;
+    width: 100%;
+    max-width: 100%;
+    min-height: 44px;
+    font-size: 16px;
+  }
+  .weather-toolbar-title {
+    margin-right: 0;
+    margin-bottom: 4px;
+  }
+  .weather-toolbar .toolbar-label,
+  .ou-filters .toolbar-label,
+  .pricing-toolbar .toolbar-label {
+    width: 100%;
+  }
+
+  .ou-filters #ou-market-filter,
+  .ou-filters #ou-player-filter,
+  .ou-filters #ou-line-filter,
+  .ou-filters #ou-odds-over-filter,
+  .ou-filters #ou-odds-under-filter {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+  }
+
+  .outrights-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-primary {
+    min-height: 44px;
+    padding: 10px 20px;
+  }
+
+  .props-step-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .ev-devig-btn-toolbar {
+    width: 100%;
+    margin-left: 0;
+    min-height: 44px;
+  }
+
+  .props-shot-wrap #props-shots-table .props-shot-pbp {
+    max-width: 100%;
+  }
 }

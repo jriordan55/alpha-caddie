@@ -1,0 +1,15 @@
+{
+  "name": "golfmodel",
+  "private": true,
+  "description": "Repo root shortcuts; web app lives in alpha-caddie-web/",
+  "scripts": {
+    "start": "npm start --prefix alpha-caddie-web",
+    "dev": "npm run dev --prefix alpha-caddie-web",
+    "build:history": "npm run build:history --prefix alpha-caddie-web",
+    "build:shots-web": "npm run build:shots-web --prefix alpha-caddie-web",
+    "embed:history": "npm run embed:history --prefix alpha-caddie-web",
+    "fetch:dg": "npm run fetch:dg --prefix alpha-caddie-web",
+    "update:rounds": "npm run update:rounds --prefix alpha-caddie-web",
+    "sync:rounds-csv": "npm run sync:rounds-csv --prefix alpha-caddie-web"
+  }
+}

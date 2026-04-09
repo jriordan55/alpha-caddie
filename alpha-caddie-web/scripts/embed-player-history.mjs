@@ -39,6 +39,9 @@ const head =
   "window.__ALPHA_CADDIE_EMBEDDED_ROUND_HISTORY__ = ";
 const tail = ";\n";
 
-/** Single write; avoids splicing multi‑MB literals into app.js. */
-fs.writeFileSync(OUT_JS, head + JSON.stringify(data, null, 2) + tail, "utf8");
+/** Write via temp + rename (fewer Windows "UNKNOWN" errors when AV/sync holds the target). */
+const body = head + JSON.stringify(data, null, 2) + tail;
+const tmp = OUT_JS + ".tmp";
+fs.writeFileSync(tmp, body, "utf8");
+fs.renameSync(tmp, OUT_JS);
 console.log("[embed-player-history] Wrote", path.basename(OUT_JS));

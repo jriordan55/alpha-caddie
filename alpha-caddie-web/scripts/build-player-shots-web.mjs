@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 /**
- * Streams data/all_shots_2021_2026.csv into player_shots_web.json for the static app.
- * - Drops PGA seasons before 2022 (skips R2021… tournament_ids — removes 2021 shot rows).
- * - Keeps shot rows only for the last SHOT_ROUND_TAIL rounds per projected player (default 14;
- *   override with env SHOT_ROUND_TAIL=4–28). Narrower than the hole CSV tail keeps JSON size down.
+ * Streams data/all_shots_2021_2026.csv into player_shots_web.json (hole shot table / sim support).
+ * Separate from Historical Trends: those use historical_rounds_all + optional pga_meta join only.
+ *
+ * - Drops PGA shot seasons before MIN_SHOT_SEASON_YEAR (default 2022).
+ * - Last SHOT_ROUND_TAIL rounds per projected player (default 14; env 4–28).
  * - Maps pga player_id → dg_id via data/pga_datagolf_player_map.csv.
  *
- * Env: GOLF_MODEL_DIR (repo root). Run from alpha-caddie-web: npm run build:shots-web
+ * Env: GOLF_MODEL_DIR. Run: npm run build:shots-web
  */
 import fs from "fs";
 import path from "path";
@@ -36,6 +37,7 @@ const SHOTS_CSV = path.join(MODEL_ROOT, "data", "all_shots_2021_2026.csv");
 const PLAYER_MAP_CSV = path.join(MODEL_ROOT, "data", "pga_datagolf_player_map.csv");
 const PROJECTIONS_JSON = path.join(WEB_ROOT, "projections.json");
 const OUT_JSON = path.join(WEB_ROOT, "player_shots_web.json");
+const HOLE_PARS_FROM_SHOTS_JSON = path.join(WEB_ROOT, "hole_pars_from_shots.json");
 
 const MIN_YEAR = new Date().getFullYear() - 4;
 const MAX_ROUNDS_PER_PLAYER = 200;
@@ -211,9 +213,55 @@ async function buildAllowedTriplesAndNames(allowedDgIds) {
 }
 
 /**
+ * Record (tournament_name → hole → par) counts from every shot row (not limited to allowlist).
+ * Used for Hole Hangout scorecard layout vs generic 18-hole templates.
+ */
+function recordParVote(parByEventNorm, tournamentName, holeNumRaw, parRaw) {
+  const en = normEvt(tournamentName);
+  const h = Math.round(Number(holeNumRaw));
+  const pr = Math.round(Number(parRaw));
+  if (!en || h < 1 || h > 18 || (pr !== 3 && pr !== 4 && pr !== 5)) return;
+  if (!parByEventNorm.has(en)) parByEventNorm.set(en, new Map());
+  const hm = parByEventNorm.get(en);
+  if (!hm.has(h)) hm.set(h, new Map());
+  const pm = hm.get(h);
+  pm.set(pr, (pm.get(pr) || 0) + 1);
+}
+
+function finalizeHoleParsByEventNorm(parByEventNorm) {
+  const out = {};
+  for (const [en, hm] of parByEventNorm) {
+    const arr = [];
+    let ok = true;
+    for (let hole = 1; hole <= 18; hole++) {
+      if (!hm.has(hole)) {
+        ok = false;
+        break;
+      }
+      const pm = hm.get(hole);
+      let bestP = NaN;
+      let bestC = -1;
+      for (const [p, c] of pm) {
+        if (c > bestC) {
+          bestC = c;
+          bestP = p;
+        }
+      }
+      if (!Number.isFinite(bestP)) {
+        ok = false;
+        break;
+      }
+      arr.push(bestP);
+    }
+    if (ok && arr.length === 18) out[en] = arr;
+  }
+  return out;
+}
+
+/**
  * Nested: byDgId[dg][roundUid][holeStr] = array of compact shots (sorted by stroke_number).
  */
-async function streamShotsIntoBuckets(pgaToDg, allowedTriplesShots, dgToPlayerName) {
+async function streamShotsIntoBuckets(pgaToDg, allowedTriplesShots, dgToPlayerName, parByEventNorm) {
   /** @type {Map<string, Map<string, Map<string, Array<object>>>>} */
   const byDg = new Map();
   let kept = 0;
@@ -238,6 +286,9 @@ async function streamShotsIntoBuckets(pgaToDg, allowedTriplesShots, dgToPlayerNa
   for await (const row of parser) {
     const tid = String(row.tournament_id || "").trim();
     const sy = shotCsvSeasonYear(tid);
+    if (Number.isFinite(sy) && sy >= MIN_SHOT_SEASON_YEAR) {
+      recordParVote(parByEventNorm, row.tournament_name, row.hole_number, row.par);
+    }
     if (!Number.isFinite(sy) || sy < MIN_SHOT_SEASON_YEAR) {
       skippedYear++;
       continue;
@@ -322,11 +373,16 @@ async function main() {
   const { allowedTriplesShots, dgToPlayerName } = await buildAllowedTriplesAndNames(allowed);
   console.log("Allowlist triples (shots, last", SHOT_ROUND_TAIL, "rounds/player):", allowedTriplesShots.size);
 
+  const parByEventNorm = new Map();
   const { byDg, kept, skippedYear, skippedTriple, skippedMap } = await streamShotsIntoBuckets(
     pgaToDg,
     allowedTriplesShots,
-    dgToPlayerName
+    dgToPlayerName,
+    parByEventNorm
   );
+  const holeParsByEventNorm = finalizeHoleParsByEventNorm(parByEventNorm);
+  const nParEvents = Object.keys(holeParsByEventNorm).length;
+  console.log("Hole par layouts from shots CSV (complete 18 holes):", nParEvents, "tournaments");
   console.log(
     "Shot rows kept:",
     kept,
@@ -346,6 +402,7 @@ async function main() {
       source_csv: path.basename(SHOTS_CSV),
       player_map: path.basename(PLAYER_MAP_CSV),
       rows_used: kept,
+      hole_pars_by_event_norm: holeParsByEventNorm,
     },
     byDgId: serializeNestedMaps(byDg),
   };
@@ -353,6 +410,14 @@ async function main() {
   fs.writeFileSync(OUT_JSON, JSON.stringify(payload), "utf8");
   const st = fs.statSync(OUT_JSON);
   console.log("Wrote", OUT_JSON, `(${(st.size / 1024).toFixed(1)} KB)`);
+
+  const parSidecar = {
+    updated_at: payload.meta.updated_at,
+    source_csv: path.basename(SHOTS_CSV),
+    hole_pars_by_event_norm: holeParsByEventNorm,
+  };
+  fs.writeFileSync(HOLE_PARS_FROM_SHOTS_JSON, JSON.stringify(parSidecar, null, 2), "utf8");
+  console.log("Wrote", HOLE_PARS_FROM_SHOTS_JSON);
 }
 
 main().catch((e) => {

@@ -192,6 +192,32 @@ function holeParsFromFieldUpdates(raw) {
   return null;
 }
 
+function lookupHoleParsFromShotsExport(event_name) {
+  const p = join(ROOT, "hole_pars_from_shots.json");
+  if (!existsSync(p)) return null;
+  let j;
+  try {
+    j = JSON.parse(readFileSync(p, "utf8"));
+  } catch {
+    return null;
+  }
+  const map = j && typeof j === "object" ? j.hole_pars_by_event_norm : null;
+  if (!map || typeof map !== "object") return null;
+  const ek = normHoleKey(event_name);
+  if (!ek) return null;
+  const ekCompact = ek.replace(/[^a-z0-9]+/g, " ").replace(/\s+/g, " ").trim();
+  for (const [k, arr] of Object.entries(map)) {
+    if (!Array.isArray(arr) || arr.length !== 18) continue;
+    const kk = normHoleKey(k).replace(/[^a-z0-9]+/g, " ").replace(/\s+/g, " ").trim();
+    if (!kk) continue;
+    if (kk === ekCompact || ekCompact.includes(kk) || kk.includes(ekCompact)) {
+      const pars = arr.map((x) => Math.round(num(x, NaN)));
+      if (pars.every((n) => n >= 3 && n <= 5)) return { pars, source: "shots_csv" };
+    }
+  }
+  return null;
+}
+
 function resolveHoleParsForEvent({ fieldRaw, course_used, event_name }) {
   const maps = loadCourseHolesMaps();
   const fromMap = lookupHoleParsFromMaps(maps, course_used, event_name);
@@ -199,6 +225,9 @@ function resolveHoleParsForEvent({ fieldRaw, course_used, event_name }) {
 
   const fromField = holeParsFromFieldUpdates(fieldRaw);
   if (fromField) return { pars: fromField, source: "field_updates" };
+
+  const fromShots = lookupHoleParsFromShotsExport(event_name);
+  if (fromShots) return fromShots;
 
   const csvCandidates = [
     process.env.GOLF_HOLES_CSV,
