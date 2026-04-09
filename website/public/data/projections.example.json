@@ -1,0 +1,55 @@
+{
+  "event_name": "Example Invitational",
+  "round": 1,
+  "updated_at": "2026-04-01T12:00:00Z",
+  "players": [
+    {
+      "player_name": "Morikawa, Collin",
+      "dg_id": 10001,
+      "country": "USA",
+      "round": 1,
+      "total_score": 69.2,
+      "round_sd": 2.6,
+      "score_to_par": -2.8,
+      "gir": 12.1,
+      "fairways": 9.4,
+      "birdies": 4.2,
+      "pars": 11.0,
+      "bogeys": 2.5,
+      "doubles": 0.3,
+      "eagles": 0.05
+    },
+    {
+      "player_name": "McIlroy, Rory",
+      "dg_id": 10002,
+      "country": "NIR",
+      "round": 1,
+      "total_score": 68.9,
+      "round_sd": 2.8,
+      "score_to_par": -3.1,
+      "gir": 12.4,
+      "fairways": 8.9,
+      "birdies": 4.6,
+      "pars": 10.5,
+      "bogeys": 2.6,
+      "doubles": 0.35,
+      "eagles": 0.08
+    },
+    {
+      "player_name": "Spieth, Jordan",
+      "dg_id": 10003,
+      "country": "USA",
+      "round": 1,
+      "total_score": 70.4,
+      "round_sd": 2.9,
+      "score_to_par": -1.6,
+      "gir": 11.2,
+      "fairways": 8.1,
+      "birdies": 3.8,
+      "pars": 11.2,
+      "bogeys": 2.8,
+      "doubles": 0.4,
+      "eagles": 0.02
+    }
+  ]
+}

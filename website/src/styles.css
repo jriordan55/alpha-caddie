@@ -1,0 +1,285 @@
+:root {
+  --golf-bg: #050608;
+  --golf-elevated: #111216;
+  --golf-elevated-soft: #191b22;
+  --golf-border: #2b2e36;
+  --golf-card-border: #343742;
+  --golf-green: #00c46b;
+  --golf-green-soft: #00a85b;
+  --golf-text: #f5f7fb;
+  --golf-text-muted: #8b8f9c;
+  --golf-danger: #ff4d4f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--golf-bg);
+  color: var(--golf-text);
+}
+
+.app-nav {
+  background: #050608;
+  padding: 14px 24px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9);
+  border-bottom: 1px solid var(--golf-border);
+}
+
+.app-nav .nav-title {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.75rem;
+  letter-spacing: 0.02em;
+  margin: 0 0 4px 0;
+  display: block;
+}
+
+.app-nav .nav-subtitle {
+  color: var(--golf-text-muted);
+  font-size: 0.8125rem;
+  margin: 0;
+}
+
+.content-wrapper {
+  padding: 28px 32px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-bottom: 2px solid var(--golf-border);
+  margin-bottom: 20px;
+}
+
+.tabs button {
+  background: transparent;
+  border: none;
+  color: var(--golf-text-muted);
+  font-weight: 600;
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+
+.tabs button:hover {
+  color: var(--golf-text);
+}
+
+.tabs button.active {
+  color: var(--golf-green);
+  border-bottom-color: var(--golf-green);
+}
+
+.panel {
+  display: none;
+}
+
+.panel.active {
+  display: block;
+}
+
+.leaderboard-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 18px;
+  background: var(--golf-elevated);
+  border-radius: 12px;
+  border: 1px solid var(--golf-border);
+  margin-bottom: 16px;
+}
+
+.leaderboard-toolbar-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--golf-text-muted);
+}
+
+.leaderboard-title {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--golf-text-muted);
+  margin: 0 0 12px 0;
+  font-weight: 600;
+}
+
+h2.leaderboard-heading {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--golf-text);
+  margin: 0 0 8px 0;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.props-card,
+.leaderboard-card {
+  background: var(--golf-elevated);
+  border-radius: 12px;
+  border: 1px solid var(--golf-card-border);
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.leaderboard-card {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.text-muted {
+  color: var(--golf-text-muted);
+  font-size: 0.85rem;
+  margin: 0 0 12px 0;
+}
+
+select,
+input[type="number"],
+input[type="text"] {
+  background: var(--golf-elevated-soft);
+  color: var(--golf-text);
+  border: 1px solid var(--golf-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--golf-green) 0%, var(--golf-green-soft) 100%);
+  border: 1px solid rgba(0, 196, 107, 0.8);
+  color: #fff;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.05);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.status-text {
+  color: var(--golf-text-muted);
+  font-size: 0.8rem;
+}
+
+table.data {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+table.data thead th {
+  background: #181a20;
+  color: var(--golf-text);
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--golf-border);
+  white-space: nowrap;
+}
+
+table.data tbody td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--golf-border);
+}
+
+table.data tbody tr:nth-child(even) td {
+  background: #0d0e12;
+}
+
+table.data tbody tr:nth-child(odd) td {
+  background: #101116;
+}
+
+table.data tbody tr:hover td {
+  background: rgba(0, 196, 107, 0.1);
+}
+
+td.dt-center,
+th.dt-center {
+  text-align: center;
+}
+
+.golfer-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ou-prices {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.ou-prices .ou-o {
+  color: #ff8a8a;
+  font-weight: 600;
+}
+
+.ou-prices .ou-u {
+  color: var(--golf-green);
+  font-weight: 600;
+}
+
+.props-label {
+  font-weight: 600;
+  color: var(--golf-text-muted);
+  margin-bottom: 4px;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.props-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+.ev-positive {
+  color: var(--golf-green);
+  font-weight: 700;
+}
+
+.ev-negative {
+  color: var(--golf-danger);
+  font-weight: 700;
+}
+
+.message-box {
+  padding: 16px;
+  color: var(--golf-text-muted);
+}
+
+@media (max-width: 768px) {
+  .content-wrapper {
+    padding: 14px 12px 24px;
+  }
+  .app-nav .nav-title {
+    font-size: 1.25rem;
+  }
+}

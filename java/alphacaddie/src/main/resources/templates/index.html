@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>AlphaCaddie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root { --bg:#050608; --card:#111216; --border:#2b2e36; --green:#00c46b; --text:#f5f7fb; --muted:#8b8f9c; }
+    body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); margin:0; }
+    header { padding:16px 24px; border-bottom:1px solid var(--border); }
+    h1 { margin:0; font-size:1.6rem; }
+    .sub { color:var(--muted); font-size:.85rem; margin:4px 0 0; }
+    nav { display:flex; flex-wrap:wrap; gap:8px; padding:16px 24px; border-bottom:1px solid var(--border); }
+    nav a { color:var(--muted); text-decoration:none; font-weight:600; padding:8px 14px; border-radius:8px; }
+    nav a:hover { color:var(--text); }
+    nav a.active { color:var(--green); border:1px solid var(--green); }
+    main { padding:24px; max-width:1200px; margin:0 auto; }
+    .panel { display:none; }
+    .panel.active { display:block; }
+    .toolbar { display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-bottom:16px; background:var(--card); padding:14px; border-radius:12px; border:1px solid var(--border); }
+    label { color:var(--muted); font-size:.75rem; text-transform:uppercase; font-weight:600; }
+    select { background:#191b22; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 12px; }
+    .card { background:var(--card); border-radius:12px; border:1px solid #343742; padding:16px; overflow-x:auto; }
+    table.data { border-collapse:collapse; width:100%; font-size:.88rem; }
+    table.data th { background:#181a20; text-align:left; padding:10px 8px; font-size:.68rem; text-transform:uppercase; letter-spacing:.06em; border-bottom:1px solid var(--border); }
+    table.data td { padding:10px 8px; border-bottom:1px solid var(--border); }
+    table.data tbody tr:nth-child(even) td { background:#0d0e12; }
+    table.data tbody tr:nth-child(odd) td { background:#101116; }
+    .dt-center { text-align:center; }
+    .golfer-cell { display:inline-flex; align-items:center; gap:6px; }
+    .ou-prices { font-size:.72rem; line-height:1.35; text-align:center; }
+    .ou-o { color:#ff8a8a; font-weight:600; }
+    .ou-u { color:var(--green); font-weight:600; }
+    pre.json { color:var(--muted); font-size:.72rem; max-height:480px; overflow:auto; white-space:pre-wrap; }
+    .warn { color:#f59e0b; padding:12px; background:#1a1510; border-radius:8px; margin-bottom:16px; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>AlphaCaddie</h1>
+  <p class="sub">Java + Spring Boot — DataGolf field + skill ratings → model O/U (no R runtime)</p>
+</header>
+<nav>
+  <a th:href="@{/(tab='mu')}" th:classappend="${tab=='mu'} ? 'active'">Model O/U</a>
+  <a th:href="@{/(tab='props')}" th:classappend="${tab=='props'} ? 'active'">Player Props</a>
+  <a th:href="@{/(tab='ev')}" th:classappend="${tab=='ev'} ? 'active'">+EV Bets</a>
+  <a th:href="@{/(tab='matchups')}" th:classappend="${tab=='matchups'} ? 'active'">Matchups</a>
+  <a th:href="@{/(tab='outrights')}" th:classappend="${tab=='outrights'} ? 'active'">Outrights</a>
+  <a th:href="@{/(tab='hole')}" th:classappend="${tab=='hole'} ? 'active'">Hole Hangout</a>
+</nav>
+<main>
+  <div th:unless="${hasKey}" class="warn">Set <code>datagolf.api-key</code> in <code>application.properties</code> or environment variable <code>DATAGOLF_API_KEY</code>.</div>
+
+  <section th:class="${tab=='mu'} ? 'panel active' : 'panel'">
+    <div class="toolbar">
+      <div><label>Auto round</label><br/><span th:text="${roundLabel}">R1</span></div>
+      <form method="get" style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;">
+        <input type="hidden" name="tab" value="mu"/>
+        <div><label>Market</label><br/>
+          <select name="stat" onchange="this.form.submit()">
+            <option th:selected="${stat=='Total score'}" value="Total score">Total score</option>
+            <option th:selected="${stat=='Birdies'}" value="Birdies">Birdies</option>
+            <option th:selected="${stat=='Pars'}" value="Pars">Pars</option>
+            <option th:selected="${stat=='Bogeys'}" value="Bogeys">Bogeys</option>
+            <option th:selected="${stat=='GIR'}" value="GIR">GIR</option>
+            <option th:selected="${stat=='Fairways hit'}" value="Fairways hit">Fairways hit</option>
+          </select>
+        </div>
+      </form>
+    </div>
+    <h2 th:text="|Model O/U — ${stat} — ${roundLabel}|">Title</h2>
+    <p style="color:var(--muted);font-size:.85rem;" th:text="${eventSubtitle}"></p>
+    <div class="card">
+      <table class="data">
+        <thead>
+          <tr>
+            <th>Golfer</th>
+            <th class="dt-center">Median</th>
+            <th class="dt-center" th:each="L : ${lineHeaders}" th:text="${L}">64</th>
+            <th class="dt-center" th:if="${showTeeTime}">Tee time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="row : ${ouRows}">
+            <td><span class="golfer-cell" th:utext="${row.golferHtml}">Player</span></td>
+            <td class="dt-center" th:text="${row.median}">70</td>
+            <td class="dt-center" th:each="c : ${row.lineCells}" th:utext="${c}">—</td>
+            <td class="dt-center" th:if="${showTeeTime}" th:text="${row.teeTime}">—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section th:class="${tab=='props'} ? 'panel active' : 'panel'">
+    <h2>Player Props</h2>
+    <p style="color:var(--muted);">Means from the same Java projection as Model O/U (skill-ratings → imputed counts). Extend with book lines in Java when you add CSV parsing.</p>
+    <div class="card">
+      <table class="data">
+        <thead><tr><th>Player</th><th class="dt-center">μ total</th><th class="dt-center">μ birdies</th><th class="dt-center">μ pars</th><th class="dt-center">μ bogeys</th></tr></thead>
+        <tbody>
+          <tr th:each="p : ${players}">
+            <td th:text="${p.prettyName}">Name</td>
+            <td class="dt-center" th:text="${#numbers.formatDecimal(p.totalScore,1,2)}">70</td>
+            <td class="dt-center" th:text="${#numbers.formatDecimal(p.birdies,1,2)}">4</td>
+            <td class="dt-center" th:text="${#numbers.formatDecimal(p.pars,1,2)}">10</td>
+            <td class="dt-center" th:text="${#numbers.formatDecimal(p.bogeys,1,2)}">3</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section th:class="${tab=='ev'} ? 'panel active' : 'panel'">
+    <h2>+EV Bets</h2>
+    <p style="color:var(--muted);">Port your prop CSV + EV loop from the old app into <code>DataGolfService</code> / a new <code>EvBetsService</code> (pure Java).</p>
+  </section>
+
+  <section th:class="${tab=='matchups'} ? 'panel active' : 'panel'">
+    <h2>Round matchups (DataGolf JSON)</h2>
+    <div class="card"><pre class="json" th:text="${matchupsJson}">{}</pre></div>
+  </section>
+
+  <section th:class="${tab=='outrights'} ? 'panel active' : 'panel'">
+    <h2>Outrights — win market (DataGolf JSON)</h2>
+    <div class="card"><pre class="json" th:text="${outrightsJson}">{}</pre></div>
+  </section>
+
+  <section th:class="${tab=='hole'} ? 'panel active' : 'panel'">
+    <h2>Hole Hangout</h2>
+    <p style="color:var(--muted);">Shot-level MC can be added in Java (load empirical transition tables from resources) or call a small service. No R required.</p>
+  </section>
+</main>
+</body>
+</html>
