@@ -3361,54 +3361,20 @@ function propsTopTableSortInPlace(rows, statKey) {
   });
 }
 
-/** Golfer column: name, line (white), market, compact Under/Over counts (same coloring as sidebar). */
-function propsTopHitsAppendNameCell(tr, r, statKey, line) {
-  const td = document.createElement("td");
-  td.className = "props-top-hit-name-td";
-  const row = document.createElement("div");
-  row.className = "props-top-hit-name-row";
-
-  const nameSpan = document.createElement("span");
-  nameSpan.className = "props-top-hit-name-text";
-  nameSpan.textContent = r.name;
-
-  const lineSpan = document.createElement("span");
-  lineSpan.className = "props-top-hit-line-inline";
-  lineSpan.textContent = Number.isFinite(line) ? formatPropLineValueForInput(line) : "—";
-
-  const marketSpan = document.createElement("span");
-  marketSpan.className = "props-top-hit-market-inline";
-  marketSpan.textContent = propMarketLabelFromKey(statKey);
-
-  const ouWrap = document.createElement("div");
+function paintPropsHeaderInlineMeta(statKey, line, st) {
+  const metaEl = document.getElementById("props-trends-inline-meta");
+  if (!metaEl) return;
+  const market = propMarketLabelFromKey(statKey);
+  const lineTxt = Number.isFinite(line) ? formatPropLineValueForInput(line) : "—";
   const lowerBetter = statKey === "total" || statKey === "bogeys";
-  ouWrap.className = `props-top-hit-ou-mini props-ou-split${lowerBetter ? " props-ou-lower-is-better" : ""}`;
-
-  function ouCol(label, valClass, count, rate, valid) {
-    const col = document.createElement("div");
-    col.className = "props-ou-col";
-    const h = document.createElement("span");
-    h.className = "props-ou-h";
-    h.textContent = label;
-    const p = document.createElement("p");
-    p.className = `props-ou-val ${valClass}`;
-    if (valid > 0 && Number.isFinite(rate)) {
-      p.textContent = `${count}/${valid} (${Math.round(rate * 100)}%)`;
-    } else {
-      p.textContent = "—";
-    }
-    col.append(h, p);
-    return col;
-  }
-
-  ouWrap.append(
-    ouCol("Under", "props-ou-under", r.under, r.underRate, r.valid),
-    ouCol("Over", "props-ou-over", r.over, r.overRate, r.valid)
-  );
-
-  row.append(nameSpan, lineSpan, marketSpan, ouWrap);
-  td.appendChild(row);
-  tr.appendChild(td);
+  const underPct = st && st.valid > 0 && Number.isFinite(st.underRate) ? Math.round(st.underRate * 100) : NaN;
+  const overPct = st && st.valid > 0 && Number.isFinite(st.overRate) ? Math.round(st.overRate * 100) : NaN;
+  const underTxt =
+    st && st.valid > 0 && Number.isFinite(underPct) ? `${st.under}/${st.valid} (${underPct}%)` : "—";
+  const overTxt =
+    st && st.valid > 0 && Number.isFinite(overPct) ? `${st.over}/${st.valid} (${overPct}%)` : "—";
+  metaEl.className = `props-trends-inline-meta${lowerBetter ? " props-ou-lower-is-better" : ""}`;
+  metaEl.innerHTML = `<span class="props-trends-inline-line">Line ${lineTxt}</span><span class="props-trends-inline-market">${market}</span><span class="props-trends-inline-under">U ${underTxt}</span><span class="props-trends-inline-over">O ${overTxt}</span>`;
 }
 
 function paintPropsTopTableSortHeaders() {
@@ -3535,7 +3501,7 @@ function renderPropsHitRateAndTopTable(statKey, line, winN) {
       return td;
     };
     tr.appendChild(mk(String(i + 1), "num"));
-    propsTopHitsAppendNameCell(tr, r, statKey, line);
+    tr.appendChild(mk(r.name));
     tr.appendChild(mk(`${(r.overRate * 100).toFixed(1)}%`, "num"));
     tr.appendChild(mk(`${r.over} / ${r.valid}`, "num"));
     tr.appendChild(mk(`${(r.underRate * 100).toFixed(1)}%`, "num"));
@@ -4024,6 +3990,11 @@ function renderPropsTrends() {
   }
   if (!HISTORY._ok) {
     if (empty) empty.hidden = false;
+    const wnEarly = clamp(
+      Math.round(num(document.getElementById("props-window-n")?.value, PROPS_HISTORY_ROUND_DEFAULT)),
+      PROPS_HISTORY_ROUND_MIN,
+      PROPS_HISTORY_ROUND_MAX
+    );
     const lineInpEarly = document.getElementById("prop-line");
     const ctxKeyEarly = propsTrendLineContextKeyFromDom();
     const lineEditingEarly = Boolean(lineInpEarly && document.activeElement === lineInpEarly);
@@ -4043,12 +4014,9 @@ function renderPropsTrends() {
       lineInpEarly.value = formatPropLineValueForInput(lineEarly);
     }
     if (Number.isFinite(lineEarly)) propsTrendLastGoodLine = lineEarly;
+    const stEarly = propsFullHitStatsForDg(dg, statKey, lineEarly, wnEarly);
+    paintPropsHeaderInlineMeta(statKey, lineEarly, stEarly);
     drawPropsTrendCanvas([], lineEarly, statKey);
-    const wnEarly = clamp(
-      Math.round(num(document.getElementById("props-window-n")?.value, PROPS_HISTORY_ROUND_DEFAULT)),
-      PROPS_HISTORY_ROUND_MIN,
-      PROPS_HISTORY_ROUND_MAX
-    );
     renderPropsHitRateAndTopTable(statKey, lineEarly, wnEarly);
     return;
   }
@@ -4100,6 +4068,8 @@ function renderPropsTrends() {
     line,
     statKey
   );
+  const stNow = propsFullHitStatsForDg(dg, statKey, line, winN);
+  paintPropsHeaderInlineMeta(statKey, line, stNow);
   renderPropsHitRateAndTopTable(statKey, line, winN);
 }
 
