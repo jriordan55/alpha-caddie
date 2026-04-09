@@ -10,8 +10,9 @@
 const OU_HOLD = 0.048;
 const OU_DEFAULT_ODDS_AM = -110;
 const PROPS_HISTORY_ROUND_MIN = 1;
-const PROPS_HISTORY_ROUND_MAX = 100;
-const PROPS_HISTORY_ROUND_DEFAULT = 20;
+/** Upper bound for the “Rounds” window; raise if bundles store more per player. */
+const PROPS_HISTORY_ROUND_MAX = 2000;
+const PROPS_HISTORY_ROUND_DEFAULT = 50;
 /** Min qualifying rounds with stat data to appear in Historical Trends top-10 table (all courses). */
 const PROPS_TOP_HIT_MIN_ROUNDS = 20;
 
@@ -20,8 +21,6 @@ const OU_LINE_RANGES = {
   Birdies: [0.5, 1.5, 2.5, 3.5, 4.5, 5.5],
   Pars: [8.5, 9.5, 10.5, 11.5, 12.5, 13.5],
   Bogeys: [0.5, 1.5, 2.5, 3.5, 4.5, 5.5],
-  GIR: [4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 13.5, 14.5, 15.5],
-  "Fairways hit": [4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 13.5, 14.5, 15.5],
 };
 
 /** DataGolf / OWGR-style codes → flagcdn.com slug (lowercase). */
@@ -279,7 +278,7 @@ let DATA = {
 // Assign: window.__ALPHA_CADDIE_EMBEDDED_ROUND_HISTORY__ = <object> (see embed script)
 
 let HISTORY = { meta: {}, byDgId: {}, holesByPlayerKey: {}, _ok: false };
-/** Built by npm run build:shots-web from data/all_shots_2021_2026.csv (2022+ rows). */
+/** Built by build:shots-web from all_shots_*.csv — unrelated to Historical Trends (round history JSON). */
 let SHOTS = { meta: {}, byDgId: {}, _ok: false };
 let propsTrendsLineContextKey = "";
 /** Last valid line used when the input is mid-edit or empty. */
@@ -590,10 +589,7 @@ function updateStatusBar() {
   const el = document.getElementById("data-status-primary");
   if (!el) return;
   const m = DATA.meta || {};
-  const parts = [];
-  if (m.event_name) parts.push(String(m.event_name));
-  if (m.course_used) parts.push(String(m.course_used));
-  el.textContent = parts.join(" · ");
+  el.textContent = m.course_used ? String(m.course_used) : "—";
 }
 
 function configureRoundPickerUi() {
@@ -608,8 +604,6 @@ const OU_STAT_MAP = {
   Birdies: { field: "birdies", sdKey: null },
   Pars: { field: "pars", sdKey: null },
   Bogeys: { field: "bogeys", sdKey: null },
-  GIR: { field: "gir", sdKey: null },
-  "Fairways hit": { field: "fairways", sdKey: null },
 };
 
 const WEATHER_DEFAULTS = Object.freeze({
@@ -655,7 +649,8 @@ const WEATHER_UI_IDS = [
   { temp: "hh-weather-temp", wind: "hh-weather-wind", humidity: "hh-weather-humidity", condition: "hh-weather-condition" },
 ];
 
-const PRICING_DEFAULTS = Object.freeze({ mode: "default", skill: "sg_total" });
+const PRICING_DEFAULTS = Object.freeze({ mode: "default", skill: "default" });
+const PRICING_SKILL_COLUMNS = Object.freeze(["sg_total", "sg_ott", "sg_app", "sg_arg", "sg_putt", "sg_t2g"]);
 let PRICING_STATE = { ...PRICING_DEFAULTS };
 
 const PRICING_UI_IDS = [
@@ -670,10 +665,21 @@ function pricingFromUiIds(ids) {
   const modeEl = document.getElementById(ids.mode);
   const skillEl = document.getElementById(ids.skill);
   const rawM = String(modeEl?.value || PRICING_DEFAULTS.mode).toLowerCase();
-  const rawS = String(skillEl?.value || PRICING_DEFAULTS.skill).toLowerCase();
   const mode = ["default", "recent", "course", "skill"].includes(rawM) ? rawM : "default";
-  const skill = ["sg_total", "sg_ott", "sg_app", "sg_arg", "sg_putt", "sg_t2g"].includes(rawS) ? rawS : "sg_total";
+  let skill = PRICING_DEFAULTS.skill;
+  if (mode === "skill") {
+    const rawS = String(skillEl?.value || "sg_total").toLowerCase();
+    if (rawS === "default") skill = "sg_total";
+    else skill = PRICING_SKILL_COLUMNS.includes(rawS) ? rawS : "sg_total";
+  }
   return { mode, skill };
+}
+
+/** History column for skill-focus pricing; never "default". */
+function pricingSkillHistoryKey() {
+  const s = PRICING_STATE.skill;
+  if (s && s !== "default" && PRICING_SKILL_COLUMNS.includes(s)) return s;
+  return "sg_total";
 }
 
 function syncPricingUiFromState() {
@@ -681,13 +687,16 @@ function syncPricingUiFromState() {
     const modeEl = document.getElementById(ids.mode);
     const skillEl = document.getElementById(ids.skill);
     if (modeEl) modeEl.value = PRICING_STATE.mode;
-    if (skillEl) skillEl.value = PRICING_STATE.skill;
+    if (skillEl) {
+      skillEl.value = PRICING_STATE.skill;
+      skillEl.disabled = PRICING_STATE.mode === "default";
+    }
   }
   updatePricingSkillLabelsVisibility();
 }
 
 function updatePricingSkillLabelsVisibility() {
-  const show = PRICING_STATE.mode === "skill";
+  const show = PRICING_STATE.mode === "skill" || PRICING_STATE.mode === "default";
   for (const ids of PRICING_UI_IDS) {
     const lab = document.getElementById(ids.skillLabel);
     if (lab) lab.hidden = !show;
@@ -701,7 +710,7 @@ function refreshPricingAffectedViews() {
   buildOutrightsTable();
   renderPropsTrends();
   updatePropsFooterEv();
-  if (hangoutResultsVisible()) scheduleHangoutLiveRecompute();
+  scheduleHangoutSimulateDebounced();
 }
 
 function weatherFromUiIds(ids) {
@@ -754,8 +763,6 @@ function statWeatherMuAdjustment(market) {
   if (market === "Total score") return d;
   if (market === "Bogeys") return 0.45 * d;
   if (market === "Birdies") return -0.5 * d;
-  if (market === "GIR") return -0.4 * d;
-  if (market === "Fairways hit") return -0.25 * d;
   return 0;
 }
 
@@ -850,6 +857,11 @@ function setOuViewMode(mode) {
 function getOuMarket() {
   const el = document.getElementById("ou-market-filter");
   return el && el.value ? el.value : "Total score";
+}
+
+/** Round score & bogeys: lower is better — bar chart uses P(under) height and green when that share is strong. */
+function ouMarketLowerIsBetter(market) {
+  return market === "Total score" || market === "Bogeys";
 }
 
 function enforceHalfLine(v) {
@@ -1086,7 +1098,7 @@ function isOuGolferSelected() {
   return Boolean(String(document.getElementById("ou-player-filter")?.value || "").trim());
 }
 
-/** P(over) chart only when a golfer is chosen (table row or Golfer filter). */
+/** Line-distribution chart when a golfer is chosen (table row or Golfer filter). */
 function syncOuChartCard() {
   const card = document.getElementById("ou-chart-card");
   if (!card) return;
@@ -1132,13 +1144,22 @@ function showOuChartTooltip(ev, hit) {
   tip.style.top = `${top}px`;
 }
 
-/** Bar chart: P(over) at each line — same Market + Golfer filters as the table. */
+/** Bar chart: P(over) or P(under) by market at each line — same Market + Golfer filters as the table. */
 function drawOuLineDistributionChart() {
   const canvas = document.getElementById("ou-chart-canvas");
   if (!canvas || !canvas.getContext) return;
   hideOuChartTooltip();
   ouChartHitRegions = [];
   const market = getOuMarket();
+  const lowerBetter = ouMarketLowerIsBetter(market);
+  const titleEl = document.getElementById("ou-chart-title");
+  if (titleEl) {
+    titleEl.textContent = lowerBetter ? "P(under) by line" : "P(over) by line";
+  }
+  canvas.setAttribute(
+    "aria-label",
+    lowerBetter ? "P(under) by line" : "P(over) by line"
+  );
   const lines = OU_LINE_RANGES[market] || OU_LINE_RANGES["Total score"];
   const round = getOuRound();
   const allRows = ouSortedPlayerRows(market, round);
@@ -1211,13 +1232,15 @@ function drawOuLineDistributionChart() {
     const L = lines[i];
     const pOverRaw = modelProbOverMarket(market, row, L);
     const pOver = clampProb01(pOverRaw);
-    const pct = Number.isFinite(pOver) ? pOver * 100 : NaN;
+    const pChart = lowerBetter ? 1 - pOver : pOver;
+    const pct = Number.isFinite(pChart) ? pChart * 100 : NaN;
     const cx = pad.l + (i + 0.5) * slotW;
     const x0 = cx - barW / 2;
     if (!Number.isFinite(pct)) continue;
     const y0 = yPct(pct);
     const yBase = yPct(0);
-    ctx.fillStyle = pct >= 50 ? "rgba(255, 138, 138, 0.88)" : "rgba(0, 196, 107, 0.82)";
+    const highIsGood = lowerBetter ? pct >= 50 : pct < 50;
+    ctx.fillStyle = highIsGood ? "rgba(0, 196, 107, 0.82)" : "rgba(255, 138, 138, 0.88)";
     ctx.fillRect(x0, y0, barW, yBase - y0);
     ctx.strokeStyle = "rgba(255,255,255,0.12)";
     ctx.strokeRect(x0, y0, barW, yBase - y0);
@@ -1280,9 +1303,7 @@ function modelProbForProp(prop) {
           ? "Pars"
           : stat === "bogeys"
             ? "Bogeys"
-            : stat === "gir"
-              ? "GIR"
-              : "Fairways hit";
+            : "Total score";
   const pOver = modelProbOverMarket(marketLabel, row, line);
   return { pOver, pUnder: 1 - pOver };
 }
@@ -1640,6 +1661,36 @@ function devigFairForSide(q1, q2, method, sideKey) {
  * `none`: weighted mean of posted decimals → implied from mean decimal.
  * Other methods: two-way devig per book, then weighted mean of fair win probs.
  */
+/**
+ * Multiplicative “devig” fair prob for one side of a 3-way (3-ball) market per book, then weighted mean.
+ */
+function matchupConsensusThreeWaySide(oddsObj, sideKey, prefs) {
+  const want = String(sideKey || "").toLowerCase();
+  if (!["p1", "p2", "p3"].includes(want)) return NaN;
+  const items = [];
+  for (const bk of Object.keys(oddsObj || {})) {
+    if (!evBookAllowedInConsensus(bk, prefs)) continue;
+    const wB = evConsensusWeightForBook(bk, prefs);
+    if (prefs.bookWeights && wB <= 0) continue;
+    const pack = oddsObj[bk];
+    const d1 = num(pack?.p1, NaN);
+    const d2 = num(pack?.p2, NaN);
+    const d3 = num(pack?.p3, NaN);
+    if (!Number.isFinite(d1) || d1 <= 1 || !Number.isFinite(d2) || d2 <= 1 || !Number.isFinite(d3) || d3 <= 1) continue;
+    const q1 = 1 / d1;
+    const q2 = 1 / d2;
+    const q3 = 1 / d3;
+    const s = q1 + q2 + q3;
+    if (s <= 0) continue;
+    const pFair = want === "p1" ? q1 / s : want === "p2" ? q2 / s : q3 / s;
+    items.push({ bk, v: pFair, w: wB });
+  }
+  if (!items.length) return NaN;
+  const tw = items.reduce((sum, it) => sum + it.w, 0);
+  if (tw <= 0) return NaN;
+  return items.reduce((sum, it) => sum + it.w * it.v, 0) / tw;
+}
+
 function matchupConsensusSide(oddsObj, sideKey, prefs) {
   const items = [];
   const method = evDevigMethodValid(prefs.method) ? prefs.method : "none";
@@ -1911,14 +1962,66 @@ function collectUnifiedEvRows() {
   for (const mk of ["tournament_matchups", "round_matchups", "3_balls"]) {
     const list = mpack[mk] && mpack[mk].match_list;
     if (!Array.isArray(list)) continue;
+    const marketLabel =
+      mk === "tournament_matchups" ? "Tournament Matchups" : mk === "round_matchups" ? "Round Matchups" : "3 Balls";
     for (const m of list) {
       const id1 = Math.round(num(m.p1_dg_id, NaN));
       const id2 = Math.round(num(m.p2_dg_id, NaN));
+      const id3 = Math.round(num(m.p3_dg_id, NaN));
       const row1 = DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === id1 && samePlayerRound(p, r));
       const row2 = DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === id2 && samePlayerRound(p, r));
+      const row3 = DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === id3 && samePlayerRound(p, r));
       const mu1 = effectiveMuSg(row1, id1);
       const mu2 = effectiveMuSg(row2, id2);
-      const p1 = matchupWinProb(mu1, mu2);
+      const mu3 = effectiveMuSg(row3, id3);
+      const isThreeBall = mk === "3_balls" && Number.isFinite(id3) && id3 > 0;
+      if (isThreeBall) {
+        const [tp1, tp2, tp3] = threeBallModelProbs(mu1, mu2, mu3);
+        const b1 = bestBookDecimalForSide(m.odds || {}, "p1");
+        const b2 = bestBookDecimalForSide(m.odds || {}, "p2");
+        const b3 = bestBookDecimalForSide(m.odds || {}, "p3");
+        const n1 = displayGolferName(String(m.p1_player_name || ""));
+        const n2 = displayGolferName(String(m.p2_player_name || ""));
+        const n3 = displayGolferName(String(m.p3_player_name || ""));
+        const mp1 = matchupConsensusThreeWaySide(m.odds || {}, "p1", devigPrefs);
+        const mp2 = matchupConsensusThreeWaySide(m.odds || {}, "p2", devigPrefs);
+        const mp3 = matchupConsensusThreeWaySide(m.odds || {}, "p3", devigPrefs);
+        rows.push({
+          golfer: n1,
+          market: marketLabel,
+          bet: `3-ball vs ${n2} & ${n3}`,
+          modelPct: tp1,
+          modelEv: Number.isFinite(b1.dec) ? tp1 * b1.dec - 1 : NaN,
+          bestBook: b1.book,
+          bestBookOdds: Number.isFinite(b1.dec) ? formatAmerican(americanFromDecimal(b1.dec)) : "—",
+          bestDec: b1.dec,
+          consensusP: mp1,
+        });
+        rows.push({
+          golfer: n2,
+          market: marketLabel,
+          bet: `3-ball vs ${n1} & ${n3}`,
+          modelPct: tp2,
+          modelEv: Number.isFinite(b2.dec) ? tp2 * b2.dec - 1 : NaN,
+          bestBook: b2.book,
+          bestBookOdds: Number.isFinite(b2.dec) ? formatAmerican(americanFromDecimal(b2.dec)) : "—",
+          bestDec: b2.dec,
+          consensusP: mp2,
+        });
+        rows.push({
+          golfer: n3,
+          market: marketLabel,
+          bet: `3-ball vs ${n1} & ${n2}`,
+          modelPct: tp3,
+          modelEv: Number.isFinite(b3.dec) ? tp3 * b3.dec - 1 : NaN,
+          bestBook: b3.book,
+          bestBookOdds: Number.isFinite(b3.dec) ? formatAmerican(americanFromDecimal(b3.dec)) : "—",
+          bestDec: b3.dec,
+          consensusP: mp3,
+        });
+        continue;
+      }
+      const p1 = matchupWinProb(mu1, mu2, mk);
       const b1 = bestBookDecimalForSide(m.odds || {}, "p1");
       const b2 = bestBookDecimalForSide(m.odds || {}, "p2");
       const modelEv1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
@@ -1927,7 +2030,7 @@ function collectUnifiedEvRows() {
       const marketP2 = matchupConsensusSide(m.odds || {}, "p2", devigPrefs);
       rows.push({
         golfer: displayGolferName(String(m.p1_player_name || "")),
-        market: mk === "tournament_matchups" ? "Tournament Matchups" : mk === "round_matchups" ? "Round Matchups" : "3 Balls",
+        market: marketLabel,
         bet: `vs ${displayGolferName(String(m.p2_player_name || ""))}`,
         modelPct: p1,
         modelEv: modelEv1,
@@ -1938,7 +2041,7 @@ function collectUnifiedEvRows() {
       });
       rows.push({
         golfer: displayGolferName(String(m.p2_player_name || "")),
-        market: mk === "tournament_matchups" ? "Tournament Matchups" : mk === "round_matchups" ? "Round Matchups" : "3 Balls",
+        market: marketLabel,
         bet: `vs ${displayGolferName(String(m.p1_player_name || ""))}`,
         modelPct: 1 - p1,
         modelEv: modelEv2,
@@ -2119,11 +2222,30 @@ function buildEvTable() {
   }
 }
 
-function matchupWinProb(mu1, mu2) {
+/**
+ * P(player 1 beats player 2) for one round / multi-day context.
+ * Uses a Gaussian difference with stroke-scale noise; old 0.35·√2 SD (~0.5) was far too tight vs
+ * single-round variance, which produced bogus ~−2000 “fair” prices.
+ */
+function matchupWinProb(mu1, mu2, marketKind) {
   if (!Number.isFinite(mu1) || !Number.isFinite(mu2)) return 0.5;
-  const sig = 0.35;
-  const d = (mu1 - mu2) / (sig * Math.SQRT2);
-  return clamp(normalCdf(d), 0.04, 0.96);
+  const sigmaDiff =
+    marketKind === "tournament_matchups"
+      ? 1.55
+      : 2.85;
+  const d = (mu1 - mu2) / sigmaDiff;
+  return clamp(normalCdf(d), 0.12, 0.88);
+}
+
+/** Win shares for a 3-ball (lowest score wins); softmax on mu_sg so similar skills stay ~⅓ each. */
+function threeBallModelProbs(mu1, mu2, mu3) {
+  const m = [mu1, mu2, mu3].map((x) => num(x, NaN));
+  if (m.some((x) => !Number.isFinite(x))) return [1 / 3, 1 / 3, 1 / 3];
+  const T = 2.05;
+  const ex = m.map((v) => Math.exp(v / T));
+  const s = ex[0] + ex[1] + ex[2];
+  if (s <= 0) return [1 / 3, 1 / 3, 1 / 3];
+  return [ex[0] / s, ex[1] / s, ex[2] / s];
 }
 
 function bestBookDecimalForSide(oddsObj, side /* 'p1'|'p2' */) {
@@ -2181,22 +2303,27 @@ function buildMatchupsTable() {
   for (const m of list) {
     const id1 = Math.round(num(m.p1_dg_id, NaN));
     const id2 = Math.round(num(m.p2_dg_id, NaN));
+    const id3 = Math.round(num(m.p3_dg_id, NaN));
     const row1 = DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === id1 && samePlayerRound(p, r));
     const row2 = DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === id2 && samePlayerRound(p, r));
+    const row3 = DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === id3 && samePlayerRound(p, r));
     const mu1 = effectiveMuSg(row1, id1);
     const mu2 = effectiveMuSg(row2, id2);
-    const p1m = matchupWinProb(mu1, mu2);
+    const mu3 = effectiveMuSg(row3, id3);
     const odds = m.odds || {};
     const b1 = bestBookDecimalForSide(odds, "p1");
     const b2 = bestBookDecimalForSide(odds, "p2");
-    const ev1 = Number.isFinite(b1.dec) ? p1m * b1.dec - 1 : NaN;
-    const ev2 = Number.isFinite(b2.dec) ? (1 - p1m) * b2.dec - 1 : NaN;
-    const label = `${m.p1_player_name || ""} vs ${m.p2_player_name || ""}`;
+    const b3 = bestBookDecimalForSide(odds, "p3");
+    const isThree = key === "3_balls" && Number.isFinite(id3) && id3 > 0;
+    const label = isThree
+      ? `${m.p1_player_name || ""} / ${m.p2_player_name || ""} / ${m.p3_player_name || ""}`
+      : `${m.p1_player_name || ""} vs ${m.p2_player_name || ""}`;
+    const span = isThree ? 3 : 2;
     function row(side, name, modelPct, ev, bb) {
       const tr = document.createElement("tr");
       const td0 = document.createElement("td");
       if (side === 1) {
-        td0.rowSpan = 2;
+        td0.rowSpan = span;
         td0.textContent = label;
       }
       const td1 = document.createElement("td");
@@ -2222,8 +2349,21 @@ function buildMatchupsTable() {
       tr.appendChild(td4);
       tbody.appendChild(tr);
     }
-    row(1, m.p1_player_name, p1m, ev1, b1);
-    row(2, m.p2_player_name, 1 - p1m, ev2, b2);
+    if (isThree) {
+      const [tp1, tp2, tp3] = threeBallModelProbs(mu1, mu2, mu3);
+      const ev1 = Number.isFinite(b1.dec) ? tp1 * b1.dec - 1 : NaN;
+      const ev2 = Number.isFinite(b2.dec) ? tp2 * b2.dec - 1 : NaN;
+      const ev3 = Number.isFinite(b3.dec) ? tp3 * b3.dec - 1 : NaN;
+      row(1, m.p1_player_name, tp1, ev1, b1);
+      row(2, m.p2_player_name, tp2, ev2, b2);
+      row(3, m.p3_player_name, tp3, ev3, b3);
+    } else {
+      const p1m = matchupWinProb(mu1, mu2, key);
+      const ev1 = Number.isFinite(b1.dec) ? p1m * b1.dec - 1 : NaN;
+      const ev2 = Number.isFinite(b2.dec) ? (1 - p1m) * b2.dec - 1 : NaN;
+      row(1, m.p1_player_name, p1m, ev1, b1);
+      row(2, m.p2_player_name, 1 - p1m, ev2, b2);
+    }
   }
 }
 
@@ -2684,13 +2824,13 @@ function parseEventCompletedChronoBase(s) {
   return y * 10000 + (mo || 0) * 100 + (d || 0);
 }
 
-function courseFilterOn() {
-  const cb = document.getElementById("props-filter-current-course");
-  return cb && cb.checked;
-}
-
 function venueCourseName() {
   return String(DATA.meta.course_used || "").trim().toLowerCase();
+}
+
+function courseFilterOn() {
+  const cb = document.getElementById("props-filter-current-course");
+  return Boolean(cb && cb.checked);
 }
 
 function selectedPropsTempRangeFilter() {
@@ -2794,7 +2934,7 @@ function refreshPropsFilterOptionsForGolfer(dgId) {
   }
 }
 
-/** Birdies / pars / GIR / fairways: higher is better. Round score / bogeys: higher is worse. */
+/** Birdies / pars: higher is better. Round score / bogeys: higher is worse. */
 function propsMarketHigherIsBetter(statKey) {
   return statKey === "birdies" || statKey === "pars" || statKey === "gir" || statKey === "fairways";
 }
@@ -2819,11 +2959,79 @@ function historyRoundIsPlaceholderAllMarketsZero(row) {
   return countsAllZero && noRealTotal;
 }
 
+/** Loose match for schedule titles (e.g. “THE MASTERS” vs “Masters Tournament”). */
+function scheduleNameMatchesMeta(histNameRaw, metaNameRaw) {
+  const meta = String(metaNameRaw || "").trim();
+  const hist = String(histNameRaw || "").trim();
+  if (!meta || !hist) return false;
+  if (courseNameMatchesVenue(hist, meta)) return true;
+  const strip = (s) =>
+    s
+      .toLowerCase()
+      .replace(/\b(the|pga|liv\s*golf|dp\s*world)\b/g, " ")
+      .replace(/\b(championship|tournament|invitational|classic|open)\b/g, " ")
+      .replace(/[^a-z0-9]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  const h = strip(hist);
+  const m = strip(meta);
+  if (!h || !m) return false;
+  if (h.includes(m) || m.includes(h)) return true;
+  const tokens = (s) => s.split(" ").filter((t) => t.length >= 4);
+  const ht = tokens(h);
+  const mt = tokens(m);
+  for (const t of mt) {
+    if (ht.some((x) => x.includes(t) || t.includes(x))) return true;
+  }
+  return false;
+}
+
+/**
+ * Extra course matching for API vs CSV naming (same idea as hangoutHistoryPriorThree):
+ * short venue strings from DataGolf vs longer course_name in history.
+ */
+function courseNameMatchesVenueLoose(courseNameRaw, venueRaw) {
+  if (courseNameMatchesVenue(courseNameRaw, venueRaw)) return true;
+  const c = String(courseNameRaw || "").trim().toLowerCase();
+  const needle = String(venueRaw || "").trim().toLowerCase();
+  if (!c || !needle) return false;
+  const headC = Math.min(10, c.length);
+  const headN = Math.min(10, needle.length);
+  if (headC >= 3 && needle.includes(c.slice(0, headC))) return true;
+  if (headN >= 3 && c.includes(needle.slice(0, headN))) return true;
+  return false;
+}
+
+/** Schedule title match + prefix / normalized fallbacks (sponsor-heavy titles vs short CSV names). */
+function eventNameMatchesCurrentSchedule(histNameRaw, metaNameRaw) {
+  if (scheduleNameMatchesMeta(histNameRaw, metaNameRaw)) return true;
+  const en = String(histNameRaw || "").trim().toLowerCase();
+  const evN = String(metaNameRaw || "").trim().toLowerCase();
+  if (!en || !evN) return false;
+  if (en.includes(evN.slice(0, 14)) || evN.includes(en.slice(0, 10))) return true;
+  const a = normEvtNameKey(histNameRaw);
+  const b = normEvtNameKey(metaNameRaw);
+  if (a && b && (a === b || a.includes(b) || b.includes(a))) return true;
+  return false;
+}
+
+/** Current course / event from projections vs this history row (either can match). */
+function currentTournamentContextMatchesRound(r) {
+  const vn = venueCourseName();
+  const metaEvent = String(DATA.meta.event_name || "").trim();
+  const byCourse = vn ? courseNameMatchesVenueLoose(r.course_name, vn) : false;
+  const byEvent = metaEvent ? eventNameMatchesCurrentSchedule(r.event_name, metaEvent) : false;
+  return byCourse || byEvent;
+}
+
 function filteredHistoryRounds(dgId) {
   let list = historyRoundsForDg(dgId);
-  if (courseFilterOn() && venueCourseName()) {
+  if (courseFilterOn()) {
     const vn = venueCourseName();
-    list = list.filter((r) => String(r.course_name || "").trim().toLowerCase().includes(vn) || vn.includes(String(r.course_name || "").trim().toLowerCase()));
+    const metaEvent = String(DATA.meta.event_name || "").trim();
+    if (vn || metaEvent) {
+      list = list.filter((r) => currentTournamentContextMatchesRound(r));
+    }
   }
   const courseFilter = selectedPropsCourseFilter();
   if (courseFilter) {
@@ -2846,6 +3054,18 @@ function filteredHistoryRounds(dgId) {
   list = list.filter((r) => !historyRoundIsPlaceholderAllMarketsZero(r));
   list.sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
   return list;
+}
+
+/** Newest-first rounds for chart + hit stats. “Current course only” uses every matching round (no Rounds cap). */
+function propsFilteredRoundsNewestFirst(dgId, winN) {
+  const list = filteredHistoryRounds(dgId);
+  if (courseFilterOn()) return list;
+  const wn = clamp(
+    Math.round(num(winN, PROPS_HISTORY_ROUND_DEFAULT)),
+    PROPS_HISTORY_ROUND_MIN,
+    PROPS_HISTORY_ROUND_MAX
+  );
+  return list.slice(0, wn);
 }
 
 function historyRoundsChronoNewestFirst(dgId) {
@@ -2878,8 +3098,6 @@ function pricingModeMuSgBonus(dgId) {
 
   const rounds = historyRoundsChronoNewestFirst(id);
   if (rounds.length < 4) return 0;
-
-  const skillKey = PRICING_STATE.skill || "sg_total";
 
   if (mode === "recent") {
     const nRec = Math.min(6, Math.max(3, Math.floor(rounds.length / 2)));
@@ -2946,8 +3164,6 @@ function pricingStatMuAdjustment(market, dgId) {
   if (market === "Total score") return -1.05 * b;
   if (market === "Bogeys") return -0.45 * b;
   if (market === "Birdies") return 0.5 * b;
-  if (market === "GIR") return 0.4 * b;
-  if (market === "Fairways hit") return 0.25 * b;
   if (market === "Pars") return 0.08 * b;
   return 0;
 }
@@ -2972,13 +3188,14 @@ function propsTrendLineContextKeyFromDom() {
     PROPS_HISTORY_ROUND_MIN,
     PROPS_HISTORY_ROUND_MAX
   );
+  const winNKey = courseFilterOn() ? "all" : String(winN);
   const temp = selectedPropsTempRangeFilter() || "all";
   const wind = selectedPropsWindRangeFilter() || "all";
   const hum = selectedPropsHumidityRangeFilter() || "all";
   const course = selectedPropsCourseFilter() || "all";
   const pm = PRICING_STATE.mode || "default";
-  const ps = PRICING_STATE.skill || "sg_total";
-  return `${dg}|${sk}|${courseFilterOn() ? 1 : 0}|${winN}|${temp}|${wind}|${hum}|${course}|${pm}|${ps}`;
+  const ps = PRICING_STATE.skill === "default" ? "default" : pricingSkillHistoryKey();
+  return `${dg}|${sk}|${courseFilterOn() ? 1 : 0}|${winNKey}|${temp}|${wind}|${hum}|${course}|${pm}|${ps}`;
 }
 
 /** After user changes line or steppers so projection logic does not overwrite the input. */
@@ -2986,9 +3203,17 @@ function lockPropsTrendLineContextToCurrentFilter() {
   propsTrendsLineContextKey = propsTrendLineContextKeyFromDom();
 }
 
-/** With “current course only”, any player with ≥1 qualifying round in the window is eligible. */
+/**
+ * Min rounds to list a player in the trends table. Full-field default is high for stability;
+ * any narrow filter (this event’s course, a specific course from the dropdown, or weather buckets)
+ * uses 1 so you still see the whole field when sample sizes are small per player.
+ */
 function propsTopHitMinRoundsForFilter() {
   if (courseFilterOn()) return 1;
+  if (selectedPropsCourseFilter()) return 1;
+  if (selectedPropsTempRangeFilter()) return 1;
+  if (selectedPropsWindRangeFilter()) return 1;
+  if (selectedPropsHumidityRangeFilter()) return 1;
   return PROPS_TOP_HIT_MIN_ROUNDS;
 }
 
@@ -3054,16 +3279,15 @@ function propMarketLabelFromKey(statKey) {
 }
 
 /**
- * Over / under vs line (strict; pushes excluded from both counts). Same window as chart.
+ * Over / under vs line (strict; pushes excluded from both counts).
+ * Selected golfer: same window as chart (`propsFilteredRoundsNewestFirst`).
+ * Leaderboard table: all rounds matching filters (ignore Rounds stepper).
  */
-function propsFullHitStatsForDg(dgId, statKey, line, winN) {
+function propsFullHitStatsForDg(dgId, statKey, line, winN, forLeaderboardTable = false) {
   if (!Number.isFinite(line)) return { valid: 0, over: 0, under: 0, overRate: NaN, underRate: NaN };
-  const wn = clamp(
-    Math.round(num(winN, PROPS_HISTORY_ROUND_DEFAULT)),
-    PROPS_HISTORY_ROUND_MIN,
-    PROPS_HISTORY_ROUND_MAX
-  );
-  const newestFirst = filteredHistoryRounds(dgId).slice(0, wn);
+  const newestFirst = forLeaderboardTable
+    ? filteredHistoryRounds(dgId)
+    : propsFilteredRoundsNewestFirst(dgId, winN);
   let valid = 0;
   let over = 0;
   let under = 0;
@@ -3109,15 +3333,22 @@ function paintPropsTopHitsHeadUi(statKey, line) {
     toggle.setAttribute(
       "aria-label",
       propsTopHitsFitMode === "fire"
-        ? "Showing fire side — click to show ice side"
-        : "Showing ice side — click to show fire side"
+        ? "Prioritize fire-side fits — click to prioritize ice-side fits"
+        : "Prioritize ice-side fits — click to prioritize fire-side fits"
     );
   }
 }
 
-function propsTopTableSortInPlace(rows) {
+function propsTopTableSortInPlace(rows, statKey) {
+  const fitFirst =
+    propsTopHitsFitMode === "fire"
+      ? (r) => propsPlayerMeetsFireSide(statKey, r)
+      : (r) => propsPlayerMeetsIceSide(statKey, r);
   const { key, dir } = propsTopTableSort;
   rows.sort((a, b) => {
+    const fa = fitFirst(a) ? 0 : 1;
+    const fb = fitFirst(b) ? 0 : 1;
+    if (fa !== fb) return fa - fb;
     let cmp = 0;
     if (key === "name") cmp = String(a.name).localeCompare(String(b.name));
     else if (key === "overRate") cmp = a.overRate - b.overRate;
@@ -3218,7 +3449,7 @@ function renderPropsHitRateAndTopTable(statKey, line, winN) {
     .filter((x) => Number.isFinite(x));
   const rows = [];
   for (const id of ids) {
-    const s = propsFullHitStatsForDg(id, statKey, line, wn);
+    const s = propsFullHitStatsForDg(id, statKey, line, wn, true);
     if (s.valid < minR) continue;
     rows.push({
       dgId: id,
@@ -3231,21 +3462,14 @@ function renderPropsHitRateAndTopTable(statKey, line, winN) {
     });
   }
   const poolSize = rows.length;
-  const filtered =
-    propsTopHitsFitMode === "fire"
-      ? rows.filter((r) => propsPlayerMeetsFireSide(statKey, r))
-      : rows.filter((r) => propsPlayerMeetsIceSide(statKey, r));
-  propsTopTableSortInPlace(filtered);
-  const top = filtered.slice(0, 10);
+  propsTopTableSortInPlace(rows, statKey);
+  const top = rows.slice(0, 10);
   if (!top.length) {
     const tr = document.createElement("tr");
     const td = document.createElement("td");
     td.colSpan = 6;
     td.className = "text-muted";
-    td.textContent =
-      poolSize === 0
-        ? `No golfers with at least ${minR} qualifying rounds for this filter.`
-        : `No golfers match the selected fit (🔥 or 🧊 side) with this filter.`;
+    td.textContent = `No golfers with at least ${minR} qualifying rounds for this filter.`;
     tr.appendChild(td);
     tbody.appendChild(tr);
     paintPropsTopTableSortHeaders();
@@ -3312,11 +3536,35 @@ function propsChartAxisLabel(completed) {
 }
 
 /**
- * FanDuel-style x-axis: a few labels when many bars; text always propsChartAxisLabel; duplicates blanked.
+ * One string per bar for the x-axis (M/D; adds 'YY when the same calendar label spans multiple years).
+ */
+function buildPropsTrendXAxisLabels(series) {
+  if (!series.length) return [];
+  const bases = series.map((s) => propsChartAxisLabel(s.date || ""));
+  const countByBase = new Map();
+  for (const b of bases) countByBase.set(b, (countByBase.get(b) || 0) + 1);
+  return series.map((s, i) => {
+    const b = bases[i];
+    if ((countByBase.get(b) || 0) <= 1) return b;
+    const r = s._hist;
+    const yr = num(r?.year, NaN);
+    const sameBaseIdx = [];
+    for (let j = 0; j < bases.length; j++) if (bases[j] === b) sameBaseIdx.push(j);
+    const years = new Set(
+      sameBaseIdx.map((j) => num(series[j]._hist?.year, NaN)).filter((y) => Number.isFinite(y) && y >= 1990)
+    );
+    if (years.size > 1 && Number.isFinite(yr)) return `${b} '${String(yr).slice(-2)}`;
+    return b;
+  });
+}
+
+/**
+ * FanDuel-style x-axis: a few labels when many bars; duplicate display strings blanked.
+ * `perBarLabels` = output of buildPropsTrendXAxisLabels (same length as series).
  * Returns Map barIndex → label string.
  */
-function propsChartSparseTickLabels(dates, innerWidthPx) {
-  const n = dates.length;
+function propsChartSparseTickLabels(perBarLabels, innerWidthPx) {
+  const n = perBarLabels.length;
   const map = new Map();
   if (!n) return map;
   const minPx = 62;
@@ -3335,7 +3583,7 @@ function propsChartSparseTickLabels(dates, innerWidthPx) {
   }
   const uniq = [...new Set(indices)].sort((a, b) => a - b);
   for (const i of uniq) {
-    map.set(i, propsChartAxisLabel(dates[i]));
+    map.set(i, String(perBarLabels[i] || "").trim());
   }
   const shown = new Set();
   for (const i of uniq) {
@@ -3347,9 +3595,9 @@ function propsChartSparseTickLabels(dates, innerWidthPx) {
   return map;
 }
 
-/** One label per bar when there is room; duplicate M/D → suffix (no year on axis). */
-function propsChartXAxisDateLabels(dates, innerW) {
-  const n = dates.length;
+/** One label per bar when there is room; duplicate strings → blank on repeats. */
+function propsChartXAxisDateLabels(perBarLabels, innerW) {
+  const n = perBarLabels.length;
   const map = new Map();
   if (!n) return map;
   const minPx = 38;
@@ -3357,7 +3605,7 @@ function propsChartXAxisDateLabels(dates, innerW) {
   if (labelEveryBar) {
     const seen = new Map();
     for (let i = 0; i < n; i++) {
-      let lab = propsChartAxisLabel(dates[i]);
+      let lab = String(perBarLabels[i] || "").trim();
       const prev = seen.get(lab) || 0;
       seen.set(lab, prev + 1);
       if (prev > 0) lab = "";
@@ -3365,7 +3613,7 @@ function propsChartXAxisDateLabels(dates, innerW) {
     }
     return map;
   }
-  return propsChartSparseTickLabels(dates, innerW);
+  return propsChartSparseTickLabels(perBarLabels, innerW);
 }
 
 /**
@@ -3411,20 +3659,12 @@ function pointInPropsChartHitRegion(canvasX, canvasY) {
   return propsChartHitRegions.some((r) => canvasX >= r.x0 && canvasX < r.x0 + r.w && canvasY >= r.y0 && canvasY < r.y0 + r.h);
 }
 
-/** When regions overlap, pick the bar whose center is closest to x. */
+/** Hit regions are non-overlapping column slots; first match is unambiguous. */
 function pickPropsChartHit(canvasX, canvasY) {
-  let best = null;
-  let bestDist = Infinity;
   for (const r of propsChartHitRegions) {
-    if (canvasX < r.x0 || canvasX >= r.x0 + r.w || canvasY < r.y0 || canvasY >= r.y0 + r.h) continue;
-    const mid = r.x0 + r.w / 2;
-    const d = Math.abs(canvasX - mid);
-    if (d < bestDist) {
-      bestDist = d;
-      best = r;
-    }
+    if (canvasX >= r.x0 && canvasX < r.x0 + r.w && canvasY >= r.y0 && canvasY < r.y0 + r.h) return r;
   }
-  return best;
+  return null;
 }
 
 function hidePropsChartTooltip() {
@@ -3437,13 +3677,18 @@ function propsChartFormatValue(statKey, v) {
   return String(Math.round(v));
 }
 
+/**
+ * Map pointer to chart coordinates. Drawing + hit regions use logical CSS pixels (0..clientWidth)
+ * after setTransform(dpr); bitmap width/height are dpr × logical — do not use canvas.width here.
+ */
 function canvasCoordsFromEvent(canvas, ev) {
   const rect = canvas.getBoundingClientRect();
-  const sx = rect.width > 0 ? canvas.width / rect.width : 1;
-  const sy = rect.height > 0 ? canvas.height / rect.height : 1;
+  const lw = canvas.clientWidth || rect.width;
+  const lh = canvas.clientHeight || rect.height;
+  if (rect.width <= 0 || rect.height <= 0) return { x: 0, y: 0 };
   return {
-    x: (ev.clientX - rect.left) * sx,
-    y: (ev.clientY - rect.top) * sy,
+    x: ((ev.clientX - rect.left) / rect.width) * lw,
+    y: ((ev.clientY - rect.top) / rect.height) * lh,
   };
 }
 
@@ -3484,6 +3729,43 @@ function showPropsChartTooltip(canvas, ev, hit) {
   tip.style.top = `${top}px`;
 }
 
+/** Y-axis ticks: integers for round score / counting stats so grid lines match numeric labels. */
+function propsChartYTickValues(minV, maxV, statKey) {
+  const intLike = statKey === "total" || statKey === "birdies" || statKey === "pars" || statKey === "bogeys";
+  if (!intLike) {
+    const n = 5;
+    const out = [];
+    for (let g = 0; g <= n; g++) out.push(minV + ((maxV - minV) * g) / n);
+    return out;
+  }
+  const lo = Math.floor(minV);
+  const hi = Math.ceil(maxV);
+  if (hi <= lo) return [lo, hi + 1];
+  const span = hi - lo;
+  let step = Math.max(1, Math.round(span / 5));
+  if (step === 3 && span >= 18) step = 4;
+  const ticks = [];
+  for (let t = Math.ceil(lo / step) * step; t <= hi; t += step) ticks.push(t);
+  if (!ticks.length) return [lo, hi];
+  if (ticks[0] > lo) ticks.unshift(lo);
+  if (ticks[ticks.length - 1] < hi) ticks.push(hi);
+  return [...new Set(ticks)].sort((a, b) => a - b);
+}
+
+function propsChartTickLabel(statKey, v) {
+  const intLike = statKey === "total" || statKey === "birdies" || statKey === "pars" || statKey === "bogeys";
+  if (intLike) return String(Math.round(v));
+  return Math.abs(v - Math.round(v)) < 0.05 ? String(Math.round(v)) : String(Number(v.toFixed(1)));
+}
+
+/** Match CSS layout box to bitmap aspect ratio (avoids non-uniform scaling from height:auto + max-height). */
+function syncPropsTrendCanvasCssBox(canvas, cssW, cssH) {
+  canvas.style.width = `${cssW}px`;
+  canvas.style.height = `${cssH}px`;
+  canvas.style.maxWidth = "100%";
+  canvas.style.boxSizing = "border-box";
+}
+
 /** `series` items: `{ actual, date?, _hist? }` — `_hist` is raw round row (course_name, …). */
 function drawPropsTrendCanvas(series, lineY, statKey) {
   propsChartHitRegions = [];
@@ -3492,10 +3774,12 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
   const wrap = canvas?.closest(".props-trends-chart-wrap");
   if (!canvas || !canvas.getContext) return;
   const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const vhCap = typeof window !== "undefined" ? Math.min(480, Math.round(window.innerHeight * 0.42)) : 480;
 
   function paintEmptyBackground(cssW0, cssH0) {
     canvas.width = Math.round(cssW0 * dpr);
     canvas.height = Math.round(cssH0 * dpr);
+    syncPropsTrendCanvasCssBox(canvas, cssW0, cssH0);
     const c0 = canvas.getContext("2d");
     if (!c0) return;
     c0.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -3505,19 +3789,15 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
   }
 
   if (!series.length) {
-    canvas.style.width = "100%";
-    canvas.style.maxWidth = "100%";
     const vis = wrap && wrap.clientWidth > 80 ? wrap.clientWidth - 28 : 800;
-    const cssH0 = Math.round(clamp(vis * 0.48, 280, 420));
+    const cssH0 = Math.round(clamp(vis * 0.48, 240, Math.min(420, vhCap)));
     paintEmptyBackground(vis, cssH0);
     return;
   }
   const vals = series.map((s) => s.actual).filter((x) => Number.isFinite(x));
   if (!vals.length) {
-    canvas.style.width = "100%";
-    canvas.style.maxWidth = "100%";
     const vis = wrap && wrap.clientWidth > 80 ? wrap.clientWidth - 28 : 800;
-    paintEmptyBackground(vis, Math.round(clamp(vis * 0.48, 280, 420)));
+    paintEmptyBackground(vis, Math.round(clamp(vis * 0.48, 240, Math.min(420, vhCap))));
     return;
   }
 
@@ -3526,9 +3806,8 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
   const pad = { l: 42, r: 14, t: 12, b: n > 12 ? 54 : 46 };
   const innerW = Math.max(80, visibleW - pad.l - pad.r);
   const cssW = Math.round(visibleW);
-  const cssH = Math.round(clamp(visibleW * 0.5, 300, 480));
-  canvas.style.width = "100%";
-  canvas.style.maxWidth = "100%";
+  const cssH = Math.round(clamp(visibleW * 0.5, 260, Math.min(480, vhCap)));
+  syncPropsTrendCanvasCssBox(canvas, cssW, cssH);
   canvas.width = Math.round(cssW * dpr);
   canvas.height = Math.round(cssH * dpr);
   const ctx = canvas.getContext("2d");
@@ -3571,12 +3850,12 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
     return pad.t + innerH * (1 - t);
   }
   const yBase = invertY ? yScale(maxV) : yScale(minV);
-  const yTickCount = 5;
+  const yTicks = propsChartYTickValues(minV, maxV, statKey);
   ctx.strokeStyle = "rgba(255, 255, 255, 0.07)";
   ctx.lineWidth = 1;
-  for (let g = 0; g <= yTickCount; g++) {
-    const v = minV + ((maxV - minV) * g) / yTickCount;
-    const y = yScale(v);
+  for (const tv of yTicks) {
+    if (tv < minV - 1e-9 || tv > maxV + 1e-9) continue;
+    const y = yScale(tv);
     ctx.beginPath();
     ctx.moveTo(pad.l, y);
     ctx.lineTo(w - pad.r, y);
@@ -3608,9 +3887,9 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";
   }
-  const dates = series.map((s) => s.date || "");
+  const slotW = innerW / n;
+  const xAxisPerBar = buildPropsTrendXAxisLabels(series);
   const { xCenter, barW } = propsChartBarLayout(series, pad.l, innerW);
-  const hitPad = 5;
   const lowerIsBetter = invertY;
   for (let i = 0; i < n; i++) {
     const v = series[i].actual;
@@ -3620,12 +3899,11 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
     const x0 = Math.max(pad.l, Math.min(xc - bw / 2, pad.l + innerW - bw));
     const yTop = yScale(v);
     const hBar = Math.max(1, yBase - yTop);
-    const xHit0 = Math.max(pad.l, x0 - hitPad);
-    const xHit1 = Math.min(pad.l + innerW, x0 + bw + hitPad);
+    const slotLeft = pad.l + i * slotW;
     propsChartHitRegions.push({
-      x0: xHit0,
+      x0: slotLeft,
       y0: pad.t,
-      w: Math.max(1, xHit1 - xHit0),
+      w: Math.max(1, slotW),
       h: yBase - pad.t,
       _hist: series[i]._hist,
       date: String(series[i].date || "").trim() || "—",
@@ -3654,13 +3932,13 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
   ctx.font = "9px DM Sans, sans-serif";
   ctx.textAlign = "left";
   ctx.textBaseline = "middle";
-  for (let g = 0; g <= yTickCount; g++) {
-    const v = minV + ((maxV - minV) * g) / yTickCount;
-    const y = yScale(v);
-    ctx.fillText(String(Math.round(v)), 5, y);
+  for (const tv of yTicks) {
+    if (tv < minV - 1e-9 || tv > maxV + 1e-9) continue;
+    const y = yScale(tv);
+    ctx.fillText(propsChartTickLabel(statKey, tv), 5, y);
   }
   ctx.textBaseline = "alphabetic";
-  const tickMap = propsChartXAxisDateLabels(dates, innerW);
+  const tickMap = propsChartXAxisDateLabels(xAxisPerBar, innerW);
   const xLabFont = n > 36 ? 10 : 12;
   ctx.font = `${xLabFont}px DM Sans, sans-serif`;
   ctx.textAlign = "center";
@@ -3689,7 +3967,7 @@ function renderPropsTrends() {
   if (playerRow) {
     setPropsCountryFlag(playerRow);
     if (titleEl) titleEl.textContent = displayGolferName(playerRow.player_name) || "—";
-    if (subEl) subEl.textContent = DATA.meta.event_name ? String(DATA.meta.event_name) : "";
+    if (subEl) subEl.textContent = "";
   } else {
     if (titleEl) titleEl.textContent = "—";
     if (subEl) subEl.textContent = "";
@@ -3751,7 +4029,7 @@ function renderPropsTrends() {
     lineInp.value = formatPropLineValueForInput(line);
   }
   if (Number.isFinite(line)) propsTrendLastGoodLine = line;
-  const newestFirst = filteredHistoryRounds(dg).slice(0, winN);
+  const newestFirst = propsFilteredRoundsNewestFirst(dg, winN);
   const rawList = newestFirst.slice().sort((a, b) => historyRoundChronoKey(a) - historyRoundChronoKey(b));
   const series = [];
   for (const r of rawList) {
@@ -3794,9 +4072,7 @@ function updatePropsFooterEv() {
           ? "Pars"
           : statKey === "bogeys"
             ? "Bogeys"
-            : statKey === "gir"
-              ? "GIR"
-              : "Fairways hit";
+            : "Total score";
   const rproj = projectionRowForPlayerRound(playerRow?.player_name, getOuRound());
   const pOver = rproj && Number.isFinite(line) ? modelProbOverMarket(marketLabel, rproj, line) : NaN;
   const pUnder = Number.isFinite(pOver) ? 1 - pOver : NaN;
@@ -3886,22 +4162,76 @@ function updatePropsHoleCard() {
 const hangoutPalette = ["#00c46b", "#5ac8fa", "#ff8a8a", "#ffd166", "#c77dff", "#ff9f1c"];
 /** Last simulated path length for resize redraw of `#hh-hole-canvas`. */
 let hangoutCanvasShotCount = 0;
-let hangoutLiveRefreshT = 0;
+let hangoutSimDebounceT = 0;
 
 function hangoutResultsVisible() {
   const vz = document.getElementById("hh-hole-viz");
   return Boolean(vz && !vz.hidden && hangoutCanvasShotCount > 0);
 }
 
+/** Debounced full hole sim so filters and live fields update results without hammering the UI. */
+function scheduleHangoutSimulateDebounced(ms = 240) {
+  window.clearTimeout(hangoutSimDebounceT);
+  hangoutSimDebounceT = window.setTimeout(() => runHangoutSimulate(), ms);
+}
+
 function scheduleHangoutLiveRecompute() {
-  window.clearTimeout(hangoutLiveRefreshT);
-  hangoutLiveRefreshT = window.setTimeout(() => runHangoutSimulate(), 320);
+  scheduleHangoutSimulateDebounced(280);
 }
 
 function onHangoutLiveFieldChanged() {
   hangoutZeroYdsIfGreenLie();
-  if (hangoutResultsVisible()) scheduleHangoutLiveRecompute();
-  else clearHangoutSimulationResults();
+  scheduleHangoutSimulateDebounced();
+}
+
+/** Stack so nested simulate calls (shouldn't happen) restore prior RNG. */
+const _hangoutRngStack = [];
+let _hangoutRngImpl = null;
+
+function hangoutRngU01() {
+  if (typeof _hangoutRngImpl === "function") return _hangoutRngImpl();
+  return Math.random();
+}
+
+function hangoutPushRngState(rngFn) {
+  _hangoutRngStack.push(_hangoutRngImpl);
+  _hangoutRngImpl = rngFn;
+}
+
+function hangoutPopRngState() {
+  _hangoutRngImpl = _hangoutRngStack.pop() ?? null;
+}
+
+function makeMulberry32(a) {
+  return function mulberry32() {
+    let t = (a += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function hangoutFnv1aHash(str) {
+  let h = 2166136261 >>> 0;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+function buildHangoutSimSeedKey(hpars, holeIdx) {
+  const r = getOuRound();
+  const hole = String(holeIdx + 1);
+  const par = hpars[holeIdx] ?? 4;
+  const pid = document.getElementById("hh-player")?.value || "";
+  const w = `${WEATHER_STATE.tempF}|${WEATHER_STATE.windMph}|${WEATHER_STATE.humidityPct}|${WEATHER_STATE.condition}`;
+  const pr = `${PRICING_STATE.mode}|${PRICING_STATE.skill}`;
+  const live = hangoutLiveOn()
+    ? `L|${document.getElementById("hh-shot-num")?.value}|${document.getElementById("hh-dist-yds")?.value}|${document.getElementById("hh-lie")?.value}|${document.getElementById("hh-putt-ft")?.value}`
+    : "N";
+  const meta = `${DATA.meta?.event_name || ""}|${DATA.meta?.course_used || ""}`;
+  return `${meta}|R${r}|H${hole}|P${par}|DG${pid}|${w}|${pr}|${live}`;
 }
 
 /** Last 3-way hole result model for Prob/Price toggle without re-rolling. */
@@ -4146,9 +4476,19 @@ function hangoutZeroYdsIfGreenLie() {
   if (lie === "Green" && di) di.value = "0";
 }
 
+/** Official Augusta National 18-hole par layout (par 72). Used when meta is still generic. */
+const AUGUSTA_NATIONAL_HOLE_PARS = Object.freeze([4, 5, 4, 3, 4, 3, 4, 5, 4, 4, 4, 3, 5, 4, 5, 3, 4, 4]);
+
 function parseHoleParsMeta() {
+  const vn = String(DATA.meta?.course_used || "").trim().toLowerCase();
+  const ev = String(DATA.meta?.event_name || "").trim().toLowerCase();
+  const augustaContext = vn.includes("augusta") || ev.includes("masters");
+  const src = String(DATA.meta?.hole_pars_source || "").toLowerCase();
+  if (augustaContext && src === "generic") return [...AUGUSTA_NATIONAL_HOLE_PARS];
+
   const hp = DATA.meta.hole_pars;
   if (Array.isArray(hp) && hp.length >= 18) return hp.slice(0, 18).map((x) => Math.round(num(x, 4)));
+  if (augustaContext) return [...AUGUSTA_NATIONAL_HOLE_PARS];
   return Array.from({ length: 18 }, () => 4);
 }
 
@@ -4168,7 +4508,7 @@ function clearHangoutSimulationResults() {
   }
   if (pOutRows) {
     pOutRows.innerHTML = hadResults
-      ? '<p class="text-muted" style="margin:0;font-size:0.9rem;">Cleared — run <strong>Simulate hole</strong>.</p>'
+      ? '<p class="text-muted hangout-cleared-msg">Results cleared — change a control or use <strong>Run simulation</strong>.</p>'
       : "";
   }
   const viz = document.getElementById("hh-hole-viz");
@@ -4187,9 +4527,6 @@ function initHangoutSelectors(resetHole) {
   const hp = parseHoleParsMeta();
   const holeSel = document.getElementById("hh-hole");
   const plSel = document.getElementById("hh-player");
-  const courseLine = document.getElementById("hh-course-line");
-  const parHint = document.getElementById("hh-hole-par-hint");
-  if (courseLine) courseLine.textContent = DATA.meta.course_used || "—";
   if (holeSel) {
     const prev = holeSel.value;
     holeSel.innerHTML = "";
@@ -4201,8 +4538,6 @@ function initHangoutSelectors(resetHole) {
     }
     if (!resetHole && prev && num(prev, 0) >= 1 && num(prev, 0) <= 18) holeSel.value = prev;
     else holeSel.value = "1";
-    const hi = num(holeSel.value, 1) - 1;
-    if (parHint) parHint.textContent = `Selected: par ${hp[hi]}`;
   }
   if (plSel) {
     const pr = plSel.value;
@@ -4262,12 +4597,53 @@ function parTilt(holePar, holeParsArr) {
   return t / (base * 3 + 1e-6);
 }
 
+const HANGOUT_FIVE_ORDER = ["eagle", "birdie", "par", "bogey", "double"];
+
+/**
+ * Log-odds tilt for hangout hole outcomes from pricing mode + weather (field difficulty
+ * and skill×weather), consistent with O/U pricing and weather adjustments.
+ */
+function hangoutOutcomeDistributionT(row, dgId) {
+  const id = Math.round(num(dgId, NaN));
+  const pBonus = Number.isFinite(id) ? pricingModeMuSgBonus(id) : 0;
+  const tPrice =
+    Number.isFinite(pBonus) && Math.abs(pBonus) > 1e-12 ? clamp(pBonus * 0.22, -0.09, 0.09) : 0;
+  const d = weatherDifficultyDelta();
+  const tWeatherBase = clamp(-num(d, 0) * 0.055, -0.09, 0.09);
+  const wEdge = playerSkillWeatherEdge(row);
+  const tWeatherSkill =
+    Number.isFinite(wEdge) && Math.abs(wEdge) > 1e-12 ? clamp(wEdge * 0.2, -0.09, 0.09) : 0;
+  return clamp(tPrice + tWeatherBase + tWeatherSkill, -0.2, 0.2);
+}
+
+/** Renormalize eagle..double mix after tilt so Prob bars, expected score, and sampled score align. */
+function hangoutTiltProbsFive(probsFive, t) {
+  if (!Number.isFinite(t) || Math.abs(t) < 1e-12) return probsFive;
+  const mult = {
+    eagle: Math.exp(t * 1.22),
+    birdie: Math.exp(t * 1.02),
+    par: Math.exp(t * 0.12),
+    bogey: Math.exp(-t * 0.88),
+    double: Math.exp(-t * 1.12),
+  };
+  let s = 0;
+  const out = {};
+  for (const k of HANGOUT_FIVE_ORDER) {
+    const v = (probsFive[k] || 0) * mult[k];
+    out[k] = v;
+    s += v;
+  }
+  if (s < 1e-15) return probsFive;
+  for (const k of HANGOUT_FIVE_ORDER) out[k] /= s;
+  return out;
+}
+
 function hangoutLiveOn() {
   return Boolean(document.getElementById("hh-use-live")?.checked);
 }
 
 function hangoutRi(lo, hi) {
-  return Math.round(lo + Math.random() * (hi - lo));
+  return Math.round(lo + hangoutRngU01() * (hi - lo));
 }
 
 function hangoutScoreLabel(holePar, sc) {
@@ -4304,14 +4680,14 @@ function hangoutShotsPar3(sc) {
     return [{ title: "Tee shot", yards: tee, lie: "Green", tag: "Hole-in-one" }];
   }
   if (sc === 2) {
-    const onG = Math.random() < 0.48;
+    const onG = hangoutRngU01() < 0.48;
     return [
       { title: "Tee shot", yards: tee, lie: onG ? "Green" : "Fairway" },
       { title: "Putt", feet: hangoutRi(7, 22), tag: "Birdie" },
     ];
   }
   if (sc === 3) {
-    if (Math.random() < 0.42) {
+    if (hangoutRngU01() < 0.42) {
       return [
         { title: "Tee shot", yards: tee, lie: "Green" },
         { title: "Putt", feet: hangoutRi(22, 38), lie: "" },
@@ -4345,7 +4721,7 @@ function hangoutShotsPar4(sc) {
   const tee = hangoutRi(285, 348);
   if (sc <= 2) {
     return [
-      { title: "Tee shot", yards: tee, lie: Math.random() < 0.4 ? "Green" : "Fairway" },
+      { title: "Tee shot", yards: tee, lie: hangoutRngU01() < 0.4 ? "Green" : "Fairway" },
       { title: "Putt", feet: hangoutRi(4, 28), tag: "Eagle" },
     ];
   }
@@ -4358,7 +4734,7 @@ function hangoutShotsPar4(sc) {
   }
   if (sc === 4) {
     return [
-      { title: "Tee shot", yards: tee, lie: Math.random() < 0.22 ? "Rough" : "Fairway" },
+      { title: "Tee shot", yards: tee, lie: hangoutRngU01() < 0.22 ? "Rough" : "Fairway" },
       { title: "Approach", yards: hangoutRi(118, 168), lie: "Green" },
       { title: "Putt", feet: hangoutRi(22, 38), lie: "" },
       { title: "Putt", feet: hangoutRi(2, 5), tag: "Par" },
@@ -4402,7 +4778,7 @@ function hangoutShotsPar5(sc) {
   }
   if (sc === 5) {
     return [
-      { title: "Tee shot", yards: tee, lie: Math.random() < 0.18 ? "Rough" : "Fairway" },
+      { title: "Tee shot", yards: tee, lie: hangoutRngU01() < 0.18 ? "Rough" : "Fairway" },
       { title: "Layup", yards: hangoutRi(220, 275), lie: "Fairway" },
       { title: "Approach", yards: hangoutRi(105, 148), lie: "Green" },
       { title: "Putt", feet: hangoutRi(22, 36), lie: "" },
@@ -4440,7 +4816,7 @@ function hangoutFallbackShots(holePar, sc) {
     out.push({
       title: "Approach",
       yards: d,
-      lie: Math.random() < 0.2 ? "Rough" : "Green",
+      lie: hangoutRngU01() < 0.2 ? "Rough" : "Green",
     });
     d = Math.max(35, d - hangoutRi(25, 55));
     rem--;
@@ -4565,135 +4941,148 @@ function runHangoutSimulate() {
   const holeIdx = num(document.getElementById("hh-hole")?.value, 1) - 1;
   const holePar = hpars[holeIdx] || 4;
   const holeNum1 = holeIdx + 1;
-  const row = getHangoutPlayerRow();
-  const dname = displayGolferName(String(row?.player_name || "Player"));
-  if (!row) {
-    hangoutCanvasShotCount = 0;
-    hangoutLastThreeProbs = null;
-    if (viz) viz.hidden = true;
-    if (canvas && canvas.getContext) {
-      const c0 = canvas.getContext("2d");
-      if (c0) c0.clearRect(0, 0, canvas.width, canvas.height);
+  const seedKey = buildHangoutSimSeedKey(hpars, holeIdx);
+  const seed32 = hangoutFnv1aHash(seedKey) || 0x9e3779b9;
+  hangoutPushRngState(makeMulberry32(seed32));
+  try {
+    const row = getHangoutPlayerRow();
+    const dname = displayGolferName(String(row?.player_name || "Player"));
+    if (!row) {
+      hangoutCanvasShotCount = 0;
+      hangoutLastThreeProbs = null;
+      if (viz) viz.hidden = true;
+      if (canvas && canvas.getContext) {
+        const c0 = canvas.getContext("2d");
+        if (c0) c0.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      const otb = document.getElementById("hh-out-toolbar");
+      if (otb) otb.hidden = true;
+      if (top) {
+        top.hidden = false;
+        top.innerHTML = `<span class="hh-top-title">Hole ${holeIdx + 1} · Par ${holePar}</span><span class="hh-top-note">${DATA.meta.course_used || ""}</span>`;
+      }
+      pOutRows.innerHTML =
+        '<p class="text-muted" style="margin:0;font-size:0.9rem;">No row for this player/round.</p>';
+      holeCard.innerHTML = "";
+      pSeq.innerHTML = "";
+      return;
     }
-    const otb = document.getElementById("hh-out-toolbar");
-    if (otb) otb.hidden = true;
+    const dgId = Math.round(num(row.dg_id, NaN));
+    const mix = scoreMixFromProjection(row);
+    const tilt = parTilt(holePar, hpars);
+    const liveFive = liveRoughFiveMults();
+    const labels = [
+      { k: "eagle" },
+      { k: "birdie" },
+      { k: "par" },
+      { k: "bogey" },
+      { k: "double" },
+    ];
+    const order = ["eagle", "birdie", "par", "bogey", "double"];
+    const raw = {};
+    let ssum = 0;
+    for (const { k } of labels) {
+      let w = (mix[k] || 0) / 18;
+      if (k === "birdie" && holePar <= 3) w *= 1.12 * tilt;
+      else if (k === "eagle" && holePar >= 5) w *= 1.1 * tilt;
+      else if (k === "par") w *= tilt;
+      else if (k === "bogey") w *= 2 - 0.5 * (tilt - 1);
+      const lm = num(liveFive[k], 1);
+      raw[k] = w * (Number.isFinite(lm) && lm > 0 ? lm : 1);
+      ssum += raw[k];
+    }
+    let probsFive = {};
+    if (ssum < 1e-15) {
+      const u = 0.2;
+      for (const k of order) probsFive[k] = u;
+    } else {
+      for (const { k } of labels) probsFive[k] = raw[k] / ssum;
+    }
+    probsFive = hangoutTiltProbsFive(probsFive, hangoutOutcomeDistributionT(row, dgId));
+    let three = hangoutCollapseFiveToThree(probsFive);
+    three = hangoutNormThree(three);
+    const hist3 = hangoutHistoryPriorThree(dgId, DATA.meta.course_used, DATA.meta.event_name);
+    if (hist3) three = hangoutBlendThree(three, hist3, 0.38);
+    const shotN = clamp(Math.round(num(document.getElementById("hh-shot-num")?.value, 1)), 1, 18);
+    const puttFt = clamp(num(document.getElementById("hh-putt-ft")?.value, 10), 2, 120);
+    const liveGreen = hangoutLiveOn() && String(document.getElementById("hh-lie")?.value || "") === "Green";
+    if (liveGreen) {
+      three = hangoutPuttingThreeWay(holePar, shotN, puttFt);
+      three = hangoutNormThree(three);
+      const tLG = hangoutOutcomeDistributionT(row, dgId);
+      if (Number.isFinite(tLG) && Math.abs(tLG) > 1e-9) {
+        const u = clamp(tLG * 0.38, -0.07, 0.07);
+        three = hangoutNormThree({
+          birdie: three.birdie * Math.exp(u),
+          par: three.par,
+          bogeyPlus: three.bogeyPlus * Math.exp(-u),
+        });
+      }
+      const bg = three.bogeyPlus;
+      probsFive = {
+        eagle: 0,
+        birdie: three.birdie,
+        par: three.par,
+        bogey: bg * 0.78,
+        double: bg * 0.22,
+      };
+    } else {
+      three = hangoutNormThree(three);
+    }
+    hangoutLastThreeProbs = three;
+    const bogM =
+      probsFive.bogey + probsFive.double > 1e-9
+        ? (probsFive.bogey + 2 * probsFive.double) / (probsFive.bogey + probsFive.double)
+        : 1.32;
+    const exp = liveGreen
+      ? shotN - 1 + interpPgaPuttingSeries(puttFt, PGA_PUTT_DISTANCE_FT, PGA_PUTT_TOUR_AVG)
+      : three.birdie * (holePar - 1) + three.par * holePar + three.bogeyPlus * (holePar + bogM);
     if (top) {
       top.hidden = false;
-      top.innerHTML = `<span class="hh-top-title">Hole ${holeIdx + 1} · Par ${holePar}</span><span class="hh-top-note">${DATA.meta.event_name || ""}</span>`;
+      top.innerHTML = `<span class="hh-top-title">Hole ${holeIdx + 1} · Par ${holePar}</span><span class="hh-top-note">${dname} · ${DATA.meta.course_used || ""}</span>`;
     }
-    pOutRows.innerHTML =
-      '<p class="text-muted" style="margin:0;font-size:0.9rem;">No row for this player/round.</p>';
-    holeCard.innerHTML = "";
-    pSeq.innerHTML = "";
-    return;
+    hangoutRenderThreeOutcomes(three);
+    holeCard.innerHTML = `<h4>Expected Score</h4><p class="hangout-pred-score">${exp.toFixed(2)}</p>`;
+    const rPick = hangoutRngU01();
+    let cat = "par";
+    if (rPick < three.birdie) cat = "birdie";
+    else if (rPick < three.birdie + three.par) cat = "par";
+    else cat = "bogeyPlus";
+    let sc;
+    if (cat === "birdie") {
+      const pe = probsFive.eagle;
+      const pb = probsFive.birdie;
+      const den = pe + pb + 1e-12;
+      sc = hangoutRngU01() < pe / den ? holePar - 2 : holePar - 1;
+    } else if (cat === "par") {
+      sc = holePar;
+    } else {
+      const pg = probsFive.bogey;
+      const pd = probsFive.double;
+      const den = pg + pd + 1e-12;
+      sc = hangoutRngU01() < pg / den ? holePar + 1 : holePar + 2;
+    }
+    const shots = hangoutBuildShotsFromBundleOrSynth(holePar, sc, dgId, holeNum1).map((s, i) => hangoutApplyLiveToShot(i + 1, { ...s }));
+    hangoutCanvasShotCount = shots.length;
+    if (viz) viz.hidden = false;
+    if (canvas) drawHangoutHoleCanvas(canvas, shots.length);
+    const rel = hangoutScoreLabel(holePar, sc);
+    const delta = sc - holePar;
+    const scoreCls = delta < 0 ? "good" : delta > 0 ? "bad" : "";
+    const rows = shots.map((s, i) => hangoutShotRowHtml(i + 1, s)).join("");
+    pSeq.innerHTML = `<div class="hangout-seq-head"><h4>Shots</h4><span class="hangout-seq-score ${scoreCls}">${sc} · ${rel}</span></div>${rows}`;
+  } finally {
+    hangoutPopRngState();
   }
-  const dgId = Math.round(num(row.dg_id, NaN));
-  const mix = scoreMixFromProjection(row);
-  const tilt = parTilt(holePar, hpars);
-  const liveFive = liveRoughFiveMults();
-  const labels = [
-    { k: "eagle" },
-    { k: "birdie" },
-    { k: "par" },
-    { k: "bogey" },
-    { k: "double" },
-  ];
-  const order = ["eagle", "birdie", "par", "bogey", "double"];
-  const raw = {};
-  let ssum = 0;
-  for (const { k } of labels) {
-    let w = (mix[k] || 0) / 18;
-    if (k === "birdie" && holePar <= 3) w *= 1.12 * tilt;
-    else if (k === "eagle" && holePar >= 5) w *= 1.1 * tilt;
-    else if (k === "par") w *= tilt;
-    else if (k === "bogey") w *= 2 - 0.5 * (tilt - 1);
-    const lm = num(liveFive[k], 1);
-    raw[k] = w * (Number.isFinite(lm) && lm > 0 ? lm : 1);
-    ssum += raw[k];
-  }
-  const probsFive = {};
-  if (ssum < 1e-15) {
-    const u = 0.2;
-    for (const k of order) probsFive[k] = u;
-  } else {
-    for (const { k } of labels) probsFive[k] = raw[k] / ssum;
-  }
-  let three = hangoutCollapseFiveToThree(probsFive);
-  three = hangoutNormThree(three);
-  const hist3 = hangoutHistoryPriorThree(dgId, DATA.meta.course_used, DATA.meta.event_name);
-  if (hist3) three = hangoutBlendThree(three, hist3, 0.38);
-  const pBonus = pricingModeMuSgBonus(dgId);
-  if (Number.isFinite(pBonus) && Math.abs(pBonus) > 1e-9) {
-    const t = clamp(pBonus * 0.22, -0.09, 0.09);
-    three = hangoutNormThree({
-      birdie: three.birdie * Math.exp(t),
-      par: three.par,
-      bogeyPlus: three.bogeyPlus * Math.exp(-t),
-    });
-  }
-  const shotN = clamp(Math.round(num(document.getElementById("hh-shot-num")?.value, 1)), 1, 18);
-  const puttFt = clamp(num(document.getElementById("hh-putt-ft")?.value, 10), 2, 120);
-  const liveGreen = hangoutLiveOn() && String(document.getElementById("hh-lie")?.value || "") === "Green";
-  if (liveGreen) three = hangoutPuttingThreeWay(holePar, shotN, puttFt);
-  three = hangoutNormThree(three);
-  hangoutLastThreeProbs = three;
-  const bogM =
-    probsFive.bogey + probsFive.double > 1e-9
-      ? (probsFive.bogey + 2 * probsFive.double) / (probsFive.bogey + probsFive.double)
-      : 1.32;
-  const exp = liveGreen
-    ? shotN - 1 + interpPgaPuttingSeries(puttFt, PGA_PUTT_DISTANCE_FT, PGA_PUTT_TOUR_AVG)
-    : three.birdie * (holePar - 1) + three.par * holePar + three.bogeyPlus * (holePar + bogM);
-  if (top) {
-    top.hidden = false;
-    top.innerHTML = `<span class="hh-top-title">Hole ${holeIdx + 1} · Par ${holePar}</span><span class="hh-top-note">${dname} · ${DATA.meta.event_name || ""}</span>`;
-  }
-  hangoutRenderThreeOutcomes(three);
-  const traced = getHangoutShotsBundleRows(dgId, holeNum1);
-  holeCard.innerHTML = `<h4>Hole card</h4><p class="hangout-pred-score">${exp.toFixed(2)}</p><p class="text-muted">Par ${holePar}${traced ? " · traced" : " · model"}</p>`;
-  const rPick = Math.random();
-  let cat = "par";
-  if (rPick < three.birdie) cat = "birdie";
-  else if (rPick < three.birdie + three.par) cat = "par";
-  else cat = "bogeyPlus";
-  let sc;
-  if (cat === "birdie") {
-    const pe = probsFive.eagle;
-    const pb = probsFive.birdie;
-    const den = pe + pb + 1e-12;
-    sc = Math.random() < pe / den ? holePar - 2 : holePar - 1;
-  } else if (cat === "par") {
-    sc = holePar;
-  } else {
-    const pg = probsFive.bogey;
-    const pd = probsFive.double;
-    const den = pg + pd + 1e-12;
-    sc = Math.random() < pg / den ? holePar + 1 : holePar + 2;
-  }
-  const shots = hangoutBuildShotsFromBundleOrSynth(holePar, sc, dgId, holeNum1).map((s, i) => hangoutApplyLiveToShot(i + 1, { ...s }));
-  hangoutCanvasShotCount = shots.length;
-  if (viz) viz.hidden = false;
-  if (canvas) drawHangoutHoleCanvas(canvas, shots.length);
-  const rel = hangoutScoreLabel(holePar, sc);
-  const delta = sc - holePar;
-  const scoreCls = delta < 0 ? "good" : delta > 0 ? "bad" : "";
-  const rows = shots.map((s, i) => hangoutShotRowHtml(i + 1, s)).join("");
-  pSeq.innerHTML = `<div class="hangout-seq-head"><h4>Shots</h4><span class="hangout-seq-score ${scoreCls}">${sc} · ${rel}</span></div>${rows}`;
 }
 
 function updateHangout() {
   initHangoutSelectors(false);
-  const parHint = document.getElementById("hh-hole-par-hint");
-  const hp = parseHoleParsMeta();
-  const hi = num(document.getElementById("hh-hole")?.value, 1) - 1;
-  if (parHint && hi >= 0 && hi < 18) parHint.textContent = `Selected: par ${hp[hi]}`;
-  clearHangoutSimulationResults();
+  scheduleHangoutSimulateDebounced();
 }
 
 function refreshAll() {
   updateRoundLabels();
-  const ot = document.getElementById("outrights-tournament");
-  if (ot) ot.textContent = `Tournament: ${DATA.meta.event_name || "—"}`;
   buildOuTable();
   buildEvTable();
   buildMatchupsTable();
@@ -4701,7 +5090,7 @@ function refreshAll() {
   fillPropGolferSelect();
   renderPropsTrends();
   initHangoutSelectors(false);
-  clearHangoutSimulationResults();
+  scheduleHangoutSimulateDebounced();
 }
 
 /**
@@ -4776,10 +5165,14 @@ function initTabs() {
           const cv = document.getElementById("hh-hole-canvas");
           if (vz && cv && !vz.hidden && hangoutCanvasShotCount > 0) {
             drawHangoutHoleCanvas(cv, hangoutCanvasShotCount);
+          } else {
+            scheduleHangoutSimulateDebounced(0);
           }
         });
       }
-      if (tab === "props") requestAnimationFrame(() => renderPropsTrends());
+      if (tab === "props") {
+        requestAnimationFrame(() => renderPropsTrends());
+      }
     });
   });
 }
@@ -4792,7 +5185,7 @@ document.addEventListener("DOMContentLoaded", () => {
     buildOutrightsTable();
     renderPropsTrends();
     updatePropsFooterEv();
-    if (hangoutResultsVisible()) scheduleHangoutLiveRecompute();
+    scheduleHangoutSimulateDebounced();
   }
   function applyWeatherFrom(ids, syncUi = true) {
     const next = weatherFromUiIds(ids);
@@ -4852,7 +5245,7 @@ document.addEventListener("DOMContentLoaded", () => {
     buildMatchupsTable();
     renderPropsTrends();
     initHangoutSelectors(false);
-    clearHangoutSimulationResults();
+    scheduleHangoutSimulateDebounced();
   });
   document.getElementById("ou-market-filter")?.addEventListener("change", () => {
     ouTableSort = { key: "stat-order", dir: 1 };
@@ -5128,13 +5521,12 @@ document.addEventListener("DOMContentLoaded", () => {
     true
   );
   document.getElementById("hh-hole")?.addEventListener("change", () => updateHangout());
-  document.getElementById("hh-player")?.addEventListener("change", () => clearHangoutSimulationResults());
+  document.getElementById("hh-player")?.addEventListener("change", () => scheduleHangoutSimulateDebounced());
   document.getElementById("hh-sim-run")?.addEventListener("click", () => runHangoutSimulate());
   document.getElementById("hh-odds-mode-prob")?.addEventListener("click", () => setHangoutOddsViewMode(false));
   document.getElementById("hh-odds-mode-price")?.addEventListener("click", () => setHangoutOddsViewMode(true));
   document.getElementById("hh-use-live")?.addEventListener("change", () => {
-    if (hangoutResultsVisible()) scheduleHangoutLiveRecompute();
-    else clearHangoutSimulationResults();
+    scheduleHangoutSimulateDebounced();
   });
   const hhLiveDebounceIds = ["hh-shot-num", "hh-dist-yds", "hh-lie", "hh-putt-ft"];
   hhLiveDebounceIds.forEach((id) => {
@@ -5144,25 +5536,50 @@ document.addEventListener("DOMContentLoaded", () => {
     el.addEventListener("change", () => onHangoutLiveFieldChanged());
   });
   const trendCanvas = document.getElementById("props-trend-canvas");
-  trendCanvas?.addEventListener("mousemove", (ev) => {
-    if (!propsChartHitRegions.length) {
-      trendCanvas.style.cursor = "";
+  function updatePropsTrendChartHover(canvas, ev) {
+    if (!canvas || !propsChartHitRegions.length) {
+      if (canvas) canvas.style.cursor = "";
       hidePropsChartTooltip();
       return;
     }
-    const { x, y } = canvasCoordsFromEvent(trendCanvas, ev);
+    const { x, y } = canvasCoordsFromEvent(canvas, ev);
     const hit = pickPropsChartHit(x, y);
-    trendCanvas.style.cursor = hit ? "pointer" : "default";
+    canvas.style.cursor = hit ? "pointer" : "default";
     if (!hit) {
       hidePropsChartTooltip();
       return;
     }
-    showPropsChartTooltip(trendCanvas, ev, hit);
-  });
-  trendCanvas?.addEventListener("mouseleave", () => hidePropsChartTooltip());
+    showPropsChartTooltip(canvas, ev, hit);
+  }
+  function leavePropsTrendChart(canvas) {
+    if (canvas) canvas.style.cursor = "";
+    hidePropsChartTooltip();
+  }
+  if (trendCanvas) {
+    if (window.PointerEvent) {
+      trendCanvas.addEventListener("pointermove", (ev) => updatePropsTrendChartHover(trendCanvas, ev));
+      trendCanvas.addEventListener("pointerdown", (ev) => updatePropsTrendChartHover(trendCanvas, ev));
+      trendCanvas.addEventListener("pointerleave", () => leavePropsTrendChart(trendCanvas));
+    } else {
+      trendCanvas.addEventListener("mousemove", (ev) => updatePropsTrendChartHover(trendCanvas, ev));
+      trendCanvas.addEventListener("mouseleave", () => leavePropsTrendChart(trendCanvas));
+      trendCanvas.addEventListener(
+        "touchstart",
+        (ev) => {
+          if (ev.touches.length !== 1) return;
+          const t = ev.touches[0];
+          updatePropsTrendChartHover(trendCanvas, t);
+        },
+        { passive: true }
+      );
+    }
+  }
   document.getElementById("prop-stat")?.addEventListener("change", () => syncPropsLineStep());
   syncPropsLineStep();
-  document.addEventListener("click", () => hidePropsChartTooltip());
+  document.addEventListener("click", (e) => {
+    if (e.target instanceof Element && e.target.closest("#props-trend-canvas")) return;
+    hidePropsChartTooltip();
+  });
   void (async () => {
     await loadProjections();
     startProjectionsPolling();

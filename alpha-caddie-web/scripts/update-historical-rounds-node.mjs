@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 /**
  * Merge DataGolf historical-raw-data/rounds into repo data/historical_rounds_all.csv (no R).
- * Default: PGA (2004+) + LIV (2017+) for the same refresh-year window as live_data.R.
+ * Default: refresh every calendar year from 2004 through current (PGA); LIV from 2017 (skipped in-loop).
  *
  * Env:
  *   DATAGOLF_API_KEY or alpha-caddie-web/datagolf.local.json (apiKey)
  *   GOLF_MODEL_DIR — repo root (parent of alpha-caddie-web). Default: parent of this package.
  *   GOLF_HISTORICAL_ROUNDS_TOURS — comma-separated (default: pga,liv). Use "pga" for PGA only.
  *   GOLF_HISTORICAL_ROUNDS_YEARS — override year list
- *   GOLF_HISTORICAL_ROUNDS_LIGHT=1 — current + prior calendar year only
+ *   GOLF_HISTORICAL_ROUNDS_LIGHT=1 — only current + prior calendar year (fast; trims CSV to those years)
+ *   Default without LIGHT: fetch 2004–current (PGA); LIV rows start 2017 (skipped automatically per tour).
  *   GOLF_ROUNDS_PREFER_CSV_FIRST / GOLF_ROUNDS_PREFER_JSON_FIRST — same idea as live_data.R
  *   GOLF_DG_ROUNDS_DELAY_MS — ms between each tour/year request (default 1500; reduces 429s)
  *   GOLF_DG_MAX_ATTEMPTS — retries per request on 429/5xx (default 12)
@@ -24,7 +25,10 @@ const WEB_ROOT = path.resolve(__dirname, "..");
 const MODEL_ROOT = process.env.GOLF_MODEL_DIR ? path.resolve(process.env.GOLF_MODEL_DIR) : path.resolve(WEB_ROOT, "..");
 
 const BASE = "https://feeds.datagolf.com/historical-raw-data/rounds";
-const YEARS_TO_KEEP = 5;
+/** When trimming the on-disk CSV before merge, never drop seasons before this year. */
+const FIRST_HIST_YEAR = 2004;
+/** Rolling window for GOLF_HISTORICAL_ROUNDS_LIGHT=1 only (years to keep + fetch). */
+const LIGHT_YEARS = 2;
 
 const COL_ORDER = [
   "tour",
@@ -107,12 +111,13 @@ function refreshYears() {
     return ys.sort((a, b) => a - b);
   }
   if (process.env.GOLF_HISTORICAL_ROUNDS_LIGHT === "1") {
-    return [cy - 1, cy].filter((y) => y >= 2004).sort((a, b) => a - b);
+    const minY = Math.max(FIRST_HIST_YEAR, cy - LIGHT_YEARS + 1);
+    const out = [];
+    for (let y = minY; y <= cy; y++) out.push(y);
+    return out;
   }
-  let minY = cy - YEARS_TO_KEEP + 1;
-  if (minY < 2004) minY = 2004;
   const out = [];
-  for (let y = minY; y <= cy; y++) out.push(y);
+  for (let y = FIRST_HIST_YEAR; y <= cy; y++) out.push(y);
   return out;
 }
 
@@ -410,7 +415,10 @@ async function main() {
 
   let existing = readCsv(outPath);
   const cy = new Date().getFullYear();
-  const minKeep = cy - YEARS_TO_KEEP + 1;
+  const minKeep =
+    process.env.GOLF_HISTORICAL_ROUNDS_LIGHT === "1"
+      ? Math.max(FIRST_HIST_YEAR, cy - LIGHT_YEARS + 1)
+      : FIRST_HIST_YEAR;
   existing = existing.filter((r) => parseInt(String(r.year), 10) >= minKeep);
 
   let combined = existing.map((r) => normalizeRow(r));

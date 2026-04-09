@@ -21,5 +21,10 @@ alpha-caddie-web/logs/
 **/historical_rounds_all_with_tournament_metadata.csv
 **/historical_rounds_all_with_tournament_metadata_*.csv
 
+# GitHub hard limit 100MB / oversized — keep local only or use Git LFS
+data/historical_outrights_outcomes.csv
+data/historical_matchups_outcomes.csv
+data/historical_matchups_outcomes_*.csv
+
 java/alphacaddie/target/
 java/alphacaddie/.mvn-tools/

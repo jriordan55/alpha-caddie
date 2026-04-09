@@ -10,6 +10,10 @@
  *   GOLF_MODEL_DIR   - repo root (parent of alpha-caddie-web). Default: parent of this package.
  *   HISTORICAL_ROUNDS_CSV - override rounds path
  *   HOLE_DATA_CSV    - override hole_data path; set empty to skip holes pass
+ *   GOLF_HISTORY_MIN_YEAR - first calendar year to keep from CSV (default 2004)
+ *   GOLF_HISTORY_MAX_ROUNDS_PER_PLAYER - cap per player after sort (default 2000; min 50 max 5000)
+ *   HISTORICAL_ROUNDS_METADATA_OVERLAY_CSV - path to *_with_tournament_metadata*.csv for pga_meta_* merge;
+ *     unset = auto-pick newest under data/; "" = disable (canonical columns only)
  *
  * Run from alpha-caddie-web: npm run build:history
  *
@@ -17,10 +21,10 @@
  * npm run fetch:dg refreshes data/historical_rounds_all.csv then runs this script; set
  * ALPHA_CADDIE_PGA_HISTORY=1 on fetch:dg to run the PGA builder after the CSV build.
  *
- * CSV path: prefer golfModel/data/historical_rounds_all.csv and golfModel/data/hole_data.csv
- * (same files as the R model). Falls back to alpha-caddie-web/data/ or repo root only if missing.
- * all_shots_2021_2026.csv is not parsed here (too large for the static bundle); its mtime/size
- * are recorded in meta so the UI can show the model shots file is in sync.
+ * CSV path: prefer golfModel/data/historical_rounds_all.csv (full history). Only if that is missing,
+ * use the newest historical_rounds_all_with_tournament_metadata*.csv (snapshots are often partial).
+ * Historical Trends and weather/meta filters use only this rounds CSV (+ join columns if present).
+ * all_shots_2021_2026.csv is a different pipeline (build-player-shots-web.mjs); not used here.
  */
 
 import fs from "fs";
@@ -39,6 +43,13 @@ function resolveRoundsCsvPath() {
   if (process.env.HISTORICAL_ROUNDS_CSV) {
     return path.resolve(process.env.HISTORICAL_ROUNDS_CSV);
   }
+  const canonicalModel = path.join(MODEL_ROOT, "data", "historical_rounds_all.csv");
+  if (fs.existsSync(canonicalModel)) return canonicalModel;
+  const canonicalWeb = path.join(WEB_ROOT, "data", "historical_rounds_all.csv");
+  if (fs.existsSync(canonicalWeb)) return canonicalWeb;
+  const inRoot = path.join(MODEL_ROOT, "historical_rounds_all.csv");
+  if (fs.existsSync(inRoot)) return inRoot;
+
   const candidates = [];
   const dataDir = path.join(MODEL_ROOT, "data");
   const webDataDir = path.join(WEB_ROOT, "data");
@@ -61,13 +72,47 @@ function resolveRoundsCsvPath() {
     candidates.sort((a, b) => b.mtimeMs - a.mtimeMs);
     return candidates[0].p;
   }
-  const canonical = path.join(MODEL_ROOT, "data", "historical_rounds_all.csv");
-  if (fs.existsSync(canonical)) return canonical;
-  const inWebData = path.join(WEB_ROOT, "data", "historical_rounds_all.csv");
-  if (fs.existsSync(inWebData)) return inWebData;
-  const inRoot = path.join(MODEL_ROOT, "historical_rounds_all.csv");
-  if (fs.existsSync(inRoot)) return inRoot;
-  return canonical;
+  return canonicalModel;
+}
+
+/**
+ * When rounds come from canonical CSV, merge pga_meta_* from a join export (same event_id+year).
+ * Skipped if the primary file is already a *_with_tournament_metadata*.csv.
+ */
+function resolveMetadataOverlayCsvPath() {
+  const base = path.basename(ROUNDS_CSV);
+  if (/historical_rounds_all_with_tournament_metadata/i.test(base)) return null;
+
+  const raw = process.env.HISTORICAL_ROUNDS_METADATA_OVERLAY_CSV;
+  if (raw !== undefined && String(raw).trim() === "") return null;
+  if (raw !== undefined && String(raw).trim() !== "") {
+    const p = path.resolve(String(raw).trim());
+    return fs.existsSync(p) ? p : null;
+  }
+
+  const candidates = [];
+  for (const dir of [path.join(MODEL_ROOT, "data"), path.join(WEB_ROOT, "data")]) {
+    if (!fs.existsSync(dir)) continue;
+    for (const f of fs.readdirSync(dir)) {
+      if (!/^historical_rounds_all_with_tournament_metadata(_\d{8}_\d{6})?\.csv$/i.test(f)) continue;
+      const p = path.join(dir, f);
+      try {
+        candidates.push({ p, mtimeMs: fs.statSync(p).mtimeMs });
+      } catch (_) {
+        // ignore
+      }
+    }
+  }
+  if (!candidates.length) return null;
+  for (const c of candidates) {
+    try {
+      c.size = fs.statSync(c.p).size;
+    } catch (_) {
+      c.size = 0;
+    }
+  }
+  candidates.sort((a, b) => b.size - a.size || b.mtimeMs - a.mtimeMs);
+  return candidates[0].p;
 }
 
 function resolveHoleDataCsv() {
@@ -102,13 +147,23 @@ function shotsModelCsvMeta() {
 }
 
 const ROUNDS_CSV = resolveRoundsCsvPath();
+const METADATA_OVERLAY_CSV = resolveMetadataOverlayCsvPath();
 const HOLES_CSV = resolveHoleDataCsv();
 const PROJECTIONS_JSON = path.join(WEB_ROOT, "projections.json");
 const OUT_JSON = path.join(WEB_ROOT, "player_round_history.json");
 
-const MIN_YEAR = new Date().getFullYear() - 4;
-/** Max rounds stored per player (newest wins). UI shows up to 100; extra buffer for course filter. */
-const MAX_ROUNDS_PER_PLAYER = 200;
+const CY = new Date().getFullYear();
+const MIN_YEAR = (() => {
+  const env = parseInt(String(process.env.GOLF_HISTORY_MIN_YEAR ?? "").trim(), 10);
+  if (Number.isFinite(env) && env >= 1990 && env <= CY + 1) return env;
+  return 2004;
+})();
+/** Max rounds stored per player (newest wins after sort). Keeps bundle size bounded. */
+const MAX_ROUNDS_PER_PLAYER = (() => {
+  const env = parseInt(String(process.env.GOLF_HISTORY_MAX_ROUNDS_PER_PLAYER ?? "").trim(), 10);
+  if (Number.isFinite(env) && env >= 50 && env <= 5000) return env;
+  return 2000;
+})();
 /** Only attach hole-by-hole rows for this many most recent rounds per player (keeps JSON small). */
 const HOLE_JOIN_TAIL = 28;
 
@@ -225,7 +280,49 @@ function sgFields(row) {
   };
 }
 
-async function streamRounds(allowedDgIds) {
+function mergePgaMetaPatch(into, row) {
+  for (const key of Object.keys(row)) {
+    if (!key.startsWith("pga_meta_")) continue;
+    const v = row[key];
+    if (v == null || v === "") continue;
+    if (into[key] == null || into[key] === "") into[key] = v;
+  }
+}
+
+/** event_id|year -> merged pga_meta_* fields (first non-empty wins on duplicates). */
+async function loadPgaMetaOverlayFromCsv(csvPath) {
+  const map = new Map();
+  if (!csvPath || !fs.existsSync(csvPath)) return map;
+  const parser = createReadStream(csvPath).pipe(
+    parse({
+      columns: true,
+      relax_quotes: true,
+      relax_column_count: true,
+      skip_records_with_error: true,
+    })
+  );
+  for await (const row of parser) {
+    const eid = Math.round(num(row.event_id));
+    const yr = parseInt(row.year, 10);
+    if (!Number.isFinite(eid) || !Number.isFinite(yr)) continue;
+    const k = `${eid}|${yr}`;
+    let patch = map.get(k);
+    if (!patch) {
+      patch = {};
+      map.set(k, patch);
+    }
+    mergePgaMetaPatch(patch, row);
+  }
+  console.log(
+    "PGA metadata overlay:",
+    map.size,
+    "event-year keys from",
+    path.basename(csvPath)
+  );
+  return map;
+}
+
+async function streamRounds(allowedDgIds, pgaMetaOverlay) {
   const byDgId = new Map();
 
   if (!fs.existsSync(ROUNDS_CSV)) {
@@ -252,6 +349,11 @@ async function streamRounds(allowedDgIds) {
     const rs = num(row.round_score);
     if (!Number.isFinite(rs)) continue;
 
+    const eid = Math.round(num(row.event_id));
+    const metaPatch =
+      pgaMetaOverlay && Number.isFinite(eid) ? pgaMetaOverlay.get(`${eid}|${yr}`) : null;
+    const rowForWeather = metaPatch ? { ...row, ...metaPatch } : row;
+
     const sortKey = parseUsDateSortKey(row.event_completed) * 10 + (parseInt(row.round_num, 10) || 1);
     const eventName = String(row.event_name || "").trim();
     const courseRaw = String(
@@ -272,7 +374,7 @@ async function streamRounds(allowedDgIds) {
       round_num: parseInt(row.round_num, 10) || 1,
       fin_text: String(row.fin_text || ""),
       ...metricFields(row),
-      ...weatherFields(row),
+      ...weatherFields(rowForWeather),
       ...sgFields(row),
     };
 
@@ -343,11 +445,14 @@ async function streamHoles(allowedTriples) {
 
 async function main() {
   console.log("Rounds CSV:", ROUNDS_CSV);
+  console.log("Metadata overlay CSV:", METADATA_OVERLAY_CSV || "(none)");
+  console.log("min_year (CSV filter):", MIN_YEAR, "| max_rounds/player:", MAX_ROUNDS_PER_PLAYER);
   console.log("Holes CSV:", HOLES_CSV || "(skip)");
   const allowed = loadAllowedDgIds();
   console.log("Allowed dg_ids from projections:", allowed.size);
 
-  const { byDgId, allowedTriples } = await streamRounds(allowed);
+  const pgaMetaOverlay = METADATA_OVERLAY_CSV ? await loadPgaMetaOverlayFromCsv(METADATA_OVERLAY_CSV) : new Map();
+  const { byDgId, allowedTriples } = await streamRounds(allowed, pgaMetaOverlay);
   console.log("Players with rounds:", byDgId.size);
 
   const holesByPlayerKey = await streamHoles(allowedTriples);
@@ -362,6 +467,12 @@ async function main() {
       rounds_csv_mtime: fs.existsSync(ROUNDS_CSV)
         ? new Date(fs.statSync(ROUNDS_CSV).mtimeMs).toISOString()
         : null,
+      metadata_overlay_csv: METADATA_OVERLAY_CSV ? path.basename(METADATA_OVERLAY_CSV) : null,
+      metadata_overlay_csv_relpath: METADATA_OVERLAY_CSV ? relUnderModel(METADATA_OVERLAY_CSV) : null,
+      metadata_overlay_csv_mtime:
+        METADATA_OVERLAY_CSV && fs.existsSync(METADATA_OVERLAY_CSV)
+          ? new Date(fs.statSync(METADATA_OVERLAY_CSV).mtimeMs).toISOString()
+          : null,
       holes_csv: HOLES_CSV ? path.basename(HOLES_CSV) : null,
       holes_csv_relpath: HOLES_CSV ? relUnderModel(HOLES_CSV) : null,
       holes_csv_mtime:
