@@ -1232,6 +1232,7 @@ function drawOuLineDistributionChart() {
     const L = lines[i];
     const pOverRaw = modelProbOverMarket(market, row, L);
     const pOver = clampProb01(pOverRaw);
+    const pUnder = Number.isFinite(pOver) ? 1 - pOver : NaN;
     const pChart = lowerBetter ? pOver : 1 - pOver;
     const pct = Number.isFinite(pChart) ? pChart * 100 : NaN;
     const cx = pad.l + (i + 0.5) * slotW;
@@ -1239,8 +1240,11 @@ function drawOuLineDistributionChart() {
     if (!Number.isFinite(pct)) continue;
     const y0 = yPct(pct);
     const yBase = yPct(0);
-    const highIsGood = lowerBetter ? pct < 50 : pct >= 50;
-    ctx.fillStyle = highIsGood ? "rgba(0, 196, 107, 0.82)" : "rgba(255, 138, 138, 0.88)";
+    // Colors: for round score/bogeys show Under=green, Over=red.
+    // For other markets, keep "high plotted probability" = green.
+    const isUnderFav = Number.isFinite(pUnder) && Number.isFinite(pOver) ? pUnder >= pOver : false;
+    const isGreen = lowerBetter ? isUnderFav : pct >= 50;
+    ctx.fillStyle = isGreen ? "rgba(0, 196, 107, 0.82)" : "rgba(255, 138, 138, 0.88)";
     ctx.fillRect(x0, y0, barW, yBase - y0);
     ctx.strokeStyle = "rgba(255,255,255,0.12)";
     ctx.strokeRect(x0, y0, barW, yBase - y0);
