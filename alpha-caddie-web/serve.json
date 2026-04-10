@@ -1,0 +1,13 @@
+{
+  "headers": [
+    {
+      "source": "**/*.@(html|js|css|json)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, must-revalidate"
+        }
+      ]
+    }
+  ]
+}

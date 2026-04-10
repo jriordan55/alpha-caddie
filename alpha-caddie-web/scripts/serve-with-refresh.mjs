@@ -8,16 +8,26 @@
  * Live model / current strokes and book lines live in projections.json + live-in-play.json — refresh those
  * from repo root with: scripts/refresh_projections_between_rounds.ps1 (R), not this file.
  *
- * By default we only re-fetch the last 2 calendar years of rounds from the API and merge into your existing CSV,
- * so 2004–present history on disk stays intact and you avoid 429s from re-pulling every season on every start.
- * Full historical re-merge: npm run update:rounds (or set GOLF_HISTORICAL_ROUNDS_FULL_ON_START=1).
+ * Historical rounds: merges PGA+LIV from 2004 through current calendar year (same as npm run update:rounds).
+ * For a faster local start without hitting the API, set GOLF_SKIP_HISTORICAL_ROUNDS_MERGE_ON_START=1 (uses CSV on disk).
+ * Optional: GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS=N — only re-pull last N calendar years (keeps older CSV rows).
+ *
+ * Live model (pricing): runs npm run fetch:in-play → live-in-play.json (DataGolf preds/in-play) unless
+ * GOLF_SKIP_LIVE_IN_PLAY_ON_START=1.
+ * While serving, re-runs fetch:in-play on a short interval; the script skips writing when info.last_update
+ * is unchanged (matches DataGolf refresh cadence). Disable: GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER=1.
+ * Override interval (ms): GOLF_LIVE_IN_PLAY_SERVER_POLL_MS (default 60000)
  *
  * Env:
- *   GOLF_SKIP_REFRESH_ON_START=1  — only serve (no API / R)
- *   GOLF_HISTORICAL_ROUNDS_FULL_ON_START=1 — on start, fetch 2004–current like npm run update:rounds (slow)
- *   GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS=N — override recent window (default on start: 2 when not full)
+ *   GOLF_SKIP_REFRESH_ON_START=1 — only serve (no API)
+ *   GOLF_SKIP_HISTORICAL_ROUNDS_MERGE_ON_START=1 — skip rounds CSV merge; still build:history + fetch:in-play + mirror
+ *   GOLF_SKIP_LIVE_IN_PLAY_ON_START=1 — skip preds/in-play fetch on start
+ *   GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER=1 — do not re-fetch live-in-play.json every 5 min while serving
+ *   GOLF_LIVE_IN_PLAY_SERVER_POLL_MS — disk refresh interval in ms (default 60000)
+ *   GOLF_HISTORICAL_ROUNDS_LIGHT=1 — destructive: trim CSV to last 2 seasons (avoid unless you mean it)
+ *   GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS=N — partial API refresh only
  *   ALPHA_CADDIE_START_FETCH_DG=1 — run full fetch:dg instead of rounds+history only
- *   PORT                          — serve port (default 5173)
+ *   PORT — serve port (default 5173)
  */
 import { spawn, spawnSync } from "child_process";
 import fs from "fs";
@@ -62,24 +72,21 @@ function refreshBeforeServe() {
   const key = loadApiKey();
   const roundsNode = path.join(WEB_ROOT, "scripts", "update-historical-rounds-node.mjs");
 
-  if (key && fs.existsSync(roundsNode)) {
+  if (process.env.GOLF_SKIP_HISTORICAL_ROUNDS_MERGE_ON_START === "1") {
+    console.log(
+      "[alpha-caddie-web] GOLF_SKIP_HISTORICAL_ROUNDS_MERGE_ON_START=1 — skipping DataGolf rounds merge (using historical_rounds_all.csv on disk)."
+    );
+  } else if (key && fs.existsSync(roundsNode)) {
     const roundsEnv = { ...process.env, GOLF_MODEL_DIR: REPO_ROOT, DATAGOLF_API_KEY: key };
-    const fullStart = process.env.GOLF_HISTORICAL_ROUNDS_FULL_ON_START === "1";
     const hasYears = String(process.env.GOLF_HISTORICAL_ROUNDS_YEARS || "").trim();
     const light = process.env.GOLF_HISTORICAL_ROUNDS_LIGHT === "1";
-    let explicitRecent = String(process.env.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "").trim();
-    if (!fullStart && !hasYears && !light && !explicitRecent) {
-      roundsEnv.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS = "2";
-      explicitRecent = "2";
-    }
     const recentFetch = String(roundsEnv.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "").trim();
     const recentMerge = !light && !!recentFetch;
-    let mergeNote = "…";
+    let mergeNote = "(full 2004–current PGA + LIV merge into repo CSV) …";
     if (light) mergeNote = "(LIGHT=1: trims CSV to recent seasons) …";
     else if (hasYears) mergeNote = "(custom GOLF_HISTORICAL_ROUNDS_YEARS) …";
-    else if (recentMerge) mergeNote = `(API: last ${recentFetch} season(s); older 2004+ rows on disk kept) …`;
-    else if (fullStart) mergeNote = "(full 2004–present from API) …";
-    console.log("[alpha-caddie-web] Merging DataGolf rounds (PGA + LIV) → data/historical_rounds_all.csv", mergeNote);
+    else if (recentMerge) mergeNote = `(API: last ${recentFetch} season(s) only; older rows on disk preserved) …`;
+    console.log("[alpha-caddie-web] Merging DataGolf rounds → data/historical_rounds_all.csv", mergeNote);
     const u = spawnSync(process.execPath, [roundsNode], {
       cwd: WEB_ROOT,
       stdio: "inherit",
@@ -123,6 +130,19 @@ function refreshBeforeServe() {
     if (s.status !== 0) console.warn("[alpha-caddie-web] build-player-shots-web exited", s.status);
   }
 
+  const livePlay = path.join(WEB_ROOT, "scripts", "fetch-live-in-play.mjs");
+  if (key && fs.existsSync(livePlay) && process.env.GOLF_SKIP_LIVE_IN_PLAY_ON_START !== "1") {
+    console.log("[alpha-caddie-web] DataGolf preds/in-play → live-in-play.json …");
+    const lp = spawnSync(process.execPath, [livePlay], {
+      cwd: WEB_ROOT,
+      stdio: "inherit",
+      env: { ...process.env, GOLF_MODEL_DIR: REPO_ROOT, DATAGOLF_API_KEY: key },
+    });
+    if (lp.status !== 0) {
+      console.warn("[alpha-caddie-web] fetch:in-play exited", lp.status, "— keep existing live-in-play.json if present.");
+    }
+  }
+
   mirrorModelDataToWeb(REPO_ROOT, WEB_ROOT);
 }
 
@@ -141,6 +161,28 @@ const child = spawn("npx", ["--yes", "serve", ".", "-p", port], {
   shell: true,
   env: process.env,
 });
+
+function startLiveInPlayDiskPoller() {
+  if (process.env.GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER === "1") return;
+  const key = loadApiKey();
+  const script = path.join(WEB_ROOT, "scripts", "fetch-live-in-play.mjs");
+  if (!key || !fs.existsSync(script)) return;
+  const ms = Math.min(600_000, Math.max(30_000, Number(process.env.GOLF_LIVE_IN_PLAY_SERVER_POLL_MS || 60_000)));
+  setInterval(() => {
+    const bg = spawn(process.execPath, [script], {
+      cwd: WEB_ROOT,
+      stdio: "ignore",
+      env: { ...process.env, GOLF_MODEL_DIR: REPO_ROOT, DATAGOLF_API_KEY: key },
+    });
+    bg.on("error", () => {});
+  }, ms);
+  console.log(
+    "[alpha-caddie-web] live-in-play.json disk refresh every",
+    Math.round(ms / 1000),
+    "s (DataGolf preds/in-play). Set GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER=1 to disable."
+  );
+}
+startLiveInPlayDiskPoller();
 
 child.on("exit", (code, signal) => {
   if (signal) process.kill(process.pid, signal);

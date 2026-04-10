@@ -6,10 +6,13 @@
  * or window.__ALPHA_CADDIE_PROJECTIONS_URL__. Round history: embedded-player-round-history.js;
  * player_round_history.json + player_shots_web.json when served over HTTP.
  *
- * Live placement probs (win, top_5, top_10, top_20, make_cut / mc): place live-in-play.json next to projections.json
- * (scripts/fetch_datagolf_in_play.R; refresh_projections_between_rounds.ps1 runs it after export).
- * On each load the app fetches that file once and merges into all player rows (no poll flag required).
- * Optional repeat merge: meta.poll_datagolf_live_predictions or ?liveOverlay=1 — never embed a DG key here.
+ * Live placement probs (DataGolf preds/in-play): live-in-play.json next to projections.json
+ * (npm run fetch:in-play, or scripts/fetch_datagolf_in_play.R after R export). JSON uses win/top_* as
+ * decimals in (0,1) when odds_format=percent (per DataGolf docs). Over HTTP the app refetches
+ * live-in-play.json often (default ~60s) but only re-merges pricing when DataGolf’s payload changes,
+ * using info.last_update when present (same signal as their ~5 min model refresh). Opt out: ?liveInPlay=0
+ * or ?liveInPlayPoll=0, or meta.poll_datagolf_live_predictions: false. Poll interval: ?liveInPlayPoll=90
+ * (seconds, 30–600). Never embed a DG API key in the browser.
  */
 
 const OU_HOLD = 0.048;
@@ -543,6 +546,8 @@ let lastProjectionsLoadedAtMs = 0;
 /** Min time since last successful projections load before +EV tab triggers another silent fetch. */
 
 let datagolfLivePollTimerId = 0;
+/** Fingerprint of last merged preds/in-play (info.last_update); skip merge until DataGolf publishes a new one. */
+let lastDatagolfInPlayToken = "";
 
 function projectionsJsonUrl() {
   if (typeof window !== "undefined" && window.__ALPHA_CADDIE_PROJECTIONS_URL__) {
@@ -575,14 +580,32 @@ function liveInPlayJsonUrl() {
   }
 }
 
+function datagolfLivePollingDisabledExplicitly() {
+  try {
+    const q = new URLSearchParams(window.location.search);
+    const poll = (q.get("liveInPlayPoll") || "").trim().toLowerCase();
+    if (poll === "0" || poll === "off" || poll === "false" || poll === "no") return true;
+    if (q.get("liveInPlay") === "0" || q.get("liveOverlay") === "0") return true;
+  } catch (_) {}
+  if (DATA?.meta && DATA.meta.poll_datagolf_live_predictions === false) return true;
+  return false;
+}
+
+/** Refetch live-in-play.json on an interval when not file:// and not explicitly disabled. */
 function datagolfLiveOverlayEnabled() {
   try {
     const q = new URLSearchParams(window.location.search);
     if (q.get("liveOverlay") === "1" || q.get("liveInPlay") === "1") return true;
   } catch (_) {}
-  return Boolean(DATA && DATA.meta && DATA.meta.poll_datagolf_live_predictions);
+  if (datagolfLivePollingDisabledExplicitly()) return false;
+  if (DATA?.meta?.poll_datagolf_live_predictions === true) return true;
+  return !isFileProtocol();
 }
 
+/**
+ * How often to check live-in-play.json. Merges only when dgInPlayUpdateToken() changes (DataGolf last_update).
+ * Default 60s — catches their ~5 min model refresh within a minute without waiting a full 5 min cycle.
+ */
 function datagolfLivePollIntervalMs() {
   try {
     const q = new URLSearchParams(window.location.search).get("liveInPlayPoll");
@@ -592,9 +615,49 @@ function datagolfLivePollIntervalMs() {
       return Math.min(600, Math.max(30, sec)) * 1000;
     }
   } catch (_) {}
-  const sec = num(DATA.meta?.datagolf_live_poll_interval_sec, 300);
-  if (!Number.isFinite(sec) || sec < 30) return 300 * 1000;
+  const sec = num(DATA.meta?.datagolf_live_poll_interval_sec, 60);
+  if (!Number.isFinite(sec) || sec < 30) return 60 * 1000;
   return Math.min(600, Math.max(30, sec)) * 1000;
+}
+
+/** First non-null field from row (JSON API may use snake_case or camelCase). */
+function dgInPlayField(row, names) {
+  for (const k of names) {
+    if (row[k] == null || row[k] === "") continue;
+    return row[k];
+  }
+  return undefined;
+}
+
+/** Stable token from preds/in-play JSON so we only re-merge after DataGolf updates the feed. */
+function dgInPlayUpdateToken(j) {
+  if (!j || typeof j !== "object") return "";
+  const info = j.info && typeof j.info === "object" ? j.info : {};
+  const lu = info.last_update != null ? String(info.last_update).trim() : "";
+  if (lu) return `lu:${lu}`;
+  const n = Array.isArray(j.data) ? j.data.length : 0;
+  const parts = [];
+  for (let i = 0; i < Math.min(8, n); i++) {
+    const r = j.data[i];
+    if (!r || typeof r !== "object") continue;
+    const w = num(dgInPlayField(r, ["win", "win_prob"]), NaN);
+    parts.push(`${dgInPlayField(r, ["dg_id", "dgId"]) ?? ""}:${Number.isFinite(w) ? w.toFixed(5) : ""}`);
+  }
+  return `fb:${n}:${parts.join("|")}`;
+}
+
+function playerDgFingerprint(players) {
+  if (!Array.isArray(players) || !players.length) return "";
+  const ids = [];
+  const seen = new Set();
+  for (const p of players) {
+    const id = Math.round(num(p.dg_id, NaN));
+    if (!Number.isFinite(id) || seen.has(id)) continue;
+    seen.add(id);
+    ids.push(id);
+  }
+  ids.sort((a, b) => a - b);
+  return `${ids.length}:${ids.slice(0, 400).join(",")}`;
 }
 
 /**
@@ -610,26 +673,30 @@ function mergeDatagolfInPlayPayload(j) {
   let touched = 0;
   for (const row of j.data) {
     if (!row || typeof row !== "object") continue;
-    const id = Math.round(num(row.dg_id, NaN));
+    const id = Math.round(num(dgInPlayField(row, ["dg_id", "dgId"]) ?? row.dg_id, NaN));
     if (!Number.isFinite(id)) continue;
-    const win = datagolfModelProb01(row.win);
-    const top5 = datagolfModelProb01(row.top_5);
-    const top10 = datagolfModelProb01(row.top_10);
-    const top20 = datagolfModelProb01(row.top_20);
-    let makeCut = datagolfModelProb01(row.make_cut);
+    const win = datagolfModelProb01(dgInPlayField(row, ["win", "win_prob", "p_win"]));
+    const top5 = datagolfModelProb01(dgInPlayField(row, ["top_5", "top5"]));
+    const top10 = datagolfModelProb01(dgInPlayField(row, ["top_10", "top10"]));
+    const top20 = datagolfModelProb01(dgInPlayField(row, ["top_20", "top20"]));
+    let makeCut = datagolfModelProb01(dgInPlayField(row, ["make_cut", "makeCut"]));
     if (!Number.isFinite(makeCut)) {
-      const mcRaw = row.mc != null ? row.mc : row.miss_cut;
+      const mcRaw = dgInPlayField(row, ["mc", "miss_cut", "missCut"]);
       const mcP = datagolfModelProb01(mcRaw);
       if (Number.isFinite(mcP)) makeCut = 1 - mcP;
     }
     const byId = DATA.players.filter((p) => Math.round(num(p.dg_id, NaN)) === id);
     if (!byId.length) continue;
+    const curPos = dgInPlayField(row, ["current_pos", "currentPos"]);
+    const curScore = dgInPlayField(row, ["current_score", "currentScore"]);
     for (const p of byId) {
       if (Number.isFinite(win)) p.win = win;
       if (Number.isFinite(top5)) p.top_5 = top5;
       if (Number.isFinite(top10)) p.top_10 = top10;
       if (Number.isFinite(top20)) p.top_20 = top20;
       if (Number.isFinite(makeCut)) p.make_cut = makeCut;
+      if (curPos != null && String(curPos).trim() !== "") p.current_pos = String(curPos).trim();
+      if (Number.isFinite(num(curScore, NaN))) p.current_score = num(curScore, NaN);
       touched++;
     }
   }
@@ -650,6 +717,7 @@ function mergeDatagolfInPlayPayload(j) {
 async function fetchAndMergeDatagolfLiveInPlay(opts = {}) {
   const force = Boolean(opts.force);
   if (isFileProtocol()) return;
+  if (datagolfLivePollingDisabledExplicitly()) return;
   if (!force && !datagolfLiveOverlayEnabled()) return;
   if (!DATA.players || !DATA.players.length) return;
   const url = liveInPlayJsonUrl();
@@ -657,9 +725,14 @@ async function fetchAndMergeDatagolfLiveInPlay(opts = {}) {
     const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) return;
     const j = await res.json();
-    if (!mergeDatagolfInPlayPayload(j)) return;
-    refreshPricingAffectedViews();
-    updateStatusBar();
+    const token = dgInPlayUpdateToken(j);
+    if (!force && token && lastDatagolfInPlayToken && token === lastDatagolfInPlayToken) return;
+    const merged = mergeDatagolfInPlayPayload(j);
+    if (token) lastDatagolfInPlayToken = token;
+    if (merged) {
+      refreshPricingAffectedViews();
+      updateStatusBar();
+    }
   } catch (_) {
     /* ignore missing live file or CORS */
   }
@@ -729,6 +802,7 @@ function setBootError(msg) {
 }
 
 function applyPayload(raw) {
+  const prevFieldFp = playerDgFingerprint(DATA.players);
   const players = Array.isArray(raw.players) ? raw.players : [];
   const props = Array.isArray(raw.props) ? raw.props : [];
   let outrights = raw.outrights && typeof raw.outrights === "object" ? raw.outrights : {};
@@ -753,6 +827,8 @@ function applyPayload(raw) {
     outrights,
     matchups,
   };
+  const nextFieldFp = playerDgFingerprint(players);
+  if (prevFieldFp !== nextFieldFp) lastDatagolfInPlayToken = "";
 }
 
 function ouDisplayRoundAuto() {
@@ -802,11 +878,7 @@ function updateStatusBar() {
   const el = document.getElementById("data-status-primary");
   if (!el) return;
   const m = DATA.meta || {};
-  let line = m.course_used ? String(m.course_used) : "—";
-  if (m.datagolf_live_last_update && String(m.datagolf_live_last_update).trim()) {
-    line += ` · Live model ${String(m.datagolf_live_last_update).trim()}`;
-  }
-  el.textContent = line;
+  el.textContent = m.course_used ? String(m.course_used) : "—";
 }
 
 function configureRoundPickerUi() {
@@ -997,38 +1069,6 @@ function weatherAdjustedMuSg(row) {
   return base + playerSkillWeatherEdge(row);
 }
 
-function logistic(x) {
-  if (!Number.isFinite(x)) return NaN;
-  if (x > 40) return 1;
-  if (x < -40) return 0;
-  return 1 / (1 + Math.exp(-x));
-}
-
-function logit(p) {
-  const pp = clamp(num(p, NaN), 1e-6, 1 - 1e-6);
-  if (!Number.isFinite(pp)) return NaN;
-  return Math.log(pp / (1 - pp));
-}
-
-function weatherAdjustedOutrightProb(baseP, rowPlayer, marketKey) {
-  if (!Number.isFinite(baseP)) return NaN;
-  const k =
-    marketKey === "win"
-      ? 0.35
-      : marketKey === "top_5"
-        ? 0.28
-        : marketKey === "top_10"
-          ? 0.22
-          : marketKey === "top_20"
-            ? 0.16
-            : 0.1;
-  const wShift = playerSkillWeatherEdge(rowPlayer) * k;
-  const id = Math.round(num(rowPlayer?.dg_id, NaN));
-  const pB = Number.isFinite(id) ? pricingModeMuSgBonus(id) : 0;
-  const pShift = Number.isFinite(pB) ? pB * k * 2.35 : 0;
-  return clamp(logistic(logit(baseP) + wShift + pShift), 1e-4, 1 - 1e-4);
-}
-
 function ouStatRec(market) {
   return OU_STAT_MAP[market] || OU_STAT_MAP["Total score"];
 }
@@ -1086,12 +1126,29 @@ function enforceHalfLine(v) {
   return Math.round(v - 0.5) + 0.5;
 }
 
-function selectedOuLine() {
+function parseOuLineFilterInput() {
   const el = document.getElementById("ou-line-filter");
-  const raw = num(el?.value, NaN);
-  const v = enforceHalfLine(raw);
-  if (el && Number.isFinite(v)) el.value = v.toFixed(1);
-  return v;
+  if (!el) return NaN;
+  const s = String(el.value ?? "").trim();
+  if (!s || s === "-" || s === "+" || s === "." || s === "-." || s === "+.") return NaN;
+  const raw = num(s, NaN);
+  if (!Number.isFinite(raw)) return NaN;
+  return enforceHalfLine(raw);
+}
+
+/** Highlight / odds column: parsed line if valid, else last committed (typing must not snap every keystroke). */
+function lineSelForOuTable() {
+  const v = parseOuLineFilterInput();
+  return Number.isFinite(v) ? v : ouLineCommitted;
+}
+
+function commitOuLineFilterValue() {
+  const el = document.getElementById("ou-line-filter");
+  if (!el) return;
+  let v = parseOuLineFilterInput();
+  if (!Number.isFinite(v)) v = ouLineCommitted;
+  else ouLineCommitted = v;
+  el.value = ouLineCommitted.toFixed(1);
 }
 
 function selectedOuOddsById(inputId, normalizeInput = false) {
@@ -1146,6 +1203,8 @@ function ouCellEdgeStackHtml(market, p, L, pImpOver, pImpUnder, viewMode, oddsOv
 /** Default: same order as projections (expected total ↑, or stat ↓ for props-style markets). */
 let ouTableSort = { key: "stat-order", dir: 1 };
 let ouTableSortInited = false;
+/** Last snapped O/U line; used while the line input is empty or mid-edit (avoid rewriting on every keystroke). */
+let ouLineCommitted = 70.5;
 
 function ouTableSortValue(playerRow, market, lineSel, pImpOverSel, pImpUnderSel, sortKey) {
   if (sortKey === "golfer") return displayGolferName(playerRow.player_name || "").toLowerCase();
@@ -1220,9 +1279,7 @@ function buildOuTable() {
   const thead = table.querySelector("thead");
   const tbody = table.querySelector("tbody");
   if (!thead || !tbody) return;
-  const lineInp = document.getElementById("ou-line-filter");
-  if (lineInp) lineInp.step = "0.5";
-  const lineSel = selectedOuLine();
+  const lineSel = lineSelForOuTable();
   const oddsOver = selectedOuOddsById("ou-odds-over-filter");
   const oddsUnder = selectedOuOddsById("ou-odds-under-filter");
   const pImpOver = impliedProbFromAmerican(oddsOver);
@@ -2646,7 +2703,9 @@ function modelProbOutrightMarket(rowPlayer, marketKey) {
   let baseP = datagolfModelProb01(raw);
   if (marketKey === "mc" && Number.isFinite(baseP)) baseP = 1 - baseP;
   if (!Number.isFinite(baseP)) return NaN;
-  return weatherAdjustedOutrightProb(baseP, rowPlayer, marketKey);
+  // Placement probs from DataGolf are already event-conditional; additive logit shifts
+  // (weather / pricing-mode) blow up rare events — use raw p for model price & +EV.
+  return clamp(baseP, 1e-6, 1 - 1e-6);
 }
 
 let outrightSort = { key: "player", dir: 1 };
@@ -5556,14 +5615,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const inp = document.getElementById("ou-line-filter");
     if (inp && rng.length) {
       const mid = m === "Total score" ? 70.5 : enforceHalfLine(rng[Math.floor(rng.length / 2)]);
-      inp.step = "0.5";
-      inp.value = Number.isFinite(mid) ? Number(mid).toFixed(1) : "70.5";
+      ouLineCommitted = Number.isFinite(mid) ? mid : 70.5;
+      inp.value = ouLineCommitted.toFixed(1);
     }
     buildOuTable();
   });
   document.getElementById("ou-player-filter")?.addEventListener("change", () => buildOuTable());
-  document.getElementById("ou-line-filter")?.addEventListener("change", () => buildOuTable());
+  document.getElementById("ou-line-filter")?.addEventListener("change", () => {
+    commitOuLineFilterValue();
+    buildOuTable();
+  });
   document.getElementById("ou-line-filter")?.addEventListener("input", () => buildOuTable());
+  document.getElementById("ou-line-filter")?.addEventListener("blur", () => {
+    commitOuLineFilterValue();
+    buildOuTable();
+  });
+  {
+    const v0 = parseOuLineFilterInput();
+    if (Number.isFinite(v0)) ouLineCommitted = v0;
+  }
   document.getElementById("ou-odds-over-filter")?.addEventListener("change", () => {
     selectedOuOddsById("ou-odds-over-filter", true);
     buildOuTable();
