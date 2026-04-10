@@ -14,6 +14,28 @@
 
 const OU_HOLD = 0.048;
 const OU_DEFAULT_ODDS_AM = -110;
+
+/**
+ * Max model-implied / book-implied ratio before we hide outright EV (stale projections.json model vs
+ * updated book cells — otherwise EV shows thousands of %). Real edges this wide are extremely rare.
+ */
+const OUTRIGHT_EV_MAX_MODEL_TO_BOOK_RATIO = Object.freeze({
+  win: 28,
+  top_5: 22,
+  top_10: 16,
+  top_20: 12,
+  make_cut: 10,
+  mc: 10,
+});
+
+/** @returns {number} EV or NaN if ratio implausible or inputs invalid */
+function outrightEvFromModelAndBook(modelP, pBook, marketKey) {
+  if (!Number.isFinite(modelP) || !Number.isFinite(pBook) || modelP <= 0 || pBook <= 0 || pBook >= 1) return NaN;
+  const cap = OUTRIGHT_EV_MAX_MODEL_TO_BOOK_RATIO[marketKey];
+  if (!Number.isFinite(cap) || cap <= 0) return NaN;
+  if (modelP / pBook > cap) return NaN;
+  return modelP / pBook - 1;
+}
 const PROPS_HISTORY_ROUND_MIN = 1;
 /** Upper bound for the “Rounds” window; raise if bundles store more per player. */
 const PROPS_HISTORY_ROUND_MAX = 2000;
@@ -509,7 +531,6 @@ let projectionsLoadInFlight = false;
 /** Set when projections.json (or bundled demo) finishes applying; used to refetch market odds on +EV. */
 let lastProjectionsLoadedAtMs = 0;
 /** Min time since last successful projections load before +EV tab triggers another silent fetch. */
-const EV_TAB_REFETCH_MIN_GAP_MS = 20000;
 
 let datagolfLivePollTimerId = 0;
 
@@ -2260,7 +2281,8 @@ function collectUnifiedEvRows() {
         if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
         const pBook = pct / 100;
         if (pBook <= 0 || pBook >= 1) continue;
-        const ev = modelP / pBook - 1;
+        const ev = outrightEvFromModelAndBook(modelP, pBook, mk);
+        if (!Number.isFinite(ev)) continue;
         if (!Number.isFinite(bestEv) || ev > bestEv) {
           bestEv = ev;
           bestBook = bk;
@@ -2640,7 +2662,8 @@ function buildOutrightsTableBodyOnly() {
       const pBook = pct / 100;
       if (pBook <= 0 || pBook >= 1) continue;
       if (!Number.isFinite(modelP) || modelP <= 0) continue;
-      const ev = modelP / pBook - 1;
+      const ev = outrightEvFromModelAndBook(modelP, pBook, mk);
+      if (!Number.isFinite(ev)) continue;
       const am = americanFromImpliedProb(pBook);
       if (!Number.isFinite(bestEv) || ev > bestEv) {
         bestEv = ev;
@@ -5401,30 +5424,9 @@ function activeAppTabId() {
   return active ? String(active.getAttribute("data-tab") || "") : "";
 }
 
-/** Refetch projections so matchups/outrights odds update; on failure (silent) DATA is unchanged. */
-function refreshMarketOddsFromServer() {
-  if (isFileProtocol()) {
-    buildEvTable();
-    return;
-  }
-  buildEvTable();
-  void loadProjections({ silent: true, reloadSidecar: false });
-}
-
-/**
- * When opening +EV, pull fresh book odds if we have not loaded recently (e.g. poll off or user was elsewhere).
- */
+/** Rebuild +EV table from already-loaded DATA (book odds come from projections.json; optional background poll updates DATA). */
 function syncEvTabOddsAfterShow() {
-  if (isFileProtocol()) {
-    buildEvTable();
-    return;
-  }
-  const age = Date.now() - lastProjectionsLoadedAtMs;
-  if (!Number.isFinite(age) || age >= EV_TAB_REFETCH_MIN_GAP_MS) {
-    refreshMarketOddsFromServer();
-  } else {
-    buildEvTable();
-  }
+  buildEvTable();
 }
 
 function initTabs() {
@@ -5624,7 +5626,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("ev-boost-pct")?.addEventListener("input", () => buildEvTable());
   document.getElementById("ev-boost-pct")?.addEventListener("change", () => buildEvTable());
   document.getElementById("btn-ev-devig")?.addEventListener("click", () => openEvDevigDialog());
-  document.getElementById("btn-ev-refresh")?.addEventListener("click", () => refreshMarketOddsFromServer());
   document.getElementById("btn-ev-help")?.addEventListener("click", () => openEvHelpDialog());
   document.getElementById("ev-help-close-x")?.addEventListener("click", () => closeEvHelpDialog());
   document.getElementById("ev-help-dismiss")?.addEventListener("click", () => closeEvHelpDialog());

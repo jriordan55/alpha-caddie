@@ -1,12 +1,21 @@
 #!/usr/bin/env node
 /**
  * npm start / npm run dev — before serving static files:
- *   1) Pull latest rounds into data/historical_rounds_all.csv (DataGolf, Node — no R)
+ *   1) Merge latest rounds into data/historical_rounds_all.csv (DataGolf, Node — no R)
  *   2) Rebuild player_round_history.json from that CSV
  *   3) Write embedded-player-round-history.js (same as npm run build:history tail)
  *
+ * Live model / current strokes and book lines live in projections.json + live-in-play.json — refresh those
+ * from repo root with: scripts/refresh_projections_between_rounds.ps1 (R), not this file.
+ *
+ * By default we only re-fetch the last 2 calendar years of rounds from the API and merge into your existing CSV,
+ * so 2004–present history on disk stays intact and you avoid 429s from re-pulling every season on every start.
+ * Full historical re-merge: npm run update:rounds (or set GOLF_HISTORICAL_ROUNDS_FULL_ON_START=1).
+ *
  * Env:
  *   GOLF_SKIP_REFRESH_ON_START=1  — only serve (no API / R)
+ *   GOLF_HISTORICAL_ROUNDS_FULL_ON_START=1 — on start, fetch 2004–current like npm run update:rounds (slow)
+ *   GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS=N — override recent window (default on start: 2 when not full)
  *   ALPHA_CADDIE_START_FETCH_DG=1 — run full fetch:dg instead of rounds+history only
  *   PORT                          — serve port (default 5173)
  */
@@ -54,11 +63,27 @@ function refreshBeforeServe() {
   const roundsNode = path.join(WEB_ROOT, "scripts", "update-historical-rounds-node.mjs");
 
   if (key && fs.existsSync(roundsNode)) {
-    console.log("[alpha-caddie-web] Merging latest DataGolf rounds (PGA + LIV) → data/historical_rounds_all.csv …");
+    const roundsEnv = { ...process.env, GOLF_MODEL_DIR: REPO_ROOT, DATAGOLF_API_KEY: key };
+    const fullStart = process.env.GOLF_HISTORICAL_ROUNDS_FULL_ON_START === "1";
+    const hasYears = String(process.env.GOLF_HISTORICAL_ROUNDS_YEARS || "").trim();
+    const light = process.env.GOLF_HISTORICAL_ROUNDS_LIGHT === "1";
+    let explicitRecent = String(process.env.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "").trim();
+    if (!fullStart && !hasYears && !light && !explicitRecent) {
+      roundsEnv.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS = "2";
+      explicitRecent = "2";
+    }
+    const recentFetch = String(roundsEnv.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "").trim();
+    const recentMerge = !light && !!recentFetch;
+    let mergeNote = "…";
+    if (light) mergeNote = "(LIGHT=1: trims CSV to recent seasons) …";
+    else if (hasYears) mergeNote = "(custom GOLF_HISTORICAL_ROUNDS_YEARS) …";
+    else if (recentMerge) mergeNote = `(API: last ${recentFetch} season(s); older 2004+ rows on disk kept) …`;
+    else if (fullStart) mergeNote = "(full 2004–present from API) …";
+    console.log("[alpha-caddie-web] Merging DataGolf rounds (PGA + LIV) → data/historical_rounds_all.csv", mergeNote);
     const u = spawnSync(process.execPath, [roundsNode], {
       cwd: WEB_ROOT,
       stdio: "inherit",
-      env: { ...process.env, GOLF_MODEL_DIR: REPO_ROOT, DATAGOLF_API_KEY: key },
+      env: roundsEnv,
     });
     if (u.status !== 0) {
       console.warn("[alpha-caddie-web] Rounds update failed (code", u.status, "); continuing with existing CSV.");

@@ -8,8 +8,10 @@
  *   GOLF_MODEL_DIR — repo root (parent of alpha-caddie-web). Default: parent of this package.
  *   GOLF_HISTORICAL_ROUNDS_TOURS — comma-separated (default: pga,liv). Use "pga" for PGA only.
  *   GOLF_HISTORICAL_ROUNDS_YEARS — override year list
- *   GOLF_HISTORICAL_ROUNDS_LIGHT=1 — only current + prior calendar year (fast; trims CSV to those years)
- *   Default without LIGHT: fetch 2004–current (PGA); LIV rows start 2017 (skipped automatically per tour).
+ *   GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS=N — fetch only the last N calendar years from the API but
+ *     keep all older rows already on disk (does NOT trim 2004+ history). Use for fast merges.
+ *   GOLF_HISTORICAL_ROUNDS_LIGHT=1 — only current + prior calendar year (fast; **destructive**: trims CSV to those years)
+ *   Default without the above: fetch 2004–current (PGA); LIV rows start 2017 (skipped automatically per tour).
  *   GOLF_ROUNDS_PREFER_CSV_FIRST / GOLF_ROUNDS_PREFER_JSON_FIRST — same idea as live_data.R
  *   GOLF_DG_ROUNDS_DELAY_MS — ms between each tour/year request (default 1500; reduces 429s)
  *   GOLF_DG_MAX_ATTEMPTS — retries per request on 429/5xx (default 12)
@@ -112,6 +114,14 @@ function refreshYears() {
   }
   if (process.env.GOLF_HISTORICAL_ROUNDS_LIGHT === "1") {
     const minY = Math.max(FIRST_HIST_YEAR, cy - LIGHT_YEARS + 1);
+    const out = [];
+    for (let y = minY; y <= cy; y++) out.push(y);
+    return out;
+  }
+  const recentRaw = String(process.env.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "").trim();
+  const recentN = parseInt(recentRaw, 10);
+  if (Number.isFinite(recentN) && recentN > 0) {
+    const minY = Math.max(FIRST_HIST_YEAR, cy - recentN + 1);
     const out = [];
     for (let y = minY; y <= cy; y++) out.push(y);
     return out;
@@ -415,6 +425,7 @@ async function main() {
 
   let existing = readCsv(outPath);
   const cy = new Date().getFullYear();
+  /** Only LIGHT=1 drops older seasons from disk. RECENT_FETCH_YEARS alone keeps full 2004+ history. */
   const minKeep =
     process.env.GOLF_HISTORICAL_ROUNDS_LIGHT === "1"
       ? Math.max(FIRST_HIST_YEAR, cy - LIGHT_YEARS + 1)
@@ -424,7 +435,14 @@ async function main() {
   let combined = existing.map((r) => normalizeRow(r));
   const years = refreshYears();
   const tours = toursToFetch();
-  console.log("historical_rounds_all (Node): years", years.join(", "), "| tours", tours.join(", "));
+  const isRecentOnly =
+    String(process.env.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "").trim() &&
+    process.env.GOLF_HISTORICAL_ROUNDS_LIGHT !== "1";
+  console.log(
+    `historical_rounds_all (Node): API years ${years.join(", ")} | tours ${tours.join(", ")}${
+      isRecentOnly ? " | older CSV rows preserved (not trimmed)" : ""
+    }`
+  );
   console.log("OUT:", outPath);
 
   const betweenMs = Math.max(0, Number(process.env.GOLF_DG_ROUNDS_DELAY_MS || 1500));
