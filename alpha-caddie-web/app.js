@@ -21,9 +21,9 @@ const OU_DEFAULT_ODDS_AM = -110;
  */
 const OUTRIGHT_EV_MAX_MODEL_TO_BOOK_RATIO = Object.freeze({
   win: 28,
-  top_5: 22,
-  top_10: 16,
-  top_20: 12,
+  top_5: 18,
+  top_10: 12,
+  top_20: 8,
   make_cut: 10,
   mc: 10,
 });
@@ -466,12 +466,22 @@ function bookImpliedProb01(v) {
   return NaN;
 }
 
-/** preds/in-play `data` model fields: unit interval or percent in (1, 100] (matches modelProbOutrightMarket). */
+/**
+ * preds/in-play `data` with odds_format=percent: values in (1, 100) are percents (e.g. 1.2 => 1.2%).
+ * Same convention as bookImpliedProb01 — NOT the old (0,1.5] bug that turned 1.2% into ~100% model prob.
+ * Unit probabilities in (0, 1] are accepted as-is.
+ */
 function datagolfModelProb01(v) {
   const x = num(v, NaN);
   if (!Number.isFinite(x) || x < 0) return NaN;
-  if (x > 1.5) return Math.min(1, x / 100);
-  return Math.min(1, Math.max(0, x));
+  if (x > 0 && x <= 1) return Math.min(1, Math.max(0, x));
+  if (x > 1 && x < 100) return Math.min(1, x / 100);
+  if (x === 100) return NaN;
+  if (Math.abs(x) >= 101 && Math.abs(x) <= 500000) {
+    const dec = decimalFromAmerican(Math.round(x));
+    if (Number.isFinite(dec) && dec > 1) return 1 / dec;
+  }
+  return NaN;
 }
 
 /** Hoisted for DEFAULT_PROJECTIONS_PAYLOAD — demo head-to-heads from R1 field. */
@@ -626,6 +636,7 @@ function mergeDatagolfInPlayPayload(j) {
   if (DATA.meta) {
     if (lastUpdate) DATA.meta.datagolf_live_last_update = lastUpdate;
     if (Number.isFinite(currentRound)) DATA.meta.datagolf_live_current_round = currentRound;
+    DATA.meta.datagolf_live_placement_rows_merged = touched;
     if (
       touched > 0 &&
       !Object.prototype.hasOwnProperty.call(DATA.meta, "live_matchup_model_blend")
@@ -2630,11 +2641,12 @@ function modelProbOutrightMarket(rowPlayer, marketKey) {
             : marketKey === "make_cut" || marketKey === "mc"
               ? "make_cut"
               : "win";
-  let v = num(rowPlayer[col], NaN);
-  if (marketKey === "mc" && Number.isFinite(v)) v = 1 - v;
-  if (!Number.isFinite(v)) return NaN;
-  const p = v > 1.5 ? v / 100 : v;
-  return weatherAdjustedOutrightProb(p, rowPlayer, marketKey);
+  const raw = num(rowPlayer[col], NaN);
+  if (!Number.isFinite(raw)) return NaN;
+  let baseP = datagolfModelProb01(raw);
+  if (marketKey === "mc" && Number.isFinite(baseP)) baseP = 1 - baseP;
+  if (!Number.isFinite(baseP)) return NaN;
+  return weatherAdjustedOutrightProb(baseP, rowPlayer, marketKey);
 }
 
 let outrightSort = { key: "player", dir: 1 };
@@ -5457,7 +5469,11 @@ function initTabs() {
         requestAnimationFrame(() => renderPropsTrends());
       }
       if (tab === "ev") {
-        requestAnimationFrame(() => syncEvTabOddsAfterShow());
+        requestAnimationFrame(() => {
+          if (!isFileProtocol()) {
+            void fetchAndMergeDatagolfLiveInPlay({ force: true }).then(() => buildEvTable());
+          } else syncEvTabOddsAfterShow();
+        });
       }
     });
   });
