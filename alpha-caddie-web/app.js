@@ -5,6 +5,10 @@
  * Auto-refresh: default every 120s (?poll=0 off, ?poll=30 for 30s). Override URL: ?projections=/path.json
  * or window.__ALPHA_CADDIE_PROJECTIONS_URL__. Round history: embedded-player-round-history.js;
  * player_round_history.json + player_shots_web.json when served over HTTP.
+ *
+ * Live tournament finish probabilities: place live-in-play.json next to projections.json (from
+ * scripts/fetch_datagolf_in_play.R; API key stays server-side). Enable client merge with
+ * meta.poll_datagolf_live_predictions or ?liveOverlay=1 — never embed a DataGolf key in this file.
  */
 
 const OU_HOLD = 0.048;
@@ -307,6 +311,28 @@ function samePlayerRound(p, round) {
   return Number.isFinite(pr) && Number.isFinite(rr) && pr === rr;
 }
 
+/**
+ * Player row for model / +EV: prefers DataGolf in-play `current_round`, then UI round, then any dg_id row.
+ * Avoids stale win% when the round picker does not match the live tournament round.
+ */
+function projectionPlayerRowForModel(dgId, preferredRound) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return null;
+  const pr = Math.round(num(preferredRound, NaN));
+  const liveR = Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
+  const candidates = (DATA.players || []).filter((p) => Math.round(num(p.dg_id, NaN)) === id);
+  if (!candidates.length) return null;
+  if (Number.isFinite(liveR) && liveR >= 1 && liveR <= 4) {
+    const hit = candidates.find((p) => Math.round(num(p.round, NaN)) === liveR);
+    if (hit) return hit;
+  }
+  if (Number.isFinite(pr) && pr >= 1 && pr <= 4) {
+    const hit = candidates.find((p) => Math.round(num(p.round, NaN)) === pr);
+    if (hit) return hit;
+  }
+  return candidates[0];
+}
+
 function clamp(x, lo, hi) {
   return Math.min(hi, Math.max(lo, x));
 }
@@ -456,6 +482,12 @@ let dataSource = "bundled";
 let projectionsPollMs = 0;
 let projectionsPollTimerId = 0;
 let projectionsLoadInFlight = false;
+/** Set when projections.json (or bundled demo) finishes applying; used to refetch market odds on +EV. */
+let lastProjectionsLoadedAtMs = 0;
+/** Min time since last successful projections load before +EV tab triggers another silent fetch. */
+const EV_TAB_REFETCH_MIN_GAP_MS = 20000;
+
+let datagolfLivePollTimerId = 0;
 
 function projectionsJsonUrl() {
   if (typeof window !== "undefined" && window.__ALPHA_CADDIE_PROJECTIONS_URL__) {
@@ -467,6 +499,133 @@ function projectionsJsonUrl() {
     if (q != null && String(q).trim()) return String(q).trim();
   } catch (_) {}
   return "projections.json";
+}
+
+/** Sibling of projections.json, or window.__ALPHA_CADDIE_LIVE_IN_PLAY_URL__. */
+function liveInPlayJsonUrl() {
+  if (typeof window !== "undefined" && window.__ALPHA_CADDIE_LIVE_IN_PLAY_URL__) {
+    const u = String(window.__ALPHA_CADDIE_LIVE_IN_PLAY_URL__).trim();
+    if (u) return u;
+  }
+  const base = projectionsJsonUrl().trim();
+  if (!base) return "live-in-play.json";
+  try {
+    const u = new URL(base, typeof location !== "undefined" ? location.href : undefined);
+    u.pathname = u.pathname.replace(/[^/]+$/, "live-in-play.json");
+    u.search = "";
+    u.hash = "";
+    return u.toString();
+  } catch (_) {
+    return "live-in-play.json";
+  }
+}
+
+function datagolfLiveOverlayEnabled() {
+  try {
+    const q = new URLSearchParams(window.location.search);
+    if (q.get("liveOverlay") === "1" || q.get("liveInPlay") === "1") return true;
+  } catch (_) {}
+  return Boolean(DATA && DATA.meta && DATA.meta.poll_datagolf_live_predictions);
+}
+
+function datagolfLivePollIntervalMs() {
+  try {
+    const q = new URLSearchParams(window.location.search).get("liveInPlayPoll");
+    if (q != null && String(q).trim() !== "") {
+      const sec = Number(q);
+      if (!Number.isFinite(sec) || sec <= 0) return 0;
+      return Math.min(600, Math.max(30, sec)) * 1000;
+    }
+  } catch (_) {}
+  const sec = num(DATA.meta?.datagolf_live_poll_interval_sec, 300);
+  if (!Number.isFinite(sec) || sec < 30) return 300 * 1000;
+  return Math.min(600, Math.max(30, sec)) * 1000;
+}
+
+/**
+ * Merge DataGolf preds/in-play `data` rows into DATA.players (win, top_5, top_10, top_20, make_cut).
+ * Matches dg_id and, when API provides info.current_round, only updates player rows for that round.
+ */
+function mergeDatagolfInPlayPayload(j) {
+  if (!j || !Array.isArray(j.data) || !DATA.players || !DATA.players.length) return false;
+  const info = j.info && typeof j.info === "object" ? j.info : {};
+  const currentRound = num(info.current_round, NaN);
+  const lastUpdate = info.last_update != null ? String(info.last_update) : "";
+  let touched = 0;
+  for (const row of j.data) {
+    if (!row || typeof row !== "object") continue;
+    const id = Math.round(num(row.dg_id, NaN));
+    if (!Number.isFinite(id)) continue;
+    const win = num(row.win, NaN);
+    const top5 = num(row.top_5, NaN);
+    const top10 = num(row.top_10, NaN);
+    const top20 = num(row.top_20, NaN);
+    const makeCut = num(row.make_cut, NaN);
+    const rowRound = num(row.round, NaN);
+    const byId = DATA.players.filter((p) => Math.round(num(p.dg_id, NaN)) === id);
+    if (!byId.length) continue;
+    let targets = byId;
+    if (Number.isFinite(currentRound)) {
+      const crMatch = byId.filter((p) => num(p.round, NaN) === currentRound);
+      targets = crMatch.length ? crMatch : byId;
+    }
+    if (Number.isFinite(rowRound) && targets.length > 1) {
+      const rrMatch = targets.filter((p) => num(p.round, NaN) === rowRound);
+      if (rrMatch.length) targets = rrMatch;
+    }
+    for (const p of targets) {
+      if (Number.isFinite(win)) p.win = win;
+      if (Number.isFinite(top5)) p.top_5 = top5;
+      if (Number.isFinite(top10)) p.top_10 = top10;
+      if (Number.isFinite(top20)) p.top_20 = top20;
+      if (Number.isFinite(makeCut)) p.make_cut = makeCut;
+      touched++;
+    }
+  }
+  if (DATA.meta) {
+    if (lastUpdate) DATA.meta.datagolf_live_last_update = lastUpdate;
+    if (Number.isFinite(currentRound)) DATA.meta.datagolf_live_current_round = currentRound;
+    if (
+      touched > 0 &&
+      !Object.prototype.hasOwnProperty.call(DATA.meta, "live_matchup_model_blend")
+    ) {
+      DATA.meta.live_matchup_model_blend = 0.35;
+    }
+  }
+  return touched > 0;
+}
+
+async function fetchAndMergeDatagolfLiveInPlay() {
+  if (!datagolfLiveOverlayEnabled() || isFileProtocol()) return;
+  if (!DATA.players || !DATA.players.length) return;
+  const url = liveInPlayJsonUrl();
+  try {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) return;
+    const j = await res.json();
+    if (!mergeDatagolfInPlayPayload(j)) return;
+    refreshPricingAffectedViews();
+    updateStatusBar();
+  } catch (_) {
+    /* ignore missing live file or CORS */
+  }
+}
+
+function stopDatagolfLivePolling() {
+  if (datagolfLivePollTimerId) {
+    window.clearInterval(datagolfLivePollTimerId);
+    datagolfLivePollTimerId = 0;
+  }
+}
+
+function startDatagolfLivePolling() {
+  stopDatagolfLivePolling();
+  if (!datagolfLiveOverlayEnabled() || isFileProtocol()) return;
+  const ms = datagolfLivePollIntervalMs();
+  if (!ms) return;
+  datagolfLivePollTimerId = window.setInterval(() => {
+    void fetchAndMergeDatagolfLiveInPlay();
+  }, ms);
 }
 
 /** Interval for silent projections reload; 0 = disabled. Default 120s when ?poll omitted. */
@@ -589,7 +748,11 @@ function updateStatusBar() {
   const el = document.getElementById("data-status-primary");
   if (!el) return;
   const m = DATA.meta || {};
-  el.textContent = m.course_used ? String(m.course_used) : "—";
+  let line = m.course_used ? String(m.course_used) : "—";
+  if (m.datagolf_live_last_update && String(m.datagolf_live_last_update).trim()) {
+    line += ` · Live model ${String(m.datagolf_live_last_update).trim()}`;
+  }
+  el.textContent = line;
 }
 
 function configureRoundPickerUi() {
@@ -1972,15 +2135,15 @@ function collectUnifiedEvRows() {
       const id1 = Math.round(num(m.p1_dg_id, NaN));
       const id2 = Math.round(num(m.p2_dg_id, NaN));
       const id3 = Math.round(num(m.p3_dg_id, NaN));
-      const row1 = DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === id1 && samePlayerRound(p, r));
-      const row2 = DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === id2 && samePlayerRound(p, r));
-      const row3 = DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === id3 && samePlayerRound(p, r));
+      const row1 = projectionPlayerRowForModel(id1, r);
+      const row2 = projectionPlayerRowForModel(id2, r);
+      const row3 = projectionPlayerRowForModel(id3, r);
       const mu1 = effectiveMuSg(row1, id1);
       const mu2 = effectiveMuSg(row2, id2);
       const mu3 = effectiveMuSg(row3, id3);
       const isThreeBall = mk === "3_balls" && Number.isFinite(id3) && id3 > 0;
       if (isThreeBall) {
-        const [tp1, tp2, tp3] = threeBallModelProbs(mu1, mu2, mu3);
+        const [tp1, tp2, tp3] = threeBallModelProbsLiveBlended(mu1, mu2, mu3, row1, row2, row3);
         const b1 = bestBookDecimalForSide(m.odds || {}, "p1");
         const b2 = bestBookDecimalForSide(m.odds || {}, "p2");
         const b3 = bestBookDecimalForSide(m.odds || {}, "p3");
@@ -2025,7 +2188,7 @@ function collectUnifiedEvRows() {
         });
         continue;
       }
-      const p1 = matchupWinProb(mu1, mu2, mk);
+      const p1 = matchupWinProbLiveBlended(mu1, mu2, mk, row1, row2);
       const b1 = bestBookDecimalForSide(m.odds || {}, "p1");
       const b2 = bestBookDecimalForSide(m.odds || {}, "p2");
       const modelEv1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
@@ -2063,9 +2226,7 @@ function collectUnifiedEvRows() {
     const books = Array.isArray(pack.bookKeys) ? pack.bookKeys.filter((k) => k && k !== "datagolf") : [];
     for (const row of pack.rows) {
       const id = Math.round(num(row.dg_id, NaN));
-      const prow =
-        DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === id && samePlayerRound(p, r)) ||
-        DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === id);
+      const prow = projectionPlayerRowForModel(id, r);
       const modelP = modelProbOutrightMarket(prow || {}, mk);
       let bestBook = "";
       let bestAm = NaN;
@@ -2252,6 +2413,40 @@ function threeBallModelProbs(mu1, mu2, mu3) {
   return [ex[0] / s, ex[1] / s, ex[2] / s];
 }
 
+/** When >0, blend matchup / 3-ball model probs with live DataGolf win shares (see mergeDatagolfInPlayPayload). */
+function liveMatchupModelBlendAlpha() {
+  const a = num(DATA.meta?.live_matchup_model_blend, NaN);
+  if (!Number.isFinite(a) || a <= 0) return 0;
+  return clamp(a, 0, 0.85);
+}
+
+function matchupWinProbLiveBlended(mu1, mu2, mk, row1, row2) {
+  const pBase = matchupWinProb(mu1, mu2, mk);
+  const alpha = liveMatchupModelBlendAlpha();
+  if (!alpha || !row1 || !row2) return pBase;
+  const w1 = num(row1.win, NaN);
+  const w2 = num(row2.win, NaN);
+  if (!Number.isFinite(w1) || !Number.isFinite(w2) || w1 + w2 <= 0) return pBase;
+  const pLive = w1 / (w1 + w2);
+  return clamp(alpha * pLive + (1 - alpha) * pBase, 0.08, 0.92);
+}
+
+function threeBallModelProbsLiveBlended(mu1, mu2, mu3, row1, row2, row3) {
+  const base = threeBallModelProbs(mu1, mu2, mu3);
+  const alpha = liveMatchupModelBlendAlpha();
+  if (!alpha || !row1 || !row2 || !row3) return base;
+  const w1 = num(row1.win, NaN);
+  const w2 = num(row2.win, NaN);
+  const w3 = num(row3.win, NaN);
+  if (![w1, w2, w3].every(Number.isFinite) || w1 + w2 + w3 <= 0) return base;
+  const t = w1 + w2 + w3;
+  const live = [w1 / t, w2 / t, w3 / t];
+  const out = [0, 1, 2].map((i) => alpha * live[i] + (1 - alpha) * base[i]);
+  const s = out[0] + out[1] + out[2];
+  if (s <= 0) return base;
+  return [out[0] / s, out[1] / s, out[2] / s];
+}
+
 function bestBookDecimalForSide(oddsObj, side /* 'p1'|'p2' */) {
   if (!oddsObj || typeof oddsObj !== "object") return { book: "", dec: NaN };
   let bestD = NaN;
@@ -2308,9 +2503,9 @@ function buildMatchupsTable() {
     const id1 = Math.round(num(m.p1_dg_id, NaN));
     const id2 = Math.round(num(m.p2_dg_id, NaN));
     const id3 = Math.round(num(m.p3_dg_id, NaN));
-    const row1 = DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === id1 && samePlayerRound(p, r));
-    const row2 = DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === id2 && samePlayerRound(p, r));
-    const row3 = DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === id3 && samePlayerRound(p, r));
+    const row1 = projectionPlayerRowForModel(id1, r);
+    const row2 = projectionPlayerRowForModel(id2, r);
+    const row3 = projectionPlayerRowForModel(id3, r);
     const mu1 = effectiveMuSg(row1, id1);
     const mu2 = effectiveMuSg(row2, id2);
     const mu3 = effectiveMuSg(row3, id3);
@@ -2354,7 +2549,7 @@ function buildMatchupsTable() {
       tbody.appendChild(tr);
     }
     if (isThree) {
-      const [tp1, tp2, tp3] = threeBallModelProbs(mu1, mu2, mu3);
+      const [tp1, tp2, tp3] = threeBallModelProbsLiveBlended(mu1, mu2, mu3, row1, row2, row3);
       const ev1 = Number.isFinite(b1.dec) ? tp1 * b1.dec - 1 : NaN;
       const ev2 = Number.isFinite(b2.dec) ? tp2 * b2.dec - 1 : NaN;
       const ev3 = Number.isFinite(b3.dec) ? tp3 * b3.dec - 1 : NaN;
@@ -2362,7 +2557,7 @@ function buildMatchupsTable() {
       row(2, m.p2_player_name, tp2, ev2, b2);
       row(3, m.p3_player_name, tp3, ev3, b3);
     } else {
-      const p1m = matchupWinProb(mu1, mu2, key);
+      const p1m = matchupWinProbLiveBlended(mu1, mu2, key, row1, row2);
       const ev1 = Number.isFinite(b1.dec) ? p1m * b1.dec - 1 : NaN;
       const ev2 = Number.isFinite(b2.dec) ? (1 - p1m) * b2.dec - 1 : NaN;
       row(1, m.p1_player_name, p1m, ev1, b1);
@@ -2411,8 +2606,7 @@ function buildOutrightsTableBodyOnly() {
   const r1 = getOuRound();
   const rows = pack.rows.map((row) => {
     const id = Math.round(num(row.dg_id, NaN));
-    const prow = DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === id && samePlayerRound(p, r1)) ||
-      DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === id);
+    const prow = projectionPlayerRowForModel(id, r1);
     const modelP = modelProbOutrightMarket(prow || {}, mk);
     let bestBook = "";
     let bestAm = NaN;
@@ -5130,12 +5324,18 @@ async function loadProjections(opts = {}) {
   if (!silent) setBootError("");
 
   const finishOk = async () => {
+    lastProjectionsLoadedAtMs = Date.now();
     if (reloadSidecar) {
       await loadPlayerHistory();
       await loadPlayerShots();
     }
     refreshAll();
     updateStatusBar();
+    stopDatagolfLivePolling();
+    if (datagolfLiveOverlayEnabled() && !isFileProtocol()) {
+      window.setTimeout(() => void fetchAndMergeDatagolfLiveInPlay(), 1500);
+      startDatagolfLivePolling();
+    }
   };
 
   try {
@@ -5170,6 +5370,37 @@ async function loadProjections(opts = {}) {
   }
 }
 
+function activeAppTabId() {
+  const active = document.querySelector(".tabs .tab.active");
+  return active ? String(active.getAttribute("data-tab") || "") : "";
+}
+
+/** Refetch projections so matchups/outrights odds update; on failure (silent) DATA is unchanged. */
+function refreshMarketOddsFromServer() {
+  if (isFileProtocol()) {
+    buildEvTable();
+    return;
+  }
+  buildEvTable();
+  void loadProjections({ silent: true, reloadSidecar: false });
+}
+
+/**
+ * When opening +EV, pull fresh book odds if we have not loaded recently (e.g. poll off or user was elsewhere).
+ */
+function syncEvTabOddsAfterShow() {
+  if (isFileProtocol()) {
+    buildEvTable();
+    return;
+  }
+  const age = Date.now() - lastProjectionsLoadedAtMs;
+  if (!Number.isFinite(age) || age >= EV_TAB_REFETCH_MIN_GAP_MS) {
+    refreshMarketOddsFromServer();
+  } else {
+    buildEvTable();
+  }
+}
+
 function initTabs() {
   document.querySelectorAll(".tabs .tab").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -5196,6 +5427,9 @@ function initTabs() {
       }
       if (tab === "props") {
         requestAnimationFrame(() => renderPropsTrends());
+      }
+      if (tab === "ev") {
+        requestAnimationFrame(() => syncEvTabOddsAfterShow());
       }
     });
   });
@@ -5364,6 +5598,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("ev-boost-pct")?.addEventListener("input", () => buildEvTable());
   document.getElementById("ev-boost-pct")?.addEventListener("change", () => buildEvTable());
   document.getElementById("btn-ev-devig")?.addEventListener("click", () => openEvDevigDialog());
+  document.getElementById("btn-ev-refresh")?.addEventListener("click", () => refreshMarketOddsFromServer());
   document.getElementById("btn-ev-help")?.addEventListener("click", () => openEvHelpDialog());
   document.getElementById("ev-help-close-x")?.addEventListener("click", () => closeEvHelpDialog());
   document.getElementById("ev-help-dismiss")?.addEventListener("click", () => closeEvHelpDialog());
@@ -5604,6 +5839,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target instanceof Element && e.target.closest("#props-trend-canvas")) return;
     hidePropsChartTooltip();
   });
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState !== "visible") return;
+    if (activeAppTabId() === "ev") syncEvTabOddsAfterShow();
+    if (datagolfLiveOverlayEnabled() && !isFileProtocol()) void fetchAndMergeDatagolfLiveInPlay();
+  });
+
   void (async () => {
     await loadProjections();
     startProjectionsPolling();

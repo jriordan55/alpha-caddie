@@ -1005,6 +1005,8 @@ server <- function(input, output, session) {
   pre_tournament_event_cache <- reactiveVal(NULL) # event_name from preds/pre-tournament
   schedule_upcoming_cache <- reactiveVal(NULL)    # get-schedule upcoming payload (for course lookup)
   data_loaded <- reactiveVal(FALSE)
+  # From simulated_round_static.rds $model_next_round when present (DataGolf live round); else use clock.
+  model_next_round_from_static <- reactiveVal(NA_integer_)
   field_updates_cache <- reactiveVal(NULL)
   live_hole_stats_cache <- reactiveVal(NULL)
   hole_data_cache <- reactiveVal(NULL)
@@ -1031,9 +1033,16 @@ server <- function(input, output, session) {
     if (!is.null(cached)) {
       if (is.data.frame(cached)) {
         tbl <- cached
+        model_next_round_from_static(NA_integer_)
       } else if (is.list(cached) && "data" %in% names(cached)) {
         tbl <- cached$data
         event_name <- as.character(cached$event_name %||% "")
+        mr <- suppressWarnings(as.integer(cached$model_next_round %||% NA_integer_))
+        if (is.finite(mr) && mr >= 1L && mr <= 4L) {
+          model_next_round_from_static(as.integer(mr))
+        } else {
+          model_next_round_from_static(NA_integer_)
+        }
       }
     }
     if (!is.null(tbl) && is.data.frame(tbl) && nrow(tbl) > 0) {
@@ -1048,9 +1057,11 @@ server <- function(input, output, session) {
     is_running(FALSE)
   }
 
-  # Display round (1-4): fixed schedule (9pm cutoffs); no user control
+  # Display round (1-4): prefer round baked into static RDS (DataGolf current_round); else ET 9pm schedule.
   display_round_num <- reactive({
     invalidateLater(60000L, session)
+    mr <- model_next_round_from_static()
+    if (is.finite(mr) && mr >= 1L && mr <= 4L) return(as.integer(mr))
     ou_display_round_auto()
   })
 

@@ -24,7 +24,9 @@
 # - Within-tournament form (GOLF_RAW_PROJECTIONS=0 only): books often move ~0.1 SG per 1 stroke R1 vs baseline;
 #   we carry only a small fraction of prior-round SG *surplus vs baseline skill* into the next round’s mean SG
 #   (default GOLF_WITHIN_EVENT_FORM_CARRY=0.02 ≈ 2% per round, capped by GOLF_WITHIN_EVENT_FORM_CAP). Uses
-#   historical_rounds_all rows for the current event (event_name + year) when available.
+#   historical_rounds_all rows for the current event (event_name + year) when available; if those rows are
+#   missing (CSV not refreshed yet), R/datagolf_between_rounds_form.R can fill from preds/live-tournament-stats
+#   (batch fetch when GOLF_DG_WITHIN_EVENT_FORM_API=1). preds/in-play still supplies win/top5/... once per pipeline run.
 
 library(dplyr)
 library(tibble)
@@ -68,8 +70,30 @@ normalize_event_name <- function(x) {
   trimws(x)
 }
 
-if (!exists("API_KEY") || !nzchar(API_KEY %||% "")) API_KEY <- Sys.getenv("DATAGOLF_API_KEY", "")
 model_dir <- if (nzchar(Sys.getenv("GOLF_MODEL_DIR"))) Sys.getenv("GOLF_MODEL_DIR") else getwd()
+
+# API key: env first (same as live_data.R / fetch_datagolf_in_play.R), then JSON next to the web app.
+if (!exists("API_KEY") || !nzchar(API_KEY %||% "")) API_KEY <- trimws(Sys.getenv("DATAGOLF_API_KEY", ""))
+if (!nzchar(API_KEY %||% "")) {
+  for (p in c(
+    file.path(model_dir, "alpha-caddie-web", "datagolf.local.json"),
+    file.path(model_dir, "website", "datagolf.local.json")
+  )) {
+    if (!file.exists(p)) next
+    raw <- tryCatch(jsonlite::fromJSON(p, simplifyVector = TRUE), error = function(e) NULL)
+    if (is.list(raw)) {
+      kk <- raw$apiKey %||% raw$key %||% ""
+      kk <- trimws(as.character(kk))
+      if (nzchar(kk)) {
+        API_KEY <- kk
+        break
+      }
+    }
+  }
+}
+if (!nzchar(API_KEY %||% "")) {
+  message("DATAGOLF_API_KEY is empty and no apiKey found in alpha-caddie-web/datagolf.local.json — DataGolf feeds will fail.")
+}
 
 # Raw mode (default ON): projections = DataGolf API only (skill-ratings +/- optional fantasy defaults).
 # No historical baselines, shrinkage, course-fit, shot MC, or internal round-SG multipliers.
@@ -83,9 +107,18 @@ file_round <- if (file.exists(round_file)) suppressWarnings(as.integer(readLines
 # ========== 1) FETCH: field updates, live in-play (or pre-tournament), schedule for Mon/Tue/Wed ==========
 field_updates_table <- tryCatch({
   res <- GET("https://feeds.datagolf.com/field-updates", query = list(tour = "pga", file_format = "csv", key = API_KEY))
-  if (res$status_code != 200) stop("status ", res$status_code)
+  sc <- res$status_code
+  if (sc != 200) stop("status ", sc)
   read_csv(content(res, "raw"), show_col_types = FALSE)
-}, error = function(e) { message("Field updates: ", conditionMessage(e)); tibble(dg_id = integer(), player_name = character()) })
+}, error = function(e) {
+  message("Field updates: ", conditionMessage(e))
+  em <- conditionMessage(e)
+  if (grepl("403|401", em)) {
+    message("DataGolf returned 401/403: wrong or missing API key, or plan without API access (Scratch Plus). ",
+            "Set $env:DATAGOLF_API_KEY in PowerShell or add {\"apiKey\":\"...\"} to alpha-caddie-web/datagolf.local.json .")
+  }
+  tibble(dg_id = integer(), player_name = character())
+})
 for (col in c("r1_teetime", "r2_teetime", "r3_teetime", "r4_teetime")) if (col %in% names(field_updates_table)) field_updates_table[[col]] <- as.character(field_updates_table[[col]])
 # Expose current tournament for app cache invalidation (so model uses this event, not a cached prior one)
 dg_current_event_name <<- if (nrow(field_updates_table) > 0 && "event_name" %in% names(field_updates_table))
@@ -121,6 +154,8 @@ if (is.finite(env_round) && env_round >= 1L && env_round <= 4L) {
   else next_round_num <- 1L
 }
 if (!is.finite(next_round_num) || next_round_num < 1L) next_round_num <- 1L
+# TRUE when round came from golf_next_round.txt, GOLF_NEXT_ROUND, or R option (do not override with API).
+next_round_locked <- is.finite(env_round) && env_round >= 1L && env_round <= 4L
 wday_et <- if (exists("wday_et")) wday_et else NA_integer_
 
 # Fetch pre-tournament predictions (for R1 reverse-engineering and fallback when in-play empty)
@@ -184,10 +219,33 @@ live_model_table <- tryCatch({
   read_csv(content(res, "raw"), show_col_types = FALSE)
 }, error = function(e) tibble(dg_id = integer(), player_name = character(), win = numeric(), top_5 = numeric(), top_10 = numeric(), make_cut = numeric()))
 
-# Round 1: always reverse-engineer from Pre-Tournament Predictions (full-field make cut, top 20, top 5, win)
+# When not locked to file/env, align with DataGolf live event (fixes stale R1 after tournament moves to R2/R3/R4).
+if (tolower(Sys.getenv("GOLF_NEXT_ROUND_FROM_DATAGOLF", "1")) %in% c("1", "true", "yes") &&
+    !next_round_locked && nzchar(API_KEY %||% "") && nrow(live_model_table) > 0L) {
+  ip <- tryCatch({
+    res <- GET(
+      "https://feeds.datagolf.com/preds/in-play",
+      query = list(tour = "pga", dead_heat = "no", odds_format = "percent", file_format = "json", key = API_KEY)
+    )
+    if (res$status_code != 200L) {
+      NULL
+    } else {
+      jsonlite::fromJSON(httr::content(res, as = "text", encoding = "UTF-8"), simplifyVector = FALSE)
+    }
+  }, error = function(e) NULL)
+  if (!is.null(ip) && is.list(ip$info)) {
+    cr <- suppressWarnings(as.integer(ip$info$current_round %||% NA))
+    if (is.finite(cr) && cr >= 1L && cr <= 4L) {
+      next_round_num <- cr
+      message("next_round_num from DataGolf in-play current_round: ", cr)
+    }
+  }
+}
+
+# Round 1: use pre-tournament only when in-play has no rows (do not replace live in-play with static pre-t).
 if (next_round_num == 1L) {
   pre_tournament_table <- fetch_pre_tournament()
-  if (!is.null(pre_tournament_table) && nrow(pre_tournament_table) > 0) {
+  if (!is.null(pre_tournament_table) && nrow(pre_tournament_table) > 0L && nrow(live_model_table) == 0L) {
     live_model_table <- pre_tournament_table %>% select(dg_id, player_name, win, top_5, top_10, any_of(c("top_20", "make_cut")))
     if (!"top_20" %in% names(live_model_table)) live_model_table$top_20 <- NA_real_
     if (!"make_cut" %in% names(live_model_table)) live_model_table$make_cut <- NA_real_
@@ -437,7 +495,8 @@ if (nrow(live_model_table) > 0 && nrow(dg) > 0) {
 }
 
 if (nrow(dg) == 0) {
-  simulated_round_table <<- tibble(dg_id = integer(), player_name = character(), position = integer(), total_score = numeric(), score_to_par = numeric(), mu_sg = numeric(), implied_mu_sg = numeric(), win = numeric(), top_5 = numeric(), top_10 = numeric(), top_20 = numeric(), make_cut = numeric(), eagles = numeric(), birdies = numeric(), pars = numeric(), bogeys = numeric(), doubles = numeric(), round_label = character(), course_used = character(), next_round = integer(), round = integer())
+  message("No players in field: field-updates and in-play/pre-tournament returned nothing (often follows HTTP 403/401 above).")
+  stop("Cannot build projections: empty field.", call. = FALSE)
 } else if (RAW_PROJECTIONS) {
   # ---------- RAW PROJECTIONS: preds/skill-ratings + optional preds/fantasy-projection-defaults ----------
   message("GOLF_RAW_PROJECTIONS: using DataGolf skill-ratings (and optional fantasy defaults); no internal baselines.")
@@ -626,7 +685,14 @@ if (nrow(dg) == 0) {
   }
   static_path_raw <- file.path(model_dir, "simulated_round_static.rds")
   tryCatch(
-    saveRDS(simulated_round_table, static_path_raw),
+    saveRDS(
+      list(
+        data = simulated_round_table,
+        event_name = dg_current_event_name %||% "",
+        model_next_round = as.integer(next_round_num)
+      ),
+      static_path_raw
+    ),
     error = function(e) message("Could not write simulated_round_static.rds (raw): ", conditionMessage(e))
   )
 } else {
@@ -1132,6 +1198,58 @@ if (nrow(dg) == 0) {
   }
   if (is.null(within_event_form_tbl) || nrow(within_event_form_tbl) == 0L) {
     within_event_form_tbl <- tibble(dg_id = integer(), round = integer(), within_form_shift = numeric())
+  }
+
+  # When historical_rounds_all has no rows for this week, use DataGolf live-tournament-stats (per-round sg_total)
+  # to build the same within_form_shift table (batch API — no browser polling).
+  use_api_form <- tolower(trimws(Sys.getenv("GOLF_DG_WITHIN_EVENT_FORM_API", "1"))) %in% c("1", "true", "yes")
+  if (use_api_form && WITHIN_FORM_K != 0 && nzchar(API_KEY %||% "")) {
+    lts_path <- file.path(model_dir, "R", "datagolf_between_rounds_form.R")
+    if (file.exists(lts_path)) {
+      tryCatch(
+        source(lts_path, encoding = "UTF-8"),
+        error = function(e) message("datagolf_between_rounds_form.R: ", conditionMessage(e))
+      )
+    }
+    if (exists("build_within_event_form_tbl_from_datagolf_lts", mode = "function")) {
+      req_ev <- tolower(trimws(Sys.getenv("GOLF_DG_LTS_REQUIRE_EVENT_MATCH", "1"))) %in% c("1", "true", "yes")
+      api_tbl <- tryCatch(
+        build_within_event_form_tbl_from_datagolf_lts(
+          dg_base,
+          API_KEY,
+          tour = "pga",
+          within_form_k = WITHIN_FORM_K,
+          within_form_cap = WITHIN_FORM_CAP,
+          event_name_norm = normalize_event_name(dg_current_event_name %||% ""),
+          require_event_match = req_ev
+        ),
+        error = function(e) {
+          message("within-event form (DataGolf API): ", conditionMessage(e))
+          NULL
+        }
+      )
+      blend_api <- tolower(trimws(Sys.getenv("GOLF_DG_WITHIN_EVENT_FORM_API_BLEND", "0"))) %in% c("1", "true", "yes")
+      blend_w <- suppressWarnings(as.numeric(Sys.getenv("GOLF_DG_WITHIN_EVENT_FORM_API_BLEND_W", "0.5")))
+      if (!is.finite(blend_w)) blend_w <- 0.5
+      blend_w <- pmax(0, pmin(1, blend_w))
+      if (!is.null(api_tbl) && nrow(api_tbl) > 0L) {
+        if (nrow(within_event_form_tbl) == 0L) {
+          within_event_form_tbl <- api_tbl
+          message("within-event form: using DataGolf live-tournament-stats (no current-event historical rows).")
+        } else if (blend_api) {
+          within_event_form_tbl <- full_join(
+            within_event_form_tbl %>% rename(hist_sh = within_form_shift),
+            api_tbl %>% rename(api_sh = within_form_shift),
+            by = c("dg_id", "round")
+          ) %>%
+            mutate(
+              within_form_shift = (1 - blend_w) * coalesce(hist_sh, 0) + blend_w * coalesce(api_sh, 0)
+            ) %>%
+            select(dg_id, round, within_form_shift)
+          message("within-event form: blended historical + DataGolf API (weight=", blend_w, ").")
+        }
+      }
+    }
   }
 
   round_score_baseline <- if (exists("TARGET_FIELD_AVG_ROUND_SCORE") && is.finite(TARGET_FIELD_AVG_ROUND_SCORE)) as.numeric(TARGET_FIELD_AVG_ROUND_SCORE) else as.numeric(course_par_18)
@@ -1903,7 +2021,14 @@ if (!RAW_PROJECTIONS && exists("simulated_round_table") && !is.null(simulated_ro
   # Also write a static snapshot for Shiny to use in low-memory environments (e.g. shinyapps.io)
   static_path <- file.path(model_dir, "simulated_round_static.rds")
   tryCatch(
-    saveRDS(simulated_round_table, static_path),
+    saveRDS(
+      list(
+        data = simulated_round_table,
+        event_name = dg_current_event_name %||% "",
+        model_next_round = as.integer(next_round_num)
+      ),
+      static_path
+    ),
     error = function(e) message("Could not write static projections RDS: ", conditionMessage(e))
   )
 }

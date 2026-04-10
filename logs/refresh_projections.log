@@ -1,0 +1,46 @@
+
+===== 2026-04-09 21:43:25 (Rscript=C:\Program Files\R\R-4.2.0\bin\Rscript.exe) =====
+
+===== 2026-04-09 21:46:52 (Rscript=C:\Program Files\R\R-4.2.0\bin\Rscript.exe) =====
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Warning message:
+package 'dplyr' was built under R version 4.2.3 
+Warning message:
+package 'tibble' was built under R version 4.2.3 
+Warning message:
+package 'httr' was built under R version 4.2.3 
+Warning message:
+package 'readr' was built under R version 4.2.3 
+
+Attaching package: 'jsonlite'
+
+The following objects are masked from 'package:rlang':
+
+    flatten, unbox
+
+Warning message:
+package 'jsonlite' was built under R version 4.2.3 
+Warning message:
+package 'purrr' was built under R version 4.2.2 
+Warning message:
+package 'tidyr' was built under R version 4.2.3 
+Field updates: status 403
+Course filter "Castle Pines Golf Club": kept 14136 / 6548776 rows across 1 tournaments.
+Warning messages:
+1: package 'jsonlite' was built under R version 4.2.3 
+2: package 'readr' was built under R version 4.2.3 
+3: package 'dplyr' was built under R version 4.2.3 
+simulated_round_static.rds has 0 rows; not writing projections.json
+ERROR: export_projections_for_website.R exit code 1
+
+===== 2026-04-09 22:00:48 (Rscript=C:\Program Files\R\R-4.2.0\bin\Rscript.exe) =====
