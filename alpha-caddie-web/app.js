@@ -6,9 +6,10 @@
  * or window.__ALPHA_CADDIE_PROJECTIONS_URL__. Round history: embedded-player-round-history.js;
  * player_round_history.json + player_shots_web.json when served over HTTP.
  *
- * Live tournament finish probabilities: place live-in-play.json next to projections.json (from
- * scripts/fetch_datagolf_in_play.R; API key stays server-side). Enable client merge with
- * meta.poll_datagolf_live_predictions or ?liveOverlay=1 — never embed a DataGolf key in this file.
+ * Live placement probs (win, top_5, top_10, top_20, make_cut / mc): place live-in-play.json next to projections.json
+ * (scripts/fetch_datagolf_in_play.R; refresh_projections_between_rounds.ps1 runs it after export).
+ * On each load the app fetches that file once and merges into all player rows (no poll flag required).
+ * Optional repeat merge: meta.poll_datagolf_live_predictions or ?liveOverlay=1 — never embed a DG key here.
  */
 
 const OU_HOLD = 0.048;
@@ -312,18 +313,23 @@ function samePlayerRound(p, round) {
 }
 
 /**
- * Player row for model / +EV: prefers DataGolf in-play `current_round`, then UI round, then any dg_id row.
- * Avoids stale win% when the round picker does not match the live tournament round.
+ * Player row for model / +EV: prefers live DG round, then export `display_round`, then preferred round, then any row.
+ * Avoids stale placement probs when the leaderboard round picker lags the real tournament.
  */
 function projectionPlayerRowForModel(dgId, preferredRound) {
   const id = Math.round(num(dgId, NaN));
   if (!Number.isFinite(id)) return null;
   const pr = Math.round(num(preferredRound, NaN));
   const liveR = Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
+  const metaDr = Math.round(num(DATA?.meta?.display_round, NaN));
   const candidates = (DATA.players || []).filter((p) => Math.round(num(p.dg_id, NaN)) === id);
   if (!candidates.length) return null;
   if (Number.isFinite(liveR) && liveR >= 1 && liveR <= 4) {
     const hit = candidates.find((p) => Math.round(num(p.round, NaN)) === liveR);
+    if (hit) return hit;
+  }
+  if (Number.isFinite(metaDr) && metaDr >= 1 && metaDr <= 4) {
+    const hit = candidates.find((p) => Math.round(num(p.round, NaN)) === metaDr);
     if (hit) return hit;
   }
   if (Number.isFinite(pr) && pr >= 1 && pr <= 4) {
@@ -331,6 +337,16 @@ function projectionPlayerRowForModel(dgId, preferredRound) {
     if (hit) return hit;
   }
   return candidates[0];
+}
+
+/** Round for outright / placement +EV: live DG → export display_round → O/U picker (not leaderboard-only R1). */
+function getModelRoundForEv() {
+  const m = DATA.meta || {};
+  const liveR = Math.round(num(m.datagolf_live_current_round, NaN));
+  if (Number.isFinite(liveR) && liveR >= 1 && liveR <= 4) return liveR;
+  const dr = Math.round(num(m.display_round, NaN));
+  if (Number.isFinite(dr) && dr >= 1 && dr <= 4) return dr;
+  return getOuRound();
 }
 
 function clamp(x, lo, hi) {
@@ -426,6 +442,14 @@ function bookImpliedProb01(v) {
     if (Number.isFinite(dec) && dec > 1) return 1 / dec;
   }
   return NaN;
+}
+
+/** preds/in-play `data` model fields: unit interval or percent in (1, 100] (matches modelProbOutrightMarket). */
+function datagolfModelProb01(v) {
+  const x = num(v, NaN);
+  if (!Number.isFinite(x) || x < 0) return NaN;
+  if (x > 1.5) return Math.min(1, x / 100);
+  return Math.min(1, Math.max(0, x));
 }
 
 /** Hoisted for DEFAULT_PROJECTIONS_PAYLOAD — demo head-to-heads from R1 field. */
@@ -543,8 +567,9 @@ function datagolfLivePollIntervalMs() {
 }
 
 /**
- * Merge DataGolf preds/in-play `data` rows into DATA.players (win, top_5, top_10, top_20, make_cut).
- * Matches dg_id and, when API provides info.current_round, only updates player rows for that round.
+ * Merge DataGolf preds/in-play `data` rows into DATA.players:
+ * win, top_5, top_10, top_20, make_cut (and mc → make_cut when make_cut absent).
+ * Placement probs are tournament-wide — update every round row for that dg_id.
  */
 function mergeDatagolfInPlayPayload(j) {
   if (!j || !Array.isArray(j.data) || !DATA.players || !DATA.players.length) return false;
@@ -556,24 +581,19 @@ function mergeDatagolfInPlayPayload(j) {
     if (!row || typeof row !== "object") continue;
     const id = Math.round(num(row.dg_id, NaN));
     if (!Number.isFinite(id)) continue;
-    const win = num(row.win, NaN);
-    const top5 = num(row.top_5, NaN);
-    const top10 = num(row.top_10, NaN);
-    const top20 = num(row.top_20, NaN);
-    const makeCut = num(row.make_cut, NaN);
-    const rowRound = num(row.round, NaN);
+    const win = datagolfModelProb01(row.win);
+    const top5 = datagolfModelProb01(row.top_5);
+    const top10 = datagolfModelProb01(row.top_10);
+    const top20 = datagolfModelProb01(row.top_20);
+    let makeCut = datagolfModelProb01(row.make_cut);
+    if (!Number.isFinite(makeCut)) {
+      const mcRaw = row.mc != null ? row.mc : row.miss_cut;
+      const mcP = datagolfModelProb01(mcRaw);
+      if (Number.isFinite(mcP)) makeCut = 1 - mcP;
+    }
     const byId = DATA.players.filter((p) => Math.round(num(p.dg_id, NaN)) === id);
     if (!byId.length) continue;
-    let targets = byId;
-    if (Number.isFinite(currentRound)) {
-      const crMatch = byId.filter((p) => num(p.round, NaN) === currentRound);
-      targets = crMatch.length ? crMatch : byId;
-    }
-    if (Number.isFinite(rowRound) && targets.length > 1) {
-      const rrMatch = targets.filter((p) => num(p.round, NaN) === rowRound);
-      if (rrMatch.length) targets = rrMatch;
-    }
-    for (const p of targets) {
+    for (const p of byId) {
       if (Number.isFinite(win)) p.win = win;
       if (Number.isFinite(top5)) p.top_5 = top5;
       if (Number.isFinite(top10)) p.top_10 = top10;
@@ -595,8 +615,10 @@ function mergeDatagolfInPlayPayload(j) {
   return touched > 0;
 }
 
-async function fetchAndMergeDatagolfLiveInPlay() {
-  if (!datagolfLiveOverlayEnabled() || isFileProtocol()) return;
+async function fetchAndMergeDatagolfLiveInPlay(opts = {}) {
+  const force = Boolean(opts.force);
+  if (isFileProtocol()) return;
+  if (!force && !datagolfLiveOverlayEnabled()) return;
   if (!DATA.players || !DATA.players.length) return;
   const url = liveInPlayJsonUrl();
   try {
@@ -2220,13 +2242,14 @@ function collectUnifiedEvRows() {
     }
   }
   const opack = DATA.outrights || {};
+  const rOut = getModelRoundForEv();
   for (const mk of ["win", "top_5", "top_10", "top_20", "make_cut", "mc"]) {
     const pack = opack[mk];
     if (!pack || !Array.isArray(pack.rows)) continue;
     const books = Array.isArray(pack.bookKeys) ? pack.bookKeys.filter((k) => k && k !== "datagolf") : [];
     for (const row of pack.rows) {
       const id = Math.round(num(row.dg_id, NaN));
-      const prow = projectionPlayerRowForModel(id, r);
+      const prow = projectionPlayerRowForModel(id, rOut);
       const modelP = modelProbOutrightMarket(prow || {}, mk);
       let bestBook = "";
       let bestAm = NaN;
@@ -2603,10 +2626,10 @@ function buildOutrightsTableBodyOnly() {
   const tbody = table.querySelector("tbody");
   if (!tbody || !pack || !Array.isArray(pack.rows)) return;
   const bookKeys = Array.isArray(pack.bookKeys) ? pack.bookKeys.filter((k) => k && k !== "datagolf") : [];
-  const r1 = getOuRound();
+  const rOut = getModelRoundForEv();
   const rows = pack.rows.map((row) => {
     const id = Math.round(num(row.dg_id, NaN));
-    const prow = projectionPlayerRowForModel(id, r1);
+    const prow = projectionPlayerRowForModel(id, rOut);
     const modelP = modelProbOutrightMarket(prow || {}, mk);
     let bestBook = "";
     let bestAm = NaN;
@@ -5329,11 +5352,14 @@ async function loadProjections(opts = {}) {
       await loadPlayerHistory();
       await loadPlayerShots();
     }
+    // One merge from live-in-play.json even when client polling is off (fixes stale outright model vs books).
+    if (!isFileProtocol()) {
+      await fetchAndMergeDatagolfLiveInPlay({ force: true });
+    }
     refreshAll();
     updateStatusBar();
     stopDatagolfLivePolling();
     if (datagolfLiveOverlayEnabled() && !isFileProtocol()) {
-      window.setTimeout(() => void fetchAndMergeDatagolfLiveInPlay(), 1500);
       startDatagolfLivePolling();
     }
   };

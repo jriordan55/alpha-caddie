@@ -132,5 +132,15 @@ if ($code2 -ne 0) {
     exit $code2
 }
 
+# Writes alpha-caddie-web/live-in-play.json so the web app can merge DataGolf placement probs (win/top10/…)
+# into players on load; without this, +EV can show huge fake EV vs updated books.
+$fetchLive = Join-Path $repoRoot "scripts\fetch_datagolf_in_play.R"
+if (Test-Path $fetchLive) {
+    $code3 = Invoke-RscriptFile -RscriptExe $rscript -ScriptPath $fetchLive -WorkingDirectory $repoRoot -LogPath $logFile
+    if ($code3 -ne 0) {
+        Add-Content -Path $logFile -Value "WARNING: fetch_datagolf_in_play.R exit code $code3 (optional; +EV may lag books until this succeeds)"
+    }
+}
+
 Add-Content -Path $logFile -Value "===== done $(Get-Date -Format s) ====="
 exit 0
