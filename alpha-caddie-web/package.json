@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "fetch:dg": "node scripts/fetch-datagolf.mjs",
+    "fetch:in-play": "node scripts/fetch-live-in-play.mjs",
     "update:rounds": "node scripts/run-update-historical-rounds.mjs",
     "sync:rounds-csv": "node scripts/sync-historical-csv.mjs",
     "sync:data-to-web": "node scripts/sync-historical-csv.mjs",
