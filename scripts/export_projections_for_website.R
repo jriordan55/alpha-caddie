@@ -9,6 +9,9 @@
 #
 # Env: GOLF_MODEL_DIR = repo root if not cwd.
 #      GOLF_EXPORT_PROJECTIONS_EXTRA = optional extra path (one file) to also write the same JSON.
+#      GOLF_POLL_DATAGOLF_LIVE = 1/true/yes → set meta.poll_datagolf_live_predictions so the static app
+#        polls sibling live-in-play.json (from scripts/fetch_datagolf_in_play.R) for in-play finish probs.
+#      GOLF_DATAGOLF_LIVE_POLL_SEC = optional client poll interval 30–600 (default 300).
 
 suppressPackageStartupMessages({
   library(jsonlite)
@@ -158,6 +161,7 @@ if (!file.exists(rds_path)) {
 }
 
 obj <- readRDS(rds_path)
+model_next_round <- NA_integer_
 if (is.data.frame(obj)) {
   tbl <- obj
   event_name <- ""
@@ -173,6 +177,8 @@ if (is.data.frame(obj)) {
   if (!nzchar(course_used) && "course_used" %in% names(tbl) && nrow(tbl) > 0) {
     course_used <- trimws(as.character(tbl$course_used[1]))
   }
+  mr <- suppressWarnings(as.integer(obj$model_next_round %||% NA_integer_))
+  if (is.finite(mr) && mr >= 1L && mr <= 4L) model_next_round <- mr
 } else {
   stop("simulated_round_static.rds: expected data.frame or list(data = data.frame, ...)")
 }
@@ -195,8 +201,12 @@ players <- tbl[, cols, drop = FALSE]
 
 props_df <- collect_props(model_dir)
 
-auto_r <- ou_display_round_auto()
 tz_lab <- Sys.getenv("GOLF_OU_TZ", "America/New_York")
+auto_r <- if (is.finite(model_next_round) && model_next_round %in% 1L:4L) {
+  as.integer(model_next_round)
+} else {
+  ou_display_round_auto()
+}
 rnd_lab <- switch(as.character(auto_r),
   "1" = "R1 — next Thursday",
   "2" = "R2 — Friday",
@@ -204,7 +214,14 @@ rnd_lab <- switch(as.character(auto_r),
   "4" = "R4 — Sunday",
   paste0("R", auto_r)
 )
-display_round_label <- paste0(rnd_lab, " (auto, ", tz_lab, ")")
+round_src <- if (is.finite(model_next_round) && model_next_round %in% 1L:4L) "model" else "auto"
+display_round_label <- paste0(rnd_lab, " (", round_src, ", ", tz_lab, ")")
+
+poll_live_raw <- tolower(trimws(Sys.getenv("GOLF_POLL_DATAGOLF_LIVE", "")))
+poll_live <- poll_live_raw %in% c("1", "true", "yes")
+live_poll_sec <- suppressWarnings(as.integer(Sys.getenv("GOLF_DATAGOLF_LIVE_POLL_SEC", "300")))
+if (!is.finite(live_poll_sec) || live_poll_sec < 30L) live_poll_sec <- 300L
+if (live_poll_sec > 600L) live_poll_sec <- 600L
 
 payload <- list(
   event_name = event_name,
@@ -216,6 +233,19 @@ payload <- list(
   players = players,
   props = props_df
 )
+if (poll_live) {
+  payload$poll_datagolf_live_predictions <- TRUE
+  payload$datagolf_live_poll_interval_sec <- live_poll_sec
+  payload$live_matchup_model_blend <- 0.35
+}
+
+out_paths <- c(
+  out_path,
+  file.path(model_dir, "alpha-caddie-web", "projections.json")
+)
+extra_export <- trimws(Sys.getenv("GOLF_EXPORT_PROJECTIONS_EXTRA", ""))
+if (nzchar(extra_export)) out_paths <- c(out_paths, extra_export)
+out_paths <- unique(out_paths[nzchar(out_paths)])
 
 for (op in out_paths) {
   dir.create(dirname(op), recursive = TRUE, showWarnings = FALSE)
