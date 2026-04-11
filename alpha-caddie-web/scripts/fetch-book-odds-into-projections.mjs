@@ -10,12 +10,11 @@
  * Env: DATAGOLF_API_KEY or datagolf.local.json; GOLF_MODEL_DIR (repo root); GOLF_TOUR (default pga).
  *      GOLF_OUTRIGHTS_DEAD_HEAT=yes|no — same as fetch-datagolf.mjs
  *      GOLF_SKIP_PROPS_CSV=1 — do not merge data/player_props_*.csv into projections.props (Model O/U DK lines).
- *      GOLF_SKIP_DK_OU=1 — do not pull Birdies / Pars / Bogeys from DraftKings (see draftkings-ou-props.mjs).
+ *      GOLF_SKIP_DK_OU=1 — do not pull DK round props (see draftkings-ou-props.mjs).
  *
- * DraftKings Birdies or Better, Pars, and Bogeys or Worse for the current round are fetched automatically when
- * Playwright is installed (npm i in alpha-caddie-web; npx playwright install chromium once per machine).
- * Full-field "Total Score" (18-hole stroke O/U) is not reliably available from the same DK API surface; use
- * data/player_props_lines.csv for that market if you need it.
+ * DraftKings round props (Birdies, Pars, Bogeys, Round Score → Total Score) are fetched when Playwright is
+ * installed (npm i in alpha-caddie-web; npx playwright install chromium once per machine).
+ * CSV files still override or fill gaps when DK omits a player or market.
  */
 import { parse } from "csv-parse/sync";
 import { existsSync, readFileSync, writeFileSync } from "fs";
@@ -371,7 +370,7 @@ async function main() {
     }
     for (const r of dkProps) {
       const m = String(r.market || "").trim();
-      if (m === "Birdies" || m === "Pars" || m === "Bogeys") {
+      if (m === "Birdies" || m === "Pars" || m === "Bogeys" || m === "Total Score") {
         byKey.set(`${r.player_name}|${r.market}|${r.line}`, r);
       }
     }

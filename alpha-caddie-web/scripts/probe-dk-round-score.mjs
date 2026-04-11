@@ -1,6 +1,6 @@
 /**
- * Dev-only: confirm whether any Masters subcategory returns stroke O/U lines in the
- * full-round band (~66–80). Expect 0 unless DK product changes.
+ * Dev-only: count stroke O/U markets in the full-round band (~66–82) vs nine-hole (~30–46).
+ * When `ouMarkets_line_66_82` > 0, draftkings-ou-props.mjs can pull Round Score → Total Score.
  *
  *   node scripts/probe-dk-round-score.mjs
  */

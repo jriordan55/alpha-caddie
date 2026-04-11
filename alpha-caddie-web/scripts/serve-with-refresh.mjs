@@ -13,7 +13,7 @@
  * Optional: GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS=N — only re-pull last N calendar years (keeps older CSV rows).
  *
  * Live model (pricing): runs fetch:in-play → live-in-play.json unless GOLF_SKIP_LIVE_IN_PLAY_ON_START=1.
- * While serving, re-runs fetch:in-play on an interval (writes skip when info.last_update unchanged).
+ * While serving, re-runs fetch:in-play on an interval (writes skip when in-play + live feed timestamps unchanged).
  * Disable: GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER=1. GOLF_LIVE_IN_PLAY_SERVER_POLL_MS (default 30000).
  *
  * Book odds: runs fetch-book-odds-into-projections.mjs unless GOLF_SKIP_BOOK_ODDS_ON_START=1.

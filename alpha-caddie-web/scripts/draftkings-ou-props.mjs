@@ -1,5 +1,5 @@
 /**
- * Pull DraftKings round O/U props (Birdies or Better, Pars, Bogeys or Worse) via
+ * Pull DraftKings round O/U props (Birdies or Better, Pars, Bogeys or Worse, Round Score → Total Score) via
  * sportsbook-nash leagueSubcategory markets API, using Playwright for session cookies.
  *
  * Env:
@@ -8,6 +8,7 @@
  *   DK_SITE_SEGMENT — default US-MA-SB (set to your state segment if requests fail)
  *   DK_LEAGUE_ID — default 92694 (The Masters)
  *   DK_SUBCAT_JSON — optional override, e.g. {"Birdies":"17299","Pars":"17300","Bogeys":"17301"}
+ *   If Pars/Bogeys are missing from page nav state, defaults 17299/17300/17301 are used (Masters-style).
  *
  * "Total Score" (18-hole round strokes ~66–80): verified absent from sportsbook-nash
  * leagueSubcategory/markets for every Masters (92694) nav subcategory — only nine-hole style
@@ -32,6 +33,16 @@ const STAT_BY_SEO = {
   pars: "Pars",
   "bogeys-or-worse": "Bogeys",
 };
+
+/** When nav in __INITIAL_STATE__ omits Pars/Bogeys (lazy tabs), these Masters round-pack IDs still work. */
+const FALLBACK_SUBCAT_BY_STAT = {
+  Birdies: "17299",
+  Pars: "17300",
+  Bogeys: "17301",
+};
+
+/** When nav omits Round Score tabs, try these Masters subcategory ids (merge + dedupe players). */
+const FALLBACK_ROUND_SCORE_SUBS = ["11786", "18987"];
 
 function marketsUrl(leagueId, subcatId, siteSegment) {
   const seg = String(siteSegment || SITE);
@@ -77,40 +88,34 @@ function parseAmerican(raw) {
   return Number.isFinite(n) ? n : NaN;
 }
 
-function discoverSubcatsFromInitialState(ini, wantLeagueId) {
-  const lg = String(wantLeagueId);
-  const bySeo = new Map();
-  function walk(o, depth) {
-    if (!o || typeof o !== "object" || depth > 45) return;
-    const p = o.parameters;
-    if (p && String(p.leagueId) === lg && p.subcategoryId != null) {
-      const seo = String(o.seoId || "").trim().toLowerCase();
-      if (seo && STAT_BY_SEO[seo]) {
-        bySeo.set(seo, String(p.subcategoryId));
-      }
-    }
-    if (Array.isArray(o)) {
-      for (const x of o) walk(x, depth + 1);
-      return;
-    }
-    for (const k of Object.keys(o)) walk(o[k], depth + 1);
-  }
-  walk(ini, 0);
-  return bySeo;
-}
-
 const NAME_RE = {
   Birdies: /^(.+?)\s+Birdies or Better\s+-\s+Round\s+(\d+)\s*$/i,
   Pars: /^(.+?)\s+Pars\s+-\s+Round\s+(\d+)\s*$/i,
   Bogeys: /^(.+?)\s+Bogeys or Worse\s+-\s+Round\s+(\d+)\s*$/i,
 };
 
+const NAME_RE_TOTAL_SCORE = /^(.+?)\s+Round Score\s+-\s+Round\s+(\d+)\s*$/i;
+
 function parseMarketName(stat, marketName) {
+  const raw = String(marketName || "").trim();
+  if (stat === "Total Score") {
+    const m = raw.match(NAME_RE_TOTAL_SCORE);
+    if (!m) return null;
+    return { dkPlayer: m[1].replace(/\s+/g, " ").trim(), round: Number(m[2]) };
+  }
   const re = NAME_RE[stat];
   if (!re) return null;
-  const m = String(marketName || "").trim().match(re);
+  const m = raw.match(re);
   if (!m) return null;
-  return { dkPlayer: m[1].trim(), round: Number(m[2]) };
+  return { dkPlayer: m[1].replace(/\s+/g, " ").trim(), round: Number(m[2]) };
+}
+
+function lineFromSelection(s) {
+  const pts = s.points != null ? Number(s.points) : NaN;
+  if (Number.isFinite(pts)) return pts;
+  const lab = String(s.label || "");
+  const m = lab.match(/(?:over|under)\s+([\d.]+)/i);
+  return m ? Number(m[1]) : NaN;
 }
 
 function propsFromMarketsBody(body, stat, dgByNameLower) {
@@ -134,11 +139,13 @@ function propsFromMarketsBody(body, stat, dgByNameLower) {
     for (const s of sel) {
       const ot = String(s.outcomeType || "").toLowerCase();
       const lab = String(s.label || "").toLowerCase();
-      if (ot === "over" || lab === "over") overSel = s;
-      else if (ot === "under" || lab === "under") underSel = s;
+      if (ot === "over" || lab === "over" || /^over\b/i.test(lab)) overSel = s;
+      else if (ot === "under" || lab === "under" || /^under\b/i.test(lab)) underSel = s;
     }
     if (!overSel || !underSel) continue;
-    const lineRaw = Number(overSel.points ?? underSel.points);
+    const lo = lineFromSelection(overSel);
+    const lu = lineFromSelection(underSel);
+    const lineRaw = Number.isFinite(lo) ? lo : lu;
     if (!Number.isFinite(lineRaw)) continue;
     let line = lineRaw;
     if (stat !== "Total Score" && line === Math.floor(line)) line += 0.5;
@@ -199,18 +206,24 @@ export async function fetchDraftKingsOuProps(opts = {}) {
     return { props: [], subcatsUsed: {}, error: `goto: ${e.message}` };
   }
 
-  const bySeo = await page.evaluate((lid) => {
+  const nav = await page.evaluate((lid) => {
     const ini = window.__INITIAL_STATE__;
-    if (!ini) return {};
+    if (!ini) return { seoMap: {}, roundScoreSubs: [] };
     const lg = String(lid);
     const want = { "birdies-or-better": 1, pars: 1, "bogeys-or-worse": 1 };
     const bySeo = {};
+    const roundScoreSubs = new Set();
     function walk(o, depth) {
       if (!o || typeof o !== "object" || depth > 45) return;
       const p = o.parameters;
       if (p && String(p.leagueId) === lg && p.subcategoryId != null) {
-        const seo = String(o.seoId || "").trim().toLowerCase();
+        let seo = String(o.seoId || "").trim().toLowerCase();
+        if (seo === "bogies-or-worse") seo = "bogeys-or-worse";
         if (want[seo]) bySeo[seo] = String(p.subcategoryId);
+        const title = String(o.title || "").trim().toLowerCase();
+        if (title === "round score" || /round[-_]?score/.test(seo)) {
+          roundScoreSubs.add(String(p.subcategoryId));
+        }
       }
       if (Array.isArray(o)) {
         for (const x of o) walk(x, depth + 1);
@@ -219,21 +232,33 @@ export async function fetchDraftKingsOuProps(opts = {}) {
       for (const k of Object.keys(o)) walk(o[k], depth + 1);
     }
     walk(ini, 0);
-    return bySeo;
+    return { seoMap: bySeo, roundScoreSubs: [...roundScoreSubs] };
   }, leagueId);
+
+  const bySeo = nav.seoMap || {};
+  let roundScoreSubs = [];
+  const tsOv = overrides["Total Score"] ?? overrides.TotalScore;
+  if (tsOv != null) {
+    roundScoreSubs = Array.isArray(tsOv) ? tsOv.map(String) : [String(tsOv)];
+  } else if (nav.roundScoreSubs?.length) {
+    roundScoreSubs = [...nav.roundScoreSubs];
+  } else {
+    roundScoreSubs = [...FALLBACK_ROUND_SCORE_SUBS];
+  }
+  roundScoreSubs = [...new Set(roundScoreSubs.map(String).filter(Boolean))];
 
   const subcatsUsed = {};
   const statToSub = {};
   for (const [seo, stat] of Object.entries(STAT_BY_SEO)) {
     const fromNav = bySeo[seo];
     const fromEnv = overrides[stat];
-    const sub = fromEnv || fromNav;
+    const sub = fromEnv || fromNav || FALLBACK_SUBCAT_BY_STAT[stat];
     if (!sub) continue;
     statToSub[stat] = sub;
     subcatsUsed[stat] = sub;
   }
 
-  if (Object.keys(statToSub).length === 0) {
+  if (Object.keys(statToSub).length === 0 && roundScoreSubs.length === 0) {
     await browser.close();
     return {
       props: [],
@@ -245,12 +270,26 @@ export async function fetchDraftKingsOuProps(opts = {}) {
   const all = [];
   try {
     const api = ctx.request;
-    for (const [stat, sub] of Object.entries(statToSub)) {
+    const entries = Object.entries(statToSub);
+    for (let i = 0; i < entries.length; i++) {
+      const [stat, sub] = entries[i];
       const u = marketsUrl(leagueId, sub, siteSegment);
       const res = await api.get(u, { timeout: 60000 });
       if (!res.ok()) continue;
       const body = await res.json();
       all.push(...propsFromMarketsBody(body, stat, dgByNameLower));
+      await page.waitForTimeout(250);
+    }
+    for (let i = 0; i < roundScoreSubs.length; i++) {
+      const sub = roundScoreSubs[i];
+      const u = marketsUrl(leagueId, sub, siteSegment);
+      const res = await api.get(u, { timeout: 60000 });
+      if (!res.ok()) continue;
+      const body = await res.json();
+      all.push(...propsFromMarketsBody(body, "Total Score", dgByNameLower));
+      const prev = subcatsUsed["Total Score"];
+      subcatsUsed["Total Score"] = prev ? `${prev},${sub}` : sub;
+      if (i < roundScoreSubs.length - 1) await page.waitForTimeout(250);
     }
   } finally {
     await browser.close();
@@ -264,10 +303,6 @@ export async function fetchDraftKingsOuProps(opts = {}) {
 }
 
 async function main() {
-  const { readFileSync, existsSync } = await import("fs");
-  const { dirname, join } = await import("path");
-  const { fileURLToPath } = await import("url");
-  const __dirname = dirname(fileURLToPath(import.meta.url));
   const proj = join(__dirname, "..", "projections.json");
   let players = [];
   if (existsSync(proj)) {
