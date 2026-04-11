@@ -242,19 +242,21 @@ function metricFields(row) {
   };
 }
 
+/** PGA CSV uses values like "71°F", "89%"; plain Number() is NaN — strip to a scalar like the web app filters. */
+function parseWeatherScalar(v) {
+  const s = String(v ?? "").trim();
+  if (!s) return NaN;
+  const direct = Number(s);
+  if (Number.isFinite(direct)) return direct;
+  const cleaned = s.replace(/[^0-9.-]+/g, "");
+  const n = parseFloat(cleaned);
+  return Number.isFinite(n) ? n : NaN;
+}
+
 function weatherFields(row) {
-  const maybeNum = (v) => {
-    const s = String(v ?? "").trim();
-    if (!s) return NaN;
-    const n = Number(s);
-    return Number.isFinite(n) ? n : NaN;
-  };
-  const tempF = maybeNum(row.pga_meta_weather_temp_f ?? row.weather_temp_f);
-  const windMph = maybeNum(row.pga_meta_weather_wind_mph ?? row.weather_wind_mph);
-  const humidityRaw = row.pga_meta_weather_humidity ?? row.weather_humidity;
-  const humidity = Number.isFinite(maybeNum(humidityRaw))
-    ? maybeNum(humidityRaw)
-    : maybeNum(String(humidityRaw ?? "").replace(/[^0-9.-]+/g, ""));
+  const tempF = parseWeatherScalar(row.pga_meta_weather_temp_f ?? row.weather_temp_f);
+  const windMph = parseWeatherScalar(row.pga_meta_weather_wind_mph ?? row.weather_wind_mph);
+  const humidity = parseWeatherScalar(row.pga_meta_weather_humidity ?? row.weather_humidity);
   const condition = String(row.pga_meta_weather_condition ?? row.weather_condition ?? "").trim();
   return {
     weather_temp_f: Number.isFinite(tempF) ? tempF : null,

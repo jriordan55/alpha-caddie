@@ -11,7 +11,7 @@
 #      GOLF_EXPORT_PROJECTIONS_EXTRA = optional extra path (one file) to also write the same JSON.
 #      GOLF_POLL_DATAGOLF_LIVE = 1/true/yes → set meta.poll_datagolf_live_predictions so the static app
 #        polls sibling live-in-play.json (from scripts/fetch_datagolf_in_play.R) for in-play finish probs.
-#      GOLF_DATAGOLF_LIVE_POLL_SEC = optional client poll interval 30–600 (default 300).
+#      GOLF_DATAGOLF_LIVE_POLL_SEC = optional client poll interval 30–600 (default 30).
 
 suppressPackageStartupMessages({
   library(jsonlite)
@@ -86,13 +86,15 @@ ensure_prop_cols <- function(tbl, default_market) {
   }
   tbl <- tbl %>% dplyr::filter(!is.na(.data$market))
   if (nrow(tbl) == 0) return(NULL)
-  tbl %>%
+  has_dg <- "dg_id" %in% names(tbl)
+  out <- tbl %>%
     dplyr::transmute(
       player_name = trimws(as.character(.data$player_name)),
       line = as.numeric(.data$line),
       over_odds = as.numeric(.data$over_odds),
       under_odds = as.numeric(.data$under_odds),
-      market = as.character(.data$market)
+      market = as.character(.data$market),
+      dg_id = if (has_dg) suppressWarnings(as.integer(round(as.numeric(.data$dg_id)))) else NA_integer_
     ) %>%
     dplyr::mutate(
       line = dplyr::if_else(
@@ -101,6 +103,10 @@ ensure_prop_cols <- function(tbl, default_market) {
         .data$line
       )
     )
+  if (!has_dg) {
+    out <- dplyr::select(out, -.data$dg_id)
+  }
+  out
 }
 
 collect_props <- function(root) {
@@ -218,9 +224,14 @@ round_src <- if (is.finite(model_next_round) && model_next_round %in% 1L:4L) "mo
 display_round_label <- paste0(rnd_lab, " (", round_src, ", ", tz_lab, ")")
 
 poll_live_raw <- tolower(trimws(Sys.getenv("GOLF_POLL_DATAGOLF_LIVE", "")))
-poll_live <- poll_live_raw %in% c("1", "true", "yes")
-live_poll_sec <- suppressWarnings(as.integer(Sys.getenv("GOLF_DATAGOLF_LIVE_POLL_SEC", "300")))
-if (!is.finite(live_poll_sec) || live_poll_sec < 30L) live_poll_sec <- 300L
+poll_live_off <- poll_live_raw %in% c("0", "false", "no", "off")
+# Poll in-play during any model round (R1–R4) so Thursday pricing picks up live standings, not only R2+.
+poll_live <- !poll_live_off &&
+  (poll_live_raw %in% c("1", "true", "yes") ||
+    (is.finite(model_next_round) && model_next_round >= 1L && model_next_round <= 4L))
+# Client checks preds/in-play often but only re-merges when info.last_update changes (~DataGolf cadence).
+live_poll_sec <- suppressWarnings(as.integer(Sys.getenv("GOLF_DATAGOLF_LIVE_POLL_SEC", "30")))
+if (!is.finite(live_poll_sec) || live_poll_sec < 30L) live_poll_sec <- 30L
 if (live_poll_sec > 600L) live_poll_sec <- 600L
 
 payload <- list(
@@ -233,6 +244,11 @@ payload <- list(
   players = players,
   props = props_df
 )
+# Browser silent-refresh interval for projections.json (book odds / +EV). Override: GOLF_CLIENT_PROJECTIONS_POLL_SEC
+proj_poll_sec <- suppressWarnings(as.integer(Sys.getenv("GOLF_CLIENT_PROJECTIONS_POLL_SEC", "30")))
+if (!is.finite(proj_poll_sec) || proj_poll_sec < 15L) proj_poll_sec <- 30L
+if (proj_poll_sec > 3600L) proj_poll_sec <- 3600L
+payload$projections_poll_interval_sec <- proj_poll_sec
 if (poll_live) {
   payload$poll_datagolf_live_predictions <- TRUE
   payload$datagolf_live_poll_interval_sec <- live_poll_sec

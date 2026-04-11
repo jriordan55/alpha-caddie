@@ -5,6 +5,8 @@
   "scripts": {
     "fetch:dg": "node scripts/fetch-datagolf.mjs",
     "fetch:in-play": "node scripts/fetch-live-in-play.mjs",
+    "fetch:book-odds": "node scripts/fetch-book-odds-into-projections.mjs",
+    "fetch:dk-ou": "node scripts/draftkings-ou-props.mjs",
     "update:rounds": "node scripts/run-update-historical-rounds.mjs",
     "sync:rounds-csv": "node scripts/sync-historical-csv.mjs",
     "sync:data-to-web": "node scripts/sync-historical-csv.mjs",
@@ -21,5 +23,8 @@
   },
   "dependencies": {
     "csv-parse": "^5.6.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.49.1"
   }
 }

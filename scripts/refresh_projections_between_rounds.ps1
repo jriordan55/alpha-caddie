@@ -4,6 +4,10 @@
 # Manual:
 #   powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\refresh_projections_between_rounds.ps1
 #
+# High-frequency live + book odds + git push (tournament): scripts\live-in-play-push-once.ps1
+#   (runs fetch-book-odds + fetch-live-in-play) or register-live-in-play-push-task / tournament-live-push-loop.
+#   Manual odds-only: npm run fetch:book-odds --prefix alpha-caddie-web
+#
 # Automatic (between rounds): Task Scheduler → Create Task → Triggers → e.g. Weekly, Thu–Sun,
 #   repeat every 1 hour for 24 hours (or set hourly during tournament weeks). Action:
 #   Program: powershell.exe

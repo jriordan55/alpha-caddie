@@ -2,14 +2,15 @@
  * AlphaCaddie — demo grid is bundled; over HTTP the app loads projections.json (same schema as
  * scripts/export_projections_for_website.R after round_projections.R → simulated_round_static.rds).
  * Export writes both website/public/data/projections.json and alpha-caddie-web/projections.json.
- * Auto-refresh: default every 120s (?poll=0 off, ?poll=30 for 30s). Override URL: ?projections=/path.json
+ * Auto-refresh: default ~30s chained polls (?poll=0 off). meta.projections_poll_interval_sec (15–3600) overrides.
+ * Override URL: ?projections=/path.json
  * or window.__ALPHA_CADDIE_PROJECTIONS_URL__. Round history: embedded-player-round-history.js;
  * player_round_history.json + player_shots_web.json when served over HTTP.
  *
  * Live placement probs (DataGolf preds/in-play): live-in-play.json next to projections.json
  * (npm run fetch:in-play, or scripts/fetch_datagolf_in_play.R after R export). JSON uses win/top_* as
  * decimals in (0,1) when odds_format=percent (per DataGolf docs). Over HTTP the app refetches
- * live-in-play.json often (default ~60s) but only re-merges pricing when DataGolf’s payload changes,
+ * live-in-play.json often (default ~30s) but only re-merges pricing when DataGolf’s payload changes,
  * using info.last_update when present (same signal as their ~5 min model refresh). Opt out: ?liveInPlay=0
  * or ?liveInPlayPoll=0, or meta.poll_datagolf_live_predictions: false. Poll interval: ?liveInPlayPoll=90
  * (seconds, 30–600). Never embed a DG API key in the browser.
@@ -214,11 +215,11 @@ function buildDefaultProjectionsPayload() {
     }
   });
   const props = [
-    { player_name: "Scheffler, Scottie", line: 69.5, over_odds: -108, under_odds: -112, market: "Total Score" },
-    { player_name: "McIlroy, Rory", line: 70.5, over_odds: -110, under_odds: -110, market: "Total Score" },
-    { player_name: "Morikawa, Collin", line: 4.5, over_odds: -115, under_odds: -105, market: "Birdies" },
-    { player_name: "Homa, Max", line: 10.5, over_odds: -110, under_odds: -118, market: "Pars" },
-    { player_name: "Schauffele, Xander", line: 2.5, over_odds: -120, under_odds: -102, market: "Bogeys" },
+    { dg_id: 1, player_name: "Scheffler, Scottie", line: 69.5, over_odds: -108, under_odds: -112, market: "Total Score" },
+    { dg_id: 2, player_name: "McIlroy, Rory", line: 70.5, over_odds: -110, under_odds: -110, market: "Total Score" },
+    { dg_id: 3, player_name: "Morikawa, Collin", line: 4.5, over_odds: -115, under_odds: -105, market: "Birdies" },
+    { dg_id: 5, player_name: "Homa, Max", line: 10.5, over_odds: -110, under_odds: -118, market: "Pars" },
+    { dg_id: 4, player_name: "Schauffele, Xander", line: 2.5, over_odds: -120, under_odds: -102, market: "Bogeys" },
   ];
   return {
     event_name: "Bundled demo field — edit buildDefaultProjectionsPayload() in app.js",
@@ -477,6 +478,7 @@ function bookImpliedProb01(v) {
 function datagolfModelProb01(v) {
   const x = num(v, NaN);
   if (!Number.isFinite(x) || x < 0) return NaN;
+  if (x === 0) return 0;
   if (x > 0 && x <= 1) return Math.min(1, Math.max(0, x));
   if (x > 1 && x < 100) return Math.min(1, x / 100);
   if (x === 100) return NaN;
@@ -541,6 +543,9 @@ let dataSource = "bundled";
 let projectionsPollMs = 0;
 let projectionsPollTimerId = 0;
 let projectionsLoadInFlight = false;
+/** If a silent poll hit while a load was in flight, run one more right after (avoid missing odds/EV updates). */
+let projectionsSilentReloadQueued = false;
+let lastDocVisibleProjectionsRefetchAt = 0;
 /** Set when projections.json (or bundled demo) finishes applying; used to refetch market odds on +EV. */
 let lastProjectionsLoadedAtMs = 0;
 /** Min time since last successful projections load before +EV tab triggers another silent fetch. */
@@ -548,6 +553,8 @@ let lastProjectionsLoadedAtMs = 0;
 let datagolfLivePollTimerId = 0;
 /** Fingerprint of last merged preds/in-play (info.last_update); skip merge until DataGolf publishes a new one. */
 let lastDatagolfInPlayToken = "";
+/** Every N polls, merge anyway so make_cut / current_pos refresh if the file changes without last_update bumping. */
+let datagolfLivePeriodicForceTick = 0;
 
 function projectionsJsonUrl() {
   if (typeof window !== "undefined" && window.__ALPHA_CADDIE_PROJECTIONS_URL__) {
@@ -559,6 +566,20 @@ function projectionsJsonUrl() {
     if (q != null && String(q).trim()) return String(q).trim();
   } catch (_) {}
   return "projections.json";
+}
+
+/** Same-origin fetches can still reuse a cached body; bust query on polls so book odds / +EV stay current. */
+function cacheBustFetchUrl(baseUrl) {
+  const raw = String(baseUrl || "").trim();
+  if (!raw) return raw;
+  try {
+    const u = new URL(raw, typeof location !== "undefined" ? location.href : undefined);
+    u.searchParams.set("_cb", String(Date.now()));
+    return u.toString();
+  } catch (_) {
+    const sep = raw.includes("?") ? "&" : "?";
+    return `${raw}${sep}_cb=${Date.now()}`;
+  }
 }
 
 /** Sibling of projections.json, or window.__ALPHA_CADDIE_LIVE_IN_PLAY_URL__. */
@@ -604,7 +625,7 @@ function datagolfLiveOverlayEnabled() {
 
 /**
  * How often to check live-in-play.json. Merges only when dgInPlayUpdateToken() changes (DataGolf last_update).
- * Default 60s — catches their ~5 min model refresh within a minute without waiting a full 5 min cycle.
+ * Default 30s — catches their ~5 min model refresh without long gaps; periodic force-merge also reapplies JSON.
  */
 function datagolfLivePollIntervalMs() {
   try {
@@ -615,8 +636,8 @@ function datagolfLivePollIntervalMs() {
       return Math.min(600, Math.max(30, sec)) * 1000;
     }
   } catch (_) {}
-  const sec = num(DATA.meta?.datagolf_live_poll_interval_sec, 60);
-  if (!Number.isFinite(sec) || sec < 30) return 60 * 1000;
+  const sec = num(DATA.meta?.datagolf_live_poll_interval_sec, 30);
+  if (!Number.isFinite(sec) || sec < 30) return 30 * 1000;
   return Math.min(600, Math.max(30, sec)) * 1000;
 }
 
@@ -715,12 +736,21 @@ function mergeDatagolfInPlayPayload(j) {
 }
 
 async function fetchAndMergeDatagolfLiveInPlay(opts = {}) {
-  const force = Boolean(opts.force);
+  let force = Boolean(opts.force);
+  if (!force) {
+    datagolfLivePeriodicForceTick += 1;
+    if (datagolfLivePeriodicForceTick >= 8) {
+      force = true;
+      datagolfLivePeriodicForceTick = 0;
+    }
+  } else {
+    datagolfLivePeriodicForceTick = 0;
+  }
   if (isFileProtocol()) return;
-  if (datagolfLivePollingDisabledExplicitly()) return;
+  if (!force && datagolfLivePollingDisabledExplicitly()) return;
   if (!force && !datagolfLiveOverlayEnabled()) return;
   if (!DATA.players || !DATA.players.length) return;
-  const url = liveInPlayJsonUrl();
+  const url = cacheBustFetchUrl(liveInPlayJsonUrl());
   try {
     const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) return;
@@ -755,29 +785,50 @@ function startDatagolfLivePolling() {
   }, ms);
 }
 
-/** Interval for silent projections reload; 0 = disabled. Default 120s when ?poll omitted. */
+/**
+ * Interval for silent projections reload; 0 = disabled.
+ * URL ?poll= overrides; else meta.projections_poll_interval_sec (15–3600); else 30s.
+ */
 function projectionsPollIntervalMs() {
   if (isFileProtocol()) return 0;
   try {
     const raw = new URLSearchParams(window.location.search).get("poll");
-    if (raw === null || raw === "") return 120 * 1000;
+    if (raw === null || raw === "") {
+      const msec = num(DATA?.meta?.projections_poll_interval_sec, NaN);
+      if (Number.isFinite(msec) && msec >= 15 && msec <= 3600) return msec * 1000;
+      return 30 * 1000;
+    }
     const t = String(raw).trim().toLowerCase();
     if (t === "0" || t === "false" || t === "off" || t === "no") return 0;
     const sec = Number(raw);
     if (!Number.isFinite(sec) || sec <= 0) return 0;
     return Math.min(3600, Math.max(15, sec)) * 1000;
   } catch (_) {}
-  return 120 * 1000;
+  return 30 * 1000;
+}
+
+/** Chain timeouts so the next poll only starts after the previous load finishes (setInterval was skipping while inFlight). */
+function scheduleProjectionsPollTimeout() {
+  window.clearTimeout(projectionsPollTimerId);
+  projectionsPollTimerId = 0;
+  const ms = projectionsPollIntervalMs();
+  projectionsPollMs = ms;
+  if (!ms) return;
+  projectionsPollTimerId = window.setTimeout(() => {
+    void (async () => {
+      try {
+        await loadProjections({ silent: true, reloadSidecar: false });
+      } catch (_) {
+        /* errors handled inside loadProjections */
+      } finally {
+        scheduleProjectionsPollTimeout();
+      }
+    })();
+  }, ms);
 }
 
 function startProjectionsPolling() {
-  window.clearInterval(projectionsPollTimerId);
-  projectionsPollTimerId = 0;
-  projectionsPollMs = projectionsPollIntervalMs();
-  if (!projectionsPollMs) return;
-  projectionsPollTimerId = window.setInterval(() => {
-    loadProjections({ silent: true, reloadSidecar: false });
-  }, projectionsPollMs);
+  scheduleProjectionsPollTimeout();
 }
 
 function isFileProtocol() {
@@ -850,6 +901,54 @@ function getOuRound() {
   const n = num(v, NaN);
   if (Number.isFinite(n) && n >= 1 && n <= 4) return Math.round(n);
   return ouDisplayRoundAuto();
+}
+
+/** Max of live DG round, export display_round, and O/U picker — drives post-cut list filtering. */
+function tournamentMaxEffectiveRound() {
+  const liveR = Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
+  const dr = Math.round(num(DATA?.meta?.display_round, NaN));
+  const ou = Math.round(getOuRound());
+  return Math.max(
+    Number.isFinite(liveR) && liveR >= 1 ? liveR : 0,
+    Number.isFinite(dr) && dr >= 1 ? dr : 0,
+    Number.isFinite(ou) && ou >= 1 ? ou : 0
+  );
+}
+
+/**
+ * True when missed-cut / WD-style players should be hidden from O/U, +EV, matchups, etc.
+ * R3+ always; during R2 also once any player row is definitively eliminated (covers Friday cut before meta bumps to 3).
+ */
+function tournamentPostCutListPhase() {
+  const mx = tournamentMaxEffectiveRound();
+  if (mx >= 3) return true;
+  if (mx < 2) return false;
+  if (!Array.isArray(DATA.players)) return false;
+  return DATA.players.some((p) => isPlayerEliminatedFromEvent(p));
+}
+
+function isPlayerEliminatedFromEvent(playerRow) {
+  if (!playerRow || typeof playerRow !== "object") return false;
+  const mc = playerRow.make_cut;
+  if (mc === false) return true;
+  if (mc === true) return false;
+  if (typeof mc === "boolean") return !mc;
+  const n = num(mc, NaN);
+  if (Number.isFinite(n) && n <= 0) return true;
+  const pos = String(playerRow.current_pos || "");
+  return /\b(CUT|WD|DQ|MDF|DNS|W\/D|RET)\b/i.test(pos);
+}
+
+/** dg_ids to omit from post-cut actionable markets (not used for make_cut / mc outright tabs). */
+function dgIdsEliminatedFromEventPostCut() {
+  const out = new Set();
+  if (!tournamentPostCutListPhase() || !Array.isArray(DATA.players)) return out;
+  for (const p of DATA.players) {
+    if (!isPlayerEliminatedFromEvent(p)) continue;
+    const id = Math.round(num(p.dg_id, NaN));
+    if (Number.isFinite(id)) out.add(id);
+  }
+  return out;
 }
 
 function updateRoundLabels() {
@@ -1126,6 +1225,99 @@ function enforceHalfLine(v) {
   return Math.round(v - 0.5) + 0.5;
 }
 
+/** R export / CSV uses "Total Score"; O/U UI uses "Total score". */
+function ouPropsCanonicalMarket(market) {
+  const m = String(market || "");
+  if (m === "Total score") return "Total Score";
+  return m;
+}
+
+function ouPropPlayerKeyRaw(name) {
+  return String(name || "").trim().toLowerCase();
+}
+
+function ouPropPlayerKeyDisplay(name) {
+  return String(displayGolferName(name || ""))
+    .trim()
+    .toLowerCase();
+}
+
+/** Map id:${dgId}:${line} / nm:${name}:${line} → { over, under } American odds. */
+function ouBuildPropsOddsIndex(market) {
+  const canon = ouPropsCanonicalMarket(market);
+  const map = new Map();
+  const props = Array.isArray(DATA.props) ? DATA.props : [];
+  for (const r of props) {
+    if (String(r.market || "").trim() !== canon) continue;
+    const L = enforceHalfLine(num(r.line, NaN));
+    if (!Number.isFinite(L)) continue;
+    const o = num(r.over_odds, NaN);
+    const u = num(r.under_odds, NaN);
+    if (!Number.isFinite(o) || !Number.isFinite(u)) continue;
+    const id = Math.round(num(r.dg_id, NaN));
+    if (Number.isFinite(id) && id > 0) map.set(`id:${id}:${L}`, { over: o, under: u });
+    const raw = String(r.player_name || "").trim();
+    if (raw) {
+      map.set(`nm:${ouPropPlayerKeyRaw(raw)}:${L}`, { over: o, under: u });
+      map.set(`nm:${ouPropPlayerKeyDisplay(raw)}:${L}`, { over: o, under: u });
+    }
+  }
+  return map;
+}
+
+function ouPropsBookOddsFromIndex(idx, playerRow, line) {
+  const L = enforceHalfLine(line);
+  if (!Number.isFinite(L) || !idx) return null;
+  const id = Math.round(num(playerRow?.dg_id, NaN));
+  if (Number.isFinite(id) && id > 0) {
+    const byId = idx.get(`id:${id}:${L}`);
+    if (byId) return byId;
+  }
+  const nm = String(playerRow?.player_name || "").trim();
+  if (!nm) return null;
+  let hit = idx.get(`nm:${ouPropPlayerKeyRaw(nm)}:${L}`);
+  if (hit) return hit;
+  hit = idx.get(`nm:${ouPropPlayerKeyDisplay(nm)}:${L}`);
+  return hit || null;
+}
+
+function ouBookImpliedForSortColumn(playerRow, market, L, lineSel, pImpOverSel, pImpUnderSel, propIdx, side) {
+  const useCustom = lineMatchesOuHighlight(lineSel, L, market);
+  if (useCustom) return side === "over" ? pImpOverSel : pImpUnderSel;
+  const pk = ouPropsBookOddsFromIndex(propIdx, playerRow, L);
+  if (pk && Number.isFinite(pk.over) && Number.isFinite(pk.under)) {
+    return side === "over" ? impliedProbFromAmerican(pk.over) : impliedProbFromAmerican(pk.under);
+  }
+  return impliedProbFromAmerican(OU_DEFAULT_ODDS_AM);
+}
+
+function formatAmericanOddsInput(am) {
+  const v = Math.round(num(am, NaN));
+  if (!Number.isFinite(v) || v === 0) return "";
+  return v > 0 ? `+${v}` : String(v);
+}
+
+/** When one golfer is selected and props include their line, mirror DK over/under into the toolbar. */
+function syncOuToolbarOddsFromProps(market, lineSel, round) {
+  const oEl = document.getElementById("ou-odds-over-filter");
+  const uEl = document.getElementById("ou-odds-under-filter");
+  const pf = document.getElementById("ou-player-filter");
+  if (!oEl || !uEl || !pf) return;
+  if (document.activeElement === oEl || document.activeElement === uEl) return;
+  const want = String(pf.value || "").trim();
+  if (!want) return;
+  const r = Math.round(num(round, NaN));
+  const row = DATA.players.find((p) => String(p.player_name || "").trim() === want && samePlayerRound(p, r));
+  if (!row) return;
+  const idx = ouBuildPropsOddsIndex(market);
+  const L = enforceHalfLine(lineSel);
+  if (!Number.isFinite(L)) return;
+  const pk = ouPropsBookOddsFromIndex(idx, row, L);
+  if (!pk || !Number.isFinite(pk.over) || !Number.isFinite(pk.under)) return;
+  oEl.value = formatAmericanOddsInput(pk.over);
+  uEl.value = formatAmericanOddsInput(pk.under);
+}
+
 function parseOuLineFilterInput() {
   const el = document.getElementById("ou-line-filter");
   if (!el) return NaN;
@@ -1206,13 +1398,12 @@ let ouTableSortInited = false;
 /** Last snapped O/U line; used while the line input is empty or mid-edit (avoid rewriting on every keystroke). */
 let ouLineCommitted = 70.5;
 
-function ouTableSortValue(playerRow, market, lineSel, pImpOverSel, pImpUnderSel, sortKey) {
+function ouTableSortValue(playerRow, market, lineSel, pImpOverSel, pImpUnderSel, sortKey, propIdx) {
   if (sortKey === "golfer") return displayGolferName(playerRow.player_name || "").toLowerCase();
   if (sortKey && sortKey.startsWith("line-")) {
     const L = parseFloat(sortKey.slice(5));
-    const useCustom = lineMatchesOuHighlight(lineSel, L, market);
-    const pImpOver = useCustom ? pImpOverSel : impliedProbFromAmerican(OU_DEFAULT_ODDS_AM);
-    const pImpUnder = useCustom ? pImpUnderSel : impliedProbFromAmerican(OU_DEFAULT_ODDS_AM);
+    const pImpOver = ouBookImpliedForSortColumn(playerRow, market, L, lineSel, pImpOverSel, pImpUnderSel, propIdx, "over");
+    const pImpUnder = ouBookImpliedForSortColumn(playerRow, market, L, lineSel, pImpOverSel, pImpUnderSel, propIdx, "under");
     const { edgeO } = ouEdgeForCell(market, playerRow, L, pImpOver, pImpUnder);
     return Number.isFinite(edgeO) ? edgeO : -Infinity;
   }
@@ -1257,7 +1448,10 @@ function lineMatchesOuHighlight(lineSel, L, market) {
 
 /** All players for `round`, sorted the same way as the O/U table for `market`. */
 function ouSortedPlayerRows(market, round) {
-  const rows = DATA.players.filter((p) => samePlayerRound(p, round));
+  let rows = DATA.players.filter((p) => samePlayerRound(p, round));
+  if (tournamentPostCutListPhase()) {
+    rows = rows.filter((p) => !isPlayerEliminatedFromEvent(p));
+  }
   rows.sort((a, b) => {
     const rec = ouStatRec(market);
     const va = num(a[rec.field], 1e9);
@@ -1284,6 +1478,7 @@ function buildOuTable() {
   const oddsUnder = selectedOuOddsById("ou-odds-under-filter");
   const pImpOver = impliedProbFromAmerican(oddsOver);
   const pImpUnder = impliedProbFromAmerican(oddsUnder);
+  const propIdx = ouBuildPropsOddsIndex(market);
 
   const sortInd = `<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span>`;
   const hr = document.createElement("tr");
@@ -1329,8 +1524,8 @@ function buildOuTable() {
   const d = ouTableSort.dir;
   if (k !== "stat-order") {
     rows.sort((a, b) => {
-      const va = ouTableSortValue(a, market, lineSel, pImpOver, pImpUnder, k);
-      const vb = ouTableSortValue(b, market, lineSel, pImpOver, pImpUnder, k);
+      const va = ouTableSortValue(a, market, lineSel, pImpOver, pImpUnder, k, propIdx);
+      const vb = ouTableSortValue(b, market, lineSel, pImpOver, pImpUnder, k, propIdx);
       if (typeof va === "string" && typeof vb === "string") return va.localeCompare(vb) * d;
       return (Number(va) - Number(vb)) * d;
     });
@@ -1353,8 +1548,11 @@ function buildOuTable() {
       if (!Number.isFinite(pOver)) {
         td.textContent = "—";
       } else {
-        const colOddsOver = useCustomOdds ? oddsOver : OU_DEFAULT_ODDS_AM;
-        const colOddsUnder = useCustomOdds ? oddsUnder : OU_DEFAULT_ODDS_AM;
+        const pk = useCustomOdds ? null : ouPropsBookOddsFromIndex(propIdx, p, L);
+        const colOddsOver =
+          useCustomOdds ? oddsOver : pk && Number.isFinite(pk.over) ? pk.over : OU_DEFAULT_ODDS_AM;
+        const colOddsUnder =
+          useCustomOdds ? oddsUnder : pk && Number.isFinite(pk.under) ? pk.under : OU_DEFAULT_ODDS_AM;
         const colPImpOver = impliedProbFromAmerican(colOddsOver);
         const colPImpUnder = impliedProbFromAmerican(colOddsUnder);
         td.innerHTML = ouCellEdgeStackHtml(market, p, L, colPImpOver, colPImpUnder, viewMode, colOddsOver, colOddsUnder);
@@ -1366,6 +1564,7 @@ function buildOuTable() {
 
   updateOuSortIndicators();
   syncOuChartCard();
+  syncOuToolbarOddsFromProps(market, lineSel, round);
 }
 
 function isOuGolferSelected() {
@@ -2236,6 +2435,7 @@ function collectUnifiedEvRows() {
   const rows = [];
   const devigPrefs = loadEvDevigPrefs();
   const r = getOuRound();
+  const elim = dgIdsEliminatedFromEventPostCut();
   const mpack = DATA.matchups || {};
   for (const mk of ["tournament_matchups", "round_matchups", "3_balls"]) {
     const list = mpack[mk] && mpack[mk].match_list;
@@ -2253,6 +2453,7 @@ function collectUnifiedEvRows() {
       const mu2 = effectiveMuSg(row2, id2);
       const mu3 = effectiveMuSg(row3, id3);
       const isThreeBall = mk === "3_balls" && Number.isFinite(id3) && id3 > 0;
+      if (elim.size && (elim.has(id1) || elim.has(id2) || (isThreeBall && elim.has(id3)))) continue;
       if (isThreeBall) {
         const [tp1, tp2, tp3] = threeBallModelProbsLiveBlended(mu1, mu2, mu3, row1, row2, row3);
         const b1 = bestBookDecimalForSide(m.odds || {}, "p1");
@@ -2338,6 +2539,7 @@ function collectUnifiedEvRows() {
     const books = Array.isArray(pack.bookKeys) ? pack.bookKeys.filter((k) => k && k !== "datagolf") : [];
     for (const row of pack.rows) {
       const id = Math.round(num(row.dg_id, NaN));
+      if (elim.size && elim.has(id) && mk !== "make_cut" && mk !== "mc") continue;
       const prow = projectionPlayerRowForModel(id, rOut);
       const modelP = modelProbOutrightMarket(prow || {}, mk);
       let bestBook = "";
@@ -2612,6 +2814,7 @@ function buildMatchupsTable() {
     return;
   }
   const r = getOuRound();
+  const elim = dgIdsEliminatedFromEventPostCut();
   for (const m of list) {
     const id1 = Math.round(num(m.p1_dg_id, NaN));
     const id2 = Math.round(num(m.p2_dg_id, NaN));
@@ -2627,6 +2830,7 @@ function buildMatchupsTable() {
     const b2 = bestBookDecimalForSide(odds, "p2");
     const b3 = bestBookDecimalForSide(odds, "p3");
     const isThree = key === "3_balls" && Number.isFinite(id3) && id3 > 0;
+    if (elim.size && (elim.has(id1) || elim.has(id2) || (isThree && elim.has(id3)))) continue;
     const label = isThree
       ? `${m.p1_player_name || ""} / ${m.p2_player_name || ""} / ${m.p3_player_name || ""}`
       : `${m.p1_player_name || ""} vs ${m.p2_player_name || ""}`;
@@ -2720,7 +2924,12 @@ function buildOutrightsTableBodyOnly() {
   if (!tbody || !pack || !Array.isArray(pack.rows)) return;
   const bookKeys = Array.isArray(pack.bookKeys) ? pack.bookKeys.filter((k) => k && k !== "datagolf") : [];
   const rOut = getModelRoundForEv();
-  const rows = pack.rows.map((row) => {
+  const elim = dgIdsEliminatedFromEventPostCut();
+  const outrightRowOk =
+    mk === "make_cut" || mk === "mc"
+      ? () => true
+      : (row) => !elim.has(Math.round(num(row.dg_id, NaN)));
+  const rows = pack.rows.filter(outrightRowOk).map((row) => {
     const id = Math.round(num(row.dg_id, NaN));
     const prow = projectionPlayerRowForModel(id, rOut);
     const modelP = modelProbOutrightMarket(prow || {}, mk);
@@ -3057,6 +3266,7 @@ function defaultPropGolferDgId() {
   const nm = (s) => String(s || "").toLowerCase();
   for (const p of DATA.players) {
     if (!samePlayerRound(p, 1)) continue;
+    if (tournamentPostCutListPhase() && isPlayerEliminatedFromEvent(p)) continue;
     const n = nm(p.player_name);
     if (n.includes("scheffler") && n.includes("scottie")) return Math.round(num(p.dg_id, NaN));
   }
@@ -3070,6 +3280,7 @@ function fillPropGolferSelect() {
   const opts = [];
   for (const p of DATA.players) {
     if (!samePlayerRound(p, 1)) continue;
+    if (tournamentPostCutListPhase() && isPlayerEliminatedFromEvent(p)) continue;
     const id = Math.round(num(p.dg_id, NaN));
     if (!Number.isFinite(id) || seen.has(id)) continue;
     seen.add(id);
@@ -4880,6 +5091,7 @@ function initHangoutSelectors(resetHole) {
     const seen = new Set();
     for (const p of DATA.players) {
       if (!samePlayerRound(p, getOuRound())) continue;
+      if (tournamentPostCutListPhase() && isPlayerEliminatedFromEvent(p)) continue;
       const id = Math.round(num(p.dg_id, NaN));
       if (!Number.isFinite(id) || seen.has(id)) continue;
       seen.add(id);
@@ -5436,7 +5648,10 @@ function refreshAll() {
 async function loadProjections(opts = {}) {
   const silent = Boolean(opts.silent);
   const reloadSidecar = opts.reloadSidecar !== false;
-  if (projectionsLoadInFlight) return;
+  if (projectionsLoadInFlight) {
+    if (silent) projectionsSilentReloadQueued = true;
+    return;
+  }
   projectionsLoadInFlight = true;
   if (!silent) setBootError("");
 
@@ -5467,8 +5682,12 @@ async function loadProjections(opts = {}) {
       return;
     }
     showFileProtocolBanner(false);
-    const url = projectionsJsonUrl();
-    const res = await fetch(url, { cache: "no-store" });
+    const url = cacheBustFetchUrl(projectionsJsonUrl());
+    const fetchOpts = { cache: "no-store" };
+    if (typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function") {
+      fetchOpts.signal = AbortSignal.timeout(45000);
+    }
+    const res = await fetch(url, fetchOpts);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const j = await res.json();
     const base = url.split("/").pop() || url;
@@ -5487,6 +5706,12 @@ async function loadProjections(opts = {}) {
     }
   } finally {
     projectionsLoadInFlight = false;
+    if (projectionsSilentReloadQueued) {
+      projectionsSilentReloadQueued = false;
+      queueMicrotask(() => {
+        void loadProjections({ silent: true, reloadSidecar: false });
+      });
+    }
   }
 }
 
@@ -5530,7 +5755,7 @@ function initTabs() {
       if (tab === "ev") {
         requestAnimationFrame(() => {
           if (!isFileProtocol()) {
-            void fetchAndMergeDatagolfLiveInPlay({ force: true }).then(() => buildEvTable());
+            void loadProjections({ silent: true, reloadSidecar: false });
           } else syncEvTabOddsAfterShow();
         });
       }
@@ -5954,6 +6179,12 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState !== "visible") return;
+    const now = Date.now();
+    if (!isFileProtocol() && now - lastDocVisibleProjectionsRefetchAt > 8000) {
+      lastDocVisibleProjectionsRefetchAt = now;
+      void loadProjections({ silent: true, reloadSidecar: false });
+      return;
+    }
     if (activeAppTabId() === "ev") syncEvTabOddsAfterShow();
     if (datagolfLiveOverlayEnabled() && !isFileProtocol()) void fetchAndMergeDatagolfLiveInPlay();
   });

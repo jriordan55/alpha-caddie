@@ -76,12 +76,12 @@
           <label class="toolbar-label ou-filter-field ou-filter-span-full ou-filter-line-wrap">Line
             <input id="ou-line-filter" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="70.5" />
           </label>
-          <div class="ou-odds-pair" role="group" aria-label="Over and under odds">
+          <div class="ou-odds-pair" role="group" aria-label="Over and under odds (DraftKings-style lines when loaded in projections.props)">
             <label class="toolbar-label ou-filter-field">Over odds
-              <input id="ou-odds-over-filter" type="text" inputmode="text" value="-110" />
+              <input id="ou-odds-over-filter" type="text" inputmode="text" value="-110" title="Book over price for the highlighted line; auto-filled from projections.props (e.g. CSV merged by npm run fetch:book-odds) when a golfer is selected." />
             </label>
             <label class="toolbar-label ou-filter-field">Under odds
-              <input id="ou-odds-under-filter" type="text" inputmode="text" value="-110" />
+              <input id="ou-odds-under-filter" type="text" inputmode="text" value="-110" title="Book under price for the highlighted line; auto-filled from projections.props when available." />
             </label>
           </div>
         </div>
@@ -903,7 +903,7 @@
     </div>
   </dialog>
 
-  <script src="embedded-player-round-history.js?v=2"></script>
-  <script src="app.js?v=3"></script>
+  <script src="embedded-player-round-history.js?v=4"></script>
+  <script src="app.js?v=9"></script>
 </body>
 </html>

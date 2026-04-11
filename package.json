@@ -10,6 +10,9 @@
     "embed:history": "npm run embed:history --prefix alpha-caddie-web",
     "fetch:dg": "npm run fetch:dg --prefix alpha-caddie-web",
     "update:rounds": "npm run update:rounds --prefix alpha-caddie-web",
-    "sync:rounds-csv": "npm run sync:rounds-csv --prefix alpha-caddie-web"
+    "sync:rounds-csv": "npm run sync:rounds-csv --prefix alpha-caddie-web",
+    "fetch:book-odds": "npm run fetch:book-odds --prefix alpha-caddie-web",
+    "push:live-once": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/live-in-play-push-once.ps1",
+    "push:live-loop": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/tournament-live-push-loop.ps1"
   }
 }
