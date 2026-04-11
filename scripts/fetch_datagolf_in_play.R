@@ -39,12 +39,17 @@ load_datagolf_api_key <- function(root = model_dir) {
   trimws(as.character(kk))
 }
 
-tour <- if (length(commandArgs(trailingOnly = TRUE))) {
+primary_tour <- if (length(commandArgs(trailingOnly = TRUE))) {
   trimws(as.character(commandArgs(trailingOnly = TRUE)[1]))
 } else {
   trimws(Sys.getenv("GOLF_DATAGOLF_TOUR", "pga"))
 }
-if (!nzchar(tour)) tour <- "pga"
+if (!nzchar(primary_tour)) primary_tour <- "pga"
+fallback_tour <- trimws(Sys.getenv("GOLF_IN_PLAY_FALLBACK_TOUR", "opp"))
+dead_heat <- trimws(Sys.getenv("GOLF_IN_PLAY_DEAD_HEAT", "no"))
+if (!nzchar(dead_heat)) dead_heat <- "no"
+odds_fmt <- trimws(Sys.getenv("GOLF_IN_PLAY_ODDS_FORMAT", "percent"))
+if (!nzchar(odds_fmt)) odds_fmt <- "percent"
 
 key <- load_datagolf_api_key()
 if (!nzchar(key)) {
@@ -52,21 +57,38 @@ if (!nzchar(key)) {
   quit(status = 1)
 }
 
-url <- sprintf(
-  "https://feeds.datagolf.com/preds/in-play?tour=%s&dead_heat=no&odds_format=percent&file_format=json&key=%s",
-  utils::URLencode(tour, reserved = TRUE),
-  utils::URLencode(key, reserved = TRUE)
-)
+in_play_url <- function(tour) {
+  sprintf(
+    "https://feeds.datagolf.com/preds/in-play?tour=%s&dead_heat=%s&odds_format=%s&file_format=json&key=%s",
+    utils::URLencode(tour, reserved = TRUE),
+    utils::URLencode(dead_heat, reserved = TRUE),
+    utils::URLencode(odds_fmt, reserved = TRUE),
+    utils::URLencode(key, reserved = TRUE)
+  )
+}
 
-parsed <- tryCatch(
-  jsonlite::fromJSON(url, simplifyVector = FALSE),
-  error = function(e) {
-    message("fetch_datagolf_in_play: request failed: ", conditionMessage(e))
-    NULL
+tours_try <- unique(c(primary_tour, fallback_tour))
+tours_try <- tours_try[nzchar(tours_try)]
+parsed <- NULL
+tour_used <- NA_character_
+for (tr in tours_try) {
+  u <- in_play_url(tr)
+  parsed <- tryCatch(
+    jsonlite::fromJSON(u, simplifyVector = FALSE),
+    error = function(e) {
+      message("fetch_datagolf_in_play: request failed (tour=", tr, "): ", conditionMessage(e))
+      NULL
+    }
+  )
+  if (is.list(parsed) && is.list(parsed$data) && length(parsed$data) > 0L) {
+    tour_used <- tr
+    if (!identical(tr, tours_try[[1]])) message("fetch_datagolf_in_play: using tour ", tr, " (primary had 0 players)")
+    break
   }
-)
+  parsed <- NULL
+}
 if (!is.list(parsed) || !is.list(parsed$data)) {
-  message("fetch_datagolf_in_play: unexpected JSON (no data array).")
+  message("fetch_datagolf_in_play: unexpected JSON or empty data[] for tours: ", paste(tours_try, collapse = ", "))
   quit(status = 1)
 }
 
@@ -74,4 +96,4 @@ out <- file.path(model_dir, "alpha-caddie-web", "live-in-play.json")
 dir.create(dirname(out), recursive = TRUE, showWarnings = FALSE)
 jsonlite::write_json(parsed, out, pretty = TRUE, auto_unbox = TRUE, null = "null")
 message("fetch_datagolf_in_play: wrote ", normalizePath(out, winslash = "/", mustWork = FALSE),
-        " (", length(parsed$data), " players, tour=", tour, ")")
+        " (", length(parsed$data), " players, tour=", tour_used, ", dead_heat=", dead_heat, ", odds_format=", odds_fmt, ")")

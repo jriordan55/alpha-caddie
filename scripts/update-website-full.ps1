@@ -57,4 +57,5 @@ try {
 }
 
 Write-Host "Done. Commit and push paths under alpha-caddie-web/ and website/public/data/ as needed." -ForegroundColor Green
+Write-Host "Automate nightly commit+push: scripts\register-nightly-push-task.ps1" -ForegroundColor DarkGray
 exit 0

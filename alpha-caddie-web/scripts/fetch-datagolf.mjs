@@ -25,6 +25,10 @@
  * and writes embedded-player-round-history.js (window.__ALPHA_CADDIE_EMBEDDED_ROUND_HISTORY__).
  * Set ALPHA_CADDIE_EMBED_HISTORY=0 to skip that step. Set ALPHA_CADDIE_PGA_HISTORY=1 to run
  * the pgatouR history script after the CSV build (embed runs again after that).
+ *
+ * Outrights (betting-tools/outrights): GOLF_OUTRIGHTS_DEAD_HEAT=yes|no overrides both; if unset,
+ * win uses dead_heat=no and placement markets (top_5/10/20, make_cut, mc) use yes — matches DataGolf
+ * betting-tool defaults for implied % vs books. Rows with datagolf=0 are filled from preds/pre-tournament.
  */
 
 import { spawnSync } from "child_process";
@@ -671,6 +675,57 @@ async function main() {
     return p * 100;
   }
 
+  /** DataGolf: win conventionally no dead heat; placement / cut markets use yes (matches datagolf.com tool). */
+  function outrightDeadHeatForMarket(market) {
+    const g = String(process.env.GOLF_OUTRIGHTS_DEAD_HEAT || "").trim().toLowerCase();
+    if (g === "yes" || g === "no") return g;
+    return market === "win" ? "no" : "yes";
+  }
+
+  function outrightPretField(market) {
+    if (market === "mc") return "make_cut";
+    return market;
+  }
+
+  /** API often omits or zeroes `datagolf`; fill from model column aliases or preds/pre-tournament map. */
+  function enrichOutrightsRows(rows, market, pretByDg) {
+    const pretKey = outrightPretField(market);
+    const isMc = market === "mc";
+    for (const r of rows) {
+      let dgVal = num(r.datagolf, NaN);
+      if (Number.isFinite(dgVal) && dgVal > 0) continue;
+      for (const alt of ["model", "fair", "prediction", "dg_fair"]) {
+        if (!(alt in r)) continue;
+        const pv = num(r[alt], NaN);
+        if (!Number.isFinite(pv) || pv === 0) continue;
+        r.datagolf = impliedPercentFromDgPercentField(pv);
+        delete r[alt];
+        break;
+      }
+      dgVal = num(r.datagolf, NaN);
+      if (Number.isFinite(dgVal) && dgVal > 0) continue;
+      const id = Math.round(num(r.dg_id, NaN));
+      const pt = pretByDg.get(id);
+      if (!pt) continue;
+      let p = num(pt[pretKey], NaN);
+      if (!Number.isFinite(p)) continue;
+      if (isMc) p = 1 - p;
+      const pct = impliedPercentFromDgPercentField(p);
+      if (Number.isFinite(pct) && pct > 0) r.datagolf = pct;
+    }
+  }
+
+  function outrightBookKeysFromRows(rows) {
+    const s = new Set();
+    for (const r of rows) {
+      for (const k of Object.keys(r)) {
+        if (k === "dg_id" || k === "player_name") continue;
+        s.add(k);
+      }
+    }
+    return [...s].sort();
+  }
+
   function parseOutrightsResponse(raw) {
     const arr = outrightOddsArrayFromResponse(raw);
     const rows = [];
@@ -706,14 +761,21 @@ async function main() {
   const outrights = {};
   for (const m of outrightsMarkets) {
     try {
-      console.log(`Fetching betting-tools/outrights (${m})…`);
+      console.log(`Fetching betting-tools/outrights (${m}, dead_heat=${outrightDeadHeatForMarket(m)})…`);
       const raw = await fetchDg(
         "/betting-tools/outrights",
-        { tour: TOUR, market: m, odds_format: "percent", file_format: "json" },
+        {
+          tour: TOUR,
+          market: m,
+          odds_format: "percent",
+          dead_heat: outrightDeadHeatForMarket(m),
+          file_format: "json",
+        },
         key
       );
-      const { rows, bookKeys } = parseOutrightsResponse(raw);
-      if (rows.length > 0) outrights[m] = { rows, bookKeys };
+      const { rows } = parseOutrightsResponse(raw);
+      enrichOutrightsRows(rows, m, pretByDg);
+      if (rows.length > 0) outrights[m] = { rows, bookKeys: outrightBookKeysFromRows(rows) };
     } catch (e) {
       console.warn(`Outrights ${m} skipped:`, e.message);
     }

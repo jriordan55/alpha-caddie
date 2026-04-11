@@ -213,26 +213,58 @@ schedule_match_event <- function(events, event_name) {
 
 SCHEDULE_UPCOMING_EVENTS <- fetch_schedule_upcoming_events()
 
+# preds/in-play: same params as DataGolf docs (tour, dead_heat, odds_format). Fallback tour if primary field is empty (e.g. opp opposite-field).
+DG_IN_PLAY_PRIMARY_TOUR <- trimws(Sys.getenv("GOLF_DATAGOLF_TOUR", "pga"))
+if (!nzchar(DG_IN_PLAY_PRIMARY_TOUR)) DG_IN_PLAY_PRIMARY_TOUR <- "pga"
+DG_IN_PLAY_FALLBACK_TOUR <- trimws(Sys.getenv("GOLF_IN_PLAY_FALLBACK_TOUR", "opp"))
+DG_IN_PLAY_DEAD_HEAT <- trimws(Sys.getenv("GOLF_IN_PLAY_DEAD_HEAT", "no"))
+if (!nzchar(DG_IN_PLAY_DEAD_HEAT)) DG_IN_PLAY_DEAD_HEAT <- "no"
+
 live_model_table <- tryCatch({
-  res <- GET("https://feeds.datagolf.com/preds/in-play", query = list(tour = "pga", dead_heat = "no", odds_format = "percent", file_format = "csv", key = API_KEY))
-  if (res$status_code != 200) stop("status ", res$status_code)
-  read_csv(content(res, "raw"), show_col_types = FALSE)
+  tours_try <- unique(c(DG_IN_PLAY_PRIMARY_TOUR, DG_IN_PLAY_FALLBACK_TOUR))
+  tours_try <- tours_try[nzchar(tours_try)]
+  tbl <- NULL
+  tour_used <- NA_character_
+  for (tr in tours_try) {
+    res <- GET(
+      "https://feeds.datagolf.com/preds/in-play",
+      query = list(tour = tr, dead_heat = DG_IN_PLAY_DEAD_HEAT, odds_format = "percent", file_format = "csv", key = API_KEY)
+    )
+    if (res$status_code != 200) next
+    chunk <- read_csv(content(res, "raw"), show_col_types = FALSE)
+    if (NROW(chunk) > 0) {
+      tbl <- chunk
+      tour_used <- tr
+      if (!identical(tr, tours_try[[1]])) message("in-play CSV: using tour ", tr, " (primary had 0 rows)")
+      break
+    }
+  }
+  if (is.null(tbl) || NROW(tbl) == 0) stop("no in-play rows")
+  tbl
 }, error = function(e) tibble(dg_id = integer(), player_name = character(), win = numeric(), top_5 = numeric(), top_10 = numeric(), make_cut = numeric()))
 
 # When not locked to file/env, align with DataGolf live event (fixes stale R1 after tournament moves to R2/R3/R4).
 if (tolower(Sys.getenv("GOLF_NEXT_ROUND_FROM_DATAGOLF", "1")) %in% c("1", "true", "yes") &&
     !next_round_locked && nzchar(API_KEY %||% "") && nrow(live_model_table) > 0L) {
-  ip <- tryCatch({
-    res <- GET(
-      "https://feeds.datagolf.com/preds/in-play",
-      query = list(tour = "pga", dead_heat = "no", odds_format = "percent", file_format = "json", key = API_KEY)
-    )
-    if (res$status_code != 200L) {
-      NULL
-    } else {
-      jsonlite::fromJSON(httr::content(res, as = "text", encoding = "UTF-8"), simplifyVector = FALSE)
+  ip <- NULL
+  for (tr in unique(c(DG_IN_PLAY_PRIMARY_TOUR, DG_IN_PLAY_FALLBACK_TOUR))) {
+    if (!nzchar(tr)) next
+    chunk <- tryCatch({
+      res <- GET(
+        "https://feeds.datagolf.com/preds/in-play",
+        query = list(tour = tr, dead_heat = DG_IN_PLAY_DEAD_HEAT, odds_format = "percent", file_format = "json", key = API_KEY)
+      )
+      if (res$status_code != 200L) {
+        NULL
+      } else {
+        jsonlite::fromJSON(httr::content(res, as = "text", encoding = "UTF-8"), simplifyVector = FALSE)
+      }
+    }, error = function(e) NULL)
+    if (!is.null(chunk) && is.list(chunk$info)) {
+      ip <- chunk
+      break
     }
-  }, error = function(e) NULL)
+  }
   if (!is.null(ip) && is.list(ip$info)) {
     cr <- suppressWarnings(as.integer(ip$info$current_round %||% NA))
     if (is.finite(cr) && cr >= 1L && cr <= 4L) {
@@ -1382,15 +1414,17 @@ if (nrow(dg) == 0) {
     )
     # Cap any probability at 95% so we never get 100% -> -9999 American odds
     cap_p <- function(x) pmin(0.95, pmax(0, as.numeric(x)))
-    # Use model when API is NA or when API placement prob is unrealistically small (e.g. wrong scale)
+    # Trust DataGolf in-play / pre-tournament placement probs whenever present. Longshots legitimately
+    # have top_20 etc. below 2%; the old top_* < 0.02 rule overwrote live API with heuristic rank
+    # from the *simulation* (not the real leaderboard), which broke pricing vs books mid-event.
     dg_sim_all <- dg_sim_all %>%
       left_join(model_outrights, by = "dg_id") %>%
       mutate(
         win      = cap_p(coalesce(win, model_win)),
-        top_5    = cap_p(if_else(is.na(top_5)   | top_5   < 0.02, model_top_5,   top_5)),
-        top_10   = cap_p(if_else(is.na(top_10)  | top_10  < 0.02, model_top_10,  top_10)),
-        top_20   = cap_p(if_else(is.na(top_20)  | top_20  < 0.02, model_top_20,  top_20)),
-        make_cut = cap_p(if_else(is.na(make_cut) | make_cut < 0.02, model_make_cut, make_cut))
+        top_5    = cap_p(if_else(is.na(top_5),   model_top_5,   top_5)),
+        top_10   = cap_p(if_else(is.na(top_10),  model_top_10,  top_10)),
+        top_20   = cap_p(if_else(is.na(top_20),  model_top_20,  top_20)),
+        make_cut = cap_p(if_else(is.na(make_cut), model_make_cut, make_cut))
       ) %>%
       select(-model_win, -model_top_5, -model_top_10, -model_top_20, -model_make_cut)
   }
@@ -1988,11 +2022,13 @@ if (!RAW_PROJECTIONS && exists("simulated_round_table") && !is.null(simulated_ro
     dg_sim <- dg_sim %>%
       dplyr::left_join(sim_outrights %>% dplyr::select(dg_id, sim_win, sim_top_5, sim_top_10, sim_top_20, sim_make_cut), by = "dg_id") %>%
       dplyr::mutate(
-        win      = dplyr::coalesce(sim_win, win),
-        top_5    = dplyr::coalesce(sim_top_5, top_5),
-        top_10   = dplyr::coalesce(sim_top_10, top_10),
-        top_20   = dplyr::coalesce(sim_top_20, top_20),
-        make_cut = dplyr::coalesce(sim_make_cut, make_cut)
+        # Keep DataGolf live/pre-tournament placement probs when present (these reflect current standings).
+        # Only fall back to tournament simulation when API values are missing.
+        win      = dplyr::coalesce(win, sim_win),
+        top_5    = dplyr::coalesce(top_5, sim_top_5),
+        top_10   = dplyr::coalesce(top_10, sim_top_10),
+        top_20   = dplyr::coalesce(top_20, sim_top_20),
+        make_cut = dplyr::coalesce(make_cut, sim_make_cut)
       ) %>%
       dplyr::select(-dplyr::any_of(c("sim_win", "sim_top_5", "sim_top_10", "sim_top_20", "sim_make_cut")))
   }

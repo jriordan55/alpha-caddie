@@ -48,3 +48,172 @@ ERROR: export_projections_for_website.R exit code 1
 ===== 2026-04-09 23:57:41 (Rscript=C:\Program Files\R\R-4.2.0\bin\Rscript.exe) =====
 
 ===== 2026-04-10 00:05:58 (Rscript=C:\Program Files\R\R-4.2.0\bin\Rscript.exe) =====
+[1] "C:\\Users\\student\\Documents\\golfModel/simulated_round_static.rds"
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Warning message:
+package 'dplyr' was built under R version 4.2.3 
+Warning message:
+package 'tibble' was built under R version 4.2.3 
+Warning message:
+package 'httr' was built under R version 4.2.3 
+Warning message:
+package 'readr' was built under R version 4.2.3 
+
+Attaching package: 'jsonlite'
+
+The following objects are masked from 'package:rlang':
+
+    flatten, unbox
+
+Warning message:
+package 'jsonlite' was built under R version 4.2.3 
+Warning message:
+package 'purrr' was built under R version 4.2.2 
+Warning message:
+package 'tidyr' was built under R version 4.2.3 
+next_round_num from DataGolf in-play current_round: 1
+Course filter "Augusta National Golf Club": kept 0 / 6548776 rows across 7 tournaments.
+Warning messages:
+1: In dplyr::left_join(., if (!is.null(shot_tbl)) { :
+  Detected an unexpected many-to-many relationship between `x` and `y`.
+ℹ Row 57 of `x` matches multiple rows in `y`.
+ℹ Row 57 of `y` matches multiple rows in `x`.
+ℹ If a many-to-many relationship is expected, set `relationship =
+  "many-to-many"` to silence this warning.
+2: In dplyr::left_join(., cnt_r, by = "dg_id") :
+  Detected an unexpected many-to-many relationship between `x` and `y`.
+ℹ Row 31 of `x` matches multiple rows in `y`.
+ℹ Row 57 of `y` matches multiple rows in `x`.
+ℹ If a many-to-many relationship is expected, set `relationship =
+  "many-to-many"` to silence this warning.
+3: In dplyr::left_join(., cnt_r, by = "dg_id") :
+  Detected an unexpected many-to-many relationship between `x` and `y`.
+ℹ Row 46 of `x` matches multiple rows in `y`.
+ℹ Row 57 of `y` matches multiple rows in `x`.
+ℹ If a many-to-many relationship is expected, set `relationship =
+  "many-to-many"` to silence this warning.
+4: In dplyr::left_join(., cnt_r, by = "dg_id") :
+  Detected an unexpected many-to-many relationship between `x` and `y`.
+ℹ Row 50 of `x` matches multiple rows in `y`.
+ℹ Row 57 of `y` matches multiple rows in `x`.
+ℹ If a many-to-many relationship is expected, set `relationship =
+  "many-to-many"` to silence this warning.
+5: In dplyr::left_join(., cnt_r, by = "dg_id") :
+  Detected an unexpected many-to-many relationship between `x` and `y`.
+ℹ Row 85 of `x` matches multiple rows in `y`.
+ℹ Row 57 of `y` matches multiple rows in `x`.
+ℹ If a many-to-many relationship is expected, set `relationship =
+  "many-to-many"` to silence this warning.
+Tournament MC: shot-level (n=150, tour_mu_round≈73.225)
+Warning messages:
+1: In dplyr::left_join(., projection_counts_round_tbl, by = c("dg_id",  :
+  Detected an unexpected many-to-many relationship between `x` and `y`.
+ℹ Row 91 of `x` matches multiple rows in `y`.
+ℹ Row 31 of `y` matches multiple rows in `x`.
+ℹ If a many-to-many relationship is expected, set `relationship =
+  "many-to-many"` to silence this warning.
+2: In dplyr::left_join(., sim_outrights %>% dplyr::select(dg_id, sim_win,  :
+  Detected an unexpected many-to-many relationship between `x` and `y`.
+ℹ Row 91 of `x` matches multiple rows in `y`.
+ℹ Row 1 of `y` matches multiple rows in `x`.
+ℹ If a many-to-many relationship is expected, set `relationship =
+  "many-to-many"` to silence this warning.
+Error: unexpected ')' in "    )"
+Execution halted
+ERROR: round_projections.R exit code 1
+
+===== 2026-04-10 01:33:07 (Rscript=C:\Program Files\R\R-4.2.0\bin\Rscript.exe) =====
+
+===== 2026-04-10 04:11:59 (Rscript=C:\Program Files\R\R-4.2.0\bin\Rscript.exe) =====
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Warning message:
+package 'dplyr' was built under R version 4.2.3 
+Warning message:
+package 'tibble' was built under R version 4.2.3 
+Warning message:
+package 'httr' was built under R version 4.2.3 
+Warning message:
+package 'readr' was built under R version 4.2.3 
+
+Attaching package: 'jsonlite'
+
+The following objects are masked from 'package:rlang':
+
+    flatten, unbox
+
+Warning message:
+package 'jsonlite' was built under R version 4.2.3 
+Warning message:
+package 'purrr' was built under R version 4.2.2 
+Warning message:
+package 'tidyr' was built under R version 4.2.3 
+next_round_num from DataGolf in-play current_round: 1
+Course filter "Augusta National Golf Club": kept 0 / 6548776 rows across 7 tournaments.
+Warning messages:
+1: In dplyr::left_join(., if (!is.null(shot_tbl)) { :
+  Detected an unexpected many-to-many relationship between `x` and `y`.
+ℹ Row 57 of `x` matches multiple rows in `y`.
+ℹ Row 57 of `y` matches multiple rows in `x`.
+ℹ If a many-to-many relationship is expected, set `relationship =
+  "many-to-many"` to silence this warning.
+2: In dplyr::left_join(., cnt_r, by = "dg_id") :
+  Detected an unexpected many-to-many relationship between `x` and `y`.
+ℹ Row 31 of `x` matches multiple rows in `y`.
+ℹ Row 57 of `y` matches multiple rows in `x`.
+ℹ If a many-to-many relationship is expected, set `relationship =
+  "many-to-many"` to silence this warning.
+3: In dplyr::left_join(., cnt_r, by = "dg_id") :
+  Detected an unexpected many-to-many relationship between `x` and `y`.
+ℹ Row 46 of `x` matches multiple rows in `y`.
+ℹ Row 57 of `y` matches multiple rows in `x`.
+ℹ If a many-to-many relationship is expected, set `relationship =
+  "many-to-many"` to silence this warning.
+4: In dplyr::left_join(., cnt_r, by = "dg_id") :
+  Detected an unexpected many-to-many relationship between `x` and `y`.
+ℹ Row 50 of `x` matches multiple rows in `y`.
+ℹ Row 57 of `y` matches multiple rows in `x`.
+ℹ If a many-to-many relationship is expected, set `relationship =
+  "many-to-many"` to silence this warning.
+5: In dplyr::left_join(., cnt_r, by = "dg_id") :
+  Detected an unexpected many-to-many relationship between `x` and `y`.
+ℹ Row 85 of `x` matches multiple rows in `y`.
+ℹ Row 57 of `y` matches multiple rows in `x`.
+ℹ If a many-to-many relationship is expected, set `relationship =
+  "many-to-many"` to silence this warning.
+Tournament MC: shot-level (n=150, tour_mu_round≈73.225)
+Warning messages:
+1: In dplyr::left_join(., projection_counts_round_tbl, by = c("dg_id",  :
+  Detected an unexpected many-to-many relationship between `x` and `y`.
+ℹ Row 91 of `x` matches multiple rows in `y`.
+ℹ Row 31 of `y` matches multiple rows in `x`.
+ℹ If a many-to-many relationship is expected, set `relationship =
+  "many-to-many"` to silence this warning.
+2: In dplyr::left_join(., sim_outrights %>% dplyr::select(dg_id, sim_win,  :
+  Detected an unexpected many-to-many relationship between `x` and `y`.
+ℹ Row 91 of `x` matches multiple rows in `y`.
+ℹ Row 1 of `y` matches multiple rows in `x`.
+ℹ If a many-to-many relationship is expected, set `relationship =
+  "many-to-many"` to silence this warning.
+Error: unexpected ')' in "score)"
+Execution halted
+ERROR: round_projections.R exit code 1

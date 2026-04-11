@@ -618,9 +618,9 @@ has_text <- function(x) {
   isTRUE(nzchar(trimws(as.character(x[[1]]))))
 }
 
-# DraftKings props URLs (for reference; line/odds are loaded from CSV or pull_draftkings_birdie_par_bogey.R)
-DRAFTKINGS_ROUND_SCORE_URL <- "https://sportsbook.draftkings.com/leagues/golf/the-genesis-invitational?category=popular&subcategory=round-score"
-DRAFTKINGS_BIRDIE_PAR_BOGEY_URL <- "https://sportsbook.draftkings.com/leagues/golf/the-genesis-invitational?category=round&subcategory=birdie-par-bogey"
+# DraftKings props URLs (reference when building data/player_props_*.csv; Model O/U reads those CSVs via export / fetch:book-odds)
+DRAFTKINGS_ROUND_SCORE_URL <- "https://sportsbook.draftkings.com/leagues/golf/us-masters?category=popular&subcategory=round-score"
+DRAFTKINGS_BIRDIE_PAR_BOGEY_URL <- "https://sportsbook.draftkings.com/leagues/golf/us-masters?category=round&subcategory=birdie-par-bogey"
 
 # -----------------------------
 # UI
@@ -2560,9 +2560,10 @@ server <- function(input, output, session) {
     cache[[mkt]] <- "loading"
     outrights_cache(cache)
     tryCatch({
+      dh <- if (mkt %in% c("top_5", "top_10", "top_20", "make_cut", "mc")) "yes" else "no"
       r <- httr::GET(
         "https://feeds.datagolf.com/betting-tools/outrights",
-        query = list(tour = "pga", market = mkt, odds_format = "percent", file_format = "json", key = datagolf_api_key)
+        query = list(tour = "pga", market = mkt, odds_format = "percent", dead_heat = dh, file_format = "json", key = datagolf_api_key)
       )
       if (httr::status_code(r) != 200) { cache[[mkt]] <- NULL; outrights_cache(cache); return() }
       raw <- jsonlite::fromJSON(httr::content(r, as = "text", encoding = "UTF-8"), flatten = TRUE, simplifyDataFrame = FALSE)
