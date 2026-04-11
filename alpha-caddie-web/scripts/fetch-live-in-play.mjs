@@ -1,9 +1,16 @@
 #!/usr/bin/env node
 /**
- * DataGolf Live Predictive Model — preds/in-play (JSON, ~5 min updates).
- * https://feeds.datagolf.com/preds/in-play?tour=[tour]&dead_heat=[no|yes]&odds_format=[percent|...]&file_format=json
+ * DataGolf live bundle for the static app:
+ * - preds/in-play (placement probs, ~5 min)
+ * - preds/live-tournament-stats (field SG / traditional stats)
+ * - preds/live-hole-stats (hole scoring vs par — drives live “course difficulty” pricing)
  *
- * Writes alpha-caddie-web/live-in-play.json (same shape as API) for the static app to merge into pricing.
+ * https://feeds.datagolf.com/preds/in-play?tour=[tour]&dead_heat=[no|yes]&odds_format=[percent|...]&file_format=json
+ * https://feeds.datagolf.com/preds/live-tournament-stats?stats=...&round=event_avg&display=value&file_format=json
+ * https://feeds.datagolf.com/preds/live-hole-stats?tour=[tour]&file_format=json
+ *
+ * Writes alpha-caddie-web/live-in-play.json: API shape for in-play plus optional top-level
+ * `live_tournament_stats` and `live_hole_stats` objects from DataGolf.
  *
  * Env:
  *   DATAGOLF_API_KEY or datagolf.local.json { apiKey }
@@ -122,26 +129,49 @@ async function main() {
     process.exit(1);
   }
 
+  let liveTournamentStats = null;
+  let liveHoleStats = null;
+  try {
+    liveTournamentStats = await dgGetJson(liveTournamentStatsUrl(key));
+  } catch (e) {
+    console.warn("[fetch-live-in-play] live-tournament-stats:", e.message || e);
+  }
+  try {
+    liveHoleStats = await dgGetJson(liveHoleStatsUrl(key, tourUsed));
+  } catch (e) {
+    console.warn("[fetch-live-in-play] live-hole-stats:", e.message || e);
+  }
+
+  const bundle = {
+    ...parsed,
+    ...(liveTournamentStats && typeof liveTournamentStats === "object"
+      ? { live_tournament_stats: liveTournamentStats }
+      : {}),
+    ...(liveHoleStats && typeof liveHoleStats === "object" ? { live_hole_stats: liveHoleStats } : {}),
+  };
+
   const out = path.join(WEB_ROOT, "live-in-play.json");
   fs.mkdirSync(path.dirname(out), { recursive: true });
-  const newLu =
-    parsed.info && parsed.info.last_update != null ? String(parsed.info.last_update).trim() : "";
-  if (newLu && fs.existsSync(out)) {
+  const token = compositeLiveBundleToken(parsed, liveTournamentStats, liveHoleStats);
+  if (token && fs.existsSync(out)) {
     try {
       const prev = JSON.parse(fs.readFileSync(out, "utf8"));
-      const prevLu =
-        prev?.info && prev.info.last_update != null ? String(prev.info.last_update).trim() : "";
-      if (prevLu && prevLu === newLu) {
-        console.log(`[fetch-live-in-play] unchanged info.last_update (${newLu}); skip write`);
+      const prevTok = compositeLiveBundleToken(
+        prev,
+        prev.live_tournament_stats,
+        prev.live_hole_stats
+      );
+      if (prevTok && prevTok === token) {
+        console.log(`[fetch-live-in-play] unchanged bundle token (${token}); skip write`);
         return;
       }
     } catch {
       /* rewrite if parse fails */
     }
   }
-  fs.writeFileSync(out, JSON.stringify(parsed, null, 2), "utf8");
+  fs.writeFileSync(out, JSON.stringify(bundle, null, 2), "utf8");
   console.log(
-    `[fetch-live-in-play] wrote ${out} (${parsed.data.length} players, tour=${tourUsed}, odds_format=${oddsFormat})`
+    `[fetch-live-in-play] wrote ${out} (${parsed.data.length} players, tour=${tourUsed}, odds_format=${oddsFormat}; live feeds=${liveTournamentStats ? "t" : "-"}${liveHoleStats ? "h" : "-"})`
   );
 }
 
