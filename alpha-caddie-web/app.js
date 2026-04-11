@@ -7,11 +7,15 @@
  * or window.__ALPHA_CADDIE_PROJECTIONS_URL__. Round history: embedded-player-round-history.js;
  * player_round_history.json + player_shots_web.json when served over HTTP.
  *
- * Live placement probs (DataGolf preds/in-play): live-in-play.json next to projections.json
- * (npm run fetch:in-play, or scripts/fetch_datagolf_in_play.R after R export). JSON uses win/top_* as
- * decimals in (0,1) when odds_format=percent (per DataGolf docs). Over HTTP the app refetches
- * live-in-play.json often (default ~30s) but only re-merges pricing when DataGolf’s payload changes,
- * using info.last_update when present (same signal as their ~5 min model refresh). Opt out: ?liveInPlay=0
+ * Live bundle (DataGolf): live-in-play.json next to projections.json — preds/in-play plus optional
+ * live_tournament_stats / live_hole_stats (npm run fetch:in-play). Hole-level avg vs par sets
+ * meta.live_course_round_excess_strokes for O/U and props mu (even when pricing mode is default).
+ * preds/in-play `thru` / `today` (and optional today_birdies / today_bogeys / today_pars / eagles when DG sends them)
+ * merge onto the matching `round` row for mid-round Total score and counting-stat O/U +EV (birdies / pars / bogeys).
+ * Matchups / 3-ball +EV still use `effectiveMuSg` (live total-score → SG delta).
+ * JSON uses win/top_* as decimals in (0,1) when odds_format=percent (per DataGolf docs). Over HTTP
+ * the app refetches live-in-play.json often (default ~30s) but only re-merges when the bundle token
+ * changes (in-play last_update + live feed timestamps). Opt out: ?liveInPlay=0
  * or ?liveInPlayPoll=0, or meta.poll_datagolf_live_predictions: false. Poll interval: ?liveInPlayPoll=90
  * (seconds, 30–600). Never embed a DG API key in the browser.
  */
@@ -650,12 +654,18 @@ function dgInPlayField(row, names) {
   return undefined;
 }
 
-/** Stable token from preds/in-play JSON so we only re-merge after DataGolf updates the feed. */
+/** Stable token from live bundle JSON so we only re-merge after DataGolf updates any included feed. */
 function dgInPlayUpdateToken(j) {
   if (!j || typeof j !== "object") return "";
   const info = j.info && typeof j.info === "object" ? j.info : {};
   const lu = info.last_update != null ? String(info.last_update).trim() : "";
-  if (lu) return `lu:${lu}`;
+  const tLu =
+    j.live_tournament_stats && j.live_tournament_stats.last_updated != null
+      ? String(j.live_tournament_stats.last_updated).trim()
+      : "";
+  const hLu =
+    j.live_hole_stats && j.live_hole_stats.last_update != null ? String(j.live_hole_stats.last_update).trim() : "";
+  if (lu || tLu || hLu) return `lu:${lu}|ts:${tLu}|hs:${hLu}`;
   const n = Array.isArray(j.data) ? j.data.length : 0;
   const parts = [];
   for (let i = 0; i < Math.min(8, n); i++) {
@@ -681,13 +691,196 @@ function playerDgFingerprint(players) {
   return `${ids.length}:${ids.slice(0, 400).join(",")}`;
 }
 
+/** Target round for live-hole-stats (DataGolf current_round, else latest round_num in payload). */
+function dgLiveHoleStatsTargetRoundNum(payload) {
+  if (!payload || typeof payload !== "object") return NaN;
+  const cr = num(payload.current_round, NaN);
+  if (Number.isFinite(cr) && cr >= 1) return Math.floor(cr);
+  let maxR = NaN;
+  const courses = payload.courses;
+  if (!Array.isArray(courses)) return NaN;
+  for (const c of courses) {
+    const rounds = c.rounds;
+    if (!Array.isArray(rounds)) continue;
+    for (const rr of rounds) {
+      const rn = num(rr.round_num, NaN);
+      if (Number.isFinite(rn)) maxR = Number.isFinite(maxR) ? Math.max(maxR, rn) : rn;
+    }
+  }
+  return maxR;
+}
+
+/**
+ * Per course: sum over holes of (avg_score − par) for one round; return mean across courses.
+ * `minThru` drops thin holes (early wave).
+ */
+function liveCourseRoundExcessFromHoleStats(payload, minThru = 4) {
+  if (!payload || typeof payload !== "object") return NaN;
+  const courses = payload.courses;
+  if (!Array.isArray(courses) || !courses.length) return NaN;
+
+  const sumForRound = (rn) => {
+    const perCourse = [];
+    for (const c of courses) {
+      const rounds = c.rounds;
+      if (!Array.isArray(rounds)) continue;
+      let sum = 0;
+      let nh = 0;
+      for (const rr of rounds) {
+        if (num(rr.round_num, NaN) !== rn) continue;
+        const holes = rr.holes;
+        if (!Array.isArray(holes)) continue;
+        for (const h of holes) {
+          const par = num(h.par, NaN);
+          const total = h.total && typeof h.total === "object" ? h.total : {};
+          const avg = num(total.avg_score, NaN);
+          const th = num(total.players_thru, NaN);
+          if (!Number.isFinite(par) || !Number.isFinite(avg)) continue;
+          if (Number.isFinite(th) && th < minThru) continue;
+          sum += avg - par;
+          nh++;
+        }
+      }
+      if (nh > 0) perCourse.push(sum);
+    }
+    if (!perCourse.length) return NaN;
+    if (perCourse.length === 1) return perCourse[0];
+    const mean = perCourse.reduce((a, b) => a + b, 0) / perCourse.length;
+    const mx = Math.max(...perCourse);
+    /* Multi-course events: pure mean dilutes a tough track — blend toward the harder course. */
+    return mean + 0.5 * (mx - mean);
+  };
+
+  let targetRn = dgLiveHoleStatsTargetRoundNum(payload);
+  let ex = Number.isFinite(targetRn) ? sumForRound(targetRn) : NaN;
+  if (!Number.isFinite(ex)) {
+    let maxR = NaN;
+    for (const c of courses) {
+      for (const rr of c.rounds || []) {
+        const rn = num(rr.round_num, NaN);
+        if (Number.isFinite(rn)) maxR = Number.isFinite(maxR) ? Math.max(maxR, rn) : rn;
+      }
+    }
+    if (Number.isFinite(maxR)) ex = sumForRound(maxR);
+  }
+  return ex;
+}
+
+/** Pull live course difficulty (+ optional DG labels) from fetch-live-in-play bundle. */
+function mergeDatagolfLiveCourseMeta(j) {
+  if (!DATA.meta) DATA.meta = {};
+  let touched = false;
+  const clearKeys = (keys) => {
+    for (const k of keys) {
+      if (Object.prototype.hasOwnProperty.call(DATA.meta, k)) {
+        delete DATA.meta[k];
+        touched = true;
+      }
+    }
+  };
+
+  if (Object.prototype.hasOwnProperty.call(j, "live_hole_stats")) {
+    const lh = j.live_hole_stats;
+    if (lh && typeof lh === "object") {
+      const hlu = lh.last_update != null ? String(lh.last_update).trim() : "";
+      const cr = num(lh.current_round, NaN);
+      const ex = liveCourseRoundExcessFromHoleStats(lh);
+      if (DATA.meta.live_course_hole_stats_last_update !== hlu) touched = true;
+      if (hlu) DATA.meta.live_course_hole_stats_last_update = hlu;
+      else delete DATA.meta.live_course_hole_stats_last_update;
+      if (Number.isFinite(cr)) {
+        if (DATA.meta.live_course_hole_stats_round !== cr) touched = true;
+        DATA.meta.live_course_hole_stats_round = cr;
+      } else {
+        clearKeys(["live_course_hole_stats_round"]);
+      }
+      const prevEx = DATA.meta.live_course_round_excess_strokes;
+      if (Number.isFinite(ex)) {
+        if (prevEx !== ex) touched = true;
+        DATA.meta.live_course_round_excess_strokes = ex;
+      } else {
+        clearKeys(["live_course_round_excess_strokes"]);
+      }
+    } else {
+      clearKeys([
+        "live_course_hole_stats_last_update",
+        "live_course_hole_stats_round",
+        "live_course_round_excess_strokes",
+      ]);
+    }
+  }
+
+  if (Object.prototype.hasOwnProperty.call(j, "live_tournament_stats")) {
+    const lt = j.live_tournament_stats;
+    if (lt && typeof lt === "object") {
+      const lud = lt.last_updated != null ? String(lt.last_updated).trim() : "";
+      if (DATA.meta.live_dg_tournament_stats_last !== lud) touched = true;
+      if (lud) DATA.meta.live_dg_tournament_stats_last = lud;
+      else delete DATA.meta.live_dg_tournament_stats_last;
+      const ev = String(lt.event_name || "").trim();
+      if (DATA.meta.live_dg_tournament_stats_event !== ev) touched = true;
+      if (ev) DATA.meta.live_dg_tournament_stats_event = ev;
+      else delete DATA.meta.live_dg_tournament_stats_event;
+    } else {
+      clearKeys(["live_dg_tournament_stats_last", "live_dg_tournament_stats_event"]);
+    }
+  }
+
+  return touched;
+}
+
+function clearDgLiveRoundScratch(p) {
+  delete p.dg_live_thru;
+  delete p.dg_live_today;
+  delete p.dg_live_birdies_so_far;
+  delete p.dg_live_bogeys_so_far;
+  delete p.dg_live_pars_so_far;
+  delete p.dg_live_eagles_so_far;
+}
+
+/** Optional hole counts from preds/in-play (field names vary by DG version). */
+function mergeDgLiveScorecardCounts(p, inPlayRow, thruRounded) {
+  const th = Math.round(num(thruRounded, NaN));
+  const cap = Number.isFinite(th) && th > 0 ? th + 3 : 22;
+  const q = (aliases) => {
+    const v = num(dgInPlayField(inPlayRow, aliases), NaN);
+    if (!Number.isFinite(v) || v < 0) return NaN;
+    const r = Math.round(v);
+    return r <= cap ? r : NaN;
+  };
+  const setCt = (val, key) => {
+    if (Number.isFinite(val) && val >= 0 && val <= 22) p[key] = val;
+    else delete p[key];
+  };
+  setCt(q(["today_birdies", "round_birdies", "birdies_today", "birdies_thru", "n_birdies"]), "dg_live_birdies_so_far");
+  setCt(
+    q(["today_bogeys", "round_bogeys", "bogeys_today", "bogies_today", "today_bogies", "bogeys_thru"]),
+    "dg_live_bogeys_so_far"
+  );
+  setCt(q(["today_pars", "round_pars", "pars_today", "pars_thru"]), "dg_live_pars_so_far");
+  setCt(q(["today_eagles", "eagles_today", "eagles_or_better_today", "eagles_thru"]), "dg_live_eagles_so_far");
+  const genB = num(dgInPlayField(inPlayRow, ["birdies"]), NaN);
+  if (
+    !Object.prototype.hasOwnProperty.call(p, "dg_live_birdies_so_far") &&
+    Number.isFinite(genB) &&
+    Number.isFinite(th) &&
+    th >= 1 &&
+    genB >= 0 &&
+    genB <= th
+  ) {
+    p.dg_live_birdies_so_far = Math.round(genB);
+  }
+}
+
 /**
  * Merge DataGolf preds/in-play `data` rows into DATA.players:
  * win, top_5, top_10, top_20, make_cut (and mc → make_cut when make_cut absent).
  * Placement probs are tournament-wide — update every round row for that dg_id.
  */
 function mergeDatagolfInPlayPayload(j) {
-  if (!j || !Array.isArray(j.data) || !DATA.players || !DATA.players.length) return false;
+  if (!j || typeof j !== "object" || !DATA.players || !DATA.players.length) return false;
+  const metaTouched = mergeDatagolfLiveCourseMeta(j);
+  if (!Array.isArray(j.data)) return metaTouched;
   const info = j.info && typeof j.info === "object" ? j.info : {};
   const currentRound = num(info.current_round, NaN);
   const lastUpdate = info.last_update != null ? String(info.last_update) : "";
@@ -710,6 +903,9 @@ function mergeDatagolfInPlayPayload(j) {
     if (!byId.length) continue;
     const curPos = dgInPlayField(row, ["current_pos", "currentPos"]);
     const curScore = dgInPlayField(row, ["current_score", "currentScore"]);
+    const dgRound = Math.round(num(dgInPlayField(row, ["round", "Round"]), NaN));
+    const thruLive = num(dgInPlayField(row, ["thru", "Thru"]), NaN);
+    const todayLive = num(dgInPlayField(row, ["today", "Today"]), NaN);
     for (const p of byId) {
       if (Number.isFinite(win)) p.win = win;
       if (Number.isFinite(top5)) p.top_5 = top5;
@@ -718,6 +914,25 @@ function mergeDatagolfInPlayPayload(j) {
       if (Number.isFinite(makeCut)) p.make_cut = makeCut;
       if (curPos != null && String(curPos).trim() !== "") p.current_pos = String(curPos).trim();
       if (Number.isFinite(num(curScore, NaN))) p.current_score = num(curScore, NaN);
+      const pr = Math.round(num(p.round, NaN));
+      if (!Number.isFinite(dgRound) || dgRound < 1 || dgRound > 4) {
+        clearDgLiveRoundScratch(p);
+      } else if (pr === dgRound) {
+        if (Number.isFinite(thruLive)) p.dg_live_thru = thruLive;
+        else delete p.dg_live_thru;
+        if (Number.isFinite(todayLive)) p.dg_live_today = todayLive;
+        else delete p.dg_live_today;
+        if (Number.isFinite(thruLive) && Math.round(thruLive) >= 1) {
+          mergeDgLiveScorecardCounts(p, row, thruLive);
+        } else {
+          delete p.dg_live_birdies_so_far;
+          delete p.dg_live_bogeys_so_far;
+          delete p.dg_live_pars_so_far;
+          delete p.dg_live_eagles_so_far;
+        }
+      } else {
+        clearDgLiveRoundScratch(p);
+      }
       touched++;
     }
   }
@@ -732,7 +947,7 @@ function mergeDatagolfInPlayPayload(j) {
       DATA.meta.live_matchup_model_blend = 0.35;
     }
   }
-  return touched > 0;
+  return touched > 0 || metaTouched;
 }
 
 async function fetchAndMergeDatagolfLiveInPlay(opts = {}) {
@@ -1154,6 +1369,181 @@ function statWeatherMuAdjustment(market) {
   return 0;
 }
 
+/**
+ * Maps DataGolf live-hole-stats round excess (strokes vs par for the field) into a stroke-unit shift `d`
+ * for O/U / +EV. Tuned so “playing hard” days move totals meaningfully (prior gain was too timid).
+ */
+const LIVE_COURSE_EXCESS_TO_STROKE_K = 1.72;
+const LIVE_COURSE_D_CLAMP_NEG = -3.15;
+const LIVE_COURSE_D_CLAMP_POS = 4.45;
+
+function liveCourseDifficultyDForMu() {
+  const exR = num(DATA?.meta?.live_course_round_excess_strokes, NaN);
+  if (!Number.isFinite(exR)) return 0;
+  return clamp(exR * LIVE_COURSE_EXCESS_TO_STROKE_K, LIVE_COURSE_D_CLAMP_NEG, LIVE_COURSE_D_CLAMP_POS);
+}
+
+/**
+ * Field scoring vs par from DataGolf live-hole-stats (current round): sum_h (avg_score − par) per course,
+ * then mean across courses. Positive ⇒ course playing hard vs par → higher expected totals / bogeys.
+ */
+function liveCourseOUMuAdjustment(market) {
+  const d = liveCourseDifficultyDForMu();
+  if (market === "Total score") return d;
+  if (market === "Bogeys") return 0.48 * d;
+  if (market === "Birdies") return -0.55 * d;
+  if (market === "Pars") return -0.11 * d;
+  return 0;
+}
+
+function liveCoursePropHistoryNudge(statKey) {
+  const d = liveCourseDifficultyDForMu();
+  if (statKey === "total") return d;
+  if (statKey === "bogeys") return 0.48 * d;
+  if (statKey === "birdies") return -0.55 * d;
+  if (statKey === "pars") return -0.11 * d;
+  return 0;
+}
+
+/** Sum par for holes 1..n (n = holes completed, e.g. thru=14 → first 14 holes). */
+function courseParSumFirstNHoles(holePars, nHolesCompleted) {
+  const n = Math.min(18, Math.max(0, Math.floor(num(nHolesCompleted, NaN))));
+  if (!n) return 0;
+  if (!Array.isArray(holePars) || holePars.length < n) return NaN;
+  let s = 0;
+  for (let i = 0; i < n; i++) {
+    const p = num(holePars[i], NaN);
+    if (!Number.isFinite(p)) return NaN;
+    s += p;
+  }
+  return s;
+}
+
+/**
+ * Mid-round: blend pre-round `total_score` with realized strokes + prorated remainder.
+ * Uses preds/in-play `today` (vs par through `thru`) on the row whose `round` matches live DG round.
+ */
+function liveCurrentRoundTotalScoreMuDelta(row) {
+  const liveR = Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
+  const pr = Math.round(num(row?.round, NaN));
+  if (!Number.isFinite(liveR) || liveR < 1 || liveR > 4 || pr !== liveR) return 0;
+  const thru = Math.round(num(row.dg_live_thru, NaN));
+  const today = num(row.dg_live_today, NaN);
+  const baseMu = num(row.total_score, NaN);
+  const par18 = num(DATA?.meta?.course_par_18, NaN);
+  const holePars = DATA.meta?.hole_pars;
+  if (!Number.isFinite(baseMu) || !Number.isFinite(par18)) return 0;
+  if (!Number.isFinite(today)) return 0;
+
+  if (Number.isFinite(thru) && thru >= 18) {
+    const finalStrokes = par18 + today;
+    return clamp(finalStrokes - baseMu, -14, 14);
+  }
+  if (!Number.isFinite(thru) || thru < 1) return 0;
+
+  let parThru = courseParSumFirstNHoles(holePars, thru);
+  if (!Number.isFinite(parThru)) parThru = (par18 / 18) * thru;
+  const parRem = par18 - parThru;
+  const rem = 18 - thru;
+  if (rem <= 0) return 0;
+  const expExcessRem = ((baseMu - par18) * rem) / 18;
+  const actualStrokes = parThru + today;
+  const muLive = actualStrokes + parRem + expExcessRem;
+  return clamp(muLive - baseMu, -12, 12);
+}
+
+function liveRowMatchesDgLiveRound(row) {
+  const liveR = Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
+  const pr = Math.round(num(row?.round, NaN));
+  return Number.isFinite(liveR) && liveR >= 1 && liveR <= 4 && pr === liveR;
+}
+
+/** When DG omits hole counts, infer minimum plausible birdies / bogeys from strokes vs par through `thru`. */
+function inferBirdiesSoFarFromTodayVsPar(today, thru) {
+  if (!Number.isFinite(today) || !Number.isFinite(thru) || thru < 1) return NaN;
+  if (today >= 0) return 0;
+  const under = -today;
+  return Math.min(thru, Math.max(0, Math.round(under * 0.52)));
+}
+
+function inferBogeysSoFarFromTodayVsPar(today, thru) {
+  if (!Number.isFinite(today) || !Number.isFinite(thru) || thru < 1) return NaN;
+  if (today <= 0) return 0;
+  return Math.min(thru, Math.max(0, Math.round(today * 0.52)));
+}
+
+/**
+ * Birdies / pars / bogeys O/U: expected full-round mean becomes (count so far) + (proj rate × holes left).
+ * Uses merged dg_live_*_so_far when present; else infers birdies/bogeys from `today` vs par and pars as residual holes.
+ * Tightens sigma by √(holes_left / 18) (and near lock when round complete).
+ */
+function livePartialRoundCountPropAdjust(market, row) {
+  const out = { muDelta: 0, sigmaScale: 1 };
+  if (market !== "Birdies" && market !== "Pars" && market !== "Bogeys") return out;
+  if (!liveRowMatchesDgLiveRound(row)) return out;
+  const thru = Math.round(num(row.dg_live_thru, NaN));
+  const today = num(row.dg_live_today, NaN);
+  if (!Number.isFinite(thru) || thru < 1) return out;
+  const rem = 18 - thru;
+  if (rem < 0) return out;
+
+  const field = market === "Birdies" ? "birdies" : market === "Pars" ? "pars" : "bogeys";
+  const muFull = num(row[field], NaN);
+  if (!Number.isFinite(muFull) || muFull < 0) return out;
+
+  let b = num(row.dg_live_birdies_so_far, NaN);
+  let bg = num(row.dg_live_bogeys_so_far, NaN);
+  if (!Number.isFinite(b)) b = inferBirdiesSoFarFromTodayVsPar(today, thru);
+  if (!Number.isFinite(bg)) bg = inferBogeysSoFarFromTodayVsPar(today, thru);
+  if (!Number.isFinite(b)) b = 0;
+  if (!Number.isFinite(bg)) bg = 0;
+
+  const eg = num(row.dg_live_eagles_so_far, NaN);
+  const eagles = Number.isFinite(eg) && eg >= 0 ? Math.min(thru, Math.round(eg)) : 0;
+
+  let pSo = num(row.dg_live_pars_so_far, NaN);
+  if (!Number.isFinite(pSo)) {
+    pSo = Math.max(0, thru - b - bg - eagles);
+    pSo = Math.min(thru, pSo);
+  }
+
+  const rate = muFull / 18;
+  let soFar;
+  if (market === "Birdies") soFar = b;
+  else if (market === "Bogeys") soFar = bg;
+  else soFar = pSo;
+
+  let muLive = soFar + rate * rem;
+  muLive = clamp(muLive, 0, 18);
+
+  out.muDelta = muLive - muFull;
+  if (thru >= 18) out.sigmaScale = 0.26;
+  else out.sigmaScale = clamp(Math.sqrt(rem / 18), 0.17, 1);
+  return out;
+}
+
+/**
+ * Matchups / 3-ball +EV use `mu_sg`; map in-round total-score revision to the same stroke↔SG scale
+ * as bundled demo rows (mu_sg ≈ (par − total_score) × 0.2 ⇒ Δsg ≈ −0.2 × Δstrokes).
+ */
+function liveCurrentRoundMuSgDelta(row) {
+  const d = liveCurrentRoundTotalScoreMuDelta(row);
+  if (!Number.isFinite(d) || d === 0) return 0;
+  return clamp(-0.2 * d, -1.45, 1.45);
+}
+
+/** Tighten Total score O/U sigma as the live round progresses (less variance left to play). */
+function sigmaLiveRoundShrinkForTotalScore(row, rec) {
+  if (!rec || rec.field !== "total_score") return 1;
+  const liveR = Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
+  const pr = Math.round(num(row?.round, NaN));
+  if (!Number.isFinite(liveR) || pr !== liveR) return 1;
+  const thru = Math.round(num(row.dg_live_thru, NaN));
+  if (!Number.isFinite(thru) || thru < 1) return 1;
+  if (thru >= 18) return 0.32;
+  return clamp(Math.sqrt((18 - thru) / 18), 0.2, 1);
+}
+
 function playerSkillWeatherEdge(row) {
   const baseSg = num(row?.mu_sg ?? row?.implied_mu_sg, NaN);
   const roundSd = num(row?.round_sd, NaN);
@@ -1174,22 +1564,31 @@ function ouStatRec(market) {
 
 function sigmaForOu(market, row, rec) {
   const weatherMult = weatherSigmaMultiplier();
+  const liveShrink = sigmaLiveRoundShrinkForTotalScore(row, rec);
   if (rec.sdKey) {
     const s = num(row[rec.sdKey], NaN);
-    if (Number.isFinite(s) && s > 0.05) return s * weatherMult;
-    return 2.75 * weatherMult;
+    if (Number.isFinite(s) && s > 0.05) return s * weatherMult * liveShrink;
+    return 2.75 * weatherMult * liveShrink;
   }
   const mu = Math.abs(num(row[rec.field], 1));
-  return Math.max(0.55, Math.sqrt(Math.max(mu, 0.2)) * 0.9 * weatherMult);
+  return Math.max(0.55, Math.sqrt(Math.max(mu, 0.2)) * 0.9 * weatherMult) * liveShrink;
 }
 
 function modelProbOverMarket(market, row, line) {
   const rec = ouStatRec(market);
   const dgId = Math.round(num(row?.dg_id, NaN));
+  const liveRoundAdj = market === "Total score" ? liveCurrentRoundTotalScoreMuDelta(row) : 0;
+  const countLive = livePartialRoundCountPropAdjust(market, row);
   const mu =
-    num(row[rec.field], NaN) + statWeatherMuAdjustment(market) + pricingStatMuAdjustment(market, dgId);
+    num(row[rec.field], NaN) +
+    statWeatherMuAdjustment(market) +
+    liveCourseOUMuAdjustment(market) +
+    liveRoundAdj +
+    countLive.muDelta +
+    pricingStatMuAdjustment(market, dgId);
   if (!Number.isFinite(mu)) return NaN;
-  const sig = sigmaForOu(market, row, rec);
+  let sig = sigmaForOu(market, row, rec) * countLive.sigmaScale;
+  if (!Number.isFinite(sig) || sig < 0.06) sig = sigmaForOu(market, row, rec);
   const z = (line - mu) / sig;
   return 1 - normalCdf(z);
 }
@@ -1765,9 +2164,84 @@ function projectionRowForPlayerRound(playerName, round) {
   );
 }
 
+/** Props / DK use "First Last"; projections use "Last, First". Resolve a row for `getModelRoundForEv` context. */
+function projectionRowForPropPlayerSource(propRow, preferredRound) {
+  const id = Math.round(num(propRow?.dg_id, NaN));
+  if (Number.isFinite(id) && id > 0) {
+    const hit = projectionPlayerRowForModel(id, preferredRound);
+    if (hit) return hit;
+  }
+  const raw = String(propRow?.player_name || "").trim().toLowerCase();
+  if (!raw) return null;
+  const cand = (DATA.players || []).filter((p) => samePlayerRound(p, preferredRound));
+  for (const p of cand) {
+    if (String(p.player_name || "").trim().toLowerCase() === raw) return p;
+    if (displayGolferName(p.player_name).trim().toLowerCase() === raw) return p;
+  }
+  return null;
+}
+
+/** De-vig two-way O/U into an implied P(over) from posted American prices. */
+function propsNoVigOverProb(overAm, underAm) {
+  const o = impliedProbFromAmerican(overAm);
+  const u = impliedProbFromAmerican(underAm);
+  if (!Number.isFinite(o) || !Number.isFinite(u) || o + u <= 1e-9) return NaN;
+  return o / (o + u);
+}
+
+function appendModelOuPropsEvRows(rows, elim) {
+  const props = Array.isArray(DATA.props) ? DATA.props : [];
+  if (!props.length) return;
+  const rMod = getModelRoundForEv();
+  const allow = new Set(["Total Score", "Birdies", "Pars", "Bogeys"]);
+  for (const pr of props) {
+    const marketCanon = ouPropsCanonicalMarket(pr.market);
+    if (!allow.has(marketCanon)) continue;
+    const mKey = marketCanon === "Total Score" ? "Total score" : marketCanon;
+    const L = enforceHalfLine(num(pr.line, NaN));
+    if (!Number.isFinite(L)) continue;
+    const oAm = Math.round(num(pr.over_odds, NaN));
+    const uAm = Math.round(num(pr.under_odds, NaN));
+    if (!Number.isFinite(oAm) || !Number.isFinite(uAm) || oAm === 0 || uAm === 0) continue;
+    const prow = projectionRowForPropPlayerSource(pr, rMod);
+    if (!prow) continue;
+    const dgId = Math.round(num(prow.dg_id, NaN));
+    if (elim.size && elim.has(dgId)) continue;
+    const pOver = clampProb01(modelProbOverMarket(mKey, prow, L));
+    if (!Number.isFinite(pOver)) continue;
+    const pUnder = clampProb01(1 - pOver);
+    const dO = decimalFromAmerican(oAm);
+    const dU = decimalFromAmerican(uAm);
+    const qOver = propsNoVigOverProb(oAm, uAm);
+    const golfer = displayGolferName(String(prow.player_name || ""));
+    rows.push({
+      golfer,
+      market: marketCanon,
+      bet: `Over ${L}`,
+      modelPct: pOver,
+      modelEv: Number.isFinite(dO) ? pOver * dO - 1 : NaN,
+      bestBook: "draftkings",
+      bestBookOdds: formatAmerican(oAm),
+      bestDec: dO,
+      consensusP: qOver,
+    });
+    rows.push({
+      golfer,
+      market: marketCanon,
+      bet: `Under ${L}`,
+      modelPct: pUnder,
+      modelEv: Number.isFinite(dU) ? pUnder * dU - 1 : NaN,
+      bestBook: "draftkings",
+      bestBookOdds: formatAmerican(uAm),
+      bestDec: dU,
+      consensusP: Number.isFinite(qOver) ? 1 - qOver : NaN,
+    });
+  }
+}
+
 function modelProbForProp(prop) {
   const stat = propMarketToStatKey(prop.market);
-  const row = projectionRowForPlayerRound(prop.player_name, getOuRound());
+  const row = projectionRowForPlayerRound(prop.player_name, getModelRoundForEv());
   if (!row) return { pOver: NaN, pUnder: NaN };
   const line = num(prop.line, NaN);
   if (!Number.isFinite(line)) return { pOver: NaN, pUnder: NaN };
@@ -2594,6 +3068,7 @@ function collectUnifiedEvRows() {
       });
     }
   }
+  appendModelOuPropsEvRows(rows, elim);
   return rows;
 }
 
@@ -3662,7 +4137,7 @@ function pricingModeMuSgBonus(dgId) {
   }
 
   if (mode === "skill") {
-    const sk = skillKey;
+    const sk = pricingSkillHistoryKey();
     const nRec = Math.min(8, Math.max(3, Math.floor(rounds.length / 2)));
     const recent = rounds.slice(0, nRec);
     const older = rounds.slice(nRec, Math.min(rounds.length, nRec + 24));
@@ -3681,7 +4156,7 @@ function effectiveMuSg(row, dgIdOpt) {
   const base = weatherAdjustedMuSg(row);
   const id = Number.isFinite(dgIdOpt) ? Math.round(dgIdOpt) : Math.round(num(row?.dg_id, NaN));
   if (!Number.isFinite(base) || !Number.isFinite(id)) return base;
-  return base + pricingModeMuSgBonus(id);
+  return base + pricingModeMuSgBonus(id) + liveCurrentRoundMuSgDelta(row);
 }
 
 function pricingStatMuAdjustment(market, dgId) {
@@ -4049,7 +4524,9 @@ function modelForHistoryRow(statKey, row) {
   else if (statKey === "gir") base = num(r.gir, NaN);
   else if (statKey === "fairways") base = num(r.fairways, NaN);
   if (!Number.isFinite(base)) return NaN;
-  return base + pricingModelHistoryNudge(statKey, dgId);
+  const liveRound =
+    statKey === "total" ? liveCurrentRoundTotalScoreMuDelta(r) : 0;
+  return base + pricingModelHistoryNudge(statKey, dgId) + liveCoursePropHistoryNudge(statKey) + liveRound;
 }
 
 function shortPropsDateLabel(completed) {
@@ -4607,8 +5084,11 @@ function updatePropsFooterEv() {
   const uAm = num(document.getElementById("prop-under")?.value, NaN);
   const dg = selectedDgId();
   const statKey = statKeyFromPropSelect();
-  const playerRow =
-    DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === dg && samePlayerRound(p, 1)) || DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === dg);
+  const rEv = getModelRoundForEv();
+  const rproj =
+    projectionPlayerRowForModel(dg, rEv) ||
+    DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === dg && samePlayerRound(p, rEv)) ||
+    DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === dg);
   const marketLabel =
     statKey === "total"
       ? "Total score"
@@ -4619,8 +5099,8 @@ function updatePropsFooterEv() {
           : statKey === "bogeys"
             ? "Bogeys"
             : "Total score";
-  const rproj = projectionRowForPlayerRound(playerRow?.player_name, getOuRound());
-  const pOver = rproj && Number.isFinite(line) ? modelProbOverMarket(marketLabel, rproj, line) : NaN;
+  const pOver =
+    rproj && Number.isFinite(line) ? modelProbOverMarket(marketLabel, rproj, line) : NaN;
   const pUnder = Number.isFinite(pOver) ? 1 - pOver : NaN;
   const dO = decimalFromAmerican(oAm);
   const dU = decimalFromAmerican(uAm);
