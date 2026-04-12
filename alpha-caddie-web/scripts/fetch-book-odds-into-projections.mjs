@@ -12,8 +12,9 @@
  *      GOLF_SKIP_PROPS_CSV=1 — do not merge data/player_props_*.csv into projections.props (Model O/U DK lines).
  *      GOLF_SKIP_DK_OU=1 — do not pull DK round props (see draftkings-ou-props.mjs).
  *
- * DraftKings round props (Birdies, Pars, Bogeys, Round Score → Total Score) are fetched when Playwright is
- * installed (npm i in alpha-caddie-web; npx playwright install chromium once per machine).
+ * DraftKings round props (Birdies, Pars, Bogeys, Round Score → Total Score) use Playwright + Chromium.
+ * Production (Render): `playwright` is a runtime dependency; build should run `npx playwright install chromium`.
+ * Point DK at the active event: DK_LEAGUE_URL (e.g. …/leagues/golf/pga?category=round) and DK_LEAGUE_ID (from DK URL).
  * CSV files still override or fill gaps when DK omits a player or market.
  */
 import { parse } from "csv-parse/sync";
