@@ -28,7 +28,7 @@
  *   GOLF_LIVE_IN_PLAY_SERVER_POLL_MS — live-in-play poll in ms (default 30000)
  *   GOLF_SKIP_BOOK_ODDS_ON_START=1 — skip book odds fetch on start
  *   GOLF_SKIP_BOOK_ODDS_POLL_SERVER=1 — do not refresh betting-tools odds into projections.json while serving
- *   GOLF_BOOK_ODDS_SERVER_POLL_MS — book odds poll in ms (default 90000, min 60000)
+ *   GOLF_BOOK_ODDS_SERVER_POLL_MS — book odds + DK round props poll in ms (default 60000, min 45000)
  *   GOLF_HISTORICAL_ROUNDS_LIGHT=1 — destructive: trim CSV to last 2 seasons (avoid unless you mean it)
  *   GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS=N — partial API refresh only
  *   ALPHA_CADDIE_START_FETCH_DG=1 — run full fetch:dg instead of rounds+history only
@@ -181,10 +181,19 @@ const child = spawn("npx", ["--yes", "serve", ".", "-p", port], {
 });
 
 function startLiveInPlayDiskPoller() {
-  if (process.env.GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER === "1") return;
+  if (process.env.GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER === "1") {
+    console.log("[alpha-caddie-web] GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER=1 — live-in-play disk poller off.");
+    return;
+  }
   const key = loadApiKey();
   const script = path.join(WEB_ROOT, "scripts", "fetch-live-in-play.mjs");
-  if (!key || !fs.existsSync(script)) return;
+  if (!fs.existsSync(script)) return;
+  if (!key) {
+    console.warn(
+      "[alpha-caddie-web] No DATAGOLF_API_KEY (and no datagolf.local.json) — live-in-play.json will NOT update on disk. Set DATAGOLF_API_KEY in Render → Environment for auto-updates."
+    );
+    return;
+  }
   const ms = Math.min(600_000, Math.max(30_000, Number(process.env.GOLF_LIVE_IN_PLAY_SERVER_POLL_MS || 30_000)));
   setInterval(() => {
     const bg = spawn(process.execPath, [script], {
@@ -203,21 +212,39 @@ function startLiveInPlayDiskPoller() {
 startLiveInPlayDiskPoller();
 
 function startBookOddsDiskPoller() {
-  if (process.env.GOLF_SKIP_BOOK_ODDS_POLL_SERVER === "1") return;
+  if (process.env.GOLF_SKIP_BOOK_ODDS_POLL_SERVER === "1") {
+    console.log("[alpha-caddie-web] GOLF_SKIP_BOOK_ODDS_POLL_SERVER=1 — book odds disk poller off.");
+    return;
+  }
   const key = loadApiKey();
   const script = path.join(WEB_ROOT, "scripts", "fetch-book-odds-into-projections.mjs");
-  if (!key || !fs.existsSync(script)) return;
-  const ms = Math.min(600_000, Math.max(60_000, Number(process.env.GOLF_BOOK_ODDS_SERVER_POLL_MS || 90_000)));
+  if (!fs.existsSync(script)) return;
+  if (!key) {
+    console.warn(
+      "[alpha-caddie-web] No DATAGOLF_API_KEY — projections book-odds poller skipped (same as live-in-play)."
+    );
+    return;
+  }
+  const ms = Math.min(600_000, Math.max(45_000, Number(process.env.GOLF_BOOK_ODDS_SERVER_POLL_MS || 60_000)));
   setInterval(() => {
     const bg = spawn(process.execPath, [script], {
       cwd: WEB_ROOT,
-      stdio: "ignore",
+      stdio: ["ignore", "inherit", "inherit"],
       env: { ...process.env, GOLF_MODEL_DIR: REPO_ROOT, DATAGOLF_API_KEY: key },
     });
-    bg.on("error", () => {});
+    bg.on("error", (err) => console.warn("[alpha-caddie-web] fetch-book-odds spawn error:", err.message));
+    bg.on("exit", (code) => {
+      if (code !== 0 && code != null) {
+        console.warn(
+          "[alpha-caddie-web] fetch-book-odds exited",
+          code,
+          "— DK props need Playwright (build: npm install && npx playwright install chromium). Check logs above."
+        );
+      }
+    });
   }, ms);
   console.log(
-    "[alpha-caddie-web] projections book odds refresh every",
+    "[alpha-caddie-web] projections + DraftKings props refresh every",
     Math.round(ms / 1000),
     "s. Set GOLF_SKIP_BOOK_ODDS_POLL_SERVER=1 to disable."
   );

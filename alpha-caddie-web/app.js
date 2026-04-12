@@ -654,6 +654,32 @@ function dgInPlayField(row, names) {
   return undefined;
 }
 
+/** Cheap string hash so live row edits (thru/today/scores) bump the merge token even if `last_update` is unchanged. */
+function hashDjb2(str) {
+  let h = 5381;
+  for (let i = 0; i < str.length; i++) {
+    h = Math.imul(h, 33) + str.charCodeAt(i);
+  }
+  return (h >>> 0).toString(36);
+}
+
+/** Fingerprint in-play `data` rows: placement + hole progress + card vs par (not only info.last_update). */
+function dgInPlayLiveScorebookHash(j) {
+  if (!Array.isArray(j.data) || !j.data.length) return "0";
+  const chunks = [];
+  for (const r of j.data) {
+    if (!r || typeof r !== "object") continue;
+    const id = dgInPlayField(r, ["dg_id", "dgId"]) ?? "";
+    const thru = dgInPlayField(r, ["thru", "Thru"]);
+    const today = dgInPlayField(r, ["today", "Today"]);
+    const cs = dgInPlayField(r, ["current_score", "currentScore"]);
+    const w = dgInPlayField(r, ["win", "win_prob"]);
+    const wn = num(w, NaN);
+    chunks.push(`${id}:${thru}:${today}:${cs}:${Number.isFinite(wn) ? wn.toFixed(4) : ""}`);
+  }
+  return `${j.data.length}:${hashDjb2(chunks.join("|"))}`;
+}
+
 /** Stable token from live bundle JSON so we only re-merge after DataGolf updates any included feed. */
 function dgInPlayUpdateToken(j) {
   if (!j || typeof j !== "object") return "";
@@ -665,7 +691,8 @@ function dgInPlayUpdateToken(j) {
       : "";
   const hLu =
     j.live_hole_stats && j.live_hole_stats.last_update != null ? String(j.live_hole_stats.last_update).trim() : "";
-  if (lu || tLu || hLu) return `lu:${lu}|ts:${tLu}|hs:${hLu}`;
+  const scH = dgInPlayLiveScorebookHash(j);
+  if (lu || tLu || hLu) return `lu:${lu}|ts:${tLu}|hs:${hLu}|sc:${scH}`;
   const n = Array.isArray(j.data) ? j.data.length : 0;
   const parts = [];
   for (let i = 0; i < Math.min(8, n); i++) {
@@ -674,7 +701,7 @@ function dgInPlayUpdateToken(j) {
     const w = num(dgInPlayField(r, ["win", "win_prob"]), NaN);
     parts.push(`${dgInPlayField(r, ["dg_id", "dgId"]) ?? ""}:${Number.isFinite(w) ? w.toFixed(5) : ""}`);
   }
-  return `fb:${n}:${parts.join("|")}`;
+  return `fb:${n}:${parts.join("|")}|sc:${scH}`;
 }
 
 function playerDgFingerprint(players) {

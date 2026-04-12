@@ -22,9 +22,7 @@
     "serve:only": "npx --yes serve . -p 5173"
   },
   "dependencies": {
-    "csv-parse": "^5.6.0"
-  },
-  "devDependencies": {
+    "csv-parse": "^5.6.0",
     "playwright": "^1.49.1"
   }
 }
