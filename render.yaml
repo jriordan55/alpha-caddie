@@ -1,9 +1,10 @@
 # Alpha Caddie on Render — use a Web Service (this blueprint), not a Static Site.
 # Static Site deploys only fixed files from Git; nothing rewrites projections.json / live-in-play.json.
-# `npm start` runs serve-with-refresh.mjs: polls DataGolf and refreshes JSON on disk; the browser polls those files.
+# `npm start` runs serve-with-refresh.mjs: light preflight (book odds + in-play), then polls. Optional GOLF_START_FULL_REFRESH=1 for rounds merge + build:history on boot.
 #
 # After first deploy: Dashboard → this service → Environment → add secret DATAGOLF_API_KEY.
 # Optional: GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER=1 (disable live disk poll), GOLF_LIVE_IN_PLAY_SERVER_POLL_MS=30000
+# Keep field/event/course current without git: GOLF_FETCH_DG_SERVER_POLL_MS=1800000 (30 min; min 300000). Heavy API + CSV.
 # DraftKings round props need Playwright Chromium (installed in build). If your repo root differs, set rootDir
 # to the folder that contains this package.json (e.g. src/alpha-caddie-web).
 # DK event: set DK_LEAGUE_URL + DK_LEAGUE_ID (defaults target Masters nav — wrong week otherwise).

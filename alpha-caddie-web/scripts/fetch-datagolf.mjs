@@ -8,9 +8,10 @@
  * Usage (from alpha-caddie-web/):
  *   set DATAGOLF_API_KEY=your_key
  *   npm run fetch:dg
- * Daily automation: refresh:daily runs this script then pgatouR shot backfill; shots CSV is mirrored to
- * alpha-caddie-web/data/all_shots_2021_2026.csv. This script then runs build-player-shots-web.mjs →
- * player_shots_web.json (2022+ rows) for the Player Props shot log. GOLF_SKIP_SHOTS_UPDATE=1 skips shots R step only.
+ * Shots (heavy): by default this script does **not** rescan all_shots_2022_2026.csv or copy it into
+ * alpha-caddie-web/data (avoids long runs + Windows EBUSY on the CSV). Set GOLF_BUILD_SHOTS_WEB_ON_FETCH=1
+ * to run build-player-shots-web.mjs and mirror that CSV. Full pgatouR backfill remains `npm run refresh:shots`
+ * or `npm run refresh:daily` (R update + mirror + shots web build).
  *
  * Or copy datagolf.local.example.json -> datagolf.local.json and put "apiKey" there.
  *
@@ -26,9 +27,10 @@
  * Set ALPHA_CADDIE_EMBED_HISTORY=0 to skip that step. Set ALPHA_CADDIE_PGA_HISTORY=1 to run
  * the pgatouR history script after the CSV build (embed runs again after that).
  *
- * Outrights (betting-tools/outrights): GOLF_OUTRIGHTS_DEAD_HEAT=yes|no overrides both; if unset,
- * win uses dead_heat=no and placement markets (top_5/10/20, make_cut, mc) use yes — matches DataGolf
- * betting-tool defaults for implied % vs books. Rows with datagolf=0 are filled from preds/pre-tournament.
+ * Outrights (betting-tools/outrights): GOLF_OUTRIGHTS_ODDS_FORMAT=decimal|percent|american (default decimal;
+ * DataGolf’s betting endpoint defaults to decimal — fair odds 1/x → implied %). GOLF_OUTRIGHTS_DEAD_HEAT=yes|no;
+ * rows with datagolf=0 are filled from preds/pre-tournament.
+ * preds/pre-tournament: GOLF_PRE_TOURNAMENT_ODDS_FORMAT defaults to decimal (docs show decimal odds; percent is ambiguous).
  */
 
 import { spawnSync } from "child_process";
@@ -249,7 +251,7 @@ function resolveHoleParsForEvent({ fieldRaw, course_used, event_name }) {
 const RAW_ROUND_SD = Number(process.env.GOLF_RAW_ROUND_SD) || 2.75;
 const COURSE_PAR_18 = Number(process.env.GOLF_COURSE_PAR) || 72;
 const N_FAIRWAY_HOLES = Number(process.env.GOLF_N_FAIRWAY_HOLES) || 14;
-const TOUR = process.env.GOLF_TOUR || "pga";
+const TOUR = (process.env.GOLF_DATAGOLF_TOUR || process.env.GOLF_TOUR || "pga").trim() || "pga";
 
 const WEEKDAYS = ["Thursday", "Friday", "Saturday", "Sunday"];
 
@@ -337,7 +339,7 @@ function clampMuSg(m) {
   return Math.max(-4, Math.min(4, x));
 }
 
-/** Default matches R round_projections shot-level fallback when ROUND_HIST_SG_MULT is unset. */
+/** Default matches R round_projections Gaussian-round mu_mult when ROUND_HIST_SG_MULT is unset. */
 function parseRoundMuMult() {
   const def = [1, 0.99, 0.97, 0.95];
   const raw = process.env.GOLF_NODE_ROUND_MU_MULT;
@@ -355,6 +357,7 @@ function derivedStatsFromMuSg(muRaw, nFairwayHoles) {
   const stpVec = -mu_sg;
   const gir = Math.max(6, Math.min(16, 11.5 - 0.25 * stpVec));
   const fairways = Math.max(4, Math.min(nFairwayHoles, 0.55 * nFairwayHoles - 0.15 * stpVec));
+  const putts = Math.max(22, Math.min(35, 28.5 + 0.32 * stpVec - 0.1 * (gir - 11)));
   return {
     mu_sg,
     implied_mu_sg: mu_sg,
@@ -365,6 +368,7 @@ function derivedStatsFromMuSg(muRaw, nFairwayHoles) {
     doubles: im.doubles,
     gir,
     fairways,
+    putts,
   };
 }
 
@@ -375,10 +379,24 @@ function sgTotalFromSkillRow(row) {
   return 0;
 }
 
-/** Normalize pre-tournament probs to 0–1 */
-function normProb01(v) {
+/**
+ * Normalize preds/pre-tournament placement fields to implied probability (0–1).
+ * odds_format from API: percent (default), decimal (fair odds 1/p), american (+/−).
+ */
+function normProb01(v, oddsFormat = "percent") {
   const x = num(v, NaN);
   if (!Number.isFinite(x)) return NaN;
+  const fmt = String(oddsFormat || "percent").toLowerCase();
+  if (fmt === "decimal") {
+    if (x > 1 && x < 2000) return 1 / x;
+    if (x > 0 && x <= 1) return x;
+    return NaN;
+  }
+  if (fmt === "american") {
+    if (x > 0) return 100 / (x + 100);
+    if (x < 0) return Math.abs(x) / (Math.abs(x) + 100);
+    return NaN;
+  }
   if (x > 1.5) return x / 100;
   return x;
 }
@@ -418,6 +436,8 @@ function displayRoundLabel(r, tz) {
 }
 
 async function main() {
+  const buildShotsWebOnFetch = process.env.GOLF_BUILD_SHOTS_WEB_ON_FETCH === "1";
+
   const key = loadApiKey();
   if (!key) {
     console.error(
@@ -506,14 +526,20 @@ async function main() {
     });
   }
 
+  const pretDeadHeat = (process.env.GOLF_PRE_TOURNAMENT_DEAD_HEAT || "yes").trim().toLowerCase();
+  const pretOddsFormat = (process.env.GOLF_PRE_TOURNAMENT_ODDS_FORMAT || "decimal").trim().toLowerCase();
+  const pretAddPos = (process.env.GOLF_PRE_TOURNAMENT_ADD_POSITION || "").trim();
   console.log("Fetching preds/pre-tournament…");
   let pretList = [];
   try {
-    const pret = await fetchDg(
-      "/preds/pre-tournament",
-      { tour: TOUR, dead_heat: "no", odds_format: "percent", file_format: "json" },
-      key
-    );
+    const pretParams = {
+      tour: TOUR,
+      dead_heat: pretDeadHeat === "no" ? "no" : "yes",
+      odds_format: pretOddsFormat,
+      file_format: "json",
+    };
+    if (pretAddPos) pretParams.add_position = pretAddPos;
+    const pret = await fetchDg("/preds/pre-tournament", pretParams, key);
     pretList = asArray(pret.baseline_history_fit).length
       ? asArray(pret.baseline_history_fit)
       : asArray(pret.baseline).length
@@ -528,11 +554,11 @@ async function main() {
     const id = num(row.dg_id ?? row.id ?? row.dgId, NaN);
     if (!Number.isFinite(id)) continue;
     pretByDg.set(Math.round(id), {
-      win: normProb01(row.win),
-      top_5: normProb01(row.top_5),
-      top_10: normProb01(row.top_10),
-      top_20: normProb01(row.top_20),
-      make_cut: normProb01(row.make_cut),
+      win: normProb01(row.win, pretOddsFormat),
+      top_5: normProb01(row.top_5, pretOddsFormat),
+      top_10: normProb01(row.top_10, pretOddsFormat),
+      top_20: normProb01(row.top_20, pretOddsFormat),
+      make_cut: normProb01(row.make_cut, pretOddsFormat),
     });
   }
 
@@ -566,6 +592,8 @@ async function main() {
     if (!Number.isFinite(fairways))
       fairways = Math.max(4, Math.min(N_FAIRWAY_HOLES, 0.55 * N_FAIRWAY_HOLES - 0.15 * stpVec));
 
+    const putts = Math.max(22, Math.min(35, 28.5 + 0.32 * stpVec - 0.1 * (gir - 11)));
+
     const pt = pretByDg.get(id) || {};
     base.push({
       dg_id: id,
@@ -580,6 +608,7 @@ async function main() {
       doubles,
       gir,
       fairways,
+      putts,
       win: pt.win,
       top_5: pt.top_5,
       top_10: pt.top_10,
@@ -598,6 +627,14 @@ async function main() {
   const dr = ouDisplayRoundAuto(new Date(), tz);
   const roundMuMult = parseRoundMuMult();
 
+  function stripGirFairwaysPuttsIfTiny(o) {
+    if (!o || typeof o !== "object") return;
+    for (const k of ["gir", "fairways", "putts"]) {
+      const v = o[k];
+      if (v === 0 || v === 1) delete o[k];
+    }
+  }
+
   const players = [];
   for (let r = 1; r <= 4; r++) {
     const mult = num(roundMuMult[r - 1], 1);
@@ -614,13 +651,14 @@ async function main() {
           doubles: row.doubles,
           gir: row.gir,
           fairways: row.fairways,
+          putts: row.putts,
         };
       } else {
         st = derivedStatsFromMuSg(row.mu_sg * mult, N_FAIRWAY_HOLES);
       }
       const stp = score_to_par(st.mu_sg);
       const ts = total_score(st.mu_sg);
-      players.push({
+      const pl = {
         dg_id: row.dg_id,
         player_name: row.player_name,
         country: row.country,
@@ -635,6 +673,7 @@ async function main() {
         round_sd: RAW_ROUND_SD,
         gir: Math.round(st.gir * 100) / 100,
         fairways: Math.round(st.fairways * 100) / 100,
+        putts: Math.round(st.putts * 100) / 100,
         eagles: Math.round(st.eagles * 1000) / 1000,
         birdies: Math.round(st.birdies * 100) / 100,
         pars: Math.round(st.pars * 100) / 100,
@@ -646,14 +685,15 @@ async function main() {
         top_20: Number.isFinite(row.top_20) ? Math.round(row.top_20 * 10000) / 10000 : null,
         make_cut: Number.isFinite(row.make_cut) ? Math.round(row.make_cut * 10000) / 10000 : null,
         course_used: course_used || undefined,
-      });
+      };
+      stripGirFairwaysPuttsIfTiny(pl);
+      players.push(pl);
     }
   }
 
   /**
-   * betting-tools/outrights — must use odds_format=percent (same as app.R).
+   * betting-tools/outrights — odds_format from GOLF_OUTRIGHTS_ODDS_FORMAT (default decimal).
    * Row list resolution matches Shiny outrights_table_data (odds → data → field → …).
-   * Each numeric book field: if value > 1 treat as 0–100 scale and divide by 100 to prob, else already prob (R: is.finite(v) && v > 1).
    */
   function outrightOddsArrayFromResponse(raw) {
     if (raw == null) return [];
@@ -668,9 +708,25 @@ async function main() {
 
   const OUTRIGHTS_ROW_SKIP_KEYS = new Set(["dg_id", "id", "player_name", "name"]);
 
-  function impliedPercentFromDgPercentField(v) {
-    if (!Number.isFinite(v)) return NaN;
-    let p = v;
+  const outrightsOddsFormat = (process.env.GOLF_OUTRIGHTS_ODDS_FORMAT || "decimal").trim().toLowerCase();
+
+  /** API numeric → implied % on 0–100 display scale (matches books in UI). */
+  function impliedPctFromOutrightsApiValue(v, oddsFormat) {
+    const x = num(v, NaN);
+    if (!Number.isFinite(x) || x <= 0) return NaN;
+    const fmt = String(oddsFormat || "decimal").toLowerCase();
+    if (fmt === "decimal") {
+      if (x > 1 && x < 20000) return (1 / x) * 100;
+      if (x > 0 && x <= 1) return x * 100;
+      return NaN;
+    }
+    if (fmt === "american") {
+      if (x > 0) return (100 / (x + 100)) * 100;
+      if (x < 0) return (Math.abs(x) / (Math.abs(x) + 100)) * 100;
+      return NaN;
+    }
+    if (fmt === "fraction") return NaN;
+    let p = x;
     if (p > 1) p /= 100;
     return p * 100;
   }
@@ -698,7 +754,7 @@ async function main() {
         if (!(alt in r)) continue;
         const pv = num(r[alt], NaN);
         if (!Number.isFinite(pv) || pv === 0) continue;
-        r.datagolf = impliedPercentFromDgPercentField(pv);
+        r.datagolf = impliedPctFromOutrightsApiValue(pv, outrightsOddsFormat);
         delete r[alt];
         break;
       }
@@ -710,7 +766,7 @@ async function main() {
       let p = num(pt[pretKey], NaN);
       if (!Number.isFinite(p)) continue;
       if (isMc) p = 1 - p;
-      const pct = impliedPercentFromDgPercentField(p);
+      const pct = Number.isFinite(p) && p > 0 ? p * 100 : NaN;
       if (Number.isFinite(pct) && pct > 0) r.datagolf = pct;
     }
   }
@@ -747,7 +803,7 @@ async function main() {
         if (Array.isArray(val) && val.length) val = val[0];
         const v = num(val, NaN);
         if (!Number.isFinite(v)) continue;
-        const pct = impliedPercentFromDgPercentField(v);
+        const pct = impliedPctFromOutrightsApiValue(v, outrightsOddsFormat);
         if (!Number.isFinite(pct)) continue;
         out[key] = pct;
         bookSet.add(key);
@@ -761,13 +817,15 @@ async function main() {
   const outrights = {};
   for (const m of outrightsMarkets) {
     try {
-      console.log(`Fetching betting-tools/outrights (${m}, dead_heat=${outrightDeadHeatForMarket(m)})…`);
+      console.log(
+        `Fetching betting-tools/outrights (${m}, dead_heat=${outrightDeadHeatForMarket(m)}, odds_format=${outrightsOddsFormat})…`
+      );
       const raw = await fetchDg(
         "/betting-tools/outrights",
         {
           tour: TOUR,
           market: m,
-          odds_format: "percent",
+          odds_format: outrightsOddsFormat,
           dead_heat: outrightDeadHeatForMarket(m),
           file_format: "json",
         },
@@ -820,9 +878,13 @@ async function main() {
     source:
       "DataGolf API (field-updates, skill-ratings, fantasy-projection-defaults, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
     /** Web app: book columns are implied % (0–100); convert to American in UI like Shiny pct_to_american */
-    outrights_odds_format: "percent",
+    outrights_odds_format: outrightsOddsFormat,
     /** Stored raw from betting-tools/matchups with odds_format=decimal */
     matchups_odds_format: "decimal",
+    /** Same-origin browser polls only; server pushes DataGolf via serve-with-refresh pollers. */
+    projections_poll_interval_sec: 20,
+    datagolf_live_poll_interval_sec: 20,
+    poll_datagolf_live_predictions: true,
     course_par_18: COURSE_PAR_18,
     hole_pars,
     hole_pars_source,
@@ -901,7 +963,7 @@ async function main() {
   }
 
   const shotsWebScript = join(__dirname, "build-player-shots-web.mjs");
-  if (existsSync(shotsWebScript)) {
+  if (buildShotsWebOnFetch && existsSync(shotsWebScript)) {
     console.log("Building player_shots_web.json from all_shots CSV (2022+) …");
     const sr = spawnSync(process.execPath, [shotsWebScript], {
       cwd: ROOT,
@@ -909,9 +971,13 @@ async function main() {
       env: { ...process.env, GOLF_MODEL_DIR: GOLF_MODEL_ROOT },
     });
     if (sr.status !== 0) console.warn("build-player-shots-web.mjs exited with code", sr.status);
+  } else if (!buildShotsWebOnFetch) {
+    console.log(
+      "Skipping player_shots_web.json rebuild and all_shots CSV mirror (set GOLF_BUILD_SHOTS_WEB_ON_FETCH=1 to enable)."
+    );
   }
 
-  mirrorModelDataToWeb(GOLF_MODEL_ROOT, ROOT);
+  mirrorModelDataToWeb(GOLF_MODEL_ROOT, ROOT, { skipAllShotsCsv: !buildShotsWebOnFetch });
 }
 
 main().catch((e) => {

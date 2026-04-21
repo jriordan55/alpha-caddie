@@ -18,7 +18,7 @@
  * the app refetches live-in-play.json often (default ~30s) but only re-merges when the bundle token
  * changes (in-play last_update + live feed timestamps). Opt out: ?liveInPlay=0
  * or ?liveInPlayPoll=0, or meta.poll_datagolf_live_predictions: false. Poll interval: ?liveInPlayPoll=90
- * (seconds, 30–600). Never embed a DG API key in the browser.
+ * (seconds, 15–600). Never embed a DG API key in the browser.
  */
 
 const OU_HOLD = 0.048;
@@ -787,12 +787,12 @@ function datagolfLivePollIntervalMs() {
     if (q != null && String(q).trim() !== "") {
       const sec = Number(q);
       if (!Number.isFinite(sec) || sec <= 0) return 0;
-      return Math.min(600, Math.max(30, sec)) * 1000;
+      return Math.min(600, Math.max(15, sec)) * 1000;
     }
   } catch (_) {}
   const sec = num(DATA.meta?.datagolf_live_poll_interval_sec, 30);
-  if (!Number.isFinite(sec) || sec < 30) return 30 * 1000;
-  return Math.min(600, Math.max(30, sec)) * 1000;
+  if (!Number.isFinite(sec) || sec < 15) return 30 * 1000;
+  return Math.min(600, Math.max(15, sec)) * 1000;
 }
 
 /** First non-null field from row (JSON API may use snake_case or camelCase). */
@@ -7290,7 +7290,18 @@ document.addEventListener("DOMContentLoaded", () => {
       void loadProjections({ silent: true, reloadSidecar: false });
       return;
     }
-    if (datagolfLiveOverlayEnabled() && !isFileProtocol()) void fetchAndMergeDatagolfLiveInPlay();
+    if (datagolfLiveOverlayEnabled() && !isFileProtocol()) void fetchAndMergeDatagolfLiveInPlay({ force: true });
+  });
+
+  window.addEventListener("online", () => {
+    if (isFileProtocol()) return;
+    void loadProjections({ silent: true, reloadSidecar: false });
+  });
+
+  window.addEventListener("pageshow", (ev) => {
+    if (!ev.persisted || isFileProtocol()) return;
+    lastDocVisibleProjectionsRefetchAt = Date.now();
+    void loadProjections({ silent: true, reloadSidecar: false });
   });
 
   void (async () => {
