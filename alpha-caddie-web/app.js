@@ -513,8 +513,20 @@ function getModelRoundForEv() {
 function syncLbRoundToTournamentModelRound() {
   const sel = document.getElementById("lb-round");
   if (!sel || isAfterSunday8pmEt()) return false;
-  const liveR = Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
+  const mismatch = String(DATA?.meta?.datagolf_live_event_mismatch || "").trim();
+  const liveR = mismatch
+    ? NaN
+    : Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
   const dr = Math.round(num(DATA?.meta?.display_round, NaN));
+  /* Live file from a different tournament can leave the picker on R4 while projections are R1 — snap back. */
+  if (mismatch && Number.isFinite(dr) && dr >= 1 && dr <= 4) {
+    const curSnap = Math.round(num(sel.value, NaN));
+    if (!Number.isFinite(curSnap) || curSnap !== dr) {
+      sel.value = String(dr);
+      return true;
+    }
+    return false;
+  }
   let target = 0;
   if (Number.isFinite(liveR) && liveR >= 1 && liveR <= 4) target = Math.max(target, liveR);
   if (Number.isFinite(dr) && dr >= 1 && dr <= 4) target = Math.max(target, dr);
@@ -1129,6 +1141,8 @@ function mergeDatagolfInPlayPayload(j) {
     if (DATA.meta) {
       DATA.meta.datagolf_live_event_mismatch = `${inPlayEvent} vs ${modelEvent}`;
       DATA.meta.datagolf_live_placement_rows_merged = 0;
+      /* Stale live bundle (wrong week) must not leave R4 etc. on meta — that forces post-cut UI off pre-tournament rows. */
+      delete DATA.meta.datagolf_live_current_round;
     }
     return metaTouched;
   }
@@ -1381,7 +1395,8 @@ function getOuRound() {
 
 /** Max of live DG round, export display_round, and O/U picker — drives post-cut list filtering. */
 function tournamentMaxEffectiveRound() {
-  const liveR = Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
+  const mm = String(DATA?.meta?.datagolf_live_event_mismatch || "").trim();
+  const liveR = mm ? NaN : Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
   const dr = Math.round(num(DATA?.meta?.display_round, NaN));
   const ou = Math.round(getOuRound());
   return Math.max(
@@ -1409,6 +1424,8 @@ function isPlayerEliminatedFromEvent(playerRow) {
   if (mc === false) return true;
   if (mc === true) return false;
   if (typeof mc === "boolean") return !mc;
+  /* Number(null)===0 — null/undefined make_cut must mean “unknown”, not missed cut (clears every tab in post-cut phase). */
+  if (mc == null || mc === "") return false;
   const n = num(mc, NaN);
   if (Number.isFinite(n) && n <= 0) return true;
   const pos = String(playerRow.current_pos || "");
