@@ -4577,6 +4577,26 @@ function filteredHistoryRounds(dgId) {
     );
   }
   list = list.filter((r) => !historyRoundIsPlaceholderAllMarketsZero(r));
+  /* Current-course + event filter can yield zero rows (rookies, first-time venue) — fall back to recent form. */
+  if (courseFilterOn() && !list.length) {
+    list = historyRoundsForDg(dgId).filter((r) => !historyRoundIsPlaceholderAllMarketsZero(r));
+    if (courseFilter) {
+      list = list.filter((r) => String(r.course_name || "").trim().toLowerCase() === courseFilter);
+    }
+    if (tempBucket) {
+      list = list.filter((r) => weatherRangeMatch("temp", tempBucket, parseWeatherNumber(r?.pga_meta_weather_temp_f ?? r?.weather_temp_f)));
+    }
+    if (windBucket) {
+      list = list.filter((r) => weatherRangeMatch("wind", windBucket, parseWeatherNumber(r?.pga_meta_weather_wind_mph ?? r?.weather_wind_mph)));
+    }
+    if (humidityBucket) {
+      list = list.filter((r) =>
+        weatherRangeMatch("humidity", humidityBucket, parseWeatherNumber(r?.pga_meta_weather_humidity ?? r?.weather_humidity))
+      );
+    }
+    list.sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
+    list = list.slice(0, 60);
+  }
   list.sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
   return list;
 }
@@ -5932,19 +5952,34 @@ function hangoutHistoryPriorThree(dgId, courseUsed, eventName) {
   const rec = HISTORY.byDgId && HISTORY.byDgId[String(dgId)];
   if (!rec || !Array.isArray(rec.rounds) || !rec.rounds.length) return null;
   const needle = String(courseUsed || "").trim().toLowerCase();
-  let rounds = needle
-    ? rec.rounds.filter((r) => {
-        const c = String(r.course_name || "").trim().toLowerCase();
-        return c && (c.includes(needle) || needle.includes(c.slice(0, Math.min(10, c.length))));
-      })
-    : rec.rounds.slice(0, 120);
   const evN = String(eventName || "").trim().toLowerCase();
-  if (evN && rounds.length) {
-    const evF = rounds.filter((r) => {
+  const byVenue = (arr) =>
+    needle
+      ? arr.filter((r) => {
+          const c = String(r.course_name || "").trim().toLowerCase();
+          return c && (c.includes(needle) || needle.includes(c.slice(0, Math.min(10, c.length))));
+        })
+      : arr.slice(0, 120);
+  const byEvent = (arr) => {
+    if (!evN || !arr.length) return arr;
+    const evF = arr.filter((r) => {
       const en = String(r.event_name || "").trim().toLowerCase();
       return en && (en.includes(evN.slice(0, 14)) || evN.includes(en.slice(0, 10)));
     });
-    if (evF.length) rounds = evF;
+    return evF.length ? evF : arr;
+  };
+  const sortedCareer = () =>
+    rec.rounds
+      .filter((r) => r && !historyRoundIsPlaceholderAllMarketsZero(r))
+      .sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a))
+      .slice(0, 100);
+  let rounds = byEvent(byVenue(rec.rounds));
+  /* New venue / rookies: no prior rounds on this course — use same-event anywhere, then recent career. */
+  if (!rounds.length && needle && evN) {
+    rounds = byEvent(rec.rounds.filter((r) => !historyRoundIsPlaceholderAllMarketsZero(r)));
+  }
+  if (!rounds.length && needle) {
+    rounds = sortedCareer();
   }
   if (!rounds.length) return null;
   let b = 0;
@@ -6124,13 +6159,18 @@ function hangoutZeroYdsIfGreenLie() {
 
 /** Official Augusta National 18-hole par layout (par 72). Used when meta is still generic. */
 const AUGUSTA_NATIONAL_HOLE_PARS = Object.freeze([4, 5, 4, 3, 4, 3, 4, 5, 4, 4, 4, 3, 5, 4, 5, 3, 4, 4]);
+/** TPC Louisiana (Zurich Classic host) — PGA Tour scorecard; used when hole_pars_source is still generic. */
+const TPC_LOUISIANA_HOLE_PARS = Object.freeze([4, 5, 3, 4, 4, 4, 5, 4, 3, 4, 5, 4, 4, 3, 4, 4, 3, 5]);
 
 function parseHoleParsMeta() {
   const vn = String(DATA.meta?.course_used || "").trim().toLowerCase();
   const ev = String(DATA.meta?.event_name || "").trim().toLowerCase();
   const augustaContext = vn.includes("augusta") || ev.includes("masters");
+  const zurichTpcContext =
+    vn.includes("tpc louisiana") || ev.includes("zurich classic") || ev.includes("new orleans");
   const src = String(DATA.meta?.hole_pars_source || "").toLowerCase();
   if (augustaContext && src === "generic") return [...AUGUSTA_NATIONAL_HOLE_PARS];
+  if (zurichTpcContext && src === "generic") return [...TPC_LOUISIANA_HOLE_PARS];
 
   const hp = DATA.meta.hole_pars;
   if (Array.isArray(hp) && hp.length >= 18) return hp.slice(0, 18).map((x) => Math.round(num(x, 4)));

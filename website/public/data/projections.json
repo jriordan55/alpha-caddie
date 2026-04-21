@@ -3,7 +3,7 @@
   "course_used": "TPC Louisiana",
   "display_round": 1,
   "display_round_label": "R1 — next Thursday (auto, America/New_York)",
-  "updated_at": "2026-04-21T22:36:38Z",
+  "updated_at": "2026-04-21T23:02:31Z",
   "source": "DataGolf API (field-updates, skill-ratings, fantasy-projection-defaults, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "decimal",
   "matchups_odds_format": "decimal",
@@ -13,25 +13,25 @@
   "course_par_18": 72,
   "hole_pars": [
     4,
-    4,
+    5,
     3,
+    4,
     4,
     4,
     5,
     4,
     3,
     4,
+    5,
     4,
     4,
     3,
     4,
-    4,
-    5,
     4,
     3,
     5
   ],
-  "hole_pars_source": "generic",
+  "hole_pars_source": "bundled",
   "players": [
     {
       "dg_id": 17646,
@@ -25249,5 +25249,5 @@
       "match_list": "No 3_balls being offered right now."
     }
   },
-  "book_odds_refreshed_at": "2026-04-21T22:36:38Z"
+  "book_odds_refreshed_at": "2026-04-21T23:02:31Z"
 }
