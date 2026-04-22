@@ -3885,10 +3885,11 @@ function modelProbOutrightMarket(rowPlayer, marketKey) {
             : marketKey === "make_cut" || marketKey === "mc"
               ? "make_cut"
               : "win";
-  const raw = num(rowPlayer[col], NaN);
-  if (!Number.isFinite(raw)) return NaN;
-  let baseP = datagolfModelProb01(raw);
-  if (!Number.isFinite(baseP)) return NaN;
+  const rawVal = rowPlayer ? rowPlayer[col] : undefined;
+  /* Number(null)===0: null/blank placement fields must be treated as missing, not near-zero event odds. */
+  if (rawVal == null || rawVal === "") return NaN;
+  let baseP = datagolfModelProb01(rawVal);
+  if (!Number.isFinite(baseP) || baseP <= 0) return NaN;
   if (marketKey === "win" && outrightLiveTournamentContext()) {
     const id = Math.round(num(rowPlayer?.dg_id, NaN));
     const sm = outrightFieldScoreSoftmaxWinMap();
