@@ -264,16 +264,50 @@ function spawnScript(scriptPath, taskLabel, opts = {}) {
   return bg;
 }
 
-function etWeekdayShort(now = new Date()) {
+function readJsonFileSafe(p) {
+  if (!fs.existsSync(p)) return null;
   try {
-    const wd = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", weekday: "short" }).format(now);
-    return String(wd || "").slice(0, 3);
+    return JSON.parse(fs.readFileSync(p, "utf8"));
   } catch {
-    return "Mon";
+    return null;
   }
 }
 
-/** One projections pipeline: pre-round (Mon-Wed) -> live (Thu-Sun) in ET. */
+function normEventName(s) {
+  return String(s || "")
+    .toLowerCase()
+    .replace(/\b(the|pga|liv\s*golf|dp\s*world)\b/g, " ")
+    .replace(/\b(championship|tournament|invitational|classic|open)\b/g, " ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function eventsLikelySame(a, b) {
+  const x = normEventName(a);
+  const y = normEventName(b);
+  if (!x || !y) return false;
+  if (x === y || x.includes(y) || y.includes(x)) return true;
+  const xt = x.split(" ").filter((t) => t.length >= 4);
+  const yt = y.split(" ").filter((t) => t.length >= 4);
+  if (!xt.length || !yt.length) return false;
+  const hit = xt.filter((t) => yt.some((u) => u.includes(t) || t.includes(u))).length;
+  return hit >= Math.min(2, Math.min(xt.length, yt.length));
+}
+
+function inferLiveModeFromFiles() {
+  const proj = readJsonFileSafe(path.join(WEB_ROOT, "projections.json")) || {};
+  const live = readJsonFileSafe(path.join(WEB_ROOT, "live-in-play.json")) || {};
+  const projEvent = String(proj.event_name || "").trim();
+  const info = live && typeof live.info === "object" ? live.info : {};
+  const liveEvent = String(info.event_name || live.event_name || live?.live_tournament_stats?.event_name || "").trim();
+  const liveRound = Number(info.current_round);
+  const rows = Array.isArray(live.data) ? live.data.length : 0;
+  const eventAligned = eventsLikelySame(projEvent, liveEvent);
+  return eventAligned && Number.isFinite(liveRound) && liveRound >= 1 && liveRound <= 4 && rows > 0;
+}
+
+/** One projections pipeline: follow DataGolf state (pre-round until in-play aligns, then live). */
 function startUnifiedProjectionPipeline() {
   const enabled = String(process.env.GOLF_UNIFIED_PROJECTIONS_PIPELINE || "1").trim() !== "0";
   if (!enabled) return false;
@@ -285,14 +319,11 @@ function startUnifiedProjectionPipeline() {
 
   const preMs = Math.max(1_800_000, Number(process.env.GOLF_PRE_ROUND_PROJECTIONS_POLL_MS || 21_600_000));
   const liveMs = Math.max(30_000, Number(process.env.GOLF_LIVE_PROJECTIONS_POLL_MS || 60_000));
+  const probeMs = Math.max(30_000, Math.min(liveMs, Number(process.env.GOLF_LIVE_PROBE_POLL_MS || 60_000)));
   let mode = "";
   let busy = false;
   let lastNoKeyLog = 0;
-
-  const inLiveWindow = () => {
-    const wd = etWeekdayShort();
-    return wd === "Thu" || wd === "Fri" || wd === "Sat" || wd === "Sun";
-  };
+  let lastPreRunAt = 0;
   const logNoKeyThrottled = () => {
     const now = Date.now();
     if (now - lastNoKeyLog > 600_000) {
@@ -308,51 +339,54 @@ function startUnifiedProjectionPipeline() {
       logNoKeyThrottled();
       return;
     }
-    const nextMode = inLiveWindow() ? "live" : "pre";
-    if (nextMode !== mode) {
-      mode = nextMode;
-      if (mode === "live") {
-        console.log("[alpha-caddie-web] Unified pipeline mode=live (Thu-Sun ET): fetch:in-play + fetch:book-odds.");
-      } else {
-        console.log("[alpha-caddie-web] Unified pipeline mode=pre-round (Mon-Wed ET): fetch:dg.");
-      }
-    }
     busy = true;
-    if (mode === "pre") {
-      const job = spawnScript(fetchDgScript, "fetch:dg", { logNoKey: false });
-      if (!job) {
-        busy = false;
-        return;
-      }
-      job.on("exit", () => {
-        busy = false;
-      });
-      return;
-    }
-    const liveJob = spawnScript(inPlayScript, "fetch:in-play", { logNoKey: false });
-    const bookJob = spawnScript(bookScript, "fetch:book-odds", { logNoKey: false });
-    if (!liveJob && !bookJob) {
+    // Always probe DataGolf in-play first so mode follows their feed, not calendar assumptions.
+    const probe = spawnScript(inPlayScript, "fetch:in-play", { logNoKey: false });
+    if (!probe) {
       busy = false;
       return;
     }
-    let pending = 0;
-    const onDone = () => {
-      pending -= 1;
-      if (pending <= 0) busy = false;
-    };
-    if (liveJob) {
-      pending += 1;
-      liveJob.on("exit", onDone);
-    }
-    if (bookJob) {
-      pending += 1;
-      bookJob.on("exit", onDone);
-    }
+    probe.on("exit", () => {
+      const nextMode = inferLiveModeFromFiles() ? "live" : "pre";
+      const now = Date.now();
+      if (nextMode !== mode) {
+        mode = nextMode;
+        if (nextMode === "live") {
+          console.log("[alpha-caddie-web] Unified pipeline mode=live (DataGolf in-play aligned): fetch:in-play + fetch:book-odds.");
+        } else {
+          console.log("[alpha-caddie-web] Unified pipeline mode=pre-round (DataGolf not live/aligned): fetch:dg.");
+        }
+      }
+      if (nextMode === "live") {
+        const bookJob = spawnScript(bookScript, "fetch:book-odds", { logNoKey: false });
+        if (!bookJob) {
+          busy = false;
+          return;
+        }
+        bookJob.on("exit", () => {
+          busy = false;
+        });
+        return;
+      }
+      if (now - lastPreRunAt < preMs) {
+        busy = false;
+        return;
+      }
+      lastPreRunAt = now;
+      const preJob = spawnScript(fetchDgScript, "fetch:dg", { logNoKey: false });
+      if (!preJob) {
+        busy = false;
+        return;
+      }
+      preJob.on("exit", () => {
+        busy = false;
+      });
+    });
   };
 
   const scheduler = () => {
     runTick();
-    const wait = inLiveWindow() ? liveMs : preMs;
+    const wait = mode === "live" ? liveMs : probeMs;
     setTimeout(scheduler, wait);
   };
   scheduler();
@@ -361,6 +395,8 @@ function startUnifiedProjectionPipeline() {
     Math.round(preMs / 1000),
     "s; live poll:",
     Math.round(liveMs / 1000),
+    "s; live probe:",
+    Math.round(probeMs / 1000),
     "s. Disable with GOLF_UNIFIED_PROJECTIONS_PIPELINE=0."
   );
   return true;
