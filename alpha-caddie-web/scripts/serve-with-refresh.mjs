@@ -30,6 +30,9 @@
  *   GOLF_SKIP_BOOK_ODDS_ON_START=1 — skip book odds fetch on start
  *   GOLF_SKIP_BOOK_ODDS_POLL_SERVER=1 — do not refresh betting-tools odds into projections.json while serving
  *   GOLF_BOOK_ODDS_SERVER_POLL_MS — book odds + DK round props poll in ms (default 60000, min 45000)
+ *   GOLF_UNIFIED_PROJECTIONS_PIPELINE=1 — single scheduler: pre-round fetch:dg before Thursday ET, then live fetch:in-play + fetch:book-odds from Thursday onward.
+ *   GOLF_PRE_ROUND_PROJECTIONS_POLL_MS — unified pre-round fetch:dg interval (default 21600000; min 1800000)
+ *   GOLF_LIVE_PROJECTIONS_POLL_MS — unified live tick interval for in-play + book odds (default 60000; min 30000)
  *   GOLF_HISTORICAL_ROUNDS_LIGHT=1 — destructive: trim CSV to last 2 seasons (avoid unless you mean it)
  *   GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS=N — partial API refresh only
  *   ALPHA_CADDIE_START_FETCH_DG=1 — run full fetch:dg instead of rounds+history only
@@ -242,6 +245,127 @@ const child = spawn("npx", ["--yes", "serve", ".", "-p", port], {
   env: process.env,
 });
 
+function spawnScript(scriptPath, taskLabel, opts = {}) {
+  if (!fs.existsSync(scriptPath)) return null;
+  const key = loadApiKey();
+  if (!key) {
+    if (opts.logNoKey !== false) console.warn(`[alpha-caddie-web] No DATAGOLF_API_KEY — skipping ${taskLabel}.`);
+    return null;
+  }
+  const bg = spawn(process.execPath, [scriptPath], {
+    cwd: WEB_ROOT,
+    stdio: ["ignore", "inherit", "inherit"],
+    env: { ...process.env, GOLF_MODEL_DIR: REPO_ROOT, DATAGOLF_API_KEY: key },
+  });
+  bg.on("error", (err) => console.warn(`[alpha-caddie-web] ${taskLabel} spawn error:`, err.message));
+  bg.on("exit", (code) => {
+    if (code !== 0 && code != null) console.warn(`[alpha-caddie-web] ${taskLabel} exited`, code);
+  });
+  return bg;
+}
+
+function etWeekdayShort(now = new Date()) {
+  try {
+    const wd = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", weekday: "short" }).format(now);
+    return String(wd || "").slice(0, 3);
+  } catch {
+    return "Mon";
+  }
+}
+
+/** One projections pipeline: pre-round (Mon-Wed) -> live (Thu-Sun) in ET. */
+function startUnifiedProjectionPipeline() {
+  const enabled = String(process.env.GOLF_UNIFIED_PROJECTIONS_PIPELINE || "1").trim() !== "0";
+  if (!enabled) return false;
+
+  const fetchDgScript = path.join(WEB_ROOT, "scripts", "fetch-datagolf.mjs");
+  const inPlayScript = path.join(WEB_ROOT, "scripts", "fetch-live-in-play.mjs");
+  const bookScript = path.join(WEB_ROOT, "scripts", "fetch-book-odds-into-projections.mjs");
+  if (!fs.existsSync(fetchDgScript) || !fs.existsSync(inPlayScript) || !fs.existsSync(bookScript)) return false;
+
+  const preMs = Math.max(1_800_000, Number(process.env.GOLF_PRE_ROUND_PROJECTIONS_POLL_MS || 21_600_000));
+  const liveMs = Math.max(30_000, Number(process.env.GOLF_LIVE_PROJECTIONS_POLL_MS || 60_000));
+  let mode = "";
+  let busy = false;
+  let lastNoKeyLog = 0;
+
+  const inLiveWindow = () => {
+    const wd = etWeekdayShort();
+    return wd === "Thu" || wd === "Fri" || wd === "Sat" || wd === "Sun";
+  };
+  const logNoKeyThrottled = () => {
+    const now = Date.now();
+    if (now - lastNoKeyLog > 600_000) {
+      lastNoKeyLog = now;
+      console.warn("[alpha-caddie-web] No DATAGOLF_API_KEY — unified projections pipeline tick skipped.");
+    }
+  };
+
+  const runTick = () => {
+    if (busy) return;
+    const key = loadApiKey();
+    if (!key) {
+      logNoKeyThrottled();
+      return;
+    }
+    const nextMode = inLiveWindow() ? "live" : "pre";
+    if (nextMode !== mode) {
+      mode = nextMode;
+      if (mode === "live") {
+        console.log("[alpha-caddie-web] Unified pipeline mode=live (Thu-Sun ET): fetch:in-play + fetch:book-odds.");
+      } else {
+        console.log("[alpha-caddie-web] Unified pipeline mode=pre-round (Mon-Wed ET): fetch:dg.");
+      }
+    }
+    busy = true;
+    if (mode === "pre") {
+      const job = spawnScript(fetchDgScript, "fetch:dg", { logNoKey: false });
+      if (!job) {
+        busy = false;
+        return;
+      }
+      job.on("exit", () => {
+        busy = false;
+      });
+      return;
+    }
+    const liveJob = spawnScript(inPlayScript, "fetch:in-play", { logNoKey: false });
+    const bookJob = spawnScript(bookScript, "fetch:book-odds", { logNoKey: false });
+    if (!liveJob && !bookJob) {
+      busy = false;
+      return;
+    }
+    let pending = 0;
+    const onDone = () => {
+      pending -= 1;
+      if (pending <= 0) busy = false;
+    };
+    if (liveJob) {
+      pending += 1;
+      liveJob.on("exit", onDone);
+    }
+    if (bookJob) {
+      pending += 1;
+      bookJob.on("exit", onDone);
+    }
+  };
+
+  const scheduler = () => {
+    runTick();
+    const wait = inLiveWindow() ? liveMs : preMs;
+    setTimeout(scheduler, wait);
+  };
+  scheduler();
+  console.log(
+    "[alpha-caddie-web] Unified projections pipeline enabled. pre-round poll:",
+    Math.round(preMs / 1000),
+    "s; live poll:",
+    Math.round(liveMs / 1000),
+    "s. Disable with GOLF_UNIFIED_PROJECTIONS_PIPELINE=0."
+  );
+  return true;
+}
+
 function startLiveInPlayDiskPoller() {
   if (process.env.GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER === "1") {
     console.log("[alpha-caddie-web] GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER=1 — live-in-play disk poller off.");
@@ -287,7 +411,8 @@ function startLiveInPlayDiskPoller() {
     "s (DataGolf preds/in-play + scores). Key re-read each tick. Set GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER=1 to disable."
   );
 }
-startLiveInPlayDiskPoller();
+const usingUnifiedPipeline = startUnifiedProjectionPipeline();
+if (!usingUnifiedPipeline) startLiveInPlayDiskPoller();
 
 function startBookOddsDiskPoller() {
   if (process.env.GOLF_SKIP_BOOK_ODDS_POLL_SERVER === "1") {
@@ -336,7 +461,7 @@ function startBookOddsDiskPoller() {
     "s (API key re-read each tick). Set GOLF_SKIP_BOOK_ODDS_POLL_SERVER=1 to disable."
   );
 }
-startBookOddsDiskPoller();
+if (!usingUnifiedPipeline) startBookOddsDiskPoller();
 
 /** Optional full projections rebuild from DataGolf (field + model rows). Min interval 5 minutes; skips overlapping runs. */
 function startFetchDgDiskPoller() {
@@ -386,7 +511,7 @@ function startFetchDgDiskPoller() {
     "s (GOLF_FETCH_DG_SERVER_POLL_MS). Heavy — raise interval if needed."
   );
 }
-startFetchDgDiskPoller();
+if (!usingUnifiedPipeline) startFetchDgDiskPoller();
 
 child.on("exit", (code, signal) => {
   if (signal) process.kill(process.pid, signal);
