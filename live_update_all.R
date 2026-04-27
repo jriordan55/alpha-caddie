@@ -24,9 +24,10 @@
 #    Target: C:\Users\student\Documents\golfModel\data\historical_matchups_outcomes.csv
 #    Only adds 2026 rows if not already present (existing year-2026 rows replaced by fresh fetch).
 #
-# 4) data/all_shots_2021_2026.csv (+ data/all_shots_progress.rds)
+# 4) data/all_shots_2022_2026.csv (+ data/all_shots_progress.rds)
 #    pgatouR only (not DataGolf): backfill tournaments with schedule end date after the latest
-#    end date among IDs already in the CSV, through today. See helper.R: backfill_shots_after_csv_anchor().
+#    end date among IDs already in the CSV, through today. Schedules are pulled only for seasons
+#    from the earliest year in the CSV (min 2022) through the current year. See helper.R: backfill_shots_after_csv_anchor().
 
 library(httr)
 library(jsonlite)
@@ -453,8 +454,8 @@ update_matchups_2026 <- function(try_year) {
   invisible(nrow(new_rows))
 }
 
-# ---- 4) Shot-by-shot (pgatouR only): backfill -> data/all_shots_2021_2026.csv ----
-PATH_SHOTS <- normalizePath(file.path(MODEL_DIR, "data", "all_shots_2021_2026.csv"), mustWork = FALSE)
+# ---- 4) Shot-by-shot (pgatouR only): backfill -> data/all_shots_2022_2026.csv ----
+PATH_SHOTS <- normalizePath(file.path(MODEL_DIR, "data", "all_shots_2022_2026.csv"), mustWork = FALSE)
 PATH_SHOTS_PROGRESS <- normalizePath(file.path(MODEL_DIR, "data", "all_shots_progress.rds"), mustWork = FALSE)
 
 #' Backfill shot rows after latest schedule date in CSV through today (pgatouR). Continues on failure.

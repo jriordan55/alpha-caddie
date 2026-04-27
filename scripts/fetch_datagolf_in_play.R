@@ -42,7 +42,7 @@ load_datagolf_api_key <- function(root = model_dir) {
 primary_tour <- if (length(commandArgs(trailingOnly = TRUE))) {
   trimws(as.character(commandArgs(trailingOnly = TRUE)[1]))
 } else {
-  trimws(Sys.getenv("GOLF_DATAGOLF_TOUR", "pga"))
+  trimws(Sys.getenv("GOLF_DATAGOLF_TOUR", Sys.getenv("GOLF_TOUR", "pga")))
 }
 if (!nzchar(primary_tour)) primary_tour <- "pga"
 fallback_tour <- trimws(Sys.getenv("GOLF_IN_PLAY_FALLBACK_TOUR", "opp"))

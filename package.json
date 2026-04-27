@@ -5,6 +5,7 @@
   "scripts": {
     "start": "npm start --prefix alpha-caddie-web",
     "dev": "npm run dev --prefix alpha-caddie-web",
+    "start:web:fast": "npm run start:fast --prefix alpha-caddie-web",
     "build:history": "npm run build:history --prefix alpha-caddie-web",
     "build:shots-web": "npm run build:shots-web --prefix alpha-caddie-web",
     "embed:history": "npm run embed:history --prefix alpha-caddie-web",
@@ -12,6 +13,10 @@
     "update:rounds": "npm run update:rounds --prefix alpha-caddie-web",
     "sync:rounds-csv": "npm run sync:rounds-csv --prefix alpha-caddie-web",
     "fetch:book-odds": "npm run fetch:book-odds --prefix alpha-caddie-web",
+    "perfect": "npm run perfect --prefix alpha-caddie-web",
+    "update:shots-aggregate": "npm run refresh:shots --prefix alpha-caddie-web",
+    "projections:sim": "node scripts/run-projections-sim.mjs",
+    "projections:sim:fast": "node scripts/run-projections-sim.mjs --fast",
     "push:live-once": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/live-in-play-push-once.ps1",
     "push:live-loop": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/tournament-live-push-loop.ps1"
   }

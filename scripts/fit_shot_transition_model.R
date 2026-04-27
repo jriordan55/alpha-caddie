@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-# Fit empirical shot transition model from all_shots_2021_2026.csv -> data/shot_transition_model.rds
+# Fit empirical shot transition model from all_shots_2022_2026.csv -> data/shot_transition_model.rds
 # Uses SELECTED_COURSE: env SELECTED_COURSE, golf_selected_course.txt, or course_table.csv.
 # Shot filtering (in order): (1) pgatouR tournament_ids that DataGolf historical data ties to SELECTED_COURSE
 #   via pga_datagolf_tournament_map.csv; (2) else pgatouR schedule course_name; (3) else tour-wide.
@@ -32,7 +32,7 @@ source(file.path(repo_root, "R", "course_context.R"))
 source(file.path(repo_root, "R", "tournament_pga_datagolf_mapping.R"))
 source(file.path(repo_root, "R", "shot_level_model.R"))
 
-shots_path <- file.path(repo_root, "data", "all_shots_2021_2026.csv")
+shots_path <- file.path(repo_root, "data", "all_shots_2022_2026.csv")
 if (!file.exists(shots_path)) stop("Missing ", shots_path)
 
 selected <- read_selected_course(repo_root)

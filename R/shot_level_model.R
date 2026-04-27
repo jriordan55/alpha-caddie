@@ -1,5 +1,5 @@
 # Shot-level empirical model for round / tournament score distributions.
-# Uses all_shots_2021_2026.csv: resamples realized shot outcomes conditional on (lie, distance-to-hole bin).
+# Uses all_shots_2022_2026.csv: resamples realized shot outcomes conditional on (lie, distance-to-hole bin).
 #
 # Notation: distance_remaining on each row = yards (or ft/in) TO THE HOLE AFTER that stroke completes.
 #

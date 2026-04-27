@@ -150,7 +150,7 @@ refresh_current_course_hole_template <- function(model_dir, selected_course) {
   if (is.na(selected_course) || !nzchar(trimws(as.character(selected_course)))) return(NULL)
   selected_course <- trimws(as.character(selected_course))
 
-  shots_path <- file.path(model_dir, "data", "all_shots_2021_2026.csv")
+  shots_path <- file.path(model_dir, "data", "all_shots_2022_2026.csv")
   sched_path <- file.path(model_dir, "data", "pga_tournament_course_map.csv")
   if (!file.exists(shots_path)) {
     tpl <- course_hole_template_from_course_table(model_dir, selected_course)

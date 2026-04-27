@@ -1,0 +1,664 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5VPJT5JF');</script>
+<!-- End Google Tag Manager -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Complete your secure checkout to access premium features">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Secure Checkout | BallparkPal</title>
+    <link rel="icon" type="image/png" href="Images/MainLogo.png">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://js.whop.com">
+    
+    <!-- Whop Checkout Script -->
+    <script 
+        async 
+        defer 
+        src="https://js.whop.com/static/checkout/loader.js">
+    </script>
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary-color: #0275d8;
+            --primary-dark: #025aa5;
+            --text-primary: #333;
+            --text-secondary: #666;
+            --bg-primary: #f8f9fa;
+            --bg-white: #ffffff;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .checkout-wrapper {
+            width: 100%;
+            max-width: 700px;
+            margin: auto;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .checkout-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .checkout-top-row .plan-heading {
+            flex: 1;
+            padding-right: 90px;
+        }
+
+        .checkout-top-row .plan-heading h2 {
+            margin-bottom: 4px;
+            color: var(--text-primary);
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .checkout-top-row .plan-heading p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .checkout-logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+            transition: var(--transition);
+        }
+
+        .checkout-logo:hover {
+            opacity: 0.85;
+        }
+
+        .checkout-logo img {
+            max-width: 80px;
+            height: auto;
+        }
+
+        .checkout-container {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .checkout-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+        }
+
+        .checkout-content {
+            padding: 32px;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .checkout-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 500px;
+            color: var(--text-secondary);
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .whop-checkout-embed {
+            flex: 1;
+            min-height: 500px;
+        }
+
+        .whop-checkout-embed > * {
+            width: 100% !important;
+            min-height: 500px;
+        }
+
+        .plan-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 8px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .plan-card {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: rgba(2, 117, 216, 0.1);
+            touch-action: manipulation;
+            text-align: left;
+        }
+
+        .plan-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--primary-color);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .plan-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+            transform: translateX(4px);
+        }
+
+        .plan-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .plan-card:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(2, 117, 216, 0.15);
+        }
+
+        .plan-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .plan-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .plan-icon svg {
+            width: 22px;
+            height: 22px;
+            fill: white;
+        }
+
+        .plan-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+            flex: 1;
+        }
+
+        .plan-price {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1;
+            letter-spacing: -0.5px;
+            flex-shrink: 0;
+        }
+
+        .plan-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin: 0;
+            padding-left: 56px;
+        }
+
+        @media (max-width: 600px) {
+            .checkout-top-row .plan-heading {
+                padding-right: 60px;
+            }
+
+            .checkout-top-row .plan-heading h2 {
+                font-size: 22px;
+            }
+
+            .checkout-top-row .plan-heading p {
+                font-size: 15px;
+            }
+
+            .desktop-only {
+                display: none;
+            }
+
+            .checkout-logo {
+                top: 16px;
+                right: 16px;
+            }
+
+            .checkout-logo img {
+                max-width: 50px;
+            }
+
+            .plan-card {
+                padding: 16px;
+            }
+
+            .plan-header {
+                gap: 10px;
+            }
+
+            .plan-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 8px;
+            }
+
+            .plan-icon svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .plan-title {
+                font-size: 16px;
+            }
+
+            .plan-price {
+                font-size: 22px;
+            }
+
+            .plan-description {
+                padding-left: 50px;
+                font-size: 13px;
+                line-height: 1.45;
+            }
+
+            .plan-list {
+                gap: 14px;
+            }
+
+            .back-to-plans {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+
+            .security-badge {
+                margin-top: 20px;
+                padding-top: 20px;
+                font-size: 13px;
+            }
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .security-icon {
+            width: 20px;
+            height: 20px;
+            fill: #28a745;
+        }
+
+        .back-to-plans {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding: 10px 14px;
+            min-height: 44px;
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            background: #fff;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            -webkit-tap-highlight-color: rgba(2, 117, 216, 0.1);
+            touch-action: manipulation;
+        }
+
+        .back-to-plans:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .back-to-plans svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .debug-info {
+            margin-top: 16px;
+            padding: 12px;
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            color: #856404;
+            font-family: 'Courier New', monospace;
+            display: none;
+        }
+
+        .debug-info.active {
+            display: block;
+        }
+
+        @media (max-width: 640px) {
+            .checkout-content {
+                padding: 24px 20px;
+                min-height: auto;
+            }
+
+            .whop-checkout-embed {
+                min-height: 450px;
+            }
+
+            .whop-checkout-embed > * {
+                min-height: 450px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                min-height: 100vh;
+                min-height: 100dvh;
+                padding: 16px;
+                padding-top: max(16px, env(safe-area-inset-top));
+                padding-bottom: max(16px, env(safe-area-inset-bottom));
+                padding-left: max(12px, env(safe-area-inset-left));
+                padding-right: max(12px, env(safe-area-inset-right));
+            }
+
+            .checkout-content {
+                padding: 20px 16px;
+                min-height: auto;
+            }
+
+            .checkout-container {
+                border-radius: var(--radius-md);
+            }
+
+            .checkout-top-row .plan-heading {
+                padding-right: 50px;
+            }
+
+            .checkout-top-row .plan-heading h2 {
+                font-size: 20px;
+            }
+
+            .checkout-logo {
+                top: 14px;
+                right: 14px;
+            }
+
+            .checkout-logo img {
+                max-width: 40px;
+            }
+
+            .plan-card {
+                padding: 14px;
+                border-radius: var(--radius-sm);
+            }
+
+            .plan-card:hover {
+                transform: none;
+            }
+
+            .plan-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .plan-icon svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .plan-title {
+                font-size: 15px;
+            }
+
+            .plan-price {
+                font-size: 20px;
+            }
+
+            .plan-description {
+                padding-left: 48px;
+                font-size: 12px;
+            }
+
+            .plan-list {
+                gap: 12px;
+            }
+
+            .whop-checkout-embed {
+                min-height: 400px;
+            }
+
+            .whop-checkout-embed > * {
+                min-height: 400px;
+            }
+
+            .checkout-loading {
+                min-height: 350px;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 360px) {
+            body {
+                padding: 12px;
+                padding-top: max(12px, env(safe-area-inset-top));
+                padding-bottom: max(12px, env(safe-area-inset-bottom));
+            }
+
+            .checkout-content {
+                padding: 16px 12px;
+            }
+
+            .plan-card {
+                padding: 12px;
+            }
+
+            .plan-icon {
+                width: 32px;
+                height: 32px;
+            }
+
+            .plan-icon svg {
+                width: 16px;
+                height: 16px;
+            }
+
+            .plan-title {
+                font-size: 14px;
+            }
+
+            .plan-price {
+                font-size: 18px;
+            }
+
+            .plan-description {
+                padding-left: 44px;
+                font-size: 12px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        *:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body><a href="https://www.ballparkpal.com/cdn-cgi/content?id=AI5QwYipd5eQj9nxGg55.W35TQY3rGjZo9UURwDjFLA-1776703532.1197555-1.0.1.1-ISO228DHecHcc3bVk_x0mb4W1ZgdKS5ojlD4QG1O6w4" aria-hidden="true" rel="nofollow noopener" style="display: none !important; visibility: hidden !important"></a>
+    <div class="checkout-wrapper">
+        <div class="checkout-container">
+            <div class="checkout-content">
+                
+                                    <!-- Step 1: Plan selection -->
+                    <div class="checkout-top-row">
+                        <div class="plan-heading">
+                            <h2>Select Your Plan</h2>
+                            <p>A subscription provides full access<span class="desktop-only"> to Ballpark Pal</span></p>
+                        </div>
+                        <a href="https://ballparkpal.com" class="checkout-logo">
+                            <img src="Images/MainLogo.png" alt="BallparkPal">
+                        </a>
+                    </div>
+
+                                            <form method="post">
+                            <div class="plan-list">
+                                                                    <button
+                                        type="submit"
+                                        name="choose_plan"
+                                        value="plan_bRQl8KAOxRrMj"
+                                        class="plan-card"
+                                    >
+                                        <div class="plan-header">
+                                            <div class="plan-icon">
+                                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                                                </svg>
+                                            </div>
+                                            <div class="plan-title">
+                                                Monthly                                            </div>
+                                            <div class="plan-price">
+                                                $10                                            </div>
+                                        </div>
+                                        <p class="plan-description">
+                                            Full monthly access to Ballpark Pal                                        </p>
+                                    </button>
+                                                                    <button
+                                        type="submit"
+                                        name="choose_plan"
+                                        value="plan_FROnZPGGUEBQa"
+                                        class="plan-card"
+                                    >
+                                        <div class="plan-header">
+                                            <div class="plan-icon">
+                                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                                                </svg>
+                                            </div>
+                                            <div class="plan-title">
+                                                Annual                                            </div>
+                                            <div class="plan-price">
+                                                $60                                            </div>
+                                        </div>
+                                        <p class="plan-description">
+                                            Season-long access ($10 savings)                                        </p>
+                                    </button>
+                                                            </div>
+                        </form>
+                    
+                
+                <div class="security-badge" role="img" aria-label="Secure checkout">
+                    <svg class="security-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1ZM12 7C13.4 7 14.8 8.6 14.8 10V11.5C15.4 11.5 16 12.1 16 12.7V16.2C16 16.8 15.4 17.3 14.8 17.3H9.2C8.6 17.3 8 16.7 8 16.1V12.6C8 12 8.6 11.5 9.2 11.5V10C9.2 8.6 10.6 7 12 7ZM12 8.2C11.2 8.2 10.5 8.7 10.5 9.5V11.5H13.5V9.5C13.5 8.7 12.8 8.2 12 8.2Z" fill="currentColor"/>
+                    </svg>
+                    <span>Secure & Encrypted</span>
+                </div>
+
+                <a href="/" style="display:block;text-align:center;margin-top:16px;color:#888;font-size:13px;text-decoration:none;">&larr; Back to Home</a>
+
+                            </div>
+        </div>
+    </div>
+
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ef59eb3bbedb9a3',t:'MTc3NjcwMzUzMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+

@@ -1,21 +1,24 @@
 # round_projections.R — Standalone pipeline: field, live in-play, course, then decomp + strokes gained
 # Builds simulated_round_table from DataGolf APIs; enhances with player decomps, course fit, SG-based counts.
-# Leaderboard projections and outright model prices are tied together: section 4 runs a Monte Carlo
-# tournament simulation and overwrites win/top5/top10/top20/make_cut with empirical frequencies.
-# Default (when data/shot_transition_model.rds exists): shot-level empirical transitions from
-# all_shots (fit_shot_transition_model.R) supply round-score noise; means follow DataGolf-style
-# mu_sg + form shock per sim. Set GOLF_USE_SHOT_LEVEL_MC=0 to use Gaussian N(mu_sg, round_sd) rounds.
+# Leaderboard projections and outright model prices: section 4 runs tournament Monte Carlo for sim_* columns.
+# Merge with API placement: GOLF_PLACEMENT_SOURCE=sim (or model) prefers sim_*; default / dg prefers DataGolf
+# win/top_5/... when present (live in-play reflects the real leaderboard; sim fills only missing unless sim mode).
+# Default tournament MC: shifted log-normal residuals around mu_sg (round-level only).
+# Optional: GOLF_USE_SHOT_LEVEL_MC=1 and data/shot_transition_model.rds — shot-path empirical round noise.
 # The app can blend these with fair public odds (margin removed) for the displayed "Model" column.
 #
 # Methodology (DataGolf-aligned, no odds reverse-engineering):
-# - Skill (mu_sg) from historical data only: weighted SG average + course fit. No DataGolf win/top5/top10 odds.
+# - GOLF_RAW_PROJECTIONS=1 (default): DataGolf preds/skill-ratings for mu_sg; preds/in-play or pre-tournament for
+#   placement; round score + birdies/pars/bogeys/eagles/doubles from historical_rounds_all at SELECTED_COURSE
+#   (player×round, then field-at-course×round), then optional fantasy DK columns, then SG-shape impute + renormalize.
+# - GOLF_RAW_PROJECTIONS=0: Skill (mu_sg) from historical data only: weighted SG average + course fit. No DG win odds.
 # - Standard deviation (2026 off-season): SD varies with skill (higher skill = lower residual SD) and driving
 #   distance (longer hitters = higher variance). Driving accuracy has no meaningful predictive power for SD.
 #   Baseline SD by skill from PGA Tour residual (actual minus predicted) SG table; then combined with
 #   player's observed residual SD over last 150 rounds (modest impact) for final projected SD.
 # - Course fit: attribute-based (OTT, APP, ARG, PUTT, driving distance/accuracy) vs course profile.
-# - Counts (eagles/birdies/pars/bogeys/doubles): Monte Carlo mean from shot resampling (shot_transition_model.rds)
-#   when available; else historical per-player/course means from historical_rounds_all — no fixed delta_stp baselines.
+# - Counts (eagles/birdies/pars/bogeys/doubles): historical per-player/course means from historical_rounds_all by default.
+#   GOLF_USE_SHOT_LEVEL_PROJECTION_COUNTS=1 uses Monte Carlo from shot_transition_model.rds when a template exists.
 #   Per-round shape vs R1 from field averages at this course (round_num). GIR/fairways: shot MC uses each hole's
 #   par (par-3/4/5 rules in hole_gir_fairway_from_to_codes). Historical fallbacks scale GIR x18; fairways x
 #   (number of par-4 + par-5 holes) from the same 18-hole par vector as shot MC (shot_tpl / course layout).
@@ -95,9 +98,10 @@ if (!nzchar(API_KEY %||% "")) {
   message("DATAGOLF_API_KEY is empty and no apiKey found in alpha-caddie-web/datagolf.local.json — DataGolf feeds will fail.")
 }
 
-# Raw mode (default ON): projections = DataGolf API only (skill-ratings +/- optional fantasy defaults).
-# No historical baselines, shrinkage, course-fit, shot MC, or internal round-SG multipliers.
-# Set GOLF_RAW_PROJECTIONS=0 to restore the full pipeline.
+# Raw mode (default ON): DataGolf skill-ratings for mu_sg; preds/in-play or pre-tournament for placement;
+# optional fantasy defaults for GIR/fairways only. Round score + birdies/pars/bogeys (+ eagles/doubles)
+# come from historical_rounds_all at this course (player×round means, then field-at-course×round, then DG fantasy, then −mu_sg for score only).
+# Set GOLF_RAW_PROJECTIONS=0 to restore the full internal pipeline.
 RAW_PROJECTIONS <- tolower(trimws(Sys.getenv("GOLF_RAW_PROJECTIONS", "1"))) %in% c("1", "true", "yes")
 
 # Round override: Shiny app writes golf_next_round.txt (content "1"-"4") so script always sees selected round
@@ -159,10 +163,23 @@ next_round_locked <- is.finite(env_round) && env_round >= 1L && env_round <= 4L
 wday_et <- if (exists("wday_et")) wday_et else NA_integer_
 
 # Fetch pre-tournament predictions (for R1 reverse-engineering and fallback when in-play empty)
+# API: https://feeds.datagolf.com/preds/pre-tournament — tour, add_position, dead_heat, odds_format (see DataGolf docs).
+# Defaults: baseline_history_fit when present (course history & fit); dead_heat=yes; decimal odds (DataGolf docs).
+# Env: GOLF_DATAGOLF_TOUR / GOLF_TOUR, GOLF_PRE_TOURNAMENT_DEAD_HEAT (yes|no), GOLF_PRE_TOURNAMENT_ODDS_FORMAT
+#      (percent|decimal|american), GOLF_PRE_TOURNAMENT_ADD_POSITION (e.g. "17,23" for extra top_N columns).
 pre_tournament_table <- NULL
 fetch_pre_tournament <- function() {
   tryCatch({
-    res <- GET("https://feeds.datagolf.com/preds/pre-tournament", query = list(tour = "pga", dead_heat = "no", odds_format = "percent", file_format = "json", key = API_KEY))
+    pret_tour <- trimws(Sys.getenv("GOLF_DATAGOLF_TOUR", Sys.getenv("GOLF_TOUR", "pga")))
+    if (!nzchar(pret_tour)) pret_tour <- "pga"
+    pret_dh <- tolower(trimws(Sys.getenv("GOLF_PRE_TOURNAMENT_DEAD_HEAT", "yes")))
+    if (!pret_dh %in% c("yes", "no")) pret_dh <- "yes"
+    pret_fmt <- tolower(trimws(Sys.getenv("GOLF_PRE_TOURNAMENT_ODDS_FORMAT", "decimal")))
+    if (!pret_fmt %in% c("percent", "decimal", "american", "fraction")) pret_fmt <- "percent"
+    pret_add <- trimws(Sys.getenv("GOLF_PRE_TOURNAMENT_ADD_POSITION", ""))
+    q <- list(tour = pret_tour, dead_heat = pret_dh, odds_format = pret_fmt, file_format = "json", key = API_KEY)
+    if (nzchar(pret_add)) q$add_position <- pret_add
+    res <- GET("https://feeds.datagolf.com/preds/pre-tournament", query = q)
     if (res$status_code != 200) return(NULL)
     dat <- jsonlite::fromJSON(content(res, as = "text", encoding = "UTF-8"), flatten = TRUE, simplifyDataFrame = TRUE)
     PRET_EVENT_NAME <<- trimws(as.character(dat$event_name %||% ""))
@@ -172,12 +189,28 @@ fetch_pre_tournament <- function() {
     else if ("baseline" %in% names(dat) && is.data.frame(dat$baseline) && nrow(dat$baseline) > 0 && "dg_id" %in% names(dat$baseline))
       bl <- dat$baseline
     if (is.null(bl)) return(NULL)
-    bl <- bl %>% mutate(
-      win = as.numeric(win %||% 0), top_5 = as.numeric(top_5 %||% 0), top_10 = as.numeric(top_10 %||% 0),
-      top_20 = as.numeric(top_20 %||% 0), make_cut = as.numeric(make_cut %||% 0)
+    norm_pt_fin <- function(x) {
+      x <- suppressWarnings(as.numeric(x))
+      if (identical(pret_fmt, "decimal")) {
+        dplyr::if_else(is.finite(x) & x > 1 & x < 2000, 1 / x, dplyr::if_else(is.finite(x) & x >= 0 & x <= 1, x, NA_real_))
+      } else if (identical(pret_fmt, "american")) {
+        dplyr::case_when(
+          !is.finite(x) ~ NA_real_,
+          x > 0 ~ 100 / (x + 100),
+          x < 0 ~ abs(x) / (abs(x) + 100),
+          TRUE ~ NA_real_
+        )
+      } else {
+        dplyr::if_else(is.finite(x) & x > 1.5, x / 100, dplyr::if_else(is.finite(x) & x >= 0 & x <= 1, x, NA_real_))
+      }
+    }
+    bl <- bl %>% dplyr::mutate(
+      win = norm_pt_fin(.data$win),
+      top_5 = norm_pt_fin(.data$top_5),
+      top_10 = norm_pt_fin(.data$top_10),
+      top_20 = norm_pt_fin(.data$top_20),
+      make_cut = norm_pt_fin(.data$make_cut)
     )
-    if (any(is.finite(bl$win) & bl$win > 1.5)) bl <- bl %>% mutate(win = win / 100, top_5 = top_5 / 100, top_10 = top_10 / 100, top_20 = top_20 / 100, make_cut = make_cut / 100)
-    else bl <- bl %>% mutate(win = win / 100, top_5 = top_5 / 100, top_10 = top_10 / 100, top_20 = top_20 / 100, make_cut = make_cut / 100)
     bl
   }, error = function(e) { message("Pre-tournament fetch: ", conditionMessage(e)); NULL })
 }
@@ -213,8 +246,9 @@ schedule_match_event <- function(events, event_name) {
 
 SCHEDULE_UPCOMING_EVENTS <- fetch_schedule_upcoming_events()
 
-# preds/in-play: same params as DataGolf docs (tour, dead_heat, odds_format). Fallback tour if primary field is empty (e.g. opp opposite-field).
-DG_IN_PLAY_PRIMARY_TOUR <- trimws(Sys.getenv("GOLF_DATAGOLF_TOUR", "pga"))
+# preds/in-play: https://feeds.datagolf.com/preds/in-play — updates ~every 5 minutes during events (DataGolf).
+# Params: tour, dead_heat, odds_format. Fallback tour if primary field is empty (e.g. opp opposite-field).
+DG_IN_PLAY_PRIMARY_TOUR <- trimws(Sys.getenv("GOLF_DATAGOLF_TOUR", Sys.getenv("GOLF_TOUR", "pga")))
 if (!nzchar(DG_IN_PLAY_PRIMARY_TOUR)) DG_IN_PLAY_PRIMARY_TOUR <- "pga"
 DG_IN_PLAY_FALLBACK_TOUR <- trimws(Sys.getenv("GOLF_IN_PLAY_FALLBACK_TOUR", "opp"))
 DG_IN_PLAY_DEAD_HEAT <- trimws(Sys.getenv("GOLF_IN_PLAY_DEAD_HEAT", "no"))
@@ -640,7 +674,7 @@ if (nrow(dg) == 0) {
     if (!"doubles" %in% names(base)) base$doubles <- NA_real_
     if (!"gir" %in% names(base)) base$gir <- NA_real_
     if (!"fairways" %in% names(base)) base$fairways <- NA_real_
-    # Fantasy feed often omits pars/birdies columns or uses names we don't map — fill from mu_sg so Model O/U isn't all "—".
+    # Last-resort score-type shape from mu_sg (only used when historical + fantasy still leave gaps).
     impute_counts_from_mu_sg <- function(stp) {
       stp <- pmax(-8, pmin(8, as.numeric(stp)))
       eagles <- pmax(0, 0.15 - 0.02 * stp)
@@ -658,12 +692,6 @@ if (nrow(dg) == 0) {
         doubles = doubles * k
       )
     }
-    im <- impute_counts_from_mu_sg(-as.numeric(base$mu_sg))
-    base$eagles <- dplyr::coalesce(base$eagles, im$eagles)
-    base$birdies <- dplyr::coalesce(base$birdies, im$birdies)
-    base$pars <- dplyr::coalesce(base$pars, im$pars)
-    base$bogeys <- dplyr::coalesce(base$bogeys, im$bogeys)
-    base$doubles <- dplyr::coalesce(base$doubles, im$doubles)
     # GIR / fairways as counts when still missing (rates ~ skill)
     stp_vec <- -as.numeric(base$mu_sg)
     base$gir <- dplyr::coalesce(
@@ -674,21 +702,155 @@ if (nrow(dg) == 0) {
       base$fairways,
       pmax(4, pmin(as.numeric(n_fairway_holes), 0.55 * as.numeric(n_fairway_holes) - 0.15 * stp_vec))
     )
+    if (!exists("renormalize_counts_5", mode = "function")) {
+      source(file.path(model_dir, "R", "projection_outcome_helpers.R"), encoding = "UTF-8")
+    }
+    raw_hist_pr <- NULL
+    raw_hist_rd <- NULL
+    sk_hist <- normalize_course_name(SELECTED_COURSE %||% "")
+    hist_path_raw <- historical_rounds_all_path %||% file.path(model_dir, "data", "historical_rounds_all.csv")
+    if (nzchar(sk_hist) && file.exists(hist_path_raw)) {
+      tryCatch(
+        {
+          hr <- readr::read_csv(hist_path_raw, show_col_types = FALSE)
+          need <- intersect(
+            c(
+              "dg_id", "course_name", "year", "round_num", "round", "round_score", "course_par",
+              "birdies", "bogies", "eagles_or_better", "doubles_or_worse"
+            ),
+            names(hr)
+          )
+          if (length(need) >= 4L && all(c("dg_id", "course_name", "round_score") %in% need)) {
+            hr <- hr[, need, drop = FALSE]
+            if ("year" %in% names(hr)) {
+              cy <- as.integer(format(Sys.Date(), "%Y"))
+              hr <- hr %>% dplyr::filter(suppressWarnings(as.integer(.data$year)) >= cy - 1L | is.na(.data$year))
+            }
+            if (nrow(hr) > 45000L) hr <- hr %>% dplyr::slice_sample(n = 45000L)
+            hr <- hr %>%
+              dplyr::mutate(course_key = normalize_course_name(as.character(.data$course_name))) %>%
+              dplyr::filter(.data$course_key == sk_hist, is.finite(.data$dg_id))
+            rnd <- if ("round_num" %in% names(hr)) "round_num" else if ("round" %in% names(hr)) "round" else NULL
+            if (!is.null(rnd) && nrow(hr) > 10L) {
+              sym_r <- rlang::sym(rnd)
+              hr <- hr %>%
+                dplyr::mutate(.rn = suppressWarnings(as.integer(!!sym_r))) %>%
+                dplyr::filter(.data$.rn %in% 1L:4L)
+              raw_hist_pr <- hr %>%
+                dplyr::group_by(dg_id, .rn) %>%
+                dplyr::summarise(
+                  h_rs = mean(as.numeric(.data$round_score), na.rm = TRUE),
+                  h_bird = if ("birdies" %in% names(hr)) mean(as.numeric(.data$birdies), na.rm = TRUE) else NA_real_,
+                  h_bog = if ("bogies" %in% names(hr)) mean(as.numeric(.data$bogies), na.rm = TRUE) else NA_real_,
+                  h_eag = if ("eagles_or_better" %in% names(hr)) mean(as.numeric(.data$eagles_or_better), na.rm = TRUE) else NA_real_,
+                  h_dbl = if ("doubles_or_worse" %in% names(hr)) mean(as.numeric(.data$doubles_or_worse), na.rm = TRUE) else NA_real_,
+                  .groups = "drop"
+                ) %>%
+                dplyr::rename(round = .rn)
+              raw_hist_rd <- hr %>%
+                dplyr::group_by(.rn) %>%
+                dplyr::summarise(
+                  f_rs = mean(as.numeric(.data$round_score), na.rm = TRUE),
+                  f_bird = if ("birdies" %in% names(hr)) mean(as.numeric(.data$birdies), na.rm = TRUE) else NA_real_,
+                  f_bog = if ("bogies" %in% names(hr)) mean(as.numeric(.data$bogies), na.rm = TRUE) else NA_real_,
+                  f_eag = if ("eagles_or_better" %in% names(hr)) mean(as.numeric(.data$eagles_or_better), na.rm = TRUE) else NA_real_,
+                  f_dbl = if ("doubles_or_worse" %in% names(hr)) mean(as.numeric(.data$doubles_or_worse), na.rm = TRUE) else NA_real_,
+                  .groups = "drop"
+                ) %>%
+                dplyr::rename(round = .rn)
+            }
+          }
+        },
+        error = function(e) message("GOLF_RAW_PROJECTIONS historical course scoring: ", conditionMessage(e))
+      )
+    }
+    if (is.null(raw_hist_pr)) {
+      raw_hist_pr <- tibble::tibble(
+        dg_id = integer(), round = integer(), h_rs = numeric(), h_bird = numeric(),
+        h_bog = numeric(), h_eag = numeric(), h_dbl = numeric()
+      )
+    }
+    if (is.null(raw_hist_rd)) {
+      raw_hist_rd <- tibble::tibble(
+        round = integer(), f_rs = numeric(), f_bird = numeric(), f_bog = numeric(), f_eag = numeric(), f_dbl = numeric()
+      )
+    }
+
     list_sim <- list()
     for (r in 1L:4L) {
+      pr <- raw_hist_pr %>%
+        dplyr::filter(.data$round == r) %>%
+        dplyr::select(dg_id, h_rs, h_bird, h_bog, h_eag, h_dbl)
+      fr <- raw_hist_rd %>% dplyr::filter(.data$round == r)
+      fr_rs <- if (nrow(fr) == 1L && is.finite(fr$f_rs[1])) as.numeric(fr$f_rs[1]) else NA_real_
+      fr_bird <- if (nrow(fr) == 1L && is.finite(fr$f_bird[1])) as.numeric(fr$f_bird[1]) else NA_real_
+      fr_bog <- if (nrow(fr) == 1L && is.finite(fr$f_bog[1])) as.numeric(fr$f_bog[1]) else NA_real_
+      fr_eag <- if (nrow(fr) == 1L && is.finite(fr$f_eag[1])) as.numeric(fr$f_eag[1]) else NA_real_
+      fr_dbl <- if (nrow(fr) == 1L && is.finite(fr$f_dbl[1])) as.numeric(fr$f_dbl[1]) else NA_real_
+
       br <- base %>%
+        dplyr::left_join(pr, by = "dg_id") %>%
         dplyr::mutate(
           round = r,
           round_label = paste0("R", r, " (", weekday_names[r], ")"),
           next_round = r,
           implied_mu_sg = as.numeric(mu_sg),
           mu_sg = as.numeric(mu_sg),
-          score_to_par = -mu_sg,
+          score_to_par = dplyr::coalesce(
+            dplyr::if_else(is.finite(h_rs), as.numeric(h_rs) - as.numeric(course_par_18), NA_real_),
+            dplyr::if_else(is.finite(fr_rs), fr_rs - as.numeric(course_par_18), NA_real_),
+            -as.numeric(mu_sg)
+          ),
+          eagles = dplyr::coalesce(
+            dplyr::if_else(is.finite(h_eag), as.numeric(h_eag), NA_real_),
+            dplyr::if_else(is.finite(fr_eag), fr_eag, NA_real_),
+            as.numeric(eagles)
+          ),
+          birdies = dplyr::coalesce(
+            dplyr::if_else(is.finite(h_bird), as.numeric(h_bird), NA_real_),
+            dplyr::if_else(is.finite(fr_bird), fr_bird, NA_real_),
+            as.numeric(birdies)
+          ),
+          bogeys = dplyr::coalesce(
+            dplyr::if_else(is.finite(h_bog), as.numeric(h_bog), NA_real_),
+            dplyr::if_else(is.finite(fr_bog), fr_bog, NA_real_),
+            as.numeric(bogeys)
+          ),
+          doubles = dplyr::coalesce(
+            dplyr::if_else(is.finite(h_dbl), as.numeric(h_dbl), NA_real_),
+            dplyr::if_else(is.finite(fr_dbl), fr_dbl, NA_real_),
+            as.numeric(doubles)
+          ),
+          pars = dplyr::coalesce(
+            as.numeric(pars),
+            pmax(0, 18 - eagles - birdies - bogeys - doubles)
+          ),
           total_score = as.numeric(course_par_18) + as.numeric(score_to_par),
           round_sd = RAW_ROUND_SD,
           course_used = DISPLAY_COURSE %||% SELECTED_COURSE
         ) %>%
-        dplyr::arrange(total_score) %>%
+        dplyr::select(-dplyr::any_of(c("h_rs", "h_bird", "h_bog", "h_eag", "h_dbl")))
+
+      im_mu <- impute_counts_from_mu_sg(-as.numeric(br$mu_sg))
+      br$eagles <- dplyr::coalesce(br$eagles, im_mu$eagles)
+      br$birdies <- dplyr::coalesce(br$birdies, im_mu$birdies)
+      br$pars <- dplyr::coalesce(br$pars, im_mu$pars)
+      br$bogeys <- dplyr::coalesce(br$bogeys, im_mu$bogeys)
+      br$doubles <- dplyr::coalesce(br$doubles, im_mu$doubles)
+      if (nrow(br) > 0L) {
+        for (i in seq_len(nrow(br))) {
+          v <- renormalize_counts_5(c(br$eagles[i], br$birdies[i], br$pars[i], br$bogeys[i], br$doubles[i]))
+          if (length(v) == 5L && all(is.finite(v))) {
+            br$eagles[i] <- v[1]
+            br$birdies[i] <- v[2]
+            br$pars[i] <- v[3]
+            br$bogeys[i] <- v[4]
+            br$doubles[i] <- v[5]
+          }
+        }
+      }
+      br <- br %>%
+        dplyr::arrange(.data$total_score) %>%
         dplyr::mutate(position = dplyr::row_number())
       list_sim[[r]] <- br
     }
@@ -1098,7 +1260,7 @@ if (nrow(dg) == 0) {
   shot_tbl <- NULL
   shot_tpl <- resolve_shot_template_local()
   n_sims_ct <- as.integer(max(5L, min(80L, as.integer(Sys.getenv("GOLF_SHOT_COUNT_MC_NSIM", "12")))))
-  use_shot_counts <- !is.null(shot_tpl) && Sys.getenv("GOLF_USE_SHOT_LEVEL_PROJECTION_COUNTS", "1") != "0"
+  use_shot_counts <- !is.null(shot_tpl) && Sys.getenv("GOLF_USE_SHOT_LEVEL_PROJECTION_COUNTS", "0") != "0"
   if (isTRUE(use_shot_counts)) {
     shot_rds_path <- file.path(model_dir, "data", "shot_transition_model.rds")
     if (file.exists(shot_rds_path)) {
@@ -1874,10 +2036,29 @@ if (!RAW_PROJECTIONS && exists("simulated_round_table") && !is.null(simulated_ro
     }, error = function(e) message("expected_counts_from_sg_lookup (post mu_sg): ", conditionMessage(e)))
   }
 
-  # Monte Carlo tournament: either shot-level empirical round noise (preferred) or Gaussian N(mu_sg, round_sd).
+  # Monte Carlo tournament: default shifted log-normal residuals around mu_sg;
+  # optional shot-level when GOLF_USE_SHOT_LEVEL_MC=1.
   sim_outrights <- NULL
   if (nrow(dg_sim) > 0 && "round_sd" %in% names(dg_sim) && "mu_sg" %in% names(dg_sim)) {
     tryCatch({
+      LOGN_SDLOG <- suppressWarnings(as.numeric(Sys.getenv("GOLF_TOURNAMENT_MC_LOGN_SDLOG", "0.45")))
+      if (!is.finite(LOGN_SDLOG)) LOGN_SDLOG <- 0.45
+      LOGN_SDLOG <- pmax(0.05, pmin(1.5, LOGN_SDLOG))
+      draw_shifted_lognormal <- function(mean_x, sd_x, sdlog = LOGN_SDLOG) {
+        mx <- as.numeric(mean_x)
+        sx <- as.numeric(sd_x)
+        if (!is.finite(mx)) mx <- 0
+        if (!is.finite(sx) || sx <= 0) return(mx)
+        sl <- as.numeric(sdlog)
+        if (!is.finite(sl) || sl <= 0) return(stats::rnorm(1L, mean = mx, sd = sx))
+        cv <- sqrt(exp(sl^2) - 1)
+        if (!is.finite(cv) || cv <= 0) return(stats::rnorm(1L, mean = mx, sd = sx))
+        mean_y <- sx / cv
+        if (!is.finite(mean_y) || mean_y <= 0) return(stats::rnorm(1L, mean = mx, sd = sx))
+        ml <- log(mean_y) - 0.5 * sl^2
+        eps <- stats::rlnorm(1L, meanlog = ml, sdlog = sl) - mean_y
+        mx + eps
+      }
       players_sim <- dg_sim %>% dplyr::filter(round == 1L) %>%
         dplyr::select(dg_id, player_name, mu_sg, round_sd, dplyr::any_of("position")) %>%
         dplyr::mutate(
@@ -1899,7 +2080,7 @@ if (!RAW_PROJECTIONS && exists("simulated_round_table") && !is.null(simulated_ro
       n_players <- nrow(players_sim)
       if (n_players >= 2L) {
         shot_rds_path <- file.path(model_dir, "data", "shot_transition_model.rds")
-        use_shot_mc <- isTRUE(file.exists(shot_rds_path)) && Sys.getenv("GOLF_USE_SHOT_LEVEL_MC", "1") != "0"
+        use_shot_mc <- isTRUE(file.exists(shot_rds_path)) && Sys.getenv("GOLF_USE_SHOT_LEVEL_MC", "0") != "0"
         shot_fit <- NULL
         holes_par_mc <- NULL
         holes_yardage_mc <- NULL
@@ -1938,6 +2119,9 @@ if (!RAW_PROJECTIONS && exists("simulated_round_table") && !is.null(simulated_ro
         mu_mult <- if (exists("ROUND_HIST_SG_MULT") && length(ROUND_HIST_SG_MULT) == 4L) as.numeric(ROUND_HIST_SG_MULT) else c(1.00, 0.99, 0.97, 0.95)
         sd_mult <- if (exists("ROUND_HIST_SD_MULT") && length(ROUND_HIST_SD_MULT) == 4L) as.numeric(ROUND_HIST_SD_MULT) else c(1.00, 1.01, 1.03, 1.05)
         FORM_SD <- 0.25
+        tmc_env <- trimws(Sys.getenv("GOLF_TOURNAMENT_MC_NSIM", ""))
+        tmc_n <- suppressWarnings(as.integer(tmc_env))
+        tmc_ok <- is.finite(tmc_n) && tmc_n >= 50L && tmc_n <= 2000L
 
         if (isTRUE(use_shot_mc)) {
           if (!exists("shot_level_mc_tournament_calibrated", mode = "function")) {
@@ -1950,6 +2134,8 @@ if (!RAW_PROJECTIONS && exists("simulated_round_table") && !is.null(simulated_ro
           pga_ids_mc <- dg_id_to_pga_player_id(players_sim$dg_id, pga_map_tbl)
           # Fewer outer sims when each sim runs full shot paths (field-size scaled)
           N_SIM_TOURNAMENT <- min(500L, max(150L, as.integer(2200L %/% max(1L, n_players))))
+          if (tmc_ok) N_SIM_TOURNAMENT <- as.integer(tmc_n)
+          if (tmc_ok) message("GOLF_TOURNAMENT_MC_NSIM: using ", N_SIM_TOURNAMENT, " outer tournament sims (shot-level)")
           res_mc <- shot_level_mc_tournament_calibrated(
             mu_sg = players_sim$mu_sg,
             pga_player_ids = pga_ids_mc,
@@ -1979,6 +2165,8 @@ if (!RAW_PROJECTIONS && exists("simulated_round_table") && !is.null(simulated_ro
           )
         } else {
           N_SIM_TOURNAMENT <- 1000L
+          if (tmc_ok) N_SIM_TOURNAMENT <- as.integer(tmc_n)
+          if (tmc_ok) message("GOLF_TOURNAMENT_MC_NSIM: using ", N_SIM_TOURNAMENT, " outer tournament sims (shifted log-normal)")
           set.seed(42L)
           wins <- integer(n_players)
           t5 <- integer(n_players)
@@ -1986,13 +2174,15 @@ if (!RAW_PROJECTIONS && exists("simulated_round_table") && !is.null(simulated_ro
           t20 <- integer(n_players)
           mc <- integer(n_players)
           for (iter in seq_len(N_SIM_TOURNAMENT)) {
-            form_shock <- stats::rnorm(n_players, mean = 0, sd = FORM_SD)
+            form_shock <- vapply(seq_len(n_players), function(p) {
+              draw_shifted_lognormal(0, FORM_SD, sdlog = LOGN_SDLOG)
+            }, numeric(1))
             total_72 <- vapply(seq_len(n_players), function(p) {
               sg_draw <- vapply(1L:4L, function(r) {
-                stats::rnorm(
-                  1L,
-                  mean = players_sim$mu_sg[p] * mu_mult[r] + form_shock[p],
-                  sd   = players_sim$round_sd[p] * sd_mult[r]
+                draw_shifted_lognormal(
+                  mean_x = players_sim$mu_sg[p] * mu_mult[r] + form_shock[p],
+                  sd_x   = players_sim$round_sd[p] * sd_mult[r],
+                  sdlog  = LOGN_SDLOG
                 )
               }, numeric(1))
               round_scores <- baseline + (avg_stp - as.numeric(sg_draw))
@@ -2013,22 +2203,25 @@ if (!RAW_PROJECTIONS && exists("simulated_round_table") && !is.null(simulated_ro
             sim_top_20 = pmin(0.95, pmax(0.001, as.numeric(t20) / N_SIM_TOURNAMENT)),
             sim_make_cut = pmin(0.95, pmax(0.001, as.numeric(mc) / N_SIM_TOURNAMENT))
           )
-          message("Tournament MC: Gaussian rounds (n=", N_SIM_TOURNAMENT, ")")
+          message("Tournament MC: shifted log-normal rounds (n=", N_SIM_TOURNAMENT, ", sdlog=", round(LOGN_SDLOG, 3), ")")
         }
       }
     }, error = function(e) message("Tournament simulation: ", conditionMessage(e)))
   }
   if (!is.null(sim_outrights) && nrow(sim_outrights) > 0) {
+    placement_src <- tolower(trimws(Sys.getenv("GOLF_PLACEMENT_SOURCE", "")))
+    prefer_sim_placement <- placement_src %in% c("sim", "model", "internal")
+    if (prefer_sim_placement) {
+      message("GOLF_PLACEMENT_SOURCE=", placement_src, ": win/top_* / make_cut prefer tournament MC over API where sim is non-missing.")
+    }
     dg_sim <- dg_sim %>%
       dplyr::left_join(sim_outrights %>% dplyr::select(dg_id, sim_win, sim_top_5, sim_top_10, sim_top_20, sim_make_cut), by = "dg_id") %>%
       dplyr::mutate(
-        # Keep DataGolf live/pre-tournament placement probs when present (these reflect current standings).
-        # Only fall back to tournament simulation when API values are missing.
-        win      = dplyr::coalesce(win, sim_win),
-        top_5    = dplyr::coalesce(top_5, sim_top_5),
-        top_10   = dplyr::coalesce(top_10, sim_top_10),
-        top_20   = dplyr::coalesce(top_20, sim_top_20),
-        make_cut = dplyr::coalesce(make_cut, sim_make_cut)
+        win      = if (prefer_sim_placement) dplyr::coalesce(sim_win, win) else dplyr::coalesce(win, sim_win),
+        top_5    = if (prefer_sim_placement) dplyr::coalesce(sim_top_5, top_5) else dplyr::coalesce(top_5, sim_top_5),
+        top_10   = if (prefer_sim_placement) dplyr::coalesce(sim_top_10, top_10) else dplyr::coalesce(top_10, sim_top_10),
+        top_20   = if (prefer_sim_placement) dplyr::coalesce(sim_top_20, top_20) else dplyr::coalesce(top_20, sim_top_20),
+        make_cut = if (prefer_sim_placement) dplyr::coalesce(sim_make_cut, make_cut) else dplyr::coalesce(make_cut, sim_make_cut)
       ) %>%
       dplyr::select(-dplyr::any_of(c("sim_win", "sim_top_5", "sim_top_10", "sim_top_20", "sim_make_cut")))
   }

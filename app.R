@@ -1270,16 +1270,21 @@ server <- function(input, output, session) {
 
   refresh_pre_tournament_event <- function(context = "pre-tournament fetch") {
     tryCatch({
-      r <- httr::GET(
-        "https://feeds.datagolf.com/preds/pre-tournament",
-        query = list(
-          tour = "pga",
-          dead_heat = "yes",
-          odds_format = "percent",
-          file_format = "json",
-          key = datagolf_api_key
-        )
+      pret_tour <- trimws(Sys.getenv("GOLF_DATAGOLF_TOUR", Sys.getenv("GOLF_TOUR", "pga")))
+      if (!nzchar(pret_tour)) pret_tour <- "pga"
+      pret_dh <- tolower(trimws(Sys.getenv("GOLF_PRE_TOURNAMENT_DEAD_HEAT", "yes")))
+      if (!pret_dh %in% c("yes", "no")) pret_dh <- "yes"
+      pret_fmt <- tolower(trimws(Sys.getenv("GOLF_PRE_TOURNAMENT_ODDS_FORMAT", "decimal")))
+      pret_add <- trimws(Sys.getenv("GOLF_PRE_TOURNAMENT_ADD_POSITION", ""))
+      q <- list(
+        tour = pret_tour,
+        dead_heat = pret_dh,
+        odds_format = pret_fmt,
+        file_format = "json",
+        key = datagolf_api_key
       )
+      if (nzchar(pret_add)) q$add_position <- pret_add
+      r <- httr::GET("https://feeds.datagolf.com/preds/pre-tournament", query = q)
       if (httr::status_code(r) == 200) {
         data <- jsonlite::fromJSON(httr::content(r, as = "text", encoding = "UTF-8"), flatten = TRUE, simplifyDataFrame = FALSE)
         if (is.list(data)) pre_tournament_event_cache(data)
@@ -2550,6 +2555,25 @@ server <- function(input, output, session) {
     x[is.finite(x) & x < -500] <- -500
     x
   }
+  outrights_api_numeric_to_pct <- function(v, odds_format) {
+    v <- suppressWarnings(as.numeric(v))
+    if (!is.finite(v) || v <= 0) return(NA_real_)
+    fmt <- tolower(trimws(odds_format))
+    if (!nzchar(fmt)) fmt <- "decimal"
+    if (identical(fmt, "decimal")) {
+      if (v > 1 && v < 20000) return(100 / v)
+      if (v > 0 && v <= 1) return(v * 100)
+      return(NA_real_)
+    }
+    if (identical(fmt, "american")) {
+      if (v > 0) return(100 * 100 / (v + 100))
+      if (v < 0) return(100 * abs(v) / (abs(v) + 100))
+      return(NA_real_)
+    }
+    if (identical(fmt, "fraction")) return(NA_real_)
+    if (v > 1) v <- v / 100
+    return(v * 100)
+  }
   observe({
     tab <- input$main_tabs
     mkt <- input$outright_market
@@ -2561,9 +2585,11 @@ server <- function(input, output, session) {
     outrights_cache(cache)
     tryCatch({
       dh <- if (mkt %in% c("top_5", "top_10", "top_20", "make_cut", "mc")) "yes" else "no"
+      orf <- tolower(trimws(Sys.getenv("GOLF_OUTRIGHTS_ODDS_FORMAT", "percent")))
+      if (!orf %in% c("decimal", "percent", "american", "fraction")) orf <- "percent"
       r <- httr::GET(
         "https://feeds.datagolf.com/betting-tools/outrights",
-        query = list(tour = "pga", market = mkt, odds_format = "percent", dead_heat = dh, file_format = "json", key = datagolf_api_key)
+        query = list(tour = "pga", market = mkt, odds_format = orf, dead_heat = dh, file_format = "json", key = datagolf_api_key)
       )
       if (httr::status_code(r) != 200) { cache[[mkt]] <- NULL; outrights_cache(cache); return() }
       raw <- jsonlite::fromJSON(httr::content(r, as = "text", encoding = "UTF-8"), flatten = TRUE, simplifyDataFrame = FALSE)
@@ -2574,10 +2600,21 @@ server <- function(input, output, session) {
 
   fetch_pre_tournament_outrights <- function() {
     tryCatch({
-      r <- httr::GET(
-        "https://feeds.datagolf.com/preds/pre-tournament",
-        query = list(tour = "pga", dead_heat = "no", odds_format = "percent", file_format = "json", key = datagolf_api_key)
+      pret_tour <- trimws(Sys.getenv("GOLF_DATAGOLF_TOUR", Sys.getenv("GOLF_TOUR", "pga")))
+      if (!nzchar(pret_tour)) pret_tour <- "pga"
+      pret_dh <- tolower(trimws(Sys.getenv("GOLF_PRE_TOURNAMENT_DEAD_HEAT", "yes")))
+      if (!pret_dh %in% c("yes", "no")) pret_dh <- "yes"
+      pret_fmt <- tolower(trimws(Sys.getenv("GOLF_PRE_TOURNAMENT_ODDS_FORMAT", "decimal")))
+      pret_add <- trimws(Sys.getenv("GOLF_PRE_TOURNAMENT_ADD_POSITION", ""))
+      q <- list(
+        tour = pret_tour,
+        dead_heat = pret_dh,
+        odds_format = pret_fmt,
+        file_format = "json",
+        key = datagolf_api_key
       )
+      if (nzchar(pret_add)) q$add_position <- pret_add
+      r <- httr::GET("https://feeds.datagolf.com/preds/pre-tournament", query = q)
       if (httr::status_code(r) != 200) return(NULL)
       dat <- jsonlite::fromJSON(httr::content(r, as = "text", encoding = "UTF-8"), flatten = TRUE, simplifyDataFrame = TRUE)
       bl <- NULL
@@ -2587,12 +2624,28 @@ server <- function(input, output, session) {
         bl <- dat$baseline
       if (is.null(bl) || nrow(bl) == 0) return(NULL)
       if (!"dg_id" %in% names(bl) && "id" %in% names(bl)) bl$dg_id <- bl$id
+      norm_pt_fin <- function(x) {
+        x <- suppressWarnings(as.numeric(x))
+        if (identical(pret_fmt, "decimal")) {
+          dplyr::if_else(is.finite(x) & x > 1 & x < 2000, 1 / x, dplyr::if_else(is.finite(x) & x >= 0 & x <= 1, x, NA_real_))
+        } else if (identical(pret_fmt, "american")) {
+          dplyr::case_when(
+            !is.finite(x) ~ NA_real_,
+            x > 0 ~ 100 / (x + 100),
+            x < 0 ~ abs(x) / (abs(x) + 100),
+            TRUE ~ NA_real_
+          )
+        } else {
+          dplyr::if_else(is.finite(x) & x > 1.5, x / 100, dplyr::if_else(is.finite(x) & x >= 0 & x <= 1, x, NA_real_))
+        }
+      }
       bl <- bl %>% dplyr::mutate(
-        win = as.numeric(win %||% 0), top_5 = as.numeric(top_5 %||% 0), top_10 = as.numeric(top_10 %||% 0),
-        top_20 = as.numeric(top_20 %||% 0), make_cut = as.numeric(make_cut %||% 0)
+        win = norm_pt_fin(.data$win),
+        top_5 = norm_pt_fin(.data$top_5),
+        top_10 = norm_pt_fin(.data$top_10),
+        top_20 = norm_pt_fin(.data$top_20),
+        make_cut = norm_pt_fin(.data$make_cut)
       )
-      if (any(is.finite(bl$win) & bl$win > 1.5)) bl <- bl %>% dplyr::mutate(win = win / 100, top_5 = top_5 / 100, top_10 = top_10 / 100, top_20 = top_20 / 100, make_cut = make_cut / 100)
-      else bl <- bl %>% dplyr::mutate(win = win / 100, top_5 = top_5 / 100, top_10 = top_10 / 100, top_20 = top_20 / 100, make_cut = make_cut / 100)
       bl
     }, error = function(e) { message("Pre-tournament fetch: ", conditionMessage(e)); NULL })
   }
@@ -2665,6 +2718,8 @@ server <- function(input, output, session) {
     if (is.null(model_pct) || nrow(model_pct) == 0) return(NULL)
     model_pct <- .norm_model_pct(model_pct)
     api_df <- NULL
+    orf_tbl <- tolower(trimws(Sys.getenv("GOLF_OUTRIGHTS_ODDS_FORMAT", "percent")))
+    if (!orf_tbl %in% c("decimal", "percent", "american", "fraction")) orf_tbl <- "percent"
     if (is.list(odds_arr) && length(odds_arr) > 0) {
       rows <- lapply(odds_arr, function(row) {
         if (!is.list(row)) return(NULL)
@@ -2676,8 +2731,8 @@ server <- function(input, output, session) {
           val <- row[[k]]
           if (is.list(val)) val <- if (length(val) > 0) val[[1]] else NA_real_
           v <- suppressWarnings(as.numeric(val %||% NA_real_))
-          if (is.finite(v) && v > 1) v <- v / 100
-          if (is.finite(v)) out[[tolower(k)]] <- v * 100
+          pc <- outrights_api_numeric_to_pct(v, orf_tbl)
+          if (is.finite(pc)) out[[tolower(k)]] <- pc
         }
         out
       })

@@ -6,7 +6,7 @@ One scheduled job refreshes **everything** needed for shot-level modeling, DataG
 
 | Step | What | Output / effect |
 |------|------|------------------|
-| 1 | `live_update_all.R` → `live_update_all_2026()` or `live_update_all()` | **DataGolf:** `historical_rounds_all.csv`, `historical_outrights_outcomes.csv`, `historical_matchups_outcomes.csv`. **Shots:** `append_latest_tournament_shots()` via `helper.R` → `data/all_shots_2021_2026.csv` (requires **pgatouR**) |
+| 1 | `live_update_all.R` → `live_update_all_2026()` or `live_update_all()` | **DataGolf:** `historical_rounds_all.csv`, `historical_outrights_outcomes.csv`, `historical_matchups_outcomes.csv`. **Shots:** `append_latest_tournament_shots()` via `helper.R` → `data/all_shots_2022_2026.csv` (requires **pgatouR**) |
 | 2 | `scripts/build_pga_datagolf_tournament_map.R` | `data/pga_datagolf_tournament_map.csv` |
 | 3 | `scripts/build_pga_datagolf_player_map.R` | `data/pga_datagolf_player_map.csv` |
 | 4 | `round_projections.R` (**pass 1**) | DataGolf field-updates → `golf_selected_course.txt`, `simulated_round_static.rds`, `data/current_course_holes.rds`, … |

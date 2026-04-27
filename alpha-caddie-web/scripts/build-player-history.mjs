@@ -24,7 +24,8 @@
  * CSV path: prefer golfModel/data/historical_rounds_all.csv (full history). Only if that is missing,
  * use the newest historical_rounds_all_with_tournament_metadata*.csv (snapshots are often partial).
  * Historical Trends and weather/meta filters use only this rounds CSV (+ join columns if present).
- * all_shots_2021_2026.csv is a different pipeline (build-player-shots-web.mjs); not used here.
+ * Shot-derived round stats: when data/all_shots_2022_2026_round_fairways_gir_putts.csv exists, merges
+ * fairways / GIR / putts onto PGA rounds by (dg_id or player name) + event date + round (see loadShotsRoundAggMaps).
  */
 
 import fs from "fs";
@@ -133,13 +134,13 @@ function relUnderModel(absPath) {
 }
 
 function shotsModelCsvMeta() {
-  const p = path.join(MODEL_ROOT, "data", "all_shots_2021_2026.csv");
+  const p = path.join(MODEL_ROOT, "data", "all_shots_2022_2026.csv");
   if (!fs.existsSync(p)) {
-    return { name: "all_shots_2021_2026.csv", present: false };
+    return { name: "all_shots_2022_2026.csv", present: false };
   }
   const st = fs.statSync(p);
   return {
-    name: "all_shots_2021_2026.csv",
+    name: "all_shots_2022_2026.csv",
     present: true,
     mtime: new Date(st.mtimeMs).toISOString(),
     size_bytes: st.size,
@@ -175,6 +176,7 @@ function num(x) {
 function normEvt(s) {
   return String(s || "")
     .toLowerCase()
+    .replace(/&/g, " and ")
     .replace(/[^a-z0-9]+/g, " ")
     .trim()
     .replace(/\s+/g, " ");
@@ -197,6 +199,25 @@ function playerKeyHole(name) {
   if (parts.length < 2) return parts.join(" ").toLowerCase();
   const last = parts[parts.length - 1].toLowerCase();
   const first = parts.slice(0, -1).join(" ").toLowerCase();
+  return `${last}|${first}`;
+}
+
+/** Accepts either "Last, First" or "First Last" and normalizes to last|first for cross-source joins. */
+function playerKeyCanonical(name) {
+  const raw = String(name || "").trim().toLowerCase().replace(/\./g, "");
+  if (!raw) return "";
+  const clean = (x) => String(x || "").replace(/[^a-z0-9 ]+/g, "").replace(/\s+/g, " ").trim();
+  if (raw.includes(",")) {
+    const parts = raw.split(",");
+    const last = clean(parts[0]);
+    const first = clean(parts.slice(1).join(" "));
+    if (last || first) return `${last}|${first}`;
+  }
+  const parts = clean(raw).split(" ").filter(Boolean);
+  if (!parts.length) return "";
+  if (parts.length === 1) return `${parts[0]}|`;
+  const last = parts[parts.length - 1];
+  const first = parts.slice(0, -1).join(" ");
   return `${last}|${first}`;
 }
 
@@ -225,11 +246,30 @@ function loadAllowedDgIds() {
   return ids;
 }
 
+/** (0, 1] = share-of-holes; otherwise treat as integer hole counts (not n<holes rate heuristic). */
+function countFromRateOrRaw(raw, holes) {
+  const n = num(raw, NaN);
+  if (!Number.isFinite(n)) return null;
+  if (n > 0 && n <= 1.0001) return Math.min(holes, Math.max(0, Math.round(n * holes)));
+  return Math.min(holes, Math.max(0, Math.round(n)));
+}
+
+/** 0 / 1 are almost always bad joins or placeholders — drop so charts and props do not treat them as real. */
+function stripGirFairwaysPuttsIfGarbage(mf) {
+  if (!mf || typeof mf !== "object") return;
+  for (const k of ["gir", "fairways", "putts"]) {
+    const v = mf[k];
+    if (v === 0 || v === 1) delete mf[k];
+  }
+}
+
 function metricFields(row) {
   const gir = num(row.gir);
   const fa = num(row.driving_acc);
-  const girCount = Number.isFinite(gir) ? (gir <= 2 ? Math.round(gir * 18) : Math.round(gir)) : null;
-  const fwCount = Number.isFinite(fa) ? (fa <= 1 ? Math.round(fa * 14) : Math.round(fa)) : null;
+  let girCount = Number.isFinite(gir) ? countFromRateOrRaw(gir, 18) : null;
+  let fwCount = Number.isFinite(fa) ? countFromRateOrRaw(fa, 14) : null;
+  if (girCount === 0 || girCount === 1) girCount = null;
+  if (fwCount === 0 || fwCount === 1) fwCount = null;
   return {
     round_score: num(row.round_score),
     birdies: num(row.birdies),
@@ -237,6 +277,8 @@ function metricFields(row) {
     bogies: num(row.bogies),
     gir: girCount,
     fairways: fwCount,
+    /** Filled from shot CSV aggregate when matched; else null. */
+    putts: null,
     eagles_or_better: num(row.eagles_or_better),
     doubles_or_worse: num(row.doubles_or_worse),
   };
@@ -292,6 +334,119 @@ function mergePgaMetaPatch(into, row) {
 }
 
 /** event_id|year -> merged pga_meta_* fields (first non-empty wins on duplicates). */
+function resolvePgaDgMapCsvPath() {
+  if (process.env.PGA_DG_PLAYER_MAP_CSV) return path.resolve(String(process.env.PGA_DG_PLAYER_MAP_CSV).trim());
+  const a = path.join(MODEL_ROOT, "data", "pga_datagolf_player_map.csv");
+  if (fs.existsSync(a)) return a;
+  const b = path.join(WEB_ROOT, "data", "pga_datagolf_player_map.csv");
+  return fs.existsSync(b) ? b : a;
+}
+
+function resolveShotsRoundAggCsvPath() {
+  if (process.env.SHOTS_ROUND_AGG_CSV) return path.resolve(String(process.env.SHOTS_ROUND_AGG_CSV).trim());
+  const a = path.join(MODEL_ROOT, "data", "all_shots_2022_2026_round_fairways_gir_putts.csv");
+  if (fs.existsSync(a)) return a;
+  const b = path.join(WEB_ROOT, "data", "all_shots_2022_2026_round_fairways_gir_putts.csv");
+  return fs.existsSync(b) ? b : a;
+}
+
+/**
+ * Maps from shot aggregate CSV:
+ *   (dg_id|sortKey), (playerKey|sortKey) — when `date` is present
+ *   (dg_id|evtNorm|year|round), (playerKey|evtNorm|year|round) — fallback when date was blank but evt_norm+year exist
+ */
+async function loadShotsRoundAggMaps() {
+  const byDgSk = new Map();
+  const byPkSk = new Map();
+  const byDgEvtYrRnd = new Map();
+  const byPkEvtYrRnd = new Map();
+  const aggPath = resolveShotsRoundAggCsvPath();
+  if (!fs.existsSync(aggPath)) {
+    console.log("Shots round aggregate CSV (optional): not found —", path.basename(aggPath));
+    return { byDgSk, byPkSk, byDgEvtYrRnd, byPkEvtYrRnd, aggPath: null };
+  }
+
+  const pidToDg = new Map();
+  const mapPath = resolvePgaDgMapCsvPath();
+  if (fs.existsSync(mapPath)) {
+    const parser = createReadStream(mapPath).pipe(
+      parse({
+        columns: true,
+        relax_quotes: true,
+        relax_column_count: true,
+        skip_records_with_error: true,
+      })
+    );
+    for await (const row of parser) {
+      const pid = String(row.pga_player_id ?? "").trim();
+      const dg = Math.round(num(row.dg_id));
+      if (pid && Number.isFinite(dg)) pidToDg.set(pid, dg);
+    }
+  }
+
+  const parser = createReadStream(aggPath).pipe(
+    parse({
+      columns: true,
+      relax_quotes: true,
+      relax_column_count: true,
+      skip_records_with_error: true,
+    })
+  );
+  for await (const row of parser) {
+    const date = String(row.date ?? "").trim();
+    const rnd = parseInt(String(row.round ?? "").trim(), 10) || 1;
+    const fairways = num(row.fairways);
+    const gir = num(row.gir);
+    const putts = num(row.putts);
+    const val = {
+      fairways: Number.isFinite(fairways) ? Math.round(fairways) : null,
+      gir: Number.isFinite(gir) ? Math.round(gir) : null,
+      putts: Number.isFinite(putts) ? Math.round(putts) : null,
+    };
+    const gl = String(row.golfer ?? "").trim();
+    const evtNormAgg = String(row.evt_norm ?? "")
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, " ");
+    const yrAgg = parseInt(String(row.year ?? "").trim(), 10);
+    const evtRndKey =
+      evtNormAgg && Number.isFinite(yrAgg) && yrAgg > 1900 ? `${evtNormAgg}|${yrAgg}|${rnd}` : "";
+
+    if (date) {
+      const sk = parseUsDateSortKey(date) * 10 + rnd;
+      if (/^\d+$/.test(gl)) {
+        const dg = pidToDg.get(gl);
+        if (Number.isFinite(dg)) byDgSk.set(`${dg}|${sk}`, val);
+      } else if (gl) {
+        const pk = playerKeyCanonical(gl);
+        if (pk) byPkSk.set(`${pk}|||${sk}`, val);
+      }
+    }
+    if (evtRndKey) {
+      if (/^\d+$/.test(gl)) {
+        const dg = pidToDg.get(gl);
+        if (Number.isFinite(dg)) byDgEvtYrRnd.set(`${dg}|${evtRndKey}`, val);
+      } else if (gl) {
+        const pk = playerKeyCanonical(gl);
+        if (pk) byPkEvtYrRnd.set(`${pk}|${evtRndKey}`, val);
+      }
+    }
+  }
+  console.log(
+    "Shots round aggregate:",
+    byDgSk.size,
+    "dg_id|date keys,",
+    byPkSk.size,
+    "name|date keys,",
+    byDgEvtYrRnd.size,
+    "dg_id|event|year|round keys,",
+    byPkEvtYrRnd.size,
+    "name|event|year|round keys from",
+    path.basename(aggPath)
+  );
+  return { byDgSk, byPkSk, byDgEvtYrRnd, byPkEvtYrRnd, aggPath };
+}
+
 async function loadPgaMetaOverlayFromCsv(csvPath) {
   const map = new Map();
   if (!csvPath || !fs.existsSync(csvPath)) return map;
@@ -324,8 +479,12 @@ async function loadPgaMetaOverlayFromCsv(csvPath) {
   return map;
 }
 
-async function streamRounds(allowedDgIds, pgaMetaOverlay) {
+async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg) {
   const byDgId = new Map();
+  const byDgSk = shotsAgg?.byDgSk || new Map();
+  const byPkSk = shotsAgg?.byPkSk || new Map();
+  const byDgEvtYrRnd = shotsAgg?.byDgEvtYrRnd || new Map();
+  const byPkEvtYrRnd = shotsAgg?.byPkEvtYrRnd || new Map();
 
   if (!fs.existsSync(ROUNDS_CSV)) {
     console.error("Missing rounds CSV:", ROUNDS_CSV);
@@ -358,6 +517,13 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay) {
 
     const sortKey = parseUsDateSortKey(row.event_completed) * 10 + (parseInt(row.round_num, 10) || 1);
     const eventName = String(row.event_name || "").trim();
+    const evtNormHist = normEvt(eventName);
+    const yrHist = parseInt(String(row.year || "").trim(), 10);
+    const rnHist = parseInt(String(row.round_num || "1").trim(), 10) || 1;
+    const evtRndHistKey =
+      evtNormHist && Number.isFinite(yrHist) && yrHist > 1900
+        ? `${evtNormHist}|${yrHist}|${rnHist}`
+        : "";
     const courseRaw = String(
       row.course_name ||
         row.Course_Name ||
@@ -366,6 +532,20 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay) {
         row.venue ||
         ""
     ).trim();
+    const pkHist = playerKeyCanonical(String(row.player_name || ""));
+    const shotOv =
+      (Number.isFinite(dg) ? byDgSk.get(`${dg}|${sortKey}`) : undefined) ??
+      byPkSk.get(`${pkHist}|||${sortKey}`) ??
+      (evtRndHistKey && Number.isFinite(dg) ? byDgEvtYrRnd.get(`${dg}|${evtRndHistKey}`) : undefined) ??
+      (evtRndHistKey ? byPkEvtYrRnd.get(`${pkHist}|${evtRndHistKey}`) : undefined) ??
+      null;
+    const mf = metricFields(row);
+    if (shotOv) {
+      if (shotOv.putts != null) mf.putts = shotOv.putts;
+      if (shotOv.gir != null) mf.gir = shotOv.gir;
+      if (shotOv.fairways != null) mf.fairways = shotOv.fairways;
+    }
+    stripGirFairwaysPuttsIfGarbage(mf);
     const rec = {
       sortKey,
       event_completed: String(row.event_completed || ""),
@@ -375,7 +555,7 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay) {
       course_name: courseRaw || eventName,
       round_num: parseInt(row.round_num, 10) || 1,
       fin_text: String(row.fin_text || ""),
-      ...metricFields(row),
+      ...mf,
       ...weatherFields(rowForWeather),
       ...sgFields(row),
     };
@@ -454,7 +634,8 @@ async function main() {
   console.log("Allowed dg_ids from projections:", allowed.size);
 
   const pgaMetaOverlay = METADATA_OVERLAY_CSV ? await loadPgaMetaOverlayFromCsv(METADATA_OVERLAY_CSV) : new Map();
-  const { byDgId, allowedTriples } = await streamRounds(allowed, pgaMetaOverlay);
+  const shotsAgg = await loadShotsRoundAggMaps();
+  const { byDgId, allowedTriples } = await streamRounds(allowed, pgaMetaOverlay, shotsAgg);
   console.log("Players with rounds:", byDgId.size);
 
   const holesByPlayerKey = await streamHoles(allowedTriples);
@@ -483,6 +664,15 @@ async function main() {
           : null,
       /** Same repo file as the shot model; mirrored to alpha-caddie-web/data/ — not loaded in the browser. */
       shots_model_csv: shotsModelCsvMeta(),
+      shots_round_agg_csv: shotsAgg.aggPath
+        ? {
+            name: path.basename(shotsAgg.aggPath),
+            relpath: relUnderModel(shotsAgg.aggPath),
+            mtime: fs.existsSync(shotsAgg.aggPath)
+              ? new Date(fs.statSync(shotsAgg.aggPath).mtimeMs).toISOString()
+              : null,
+          }
+        : null,
       min_year: MIN_YEAR,
       max_rounds_per_player: MAX_ROUNDS_PER_PLAYER,
       players: byDgId.size,

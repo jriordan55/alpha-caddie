@@ -73,6 +73,7 @@ function mergeFieldAndProjections(
       score_to_par: pr?.score_to_par,
       gir: pr?.gir,
       fairways: pr?.fairways,
+      putts: pr?.putts,
       birdies: pr?.birdies,
       pars: pr?.pars,
       bogeys: pr?.bogeys,
@@ -122,6 +123,7 @@ function renderModelOuTable(
     Bogeys: "bogeys",
     GIR: "gir",
     "Fairways hit": "fairways",
+    Putts: "putts",
   };
 
   const sorted = [...rows].sort((a, b) => {
@@ -133,6 +135,11 @@ function renderModelOuTable(
     if (stat === "Bogeys") {
       const la = Number(a.bogeys);
       const lb = Number(b.bogeys);
+      if (Number.isFinite(la) && Number.isFinite(lb)) return la - lb;
+    }
+    if (stat === "Putts") {
+      const la = Number(a.putts);
+      const lb = Number(b.putts);
       if (Number.isFinite(la) && Number.isFinite(lb)) return la - lb;
     }
     const key = colMap[stat];
@@ -290,6 +297,7 @@ function mountApp() {
         <option>Bogeys</option>
         <option>GIR</option>
         <option>Fairways hit</option>
+        <option>Putts</option>
       </select>
       <button type="button" class="btn-primary" id="btn-refresh">Refresh</button>
       <span class="status-text" id="status-mu"></span>
@@ -518,7 +526,7 @@ function mountApp() {
     const data = await fetchJson<Record<string, unknown>>("betting-tools/outrights", {
       tour: "pga",
       market: mkt,
-      odds_format: "percent",
+      odds_format: "decimal",
       file_format: "json",
     });
     if (!data) {

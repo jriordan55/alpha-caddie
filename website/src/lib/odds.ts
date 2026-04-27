@@ -106,4 +106,5 @@ export const LB_OU_LINES: Record<string, number[]> = {
   Bogeys: Array.from({ length: 7 }, (_, i) => i),
   GIR: Array.from({ length: 11 }, (_, i) => 5 + i),
   "Fairways hit": Array.from({ length: 11 }, (_, i) => 5 + i),
+  Putts: Array.from({ length: 11 }, (_, i) => 25 + i),
 };

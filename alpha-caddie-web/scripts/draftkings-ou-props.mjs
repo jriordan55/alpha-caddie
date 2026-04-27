@@ -1,19 +1,16 @@
 /**
- * Pull DraftKings round O/U props (Birdies or Better, Pars, Bogeys or Worse, Round Score → Total Score) via
+ * Pull DraftKings round O/U props (Birdies, Pars, Bogeys, GIR, Fairways, Putts, Round Score) via
  * sportsbook-nash leagueSubcategory markets API, using Playwright for session cookies.
  *
  * Env:
  *   GOLF_SKIP_DK_OU=1 — skip entirely
- *   DK_LEAGUE_URL — default https://sportsbook.draftkings.com/leagues/golf/us-masters?category=round
+ *   DK_LEAGUE_URL — e.g. https://sportsbook.draftkings.com/leagues/golf/rbc-heritage?category=round
  *   DK_SITE_SEGMENT — default US-MA-SB (set to your state segment if requests fail)
- *   DK_LEAGUE_ID — default 92694 (The Masters)
- *   DK_SUBCAT_JSON — optional override, e.g. {"Birdies":"17299","Pars":"17300","Bogeys":"17301"}
- *   If Pars/Bogeys are missing from page nav state, defaults 17299/17300/17301 are used (Masters-style).
+ *   DK_LEAGUE_ID — optional explicit league id (auto-detected from page if omitted).
+ *   DK_SUBCAT_JSON — optional override per stat (skips subcategory probe for keys you set).
+ *   Putts / GIR / fairways: nav ids often point at hole or “2 ball” markets; we probe league subs for titles like “… Putts - Round 1”.
  *
- * "Total Score" (18-hole round strokes ~66–80): verified absent from sportsbook-nash
- * leagueSubcategory/markets for every Masters (92694) nav subcategory — only nine-hole style
- * markets appear in that API (e.g. Front 9 / Back 9 Score ~35.5 on sub 19585 / 19586). Use
- * data/player_props_lines.csv for full-round stroke O/U when needed.
+ * Note: "Total Score" can be absent on some events; fallback CSV still applies in fetch-book-odds-into-projections.
  */
 import { existsSync, readFileSync } from "fs";
 import { dirname, join, resolve } from "path";
@@ -24,21 +21,35 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const DEFAULT_URL =
   process.env.DK_LEAGUE_URL?.trim() ||
-  "https://sportsbook.draftkings.com/leagues/golf/us-masters?category=round";
+  "https://sportsbook.draftkings.com/leagues/golf/rbc-heritage?category=round";
 const SITE = process.env.DK_SITE_SEGMENT?.trim() || "US-MA-SB";
-const LEAGUE_ID = process.env.DK_LEAGUE_ID?.trim() || "92694";
+const LEAGUE_ID = process.env.DK_LEAGUE_ID?.trim() || "";
 
 const STAT_BY_SEO = {
   "birdies-or-better": "Birdies",
   pars: "Pars",
   "bogeys-or-worse": "Bogeys",
+  "greens-in-regulation": "GIR",
+  "fairways-hit": "Fairways hit",
+  "total-putts": "Putts",
+  putts: "Putts",
 };
 
-/** When nav in __INITIAL_STATE__ omits Pars/Bogeys (lazy tabs), these Masters round-pack IDs still work. */
+/** Legacy fallback ids for older pages where nav state omits round stats. */
 const FALLBACK_SUBCAT_BY_STAT = {
   Birdies: "17299",
   Pars: "17300",
   Bogeys: "17301",
+};
+
+/**
+ * DraftKings reuses subcategory ids across "2 Ball …" nav labels vs field round O/U.
+ * Prefer subs whose market *names* look like "Player X Putts - Round 1", not group/hole props.
+ */
+const PROBE_SUBS_FIRST = {
+  Putts: ["17304", "17399"],
+  GIR: [],
+  "Fairways hit": [],
 };
 
 /** When nav omits Round Score tabs, try these Masters subcategory ids (merge + dedupe players). */
@@ -88,26 +99,109 @@ function parseAmerican(raw) {
   return Number.isFinite(n) ? n : NaN;
 }
 
+const ROUND_TAIL = String.raw`(?:Round\s+(\d+)|R(\d+))\s*$`;
+
 const NAME_RE = {
-  Birdies: /^(.+?)\s+Birdies or Better\s+-\s+Round\s+(\d+)\s*$/i,
-  Pars: /^(.+?)\s+Pars\s+-\s+Round\s+(\d+)\s*$/i,
-  Bogeys: /^(.+?)\s+Bogeys or Worse\s+-\s+Round\s+(\d+)\s*$/i,
+  Birdies: new RegExp(`^(.+?)\\s+Birdies or Better\\s+-\\s+${ROUND_TAIL}`, "i"),
+  Pars: new RegExp(`^(.+?)\\s+Pars\\s+-\\s+${ROUND_TAIL}`, "i"),
+  Bogeys: new RegExp(`^(.+?)\\s+Bogeys or Worse\\s+-\\s+${ROUND_TAIL}`, "i"),
+  GIR: new RegExp(
+    `^(.+?)\\s+(?:Greens?\\s+in\\s+Regulation|GIR)\\s+-\\s+${ROUND_TAIL}`,
+    "i",
+  ),
+  "Fairways hit": new RegExp(`^(.+?)\\s+Fairways?\\s+Hit\\s+-\\s+${ROUND_TAIL}`, "i"),
+  Putts: new RegExp(`^(.+?)\\s+(?:Total\\s+)?Putts\\s+-\\s+${ROUND_TAIL}`, "i"),
 };
 
-const NAME_RE_TOTAL_SCORE = /^(.+?)\s+Round Score\s+-\s+Round\s+(\d+)\s*$/i;
+const NAME_RE_TOTAL_SCORE = new RegExp(`^(.+?)\\s+Round Score\\s+-\\s+${ROUND_TAIL}`, "i");
+
+function roundFromMatch(m) {
+  if (!m) return NaN;
+  const a = m[m.length - 2];
+  const b = m[m.length - 1];
+  const n = Number(a || b);
+  return Number.isFinite(n) ? n : NaN;
+}
 
 function parseMarketName(stat, marketName) {
   const raw = String(marketName || "").trim();
   if (stat === "Total Score") {
     const m = raw.match(NAME_RE_TOTAL_SCORE);
     if (!m) return null;
-    return { dkPlayer: m[1].replace(/\s+/g, " ").trim(), round: Number(m[2]) };
+    const rd = roundFromMatch(m);
+    if (!Number.isFinite(rd)) return null;
+    return { dkPlayer: m[1].replace(/\s+/g, " ").trim(), round: rd };
   }
   const re = NAME_RE[stat];
   if (!re) return null;
   const m = raw.match(re);
   if (!m) return null;
-  return { dkPlayer: m[1].replace(/\s+/g, " ").trim(), round: Number(m[2]) };
+  const rd = roundFromMatch(m);
+  if (!Number.isFinite(rd)) return null;
+  return { dkPlayer: m[1].replace(/\s+/g, " ").trim(), round: rd };
+}
+
+/** True if `name` looks like a per-player round O/U title (not hole / group / side markets). */
+function isGoodPlayerRoundSampleName(stat, name) {
+  const s = String(name || "").trim();
+  if (!s) return false;
+  if (/\bon\s+hole\b/i.test(s)) return false;
+  if (/number\s+of\s+greens/i.test(s)) return false;
+  if (/total\s+group|group\s+drives|to\s+hit\s+a\s+gir/i.test(s)) return false;
+  if (/player\s+most\b/i.test(s)) return false;
+  return !!parseMarketName(stat, s);
+}
+
+function buildProbeOrder(stat, preferredSub, allLeagueSubIds) {
+  const first = PROBE_SUBS_FIRST[stat] || [];
+  const out = [];
+  const add = (x) => {
+    const id = String(x || "").trim();
+    if (id && !out.includes(id)) out.push(id);
+  };
+  /** Cap league-wide scans — enough to escape wrong nav ids without one fetch per tab. */
+  const max = 36;
+  for (const id of first) {
+    add(id);
+    if (out.length >= max) return out;
+  }
+  add(preferredSub);
+  for (const id of allLeagueSubIds || []) {
+    add(id);
+    if (out.length >= max) break;
+  }
+  return out;
+}
+
+async function pickSubcategoryForStat(api, leagueId, siteSegment, stat, preferredSub, allLeagueSubIds, dgByNameLower) {
+  const candidates = buildProbeOrder(stat, preferredSub, allLeagueSubIds);
+  let bestSub = "";
+  let bestScore = 0;
+  const seen = new Set();
+  for (const sub of candidates) {
+    if (!sub || seen.has(sub)) continue;
+    seen.add(sub);
+    const u = marketsUrl(leagueId, sub, siteSegment);
+    const res = await api.get(u, { timeout: 60000 });
+    if (!res.ok()) continue;
+    let body;
+    try {
+      body = await res.json();
+    } catch {
+      continue;
+    }
+    const mk = Array.isArray(body?.markets) ? body.markets : [];
+    const sample = mk.slice(0, 20).map((m) => m.name);
+    if (!sample.some((n) => isGoodPlayerRoundSampleName(stat, n))) continue;
+    const nParsed = propsFromMarketsBody(body, stat, dgByNameLower).length;
+    if (nParsed > bestScore) {
+      bestScore = nParsed;
+      bestSub = sub;
+      if (nParsed >= 12) break;
+    }
+    await new Promise((r) => setTimeout(r, 45));
+  }
+  return bestScore > 0 ? bestSub : "";
 }
 
 function lineFromSelection(s) {
@@ -171,7 +265,7 @@ export async function fetchDraftKingsOuProps(opts = {}) {
   }
   const players = opts.players;
   const leagueUrl = opts.leagueUrl || DEFAULT_URL;
-  const leagueId = opts.leagueId || LEAGUE_ID;
+  const requestedLeagueId = String(opts.leagueId || LEAGUE_ID || "").trim();
   const siteSegment = opts.siteSegment || SITE;
   const dgByNameLower = buildDgLookup(players);
 
@@ -206,23 +300,53 @@ export async function fetchDraftKingsOuProps(opts = {}) {
     return { props: [], subcatsUsed: {}, error: `goto: ${e.message}` };
   }
 
-  const nav = await page.evaluate((lid) => {
+  const nav = await page.evaluate((lidRaw) => {
     const ini = window.__INITIAL_STATE__;
-    if (!ini) return { seoMap: {}, roundScoreSubs: [] };
-    const lg = String(lid);
-    const want = { "birdies-or-better": 1, pars: 1, "bogeys-or-worse": 1 };
+    if (!ini)
+      return { seoMap: {}, roundScoreSubs: [], detectedLeagueId: "", allSubIdsForLeague: [] };
+    const requested = String(lidRaw || "").trim();
+    const seoToStat = {
+      "birdies-or-better": "Birdies",
+      pars: "Pars",
+      "bogeys-or-worse": "Bogeys",
+      "greens-in-regulation": "GIR",
+      "fairways-hit": "Fairways hit",
+      "total-putts": "Putts",
+      putts: "Putts",
+    };
+    const titleToStat = [
+      [/birdies?\s+or\s+better/i, "Birdies"],
+      [/\bpars?\b/i, "Pars"],
+      [/bogeys?\s+or\s+worse/i, "Bogeys"],
+      [/greens?\s+in\s+regulation|\bgir\b/i, "GIR"],
+      [/fairways?\s+hit/i, "Fairways hit"],
+      [/(?:total\s+)?putts?/i, "Putts"],
+    ];
     const bySeo = {};
     const roundScoreSubs = new Set();
+    const leagueRows = [];
     function walk(o, depth) {
       if (!o || typeof o !== "object" || depth > 45) return;
       const p = o.parameters;
-      if (p && String(p.leagueId) === lg && p.subcategoryId != null) {
+      if (p && p.subcategoryId != null && p.leagueId != null) {
+        const leagueId = String(p.leagueId);
         let seo = String(o.seoId || "").trim().toLowerCase();
         if (seo === "bogies-or-worse") seo = "bogeys-or-worse";
-        if (want[seo]) bySeo[seo] = String(p.subcategoryId);
-        const title = String(o.title || "").trim().toLowerCase();
-        if (title === "round score" || /round[-_]?score/.test(seo)) {
-          roundScoreSubs.add(String(p.subcategoryId));
+        const title = String(o.title || "").trim();
+        let stat = seoToStat[seo] || null;
+        if (!stat) {
+          const t = title.toLowerCase();
+          for (const [re, s] of titleToStat) {
+            if (re.test(t)) {
+              stat = s;
+              break;
+            }
+          }
+        }
+        leagueRows.push({ leagueId, subcategoryId: String(p.subcategoryId), seo, title, stat });
+        const titleLc = title.toLowerCase();
+        if (titleLc === "round score" || /round[-_]?score/.test(seo)) {
+          roundScoreSubs.add(`${leagueId}|||${String(p.subcategoryId)}`);
         }
       }
       if (Array.isArray(o)) {
@@ -232,8 +356,49 @@ export async function fetchDraftKingsOuProps(opts = {}) {
       for (const k of Object.keys(o)) walk(o[k], depth + 1);
     }
     walk(ini, 0);
-    return { seoMap: bySeo, roundScoreSubs: [...roundScoreSubs] };
-  }, leagueId);
+    const counts = new Map();
+    for (const r of leagueRows) {
+      counts.set(r.leagueId, (counts.get(r.leagueId) || 0) + (r.stat ? 3 : 1));
+    }
+    let detectedLeagueId = "";
+    if (requested) detectedLeagueId = requested;
+    else {
+      let best = -1;
+      for (const [k, c] of counts.entries()) {
+        if (c > best) {
+          best = c;
+          detectedLeagueId = k;
+        }
+      }
+    }
+    for (const r of leagueRows) {
+      if (detectedLeagueId && r.leagueId !== detectedLeagueId) continue;
+      if (r.seo) bySeo[r.seo] = r.subcategoryId;
+      if (r.stat) bySeo[`__stat__${r.stat}`] = r.subcategoryId;
+    }
+    const scoreSubs = [];
+    for (const tag of roundScoreSubs) {
+      const [lg, sub] = String(tag).split("|||");
+      if (!detectedLeagueId || lg === detectedLeagueId) scoreSubs.push(sub);
+    }
+    const allSubs = new Set();
+    for (const r of leagueRows) {
+      if (detectedLeagueId && r.leagueId !== detectedLeagueId) continue;
+      allSubs.add(r.subcategoryId);
+    }
+    return {
+      seoMap: bySeo,
+      roundScoreSubs: scoreSubs,
+      detectedLeagueId,
+      allSubIdsForLeague: [...allSubs].sort(),
+    };
+  }, requestedLeagueId);
+
+  const leagueId = String(nav?.detectedLeagueId || requestedLeagueId || "").trim();
+  if (!leagueId) {
+    await browser.close();
+    return { props: [], subcatsUsed: {}, error: "Could not detect DK league id from page (set DK_LEAGUE_ID)." };
+  }
 
   const bySeo = nav.seoMap || {};
   let roundScoreSubs = [];
@@ -250,12 +415,28 @@ export async function fetchDraftKingsOuProps(opts = {}) {
   const subcatsUsed = {};
   const statToSub = {};
   for (const [seo, stat] of Object.entries(STAT_BY_SEO)) {
-    const fromNav = bySeo[seo];
+    const fromNav = bySeo[seo] || bySeo[`__stat__${stat}`];
     const fromEnv = overrides[stat];
     const sub = fromEnv || fromNav || FALLBACK_SUBCAT_BY_STAT[stat];
     if (!sub) continue;
     statToSub[stat] = sub;
     subcatsUsed[stat] = sub;
+  }
+
+  const allLeagueSubIds = Array.isArray(nav.allSubIdsForLeague) ? nav.allSubIdsForLeague : [];
+  const api = ctx.request;
+  for (const st of ["Putts", "GIR", "Fairways hit"]) {
+    if (overrides[st]) continue;
+    const pref = statToSub[st] || "";
+    if (!pref && !(PROBE_SUBS_FIRST[st] || []).length && st !== "Fairways hit" && st !== "GIR") continue;
+    const picked = await pickSubcategoryForStat(api, leagueId, siteSegment, st, pref, allLeagueSubIds, dgByNameLower);
+    if (picked) {
+      statToSub[st] = picked;
+      subcatsUsed[st] = picked;
+    } else if (statToSub[st]) {
+      delete statToSub[st];
+      delete subcatsUsed[st];
+    }
   }
 
   if (Object.keys(statToSub).length === 0 && roundScoreSubs.length === 0) {

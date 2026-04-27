@@ -1,20 +1,27 @@
 #!/usr/bin/env node
 /**
  * Refresh only sportsbook columns: fetches betting-tools/outrights + matchups (+ preds/pre-tournament
- * for datagolf column fill) and merges into existing alpha-caddie-web/projections.json.
+ * for datagolf column fill) and merges into existing alpha-caddie-web/projections.json. Outrights are
+ * the same Scratch feed as the Finish Position tool (https://datagolf.com/betting-tool-finish), not HTML.
  *
  * Use between full `npm run fetch:dg` / R exports so the static app sees current lines without rebuilding players.
  *
  *   npm run fetch:book-odds
  *
- * Env: DATAGOLF_API_KEY or datagolf.local.json; GOLF_MODEL_DIR (repo root); GOLF_TOUR (default pga).
+ * Env: DATAGOLF_API_KEY or datagolf.local.json; GOLF_MODEL_DIR (repo root); GOLF_DATAGOLF_TOUR or GOLF_TOUR (default pga).
+ *      preds/pre-tournament: GOLF_PRE_TOURNAMENT_DEAD_HEAT (default yes), GOLF_PRE_TOURNAMENT_ODDS_FORMAT (default decimal).
+ *      betting-tools/outrights: GOLF_OUTRIGHTS_ODDS_FORMAT (default percent — same IMPLIED % as
+ *      https://datagolf.com/betting-tool-finish; override with decimal|american if needed).
+ *      GOLF_PRE_TOURNAMENT_ADD_POSITION (optional, e.g. "17,23").
  *      GOLF_OUTRIGHTS_DEAD_HEAT=yes|no — same as fetch-datagolf.mjs
  *      GOLF_SKIP_PROPS_CSV=1 — do not merge data/player_props_*.csv into projections.props (Model O/U DK lines).
  *      GOLF_SKIP_DK_OU=1 — do not pull DK round props (see draftkings-ou-props.mjs).
+ *      GOLF_SKIP_MODEL_FALLBACK_OU=1 — when DK+CSV have no GIR / fairways / putts rows, do not synthesize from projections.players.
  *
  * DraftKings round props (Birdies, Pars, Bogeys, Round Score → Total Score) use Playwright + Chromium.
  * Production (Render): `playwright` is a runtime dependency; build should run `npx playwright install chromium`.
- * Point DK at the active event: DK_LEAGUE_URL (e.g. …/leagues/golf/pga?category=round) and DK_LEAGUE_ID (from DK URL).
+ * Point DK at the active event: DK_LEAGUE_URL (e.g. …/leagues/golf/{event}?category=round) and DK_LEAGUE_ID (from DK URL).
+ * If DK_LEAGUE_URL is unset, uses projections.event_name → slug (override with dk_league_slug on JSON or set DK_LEAGUE_URL when DK’s slug differs).
  * CSV files still override or fill gaps when DK omits a player or market.
  */
 import { parse } from "csv-parse/sync";
@@ -27,7 +34,7 @@ const WEB_ROOT = join(__dirname, "..");
 const GOLF_MODEL_ROOT = process.env.GOLF_MODEL_DIR?.trim()
   ? resolve(process.env.GOLF_MODEL_DIR.trim())
   : resolve(WEB_ROOT, "..");
-const TOUR = process.env.GOLF_TOUR || "pga";
+const TOUR = (process.env.GOLF_DATAGOLF_TOUR || process.env.GOLF_TOUR || "pga").trim() || "pga";
 
 function loadApiKey() {
   const env = (process.env.DATAGOLF_API_KEY || "").trim();
@@ -44,6 +51,26 @@ function loadApiKey() {
   return "";
 }
 
+/**
+ * When `DK_LEAGUE_URL` is unset, point Playwright at the same DraftKings event as `projections.json`.
+ * Slug from `event_name` can mismatch DK URLs — set `DK_LEAGUE_URL` or optional `dk_league_slug` on the payload.
+ */
+function inferDraftKingsLeagueUrlFromProjections(payload) {
+  if (String(process.env.DK_LEAGUE_URL || "").trim()) return "";
+  const slug = String(
+    payload?.dk_league_slug || payload?.draftkings_league_slug || payload?.dk_event_slug || "",
+  ).trim();
+  if (slug) return `https://sportsbook.draftkings.com/leagues/golf/${slug}?category=round`;
+  const name = String(payload?.event_name || "").trim();
+  if (!name) return "";
+  const s = name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  if (!s) return "";
+  return `https://sportsbook.draftkings.com/leagues/golf/${s}?category=round`;
+}
+
 async function fetchDg(path, params, key) {
   const u = new URL(`https://feeds.datagolf.com${path}`);
   for (const [k, v] of Object.entries(params)) u.searchParams.set(k, String(v));
@@ -58,11 +85,60 @@ function num(x, fallback = NaN) {
   return Number.isFinite(n) ? n : fallback;
 }
 
+function snapHalfLine(x) {
+  const v = num(x, NaN);
+  if (!Number.isFinite(v)) return NaN;
+  return Math.round(v - 0.5) + 0.5;
+}
+
+/** When DraftKings has no field O/U for GIR/FW/putts, expose model means as *.5 lines (-110/-110) so the UI loads. */
+function modelFallbackOuForMarket(players, market) {
+  const field =
+    market === "GIR" ? "gir" : market === "Fairways hit" ? "fairways" : market === "Putts" ? "putts" : "";
+  if (!field || !Array.isArray(players)) return [];
+  const holes = market === "GIR" ? 18 : market === "Fairways hit" ? 14 : null;
+  const out = [];
+  for (const p of players) {
+    const pn = String(p.player_name || "").trim();
+    if (!pn) continue;
+    let x = num(p[field], NaN);
+    if (!Number.isFinite(x)) continue;
+    if (x === 0 || x === 1) continue;
+    if (holes != null) {
+      /** (0, 1] = share of holes; (1, holes] = counts — do not treat 11.2 as a rate. */
+      if (x > 0 && x <= 1.0001) {
+        x = Math.min(holes, Math.max(0, Math.round(x * holes)));
+      } else {
+        x = Math.min(holes, Math.max(0, Math.round(x)));
+      }
+    } else {
+      x = Math.round(x);
+    }
+    let L = snapHalfLine(x);
+    if (market === "GIR") L = Math.min(16.5, Math.max(4.5, L));
+    else if (market === "Fairways hit") L = Math.min(13.5, Math.max(2.5, L));
+    else if (market === "Putts") L = Math.min(36.5, Math.max(22.5, L));
+    if (!Number.isFinite(L)) continue;
+    const dg = Math.round(num(p.dg_id, NaN));
+    const o = { player_name: pn, line: L, over_odds: -110, under_odds: -110, market };
+    if (Number.isFinite(dg) && dg > 0) o.dg_id = dg;
+    out.push(o);
+  }
+  return out;
+}
+
+function countPropRowsByMarket(rows, market) {
+  return rows.filter((r) => String(r.market || "").trim() === market).length;
+}
+
 const OU_PROP_CSV_FILES = [
   ["Total Score", "player_props_lines.csv"],
   ["Birdies", "player_props_birdies.csv"],
   ["Pars", "player_props_pars.csv"],
   ["Bogeys", "player_props_bogeys.csv"],
+  ["GIR", "player_props_gir.csv"],
+  ["Fairways hit", "player_props_fairways.csv"],
+  ["Putts", "player_props_putts.csv"],
 ];
 
 function normalizePropMarketFromRow(row, defaultMkt) {
@@ -74,6 +150,9 @@ function normalizePropMarketFromRow(row, defaultMkt) {
   if (/bog/.test(v)) return "Bogeys";
   if (/bird/.test(v)) return "Birdies";
   if (/par/.test(v)) return "Pars";
+  if (/gir|green/.test(v)) return "GIR";
+  if (/fairway/.test(v)) return "Fairways hit";
+  if (/putt/.test(v)) return "Putts";
   return defaultMkt;
 }
 
@@ -138,9 +217,20 @@ function rowsFromResponse(dat) {
   return [];
 }
 
-function normProb01(v) {
+function normProb01(v, oddsFormat = "percent") {
   const x = num(v, NaN);
   if (!Number.isFinite(x)) return NaN;
+  const fmt = String(oddsFormat || "percent").toLowerCase();
+  if (fmt === "decimal") {
+    if (x > 1 && x < 2000) return 1 / x;
+    if (x > 0 && x <= 1) return x;
+    return NaN;
+  }
+  if (fmt === "american") {
+    if (x > 0) return 100 / (x + 100);
+    if (x < 0) return Math.abs(x) / (Math.abs(x) + 100);
+    return NaN;
+  }
   if (x > 1.5) return x / 100;
   return x;
 }
@@ -158,9 +248,24 @@ function outrightOddsArrayFromResponse(raw) {
   return [];
 }
 
-function impliedPercentFromDgPercentField(v) {
-  if (!Number.isFinite(v)) return NaN;
-  let p = v;
+const outrightsOddsFormat = (process.env.GOLF_OUTRIGHTS_ODDS_FORMAT || "percent").trim().toLowerCase();
+
+function impliedPctFromOutrightsApiValue(v, oddsFormat) {
+  const x = num(v, NaN);
+  if (!Number.isFinite(x) || x <= 0) return NaN;
+  const fmt = String(oddsFormat || "decimal").toLowerCase();
+  if (fmt === "decimal") {
+    if (x > 1 && x < 20000) return (1 / x) * 100;
+    if (x > 0 && x <= 1) return x * 100;
+    return NaN;
+  }
+  if (fmt === "american") {
+    if (x > 0) return (100 / (x + 100)) * 100;
+    if (x < 0) return (Math.abs(x) / (Math.abs(x) + 100)) * 100;
+    return NaN;
+  }
+  if (fmt === "fraction") return NaN;
+  let p = x;
   if (p > 1) p /= 100;
   return p * 100;
 }
@@ -186,7 +291,7 @@ function enrichOutrightsRows(rows, market, pretByDg) {
       if (!(alt in r)) continue;
       const pv = num(r[alt], NaN);
       if (!Number.isFinite(pv) || pv === 0) continue;
-      r.datagolf = impliedPercentFromDgPercentField(pv);
+      r.datagolf = impliedPctFromOutrightsApiValue(pv, outrightsOddsFormat);
       delete r[alt];
       break;
     }
@@ -198,8 +303,8 @@ function enrichOutrightsRows(rows, market, pretByDg) {
     let p = num(pt[pretKey], NaN);
     if (!Number.isFinite(p)) continue;
     if (isMc) p = 1 - p;
-    const pct = impliedPercentFromDgPercentField(p);
-    if (Number.isFinite(pct) && pct > 0) r.datagolf = pct;
+      const pct = Number.isFinite(p) && p > 0 ? p * 100 : NaN;
+      if (Number.isFinite(pct) && pct > 0) r.datagolf = pct;
   }
 }
 
@@ -235,7 +340,7 @@ function parseOutrightsResponse(raw) {
       if (Array.isArray(val) && val.length) val = val[0];
       const v = num(val, NaN);
       if (!Number.isFinite(v)) continue;
-      const pct = impliedPercentFromDgPercentField(v);
+      const pct = impliedPctFromOutrightsApiValue(v, outrightsOddsFormat);
       if (!Number.isFinite(pct)) continue;
       out[key] = pct;
       bookSet.add(key);
@@ -273,12 +378,18 @@ async function main() {
   const pretByDg = new Map();
   if (process.env.GOLF_SKIP_PRET_FOR_ODDS !== "1") {
     try {
+      const pretDeadHeat = (process.env.GOLF_PRE_TOURNAMENT_DEAD_HEAT || "yes").trim().toLowerCase();
+      const pretOddsFormat = (process.env.GOLF_PRE_TOURNAMENT_ODDS_FORMAT || "decimal").trim().toLowerCase();
+      const pretAddPos = (process.env.GOLF_PRE_TOURNAMENT_ADD_POSITION || "").trim();
       console.log("Fetching preds/pre-tournament (for outright datagolf fill)…");
-      const pret = await fetchDg(
-        "/preds/pre-tournament",
-        { tour: TOUR, dead_heat: "no", odds_format: "percent", file_format: "json" },
-        key
-      );
+      const pretParams = {
+        tour: TOUR,
+        dead_heat: pretDeadHeat === "no" ? "no" : "yes",
+        odds_format: pretOddsFormat,
+        file_format: "json",
+      };
+      if (pretAddPos) pretParams.add_position = pretAddPos;
+      const pret = await fetchDg("/preds/pre-tournament", pretParams, key);
       const pretList = asArray(pret.baseline_history_fit).length
         ? asArray(pret.baseline_history_fit)
         : asArray(pret.baseline).length
@@ -288,11 +399,11 @@ async function main() {
         const id = num(row.dg_id ?? row.id ?? row.dgId, NaN);
         if (!Number.isFinite(id)) continue;
         pretByDg.set(Math.round(id), {
-          win: normProb01(row.win),
-          top_5: normProb01(row.top_5),
-          top_10: normProb01(row.top_10),
-          top_20: normProb01(row.top_20),
-          make_cut: normProb01(row.make_cut),
+          win: normProb01(row.win, pretOddsFormat),
+          top_5: normProb01(row.top_5, pretOddsFormat),
+          top_10: normProb01(row.top_10, pretOddsFormat),
+          top_20: normProb01(row.top_20, pretOddsFormat),
+          make_cut: normProb01(row.make_cut, pretOddsFormat),
         });
       }
     } catch (e) {
@@ -310,7 +421,7 @@ async function main() {
         {
           tour: TOUR,
           market: m,
-          odds_format: "percent",
+          odds_format: outrightsOddsFormat,
           dead_heat: outrightDeadHeatForMarket(m),
           file_format: "json",
         },
@@ -344,18 +455,25 @@ async function main() {
     ...payload,
     outrights,
     matchups,
-    outrights_odds_format: "percent",
+    outrights_odds_format: outrightsOddsFormat,
     matchups_odds_format: "decimal",
     updated_at: new Date().toISOString().replace(/\.\d{3}Z$/, "Z"),
     book_odds_refreshed_at: new Date().toISOString().replace(/\.\d{3}Z$/, "Z"),
   };
+  if (next.outrights_model_blend_weight == null) next.outrights_model_blend_weight = 1;
+  if (next.outright_win_score_blend == null) next.outright_win_score_blend = 0;
+  if (next.outright_live_score_placement_nudge == null) next.outright_live_score_placement_nudge = false;
 
   if (process.env.GOLF_SKIP_PROPS_CSV !== "1" || process.env.GOLF_SKIP_DK_OU !== "1") {
     const csvProps = process.env.GOLF_SKIP_PROPS_CSV === "1" ? [] : loadOuPropsFromRepoCsv();
     let dkProps = [];
     if (process.env.GOLF_SKIP_DK_OU !== "1") {
       try {
-        const dk = await fetchDraftKingsOuProps({ players: payload.players });
+        const dkLeagueUrl = inferDraftKingsLeagueUrlFromProjections(payload);
+        const dk = await fetchDraftKingsOuProps({
+          players: payload.players,
+          ...(dkLeagueUrl ? { leagueUrl: dkLeagueUrl } : {}),
+        });
         dkProps = dk.props || [];
         if (dk.error && !String(dk.error).startsWith("skipped")) console.warn("DraftKings O/U:", dk.error);
         if (dkProps.length && dk.subcatsUsed && Object.keys(dk.subcatsUsed).length) {
@@ -371,8 +489,24 @@ async function main() {
     }
     for (const r of dkProps) {
       const m = String(r.market || "").trim();
-      if (m === "Birdies" || m === "Pars" || m === "Bogeys" || m === "Total Score") {
+      if (
+        m === "Birdies" ||
+        m === "Pars" ||
+        m === "Bogeys" ||
+        m === "Total Score" ||
+        m === "GIR" ||
+        m === "Fairways hit" ||
+        m === "Putts"
+      ) {
         byKey.set(`${r.player_name}|${r.market}|${r.line}`, r);
+      }
+    }
+    if (String(process.env.GOLF_SKIP_MODEL_FALLBACK_OU || "").trim() !== "1") {
+      for (const mkt of ["GIR", "Fairways hit", "Putts"]) {
+        if (countPropRowsByMarket([...byKey.values()], mkt) > 0) continue;
+        for (const r of modelFallbackOuForMarket(payload.players, mkt)) {
+          byKey.set(`${r.player_name}|${r.market}|${r.line}`, r);
+        }
       }
     }
     const merged = [...byKey.values()];

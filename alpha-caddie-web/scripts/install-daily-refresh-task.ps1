@@ -20,7 +20,7 @@ $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoi
 $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Limited
 
 Register-ScheduledTask -TaskName $TaskName -Action $action -Trigger $trigger -Settings $settings -Principal $principal `
-  -Description "Alpha Caddie Web: daily DataGolf + PGA shots (projections, historical_rounds_all, player history, embed, all_shots_2021_2026.csv)." `
+  -Description "Alpha Caddie Web: daily DataGolf + PGA shots (projections, historical_rounds_all, player history, embed, all_shots_2022_2026.csv)." `
   -Force
 
 Write-Host "Registered task '$TaskName' daily at $At (local time)."

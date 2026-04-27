@@ -84,7 +84,7 @@ run_rscript_file(proj_path, "round_projections.R (pass 1)")
 
 # ---- 5) Refit shot model for course in golf_selected_course.txt ----
 fit_script <- file.path(repo_root, "scripts", "fit_shot_transition_model.R")
-shots_csv <- file.path(repo_root, "data", "all_shots_2021_2026.csv")
+shots_csv <- file.path(repo_root, "data", "all_shots_2022_2026.csv")
 if (file.exists(fit_script) && file.exists(shots_csv)) {
   message("[", Sys.time(), "] (5/7) fit_shot_transition_model.R -> shot_transition_model.rds")
   tryCatch(

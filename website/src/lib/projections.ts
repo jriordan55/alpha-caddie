@@ -8,6 +8,7 @@ export type ProjectionPlayer = {
   score_to_par?: number;
   gir?: number;
   fairways?: number;
+  putts?: number;
   eagles?: number;
   birdies?: number;
   pars?: number;

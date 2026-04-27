@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Streams data/all_shots_2021_2026.csv into player_shots_web.json (hole shot table / sim support).
+ * Streams data/all_shots_2022_2026.csv into player_shots_web.json (hole shot table / sim support).
  * Separate from Historical Trends: those use historical_rounds_all + optional pga_meta join only.
  *
  * - Drops PGA shot seasons before MIN_SHOT_SEASON_YEAR (default 2022).
@@ -33,7 +33,7 @@ function resolveRoundsCsvPath() {
 }
 
 const ROUNDS_CSV = resolveRoundsCsvPath();
-const SHOTS_CSV = path.join(MODEL_ROOT, "data", "all_shots_2021_2026.csv");
+const SHOTS_CSV = path.join(MODEL_ROOT, "data", "all_shots_2022_2026.csv");
 const PLAYER_MAP_CSV = path.join(MODEL_ROOT, "data", "pga_datagolf_player_map.csv");
 const PROJECTIONS_JSON = path.join(WEB_ROOT, "projections.json");
 const OUT_JSON = path.join(WEB_ROOT, "player_shots_web.json");
@@ -79,12 +79,29 @@ function parseUsDateSortKey(s) {
   return y * 10000 + (mo || 0) * 100 + (d || 0);
 }
 
+function countFromRateOrRaw(raw, holes) {
+  const n = num(raw, NaN);
+  if (!Number.isFinite(n)) return null;
+  if (n > 0 && n <= 1.0001) return Math.min(holes, Math.max(0, Math.round(n * holes)));
+  return Math.min(holes, Math.max(0, Math.round(n)));
+}
+
+function stripGirFairwaysPuttsIfGarbage(mf) {
+  if (!mf || typeof mf !== "object") return;
+  for (const k of ["gir", "fairways", "putts"]) {
+    const v = mf[k];
+    if (v === 0 || v === 1) delete mf[k];
+  }
+}
+
 function metricFields(row) {
   const gir = num(row.gir);
   const fa = num(row.driving_acc);
-  const girCount = Number.isFinite(gir) ? (gir <= 2 ? Math.round(gir * 18) : Math.round(gir)) : null;
-  const fwCount = Number.isFinite(fa) ? (fa <= 1 ? Math.round(fa * 14) : Math.round(fa)) : null;
-  return {
+  let girCount = Number.isFinite(gir) ? countFromRateOrRaw(gir, 18) : null;
+  let fwCount = Number.isFinite(fa) ? countFromRateOrRaw(fa, 14) : null;
+  if (girCount === 0 || girCount === 1) girCount = null;
+  if (fwCount === 0 || fwCount === 1) fwCount = null;
+  const mf = {
     round_score: num(row.round_score),
     birdies: num(row.birdies),
     pars: num(row.pars),
@@ -94,6 +111,8 @@ function metricFields(row) {
     eagles_or_better: num(row.eagles_or_better),
     doubles_or_worse: num(row.doubles_or_worse),
   };
+  stripGirFairwaysPuttsIfGarbage(mf);
+  return mf;
 }
 
 function shotCsvSeasonYear(tournamentId) {

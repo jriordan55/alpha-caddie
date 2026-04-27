@@ -15,7 +15,7 @@ setwd(repo_root)
 
 message("[", Sys.time(), "] Starting Sunday republish job in: ", repo_root)
 
-# Latest PGA shots → append to data/all_shots_2021_2026.csv if not already present (requires pgatouR).
+# Latest PGA shots → append to data/all_shots_2022_2026.csv if not already present (requires pgatouR).
 helper_path <- file.path(repo_root, "helper.R")
 if (file.exists(helper_path)) {
   message("[", Sys.time(), "] Latest-tournament shot append (helper.R)...")
@@ -26,7 +26,7 @@ if (file.exists(helper_path)) {
       fn <- helper_env[["append_latest_tournament_shots"]]
       if (is.function(fn)) {
         fn(
-          output_csv = file.path(repo_root, "data", "all_shots_2021_2026.csv"),
+          output_csv = file.path(repo_root, "data", "all_shots_2022_2026.csv"),
           progress_rds = file.path(repo_root, "data", "all_shots_progress.rds"),
           rounds = 1:4,
           sleep_seconds = 0.03,

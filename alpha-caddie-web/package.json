@@ -17,8 +17,11 @@
     "refresh:web": "npm run fetch:dg",
     "refresh:shots": "node scripts/run-update-latest-shots.mjs",
     "refresh:daily": "node scripts/fetch-datagolf.mjs && node scripts/run-update-latest-shots.mjs",
+    "perfect": "node scripts/perfect-launch.mjs",
     "start": "node scripts/serve-with-refresh.mjs",
     "dev": "node scripts/serve-with-refresh.mjs",
+    "start:fast": "node scripts/serve-with-refresh.mjs --fast",
+    "dev:fast": "node scripts/serve-with-refresh.mjs --fast",
     "serve:only": "npx --yes serve . -p 5173"
   },
   "dependencies": {

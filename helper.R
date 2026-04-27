@@ -86,7 +86,7 @@ save_progress <- function(progress, progress_rds) {
 get_all_shots <- function(
   years = 2021:2026,
   rounds = 1:4,
-  output_csv = "data/all_shots_2021_2026.csv",
+  output_csv = "data/all_shots_2022_2026.csv",
   progress_rds = "data/all_shots_progress.rds",
   sleep_seconds = 0.03,
   resume = TRUE
@@ -278,6 +278,24 @@ csv_has_tournament <- function(output_csv, tournament_id) {
   FALSE
 }
 
+# Extract 4-digit season years from pgatouR/DataGolf-style ids like R2022047 (letter + YYYY + …).
+tournament_id_season_years <- function(ids) {
+  ids <- unique(as.character(ids))
+  ids <- ids[!is.na(ids) & nzchar(ids)]
+  if (length(ids) == 0L) return(integer(0))
+  ys <- integer(0)
+  for (id in ids) {
+    if (nchar(id) >= 5L) {
+      pfx <- substr(id, 1L, 1L)
+      if (pfx %in% c("R", "r")) {
+        y <- suppressWarnings(as.integer(substr(id, 2L, 5L)))
+        if (!is.na(y)) ys <- c(ys, y)
+      }
+    }
+  }
+  unique(ys)
+}
+
 # Unique tournament_id values already stored (pgatouR IDs like R2021464).
 unique_tournament_ids_in_shots_csv <- function(output_csv) {
   if (!file.exists(output_csv)) return(character(0))
@@ -328,12 +346,14 @@ append_tournament_shots_core <- function(ev, ev_name, output_csv, rounds = 1:4, 
 
 #' Backfill shot CSV from pgatouR only: tournaments with schedule end date after the latest
 #' end date among events already in the file, through Sys.Date(), plus in-progress events not yet
-#' in the file. Same paths as historical rounds: typically \code{data/all_shots_2021_2026.csv}.
+#' in the file. Same paths as historical rounds: typically \code{data/all_shots_2022_2026.csv}.
 #'
-#' @param years Calendar years for PGA schedule fetch (default \code{2021:current_year}).
+#' @param years Calendar years for PGA schedule fetch. Default: from the minimum season year implied
+#'   by \code{tournament_id} values already in the CSV (at least 2022) through the current calendar
+#'   year — so routine refreshes do not re-download schedules from 2021 onward.
 #' @param max_events Optional cap per run (env \code{GOLF_SHOTS_MAX_EVENTS} overrides when set).
 backfill_shots_after_csv_anchor <- function(
-  output_csv = "data/all_shots_2021_2026.csv",
+  output_csv = "data/all_shots_2022_2026.csv",
   progress_rds = "data/all_shots_progress.rds",
   years = NULL,
   rounds = 1:4,
@@ -342,7 +362,6 @@ backfill_shots_after_csv_anchor <- function(
   force = FALSE
 ) {
   cy <- as.integer(format(Sys.Date(), "%Y"))
-  if (is.null(years)) years <- seq(2021L, cy)
   mx <- Sys.getenv("GOLF_SHOTS_MAX_EVENTS", "")
   if (nzchar(mx)) {
     k <- suppressWarnings(as.integer(mx))
@@ -352,6 +371,21 @@ backfill_shots_after_csv_anchor <- function(
   ids_in_csv <- unique_tournament_ids_in_shots_csv(output_csv)
   message("Shot CSV (pgatouR only): ", output_csv)
   message("  Tournaments already in file: ", length(ids_in_csv))
+
+  if (is.null(years)) {
+    tid_y <- tournament_id_season_years(ids_in_csv)
+    y_lo <- if (length(tid_y)) {
+      max(2022L, min(tid_y, na.rm = TRUE))
+    } else {
+      max(2022L, cy - 1L)
+    }
+    years <- seq(y_lo, cy)
+    message(
+      "  PGA schedule fetch: ",
+      min(years), "-", max(years),
+      " (from earliest season in CSV through current year; pass years explicitly to override)."
+    )
+  }
 
   sch <- get_schedules(years)
   tid_col <- pick_col(sch, c("tournament_id", "tournamentid", "event_id", "id"))
@@ -445,7 +479,7 @@ backfill_shots_after_csv_anchor <- function(
 
 # Pull all shots for the most recent tournament and append to all_shots CSV if not already present.
 append_latest_tournament_shots <- function(
-  output_csv = "data/all_shots_2021_2026.csv",
+  output_csv = "data/all_shots_2022_2026.csv",
   progress_rds = "data/all_shots_progress.rds",
   rounds = 1:4,
   sleep_seconds = 0.03,
@@ -492,7 +526,7 @@ append_latest_tournament_shots <- function(
 # progress <- get_all_shots(
 #   years = 2021:2026,
 #   rounds = 1:4,
-#   output_csv = "data/all_shots_2021_2026.csv",
+#   output_csv = "data/all_shots_2022_2026.csv",
 #   progress_rds = "data/all_shots_progress.rds",
 #   sleep_seconds = 0.03,
 #   resume = TRUE

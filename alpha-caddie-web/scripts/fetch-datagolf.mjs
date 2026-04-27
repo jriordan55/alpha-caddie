@@ -27,8 +27,8 @@
  * Set ALPHA_CADDIE_EMBED_HISTORY=0 to skip that step. Set ALPHA_CADDIE_PGA_HISTORY=1 to run
  * the pgatouR history script after the CSV build (embed runs again after that).
  *
- * Outrights (betting-tools/outrights): GOLF_OUTRIGHTS_ODDS_FORMAT=decimal|percent|american (default decimal;
- * DataGolf’s betting endpoint defaults to decimal — fair odds 1/x → implied %). GOLF_OUTRIGHTS_DEAD_HEAT=yes|no;
+ * Outrights (betting-tools/outrights): GOLF_OUTRIGHTS_ODDS_FORMAT=percent|decimal|american (default percent;
+ * matches datagolf.com betting-tool-finish IMPLIED %). GOLF_OUTRIGHTS_DEAD_HEAT=yes|no;
  * rows with datagolf=0 are filled from preds/pre-tournament.
  * preds/pre-tournament: GOLF_PRE_TOURNAMENT_ODDS_FORMAT defaults to decimal (docs show decimal odds; percent is ambiguous).
  */
@@ -692,7 +692,7 @@ async function main() {
   }
 
   /**
-   * betting-tools/outrights — odds_format from GOLF_OUTRIGHTS_ODDS_FORMAT (default decimal).
+   * betting-tools/outrights — odds_format from GOLF_OUTRIGHTS_ODDS_FORMAT (default percent; finish tool IMPLIED %).
    * Row list resolution matches Shiny outrights_table_data (odds → data → field → …).
    */
   function outrightOddsArrayFromResponse(raw) {
@@ -708,7 +708,7 @@ async function main() {
 
   const OUTRIGHTS_ROW_SKIP_KEYS = new Set(["dg_id", "id", "player_name", "name"]);
 
-  const outrightsOddsFormat = (process.env.GOLF_OUTRIGHTS_ODDS_FORMAT || "decimal").trim().toLowerCase();
+  const outrightsOddsFormat = (process.env.GOLF_OUTRIGHTS_ODDS_FORMAT || "percent").trim().toLowerCase();
 
   /** API numeric → implied % on 0–100 display scale (matches books in UI). */
   function impliedPctFromOutrightsApiValue(v, oddsFormat) {
@@ -885,6 +885,10 @@ async function main() {
     projections_poll_interval_sec: 20,
     datagolf_live_poll_interval_sec: 20,
     poll_datagolf_live_predictions: true,
+    /** +EV / outrights: raw export probs (no model↔consensus blend line; no live-board nudges unless enabled). */
+    outrights_model_blend_weight: 1,
+    outright_win_score_blend: 0,
+    outright_live_score_placement_nudge: false,
     course_par_18: COURSE_PAR_18,
     hole_pars,
     hole_pars_source,

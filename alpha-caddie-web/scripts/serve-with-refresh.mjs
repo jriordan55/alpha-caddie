@@ -16,7 +16,8 @@
  * Disable: GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER=1. GOLF_LIVE_IN_PLAY_SERVER_POLL_MS (default 60000; min 30000; max 600000).
  *
  * Book odds: runs fetch-book-odds-into-projections.mjs unless GOLF_SKIP_BOOK_ODDS_ON_START=1.
- * While serving, polls that script on GOLF_BOOK_ODDS_SERVER_POLL_MS (default 60000, min 45000).
+ * While serving, polls that script on GOLF_BOOK_ODDS_SERVER_POLL_MS (default 60000, min 45000) unless the
+ * unified pipeline is on (default) — then pre-round still runs fetch:book-odds every tick; full fetch:dg is throttled.
  * Disable: GOLF_SKIP_BOOK_ODDS_POLL_SERVER=1.
  *
  * Env:
@@ -65,15 +66,14 @@ if (fastLocal) {
     if (!String(process.env[k] || "").trim()) process.env[k] = v;
   };
   def("GOLF_SKIP_HISTORICAL_ROUNDS_MERGE_ON_START", "1");
-  def("GOLF_SKIP_BOOK_ODDS_ON_START", "1");
+  /** Keep book odds + in-play refresh (light API); only skip heavy CSV/history/mirror. */
   def("GOLF_SKIP_LIVE_IN_PLAY_ON_START", "1");
-  def("GOLF_SKIP_BOOK_ODDS_POLL_SERVER", "1");
   def("GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER", "1");
   def("GOLF_SKIP_BUILD_HISTORY_ON_START", "1");
   def("GOLF_SKIP_SHOTS_WEB_ON_START", "1");
   def("GOLF_SKIP_MIRROR_MODEL_DATA_ON_START", "1");
   console.log(
-    "[alpha-caddie-web] Fast start: skipping rounds merge, history+shots rebuild, book odds + in-play (start + pollers), model CSV mirror — using files already on disk. Refresh data when needed: npm run fetch:dg / fetch:book-odds / update:rounds."
+    "[alpha-caddie-web] Fast start: skipping rounds merge, history+shots rebuild, model CSV mirror — still refreshes book odds + in-play when DATAGOLF_API_KEY is set. Heavy refresh: npm run fetch:dg / update:rounds."
   );
 }
 
@@ -354,7 +354,11 @@ function startUnifiedProjectionPipeline() {
         if (nextMode === "live") {
           console.log("[alpha-caddie-web] Unified pipeline mode=live (DataGolf in-play aligned): fetch:in-play + fetch:book-odds.");
         } else {
-          console.log("[alpha-caddie-web] Unified pipeline mode=pre-round (DataGolf not live/aligned): fetch:dg.");
+          console.log(
+            "[alpha-caddie-web] Unified pipeline mode=pre-round: fetch:book-odds every tick; fetch:dg at most every",
+            Math.round(preMs / 1000),
+            "s."
+          );
         }
       }
       if (nextMode === "live") {
@@ -368,18 +372,27 @@ function startUnifiedProjectionPipeline() {
         });
         return;
       }
-      if (now - lastPreRunAt < preMs) {
+      // Pre-round: always merge fresh sportsbook lines (was incorrectly gated on fetch:dg only — odds stayed stale for hours).
+      const bookJob = spawnScript(bookScript, "fetch:book-odds", { logNoKey: false });
+      if (!bookJob) {
         busy = false;
         return;
       }
-      lastPreRunAt = now;
-      const preJob = spawnScript(fetchDgScript, "fetch:dg", { logNoKey: false });
-      if (!preJob) {
-        busy = false;
-        return;
-      }
-      preJob.on("exit", () => {
-        busy = false;
+      bookJob.on("exit", () => {
+        const now2 = Date.now();
+        if (now2 - lastPreRunAt < preMs) {
+          busy = false;
+          return;
+        }
+        lastPreRunAt = now2;
+        const preJob = spawnScript(fetchDgScript, "fetch:dg", { logNoKey: false });
+        if (!preJob) {
+          busy = false;
+          return;
+        }
+        preJob.on("exit", () => {
+          busy = false;
+        });
       });
     });
   };

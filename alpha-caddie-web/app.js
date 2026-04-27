@@ -14,7 +14,8 @@
  * (Model O/U, round matchups, 3-balls) ignore those hooks unless `meta.in_play_affects_round_odds` is true.
  * Tournament matchups can still use live win-share blend when that flag is on.
  * projections.json: player win/top_* are implied probs (0–1) from preds/pre-tournament (default API decimal odds).
- * Outrights book columns: implied % (0–100) from betting-tools/outrights (default decimal). Over HTTP
+ * Outrights book columns: implied % (0–100) from DataGolf `betting-tools/outrights` (same markets as
+ * https://datagolf.com/betting-tool-finish; fetch scripts default odds_format=percent to match IMPLIED %). Over HTTP
  * the app refetches live-in-play.json often (default ~30s) but only re-merges when the bundle token
  * changes (in-play last_update + live feed timestamps). Opt out: ?liveInPlay=0
  * or ?liveInPlayPoll=0, or meta.poll_datagolf_live_predictions: false. Poll interval: ?liveInPlayPoll=90
@@ -243,7 +244,10 @@ function buildDefaultProjectionsPayload() {
     display_round_label: "",
     updated_at: "",
     source: "bundled-demo",
-    outrights_odds_format: "decimal",
+    outrights_model_blend_weight: 1,
+    outright_win_score_blend: 0,
+    outright_live_score_placement_nudge: false,
+    outrights_odds_format: "percent",
     matchups_odds_format: "decimal",
     players,
     props,
@@ -1471,12 +1475,8 @@ function updateStatusBar() {
   if (!el) return;
   const m = DATA.meta || {};
   const course = m.course_used ? String(m.course_used) : "—";
-  const liveMismatch = String(m.datagolf_live_event_mismatch || "").trim();
-  /* Live preds/in-play only merges placement when event matches projections.json; stale committed JSON → wrong course label + blocked merge. */
-  el.textContent = liveMismatch ? `${course} · live event ≠ projections file` : course;
-  el.title = liveMismatch
-    ? `Mismatch: ${liveMismatch}. Re-run npm run fetch:dg (correct GOLF_DATAGOLF_TOUR), commit projections.json, deploy.`
-    : [m.event_name, course].filter(Boolean).join(" · ");
+  el.textContent = course;
+  el.title = [m.event_name, course].filter(Boolean).join(" · ");
 }
 
 function configureRoundPickerUi() {
@@ -3063,27 +3063,6 @@ function outrightConsensusProbFromBooks(bookDecItems, prefs) {
   return avgDec > 1 ? 1 / avgDec : NaN;
 }
 
-/**
- * Blend DataGolf model probability (pre-tournament / placement source) with
- * market consensus implied probability from average outright odds.
- */
-function outrightModelBlendWeight() {
-  const wEnv = num(DATA?.meta?.outrights_model_blend_weight, NaN);
-  if (Number.isFinite(wEnv)) return clamp(wEnv, 0, 1);
-  return 0.7;
-}
-
-function blendedOutrightModelProb(modelP, consensusP) {
-  const mOk = Number.isFinite(modelP) && modelP > 0 && modelP < 1;
-  const cOk = Number.isFinite(consensusP) && consensusP > 0 && consensusP < 1;
-  if (!mOk && !cOk) return NaN;
-  if (mOk && !cOk) return clamp(modelP, 1e-6, 1 - 1e-6);
-  if (!mOk && cOk) return clamp(consensusP, 1e-6, 1 - 1e-6);
-  const wModel = outrightModelBlendWeight();
-  const p = wModel * modelP + (1 - wModel) * consensusP;
-  return clamp(p, 1e-6, 1 - 1e-6);
-}
-
 function evDevigSortedBookKeys() {
   return Object.keys(SPORTSBOOK_META)
     .filter((k) => k !== "datagolf")
@@ -3452,7 +3431,6 @@ function collectUnifiedEvRows() {
                     : "Outright Miss Cut",
         bet: mk === "mc" ? "Miss Cut" : mk === "make_cut" ? "Make Cut" : mk.replace("_", " ").toUpperCase(),
         modelPct: modelP,
-        blendedModelPct: blendedOutrightModelProb(modelP, marketP),
         modelEv: bestEv,
         bestBook,
         bestBookOdds: Number.isFinite(bestAm) ? formatAmerican(bestAm) : "—",
@@ -3562,18 +3540,7 @@ function buildEvTable() {
     tr.appendChild(mkTd(r.golfer));
     const modelTd = document.createElement("td");
     modelTd.className = "num";
-    const modelPrice = modelAmericanFromProb(r.modelPct);
-    modelTd.textContent = modelPrice;
-    const isOutrightRow = String(r.market || "").startsWith("Outright ");
-    if (isOutrightRow) {
-      const blendPrice = modelAmericanFromProb(num(r.blendedModelPct, NaN));
-      if (blendPrice && blendPrice !== "—") {
-        const sub = document.createElement("div");
-        sub.className = "model-blend-subline";
-        sub.textContent = `Blend ${blendPrice}`;
-        modelTd.appendChild(sub);
-      }
-    }
+    modelTd.textContent = modelAmericanFromProb(r.modelPct);
     tr.appendChild(modelTd);
     tr.appendChild(mkTd(modelAmericanFromProb(r.consensusP), "num"));
     tr.appendChild(mkTd(impliedStr, "num"));
@@ -3844,9 +3811,11 @@ function outrightFieldScoreSoftmaxWinMap() {
 /**
  * Nudge placement probs using leaderboard `current_score` vs the field (DataGolf: lower = better).
  * Scaled down when preds/in-play already supplied placement so we do not double-count DG's model.
+ * Off by default — +EV uses raw export placement unless meta.outright_live_score_placement_nudge is true.
  */
 function outrightProbWithLiveScoreNudge(rowPlayer, marketKey, baseP) {
   if (!Number.isFinite(baseP) || baseP <= 0 || baseP >= 1) return baseP;
+  if (DATA?.meta?.outright_live_score_placement_nudge !== true) return baseP;
   if (!outrightLiveTournamentContext()) return baseP;
   const fs = outrightFieldCurrentScoreStats();
   if (!fs) return baseP;
@@ -3896,8 +3865,8 @@ function modelProbOutrightMarket(rowPlayer, marketKey) {
     const pScore = sm.get(id);
     if (Number.isFinite(pScore) && sm.size >= 5) {
       const metaBlend = num(DATA?.meta?.outright_win_score_blend, NaN);
-      const blend = Number.isFinite(metaBlend) ? clamp(metaBlend, 0.2, 0.72) : 0.48;
-      baseP = clamp(blend * pScore + (1 - blend) * baseP, 1e-6, 1 - 1e-6);
+      const blend = Number.isFinite(metaBlend) ? clamp(metaBlend, 0, 1) : 0;
+      if (blend > 0) baseP = clamp(blend * pScore + (1 - blend) * baseP, 1e-6, 1 - 1e-6);
     }
   }
   if (marketKey === "mc") {
@@ -3917,7 +3886,10 @@ function modelProbOutrightMarket(rowPlayer, marketKey) {
  */
 function modelProbOutrightFromRowOrProjections(outrightRow, marketKey) {
   const id = Math.round(num(outrightRow?.dg_id, NaN));
-  const prow = Number.isFinite(id) ? projectionRowWithPlacementMerged(id) : null;
+  let prow = Number.isFinite(id) ? projectionRowWithPlacementMerged(id) : null;
+  if (!prow && outrightRow?.player_name) {
+    prow = projectionPlayerRowForModelByIdOrName(NaN, outrightRow.player_name, getModelRoundForEv());
+  }
   const fromPret = modelProbOutrightMarket(prow || {}, marketKey);
   if (Number.isFinite(fromPret) && fromPret > 0) return fromPret;
 
@@ -3926,6 +3898,23 @@ function modelProbOutrightFromRowOrProjections(outrightRow, marketKey) {
     let p = dgPct / 100;
     if (marketKey === "mc" && Number.isFinite(p)) p = 1 - p;
     if (p > 0 && p < 1) return clamp(p, 1e-6, 1 - 1e-6);
+  }
+  // Last-resort: when projections placement fields are null and API omits datagolf column,
+  // use market consensus from posted books so model price does not go blank.
+  let s = 0;
+  let nBooks = 0;
+  for (const [k, v] of Object.entries(outrightRow || {})) {
+    const kk = String(k || "").toLowerCase();
+    if (!kk || kk === "datagolf" || kk === "dg_id" || kk === "id" || kk === "player_name" || kk === "name") continue;
+    const pct = impliedPctFromBookField(v);
+    if (!Number.isFinite(pct) || pct <= 0 || pct >= 100) continue;
+    s += pct / 100;
+    nBooks += 1;
+  }
+  if (nBooks > 0) {
+    let p = s / nBooks;
+    if (marketKey === "mc") p = 1 - p;
+    if (Number.isFinite(p) && p > 0 && p < 1) return clamp(p, 1e-6, 1 - 1e-6);
   }
   return NaN;
 }
@@ -6913,9 +6902,10 @@ function initTabs() {
       }
       if (tab === "ev") {
         requestAnimationFrame(() => {
+          syncEvTabOddsAfterShow();
           if (!isFileProtocol()) {
             void loadProjections({ silent: true, reloadSidecar: false });
-          } else syncEvTabOddsAfterShow();
+          }
         });
       }
     });

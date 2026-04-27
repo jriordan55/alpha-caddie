@@ -1,6 +1,8 @@
-# Backfill data/all_shots_2021_2026.csv using pgatouR only (not DataGolf):
-# pull every PGA tournament whose schedule end date is after the latest end date among
+# Backfill data/all_shots_2022_2026.csv using pgatouR only (not DataGolf):
+# pull completed PGA tournaments whose schedule end date is after the latest end date among
 # tournament_ids already in the file, through Sys.Date(), plus in-progress events not yet stored.
+# PGA schedules are fetched only from the earliest season year found in the CSV (min 2022)
+# through the current calendar year — not from 2021 onward on every refresh.
 # See helper.R::backfill_shots_after_csv_anchor().
 #
 # Usage: Rscript scripts/update_latest_shots.R <repo_root>
@@ -10,6 +12,9 @@
 #   GOLF_MODEL_DIR     - repo root if no arg
 #   GOLF_SHOTS_FORCE=1 - re-pull even if tournament_id already in CSV
 #   GOLF_SKIP_SHOTS_UPDATE=1 - exit 0 immediately (for CI / machines without pgatouR)
+#
+# When invoked via alpha-caddie-web (npm run refresh:shots), run-update-latest-shots.mjs also runs
+# scripts/build_shots_round_aggregate.py unless GOLF_SKIP_SHOTS_AGGREGATE=1, then mirrors CSVs into web/data/.
 
 args <- commandArgs(trailingOnly = TRUE)
 repo <- if (length(args) >= 1L) {
@@ -39,7 +44,7 @@ if (!requireNamespace("pgatouR", quietly = TRUE)) {
 
 source(helper_path, local = FALSE)
 
-out_csv <- file.path(repo, "data", "all_shots_2021_2026.csv")
+out_csv <- file.path(repo, "data", "all_shots_2022_2026.csv")
 out_prog <- file.path(repo, "data", "all_shots_progress.rds")
 force <- identical(Sys.getenv("GOLF_SHOTS_FORCE", ""), "1")
 

@@ -904,6 +904,13 @@ body {
 .data-table-outrights tbody td {
   padding: 6px 10px;
 }
+.model-blend-subline {
+  margin-top: 3px;
+  font-size: 0.62rem;
+  line-height: 1.15;
+  color: var(--golf-text-muted);
+  font-weight: 600;
+}
 .data-table-outrights tbody tr.outrights-data-row.outrights-row-alt {
   background: rgba(255, 255, 255, 0.028);
 }
