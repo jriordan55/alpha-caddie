@@ -1,18 +1,21 @@
 # Alpha Caddie on Render — use a Web Service (this blueprint), not a Static Site.
-# Static Site deploys only fixed files from Git; nothing rewrites projections.json / live-in-play.json.
-# `npm start` runs serve-with-refresh.mjs: light preflight (book odds + in-play), then polls. Optional GOLF_START_FULL_REFRESH=1 for rounds merge + build:history on boot.
+# `npm start` → serve-with-refresh.mjs: book odds + in-play when DATAGOLF_API_KEY is set.
 #
-# After first deploy: Dashboard → this service → Environment → add secret DATAGOLF_API_KEY.
-# Optional: GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER=1 (disable live disk poll), GOLF_LIVE_IN_PLAY_SERVER_POLL_MS=30000
-# Keep field/event/course current without git: GOLF_FETCH_DG_SERVER_POLL_MS=1800000 (30 min; min 300000). Heavy API + CSV.
-# DraftKings round props need Playwright Chromium (installed in build). If your repo root differs, set rootDir
-# to the folder that contains this package.json (e.g. src/alpha-caddie-web).
-# DK event: set DK_LEAGUE_URL + DK_LEAGUE_ID (defaults target Masters nav — wrong week otherwise).
+# Dashboard → Environment: set secret DATAGOLF_API_KEY.
+# Commit alpha-caddie-web/projections.json, or set ALPHA_CADDIE_START_FETCH_DG=1 for a slow first-boot fetch:dg.
+#
+# GOLF_SKIP_DK_OU=1 (default below) skips Playwright/DraftKings props on Render. To enable DK: delete that env var
+# and use buildCommand: npm install && npx playwright install chromium
+#
+# Optional: GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER=1, GOLF_FETCH_DG_SERVER_POLL_MS=1800000, DK_LEAGUE_URL, DK_LEAGUE_ID.
 services:
   - type: web
     name: alpha-caddie-web
     runtime: node
     rootDir: alpha-caddie-web
-    buildCommand: npm install && npx playwright install chromium
+    buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /
+    envVars:
+      - key: GOLF_SKIP_DK_OU
+        value: "1"
