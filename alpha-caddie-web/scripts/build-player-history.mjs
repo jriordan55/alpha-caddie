@@ -134,6 +134,9 @@ function relUnderModel(absPath) {
 }
 
 function shotsModelCsvMeta() {
+  if (String(process.env.GOLF_USE_ALL_SHOTS_CSV || "").trim() !== "1") {
+    return { name: "all_shots_2022_2026.csv", present: false, disabled: true };
+  }
   const p = path.join(MODEL_ROOT, "data", "all_shots_2022_2026.csv");
   if (!fs.existsSync(p)) {
     return { name: "all_shots_2022_2026.csv", present: false };
@@ -343,11 +346,11 @@ function resolvePgaDgMapCsvPath() {
 }
 
 function resolveShotsRoundAggCsvPath() {
+  if (String(process.env.GOLF_USE_ALL_SHOTS_CSV || "").trim() !== "1") return null;
   if (process.env.SHOTS_ROUND_AGG_CSV) return path.resolve(String(process.env.SHOTS_ROUND_AGG_CSV).trim());
-  const a = path.join(MODEL_ROOT, "data", "all_shots_2022_2026_round_fairways_gir_putts.csv");
-  if (fs.existsSync(a)) return a;
-  const b = path.join(WEB_ROOT, "data", "all_shots_2022_2026_round_fairways_gir_putts.csv");
-  return fs.existsSync(b) ? b : a;
+  const web = path.join(WEB_ROOT, "data", "all_shots_2022_2026_round_fairways_gir_putts.csv");
+  if (fs.existsSync(web)) return web;
+  return path.join(MODEL_ROOT, "data", "all_shots_2022_2026_round_fairways_gir_putts.csv");
 }
 
 /**
@@ -361,8 +364,11 @@ async function loadShotsRoundAggMaps() {
   const byDgEvtYrRnd = new Map();
   const byPkEvtYrRnd = new Map();
   const aggPath = resolveShotsRoundAggCsvPath();
-  if (!fs.existsSync(aggPath)) {
-    console.log("Shots round aggregate CSV (optional): not found —", path.basename(aggPath));
+  if (!aggPath || !fs.existsSync(aggPath)) {
+    console.log(
+      "Shots round aggregate CSV (optional): skipped —",
+      aggPath ? path.basename(aggPath) : "GOLF_USE_ALL_SHOTS_CSV not set",
+    );
     return { byDgSk, byPkSk, byDgEvtYrRnd, byPkEvtYrRnd, aggPath: null };
   }
 

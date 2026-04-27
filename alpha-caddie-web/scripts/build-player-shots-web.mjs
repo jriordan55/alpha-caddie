@@ -8,6 +8,9 @@
  * - Maps pga player_id → dg_id via data/pga_datagolf_player_map.csv.
  *
  * Env: GOLF_MODEL_DIR. Run: npm run build:shots-web
+ *
+ * Default: does nothing (writes empty player_shots_web.json). Opt in with GOLF_USE_ALL_SHOTS_CSV=1
+ * when data/all_shots_2022_2026.csv is present.
  */
 import fs from "fs";
 import path from "path";
@@ -383,6 +386,25 @@ function serializeNestedMaps(byDg) {
 }
 
 async function main() {
+  if (String(process.env.GOLF_USE_ALL_SHOTS_CSV || "").trim() !== "1") {
+    const stub = {
+      meta: {
+        updated_at: new Date().toISOString(),
+        skipped: true,
+        note: "Set GOLF_USE_ALL_SHOTS_CSV=1 and keep data/all_shots_2022_2026.csv to build shot rows.",
+      },
+      byDgId: {},
+    };
+    fs.writeFileSync(OUT_JSON, JSON.stringify(stub), "utf8");
+    fs.writeFileSync(
+      HOLE_PARS_FROM_SHOTS_JSON,
+      JSON.stringify({ updated_at: stub.meta.updated_at, hole_pars_by_event_norm: {} }, null, 2),
+      "utf8",
+    );
+    console.log("[build-player-shots-web] Skipped (GOLF_USE_ALL_SHOTS_CSV not set) — wrote minimal", OUT_JSON);
+    return;
+  }
+
   console.log("Shots CSV:", SHOTS_CSV);
   console.log("Rounds CSV (allowlist):", ROUNDS_CSV);
   const allowed = loadAllowedDgIds();

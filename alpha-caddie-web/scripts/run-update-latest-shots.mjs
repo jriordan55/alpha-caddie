@@ -64,7 +64,7 @@ if (process.env.GOLF_SKIP_SHOTS_AGGREGATE === "1") {
   if ((last.status ?? 1) !== 0) process.exit(last.status ?? 1);
 }
 
-mirrorModelDataToWeb(REPO_ROOT, WEB_ROOT);
+mirrorModelDataToWeb(REPO_ROOT, WEB_ROOT, { includeAllShotsCsv: true });
 
 const buildShots = path.join(WEB_ROOT, "scripts", "build-player-shots-web.mjs");
 if (fs.existsSync(buildShots)) {

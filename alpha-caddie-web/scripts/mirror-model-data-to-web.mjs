@@ -4,8 +4,8 @@
  * Explorer stay aligned with golfModel/data/ after R refreshes.
  *
  *   - data/historical_rounds_all.csv
- *   - data/all_shots_2022_2026.csv (if present and options.skipAllShotsCsv is not true)
- *   - data/all_shots_2022_2026_round_fairways_gir_putts.csv (if present)
+ *   - data/all_shots_2022_2026.csv + round fairways/GIR/putts aggregate (only if options.includeAllShotsCsv
+ *     or GOLF_USE_ALL_SHOTS_CSV=1 — default off; huge files stay out of the web mirror)
  *   - hole_data.csv from data/hole_data.csv or repo root hole_data.csv
  *
  * Import: import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
@@ -36,7 +36,7 @@ const REPO_ROOT = path.resolve(WEB_ROOT, "..");
 /**
  * @param {string} repoRoot - golfModel root (parent of alpha-caddie-web)
  * @param {string} webRoot - alpha-caddie-web root
- * @param {{ skipAllShotsCsv?: boolean }} [options] — set skipAllShotsCsv to avoid copying the large shots CSV (e.g. after fetch:dg when not rebuilding player_shots_web.json).
+ * @param {{ includeAllShotsCsv?: boolean }} [options] — copy all_shots + round aggregate when true (or env GOLF_USE_ALL_SHOTS_CSV=1). Default: do not copy.
  */
 /** Windows often returns EBUSY if Excel/OneDrive/AV has the file open — retry with short delay. */
 function copyFileRetry(src, dest, label) {
@@ -60,7 +60,9 @@ function copyFileRetry(src, dest, label) {
 }
 
 export function mirrorModelDataToWeb(repoRoot, webRoot, options = {}) {
-  const skipAllShotsCsv = options.skipAllShotsCsv === true;
+  const wantShots =
+    options.includeAllShotsCsv === true ||
+    String(process.env.GOLF_USE_ALL_SHOTS_CSV || "").trim() === "1";
   const webData = path.join(webRoot, "data");
   fs.mkdirSync(webData, { recursive: true });
   const copied = [];
@@ -72,15 +74,15 @@ export function mirrorModelDataToWeb(repoRoot, webRoot, options = {}) {
   }
 
   const shots = path.join(repoRoot, "data", "all_shots_2022_2026.csv");
-  if (!skipAllShotsCsv && fs.existsSync(shots)) {
+  if (wantShots && fs.existsSync(shots)) {
     const ok = copyFileRetry(shots, path.join(webData, "all_shots_2022_2026.csv"), "all_shots_2022_2026.csv");
     if (ok) copied.push("all_shots_2022_2026.csv");
-  } else if (skipAllShotsCsv) {
-    console.log("[mirror-model-data-to-web] skip all_shots_2022_2026.csv (skipAllShotsCsv)");
+  } else if (!wantShots) {
+    console.log("[mirror-model-data-to-web] skip all_shots + round aggregate (set GOLF_USE_ALL_SHOTS_CSV=1 or includeAllShotsCsv:true to copy)");
   }
 
   const roundAgg = path.join(repoRoot, "data", "all_shots_2022_2026_round_fairways_gir_putts.csv");
-  if (fs.existsSync(roundAgg)) {
+  if (wantShots && fs.existsSync(roundAgg)) {
     const ok = copyFileRetry(
       roundAgg,
       path.join(webData, "all_shots_2022_2026_round_fairways_gir_putts.csv"),

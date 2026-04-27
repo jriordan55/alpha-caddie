@@ -8,10 +8,10 @@
  * Usage (from alpha-caddie-web/):
  *   set DATAGOLF_API_KEY=your_key
  *   npm run fetch:dg
- * Shots (heavy): by default this script does **not** rescan all_shots_2022_2026.csv or copy it into
- * alpha-caddie-web/data (avoids long runs + Windows EBUSY on the CSV). Set GOLF_BUILD_SHOTS_WEB_ON_FETCH=1
- * to run build-player-shots-web.mjs and mirror that CSV. Full pgatouR backfill remains `npm run refresh:shots`
- * or `npm run refresh:daily` (R update + mirror + shots web build).
+ * Shots (heavy): all_shots CSV is **off by default**. `mirror-model-data-to-web` does not copy
+ * all_shots_*.csv unless GOLF_USE_ALL_SHOTS_CSV=1 or `npm run refresh:shots` (passes includeAllShotsCsv).
+ * Set GOLF_BUILD_SHOTS_WEB_ON_FETCH=1 to run build-player-shots-web.mjs after fetch (still writes a
+ * minimal JSON unless GOLF_USE_ALL_SHOTS_CSV=1 and data/all_shots_2022_2026.csv exists).
  *
  * Or copy datagolf.local.example.json -> datagolf.local.json and put "apiKey" there.
  *
@@ -968,7 +968,9 @@ async function main() {
 
   const shotsWebScript = join(__dirname, "build-player-shots-web.mjs");
   if (buildShotsWebOnFetch && existsSync(shotsWebScript)) {
-    console.log("Building player_shots_web.json from all_shots CSV (2022+) …");
+    console.log(
+      "Running build-player-shots-web.mjs (full shot rows only if GOLF_USE_ALL_SHOTS_CSV=1 and CSV exists) …",
+    );
     const sr = spawnSync(process.execPath, [shotsWebScript], {
       cwd: ROOT,
       stdio: "inherit",
@@ -981,7 +983,7 @@ async function main() {
     );
   }
 
-  mirrorModelDataToWeb(GOLF_MODEL_ROOT, ROOT, { skipAllShotsCsv: !buildShotsWebOnFetch });
+  mirrorModelDataToWeb(GOLF_MODEL_ROOT, ROOT);
 }
 
 main().catch((e) => {
