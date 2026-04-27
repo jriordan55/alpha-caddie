@@ -16,7 +16,10 @@ alpha-caddie-web/player_shots_web.json
 alpha-caddie-web/logs/
 
 # Raw / huge CSVs — exceed GitHub 100MB limit (regenerate locally or use Git LFS)
+**/all_shots_2021_2026.csv
 **/all_shots_2022_2026.csv
+# Mirrored from repo root by scripts; large — do not commit the web copy
+alpha-caddie-web/data/historical_rounds_all.csv
 **/hole_data.csv
 **/historical_rounds_all_with_tournament_metadata.csv
 **/historical_rounds_all_with_tournament_metadata_*.csv
