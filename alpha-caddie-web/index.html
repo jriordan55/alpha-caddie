@@ -20,7 +20,7 @@
 
   <main class="content-wrapper">
     <nav class="tabs" role="tablist" aria-label="Main">
-      <button type="button" class="tab active" data-tab="ou" role="tab" aria-selected="true">Model O/U</button>
+      <button type="button" class="tab active" data-tab="ou" role="tab" aria-selected="true">Round projections</button>
       <button type="button" class="tab" data-tab="props" role="tab">Historical Trends</button>
       <button type="button" class="tab" data-tab="ev" role="tab">+EV Bets</button>
       <button type="button" class="tab" data-tab="hangout" role="tab">Hole Hangout</button>
@@ -33,15 +33,15 @@
     </p>
     <p id="boot-error" class="note text-warn" hidden style="font-weight:600;"></p>
 
-    <!-- Model O/U -->
-    <section id="panel-ou" class="panel active" role="tabpanel">
+    <!-- Round projections (tab id ou) -->
+    <section id="panel-ou" class="panel active" role="tabpanel" data-ou-view="projections">
       <div class="ev-panel-head">
-        <h2 class="ev-devig-sr-only">Model O/U</h2>
-        <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="ou" aria-label="Help: Model O/U tab">?</button>
+        <h2 class="ev-devig-sr-only">Round projections</h2>
+        <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="ou" aria-label="Help: Round projections tab">?</button>
       </div>
       <div class="ou-filter-card">
         <div class="ou-panel-head">
-          <div class="toolbar ou-toolbar">
+          <div class="toolbar ou-toolbar ou-toolbar-projections">
             <span class="toolbar-label muted ou-auto-round-line" id="auto-round">—</span>
             <label class="toolbar-label ou-round-label">Round
               <select id="lb-round" title="Round">
@@ -51,41 +51,48 @@
                 <option value="4">R4</option>
               </select>
             </label>
+            <label class="toolbar-label ou-filter-field ou-golfer-inline">Golfer
+              <select id="ou-player-filter" title="Filter table to one golfer">
+                <option value="">All golfers</option>
+              </select>
+            </label>
+            <label class="toolbar-label ou-filter-field">Market
+              <select id="ou-proj-market-filter" title="Filter table to one stat market">
+                <option value="">All markets</option>
+              </select>
+            </label>
           </div>
+        </div>
+        <div class="ou-legacy-ou-controls" hidden aria-hidden="true">
           <div class="ou-view-toggle-wrap" aria-label="O/U display mode">
             <div class="ou-view-toggle" role="tablist">
               <button type="button" class="ou-toggle-btn active" id="ou-mode-prob" role="tab" aria-selected="true" data-ou-mode="prob">Prob</button>
               <button type="button" class="ou-toggle-btn" id="ou-mode-price" role="tab" aria-selected="false" data-ou-mode="price">Price</button>
             </div>
           </div>
-        </div>
-        <div class="ou-filters toolbar" aria-label="O/U filters">
-          <label class="toolbar-label ou-filter-field ou-filter-span-full">Market
-            <select id="ou-market-filter">
-              <option value="Total score">Round score</option>
-              <option>Birdies</option>
-              <option>Pars</option>
-              <option>Bogeys</option>
-              <option>GIR</option>
-              <option>Fairways hit</option>
-              <option>Putts</option>
-            </select>
-          </label>
-          <label class="toolbar-label ou-filter-field ou-filter-span-full">Golfer
-            <select id="ou-player-filter">
-              <option value="">All</option>
-            </select>
-          </label>
-          <label class="toolbar-label ou-filter-field ou-filter-span-full ou-filter-line-wrap">Line
-            <input id="ou-line-filter" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="70.5" />
-          </label>
-          <div class="ou-odds-pair" role="group" aria-label="Over and under odds (DraftKings-style lines when loaded in projections.props)">
-            <label class="toolbar-label ou-filter-field">Over odds
-              <input id="ou-odds-over-filter" type="text" inputmode="text" value="-110" title="Book over price for the highlighted line; auto-filled from projections.props (e.g. CSV merged by npm run fetch:book-odds) when a golfer is selected." />
+          <div class="ou-filters toolbar" aria-label="Legacy O/U line tools">
+            <label class="toolbar-label ou-filter-field ou-filter-span-full">Market
+              <select id="ou-market-filter">
+                <option value="Total score">Round score</option>
+                <option>Birdies</option>
+                <option>Pars</option>
+                <option>Bogeys</option>
+                <option>GIR</option>
+                <option>Fairways hit</option>
+                <option>Putts</option>
+              </select>
             </label>
-            <label class="toolbar-label ou-filter-field">Under odds
-              <input id="ou-odds-under-filter" type="text" inputmode="text" value="-110" title="Book under price for the highlighted line; auto-filled from projections.props when available." />
+            <label class="toolbar-label ou-filter-field ou-filter-span-full ou-filter-line-wrap">Line
+              <input id="ou-line-filter" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="70.5" />
             </label>
+            <div class="ou-odds-pair" role="group" aria-label="Over and under odds">
+              <label class="toolbar-label ou-filter-field">Over odds
+                <input id="ou-odds-over-filter" type="text" inputmode="text" value="-110" />
+              </label>
+              <label class="toolbar-label ou-filter-field">Under odds
+                <input id="ou-odds-under-filter" type="text" inputmode="text" value="-110" />
+              </label>
+            </div>
           </div>
         </div>
         <div class="toolbar weather-toolbar ou-weather-block" aria-label="Weather adjustments">
@@ -138,7 +145,7 @@
         </div>
       </div>
       <div class="table-wrap leaderboard-card ou-table-card">
-        <table class="data-table" id="table-ou">
+        <table class="data-table table-ou-projections" id="table-ou">
           <thead></thead>
           <tbody></tbody>
         </table>
@@ -404,7 +411,7 @@
         <h2 class="ev-devig-sr-only">Round Matchups</h2>
         <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="matchups" aria-label="Help: Round Matchups tab">?</button>
       </div>
-      <p class="text-muted">Prices are decimal odds from the loaded matchups board. The <strong>Model</strong> column follows the <strong>round</strong> you pick on Model O/U so it stays aligned with the rest of the sheet.</p>
+      <p class="text-muted">Prices are decimal odds from the loaded matchups board. The <strong>Model</strong> column follows the <strong>round</strong> you pick on Round projections so it stays aligned with the rest of the sheet.</p>
       <p class="text-muted" id="matchups-source-note" hidden></p>
       <div class="toolbar outrights-toolbar">
         <label class="toolbar-label">Market
@@ -562,7 +569,7 @@
             <select id="hh-hole" title="Par from venue scorecard (hole_pars)"></select>
           </label>
           <label>Player
-            <select id="hh-player" title="Field for the round selected on Model O/U"></select>
+            <select id="hh-player" title="Field for the round selected on Round projections"></select>
           </label>
           <div class="hangout-sim-actions">
             <button type="button" class="btn-primary" id="hh-sim-run">Run simulation</button>
@@ -713,7 +720,7 @@
       <section class="ev-help-section" aria-labelledby="ev-help-weather-h">
         <h4 class="ev-devig-section-title" id="ev-help-weather-h">Weather</h4>
         <p class="text-muted ev-help-devig-lede">
-          Use the same weather controls as Model O/U and Hole Hangout. Set temp, wind, humidity, and <strong>Condition</strong> to match the expected day; that updates fair win chances on every row here. Choosing <strong>Default</strong> for condition resets the numbers to the baseline weather snapshot (then adjust sliders again if needed).
+          Use the same weather controls as Round projections and Hole Hangout. Set temp, wind, humidity, and <strong>Condition</strong> to match the expected day; that updates fair win chances on every row here. Choosing <strong>Default</strong> for condition resets the numbers to the baseline weather snapshot (then adjust sliders again if needed).
         </p>
       </section>
 
@@ -787,15 +794,15 @@
   <dialog id="tab-help-dialog-ou" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-ou">
     <div class="ev-devig-dialog-inner ev-help-dialog-inner">
       <header class="ev-devig-head">
-        <h3 class="ev-devig-title" id="tab-help-title-ou">Model O/U</h3>
+        <h3 class="ev-devig-title" id="tab-help-title-ou">Round projections</h3>
         <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
       </header>
       <p class="ev-help-intro text-muted">
-        Pick a <strong>Market</strong> (round score, props, and so on), then read each golfer’s model edge at the listed <strong>lines</strong>. Use <strong>Round</strong> to match Thursday through Sunday. Switch <strong>Prob / Price</strong> to read edges as percentages or as fair American odds. Set <strong>Line</strong> and the over and under odds to mirror a ticket; that column highlights when the line matches.
+        For the <strong>Round</strong> you pick (R1–R4), each row is one golfer, one DraftKings market that exists for the event, and either <strong>Over</strong> or <strong>Under</strong> on that line. Columns show the model projection in <strong>Proj</strong>, the book line, a <strong>Book</strong> mark (DraftKings logo), the price for that side, model probability at the line, and edge vs the book. The table loads sorted by <strong>Edge</strong> (highest first). <strong>Click a row</strong> to expand a detail strip: discrete outcome distribution (line vs over), projection snapshot, and model inputs. Tap the same row again to collapse. Markets follow the same weather and pricing adjustments as the rest of the app. Hover a row for mean and σ used on the model side of the line.
       </p>
       <section class="ev-help-section" aria-labelledby="tab-help-ou-sort-h">
-        <h4 class="ev-devig-section-title" id="tab-help-ou-sort-h">Table and chart</h4>
-        <p class="text-muted ev-help-devig-lede">Tap column headers to sort. Green and red cells flag where the model disagrees with the book’s implied price. Choose one golfer in <strong>Golfer</strong> to open the bar chart and scan over probability across lines.</p>
+        <h4 class="ev-devig-section-title" id="tab-help-ou-sort-h">Table</h4>
+        <p class="text-muted ev-help-devig-lede">Tap a column header to sort. On load, rows are ordered by <strong>Edge</strong> (highest first). When two rows tie on the active sort column, order falls back to golfer, then market, then Over before Under. Use <strong>Golfer</strong> and <strong>Market</strong> above the table to limit rows to one player and/or one stat (DK markets present for the event). Each golfer–market pair still shows Over and Under. Changing <strong>Round</strong> or either filter collapses any expanded row.</p>
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-ou-weather-h">
         <h4 class="ev-devig-section-title" id="tab-help-ou-weather-h">Weather</h4>
@@ -851,7 +858,7 @@
       </p>
       <section class="ev-help-section" aria-labelledby="tab-help-matchups-model-h">
         <h4 class="ev-devig-section-title" id="tab-help-matchups-model-h">Market and round</h4>
-        <p class="text-muted ev-help-devig-lede">Use <strong>Market</strong> to switch tournament, single-round, or three-ball lists. Set <strong>Round</strong> on the Model O/U tab first; this table follows that choice. Adjust <strong>Weather</strong> and <strong>Pricing</strong> on other tabs to update fair win chances here.</p>
+        <p class="text-muted ev-help-devig-lede">Use <strong>Market</strong> to switch tournament, single-round, or three-ball lists. Set <strong>Round</strong> on the Round projections tab first; this table follows that choice. Adjust <strong>Weather</strong> and <strong>Pricing</strong> on other tabs to update fair win chances here.</p>
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-matchups-pricing-h">
         <h4 class="ev-devig-section-title" id="tab-help-matchups-pricing-h">Pricing</h4>
@@ -874,7 +881,7 @@
       </p>
       <section class="ev-help-section" aria-labelledby="tab-help-outrights-global-h">
         <h4 class="ev-devig-section-title" id="tab-help-outrights-global-h">Weather and pricing</h4>
-        <p class="text-muted ev-help-devig-lede">Weather lives on Model O/U, +EV, or Hole Hangout but still moves fair chances here. Use the <strong>Pricing</strong> row to align with form, course, or skill the same way as on other tabs.</p>
+        <p class="text-muted ev-help-devig-lede">Weather lives on Round projections, +EV, or Hole Hangout but still moves fair chances here. Use the <strong>Pricing</strong> row to align with form, course, or skill the same way as on other tabs.</p>
       </section>
       <footer class="ev-help-actions">
         <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
@@ -889,7 +896,7 @@
         <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
       </header>
       <p class="ev-help-intro text-muted">
-        The <strong>course</strong> under the tabs applies to every screen. Pick <strong>Hole</strong> and <strong>Player</strong> (field follows the round on Model O/U). Results refresh when you change weather, pricing, hole, player, or live scenario; <strong>Run simulation</strong> forces an immediate refresh. The same settings reproduce the same sample shot path.
+        The <strong>course</strong> under the tabs applies to every screen. Pick <strong>Hole</strong> and <strong>Player</strong> (field follows the round on Round projections). Results refresh when you change weather, pricing, hole, player, or live scenario; <strong>Run simulation</strong> forces an immediate refresh. The same settings reproduce the same sample shot path.
       </p>
       <section class="ev-help-section" aria-labelledby="tab-help-hh-live-h">
         <h4 class="ev-devig-section-title" id="tab-help-hh-live-h">Live inputs</h4>
@@ -897,7 +904,7 @@
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-hh-weather-h">
         <h4 class="ev-devig-section-title" id="tab-help-hh-weather-h">Weather</h4>
-        <p class="text-muted ev-help-devig-lede">These sliders stay in sync with the rest of the app; change them the same way as on Model O/U to reflect wind and conditions.</p>
+        <p class="text-muted ev-help-devig-lede">These sliders stay in sync with the rest of the app; change them the same way as on Round projections to reflect wind and conditions.</p>
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-hh-pricing-h">
         <h4 class="ev-devig-section-title" id="tab-help-hh-pricing-h">Pricing</h4>
@@ -910,6 +917,6 @@
   </dialog>
 
   <script src="embedded-player-round-history.js?v=5"></script>
-  <script src="app.js?v=15"></script>
+  <script src="app.js?v=16"></script>
 </body>
 </html>
