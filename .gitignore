@@ -18,6 +18,11 @@ alpha-caddie-web/logs/
 # Raw / huge CSVs — exceed GitHub 100MB limit (regenerate locally or use Git LFS)
 **/all_shots_2021_2026.csv
 **/all_shots_2022_2026.csv
+data/all_shots_2022_2026.repull2.csv
+data/all_shots_2022_2026.merged.clean.csv
+data/all_shots_2024_2026.fixed.csv
+**/all_shots_2022_2026_round_fairways_gir_putts.csv.new.csv
+data/all_shots_2024_2026.fixed.csv - Shortcut.lnk
 # Mirrored from repo root by scripts; large — do not commit the web copy
 alpha-caddie-web/data/historical_rounds_all.csv
 **/hole_data.csv
@@ -31,3 +36,5 @@ data/historical_matchups_outcomes_*.csv
 
 java/alphacaddie/target/
 java/alphacaddie/.mvn-tools/
+
+scripts/__pycache__/

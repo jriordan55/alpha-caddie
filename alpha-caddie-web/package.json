@@ -6,6 +6,7 @@
     "fetch:dg": "node scripts/fetch-datagolf.mjs",
     "fetch:in-play": "node scripts/fetch-live-in-play.mjs",
     "fetch:book-odds": "node scripts/fetch-book-odds-into-projections.mjs",
+    "refresh": "node scripts/refresh-fresh.mjs",
     "fetch:dk-ou": "node scripts/draftkings-ou-props.mjs",
     "update:rounds": "node scripts/run-update-historical-rounds.mjs",
     "sync:rounds-csv": "node scripts/sync-historical-csv.mjs",
