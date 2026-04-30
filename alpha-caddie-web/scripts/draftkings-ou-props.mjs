@@ -8,7 +8,8 @@
  *   DK_SITE_SEGMENT — default US-MA-SB (set to your state segment if requests fail)
  *   DK_LEAGUE_ID — optional explicit league id (auto-detected from page if omitted).
  *   DK_SUBCAT_JSON — optional override per stat (skips subcategory probe for keys you set).
- *   Putts / GIR / fairways: nav ids often point at hole or “2 ball” markets; we probe league subs for titles like “… Putts - Round 1”.
+ *   Putts / GIR / fairways / Birdies / Pars: nav ids often point at hole, “2 ball”, “player most”, or Par-N props;
+ *   we probe league subs for titles like “… Putts - Round 1” / “… Birdies or Better - Round 1”.
  *
  * Note: "Total Score" can be absent on some events; fallback CSV still applies in fetch-book-odds-into-projections.
  */
@@ -425,7 +426,7 @@ export async function fetchDraftKingsOuProps(opts = {}) {
 
   const allLeagueSubIds = Array.isArray(nav.allSubIdsForLeague) ? nav.allSubIdsForLeague : [];
   const api = ctx.request;
-  for (const st of ["Putts", "GIR", "Fairways hit"]) {
+  for (const st of ["Putts", "GIR", "Fairways hit", "Birdies", "Pars"]) {
     if (overrides[st]) continue;
     const pref = statToSub[st] || "";
     if (!pref && !(PROBE_SUBS_FIRST[st] || []).length && st !== "Fairways hit" && st !== "GIR") continue;
