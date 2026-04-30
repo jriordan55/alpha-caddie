@@ -20,3 +20,16 @@ services:
     buildCommand: npm install && npx playwright install chromium
     startCommand: npm start
     healthCheckPath: /
+    envVars:
+      # Keep DraftKings scrape enabled on Render.
+      - key: GOLF_SKIP_DK_OU
+        value: "0"
+      # Rebuild/merge sportsbook + DK props every minute.
+      - key: GOLF_BOOK_ODDS_SERVER_POLL_MS
+        value: "60000"
+      # Refresh full DataGolf projections every 10 minutes (keeps model fallback markets fresh).
+      - key: GOLF_FETCH_DG_SERVER_POLL_MS
+        value: "600000"
+      # Prefer live API + DK props over static CSV props on Render.
+      - key: GOLF_SKIP_PROPS_CSV
+        value: "1"
