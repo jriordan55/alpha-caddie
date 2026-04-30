@@ -3975,7 +3975,6 @@ function collectUnifiedEvRows() {
       });
     }
   }
-  appendModelOuPropsEvRows(rows, elim);
   return rows;
 }
 
@@ -5070,6 +5069,18 @@ function courseNameMatchesVenueLoose(courseNameRaw, venueRaw) {
   return false;
 }
 
+/** Course-name canonical key for filters/matching (e.g. "Trump National Doral" vs "(Blue Monster)"). */
+function normCourseNameKey(raw) {
+  return String(raw || "")
+    .toLowerCase()
+    .replace(/\([^)]*\)/g, " ")
+    .replace(/\b(blue monster|stadium course|championship course|club de golf)\b/g, " ")
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 /** Schedule title match + prefix / normalized fallbacks (sponsor-heavy titles vs short CSV names). */
 function eventNameMatchesCurrentSchedule(histNameRaw, metaNameRaw) {
   if (scheduleNameMatchesMeta(histNameRaw, metaNameRaw)) return true;
@@ -5103,7 +5114,7 @@ function filteredHistoryRounds(dgId) {
   }
   const courseFilter = selectedPropsCourseFilter();
   if (courseFilter) {
-    list = list.filter((r) => String(r.course_name || "").trim().toLowerCase() === courseFilter);
+    list = list.filter((r) => normCourseNameKey(r.course_name) === normCourseNameKey(courseFilter));
   }
   const tempBucket = selectedPropsTempRangeFilter();
   if (tempBucket) {
@@ -5124,7 +5135,7 @@ function filteredHistoryRounds(dgId) {
   if (courseFilterOn() && !list.length) {
     list = historyRoundsForDg(dgId).filter((r) => !historyRoundIsPlaceholderAllMarketsZero(r));
     if (courseFilter) {
-      list = list.filter((r) => String(r.course_name || "").trim().toLowerCase() === courseFilter);
+      list = list.filter((r) => normCourseNameKey(r.course_name) === normCourseNameKey(courseFilter));
     }
     if (tempBucket) {
       list = list.filter((r) => weatherRangeMatch("temp", tempBucket, parseWeatherNumber(r?.pga_meta_weather_temp_f ?? r?.weather_temp_f)));
@@ -5175,7 +5186,11 @@ function courseNameMatchesVenue(courseNameRaw, venueRaw) {
   const c = String(courseNameRaw || "").trim().toLowerCase();
   const v = String(venueRaw || "").trim().toLowerCase();
   if (!c || !v) return false;
-  return c.includes(v) || v.includes(c);
+  if (c.includes(v) || v.includes(c)) return true;
+  const ck = normCourseNameKey(c);
+  const vk = normCourseNameKey(v);
+  if (!ck || !vk) return false;
+  return ck.includes(vk) || vk.includes(ck);
 }
 
 function pricingModeMuSgBonus(dgId) {
