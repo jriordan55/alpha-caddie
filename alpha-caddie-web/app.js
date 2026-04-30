@@ -1508,22 +1508,31 @@ const OU_PROJECTION_MARKETS = Object.freeze([
   { market: "Putts", label: "Putts" },
 ]);
 
-function ouDraftKingsPropsOnly() {
+/**
+ * Props used to resolve lines and odds (DK scrape + CSV + model fallback rows in JSON).
+ * Model fallback is excluded from {@link ouProjectionColumnsActive} so the table matches DK-offered markets.
+ */
+function ouRoundOuPropsForLines() {
   const props = Array.isArray(DATA.props) ? DATA.props : [];
-  const dk = props.filter((r) => String(r.source || "").trim().toLowerCase() === "draftkings");
-  // Backward compatibility for older projections.json files without source tagging.
-  return dk.length ? dk : props;
+  const merged = props.filter((r) => {
+    const s = String(r.source || "").trim().toLowerCase();
+    return !s || s === "draftkings" || s === "csv" || s === "model_fallback";
+  });
+  return merged.length ? merged : props;
 }
 
+/**
+ * Columns + Market filter: markets from DraftKings scrape only (`source: draftkings`).
+ * No CSV or untagged fallback — if DK props are absent (e.g. GOLF_SKIP_DK_OU on Render), the grid is empty until a DK run populates props.
+ */
 function ouProjectionColumnsActive() {
-  const props = ouDraftKingsPropsOnly();
-  const dkMarkets = new Set(
-    props.map((r) => String(r.market || "").trim())
-  );
+  const props = Array.isArray(DATA.props) ? DATA.props : [];
+  const dk = props.filter((r) => String(r.source || "").trim().toLowerCase() === "draftkings");
+  const marketSet = new Set(dk.map((r) => String(r.market || "").trim()));
   const out = [];
   for (const col of OU_PROJECTION_MARKETS) {
     const canon = ouPropsCanonicalMarket(col.market);
-    if (dkMarkets.has(canon)) out.push(col);
+    if (marketSet.has(canon)) out.push(col);
   }
   return out;
 }
@@ -2060,7 +2069,7 @@ function ouPropPlayerKeyDisplay(name) {
 function ouBuildPropsOddsIndex(market) {
   const canon = ouPropsCanonicalMarket(market);
   const map = new Map();
-  const props = ouDraftKingsPropsOnly();
+  const props = ouRoundOuPropsForLines();
   for (const r of props) {
     if (String(r.market || "").trim() !== canon) continue;
     const L = enforceHalfLine(num(r.line, NaN));
@@ -2097,7 +2106,7 @@ function ouPropsBookOddsFromIndex(idx, playerRow, line) {
 
 function ouPropsRowsForMarketPlayer(market, playerRow) {
   const canon = ouPropsCanonicalMarket(market);
-  const props = ouDraftKingsPropsOnly();
+  const props = ouRoundOuPropsForLines();
   const out = [];
   const wantId = Math.round(num(playerRow?.dg_id, NaN));
   const wantRaw = ouPropPlayerKeyRaw(playerRow?.player_name || "");
