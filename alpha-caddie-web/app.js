@@ -5096,13 +5096,16 @@ function eventNameMatchesCurrentSchedule(histNameRaw, metaNameRaw) {
   return false;
 }
 
-/** Current course / event from projections vs this history row (either can match). */
+/** Current tournament context match for history rows.
+ * If venue is known, require course match for "Current course only".
+ * Event-name fallback is used only when venue is unavailable.
+ */
 function currentTournamentContextMatchesRound(r) {
   const vn = venueCourseName();
   const metaEvent = String(DATA.meta.event_name || "").trim();
-  const byCourse = vn ? courseNameMatchesVenueLoose(r.course_name, vn) : false;
-  const byEvent = metaEvent ? eventNameMatchesCurrentSchedule(r.event_name, metaEvent) : false;
-  return byCourse || byEvent;
+  if (vn) return courseNameMatchesVenueLoose(r.course_name, vn);
+  if (metaEvent) return eventNameMatchesCurrentSchedule(r.event_name, metaEvent);
+  return false;
 }
 
 function filteredHistoryRounds(dgId) {
@@ -5133,25 +5136,28 @@ function filteredHistoryRounds(dgId) {
     );
   }
   list = list.filter((r) => !historyRoundIsPlaceholderAllMarketsZero(r));
-  /* Current-course + event filter can yield zero rows (rookies, first-time venue) — fall back to recent form. */
+  /* Current-course filter can yield zero rows (rookies, first-time venue) — fall back only when venue is unknown. */
   if (courseFilterOn() && !list.length) {
-    list = historyRoundsForDg(dgId).filter((r) => !historyRoundIsPlaceholderAllMarketsZero(r));
-    if (courseFilter) {
-      list = list.filter((r) => normCourseNameKey(r.course_name) === normCourseNameKey(courseFilter));
+    const vn = venueCourseName();
+    if (!vn) {
+      list = historyRoundsForDg(dgId).filter((r) => !historyRoundIsPlaceholderAllMarketsZero(r));
+      if (courseFilter) {
+        list = list.filter((r) => normCourseNameKey(r.course_name) === normCourseNameKey(courseFilter));
+      }
+      if (tempBucket) {
+        list = list.filter((r) => weatherRangeMatch("temp", tempBucket, parseWeatherNumber(r?.pga_meta_weather_temp_f ?? r?.weather_temp_f)));
+      }
+      if (windBucket) {
+        list = list.filter((r) => weatherRangeMatch("wind", windBucket, parseWeatherNumber(r?.pga_meta_weather_wind_mph ?? r?.weather_wind_mph)));
+      }
+      if (humidityBucket) {
+        list = list.filter((r) =>
+          weatherRangeMatch("humidity", humidityBucket, parseWeatherNumber(r?.pga_meta_weather_humidity ?? r?.weather_humidity))
+        );
+      }
+      list.sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
+      list = list.slice(0, 60);
     }
-    if (tempBucket) {
-      list = list.filter((r) => weatherRangeMatch("temp", tempBucket, parseWeatherNumber(r?.pga_meta_weather_temp_f ?? r?.weather_temp_f)));
-    }
-    if (windBucket) {
-      list = list.filter((r) => weatherRangeMatch("wind", windBucket, parseWeatherNumber(r?.pga_meta_weather_wind_mph ?? r?.weather_wind_mph)));
-    }
-    if (humidityBucket) {
-      list = list.filter((r) =>
-        weatherRangeMatch("humidity", humidityBucket, parseWeatherNumber(r?.pga_meta_weather_humidity ?? r?.weather_humidity))
-      );
-    }
-    list.sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
-    list = list.slice(0, 60);
   }
   list.sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
   return list;
