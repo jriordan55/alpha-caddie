@@ -1735,16 +1735,35 @@ function statWeatherMuAdjustment(market) {
 
 /**
  * Maps DataGolf live-hole-stats round excess (strokes vs par for the field) into a stroke-unit shift `d`
- * for O/U / +EV. Tuned so “playing hard” days move totals meaningfully (prior gain was too timid).
+ * for O/U / +EV.
+ * Keep "course playing hard" responsive, but damp "course playing easy" so totals do not get unrealistically low.
  */
-const LIVE_COURSE_EXCESS_TO_STROKE_K = 1.72;
-const LIVE_COURSE_D_CLAMP_NEG = -3.15;
-const LIVE_COURSE_D_CLAMP_POS = 4.45;
+const LIVE_COURSE_EXCESS_TO_STROKE_K_HARD = 1.5;
+const LIVE_COURSE_EXCESS_TO_STROKE_K_EASY = 0.8;
+const LIVE_COURSE_D_CLAMP_NEG = -1.6;
+const LIVE_COURSE_D_CLAMP_POS = 3.4;
+
+/** True only after tournament play has actually started (at least one player has begun the live round). */
+function hasStartedLiveRoundData() {
+  if (!inPlayAffectsRoundOdds()) return false;
+  const liveR = Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
+  if (!Number.isFinite(liveR) || liveR < 1 || liveR > 4) return false;
+  const rows = Array.isArray(DATA?.data) ? DATA.data : [];
+  for (const r of rows) {
+    const rr = Math.round(num(r?.round, NaN));
+    if (rr !== liveR) continue;
+    const thru = Math.round(num(r?.dg_live_thru, NaN));
+    if (Number.isFinite(thru) && thru >= 1) return true;
+  }
+  return false;
+}
 
 function liveCourseDifficultyDForMu() {
+  if (!hasStartedLiveRoundData()) return 0;
   const exR = num(DATA?.meta?.live_course_round_excess_strokes, NaN);
   if (!Number.isFinite(exR)) return 0;
-  return clamp(exR * LIVE_COURSE_EXCESS_TO_STROKE_K, LIVE_COURSE_D_CLAMP_NEG, LIVE_COURSE_D_CLAMP_POS);
+  const k = exR < 0 ? LIVE_COURSE_EXCESS_TO_STROKE_K_EASY : LIVE_COURSE_EXCESS_TO_STROKE_K_HARD;
+  return clamp(exR * k, LIVE_COURSE_D_CLAMP_NEG, LIVE_COURSE_D_CLAMP_POS);
 }
 
 /**
