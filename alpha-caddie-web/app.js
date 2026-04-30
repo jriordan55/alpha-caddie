@@ -1510,7 +1510,7 @@ const OU_PROJECTION_MARKETS = Object.freeze([
 
 /**
  * Props used to resolve lines and odds (DK scrape + CSV + model fallback rows in JSON).
- * Model fallback is excluded from {@link ouProjectionColumnsActive} so the table matches DK-offered markets.
+ * {@link ouProjectionColumnsActive} prefers DK-tagged props but uses csv/model_fallback when DK is absent.
  */
 function ouRoundOuPropsForLines() {
   const props = Array.isArray(DATA.props) ? DATA.props : [];
@@ -1522,13 +1522,20 @@ function ouRoundOuPropsForLines() {
 }
 
 /**
- * Columns + Market filter: markets from DraftKings scrape only (`source: draftkings`).
- * No CSV or untagged fallback — if DK props are absent (e.g. GOLF_SKIP_DK_OU on Render), the grid is empty until a DK run populates props.
+ * Columns + Market filter: prefer markets from DraftKings (`source: draftkings`).
+ * If there are no DK-tagged rows (skipped scrape, first boot, or scrape error), fall back to props from
+ * csv / model_fallback / untagged so Render and local JSON still show lines until DK populates.
  */
 function ouProjectionColumnsActive() {
   const props = Array.isArray(DATA.props) ? DATA.props : [];
   const dk = props.filter((r) => String(r.source || "").trim().toLowerCase() === "draftkings");
-  const marketSet = new Set(dk.map((r) => String(r.market || "").trim()));
+  const marketRows = dk.length
+    ? dk
+    : props.filter((r) => {
+        const s = String(r.source || "").trim().toLowerCase();
+        return s === "csv" || s === "model_fallback" || !s;
+      });
+  const marketSet = new Set(marketRows.map((r) => String(r.market || "").trim()));
   const out = [];
   for (const col of OU_PROJECTION_MARKETS) {
     const canon = ouPropsCanonicalMarket(col.market);
@@ -2736,6 +2743,16 @@ function buildOuTable() {
   if (ouProjExpandedKey && !flatRowKeys.has(ouProjExpandedKey)) ouProjExpandedKey = "";
 
   tbody.innerHTML = "";
+  if (!cols.length) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = projColCount;
+    td.className = "ou-cell ou-proj-long-td ou-proj-empty-td";
+    td.textContent =
+      "No O/U prop markets in this file yet. On the server: set DATAGOLF_API_KEY, run fetch-book-odds (and remove GOLF_SKIP_DK_OU for DraftKings lines). Or run: npm run refresh";
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+  } else {
   for (const r of flatRows) {
     const tr = document.createElement("tr");
     tr.className = "ou-proj-long-tr ou-proj-data-row";
@@ -2836,6 +2853,7 @@ function buildOuTable() {
       dtr.appendChild(dtd);
       tbody.appendChild(dtr);
     }
+  }
   }
 
   updateOuSortIndicators();

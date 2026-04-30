@@ -16,7 +16,9 @@
  *      GOLF_OUTRIGHTS_DEAD_HEAT=yes|no — same as fetch-datagolf.mjs
  *      GOLF_SKIP_PROPS_CSV=1 — do not merge data/player_props_*.csv into projections.props (Model O/U DK lines).
  *      GOLF_SKIP_DK_OU=1 — do not pull DK round props (see draftkings-ou-props.mjs).
- *      GOLF_SKIP_MODEL_FALLBACK_OU=1 — when DK+CSV have no GIR / fairways / putts rows, do not synthesize from projections.players.
+ *      GOLF_SKIP_MODEL_FALLBACK_OU=1 — do not synthesize GIR / fairways / putts from projections.players for players DK omits.
+ *      GIR/FW/Putts: each run drops stale csv+model_fallback rows for those markets, then re-adds model lines from current
+ *      payload.players for any player DK does not supply (DK rows stay authoritative when present).
  *
  * DraftKings round props (Birdies, Pars, Bogeys, Round Score → Total Score) use Playwright + Chromium.
  * Production (Render): `playwright` is a runtime dependency; build should run `npx playwright install chromium`.
@@ -127,8 +129,29 @@ function modelFallbackOuForMarket(players, market) {
   return out;
 }
 
-function countPropRowsByMarket(rows, market) {
-  return rows.filter((r) => String(r.market || "").trim() === market).length;
+function withPropSource(rows, source) {
+  const s = String(source || "unknown").trim();
+  return (Array.isArray(rows) ? rows : []).map((r) => ({ ...r, source: s }));
+}
+
+const OU_COUNTING_MARKETS_FW = ["GIR", "Fairways hit", "Putts"];
+
+/** Stable key: dg_id when set, else normalized player name — paired with market for DK coverage checks. */
+function propPlayerMarketPresenceKey(r, market) {
+  const id = Math.round(num(r.dg_id, NaN));
+  if (Number.isFinite(id) && id > 0) return `id:${id}|${market}`;
+  return `nm:${String(r.player_name || "").trim().toLowerCase()}|${market}`;
+}
+
+/** Remove stale csv / model_fallback rows for GIR, fairways, putts so they can be rebuilt from current players. */
+function stripNonDkCountingProps(byKey) {
+  for (const key of [...byKey.keys()]) {
+    const r = byKey.get(key);
+    const m = String(r.market || "").trim();
+    if (!OU_COUNTING_MARKETS_FW.includes(m)) continue;
+    const src = String(r.source || "").trim().toLowerCase();
+    if (src === "csv" || src === "model_fallback") byKey.delete(key);
+  }
 }
 
 const OU_PROP_CSV_FILES = [
@@ -465,7 +488,8 @@ async function main() {
   if (next.outright_live_score_placement_nudge == null) next.outright_live_score_placement_nudge = false;
 
   if (process.env.GOLF_SKIP_PROPS_CSV !== "1" || process.env.GOLF_SKIP_DK_OU !== "1") {
-    const csvProps = process.env.GOLF_SKIP_PROPS_CSV === "1" ? [] : loadOuPropsFromRepoCsv();
+    const csvPropsRaw = process.env.GOLF_SKIP_PROPS_CSV === "1" ? [] : loadOuPropsFromRepoCsv();
+    const csvProps = withPropSource(csvPropsRaw, "csv");
     let dkProps = [];
     if (process.env.GOLF_SKIP_DK_OU !== "1") {
       try {
@@ -474,7 +498,7 @@ async function main() {
           players: payload.players,
           ...(dkLeagueUrl ? { leagueUrl: dkLeagueUrl } : {}),
         });
-        dkProps = dk.props || [];
+        dkProps = withPropSource(dk.props || [], "draftkings");
         if (dk.error && !String(dk.error).startsWith("skipped")) console.warn("DraftKings O/U:", dk.error);
         if (dkProps.length && dk.subcatsUsed && Object.keys(dk.subcatsUsed).length) {
           console.log("DraftKings props subcategories", dk.subcatsUsed);
@@ -501,10 +525,21 @@ async function main() {
         byKey.set(`${r.player_name}|${r.market}|${r.line}`, r);
       }
     }
+
+    stripNonDkCountingProps(byKey);
+
+    const dkCountingPresence = new Set();
+    for (const r of dkProps) {
+      const m = String(r.market || "").trim();
+      if (!OU_COUNTING_MARKETS_FW.includes(m)) continue;
+      dkCountingPresence.add(propPlayerMarketPresenceKey(r, m));
+    }
+
     if (String(process.env.GOLF_SKIP_MODEL_FALLBACK_OU || "").trim() !== "1") {
-      for (const mkt of ["GIR", "Fairways hit", "Putts"]) {
-        if (countPropRowsByMarket([...byKey.values()], mkt) > 0) continue;
-        for (const r of modelFallbackOuForMarket(payload.players, mkt)) {
+      for (const mkt of OU_COUNTING_MARKETS_FW) {
+        const fresh = withPropSource(modelFallbackOuForMarket(payload.players, mkt), "model_fallback");
+        for (const r of fresh) {
+          if (dkCountingPresence.has(propPlayerMarketPresenceKey(r, mkt))) continue;
           byKey.set(`${r.player_name}|${r.market}|${r.line}`, r);
         }
       }
@@ -521,7 +556,7 @@ async function main() {
         nCsv,
         "rows; DK auto:",
         nDk,
-        "rows)",
+        "rows; GIR/FW/Putts refreshed from players where DK omits)",
       );
     }
   }

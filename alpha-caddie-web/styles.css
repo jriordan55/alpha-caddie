@@ -724,6 +724,13 @@ body {
 }
 #table-ou.table-ou-projections td.ou-proj-td-edge.pos { color: #1ecf77; }
 #table-ou.table-ou-projections td.ou-proj-td-edge.neg { color: #ff646f; }
+#table-ou.table-ou-projections td.ou-proj-empty-td {
+  padding: 20px 18px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: #8b95ab;
+  text-align: left;
+}
 
 #table-ou.table-ou-projections tr.ou-proj-data-row {
   cursor: pointer;
