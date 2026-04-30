@@ -1529,17 +1529,16 @@ function ouRoundOuPropsForLines() {
 function ouProjectionColumnsActive() {
   const props = Array.isArray(DATA.props) ? DATA.props : [];
   const dk = props.filter((r) => String(r.source || "").trim().toLowerCase() === "draftkings");
-  const marketRows = dk.length
-    ? dk
-    : props.filter((r) => {
-        const s = String(r.source || "").trim().toLowerCase();
-        return s === "csv" || s === "model_fallback" || !s;
-      });
-  const marketSet = new Set(marketRows.map((r) => String(r.market || "").trim()));
+  const nonDk = props.filter((r) => {
+    const s = String(r.source || "").trim().toLowerCase();
+    return s === "csv" || s === "model_fallback" || !s;
+  });
+  const dkSet = new Set(dk.map((r) => String(r.market || "").trim()));
+  const nonDkSet = new Set(nonDk.map((r) => String(r.market || "").trim()));
   const out = [];
   for (const col of OU_PROJECTION_MARKETS) {
     const canon = ouPropsCanonicalMarket(col.market);
-    if (marketSet.has(canon)) out.push(col);
+    if (dkSet.has(canon) || nonDkSet.has(canon)) out.push(col);
   }
   return out;
 }
@@ -2130,8 +2129,11 @@ function ouPropsRowsForMarketPlayer(market, playerRow) {
     const sameById = Number.isFinite(wantId) && wantId > 0 && rid === wantId;
     const sameByName = (wantRaw && rRaw && wantRaw === rRaw) || (wantDisp && rDisp && wantDisp === rDisp);
     if (!sameById && !sameByName) continue;
-    out.push({ line: L, over: o, under: u });
+    out.push({ line: L, over: o, under: u, source: String(r.source || "").trim().toLowerCase() });
   }
+  // Prefer DK rows when available for this exact player+market.
+  const dkOnly = out.filter((r) => r.source === "draftkings");
+  if (dkOnly.length) return dkOnly;
   return out;
 }
 
