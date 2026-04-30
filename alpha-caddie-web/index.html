@@ -23,6 +23,7 @@
       <button type="button" class="tab active" data-tab="ou" role="tab" aria-selected="true">Round projections</button>
       <button type="button" class="tab" data-tab="props" role="tab">Historical Trends</button>
       <button type="button" class="tab" data-tab="ev" role="tab">+EV Bets</button>
+      <button type="button" class="tab" data-tab="results" role="tab">Results</button>
       <button type="button" class="tab" data-tab="hangout" role="tab">Hole Hangout</button>
     </nav>
 
@@ -504,6 +505,70 @@
               <th class="num">Model</th>
               <th class="num">EV</th>
               <th class="num">Best Book</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Results -->
+    <section id="panel-results" class="panel" role="tabpanel" hidden>
+      <div class="ev-panel-head">
+        <h2 class="ev-devig-sr-only">Results</h2>
+      </div>
+      <p class="text-muted">
+        Historical ROI and PnL from closing prices in <code>historical_matchups_outcomes.csv</code> and
+        <code>historical_outrights_outcomes.csv</code>, filtered by modeled EV edge, market, and sportsbook.
+      </p>
+      <div class="toolbar outrights-toolbar">
+        <label class="toolbar-label">Source
+          <select id="results-filter-source">
+            <option value="all">All</option>
+            <option value="matchups">Matchups</option>
+            <option value="outrights">Outrights</option>
+          </select>
+        </label>
+        <label class="toolbar-label">Market
+          <select id="results-filter-market">
+            <option value="__all__">All</option>
+          </select>
+        </label>
+        <label class="toolbar-label">Sportsbook
+          <select id="results-filter-book">
+            <option value="__all__">All</option>
+          </select>
+        </label>
+        <label class="toolbar-label">Min EV edge (%)
+          <input id="results-filter-min-ev" type="number" min="-10" max="40" step="0.5" value="0" />
+        </label>
+        <label class="toolbar-label">Line metric
+          <select id="results-filter-metric">
+            <option value="pnl">Cumulative PnL (units)</option>
+            <option value="roi">Cumulative ROI (%)</option>
+          </select>
+        </label>
+      </div>
+      <p id="results-status" class="note text-muted">Loading results…</p>
+      <div class="ou-chart-card leaderboard-card" id="results-chart-card">
+        <div class="ou-chart-head">
+          <div class="ou-chart-head-text">
+            <span class="ou-chart-title" id="results-chart-title">Cumulative PnL</span>
+          </div>
+        </div>
+        <div class="ou-chart-wrap">
+          <canvas id="results-chart-canvas" width="1000" height="260" aria-label="Historical ROI and PnL"></canvas>
+        </div>
+      </div>
+      <div class="table-wrap leaderboard-card">
+        <table class="data-table" id="table-results-summary">
+          <thead>
+            <tr>
+              <th class="num">Bets</th>
+              <th class="num">Stake (u)</th>
+              <th class="num">PnL (u)</th>
+              <th class="num">ROI %</th>
+              <th>Date range</th>
             </tr>
           </thead>
           <tbody></tbody>

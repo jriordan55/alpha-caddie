@@ -331,6 +331,7 @@ let DATA = {
 let HISTORY = { meta: {}, byDgId: {}, holesByPlayerKey: {}, _ok: false };
 /** Built by build:shots-web from all_shots_*.csv — unrelated to Historical Trends (round history JSON). */
 let SHOTS = { meta: {}, byDgId: {}, _ok: false };
+let RESULTS = { loaded: false, loading: false, error: "", payload: null };
 let propsTrendsLineContextKey = "";
 /** Last valid line used when the input is mid-edit or empty. */
 let propsTrendLastGoodLine = NaN;
@@ -7451,6 +7452,251 @@ function syncEvTabOddsAfterShow() {
   buildEvTable();
 }
 
+function resultsJsonUrl() {
+  return "data/results_backtest.json";
+}
+
+function resultsStatus(text) {
+  const el = document.getElementById("results-status");
+  if (el) el.textContent = String(text || "");
+}
+
+function resultsSelectValue(id, fallback = "__all__") {
+  const el = document.getElementById(id);
+  if (!el) return fallback;
+  return String(el.value || fallback);
+}
+
+function loadResultsPayload() {
+  if (RESULTS.loaded || RESULTS.loading) return;
+  RESULTS.loading = true;
+  resultsStatus("Loading results...");
+  fetch(cacheBustFetchUrl(resultsJsonUrl()), { cache: "no-store" })
+    .then((r) => {
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      return r.json();
+    })
+    .then((j) => {
+      RESULTS.payload = j && typeof j === "object" ? j : null;
+      RESULTS.loaded = true;
+      RESULTS.error = "";
+      initResultsFilters();
+      renderResultsTab();
+    })
+    .catch((e) => {
+      RESULTS.error = e?.message || String(e);
+      resultsStatus(`Results file missing: ${resultsJsonUrl()} (${RESULTS.error})`);
+    })
+    .finally(() => {
+      RESULTS.loading = false;
+    });
+}
+
+function resultsMarketsForSource(source) {
+  const p = RESULTS.payload || {};
+  if (source === "matchups") return Array.isArray(p?.markets?.matchups) ? p.markets.matchups : [];
+  if (source === "outrights") return Array.isArray(p?.markets?.outrights) ? p.markets.outrights : [];
+  const a = Array.isArray(p?.markets?.matchups) ? p.markets.matchups : [];
+  const b = Array.isArray(p?.markets?.outrights) ? p.markets.outrights : [];
+  return [...new Set([...a, ...b])].sort();
+}
+
+function resultsBooksForSource(source) {
+  const p = RESULTS.payload || {};
+  if (source === "matchups") return Array.isArray(p?.books?.matchups) ? p.books.matchups : [];
+  if (source === "outrights") return Array.isArray(p?.books?.outrights) ? p.books.outrights : [];
+  const a = Array.isArray(p?.books?.matchups) ? p.books.matchups : [];
+  const b = Array.isArray(p?.books?.outrights) ? p.books.outrights : [];
+  return [...new Set([...a, ...b])].sort();
+}
+
+function refillSelectWithAll(id, items, prev = "__all__") {
+  const sel = document.getElementById(id);
+  if (!sel) return;
+  sel.innerHTML = "";
+  const all = document.createElement("option");
+  all.value = "__all__";
+  all.textContent = "All";
+  sel.appendChild(all);
+  for (const it of items) {
+    const o = document.createElement("option");
+    o.value = it;
+    o.textContent = it;
+    sel.appendChild(o);
+  }
+  if ([...sel.options].some((o) => o.value === prev)) sel.value = prev;
+  else sel.value = "__all__";
+}
+
+function initResultsFilters() {
+  if (!RESULTS.payload) return;
+  const source = resultsSelectValue("results-filter-source", "all");
+  const prevM = resultsSelectValue("results-filter-market");
+  const prevB = resultsSelectValue("results-filter-book");
+  refillSelectWithAll("results-filter-market", resultsMarketsForSource(source), prevM);
+  refillSelectWithAll("results-filter-book", resultsBooksForSource(source), prevB);
+}
+
+function filteredResultsRows() {
+  const p = RESULTS.payload;
+  if (!p || !Array.isArray(p.rows)) return [];
+  const source = resultsSelectValue("results-filter-source", "all");
+  const market = resultsSelectValue("results-filter-market");
+  const book = resultsSelectValue("results-filter-book");
+  const minEv = num(document.getElementById("results-filter-min-ev")?.value, 0);
+  return p.rows.filter((r) => {
+    if (source !== "all" && r.source !== source) return false;
+    if (market !== "__all__" && r.market !== market) return false;
+    if (book !== "__all__" && r.book !== book) return false;
+    return num(r.ev_bin, -999) >= minEv;
+  });
+}
+
+function resultsSeriesFromRows(rows) {
+  const day = new Map();
+  for (const r of rows) {
+    const d = String(r.date || "");
+    if (!d) continue;
+    let o = day.get(d);
+    if (!o) {
+      o = { date: d, bets: 0, pnl: 0 };
+      day.set(d, o);
+    }
+    o.bets += Math.round(num(r.bets, 0));
+    o.pnl += num(r.pnl, 0);
+  }
+  const pts = [...day.values()].sort((a, b) => a.date.localeCompare(b.date));
+  let cumB = 0;
+  let cumP = 0;
+  for (const p of pts) {
+    cumB += p.bets;
+    cumP += p.pnl;
+    p.cumBets = cumB;
+    p.cumStake = cumB;
+    p.cumPnl = cumP;
+    p.cumRoiPct = cumB > 0 ? (100 * cumP) / cumB : 0;
+  }
+  return pts;
+}
+
+function drawResultsChart(points, metric) {
+  const cv = document.getElementById("results-chart-canvas");
+  if (!cv) return;
+  const ctx = cv.getContext("2d");
+  if (!ctx) return;
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const cssW = cv.clientWidth || 1000;
+  const cssH = cv.clientHeight || 260;
+  cv.width = Math.round(cssW * dpr);
+  cv.height = Math.round(cssH * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssW, cssH);
+
+  const padL = 50;
+  const padR = 20;
+  const padT = 18;
+  const padB = 28;
+  const w = Math.max(10, cssW - padL - padR);
+  const h = Math.max(10, cssH - padT - padB);
+  ctx.fillStyle = "#9ca3af";
+  ctx.font = "12px DM Sans, sans-serif";
+  ctx.textAlign = "left";
+  ctx.textBaseline = "top";
+
+  if (!points.length) {
+    ctx.fillText("No bets for current filters.", padL, padT + 6);
+    return;
+  }
+  const vals = points.map((p) => (metric === "roi" ? p.cumRoiPct : p.cumPnl));
+  let lo = Math.min(...vals);
+  let hi = Math.max(...vals);
+  if (lo === hi) {
+    lo -= 1;
+    hi += 1;
+  }
+  const y = (v) => padT + h - ((v - lo) / (hi - lo)) * h;
+  const x = (i) => padL + (i / Math.max(1, points.length - 1)) * w;
+
+  ctx.strokeStyle = "rgba(255,255,255,0.12)";
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 4; i++) {
+    const yy = padT + (i / 3) * h;
+    ctx.beginPath();
+    ctx.moveTo(padL, yy);
+    ctx.lineTo(padL + w, yy);
+    ctx.stroke();
+  }
+
+  const zeroY = lo <= 0 && hi >= 0 ? y(0) : NaN;
+  if (Number.isFinite(zeroY)) {
+    ctx.strokeStyle = "rgba(255,255,255,0.26)";
+    ctx.beginPath();
+    ctx.moveTo(padL, zeroY);
+    ctx.lineTo(padL + w, zeroY);
+    ctx.stroke();
+  }
+
+  ctx.strokeStyle = metric === "roi" ? "#22c55e" : "#60a5fa";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (let i = 0; i < points.length; i++) {
+    const px = x(i);
+    const py = y(metric === "roi" ? points[i].cumRoiPct : points[i].cumPnl);
+    if (i === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  const last = points[points.length - 1];
+  const title = document.getElementById("results-chart-title");
+  if (title) {
+    title.textContent =
+      metric === "roi"
+        ? `Cumulative ROI (${last.cumRoiPct.toFixed(2)}%)`
+        : `Cumulative PnL (${last.cumPnl.toFixed(2)}u)`;
+  }
+}
+
+function renderResultsSummary(points) {
+  const tb = document.querySelector("#table-results-summary tbody");
+  if (!tb) return;
+  tb.innerHTML = "";
+  const tr = document.createElement("tr");
+  const last = points.length ? points[points.length - 1] : null;
+  const bets = last ? Math.round(last.cumBets) : 0;
+  const stake = last ? last.cumStake : 0;
+  const pnl = last ? last.cumPnl : 0;
+  const roi = stake > 0 ? (100 * pnl) / stake : 0;
+  const firstDate = points.length ? points[0].date : "—";
+  const lastDate = points.length ? points[points.length - 1].date : "—";
+  const cells = [
+    bets.toLocaleString(),
+    stake.toFixed(0),
+    pnl.toFixed(2),
+    roi.toFixed(2),
+    `${firstDate} to ${lastDate}`,
+  ];
+  for (let i = 0; i < cells.length; i++) {
+    const td = document.createElement("td");
+    td.textContent = cells[i];
+    if (i < 4) td.className = "num";
+    tr.appendChild(td);
+  }
+  tb.appendChild(tr);
+}
+
+function renderResultsTab() {
+  if (!RESULTS.payload) return;
+  const rows = filteredResultsRows();
+  const points = resultsSeriesFromRows(rows);
+  const metric = resultsSelectValue("results-filter-metric", "pnl");
+  resultsStatus(
+    `${rows.length.toLocaleString()} aggregated rows · ${points.length.toLocaleString()} dates`
+  );
+  drawResultsChart(points, metric);
+  renderResultsSummary(points);
+}
+
 function initTabs() {
   document.querySelectorAll(".tabs .tab").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -7496,6 +7742,12 @@ function initTabs() {
           if (!isFileProtocol()) {
             void loadProjections({ silent: true, reloadSidecar: false });
           }
+        });
+      }
+      if (tab === "results") {
+        requestAnimationFrame(() => {
+          loadResultsPayload();
+          renderResultsTab();
         });
       }
     });
@@ -7673,6 +7925,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (propsPanel && propsPanel.classList.contains("active") && !propsPanel.hidden) {
         renderPropsTrends();
       }
+      const resPanel = document.getElementById("panel-results");
+      if (resPanel && resPanel.classList.contains("active") && !resPanel.hidden) {
+        renderResultsTab();
+      }
       const vz = document.getElementById("hh-hole-viz");
       const cv = document.getElementById("hh-hole-canvas");
       if (vz && cv && !vz.hidden && hangoutCanvasShotCount > 0) {
@@ -7685,6 +7941,14 @@ document.addEventListener("DOMContentLoaded", () => {
   ["ev-filter-golfer", "ev-filter-market", "ev-filter-book"].forEach((id) =>
     document.getElementById(id)?.addEventListener("change", () => buildEvTable())
   );
+  ["results-filter-source", "results-filter-market", "results-filter-book", "results-filter-metric"].forEach((id) =>
+    document.getElementById(id)?.addEventListener("change", () => {
+      if (id === "results-filter-source") initResultsFilters();
+      renderResultsTab();
+    })
+  );
+  document.getElementById("results-filter-min-ev")?.addEventListener("input", () => renderResultsTab());
+  document.getElementById("results-filter-min-ev")?.addEventListener("change", () => renderResultsTab());
   document.getElementById("ev-bankroll")?.addEventListener("input", () => buildEvTable());
   document.getElementById("ev-bankroll")?.addEventListener("change", () => buildEvTable());
   document.getElementById("ev-boost")?.addEventListener("change", () => buildEvTable());
