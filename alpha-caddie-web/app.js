@@ -332,6 +332,12 @@ let HISTORY = { meta: {}, byDgId: {}, holesByPlayerKey: {}, _ok: false };
 /** Built by build:shots-web from all_shots_*.csv — unrelated to Historical Trends (round history JSON). */
 let SHOTS = { meta: {}, byDgId: {}, _ok: false };
 let RESULTS = { loaded: false, loading: false, error: "", payload: null };
+/** Chronological bet tuples for Kelly ROI — from `data/results_kelly_bets.json` (see build-results-backtest.mjs). */
+let KELLY = { loaded: false, loading: false, error: "", payload: null };
+/** Results tab: `1w` | `1m` | `1y` | `ytd` | `all` */
+let resultsTimeRange = "all";
+/** Hit regions for Results chart win-marker tooltips (canvas). */
+let resultsChartHitRegions = [];
 let propsTrendsLineContextKey = "";
 /** Last valid line used when the input is mid-edit or empty. */
 let propsTrendLastGoodLine = NaN;
@@ -2950,6 +2956,33 @@ function showOuChartTooltip(ev, hit) {
   tip.style.top = `${top}px`;
 }
 
+function hideResultsChartTooltip() {
+  const tip = document.getElementById("results-chart-tooltip");
+  if (tip) tip.hidden = true;
+}
+
+function showResultsChartTooltip(ev, hit) {
+  const tip = document.getElementById("results-chart-tooltip");
+  const wrap = tip?.closest(".results-chart-wrap");
+  if (!tip || !wrap || !hit?.tipHtml) return;
+  tip.innerHTML = hit.tipHtml;
+  tip.hidden = false;
+  const rect = wrap.getBoundingClientRect();
+  const padWrap = 8;
+  let left = ev.clientX - rect.left + 12;
+  let top = ev.clientY - rect.top + 10;
+  tip.style.left = `${left}px`;
+  tip.style.top = `${top}px`;
+  const tw = tip.offsetWidth;
+  const th = tip.offsetHeight;
+  const maxL = wrap.clientWidth - tw - padWrap;
+  const maxT = wrap.clientHeight - th - padWrap;
+  if (left > maxL) left = Math.max(padWrap, maxL);
+  if (top > maxT) top = Math.max(padWrap, maxT);
+  tip.style.left = `${left}px`;
+  tip.style.top = `${top}px`;
+}
+
 /** Bar chart: P(over) for score/bogeys (declining vs line); P(under) for birdies/pars (rising vs line). */
 function drawOuLineDistributionChart() {
   const canvas = document.getElementById("ou-chart-canvas");
@@ -5222,9 +5255,15 @@ function courseNameMatchesVenue(courseNameRaw, venueRaw) {
 }
 
 function pricingModeMuSgBonus(dgId) {
+  return pricingModeMuSgBonusForMode(dgId, PRICING_STATE.mode, PRICING_STATE.skill);
+}
+
+function pricingModeMuSgBonusForMode(dgId, modeRaw, skillRaw = PRICING_STATE.skill) {
   const id = Math.round(num(dgId, NaN));
   if (!Number.isFinite(id)) return 0;
-  const mode = PRICING_STATE.mode;
+  const mode = ["default", "recent", "course", "skill"].includes(String(modeRaw || "").toLowerCase())
+    ? String(modeRaw || "").toLowerCase()
+    : "default";
   if (mode === "default") return 0;
 
   const rounds = historyRoundsChronoNewestFirst(id);
@@ -5267,7 +5306,9 @@ function pricingModeMuSgBonus(dgId) {
   }
 
   if (mode === "skill") {
-    const sk = pricingSkillHistoryKey();
+    const skRaw = String(skillRaw || "sg_total").toLowerCase();
+    const sk =
+      skRaw === "default" ? "sg_total" : PRICING_SKILL_COLUMNS.includes(skRaw) ? skRaw : "sg_total";
     const nRec = Math.min(8, Math.max(3, Math.floor(rounds.length / 2)));
     const recent = rounds.slice(0, nRec);
     const older = rounds.slice(nRec, Math.min(rounds.length, nRec + 24));
@@ -7492,31 +7533,83 @@ function loadResultsPayload() {
     });
 }
 
-function resultsMarketsForSource(source) {
+function resultsAllMarkets() {
   const p = RESULTS.payload || {};
-  if (source === "matchups") return Array.isArray(p?.markets?.matchups) ? p.markets.matchups : [];
-  if (source === "outrights") return Array.isArray(p?.markets?.outrights) ? p.markets.outrights : [];
   const a = Array.isArray(p?.markets?.matchups) ? p.markets.matchups : [];
   const b = Array.isArray(p?.markets?.outrights) ? p.markets.outrights : [];
-  return [...new Set([...a, ...b])].sort();
+  return [...new Set([...a, ...b])]
+    .filter((m) => m && m !== "__all__" && m !== "__combined__")
+    .sort();
 }
 
-function resultsBooksForSource(source) {
+function resultsAllBooks() {
   const p = RESULTS.payload || {};
-  if (source === "matchups") return Array.isArray(p?.books?.matchups) ? p.books.matchups : [];
-  if (source === "outrights") return Array.isArray(p?.books?.outrights) ? p.books.outrights : [];
   const a = Array.isArray(p?.books?.matchups) ? p.books.matchups : [];
   const b = Array.isArray(p?.books?.outrights) ? p.books.outrights : [];
-  return [...new Set([...a, ...b])].sort();
+  return [...new Set([...a, ...b])].filter((bk) => bk && bk !== "__all__").sort();
 }
 
-function refillSelectWithAll(id, items, prev = "__all__") {
-  const sel = document.getElementById(id);
+function refillResultsMarketSelect(items, prev) {
+  const sel = document.getElementById("results-filter-market");
+  if (!sel) return;
+  sel.innerHTML = "";
+  for (const it of items) {
+    if (!it || it === "__all__" || it === "__combined__") continue;
+    const o = document.createElement("option");
+    o.value = it;
+    o.textContent = resultsMarketDisplayName(it);
+    sel.appendChild(o);
+  }
+  if (!sel.options.length) return;
+  const prevOk =
+    prev &&
+    prev !== "__combined__" &&
+    prev !== "__all__" &&
+    [...sel.options].some((o) => o.value === prev);
+  sel.value = prevOk ? prev : sel.options[0].value;
+}
+
+function resultsDefaultMarketValue() {
+  const sel = document.getElementById("results-filter-market");
+  if (!sel || !sel.options.length) return "";
+  return String(sel.options[0].value || "");
+}
+
+function refillResultsBookSelect(items, prev = "__all__") {
+  const sel = document.getElementById("results-filter-book");
   if (!sel) return;
   sel.innerHTML = "";
   const all = document.createElement("option");
   all.value = "__all__";
-  all.textContent = "All";
+  all.textContent = "All books";
+  sel.appendChild(all);
+  for (const it of items) {
+    const o = document.createElement("option");
+    o.value = it;
+    const m = bookMeta(it);
+    o.textContent = m.short;
+    o.title = m.label;
+    sel.appendChild(o);
+  }
+  if ([...sel.options].some((o) => o.value === prev)) sel.value = prev;
+  else sel.value = "__all__";
+}
+
+function refillResultsCourseSelect(prev = "__all__") {
+  const sel = document.getElementById("results-filter-course");
+  if (!sel) return;
+  const tuples = kellyBetTuples();
+  const names = new Set();
+  for (const row of tuples) {
+    if (String(row[2] || "") !== "outrights") continue;
+    const en = kellyTupleEventName(row);
+    if (en) names.add(en);
+  }
+  const items = [...names].sort((a, b) => a.localeCompare(b));
+  sel.innerHTML = "";
+  const all = document.createElement("option");
+  all.value = "__all__";
+  all.textContent = "All tournaments";
   sel.appendChild(all);
   for (const it of items) {
     const o = document.createElement("option");
@@ -7524,157 +7617,869 @@ function refillSelectWithAll(id, items, prev = "__all__") {
     o.textContent = it;
     sel.appendChild(o);
   }
-  if ([...sel.options].some((o) => o.value === prev)) sel.value = prev;
+  if (prev && prev !== "__all__" && [...sel.options].some((o) => o.value === prev)) sel.value = prev;
   else sel.value = "__all__";
+}
+
+function refillResultsPlayerSelect(prev = "__all__") {
+  const sel = document.getElementById("results-filter-player");
+  if (!sel) return;
+  const tuples = kellyBetTuples();
+  const byKey = new Map();
+  for (const row of tuples) {
+    const key = resultsPlayerFilterKey(row);
+    const nm = String(row[10] ?? "").trim();
+    if (!key || !nm) continue;
+    if (!byKey.has(key)) byKey.set(key, nm);
+  }
+  const sorted = [...byKey.entries()].sort((a, b) =>
+    displayGolferName(a[1]).localeCompare(displayGolferName(b[1]), undefined, { sensitivity: "base" }),
+  );
+  sel.innerHTML = "";
+  const all = document.createElement("option");
+  all.value = "__all__";
+  all.textContent = "All players";
+  sel.appendChild(all);
+  for (const [val, rawName] of sorted) {
+    const o = document.createElement("option");
+    o.value = val;
+    o.textContent = displayGolferName(rawName);
+    sel.appendChild(o);
+  }
+  if (prev && prev !== "__all__" && [...sel.options].some((o) => o.value === prev)) sel.value = prev;
+  else sel.value = "__all__";
+}
+
+function syncResultsKellyAuxFilters() {
+  const prevC = resultsSelectValue("results-filter-course", "__all__");
+  const prevP = resultsSelectValue("results-filter-player", "__all__");
+  refillResultsCourseSelect(prevC);
+  refillResultsPlayerSelect(prevP);
 }
 
 function initResultsFilters() {
   if (!RESULTS.payload) return;
-  const source = resultsSelectValue("results-filter-source", "all");
-  const prevM = resultsSelectValue("results-filter-market");
-  const prevB = resultsSelectValue("results-filter-book");
-  refillSelectWithAll("results-filter-market", resultsMarketsForSource(source), prevM);
-  refillSelectWithAll("results-filter-book", resultsBooksForSource(source), prevB);
+  const prevM = resultsSelectValue("results-filter-market", "");
+  const prevB = resultsSelectValue("results-filter-book", "__all__");
+  refillResultsMarketSelect(resultsAllMarkets(), prevM);
+  refillResultsBookSelect(resultsAllBooks(), prevB);
+  syncResultsBookLogoUi();
 }
 
-function filteredResultsRows() {
-  const p = RESULTS.payload;
-  if (!p || !Array.isArray(p.rows)) return [];
-  const source = resultsSelectValue("results-filter-source", "all");
-  const market = resultsSelectValue("results-filter-market");
-  const book = resultsSelectValue("results-filter-book");
-  const minEv = num(document.getElementById("results-filter-min-ev")?.value, 0);
-  return p.rows.filter((r) => {
-    if (source !== "all" && r.source !== source) return false;
-    if (market !== "__all__" && r.market !== market) return false;
-    if (book !== "__all__" && r.book !== book) return false;
-    return num(r.ev_bin, -999) >= minEv;
+function resultsMaxDateIso(rows) {
+  let max = "";
+  for (const r of rows) {
+    const d = String(r.date || "").trim().slice(0, 10);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(d) && d > max) max = d;
+  }
+  return max;
+}
+
+function resultsTimeRangeStartIso(maxD, rangeKey) {
+  if (!maxD || rangeKey === "all") return "";
+  const m = maxD.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return "";
+  const y = Number(m[1]);
+  const mo = Number(m[2]);
+  const day = Number(m[3]);
+  const maxT = Date.UTC(y, mo - 1, day);
+  let startT = maxT;
+  if (rangeKey === "1w") startT = maxT - 6 * 86400000;
+  else if (rangeKey === "1m") startT = maxT - 29 * 86400000;
+  else if (rangeKey === "1y") startT = maxT - 364 * 86400000;
+  else if (rangeKey === "ytd") startT = Date.UTC(y, 0, 1);
+  else return "";
+  return new Date(startT).toISOString().slice(0, 10);
+}
+
+function resultsRowsInTimeRange(rows, rangeKey) {
+  if (!rows.length || rangeKey === "all") return rows;
+  const maxD = resultsMaxDateIso(rows);
+  if (!maxD) return rows;
+  const start = resultsTimeRangeStartIso(maxD, rangeKey);
+  if (!start) return rows;
+  return rows.filter((r) => String(r.date || "").slice(0, 10) >= start);
+}
+
+function resultsRangeCaption(rangeKey) {
+  if (rangeKey === "1w") return "Last 7 days";
+  if (rangeKey === "1m") return "Last 30 days";
+  if (rangeKey === "1y") return "Last 365 days";
+  if (rangeKey === "ytd") return "Year to date (sample year)";
+  return "All history";
+}
+
+function syncResultsRangePillsUi() {
+  document.querySelectorAll(".results-range-pill[data-results-range]").forEach((b) => {
+    b.classList.toggle("active", (b.getAttribute("data-results-range") || "") === resultsTimeRange);
   });
 }
 
-function resultsSeriesFromRows(rows) {
-  const day = new Map();
-  for (const r of rows) {
-    const d = String(r.date || "");
-    if (!d) continue;
-    let o = day.get(d);
-    if (!o) {
-      o = { date: d, bets: 0, pnl: 0 };
-      day.set(d, o);
-    }
-    o.bets += Math.round(num(r.bets, 0));
-    o.pnl += num(r.pnl, 0);
-  }
-  const pts = [...day.values()].sort((a, b) => a.date.localeCompare(b.date));
-  let cumB = 0;
-  let cumP = 0;
-  for (const p of pts) {
-    cumB += p.bets;
-    cumP += p.pnl;
-    p.cumBets = cumB;
-    p.cumStake = cumB;
-    p.cumPnl = cumP;
-    p.cumRoiPct = cumB > 0 ? (100 * cumP) / cumB : 0;
-  }
-  return pts;
+function kellyBetsJsonUrl() {
+  return "data/results_kelly_bets.json";
 }
 
-function drawResultsChart(points, metric) {
-  const cv = document.getElementById("results-chart-canvas");
-  if (!cv) return;
-  const ctx = cv.getContext("2d");
-  if (!ctx) return;
-  const dpr = Math.min(2, window.devicePixelRatio || 1);
-  const cssW = cv.clientWidth || 1000;
-  const cssH = cv.clientHeight || 260;
-  cv.width = Math.round(cssW * dpr);
-  cv.height = Math.round(cssH * dpr);
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.clearRect(0, 0, cssW, cssH);
+function loadKellyBetsPayload() {
+  if (KELLY.loaded || KELLY.loading) return Promise.resolve();
+  KELLY.loading = true;
+  KELLY.error = "";
+  return fetch(cacheBustFetchUrl(kellyBetsJsonUrl()), { cache: "no-store" })
+    .then((r) => {
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      return r.json();
+    })
+    .then((j) => {
+      KELLY.payload = j && typeof j === "object" ? j : null;
+      KELLY.loaded = true;
+    })
+    .catch((e) => {
+      KELLY.error = e?.message || String(e);
+      KELLY.payload = null;
+      KELLY.loaded = true;
+    })
+    .finally(() => {
+      KELLY.loading = false;
+    });
+}
 
-  const padL = 50;
-  const padR = 20;
-  const padT = 18;
-  const padB = 28;
-  const w = Math.max(10, cssW - padL - padR);
-  const h = Math.max(10, cssH - padT - padB);
-  ctx.fillStyle = "#9ca3af";
-  ctx.font = "12px DM Sans, sans-serif";
-  ctx.textAlign = "left";
-  ctx.textBaseline = "top";
+/** @returns {number[][]} */
+function kellyBetTuples() {
+  const b = KELLY.payload?.bets;
+  return Array.isArray(b) ? b : [];
+}
 
-  if (!points.length) {
-    ctx.fillText("No bets for current filters.", padL, padT + 6);
+function kellyTupleEventName(row) {
+  return Array.isArray(row) && row.length > 11 ? String(row[11] ?? "").trim() : "";
+}
+
+function kellyTupleDgId(row) {
+  return Array.isArray(row) && row.length > 12 ? String(row[12] ?? "").trim() : "";
+}
+
+function resultsPlayerNameNormKey(name) {
+  return String(name || "")
+    .toLowerCase()
+    .replace(/,/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/** Stable value for results-filter-player (dg:id or nm:key). */
+function resultsPlayerFilterKey(row) {
+  const id = kellyTupleDgId(row);
+  if (id) return `dg:${id}`;
+  const nm = String(row[10] ?? "").trim();
+  if (!nm) return "";
+  return `nm:${resultsPlayerNameNormKey(nm)}`;
+}
+
+function filterKellyBetTuples(tuples) {
+  const market = resultsSelectValue("results-filter-market", resultsDefaultMarketValue());
+  const book = resultsSelectValue("results-filter-book", "__all__");
+  const minEv = num(document.getElementById("results-filter-min-ev")?.value, 0);
+  return tuples.filter((row) => {
+    const mkt = String(row[3] || "");
+    const bk = String(row[4] || "");
+    if (market && mkt !== market) return false;
+    if (book !== "__all__" && bk !== book) return false;
+    const evPct = num(row[5], NaN);
+    if (!Number.isFinite(evPct) || evPct < minEv) return false;
+    return true;
+  });
+}
+
+function resultsPricingModeValue() {
+  const raw = String(resultsSelectValue("results-filter-pricing-mode", "default") || "default").toLowerCase();
+  return ["default", "recent", "course", "skill"].includes(raw) ? raw : "default";
+}
+
+function resultsPricingSkillKeyForRow(row) {
+  const src = String(row?.[2] || "").toLowerCase();
+  const mkt = String(row?.[3] || "").toLowerCase();
+  if (src === "outrights") {
+    if (mkt === "win") return "sg_total";
+    if (mkt === "top_5" || mkt === "top_10" || mkt === "top_20") return "sg_t2g";
+    if (mkt === "make_cut" || mkt === "mc") return "sg_ott";
+    return "sg_total";
+  }
+  if (mkt === "3_balls") return "sg_app";
+  if (mkt === "round_matchups") return "sg_t2g";
+  return "sg_total";
+}
+
+function buildResultsDgIdLookupFromTuples(tuples) {
+  const byName = new Map();
+  for (const row of tuples || []) {
+    const id = Math.round(num(row?.[12], NaN));
+    const nameKey = resultsPlayerNameNormKey(String(row?.[10] || ""));
+    if (!nameKey || !Number.isFinite(id) || id <= 0) continue;
+    const prev = byName.get(nameKey);
+    if (!prev) byName.set(nameKey, { id, n: 1 });
+    else if (prev.id === id) prev.n += 1;
+    else if (prev.n <= 1) byName.set(nameKey, { id, n: 1 });
+  }
+  const out = new Map();
+  for (const [k, v] of byName.entries()) out.set(k, v.id);
+  return out;
+}
+
+function resultsTupleDgIdResolved(row, dgIdLookup) {
+  const id = Math.round(num(row?.[12], NaN));
+  if (Number.isFinite(id) && id > 0) return id;
+  const nm = resultsPlayerNameNormKey(String(row?.[10] || ""));
+  if (!nm) return NaN;
+  const lk = Math.round(num(dgIdLookup?.get(nm), NaN));
+  return Number.isFinite(lk) && lk > 0 ? lk : NaN;
+}
+
+function applyPricingModeProbAdjust(baseP, row, pricingMode, dgIdLookup) {
+  if (!Number.isFinite(baseP)) return NaN;
+  const p = clamp(baseP, 1e-6, 1 - 1e-6);
+  if (pricingMode === "default") return p;
+  const dgId = resultsTupleDgIdResolved(row, dgIdLookup);
+  if (!Number.isFinite(dgId)) return p;
+  const skillKey = pricingMode === "skill" ? resultsPricingSkillKeyForRow(row) : PRICING_STATE.skill;
+  const b = pricingModeMuSgBonusForMode(dgId, pricingMode, skillKey);
+  if (!Number.isFinite(b) || b === 0) return p;
+  const logit = Math.log(p / (1 - p));
+  const z = logit + b * 0.85;
+  const ez = Math.exp(clamp(z, -12, 12));
+  return ez / (1 + ez);
+}
+
+/**
+ * Keep rows where calibrated model has strictly positive edge vs book decimal (same rule as Kelly stake sizing).
+ * Ensures Results uses **all +EV opportunities**, not binned EV approximations.
+ */
+function filterKellyTuplesPositiveModelEdge(tuples, pricingMode = "default", dgIdLookup = null) {
+  return tuples.filter((row) => {
+    const pBase = num(row[6], NaN);
+    const dec = num(row[7], NaN);
+    if (!Number.isFinite(pBase) || !Number.isFinite(dec) || dec <= 1) return false;
+    const p = applyPricingModeProbAdjust(pBase, row, pricingMode, dgIdLookup);
+    return p * dec - 1 > 1e-12;
+  });
+}
+
+/**
+ * Outrights only: keep top-N +EV runners by model EV% per (event × book × market).
+ * Balances sample size and avoids betting the full field for one market snapshot.
+ */
+function filterOutrightTopNPerEventBookMarket(tuples, topN = 5) {
+  const k = Math.max(1, Math.min(20, Math.round(num(topN, 5))));
+  const keepNonOutrights = [];
+  const buckets = new Map();
+  for (const row of tuples) {
+    const src = String(row[2] || "");
+    if (src !== "outrights") {
+      keepNonOutrights.push(row);
+      continue;
+    }
+    const eid = String(row[9] || "").trim();
+    const bk = String(row[4] || "").trim().toLowerCase();
+    const mkt = String(row[3] || "").trim().toLowerCase();
+    const date = String(row[1] || "").slice(0, 10);
+    const key = eid ? `${eid}|${bk}|${mkt}` : `${date}|${bk}|${mkt}`;
+    let arr = buckets.get(key);
+    if (!arr) {
+      arr = [];
+      buckets.set(key, arr);
+    }
+    arr.push(row);
+  }
+  const keepOutrights = [];
+  for (const arr of buckets.values()) {
+    arr.sort((a, b) => num(b[5], -Infinity) - num(a[5], -Infinity) || num(a[0], 0) - num(b[0], 0));
+    for (let i = 0; i < arr.length && i < k; i++) keepOutrights.push(arr[i]);
+  }
+  return [...keepNonOutrights, ...keepOutrights];
+}
+
+/**
+ * Outright win rows are mutually exclusive outcomes, but keeping only one runner/event is too sparse.
+ * Keep top-N model EV% win runners per event × book so sample size is usable.
+ */
+function filterOutrightWinTopNPerEventBook(tuples, topN = 3) {
+  const k = Math.max(1, Math.min(20, Math.round(num(topN, 3))));
+  const nonWin = [];
+  const buckets = new Map();
+  for (const row of tuples) {
+    const src = String(row[2] || "");
+    const mkt = String(row[3] || "");
+    if (src !== "outrights" || mkt !== "win") {
+      nonWin.push(row);
+      continue;
+    }
+    const eid = String(row[9] || "").trim();
+    const bk = String(row[4] || "").trim().toLowerCase();
+    const date = String(row[1] || "").slice(0, 10);
+    const key = eid ? `${eid}|${bk}` : `${date}|${bk}`;
+    let arr = buckets.get(key);
+    if (!arr) {
+      arr = [];
+      buckets.set(key, arr);
+    }
+    arr.push(row);
+  }
+  const keepWin = [];
+  for (const arr of buckets.values()) {
+    arr.sort((a, b) => num(b[5], -Infinity) - num(a[5], -Infinity) || num(a[0], 0) - num(b[0], 0));
+    for (let i = 0; i < arr.length && i < k; i++) keepWin.push(arr[i]);
+  }
+  return [...nonWin, ...keepWin];
+}
+
+function kellyMaxDateIsoFromTuples(tuples) {
+  let max = "";
+  for (const row of tuples) {
+    const d = String(row[1] || "").slice(0, 10);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(d) && d > max) max = d;
+  }
+  return max;
+}
+
+function kellyTuplesInTimeRange(tuples, rangeKey) {
+  if (!tuples.length || rangeKey === "all") return tuples;
+  const maxD = kellyMaxDateIsoFromTuples(tuples);
+  if (!maxD) return tuples;
+  const start = resultsTimeRangeStartIso(maxD, rangeKey);
+  if (!start) return tuples;
+  return tuples.filter((row) => String(row[1] || "").slice(0, 10) >= start);
+}
+
+/**
+ * Kelly sim; tuple indices through dg_id when schema ≥ 3 (see build-results-backtest.mjs).
+ * Stake fractions use **starting** bankroll B0 only (flat sizing). Equity is tracked without flooring at 0
+ * so the series does not flatline after ruin when thousands of +EV bets share settlement days.
+ * Same-day gross stake is capped to **one B0** (proportional scale), not to trailing equity.
+ * @returns {{ series: object[], topWins: object[], nDays: number }}
+ */
+function simulateKellyDailySeriesDetailed(tuples, meta) {
+  const B0 = num(meta?.bankroll0, 100);
+  const kFrac = num(meta?.kelly_fraction, 0.25);
+  const capF = num(meta?.max_kelly_stake_frac, 0.15);
+  const pricingMode = String(meta?.pricing_mode || "default").toLowerCase();
+  const dgIdLookup = meta?.dg_id_lookup || null;
+  let equity = B0;
+  let cumStake = 0;
+  let nB = 0;
+  const series = [];
+  let lastTs = 0;
+  /** @type {{ date: string, cumPnlUnits: number, profitUnits: number, stakeUnits: number, bankrollBeforeUnits: number, source: string, market: string, book: string, dec: number, player: string }[]} */
+  const wins = [];
+  const sorted = [...tuples].sort((a, b) => num(a[0], 0) - num(b[0], 0));
+  const groups = new Map();
+  for (const row of sorted) {
+    const date = String(row[1] || "").slice(0, 10);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) continue;
+    let arr = groups.get(date);
+    if (!arr) {
+      arr = [];
+      groups.set(date, arr);
+    }
+    arr.push(row);
+  }
+  const dates = [...groups.keys()].sort();
+  const nDays = dates.length;
+  for (const date of dates) {
+    const rows = groups.get(date) || [];
+    const sized = [];
+    for (const row of rows) {
+      const pBase = num(row[6], NaN);
+      const decN = num(row[7], NaN);
+      const w = num(row[8], 0) === 1 ? 1 : 0;
+      const player = String(row[10] ?? "");
+      const src = String(row[2] || "");
+      const mkt = String(row[3] || "");
+      const bk = String(row[4] || "");
+      if (!Number.isFinite(decN) || decN <= 1 || !Number.isFinite(pBase)) continue;
+      const pN = applyPricingModeProbAdjust(pBase, row, pricingMode, dgIdLookup);
+      const edge = pN * decN - 1;
+      let f = edge > 0 ? edge / (decN - 1) : 0;
+      if (!Number.isFinite(f) || f <= 0) continue;
+      f *= kFrac;
+      f = Math.min(f, capF);
+      if (!Number.isFinite(f) || f <= 0) continue;
+      sized.push({ t: num(row[0], 0), f, decN, w, player, src, mkt, bk });
+    }
+    sized.sort(
+      (a, b) =>
+        a.t - b.t ||
+        String(a.mkt).localeCompare(String(b.mkt)) ||
+        String(a.bk).localeCompare(String(b.bk)) ||
+        String(a.player).localeCompare(String(b.player)),
+    );
+    const nominalStakes = sized.map((s) => Math.min(Math.max(0, B0 * s.f), B0));
+    const nominalTotal = nominalStakes.reduce((a, b) => a + b, 0);
+    // Softer compression than linear scaling so high-volume days still show meaningful volatility.
+    const dayScale = nominalTotal > 0 ? Math.min(1, Math.sqrt(B0 / nominalTotal)) : 0;
+    for (let i = 0; i < sized.length; i++) {
+      const s = sized[i];
+      const stake = nominalStakes[i] * dayScale;
+      if (!Number.isFinite(stake) || stake <= 0) continue;
+      const bankrollBeforeUnits = equity;
+      cumStake += stake;
+      nB += 1;
+      if (s.w) {
+        const profitU = stake * (s.decN - 1);
+        equity += profitU;
+        wins.push({
+          date,
+          cumPnlUnits: equity - B0,
+          profitUnits: profitU,
+          stakeUnits: stake,
+          bankrollBeforeUnits,
+          source: s.src,
+          market: s.mkt,
+          book: s.bk,
+          dec: s.decN,
+          player: s.player,
+        });
+      } else {
+        equity -= stake;
+      }
+      const ts = Math.max(lastTs + 1, num(s.t, 0));
+      lastTs = ts;
+      series.push({
+        date,
+        ts,
+        cumBets: nB,
+        cumStake,
+        cumPnl: equity - B0,
+        cumRoiPct: B0 > 0 ? (equity / B0 - 1) * 100 : 0,
+        _kellyBr: equity,
+      });
+    }
+  }
+  wins.sort((a, b) => b.profitUnits - a.profitUnits);
+  const topWins = wins.slice(0, 8);
+  return { series, topWins, nDays };
+}
+
+function resultsBankrollDollarsFromUi() {
+  const raw = num(document.getElementById("results-bankroll-dollars")?.value, 10000);
+  return Math.max(100, raw);
+}
+
+function formatUsdCompact(n) {
+  if (!Number.isFinite(n)) return "—";
+  const sign = n < 0 ? "-" : "";
+  const v = Math.abs(n);
+  if (v >= 1e6) return `${sign}$${(v / 1e6).toFixed(2)}M`;
+  if (v >= 10000) return `${sign}$${Math.round(v).toLocaleString("en-US")}`;
+  if (v >= 1000) return `${sign}$${(v / 1000).toFixed(1)}k`;
+  return `${sign}$${v.toFixed(0)}`;
+}
+
+function resultsMarketDisplayName(key) {
+  const k = String(key || "").trim().toLowerCase();
+  const map = {
+    win: "Win",
+    top_5: "Top 5",
+    top_10: "Top 10",
+    top_20: "Top 20",
+    make_cut: "Make cut",
+    mc: "Miss cut",
+    tournament_matchups: "Tournament matchups",
+    round_matchups: "Round matchups",
+    "3_balls": "3-Balls",
+  };
+  if (map[k]) return map[k];
+  return String(key || "")
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function syncResultsBookLogoUi() {
+  const wrap = document.getElementById("results-book-logo-wrap");
+  if (!wrap) return;
+  wrap.innerHTML = "";
+  const bk = resultsSelectValue("results-filter-book", "__all__");
+  if (bk === "__all__") return;
+  const m = bookMeta(bk);
+  const img = document.createElement("img");
+  img.className = "results-book-logo-img";
+  img.alt = m.label;
+  const fb = document.createElement("span");
+  fb.className = "results-book-logo-fallback";
+  fb.textContent = m.short;
+  fb.style.display = "none";
+  wrap.appendChild(img);
+  wrap.appendChild(fb);
+  attachBookLogoWithFallback(img, fb, m.domain);
+}
+
+async function renderResultsKellyPnL() {
+  await loadKellyBetsPayload();
+  const bankrollDollars = resultsBankrollDollarsFromUi();
+  const B0Fallback = num(KELLY.payload?.bankroll0, 100);
+  const metaFallback = {
+    bankroll0: B0Fallback,
+    kelly_fraction: num(KELLY.payload?.kelly_fraction, 0.25),
+    max_kelly_stake_frac: num(KELLY.payload?.max_kelly_stake_frac, 0.15),
+    bankrollDollars,
+  };
+  const tuples0 = kellyBetTuples();
+  if (!KELLY.payload || !tuples0.length) {
+    resultsStatus(
+      KELLY.error ? `Unable to load bet history (${KELLY.error})` : "Bet history unavailable. Run npm run build:results.",
+    );
+    drawResultsChart([], { bankrollDollars, bankroll0: B0Fallback, totalBets: 0, winMarkers: [] });
+    renderResultsSummaryKellyUsd([], metaFallback, bankrollDollars);
+    syncResultsBookLogoUi();
     return;
   }
-  const vals = points.map((p) => (metric === "roi" ? p.cumRoiPct : p.cumPnl));
-  let lo = Math.min(...vals);
-  let hi = Math.max(...vals);
-  if (lo === hi) {
-    lo -= 1;
-    hi += 1;
-  }
-  const y = (v) => padT + h - ((v - lo) / (hi - lo)) * h;
-  const x = (i) => padL + (i / Math.max(1, points.length - 1)) * w;
+  const pricingMode = resultsPricingModeValue();
+  const dgIdLookup = buildResultsDgIdLookupFromTuples(tuples0);
+  let t = filterKellyBetTuples(tuples0);
+  t = filterKellyTuplesPositiveModelEdge(t, pricingMode, dgIdLookup);
+  t = filterOutrightTopNPerEventBookMarket(t, 5);
+  const selectedMarket = resultsSelectValue("results-filter-market", resultsDefaultMarketValue());
+  t = kellyTuplesInTimeRange(t, resultsTimeRange);
+  const meta = {
+    bankroll0: num(KELLY.payload.bankroll0, 100),
+    kelly_fraction: num(KELLY.payload.kelly_fraction, 0.25),
+    max_kelly_stake_frac: num(KELLY.payload.max_kelly_stake_frac, 0.15),
+    pricing_mode: pricingMode,
+    dg_id_lookup: dgIdLookup,
+  };
+  const B0 = meta.bankroll0;
+  const { series, nDays } = simulateKellyDailySeriesDetailed(t, meta);
+  const points = series.map((p) => ({
+    ...p,
+    cumPnlUsd: (p.cumPnl / B0) * bankrollDollars,
+    cumStakeUsd: (p.cumStake / B0) * bankrollDollars,
+  }));
+  const winMarkers = [];
+  const kfPct = (num(meta.kelly_fraction, 0.25) * 100).toFixed(0);
+  const capPct = (num(meta.max_kelly_stake_frac, 0.15) * 100).toFixed(0);
+  resultsStatus("");
+  drawResultsChart(points, {
+    bankrollDollars,
+    bankroll0: B0,
+    totalBets: t.length,
+    winMarkers,
+  });
+  renderResultsSummaryKellyUsd(points, { ...meta, bankrollDollars }, bankrollDollars);
+  syncResultsBookLogoUi();
+}
 
-  ctx.strokeStyle = "rgba(255,255,255,0.12)";
+function syncResultsChartCanvasCssBox(canvas, cssW, cssH) {
+  canvas.style.width = `${cssW}px`;
+  canvas.style.height = `${cssH}px`;
+  canvas.style.maxWidth = "100%";
+  canvas.style.boxSizing = "border-box";
+}
+
+const RESULTS_MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** Axis / table: include year for clarity (e.g. Jan 20, 2026). */
+function resultsChartFormatDateLong(iso) {
+  const m = String(iso || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return String(iso || "");
+  const y = Number(m[1]);
+  const mo = Number(m[2]);
+  const d = Number(m[3]);
+  const mon = RESULTS_MONTH_SHORT[mo - 1] || String(mo);
+  return `${mon} ${d}, ${y}`;
+}
+
+/** Compact axis label (e.g. Jan '19) — even spacing uses index ticks; short text avoids overlap. */
+function resultsChartFormatDateAxis(iso) {
+  const m = String(iso || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return String(iso || "").slice(0, 9);
+  const y = Number(m[1]);
+  const mo = Number(m[2]);
+  const mon = RESULTS_MONTH_SHORT[mo - 1] || String(mo);
+  const yy = y % 100;
+  return `${mon} '${yy < 10 ? `0${yy}` : String(yy)}`;
+}
+
+/** `count` tick positions from 0 … n-1 at equal index gaps (symmetric on chart width). */
+function resultsChartEvenXTickIndices(n, count) {
+  if (n <= 0) return [];
+  const k = Math.max(2, Math.min(count, n));
+  if (n === 1) return [0];
+  const out = [];
+  for (let j = 0; j < k; j++) {
+    out.push(Math.round((j / (k - 1)) * (n - 1)));
+  }
+  return [...new Set(out)].sort((a, b) => a - b);
+}
+
+function resultsChartNiceYTicks(lo, hi, wantInt = false) {
+  const span = Math.max(1e-9, hi - lo);
+  const raw = span / 4;
+  const pow10 = 10 ** Math.floor(Math.log10(raw));
+  const fr = raw / pow10;
+  let step = pow10;
+  if (fr < 1.5) step = pow10;
+  else if (fr < 3.5) step = 2 * pow10;
+  else if (fr < 8) step = 5 * pow10;
+  else step = 10 * pow10;
+  const start = Math.floor(lo / step) * step;
+  const out = [];
+  for (let v = start; v <= hi + step * 0.001; v += step) {
+    if (v >= lo - 1e-9 && v <= hi + 1e-9) out.push(v);
+    if (out.length > 8) break;
+  }
+  if (wantInt) return out.map((x) => Math.round(x));
+  return out;
+}
+
+function drawResultsChart(points, opts = {}) {
+  resultsChartHitRegions = [];
+  hideResultsChartTooltip();
+  const bankrollDollars = num(opts.bankrollDollars, 10000);
+  const bankroll0 = num(opts.bankroll0, 100);
+  const totalBets = Math.round(
+    num(opts.totalBets, points.length ? points[points.length - 1].cumBets : 0),
+  );
+  const winMarkers = Array.isArray(opts.winMarkers) ? opts.winMarkers : [];
+
+  function rowUsd(p) {
+    if (Number.isFinite(p.cumPnlUsd)) return p.cumPnlUsd;
+    return (num(p.cumPnl, 0) / bankroll0) * bankrollDollars;
+  }
+
+  const canvas = document.getElementById("results-chart-canvas");
+  const wrap = canvas?.closest(".results-chart-wrap");
+  if (!canvas || !canvas.getContext) return;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  const kpiMain = document.getElementById("results-kpi-main");
+  const kpiSub = document.getElementById("results-kpi-sub");
+  const kpiLab = document.getElementById("results-kpi-label");
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const vhCap = typeof window !== "undefined" ? Math.min(520, Math.round(window.innerHeight * 0.42)) : 520;
+
+  function paintEmpty(msg, cssW0, cssH0) {
+    canvas.width = Math.round(cssW0 * dpr);
+    canvas.height = Math.round(cssH0 * dpr);
+    syncResultsChartCanvasCssBox(canvas, cssW0, cssH0);
+    const c0 = canvas.getContext("2d");
+    if (!c0) return;
+    c0.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c0.clearRect(0, 0, cssW0, cssH0);
+    c0.fillStyle = "#111216";
+    c0.fillRect(0, 0, cssW0, cssH0);
+    c0.fillStyle = "#8b8f9c";
+    c0.font = "13px DM Sans, system-ui, sans-serif";
+    c0.textAlign = "left";
+    c0.textBaseline = "top";
+    c0.fillText(msg, 14, 14);
+  }
+
+  const visibleW = wrap && wrap.clientWidth > 80 ? wrap.clientWidth - 4 : 800;
+  const cssW = Math.round(visibleW);
+  const cssH = Math.round(clamp(visibleW * 0.42, 240, vhCap));
+
+  if (!points.length) {
+    if (kpiLab) kpiLab.textContent = "Cumulative Kelly PnL";
+    if (kpiMain) {
+      kpiMain.textContent = "—";
+      kpiMain.classList.remove("results-kpi-pos", "results-kpi-neg");
+    }
+    if (kpiSub) kpiSub.textContent = "";
+    paintEmpty("No bets for current filters.", cssW, cssH);
+    return;
+  }
+
+  syncResultsChartCanvasCssBox(canvas, cssW, cssH);
+  canvas.width = Math.round(cssW * dpr);
+  canvas.height = Math.round(cssH * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssW, cssH);
+  ctx.fillStyle = "#111216";
+  ctx.fillRect(0, 0, cssW, cssH);
+
+  const pad = { l: 62, r: 16, t: 14, b: 44 };
+  const innerW = Math.max(60, cssW - pad.l - pad.r);
+  const innerH = Math.max(60, cssH - pad.t - pad.b);
+
+  const vals = points.map((p) => rowUsd(p));
+  let minV = Math.min(...vals);
+  let maxV = Math.max(...vals);
+  const span0 = Math.max(1e-9, maxV - minV);
+  const padAbs = Math.max(250, span0 * 0.15);
+  minV -= padAbs;
+  maxV += padAbs;
+  if (maxV - minV < 800) {
+    const mid = (minV + maxV) / 2;
+    minV = mid - 400;
+    maxV = mid + 400;
+  }
+
+  const yScale = (v) => pad.t + innerH * (1 - (v - minV) / (maxV - minV));
+  const yTicks = resultsChartNiceYTicks(minV, maxV, false);
+
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.07)";
   ctx.lineWidth = 1;
-  for (let i = 0; i < 4; i++) {
-    const yy = padT + (i / 3) * h;
+  for (const tv of yTicks) {
+    if (tv < minV - 1e-9 || tv > maxV + 1e-9) continue;
+    const y = yScale(tv);
     ctx.beginPath();
-    ctx.moveTo(padL, yy);
-    ctx.lineTo(padL + w, yy);
+    ctx.moveTo(pad.l, y);
+    ctx.lineTo(pad.l + innerW, y);
     ctx.stroke();
   }
 
-  const zeroY = lo <= 0 && hi >= 0 ? y(0) : NaN;
+  ctx.strokeStyle = "#2b2e36";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(pad.l, pad.t);
+  ctx.lineTo(pad.l, pad.t + innerH);
+  ctx.lineTo(pad.l + innerW, pad.t + innerH);
+  ctx.stroke();
+
+  ctx.fillStyle = "#8b8f9c";
+  ctx.font = "10px DM Sans, system-ui, sans-serif";
+  ctx.textAlign = "right";
+  ctx.textBaseline = "middle";
+  for (const tv of yTicks) {
+    if (tv < minV - 1e-9 || tv > maxV + 1e-9) continue;
+    const y = yScale(tv);
+    ctx.fillText(formatUsdCompact(tv), pad.l - 8, y);
+  }
+
+  ctx.save();
+  ctx.translate(12, pad.t + innerH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillStyle = "#6b7280";
+  ctx.font = "11px DM Sans, system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("Cumulative Kelly PnL ($)", 0, 0);
+  ctx.restore();
+
+  const xByIndex = (i) => pad.l + (i / Math.max(1, points.length - 1)) * innerW;
+
+  const zeroY = minV <= 0 && maxV >= 0 ? yScale(0) : NaN;
   if (Number.isFinite(zeroY)) {
-    ctx.strokeStyle = "rgba(255,255,255,0.26)";
+    ctx.strokeStyle = "rgba(255,255,255,0.22)";
+    ctx.setLineDash([4, 4]);
     ctx.beginPath();
-    ctx.moveTo(padL, zeroY);
-    ctx.lineTo(padL + w, zeroY);
+    ctx.moveTo(pad.l, zeroY);
+    ctx.lineTo(pad.l + innerW, zeroY);
     ctx.stroke();
+    ctx.setLineDash([]);
   }
 
-  ctx.strokeStyle = metric === "roi" ? "#22c55e" : "#60a5fa";
-  ctx.lineWidth = 2;
+  const grad = ctx.createLinearGradient(pad.l, 0, pad.l + innerW, 0);
+  grad.addColorStop(0, "#00c46b");
+  grad.addColorStop(1, "rgba(0, 196, 107, 0.45)");
+  ctx.strokeStyle = grad;
+  ctx.lineWidth = 2.25;
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
   ctx.beginPath();
   for (let i = 0; i < points.length; i++) {
-    const px = x(i);
-    const py = y(metric === "roi" ? points[i].cumRoiPct : points[i].cumPnl);
+    const p = points[i];
+    const px = xByIndex(i);
+    const py = yScale(rowUsd(p));
+    if (!Number.isFinite(px) || !Number.isFinite(py)) continue;
     if (i === 0) ctx.moveTo(px, py);
     else ctx.lineTo(px, py);
   }
   ctx.stroke();
 
-  const last = points[points.length - 1];
-  const title = document.getElementById("results-chart-title");
-  if (title) {
-    title.textContent =
-      metric === "roi"
-        ? `Cumulative ROI (${last.cumRoiPct.toFixed(2)}%)`
-        : `Cumulative PnL (${last.cumPnl.toFixed(2)}u)`;
+  const nPts = points.length;
+  const maxTicks = innerW < 480 ? 5 : innerW < 680 ? 6 : innerW < 900 ? 7 : 8;
+  const xTickIdx = resultsChartEvenXTickIndices(nPts, maxTicks);
+
+  const xFontPx = nPts > 400 || innerW < 560 ? 9 : 10;
+  ctx.fillStyle = "#8b8f9c";
+  ctx.font = `${xFontPx}px DM Sans, system-ui, sans-serif`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  for (const idx of xTickIdx) {
+    const p = points[idx];
+    const px = xByIndex(idx);
+    if (!Number.isFinite(px)) continue;
+    const lab = resultsChartFormatDateAxis(p.date);
+    ctx.fillText(lab, px, pad.t + innerH + 8);
+    ctx.strokeStyle = "rgba(255,255,255,0.08)";
+    ctx.beginPath();
+    ctx.moveTo(px, pad.t + innerH);
+    ctx.lineTo(px, pad.t + innerH + 5);
+    ctx.stroke();
   }
+
+  ctx.fillStyle = "#8b8f9c";
+  ctx.font = "10px DM Sans, system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  ctx.fillText("Date", pad.l + innerW / 2, cssH - 12);
+
+  for (const wm of winMarkers) {
+    const i = Math.max(0, Math.min(points.length - 1, Math.round(num(wm.pointIndex, 0))));
+    const px = xByIndex(i) + num(wm.xShift, 0);
+    const py = yScale(rowUsd(points[i]));
+    if (!Number.isFinite(px) || !Number.isFinite(py)) continue;
+    ctx.beginPath();
+    ctx.arc(px, py, 6, 0, Math.PI * 2);
+    ctx.fillStyle = "#facc15";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,0.92)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    resultsChartHitRegions.push({
+      kind: "win",
+      cx: px,
+      cy: py,
+      r: 14,
+      tipHtml: wm.tipHtml || "",
+    });
+  }
+
+  const last = points[points.length - 1];
+  const first = points[0];
+  if (kpiLab) kpiLab.textContent = "Cumulative Kelly PnL";
+  if (kpiMain) {
+    const rawEnd = rowUsd(last);
+    const endStr = `${rawEnd > 0 ? "+" : ""}${formatUsdCompact(rawEnd)}`;
+    kpiMain.textContent = endStr;
+    kpiMain.classList.remove("results-kpi-pos", "results-kpi-neg");
+    if (rawEnd > 25) kpiMain.classList.add("results-kpi-pos");
+    else if (rawEnd < -25) kpiMain.classList.add("results-kpi-neg");
+  }
+  if (kpiSub) kpiSub.textContent = "";
 }
 
-function renderResultsSummary(points) {
+function renderResultsSummaryKellyUsd(points, meta, bankrollDollars) {
+  const trh = document.querySelector("#table-results-summary thead tr");
+  if (trh) {
+    trh.innerHTML =
+      "<th class=\"num\">Bets</th><th class=\"num\">Total staked</th><th class=\"num\">Net P&amp;L</th><th class=\"num\">Return</th><th>Period</th>";
+  }
   const tb = document.querySelector("#table-results-summary tbody");
   if (!tb) return;
   tb.innerHTML = "";
   const tr = document.createElement("tr");
+  const B0 = num(meta?.bankroll0, 100);
   const last = points.length ? points[points.length - 1] : null;
   const bets = last ? Math.round(last.cumBets) : 0;
-  const stake = last ? last.cumStake : 0;
-  const pnl = last ? last.cumPnl : 0;
-  const roi = stake > 0 ? (100 * pnl) / stake : 0;
-  const firstDate = points.length ? points[0].date : "—";
-  const lastDate = points.length ? points[points.length - 1].date : "—";
+  let stakeUsd = 0;
+  let netUsd = 0;
+  let roiPct = 0;
+  if (last) {
+    stakeUsd = Number.isFinite(last.cumStakeUsd)
+      ? last.cumStakeUsd
+      : (num(last.cumStake, 0) / B0) * bankrollDollars;
+    netUsd = Number.isFinite(last.cumPnlUsd)
+      ? last.cumPnlUsd
+      : (num(last.cumPnl, 0) / B0) * bankrollDollars;
+    roiPct = Number.isFinite(last.cumRoiPct) ? last.cumRoiPct : 0;
+  }
+  const firstDate = points.length ? resultsChartFormatDateLong(points[0].date) : "—";
+  const lastDate = points.length ? resultsChartFormatDateLong(points[points.length - 1].date) : "—";
   const cells = [
     bets.toLocaleString(),
-    stake.toFixed(0),
-    pnl.toFixed(2),
-    roi.toFixed(2),
-    `${firstDate} to ${lastDate}`,
+    formatUsdCompact(stakeUsd),
+    `${netUsd >= 0 ? "+" : ""}${formatUsdCompact(netUsd)}`,
+    `${roiPct >= 0 ? "+" : ""}${roiPct.toFixed(2)}%`,
+    `${firstDate} – ${lastDate}`,
   ];
   for (let i = 0; i < cells.length; i++) {
     const td = document.createElement("td");
@@ -7683,18 +8488,15 @@ function renderResultsSummary(points) {
     tr.appendChild(td);
   }
   tb.appendChild(tr);
+  const kf = num(meta?.kelly_fraction, 0.25);
+  const cap = num(meta?.max_kelly_stake_frac, 0.15);
+  tr.title = `Model bankroll ${B0} u · scaled to $${Math.round(bankrollDollars).toLocaleString("en-US")} · ${(kf * 100).toFixed(0)}% Kelly · max ${(cap * 100).toFixed(0)}% per bet`;
 }
 
 function renderResultsTab() {
-  if (!RESULTS.payload) return;
-  const rows = filteredResultsRows();
-  const points = resultsSeriesFromRows(rows);
-  const metric = resultsSelectValue("results-filter-metric", "pnl");
-  resultsStatus(
-    `${rows.length.toLocaleString()} aggregated rows · ${points.length.toLocaleString()} dates`
-  );
-  drawResultsChart(points, metric);
-  renderResultsSummary(points);
+  if (resultsTimeRange === "1d") resultsTimeRange = "all";
+  syncResultsRangePillsUi();
+  void renderResultsKellyPnL();
 }
 
 function initTabs() {
@@ -7907,6 +8709,25 @@ document.addEventListener("DOMContentLoaded", () => {
     else hideOuChartTooltip();
   });
   ouCv?.addEventListener("mouseleave", () => hideOuChartTooltip());
+  const resCv = document.getElementById("results-chart-canvas");
+  resCv?.addEventListener("mousemove", (ev) => {
+    if (!resultsChartHitRegions.length) {
+      hideResultsChartTooltip();
+      return;
+    }
+    const rect = resCv.getBoundingClientRect();
+    const x = ev.clientX - rect.left;
+    const y = ev.clientY - rect.top;
+    const hit = resultsChartHitRegions.find((r) => {
+      if (r.kind !== "win") return false;
+      const dx = x - r.cx;
+      const dy = y - r.cy;
+      return dx * dx + dy * dy <= r.r * r.r;
+    });
+    if (hit) showResultsChartTooltip(ev, hit);
+    else hideResultsChartTooltip();
+  });
+  resCv?.addEventListener("mouseleave", () => hideResultsChartTooltip());
   let ouChartResizeT = 0;
   window.addEventListener("resize", () => {
     window.clearTimeout(ouChartResizeT);
@@ -7941,12 +8762,27 @@ document.addEventListener("DOMContentLoaded", () => {
   ["ev-filter-golfer", "ev-filter-market", "ev-filter-book"].forEach((id) =>
     document.getElementById(id)?.addEventListener("change", () => buildEvTable())
   );
-  ["results-filter-source", "results-filter-market", "results-filter-book", "results-filter-metric"].forEach((id) =>
+  ["results-filter-market", "results-filter-book", "results-filter-pricing-mode"].forEach((id) =>
     document.getElementById(id)?.addEventListener("change", () => {
-      if (id === "results-filter-source") initResultsFilters();
+      if (id === "results-filter-market" && resultsTimeRange !== "all") {
+        resultsTimeRange = "all";
+        syncResultsRangePillsUi();
+      }
+      if (id === "results-filter-book") syncResultsBookLogoUi();
       renderResultsTab();
-    })
+    }),
   );
+  document.getElementById("results-bankroll-dollars")?.addEventListener("input", () => renderResultsTab());
+  document.getElementById("results-bankroll-dollars")?.addEventListener("change", () => renderResultsTab());
+  document.getElementById("panel-results")?.addEventListener("click", (e) => {
+    const btn = e.target && /** @type {HTMLElement} */ (e.target).closest?.(".results-range-pill[data-results-range]");
+    if (!btn) return;
+    const r = btn.getAttribute("data-results-range");
+    if (!r) return;
+    resultsTimeRange = r;
+    syncResultsRangePillsUi();
+    renderResultsTab();
+  });
   document.getElementById("results-filter-min-ev")?.addEventListener("input", () => renderResultsTab());
   document.getElementById("results-filter-min-ev")?.addEventListener("change", () => renderResultsTab());
   document.getElementById("ev-bankroll")?.addEventListener("input", () => buildEvTable());

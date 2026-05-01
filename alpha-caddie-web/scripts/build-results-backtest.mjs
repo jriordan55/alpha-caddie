@@ -7,6 +7,12 @@
  *
  * Output (web):
  *   - alpha-caddie-web/data/results_backtest.json
+ *   - alpha-caddie-web/data/results_kelly_bets.json (chronological bets for Kelly ROI; capped by env)
+ *
+ * Outrights CSV (expected columns): event_id, event_name, event_completed, season, year, book, market,
+ * dg_id, player_name, open_odds, close_odds, open_time, close_time, bet_outcome_numeric (or bet_outcome), …
+ * Decimal price: American close_odds, fallback open_odds. Model p from calibration(implied) vs that line → EV in Kelly tuples.
+ * Env RESULTS_KELLY_MAX_BETS: keep only the newest N rows after sorting (0 = unlimited, default).
  */
 import { createReadStream, existsSync, mkdirSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
@@ -21,6 +27,9 @@ const DATA_DIR = resolve(REPO_ROOT, "data");
 const MATCHUPS_CSV = join(DATA_DIR, "historical_matchups_outcomes.csv");
 const OUTRIGHTS_CSV = join(DATA_DIR, "historical_outrights_outcomes.csv");
 const OUT_JSON = join(WEB_ROOT, "data", "results_backtest.json");
+const KELLY_JSON = join(WEB_ROOT, "data", "results_kelly_bets.json");
+/** Max bets kept for Kelly sim (newest first after cap). 0 = unlimited (default). */
+const KELLY_MAX_BETS = Math.max(0, Math.round(Number(process.env.RESULTS_KELLY_MAX_BETS || "0")));
 
 const EV_BIN_STEP = 0.5;
 const EV_BIN_MIN = -10;
@@ -64,6 +73,21 @@ function americanToDecimal(am) {
   return 1 + 100 / Math.abs(a);
 }
 
+/** 0/1 win flag from API-style CSVs (supports alternate header names). */
+function outrightBetOutcomeNumeric(row) {
+  const v = row.bet_outcome_numeric ?? row.bet_outcome ?? "";
+  return toNum(v);
+}
+
+/** American close price first (aligned with typical settlement line), then open. */
+function outrightDecimalCloseFirst(openAm, closeAm) {
+  const decClose = americanToDecimal(closeAm);
+  if (Number.isFinite(decClose) && decClose > 1) return decClose;
+  const decOpen = americanToDecimal(openAm);
+  if (Number.isFinite(decOpen) && decOpen > 1) return decOpen;
+  return NaN;
+}
+
 function normDate(raw, yearRaw) {
   const s = String(raw || "").trim();
   const m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
@@ -71,6 +95,16 @@ function normDate(raw, yearRaw) {
   const y = Math.round(toNum(yearRaw));
   if (Number.isFinite(y) && y >= 2000 && y <= 2100) return `${y}-01-01`;
   return "2000-01-01";
+}
+
+/** Millis UTC for sorting; falls back to noon UTC on normDate. */
+function betTimeMs(closeTimeRaw, yearRaw) {
+  const s = String(closeTimeRaw || "").trim();
+  const t = Date.parse(s.replace(" ", "T"));
+  if (Number.isFinite(t)) return t;
+  const d = normDate(closeTimeRaw, yearRaw);
+  const t2 = Date.parse(`${d}T12:00:00Z`);
+  return Number.isFinite(t2) ? t2 : 0;
 }
 
 function evBin(evPct) {
@@ -167,10 +201,8 @@ async function buildCalibration(matchCsv, outrCsv) {
     () => {},
     (r) => {
       const market = String(r.market || "").trim();
-      const close = toNum(r.close_odds);
-      const open = toNum(r.open_odds);
-      const dec = Number.isFinite(close) ? americanToDecimal(close) : americanToDecimal(open);
-      const outc = toNum(r.bet_outcome_numeric);
+      const dec = outrightDecimalCloseFirst(r.open_odds, r.close_odds);
+      const outc = outrightBetOutcomeNumeric(r);
       if (!Number.isFinite(dec) || dec <= 1 || !(outc === 0 || outc === 1)) return;
       const implied = 1 / dec;
       addCal(market, implied, outc === 1);
@@ -201,6 +233,8 @@ async function build() {
   const agg = new Map();
   const marketsBySource = { matchups: new Set(), outrights: new Set() };
   const booksBySource = { matchups: new Set(), outrights: new Set() };
+  /** @type {{ t: number, date: string, source: string, market: string, book: string, ev_pct: number, p: number, dec: number, win: 0|1, event_id: string }[]} */
+  const kellyBets = [];
 
   await readCsvRows(
     MATCHUPS_CSV,
@@ -233,6 +267,27 @@ async function build() {
         pushAgg(agg, "matchups", "__all__", book, date, b, pnl);
         pushAgg(agg, "matchups", market, "__all__", date, b, pnl);
         pushAgg(agg, "matchups", "__all__", "__all__", date, b, pnl);
+        const pn =
+          i === 0
+            ? String(r.p1_player_name || "").trim()
+            : i === 1
+              ? String(r.p2_player_name || "").trim()
+              : String(r.p3_player_name || "").trim();
+        kellyBets.push({
+          t: betTimeMs(r.close_time || r.open_time, r.year),
+          date,
+          source: "matchups",
+          market,
+          book,
+          ev_pct: evPct,
+          p: modelP,
+          dec,
+          win: outc[i] === 1 ? 1 : 0,
+          event_id: String(r.event_id || ""),
+          player_name: pn,
+          event_name: "",
+          dg_id: "",
+        });
       }
     },
   );
@@ -243,14 +298,12 @@ async function build() {
     (r) => {
       const market = String(r.market || "").trim() || "unknown";
       const book = String(r.book || r.sportsbook || "").trim().toLowerCase() || "unknown";
-      const date = normDate(r.close_time || r.open_time, r.year);
+      const date = normDate(r.open_time || r.close_time, r.year);
       marketsBySource.outrights.add(market);
       booksBySource.outrights.add(book);
 
-      const close = toNum(r.close_odds);
-      const open = toNum(r.open_odds);
-      const dec = Number.isFinite(close) ? americanToDecimal(close) : americanToDecimal(open);
-      const outc = toNum(r.bet_outcome_numeric);
+      const dec = outrightDecimalCloseFirst(r.open_odds, r.close_odds);
+      const outc = outrightBetOutcomeNumeric(r);
       if (!Number.isFinite(dec) || dec <= 1 || !(outc === 0 || outc === 1)) return;
       const implied = 1 / dec;
       const modelP = modelProbFromCal(cal, market, implied);
@@ -261,19 +314,57 @@ async function build() {
       pushAgg(agg, "outrights", "__all__", book, date, b, pnl);
       pushAgg(agg, "outrights", market, "__all__", date, b, pnl);
       pushAgg(agg, "outrights", "__all__", "__all__", date, b, pnl);
+      kellyBets.push({
+        t: betTimeMs(r.open_time || r.close_time, r.year),
+        date,
+        source: "outrights",
+        market,
+        book,
+        ev_pct: evPct,
+        p: modelP,
+        dec,
+        win: outc === 1 ? 1 : 0,
+        event_id: String(r.event_id || ""),
+        player_name: String(r.player_name || "").trim(),
+        event_name: String(r.event_name || "").trim(),
+        dg_id: String(r.dg_id != null ? r.dg_id : "").trim(),
+      });
     },
   );
+
+  kellyBets.sort((a, b) => a.t - b.t || a.date.localeCompare(b.date) || a.source.localeCompare(b.source));
+  let kellyOut = kellyBets;
+  if (KELLY_MAX_BETS > 0 && kellyBets.length > KELLY_MAX_BETS) {
+    kellyOut = kellyBets.slice(-KELLY_MAX_BETS);
+    console.warn(`Kelly bet list truncated to last ${KELLY_MAX_BETS} of ${kellyBets.length} rows`);
+  }
+  const kellyTuples = kellyOut.map((x) => [
+    x.t,
+    x.date,
+    x.source,
+    x.market,
+    x.book,
+    Number(x.ev_pct.toFixed(4)),
+    Number(x.p.toFixed(6)),
+    Number(x.dec.toFixed(6)),
+    x.win,
+    x.event_id,
+    x.player_name || "",
+    x.event_name || "",
+    x.dg_id || "",
+  ]);
 
   const rows = [...agg.values()].map((r) => ({
     ...r,
     pnl: Number(r.pnl.toFixed(6)),
   }));
-  rows.sort((a, b) =>
-    a.source.localeCompare(b.source) ||
-    a.market.localeCompare(b.market) ||
-    a.book.localeCompare(b.book) ||
-    a.date.localeCompare(b.date) ||
-    a.ev_bin - b.ev_bin
+  rows.sort(
+    (a, b) =>
+      a.source.localeCompare(b.source) ||
+      a.market.localeCompare(b.market) ||
+      a.book.localeCompare(b.book) ||
+      a.date.localeCompare(b.date) ||
+      a.ev_bin - b.ev_bin,
   );
 
   const out = {
@@ -295,6 +386,34 @@ async function build() {
   mkdirSync(dirname(OUT_JSON), { recursive: true });
   writeFileSync(OUT_JSON, JSON.stringify(out));
   console.log(`Wrote ${OUT_JSON} (${rows.length} rows)`);
+
+  const kellyPayload = {
+    schema: 3,
+    generated_at: new Date().toISOString(),
+    bankroll0: 100,
+    kelly_fraction: 0.25,
+    max_kelly_stake_frac: 0.15,
+    outrights_price: "close_american_decimal",
+    cols: [
+      "t",
+      "date",
+      "source",
+      "market",
+      "book",
+      "ev_pct",
+      "p",
+      "dec",
+      "win",
+      "event_id",
+      "player_name",
+      "event_name",
+      "dg_id",
+    ],
+    n: kellyTuples.length,
+    bets: kellyTuples,
+  };
+  writeFileSync(KELLY_JSON, JSON.stringify(kellyPayload));
+  console.log(`Wrote ${KELLY_JSON} (${kellyTuples.length} bets)`);
 }
 
 const isMain = resolve(process.argv[1] || "") === resolve(fileURLToPath(import.meta.url));
@@ -304,4 +423,3 @@ if (isMain) {
     process.exit(1);
   });
 }
-
