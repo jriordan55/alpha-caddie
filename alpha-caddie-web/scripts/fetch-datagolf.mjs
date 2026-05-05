@@ -18,6 +18,8 @@
  * Multi-tour field: when GOLF_DATAGOLF_TOUR is `pga`, fetches field-updates for both `pga` and `opp` and picks the feed
  * with the newest `last_updated` (and sufficient players). Override list with GOLF_FIELD_UPDATES_TOUR_CANDIDATES=pga,euro,opp.
  * Writes projections.datagolf_feed_tour so in-play + book-odds use the same tour code.
+ * get-schedule (upcoming_only yes/no) picks which field-updates candidate matches DataGolf’s canonical next event.
+ * Skip anchor with GOLF_SKIP_GET_SCHEDULE_FIELD_ANCHOR=1.
  *
  * Requires Node 18+ (global fetch).
  *
@@ -42,7 +44,7 @@ import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { findRscriptSync } from "./find-rscript.mjs";
-import { fieldWeekKey, foldComparableTitle } from "./dg-events-align.mjs";
+import { eventsLikelySame, fieldWeekKey, foldComparableTitle } from "./dg-events-align.mjs";
 import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -333,6 +335,35 @@ async function fetchDg(path, params, key) {
   return res.json();
 }
 
+/** Same idea as round_projections.R / live_data.R — authoritative “next” event vs lagging field-updates labels. */
+async function fetchCanonicalUpcomingEventName(scheduleTour, key) {
+  for (const upcoming of ["yes", "no"]) {
+    try {
+      const raw = await fetchDg(
+        "/get-schedule",
+        { tour: scheduleTour, upcoming_only: upcoming, file_format: "json" },
+        key
+      );
+      const events = raw?.events ?? raw?.schedule ?? raw?.tournaments;
+      const arr = Array.isArray(events) ? events : [];
+      if (!arr.length) continue;
+      const row = arr[0];
+      const obj = row && typeof row === "object" ? row : {};
+      const nm = String(obj.event_name ?? obj.name ?? obj.tournament_name ?? "").trim();
+      if (nm) return { name: nm, upcoming_only: upcoming };
+    } catch (e) {
+      console.warn(`get-schedule tour=${scheduleTour} upcoming=${upcoming}:`, e.message || e);
+    }
+  }
+  return null;
+}
+
+function fieldCandidateMatchesSchedule(candidateEv, anchorName) {
+  if (!anchorName || !candidateEv) return false;
+  if (foldComparableTitle(candidateEv) === foldComparableTitle(anchorName)) return true;
+  return eventsLikelySame(candidateEv, anchorName);
+}
+
 function firstNumCol(obj, candidates) {
   if (!obj || typeof obj !== "object") return null;
   for (const c of candidates) {
@@ -485,7 +516,8 @@ async function main() {
       const xs = [...new Set(raw.split(/[,;\s]+/).map((x) => x.trim().toLowerCase()).filter(Boolean))];
       return xs.length ? xs : [TOUR];
     }
-    return TOUR === "pga" ? ["pga", "opp"] : [TOUR];
+    /** Prefer `opp` first so ties favor opposite-field when timestamps are stale/identical (large `pga` field can be last week). */
+    return TOUR === "pga" ? ["opp", "pga"] : [TOUR];
   }
 
   console.log("Fetching field-updates (comparing tours)…");
@@ -498,7 +530,8 @@ async function main() {
       const fieldRowsTry = buildFieldRowsFromFieldRaw(raw);
       const lu = raw.last_updated ?? raw.last_update ?? raw.updated_at;
       const ts = parseDgTimestamp(lu);
-      scored.push({ tour, raw, fieldRowsTry, ts, n: fieldRowsTry.length });
+      const ev = String(raw.event_name || raw.eventName || "").trim();
+      scored.push({ tour, raw, fieldRowsTry, ts, n: fieldRowsTry.length, ev });
     } catch (e) {
       console.warn(`field-updates tour=${tour}:`, e.message || e);
     }
@@ -509,12 +542,38 @@ async function main() {
     console.error("No field-updates from tours:", toursTry.join(", "));
     process.exit(1);
   }
-  pool.sort((a, b) => {
+
+  const skipSchedule =
+    String(process.env.GOLF_SKIP_GET_SCHEDULE_FIELD_ANCHOR || "").trim() === "1";
+  let anchor = null;
+  if (!skipSchedule) {
+    anchor = await fetchCanonicalUpcomingEventName(TOUR, key);
+    if (anchor) {
+      console.log(`[get-schedule] canonical upcoming: "${anchor.name}" (upcoming_only=${anchor.upcoming_only})`);
+    } else {
+      console.warn("[get-schedule] could not resolve upcoming event — picking field-updates by timestamp/order only");
+    }
+  }
+
+  let poolUse = pool;
+  if (!skipSchedule && anchor?.name) {
+    const matched = pool.filter((s) => fieldCandidateMatchesSchedule(s.ev, anchor.name));
+    if (matched.length) {
+      poolUse = matched;
+      console.log("[field-updates] schedule anchor matched:", matched.map((m) => `${m.tour}("${m.ev}")`).join(", "));
+    } else {
+      console.warn(
+        "[field-updates] schedule anchor matched none — candidates:",
+        pool.map((s) => `${s.tour}:${s.ev}`).join(" | ")
+      );
+    }
+  }
+
+  poolUse.sort((a, b) => {
     if (b.ts !== a.ts) return b.ts - a.ts;
-    if (b.n !== a.n) return b.n - a.n;
     return toursTry.indexOf(a.tour) - toursTry.indexOf(b.tour);
   });
-  const win = pool[0];
+  const win = poolUse[0];
   const tourForFeeds = win.tour;
   const fieldRaw = win.raw;
   const fieldRows = win.fieldRowsTry;
@@ -979,6 +1038,8 @@ async function main() {
     course_used,
     /** Betting tools + preds feeds must use this tour (may be `opp` while env says `pga`). */
     datagolf_feed_tour: tourForFeeds,
+    /** Which upcoming event get-schedule used to choose amongst field-updates feeds (debug). */
+    datagolf_schedule_anchor_event: anchor?.name || undefined,
     /** Stable compare for fetch-book-odds vs `/field-updates` (surpasses fuzzy-only title bugs). */
     datagolf_field_week_key: fieldWeekKey(event_name, course_used),
     display_round: dr,
