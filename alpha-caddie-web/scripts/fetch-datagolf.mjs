@@ -18,7 +18,8 @@
  * Multi-tour field: when GOLF_DATAGOLF_TOUR is `pga`, fetches field-updates for both `pga` and `opp` and picks the feed
  * with the newest `last_updated` (and sufficient players). Override list with GOLF_FIELD_UPDATES_TOUR_CANDIDATES=pga,euro,opp.
  * Writes projections.datagolf_feed_tour so in-play + book-odds use the same tour code.
- * get-schedule (upcoming_only yes/no) picks which field-updates candidate matches DataGolf’s canonical next event.
+ * get-schedule (upcoming_only yes/no) picks which field-updates row matches DG’s canonical next event (best row by date when many).
+ * If schedule titles don’t match field-updates labels, preds/in-play info.event_name narrows candidates before timestamp tie-break.
  * Skip anchor with GOLF_SKIP_GET_SCHEDULE_FIELD_ANCHOR=1.
  *
  * Requires Node 18+ (global fetch).
@@ -335,8 +336,62 @@ async function fetchDg(path, params, key) {
   return res.json();
 }
 
-/** Same idea as round_projections.R / live_data.R — authoritative “next” event vs lagging field-updates labels. */
-async function fetchCanonicalUpcomingEventName(scheduleTour, key) {
+function flattenScheduleEventRows(raw) {
+  if (!raw || typeof raw !== "object") return [];
+  let events = raw.events ?? raw.schedule ?? raw.tournaments ?? raw.data ?? raw.results;
+  if (Array.isArray(events)) return events;
+  if (events && typeof events === "object") {
+    for (const k of ["events", "data", "rows", "schedule"]) {
+      if (Array.isArray(events[k])) return events[k];
+    }
+  }
+  return [];
+}
+
+function scheduleRowStartMs(row) {
+  const o = row && typeof row === "object" ? row : {};
+  const cand = [
+    o.start_date,
+    o.date,
+    o.event_date,
+    o.calendar_date,
+    o.week_start,
+    o.first_round_date,
+  ];
+  for (const c of cand) {
+    const ms = Date.parse(String(c ?? "").trim());
+    if (Number.isFinite(ms)) return ms;
+  }
+  const y = Number(o.calendar_year ?? o.year ?? o.season ?? NaN);
+  if (Number.isFinite(y) && y >= 1990 && y <= 2100) return Date.UTC(y, 5, 15);
+  return NaN;
+}
+
+/** Prefer chronologically next row when DG returns a season-long list (not always row 0). */
+function pickBestScheduleAnchor(rows, graceDays = 3) {
+  const GRACE_MS = graceDays * 86400000;
+  const now = Date.now();
+  const enriched = [];
+  for (const row of rows) {
+    const o = row && typeof row === "object" ? row : {};
+    const nm = String(o.event_name ?? o.name ?? o.tournament_name ?? "").trim();
+    if (!nm) continue;
+    let sd = scheduleRowStartMs(o);
+    enriched.push({ nm, sd });
+  }
+  if (!enriched.length) return null;
+  const near = enriched.filter((x) => !Number.isFinite(x.sd) || x.sd >= now - GRACE_MS);
+  const pool = near.length ? near : enriched;
+  pool.sort((a, b) => {
+    const ad = Number.isFinite(a.sd) ? a.sd : Infinity;
+    const bd = Number.isFinite(b.sd) ? b.sd : Infinity;
+    return ad - bd;
+  });
+  return { name: pool[0].nm };
+}
+
+/** Same idea as round_projections.R / live_data.R — canonical upcoming vs lagging field-updates labels. */
+async function fetchCanonicalScheduleAnchor(scheduleTour, key) {
   for (const upcoming of ["yes", "no"]) {
     try {
       const raw = await fetchDg(
@@ -344,18 +399,38 @@ async function fetchCanonicalUpcomingEventName(scheduleTour, key) {
         { tour: scheduleTour, upcoming_only: upcoming, file_format: "json" },
         key
       );
-      const events = raw?.events ?? raw?.schedule ?? raw?.tournaments;
-      const arr = Array.isArray(events) ? events : [];
-      if (!arr.length) continue;
-      const row = arr[0];
-      const obj = row && typeof row === "object" ? row : {};
-      const nm = String(obj.event_name ?? obj.name ?? obj.tournament_name ?? "").trim();
-      if (nm) return { name: nm, upcoming_only: upcoming };
+      const rows = flattenScheduleEventRows(raw);
+      if (!rows.length) {
+        if (raw && typeof raw === "object") {
+          console.warn(`get-schedule (${scheduleTour} upcoming=${upcoming}) empty events; keys:`, Object.keys(raw));
+        }
+        continue;
+      }
+      const pick = pickBestScheduleAnchor(rows);
+      if (pick?.name) return { name: pick.name, upcoming_only: upcoming };
     } catch (e) {
       console.warn(`get-schedule tour=${scheduleTour} upcoming=${upcoming}:`, e.message || e);
     }
   }
   return null;
+}
+
+async function fetchInPlayEventLabel(tour, key) {
+  try {
+    const raw = await fetchDg("/preds/in-play", {
+      tour,
+      dead_heat: "no",
+      odds_format: "percent",
+      file_format: "json",
+    }, key);
+    const info = raw?.info && typeof raw.info === "object" ? raw.info : {};
+    const nm = String(info.event_name ?? raw.event_name ?? "").trim();
+    const rows = Array.isArray(raw.data) ? raw.data.length : 0;
+    return { nm, rows };
+  } catch (e) {
+    console.warn(`preds/in-play tour=${tour}:`, e.message || e);
+    return { nm: "", rows: 0 };
+  }
 }
 
 function fieldCandidateMatchesSchedule(candidateEv, anchorName) {
@@ -547,23 +622,48 @@ async function main() {
     String(process.env.GOLF_SKIP_GET_SCHEDULE_FIELD_ANCHOR || "").trim() === "1";
   let anchor = null;
   if (!skipSchedule) {
-    anchor = await fetchCanonicalUpcomingEventName(TOUR, key);
+    anchor = await fetchCanonicalScheduleAnchor(TOUR, key);
     if (anchor) {
       console.log(`[get-schedule] canonical upcoming: "${anchor.name}" (upcoming_only=${anchor.upcoming_only})`);
     } else {
-      console.warn("[get-schedule] could not resolve upcoming event — picking field-updates by timestamp/order only");
+      console.warn("[get-schedule] could not resolve upcoming event — preds/in-play fallback may decide.");
     }
   }
 
   let poolUse = pool;
+  let narrowedBySchedule = false;
   if (!skipSchedule && anchor?.name) {
     const matched = pool.filter((s) => fieldCandidateMatchesSchedule(s.ev, anchor.name));
     if (matched.length) {
       poolUse = matched;
+      narrowedBySchedule = true;
       console.log("[field-updates] schedule anchor matched:", matched.map((m) => `${m.tour}("${m.ev}")`).join(", "));
     } else {
       console.warn(
         "[field-updates] schedule anchor matched none — candidates:",
+        pool.map((s) => `${s.tour}:${s.ev}`).join(" | ")
+      );
+    }
+  }
+
+  if (!narrowedBySchedule) {
+    const ipLabels = Object.fromEntries(
+      await Promise.all(toursTry.map(async (t) => [t, await fetchInPlayEventLabel(t, key)]))
+    );
+    for (const t of toursTry) {
+      const ip = ipLabels[t];
+      if (ip?.nm) console.log(`[preds/in-play] tour=${t} info="${ip.nm}" rows=${ip.rows}`);
+    }
+    const matchedIp = pool.filter((s) => {
+      const ip = ipLabels[s.tour];
+      return ip?.nm && fieldCandidateMatchesSchedule(s.ev, ip.nm);
+    });
+    if (matchedIp.length) {
+      poolUse = matchedIp;
+      console.log("[field-updates] preds/in-play anchor matched:", matchedIp.map((m) => `${m.tour}("${m.ev}")`).join(", "));
+    } else if (!narrowedBySchedule) {
+      console.warn(
+        "[field-updates] preds/in-play matched none — picking field-updates by timestamp/order; tours:",
         pool.map((s) => `${s.tour}:${s.ev}`).join(" | ")
       );
     }
