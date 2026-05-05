@@ -275,12 +275,13 @@ if (process.env.GOLF_SKIP_REFRESH_ON_START === "1") {
 }
 
 const port = String(process.env.PORT || "5173");
-console.log("[alpha-caddie-web] Starting static server on port", port, "…");
+process.env.PORT = port;
+const staticServer = path.join(WEB_ROOT, "scripts", "serve-static-no-json-cache.mjs");
+console.log("[alpha-caddie-web] Starting static server on port", port, "(no-store JSON) …");
 
-const child = spawn("npx", ["--yes", "serve", ".", "-p", port], {
+const child = spawn(process.execPath, [staticServer], {
   cwd: WEB_ROOT,
   stdio: "inherit",
-  shell: true,
   env: process.env,
 });
 

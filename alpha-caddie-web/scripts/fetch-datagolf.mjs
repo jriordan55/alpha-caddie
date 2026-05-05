@@ -38,7 +38,7 @@ import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { findRscriptSync } from "./find-rscript.mjs";
-import { fieldWeekKey } from "./dg-events-align.mjs";
+import { fieldWeekKey, foldComparableTitle } from "./dg-events-align.mjs";
 import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -454,8 +454,8 @@ async function main() {
     key
   );
   const fieldList = asArray(fieldRaw.field).length ? asArray(fieldRaw.field) : rowsFromResponse(fieldRaw);
-  const event_name = String(fieldRaw.event_name || fieldRaw.eventName || "").trim();
-  const course_used = String(fieldRaw.course_name || fieldRaw.courseName || fieldRaw.course || "").trim();
+  let event_name = String(fieldRaw.event_name || fieldRaw.eventName || "").trim();
+  let course_used = String(fieldRaw.course_name || fieldRaw.courseName || fieldRaw.course || "").trim();
 
   const fieldRows = [];
   for (const p of fieldList) {
@@ -534,6 +534,7 @@ async function main() {
   const pretOddsFormat = (process.env.GOLF_PRE_TOURNAMENT_ODDS_FORMAT || "decimal").trim().toLowerCase();
   const pretAddPos = (process.env.GOLF_PRE_TOURNAMENT_ADD_POSITION || "").trim();
   console.log("Fetching preds/pre-tournament…");
+  let pretRaw = null;
   let pretList = [];
   try {
     const pretParams = {
@@ -543,14 +544,66 @@ async function main() {
       file_format: "json",
     };
     if (pretAddPos) pretParams.add_position = pretAddPos;
-    const pret = await fetchDg("/preds/pre-tournament", pretParams, key);
-    pretList = asArray(pret.baseline_history_fit).length
-      ? asArray(pret.baseline_history_fit)
-      : asArray(pret.baseline).length
-        ? asArray(pret.baseline)
-        : rowsFromResponse(pret);
+    pretRaw = await fetchDg("/preds/pre-tournament", pretParams, key);
+    pretList = asArray(pretRaw.baseline_history_fit).length
+      ? asArray(pretRaw.baseline_history_fit)
+      : asArray(pretRaw.baseline).length
+        ? asArray(pretRaw.baseline)
+        : rowsFromResponse(pretRaw);
   } catch (e) {
     console.warn("Pre-tournament skipped:", e.message);
+  }
+
+  /** field-updates labels sometimes lag preds/pre-tournament; align titles when baseline covers the same field. */
+  const alignTitleFromPret =
+    String(process.env.GOLF_ALIGN_EVENT_TITLE_FROM_PRETOURNAMENT || "1").trim() !== "0";
+  if (alignTitleFromPret && pretRaw && typeof pretRaw === "object" && pretList.length && fieldRows.length) {
+    const row0 = pretList[0] && typeof pretList[0] === "object" ? pretList[0] : {};
+    const pretEvt = String(
+      pretRaw.event_name ||
+        pretRaw.event ||
+        pretRaw.Event ||
+        row0.event_name ||
+        row0.tournament_name ||
+        row0.event ||
+        "",
+    ).trim();
+    const pretCrs = String(
+      pretRaw.course_name ||
+        pretRaw.course ||
+        pretRaw.course_used ||
+        row0.course_name ||
+        row0.course ||
+        "",
+    ).trim();
+    const pretIds = new Set();
+    for (const row of pretList) {
+      const id = Math.round(num(row.dg_id ?? row.id ?? row.dgId, NaN));
+      if (Number.isFinite(id)) pretIds.add(id);
+    }
+    let inter = 0;
+    for (const fr of fieldRows) {
+      if (pretIds.has(fr.dg_id)) inter++;
+    }
+    const cov = inter / fieldRows.length;
+    if (pretEvt && cov >= 0.92) {
+      if (foldComparableTitle(pretEvt) !== foldComparableTitle(event_name)) {
+        console.warn(
+          `Using preds/pre-tournament event (${(cov * 100).toFixed(0)}% field dg_ids in baseline): "${pretEvt}" (field-updates had "${event_name}")`,
+        );
+        event_name = pretEvt;
+      }
+      if (
+        pretCrs &&
+        course_used &&
+        foldComparableTitle(pretCrs) !== foldComparableTitle(course_used)
+      ) {
+        console.warn(
+          `Using preds/pre-tournament course (${(cov * 100).toFixed(0)}% overlap): "${pretCrs}" (field-updates had "${course_used}")`,
+        );
+        course_used = pretCrs;
+      }
+    }
   }
 
   const pretByDg = new Map();

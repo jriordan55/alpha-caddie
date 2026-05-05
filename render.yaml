@@ -1,5 +1,5 @@
 # Alpha Caddie on Render — use a Web Service (this blueprint), not a Static Site.
-# `npm start` → serve-with-refresh.mjs: book odds + in-play when DATAGOLF_API_KEY is set.
+# `npm start` → serve-with-refresh.mjs + serve-static-no-json-cache.mjs (JSON responses are never edge-cached).
 #
 # Dashboard → Environment: set secret DATAGOLF_API_KEY (required for fetch:book-odds + in-play).
 # Optional: DK_LEAGUE_URL (full DraftKings golf league URL with ?category=round) if slug from event_name mismatches DK.
@@ -26,6 +26,9 @@ services:
     envVars:
       # Sync rebuild once per deploy/restart before merging odds (avoids serving last week’s git snapshot).
       - key: GOLF_RENDER_SYNC_FETCH_DG_ON_BOOT
+        value: "1"
+      # Align projections event/course labels from preds/pre-tournament when field-updates wording lags (disable: "0").
+      - key: GOLF_ALIGN_EVENT_TITLE_FROM_PRETOURNAMENT
         value: "1"
       # Keep DraftKings scrape enabled on Render.
       - key: GOLF_SKIP_DK_OU
