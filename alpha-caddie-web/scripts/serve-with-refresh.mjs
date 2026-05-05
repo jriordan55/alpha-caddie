@@ -38,8 +38,9 @@
  *   GOLF_HISTORICAL_ROUNDS_LIGHT=1 — destructive: trim CSV to last 2 seasons (avoid unless you mean it)
  *   GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS=N — partial API refresh only
  *   ALPHA_CADDIE_START_FETCH_DG=1 — run full fetch:dg instead of rounds+history only
- *   Stale week vs DataGolf: fetch-book-odds compares field-updates to projections.event_name and runs fetch:dg when
- *     they diverge (opt out: GOLF_SKIP_INLINE_FETCH_DG_ON_EVENT_MISMATCH=1).
+ *   Stale week vs DataGolf: fetch-book-odds compares `datagolf_field_week_key` + titles/courses vs `/field-updates`;
+ *     opt out of inline rebuild: GOLF_SKIP_INLINE_FETCH_DG_ON_EVENT_MISMATCH=1.
+ *   Render: GOLF_RENDER_SYNC_FETCH_DG_ON_BOOT=1 (default in render.yaml) runs sync fetch:dg once before book odds on boot.
  *   PORT — serve port (default 5173)
  *
  * Fast local UI (no long preflight before the server listens):
@@ -212,6 +213,24 @@ function refreshBeforeServe() {
     if (s.status !== 0) console.warn("[alpha-caddie-web] build-player-shots-web exited", s.status);
   } else if (skipShots) {
     console.log("[alpha-caddie-web] GOLF_SKIP_SHOTS_WEB_ON_START=1 — skipping build-player-shots-web.mjs.");
+  }
+
+  const fetchDgScriptPath = path.join(WEB_ROOT, "scripts", "fetch-datagolf.mjs");
+  const renderSyncDgBoot =
+    String(process.env.RENDER || "").toLowerCase() === "true" &&
+    String(process.env.GOLF_RENDER_SYNC_FETCH_DG_ON_BOOT || "1").trim() !== "0" &&
+    key &&
+    fs.existsSync(fetchDgScriptPath);
+  if (renderSyncDgBoot && process.env.GOLF_SKIP_REFRESH_ON_START !== "1") {
+    console.log("[alpha-caddie-web] Render: sync fetch:dg on boot (writes fresh field/event before book odds) …");
+    const dgBoot = spawnSync(process.execPath, [fetchDgScriptPath], {
+      cwd: WEB_ROOT,
+      stdio: "inherit",
+      env: { ...process.env, GOLF_MODEL_DIR: REPO_ROOT, DATAGOLF_API_KEY: key },
+    });
+    if (dgBoot.status !== 0) {
+      console.warn("[alpha-caddie-web] fetch:dg on boot exited", dgBoot.status);
+    }
   }
 
   const bookOdds = path.join(WEB_ROOT, "scripts", "fetch-book-odds-into-projections.mjs");

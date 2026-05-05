@@ -34,7 +34,14 @@ import { parse } from "csv-parse/sync";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
-import { eventsLikelySame } from "./dg-events-align.mjs";
+import {
+  coursesClearlyDistinct,
+  eventsLikelySame,
+  fieldWeekKey,
+  fieldWeekKeysRoughMatch,
+  titleTokenOverlapRatio,
+  tokenizeEventTitle,
+} from "./dg-events-align.mjs";
 import { fetchDraftKingsOuProps } from "./draftkings-ou-props.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -427,13 +434,37 @@ async function main() {
         return Number.isFinite(id) && pn.length > 0;
       });
       const projEvent = String(payload.event_name || "").trim();
-      const staleWeek =
+      const fuCourse = String(fu.course_name || fu.courseName || fu.course || "").trim();
+      const fuKey = fieldWeekKey(fuEvent, fuCourse);
+      const projKey = String(payload.datagolf_field_week_key || "").trim() || fieldWeekKey(projEvent, String(payload.course_used || ""));
+      const hasFu = fuEvent && fuRows.length >= 8;
+      const keysOk = fieldWeekKeysRoughMatch(projKey, fuKey);
+      const nameFuzzyOk = !!(projEvent && fuEvent && eventsLikelySame(projEvent, fuEvent));
+      const ta = tokenizeEventTitle(projEvent);
+      const tb = tokenizeEventTitle(fuEvent);
+      const tokenStale =
+        projEvent &&
         fuEvent &&
-        fuRows.length >= 8 &&
-        (!projEvent || !eventsLikelySame(projEvent, fuEvent));
+        ta.length >= 3 &&
+        tb.length >= 3 &&
+        titleTokenOverlapRatio(projEvent, fuEvent) < 0.38;
+      const courseStale = !!(projEvent && fuEvent && nameFuzzyOk && coursesClearlyDistinct(payload.course_used, fuCourse));
+
+      const staleWeek =
+        hasFu &&
+        (!projEvent ||
+          !keysOk ||
+          !nameFuzzyOk ||
+          courseStale ||
+          tokenStale);
+
+      console.log(
+        `[fetch-book-odds] field-updates sync: projKey=${JSON.stringify(projKey)} fuKey=${JSON.stringify(fuKey)} keysOk=${keysOk} fuzzy=${nameFuzzyOk} stale=${staleWeek}`
+      );
+
       if (staleWeek) {
         console.warn(
-          `[fetch-book-odds] field-updates event "${fuEvent}" does not match projections "${projEvent || "(none)"}" — running fetch:dg …`
+          `[fetch-book-odds] projections look stale vs field-updates ("${projEvent || "(none)"}" vs "${fuEvent}") — running fetch:dg …`
         );
         const dgScript = join(WEB_ROOT, "scripts", "fetch-datagolf.mjs");
         const r = spawnSync(process.execPath, [dgScript], {

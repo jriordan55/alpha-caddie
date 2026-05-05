@@ -8,8 +8,8 @@
 # Server re-runs fetch-book-odds on an interval (default 60s, GOLF_BOOK_ODDS_SERVER_POLL_MS); the browser polls
 # projections.json so the UI picks up new DK lines without a manual refresh.
 #
-# Week rollover: fetch-book-odds compares DataGolf field-updates to projections.event_name and runs full fetch:dg when
-# they differ (optional skip: GOLF_SKIP_INLINE_FETCH_DG_ON_EVENT_MISMATCH=1). Requires DATAGOLF_API_KEY.
+# Boot: full fetch:dg before book odds so projections.json is never stuck on git for this dyno (set GOLF_RENDER_SYNC_FETCH_DG_ON_BOOT=0 if deploy times out).
+# Week rollover: fetch-book-odds also compares datagolf_field_week_key vs /field-updates (skip inline: GOLF_SKIP_INLINE_FETCH_DG_ON_EVENT_MISMATCH=1).
 #
 # If the Round projections table is empty: delete GOLF_SKIP_DK_OU in the Render dashboard (env vars override this file).
 # With skip on, fetch-book-odds may not merge props; the UI falls back to csv/model_fallback rows when no DK tags exist.
@@ -24,6 +24,9 @@ services:
     startCommand: npm start
     healthCheckPath: /
     envVars:
+      # Sync rebuild once per deploy/restart before merging odds (avoids serving last week’s git snapshot).
+      - key: GOLF_RENDER_SYNC_FETCH_DG_ON_BOOT
+        value: "1"
       # Keep DraftKings scrape enabled on Render.
       - key: GOLF_SKIP_DK_OU
         value: "0"

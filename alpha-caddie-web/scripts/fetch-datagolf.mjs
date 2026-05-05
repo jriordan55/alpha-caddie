@@ -38,6 +38,7 @@ import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { findRscriptSync } from "./find-rscript.mjs";
+import { fieldWeekKey } from "./dg-events-align.mjs";
 import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -875,6 +876,8 @@ async function main() {
   const payload = {
     event_name,
     course_used,
+    /** Stable compare for fetch-book-odds vs `/field-updates` (surpasses fuzzy-only title bugs). */
+    datagolf_field_week_key: fieldWeekKey(event_name, course_used),
     display_round: dr,
     display_round_label: displayRoundLabel(dr, tz),
     updated_at: new Date().toISOString().replace(/\.\d{3}Z$/, "Z"),
