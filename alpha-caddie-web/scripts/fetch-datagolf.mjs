@@ -45,7 +45,13 @@ import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { findRscriptSync } from "./find-rscript.mjs";
-import { eventsLikelySame, fieldWeekKey, foldComparableTitle } from "./dg-events-align.mjs";
+import {
+  coursesClearlyDistinct,
+  eventsLikelySame,
+  fieldWeekKey,
+  foldComparableTitle,
+  titleTokenOverlapRatio,
+} from "./dg-events-align.mjs";
 import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -761,7 +767,11 @@ async function main() {
     console.warn("Pre-tournament skipped:", e.message);
   }
 
-  /** field-updates labels sometimes lag preds/pre-tournament; align titles when baseline covers the same field. */
+  /**
+   * field-updates labels sometimes lag preds/pre-tournament; align titles when baseline covers the same field.
+   * Never replace field-updates names from pret when titles/course disagree — high dg_id overlap alone can occur across
+   * wrong-week or mismatched API metadata (e.g. stale pret event_name vs correct field-updates week).
+   */
   const alignTitleFromPret =
     String(process.env.GOLF_ALIGN_EVENT_TITLE_FROM_PRETOURNAMENT || "1").trim() !== "0";
   if (alignTitleFromPret && pretRaw && typeof pretRaw === "object" && pretList.length && fieldRows.length) {
@@ -793,7 +803,13 @@ async function main() {
       if (pretIds.has(fr.dg_id)) inter++;
     }
     const cov = inter / fieldRows.length;
-    if (pretEvt && cov >= 0.92) {
+    const titlesComparable =
+      pretEvt &&
+      event_name &&
+      (foldComparableTitle(pretEvt) === foldComparableTitle(event_name) ||
+        eventsLikelySame(pretEvt, event_name) ||
+        titleTokenOverlapRatio(pretEvt, event_name) >= 0.55);
+    if (cov >= 0.92 && pretEvt && titlesComparable) {
       if (foldComparableTitle(pretEvt) !== foldComparableTitle(event_name)) {
         console.warn(
           `Using preds/pre-tournament event (${(cov * 100).toFixed(0)}% field dg_ids in baseline): "${pretEvt}" (field-updates had "${event_name}")`,
@@ -803,13 +819,20 @@ async function main() {
       if (
         pretCrs &&
         course_used &&
-        foldComparableTitle(pretCrs) !== foldComparableTitle(course_used)
+        foldComparableTitle(pretCrs) !== foldComparableTitle(course_used) &&
+        !coursesClearlyDistinct(pretCrs, course_used)
       ) {
         console.warn(
           `Using preds/pre-tournament course (${(cov * 100).toFixed(0)}% overlap): "${pretCrs}" (field-updates had "${course_used}")`,
         );
         course_used = pretCrs;
       }
+    } else if (cov >= 0.92 && pretEvt && foldComparableTitle(pretEvt) !== foldComparableTitle(event_name)) {
+      console.warn(
+        `Skipping preds/pre-tournament title "${pretEvt}" vs field "${event_name}" (${(cov * 100).toFixed(
+          0,
+        )}% dg overlap) — titles not comparable; keeping field-updates labels.`,
+      );
     }
   }
 
