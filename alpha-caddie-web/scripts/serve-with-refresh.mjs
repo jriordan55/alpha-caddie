@@ -38,9 +38,8 @@
  *   GOLF_HISTORICAL_ROUNDS_LIGHT=1 — destructive: trim CSV to last 2 seasons (avoid unless you mean it)
  *   GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS=N — partial API refresh only
  *   ALPHA_CADDIE_START_FETCH_DG=1 — run full fetch:dg instead of rounds+history only
- *   Render (RENDER=true): runs fetch:dg once in the background after light refresh so projections.json
- *     matches DataGolf field/event (git snapshot alone often shows the wrong week). Opt out: GOLF_SKIP_FETCH_DG_ON_START=1.
- *   GOLF_FETCH_DG_BOOTSTRAP=1 — same background fetch on non-Render hosts when you want parity with Render.
+ *   Stale week vs DataGolf: fetch-book-odds compares field-updates to projections.event_name and runs fetch:dg when
+ *     they diverge (opt out: GOLF_SKIP_INLINE_FETCH_DG_ON_EVENT_MISMATCH=1).
  *   PORT — serve port (default 5173)
  *
  * Fast local UI (no long preflight before the server listens):
@@ -55,6 +54,7 @@ import { spawn, spawnSync } from "child_process";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { eventsLikelySame } from "./dg-events-align.mjs";
 import { findRscriptSync } from "./find-rscript.mjs";
 import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
 
@@ -76,37 +76,6 @@ function clampFetchDgPollMs(rawMs) {
     );
   }
   return clamped;
-}
-
-/** Pull current field/event into projections.json without blocking deploy health checks (fetch can take minutes). */
-function scheduleFetchDgBootstrapBackground() {
-  const skip = String(process.env.GOLF_SKIP_FETCH_DG_ON_START || "").trim() === "1";
-  const onRender = String(process.env.RENDER || "").toLowerCase() === "true";
-  const forceBoot = String(process.env.GOLF_FETCH_DG_BOOTSTRAP || "").trim() === "1";
-  if (skip || (!onRender && !forceBoot)) return;
-
-  const key = loadApiKey();
-  const fetchDgPath = path.join(WEB_ROOT, "scripts", "fetch-datagolf.mjs");
-  if (!key || !fs.existsSync(fetchDgPath)) return;
-
-  console.log(
-    "[alpha-caddie-web] Starting fetch:dg in background (Render/bootstrap) — serving immediately; upcoming field appears once this completes."
-  );
-  const bg = spawn(process.execPath, [fetchDgPath], {
-    cwd: WEB_ROOT,
-    stdio: ["ignore", "inherit", "inherit"],
-    env: { ...process.env, GOLF_MODEL_DIR: REPO_ROOT, DATAGOLF_API_KEY: key },
-  });
-  bg.on("error", (err) => console.warn("[alpha-caddie-web] fetch:dg bootstrap spawn error:", err.message));
-  bg.on("exit", (code) => {
-    if (code !== 0 && code != null) {
-      console.warn(
-        "[alpha-caddie-web] fetch:dg bootstrap exited",
-        code,
-        "— upcoming tournament/field may stay stale until the next scheduled fetch:dg."
-      );
-    } else console.log("[alpha-caddie-web] fetch:dg bootstrap finished — projections.json refreshed.");
-  });
 }
 
 const fastLocal =
@@ -278,8 +247,6 @@ function refreshBeforeServe() {
   } else {
     mirrorModelDataToWeb(REPO_ROOT, WEB_ROOT);
   }
-
-  scheduleFetchDgBootstrapBackground();
 }
 
 if (process.env.GOLF_SKIP_REFRESH_ON_START === "1") {
@@ -324,28 +291,6 @@ function readJsonFileSafe(p) {
   } catch {
     return null;
   }
-}
-
-function normEventName(s) {
-  return String(s || "")
-    .toLowerCase()
-    .replace(/\b(the|pga|liv\s*golf|dp\s*world)\b/g, " ")
-    .replace(/\b(championship|tournament|invitational|classic|open)\b/g, " ")
-    .replace(/[^a-z0-9]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function eventsLikelySame(a, b) {
-  const x = normEventName(a);
-  const y = normEventName(b);
-  if (!x || !y) return false;
-  if (x === y || x.includes(y) || y.includes(x)) return true;
-  const xt = x.split(" ").filter((t) => t.length >= 4);
-  const yt = y.split(" ").filter((t) => t.length >= 4);
-  if (!xt.length || !yt.length) return false;
-  const hit = xt.filter((t) => yt.some((u) => u.includes(t) || t.includes(u))).length;
-  return hit >= Math.min(2, Math.min(xt.length, yt.length));
 }
 
 function inferLiveModeFromFiles() {

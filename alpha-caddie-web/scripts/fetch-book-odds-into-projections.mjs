@@ -5,6 +5,9 @@
  * the same Scratch feed as the Finish Position tool (https://datagolf.com/betting-tool-finish), not HTML.
  *
  * Use between full `npm run fetch:dg` / R exports so the static app sees current lines without rebuilding players.
+ * Preflight: compares `/field-updates` event_name to projections.event_name; on mismatch runs `fetch-datagolf.mjs`
+ * then re-reads JSON so Render/git snapshots advance to the current PGA week automatically.
+ * Skip with GOLF_SKIP_INLINE_FETCH_DG_ON_EVENT_MISMATCH=1.
  *
  *   npm run fetch:book-odds
  *
@@ -26,10 +29,12 @@
  * If DK_LEAGUE_URL is unset, uses projections.event_name → slug (override with dk_league_slug on JSON or set DK_LEAGUE_URL when DK’s slug differs).
  * CSV files still override or fill gaps when DK omits a player or market.
  */
+import { spawnSync } from "child_process";
 import { parse } from "csv-parse/sync";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
+import { eventsLikelySame } from "./dg-events-align.mjs";
 import { fetchDraftKingsOuProps } from "./draftkings-ou-props.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -71,6 +76,17 @@ function inferDraftKingsLeagueUrlFromProjections(payload) {
     .replace(/^-+|-+$/g, "");
   if (!s) return "";
   return `https://sportsbook.draftkings.com/leagues/golf/${s}?category=round`;
+}
+
+/** Rough player-list shape from field-updates (matches fetch-datagolf parsing intent). */
+function fieldRowsFromUpdates(raw) {
+  if (!raw || typeof raw !== "object") return [];
+  if (Array.isArray(raw.field) && raw.field.length) return raw.field;
+  for (const k of ["data", "players", "baseline_history_fit", "baseline"]) {
+    const v = raw[k];
+    if (Array.isArray(v) && v.length) return v;
+  }
+  return [];
 }
 
 async function fetchDg(path, params, key) {
@@ -396,6 +412,48 @@ async function main() {
   if (!payload || typeof payload !== "object") {
     console.error("Invalid projections.json root");
     process.exit(1);
+  }
+
+  /** DataGolf week rotated but git/deploy snapshot still has last event → merge odds only locks stale field. */
+  const skipInlineDg = String(process.env.GOLF_SKIP_INLINE_FETCH_DG_ON_EVENT_MISMATCH || "").trim() === "1";
+  if (!skipInlineDg) {
+    try {
+      const fu = await fetchDg("/field-updates", { tour: TOUR, file_format: "json" }, key);
+      const fuEvent = String(fu.event_name || fu.eventName || "").trim();
+      const fuRows = fieldRowsFromUpdates(fu).filter((p) => {
+        if (!p || typeof p !== "object") return false;
+        const id = num(p.dg_id ?? p.dgId, NaN);
+        const pn = String(p.player_name || p.name || p.playerName || "").trim();
+        return Number.isFinite(id) && pn.length > 0;
+      });
+      const projEvent = String(payload.event_name || "").trim();
+      const staleWeek =
+        fuEvent &&
+        fuRows.length >= 8 &&
+        (!projEvent || !eventsLikelySame(projEvent, fuEvent));
+      if (staleWeek) {
+        console.warn(
+          `[fetch-book-odds] field-updates event "${fuEvent}" does not match projections "${projEvent || "(none)"}" — running fetch:dg …`
+        );
+        const dgScript = join(WEB_ROOT, "scripts", "fetch-datagolf.mjs");
+        const r = spawnSync(process.execPath, [dgScript], {
+          cwd: WEB_ROOT,
+          stdio: "inherit",
+          env: { ...process.env, GOLF_MODEL_DIR: GOLF_MODEL_ROOT, DATAGOLF_API_KEY: key },
+        });
+        if (r.status !== 0) {
+          console.warn("[fetch-book-odds] fetch:dg exited", r.status, "— merging book odds into existing projections.");
+        } else {
+          try {
+            payload = JSON.parse(readFileSync(projPath, "utf8"));
+          } catch (e) {
+            console.warn("[fetch-book-odds] could not re-read projections after fetch:dg:", e.message);
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("[fetch-book-odds] field-updates preflight:", e.message || e);
+    }
   }
 
   const pretByDg = new Map();

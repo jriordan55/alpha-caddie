@@ -473,15 +473,18 @@ async function main() {
     process.exit(1);
   }
 
+  console.log(
+    `field-updates: tour=${TOUR} event="${event_name || "(unnamed)"}" course="${course_used || ""}" (${fieldRows.length} players)`
+  );
+
   const byDg = new Map(fieldRows.map((r) => [r.dg_id, r]));
 
   console.log("Fetching skill-ratings…");
-  let skillJson;
+  let skillJson = {};
   try {
     skillJson = await fetchDg("/preds/skill-ratings", { display: "value", file_format: "json" }, key);
   } catch (e) {
-    console.error(e.message);
-    process.exit(1);
+    console.warn("skill-ratings failed — continuing with mu_sg≈0 fallback so projections.json still refresh:", e.message || e);
   }
   const skillList = rowsFromResponse(skillJson);
   const skillByDg = new Map();
