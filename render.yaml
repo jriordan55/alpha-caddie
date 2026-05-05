@@ -8,6 +8,9 @@
 # Server re-runs fetch-book-odds on an interval (default 60s, GOLF_BOOK_ODDS_SERVER_POLL_MS); the browser polls
 # projections.json so the UI picks up new DK lines without a manual refresh.
 #
+# First-load field/event: RENDER=true triggers a background `npm run fetch:dg` after boot (git snapshots can be the wrong week).
+# Opt out with GOLF_SKIP_FETCH_DG_ON_START=1. Requires DATAGOLF_API_KEY in the dashboard.
+#
 # If the Round projections table is empty: delete GOLF_SKIP_DK_OU in the Render dashboard (env vars override this file).
 # With skip on, fetch-book-odds may not merge props; the UI falls back to csv/model_fallback rows when no DK tags exist.
 #
