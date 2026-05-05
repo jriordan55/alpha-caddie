@@ -27,7 +27,8 @@ services:
       # Rebuild/merge sportsbook + DK props every minute.
       - key: GOLF_BOOK_ODDS_SERVER_POLL_MS
         value: "60000"
-      # Refresh full DataGolf projections every 10 minutes (keeps model fallback markets fresh).
+      # Full fetch:dg (field / course / model rows). Interval clamped to at least 5 minutes server-side.
+      # Required with unified pipeline so live weeks still refresh full projections periodically.
       - key: GOLF_FETCH_DG_SERVER_POLL_MS
         value: "600000"
       # Prefer live API + DK props over static CSV props on Render.

@@ -27,7 +27,8 @@
  *   GOLF_SKIP_LIVE_IN_PLAY_ON_START=1 — skip preds/in-play fetch on start
  *   GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER=1 — do not re-fetch live-in-play.json while serving
  *   GOLF_LIVE_IN_PLAY_SERVER_POLL_MS — live-in-play poll in ms (default 60000; raise if you hit API limits)
- *   GOLF_FETCH_DG_SERVER_POLL_MS — optional: full `fetch-datagolf.mjs` interval (ms). Min 300000 (5m). Heavy (API + CSV/history); use on Render to keep event/field/course aligned with DataGolf without git-only projections.
+ *   GOLF_FETCH_DG_SERVER_POLL_MS — full `fetch-datagolf.mjs` interval (ms). Floored at 300000 (5m); larger values clamped to 24h max. Honored even when
+ *     GOLF_UNIFIED_PROJECTIONS_PIPELINE=1 (live mode otherwise never refreshes field/course rows; unified mode used to ignore this env).
  *   GOLF_SKIP_BOOK_ODDS_ON_START=1 — skip book odds fetch on start
  *   GOLF_SKIP_BOOK_ODDS_POLL_SERVER=1 — do not refresh betting-tools odds into projections.json while serving
  *   GOLF_BOOK_ODDS_SERVER_POLL_MS — book odds + DK round props poll in ms (default 60000, min 45000)
@@ -57,6 +58,22 @@ import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
 const REPO_ROOT = path.resolve(WEB_ROOT, "..");
+
+/** Full `fetch:dg` / projections rebuild — never more often than once per 5 minutes. */
+const MIN_FETCH_DG_POLL_MS = 300_000;
+const MAX_FETCH_DG_POLL_MS = 86_400_000;
+
+/** @returns {number | null} clamped ms, or null if invalid */
+function clampFetchDgPollMs(rawMs) {
+  if (!Number.isFinite(rawMs) || rawMs <= 0) return null;
+  const clamped = Math.min(MAX_FETCH_DG_POLL_MS, Math.max(MIN_FETCH_DG_POLL_MS, rawMs));
+  if (rawMs < MIN_FETCH_DG_POLL_MS) {
+    console.warn(
+      `[alpha-caddie-web] GOLF_FETCH_DG_SERVER_POLL_MS (${rawMs}ms) below 5-minute minimum — using ${clamped}ms.`
+    );
+  }
+  return clamped;
+}
 
 const fastLocal =
   process.argv.includes("--fast") ||
@@ -320,10 +337,22 @@ function startUnifiedProjectionPipeline() {
   const preMs = Math.max(1_800_000, Number(process.env.GOLF_PRE_ROUND_PROJECTIONS_POLL_MS || 21_600_000));
   const liveMs = Math.max(30_000, Number(process.env.GOLF_LIVE_PROJECTIONS_POLL_MS || 60_000));
   const probeMs = Math.max(30_000, Math.min(liveMs, Number(process.env.GOLF_LIVE_PROBE_POLL_MS || 60_000)));
+
+  const envDgRaw = String(process.env.GOLF_FETCH_DG_SERVER_POLL_MS || "").trim();
+  let dgPollMs = null;
+  if (envDgRaw && envDgRaw !== "0") {
+    const clamped = clampFetchDgPollMs(Number(envDgRaw));
+    if (clamped != null) dgPollMs = clamped;
+    else console.warn("[alpha-caddie-web] GOLF_FETCH_DG_SERVER_POLL_MS invalid — ignoring.");
+  }
+  /** Pre-round full rebuild spacing: explicit poll interval if set, else conservative default (6h). */
+  const dgThrottlePreMs = dgPollMs ?? preMs;
+
   let mode = "";
   let busy = false;
   let lastNoKeyLog = 0;
-  let lastPreRunAt = 0;
+  /** Last time we started fetch:dg (pre + optional live); 0 = never, allows first run immediately. */
+  let lastFullDgRunAt = 0;
   const logNoKeyThrottled = () => {
     const now = Date.now();
     if (now - lastNoKeyLog > 600_000) {
@@ -352,12 +381,18 @@ function startUnifiedProjectionPipeline() {
       if (nextMode !== mode) {
         mode = nextMode;
         if (nextMode === "live") {
-          console.log("[alpha-caddie-web] Unified pipeline mode=live (DataGolf in-play aligned): fetch:in-play + fetch:book-odds.");
+          console.log(
+            "[alpha-caddie-web] Unified pipeline mode=live (DataGolf in-play aligned): fetch:in-play + fetch:book-odds" +
+              (dgPollMs
+                ? `; fetch:dg at most every ${Math.round(dgPollMs / 1000)}s (GOLF_FETCH_DG_SERVER_POLL_MS).`
+                : ".")
+          );
         } else {
           console.log(
             "[alpha-caddie-web] Unified pipeline mode=pre-round: fetch:book-odds every tick; fetch:dg at most every",
-            Math.round(preMs / 1000),
-            "s."
+            Math.round(dgThrottlePreMs / 1000),
+            "s.",
+            dgPollMs ? "(GOLF_FETCH_DG_SERVER_POLL_MS)" : "(GOLF_PRE_ROUND_PROJECTIONS_POLL_MS default)"
           );
         }
       }
@@ -368,7 +403,24 @@ function startUnifiedProjectionPipeline() {
           return;
         }
         bookJob.on("exit", () => {
-          busy = false;
+          if (!dgPollMs) {
+            busy = false;
+            return;
+          }
+          const nowDg = Date.now();
+          if (lastFullDgRunAt !== 0 && nowDg - lastFullDgRunAt < dgPollMs) {
+            busy = false;
+            return;
+          }
+          lastFullDgRunAt = nowDg;
+          const dgJob = spawnScript(fetchDgScript, "fetch:dg (live)", { logNoKey: false });
+          if (!dgJob) {
+            busy = false;
+            return;
+          }
+          dgJob.on("exit", () => {
+            busy = false;
+          });
         });
         return;
       }
@@ -380,11 +432,11 @@ function startUnifiedProjectionPipeline() {
       }
       bookJob.on("exit", () => {
         const now2 = Date.now();
-        if (now2 - lastPreRunAt < preMs) {
+        if (lastFullDgRunAt !== 0 && now2 - lastFullDgRunAt < dgThrottlePreMs) {
           busy = false;
           return;
         }
-        lastPreRunAt = now2;
+        lastFullDgRunAt = now2;
         const preJob = spawnScript(fetchDgScript, "fetch:dg", { logNoKey: false });
         if (!preJob) {
           busy = false;
@@ -404,11 +456,13 @@ function startUnifiedProjectionPipeline() {
   };
   scheduler();
   console.log(
-    "[alpha-caddie-web] Unified projections pipeline enabled. pre-round poll:",
-    Math.round(preMs / 1000),
-    "s; live poll:",
+    "[alpha-caddie-web] Unified projections pipeline enabled. fetch:dg throttle (pre-round):",
+    Math.round(dgThrottlePreMs / 1000),
+    "s;",
+    dgPollMs ? `fetch:dg in live every ${Math.round(dgPollMs / 1000)}s;` : "no fetch:dg in live (set GOLF_FETCH_DG_SERVER_POLL_MS);",
+    "live poll:",
     Math.round(liveMs / 1000),
-    "s; live probe:",
+    "s; probe:",
     Math.round(probeMs / 1000),
     "s. Disable with GOLF_UNIFIED_PROJECTIONS_PIPELINE=0."
   );
@@ -512,18 +566,15 @@ function startBookOddsDiskPoller() {
 }
 if (!usingUnifiedPipeline) startBookOddsDiskPoller();
 
-/** Optional full projections rebuild from DataGolf (field + model rows). Min interval 5 minutes; skips overlapping runs. */
+/** Optional full projections rebuild from DataGolf (field + model rows). Interval floored at 5 minutes; skips overlapping runs. */
 function startFetchDgDiskPoller() {
   const raw = String(process.env.GOLF_FETCH_DG_SERVER_POLL_MS || "").trim();
   if (!raw || raw === "0") return;
-  const n = Number(raw);
-  if (!Number.isFinite(n) || n < 300_000) {
-    console.warn(
-      "[alpha-caddie-web] GOLF_FETCH_DG_SERVER_POLL_MS must be a number ≥ 300000 (5 min) — ignoring full fetch:dg poller."
-    );
+  const ms = clampFetchDgPollMs(Number(raw));
+  if (ms == null) {
+    console.warn("[alpha-caddie-web] GOLF_FETCH_DG_SERVER_POLL_MS invalid — ignoring full fetch:dg poller.");
     return;
   }
-  const ms = Math.min(86_400_000, n);
   const script = path.join(WEB_ROOT, "scripts", "fetch-datagolf.mjs");
   if (!fs.existsSync(script)) return;
   let busy = false;
