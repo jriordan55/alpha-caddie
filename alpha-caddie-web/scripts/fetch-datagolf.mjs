@@ -597,8 +597,8 @@ async function main() {
       const xs = [...new Set(raw.split(/[,;\s]+/).map((x) => x.trim().toLowerCase()).filter(Boolean))];
       return xs.length ? xs : [TOUR];
     }
-    /** Prefer `opp` first so ties favor opposite-field when timestamps are stale/identical (large `pga` field can be last week). */
-    return TOUR === "pga" ? ["opp", "pga"] : [TOUR];
+    /** Prefer `pga` before `opp` so timestamp ties favor the main tour field (opp can be another tour/week with a fresher clock). */
+    return TOUR === "pga" ? ["pga", "opp"] : [TOUR];
   }
 
   console.log("Fetching field-updates (comparing tours)…");
@@ -675,6 +675,19 @@ async function main() {
     }
   }
 
+  /* Timestamp-only picks can grab the wrong tour (e.g. LIV / opposite-field with newer last_updated).
+   * If get-schedule anchored an event and any viable feed matches it, restrict to those feeds before sorting. */
+  if (!skipSchedule && anchor?.name) {
+    const anchorHits = pool.filter((s) => fieldCandidateMatchesSchedule(s.ev, anchor.name));
+    if (anchorHits.length) {
+      poolUse = anchorHits;
+      console.log(
+        "[field-updates] final schedule-anchor pool:",
+        anchorHits.map((m) => `${m.tour}("${m.ev}", ts=${m.ts})`).join(", ")
+      );
+    }
+  }
+
   poolUse.sort((a, b) => {
     if (b.ts !== a.ts) return b.ts - a.ts;
     return toursTry.indexOf(a.tour) - toursTry.indexOf(b.tour);
@@ -685,6 +698,9 @@ async function main() {
   const fieldRows = win.fieldRowsTry;
   let event_name = String(fieldRaw.event_name || fieldRaw.eventName || "").trim();
   let course_used = String(fieldRaw.course_name || fieldRaw.courseName || fieldRaw.course || "").trim();
+  if (!skipSchedule && anchor?.name && fieldCandidateMatchesSchedule(event_name, anchor.name)) {
+    event_name = anchor.name;
+  }
 
   console.log(
     `[field-updates] chose tour=${tourForFeeds} "${event_name || "(unnamed)"}" (${fieldRows.length} players, ts=${win.ts}); scanned:`,
@@ -773,7 +789,7 @@ async function main() {
    * wrong-week or mismatched API metadata (e.g. stale pret event_name vs correct field-updates week).
    */
   const alignTitleFromPret =
-    String(process.env.GOLF_ALIGN_EVENT_TITLE_FROM_PRETOURNAMENT || "1").trim() !== "0";
+    String(process.env.GOLF_ALIGN_EVENT_TITLE_FROM_PRETOURNAMENT || "0").trim() === "1";
   if (alignTitleFromPret && pretRaw && typeof pretRaw === "object" && pretList.length && fieldRows.length) {
     const row0 = pretList[0] && typeof pretList[0] === "object" ? pretList[0] : {};
     const pretEvt = String(

@@ -29,9 +29,9 @@ services:
       # Sync rebuild once per deploy/restart before merging odds (avoids serving last week’s git snapshot).
       - key: GOLF_RENDER_SYNC_FETCH_DG_ON_BOOT
         value: "1"
-      # Align projections event/course labels from preds/pre-tournament when field-updates wording lags (disable: "0").
+      # Off by default in fetch-datagolf; only set "1" when DG field-updates titles lag (wrong-week pret metadata has burned labels before).
       - key: GOLF_ALIGN_EVENT_TITLE_FROM_PRETOURNAMENT
-        value: "1"
+        value: "0"
       # Keep DraftKings scrape enabled on Render.
       - key: GOLF_SKIP_DK_OU
         value: "0"
