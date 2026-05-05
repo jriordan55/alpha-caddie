@@ -11,7 +11,8 @@
  *
  *   npm run fetch:book-odds
  *
- * Env: DATAGOLF_API_KEY or datagolf.local.json; GOLF_MODEL_DIR (repo root); GOLF_DATAGOLF_TOUR or GOLF_TOUR (default pga).
+ * Env: DATAGOLF_API_KEY or datagolf.local.json; GOLF_MODEL_DIR (repo root); GOLF_DATAGOLF_TOUR / GOLF_TOUR fallback when
+ *      projections.json lacks datagolf_feed_tour (written by fetch-datagolf when multiple tours are compared).
  *      preds/pre-tournament: GOLF_PRE_TOURNAMENT_DEAD_HEAT (default yes), GOLF_PRE_TOURNAMENT_ODDS_FORMAT (default decimal).
  *      betting-tools/outrights: GOLF_OUTRIGHTS_ODDS_FORMAT (default percent — same IMPLIED % as
  *      https://datagolf.com/betting-tool-finish; override with decimal|american if needed).
@@ -48,7 +49,7 @@ const WEB_ROOT = join(__dirname, "..");
 const GOLF_MODEL_ROOT = process.env.GOLF_MODEL_DIR?.trim()
   ? resolve(process.env.GOLF_MODEL_DIR.trim())
   : resolve(WEB_ROOT, "..");
-const TOUR = (process.env.GOLF_DATAGOLF_TOUR || process.env.GOLF_TOUR || "pga").trim() || "pga";
+const ENV_DEFAULT_TOUR = ((process.env.GOLF_DATAGOLF_TOUR || process.env.GOLF_TOUR || "pga").trim() || "pga").toLowerCase();
 
 function loadApiKey() {
   const env = (process.env.DATAGOLF_API_KEY || "").trim();
@@ -421,11 +422,13 @@ async function main() {
     process.exit(1);
   }
 
+  const tourForFeeds = String(payload.datagolf_feed_tour || "").trim().toLowerCase() || ENV_DEFAULT_TOUR;
+
   /** DataGolf week rotated but git/deploy snapshot still has last event → merge odds only locks stale field. */
   const skipInlineDg = String(process.env.GOLF_SKIP_INLINE_FETCH_DG_ON_EVENT_MISMATCH || "").trim() === "1";
   if (!skipInlineDg) {
     try {
-      const fu = await fetchDg("/field-updates", { tour: TOUR, file_format: "json" }, key);
+      const fu = await fetchDg("/field-updates", { tour: tourForFeeds, file_format: "json" }, key);
       const fuEvent = String(fu.event_name || fu.eventName || "").trim();
       const fuRows = fieldRowsFromUpdates(fu).filter((p) => {
         if (!p || typeof p !== "object") return false;
@@ -495,7 +498,7 @@ async function main() {
       const pretAddPos = (process.env.GOLF_PRE_TOURNAMENT_ADD_POSITION || "").trim();
       console.log("Fetching preds/pre-tournament (for outright datagolf fill)…");
       const pretParams = {
-        tour: TOUR,
+        tour: tourForFeeds,
         dead_heat: pretDeadHeat === "no" ? "no" : "yes",
         odds_format: pretOddsFormat,
         file_format: "json",
@@ -531,7 +534,7 @@ async function main() {
       const raw = await fetchDg(
         "/betting-tools/outrights",
         {
-          tour: TOUR,
+          tour: tourForFeeds,
           market: m,
           odds_format: outrightsOddsFormat,
           dead_heat: outrightDeadHeatForMarket(m),
@@ -554,7 +557,7 @@ async function main() {
       console.log(`Fetching betting-tools/matchups (${m})…`);
       const raw = await fetchDg(
         "/betting-tools/matchups",
-        { tour: TOUR, market: m, odds_format: "decimal", file_format: "json" },
+        { tour: tourForFeeds, market: m, odds_format: "decimal", file_format: "json" },
         key
       );
       if (raw && typeof raw === "object") matchups[m] = raw;

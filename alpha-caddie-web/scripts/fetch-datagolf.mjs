@@ -15,6 +15,10 @@
  *
  * Or copy datagolf.local.example.json -> datagolf.local.json and put "apiKey" there.
  *
+ * Multi-tour field: when GOLF_DATAGOLF_TOUR is `pga`, fetches field-updates for both `pga` and `opp` and picks the feed
+ * with the newest `last_updated` (and sufficient players). Override list with GOLF_FIELD_UPDATES_TOUR_CANDIDATES=pga,euro,opp.
+ * Writes projections.datagolf_feed_tour so in-play + book-odds use the same tour code.
+ *
  * Requires Node 18+ (global fetch).
  *
  * Hole Hangout: writes hole_pars (18 ints) from course_holes.json + course_holes.local.json,
@@ -293,6 +297,33 @@ function rowsFromResponse(dat) {
   return [];
 }
 
+function parseDgTimestamp(raw) {
+  if (raw == null) return 0;
+  if (typeof raw === "number" && Number.isFinite(raw)) {
+    const n = raw;
+    return n > 1e12 ? Math.round(n) : Math.round(n * 1000);
+  }
+  const ms = Date.parse(String(raw).trim());
+  return Number.isFinite(ms) ? ms : 0;
+}
+
+function buildFieldRowsFromFieldRaw(fieldRaw) {
+  const fieldList = asArray(fieldRaw.field).length ? asArray(fieldRaw.field) : rowsFromResponse(fieldRaw);
+  const fieldRows = [];
+  for (const p of fieldList) {
+    if (!p || typeof p !== "object") continue;
+    const dg_id = num(p.dg_id ?? p.dgId, NaN);
+    const player_name = String(p.player_name || p.name || p.playerName || "").trim();
+    if (!Number.isFinite(dg_id) || !player_name) continue;
+    fieldRows.push({
+      dg_id: Math.round(dg_id),
+      player_name,
+      country: String(p.country || "").trim(),
+    });
+  }
+  return fieldRows;
+}
+
 async function fetchDg(path, params, key) {
   const u = new URL(`https://feeds.datagolf.com${path}`);
   for (const [k, v] of Object.entries(params)) u.searchParams.set(k, String(v));
@@ -447,35 +478,52 @@ async function main() {
     process.exit(1);
   }
 
-  console.log("Fetching field-updates…");
-  const fieldRaw = await fetchDg(
-    "/field-updates",
-    { tour: TOUR, file_format: "json" },
-    key
-  );
-  const fieldList = asArray(fieldRaw.field).length ? asArray(fieldRaw.field) : rowsFromResponse(fieldRaw);
+  /** Dual-field weeks: `pga` feed may lag while `opp` already shows this week's opposite-field event. */
+  function fieldUpdateTourCandidates() {
+    const raw = String(process.env.GOLF_FIELD_UPDATES_TOUR_CANDIDATES || "").trim();
+    if (raw) {
+      const xs = [...new Set(raw.split(/[,;\s]+/).map((x) => x.trim().toLowerCase()).filter(Boolean))];
+      return xs.length ? xs : [TOUR];
+    }
+    return TOUR === "pga" ? ["pga", "opp"] : [TOUR];
+  }
+
+  console.log("Fetching field-updates (comparing tours)…");
+  const toursTry = fieldUpdateTourCandidates();
+  const minPlayers = Math.max(8, Number(process.env.GOLF_FIELD_UPDATES_MIN_PLAYERS || "30"));
+  const scored = [];
+  for (const tour of toursTry) {
+    try {
+      const raw = await fetchDg("/field-updates", { tour, file_format: "json" }, key);
+      const fieldRowsTry = buildFieldRowsFromFieldRaw(raw);
+      const lu = raw.last_updated ?? raw.last_update ?? raw.updated_at;
+      const ts = parseDgTimestamp(lu);
+      scored.push({ tour, raw, fieldRowsTry, ts, n: fieldRowsTry.length });
+    } catch (e) {
+      console.warn(`field-updates tour=${tour}:`, e.message || e);
+    }
+  }
+  const viable = scored.filter((s) => s.n >= minPlayers);
+  const pool = viable.length ? viable : scored.filter((s) => s.n > 0);
+  if (!pool.length) {
+    console.error("No field-updates from tours:", toursTry.join(", "));
+    process.exit(1);
+  }
+  pool.sort((a, b) => {
+    if (b.ts !== a.ts) return b.ts - a.ts;
+    if (b.n !== a.n) return b.n - a.n;
+    return toursTry.indexOf(a.tour) - toursTry.indexOf(b.tour);
+  });
+  const win = pool[0];
+  const tourForFeeds = win.tour;
+  const fieldRaw = win.raw;
+  const fieldRows = win.fieldRowsTry;
   let event_name = String(fieldRaw.event_name || fieldRaw.eventName || "").trim();
   let course_used = String(fieldRaw.course_name || fieldRaw.courseName || fieldRaw.course || "").trim();
 
-  const fieldRows = [];
-  for (const p of fieldList) {
-    if (!p || typeof p !== "object") continue;
-    const dg_id = num(p.dg_id ?? p.dgId, NaN);
-    const player_name = String(p.player_name || p.name || p.playerName || "").trim();
-    if (!Number.isFinite(dg_id) || !player_name) continue;
-    fieldRows.push({
-      dg_id: Math.round(dg_id),
-      player_name,
-      country: String(p.country || "").trim(),
-    });
-  }
-  if (fieldRows.length === 0) {
-    console.error("No players in field-updates response.");
-    process.exit(1);
-  }
-
   console.log(
-    `field-updates: tour=${TOUR} event="${event_name || "(unnamed)"}" course="${course_used || ""}" (${fieldRows.length} players)`
+    `[field-updates] chose tour=${tourForFeeds} "${event_name || "(unnamed)"}" (${fieldRows.length} players, ts=${win.ts}); scanned:`,
+    scored.map((s) => `${s.tour}:${s.n}`).join(", ")
   );
 
   const byDg = new Map(fieldRows.map((r) => [r.dg_id, r]));
@@ -500,7 +548,7 @@ async function main() {
   try {
     const fant = await fetchDg(
       "/preds/fantasy-projection-defaults",
-      { tour: TOUR, site: "draftkings", slate: "main", file_format: "json" },
+      { tour: tourForFeeds, site: "draftkings", slate: "main", file_format: "json" },
       key
     );
     fantasyList = rowsFromResponse(fant);
@@ -538,7 +586,7 @@ async function main() {
   let pretList = [];
   try {
     const pretParams = {
-      tour: TOUR,
+      tour: tourForFeeds,
       dead_heat: pretDeadHeat === "no" ? "no" : "yes",
       odds_format: pretOddsFormat,
       file_format: "json",
@@ -880,7 +928,7 @@ async function main() {
       const raw = await fetchDg(
         "/betting-tools/outrights",
         {
-          tour: TOUR,
+          tour: tourForFeeds,
           market: m,
           odds_format: outrightsOddsFormat,
           dead_heat: outrightDeadHeatForMarket(m),
@@ -904,7 +952,7 @@ async function main() {
       console.log(`Fetching betting-tools/matchups (${m})…`);
       const raw = await fetchDg(
         "/betting-tools/matchups",
-        { tour: TOUR, market: m, odds_format: "decimal", file_format: "json" },
+        { tour: tourForFeeds, market: m, odds_format: "decimal", file_format: "json" },
         key
       );
       if (raw && typeof raw === "object") matchups[m] = raw;
@@ -929,6 +977,8 @@ async function main() {
   const payload = {
     event_name,
     course_used,
+    /** Betting tools + preds feeds must use this tour (may be `opp` while env says `pga`). */
+    datagolf_feed_tour: tourForFeeds,
     /** Stable compare for fetch-book-odds vs `/field-updates` (surpasses fuzzy-only title bugs). */
     datagolf_field_week_key: fieldWeekKey(event_name, course_used),
     display_round: dr,

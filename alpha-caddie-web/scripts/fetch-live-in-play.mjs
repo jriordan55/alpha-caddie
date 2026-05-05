@@ -17,7 +17,8 @@
  * Env:
  *   DATAGOLF_API_KEY or datagolf.local.json { apiKey }
  *   GOLF_MODEL_DIR — repo root (parent of alpha-caddie-web)
- *   GOLF_DATAGOLF_TOUR or GOLF_TOUR — primary tour (default: pga). Options: pga, euro, opp, kft, alt
+ *   GOLF_DATAGOLF_TOUR or GOLF_TOUR — default primary tour when projections.json has no datagolf_feed_tour
+ *   projections.datagolf_feed_tour — set by fetch:dg when the chosen field is opp/kft/etc. (overrides env)
  *   GOLF_IN_PLAY_FALLBACK_TOUR — if primary returns empty data[], try this (default: opp)
  *   GOLF_IN_PLAY_DEAD_HEAT — no (default) | yes
  *   GOLF_IN_PLAY_ODDS_FORMAT — percent (default), american, decimal, fraction
@@ -28,6 +29,18 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
+
+/** Prefer tour chosen during fetch:dg (pga vs opp dual-field weeks). */
+function datagolfFeedTourFromProjections() {
+  try {
+    const p = path.join(WEB_ROOT, "projections.json");
+    if (!fs.existsSync(p)) return "";
+    const j = JSON.parse(fs.readFileSync(p, "utf8"));
+    return String(j.datagolf_feed_tour || "").trim().toLowerCase();
+  } catch {
+    return "";
+  }
+}
 
 function loadApiKey() {
   const env = (process.env.DATAGOLF_API_KEY || "").trim();
@@ -238,7 +251,14 @@ async function main() {
     process.exit(1);
   }
 
-  const primary = (process.env.GOLF_DATAGOLF_TOUR || process.env.GOLF_TOUR || "pga").trim().toLowerCase() || "pga";
+  const envPrimary = (process.env.GOLF_DATAGOLF_TOUR || process.env.GOLF_TOUR || "pga").trim().toLowerCase() || "pga";
+  const fromProj = datagolfFeedTourFromProjections();
+  const primary = fromProj || envPrimary;
+  if (fromProj) {
+    console.log(`[fetch-live-in-play] tour=${primary} (from projections.datagolf_feed_tour)`);
+  } else {
+    console.log(`[fetch-live-in-play] tour=${primary} (env; projections has no datagolf_feed_tour yet)`);
+  }
   const fallback = (process.env.GOLF_IN_PLAY_FALLBACK_TOUR || "opp").trim().toLowerCase();
   const deadHeat = (process.env.GOLF_IN_PLAY_DEAD_HEAT || "no").trim().toLowerCase();
   const oddsFormat = (process.env.GOLF_IN_PLAY_ODDS_FORMAT || "percent").trim().toLowerCase();
