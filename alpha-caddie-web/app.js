@@ -1477,13 +1477,30 @@ function formatDataSizeBytes(n) {
   return `${Math.round(x)} B`;
 }
 
+/** Event first, then venue — status bar used to show only `course_used`, which reads like the wrong “tournament”. */
+function metaEventVenueLabel() {
+  const m = DATA.meta || {};
+  const ev = m.event_name ? String(m.event_name).trim() : "";
+  const course = m.course_used ? String(m.course_used).trim() : "";
+  if (ev && course) return `${ev} · ${course}`;
+  return ev || course || "";
+}
+
+function metaEventVenueHtmlNote() {
+  const s = metaEventVenueLabel();
+  if (!s) return "";
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 function updateStatusBar() {
   const el = document.getElementById("data-status-primary");
   if (!el) return;
   const m = DATA.meta || {};
-  const course = m.course_used ? String(m.course_used) : "—";
-  el.textContent = course;
-  el.title = [m.event_name, course].filter(Boolean).join(" · ");
+  const ev = m.event_name ? String(m.event_name).trim() : "";
+  const course = m.course_used ? String(m.course_used).trim() : "";
+  const line = metaEventVenueLabel() || "—";
+  el.textContent = line;
+  el.title = ev && course ? `${ev}\n${course}` : line;
 }
 
 function configureRoundPickerUi() {
@@ -7273,7 +7290,7 @@ function runHangoutSimulate() {
       if (otb) otb.hidden = true;
       if (top) {
         top.hidden = false;
-        top.innerHTML = `<span class="hh-top-title">Hole ${holeIdx + 1} · Par ${holePar}</span><span class="hh-top-note">${DATA.meta.course_used || ""}</span>`;
+        top.innerHTML = `<span class="hh-top-title">Hole ${holeIdx + 1} · Par ${holePar}</span><span class="hh-top-note">${metaEventVenueHtmlNote()}</span>`;
       }
       pOutRows.innerHTML =
         '<p class="text-muted" style="margin:0;font-size:0.9rem;">No row for this player/round.</p>';
@@ -7353,7 +7370,7 @@ function runHangoutSimulate() {
       : three.birdie * (holePar - 1) + three.par * holePar + three.bogeyPlus * (holePar + bogM);
     if (top) {
       top.hidden = false;
-      top.innerHTML = `<span class="hh-top-title">Hole ${holeIdx + 1} · Par ${holePar}</span><span class="hh-top-note">${dname} · ${DATA.meta.course_used || ""}</span>`;
+      top.innerHTML = `<span class="hh-top-title">Hole ${holeIdx + 1} · Par ${holePar}</span><span class="hh-top-note">${dname} · ${metaEventVenueHtmlNote()}</span>`;
     }
     hangoutRenderThreeOutcomes(three);
     holeCard.innerHTML = `<h4>Expected Score</h4><p class="hangout-pred-score">${exp.toFixed(2)}</p>`;
