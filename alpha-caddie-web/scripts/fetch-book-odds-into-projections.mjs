@@ -72,7 +72,8 @@ function loadApiKey() {
  * Slug from `event_name` can mismatch DK URLs — set `DK_LEAGUE_URL` or optional `dk_league_slug` on the payload.
  */
 function inferDraftKingsLeagueUrlFromProjections(payload) {
-  if (String(process.env.DK_LEAGUE_URL || "").trim()) return "";
+  const envUrl = String(process.env.DK_LEAGUE_URL || "").trim();
+  if (envUrl) return envUrl;
   const slug = String(
     payload?.dk_league_slug || payload?.draftkings_league_slug || payload?.dk_event_slug || "",
   ).trim();

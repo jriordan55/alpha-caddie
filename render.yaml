@@ -2,7 +2,9 @@
 # `npm start` → serve-with-refresh.mjs + serve-static-no-json-cache.mjs (JSON responses are never edge-cached).
 #
 # Dashboard → Environment: set secret DATAGOLF_API_KEY (required for fetch:book-odds + in-play).
-# Optional: DK_LEAGUE_URL (full DraftKings golf league URL with ?category=round) if slug from event_name mismatches DK.
+# Round props (DraftKings): set DK_LEAGUE_URL when slug inference misses (e.g. Truist:
+# https://sportsbook.draftkings.com/leagues/golf/truist-championship?category=round ).
+# If Playwright/API returns empty props, try DK_SITE_SEGMENT (default US-MA-SB) for your geo, e.g. US-VA-SB.
 #
 # Fresh DraftKings round props: Chromium is installed at build time; do NOT set GOLF_SKIP_DK_OU (omit it or set "0").
 # Server re-runs fetch-book-odds on an interval (default 60s, GOLF_BOOK_ODDS_SERVER_POLL_MS); the browser polls
