@@ -5,8 +5,9 @@
  * the same Scratch feed as the Finish Position tool (https://datagolf.com/betting-tool-finish), not HTML.
  *
  * Use between full `npm run fetch:dg` / R exports so the static app sees current lines without rebuilding players.
- * Preflight: compares `/field-updates` event_name to projections.event_name; on mismatch runs `fetch-datagolf.mjs`
- * then re-reads JSON so Render/git snapshots advance to the current PGA week automatically.
+ * Preflight: compares `/field-updates` to projections (week key + fuzzy title); on mismatch runs `fetch-datagolf.mjs`
+ * then re-reads JSON. Compares `GOLF_DATAGOLF_TOUR`/`pga` field-updates when feed tour differs so a stuck `liv`/snapshot
+ * cannot self-match forever.
  * Skip with GOLF_SKIP_INLINE_FETCH_DG_ON_EVENT_MISMATCH=1.
  *
  *   npm run fetch:book-odds
@@ -429,29 +430,41 @@ async function main() {
   if (!skipInlineDg) {
     try {
       const fu = await fetchDg("/field-updates", { tour: tourForFeeds, file_format: "json" }, key);
-      const fuEvent = String(fu.event_name || fu.eventName || "").trim();
-      const fuRows = fieldRowsFromUpdates(fu).filter((p) => {
+      /** Calendar week for staleness: always compare to ENV_DEFAULT_TOUR (usually `pga`), not only `datagolf_feed_tour`.
+       * Otherwise a stuck `liv` / `opp` snapshot matches itself forever and never runs inline fetch:dg. */
+      let fuCal = fu;
+      if (tourForFeeds !== ENV_DEFAULT_TOUR) {
+        try {
+          fuCal = await fetchDg("/field-updates", { tour: ENV_DEFAULT_TOUR, file_format: "json" }, key);
+        } catch (e) {
+          console.warn(`[fetch-book-odds] field-updates ${ENV_DEFAULT_TOUR}:`, e.message || e);
+        }
+      }
+      const fuEventFeed = String(fu.event_name || fu.eventName || "").trim();
+      const fuCourseFeed = String(fu.course_name || fu.courseName || fu.course || "").trim();
+      const calEvent = String(fuCal.event_name || fuCal.eventName || "").trim() || fuEventFeed;
+      const calCourse = String(fuCal.course_name || fuCal.courseName || fuCal.course || "").trim() || fuCourseFeed;
+      const fuRows = fieldRowsFromUpdates(fuCal).filter((p) => {
         if (!p || typeof p !== "object") return false;
         const id = num(p.dg_id ?? p.dgId, NaN);
         const pn = String(p.player_name || p.name || p.playerName || "").trim();
         return Number.isFinite(id) && pn.length > 0;
       });
       const projEvent = String(payload.event_name || "").trim();
-      const fuCourse = String(fu.course_name || fu.courseName || fu.course || "").trim();
-      const fuKey = fieldWeekKey(fuEvent, fuCourse);
+      const fuKey = fieldWeekKey(calEvent, calCourse);
       const projKey = String(payload.datagolf_field_week_key || "").trim() || fieldWeekKey(projEvent, String(payload.course_used || ""));
-      const hasFu = fuEvent && fuRows.length >= 8;
+      const hasFu = calEvent && fuRows.length >= 8;
       const keysOk = fieldWeekKeysRoughMatch(projKey, fuKey);
-      const nameFuzzyOk = !!(projEvent && fuEvent && eventsLikelySame(projEvent, fuEvent));
+      const nameFuzzyOk = !!(projEvent && calEvent && eventsLikelySame(projEvent, calEvent));
       const ta = tokenizeEventTitle(projEvent);
-      const tb = tokenizeEventTitle(fuEvent);
+      const tb = tokenizeEventTitle(calEvent);
       const tokenStale =
         projEvent &&
-        fuEvent &&
+        calEvent &&
         ta.length >= 3 &&
         tb.length >= 3 &&
-        titleTokenOverlapRatio(projEvent, fuEvent) < 0.38;
-      const courseStale = !!(projEvent && fuEvent && nameFuzzyOk && coursesClearlyDistinct(payload.course_used, fuCourse));
+        titleTokenOverlapRatio(projEvent, calEvent) < 0.38;
+      const courseStale = !!(projEvent && calEvent && nameFuzzyOk && coursesClearlyDistinct(payload.course_used, calCourse));
 
       const staleWeek =
         hasFu &&
@@ -462,12 +475,14 @@ async function main() {
           tokenStale);
 
       console.log(
-        `[fetch-book-odds] field-updates sync: projKey=${JSON.stringify(projKey)} fuKey=${JSON.stringify(fuKey)} keysOk=${keysOk} fuzzy=${nameFuzzyOk} stale=${staleWeek}`
+        `[fetch-book-odds] field-updates sync: feedTour=${tourForFeeds} vs calendarTour=${ENV_DEFAULT_TOUR} feed="${fuEventFeed}" calendar="${calEvent}" projKey=${JSON.stringify(
+          projKey,
+        )} fuKey=${JSON.stringify(fuKey)} keysOk=${keysOk} fuzzy=${nameFuzzyOk} stale=${staleWeek}`
       );
 
       if (staleWeek) {
         console.warn(
-          `[fetch-book-odds] projections look stale vs field-updates ("${projEvent || "(none)"}" vs "${fuEvent}") — running fetch:dg …`
+          `[fetch-book-odds] projections look stale vs ${ENV_DEFAULT_TOUR} field-updates ("${projEvent || "(none)"}" vs "${calEvent}") — running fetch:dg …`
         );
         const dgScript = join(WEB_ROOT, "scripts", "fetch-datagolf.mjs");
         const r = spawnSync(process.execPath, [dgScript], {
