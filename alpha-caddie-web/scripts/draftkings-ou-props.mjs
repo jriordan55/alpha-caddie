@@ -2,6 +2,9 @@
  * Pull DraftKings round O/U props (Birdies, Pars, Bogeys, GIR, Fairways, Putts, Round Score) via
  * sportsbook-nash leagueSubcategory markets API, using Playwright for session cookies.
  *
+ * CLI (`npm run fetch:dk-ou`): reads `projections.json` for players + league URL (event_name → slug, or dk_league_slug),
+ * unless `DK_LEAGUE_URL` is set — same idea as fetch-book-odds.
+ *
  * Env:
  *   GOLF_SKIP_DK_OU=1 — skip entirely
  *   DK_LEAGUE_URL — e.g. https://sportsbook.draftkings.com/leagues/golf/rbc-heritage?category=round
@@ -484,18 +487,40 @@ export async function fetchDraftKingsOuProps(opts = {}) {
   return { props: [...dedup.values()], subcatsUsed };
 }
 
+/** Same rules as fetch-book-odds `inferDraftKingsLeagueUrlFromProjections` (DK_LEAGUE_URL → slug fields → event_name slug). */
+function inferLeagueUrlFromPayload(payload) {
+  const envUrl = String(process.env.DK_LEAGUE_URL || "").trim();
+  if (envUrl) return envUrl;
+  if (!payload || typeof payload !== "object") return "";
+  const slug = String(
+    payload.dk_league_slug || payload.draftkings_league_slug || payload.dk_event_slug || "",
+  ).trim();
+  if (slug) return `https://sportsbook.draftkings.com/leagues/golf/${slug}?category=round`;
+  const name = String(payload.event_name || "").trim();
+  if (!name) return "";
+  const s = name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  if (!s) return "";
+  return `https://sportsbook.draftkings.com/leagues/golf/${s}?category=round`;
+}
+
 async function main() {
   const proj = join(__dirname, "..", "projections.json");
   let players = [];
+  let opts = {};
   if (existsSync(proj)) {
     try {
       const payload = JSON.parse(readFileSync(proj, "utf8"));
       players = payload.players || [];
+      const leagueUrl = inferLeagueUrlFromPayload(payload);
+      if (leagueUrl) opts = { leagueUrl };
     } catch {
       /* ignore */
     }
   }
-  const { props, subcatsUsed, error } = await fetchDraftKingsOuProps({ players });
+  const { props, subcatsUsed, error } = await fetchDraftKingsOuProps({ players, ...opts });
   console.log(JSON.stringify({ n: props.length, subcatsUsed, error: error || null }, null, 2));
   if (props[0]) console.log("sample", props[0]);
 }
