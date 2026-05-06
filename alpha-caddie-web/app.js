@@ -1534,7 +1534,7 @@ const OU_PROJECTION_MARKETS = Object.freeze([
 
 /**
  * Props used to resolve lines and odds (DK scrape + CSV + model fallback rows in JSON).
- * {@link ouProjectionColumnsActive} prefers DK-tagged props but uses csv/model_fallback when DK is absent.
+ * {@link ouProjectionColumnsActive} lists every standard market once `players` exist; these rows supply lines when present.
  */
 function ouRoundOuPropsForLines() {
   const props = Array.isArray(DATA.props) ? DATA.props : [];
@@ -1546,11 +1546,15 @@ function ouRoundOuPropsForLines() {
 }
 
 /**
- * Columns + Market filter: prefer markets from DraftKings (`source: draftkings`).
- * If there are no DK-tagged rows (skipped scrape, first boot, or scrape error), fall back to props from
- * csv / model_fallback / untagged so Render and local JSON still show lines until DK populates.
+ * Columns for the Round projections grid + Market filter.
+ * With a loaded field, always list every standard market so Birdies/GIR/etc. stay visible even when DraftKings
+ * only posts lines for a subset (parse probes vary by event). Book columns still fill only when props exist.
+ * Without players, infer columns from props only (demo / props-only payloads).
  */
 function ouProjectionColumnsActive() {
+  const players = Array.isArray(DATA.players) ? DATA.players : [];
+  if (players.length) return [...OU_PROJECTION_MARKETS];
+
   const props = Array.isArray(DATA.props) ? DATA.props : [];
   const dk = props.filter((r) => String(r.source || "").trim().toLowerCase() === "draftkings");
   const nonDk = props.filter((r) => {
