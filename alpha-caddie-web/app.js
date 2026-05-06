@@ -2794,7 +2794,12 @@ function buildOuTable() {
     td.colSpan = projColCount;
     td.className = "ou-cell ou-proj-long-td ou-proj-empty-td";
     td.textContent =
-      "No O/U prop markets in this file yet. On the server: set DATAGOLF_API_KEY, run fetch-book-odds (and remove GOLF_SKIP_DK_OU for DraftKings lines). Or run: npm run refresh";
+      "No round O/U props in projections.json yet.\n\n" +
+      "• Set DATAGOLF_API_KEY (Render dashboard or datagolf.local.json locally).\n" +
+      "• Keep DraftKings enabled: do not set GOLF_SKIP_DK_OU=1 (omit it or use 0).\n" +
+      "• Run one of: npm run fetch:book-odds · npm run refresh · npm run perfect\n" +
+      "• DraftKings needs Chromium: npx playwright install chromium (see Render build).\n" +
+      "• If DK opens the wrong event, set DK_LEAGUE_URL to your league URL with ?category=round.";
     tr.appendChild(td);
     tbody.appendChild(tr);
   } else {

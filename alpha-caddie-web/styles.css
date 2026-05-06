@@ -287,6 +287,163 @@ body {
 .ou-chart-wrap {
   position: relative;
 }
+
+/* Results tab — match Historical Trends chart framing (bordered plot box, responsive canvas). */
+.results-chart-wrap {
+  position: relative;
+  background: var(--golf-elevated);
+  border: 1px solid var(--golf-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  min-width: 0;
+  max-height: min(52vh, 520px);
+  overflow: hidden;
+}
+
+.results-toolbar .results-book-toolbar-label {
+  min-width: 0;
+}
+.results-book-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+.results-book-logo-wrap {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--golf-elevated-soft);
+  border: 1px solid var(--golf-card-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.results-book-logo-wrap:empty {
+  display: none;
+}
+.results-book-logo-img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  display: block;
+}
+.results-book-logo-fallback {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--golf-text-muted);
+  letter-spacing: 0.04em;
+}
+.results-book-filter-row select {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.results-toolbar-row2 {
+  margin-top: 10px;
+}
+@media (max-width: 1024px) {
+  .results-chart-wrap {
+    max-height: none;
+    min-height: 240px;
+  }
+}
+
+/* Results — Polymarket-style KPI + chart row */
+.results-hero {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 16px;
+  min-width: 0;
+}
+.results-hero-chart {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.results-hero-kpi {
+  flex: 0 0 min(240px, 32vw);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  gap: 8px;
+  padding: 4px 4px 0 8px;
+}
+.results-range-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.results-range-pill {
+  appearance: none;
+  border: 1px solid var(--golf-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--golf-text-muted);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 5px 9px;
+  border-radius: 999px;
+  cursor: pointer;
+  line-height: 1;
+}
+.results-range-pill:hover {
+  color: var(--golf-text);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+.results-range-pill.active {
+  color: var(--golf-green);
+  border-color: var(--golf-green);
+  background: rgba(0, 196, 107, 0.1);
+  box-shadow: none;
+}
+.results-kpi-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--golf-text-muted);
+  margin-top: 4px;
+}
+.results-kpi-main {
+  font-size: clamp(1.35rem, 3.2vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--golf-text);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.results-kpi-main.results-kpi-pos {
+  color: #4ade80;
+}
+.results-kpi-main.results-kpi-neg {
+  color: #fb7185;
+}
+.results-kpi-sub {
+  font-size: 0.78rem;
+  color: var(--golf-text-muted);
+  max-width: 220px;
+  line-height: 1.35;
+}
+@media (max-width: 900px) {
+  .results-hero {
+    flex-direction: column;
+  }
+  .results-hero-kpi {
+    flex: 0 0 auto;
+    align-items: flex-start;
+    text-align: left;
+    width: 100%;
+    padding: 8px 0 0;
+  }
+  .results-range-pills {
+    justify-content: flex-start;
+  }
+}
 .ou-chart-tooltip {
   position: absolute;
   z-index: 6;
@@ -730,6 +887,7 @@ body {
   line-height: 1.45;
   color: #8b95ab;
   text-align: left;
+  white-space: pre-line;
 }
 
 #table-ou.table-ou-projections tr.ou-proj-data-row {
