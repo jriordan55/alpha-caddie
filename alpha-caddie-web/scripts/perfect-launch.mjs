@@ -6,6 +6,12 @@
  *
  * Requires DATAGOLF_API_KEY or alpha-caddie-web/datagolf.local.json (same as fetch:dg).
  * Port: PORT env or 5173.
+ *
+ * Runs `draftkings-ou-props.mjs` (same as `npm run fetch:dk-ou`) before `fetch:book-odds` so DraftKings round
+ * props are probed against `projections.json` first; book-odds then merges DK + books into JSON (Playwright twice).
+ * Skip the standalone probe: PERFECT_SKIP_FETCH_DK_OU=1
+ *
+ * DK URL: set DK_LEAGUE_URL (e.g. Truist round page) or rely on slug from projections.event_name.
  */
 import { spawn, spawnSync } from "child_process";
 import net from "net";
@@ -84,7 +90,10 @@ function openBrowser(url) {
 
 runNodeScript("fetch-datagolf.mjs", "Full projections (fetch:dg)");
 runNodeScript("fetch-live-in-play.mjs", "Live / in-play JSON (fetch:in-play)");
-runNodeScript("fetch-book-odds-into-projections.mjs", "Latest sportsbook odds (fetch:book-odds)");
+if (String(process.env.PERFECT_SKIP_FETCH_DK_OU || "").trim() !== "1") {
+  runNodeScript("draftkings-ou-props.mjs", "DraftKings round O/U probe (npm run fetch:dk-ou)");
+}
+runNodeScript("fetch-book-odds-into-projections.mjs", "Latest sportsbook odds + DK merge (fetch:book-odds)");
 
 const port = portNumber();
 const url = `http://127.0.0.1:${port}/`;
