@@ -15,6 +15,7 @@
 # Dual PGA weeks: fetch:dg compares field-updates + get-schedule anchor + timestamps (override tours: GOLF_FIELD_UPDATES_TOUR_CANDIDATES).
 #
 # Boot: full fetch:dg before book odds so projections.json is never stuck on git for this dyno (set GOLF_RENDER_SYNC_FETCH_DG_ON_BOOT=0 if deploy times out).
+# Historical Trends needs historical_rounds_all.csv + player_round_history.json — merge ALL seasons from 2004 often hits Render boot/time limits after projections are written. RECENT_FETCH caps API merge to recent seasons so history JSON still builds (override if you commit a full CSV).
 # Week rollover: fetch-book-odds also compares datagolf_field_week_key vs /field-updates (skip inline: GOLF_SKIP_INLINE_FETCH_DG_ON_EVENT_MISMATCH=1).
 #
 # If the Round projections table is empty: delete GOLF_SKIP_DK_OU in the Render dashboard (env vars override this file).
@@ -22,6 +23,7 @@
 #
 # Optional: GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER=1, GOLF_FETCH_DG_SERVER_POLL_MS=1800000, GOLF_SKIP_BOOK_ODDS_POLL_SERVER=1
 # Heavy CSV / restart speed: GOLF_SKIP_RESULTS_BUILD_ON_BOOT=1 (omit rebuild on npm start; rely on deploy build:results only).
+# If logs show duplicate repair merges: GOLF_SKIP_RENDER_HISTORY_REPAIR=1 (only after Trends loads reliably).
 services:
   - type: web
     name: alpha-caddie-web
@@ -55,3 +57,6 @@ services:
       # Kelly + Results cube: only bets on/after (today UTC − N years). Full history: set "0".
       - key: RESULTS_EXPORT_LAST_YEARS
         value: "2"
+      # Critical for Historical Trends on Render: merge only recent PGA/LIV seasons into historical_rounds_all.csv (fetch:dg + repair pass). Raise only if you ship a prebuilt full CSV.
+      - key: GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS
+        value: "5"

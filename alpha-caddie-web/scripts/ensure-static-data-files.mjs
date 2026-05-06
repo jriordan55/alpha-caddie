@@ -8,7 +8,7 @@ import fs from "fs";
 import path from "path";
 import { buildOfflineDemoProjectionsPayload } from "./offline-demo-projections-payload.mjs";
 
-function onRenderHost() {
+export function onRenderHost() {
   return String(process.env.RENDER || "").toLowerCase() === "true";
 }
 
@@ -259,6 +259,66 @@ export function ensureResultsBacktestAndKelly(webRoot, repoRoot, stubsOk) {
         "utf8",
       );
       console.warn("[alpha-caddie-web] Wrote empty results_kelly_bets.json (local stub only).");
+    }
+  }
+
+  /** Results tab expects HTTP 200; outcomes CSVs are usually gitignored — ship schema-valid empty payloads on Render. */
+  const outcomesCsvMissing = !fs.existsSync(matchupCsv) || !fs.existsSync(outrightCsv);
+  if (onRenderHost() && outcomesCsvMissing) {
+    const iso = new Date().toISOString();
+    if (!fs.existsSync(backtestPath)) {
+      fs.writeFileSync(
+        backtestPath,
+        JSON.stringify({
+          generated_at: iso,
+          source: "render-empty-no-outcomes-csv",
+          ev_bin_step: 0.5,
+          ev_bin_min: -10,
+          ev_bin_max: 40,
+          markets: { matchups: [], outrights: [] },
+          books: { matchups: [], outrights: [] },
+          rows: [],
+        }),
+        "utf8",
+      );
+      console.warn(
+        "[alpha-caddie-web] Wrote schema-valid empty results_backtest.json — add data/historical_matchups_outcomes.csv + historical_outrights_outcomes.csv to repo for real Results.",
+      );
+    }
+    if (!fs.existsSync(kellyPath)) {
+      fs.writeFileSync(
+        kellyPath,
+        JSON.stringify({
+          schema: 3,
+          generated_at: iso,
+          source: "render-empty-no-outcomes-csv",
+          bankroll0: 100,
+          kelly_fraction: 0.25,
+          max_kelly_stake_frac: 0.15,
+          outrights_price: "close_american_decimal",
+          cols: [
+            "t",
+            "date",
+            "source",
+            "market",
+            "book",
+            "ev_pct",
+            "p",
+            "dec",
+            "win",
+            "event_id",
+            "player_name",
+            "event_name",
+            "dg_id",
+          ],
+          n: 0,
+          bets: [],
+        }),
+        "utf8",
+      );
+      console.warn(
+        "[alpha-caddie-web] Wrote schema-valid empty results_kelly_bets.json — same CSV requirement as Results cube.",
+      );
     }
   }
 }

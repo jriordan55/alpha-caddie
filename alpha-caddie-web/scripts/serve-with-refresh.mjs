@@ -100,6 +100,76 @@ if (fastLocal) {
   );
 }
 
+/**
+ * Render often completes projections.json inside fetch:dg but times out or skips before Historical Trends:
+ * the rounds CSV merge defaults to 2004→present (very slow). Render yaml sets GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS;
+ * if player_round_history.json is still missing/empty after refresh, run a short merge + build:history once more.
+ */
+function renderHistoricalTrendsPayloadBroken(webRoot) {
+  const histJson = path.join(webRoot, "player_round_history.json");
+  if (!fs.existsSync(histJson)) return true;
+  try {
+    const j = JSON.parse(fs.readFileSync(histJson, "utf8"));
+    return !j?.byDgId || typeof j.byDgId !== "object" || Object.keys(j.byDgId).length === 0;
+  } catch {
+    return true;
+  }
+}
+
+function repairRenderHistoricalTrendsIfNeeded() {
+  if (String(process.env.RENDER || "").toLowerCase() !== "true") return;
+  if (String(process.env.GOLF_SKIP_RENDER_HISTORY_REPAIR || "").trim() === "1") return;
+  const key = loadApiKey();
+  if (!key) return;
+  const projPath = path.join(WEB_ROOT, "projections.json");
+  if (!fs.existsSync(projPath)) return;
+  if (!renderHistoricalTrendsPayloadBroken(WEB_ROOT)) return;
+
+  const roundsNode = path.join(WEB_ROOT, "scripts", "update-historical-rounds-node.mjs");
+  const buildHist = path.join(WEB_ROOT, "scripts", "build-player-history.mjs");
+  const embedHist = path.join(WEB_ROOT, "scripts", "embed-player-history.mjs");
+  const repairYears =
+    String(process.env.GOLF_RENDER_HISTORY_REPAIR_YEARS || process.env.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "5").trim() ||
+    "5";
+
+  console.warn(
+    `[alpha-caddie-web] Render repair: Historical Trends JSON missing or empty — merging rounds (recent seasons=${repairYears}) + build:history …`,
+  );
+
+  const mergeEnv = {
+    ...process.env,
+    GOLF_MODEL_DIR: REPO_ROOT,
+    DATAGOLF_API_KEY: key,
+    GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS: repairYears,
+  };
+  if (fs.existsSync(roundsNode)) {
+    const u = spawnSync(process.execPath, [roundsNode], {
+      cwd: WEB_ROOT,
+      stdio: "inherit",
+      env: mergeEnv,
+    });
+    if (u.status !== 0) console.warn("[alpha-caddie-web] Render repair: update-historical-rounds-node exited", u.status);
+  }
+
+  if (fs.existsSync(buildHist)) {
+    const h = spawnSync(process.execPath, [buildHist], {
+      cwd: WEB_ROOT,
+      stdio: "inherit",
+      env: { ...process.env, GOLF_MODEL_DIR: REPO_ROOT },
+    });
+    if (h.status !== 0) console.warn("[alpha-caddie-web] Render repair: build-player-history exited", h.status);
+  }
+
+  if (fs.existsSync(embedHist)) {
+    const e = spawnSync(process.execPath, [embedHist], {
+      cwd: WEB_ROOT,
+      stdio: "inherit",
+      env: process.env,
+    });
+    if (e.status !== 0) console.warn("[alpha-caddie-web] Render repair: embed-player-history exited", e.status);
+  }
+}
+
 function loadApiKey() {
   const env = (process.env.DATAGOLF_API_KEY || "").trim();
   if (env) return env;
@@ -275,6 +345,8 @@ if (process.env.GOLF_SKIP_REFRESH_ON_START === "1") {
 } else {
   refreshBeforeServe();
 }
+
+repairRenderHistoricalTrendsIfNeeded();
 
 ensureAlphaCaddieStaticArtifacts(WEB_ROOT, REPO_ROOT);
 
