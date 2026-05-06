@@ -22,13 +22,19 @@
  *   GOLF_IN_PLAY_FALLBACK_TOUR — if primary returns empty data[], try this (default: opp)
  *   GOLF_IN_PLAY_DEAD_HEAT — no (default) | yes
  *   GOLF_IN_PLAY_ODDS_FORMAT — percent (default), american, decimal, fraction
+ *   GOLF_SKIP_LIVE_IN_PLAY_PGA_ALIGN_FETCH_DG=1 — skip PGA-vs-projections week check (runs fetch:dg when snapshot is wrong tour).
  */
+import { spawnSync } from "child_process";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { eventsLikelySame, fieldWeekKey, fieldWeekKeysRoughMatch } from "./dg-events-align.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
+const GOLF_MODEL_ROOT = process.env.GOLF_MODEL_DIR?.trim()
+  ? path.resolve(process.env.GOLF_MODEL_DIR.trim())
+  : path.resolve(WEB_ROOT, "..");
 
 /** Prefer tour chosen during fetch:dg (pga vs opp dual-field weeks). */
 function datagolfFeedTourFromProjections() {
@@ -40,6 +46,64 @@ function datagolfFeedTourFromProjections() {
   } catch {
     return "";
   }
+}
+
+function readProjectionsRoot() {
+  const p = path.join(WEB_ROOT, "projections.json");
+  if (!fs.existsSync(p)) return null;
+  try {
+    const j = JSON.parse(fs.readFileSync(p, "utf8"));
+    return j && typeof j === "object" ? j : null;
+  } catch {
+    return null;
+  }
+}
+
+async function fetchJsonGet(href) {
+  const res = await fetch(href, { headers: { Accept: "application/json" } });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+/**
+ * Git/deploy snapshots can pin `datagolf_feed_tour=liv` while PGA has rolled — preds/in-play then stays on LIV forever.
+ * Align disk projections with `/field-updates?tour=pga` before pulling preds/in-play.
+ */
+async function maybeRebuildProjectionsIfPgaWeekMismatch(key) {
+  if (String(process.env.GOLF_SKIP_LIVE_IN_PLAY_PGA_ALIGN_FETCH_DG || "").trim() === "1") return;
+  const proj = readProjectionsRoot();
+  if (!proj) return;
+  const projEvent = String(proj.event_name || "").trim();
+  const projCourse = String(proj.course_used || "").trim();
+  if (!projEvent) return;
+  let fu;
+  try {
+    const u = new URL("https://feeds.datagolf.com/field-updates");
+    u.searchParams.set("tour", "pga");
+    u.searchParams.set("file_format", "json");
+    u.searchParams.set("key", key);
+    fu = await fetchJsonGet(u.href);
+  } catch (e) {
+    console.warn("[fetch-live-in-play] PGA field-updates (week alignment):", e.message || e);
+    return;
+  }
+  const pgaEv = String(fu.event_name || "").trim();
+  const pgaCourse = String(fu.course_name || fu.course || "").trim();
+  if (!pgaEv) return;
+  const pk =
+    String(proj.datagolf_field_week_key || "").trim() || fieldWeekKey(projEvent, projCourse);
+  const fk = fieldWeekKey(pgaEv, pgaCourse);
+  if (fieldWeekKeysRoughMatch(pk, fk) && eventsLikelySame(projEvent, pgaEv)) return;
+  console.warn(
+    `[fetch-live-in-play] projections snapshot (${projEvent}) does not match PGA field-updates (${pgaEv}) — running fetch:dg …`
+  );
+  const dgScript = path.join(WEB_ROOT, "scripts", "fetch-datagolf.mjs");
+  const r = spawnSync(process.execPath, [dgScript], {
+    cwd: WEB_ROOT,
+    stdio: "inherit",
+    env: { ...process.env, GOLF_MODEL_DIR: GOLF_MODEL_ROOT, DATAGOLF_API_KEY: key },
+  });
+  if (r.status !== 0) console.warn("[fetch-live-in-play] fetch:dg exited", r.status);
 }
 
 function loadApiKey() {
@@ -251,6 +315,8 @@ async function main() {
     process.exit(1);
   }
 
+  await maybeRebuildProjectionsIfPgaWeekMismatch(key);
+
   const envPrimary = (process.env.GOLF_DATAGOLF_TOUR || process.env.GOLF_TOUR || "pga").trim().toLowerCase() || "pga";
   const fromProj = datagolfFeedTourFromProjections();
   const primary = fromProj || envPrimary;
@@ -325,7 +391,16 @@ async function main() {
   const out = path.join(WEB_ROOT, "live-in-play.json");
   fs.mkdirSync(path.dirname(out), { recursive: true });
   const token = compositeLiveBundleToken(parsed, liveTournamentStats, liveHoleStats, fieldUpdates);
-  if (token && fs.existsSync(out)) {
+  const pm = readProjectionsRoot();
+  const infoEv = String(parsed?.info?.event_name || "").trim();
+  const projEv = pm ? String(pm.event_name || "").trim() : "";
+  const projInPlayEventMismatch = !!(projEv && infoEv && !eventsLikelySame(projEv, infoEv));
+  if (projInPlayEventMismatch) {
+    console.warn(
+      `[fetch-live-in-play] preds/in-play info.event_name "${infoEv}" vs projections "${projEv}" — forcing disk write (token skip disabled)`
+    );
+  }
+  if (token && fs.existsSync(out) && !projInPlayEventMismatch) {
     try {
       const prev = JSON.parse(fs.readFileSync(out, "utf8"));
       const prevTok = compositeLiveBundleToken(
