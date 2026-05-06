@@ -24,8 +24,10 @@
  * CSV path: prefer golfModel/data/historical_rounds_all.csv (full history). Only if that is missing,
  * use the newest historical_rounds_all_with_tournament_metadata*.csv (snapshots are often partial).
  * Historical Trends and weather/meta filters use only this rounds CSV (+ join columns if present).
- * Shot-derived round stats: when data/all_shots_2022_2026_round_fairways_gir_putts.csv exists, merges
- * fairways / GIR / putts onto PGA rounds by (dg_id or player name) + event date + round (see loadShotsRoundAggMaps).
+ * Shot-derived round stats (putts / refreshed GIR & FW): when
+ * data/all_shots_2022_2026_round_fairways_gir_putts.csv exists under repo or alpha-caddie-web/data,
+ * merges onto PGA rounds by (dg_id or player name) + event date + round (see loadShotsRoundAggMaps).
+ * Set GOLF_SKIP_SHOTS_ROUND_AGG_MERGE=1 to skip (Historical Trends putts stay blank — rounds CSV has no putts column).
  */
 
 import fs from "fs";
@@ -346,11 +348,15 @@ function resolvePgaDgMapCsvPath() {
 }
 
 function resolveShotsRoundAggCsvPath() {
-  if (String(process.env.GOLF_USE_ALL_SHOTS_CSV || "").trim() !== "1") return null;
-  if (process.env.SHOTS_ROUND_AGG_CSV) return path.resolve(String(process.env.SHOTS_ROUND_AGG_CSV).trim());
+  if (String(process.env.GOLF_SKIP_SHOTS_ROUND_AGG_MERGE || "").trim() === "1") return null;
+  if (process.env.SHOTS_ROUND_AGG_CSV) {
+    const p = path.resolve(String(process.env.SHOTS_ROUND_AGG_CSV).trim());
+    return fs.existsSync(p) ? p : null;
+  }
   const web = path.join(WEB_ROOT, "data", "all_shots_2022_2026_round_fairways_gir_putts.csv");
   if (fs.existsSync(web)) return web;
-  return path.join(MODEL_ROOT, "data", "all_shots_2022_2026_round_fairways_gir_putts.csv");
+  const model = path.join(MODEL_ROOT, "data", "all_shots_2022_2026_round_fairways_gir_putts.csv");
+  return fs.existsSync(model) ? model : null;
 }
 
 /**
@@ -367,7 +373,11 @@ async function loadShotsRoundAggMaps() {
   if (!aggPath || !fs.existsSync(aggPath)) {
     console.log(
       "Shots round aggregate CSV (optional): skipped —",
-      aggPath ? path.basename(aggPath) : "GOLF_USE_ALL_SHOTS_CSV not set",
+      process.env.GOLF_SKIP_SHOTS_ROUND_AGG_MERGE === "1"
+        ? "GOLF_SKIP_SHOTS_ROUND_AGG_MERGE=1"
+        : !aggPath
+          ? "no all_shots_2022_2026_round_fairways_gir_putts.csv under data/"
+          : path.basename(aggPath),
     );
     return { byDgSk, byPkSk, byDgEvtYrRnd, byPkEvtYrRnd, aggPath: null };
   }

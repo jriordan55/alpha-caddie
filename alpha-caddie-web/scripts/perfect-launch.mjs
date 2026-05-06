@@ -21,7 +21,14 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
 const REPO_ROOT = path.resolve(WEB_ROOT, "..");
-const env = { ...process.env, GOLF_MODEL_DIR: process.env.GOLF_MODEL_DIR?.trim() || REPO_ROOT };
+const env = {
+  ...process.env,
+  GOLF_MODEL_DIR: process.env.GOLF_MODEL_DIR?.trim() || REPO_ROOT,
+  // Force shot-enriched history for perfect runs; pgatouR overwrite omits putts/GIR/fairways.
+  // Opt in explicitly with PERFECT_USE_PGA_HISTORY=1.
+  ALPHA_CADDIE_PGA_HISTORY:
+    String(process.env.PERFECT_USE_PGA_HISTORY || "").trim() === "1" ? "1" : "0",
+};
 
 function runNodeScript(rel, label) {
   const script = path.join(WEB_ROOT, "scripts", rel);
@@ -104,7 +111,16 @@ console.log(`\n[perfect] Starting server on port ${port} (Ctrl+C to stop)…\n`)
 const child = spawn(process.execPath, [serve], {
   cwd: WEB_ROOT,
   stdio: "inherit",
-  env: { ...env, PORT: String(port) },
+  env: {
+    ...env,
+    PORT: String(port),
+    // perfect is intended to do one-shot refreshes above, then serve.
+    // Disable background pollers to prevent endless fetch loops in local runs.
+    GOLF_UNIFIED_PROJECTIONS_PIPELINE: String(process.env.GOLF_UNIFIED_PROJECTIONS_PIPELINE || "0"),
+    GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER: String(process.env.GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER || "1"),
+    GOLF_SKIP_BOOK_ODDS_POLL_SERVER: String(process.env.GOLF_SKIP_BOOK_ODDS_POLL_SERVER || "1"),
+    GOLF_FETCH_DG_SERVER_POLL_MS: String(process.env.GOLF_FETCH_DG_SERVER_POLL_MS || "0"),
+  },
 });
 
 let opened = false;

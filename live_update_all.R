@@ -1,5 +1,6 @@
 # live_update_all.R
 # Refreshes model inputs: DataGolf historical CSVs + latest PGA shot-by-shot data.
+# Outrights/matchups only (no R on PATH): from alpha-caddie-web run `npm run update:odds` (needs DATAGOLF_API_KEY or datagolf.local.json).
 # Safe to run repeatedly. Rounds/outrights/matchups: full replace per calendar year from DataGolf
 # (default years = current + previous — keeps 2026 complete during 2026 and refreshes into 2027).
 # Shots: append the most recent tournament via pgatouR (helper.R) if not already in the CSV.

@@ -11,6 +11,8 @@
  *   DK_SITE_SEGMENT — default US-MA-SB (set to your state segment if requests fail)
  *   DK_LEAGUE_ID — optional explicit league id (auto-detected from page if omitted).
  *   DK_SUBCAT_JSON — optional override per stat (skips subcategory probe for keys you set).
+ *   DK_OU_DEBUG_MARKETS=1 — extra selection key dump when a category returns markets but 0 parsed rows.
+ *
  *   Putts / GIR / fairways / Birdies / Pars: nav ids often point at hole, “2 ball”, “player most”, or Par-N props;
  *   we probe league subs for titles like “… Putts - Round 1” / “… Birdies or Better - Round 1”.
  *
@@ -103,32 +105,61 @@ function parseAmerican(raw) {
   return Number.isFinite(n) ? n : NaN;
 }
 
-const ROUND_TAIL = String.raw`(?:Round\s+(\d+)|R(\d+))\s*$`;
+const ROUND_TAIL = String.raw`(?:Round\s+(\d+)|R(\d+)|Rd\.?\s*(\d+))(?:\s+O\/U)?\s*$`;
+
+/** DK often uses en-dashes/em-dashes/spaces inconsistently — normalize before regex match. */
+function normalizeMarketTitle(raw) {
+  return String(raw || "")
+    .replace(/\s+/g, " ")
+    .replace(/[\u2013\u2014\u2212]/g, "-")
+    .trim();
+}
+
+const SEP = String.raw`\s*[-–—]\s*`;
+
+/** DK often embeds the printed line in the title, e.g. "Name o71.5 Round Score - Round 1". */
+const OPTIONAL_TITLE_LINE = String.raw`(?:[oOuU]\s*\d+(?:\.\d+)?\s+)?`;
 
 const NAME_RE = {
-  Birdies: new RegExp(`^(.+?)\\s+Birdies or Better\\s+-\\s+${ROUND_TAIL}`, "i"),
-  Pars: new RegExp(`^(.+?)\\s+Pars\\s+-\\s+${ROUND_TAIL}`, "i"),
-  Bogeys: new RegExp(`^(.+?)\\s+Bogeys or Worse\\s+-\\s+${ROUND_TAIL}`, "i"),
-  GIR: new RegExp(
-    `^(.+?)\\s+(?:Greens?\\s+in\\s+Regulation|GIR)\\s+-\\s+${ROUND_TAIL}`,
+  Birdies: new RegExp(
+    `^(.+?)\\s+${OPTIONAL_TITLE_LINE}Birdies or Better\\s+${SEP}${ROUND_TAIL}`,
     "i",
   ),
-  "Fairways hit": new RegExp(`^(.+?)\\s+Fairways?\\s+Hit\\s+-\\s+${ROUND_TAIL}`, "i"),
-  Putts: new RegExp(`^(.+?)\\s+(?:Total\\s+)?Putts\\s+-\\s+${ROUND_TAIL}`, "i"),
+  Pars: new RegExp(`^(.+?)\\s+${OPTIONAL_TITLE_LINE}Pars\\s+${SEP}${ROUND_TAIL}`, "i"),
+  Bogeys: new RegExp(
+    `^(.+?)\\s+${OPTIONAL_TITLE_LINE}Bogeys or Worse\\s+${SEP}${ROUND_TAIL}`,
+    "i",
+  ),
+  GIR: new RegExp(
+    `^(.+?)\\s+${OPTIONAL_TITLE_LINE}(?:Greens?\\s+in\\s+Regulation|GIR)\\s+${SEP}${ROUND_TAIL}`,
+    "i",
+  ),
+  "Fairways hit": new RegExp(
+    `^(.+?)\\s+${OPTIONAL_TITLE_LINE}Fairways?\\s+Hit\\s+${SEP}${ROUND_TAIL}`,
+    "i",
+  ),
+  Putts: new RegExp(
+    `^(.+?)\\s+${OPTIONAL_TITLE_LINE}(?:Total\\s+)?Putts\\s+${SEP}${ROUND_TAIL}`,
+    "i",
+  ),
 };
 
-const NAME_RE_TOTAL_SCORE = new RegExp(`^(.+?)\\s+Round Score\\s+-\\s+${ROUND_TAIL}`, "i");
+const NAME_RE_TOTAL_SCORE = new RegExp(
+  `^(.+?)\\s+${OPTIONAL_TITLE_LINE}Round Score\\s+${SEP}${ROUND_TAIL}`,
+  "i",
+);
 
 function roundFromMatch(m) {
   if (!m) return NaN;
-  const a = m[m.length - 2];
-  const b = m[m.length - 1];
-  const n = Number(a || b);
-  return Number.isFinite(n) ? n : NaN;
+  for (let i = 2; i < m.length; i++) {
+    const n = Number(m[i]);
+    if (Number.isFinite(n)) return n;
+  }
+  return NaN;
 }
 
 function parseMarketName(stat, marketName) {
-  const raw = String(marketName || "").trim();
+  const raw = normalizeMarketTitle(marketName);
   if (stat === "Total Score") {
     const m = raw.match(NAME_RE_TOTAL_SCORE);
     if (!m) return null;
@@ -211,34 +242,99 @@ async function pickSubcategoryForStat(api, leagueId, siteSegment, stat, preferre
 function lineFromSelection(s) {
   const pts = s.points != null ? Number(s.points) : NaN;
   if (Number.isFinite(pts)) return pts;
-  const lab = String(s.label || "");
+  const lab = String(s.label || s.participantLabel || s.outcomeLabel || "");
   const m = lab.match(/(?:over|under)\s+([\d.]+)/i);
   return m ? Number(m[1]) : NaN;
 }
 
+function selectionMarketId(s) {
+  const v =
+    s.marketId ??
+    s.marketID ??
+    s.EventMarketId ??
+    s.eventMarketId ??
+    s.market_id ??
+    s.parentMarketId;
+  return v != null ? String(v) : "";
+}
+
+function americanFromSelection(s) {
+  const d = s.displayOdds;
+  if (d && d.american != null) return parseAmerican(d.american);
+  if (s.americanOdds != null) return parseAmerican(s.americanOdds);
+  if (s.trueOdds?.american != null) return parseAmerican(s.trueOdds.american);
+  if (s.odds?.american != null) return parseAmerican(s.odds.american);
+  return NaN;
+}
+
+function flattenSelectionsFromBody(body) {
+  const top = Array.isArray(body?.selections) ? body.selections : [];
+  const out = [...top];
+  for (const mk of body?.markets || []) {
+    if (Array.isArray(mk?.selections)) out.push(...mk.selections);
+    if (Array.isArray(mk?.outcomes)) out.push(...mk.outcomes);
+  }
+  return out;
+}
+
+function logUnparsedSample(stat, body, reason) {
+  const markets = body?.markets;
+  const selections = body?.selections || [];
+  if (!Array.isArray(markets) || !markets.length) return;
+  const mk = markets[0];
+  const mid = String(mk?.id ?? mk?.marketId ?? "");
+  const related = selections.filter((s) => selectionMarketId(s) === mid);
+  const name = normalizeMarketTitle(mk?.name).slice(0, 120);
+  console.warn(
+    `[draftkings-ou] ${reason} stat=${stat} nMarkets=${markets.length} first=${JSON.stringify(name)} mktId=${mid} selsForMkt=${related.length} totalSels=${selections.length}`,
+  );
+  if (process.env.DK_OU_DEBUG_MARKETS === "1" && (related[0] || selections[0])) {
+    const one = related[0] || selections[0];
+    console.warn(`[draftkings-ou] sel keys=${Object.keys(one).sort().join(",")}`);
+  }
+}
+
 function propsFromMarketsBody(body, stat, dgByNameLower) {
   const markets = body?.markets;
-  const selections = body?.selections;
-  if (!Array.isArray(markets) || !Array.isArray(selections)) return [];
+  const selections = flattenSelectionsFromBody(body);
+  if (!Array.isArray(markets) || !markets.length) return [];
   const byMarket = new Map();
   for (const s of selections) {
-    const mid = String(s.marketId || "");
+    const mid = selectionMarketId(s);
     if (!mid) continue;
     if (!byMarket.has(mid)) byMarket.set(mid, []);
     byMarket.get(mid).push(s);
   }
   const out = [];
   for (const mk of markets) {
+    const mkId = String(mk.id ?? mk.marketId ?? mk.eventMarketId ?? "");
     const parsed = parseMarketName(stat, mk.name);
     if (!parsed) continue;
-    const sel = byMarket.get(String(mk.id)) || [];
+    let sel = byMarket.get(mkId) || [];
+    if (!sel.length && mk.uuid) sel = byMarket.get(String(mk.uuid)) || [];
+    if (!sel.length && mk.eventId) {
+      sel = selections.filter((s) => String(s.eventId || s.eventID || "") === String(mk.eventId));
+    }
     let overSel;
     let underSel;
     for (const s of sel) {
-      const ot = String(s.outcomeType || "").toLowerCase();
-      const lab = String(s.label || "").toLowerCase();
-      if (ot === "over" || lab === "over" || /^over\b/i.test(lab)) overSel = s;
-      else if (ot === "under" || lab === "under" || /^under\b/i.test(lab)) underSel = s;
+      const ot = String(s.outcomeType || s.type || "").toLowerCase();
+      const labRaw = String(s.label || s.participantLabel || s.outcomeLabel || "");
+      const lab = labRaw.toLowerCase();
+      const overish =
+        ot === "over" ||
+        lab === "over" ||
+        /^over\b/i.test(lab) ||
+        /^\s*o\s*[\d.]+\b/i.test(lab) ||
+        (ot.includes("over") && !ot.includes("under"));
+      const underish =
+        ot === "under" ||
+        lab === "under" ||
+        /^under\b/i.test(lab) ||
+        /^\s*u\s*[\d.]+\b/i.test(lab) ||
+        (ot.includes("under") && !ot.includes("over"));
+      if (overish) overSel = s;
+      else if (underish) underSel = s;
     }
     if (!overSel || !underSel) continue;
     const lo = lineFromSelection(overSel);
@@ -247,8 +343,8 @@ function propsFromMarketsBody(body, stat, dgByNameLower) {
     if (!Number.isFinite(lineRaw)) continue;
     let line = lineRaw;
     if (stat !== "Total Score" && line === Math.floor(line)) line += 0.5;
-    const over = parseAmerican(overSel.displayOdds?.american);
-    const under = parseAmerican(underSel.displayOdds?.american);
+    const over = americanFromSelection(overSel);
+    const under = americanFromSelection(underSel);
     if (!Number.isFinite(over) || !Number.isFinite(under)) continue;
     const player_name = parsed.dkPlayer;
     const o = { player_name, line, over_odds: over, under_odds: under, market: stat };
@@ -272,6 +368,9 @@ export async function fetchDraftKingsOuProps(opts = {}) {
   const requestedLeagueId = String(opts.leagueId || LEAGUE_ID || "").trim();
   const siteSegment = opts.siteSegment || SITE;
   const dgByNameLower = buildDgLookup(players);
+  console.log(
+    `[draftkings-ou] url=${leagueUrl} site=${siteSegment} players=${Array.isArray(players) ? players.length : 0}`,
+  );
 
   let overrides = {};
   const rawOv = process.env.DK_SUBCAT_JSON?.trim();
@@ -298,7 +397,16 @@ export async function fetchDraftKingsOuProps(opts = {}) {
   const page = await ctx.newPage();
   try {
     await page.goto(leagueUrl, { waitUntil: "domcontentloaded", timeout: 90000 });
-    await page.waitForTimeout(8000);
+    await page
+      .waitForFunction(() => typeof window !== "undefined" && window.__INITIAL_STATE__ != null, {
+        timeout: 45000,
+      })
+      .catch(() => {});
+    const extraMs = Math.min(
+      30000,
+      Math.max(2000, Number(process.env.DK_PAGE_WAIT_MS || 8000)),
+    );
+    await page.waitForTimeout(extraMs);
   } catch (e) {
     await browser.close();
     return { props: [], subcatsUsed: {}, error: `goto: ${e.message}` };
@@ -429,7 +537,7 @@ export async function fetchDraftKingsOuProps(opts = {}) {
 
   const allLeagueSubIds = Array.isArray(nav.allSubIdsForLeague) ? nav.allSubIdsForLeague : [];
   const api = ctx.request;
-  for (const st of ["Putts", "GIR", "Fairways hit", "Birdies", "Pars"]) {
+  for (const st of ["Putts", "GIR", "Fairways hit", "Birdies", "Pars", "Bogeys"]) {
     if (overrides[st]) continue;
     const pref = statToSub[st] || "";
     if (!pref && !(PROBE_SUBS_FIRST[st] || []).length && st !== "Fairways hit" && st !== "GIR") continue;
@@ -452,26 +560,44 @@ export async function fetchDraftKingsOuProps(opts = {}) {
     };
   }
 
+  const nAttempts = Object.keys(statToSub).length + roundScoreSubs.length;
   const all = [];
+  let apiFail = 0;
+  let apiBadShape = 0;
   try {
-    const api = ctx.request;
     const entries = Object.entries(statToSub);
     for (let i = 0; i < entries.length; i++) {
       const [stat, sub] = entries[i];
       const u = marketsUrl(leagueId, sub, siteSegment);
       const res = await api.get(u, { timeout: 60000 });
-      if (!res.ok()) continue;
+      if (!res.ok()) {
+        apiFail++;
+        console.warn(`[draftkings-ou] markets HTTP ${res.status()} stat=${stat} sub=${sub}`);
+        continue;
+      }
       const body = await res.json();
-      all.push(...propsFromMarketsBody(body, stat, dgByNameLower));
+      if (!Array.isArray(body?.markets)) apiBadShape++;
+      const chunk = propsFromMarketsBody(body, stat, dgByNameLower);
+      all.push(...chunk);
+      if (!chunk.length && Array.isArray(body?.markets) && body.markets.length)
+        logUnparsedSample(stat, body, "no-rows");
       await page.waitForTimeout(250);
     }
     for (let i = 0; i < roundScoreSubs.length; i++) {
       const sub = roundScoreSubs[i];
       const u = marketsUrl(leagueId, sub, siteSegment);
       const res = await api.get(u, { timeout: 60000 });
-      if (!res.ok()) continue;
+      if (!res.ok()) {
+        apiFail++;
+        console.warn(`[draftkings-ou] round-score markets HTTP ${res.status()} sub=${sub}`);
+        continue;
+      }
       const body = await res.json();
-      all.push(...propsFromMarketsBody(body, "Total Score", dgByNameLower));
+      if (!Array.isArray(body?.markets)) apiBadShape++;
+      const chunkTs = propsFromMarketsBody(body, "Total Score", dgByNameLower);
+      all.push(...chunkTs);
+      if (!chunkTs.length && Array.isArray(body?.markets) && body.markets.length)
+        logUnparsedSample("Total Score", body, "no-rows");
       const prev = subcatsUsed["Total Score"];
       subcatsUsed["Total Score"] = prev ? `${prev},${sub}` : sub;
       if (i < roundScoreSubs.length - 1) await page.waitForTimeout(250);
@@ -484,7 +610,22 @@ export async function fetchDraftKingsOuProps(opts = {}) {
   for (const r of all) {
     dedup.set(`${r.player_name}|${r.market}|${r.line}`, r);
   }
-  return { props: [...dedup.values()], subcatsUsed };
+  const props = [...dedup.values()];
+  if (!props.length && nAttempts > 0) {
+    const hint =
+      apiFail > 0
+        ? `Nash API failures (${apiFail}); try DK_SITE_SEGMENT (e.g. US-VA-SB) or rerun.`
+        : apiBadShape > 0
+          ? "Markets JSON missing markets/selections arrays (DK shape change?)."
+          : "Subcategories resolved but parsed 0 O/U rows (market titles vs regex, or empty category).";
+    console.warn("[draftkings-ou]", hint);
+    return {
+      props,
+      subcatsUsed,
+      error: hint,
+    };
+  }
+  return { props, subcatsUsed };
 }
 
 /** Same rules as fetch-book-odds `inferDraftKingsLeagueUrlFromProjections` (DK_LEAGUE_URL → slug fields → event_name slug). */

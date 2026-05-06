@@ -602,12 +602,25 @@ async function main() {
     if (process.env.GOLF_SKIP_DK_OU !== "1") {
       try {
         const dkLeagueUrl = inferDraftKingsLeagueUrlFromProjections(payload);
+        console.log(
+          "[fetch-book-odds] DK O/U scrape:",
+          dkLeagueUrl ? dkLeagueUrl : "default URL (set DK_LEAGUE_URL or dk_league_slug on payload)",
+        );
         const dk = await fetchDraftKingsOuProps({
           players: payload.players,
           ...(dkLeagueUrl ? { leagueUrl: dkLeagueUrl } : {}),
         });
         dkProps = withPropSource(dk.props || [], "draftkings");
-        if (dk.error && !String(dk.error).startsWith("skipped")) console.warn("DraftKings O/U:", dk.error);
+        if (!dkProps.length && process.env.GOLF_SKIP_DK_OU !== "1") {
+          console.warn(
+            "DraftKings O/U:",
+            dk.error && !String(dk.error).startsWith("skipped")
+              ? dk.error
+              : "0 props — check [draftkings-ou] logs above (Playwright, DK_SITE_SEGMENT, npm run fetch:dk-ou)",
+          );
+        } else if (dk.error && !String(dk.error).startsWith("skipped")) {
+          console.warn("DraftKings O/U:", dk.error);
+        }
         if (dkProps.length && dk.subcatsUsed && Object.keys(dk.subcatsUsed).length) {
           console.log("DraftKings props subcategories", dk.subcatsUsed);
         }

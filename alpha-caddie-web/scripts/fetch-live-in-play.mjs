@@ -397,10 +397,10 @@ async function main() {
   const projInPlayEventMismatch = !!(projEv && infoEv && !eventsLikelySame(projEv, infoEv));
   if (projInPlayEventMismatch) {
     console.warn(
-      `[fetch-live-in-play] preds/in-play info.event_name "${infoEv}" vs projections "${projEv}" — forcing disk write (token skip disabled)`
+      `[fetch-live-in-play] preds/in-play info.event_name "${infoEv}" vs projections "${projEv}" — stale in-play event metadata detected`
     );
   }
-  if (token && fs.existsSync(out) && !projInPlayEventMismatch) {
+  if (token && fs.existsSync(out)) {
     try {
       const prev = JSON.parse(fs.readFileSync(out, "utf8"));
       const prevTok = compositeLiveBundleToken(
@@ -410,6 +410,18 @@ async function main() {
         prev.field_updates
       );
       if (prevTok && prevTok === token) {
+        if (projInPlayEventMismatch) {
+          const prevInfoEv = String(prev?.info?.event_name || "").trim();
+          if (prevInfoEv && !eventsLikelySame(prevInfoEv, projEv)) {
+            console.warn(
+              `[fetch-live-in-play] unchanged stale in-play bundle token (${token}); skip write to avoid refresh loop`
+            );
+          } else {
+            console.warn(
+              `[fetch-live-in-play] unchanged bundle token (${token}) with in-play/projections event mismatch; skip write`
+            );
+          }
+        }
         console.log(`[fetch-live-in-play] unchanged bundle token (${token}); skip write`);
         return;
       }

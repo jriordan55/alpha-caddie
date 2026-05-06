@@ -9,6 +9,7 @@
     "refresh": "node scripts/refresh-fresh.mjs",
     "fetch:dk-ou": "node scripts/draftkings-ou-props.mjs",
     "update:rounds": "node scripts/run-update-historical-rounds.mjs",
+    "update:odds": "node scripts/update-historical-odds-node.mjs",
     "sync:rounds-csv": "node scripts/sync-historical-csv.mjs",
     "sync:data-to-web": "node scripts/sync-historical-csv.mjs",
     "build:shots-web": "node scripts/build-player-shots-web.mjs",

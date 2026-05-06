@@ -807,6 +807,16 @@ body {
   min-width: 7.5rem;
   max-width: none;
 }
+#table-ou.table-ou-projections tbody td.ou-proj-td-golfer .ou-player-flag {
+  display: inline-block;
+  width: 18px;
+  height: 13px;
+  object-fit: cover;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  margin-right: 8px;
+  vertical-align: -1px;
+}
 #table-ou.table-ou-projections .ou-proj-th-market,
 #table-ou.table-ou-projections .ou-proj-td-market {
   min-width: 6.5rem;

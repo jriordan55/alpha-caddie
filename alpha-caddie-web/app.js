@@ -339,6 +339,9 @@ let resultsTimeRange = "all";
 /** Hit regions for Results chart win-marker tooltips (canvas). */
 let resultsChartHitRegions = [];
 let propsTrendsLineContextKey = "";
+/** Perf caches for pricing-mode recomputes (cleared when history/context changes). */
+const HISTORY_ROUNDS_CHRONO_CACHE = new Map();
+const PRICING_MU_BONUS_CACHE = new Map();
 /** Last valid line used when the input is mid-edit or empty. */
 let propsTrendLastGoodLine = NaN;
 /** Top-10 table sort: `dir` 1 = ascending, -1 = descending (higher values first). */
@@ -1696,6 +1699,18 @@ function updatePricingSkillLabelsVisibility() {
 }
 
 function refreshPricingAffectedViews() {
+  const tab = activeAppTabId();
+  if (tab === "ou") return void buildOuTable();
+  if (tab === "ev") return void buildEvTable();
+  if (tab === "matchups") return void buildMatchupsTable();
+  if (tab === "outrights") return void buildOutrightsTable();
+  if (tab === "props") {
+    renderPropsTrends();
+    updatePropsFooterEv();
+    return;
+  }
+  if (tab === "hangout") return void scheduleHangoutSimulateDebounced();
+  // Fallback for early boot / unknown tab.
   buildOuTable();
   buildEvTable();
   buildMatchupsTable();
@@ -2817,7 +2832,25 @@ function buildOuTable() {
     if (ouProjExpandedKey === expandKey) tr.classList.add("ou-proj-row-expanded");
     const nameTd = document.createElement("td");
     nameTd.className = "ou-cell ou-proj-long-td ou-proj-td-golfer";
-    nameTd.textContent = displayGolferName(rawName);
+    const countryRaw = String(player.country || "").trim();
+    const countrySlug = golfCountryToFlagSlug(countryRaw);
+    if (countrySlug) {
+      const flagEl = document.createElement("img");
+      flagEl.className = "ou-player-flag";
+      flagEl.alt = countryRaw || "Country";
+      flagEl.title = countryRaw || "";
+      flagEl.loading = "lazy";
+      flagEl.decoding = "async";
+      flagEl.src = flagImageUrlFromCountry(countryRaw);
+      flagEl.onerror = function onFlagErr() {
+        this.onerror = null;
+        this.style.display = "none";
+      };
+      nameTd.appendChild(flagEl);
+    }
+    const nameText = document.createElement("span");
+    nameText.textContent = displayGolferName(rawName);
+    nameTd.appendChild(nameText);
     nameTd.dataset.playerValue = rawName;
     tr.appendChild(nameTd);
 
@@ -3264,6 +3297,39 @@ const SPORTSBOOK_META = {
   datagolf: { label: "DataGolf", short: "DG", domain: "datagolf.com" },
 };
 
+const EV_ALLOWED_SPORTSBOOKS = new Set([
+  "draftkings",
+  "fanduel",
+  "betmgm",
+  "bet365",
+  "pinnacle",
+  "caesars",
+  "bovada",
+  "betonline",
+]);
+
+function normalizeEvSportsbookKey(bookRaw) {
+  const k = String(bookRaw || "").trim().toLowerCase();
+  if (!k) return "";
+  if (k === "betonlineag" || k === "betonlineas") return "betonline";
+  return k;
+}
+
+function evSportsbookAllowed(bookRaw) {
+  return EV_ALLOWED_SPORTSBOOKS.has(normalizeEvSportsbookKey(bookRaw));
+}
+
+function filterOddsObjectForEvSportsbooks(oddsObj) {
+  const out = {};
+  if (!oddsObj || typeof oddsObj !== "object") return out;
+  for (const [bk, pack] of Object.entries(oddsObj)) {
+    const norm = normalizeEvSportsbookKey(bk);
+    if (!evSportsbookAllowed(norm)) continue;
+    out[norm] = pack;
+  }
+  return out;
+}
+
 function bookMeta(book) {
   const k = String(book || "").trim().toLowerCase();
   if (SPORTSBOOK_META[k]) return { ...SPORTSBOOK_META[k], key: k };
@@ -3462,16 +3528,17 @@ function saveEvDevigPrefs(prefs) {
 }
 
 function evBookAllowedInConsensus(bk, prefs) {
-  const k = String(bk || "").toLowerCase();
+  const k = normalizeEvSportsbookKey(bk);
   if (k === "datagolf") return false;
+  if (!evSportsbookAllowed(k)) return false;
   if (!prefs || prefs.books == null) return true;
   if (prefs.books.length === 0) return false;
-  return prefs.books.includes(k);
+  return prefs.books.map(normalizeEvSportsbookKey).includes(k);
 }
 
 function evConsensusWeightForBook(bk, prefs) {
   if (!prefs || !prefs.bookWeights) return 1;
-  const k = String(bk || "").toLowerCase();
+  const k = normalizeEvSportsbookKey(bk);
   const w = num(prefs.bookWeights[k], NaN);
   if (Number.isFinite(w) && w > 0) return w;
   return 0;
@@ -3682,7 +3749,7 @@ function outrightConsensusProbFromBooks(bookDecItems, prefs) {
 
 function evDevigSortedBookKeys() {
   return Object.keys(SPORTSBOOK_META)
-    .filter((k) => k !== "datagolf")
+    .filter((k) => k !== "datagolf" && evSportsbookAllowed(k))
     .sort((a, b) => bookMeta(a).label.localeCompare(bookMeta(b).label));
 }
 
@@ -3917,17 +3984,18 @@ function collectUnifiedEvRows() {
       const mu3 = effectiveMuSg(row3, id3, mk);
       const isThreeBall = mk === "3_balls" && Number.isFinite(id3) && id3 > 0;
       if (elim.size && (elim.has(id1) || elim.has(id2) || (isThreeBall && elim.has(id3)))) continue;
+      const oddsEv = filterOddsObjectForEvSportsbooks(m.odds || {});
       if (isThreeBall) {
         const [tp1, tp2, tp3] = threeBallModelProbsLiveBlended(mu1, mu2, mu3, row1, row2, row3);
-        const b1 = bestBookDecimalForSide(m.odds || {}, "p1");
-        const b2 = bestBookDecimalForSide(m.odds || {}, "p2");
-        const b3 = bestBookDecimalForSide(m.odds || {}, "p3");
+        const b1 = bestBookDecimalForSide(oddsEv, "p1");
+        const b2 = bestBookDecimalForSide(oddsEv, "p2");
+        const b3 = bestBookDecimalForSide(oddsEv, "p3");
         const n1 = displayGolferName(String(m.p1_player_name || ""));
         const n2 = displayGolferName(String(m.p2_player_name || ""));
         const n3 = displayGolferName(String(m.p3_player_name || ""));
-        const mp1 = matchupConsensusThreeWaySide(m.odds || {}, "p1", devigPrefs);
-        const mp2 = matchupConsensusThreeWaySide(m.odds || {}, "p2", devigPrefs);
-        const mp3 = matchupConsensusThreeWaySide(m.odds || {}, "p3", devigPrefs);
+        const mp1 = matchupConsensusThreeWaySide(oddsEv, "p1", devigPrefs);
+        const mp2 = matchupConsensusThreeWaySide(oddsEv, "p2", devigPrefs);
+        const mp3 = matchupConsensusThreeWaySide(oddsEv, "p3", devigPrefs);
         rows.push({
           golfer: n1,
           market: marketLabel,
@@ -3964,12 +4032,12 @@ function collectUnifiedEvRows() {
         continue;
       }
       const p1 = matchupWinProbLiveBlended(mu1, mu2, mk, row1, row2);
-      const b1 = bestBookDecimalForSide(m.odds || {}, "p1");
-      const b2 = bestBookDecimalForSide(m.odds || {}, "p2");
+      const b1 = bestBookDecimalForSide(oddsEv, "p1");
+      const b2 = bestBookDecimalForSide(oddsEv, "p2");
       const modelEv1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
       const modelEv2 = Number.isFinite(b2.dec) ? (1 - p1) * b2.dec - 1 : NaN;
-      const marketP1 = matchupConsensusSide(m.odds || {}, "p1", devigPrefs);
-      const marketP2 = matchupConsensusSide(m.odds || {}, "p2", devigPrefs);
+      const marketP1 = matchupConsensusSide(oddsEv, "p1", devigPrefs);
+      const marketP2 = matchupConsensusSide(oddsEv, "p2", devigPrefs);
       rows.push({
         golfer: displayGolferName(String(m.p1_player_name || "")),
         market: marketLabel,
@@ -3999,7 +4067,9 @@ function collectUnifiedEvRows() {
   for (const mk of ["win", "top_5", "top_10", "top_20", "make_cut", "mc"]) {
     const pack = opack[mk];
     if (!pack || !Array.isArray(pack.rows)) continue;
-    const books = Array.isArray(pack.bookKeys) ? pack.bookKeys.filter((k) => k && k !== "datagolf") : [];
+    const books = Array.isArray(pack.bookKeys)
+      ? pack.bookKeys.filter((k) => k && k !== "datagolf" && evSportsbookAllowed(k))
+      : [];
     for (const row of pack.rows) {
       const id = Math.round(num(row.dg_id, NaN));
       if (elim.size && elim.has(id) && mk !== "make_cut" && mk !== "mc") continue;
@@ -4009,7 +4079,8 @@ function collectUnifiedEvRows() {
       let bestEv = NaN;
       const modelOk = Number.isFinite(modelP) && modelP > 0;
       for (const bk of books) {
-        const pct = impliedPctFromBookField(row[bk]);
+        const bkNorm = normalizeEvSportsbookKey(bk);
+        const pct = impliedPctFromBookField(row[bk] ?? row[bkNorm]);
         if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
         const pBook = pct / 100;
         if (pBook <= 0 || pBook >= 1) continue;
@@ -4017,18 +4088,19 @@ function collectUnifiedEvRows() {
         if (!Number.isFinite(ev)) continue;
         if (!Number.isFinite(bestEv) || ev > bestEv) {
           bestEv = ev;
-          bestBook = bk;
+          bestBook = bkNorm;
           bestAm = americanFromImpliedProb(pBook);
         }
       }
       const decItems = [];
       for (const bk of books) {
-        if (!evBookAllowedInConsensus(bk, devigPrefs)) continue;
-        const pct = impliedPctFromBookField(row[bk]);
+        const bkNorm = normalizeEvSportsbookKey(bk);
+        if (!evBookAllowedInConsensus(bkNorm, devigPrefs)) continue;
+        const pct = impliedPctFromBookField(row[bk] ?? row[bkNorm]);
         if (!Number.isFinite(pct) || pct <= 0) continue;
         const pp = pct / 100;
         if (pp <= 0 || pp >= 1) continue;
-        decItems.push({ bk, dec: 1 / pp });
+        decItems.push({ bk: bkNorm, dec: 1 / pp });
       }
       const marketP = outrightConsensusProbFromBooks(decItems, devigPrefs);
       const bestDec = Number.isFinite(bestAm) ? decimalFromAmerican(bestAm) : NaN;
@@ -4087,6 +4159,92 @@ function fillEvFilters(rows) {
   if ([...b.options].some((o) => o.value === bPrev)) b.value = bPrev;
 }
 
+let evSort = { key: "model_ev", dir: -1 };
+let evSortInited = false;
+
+function updateEvSortIndicators() {
+  const table = document.getElementById("table-ev");
+  if (!table) return;
+  table.querySelectorAll("thead th.sortable").forEach((th) => {
+    const key = String(th.dataset.sortKey || "");
+    const up = th.querySelector(".sort-up");
+    const dn = th.querySelector(".sort-down");
+    if (up) up.classList.toggle("active", key === evSort.key && evSort.dir > 0);
+    if (dn) dn.classList.toggle("active", key === evSort.key && evSort.dir < 0);
+  });
+}
+
+function initEvTableSortOnce() {
+  if (evSortInited) return;
+  const table = document.getElementById("table-ev");
+  if (!table) return;
+  const keyOrder = [
+    "model_ev",
+    "kelly",
+    "best_book",
+    "golfer",
+    "model",
+    "consensus",
+    "implied",
+    "delta",
+    "market",
+    "bet",
+  ];
+  const ths = table.querySelectorAll("thead th");
+  ths.forEach((th, idx) => {
+    const key = keyOrder[idx] || "";
+    if (!key) return;
+    th.classList.add("sortable");
+    th.dataset.sortKey = key;
+    if (!th.querySelector(".sort-ind")) {
+      const s = document.createElement("span");
+      s.className = "sort-ind";
+      s.innerHTML = '<span class="sort-up">▲</span><span class="sort-down">▼</span>';
+      th.appendChild(s);
+    }
+  });
+  table.querySelector("thead")?.addEventListener("click", (ev) => {
+    const th = ev.target.closest("th.sortable");
+    if (!th || !table.contains(th)) return;
+    const key = String(th.dataset.sortKey || "");
+    if (!key) return;
+    if (evSort.key === key) evSort.dir *= -1;
+    else {
+      evSort.key = key;
+      evSort.dir = key === "golfer" || key === "market" || key === "bet" || key === "best_book" ? 1 : -1;
+    }
+    buildEvTable();
+  });
+  evSortInited = true;
+  updateEvSortIndicators();
+}
+
+function evSortValue(row, key) {
+  if (key === "model_ev") return row._modelEv;
+  if (key === "kelly") return row._kelly;
+  if (key === "best_book") return String(row.bestBook || "");
+  if (key === "golfer") return String(row.golfer || "");
+  if (key === "model") return row.modelPct;
+  if (key === "consensus") return row.consensusP;
+  if (key === "implied") return row._bookImp;
+  if (key === "delta") return row._deltaPct;
+  if (key === "market") return String(row.market || "");
+  if (key === "bet") return String(row.bet || "");
+  return row._modelEv;
+}
+
+function compareEvRows(a, b, key, dir) {
+  const va = evSortValue(a, key);
+  const vb = evSortValue(b, key);
+  if (typeof va === "string" || typeof vb === "string") {
+    return dir * String(va || "").localeCompare(String(vb || ""));
+  }
+  const na = Number.isFinite(va) ? va : dir > 0 ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
+  const nb = Number.isFinite(vb) ? vb : dir > 0 ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
+  if (na !== nb) return dir * (na - nb);
+  return String(a.golfer || "").localeCompare(String(b.golfer || ""));
+}
+
 function buildEvTable() {
   const tbody = document.querySelector("#table-ev tbody");
   if (!tbody) return;
@@ -4103,9 +4261,19 @@ function buildEvTable() {
     const d = decimalWithProfitBoost(d0, boostPct);
     return Number.isFinite(d) && d > 1 && Number.isFinite(r.modelPct) ? r.modelPct * d - 1 : NaN;
   };
-  const out = rows
+  let out = rows
     .filter((r) => (!g || r.golfer === g) && (!m || r.market === m) && (!b || r.bestBook === b))
-    .sort((a, c) => num(modelEvWithBoost(c), -1e9) - num(modelEvWithBoost(a), -1e9));
+    .map((r) => {
+      const dec0 = num(r.bestDec, NaN);
+      const dec = decimalWithProfitBoost(dec0, boostPct);
+      const bookImp = Number.isFinite(dec) && dec > 1 ? 1 / dec : NaN;
+      const mEv = modelEvWithBoost(r);
+      const kelly = evKellyDollarsFromDecimal(r.modelPct, dec, bankroll);
+      const deltaPct = Number.isFinite(r.modelPct) && Number.isFinite(bookImp) ? (r.modelPct - bookImp) * 100 : NaN;
+      return { ...r, _dec: dec, _bookImp: bookImp, _modelEv: mEv, _kelly: kelly, _deltaPct: deltaPct };
+    });
+  out = out.slice().sort((a, c) => compareEvRows(a, c, evSort.key, evSort.dir));
+  updateEvSortIndicators();
   tbody.innerHTML = "";
   if (!out.length) {
     const tr = document.createElement("tr");
@@ -4126,19 +4294,18 @@ function buildEvTable() {
       td.textContent = txt;
       return td;
     };
-    const dec0 = num(r.bestDec, NaN);
-    const dec = decimalWithProfitBoost(dec0, boostPct);
-    const bookImp = Number.isFinite(dec) && dec > 1 ? 1 / dec : NaN;
+    const dec = r._dec;
+    const bookImp = r._bookImp;
     const impliedStr = Number.isFinite(bookImp) ? `${(bookImp * 100).toFixed(1)}%` : "";
     let deltaStr = "";
-    if (Number.isFinite(r.modelPct) && Number.isFinite(bookImp)) {
-      const dPct = (r.modelPct - bookImp) * 100;
+    if (Number.isFinite(r._deltaPct)) {
+      const dPct = r._deltaPct;
       deltaStr = `${dPct >= 0 ? "+" : ""}${dPct.toFixed(1)}%`;
     }
-    const kelly$ = evKellyDollarsFromDecimal(r.modelPct, dec, bankroll);
+    const kelly$ = r._kelly;
     const kellyStr = Number.isFinite(kelly$) ? `$${kelly$.toFixed(2)}` : "";
 
-    const mEv = modelEvWithBoost(r);
+    const mEv = r._modelEv;
     const modelEvTd = mkTd(Number.isFinite(mEv) ? `${(mEv * 100).toFixed(1)}%` : "", "num");
     if (Number.isFinite(mEv)) modelEvTd.classList.add(mEv >= 0 ? "ev-pos" : "ev-neg");
     tr.appendChild(modelEvTd);
@@ -4848,24 +5015,34 @@ async function loadPlayerHistory() {
     const emb = embeddedRoundHistoryPayload();
     if (emb) {
       HISTORY = { ...emb, _ok: true };
+      HISTORY_ROUNDS_CHRONO_CACHE.clear();
+      PRICING_MU_BONUS_CACHE.clear();
       return;
     }
     HISTORY = { meta: {}, byDgId: {}, holesByPlayerKey: {}, _ok: false };
+    HISTORY_ROUNDS_CHRONO_CACHE.clear();
+    PRICING_MU_BONUS_CACHE.clear();
     return;
   }
   try {
     const res = await fetch("player_round_history.json", { cache: "no-store" });
     if (res.ok) {
       HISTORY = { ...(await res.json()), _ok: true };
+      HISTORY_ROUNDS_CHRONO_CACHE.clear();
+      PRICING_MU_BONUS_CACHE.clear();
       return;
     }
   } catch (_) {}
   const emb = embeddedRoundHistoryPayload();
   if (emb) {
     HISTORY = { ...emb, _ok: true };
+    HISTORY_ROUNDS_CHRONO_CACHE.clear();
+    PRICING_MU_BONUS_CACHE.clear();
     return;
   }
   HISTORY = { meta: {}, byDgId: {}, holesByPlayerKey: {}, _ok: false };
+  HISTORY_ROUNDS_CHRONO_CACHE.clear();
+  PRICING_MU_BONUS_CACHE.clear();
 }
 
 async function loadPlayerShots() {
@@ -5255,8 +5432,15 @@ function propsFilteredRoundsNewestFirst(dgId, winN) {
 }
 
 function historyRoundsChronoNewestFirst(dgId) {
+  const id = Math.round(num(dgId, NaN));
+  if (Number.isFinite(id)) {
+    const cached = HISTORY_ROUNDS_CHRONO_CACHE.get(id);
+    if (cached) return cached;
+  }
   const list = historyRoundsForDg(dgId).filter((r) => !historyRoundIsPlaceholderAllMarketsZero(r));
-  return list.sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
+  const sorted = list.sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
+  if (Number.isFinite(id)) HISTORY_ROUNDS_CHRONO_CACHE.set(id, sorted);
+  return sorted;
 }
 
 function meanNumFromRounds(rounds, key) {
@@ -5290,10 +5474,25 @@ function pricingModeMuSgBonusForMode(dgId, modeRaw, skillRaw = PRICING_STATE.ski
   const mode = ["default", "recent", "course", "skill"].includes(String(modeRaw || "").toLowerCase())
     ? String(modeRaw || "").toLowerCase()
     : "default";
-  if (mode === "default") return 0;
+  const skillKey = String(skillRaw || "default").toLowerCase();
+  const venueKey = mode === "course" ? normCourseNameKey(venueCourseName()) : "";
+  const cacheKey = `${id}|${mode}|${skillKey}|${venueKey}`;
+  if (PRICING_MU_BONUS_CACHE.has(cacheKey)) return PRICING_MU_BONUS_CACHE.get(cacheKey) || 0;
+  if (mode === "default") {
+    const recent = pricingModeMuSgBonusForMode(id, "recent", skillRaw);
+    const course = pricingModeMuSgBonusForMode(id, "course", skillRaw);
+    const skill = pricingModeMuSgBonusForMode(id, "skill", skillRaw);
+    // Blended default: combine all modes, but keep magnitude below specialized modes.
+    const out = clamp(0.4 * recent + 0.25 * course + 0.35 * skill, -0.28, 0.28);
+    PRICING_MU_BONUS_CACHE.set(cacheKey, out);
+    return out;
+  }
 
   const rounds = historyRoundsChronoNewestFirst(id);
-  if (rounds.length < 4) return 0;
+  if (rounds.length < 4) {
+    PRICING_MU_BONUS_CACHE.set(cacheKey, 0);
+    return 0;
+  }
 
   if (mode === "recent") {
     const nRec = Math.min(6, Math.max(3, Math.floor(rounds.length / 2)));
@@ -5302,32 +5501,48 @@ function pricingModeMuSgBonusForMode(dgId, modeRaw, skillRaw = PRICING_STATE.ski
     let rMean = meanNumFromRounds(recent, "sg_total");
     let oMean = meanNumFromRounds(older, "sg_total");
     if (Number.isFinite(rMean) && Number.isFinite(oMean)) {
-      return clamp((rMean - oMean) * 0.9, -0.35, 0.35);
+      const out = clamp((rMean - oMean) * 0.9, -0.35, 0.35);
+      PRICING_MU_BONUS_CACHE.set(cacheKey, out);
+      return out;
     }
     rMean = meanNumFromRounds(recent, "round_score");
     oMean = meanNumFromRounds(older, "round_score");
     if (Number.isFinite(rMean) && Number.isFinite(oMean)) {
-      return clamp(((oMean - rMean) / 6) * 0.85, -0.35, 0.35);
+      const out = clamp(((oMean - rMean) / 6) * 0.85, -0.35, 0.35);
+      PRICING_MU_BONUS_CACHE.set(cacheKey, out);
+      return out;
     }
+    PRICING_MU_BONUS_CACHE.set(cacheKey, 0);
     return 0;
   }
 
   if (mode === "course") {
     const vn = venueCourseName();
-    if (!vn) return 0;
+    if (!vn) {
+      PRICING_MU_BONUS_CACHE.set(cacheKey, 0);
+      return 0;
+    }
     const here = rounds.filter((r) => courseNameMatchesVenue(r.course_name, vn));
-    if (here.length < 2) return 0;
+    if (here.length < 2) {
+      PRICING_MU_BONUS_CACHE.set(cacheKey, 0);
+      return 0;
+    }
     const other = rounds.filter((r) => !courseNameMatchesVenue(r.course_name, vn));
     const hMean = meanNumFromRounds(here, "sg_total");
     const oMean = meanNumFromRounds(other.length ? other : rounds, "sg_total");
     if (Number.isFinite(hMean) && Number.isFinite(oMean)) {
-      return clamp((hMean - oMean) * 0.75, -0.35, 0.35);
+      const out = clamp((hMean - oMean) * 0.75, -0.35, 0.35);
+      PRICING_MU_BONUS_CACHE.set(cacheKey, out);
+      return out;
     }
     const hSc = meanNumFromRounds(here, "round_score");
     const oSc = meanNumFromRounds(other.length ? other : rounds, "round_score");
     if (Number.isFinite(hSc) && Number.isFinite(oSc)) {
-      return clamp(((oSc - hSc) / 6) * 0.7, -0.35, 0.35);
+      const out = clamp(((oSc - hSc) / 6) * 0.7, -0.35, 0.35);
+      PRICING_MU_BONUS_CACHE.set(cacheKey, out);
+      return out;
     }
+    PRICING_MU_BONUS_CACHE.set(cacheKey, 0);
     return 0;
   }
 
@@ -5341,11 +5556,15 @@ function pricingModeMuSgBonusForMode(dgId, modeRaw, skillRaw = PRICING_STATE.ski
     const rMean = meanNumFromRounds(recent, sk);
     const oMean = meanNumFromRounds(older, sk);
     if (Number.isFinite(rMean) && Number.isFinite(oMean)) {
-      return clamp((rMean - oMean) * 0.75, -0.35, 0.35);
+      const out = clamp((rMean - oMean) * 0.75, -0.35, 0.35);
+      PRICING_MU_BONUS_CACHE.set(cacheKey, out);
+      return out;
     }
+    PRICING_MU_BONUS_CACHE.set(cacheKey, 0);
     return 0;
   }
 
+  PRICING_MU_BONUS_CACHE.set(cacheKey, 0);
   return 0;
 }
 
@@ -8642,6 +8861,7 @@ document.addEventListener("DOMContentLoaded", () => {
   configureRoundPickerUi();
   initTabs();
   initOutrightsTableSortOnce();
+  initEvTableSortOnce();
   document.getElementById("btn-refresh-outrights")?.addEventListener("click", () => loadProjections());
   document.getElementById("lb-round")?.addEventListener("change", () => {
     ouProjExpandedKey = "";

@@ -22,7 +22,14 @@ data/all_shots_2022_2026.repull2.csv
 data/all_shots_2022_2026.merged.clean.csv
 data/all_shots_2024_2026.fixed.csv
 **/all_shots_2022_2026_round_fairways_gir_putts.csv.new.csv
+**/all_shots_2022_2026_round_fairways_gir_putts.csv
+
+# Regenerated app state (Render runs fetch:dg / fetch:book-odds on boot)
+alpha-caddie-web/projections.json
+alpha-caddie-web/live-in-play.json
+website/public/data/projections.json
 data/all_shots_2024_2026.fixed.csv - Shortcut.lnk
+data/all_shots_progress.rds
 # Mirrored from repo root by scripts; large — do not commit the web copy
 alpha-caddie-web/data/historical_rounds_all.csv
 **/hole_data.csv
@@ -33,6 +40,20 @@ alpha-caddie-web/data/historical_rounds_all.csv
 data/historical_outrights_outcomes.csv
 data/historical_matchups_outcomes.csv
 data/historical_matchups_outcomes_*.csv
+# Full rounds export (regenerate: npm run update:rounds / fetch:dg)
+data/historical_rounds_all.csv
+
+# Results / Kelly JSON (can exceed 100MB; build locally or on server)
+**/results_kelly_bets.json
+**/results_backtest.json
+
+# Generated history embed (npm run build:history / fetch:dg)
+alpha-caddie-web/embedded-player-round-history.js
+
+# Temp / logs
+data/*.tmp.*
+data/**/*.tmp.*
+**/logs/*.log
 
 java/alphacaddie/target/
 java/alphacaddie/.mvn-tools/
