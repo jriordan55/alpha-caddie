@@ -13,6 +13,8 @@
  * dg_id, player_name, open_odds, close_odds, open_time, close_time, bet_outcome_numeric (or bet_outcome), …
  * Decimal price: American close_odds, fallback open_odds. Model p from calibration(implied) vs that line → EV in Kelly tuples.
  * Env RESULTS_KELLY_MAX_BETS: keep only the newest N rows after sorting (0 = unlimited, default).
+ * Env RESULTS_EXPORT_LAST_YEARS: only emit Kelly tuples + cube aggregation rows for bets on/after
+ *   (today UTC midnight − N whole years). Default 2 keeps Kelly JSON small on deploy; 0 = full history.
  */
 import { createReadStream, existsSync, mkdirSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
@@ -30,6 +32,32 @@ const OUT_JSON = join(WEB_ROOT, "data", "results_backtest.json");
 const KELLY_JSON = join(WEB_ROOT, "data", "results_kelly_bets.json");
 /** Max bets kept for Kelly sim (newest first after cap). 0 = unlimited (default). */
 const KELLY_MAX_BETS = Math.max(0, Math.round(Number(process.env.RESULTS_KELLY_MAX_BETS || "0")));
+
+/** 0 = no date cutoff; default 2 = rolling window from “today” UTC (same rows in cube + Kelly). */
+const EXPORT_LAST_YEARS = (() => {
+  const raw = process.env.RESULTS_EXPORT_LAST_YEARS;
+  if (raw !== undefined && String(raw).trim() === "") return 0;
+  const n = Number(raw ?? "2");
+  if (!Number.isFinite(n) || n <= 0) return 0;
+  return Math.min(80, Math.floor(n));
+})();
+
+function exportCutoffIsoDate() {
+  if (!EXPORT_LAST_YEARS) return "";
+  const d = new Date();
+  d.setUTCHours(0, 0, 0, 0);
+  d.setUTCFullYear(d.getUTCFullYear() - EXPORT_LAST_YEARS);
+  return d.toISOString().slice(0, 10);
+}
+
+/** @param {string} dateIso YYYY-MM-DD from normDate */
+function includeExportedBetDate(dateIso) {
+  if (!EXPORT_LAST_YEARS) return true;
+  const co = exportCutoffIsoDate();
+  const dd = String(dateIso || "").trim().slice(0, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dd)) return false;
+  return dd >= co;
+}
 
 const EV_BIN_STEP = 0.5;
 const EV_BIN_MIN = -10;
@@ -228,6 +256,11 @@ async function build() {
   if (!existsSync(MATCHUPS_CSV) || !existsSync(OUTRIGHTS_CSV)) {
     throw new Error("Missing historical outcomes CSV(s) in data/.");
   }
+  if (EXPORT_LAST_YEARS) {
+    console.log(
+      `[build-results] RESULTS_EXPORT_LAST_YEARS=${EXPORT_LAST_YEARS} → including bets on/after ${exportCutoffIsoDate()} (UTC)`,
+    );
+  }
   const cal = await buildCalibration(MATCHUPS_CSV, OUTRIGHTS_CSV);
 
   const agg = new Map();
@@ -243,6 +276,7 @@ async function build() {
       const market = classifyMatchupMarket(r.bet_type);
       const book = String(r.book || "").trim().toLowerCase() || "unknown";
       const date = normDate(r.close_time || r.open_time, r.year);
+      if (!includeExportedBetDate(date)) return;
       marketsBySource.matchups.add(market);
       booksBySource.matchups.add(book);
 
@@ -299,6 +333,7 @@ async function build() {
       const market = String(r.market || "").trim() || "unknown";
       const book = String(r.book || r.sportsbook || "").trim().toLowerCase() || "unknown";
       const date = normDate(r.open_time || r.close_time, r.year);
+      if (!includeExportedBetDate(date)) return;
       marketsBySource.outrights.add(market);
       booksBySource.outrights.add(book);
 
@@ -369,6 +404,8 @@ async function build() {
 
   const out = {
     generated_at: new Date().toISOString(),
+    export_last_years: EXPORT_LAST_YEARS || undefined,
+    export_cutoff_date_utc: EXPORT_LAST_YEARS ? exportCutoffIsoDate() : undefined,
     ev_bin_step: EV_BIN_STEP,
     ev_bin_min: EV_BIN_MIN,
     ev_bin_max: EV_BIN_MAX,
@@ -390,6 +427,8 @@ async function build() {
   const kellyPayload = {
     schema: 3,
     generated_at: new Date().toISOString(),
+    export_last_years: EXPORT_LAST_YEARS || undefined,
+    export_cutoff_date_utc: EXPORT_LAST_YEARS ? exportCutoffIsoDate() : undefined,
     bankroll0: 100,
     kelly_fraction: 0.25,
     max_kelly_stake_frac: 0.15,

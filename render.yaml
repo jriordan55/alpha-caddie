@@ -2,6 +2,8 @@
 # `npm start` → serve-with-refresh.mjs + serve-static-no-json-cache.mjs (JSON responses are never edge-cached).
 #
 # Dashboard → Environment: set secret DATAGOLF_API_KEY (required for fetch:book-odds + in-play).
+# Results/Kelly: commit golfModel/data/historical_matchups_outcomes.csv + historical_outrights_outcomes.csv
+# (or strip secrets/size then commit); without them, build:results is skipped and the Results tab has no data.
 # Round props (DraftKings): set DK_LEAGUE_URL when slug inference misses (e.g. Truist:
 # https://sportsbook.draftkings.com/leagues/golf/truist-championship?category=round ).
 # If Playwright/API returns empty props, try DK_SITE_SEGMENT (default US-MA-SB) for your geo, e.g. US-VA-SB.
@@ -19,12 +21,15 @@
 # With skip on, fetch-book-odds may not merge props; the UI falls back to csv/model_fallback rows when no DK tags exist.
 #
 # Optional: GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER=1, GOLF_FETCH_DG_SERVER_POLL_MS=1800000, GOLF_SKIP_BOOK_ODDS_POLL_SERVER=1
+# Heavy CSV / restart speed: GOLF_SKIP_RESULTS_BUILD_ON_BOOT=1 (omit rebuild on npm start; rely on deploy build:results only).
 services:
   - type: web
     name: alpha-caddie-web
     runtime: node
     rootDir: alpha-caddie-web
-    buildCommand: npm install && npx playwright install chromium
+    # Rebuild Results/Kelly when historical_*_outcomes CSVs are in repo (fails silently if missing).
+    # RESULTS_EXPORT_LAST_YEARS limits Kelly/cube rows to a rolling window so JSON stays deploy-sized.
+    buildCommand: npm install && npx playwright install chromium && (npm run build:results || true)
     startCommand: npm start
     healthCheckPath: /
     envVars:
@@ -47,3 +52,6 @@ services:
       # Prefer live API + DK props over static CSV props on Render.
       - key: GOLF_SKIP_PROPS_CSV
         value: "1"
+      # Kelly + Results cube: only bets on/after (today UTC − N years). Full history: set "0".
+      - key: RESULTS_EXPORT_LAST_YEARS
+        value: "2"

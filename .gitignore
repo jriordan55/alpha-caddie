@@ -24,8 +24,8 @@ data/all_shots_2024_2026.fixed.csv
 **/all_shots_2022_2026_round_fairways_gir_putts.csv.new.csv
 **/all_shots_2022_2026_round_fairways_gir_putts.csv
 
-# Regenerated app state (Render runs fetch:dg / fetch:book-odds on boot)
-alpha-caddie-web/projections.json
+# Regenerated app state (Render runs fetch:dg / fetch:book-odds on boot).
+# projections.json may be committed as a last-known-good snapshot; serve-with-refresh writes an offline stub if absent.
 alpha-caddie-web/live-in-play.json
 website/public/data/projections.json
 data/all_shots_2024_2026.fixed.csv - Shortcut.lnk

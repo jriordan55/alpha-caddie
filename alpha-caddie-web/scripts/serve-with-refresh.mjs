@@ -3,6 +3,7 @@
  * npm start / npm run dev — default preflight is **light** (latest lines only):
  *   - Refreshes book odds → projections.json + live-in-play.json (when DATAGOLF_API_KEY is set)
  *   - Skips rounds CSV merge, build:history, shots web rebuild, and model CSV mirror unless you opt in
+ *   - After refresh: ensure-static-data-files.mjs — local-only stubs; Render skips demo data (see module header).
  *
  * Full preflight (rounds merge + build:history + mirror + book odds + in-play): set GOLF_START_FULL_REFRESH=1 before start.
  *
@@ -58,6 +59,7 @@ import { fileURLToPath } from "url";
 import { eventsLikelySame } from "./dg-events-align.mjs";
 import { findRscriptSync } from "./find-rscript.mjs";
 import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
+import { ensureAlphaCaddieStaticArtifacts } from "./ensure-static-data-files.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -273,6 +275,8 @@ if (process.env.GOLF_SKIP_REFRESH_ON_START === "1") {
 } else {
   refreshBeforeServe();
 }
+
+ensureAlphaCaddieStaticArtifacts(WEB_ROOT, REPO_ROOT);
 
 const port = String(process.env.PORT || "5173");
 process.env.PORT = port;
