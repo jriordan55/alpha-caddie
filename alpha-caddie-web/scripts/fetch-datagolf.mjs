@@ -525,6 +525,29 @@ function sgTotalFromSkillRow(row) {
   return 0;
 }
 
+/** Optional pillar SG from preds/skill-ratings — merged onto projection rows for UI (matchups analysis). */
+function skillPillarsFromSkillRow(row) {
+  if (!row || typeof row !== "object") return null;
+  const pick = (keys) => {
+    for (const k of keys) {
+      if (row[k] != null) {
+        const v = num(row[k], NaN);
+        if (Number.isFinite(v)) return v;
+      }
+    }
+    return NaN;
+  };
+  const total = sgTotalFromSkillRow(row);
+  return {
+    sg_total: Number.isFinite(total) ? total : NaN,
+    sg_ott: pick(["sg_ott", "ott", "off_the_tee"]),
+    sg_app: pick(["sg_app", "app", "approach"]),
+    sg_arg: pick(["sg_arg", "arg", "around_the_green"]),
+    sg_putt: pick(["sg_putt", "putt", "putting"]),
+    sg_t2g: pick(["sg_t2g", "t2g"]),
+  };
+}
+
 /**
  * Normalize preds/pre-tournament placement fields to implied probability (0–1).
  * odds_format from API: percent (default), decimal (fair odds 1/p), american (+/−).
@@ -723,7 +746,7 @@ async function main() {
   for (const row of skillList) {
     const id = num(row.dg_id ?? row.dgId, NaN);
     if (!Number.isFinite(id)) continue;
-    skillByDg.set(Math.round(id), sgTotalFromSkillRow(row));
+    skillByDg.set(Math.round(id), skillPillarsFromSkillRow(row));
   }
 
   console.log("Fetching fantasy-projection-defaults…");
@@ -870,7 +893,8 @@ async function main() {
   const base = [];
   for (const fr of fieldRows) {
     const id = fr.dg_id;
-    let mu_sg = skillByDg.has(id) ? skillByDg.get(id) : 0;
+    const skRow = skillByDg.get(id);
+    let mu_sg = skRow && Number.isFinite(skRow.sg_total) ? skRow.sg_total : 0;
     if (!Number.isFinite(mu_sg)) mu_sg = 0;
 
     const fx = fantasyByDg.get(id) || {};
@@ -900,7 +924,7 @@ async function main() {
     const putts = Math.max(22, Math.min(35, 28.5 + 0.32 * stpVec - 0.1 * (gir - 11)));
 
     const pt = pretByDg.get(id) || {};
-    base.push({
+    const rowOut = {
       dg_id: id,
       player_name: fr.player_name,
       country: fr.country || undefined,
@@ -919,7 +943,13 @@ async function main() {
       top_10: pt.top_10,
       top_20: pt.top_20,
       make_cut: pt.make_cut,
-    });
+    };
+    if (skRow) {
+      for (const k of ["sg_total", "sg_ott", "sg_app", "sg_arg", "sg_putt", "sg_t2g"]) {
+        if (Number.isFinite(skRow[k])) rowOut[k] = skRow[k];
+      }
+    }
+    base.push(rowOut);
   }
 
   const score_to_par = (mu) => -num(mu, 0);
@@ -992,6 +1022,9 @@ async function main() {
         course_used: course_used || undefined,
       };
       stripGirFairwaysPuttsIfTiny(pl);
+      for (const k of ["sg_total", "sg_ott", "sg_app", "sg_arg", "sg_putt", "sg_t2g"]) {
+        if (Number.isFinite(row[k])) pl[k] = Math.round(row[k] * 1000) / 1000;
+      }
       players.push(pl);
     }
   }

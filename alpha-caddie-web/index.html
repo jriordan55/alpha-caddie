@@ -304,6 +304,9 @@
             <option value="3_balls">3 Balls</option>
           </select>
         </label>
+        <p class="text-muted matchup-analysis-note">
+          Lines use the same sportsbook whitelist as +EV and the books/weights from <strong>Devig</strong> on the +EV tab (consensus % + best decimal among allowed books). Run <code>npm run fetch:dg</code> after deploy so skill-rating pillars populate SG columns.
+        </p>
         <p id="analysis-market-note" class="text-muted matchup-analysis-note" hidden></p>
       </div>
       <div class="table-wrap leaderboard-card outrights-table-wrap">
@@ -311,10 +314,12 @@
           <thead>
             <tr>
               <th>Matchup</th>
-              <th>Best side</th>
-              <th class="num">Model %</th>
+              <th>Pick</th>
+              <th class="num">Model</th>
+              <th class="num">Mkt</th>
               <th class="num">Edge</th>
-              <th class="num">Best Book</th>
+              <th class="num">Odds</th>
+              <th class="num">Book</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -326,7 +331,9 @@
             <tr>
               <th>Metric</th>
               <th class="num" id="analysis-sg-player-a">Player A</th>
+              <th class="num">Fld %</th>
               <th class="num" id="analysis-sg-player-b">Player B</th>
+              <th class="num">Fld %</th>
               <th>Advantage</th>
             </tr>
           </thead>
@@ -962,6 +969,6 @@
   </dialog>
 
   <script src="embedded-player-round-history.js?v=5"></script>
-  <script src="app.js?v=50"></script>
+  <script src="app.js?v=51"></script>
 </body>
 </html>

@@ -4426,6 +4426,26 @@ function bestBookDecimalForSide(oddsObj, side /* 'p1'|'p2' */) {
   return { book: bestB, dec: bestD };
 }
 
+/** Like `bestBookDecimalForSide` but only keys allowed by +EV whitelist *and* Devig consensus settings. */
+function bestBookDecimalForSideEvPrefs(oddsObj, side /* 'p1'|'p2'|'p3' */, prefs) {
+  const filtered = filterOddsObjectForEvSportsbooks(oddsObj || {});
+  if (!filtered || typeof filtered !== "object") return { book: "", dec: NaN };
+  let bestD = NaN;
+  let bestB = "";
+  for (const bk of Object.keys(filtered)) {
+    if (!evBookAllowedInConsensus(bk, prefs)) continue;
+    const pack = filtered[bk];
+    if (!pack || typeof pack !== "object") continue;
+    const d = num(pack[side], NaN);
+    if (!Number.isFinite(d) || d <= 1) continue;
+    if (!Number.isFinite(bestD) || d > bestD) {
+      bestD = d;
+      bestB = bk;
+    }
+  }
+  return { book: bestB, dec: bestD };
+}
+
 function matchupAnalysisMetricValue(row, key) {
   if (!row) return NaN;
   if (key === "sg_total") {
@@ -4436,6 +4456,29 @@ function matchupAnalysisMetricValue(row, key) {
   return num(row[key], NaN);
 }
 
+/** One projection row per `dg_id` for the active model round (same resolution as matchup rows). */
+function matchupAnalysisFieldRowsForRound(r) {
+  const ids = new Set(
+    (DATA.players || []).map((p) => Math.round(num(p.dg_id, NaN))).filter((id) => Number.isFinite(id)),
+  );
+  const rows = [];
+  for (const id of ids) {
+    const row = projectionPlayerRowForModel(id, r);
+    if (row) rows.push(row);
+  }
+  return rows;
+}
+
+/** Share of the field strictly worse on this SG metric (higher SG is better), in 0–100. */
+function matchupAnalysisFieldPctHigherBetter(samples, v) {
+  if (!Array.isArray(samples) || !samples.length || !Number.isFinite(v)) return NaN;
+  let below = 0;
+  for (const x of samples) {
+    if (Number.isFinite(x) && x < v) below++;
+  }
+  return (below / samples.length) * 100;
+}
+
 function buildMatchupAnalysisTool() {
   const tbody = document.querySelector("#table-matchup-analysis tbody");
   const sgBody = document.querySelector("#table-matchup-analysis-sg tbody");
@@ -4444,6 +4487,7 @@ function buildMatchupAnalysisTool() {
   if (!tbody || !sgBody) return;
   tbody.innerHTML = "";
   sgBody.innerHTML = "";
+  const devigPrefs = loadEvDevigPrefs();
   const key = String(marketEl?.value || "round_matchups");
   const pack = DATA.matchups && DATA.matchups[key];
   const list = pack && pack.match_list;
@@ -4458,7 +4502,7 @@ function buildMatchupAnalysisTool() {
     }
     const tr = document.createElement("tr");
     const td = document.createElement("td");
-    td.colSpan = 5;
+    td.colSpan = 7;
     td.className = "text-muted";
     td.textContent = String(list);
     tr.appendChild(td);
@@ -4469,7 +4513,7 @@ function buildMatchupAnalysisTool() {
   if (!Array.isArray(list) || !list.length) {
     const tr = document.createElement("tr");
     const td = document.createElement("td");
-    td.colSpan = 5;
+    td.colSpan = 7;
     td.textContent = "No matchups.";
     tr.appendChild(td);
     tbody.appendChild(tr);
@@ -4477,6 +4521,16 @@ function buildMatchupAnalysisTool() {
   }
 
   const r = getModelRoundForEv();
+  const fieldRows = matchupAnalysisFieldRowsForRound(r);
+  const sgMetricKeys = ["sg_total", "sg_t2g", "sg_ott", "sg_app", "sg_arg", "sg_putt"];
+  /** @type {Record<string, number[]>} */
+  const fieldSamplesByMetric = {};
+  for (const mk of sgMetricKeys) {
+    fieldSamplesByMetric[mk] = fieldRows
+      .map((row) => matchupAnalysisMetricValue(row, mk))
+      .filter((x) => Number.isFinite(x));
+  }
+
   const rows = [];
   for (const m of list) {
     const id1 = Math.round(num(m.p1_dg_id, NaN));
@@ -4486,22 +4540,50 @@ function buildMatchupAnalysisTool() {
     const row2 = projectionPlayerRowForModelByIdOrName(id2, m.p2_player_name, r);
     const row3 = projectionPlayerRowForModelByIdOrName(id3, m.p3_player_name, r);
     const odds = m.odds || {};
-    const b1 = bestBookDecimalForSide(odds, "p1");
-    const b2 = bestBookDecimalForSide(odds, "p2");
-    const b3 = bestBookDecimalForSide(odds, "p3");
+    const oddsEv = filterOddsObjectForEvSportsbooks(odds);
+    const b1 = bestBookDecimalForSideEvPrefs(odds, "p1", devigPrefs);
+    const b2 = bestBookDecimalForSideEvPrefs(odds, "p2", devigPrefs);
+    const b3 = bestBookDecimalForSideEvPrefs(odds, "p3", devigPrefs);
     const isThree = key === "3_balls" && Number.isFinite(id3) && id3 > 0;
     const mu1 = effectiveMuSg(row1, id1, key);
     const mu2 = effectiveMuSg(row2, id2, key);
     const mu3 = effectiveMuSg(row3, id3, key);
     if (isThree) {
       const [p1, p2, p3] = threeBallModelProbsLiveBlended(mu1, mu2, mu3, row1, row2, row3);
+      const mp1 = matchupConsensusThreeWaySide(oddsEv, "p1", devigPrefs);
+      const mp2 = matchupConsensusThreeWaySide(oddsEv, "p2", devigPrefs);
+      const mp3 = matchupConsensusThreeWaySide(oddsEv, "p3", devigPrefs);
       const ev1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
       const ev2 = Number.isFinite(b2.dec) ? p2 * b2.dec - 1 : NaN;
       const ev3 = Number.isFinite(b3.dec) ? p3 * b3.dec - 1 : NaN;
       const sides = [
-        { side: "p1", name: String(m.p1_player_name || ""), modelPct: p1, edge: ev1, book: b1, row: row1 },
-        { side: "p2", name: String(m.p2_player_name || ""), modelPct: p2, edge: ev2, book: b2, row: row2 },
-        { side: "p3", name: String(m.p3_player_name || ""), modelPct: p3, edge: ev3, book: b3, row: row3 },
+        {
+          side: "p1",
+          name: String(m.p1_player_name || ""),
+          modelPct: p1,
+          marketPct: mp1,
+          edge: ev1,
+          book: b1,
+          row: row1,
+        },
+        {
+          side: "p2",
+          name: String(m.p2_player_name || ""),
+          modelPct: p2,
+          marketPct: mp2,
+          edge: ev2,
+          book: b2,
+          row: row2,
+        },
+        {
+          side: "p3",
+          name: String(m.p3_player_name || ""),
+          modelPct: p3,
+          marketPct: mp3,
+          edge: ev3,
+          book: b3,
+          row: row3,
+        },
       ].sort((a, b) => num(b.edge, -99) - num(a.edge, -99));
       rows.push({
         key: `3b:${id1}:${id2}:${id3}`,
@@ -4513,11 +4595,30 @@ function buildMatchupAnalysisTool() {
     }
     const p1 = matchupWinProbLiveBlended(mu1, mu2, key, row1, row2);
     const p2 = 1 - p1;
+    const marketP1 = matchupConsensusSide(oddsEv, "p1", devigPrefs);
+    const marketP2 = matchupConsensusSide(oddsEv, "p2", devigPrefs);
     const ev1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
     const ev2 = Number.isFinite(b2.dec) ? p2 * b2.dec - 1 : NaN;
-    const best = ev1 >= ev2
-      ? { side: "p1", name: String(m.p1_player_name || ""), modelPct: p1, edge: ev1, book: b1, row: row1 }
-      : { side: "p2", name: String(m.p2_player_name || ""), modelPct: p2, edge: ev2, book: b2, row: row2 };
+    const best =
+      ev1 >= ev2
+        ? {
+            side: "p1",
+            name: String(m.p1_player_name || ""),
+            modelPct: p1,
+            marketPct: marketP1,
+            edge: ev1,
+            book: b1,
+            row: row1,
+          }
+        : {
+            side: "p2",
+            name: String(m.p2_player_name || ""),
+            modelPct: p2,
+            marketPct: marketP2,
+            edge: ev2,
+            book: b2,
+            row: row2,
+          };
     rows.push({
       key: `h2h:${id1}:${id2}`,
       matchup: `${m.p1_player_name || ""} vs ${m.p2_player_name || ""}`,
@@ -4532,7 +4633,7 @@ function buildMatchupAnalysisTool() {
   if (!rows.length) {
     const tr = document.createElement("tr");
     const td = document.createElement("td");
-    td.colSpan = 5;
+    td.colSpan = 7;
     td.textContent = "No matchups.";
     tr.appendChild(td);
     tbody.appendChild(tr);
@@ -4547,7 +4648,7 @@ function buildMatchupAnalysisTool() {
     if (!entry || entry.isThree || !entry.left || !entry.right) {
       const tr = document.createElement("tr");
       const td = document.createElement("td");
-      td.colSpan = 4;
+      td.colSpan = 6;
       td.className = "text-muted";
       td.textContent = entry?.isThree
         ? "SG breakdown is shown for head-to-head matchups."
@@ -4560,24 +4661,34 @@ function buildMatchupAnalysisTool() {
     if (titleB) titleB.textContent = entry.right.name || "Player B";
     const metrics = [
       ["SG: Total", "sg_total"],
+      ["SG: Tee-to-Green", "sg_t2g"],
       ["SG: Off the Tee", "sg_ott"],
       ["SG: Approach", "sg_app"],
       ["SG: Around Green", "sg_arg"],
       ["SG: Putting", "sg_putt"],
     ];
     for (const [label, keyMetric] of metrics) {
+      const samples = fieldSamplesByMetric[keyMetric] || [];
       const a = matchupAnalysisMetricValue(entry.left.row, keyMetric);
       const b = matchupAnalysisMetricValue(entry.right.row, keyMetric);
       const diff = Number.isFinite(a) && Number.isFinite(b) ? a - b : NaN;
+      const pctA = matchupAnalysisFieldPctHigherBetter(samples, a);
+      const pctB = matchupAnalysisFieldPctHigherBetter(samples, b);
       const tr = document.createElement("tr");
       const tdMetric = document.createElement("td");
       tdMetric.textContent = label;
       const tdA = document.createElement("td");
       tdA.className = "num";
       tdA.textContent = Number.isFinite(a) ? a.toFixed(2) : "—";
+      const tdPctA = document.createElement("td");
+      tdPctA.className = "num";
+      tdPctA.textContent = Number.isFinite(pctA) ? `${pctA.toFixed(0)}%` : "—";
       const tdB = document.createElement("td");
       tdB.className = "num";
       tdB.textContent = Number.isFinite(b) ? b.toFixed(2) : "—";
+      const tdPctB = document.createElement("td");
+      tdPctB.className = "num";
+      tdPctB.textContent = Number.isFinite(pctB) ? `${pctB.toFixed(0)}%` : "—";
       const tdAdv = document.createElement("td");
       if (!Number.isFinite(diff) || Math.abs(diff) < 0.005) {
         tdAdv.textContent = "Even";
@@ -4588,7 +4699,9 @@ function buildMatchupAnalysisTool() {
       }
       tr.appendChild(tdMetric);
       tr.appendChild(tdA);
+      tr.appendChild(tdPctA);
       tr.appendChild(tdB);
+      tr.appendChild(tdPctB);
       tr.appendChild(tdAdv);
       sgBody.appendChild(tr);
     }
@@ -4608,6 +4721,9 @@ function buildMatchupAnalysisTool() {
     const tdModel = document.createElement("td");
     tdModel.className = "num";
     tdModel.textContent = Number.isFinite(item.best?.modelPct) ? `${(item.best.modelPct * 100).toFixed(1)}%` : "—";
+    const tdMkt = document.createElement("td");
+    tdMkt.className = "num";
+    tdMkt.textContent = Number.isFinite(item.best?.marketPct) ? `${(item.best.marketPct * 100).toFixed(1)}%` : "—";
     const tdEdge = document.createElement("td");
     tdEdge.className = "num";
     if (Number.isFinite(item.best?.edge)) {
@@ -4616,17 +4732,25 @@ function buildMatchupAnalysisTool() {
     } else {
       tdEdge.textContent = "—";
     }
+    const tdOdds = document.createElement("td");
+    tdOdds.className = "num";
+    tdOdds.textContent =
+      Number.isFinite(item.best?.book?.dec) && item.best.book.dec > 1
+        ? formatAmerican(americanFromDecimal(item.best.book.dec))
+        : "—";
     const tdBook = document.createElement("td");
     tdBook.className = "num best-book-td";
-    if (item.best?.book?.book && Number.isFinite(item.best?.book?.dec)) {
-      tdBook.innerHTML = `${bookBadgeHtml(item.best.book.book)} <span class="best-book-odds">${item.best.book.dec.toFixed(2)}</span>`;
+    if (item.best?.book?.book) {
+      tdBook.innerHTML = bookBadgeHtml(item.best.book.book);
     } else {
       tdBook.textContent = "—";
     }
     tr.appendChild(tdM);
     tr.appendChild(tdSide);
     tr.appendChild(tdModel);
+    tr.appendChild(tdMkt);
     tr.appendChild(tdEdge);
+    tr.appendChild(tdOdds);
     tr.appendChild(tdBook);
     tbody.appendChild(tr);
   }
@@ -9340,11 +9464,13 @@ document.addEventListener("DOMContentLoaded", () => {
     saveEvDevigPrefs(readEvDevigFormToPrefs());
     closeEvDevigDialog();
     buildEvTable();
+    buildMatchupAnalysisTool();
   });
   document.getElementById("ev-devig-clear")?.addEventListener("click", () => {
     saveEvDevigPrefs({ method: "none", consensusMode: "market", singleBook: "", splitBooks: [], weights: null });
     syncEvDevigFormFromPrefs();
     buildEvTable();
+    buildMatchupAnalysisTool();
   });
   document.getElementById("ev-devig-dialog")?.addEventListener("click", (e) => {
     if (e.target && /** @type {HTMLElement} */ (e.target).id === "ev-devig-dialog") closeEvDevigDialog();
