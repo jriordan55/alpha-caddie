@@ -14,7 +14,8 @@
 #
 # Dual PGA weeks: fetch:dg compares field-updates + get-schedule anchor + timestamps (override tours: GOLF_FIELD_UPDATES_TOUR_CANDIDATES).
 #
-# Boot: full fetch:dg before book odds so projections.json is never stuck on git for this dyno (set GOLF_RENDER_SYNC_FETCH_DG_ON_BOOT=0 if deploy times out).
+# Boot mirrors `npm run perfect`: fetch:dg → in-play → DK O/U probe → book odds (set GOLF_RENDER_SYNC_FETCH_DG_ON_BOOT=0 only if deploy times out).
+# Skip standalone DK probe: PERFECT_SKIP_FETCH_DK_OU=1 or GOLF_RENDER_SKIP_DK_OU_PROBE=1.
 # Historical Trends needs historical_rounds_all.csv + player_round_history.json — merge ALL seasons from 2004 often hits Render boot/time limits after projections are written. RECENT_FETCH caps API merge to recent seasons so history JSON still builds (override if you commit a full CSV).
 # Week rollover: fetch-book-odds also compares datagolf_field_week_key vs /field-updates (skip inline: GOLF_SKIP_INLINE_FETCH_DG_ON_EVENT_MISMATCH=1).
 #

@@ -287,26 +287,56 @@ function refreshBeforeServe() {
     console.log("[alpha-caddie-web] GOLF_SKIP_SHOTS_WEB_ON_START=1 — skipping build-player-shots-web.mjs.");
   }
 
+  /**
+   * `npm run perfect` runs fetch:dg → in-play → draftkings-ou-props → book-odds before serve.
+   * Render used dg → book → in-play with no standalone DK probe — mismatched projections/DK merge vs local.
+   */
   const fetchDgScriptPath = path.join(WEB_ROOT, "scripts", "fetch-datagolf.mjs");
-  const renderSyncDgBoot =
-    String(process.env.RENDER || "").toLowerCase() === "true" &&
-    String(process.env.GOLF_RENDER_SYNC_FETCH_DG_ON_BOOT || "1").trim() !== "0" &&
+  const skipRefreshStart = process.env.GOLF_SKIP_REFRESH_ON_START === "1";
+  const isRenderHost = String(process.env.RENDER || "").toLowerCase() === "true";
+  const renderSyncDgOn = String(process.env.GOLF_RENDER_SYNC_FETCH_DG_ON_BOOT || "1").trim() !== "0";
+  const renderPerfectBoot =
+    isRenderHost &&
     key &&
+    !skipRefreshStart &&
+    renderSyncDgOn &&
     fs.existsSync(fetchDgScriptPath);
-  if (renderSyncDgBoot && process.env.GOLF_SKIP_REFRESH_ON_START !== "1") {
-    console.log("[alpha-caddie-web] Render: sync fetch:dg on boot (writes fresh field/event before book odds) …");
-    const dgBoot = spawnSync(process.execPath, [fetchDgScriptPath], {
-      cwd: WEB_ROOT,
-      stdio: "inherit",
-      env: { ...process.env, GOLF_MODEL_DIR: REPO_ROOT, DATAGOLF_API_KEY: key },
-    });
-    if (dgBoot.status !== 0) {
-      console.warn("[alpha-caddie-web] fetch:dg on boot exited", dgBoot.status);
+
+  const dgBootEnv = { ...process.env, GOLF_MODEL_DIR: REPO_ROOT, DATAGOLF_API_KEY: key };
+
+  if (renderPerfectBoot) {
+    console.log(
+      "[alpha-caddie-web] Render boot = npm run perfect parity: fetch:dg → in-play → DK O/U probe → book odds …",
+    );
+    const runRenderBootStep = (label, scriptFile) => {
+      const scriptPath = path.join(WEB_ROOT, "scripts", scriptFile);
+      if (!fs.existsSync(scriptPath)) return;
+      console.log(`[alpha-caddie-web] Render boot: ${label} …`);
+      const r = spawnSync(process.execPath, [scriptPath], {
+        cwd: WEB_ROOT,
+        stdio: "inherit",
+        env: dgBootEnv,
+      });
+      if (r.status !== 0) console.warn(`[alpha-caddie-web] ${label} exited`, r.status);
+    };
+
+    runRenderBootStep("fetch:dg", "fetch-datagolf.mjs");
+    if (process.env.GOLF_SKIP_LIVE_IN_PLAY_ON_START !== "1") {
+      runRenderBootStep("fetch:in-play", "fetch-live-in-play.mjs");
+    }
+    const skipDkProbe =
+      String(process.env.PERFECT_SKIP_FETCH_DK_OU || "").trim() === "1" ||
+      String(process.env.GOLF_RENDER_SKIP_DK_OU_PROBE || "").trim() === "1";
+    if (!skipDkProbe) {
+      runRenderBootStep("DraftKings round O/U probe", "draftkings-ou-props.mjs");
+    }
+    if (process.env.GOLF_SKIP_BOOK_ODDS_ON_START !== "1") {
+      runRenderBootStep("fetch:book-odds", "fetch-book-odds-into-projections.mjs");
     }
   }
 
   const bookOdds = path.join(WEB_ROOT, "scripts", "fetch-book-odds-into-projections.mjs");
-  if (key && fs.existsSync(bookOdds) && process.env.GOLF_SKIP_BOOK_ODDS_ON_START !== "1") {
+  if (!renderPerfectBoot && key && fs.existsSync(bookOdds) && process.env.GOLF_SKIP_BOOK_ODDS_ON_START !== "1") {
     console.log("[alpha-caddie-web] Book odds → projections.json …");
     const bo = spawnSync(process.execPath, [bookOdds], {
       cwd: WEB_ROOT,
@@ -319,7 +349,7 @@ function refreshBeforeServe() {
   }
 
   const livePlay = path.join(WEB_ROOT, "scripts", "fetch-live-in-play.mjs");
-  if (key && fs.existsSync(livePlay) && process.env.GOLF_SKIP_LIVE_IN_PLAY_ON_START !== "1") {
+  if (!renderPerfectBoot && key && fs.existsSync(livePlay) && process.env.GOLF_SKIP_LIVE_IN_PLAY_ON_START !== "1") {
     console.log("[alpha-caddie-web] DataGolf preds/in-play → live-in-play.json …");
     const lp = spawnSync(process.execPath, [livePlay], {
       cwd: WEB_ROOT,
