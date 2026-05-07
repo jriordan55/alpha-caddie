@@ -338,6 +338,7 @@ let KELLY = { loaded: false, loading: false, error: "", payload: null };
 let resultsTimeRange = "all";
 /** Hit regions for Results chart win-marker tooltips (canvas). */
 let resultsChartHitRegions = [];
+let matchupAnalysisSelectedKey = "";
 let propsTrendsLineContextKey = "";
 /** Perf caches for pricing-mode recomputes (cleared when history/context changes). */
 const HISTORY_ROUNDS_CHRONO_CACHE = new Map();
@@ -1703,6 +1704,7 @@ function refreshPricingAffectedViews() {
   if (tab === "ou") return void buildOuTable();
   if (tab === "ev") return void buildEvTable();
   if (tab === "matchups") return void buildMatchupsTable();
+  if (tab === "matchup-analysis") return void buildMatchupAnalysisTool();
   if (tab === "outrights") return void buildOutrightsTable();
   if (tab === "props") {
     renderPropsTrends();
@@ -1714,6 +1716,7 @@ function refreshPricingAffectedViews() {
   buildOuTable();
   buildEvTable();
   buildMatchupsTable();
+  buildMatchupAnalysisTool();
   buildOutrightsTable();
   renderPropsTrends();
   updatePropsFooterEv();
@@ -4412,6 +4415,213 @@ function bestBookDecimalForSide(oddsObj, side /* 'p1'|'p2' */) {
     }
   }
   return { book: bestB, dec: bestD };
+}
+
+function matchupAnalysisMetricValue(row, key) {
+  if (!row) return NaN;
+  if (key === "sg_total") {
+    const base = num(row.sg_total, NaN);
+    if (Number.isFinite(base)) return base;
+    return num(row.mu_sg, NaN);
+  }
+  return num(row[key], NaN);
+}
+
+function buildMatchupAnalysisTool() {
+  const tbody = document.querySelector("#table-matchup-analysis tbody");
+  const sgBody = document.querySelector("#table-matchup-analysis-sg tbody");
+  const marketEl = document.getElementById("analysis-market");
+  const note = document.getElementById("analysis-market-note");
+  if (!tbody || !sgBody) return;
+  tbody.innerHTML = "";
+  sgBody.innerHTML = "";
+  const key = String(marketEl?.value || "round_matchups");
+  const pack = DATA.matchups && DATA.matchups[key];
+  const list = pack && pack.match_list;
+  const titleA = document.getElementById("analysis-sg-player-a");
+  const titleB = document.getElementById("analysis-sg-player-b");
+  if (titleA) titleA.textContent = "Player A";
+  if (titleB) titleB.textContent = "Player B";
+  if (typeof list === "string") {
+    if (note) {
+      note.hidden = false;
+      note.textContent = String(list);
+    }
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 5;
+    td.className = "text-muted";
+    td.textContent = String(list);
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    return;
+  }
+  if (note) note.hidden = true;
+  if (!Array.isArray(list) || !list.length) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 5;
+    td.textContent = "No matchups.";
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    return;
+  }
+
+  const r = getModelRoundForEv();
+  const rows = [];
+  for (const m of list) {
+    const id1 = Math.round(num(m.p1_dg_id, NaN));
+    const id2 = Math.round(num(m.p2_dg_id, NaN));
+    const id3 = Math.round(num(m.p3_dg_id, NaN));
+    const row1 = projectionPlayerRowForModelByIdOrName(id1, m.p1_player_name, r);
+    const row2 = projectionPlayerRowForModelByIdOrName(id2, m.p2_player_name, r);
+    const row3 = projectionPlayerRowForModelByIdOrName(id3, m.p3_player_name, r);
+    const odds = m.odds || {};
+    const b1 = bestBookDecimalForSide(odds, "p1");
+    const b2 = bestBookDecimalForSide(odds, "p2");
+    const b3 = bestBookDecimalForSide(odds, "p3");
+    const isThree = key === "3_balls" && Number.isFinite(id3) && id3 > 0;
+    const mu1 = effectiveMuSg(row1, id1, key);
+    const mu2 = effectiveMuSg(row2, id2, key);
+    const mu3 = effectiveMuSg(row3, id3, key);
+    if (isThree) {
+      const [p1, p2, p3] = threeBallModelProbsLiveBlended(mu1, mu2, mu3, row1, row2, row3);
+      const ev1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
+      const ev2 = Number.isFinite(b2.dec) ? p2 * b2.dec - 1 : NaN;
+      const ev3 = Number.isFinite(b3.dec) ? p3 * b3.dec - 1 : NaN;
+      const sides = [
+        { side: "p1", name: String(m.p1_player_name || ""), modelPct: p1, edge: ev1, book: b1, row: row1 },
+        { side: "p2", name: String(m.p2_player_name || ""), modelPct: p2, edge: ev2, book: b2, row: row2 },
+        { side: "p3", name: String(m.p3_player_name || ""), modelPct: p3, edge: ev3, book: b3, row: row3 },
+      ].sort((a, b) => num(b.edge, -99) - num(a.edge, -99));
+      rows.push({
+        key: `3b:${id1}:${id2}:${id3}`,
+        matchup: `${m.p1_player_name || ""} / ${m.p2_player_name || ""} / ${m.p3_player_name || ""}`,
+        best: sides[0],
+        isThree: true,
+      });
+      continue;
+    }
+    const p1 = matchupWinProbLiveBlended(mu1, mu2, key, row1, row2);
+    const p2 = 1 - p1;
+    const ev1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
+    const ev2 = Number.isFinite(b2.dec) ? p2 * b2.dec - 1 : NaN;
+    const best = ev1 >= ev2
+      ? { side: "p1", name: String(m.p1_player_name || ""), modelPct: p1, edge: ev1, book: b1, row: row1 }
+      : { side: "p2", name: String(m.p2_player_name || ""), modelPct: p2, edge: ev2, book: b2, row: row2 };
+    rows.push({
+      key: `h2h:${id1}:${id2}`,
+      matchup: `${m.p1_player_name || ""} vs ${m.p2_player_name || ""}`,
+      best,
+      isThree: false,
+      left: { name: String(m.p1_player_name || ""), row: row1 },
+      right: { name: String(m.p2_player_name || ""), row: row2 },
+    });
+  }
+
+  rows.sort((a, b) => num(b.best?.edge, -99) - num(a.best?.edge, -99));
+  if (!rows.length) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 5;
+    td.textContent = "No matchups.";
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    return;
+  }
+
+  if (!rows.some((x) => x.key === matchupAnalysisSelectedKey)) matchupAnalysisSelectedKey = rows[0].key;
+  const selected = rows.find((x) => x.key === matchupAnalysisSelectedKey) || rows[0];
+
+  const renderSgBreakdown = (entry) => {
+    sgBody.innerHTML = "";
+    if (!entry || entry.isThree || !entry.left || !entry.right) {
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.colSpan = 4;
+      td.className = "text-muted";
+      td.textContent = entry?.isThree
+        ? "SG breakdown is shown for head-to-head matchups."
+        : "Select a head-to-head matchup to view SG comparison.";
+      tr.appendChild(td);
+      sgBody.appendChild(tr);
+      return;
+    }
+    if (titleA) titleA.textContent = entry.left.name || "Player A";
+    if (titleB) titleB.textContent = entry.right.name || "Player B";
+    const metrics = [
+      ["SG: Total", "sg_total"],
+      ["SG: Off the Tee", "sg_ott"],
+      ["SG: Approach", "sg_app"],
+      ["SG: Around Green", "sg_arg"],
+      ["SG: Putting", "sg_putt"],
+    ];
+    for (const [label, keyMetric] of metrics) {
+      const a = matchupAnalysisMetricValue(entry.left.row, keyMetric);
+      const b = matchupAnalysisMetricValue(entry.right.row, keyMetric);
+      const diff = Number.isFinite(a) && Number.isFinite(b) ? a - b : NaN;
+      const tr = document.createElement("tr");
+      const tdMetric = document.createElement("td");
+      tdMetric.textContent = label;
+      const tdA = document.createElement("td");
+      tdA.className = "num";
+      tdA.textContent = Number.isFinite(a) ? a.toFixed(2) : "—";
+      const tdB = document.createElement("td");
+      tdB.className = "num";
+      tdB.textContent = Number.isFinite(b) ? b.toFixed(2) : "—";
+      const tdAdv = document.createElement("td");
+      if (!Number.isFinite(diff) || Math.abs(diff) < 0.005) {
+        tdAdv.textContent = "Even";
+      } else {
+        const who = diff > 0 ? entry.left.name : entry.right.name;
+        tdAdv.textContent = `${who} ${diff > 0 ? "+" : ""}${diff.toFixed(2)} strokes`;
+        tdAdv.className = diff > 0 ? "ev-pos" : "ev-neg";
+      }
+      tr.appendChild(tdMetric);
+      tr.appendChild(tdA);
+      tr.appendChild(tdB);
+      tr.appendChild(tdAdv);
+      sgBody.appendChild(tr);
+    }
+  };
+
+  for (const item of rows) {
+    const tr = document.createElement("tr");
+    if (item.key === selected.key) tr.classList.add("matchup-analysis-row-selected");
+    tr.addEventListener("click", () => {
+      matchupAnalysisSelectedKey = item.key;
+      buildMatchupAnalysisTool();
+    });
+    const tdM = document.createElement("td");
+    tdM.textContent = item.matchup;
+    const tdSide = document.createElement("td");
+    tdSide.textContent = item.best?.name || "—";
+    const tdModel = document.createElement("td");
+    tdModel.className = "num";
+    tdModel.textContent = Number.isFinite(item.best?.modelPct) ? `${(item.best.modelPct * 100).toFixed(1)}%` : "—";
+    const tdEdge = document.createElement("td");
+    tdEdge.className = "num";
+    if (Number.isFinite(item.best?.edge)) {
+      tdEdge.textContent = `${(item.best.edge * 100).toFixed(1)}%`;
+      tdEdge.classList.add(item.best.edge >= 0 ? "ev-pos" : "ev-neg");
+    } else {
+      tdEdge.textContent = "—";
+    }
+    const tdBook = document.createElement("td");
+    tdBook.className = "num best-book-td";
+    if (item.best?.book?.book && Number.isFinite(item.best?.book?.dec)) {
+      tdBook.innerHTML = `${bookBadgeHtml(item.best.book.book)} <span class="best-book-odds">${item.best.book.dec.toFixed(2)}</span>`;
+    } else {
+      tdBook.textContent = "—";
+    }
+    tr.appendChild(tdM);
+    tr.appendChild(tdSide);
+    tr.appendChild(tdModel);
+    tr.appendChild(tdEdge);
+    tr.appendChild(tdBook);
+    tbody.appendChild(tr);
+  }
+  renderSgBreakdown(selected);
 }
 
 function buildMatchupsTable() {
@@ -8792,6 +9002,9 @@ function initTabs() {
       if (tab === "props") {
         requestAnimationFrame(() => renderPropsTrends());
       }
+      if (tab === "matchup-analysis") {
+        requestAnimationFrame(() => buildMatchupAnalysisTool());
+      }
       if (tab === "ev") {
         requestAnimationFrame(() => {
           syncEvTabOddsAfterShow();
@@ -8815,6 +9028,7 @@ document.addEventListener("DOMContentLoaded", () => {
     buildOuTable();
     buildEvTable();
     buildMatchupsTable();
+    buildMatchupAnalysisTool();
     buildOutrightsTable();
     renderPropsTrends();
     updatePropsFooterEv();
@@ -8878,9 +9092,14 @@ document.addEventListener("DOMContentLoaded", () => {
     buildOuTable();
     buildEvTable();
     buildMatchupsTable();
+    buildMatchupAnalysisTool();
     renderPropsTrends();
     initHangoutSelectors(false);
     scheduleHangoutSimulateDebounced();
+  });
+  document.getElementById("analysis-market")?.addEventListener("change", () => {
+    matchupAnalysisSelectedKey = "";
+    buildMatchupAnalysisTool();
   });
   document.getElementById("ou-market-filter")?.addEventListener("change", () => {
     ouTableSort = { key: "pr-edge", dir: -1 };

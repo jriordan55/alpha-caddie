@@ -2,6 +2,8 @@ param(
   [switch] $SkipPush,
   [switch] $NoFullHistory,
   [switch] $SkipResultsBuild,
+  [switch] $ArtifactsOnly,
+  [switch] $PullFirst,
   [string] $CommitMessage = ""
 )
 
@@ -34,10 +36,14 @@ function Run-Step([string] $label, [scriptblock] $command) {
 
 Run-Step "Running fetch:dg ..." { npm run fetch:dg }
 Run-Step "Running fetch:in-play ..." { npm run fetch:in-play }
+Remove-Item Env:\GOLF_SKIP_DK_OU -ErrorAction SilentlyContinue
+Remove-Item Env:\PERFECT_SKIP_FETCH_DK_OU -ErrorAction SilentlyContinue
+Run-Step "Running fetch:dk-ou ..." { npm run fetch:dk-ou }
 Run-Step "Running fetch:book-odds ..." { npm run fetch:book-odds }
 Run-Step "Running update:rounds ..." { npm run update:rounds }
 Run-Step "Running build:history ..." { npm run build:history }
 if (-not $SkipResultsBuild) {
+  $env:RESULTS_EXPORT_LAST_YEARS = "2"
   Run-Step "Running build:results ..." { npm run build:results }
 } else {
   Write-Host "Skipping build:results (SkipResultsBuild enabled)."
@@ -66,6 +72,13 @@ foreach ($rel in $artifacts) {
   }
 }
 
+if ($ArtifactsOnly) {
+  Write-Host "ArtifactsOnly enabled: staging only generated data artifacts."
+} else {
+  Write-Host "Staging all repo changes (plus forced data artifacts) ..."
+  git -C $repoRoot add -A
+}
+
 git -C $repoRoot diff --cached --quiet
 if ($LASTEXITCODE -eq 0) {
   Write-Host "No staged changes; nothing to commit."
@@ -87,6 +100,13 @@ if ($SkipPush) {
 }
 
 $branch = git -C $repoRoot rev-parse --abbrev-ref HEAD
+if ($PullFirst) {
+  Write-Host "Pulling latest origin/$branch with rebase ..."
+  git -C $repoRoot pull --rebase origin $branch
+  if ($LASTEXITCODE -ne 0) {
+    throw "git pull --rebase failed with exit code $LASTEXITCODE"
+  }
+}
 Write-Host "Pushing origin $branch ..."
 git -C $repoRoot push origin $branch
 if ($LASTEXITCODE -ne 0) {

@@ -622,6 +622,10 @@ body {
 .data-table tbody tr:nth-child(even) td { background: #0d0e12; }
 .data-table tbody tr:nth-child(odd) td { background: #101116; }
 .data-table tbody tr:hover td { background: rgba(0, 196, 107, 0.08); }
+.data-table tbody tr.matchup-analysis-row-selected td {
+  background: rgba(0, 196, 107, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(0, 196, 107, 0.28);
+}
 .data-table .num { text-align: center; font-variant-numeric: tabular-nums; }
 .data-table .ou-cell { font-size: 0.78rem; line-height: 1.4; text-align: center; }
 .data-table .ou-o { color: var(--golf-text); font-weight: 600; }
@@ -1139,6 +1143,11 @@ body {
 .ev-box { font-size: 1.1rem; }
 .ev-pos { color: var(--golf-green); font-weight: 700; }
 .ev-neg { color: var(--golf-danger); font-weight: 700; }
+.matchup-analysis-note {
+  margin: 0;
+  text-transform: none;
+  letter-spacing: normal;
+}
 
 .section-heading {
   font-size: 0.75rem;

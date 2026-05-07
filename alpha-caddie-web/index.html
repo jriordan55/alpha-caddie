@@ -22,6 +22,7 @@
     <nav class="tabs" role="tablist" aria-label="Main">
       <button type="button" class="tab active" data-tab="ou" role="tab" aria-selected="true">Round projections</button>
       <button type="button" class="tab" data-tab="props" role="tab">Historical Trends</button>
+      <button type="button" class="tab" data-tab="matchup-analysis" role="tab">Matchup Analysis Tool</button>
       <button type="button" class="tab" data-tab="ev" role="tab">+EV Bets</button>
       <button type="button" class="tab" data-tab="results" role="tab">Results</button>
       <button type="button" class="tab" data-tab="hangout" role="tab">Hole Hangout</button>
@@ -288,6 +289,50 @@
         </div>
         </div>
       </div>
+      </div>
+    </section>
+
+    <!-- Matchup Analysis Tool -->
+    <section id="panel-matchup-analysis" class="panel" role="tabpanel" hidden>
+      <div class="ev-panel-head">
+        <h2 class="ev-devig-sr-only">Matchup Analysis Tool</h2>
+      </div>
+      <div class="toolbar outrights-toolbar">
+        <label class="toolbar-label">Market
+          <select id="analysis-market">
+            <option value="round_matchups" selected>Round Matchups</option>
+            <option value="tournament_matchups">Tournament Matchups</option>
+            <option value="3_balls">3 Balls</option>
+          </select>
+        </label>
+        <p id="analysis-market-note" class="text-muted matchup-analysis-note" hidden></p>
+      </div>
+      <div class="table-wrap leaderboard-card outrights-table-wrap">
+        <table class="data-table data-table-outrights" id="table-matchup-analysis">
+          <thead>
+            <tr>
+              <th>Matchup</th>
+              <th>Best side</th>
+              <th class="num">Model %</th>
+              <th class="num">Edge</th>
+              <th class="num">Best Book</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="table-wrap leaderboard-card outrights-table-wrap">
+        <table class="data-table data-table-outrights" id="table-matchup-analysis-sg">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th class="num" id="analysis-sg-player-a">Player A</th>
+              <th class="num" id="analysis-sg-player-b">Player B</th>
+              <th>Advantage</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
       </div>
     </section>
 
@@ -990,6 +1035,6 @@
   </dialog>
 
   <script src="embedded-player-round-history.js?v=5"></script>
-  <script src="app.js?v=48"></script>
+  <script src="app.js?v=49"></script>
 </body>
 </html>
