@@ -60,7 +60,7 @@ import { fileURLToPath } from "url";
 import { eventsLikelySame } from "./dg-events-align.mjs";
 import { findRscriptSync } from "./find-rscript.mjs";
 import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
-import { ensureAlphaCaddieStaticArtifacts } from "./ensure-static-data-files.mjs";
+import { ensureAlphaCaddieStaticArtifacts, renderHistoricalTrendsPayloadBroken } from "./ensure-static-data-files.mjs";
 import { resolveGolfModelDir } from "./resolve-golf-model-dir.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -106,17 +106,8 @@ if (fastLocal) {
  * Render: if Historical Trends JSON is missing or `byDgId` is empty after boot, repair runs update-historical-rounds → build → embed.
  * With GOLF_HISTORICAL_ROUNDS_FULL_HISTORY=1 (render.yaml), repair does one uncapped 2004→present PGA (+ LIV) merge (slow).
  * Without it, repair retries with GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS then optional wide / FULL_MERGE_IF_EMPTY passes.
+ * Broken/populated checks avoid parsing huge JSON on tiny dynos (see renderHistoricalTrendsPayloadBroken).
  */
-function renderHistoricalTrendsPayloadBroken(webRoot) {
-  const histJson = path.join(webRoot, "player_round_history.json");
-  if (!fs.existsSync(histJson)) return true;
-  try {
-    const j = JSON.parse(fs.readFileSync(histJson, "utf8"));
-    return !j?.byDgId || typeof j.byDgId !== "object" || Object.keys(j.byDgId).length === 0;
-  } catch {
-    return true;
-  }
-}
 
 function repairRenderHistoricalTrendsIfNeeded() {
   if (String(process.env.RENDER || "").toLowerCase() !== "true") return;
@@ -471,8 +462,13 @@ function logRenderBootstrapDiag() {
   let historyPlayers = -1;
   if (fs.existsSync(hist)) {
     try {
-      const j = JSON.parse(fs.readFileSync(hist, "utf8"));
-      historyPlayers = Object.keys(j?.byDgId || {}).length;
+      const st = fs.statSync(hist);
+      if (st.size > 350_000) {
+        historyPlayers = renderHistoricalTrendsPayloadBroken(WEB_ROOT) ? 0 : -3;
+      } else {
+        const j = JSON.parse(fs.readFileSync(hist, "utf8"));
+        historyPlayers = Object.keys(j?.byDgId || {}).length;
+      }
     } catch {
       historyPlayers = -2;
     }

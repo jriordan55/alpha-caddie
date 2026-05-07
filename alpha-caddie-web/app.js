@@ -363,6 +363,15 @@ function num(v, d) {
   return Number.isFinite(n) ? n : d;
 }
 
+/** Results tab removed from `index.html`; keep guards so leftover JS does not touch missing DOM. */
+function resultsFeatureEnabled() {
+  try {
+    return Boolean(document.getElementById("panel-results"));
+  } catch {
+    return false;
+  }
+}
+
 function samePlayerRound(p, round) {
   const pr = Math.round(num(p?.round, NaN));
   const rr = Math.round(num(round, NaN));
@@ -7973,6 +7982,7 @@ function resultsSelectValue(id, fallback = "__all__") {
 }
 
 function loadResultsPayload() {
+  if (!resultsFeatureEnabled()) return;
   if (RESULTS.loaded || RESULTS.loading) return;
   RESULTS.loading = true;
   resultsStatus("Loading results...");
@@ -8174,6 +8184,7 @@ function resultsRangeCaption(rangeKey) {
 }
 
 function syncResultsRangePillsUi() {
+  if (!resultsFeatureEnabled()) return;
   document.querySelectorAll(".results-range-pill[data-results-range]").forEach((b) => {
     b.classList.toggle("active", (b.getAttribute("data-results-range") || "") === resultsTimeRange);
   });
@@ -8574,6 +8585,7 @@ function syncResultsBookLogoUi() {
 }
 
 async function renderResultsKellyPnL() {
+  if (!resultsFeatureEnabled()) return;
   await loadKellyBetsPayload();
   const bankrollDollars = resultsBankrollDollarsFromUi();
   const B0Fallback = num(KELLY.payload?.bankroll0, 100);
@@ -8958,6 +8970,7 @@ function renderResultsSummaryKellyUsd(points, meta, bankrollDollars) {
 }
 
 function renderResultsTab() {
+  if (!resultsFeatureEnabled()) return;
   if (resultsTimeRange === "1d") resultsTimeRange = "all";
   syncResultsRangePillsUi();
   void renderResultsKellyPnL();

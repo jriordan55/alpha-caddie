@@ -1,8 +1,6 @@
 param(
   [switch] $SkipPush,
   [switch] $NoFullHistory,
-  [switch] $SkipResultsBuild,
-  [switch] $IncludeResultsInCommit,
   [switch] $ArtifactsOnly,
   [switch] $PullFirst,
   [string] $CommitMessage = ""
@@ -43,12 +41,6 @@ Run-Step "Running fetch:dk-ou ..." { npm run fetch:dk-ou }
 Run-Step "Running fetch:book-odds ..." { npm run fetch:book-odds }
 Run-Step "Running update:rounds ..." { npm run update:rounds }
 Run-Step "Running build:history ..." { npm run build:history }
-if (-not $SkipResultsBuild) {
-  Remove-Item Env:\RESULTS_EXPORT_LAST_YEARS -ErrorAction SilentlyContinue
-  Run-Step "Running build:results ..." { npm run build:results }
-} else {
-  Write-Host "Skipping build:results (SkipResultsBuild enabled)."
-}
 
 Set-Location $repoRoot
 
@@ -62,11 +54,6 @@ $artifacts = @(
   "alpha-caddie-web/embedded-player-round-history.js"
 )
 
-$resultsArtifacts = @(
-  "alpha-caddie-web/data/results_backtest.json",
-  "alpha-caddie-web/data/results_kelly_bets.json"
-)
-
 $localOnlyUiFiles = @(
   "alpha-caddie-web/index.html",
   "alpha-caddie-web/app.js",
@@ -76,17 +63,7 @@ $localOnlyUiFiles = @(
 foreach ($rel in $artifacts) {
   $abs = Join-Path $repoRoot $rel
   if (Test-Path $abs) {
-    # These artifacts are intentionally gitignored for normal development;
-    # this publish script force-stages them for Render snapshot deploys.
     git -C $repoRoot add -f -- "$rel"
-  }
-}
-if ($IncludeResultsInCommit) {
-  foreach ($rel in $resultsArtifacts) {
-    $abs = Join-Path $repoRoot $rel
-    if (Test-Path $abs) {
-      git -C $repoRoot add -f -- "$rel"
-    }
   }
 }
 
@@ -97,14 +74,7 @@ if ($ArtifactsOnly) {
   git -C $repoRoot add -A
 }
 
-if (-not $IncludeResultsInCommit) {
-  Write-Host "Excluding Results artifacts from commit (kept locally)."
-  foreach ($rel in $resultsArtifacts) {
-    git -C $repoRoot restore --staged -- "$rel" 2>$null
-  }
-}
-
-Write-Host "Keeping local-only Matchup Analysis tab files out of push."
+Write-Host "Keeping local-only UI tab files out of push (if configured below)."
 foreach ($rel in $localOnlyUiFiles) {
   git -C $repoRoot restore --staged -- "$rel" 2>$null
 }
@@ -143,4 +113,4 @@ if ($LASTEXITCODE -ne 0) {
   throw "git push failed with exit code $LASTEXITCODE"
 }
 
-Write-Host "Done: history artifacts refreshed and pushed."
+Write-Host "Done: refreshed artifacts pushed (no Results build)."

@@ -24,7 +24,6 @@
       <button type="button" class="tab" data-tab="props" role="tab">Historical Trends</button>
       <button type="button" class="tab" data-tab="matchup-analysis" role="tab">Matchup Analysis Tool</button>
       <button type="button" class="tab" data-tab="ev" role="tab">+EV Bets</button>
-      <button type="button" class="tab" data-tab="results" role="tab">Results</button>
       <button type="button" class="tab" data-tab="hangout" role="tab">Hole Hangout</button>
     </nav>
 
@@ -557,78 +556,6 @@
       </div>
     </section>
 
-    <!-- Results -->
-    <section id="panel-results" class="panel" role="tabpanel" hidden>
-      <div class="ev-panel-head">
-        <h2 class="ev-devig-sr-only">Results</h2>
-      </div>
-      <div class="toolbar outrights-toolbar results-toolbar">
-        <label class="toolbar-label">Market
-          <select id="results-filter-market" aria-label="Market"></select>
-        </label>
-        <label class="toolbar-label results-book-toolbar-label">Sportsbook
-          <div class="results-book-filter-row">
-            <div id="results-book-logo-wrap" class="results-book-logo-wrap" aria-hidden="true"></div>
-            <select id="results-filter-book" aria-label="Sportsbook"></select>
-          </div>
-        </label>
-        <label class="toolbar-label">Bankroll ($)
-          <input id="results-bankroll-dollars" type="number" min="100" step="100" value="10000" title="Scales Kelly P&amp;L and stakes to this starting bankroll" />
-        </label>
-        <label class="toolbar-label">Min EV edge (%)
-          <input id="results-filter-min-ev" type="number" min="-10" max="40" step="0.5" value="0" />
-        </label>
-      </div>
-      <div class="toolbar outrights-toolbar results-toolbar results-toolbar-row2">
-        <label class="toolbar-label">Pricing mode
-          <select id="results-filter-pricing-mode" aria-label="Pricing mode" title="Historical Kelly uses default calibration. Hot/cold, course history, and skill variants require rebuilding Kelly data with mode-specific probabilities.">
-            <option value="default" selected>Default</option>
-            <option value="recent">Recent form (hot/cold)</option>
-            <option value="course">Course history</option>
-            <option value="skill">Skill focus</option>
-          </select>
-        </label>
-      </div>
-      <p id="results-status" class="note text-muted">Loading results…</p>
-      <p id="results-pricing-mode-hint" class="note text-muted" hidden></p>
-      <div class="ou-chart-card leaderboard-card" id="results-chart-card">
-        <div class="results-hero">
-          <div class="results-hero-chart">
-            <div class="ou-chart-wrap results-chart-wrap">
-              <canvas id="results-chart-canvas" width="800" height="260" aria-label="Cumulative Kelly PnL"></canvas>
-              <div id="results-chart-tooltip" class="ou-chart-tooltip" hidden></div>
-            </div>
-          </div>
-          <aside class="results-hero-kpi" aria-label="Summary and range">
-            <div class="results-range-pills" role="tablist" aria-label="Time range">
-              <button type="button" class="results-range-pill" data-results-range="1w">1W</button>
-              <button type="button" class="results-range-pill" data-results-range="1m">1M</button>
-              <button type="button" class="results-range-pill" data-results-range="1y">1Y</button>
-              <button type="button" class="results-range-pill" data-results-range="ytd">YTD</button>
-              <button type="button" class="results-range-pill active" data-results-range="all">ALL</button>
-            </div>
-            <div class="results-kpi-label" id="results-kpi-label">Cumulative Kelly PnL</div>
-            <div class="results-kpi-main" id="results-kpi-main">—</div>
-            <div class="results-kpi-sub" id="results-kpi-sub"></div>
-          </aside>
-        </div>
-      </div>
-      <div class="table-wrap leaderboard-card">
-        <table class="data-table" id="table-results-summary">
-          <thead>
-            <tr>
-              <th class="num">Bets</th>
-              <th class="num">Total staked</th>
-              <th class="num">Net P&amp;L</th>
-              <th class="num">Return</th>
-              <th>Period</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
-
     <!-- Hole Hangout -->
     <section id="panel-hangout" class="panel" role="tabpanel" hidden>
       <div class="ev-panel-head">
@@ -1035,6 +962,6 @@
   </dialog>
 
   <script src="embedded-player-round-history.js?v=5"></script>
-  <script src="app.js?v=49"></script>
+  <script src="app.js?v=50"></script>
 </body>
 </html>

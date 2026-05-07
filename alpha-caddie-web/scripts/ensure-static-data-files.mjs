@@ -1,7 +1,7 @@
 /**
  * Before the static server listens: optional verification / rebuild helpers.
- * On Render (RENDER=true): never writes demo projections or empty JSON stubs — real assets come from
- * fetch:dg / committed CSVs / npm run build:results during deploy (see render.yaml).
+ * On Render (RENDER=true): never writes demo projections — real assets come from fetch:dg / committed CSV + history JSON.
+ * Results/Kelly JSON is not generated here (Results tab removed).
  */
 import { spawnSync } from "child_process";
 import fs from "fs";
@@ -68,23 +68,61 @@ function resolveHistoricalRoundsCsv(webRoot, repoRoot) {
   return null;
 }
 
-function historyJsonLooksPopulated(raw) {
-  return raw && typeof raw.byDgId === "object" && Object.keys(raw.byDgId).length > 0;
+const HISTORY_JSON_PREFIX_BYTES = 262144;
+
+/**
+ * True when Historical Trends JSON is missing, unreadable, or has empty `byDgId`.
+ * Large committed exports are multi‑MB; full `JSON.parse` here has OOM'd small Render dynos (exit 134).
+ */
+export function renderHistoricalTrendsPayloadBroken(webRoot) {
+  const histJson = path.join(webRoot, "player_round_history.json");
+  if (!fs.existsSync(histJson)) return true;
+  let size = 0;
+  try {
+    size = fs.statSync(histJson).size;
+  } catch {
+    return true;
+  }
+  if (size === 0) return true;
+
+  const prefixLen = Math.min(size, HISTORY_JSON_PREFIX_BYTES);
+  let prefix = "";
+  try {
+    const fd = fs.openSync(histJson, "r");
+    try {
+      const buf = Buffer.alloc(prefixLen);
+      fs.readSync(fd, buf, 0, prefixLen, 0);
+      prefix = buf.toString("utf8");
+    } finally {
+      fs.closeSync(fd);
+    }
+  } catch {
+    return true;
+  }
+
+  if (/"byDgId"\s*:\s*\{\s*\}/.test(prefix)) return true;
+  if (prefix.includes('"render-history-shell"') || prefix.includes('"offline-stub"')) return true;
+
+  if (size > 350_000) {
+    const m = prefix.match(/"byDgId"\s*:\s*\{/);
+    if (!m) return true;
+    const afterBrace = prefix.slice(m.index + m[0].length).replace(/^\s*/, "");
+    if (afterBrace.startsWith("}")) return true;
+    return false;
+  }
+
+  try {
+    const j = JSON.parse(fs.readFileSync(histJson, "utf8"));
+    return !j?.byDgId || typeof j.byDgId !== "object" || Object.keys(j.byDgId).length === 0;
+  } catch {
+    return true;
+  }
 }
 
 export function ensurePlayerRoundHistoryJson(webRoot, repoRoot, stubsOk) {
   const outPath = path.join(webRoot, "player_round_history.json");
-  const readHistory = () => {
-    if (!fs.existsSync(outPath)) return null;
-    try {
-      return JSON.parse(fs.readFileSync(outPath, "utf8"));
-    } catch {
-      return null;
-    }
-  };
 
-  const existing = readHistory();
-  if (historyJsonLooksPopulated(existing)) return;
+  if (!renderHistoricalTrendsPayloadBroken(webRoot)) return;
 
   const projPath = path.join(webRoot, "projections.json");
   const csvPath = resolveHistoricalRoundsCsv(webRoot, repoRoot);
@@ -98,8 +136,7 @@ export function ensurePlayerRoundHistoryJson(webRoot, repoRoot, stubsOk) {
         stdio: "inherit",
         env: { ...process.env, GOLF_MODEL_DIR: repoRoot },
       });
-      const built = readHistory();
-      if (r.status === 0 && historyJsonLooksPopulated(built)) return;
+      if (r.status === 0 && !renderHistoricalTrendsPayloadBroken(webRoot)) return;
       if (r.status !== 0) console.warn("[alpha-caddie-web] build-player-history exited", r.status);
     }
   }
@@ -140,201 +177,11 @@ export function ensurePlayerRoundHistoryJson(webRoot, repoRoot, stubsOk) {
   console.warn("[alpha-caddie-web] Wrote minimal player_round_history.json (local stub only).");
 }
 
+/** Results/Kelly tab removed — no results JSON on boot (projections + Historical Trends unchanged). */
 export function ensureResultsBacktestAndKelly(webRoot, repoRoot, stubsOk) {
-  const dataDir = path.join(webRoot, "data");
-  fs.mkdirSync(dataDir, { recursive: true });
-  const backtestPath = path.join(dataDir, "results_backtest.json");
-  const kellyPath = path.join(dataDir, "results_kelly_bets.json");
-  const matchupCsv = path.join(repoRoot, "data", "historical_matchups_outcomes.csv");
-  const outrightCsv = path.join(repoRoot, "data", "historical_outrights_outcomes.csv");
-  const br = path.join(webRoot, "scripts", "build-results-backtest.mjs");
-
-  const rebuildOnRenderBoot =
-    onRenderHost() &&
-    String(process.env.GOLF_SKIP_RESULTS_BUILD_ON_BOOT || "").trim() !== "1" &&
-    fs.existsSync(matchupCsv) &&
-    fs.existsSync(outrightCsv) &&
-    fs.existsSync(br);
-
-  if (rebuildOnRenderBoot) {
-    console.log("[alpha-caddie-web] Render: rebuilding Results + Kelly JSON from outcomes CSVs …");
-    const r = spawnSync(process.execPath, [br], {
-      cwd: webRoot,
-      stdio: "inherit",
-      env: { ...process.env, GOLF_MODEL_DIR: repoRoot },
-    });
-    if (r.status !== 0) console.warn("[alpha-caddie-web] build-results-backtest on boot exited", r.status);
-  }
-
-  let needBacktest = false;
-  if (!fs.existsSync(backtestPath)) needBacktest = true;
-  else {
-    try {
-      const j = JSON.parse(fs.readFileSync(backtestPath, "utf8"));
-      if (!j || typeof j !== "object" || !Array.isArray(j.rows)) needBacktest = true;
-    } catch {
-      needBacktest = true;
-    }
-  }
-
-  let needKelly = false;
-  if (!fs.existsSync(kellyPath)) needKelly = true;
-  else {
-    try {
-      const k = JSON.parse(fs.readFileSync(kellyPath, "utf8"));
-      if (!k || typeof k !== "object" || !Array.isArray(k.bets)) needKelly = true;
-    } catch {
-      needKelly = true;
-    }
-  }
-
-  if ((needBacktest || needKelly) && fs.existsSync(matchupCsv) && fs.existsSync(outrightCsv) && fs.existsSync(br)) {
-    console.log("[alpha-caddie-web] Running build-results-backtest.mjs (outcomes CSVs present, JSON missing) …");
-    const r = spawnSync(process.execPath, [br], {
-      cwd: webRoot,
-      stdio: "inherit",
-      env: { ...process.env, GOLF_MODEL_DIR: repoRoot },
-    });
-    if (r.status !== 0) console.warn("[alpha-caddie-web] build-results-backtest exited", r.status);
-    else {
-      needBacktest = false;
-      needKelly = false;
-      try {
-        const j = JSON.parse(fs.readFileSync(backtestPath, "utf8"));
-        if (!j || !Array.isArray(j.rows)) needBacktest = true;
-      } catch {
-        needBacktest = true;
-      }
-      try {
-        const k = JSON.parse(fs.readFileSync(kellyPath, "utf8"));
-        if (!k || !Array.isArray(k.bets)) needKelly = true;
-      } catch {
-        needKelly = true;
-      }
-    }
-  }
-
-  if (needBacktest) {
-    if (!stubsOk) {
-      console.error(
-        "[alpha-caddie-web] results_backtest.json missing — add data/historical_*_outcomes.csv and run npm run build:results (see RESULTS_EXPORT_LAST_YEARS).",
-      );
-    } else {
-      fs.writeFileSync(
-        backtestPath,
-        JSON.stringify({
-          generated_at: new Date().toISOString(),
-          ev_bin_step: 0.5,
-          ev_bin_min: -10,
-          ev_bin_max: 40,
-          markets: { matchups: [], outrights: [] },
-          books: { matchups: [], outrights: [] },
-          rows: [],
-          note: "Offline stub — run npm run build:results.",
-        }),
-        "utf8",
-      );
-      console.warn("[alpha-caddie-web] Wrote empty results_backtest.json (local stub only).");
-    }
-  }
-
-  if (needKelly) {
-    if (!stubsOk) {
-      console.error("[alpha-caddie-web] results_kelly_bets.json missing — same fix as results_backtest.json.");
-    } else {
-      fs.writeFileSync(
-        kellyPath,
-        JSON.stringify({
-          schema: 3,
-          generated_at: new Date().toISOString(),
-          bankroll0: 100,
-          kelly_fraction: 0.25,
-          max_kelly_stake_frac: 0.15,
-          outrights_price: "close_american_decimal",
-          cols: [
-            "t",
-            "date",
-            "source",
-            "market",
-            "book",
-            "ev_pct",
-            "p",
-            "dec",
-            "win",
-            "event_id",
-            "player_name",
-            "event_name",
-            "dg_id",
-          ],
-          n: 0,
-          bets: [],
-          note: "Offline stub — run npm run build:results.",
-        }),
-        "utf8",
-      );
-      console.warn("[alpha-caddie-web] Wrote empty results_kelly_bets.json (local stub only).");
-    }
-  }
-
-  /** Results tab expects HTTP 200; outcomes CSVs are usually gitignored — ship schema-valid empty payloads on Render. */
-  const outcomesCsvMissing = !fs.existsSync(matchupCsv) || !fs.existsSync(outrightCsv);
-  if (onRenderHost() && outcomesCsvMissing) {
-    const iso = new Date().toISOString();
-    if (!fs.existsSync(backtestPath)) {
-      fs.writeFileSync(
-        backtestPath,
-        JSON.stringify({
-          generated_at: iso,
-          source: "render-empty-no-outcomes-csv",
-          ev_bin_step: 0.5,
-          ev_bin_min: -10,
-          ev_bin_max: 40,
-          markets: { matchups: [], outrights: [] },
-          books: { matchups: [], outrights: [] },
-          rows: [],
-        }),
-        "utf8",
-      );
-      console.warn(
-        "[alpha-caddie-web] Wrote schema-valid empty results_backtest.json — add data/historical_matchups_outcomes.csv + historical_outrights_outcomes.csv to repo for real Results.",
-      );
-    }
-    if (!fs.existsSync(kellyPath)) {
-      fs.writeFileSync(
-        kellyPath,
-        JSON.stringify({
-          schema: 3,
-          generated_at: iso,
-          source: "render-empty-no-outcomes-csv",
-          bankroll0: 100,
-          kelly_fraction: 0.25,
-          max_kelly_stake_frac: 0.15,
-          outrights_price: "close_american_decimal",
-          cols: [
-            "t",
-            "date",
-            "source",
-            "market",
-            "book",
-            "ev_pct",
-            "p",
-            "dec",
-            "win",
-            "event_id",
-            "player_name",
-            "event_name",
-            "dg_id",
-          ],
-          n: 0,
-          bets: [],
-        }),
-        "utf8",
-      );
-      console.warn(
-        "[alpha-caddie-web] Wrote schema-valid empty results_kelly_bets.json — same CSV requirement as Results cube.",
-      );
-    }
-  }
+  void webRoot;
+  void repoRoot;
+  void stubsOk;
 }
 
 export function ensureEmbeddedRoundHistoryJs(webRoot, stubsOk) {
