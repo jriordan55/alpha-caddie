@@ -182,8 +182,46 @@ function repairRenderHistoricalTrendsIfNeeded() {
   }
 
   const wideYears =
-    String(process.env.GOLF_RENDER_HISTORY_WIDE_RETRY_YEARS || "38").trim() || "38";
+    String(process.env.GOLF_RENDER_HISTORY_WIDE_RETRY_YEARS || "55").trim() || "55";
   runRepairPass("wide retry", "extra merge if export still empty", wideYears);
+
+  if (!renderHistoricalTrendsPayloadBroken(WEB_ROOT)) return;
+  if (String(process.env.GOLF_RENDER_FULL_HISTORICAL_MERGE_IF_EMPTY || "").trim() !== "1") return;
+
+  console.warn(
+    "[alpha-caddie-web] Render repair: FULL historical merge (GOLF_RENDER_FULL_HISTORICAL_MERGE_IF_EMPTY=1 — no RECENT_FETCH cap; slow, may hit API limits).",
+  );
+  const fullMergeEnv = {
+    ...process.env,
+    GOLF_MODEL_DIR: REPO_ROOT,
+    DATAGOLF_API_KEY: key,
+  };
+  delete fullMergeEnv.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS;
+  delete fullMergeEnv.GOLF_HISTORICAL_ROUNDS_LIGHT;
+  if (fs.existsSync(roundsNode)) {
+    const u3 = spawnSync(process.execPath, [roundsNode], {
+      cwd: WEB_ROOT,
+      stdio: "inherit",
+      env: fullMergeEnv,
+    });
+    if (u3.status !== 0) console.warn("[alpha-caddie-web] Render repair (full merge): update-historical-rounds-node exited", u3.status);
+  }
+  if (fs.existsSync(buildHist)) {
+    const h3 = spawnSync(process.execPath, [buildHist], {
+      cwd: WEB_ROOT,
+      stdio: "inherit",
+      env: histEnv,
+    });
+    if (h3.status !== 0) console.warn("[alpha-caddie-web] Render repair (full merge): build-player-history exited", h3.status);
+  }
+  if (fs.existsSync(embedHist)) {
+    const e3 = spawnSync(process.execPath, [embedHist], {
+      cwd: WEB_ROOT,
+      stdio: "inherit",
+      env: histEnv,
+    });
+    if (e3.status !== 0) console.warn("[alpha-caddie-web] Render repair (full merge): embed-player-history exited", e3.status);
+  }
 }
 
 function loadApiKey() {

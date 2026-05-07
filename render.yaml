@@ -65,7 +65,7 @@ services:
       # Kelly + Results cube: only bets on/after (today UTC − N years). Full history: set "0".
       - key: RESULTS_EXPORT_LAST_YEARS
         value: "2"
-      # Historical Trends — calendar years of PGA/LIV rounds merged per boot (empty charts ↑ until overlap with field dg_ids).
-      # Disable 2nd widen pass: GOLF_RENDER_WIDE_HISTORY_REPAIR=0
+      # Historical Trends — calendar years merged each boot (raise if Trends stays empty). Wide 2nd pass defaults on — off: GOLF_RENDER_WIDE_HISTORY_REPAIR=0
+      # Nuclear once-only empty fix (slow / many API calls): GOLF_RENDER_FULL_HISTORICAL_MERGE_IF_EMPTY=1 then remove after success.
       - key: GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS
-        value: "22"
+        value: "35"

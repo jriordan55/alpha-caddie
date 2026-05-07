@@ -649,10 +649,28 @@ async function main() {
   const allowed = loadAllowedDgIds();
   console.log("Allowed dg_ids from projections:", allowed.size);
 
+  if (!fs.existsSync(ROUNDS_CSV)) {
+    console.error("[build-player-history] Missing rounds CSV — run fetch:dg / update:rounds merge first:", ROUNDS_CSV);
+  } else {
+    try {
+      const st = fs.statSync(ROUNDS_CSV);
+      console.log("[build-player-history] Rounds CSV bytes:", st.size, "| exists OK");
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
   const pgaMetaOverlay = METADATA_OVERLAY_CSV ? await loadPgaMetaOverlayFromCsv(METADATA_OVERLAY_CSV) : new Map();
   const shotsAgg = await loadShotsRoundAggMaps();
   const { byDgId, allowedTriples } = await streamRounds(allowed, pgaMetaOverlay, shotsAgg);
   console.log("Players with rounds:", byDgId.size);
+  if (allowed.size > 0 && byDgId.size === 0 && fs.existsSync(ROUNDS_CSV)) {
+    console.warn(
+      "[build-player-history] 0 players matched: projections have",
+      allowed.size,
+      "dg_ids but CSV rows did not join (tour must be pga|liv, dg_id must match, MIN_YEAR filter, or CSV missing recent seasons — widen GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS / run full merge).",
+    );
+  }
 
   const holesByPlayerKey = await streamHoles(allowedTriples);
   const holePlayerCount = Object.keys(holesByPlayerKey).length;

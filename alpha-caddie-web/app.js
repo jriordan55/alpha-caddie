@@ -6497,9 +6497,11 @@ function renderPropsTrends() {
   if (!HISTORY._ok || !historyHasBuckets) {
     if (empty) {
       empty.hidden = false;
+      const metaHint = String(HISTORY.meta?.note || "").trim();
       empty.textContent = !HISTORY._ok
         ? "No history file."
-        : "History loaded but contains no rounds yet (server still merging CSV or recent-year window too small — raise GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS on Render).";
+        : metaHint ||
+          "History export has no rounds yet. On Render: raise GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS (e.g. 35), check deploy logs for build-player-history / update-historical-rounds, or set GOLF_RENDER_FULL_HISTORICAL_MERGE_IF_EMPTY=1 once for a full PGA+LIV merge (slow).";
     }
     const wnEarly = clamp(
       Math.round(num(document.getElementById("props-window-n")?.value, PROPS_HISTORY_ROUND_DEFAULT)),
