@@ -5025,7 +5025,7 @@ async function loadPlayerHistory() {
     return;
   }
   try {
-    const res = await fetch("player_round_history.json", { cache: "no-store" });
+    const res = await fetch(cacheBustFetchUrl("player_round_history.json"), { cache: "no-store" });
     if (res.ok) {
       HISTORY = { ...(await res.json()), _ok: true };
       HISTORY_ROUNDS_CHRONO_CACHE.clear();
@@ -6492,8 +6492,15 @@ function renderPropsTrends() {
     if (titleEl) titleEl.textContent = "—";
     if (subEl) subEl.textContent = "";
   }
-  if (!HISTORY._ok) {
-    if (empty) empty.hidden = false;
+  const historyHasBuckets =
+    HISTORY._ok && HISTORY.byDgId && typeof HISTORY.byDgId === "object" && Object.keys(HISTORY.byDgId).length > 0;
+  if (!HISTORY._ok || !historyHasBuckets) {
+    if (empty) {
+      empty.hidden = false;
+      empty.textContent = !HISTORY._ok
+        ? "No history file."
+        : "History loaded but contains no rounds yet (server still merging CSV or recent-year window too small — raise GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS on Render).";
+    }
     const wnEarly = clamp(
       Math.round(num(document.getElementById("props-window-n")?.value, PROPS_HISTORY_ROUND_DEFAULT)),
       PROPS_HISTORY_ROUND_MIN,

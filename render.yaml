@@ -64,6 +64,6 @@ services:
       # Kelly + Results cube: only bets on/after (today UTC − N years). Full history: set "0".
       - key: RESULTS_EXPORT_LAST_YEARS
         value: "2"
-      # Critical for Historical Trends on Render: merge only recent PGA/LIV seasons into historical_rounds_all.csv (fetch:dg + repair pass). Raise only if you ship a prebuilt full CSV.
+      # Historical Trends: wider window = more overlap with current field dg_ids in player_round_history.json (trade-off: slower boot merge).
       - key: GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS
-        value: "5"
+        value: "10"

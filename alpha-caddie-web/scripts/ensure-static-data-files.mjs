@@ -105,8 +105,22 @@ export function ensurePlayerRoundHistoryJson(webRoot, repoRoot, stubsOk) {
   }
 
   if (!stubsOk) {
-    console.error(
-      "[alpha-caddie-web] player_round_history.json missing or empty after rebuild attempt — confirm fetch:dg completes (writes history) or ship CSV + run build:history.",
+    /** Without this file the browser gets HTTP 404 → HISTORY._ok false → “No history file.” Shell JSON = 200 + empty byDgId until merge/build succeeds. */
+    const iso = new Date().toISOString();
+    const note = csvPath
+      ? "Render: rounds CSV on disk but no rows exported for current field dg_ids yet — increase GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS or check DataGolf merge logs."
+      : "Render: historical_rounds_all.csv missing or empty — fetch:dg / rounds merge must succeed before Historical Trends fill in.";
+    fs.writeFileSync(
+      outPath,
+      JSON.stringify({
+        meta: { updated_at: iso, source: "render-history-shell", note },
+        byDgId: {},
+        holesByPlayerKey: {},
+      }),
+      "utf8",
+    );
+    console.warn(
+      "[alpha-caddie-web] Wrote shell player_round_history.json (empty byDgId) so Historical Trends can load — fix CSV merge/build to populate.",
     );
     return;
   }
