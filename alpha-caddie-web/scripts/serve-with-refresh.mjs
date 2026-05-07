@@ -103,9 +103,9 @@ if (fastLocal) {
 }
 
 /**
- * Render often completes projections.json inside fetch:dg but times out or skips before Historical Trends:
- * the rounds CSV merge defaults to 2004→present (very slow). Render yaml sets GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS;
- * if player_round_history.json is still missing/empty after refresh, run a short merge + build:history once more.
+ * Render: if Historical Trends JSON is missing or `byDgId` is empty after boot, repair runs update-historical-rounds → build → embed.
+ * With GOLF_HISTORICAL_ROUNDS_FULL_HISTORY=1 (render.yaml), repair does one uncapped 2004→present PGA (+ LIV) merge (slow).
+ * Without it, repair retries with GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS then optional wide / FULL_MERGE_IF_EMPTY passes.
  */
 function renderHistoricalTrendsPayloadBroken(webRoot) {
   const histJson = path.join(webRoot, "player_round_history.json");
@@ -132,14 +132,8 @@ function repairRenderHistoricalTrendsIfNeeded() {
   const embedHist = path.join(WEB_ROOT, "scripts", "embed-player-history.mjs");
   const histEnv = { ...process.env, GOLF_MODEL_DIR: REPO_ROOT };
 
-  const runRepairPass = (label, seasonsLabel, yearsStr) => {
-    console.warn(`[alpha-caddie-web] Render repair (${label}): GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS=${yearsStr} (${seasonsLabel}) …`);
-    const mergeEnv = {
-      ...process.env,
-      GOLF_MODEL_DIR: REPO_ROOT,
-      DATAGOLF_API_KEY: key,
-      GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS: yearsStr,
-    };
+  const mergeBuildEmbed = (mergeEnv, logLine) => {
+    console.warn("[alpha-caddie-web] Render repair:", logLine);
     if (fs.existsSync(roundsNode)) {
       const u = spawnSync(process.execPath, [roundsNode], {
         cwd: WEB_ROOT,
@@ -164,6 +158,33 @@ function repairRenderHistoricalTrendsIfNeeded() {
       });
       if (e.status !== 0) console.warn("[alpha-caddie-web] Render repair: embed-player-history exited", e.status);
     }
+  };
+
+  const fullHistory = String(process.env.GOLF_HISTORICAL_ROUNDS_FULL_HISTORY || "").trim() === "1";
+  if (fullHistory) {
+    const mergeEnv = {
+      ...process.env,
+      GOLF_MODEL_DIR: REPO_ROOT,
+      DATAGOLF_API_KEY: key,
+      GOLF_HISTORICAL_ROUNDS_FULL_HISTORY: "1",
+    };
+    delete mergeEnv.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS;
+    delete mergeEnv.GOLF_HISTORICAL_ROUNDS_LIGHT;
+    mergeBuildEmbed(
+      mergeEnv,
+      "full history (GOLF_HISTORICAL_ROUNDS_FULL_HISTORY=1 — 2004→present PGA years in refreshYears; LIV per tour rules; first boot can take many minutes).",
+    );
+    return;
+  }
+
+  const runRepairPass = (label, seasonsLabel, yearsStr) => {
+    const mergeEnv = {
+      ...process.env,
+      GOLF_MODEL_DIR: REPO_ROOT,
+      DATAGOLF_API_KEY: key,
+      GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS: yearsStr,
+    };
+    mergeBuildEmbed(mergeEnv, `${label}: GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS=${yearsStr} (${seasonsLabel})`);
   };
 
   const primaryYears =
@@ -279,10 +300,12 @@ function refreshBeforeServe() {
     const roundsEnv = { ...process.env, GOLF_MODEL_DIR: REPO_ROOT, DATAGOLF_API_KEY: key };
     const hasYears = String(process.env.GOLF_HISTORICAL_ROUNDS_YEARS || "").trim();
     const light = process.env.GOLF_HISTORICAL_ROUNDS_LIGHT === "1";
+    const fullHistBoot = String(roundsEnv.GOLF_HISTORICAL_ROUNDS_FULL_HISTORY || "").trim() === "1";
     const recentFetch = String(roundsEnv.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "").trim();
-    const recentMerge = !light && !!recentFetch;
+    const recentMerge = !light && !fullHistBoot && !!recentFetch;
     let mergeNote = "(full 2004–current PGA + LIV merge into repo CSV) …";
-    if (light) mergeNote = "(LIGHT=1: trims CSV to recent seasons) …";
+    if (fullHistBoot) mergeNote = "(FULL_HISTORY=1: every PGA season 2004→current + LIV per tour rules) …";
+    else if (light) mergeNote = "(LIGHT=1: trims CSV to recent seasons) …";
     else if (hasYears) mergeNote = "(custom GOLF_HISTORICAL_ROUNDS_YEARS) …";
     else if (recentMerge) mergeNote = `(API: last ${recentFetch} season(s) only; older rows on disk preserved) …`;
     console.log("[alpha-caddie-web] Merging DataGolf rounds → data/historical_rounds_all.csv", mergeNote);

@@ -8,8 +8,10 @@
  *   GOLF_MODEL_DIR — repo root (parent of alpha-caddie-web). Default: parent of this package.
  *   GOLF_HISTORICAL_ROUNDS_TOURS — comma-separated (default: pga,liv). Use "pga" for PGA only.
  *   GOLF_HISTORICAL_ROUNDS_YEARS — override year list
+ *   GOLF_HISTORICAL_ROUNDS_FULL_HISTORY=1 — merge every PGA year from 2004 through current (+ LIV rules); ignores
+ *     RECENT_FETCH and LIGHT (slow; use on hosts like Render when you want full historical_rounds_all.csv).
  *   GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS=N — fetch only the last N calendar years from the API but
- *     keep all older rows already on disk (does NOT trim 2004+ history). Use for fast merges.
+ *     keep all older rows already on disk (does NOT trim 2004+ history). Use for fast merges. Omit or set "0" with FULL_HISTORY for uncapped.
  *   GOLF_HISTORICAL_ROUNDS_LIGHT=1 — only current + prior calendar year (fast; **destructive**: trims CSV to those years)
  *   Default without the above: fetch 2004–current (PGA); LIV rows start 2017 (skipped automatically per tour).
  *   GOLF_ROUNDS_PREFER_CSV_FIRST / GOLF_ROUNDS_PREFER_JSON_FIRST — same idea as live_data.R
@@ -100,6 +102,8 @@ function toursToFetch() {
 
 function refreshYears() {
   const cy = new Date().getFullYear();
+  const fullHist = String(process.env.GOLF_HISTORICAL_ROUNDS_FULL_HISTORY || "").trim() === "1";
+
   const ex = (process.env.GOLF_HISTORICAL_ROUNDS_YEARS || "").trim();
   if (ex) {
     const ys = [
@@ -111,6 +115,11 @@ function refreshYears() {
       ),
     ];
     return ys.sort((a, b) => a - b);
+  }
+  if (fullHist) {
+    const out = [];
+    for (let y = FIRST_HIST_YEAR; y <= cy; y++) out.push(y);
+    return out;
   }
   if (process.env.GOLF_HISTORICAL_ROUNDS_LIGHT === "1") {
     const minY = Math.max(FIRST_HIST_YEAR, cy - LIGHT_YEARS + 1);

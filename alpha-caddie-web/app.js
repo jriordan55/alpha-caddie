@@ -6501,7 +6501,7 @@ function renderPropsTrends() {
       empty.textContent = !HISTORY._ok
         ? "No history file."
         : metaHint ||
-          "History export has no rounds yet. On Render: raise GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS (e.g. 35), check deploy logs for build-player-history / update-historical-rounds, or set GOLF_RENDER_FULL_HISTORICAL_MERGE_IF_EMPTY=1 once for a full PGA+LIV merge (slow).";
+          "History export has no rounds yet. On Render: set GOLF_HISTORICAL_ROUNDS_FULL_HISTORY=1 (full PGA+LIV merge; slow), or widen GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS if you use a capped merge — check deploy logs for update-historical-rounds-node / build-player-history. One-shot uncapped repair: GOLF_RENDER_FULL_HISTORICAL_MERGE_IF_EMPTY=1.";
     }
     const wnEarly = clamp(
       Math.round(num(document.getElementById("props-window-n")?.value, PROPS_HISTORY_ROUND_DEFAULT)),
