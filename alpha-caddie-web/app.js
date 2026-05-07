@@ -4446,14 +4446,113 @@ function bestBookDecimalForSideEvPrefs(oddsObj, side /* 'p1'|'p2'|'p3' */, prefs
   return { book: bestB, dec: bestD };
 }
 
+function matchupAnalysisTotalSg(row) {
+  if (!row) return NaN;
+  const base = num(row.sg_total, NaN);
+  if (Number.isFinite(base)) return base;
+  return num(row.mu_sg, NaN);
+}
+
+/**
+ * Skill feed sometimes omits component SG; scale from overall SG so matchup breakdown is populated (approximate).
+ * Weights sum to 1; tee-to-green = OTT + APP + ARG.
+ */
+function matchupAnalysisSyntheticPillarsFromTotal(totalRaw) {
+  const t = num(totalRaw, NaN);
+  if (!Number.isFinite(t)) return null;
+  const wOtt = 0.22;
+  const wApp = 0.42;
+  const wArg = 0.13;
+  const wPutt = 0.23;
+  return {
+    sg_ott: t * wOtt,
+    sg_app: t * wApp,
+    sg_arg: t * wArg,
+    sg_putt: t * wPutt,
+    sg_t2g: t * (wOtt + wApp + wArg),
+  };
+}
+
 function matchupAnalysisMetricValue(row, key) {
   if (!row) return NaN;
-  if (key === "sg_total") {
-    const base = num(row.sg_total, NaN);
-    if (Number.isFinite(base)) return base;
-    return num(row.mu_sg, NaN);
+  if (key === "sg_total") return matchupAnalysisTotalSg(row);
+  const direct = num(row[key], NaN);
+  if (Number.isFinite(direct)) return direct;
+  const syn = matchupAnalysisSyntheticPillarsFromTotal(matchupAnalysisTotalSg(row));
+  if (!syn || !(key in syn)) return NaN;
+  return syn[key];
+}
+
+function renderMatchupAnalysisPricing(host, entry) {
+  if (!host) return;
+  host.innerHTML = "";
+  if (!entry?.pricingSides?.length) {
+    const p = document.createElement("p");
+    p.className = "text-muted";
+    p.textContent = "No pricing for this matchup.";
+    host.appendChild(p);
+    return;
   }
-  return num(row[key], NaN);
+  const tbl = document.createElement("table");
+  tbl.className = "data-table data-table-outrights matchup-analysis-price-table";
+  const thead = document.createElement("thead");
+  const hr = document.createElement("tr");
+  hr.appendChild(document.createElement("th"));
+  let maxEdge = NaN;
+  for (const s of entry.pricingSides) {
+    const e = num(s.edge, NaN);
+    if (!Number.isFinite(e)) continue;
+    maxEdge = Number.isFinite(maxEdge) ? Math.max(maxEdge, e) : e;
+  }
+  const multi = entry.pricingSides.length > 1;
+  for (const s of entry.pricingSides) {
+    const th = document.createElement("th");
+    th.className = "num";
+    th.textContent = displayGolferName(String(s.label || ""));
+    const se = num(s.edge, NaN);
+    if (multi && Number.isFinite(se) && Number.isFinite(maxEdge) && Math.abs(se - maxEdge) < 1e-9) {
+      th.classList.add("matchup-analysis-best-pick");
+    }
+    hr.appendChild(th);
+  }
+  thead.appendChild(hr);
+  tbl.appendChild(thead);
+  const tb = document.createElement("tbody");
+  const addRow = (label, fill) => {
+    const tr = document.createElement("tr");
+    const td0 = document.createElement("td");
+    td0.textContent = label;
+    tr.appendChild(td0);
+    for (const s of entry.pricingSides) {
+      const td = document.createElement("td");
+      td.className = "num";
+      fill(td, s);
+      tr.appendChild(td);
+    }
+    tb.appendChild(tr);
+  };
+  addRow("Model", (td, s) => {
+    td.textContent = Number.isFinite(s.modelPct) ? `${(s.modelPct * 100).toFixed(1)}%` : "—";
+  });
+  addRow("Market", (td, s) => {
+    td.textContent = Number.isFinite(s.marketPct) ? `${(s.marketPct * 100).toFixed(1)}%` : "—";
+  });
+  addRow("Edge", (td, s) => {
+    if (Number.isFinite(s.edge)) {
+      td.textContent = `${(s.edge * 100).toFixed(1)}%`;
+      td.classList.add(s.edge >= 0 ? "ev-pos" : "ev-neg");
+    } else td.textContent = "—";
+  });
+  addRow("Odds", (td, s) => {
+    td.textContent =
+      Number.isFinite(s.book?.dec) && s.book.dec > 1 ? formatAmerican(americanFromDecimal(s.book.dec)) : "—";
+  });
+  addRow("Book", (td, s) => {
+    if (s.book?.book) td.innerHTML = bookBadgeHtml(s.book.book);
+    else td.textContent = "—";
+  });
+  tbl.appendChild(tb);
+  host.appendChild(tbl);
 }
 
 /** One projection row per `dg_id` for the active model round (same resolution as matchup rows). */
@@ -4480,13 +4579,16 @@ function matchupAnalysisFieldPctHigherBetter(samples, v) {
 }
 
 function buildMatchupAnalysisTool() {
-  const tbody = document.querySelector("#table-matchup-analysis tbody");
+  const pricingHost = document.getElementById("matchup-analysis-pricing");
+  const matchupPickEl = document.getElementById("analysis-matchup-select");
   const sgBody = document.querySelector("#table-matchup-analysis-sg tbody");
+  const pillarNote = document.getElementById("analysis-sg-pillar-note");
   const marketEl = document.getElementById("analysis-market");
   const note = document.getElementById("analysis-market-note");
-  if (!tbody || !sgBody) return;
-  tbody.innerHTML = "";
+  if (!sgBody) return;
   sgBody.innerHTML = "";
+  if (pricingHost) pricingHost.innerHTML = "";
+  if (pillarNote) pillarNote.textContent = "";
   const devigPrefs = loadEvDevigPrefs();
   const key = String(marketEl?.value || "round_matchups");
   const pack = DATA.matchups && DATA.matchups[key];
@@ -4500,23 +4602,31 @@ function buildMatchupAnalysisTool() {
       note.hidden = false;
       note.textContent = String(list);
     }
+    if (matchupPickEl) {
+      matchupPickEl.innerHTML = "";
+      matchupPickEl.hidden = true;
+    }
     const tr = document.createElement("tr");
     const td = document.createElement("td");
-    td.colSpan = 7;
+    td.colSpan = 6;
     td.className = "text-muted";
     td.textContent = String(list);
     tr.appendChild(td);
-    tbody.appendChild(tr);
+    sgBody.appendChild(tr);
     return;
   }
   if (note) note.hidden = true;
   if (!Array.isArray(list) || !list.length) {
+    if (matchupPickEl) {
+      matchupPickEl.innerHTML = "";
+      matchupPickEl.hidden = true;
+    }
     const tr = document.createElement("tr");
     const td = document.createElement("td");
-    td.colSpan = 7;
+    td.colSpan = 6;
     td.textContent = "No matchups.";
     tr.appendChild(td);
-    tbody.appendChild(tr);
+    sgBody.appendChild(tr);
     return;
   }
 
@@ -4556,10 +4666,9 @@ function buildMatchupAnalysisTool() {
       const ev1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
       const ev2 = Number.isFinite(b2.dec) ? p2 * b2.dec - 1 : NaN;
       const ev3 = Number.isFinite(b3.dec) ? p3 * b3.dec - 1 : NaN;
-      const sides = [
+      const pricingSides = [
         {
-          side: "p1",
-          name: String(m.p1_player_name || ""),
+          label: String(m.p1_player_name || ""),
           modelPct: p1,
           marketPct: mp1,
           edge: ev1,
@@ -4567,8 +4676,7 @@ function buildMatchupAnalysisTool() {
           row: row1,
         },
         {
-          side: "p2",
-          name: String(m.p2_player_name || ""),
+          label: String(m.p2_player_name || ""),
           modelPct: p2,
           marketPct: mp2,
           edge: ev2,
@@ -4576,19 +4684,24 @@ function buildMatchupAnalysisTool() {
           row: row2,
         },
         {
-          side: "p3",
-          name: String(m.p3_player_name || ""),
+          label: String(m.p3_player_name || ""),
           modelPct: p3,
           marketPct: mp3,
           edge: ev3,
           book: b3,
           row: row3,
         },
+      ];
+      const sides = [
+        { side: "p1", name: pricingSides[0].label, modelPct: p1, marketPct: mp1, edge: ev1, book: b1, row: row1 },
+        { side: "p2", name: pricingSides[1].label, modelPct: p2, marketPct: mp2, edge: ev2, book: b2, row: row2 },
+        { side: "p3", name: pricingSides[2].label, modelPct: p3, marketPct: mp3, edge: ev3, book: b3, row: row3 },
       ].sort((a, b) => num(b.edge, -99) - num(a.edge, -99));
       rows.push({
         key: `3b:${id1}:${id2}:${id3}`,
         matchup: `${m.p1_player_name || ""} / ${m.p2_player_name || ""} / ${m.p3_player_name || ""}`,
         best: sides[0],
+        pricingSides,
         isThree: true,
       });
       continue;
@@ -4619,10 +4732,29 @@ function buildMatchupAnalysisTool() {
             book: b2,
             row: row2,
           };
+    const pricingSides = [
+      {
+        label: String(m.p1_player_name || ""),
+        modelPct: p1,
+        marketPct: marketP1,
+        edge: ev1,
+        book: b1,
+        row: row1,
+      },
+      {
+        label: String(m.p2_player_name || ""),
+        modelPct: p2,
+        marketPct: marketP2,
+        edge: ev2,
+        book: b2,
+        row: row2,
+      },
+    ];
     rows.push({
       key: `h2h:${id1}:${id2}`,
       matchup: `${m.p1_player_name || ""} vs ${m.p2_player_name || ""}`,
       best,
+      pricingSides,
       isThree: false,
       left: { name: String(m.p1_player_name || ""), row: row1 },
       right: { name: String(m.p2_player_name || ""), row: row2 },
@@ -4631,17 +4763,34 @@ function buildMatchupAnalysisTool() {
 
   rows.sort((a, b) => num(b.best?.edge, -99) - num(a.best?.edge, -99));
   if (!rows.length) {
+    if (matchupPickEl) {
+      matchupPickEl.innerHTML = "";
+      matchupPickEl.hidden = true;
+    }
     const tr = document.createElement("tr");
     const td = document.createElement("td");
-    td.colSpan = 7;
+    td.colSpan = 6;
     td.textContent = "No matchups.";
     tr.appendChild(td);
-    tbody.appendChild(tr);
+    sgBody.appendChild(tr);
     return;
   }
 
   if (!rows.some((x) => x.key === matchupAnalysisSelectedKey)) matchupAnalysisSelectedKey = rows[0].key;
   const selected = rows.find((x) => x.key === matchupAnalysisSelectedKey) || rows[0];
+
+  if (matchupPickEl) {
+    matchupPickEl.hidden = false;
+    matchupPickEl.innerHTML = "";
+    for (const item of rows) {
+      const opt = document.createElement("option");
+      opt.value = item.key;
+      opt.textContent = item.matchup;
+      matchupPickEl.appendChild(opt);
+    }
+    matchupPickEl.value = selected.key;
+  }
+  renderMatchupAnalysisPricing(pricingHost, selected);
 
   const renderSgBreakdown = (entry) => {
     sgBody.innerHTML = "";
@@ -4651,8 +4800,8 @@ function buildMatchupAnalysisTool() {
       td.colSpan = 6;
       td.className = "text-muted";
       td.textContent = entry?.isThree
-        ? "SG breakdown is shown for head-to-head matchups."
-        : "Select a head-to-head matchup to view SG comparison.";
+        ? "Strokes gained breakdown applies to head-to-head markets only; switch Market to Round or Tournament matchups."
+        : "Select a head-to-head matchup.";
       tr.appendChild(td);
       sgBody.appendChild(tr);
       return;
@@ -4707,54 +4856,11 @@ function buildMatchupAnalysisTool() {
     }
   };
 
-  for (const item of rows) {
-    const tr = document.createElement("tr");
-    if (item.key === selected.key) tr.classList.add("matchup-analysis-row-selected");
-    tr.addEventListener("click", () => {
-      matchupAnalysisSelectedKey = item.key;
-      buildMatchupAnalysisTool();
-    });
-    const tdM = document.createElement("td");
-    tdM.textContent = item.matchup;
-    const tdSide = document.createElement("td");
-    tdSide.textContent = item.best?.name || "—";
-    const tdModel = document.createElement("td");
-    tdModel.className = "num";
-    tdModel.textContent = Number.isFinite(item.best?.modelPct) ? `${(item.best.modelPct * 100).toFixed(1)}%` : "—";
-    const tdMkt = document.createElement("td");
-    tdMkt.className = "num";
-    tdMkt.textContent = Number.isFinite(item.best?.marketPct) ? `${(item.best.marketPct * 100).toFixed(1)}%` : "—";
-    const tdEdge = document.createElement("td");
-    tdEdge.className = "num";
-    if (Number.isFinite(item.best?.edge)) {
-      tdEdge.textContent = `${(item.best.edge * 100).toFixed(1)}%`;
-      tdEdge.classList.add(item.best.edge >= 0 ? "ev-pos" : "ev-neg");
-    } else {
-      tdEdge.textContent = "—";
-    }
-    const tdOdds = document.createElement("td");
-    tdOdds.className = "num";
-    tdOdds.textContent =
-      Number.isFinite(item.best?.book?.dec) && item.best.book.dec > 1
-        ? formatAmerican(americanFromDecimal(item.best.book.dec))
-        : "—";
-    const tdBook = document.createElement("td");
-    tdBook.className = "num best-book-td";
-    if (item.best?.book?.book) {
-      tdBook.innerHTML = bookBadgeHtml(item.best.book.book);
-    } else {
-      tdBook.textContent = "—";
-    }
-    tr.appendChild(tdM);
-    tr.appendChild(tdSide);
-    tr.appendChild(tdModel);
-    tr.appendChild(tdMkt);
-    tr.appendChild(tdEdge);
-    tr.appendChild(tdOdds);
-    tr.appendChild(tdBook);
-    tbody.appendChild(tr);
-  }
   renderSgBreakdown(selected);
+  if (pillarNote) {
+    pillarNote.textContent =
+      "Fld % is the share of the field strictly lower on that SG value (higher SG is better). Component SG uses DataGolf splits when present in projections; otherwise values are scaled from overall SG using fixed tour-average shares (approximate).";
+  }
 }
 
 function buildMatchupsTable() {
@@ -9236,6 +9342,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   document.getElementById("analysis-market")?.addEventListener("change", () => {
     matchupAnalysisSelectedKey = "";
+    buildMatchupAnalysisTool();
+  });
+  document.getElementById("analysis-matchup-select")?.addEventListener("change", (e) => {
+    matchupAnalysisSelectedKey = String(/** @type {HTMLSelectElement} */ (e.target).value || "");
     buildMatchupAnalysisTool();
   });
   document.getElementById("ou-market-filter")?.addEventListener("change", () => {

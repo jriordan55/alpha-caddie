@@ -296,7 +296,7 @@
       <div class="ev-panel-head">
         <h2 class="ev-devig-sr-only">Matchup Analysis Tool</h2>
       </div>
-      <div class="toolbar outrights-toolbar">
+      <div class="toolbar outrights-toolbar matchup-analysis-toolbar">
         <label class="toolbar-label">Market
           <select id="analysis-market">
             <option value="round_matchups" selected>Round Matchups</option>
@@ -304,27 +304,17 @@
             <option value="3_balls">3 Balls</option>
           </select>
         </label>
+        <label class="toolbar-label">Matchup
+          <select id="analysis-matchup-select" aria-label="Choose matchup"></select>
+        </label>
         <p class="text-muted matchup-analysis-note">
-          Lines use the same sportsbook whitelist as +EV and the books/weights from <strong>Devig</strong> on the +EV tab (consensus % + best decimal among allowed books). Run <code>npm run fetch:dg</code> after deploy so skill-rating pillars populate SG columns.
+          Prices use the same +EV book whitelist and <strong>Devig</strong> consensus as the +EV tab. Pick a matchup above; component SG uses DataGolf pillars when present, otherwise a proportional split from overall SG so rows are not blank.
         </p>
         <p id="analysis-market-note" class="text-muted matchup-analysis-note" hidden></p>
       </div>
-      <div class="table-wrap leaderboard-card outrights-table-wrap">
-        <table class="data-table data-table-outrights" id="table-matchup-analysis">
-          <thead>
-            <tr>
-              <th>Matchup</th>
-              <th>Pick</th>
-              <th class="num">Model</th>
-              <th class="num">Mkt</th>
-              <th class="num">Edge</th>
-              <th class="num">Odds</th>
-              <th class="num">Book</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
+      <h3 class="section-heading">Prices &amp; edge</h3>
+      <div id="matchup-analysis-pricing" class="table-wrap leaderboard-card outrights-table-wrap"></div>
+      <h3 class="section-heading">Strokes gained vs field</h3>
       <div class="table-wrap leaderboard-card outrights-table-wrap">
         <table class="data-table data-table-outrights" id="table-matchup-analysis-sg">
           <thead>
@@ -339,6 +329,7 @@
           </thead>
           <tbody></tbody>
         </table>
+        <p id="analysis-sg-pillar-note" class="text-muted matchup-analysis-note"></p>
       </div>
     </section>
 
@@ -969,6 +960,6 @@
   </dialog>
 
   <script src="embedded-player-round-history.js?v=5"></script>
-  <script src="app.js?v=51"></script>
+  <script src="app.js?v=52"></script>
 </body>
 </html>

@@ -1149,6 +1149,28 @@ body {
   letter-spacing: normal;
 }
 
+.matchup-analysis-toolbar {
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+
+.matchup-analysis-toolbar .toolbar-label:last-of-type {
+  min-width: min(100%, 420px);
+}
+
+.matchup-analysis-toolbar #analysis-matchup-select {
+  min-width: 280px;
+  max-width: min(100%, 560px);
+}
+
+.matchup-analysis-price-table {
+  width: 100%;
+}
+
+th.matchup-analysis-best-pick {
+  box-shadow: inset 0 -3px 0 var(--golf-green);
+}
+
 .section-heading {
   font-size: 0.75rem;
   text-transform: uppercase;
