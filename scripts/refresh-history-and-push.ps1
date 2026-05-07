@@ -1,6 +1,7 @@
 param(
   [switch] $SkipPush,
   [switch] $NoFullHistory,
+  [switch] $SkipResultsBuild,
   [string] $CommitMessage = ""
 )
 
@@ -23,42 +24,56 @@ if (-not $NoFullHistory) {
   Write-Host "Running without FULL history override."
 }
 
-Write-Host "Running update:rounds ..."
-npm run update:rounds
-if ($LASTEXITCODE -ne 0) {
-  throw "npm run update:rounds failed with exit code $LASTEXITCODE"
+function Run-Step([string] $label, [scriptblock] $command) {
+  Write-Host $label
+  & $command
+  if ($LASTEXITCODE -ne 0) {
+    throw "$label failed with exit code $LASTEXITCODE"
+  }
 }
 
-Write-Host "Running build:history ..."
-npm run build:history
-if ($LASTEXITCODE -ne 0) {
-  throw "npm run build:history failed with exit code $LASTEXITCODE"
+Run-Step "Running fetch:dg ..." { npm run fetch:dg }
+Run-Step "Running fetch:in-play ..." { npm run fetch:in-play }
+Run-Step "Running fetch:book-odds ..." { npm run fetch:book-odds }
+Run-Step "Running update:rounds ..." { npm run update:rounds }
+Run-Step "Running build:history ..." { npm run build:history }
+if (-not $SkipResultsBuild) {
+  Run-Step "Running build:results ..." { npm run build:results }
+} else {
+  Write-Host "Skipping build:results (SkipResultsBuild enabled)."
 }
 
 Set-Location $repoRoot
 
 $artifacts = @(
+  "alpha-caddie-web/projections.json",
+  "alpha-caddie-web/live-in-play.json",
+  "website/public/data/projections.json",
   "data/historical_rounds_all.csv",
   "alpha-caddie-web/data/historical_rounds_all.csv",
   "alpha-caddie-web/player_round_history.json",
-  "alpha-caddie-web/embedded-player-round-history.js"
+  "alpha-caddie-web/embedded-player-round-history.js",
+  "alpha-caddie-web/data/results_backtest.json",
+  "alpha-caddie-web/data/results_kelly_bets.json"
 )
 
 foreach ($rel in $artifacts) {
   $abs = Join-Path $repoRoot $rel
   if (Test-Path $abs) {
-    git -C $repoRoot add -- "$rel"
+    # These artifacts are intentionally gitignored for normal development;
+    # this publish script force-stages them for Render snapshot deploys.
+    git -C $repoRoot add -f -- "$rel"
   }
 }
 
 git -C $repoRoot diff --cached --quiet
 if ($LASTEXITCODE -eq 0) {
-  Write-Host "No staged history changes; nothing to commit."
+  Write-Host "No staged changes; nothing to commit."
   exit 0
 }
 
 if ([string]::IsNullOrWhiteSpace($CommitMessage)) {
-  $CommitMessage = "chore(data): refresh historical rounds/history $(Get-Date -Format 'yyyy-MM-dd')"
+  $CommitMessage = "chore(data): full refresh + publish $(Get-Date -Format 'yyyy-MM-dd')"
 }
 
 git -C $repoRoot commit -m $CommitMessage
