@@ -292,12 +292,12 @@ function asArray(x) {
   return [];
 }
 
-/** DataGolf JSON: root array, or { data }, { players }, { field }, { baseline_history_fit } */
+/** DataGolf JSON: root array, or common `{ data | players | field | rankings | rows | … }` wrappers */
 function rowsFromResponse(dat) {
   if (dat == null) return [];
   if (Array.isArray(dat)) return dat;
   if (typeof dat !== "object") return [];
-  for (const k of ["data", "players", "field", "baseline_history_fit", "baseline"]) {
+  for (const k of ["data", "players", "field", "baseline_history_fit", "baseline", "rankings", "results", "rows"]) {
     const v = dat[k];
     if (Array.isArray(v)) return v;
     if (v && typeof v === "object" && !Array.isArray(v) && dat.baseline_history_fit == null) {
@@ -518,33 +518,88 @@ function derivedStatsFromMuSg(muRaw, nFairwayHoles) {
   };
 }
 
-function sgTotalFromSkillRow(row) {
-  if (row.sg_total != null) return num(row.sg_total);
-  if (row.total != null) return num(row.total);
-  if (row.overall != null) return num(row.overall);
-  return 0;
+/** Lowercase / hyphen-normalized keys + compact (no underscore) aliases for column lookup. */
+function normalizedScalarBag(row) {
+  /** @type {Record<string, unknown>} */
+  const bag = Object.create(null);
+  if (!row || typeof row !== "object") return bag;
+  for (const [k0, v] of Object.entries(row)) {
+    const k = String(k0).trim().toLowerCase().replace(/-/g, "_");
+    if (bag[k] == null) bag[k] = v;
+    const compact = k.replace(/_/g, "");
+    if (compact && bag[compact] == null) bag[compact] = v;
+  }
+  return bag;
 }
 
-/** Optional pillar SG from preds/skill-ratings — merged onto projection rows for UI (matchups analysis). */
+function pickFromBag(bag, keys) {
+  for (const key of keys) {
+    const lk = String(key).trim().toLowerCase().replace(/-/g, "_");
+    for (const cand of [lk, lk.replace(/_/g, "")]) {
+      if (!cand || !(cand in bag) || bag[cand] == null) continue;
+      const v = num(bag[cand], NaN);
+      if (Number.isFinite(v)) return v;
+    }
+  }
+  return NaN;
+}
+
+/**
+ * Strokes-gained pillars from preds/skill-ratings merged with preds/player-decompositions (same dg_id).
+ * Both endpoints may use different column names; we resolve via aliases + normalized keys.
+ */
 function skillPillarsFromSkillRow(row) {
   if (!row || typeof row !== "object") return null;
-  const pick = (keys) => {
-    for (const k of keys) {
-      if (row[k] != null) {
-        const v = num(row[k], NaN);
-        if (Number.isFinite(v)) return v;
-      }
-    }
-    return NaN;
-  };
-  const total = sgTotalFromSkillRow(row);
+  const bag = normalizedScalarBag(row);
+  const pick = (keys) => pickFromBag(bag, keys);
+
+  const sg_total = pick(["sg_total", "total", "overall", "strokes_gained_total", "total_sg", "true_sg_total"]);
+  let sg_ott = pick([
+    "sg_ott",
+    "ott",
+    "off_the_tee",
+    "off_the_tee_sg",
+    "strokes_gained_ott",
+    "sg_ot",
+    "sg_off_the_tee",
+    "true_sg_ott",
+  ]);
+  let sg_app = pick([
+    "sg_app",
+    "app",
+    "approach",
+    "strokes_gained_app",
+    "sg_approach",
+    "true_sg_app",
+  ]);
+  let sg_arg = pick([
+    "sg_arg",
+    "arg",
+    "around_the_green",
+    "around_green",
+    "strokes_gained_arg",
+    "sg_around_the_green",
+    "true_sg_arg",
+  ]);
+  let sg_putt = pick([
+    "sg_putt",
+    "putt",
+    "putting",
+    "strokes_gained_putt",
+    "sg_putting",
+    "true_sg_putt",
+  ]);
+  let sg_t2g = pick(["sg_t2g", "t2g", "strokes_gained_t2g", "sg_teetogreen", "true_sg_t2g"]);
+  if (!Number.isFinite(sg_t2g) && [sg_ott, sg_app, sg_arg].every(Number.isFinite)) {
+    sg_t2g = sg_ott + sg_app + sg_arg;
+  }
   return {
-    sg_total: Number.isFinite(total) ? total : NaN,
-    sg_ott: pick(["sg_ott", "ott", "off_the_tee"]),
-    sg_app: pick(["sg_app", "app", "approach"]),
-    sg_arg: pick(["sg_arg", "arg", "around_the_green"]),
-    sg_putt: pick(["sg_putt", "putt", "putting"]),
-    sg_t2g: pick(["sg_t2g", "t2g"]),
+    sg_total,
+    sg_ott,
+    sg_app,
+    sg_arg,
+    sg_putt,
+    sg_t2g,
   };
 }
 
@@ -734,6 +789,29 @@ async function main() {
 
   const byDg = new Map(fieldRows.map((r) => [r.dg_id, r]));
 
+  console.log("Fetching player-decompositions (SG pillars)…");
+  /** @type {Map<number, object>} */
+  const decompByDgRaw = new Map();
+  async function fetchPlayerDecompositions(tourCode) {
+    return fetchDg("/preds/player-decompositions", { tour: tourCode, display: "value", file_format: "json" }, key);
+  }
+  try {
+    let decompJson = await fetchPlayerDecompositions(tourForFeeds);
+    let decompList = rowsFromResponse(decompJson);
+    if (!decompList.length && tourForFeeds && String(tourForFeeds).toLowerCase() !== "pga") {
+      decompJson = await fetchPlayerDecompositions("pga");
+      decompList = rowsFromResponse(decompJson);
+    }
+    for (const row of decompList) {
+      const id = num(row.dg_id ?? row.dgId, NaN);
+      if (!Number.isFinite(id)) continue;
+      decompByDgRaw.set(Math.round(id), row);
+    }
+    console.log(`player-decompositions: ${decompByDgRaw.size} player rows`);
+  } catch (e) {
+    console.warn("player-decompositions skipped — pillar SG may only come from skill-ratings:", e.message || e);
+  }
+
   console.log("Fetching skill-ratings…");
   let skillJson = {};
   try {
@@ -746,7 +824,15 @@ async function main() {
   for (const row of skillList) {
     const id = num(row.dg_id ?? row.dgId, NaN);
     if (!Number.isFinite(id)) continue;
-    skillByDg.set(Math.round(id), skillPillarsFromSkillRow(row));
+    const rid = Math.round(id);
+    const merged = { ...(decompByDgRaw.get(rid) || {}), ...row };
+    skillByDg.set(rid, skillPillarsFromSkillRow(merged));
+  }
+  for (const fr of fieldRows) {
+    const fid = Math.round(num(fr.dg_id, NaN));
+    if (!Number.isFinite(fid) || skillByDg.has(fid)) continue;
+    const rawOnly = decompByDgRaw.get(fid);
+    if (rawOnly) skillByDg.set(fid, skillPillarsFromSkillRow(rawOnly));
   }
 
   console.log("Fetching fantasy-projection-defaults…");
@@ -1220,7 +1306,7 @@ async function main() {
     display_round_label: displayRoundLabel(dr, tz),
     updated_at: new Date().toISOString().replace(/\.\d{3}Z$/, "Z"),
     source:
-      "DataGolf API (field-updates, skill-ratings, fantasy-projection-defaults, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
+      "DataGolf API (field-updates, skill-ratings, player-decompositions, fantasy-projection-defaults, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
     /** Web app: book columns are implied % (0–100); convert to American in UI like Shiny pct_to_american */
     outrights_odds_format: outrightsOddsFormat,
     /** Stored raw from betting-tools/matchups with odds_format=decimal */

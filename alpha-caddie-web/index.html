@@ -308,7 +308,7 @@
           <select id="analysis-matchup-select" aria-label="Choose matchup"></select>
         </label>
         <p class="text-muted matchup-analysis-note">
-          Prices use the same +EV book whitelist and <strong>Devig</strong> consensus as the +EV tab. Pick a matchup above; component SG uses DataGolf pillars when present, otherwise a proportional split from overall SG so rows are not blank.
+          Prices use the same +EV book whitelist and <strong>Devig</strong> consensus as the +EV tab. Strokes-gained components are loaded from DataGolf via <code>npm run fetch:dg</code> (skill-ratings + player-decompositions).
         </p>
         <p id="analysis-market-note" class="text-muted matchup-analysis-note" hidden></p>
       </div>
@@ -960,6 +960,6 @@
   </dialog>
 
   <script src="embedded-player-round-history.js?v=5"></script>
-  <script src="app.js?v=52"></script>
+  <script src="app.js?v=53"></script>
 </body>
 </html>

@@ -4446,41 +4446,14 @@ function bestBookDecimalForSideEvPrefs(oddsObj, side /* 'p1'|'p2'|'p3' */, prefs
   return { book: bestB, dec: bestD };
 }
 
-function matchupAnalysisTotalSg(row) {
-  if (!row) return NaN;
-  const base = num(row.sg_total, NaN);
-  if (Number.isFinite(base)) return base;
-  return num(row.mu_sg, NaN);
-}
-
-/**
- * Skill feed sometimes omits component SG; scale from overall SG so matchup breakdown is populated (approximate).
- * Weights sum to 1; tee-to-green = OTT + APP + ARG.
- */
-function matchupAnalysisSyntheticPillarsFromTotal(totalRaw) {
-  const t = num(totalRaw, NaN);
-  if (!Number.isFinite(t)) return null;
-  const wOtt = 0.22;
-  const wApp = 0.42;
-  const wArg = 0.13;
-  const wPutt = 0.23;
-  return {
-    sg_ott: t * wOtt,
-    sg_app: t * wApp,
-    sg_arg: t * wArg,
-    sg_putt: t * wPutt,
-    sg_t2g: t * (wOtt + wApp + wArg),
-  };
-}
-
 function matchupAnalysisMetricValue(row, key) {
   if (!row) return NaN;
-  if (key === "sg_total") return matchupAnalysisTotalSg(row);
-  const direct = num(row[key], NaN);
-  if (Number.isFinite(direct)) return direct;
-  const syn = matchupAnalysisSyntheticPillarsFromTotal(matchupAnalysisTotalSg(row));
-  if (!syn || !(key in syn)) return NaN;
-  return syn[key];
+  if (key === "sg_total") {
+    const base = num(row.sg_total, NaN);
+    if (Number.isFinite(base)) return base;
+    return num(row.mu_sg, NaN);
+  }
+  return num(row[key], NaN);
 }
 
 function renderMatchupAnalysisPricing(host, entry) {
@@ -4859,7 +4832,7 @@ function buildMatchupAnalysisTool() {
   renderSgBreakdown(selected);
   if (pillarNote) {
     pillarNote.textContent =
-      "Fld % is the share of the field strictly lower on that SG value (higher SG is better). Component SG uses DataGolf splits when present in projections; otherwise values are scaled from overall SG using fixed tour-average shares (approximate).";
+      "Fld % is the share of the field strictly lower on that SG number (higher SG is better). Component strokes gained is merged from DataGolf skill-ratings and player-decompositions when you run npm run fetch:dg; refresh projections if any pillar shows as unavailable.";
   }
 }
 
