@@ -804,13 +804,104 @@ body {
 #table-ou td.ou-proj-cell-edge.pos { color: #1ecf77; }
 #table-ou td.ou-proj-cell-edge.neg { color: #ff646f; }
 
-/* Round projections — long rows (golfer × market × Over|Under) */
-#table-ou.table-ou-projections thead th:first-child,
-#table-ou.table-ou-projections tbody td.ou-proj-td-golfer {
-  width: auto;
-  min-width: 7.5rem;
-  max-width: none;
+#table-ou.table-ou-projections {
+  /* Frozen leading columns (horizontal scroll) — widths must match sticky `left` offsets */
+  --ou-sticky-w-golfer: 200px;
+  --ou-sticky-w-market: 118px;
+  --ou-sticky-w-side: 76px;
 }
+
+#table-ou.table-ou-projections thead th.ou-proj-th-golfer,
+#table-ou.table-ou-projections thead th.ou-proj-th-market,
+#table-ou.table-ou-projections thead th.ou-proj-th-side,
+#table-ou.table-ou-projections tbody td.ou-proj-td-golfer,
+#table-ou.table-ou-projections tbody td.ou-proj-td-market,
+#table-ou.table-ou-projections tbody td.ou-proj-td-side {
+  position: sticky;
+  background-clip: padding-box;
+}
+
+#table-ou.table-ou-projections thead th.ou-proj-th-golfer {
+  left: 0;
+  z-index: 6;
+  width: var(--ou-sticky-w-golfer);
+  min-width: var(--ou-sticky-w-golfer);
+  max-width: var(--ou-sticky-w-golfer);
+  box-sizing: border-box;
+  background: #121a27;
+}
+#table-ou.table-ou-projections thead th.ou-proj-th-market {
+  left: var(--ou-sticky-w-golfer);
+  z-index: 7;
+  width: var(--ou-sticky-w-market);
+  min-width: var(--ou-sticky-w-market);
+  max-width: var(--ou-sticky-w-market);
+  box-sizing: border-box;
+  background: #121a27;
+}
+#table-ou.table-ou-projections thead th.ou-proj-th-side {
+  left: calc(var(--ou-sticky-w-golfer) + var(--ou-sticky-w-market));
+  z-index: 8;
+  width: var(--ou-sticky-w-side);
+  min-width: var(--ou-sticky-w-side);
+  max-width: var(--ou-sticky-w-side);
+  box-sizing: border-box;
+  background: #121a27;
+  box-shadow: 8px 0 18px -8px rgba(0, 0, 0, 0.65);
+}
+
+#table-ou.table-ou-projections tbody td.ou-proj-td-golfer {
+  left: 0;
+  z-index: 3;
+  width: var(--ou-sticky-w-golfer);
+  min-width: var(--ou-sticky-w-golfer);
+  max-width: var(--ou-sticky-w-golfer);
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#table-ou.table-ou-projections tbody td.ou-proj-td-market {
+  left: var(--ou-sticky-w-golfer);
+  z-index: 4;
+  width: var(--ou-sticky-w-market);
+  min-width: var(--ou-sticky-w-market);
+  max-width: var(--ou-sticky-w-market);
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#table-ou.table-ou-projections tbody td.ou-proj-td-side {
+  left: calc(var(--ou-sticky-w-golfer) + var(--ou-sticky-w-market));
+  z-index: 5;
+  width: var(--ou-sticky-w-side);
+  min-width: var(--ou-sticky-w-side);
+  max-width: var(--ou-sticky-w-side);
+  box-sizing: border-box;
+  box-shadow: 8px 0 18px -8px rgba(0, 0, 0, 0.65);
+}
+
+#table-ou.table-ou-projections tbody tr:nth-child(odd) td.ou-proj-td-golfer,
+#table-ou.table-ou-projections tbody tr:nth-child(odd) td.ou-proj-td-market,
+#table-ou.table-ou-projections tbody tr:nth-child(odd) td.ou-proj-td-side {
+  background-color: #0a111b;
+}
+#table-ou.table-ou-projections tbody tr:nth-child(even) td.ou-proj-td-golfer,
+#table-ou.table-ou-projections tbody tr:nth-child(even) td.ou-proj-td-market,
+#table-ou.table-ou-projections tbody tr:nth-child(even) td.ou-proj-td-side {
+  background-color: #0d1420;
+}
+#table-ou.table-ou-projections tbody tr:hover td.ou-proj-td-golfer,
+#table-ou.table-ou-projections tbody tr:hover td.ou-proj-td-market,
+#table-ou.table-ou-projections tbody tr:hover td.ou-proj-td-side {
+  background-color: #111c2a !important;
+}
+#table-ou.table-ou-projections tr.ou-proj-data-row.ou-proj-row-expanded td.ou-proj-td-golfer,
+#table-ou.table-ou-projections tr.ou-proj-data-row.ou-proj-row-expanded td.ou-proj-td-market,
+#table-ou.table-ou-projections tr.ou-proj-data-row.ou-proj-row-expanded td.ou-proj-td-side {
+  background-color: #101a28 !important;
+}
+
+/* Round projections — long rows (golfer × market × Over|Under) */
 #table-ou.table-ou-projections tbody td.ou-proj-td-golfer .ou-player-flag {
   display: inline-block;
   width: 18px;
@@ -823,12 +914,7 @@ body {
 }
 #table-ou.table-ou-projections .ou-proj-th-market,
 #table-ou.table-ou-projections .ou-proj-td-market {
-  min-width: 6.5rem;
   text-align: left;
-}
-#table-ou.table-ou-projections .ou-proj-th-side,
-#table-ou.table-ou-projections .ou-proj-td-side {
-  min-width: 3.5rem;
 }
 #table-ou.table-ou-projections .ou-proj-th-mu,
 #table-ou.table-ou-projections .ou-proj-td-mu {
