@@ -1711,13 +1711,14 @@ th.matchup-analysis-best-pick {
   color: var(--golf-text-muted);
 }
 .props-trends-book-ou {
-  margin-left: auto;
+  margin-left: 10px;
   display: inline-flex;
   align-items: baseline;
   gap: 10px;
   font-size: 0.88rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
 }
 .props-trends-book-ou-over {
   color: var(--golf-green);

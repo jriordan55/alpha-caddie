@@ -6484,7 +6484,7 @@ function paintPropsTrendKpiRow(statKey, hitSt, graphSeries, dgId) {
   };
 
   addKpi("All-time avg", allMean);
-  addKpi(`Season ${PROPS_TREND_DISPLAY_SEASON_YEAR} avg`, seasonMean);
+  addKpi("Season avg", seasonMean);
   addKpi("Graph avg", graphMean);
 
   if (hitSt && hitSt.valid > 0) {
@@ -7038,34 +7038,6 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
   ctx.lineTo(pad.l, h - pad.b);
   ctx.lineTo(w - pad.r, h - pad.b);
   ctx.stroke();
-  if (Number.isFinite(lineY)) {
-    const yL = yScale(lineY);
-    ctx.strokeStyle = "#f5a623";
-    ctx.lineWidth = 2;
-    ctx.setLineDash([]);
-    ctx.beginPath();
-    ctx.moveTo(pad.l, yL);
-    ctx.lineTo(w - pad.r, yL);
-    ctx.stroke();
-    const lineLbl = formatPropLineChartLabel(statKey, lineY);
-    ctx.font = "bold 10px DM Sans, sans-serif";
-    ctx.textAlign = "left";
-    ctx.textBaseline = "middle";
-    const padX = 6;
-    const tw = ctx.measureText(lineLbl).width + padX * 2;
-    const bh = 16;
-    const bx = pad.l + 4;
-    const by = yL - bh / 2;
-    ctx.fillStyle = "#f5a623";
-    ctx.beginPath();
-    if (typeof ctx.roundRect === "function") ctx.roundRect(bx, by, tw, bh, 4);
-    else ctx.rect(bx, by, tw, bh);
-    ctx.fill();
-    ctx.fillStyle = "#0a0c0f";
-    ctx.fillText(lineLbl, bx + padX, yL);
-    ctx.textAlign = "left";
-    ctx.textBaseline = "alphabetic";
-  }
   const slotW = innerW / n;
   const xAxisPerBar = buildPropsTrendXAxisLabels(series);
   const { xCenter, barW } = propsChartBarLayout(series, pad.l, innerW);
@@ -7106,6 +7078,35 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
     ctx.strokeStyle = "rgba(0,0,0,0.35)";
     ctx.lineWidth = 1;
     ctx.strokeRect(Math.round(x0) + 0.5, yTop + 0.5, Math.round(bw) - 1, hBar - 1);
+  }
+  /* Draw reference line + pill on top of bars so the label is not occluded. */
+  if (Number.isFinite(lineY)) {
+    const yL = yScale(lineY);
+    ctx.strokeStyle = "#f5a623";
+    ctx.lineWidth = 2;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(pad.l, yL);
+    ctx.lineTo(w - pad.r, yL);
+    ctx.stroke();
+    const lineLbl = formatPropLineChartLabel(statKey, lineY);
+    ctx.font = "bold 10px DM Sans, sans-serif";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    const padX = 6;
+    const tw = ctx.measureText(lineLbl).width + padX * 2;
+    const bh = 16;
+    const bx = pad.l + 4;
+    const by = yL - bh / 2;
+    ctx.fillStyle = "#f5a623";
+    ctx.beginPath();
+    if (typeof ctx.roundRect === "function") ctx.roundRect(bx, by, tw, bh, 4);
+    else ctx.rect(bx, by, tw, bh);
+    ctx.fill();
+    ctx.fillStyle = "#0a0c0f";
+    ctx.fillText(lineLbl, bx + padX, yL);
+    ctx.textAlign = "left";
+    ctx.textBaseline = "alphabetic";
   }
   ctx.fillStyle = "#8b8f9c";
   ctx.font = "9px DM Sans, sans-serif";
