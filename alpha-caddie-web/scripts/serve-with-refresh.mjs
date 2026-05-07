@@ -41,7 +41,8 @@
  *   ALPHA_CADDIE_START_FETCH_DG=1 — run full fetch:dg instead of rounds+history only
  *   Stale week vs DataGolf: fetch-book-odds compares `datagolf_field_week_key` + titles/courses vs `/field-updates`;
  *     opt out of inline rebuild: GOLF_SKIP_INLINE_FETCH_DG_ON_EVENT_MISMATCH=1.
- *   Render: GOLF_RENDER_SYNC_FETCH_DG_ON_BOOT=1 (default in render.yaml) runs sync fetch:dg once before book odds on boot.
+ *   Render: GOLF_RENDER_SYNC_FETCH_DG_ON_BOOT=1 (default in render.yaml) runs perfect-parity boot chain.
+ *   GOLF_MODEL_DIR: optional override for repo root (see resolve-golf-model-dir.mjs).
  *   PORT — serve port (default 5173)
  *
  * Fast local UI (no long preflight before the server listens):
@@ -60,10 +61,11 @@ import { eventsLikelySame } from "./dg-events-align.mjs";
 import { findRscriptSync } from "./find-rscript.mjs";
 import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
 import { ensureAlphaCaddieStaticArtifacts } from "./ensure-static-data-files.mjs";
+import { resolveGolfModelDir } from "./resolve-golf-model-dir.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
-const REPO_ROOT = path.resolve(WEB_ROOT, "..");
+const REPO_ROOT = resolveGolfModelDir(WEB_ROOT);
 
 /** Full `fetch:dg` / projections rebuild — never more often than once per 5 minutes. */
 const MIN_FETCH_DG_POLL_MS = 300_000;
@@ -294,15 +296,20 @@ function refreshBeforeServe() {
   const fetchDgScriptPath = path.join(WEB_ROOT, "scripts", "fetch-datagolf.mjs");
   const skipRefreshStart = process.env.GOLF_SKIP_REFRESH_ON_START === "1";
   const isRenderHost = String(process.env.RENDER || "").toLowerCase() === "true";
+  const forcePerfectBoot = String(process.env.GOLF_FORCE_PERFECT_BOOT_CHAIN || "").trim() === "1";
   const renderSyncDgOn = String(process.env.GOLF_RENDER_SYNC_FETCH_DG_ON_BOOT || "1").trim() !== "0";
   const renderPerfectBoot =
-    isRenderHost &&
+    (isRenderHost || forcePerfectBoot) &&
     key &&
     !skipRefreshStart &&
     renderSyncDgOn &&
     fs.existsSync(fetchDgScriptPath);
 
   const dgBootEnv = { ...process.env, GOLF_MODEL_DIR: REPO_ROOT, DATAGOLF_API_KEY: key };
+
+  if ((isRenderHost || forcePerfectBoot) && !skipRefreshStart) {
+    console.log("[alpha-caddie-web] Paths:", { WEB_ROOT, REPO_ROOT });
+  }
 
   if (renderPerfectBoot) {
     console.log(
@@ -379,6 +386,35 @@ if (process.env.GOLF_SKIP_REFRESH_ON_START === "1") {
 repairRenderHistoricalTrendsIfNeeded();
 
 ensureAlphaCaddieStaticArtifacts(WEB_ROOT, REPO_ROOT);
+
+function logRenderBootstrapDiag() {
+  if (String(process.env.RENDER || "").toLowerCase() !== "true") return;
+  if (String(process.env.GOLF_SKIP_RENDER_BOOT_DIAG || "").trim() === "1") return;
+  const proj = path.join(WEB_ROOT, "projections.json");
+  const hist = path.join(WEB_ROOT, "player_round_history.json");
+  const rb = path.join(WEB_ROOT, "data", "results_backtest.json");
+  let historyPlayers = -1;
+  if (fs.existsSync(hist)) {
+    try {
+      const j = JSON.parse(fs.readFileSync(hist, "utf8"));
+      historyPlayers = Object.keys(j?.byDgId || {}).length;
+    } catch {
+      historyPlayers = -2;
+    }
+  }
+  console.log("[alpha-caddie-web] Render bootstrap diagnostics:", {
+    WEB_ROOT,
+    REPO_ROOT,
+    repo_data_dir_exists: fs.existsSync(path.join(REPO_ROOT, "data")),
+    web_data_dir_exists: fs.existsSync(path.join(WEB_ROOT, "data")),
+    projections_bytes: fs.existsSync(proj) ? fs.statSync(proj).size : 0,
+    history_player_buckets: historyPlayers,
+    results_backtest_exists: fs.existsSync(rb),
+    unified_pipeline: String(process.env.GOLF_UNIFIED_PROJECTIONS_PIPELINE ?? "(unset→1)"),
+  });
+}
+
+logRenderBootstrapDiag();
 
 const port = String(process.env.PORT || "5173");
 process.env.PORT = port;

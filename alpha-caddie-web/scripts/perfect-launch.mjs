@@ -17,10 +17,11 @@ import { spawn, spawnSync } from "child_process";
 import net from "net";
 import path from "path";
 import { fileURLToPath } from "url";
+import { resolveGolfModelDir } from "./resolve-golf-model-dir.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
-const REPO_ROOT = path.resolve(WEB_ROOT, "..");
+const REPO_ROOT = resolveGolfModelDir(WEB_ROOT);
 const env = {
   ...process.env,
   GOLF_MODEL_DIR: process.env.GOLF_MODEL_DIR?.trim() || REPO_ROOT,

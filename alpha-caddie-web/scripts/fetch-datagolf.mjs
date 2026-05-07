@@ -53,10 +53,12 @@ import {
   titleTokenOverlapRatio,
 } from "./dg-events-align.mjs";
 import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
+import { resolveGolfModelDir } from "./resolve-golf-model-dir.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
-const GOLF_MODEL_ROOT = join(ROOT, "..");
+/** Honors GOLF_MODEL_DIR env (Render / monorepo); otherwise resolve-golf-model-dir.mjs heuristics. */
+const GOLF_MODEL_ROOT = resolveGolfModelDir(ROOT);
 
 /** When no course/event match, Hole Hangout uses this 18-hole par pattern (same as web app fallback). */
 const GENERIC_HOLE_PARS_FALLBACK = [4, 4, 3, 4, 4, 5, 4, 3, 4, 4, 4, 3, 4, 4, 5, 4, 3, 5];

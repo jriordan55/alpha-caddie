@@ -55,6 +55,12 @@ services:
       # Prefer live API + DK props over static CSV props on Render.
       - key: GOLF_SKIP_PROPS_CSV
         value: "1"
+      # Match `npm run perfect` child server: disk pollers instead of unified scheduler (avoids pre/live tick overwriting boot output differently than local).
+      - key: GOLF_UNIFIED_PROJECTIONS_PIPELINE
+        value: "0"
+      # Only if DataGolf files land in the wrong place: set to absolute repo root containing `data/` (leave unset for normal golfModel/alpha-caddie-web monorepo).
+      # - key: GOLF_MODEL_DIR
+      #   value: "/opt/render/project/src"
       # Kelly + Results cube: only bets on/after (today UTC − N years). Full history: set "0".
       - key: RESULTS_EXPORT_LAST_YEARS
         value: "2"
