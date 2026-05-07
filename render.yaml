@@ -25,6 +25,7 @@
 # Optional: GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER=1, GOLF_FETCH_DG_SERVER_POLL_MS=1800000, GOLF_SKIP_BOOK_ODDS_POLL_SERVER=1
 # Heavy CSV / restart speed: GOLF_SKIP_RESULTS_BUILD_ON_BOOT=1 (omit rebuild on npm start; rely on deploy build:results only).
 # If logs show duplicate repair merges: GOLF_SKIP_RENDER_HISTORY_REPAIR=1 (only after Trends loads reliably).
+# Wide 2nd merge if Trends still empty: default on — disable with GOLF_RENDER_WIDE_HISTORY_REPAIR=0
 services:
   - type: web
     name: alpha-caddie-web
@@ -64,6 +65,7 @@ services:
       # Kelly + Results cube: only bets on/after (today UTC − N years). Full history: set "0".
       - key: RESULTS_EXPORT_LAST_YEARS
         value: "2"
-      # Historical Trends: wider window = more overlap with current field dg_ids in player_round_history.json (trade-off: slower boot merge).
+      # Historical Trends — calendar years of PGA/LIV rounds merged per boot (empty charts ↑ until overlap with field dg_ids).
+      # Disable 2nd widen pass: GOLF_RENDER_WIDE_HISTORY_REPAIR=0
       - key: GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS
-        value: "10"
+        value: "22"
