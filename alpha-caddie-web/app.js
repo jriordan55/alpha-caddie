@@ -6271,20 +6271,248 @@ function propsTopTableSortInPlace(rows, statKey) {
   });
 }
 
-function paintPropsHeaderInlineMeta(statKey, line, st) {
-  const metaEl = document.getElementById("props-trends-inline-meta");
-  if (!metaEl) return;
-  const market = propMarketLabelFromKey(statKey);
-  const lineTxt = Number.isFinite(line) ? formatPropLineValueForInput(line) : "—";
-  const lowerBetter = propsStatLowerIsBetter(statKey);
-  const underPct = st && st.valid > 0 && Number.isFinite(st.underRate) ? Math.round(st.underRate * 100) : NaN;
-  const overPct = st && st.valid > 0 && Number.isFinite(st.overRate) ? Math.round(st.overRate * 100) : NaN;
-  const underTxt =
-    st && st.valid > 0 && Number.isFinite(underPct) ? `${st.under}/${st.valid} (${underPct}%)` : "—";
-  const overTxt =
-    st && st.valid > 0 && Number.isFinite(overPct) ? `${st.over}/${st.valid} (${overPct}%)` : "—";
-  metaEl.className = `props-trends-inline-meta${lowerBetter ? " props-ou-lower-is-better" : ""}`;
-  metaEl.innerHTML = `<span class="props-trends-inline-line">Line ${lineTxt}</span><span class="props-trends-inline-market">${market}</span><span class="props-trends-inline-under">U ${underTxt}</span><span class="props-trends-inline-over">O ${overTxt}</span>`;
+/** Calendar year on a history row (`year` field or parsed `event_completed`). */
+function historyRoundSeasonYear(r) {
+  if (!r || typeof r !== "object") return NaN;
+  const y = num(r.year, NaN);
+  if (Number.isFinite(y) && y >= 1990 && y <= 2100) return Math.round(y);
+  const base = parseEventCompletedChronoBase(r.event_completed);
+  const yy = Math.floor(base / 10000);
+  return yy >= 1990 && yy <= 2100 ? yy : NaN;
+}
+
+const PROPS_TREND_DISPLAY_SEASON_YEAR = 2026;
+
+function propsTrendHistoryBaselineRounds(dgId) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return [];
+  return historyRoundsForDg(id).filter((r) => !historyRoundIsPlaceholderAllMarketsZero(r));
+}
+
+function propsTrendMeanActual(statKey, rounds) {
+  let sum = 0;
+  let n = 0;
+  for (const r of rounds) {
+    const a = actualForRoundRow(statKey, r);
+    if (!Number.isFinite(a)) continue;
+    sum += a;
+    n++;
+  }
+  return n > 0 ? sum / n : NaN;
+}
+
+function propsTrendCourseFilterActive() {
+  return Boolean(courseFilterOn() || selectedPropsCourseFilter());
+}
+
+/** Course-only slice of career history (sidebar “Current course” and/or Course dropdown); ignores weather & graph window. */
+function roundsMatchingCourseSelectionOnly(dgId) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return [];
+  if (!propsTrendCourseFilterActive()) return [];
+  let list = propsTrendHistoryBaselineRounds(id);
+  if (courseFilterOn()) {
+    const vn = venueCourseName();
+    const metaEvent = String(DATA.meta?.event_name || "").trim();
+    if (vn || metaEvent) list = list.filter((r) => currentTournamentContextMatchesRound(r));
+  }
+  const courseSel = selectedPropsCourseFilter();
+  if (courseSel) list = list.filter((r) => normCourseNameKey(r.course_name) === normCourseNameKey(courseSel));
+  return list;
+}
+
+function formatPropsTrendKpiValue(statKey, v) {
+  if (!Number.isFinite(v)) return "—";
+  void statKey;
+  return v.toFixed(1);
+}
+
+function propMarketTrendBookLabel(statKey) {
+  if (statKey === "total") return "Score";
+  return propMarketLabelFromKey(statKey);
+}
+
+/**
+ * Posted O/U for a sportsbook (`fanduel` | `draftkings`) nearest the chart line.
+ */
+function propsTrendPickQuoteForBook(playerRow, marketLabel, hintLine, bookSlug) {
+  const canon = ouPropsCanonicalMarket(marketLabel);
+  const want = String(bookSlug || "").trim().toLowerCase();
+  if (!want || !playerRow) return null;
+  const props = Array.isArray(DATA.props) ? DATA.props : [];
+  /** @type {{ line: number, over: number, under: number }[]} */
+  const cand = [];
+  for (const r of props) {
+    const src = String(r.source || "").trim().toLowerCase();
+    if (src !== want) continue;
+    if (String(r.market || "").trim() !== canon) continue;
+    const L = enforceHalfLine(num(r.line, NaN));
+    const o = Math.round(num(r.over_odds, NaN));
+    const u = Math.round(num(r.under_odds, NaN));
+    if (!Number.isFinite(L) || !Number.isFinite(o) || !Number.isFinite(u) || o === 0 || u === 0) continue;
+    const rid = Math.round(num(r.dg_id, NaN));
+    const wantId = Math.round(num(playerRow.dg_id, NaN));
+    const rRaw = ouPropPlayerKeyRaw(r.player_name || "");
+    const rDisp = ouPropPlayerKeyDisplay(r.player_name || "");
+    const wantRaw = ouPropPlayerKeyRaw(playerRow.player_name || "");
+    const wantDisp = ouPropPlayerKeyDisplay(playerRow.player_name || "");
+    const sameById = Number.isFinite(wantId) && wantId > 0 && rid === wantId;
+    const sameByName =
+      (wantRaw && rRaw && wantRaw === rRaw) || (wantDisp && rDisp && wantDisp === rDisp);
+    if (!sameById && !sameByName) continue;
+    cand.push({ line: L, over: o, under: u });
+  }
+  if (!cand.length) return null;
+  const h = enforceHalfLine(hintLine);
+  if (!Number.isFinite(h)) return cand.slice().sort((a, b) => a.line - b.line)[0];
+  let best = cand[0];
+  let bd = Math.abs(best.line - h);
+  for (let i = 1; i < cand.length; i++) {
+    const d = Math.abs(cand[i].line - h);
+    if (d < bd) {
+      best = cand[i];
+      bd = d;
+    }
+  }
+  return best;
+}
+
+function paintPropsTrendBookRows(playerRow, statKey, lineHint, hitSt) {
+  const wrap = document.getElementById("props-trends-book-lines");
+  if (!wrap) return;
+  wrap.replaceChildren();
+  if (!playerRow) return;
+
+  const marketLbl = ouMarketKeyFromStatKey(statKey);
+  const mShort = propMarketTrendBookLabel(statKey);
+  const fd = propsTrendPickQuoteForBook(playerRow, marketLbl, lineHint, "fanduel");
+  const dk = propsTrendPickQuoteForBook(playerRow, marketLbl, lineHint, "draftkings");
+
+  const mkRow = (bookKey, pick) => {
+    if (!pick) return;
+    const meta = SPORTSBOOK_META[bookKey];
+    if (!meta) return;
+    const row = document.createElement("div");
+    row.className = `props-trends-book-row${propsStatLowerIsBetter(statKey) ? " props-ou-lower-is-better" : ""}`;
+    const logoWrap = document.createElement("span");
+    logoWrap.className = "props-trends-book-logo-wrap";
+    const img = document.createElement("img");
+    img.className = "props-trends-book-logo-img";
+    img.alt = meta.label;
+    img.loading = "lazy";
+    const fb = document.createElement("span");
+    fb.className = "props-trends-book-logo-fallback";
+    fb.textContent = meta.short || bookKey.slice(0, 2).toUpperCase();
+    fb.style.display = "none";
+    logoWrap.appendChild(img);
+    logoWrap.appendChild(fb);
+    row.appendChild(logoWrap);
+    attachBookLogoWithFallback(img, fb, meta.domain);
+
+    const main = document.createElement("span");
+    main.className = "props-trends-book-main";
+    main.appendChild(document.createTextNode(`${formatPropLineValueForInput(pick.line)} `));
+    const mkt = document.createElement("span");
+    mkt.className = "props-trends-book-mkt";
+    mkt.textContent = mShort;
+    main.appendChild(mkt);
+    row.appendChild(main);
+
+    const ou = document.createElement("span");
+    ou.className = "props-trends-book-ou";
+    const oSp = document.createElement("span");
+    oSp.className = "props-trends-book-ou-over";
+    oSp.textContent = `O ${formatAmerican(pick.over)}`;
+    const uSp = document.createElement("span");
+    uSp.className = "props-trends-book-ou-under";
+    uSp.textContent = `U ${formatAmerican(pick.under)}`;
+    ou.appendChild(oSp);
+    ou.appendChild(uSp);
+    row.appendChild(ou);
+    wrap.appendChild(row);
+  };
+
+  mkRow("fanduel", fd);
+  mkRow("draftkings", dk);
+
+  if (!fd && !dk && Number.isFinite(lineHint)) {
+    const lowerBetter = propsStatLowerIsBetter(statKey);
+    const lineTxt = formatPropLineValueForInput(lineHint);
+    const market = propMarketLabelFromKey(statKey);
+    const underPct =
+      hitSt && hitSt.valid > 0 && Number.isFinite(hitSt.underRate) ? Math.round(hitSt.underRate * 100) : NaN;
+    const overPct =
+      hitSt && hitSt.valid > 0 && Number.isFinite(hitSt.overRate) ? Math.round(hitSt.overRate * 100) : NaN;
+    const underTxt =
+      hitSt && hitSt.valid > 0 && Number.isFinite(underPct) ? `${hitSt.under}/${hitSt.valid} (${underPct}%)` : "—";
+    const overTxt =
+      hitSt && hitSt.valid > 0 && Number.isFinite(overPct) ? `${hitSt.over}/${hitSt.valid} (${overPct}%)` : "—";
+    const fbRow = document.createElement("div");
+    fbRow.className = `props-trends-inline-meta${lowerBetter ? " props-ou-lower-is-better" : ""}`;
+    fbRow.innerHTML = `<span class="props-trends-inline-line">Line ${lineTxt}</span><span class="props-trends-inline-market">${market}</span><span class="props-trends-inline-under">U ${underTxt}</span><span class="props-trends-inline-over">O ${overTxt}</span>`;
+    wrap.appendChild(fbRow);
+  }
+}
+
+function paintPropsTrendKpiRow(statKey, hitSt, graphSeries, dgId) {
+  const el = document.getElementById("props-trends-kpis");
+  if (!el) return;
+  el.replaceChildren();
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return;
+
+  const pool = propsTrendHistoryBaselineRounds(id);
+  const allMean = propsTrendMeanActual(statKey, pool);
+  const seasonRounds = pool.filter((r) => historyRoundSeasonYear(r) === PROPS_TREND_DISPLAY_SEASON_YEAR);
+  const seasonMean = propsTrendMeanActual(statKey, seasonRounds);
+
+  const vals = (graphSeries || []).map((s) => s.actual).filter((x) => Number.isFinite(x));
+  const graphMean = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : NaN;
+
+  const addKpi = (label, val) => {
+    const wrap = document.createElement("div");
+    wrap.className = "props-trends-kpi";
+    const lab = document.createElement("span");
+    lab.className = "props-trends-kpi-lab";
+    lab.textContent = label;
+    const v = document.createElement("span");
+    v.className = "props-trends-kpi-val";
+    v.textContent = formatPropsTrendKpiValue(statKey, val);
+    wrap.appendChild(lab);
+    wrap.appendChild(v);
+    el.appendChild(wrap);
+  };
+
+  addKpi("All-time avg", allMean);
+  addKpi(`Season ${PROPS_TREND_DISPLAY_SEASON_YEAR} avg`, seasonMean);
+  addKpi("Graph avg", graphMean);
+
+  if (hitSt && hitSt.valid > 0) {
+    const hi = propsMarketHigherIsBetter(statKey);
+    const winRate = hi ? hitSt.overRate : hitSt.underRate;
+    const wins = hi ? hitSt.over : hitSt.under;
+    const wrap = document.createElement("div");
+    wrap.className = "props-trends-kpi";
+    const lab = document.createElement("span");
+    lab.className = "props-trends-kpi-lab";
+    lab.textContent = "Hit rate";
+    const val = document.createElement("span");
+    val.className = "props-trends-kpi-val";
+    val.textContent = `${(winRate * 100).toFixed(1)}% (${wins}/${hitSt.valid})`;
+    wrap.appendChild(lab);
+    wrap.appendChild(val);
+    el.appendChild(wrap);
+  }
+
+  if (propsTrendCourseFilterActive()) {
+    const cr = roundsMatchingCourseSelectionOnly(id);
+    addKpi("Course avg", propsTrendMeanActual(statKey, cr));
+  }
+}
+
+function paintPropsTrendsInsightHeader(playerRow, statKey, line, hitSt, graphSeries, dgId) {
+  paintPropsTrendBookRows(playerRow, statKey, line, hitSt);
+  paintPropsTrendKpiRow(statKey, hitSt, graphSeries, dgId);
 }
 
 function paintPropsTopTableSortHeaders() {
@@ -6811,21 +7039,30 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
   ctx.lineTo(w - pad.r, h - pad.b);
   ctx.stroke();
   if (Number.isFinite(lineY)) {
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.55)";
-    ctx.lineWidth = 1;
-    ctx.setLineDash([4, 3]);
-    ctx.beginPath();
     const yL = yScale(lineY);
+    ctx.strokeStyle = "#f5a623";
+    ctx.lineWidth = 2;
+    ctx.setLineDash([]);
+    ctx.beginPath();
     ctx.moveTo(pad.l, yL);
     ctx.lineTo(w - pad.r, yL);
     ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle = "rgba(180, 184, 196, 0.95)";
-    ctx.font = "9px DM Sans, sans-serif";
-    ctx.textAlign = "right";
-    ctx.textBaseline = "bottom";
     const lineLbl = formatPropLineChartLabel(statKey, lineY);
-    ctx.fillText(lineLbl, w - pad.r, yL - 3);
+    ctx.font = "bold 10px DM Sans, sans-serif";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    const padX = 6;
+    const tw = ctx.measureText(lineLbl).width + padX * 2;
+    const bh = 16;
+    const bx = pad.l + 4;
+    const by = yL - bh / 2;
+    ctx.fillStyle = "#f5a623";
+    ctx.beginPath();
+    if (typeof ctx.roundRect === "function") ctx.roundRect(bx, by, tw, bh, 4);
+    else ctx.rect(bx, by, tw, bh);
+    ctx.fill();
+    ctx.fillStyle = "#0a0c0f";
+    ctx.fillText(lineLbl, bx + padX, yL);
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";
   }
@@ -6960,7 +7197,9 @@ function renderPropsTrends() {
     }
     if (Number.isFinite(lineEarly)) propsTrendLastGoodLine = lineEarly;
     const stEarly = propsFullHitStatsForDg(dg, statKey, lineEarly, wnEarly);
-    paintPropsHeaderInlineMeta(statKey, lineEarly, stEarly);
+    paintPropsTrendsInsightHeader(playerRow, statKey, lineEarly, stEarly, [], dg);
+    const chartLegEarly = document.getElementById("props-chart-line-legend");
+    if (chartLegEarly) chartLegEarly.hidden = !Number.isFinite(lineEarly);
     drawPropsTrendCanvas([], lineEarly, statKey);
     renderPropsHitRateAndTopTable(statKey, lineEarly, wnEarly);
     return;
@@ -7004,12 +7243,12 @@ function renderPropsTrends() {
   if (Number.isFinite(line)) propsTrendLastGoodLine = line;
   const newestFirst = propsFilteredRoundsNewestFirst(dg, winN);
   const rawList = newestFirst.slice().sort((a, b) => historyRoundChronoKey(a) - historyRoundChronoKey(b));
-  const series = [];
+  const seriesFull = [];
   for (const r of rawList) {
     const actual = actualForRoundRow(statKey, r);
     if (!Number.isFinite(actual)) continue;
     const m = modelForHistoryRow(statKey, { ...r, _playerName: playerRow?.player_name });
-    series.push({
+    seriesFull.push({
       _hist: r,
       date: r.event_completed || "",
       course: propsCourseNameFromRow(r),
@@ -7018,13 +7257,12 @@ function renderPropsTrends() {
       dif: Number.isFinite(m) ? actual - m : NaN,
     });
   }
-  drawPropsTrendCanvas(
-    series.map((s) => ({ actual: s.actual, date: s.date, _hist: s._hist })),
-    line,
-    statKey
-  );
+  const seriesChart = seriesFull.map((s) => ({ actual: s.actual, date: s.date, _hist: s._hist }));
+  drawPropsTrendCanvas(seriesChart, line, statKey);
   const stNow = propsFullHitStatsForDg(dg, statKey, line, winN);
-  paintPropsHeaderInlineMeta(statKey, line, stNow);
+  paintPropsTrendsInsightHeader(playerRow, statKey, line, stNow, seriesChart, dg);
+  const chartLeg = document.getElementById("props-chart-line-legend");
+  if (chartLeg) chartLeg.hidden = !Number.isFinite(line);
   renderPropsHitRateAndTopTable(statKey, line, winN);
 }
 

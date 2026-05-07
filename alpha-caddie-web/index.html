@@ -173,8 +173,9 @@
         <div class="props-trends-head-text">
           <div class="props-trends-title-row">
             <p class="props-trends-title" id="props-trends-title">—</p>
-            <p class="props-trends-inline-meta" id="props-trends-inline-meta"></p>
           </div>
+          <div id="props-trends-book-lines" class="props-trends-book-lines" aria-label="Book lines"></div>
+          <div id="props-trends-kpis" class="props-trends-kpis" aria-label="Summary averages"></div>
           <p class="props-trends-sub" id="props-trends-sub"></p>
         </div>
         <button type="button" class="ev-help-btn tab-help-btn props-tab-help-btn" data-tab-help="props" aria-label="Help: Historical Trends tab">?</button>
@@ -183,6 +184,7 @@
         <div class="props-trends-chart-wrap">
           <canvas id="props-trend-canvas" width="800" height="220" aria-label="Historical round bar chart"></canvas>
           <div id="props-chart-tooltip" class="props-chart-tooltip" hidden></div>
+          <p class="props-chart-line-legend" id="props-chart-line-legend" hidden><span class="props-chart-line-legend-chip" aria-hidden="true"></span> Line</p>
           <p class="text-muted props-chart-empty" id="props-chart-empty" hidden>No history file.</p>
         </div>
         <aside class="props-trends-sidebar" aria-label="Historical trend filters and line">
@@ -960,6 +962,6 @@
   </dialog>
 
   <script src="embedded-player-round-history.js?v=5"></script>
-  <script src="app.js?v=53"></script>
+  <script src="app.js?v=54"></script>
 </body>
 </html>

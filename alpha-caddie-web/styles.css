@@ -1661,7 +1661,122 @@ th.matchup-analysis-best-pick {
   font-size: 0.8rem;
   color: var(--golf-text-muted);
 }
-/* Single column: chart → filters → top-hits table (all widths). */
+.props-trends-book-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+.props-trends-book-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.props-trends-book-logo-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+.props-trends-book-logo-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  object-fit: contain;
+  background: rgba(255, 255, 255, 0.06);
+}
+.props-trends-book-logo-fallback {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--golf-text-muted);
+}
+.props-trends-book-main {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.props-trends-book-main .props-trends-book-mkt {
+  margin-left: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--golf-text-muted);
+}
+.props-trends-book-ou {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.props-trends-book-ou-over {
+  color: var(--golf-green);
+}
+.props-trends-book-ou-under {
+  color: var(--golf-danger);
+}
+.props-trends-book-row.props-ou-lower-is-better .props-trends-book-ou-over {
+  color: var(--golf-danger);
+}
+.props-trends-book-row.props-ou-lower-is-better .props-trends-book-ou-under {
+  color: var(--golf-green);
+}
+.props-trends-kpis {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 22px;
+  align-items: baseline;
+  margin-top: 12px;
+}
+.props-trends-kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.props-trends-kpi-lab {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--golf-text-muted);
+}
+.props-trends-kpi-val {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--golf-green);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+}
+.props-chart-line-legend {
+  margin: 8px 0 0;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--golf-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.props-chart-line-legend-chip {
+  display: inline-block;
+  width: 14px;
+  height: 4px;
+  border-radius: 2px;
+  background: #f5a623;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
 .props-trends-body {
   display: flex;
   flex-direction: column;
