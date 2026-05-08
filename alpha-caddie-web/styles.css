@@ -1242,12 +1242,10 @@ th.matchup-analysis-best-pick {
   height: 100%;
   border-radius: 999px;
 }
-.matchup-analysis-bar-fill.sg {
-  background: #89bea8;
-}
+.matchup-analysis-bar-fill.sg,
 .matchup-analysis-bar-fill.distance,
 .matchup-analysis-bar-fill.accuracy {
-  background: #6cb6ff;
+  background: #89bea8;
 }
 
 .section-heading {

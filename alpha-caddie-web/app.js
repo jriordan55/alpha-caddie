@@ -4454,7 +4454,13 @@ function matchupAnalysisMetricValue(row, key) {
     return num(row.mu_sg, NaN);
   }
   if (key === "distance") {
-    const cands = [num(row.distance, NaN), num(row.driving_distance, NaN), num(row.avg_drive_distance, NaN)];
+    const cands = [
+      num(row.avg_driving_distance, NaN),
+      num(row.average_driving_distance, NaN),
+      num(row.avg_drive_distance, NaN),
+      num(row.driving_distance, NaN),
+      num(row.distance, NaN),
+    ];
     for (const v of cands) if (Number.isFinite(v)) return v;
     return NaN;
   }
@@ -4814,7 +4820,7 @@ function buildMatchupAnalysisTool() {
       ["SG: Approach", "sg_app"],
       ["SG: Around Green", "sg_arg"],
       ["SG: Putting", "sg_putt"],
-      ["Distance", "distance"],
+      ["Avg driving distance", "distance"],
       ["Accuracy", "accuracy"],
     ];
     const buildMetricCell = (td, v, samples, kind = "sg") => {

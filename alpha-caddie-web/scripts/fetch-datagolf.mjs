@@ -608,13 +608,17 @@ function drivingAttrsFromSkillBag(row) {
   if (!row || typeof row !== "object") return { driving_distance: NaN, driving_accuracy: NaN };
   const bag = normalizedScalarBag(row);
   const dist = pickFromBag(bag, [
-    "driving_distance",
     "avg_driving_distance",
+    "average_driving_distance",
+    "mean_driving_distance",
+    "avg_drive_distance",
+    "avg_drive_dist",
+    "driving_distance",
     "drive_distance",
     "distance",
-    "avg_drive_distance",
     "driving_dist",
     "predicted_driving_distance",
+    "predicted_avg_driving_distance",
     "dd",
     "ott_distance",
   ]);
@@ -897,7 +901,13 @@ async function main() {
     const dbc = firstNumCol(row, ["doubles", "double_bogeys", "doubles_or_worse"]);
     const gc = firstNumCol(row, ["gir", "greens_in_regulation", "gir_count"]);
     const fc = firstNumCol(row, ["fairways", "driving_accuracy", "fw", "fairway"]);
-    const ddc = firstNumCol(row, ["driving_distance", "avg_driving_distance", "drive_distance", "distance"]);
+    const ddc = firstNumCol(row, [
+      "avg_driving_distance",
+      "average_driving_distance",
+      "driving_distance",
+      "drive_distance",
+      "distance",
+    ]);
     fantasyByDg.set(Math.round(id), {
       birdies: bc ? num(row[bc]) : NaN,
       pars: pc ? num(row[pc]) : NaN,
@@ -1157,7 +1167,11 @@ async function main() {
       for (const k of ["sg_total", "sg_ott", "sg_app", "sg_arg", "sg_putt", "sg_t2g"]) {
         if (Number.isFinite(row[k])) pl[k] = Math.round(row[k] * 1000) / 1000;
       }
-      if (Number.isFinite(row.driving_distance)) pl.driving_distance = Math.round(row.driving_distance * 10) / 10;
+      if (Number.isFinite(row.driving_distance)) {
+        const dy = Math.round(row.driving_distance * 10) / 10;
+        pl.avg_driving_distance = dy;
+        pl.driving_distance = dy;
+      }
       if (Number.isFinite(row.driving_accuracy)) pl.driving_accuracy = Math.round(row.driving_accuracy * 10) / 10;
       else {
         const fw = st.fairways;
