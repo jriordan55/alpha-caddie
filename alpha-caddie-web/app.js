@@ -6330,6 +6330,8 @@ function roundsMatchingCurrentCourseOnly(dgId) {
   if (!vn && !metaEvent) return [];
   let list = propsTrendHistoryBaselineRounds(id);
   list = list.filter((r) => currentTournamentContextMatchesRound(r));
+  // "Current course avg" should reflect this season only, not prior-year starts at the same venue.
+  list = list.filter((r) => historyRoundSeasonYear(r) === PROPS_TREND_DISPLAY_SEASON_YEAR);
   return list;
 }
 
