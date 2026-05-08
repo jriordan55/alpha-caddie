@@ -6353,6 +6353,23 @@ function roundsMatchingCurrentCourseOnlyFieldSeason() {
   return out;
 }
 
+/** Field-wide current-course rounds (all players), all seasons. */
+function roundsMatchingCurrentCourseOnlyFieldAllTime() {
+  const vn = venueCourseName();
+  const metaEvent = String(DATA.meta.event_name || "").trim();
+  if (!vn && !metaEvent) return [];
+  const out = [];
+  for (const rec of Object.values(HISTORY.byDgId || {})) {
+    if (!rec || !Array.isArray(rec.rounds)) continue;
+    for (const r of rec.rounds) {
+      if (historyRoundIsPlaceholderAllMarketsZero(r)) continue;
+      if (!currentTournamentContextMatchesRound(r)) continue;
+      out.push(r);
+    }
+  }
+  return out;
+}
+
 function formatPropsTrendKpiValue(statKey, v) {
   if (!Number.isFinite(v)) return "—";
   void statKey;
@@ -6518,23 +6535,25 @@ function paintPropsTrendKpiRow(statKey, hitSt, graphSeries, dgId) {
   addKpi("All-time avg", allMean);
   addKpi("Season avg", seasonMean);
   addKpi("Graph avg", graphMean);
-  addKpi("Current course avg", propsTrendMeanActual(statKey, roundsMatchingCurrentCourseOnlyFieldSeason()));
+  addKpi(`${PROPS_TREND_DISPLAY_SEASON_YEAR} course avg`, propsTrendMeanActual(statKey, roundsMatchingCurrentCourseOnlyFieldSeason()));
+  addKpi("All-time course avg", propsTrendMeanActual(statKey, roundsMatchingCurrentCourseOnlyFieldAllTime()));
 
   if (hitSt && hitSt.valid > 0) {
-    const hi = propsMarketHigherIsBetter(statKey);
-    const winRate = hi ? hitSt.overRate : hitSt.underRate;
-    const wins = hi ? hitSt.over : hitSt.under;
-    const wrap = document.createElement("div");
-    wrap.className = "props-trends-kpi";
-    const lab = document.createElement("span");
-    lab.className = "props-trends-kpi-lab";
-    lab.textContent = "Hit rate";
-    const val = document.createElement("span");
-    val.className = "props-trends-kpi-val";
-    val.textContent = `${(winRate * 100).toFixed(1)}% (${wins}/${hitSt.valid})`;
-    wrap.appendChild(lab);
-    wrap.appendChild(val);
-    el.appendChild(wrap);
+    const addRateKpi = (label, rate, wins, total) => {
+      const wrap = document.createElement("div");
+      wrap.className = "props-trends-kpi";
+      const lab = document.createElement("span");
+      lab.className = "props-trends-kpi-lab";
+      lab.textContent = label;
+      const val = document.createElement("span");
+      val.className = "props-trends-kpi-val";
+      val.textContent = Number.isFinite(rate) ? `${(rate * 100).toFixed(1)}% (${wins}/${total})` : "—";
+      wrap.appendChild(lab);
+      wrap.appendChild(val);
+      el.appendChild(wrap);
+    };
+    addRateKpi("Over hit rate", hitSt.overRate, hitSt.over, hitSt.valid);
+    addRateKpi("Under hit rate", hitSt.underRate, hitSt.under, hitSt.valid);
   }
 
   if (propsTrendCourseFilterActive()) {
