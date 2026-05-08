@@ -5570,7 +5570,7 @@ function parseEventCompletedChronoBase(s) {
 }
 
 function venueCourseName() {
-  return String(DATA.meta.course_used || "").trim().toLowerCase();
+  return String(DATA.meta.course_used || DATA.course_used || "").trim().toLowerCase();
 }
 
 function courseFilterOn() {
