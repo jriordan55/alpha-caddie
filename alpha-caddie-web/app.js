@@ -4453,6 +4453,24 @@ function matchupAnalysisMetricValue(row, key) {
     if (Number.isFinite(base)) return base;
     return num(row.mu_sg, NaN);
   }
+  if (key === "distance") {
+    const cands = [num(row.distance, NaN), num(row.driving_distance, NaN), num(row.avg_drive_distance, NaN)];
+    for (const v of cands) if (Number.isFinite(v)) return v;
+    return NaN;
+  }
+  if (key === "accuracy") {
+    const cands = [num(row.accuracy, NaN), num(row.driving_acc, NaN), num(row.driving_accuracy, NaN)];
+    let raw = NaN;
+    for (const v of cands) {
+      if (Number.isFinite(v)) {
+        raw = v;
+        break;
+      }
+    }
+    if (!Number.isFinite(raw)) return NaN;
+    // support either pct points (48.3) or ratio (0.483)
+    return raw > 1 ? raw : raw * 100;
+  }
   return num(row[key], NaN);
 }
 
@@ -4605,7 +4623,7 @@ function buildMatchupAnalysisTool() {
 
   const r = getModelRoundForEv();
   const fieldRows = matchupAnalysisFieldRowsForRound(r);
-  const sgMetricKeys = ["sg_total", "sg_t2g", "sg_ott", "sg_app", "sg_arg", "sg_putt"];
+  const sgMetricKeys = ["sg_total", "sg_t2g", "sg_ott", "sg_app", "sg_arg", "sg_putt", "distance", "accuracy"];
   /** @type {Record<string, number[]>} */
   const fieldSamplesByMetric = {};
   for (const mk of sgMetricKeys) {
@@ -4788,7 +4806,39 @@ function buildMatchupAnalysisTool() {
       ["SG: Approach", "sg_app"],
       ["SG: Around Green", "sg_arg"],
       ["SG: Putting", "sg_putt"],
+      ["Distance", "distance"],
+      ["Accuracy", "accuracy"],
     ];
+    const buildMetricCell = (td, v, samples, kind = "sg") => {
+      td.className = "num matchup-analysis-bar-cell";
+      if (!Number.isFinite(v)) {
+        td.textContent = "—";
+        return;
+      }
+      let maxAbs = 0;
+      for (const s of samples || []) {
+        if (!Number.isFinite(s)) continue;
+        maxAbs = Math.max(maxAbs, Math.abs(s));
+      }
+      maxAbs = Math.max(maxAbs, Math.abs(v), kind === "sg" ? 0.6 : kind === "distance" ? 30 : 20);
+      const pct = Math.max(0, Math.min(100, (Math.abs(v) / maxAbs) * 100));
+      const wrap = document.createElement("span");
+      wrap.className = "matchup-analysis-bar-wrap";
+      const val = document.createElement("span");
+      val.className = `matchup-analysis-bar-val${v >= 0 ? " pos" : " neg"}`;
+      if (kind === "sg") val.textContent = `${v >= 0 ? "+" : ""}${v.toFixed(2)}`;
+      else if (kind === "distance") val.textContent = `${v >= 0 ? "+" : ""}${v.toFixed(1)}`;
+      else val.textContent = `${v >= 0 ? "+" : ""}${v.toFixed(1)}%`;
+      const track = document.createElement("span");
+      track.className = "matchup-analysis-bar-track";
+      const fill = document.createElement("span");
+      fill.className = `matchup-analysis-bar-fill ${kind}`;
+      fill.style.width = `${pct.toFixed(1)}%`;
+      track.appendChild(fill);
+      wrap.appendChild(val);
+      wrap.appendChild(track);
+      td.appendChild(wrap);
+    };
     for (const [label, keyMetric] of metrics) {
       const samples = fieldSamplesByMetric[keyMetric] || [];
       const a = matchupAnalysisMetricValue(entry.left.row, keyMetric);
@@ -4800,14 +4850,12 @@ function buildMatchupAnalysisTool() {
       const tdMetric = document.createElement("td");
       tdMetric.textContent = label;
       const tdA = document.createElement("td");
-      tdA.className = "num";
-      tdA.textContent = Number.isFinite(a) ? a.toFixed(2) : "—";
+      buildMetricCell(tdA, a, samples, keyMetric === "sg_total" || keyMetric.startsWith("sg_") ? "sg" : keyMetric);
       const tdPctA = document.createElement("td");
       tdPctA.className = "num";
       tdPctA.textContent = Number.isFinite(pctA) ? `${pctA.toFixed(0)}%` : "—";
       const tdB = document.createElement("td");
-      tdB.className = "num";
-      tdB.textContent = Number.isFinite(b) ? b.toFixed(2) : "—";
+      buildMetricCell(tdB, b, samples, keyMetric === "sg_total" || keyMetric.startsWith("sg_") ? "sg" : keyMetric);
       const tdPctB = document.createElement("td");
       tdPctB.className = "num";
       tdPctB.textContent = Number.isFinite(pctB) ? `${pctB.toFixed(0)}%` : "—";
@@ -8453,11 +8501,8 @@ function activeAppTabId() {
   return active ? String(active.getAttribute("data-tab") || "") : "";
 }
 
-/** Rebuild +EV with fresh projections so Best Book odds reflect the latest posted lines. */
-async function syncEvTabOddsAfterShow() {
-  if (!isFileProtocol()) {
-    await loadProjections({ silent: true, reloadSidecar: false });
-  }
+/** Rebuild +EV table from already-loaded DATA (book odds come from projections.json; optional background poll updates DATA). */
+function syncEvTabOddsAfterShow() {
   buildEvTable();
 }
 
@@ -9515,7 +9560,10 @@ function initTabs() {
       }
       if (tab === "ev") {
         requestAnimationFrame(() => {
-          void syncEvTabOddsAfterShow();
+          syncEvTabOddsAfterShow();
+          if (!isFileProtocol()) {
+            void loadProjections({ silent: true, reloadSidecar: false });
+          }
         });
       }
       if (tab === "results") {
@@ -10025,7 +10073,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     if (activeAppTabId() === "ev" && !isFileProtocol()) {
-      void syncEvTabOddsAfterShow();
+      void loadProjections({ silent: true, reloadSidecar: false });
       return;
     }
     if (datagolfLiveOverlayEnabled() && !isFileProtocol()) void fetchAndMergeDatagolfLiveInPlay({ force: true });

@@ -1213,6 +1213,42 @@ th.matchup-analysis-best-pick {
   box-shadow: inset 0 -3px 0 var(--golf-green);
 }
 
+#table-matchup-analysis-sg .matchup-analysis-bar-cell {
+  min-width: 170px;
+}
+.matchup-analysis-bar-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 155px;
+}
+.matchup-analysis-bar-val {
+  min-width: 44px;
+  text-align: right;
+  font-weight: 700;
+}
+.matchup-analysis-bar-val.pos { color: var(--golf-green); }
+.matchup-analysis-bar-val.neg { color: var(--golf-danger); }
+.matchup-analysis-bar-track {
+  width: 92px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+.matchup-analysis-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+}
+.matchup-analysis-bar-fill.sg {
+  background: #89bea8;
+}
+.matchup-analysis-bar-fill.distance,
+.matchup-analysis-bar-fill.accuracy {
+  background: #6cb6ff;
+}
+
 .section-heading {
   font-size: 0.75rem;
   text-transform: uppercase;
