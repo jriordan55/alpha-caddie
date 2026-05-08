@@ -297,6 +297,7 @@
     <section id="panel-matchup-analysis" class="panel" role="tabpanel" hidden>
       <div class="ev-panel-head">
         <h2 class="ev-devig-sr-only">Matchup Analysis Tool</h2>
+        <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="matchup-analysis" aria-label="Help: Matchup Analysis tab">?</button>
       </div>
       <div class="toolbar outrights-toolbar matchup-analysis-toolbar">
         <label class="toolbar-label">Market
@@ -309,9 +310,6 @@
         <label class="toolbar-label">Matchup
           <select id="analysis-matchup-select" aria-label="Choose matchup"></select>
         </label>
-        <p class="text-muted matchup-analysis-note">
-          Prices use the same +EV book whitelist and <strong>Devig</strong> consensus as the +EV tab. Strokes-gained components are loaded from DataGolf via <code>npm run fetch:dg</code> (skill-ratings + player-decompositions).
-        </p>
         <p id="analysis-market-note" class="text-muted matchup-analysis-note" hidden></p>
       </div>
       <h3 class="section-heading">Prices &amp; edge</h3>
@@ -331,7 +329,6 @@
           </thead>
           <tbody></tbody>
         </table>
-        <p id="analysis-sg-pillar-note" class="text-muted matchup-analysis-note"></p>
       </div>
     </section>
 
@@ -892,6 +889,38 @@
     </div>
   </dialog>
 
+  <dialog id="tab-help-dialog-matchup-analysis" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-matchup-analysis">
+    <div class="ev-devig-dialog-inner ev-help-dialog-inner">
+      <header class="ev-devig-head">
+        <h3 class="ev-devig-title" id="tab-help-title-matchup-analysis">Matchup Analysis Tool</h3>
+        <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
+      </header>
+      <p class="ev-help-intro text-muted">
+        Compare one listed matchup at a time: sportsbook prices versus the model, then a strokes-gained and driving profile versus the rest of the field.
+      </p>
+      <section class="ev-help-section" aria-labelledby="tab-help-ma-controls-h">
+        <h4 class="ev-devig-section-title" id="tab-help-ma-controls-h">Market and matchup</h4>
+        <p class="text-muted ev-help-devig-lede"><strong>Market</strong> switches round, tournament head-to-head, or three-ball lists from DataGolf. <strong>Matchup</strong> picks which pairing (or trio) you are analyzing. Three-ball rows show prices only; the strokes-gained table is for two-player markets.</p>
+      </section>
+      <section class="ev-help-section" aria-labelledby="tab-help-ma-prices-h">
+        <h4 class="ev-devig-section-title" id="tab-help-ma-prices-h">Prices &amp; edge</h4>
+        <p class="text-muted ev-help-devig-lede"><strong>Model</strong> is the win probability from the same blended matchup math as the Round Matchups tab (weather and pricing elsewhere still feed into it). <strong>Market</strong> is devigged consensus across the same sportsbook whitelist as <strong>+EV Bets</strong>. <strong>Edge</strong> is expected value at the best shown decimal price. <strong>Odds</strong> / <strong>Book</strong> identify that price.</p>
+      </section>
+      <section class="ev-help-section" aria-labelledby="tab-help-ma-sg-h">
+        <h4 class="ev-devig-section-title" id="tab-help-ma-sg-h">Strokes gained vs field</h4>
+        <p class="text-muted ev-help-devig-lede">SG rows use merged DataGolf <strong>skill-ratings</strong> and <strong>player-decompositions</strong> when you refresh projections (<code>npm run fetch:dg</code>). Bars encode magnitude; green/red on SG is positive versus negative versus par.</p>
+        <p class="text-muted ev-help-devig-lede"><strong>Fld %</strong> is the share of the field strictly lower on that number (higher is better for SG, driving distance, and fairway accuracy). <strong>Advantage</strong> states who leads and by how much (strokes, yards, or percentage points).</p>
+      </section>
+      <section class="ev-help-section" aria-labelledby="tab-help-ma-driving-h">
+        <h4 class="ev-devig-section-title" id="tab-help-ma-driving-h">Distance and accuracy</h4>
+        <p class="text-muted ev-help-devig-lede"><strong>Distance</strong> prefers modeled driving-distance columns from those feeds when present; otherwise it stays empty. <strong>Accuracy</strong> uses modeled fairway accuracy when available, and otherwise estimates fairway rate from projected fairways hit per round (14 eligible holes).</p>
+      </section>
+      <footer class="ev-help-actions">
+        <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
+      </footer>
+    </div>
+  </dialog>
+
   <dialog id="tab-help-dialog-matchups" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-matchups">
     <div class="ev-devig-dialog-inner ev-help-dialog-inner">
       <header class="ev-devig-head">
@@ -962,6 +991,6 @@
   </dialog>
 
   <script src="embedded-player-round-history.js?v=5"></script>
-  <script src="app.js?v=69"></script>
+  <script src="app.js?v=70"></script>
 </body>
 </html>

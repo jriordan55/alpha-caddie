@@ -603,6 +603,44 @@ function skillPillarsFromSkillRow(row) {
   };
 }
 
+/** Driving distance (yards) + fairway accuracy (% points), from skill-ratings / decompositions column aliases. */
+function drivingAttrsFromSkillBag(row) {
+  if (!row || typeof row !== "object") return { driving_distance: NaN, driving_accuracy: NaN };
+  const bag = normalizedScalarBag(row);
+  const dist = pickFromBag(bag, [
+    "driving_distance",
+    "avg_driving_distance",
+    "drive_distance",
+    "distance",
+    "avg_drive_distance",
+    "driving_dist",
+    "predicted_driving_distance",
+    "dd",
+    "ott_distance",
+  ]);
+  let acc = pickFromBag(bag, [
+    "driving_accuracy",
+    "driving_acc",
+    "fairway_pct",
+    "fw_pct",
+    "fairways_hit_pct",
+    "driving_accuracy_pct",
+    "accuracy_ot",
+    "accuracy_off_the_tee",
+    "predicted_fw_pct",
+    "fairway_accuracy",
+    "fw_accuracy",
+  ]);
+  if (Number.isFinite(acc) && acc > 0 && acc <= 1) acc *= 100;
+  return { driving_distance: dist, driving_accuracy: acc };
+}
+
+function mergeSkillDrivingProfile(mergedRow) {
+  const pillars = skillPillarsFromSkillRow(mergedRow) || {};
+  const drv = drivingAttrsFromSkillBag(mergedRow);
+  return { ...pillars, ...drv };
+}
+
 /**
  * Normalize preds/pre-tournament placement fields to implied probability (0–1).
  * odds_format from API: percent (default), decimal (fair odds 1/p), american (+/−).
@@ -826,13 +864,13 @@ async function main() {
     if (!Number.isFinite(id)) continue;
     const rid = Math.round(id);
     const merged = { ...(decompByDgRaw.get(rid) || {}), ...row };
-    skillByDg.set(rid, skillPillarsFromSkillRow(merged));
+    skillByDg.set(rid, mergeSkillDrivingProfile(merged));
   }
   for (const fr of fieldRows) {
     const fid = Math.round(num(fr.dg_id, NaN));
     if (!Number.isFinite(fid) || skillByDg.has(fid)) continue;
     const rawOnly = decompByDgRaw.get(fid);
-    if (rawOnly) skillByDg.set(fid, skillPillarsFromSkillRow(rawOnly));
+    if (rawOnly) skillByDg.set(fid, mergeSkillDrivingProfile(rawOnly));
   }
 
   console.log("Fetching fantasy-projection-defaults…");
@@ -859,6 +897,7 @@ async function main() {
     const dbc = firstNumCol(row, ["doubles", "double_bogeys", "doubles_or_worse"]);
     const gc = firstNumCol(row, ["gir", "greens_in_regulation", "gir_count"]);
     const fc = firstNumCol(row, ["fairways", "driving_accuracy", "fw", "fairway"]);
+    const ddc = firstNumCol(row, ["driving_distance", "avg_driving_distance", "drive_distance", "distance"]);
     fantasyByDg.set(Math.round(id), {
       birdies: bc ? num(row[bc]) : NaN,
       pars: pc ? num(row[pc]) : NaN,
@@ -867,6 +906,7 @@ async function main() {
       doubles: dbc ? num(row[dbc]) : NaN,
       gir: gc ? num(row[gc]) : NaN,
       fairways: fc ? num(row[fc]) : NaN,
+      driving_distance: ddc ? num(row[ddc]) : NaN,
     });
   }
 
@@ -983,6 +1023,9 @@ async function main() {
     let mu_sg = skRow && Number.isFinite(skRow.sg_total) ? skRow.sg_total : 0;
     if (!Number.isFinite(mu_sg)) mu_sg = 0;
 
+    let driving_distance = skRow && Number.isFinite(skRow.driving_distance) ? skRow.driving_distance : NaN;
+    let driving_accuracy = skRow && Number.isFinite(skRow.driving_accuracy) ? skRow.driving_accuracy : NaN;
+
     const fx = fantasyByDg.get(id) || {};
     let eagles = num(fx.eagles);
     let birdies = num(fx.birdies);
@@ -991,6 +1034,7 @@ async function main() {
     let doubles = num(fx.doubles);
     let gir = num(fx.gir);
     let fairways = num(fx.fairways);
+    if (!Number.isFinite(driving_distance)) driving_distance = num(fx.driving_distance);
 
     if (Number.isFinite(gir) && gir > 0 && gir <= 1) gir *= 18;
     if (Number.isFinite(fairways) && fairways > 0 && fairways <= 1) fairways *= N_FAIRWAY_HOLES;
@@ -1035,6 +1079,8 @@ async function main() {
         if (Number.isFinite(skRow[k])) rowOut[k] = skRow[k];
       }
     }
+    if (Number.isFinite(driving_distance)) rowOut.driving_distance = driving_distance;
+    if (Number.isFinite(driving_accuracy)) rowOut.driving_accuracy = driving_accuracy;
     base.push(rowOut);
   }
 
@@ -1110,6 +1156,14 @@ async function main() {
       stripGirFairwaysPuttsIfTiny(pl);
       for (const k of ["sg_total", "sg_ott", "sg_app", "sg_arg", "sg_putt", "sg_t2g"]) {
         if (Number.isFinite(row[k])) pl[k] = Math.round(row[k] * 1000) / 1000;
+      }
+      if (Number.isFinite(row.driving_distance)) pl.driving_distance = Math.round(row.driving_distance * 10) / 10;
+      if (Number.isFinite(row.driving_accuracy)) pl.driving_accuracy = Math.round(row.driving_accuracy * 10) / 10;
+      else {
+        const fw = st.fairways;
+        if (Number.isFinite(fw) && fw > 1.02) {
+          pl.driving_accuracy = Math.round(((fw / N_FAIRWAY_HOLES) * 100) * 10) / 10;
+        }
       }
       players.push(pl);
     }

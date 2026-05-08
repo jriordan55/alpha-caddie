@@ -1229,6 +1229,7 @@ th.matchup-analysis-best-pick {
 }
 .matchup-analysis-bar-val.pos { color: var(--golf-green); }
 .matchup-analysis-bar-val.neg { color: var(--golf-danger); }
+.matchup-analysis-bar-val.neutral { color: var(--golf-text); }
 .matchup-analysis-bar-track {
   width: 92px;
   height: 8px;

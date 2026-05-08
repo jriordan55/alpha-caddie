@@ -4459,7 +4459,13 @@ function matchupAnalysisMetricValue(row, key) {
     return NaN;
   }
   if (key === "accuracy") {
-    const cands = [num(row.accuracy, NaN), num(row.driving_acc, NaN), num(row.driving_accuracy, NaN)];
+    const cands = [
+      num(row.driving_accuracy, NaN),
+      num(row.accuracy, NaN),
+      num(row.driving_acc, NaN),
+      num(row.fw_pct, NaN),
+      num(row.fairway_pct, NaN),
+    ];
     let raw = NaN;
     for (const v of cands) {
       if (Number.isFinite(v)) {
@@ -4573,13 +4579,11 @@ function buildMatchupAnalysisTool() {
   const pricingHost = document.getElementById("matchup-analysis-pricing");
   const matchupPickEl = document.getElementById("analysis-matchup-select");
   const sgBody = document.querySelector("#table-matchup-analysis-sg tbody");
-  const pillarNote = document.getElementById("analysis-sg-pillar-note");
   const marketEl = document.getElementById("analysis-market");
   const note = document.getElementById("analysis-market-note");
   if (!sgBody) return;
   sgBody.innerHTML = "";
   if (pricingHost) pricingHost.innerHTML = "";
-  if (pillarNote) pillarNote.textContent = "";
   const devigPrefs = loadEvDevigPrefs();
   const key = String(marketEl?.value || "round_matchups");
   const pack = DATA.matchups && DATA.matchups[key];
@@ -4690,7 +4694,7 @@ function buildMatchupAnalysisTool() {
       ].sort((a, b) => num(b.edge, -99) - num(a.edge, -99));
       rows.push({
         key: `3b:${id1}:${id2}:${id3}`,
-        matchup: `${m.p1_player_name || ""} / ${m.p2_player_name || ""} / ${m.p3_player_name || ""}`,
+        matchup: `${displayGolferName(String(m.p1_player_name || ""))} / ${displayGolferName(String(m.p2_player_name || ""))} / ${displayGolferName(String(m.p3_player_name || ""))}`,
         best: sides[0],
         pricingSides,
         isThree: true,
@@ -4743,7 +4747,7 @@ function buildMatchupAnalysisTool() {
     ];
     rows.push({
       key: `h2h:${id1}:${id2}`,
-      matchup: `${m.p1_player_name || ""} vs ${m.p2_player_name || ""}`,
+      matchup: `${displayGolferName(String(m.p1_player_name || ""))} vs ${displayGolferName(String(m.p2_player_name || ""))}`,
       best,
       pricingSides,
       isThree: false,
@@ -4797,8 +4801,8 @@ function buildMatchupAnalysisTool() {
       sgBody.appendChild(tr);
       return;
     }
-    if (titleA) titleA.textContent = entry.left.name || "Player A";
-    if (titleB) titleB.textContent = entry.right.name || "Player B";
+    if (titleA) titleA.textContent = displayGolferName(String(entry.left.name || "")) || "Player A";
+    if (titleB) titleB.textContent = displayGolferName(String(entry.right.name || "")) || "Player B";
     const metrics = [
       ["SG: Total", "sg_total"],
       ["SG: Tee-to-Green", "sg_t2g"],
@@ -4820,15 +4824,19 @@ function buildMatchupAnalysisTool() {
         if (!Number.isFinite(s)) continue;
         maxAbs = Math.max(maxAbs, Math.abs(s));
       }
-      maxAbs = Math.max(maxAbs, Math.abs(v), kind === "sg" ? 0.6 : kind === "distance" ? 30 : 20);
+      maxAbs = Math.max(maxAbs, Math.abs(v), kind === "sg" ? 0.6 : kind === "distance" ? 30 : 25);
       const pct = Math.max(0, Math.min(100, (Math.abs(v) / maxAbs) * 100));
       const wrap = document.createElement("span");
       wrap.className = "matchup-analysis-bar-wrap";
       const val = document.createElement("span");
-      val.className = `matchup-analysis-bar-val${v >= 0 ? " pos" : " neg"}`;
-      if (kind === "sg") val.textContent = `${v >= 0 ? "+" : ""}${v.toFixed(2)}`;
-      else if (kind === "distance") val.textContent = `${v >= 0 ? "+" : ""}${v.toFixed(1)}`;
-      else val.textContent = `${v >= 0 ? "+" : ""}${v.toFixed(1)}%`;
+      if (kind === "sg") {
+        val.className = `matchup-analysis-bar-val${v >= 0 ? " pos" : " neg"}`;
+        val.textContent = `${v >= 0 ? "+" : ""}${v.toFixed(2)}`;
+      } else {
+        val.className = "matchup-analysis-bar-val neutral";
+        if (kind === "distance") val.textContent = `${v.toFixed(1)} yds`;
+        else val.textContent = `${v.toFixed(1)}%`;
+      }
       const track = document.createElement("span");
       track.className = "matchup-analysis-bar-track";
       const fill = document.createElement("span");
@@ -4860,11 +4868,19 @@ function buildMatchupAnalysisTool() {
       tdPctB.className = "num";
       tdPctB.textContent = Number.isFinite(pctB) ? `${pctB.toFixed(0)}%` : "—";
       const tdAdv = document.createElement("td");
-      if (!Number.isFinite(diff) || Math.abs(diff) < 0.005) {
+      const eps = keyMetric.startsWith("sg_") ? 0.005 : keyMetric === "distance" ? 0.2 : 0.2;
+      if (!Number.isFinite(diff) || Math.abs(diff) < eps) {
         tdAdv.textContent = "Even";
       } else {
-        const who = diff > 0 ? entry.left.name : entry.right.name;
-        tdAdv.textContent = `${who} ${diff > 0 ? "+" : ""}${diff.toFixed(2)} strokes`;
+        const rawWho = diff > 0 ? entry.left.name : entry.right.name;
+        const who = displayGolferName(String(rawWho || ""));
+        if (keyMetric.startsWith("sg_")) {
+          tdAdv.textContent = `${who} ${diff > 0 ? "+" : ""}${diff.toFixed(2)} strokes`;
+        } else if (keyMetric === "distance") {
+          tdAdv.textContent = `${who} ${diff > 0 ? "+" : ""}${diff.toFixed(1)} yds`;
+        } else {
+          tdAdv.textContent = `${who} ${diff > 0 ? "+" : ""}${diff.toFixed(1)} pts`;
+        }
         tdAdv.className = diff > 0 ? "ev-pos" : "ev-neg";
       }
       tr.appendChild(tdMetric);
@@ -4878,10 +4894,6 @@ function buildMatchupAnalysisTool() {
   };
 
   renderSgBreakdown(selected);
-  if (pillarNote) {
-    pillarNote.textContent =
-      "Fld % is the share of the field strictly lower on that SG number (higher SG is better). Component strokes gained is merged from DataGolf skill-ratings and player-decompositions when you run npm run fetch:dg; refresh projections if any pillar shows as unavailable.";
-  }
 }
 
 function buildMatchupsTable() {
