@@ -5769,7 +5769,8 @@ function livePropHistoricalRemainders(dgId, statKey, completedHoles, maxRounds) 
   const pname = String(rec.player_name || "").trim();
   const pkey = playerKeyFromName(pname);
   const rounds = rec.rounds.slice().sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
-  const cap = Math.min(maxRounds || 140, rounds.length);
+  const cap =
+    Number.isFinite(maxRounds) && maxRounds > 0 ? Math.min(maxRounds, rounds.length) : rounds.length;
   for (let i = 0; i < cap; i++) {
     const r = rounds[i];
     const fin = actualForRoundRow(statKey, r);
@@ -5880,7 +5881,7 @@ function renderLivePropPredictor() {
     histNote =
       "GIR, fairways, and putts use the Round projection mean and spread scaled to holes left (hole history rarely has those per hole).";
   } else {
-    const { samples, holeBacked, n } = livePropHistoricalRemainders(dg, statKey, completed, 140);
+    const { samples, holeBacked, n } = livePropHistoricalRemainders(dg, statKey, completed);
     const mMod = livePropModelRemainderSigma(marketLabel, rowClean, statKey, completed);
     const { mean: muHist, std: sigHist, n: nEff } = livePropSampleMeanStd(samples);
     const w = Math.min(1, nEff / 26);
