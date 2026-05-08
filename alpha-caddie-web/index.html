@@ -913,7 +913,7 @@
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-ma-driving-h">
         <h4 class="ev-devig-section-title" id="tab-help-ma-driving-h">Distance and accuracy</h4>
-        <p class="text-muted ev-help-devig-lede"><strong>Distance</strong> prefers modeled driving-distance columns from those feeds when present; otherwise it stays empty. <strong>Accuracy</strong> uses modeled fairway accuracy when available, and otherwise estimates fairway rate from projected fairways hit per round (14 eligible holes).</p>
+        <p class="text-muted ev-help-devig-lede"><strong>Distance</strong> uses driving-distance columns merged from DataGolf where the feed includes them; older projection files may leave this blank until the next <code>npm run fetch:dg</code>. <strong>Accuracy</strong> uses modeled fairway accuracy when present; otherwise it estimates fairway rate from projected fairways hit per round (14 eligible holes).</p>
       </section>
       <footer class="ev-help-actions">
         <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
@@ -991,6 +991,6 @@
   </dialog>
 
   <script src="embedded-player-round-history.js?v=5"></script>
-  <script src="app.js?v=70"></script>
+  <script src="app.js?v=71"></script>
 </body>
 </html>

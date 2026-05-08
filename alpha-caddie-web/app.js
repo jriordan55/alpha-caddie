@@ -4473,6 +4473,10 @@ function matchupAnalysisMetricValue(row, key) {
         break;
       }
     }
+    if (!Number.isFinite(raw)) {
+      const fw = num(row.fairways, NaN);
+      if (Number.isFinite(fw) && fw > 1.02) raw = (fw / 14) * 100;
+    }
     if (!Number.isFinite(raw)) return NaN;
     // support either pct points (48.3) or ratio (0.483)
     return raw > 1 ? raw : raw * 100;
