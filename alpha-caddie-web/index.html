@@ -22,6 +22,7 @@
     <nav class="tabs" role="tablist" aria-label="Main">
       <button type="button" class="tab active" data-tab="ou" role="tab" aria-selected="true">Round projections</button>
       <button type="button" class="tab" data-tab="props" role="tab">Historical Trends</button>
+      <button type="button" class="tab" data-tab="live-prop" role="tab">Live Prop Predictor</button>
       <button type="button" class="tab" data-tab="matchup-analysis" role="tab">Matchup Analysis Tool</button>
       <button type="button" class="tab" data-tab="ev" role="tab">+EV Bets</button>
       <button type="button" class="tab" data-tab="hangout" role="tab">Hole Hangout</button>
@@ -290,6 +291,66 @@
         </div>
         </div>
       </div>
+      </div>
+    </section>
+
+    <!-- Live Prop Predictor -->
+    <section id="panel-live-prop" class="panel" role="tabpanel" hidden>
+      <div class="ev-panel-head">
+        <h2 class="ev-devig-sr-only">Live Prop Predictor</h2>
+        <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="live-prop" aria-label="Help: Live Prop Predictor tab">?</button>
+      </div>
+      <p class="text-muted live-prop-lede">
+        Mid-round: enter where they are and what they’ve posted so far; we project the full-round stat (same markets as Round projections) and compare your prices to the model.
+      </p>
+      <div class="live-prop-layout">
+        <div class="leaderboard-card live-prop-card live-prop-input-card">
+          <h3 class="live-prop-card-title">Inputs</h3>
+          <div class="live-prop-form-grid">
+            <label class="toolbar-label live-prop-field-span">Golfer
+              <select id="live-prop-golfer"></select>
+            </label>
+            <label class="toolbar-label live-prop-field-span">Market
+              <select id="live-prop-market" aria-label="Prop market">
+                <option value="total">Round score</option>
+                <option value="birdies">Birdies</option>
+                <option value="pars">Pars</option>
+                <option value="bogeys">Bogeys</option>
+                <option value="gir">GIR</option>
+                <option value="fairways">Fairways hit</option>
+                <option value="putts">Putts</option>
+              </select>
+            </label>
+            <label class="toolbar-label">Hole now (1–18)
+              <input id="live-prop-hole" type="number" min="1" max="18" step="1" value="5" inputmode="numeric" aria-describedby="live-prop-hole-hint" />
+            </label>
+            <label class="toolbar-label">Current total
+              <input id="live-prop-current" type="number" min="0" step="0.1" value="0" inputmode="decimal" placeholder="0" aria-describedby="live-prop-hole-hint" />
+            </label>
+            <p id="live-prop-hole-hint" class="text-muted live-prop-field-span live-prop-hint">
+              “Hole now” means the hole being played; totals are through completed holes only (e.g. hole 5 → four holes finished).
+            </p>
+            <label class="toolbar-label live-prop-field-span">Line (half-points)
+              <input id="live-prop-line" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="70.5" />
+            </label>
+            <div class="live-prop-odds-pair" role="group" aria-label="Over and under odds">
+              <label class="toolbar-label">Over (American)
+                <input id="live-prop-over-am" type="text" inputmode="text" value="-110" />
+              </label>
+              <label class="toolbar-label">Under (American)
+                <input id="live-prop-under-am" type="text" inputmode="text" value="-110" />
+              </label>
+            </div>
+            <div class="live-prop-actions live-prop-field-span">
+              <button type="button" class="btn-primary" id="live-prop-run">Update projection</button>
+            </div>
+          </div>
+        </div>
+        <div class="leaderboard-card live-prop-card live-prop-output-card">
+          <h3 class="live-prop-card-title">Projection &amp; edge</h3>
+          <div id="live-prop-results" class="live-prop-results" aria-live="polite"></div>
+          <p id="live-prop-detail" class="text-muted live-prop-detail"></p>
+        </div>
       </div>
     </section>
 
@@ -889,6 +950,34 @@
     </div>
   </dialog>
 
+  <dialog id="tab-help-dialog-live-prop" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-live-prop">
+    <div class="ev-devig-dialog-inner ev-help-dialog-inner">
+      <header class="ev-devig-head">
+        <h3 class="ev-devig-title" id="tab-help-title-live-prop">Live Prop Predictor</h3>
+        <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
+      </header>
+      <p class="ev-help-intro text-muted">
+        Estimate <strong>full-round</strong> totals mid-event using the same stat columns as <strong>Round projections</strong>, plus how uncertain the remaining holes are from historical rounds (when hole-by-hole rows exist) and the usual Round projection spread scaled to holes left.
+      </p>
+      <section class="ev-help-section" aria-labelledby="tab-help-live-prop-how-h">
+        <h4 class="ev-devig-section-title" id="tab-help-live-prop-how-h">How to fill it in</h4>
+        <dl class="ev-help-dl">
+          <dt>Hole now</dt>
+          <dd>The hole currently being played. Completed holes = that number minus one — enter stat totals only through those finished holes.</dd>
+          <dt>Round score, birdies, pars, bogeys</dt>
+          <dd>Where history includes hole-by-hole scores for a round, we learn the distribution of “what’s left” after your checkpoint and blend it with the model.</dd>
+          <dt>GIR, fairways, putts</dt>
+          <dd>Hole files rarely break these down per hole; we scale the Round projection mean and volatility to the holes remaining.</dd>
+          <dt>Weather &amp; pricing</dt>
+          <dd>Uses the same global Weather and Pricing controls as the Round projections tab — adjust there first.</dd>
+        </dl>
+      </section>
+      <footer class="ev-help-actions">
+        <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
+      </footer>
+    </div>
+  </dialog>
+
   <dialog id="tab-help-dialog-matchup-analysis" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-matchup-analysis">
     <div class="ev-devig-dialog-inner ev-help-dialog-inner">
       <header class="ev-devig-head">
@@ -992,6 +1081,6 @@
   </dialog>
 
   <script src="embedded-player-round-history.js?v=5"></script>
-  <script src="app.js?v=74"></script>
+  <script src="app.js?v=75"></script>
 </body>
 </html>

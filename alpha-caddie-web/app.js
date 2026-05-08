@@ -1773,6 +1773,7 @@ function refreshPricingAffectedViews() {
     updatePropsFooterEv();
     return;
   }
+  if (tab === "live-prop") return void renderLivePropPredictor();
   if (tab === "hangout") return void scheduleHangoutSimulateDebounced();
   // Fallback for early boot / unknown tab.
   buildOuTable();
@@ -1782,6 +1783,7 @@ function refreshPricingAffectedViews() {
   buildOutrightsTable();
   renderPropsTrends();
   updatePropsFooterEv();
+  renderLivePropPredictor();
   scheduleHangoutSimulateDebounced();
 }
 
@@ -5630,8 +5632,8 @@ function defaultPropGolferDgId() {
   return NaN;
 }
 
-function fillPropGolferSelect() {
-  const sel = document.getElementById("prop-golfer");
+function fillFieldGolferSelect(selId, pickDefaultIdFn) {
+  const sel = document.getElementById(selId);
   if (!sel) return;
   const seen = new Set();
   const opts = [];
@@ -5652,11 +5654,338 @@ function fillPropGolferSelect() {
     op.textContent = displayGolferName(o.name);
     sel.appendChild(op);
   }
-  const defaultId = defaultPropGolferDgId();
+  const defaultId = pickDefaultIdFn ? pickDefaultIdFn() : NaN;
   if (cur && [...sel.options].some((o) => o.value === cur)) sel.value = cur;
   else if (Number.isFinite(defaultId) && [...sel.options].some((o) => o.value === String(defaultId))) {
     sel.value = String(defaultId);
   } else if (sel.options.length) sel.selectedIndex = 0;
+}
+
+function fillPropGolferSelect() {
+  fillFieldGolferSelect("prop-golfer", defaultPropGolferDgId);
+}
+
+function fillLivePropGolferSelect() {
+  fillFieldGolferSelect("live-prop-golfer", defaultPropGolferDgId);
+}
+
+/** Strip DG live partial-round fields so remainder math uses full-round priors + user-entered “so far”. */
+function rowWithoutLivePartialFields(row) {
+  if (!row || typeof row !== "object") return row;
+  const out = { ...row };
+  delete out.dg_live_thru;
+  delete out.dg_live_today;
+  delete out.dg_live_birdies_so_far;
+  delete out.dg_live_bogeys_so_far;
+  delete out.dg_live_pars_so_far;
+  delete out.dg_live_eagles_so_far;
+  delete out.dg_live_placement_from_api;
+  return out;
+}
+
+function livePropSampleMeanStd(xs) {
+  const n = xs.length;
+  if (!n) return { mean: NaN, std: NaN, n: 0 };
+  const mean = xs.reduce((s, x) => s + x, 0) / n;
+  if (n < 2) return { mean, std: NaN, n };
+  let v = 0;
+  for (const x of xs) v += (x - mean) ** 2;
+  return { mean, std: Math.sqrt(v / (n - 1)), n };
+}
+
+function livePropDedupeHolesSorted(holes) {
+  const byHole = new Map();
+  if (!Array.isArray(holes)) return [];
+  for (const h of holes) {
+    const hn = Math.round(num(h.hole, NaN));
+    if (!Number.isFinite(hn) || hn < 1 || hn > 18) continue;
+    byHole.set(hn, h);
+  }
+  return [...byHole.entries()].sort((a, b) => a[0] - b[0]).map(([, h]) => h);
+}
+
+function livePropHolesForRound(pkey, r) {
+  const hm = HISTORY.holesByPlayerKey[pkey];
+  if (!hm || !r) return null;
+  const rn = Math.round(num(r.round_num, NaN));
+  if (!Number.isFinite(rn) || rn < 1) return null;
+  const suf = `\tR${rn}`;
+  const evN = normEvtNameKey(String(r.event_name || ""));
+  let fuzzy = null;
+  for (const k of Object.keys(hm)) {
+    if (!k.endsWith(suf)) continue;
+    const pref = k.slice(0, k.length - suf.length).trim();
+    if (normEvtNameKey(pref) === evN) return hm[k];
+    fuzzy ??= hm[k];
+  }
+  return fuzzy;
+}
+
+function livePropHolesCoverCompleted(holes, completedHoles) {
+  const deduped = livePropDedupeHolesSorted(holes);
+  if (!deduped.length || completedHoles < 1) return false;
+  const have = new Set();
+  for (const h of deduped) {
+    const hn = Math.round(num(h.hole, NaN));
+    if (Number.isFinite(hn)) have.add(hn);
+  }
+  for (let hi = 1; hi <= completedHoles; hi++) {
+    if (!have.has(hi)) return false;
+  }
+  return true;
+}
+
+function livePropCumulativeFromHoles(holes, completedHoles, statKey) {
+  if (!Array.isArray(holes) || completedHoles < 1) return NaN;
+  const sorted = livePropDedupeHolesSorted(holes);
+  let strokes = 0;
+  let birdies = 0;
+  let pars = 0;
+  let bogeys = 0;
+  for (const h of sorted) {
+    const hn = Math.round(num(h.hole, NaN));
+    if (!Number.isFinite(hn) || hn > completedHoles) continue;
+    const par = num(h.par, NaN);
+    const sc = num(h.score, NaN);
+    if (!Number.isFinite(sc) || !Number.isFinite(par)) continue;
+    strokes += sc;
+    const rel = sc - par;
+    if (rel === -1) birdies += 1;
+    if (rel === 0) pars += 1;
+    if (rel >= 1) bogeys += 1;
+  }
+  if (statKey === "total") return strokes;
+  if (statKey === "birdies") return birdies;
+  if (statKey === "pars") return pars;
+  if (statKey === "bogeys") return bogeys;
+  return NaN;
+}
+
+function livePropHistoricalRemainders(dgId, statKey, completedHoles, maxRounds) {
+  const samples = [];
+  let holeBacked = 0;
+  const rec = HISTORY.byDgId && HISTORY.byDgId[String(dgId)];
+  if (!rec || !Array.isArray(rec.rounds)) return { samples, holeBacked, n: 0 };
+  const pname = String(rec.player_name || "").trim();
+  const pkey = playerKeyFromName(pname);
+  const rounds = rec.rounds.slice().sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
+  const cap = Math.min(maxRounds || 140, rounds.length);
+  for (let i = 0; i < cap; i++) {
+    const r = rounds[i];
+    const fin = actualForRoundRow(statKey, r);
+    if (!Number.isFinite(fin)) continue;
+    let cum = NaN;
+    let usedHoleBack = false;
+    const holes = livePropHolesForRound(pkey, r);
+    if (
+      completedHoles >= 1 &&
+      holes &&
+      livePropHolesCoverCompleted(holes, completedHoles) &&
+      (statKey === "total" || statKey === "birdies" || statKey === "pars" || statKey === "bogeys")
+    ) {
+      cum = livePropCumulativeFromHoles(holes, completedHoles, statKey);
+      if (Number.isFinite(cum)) usedHoleBack = true;
+    }
+    if (!Number.isFinite(cum)) {
+      const c = completedHoles;
+      cum = c > 0 ? fin * (c / 18) : 0;
+    }
+    if (usedHoleBack) holeBacked++;
+    samples.push(fin - cum);
+  }
+  return { samples, holeBacked, n: samples.length };
+}
+
+function livePropModelRemainderSigma(marketLabel, rowClean, statKey, completedHoles) {
+  const rem = clamp(18 - completedHoles, 0, 18);
+  const muFull = ouProjectedMean(marketLabel, rowClean);
+  const sigFull = sigmaForOu(marketLabel, rowClean);
+  if (!Number.isFinite(muFull) || !Number.isFinite(sigFull)) return { muRem: NaN, sigRem: NaN };
+  if (rem <= 0) return { muRem: 0, sigRem: Math.max(0.08, sigFull * 0.06) };
+  if (statKey === "fairways") {
+    const denom = 14;
+    const remU = Math.max(1, Math.round((denom / 18) * rem));
+    return {
+      muRem: (muFull / denom) * remU,
+      sigRem: Math.max(0.2, sigFull * Math.sqrt(remU / denom)),
+    };
+  }
+  if (statKey === "gir" || statKey === "putts") {
+    const denom = 18;
+    return {
+      muRem: (muFull / denom) * rem,
+      sigRem: Math.max(0.25, sigFull * Math.sqrt(rem / denom)),
+    };
+  }
+  return {
+    muRem: muFull * (rem / 18),
+    sigRem: Math.max(0.15, sigFull * Math.sqrt(rem / 18)),
+  };
+}
+
+function renderLivePropPredictor() {
+  const root = document.getElementById("live-prop-results");
+  const detail = document.getElementById("live-prop-detail");
+  if (!root || !detail) return;
+
+  const dg = Math.round(num(document.getElementById("live-prop-golfer")?.value, NaN));
+  const statKey = String(document.getElementById("live-prop-market")?.value || "total");
+  const holePlaying = Math.round(num(document.getElementById("live-prop-hole")?.value, NaN));
+  const curRaw = num(document.getElementById("live-prop-current")?.value, NaN);
+  const lineRaw = num(document.getElementById("live-prop-line")?.value, NaN);
+  const line = clampPropLineForMarket(statKey, enforceHalfLine(lineRaw));
+  const oAm = num(document.getElementById("live-prop-over-am")?.value, NaN);
+  const uAm = num(document.getElementById("live-prop-under-am")?.value, NaN);
+
+  const completed = Number.isFinite(holePlaying) ? clamp(holePlaying - 1, 0, 17) : NaN;
+  const marketLabel = ouMarketKeyFromStatKey(statKey);
+  const rEv = getModelRoundForEv();
+  const rowRaw =
+    projectionPlayerRowForModel(dg, rEv) ||
+    DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === dg && samePlayerRound(p, rEv)) ||
+    DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === dg);
+  const rowClean = rowRaw ? rowWithoutLivePartialFields(rowRaw) : null;
+
+  const histOk = Boolean(HISTORY._ok);
+
+  if (
+    !Number.isFinite(dg) ||
+    !Number.isFinite(holePlaying) ||
+    holePlaying < 1 ||
+    holePlaying > 18 ||
+    !Number.isFinite(curRaw) ||
+    curRaw < 0 ||
+    !Number.isFinite(line)
+  ) {
+    root.innerHTML = `<p class="live-prop-placeholder text-muted">Pick golfer and market. <strong>Hole now</strong> is where the player is playing (holes finished = that number minus one). Enter the stat total <strong>through completed holes</strong>, the book line (half-points only), and American odds for Over and Under.</p>`;
+    detail.textContent =
+      "Uses the same Weather and Pricing controls as Round projections (global state). Remainder uncertainty blends history when hole-by-hole scoring matches; otherwise the Round projection model scales to holes left.";
+    return;
+  }
+
+  if (!rowClean) {
+    root.innerHTML = `<p class="text-warn">No projection row for this golfer — refresh projections.</p>`;
+    detail.textContent = "";
+    return;
+  }
+
+  let muRem;
+  let sigRem;
+  let histNote = "";
+
+  if (statKey === "gir" || statKey === "fairways" || statKey === "putts") {
+    const m = livePropModelRemainderSigma(marketLabel, rowClean, statKey, completed);
+    muRem = m.muRem;
+    sigRem = m.sigRem;
+    histNote =
+      "GIR, fairways, and putts use the Round projection mean and spread scaled to holes left (hole history rarely has those per hole).";
+  } else {
+    const { samples, holeBacked, n } = livePropHistoricalRemainders(dg, statKey, completed, 140);
+    const mMod = livePropModelRemainderSigma(marketLabel, rowClean, statKey, completed);
+    const { mean: muHist, std: sigHist, n: nEff } = livePropSampleMeanStd(samples);
+    const w = Math.min(1, nEff / 26);
+    if (histOk && nEff >= 6 && Number.isFinite(muHist) && Number.isFinite(sigHist)) {
+      muRem = w * muHist + (1 - w) * mMod.muRem;
+      sigRem = Math.max(0.25, w * sigHist + (1 - w) * mMod.sigRem);
+      histNote =
+        completed >= 1
+          ? `History n=${nEff} (${holeBacked} rounds with hole-by-hole rows through ${completed} completed holes). Blended with model remainder.`
+          : `History n=${nEff}; full-round remainder from prior rounds (no holes completed yet). Blended with model.`;
+    } else {
+      muRem = mMod.muRem;
+      sigRem = mMod.sigRem;
+      histNote = histOk
+        ? `Limited usable history (n=${nEff}); using model remainder from Round projections.`
+        : "History not loaded; model-only remainder from Round projections.";
+    }
+  }
+
+  if (!Number.isFinite(muRem) || !Number.isFinite(sigRem)) {
+    root.innerHTML = `<p class="text-warn">Could not build remainder distribution for this market.</p>`;
+    detail.textContent = "";
+    return;
+  }
+
+  const predFinal = curRaw + muRem;
+  const sigF = Math.max(0.22, sigRem);
+  const z = (line - predFinal) / sigF;
+  const pOver = clampProb01(1 - normalCdf(z));
+  const pUnder = clampProb01(1 - pOver);
+
+  const dO = decimalFromAmerican(oAm);
+  const dU = decimalFromAmerican(uAm);
+  const evO = Number.isFinite(dO) && dO > 1 ? pOver * dO - 1 : NaN;
+  const evU = Number.isFinite(dU) && dU > 1 ? pUnder * dU - 1 : NaN;
+
+  const fmtPct = (x) => (Number.isFinite(x) ? `${(x * 100).toFixed(1)}%` : "—");
+  const fmtEv = (x) =>
+    Number.isFinite(x)
+      ? `<span class="${x >= 0 ? "ev-pos" : "ev-neg"}">${(x * 100).toFixed(1)}%</span>`
+      : "—";
+
+  const prec = statKey === "total" ? 2 : 1;
+  root.innerHTML = `
+    <div class="live-prop-result-grid">
+      <div class="live-prop-metric">
+        <span class="live-prop-metric-label">Projected final</span>
+        <span class="live-prop-metric-val">${predFinal.toFixed(prec)}</span>
+      </div>
+      <div class="live-prop-metric">
+        <span class="live-prop-metric-label">σ remainder</span>
+        <span class="live-prop-metric-val">${sigF.toFixed(2)}</span>
+      </div>
+      <div class="live-prop-metric">
+        <span class="live-prop-metric-label">P (Over)</span>
+        <span class="live-prop-metric-val">${fmtPct(pOver)}</span>
+      </div>
+      <div class="live-prop-metric">
+        <span class="live-prop-metric-label">P (Under)</span>
+        <span class="live-prop-metric-val">${fmtPct(pUnder)}</span>
+      </div>
+      <div class="live-prop-metric">
+        <span class="live-prop-metric-label">EV Over</span>
+        <span class="live-prop-metric-val">${fmtEv(evO)}</span>
+      </div>
+      <div class="live-prop-metric">
+        <span class="live-prop-metric-label">EV Under</span>
+        <span class="live-prop-metric-val">${fmtEv(evU)}</span>
+      </div>
+    </div>`;
+  detail.textContent = histNote;
+}
+
+function syncLivePropLineFromMarket() {
+  const statKey = String(document.getElementById("live-prop-market")?.value || "total");
+  const inp = document.getElementById("live-prop-line");
+  if (!inp) return;
+  const d = defaultPropLineForStat(statKey);
+  inp.value = formatPropLineValueForInput(clampPropLineForMarket(statKey, d));
+}
+
+function initLivePropPredictorUi() {
+  fillLivePropGolferSelect();
+  syncLivePropLineFromMarket();
+  const ids = [
+    "live-prop-golfer",
+    "live-prop-market",
+    "live-prop-hole",
+    "live-prop-current",
+    "live-prop-line",
+    "live-prop-over-am",
+    "live-prop-under-am",
+  ];
+  for (const id of ids) {
+    document.getElementById(id)?.addEventListener("change", () => {
+      if (id === "live-prop-market") syncLivePropLineFromMarket();
+      renderLivePropPredictor();
+    });
+    document.getElementById(id)?.addEventListener("input", () => renderLivePropPredictor());
+  }
+  document.getElementById("live-prop-run")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    renderLivePropPredictor();
+  });
+  renderLivePropPredictor();
 }
 
 function selectedDgId() {
@@ -8506,7 +8835,9 @@ function refreshAll() {
   buildMatchupsTable();
   buildOutrightsTable();
   fillPropGolferSelect();
+  fillLivePropGolferSelect();
   renderPropsTrends();
+  renderLivePropPredictor();
   initHangoutSelectors(false);
   scheduleHangoutSimulateDebounced();
 }
@@ -9648,6 +9979,9 @@ function initTabs() {
       if (tab === "matchup-analysis") {
         requestAnimationFrame(() => buildMatchupAnalysisTool());
       }
+      if (tab === "live-prop") {
+        requestAnimationFrame(() => renderLivePropPredictor());
+      }
       if (tab === "ev") {
         requestAnimationFrame(() => {
           syncEvTabOddsAfterShow();
@@ -9675,6 +10009,7 @@ document.addEventListener("DOMContentLoaded", () => {
     buildOutrightsTable();
     renderPropsTrends();
     updatePropsFooterEv();
+    renderLivePropPredictor();
     scheduleHangoutSimulateDebounced();
   }
   function applyWeatherFrom(ids, syncUi = true) {
@@ -9726,6 +10061,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initPropsTopTableSortOnce();
   configureRoundPickerUi();
   initTabs();
+  initLivePropPredictorUi();
   initOutrightsTableSortOnce();
   initEvTableSortOnce();
   document.getElementById("btn-refresh-outrights")?.addEventListener("click", () => loadProjections());
