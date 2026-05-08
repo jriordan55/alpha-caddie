@@ -6337,15 +6337,14 @@ function roundsMatchingCurrentCourseOnly(dgId) {
 
 /** Field-wide current-course rounds (all players) for this season, for the Current course avg KPI. */
 function roundsMatchingCurrentCourseOnlyFieldSeason() {
-  const vn = venueCourseName();
-  const metaEvent = String(DATA.meta.event_name || "").trim();
-  if (!vn && !metaEvent) return [];
+  const venueKey = normCourseNameKey(venueCourseName());
+  if (!venueKey) return [];
   const out = [];
   for (const rec of Object.values(HISTORY.byDgId || {})) {
     if (!rec || !Array.isArray(rec.rounds)) continue;
     for (const r of rec.rounds) {
       if (historyRoundIsPlaceholderAllMarketsZero(r)) continue;
-      if (!currentTournamentContextMatchesRound(r)) continue;
+      if (normCourseNameKey(r.course_name) !== venueKey) continue;
       if (historyRoundSeasonYear(r) !== PROPS_TREND_DISPLAY_SEASON_YEAR) continue;
       out.push(r);
     }
@@ -6355,15 +6354,14 @@ function roundsMatchingCurrentCourseOnlyFieldSeason() {
 
 /** Field-wide current-course rounds (all players), all seasons. */
 function roundsMatchingCurrentCourseOnlyFieldAllTime() {
-  const vn = venueCourseName();
-  const metaEvent = String(DATA.meta.event_name || "").trim();
-  if (!vn && !metaEvent) return [];
+  const venueKey = normCourseNameKey(venueCourseName());
+  if (!venueKey) return [];
   const out = [];
   for (const rec of Object.values(HISTORY.byDgId || {})) {
     if (!rec || !Array.isArray(rec.rounds)) continue;
     for (const r of rec.rounds) {
       if (historyRoundIsPlaceholderAllMarketsZero(r)) continue;
-      if (!currentTournamentContextMatchesRound(r)) continue;
+      if (normCourseNameKey(r.course_name) !== venueKey) continue;
       out.push(r);
     }
   }
@@ -6560,9 +6558,6 @@ function paintPropsTrendKpiRow(statKey, hitSt, graphSeries, dgId) {
     addRateKpi("Under hit rate", hitSt.underRate, hitSt.under, hitSt.valid, "under");
   }
 
-  if (propsTrendCourseFilterActive()) {
-    addKpi("Course avg", propsTrendMeanActual(statKey, roundsMatchingCurrentCourseOnlyFieldAllTime()));
-  }
 }
 
 function paintPropsTrendsInsightHeader(playerRow, statKey, line, hitSt, graphSeries, dgId) {

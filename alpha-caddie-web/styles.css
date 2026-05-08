@@ -1801,6 +1801,8 @@ th.matchup-analysis-best-pick {
   font-variant-numeric: tabular-nums;
   line-height: 1.15;
 }
+.props-trends-kpi-val.ev-pos { color: var(--golf-green); }
+.props-trends-kpi-val.ev-neg { color: var(--golf-danger); }
 .props-chart-line-legend {
   margin: 8px 0 0;
   font-size: 0.7rem;
