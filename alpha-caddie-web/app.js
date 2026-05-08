@@ -6335,6 +6335,24 @@ function roundsMatchingCurrentCourseOnly(dgId) {
   return list;
 }
 
+/** Field-wide current-course rounds (all players) for this season, for the Current course avg KPI. */
+function roundsMatchingCurrentCourseOnlyFieldSeason() {
+  const vn = venueCourseName();
+  const metaEvent = String(DATA.meta.event_name || "").trim();
+  if (!vn && !metaEvent) return [];
+  const out = [];
+  for (const rec of Object.values(HISTORY.byDgId || {})) {
+    if (!rec || !Array.isArray(rec.rounds)) continue;
+    for (const r of rec.rounds) {
+      if (historyRoundIsPlaceholderAllMarketsZero(r)) continue;
+      if (!currentTournamentContextMatchesRound(r)) continue;
+      if (historyRoundSeasonYear(r) !== PROPS_TREND_DISPLAY_SEASON_YEAR) continue;
+      out.push(r);
+    }
+  }
+  return out;
+}
+
 function formatPropsTrendKpiValue(statKey, v) {
   if (!Number.isFinite(v)) return "—";
   void statKey;
@@ -6500,7 +6518,7 @@ function paintPropsTrendKpiRow(statKey, hitSt, graphSeries, dgId) {
   addKpi("All-time avg", allMean);
   addKpi("Season avg", seasonMean);
   addKpi("Graph avg", graphMean);
-  addKpi("Current course avg", propsTrendMeanActual(statKey, roundsMatchingCurrentCourseOnly(id)));
+  addKpi("Current course avg", propsTrendMeanActual(statKey, roundsMatchingCurrentCourseOnlyFieldSeason()));
 
   if (hitSt && hitSt.valid > 0) {
     const hi = propsMarketHigherIsBetter(statKey);
