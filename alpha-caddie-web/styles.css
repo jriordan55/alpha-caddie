@@ -3171,6 +3171,13 @@ th.matchup-analysis-best-pick {
     padding: 10px 12px;
   }
 
+  /* iPhone: keep round-projections table wider than viewport so sticky lead cols
+     do not consume the full visible width and block access to later columns. */
+  #panel-ou #table-ou.table-ou-projections {
+    width: max-content;
+    min-width: 980px;
+  }
+
 }
 
 #panel-ev .table-wrap,

@@ -270,10 +270,29 @@ function loadLiveRoundSnapshotByDg() {
   const meta = proj?.meta && typeof proj.meta === "object" ? proj.meta : {};
   const eventName = String(proj?.event_name || live?.info?.event_name || "").trim();
   if (!eventName) return null;
-  const roundNum = Math.round(num(meta.datagolf_live_current_round, NaN));
+  const roundCandidates = [
+    meta.datagolf_live_current_round,
+    meta.display_round,
+    live?.info?.current_round,
+    live?.current_round,
+  ];
+  for (const r of rows) {
+    roundCandidates.push(r?.round);
+  }
+  let roundNum = NaN;
+  for (const cand of roundCandidates) {
+    const rn = Math.round(num(cand, NaN));
+    if (Number.isFinite(rn) && rn >= 1 && rn <= 4) {
+      roundNum = rn;
+      break;
+    }
+  }
   if (!Number.isFinite(roundNum) || roundNum < 1 || roundNum > 4) return null;
   const courseName = String(proj?.course_used || meta.course_used || "").trim() || eventName;
-  const coursePar = num(meta.course_par_18, NaN);
+  const coursePar = num(
+    proj?.course_par_18 ?? meta.course_par_18 ?? live?.info?.course_par ?? live?.course_par,
+    NaN
+  );
   const eventDate = isoDateMdY(live?.info?.last_update || live?.last_update || new Date().toISOString());
   const eventYear = parseInt(String(eventDate).split("/")[2] || "", 10);
   /** @type {Map<number, any>} */
