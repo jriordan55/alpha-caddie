@@ -728,11 +728,8 @@ body {
   letter-spacing: 0.08em;
 }
 
-/* Round projections table: allow horizontal scroll when many columns */
+/* Round projections table: always allow horizontal swipe (iOS Safari can ignore :has fallback). */
 #panel-ou .ou-table-card.table-wrap {
-  overflow-x: clip;
-}
-#panel-ou .ou-table-card.table-wrap:has(.table-ou-projections) {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
