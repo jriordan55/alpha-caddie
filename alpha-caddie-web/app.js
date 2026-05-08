@@ -6539,7 +6539,8 @@ function paintPropsTrendKpiRow(statKey, hitSt, graphSeries, dgId) {
   addKpi("All-time course avg", propsTrendMeanActual(statKey, roundsMatchingCurrentCourseOnlyFieldAllTime()));
 
   if (hitSt && hitSt.valid > 0) {
-    const addRateKpi = (label, rate, wins, total) => {
+    const lowerBetter = propsStatLowerIsBetter(statKey);
+    const addRateKpi = (label, rate, wins, total, side) => {
       const wrap = document.createElement("div");
       wrap.className = "props-trends-kpi";
       const lab = document.createElement("span");
@@ -6548,17 +6549,19 @@ function paintPropsTrendKpiRow(statKey, hitSt, graphSeries, dgId) {
       const val = document.createElement("span");
       val.className = "props-trends-kpi-val";
       val.textContent = Number.isFinite(rate) ? `${(rate * 100).toFixed(1)}% (${wins}/${total})` : "—";
+      const isUnderSide = side === "under";
+      const greenSide = lowerBetter ? isUnderSide : !isUnderSide;
+      val.classList.add(greenSide ? "ev-pos" : "ev-neg");
       wrap.appendChild(lab);
       wrap.appendChild(val);
       el.appendChild(wrap);
     };
-    addRateKpi("Over hit rate", hitSt.overRate, hitSt.over, hitSt.valid);
-    addRateKpi("Under hit rate", hitSt.underRate, hitSt.under, hitSt.valid);
+    addRateKpi("Over hit rate", hitSt.overRate, hitSt.over, hitSt.valid, "over");
+    addRateKpi("Under hit rate", hitSt.underRate, hitSt.under, hitSt.valid, "under");
   }
 
   if (propsTrendCourseFilterActive()) {
-    const cr = roundsMatchingCourseSelectionOnly(id);
-    addKpi("Course avg", propsTrendMeanActual(statKey, cr));
+    addKpi("Course avg", propsTrendMeanActual(statKey, roundsMatchingCurrentCourseOnlyFieldAllTime()));
   }
 }
 
