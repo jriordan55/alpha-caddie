@@ -6321,6 +6321,18 @@ function roundsMatchingCourseSelectionOnly(dgId) {
   return list;
 }
 
+/** Current tournament venue-only slice (independent of filters), used for KPI context. */
+function roundsMatchingCurrentCourseOnly(dgId) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return [];
+  const vn = venueCourseName();
+  const metaEvent = String(DATA.meta.event_name || "").trim();
+  if (!vn && !metaEvent) return [];
+  let list = propsTrendHistoryBaselineRounds(id);
+  list = list.filter((r) => currentTournamentContextMatchesRound(r));
+  return list;
+}
+
 function formatPropsTrendKpiValue(statKey, v) {
   if (!Number.isFinite(v)) return "—";
   void statKey;
@@ -6486,6 +6498,7 @@ function paintPropsTrendKpiRow(statKey, hitSt, graphSeries, dgId) {
   addKpi("All-time avg", allMean);
   addKpi("Season avg", seasonMean);
   addKpi("Graph avg", graphMean);
+  addKpi("Current course avg", propsTrendMeanActual(statKey, roundsMatchingCurrentCourseOnly(id)));
 
   if (hitSt && hitSt.valid > 0) {
     const hi = propsMarketHigherIsBetter(statKey);
