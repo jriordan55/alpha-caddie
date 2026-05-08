@@ -980,6 +980,57 @@ function liveCourseRoundExcessFromHoleStats(payload, minThru = 4) {
 }
 
 /** Pull live course difficulty (+ optional DG labels) from fetch-live-in-play bundle. */
+/**
+ * Overlay preds/live-tournament-stats `distance` / `accuracy` onto every round row for each dg_id.
+ * Same feed as DataGolf Live Stats (event_avg); works even when `j.data` is missing.
+ */
+function mergeLiveTournamentDrivingIntoPlayers(j) {
+  if (!j || typeof j !== "object" || !DATA.players || !DATA.players.length) return false;
+  const lt = j.live_tournament_stats;
+  if (!lt || typeof lt !== "object") return false;
+  const lst = Array.isArray(lt.live_stats) ? lt.live_stats : [];
+  if (!lst.length) return false;
+  const modelEvent = String(DATA.meta?.event_name || DATA.event_name || "").trim();
+  const ltEv = String(lt.event_name || "").trim();
+  if (
+    modelEvent &&
+    ltEv &&
+    !eventNameMatchesCurrentSchedule(ltEv, modelEvent) &&
+    !eventNameMatchesCurrentSchedule(modelEvent, ltEv)
+  ) {
+    return false;
+  }
+  const byDg = new Map();
+  for (const row of lst) {
+    if (!row || typeof row !== "object") continue;
+    const id = Math.round(num(row.dg_id ?? row.dgId, NaN));
+    if (!Number.isFinite(id)) continue;
+    const dist = num(row.distance, NaN);
+    let acc = num(row.accuracy, NaN);
+    if (Number.isFinite(acc) && acc > 0 && acc <= 1) acc *= 100;
+    byDg.set(id, { dist, acc });
+  }
+  if (!byDg.size) return false;
+  let touched = 0;
+  for (const p of DATA.players) {
+    const id = Math.round(num(p.dg_id, NaN));
+    if (!Number.isFinite(id)) continue;
+    const x = byDg.get(id);
+    if (!x) continue;
+    if (Number.isFinite(x.dist)) {
+      const dy = Math.round(x.dist * 10) / 10;
+      p.driving_distance = dy;
+      p.avg_driving_distance = dy;
+      touched++;
+    }
+    if (Number.isFinite(x.acc)) {
+      p.driving_accuracy = Math.round(x.acc * 10) / 10;
+      touched++;
+    }
+  }
+  return touched > 0;
+}
+
 function mergeDatagolfLiveCourseMeta(j) {
   if (!DATA.meta) DATA.meta = {};
   let touched = false;
@@ -1143,6 +1194,7 @@ function mergeDgFieldScoresFromBundleIntoData(dataRows, fieldUpdatesRaw) {
 function mergeDatagolfInPlayPayload(j) {
   if (!j || typeof j !== "object" || !DATA.players || !DATA.players.length) return false;
   const metaTouched = mergeDatagolfLiveCourseMeta(j);
+  let drivingTouched = false;
   if (!Array.isArray(j.data)) return metaTouched;
   const info = j.info && typeof j.info === "object" ? j.info : {};
   const currentRound = num(info.current_round, NaN);
@@ -1171,6 +1223,7 @@ function mergeDatagolfInPlayPayload(j) {
     return metaTouched;
   }
   if (DATA.meta) delete DATA.meta.datagolf_live_event_mismatch;
+  drivingTouched = mergeLiveTournamentDrivingIntoPlayers(j);
   if (j.field_updates && typeof j.field_updates === "object") {
     mergeDgFieldScoresFromBundleIntoData(j.data, j.field_updates);
   }
@@ -1245,7 +1298,7 @@ function mergeDatagolfInPlayPayload(j) {
       DATA.meta.live_matchup_model_blend = 0.35;
     }
   }
-  return touched > 0 || metaTouched;
+  return touched > 0 || metaTouched || drivingTouched;
 }
 
 async function fetchAndMergeDatagolfLiveInPlay(opts = {}) {
@@ -4459,6 +4512,7 @@ function matchupAnalysisMetricValue(row, key) {
       num(row.average_driving_distance, NaN),
       num(row.avg_drive_distance, NaN),
       num(row.driving_distance, NaN),
+      num(row.driving_dist, NaN),
       num(row.distance, NaN),
     ];
     for (const v of cands) if (Number.isFinite(v)) return v;
@@ -4820,22 +4874,36 @@ function buildMatchupAnalysisTool() {
       ["SG: Approach", "sg_app"],
       ["SG: Around Green", "sg_arg"],
       ["SG: Putting", "sg_putt"],
-      ["Avg driving distance", "distance"],
+      ["Driving distance", "distance"],
       ["Accuracy", "accuracy"],
     ];
+    const barPctMatchup = (kind, v, samples) => {
+      const finite = (samples || []).filter((x) => Number.isFinite(x));
+      if (kind === "sg") {
+        let maxAbs = 0;
+        for (const s of finite) maxAbs = Math.max(maxAbs, Math.abs(s));
+        maxAbs = Math.max(maxAbs, Math.abs(v), 0.6);
+        return Math.max(0, Math.min(100, (Math.abs(v) / maxAbs) * 100));
+      }
+      let lo = Infinity;
+      let hi = -Infinity;
+      for (const s of finite) {
+        lo = Math.min(lo, s);
+        hi = Math.max(hi, s);
+      }
+      lo = Math.min(lo, v);
+      hi = Math.max(hi, v);
+      const span = hi - lo;
+      if (!Number.isFinite(span) || span < 1e-9) return 0;
+      return Math.max(0, Math.min(100, ((v - lo) / span) * 100));
+    };
     const buildMetricCell = (td, v, samples, kind = "sg") => {
       td.className = "num matchup-analysis-bar-cell";
       if (!Number.isFinite(v)) {
         td.textContent = "—";
         return;
       }
-      let maxAbs = 0;
-      for (const s of samples || []) {
-        if (!Number.isFinite(s)) continue;
-        maxAbs = Math.max(maxAbs, Math.abs(s));
-      }
-      maxAbs = Math.max(maxAbs, Math.abs(v), kind === "sg" ? 0.6 : kind === "distance" ? 30 : 25);
-      const pct = Math.max(0, Math.min(100, (Math.abs(v) / maxAbs) * 100));
+      const pct = barPctMatchup(kind, v, samples);
       const wrap = document.createElement("span");
       wrap.className = "matchup-analysis-bar-wrap";
       const val = document.createElement("span");

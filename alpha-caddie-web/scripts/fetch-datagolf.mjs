@@ -920,6 +920,58 @@ async function main() {
     });
   }
 
+  /** event_avg driving distance (yards) + accuracy from preds/live-tournament-stats — matches DG Live Stats feed. */
+  let liveDrivingByDg = new Map();
+  try {
+    const statsParam =
+      String(process.env.GOLF_PROJECTIONS_MERGE_LIVE_STATS || "distance,accuracy").trim() || "distance,accuracy";
+    const roundParam = String(process.env.GOLF_LIVE_TOURNAMENT_STATS_ROUND || "event_avg").trim() || "event_avg";
+    const liveTsJson = await fetchDg(
+      "/preds/live-tournament-stats",
+      { stats: statsParam, round: roundParam, display: "value", file_format: "json" },
+      key,
+    );
+    const lst = Array.isArray(liveTsJson?.live_stats)
+      ? liveTsJson.live_stats
+      : rowsFromResponse(liveTsJson);
+    const evLive = String(liveTsJson?.event_name ?? liveTsJson?.eventName ?? "").trim();
+    let overlapOk = false;
+    if (lst.length && fieldRows.length) {
+      const liveIds = new Set();
+      for (const row of lst) {
+        const lid = Math.round(num(row.dg_id ?? row.dgId, NaN));
+        if (Number.isFinite(lid)) liveIds.add(lid);
+      }
+      let inter = 0;
+      for (const fr of fieldRows) {
+        if (liveIds.has(fr.dg_id)) inter++;
+      }
+      overlapOk = inter / fieldRows.length >= 0.72;
+    }
+    const titlesAlign =
+      !evLive ||
+      !event_name ||
+      foldComparableTitle(evLive) === foldComparableTitle(event_name) ||
+      eventsLikelySame(evLive, event_name);
+    if (lst.length && (titlesAlign || overlapOk)) {
+      for (const row of lst) {
+        const pid = Math.round(num(row.dg_id ?? row.dgId, NaN));
+        if (!Number.isFinite(pid)) continue;
+        const dist = num(row.distance, NaN);
+        let acc = num(row.accuracy, NaN);
+        if (Number.isFinite(acc) && acc > 0 && acc <= 1) acc *= 100;
+        liveDrivingByDg.set(pid, { distance: dist, accuracy: acc });
+      }
+      console.log(
+        `live-tournament-stats: merged driving for ${liveDrivingByDg.size} players (round=${roundParam}${titlesAlign ? "" : ", title mismatch but field overlap OK"})`,
+      );
+    } else if (lst.length && evLive && event_name && !titlesAlign && !overlapOk) {
+      console.warn(`live-tournament-stats event "${evLive}" vs field "${event_name}" — skip driving merge`);
+    }
+  } catch (e) {
+    console.warn("live-tournament-stats merge skipped:", e.message || e);
+  }
+
   const pretDeadHeat = (process.env.GOLF_PRE_TOURNAMENT_DEAD_HEAT || "yes").trim().toLowerCase();
   const pretOddsFormat = (process.env.GOLF_PRE_TOURNAMENT_ODDS_FORMAT || "decimal").trim().toLowerCase();
   const pretAddPos = (process.env.GOLF_PRE_TOURNAMENT_ADD_POSITION || "").trim();
@@ -1033,8 +1085,19 @@ async function main() {
     let mu_sg = skRow && Number.isFinite(skRow.sg_total) ? skRow.sg_total : 0;
     if (!Number.isFinite(mu_sg)) mu_sg = 0;
 
-    let driving_distance = skRow && Number.isFinite(skRow.driving_distance) ? skRow.driving_distance : NaN;
-    let driving_accuracy = skRow && Number.isFinite(skRow.driving_accuracy) ? skRow.driving_accuracy : NaN;
+    const liveDv = liveDrivingByDg.get(id);
+    let driving_distance =
+      liveDv && Number.isFinite(liveDv.distance)
+        ? liveDv.distance
+        : skRow && Number.isFinite(skRow.driving_distance)
+          ? skRow.driving_distance
+          : NaN;
+    let driving_accuracy =
+      liveDv && Number.isFinite(liveDv.accuracy)
+        ? liveDv.accuracy
+        : skRow && Number.isFinite(skRow.driving_accuracy)
+          ? skRow.driving_accuracy
+          : NaN;
 
     const fx = fantasyByDg.get(id) || {};
     let eagles = num(fx.eagles);
@@ -1089,7 +1152,10 @@ async function main() {
         if (Number.isFinite(skRow[k])) rowOut[k] = skRow[k];
       }
     }
-    if (Number.isFinite(driving_distance)) rowOut.driving_distance = driving_distance;
+    if (Number.isFinite(driving_distance)) {
+      rowOut.driving_distance = driving_distance;
+      rowOut.avg_driving_distance = driving_distance;
+    }
     if (Number.isFinite(driving_accuracy)) rowOut.driving_accuracy = driving_accuracy;
     base.push(rowOut);
   }
@@ -1374,7 +1440,7 @@ async function main() {
     display_round_label: displayRoundLabel(dr, tz),
     updated_at: new Date().toISOString().replace(/\.\d{3}Z$/, "Z"),
     source:
-      "DataGolf API (field-updates, skill-ratings, player-decompositions, fantasy-projection-defaults, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
+      "DataGolf API (field-updates, skill-ratings, player-decompositions, preds/live-tournament-stats when available, fantasy-projection-defaults, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
     /** Web app: book columns are implied % (0–100); convert to American in UI like Shiny pct_to_american */
     outrights_odds_format: outrightsOddsFormat,
     /** Stored raw from betting-tools/matchups with odds_format=decimal */
