@@ -295,6 +295,14 @@ function loadLiveRoundSnapshotByDg() {
   );
   const eventDate = isoDateMdY(live?.info?.last_update || live?.last_update || new Date().toISOString());
   const eventYear = parseInt(String(eventDate).split("/")[2] || "", 10);
+  const projRows = Array.isArray(proj?.players) ? proj.players : [];
+  const projByDgRound = new Map();
+  for (const p of projRows) {
+    const pdg = Math.round(num(p?.dg_id, NaN));
+    const pr = Math.round(num(p?.round, NaN));
+    if (!Number.isFinite(pdg) || !Number.isFinite(pr) || pr < 1 || pr > 4) continue;
+    projByDgRound.set(`${pdg}|${pr}`, p);
+  }
   /** @type {Map<number, any>} */
   const byDg = new Map();
   for (const r of rows) {
@@ -305,6 +313,7 @@ function loadLiveRoundSnapshotByDg() {
     // in-play `today` is per-round relative-to-par and is safest for round_score derivation.
     if (!Number.isFinite(today) || !Number.isFinite(coursePar)) continue;
     const roundScore = Math.round((coursePar + today) * 10) / 10;
+    const pp = projByDgRound.get(`${dg}|${roundNum}`);
     byDg.set(dg, {
       sortKey: parseUsDateSortKey(eventDate) * 10 + roundNum,
       event_completed: eventDate,
@@ -315,12 +324,12 @@ function loadLiveRoundSnapshotByDg() {
       round_num: roundNum,
       fin_text: "",
       round_score: Number.isFinite(roundScore) ? roundScore : null,
-      birdies: null,
-      pars: null,
-      bogies: null,
-      gir: null,
-      fairways: null,
-      putts: null,
+      birdies: Number.isFinite(num(pp?.birdies, NaN)) ? num(pp?.birdies, NaN) : null,
+      pars: Number.isFinite(num(pp?.pars, NaN)) ? num(pp?.pars, NaN) : null,
+      bogies: Number.isFinite(num(pp?.bogeys, NaN)) ? num(pp?.bogeys, NaN) : null,
+      gir: Number.isFinite(num(pp?.gir, NaN)) ? num(pp?.gir, NaN) : null,
+      fairways: Number.isFinite(num(pp?.fairways, NaN)) ? num(pp?.fairways, NaN) : null,
+      putts: Number.isFinite(num(pp?.putts, NaN)) ? num(pp?.putts, NaN) : null,
       eagles_or_better: null,
       doubles_or_worse: null,
       weather_temp_f: null,
