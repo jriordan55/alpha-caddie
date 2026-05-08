@@ -1153,8 +1153,9 @@ async function main() {
       }
     }
     if (Number.isFinite(driving_distance)) {
-      rowOut.driving_distance = driving_distance;
-      rowOut.avg_driving_distance = driving_distance;
+      const dyInt = Math.round(driving_distance);
+      rowOut.driving_distance = dyInt;
+      rowOut.avg_driving_distance = dyInt;
     }
     if (Number.isFinite(driving_accuracy)) rowOut.driving_accuracy = driving_accuracy;
     base.push(rowOut);
@@ -1234,7 +1235,7 @@ async function main() {
         if (Number.isFinite(row[k])) pl[k] = Math.round(row[k] * 1000) / 1000;
       }
       if (Number.isFinite(row.driving_distance)) {
-        const dy = Math.round(row.driving_distance * 10) / 10;
+        const dy = Math.round(row.driving_distance);
         pl.avg_driving_distance = dy;
         pl.driving_distance = dy;
       }

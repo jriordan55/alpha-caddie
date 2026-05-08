@@ -1018,7 +1018,7 @@ function mergeLiveTournamentDrivingIntoPlayers(j) {
     const x = byDg.get(id);
     if (!x) continue;
     if (Number.isFinite(x.dist)) {
-      const dy = Math.round(x.dist * 10) / 10;
+      const dy = Math.round(x.dist);
       p.driving_distance = dy;
       p.avg_driving_distance = dy;
       touched++;
@@ -4912,7 +4912,7 @@ function buildMatchupAnalysisTool() {
         val.textContent = `${v >= 0 ? "+" : ""}${v.toFixed(2)}`;
       } else {
         val.className = "matchup-analysis-bar-val neutral";
-        if (kind === "distance") val.textContent = `${v.toFixed(1)} yds`;
+        if (kind === "distance") val.textContent = `${Math.round(v)} yds`;
         else val.textContent = `${v.toFixed(1)}%`;
       }
       const track = document.createElement("span");
@@ -4955,7 +4955,7 @@ function buildMatchupAnalysisTool() {
         if (keyMetric.startsWith("sg_")) {
           tdAdv.textContent = `${who} ${diff > 0 ? "+" : ""}${diff.toFixed(2)} strokes`;
         } else if (keyMetric === "distance") {
-          tdAdv.textContent = `${who} ${diff > 0 ? "+" : ""}${diff.toFixed(1)} yds`;
+          tdAdv.textContent = `${who} ${diff > 0 ? "+" : ""}${Math.round(diff)} yds`;
         } else {
           tdAdv.textContent = `${who} ${diff > 0 ? "+" : ""}${diff.toFixed(1)} pts`;
         }
