@@ -156,6 +156,7 @@ const ROUNDS_CSV = resolveRoundsCsvPath();
 const METADATA_OVERLAY_CSV = resolveMetadataOverlayCsvPath();
 const HOLES_CSV = resolveHoleDataCsv();
 const PROJECTIONS_JSON = path.join(WEB_ROOT, "projections.json");
+const LIVE_IN_PLAY_JSON = path.join(WEB_ROOT, "live-in-play.json");
 const OUT_JSON = path.join(WEB_ROOT, "player_round_history.json");
 
 const CY = new Date().getFullYear();
@@ -235,6 +236,117 @@ function parseUsDateSortKey(s) {
   const y = parseInt(p[2], 10);
   if (!Number.isFinite(y)) return 0;
   return y * 10000 + (mo || 0) * 100 + (d || 0);
+}
+
+function isoDateMdY(isoMaybe) {
+  const t = String(isoMaybe || "").trim();
+  const m = t.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (m) {
+    const y = parseInt(m[1], 10);
+    const mo = parseInt(m[2], 10);
+    const d = parseInt(m[3], 10);
+    if (Number.isFinite(y) && Number.isFinite(mo) && Number.isFinite(d)) return `${mo}/${d}/${y}`;
+  }
+  const d = new Date();
+  return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+}
+
+/**
+ * Best-effort live round row from live-in-play + projections metadata so Historical Trends
+ * includes the latest in-progress round after push:all (even before historical-raw-data catches up).
+ */
+function loadLiveRoundSnapshotByDg() {
+  if (!fs.existsSync(PROJECTIONS_JSON) || !fs.existsSync(LIVE_IN_PLAY_JSON)) return null;
+  let proj;
+  let live;
+  try {
+    proj = JSON.parse(fs.readFileSync(PROJECTIONS_JSON, "utf8"));
+    live = JSON.parse(fs.readFileSync(LIVE_IN_PLAY_JSON, "utf8"));
+  } catch {
+    return null;
+  }
+  const rows = Array.isArray(live?.data) ? live.data : [];
+  if (!rows.length) return null;
+  const meta = proj?.meta && typeof proj.meta === "object" ? proj.meta : {};
+  const eventName = String(proj?.event_name || live?.info?.event_name || "").trim();
+  if (!eventName) return null;
+  const roundNum = Math.round(num(meta.datagolf_live_current_round, NaN));
+  if (!Number.isFinite(roundNum) || roundNum < 1 || roundNum > 4) return null;
+  const courseName = String(proj?.course_used || meta.course_used || "").trim() || eventName;
+  const coursePar = num(meta.course_par_18, NaN);
+  const eventDate = isoDateMdY(live?.info?.last_update || live?.last_update || new Date().toISOString());
+  const eventYear = parseInt(String(eventDate).split("/")[2] || "", 10);
+  /** @type {Map<number, any>} */
+  const byDg = new Map();
+  for (const r of rows) {
+    const dg = Math.round(num(r?.dg_id ?? r?.dgId, NaN));
+    if (!Number.isFinite(dg)) continue;
+    const today = num(r?.today ?? r?.Today, NaN);
+    const currentScore = num(r?.current_score ?? r?.currentScore, NaN);
+    // in-play `today` is per-round relative-to-par and is safest for round_score derivation.
+    if (!Number.isFinite(today) || !Number.isFinite(coursePar)) continue;
+    const roundScore = Math.round((coursePar + today) * 10) / 10;
+    byDg.set(dg, {
+      sortKey: parseUsDateSortKey(eventDate) * 10 + roundNum,
+      event_completed: eventDate,
+      year: Number.isFinite(eventYear) ? eventYear : new Date().getFullYear(),
+      event_name: eventName,
+      event_id: "",
+      course_name: courseName,
+      round_num: roundNum,
+      fin_text: "",
+      round_score: Number.isFinite(roundScore) ? roundScore : null,
+      birdies: null,
+      pars: null,
+      bogies: null,
+      gir: null,
+      fairways: null,
+      putts: null,
+      eagles_or_better: null,
+      doubles_or_worse: null,
+      weather_temp_f: null,
+      weather_wind_mph: null,
+      weather_humidity: null,
+      weather_condition: "",
+      sg_putt: Number.isFinite(num(r?.sg_putt, NaN)) ? num(r.sg_putt, NaN) : null,
+      sg_app: Number.isFinite(num(r?.sg_app, NaN)) ? num(r.sg_app, NaN) : null,
+      sg_arg: Number.isFinite(num(r?.sg_arg, NaN)) ? num(r.sg_arg, NaN) : null,
+      sg_ott: Number.isFinite(num(r?.sg_ott, NaN)) ? num(r.sg_ott, NaN) : null,
+      sg_t2g: Number.isFinite(num(r?.sg_t2g, NaN)) ? num(r.sg_t2g, NaN) : null,
+      sg_total: Number.isFinite(num(r?.sg_total, NaN)) ? num(r.sg_total, NaN) : null,
+      current_score: Number.isFinite(currentScore) ? currentScore : null,
+      today: Number.isFinite(today) ? today : null,
+      _from_live_in_play: true,
+    });
+  }
+  return byDg.size ? byDg : null;
+}
+
+function upsertLiveRoundRows(byDgId, liveByDg) {
+  if (!liveByDg || !liveByDg.size) return 0;
+  let n = 0;
+  for (const [dg, liveRec] of liveByDg.entries()) {
+    const bucket = byDgId.get(dg);
+    if (!bucket || !Array.isArray(bucket.rounds)) continue;
+    const wantEvt = normEvt(liveRec.event_name);
+    const wantYr = parseInt(String(liveRec.year || ""), 10);
+    const wantRnd = parseInt(String(liveRec.round_num || ""), 10);
+    let hitIdx = -1;
+    for (let i = bucket.rounds.length - 1; i >= 0; i--) {
+      const rr = bucket.rounds[i];
+      if (parseInt(String(rr.round_num || ""), 10) !== wantRnd) continue;
+      if (Number.isFinite(wantYr) && parseInt(String(rr.year || ""), 10) !== wantYr) continue;
+      if (normEvt(rr.event_name) !== wantEvt) continue;
+      hitIdx = i;
+      break;
+    }
+    if (hitIdx >= 0) bucket.rounds[hitIdx] = { ...bucket.rounds[hitIdx], ...liveRec };
+    else bucket.rounds.push(liveRec);
+    bucket.rounds.sort((a, b) => num(a.sortKey, 0) - num(b.sortKey, 0));
+    if (bucket.rounds.length > MAX_ROUNDS_PER_PLAYER) bucket.rounds = bucket.rounds.slice(-MAX_ROUNDS_PER_PLAYER);
+    n++;
+  }
+  return n;
 }
 
 function loadAllowedDgIds() {
@@ -663,7 +775,12 @@ async function main() {
   const pgaMetaOverlay = METADATA_OVERLAY_CSV ? await loadPgaMetaOverlayFromCsv(METADATA_OVERLAY_CSV) : new Map();
   const shotsAgg = await loadShotsRoundAggMaps();
   const { byDgId, allowedTriples } = await streamRounds(allowed, pgaMetaOverlay, shotsAgg);
+  const liveRoundByDg = loadLiveRoundSnapshotByDg();
+  const liveMergedPlayers = upsertLiveRoundRows(byDgId, liveRoundByDg);
   console.log("Players with rounds:", byDgId.size);
+  if (liveMergedPlayers > 0) {
+    console.log("[build-player-history] live round snapshot merged for", liveMergedPlayers, "player(s) from live-in-play.json");
+  }
   if (allowed.size > 0 && byDgId.size === 0 && fs.existsSync(ROUNDS_CSV)) {
     console.warn(
       "[build-player-history] 0 players matched: projections have",

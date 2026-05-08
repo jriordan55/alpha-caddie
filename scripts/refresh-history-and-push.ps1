@@ -42,12 +42,24 @@ Run-Step "Running fetch:book-odds ..." { npm run fetch:book-odds }
 Run-Step "Running update:rounds ..." { npm run update:rounds }
 Run-Step "Running build:history ..." { npm run build:history }
 
+$webDataDir = Join-Path $repoRoot "website/public/data"
+if (-not (Test-Path $webDataDir)) {
+  New-Item -ItemType Directory -Path $webDataDir -Force | Out-Null
+}
+$liveSrc = Join-Path $webRoot "live-in-play.json"
+$liveDest = Join-Path $webDataDir "live-in-play.json"
+if (Test-Path $liveSrc) {
+  Copy-Item -Path $liveSrc -Destination $liveDest -Force
+  Write-Host "Mirrored live-in-play.json -> website/public/data/live-in-play.json"
+}
+
 Set-Location $repoRoot
 
 $artifacts = @(
   "alpha-caddie-web/projections.json",
   "alpha-caddie-web/live-in-play.json",
   "website/public/data/projections.json",
+  "website/public/data/live-in-play.json",
   "data/historical_rounds_all.csv",
   "alpha-caddie-web/data/historical_rounds_all.csv",
   "alpha-caddie-web/player_round_history.json",
