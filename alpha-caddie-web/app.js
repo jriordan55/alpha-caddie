@@ -8453,8 +8453,11 @@ function activeAppTabId() {
   return active ? String(active.getAttribute("data-tab") || "") : "";
 }
 
-/** Rebuild +EV table from already-loaded DATA (book odds come from projections.json; optional background poll updates DATA). */
-function syncEvTabOddsAfterShow() {
+/** Rebuild +EV with fresh projections so Best Book odds reflect the latest posted lines. */
+async function syncEvTabOddsAfterShow() {
+  if (!isFileProtocol()) {
+    await loadProjections({ silent: true, reloadSidecar: false });
+  }
   buildEvTable();
 }
 
@@ -9512,10 +9515,7 @@ function initTabs() {
       }
       if (tab === "ev") {
         requestAnimationFrame(() => {
-          syncEvTabOddsAfterShow();
-          if (!isFileProtocol()) {
-            void loadProjections({ silent: true, reloadSidecar: false });
-          }
+          void syncEvTabOddsAfterShow();
         });
       }
       if (tab === "results") {
@@ -10025,7 +10025,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     if (activeAppTabId() === "ev" && !isFileProtocol()) {
-      void loadProjections({ silent: true, reloadSidecar: false });
+      void syncEvTabOddsAfterShow();
       return;
     }
     if (datagolfLiveOverlayEnabled() && !isFileProtocol()) void fetchAndMergeDatagolfLiveInPlay({ force: true });
