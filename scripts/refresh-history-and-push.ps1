@@ -7,6 +7,13 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+#
+# Matchup Analysis Tool stays fresh when these commands succeed:
+#   fetch:dg  → projections.players (SG pillars + merged preds/live-tournament-stats driving when DG serves it),
+#               projections.matchups (betting-tools/matchups)
+#   fetch:book-odds → refreshed matchup/outright odds on projections.json
+#   fetch:in-play → live-in-play.json → browser overlays placement win probs + live_tournament_stats distance/accuracy onto DATA.players
+# Mirrors below copy projections + live into website/public/data/ so both apps ship the same JSON.
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $webRoot = Join-Path $repoRoot "alpha-caddie-web"
@@ -51,6 +58,13 @@ $liveDest = Join-Path $webDataDir "live-in-play.json"
 if (Test-Path $liveSrc) {
   Copy-Item -Path $liveSrc -Destination $liveDest -Force
   Write-Host "Mirrored live-in-play.json -> website/public/data/live-in-play.json"
+}
+
+$projSrc = Join-Path $webRoot "projections.json"
+$projDest = Join-Path $webDataDir "projections.json"
+if (Test-Path $projSrc) {
+  Copy-Item -Path $projSrc -Destination $projDest -Force
+  Write-Host "Mirrored projections.json -> website/public/data/projections.json"
 }
 
 Set-Location $repoRoot
