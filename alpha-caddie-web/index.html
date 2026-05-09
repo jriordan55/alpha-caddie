@@ -99,11 +99,7 @@
         </div>
         <div class="toolbar weather-toolbar ou-weather-block" aria-label="Weather">
           <span class="weather-toolbar-title ou-block-heading">Weather</span>
-          <p class="weather-auto-note text-muted">
-            Hourly forecast at the venue (<a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>)
-            matched to each golfer’s tee time from the DataGolf field bundle (live <code>field_updates</code>).
-            Morning vs afternoon rounds can diverge when conditions change through the day.
-          </p>
+          <p id="ou-weather-wave-summary" class="weather-auto-note text-muted"></p>
         </div>
         <div class="toolbar weather-toolbar pricing-toolbar ou-pricing-block" aria-label="Pricing mode">
           <span class="weather-toolbar-title ou-block-heading">Pricing</span>
@@ -425,9 +421,7 @@
       </div>
       <div class="toolbar weather-toolbar" aria-label="Weather">
         <span class="weather-toolbar-title">Weather</span>
-        <p class="weather-auto-note text-muted">
-          Tee-time weather from DataGolf field times + Open-Meteo hourly at the course (see Round projections note).
-        </p>
+        <p id="ev-weather-wave-summary" class="weather-auto-note text-muted"></p>
       </div>
       <div class="toolbar weather-toolbar pricing-toolbar" aria-label="Pricing mode">
         <span class="weather-toolbar-title">Pricing</span>

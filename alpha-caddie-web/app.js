@@ -2146,6 +2146,117 @@ function medianWeatherSnapshotFromSamples(samples) {
   };
 }
 
+function weatherConditionDisplayLabel(condRaw) {
+  const c = String(condRaw || "").trim().toLowerCase();
+  if (!c || c === "default") return "neutral";
+  return c;
+}
+
+/** One-line weather for banners and model-input panels (matches projection row snapshot). */
+function formatWeatherSnapshotCompact(w) {
+  if (!w || typeof w !== "object" || !Number.isFinite(w.tempF)) return "";
+  if (!Number.isFinite(w.windMph) || !Number.isFinite(w.humidityPct)) return "";
+  const lab = weatherConditionDisplayLabel(w.condition);
+  return `${w.tempF.toFixed(1)}°F · ${w.windMph.toFixed(1)} mph · ${w.humidityPct.toFixed(0)}% · ${lab}`;
+}
+
+function classifyMorningAfternoonTee(teetimeStr, waveStr) {
+  const w = String(waveStr || "").trim().toLowerCase();
+  if (/\b(?:morning|am)\b/.test(w) || w === "1" || /^wave\s*1\b/.test(w)) return "morning";
+  if (/\b(?:afternoon|pm)\b/.test(w) || w === "2" || /^wave\s*2\b/.test(w)) return "afternoon";
+  const m = String(teetimeStr || "").trim().match(/^\d{4}-\d{2}-\d{2}\s+(\d{1,2}):(\d{2})/);
+  if (!m) return "";
+  const hh = parseInt(m[1], 10);
+  const mm = parseInt(m[2], 10);
+  const frac = hh + mm / 60;
+  return frac < 13 ? "morning" : "afternoon";
+}
+
+function eventForecastDateYmdFromData() {
+  const ds = String(DATA?.meta?.datagolf_field_date_start || "").trim();
+  let m = ds.match(/^(\d{4}-\d{2}-\d{2})/);
+  if (m) return m[1];
+  for (const p of DATA.players || []) {
+    const tt = String(p?.dg_teetime_local || "").trim();
+    m = tt.match(/^(\d{4}-\d{2}-\d{2})/);
+    if (m) return m[1];
+  }
+  const t0 = OPEN_METEO_FORECAST_CACHE.hourly?.time?.[0];
+  if (t0) return String(t0).slice(0, 10);
+  return "";
+}
+
+function hourlyIndexNearLocalHour(hourly, dateYmd, hour) {
+  const times = hourly?.time;
+  if (!Array.isArray(times) || !dateYmd) return -1;
+  const want = `${dateYmd}T${String(Math.min(23, Math.max(0, hour))).padStart(2, "0")}`;
+  let lastSameDay = -1;
+  for (let i = 0; i < times.length; i++) {
+    const t = String(times[i] || "");
+    if (t.slice(0, 10) !== dateYmd) continue;
+    lastSameDay = i;
+    if (t.length >= 13 && t.slice(0, 13) >= want) return i;
+  }
+  return lastSameDay;
+}
+
+function computeMorningAfternoonForecastSnapshots(hourly, players) {
+  const morningSamples = [];
+  const afternoonSamples = [];
+  for (const p of players || []) {
+    const snap = p?.dg_auto_weather;
+    if (!snap || !Number.isFinite(snap.tempF)) continue;
+    const bucket = classifyMorningAfternoonTee(p?.dg_teetime_local, p?.dg_tee_wave);
+    if (bucket === "morning") morningSamples.push(snap);
+    else if (bucket === "afternoon") afternoonSamples.push(snap);
+  }
+  let mMed = medianWeatherSnapshotFromSamples(morningSamples);
+  let aMed = medianWeatherSnapshotFromSamples(afternoonSamples);
+  const dateYmd = eventForecastDateYmdFromData();
+  if ((!mMed || !Number.isFinite(mMed.tempF)) && hourly && dateYmd) {
+    const ix = hourlyIndexNearLocalHour(hourly, dateYmd, 8);
+    if (ix >= 0) mMed = hourlySliceWeatherSnapshot(hourly, ix, 5);
+  }
+  if ((!aMed || !Number.isFinite(aMed.tempF)) && hourly && dateYmd) {
+    const ix = hourlyIndexNearLocalHour(hourly, dateYmd, 14);
+    if (ix >= 0) aMed = hourlySliceWeatherSnapshot(hourly, ix, 5);
+  }
+  return { morning: mMed, afternoon: aMed };
+}
+
+function buildForecastWaveSummaryString(morningSnap, afternoonSnap) {
+  const m = morningSnap ? formatWeatherSnapshotCompact(morningSnap) : "";
+  const a = afternoonSnap ? formatWeatherSnapshotCompact(afternoonSnap) : "";
+  if (!m && !a) return "";
+  const parts = [];
+  if (m) parts.push(`Morning tees: ${m}.`);
+  if (a) parts.push(`Afternoon tees: ${a}.`);
+  return parts.join(" ");
+}
+
+function finalizeForecastWaveSummary(hourlyOrNull) {
+  if (!DATA.meta) DATA.meta = {};
+  if (hourlyOrNull && DATA.players?.length) {
+    const { morning, afternoon } = computeMorningAfternoonForecastSnapshots(hourlyOrNull, DATA.players);
+    DATA.meta.forecast_wave_summary = buildForecastWaveSummaryString(morning, afternoon);
+  } else {
+    DATA.meta.forecast_wave_summary = "";
+  }
+  syncForecastWaveBannerTexts();
+}
+
+function syncForecastWaveBannerTexts() {
+  const raw = DATA.meta?.forecast_wave_summary;
+  const text = typeof raw === "string" ? raw.trim() : "";
+  const fallback =
+    "Morning and afternoon snapshots appear once the venue forecast loads (mapped course + tee times when available).";
+  const show = text || fallback;
+  for (const id of ["ou-weather-wave-summary", "ev-weather-wave-summary"]) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = show;
+  }
+}
+
 /**
  * DataGolf documents tee times in field-updates (bundled as live-in-play `field_updates`).
  * Hourly conditions come from Open-Meteo at the venue — DG website hourly tables are not in the public API feed.
@@ -2158,6 +2269,7 @@ async function refreshForecastWeatherFromOpenMeteo() {
   if (!coords || !DATA.players?.length) {
     for (const p of DATA.players || []) delete p.dg_auto_weather;
     DATA.meta.forecast_weather_status = coords ? "no_players" : "no_course_coords";
+    finalizeForecastWaveSummary(null);
     return false;
   }
   const cacheKey = `${coords.lat}|${coords.lon}|${tz}|${DATA.meta.datagolf_field_date_start || ""}`;
@@ -2176,12 +2288,14 @@ async function refreshForecastWeatherFromOpenMeteo() {
       OPEN_METEO_FORECAST_CACHE = { key: cacheKey, atMs: now, hourly };
     } catch {
       DATA.meta.forecast_weather_status = "open_meteo_fetch_failed";
+      finalizeForecastWaveSummary(null);
       return false;
     }
   }
   const timesArr = hourly?.time;
   if (!Array.isArray(timesArr) || !timesArr.length) {
     DATA.meta.forecast_weather_status = "empty_hourly";
+    finalizeForecastWaveSummary(null);
     return false;
   }
 
@@ -2213,6 +2327,7 @@ async function refreshForecastWeatherFromOpenMeteo() {
 
   DATA.meta.forecast_weather_status = perTeeSamples.length ? "ok_tee_time" : medianSnap ? "ok_median" : "no_tee_match";
   DATA.meta.forecast_weather_updated_at = new Date().toISOString();
+  finalizeForecastWaveSummary(hourly);
   PRICING_MU_BONUS_CACHE.clear();
   return true;
 }
@@ -2380,6 +2495,11 @@ function effectiveWeatherForProjectionRow(row) {
     };
   }
   return { ...WEATHER_STATE };
+}
+
+/** Weather line for expanded projection “Model inputs” (every player gets a readable snapshot). */
+function formatEffectiveWeatherLine(row) {
+  return formatWeatherSnapshotCompact(effectiveWeatherForProjectionRow(row)) || "—";
 }
 
 function statWeatherMuAdjustment(market, row) {
@@ -3262,11 +3382,6 @@ function buildOuProjDetailPanel(player, col, side, mu, pick, rawName) {
   h2.textContent = "Projection snapshot";
   const dl1 = document.createElement("dl");
   dl1.className = "ou-proj-detail-dl";
-  const merge =
-    DATA.meta?.projections_merge && typeof DATA.meta.projections_merge === "object"
-      ? DATA.meta.projections_merge
-      : {};
-  const histN = merge.historical_players;
   const addRow = (dt, dd) => {
     const dtt = document.createElement("dt");
     dtt.textContent = dt;
@@ -3281,7 +3396,6 @@ function buildOuProjDetailPanel(player, col, side, mu, pick, rawName) {
   if (mKey === "Total score" && Number.isFinite(num(player.round_sd, NaN))) {
     addRow("Round SD (feed)", num(player.round_sd).toFixed(2));
   }
-  addRow("Players in merge", Number.isFinite(histN) ? String(histN) : "—");
   histCol.appendChild(h2);
   histCol.appendChild(dl1);
 
@@ -3303,15 +3417,7 @@ function buildOuProjDetailPanel(player, col, side, mu, pick, rawName) {
   addM("μ SG", Number.isFinite(num(player.mu_sg, NaN)) ? num(player.mu_sg).toFixed(3) : "—");
   addM("Implied μ SG", Number.isFinite(num(player.implied_mu_sg, NaN)) ? num(player.implied_mu_sg).toFixed(3) : "—");
   addM("Score to par", Number.isFinite(num(player.score_to_par, NaN)) ? num(player.score_to_par).toFixed(2) : "—");
-  const ew = effectiveWeatherForProjectionRow(player);
-  const ws =
-    player &&
-    Number.isFinite(ew.tempF) &&
-    Number.isFinite(ew.windMph) &&
-    Number.isFinite(ew.humidityPct)
-      ? `${ew.tempF.toFixed(1)}°F · ${ew.windMph.toFixed(1)} mph · ${ew.humidityPct.toFixed(0)}% · ${ew.condition}`
-      : "—";
-  addM("Weather", ws);
+  addM("Weather", formatEffectiveWeatherLine(player));
   addM("Pricing", PRICING_STATE.mode + (PRICING_STATE.mode === "skill" ? ` · ${PRICING_STATE.skill}` : ""));
   if (pick && Number.isFinite(pick.line)) {
     addM("Book line", String(pick.line));
@@ -3571,6 +3677,7 @@ function buildOuTable() {
 
   updateOuSortIndicators();
   syncOuChartCard();
+  syncForecastWaveBannerTexts();
   if (ouProjExpandedDetail) {
     requestAnimationFrame(() => {
       const c = document.querySelector("#table-ou tbody .ou-proj-detail-canvas");
