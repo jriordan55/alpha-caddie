@@ -4567,6 +4567,14 @@ function buildEvTable() {
       const kelly = evKellyDollarsFromDecimal(r.modelPct, dec, bankroll);
       const deltaPct = Number.isFinite(r.modelPct) && Number.isFinite(bookImp) ? (r.modelPct - bookImp) * 100 : NaN;
       return { ...r, _dec: dec, _bookImp: bookImp, _modelEv: mEv, _kelly: kelly, _deltaPct: deltaPct };
+    })
+    .filter((r) => {
+      const hasSportsbookOdds =
+        String(r.bestBook || "").trim() !== "" && Number.isFinite(r._dec) && r._dec > 1;
+      if (!hasSportsbookOdds) return false;
+      const ev = r._modelEv;
+      if (Number.isFinite(ev) && (ev > 0.5 || ev < -0.5)) return false;
+      return true;
     });
   out = out.slice().sort((a, c) => compareEvRows(a, c, evSort.key, evSort.dir));
   updateEvSortIndicators();
