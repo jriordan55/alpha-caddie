@@ -5849,6 +5849,14 @@ function renderLivePropPredictor() {
   const uAm = num(document.getElementById("live-prop-under-am")?.value, NaN);
 
   const completed = Number.isFinite(throughHoles) ? clamp(throughHoles, 0, 17) : NaN;
+  const isRoundScoreMarket = statKey === "total";
+  const par18 = num(DATA?.meta?.course_par_18, NaN);
+  const holePars = DATA?.meta?.hole_pars;
+  let parThru = courseParSumFirstNHoles(holePars, completed);
+  if (!Number.isFinite(parThru)) {
+    parThru = Number.isFinite(par18) && Number.isFinite(completed) ? (par18 / 18) * completed : NaN;
+  }
+  const currentForProjection = isRoundScoreMarket && Number.isFinite(parThru) ? parThru + curRaw : curRaw;
   const marketLabel = ouMarketKeyFromStatKey(statKey);
   const rEv = getModelRoundForEv();
   const rowRaw =
@@ -5865,7 +5873,8 @@ function renderLivePropPredictor() {
     throughHoles < 0 ||
     throughHoles > 17 ||
     !Number.isFinite(curRaw) ||
-    curRaw < 0 ||
+    (!isRoundScoreMarket && curRaw < 0) ||
+    (isRoundScoreMarket && !Number.isFinite(parThru)) ||
     !Number.isFinite(line)
   ) {
     root.innerHTML = `<p class="live-prop-placeholder">Complete the form to see projection and edge.</p>`;
@@ -5903,7 +5912,7 @@ function renderLivePropPredictor() {
     return;
   }
 
-  const predFinal = curRaw + muRem;
+  const predFinal = currentForProjection + muRem;
   const sigF = Math.max(0.22, sigRem);
   const z = (line - predFinal) / sigF;
   const pOver = clampProb01(1 - normalCdf(z));
@@ -5933,7 +5942,7 @@ function renderLivePropPredictor() {
         <span class="live-prop-metric-val">${predFinal.toFixed(prec)}</span>
       </div>
       <div class="live-prop-metric">
-        <span class="live-prop-metric-label">σ remainder</span>
+        <span class="live-prop-metric-label">Standard deviation</span>
         <span class="live-prop-metric-val">${sigF.toFixed(2)}</span>
       </div>
       <div class="live-prop-metric">
@@ -6001,6 +6010,33 @@ function syncLivePropBookLineAndOddsFromDk() {
   fallbackLineAndOdds();
 }
 
+function syncLivePropCurrentInputLabel() {
+  const statKey = String(document.getElementById("live-prop-market")?.value || "total");
+  const through = Math.round(num(document.getElementById("live-prop-through-holes")?.value, NaN));
+  const labelEl = document.getElementById("live-prop-current-label");
+  const inputEl = document.getElementById("live-prop-current");
+  if (!labelEl || !inputEl) return;
+  if (statKey === "total") {
+    const par18 = num(DATA?.meta?.course_par_18, NaN);
+    const holePars = DATA?.meta?.hole_pars;
+    let parThru = courseParSumFirstNHoles(holePars, through);
+    if (!Number.isFinite(parThru) && Number.isFinite(par18) && Number.isFinite(through)) {
+      parThru = (par18 / 18) * clamp(through, 0, 17);
+    }
+    labelEl.textContent = Number.isFinite(parThru)
+      ? `Current to par (through ${clamp(through, 0, 17)} holes, par ${parThru.toFixed(0)})`
+      : "Current to par";
+    inputEl.min = "-18";
+    inputEl.step = "1";
+    inputEl.placeholder = "0";
+  } else {
+    labelEl.textContent = "Current total";
+    inputEl.min = "0";
+    inputEl.step = "0.1";
+    inputEl.placeholder = "0";
+  }
+}
+
 function initLivePropPredictorUi() {
   fillLivePropGolferSelect();
   const marketEl = document.getElementById("live-prop-market");
@@ -6011,6 +6047,7 @@ function initLivePropPredictorUi() {
   if (currentEl) currentEl.value = "2";
   const lineEl = document.getElementById("live-prop-line");
   if (lineEl) lineEl.value = "4.5";
+  syncLivePropCurrentInputLabel();
   syncLivePropBookLineAndOddsFromDk();
   const ids = [
     "live-prop-golfer",
@@ -6024,9 +6061,13 @@ function initLivePropPredictorUi() {
   for (const id of ids) {
     document.getElementById(id)?.addEventListener("change", () => {
       if (id === "live-prop-market" || id === "live-prop-golfer") syncLivePropBookLineAndOddsFromDk();
+      if (id === "live-prop-market" || id === "live-prop-through-holes") syncLivePropCurrentInputLabel();
       renderLivePropPredictor();
     });
-    document.getElementById(id)?.addEventListener("input", () => renderLivePropPredictor());
+    document.getElementById(id)?.addEventListener("input", () => {
+      if (id === "live-prop-market" || id === "live-prop-through-holes") syncLivePropCurrentInputLabel();
+      renderLivePropPredictor();
+    });
   }
   renderLivePropPredictor();
 }
