@@ -34,6 +34,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { createReadStream } from "fs";
+import { execFileSync } from "child_process";
 import { parse } from "csv-parse";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -158,6 +159,34 @@ const HOLES_CSV = resolveHoleDataCsv();
 const PROJECTIONS_JSON = path.join(WEB_ROOT, "projections.json");
 const LIVE_IN_PLAY_JSON = path.join(WEB_ROOT, "live-in-play.json");
 const OUT_JSON = path.join(WEB_ROOT, "player_round_history.json");
+
+function fmtBytes(n) {
+  if (!Number.isFinite(n) || n < 0) return "—";
+  if (n >= 1e9) return `${(n / 1e9).toFixed(2)} GB`;
+  if (n >= 1e6) return `${(n / 1e6).toFixed(1)} MB`;
+  if (n >= 1e3) return `${(n / 1e3).toFixed(0)} KB`;
+  return `${Math.round(n)} B`;
+}
+
+/** Windows only: free bytes on the drive hosting `filePath`, or null if unknown. */
+function tryFreeBytesOnDriveOf(filePath) {
+  if (process.platform !== "win32") return null;
+  const abs = path.resolve(filePath);
+  const m = abs.match(/^([A-Za-z]):/);
+  if (!m) return null;
+  const letter = m[1].toUpperCase();
+  try {
+    const out = execFileSync(
+      "powershell",
+      ["-NoProfile", "-Command", `(Get-PSDrive -Name '${letter}').Free`],
+      { encoding: "utf8", maxBuffer: 64 },
+    );
+    const n = parseInt(String(out).trim(), 10);
+    return Number.isFinite(n) ? n : null;
+  } catch {
+    return null;
+  }
+}
 
 const CY = new Date().getFullYear();
 const MIN_YEAR = (() => {
@@ -865,9 +894,45 @@ async function main() {
     holesByPlayerKey,
   };
 
-  fs.writeFileSync(OUT_JSON, JSON.stringify(out), "utf8");
+  let json;
+  try {
+    json = JSON.stringify(out);
+  } catch (e) {
+    console.error("[build-player-history] JSON.stringify failed (dataset may be too large for RAM):", e instanceof Error ? e.message : e);
+    throw e;
+  }
+  const needBytes = Buffer.byteLength(json, "utf8");
+
+  const free = tryFreeBytesOnDriveOf(OUT_JSON);
+  if (free != null && needBytes > free) {
+    console.error(
+      `[build-player-history] Not enough free space on drive: need ~${fmtBytes(needBytes)} for a complete temp write before replacing ${OUT_JSON}, only ~${fmtBytes(free)} free. Empty Recycle Bin, delete large temp files, or set HOLE_DATA_CSV="" to skip hole rows / lower GOLF_HISTORY_MAX_ROUNDS_PER_PLAYER.`,
+    );
+    process.exit(1);
+  }
+
+  // Write to *.tmp then rename over the destination so the previous JSON stays intact if write fails;
+  // rename replaces OUT_JSON in one step (previous file is not deleted until the new bytes are ready).
+  const tmpPath = `${OUT_JSON}.tmp`;
+  try {
+    fs.writeFileSync(tmpPath, json, "utf8");
+    fs.renameSync(tmpPath, OUT_JSON);
+  } catch (e) {
+    const err = /** @type {NodeJS.ErrnoException} */ (e);
+    try {
+      if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);
+    } catch (_) {}
+    if (err && err.code === "ENOSPC") {
+      console.error(
+        `[build-player-history] ENOSPC (~${fmtBytes(needBytes)}). ${path.basename(OUT_JSON)} was not replaced; source CSVs are unchanged. ` +
+          `Peak disk use briefly includes old + *.tmp during upgrade — free more space, then retry.`,
+      );
+    }
+    throw e;
+  }
+
   const st = fs.statSync(OUT_JSON);
-  console.log("Wrote", OUT_JSON, `(${(st.size / 1024).toFixed(1)} KB)`);
+  console.log("Wrote", OUT_JSON, `(${fmtBytes(st.size)})`);
 }
 
 main().catch((e) => {

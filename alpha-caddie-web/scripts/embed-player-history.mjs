@@ -39,9 +39,25 @@ const head =
   "window.__ALPHA_CADDIE_EMBEDDED_ROUND_HISTORY__ = ";
 const tail = ";\n";
 
-/** Write via temp + rename (fewer Windows "UNKNOWN" errors when AV/sync holds the target). */
-const body = head + JSON.stringify(data, null, 2) + tail;
+const pretty = String(process.env.ALPHA_CADDIE_EMBED_PRETTY || "").trim() === "1";
+/** Compact JSON saves large amounts of disk vs pretty-print (critical near ENOSPC). ALPHA_CADDIE_EMBED_PRETTY=1 for readable output. */
+const body = head + (pretty ? JSON.stringify(data, null, 2) : JSON.stringify(data)) + tail;
+
+/** Write via temp + rename: keeps previous embedded bundle if write fails; replaces atomically when rename succeeds. */
 const tmp = OUT_JS + ".tmp";
-fs.writeFileSync(tmp, body, "utf8");
-fs.renameSync(tmp, OUT_JS);
-console.log("[embed-player-history] Wrote", path.basename(OUT_JS));
+try {
+  fs.writeFileSync(tmp, body, "utf8");
+  fs.renameSync(tmp, OUT_JS);
+} catch (e) {
+  const err = /** @type {NodeJS.ErrnoException} */ (e);
+  try {
+    if (fs.existsSync(tmp)) fs.unlinkSync(tmp);
+  } catch (_) {}
+  if (err && err.code === "ENOSPC") {
+    console.error(
+      "[embed-player-history] ENOSPC: disk full — previous embedded-player-round-history.js was not replaced. Free space, or set ALPHA_CADDIE_EMBED_HISTORY=0 to skip the embed and load player_round_history.json over HTTP only.",
+    );
+  }
+  throw e;
+}
+console.log("[embed-player-history] Wrote", path.basename(OUT_JS), pretty ? "(pretty)" : "(compact)");
