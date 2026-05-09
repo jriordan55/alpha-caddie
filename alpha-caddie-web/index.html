@@ -22,6 +22,7 @@
     <nav class="tabs" role="tablist" aria-label="Main">
       <button type="button" class="tab active" data-tab="ou" role="tab" aria-selected="true">Round projections</button>
       <button type="button" class="tab" data-tab="props" role="tab">Historical Trends</button>
+      <button type="button" class="tab" data-tab="course-fit" role="tab">Course fit</button>
       <button type="button" class="tab" data-tab="live-prop" role="tab">Live Prop Predictor</button>
       <button type="button" class="tab" data-tab="matchup-analysis" role="tab">Matchup Analysis Tool</button>
       <button type="button" class="tab" data-tab="ev" role="tab">+EV Bets</button>
@@ -293,6 +294,66 @@
         </div>
         </div>
       </div>
+      </div>
+    </section>
+
+    <!-- Course fit -->
+    <section id="panel-course-fit" class="panel course-fit-panel" role="tabpanel" hidden>
+      <div class="course-fit-shell">
+        <div class="ev-panel-head course-fit-head">
+          <div>
+            <h2 class="course-fit-page-title">Course fit</h2>
+            <p class="text-muted course-fit-lede">
+              Skill-shape comparison vs the field for <strong id="course-fit-venue-label">—</strong>.
+              The green polygon uses historical SG at this venue when your embedded history includes rounds here; driving metrics otherwise track the current field profile.
+            </p>
+          </div>
+        </div>
+        <div class="course-fit-layout">
+          <aside class="leaderboard-card course-fit-sidebar">
+            <label class="course-fit-sidebar-label">Player
+              <select id="course-fit-player" aria-label="Player for radar overlay"></select>
+            </label>
+            <div class="course-fit-sidebar-block">
+              <h3 class="course-fit-sidebar-heading">Course similarity</h3>
+              <p class="text-muted course-fit-sidebar-note">Other venues with similar historical SG shape (needs round history).</p>
+              <ol id="course-fit-similar-list" class="course-fit-similar-list"></ol>
+              <p id="course-fit-similar-empty" class="text-muted course-fit-empty" hidden>No similarity data (load player history).</p>
+            </div>
+          </aside>
+          <div class="leaderboard-card course-fit-radar-card">
+            <div class="course-fit-radar-head">
+              <span class="course-fit-radar-eyebrow">Radar</span>
+              <p class="course-fit-radar-sub" id="course-fit-radar-caption">—</p>
+            </div>
+            <div class="course-fit-radar-canvas-wrap">
+              <canvas id="course-fit-radar-canvas" width="520" height="420" aria-label="Course fit radar chart"></canvas>
+            </div>
+            <div class="course-fit-radar-legend" id="course-fit-radar-legend"></div>
+          </div>
+        </div>
+        <div class="leaderboard-card course-fit-table-card">
+          <h3 class="course-fit-table-title" id="course-fit-table-heading">Who fits this venue?</h3>
+          <p class="text-muted course-fit-table-lede">
+            Ranked by approximate <span class="course-fit-accent">course-fit adjustment</span> (strokes vs field average on dimensions this venue emphasizes from history).
+          </p>
+          <label class="course-fit-search-wrap">
+            <span class="course-fit-search-icon" aria-hidden="true">⌕</span>
+            <input type="search" id="course-fit-search" class="course-fit-search" placeholder="Find players…" autocomplete="off" />
+          </label>
+          <div class="table-wrap course-fit-table-wrap">
+            <table class="data-table course-fit-table" id="table-course-fit">
+              <thead>
+                <tr>
+                  <th scope="col">Player</th>
+                  <th class="num" scope="col">Category</th>
+                  <th class="num" scope="col">Fit (Δ SG)</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </section>
 

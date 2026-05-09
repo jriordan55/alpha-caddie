@@ -2433,6 +2433,7 @@ function refreshPricingAffectedViews() {
   }
   if (tab === "live-prop") return void renderLivePropPredictor();
   if (tab === "hangout") return void scheduleHangoutSimulateDebounced();
+  if (tab === "course-fit") return void buildCourseFitTab();
   // Fallback for early boot / unknown tab.
   buildOuTable();
   buildEvTable();
@@ -2443,6 +2444,7 @@ function refreshPricingAffectedViews() {
   updatePropsFooterEv();
   renderLivePropPredictor();
   scheduleHangoutSimulateDebounced();
+  buildCourseFitTab();
 }
 
 function weatherScalarFromInput(raw, cur, lo, hi) {
@@ -5709,6 +5711,409 @@ function buildMatchupAnalysisTool() {
   };
 
   renderSgBreakdown(selected);
+}
+
+/** --- Course fit tab (skill-shape radar, venue similarity, fit leaderboard) --- */
+const COURSE_FIT_AXIS_KEYS = ["dist", "acc", "app", "arg", "putt"];
+
+/** Raw scalars for radar [distance yds, accuracy %, sg_app, sg_arg, sg_putt]. */
+function courseFitRawProfile(row) {
+  if (!row || typeof row !== "object") return COURSE_FIT_AXIS_KEYS.map(() => NaN);
+  const d = num(row.avg_driving_distance ?? row.driving_distance, NaN);
+  const acc = num(row.driving_accuracy, NaN);
+  return [d, acc, num(row.sg_app, NaN), num(row.sg_arg, NaN), num(row.sg_putt, NaN)];
+}
+
+function courseFitMinMaxFromRows(rows) {
+  const vals = COURSE_FIT_AXIS_KEYS.map(() => []);
+  for (const r of rows) {
+    const raw = courseFitRawProfile(r);
+    for (let i = 0; i < 5; i++) vals[i].push(raw[i]);
+  }
+  return vals.map((arr) => {
+    const finite = arr.filter((x) => Number.isFinite(x));
+    if (!finite.length) return { lo: 0, hi: 1 };
+    let lo = Math.min(...finite);
+    let hi = Math.max(...finite);
+    if (hi - lo < 1e-9) {
+      lo -= 1;
+      hi += 1;
+    }
+    return { lo, hi };
+  });
+}
+
+function courseFitNormalizeRaw(raw, ranges) {
+  return raw.map((v, i) => {
+    if (!Number.isFinite(v)) return 0.5;
+    const { lo, hi } = ranges[i];
+    return clamp((v - lo) / (hi - lo), 0, 1);
+  });
+}
+
+function courseFitMeanNormalized(rows, ranges) {
+  if (!rows.length) return COURSE_FIT_AXIS_KEYS.map(() => 0.5);
+  const sum = COURSE_FIT_AXIS_KEYS.map(() => 0);
+  let n = 0;
+  for (const r of rows) {
+    const nv = courseFitNormalizeRaw(courseFitRawProfile(r), ranges);
+    if (nv.every((x) => Number.isFinite(x))) {
+      for (let i = 0; i < 5; i++) sum[i] += nv[i];
+      n++;
+    }
+  }
+  if (!n) return COURSE_FIT_AXIS_KEYS.map(() => 0.5);
+  return sum.map((s) => s / n);
+}
+
+/** Mean SG from embedded history at venue (ott/app/arg/putt); returns null if thin data. */
+function courseFitVenueHistoricalSgMeans(venueKeyNorm) {
+  if (!venueKeyNorm || !HISTORY._ok || !HISTORY.byDgId) return null;
+  const sum = [0, 0, 0, 0];
+  const ct = [0, 0, 0, 0];
+  const idxMap = [
+    ["sg_ott", 0],
+    ["sg_app", 1],
+    ["sg_arg", 2],
+    ["sg_putt", 3],
+  ];
+  for (const rec of Object.values(HISTORY.byDgId)) {
+    if (!rec || !Array.isArray(rec.rounds)) continue;
+    for (const r of rec.rounds) {
+      if (historyRoundIsPlaceholderAllMarketsZero(r)) continue;
+      if (normCourseNameKey(historyRoundCourseName(r)) !== venueKeyNorm) continue;
+      for (const [k, j] of idxMap) {
+        const v = num(r[k], NaN);
+        if (Number.isFinite(v)) {
+          sum[j] += v;
+          ct[j]++;
+        }
+      }
+    }
+  }
+  const mins = 8;
+  const totalSamples = ct.reduce((a, b) => a + b, 0);
+  if (totalSamples < mins) return null;
+  const means = idxMap.map((_, j) => (ct[j] ? sum[j] / ct[j] : NaN));
+  return { ott: means[0], app: means[1], arg: means[2], putt: means[3], samples: totalSamples };
+}
+
+function historyRoundCourseName(r) {
+  return String(r?.course_name ?? "").trim();
+}
+
+function courseFitNormScalar(v, rangeObj) {
+  if (!Number.isFinite(v)) return 0.5;
+  const lo = rangeObj.lo;
+  const hi = rangeObj.hi;
+  const span = hi - lo < 1e-9 ? 1 : hi - lo;
+  return clamp((v - lo) / span, 0, 1);
+}
+
+/** Blend field-average radar with historical SG means at this venue (embedded history). */
+function courseFitVenueProfileVector(rows, ranges, histSg) {
+  const tour = courseFitMeanNormalized(rows, ranges);
+  if (!histSg) return tour.slice();
+  const v = tour.slice();
+  v[2] = courseFitNormScalar(histSg.app, ranges[2]);
+  v[3] = courseFitNormScalar(histSg.arg, ranges[3]);
+  v[4] = courseFitNormScalar(histSg.putt, ranges[4]);
+  const ovs = rows.map((r) => num(r.sg_ott, NaN)).filter(Number.isFinite);
+  if (ovs.length && Number.isFinite(histSg.ott)) {
+    const lo = Math.min(...ovs);
+    const hi = Math.max(...ovs);
+    const span = hi - lo < 1e-9 ? 1 : hi - lo;
+    v[0] = clamp((histSg.ott - lo) / span, 0, 1);
+  }
+  return v;
+}
+
+const COURSE_FIT_RADAR_LABELS = ["Driving dist.", "Driving acc.", "Approach", "Around green", "Putting"];
+
+/** Per-course mean SG vector [ott,app,arg,putt] from embedded history (for similarity). */
+function courseFitMeanSgVectorByCourse() {
+  /** @type {Map<string, { sum: number[]; ct: number[] }>} */
+  const acc = new Map();
+  if (!HISTORY._ok || !HISTORY.byDgId) return acc;
+  const keys = ["sg_ott", "sg_app", "sg_arg", "sg_putt"];
+  for (const rec of Object.values(HISTORY.byDgId)) {
+    if (!rec?.rounds) continue;
+    for (const r of rec.rounds) {
+      if (historyRoundIsPlaceholderAllMarketsZero(r)) continue;
+      const ck = normCourseNameKey(historyRoundCourseName(r));
+      if (!ck) continue;
+      if (!acc.has(ck)) acc.set(ck, { sum: [0, 0, 0, 0], ct: [0, 0, 0, 0] });
+      const b = acc.get(ck);
+      for (let j = 0; j < 4; j++) {
+        const v = num(r[keys[j]], NaN);
+        if (Number.isFinite(v)) {
+          b.sum[j] += v;
+          b.ct[j]++;
+        }
+      }
+    }
+  }
+  /** @type {Map<string, number[]>} */
+  const out = new Map();
+  for (const [ck, b] of acc) {
+    const totalCt = b.ct.reduce((a, c) => a + c, 0);
+    if (totalCt < 24) continue;
+    const vec = b.sum.map((s, j) => (b.ct[j] ? s / b.ct[j] : NaN));
+    if (vec.every(Number.isFinite)) out.set(ck, vec);
+  }
+  return out;
+}
+
+function courseFitSimilarCourses(venueKeyNorm, histSg) {
+  const map = courseFitMeanSgVectorByCourse();
+  const base = histSg ? [histSg.ott, histSg.app, histSg.arg, histSg.putt] : null;
+  if (!base || !base.every(Number.isFinite)) return [];
+  const rows = [];
+  for (const [ck, vec] of map) {
+    if (ck === venueKeyNorm) continue;
+    const d = Math.hypot(vec[0] - base[0], vec[1] - base[1], vec[2] - base[2], vec[3] - base[3]);
+    rows.push({ ck, dist: d, sim: 1 / (1 + d) });
+  }
+  rows.sort((a, b) => b.sim - a.sim);
+  return rows.slice(0, 12);
+}
+
+function courseFitPlayerPool() {
+  const rnd = getOuRound();
+  let rows = (DATA.players || []).filter((p) => samePlayerRound(p, rnd));
+  if (tournamentPostCutListPhase()) rows = rows.filter((p) => !isPlayerEliminatedFromEvent(p));
+  return rows;
+}
+
+function courseFitBestCategoryAndFit(playerN, emphasis) {
+  let bestI = 0;
+  let best = -Infinity;
+  for (let i = 0; i < 5; i++) {
+    const c = Math.max(0, emphasis[i]) * (playerN[i] - 0.5);
+    if (c > best) {
+      best = c;
+      bestI = i;
+    }
+  }
+  const strokeLike =
+    emphasis.reduce((s, e, i) => s + Math.max(0, e) * (playerN[i] - 0.5), 0) * 2.4;
+  return { cat: COURSE_FIT_RADAR_LABELS[bestI] || "—", fit: strokeLike };
+}
+
+function drawCourseFitRadar(canvas, tour5, venue5, player5) {
+  if (!canvas || typeof canvas.getContext !== "function") return;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  const dpr = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
+  const rect = canvas.getBoundingClientRect();
+  const W = Math.max(280, rect.width || 520);
+  const H = Math.max(260, Math.round(rect.width * 0.82) || 400);
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = `${W}px`;
+  canvas.style.height = `${H}px`;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+  const cx = W / 2;
+  const cy = H / 2 + 8;
+  const R = Math.min(W, H) * 0.36;
+  const n = 5;
+  const tau = (Math.PI * 2) / n;
+  const angleAt = (i) => -Math.PI / 2 + i * tau;
+
+  ctx.strokeStyle = "rgba(255,255,255,0.12)";
+  ctx.lineWidth = 1;
+  for (let ring = 1; ring <= 4; ring++) {
+    const rr = (R * ring) / 4;
+    ctx.beginPath();
+    for (let i = 0; i <= n; i++) {
+      const a = angleAt(i % n);
+      const x = cx + rr * Math.cos(a);
+      const y = cy + rr * Math.sin(a);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.stroke();
+  }
+  for (let i = 0; i < n; i++) {
+    const a = angleAt(i);
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + R * Math.cos(a), cy + R * Math.sin(a));
+    ctx.stroke();
+  }
+
+  const poly = (pts, stroke, fill, dash) => {
+    ctx.beginPath();
+    for (let i = 0; i < n; i++) {
+      const t = pts[i] ?? 0.5;
+      const rr = R * (0.25 + 0.75 * clamp(t, 0, 1));
+      const a = angleAt(i);
+      const x = cx + rr * Math.cos(a);
+      const y = cy + rr * Math.sin(a);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    if (fill) {
+      ctx.fillStyle = fill;
+      ctx.fill();
+    }
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = 2;
+    ctx.setLineDash(dash || []);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  };
+
+  poly(tour5, "rgba(140,148,168,0.95)", null, [6, 4]);
+  poly(venue5, "rgba(0,196,107,0.95)", "rgba(0,196,107,0.14)", []);
+  poly(player5, "rgba(245,166,35,0.98)", "rgba(245,166,35,0.12)", []);
+
+  ctx.fillStyle = "rgba(180,186,198,0.95)";
+  ctx.font = "600 11px DM Sans, system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  for (let i = 0; i < n; i++) {
+    const a = angleAt(i);
+    const lab = COURSE_FIT_RADAR_LABELS[i] || "";
+    const xr = cx + (R + 28) * Math.cos(a);
+    const yr = cy + (R + 28) * Math.sin(a);
+    const words = lab.split(" ");
+    words.forEach((w, j) => {
+      ctx.fillText(w, xr, yr + j * 12 - ((words.length - 1) * 6));
+    });
+  }
+}
+
+let courseFitRadarResizeBound = false;
+
+function buildCourseFitTab() {
+  const venueEl = document.getElementById("course-fit-venue-label");
+  const capEl = document.getElementById("course-fit-radar-caption");
+  const legEl = document.getElementById("course-fit-radar-legend");
+  const simList = document.getElementById("course-fit-similar-list");
+  const simEmpty = document.getElementById("course-fit-similar-empty");
+  const sel = document.getElementById("course-fit-player");
+  const tbody = document.querySelector("#table-course-fit tbody");
+  const theadHeading = document.getElementById("course-fit-table-heading");
+  const canvas = document.getElementById("course-fit-radar-canvas");
+  if (!tbody || !canvas) return;
+
+  const venueName = String(DATA?.meta?.course_used || DATA?.course_used || "this venue").trim() || "this venue";
+  if (venueEl) venueEl.textContent = venueName;
+  const vk = normCourseNameKey(venueName);
+
+  const rows = courseFitPlayerPool();
+  const ranges = courseFitMinMaxFromRows(rows);
+  const histSg = courseFitVenueHistoricalSgMeans(vk);
+  const tour5 = courseFitMeanNormalized(rows, ranges);
+  const venue5 = courseFitVenueProfileVector(rows, ranges, histSg);
+  const emphasis = venue5.map((v, i) => v - tour5[i]);
+
+  if (capEl) {
+    capEl.textContent = histSg
+      ? `${venueName} · historical SG blend (${histSg.samples} stat rows in embedded history)`
+      : `${venueName} · field-average profile (embed history at this venue for a richer curve)`;
+  }
+
+  if (legEl) {
+    legEl.innerHTML =
+      '<span class="course-fit-leg-item"><span class="course-fit-leg-dash"></span> Field average</span>' +
+      '<span class="course-fit-leg-item"><span class="course-fit-leg-green"></span> Venue profile</span>' +
+      '<span class="course-fit-leg-item"><span class="course-fit-leg-gold"></span> Selected player</span>';
+  }
+
+  if (sel) {
+    const prev = sel.value;
+    sel.innerHTML = "";
+    const opt0 = document.createElement("option");
+    opt0.value = "";
+    opt0.textContent = "— None —";
+    sel.appendChild(opt0);
+    for (const r of rows) {
+      const id = Math.round(num(r.dg_id, NaN));
+      if (!Number.isFinite(id)) continue;
+      const o = document.createElement("option");
+      o.value = String(id);
+      o.textContent = displayGolferName(String(r.player_name || ""));
+      sel.appendChild(o);
+    }
+    if (prev && [...sel.options].some((x) => x.value === prev)) sel.value = prev;
+  }
+
+  const dgSel = Math.round(num(sel?.value, NaN));
+  const prow = rows.find((r) => Math.round(num(r.dg_id, NaN)) === dgSel);
+  const player5 = prow ? courseFitNormalizeRaw(courseFitRawProfile(prow), ranges) : tour5.map(() => 0.5);
+
+  drawCourseFitRadar(canvas, tour5, venue5, player5);
+
+  if (!courseFitRadarResizeBound && typeof window !== "undefined") {
+    courseFitRadarResizeBound = true;
+    window.addEventListener("resize", () => {
+      if (activeAppTabId() === "course-fit") buildCourseFitTab();
+    });
+  }
+
+  const similar = courseFitSimilarCourses(vk, histSg);
+  if (simList && simEmpty) {
+    simList.innerHTML = "";
+    if (!similar.length) {
+      simEmpty.hidden = false;
+    } else {
+      simEmpty.hidden = true;
+      let rank = 1;
+      for (const s of similar) {
+        const li = document.createElement("li");
+        li.className = "course-fit-similar-li";
+        li.innerHTML = `<span class="course-fit-sim-rank">${rank++}.</span><span class="course-fit-sim-name">${escapeHtml(
+          s.ck.replace(/\b\w/g, (c) => c.toUpperCase()),
+        )}</span><span class="course-fit-sim-score">${(s.sim * 100).toFixed(0)}</span>`;
+        simList.appendChild(li);
+      }
+    }
+  }
+
+  const search = String(document.getElementById("course-fit-search")?.value || "")
+    .trim()
+    .toLowerCase();
+  const ranked = [];
+  for (const r of rows) {
+    const nv = courseFitNormalizeRaw(courseFitRawProfile(r), ranges);
+    const { cat, fit } = courseFitBestCategoryAndFit(nv, emphasis);
+    ranked.push({ r, cat, fit });
+  }
+  ranked.sort((a, b) => b.fit - a.fit);
+
+  tbody.innerHTML = "";
+  if (theadHeading) theadHeading.textContent = `Who fits ${venueName}?`;
+
+  for (const row of ranked) {
+    const nm = displayGolferName(String(row.r.player_name || ""));
+    if (search && !nm.toLowerCase().includes(search)) continue;
+    const tr = document.createElement("tr");
+    const tdN = document.createElement("td");
+    tdN.textContent = nm;
+    const tdC = document.createElement("td");
+    tdC.className = "num";
+    tdC.textContent = row.cat;
+    const tdF = document.createElement("td");
+    tdF.className = `num ${row.fit >= 0 ? "ev-pos" : "ev-neg"}`;
+    tdF.textContent = `${row.fit >= 0 ? "+" : ""}${row.fit.toFixed(2)}`;
+    tr.appendChild(tdN);
+    tr.appendChild(tdC);
+    tr.appendChild(tdF);
+    tbody.appendChild(tr);
+  }
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 function buildMatchupsTable() {
@@ -9742,6 +10147,7 @@ function refreshAll() {
   renderLivePropPredictor();
   initHangoutSelectors(false);
   scheduleHangoutSimulateDebounced();
+  buildCourseFitTab();
 }
 
 /**
@@ -10884,6 +11290,9 @@ function initTabs() {
       if (tab === "live-prop") {
         requestAnimationFrame(() => renderLivePropPredictor());
       }
+      if (tab === "course-fit") {
+        requestAnimationFrame(() => buildCourseFitTab());
+      }
       if (tab === "ev") {
         requestAnimationFrame(() => {
           syncEvTabOddsAfterShow();
@@ -10922,6 +11331,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initLivePropPredictorUi();
   initOutrightsTableSortOnce();
   initEvTableSortOnce();
+  document.getElementById("course-fit-player")?.addEventListener("change", () => buildCourseFitTab());
+  document.getElementById("course-fit-search")?.addEventListener("input", () => buildCourseFitTab());
   document.getElementById("btn-refresh-outrights")?.addEventListener("click", () => loadProjections());
   document.getElementById("lb-round")?.addEventListener("change", () => {
     ouProjExpandedKey = "";
@@ -10935,6 +11346,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderLivePropPredictor();
     initHangoutSelectors(false);
     scheduleHangoutSimulateDebounced();
+    buildCourseFitTab();
     void refreshForecastWeatherFromOpenMeteo().then((fwOk) => {
       if (fwOk) refreshPricingAffectedViews();
     });
