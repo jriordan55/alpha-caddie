@@ -6897,11 +6897,48 @@ function propsWeatherBucketFromHumidityPct(h) {
   return "gte80";
 }
 
-function selectedPropsTempRangeFilter() {
-  const raw = String(document.getElementById("props-filter-temp-range")?.value ?? "").trim();
-  if (!raw) return "";
-  const t = parseWeatherNumber(raw);
-  return propsWeatherBucketFromTempF(t);
+/** °F min/max from Historical Trends filters; blank = unbounded. If min &gt; max, values are swapped. */
+function propsTempBoundsFromDom() {
+  const rsMin = String(document.getElementById("props-filter-temp-min")?.value ?? "").trim();
+  const rsMax = String(document.getElementById("props-filter-temp-max")?.value ?? "").trim();
+  let minF = rsMin ? parseWeatherNumber(rsMin) : NaN;
+  let maxF = rsMax ? parseWeatherNumber(rsMax) : NaN;
+  if (!Number.isFinite(minF)) minF = NaN;
+  if (!Number.isFinite(maxF)) maxF = NaN;
+  if (Number.isFinite(minF) && Number.isFinite(maxF) && minF > maxF) {
+    const t = minF;
+    minF = maxF;
+    maxF = t;
+  }
+  return { minF, maxF };
+}
+
+function propsTempFilterActive() {
+  const { minF, maxF } = propsTempBoundsFromDom();
+  return Number.isFinite(minF) || Number.isFinite(maxF);
+}
+
+function historyRoundTempFInBand(tempF, minF, maxF) {
+  if (!Number.isFinite(tempF)) return false;
+  if (Number.isFinite(minF) && tempF < minF) return false;
+  if (Number.isFinite(maxF) && tempF > maxF) return false;
+  return true;
+}
+
+function filterHistoryRoundsByTempRange(list) {
+  const { minF, maxF } = propsTempBoundsFromDom();
+  if (!Number.isFinite(minF) && !Number.isFinite(maxF)) return list;
+  return list.filter((r) =>
+    historyRoundTempFInBand(parseWeatherNumber(r?.pga_meta_weather_temp_f ?? r?.weather_temp_f), minF, maxF),
+  );
+}
+
+function propsTrendTempContextKey() {
+  const { minF, maxF } = propsTempBoundsFromDom();
+  if (!Number.isFinite(minF) && !Number.isFinite(maxF)) return "all";
+  const a = Number.isFinite(minF) ? String(minF) : "";
+  const b = Number.isFinite(maxF) ? String(maxF) : "";
+  return `${a}:${b}`;
 }
 
 function selectedPropsWindRangeFilter() {
@@ -7127,10 +7164,7 @@ function filteredHistoryRounds(dgId) {
   if (courseFilter) {
     list = list.filter((r) => normCourseNameKey(r.course_name) === normCourseNameKey(courseFilter));
   }
-  const tempBucket = selectedPropsTempRangeFilter();
-  if (tempBucket) {
-    list = list.filter((r) => weatherRangeMatch("temp", tempBucket, parseWeatherNumber(r?.pga_meta_weather_temp_f ?? r?.weather_temp_f)));
-  }
+  list = filterHistoryRoundsByTempRange(list);
   const windBucket = selectedPropsWindRangeFilter();
   if (windBucket) {
     list = list.filter((r) => weatherRangeMatch("wind", windBucket, parseWeatherNumber(r?.pga_meta_weather_wind_mph ?? r?.weather_wind_mph)));
@@ -7150,9 +7184,7 @@ function filteredHistoryRounds(dgId) {
       if (courseFilter) {
         list = list.filter((r) => normCourseNameKey(r.course_name) === normCourseNameKey(courseFilter));
       }
-      if (tempBucket) {
-        list = list.filter((r) => weatherRangeMatch("temp", tempBucket, parseWeatherNumber(r?.pga_meta_weather_temp_f ?? r?.weather_temp_f)));
-      }
+      list = filterHistoryRoundsByTempRange(list);
       if (windBucket) {
         list = list.filter((r) => weatherRangeMatch("wind", windBucket, parseWeatherNumber(r?.pga_meta_weather_wind_mph ?? r?.weather_wind_mph)));
       }
@@ -7367,7 +7399,7 @@ function propsTrendLineContextKeyFromDom() {
     PROPS_HISTORY_ROUND_MAX
   );
   const winNKey = courseFilterOn() ? "all" : String(winN);
-  const temp = selectedPropsTempRangeFilter() || "all";
+  const temp = propsTrendTempContextKey();
   const wind = selectedPropsWindRangeFilter() || "all";
   const hum = selectedPropsHumidityRangeFilter() || "all";
   const course = selectedPropsCourseFilter() || "all";
@@ -7389,7 +7421,7 @@ function lockPropsTrendLineContextToCurrentFilter() {
 function propsTopHitMinRoundsForFilter() {
   if (courseFilterOn()) return 1;
   if (selectedPropsCourseFilter()) return 1;
-  if (selectedPropsTempRangeFilter()) return 1;
+  if (propsTempFilterActive()) return 1;
   if (selectedPropsWindRangeFilter()) return 1;
   if (selectedPropsHumidityRangeFilter()) return 1;
   return PROPS_TOP_HIT_MIN_ROUNDS;
@@ -11156,7 +11188,8 @@ document.addEventListener("DOMContentLoaded", () => {
     "prop-golfer",
     "prop-stat",
     "props-filter-current-course",
-    "props-filter-temp-range",
+    "props-filter-temp-min",
+    "props-filter-temp-max",
     "props-filter-wind-range",
     "props-filter-humidity-range",
     "props-filter-course",
@@ -11168,7 +11201,8 @@ document.addEventListener("DOMContentLoaded", () => {
     el.addEventListener("change", () => renderPropsTrends());
     if (
       id === "props-filter-current-course" ||
-      id === "props-filter-temp-range" ||
+      id === "props-filter-temp-min" ||
+      id === "props-filter-temp-max" ||
       id === "props-filter-wind-range" ||
       id === "props-filter-humidity-range"
     ) {

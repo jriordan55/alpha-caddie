@@ -167,21 +167,55 @@
           <div id="props-chart-tooltip" class="props-chart-tooltip" hidden></div>
           <p class="props-chart-line-legend" id="props-chart-line-legend" hidden><span class="props-chart-line-legend-chip" aria-hidden="true"></span> Line</p>
           <p class="text-muted props-chart-empty" id="props-chart-empty" hidden>No history file.</p>
+          <div class="props-chart-steppers" aria-label="Chart window and comparison line">
+            <div class="props-stepper-block">
+              <span class="props-sidebar-label">Rounds</span>
+              <div class="props-stepper">
+                <button type="button" class="props-step-btn" id="props-win-minus" aria-label="Fewer rounds">−</button>
+                <input type="number" id="props-window-n" min="1" max="2000" step="1" value="50" />
+                <button type="button" class="props-step-btn" id="props-win-plus" aria-label="More rounds">+</button>
+              </div>
+            </div>
+            <div class="props-stepper-block">
+              <span class="props-sidebar-label">Line</span>
+              <div class="props-stepper">
+                <button type="button" class="props-step-btn" id="props-line-minus" aria-label="Lower line">−</button>
+                <input type="number" id="prop-line" class="props-line-input" value="70.5" step="0.5" min="0" inputmode="decimal" />
+                <button type="button" class="props-step-btn" id="props-line-plus" aria-label="Raise line">+</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <aside class="props-trends-sidebar" aria-label="Historical trend filters and line">
+        <aside class="props-trends-sidebar" aria-label="Historical trend filters">
           <div class="toolbar weather-toolbar weather-toolbar-compact" aria-label="Historical trend filters">
             <span class="weather-toolbar-title">Filters</span>
-            <label class="toolbar-label">Temp °F
-              <input
-                id="props-filter-temp-range"
-                class="props-weather-filter-input"
-                type="text"
-                inputmode="decimal"
-                autocomplete="off"
-                placeholder="Any"
-                title="Leave blank for all rounds. Enter °F (e.g. 72) to keep rounds in that temperature band."
-              />
-            </label>
+            <div class="props-filter-temp-range-group">
+              <span class="props-filter-temp-range-title">Temp °F</span>
+              <div class="props-filter-temp-range-inputs">
+                <label class="toolbar-label">Min
+                  <input
+                    id="props-filter-temp-min"
+                    class="props-weather-filter-input"
+                    type="text"
+                    inputmode="decimal"
+                    autocomplete="off"
+                    placeholder="Any"
+                    title="Minimum °F (blank = no lower bound)"
+                  />
+                </label>
+                <label class="toolbar-label">Max
+                  <input
+                    id="props-filter-temp-max"
+                    class="props-weather-filter-input"
+                    type="text"
+                    inputmode="decimal"
+                    autocomplete="off"
+                    placeholder="Any"
+                    title="Maximum °F (blank = no upper bound)"
+                  />
+                </label>
+              </div>
+            </div>
             <label class="toolbar-label">Wind mph
               <input
                 id="props-filter-wind-range"
@@ -230,22 +264,6 @@
               <span>Current course only</span>
             </span>
           </label>
-          <div class="props-stepper-block">
-            <span class="props-sidebar-label">Rounds</span>
-            <div class="props-stepper">
-              <button type="button" class="props-step-btn" id="props-win-minus" aria-label="Fewer rounds">−</button>
-              <input type="number" id="props-window-n" min="1" max="2000" step="1" value="50" />
-              <button type="button" class="props-step-btn" id="props-win-plus" aria-label="More rounds">+</button>
-            </div>
-          </div>
-          <div class="props-stepper-block">
-            <span class="props-sidebar-label">Line</span>
-            <div class="props-stepper">
-              <button type="button" class="props-step-btn" id="props-line-minus" aria-label="Lower line">−</button>
-              <input type="number" id="prop-line" class="props-line-input" value="70.5" step="0.5" min="0" inputmode="decimal" />
-              <button type="button" class="props-step-btn" id="props-line-plus" aria-label="Raise line">+</button>
-            </div>
-          </div>
         </aside>
         <div class="props-top-hits-section">
         <div class="props-top-hits-head-row" aria-live="polite">
@@ -873,7 +891,7 @@
         <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
       </header>
       <p class="ev-help-intro text-muted">
-        Compare past rounds to the model line for one golfer and stat. The header shows who and which event. <strong>Filters</strong> hide rounds that do not match typed weather values (temp °F, wind mph, humidity % — leave blank for all), the <strong>Course</strong> dropdown (when not All), or optional <strong>Current course only</strong> (this week’s venue from projections).
+        Compare past rounds to the model line for one golfer and stat. The header shows who and which event. <strong>Filters</strong> hide rounds that do not match typed weather values (<strong>Temp °F</strong> uses optional min and max — leave either blank for no bound; wind mph and humidity % still map to bands — leave blank for all), the <strong>Course</strong> dropdown (when not All), or optional <strong>Current course only</strong> (this week’s venue from projections).
       </p>
       <section class="ev-help-section" aria-labelledby="tab-help-props-sidebar-h">
         <h4 class="ev-devig-section-title" id="tab-help-props-sidebar-h">How to use the sidebar</h4>
@@ -881,7 +899,7 @@
           <dt>Golfer and market</dt>
           <dd>Select who to study and which stat the bars represent.</dd>
           <dt>Rounds and line</dt>
-          <dd>Set how many recent rounds to include and which <strong>Line</strong> to use for over or under hit rates and the small EV readout.</dd>
+          <dd>Under the chart, set how many recent rounds to include and which <strong>Line</strong> to use for over or under hit rates and the small EV readout.</dd>
           <dt>Hit rates and top table</dt>
           <dd>See over and under frequency in the window, then scroll the league table for the same line.</dd>
         </dl>

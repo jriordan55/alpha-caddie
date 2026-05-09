@@ -1986,6 +1986,50 @@ th.matchup-analysis-best-pick {
   flex-direction: column;
 }
 
+.props-chart-steppers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px 14px;
+  width: 100%;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--golf-border);
+  position: relative;
+  z-index: 4;
+}
+.props-chart-steppers .props-stepper-block {
+  flex: 1 1 156px;
+  min-width: min(100%, 200px);
+  margin: 0;
+}
+
+.props-filter-temp-range-group {
+  flex: 1 1 100%;
+  min-width: 0;
+  margin-bottom: 4px;
+}
+.props-filter-temp-range-title {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--golf-text-muted);
+  margin-bottom: 6px;
+}
+.props-filter-temp-range-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 12px;
+  align-items: end;
+}
+@media (max-width: 420px) {
+  .props-filter-temp-range-inputs {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (min-width: 1025px) {
   .props-trends-body .props-trends-chart-wrap {
     max-height: min(52vh, 520px);
