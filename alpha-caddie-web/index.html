@@ -97,29 +97,13 @@
             </div>
           </div>
         </div>
-        <div class="toolbar weather-toolbar ou-weather-block" aria-label="Weather adjustments">
+        <div class="toolbar weather-toolbar ou-weather-block" aria-label="Weather">
           <span class="weather-toolbar-title ou-block-heading">Weather</span>
-          <div class="ou-weather-grid">
-            <label class="toolbar-label">Temp (F)
-              <input id="ou-weather-temp" type="number" value="72" min="20" max="120" step="1" />
-            </label>
-            <label class="toolbar-label">Wind (mph)
-              <input id="ou-weather-wind" type="number" value="8" min="0" max="60" step="1" />
-            </label>
-            <label class="toolbar-label">Humidity (%)
-              <input id="ou-weather-humidity" type="number" value="55" min="0" max="100" step="1" />
-            </label>
-            <label class="toolbar-label ou-filter-span-full">Condition
-              <select id="ou-weather-condition">
-                <option value="default" selected>Default</option>
-                <option value="clear">Clear</option>
-                <option value="cloudy">Cloudy</option>
-                <option value="windy">Windy</option>
-                <option value="rain">Rain</option>
-                <option value="storm">Storm</option>
-              </select>
-            </label>
-          </div>
+          <p class="weather-auto-note text-muted">
+            Hourly forecast at the venue (<a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>)
+            matched to each golfer’s tee time from the DataGolf field bundle (live <code>field_updates</code>).
+            Morning vs afternoon rounds can diverge when conditions change through the day.
+          </p>
         </div>
         <div class="toolbar weather-toolbar pricing-toolbar ou-pricing-block" aria-label="Pricing mode">
           <span class="weather-toolbar-title ou-block-heading">Pricing</span>
@@ -439,27 +423,11 @@
         </label>
         <button type="button" class="ev-devig-btn-toolbar" id="btn-ev-devig" title="Consensus &amp; two-way devig for the CS column">Devig</button>
       </div>
-      <div class="toolbar weather-toolbar" aria-label="Weather adjustments">
+      <div class="toolbar weather-toolbar" aria-label="Weather">
         <span class="weather-toolbar-title">Weather</span>
-        <label class="toolbar-label">Temp (F)
-          <input id="ev-weather-temp" type="number" value="72" min="20" max="120" step="1" />
-        </label>
-        <label class="toolbar-label">Wind (mph)
-          <input id="ev-weather-wind" type="number" value="8" min="0" max="60" step="1" />
-        </label>
-        <label class="toolbar-label">Humidity (%)
-          <input id="ev-weather-humidity" type="number" value="55" min="0" max="100" step="1" />
-        </label>
-        <label class="toolbar-label">Condition
-          <select id="ev-weather-condition">
-            <option value="default" selected>Default</option>
-            <option value="clear">Clear</option>
-            <option value="cloudy">Cloudy</option>
-            <option value="windy">Windy</option>
-            <option value="rain">Rain</option>
-            <option value="storm">Storm</option>
-          </select>
-        </label>
+        <p class="weather-auto-note text-muted">
+          Tee-time weather from DataGolf field times + Open-Meteo hourly at the course (see Round projections note).
+        </p>
       </div>
       <div class="toolbar weather-toolbar pricing-toolbar" aria-label="Pricing mode">
         <span class="weather-toolbar-title">Pricing</span>
@@ -619,27 +587,11 @@
       <div class="hangout-controls-stack">
       <div class="props-card hangout-controls-card">
         <h3>Hole &amp; player</h3>
-        <div class="toolbar weather-toolbar weather-toolbar-compact" aria-label="Weather adjustments">
+        <div class="toolbar weather-toolbar weather-toolbar-compact" aria-label="Weather">
           <span class="weather-toolbar-title">Weather</span>
-          <label class="toolbar-label">Temp
-            <input id="hh-weather-temp" type="number" value="72" min="20" max="120" step="1" />
-          </label>
-          <label class="toolbar-label">Wind
-            <input id="hh-weather-wind" type="number" value="8" min="0" max="60" step="1" />
-          </label>
-          <label class="toolbar-label">Humidity
-            <input id="hh-weather-humidity" type="number" value="55" min="0" max="100" step="1" />
-          </label>
-          <label class="toolbar-label">Cond
-            <select id="hh-weather-condition">
-              <option value="default" selected>Default</option>
-              <option value="clear">Clear</option>
-              <option value="cloudy">Cloudy</option>
-              <option value="windy">Windy</option>
-              <option value="rain">Rain</option>
-              <option value="storm">Storm</option>
-            </select>
-          </label>
+          <p class="weather-auto-note text-muted">
+            Uses forecast + tee time for the selected golfer / round (same engine as projections).
+          </p>
         </div>
         <div class="toolbar weather-toolbar weather-toolbar-compact pricing-toolbar" aria-label="Pricing mode">
           <span class="weather-toolbar-title">Pricing</span>

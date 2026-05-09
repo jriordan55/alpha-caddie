@@ -1136,6 +1136,48 @@ function mergeDgLiveScorecardCounts(p, inPlayRow, thruRounded) {
   }
 }
 
+/** Tee times per round from field_updates → projection rows (`dg_teetime_local`) for forecast slicing. */
+function mergeDgFieldTeeTimesIntoPlayers(fieldUpdatesRaw) {
+  if (!fieldUpdatesRaw || typeof fieldUpdatesRaw !== "object" || !DATA.players?.length) return 0;
+  if (!DATA.meta) DATA.meta = {};
+  const ds = fieldUpdatesRaw.date_start != null ? String(fieldUpdatesRaw.date_start).trim() : "";
+  if (ds) DATA.meta.datagolf_field_date_start = ds;
+  const flist =
+    fieldUpdatesRaw.field ??
+    fieldUpdatesRaw.field_updates ??
+    fieldUpdatesRaw.players ??
+    fieldUpdatesRaw.data;
+  if (!Array.isArray(flist) || !flist.length) return 0;
+  const byDg = new Map();
+  for (const fp of flist) {
+    const id = Math.round(num(fp?.dg_id ?? fp?.dgId, NaN));
+    if (!Number.isFinite(id)) continue;
+    byDg.set(id, Array.isArray(fp.teetimes) ? fp.teetimes : []);
+  }
+  let n = 0;
+  for (const p of DATA.players) {
+    const id = Math.round(num(p.dg_id, NaN));
+    if (!Number.isFinite(id)) continue;
+    const tt = byDg.get(id);
+    if (!Array.isArray(tt)) {
+      delete p.dg_teetime_local;
+      delete p.dg_tee_wave;
+      continue;
+    }
+    const rnd = Math.round(num(p.round, NaN));
+    const slot = tt.find((t) => Math.round(num(t.round_num, NaN)) === rnd);
+    if (slot && slot.teetime != null && String(slot.teetime).trim() !== "") {
+      p.dg_teetime_local = String(slot.teetime).trim();
+      p.dg_tee_wave = String(slot.wave || "").trim();
+      n++;
+    } else {
+      delete p.dg_teetime_local;
+      delete p.dg_tee_wave;
+    }
+  }
+  return n;
+}
+
 /**
  * Overlay DataGolf `field-updates` leaderboard numbers onto preds/in-play `data[]` (by dg_id)
  * when the live bundle includes `field_updates` (see scripts/fetch-live-in-play.mjs).
@@ -1214,6 +1256,11 @@ function mergeDatagolfInPlayPayload(j) {
   // Only overlay placement probabilities when in-play bundle and projections refer to the same tournament.
   // A cross-event merge can produce near-certain model prices against unrelated outright books.
   if (!eventAligned) {
+    for (const p of DATA.players || []) {
+      delete p.dg_teetime_local;
+      delete p.dg_tee_wave;
+      delete p.dg_auto_weather;
+    }
     if (DATA.meta) {
       DATA.meta.datagolf_live_event_mismatch = `${inPlayEvent} vs ${modelEvent}`;
       DATA.meta.datagolf_live_placement_rows_merged = 0;
@@ -1226,6 +1273,7 @@ function mergeDatagolfInPlayPayload(j) {
   drivingTouched = mergeLiveTournamentDrivingIntoPlayers(j);
   if (j.field_updates && typeof j.field_updates === "object") {
     mergeDgFieldScoresFromBundleIntoData(j.data, j.field_updates);
+    mergeDgFieldTeeTimesIntoPlayers(j.field_updates);
   }
   let touched = 0;
   for (const row of j.data) {
@@ -1559,6 +1607,12 @@ async function fetchAndMergeDatagolfLiveInPlay(opts = {}) {
       refreshPricingAffectedViews();
       updateStatusBar();
     }
+    void refreshForecastWeatherFromOpenMeteo().then((fwOk) => {
+      if (fwOk) {
+        refreshPricingAffectedViews();
+        updateStatusBar();
+      }
+    });
   } catch (_) {
     /* ignore missing live file or CORS */
   }
@@ -1900,15 +1954,6 @@ const WEATHER_DEFAULTS = Object.freeze({
   condition: "default",
 });
 
-const WEATHER_CONDITION_AVERAGES = Object.freeze({
-  default: { tempF: 72, windMph: 8, humidityPct: 55 },
-  clear: { tempF: 78, windMph: 7, humidityPct: 45 },
-  cloudy: { tempF: 70, windMph: 10, humidityPct: 62 },
-  windy: { tempF: 66, windMph: 18, humidityPct: 58 },
-  rain: { tempF: 64, windMph: 14, humidityPct: 85 },
-  storm: { tempF: 60, windMph: 22, humidityPct: 92 },
-});
-
 const WEATHER_CONDITION_MEAN_DELTA = Object.freeze({
   default: 0,
   clear: 0,
@@ -1929,12 +1974,248 @@ const WEATHER_CONDITION_SIGMA_DELTA = Object.freeze({
 
 let WEATHER_STATE = { ...WEATHER_DEFAULTS };
 
-const WEATHER_UI_IDS = [
-  { temp: "ou-weather-temp", wind: "ou-weather-wind", humidity: "ou-weather-humidity", condition: "ou-weather-condition" },
-  { temp: "props-weather-temp", wind: "props-weather-wind", humidity: "props-weather-humidity", condition: "props-weather-condition" },
-  { temp: "ev-weather-temp", wind: "ev-weather-wind", humidity: "ev-weather-humidity", condition: "ev-weather-condition" },
-  { temp: "hh-weather-temp", wind: "hh-weather-wind", humidity: "hh-weather-humidity", condition: "hh-weather-condition" },
-];
+/** Manual weather sliders removed — forecasts come from tee-time slices (see `refreshForecastWeatherFromOpenMeteo`). */
+const WEATHER_UI_IDS = [];
+
+/** Normalized course_used → lat/lon for hourly forecast at venue (extend as needed). */
+const COURSE_COORDINATES_BY_NAME = {
+  "quail hollow club": { lat: 35.1158, lon: -80.8529 },
+  "augusta national golf club": { lat: 33.503, lon: -82.0199 },
+  "the stadium course at tpc sawgrass": { lat: 30.198, lon: -81.394 },
+  "tpc sawgrass": { lat: 30.198, lon: -81.394 },
+  "oak hill country club": { lat: 43.1227, lon: -77.5229 },
+  "torrey pines golf course": { lat: 32.8955, lon: -117.246 },
+  "the oceans course at half moon bay golf links": { lat: 37.4636, lon: -122.449 },
+  "pebble beach golf links": { lat: 36.5698, lon: -121.9506 },
+  "harbour town golf links": { lat: 32.1392, lon: -80.8107 },
+  "east lake golf club": { lat: 33.7437, lon: -84.349 },
+  "wilmington country club": { lat: 39.7878, lon: -84.2108 },
+  "castle pines golf club": { lat: 39.4189, lon: -104.894 },
+  "detroit golf club": { lat: 42.4369, lon: -83.161 },
+  "royal liverpool golf club": { lat: 53.3728, lon: -3.184 },
+  "the riviera country club": { lat: 34.0497, lon: -118.501 },
+  "colonial country club": { lat: 32.7248, lon: -97.434 },
+  "muirfield village golf club": { lat: 40.1416, lon: -82.791 },
+  "congressional country club": { lat: 39.0299, lon: -77.164 },
+};
+
+function normCourseKeyForForecast(name) {
+  return String(name || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+}
+
+/** Cached Open-Meteo hourly payload; recomputed player snapshots when tee times / round change. */
+let OPEN_METEO_FORECAST_CACHE = /** @type {{ key: string; atMs: number; hourly: object | null }} */ ({
+  key: "",
+  atMs: 0,
+  hourly: null,
+});
+const OPEN_METEO_TTL_MS = 30 * 60 * 1000;
+
+function courseCoordinatesFromMeta() {
+  const key = normCourseKeyForForecast(DATA?.meta?.course_used || DATA?.course_used || "");
+  return COURSE_COORDINATES_BY_NAME[key] || null;
+}
+
+function forecastTimezoneFromMeta() {
+  const lab = String(DATA?.meta?.display_round_label || "");
+  const m = lab.match(/America\/[A-Za-z_/]+/);
+  if (m) return m[0];
+  return "America/New_York";
+}
+
+function openMeteoForecastUrl(lat, lon, timezone) {
+  const u = new URL("https://api.open-meteo.com/v1/forecast");
+  u.searchParams.set("latitude", String(lat));
+  u.searchParams.set("longitude", String(lon));
+  u.searchParams.set(
+    "hourly",
+    "temperature_2m,relativehumidity_2m,precipitation_probability,windspeed_10m,weathercode",
+  );
+  u.searchParams.set("windspeed_unit", "mph");
+  u.searchParams.set("temperature_unit", "fahrenheit");
+  u.searchParams.set("forecast_days", "8");
+  u.searchParams.set("timezone", timezone || "America/New_York");
+  return u.href;
+}
+
+function teeHourFloorIsoFromDg(teetimeStr) {
+  const m = String(teetimeStr || "")
+    .trim()
+    .match(/^(\d{4}-\d{2}-\d{2})\s+(\d{1,2}):(\d{2})/);
+  if (!m) return "";
+  const hh = String(parseInt(m[2], 10)).padStart(2, "0");
+  return `${m[1]}T${hh}:00`;
+}
+
+function hourlyIndexForDgTeetime(timesArr, teetimeStr) {
+  const floorIso = teeHourFloorIsoFromDg(teetimeStr);
+  if (!floorIso || !Array.isArray(timesArr)) return -1;
+  for (let i = 0; i < timesArr.length; i++) {
+    const t = String(timesArr[i] || "");
+    if (t.length >= 16 && t.slice(0, 16) >= floorIso.slice(0, 16)) return i;
+  }
+  return timesArr.length > 0 ? timesArr.length - 1 : -1;
+}
+
+function openMeteoConditionFromHourSlice(codeWorst, maxPrecipProb) {
+  const p = num(maxPrecipProb, 0);
+  const c = Math.round(num(codeWorst, NaN));
+  const rainyCodes = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82];
+  const stormCodes = [95, 96, 99];
+  if (stormCodes.includes(c)) return "storm";
+  if (p >= 55 || rainyCodes.includes(c)) return "rain";
+  if (p >= 30 && (rainyCodes.includes(c) || c >= 51)) return "rain";
+  if ([45, 48].includes(c)) return "cloudy";
+  if (c <= 3 && p < 18) return "clear";
+  if (c === 3) return "cloudy";
+  return "cloudy";
+}
+
+function hourlySliceWeatherSnapshot(hourly, startIdx, spanHours) {
+  const times = hourly?.time;
+  const T = hourly?.temperature_2m;
+  const W = hourly?.windspeed_10m;
+  const H = hourly?.relativehumidity_2m;
+  const P = hourly?.precipitation_probability;
+  const C = hourly?.weathercode;
+  if (!Array.isArray(times) || startIdx < 0 || startIdx >= times.length) return null;
+  const end = Math.min(times.length, startIdx + spanHours);
+  let nt = 0,
+    sT = 0,
+    sW = 0,
+    sH = 0,
+    sP = 0,
+    worstCode = -999,
+    maxPP = 0;
+  for (let i = startIdx; i < end; i++) {
+    const ti = num(T?.[i], NaN);
+    if (!Number.isFinite(ti)) continue;
+    sT += ti;
+    sW += num(W?.[i], 0);
+    sH += num(H?.[i], 0);
+    sP += num(P?.[i], 0);
+    const cc = num(C?.[i], NaN);
+    if (Number.isFinite(cc) && cc > worstCode) worstCode = cc;
+    const pp = num(P?.[i], 0);
+    if (pp > maxPP) maxPP = pp;
+    nt++;
+  }
+  if (!nt) return null;
+  const cond =
+    worstCode > -999 ? openMeteoConditionFromHourSlice(worstCode, maxPP) : openMeteoConditionFromHourSlice(NaN, maxPP);
+  return {
+    tempF: sT / nt,
+    windMph: sW / nt,
+    humidityPct: sH / nt,
+    condition: cond,
+  };
+}
+
+function medianFinite(vals) {
+  const a = vals.filter((x) => Number.isFinite(x)).sort((x, y) => x - y);
+  if (!a.length) return NaN;
+  const mid = Math.floor(a.length / 2);
+  return a.length % 2 ? a[mid] : (a[mid - 1] + a[mid]) / 2;
+}
+
+function medianWeatherSnapshotFromSamples(samples) {
+  if (!samples.length) return null;
+  const mt = medianFinite(samples.map((s) => s.tempF));
+  const mw = medianFinite(samples.map((s) => s.windMph));
+  const mh = medianFinite(samples.map((s) => s.humidityPct));
+  if (!Number.isFinite(mt) || !Number.isFinite(mw) || !Number.isFinite(mh)) return null;
+  const rank = { storm: 5, rain: 4, windy: 3, cloudy: 2, clear: 1, default: 0 };
+  let bestC = "default";
+  let br = -1;
+  for (const s of samples) {
+    const c = String(s.condition || "default").toLowerCase();
+    const r = rank[c] ?? 0;
+    if (r > br) {
+      br = r;
+      bestC = c;
+    }
+  }
+  return {
+    tempF: mt,
+    windMph: mw,
+    humidityPct: mh,
+    condition: bestC,
+  };
+}
+
+/**
+ * DataGolf documents tee times in field-updates (bundled as live-in-play `field_updates`).
+ * Hourly conditions come from Open-Meteo at the venue — DG website hourly tables are not in the public API feed.
+ */
+async function refreshForecastWeatherFromOpenMeteo() {
+  if (typeof fetch !== "function") return false;
+  const coords = courseCoordinatesFromMeta();
+  const tz = forecastTimezoneFromMeta();
+  if (!DATA.meta) DATA.meta = {};
+  if (!coords || !DATA.players?.length) {
+    for (const p of DATA.players || []) delete p.dg_auto_weather;
+    DATA.meta.forecast_weather_status = coords ? "no_players" : "no_course_coords";
+    return false;
+  }
+  const cacheKey = `${coords.lat}|${coords.lon}|${tz}|${DATA.meta.datagolf_field_date_start || ""}`;
+  const now = Date.now();
+  let hourly = OPEN_METEO_FORECAST_CACHE.hourly;
+  if (
+    OPEN_METEO_FORECAST_CACHE.key !== cacheKey ||
+    now - OPEN_METEO_FORECAST_CACHE.atMs > OPEN_METEO_TTL_MS ||
+    !hourly
+  ) {
+    try {
+      const res = await fetch(openMeteoForecastUrl(coords.lat, coords.lon, tz));
+      if (!res.ok) throw new Error(String(res.status));
+      const j = await res.json();
+      hourly = j.hourly;
+      OPEN_METEO_FORECAST_CACHE = { key: cacheKey, atMs: now, hourly };
+    } catch {
+      DATA.meta.forecast_weather_status = "open_meteo_fetch_failed";
+      return false;
+    }
+  }
+  const timesArr = hourly?.time;
+  if (!Array.isArray(timesArr) || !timesArr.length) {
+    DATA.meta.forecast_weather_status = "empty_hourly";
+    return false;
+  }
+
+  const perTeeSamples = [];
+  for (const p of DATA.players) {
+    const tt = p?.dg_teetime_local;
+    if (!tt) continue;
+    const ix = hourlyIndexForDgTeetime(timesArr, tt);
+    if (ix < 0) continue;
+    const snap = hourlySliceWeatherSnapshot(hourly, ix, 5);
+    if (snap) perTeeSamples.push(snap);
+  }
+  const medianSnap = medianWeatherSnapshotFromSamples(perTeeSamples);
+
+  for (const p of DATA.players) {
+    const tt = p?.dg_teetime_local;
+    let snap = null;
+    if (tt) {
+      const ix = hourlyIndexForDgTeetime(timesArr, tt);
+      if (ix >= 0) snap = hourlySliceWeatherSnapshot(hourly, ix, 5);
+    }
+    if (!snap && medianSnap && Number.isFinite(medianSnap.tempF)) {
+      snap = { ...medianSnap };
+    }
+    if (snap && Number.isFinite(snap.tempF) && Number.isFinite(snap.windMph) && Number.isFinite(snap.humidityPct)) {
+      p.dg_auto_weather = snap;
+    } else delete p.dg_auto_weather;
+  }
+
+  DATA.meta.forecast_weather_status = perTeeSamples.length ? "ok_tee_time" : medianSnap ? "ok_median" : "no_tee_match";
+  DATA.meta.forecast_weather_updated_at = new Date().toISOString();
+  PRICING_MU_BONUS_CACHE.clear();
+  return true;
+}
 
 const PRICING_DEFAULTS = Object.freeze({ mode: "default", skill: "default" });
 const PRICING_SKILL_COLUMNS = Object.freeze(["sg_total", "sg_ott", "sg_app", "sg_arg", "sg_putt", "sg_t2g"]);
@@ -2051,8 +2332,8 @@ function syncWeatherUiFromState() {
   }
 }
 
-function weatherDifficultyDelta() {
-  const w = WEATHER_STATE;
+function weatherDifficultyDeltaFromSnapshot(w) {
+  if (!w || typeof w !== "object") return 0;
   const tempAdj = w.tempF >= 72 ? 0.03 * (w.tempF - 72) : 0.02 * (w.tempF - 72);
   const windAdj = 0.045 * Math.max(0, w.windMph - 8);
   const humAdj = 0.012 * Math.max(0, w.humidityPct - 55);
@@ -2062,8 +2343,12 @@ function weatherDifficultyDelta() {
   return sliderPart + condAdj;
 }
 
-function weatherSigmaMultiplier() {
-  const w = WEATHER_STATE;
+function weatherDifficultyDelta() {
+  return weatherDifficultyDeltaFromSnapshot(WEATHER_STATE);
+}
+
+function weatherSigmaMultiplierFromSnapshot(w) {
+  if (!w || typeof w !== "object") return 1;
   const windVar = 0.01 * Math.max(0, w.windMph - 8);
   const humVar = 0.0015 * Math.max(0, w.humidityPct - 55);
   if (w.condition === "default") {
@@ -2073,8 +2358,32 @@ function weatherSigmaMultiplier() {
   return clamp(1 + windVar + humVar + condVar, 0.9, 1.5);
 }
 
-function statWeatherMuAdjustment(market) {
-  const d = weatherDifficultyDelta();
+function weatherSigmaMultiplier() {
+  return weatherSigmaMultiplierFromSnapshot(WEATHER_STATE);
+}
+
+/** Tee-time forecast (bundled live field_updates + Open-Meteo hourly) when present; else global fallback. */
+function effectiveWeatherForProjectionRow(row) {
+  const auto = row?.dg_auto_weather;
+  if (
+    auto &&
+    typeof auto === "object" &&
+    Number.isFinite(auto.tempF) &&
+    Number.isFinite(auto.windMph) &&
+    Number.isFinite(auto.humidityPct)
+  ) {
+    return {
+      tempF: auto.tempF,
+      windMph: auto.windMph,
+      humidityPct: auto.humidityPct,
+      condition: String(auto.condition || "default").toLowerCase(),
+    };
+  }
+  return { ...WEATHER_STATE };
+}
+
+function statWeatherMuAdjustment(market, row) {
+  const d = weatherDifficultyDeltaFromSnapshot(effectiveWeatherForProjectionRow(row));
   if (!Number.isFinite(d)) return 0;
   if (market === "Total score") return d;
   if (market === "Bogeys") return 0.45 * d;
@@ -2296,7 +2605,7 @@ function playerSkillWeatherEdge(row) {
   const roundSd = num(row?.round_sd, NaN);
   const sgEdge = Number.isFinite(baseSg) ? baseSg * 0.12 : 0;
   const consistencyEdge = Number.isFinite(roundSd) ? clamp((2.8 - roundSd) * 0.03, -0.06, 0.06) : 0;
-  return weatherDifficultyDelta() * (sgEdge + consistencyEdge);
+  return weatherDifficultyDeltaFromSnapshot(effectiveWeatherForProjectionRow(row)) * (sgEdge + consistencyEdge);
 }
 
 function weatherAdjustedMuSg(row) {
@@ -2352,7 +2661,7 @@ function sigmaOuDiscreteCounting(market, muAbs) {
 function sigmaForOu(market, row) {
   const mKey = ouModelMarketKey(market) || "Total score";
   const rec = ouStatRec(mKey);
-  const weatherMult = weatherSigmaMultiplier();
+  const weatherMult = weatherSigmaMultiplierFromSnapshot(effectiveWeatherForProjectionRow(row));
   const liveShrink = sigmaLiveRoundShrinkForTotalScore(row, rec);
   if (rec.sdKey) {
     const s = num(row[rec.sdKey], NaN);
@@ -2375,7 +2684,7 @@ function ouProjectedMean(market, row) {
   const baseMean = ouMeanCountingStat(mKey, row);
   return (
     (Number.isFinite(baseMean) ? baseMean : num(row[rec.field], NaN)) +
-    statWeatherMuAdjustment(mKey) +
+    statWeatherMuAdjustment(mKey, row) +
     liveCourseOUMuAdjustment(mKey) +
     liveRoundAdj +
     countLive.muDelta +
@@ -2994,7 +3303,15 @@ function buildOuProjDetailPanel(player, col, side, mu, pick, rawName) {
   addM("μ SG", Number.isFinite(num(player.mu_sg, NaN)) ? num(player.mu_sg).toFixed(3) : "—");
   addM("Implied μ SG", Number.isFinite(num(player.implied_mu_sg, NaN)) ? num(player.implied_mu_sg).toFixed(3) : "—");
   addM("Score to par", Number.isFinite(num(player.score_to_par, NaN)) ? num(player.score_to_par).toFixed(2) : "—");
-  addM("Weather", `${WEATHER_STATE.tempF}°F · ${WEATHER_STATE.windMph} mph · ${WEATHER_STATE.humidityPct}%`);
+  const ew = effectiveWeatherForProjectionRow(player);
+  const ws =
+    player &&
+    Number.isFinite(ew.tempF) &&
+    Number.isFinite(ew.windMph) &&
+    Number.isFinite(ew.humidityPct)
+      ? `${ew.tempF.toFixed(1)}°F · ${ew.windMph.toFixed(1)} mph · ${ew.humidityPct.toFixed(0)}% · ${ew.condition}`
+      : "—";
+  addM("Weather", ws);
   addM("Pricing", PRICING_STATE.mode + (PRICING_STATE.mode === "skill" ? ` · ${PRICING_STATE.skill}` : ""));
   if (pick && Number.isFinite(pick.line)) {
     addM("Book line", String(pick.line));
@@ -8315,12 +8632,20 @@ function hangoutFnv1aHash(str) {
   return h >>> 0;
 }
 
+function hangoutSelectedPlayerWeatherSeedFragment() {
+  const pid = document.getElementById("hh-player")?.value || "";
+  const id = Math.round(num(pid, NaN));
+  const row = Number.isFinite(id) ? projectionPlayerRowForModel(id, getOuRound()) : null;
+  const w = effectiveWeatherForProjectionRow(row || {});
+  return `${w.tempF}|${w.windMph}|${w.humidityPct}|${w.condition}`;
+}
+
 function buildHangoutSimSeedKey(hpars, holeIdx) {
   const r = getOuRound();
   const hole = String(holeIdx + 1);
   const par = hpars[holeIdx] ?? 4;
   const pid = document.getElementById("hh-player")?.value || "";
-  const w = `${WEATHER_STATE.tempF}|${WEATHER_STATE.windMph}|${WEATHER_STATE.humidityPct}|${WEATHER_STATE.condition}`;
+  const w = hangoutSelectedPlayerWeatherSeedFragment();
   const pr = `${PRICING_STATE.mode}|${PRICING_STATE.skill}`;
   const live = hangoutLiveOn()
     ? `L|${document.getElementById("hh-shot-num")?.value}|${document.getElementById("hh-dist-yds")?.value}|${document.getElementById("hh-lie")?.value}|${document.getElementById("hh-putt-ft")?.value}`
@@ -8724,7 +9049,7 @@ function hangoutOutcomeDistributionT(row, dgId) {
   const pBonus = Number.isFinite(id) ? pricingModeMuSgBonus(id) : 0;
   const tPrice =
     Number.isFinite(pBonus) && Math.abs(pBonus) > 1e-12 ? clamp(pBonus * 0.22, -0.09, 0.09) : 0;
-  const d = weatherDifficultyDelta();
+  const d = weatherDifficultyDeltaFromSnapshot(effectiveWeatherForProjectionRow(row));
   const tWeatherBase = clamp(-num(d, 0) * 0.055, -0.09, 0.09);
   const wEdge = playerSkillWeatherEdge(row);
   const tWeatherSkill =
@@ -10372,29 +10697,6 @@ function initTabs() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  function refreshAllWeatherAffectedViews() {
-    buildOuTable();
-    buildEvTable();
-    buildMatchupsTable();
-    buildMatchupAnalysisTool();
-    buildOutrightsTable();
-    renderPropsTrends();
-    updatePropsFooterEv();
-    renderLivePropPredictor();
-    scheduleHangoutSimulateDebounced();
-  }
-  function applyWeatherFrom(ids, syncUi = true) {
-    const next = weatherFromUiIds(ids);
-    const avg = WEATHER_CONDITION_AVERAGES[next.condition] || WEATHER_CONDITION_AVERAGES.default;
-    if (avg) {
-      next.tempF = avg.tempF;
-      next.windMph = avg.windMph;
-      next.humidityPct = avg.humidityPct;
-    }
-    WEATHER_STATE = next;
-    if (syncUi) syncWeatherUiFromState();
-    refreshAllWeatherAffectedViews();
-  }
   syncWeatherUiFromState();
   syncPricingUiFromState();
   for (const ids of PRICING_UI_IDS) {
@@ -10407,36 +10709,6 @@ document.addEventListener("DOMContentLoaded", () => {
         refreshPricingAffectedViews();
       });
     }
-  }
-  for (const ids of WEATHER_UI_IDS) {
-    [ids.temp, ids.wind, ids.humidity, ids.condition].forEach((id) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.addEventListener("change", () => {
-        if (id === ids.condition) {
-          applyWeatherFrom(ids, true);
-          return;
-        }
-        WEATHER_STATE = weatherFromUiIds(ids);
-        syncWeatherUiFromState();
-        refreshAllWeatherAffectedViews();
-      });
-      el.addEventListener("input", () => {
-        if (id === ids.condition) return;
-        WEATHER_STATE = weatherFromUiIds(ids);
-        syncWeatherUiFromState();
-        refreshAllWeatherAffectedViews();
-      });
-      if (id === ids.temp || id === ids.wind || id === ids.humidity) {
-        el.addEventListener("blur", () => {
-          const inp = /** @type {HTMLInputElement} */ (el);
-          if (String(inp.value ?? "").trim() !== "") return;
-          if (id === ids.temp) inp.value = String(Math.round(WEATHER_STATE.tempF));
-          else if (id === ids.wind) inp.value = String(Math.round(WEATHER_STATE.windMph));
-          else inp.value = String(Math.round(WEATHER_STATE.humidityPct));
-        });
-      }
-    });
   }
   initPropsTopTableSortOnce();
   configureRoundPickerUi();
@@ -10457,6 +10729,9 @@ document.addEventListener("DOMContentLoaded", () => {
     renderLivePropPredictor();
     initHangoutSelectors(false);
     scheduleHangoutSimulateDebounced();
+    void refreshForecastWeatherFromOpenMeteo().then((fwOk) => {
+      if (fwOk) refreshPricingAffectedViews();
+    });
   });
   document.getElementById("analysis-market")?.addEventListener("change", () => {
     matchupAnalysisSelectedKey = "";

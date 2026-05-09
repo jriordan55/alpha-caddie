@@ -260,6 +260,15 @@ body {
 .weather-toolbar-compact .toolbar-label {
   font-size: 0.68rem;
 }
+.weather-auto-note {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  max-width: 52rem;
+}
+.weather-auto-note code {
+  font-size: 0.85em;
+}
 @media (max-width: 1120px) {
   .ou-filters #ou-player-filter {
     width: 180px;
