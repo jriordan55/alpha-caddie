@@ -1301,6 +1301,234 @@ function mergeDatagolfInPlayPayload(j) {
   return touched > 0 || metaTouched || drivingTouched;
 }
 
+/** Match build-player-history normEvt() for upserting live rows onto CSV-backed rounds. */
+function liveHistNormEvtKey(s) {
+  return String(s || "")
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+/** First tournament round date (ISO YYYY-MM-DD); round n → that calendar day + (n−1). */
+function eventCompletedMdYForRoundLiveHist(dateStartIso, roundNum) {
+  if (!dateStartIso || roundNum < 1) return "";
+  const m = String(dateStartIso).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return "";
+  const t = Date.UTC(+m[1], +m[2] - 1, +m[3]) + (roundNum - 1) * 86400000;
+  const d = new Date(t);
+  return `${d.getUTCMonth() + 1}/${d.getUTCDate()}/${d.getUTCFullYear()}`;
+}
+
+function projectionRowForDgRound(dgId, rnd) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id) || !DATA.players || !DATA.players.length) return null;
+  const rWant = Math.round(num(rnd, NaN));
+  if (!Number.isFinite(rWant) || rWant < 1) return null;
+  for (const p of DATA.players) {
+    if (Math.round(num(p.dg_id, NaN)) !== id) continue;
+    const pr = Math.round(num(p.round, NaN));
+    if (pr === rWant) return p;
+  }
+  return null;
+}
+
+const MAX_HISTORY_ROUNDS_PER_PLAYER = 2000;
+
+function upsertHistoryBucketLiveRound(dgId, liveRec) {
+  const bucket = HISTORY.byDgId[String(dgId)];
+  if (!bucket || !Array.isArray(bucket.rounds)) return false;
+  const wantEvt = liveHistNormEvtKey(liveRec.event_name);
+  const wantYr = parseInt(String(liveRec.year || ""), 10);
+  const wantRnd = parseInt(String(liveRec.round_num || ""), 10);
+  let hitIdx = -1;
+  for (let i = bucket.rounds.length - 1; i >= 0; i--) {
+    const rr = bucket.rounds[i];
+    if (parseInt(String(rr.round_num || ""), 10) !== wantRnd) continue;
+    if (Number.isFinite(wantYr) && parseInt(String(rr.year || ""), 10) !== wantYr) continue;
+    if (liveHistNormEvtKey(rr.event_name) !== wantEvt) continue;
+    hitIdx = i;
+    break;
+  }
+  if (hitIdx >= 0) bucket.rounds[hitIdx] = { ...bucket.rounds[hitIdx], ...liveRec };
+  else bucket.rounds.push(liveRec);
+  bucket.rounds.sort((a, b) => num(a.sortKey, 0) - num(b.sortKey, 0));
+  if (bucket.rounds.length > MAX_HISTORY_ROUNDS_PER_PLAYER) bucket.rounds = bucket.rounds.slice(-MAX_HISTORY_ROUNDS_PER_PLAYER);
+  return true;
+}
+
+/**
+ * Mirror scripts/build-player-history.mjs live merge: prior rounds R1… stay visible while historical CSV lags.
+ * Runs on boot (after loadPlayerHistory) and on live polls so deploys without a fresh player_round_history.json still show R1 dates.
+ */
+function mergeLiveInPlayIntoRoundHistory(j) {
+  if (!j || typeof j !== "object" || !Array.isArray(j.data) || !j.data.length) return 0;
+  if (!HISTORY._ok || !HISTORY.byDgId || typeof HISTORY.byDgId !== "object") return 0;
+
+  const info = j.info && typeof j.info === "object" ? j.info : {};
+  const fu = j.field_updates && typeof j.field_updates === "object" ? j.field_updates : {};
+  const inPlayEvent = String(info.event_name || fu.event_name || j.event_name || "").trim();
+  const modelEvent = String(DATA?.meta?.event_name || "").trim();
+  const eventAligned =
+    !inPlayEvent ||
+    !modelEvent ||
+    eventNameMatchesCurrentSchedule(inPlayEvent, modelEvent) ||
+    eventNameMatchesCurrentSchedule(modelEvent, inPlayEvent);
+  if (!eventAligned) return 0;
+
+  const dateStartIso = String(fu.date_start || info.date_start || "").trim();
+  const eventName = String(modelEvent || fu.event_name || info.event_name || "").trim();
+  if (!eventName) return 0;
+
+  const courseName =
+    String(DATA?.meta?.course_used || fu.course_name || "").trim() || eventName;
+  const coursePar = num(DATA?.meta?.course_par_18, NaN);
+  const eventIdStr = fu.event_id != null && fu.event_id !== "" ? String(fu.event_id) : "";
+
+  const roundCandidates = [
+    num(DATA?.meta?.datagolf_live_current_round, NaN),
+    num(DATA?.meta?.display_round, NaN),
+    num(fu.current_round, NaN),
+    num(info.current_round, NaN),
+    num(j.current_round, NaN),
+  ];
+  for (const row of j.data) roundCandidates.push(num(row?.round, NaN));
+  let fallbackRoundNum = NaN;
+  for (const cand of roundCandidates) {
+    const rn = Math.round(num(cand, NaN));
+    if (Number.isFinite(rn) && rn >= 1 && rn <= 4) {
+      fallbackRoundNum = rn;
+      break;
+    }
+  }
+
+  let merged = 0;
+  const lastUp = info.last_update != null ? String(info.last_update) : "";
+
+  for (const r of j.data) {
+    const dg = Math.round(num(r?.dg_id ?? r?.dgId, NaN));
+    if (!Number.isFinite(dg)) continue;
+    const playerRound = Math.round(num(r?.round, NaN));
+    const pr = Number.isFinite(playerRound) && playerRound >= 1 && playerRound <= 4 ? playerRound : fallbackRoundNum;
+    if (!Number.isFinite(pr) || pr < 1 || pr > 4) continue;
+
+    const today = num(r?.today ?? r?.Today, NaN);
+    const currentScore = num(r?.current_score ?? r?.currentScore, NaN);
+
+    if (dateStartIso) {
+      for (let rnd = 1; rnd <= pr; rnd++) {
+        const eventDate = eventCompletedMdYForRoundLiveHist(dateStartIso, rnd);
+        if (!eventDate) continue;
+        const gross = num(r[`R${rnd}`] ?? r[`r${rnd}`], NaN);
+        let roundScore = NaN;
+        let sgRow = null;
+        if (rnd < pr) {
+          if (Number.isFinite(gross)) roundScore = Math.round(gross * 10) / 10;
+        } else {
+          if (Number.isFinite(gross)) roundScore = Math.round(gross * 10) / 10;
+          else if (Number.isFinite(today) && Number.isFinite(coursePar)) {
+            roundScore = Math.round((coursePar + today) * 10) / 10;
+            sgRow = r;
+          }
+        }
+        if (!Number.isFinite(roundScore)) continue;
+
+        const eventYear = parseInt(String(eventDate).split("/")[2] || "", 10);
+        const pp = projectionRowForDgRound(dg, rnd);
+        const chronoBase = parseEventCompletedChronoBase(eventDate);
+        const liveRec = {
+          dg_id: dg,
+          sortKey: chronoBase * 10 + rnd,
+          event_completed: eventDate,
+          year: Number.isFinite(eventYear) ? eventYear : new Date().getFullYear(),
+          event_name: eventName,
+          event_id: eventIdStr,
+          course_name: courseName,
+          round_num: rnd,
+          fin_text: "",
+          round_score: roundScore,
+          birdies: pp && Number.isFinite(num(pp.birdies, NaN)) ? num(pp.birdies, NaN) : null,
+          pars: pp && Number.isFinite(num(pp.pars, NaN)) ? num(pp.pars, NaN) : null,
+          bogies: pp && Number.isFinite(num(pp.bogeys, NaN)) ? num(pp.bogeys, NaN) : null,
+          gir: pp && Number.isFinite(num(pp.gir, NaN)) ? num(pp.gir, NaN) : null,
+          fairways: pp && Number.isFinite(num(pp.fairways, NaN)) ? num(pp.fairways, NaN) : null,
+          putts: pp && Number.isFinite(num(pp.putts, NaN)) ? num(pp.putts, NaN) : null,
+          eagles_or_better: null,
+          doubles_or_worse: null,
+          weather_temp_f: null,
+          weather_wind_mph: null,
+          weather_humidity: null,
+          weather_condition: "",
+          sg_putt: sgRow && Number.isFinite(num(sgRow.sg_putt, NaN)) ? num(sgRow.sg_putt, NaN) : null,
+          sg_app: sgRow && Number.isFinite(num(sgRow.sg_app, NaN)) ? num(sgRow.sg_app, NaN) : null,
+          sg_arg: sgRow && Number.isFinite(num(sgRow.sg_arg, NaN)) ? num(sgRow.sg_arg, NaN) : null,
+          sg_ott: sgRow && Number.isFinite(num(sgRow.sg_ott, NaN)) ? num(sgRow.sg_ott, NaN) : null,
+          sg_t2g: sgRow && Number.isFinite(num(sgRow.sg_t2g, NaN)) ? num(sgRow.sg_t2g, NaN) : null,
+          sg_total: sgRow && Number.isFinite(num(sgRow.sg_total, NaN)) ? num(sgRow.sg_total, NaN) : null,
+          current_score: rnd === pr && Number.isFinite(currentScore) ? currentScore : null,
+          today: rnd === pr && Number.isFinite(today) ? today : null,
+          _from_live_in_play: true,
+        };
+        if (upsertHistoryBucketLiveRound(dg, liveRec)) merged++;
+      }
+    } else if (Number.isFinite(today) && Number.isFinite(coursePar)) {
+      const roundNum = pr;
+      const roundScore = Math.round((coursePar + today) * 10) / 10;
+      let eventDate = "";
+      const isoM = lastUp.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (isoM) eventDate = `${parseInt(isoM[2], 10)}/${parseInt(isoM[3], 10)}/${parseInt(isoM[1], 10)}`;
+      else {
+        const d = new Date();
+        eventDate = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+      }
+      const eventYear = parseInt(String(eventDate).split("/")[2] || "", 10);
+      const pp = projectionRowForDgRound(dg, roundNum);
+      const chronoBase = parseEventCompletedChronoBase(eventDate);
+      const liveRec = {
+        dg_id: dg,
+        sortKey: chronoBase * 10 + roundNum,
+        event_completed: eventDate,
+        year: Number.isFinite(eventYear) ? eventYear : new Date().getFullYear(),
+        event_name: eventName,
+        event_id: eventIdStr,
+        course_name: courseName,
+        round_num: roundNum,
+        fin_text: "",
+        round_score: Number.isFinite(roundScore) ? roundScore : null,
+        birdies: pp && Number.isFinite(num(pp.birdies, NaN)) ? num(pp.birdies, NaN) : null,
+        pars: pp && Number.isFinite(num(pp.pars, NaN)) ? num(pp.pars, NaN) : null,
+        bogies: pp && Number.isFinite(num(pp.bogeys, NaN)) ? num(pp.bogeys, NaN) : null,
+        gir: pp && Number.isFinite(num(pp.gir, NaN)) ? num(pp.gir, NaN) : null,
+        fairways: pp && Number.isFinite(num(pp.fairways, NaN)) ? num(pp.fairways, NaN) : null,
+        putts: pp && Number.isFinite(num(pp.putts, NaN)) ? num(pp.putts, NaN) : null,
+        eagles_or_better: null,
+        doubles_or_worse: null,
+        weather_temp_f: null,
+        weather_wind_mph: null,
+        weather_humidity: null,
+        weather_condition: "",
+        sg_putt: Number.isFinite(num(r.sg_putt, NaN)) ? num(r.sg_putt, NaN) : null,
+        sg_app: Number.isFinite(num(r.sg_app, NaN)) ? num(r.sg_app, NaN) : null,
+        sg_arg: Number.isFinite(num(r.sg_arg, NaN)) ? num(r.sg_arg, NaN) : null,
+        sg_ott: Number.isFinite(num(r.sg_ott, NaN)) ? num(r.sg_ott, NaN) : null,
+        sg_t2g: Number.isFinite(num(r.sg_t2g, NaN)) ? num(r.sg_t2g, NaN) : null,
+        sg_total: Number.isFinite(num(r.sg_total, NaN)) ? num(r.sg_total, NaN) : null,
+        current_score: Number.isFinite(currentScore) ? currentScore : null,
+        today: Number.isFinite(today) ? today : null,
+        _from_live_in_play: true,
+      };
+      if (upsertHistoryBucketLiveRound(dg, liveRec)) merged++;
+    }
+  }
+
+  if (merged > 0) {
+    HISTORY_ROUNDS_CHRONO_CACHE.clear();
+    PRICING_MU_BONUS_CACHE.clear();
+  }
+  return merged;
+}
+
 async function fetchAndMergeDatagolfLiveInPlay(opts = {}) {
   let force = Boolean(opts.force);
   if (!force) {
@@ -1324,9 +1552,10 @@ async function fetchAndMergeDatagolfLiveInPlay(opts = {}) {
     const token = dgInPlayUpdateToken(j);
     if (!force && token && lastDatagolfInPlayToken && token === lastDatagolfInPlayToken) return;
     const merged = mergeDatagolfInPlayPayload(j);
+    const histMerged = mergeLiveInPlayIntoRoundHistory(j);
     const roundBumped = syncLbRoundToTournamentModelRound();
     if (token) lastDatagolfInPlayToken = token;
-    if (merged || roundBumped) {
+    if (merged || roundBumped || histMerged > 0) {
       refreshPricingAffectedViews();
       updateStatusBar();
     }
