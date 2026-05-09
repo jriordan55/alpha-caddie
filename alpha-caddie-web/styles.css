@@ -3195,13 +3195,6 @@ th.matchup-analysis-best-pick {
 }
 
 /* Live Prop Predictor */
-.live-prop-lede {
-  margin: 0 0 18px;
-  font-size: 0.9375rem;
-  line-height: 1.45;
-  max-width: 52rem;
-}
-
 .live-prop-layout {
   display: grid;
   grid-template-columns: minmax(280px, 1fr) minmax(280px, 1.15fr);
@@ -3211,6 +3204,111 @@ th.matchup-analysis-best-pick {
 
 .live-prop-card {
   padding: 18px 20px 20px;
+}
+
+.live-prop-input-card .toolbar-label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--golf-text-muted);
+}
+
+.live-prop-input-card select.live-prop-input,
+.live-prop-input-card input.live-prop-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--golf-text);
+  background: var(--golf-bg);
+  border: 1px solid var(--golf-card-border);
+  border-radius: 10px;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+}
+
+.live-prop-input-card select.live-prop-input {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b8f9c' d='M2.5 4.5 L6 8 L9.5 4.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.live-prop-input-card input.live-prop-input:hover {
+  border-color: #5a5e6a;
+  background-color: #080a0e;
+}
+.live-prop-input-card select.live-prop-input:hover {
+  border-color: #5a5e6a;
+  background-color: #080a0e;
+}
+
+.live-prop-input-card select.live-prop-input:focus,
+.live-prop-input-card input.live-prop-input:focus {
+  border-color: var(--golf-green);
+  box-shadow: 0 0 0 3px rgba(0, 196, 107, 0.2);
+}
+
+.live-prop-through-field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+  padding: 12px 14px;
+  background: var(--golf-bg);
+  border: 1px solid var(--golf-card-border);
+  border-radius: 10px;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.live-prop-through-field:focus-within {
+  border-color: var(--golf-green);
+  box-shadow: 0 0 0 3px rgba(0, 196, 107, 0.18);
+}
+
+.live-prop-through-label,
+.live-prop-through-suffix {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--golf-text);
+  letter-spacing: 0.01em;
+}
+
+.live-prop-through-field .live-prop-input-number {
+  width: 3.75rem;
+  min-height: 40px;
+  padding: 0 8px;
+  text-align: center;
+  background: var(--golf-elevated-soft);
+  flex: 0 0 auto;
+}
+
+.live-prop-through-field .live-prop-input-number:focus {
+  box-shadow: none;
+}
+
+.live-prop-input-card input.live-prop-input-number::-webkit-outer-spin-button,
+.live-prop-input-card input.live-prop-input-number::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.live-prop-input-card input.live-prop-input-number[type="number"] {
+  -moz-appearance: textfield;
 }
 
 .live-prop-card-title {
@@ -3231,12 +3329,6 @@ th.matchup-analysis-best-pick {
   grid-column: 1 / -1;
 }
 
-.live-prop-hint {
-  margin: -4px 0 0;
-  font-size: 0.8125rem;
-  line-height: 1.4;
-}
-
 .live-prop-odds-pair {
   grid-column: 1 / -1;
   display: grid;
@@ -3254,8 +3346,10 @@ th.matchup-analysis-best-pick {
 
 .live-prop-placeholder {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 1rem;
   line-height: 1.5;
+  color: var(--golf-text);
+  font-weight: 500;
 }
 
 .live-prop-result-grid {
@@ -3289,12 +3383,6 @@ th.matchup-analysis-best-pick {
   letter-spacing: 0.02em;
 }
 
-.live-prop-detail {
-  margin: 16px 0 0;
-  font-size: 0.8125rem;
-  line-height: 1.45;
-}
-
 @media (max-width: 768px) {
   .live-prop-layout {
     grid-template-columns: 1fr;
@@ -3304,6 +3392,9 @@ th.matchup-analysis-best-pick {
   }
   .live-prop-odds-pair {
     grid-template-columns: 1fr;
+  }
+  .live-prop-through-field {
+    justify-content: flex-start;
   }
 }
 

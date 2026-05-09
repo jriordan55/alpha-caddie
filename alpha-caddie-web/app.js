@@ -5826,19 +5826,18 @@ function livePropModelRemainderSigma(marketLabel, rowClean, statKey, completedHo
 
 function renderLivePropPredictor() {
   const root = document.getElementById("live-prop-results");
-  const detail = document.getElementById("live-prop-detail");
-  if (!root || !detail) return;
+  if (!root) return;
 
   const dg = Math.round(num(document.getElementById("live-prop-golfer")?.value, NaN));
   const statKey = String(document.getElementById("live-prop-market")?.value || "total");
-  const holePlaying = Math.round(num(document.getElementById("live-prop-hole")?.value, NaN));
+  const throughHoles = Math.round(num(document.getElementById("live-prop-through-holes")?.value, NaN));
   const curRaw = num(document.getElementById("live-prop-current")?.value, NaN);
   const lineRaw = num(document.getElementById("live-prop-line")?.value, NaN);
   const line = clampPropLineForMarket(statKey, enforceHalfLine(lineRaw));
   const oAm = num(document.getElementById("live-prop-over-am")?.value, NaN);
   const uAm = num(document.getElementById("live-prop-under-am")?.value, NaN);
 
-  const completed = Number.isFinite(holePlaying) ? clamp(holePlaying - 1, 0, 17) : NaN;
+  const completed = Number.isFinite(throughHoles) ? clamp(throughHoles, 0, 17) : NaN;
   const marketLabel = ouMarketKeyFromStatKey(statKey);
   const rEv = getModelRoundForEv();
   const rowRaw =
@@ -5851,59 +5850,45 @@ function renderLivePropPredictor() {
 
   if (
     !Number.isFinite(dg) ||
-    !Number.isFinite(holePlaying) ||
-    holePlaying < 1 ||
-    holePlaying > 18 ||
+    !Number.isFinite(throughHoles) ||
+    throughHoles < 0 ||
+    throughHoles > 17 ||
     !Number.isFinite(curRaw) ||
     curRaw < 0 ||
     !Number.isFinite(line)
   ) {
-    root.innerHTML = `<p class="live-prop-placeholder text-muted">Pick golfer and market. <strong>Hole now</strong> is where the player is playing (holes finished = that number minus one). Enter the stat total <strong>through completed holes</strong>. The book line and Over/Under odds default from <strong>DraftKings</strong> when listed for that golfer and market (otherwise generic defaults); you can edit them.</p>`;
-    detail.textContent =
-      "Uses the same Weather and Pricing controls as Round projections (global state). Remainder uncertainty blends history when hole-by-hole scoring matches; otherwise the Round projection model scales to holes left. EV compares your projected full-round total to the selected line and odds.";
+    root.innerHTML = `<p class="live-prop-placeholder">Complete the form to see projection and edge.</p>`;
     return;
   }
 
   if (!rowClean) {
     root.innerHTML = `<p class="text-warn">No projection row for this golfer — refresh projections.</p>`;
-    detail.textContent = "";
     return;
   }
 
   let muRem;
   let sigRem;
-  let histNote = "";
 
   if (statKey === "gir" || statKey === "fairways" || statKey === "putts") {
     const m = livePropModelRemainderSigma(marketLabel, rowClean, statKey, completed);
     muRem = m.muRem;
     sigRem = m.sigRem;
-    histNote =
-      "GIR, fairways, and putts use the Round projection mean and spread scaled to holes left (hole history rarely has those per hole).";
   } else {
-    const { samples, holeBacked, n } = livePropHistoricalRemainders(dg, statKey, completed);
+    const { samples } = livePropHistoricalRemainders(dg, statKey, completed);
     const mMod = livePropModelRemainderSigma(marketLabel, rowClean, statKey, completed);
     const { mean: muHist, std: sigHist, n: nEff } = livePropSampleMeanStd(samples);
     const w = Math.min(1, nEff / 26);
     if (histOk && nEff >= 6 && Number.isFinite(muHist) && Number.isFinite(sigHist)) {
       muRem = w * muHist + (1 - w) * mMod.muRem;
       sigRem = Math.max(0.25, w * sigHist + (1 - w) * mMod.sigRem);
-      histNote =
-        completed >= 1
-          ? `History n=${nEff} (${holeBacked} rounds with hole-by-hole rows through ${completed} completed holes). Blended with model remainder.`
-          : `History n=${nEff}; full-round remainder from prior rounds (no holes completed yet). Blended with model.`;
     } else {
       muRem = mMod.muRem;
       sigRem = mMod.sigRem;
-      histNote = histOk
-        ? `Limited usable history (n=${nEff}); using model remainder from Round projections.`
-        : "History not loaded; model-only remainder from Round projections.";
     }
   }
 
   if (!Number.isFinite(muRem) || !Number.isFinite(sigRem)) {
     root.innerHTML = `<p class="text-warn">Could not build remainder distribution for this market.</p>`;
-    detail.textContent = "";
     return;
   }
 
@@ -5918,7 +5903,11 @@ function renderLivePropPredictor() {
   const evO = Number.isFinite(dO) && dO > 1 ? pOver * dO - 1 : NaN;
   const evU = Number.isFinite(dU) && dU > 1 ? pUnder * dU - 1 : NaN;
 
-  const fmtPct = (x) => (Number.isFinite(x) ? `${(x * 100).toFixed(1)}%` : "—");
+  const fmtBk = (am) => {
+    const v = Math.round(num(am, NaN));
+    if (!Number.isFinite(v) || v === 0) return "—";
+    return v > 0 ? `+${v}` : String(v);
+  };
   const fmtEv = (x) =>
     Number.isFinite(x)
       ? `<span class="${x >= 0 ? "ev-pos" : "ev-neg"}">${(x * 100).toFixed(1)}%</span>`
@@ -5928,7 +5917,7 @@ function renderLivePropPredictor() {
   root.innerHTML = `
     <div class="live-prop-result-grid">
       <div class="live-prop-metric">
-        <span class="live-prop-metric-label">Projected final</span>
+        <span class="live-prop-metric-label">Projected</span>
         <span class="live-prop-metric-val">${predFinal.toFixed(prec)}</span>
       </div>
       <div class="live-prop-metric">
@@ -5936,12 +5925,12 @@ function renderLivePropPredictor() {
         <span class="live-prop-metric-val">${sigF.toFixed(2)}</span>
       </div>
       <div class="live-prop-metric">
-        <span class="live-prop-metric-label">P (Over)</span>
-        <span class="live-prop-metric-val">${fmtPct(pOver)}</span>
+        <span class="live-prop-metric-label">Over price</span>
+        <span class="live-prop-metric-val">${fmtBk(oAm)}</span>
       </div>
       <div class="live-prop-metric">
-        <span class="live-prop-metric-label">P (Under)</span>
-        <span class="live-prop-metric-val">${fmtPct(pUnder)}</span>
+        <span class="live-prop-metric-label">Under price</span>
+        <span class="live-prop-metric-val">${fmtBk(uAm)}</span>
       </div>
       <div class="live-prop-metric">
         <span class="live-prop-metric-label">EV Over</span>
@@ -5952,7 +5941,6 @@ function renderLivePropPredictor() {
         <span class="live-prop-metric-val">${fmtEv(evU)}</span>
       </div>
     </div>`;
-  detail.textContent = histNote;
 }
 
 /** DraftKings round props in DATA.props (from fetch:dk-ou / fetch:book-odds): fill line + American odds when available for golfer + market. */
@@ -6007,7 +5995,7 @@ function initLivePropPredictorUi() {
   const ids = [
     "live-prop-golfer",
     "live-prop-market",
-    "live-prop-hole",
+    "live-prop-through-holes",
     "live-prop-current",
     "live-prop-line",
     "live-prop-over-am",
