@@ -18,6 +18,7 @@
     "projections:sim": "node scripts/run-projections-sim.mjs",
     "projections:sim:fast": "node scripts/run-projections-sim.mjs --fast",
     "push:all": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/refresh-history-and-push.ps1",
+    "push all": "npm run push:all",
     "push:all:pull-first": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/refresh-history-and-push.ps1 -PullFirst",
     "push:artifacts-only": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/refresh-history-and-push.ps1 -ArtifactsOnly",
     "push:live-once": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/live-in-play-push-once.ps1",

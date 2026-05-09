@@ -14,6 +14,9 @@ $ErrorActionPreference = "Stop"
 #   fetch:book-odds → refreshed matchup/outright odds on projections.json
 #   fetch:in-play → live-in-play.json → browser overlays placement win probs + live_tournament_stats distance/accuracy onto DATA.players
 # Mirrors below copy projections + live into website/public/data/ so both apps ship the same JSON.
+#
+# Round-projections / +EV weather: tee times live in live-in-play.json (field_updates from fetch:in-play);
+# venue hourly forecast + banners resolve in the browser (app.js). Previously unstaged UI files excluded weather from this push — UI ships here when changed.
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $webRoot = Join-Path $repoRoot "alpha-caddie-web"
@@ -80,12 +83,6 @@ $artifacts = @(
   "alpha-caddie-web/embedded-player-round-history.js"
 )
 
-$localOnlyUiFiles = @(
-  "alpha-caddie-web/index.html",
-  "alpha-caddie-web/app.js",
-  "alpha-caddie-web/styles.css"
-)
-
 foreach ($rel in $artifacts) {
   $abs = Join-Path $repoRoot $rel
   if (Test-Path $abs) {
@@ -98,11 +95,6 @@ if ($ArtifactsOnly) {
 } else {
   Write-Host "Staging all repo changes (plus forced data artifacts) ..."
   git -C $repoRoot add -A
-}
-
-Write-Host "Keeping local-only UI tab files out of push (if configured below)."
-foreach ($rel in $localOnlyUiFiles) {
-  git -C $repoRoot restore --staged -- "$rel" 2>$null
 }
 
 git -C $repoRoot diff --cached --quiet

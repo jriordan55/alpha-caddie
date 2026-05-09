@@ -6342,6 +6342,7 @@ function defaultPropGolferDgId() {
 function fillFieldGolferSelect(selId, pickDefaultIdFn) {
   const sel = document.getElementById(selId);
   if (!sel) return;
+  const prevVal = String(sel.value || "");
   const seen = new Set();
   const opts = [];
   for (const p of DATA.players) {
@@ -6353,7 +6354,6 @@ function fillFieldGolferSelect(selId, pickDefaultIdFn) {
     opts.push({ id, name: String(p.player_name || "") });
   }
   opts.sort((a, b) => displayGolferName(a.name).localeCompare(displayGolferName(b.name)));
-  const cur = sel.value;
   sel.innerHTML = "";
   for (const o of opts) {
     const op = document.createElement("option");
@@ -6362,10 +6362,16 @@ function fillFieldGolferSelect(selId, pickDefaultIdFn) {
     sel.appendChild(op);
   }
   const defaultId = pickDefaultIdFn ? pickDefaultIdFn() : NaN;
-  if (cur && [...sel.options].some((o) => o.value === cur)) sel.value = cur;
-  else if (Number.isFinite(defaultId) && [...sel.options].some((o) => o.value === String(defaultId))) {
-    sel.value = String(defaultId);
-  } else if (sel.options.length) sel.selectedIndex = 0;
+  let nextVal = "";
+  if (prevVal && [...sel.options].some((o) => o.value === prevVal)) nextVal = prevVal;
+  else if (Number.isFinite(defaultId) && [...sel.options].some((o) => o.value === String(defaultId))) nextVal = String(defaultId);
+  else if (sel.options.length) nextVal = sel.options[0].value;
+
+  sel.value = nextVal;
+  const changed = prevVal !== String(sel.value || "");
+  if (changed && (selId === "live-prop-golfer" || selId === "prop-golfer")) {
+    sel.dispatchEvent(new Event("change", { bubbles: true }));
+  }
 }
 
 function fillPropGolferSelect() {
@@ -6743,7 +6749,6 @@ function syncLivePropCurrentInputLabel() {
 }
 
 function initLivePropPredictorUi() {
-  fillLivePropGolferSelect();
   const marketEl = document.getElementById("live-prop-market");
   if (marketEl && [...marketEl.options].some((o) => o.value === "birdies")) marketEl.value = "birdies";
   const throughEl = document.getElementById("live-prop-through-holes");
@@ -6753,7 +6758,6 @@ function initLivePropPredictorUi() {
   const lineEl = document.getElementById("live-prop-line");
   if (lineEl) lineEl.value = "4.5";
   syncLivePropCurrentInputLabel();
-  syncLivePropBookLineAndOddsFromDk();
   const ids = [
     "live-prop-golfer",
     "live-prop-market",
@@ -6774,6 +6778,8 @@ function initLivePropPredictorUi() {
       renderLivePropPredictor();
     });
   }
+  fillLivePropGolferSelect();
+  syncLivePropBookLineAndOddsFromDk();
   renderLivePropPredictor();
 }
 
@@ -9671,7 +9677,7 @@ function refreshAll() {
   buildOutrightsTable();
   fillPropGolferSelect();
   fillLivePropGolferSelect();
-  syncLivePropBookLineAndOddsFromDk();
+  /* Do not syncLivePropBookLineAndOddsFromDk here — background refresh would wipe manual live line / odds. */
   renderPropsTrends();
   renderLivePropPredictor();
   initHangoutSelectors(false);
