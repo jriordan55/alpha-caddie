@@ -5914,11 +5914,12 @@ function renderLivePropPredictor() {
   const evO = Number.isFinite(dO) && dO > 1 ? pOver * dO - 1 : NaN;
   const evU = Number.isFinite(dU) && dU > 1 ? pUnder * dU - 1 : NaN;
 
-  const fmtBk = (am) => {
-    const v = Math.round(num(am, NaN));
-    if (!Number.isFinite(v) || v === 0) return "—";
-    return v > 0 ? `+${v}` : String(v);
-  };
+  const LIVE_PROP_MODEL_VIG = 0.075;
+  const vigOverProb = clampProb01(pOver * (1 + LIVE_PROP_MODEL_VIG));
+  const vigUnderProb = clampProb01(pUnder * (1 + LIVE_PROP_MODEL_VIG));
+  const fairOverAm = americanFromImpliedProb(vigOverProb);
+  const fairUnderAm = americanFromImpliedProb(vigUnderProb);
+  const fmtFair = (am) => (Number.isFinite(am) ? formatAmerican(am) : "—");
   const fmtEv = (x) =>
     Number.isFinite(x)
       ? `<span class="${x >= 0 ? "ev-pos" : "ev-neg"}">${(x * 100).toFixed(1)}%</span>`
@@ -5936,12 +5937,12 @@ function renderLivePropPredictor() {
         <span class="live-prop-metric-val">${sigF.toFixed(2)}</span>
       </div>
       <div class="live-prop-metric">
-        <span class="live-prop-metric-label">Over price</span>
-        <span class="live-prop-metric-val">${fmtBk(oAm)}</span>
+        <span class="live-prop-metric-label">Over fair price</span>
+        <span class="live-prop-metric-val">${fmtFair(fairOverAm)}</span>
       </div>
       <div class="live-prop-metric">
-        <span class="live-prop-metric-label">Under price</span>
-        <span class="live-prop-metric-val">${fmtBk(uAm)}</span>
+        <span class="live-prop-metric-label">Under fair price</span>
+        <span class="live-prop-metric-val">${fmtFair(fairUnderAm)}</span>
       </div>
       <div class="live-prop-metric">
         <span class="live-prop-metric-label">EV Over</span>
@@ -6027,10 +6028,6 @@ function initLivePropPredictorUi() {
     });
     document.getElementById(id)?.addEventListener("input", () => renderLivePropPredictor());
   }
-  document.getElementById("live-prop-run")?.addEventListener("click", (e) => {
-    e.preventDefault();
-    renderLivePropPredictor();
-  });
   renderLivePropPredictor();
 }
 
