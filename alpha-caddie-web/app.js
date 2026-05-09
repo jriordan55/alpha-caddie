@@ -6364,16 +6364,54 @@ function courseFilterOn() {
   return Boolean(cb && cb.checked);
 }
 
+/** Map a typed °F value to the same bucket keys used by weatherRangeMatch ("temp"). Empty input → "" */
+function propsWeatherBucketFromTempF(t) {
+  if (!Number.isFinite(t)) return "";
+  if (t < 60) return "lt60";
+  if (t < 70) return "60_69";
+  if (t < 80) return "70_79";
+  if (t < 90) return "80_89";
+  return "gte90";
+}
+
+/** Map typed wind mph to weatherRangeMatch wind buckets. */
+function propsWeatherBucketFromWindMph(w) {
+  if (!Number.isFinite(w)) return "";
+  if (w < 6) return "0_5";
+  if (w < 11) return "6_10";
+  if (w < 16) return "11_15";
+  if (w < 21) return "16_20";
+  return "gte21";
+}
+
+/** Map typed humidity % to weatherRangeMatch humidity buckets. */
+function propsWeatherBucketFromHumidityPct(h) {
+  if (!Number.isFinite(h)) return "";
+  if (h < 40) return "lt40";
+  if (h < 60) return "40_59";
+  if (h < 80) return "60_79";
+  return "gte80";
+}
+
 function selectedPropsTempRangeFilter() {
-  return String(document.getElementById("props-filter-temp-range")?.value || "").trim().toLowerCase();
+  const raw = String(document.getElementById("props-filter-temp-range")?.value ?? "").trim();
+  if (!raw) return "";
+  const t = parseWeatherNumber(raw);
+  return propsWeatherBucketFromTempF(t);
 }
 
 function selectedPropsWindRangeFilter() {
-  return String(document.getElementById("props-filter-wind-range")?.value || "").trim().toLowerCase();
+  const raw = String(document.getElementById("props-filter-wind-range")?.value ?? "").trim();
+  if (!raw) return "";
+  const w = parseWeatherNumber(raw);
+  return propsWeatherBucketFromWindMph(w);
 }
 
 function selectedPropsHumidityRangeFilter() {
-  return String(document.getElementById("props-filter-humidity-range")?.value || "").trim().toLowerCase();
+  const raw = String(document.getElementById("props-filter-humidity-range")?.value ?? "").trim();
+  if (!raw) return "";
+  const h = parseWeatherNumber(raw);
+  return propsWeatherBucketFromHumidityPct(h);
 }
 
 function selectedPropsCourseFilter() {
@@ -10657,7 +10695,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const el = document.getElementById(id);
     if (!el) return;
     el.addEventListener("change", () => renderPropsTrends());
-    if (id === "props-filter-current-course") el.addEventListener("input", () => renderPropsTrends());
+    if (
+      id === "props-filter-current-course" ||
+      id === "props-filter-temp-range" ||
+      id === "props-filter-wind-range" ||
+      id === "props-filter-humidity-range"
+    ) {
+      el.addEventListener("input", () => renderPropsTrends());
+    }
   });
   document.getElementById("props-top-hits-emoji-toggle")?.addEventListener("click", () => {
     propsTopHitsFitMode = propsTopHitsFitMode === "fire" ? "ice" : "fire";

@@ -191,34 +191,41 @@
         <aside class="props-trends-sidebar" aria-label="Historical trend filters and line">
           <div class="toolbar weather-toolbar weather-toolbar-compact" aria-label="Historical trend filters">
             <span class="weather-toolbar-title">Filters</span>
-            <label class="toolbar-label">Temp
-              <select id="props-filter-temp-range">
-                <option value="">All</option>
-                <option value="lt60">&lt; 60F</option>
-                <option value="60_69">60-69F</option>
-                <option value="70_79">70-79F</option>
-                <option value="80_89">80-89F</option>
-                <option value="gte90">90F+</option>
-              </select>
+            <label class="toolbar-label">Temp °F
+              <input
+                id="props-filter-temp-range"
+                type="number"
+                inputmode="decimal"
+                placeholder="Any"
+                min="20"
+                max="120"
+                step="any"
+                title="Leave blank for all rounds. Enter °F (e.g. 72) to keep rounds in that temperature band."
+              />
             </label>
-            <label class="toolbar-label">Wind
-              <select id="props-filter-wind-range">
-                <option value="">All</option>
-                <option value="0_5">0-5 mph</option>
-                <option value="6_10">6-10 mph</option>
-                <option value="11_15">11-15 mph</option>
-                <option value="16_20">16-20 mph</option>
-                <option value="gte21">21+ mph</option>
-              </select>
+            <label class="toolbar-label">Wind mph
+              <input
+                id="props-filter-wind-range"
+                type="number"
+                inputmode="decimal"
+                placeholder="Any"
+                min="0"
+                max="80"
+                step="any"
+                title="Leave blank for all rounds. Enter wind speed to filter to that wind band."
+              />
             </label>
-            <label class="toolbar-label">Humidity
-              <select id="props-filter-humidity-range">
-                <option value="">All</option>
-                <option value="lt40">&lt; 40%</option>
-                <option value="40_59">40-59%</option>
-                <option value="60_79">60-79%</option>
-                <option value="gte80">80%+</option>
-              </select>
+            <label class="toolbar-label">Humidity %
+              <input
+                id="props-filter-humidity-range"
+                type="number"
+                inputmode="decimal"
+                placeholder="Any"
+                min="0"
+                max="100"
+                step="any"
+                title="Leave blank for all rounds. Enter relative humidity % to filter to that band."
+              />
             </label>
             <label class="toolbar-label">Course
               <select id="props-filter-course">
@@ -923,7 +930,7 @@
         <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
       </header>
       <p class="ev-help-intro text-muted">
-        Compare past rounds to the model line for one golfer and stat. The header shows who and which event. <strong>Filters</strong> hide rounds that do not match chosen weather bands, the <strong>Course</strong> dropdown (when not All), or optional <strong>Current course only</strong> (this week’s venue from projections).
+        Compare past rounds to the model line for one golfer and stat. The header shows who and which event. <strong>Filters</strong> hide rounds that do not match typed weather values (temp °F, wind mph, humidity % — leave blank for all), the <strong>Course</strong> dropdown (when not All), or optional <strong>Current course only</strong> (this week’s venue from projections).
       </p>
       <section class="ev-help-section" aria-labelledby="tab-help-props-sidebar-h">
         <h4 class="ev-devig-section-title" id="tab-help-props-sidebar-h">How to use the sidebar</h4>

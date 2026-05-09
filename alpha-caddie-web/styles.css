@@ -2016,6 +2016,27 @@ th.matchup-analysis-best-pick {
   border-color: rgba(0, 196, 107, 0.45);
   box-shadow: 0 0 0 2px rgba(0, 196, 107, 0.12);
 }
+.props-trends-sidebar .weather-toolbar-compact input[type="number"] {
+  width: 100%;
+  margin-top: 6px;
+  box-sizing: border-box;
+  background: var(--golf-elevated-soft);
+  color: var(--golf-text);
+  border: 1px solid var(--golf-border);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-family: inherit;
+  font-size: 0.875rem;
+}
+.props-trends-sidebar .weather-toolbar-compact input[type="number"]:hover,
+.props-trends-sidebar .weather-toolbar-compact input[type="number"]:focus {
+  border-color: #3d424d;
+  outline: none;
+}
+.props-trends-sidebar .weather-toolbar-compact input[type="number"]:focus {
+  border-color: rgba(0, 196, 107, 0.45);
+  box-shadow: 0 0 0 2px rgba(0, 196, 107, 0.12);
+}
 .props-sidebar-label {
   display: block;
   font-size: 0.72rem;
