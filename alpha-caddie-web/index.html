@@ -301,7 +301,7 @@
         <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="live-prop" aria-label="Help: Live Prop Predictor tab">?</button>
       </div>
       <p class="text-muted live-prop-lede">
-        Mid-round: enter where they are and what they’ve posted so far; we project the full-round stat (same markets as Round projections) and compare your prices to the model.
+        Mid-round: enter where they are and what they’ve posted so far; we project the full-round stat (same markets as Round projections). Line and Over/Under default from DraftKings when loaded (otherwise placeholders); EV compares that posted line to the projection.
       </p>
       <div class="live-prop-layout">
         <div class="leaderboard-card live-prop-card live-prop-input-card">
@@ -970,6 +970,8 @@
           <dd>Hole files rarely break these down per hole; we scale the Round projection mean and volatility to the holes remaining.</dd>
           <dt>Weather &amp; pricing</dt>
           <dd>Uses the same global Weather and Pricing controls as the Round projections tab — adjust there first.</dd>
+          <dt>Line &amp; odds</dt>
+          <dd>When <code>projections.json</code> includes DraftKings round props (<code>npm run fetch:dk-ou</code> / push pipeline), changing <strong>Golfer</strong> or <strong>Market</strong> fills the posted DK half-point line and Over/Under American prices for that matchup. If DK does not list that prop, you get generic defaults (−110); you can always edit the fields.</dd>
         </dl>
       </section>
       <footer class="ev-help-actions">
@@ -1081,6 +1083,6 @@
   </dialog>
 
   <script src="embedded-player-round-history.js?v=5"></script>
-  <script src="app.js?v=76"></script>
+  <script src="app.js?v=79"></script>
 </body>
 </html>

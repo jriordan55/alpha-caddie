@@ -5858,9 +5858,9 @@ function renderLivePropPredictor() {
     curRaw < 0 ||
     !Number.isFinite(line)
   ) {
-    root.innerHTML = `<p class="live-prop-placeholder text-muted">Pick golfer and market. <strong>Hole now</strong> is where the player is playing (holes finished = that number minus one). Enter the stat total <strong>through completed holes</strong>, the book line (half-points only), and American odds for Over and Under.</p>`;
+    root.innerHTML = `<p class="live-prop-placeholder text-muted">Pick golfer and market. <strong>Hole now</strong> is where the player is playing (holes finished = that number minus one). Enter the stat total <strong>through completed holes</strong>. The book line and Over/Under odds default from <strong>DraftKings</strong> when listed for that golfer and market (otherwise generic defaults); you can edit them.</p>`;
     detail.textContent =
-      "Uses the same Weather and Pricing controls as Round projections (global state). Remainder uncertainty blends history when hole-by-hole scoring matches; otherwise the Round projection model scales to holes left.";
+      "Uses the same Weather and Pricing controls as Round projections (global state). Remainder uncertainty blends history when hole-by-hole scoring matches; otherwise the Round projection model scales to holes left. EV compares your projected full-round total to the selected line and odds.";
     return;
   }
 
@@ -5955,17 +5955,55 @@ function renderLivePropPredictor() {
   detail.textContent = histNote;
 }
 
-function syncLivePropLineFromMarket() {
+/** DraftKings round props in DATA.props (from fetch:dk-ou / fetch:book-odds): fill line + American odds when available for golfer + market. */
+function syncLivePropBookLineAndOddsFromDk() {
   const statKey = String(document.getElementById("live-prop-market")?.value || "total");
-  const inp = document.getElementById("live-prop-line");
-  if (!inp) return;
-  const d = defaultPropLineForStat(statKey);
-  inp.value = formatPropLineValueForInput(clampPropLineForMarket(statKey, d));
+  const dg = Math.round(num(document.getElementById("live-prop-golfer")?.value, NaN));
+  const lineEl = document.getElementById("live-prop-line");
+  const oEl = document.getElementById("live-prop-over-am");
+  const uEl = document.getElementById("live-prop-under-am");
+  if (!lineEl || !oEl || !uEl) return;
+
+  const fallbackLineAndOdds = () => {
+    const d = defaultPropLineForStat(statKey);
+    lineEl.value = formatPropLineValueForInput(clampPropLineForMarket(statKey, d));
+    oEl.value = formatAmericanOddsInput(OU_DEFAULT_ODDS_AM);
+    uEl.value = formatAmericanOddsInput(OU_DEFAULT_ODDS_AM);
+  };
+
+  if (!Number.isFinite(dg) || dg <= 0) {
+    fallbackLineAndOdds();
+    return;
+  }
+
+  const marketLabel = ouMarketKeyFromStatKey(statKey);
+  const rEv = getModelRoundForEv();
+  const rowRaw =
+    projectionPlayerRowForModel(dg, rEv) ||
+    DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === dg && samePlayerRound(p, rEv)) ||
+    DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === dg);
+  const rowClean = rowRaw ? rowWithoutLivePartialFields(rowRaw) : null;
+
+  if (!rowClean) {
+    fallbackLineAndOdds();
+    return;
+  }
+
+  const mu = ouProjectedMean(marketLabel, rowClean);
+  const pick = chooseOuPropLineForProjection(marketLabel, rowClean, mu);
+  if (pick && Number.isFinite(pick.line)) {
+    lineEl.value = formatPropLineValueForInput(clampPropLineForMarket(statKey, pick.line));
+    oEl.value = formatAmericanOddsInput(pick.over);
+    uEl.value = formatAmericanOddsInput(pick.under);
+    return;
+  }
+
+  fallbackLineAndOdds();
 }
 
 function initLivePropPredictorUi() {
   fillLivePropGolferSelect();
-  syncLivePropLineFromMarket();
+  syncLivePropBookLineAndOddsFromDk();
   const ids = [
     "live-prop-golfer",
     "live-prop-market",
@@ -5977,7 +6015,7 @@ function initLivePropPredictorUi() {
   ];
   for (const id of ids) {
     document.getElementById(id)?.addEventListener("change", () => {
-      if (id === "live-prop-market") syncLivePropLineFromMarket();
+      if (id === "live-prop-market" || id === "live-prop-golfer") syncLivePropBookLineAndOddsFromDk();
       renderLivePropPredictor();
     });
     document.getElementById(id)?.addEventListener("input", () => renderLivePropPredictor());
@@ -8837,6 +8875,7 @@ function refreshAll() {
   buildOutrightsTable();
   fillPropGolferSelect();
   fillLivePropGolferSelect();
+  syncLivePropBookLineAndOddsFromDk();
   renderPropsTrends();
   renderLivePropPredictor();
   initHangoutSelectors(false);
@@ -10074,6 +10113,8 @@ document.addEventListener("DOMContentLoaded", () => {
     buildMatchupsTable();
     buildMatchupAnalysisTool();
     renderPropsTrends();
+    syncLivePropBookLineAndOddsFromDk();
+    renderLivePropPredictor();
     initHangoutSelectors(false);
     scheduleHangoutSimulateDebounced();
   });
