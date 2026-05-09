@@ -2016,25 +2016,38 @@ function refreshPricingAffectedViews() {
   scheduleHangoutSimulateDebounced();
 }
 
+function weatherScalarFromInput(raw, cur, lo, hi) {
+  const s = String(raw ?? "").trim();
+  if (s === "") return cur;
+  const n = Number(s);
+  if (!Number.isFinite(n)) return cur;
+  return clamp(n, lo, hi);
+}
+
 function weatherFromUiIds(ids) {
+  const tempEl = document.getElementById(ids.temp);
+  const windEl = document.getElementById(ids.wind);
+  const humEl = document.getElementById(ids.humidity);
+  const condEl = document.getElementById(ids.condition);
   return {
-    tempF: clamp(num(document.getElementById(ids.temp)?.value, WEATHER_DEFAULTS.tempF), 20, 120),
-    windMph: clamp(num(document.getElementById(ids.wind)?.value, WEATHER_DEFAULTS.windMph), 0, 60),
-    humidityPct: clamp(num(document.getElementById(ids.humidity)?.value, WEATHER_DEFAULTS.humidityPct), 0, 100),
-    condition: String(document.getElementById(ids.condition)?.value || WEATHER_DEFAULTS.condition).toLowerCase(),
+    tempF: weatherScalarFromInput(tempEl?.value, WEATHER_STATE.tempF, 20, 120),
+    windMph: weatherScalarFromInput(windEl?.value, WEATHER_STATE.windMph, 0, 60),
+    humidityPct: weatherScalarFromInput(humEl?.value, WEATHER_STATE.humidityPct, 0, 100),
+    condition: String(condEl?.value || WEATHER_DEFAULTS.condition).toLowerCase(),
   };
 }
 
 function syncWeatherUiFromState() {
+  const ae = document.activeElement;
   for (const ids of WEATHER_UI_IDS) {
     const tempEl = document.getElementById(ids.temp);
     const windEl = document.getElementById(ids.wind);
     const humEl = document.getElementById(ids.humidity);
     const condEl = document.getElementById(ids.condition);
-    if (tempEl) tempEl.value = String(Math.round(WEATHER_STATE.tempF));
-    if (windEl) windEl.value = String(Math.round(WEATHER_STATE.windMph));
-    if (humEl) humEl.value = String(Math.round(WEATHER_STATE.humidityPct));
-    if (condEl) condEl.value = WEATHER_STATE.condition;
+    if (tempEl && tempEl !== ae) tempEl.value = String(Math.round(WEATHER_STATE.tempF));
+    if (windEl && windEl !== ae) windEl.value = String(Math.round(WEATHER_STATE.windMph));
+    if (humEl && humEl !== ae) humEl.value = String(Math.round(WEATHER_STATE.humidityPct));
+    if (condEl && condEl !== ae) condEl.value = WEATHER_STATE.condition;
   }
 }
 
@@ -10414,6 +10427,15 @@ document.addEventListener("DOMContentLoaded", () => {
         syncWeatherUiFromState();
         refreshAllWeatherAffectedViews();
       });
+      if (id === ids.temp || id === ids.wind || id === ids.humidity) {
+        el.addEventListener("blur", () => {
+          const inp = /** @type {HTMLInputElement} */ (el);
+          if (String(inp.value ?? "").trim() !== "") return;
+          if (id === ids.temp) inp.value = String(Math.round(WEATHER_STATE.tempF));
+          else if (id === ids.wind) inp.value = String(Math.round(WEATHER_STATE.windMph));
+          else inp.value = String(Math.round(WEATHER_STATE.humidityPct));
+        });
+      }
     });
   }
   initPropsTopTableSortOnce();
