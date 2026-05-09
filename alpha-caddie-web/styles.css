@@ -1257,6 +1257,89 @@ th.matchup-analysis-best-pick {
   background: #89bea8;
 }
 
+/* Matchup Analysis: `outrights-table-wrap` uses overflow-x: clip elsewhere — that hides columns on narrow viewports. */
+#panel-matchup-analysis .outrights-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+#panel-matchup-analysis .matchup-analysis-price-table {
+  min-width: min(100%, 340px);
+  table-layout: auto;
+}
+
+#panel-matchup-analysis #table-matchup-analysis-sg {
+  min-width: 0;
+}
+
+@media (max-width: 720px) {
+  #panel-matchup-analysis #table-matchup-analysis-sg {
+    table-layout: auto;
+    width: max-content;
+    max-width: none;
+    font-size: 0.72rem;
+  }
+  #panel-matchup-analysis #table-matchup-analysis-sg thead th,
+  #panel-matchup-analysis #table-matchup-analysis-sg tbody td {
+    padding: 8px 8px;
+    vertical-align: middle;
+  }
+  #panel-matchup-analysis #table-matchup-analysis-sg thead th {
+    white-space: nowrap;
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
+  }
+  #panel-matchup-analysis #table-matchup-analysis-sg thead th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: #181a20;
+    box-shadow: 4px 0 8px rgba(0, 0, 0, 0.35);
+  }
+  #panel-matchup-analysis #table-matchup-analysis-sg tbody td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: inherit;
+    box-shadow: 4px 0 8px rgba(0, 0, 0, 0.22);
+    font-size: 0.68rem;
+    max-width: 7.5rem;
+    white-space: normal;
+  }
+  #panel-matchup-analysis #table-matchup-analysis-sg tbody tr:nth-child(even) td:first-child {
+    background: #0d0e12;
+  }
+  #panel-matchup-analysis #table-matchup-analysis-sg tbody tr:nth-child(odd) td:first-child {
+    background: #101116;
+  }
+  #panel-matchup-analysis #table-matchup-analysis-sg tbody td:last-child {
+    max-width: 10.5rem;
+    min-width: 8rem;
+    white-space: normal;
+    line-height: 1.25;
+    word-break: normal;
+    overflow-wrap: anywhere;
+  }
+  #panel-matchup-analysis #table-matchup-analysis-sg .matchup-analysis-bar-cell {
+    min-width: 0;
+  }
+  #panel-matchup-analysis .matchup-analysis-bar-wrap {
+    flex-wrap: nowrap;
+    min-width: 0;
+    gap: 6px;
+    align-items: center;
+  }
+  #panel-matchup-analysis .matchup-analysis-bar-track {
+    width: 56px;
+    min-width: 56px;
+  }
+  #panel-matchup-analysis .matchup-analysis-bar-val {
+    min-width: 2.25rem;
+    font-size: 0.68rem;
+  }
+}
+
 .section-heading {
   font-size: 0.75rem;
   text-transform: uppercase;

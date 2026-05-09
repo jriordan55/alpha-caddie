@@ -4249,7 +4249,14 @@ function loadEvDevigPrefs() {
     if (cm === "single" && !singleBook) cm = "market";
     if (cm === "market") books = null;
     else if (cm === "single") books = singleBook ? [singleBook] : null;
-    else books = splitBooks.slice();
+    else {
+      books = splitBooks.slice();
+      /* Empty split list used to yield books=[] and filtered out every book (Market/Odds blank everywhere). */
+      if (!books.length) {
+        cm = "market";
+        books = null;
+      }
+    }
     const bookWeights =
       weights && Object.keys(weights).some((k) => Number.isFinite(weights[k]) && weights[k] > 0) ? weights : null;
     return {
@@ -4298,7 +4305,7 @@ function evBookAllowedInConsensus(bk, prefs) {
   if (k === "datagolf") return false;
   if (!evSportsbookAllowed(k)) return false;
   if (!prefs || prefs.books == null) return true;
-  if (prefs.books.length === 0) return false;
+  if (prefs.books.length === 0) return true;
   return prefs.books.map(normalizeEvSportsbookKey).includes(k);
 }
 
@@ -5348,6 +5355,15 @@ function matchupAnalysisFieldPctHigherBetter(samples, v) {
   return (below / samples.length) * 100;
 }
 
+/** Narrow screens: short header to avoid broken mid-word wraps (full name still in row context). */
+function matchupAnalysisShortPlayerHead(fullName) {
+  const s = displayGolferName(String(fullName || "")).trim();
+  if (!s) return "Player";
+  const parts = s.split(/\s+/).filter(Boolean);
+  if (parts.length === 1) return parts[0].length > 14 ? `${parts[0].slice(0, 13)}…` : parts[0];
+  return parts[parts.length - 1];
+}
+
 function buildMatchupAnalysisTool() {
   const pricingHost = document.getElementById("matchup-analysis-pricing");
   const matchupPickEl = document.getElementById("analysis-matchup-select");
@@ -5574,8 +5590,20 @@ function buildMatchupAnalysisTool() {
       sgBody.appendChild(tr);
       return;
     }
-    if (titleA) titleA.textContent = displayGolferName(String(entry.left.name || "")) || "Player A";
-    if (titleB) titleB.textContent = displayGolferName(String(entry.right.name || "")) || "Player B";
+    const narrowSgHead =
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(max-width: 720px)").matches;
+    const fullA = displayGolferName(String(entry.left.name || "")) || "Player A";
+    const fullB = displayGolferName(String(entry.right.name || "")) || "Player B";
+    if (titleA) {
+      titleA.textContent = narrowSgHead ? matchupAnalysisShortPlayerHead(entry.left.name) : fullA;
+      titleA.title = fullA;
+    }
+    if (titleB) {
+      titleB.textContent = narrowSgHead ? matchupAnalysisShortPlayerHead(entry.right.name) : fullB;
+      titleB.title = fullB;
+    }
     const metrics = [
       ["SG: Total", "sg_total"],
       ["SG: Tee-to-Green", "sg_t2g"],
