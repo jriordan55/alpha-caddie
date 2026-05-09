@@ -5666,7 +5666,18 @@ function fillPropGolferSelect() {
 }
 
 function fillLivePropGolferSelect() {
-  fillFieldGolferSelect("live-prop-golfer", defaultPropGolferDgId);
+  fillFieldGolferSelect("live-prop-golfer", defaultLivePropGolferDgId);
+}
+
+function defaultLivePropGolferDgId() {
+  const nm = (s) => String(s || "").toLowerCase();
+  for (const p of DATA.players) {
+    if (!samePlayerRound(p, 1)) continue;
+    if (tournamentPostCutListPhase() && isPlayerEliminatedFromEvent(p)) continue;
+    const n = nm(p.player_name);
+    if (n.includes("cameron") && n.includes("young")) return Math.round(num(p.dg_id, NaN));
+  }
+  return defaultPropGolferDgId();
 }
 
 /** Strip DG live partial-round fields so remainder math uses full-round priors + user-entered “so far”. */
@@ -5991,6 +6002,14 @@ function syncLivePropBookLineAndOddsFromDk() {
 
 function initLivePropPredictorUi() {
   fillLivePropGolferSelect();
+  const marketEl = document.getElementById("live-prop-market");
+  if (marketEl && [...marketEl.options].some((o) => o.value === "birdies")) marketEl.value = "birdies";
+  const throughEl = document.getElementById("live-prop-through-holes");
+  if (throughEl) throughEl.value = "6";
+  const currentEl = document.getElementById("live-prop-current");
+  if (currentEl) currentEl.value = "2";
+  const lineEl = document.getElementById("live-prop-line");
+  if (lineEl) lineEl.value = "4.5";
   syncLivePropBookLineAndOddsFromDk();
   const ids = [
     "live-prop-golfer",

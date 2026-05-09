@@ -3263,7 +3263,7 @@ th.matchup-analysis-best-pick {
 
 .live-prop-through-field {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 10px 12px;
   padding: 12px 14px;
@@ -3289,12 +3289,13 @@ th.matchup-analysis-best-pick {
 }
 
 .live-prop-through-field .live-prop-input-number {
-  width: 3.75rem;
+  width: 4.5rem;
+  max-width: 4.5rem;
   min-height: 40px;
   padding: 0 8px;
   text-align: center;
   background: var(--golf-elevated-soft);
-  flex: 0 0 auto;
+  flex: 0 0 4.5rem;
 }
 
 .live-prop-through-field .live-prop-input-number:focus {
@@ -3395,6 +3396,7 @@ th.matchup-analysis-best-pick {
   }
   .live-prop-through-field {
     justify-content: flex-start;
+    flex-wrap: nowrap;
   }
 }
 
