@@ -2041,13 +2041,20 @@ function openMeteoForecastUrl(lat, lon, timezone) {
   return u.href;
 }
 
-function teeHourFloorIsoFromDg(teetimeStr) {
+/** Date + clock from DataGolf tee strings (`YYYY-MM-DD HH:MM` or ISO `YYYY-MM-DDTHH:MM`). */
+function parseDgTeetimeParts(teetimeStr) {
   const m = String(teetimeStr || "")
     .trim()
-    .match(/^(\d{4}-\d{2}-\d{2})\s+(\d{1,2}):(\d{2})/);
-  if (!m) return "";
-  const hh = String(parseInt(m[2], 10)).padStart(2, "0");
-  return `${m[1]}T${hh}:00`;
+    .match(/^(\d{4}-\d{2}-\d{2})[ T](\d{1,2}):(\d{2})/);
+  if (!m) return null;
+  return { ymd: m[1], hh: parseInt(m[2], 10), mm: parseInt(m[3], 10) };
+}
+
+function teeHourFloorIsoFromDg(teetimeStr) {
+  const p = parseDgTeetimeParts(teetimeStr);
+  if (!p) return "";
+  const hh = String(p.hh).padStart(2, "0");
+  return `${p.ymd}T${hh}:00`;
 }
 
 function hourlyIndexForDgTeetime(timesArr, teetimeStr) {
@@ -2164,11 +2171,9 @@ function classifyMorningAfternoonTee(teetimeStr, waveStr) {
   const w = String(waveStr || "").trim().toLowerCase();
   if (/\b(?:morning|am)\b/.test(w) || w === "1" || /^wave\s*1\b/.test(w)) return "morning";
   if (/\b(?:afternoon|pm)\b/.test(w) || w === "2" || /^wave\s*2\b/.test(w)) return "afternoon";
-  const m = String(teetimeStr || "").trim().match(/^\d{4}-\d{2}-\d{2}\s+(\d{1,2}):(\d{2})/);
-  if (!m) return "";
-  const hh = parseInt(m[1], 10);
-  const mm = parseInt(m[2], 10);
-  const frac = hh + mm / 60;
+  const p = parseDgTeetimeParts(teetimeStr);
+  if (!p) return "";
+  const frac = p.hh + p.mm / 60;
   return frac < 13 ? "morning" : "afternoon";
 }
 
@@ -2200,28 +2205,66 @@ function hourlyIndexNearLocalHour(hourly, dateYmd, hour) {
   return lastSameDay;
 }
 
-function computeMorningAfternoonForecastSnapshots(hourly, players) {
-  const morningSamples = [];
-  const afternoonSamples = [];
+/** Median of sorted hourly start indices (stable tee-window anchor per wave). */
+function medianHourlyStartIndex(indices) {
+  const a = indices.filter((i) => Number.isFinite(i) && i >= 0).slice().sort((x, y) => x - y);
+  if (!a.length) return -1;
+  const mid = Math.floor(a.length / 2);
+  return a.length % 2 ? a[mid] : Math.round((a[mid - 1] + a[mid]) / 2);
+}
+
+/**
+ * Banner morning vs afternoon must come from distinct hourly slices — not medians of `dg_auto_weather`
+ * (those collapse to one number when the feed falls back to a global median snapshot).
+ */
+function snapshotForWaveFromHourly(hourly, players, bucket, fallbackHourLocal) {
+  const timesArr = hourly?.time;
+  if (!Array.isArray(timesArr) || !timesArr.length) return null;
+  const ixList = [];
   for (const p of players || []) {
-    const snap = p?.dg_auto_weather;
-    if (!snap || !Number.isFinite(snap.tempF)) continue;
-    const bucket = classifyMorningAfternoonTee(p?.dg_teetime_local, p?.dg_tee_wave);
-    if (bucket === "morning") morningSamples.push(snap);
-    else if (bucket === "afternoon") afternoonSamples.push(snap);
+    if (classifyMorningAfternoonTee(p?.dg_teetime_local, p?.dg_tee_wave) !== bucket) continue;
+    const tt = p?.dg_teetime_local;
+    if (!tt) continue;
+    const ix = hourlyIndexForDgTeetime(timesArr, tt);
+    if (ix >= 0) ixList.push(ix);
   }
-  let mMed = medianWeatherSnapshotFromSamples(morningSamples);
-  let aMed = medianWeatherSnapshotFromSamples(afternoonSamples);
-  const dateYmd = eventForecastDateYmdFromData();
-  if ((!mMed || !Number.isFinite(mMed.tempF)) && hourly && dateYmd) {
-    const ix = hourlyIndexNearLocalHour(hourly, dateYmd, 8);
-    if (ix >= 0) mMed = hourlySliceWeatherSnapshot(hourly, ix, 5);
+  let startIx = medianHourlyStartIndex(ixList);
+  if (startIx < 0) {
+    const dateYmd = eventForecastDateYmdFromData();
+    startIx = hourlyIndexNearLocalHour(hourly, dateYmd, fallbackHourLocal);
   }
-  if ((!aMed || !Number.isFinite(aMed.tempF)) && hourly && dateYmd) {
-    const ix = hourlyIndexNearLocalHour(hourly, dateYmd, 14);
-    if (ix >= 0) aMed = hourlySliceWeatherSnapshot(hourly, ix, 5);
+  if (startIx < 0) return null;
+  return hourlySliceWeatherSnapshot(hourly, startIx, 5);
+}
+
+function computeMorningAfternoonForecastSnapshots(hourly, players) {
+  if (!hourly) return { morning: null, afternoon: null };
+  let morning = snapshotForWaveFromHourly(hourly, players, "morning", 9);
+  let afternoon = snapshotForWaveFromHourly(hourly, players, "afternoon", 15);
+  /* Same median tee hour / flat hourly → identical banner lines; anchor afternoon later same day. */
+  if (morning && afternoon && snapshotSnapshotsNearlyEqual(morning, afternoon)) {
+    const dateYmd = eventForecastDateYmdFromData();
+    const timesArr = hourly?.time;
+    if (dateYmd && Array.isArray(timesArr)) {
+      const ixM = hourlyIndexNearLocalHour(hourly, dateYmd, 8);
+      let ixA = hourlyIndexNearLocalHour(hourly, dateYmd, 15);
+      if (ixM >= 0 && ixA >= 0 && ixA <= ixM) ixA = Math.min(timesArr.length - 5, ixM + 6);
+      if (ixM >= 0) morning = hourlySliceWeatherSnapshot(hourly, ixM, 5);
+      if (ixA >= 0) afternoon = hourlySliceWeatherSnapshot(hourly, ixA, 5);
+    }
   }
-  return { morning: mMed, afternoon: aMed };
+  return { morning, afternoon };
+}
+
+/** True if banner lines would round to identical user-visible numbers. */
+function snapshotSnapshotsNearlyEqual(a, b) {
+  if (!a || !b) return false;
+  return (
+    Math.abs(a.tempF - b.tempF) < 0.06 &&
+    Math.abs(a.windMph - b.windMph) < 0.06 &&
+    Math.abs(a.humidityPct - b.humidityPct) < 0.6 &&
+    String(a.condition || "") === String(b.condition || "")
+  );
 }
 
 function buildForecastWaveSummaryString(morningSnap, afternoonSnap) {
