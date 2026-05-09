@@ -422,6 +422,30 @@ function compareRows(a, b) {
   return (Number(a.round_num) || 0) - (Number(b.round_num) || 0);
 }
 
+/** Stable row identity for one player-round in one event slice. */
+function rowKey(r) {
+  return [
+    String(r.tour || "").toLowerCase() || "pga",
+    parseInt(String(r.year), 10) || "",
+    String(r.event_id || ""),
+    Math.round(Number(r.dg_id)) || "",
+    Number(r.round_num) || "",
+  ].join("|");
+}
+
+/**
+ * Lossless merge for one tour/year slice:
+ * - start from existing rows
+ * - overlay fresh fetch rows by row key
+ * This prevents transient API partials from deleting already-known completed rounds.
+ */
+function mergeSlicePreserveExisting(existingSlice, freshSlice) {
+  const byKey = new Map();
+  for (const r of existingSlice) byKey.set(rowKey(r), r);
+  for (const r of freshSlice) byKey.set(rowKey(r), r);
+  return [...byKey.values()];
+}
+
 async function main() {
   const key = loadApiKey();
   if (!key) {
@@ -467,11 +491,24 @@ async function main() {
       try {
         let yearRows = await fetchYearRounds(yr, tourCode, key);
         yearRows = yearRows.map((r) => normalizeRow(r));
-        combined = combined.filter(
-          (r) => !(parseInt(String(r.year), 10) === yr && tourMatchesRefresh(r.tour, tourCode))
-        );
-        combined.push(...yearRows);
-        console.log(`  +${yearRows.length} rows`);
+        const keep = [];
+        const oldSlice = [];
+        for (const r of combined) {
+          if (parseInt(String(r.year), 10) === yr && tourMatchesRefresh(r.tour, tourCode)) oldSlice.push(r);
+          else keep.push(r);
+        }
+        if (!yearRows.length) {
+          combined = keep.concat(oldSlice);
+          console.warn(`  +0 rows (API empty); kept existing ${oldSlice.length} rows for ${tourCode} ${yr}`);
+          hadFailure = true;
+        } else {
+          const merged = mergeSlicePreserveExisting(oldSlice, yearRows);
+          combined = keep.concat(merged);
+          const delta = merged.length - oldSlice.length;
+          console.log(
+            `  +${yearRows.length} fetched, ${merged.length} kept after lossless merge (${delta >= 0 ? "+" : ""}${delta} vs prior)`
+          );
+        }
       } catch (e) {
         console.warn(`  SKIP ${tourCode} ${yr} (keeping existing CSV rows for this slice):`, e.message || e);
         hadFailure = true;

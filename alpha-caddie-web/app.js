@@ -6023,9 +6023,7 @@ function syncLivePropCurrentInputLabel() {
     if (!Number.isFinite(parThru) && Number.isFinite(par18) && Number.isFinite(through)) {
       parThru = (par18 / 18) * clamp(through, 0, 17);
     }
-    labelEl.textContent = Number.isFinite(parThru)
-      ? `Current to par (through ${clamp(through, 0, 17)} holes, par ${parThru.toFixed(0)})`
-      : "Current to par";
+    labelEl.textContent = "Current to par";
     inputEl.min = "-18";
     inputEl.step = "1";
     inputEl.placeholder = "0";
