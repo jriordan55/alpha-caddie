@@ -9,7 +9,9 @@ param(
 $ErrorActionPreference = "Stop"
 #
 # Course fit tab — generated artifacts this pipeline must publish:
-#   • projections.json — field + meta.course_used (fetch:dg); outrights win/top5/10/20 after fetch:book-odds merge into DATA.outrights.
+#   • projections.json — field + meta.course_used (fetch:dg); outrights win/top5/10/20/cut after fetch:book-odds merge into DATA.outrights
+#     (same Scratch API as datagolf.com/betting-tool-finish IMPLIED %). fetch:finish-tool re-merges that feed so the standalone script stays exercised;
+#     set GOLF_FINISH_TOOL_PLAYWRIGHT=1 (+ optional DATAGOLF_PLAYWRIGHT_STORAGE_STATE) to capture browser JSON instead of direct API for missing markets.
 #   • approach_skill_ytd.json — Predicted shot distance bins (fetch:dg preds/approach-skill); optional approach_skill_l12.json fallback if present.
 #   • embedded-player-round-history.js (+ CSV / player_round_history.json) — radar, venue SG, similarity (build:history after fetch:dg).
 #
@@ -62,6 +64,7 @@ Remove-Item Env:\GOLF_SKIP_DK_OU -ErrorAction SilentlyContinue
 Remove-Item Env:\PERFECT_SKIP_FETCH_DK_OU -ErrorAction SilentlyContinue
 Run-Step "Running fetch:dk-ou ..." { npm run fetch:dk-ou }
 Run-Step "Running fetch:book-odds ..." { npm run fetch:book-odds }
+Run-Step 'Running fetch:finish-tool — outrights, same Scratch feed as DG Finish Position; runs after book-odds ...' { npm run fetch:finish-tool }
 Run-Step "Running update:rounds ..." { npm run update:rounds }
 Run-Step "Running build:history ..." { npm run build:history }
 

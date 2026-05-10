@@ -17,6 +17,8 @@
  *   GOLF_ROUNDS_PREFER_CSV_FIRST / GOLF_ROUNDS_PREFER_JSON_FIRST — same idea as live_data.R
  *   GOLF_DG_ROUNDS_DELAY_MS — ms between each tour/year request (default 1500; reduces 429s)
  *   GOLF_DG_MAX_ATTEMPTS — retries per request on 429/5xx (default 12)
+ *   GOLF_HISTORICAL_ROUNDS_FAIL_ON_PARTIAL=1 — exit 1 if any tour/year slice failed or returned empty (default: warn only,
+ *     exit 0 after writing CSV so npm run push:all / CI can finish when DataGolf has transient gaps)
  */
 
 import fs from "fs";
@@ -522,7 +524,9 @@ async function main() {
   console.log("Wrote", combined.length, "rows ->", outPath);
   if (hadFailure) {
     console.warn("Completed with one or more failed fetches; re-run fetch:dg later to fill gaps.");
-    process.exit(1);
+    if (String(process.env.GOLF_HISTORICAL_ROUNDS_FAIL_ON_PARTIAL || "").trim() === "1") {
+      process.exit(1);
+    }
   }
 }
 
