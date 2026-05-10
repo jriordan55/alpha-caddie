@@ -983,6 +983,85 @@ function liveCourseRoundExcessFromHoleStats(payload, minThru = 4) {
   return ex;
 }
 
+/** Field-updates teetimes `course_num` ↔ live_hole_stats `course_key` (same as fetch-datagolf.mjs). */
+function courseNumsFromFieldUpdates(fieldRaw) {
+  const nums = new Set();
+  const fieldList = Array.isArray(fieldRaw?.field) ? fieldRaw.field : [];
+  for (const p of fieldList) {
+    const tt = p?.teetimes;
+    if (!Array.isArray(tt)) continue;
+    for (const t of tt) {
+      const n = t?.course_num ?? t?.courseNum;
+      if (n == null || n === "") continue;
+      nums.add(String(n).trim());
+    }
+  }
+  return nums;
+}
+
+function pickLiveHoleStatsCourseClient(lh, courseUsed, fieldRaw) {
+  const courses = lh?.courses;
+  if (!Array.isArray(courses) || !courses.length) return null;
+  if (courses.length === 1) return courses[0];
+  const nums = courseNumsFromFieldUpdates(fieldRaw);
+  if (nums.size) {
+    for (const c of courses) {
+      const ck = String(c.course_key ?? c.courseKey ?? "").trim();
+      if (ck && nums.has(ck)) return c;
+    }
+  }
+  const cu = String(courseUsed || "").trim().toLowerCase();
+  for (const c of courses) {
+    const cn = String(c.course_name ?? c.courseName ?? "").trim();
+    if (!cn || !cu) continue;
+    const cl = cn.toLowerCase();
+    if (cl.includes(cu) || cu.includes(cl)) return c;
+  }
+  return null;
+}
+
+/** Per-hole par array from preds/live-hole-stats payload (live-in-play.json `live_hole_stats`). */
+function holeParsArrayFromLiveHoleStats(lh, courseUsed, fieldRaw) {
+  const courseEntry = pickLiveHoleStatsCourseClient(lh, courseUsed, fieldRaw);
+  if (!courseEntry) return null;
+  const rounds = courseEntry.rounds;
+  if (!Array.isArray(rounds) || !rounds.length) return null;
+  const cr = num(lh.current_round, NaN);
+  let roundPick = rounds;
+  if (Number.isFinite(cr)) {
+    const matched = rounds.filter((r) => num(r.round_num ?? r.roundNum, NaN) === cr);
+    if (matched.length) roundPick = matched;
+  } else {
+    let maxRn = -Infinity;
+    for (const r of rounds) {
+      const rn = num(r.round_num ?? r.roundNum, NaN);
+      if (Number.isFinite(rn)) maxRn = Math.max(maxRn, rn);
+    }
+    if (Number.isFinite(maxRn)) {
+      const matched = rounds.filter((r) => num(r.round_num ?? r.roundNum, NaN) === maxRn);
+      if (matched.length) roundPick = matched;
+    }
+  }
+  const holes = roundPick[0]?.holes;
+  if (!Array.isArray(holes) || holes.length < 18) return null;
+  const byHole = new Map();
+  for (const h of holes) {
+    if (!h || typeof h !== "object") continue;
+    const hn = Math.round(num(h.hole, NaN));
+    const p = num(h.par, NaN);
+    if (!Number.isFinite(hn) || hn < 1 || hn > 18) continue;
+    if (!Number.isFinite(p) || p < 3 || p > 5) continue;
+    byHole.set(hn, Math.round(p));
+  }
+  if (byHole.size < 18) return null;
+  const arr = [];
+  for (let i = 1; i <= 18; i++) {
+    if (!byHole.has(i)) return null;
+    arr.push(byHole.get(i));
+  }
+  return arr;
+}
+
 /** Pull live course difficulty (+ optional DG labels) from fetch-live-in-play bundle. */
 /**
  * Overlay preds/live-tournament-stats `distance` / `accuracy` onto every round row for each dg_id.
@@ -1068,6 +1147,29 @@ function mergeDatagolfLiveCourseMeta(j) {
         DATA.meta.live_course_round_excess_strokes = ex;
       } else {
         clearKeys(["live_course_round_excess_strokes"]);
+      }
+
+      const lhEv = String(lh.event_name ?? "").trim();
+      const modelEv = String(DATA.meta?.event_name ?? "").trim();
+      const evOk =
+        !lhEv ||
+        !modelEv ||
+        lhEv.toLowerCase() === modelEv.toLowerCase() ||
+        eventNameMatchesCurrentSchedule(lhEv, modelEv) ||
+        eventNameMatchesCurrentSchedule(modelEv, lhEv);
+      if (evOk) {
+        const courseUsed = String(DATA.meta?.course_used ?? "").trim();
+        const fu = j.field_updates && typeof j.field_updates === "object" ? j.field_updates : null;
+        const parsArr = holeParsArrayFromLiveHoleStats(lh, courseUsed, fu);
+        if (parsArr && parsArr.length === 18) {
+          const prevJson = JSON.stringify(DATA.meta.hole_pars);
+          const nextJson = JSON.stringify(parsArr);
+          if (prevJson !== nextJson) {
+            DATA.meta.hole_pars = parsArr;
+            DATA.meta.hole_pars_source = "live_hole_stats";
+            touched = true;
+          }
+        }
       }
     } else {
       clearKeys([
