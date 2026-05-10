@@ -10,7 +10,7 @@ $ErrorActionPreference = "Stop"
 #
 # Matchup Analysis Tool stays fresh when these commands succeed:
 #   fetch:dg  → projections.players (SG pillars + merged preds/live-tournament-stats driving when DG serves it),
-#               projections.matchups (betting-tools/matchups)
+#               projections.matchups (betting-tools/matchups), approach_skill_ytd.json (Course Fit shot bins)
 #   fetch:book-odds → refreshed matchup/outright odds on projections.json
 #   fetch:in-play → live-in-play.json → browser overlays placement win probs + live_tournament_stats distance/accuracy onto DATA.players
 # Mirrors below copy projections + live into website/public/data/ so both apps ship the same JSON.
@@ -70,13 +70,22 @@ if (Test-Path $projSrc) {
   Write-Host "Mirrored projections.json -> website/public/data/projections.json"
 }
 
+$asSrc = Join-Path $webRoot "approach_skill_ytd.json"
+$asDest = Join-Path $webDataDir "approach_skill_ytd.json"
+if (Test-Path $asSrc) {
+  Copy-Item -Path $asSrc -Destination $asDest -Force
+  Write-Host "Mirrored approach_skill_ytd.json -> website/public/data/approach_skill_ytd.json"
+}
+
 Set-Location $repoRoot
 
 $artifacts = @(
   "alpha-caddie-web/projections.json",
   "alpha-caddie-web/live-in-play.json",
+  "alpha-caddie-web/approach_skill_ytd.json",
   "website/public/data/projections.json",
   "website/public/data/live-in-play.json",
+  "website/public/data/approach_skill_ytd.json",
   "data/historical_rounds_all.csv",
   "alpha-caddie-web/data/historical_rounds_all.csv",
   "alpha-caddie-web/player_round_history.json",

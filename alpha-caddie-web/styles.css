@@ -617,8 +617,8 @@ body {
   gap: 18px;
 }
 .course-fit-panel .ev-panel-head.course-fit-head {
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: flex-end;
+  align-items: center;
   margin-bottom: 0;
 }
 .course-fit-page-title {

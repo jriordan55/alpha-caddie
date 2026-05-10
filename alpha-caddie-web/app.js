@@ -6071,12 +6071,12 @@ function courseFitFindDraftKingsOuProp(dgId, playerName, market) {
 }
 
 const COURSE_FIT_BIN_LABELS = {
-  put: ["2–5 feet (putting distribution)", "5–30 feet", "30+ feet"],
+  put: ["putts from 2-5 feet", "putts from 5-30 feet", "putts from 30+ feet"],
   rough: ["rough approach under 150 yards", "rough approach 150+ yards"],
   fw: [
-    "fairway approach 50–100 yards",
-    "fairway approach 100–150 yards",
-    "fairway approach 150–200 yards",
+    "fairway approach 50-100 yards",
+    "fairway approach 100-150 yards",
+    "fairway approach 150-200 yards",
     "fairway approach 200+ yards",
   ],
 };
@@ -6137,7 +6137,7 @@ function courseFitBinTooltipShow(td, clientX, clientY) {
   if (mainEl) {
     const pStr = Number.isFinite(pred) ? pred.toFixed(1) : "—";
     const fStr = Number.isFinite(field) ? field.toFixed(1) : "—";
-    mainEl.innerHTML = `We predict <strong>${escapeHtml(nm)}</strong> will hit <strong>${pStr}</strong> ${escapeHtml(binPhrase)} per round (scaled). At this field’s average in-bin profile we use <strong>${fStr}</strong> per round.`;
+    mainEl.innerHTML = `We predict <strong>${escapeHtml(nm)}</strong> will hit <strong>${pStr}</strong> ${escapeHtml(binPhrase)} per round (scaled). At this field's average in-bin profile we use <strong>${fStr}</strong> per round.`;
   }
 
   const span = Math.max(Math.abs(pred - field) * 2.5, 0.35, Math.abs(pred - field) + 0.25);
@@ -6176,6 +6176,8 @@ function courseFitBinTooltipShow(td, clientX, clientY) {
   }
 
   if (dkEl) {
+    dkEl.hidden = true;
+    dkEl.textContent = "";
     const mk =
       zone === "put" ? "Putts" : zone === "rough" ? "Fairways hit" : zone === "fw" ? "GIR" : "";
     const dkRow = mk ? courseFitFindDraftKingsOuProp(dg, nm, mk) : null;
@@ -6183,11 +6185,9 @@ function courseFitBinTooltipShow(td, clientX, clientY) {
     const rStr = Number.isFinite(rLab) && rLab >= 1 && rLab <= 4 ? `R${Math.round(rLab)}` : "";
     if (dkRow && Number.isFinite(num(dkRow.line, NaN))) {
       const L = num(dkRow.line, NaN);
+      dkEl.hidden = false;
       dkEl.innerHTML =
-        `DraftKings ${rStr ? `${rStr} ` : ""}· Line <strong>${L.toFixed(L % 1 === 0 ? 0 : 1)}</strong> · O ${formatAmericanOddsShort(dkRow.over_odds)} / U ${formatAmericanOddsShort(dkRow.under_odds)}`;
-    } else {
-      dkEl.textContent =
-        "No DraftKings O/U row in projections for this market (run book-odds / DK props merge when lines post).";
+        `${rStr ? `${rStr} · ` : ""}Line <strong>${L.toFixed(L % 1 === 0 ? 0 : 1)}</strong> · O ${formatAmericanOddsShort(dkRow.over_odds)} / U ${formatAmericanOddsShort(dkRow.under_odds)}`;
     }
   }
 
@@ -6249,7 +6249,6 @@ function courseFitShotBinStripHtml(playerVal, fieldVal, lo, hi, skillPositive) {
 
 function buildCourseFitShotBinsTable(rows, approachPayload, venueName, searchShots) {
   const tbody = document.getElementById("course-fit-shot-tbody");
-  const foot = document.getElementById("course-fit-shot-foot");
   const headEl = document.getElementById("course-fit-shot-heading");
   if (!tbody) return;
 
@@ -6334,7 +6333,6 @@ function buildCourseFitShotBinsTable(rows, approachPayload, venueName, searchSho
       "No <code>approach_skill_ytd.json</code> data. Run <code>npm run fetch:dg</code> with <code>DATAGOLF_API_KEY</code> (or <code>datagolf.local.json</code>) to embed DataGolf <code>preds/approach-skill</code> (year-to-date).";
     tr.appendChild(td);
     tbody.appendChild(tr);
-    if (foot) foot.textContent = "";
     return;
   }
 
@@ -6348,7 +6346,6 @@ function buildCourseFitShotBinsTable(rows, approachPayload, venueName, searchSho
       : "No overlapping players between the projection field and approach-skill export.";
     tr.appendChild(td);
     tbody.appendChild(tr);
-    if (foot) foot.textContent = "";
     return;
   }
 
@@ -6451,18 +6448,9 @@ function buildCourseFitShotBinsTable(rows, approachPayload, venueName, searchSho
   }
 
   ensureCourseFitBinTooltipHandlers();
-
-  if (foot) {
-    const lu = approachPayload?.last_updated ? String(approachPayload.last_updated) : "";
-    const per = approachPayload?.period ? String(approachPayload.period) : "";
-    foot.textContent =
-      `Black dot = field mean in each bin. Rough/fairway counts from DataGolf preds/approach-skill (${per || "ytd"} · shot totals ÷ ${AP_SKILL_COUNT_PER_ROUND_DIV} for per-round scale). Putting buckets are estimated from projected putts and SG putting vs the field. Hover bins for putts / GIR / fairways context and DraftKings when merged into projections. ` +
-      (lu ? `Feed updated ${lu}.` : "");
-  }
 }
 
 function buildCourseFitTab() {
-  const venueEl = document.getElementById("course-fit-venue-label");
   const capEl = document.getElementById("course-fit-radar-caption");
   const legEl = document.getElementById("course-fit-radar-legend");
   const simList = document.getElementById("course-fit-similar-list");
@@ -6474,7 +6462,6 @@ function buildCourseFitTab() {
   if (!tbody || !canvas) return;
 
   const venueName = String(DATA?.meta?.course_used || DATA?.course_used || "this venue").trim() || "this venue";
-  if (venueEl) venueEl.textContent = venueName;
   const vk = normCourseNameKey(venueName);
 
   const rows = courseFitPlayerPool();
