@@ -5816,6 +5816,55 @@ function courseFitNormScalar(v, rangeObj) {
   return clamp((v - lo) / span, 0, 1);
 }
 
+/**
+ * Match embedded-history venue SG to the selected course key (projections spelling may differ).
+ * Returns resolvedKey whose rounds supply histSg; otherwise null.
+ */
+function courseFitResolveHistSgForVenue(vk) {
+  if (!vk) return null;
+  const direct = courseFitVenueHistoricalSgMeans(vk);
+  if (direct) return { histSg: direct, resolvedKey: vk };
+  const map = courseFitMeanSgVectorByCourse();
+  const scored = [];
+  for (const ck of map.keys()) {
+    const hh = courseFitVenueHistoricalSgMeans(ck);
+    if (!hh) continue;
+    let score = 0;
+    if (ck === vk) score = 10000;
+    else if (vk.length >= 6 && (ck.includes(vk) || vk.includes(ck))) {
+      score = 500 + Math.min(ck.length, vk.length);
+    } else {
+      const vt = vk.split(" ").filter((t) => t.length > 1);
+      const ct = ck.split(" ").filter((t) => t.length > 1);
+      for (const t of vt) {
+        if (ct.some((u) => u === t || (t.length >= 4 && (u.startsWith(t) || t.startsWith(u))))) score += 25;
+      }
+    }
+    if (score > 0) scored.push({ ck, score, hh });
+  }
+  scored.sort((a, b) => b.score - a.score);
+  const top = scored[0];
+  if (top && top.score >= 25) return { histSg: top.hh, resolvedKey: top.ck };
+  return null;
+}
+
+/** When venue SG is unavailable, derive axis weights from skill spread in the field (fallback emphasis). */
+function courseFitFieldVarianceEmphasis(rows, ranges) {
+  const vals = COURSE_FIT_AXIS_KEYS.map(() => []);
+  for (const r of rows) {
+    const nv = courseFitNormalizeRaw(courseFitRawProfile(r), ranges);
+    for (let i = 0; i < 5; i++) vals[i].push(nv[i]);
+  }
+  const spread = vals.map((xs) => {
+    const f = xs.filter(Number.isFinite);
+    if (f.length < 2) return 0.2;
+    const m = f.reduce((a, b) => a + b, 0) / f.length;
+    return Math.sqrt(f.reduce((s, x) => s + (x - m) ** 2, 0) / f.length);
+  });
+  const mx = Math.max(...spread, 1e-6);
+  return spread.map((s) => (s / mx) * 0.35 + 0.05);
+}
+
 /** Blend field-average radar with historical SG means at this venue (embedded history). */
 function courseFitVenueProfileVector(rows, ranges, histSg) {
   const tour = courseFitMeanNormalized(rows, ranges);
@@ -5904,6 +5953,45 @@ function courseFitBestCategoryAndFit(playerN, emphasis) {
   const strokeLike =
     emphasis.reduce((s, e, i) => s + Math.max(0, e) * (playerN[i] - 0.5), 0) * 2.4;
   return { cat: COURSE_FIT_RADAR_LABELS[bestI] || "—", fit: strokeLike };
+}
+
+/** Same best-book rule as Outrights tab: highest model +EV vs posted implied at each book. */
+function courseFitOutrightBestBookOdds(marketKey, dgId) {
+  const elim = dgIdsEliminatedFromEventPostCut();
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id))
+    return { html: "—" };
+  if (elim.size && elim.has(id) && marketKey !== "make_cut" && marketKey !== "mc") {
+    return { html: "—" };
+  }
+  const pack = DATA.outrights?.[marketKey];
+  if (!pack?.rows) return { html: "—" };
+  const row = pack.rows.find((r) => Math.round(num(r.dg_id, NaN)) === id);
+  if (!row) return { html: "—" };
+  const bookKeys = Array.isArray(pack.bookKeys) ? pack.bookKeys.filter((k) => k && k !== "datagolf") : [];
+  const modelP = modelProbOutrightFromRowOrProjections(row, marketKey);
+  let bestBook = "";
+  let bestAm = NaN;
+  let bestEv = NaN;
+  const modelOk = Number.isFinite(modelP) && modelP > 0;
+  for (const bk of bookKeys) {
+    const pct = impliedPctFromBookField(row[bk]);
+    if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
+    const pBook = pct / 100;
+    if (pBook <= 0 || pBook >= 1) continue;
+    const ev = outrightEvFromModelAndBook(modelP, pBook, marketKey);
+    if (!Number.isFinite(ev)) continue;
+    const am = americanFromImpliedProb(pBook);
+    if (!Number.isFinite(bestEv) || ev > bestEv) {
+      bestEv = ev;
+      bestBook = bk;
+      bestAm = am;
+    }
+  }
+  if (!bestBook || !Number.isFinite(bestAm)) return { html: "—" };
+  return {
+    html: `${bookBadgeHtml(bestBook)} <span class="course-fit-out-odds">${formatAmerican(bestAm)}</span>`,
+  };
 }
 
 function drawCourseFitRadar(canvas, tour5, venue5, player5, similar5) {
@@ -6004,6 +6092,7 @@ let courseFitSimilarListClickBound = false;
 let courseFitVenueFilterKey = null;
 /** When projections switch events, reset venue filter and similarity selection. */
 let courseFitVenueEventKeyTracked = "";
+let courseFitGolferDefaultApplied = false;
 
 function courseFitPrettyCourseKey(ck) {
   return String(ck || "")
@@ -6508,6 +6597,7 @@ function buildCourseFitTab() {
     courseFitVenueEventKeyTracked = eventVk;
     courseFitVenueFilterKey = null;
     courseFitSimilarSelectedKey = null;
+    courseFitGolferDefaultApplied = false;
   }
 
   const mapCourses = courseFitMeanSgVectorByCourse();
@@ -6545,12 +6635,17 @@ function buildCourseFitTab() {
 
   const rows = courseFitPlayerPool();
   const ranges = courseFitMinMaxFromRows(rows);
-  const histSg = courseFitVenueHistoricalSgMeans(vk);
+  const resolvedVenue = courseFitResolveHistSgForVenue(vk);
+  const histSg = resolvedVenue?.histSg ?? null;
+  const venueProfileKey = resolvedVenue?.resolvedKey ?? vk;
   const tour5 = courseFitMeanNormalized(rows, ranges);
   const venue5 = courseFitVenueProfileVector(rows, ranges, histSg);
-  const emphasis = venue5.map((v, i) => v - tour5[i]);
+  let emphasis = venue5.map((v, i) => v - tour5[i]);
+  if (emphasis.every((e) => Math.abs(e) < 1e-9)) {
+    emphasis = courseFitFieldVarianceEmphasis(rows, ranges);
+  }
 
-  const similarRanked = courseFitSimilarCourses(vk, histSg);
+  const similarRanked = courseFitSimilarCourses(venueProfileKey, histSg);
   const similarKeys = new Set(similarRanked.map((x) => x.ck));
   if (courseFitSimilarSelectedKey && !similarKeys.has(courseFitSimilarSelectedKey)) {
     courseFitSimilarSelectedKey = null;
@@ -6600,7 +6695,18 @@ function buildCourseFitTab() {
       o.textContent = displayGolferName(String(r.player_name || ""));
       sel.appendChild(o);
     }
-    if (prev && [...sel.options].some((x) => x.value === prev)) sel.value = prev;
+    if (prev && [...sel.options].some((x) => x.value === prev)) {
+      sel.value = prev;
+    } else if (!courseFitGolferDefaultApplied) {
+      courseFitGolferDefaultApplied = true;
+      const wantTf = (o) =>
+        String(o.textContent || "")
+          .trim()
+          .toLowerCase()
+          .includes("tommy fleetwood");
+      const tfOpt = [...sel.options].find(wantTf);
+      if (tfOpt) sel.value = tfOpt.value;
+    }
   }
 
   const dgSel = Math.round(num(sel?.value, NaN));
@@ -6660,6 +6766,7 @@ function buildCourseFitTab() {
   for (const row of ranked) {
     const nm = displayGolferName(String(row.r.player_name || ""));
     if (search && !nm.toLowerCase().includes(search)) continue;
+    const dgId = Math.round(num(row.r.dg_id, NaN));
     const tr = document.createElement("tr");
     const tdN = document.createElement("td");
     tdN.textContent = nm;
@@ -6672,6 +6779,13 @@ function buildCourseFitTab() {
     tr.appendChild(tdN);
     tr.appendChild(tdC);
     tr.appendChild(tdF);
+    for (const mk of ["win", "top_5", "top_10", "top_20"]) {
+      const tdO = document.createElement("td");
+      tdO.className = "num course-fit-out-td";
+      const ob = courseFitOutrightBestBookOdds(mk, dgId);
+      tdO.innerHTML = ob.html;
+      tr.appendChild(tdO);
+    }
     tbody.appendChild(tr);
   }
 

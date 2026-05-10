@@ -856,6 +856,28 @@ body {
 .course-fit-table-wrap {
   margin-top: 4px;
 }
+.course-fit-table thead th.course-fit-out-th {
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+.course-fit-table .course-fit-out-td {
+  font-size: 0.78rem;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.course-fit-table .course-fit-out-td .book-logo-pill .book-logo-name {
+  display: none;
+}
+.course-fit-table .course-fit-out-td .book-logo-img-inline {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+.course-fit-table .course-fit-out-odds {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  margin-left: 6px;
+}
 
 .course-fit-shot-card {
   padding: 20px 18px 18px;
