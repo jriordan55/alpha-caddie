@@ -14,7 +14,9 @@ $ErrorActionPreference = "Stop"
 #   • embedded-player-round-history.js (+ CSV / player_round_history.json) — radar, venue SG, similarity (build:history after fetch:dg).
 #
 # Hole Hangout — hole pars per hole for the active course/event:
-#   • projections.json meta.hole_pars + hole_pars_source (fetch:dg: prefers DataGolf field-updates for the current week, then course_holes*.json, etc.)
+#   • fetch:dg calls preds/live-hole-stats and writes hole_pars / hole_pars_source (live_hole_stats when DG serves it).
+#   • fetch:in-play → live-in-play.json (bundled live_hole_stats); then merge:live-hole-pars-into-projections re-aligns
+#     projections.json from that bundle so push:all publishes the same per-hole table as the live feed.
 #   • course_holes.json — bundled overrides / gaps (committed); course_holes.local.json is gitignored for secrets.
 #   • hole_pars_from_shots.json — fallback map from build:history (build-player-shots-web.mjs) after rounds CSV refresh.
 #
@@ -55,6 +57,7 @@ function Run-Step([string] $label, [scriptblock] $command) {
 
 Run-Step "Running fetch:dg ..." { npm run fetch:dg }
 Run-Step "Running fetch:in-play ..." { npm run fetch:in-play }
+Run-Step "Merging live_hole_stats into projections (Hole Hangout pars) ..." { npm run merge:live-hole-pars-into-projections }
 Remove-Item Env:\GOLF_SKIP_DK_OU -ErrorAction SilentlyContinue
 Remove-Item Env:\PERFECT_SKIP_FETCH_DK_OU -ErrorAction SilentlyContinue
 Run-Step "Running fetch:dk-ou ..." { npm run fetch:dk-ou }

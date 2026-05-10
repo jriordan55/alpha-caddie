@@ -5,6 +5,7 @@
   "scripts": {
     "fetch:dg": "node scripts/fetch-datagolf.mjs",
     "fetch:in-play": "node scripts/fetch-live-in-play.mjs",
+    "merge:live-hole-pars-into-projections": "node scripts/merge-live-hole-pars-into-projections.mjs",
     "fetch:book-odds": "node scripts/fetch-book-odds-into-projections.mjs",
     "refresh": "node scripts/refresh-fresh.mjs",
     "fetch:dk-ou": "node scripts/draftkings-ou-props.mjs",
