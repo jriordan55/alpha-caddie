@@ -4947,33 +4947,64 @@ function collectUnifiedEvRows() {
   }
   const opack = DATA.outrights || {};
   const rOut = getModelRoundForEv();
+  const finishLadderEvCache = new Map();
+  const getFinishLadderBundleCached = (pid) => {
+    const k = Math.round(num(pid, NaN));
+    if (!Number.isFinite(k)) return null;
+    if (!finishLadderEvCache.has(k)) finishLadderEvCache.set(k, outrightFinishLadderBestBookBundle(k));
+    return finishLadderEvCache.get(k);
+  };
   for (const mk of ["win", "top_5", "top_10", "top_20", "make_cut", "mc"]) {
     const pack = opack[mk];
     if (!pack || !Array.isArray(pack.rows)) continue;
     const books = Array.isArray(pack.bookKeys)
       ? pack.bookKeys.filter((k) => k && k !== "datagolf" && evSportsbookAllowed(k))
       : [];
+    const finishMk = mk === "win" || mk === "top_5" || mk === "top_10" || mk === "top_20";
     for (const row of pack.rows) {
       const id = Math.round(num(row.dg_id, NaN));
       if (elim.size && elim.has(id) && mk !== "make_cut" && mk !== "mc") continue;
-      const modelP = modelProbOutrightFromRowOrProjections(row, mk);
+      let modelP = modelProbOutrightFromRowOrProjections(row, mk);
       let bestBook = "";
       let bestAm = NaN;
       let bestEv = NaN;
-      const modelOk = Number.isFinite(modelP) && modelP > 0;
-      for (const bk of books) {
-        const bkNorm = normalizeEvSportsbookKey(bk);
-        const pct = impliedPctFromBookField(row[bk] ?? row[bkNorm]);
-        if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
-        const pBook = pct / 100;
-        if (pBook <= 0 || pBook >= 1) continue;
-        const ev = outrightEvFromModelAndBook(modelP, pBook, mk);
-        if (!Number.isFinite(ev)) continue;
-        if (!Number.isFinite(bestEv) || ev > bestEv) {
-          bestEv = ev;
-          bestBook = bkNorm;
-          bestAm = americanFromImpliedProb(pBook);
+      let usedLadder = false;
+      if (finishMk) {
+        const bundle = getFinishLadderBundleCached(id);
+        if (bundle) {
+          const idx = ["win", "top_5", "top_10", "top_20"].indexOf(mk);
+          const pBook = bundle.coherent[idx];
+          const mp = bundle.modelPs[mk];
+          if (Number.isFinite(pBook) && Number.isFinite(mp) && mp > 0) {
+            const ev = outrightEvFromModelAndBook(mp, pBook, mk);
+            if (Number.isFinite(ev)) {
+              bestEv = ev;
+              bestBook = bundle.book;
+              bestAm = americanFromImpliedProbCapped(pBook);
+              modelP = mp;
+              usedLadder = true;
+            }
+          }
         }
+      }
+      if (!usedLadder) {
+        modelP = modelProbOutrightFromRowOrProjections(row, mk);
+        const modelOk = Number.isFinite(modelP) && modelP > 0;
+        for (const bk of books) {
+          const bkNorm = normalizeEvSportsbookKey(bk);
+          const pct = impliedPctFromBookField(row[bk] ?? row[bkNorm]);
+          if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
+          const pBook = pct / 100;
+          if (pBook <= 0 || pBook >= 1) continue;
+          const ev = outrightEvFromModelAndBook(modelP, pBook, mk);
+          if (!Number.isFinite(ev)) continue;
+          if (!Number.isFinite(bestEv) || ev > bestEv) {
+            bestEv = ev;
+            bestBook = bkNorm;
+            bestAm = americanFromImpliedProb(pBook);
+          }
+        }
+        if (Number.isFinite(bestAm)) bestAm = Math.round(bestAm);
       }
       const decItems = [];
       for (const bk of books) {
@@ -6057,8 +6088,8 @@ function courseFitBestCategoryAndFit(playerN, emphasis) {
   return { cat: COURSE_FIT_RADAR_LABELS[bestI] || "—", fit: strokeLike };
 }
 
-/** Same best-book rule as Outrights tab: highest model +EV vs posted implied at each book. */
-function courseFitOutrightBestBookOdds(marketKey, dgId) {
+/** Legacy: best +EV book for one outright market (make_cut / mc or fallback). */
+function courseFitOutrightBestBookOddsSingle(marketKey, dgId) {
   const elim = dgIdsEliminatedFromEventPostCut();
   const id = Math.round(num(dgId, NaN));
   if (!Number.isFinite(id))
@@ -6095,8 +6126,33 @@ function courseFitOutrightBestBookOdds(marketKey, dgId) {
   }
   if (!bestBook || !Number.isFinite(bestAm)) return { html: "—" };
   return {
-    html: `${bookBadgeHtml(bestBook)} <span class="course-fit-out-odds">${formatAmerican(bestAm)}</span>`,
+    html: `${bookBadgeHtml(bestBook)} <span class="course-fit-out-odds">${formatAmerican(Math.round(bestAm))}</span>`,
   };
+}
+
+/**
+ * Course Fit finish columns: one coherent book + monotonic ladder per player (matches +EV outright rows).
+ */
+function courseFitOutrightBestBookOdds(marketKey, dgId) {
+  const mk = String(marketKey || "");
+  if (!["win", "top_5", "top_10", "top_20"].includes(mk)) return courseFitOutrightBestBookOddsSingle(marketKey, dgId);
+  const elim = dgIdsEliminatedFromEventPostCut();
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return { html: "—" };
+  if (elim.size && elim.has(id)) return { html: "—" };
+
+  const bundle = outrightFinishLadderBestBookBundle(id);
+  const idx = ["win", "top_5", "top_10", "top_20"].indexOf(mk);
+  if (bundle && idx >= 0 && Number.isFinite(bundle.coherent[idx])) {
+    const pBook = bundle.coherent[idx];
+    const am = americanFromImpliedProbCapped(pBook);
+    if (Number.isFinite(am)) {
+      return {
+        html: `${bookBadgeHtml(bundle.book)} <span class="course-fit-out-odds">${formatAmerican(am)}</span>`,
+      };
+    }
+  }
+  return courseFitOutrightBestBookOddsSingle(marketKey, dgId);
 }
 
 function drawCourseFitRadar(canvas, tour5, venue5, player5, similar5) {
@@ -7020,6 +7076,110 @@ function impliedPctFromBookField(v) {
   return p * 100;
 }
 
+/** Display cap after coherence repair on win / top-5 / top-10 / top-20 (+EV & Course Fit). */
+const FINISH_OUTRIGHT_AMERICAN_CAP = 10000;
+
+/**
+ * Enforce P(win) ≤ P(top5) ≤ P(top10) ≤ P(top20) on posted implied probs (inclusive finish buckets).
+ * NaN slots skip coercion but do not advance the running lower bound.
+ */
+function coerceFinishLadderImpliedProbs(pw, p5, p10, p20) {
+  const raw = [pw, p5, p10, p20];
+  let prev = 1e-12;
+  const out = [];
+  for (let i = 0; i < 4; i++) {
+    let p = raw[i];
+    if (!Number.isFinite(p)) {
+      out.push(NaN);
+      continue;
+    }
+    p = clamp(p, prev, 1 - 1e-9);
+    out.push(p);
+    prev = Math.max(prev, p);
+  }
+  return out;
+}
+
+function americanFromImpliedProbCapped(p, capPos = FINISH_OUTRIGHT_AMERICAN_CAP) {
+  const am = americanFromImpliedProb(p);
+  if (!Number.isFinite(am)) return NaN;
+  if (am > capPos) return capPos;
+  if (am < -capPos) return -capPos;
+  return Math.round(am);
+}
+
+function impliedProbFromOutrightRowBook(row, bk) {
+  if (!row || !bk) return NaN;
+  const bkNorm = normalizeEvSportsbookKey(bk);
+  const pct = impliedPctFromBookField(row[bk] ?? row[bkNorm]);
+  return Number.isFinite(pct) ? pct / 100 : NaN;
+}
+
+function outrightFinishRowsByMarketDg(dgId) {
+  const markets = ["win", "top_5", "top_10", "top_20"];
+  const id = Math.round(num(dgId, NaN));
+  /** @type {Record<string, object | null>} */
+  const rowsByM = Object.create(null);
+  if (!Number.isFinite(id)) return rowsByM;
+  for (const mk of markets) {
+    const pack = DATA.outrights?.[mk];
+    const row = Array.isArray(pack?.rows) ? pack.rows.find((r) => Math.round(num(r.dg_id, NaN)) === id) : null;
+    rowsByM[mk] = row;
+  }
+  return rowsByM;
+}
+
+/**
+ * Pick one book per player so finish-market cells share a coherent ladder (same book, monotonic implied probs).
+ * Maximizes sum of per-market EV across the four ladders under the existing EV ratio caps.
+ */
+function outrightFinishLadderBestBookBundle(dgId) {
+  const markets = ["win", "top_5", "top_10", "top_20"];
+  const rowsByM = outrightFinishRowsByMarketDg(dgId);
+  /** @type {Record<string, number>} */
+  const modelPs = Object.create(null);
+  for (const mk of markets) {
+    modelPs[mk] = modelProbOutrightFromRowOrProjections(rowsByM[mk] || {}, mk);
+  }
+  const bookSet = new Set();
+  for (const mk of markets) {
+    const pack = DATA.outrights?.[mk];
+    const bks = Array.isArray(pack?.bookKeys) ? pack.bookKeys : [];
+    for (const k of bks) {
+      if (k && k !== "datagolf" && evSportsbookAllowed(k)) bookSet.add(normalizeEvSportsbookKey(k));
+    }
+  }
+  const books = [...bookSet].sort((a, b) => a.localeCompare(b));
+  let best = null;
+  let bestScore = -Infinity;
+  for (const bk of books) {
+    const raw = markets.map((mk) => impliedProbFromOutrightRowBook(rowsByM[mk], bk));
+    const coherent = coerceFinishLadderImpliedProbs(raw[0], raw[1], raw[2], raw[3]);
+    let sumEv = 0;
+    let nOk = 0;
+    for (let i = 0; i < 4; i++) {
+      const mk = markets[i];
+      const pBook = coherent[i];
+      const modelP = modelPs[mk];
+      if (!Number.isFinite(pBook) || !Number.isFinite(modelP) || modelP <= 0) continue;
+      const ev = outrightEvFromModelAndBook(modelP, pBook, mk);
+      if (!Number.isFinite(ev)) continue;
+      sumEv += ev;
+      nOk++;
+    }
+    if (nOk === 0) continue;
+    const better =
+      !best ||
+      sumEv > bestScore + 1e-9 ||
+      (Math.abs(sumEv - bestScore) <= 1e-9 && best && bk.localeCompare(best.book) < 0);
+    if (better) {
+      bestScore = sumEv;
+      best = { book: bk, coherent, raw, modelPs, rowsByM };
+    }
+  }
+  return best;
+}
+
 function outrightLogit(p) {
   const x = clamp(p, 1e-9, 1 - 1e-9);
   return Math.log(x / (1 - x));
@@ -7215,8 +7375,30 @@ function buildOutrightsTableBodyOnly() {
     mk === "make_cut" || mk === "mc"
       ? () => true
       : (row) => !elim.has(Math.round(num(row.dg_id, NaN)));
+  const finishMk = mk === "win" || mk === "top_5" || mk === "top_10" || mk === "top_20";
   const rows = pack.rows.filter(outrightRowOk).map((row) => {
-    const modelP = modelProbOutrightFromRowOrProjections(row, mk);
+    const id = Math.round(num(row.dg_id, NaN));
+    if (finishMk) {
+      const bundle = outrightFinishLadderBestBookBundle(id);
+      if (bundle) {
+        const idx = ["win", "top_5", "top_10", "top_20"].indexOf(mk);
+        const pBook = bundle.coherent[idx];
+        const mp = bundle.modelPs[mk];
+        if (Number.isFinite(pBook) && Number.isFinite(mp) && mp > 0) {
+          const ev = outrightEvFromModelAndBook(mp, pBook, mk);
+          if (Number.isFinite(ev)) {
+            return {
+              row,
+              modelP: mp,
+              bestBook: bundle.book,
+              bestAm: americanFromImpliedProbCapped(pBook),
+              bestEv: ev,
+            };
+          }
+        }
+      }
+    }
+    let modelP = modelProbOutrightFromRowOrProjections(row, mk);
     let bestBook = "";
     let bestAm = NaN;
     let bestEv = NaN;
@@ -7235,7 +7417,13 @@ function buildOutrightsTableBodyOnly() {
         bestAm = am;
       }
     }
-    return { row, modelP, bestBook, bestAm, bestEv };
+    return {
+      row,
+      modelP,
+      bestBook,
+      bestAm: Number.isFinite(bestAm) ? Math.round(bestAm) : bestAm,
+      bestEv,
+    };
   });
 
   function sortVal(item, key) {
