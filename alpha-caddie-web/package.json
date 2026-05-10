@@ -7,6 +7,7 @@
     "fetch:in-play": "node scripts/fetch-live-in-play.mjs",
     "merge:live-hole-pars-into-projections": "node scripts/merge-live-hole-pars-into-projections.mjs",
     "fetch:book-odds": "node scripts/fetch-book-odds-into-projections.mjs",
+    "fetch:finish-tool": "node scripts/fetch-datagolf-finish-tool-outrights.mjs",
     "refresh": "node scripts/refresh-fresh.mjs",
     "fetch:dk-ou": "node scripts/draftkings-ou-props.mjs",
     "update:rounds": "node scripts/run-update-historical-rounds.mjs",
