@@ -5968,14 +5968,17 @@ function courseFitOutrightBestBookOdds(marketKey, dgId) {
   if (!pack?.rows) return { html: "—" };
   const row = pack.rows.find((r) => Math.round(num(r.dg_id, NaN)) === id);
   if (!row) return { html: "—" };
-  const bookKeys = Array.isArray(pack.bookKeys) ? pack.bookKeys.filter((k) => k && k !== "datagolf") : [];
+  const bookKeys = Array.isArray(pack.bookKeys)
+    ? pack.bookKeys.filter((k) => k && k !== "datagolf" && evSportsbookAllowed(k))
+    : [];
   const modelP = modelProbOutrightFromRowOrProjections(row, marketKey);
   let bestBook = "";
   let bestAm = NaN;
   let bestEv = NaN;
   const modelOk = Number.isFinite(modelP) && modelP > 0;
   for (const bk of bookKeys) {
-    const pct = impliedPctFromBookField(row[bk]);
+    const bkNorm = normalizeEvSportsbookKey(bk);
+    const pct = impliedPctFromBookField(row[bk] ?? row[bkNorm]);
     if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
     const pBook = pct / 100;
     if (pBook <= 0 || pBook >= 1) continue;
@@ -5984,7 +5987,7 @@ function courseFitOutrightBestBookOdds(marketKey, dgId) {
     const am = americanFromImpliedProb(pBook);
     if (!Number.isFinite(bestEv) || ev > bestEv) {
       bestEv = ev;
-      bestBook = bk;
+      bestBook = bkNorm || bk;
       bestAm = am;
     }
   }
