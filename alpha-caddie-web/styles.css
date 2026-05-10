@@ -698,6 +698,22 @@ body {
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  outline: none;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.course-fit-similar-li:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+.course-fit-similar-li:focus-visible {
+  box-shadow: 0 0 0 2px rgba(90, 162, 255, 0.55);
+}
+.course-fit-similar-li-selected {
+  background: rgba(90, 162, 255, 0.18);
+  border-color: rgba(90, 162, 255, 0.45);
+}
+.course-fit-similar-li-selected .course-fit-sim-score {
+  color: #9cc8ff;
 }
 .course-fit-sim-rank {
   color: var(--golf-text-muted);
@@ -785,6 +801,12 @@ body {
   height: 14px;
   border-radius: 3px;
   background: rgba(245, 166, 35, 0.98);
+}
+.course-fit-leg-blue {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: rgba(90, 162, 255, 0.98);
 }
 
 .course-fit-table-card {

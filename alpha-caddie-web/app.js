@@ -5906,7 +5906,7 @@ function courseFitBestCategoryAndFit(playerN, emphasis) {
   return { cat: COURSE_FIT_RADAR_LABELS[bestI] || "—", fit: strokeLike };
 }
 
-function drawCourseFitRadar(canvas, tour5, venue5, player5) {
+function drawCourseFitRadar(canvas, tour5, venue5, player5, similar5) {
   if (!canvas || typeof canvas.getContext !== "function") return;
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
@@ -5975,6 +5975,9 @@ function drawCourseFitRadar(canvas, tour5, venue5, player5) {
 
   poly(tour5, "rgba(140,148,168,0.95)", null, [6, 4]);
   poly(venue5, "rgba(0,196,107,0.95)", "rgba(0,196,107,0.14)", []);
+  if (similar5 && similar5.length === 5) {
+    poly(similar5, "rgba(90, 162, 255, 0.98)", "rgba(90, 162, 255, 0.14)", []);
+  }
   poly(player5, "rgba(245,166,35,0.98)", "rgba(245,166,35,0.12)", []);
 
   ctx.fillStyle = "rgba(180,186,198,0.95)";
@@ -5994,6 +5997,34 @@ function drawCourseFitRadar(canvas, tour5, venue5, player5) {
 }
 
 let courseFitRadarResizeBound = false;
+/** Normalized course key from "Course similarity" list; shown as an extra radar overlay. */
+let courseFitSimilarSelectedKey = null;
+let courseFitSimilarListClickBound = false;
+
+function initCourseFitSimilarListClick() {
+  const panel = document.getElementById("panel-course-fit");
+  if (!panel || courseFitSimilarListClickBound) return;
+  courseFitSimilarListClickBound = true;
+  function activateSimilarLi(li) {
+    const ck = String(li.getAttribute("data-course-fit-ck") || "").trim();
+    if (!ck) return;
+    courseFitSimilarSelectedKey = courseFitSimilarSelectedKey === ck ? null : ck;
+    buildCourseFitTab();
+  }
+  panel.addEventListener("click", (ev) => {
+    const li = ev.target.closest("li.course-fit-similar-li[data-course-fit-ck]");
+    if (!li) return;
+    ev.preventDefault();
+    activateSimilarLi(li);
+  });
+  panel.addEventListener("keydown", (ev) => {
+    if (ev.key !== "Enter" && ev.key !== " ") return;
+    const li = ev.target.closest("li.course-fit-similar-li[data-course-fit-ck]");
+    if (!li) return;
+    ev.preventDefault();
+    activateSimilarLi(li);
+  });
+}
 
 async function loadApproachSkillYtdJson() {
   if (approachSkillYtdCache) return approachSkillYtdCache;
@@ -6471,6 +6502,24 @@ function buildCourseFitTab() {
   const venue5 = courseFitVenueProfileVector(rows, ranges, histSg);
   const emphasis = venue5.map((v, i) => v - tour5[i]);
 
+  const similarRanked = courseFitSimilarCourses(vk, histSg);
+  const similarKeys = new Set(similarRanked.map((x) => x.ck));
+  if (courseFitSimilarSelectedKey && !similarKeys.has(courseFitSimilarSelectedKey)) {
+    courseFitSimilarSelectedKey = null;
+  }
+  let similarHist =
+    courseFitSimilarSelectedKey ? courseFitVenueHistoricalSgMeans(courseFitSimilarSelectedKey) : null;
+  if (courseFitSimilarSelectedKey && !similarHist) {
+    courseFitSimilarSelectedKey = null;
+    similarHist = null;
+  }
+  const similar5 =
+    similarHist && courseFitSimilarSelectedKey ? courseFitVenueProfileVector(rows, ranges, similarHist) : null;
+
+  const similarDisplayName = courseFitSimilarSelectedKey
+    ? courseFitSimilarSelectedKey.replace(/\b\w/g, (c) => c.toUpperCase())
+    : "";
+
   if (capEl) {
     capEl.textContent = histSg
       ? `${venueName} · historical SG blend (${histSg.samples} stat rows in embedded history)`
@@ -6478,10 +6527,16 @@ function buildCourseFitTab() {
   }
 
   if (legEl) {
-    legEl.innerHTML =
+    let html =
       '<span class="course-fit-leg-item"><span class="course-fit-leg-dash"></span> Field average</span>' +
-      '<span class="course-fit-leg-item"><span class="course-fit-leg-green"></span> Venue profile</span>' +
+      '<span class="course-fit-leg-item"><span class="course-fit-leg-green"></span> Venue profile</span>';
+    if (similar5 && similarDisplayName) {
+      html +=
+        `<span class="course-fit-leg-item"><span class="course-fit-leg-blue" aria-hidden="true"></span> ${escapeHtml(similarDisplayName)}</span>`;
+    }
+    html +=
       '<span class="course-fit-leg-item"><span class="course-fit-leg-gold"></span> Selected player</span>';
+    legEl.innerHTML = html;
   }
 
   if (sel) {
@@ -6506,7 +6561,7 @@ function buildCourseFitTab() {
   const prow = rows.find((r) => Math.round(num(r.dg_id, NaN)) === dgSel);
   const player5 = prow ? courseFitNormalizeRaw(courseFitRawProfile(prow), ranges) : tour5.map(() => 0.5);
 
-  drawCourseFitRadar(canvas, tour5, venue5, player5);
+  drawCourseFitRadar(canvas, tour5, venue5, player5, similar5);
 
   if (!courseFitRadarResizeBound && typeof window !== "undefined") {
     courseFitRadarResizeBound = true;
@@ -6515,17 +6570,25 @@ function buildCourseFitTab() {
     });
   }
 
-  const similar = courseFitSimilarCourses(vk, histSg);
   if (simList && simEmpty) {
     simList.innerHTML = "";
-    if (!similar.length) {
+    if (!similarRanked.length) {
       simEmpty.hidden = false;
+      courseFitSimilarSelectedKey = null;
     } else {
       simEmpty.hidden = true;
       let rank = 1;
-      for (const s of similar) {
+      for (const s of similarRanked) {
         const li = document.createElement("li");
         li.className = "course-fit-similar-li";
+        li.setAttribute("data-course-fit-ck", s.ck);
+        li.setAttribute("role", "button");
+        li.setAttribute("tabindex", "0");
+        li.setAttribute(
+          "aria-pressed",
+          courseFitSimilarSelectedKey === s.ck ? "true" : "false",
+        );
+        if (courseFitSimilarSelectedKey === s.ck) li.classList.add("course-fit-similar-li-selected");
         li.innerHTML = `<span class="course-fit-sim-rank">${rank++}.</span><span class="course-fit-sim-name">${escapeHtml(
           s.ck.replace(/\b\w/g, (c) => c.toUpperCase()),
         )}</span><span class="course-fit-sim-score">${(s.sim * 100).toFixed(0)}</span>`;
@@ -11795,6 +11858,7 @@ document.addEventListener("DOMContentLoaded", () => {
   configureRoundPickerUi();
   initTabs();
   initCourseFitSubtabs();
+  initCourseFitSimilarListClick();
   ensureCourseFitBinTooltipHandlers();
   initLivePropPredictorUi();
   initOutrightsTableSortOnce();
