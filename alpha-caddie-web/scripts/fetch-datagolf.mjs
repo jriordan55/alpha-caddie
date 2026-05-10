@@ -191,24 +191,59 @@ function lookupHoleParsFromMaps(maps, course_used, event_name) {
   return null;
 }
 
-function holeParsFromFieldUpdates(raw) {
-  if (!raw || typeof raw !== "object") return null;
-  const tryArray = (a) => {
-    if (!Array.isArray(a) || a.length < 18) return null;
+/**
+ * Build pars for holes 1–18 from a DataGolf-style array.
+ * APIs often return `{ hole, par }[]` in arbitrary order — never assume index i is hole i+1.
+ */
+function normalizeHoleParsApiArray(a) {
+  if (!Array.isArray(a) || a.length < 18) return null;
+  let objectKeyed = false;
+  for (const x of a) {
+    if (x && typeof x === "object" && !Array.isArray(x)) {
+      const h = num(x.hole ?? x.hole_number ?? x.hole_num ?? x.num ?? x.n, NaN);
+      if (Number.isFinite(h) && h >= 1 && h <= 18) {
+        objectKeyed = true;
+        break;
+      }
+    }
+  }
+  if (objectKeyed) {
+    const byHole = new Map();
+    for (const x of a) {
+      if (!x || typeof x !== "object" || Array.isArray(x)) continue;
+      const h = Math.round(num(x.hole ?? x.hole_number ?? x.hole_num ?? x.num ?? x.n, NaN));
+      let p = num(x.par ?? x.par_hole ?? x.hole_par ?? x.par_for_hole, NaN);
+      if (!Number.isFinite(h) || h < 1 || h > 18) continue;
+      if (!Number.isFinite(p) || p < 3 || p > 5) continue;
+      byHole.set(h, Math.round(p));
+    }
+    if (byHole.size < 18) return null;
     const arr = [];
-    for (let i = 0; i < 18; i++) {
-      const x = a[i];
-      let p = NaN;
-      if (typeof x === "number") p = x;
-      else if (x && typeof x === "object") p = num(x.par ?? x.par_hole ?? x.hole_par, NaN);
-      if (!Number.isFinite(p) || p < 3 || p > 5) return null;
-      arr.push(Math.round(p));
+    for (let h = 1; h <= 18; h++) {
+      if (!byHole.has(h)) return null;
+      arr.push(byHole.get(h));
     }
     return arr;
-  };
+  }
+  const arr = [];
+  for (let i = 0; i < 18; i++) {
+    const x = a[i];
+    let p = NaN;
+    if (typeof x === "number") p = x;
+    else if (typeof x === "string") p = num(x.trim(), NaN);
+    else if (x && typeof x === "object") p = num(x.par ?? x.par_hole ?? x.hole_par, NaN);
+    if (!Number.isFinite(p) || p < 3 || p > 5) return null;
+    arr.push(Math.round(p));
+  }
+  return arr;
+}
+
+function holeParsFromFieldUpdates(raw) {
+  if (!raw || typeof raw !== "object") return null;
   const tryOneObject = (obj) => {
     if (!obj || typeof obj !== "object") return null;
-    const nested = tryArray(obj.holes) || tryArray(obj.course_holes);
+    const nested =
+      normalizeHoleParsApiArray(obj.holes) || normalizeHoleParsApiArray(obj.course_holes);
     if (nested) return nested;
     if (Array.isArray(obj.hole_par) && obj.hole_par.length === 18) {
       const arr = obj.hole_par.map((x) => Math.round(num(x, NaN)));

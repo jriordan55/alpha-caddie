@@ -10220,6 +10220,34 @@ const AUGUSTA_NATIONAL_HOLE_PARS = Object.freeze([4, 5, 4, 3, 4, 3, 4, 5, 4, 4, 
 /** TPC Louisiana (Zurich Classic host) — PGA Tour scorecard; used when hole_pars_source is still generic. */
 const TPC_LOUISIANA_HOLE_PARS = Object.freeze([4, 5, 3, 4, 4, 4, 5, 4, 3, 4, 5, 4, 4, 3, 4, 4, 3, 5]);
 
+function normalizeHoleParsClient(hp) {
+  if (!Array.isArray(hp) || hp.length < 18) return null;
+  const first = hp[0];
+  if (first && typeof first === "object" && !Array.isArray(first)) {
+    const h0 = num(first.hole ?? first.hole_number ?? first.hole_num ?? first.num, NaN);
+    if (Number.isFinite(h0)) {
+      const byHole = new Map();
+      for (const x of hp) {
+        if (!x || typeof x !== "object") continue;
+        const h = Math.round(num(x.hole ?? x.hole_number ?? x.hole_num ?? x.num, NaN));
+        const p = Math.round(num(x.par ?? x.par_hole ?? x.hole_par, NaN));
+        if (h >= 1 && h <= 18 && p >= 3 && p <= 5) byHole.set(h, p);
+      }
+      if (byHole.size >= 18) {
+        const arr = [];
+        for (let h = 1; h <= 18; h++) {
+          if (!byHole.has(h)) return null;
+          arr.push(byHole.get(h));
+        }
+        return arr;
+      }
+    }
+  }
+  const arr = hp.slice(0, 18).map((x) => Math.round(num(x, 4)));
+  if (!arr.every((n) => n >= 3 && n <= 5)) return null;
+  return arr;
+}
+
 function parseHoleParsMeta() {
   const vn = String(DATA.meta?.course_used || "").trim().toLowerCase();
   const ev = String(DATA.meta?.event_name || "").trim().toLowerCase();
@@ -10231,7 +10259,8 @@ function parseHoleParsMeta() {
   if (zurichTpcContext && src === "generic") return [...TPC_LOUISIANA_HOLE_PARS];
 
   const hp = DATA.meta.hole_pars;
-  if (Array.isArray(hp) && hp.length >= 18) return hp.slice(0, 18).map((x) => Math.round(num(x, 4)));
+  const normalized = normalizeHoleParsClient(hp);
+  if (normalized) return normalized;
   if (augustaContext) return [...AUGUSTA_NATIONAL_HOLE_PARS];
   return Array.from({ length: 18 }, () => 4);
 }
