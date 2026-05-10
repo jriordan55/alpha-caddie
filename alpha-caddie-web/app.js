@@ -4184,6 +4184,25 @@ const EV_ALLOWED_SPORTSBOOKS = new Set([
   "betonline",
 ]);
 
+/** Books often present on DataGolf outright feeds but omitted from tight EV list — needed for finish ladder / Course Fit when only e.g. PointsBet posts top 20. */
+const OUTRIGHT_LADDER_EXTRA_BOOKS = new Set([
+  "pointsbet",
+  "williamhill",
+  "betway",
+  "skybet",
+  "wynnbet",
+  "circa",
+  "betcris",
+  "unibet",
+]);
+
+function outrightLadderSportsbookAllowed(bookRaw) {
+  const k = normalizeEvSportsbookKey(bookRaw);
+  if (!k || k === "datagolf") return false;
+  if (EV_ALLOWED_SPORTSBOOKS.has(k)) return true;
+  return OUTRIGHT_LADDER_EXTRA_BOOKS.has(k);
+}
+
 function normalizeEvSportsbookKey(bookRaw) {
   const k = String(bookRaw || "").trim().toLowerCase();
   if (!k) return "";
@@ -4958,7 +4977,7 @@ function collectUnifiedEvRows() {
     const pack = opack[mk];
     if (!pack || !Array.isArray(pack.rows)) continue;
     const books = Array.isArray(pack.bookKeys)
-      ? pack.bookKeys.filter((k) => k && k !== "datagolf" && evSportsbookAllowed(k))
+      ? pack.bookKeys.filter((k) => k && k !== "datagolf" && outrightLadderSportsbookAllowed(k))
       : [];
     const finishMk = mk === "win" || mk === "top_5" || mk === "top_10" || mk === "top_20";
     for (const row of pack.rows) {
@@ -4994,8 +5013,9 @@ function collectUnifiedEvRows() {
           const bkNorm = normalizeEvSportsbookKey(bk);
           const pct = impliedPctFromBookField(row[bk] ?? row[bkNorm]);
           if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
-          const pBook = pct / 100;
-          if (pBook <= 0 || pBook >= 1) continue;
+          let pBook = pct / 100;
+          pBook = outrightFeedPlaceholderProbNaN(pBook, mk, bk);
+          if (!Number.isFinite(pBook) || pBook <= 0 || pBook >= 1) continue;
           const ev = outrightEvFromModelAndBook(modelP, pBook, mk);
           if (!Number.isFinite(ev)) continue;
           if (!Number.isFinite(bestEv) || ev > bestEv) {
@@ -6102,7 +6122,7 @@ function courseFitOutrightBestBookOddsSingle(marketKey, dgId) {
   const row = pack.rows.find((r) => Math.round(num(r.dg_id, NaN)) === id);
   if (!row) return { html: "—" };
   const bookKeys = Array.isArray(pack.bookKeys)
-    ? pack.bookKeys.filter((k) => k && k !== "datagolf" && evSportsbookAllowed(k))
+    ? pack.bookKeys.filter((k) => k && k !== "datagolf" && outrightLadderSportsbookAllowed(k))
     : [];
   const modelP = modelProbOutrightFromRowOrProjections(row, marketKey);
   let bestBook = "";
@@ -6113,8 +6133,9 @@ function courseFitOutrightBestBookOddsSingle(marketKey, dgId) {
     const bkNorm = normalizeEvSportsbookKey(bk);
     const pct = impliedPctFromBookField(row[bk] ?? row[bkNorm]);
     if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
-    const pBook = pct / 100;
-    if (pBook <= 0 || pBook >= 1) continue;
+    let pBook = pct / 100;
+    pBook = outrightFeedPlaceholderProbNaN(pBook, marketKey, bk);
+    if (!Number.isFinite(pBook) || pBook <= 0 || pBook >= 1) continue;
     const ev = outrightEvFromModelAndBook(modelP, pBook, marketKey);
     if (!Number.isFinite(ev)) continue;
     const am = americanFromImpliedProb(pBook);
@@ -7076,6 +7097,19 @@ function impliedPctFromBookField(v) {
   return p * 100;
 }
 
+/**
+ * DataGolf feeds sometimes substitute ~10% implied (~+900) on FanDuel/Betway/SkyBet win markets when a book has no real price (same float across much of the field). Skip those for ladder / best-book picks so Caesars-only junk does not dominate.
+ */
+function outrightFeedPlaceholderProbNaN(p01, marketKey, bookRaw) {
+  if (!Number.isFinite(p01) || p01 <= 0 || p01 >= 1) return NaN;
+  const mk = String(marketKey || "");
+  const bk = normalizeEvSportsbookKey(bookRaw);
+  if (mk === "win" && (bk === "fanduel" || bk === "betway" || bk === "skybet")) {
+    if (p01 >= 0.098 && p01 <= 0.102) return NaN;
+  }
+  return p01;
+}
+
 /** Display cap after coherence repair on win / top-5 / top-10 / top-20 (+EV & Course Fit). */
 const FINISH_OUTRIGHT_AMERICAN_CAP = 10000;
 
@@ -7108,11 +7142,14 @@ function americanFromImpliedProbCapped(p, capPos = FINISH_OUTRIGHT_AMERICAN_CAP)
   return Math.round(am);
 }
 
-function impliedProbFromOutrightRowBook(row, bk) {
+function impliedProbFromOutrightRowBook(row, bk, marketKey) {
   if (!row || !bk) return NaN;
   const bkNorm = normalizeEvSportsbookKey(bk);
   const pct = impliedPctFromBookField(row[bk] ?? row[bkNorm]);
-  return Number.isFinite(pct) ? pct / 100 : NaN;
+  if (!Number.isFinite(pct)) return NaN;
+  let p01 = pct / 100;
+  p01 = outrightFeedPlaceholderProbNaN(p01, marketKey, bk);
+  return Number.isFinite(p01) ? p01 : NaN;
 }
 
 function outrightFinishRowsByMarketDg(dgId) {
@@ -7146,14 +7183,14 @@ function outrightFinishLadderBestBookBundle(dgId) {
     const pack = DATA.outrights?.[mk];
     const bks = Array.isArray(pack?.bookKeys) ? pack.bookKeys : [];
     for (const k of bks) {
-      if (k && k !== "datagolf" && evSportsbookAllowed(k)) bookSet.add(normalizeEvSportsbookKey(k));
+      if (k && k !== "datagolf" && outrightLadderSportsbookAllowed(k)) bookSet.add(normalizeEvSportsbookKey(k));
     }
   }
   const books = [...bookSet].sort((a, b) => a.localeCompare(b));
   let best = null;
   let bestScore = -Infinity;
   for (const bk of books) {
-    const raw = markets.map((mk) => impliedProbFromOutrightRowBook(rowsByM[mk], bk));
+    const raw = markets.map((mk) => impliedProbFromOutrightRowBook(rowsByM[mk], bk, mk));
     const coherent = coerceFinishLadderImpliedProbs(raw[0], raw[1], raw[2], raw[3]);
     let sumEv = 0;
     let nOk = 0;
@@ -7405,8 +7442,9 @@ function buildOutrightsTableBodyOnly() {
     for (const bk of bookKeys) {
       const pct = impliedPctFromBookField(row[bk]);
       if (!Number.isFinite(pct) || pct <= 0) continue;
-      const pBook = pct / 100;
-      if (pBook <= 0 || pBook >= 1) continue;
+      let pBook = pct / 100;
+      pBook = outrightFeedPlaceholderProbNaN(pBook, mk, bk);
+      if (!Number.isFinite(pBook) || pBook <= 0 || pBook >= 1) continue;
       if (!Number.isFinite(modelP) || modelP <= 0) continue;
       const ev = outrightEvFromModelAndBook(modelP, pBook, mk);
       if (!Number.isFinite(ev)) continue;
