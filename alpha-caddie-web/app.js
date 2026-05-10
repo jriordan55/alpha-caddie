@@ -5834,7 +5834,7 @@ function courseFitVenueProfileVector(rows, ranges, histSg) {
   return v;
 }
 
-const COURSE_FIT_RADAR_LABELS = ["Driving dist.", "Driving acc.", "Approach", "Around green", "Putting"];
+const COURSE_FIT_RADAR_LABELS = ["Driving Distance", "Driving Accuracy", "Approach", "Around green", "Putting"];
 
 /** Per-course mean SG vector [ott,app,arg,putt] from embedded history (for similarity). */
 function courseFitMeanSgVectorByCourse() {
@@ -6000,6 +6000,16 @@ let courseFitRadarResizeBound = false;
 /** Normalized course key from "Course similarity" list; shown as an extra radar overlay. */
 let courseFitSimilarSelectedKey = null;
 let courseFitSimilarListClickBound = false;
+/** User-chosen venue for radar / similarity (normalized key); null = use this event's course from projections. */
+let courseFitVenueFilterKey = null;
+/** When projections switch events, reset venue filter and similarity selection. */
+let courseFitVenueEventKeyTracked = "";
+
+function courseFitPrettyCourseKey(ck) {
+  return String(ck || "")
+    .trim()
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
 
 function initCourseFitSimilarListClick() {
   const panel = document.getElementById("panel-course-fit");
@@ -6492,8 +6502,46 @@ function buildCourseFitTab() {
   const canvas = document.getElementById("course-fit-radar-canvas");
   if (!tbody || !canvas) return;
 
-  const venueName = String(DATA?.meta?.course_used || DATA?.course_used || "this venue").trim() || "this venue";
-  const vk = normCourseNameKey(venueName);
+  const eventVenueName = String(DATA?.meta?.course_used || DATA?.course_used || "this venue").trim() || "this venue";
+  const eventVk = normCourseNameKey(eventVenueName);
+  if (courseFitVenueEventKeyTracked !== eventVk) {
+    courseFitVenueEventKeyTracked = eventVk;
+    courseFitVenueFilterKey = null;
+    courseFitSimilarSelectedKey = null;
+  }
+
+  const mapCourses = courseFitMeanSgVectorByCourse();
+  let courseKeys = [...mapCourses.keys()].sort((a, b) => a.localeCompare(b));
+  if (eventVk && !courseKeys.includes(eventVk)) {
+    courseKeys.push(eventVk);
+    courseKeys.sort((a, b) => a.localeCompare(b));
+  }
+
+  const venueSel = document.getElementById("course-fit-venue");
+  if (venueSel) {
+    venueSel.innerHTML = "";
+    for (const ck of courseKeys) {
+      const o = document.createElement("option");
+      o.value = ck;
+      o.textContent = courseFitPrettyCourseKey(ck);
+      venueSel.appendChild(o);
+    }
+  }
+
+  let activeVk = eventVk;
+  if (courseFitVenueFilterKey && courseKeys.includes(courseFitVenueFilterKey)) {
+    activeVk = courseFitVenueFilterKey;
+  }
+  if (venueSel && courseKeys.length) {
+    if (courseKeys.includes(activeVk)) venueSel.value = activeVk;
+    else {
+      activeVk = courseKeys[0];
+      venueSel.value = activeVk;
+    }
+  }
+
+  const venueName = courseFitPrettyCourseKey(activeVk);
+  const vk = activeVk;
 
   const rows = courseFitPlayerPool();
   const ranges = courseFitMinMaxFromRows(rows);
@@ -6521,21 +6569,19 @@ function buildCourseFitTab() {
     : "";
 
   if (capEl) {
-    capEl.textContent = histSg
-      ? `${venueName} · historical SG blend (${histSg.samples} stat rows in embedded history)`
-      : `${venueName} · field-average profile (embed history at this venue for a richer curve)`;
+    capEl.textContent = venueName;
   }
 
   if (legEl) {
     let html =
-      '<span class="course-fit-leg-item"><span class="course-fit-leg-dash"></span> Field average</span>' +
+      '<span class="course-fit-leg-item"><span class="course-fit-leg-dash"></span> PGA Average</span>' +
       '<span class="course-fit-leg-item"><span class="course-fit-leg-green"></span> Venue profile</span>';
     if (similar5 && similarDisplayName) {
       html +=
         `<span class="course-fit-leg-item"><span class="course-fit-leg-blue" aria-hidden="true"></span> ${escapeHtml(similarDisplayName)}</span>`;
     }
     html +=
-      '<span class="course-fit-leg-item"><span class="course-fit-leg-gold"></span> Selected player</span>';
+      '<span class="course-fit-leg-item"><span class="course-fit-leg-gold"></span> Selected golfer</span>';
     legEl.innerHTML = html;
   }
 
@@ -6633,7 +6679,8 @@ function buildCourseFitTab() {
     .trim()
     .toLowerCase();
   void loadApproachSkillYtdJson().then((ap) => {
-    buildCourseFitShotBinsTable(rows, ap, venueName, shotSearch);
+    const shotVenueTitle = eventVk ? courseFitPrettyCourseKey(eventVk) : eventVenueName;
+    buildCourseFitShotBinsTable(rows, ap, shotVenueTitle, shotSearch);
   });
 }
 
@@ -11863,6 +11910,12 @@ document.addEventListener("DOMContentLoaded", () => {
   initLivePropPredictorUi();
   initOutrightsTableSortOnce();
   initEvTableSortOnce();
+  document.getElementById("course-fit-venue")?.addEventListener("change", (e) => {
+    const v = String(/** @type {HTMLSelectElement} */ (e.target).value || "").trim();
+    courseFitVenueFilterKey = v || null;
+    courseFitSimilarSelectedKey = null;
+    buildCourseFitTab();
+  });
   document.getElementById("course-fit-player")?.addEventListener("change", () => buildCourseFitTab());
   document.getElementById("course-fit-search")?.addEventListener("input", () => buildCourseFitTab());
   document.getElementById("course-fit-shots-search")?.addEventListener("input", () => buildCourseFitTab());

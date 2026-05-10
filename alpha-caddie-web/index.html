@@ -313,8 +313,11 @@
         <div id="course-fit-subpanel-adjustments" class="course-fit-subpanel">
           <div class="course-fit-layout">
             <aside class="leaderboard-card course-fit-sidebar">
-              <label class="course-fit-sidebar-label">Player
-                <select id="course-fit-player" aria-label="Player for radar overlay"></select>
+              <label class="course-fit-sidebar-label">Course
+                <select id="course-fit-venue" aria-label="Course for radar and similarity"></select>
+              </label>
+              <label class="course-fit-sidebar-label">Golfer
+                <select id="course-fit-player" aria-label="Golfer for radar overlay"></select>
               </label>
               <div class="course-fit-sidebar-block">
                 <h3 class="course-fit-sidebar-heading">Course similarity</h3>
@@ -337,13 +340,13 @@
             <h3 class="course-fit-table-title" id="course-fit-table-heading">Who fits this venue?</h3>
             <label class="course-fit-search-wrap">
               <span class="course-fit-search-icon" aria-hidden="true">⌕</span>
-              <input type="search" id="course-fit-search" class="course-fit-search" placeholder="Find players…" autocomplete="off" />
+              <input type="search" id="course-fit-search" class="course-fit-search" placeholder="Find golfers…" autocomplete="off" />
             </label>
             <div class="table-wrap course-fit-table-wrap">
               <table class="data-table course-fit-table" id="table-course-fit">
                 <thead>
                   <tr>
-                    <th scope="col">Player</th>
+                    <th scope="col">Golfer</th>
                     <th class="num" scope="col">Category</th>
                     <th class="num" scope="col">Fit (Δ SG)</th>
                   </tr>
@@ -359,13 +362,13 @@
             <h3 class="course-fit-table-title" id="course-fit-shot-heading">Where are players hitting shots from?</h3>
             <label class="course-fit-search-wrap">
               <span class="course-fit-search-icon" aria-hidden="true">⌕</span>
-              <input type="search" id="course-fit-shots-search" class="course-fit-search" placeholder="Find players…" autocomplete="off" />
+              <input type="search" id="course-fit-shots-search" class="course-fit-search" placeholder="Find golfers…" autocomplete="off" />
             </label>
             <div class="table-wrap course-fit-shot-table-wrap">
               <table class="data-table course-fit-shot-table" id="table-course-fit-shots">
                 <thead>
                   <tr>
-                    <th scope="col" rowspan="2" class="course-fit-shot-player-th">Player</th>
+                    <th scope="col" rowspan="2" class="course-fit-shot-player-th">Golfer</th>
                     <th scope="colgroup" colspan="3" class="course-fit-shot-group-th">Putting <span class="course-fit-shot-tag">est.</span></th>
                     <th scope="colgroup" colspan="2" class="course-fit-shot-group-th">Rough approach <span class="course-fit-shot-tag">YTD</span></th>
                     <th scope="colgroup" colspan="4" class="course-fit-shot-group-th">Fairway approach <span class="course-fit-shot-tag">YTD</span></th>
@@ -1167,10 +1170,12 @@
       <section class="ev-help-section" aria-labelledby="tab-help-cf-adj-h">
         <h4 class="ev-devig-section-title" id="tab-help-cf-adj-h">Adjustments</h4>
         <dl class="ev-help-dl">
-          <dt>Player selector</dt>
+          <dt>Golfer selector</dt>
           <dd>Pick a golfer to overlay their profile on the radar. With no selection you still see how the venue curve differs from the field.</dd>
+          <dt>Course filter</dt>
+          <dd>Choose which venue’s historical profile drives the green venue curve and the similarity list; it defaults to this week’s course from projections.</dd>
           <dt>Radar</dt>
-          <dd>Each spoke is a skill area (for example driving or putting). The shapes show <strong>field average</strong>, <strong>venue emphasis</strong> for this week’s track (when history is available), an optional <strong>comparison course</strong> from the similarity list (blue), and your <strong>selected player</strong>. Larger separation means a bigger gap between that player and the baseline on that spoke.</dd>
+          <dd>Each spoke is a skill area (for example driving or putting). The shapes show <strong>PGA average</strong> (the dashed baseline), <strong>venue emphasis</strong> for the course you picked (when history is available), an optional <strong>comparison course</strong> from the similarity list (blue), and your <strong>selected golfer</strong>. Larger separation means a bigger gap between that golfer and the baseline on that spoke.</dd>
           <dt>Course similarity</dt>
           <dd>A ranked list of other venues whose historical shape is closest to this one. <strong>Click</strong> a row to highlight it and draw that course’s profile on the radar; click again to clear.</dd>
           <dt>Who fits…?</dt>
@@ -1183,7 +1188,7 @@
           <dt>Columns</dt>
           <dd><strong>Putting</strong> splits expected putts into short, medium, and long bands from the same putting picture as the rest of the app. <strong>Rough</strong> and <strong>fairway approach</strong> split approach shots by lie and distance; counts are shown per round and lined up against the field average for each bin.</dd>
           <dt>Numbers and bars</dt>
-          <dd>Each cell is predicted shots per round in that bin. The faint marker is the field baseline for the bin; the colored dot is this player. Green versus red indicates whether their underlying skill in that bucket is above or below the field for rough and fairway rows; putting uses putting skill vs the field.</dd>
+          <dd>Each cell is predicted shots per round in that bin. The faint marker is the field baseline for the bin; the colored dot is this golfer. Green versus red indicates whether their underlying skill in that bucket is above or below the field for rough and fairway rows; putting uses putting skill vs the field.</dd>
           <dt>Hover a cell</dt>
           <dd>You get the exact predicted count versus the field baseline for that bin, a compact comparison strip, and a related headline stat (model putts, fairways, or greens in regulation vs the field). When an over/under line and prices are available for that stat, they appear at the bottom; otherwise that line is omitted.</dd>
         </dl>
@@ -1195,6 +1200,6 @@
   </dialog>
 
   <script src="embedded-player-round-history.js?v=5"></script>
-  <script src="app.js?v=85"></script>
+  <script src="app.js?v=86"></script>
 </body>
 </html>
