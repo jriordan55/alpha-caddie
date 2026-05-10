@@ -8,12 +8,17 @@ param(
 
 $ErrorActionPreference = "Stop"
 #
+# Course fit tab — generated artifacts this pipeline must publish:
+#   • projections.json — field + meta.course_used (fetch:dg); outrights win/top5/10/20 after fetch:book-odds merge into DATA.outrights.
+#   • approach_skill_ytd.json — Predicted shot distance bins (fetch:dg preds/approach-skill); optional approach_skill_l12.json fallback if present.
+#   • embedded-player-round-history.js (+ CSV / player_round_history.json) — radar, venue SG, similarity (build:history after fetch:dg).
+#
 # Matchup Analysis Tool stays fresh when these commands succeed:
 #   fetch:dg  → projections.players (SG pillars + merged preds/live-tournament-stats driving when DG serves it),
 #               projections.matchups (betting-tools/matchups), approach_skill_ytd.json (Course Fit shot bins)
 #   fetch:book-odds → refreshed matchup/outright odds on projections.json
 #   fetch:in-play → live-in-play.json → browser overlays placement win probs + live_tournament_stats distance/accuracy onto DATA.players
-# Mirrors below copy projections + live into website/public/data/ so both apps ship the same JSON.
+# Mirrors below copy projections + live + approach_skill *.json into website/public/data/ so both apps ship the same JSON.
 #
 # Round-projections / +EV weather: tee times live in live-in-play.json (field_updates from fetch:in-play);
 # venue hourly forecast + banners resolve in the browser (app.js). Previously unstaged UI files excluded weather from this push — UI ships here when changed.
@@ -77,15 +82,24 @@ if (Test-Path $asSrc) {
   Write-Host "Mirrored approach_skill_ytd.json -> website/public/data/approach_skill_ytd.json"
 }
 
+$asL12Src = Join-Path $webRoot "approach_skill_l12.json"
+$asL12Dest = Join-Path $webDataDir "approach_skill_l12.json"
+if (Test-Path $asL12Src) {
+  Copy-Item -Path $asL12Src -Destination $asL12Dest -Force
+  Write-Host "Mirrored approach_skill_l12.json -> website/public/data/approach_skill_l12.json"
+}
+
 Set-Location $repoRoot
 
 $artifacts = @(
   "alpha-caddie-web/projections.json",
   "alpha-caddie-web/live-in-play.json",
   "alpha-caddie-web/approach_skill_ytd.json",
+  "alpha-caddie-web/approach_skill_l12.json",
   "website/public/data/projections.json",
   "website/public/data/live-in-play.json",
   "website/public/data/approach_skill_ytd.json",
+  "website/public/data/approach_skill_l12.json",
   "data/historical_rounds_all.csv",
   "alpha-caddie-web/data/historical_rounds_all.csv",
   "alpha-caddie-web/player_round_history.json",
