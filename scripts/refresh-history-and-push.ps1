@@ -13,6 +13,11 @@ $ErrorActionPreference = "Stop"
 #   • approach_skill_ytd.json — Predicted shot distance bins (fetch:dg preds/approach-skill); optional approach_skill_l12.json fallback if present.
 #   • embedded-player-round-history.js (+ CSV / player_round_history.json) — radar, venue SG, similarity (build:history after fetch:dg).
 #
+# Hole Hangout — hole pars per hole for the active course/event:
+#   • projections.json meta.hole_pars + hole_pars_source (fetch:dg: prefers DataGolf field-updates for the current week, then course_holes*.json, etc.)
+#   • course_holes.json — bundled overrides / gaps (committed); course_holes.local.json is gitignored for secrets.
+#   • hole_pars_from_shots.json — fallback map from build:history (build-player-shots-web.mjs) after rounds CSV refresh.
+#
 # Matchup Analysis Tool stays fresh when these commands succeed:
 #   fetch:dg  → projections.players (SG pillars + merged preds/live-tournament-stats driving when DG serves it),
 #               projections.matchups (betting-tools/matchups), approach_skill_ytd.json (Course Fit shot bins)
@@ -96,6 +101,8 @@ $artifacts = @(
   "alpha-caddie-web/live-in-play.json",
   "alpha-caddie-web/approach_skill_ytd.json",
   "alpha-caddie-web/approach_skill_l12.json",
+  "alpha-caddie-web/course_holes.json",
+  "alpha-caddie-web/hole_pars_from_shots.json",
   "website/public/data/projections.json",
   "website/public/data/live-in-play.json",
   "website/public/data/approach_skill_ytd.json",

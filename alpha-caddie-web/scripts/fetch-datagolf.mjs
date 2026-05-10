@@ -24,9 +24,10 @@
  *
  * Requires Node 18+ (global fetch).
  *
- * Hole Hangout: writes hole_pars (18 ints) from course_holes.json + course_holes.local.json,
- * else DataGolf field-updates if it exposes holes, else all_2026_holes.csv (event name match),
- * else a generic layout. Override: GOLF_HOLES_CSV=path/to.csv
+ * Hole Hangout: writes hole_pars (18 ints) into projections — prefers DataGolf field-updates for the
+ * active event (current course/week), then course_holes.json + course_holes.local.json, then
+ * hole_pars_from_shots.json, all_2026_holes.csv (event name match), else generic layout.
+ * Override: GOLF_HOLES_CSV=path/to.csv
  *
  * After projections: refreshes repo data/historical_rounds_all.csv via Node
  * (scripts/update-historical-rounds-node.mjs — PGA + LIV, DataGolf historical-raw-data/rounds), then rebuilds player_round_history.json
@@ -205,11 +206,22 @@ function holeParsFromFieldUpdates(raw) {
     }
     return arr;
   };
-  const nested = tryArray(raw.holes) || tryArray(raw.course_holes);
-  if (nested) return nested;
-  if (Array.isArray(raw.hole_par) && raw.hole_par.length === 18) {
-    const arr = raw.hole_par.map((x) => Math.round(num(x, NaN)));
-    if (arr.every((n) => n >= 3 && n <= 5)) return arr;
+  const tryOneObject = (obj) => {
+    if (!obj || typeof obj !== "object") return null;
+    const nested = tryArray(obj.holes) || tryArray(obj.course_holes);
+    if (nested) return nested;
+    if (Array.isArray(obj.hole_par) && obj.hole_par.length === 18) {
+      const arr = obj.hole_par.map((x) => Math.round(num(x, NaN)));
+      if (arr.every((n) => n >= 3 && n <= 5)) return arr;
+    }
+    return null;
+  };
+  const roots = [raw, raw.course, raw.event, raw.info, raw.metadata, raw.tournament].filter(
+    (x) => x && typeof x === "object",
+  );
+  for (const r of roots) {
+    const hit = tryOneObject(r);
+    if (hit) return hit;
   }
   return null;
 }
@@ -241,12 +253,13 @@ function lookupHoleParsFromShotsExport(event_name) {
 }
 
 function resolveHoleParsForEvent({ fieldRaw, course_used, event_name }) {
+  /** Prefer live field-updates for the active event so Hole Hangout matches the current course/week. */
+  const fromField = holeParsFromFieldUpdates(fieldRaw);
+  if (fromField) return { pars: fromField, source: "field_updates" };
+
   const maps = loadCourseHolesMaps();
   const fromMap = lookupHoleParsFromMaps(maps, course_used, event_name);
   if (fromMap) return { pars: fromMap.pars, source: fromMap.source };
-
-  const fromField = holeParsFromFieldUpdates(fieldRaw);
-  if (fromField) return { pars: fromField, source: "field_updates" };
 
   const fromShots = lookupHoleParsFromShotsExport(event_name);
   if (fromShots) return fromShots;
