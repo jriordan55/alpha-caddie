@@ -835,6 +835,117 @@ body {
   margin-top: 4px;
 }
 
+.course-fit-shot-card {
+  padding: 20px 18px 18px;
+}
+.course-fit-code-tag {
+  font-size: 0.72rem;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--golf-elevated-soft);
+  border: 1px solid var(--golf-border);
+  color: var(--golf-text-muted);
+}
+.course-fit-shot-table-wrap {
+  overflow-x: auto;
+  margin-top: 4px;
+}
+.course-fit-shot-table {
+  font-size: 0.78rem;
+}
+.course-fit-shot-table thead th.course-fit-shot-group-th {
+  text-align: center;
+  vertical-align: bottom;
+  background: #161820;
+  border-bottom: 1px solid var(--golf-border);
+}
+.course-fit-shot-table thead th.course-fit-shot-sub {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 8px 6px;
+  white-space: nowrap;
+}
+.course-fit-shot-hint {
+  display: block;
+  font-weight: 500;
+  font-size: 0.62rem;
+  color: var(--golf-text-muted);
+  margin-top: 2px;
+}
+.course-fit-shot-tag {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--golf-green);
+}
+.course-fit-shot-player {
+  font-weight: 600;
+  white-space: nowrap;
+  max-width: 12rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.course-fit-shot-foot {
+  margin: 12px 0 0;
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+.course-fit-shot-bin-td {
+  padding: 10px 8px !important;
+  vertical-align: middle;
+}
+.course-fit-bin-cell-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 4.5rem;
+}
+.course-fit-bin-val {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+.course-fit-bin-track {
+  position: relative;
+  width: 100%;
+  height: 10px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.course-fit-bin-field-dot,
+.course-fit-bin-player {
+  position: absolute;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  margin-top: -4px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  box-sizing: border-box;
+}
+.course-fit-bin-field-dot {
+  background: #1a1a1a;
+  border-color: #555;
+  z-index: 1;
+}
+.course-fit-bin-player {
+  z-index: 2;
+}
+.course-fit-bin-good {
+  background: var(--golf-green);
+  border-color: #006633;
+}
+.course-fit-bin-bad {
+  background: #e05555;
+  border-color: #992222;
+}
+
 .data-table {
   width: 100%;
   border-collapse: collapse;

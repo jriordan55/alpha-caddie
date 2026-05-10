@@ -332,6 +332,42 @@
             <div class="course-fit-radar-legend" id="course-fit-radar-legend"></div>
           </div>
         </div>
+        <div class="leaderboard-card course-fit-shot-card" id="course-fit-shot-card">
+          <h3 class="course-fit-table-title" id="course-fit-shot-heading">Where are players hitting shots from?</h3>
+          <p class="text-muted course-fit-table-lede" id="course-fit-shot-lede">
+            Predicted shots per round by bin: <span class="course-fit-accent">approach / rough splits</span> from DataGolf
+            <code class="course-fit-code-tag">preds/approach-skill</code> (last 12 rounds). Putting buckets are estimated from projected putts + strokes-gained putting (see footer).
+          </p>
+          <label class="course-fit-search-wrap">
+            <span class="course-fit-search-icon" aria-hidden="true">⌕</span>
+            <input type="search" id="course-fit-shots-search" class="course-fit-search" placeholder="Find players…" autocomplete="off" />
+          </label>
+          <div class="table-wrap course-fit-shot-table-wrap">
+            <table class="data-table course-fit-shot-table" id="table-course-fit-shots" aria-describedby="course-fit-shot-foot">
+              <thead>
+                <tr>
+                  <th scope="col" rowspan="2" class="course-fit-shot-player-th">Player</th>
+                  <th scope="colgroup" colspan="3" class="course-fit-shot-group-th">Putting <span class="course-fit-shot-tag">est.</span></th>
+                  <th scope="colgroup" colspan="2" class="course-fit-shot-group-th">Rough approach <span class="course-fit-shot-tag">L12</span></th>
+                  <th scope="colgroup" colspan="4" class="course-fit-shot-group-th">Fairway approach <span class="course-fit-shot-tag">L12</span></th>
+                </tr>
+                <tr>
+                  <th scope="col" class="course-fit-shot-sub num">2–5′</th>
+                  <th scope="col" class="course-fit-shot-sub num">5–30′</th>
+                  <th scope="col" class="course-fit-shot-sub num">30′+</th>
+                  <th scope="col" class="course-fit-shot-sub num">&lt;150 yds</th>
+                  <th scope="col" class="course-fit-shot-sub num">150+ yds</th>
+                  <th scope="col" class="course-fit-shot-sub num">50–100</th>
+                  <th scope="col" class="course-fit-shot-sub num">100–150</th>
+                  <th scope="col" class="course-fit-shot-sub num">150–200</th>
+                  <th scope="col" class="course-fit-shot-sub num">200+</th>
+                </tr>
+              </thead>
+              <tbody id="course-fit-shot-tbody"></tbody>
+            </table>
+          </div>
+          <p class="text-muted course-fit-shot-foot" id="course-fit-shot-foot"></p>
+        </div>
         <div class="leaderboard-card course-fit-table-card">
           <h3 class="course-fit-table-title" id="course-fit-table-heading">Who fits this venue?</h3>
           <p class="text-muted course-fit-table-lede">

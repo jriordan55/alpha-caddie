@@ -329,6 +329,10 @@ let DATA = {
 // Assign: window.__ALPHA_CADDIE_EMBEDDED_ROUND_HISTORY__ = <object> (see embed script)
 
 let HISTORY = { meta: {}, byDgId: {}, holesByPlayerKey: {}, _ok: false };
+
+/** Same-origin cache from `approach_skill_l12.json` (written by `npm run fetch:dg`). Cleared when projections reload. */
+let approachSkillL12Cache = null;
+let approachSkillL12LoadPromise = null;
 /** Built by build:shots-web from all_shots_*.csv — unrelated to Historical Trends (round history JSON). */
 let SHOTS = { meta: {}, byDgId: {}, _ok: false };
 let RESULTS = { loaded: false, loading: false, error: "", payload: null };
@@ -1728,6 +1732,8 @@ function applyPayload(raw) {
     outrights,
     matchups,
   };
+  approachSkillL12Cache = null;
+  approachSkillL12LoadPromise = null;
   const nextFieldFp = playerDgFingerprint(players);
   if (prevFieldFp !== nextFieldFp) lastDatagolfInPlayToken = "";
 }
@@ -5989,6 +5995,263 @@ function drawCourseFitRadar(canvas, tour5, venue5, player5) {
 
 let courseFitRadarResizeBound = false;
 
+async function loadApproachSkillL12Json() {
+  if (approachSkillL12Cache) return approachSkillL12Cache;
+  if (approachSkillL12LoadPromise) return approachSkillL12LoadPromise;
+  approachSkillL12LoadPromise = fetch(cacheBustFetchUrl("approach_skill_l12.json"), { cache: "no-store" })
+    .then((res) => (res.ok ? res.json() : null))
+    .then((j) => {
+      approachSkillL12Cache = j && typeof j === "object" ? j : null;
+      return approachSkillL12Cache;
+    })
+    .catch(() => null)
+    .finally(() => {
+      approachSkillL12LoadPromise = null;
+    });
+  return approachSkillL12LoadPromise;
+}
+
+/** Putting buckets: not in DataGolf JSON — split projected putts using SG putting percentile vs the field. */
+function courseFitPuttingThreeBins(putts, sgPutt, sortedSgPuttField) {
+  if (!Number.isFinite(putts) || putts <= 0 || !sortedSgPuttField.length || !Number.isFinite(sgPutt)) {
+    return [NaN, NaN, NaN];
+  }
+  let below = 0;
+  for (let i = 0; i < sortedSgPuttField.length; i++) {
+    if (sortedSgPuttField[i] < sgPutt) below++;
+    else break;
+  }
+  const rank = sortedSgPuttField.length ? below / sortedSgPuttField.length : 0.5;
+  const wShort = 0.09 + 0.06 * rank;
+  const wLong = 0.47 - 0.1 * rank;
+  const wMid = 1 - wShort - wLong;
+  return [putts * wShort, putts * wMid, putts * wLong];
+}
+
+function courseFitPuttingFieldBins(meanPutts) {
+  if (!Number.isFinite(meanPutts) || meanPutts <= 0) return [NaN, NaN, NaN];
+  const rank = 0.5;
+  const wShort = 0.09 + 0.06 * rank;
+  const wLong = 0.47 - 0.1 * rank;
+  const wMid = 1 - wShort - wLong;
+  return [meanPutts * wShort, meanPutts * wMid, meanPutts * wLong];
+}
+
+function courseFitShotBinStripHtml(playerVal, fieldVal, lo, hi, skillPositive) {
+  const span = Math.max(hi - lo, 1e-6);
+  const fp = ((num(fieldVal, NaN) - lo) / span) * 100;
+  const pp = ((num(playerVal, NaN) - lo) / span) * 100;
+  const fpC = clamp(Number.isFinite(fp) ? fp : 50, 0, 100);
+  const ppC = clamp(Number.isFinite(pp) ? pp : 50, 0, 100);
+  const cls = skillPositive ? "course-fit-bin-player course-fit-bin-good" : "course-fit-bin-player course-fit-bin-bad";
+  const disp = Number.isFinite(num(playerVal, NaN)) ? num(playerVal, 0).toFixed(1) : "—";
+  return `<div class="course-fit-bin-cell-inner">
+    <span class="course-fit-bin-val">${disp}</span>
+    <div class="course-fit-bin-track" role="presentation">
+      <span class="course-fit-bin-field-dot" style="left:${fpC}%"></span>
+      <span class="${cls}" style="left:${ppC}%"></span>
+    </div>
+  </div>`;
+}
+
+function buildCourseFitShotBinsTable(rows, approachPayload, venueName, searchShots) {
+  const tbody = document.getElementById("course-fit-shot-tbody");
+  const foot = document.getElementById("course-fit-shot-foot");
+  const headEl = document.getElementById("course-fit-shot-heading");
+  if (!tbody) return;
+
+  /** Approach-skill `*_shot_count` values are L12 totals; scale to ~per-round for display (DataGolf-style). */
+  const AP_SKILL_COUNT_PER_ROUND_DIV = 45;
+
+  if (headEl) headEl.textContent = `Where are players hitting shots from at ${venueName}?`;
+
+  const q = String(searchShots || "")
+    .trim()
+    .toLowerCase();
+  const asMap = new Map();
+  const plist = Array.isArray(approachPayload?.players) ? approachPayload.players : [];
+  for (const p of plist) {
+    const id = Math.round(num(p.dg_id, NaN));
+    if (Number.isFinite(id)) asMap.set(id, p);
+  }
+
+  const sgPuttSorted = rows
+    .map((r) => num(r.sg_putt, NaN))
+    .filter(Number.isFinite)
+    .sort((a, b) => a - b);
+  const puttsVals = rows.map((r) => num(r.putts, NaN)).filter(Number.isFinite);
+  const meanPutts = puttsVals.length ? puttsVals.reduce((s, x) => s + x, 0) / puttsVals.length : NaN;
+  const meanSgPutt = sgPuttSorted.length ? sgPuttSorted.reduce((s, x) => s + x, 0) / sgPuttSorted.length : NaN;
+
+  const fieldPutBins = courseFitPuttingFieldBins(meanPutts);
+
+  const ROUGH_KEYS = ["under_150_rgh_shot_count", "over_150_rgh_shot_count"];
+  const ROUGH_SG_KEYS = ["under_150_rgh_sg_per_shot", "over_150_rgh_sg_per_shot"];
+  const FW_KEYS = ["50_100_fw_shot_count", "100_150_fw_shot_count", "150_200_fw_shot_count", "over_200_fw_shot_count"];
+  const FW_SG_KEYS = ["50_100_fw_sg_per_shot", "100_150_fw_sg_per_shot", "150_200_fw_sg_per_shot", "over_200_fw_sg_per_shot"];
+
+  const meanShot = {};
+  const meanSg = {};
+  for (const k of [...ROUGH_KEYS, ...FW_KEYS]) {
+    const xs = [];
+    for (const r of rows) {
+      const a = asMap.get(Math.round(num(r.dg_id, NaN)));
+      if (!a) continue;
+      const v = num(a[k], NaN);
+      if (Number.isFinite(v)) xs.push(v / AP_SKILL_COUNT_PER_ROUND_DIV);
+    }
+    meanShot[k] = xs.length ? xs.reduce((s, x) => s + x, 0) / xs.length : NaN;
+  }
+  for (const k of [...ROUGH_SG_KEYS, ...FW_SG_KEYS]) {
+    const xs = [];
+    for (const r of rows) {
+      const a = asMap.get(Math.round(num(r.dg_id, NaN)));
+      if (!a) continue;
+      const v = num(a[k], NaN);
+      if (Number.isFinite(v)) xs.push(v);
+    }
+    meanSg[k] = xs.length ? xs.reduce((s, x) => s + x, 0) / xs.length : NaN;
+  }
+
+  /** @type {Array<{ nm: string; put: number[]; rough: number[]; fw: number[]; sgPutt: number; ap: object }>} */
+  const built = [];
+  for (const r of rows) {
+    const nm = displayGolferName(String(r.player_name || ""));
+    if (q && !nm.toLowerCase().includes(q)) continue;
+    const dg = Math.round(num(r.dg_id, NaN));
+    const ap = asMap.get(dg);
+    if (!ap) continue;
+    const put = courseFitPuttingThreeBins(num(r.putts, NaN), num(r.sg_putt, NaN), sgPuttSorted);
+    const rough = [
+      num(ap[ROUGH_KEYS[0]], NaN) / AP_SKILL_COUNT_PER_ROUND_DIV,
+      num(ap[ROUGH_KEYS[1]], NaN) / AP_SKILL_COUNT_PER_ROUND_DIV,
+    ];
+    const fw = FW_KEYS.map((k) => num(ap[k], NaN) / AP_SKILL_COUNT_PER_ROUND_DIV);
+    built.push({ nm, put, rough, fw, sgPutt: num(r.sg_putt, NaN), ap });
+  }
+
+  tbody.innerHTML = "";
+
+  if (!plist.length) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 10;
+    td.className = "text-muted";
+    td.innerHTML =
+      "No <code>approach_skill_l12.json</code> data. Run <code>npm run fetch:dg</code> with <code>DATAGOLF_API_KEY</code> (or <code>datagolf.local.json</code>) to embed DataGolf <code>preds/approach-skill</code>.";
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    if (foot) foot.textContent = "";
+    return;
+  }
+
+  if (!built.length) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 10;
+    td.className = "text-muted";
+    td.textContent = q
+      ? "No players match this search with approach-skill rows."
+      : "No overlapping players between the projection field and approach-skill export.";
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    if (foot) foot.textContent = "";
+    return;
+  }
+
+  const colValsPut = [[], [], []];
+  const colValsRough = [[], []];
+  const colValsFw = [[], [], [], []];
+  for (const b of built) {
+    for (let i = 0; i < 3; i++) colValsPut[i].push(b.put[i]);
+    for (let j = 0; j < 2; j++) colValsRough[j].push(b.rough[j]);
+    for (let j = 0; j < 4; j++) colValsFw[j].push(b.fw[j]);
+  }
+
+  const rangePut = fieldPutBins.map((fv, i) => {
+    const xs = colValsPut[i].filter(Number.isFinite);
+    const lo0 = xs.length ? Math.min(...xs, fv) : fv;
+    const hi0 = xs.length ? Math.max(...xs, fv) : fv;
+    const lo = lo0 - 0.05;
+    const hi = hi0 + 0.05;
+    return { lo: hi - lo < 0.08 ? lo - 0.15 : lo, hi: hi - lo < 0.08 ? hi + 0.15 : hi };
+  });
+
+  const rangeRough = ROUGH_KEYS.map((key, j) => {
+    const fv = meanShot[key];
+    const xs = colValsRough[j].filter(Number.isFinite);
+    const lo0 = xs.length ? Math.min(...xs, fv) : fv;
+    const hi0 = xs.length ? Math.max(...xs, fv) : fv;
+    const lo = lo0 - 0.05;
+    const hi = hi0 + 0.05;
+    return { lo: hi - lo < 0.08 ? lo - 0.2 : lo, hi: hi - lo < 0.08 ? hi + 0.2 : hi };
+  });
+
+  const rangeFw = FW_KEYS.map((key, j) => {
+    const fv = meanShot[key];
+    const xs = colValsFw[j].filter(Number.isFinite);
+    const lo0 = xs.length ? Math.min(...xs, fv) : fv;
+    const hi0 = xs.length ? Math.max(...xs, fv) : fv;
+    const lo = lo0 - 0.05;
+    const hi = hi0 + 0.05;
+    return { lo: hi - lo < 0.08 ? lo - 0.2 : lo, hi: hi - lo < 0.08 ? hi + 0.2 : hi };
+  });
+
+  for (const b of built) {
+    const tr = document.createElement("tr");
+
+    const tdP = document.createElement("td");
+    tdP.className = "course-fit-shot-player";
+    tdP.textContent = b.nm;
+    tr.appendChild(tdP);
+
+    for (let i = 0; i < 3; i++) {
+      const td = document.createElement("td");
+      td.className = "num course-fit-shot-bin-td";
+      const good = Number.isFinite(b.sgPutt) && Number.isFinite(meanSgPutt) && b.sgPutt >= meanSgPutt;
+      td.innerHTML = courseFitShotBinStripHtml(b.put[i], fieldPutBins[i], rangePut[i].lo, rangePut[i].hi, good);
+      tr.appendChild(td);
+    }
+
+    for (let j = 0; j < 2; j++) {
+      const td = document.createElement("td");
+      td.className = "num course-fit-shot-bin-td";
+      const sgKey = ROUGH_SG_KEYS[j];
+      const fv = meanShot[ROUGH_KEYS[j]];
+      const meanSgV = meanSg[sgKey];
+      const good =
+        Number.isFinite(num(b.ap[sgKey], NaN)) && Number.isFinite(meanSgV)
+          ? num(b.ap[sgKey], NaN) >= meanSgV
+          : Number.isFinite(b.sgPutt) && Number.isFinite(meanSgPutt) && b.sgPutt >= meanSgPutt;
+      td.innerHTML = courseFitShotBinStripHtml(b.rough[j], fv, rangeRough[j].lo, rangeRough[j].hi, good);
+      tr.appendChild(td);
+    }
+
+    for (let j = 0; j < 4; j++) {
+      const td = document.createElement("td");
+      td.className = "num course-fit-shot-bin-td";
+      const sgKey = FW_SG_KEYS[j];
+      const fv = meanShot[FW_KEYS[j]];
+      const meanSgV = meanSg[sgKey];
+      const good =
+        Number.isFinite(num(b.ap[sgKey], NaN)) && Number.isFinite(meanSgV)
+          ? num(b.ap[sgKey], NaN) >= meanSgV
+          : false;
+      td.innerHTML = courseFitShotBinStripHtml(b.fw[j], fv, rangeFw[j].lo, rangeFw[j].hi, good);
+      tr.appendChild(td);
+    }
+
+    tbody.appendChild(tr);
+  }
+
+  if (foot) {
+    const lu = approachPayload?.last_updated ? String(approachPayload.last_updated) : "";
+    foot.textContent =
+      `Black dot = field mean in each bin. Rough/fairway counts from DataGolf \`preds/approach-skill\` (L12 shot totals ÷ ${AP_SKILL_COUNT_PER_ROUND_DIV} for per-round scale). Putting buckets are estimated from projected putts and SG putting vs the field. ` +
+      (lu ? `Approach-skill feed updated ${lu}.` : "");
+  }
+}
+
 function buildCourseFitTab() {
   const venueEl = document.getElementById("course-fit-venue-label");
   const capEl = document.getElementById("course-fit-radar-caption");
@@ -6106,6 +6369,13 @@ function buildCourseFitTab() {
     tr.appendChild(tdF);
     tbody.appendChild(tr);
   }
+
+  const shotSearch = String(document.getElementById("course-fit-shots-search")?.value || "")
+    .trim()
+    .toLowerCase();
+  void loadApproachSkillL12Json().then((ap) => {
+    buildCourseFitShotBinsTable(rows, ap, venueName, shotSearch);
+  });
 }
 
 function escapeHtml(s) {
@@ -11333,6 +11603,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initEvTableSortOnce();
   document.getElementById("course-fit-player")?.addEventListener("change", () => buildCourseFitTab());
   document.getElementById("course-fit-search")?.addEventListener("input", () => buildCourseFitTab());
+  document.getElementById("course-fit-shots-search")?.addEventListener("input", () => buildCourseFitTab());
   document.getElementById("btn-refresh-outrights")?.addEventListener("click", () => loadProjections());
   document.getElementById("lb-round")?.addEventListener("change", () => {
     ouProjExpandedKey = "";

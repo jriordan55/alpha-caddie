@@ -308,6 +308,31 @@ function rowsFromResponse(dat) {
   return [];
 }
 
+/** Slender export for the web Course Fit "shot bins" table (`approach_skill_l12.json`). */
+const APPROACH_SKILL_SLIM_KEYS = [
+  "50_100_fw_shot_count",
+  "50_100_fw_sg_per_shot",
+  "100_150_fw_shot_count",
+  "100_150_fw_sg_per_shot",
+  "150_200_fw_shot_count",
+  "150_200_fw_sg_per_shot",
+  "over_200_fw_shot_count",
+  "over_200_fw_sg_per_shot",
+  "under_150_rgh_shot_count",
+  "under_150_rgh_sg_per_shot",
+  "over_150_rgh_shot_count",
+  "over_150_rgh_sg_per_shot",
+];
+
+function slimApproachSkillPlayerRow(row) {
+  const id = Math.round(num(row.dg_id, NaN));
+  const o = { dg_id: id, player_name: String(row.player_name || "").trim() };
+  for (const k of APPROACH_SKILL_SLIM_KEYS) {
+    o[k] = num(row[k], NaN);
+  }
+  return o;
+}
+
 function parseDgTimestamp(raw) {
   if (raw == null) return 0;
   if (typeof raw === "number" && Number.isFinite(raw)) {
@@ -875,6 +900,30 @@ async function main() {
     if (!Number.isFinite(fid) || skillByDg.has(fid)) continue;
     const rawOnly = decompByDgRaw.get(fid);
     if (rawOnly) skillByDg.set(fid, mergeSkillDrivingProfile(rawOnly));
+  }
+
+  console.log("Fetching preds/approach-skill (L12 → approach_skill_l12.json for Course Fit shot bins)…");
+  try {
+    const asJson = await fetchDg("/preds/approach-skill", { period: "l12", file_format: "json" }, key);
+    const asList = rowsFromResponse(asJson);
+    const slimPlayers = [];
+    for (const row of asList) {
+      const id = Math.round(num(row.dg_id, NaN));
+      if (!Number.isFinite(id)) continue;
+      slimPlayers.push(slimApproachSkillPlayerRow(row));
+    }
+    const approachPayload = {
+      period: String(asJson.time_period || "l12"),
+      last_updated: asJson.last_updated ? String(asJson.last_updated) : new Date().toISOString(),
+      players: slimPlayers,
+    };
+    writeFileSync(join(ROOT, "approach_skill_l12.json"), JSON.stringify(approachPayload, null, 2), "utf8");
+    console.log(`approach-skill: ${slimPlayers.length} players -> approach_skill_l12.json`);
+  } catch (e) {
+    console.warn(
+      "approach-skill skipped — Course Fit shot table needs `npm run fetch:dg` with a valid key:",
+      e.message || e,
+    );
   }
 
   console.log("Fetching fantasy-projection-defaults…");
