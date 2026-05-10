@@ -24,9 +24,9 @@
  *
  * Requires Node 18+ (global fetch).
  *
- * Hole Hangout: writes hole_pars (18 ints) into projections — prefers DataGolf field-updates for the
- * active event (current course/week), then course_holes.json + course_holes.local.json, then
- * hole_pars_from_shots.json, all_2026_holes.csv (event name match), else generic layout.
+ * Hole Hangout: writes hole_pars (18 ints) into projections — uses field-updates holes only when their
+ * course label matches the resolved course_used (after optional preds/pre-tournament align), then
+ * course_holes.json + course_holes.local.json, hole_pars_from_shots.json, all_2026_holes.csv, else generic.
  * Override: GOLF_HOLES_CSV=path/to.csv
  *
  * After projections: refreshes repo data/historical_rounds_all.csv via Node
@@ -173,6 +173,26 @@ function loadCourseHolesMaps() {
   return out;
 }
 
+/** Prefer longest / most specific bundled key when multiple substring matches exist (unordered JSON keys). */
+function bestBundledHoleParsMatch(byMap, needleKey) {
+  if (!needleKey || !byMap || typeof byMap !== "object") return null;
+  let best = null;
+  let bestScore = -1;
+  for (const [k, v] of Object.entries(byMap)) {
+    if (!k || !Array.isArray(v) || v.length !== 18) continue;
+    let score = 0;
+    if (k === needleKey) score = 10000;
+    else if (needleKey.includes(k)) score = 1000 + k.length;
+    else if (k.includes(needleKey)) score = 500 + needleKey.length;
+    else continue;
+    if (score > bestScore) {
+      bestScore = score;
+      best = v;
+    }
+  }
+  return bestScore > 0 ? best : null;
+}
+
 function lookupHoleParsFromMaps(maps, course_used, event_name) {
   const ck = normHoleKey(course_used);
   const ek = normHoleKey(event_name);
@@ -180,14 +200,10 @@ function lookupHoleParsFromMaps(maps, course_used, event_name) {
   const be = maps.by_event || {};
   if (ck && bc[ck] && Array.isArray(bc[ck]) && bc[ck].length === 18) return { pars: bc[ck], source: "bundled" };
   if (ek && be[ek] && Array.isArray(be[ek]) && be[ek].length === 18) return { pars: be[ek], source: "bundled" };
-  for (const [k, v] of Object.entries(bc)) {
-    if (!k || !Array.isArray(v) || v.length !== 18) continue;
-    if (ck && (ck.includes(k) || k.includes(ck))) return { pars: v, source: "bundled" };
-  }
-  for (const [k, v] of Object.entries(be)) {
-    if (!k || !Array.isArray(v) || v.length !== 18) continue;
-    if (ek && (ek.includes(k) || k.includes(ek))) return { pars: v, source: "bundled" };
-  }
+  const fuzzyC = bestBundledHoleParsMatch(bc, ck);
+  if (fuzzyC) return { pars: fuzzyC, source: "bundled" };
+  const fuzzyE = bestBundledHoleParsMatch(be, ek);
+  if (fuzzyE) return { pars: fuzzyE, source: "bundled" };
   return null;
 }
 
@@ -287,10 +303,21 @@ function lookupHoleParsFromShotsExport(event_name) {
   return null;
 }
 
-function resolveHoleParsForEvent({ fieldRaw, course_used, event_name }) {
-  /** Prefer live field-updates for the active event so Hole Hangout matches the current course/week. */
+function resolveHoleParsForEvent({ fieldRaw, course_used, event_name, field_updates_course_used }) {
+  /** Prefer live field-updates only when hole metadata matches the resolved course (pret may relabel course_used). */
   const fromField = holeParsFromFieldUpdates(fieldRaw);
-  if (fromField) return { pars: fromField, source: "field_updates" };
+  const fuCrs = String(field_updates_course_used ?? "").trim();
+  const resCrs = String(course_used ?? "").trim();
+  const courseLabelsMatch =
+    !resCrs ||
+    !fuCrs ||
+    foldComparableTitle(fuCrs) === foldComparableTitle(resCrs);
+  if (fromField && courseLabelsMatch) return { pars: fromField, source: "field_updates" };
+  if (fromField && !courseLabelsMatch) {
+    console.warn(
+      `Hole pars: ignoring field-updates holes — course label "${fuCrs}" vs resolved "${resCrs}" (using bundled/CSV)`,
+    );
+  }
 
   const maps = loadCourseHolesMaps();
   const fromMap = lookupHoleParsFromMaps(maps, course_used, event_name);
@@ -893,6 +920,8 @@ async function main() {
   const fieldRows = win.fieldRowsTry;
   let event_name = String(fieldRaw.event_name || fieldRaw.eventName || "").trim();
   let course_used = String(fieldRaw.course_name || fieldRaw.courseName || fieldRaw.course || "").trim();
+  /** Before preds/pre-tournament may relabel `course_used`, remember field-updates’ course for hole-par validation. */
+  const field_updates_course_used = course_used;
   if (!skipSchedule && anchor?.name && fieldCandidateMatchesSchedule(event_name, anchor.name)) {
     event_name = anchor.name;
   }
@@ -1512,7 +1541,7 @@ async function main() {
     }
   }
 
-  const holeRes = resolveHoleParsForEvent({ fieldRaw, course_used, event_name });
+  const holeRes = resolveHoleParsForEvent({ fieldRaw, course_used, event_name, field_updates_course_used });
   const hole_pars = holeRes.pars.map((x) => Math.round(num(x, 4)));
   const hole_pars_source = holeRes.source;
   if (hole_pars_source === "generic") {
