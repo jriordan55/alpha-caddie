@@ -308,7 +308,7 @@ function rowsFromResponse(dat) {
   return [];
 }
 
-/** Slender export for the web Course Fit "shot bins" table (`approach_skill_l12.json`). */
+/** Slender export for the web Course Fit "shot bins" table (`approach_skill_ytd.json`). */
 const APPROACH_SKILL_SLIM_KEYS = [
   "50_100_fw_shot_count",
   "50_100_fw_sg_per_shot",
@@ -902,9 +902,9 @@ async function main() {
     if (rawOnly) skillByDg.set(fid, mergeSkillDrivingProfile(rawOnly));
   }
 
-  console.log("Fetching preds/approach-skill (L12 → approach_skill_l12.json for Course Fit shot bins)…");
+  console.log("Fetching preds/approach-skill (YTD → approach_skill_ytd.json for Course Fit shot bins)…");
   try {
-    const asJson = await fetchDg("/preds/approach-skill", { period: "l12", file_format: "json" }, key);
+    const asJson = await fetchDg("/preds/approach-skill", { period: "ytd", file_format: "json" }, key);
     const asList = rowsFromResponse(asJson);
     const slimPlayers = [];
     for (const row of asList) {
@@ -913,12 +913,12 @@ async function main() {
       slimPlayers.push(slimApproachSkillPlayerRow(row));
     }
     const approachPayload = {
-      period: String(asJson.time_period || "l12"),
+      period: String(asJson.time_period || "ytd"),
       last_updated: asJson.last_updated ? String(asJson.last_updated) : new Date().toISOString(),
       players: slimPlayers,
     };
-    writeFileSync(join(ROOT, "approach_skill_l12.json"), JSON.stringify(approachPayload, null, 2), "utf8");
-    console.log(`approach-skill: ${slimPlayers.length} players -> approach_skill_l12.json`);
+    writeFileSync(join(ROOT, "approach_skill_ytd.json"), JSON.stringify(approachPayload, null, 2), "utf8");
+    console.log(`approach-skill: ${slimPlayers.length} players -> approach_skill_ytd.json`);
   } catch (e) {
     console.warn(
       "approach-skill skipped — Course Fit shot table needs `npm run fetch:dg` with a valid key:",

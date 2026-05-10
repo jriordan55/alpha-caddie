@@ -893,9 +893,59 @@ body {
   font-size: 0.75rem;
   line-height: 1.45;
 }
+
+.course-fit-subtabs {
+  display: flex;
+  gap: 4px;
+  margin: 0 0 16px;
+  border-bottom: 1px solid var(--golf-border);
+}
+.course-fit-subtab {
+  position: relative;
+  top: 1px;
+  padding: 10px 16px 12px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid var(--golf-border);
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--golf-text-muted);
+  cursor: pointer;
+}
+.course-fit-subtab:hover {
+  color: var(--golf-text);
+  background: rgba(255, 255, 255, 0.07);
+}
+.course-fit-subtab.active {
+  background: var(--golf-elevated);
+  color: #6eb7ff;
+  border-color: rgba(110, 183, 255, 0.45);
+  box-shadow: 0 -2px 0 #6eb7ff inset;
+}
+.course-fit-new-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 6px;
+  font-size: 0.55rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  vertical-align: middle;
+  border-radius: 4px;
+  background: #2563eb;
+  color: #fff;
+}
+.course-fit-subpanel {
+  margin-bottom: 8px;
+}
+
 .course-fit-shot-bin-td {
   padding: 10px 8px !important;
   vertical-align: middle;
+  cursor: help;
 }
 .course-fit-bin-cell-inner {
   display: flex;
@@ -944,6 +994,87 @@ body {
 .course-fit-bin-bad {
   background: #e05555;
   border-color: #992222;
+}
+
+.course-fit-bin-tooltip {
+  position: fixed;
+  z-index: 10060;
+  max-width: min(360px, calc(100vw - 24px));
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--golf-card-border);
+  background: var(--golf-elevated);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65);
+  pointer-events: none;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+.course-fit-tip-main {
+  margin: 0 0 10px;
+}
+.course-fit-tip-chart {
+  position: relative;
+  margin: 0 0 10px;
+}
+.course-fit-tip-pred-num {
+  display: block;
+  text-align: center;
+  font-weight: 800;
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+  color: var(--golf-green);
+}
+.course-fit-tip-track {
+  position: relative;
+  height: 28px;
+  margin-top: 4px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.course-fit-tip-highlight {
+  position: absolute;
+  top: 50%;
+  height: 16px;
+  margin-top: -8px;
+  border-radius: 4px;
+  background: rgba(250, 204, 21, 0.35);
+  pointer-events: none;
+  z-index: 1;
+}
+.course-fit-tip-dot {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  margin-top: -5px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  z-index: 4;
+}
+.course-fit-tip-dot-field {
+  background: #111;
+  border-color: #666;
+}
+.course-fit-tip-dot-player {
+  background: var(--golf-green);
+  border-color: #004d26;
+  box-shadow: 0 0 0 2px rgba(0, 196, 107, 0.25);
+}
+.course-fit-tip-line {
+  position: absolute;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+  background: #222;
+  z-index: 1;
+  pointer-events: none;
+}
+.course-fit-tip-stat,
+.course-fit-tip-dk {
+  margin: 6px 0 0;
+  font-size: 0.75rem;
 }
 
 .data-table {
@@ -3481,6 +3612,16 @@ th.matchup-analysis-best-pick {
   .course-fit-sidebar-label select {
     min-height: 44px;
     font-size: 16px;
+  }
+  .course-fit-subtabs {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .course-fit-subtab {
+    flex: 1 1 auto;
+    min-height: 44px;
+    text-align: center;
+    font-size: 0.72rem;
   }
 
   .ou-panel-head {
