@@ -55,9 +55,16 @@
               </select>
             </label>
             <label class="toolbar-label ou-filter-field ou-golfer-inline">Golfer
-              <select id="ou-player-filter" title="Filter table to one golfer">
-                <option value="">All golfers</option>
-              </select>
+              <input
+                type="search"
+                id="ou-player-filter"
+                class="golfer-combobox-input"
+                list="ou-player-filter-datalist"
+                placeholder="Search golfer…"
+                title="Type to filter the table; pick a suggestion or clear for all golfers"
+                autocomplete="off"
+              />
+              <datalist id="ou-player-filter-datalist"></datalist>
             </label>
             <label class="toolbar-label ou-filter-field">Market
               <select id="ou-proj-market-filter" title="Filter table to one stat market">
@@ -246,7 +253,19 @@
             </label>
           </div>
           <label class="props-sidebar-label">Golfer
-            <select id="prop-golfer"></select>
+            <div class="golfer-combobox-wrap">
+              <input
+                type="search"
+                id="prop-golfer-search"
+                class="golfer-combobox-input"
+                list="prop-golfer-datalist"
+                placeholder="Search golfer…"
+                autocomplete="off"
+                aria-label="Golfer"
+              />
+              <datalist id="prop-golfer-datalist"></datalist>
+              <select id="prop-golfer" hidden></select>
+            </div>
           </label>
           <label class="props-sidebar-label">Market
             <select id="prop-stat">
@@ -317,7 +336,19 @@
                 <select id="course-fit-venue" aria-label="Course for radar and similarity"></select>
               </label>
               <label class="course-fit-sidebar-label">Golfer
-                <select id="course-fit-player" aria-label="Golfer for radar overlay"></select>
+                <div class="golfer-combobox-wrap">
+                  <input
+                    type="search"
+                    id="course-fit-player-search"
+                    class="golfer-combobox-input"
+                    list="course-fit-player-datalist"
+                    placeholder="Search golfer…"
+                    autocomplete="off"
+                    aria-label="Golfer for radar overlay"
+                  />
+                  <datalist id="course-fit-player-datalist"></datalist>
+                  <select id="course-fit-player" aria-label="Golfer for radar overlay" hidden></select>
+                </div>
               </label>
               <div class="course-fit-sidebar-block">
                 <h3 class="course-fit-sidebar-heading">Course similarity</h3>
@@ -431,7 +462,19 @@
           <h3 class="live-prop-card-title">Inputs</h3>
           <div class="live-prop-form-grid">
             <label class="toolbar-label live-prop-field-span">Golfer
-              <select id="live-prop-golfer" class="live-prop-input"></select>
+              <div class="golfer-combobox-wrap">
+                <input
+                  type="search"
+                  id="live-prop-golfer-search"
+                  class="live-prop-input golfer-combobox-input"
+                  list="live-prop-golfer-datalist"
+                  placeholder="Search golfer…"
+                  autocomplete="off"
+                  aria-label="Golfer"
+                />
+                <datalist id="live-prop-golfer-datalist"></datalist>
+                <select id="live-prop-golfer" class="live-prop-input" hidden></select>
+              </div>
             </label>
             <label class="toolbar-label live-prop-field-span">Market
               <select id="live-prop-market" class="live-prop-input" aria-label="Prop market">
@@ -527,9 +570,21 @@
       </div>
       <div class="toolbar outrights-toolbar">
         <label class="toolbar-label">Golfer
-          <select id="ev-filter-golfer">
-            <option value="">All</option>
-          </select>
+          <div class="golfer-combobox-wrap">
+            <input
+              type="search"
+              id="ev-filter-golfer-search"
+              class="golfer-combobox-input"
+              list="ev-filter-golfer-datalist"
+              placeholder="Search golfer…"
+              autocomplete="off"
+              aria-label="Filter by golfer"
+            />
+            <datalist id="ev-filter-golfer-datalist"></datalist>
+            <select id="ev-filter-golfer" hidden>
+              <option value="">All</option>
+            </select>
+          </div>
         </label>
         <label class="toolbar-label">Market
           <select id="ev-filter-market">
@@ -756,7 +811,19 @@
             <select id="hh-hole" title="Par from venue scorecard (hole_pars)"></select>
           </label>
           <label>Player
-            <select id="hh-player" title="Field for the round selected on Round projections"></select>
+            <div class="golfer-combobox-wrap">
+              <input
+                type="search"
+                id="hh-player-search"
+                class="golfer-combobox-input"
+                list="hh-player-datalist"
+                placeholder="Search player…"
+                autocomplete="off"
+                aria-label="Player"
+              />
+              <datalist id="hh-player-datalist"></datalist>
+              <select id="hh-player" title="Field for the round selected on Round projections" hidden></select>
+            </div>
           </label>
           <div class="hangout-sim-actions">
             <button type="button" class="btn-primary" id="hh-sim-run">Run simulation</button>

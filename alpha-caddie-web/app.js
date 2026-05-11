@@ -3176,11 +3176,12 @@ function syncOuToolbarOddsFromProps(market, lineSel, round) {
   const oEl = document.getElementById("ou-odds-over-filter");
   const uEl = document.getElementById("ou-odds-under-filter");
   const pf = document.getElementById("ou-player-filter");
-  if (!oEl || !uEl || !pf) return;
+  if (!oEl || !uEl || !pf || !(pf instanceof HTMLInputElement)) return;
   if (document.activeElement === oEl || document.activeElement === uEl) return;
-  const want = String(pf.value || "").trim();
-  if (!want) return;
   const r = Math.round(num(round, NaN));
+  const allRows = ouSortedPlayerRowsProjection(r);
+  const want = ouResolveSinglePlayerNameForToolbar(allRows, String(pf.value || "").trim());
+  if (!want) return;
   const row = DATA.players.find((p) => String(p.player_name || "").trim() === want && samePlayerRound(p, r));
   if (!row) return;
   const idx = ouBuildPropsOddsIndex(market);
@@ -3701,28 +3702,20 @@ function buildOuTable() {
 
   const allRows = ouSortedPlayerRowsProjection(round);
   const pf = document.getElementById("ou-player-filter");
-  const prevPlayerFilter = pf ? String(pf.value || "") : "";
-  if (pf) {
-    pf.innerHTML = "";
-    const allOpt = document.createElement("option");
-    allOpt.value = "";
-    allOpt.textContent = "All";
-    pf.appendChild(allOpt);
+  const dl = document.getElementById("ou-player-filter-datalist");
+  const prevQ = pf && pf instanceof HTMLInputElement ? String(pf.value || "").trim().toLowerCase() : "";
+  if (pf && pf instanceof HTMLInputElement && dl) {
+    dl.innerHTML = "";
     for (const p of allRows) {
       const nm = String(p.player_name || "");
       const opt = document.createElement("option");
-      opt.value = nm;
-      opt.textContent = displayGolferName(nm);
-      pf.appendChild(opt);
+      opt.value = displayGolferName(nm);
+      dl.appendChild(opt);
     }
-    const names = new Set(allRows.map((p) => String(p.player_name || "")));
-    if (prevPlayerFilter && names.has(prevPlayerFilter)) pf.value = prevPlayerFilter;
-    else pf.value = "";
+    if (prevQ && !allRows.some((p) => golferNameMatchesQuery(String(p.player_name || ""), prevQ))) pf.value = "";
   }
-  const playerFilter = pf ? String(pf.value || "") : "";
-  const playersFiltered = playerFilter
-    ? allRows.filter((p) => String(p.player_name || "") === playerFilter)
-    : allRows.slice();
+  const q = pf && pf instanceof HTMLInputElement ? String(pf.value || "").trim().toLowerCase() : "";
+  const playersFiltered = !q ? allRows.slice() : allRows.filter((p) => golferNameMatchesQuery(String(p.player_name || ""), q));
 
   let flatRows = ouProjectionFlatRowsForPlayers(playersFiltered, cols);
   const projMarketSel = String(document.getElementById("ou-proj-market-filter")?.value || "").trim();
@@ -3999,7 +3992,8 @@ function drawOuLineDistributionChart() {
   const allRows = ouSortedPlayerRows(market, round);
   const fp = String(document.getElementById("ou-player-filter")?.value || "");
   if (!fp.trim()) return;
-  const row = allRows.find((p) => String(p.player_name || "") === fp);
+  const row = ouResolveSinglePlayerRowFromFilter(allRows, fp);
+  if (!row) return;
 
   const dpr = Math.min(2, window.devicePixelRatio || 1);
   let cssW = canvas.clientWidth;
@@ -5153,6 +5147,7 @@ function fillEvFilters(rows) {
   if ([...g.options].some((o) => o.value === gPrev)) g.value = gPrev;
   if ([...m.options].some((o) => o.value === mPrev)) m.value = mPrev;
   if ([...b.options].some((o) => o.value === bPrev)) b.value = bPrev;
+  refreshGolferComboboxFromSelect("ev-filter-golfer");
 }
 
 let evSort = { key: "model_ev", dir: -1 };
@@ -5247,7 +5242,14 @@ function buildEvTable() {
   syncEvBoostPctInputDisabled();
   const rows = collectUnifiedEvRows();
   fillEvFilters(rows);
-  const g = String(document.getElementById("ev-filter-golfer")?.value || "");
+  const gSearchEl = document.getElementById("ev-filter-golfer-search");
+  const gSelEl = document.getElementById("ev-filter-golfer");
+  const gTyping = String(gSearchEl?.value || "").trim();
+  const gCommitted = String(gSelEl?.value || "").trim();
+  const g =
+    document.activeElement === gSearchEl
+      ? gTyping || gCommitted
+      : gCommitted || gTyping;
   const m = String(document.getElementById("ev-filter-market")?.value || "");
   const b = String(document.getElementById("ev-filter-book")?.value || "");
   const bankroll = num(document.getElementById("ev-bankroll")?.value, 1000);
@@ -5257,8 +5259,12 @@ function buildEvTable() {
     const d = decimalWithProfitBoost(d0, boostPct);
     return Number.isFinite(d) && d > 1 && Number.isFinite(r.modelPct) ? r.modelPct * d - 1 : NaN;
   };
+  const gLow = g.toLowerCase();
   let out = rows
-    .filter((r) => (!g || r.golfer === g) && (!m || r.market === m) && (!b || r.bestBook === b))
+    .filter((r) => {
+      const okG = !g || String(r.golfer || "").toLowerCase().includes(gLow);
+      return okG && (!m || r.market === m) && (!b || r.bestBook === b);
+    })
     .map((r) => {
       const dec0 = num(r.bestDec, NaN);
       const dec = decimalWithProfitBoost(dec0, boostPct);
@@ -6951,6 +6957,7 @@ function buildCourseFitTab() {
       const tfOpt = [...sel.options].find(wantTf);
       if (tfOpt) sel.value = tfOpt.value;
     }
+    refreshGolferComboboxFromSelect("course-fit-player");
   }
 
   const dgSel = Math.round(num(sel?.value, NaN));
@@ -7999,6 +8006,100 @@ function defaultPropGolferDgId() {
   return NaN;
 }
 
+/** Case-insensitive match on DataGolf name and display name; all query tokens must match somewhere. */
+function golferNameMatchesQuery(nameRaw, qLower) {
+  const q = String(qLower || "").trim().toLowerCase();
+  if (!q) return true;
+  const raw = String(nameRaw || "").toLowerCase();
+  const disp = displayGolferName(String(nameRaw || "")).toLowerCase();
+  if (disp.includes(q) || raw.includes(q)) return true;
+  const parts = q.split(/\s+/).filter(Boolean);
+  return parts.every((t) => disp.includes(t) || raw.includes(t));
+}
+
+/** `select` + `#${id}-search` + `#${id}-datalist` — wire once after DOM. */
+const GOLFER_COMBO_SELECT_IDS = ["prop-golfer", "live-prop-golfer", "course-fit-player", "hh-player", "ev-filter-golfer"];
+
+function syncGolferComboSearchFromSelect(selectId) {
+  const sel = document.getElementById(selectId);
+  const search = document.getElementById(`${selectId}-search`);
+  if (!sel || !search) return;
+  const opt = sel.selectedOptions[0];
+  search.value = opt ? String(opt.textContent || "").trim() : "";
+}
+
+function commitGolferComboSearchToSelect(selectId) {
+  const sel = /** @type {HTMLSelectElement | null} */ (document.getElementById(selectId));
+  const search = document.getElementById(`${selectId}-search`);
+  if (!sel || !search) return;
+  const q = String(search.value || "").trim();
+  const qLow = q.toLowerCase();
+  if (!q) {
+    const empty = [...sel.options].find((o) => String(o.value || "") === "");
+    if (empty) sel.value = "";
+    else if (sel.options.length) sel.selectedIndex = 0;
+    return;
+  }
+  let hit = [...sel.options].find((o) => String(o.textContent || "").trim().toLowerCase() === qLow);
+  if (!hit) hit = [...sel.options].find((o) => String(o.textContent || "").toLowerCase().includes(qLow));
+  if (!hit) hit = [...sel.options].find((o) => String(o.value || "") === q);
+  if (hit) {
+    sel.value = String(hit.value);
+    search.value = String(hit.textContent || "").trim();
+  } else {
+    syncGolferComboSearchFromSelect(selectId);
+  }
+}
+
+function refreshGolferComboboxFromSelect(selectId) {
+  const sel = document.getElementById(selectId);
+  const dl = document.getElementById(`${selectId}-datalist`);
+  const search = document.getElementById(`${selectId}-search`);
+  if (!sel || !dl) return;
+  dl.innerHTML = "";
+  for (const o of sel.querySelectorAll("option")) {
+    const label = String(o.textContent || "").trim();
+    if (!label) continue;
+    const opt = document.createElement("option");
+    opt.value = label;
+    dl.appendChild(opt);
+  }
+  if (!search || document.activeElement !== search) syncGolferComboSearchFromSelect(selectId);
+}
+
+function wireGolferSearchCombo(selectId) {
+  const search = document.getElementById(`${selectId}-search`);
+  const sel = document.getElementById(selectId);
+  if (!search || !sel || search.dataset.golferComboWired === "1") return;
+  search.dataset.golferComboWired = "1";
+  const commit = () => {
+    commitGolferComboSearchToSelect(selectId);
+    sel.dispatchEvent(new Event("change", { bubbles: true }));
+  };
+  search.addEventListener("change", commit);
+  search.addEventListener("blur", commit);
+  sel.addEventListener("change", () => syncGolferComboSearchFromSelect(selectId));
+}
+
+function wireAllGolferSearchCombosOnce() {
+  for (const id of GOLFER_COMBO_SELECT_IDS) wireGolferSearchCombo(id);
+}
+
+function ouResolveSinglePlayerRowFromFilter(allRows, qTrim) {
+  const q = String(qTrim || "").trim().toLowerCase();
+  if (!q) return null;
+  const m = allRows.filter((p) => golferNameMatchesQuery(String(p.player_name || ""), q));
+  if (m.length === 1) return m[0];
+  const exact = allRows.find((p) => String(p.player_name || "").trim().toLowerCase() === q);
+  if (exact) return exact;
+  return allRows.find((p) => displayGolferName(String(p.player_name || "")).trim().toLowerCase() === q) || null;
+}
+
+function ouResolveSinglePlayerNameForToolbar(allRows, qTrim) {
+  const row = ouResolveSinglePlayerRowFromFilter(allRows, qTrim);
+  return row ? String(row.player_name || "").trim() : "";
+}
+
 function fillFieldGolferSelect(selId, pickDefaultIdFn) {
   const sel = document.getElementById(selId);
   if (!sel) return;
@@ -8029,6 +8130,7 @@ function fillFieldGolferSelect(selId, pickDefaultIdFn) {
 
   sel.value = nextVal;
   const changed = prevVal !== String(sel.value || "");
+  if (GOLFER_COMBO_SELECT_IDS.includes(selId)) refreshGolferComboboxFromSelect(selId);
   if (changed && (selId === "live-prop-golfer" || selId === "prop-golfer")) {
     sel.dispatchEvent(new Event("change", { bubbles: true }));
   }
@@ -10863,6 +10965,7 @@ function initHangoutSelectors(resetHole) {
     }
     if (pr && [...plSel.options].some((o) => o.value === pr)) plSel.value = pr;
     else if (plSel.options.length) plSel.selectedIndex = 0;
+    refreshGolferComboboxFromSelect("hh-player");
   }
 }
 
@@ -12590,6 +12693,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initLivePropPredictorUi();
   initOutrightsTableSortOnce();
   initEvTableSortOnce();
+  wireAllGolferSearchCombosOnce();
   document.getElementById("course-fit-venue")?.addEventListener("change", (e) => {
     const v = String(/** @type {HTMLSelectElement} */ (e.target).value || "").trim();
     courseFitVenueFilterKey = v || null;
@@ -12637,10 +12741,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     buildOuTable();
   });
-  document.getElementById("ou-player-filter")?.addEventListener("change", () => {
-    ouProjExpandedKey = "";
-    buildOuTable();
-  });
+  {
+    let ouPlayerFilterDebounce = null;
+    document.getElementById("ou-player-filter")?.addEventListener("input", () => {
+      ouProjExpandedKey = "";
+      clearTimeout(ouPlayerFilterDebounce);
+      ouPlayerFilterDebounce = setTimeout(() => buildOuTable(), 140);
+    });
+    document.getElementById("ou-player-filter")?.addEventListener("change", () => {
+      ouProjExpandedKey = "";
+      buildOuTable();
+    });
+  }
   document.getElementById("ou-proj-market-filter")?.addEventListener("change", () => {
     ouProjExpandedKey = "";
     ouTableSort = { key: "pr-edge", dir: -1 };
@@ -12758,8 +12870,15 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("outright-market")?.addEventListener("change", () => buildOutrightsTable());
   document.getElementById("matchups-market")?.addEventListener("change", () => buildMatchupsTable());
   ["ev-filter-golfer", "ev-filter-market", "ev-filter-book"].forEach((id) =>
-    document.getElementById(id)?.addEventListener("change", () => buildEvTable())
+    document.getElementById(id)?.addEventListener("change", () => buildEvTable()),
   );
+  {
+    let evGolferSearchDebounce = null;
+    document.getElementById("ev-filter-golfer-search")?.addEventListener("input", () => {
+      clearTimeout(evGolferSearchDebounce);
+      evGolferSearchDebounce = setTimeout(() => buildEvTable(), 140);
+    });
+  }
   ["results-filter-market", "results-filter-book", "results-filter-pricing-mode"].forEach((id) =>
     document.getElementById(id)?.addEventListener("change", () => {
       if (id === "results-filter-market" && resultsTimeRange !== "all") {

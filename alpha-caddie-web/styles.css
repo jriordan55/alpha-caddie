@@ -141,6 +141,27 @@ body {
   font-family: inherit;
 }
 
+.golfer-combobox-wrap {
+  display: block;
+  min-width: 0;
+  width: 100%;
+}
+.golfer-combobox-input {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 10rem;
+}
+.toolbar .golfer-combobox-wrap {
+  display: inline-block;
+  margin-left: 8px;
+  vertical-align: middle;
+  max-width: min(320px, 100%);
+}
+.toolbar .golfer-combobox-wrap .golfer-combobox-input {
+  margin-left: 0;
+}
+
 /* Round projections — toolbar (round + golfer); legacy line tools may be hidden */
 .ou-panel-head {
   display: flex;
@@ -711,7 +732,8 @@ body {
   letter-spacing: 0.07em;
   color: var(--golf-text-muted);
 }
-.course-fit-sidebar-label select {
+.course-fit-sidebar-label select,
+.course-fit-sidebar-label .golfer-combobox-input {
   margin: 0;
   width: 100%;
   min-height: 40px;
@@ -722,6 +744,12 @@ body {
   color: var(--golf-text);
   font-family: inherit;
   font-size: 0.9375rem;
+}
+.course-fit-sidebar-label .golfer-combobox-wrap {
+  width: 100%;
+}
+.course-fit-sidebar-label .golfer-combobox-input {
+  min-width: 0;
 }
 .course-fit-sidebar-block {
   border-top: 1px solid var(--golf-border);
@@ -1289,7 +1317,7 @@ body {
   border: 1px solid var(--golf-border);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
-.ou-toolbar-projections .ou-golfer-inline select#ou-player-filter {
+.ou-toolbar-projections .ou-golfer-inline input#ou-player-filter {
   min-width: 180px;
   max-width: 300px;
 }
@@ -1749,13 +1777,20 @@ body {
   letter-spacing: 0.04em;
 }
 .props-grid input,
-.props-grid select {
+.props-grid select,
+.props-grid .golfer-combobox-input {
   background: var(--golf-elevated-soft);
   color: var(--golf-text);
   border: 1px solid var(--golf-border);
   border-radius: 8px;
   padding: 8px 12px;
   font-family: inherit;
+}
+.props-grid .golfer-combobox-wrap {
+  width: 100%;
+}
+.props-grid .golfer-combobox-input {
+  min-width: 0;
 }
 .check { flex-direction: row !important; align-items: center; text-transform: none !important; }
 .check input { width: auto; margin-right: 8px; }
@@ -2700,7 +2735,8 @@ th.matchup-analysis-best-pick {
   }
 }
 
-.props-trends-sidebar select {
+.props-trends-sidebar select,
+.props-trends-sidebar .golfer-combobox-input {
   width: 100%;
   margin-top: 6px;
   background: var(--golf-elevated-soft);
@@ -2712,12 +2748,18 @@ th.matchup-analysis-best-pick {
   font-size: 0.875rem;
   cursor: pointer;
 }
+.props-trends-sidebar .golfer-combobox-input {
+  cursor: text;
+}
 .props-trends-sidebar select:hover,
-.props-trends-sidebar select:focus {
+.props-trends-sidebar select:focus,
+.props-trends-sidebar .golfer-combobox-input:hover,
+.props-trends-sidebar .golfer-combobox-input:focus {
   border-color: #3d424d;
   outline: none;
 }
-.props-trends-sidebar select:focus {
+.props-trends-sidebar select:focus,
+.props-trends-sidebar .golfer-combobox-input:focus {
   border-color: rgba(0, 196, 107, 0.45);
   box-shadow: 0 0 0 2px rgba(0, 196, 107, 0.12);
 }
@@ -3711,7 +3753,8 @@ th.matchup-analysis-best-pick {
   .course-fit-layout {
     grid-template-columns: 1fr;
   }
-  .course-fit-sidebar-label select {
+  .course-fit-sidebar-label select,
+  .course-fit-sidebar-label .golfer-combobox-input {
     min-height: 44px;
     font-size: 16px;
   }
@@ -3831,7 +3874,8 @@ th.matchup-analysis-best-pick {
     width: 100%;
     white-space: normal;
   }
-  #panel-ou .ou-filter-card .ou-toolbar select {
+  #panel-ou .ou-filter-card .ou-toolbar select,
+  #panel-ou .ou-filter-card .ou-toolbar input#ou-player-filter {
     width: 100%;
     min-height: 44px;
     font-size: 16px;
@@ -3959,6 +4003,9 @@ th.matchup-analysis-best-pick {
   letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--golf-text-muted);
+}
+.live-prop-input-card .golfer-combobox-wrap {
+  width: 100%;
 }
 
 .live-prop-input-card select.live-prop-input,
