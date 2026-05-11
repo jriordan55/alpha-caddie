@@ -1479,6 +1479,15 @@ function eventCompletedMdYForRoundLiveHist(dateStartIso, roundNum) {
   return `${d.getUTCMonth() + 1}/${d.getUTCDate()}/${d.getUTCFullYear()}`;
 }
 
+function liveHistDateStartIsFuture(dateStartIso) {
+  const m = String(dateStartIso || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return false;
+  const start = Date.UTC(+m[1], +m[2] - 1, +m[3]);
+  const now = new Date();
+  const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  return Number.isFinite(start) && start > today;
+}
+
 function projectionRowForDgRound(dgId, rnd) {
   const id = Math.round(num(dgId, NaN));
   if (!Number.isFinite(id) || !DATA.players || !DATA.players.length) return null;
@@ -1536,6 +1545,7 @@ function mergeLiveInPlayIntoRoundHistory(j) {
   if (!eventAligned) return 0;
 
   const dateStartIso = String(fu.date_start || info.date_start || "").trim();
+  if (liveHistDateStartIsFuture(dateStartIso)) return 0;
   const eventName = String(modelEvent || fu.event_name || info.event_name || "").trim();
   if (!eventName) return 0;
 

@@ -36,6 +36,7 @@ import { fileURLToPath } from "url";
 import { createReadStream } from "fs";
 import { execFileSync } from "child_process";
 import { parse } from "csv-parse";
+import { eventsLikelySame, foldComparableTitle } from "./dg-events-align.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -290,6 +291,41 @@ function eventCompletedMdYForRound(dateStartIso, roundNum) {
   return `${d.getUTCMonth() + 1}/${d.getUTCDate()}/${d.getUTCFullYear()}`;
 }
 
+function dateOnlyUtcMsFromIso(dateStartIso) {
+  const m = String(dateStartIso || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return NaN;
+  const y = parseInt(m[1], 10);
+  const mo = parseInt(m[2], 10);
+  const d = parseInt(m[3], 10);
+  if (!Number.isFinite(y) || !Number.isFinite(mo) || !Number.isFinite(d)) return NaN;
+  return Date.UTC(y, mo - 1, d);
+}
+
+function todayDateOnlyUtcMs() {
+  const d = new Date();
+  return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+}
+
+function dateStartIsFuture(dateStartIso) {
+  const start = dateOnlyUtcMsFromIso(dateStartIso);
+  return Number.isFinite(start) && start > todayDateOnlyUtcMs();
+}
+
+function liveHistoryEventsLikelySame(a, b) {
+  const fa = foldComparableTitle(a);
+  const fb = foldComparableTitle(b);
+  if (!fa || !fb) return false;
+  if (fa === fb || fa.includes(fb) || fb.includes(fa)) return true;
+  return eventsLikelySame(a, b);
+}
+
+function liveSnapshotEventsCompatible({ projEvent, fieldEvent, inPlayEvent }) {
+  const target = String(projEvent || fieldEvent || "").trim();
+  if (target && fieldEvent && !liveHistoryEventsLikelySame(target, fieldEvent)) return false;
+  if (target && inPlayEvent && !liveHistoryEventsLikelySame(target, inPlayEvent)) return false;
+  return true;
+}
+
 function normalizeLiveRoundList(liveByDg) {
   if (!liveByDg) return [];
   if (Array.isArray(liveByDg)) return liveByDg;
@@ -322,10 +358,25 @@ function loadLiveRoundSnapshotByDg() {
   if (!rows.length) return null;
   const meta = proj?.meta && typeof proj.meta === "object" ? proj.meta : {};
   const fu = live?.field_updates && typeof live.field_updates === "object" ? live.field_updates : {};
-  const eventName = String(proj?.event_name || fu.event_name || live?.info?.event_name || "").trim();
+  const projEvent = String(proj?.event_name || "").trim();
+  const fieldEvent = String(fu.event_name || "").trim();
+  const inPlayEvent = String(live?.info?.event_name || live?.event_name || "").trim();
+  const eventName = String(projEvent || fieldEvent || inPlayEvent).trim();
   if (!eventName) return null;
 
   const dateStartIso = String(fu.date_start || live?.info?.date_start || "").trim();
+  if (!liveSnapshotEventsCompatible({ projEvent, fieldEvent, inPlayEvent })) {
+    console.warn(
+      `[build-player-history] Skipping live round snapshot: event mismatch (projections="${projEvent || "?"}", field_updates="${fieldEvent || "?"}", in_play="${inPlayEvent || "?"}")`,
+    );
+    return null;
+  }
+  if (dateStartIsFuture(dateStartIso)) {
+    console.warn(
+      `[build-player-history] Skipping live round snapshot for future event ${eventName} (date_start=${dateStartIso}); no completed rounds should be merged yet.`,
+    );
+    return null;
+  }
   const courseName =
     String(proj?.course_used || meta.course_used || fu.course_name || "").trim() || eventName;
   const coursePar = num(
