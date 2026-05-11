@@ -12,6 +12,10 @@
  * meta.live_course_round_excess_strokes for O/U and props mu (even when pricing mode is default).
  * preds/in-play `thru` / `today` merge onto players for display / outrights; **round-level model odds**
  * (Model O/U, round matchups, 3-balls) ignore those hooks unless `meta.in_play_affects_round_odds` is true.
+ * **+EV outright rows:** When live tournament context exists (`meta.datagolf_live_*`), model probs default to
+ * **leaderboard `current_score`** (softmax win; Monte Carlo noisy ranks for top 5/10/20), not DG preds/outrights fair.
+ * Opt out: `meta.outright_ev_live_leaderboard_model: false`. Optional `outright_ev_live_leaderboard_sigma` (stroke RMSE, default 2.25),
+ * `outright_ev_live_leaderboard_mc_sims` (default 420, min 100, max 2500).
  * Tournament matchups can still use live win-share blend when that flag is on.
  * projections.json: player win/top_* are implied probs (0–1) from preds/pre-tournament (default API decimal odds).
  * Outrights book columns: implied % (0–100) from DataGolf `betting-tools/outrights` (same markets as
@@ -4966,11 +4970,13 @@ function collectUnifiedEvRows() {
   }
   const opack = DATA.outrights || {};
   const rOut = getModelRoundForEv();
+  const evLbOpts = outrightEvLiveLeaderboardModelEnabled() ? { evLiveLeaderboard: true } : {};
+  if (evLbOpts.evLiveLeaderboard) ensureOutrightEvLiveLeaderboardProbCache();
   const finishLadderEvCache = new Map();
   const getFinishLadderBundleCached = (pid) => {
     const k = Math.round(num(pid, NaN));
     if (!Number.isFinite(k)) return null;
-    if (!finishLadderEvCache.has(k)) finishLadderEvCache.set(k, outrightFinishLadderBestBookBundle(k));
+    if (!finishLadderEvCache.has(k)) finishLadderEvCache.set(k, outrightFinishLadderBestBookBundle(k, evLbOpts));
     return finishLadderEvCache.get(k);
   };
   for (const mk of ["win", "top_5", "top_10", "top_20", "make_cut", "mc"]) {
@@ -4983,7 +4989,7 @@ function collectUnifiedEvRows() {
     for (const row of pack.rows) {
       const id = Math.round(num(row.dg_id, NaN));
       if (elim.size && elim.has(id) && mk !== "make_cut" && mk !== "mc") continue;
-      let modelP = modelProbOutrightFromRowOrProjections(row, mk);
+      let modelP = modelProbOutrightFromRowOrProjections(row, mk, evLbOpts);
       let bestBook = "";
       let bestAm = NaN;
       let bestEv = NaN;
@@ -5007,7 +5013,7 @@ function collectUnifiedEvRows() {
         }
       }
       if (!usedLadder) {
-        modelP = modelProbOutrightFromRowOrProjections(row, mk);
+        modelP = modelProbOutrightFromRowOrProjections(row, mk, evLbOpts);
         const modelOk = Number.isFinite(modelP) && modelP > 0;
         for (const bk of books) {
           const bkNorm = normalizeEvSportsbookKey(bk);
@@ -7170,13 +7176,13 @@ function outrightFinishRowsByMarketDg(dgId) {
  * Pick one book per player so finish-market cells share a coherent ladder (same book, monotonic implied probs).
  * Maximizes sum of per-market EV across the four ladders under the existing EV ratio caps.
  */
-function outrightFinishLadderBestBookBundle(dgId) {
+function outrightFinishLadderBestBookBundle(dgId, opts) {
   const markets = ["win", "top_5", "top_10", "top_20"];
   const rowsByM = outrightFinishRowsByMarketDg(dgId);
   /** @type {Record<string, number>} */
   const modelPs = Object.create(null);
   for (const mk of markets) {
-    modelPs[mk] = modelProbOutrightFromRowOrProjections(rowsByM[mk] || {}, mk);
+    modelPs[mk] = modelProbOutrightFromRowOrProjections(rowsByM[mk] || {}, mk, opts);
   }
   const bookSet = new Set();
   for (const mk of markets) {
@@ -7285,6 +7291,146 @@ function outrightFieldScoreSoftmaxWinMap() {
   return out;
 }
 
+/** +EV only: use score-driven probs when live bundle present; set `meta.outright_ev_live_leaderboard_model` false to use DG placement for +EV. */
+function outrightEvLiveLeaderboardModelEnabled() {
+  if (!outrightLiveTournamentContext()) return false;
+  return DATA?.meta?.outright_ev_live_leaderboard_model !== false;
+}
+
+let outrightEvLbProbCache = {
+  sig: "",
+  /** @type {Map<number, number>} */
+  win: new Map(),
+  /** @type {Map<number, number>} */
+  top5: new Map(),
+  /** @type {Map<number, number>} */
+  top10: new Map(),
+  /** @type {Map<number, number>} */
+  top20: new Map(),
+};
+
+function randStdNormal() {
+  let u = 0;
+  let v = 0;
+  while (u === 0) u = Math.random();
+  while (v === 0) v = Math.random();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+}
+
+function outrightEvLiveLeaderboardCacheSig() {
+  const sigma = num(DATA?.meta?.outright_ev_live_leaderboard_sigma, NaN);
+  const strokeNoise = Number.isFinite(sigma) && sigma > 0 ? sigma : 2.25;
+  const nSimsRaw = Math.round(num(DATA?.meta?.outright_ev_live_leaderboard_mc_sims, NaN));
+  const nSims = Number.isFinite(nSimsRaw) && nSimsRaw >= 100 ? Math.min(2500, nSimsRaw) : 420;
+  const parts = [];
+  for (const p of DATA.players || []) {
+    const id = Math.round(num(p.dg_id, NaN));
+    if (!Number.isFinite(id)) continue;
+    const s = num(p.current_score, NaN);
+    if (!Number.isFinite(s)) continue;
+    parts.push(`${id}:${s}`);
+  }
+  parts.sort();
+  return `${DATA.meta?.datagolf_live_last_update}|${strokeNoise}|${nSims}|${parts.join(";")}`;
+}
+
+/** Builds Maps dg_id -> P(market) for win (softmax on scores) and top_K (noisy rank MC). Safe to call repeatedly; keyed by score fingerprint. */
+function ensureOutrightEvLiveLeaderboardProbCache() {
+  const sig = outrightEvLiveLeaderboardCacheSig();
+  if (outrightEvLbProbCache.sig === sig && outrightEvLbProbCache.win.size >= 5) return;
+
+  const scoresById = new Map();
+  for (const p of DATA.players || []) {
+    const id = Math.round(num(p.dg_id, NaN));
+    if (!Number.isFinite(id) || scoresById.has(id)) continue;
+    const s = num(p.current_score, NaN);
+    if (!Number.isFinite(s)) continue;
+    scoresById.set(id, s);
+  }
+  if (scoresById.size < 5) {
+    outrightEvLbProbCache = {
+      sig: "",
+      win: new Map(),
+      top5: new Map(),
+      top10: new Map(),
+      top20: new Map(),
+    };
+    return;
+  }
+
+  outrightEvLbProbCache = {
+    sig,
+    win: new Map(),
+    top5: new Map(),
+    top10: new Map(),
+    top20: new Map(),
+  };
+
+  const winSm = outrightFieldScoreSoftmaxWinMap();
+  for (const [id, pw] of winSm) outrightEvLbProbCache.win.set(id, pw);
+
+  const sigma = num(DATA?.meta?.outright_ev_live_leaderboard_sigma, NaN);
+  const strokeNoise = Number.isFinite(sigma) && sigma > 0 ? sigma : 2.25;
+  const nSimsRaw = Math.round(num(DATA?.meta?.outright_ev_live_leaderboard_mc_sims, NaN));
+  const nSims = Number.isFinite(nSimsRaw) && nSimsRaw >= 100 ? Math.min(2500, nSimsRaw) : 420;
+
+  const ids = [...scoresById.keys()];
+  /** @type {Map<number, number>} */
+  const mkCounts = () => {
+    const m = new Map();
+    for (const id of ids) m.set(id, 0);
+    return m;
+  };
+  const c5 = mkCounts();
+  const c10 = mkCounts();
+  const c20 = mkCounts();
+
+  for (let rep = 0; rep < nSims; rep++) {
+    const perf = ids.map((id) => ({
+      id,
+      key: scoresById.get(id) + randStdNormal() * strokeNoise,
+    }));
+    perf.sort((a, b) => a.key - b.key);
+    const n = perf.length;
+    for (let i = 0; i < Math.min(5, n); i++) {
+      const id = perf[i].id;
+      c5.set(id, c5.get(id) + 1);
+    }
+    for (let i = 0; i < Math.min(10, n); i++) {
+      const id = perf[i].id;
+      c10.set(id, c10.get(id) + 1);
+    }
+    for (let i = 0; i < Math.min(20, n); i++) {
+      const id = perf[i].id;
+      c20.set(id, c20.get(id) + 1);
+    }
+  }
+
+  for (const id of ids) {
+    outrightEvLbProbCache.top5.set(id, c5.get(id) / nSims);
+    outrightEvLbProbCache.top10.set(id, c10.get(id) / nSims);
+    outrightEvLbProbCache.top20.set(id, c20.get(id) / nSims);
+  }
+}
+
+/** Lookup +EV live leaderboard model prob for one outright row + market (win | top_5 | top_10 | top_20). */
+function modelProbOutrightLiveLeaderboardEvLookup(outrightRow, marketKey) {
+  const id = Math.round(num(outrightRow?.dg_id, NaN));
+  if (!Number.isFinite(id)) return NaN;
+  ensureOutrightEvLiveLeaderboardProbCache();
+  if (!outrightEvLbProbCache.sig || outrightEvLbProbCache.win.size < 5) return NaN;
+  const mk = String(marketKey || "");
+  let m = null;
+  if (mk === "win") m = outrightEvLbProbCache.win;
+  else if (mk === "top_5") m = outrightEvLbProbCache.top5;
+  else if (mk === "top_10") m = outrightEvLbProbCache.top10;
+  else if (mk === "top_20") m = outrightEvLbProbCache.top20;
+  else return NaN;
+  const p = m.get(id);
+  if (!Number.isFinite(p) || p <= 0 || p >= 1) return NaN;
+  return clamp(p, 1e-6, 1 - 1e-6);
+}
+
 /**
  * Nudge placement probs using leaderboard `current_score` vs the field (DataGolf: lower = better).
  * Scaled down when preds/in-play already supplied placement so we do not double-count DG's model.
@@ -7357,11 +7503,15 @@ function modelProbOutrightMarket(rowPlayer, marketKey) {
 }
 
 /**
- * Outrights "Model" / +EV fair price: align with DataGolf Pre-Tournament page (preds/pre-tournament),
- * which is what `projections.json` player win/top_* are filled from in `npm run fetch:dg`.
- * betting-tools/outrights `datagolf` can differ — use it only as fallback when placement is missing.
+ * Outrights "Model" fair price: DataGolf preds/pre-tournament (+ merged in-play placement), then outrights `datagolf`, then book mean.
+ * When `opts.evLiveLeaderboard` (+EV during live events only), tries leaderboard `current_score` model first — see file header.
  */
-function modelProbOutrightFromRowOrProjections(outrightRow, marketKey) {
+function modelProbOutrightFromRowOrProjections(outrightRow, marketKey, opts) {
+  const evLb = opts && opts.evLiveLeaderboard === true && outrightEvLiveLeaderboardModelEnabled();
+  if (evLb) {
+    const pLb = modelProbOutrightLiveLeaderboardEvLookup(outrightRow, marketKey);
+    if (Number.isFinite(pLb) && pLb > 0) return pLb;
+  }
   const id = Math.round(num(outrightRow?.dg_id, NaN));
   let prow = Number.isFinite(id) ? projectionRowWithPlacementMerged(id) : null;
   if (!prow && outrightRow?.player_name) {
