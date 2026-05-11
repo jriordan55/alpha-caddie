@@ -2388,10 +2388,10 @@ th.matchup-analysis-best-pick {
 
 /* ---- Historical trends (round history chart) ---- */
 /* Let the page scroll as one column; nested max-height + flex was clipping the top-10 table. */
+/* Do not pair overflow-x: hidden with overflow-y: visible — spec forces visible → auto, which clips vertically. */
 #panel-props.panel.active {
   display: block !important;
-  overflow-x: hidden;
-  overflow-y: visible;
+  overflow: visible;
   max-height: none;
 }
 .props-viewport-inner {
@@ -2405,8 +2405,8 @@ th.matchup-analysis-best-pick {
   background: var(--golf-elevated);
   border: 1px solid var(--golf-card-border);
   border-radius: 14px;
-  overflow-x: hidden;
-  overflow-y: visible;
+  overflow: visible;
+  max-width: 100%;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
 }
 .props-shell .props-trends-header {
@@ -2417,7 +2417,7 @@ th.matchup-analysis-best-pick {
   padding: 14px 18px;
 }
 .props-shell .props-trends-body {
-  padding: 16px 18px 18px;
+  padding: 16px 18px 22px;
 }
 .props-shell .props-trends-chart-wrap {
   position: relative;
@@ -2712,8 +2712,10 @@ th.matchup-analysis-best-pick {
 }
 
 @media (min-width: 1025px) {
+  /* Canvas height is already capped in JS; a max-height here clipped legend + steppers + sidebar under the chart. */
   .props-trends-body .props-trends-chart-wrap {
-    max-height: min(52vh, 520px);
+    max-height: none;
+    overflow: visible;
   }
 }
 
