@@ -46,6 +46,9 @@ services:
       # Rebuild/merge sportsbook + DK props every minute.
       - key: GOLF_BOOK_ODDS_SERVER_POLL_MS
         value: "60000"
+      # Keep deploys fast: use the committed full history JSON on Render boot; local push scripts still rebuild history.
+      - key: GOLF_SKIP_HISTORY_ON_FETCH_DG
+        value: "1"
       # Full fetch:dg (field / course / model rows). Interval clamped to at least 5 minutes server-side.
       # Required with unified pipeline so live weeks still refresh full projections periodically.
       - key: GOLF_FETCH_DG_SERVER_POLL_MS

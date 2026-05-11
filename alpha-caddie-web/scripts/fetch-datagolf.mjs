@@ -1622,8 +1622,13 @@ async function main() {
   );
 
   const rscriptCmd = findRscriptSync();
+  const skipHistoryOnFetchDg = String(process.env.GOLF_SKIP_HISTORY_ON_FETCH_DG || "").trim() === "1";
   const updateRoundsNode = join(__dirname, "update-historical-rounds-node.mjs");
-  if (existsSync(updateRoundsNode) && key) {
+  if (skipHistoryOnFetchDg) {
+    console.log(
+      "GOLF_SKIP_HISTORY_ON_FETCH_DG=1 — keeping existing player_round_history.json / historical_rounds_all.csv."
+    );
+  } else if (existsSync(updateRoundsNode) && key) {
     console.log("Updating data/historical_rounds_all.csv (DataGolf, Node: PGA + LIV) …");
     const ur = spawnSync(process.execPath, [updateRoundsNode], {
       cwd: ROOT,
@@ -1641,7 +1646,7 @@ async function main() {
 
   const historyScript = join(__dirname, "build-player-history.mjs");
   const embedHistoryScript = join(__dirname, "embed-player-history.mjs");
-  if (existsSync(historyScript)) {
+  if (!skipHistoryOnFetchDg && existsSync(historyScript)) {
     console.log("Rebuilding player_round_history.json from historical_rounds_all.csv (+ hole_data) …");
     const r = spawnSync(process.execPath, [historyScript], {
       cwd: ROOT,
