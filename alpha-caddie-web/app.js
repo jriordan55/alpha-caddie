@@ -3709,8 +3709,10 @@ function buildOuTable() {
       .filter(Boolean)
       .sort((a, b) => a.localeCompare(b));
     golferSuggestWriteLabels(suggPanel, labels);
-    suggPanel.innerHTML = "";
-    suggPanel.hidden = true;
+    reopenGolferSuggestIfSearchFocused(pf, suggPanel, () => {
+      ouProjExpandedKey = "";
+      buildOuTable();
+    });
     if (prevQ && !allRows.some((p) => golferNameMatchesQuery(String(p.player_name || ""), prevQ))) pf.value = "";
   }
   const q = pf && pf instanceof HTMLInputElement ? String(pf.value || "").trim().toLowerCase() : "";
@@ -8097,6 +8099,17 @@ function openGolferSuggestForSearchInput(search, panel, onPickFromList) {
   });
 }
 
+/** After label cache updates: keep the panel open if the user is still typing (table/select refresh must not wipe it). */
+function reopenGolferSuggestIfSearchFocused(search, panel, onPickFromList) {
+  if (!panel) return;
+  if (!search || document.activeElement !== search) {
+    panel.innerHTML = "";
+    panel.hidden = true;
+    return;
+  }
+  openGolferSuggestForSearchInput(search, panel, onPickFromList);
+}
+
 function wireOuPlayerFilterSuggestOnce() {
   const search = document.getElementById("ou-player-filter");
   const panel = document.getElementById("ou-player-filter-suggest");
@@ -8185,8 +8198,10 @@ function refreshGolferComboboxFromSelect(selectId) {
     .map((o) => String(o.textContent || "").trim())
     .filter(Boolean);
   golferSuggestWriteLabels(panel, labels);
-  panel.innerHTML = "";
-  panel.hidden = true;
+  reopenGolferSuggestIfSearchFocused(search, panel, () => {
+    commitGolferComboSearchToSelect(selectId);
+    sel.dispatchEvent(new Event("change", { bubbles: true }));
+  });
   if (!search || document.activeElement !== search) syncGolferComboSearchFromSelect(selectId);
 }
 
