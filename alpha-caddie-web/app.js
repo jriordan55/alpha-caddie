@@ -1504,6 +1504,7 @@ function projectionRowForDgRound(dgId, rnd) {
 const MAX_HISTORY_ROUNDS_PER_PLAYER = 2000;
 
 function upsertHistoryBucketLiveRound(dgId, liveRec) {
+  if (historyDateMdYIsFuture(liveRec?.event_completed)) return false;
   const bucket = HISTORY.byDgId[String(dgId)];
   if (!bucket || !Array.isArray(bucket.rounds)) return false;
   const wantEvt = liveHistNormEvtKey(liveRec.event_name);
@@ -7953,6 +7954,30 @@ function embeddedRoundHistoryPayload() {
   return window.__ALPHA_CADDIE_EMBEDDED_ROUND_HISTORY__;
 }
 
+function historyDateMdYIsFuture(s) {
+  const m = String(s || "").trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!m) return false;
+  const t = Date.UTC(Number(m[3]), Number(m[1]) - 1, Number(m[2]));
+  const now = new Date();
+  const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  return Number.isFinite(t) && t > today;
+}
+
+function sanitizePlayerHistoryPayload(payload) {
+  if (!payload || typeof payload !== "object" || !payload.byDgId || typeof payload.byDgId !== "object") return payload;
+  let removed = 0;
+  for (const bucket of Object.values(payload.byDgId)) {
+    if (!bucket || !Array.isArray(bucket.rounds)) continue;
+    const before = bucket.rounds.length;
+    bucket.rounds = bucket.rounds.filter((r) => !historyDateMdYIsFuture(r?.event_completed));
+    removed += before - bucket.rounds.length;
+  }
+  if (removed > 0) {
+    payload.meta = { ...(payload.meta || {}), future_rounds_filtered: removed };
+  }
+  return payload;
+}
+
 /**
  * Prefer player_round_history.json (npm run build:history from historical_rounds_all.csv) when served
  * over HTTP; use embedded script as fallback or for file:// demos.
@@ -7961,7 +7986,7 @@ async function loadPlayerHistory() {
   if (isFileProtocol()) {
     const emb = embeddedRoundHistoryPayload();
     if (emb) {
-      HISTORY = { ...emb, _ok: true };
+      HISTORY = { ...sanitizePlayerHistoryPayload(emb), _ok: true };
       HISTORY_ROUNDS_CHRONO_CACHE.clear();
       PRICING_MU_BONUS_CACHE.clear();
       return;
@@ -7974,7 +7999,7 @@ async function loadPlayerHistory() {
   try {
     const res = await fetch(cacheBustFetchUrl("player_round_history.json"), { cache: "no-store" });
     if (res.ok) {
-      HISTORY = { ...(await res.json()), _ok: true };
+      HISTORY = { ...sanitizePlayerHistoryPayload(await res.json()), _ok: true };
       HISTORY_ROUNDS_CHRONO_CACHE.clear();
       PRICING_MU_BONUS_CACHE.clear();
       return;
@@ -7982,7 +8007,7 @@ async function loadPlayerHistory() {
   } catch (_) {}
   const emb = embeddedRoundHistoryPayload();
   if (emb) {
-    HISTORY = { ...emb, _ok: true };
+    HISTORY = { ...sanitizePlayerHistoryPayload(emb), _ok: true };
     HISTORY_ROUNDS_CHRONO_CACHE.clear();
     PRICING_MU_BONUS_CACHE.clear();
     return;

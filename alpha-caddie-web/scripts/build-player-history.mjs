@@ -311,6 +311,13 @@ function dateStartIsFuture(dateStartIso) {
   return Number.isFinite(start) && start > todayDateOnlyUtcMs();
 }
 
+function eventCompletedIsFutureMdY(s) {
+  const m = String(s || "").trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!m) return false;
+  const t = Date.UTC(Number(m[3]), Number(m[1]) - 1, Number(m[2]));
+  return Number.isFinite(t) && t > todayDateOnlyUtcMs();
+}
+
 function liveHistoryEventsLikelySame(a, b) {
   const fa = foldComparableTitle(a);
   const fb = foldComparableTitle(b);
@@ -541,6 +548,7 @@ function upsertLiveRoundRows(byDgId, liveByDg) {
   for (const liveRec of liveList) {
     const dg = Math.round(num(liveRec?.dg_id, NaN));
     if (!Number.isFinite(dg)) continue;
+    if (eventCompletedIsFutureMdY(liveRec.event_completed)) continue;
     const bucket = byDgId.get(dg);
     if (!bucket || !Array.isArray(bucket.rounds)) continue;
     const wantEvt = normEvt(liveRec.event_name);
@@ -852,6 +860,7 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg) {
     if (!Number.isFinite(dg) || !allowedDgIds.has(dg)) continue;
     const rs = num(row.round_score);
     if (!Number.isFinite(rs)) continue;
+    if (eventCompletedIsFutureMdY(row.event_completed)) continue;
 
     const eid = Math.round(num(row.event_id));
     const metaPatch =
