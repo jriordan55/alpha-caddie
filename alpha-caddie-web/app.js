@@ -2279,6 +2279,50 @@ function weatherConditionDisplayLabel(condRaw) {
   return c;
 }
 
+/** Emoji for Open-Meteo-derived condition buckets (wave banner + accessible companion text stays in the stats line). */
+function weatherConditionEmoji(condRaw) {
+  const c = String(condRaw || "").trim().toLowerCase();
+  if (c === "storm") return "⛈️";
+  if (c === "rain") return "🌧️";
+  if (c === "windy") return "💨";
+  if (c === "cloudy") return "☁️";
+  if (c === "clear") return "☀️";
+  return "🌤️";
+}
+
+function escapeHtmlText(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+/** Stacked morning / afternoon rows for WEATHER toolbars (theme classes in CSS). */
+function weatherWaveForecastBannerInnerHtml(morningSnap, afternoonSnap) {
+  const bits = [];
+  if (morningSnap) {
+    const line = formatWeatherSnapshotCompact(morningSnap);
+    if (line) {
+      const em = weatherConditionEmoji(morningSnap.condition);
+      bits.push(
+        `<div class="weather-wave-line"><span class="weather-wave-emoji" aria-hidden="true">${em}</span><span class="weather-wave-copy"><strong class="weather-wave-kicker">Morning tees</strong><span class="weather-wave-sep"> · </span><span class="weather-wave-stats">${escapeHtmlText(line)}</span></span></div>`,
+      );
+    }
+  }
+  if (afternoonSnap) {
+    const line = formatWeatherSnapshotCompact(afternoonSnap);
+    if (line) {
+      const em = weatherConditionEmoji(afternoonSnap.condition);
+      bits.push(
+        `<div class="weather-wave-line"><span class="weather-wave-emoji" aria-hidden="true">${em}</span><span class="weather-wave-copy"><strong class="weather-wave-kicker">Afternoon tees</strong><span class="weather-wave-sep"> · </span><span class="weather-wave-stats">${escapeHtmlText(line)}</span></span></div>`,
+      );
+    }
+  }
+  if (!bits.length) return "";
+  return `<div class="weather-wave-banner-inner">${bits.join("")}</div>`;
+}
+
 /** One-line weather for banners and model-input panels (matches projection row snapshot). */
 function formatWeatherSnapshotCompact(w) {
   if (!w || typeof w !== "object" || !Number.isFinite(w.tempF)) return "";
@@ -2376,29 +2420,41 @@ function buildForecastWaveSummaryString(morningSnap, afternoonSnap) {
   const parts = [];
   if (m) parts.push(`Morning tees: ${m}.`);
   if (a) parts.push(`Afternoon tees: ${a}.`);
-  return parts.join(" ");
+  return parts.join("\n");
 }
 
 function finalizeForecastWaveSummary(hourlyOrNull) {
   if (!DATA.meta) DATA.meta = {};
   if (hourlyOrNull && DATA.players?.length) {
     const { morning, afternoon } = computeMorningAfternoonForecastSnapshots(hourlyOrNull, DATA.players);
+    DATA.meta.forecast_wave_slots = { morning, afternoon };
     DATA.meta.forecast_wave_summary = buildForecastWaveSummaryString(morning, afternoon);
   } else {
+    DATA.meta.forecast_wave_slots = { morning: null, afternoon: null };
     DATA.meta.forecast_wave_summary = "";
   }
   syncForecastWaveBannerTexts();
 }
 
 function syncForecastWaveBannerTexts() {
-  const raw = DATA.meta?.forecast_wave_summary;
-  const text = typeof raw === "string" ? raw.trim() : "";
   const fallback =
     "Morning and afternoon snapshots appear once the venue forecast loads (mapped course + tee times when available).";
-  const show = text || fallback;
+  const slots = DATA.meta?.forecast_wave_slots;
+  const morning = slots && typeof slots === "object" ? slots.morning : null;
+  const afternoon = slots && typeof slots === "object" ? slots.afternoon : null;
+  const html = weatherWaveForecastBannerInnerHtml(morning, afternoon);
   for (const id of ["ou-weather-wave-summary", "ev-weather-wave-summary"]) {
     const el = document.getElementById(id);
-    if (el) el.textContent = show;
+    if (!el) continue;
+    if (html) {
+      el.innerHTML = html;
+      el.classList.add("weather-wave-banner");
+    } else {
+      el.classList.remove("weather-wave-banner");
+      const raw = DATA.meta?.forecast_wave_summary;
+      const text = typeof raw === "string" ? raw.trim() : "";
+      el.textContent = text || fallback;
+    }
   }
 }
 
