@@ -1622,11 +1622,13 @@ async function main() {
   );
 
   const rscriptCmd = findRscriptSync();
-  const skipHistoryOnFetchDg = String(process.env.GOLF_SKIP_HISTORY_ON_FETCH_DG || "").trim() === "1";
+  const renderHost = String(process.env.RENDER || "").toLowerCase() === "true";
+  const skipHistoryEnv = String(process.env.GOLF_SKIP_HISTORY_ON_FETCH_DG || "").trim();
+  const skipHistoryOnFetchDg = skipHistoryEnv === "1" || (renderHost && skipHistoryEnv !== "0");
   const updateRoundsNode = join(__dirname, "update-historical-rounds-node.mjs");
   if (skipHistoryOnFetchDg) {
     console.log(
-      "GOLF_SKIP_HISTORY_ON_FETCH_DG=1 — keeping existing player_round_history.json / historical_rounds_all.csv."
+      "Skipping fetch:dg history rebuild — keeping existing player_round_history.json / historical_rounds_all.csv."
     );
   } else if (existsSync(updateRoundsNode) && key) {
     console.log("Updating data/historical_rounds_all.csv (DataGolf, Node: PGA + LIV) …");
