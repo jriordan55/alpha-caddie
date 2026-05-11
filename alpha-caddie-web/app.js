@@ -7955,9 +7955,24 @@ function embeddedRoundHistoryPayload() {
 }
 
 function historyDateMdYIsFuture(s) {
-  const m = String(s || "").trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if (!m) return false;
-  const t = Date.UTC(Number(m[3]), Number(m[1]) - 1, Number(m[2]));
+  const raw = String(s || "").trim();
+  let y = NaN;
+  let mo = NaN;
+  let d = NaN;
+  const mdy = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  const iso = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (mdy) {
+    mo = Number(mdy[1]);
+    d = Number(mdy[2]);
+    y = Number(mdy[3]);
+  } else if (iso) {
+    y = Number(iso[1]);
+    mo = Number(iso[2]);
+    d = Number(iso[3]);
+  } else {
+    return false;
+  }
+  const t = Date.UTC(y, mo - 1, d);
   const now = new Date();
   const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
   return Number.isFinite(t) && t > today;
@@ -8735,7 +8750,7 @@ function statKeyFromPropSelect() {
 function historyRoundsForDg(dgId) {
   const rec = HISTORY.byDgId && HISTORY.byDgId[String(dgId)];
   if (!rec || !Array.isArray(rec.rounds)) return [];
-  return rec.rounds.slice();
+  return rec.rounds.filter((r) => !historyDateMdYIsFuture(r?.event_completed));
 }
 
 /** YYYYMMDD * 10 + round_num; matches build-player-history sortKey when present, else parses event_completed. */
