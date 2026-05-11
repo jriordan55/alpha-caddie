@@ -329,10 +329,13 @@ let DATA = {
   matchups: {},
 };
 
-// Round history: optional global from embedded-player-round-history.js (script tag before app.js in index.html)
+// Round history: loaded on demand from player_round_history.json. The embedded script is only a fallback
+// for file:// demos or unusual static hosts where JSON fetch is unavailable.
 // Assign: window.__ALPHA_CADDIE_EMBEDDED_ROUND_HISTORY__ = <object> (see embed script)
 
 let HISTORY = { meta: {}, byDgId: {}, holesByPlayerKey: {}, _ok: false };
+let playerHistoryLoadPromise = null;
+let embeddedRoundHistoryScriptPromise = null;
 
 /** Same-origin cache from `approach_skill_ytd.json` (written by `npm run fetch:dg`). Falls back to legacy `approach_skill_l12.json`. Cleared when projections reload. */
 let approachSkillYtdCache = null;
@@ -7954,6 +7957,21 @@ function embeddedRoundHistoryPayload() {
   return window.__ALPHA_CADDIE_EMBEDDED_ROUND_HISTORY__;
 }
 
+function loadEmbeddedRoundHistoryScript() {
+  if (embeddedRoundHistoryPayload()) return Promise.resolve();
+  if (typeof document === "undefined") return Promise.resolve();
+  if (embeddedRoundHistoryScriptPromise) return embeddedRoundHistoryScriptPromise;
+  embeddedRoundHistoryScriptPromise = new Promise((resolve) => {
+    const s = document.createElement("script");
+    s.src = isFileProtocol() ? "embedded-player-round-history.js" : cacheBustFetchUrl("embedded-player-round-history.js");
+    s.async = true;
+    s.onload = () => resolve();
+    s.onerror = () => resolve();
+    document.body.appendChild(s);
+  });
+  return embeddedRoundHistoryScriptPromise;
+}
+
 function historyDateMdYIsFuture(s) {
   const raw = String(s || "").trim();
   let y = NaN;
@@ -7998,38 +8016,51 @@ function sanitizePlayerHistoryPayload(payload) {
  * over HTTP; use embedded script as fallback or for file:// demos.
  */
 async function loadPlayerHistory() {
-  if (isFileProtocol()) {
+  if (HISTORY._ok) return;
+  if (playerHistoryLoadPromise) return playerHistoryLoadPromise;
+  HISTORY = { ...HISTORY, _loading: true };
+  playerHistoryLoadPromise = (async () => {
+    if (isFileProtocol()) {
+      await loadEmbeddedRoundHistoryScript();
+      const emb = embeddedRoundHistoryPayload();
+      if (emb) {
+        HISTORY = { ...sanitizePlayerHistoryPayload(emb), _ok: true, _loading: false };
+        HISTORY_ROUNDS_CHRONO_CACHE.clear();
+        PRICING_MU_BONUS_CACHE.clear();
+        return;
+      }
+      HISTORY = { meta: {}, byDgId: {}, holesByPlayerKey: {}, _ok: false, _loading: false };
+      HISTORY_ROUNDS_CHRONO_CACHE.clear();
+      PRICING_MU_BONUS_CACHE.clear();
+      return;
+    }
+    try {
+      const res = await fetch(cacheBustFetchUrl("player_round_history.json"), { cache: "no-store" });
+      if (res.ok) {
+        HISTORY = { ...sanitizePlayerHistoryPayload(await res.json()), _ok: true, _loading: false };
+        HISTORY_ROUNDS_CHRONO_CACHE.clear();
+        PRICING_MU_BONUS_CACHE.clear();
+        return;
+      }
+    } catch (_) {}
+    await loadEmbeddedRoundHistoryScript();
     const emb = embeddedRoundHistoryPayload();
     if (emb) {
-      HISTORY = { ...sanitizePlayerHistoryPayload(emb), _ok: true };
+      HISTORY = { ...sanitizePlayerHistoryPayload(emb), _ok: true, _loading: false };
       HISTORY_ROUNDS_CHRONO_CACHE.clear();
       PRICING_MU_BONUS_CACHE.clear();
       return;
     }
-    HISTORY = { meta: {}, byDgId: {}, holesByPlayerKey: {}, _ok: false };
+    HISTORY = { meta: {}, byDgId: {}, holesByPlayerKey: {}, _ok: false, _loading: false };
     HISTORY_ROUNDS_CHRONO_CACHE.clear();
     PRICING_MU_BONUS_CACHE.clear();
-    return;
-  }
+  })();
   try {
-    const res = await fetch(cacheBustFetchUrl("player_round_history.json"), { cache: "no-store" });
-    if (res.ok) {
-      HISTORY = { ...sanitizePlayerHistoryPayload(await res.json()), _ok: true };
-      HISTORY_ROUNDS_CHRONO_CACHE.clear();
-      PRICING_MU_BONUS_CACHE.clear();
-      return;
-    }
-  } catch (_) {}
-  const emb = embeddedRoundHistoryPayload();
-  if (emb) {
-    HISTORY = { ...sanitizePlayerHistoryPayload(emb), _ok: true };
-    HISTORY_ROUNDS_CHRONO_CACHE.clear();
-    PRICING_MU_BONUS_CACHE.clear();
-    return;
+    await playerHistoryLoadPromise;
+  } finally {
+    playerHistoryLoadPromise = null;
+    if (HISTORY && typeof HISTORY === "object") HISTORY._loading = false;
   }
-  HISTORY = { meta: {}, byDgId: {}, holesByPlayerKey: {}, _ok: false };
-  HISTORY_ROUNDS_CHRONO_CACHE.clear();
-  PRICING_MU_BONUS_CACHE.clear();
 }
 
 async function loadPlayerShots() {
@@ -10468,6 +10499,9 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
 }
 
 function renderPropsTrends() {
+  if (!HISTORY._ok && !HISTORY._loading && activeAppTabId() === "props") {
+    void ensurePlayerHistoryLoadedForTab("props");
+  }
   const empty = document.getElementById("props-chart-empty");
   const titleEl = document.getElementById("props-trends-title");
   const subEl = document.getElementById("props-trends-sub");
@@ -10494,7 +10528,9 @@ function renderPropsTrends() {
     if (empty) {
       empty.hidden = false;
       const metaHint = String(HISTORY.meta?.note || "").trim();
-      empty.textContent = !HISTORY._ok
+      empty.textContent = HISTORY._loading
+        ? "Loading full player history..."
+        : !HISTORY._ok
         ? "No history file."
         : metaHint ||
           "History export has no rounds yet. On Render: set GOLF_HISTORICAL_ROUNDS_FULL_HISTORY=1 (full PGA+LIV merge; slow), or widen GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS if you use a capped merge — check deploy logs for update-historical-rounds-node / build-player-history. One-shot uncapped repair: GOLF_RENDER_FULL_HISTORICAL_MERGE_IF_EMPTY=1.";
@@ -11694,11 +11730,20 @@ function refreshAll() {
   fillPropGolferSelect();
   fillLivePropGolferSelect();
   /* Do not syncLivePropBookLineAndOddsFromDk here — background refresh would wipe manual live line / odds. */
-  renderPropsTrends();
-  renderLivePropPredictor();
-  initHangoutSelectors(false);
-  scheduleHangoutSimulateDebounced();
-  buildCourseFitTab();
+  const tab = activeAppTabId();
+  if (tab === "props") {
+    void ensurePlayerHistoryLoadedForTab("props");
+    renderPropsTrends();
+  }
+  if (tab === "live-prop") renderLivePropPredictor();
+  if (tab === "hangout") {
+    initHangoutSelectors(false);
+    scheduleHangoutSimulateDebounced();
+  }
+  if (tab === "course-fit") {
+    void ensurePlayerHistoryLoadedForTab("course-fit");
+    buildCourseFitTab();
+  }
 }
 
 /**
@@ -11719,7 +11764,6 @@ async function loadProjections(opts = {}) {
   const finishOk = async () => {
     lastProjectionsLoadedAtMs = Date.now();
     if (reloadSidecar) {
-      await loadPlayerHistory();
       await loadPlayerShots();
     }
     // One merge from live-in-play.json even when client polling is off (fixes stale outright model vs books).
@@ -11779,6 +11823,20 @@ async function loadProjections(opts = {}) {
 function activeAppTabId() {
   const active = document.querySelector(".tabs .tab.active");
   return active ? String(active.getAttribute("data-tab") || "") : "";
+}
+
+function ensurePlayerHistoryLoadedForTab(tab) {
+  if (!["props", "course-fit"].includes(String(tab || ""))) return Promise.resolve();
+  if (HISTORY._ok) return Promise.resolve();
+  const p = loadPlayerHistory();
+  p.then(() => {
+    if (activeAppTabId() !== tab) return;
+    if (tab === "props") renderPropsTrends();
+    if (tab === "course-fit") buildCourseFitTab();
+  }).catch(() => {
+    if (activeAppTabId() === "props") renderPropsTrends();
+  });
+  return p;
 }
 
 /** Rebuild +EV table from already-loaded DATA (book odds come from projections.json; optional background poll updates DATA). */
@@ -12833,7 +12891,10 @@ function initTabs() {
         });
       }
       if (tab === "props") {
-        requestAnimationFrame(() => renderPropsTrends());
+        requestAnimationFrame(() => {
+          void ensurePlayerHistoryLoadedForTab("props");
+          renderPropsTrends();
+        });
       }
       if (tab === "matchup-analysis") {
         requestAnimationFrame(() => buildMatchupAnalysisTool());
@@ -12842,7 +12903,10 @@ function initTabs() {
         requestAnimationFrame(() => renderLivePropPredictor());
       }
       if (tab === "course-fit") {
-        requestAnimationFrame(() => buildCourseFitTab());
+        requestAnimationFrame(() => {
+          void ensurePlayerHistoryLoadedForTab("course-fit");
+          buildCourseFitTab();
+        });
       }
       if (tab === "ev") {
         requestAnimationFrame(() => {
@@ -12904,12 +12968,14 @@ document.addEventListener("DOMContentLoaded", () => {
     buildEvTable();
     buildMatchupsTable();
     buildMatchupAnalysisTool();
-    renderPropsTrends();
+    if (activeAppTabId() === "props") renderPropsTrends();
     syncLivePropBookLineAndOddsFromDk();
-    renderLivePropPredictor();
-    initHangoutSelectors(false);
-    scheduleHangoutSimulateDebounced();
-    buildCourseFitTab();
+    if (activeAppTabId() === "live-prop") renderLivePropPredictor();
+    if (activeAppTabId() === "hangout") {
+      initHangoutSelectors(false);
+      scheduleHangoutSimulateDebounced();
+    }
+    if (activeAppTabId() === "course-fit") buildCourseFitTab();
     void refreshForecastWeatherFromOpenMeteo().then((fwOk) => {
       if (fwOk) refreshPricingAffectedViews();
     });
