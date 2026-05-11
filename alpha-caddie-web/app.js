@@ -6308,7 +6308,7 @@ function drawCourseFitRadar(canvas, tour5, venue5, player5, similar5) {
   poly(tour5, "rgba(140,148,168,0.95)", null, [6, 4]);
   poly(venue5, "rgba(0,196,107,0.95)", "rgba(0,196,107,0.14)", []);
   if (similar5 && similar5.length === 5) {
-    poly(similar5, "rgba(90, 162, 255, 0.98)", "rgba(90, 162, 255, 0.14)", []);
+    poly(similar5, "rgba(156, 162, 180, 0.95)", "rgba(156, 162, 180, 0.12)", []);
   }
   poly(player5, "rgba(245,166,35,0.98)", "rgba(245,166,35,0.12)", []);
 

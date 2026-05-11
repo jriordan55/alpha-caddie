@@ -11,6 +11,16 @@
   --golf-text-muted: #8b8f9c;
   --golf-danger: #ff4d4f;
   --golf-ou-over: #ff8a8a;
+  /* Focus / selection — green family (replaces legacy blue chrome) */
+  --golf-focus-ring: rgba(0, 196, 107, 0.55);
+  --golf-focus-surface: rgba(0, 196, 107, 0.16);
+  --golf-focus-border: rgba(0, 196, 107, 0.45);
+  /* Panel surfaces — neutral charcoal (no blue cast) */
+  --golf-surface-deep: #0a0b0e;
+  --golf-surface-mid: #0d0e12;
+  --golf-surface-alt: #101116;
+  --golf-surface-head: #161820;
+  --golf-surface-hover: #181a20;
 }
 
 * { box-sizing: border-box; }
@@ -754,14 +764,14 @@ body {
   background: rgba(255, 255, 255, 0.06);
 }
 .course-fit-similar-li:focus-visible {
-  box-shadow: 0 0 0 2px rgba(90, 162, 255, 0.55);
+  box-shadow: 0 0 0 2px var(--golf-focus-ring);
 }
 .course-fit-similar-li-selected {
-  background: rgba(90, 162, 255, 0.18);
-  border-color: rgba(90, 162, 255, 0.45);
+  background: var(--golf-focus-surface);
+  border-color: var(--golf-focus-border);
 }
 .course-fit-similar-li-selected .course-fit-sim-score {
-  color: #9cc8ff;
+  color: var(--golf-green);
 }
 .course-fit-sim-rank {
   color: var(--golf-text-muted);
@@ -854,7 +864,7 @@ body {
   width: 14px;
   height: 14px;
   border-radius: 3px;
-  background: rgba(90, 162, 255, 0.98);
+  background: rgba(156, 162, 180, 0.95);
 }
 
 .course-fit-table-card {
@@ -1014,9 +1024,9 @@ body {
 }
 .course-fit-subtab.active {
   background: var(--golf-elevated);
-  color: #6eb7ff;
-  border-color: rgba(110, 183, 255, 0.45);
-  box-shadow: 0 -2px 0 #6eb7ff inset;
+  color: var(--golf-green);
+  border-color: var(--golf-focus-border);
+  box-shadow: 0 -2px 0 var(--golf-green) inset;
 }
 .course-fit-new-badge {
   display: inline-block;
@@ -1027,7 +1037,7 @@ body {
   letter-spacing: 0.06em;
   vertical-align: middle;
   border-radius: 4px;
-  background: #2563eb;
+  background: var(--golf-green-soft);
   color: #fff;
 }
 .course-fit-subpanel {
@@ -1275,8 +1285,8 @@ body {
   gap: 14px;
   padding: 10px 14px;
   border-radius: 12px;
-  background: linear-gradient(180deg, #0f141d 0%, #0b1018 100%);
-  border: 1px solid #1d2533;
+  background: linear-gradient(180deg, var(--golf-elevated) 0%, var(--golf-bg) 100%);
+  border: 1px solid var(--golf-border);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 .ou-toolbar-projections .ou-golfer-inline select#ou-player-filter {
@@ -1306,7 +1316,7 @@ body {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  background: #0a1019;
+  background: var(--golf-surface-deep);
 }
 #table-ou thead th {
   padding: 12px 12px;
@@ -1316,10 +1326,10 @@ body {
   white-space: nowrap;
   vertical-align: middle;
   line-height: 1.25;
-  color: #7f8ca5;
-  background: #121a27;
-  border-bottom: 1px solid #1b2638;
-  border-top: 1px solid #1b2638;
+  color: var(--golf-text-muted);
+  background: var(--golf-surface-head);
+  border-bottom: 1px solid var(--golf-border);
+  border-top: 1px solid var(--golf-border);
 }
 #table-ou thead th.sortable {
   white-space: nowrap;
@@ -1327,8 +1337,8 @@ body {
 #table-ou tbody td {
   padding: 11px 12px;
   vertical-align: middle;
-  border-bottom: 1px solid #162233;
-  background: #0c1320;
+  border-bottom: 1px solid var(--golf-border);
+  background: var(--golf-surface-mid);
 }
 #table-ou thead th:first-child,
 #table-ou tbody td:first-child {
@@ -1344,7 +1354,7 @@ body {
   font-size: 0.96rem;
   font-weight: 700;
   letter-spacing: 0.01em;
-  color: #eef3fb;
+  color: var(--golf-text);
 }
 #table-ou .ou-cell-edge {
   min-width: 0;
@@ -1364,7 +1374,7 @@ body {
 #table-ou .ou-proj-cell-edge {
   font-weight: 800;
   font-variant-numeric: tabular-nums;
-  color: #d4dbee;
+  color: var(--golf-text);
 }
 #table-ou td.ou-proj-cell-edge.pos { color: #1ecf77; }
 #table-ou td.ou-proj-cell-edge.neg { color: #ff646f; }
@@ -1407,22 +1417,22 @@ body {
 #table-ou.table-ou-projections tbody tr:nth-child(odd) td.ou-proj-td-golfer,
 #table-ou.table-ou-projections tbody tr:nth-child(odd) td.ou-proj-td-market,
 #table-ou.table-ou-projections tbody tr:nth-child(odd) td.ou-proj-td-side {
-  background-color: #0a111b;
+  background-color: var(--golf-surface-mid);
 }
 #table-ou.table-ou-projections tbody tr:nth-child(even) td.ou-proj-td-golfer,
 #table-ou.table-ou-projections tbody tr:nth-child(even) td.ou-proj-td-market,
 #table-ou.table-ou-projections tbody tr:nth-child(even) td.ou-proj-td-side {
-  background-color: #0d1420;
+  background-color: var(--golf-surface-alt);
 }
 #table-ou.table-ou-projections tbody tr:hover td.ou-proj-td-golfer,
 #table-ou.table-ou-projections tbody tr:hover td.ou-proj-td-market,
 #table-ou.table-ou-projections tbody tr:hover td.ou-proj-td-side {
-  background-color: #111c2a !important;
+  background-color: var(--golf-surface-hover) !important;
 }
 #table-ou.table-ou-projections tr.ou-proj-data-row.ou-proj-row-expanded td.ou-proj-td-golfer,
 #table-ou.table-ou-projections tr.ou-proj-data-row.ou-proj-row-expanded td.ou-proj-td-market,
 #table-ou.table-ou-projections tr.ou-proj-data-row.ou-proj-row-expanded td.ou-proj-td-side {
-  background-color: #101a28 !important;
+  background-color: var(--golf-elevated-soft) !important;
 }
 
 /* Round projections — long rows (golfer × market × Over|Under) */
@@ -1472,8 +1482,8 @@ body {
   height: 24px;
   border-radius: 5px;
   object-fit: contain;
-  background: #0e1522;
-  border: 1px solid #273248;
+  background: var(--golf-elevated-soft);
+  border: 1px solid var(--golf-border);
 }
 #table-ou.table-ou-projections .ou-proj-book-logo-fallback {
   display: none;
@@ -1482,12 +1492,12 @@ body {
   min-width: 24px;
   min-height: 24px;
   border-radius: 5px;
-  border: 1px solid #273248;
-  background: #121a27;
+  border: 1px solid var(--golf-border);
+  background: var(--golf-elevated-soft);
   font-size: 0.62rem;
   font-weight: 800;
   letter-spacing: 0.04em;
-  color: #53d88a;
+  color: var(--golf-green);
 }
 #table-ou.table-ou-projections .ou-proj-th-odds,
 #table-ou.table-ou-projections .ou-proj-td-odds {
@@ -1509,7 +1519,7 @@ body {
   padding: 20px 18px;
   font-size: 0.88rem;
   line-height: 1.45;
-  color: #8b95ab;
+  color: var(--golf-text-muted);
   text-align: left;
   white-space: pre-line;
 }
@@ -1518,15 +1528,15 @@ body {
   cursor: pointer;
 }
 #table-ou.table-ou-projections tr.ou-proj-data-row.ou-proj-row-expanded td {
-  background: #101a28 !important;
+  background: var(--golf-elevated-soft) !important;
 }
 #table-ou.table-ou-projections tr.ou-proj-data-row.ou-proj-row-expanded td:first-child {
   box-shadow: inset 3px 0 0 var(--golf-green);
 }
 #table-ou.table-ou-projections tr.ou-proj-detail-tr td.ou-proj-detail-td {
   padding: 0;
-  border-bottom: 1px solid #1b2838;
-  background: #0b1018;
+  border-bottom: 1px solid var(--golf-border);
+  background: var(--golf-bg);
   vertical-align: top;
 }
 #table-ou.table-ou-projections .ou-proj-detail-wrap {
@@ -1547,13 +1557,13 @@ body {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #8b95ab;
+  color: var(--golf-text-muted);
 }
 #table-ou.table-ou-projections .ou-proj-detail-sub {
   margin: 0 0 8px;
   font-size: 0.72rem;
   line-height: 1.35;
-  color: #6d7588;
+  color: var(--golf-text-muted);
 }
 #table-ou.table-ou-projections .ou-proj-detail-dl {
   margin: 0;
@@ -1565,12 +1575,12 @@ body {
 }
 #table-ou.table-ou-projections .ou-proj-detail-dl dt {
   margin: 0;
-  color: #7a8499;
+  color: var(--golf-text-muted);
   font-weight: 600;
 }
 #table-ou.table-ou-projections .ou-proj-detail-dl dd {
   margin: 0;
-  color: #e8ecf4;
+  color: var(--golf-text);
   font-variant-numeric: tabular-nums;
 }
 #table-ou.table-ou-projections .ou-proj-detail-legend {
@@ -1580,7 +1590,7 @@ body {
   margin-top: 8px;
   font-size: 0.65rem;
   font-weight: 600;
-  color: #8b95ab;
+  color: var(--golf-text-muted);
 }
 #table-ou.table-ou-projections .ou-proj-leg {
   display: inline-flex;
@@ -1623,7 +1633,7 @@ body {
   text-align: right;
   font-size: 0.68rem;
   line-height: 1.2;
-  color: #9da9bf;
+  color: var(--golf-text-muted);
   display: inline-flex;
   align-items: center;
   justify-content: flex-end;
@@ -1632,7 +1642,7 @@ body {
 #table-ou .ou-model-line {
   font-size: 0.64rem;
   margin-bottom: 4px;
-  color: #6d7b95;
+  color: var(--golf-text-muted);
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
@@ -1641,18 +1651,18 @@ body {
   font-size: 0.53rem;
 }
 #table-ou tbody tr:nth-child(odd) td {
-  background: #0a111b;
+  background: var(--golf-surface-mid);
 }
 #table-ou tbody tr:nth-child(even) td {
-  background: #0d1420;
+  background: var(--golf-surface-alt);
 }
 #table-ou tbody tr:hover td {
-  background: #111c2a !important;
+  background: var(--golf-surface-hover) !important;
 }
 #table-ou .ou-proj-mean {
   font-size: 1.04rem;
   font-weight: 800;
-  color: #f0f4fb;
+  color: var(--golf-text);
   letter-spacing: 0.015em;
   margin-bottom: 5px;
 }
@@ -1663,7 +1673,7 @@ body {
   color: #ff646f;
 }
 #table-ou .ou-edge-odds {
-  color: #d8deec;
+  color: var(--golf-text);
   font-weight: 700;
   font-size: 0.84rem;
 }
@@ -1674,9 +1684,9 @@ body {
   min-width: 18px;
   height: 18px;
   border-radius: 4px;
-  border: 1px solid #273248;
-  background: #121a27;
-  color: #a3afc5;
+  border: 1px solid var(--golf-border);
+  background: var(--golf-elevated-soft);
+  color: var(--golf-text-muted);
   font-size: 0.61rem;
   font-weight: 800;
   letter-spacing: 0.07em;
@@ -1689,8 +1699,8 @@ body {
   height: 18px;
   padding: 0 6px;
   border-radius: 4px;
-  border: 1px solid #273248;
-  background: #111827;
+  border: 1px solid var(--golf-border);
+  background: var(--golf-elevated);
   color: #f4ca3c;
   font-size: 0.68rem;
   font-weight: 800;
@@ -1698,13 +1708,13 @@ body {
 }
 #panel-ou .toolbar.weather-toolbar,
 #panel-ou .toolbar.pricing-toolbar {
-  background: linear-gradient(180deg, #0f141d 0%, #0b1018 100%);
-  border-color: #1d2533;
+  background: linear-gradient(180deg, var(--golf-elevated) 0%, var(--golf-bg) 100%);
+  border-color: var(--golf-border);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 #panel-ou .leaderboard-card.ou-table-card {
-  background: #0b111c;
-  border: 1px solid #1d2738;
+  background: var(--golf-elevated);
+  border: 1px solid var(--golf-border);
   border-radius: 12px;
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
@@ -3144,11 +3154,11 @@ th.matchup-analysis-best-pick {
   color: var(--golf-text-muted);
 }
 
-/* +EV Devig — electric blue accent (#007bff) to match reference */
+/* +EV Devig — primary actions use app green accent */
 .ev-devig-btn-toolbar {
   align-self: center;
-  background: #007bff;
-  border: 1px solid rgba(0, 123, 255, 0.95);
+  background: var(--golf-green);
+  border: 1px solid var(--golf-green-soft);
   color: #fff;
   font-weight: 600;
   font-size: 0.875rem;
@@ -3157,7 +3167,7 @@ th.matchup-analysis-best-pick {
   cursor: pointer;
   font-family: inherit;
   margin-left: 6px;
-  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.25);
+  box-shadow: 0 2px 8px rgba(0, 196, 107, 0.28);
 }
 .ev-devig-btn-toolbar:hover {
   filter: brightness(1.08);
@@ -3176,9 +3186,9 @@ th.matchup-analysis-best-pick {
   height: 28px;
   padding: 0;
   border-radius: 50%;
-  border: 1px solid rgba(0, 123, 255, 0.85);
-  background: rgba(0, 123, 255, 0.15);
-  color: #4da3ff;
+  border: 1px solid var(--golf-focus-border);
+  background: var(--golf-focus-surface);
+  color: var(--golf-green);
   font-size: 0.95rem;
   font-weight: 700;
   line-height: 1;
@@ -3186,7 +3196,7 @@ th.matchup-analysis-best-pick {
   font-family: inherit;
 }
 .ev-help-btn:hover {
-  background: rgba(0, 123, 255, 0.28);
+  background: rgba(0, 196, 107, 0.28);
   color: #fff;
 }
 .ev-help-dialog {
@@ -3223,7 +3233,7 @@ th.matchup-analysis-best-pick {
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #c5ccdc;
+  color: var(--golf-text);
 }
 .ev-help-dl dt:first-child {
   margin-top: 0;
@@ -3232,11 +3242,11 @@ th.matchup-analysis-best-pick {
   margin: 5px 0 0;
   font-size: 0.78rem;
   line-height: 1.45;
-  color: #8b93a5;
+  color: var(--golf-text-muted);
 }
 .ev-help-dl dd code {
   font-size: 0.9em;
-  color: #b8c0d0;
+  color: var(--golf-text-muted);
 }
 .ev-help-devig-lede {
   font-size: 0.78rem;
@@ -3257,8 +3267,8 @@ th.matchup-analysis-best-pick {
   padding: 0;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 14px;
-  background: #12161c;
-  color: #e8eaef;
+  background: var(--golf-elevated);
+  color: var(--golf-text);
   box-shadow: 0 28px 56px rgba(0, 0, 0, 0.55);
 }
 .ev-devig-dialog::backdrop {
@@ -3288,7 +3298,7 @@ th.matchup-analysis-best-pick {
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: #007bff;
+  color: var(--golf-green);
   font-size: 1.5rem;
   line-height: 1;
   cursor: pointer;
@@ -3296,14 +3306,14 @@ th.matchup-analysis-best-pick {
   font-weight: 300;
 }
 .ev-devig-close-x:hover {
-  color: #4da3ff;
-  background: rgba(0, 123, 255, 0.12);
+  color: #fff;
+  background: var(--golf-focus-surface);
 }
 .ev-devig-lede {
   font-size: 0.78rem;
   line-height: 1.5;
   margin: 0 0 16px;
-  color: #8b93a5;
+  color: var(--golf-text-muted);
 }
 .ev-devig-toolbar-row {
   display: flex;
@@ -3357,16 +3367,16 @@ th.matchup-analysis-best-pick {
   margin: -8px 0 18px;
   font-size: 0.78rem;
   line-height: 1.45;
-  color: #8b93a5;
+  color: var(--golf-text-muted);
 }
 .ev-devig-method-help summary {
   cursor: pointer;
   font-weight: 600;
-  color: #a8b0c4;
+  color: var(--golf-text);
   list-style-position: outside;
 }
 .ev-devig-method-help summary:hover {
-  color: #c5ccdc;
+  color: var(--golf-green);
 }
 .ev-devig-method-help-body {
   margin-top: 10px;
@@ -3382,7 +3392,7 @@ th.matchup-analysis-best-pick {
 .ev-devig-method-help-body dt {
   margin-top: 8px;
   font-weight: 700;
-  color: #c5ccdc;
+  color: var(--golf-text);
   font-size: 0.72rem;
 }
 .ev-devig-method-help-body dt:first-child {
@@ -3408,7 +3418,7 @@ th.matchup-analysis-best-pick {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #5a6a85;
+  color: var(--golf-text-muted);
 }
 .ev-devig-section-hint {
   font-size: 0.72rem;
@@ -3449,8 +3459,8 @@ th.matchup-analysis-best-pick {
 }
 .ev-devig-market-row input:checked + .ev-devig-radio-dot,
 .ev-devig-split-mode-row input:checked + .ev-devig-radio-dot {
-  border-color: #007bff;
-  background: #007bff;
+  border-color: var(--golf-green);
+  background: var(--golf-green);
   box-shadow: inset 0 0 0 3px #0d1014;
 }
 
@@ -3479,11 +3489,11 @@ th.matchup-analysis-best-pick {
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 .ev-devig-tile:hover {
-  border-color: rgba(0, 123, 255, 0.45);
+  border-color: var(--golf-focus-border);
 }
 .ev-devig-tile.selected {
-  border-color: #007bff;
-  box-shadow: 0 0 0 1px #007bff;
+  border-color: var(--golf-green);
+  box-shadow: 0 0 0 1px var(--golf-green);
 }
 .ev-devig-tile-logo-wrap {
   width: 32px;
@@ -3508,7 +3518,7 @@ th.matchup-analysis-best-pick {
   min-height: 24px;
   font-size: 0.65rem;
   font-weight: 700;
-  color: #8b93a5;
+  color: var(--golf-text-muted);
 }
 .ev-devig-tile-short {
   font-size: 0.68rem;
@@ -3537,12 +3547,12 @@ th.matchup-analysis-best-pick {
   background: #252c36;
 }
 .ev-devig-pill-accent {
-  background: rgba(0, 123, 255, 0.2);
-  border-color: rgba(0, 123, 255, 0.55);
-  color: #7eb8ff;
+  background: rgba(0, 196, 107, 0.2);
+  border-color: rgba(0, 196, 107, 0.55);
+  color: #7dffc4;
 }
 .ev-devig-pill-accent:hover {
-  background: rgba(0, 123, 255, 0.3);
+  background: rgba(0, 196, 107, 0.32);
 }
 
 .ev-devig-split-list {
@@ -3577,7 +3587,7 @@ th.matchup-analysis-best-pick {
 .ev-devig-split-check input {
   width: 16px;
   height: 16px;
-  accent-color: #007bff;
+  accent-color: var(--golf-green);
   flex-shrink: 0;
 }
 .ev-devig-split-logo {
@@ -3634,8 +3644,8 @@ th.matchup-analysis-best-pick {
   justify-content: flex-end;
 }
 .ev-devig-btn-apply {
-  background: #007bff;
-  border: 1px solid rgba(0, 123, 255, 0.95);
+  background: var(--golf-green);
+  border: 1px solid var(--golf-green-soft);
   color: #fff;
   font-weight: 600;
   font-size: 0.875rem;
@@ -3643,7 +3653,7 @@ th.matchup-analysis-best-pick {
   border-radius: 10px;
   cursor: pointer;
   font-family: inherit;
-  box-shadow: 0 2px 10px rgba(0, 123, 255, 0.3);
+  box-shadow: 0 2px 10px rgba(0, 196, 107, 0.32);
 }
 .ev-devig-btn-apply:hover {
   filter: brightness(1.08);
