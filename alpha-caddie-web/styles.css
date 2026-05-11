@@ -145,6 +145,63 @@ body {
   display: block;
   min-width: 0;
   width: 100%;
+  position: relative;
+}
+.golfer-suggest-anchor {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 100%;
+}
+.golfer-suggest-panel {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 4px);
+  z-index: 80;
+  min-width: 100%;
+  width: max-content;
+  max-width: min(100vw - 32px, 22rem);
+  max-height: 280px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--golf-elevated);
+  border: 1px solid var(--golf-card-border);
+  border-radius: 10px;
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+}
+.golfer-suggest-item {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--golf-text);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.golfer-suggest-item:hover,
+.golfer-suggest-item:focus-visible {
+  background: var(--golf-surface-hover);
+  outline: none;
+}
+.golfer-suggest-item:focus-visible {
+  box-shadow: inset 0 0 0 1px var(--golf-focus-border);
+}
+.toolbar .ou-golfer-inline .golfer-suggest-anchor {
+  margin-left: 8px;
+}
+.toolbar .ou-golfer-inline .golfer-suggest-anchor .golfer-combobox-input {
+  margin-left: 0;
 }
 .golfer-combobox-input {
   box-sizing: border-box;
@@ -1316,6 +1373,9 @@ body {
   background: linear-gradient(180deg, var(--golf-elevated) 0%, var(--golf-bg) 100%);
   border: 1px solid var(--golf-border);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  position: relative;
+  z-index: 2;
+  overflow: visible;
 }
 .ou-toolbar-projections .ou-golfer-inline input#ou-player-filter {
   min-width: 180px;
@@ -1407,13 +1467,25 @@ body {
 #table-ou td.ou-proj-cell-edge.pos { color: #1ecf77; }
 #table-ou td.ou-proj-cell-edge.neg { color: #ff646f; }
 
-#table-ou.table-ou-projections thead th.ou-proj-th-golfer,
 #table-ou.table-ou-projections thead th.ou-proj-th-market,
 #table-ou.table-ou-projections thead th.ou-proj-th-side,
-#table-ou.table-ou-projections tbody td.ou-proj-td-golfer,
 #table-ou.table-ou-projections tbody td.ou-proj-td-market,
 #table-ou.table-ou-projections tbody td.ou-proj-td-side {
   position: static;
+}
+
+/* Freeze golfer column while scrolling wide round projections */
+#table-ou.table-ou-projections thead th.ou-proj-th-golfer,
+#table-ou.table-ou-projections tbody td.ou-proj-td-golfer {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  box-shadow: 6px 0 18px -8px rgba(0, 0, 0, 0.75);
+}
+#table-ou.table-ou-projections thead th.ou-proj-th-golfer {
+  z-index: 4;
+  background: var(--golf-surface-head) !important;
 }
 
 #table-ou.table-ou-projections thead th.ou-proj-th-golfer,
@@ -2177,7 +2249,12 @@ th.matchup-analysis-best-pick {
   color: var(--golf-text-muted);
 }
 .outrights-intro { margin: 0 0 10px; max-width: 52rem; }
-.outrights-toolbar { margin-bottom: 12px; }
+.outrights-toolbar {
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 2;
+  overflow: visible;
+}
 .outrights-table-wrap { overflow-x: clip; -webkit-overflow-scrolling: touch; }
 .data-table-outrights {
   font-size: 0.75rem;

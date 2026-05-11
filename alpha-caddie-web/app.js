@@ -3702,16 +3702,15 @@ function buildOuTable() {
 
   const allRows = ouSortedPlayerRowsProjection(round);
   const pf = document.getElementById("ou-player-filter");
-  const dl = document.getElementById("ou-player-filter-datalist");
+  const suggPanel = document.getElementById("ou-player-filter-suggest");
   const prevQ = pf && pf instanceof HTMLInputElement ? String(pf.value || "").trim().toLowerCase() : "";
-  if (pf && pf instanceof HTMLInputElement && dl) {
-    dl.innerHTML = "";
-    for (const p of allRows) {
-      const nm = String(p.player_name || "");
-      const opt = document.createElement("option");
-      opt.value = displayGolferName(nm);
-      dl.appendChild(opt);
-    }
+  if (pf && pf instanceof HTMLInputElement && suggPanel) {
+    const labels = [...new Set(allRows.map((p) => displayGolferName(String(p.player_name || ""))))]
+      .filter(Boolean)
+      .sort((a, b) => a.localeCompare(b));
+    golferSuggestWriteLabels(suggPanel, labels);
+    suggPanel.innerHTML = "";
+    suggPanel.hidden = true;
     if (prevQ && !allRows.some((p) => golferNameMatchesQuery(String(p.player_name || ""), prevQ))) pf.value = "";
   }
   const q = pf && pf instanceof HTMLInputElement ? String(pf.value || "").trim().toLowerCase() : "";
@@ -8017,7 +8016,133 @@ function golferNameMatchesQuery(nameRaw, qLower) {
   return parts.every((t) => disp.includes(t) || raw.includes(t));
 }
 
-/** `select` + `#${id}-search` + `#${id}-datalist` — wire once after DOM. */
+/** Themed custom list (native `<datalist>` popups cannot match dark UI). */
+const GOLFER_SUGGEST_PANEL_MAX = 80;
+
+function golferSuggestReadLabels(panel) {
+  if (!panel) return [];
+  const raw = /** @type {{ _golferSuggestLabels?: string[] }} */ (/** @type {unknown} */ (panel))._golferSuggestLabels;
+  return Array.isArray(raw) ? raw : [];
+}
+
+function golferSuggestWriteLabels(panel, labels) {
+  if (!panel) return;
+  /** @type {{ _golferSuggestLabels?: string[] }} */ (/** @type {unknown} */ (panel))._golferSuggestLabels = labels;
+}
+
+function filterGolferSuggestLabels(names, qRaw) {
+  const q = String(qRaw || "").trim().toLowerCase();
+  if (!q) return names.slice(0, GOLFER_SUGGEST_PANEL_MAX);
+  const out = [];
+  for (const name of names) {
+    if (golferNameMatchesQuery(name, q)) out.push(name);
+    if (out.length >= GOLFER_SUGGEST_PANEL_MAX) break;
+  }
+  return out;
+}
+
+function hideOpenGolferSuggestPanels() {
+  document.querySelectorAll(".golfer-suggest-panel").forEach((p) => {
+    p.hidden = true;
+    p.innerHTML = "";
+  });
+}
+
+function renderOpenGolferSuggestPanel(panel, labels, onPick) {
+  if (!panel) return;
+  panel.innerHTML = "";
+  if (!labels.length) {
+    panel.hidden = true;
+    return;
+  }
+  for (const lab of labels) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "golfer-suggest-item";
+    b.setAttribute("role", "option");
+    b.textContent = lab;
+    b.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      onPick(lab);
+    });
+    panel.appendChild(b);
+  }
+  panel.hidden = false;
+}
+
+let golferSuggestGlobalPointerWired = false;
+function wireGolferSuggestGlobalDismissOnce() {
+  if (golferSuggestGlobalPointerWired) return;
+  golferSuggestGlobalPointerWired = true;
+  document.addEventListener(
+    "pointerdown",
+    (ev) => {
+      const t = ev.target;
+      if (!(t instanceof Element)) return;
+      if (t.closest(".golfer-suggest-panel") || t.closest(".golfer-suggest-anchor")) return;
+      hideOpenGolferSuggestPanels();
+    },
+    true,
+  );
+}
+
+function openGolferSuggestForSearchInput(search, panel, onPickFromList) {
+  const labels = golferSuggestReadLabels(panel);
+  const q = String(search.value || "");
+  const picked = filterGolferSuggestLabels(labels, q);
+  renderOpenGolferSuggestPanel(panel, picked, (lab) => {
+    search.value = lab;
+    hideOpenGolferSuggestPanels();
+    onPickFromList(lab);
+  });
+}
+
+function wireOuPlayerFilterSuggestOnce() {
+  const search = document.getElementById("ou-player-filter");
+  const panel = document.getElementById("ou-player-filter-suggest");
+  if (!search || !panel || !(search instanceof HTMLInputElement) || search.dataset.golferSuggestWired === "1") return;
+  search.dataset.golferSuggestWired = "1";
+  wireGolferSuggestGlobalDismissOnce();
+  const refreshPanel = () =>
+    openGolferSuggestForSearchInput(search, panel, () => {
+      ouProjExpandedKey = "";
+      buildOuTable();
+    });
+  search.addEventListener("focus", refreshPanel);
+  search.addEventListener("input", refreshPanel);
+  search.addEventListener("blur", () => {
+    setTimeout(() => {
+      if (panel.contains(document.activeElement)) return;
+      panel.hidden = true;
+      panel.innerHTML = "";
+    }, 160);
+  });
+}
+
+function wireGolferSuggestComboOnce(selectId) {
+  const search = document.getElementById(`${selectId}-search`);
+  const panel = document.getElementById(`${selectId}-suggest`);
+  const sel = document.getElementById(selectId);
+  if (!search || !panel || !sel || search.dataset.golferSuggestWired === "1") return;
+  search.dataset.golferSuggestWired = "1";
+  wireGolferSuggestGlobalDismissOnce();
+  const refreshPanel = () =>
+    openGolferSuggestForSearchInput(search, panel, () => {
+      commitGolferComboSearchToSelect(selectId);
+      sel.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+  search.addEventListener("focus", refreshPanel);
+  search.addEventListener("input", refreshPanel);
+  search.addEventListener("blur", () => {
+    setTimeout(() => {
+      if (panel.contains(document.activeElement)) return;
+      panel.hidden = true;
+      panel.innerHTML = "";
+    }, 160);
+  });
+}
+
+/** `select` + `#${id}-search` + `#${id}-suggest` panel — wire once after DOM. */
 const GOLFER_COMBO_SELECT_IDS = ["prop-golfer", "live-prop-golfer", "course-fit-player", "hh-player", "ev-filter-golfer"];
 
 function syncGolferComboSearchFromSelect(selectId) {
@@ -8053,17 +8178,15 @@ function commitGolferComboSearchToSelect(selectId) {
 
 function refreshGolferComboboxFromSelect(selectId) {
   const sel = document.getElementById(selectId);
-  const dl = document.getElementById(`${selectId}-datalist`);
+  const panel = document.getElementById(`${selectId}-suggest`);
   const search = document.getElementById(`${selectId}-search`);
-  if (!sel || !dl) return;
-  dl.innerHTML = "";
-  for (const o of sel.querySelectorAll("option")) {
-    const label = String(o.textContent || "").trim();
-    if (!label) continue;
-    const opt = document.createElement("option");
-    opt.value = label;
-    dl.appendChild(opt);
-  }
+  if (!sel || !panel) return;
+  const labels = [...sel.querySelectorAll("option")]
+    .map((o) => String(o.textContent || "").trim())
+    .filter(Boolean);
+  golferSuggestWriteLabels(panel, labels);
+  panel.innerHTML = "";
+  panel.hidden = true;
   if (!search || document.activeElement !== search) syncGolferComboSearchFromSelect(selectId);
 }
 
@@ -8082,7 +8205,11 @@ function wireGolferSearchCombo(selectId) {
 }
 
 function wireAllGolferSearchCombosOnce() {
-  for (const id of GOLFER_COMBO_SELECT_IDS) wireGolferSearchCombo(id);
+  wireGolferSuggestGlobalDismissOnce();
+  for (const id of GOLFER_COMBO_SELECT_IDS) {
+    wireGolferSearchCombo(id);
+    wireGolferSuggestComboOnce(id);
+  }
 }
 
 function ouResolveSinglePlayerRowFromFilter(allRows, qTrim) {
@@ -12694,6 +12821,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initOutrightsTableSortOnce();
   initEvTableSortOnce();
   wireAllGolferSearchCombosOnce();
+  wireOuPlayerFilterSuggestOnce();
   document.getElementById("course-fit-venue")?.addEventListener("change", (e) => {
     const v = String(/** @type {HTMLSelectElement} */ (e.target).value || "").trim();
     courseFitVenueFilterKey = v || null;

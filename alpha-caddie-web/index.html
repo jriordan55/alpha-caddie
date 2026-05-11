@@ -55,16 +55,18 @@
               </select>
             </label>
             <label class="toolbar-label ou-filter-field ou-golfer-inline">Golfer
-              <input
-                type="search"
-                id="ou-player-filter"
-                class="golfer-combobox-input"
-                list="ou-player-filter-datalist"
-                placeholder="Search golfer…"
-                title="Type to filter the table; pick a suggestion or clear for all golfers"
-                autocomplete="off"
-              />
-              <datalist id="ou-player-filter-datalist"></datalist>
+              <span class="golfer-suggest-anchor">
+                <input
+                  type="search"
+                  id="ou-player-filter"
+                  class="golfer-combobox-input"
+                  placeholder="Search golfer…"
+                  title="Type to filter the table; pick a suggestion or clear for all golfers"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <div id="ou-player-filter-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Golfer suggestions"></div>
+              </span>
             </label>
             <label class="toolbar-label ou-filter-field">Market
               <select id="ou-proj-market-filter" title="Filter table to one stat market">
@@ -253,17 +255,17 @@
             </label>
           </div>
           <label class="props-sidebar-label">Golfer
-            <div class="golfer-combobox-wrap">
+            <div class="golfer-combobox-wrap golfer-suggest-anchor">
               <input
                 type="search"
                 id="prop-golfer-search"
                 class="golfer-combobox-input"
-                list="prop-golfer-datalist"
                 placeholder="Search golfer…"
                 autocomplete="off"
+                spellcheck="false"
                 aria-label="Golfer"
               />
-              <datalist id="prop-golfer-datalist"></datalist>
+              <div id="prop-golfer-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Golfer suggestions"></div>
               <select id="prop-golfer" hidden></select>
             </div>
           </label>
@@ -336,17 +338,17 @@
                 <select id="course-fit-venue" aria-label="Course for radar and similarity"></select>
               </label>
               <label class="course-fit-sidebar-label">Golfer
-                <div class="golfer-combobox-wrap">
+                <div class="golfer-combobox-wrap golfer-suggest-anchor">
                   <input
                     type="search"
                     id="course-fit-player-search"
                     class="golfer-combobox-input"
-                    list="course-fit-player-datalist"
                     placeholder="Search golfer…"
                     autocomplete="off"
+                    spellcheck="false"
                     aria-label="Golfer for radar overlay"
                   />
-                  <datalist id="course-fit-player-datalist"></datalist>
+                  <div id="course-fit-player-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Golfer suggestions"></div>
                   <select id="course-fit-player" aria-label="Golfer for radar overlay" hidden></select>
                 </div>
               </label>
@@ -462,17 +464,17 @@
           <h3 class="live-prop-card-title">Inputs</h3>
           <div class="live-prop-form-grid">
             <label class="toolbar-label live-prop-field-span">Golfer
-              <div class="golfer-combobox-wrap">
+              <div class="golfer-combobox-wrap golfer-suggest-anchor">
                 <input
                   type="search"
                   id="live-prop-golfer-search"
                   class="live-prop-input golfer-combobox-input"
-                  list="live-prop-golfer-datalist"
                   placeholder="Search golfer…"
                   autocomplete="off"
+                  spellcheck="false"
                   aria-label="Golfer"
                 />
-                <datalist id="live-prop-golfer-datalist"></datalist>
+                <div id="live-prop-golfer-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Golfer suggestions"></div>
                 <select id="live-prop-golfer" class="live-prop-input" hidden></select>
               </div>
             </label>
@@ -570,17 +572,17 @@
       </div>
       <div class="toolbar outrights-toolbar">
         <label class="toolbar-label">Golfer
-          <div class="golfer-combobox-wrap">
+          <div class="golfer-combobox-wrap golfer-suggest-anchor">
             <input
               type="search"
               id="ev-filter-golfer-search"
               class="golfer-combobox-input"
-              list="ev-filter-golfer-datalist"
               placeholder="Search golfer…"
               autocomplete="off"
+              spellcheck="false"
               aria-label="Filter by golfer"
             />
-            <datalist id="ev-filter-golfer-datalist"></datalist>
+            <div id="ev-filter-golfer-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Golfer suggestions"></div>
             <select id="ev-filter-golfer" hidden>
               <option value="">All</option>
             </select>
@@ -811,17 +813,17 @@
             <select id="hh-hole" title="Par from venue scorecard (hole_pars)"></select>
           </label>
           <label>Player
-            <div class="golfer-combobox-wrap">
+            <div class="golfer-combobox-wrap golfer-suggest-anchor">
               <input
                 type="search"
                 id="hh-player-search"
                 class="golfer-combobox-input"
-                list="hh-player-datalist"
                 placeholder="Search player…"
                 autocomplete="off"
+                spellcheck="false"
                 aria-label="Player"
               />
-              <datalist id="hh-player-datalist"></datalist>
+              <div id="hh-player-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Player suggestions"></div>
               <select id="hh-player" title="Field for the round selected on Round projections" hidden></select>
             </div>
           </label>
