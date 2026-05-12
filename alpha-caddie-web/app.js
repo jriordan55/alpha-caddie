@@ -279,7 +279,6 @@ function buildDemoOutrightsFromPlayers(players) {
     "borgata",
     "betway",
     "caesars",
-    "datagolf",
     "draftkings",
     "fanduel",
     "pointsbet",
@@ -725,7 +724,6 @@ function buildDemoMatchupsFromPlayers(players) {
       ties: "void",
       odds: {
         draftkings: { p1: d1, p2: d2 },
-        datagolf: { p1: +(1 / p1w).toFixed(3), p2: +(1 / (1 - p1w)).toFixed(3) },
       },
     });
   }
@@ -4703,30 +4701,7 @@ function matchupConsensusSide(oddsObj, sideKey, prefs) {
   return blend;
 }
 
-function matchupDatagolfDecimalForSide(oddsObj, sideKey) {
-  const pack = oddsObj && typeof oddsObj === "object" ? oddsObj.datagolf : null;
-  const d = num(pack?.[sideKey], NaN);
-  return Number.isFinite(d) && d > 1 ? d : NaN;
-}
-
-function matchupDatagolfProbForSide(oddsObj, sideKey) {
-  const want = String(sideKey || "").toLowerCase();
-  if (!["p1", "p2", "p3"].includes(want)) return NaN;
-  const sides = ["p1", "p2", "p3"];
-  const qs = [];
-  for (const side of sides) {
-    const d = matchupDatagolfDecimalForSide(oddsObj, side);
-    qs.push(Number.isFinite(d) ? 1 / d : NaN);
-  }
-  const need = want === "p3" ? 3 : 2;
-  const finite = qs.slice(0, need).filter((q) => Number.isFinite(q) && q > 0);
-  if (finite.length !== need) return NaN;
-  const sum = finite.reduce((a, b) => a + b, 0);
-  if (sum <= 0) return NaN;
-  return qs[sides.indexOf(want)] / sum;
-}
-
-function matchupMarketProbWithFallback(oddsObj, filteredOddsObj, sideKey, prefs, isThree = false) {
+function matchupMarketProbWithFallback(filteredOddsObj, sideKey, prefs, isThree = false) {
   const p = isThree
     ? matchupConsensusThreeWaySide(filteredOddsObj, sideKey, prefs)
     : matchupConsensusSide(filteredOddsObj, sideKey, prefs);
@@ -5726,9 +5701,9 @@ function buildMatchupAnalysisTool() {
     const mu3 = effectiveMuSg(row3, id3, key);
     if (isThree) {
       const [p1, p2, p3] = threeBallModelProbsLiveBlended(mu1, mu2, mu3, row1, row2, row3);
-      const mp1 = matchupMarketProbWithFallback(odds, oddsEv, "p1", devigPrefs, true);
-      const mp2 = matchupMarketProbWithFallback(odds, oddsEv, "p2", devigPrefs, true);
-      const mp3 = matchupMarketProbWithFallback(odds, oddsEv, "p3", devigPrefs, true);
+      const mp1 = matchupMarketProbWithFallback(oddsEv, "p1", devigPrefs, true);
+      const mp2 = matchupMarketProbWithFallback(oddsEv, "p2", devigPrefs, true);
+      const mp3 = matchupMarketProbWithFallback(oddsEv, "p3", devigPrefs, true);
       const ev1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
       const ev2 = Number.isFinite(b2.dec) ? p2 * b2.dec - 1 : NaN;
       const ev3 = Number.isFinite(b3.dec) ? p3 * b3.dec - 1 : NaN;
@@ -5774,8 +5749,8 @@ function buildMatchupAnalysisTool() {
     }
     const p1 = matchupWinProbLiveBlended(mu1, mu2, key, row1, row2);
     const p2 = 1 - p1;
-    const marketP1 = matchupMarketProbWithFallback(odds, oddsEv, "p1", devigPrefs, false);
-    const marketP2 = matchupMarketProbWithFallback(odds, oddsEv, "p2", devigPrefs, false);
+    const marketP1 = matchupMarketProbWithFallback(oddsEv, "p1", devigPrefs, false);
+    const marketP2 = matchupMarketProbWithFallback(oddsEv, "p2", devigPrefs, false);
     const ev1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
     const ev2 = Number.isFinite(b2.dec) ? p2 * b2.dec - 1 : NaN;
     const best =

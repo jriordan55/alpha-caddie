@@ -419,12 +419,12 @@ function mergeScrapedOutrightsIntoMarket(existingPack, scrapedPack) {
     for (const bk of scrapedPack.bookKeys || []) {
       if (String(bk).toLowerCase() === "draftkings" && !useScrapedDraftKings) continue;
       const pct = num(r[bk], NaN);
-      if (Number.isFinite(pct) && pct > 0) out[bk] = pct;
+      if (Number.isFinite(pct) && pct !== 0) out[bk] = pct;
     }
     baseById.set(id, out);
   }
   const rows = [...baseById.values()];
-  const bookKeys = new Set(Array.isArray(existingPack?.bookKeys) ? existingPack.bookKeys.map((bk) => String(bk).toLowerCase()) : ["datagolf"]);
+  const bookKeys = new Set(Array.isArray(existingPack?.bookKeys) ? existingPack.bookKeys.map((bk) => String(bk).toLowerCase()) : []);
   for (const bk of scrapedPack.bookKeys || []) {
     const k = String(bk).toLowerCase();
     if (k === "draftkings" && !useScrapedDraftKings) continue;
@@ -468,6 +468,27 @@ function removeBookFromOutrights(outrights, bookKey) {
       ? pack.bookKeys.filter((k) => String(k).toLowerCase() !== want)
       : pack.bookKeys;
     next[market] = { ...pack, rows, bookKeys };
+  }
+  return next;
+}
+
+function removeBookFromMatchups(matchups, bookKey) {
+  const want = String(bookKey || "").toLowerCase();
+  const next = { ...(matchups && typeof matchups === "object" ? matchups : {}) };
+  for (const [market, pack] of Object.entries(next)) {
+    if (!pack || typeof pack !== "object") continue;
+    const matchList = Array.isArray(pack.match_list)
+      ? pack.match_list.map((matchup) => {
+          const odds = matchup?.odds && typeof matchup.odds === "object" ? { ...matchup.odds } : matchup?.odds;
+          if (odds && typeof odds === "object") {
+            for (const k of Object.keys(odds)) {
+              if (String(k).toLowerCase() === want) delete odds[k];
+            }
+          }
+          return { ...matchup, odds };
+        })
+      : pack.match_list;
+    next[market] = { ...pack, match_list: matchList };
   }
   return next;
 }
@@ -670,7 +691,7 @@ async function main() {
         { tour: tourForFeeds, market: m, odds_format: "decimal", file_format: "json" },
         key
       );
-      if (raw && typeof raw === "object") matchups[m] = raw;
+      if (raw && typeof raw === "object") matchups[m] = removeBookFromMatchups({ [m]: raw }, "datagolf")[m];
     } catch (e) {
       console.warn(`Matchups ${m} skipped:`, e.message);
     }
@@ -679,7 +700,7 @@ async function main() {
   const next = {
     ...payload,
     outrights,
-    matchups,
+    matchups: removeBookFromMatchups(matchups, "datagolf"),
     outrights_odds_format: outrightsOddsFormat,
     matchups_odds_format: "decimal",
     updated_at: new Date().toISOString().replace(/\.\d{3}Z$/, "Z"),
