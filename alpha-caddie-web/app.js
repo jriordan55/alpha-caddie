@@ -2336,6 +2336,9 @@ function weatherWaveForecastBannerInnerHtml(morningSnap, afternoonSnap) {
     }
   }
   if (!bits.length) return "";
+  bits.push(
+    `<div class="weather-wave-line"><span class="weather-wave-copy"><strong class="weather-wave-kicker">Note</strong><span class="weather-wave-sep"> · </span><span class="weather-wave-stats">Odds are synthetic until DraftKings odds open.</span></span></div>`,
+  );
   return `<div class="weather-wave-banner-inner">${bits.join("")}</div>`;
 }
 
@@ -2454,7 +2457,7 @@ function finalizeForecastWaveSummary(hourlyOrNull) {
 
 function syncForecastWaveBannerTexts() {
   const fallback =
-    "Morning and afternoon snapshots appear once the venue forecast loads (mapped course + tee times when available).";
+    "Morning and afternoon snapshots appear once the venue forecast loads. Odds are synthetic until DraftKings odds open.";
   const slots = DATA.meta?.forecast_wave_slots;
   const morning = slots && typeof slots === "object" ? slots.morning : null;
   const afternoon = slots && typeof slots === "object" ? slots.afternoon : null;
