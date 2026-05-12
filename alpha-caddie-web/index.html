@@ -1006,7 +1006,7 @@
           <dt>Boost / Boost %</dt>
           <dd>Turn on when a promo boosts profit on winning bets; Model EV and displayed odds follow the boost.</dd>
           <dt>Devig</dt>
-          <dd>Opens book selection, weights, and devig method for <strong>EV</strong>, <strong>Kelly</strong>, and the <strong>CS</strong> column. Tap <strong>Apply &amp; rescan</strong> after changes.</dd>
+          <dd>Opens book selection, weights, and devig method for <strong>EV</strong>, <strong>Kelly</strong>, and the <strong>CS</strong> column. Books selected for devig are hidden as bet offers. Tap <strong>Apply &amp; rescan</strong> after changes.</dd>
         </dl>
       </section>
 
@@ -1039,7 +1039,7 @@
       <section class="ev-help-section" aria-labelledby="ev-help-devig-h">
         <h4 class="ev-devig-section-title" id="ev-help-devig-h">Devig settings</h4>
         <p class="text-muted ev-help-devig-lede">
-          Open <strong>Devig</strong> to choose which books feed <strong>EV</strong>, <strong>Kelly</strong>, and <strong>CS</strong>, split weights between them, and (for head-to-heads) pick a <strong>method</strong> that nudges consensus tighter or looser versus the board. Win and place markets use the selected books without that matchup-only control.
+          Open <strong>Devig</strong> to choose which books feed <strong>EV</strong>, <strong>Kelly</strong>, and <strong>CS</strong>, split weights between them, and (for head-to-heads) pick a <strong>method</strong> that nudges consensus tighter or looser versus the board. Selected devig books are hidden from the bet offers so you do not bet into the same book used as the fair source.
         </p>
         <p class="text-muted ev-help-devig-lede">
           <strong>Tip:</strong> Try <strong>Average</strong> or <strong>Multiplicative</strong> first. Use <strong>Worst case</strong> when you want a cautious read on an edge.
@@ -1285,6 +1285,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=107"></script>
+  <script src="app.js?v=108"></script>
 </body>
 </html>

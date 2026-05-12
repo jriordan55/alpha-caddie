@@ -4528,6 +4528,16 @@ function evDevigAffectsEvAndKelly(prefs) {
   return method !== "none" || prefs.consensusMode === "single" || prefs.consensusMode === "split";
 }
 
+function evDevigOfferExcludedBooks(prefs) {
+  if (!prefs || !["single", "split"].includes(prefs.consensusMode)) return new Set();
+  return new Set(sanitizeEvDevigBookList(prefs.books || []));
+}
+
+function evBookExcludedAsOfferByDevig(bookRaw, prefs) {
+  const k = sanitizeEvDevigBookKey(bookRaw);
+  return Boolean(k && evDevigOfferExcludedBooks(prefs).has(k));
+}
+
 function sanitizeEvDevigBookKey(bookRaw) {
   const k = normalizeEvSportsbookKey(bookRaw);
   return evSportsbookAllowed(k) ? k : "";
@@ -4740,7 +4750,11 @@ function matchupMarketProbWithFallback(filteredOddsObj, sideKey, prefs, isThree 
 }
 
 function bestBookDecimalForSideWithFallback(oddsObj, sideKey, prefs, opts = {}) {
-  const best = bestBookDecimalForSide(filterOddsObjectForEvSportsbooks(oddsObj || {}, opts), sideKey, opts);
+  const filtered = filterOddsObjectForEvSportsbooks(oddsObj || {}, opts);
+  for (const bk of Object.keys(filtered)) {
+    if (evBookExcludedAsOfferByDevig(bk, prefs)) delete filtered[bk];
+  }
+  const best = bestBookDecimalForSide(filtered, sideKey, opts);
   if (Number.isFinite(best.dec) && best.dec > 1) return best;
   return best;
 }
@@ -5107,6 +5121,7 @@ function collectUnifiedEvRows() {
   const rOut = getModelRoundForEv();
   const evLbOpts = outrightEvLiveLeaderboardModelEnabled() ? { evLiveLeaderboard: true } : {};
   if (evLbOpts.evLiveLeaderboard) ensureOutrightEvLiveLeaderboardProbCache();
+  const devigOfferExcludedBooks = evDevigOfferExcludedBooks(devigPrefs);
   for (const mk of ["win", "top_5", "top_10", "top_20", "make_cut", "mc", "frl"]) {
     const pack = opack[mk];
     if (!pack || !Array.isArray(pack.rows)) continue;
@@ -5148,6 +5163,7 @@ function collectUnifiedEvRows() {
         mk === "mc" ? "Miss Cut" : mk === "make_cut" ? "Make Cut" : mk === "frl" ? "FRL" : mk.replace("_", " ").toUpperCase();
       for (const bk of books) {
         const bkNorm = normalizeEvSportsbookKey(bk);
+        if (devigOfferExcludedBooks.has(bkNorm)) continue;
         const pct = impliedPctFromOutrightBookField(row[bk] ?? row[bkNorm]);
         if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
         const pBook = pct / 100;
