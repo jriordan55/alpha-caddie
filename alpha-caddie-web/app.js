@@ -4288,6 +4288,11 @@ function evSportsbookAllowed(bookRaw, opts = {}) {
   return EV_ALLOWED_SPORTSBOOKS.has(normalizeEvSportsbookKey(bookRaw));
 }
 
+function evDevigSportsbookAllowed(bookRaw) {
+  const k = normalizeEvSportsbookKey(bookRaw);
+  return k === "datagolf" || EV_ALLOWED_SPORTSBOOKS.has(k);
+}
+
 function filterOddsObjectForEvSportsbooks(oddsObj, opts = {}) {
   const out = {};
   if (!oddsObj || typeof oddsObj !== "object") return out;
@@ -4543,7 +4548,7 @@ function evBookExcludedAsOfferByDevig(bookRaw, prefs) {
 
 function sanitizeEvDevigBookKey(bookRaw) {
   const k = normalizeEvSportsbookKey(bookRaw);
-  return evSportsbookAllowed(k) ? k : "";
+  return evDevigSportsbookAllowed(k) ? k : "";
 }
 
 function sanitizeEvDevigBookList(list) {
@@ -4844,7 +4849,7 @@ function draftKingsFinishOddsByDgIndex() {
 
 function evDevigSortedBookKeys() {
   return Object.keys(SPORTSBOOK_META)
-    .filter((k) => k !== "datagolf" && evSportsbookAllowed(k))
+    .filter((k) => evDevigSportsbookAllowed(k))
     .sort((a, b) => bookMeta(a).label.localeCompare(bookMeta(b).label));
 }
 
@@ -5086,9 +5091,9 @@ function collectUnifiedEvRows() {
       const oddsEv = filterOddsObjectForEvSportsbooks(m.odds || {}, { allowDatagolf: true });
       if (isThreeBall) {
         const [tp1, tp2, tp3] = threeBallModelProbsLiveBlended(mu1, mu2, mu3, row1, row2, row3);
-        const b1 = bestBookDecimalForSideWithFallback(oddsEv, "p1", devigPrefs, { allowDatagolf: true });
-        const b2 = bestBookDecimalForSideWithFallback(oddsEv, "p2", devigPrefs, { allowDatagolf: true });
-        const b3 = bestBookDecimalForSideWithFallback(oddsEv, "p3", devigPrefs, { allowDatagolf: true });
+        const b1 = bestBookDecimalForSideWithFallback(oddsEv, "p1", devigPrefs);
+        const b2 = bestBookDecimalForSideWithFallback(oddsEv, "p2", devigPrefs);
+        const b3 = bestBookDecimalForSideWithFallback(oddsEv, "p3", devigPrefs);
         const n1 = displayGolferName(String(m.p1_player_name || ""));
         const n2 = displayGolferName(String(m.p2_player_name || ""));
         const n3 = displayGolferName(String(m.p3_player_name || ""));
@@ -5131,8 +5136,8 @@ function collectUnifiedEvRows() {
         continue;
       }
       const p1 = matchupWinProbLiveBlended(mu1, mu2, mk, row1, row2);
-      const b1 = bestBookDecimalForSideWithFallback(oddsEv, "p1", devigPrefs, { allowDatagolf: true });
-      const b2 = bestBookDecimalForSideWithFallback(oddsEv, "p2", devigPrefs, { allowDatagolf: true });
+      const b1 = bestBookDecimalForSideWithFallback(oddsEv, "p1", devigPrefs);
+      const b2 = bestBookDecimalForSideWithFallback(oddsEv, "p2", devigPrefs);
       const modelEv1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
       const modelEv2 = Number.isFinite(b2.dec) ? (1 - p1) * b2.dec - 1 : NaN;
       const marketP1 = matchupConsensusSide(oddsEv, "p1", devigPrefs);
