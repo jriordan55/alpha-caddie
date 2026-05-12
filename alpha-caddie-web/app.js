@@ -10289,11 +10289,17 @@ function propsChartSparseTickLabels(perBarLabels, innerWidthPx) {
   return map;
 }
 
-/** One label per bar when there is room; duplicate strings → blank on repeats. */
+/** One label per bar for small samples; larger windows use sparse ticks to avoid clutter. */
 function propsChartXAxisDateLabels(perBarLabels, innerW) {
   const n = perBarLabels.length;
   const map = new Map();
   if (!n) return map;
+  if (n <= 15) {
+    for (let i = 0; i < n; i++) {
+      map.set(i, String(perBarLabels[i] || "").trim());
+    }
+    return map;
+  }
   const minPx = 54;
   const labelEveryBar = n * minPx <= innerW;
   if (labelEveryBar) {
