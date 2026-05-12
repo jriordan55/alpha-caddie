@@ -5249,7 +5249,11 @@ function fillEvFilters(rows) {
   const gSet = new Set(rows.map((r) => r.golfer).filter(Boolean));
   const mSet = new Set(rows.map((r) => r.market).filter(Boolean));
   for (const label of ["Tournament Matchups", "Round Matchups", "3 Balls"]) mSet.add(label);
-  const bSet = new Set(rows.map((r) => r.bestBook).filter(Boolean));
+  const bSet = new Set([...EV_ALLOWED_SPORTSBOOKS]);
+  for (const r of rows) {
+    const bk = normalizeEvSportsbookKey(r.bestBook);
+    if (evSportsbookAllowed(bk)) bSet.add(bk);
+  }
   const refill = (sel, vals) => {
     sel.innerHTML = '<option value="">All</option>';
     [...vals].sort((a, c) => String(a).localeCompare(String(c))).forEach((v) => {
@@ -5390,8 +5394,10 @@ function buildEvTable() {
   const maxAmericanOdds = maxOddsRaw ? num(maxOddsRaw, NaN) : NaN;
   let out = rows
     .filter((r) => {
+      const rowBook = normalizeEvSportsbookKey(r.bestBook);
+      if (!evSportsbookAllowed(rowBook)) return false;
       const okG = !g || String(r.golfer || "").toLowerCase().includes(gLow);
-      return okG && (!m || r.market === m) && (!b || r.bestBook === b);
+      return okG && (!m || r.market === m) && (!b || rowBook === b);
     })
     .map((r) => {
       const dec0 = num(r.bestDec, NaN);
