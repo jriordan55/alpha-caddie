@@ -6329,6 +6329,16 @@ function courseFitOutrightBestBookOddsSingle(marketKey, dgId) {
   };
 }
 
+const COURSE_FIT_ALLOWED_OUTRIGHT_BOOKS = new Set([
+  "draftkings",
+  "fanduel",
+  "bet365",
+  "betmgm",
+  "pinnacle",
+  "betcris",
+  "betonline",
+]);
+
 function courseFitOutrightBestPriceOdds(marketKey, dgId) {
   const mk = String(marketKey || "");
   const elim = dgIdsEliminatedFromEventPostCut();
@@ -6347,7 +6357,7 @@ function courseFitOutrightBestPriceOdds(marketKey, dgId) {
   const seen = new Set();
   for (const bkRaw of rawBookKeys) {
     const bkNorm = normalizeEvSportsbookKey(bkRaw);
-    if (!bkNorm || seen.has(bkNorm) || !outrightLadderSportsbookAllowed(bkNorm)) continue;
+    if (!bkNorm || seen.has(bkNorm) || !COURSE_FIT_ALLOWED_OUTRIGHT_BOOKS.has(bkNorm)) continue;
     seen.add(bkNorm);
     const pct = impliedPctFromOutrightBookField(row[bkRaw] ?? row[bkNorm]);
     if (!Number.isFinite(pct) || pct <= 0) continue;
@@ -7241,11 +7251,11 @@ function buildCourseFitTab() {
   for (const row of ranked) {
     const nm = displayGolferName(String(row.r.player_name || ""));
     if (search && !nm.toLowerCase().includes(search)) continue;
+    if (!(row.fit > 0)) break;
     const dgId = Math.round(num(row.r.dg_id, NaN));
     const odds = {};
     for (const mk of marketKeys) odds[mk] = courseFitOutrightBestPriceOdds(mk, dgId);
     displayRows.push({ ...row, nm, dgId, odds });
-    if (displayRows.length >= 30) break;
   }
 
   const sortKey = String(courseFitTableSort.key || "fit");
