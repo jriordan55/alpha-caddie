@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 /**
- * Refresh only sportsbook columns: fetches betting-tools/outrights + matchups (+ preds/pre-tournament
- * for datagolf column fill) and merges into existing alpha-caddie-web/projections.json. Outrights are
- * the same Scratch feed as the Finish Position tool (https://datagolf.com/betting-tool-finish), not HTML.
+ * Refresh only sportsbook columns: fetches model outrights + matchups (+ preds/pre-tournament
+ * for datagolf column fill), then replaces parseable outright book columns with scraped sportsbook pages.
  *
  * Use between full `npm run fetch:dg` / R exports so the static app sees current lines without rebuilding players.
  * Preflight: compares `/field-updates` to projections (week key + fuzzy title); on mismatch runs `fetch-datagolf.mjs`
@@ -45,6 +44,7 @@ import {
   tokenizeEventTitle,
 } from "./dg-events-align.mjs";
 import { fetchDraftKingsOuProps } from "./draftkings-ou-props.mjs";
+import { fetchSportsbookOutrightsFromUrls } from "./sportsbook-outrights-scraper.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
 const GOLF_MODEL_ROOT = process.env.GOLF_MODEL_DIR?.trim()
@@ -399,6 +399,42 @@ function parseOutrightsResponse(raw) {
   return { rows, bookKeys: [...bookSet].sort() };
 }
 
+function mergeScrapedOutrightsIntoMarket(existingPack, scrapedPack) {
+  if (!scrapedPack || !Array.isArray(scrapedPack.rows) || !scrapedPack.rows.length) return existingPack;
+  const baseById = new Map();
+  for (const r of Array.isArray(existingPack?.rows) ? existingPack.rows : []) {
+    const id = Math.round(num(r.dg_id, NaN));
+    if (!Number.isFinite(id)) continue;
+    baseById.set(id, {
+      dg_id: id,
+      player_name: String(r.player_name || "").trim(),
+      ...(Number.isFinite(num(r.datagolf, NaN)) ? { datagolf: num(r.datagolf, NaN) } : {}),
+    });
+  }
+  for (const r of scrapedPack.rows) {
+    const id = Math.round(num(r.dg_id, NaN));
+    if (!Number.isFinite(id)) continue;
+    const out = baseById.get(id) || { dg_id: id, player_name: String(r.player_name || "").trim() };
+    for (const bk of scrapedPack.bookKeys || []) {
+      const pct = num(r[bk], NaN);
+      if (Number.isFinite(pct) && pct > 0) out[bk] = pct;
+    }
+    baseById.set(id, out);
+  }
+  const rows = [...baseById.values()];
+  const bookKeys = new Set(["datagolf"]);
+  for (const bk of scrapedPack.bookKeys || []) bookKeys.add(String(bk).toLowerCase());
+  return { rows, bookKeys: [...bookKeys].sort() };
+}
+
+function mergeScrapedOutrights(outrights, scrapedOutrights) {
+  const next = { ...(outrights && typeof outrights === "object" ? outrights : {}) };
+  for (const [market, scrapedPack] of Object.entries(scrapedOutrights || {})) {
+    next[market] = mergeScrapedOutrightsIntoMarket(next[market], scrapedPack);
+  }
+  return next;
+}
+
 async function main() {
   const key = loadApiKey();
   if (!key) {
@@ -564,6 +600,23 @@ async function main() {
     } catch (e) {
       console.warn(`Outrights ${m} skipped:`, e.message);
     }
+  }
+
+  let sportsbookOutrights = {};
+  try {
+    console.log("Scraping sportsbook outright/finish pages…");
+    const scraped = await fetchSportsbookOutrightsFromUrls({ players: payload.players });
+    sportsbookOutrights = scraped.outrights || {};
+    for (const msg of scraped.logs || []) console.log("[sportsbook-outrights]", msg);
+    const n = Object.values(sportsbookOutrights).reduce((sum, pack) => sum + (Array.isArray(pack?.rows) ? pack.rows.length : 0), 0);
+    if (n > 0) {
+      Object.assign(outrights, mergeScrapedOutrights(outrights, sportsbookOutrights));
+      console.log(`[sportsbook-outrights] Replaced DataGolf API sportsbook columns on ${Object.keys(sportsbookOutrights).join(", ")} with ${n} scraped rows.`);
+    } else {
+      console.warn("[sportsbook-outrights] No parseable sportsbook rows found; keeping existing DataGolf API book columns.");
+    }
+  } catch (e) {
+    console.warn("[sportsbook-outrights] skipped:", e.message || e);
   }
 
   const matchupMarkets = ["tournament_matchups", "round_matchups", "3_balls"];
