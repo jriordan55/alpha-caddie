@@ -4757,6 +4757,33 @@ function outrightConsensusProbFromBooks(bookDecItems, prefs) {
   return avgDec > 1 ? 1 / avgDec : NaN;
 }
 
+function draftKingsFinishOddsByDgIndex() {
+  const markets = ["win", "top_5", "top_10", "top_20"];
+  const byId = new Map();
+  for (const mk of markets) {
+    const pack = DATA.outrights?.[mk];
+    for (const row of Array.isArray(pack?.rows) ? pack.rows : []) {
+      const id = Math.round(num(row.dg_id, NaN));
+      if (!Number.isFinite(id)) continue;
+      const pct = impliedPctFromBookField(row.draftkings);
+      if (!Number.isFinite(pct) || pct <= 0) continue;
+      const p = outrightFeedPlaceholderProbNaN(pct / 100, mk, "draftkings");
+      if (!Number.isFinite(p) || p <= 0 || p >= 1) continue;
+      const am = americanFromImpliedProb(p);
+      if (!Number.isFinite(am)) continue;
+      const cur = byId.get(id) || {};
+      cur[mk] = { p, am: Math.round(am) };
+      byId.set(id, cur);
+    }
+  }
+  for (const cur of byId.values()) {
+    if (cur.win && cur.top_5 && cur.win.p > cur.top_5.p + 1e-9) delete cur.win;
+    if (cur.top_5 && cur.top_10 && cur.top_5.p > cur.top_10.p + 1e-9) delete cur.top_5;
+    if (cur.top_10 && cur.top_20 && cur.top_10.p > cur.top_20.p + 1e-9) delete cur.top_10;
+  }
+  return byId;
+}
+
 function evDevigSortedBookKeys() {
   return Object.keys(SPORTSBOOK_META)
     .filter((k) => k !== "datagolf" && evSportsbookAllowed(k))
@@ -5076,6 +5103,7 @@ function collectUnifiedEvRows() {
   const rOut = getModelRoundForEv();
   const evLbOpts = outrightEvLiveLeaderboardModelEnabled() ? { evLiveLeaderboard: true } : {};
   if (evLbOpts.evLiveLeaderboard) ensureOutrightEvLiveLeaderboardProbCache();
+  const dkFinishOdds = draftKingsFinishOddsByDgIndex();
   for (const mk of ["win", "top_5", "top_10", "top_20", "make_cut", "mc"]) {
     const pack = opack[mk];
     if (!pack || !Array.isArray(pack.rows)) continue;
@@ -5093,10 +5121,15 @@ function collectUnifiedEvRows() {
       const modelOk = Number.isFinite(modelP) && modelP > 0;
       for (const bk of books) {
         const bkNorm = normalizeEvSportsbookKey(bk);
-        const pct = impliedPctFromBookField(row[bk] ?? row[bkNorm]);
-        if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
-        let pBook = pct / 100;
-        pBook = outrightFeedPlaceholderProbNaN(pBook, mk, bk);
+        let pBook =
+          mk === "win" || mk === "top_5" || mk === "top_10" || mk === "top_20"
+            ? dkFinishOdds.get(id)?.[mk]?.p
+            : NaN;
+        if (!Number.isFinite(pBook)) {
+          const pct = impliedPctFromBookField(row[bk] ?? row[bkNorm]);
+          if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
+          pBook = outrightFeedPlaceholderProbNaN(pct / 100, mk, bk);
+        }
         if (!Number.isFinite(pBook) || pBook <= 0 || pBook >= 1) continue;
         const ev = outrightEvFromModelAndBook(modelP, pBook, mk);
         if (!Number.isFinite(ev)) continue;
@@ -6263,21 +6296,12 @@ function courseFitDraftKingsOutrightOdds(marketKey, dgId) {
 
 function courseFitDraftKingsFinishOddsIndex() {
   const out = new Map();
-  for (const mk of ["win", "top_5", "top_10", "top_20"]) {
-    const pack = DATA.outrights?.[mk];
-    for (const row of Array.isArray(pack?.rows) ? pack.rows : []) {
-      const id = Math.round(num(row.dg_id, NaN));
-      if (!Number.isFinite(id)) continue;
-      const pct = impliedPctFromBookField(row.draftkings);
-      if (!Number.isFinite(pct) || pct <= 0) continue;
-      const pBook = outrightFeedPlaceholderProbNaN(pct / 100, mk, "draftkings");
-      if (!Number.isFinite(pBook) || pBook <= 0 || pBook >= 1) continue;
-      const am = americanFromImpliedProb(pBook);
-      if (!Number.isFinite(am)) continue;
-      const prev = out.get(id) || {};
-      prev[mk] = Math.round(am);
-      out.set(id, prev);
+  for (const [id, markets] of draftKingsFinishOddsByDgIndex()) {
+    const row = {};
+    for (const mk of ["win", "top_5", "top_10", "top_20"]) {
+      if (Number.isFinite(markets[mk]?.am)) row[mk] = markets[mk].am;
     }
+    out.set(id, row);
   }
   return out;
 }
