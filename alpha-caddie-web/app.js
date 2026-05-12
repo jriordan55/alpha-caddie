@@ -48,6 +48,7 @@ const OUTRIGHT_EV_MAX_MODEL_TO_BOOK_RATIO = Object.freeze({
   top_20: 8,
   make_cut: 10,
   mc: 10,
+  frl: 28,
 });
 
 /** @returns {number} EV or NaN if ratio implausible or inputs invalid */
@@ -260,7 +261,7 @@ function buildDefaultProjectionsPayload() {
   };
 }
 
-const OUTRIGHT_MARKET_KEYS = ["win", "top_5", "top_10", "top_20", "make_cut", "mc"];
+const OUTRIGHT_MARKET_KEYS = ["win", "top_5", "top_10", "top_20", "make_cut", "mc", "frl"];
 
 function outrightPayloadHasRows(outrights) {
   if (!outrights || typeof outrights !== "object") return false;
@@ -5075,7 +5076,7 @@ function collectUnifiedEvRows() {
   const rOut = getModelRoundForEv();
   const evLbOpts = outrightEvLiveLeaderboardModelEnabled() ? { evLiveLeaderboard: true } : {};
   if (evLbOpts.evLiveLeaderboard) ensureOutrightEvLiveLeaderboardProbCache();
-  for (const mk of ["win", "top_5", "top_10", "top_20", "make_cut", "mc"]) {
+  for (const mk of ["win", "top_5", "top_10", "top_20", "make_cut", "mc", "frl"]) {
     const pack = opack[mk];
     if (!pack || !Array.isArray(pack.rows)) continue;
     const books = Array.isArray(pack.bookKeys)
@@ -5130,8 +5131,10 @@ function collectUnifiedEvRows() {
                   ? "Outright Top 20"
                   : mk === "make_cut"
                     ? "Outright Make Cut"
-                    : "Outright Miss Cut",
-        bet: mk === "mc" ? "Miss Cut" : mk === "make_cut" ? "Make Cut" : mk.replace("_", " ").toUpperCase(),
+                    : mk === "mc"
+                      ? "Outright Miss Cut"
+                      : "First Round Leader",
+        bet: mk === "mc" ? "Miss Cut" : mk === "make_cut" ? "Make Cut" : mk === "frl" ? "FRL" : mk.replace("_", " ").toUpperCase(),
         modelPct: modelP,
         modelEv: bestEv,
         bestBook,
@@ -5301,8 +5304,6 @@ function buildEvTable() {
       const hasSportsbookOdds =
         String(r.bestBook || "").trim() !== "" && Number.isFinite(r._dec) && r._dec > 1;
       if (!hasSportsbookOdds) return false;
-      const ev = r._modelEv;
-      if (Number.isFinite(ev) && (ev > 0.5 || ev < -0.5)) return false;
       return true;
     });
   out = out.slice().sort((a, c) => compareEvRows(a, c, evSort.key, evSort.dir));
