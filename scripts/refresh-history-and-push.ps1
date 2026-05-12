@@ -13,7 +13,8 @@ $ErrorActionPreference = "Stop"
 #     (same Scratch API as datagolf.com/betting-tool-finish IMPLIED %). fetch:finish-tool re-merges that feed so the standalone script stays exercised;
 #     set GOLF_FINISH_TOOL_PLAYWRIGHT=1 (+ optional DATAGOLF_PLAYWRIGHT_STORAGE_STATE) to capture browser JSON instead of direct API for missing markets.
 #   • approach_skill_ytd.json — Predicted shot distance bins (fetch:dg preds/approach-skill); optional approach_skill_l12.json fallback if present.
-#   • embedded-player-round-history.js (+ CSV / player_round_history.json) — radar, venue SG, similarity (build:history after fetch:dg).
+#   • embedded-player-round-history.js (+ CSV / player_round_history.json / player-history shards) — radar, venue SG,
+#     similarity, and Hole Hangout hole-level priors (build:history after fetch:dg).
 #
 # Hole Hangout — hole pars per hole for the active course/event:
 #   • fetch:dg calls preds/live-hole-stats and writes hole_pars / hole_pars_source (live_hole_stats when DG serves it).
@@ -21,6 +22,8 @@ $ErrorActionPreference = "Stop"
 #     projections.json from that bundle so push:all publishes the same per-hole table as the live feed.
 #   • course_holes.json — bundled overrides / gaps (committed); course_holes.local.json is gitignored for secrets.
 #   • hole_pars_from_shots.json — fallback map from build:history (build-player-shots-web.mjs) after rounds CSV refresh.
+#   • player-history/by-dg/*.json + manifest.json — hole-level score rows (hole_data.csv join in build-player-history.mjs);
+#     Hole Hangout fetches shards at player-history/by-dg/{dg_id}.json. Staged below with other history artifacts.
 #
 # Matchup Analysis Tool stays fresh when these commands succeed:
 #   fetch:dg  → projections.players (SG pillars + merged preds/live-tournament-stats driving when DG serves it),
@@ -109,6 +112,8 @@ $artifacts = @(
   "alpha-caddie-web/approach_skill_l12.json",
   "alpha-caddie-web/course_holes.json",
   "alpha-caddie-web/hole_pars_from_shots.json",
+  "alpha-caddie-web/player_shots_web.json",
+  "alpha-caddie-web/player-history",
   "website/public/data/projections.json",
   "website/public/data/live-in-play.json",
   "website/public/data/approach_skill_ytd.json",

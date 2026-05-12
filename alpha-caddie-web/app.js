@@ -11203,6 +11203,17 @@ function hangoutCollapseFiveToThree(p5) {
   };
 }
 
+function hangoutRemoveHoleOutMass(probsFive, holePar) {
+  if (Math.round(num(holePar, 4)) >= 5) return probsFive;
+  const eagle = Math.max(0, num(probsFive.eagle, 0));
+  if (eagle <= 0) return probsFive;
+  return {
+    ...probsFive,
+    eagle: 0,
+    par: num(probsFive.par, 0) + eagle,
+  };
+}
+
 function hangoutBlendThree(a, b, wHist) {
   const w = clamp(num(wHist, 0), 0, 0.85);
   return hangoutNormThree({
@@ -11257,6 +11268,70 @@ function hangoutHistoryPriorThree(dgId, courseUsed, eventName) {
   const t = b + p + w;
   if (t < 1) return null;
   return hangoutNormThree({ birdie: b / t, par: p / t, bogeyPlus: w / t });
+}
+
+function hangoutHoleHistoryPriorThree(dgId, courseUsed, eventName, holeNum, holePar) {
+  const rec = HISTORY.byDgId && HISTORY.byDgId[String(dgId)];
+  if (!rec || !Array.isArray(rec.rounds) || !rec.rounds.length) return null;
+  const pname = String(rec.player_name || "").trim();
+  const pkey = playerKeyFromName(pname);
+  const holesMap = pkey && HISTORY.holesByPlayerKey ? HISTORY.holesByPlayerKey[pkey] : null;
+  if (!holesMap || typeof holesMap !== "object") return null;
+  const hWant = Math.round(num(holeNum, NaN));
+  const pWant = Math.round(num(holePar, NaN));
+  if (!Number.isFinite(hWant) || hWant < 1 || hWant > 18) return null;
+  const courseNeedle = String(courseUsed || "").trim();
+  const eventNeedle = String(eventName || "").trim();
+  const byRound = new Map();
+  for (const r of rec.rounds) {
+    const rn = Math.round(num(r?.round_num, NaN));
+    if (!Number.isFinite(rn)) continue;
+    const k = `${normEvtNameKey(r?.event_name)}\tR${rn}`;
+    if (!byRound.has(k)) byRound.set(k, []);
+    byRound.get(k).push(r);
+  }
+  const tiers = [
+    { birdie: 0, par: 0, bogeyPlus: 0, n: 0 },
+    { birdie: 0, par: 0, bogeyPlus: 0, n: 0 },
+    { birdie: 0, par: 0, bogeyPlus: 0, n: 0 },
+    { birdie: 0, par: 0, bogeyPlus: 0, n: 0 },
+  ];
+  for (const [fullKey, holes] of Object.entries(holesMap)) {
+    if (!Array.isArray(holes)) continue;
+    const hit = holes.find((h) => Math.round(num(h?.hole, NaN)) === hWant);
+    if (!hit) continue;
+    const hPar = Math.round(num(hit.par, NaN));
+    const sc = Math.round(num(hit.score, NaN));
+    if (!Number.isFinite(hPar) || !Number.isFinite(sc)) continue;
+    if (Number.isFinite(pWant) && pWant >= 3 && pWant <= 5 && hPar !== pWant) continue;
+    const parts = String(fullKey).split("\t");
+    const evRaw = (parts[0] || "").trim();
+    const rn = parseRoundNumFromRLabel(parts[1] || "");
+    const metaRows = byRound.get(`${normEvtNameKey(evRaw)}\tR${rn}`) || [];
+    const courseHit = courseNeedle && metaRows.some((r) => courseNameMatchesVenueLoose(r?.course_name, courseNeedle));
+    const eventHit =
+      eventNeedle &&
+      (eventNameMatchesCurrentSchedule(evRaw, eventNeedle) ||
+        metaRows.some((r) => eventNameMatchesCurrentSchedule(r?.event_name, eventNeedle)));
+    const tier = courseHit && eventHit ? 0 : courseHit ? 1 : eventHit ? 2 : 3;
+    const rel = sc - hPar;
+    if (rel <= -2 && hPar < 5) tiers[tier].par += 1;
+    else if (rel <= -1) tiers[tier].birdie += 1;
+    else if (rel === 0) tiers[tier].par += 1;
+    else tiers[tier].bogeyPlus += 1;
+    tiers[tier].n += 1;
+  }
+  const idx = tiers.findIndex((t) => t.n > 0);
+  if (idx < 0) return null;
+  const picked = tiers[idx];
+  const cap = [0.72, 0.66, 0.56, 0.46][idx] || 0.46;
+  const weight = clamp(picked.n / (picked.n + 5), 0.14, cap);
+  return {
+    probs: hangoutNormThree(picked),
+    n: picked.n,
+    tier: idx,
+    weight,
+  };
 }
 
 /**
@@ -11357,61 +11432,11 @@ function setHangoutOddsViewMode(price) {
   if (hangoutLastThreeProbs) hangoutRenderThreeOutcomes(hangoutLastThreeProbs);
 }
 
-function getHangoutShotsBundleRows(dgId, holeNum1) {
-  if (!SHOTS._ok) return null;
-  const byRound = SHOTS.byDgId && SHOTS.byDgId[String(dgId)];
-  if (!byRound) return null;
-  const ev = String(DATA.meta.event_name || "").trim();
-  const r = getOuRound();
-  const uid = findShotsRoundUid(byRound, `${ev}\tR${r}`);
-  if (!uid || !byRound[uid]) return null;
-  const arr = byRound[uid][String(holeNum1)];
-  if (!Array.isArray(arr) || !arr.length) return null;
-  return arr;
-}
-
-function hangoutLieFromCodes(f, t) {
-  const a = `${String(f || "")}${String(t || "")}`.toUpperCase();
-  if (a.includes("GR")) return "Green";
-  if (a.includes("FW")) return "Fairway";
-  if (a.includes("SF") || a.includes("SD") || a.includes("SB")) return "Sand";
-  if (String(f || "").toUpperCase() === "OTB" || a.includes("TB")) return "Tee";
-  return "Rough";
-}
-
-function webShotToHangoutShot(s, idx) {
-  const p = String(s.p || "");
-  const isPutt = /putt/i.test(p) || (s.d == null && /\d+\s*ft/i.test(p));
-  let feet = null;
-  let yards = null;
-  if (isPutt) {
-    const mi = p.match(/(\d+)\s*ft\s*(\d+)\s*in/i);
-    if (mi) feet = Math.round(parseInt(mi[1], 10) + parseInt(mi[2], 10) / 12);
-    else {
-      const mf = p.match(/(\d+)\s*ft/i);
-      if (mf) feet = parseInt(mf[1], 10);
-    }
-  }
-  if (!isPutt && Number.isFinite(s.d)) yards = Math.round(s.d);
-  if (!isPutt && yards == null) {
-    const my = p.match(/(\d+)\s*yds?\s*to/i) || p.match(/(\d+)\s*yds?/i);
-    if (my) yards = parseInt(my[1], 10);
-  }
-  let title = "Shot";
-  if (s.sn === 1) title = "Tee shot";
-  else if (isPutt) title = "Putt";
-  else if (idx === 1) title = "Approach";
-  else title = /layup|lay up/i.test(p) ? "Layup" : "Approach";
-  const lie = isPutt ? "Green" : hangoutLieFromCodes(s.f, s.t);
-  const tag = s.fin ? "Hole out" : "";
-  return { title, yards, feet, lie, tag };
-}
-
 function hangoutBuildShotsFromBundleOrSynth(holePar, sc, dgId, holeNum1) {
-  const bundle = getHangoutShotsBundleRows(dgId, holeNum1);
-  if (bundle && bundle.length === sc) {
-    return bundle.map((row, i) => webShotToHangoutShot(row, i));
-  }
+  void dgId;
+  void holeNum1;
+  /* Hole Hangout always uses scripted shot lines. Real shot bundles (player_shots_web.json) can replay
+   * eagles as “approach + hole” and bypass the no–hole-out wording; pricing already avoids that mass. */
   return hangoutBuildShots(holePar, sc);
 }
 
@@ -11546,6 +11571,12 @@ function getHangoutPlayerRow() {
   return DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === id && samePlayerRound(p, r));
 }
 
+function selectedHangoutDgId() {
+  const sel = document.getElementById("hh-player");
+  const id = sel ? Math.round(num(sel.value, NaN)) : NaN;
+  return Number.isFinite(id) ? id : NaN;
+}
+
 function scoreMixFromProjection(row) {
   const e = num(row?.eagles, 0);
   const b = num(row?.birdies, 0);
@@ -11629,7 +11660,8 @@ function hangoutRi(lo, hi) {
 
 function hangoutScoreLabel(holePar, sc) {
   const d = sc - holePar;
-  if (d <= -2) return "Eagle+";
+  if (d <= -3) return "Double eagle+";
+  if (d === -2) return "Eagle";
   if (d === -1) return "Birdie";
   if (d === 0) return "Par";
   return "Bogey+";
@@ -11658,7 +11690,7 @@ function hangoutApplyLiveToShot(index1, shot) {
 function hangoutShotsPar3(sc) {
   const tee = hangoutRi(165, 232);
   if (sc <= 1) {
-    return [{ title: "Tee shot", yards: tee, lie: "Green", tag: "Hole-in-one" }];
+    return [{ title: "Tee shot", yards: tee, lie: "Green" }];
   }
   if (sc === 2) {
     const onG = hangoutRngU01() < 0.48;
@@ -11703,7 +11735,7 @@ function hangoutShotsPar4(sc) {
   if (sc <= 2) {
     return [
       { title: "Tee shot", yards: tee, lie: hangoutRngU01() < 0.24 ? "Rough" : "Fairway" },
-      { title: "Approach", yards: hangoutRi(86, 154), lie: "Hole", tag: "Eagle hole-out" },
+      { title: "Approach", yards: hangoutRi(86, 154), lie: "Green" },
     ];
   }
   if (sc === 3) {
@@ -11979,11 +12011,19 @@ function runHangoutSimulate() {
     } else {
       for (const { k } of labels) probsFive[k] = raw[k] / ssum;
     }
-    probsFive = hangoutTiltProbsFive(probsFive, hangoutOutcomeDistributionT(row, dgId));
+    probsFive = hangoutRemoveHoleOutMass(
+      hangoutTiltProbsFive(probsFive, hangoutOutcomeDistributionT(row, dgId)),
+      holePar,
+    );
     let three = hangoutCollapseFiveToThree(probsFive);
     three = hangoutNormThree(three);
-    const hist3 = hangoutHistoryPriorThree(dgId, DATA.meta.course_used, DATA.meta.event_name);
-    if (hist3) three = hangoutBlendThree(three, hist3, 0.38);
+    const holeHist3 = hangoutHoleHistoryPriorThree(dgId, DATA.meta.course_used, DATA.meta.event_name, holeNum1, holePar);
+    if (holeHist3) {
+      three = hangoutBlendThree(three, holeHist3.probs, holeHist3.weight);
+    } else {
+      const hist3 = hangoutHistoryPriorThree(dgId, DATA.meta.course_used, DATA.meta.event_name);
+      if (hist3) three = hangoutBlendThree(three, hist3, 0.38);
+    }
     const shotN = clamp(Math.round(num(document.getElementById("hh-shot-num")?.value, 1)), 1, 18);
     const puttFt = clamp(num(document.getElementById("hh-putt-ft")?.value, 10), 2, 120);
     const liveGreen = hangoutLiveOn() && String(document.getElementById("hh-lie")?.value || "") === "Green";
@@ -12031,10 +12071,14 @@ function runHangoutSimulate() {
     else cat = "bogeyPlus";
     let sc;
     if (cat === "birdie") {
-      const pe = probsFive.eagle;
-      const pb = probsFive.birdie;
-      const den = pe + pb + 1e-12;
-      sc = hangoutRngU01() < pe / den ? holePar - 2 : holePar - 1;
+      if (holePar >= 5) {
+        const pe = probsFive.eagle;
+        const pb = probsFive.birdie;
+        const den = pe + pb + 1e-12;
+        sc = hangoutRngU01() < pe / den ? holePar - 2 : holePar - 1;
+      } else {
+        sc = holePar - 1;
+      }
     } else if (cat === "par") {
       sc = holePar;
     } else {
@@ -12168,17 +12212,20 @@ function activeAppTabId() {
 }
 
 function ensurePlayerHistoryLoadedForTab(tab) {
-  if (!["props", "course-fit"].includes(String(tab || ""))) return Promise.resolve();
+  if (!["props", "course-fit", "hangout"].includes(String(tab || ""))) return Promise.resolve();
   const p =
     tab === "props"
       ? loadPlayerHistoryBucket(selectedDgId())
-      : HISTORY._ok && !HISTORY._partial
-        ? Promise.resolve(true)
-        : loadPlayerHistory();
+      : tab === "hangout"
+        ? loadPlayerHistoryBucket(selectedHangoutDgId())
+        : HISTORY._ok && !HISTORY._partial
+          ? Promise.resolve(true)
+          : loadPlayerHistory();
   p.then(() => {
     if (activeAppTabId() !== tab) return;
     if (tab === "props") renderPropsTrends();
     if (tab === "course-fit") buildCourseFitTab();
+    if (tab === "hangout") scheduleHangoutSimulateDebounced(0);
   }).catch(() => {
     if (activeAppTabId() === "props") renderPropsTrends();
   });
@@ -13227,6 +13274,7 @@ function initTabs() {
         });
       if (tab === "hangout") {
         requestAnimationFrame(() => {
+          void ensurePlayerHistoryLoadedForTab("hangout");
           const vz = document.getElementById("hh-hole-viz");
           const cv = document.getElementById("hh-hole-canvas");
           if (vz && cv && !vz.hidden && hangoutCanvasShotCount > 0) {
@@ -13708,7 +13756,10 @@ document.addEventListener("DOMContentLoaded", () => {
     true
   );
   document.getElementById("hh-hole")?.addEventListener("change", () => updateHangout());
-  document.getElementById("hh-player")?.addEventListener("change", () => scheduleHangoutSimulateDebounced());
+  document.getElementById("hh-player")?.addEventListener("change", () => {
+    void ensurePlayerHistoryLoadedForTab("hangout");
+    scheduleHangoutSimulateDebounced();
+  });
   document.getElementById("hh-sim-run")?.addEventListener("click", () => runHangoutSimulate());
   document.getElementById("hh-odds-mode-prob")?.addEventListener("click", () => setHangoutOddsViewMode(false));
   document.getElementById("hh-odds-mode-price")?.addEventListener("click", () => setHangoutOddsViewMode(true));
