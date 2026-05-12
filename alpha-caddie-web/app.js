@@ -6054,35 +6054,46 @@ function courseFitMeanNormalized(rows, ranges) {
   return sum.map((s) => s / n);
 }
 
-/** Mean SG from embedded history at venue (ott/app/arg/putt); returns null if thin data. */
-function courseFitVenueHistoricalSgMeans(venueKeyNorm) {
-  if (!venueKeyNorm || !HISTORY._ok || !HISTORY.byDgId) return null;
-  const sum = [0, 0, 0, 0];
-  const ct = [0, 0, 0, 0];
-  const idxMap = [
-    ["sg_ott", 0],
-    ["sg_app", 1],
-    ["sg_arg", 2],
-    ["sg_putt", 3],
-  ];
+let courseFitCourseStatsHistoryRef = null;
+let courseFitCourseStatsCache = null;
+
+function courseFitCourseStatsByCourse() {
+  if (!HISTORY._ok || !HISTORY.byDgId) return new Map();
+  if (courseFitCourseStatsCache && courseFitCourseStatsHistoryRef === HISTORY.byDgId) return courseFitCourseStatsCache;
+  const keys = ["sg_ott", "sg_app", "sg_arg", "sg_putt"];
+  /** @type {Map<string, { sum: number[]; ct: number[] }>} */
+  const acc = new Map();
   for (const rec of Object.values(HISTORY.byDgId)) {
-    if (!rec || !Array.isArray(rec.rounds)) continue;
+    if (!rec?.rounds) continue;
     for (const r of rec.rounds) {
       if (historyRoundIsPlaceholderAllMarketsZero(r)) continue;
-      if (normCourseNameKey(historyRoundCourseName(r)) !== venueKeyNorm) continue;
-      for (const [k, j] of idxMap) {
-        const v = num(r[k], NaN);
+      const ck = normCourseNameKey(historyRoundCourseName(r));
+      if (!ck) continue;
+      if (!acc.has(ck)) acc.set(ck, { sum: [0, 0, 0, 0], ct: [0, 0, 0, 0] });
+      const b = acc.get(ck);
+      for (let j = 0; j < 4; j++) {
+        const v = num(r[keys[j]], NaN);
         if (Number.isFinite(v)) {
-          sum[j] += v;
-          ct[j]++;
+          b.sum[j] += v;
+          b.ct[j]++;
         }
       }
     }
   }
+  courseFitCourseStatsHistoryRef = HISTORY.byDgId;
+  courseFitCourseStatsCache = acc;
+  return acc;
+}
+
+/** Mean SG from embedded history at venue (ott/app/arg/putt); returns null if thin data. */
+function courseFitVenueHistoricalSgMeans(venueKeyNorm) {
+  if (!venueKeyNorm) return null;
+  const b = courseFitCourseStatsByCourse().get(venueKeyNorm);
+  if (!b) return null;
   const mins = 8;
-  const totalSamples = ct.reduce((a, b) => a + b, 0);
+  const totalSamples = b.ct.reduce((a, c) => a + c, 0);
   if (totalSamples < mins) return null;
-  const means = idxMap.map((_, j) => (ct[j] ? sum[j] / ct[j] : NaN));
+  const means = b.sum.map((s, j) => (b.ct[j] ? s / b.ct[j] : NaN));
   return { ott: means[0], app: means[1], arg: means[2], putt: means[3], samples: totalSamples };
 }
 
@@ -6169,27 +6180,7 @@ const COURSE_FIT_RADAR_LABELS = ["Driving Distance", "Driving Accuracy", "Approa
 
 /** Per-course mean SG vector [ott,app,arg,putt] from embedded history (for similarity). */
 function courseFitMeanSgVectorByCourse() {
-  /** @type {Map<string, { sum: number[]; ct: number[] }>} */
-  const acc = new Map();
-  if (!HISTORY._ok || !HISTORY.byDgId) return acc;
-  const keys = ["sg_ott", "sg_app", "sg_arg", "sg_putt"];
-  for (const rec of Object.values(HISTORY.byDgId)) {
-    if (!rec?.rounds) continue;
-    for (const r of rec.rounds) {
-      if (historyRoundIsPlaceholderAllMarketsZero(r)) continue;
-      const ck = normCourseNameKey(historyRoundCourseName(r));
-      if (!ck) continue;
-      if (!acc.has(ck)) acc.set(ck, { sum: [0, 0, 0, 0], ct: [0, 0, 0, 0] });
-      const b = acc.get(ck);
-      for (let j = 0; j < 4; j++) {
-        const v = num(r[keys[j]], NaN);
-        if (Number.isFinite(v)) {
-          b.sum[j] += v;
-          b.ct[j]++;
-        }
-      }
-    }
-  }
+  const acc = courseFitCourseStatsByCourse();
   /** @type {Map<string, number[]>} */
   const out = new Map();
   for (const [ck, b] of acc) {
@@ -6298,6 +6289,37 @@ function courseFitDraftKingsOutrightOdds(marketKey, dgId) {
   if (!Number.isFinite(am)) return { html: "—" };
   return {
     html: `${bookBadgeHtml("draftkings")} <span class="course-fit-out-odds">${formatAmerican(Math.round(am))}</span>`,
+  };
+}
+
+function courseFitDraftKingsFinishOddsIndex() {
+  const out = new Map();
+  for (const mk of ["win", "top_5", "top_10", "top_20"]) {
+    const pack = DATA.outrights?.[mk];
+    for (const row of Array.isArray(pack?.rows) ? pack.rows : []) {
+      const id = Math.round(num(row.dg_id, NaN));
+      if (!Number.isFinite(id)) continue;
+      const pct = impliedPctFromBookField(row.draftkings);
+      if (!Number.isFinite(pct) || pct <= 0) continue;
+      const pBook = outrightFeedPlaceholderProbNaN(pct / 100, mk, "draftkings");
+      if (!Number.isFinite(pBook) || pBook <= 0 || pBook >= 1) continue;
+      const am = americanFromImpliedProb(pBook);
+      if (!Number.isFinite(am)) continue;
+      const prev = out.get(id) || {};
+      prev[mk] = Math.round(am);
+      out.set(id, prev);
+    }
+  }
+  return out;
+}
+
+function courseFitDraftKingsOutrightOddsFromIndex(index, marketKey, dgId) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return { html: "—" };
+  const am = index?.get(id)?.[String(marketKey || "")];
+  if (!Number.isFinite(am)) return { html: "—" };
+  return {
+    html: `${bookBadgeHtml("draftkings")} <span class="course-fit-out-odds">${formatAmerican(am)}</span>`,
   };
 }
 
@@ -6490,6 +6512,7 @@ function setCourseFitSubtab(id) {
     btn.classList.toggle("active", on);
     btn.setAttribute("aria-selected", on ? "true" : "false");
   });
+  if (active === "shots") buildCourseFitTab();
 }
 
 function formatAmericanOddsShort(n) {
@@ -7083,6 +7106,7 @@ function buildCourseFitTab() {
   tbody.innerHTML = "";
   if (theadHeading) theadHeading.textContent = `Who fits ${venueName}?`;
 
+  const dkFinishOdds = courseFitDraftKingsFinishOddsIndex();
   let renderedFitRows = 0;
   for (const row of ranked) {
     const nm = displayGolferName(String(row.r.player_name || ""));
@@ -7104,7 +7128,7 @@ function buildCourseFitTab() {
     for (const mk of ["win", "top_5", "top_10", "top_20"]) {
       const tdO = document.createElement("td");
       tdO.className = "num course-fit-out-td";
-      const ob = courseFitOutrightBestBookOdds(mk, dgId);
+      const ob = courseFitDraftKingsOutrightOddsFromIndex(dkFinishOdds, mk, dgId);
       tdO.innerHTML = ob.html;
       tr.appendChild(tdO);
     }
@@ -7112,13 +7136,16 @@ function buildCourseFitTab() {
     renderedFitRows++;
   }
 
-  const shotSearch = String(document.getElementById("course-fit-shots-search")?.value || "")
-    .trim()
-    .toLowerCase();
-  void loadApproachSkillYtdJson().then((ap) => {
-    const shotVenueTitle = eventVk ? courseFitPrettyCourseKey(eventVk) : eventVenueName;
-    buildCourseFitShotBinsTable(rows, ap, shotVenueTitle, shotSearch);
-  });
+  const shotPanel = document.getElementById("course-fit-subpanel-shots");
+  if (shotPanel && !shotPanel.hidden) {
+    const shotSearch = String(document.getElementById("course-fit-shots-search")?.value || "")
+      .trim()
+      .toLowerCase();
+    void loadApproachSkillYtdJson().then((ap) => {
+      const shotVenueTitle = eventVk ? courseFitPrettyCourseKey(eventVk) : eventVenueName;
+      buildCourseFitShotBinsTable(rows, ap, shotVenueTitle, shotSearch);
+    });
+  }
 }
 
 function escapeHtml(s) {

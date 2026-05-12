@@ -401,14 +401,15 @@ function parseOutrightsResponse(raw) {
 
 function mergeScrapedOutrightsIntoMarket(existingPack, scrapedPack) {
   if (!scrapedPack || !Array.isArray(scrapedPack.rows) || !scrapedPack.rows.length) return existingPack;
+  const allowScrapedDraftKings = String(process.env.GOLF_USE_SCRAPED_DK_OUTRIGHTS || "").trim() === "1";
   const baseById = new Map();
   for (const r of Array.isArray(existingPack?.rows) ? existingPack.rows : []) {
     const id = Math.round(num(r.dg_id, NaN));
     if (!Number.isFinite(id)) continue;
     baseById.set(id, {
+      ...r,
       dg_id: id,
       player_name: String(r.player_name || "").trim(),
-      ...(Number.isFinite(num(r.datagolf, NaN)) ? { datagolf: num(r.datagolf, NaN) } : {}),
     });
   }
   for (const r of scrapedPack.rows) {
@@ -416,14 +417,19 @@ function mergeScrapedOutrightsIntoMarket(existingPack, scrapedPack) {
     if (!Number.isFinite(id)) continue;
     const out = baseById.get(id) || { dg_id: id, player_name: String(r.player_name || "").trim() };
     for (const bk of scrapedPack.bookKeys || []) {
+      if (String(bk).toLowerCase() === "draftkings" && !allowScrapedDraftKings) continue;
       const pct = num(r[bk], NaN);
       if (Number.isFinite(pct) && pct > 0) out[bk] = pct;
     }
     baseById.set(id, out);
   }
   const rows = [...baseById.values()];
-  const bookKeys = new Set(["datagolf"]);
-  for (const bk of scrapedPack.bookKeys || []) bookKeys.add(String(bk).toLowerCase());
+  const bookKeys = new Set(Array.isArray(existingPack?.bookKeys) ? existingPack.bookKeys.map((bk) => String(bk).toLowerCase()) : ["datagolf"]);
+  for (const bk of scrapedPack.bookKeys || []) {
+    const k = String(bk).toLowerCase();
+    if (k === "draftkings" && !allowScrapedDraftKings) continue;
+    bookKeys.add(k);
+  }
   return { rows, bookKeys: [...bookKeys].sort() };
 }
 
