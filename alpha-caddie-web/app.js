@@ -8314,6 +8314,10 @@ function syncGolferComboSearchFromSelect(selectId) {
   const search = document.getElementById(`${selectId}-search`);
   if (!sel || !search) return;
   const opt = sel.selectedOptions[0];
+  if (!opt || String(opt.value || "") === "") {
+    search.value = "";
+    return;
+  }
   search.value = opt ? String(opt.textContent || "").trim() : "";
 }
 
@@ -8334,7 +8338,7 @@ function commitGolferComboSearchToSelect(selectId) {
   if (!hit) hit = [...sel.options].find((o) => String(o.value || "") === q);
   if (hit) {
     sel.value = String(hit.value);
-    search.value = String(hit.textContent || "").trim();
+    search.value = String(hit.value || "") === "" ? "" : String(hit.textContent || "").trim();
   } else {
     syncGolferComboSearchFromSelect(selectId);
   }
@@ -8346,6 +8350,7 @@ function refreshGolferComboboxFromSelect(selectId) {
   const search = document.getElementById(`${selectId}-search`);
   if (!sel || !panel) return;
   const labels = [...sel.querySelectorAll("option")]
+    .filter((o) => String(o.value || "") !== "")
     .map((o) => String(o.textContent || "").trim())
     .filter(Boolean);
   golferSuggestWriteLabels(panel, labels);
