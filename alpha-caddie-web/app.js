@@ -7058,19 +7058,6 @@ function buildCourseFitTab() {
     capEl.textContent = venueName;
   }
 
-  if (legEl) {
-    let html =
-      '<span class="course-fit-leg-item"><span class="course-fit-leg-dash"></span> PGA Average</span>' +
-      '<span class="course-fit-leg-item"><span class="course-fit-leg-green"></span> Venue profile</span>';
-    if (similar5 && similarDisplayName) {
-      html +=
-        `<span class="course-fit-leg-item"><span class="course-fit-leg-blue" aria-hidden="true"></span> ${escapeHtml(similarDisplayName)}</span>`;
-    }
-    html +=
-      '<span class="course-fit-leg-item"><span class="course-fit-leg-gold"></span> Selected golfer</span>';
-    legEl.innerHTML = html;
-  }
-
   if (sel) {
     const prev = sel.value;
     sel.innerHTML = "";
@@ -7104,6 +7091,21 @@ function buildCourseFitTab() {
   const dgSel = Math.round(num(sel?.value, NaN));
   const prow = rows.find((r) => Math.round(num(r.dg_id, NaN)) === dgSel);
   const player5 = prow ? courseFitNormalizeRaw(courseFitRawProfile(prow), ranges) : tour5.map(() => 0.5);
+
+  if (legEl) {
+    const selectedGolferName =
+      (prow && displayGolferName(String(prow.player_name || ""))) || "Selected golfer";
+    let html =
+      '<span class="course-fit-leg-item"><span class="course-fit-leg-dash"></span> PGA Average</span>' +
+      `<span class="course-fit-leg-item"><span class="course-fit-leg-green"></span> ${escapeHtml(venueName)}</span>`;
+    if (similar5 && similarDisplayName) {
+      html +=
+        `<span class="course-fit-leg-item"><span class="course-fit-leg-blue" aria-hidden="true"></span> ${escapeHtml(similarDisplayName)}</span>`;
+    }
+    html +=
+      `<span class="course-fit-leg-item"><span class="course-fit-leg-gold"></span> ${escapeHtml(selectedGolferName)}</span>`;
+    legEl.innerHTML = html;
+  }
 
   drawCourseFitRadar(canvas, tour5, venue5, player5, similar5);
 
