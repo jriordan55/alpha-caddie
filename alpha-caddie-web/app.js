@@ -4251,6 +4251,7 @@ const EV_ALLOWED_SPORTSBOOKS = new Set([
   "bet365",
   "betmgm",
   "bovada",
+  "betcris",
 ]);
 
 /** Books often present on DataGolf outright feeds but omitted from tight EV list — needed for finish ladder / Course Fit when only e.g. PointsBet posts top 20. */
@@ -4733,7 +4734,7 @@ function matchupMarketProbWithFallback(filteredOddsObj, sideKey, prefs, isThree 
 }
 
 function bestBookDecimalForSideWithFallback(oddsObj, sideKey, prefs, opts = {}) {
-  const best = bestBookDecimalForSideEvPrefs(oddsObj, sideKey, prefs, opts);
+  const best = bestBookDecimalForSide(filterOddsObjectForEvSportsbooks(oddsObj || {}, opts), sideKey, opts);
   if (Number.isFinite(best.dec) && best.dec > 1) return best;
   return best;
 }
@@ -5141,7 +5142,6 @@ function collectUnifiedEvRows() {
         mk === "mc" ? "Miss Cut" : mk === "make_cut" ? "Make Cut" : mk === "frl" ? "FRL" : mk.replace("_", " ").toUpperCase();
       for (const bk of books) {
         const bkNorm = normalizeEvSportsbookKey(bk);
-        if (!evBookAllowedInConsensus(bkNorm, devigPrefs)) continue;
         const pct = impliedPctFromOutrightBookField(row[bk] ?? row[bkNorm]);
         if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
         const pBook = pct / 100;
