@@ -472,27 +472,6 @@ function removeBookFromOutrights(outrights, bookKey) {
   return next;
 }
 
-function removeBookFromMatchups(matchups, bookKey) {
-  const want = String(bookKey || "").toLowerCase();
-  const next = { ...(matchups && typeof matchups === "object" ? matchups : {}) };
-  for (const [market, pack] of Object.entries(next)) {
-    if (!pack || typeof pack !== "object") continue;
-    const matchList = Array.isArray(pack.match_list)
-      ? pack.match_list.map((matchup) => {
-          const odds = matchup?.odds && typeof matchup.odds === "object" ? { ...matchup.odds } : matchup?.odds;
-          if (odds && typeof odds === "object") {
-            for (const k of Object.keys(odds)) {
-              if (String(k).toLowerCase() === want) delete odds[k];
-            }
-          }
-          return { ...matchup, odds };
-        })
-      : pack.match_list;
-    next[market] = { ...pack, match_list: matchList };
-  }
-  return next;
-}
-
 async function main() {
   const key = loadApiKey();
   if (!key) {
@@ -691,7 +670,7 @@ async function main() {
         { tour: tourForFeeds, market: m, odds_format: "decimal", file_format: "json" },
         key
       );
-      if (raw && typeof raw === "object") matchups[m] = removeBookFromMatchups({ [m]: raw }, "datagolf")[m];
+      if (raw && typeof raw === "object") matchups[m] = raw;
     } catch (e) {
       console.warn(`Matchups ${m} skipped:`, e.message);
     }
@@ -700,7 +679,7 @@ async function main() {
   const next = {
     ...payload,
     outrights,
-    matchups: removeBookFromMatchups(matchups, "datagolf"),
+    matchups,
     outrights_odds_format: outrightsOddsFormat,
     matchups_odds_format: "decimal",
     updated_at: new Date().toISOString().replace(/\.\d{3}Z$/, "Z"),

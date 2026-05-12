@@ -724,6 +724,7 @@ function buildDemoMatchupsFromPlayers(players) {
       ties: "void",
       odds: {
         draftkings: { p1: d1, p2: d2 },
+        datagolf: { p1: +(1 / p1w).toFixed(3), p2: +(1 / (1 - p1w)).toFixed(3) },
       },
     });
   }
@@ -4279,16 +4280,17 @@ function normalizeEvSportsbookKey(bookRaw) {
   return k;
 }
 
-function evSportsbookAllowed(bookRaw) {
+function evSportsbookAllowed(bookRaw, opts = {}) {
+  if (opts.allowDatagolf && normalizeEvSportsbookKey(bookRaw) === "datagolf") return true;
   return EV_ALLOWED_SPORTSBOOKS.has(normalizeEvSportsbookKey(bookRaw));
 }
 
-function filterOddsObjectForEvSportsbooks(oddsObj) {
+function filterOddsObjectForEvSportsbooks(oddsObj, opts = {}) {
   const out = {};
   if (!oddsObj || typeof oddsObj !== "object") return out;
   for (const [bk, pack] of Object.entries(oddsObj)) {
     const norm = normalizeEvSportsbookKey(bk);
-    if (!evSportsbookAllowed(norm)) continue;
+    if (!evSportsbookAllowed(norm, opts)) continue;
     out[norm] = pack;
   }
   return out;
@@ -4498,10 +4500,10 @@ function saveEvDevigPrefs(prefs) {
   }
 }
 
-function evBookAllowedInConsensus(bk, prefs) {
+function evBookAllowedInConsensus(bk, prefs, opts = {}) {
   const k = normalizeEvSportsbookKey(bk);
-  if (k === "datagolf") return false;
-  if (!evSportsbookAllowed(k)) return false;
+  if (k === "datagolf" && !opts.allowDatagolf) return false;
+  if (!evSportsbookAllowed(k, opts)) return false;
   if (!prefs || prefs.books == null) return true;
   if (prefs.books.length === 0) return true;
   return prefs.books.map(normalizeEvSportsbookKey).includes(k);
@@ -4647,7 +4649,7 @@ function matchupConsensusThreeWaySide(oddsObj, sideKey, prefs) {
   if (!["p1", "p2", "p3"].includes(want)) return NaN;
   const items = [];
   for (const bk of Object.keys(oddsObj || {})) {
-    if (!evBookAllowedInConsensus(bk, prefs)) continue;
+    if (!evBookAllowedInConsensus(bk, prefs, { allowDatagolf: true })) continue;
     const wB = evConsensusWeightForBook(bk, prefs);
     if (prefs.bookWeights && wB <= 0) continue;
     const pack = oddsObj[bk];
@@ -4673,7 +4675,7 @@ function matchupConsensusSide(oddsObj, sideKey, prefs) {
   const items = [];
   const method = evDevigMethodValid(prefs.method) ? prefs.method : "none";
   for (const bk of Object.keys(oddsObj || {})) {
-    if (!evBookAllowedInConsensus(bk, prefs)) continue;
+    if (!evBookAllowedInConsensus(bk, prefs, { allowDatagolf: true })) continue;
     const wB = evConsensusWeightForBook(bk, prefs);
     if (prefs.bookWeights && wB <= 0) continue;
     const pack = oddsObj[bk];
@@ -4709,8 +4711,8 @@ function matchupMarketProbWithFallback(filteredOddsObj, sideKey, prefs, isThree 
   return NaN;
 }
 
-function bestBookDecimalForSideWithFallback(oddsObj, sideKey, prefs) {
-  const best = bestBookDecimalForSideEvPrefs(oddsObj, sideKey, prefs);
+function bestBookDecimalForSideWithFallback(oddsObj, sideKey, prefs, opts = {}) {
+  const best = bestBookDecimalForSideEvPrefs(oddsObj, sideKey, prefs, opts);
   if (Number.isFinite(best.dec) && best.dec > 1) return best;
   return best;
 }
@@ -4991,7 +4993,7 @@ function collectUnifiedEvRows() {
       const mu3 = effectiveMuSg(row3, id3, mk);
       const isThreeBall = mk === "3_balls" && Number.isFinite(id3) && id3 > 0;
       if (elim.size && (elim.has(id1) || elim.has(id2) || (isThreeBall && elim.has(id3)))) continue;
-      const oddsEv = filterOddsObjectForEvSportsbooks(m.odds || {});
+      const oddsEv = filterOddsObjectForEvSportsbooks(m.odds || {}, { allowDatagolf: true });
       if (isThreeBall) {
         const [tp1, tp2, tp3] = threeBallModelProbsLiveBlended(mu1, mu2, mu3, row1, row2, row3);
         const b1 = bestBookDecimalForSide(oddsEv, "p1");
@@ -5453,13 +5455,13 @@ function bestBookDecimalForSide(oddsObj, side /* 'p1'|'p2' */) {
 }
 
 /** Like `bestBookDecimalForSide` but only keys allowed by +EV whitelist *and* Devig consensus settings. */
-function bestBookDecimalForSideEvPrefs(oddsObj, side /* 'p1'|'p2'|'p3' */, prefs) {
-  const filtered = filterOddsObjectForEvSportsbooks(oddsObj || {});
+function bestBookDecimalForSideEvPrefs(oddsObj, side /* 'p1'|'p2'|'p3' */, prefs, opts = {}) {
+  const filtered = filterOddsObjectForEvSportsbooks(oddsObj || {}, opts);
   if (!filtered || typeof filtered !== "object") return { book: "", dec: NaN };
   let bestD = NaN;
   let bestB = "";
   for (const bk of Object.keys(filtered)) {
-    if (!evBookAllowedInConsensus(bk, prefs)) continue;
+    if (!evBookAllowedInConsensus(bk, prefs, opts)) continue;
     const pack = filtered[bk];
     if (!pack || typeof pack !== "object") continue;
     const d = num(pack[side], NaN);
@@ -5691,10 +5693,11 @@ function buildMatchupAnalysisTool() {
     const row2 = projectionPlayerRowForModelByIdOrName(id2, m.p2_player_name, r);
     const row3 = projectionPlayerRowForModelByIdOrName(id3, m.p3_player_name, r);
     const odds = m.odds || {};
-    const oddsEv = filterOddsObjectForEvSportsbooks(odds);
-    const b1 = bestBookDecimalForSideWithFallback(odds, "p1", devigPrefs);
-    const b2 = bestBookDecimalForSideWithFallback(odds, "p2", devigPrefs);
-    const b3 = bestBookDecimalForSideWithFallback(odds, "p3", devigPrefs);
+    const matchupBookOpts = { allowDatagolf: true };
+    const oddsEv = filterOddsObjectForEvSportsbooks(odds, matchupBookOpts);
+    const b1 = bestBookDecimalForSideWithFallback(odds, "p1", devigPrefs, matchupBookOpts);
+    const b2 = bestBookDecimalForSideWithFallback(odds, "p2", devigPrefs, matchupBookOpts);
+    const b3 = bestBookDecimalForSideWithFallback(odds, "p3", devigPrefs, matchupBookOpts);
     const isThree = key === "3_balls" && Number.isFinite(id3) && id3 > 0;
     const mu1 = effectiveMuSg(row1, id1, key);
     const mu2 = effectiveMuSg(row2, id2, key);
