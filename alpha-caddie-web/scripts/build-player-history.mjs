@@ -160,6 +160,8 @@ const HOLES_CSV = resolveHoleDataCsv();
 const PROJECTIONS_JSON = path.join(WEB_ROOT, "projections.json");
 const LIVE_IN_PLAY_JSON = path.join(WEB_ROOT, "live-in-play.json");
 const OUT_JSON = path.join(WEB_ROOT, "player_round_history.json");
+const SHARD_DIR = path.join(WEB_ROOT, "player-history", "by-dg");
+const SHARD_MANIFEST_JSON = path.join(WEB_ROOT, "player-history", "manifest.json");
 
 function fmtBytes(n) {
   if (!Number.isFinite(n) || n < 0) return "—";
@@ -167,6 +169,59 @@ function fmtBytes(n) {
   if (n >= 1e6) return `${(n / 1e6).toFixed(1)} MB`;
   if (n >= 1e3) return `${(n / 1e3).toFixed(0)} KB`;
   return `${Math.round(n)} B`;
+}
+
+function playerKeyFromName(full) {
+  const s = String(full || "").trim();
+  const i = s.indexOf(",");
+  if (i > 0) {
+    const last = s.slice(0, i).trim().toLowerCase();
+    const first = (s.slice(i + 1).trim().split(/\s+/)[0] || "").toLowerCase();
+    return `${last}|${first}`;
+  }
+  const tok = s.toLowerCase().split(/\s+/).filter(Boolean);
+  if (tok.length >= 2) return `${tok[tok.length - 1]}|${tok[0]}`;
+  return s.toLowerCase().replace(/\s+/g, "");
+}
+
+function writeJsonAtomic(outPath, payload) {
+  const tmpPath = `${outPath}.tmp`;
+  fs.mkdirSync(path.dirname(outPath), { recursive: true });
+  fs.writeFileSync(tmpPath, JSON.stringify(payload), "utf8");
+  fs.renameSync(tmpPath, outPath);
+}
+
+function writePlayerHistoryShards(out) {
+  fs.mkdirSync(SHARD_DIR, { recursive: true });
+  const keep = new Set();
+  const players = [];
+  for (const [dgId, bucket] of Object.entries(out.byDgId || {})) {
+    const id = String(dgId);
+    keep.add(`${id}.json`);
+    const pkey = playerKeyFromName(bucket?.player_name || "");
+    const holesByPlayerKey = {};
+    if (pkey && out.holesByPlayerKey?.[pkey]) holesByPlayerKey[pkey] = out.holesByPlayerKey[pkey];
+    writeJsonAtomic(path.join(SHARD_DIR, `${id}.json`), {
+      meta: out.meta,
+      byDgId: {
+        [id]: bucket,
+      },
+      holesByPlayerKey,
+    });
+    players.push({
+      dg_id: Number(dgId),
+      player_name: bucket?.player_name || "",
+      rounds: Array.isArray(bucket?.rounds) ? bucket.rounds.length : 0,
+    });
+  }
+  for (const entry of fs.readdirSync(SHARD_DIR, { withFileTypes: true })) {
+    if (entry.isFile() && entry.name.endsWith(".json") && !keep.has(entry.name)) {
+      fs.unlinkSync(path.join(SHARD_DIR, entry.name));
+    }
+  }
+  players.sort((a, b) => String(a.player_name).localeCompare(String(b.player_name)));
+  writeJsonAtomic(SHARD_MANIFEST_JSON, { meta: out.meta, players });
+  console.log("Wrote player history shards:", players.length, "->", path.relative(WEB_ROOT, SHARD_DIR));
 }
 
 /** Windows only: free bytes on the drive hosting `filePath`, or null if unknown. */
@@ -1108,6 +1163,7 @@ async function main() {
 
   const st = fs.statSync(OUT_JSON);
   console.log("Wrote", OUT_JSON, `(${fmtBytes(st.size)})`);
+  writePlayerHistoryShards(out);
 }
 
 main().catch((e) => {

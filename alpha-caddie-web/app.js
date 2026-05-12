@@ -336,6 +336,7 @@ let DATA = {
 let HISTORY = { meta: {}, byDgId: {}, holesByPlayerKey: {}, _ok: false };
 let playerHistoryLoadPromise = null;
 let embeddedRoundHistoryScriptPromise = null;
+const playerHistoryBucketLoadPromises = new Map();
 
 /** Same-origin cache from `approach_skill_ytd.json` (written by `npm run fetch:dg`). Falls back to legacy `approach_skill_l12.json`. Cleared when projections reload. */
 let approachSkillYtdCache = null;
@@ -8056,6 +8057,70 @@ function sanitizePlayerHistoryPayload(payload) {
   return payload;
 }
 
+function applyPlayerHistoryPayload(payload, opts = {}) {
+  const clean = sanitizePlayerHistoryPayload(payload);
+  HISTORY = { ...clean, _ok: true, _loading: false, _partial: Boolean(opts.partial) };
+  HISTORY_ROUNDS_CHRONO_CACHE.clear();
+  PRICING_MU_BONUS_CACHE.clear();
+}
+
+function mergePlayerHistoryPartialPayload(payload) {
+  const clean = sanitizePlayerHistoryPayload(payload);
+  if (!clean || !clean.byDgId || typeof clean.byDgId !== "object") return false;
+  HISTORY = {
+    meta: { ...(HISTORY.meta || {}), ...(clean.meta || {}) },
+    byDgId: { ...(HISTORY.byDgId || {}), ...clean.byDgId },
+    holesByPlayerKey: { ...(HISTORY.holesByPlayerKey || {}), ...(clean.holesByPlayerKey || {}) },
+    _ok: true,
+    _loading: false,
+    _partial: true,
+  };
+  for (const k of Object.keys(clean.byDgId)) {
+    const id = Math.round(num(k, NaN));
+    if (Number.isFinite(id)) HISTORY_ROUNDS_CHRONO_CACHE.delete(id);
+  }
+  PRICING_MU_BONUS_CACHE.clear();
+  return true;
+}
+
+function historyBucketLoaded(dgId) {
+  const id = Math.round(num(dgId, NaN));
+  return Number.isFinite(id) && Boolean(HISTORY.byDgId && HISTORY.byDgId[String(id)]);
+}
+
+function historyBucketLoading(dgId) {
+  const id = Math.round(num(dgId, NaN));
+  return Number.isFinite(id) && playerHistoryBucketLoadPromises.has(id);
+}
+
+async function loadPlayerHistoryBucket(dgId) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return false;
+  if (historyBucketLoaded(id)) return true;
+  if (isFileProtocol()) {
+    await loadPlayerHistory();
+    return historyBucketLoaded(id);
+  }
+  if (playerHistoryBucketLoadPromises.has(id)) return playerHistoryBucketLoadPromises.get(id);
+  const p = (async () => {
+    try {
+      const res = await fetch(cacheBustFetchUrl(`player-history/by-dg/${id}.json`), { cache: "no-store" });
+      if (res.ok) {
+        const ok = mergePlayerHistoryPartialPayload(await res.json());
+        if (ok) return true;
+      }
+    } catch (_) {}
+    await loadPlayerHistory();
+    return historyBucketLoaded(id);
+  })();
+  playerHistoryBucketLoadPromises.set(id, p);
+  try {
+    return await p;
+  } finally {
+    playerHistoryBucketLoadPromises.delete(id);
+  }
+}
+
 /**
  * Prefer player_round_history.json (npm run build:history from historical_rounds_all.csv) when served
  * over HTTP; use embedded script as fallback or for file:// demos.
@@ -8069,9 +8134,7 @@ async function loadPlayerHistory() {
       await loadEmbeddedRoundHistoryScript();
       const emb = embeddedRoundHistoryPayload();
       if (emb) {
-        HISTORY = { ...sanitizePlayerHistoryPayload(emb), _ok: true, _loading: false };
-        HISTORY_ROUNDS_CHRONO_CACHE.clear();
-        PRICING_MU_BONUS_CACHE.clear();
+        applyPlayerHistoryPayload(emb, { partial: false });
         return;
       }
       HISTORY = { meta: {}, byDgId: {}, holesByPlayerKey: {}, _ok: false, _loading: false };
@@ -8082,18 +8145,14 @@ async function loadPlayerHistory() {
     try {
       const res = await fetch(cacheBustFetchUrl("player_round_history.json"), { cache: "no-store" });
       if (res.ok) {
-        HISTORY = { ...sanitizePlayerHistoryPayload(await res.json()), _ok: true, _loading: false };
-        HISTORY_ROUNDS_CHRONO_CACHE.clear();
-        PRICING_MU_BONUS_CACHE.clear();
+        applyPlayerHistoryPayload(await res.json(), { partial: false });
         return;
       }
     } catch (_) {}
     await loadEmbeddedRoundHistoryScript();
     const emb = embeddedRoundHistoryPayload();
     if (emb) {
-      HISTORY = { ...sanitizePlayerHistoryPayload(emb), _ok: true, _loading: false };
-      HISTORY_ROUNDS_CHRONO_CACHE.clear();
-      PRICING_MU_BONUS_CACHE.clear();
+      applyPlayerHistoryPayload(emb, { partial: false });
       return;
     }
     HISTORY = { meta: {}, byDgId: {}, holesByPlayerKey: {}, _ok: false, _loading: false };
@@ -9895,8 +9954,14 @@ function paintPropsTrendKpiRow(statKey, hitSt, graphSeries, dgId) {
   addKpi("All-time avg", allMean);
   addKpi("Season avg", seasonMean);
   addKpi("Graph avg", graphMean);
-  addKpi(`${PROPS_TREND_DISPLAY_SEASON_YEAR} course avg`, propsTrendMeanActual(statKey, roundsMatchingCurrentCourseOnlyFieldSeason()));
-  addKpi("All-time course avg", propsTrendMeanActual(statKey, roundsMatchingCurrentCourseOnlyFieldAllTime()));
+  addKpi(
+    `${PROPS_TREND_DISPLAY_SEASON_YEAR} course avg`,
+    HISTORY._partial ? NaN : propsTrendMeanActual(statKey, roundsMatchingCurrentCourseOnlyFieldSeason())
+  );
+  addKpi(
+    "All-time course avg",
+    HISTORY._partial ? NaN : propsTrendMeanActual(statKey, roundsMatchingCurrentCourseOnlyFieldAllTime())
+  );
 
   if (hitSt && hitSt.valid > 0) {
     const lowerBetter = propsStatLowerIsBetter(statKey);
@@ -10009,6 +10074,17 @@ function renderPropsHitRateAndTopTable(statKey, line, winN) {
   }
   if (!tbody) return;
   tbody.innerHTML = "";
+  if (HISTORY._partial) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 6;
+    td.className = "text-muted";
+    td.textContent = "Selected-player history loaded. Full-field rankings are skipped on mobile to keep the page responsive.";
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    paintPropsTopTableSortHeaders();
+    return;
+  }
   const minR = propsTopHitMinRoundsForFilter();
   const ids = Object.keys(HISTORY.byDgId || {})
     .map((k) => num(k, NaN))
@@ -10545,13 +10621,14 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
 }
 
 function renderPropsTrends() {
-  if (!HISTORY._ok && !HISTORY._loading && activeAppTabId() === "props") {
+  const dg = selectedDgId();
+  const selectedHistoryMissing = Number.isFinite(dg) && !historyBucketLoaded(dg);
+  if (selectedHistoryMissing && !historyBucketLoading(dg) && activeAppTabId() === "props") {
     void ensurePlayerHistoryLoadedForTab("props");
   }
   const empty = document.getElementById("props-chart-empty");
   const titleEl = document.getElementById("props-trends-title");
   const subEl = document.getElementById("props-trends-sub");
-  const dg = selectedDgId();
   refreshPropsFilterOptionsForGolfer(dg);
   const statKey = statKeyFromPropSelect();
   if (propsTopTableSortStatKey !== statKey) {
@@ -10568,14 +10645,13 @@ function renderPropsTrends() {
     if (titleEl) titleEl.textContent = "—";
     if (subEl) subEl.textContent = "";
   }
-  const historyHasBuckets =
-    HISTORY._ok && HISTORY.byDgId && typeof HISTORY.byDgId === "object" && Object.keys(HISTORY.byDgId).length > 0;
-  if (!HISTORY._ok || !historyHasBuckets) {
+  const historyHasSelectedBucket = Number.isFinite(dg) && historyBucketLoaded(dg);
+  if (!HISTORY._ok || !historyHasSelectedBucket) {
     if (empty) {
       empty.hidden = false;
       const metaHint = String(HISTORY.meta?.note || "").trim();
-      empty.textContent = HISTORY._loading
-        ? "Loading full player history..."
+      empty.textContent = HISTORY._loading || historyBucketLoading(dg)
+        ? "Loading player history..."
         : !HISTORY._ok
         ? "No history file."
         : metaHint ||
@@ -11873,8 +11949,12 @@ function activeAppTabId() {
 
 function ensurePlayerHistoryLoadedForTab(tab) {
   if (!["props", "course-fit"].includes(String(tab || ""))) return Promise.resolve();
-  if (HISTORY._ok) return Promise.resolve();
-  const p = loadPlayerHistory();
+  const p =
+    tab === "props"
+      ? loadPlayerHistoryBucket(selectedDgId())
+      : HISTORY._ok && !HISTORY._partial
+        ? Promise.resolve(true)
+        : loadPlayerHistory();
   p.then(() => {
     if (activeAppTabId() !== tab) return;
     if (tab === "props") renderPropsTrends();
