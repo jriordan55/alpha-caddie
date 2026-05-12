@@ -2373,6 +2373,11 @@ th.matchup-analysis-best-pick {
   user-select: none;
 }
 .data-table-outrights th.sortable:hover { color: var(--golf-green); }
+.course-fit-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+.course-fit-table th.sortable:hover { color: var(--golf-green); }
 .sort-ind {
   display: inline-flex;
   flex-direction: column;

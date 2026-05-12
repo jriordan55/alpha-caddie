@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=2" />
+  <link rel="stylesheet" href="styles.css?v=3" />
 </head>
 <body>
   <header class="app-nav">
@@ -379,21 +379,33 @@
               <table class="data-table course-fit-table" id="table-course-fit">
                 <thead>
                   <tr>
-                    <th scope="col">Golfer</th>
-                    <th class="num" scope="col">Category</th>
+                    <th class="sortable" scope="col" data-course-fit-sort="golfer" aria-sort="none">
+                      Golfer<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span>
+                    </th>
+                    <th class="num sortable" scope="col" data-course-fit-sort="category" aria-sort="none">
+                      Category<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span>
+                    </th>
                     <th
-                      class="num"
+                      class="num sortable"
                       scope="col"
                       title="Approximate strokes-gained style edge vs the field on the skills this venue emphasizes (see Category). Higher values mean the golfer’s shape aligns better with the venue profile."
+                      data-course-fit-sort="fit"
+                      aria-sort="descending"
                     >
-                      Fit (Δ SG)
+                      Fit (Δ SG)<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down active">▼</span></span>
                     </th>
-                    <th class="num course-fit-out-th" scope="col" title="DraftKings outright winner odds.">
-                      Winner
+                    <th class="num course-fit-out-th sortable" scope="col" title="Best available API sportsbook winner odds." data-course-fit-sort="win" aria-sort="none">
+                      Winner<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span>
                     </th>
-                    <th class="num course-fit-out-th" scope="col" title="DraftKings top 5 odds.">Top 5</th>
-                    <th class="num course-fit-out-th" scope="col" title="DraftKings top 10 odds.">Top 10</th>
-                    <th class="num course-fit-out-th" scope="col" title="DraftKings top 20 odds.">Top 20</th>
+                    <th class="num course-fit-out-th sortable" scope="col" title="Best available API sportsbook top 5 odds." data-course-fit-sort="top_5" aria-sort="none">
+                      Top 5<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span>
+                    </th>
+                    <th class="num course-fit-out-th sortable" scope="col" title="Best available API sportsbook top 10 odds." data-course-fit-sort="top_10" aria-sort="none">
+                      Top 10<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span>
+                    </th>
+                    <th class="num course-fit-out-th sortable" scope="col" title="Best available API sportsbook top 20 odds." data-course-fit-sort="top_20" aria-sort="none">
+                      Top 20<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody></tbody>
@@ -1298,6 +1310,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=120"></script>
+  <script src="app.js?v=121"></script>
 </body>
 </html>

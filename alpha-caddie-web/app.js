@@ -6329,6 +6329,50 @@ function courseFitOutrightBestBookOddsSingle(marketKey, dgId) {
   };
 }
 
+function courseFitOutrightBestPriceOdds(marketKey, dgId) {
+  const mk = String(marketKey || "");
+  const elim = dgIdsEliminatedFromEventPostCut();
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return { html: "—", book: "", am: NaN, dec: NaN };
+  if (elim.size && elim.has(id) && mk !== "make_cut" && mk !== "mc") {
+    return { html: "—", book: "", am: NaN, dec: NaN };
+  }
+  const pack = DATA.outrights?.[mk];
+  const row = Array.isArray(pack?.rows) ? pack.rows.find((r) => Math.round(num(r.dg_id, NaN)) === id) : null;
+  if (!row) return { html: "—", book: "", am: NaN, dec: NaN };
+  const rawBookKeys = Array.isArray(pack?.bookKeys) && pack.bookKeys.length ? pack.bookKeys : Object.keys(row);
+  let bestBook = "";
+  let bestAm = NaN;
+  let bestDec = NaN;
+  const seen = new Set();
+  for (const bkRaw of rawBookKeys) {
+    const bkNorm = normalizeEvSportsbookKey(bkRaw);
+    if (!bkNorm || seen.has(bkNorm) || !outrightLadderSportsbookAllowed(bkNorm)) continue;
+    seen.add(bkNorm);
+    const pct = impliedPctFromOutrightBookField(row[bkRaw] ?? row[bkNorm]);
+    if (!Number.isFinite(pct) || pct <= 0) continue;
+    const pBook = outrightFeedPlaceholderProbNaN(pct / 100, mk, bkNorm);
+    if (!Number.isFinite(pBook) || pBook <= 0 || pBook >= 1) continue;
+    const dec = 1 / pBook;
+    const am = americanFromImpliedProb(pBook);
+    if (!Number.isFinite(dec) || !Number.isFinite(am)) continue;
+    if (!Number.isFinite(bestDec) || dec > bestDec) {
+      bestDec = dec;
+      bestAm = am;
+      bestBook = bkNorm;
+    }
+  }
+  if (!bestBook || !Number.isFinite(bestAm) || !Number.isFinite(bestDec)) {
+    return { html: "—", book: "", am: NaN, dec: NaN };
+  }
+  return {
+    html: `${bookBadgeHtml(bestBook)} <span class="course-fit-out-odds">${formatAmerican(Math.round(bestAm))}</span>`,
+    book: bestBook,
+    am: Math.round(bestAm),
+    dec: bestDec,
+  };
+}
+
 function courseFitDraftKingsOutrightOdds(marketKey, dgId) {
   const mk = String(marketKey || "");
   if (!["win", "top_5", "top_10", "top_20"].includes(mk)) return { html: "—" };
@@ -6373,15 +6417,11 @@ function courseFitDraftKingsOutrightOddsFromIndex(index, marketKey, dgId) {
 }
 
 /**
- * Course Fit finish columns should show DraftKings only. Keep the old best-book helper as a fallback for
- * non-finish markets, but do not use it for the Win/Top-N table cells.
+ * Course Fit finish columns show the best available posted sportsbook price from the API feed.
+ * DataGolf model prices are excluded; those are fair lines, not book offers.
  */
 function courseFitOutrightBestBookOdds(marketKey, dgId) {
-  const mk = String(marketKey || "");
-  if (["win", "top_5", "top_10", "top_20"].includes(mk)) {
-    return courseFitDraftKingsOutrightOdds(mk, dgId);
-  }
-  return courseFitOutrightBestBookOddsSingle(marketKey, dgId);
+  return courseFitOutrightBestPriceOdds(marketKey, dgId);
 }
 
 function drawCourseFitRadar(canvas, tour5, venue5, player5, similar5) {
@@ -6483,6 +6523,45 @@ let courseFitVenueFilterKey = null;
 /** When projections switch events, reset venue filter and similarity selection. */
 let courseFitVenueEventKeyTracked = "";
 let courseFitGolferDefaultApplied = false;
+let courseFitTableSortBound = false;
+let courseFitTableSort = { key: "fit", dir: -1 };
+
+function courseFitDefaultSortDir(key) {
+  return key === "golfer" || key === "category" ? 1 : -1;
+}
+
+function updateCourseFitTableSortIndicators() {
+  const table = document.getElementById("table-course-fit");
+  if (!table) return;
+  table.querySelectorAll("thead th.sortable[data-course-fit-sort]").forEach((th) => {
+    const key = String(th.getAttribute("data-course-fit-sort") || "");
+    const active = key && key === courseFitTableSort.key;
+    th.setAttribute("aria-sort", active ? (courseFitTableSort.dir > 0 ? "ascending" : "descending") : "none");
+    const up = th.querySelector(".sort-up");
+    const dn = th.querySelector(".sort-down");
+    if (up) up.classList.toggle("active", active && courseFitTableSort.dir > 0);
+    if (dn) dn.classList.toggle("active", active && courseFitTableSort.dir < 0);
+  });
+}
+
+function initCourseFitTableSortOnce() {
+  const table = document.getElementById("table-course-fit");
+  if (!table || courseFitTableSortBound) return;
+  courseFitTableSortBound = true;
+  table.querySelector("thead")?.addEventListener("click", (ev) => {
+    const th = ev.target.closest("th.sortable[data-course-fit-sort]");
+    if (!th || !table.contains(th)) return;
+    const key = String(th.getAttribute("data-course-fit-sort") || "");
+    if (!key) return;
+    if (courseFitTableSort.key === key) {
+      courseFitTableSort = { key, dir: -courseFitTableSort.dir };
+    } else {
+      courseFitTableSort = { key, dir: courseFitDefaultSortDir(key) };
+    }
+    buildCourseFitTab();
+  });
+  updateCourseFitTableSortIndicators();
+}
 
 function courseFitPrettyCourseKey(ck) {
   return String(ck || "")
@@ -7157,16 +7236,46 @@ function buildCourseFitTab() {
   tbody.innerHTML = "";
   if (theadHeading) theadHeading.textContent = `Who fits ${venueName}?`;
 
-  const dkFinishOdds = courseFitDraftKingsFinishOddsIndex();
-  let renderedFitRows = 0;
+  const marketKeys = ["win", "top_5", "top_10", "top_20"];
+  const displayRows = [];
   for (const row of ranked) {
     const nm = displayGolferName(String(row.r.player_name || ""));
     if (search && !nm.toLowerCase().includes(search)) continue;
-    if (renderedFitRows >= 20) break;
     const dgId = Math.round(num(row.r.dg_id, NaN));
+    const odds = {};
+    for (const mk of marketKeys) odds[mk] = courseFitOutrightBestPriceOdds(mk, dgId);
+    displayRows.push({ ...row, nm, dgId, odds });
+    if (displayRows.length >= 30) break;
+  }
+
+  const sortKey = String(courseFitTableSort.key || "fit");
+  const sortDir = courseFitTableSort.dir > 0 ? 1 : -1;
+  displayRows.sort((a, b) => {
+    if (sortKey === "golfer") {
+      const c = a.nm.localeCompare(b.nm);
+      return c * sortDir || b.fit - a.fit;
+    }
+    if (sortKey === "category") {
+      const c = String(a.cat || "").localeCompare(String(b.cat || ""));
+      return c * sortDir || b.fit - a.fit;
+    }
+    if (marketKeys.includes(sortKey)) {
+      const av = a.odds?.[sortKey]?.am;
+      const bv = b.odds?.[sortKey]?.am;
+      const af = Number.isFinite(av);
+      const bf = Number.isFinite(bv);
+      if (af !== bf) return af ? -1 : 1;
+      if (af && av !== bv) return (av - bv) * sortDir;
+      return b.fit - a.fit || a.nm.localeCompare(b.nm);
+    }
+    const fitCmp = (a.fit - b.fit) * sortDir;
+    return fitCmp || a.nm.localeCompare(b.nm);
+  });
+
+  for (const row of displayRows) {
     const tr = document.createElement("tr");
     const tdN = document.createElement("td");
-    tdN.textContent = nm;
+    tdN.textContent = row.nm;
     const tdC = document.createElement("td");
     tdC.className = "num";
     tdC.textContent = row.cat;
@@ -7176,16 +7285,16 @@ function buildCourseFitTab() {
     tr.appendChild(tdN);
     tr.appendChild(tdC);
     tr.appendChild(tdF);
-    for (const mk of ["win", "top_5", "top_10", "top_20"]) {
+    for (const mk of marketKeys) {
       const tdO = document.createElement("td");
       tdO.className = "num course-fit-out-td";
-      const ob = courseFitDraftKingsOutrightOddsFromIndex(dkFinishOdds, mk, dgId);
+      const ob = row.odds?.[mk] || { html: "—" };
       tdO.innerHTML = ob.html;
       tr.appendChild(tdO);
     }
     tbody.appendChild(tr);
-    renderedFitRows++;
   }
+  updateCourseFitTableSortIndicators();
 
   const shotPanel = document.getElementById("course-fit-subpanel-shots");
   if (shotPanel && !shotPanel.hidden) {
@@ -13131,6 +13240,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initTabs();
   initCourseFitSubtabs();
   initCourseFitSimilarListClick();
+  initCourseFitTableSortOnce();
   ensureCourseFitBinTooltipHandlers();
   initLivePropPredictorUi();
   initOutrightsTableSortOnce();
