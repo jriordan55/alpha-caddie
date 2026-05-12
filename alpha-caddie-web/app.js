@@ -368,6 +368,7 @@ let propsTopHitsFitMode = /** @type {"fire" | "ice"} */ ("fire");
 let propsChartCache = { series: null, lineY: NaN, statKey: "" };
 /** Bar hit targets in canvas pixel space (full column band for easier clicks). */
 let propsChartHitRegions = [];
+let propsChartTooltipPinned = false;
 
 function num(v, d) {
   const n = Number(v);
@@ -4701,6 +4702,45 @@ function matchupConsensusSide(oddsObj, sideKey, prefs) {
   return blend;
 }
 
+function matchupDatagolfDecimalForSide(oddsObj, sideKey) {
+  const pack = oddsObj && typeof oddsObj === "object" ? oddsObj.datagolf : null;
+  const d = num(pack?.[sideKey], NaN);
+  return Number.isFinite(d) && d > 1 ? d : NaN;
+}
+
+function matchupDatagolfProbForSide(oddsObj, sideKey) {
+  const want = String(sideKey || "").toLowerCase();
+  if (!["p1", "p2", "p3"].includes(want)) return NaN;
+  const sides = ["p1", "p2", "p3"];
+  const qs = [];
+  for (const side of sides) {
+    const d = matchupDatagolfDecimalForSide(oddsObj, side);
+    qs.push(Number.isFinite(d) ? 1 / d : NaN);
+  }
+  const need = want === "p3" ? 3 : 2;
+  const finite = qs.slice(0, need).filter((q) => Number.isFinite(q) && q > 0);
+  if (finite.length !== need) return NaN;
+  const sum = finite.reduce((a, b) => a + b, 0);
+  if (sum <= 0) return NaN;
+  return qs[sides.indexOf(want)] / sum;
+}
+
+function matchupMarketProbWithFallback(oddsObj, filteredOddsObj, sideKey, prefs, isThree = false) {
+  const p = isThree
+    ? matchupConsensusThreeWaySide(filteredOddsObj, sideKey, prefs)
+    : matchupConsensusSide(filteredOddsObj, sideKey, prefs);
+  if (Number.isFinite(p)) return p;
+  return matchupDatagolfProbForSide(oddsObj, sideKey);
+}
+
+function bestBookDecimalForSideWithFallback(oddsObj, sideKey, prefs) {
+  const best = bestBookDecimalForSideEvPrefs(oddsObj, sideKey, prefs);
+  if (Number.isFinite(best.dec) && best.dec > 1) return best;
+  const dg = matchupDatagolfDecimalForSide(oddsObj, sideKey);
+  if (Number.isFinite(dg)) return { book: "datagolf", dec: dg };
+  return best;
+}
+
 /** Weighted mean of posted decimals → consensus implied prob (outrights). */
 function outrightConsensusProbFromBooks(bookDecItems, prefs) {
   let tw = 0;
@@ -5679,18 +5719,18 @@ function buildMatchupAnalysisTool() {
     const row3 = projectionPlayerRowForModelByIdOrName(id3, m.p3_player_name, r);
     const odds = m.odds || {};
     const oddsEv = filterOddsObjectForEvSportsbooks(odds);
-    const b1 = bestBookDecimalForSideEvPrefs(odds, "p1", devigPrefs);
-    const b2 = bestBookDecimalForSideEvPrefs(odds, "p2", devigPrefs);
-    const b3 = bestBookDecimalForSideEvPrefs(odds, "p3", devigPrefs);
+    const b1 = bestBookDecimalForSideWithFallback(odds, "p1", devigPrefs);
+    const b2 = bestBookDecimalForSideWithFallback(odds, "p2", devigPrefs);
+    const b3 = bestBookDecimalForSideWithFallback(odds, "p3", devigPrefs);
     const isThree = key === "3_balls" && Number.isFinite(id3) && id3 > 0;
     const mu1 = effectiveMuSg(row1, id1, key);
     const mu2 = effectiveMuSg(row2, id2, key);
     const mu3 = effectiveMuSg(row3, id3, key);
     if (isThree) {
       const [p1, p2, p3] = threeBallModelProbsLiveBlended(mu1, mu2, mu3, row1, row2, row3);
-      const mp1 = matchupConsensusThreeWaySide(oddsEv, "p1", devigPrefs);
-      const mp2 = matchupConsensusThreeWaySide(oddsEv, "p2", devigPrefs);
-      const mp3 = matchupConsensusThreeWaySide(oddsEv, "p3", devigPrefs);
+      const mp1 = matchupMarketProbWithFallback(odds, oddsEv, "p1", devigPrefs, true);
+      const mp2 = matchupMarketProbWithFallback(odds, oddsEv, "p2", devigPrefs, true);
+      const mp3 = matchupMarketProbWithFallback(odds, oddsEv, "p3", devigPrefs, true);
       const ev1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
       const ev2 = Number.isFinite(b2.dec) ? p2 * b2.dec - 1 : NaN;
       const ev3 = Number.isFinite(b3.dec) ? p3 * b3.dec - 1 : NaN;
@@ -5736,8 +5776,8 @@ function buildMatchupAnalysisTool() {
     }
     const p1 = matchupWinProbLiveBlended(mu1, mu2, key, row1, row2);
     const p2 = 1 - p1;
-    const marketP1 = matchupConsensusSide(oddsEv, "p1", devigPrefs);
-    const marketP2 = matchupConsensusSide(oddsEv, "p2", devigPrefs);
+    const marketP1 = matchupMarketProbWithFallback(odds, oddsEv, "p1", devigPrefs, false);
+    const marketP2 = matchupMarketProbWithFallback(odds, oddsEv, "p2", devigPrefs, false);
     const ev1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
     const ev2 = Number.isFinite(b2.dec) ? p2 * b2.dec - 1 : NaN;
     const best =
@@ -5878,6 +5918,11 @@ function buildMatchupAnalysisTool() {
       if (!Number.isFinite(span) || span < 1e-9) return 0;
       return Math.max(0, Math.min(100, ((v - lo) / span) * 100));
     };
+    const formatDistanceYards = (v) => {
+      const y = Math.round(v);
+      const unit = Math.abs(y) === 1 ? "yd" : "yds";
+      return `${y > 0 ? "+" : ""}${y} ${unit}`;
+    };
     const buildMetricCell = (td, v, samples, kind = "sg") => {
       td.className = "num matchup-analysis-bar-cell";
       if (!Number.isFinite(v)) {
@@ -5892,8 +5937,8 @@ function buildMatchupAnalysisTool() {
         val.className = `matchup-analysis-bar-val${v >= 0 ? " pos" : " neg"}`;
         val.textContent = `${v >= 0 ? "+" : ""}${v.toFixed(2)}`;
       } else {
-        val.className = "matchup-analysis-bar-val neutral";
-        if (kind === "distance") val.textContent = `${Math.round(v)} yds`;
+        val.className = `matchup-analysis-bar-val neutral ${kind}`;
+        if (kind === "distance") val.textContent = formatDistanceYards(v);
         else val.textContent = `${v.toFixed(1)}%`;
       }
       const track = document.createElement("span");
@@ -10124,8 +10169,8 @@ function propsChartXAxisDateLabels(perBarLabels, innerW) {
   const n = perBarLabels.length;
   const map = new Map();
   if (!n) return map;
-  const minPx = 38;
-  const labelEveryBar = n * minPx <= innerW || n <= 20;
+  const minPx = 54;
+  const labelEveryBar = n * minPx <= innerW;
   if (labelEveryBar) {
     const seen = new Map();
     for (let i = 0; i < n; i++) {
@@ -10192,6 +10237,7 @@ function pickPropsChartHit(canvasX, canvasY) {
 }
 
 function hidePropsChartTooltip() {
+  propsChartTooltipPinned = false;
   const tip = document.getElementById("props-chart-tooltip");
   if (tip) tip.hidden = true;
 }
@@ -13377,36 +13423,49 @@ document.addEventListener("DOMContentLoaded", () => {
   function updatePropsTrendChartHover(canvas, ev) {
     if (!canvas || !propsChartHitRegions.length) {
       if (canvas) canvas.style.cursor = "";
-      hidePropsChartTooltip();
+      if (!propsChartTooltipPinned) hidePropsChartTooltip();
       return;
     }
     const { x, y } = canvasCoordsFromEvent(canvas, ev);
     const hit = pickPropsChartHit(x, y);
     canvas.style.cursor = hit ? "pointer" : "default";
+    if (propsChartTooltipPinned) return;
     if (!hit) {
       hidePropsChartTooltip();
       return;
     }
     showPropsChartTooltip(canvas, ev, hit);
   }
+  function pinPropsTrendChartTooltip(canvas, ev) {
+    if (!canvas || !propsChartHitRegions.length) return;
+    const { x, y } = canvasCoordsFromEvent(canvas, ev);
+    const hit = pickPropsChartHit(x, y);
+    if (!hit) {
+      hidePropsChartTooltip();
+      return;
+    }
+    propsChartTooltipPinned = true;
+    showPropsChartTooltip(canvas, ev, hit);
+  }
   function leavePropsTrendChart(canvas) {
     if (canvas) canvas.style.cursor = "";
-    hidePropsChartTooltip();
+    if (!propsChartTooltipPinned) hidePropsChartTooltip();
   }
   if (trendCanvas) {
     if (window.PointerEvent) {
       trendCanvas.addEventListener("pointermove", (ev) => updatePropsTrendChartHover(trendCanvas, ev));
-      trendCanvas.addEventListener("pointerdown", (ev) => updatePropsTrendChartHover(trendCanvas, ev));
+      trendCanvas.addEventListener("pointerdown", (ev) => pinPropsTrendChartTooltip(trendCanvas, ev));
       trendCanvas.addEventListener("pointerleave", () => leavePropsTrendChart(trendCanvas));
     } else {
       trendCanvas.addEventListener("mousemove", (ev) => updatePropsTrendChartHover(trendCanvas, ev));
+      trendCanvas.addEventListener("click", (ev) => pinPropsTrendChartTooltip(trendCanvas, ev));
       trendCanvas.addEventListener("mouseleave", () => leavePropsTrendChart(trendCanvas));
       trendCanvas.addEventListener(
         "touchstart",
         (ev) => {
           if (ev.touches.length !== 1) return;
           const t = ev.touches[0];
-          updatePropsTrendChartHover(trendCanvas, t);
+          pinPropsTrendChartTooltip(trendCanvas, t);
         },
         { passive: true }
       );
