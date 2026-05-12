@@ -4776,11 +4776,6 @@ function draftKingsFinishOddsByDgIndex() {
       byId.set(id, cur);
     }
   }
-  for (const cur of byId.values()) {
-    if (cur.win && cur.top_5 && cur.win.p > cur.top_5.p + 1e-9) delete cur.win;
-    if (cur.top_5 && cur.top_10 && cur.top_5.p > cur.top_10.p + 1e-9) delete cur.top_5;
-    if (cur.top_10 && cur.top_20 && cur.top_10.p > cur.top_20.p + 1e-9) delete cur.top_10;
-  }
   return byId;
 }
 
