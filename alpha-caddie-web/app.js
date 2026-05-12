@@ -5566,12 +5566,23 @@ function bestBookDecimalForSideEvPrefs(oddsObj, side /* 'p1'|'p2'|'p3' */, prefs
 }
 
 const MATCHUP_ANALYSIS_DRIVING_DISTANCE_BASELINE_YDS = 301;
+const MATCHUP_ANALYSIS_FAIRWAY_HOLES = 14;
 
 function matchupAnalysisDrivingDistanceYards(raw) {
   if (!Number.isFinite(raw)) return NaN;
   if (raw >= 150) return raw;
   if (raw > -100 && raw < 100) return MATCHUP_ANALYSIS_DRIVING_DISTANCE_BASELINE_YDS + raw;
   return raw;
+}
+
+function matchupAnalysisFairwayAccuracyPct(row, raw) {
+  const fw = num(row?.fairways, NaN);
+  const fairwayPct =
+    Number.isFinite(fw) && fw > 1.02 ? (fw / MATCHUP_ANALYSIS_FAIRWAY_HOLES) * 100 : NaN;
+  if (!Number.isFinite(raw)) return fairwayPct;
+  if (raw > 0 && raw <= 1) return raw * 100;
+  if (raw >= 20 && raw <= 100) return raw;
+  return fairwayPct;
 }
 
 function matchupAnalysisMetricValue(row, key) {
@@ -5603,20 +5614,10 @@ function matchupAnalysisMetricValue(row, key) {
       num(row.fw_pct, NaN),
       num(row.fairway_pct, NaN),
     ];
-    let raw = NaN;
-    for (const v of cands) {
-      if (Number.isFinite(v)) {
-        raw = v;
-        break;
-      }
-    }
-    if (!Number.isFinite(raw)) {
-      const fw = num(row.fairways, NaN);
-      if (Number.isFinite(fw) && fw > 1.02) raw = (fw / 14) * 100;
-    }
-    if (!Number.isFinite(raw)) return NaN;
-    // support either pct points (48.3) or ratio (0.483)
-    return raw > 1 ? raw : raw * 100;
+    const actualPct = cands.find((v) => Number.isFinite(v) && ((v > 0 && v <= 1) || (v >= 20 && v <= 100)));
+    if (Number.isFinite(actualPct)) return matchupAnalysisFairwayAccuracyPct(row, actualPct);
+    const raw = cands.find((v) => Number.isFinite(v));
+    return matchupAnalysisFairwayAccuracyPct(row, raw);
   }
   return num(row[key], NaN);
 }
