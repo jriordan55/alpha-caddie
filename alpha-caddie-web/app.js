@@ -5730,20 +5730,13 @@ function buildMatchupAnalysisTool() {
   if (titleB) titleB.textContent = "Player B";
   if (typeof list === "string") {
     if (note) {
-      note.hidden = false;
-      note.textContent = String(list);
+      note.hidden = true;
+      note.textContent = "";
     }
     if (matchupPickEl) {
       matchupPickEl.innerHTML = "";
       matchupPickEl.hidden = true;
     }
-    const tr = document.createElement("tr");
-    const td = document.createElement("td");
-    td.colSpan = 6;
-    td.className = "text-muted";
-    td.textContent = String(list);
-    tr.appendChild(td);
-    sgBody.appendChild(tr);
     return;
   }
   if (note) note.hidden = true;
@@ -5752,12 +5745,6 @@ function buildMatchupAnalysisTool() {
       matchupPickEl.innerHTML = "";
       matchupPickEl.hidden = true;
     }
-    const tr = document.createElement("tr");
-    const td = document.createElement("td");
-    td.colSpan = 6;
-    td.textContent = "No matchups.";
-    tr.appendChild(td);
-    sgBody.appendChild(tr);
     return;
   }
 
@@ -5898,12 +5885,6 @@ function buildMatchupAnalysisTool() {
       matchupPickEl.innerHTML = "";
       matchupPickEl.hidden = true;
     }
-    const tr = document.createElement("tr");
-    const td = document.createElement("td");
-    td.colSpan = 6;
-    td.textContent = "No matchups.";
-    tr.appendChild(td);
-    sgBody.appendChild(tr);
     return;
   }
 
@@ -7223,26 +7204,13 @@ function buildMatchupsTable() {
   const list = pack && pack.match_list;
   if (typeof list === "string") {
     if (note) {
-      note.hidden = false;
-      note.textContent = String(list);
+      note.hidden = true;
+      note.textContent = "";
     }
-    const tr = document.createElement("tr");
-    const td = document.createElement("td");
-    td.colSpan = 5;
-    td.className = "text-muted";
-    td.textContent = String(list);
-    tr.appendChild(td);
-    tbody.appendChild(tr);
     return;
   }
   if (note) note.hidden = true;
   if (!Array.isArray(list) || !list.length) {
-    const tr = document.createElement("tr");
-    const td = document.createElement("td");
-    td.colSpan = 5;
-    td.textContent = "No matchups.";
-    tr.appendChild(td);
-    tbody.appendChild(tr);
     return;
   }
   const r = getModelRoundForEv();
