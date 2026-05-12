@@ -6280,27 +6280,35 @@ function courseFitOutrightBestBookOddsSingle(marketKey, dgId) {
   };
 }
 
-/**
- * Course Fit finish columns: one coherent book + monotonic ladder per player (matches +EV outright rows).
- */
-function courseFitOutrightBestBookOdds(marketKey, dgId) {
+function courseFitDraftKingsOutrightOdds(marketKey, dgId) {
   const mk = String(marketKey || "");
-  if (!["win", "top_5", "top_10", "top_20"].includes(mk)) return courseFitOutrightBestBookOddsSingle(marketKey, dgId);
+  if (!["win", "top_5", "top_10", "top_20"].includes(mk)) return { html: "—" };
   const elim = dgIdsEliminatedFromEventPostCut();
   const id = Math.round(num(dgId, NaN));
   if (!Number.isFinite(id)) return { html: "—" };
   if (elim.size && elim.has(id)) return { html: "—" };
+  const pack = DATA.outrights?.[mk];
+  const row = Array.isArray(pack?.rows) ? pack.rows.find((r) => Math.round(num(r.dg_id, NaN)) === id) : null;
+  if (!row) return { html: "—" };
+  const pct = impliedPctFromBookField(row.draftkings);
+  if (!Number.isFinite(pct) || pct <= 0) return { html: "—" };
+  const pBook = outrightFeedPlaceholderProbNaN(pct / 100, mk, "draftkings");
+  if (!Number.isFinite(pBook) || pBook <= 0 || pBook >= 1) return { html: "—" };
+  const am = americanFromImpliedProb(pBook);
+  if (!Number.isFinite(am)) return { html: "—" };
+  return {
+    html: `${bookBadgeHtml("draftkings")} <span class="course-fit-out-odds">${formatAmerican(Math.round(am))}</span>`,
+  };
+}
 
-  const bundle = outrightFinishLadderBestBookBundle(id);
-  const idx = ["win", "top_5", "top_10", "top_20"].indexOf(mk);
-  if (bundle && idx >= 0 && Number.isFinite(bundle.coherent[idx])) {
-    const pBook = bundle.coherent[idx];
-    const am = americanFromImpliedProbCapped(pBook);
-    if (Number.isFinite(am)) {
-      return {
-        html: `${bookBadgeHtml(bundle.book)} <span class="course-fit-out-odds">${formatAmerican(am)}</span>`,
-      };
-    }
+/**
+ * Course Fit finish columns should show DraftKings only. Keep the old best-book helper as a fallback for
+ * non-finish markets, but do not use it for the Win/Top-N table cells.
+ */
+function courseFitOutrightBestBookOdds(marketKey, dgId) {
+  const mk = String(marketKey || "");
+  if (["win", "top_5", "top_10", "top_20"].includes(mk)) {
+    return courseFitDraftKingsOutrightOdds(mk, dgId);
   }
   return courseFitOutrightBestBookOddsSingle(marketKey, dgId);
 }
@@ -7075,9 +7083,11 @@ function buildCourseFitTab() {
   tbody.innerHTML = "";
   if (theadHeading) theadHeading.textContent = `Who fits ${venueName}?`;
 
+  let renderedFitRows = 0;
   for (const row of ranked) {
     const nm = displayGolferName(String(row.r.player_name || ""));
     if (search && !nm.toLowerCase().includes(search)) continue;
+    if (renderedFitRows >= 20) break;
     const dgId = Math.round(num(row.r.dg_id, NaN));
     const tr = document.createElement("tr");
     const tdN = document.createElement("td");
@@ -7099,6 +7109,7 @@ function buildCourseFitTab() {
       tr.appendChild(tdO);
     }
     tbody.appendChild(tr);
+    renderedFitRows++;
   }
 
   const shotSearch = String(document.getElementById("course-fit-shots-search")?.value || "")
