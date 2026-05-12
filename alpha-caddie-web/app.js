@@ -4431,16 +4431,20 @@ function loadEvDevigPrefs() {
       else if (j.books.length === 1) consensusMode = "single";
       else consensusMode = "split";
     }
-    const singleBook = String(j.singleBook || (consensusMode === "single" && j.books?.[0]) || "").toLowerCase();
+    const singleBook = sanitizeEvDevigBookKey(
+      j.singleBook || (consensusMode === "single" && j.books?.[0]) || ""
+    );
     const splitBooks = Array.isArray(j.splitBooks)
-      ? j.splitBooks.map((x) => String(x).toLowerCase())
+      ? sanitizeEvDevigBookList(j.splitBooks)
       : consensusMode === "split" && Array.isArray(j.books)
-        ? j.books.map((x) => String(x).toLowerCase())
+        ? sanitizeEvDevigBookList(j.books)
         : [];
     const weights =
       j.weights && typeof j.weights === "object"
         ? Object.fromEntries(
-            Object.entries(j.weights).map(([k, v]) => [String(k).toLowerCase(), num(v, NaN)])
+            Object.entries(j.weights)
+              .map(([k, v]) => [sanitizeEvDevigBookKey(k), num(v, NaN)])
+              .filter(([k]) => k)
           )
         : null;
     let books = null;
@@ -4504,8 +4508,9 @@ function evBookAllowedInConsensus(bk, prefs, opts = {}) {
   if (k === "datagolf" && !opts.allowDatagolf) return false;
   if (!evSportsbookAllowed(k, opts)) return false;
   if (!prefs || prefs.books == null) return true;
-  if (prefs.books.length === 0) return true;
-  return prefs.books.map(normalizeEvSportsbookKey).includes(k);
+  const selected = prefs.books.map(sanitizeEvDevigBookKey).filter(Boolean);
+  if (selected.length === 0) return true;
+  return selected.includes(k);
 }
 
 function evConsensusWeightForBook(bk, prefs) {
@@ -4514,6 +4519,23 @@ function evConsensusWeightForBook(bk, prefs) {
   const w = num(prefs.bookWeights[k], NaN);
   if (Number.isFinite(w) && w > 0) return w;
   return 0;
+}
+
+function sanitizeEvDevigBookKey(bookRaw) {
+  const k = normalizeEvSportsbookKey(bookRaw);
+  return evSportsbookAllowed(k) ? k : "";
+}
+
+function sanitizeEvDevigBookList(list) {
+  const out = [];
+  const seen = new Set();
+  for (const raw of Array.isArray(list) ? list : []) {
+    const k = sanitizeEvDevigBookKey(raw);
+    if (!k || seen.has(k)) continue;
+    seen.add(k);
+    out.push(k);
+  }
+  return out;
 }
 
 const EV_DEVIG_METHODS = [
@@ -4798,8 +4820,10 @@ function readEvDevigSplitForm() {
   for (const row of document.querySelectorAll("#ev-devig-split-list .ev-devig-split-row")) {
     const cb = row.querySelector(".ev-devig-split-cb");
     if (!cb?.checked) continue;
+    const bk = sanitizeEvDevigBookKey(cb.value);
+    if (!bk) continue;
     picked.push({
-      bk: String(cb.value).toLowerCase(),
+      bk,
       pct: num(row.querySelector(".ev-devig-split-pct")?.value, NaN),
     });
   }
@@ -4941,10 +4965,12 @@ function readEvDevigFormToPrefs() {
     return { method: m, consensusMode: "market", singleBook: "", splitBooks: [], weights: null };
   }
   if (mode === "single") {
-    const sk = String(document.getElementById("ev-devig-single-key")?.value || "").toLowerCase();
+    const sk = sanitizeEvDevigBookKey(document.getElementById("ev-devig-single-key")?.value || "");
+    if (!sk) return { method: m, consensusMode: "market", singleBook: "", splitBooks: [], weights: null };
     return { method: m, consensusMode: "single", singleBook: sk, splitBooks: [], weights: null };
   }
   const sp = readEvDevigSplitForm();
+  if (!sp.books.length) return { method: m, consensusMode: "market", singleBook: "", splitBooks: [], weights: null };
   return { method: m, consensusMode: "split", singleBook: "", splitBooks: sp.books, weights: sp.weights };
 }
 
@@ -4995,9 +5021,9 @@ function collectUnifiedEvRows() {
       const oddsEv = filterOddsObjectForEvSportsbooks(m.odds || {}, { allowDatagolf: true });
       if (isThreeBall) {
         const [tp1, tp2, tp3] = threeBallModelProbsLiveBlended(mu1, mu2, mu3, row1, row2, row3);
-        const b1 = bestBookDecimalForSide(oddsEv, "p1", { allowDatagolf: true });
-        const b2 = bestBookDecimalForSide(oddsEv, "p2", { allowDatagolf: true });
-        const b3 = bestBookDecimalForSide(oddsEv, "p3", { allowDatagolf: true });
+        const b1 = bestBookDecimalForSideWithFallback(oddsEv, "p1", devigPrefs, { allowDatagolf: true });
+        const b2 = bestBookDecimalForSideWithFallback(oddsEv, "p2", devigPrefs, { allowDatagolf: true });
+        const b3 = bestBookDecimalForSideWithFallback(oddsEv, "p3", devigPrefs, { allowDatagolf: true });
         const n1 = displayGolferName(String(m.p1_player_name || ""));
         const n2 = displayGolferName(String(m.p2_player_name || ""));
         const n3 = displayGolferName(String(m.p3_player_name || ""));
@@ -5040,8 +5066,8 @@ function collectUnifiedEvRows() {
         continue;
       }
       const p1 = matchupWinProbLiveBlended(mu1, mu2, mk, row1, row2);
-      const b1 = bestBookDecimalForSide(oddsEv, "p1", { allowDatagolf: true });
-      const b2 = bestBookDecimalForSide(oddsEv, "p2", { allowDatagolf: true });
+      const b1 = bestBookDecimalForSideWithFallback(oddsEv, "p1", devigPrefs, { allowDatagolf: true });
+      const b2 = bestBookDecimalForSideWithFallback(oddsEv, "p2", devigPrefs, { allowDatagolf: true });
       const modelEv1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
       const modelEv2 = Number.isFinite(b2.dec) ? (1 - p1) * b2.dec - 1 : NaN;
       const marketP1 = matchupConsensusSide(oddsEv, "p1", devigPrefs);
@@ -5115,6 +5141,7 @@ function collectUnifiedEvRows() {
         mk === "mc" ? "Miss Cut" : mk === "make_cut" ? "Make Cut" : mk === "frl" ? "FRL" : mk.replace("_", " ").toUpperCase();
       for (const bk of books) {
         const bkNorm = normalizeEvSportsbookKey(bk);
+        if (!evBookAllowedInConsensus(bkNorm, devigPrefs)) continue;
         const pct = impliedPctFromOutrightBookField(row[bk] ?? row[bkNorm]);
         if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
         const pBook = pct / 100;
