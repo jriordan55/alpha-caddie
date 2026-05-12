@@ -5086,26 +5086,8 @@ function collectUnifiedEvRows() {
       const id = Math.round(num(row.dg_id, NaN));
       if (elim.size && elim.has(id) && mk !== "make_cut" && mk !== "mc") continue;
       let modelP = modelProbOutrightFromRowOrProjections(row, mk, evLbOpts);
-      let bestBook = "";
-      let bestAm = NaN;
-      let bestEv = NaN;
       modelP = modelProbOutrightFromRowOrProjections(row, mk, evLbOpts);
       const modelOk = Number.isFinite(modelP) && modelP > 0;
-      for (const bk of books) {
-        const bkNorm = normalizeEvSportsbookKey(bk);
-        const pct = impliedPctFromOutrightBookField(row[bk] ?? row[bkNorm]);
-        if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
-        const pBook = pct / 100;
-        if (!Number.isFinite(pBook) || pBook <= 0 || pBook >= 1) continue;
-        const ev = outrightEvFromModelAndBook(modelP, pBook, mk);
-        if (!Number.isFinite(ev)) continue;
-        if (!Number.isFinite(bestEv) || ev > bestEv) {
-          bestEv = ev;
-          bestBook = bkNorm;
-          bestAm = americanFromImpliedProb(pBook);
-        }
-      }
-      if (Number.isFinite(bestAm)) bestAm = Math.round(bestAm);
       const decItems = [];
       for (const bk of books) {
         const bkNorm = normalizeEvSportsbookKey(bk);
@@ -5117,31 +5099,44 @@ function collectUnifiedEvRows() {
         decItems.push({ bk: bkNorm, dec: 1 / pp });
       }
       const marketP = outrightConsensusProbFromBooks(decItems, devigPrefs);
-      const bestDec = Number.isFinite(bestAm) ? decimalFromAmerican(bestAm) : NaN;
-      rows.push({
-        golfer: displayGolferName(String(row.player_name || "")),
-        market:
-          mk === "win"
-            ? "Outright Win"
-            : mk === "top_5"
-              ? "Outright Top 5"
-              : mk === "top_10"
-                ? "Outright Top 10"
-                : mk === "top_20"
-                  ? "Outright Top 20"
-                  : mk === "make_cut"
-                    ? "Outright Make Cut"
-                    : mk === "mc"
-                      ? "Outright Miss Cut"
-                      : "First Round Leader",
-        bet: mk === "mc" ? "Miss Cut" : mk === "make_cut" ? "Make Cut" : mk === "frl" ? "FRL" : mk.replace("_", " ").toUpperCase(),
-        modelPct: modelP,
-        modelEv: bestEv,
-        bestBook,
-        bestBookOdds: Number.isFinite(bestAm) ? formatAmerican(bestAm) : "—",
-        bestDec,
-        consensusP: marketP,
-      });
+      const marketLabel =
+        mk === "win"
+          ? "Outright Win"
+          : mk === "top_5"
+            ? "Outright Top 5"
+            : mk === "top_10"
+              ? "Outright Top 10"
+              : mk === "top_20"
+                ? "Outright Top 20"
+                : mk === "make_cut"
+                  ? "Outright Make Cut"
+                  : mk === "mc"
+                    ? "Outright Miss Cut"
+                    : "First Round Leader";
+      const betLabel =
+        mk === "mc" ? "Miss Cut" : mk === "make_cut" ? "Make Cut" : mk === "frl" ? "FRL" : mk.replace("_", " ").toUpperCase();
+      for (const bk of books) {
+        const bkNorm = normalizeEvSportsbookKey(bk);
+        const pct = impliedPctFromOutrightBookField(row[bk] ?? row[bkNorm]);
+        if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
+        const pBook = pct / 100;
+        if (!Number.isFinite(pBook) || pBook <= 0 || pBook >= 1) continue;
+        const modelEv = outrightEvFromModelAndBook(modelP, pBook, mk);
+        if (!Number.isFinite(modelEv)) continue;
+        const am = Math.round(americanFromImpliedProb(pBook));
+        const dec = 1 / pBook;
+        rows.push({
+          golfer: displayGolferName(String(row.player_name || "")),
+          market: marketLabel,
+          bet: betLabel,
+          modelPct: modelP,
+          modelEv,
+          bestBook: bkNorm,
+          bestBookOdds: Number.isFinite(am) ? formatAmerican(am) : "—",
+          bestDec: dec,
+          consensusP: marketP,
+        });
+      }
     }
   }
   return rows;
