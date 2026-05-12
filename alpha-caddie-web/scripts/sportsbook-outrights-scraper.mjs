@@ -112,21 +112,32 @@ function parseTextOdds(text, players, url) {
     .map((s) => s.trim())
     .filter(Boolean);
   const rows = [];
-  let markets = [];
+  let activeMarkets = marketHintsFromUrl(url);
   for (let i = 0; i < lines.length; i++) {
     const mk = marketFromLabel(lines[i]);
-    if (mk && !markets.includes(mk)) markets.push(mk);
+    if (mk) {
+      const headerMarkets = [];
+      let j = i;
+      while (j < lines.length) {
+        const hm = marketFromLabel(lines[j]);
+        if (!hm) break;
+        if (!headerMarkets.includes(hm)) headerMarkets.push(hm);
+        j++;
+      }
+      if (headerMarkets.length) activeMarkets = headerMarkets;
+      i = Math.max(i, j - 1);
+      continue;
+    }
     const player = lookup.get(normName(lines[i]));
     if (!player) continue;
     const vals = [];
-    for (let j = i + 1; j < Math.min(lines.length, i + 6); j++) {
+    for (let j = i + 1; j < Math.min(lines.length, i + 1 + Math.max(1, activeMarkets.length || 1)); j++) {
       const pct = parseOddsToken(lines[j]);
       if (!Number.isFinite(pct)) break;
       vals.push(pct);
-      if (vals.length >= Math.max(1, markets.length || 1)) break;
+      if (vals.length >= Math.max(1, activeMarkets.length || 1)) break;
     }
-    const hinted = marketHintsFromUrl(url);
-    const useMarkets = markets.length ? markets : hinted;
+    const useMarkets = activeMarkets;
     if (!useMarkets.length || !vals.length) continue;
     for (let k = 0; k < Math.min(useMarkets.length, vals.length); k++) {
       rows.push({
@@ -149,7 +160,7 @@ function mergeScrapedRows(rows) {
     const pack = byMarket[r.market];
     const key = String(Math.round(r.dg_id));
     const prev = pack.rows.get(key) || { dg_id: Math.round(r.dg_id), player_name: r.player_name };
-    prev[r.book] = r.pct;
+    if (!Number.isFinite(prev[r.book])) prev[r.book] = r.pct;
     pack.rows.set(key, prev);
     pack.bookKeys.add(r.book);
   }
@@ -162,6 +173,20 @@ function mergeScrapedRows(rows) {
       },
     ]),
   );
+}
+
+async function expandDraftKingsOutrightSections(page) {
+  for (const label of ["Top 5/10/20"]) {
+    const loc = page.getByText(label, { exact: true }).last();
+    try {
+      if ((await page.getByText(label, { exact: true }).count()) <= 0) continue;
+      await loc.scrollIntoViewIfNeeded({ timeout: 3000 }).catch(() => {});
+      await loc.click({ timeout: 5000, force: true });
+      await page.waitForTimeout(2500);
+    } catch {
+      /* best effort; default table still has winner/top-5/top-10 */
+    }
+  }
 }
 
 export function sportsbookOutrightUrlsFromEnv() {
@@ -193,7 +218,7 @@ export async function fetchSportsbookOutrightsFromUrls({ players, urls = sportsb
       try {
         await page.goto(url, { waitUntil: "domcontentloaded", timeout: 45000 });
         await page.waitForTimeout(4500);
-        const text = await page.locator("body").innerText({ timeout: 10000 }).catch(() => "");
+        let text = await page.locator("body").innerText({ timeout: 10000 }).catch(() => "");
         if (pageLooksBlocked(text)) {
           blockedBooks.add(book);
           logs.push(`${book}: blocked/challenge page`);
@@ -202,6 +227,10 @@ export async function fetchSportsbookOutrightsFromUrls({ players, urls = sportsb
         if (book === "thescore" && String(process.env.GOLF_ENABLE_THESCORE_OUTRIGHT_SCRAPE || "").trim() !== "1") {
           logs.push(`${book}: skipped mixed promo/parlay page (set GOLF_ENABLE_THESCORE_OUTRIGHT_SCRAPE=1 to force)`);
           continue;
+        }
+        if (book === "draftkings") {
+          await expandDraftKingsOutrightSections(page);
+          text = await page.locator("body").innerText({ timeout: 10000 }).catch(() => text);
         }
         const rows = parseTextOdds(text, players, url);
         scraped.push(...rows);
