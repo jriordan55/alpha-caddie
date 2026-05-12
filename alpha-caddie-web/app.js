@@ -11702,8 +11702,8 @@ function hangoutShotsPar4(sc) {
   const tee = hangoutRi(285, 348);
   if (sc <= 2) {
     return [
-      { title: "Tee shot", yards: tee, lie: hangoutRngU01() < 0.4 ? "Green" : "Fairway" },
-      { title: "Putt", feet: hangoutRi(4, 28), tag: "Eagle" },
+      { title: "Tee shot", yards: tee, lie: hangoutRngU01() < 0.24 ? "Rough" : "Fairway" },
+      { title: "Approach", yards: hangoutRi(86, 154), lie: "Hole", tag: "Eagle hole-out" },
     ];
   }
   if (sc === 3) {
@@ -11741,26 +11741,26 @@ function hangoutShotsPar4(sc) {
 }
 
 function hangoutShotsPar5(sc) {
-  const tee = hangoutRi(525, 595);
+  const tee = hangoutRi(286, 345);
   if (sc <= 3) {
     return [
       { title: "Tee shot", yards: tee, lie: "Fairway" },
-      { title: "Second", yards: hangoutRi(115, 185), lie: "Green" },
+      { title: "Second", yards: hangoutRi(205, 275), lie: "Green" },
       { title: "Putt", feet: hangoutRi(6, 22), tag: "Eagle" },
     ];
   }
   if (sc === 4) {
     return [
       { title: "Tee shot", yards: tee, lie: "Fairway" },
-      { title: "Layup", yards: hangoutRi(238, 288), lie: "Fairway" },
-      { title: "Approach", yards: hangoutRi(95, 135), lie: "Green" },
+      { title: "Second", yards: hangoutRi(210, 270), lie: "Green" },
+      { title: "Putt", feet: hangoutRi(20, 42), lie: "" },
       { title: "Putt", feet: hangoutRi(10, 22), tag: "Birdie" },
     ];
   }
   if (sc === 5) {
     return [
       { title: "Tee shot", yards: tee, lie: hangoutRngU01() < 0.18 ? "Rough" : "Fairway" },
-      { title: "Layup", yards: hangoutRi(220, 275), lie: "Fairway" },
+      { title: "Layup", yards: hangoutRi(170, 235), lie: "Fairway" },
       { title: "Approach", yards: hangoutRi(105, 148), lie: "Green" },
       { title: "Putt", feet: hangoutRi(22, 36), lie: "" },
       { title: "Putt", feet: hangoutRi(2, 5), tag: "Par" },
@@ -11769,7 +11769,7 @@ function hangoutShotsPar5(sc) {
   if (sc === 6) {
     return [
       { title: "Tee shot", yards: tee, lie: "Fairway" },
-      { title: "Second", yards: hangoutRi(255, 295), lie: "Rough" },
+      { title: "Second", yards: hangoutRi(185, 245), lie: "Rough" },
       { title: "Approach", yards: hangoutRi(128, 168), lie: "Green" },
       { title: "Putt", feet: hangoutRi(26, 40), lie: "" },
       { title: "Putt", feet: hangoutRi(4, 9), lie: "" },
@@ -11778,7 +11778,7 @@ function hangoutShotsPar5(sc) {
   }
   return [
     { title: "Tee shot", yards: tee, lie: "Rough" },
-    { title: "Layup", yards: hangoutRi(210, 250), lie: "Fairway" },
+    { title: "Layup", yards: hangoutRi(160, 225), lie: "Fairway" },
     { title: "Approach", yards: hangoutRi(145, 185), lie: "Rough" },
     { title: "Chip", yards: hangoutRi(32, 52), lie: "Green" },
     { title: "Putt", feet: hangoutRi(20, 34), lie: "" },
