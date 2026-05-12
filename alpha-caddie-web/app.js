@@ -5565,6 +5565,15 @@ function bestBookDecimalForSideEvPrefs(oddsObj, side /* 'p1'|'p2'|'p3' */, prefs
   return { book: bestB, dec: bestD };
 }
 
+const MATCHUP_ANALYSIS_DRIVING_DISTANCE_BASELINE_YDS = 301;
+
+function matchupAnalysisDrivingDistanceYards(raw) {
+  if (!Number.isFinite(raw)) return NaN;
+  if (raw >= 150) return raw;
+  if (raw > -100 && raw < 100) return MATCHUP_ANALYSIS_DRIVING_DISTANCE_BASELINE_YDS + raw;
+  return raw;
+}
+
 function matchupAnalysisMetricValue(row, key) {
   if (!row) return NaN;
   if (key === "sg_total") {
@@ -5581,7 +5590,9 @@ function matchupAnalysisMetricValue(row, key) {
       num(row.driving_dist, NaN),
       num(row.distance, NaN),
     ];
-    for (const v of cands) if (Number.isFinite(v)) return v;
+    for (const v of cands) {
+      if (Number.isFinite(v)) return matchupAnalysisDrivingDistanceYards(v);
+    }
     return NaN;
   }
   if (key === "accuracy") {
@@ -5986,7 +5997,7 @@ function buildMatchupAnalysisTool() {
     const formatDistanceYards = (v) => {
       const y = Math.round(v);
       const unit = Math.abs(y) === 1 ? "yd" : "yds";
-      return `${y > 0 ? "+" : ""}${y} ${unit}`;
+      return `${y} ${unit}`;
     };
     const buildMetricCell = (td, v, samples, kind = "sg") => {
       td.className = "num matchup-analysis-bar-cell";
