@@ -708,9 +708,11 @@ function skillPillarsFromSkillRow(row) {
   };
 }
 
-/** Driving distance (yards) + fairway accuracy (% points), from skill-ratings / decompositions column aliases. */
+/** Driving distance + accuracy skill ratings, from skill-ratings / decompositions column aliases. */
 function drivingAttrsFromSkillBag(row) {
-  if (!row || typeof row !== "object") return { driving_distance: NaN, driving_accuracy: NaN };
+  if (!row || typeof row !== "object") {
+    return { driving_distance: NaN, driving_accuracy: NaN, driving_dist: NaN, driving_acc: NaN };
+  }
   const bag = normalizedScalarBag(row);
   const dist = pickFromBag(bag, [
     "avg_driving_distance",
@@ -740,8 +742,8 @@ function drivingAttrsFromSkillBag(row) {
     "fairway_accuracy",
     "fw_accuracy",
   ]);
-  if (Number.isFinite(acc) && acc > 0 && acc <= 1) acc *= 100;
-  return { driving_distance: dist, driving_accuracy: acc };
+  const accRating = Number.isFinite(acc) && acc > -1 && acc < 1 ? acc * 100 : acc;
+  return { driving_distance: dist, driving_accuracy: accRating, driving_dist: dist, driving_acc: acc };
 }
 
 function mergeSkillDrivingProfile(mergedRow) {
@@ -1218,16 +1220,16 @@ async function main() {
 
     const liveDv = liveDrivingByDg.get(id);
     let driving_distance =
-      liveDv && Number.isFinite(liveDv.distance)
-        ? liveDv.distance
-        : skRow && Number.isFinite(skRow.driving_distance)
-          ? skRow.driving_distance
+      skRow && Number.isFinite(skRow.driving_distance)
+        ? skRow.driving_distance
+        : liveDv && Number.isFinite(liveDv.distance)
+          ? liveDv.distance
           : NaN;
     let driving_accuracy =
-      liveDv && Number.isFinite(liveDv.accuracy)
-        ? liveDv.accuracy
-        : skRow && Number.isFinite(skRow.driving_accuracy)
-          ? skRow.driving_accuracy
+      skRow && Number.isFinite(skRow.driving_accuracy)
+        ? skRow.driving_accuracy
+        : liveDv && Number.isFinite(liveDv.accuracy)
+          ? liveDv.accuracy
           : NaN;
 
     const fx = fantasyByDg.get(id) || {};
@@ -1282,6 +1284,8 @@ async function main() {
       for (const k of ["sg_total", "sg_ott", "sg_app", "sg_arg", "sg_putt", "sg_t2g"]) {
         if (Number.isFinite(skRow[k])) rowOut[k] = skRow[k];
       }
+      if (Number.isFinite(skRow.driving_dist)) rowOut.driving_dist = skRow.driving_dist;
+      if (Number.isFinite(skRow.driving_acc)) rowOut.driving_acc = skRow.driving_acc;
     }
     if (Number.isFinite(driving_distance)) {
       const dyInt = Math.round(driving_distance);

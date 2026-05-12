@@ -5565,24 +5565,14 @@ function bestBookDecimalForSideEvPrefs(oddsObj, side /* 'p1'|'p2'|'p3' */, prefs
   return { book: bestB, dec: bestD };
 }
 
-const MATCHUP_ANALYSIS_DRIVING_DISTANCE_BASELINE_YDS = 301;
-const MATCHUP_ANALYSIS_FAIRWAY_HOLES = 14;
-
-function matchupAnalysisDrivingDistanceYards(raw) {
+function drivingDistanceSkillRating(raw) {
   if (!Number.isFinite(raw)) return NaN;
-  if (raw >= 150) return raw;
-  if (raw > -100 && raw < 100) return MATCHUP_ANALYSIS_DRIVING_DISTANCE_BASELINE_YDS + raw;
   return raw;
 }
 
-function matchupAnalysisFairwayAccuracyPct(row, raw) {
-  const fw = num(row?.fairways, NaN);
-  const fairwayPct =
-    Number.isFinite(fw) && fw > 1.02 ? (fw / MATCHUP_ANALYSIS_FAIRWAY_HOLES) * 100 : NaN;
-  if (!Number.isFinite(raw)) return fairwayPct;
-  if (raw > 0 && raw <= 1) return raw * 100;
-  if (raw >= 20 && raw <= 100) return raw;
-  return fairwayPct;
+function drivingAccuracySkillRating(raw) {
+  if (!Number.isFinite(raw)) return NaN;
+  return raw > -1 && raw < 1 ? raw * 100 : raw;
 }
 
 function matchupAnalysisMetricValue(row, key) {
@@ -5594,30 +5584,26 @@ function matchupAnalysisMetricValue(row, key) {
   }
   if (key === "distance") {
     const cands = [
+      num(row.driving_dist, NaN),
       num(row.avg_driving_distance, NaN),
       num(row.average_driving_distance, NaN),
       num(row.avg_drive_distance, NaN),
       num(row.driving_distance, NaN),
-      num(row.driving_dist, NaN),
-      num(row.distance, NaN),
     ];
     for (const v of cands) {
-      if (Number.isFinite(v)) return matchupAnalysisDrivingDistanceYards(v);
+      if (Number.isFinite(v)) return drivingDistanceSkillRating(v);
     }
     return NaN;
   }
   if (key === "accuracy") {
     const cands = [
-      num(row.driving_accuracy, NaN),
-      num(row.accuracy, NaN),
       num(row.driving_acc, NaN),
-      num(row.fw_pct, NaN),
-      num(row.fairway_pct, NaN),
+      num(row.driving_accuracy, NaN),
     ];
-    const actualPct = cands.find((v) => Number.isFinite(v) && ((v > 0 && v <= 1) || (v >= 20 && v <= 100)));
-    if (Number.isFinite(actualPct)) return matchupAnalysisFairwayAccuracyPct(row, actualPct);
-    const raw = cands.find((v) => Number.isFinite(v));
-    return matchupAnalysisFairwayAccuracyPct(row, raw);
+    for (const v of cands) {
+      if (Number.isFinite(v)) return drivingAccuracySkillRating(v);
+    }
+    return NaN;
   }
   return num(row[key], NaN);
 }
@@ -5972,8 +5958,8 @@ function buildMatchupAnalysisTool() {
       ["SG: Approach", "sg_app"],
       ["SG: Around Green", "sg_arg"],
       ["SG: Putting", "sg_putt"],
-      ["Driving distance", "distance"],
-      ["Accuracy", "accuracy"],
+      ["Driving distance rating", "distance"],
+      ["Accuracy rating", "accuracy"],
     ];
     const barPctMatchup = (kind, v, samples) => {
       const finite = (samples || []).filter((x) => Number.isFinite(x));
@@ -5998,7 +5984,7 @@ function buildMatchupAnalysisTool() {
     const formatDistanceYards = (v) => {
       const y = Math.round(v);
       const unit = Math.abs(y) === 1 ? "yd" : "yds";
-      return `${y} ${unit}`;
+      return `${y > 0 ? "+" : ""}${y} ${unit}`;
     };
     const buildMetricCell = (td, v, samples, kind = "sg") => {
       td.className = "num matchup-analysis-bar-cell";
@@ -6016,6 +6002,7 @@ function buildMatchupAnalysisTool() {
       } else {
         val.className = `matchup-analysis-bar-val neutral ${kind}`;
         if (kind === "distance") val.textContent = formatDistanceYards(v);
+        else if (kind === "accuracy") val.textContent = `${v >= 0 ? "+" : ""}${v.toFixed(1)} pts`;
         else val.textContent = `${v.toFixed(1)}%`;
       }
       const track = document.createElement("span");
@@ -6080,11 +6067,13 @@ function buildMatchupAnalysisTool() {
 /** --- Course fit tab (skill-shape radar, venue similarity, fit leaderboard) --- */
 const COURSE_FIT_AXIS_KEYS = ["dist", "acc", "app", "arg", "putt"];
 
-/** Raw scalars for radar [distance yds, accuracy %, sg_app, sg_arg, sg_putt]. */
+/** Raw scalars for radar [driving distance rating, accuracy rating, sg_app, sg_arg, sg_putt]. */
 function courseFitRawProfile(row) {
   if (!row || typeof row !== "object") return COURSE_FIT_AXIS_KEYS.map(() => NaN);
-  const d = num(row.avg_driving_distance ?? row.driving_distance, NaN);
-  const acc = num(row.driving_accuracy, NaN);
+  const d = drivingDistanceSkillRating(
+    num(row.driving_dist ?? row.avg_driving_distance ?? row.driving_distance, NaN)
+  );
+  const acc = drivingAccuracySkillRating(num(row.driving_acc ?? row.driving_accuracy, NaN));
   return [d, acc, num(row.sg_app, NaN), num(row.sg_arg, NaN), num(row.sg_putt, NaN)];
 }
 
