@@ -598,6 +598,9 @@
             <option value="">All</option>
           </select>
         </label>
+        <label class="toolbar-label">Max odds
+          <input id="ev-filter-max-odds" type="number" step="100" value="10000" title="Hide rows at this American price or longer. Default excludes +10000 and above." />
+        </label>
         <label class="toolbar-label">Bankroll ($)
           <input id="ev-bankroll" type="number" min="1" step="1" value="1000" title="Quarter Kelly, capped at 1 unit = 1% of bankroll (bankroll ÷ 100)" />
         </label>
@@ -996,6 +999,8 @@
           <dd>Show only one product type (for example round matchups, tournament matchups, win, top 10).</dd>
           <dt>Best book</dt>
           <dd>Keep rows where that sportsbook posts the strongest price for the listed side.</dd>
+          <dt>Max odds</dt>
+          <dd>Hide longshots at that American price or longer. The default <strong>10000</strong> keeps odds below +10000.</dd>
           <dt>Bankroll ($)</dt>
           <dd>Your bankroll for the <strong>quarter Kelly</strong> dollar suggestion (subject to the app’s stake caps).</dd>
           <dt>Boost / Boost %</dt>
@@ -1280,6 +1285,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=106"></script>
+  <script src="app.js?v=107"></script>
 </body>
 </html>

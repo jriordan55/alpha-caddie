@@ -5320,6 +5320,8 @@ function buildEvTable() {
     return Number.isFinite(d) && d > 1 && Number.isFinite(p) ? p * d - 1 : NaN;
   };
   const gLow = g.toLowerCase();
+  const maxOddsRaw = String(document.getElementById("ev-filter-max-odds")?.value || "").trim();
+  const maxAmericanOdds = maxOddsRaw ? num(maxOddsRaw, NaN) : NaN;
   let out = rows
     .filter((r) => {
       const okG = !g || String(r.golfer || "").toLowerCase().includes(gLow);
@@ -5329,16 +5331,18 @@ function buildEvTable() {
       const dec0 = num(r.bestDec, NaN);
       const dec = decimalWithProfitBoost(dec0, boostPct);
       const bookImp = Number.isFinite(dec) && dec > 1 ? 1 / dec : NaN;
+      const am = Number.isFinite(dec) && dec > 1 ? americanFromDecimal(dec) : NaN;
       const evProb = evProbForRow(r);
       const mEv = modelEvWithBoost(r);
       const kelly = evKellyDollarsFromDecimal(evProb, dec, bankroll);
       const deltaPct = Number.isFinite(evProb) && Number.isFinite(bookImp) ? (evProb - bookImp) * 100 : NaN;
-      return { ...r, _dec: dec, _bookImp: bookImp, _evProb: evProb, _modelEv: mEv, _kelly: kelly, _deltaPct: deltaPct };
+      return { ...r, _dec: dec, _am: am, _bookImp: bookImp, _evProb: evProb, _modelEv: mEv, _kelly: kelly, _deltaPct: deltaPct };
     })
     .filter((r) => {
       const hasSportsbookOdds =
         String(r.bestBook || "").trim() !== "" && Number.isFinite(r._dec) && r._dec > 1;
       if (!hasSportsbookOdds) return false;
+      if (Number.isFinite(maxAmericanOdds) && Number.isFinite(r._am) && r._am >= maxAmericanOdds) return false;
       return true;
     });
   out = out.slice().sort((a, c) => compareEvRows(a, c, evSort.key, evSort.dir));
@@ -13300,6 +13304,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("results-filter-min-ev")?.addEventListener("change", () => renderResultsTab());
   document.getElementById("ev-bankroll")?.addEventListener("input", () => buildEvTable());
   document.getElementById("ev-bankroll")?.addEventListener("change", () => buildEvTable());
+  document.getElementById("ev-filter-max-odds")?.addEventListener("input", () => buildEvTable());
+  document.getElementById("ev-filter-max-odds")?.addEventListener("change", () => buildEvTable());
   document.getElementById("ev-boost")?.addEventListener("change", () => buildEvTable());
   document.getElementById("ev-boost-pct")?.addEventListener("input", () => buildEvTable());
   document.getElementById("ev-boost-pct")?.addEventListener("change", () => buildEvTable());
