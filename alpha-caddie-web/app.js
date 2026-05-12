@@ -4742,7 +4742,7 @@ function draftKingsFinishOddsByDgIndex() {
     for (const row of Array.isArray(pack?.rows) ? pack.rows : []) {
       const id = Math.round(num(row.dg_id, NaN));
       if (!Number.isFinite(id)) continue;
-      const pct = impliedPctFromBookField(row.draftkings);
+      const pct = impliedPctFromOutrightBookField(row.draftkings);
       if (!Number.isFinite(pct) || pct <= 0) continue;
       const p = outrightFeedPlaceholderProbNaN(pct / 100, mk, "draftkings");
       if (!Number.isFinite(p) || p <= 0 || p >= 1) continue;
@@ -5092,7 +5092,7 @@ function collectUnifiedEvRows() {
       const modelOk = Number.isFinite(modelP) && modelP > 0;
       for (const bk of books) {
         const bkNorm = normalizeEvSportsbookKey(bk);
-        const pct = impliedPctFromBookField(row[bk] ?? row[bkNorm]);
+        const pct = impliedPctFromOutrightBookField(row[bk] ?? row[bkNorm]);
         if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
         const pBook = pct / 100;
         if (!Number.isFinite(pBook) || pBook <= 0 || pBook >= 1) continue;
@@ -5109,7 +5109,7 @@ function collectUnifiedEvRows() {
       for (const bk of books) {
         const bkNorm = normalizeEvSportsbookKey(bk);
         if (!evBookAllowedInConsensus(bkNorm, devigPrefs)) continue;
-        const pct = impliedPctFromBookField(row[bk] ?? row[bkNorm]);
+        const pct = impliedPctFromOutrightBookField(row[bk] ?? row[bkNorm]);
         if (!Number.isFinite(pct) || pct <= 0) continue;
         const pp = pct / 100;
         if (pp <= 0 || pp >= 1) continue;
@@ -6219,7 +6219,7 @@ function courseFitOutrightBestBookOddsSingle(marketKey, dgId) {
   const modelOk = Number.isFinite(modelP) && modelP > 0;
   for (const bk of bookKeys) {
     const bkNorm = normalizeEvSportsbookKey(bk);
-    const pct = impliedPctFromBookField(row[bk] ?? row[bkNorm]);
+    const pct = impliedPctFromOutrightBookField(row[bk] ?? row[bkNorm]);
     if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
     let pBook = pct / 100;
     pBook = outrightFeedPlaceholderProbNaN(pBook, marketKey, bk);
@@ -6249,7 +6249,7 @@ function courseFitDraftKingsOutrightOdds(marketKey, dgId) {
   const pack = DATA.outrights?.[mk];
   const row = Array.isArray(pack?.rows) ? pack.rows.find((r) => Math.round(num(r.dg_id, NaN)) === id) : null;
   if (!row) return { html: "—" };
-  const pct = impliedPctFromBookField(row.draftkings);
+  const pct = impliedPctFromOutrightBookField(row.draftkings);
   if (!Number.isFinite(pct) || pct <= 0) return { html: "—" };
   const pBook = outrightFeedPlaceholderProbNaN(pct / 100, mk, "draftkings");
   if (!Number.isFinite(pBook) || pBook <= 0 || pBook >= 1) return { html: "—" };
@@ -7224,6 +7224,14 @@ function impliedPctFromBookField(v) {
   return p * 100;
 }
 
+function impliedPctFromOutrightBookField(v) {
+  const x = num(v, NaN);
+  if (!Number.isFinite(x) || x <= 0) return NaN;
+  if (x > 0 && x < 100) return x;
+  if (x === 100) return NaN;
+  return impliedPctFromBookField(x);
+}
+
 /**
  * DataGolf feeds sometimes substitute ~10% implied (~+900) on FanDuel/Betway/SkyBet win markets when a book has no real price (same float across much of the field). Skip those for ladder / best-book picks so Caesars-only junk does not dominate.
  */
@@ -7240,7 +7248,7 @@ function outrightFeedPlaceholderProbNaN(p01, marketKey, bookRaw) {
 function impliedProbFromOutrightRowBook(row, bk, marketKey) {
   if (!row || !bk) return NaN;
   const bkNorm = normalizeEvSportsbookKey(bk);
-  const pct = impliedPctFromBookField(row[bk] ?? row[bkNorm]);
+  const pct = impliedPctFromOutrightBookField(row[bk] ?? row[bkNorm]);
   if (!Number.isFinite(pct)) return NaN;
   let p01 = pct / 100;
   p01 = outrightFeedPlaceholderProbNaN(p01, marketKey, bk);
@@ -7676,7 +7684,7 @@ function buildOutrightsTableBodyOnly() {
     let bestAm = NaN;
     let bestEv = NaN;
     for (const bk of bookKeys) {
-      const pct = impliedPctFromBookField(row[bk]);
+      const pct = impliedPctFromOutrightBookField(row[bk]);
       if (!Number.isFinite(pct) || pct <= 0) continue;
       let pBook = pct / 100;
       pBook = outrightFeedPlaceholderProbNaN(pBook, mk, bk);
