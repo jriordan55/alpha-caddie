@@ -4731,14 +4731,12 @@ function matchupMarketProbWithFallback(oddsObj, filteredOddsObj, sideKey, prefs,
     ? matchupConsensusThreeWaySide(filteredOddsObj, sideKey, prefs)
     : matchupConsensusSide(filteredOddsObj, sideKey, prefs);
   if (Number.isFinite(p)) return p;
-  return matchupDatagolfProbForSide(oddsObj, sideKey);
+  return NaN;
 }
 
 function bestBookDecimalForSideWithFallback(oddsObj, sideKey, prefs) {
   const best = bestBookDecimalForSideEvPrefs(oddsObj, sideKey, prefs);
   if (Number.isFinite(best.dec) && best.dec > 1) return best;
-  const dg = matchupDatagolfDecimalForSide(oddsObj, sideKey);
-  if (Number.isFinite(dg)) return { book: "datagolf", dec: dg };
   return best;
 }
 
@@ -5078,20 +5076,12 @@ function collectUnifiedEvRows() {
   const rOut = getModelRoundForEv();
   const evLbOpts = outrightEvLiveLeaderboardModelEnabled() ? { evLiveLeaderboard: true } : {};
   if (evLbOpts.evLiveLeaderboard) ensureOutrightEvLiveLeaderboardProbCache();
-  const finishLadderEvCache = new Map();
-  const getFinishLadderBundleCached = (pid) => {
-    const k = Math.round(num(pid, NaN));
-    if (!Number.isFinite(k)) return null;
-    if (!finishLadderEvCache.has(k)) finishLadderEvCache.set(k, outrightFinishLadderBestBookBundle(k, evLbOpts));
-    return finishLadderEvCache.get(k);
-  };
   for (const mk of ["win", "top_5", "top_10", "top_20", "make_cut", "mc"]) {
     const pack = opack[mk];
     if (!pack || !Array.isArray(pack.rows)) continue;
     const books = Array.isArray(pack.bookKeys)
-      ? pack.bookKeys.filter((k) => k && k !== "datagolf" && outrightLadderSportsbookAllowed(k))
+      ? pack.bookKeys.filter((k) => normalizeEvSportsbookKey(k) === "draftkings")
       : [];
-    const finishMk = mk === "win" || mk === "top_5" || mk === "top_10" || mk === "top_20";
     for (const row of pack.rows) {
       const id = Math.round(num(row.dg_id, NaN));
       if (elim.size && elim.has(id) && mk !== "make_cut" && mk !== "mc") continue;
@@ -5099,45 +5089,24 @@ function collectUnifiedEvRows() {
       let bestBook = "";
       let bestAm = NaN;
       let bestEv = NaN;
-      let usedLadder = false;
-      if (finishMk) {
-        const bundle = getFinishLadderBundleCached(id);
-        if (bundle) {
-          const idx = ["win", "top_5", "top_10", "top_20"].indexOf(mk);
-          const pBook = bundle.coherent[idx];
-          const mp = bundle.modelPs[mk];
-          if (Number.isFinite(pBook) && Number.isFinite(mp) && mp > 0) {
-            const ev = outrightEvFromModelAndBook(mp, pBook, mk);
-            if (Number.isFinite(ev)) {
-              bestEv = ev;
-              bestBook = bundle.book;
-              bestAm = americanFromImpliedProbCapped(pBook);
-              modelP = mp;
-              usedLadder = true;
-            }
-          }
+      modelP = modelProbOutrightFromRowOrProjections(row, mk, evLbOpts);
+      const modelOk = Number.isFinite(modelP) && modelP > 0;
+      for (const bk of books) {
+        const bkNorm = normalizeEvSportsbookKey(bk);
+        const pct = impliedPctFromBookField(row[bk] ?? row[bkNorm]);
+        if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
+        let pBook = pct / 100;
+        pBook = outrightFeedPlaceholderProbNaN(pBook, mk, bk);
+        if (!Number.isFinite(pBook) || pBook <= 0 || pBook >= 1) continue;
+        const ev = outrightEvFromModelAndBook(modelP, pBook, mk);
+        if (!Number.isFinite(ev)) continue;
+        if (!Number.isFinite(bestEv) || ev > bestEv) {
+          bestEv = ev;
+          bestBook = bkNorm;
+          bestAm = americanFromImpliedProb(pBook);
         }
       }
-      if (!usedLadder) {
-        modelP = modelProbOutrightFromRowOrProjections(row, mk, evLbOpts);
-        const modelOk = Number.isFinite(modelP) && modelP > 0;
-        for (const bk of books) {
-          const bkNorm = normalizeEvSportsbookKey(bk);
-          const pct = impliedPctFromBookField(row[bk] ?? row[bkNorm]);
-          if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
-          let pBook = pct / 100;
-          pBook = outrightFeedPlaceholderProbNaN(pBook, mk, bk);
-          if (!Number.isFinite(pBook) || pBook <= 0 || pBook >= 1) continue;
-          const ev = outrightEvFromModelAndBook(modelP, pBook, mk);
-          if (!Number.isFinite(ev)) continue;
-          if (!Number.isFinite(bestEv) || ev > bestEv) {
-            bestEv = ev;
-            bestBook = bkNorm;
-            bestAm = americanFromImpliedProb(pBook);
-          }
-        }
-        if (Number.isFinite(bestAm)) bestAm = Math.round(bestAm);
-      }
+      if (Number.isFinite(bestAm)) bestAm = Math.round(bestAm);
       const decItems = [];
       for (const bk of books) {
         const bkNorm = normalizeEvSportsbookKey(bk);
@@ -7682,13 +7651,7 @@ function modelProbOutrightFromRowOrProjections(outrightRow, marketKey, opts) {
   const fromPret = modelProbOutrightMarket(prow || {}, marketKey);
   if (Number.isFinite(fromPret) && fromPret > 0) return fromPret;
 
-  const dgPct = impliedPctFromBookField(outrightRow?.datagolf);
-  if (Number.isFinite(dgPct) && dgPct > 0) {
-    let p = dgPct / 100;
-    if (marketKey === "mc" && Number.isFinite(p)) p = 1 - p;
-    if (p > 0 && p < 1) return clamp(p, 1e-6, 1 - 1e-6);
-  }
-  // Last-resort: when projections placement fields are null and API omits datagolf column,
+  // Last-resort: when projections placement fields are null,
   // use market consensus from posted books so model price does not go blank.
   let s = 0;
   let nBooks = 0;

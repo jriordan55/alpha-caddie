@@ -401,7 +401,7 @@ function parseOutrightsResponse(raw) {
 
 function mergeScrapedOutrightsIntoMarket(existingPack, scrapedPack) {
   if (!scrapedPack || !Array.isArray(scrapedPack.rows) || !scrapedPack.rows.length) return existingPack;
-  const allowScrapedDraftKings = String(process.env.GOLF_USE_SCRAPED_DK_OUTRIGHTS || "").trim() === "1";
+  const useScrapedDraftKings = String(process.env.GOLF_SKIP_SCRAPED_DK_OUTRIGHTS || "").trim() !== "1";
   const baseById = new Map();
   for (const r of Array.isArray(existingPack?.rows) ? existingPack.rows : []) {
     const id = Math.round(num(r.dg_id, NaN));
@@ -417,7 +417,7 @@ function mergeScrapedOutrightsIntoMarket(existingPack, scrapedPack) {
     if (!Number.isFinite(id)) continue;
     const out = baseById.get(id) || { dg_id: id, player_name: String(r.player_name || "").trim() };
     for (const bk of scrapedPack.bookKeys || []) {
-      if (String(bk).toLowerCase() === "draftkings" && !allowScrapedDraftKings) continue;
+      if (String(bk).toLowerCase() === "draftkings" && !useScrapedDraftKings) continue;
       const pct = num(r[bk], NaN);
       if (Number.isFinite(pct) && pct > 0) out[bk] = pct;
     }
@@ -427,7 +427,7 @@ function mergeScrapedOutrightsIntoMarket(existingPack, scrapedPack) {
   const bookKeys = new Set(Array.isArray(existingPack?.bookKeys) ? existingPack.bookKeys.map((bk) => String(bk).toLowerCase()) : ["datagolf"]);
   for (const bk of scrapedPack.bookKeys || []) {
     const k = String(bk).toLowerCase();
-    if (k === "draftkings" && !allowScrapedDraftKings) continue;
+    if (k === "draftkings" && !useScrapedDraftKings) continue;
     bookKeys.add(k);
   }
   return { rows, bookKeys: [...bookKeys].sort() };
@@ -437,6 +437,37 @@ function mergeScrapedOutrights(outrights, scrapedOutrights) {
   const next = { ...(outrights && typeof outrights === "object" ? outrights : {}) };
   for (const [market, scrapedPack] of Object.entries(scrapedOutrights || {})) {
     next[market] = mergeScrapedOutrightsIntoMarket(next[market], scrapedPack);
+  }
+  return next;
+}
+
+function scrapedOutrightsHasBook(scrapedOutrights, bookKey) {
+  const want = String(bookKey || "").toLowerCase();
+  for (const pack of Object.values(scrapedOutrights || {})) {
+    const keys = Array.isArray(pack?.bookKeys) ? pack.bookKeys : [];
+    if (keys.some((k) => String(k).toLowerCase() === want)) return true;
+  }
+  return false;
+}
+
+function removeBookFromOutrights(outrights, bookKey) {
+  const want = String(bookKey || "").toLowerCase();
+  const next = { ...(outrights && typeof outrights === "object" ? outrights : {}) };
+  for (const [market, pack] of Object.entries(next)) {
+    if (!pack || typeof pack !== "object") continue;
+    const rows = Array.isArray(pack.rows)
+      ? pack.rows.map((row) => {
+          const out = { ...row };
+          for (const k of Object.keys(out)) {
+            if (String(k).toLowerCase() === want) delete out[k];
+          }
+          return out;
+        })
+      : pack.rows;
+    const bookKeys = Array.isArray(pack.bookKeys)
+      ? pack.bookKeys.filter((k) => String(k).toLowerCase() !== want)
+      : pack.bookKeys;
+    next[market] = { ...pack, rows, bookKeys };
   }
   return next;
 }
@@ -585,7 +616,7 @@ async function main() {
   }
 
   const outrightsMarkets = ["win", "top_5", "top_10", "top_20", "make_cut", "mc"];
-  const outrights = { ...(payload.outrights && typeof payload.outrights === "object" ? payload.outrights : {}) };
+  let outrights = { ...(payload.outrights && typeof payload.outrights === "object" ? payload.outrights : {}) };
   for (const m of outrightsMarkets) {
     try {
       console.log(`Fetching betting-tools/outrights (${m}, dead_heat=${outrightDeadHeatForMarket(m)})…`);
@@ -616,6 +647,9 @@ async function main() {
     for (const msg of scraped.logs || []) console.log("[sportsbook-outrights]", msg);
     const n = Object.values(sportsbookOutrights).reduce((sum, pack) => sum + (Array.isArray(pack?.rows) ? pack.rows.length : 0), 0);
     if (n > 0) {
+      if (scrapedOutrightsHasBook(sportsbookOutrights, "draftkings")) {
+        outrights = removeBookFromOutrights(outrights, "draftkings");
+      }
       Object.assign(outrights, mergeScrapedOutrights(outrights, sportsbookOutrights));
       console.log(`[sportsbook-outrights] Replaced DataGolf API sportsbook columns on ${Object.keys(sportsbookOutrights).join(", ")} with ${n} scraped rows.`);
     } else {
@@ -624,6 +658,7 @@ async function main() {
   } catch (e) {
     console.warn("[sportsbook-outrights] skipped:", e.message || e);
   }
+  outrights = removeBookFromOutrights(outrights, "datagolf");
 
   const matchupMarkets = ["tournament_matchups", "round_matchups", "3_balls"];
   const matchups = { ...(payload.matchups && typeof payload.matchups === "object" ? payload.matchups : {}) };
