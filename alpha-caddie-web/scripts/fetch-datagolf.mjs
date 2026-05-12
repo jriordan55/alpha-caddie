@@ -1434,6 +1434,7 @@ async function main() {
     liveHoleStats: liveHoleStatsForPars,
   });
   const hole_pars = holeRes.pars.map((x) => Math.round(num(x, 4)));
+  const course_par_18 = hole_pars.length === 18 ? hole_pars.reduce((sum, p) => sum + Math.round(num(p, 4)), 0) : COURSE_PAR_18;
   const hole_pars_source = holeRes.source;
   if (hole_pars_source === "generic") {
     console.warn(
@@ -1471,7 +1472,7 @@ async function main() {
     outrights_model_blend_weight: 1,
     outright_win_score_blend: 0,
     outright_live_score_placement_nudge: false,
-    course_par_18: COURSE_PAR_18,
+    course_par_18,
     hole_pars,
     hole_pars_source,
     players,

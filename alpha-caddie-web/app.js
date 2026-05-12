@@ -1175,6 +1175,7 @@ function mergeDatagolfLiveCourseMeta(j) {
           const nextJson = JSON.stringify(parsArr);
           if (prevJson !== nextJson) {
             DATA.meta.hole_pars = parsArr;
+            DATA.meta.course_par_18 = parsArr.reduce((sum, p) => sum + Math.round(num(p, 4)), 0);
             DATA.meta.hole_pars_source = "live_hole_stats";
             touched = true;
           }

@@ -56,6 +56,7 @@ if (prev === next && src === "live_hole_stats") {
 }
 
 proj.hole_pars = pars;
+proj.course_par_18 = pars.reduce((sum, p) => sum + Math.round(Number(p) || 4), 0);
 proj.hole_pars_source = "live_hole_stats";
 writeFileSync(projPath, JSON.stringify(proj, null, 2), "utf8");
 console.log(
