@@ -7266,38 +7266,6 @@ function outrightFeedPlaceholderProbNaN(p01, marketKey, bookRaw) {
   return p01;
 }
 
-/** Display cap after coherence repair on win / top-5 / top-10 / top-20 (+EV & Course Fit). */
-const FINISH_OUTRIGHT_AMERICAN_CAP = 10000;
-
-/**
- * Enforce P(win) ≤ P(top5) ≤ P(top10) ≤ P(top20) on posted implied probs (inclusive finish buckets).
- * NaN slots skip coercion but do not advance the running lower bound.
- */
-function coerceFinishLadderImpliedProbs(pw, p5, p10, p20) {
-  const raw = [pw, p5, p10, p20];
-  let prev = 1e-12;
-  const out = [];
-  for (let i = 0; i < 4; i++) {
-    let p = raw[i];
-    if (!Number.isFinite(p)) {
-      out.push(NaN);
-      continue;
-    }
-    p = clamp(p, prev, 1 - 1e-9);
-    out.push(p);
-    prev = Math.max(prev, p);
-  }
-  return out;
-}
-
-function americanFromImpliedProbCapped(p, capPos = FINISH_OUTRIGHT_AMERICAN_CAP) {
-  const am = americanFromImpliedProb(p);
-  if (!Number.isFinite(am)) return NaN;
-  if (am > capPos) return capPos;
-  if (am < -capPos) return -capPos;
-  return Math.round(am);
-}
-
 function impliedProbFromOutrightRowBook(row, bk, marketKey) {
   if (!row || !bk) return NaN;
   const bkNorm = normalizeEvSportsbookKey(bk);
@@ -7323,7 +7291,7 @@ function outrightFinishRowsByMarketDg(dgId) {
 }
 
 /**
- * Pick one book per player so finish-market cells share a coherent ladder (same book, monotonic implied probs).
+ * Pick one book per player so finish-market cells share the same sportsbook.
  * Maximizes sum of per-market EV across the four ladders under the existing EV ratio caps.
  */
 function outrightFinishLadderBestBookBundle(dgId, opts) {
@@ -7347,12 +7315,11 @@ function outrightFinishLadderBestBookBundle(dgId, opts) {
   let bestScore = -Infinity;
   for (const bk of books) {
     const raw = markets.map((mk) => impliedProbFromOutrightRowBook(rowsByM[mk], bk, mk));
-    const coherent = coerceFinishLadderImpliedProbs(raw[0], raw[1], raw[2], raw[3]);
     let sumEv = 0;
     let nOk = 0;
     for (let i = 0; i < 4; i++) {
       const mk = markets[i];
-      const pBook = coherent[i];
+      const pBook = raw[i];
       const modelP = modelPs[mk];
       if (!Number.isFinite(pBook) || !Number.isFinite(modelP) || modelP <= 0) continue;
       const ev = outrightEvFromModelAndBook(modelP, pBook, mk);
@@ -7367,7 +7334,7 @@ function outrightFinishLadderBestBookBundle(dgId, opts) {
       (Math.abs(sumEv - bestScore) <= 1e-9 && best && bk.localeCompare(best.book) < 0);
     if (better) {
       bestScore = sumEv;
-      best = { book: bk, coherent, raw, modelPs, rowsByM };
+      best = { book: bk, raw, modelPs, rowsByM };
     }
   }
   return best;
@@ -7713,7 +7680,7 @@ function buildOutrightsTableBodyOnly() {
       const bundle = outrightFinishLadderBestBookBundle(id);
       if (bundle) {
         const idx = ["win", "top_5", "top_10", "top_20"].indexOf(mk);
-        const pBook = bundle.coherent[idx];
+        const pBook = bundle.raw[idx];
         const mp = bundle.modelPs[mk];
         if (Number.isFinite(pBook) && Number.isFinite(mp) && mp > 0) {
           const ev = outrightEvFromModelAndBook(mp, pBook, mk);
@@ -7722,7 +7689,7 @@ function buildOutrightsTableBodyOnly() {
               row,
               modelP: mp,
               bestBook: bundle.book,
-              bestAm: americanFromImpliedProbCapped(pBook),
+              bestAm: americanFromImpliedProb(pBook),
               bestEv: ev,
             };
           }

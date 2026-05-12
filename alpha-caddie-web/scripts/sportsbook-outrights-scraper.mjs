@@ -82,7 +82,7 @@ function parseOddsToken(raw) {
     .replace(/\u2212/g, "-")
     .replace(/−/g, "-")
     .trim();
-  if (/^[+-]\d{2,6}$/.test(s)) return impliedPctFromAmerican(Number(s));
+  if (/^[+-]\d{2,6}$/.test(s)) return Number(s);
   if (/^\d+\.\d{2,}$/.test(s)) return impliedPctFromDecimal(Number(s));
   return NaN;
 }
@@ -155,7 +155,7 @@ function parseTextOdds(text, players, url) {
 function mergeScrapedRows(rows) {
   const byMarket = {};
   for (const r of rows) {
-    if (!r?.market || !Number.isFinite(r.dg_id) || !r.book || !Number.isFinite(r.pct) || r.pct <= 0) continue;
+    if (!r?.market || !Number.isFinite(r.dg_id) || !r.book || !Number.isFinite(r.pct) || r.pct === 0) continue;
     if (!byMarket[r.market]) byMarket[r.market] = { rows: new Map(), bookKeys: new Set() };
     const pack = byMarket[r.market];
     const key = String(Math.round(r.dg_id));
