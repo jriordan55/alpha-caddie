@@ -4253,7 +4253,7 @@ const EV_ALLOWED_SPORTSBOOKS = new Set([
   "fanduel",
   "bet365",
   "betmgm",
-  "bovada",
+  "betonline",
   "betcris",
 ]);
 
