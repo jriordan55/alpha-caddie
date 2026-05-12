@@ -5997,6 +5997,10 @@ function buildMatchupAnalysisTool() {
       wrap.appendChild(track);
       td.appendChild(wrap);
     };
+    const edgeForAdvantagedSide = (leftSide) => {
+      const side = leftSide ? entry.pricingSides?.[0] : entry.pricingSides?.[1];
+      return num(side?.edge, NaN);
+    };
     for (const [label, keyMetric] of metrics) {
       const samples = fieldSamplesByMetric[keyMetric] || [];
       const a = matchupAnalysisMetricValue(entry.left.row, keyMetric);
@@ -6022,9 +6026,11 @@ function buildMatchupAnalysisTool() {
       if (!Number.isFinite(diff) || Math.abs(diff) < eps) {
         tdAdv.textContent = "Even";
       } else {
-        const rawWho = diff > 0 ? entry.left.name : entry.right.name;
+        const leftAdvantage = diff > 0;
+        const rawWho = leftAdvantage ? entry.left.name : entry.right.name;
         const who = displayGolferName(String(rawWho || ""));
         const adv = Math.abs(diff);
+        const edge = edgeForAdvantagedSide(leftAdvantage);
         if (keyMetric.startsWith("sg_")) {
           tdAdv.textContent = `${who} +${adv.toFixed(2)} strokes`;
         } else if (keyMetric === "distance") {
@@ -6032,7 +6038,8 @@ function buildMatchupAnalysisTool() {
         } else {
           tdAdv.textContent = `${who} +${adv.toFixed(1)} pts`;
         }
-        tdAdv.className = "ev-pos";
+        if (edge > 0) tdAdv.className = "ev-pos";
+        else if (edge < 0) tdAdv.className = "ev-neg";
       }
       tr.appendChild(tdMetric);
       tr.appendChild(tdA);
