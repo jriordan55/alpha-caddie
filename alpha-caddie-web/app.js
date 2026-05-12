@@ -4996,9 +4996,9 @@ function collectUnifiedEvRows() {
       const oddsEv = filterOddsObjectForEvSportsbooks(m.odds || {}, { allowDatagolf: true });
       if (isThreeBall) {
         const [tp1, tp2, tp3] = threeBallModelProbsLiveBlended(mu1, mu2, mu3, row1, row2, row3);
-        const b1 = bestBookDecimalForSide(oddsEv, "p1");
-        const b2 = bestBookDecimalForSide(oddsEv, "p2");
-        const b3 = bestBookDecimalForSide(oddsEv, "p3");
+        const b1 = bestBookDecimalForSide(oddsEv, "p1", { allowDatagolf: true });
+        const b2 = bestBookDecimalForSide(oddsEv, "p2", { allowDatagolf: true });
+        const b3 = bestBookDecimalForSide(oddsEv, "p3", { allowDatagolf: true });
         const n1 = displayGolferName(String(m.p1_player_name || ""));
         const n2 = displayGolferName(String(m.p2_player_name || ""));
         const n3 = displayGolferName(String(m.p3_player_name || ""));
@@ -5041,8 +5041,8 @@ function collectUnifiedEvRows() {
         continue;
       }
       const p1 = matchupWinProbLiveBlended(mu1, mu2, mk, row1, row2);
-      const b1 = bestBookDecimalForSide(oddsEv, "p1");
-      const b2 = bestBookDecimalForSide(oddsEv, "p2");
+      const b1 = bestBookDecimalForSide(oddsEv, "p1", { allowDatagolf: true });
+      const b2 = bestBookDecimalForSide(oddsEv, "p2", { allowDatagolf: true });
       const modelEv1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
       const modelEv2 = Number.isFinite(b2.dec) ? (1 - p1) * b2.dec - 1 : NaN;
       const marketP1 = matchupConsensusSide(oddsEv, "p1", devigPrefs);
@@ -5075,12 +5075,11 @@ function collectUnifiedEvRows() {
   const rOut = getModelRoundForEv();
   const evLbOpts = outrightEvLiveLeaderboardModelEnabled() ? { evLiveLeaderboard: true } : {};
   if (evLbOpts.evLiveLeaderboard) ensureOutrightEvLiveLeaderboardProbCache();
-  const dkFinishOdds = draftKingsFinishOddsByDgIndex();
   for (const mk of ["win", "top_5", "top_10", "top_20", "make_cut", "mc"]) {
     const pack = opack[mk];
     if (!pack || !Array.isArray(pack.rows)) continue;
     const books = Array.isArray(pack.bookKeys)
-      ? pack.bookKeys.filter((k) => normalizeEvSportsbookKey(k) === "draftkings")
+      ? pack.bookKeys.filter((k) => k && k !== "datagolf" && k !== "dg_model" && outrightLadderSportsbookAllowed(k))
       : [];
     for (const row of pack.rows) {
       const id = Math.round(num(row.dg_id, NaN));
@@ -5093,15 +5092,9 @@ function collectUnifiedEvRows() {
       const modelOk = Number.isFinite(modelP) && modelP > 0;
       for (const bk of books) {
         const bkNorm = normalizeEvSportsbookKey(bk);
-        let pBook =
-          mk === "win" || mk === "top_5" || mk === "top_10" || mk === "top_20"
-            ? dkFinishOdds.get(id)?.[mk]?.p
-            : NaN;
-        if (!Number.isFinite(pBook)) {
-          const pct = impliedPctFromBookField(row[bk] ?? row[bkNorm]);
-          if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
-          pBook = outrightFeedPlaceholderProbNaN(pct / 100, mk, bk);
-        }
+        const pct = impliedPctFromBookField(row[bk] ?? row[bkNorm]);
+        if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
+        const pBook = pct / 100;
         if (!Number.isFinite(pBook) || pBook <= 0 || pBook >= 1) continue;
         const ev = outrightEvFromModelAndBook(modelP, pBook, mk);
         if (!Number.isFinite(ev)) continue;
@@ -5436,12 +5429,12 @@ function threeBallModelProbsLiveBlended(mu1, mu2, mu3, row1, row2, row3) {
   return [out[0] / s, out[1] / s, out[2] / s];
 }
 
-function bestBookDecimalForSide(oddsObj, side /* 'p1'|'p2' */) {
+function bestBookDecimalForSide(oddsObj, side /* 'p1'|'p2'|'p3' */, opts = {}) {
   if (!oddsObj || typeof oddsObj !== "object") return { book: "", dec: NaN };
   let bestD = NaN;
   let bestB = "";
   for (const bk of Object.keys(oddsObj)) {
-    if (bk === "datagolf") continue;
+    if (normalizeEvSportsbookKey(bk) === "datagolf" && !opts.allowDatagolf) continue;
     const pack = oddsObj[bk];
     if (!pack || typeof pack !== "object") continue;
     const d = num(pack[side], NaN);
@@ -7168,9 +7161,9 @@ function buildMatchupsTable() {
     const mu2 = effectiveMuSg(row2, id2, key);
     const mu3 = effectiveMuSg(row3, id3, key);
     const odds = m.odds || {};
-    const b1 = bestBookDecimalForSide(odds, "p1");
-    const b2 = bestBookDecimalForSide(odds, "p2");
-    const b3 = bestBookDecimalForSide(odds, "p3");
+    const b1 = bestBookDecimalForSide(odds, "p1", { allowDatagolf: true });
+    const b2 = bestBookDecimalForSide(odds, "p2", { allowDatagolf: true });
+    const b3 = bestBookDecimalForSide(odds, "p3", { allowDatagolf: true });
     const isThree = key === "3_balls" && Number.isFinite(id3) && id3 > 0;
     if (elim.size && (elim.has(id1) || elim.has(id2) || (isThree && elim.has(id3)))) continue;
     const label = isThree
@@ -7598,7 +7591,7 @@ function modelProbOutrightMarket(rowPlayer, marketKey) {
 }
 
 /**
- * Outrights "Model" fair price: DataGolf preds/pre-tournament (+ merged in-play placement), then outrights `datagolf`, then book mean.
+ * Outrights "Model" fair price: scraped DataGolf finish-tool model, then projection rows, then book mean.
  * When `opts.evLiveLeaderboard` (+EV during live events only), tries leaderboard `current_score` model first — see file header.
  */
 function modelProbOutrightFromRowOrProjections(outrightRow, marketKey, opts) {
@@ -7608,6 +7601,10 @@ function modelProbOutrightFromRowOrProjections(outrightRow, marketKey, opts) {
     if (Number.isFinite(pLb) && pLb > 0) return pLb;
   }
   const id = Math.round(num(outrightRow?.dg_id, NaN));
+  const scrapedModelPct = num(outrightRow?.dg_model, NaN);
+  if (Number.isFinite(scrapedModelPct) && scrapedModelPct > 0 && scrapedModelPct < 100) {
+    return clamp(scrapedModelPct / 100, 1e-6, 1 - 1e-6);
+  }
   let prow = Number.isFinite(id) ? projectionRowWithPlacementMerged(id) : null;
   if (!prow && outrightRow?.player_name) {
     prow = projectionPlayerRowForModelByIdOrName(NaN, outrightRow.player_name, getModelRoundForEv());
@@ -7621,7 +7618,7 @@ function modelProbOutrightFromRowOrProjections(outrightRow, marketKey, opts) {
   let nBooks = 0;
   for (const [k, v] of Object.entries(outrightRow || {})) {
     const kk = String(k || "").toLowerCase();
-    if (!kk || kk === "datagolf" || kk === "dg_id" || kk === "id" || kk === "player_name" || kk === "name") continue;
+    if (!kk || kk === "datagolf" || kk === "dg_model" || kk === "dg_id" || kk === "id" || kk === "player_name" || kk === "name") continue;
     const pct = impliedPctFromBookField(v);
     if (!Number.isFinite(pct) || pct <= 0 || pct >= 100) continue;
     s += pct / 100;

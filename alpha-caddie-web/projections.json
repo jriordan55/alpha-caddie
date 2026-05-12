@@ -6,7 +6,7 @@
   "datagolf_field_week_key": "pga championship|||aronimink golf club",
   "display_round": 1,
   "display_round_label": "R1 — next Thursday (auto, America/New_York)",
-  "updated_at": "2026-05-12T02:54:12Z",
+  "updated_at": "2026-05-12T04:57:26Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, fantasy-projection-defaults, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -26439,31 +26439,56 @@
           "dg_id": 18417,
           "player_name": "Scheffler, Scottie",
           "betmgm": 18.181818181818183,
-          "draftkings": 380
+          "draftkings": 20.8,
+          "dg_model": 13.8,
+          "bet365": 18.2,
+          "williamhill": 18.2,
+          "fanduel": 17.2,
+          "pointsbet": 16.9
         },
         {
           "dg_id": 10091,
           "player_name": "McIlroy, Rory",
           "betmgm": 11.11111111111111,
-          "draftkings": 910
+          "draftkings": 9.9,
+          "dg_model": 7.6,
+          "bet365": 11.1,
+          "williamhill": 11.1,
+          "fanduel": 10.5,
+          "pointsbet": 9.6
         },
         {
           "dg_id": 19195,
           "player_name": "Rahm, Jon",
           "betmgm": 5.88235294117647,
-          "draftkings": 1375
+          "draftkings": 6.8,
+          "dg_model": 6,
+          "bet365": 7.7,
+          "williamhill": 6.7,
+          "fanduel": 6.3,
+          "pointsbet": 6.8
         },
         {
           "dg_id": 26651,
           "player_name": "Young, Cameron",
           "betmgm": 7.6923076923076925,
-          "draftkings": 1600
+          "draftkings": 5.9,
+          "dg_model": 5.9,
+          "bet365": 8.3,
+          "williamhill": 7.7,
+          "fanduel": 7.7,
+          "pointsbet": 6.7
         },
         {
           "dg_id": 19895,
           "player_name": "Schauffele, Xander",
           "betmgm": 5.263157894736842,
-          "draftkings": 2000
+          "draftkings": 4.8,
+          "dg_model": 5.1,
+          "bet365": 5.3,
+          "williamhill": 5.9,
+          "fanduel": 5.9,
+          "pointsbet": 5.1
         },
         {
           "dg_id": 23950,
@@ -27221,8 +27246,12 @@
         }
       ],
       "bookKeys": [
+        "bet365",
         "betmgm",
-        "draftkings"
+        "draftkings",
+        "fanduel",
+        "pointsbet",
+        "williamhill"
       ]
     },
     "top_5": {
@@ -27230,27 +27259,47 @@
         {
           "dg_id": 18417,
           "player_name": "Scheffler, Scottie",
-          "draftkings": -122
+          "draftkings": 50,
+          "dg_model": 38.2,
+          "bet365": 43.5,
+          "williamhill": 45.5,
+          "fanduel": 47.6
         },
         {
           "dg_id": 10091,
           "player_name": "McIlroy, Rory",
-          "draftkings": 186
+          "draftkings": 30.8,
+          "dg_model": 25.5,
+          "bet365": 31.3,
+          "williamhill": 32.3,
+          "fanduel": 32.3
         },
         {
           "dg_id": 19195,
           "player_name": "Rahm, Jon",
-          "draftkings": 260
+          "draftkings": 23.8,
+          "dg_model": 22.2,
+          "bet365": 23.8,
+          "williamhill": 25,
+          "fanduel": 25
         },
         {
           "dg_id": 26651,
           "player_name": "Young, Cameron",
-          "draftkings": 300
+          "draftkings": 21.1,
+          "dg_model": 21.2,
+          "bet365": 26.3,
+          "williamhill": 26.7,
+          "fanduel": 27
         },
         {
           "dg_id": 19895,
           "player_name": "Schauffele, Xander",
-          "draftkings": 330
+          "draftkings": 19.4,
+          "dg_model": 19.7,
+          "bet365": 19,
+          "williamhill": 22.2,
+          "fanduel": 22.7
         },
         {
           "dg_id": 23950,
@@ -28004,7 +28053,10 @@
         }
       ],
       "bookKeys": [
-        "draftkings"
+        "bet365",
+        "draftkings",
+        "fanduel",
+        "williamhill"
       ]
     },
     "top_10": {
@@ -28012,27 +28064,47 @@
         {
           "dg_id": 18417,
           "player_name": "Scheffler, Scottie",
-          "draftkings": -240
+          "draftkings": 66,
+          "dg_model": 53.4,
+          "bet365": 58.8,
+          "williamhill": 59.9,
+          "fanduel": 63.6
         },
         {
           "dg_id": 10091,
           "player_name": "McIlroy, Rory",
-          "draftkings": -102
+          "draftkings": 45.9,
+          "dg_model": 39,
+          "bet365": 46.5,
+          "williamhill": 48.8,
+          "fanduel": 48.8
         },
         {
           "dg_id": 19195,
           "player_name": "Rahm, Jon",
-          "draftkings": 134
+          "draftkings": 37.9,
+          "dg_model": 35.7,
+          "bet365": 38.5,
+          "williamhill": 38.2,
+          "fanduel": 38.5
         },
         {
           "dg_id": 26651,
           "player_name": "Young, Cameron",
-          "draftkings": 154
+          "draftkings": 34.5,
+          "dg_model": 33.8,
+          "bet365": 40,
+          "williamhill": 40,
+          "fanduel": 41.7
         },
         {
           "dg_id": 19895,
           "player_name": "Schauffele, Xander",
-          "draftkings": 162
+          "draftkings": 33.3,
+          "dg_model": 32.1,
+          "bet365": 31.3,
+          "williamhill": 33.3,
+          "fanduel": 37
         },
         {
           "dg_id": 23950,
@@ -28786,7 +28858,10 @@
         }
       ],
       "bookKeys": [
-        "draftkings"
+        "bet365",
+        "draftkings",
+        "fanduel",
+        "williamhill"
       ]
     },
     "top_20": {
@@ -28794,58 +28869,62 @@
         {
           "dg_id": 18417,
           "player_name": "Scheffler, Scottie",
-          "bet365": 73.52941176470587,
+          "bet365": 73.5,
           "betmgm": 83.33333333333334,
           "betonline": 77.51937984496124,
           "betway": 83.33333333333334,
-          "fanduel": 81.81818181818183,
+          "fanduel": 81.8,
           "pointsbet": 80,
           "skybet": 80,
           "unibet": 75.18796992481202,
-          "williamhill": 83.33333333333334,
-          "draftkings": -440
+          "williamhill": 83.3,
+          "draftkings": 81.5,
+          "dg_model": 69.9
         },
         {
           "dg_id": 10091,
           "player_name": "McIlroy, Rory",
-          "bet365": 64.1025641025641,
+          "bet365": 64.1,
           "betmgm": 71.42857142857143,
           "betonline": 66.66666666666666,
           "betway": 66.66666666666666,
-          "fanduel": 65.51724137931035,
+          "fanduel": 65.5,
           "pointsbet": 62.960397909714786,
           "skybet": 63.69426751592356,
           "unibet": 64.51612903225806,
-          "williamhill": 66.66666666666666,
-          "draftkings": -174
+          "williamhill": 66.7,
+          "draftkings": 63.5,
+          "dg_model": 56.3
         },
         {
           "dg_id": 19195,
           "player_name": "Rahm, Jon",
-          "bet365": 56.49717514124294,
+          "bet365": 56.5,
           "betmgm": 58.82352941176471,
           "betonline": 56.49717514124294,
           "betway": 57.80346820809249,
-          "fanduel": 58.33333333333335,
+          "fanduel": 58.3,
           "pointsbet": 55.55555555555556,
           "skybet": 55.55555555555556,
           "unibet": 58.82352941176471,
-          "williamhill": 57.80346820809249,
-          "draftkings": -128
+          "williamhill": 57.8,
+          "draftkings": 56.1,
+          "dg_model": 53.4
         },
         {
           "dg_id": 26651,
           "player_name": "Young, Cameron",
-          "bet365": 58.82352941176471,
+          "bet365": 58.8,
           "betmgm": 62.5,
           "betonline": 56.49717514124294,
           "betway": 58.82352941176471,
-          "fanduel": 59.18367346938776,
+          "fanduel": 59.2,
           "pointsbet": 56.51952749675012,
           "skybet": 57.80346820809249,
           "unibet": 57.14285714285714,
-          "williamhill": 57.80346820809249,
-          "draftkings": -112
+          "williamhill": 57.8,
+          "draftkings": 52.8,
+          "dg_model": 50.7
         },
         {
           "dg_id": 19895,
@@ -28854,12 +28933,13 @@
           "betmgm": 55.55555555555556,
           "betonline": 52.35602094240838,
           "betway": 52.35602094240838,
-          "fanduel": 57.44680851063829,
+          "fanduel": 57.4,
           "pointsbet": 54.54347114650376,
           "skybet": 54.64480874316939,
           "unibet": 50,
-          "williamhill": 52.35602094240838,
-          "draftkings": -110
+          "williamhill": 52.4,
+          "draftkings": 52.4,
+          "dg_model": 49.1
         },
         {
           "dg_id": 23950,
@@ -30917,42 +30997,52 @@
         {
           "dg_id": 18417,
           "player_name": "Scheffler, Scottie",
-          "bet365": 93.45794392523365,
-          "fanduel": 92.85714285714283,
+          "bet365": 93.5,
+          "fanduel": 92.9,
           "skybet": 93.45794392523365,
-          "unibet": 92.59259259259258
+          "unibet": 92.59259259259258,
+          "dg_model": 91.9,
+          "draftkings": 94.7
         },
         {
           "dg_id": 10091,
           "player_name": "McIlroy, Rory",
-          "bet365": 88.49557522123894,
-          "fanduel": 89.47368421052634,
+          "bet365": 88.5,
+          "fanduel": 89.5,
           "skybet": 90.09009009009009,
-          "unibet": 89.28571428571428
+          "unibet": 89.28571428571428,
+          "dg_model": 86.6,
+          "draftkings": 88.2
         },
         {
           "dg_id": 19195,
           "player_name": "Rahm, Jon",
-          "bet365": 85.47008547008548,
-          "fanduel": 84.6153846153846,
+          "bet365": 85.5,
+          "fanduel": 84.6,
           "skybet": 85.47008547008548,
-          "unibet": 89.28571428571428
+          "unibet": 89.28571428571428,
+          "dg_model": 86.1,
+          "draftkings": 85.7
         },
         {
           "dg_id": 26651,
           "player_name": "Young, Cameron",
-          "bet365": 87.71929824561404,
-          "fanduel": 86.66666666666666,
+          "bet365": 87.7,
+          "fanduel": 86.7,
           "skybet": 87.71929824561404,
-          "unibet": 87.71929824561404
+          "unibet": 87.71929824561404,
+          "dg_model": 84.5,
+          "draftkings": 84
         },
         {
           "dg_id": 19895,
           "player_name": "Schauffele, Xander",
-          "bet365": 83.33333333333334,
-          "fanduel": 84.6153846153846,
+          "bet365": 83.3,
+          "fanduel": 84.6,
           "skybet": 85.47008547008548,
-          "unibet": 85.47008547008548
+          "unibet": 85.47008547008548,
+          "dg_model": 83.9,
+          "draftkings": 85.2
         },
         {
           "dg_id": 23950,
@@ -31673,6 +31763,7 @@
       ],
       "bookKeys": [
         "bet365",
+        "draftkings",
         "fanduel",
         "skybet",
         "unibet"
@@ -31683,42 +31774,47 @@
         {
           "dg_id": 18417,
           "player_name": "Scheffler, Scottie",
-          "bet365": 11.11111111111111,
-          "fanduel": 15.384615384615385,
+          "bet365": 11.1,
+          "fanduel": 15.4,
           "skybet": 12.5,
-          "unibet": 14.285714285714285
+          "unibet": 14.285714285714285,
+          "dg_model": 8.1
         },
         {
           "dg_id": 10091,
           "player_name": "McIlroy, Rory",
-          "bet365": 16.666666666666664,
-          "fanduel": 18.181818181818183,
+          "bet365": 16.7,
+          "fanduel": 18.2,
           "skybet": 16.666666666666664,
-          "unibet": 18.181818181818183
+          "unibet": 18.181818181818183,
+          "dg_model": 13.4
         },
         {
           "dg_id": 19195,
           "player_name": "Rahm, Jon",
           "bet365": 20,
-          "fanduel": 22.727272727272727,
+          "fanduel": 22.7,
           "skybet": 23.094688221709006,
-          "unibet": 17.391304347826086
+          "unibet": 17.391304347826086,
+          "dg_model": 13.9
         },
         {
           "dg_id": 26651,
           "player_name": "Young, Cameron",
-          "bet365": 18.181818181818183,
-          "fanduel": 21.27659574468085,
+          "bet365": 18.2,
+          "fanduel": 21.3,
           "skybet": 22.22222222222222,
-          "unibet": 19.047619047619047
+          "unibet": 19.047619047619047,
+          "dg_model": 15.5
         },
         {
           "dg_id": 19895,
           "player_name": "Schauffele, Xander",
-          "bet365": 23.094688221709006,
-          "fanduel": 22.727272727272727,
+          "bet365": 23.1,
+          "fanduel": 22.7,
           "skybet": 23.094688221709006,
-          "unibet": 22.22222222222222
+          "unibet": 22.22222222222222,
+          "dg_model": 16.1
         },
         {
           "dg_id": 23950,
@@ -34196,5 +34292,5 @@
       "match_list": "No 3_balls being offered right now."
     }
   },
-  "book_odds_refreshed_at": "2026-05-12T02:54:12Z"
+  "book_odds_refreshed_at": "2026-05-12T04:57:26Z"
 }
