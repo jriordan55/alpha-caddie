@@ -4245,14 +4245,12 @@ const SPORTSBOOK_META = {
 };
 
 const EV_ALLOWED_SPORTSBOOKS = new Set([
+  "pinnacle",
   "draftkings",
   "fanduel",
-  "betmgm",
   "bet365",
-  "pinnacle",
-  "caesars",
+  "betmgm",
   "bovada",
-  "betonline",
 ]);
 
 /** Books often present on DataGolf outright feeds but omitted from tight EV list — needed for finish ladder / Course Fit when only e.g. PointsBet posts top 20. */
@@ -5080,7 +5078,7 @@ function collectUnifiedEvRows() {
     const pack = opack[mk];
     if (!pack || !Array.isArray(pack.rows)) continue;
     const books = Array.isArray(pack.bookKeys)
-      ? pack.bookKeys.filter((k) => k && k !== "datagolf" && k !== "dg_model" && outrightLadderSportsbookAllowed(k))
+      ? pack.bookKeys.filter((k) => k && k !== "datagolf" && k !== "dg_model" && evSportsbookAllowed(k))
       : [];
     for (const row of pack.rows) {
       const id = Math.round(num(row.dg_id, NaN));
