@@ -599,7 +599,7 @@
           </select>
         </label>
         <label class="toolbar-label">Bankroll ($)
-          <input id="ev-bankroll" type="number" min="1" step="1" value="1000" title="Kelly is capped at 1 unit = 1% of bankroll (bankroll ÷ 100)" />
+          <input id="ev-bankroll" type="number" min="1" step="1" value="1000" title="Quarter Kelly, capped at 1 unit = 1% of bankroll (bankroll ÷ 100)" />
         </label>
         <label class="toolbar-label">Boost
           <select id="ev-boost" title="Profit boost on winnings (e.g. sportsbook promo)">
@@ -616,7 +616,7 @@
         <label class="toolbar-label">Boost %
           <input id="ev-boost-pct" type="number" min="0" max="500" step="1" value="25" disabled title="Used when Boost is Custom" />
         </label>
-        <button type="button" class="ev-devig-btn-toolbar" id="btn-ev-devig" title="Consensus &amp; two-way devig for the CS column">Devig</button>
+        <button type="button" class="ev-devig-btn-toolbar" id="btn-ev-devig" title="Consensus and devig settings for EV, Kelly, and CS">Devig</button>
       </div>
       <div class="toolbar weather-toolbar" aria-label="Weather">
         <span class="weather-toolbar-title">Weather</span>
@@ -891,7 +891,7 @@
         <button type="button" class="ev-devig-close-x" id="ev-devig-close-x" aria-label="Close">×</button>
       </header>
       <p class="ev-devig-lede text-muted">
-        Choose which sportsbooks count toward the <strong>CS</strong> (consensus) column and how strongly each one weighs in. For head-to-head markets you can also pick a <strong>method</strong> that changes how tight the “fair” price sits versus the posted lines. <strong>Apply &amp; rescan</strong> updates the +EV table.
+        Choose which sportsbooks set the fair probability for <strong>EV</strong>, <strong>Kelly</strong>, and <strong>CS</strong>. For head-to-head markets you can also pick a <strong>method</strong> that changes how tight the fair price sits versus the posted lines. <strong>Apply &amp; rescan</strong> updates the +EV table.
       </p>
       <div class="ev-devig-toolbar-row">
         <input
@@ -918,7 +918,7 @@
       <details class="ev-devig-method-help">
         <summary>Picking a method</summary>
         <div class="ev-devig-method-help-body text-muted">
-          <p>Methods only affect <strong>two-way</strong> matchups (not win/top-N outrights). They change how the app turns posted odds into a single fair price for the <strong>CS</strong> column—more or less conservative.</p>
+          <p>Methods only affect <strong>two-way</strong> matchups (not win/top-N outrights). They change how the app turns posted odds into a single fair price for <strong>EV</strong>, <strong>Kelly</strong>, and <strong>CS</strong>.</p>
           <p><strong>Tip:</strong> Start with <strong>Multiplicative</strong> or <strong>Average</strong>. Use <strong>Worst case</strong> when you want the stingiest fair price for your side. If unsure, compare a couple of methods and see which <strong>CS</strong> lines up with how you read the market.</p>
         </div>
       </details>
@@ -997,11 +997,11 @@
           <dt>Best book</dt>
           <dd>Keep rows where that sportsbook posts the strongest price for the listed side.</dd>
           <dt>Bankroll ($)</dt>
-          <dd>Your bankroll for the <strong>Kelly</strong> dollar suggestion (subject to the app’s stake caps).</dd>
+          <dd>Your bankroll for the <strong>quarter Kelly</strong> dollar suggestion (subject to the app’s stake caps).</dd>
           <dt>Boost / Boost %</dt>
           <dd>Turn on when a promo boosts profit on winning bets; Model EV and displayed odds follow the boost.</dd>
           <dt>Devig</dt>
-          <dd>Opens book selection, weights, and the consensus style for the <strong>CS</strong> column. Tap <strong>Apply &amp; rescan</strong> after changes.</dd>
+          <dd>Opens book selection, weights, and devig method for <strong>EV</strong>, <strong>Kelly</strong>, and the <strong>CS</strong> column. Tap <strong>Apply &amp; rescan</strong> after changes.</dd>
         </dl>
       </section>
 
@@ -1011,7 +1011,7 @@
           <dt>Model EV</dt>
           <dd>Edge vs the best available price at a glance: green for positive, red for negative.</dd>
           <dt>Kelly</dt>
-          <dd>Suggested stake in dollars from the bankroll above, using the boosted best price.</dd>
+          <dd>Suggested quarter Kelly stake in dollars from the bankroll above, using the boosted best price.</dd>
           <dt>Best book</dt>
           <dd>Where that best price lives; American odds (boosted when a boost is on).</dd>
           <dt>Golfer</dt>
@@ -1034,7 +1034,7 @@
       <section class="ev-help-section" aria-labelledby="ev-help-devig-h">
         <h4 class="ev-devig-section-title" id="ev-help-devig-h">Devig settings</h4>
         <p class="text-muted ev-help-devig-lede">
-          Open <strong>Devig</strong> to choose which books feed <strong>CS</strong>, split weights between them, and (for head-to-heads) pick a <strong>method</strong> that nudges consensus tighter or looser versus the board. Win and place markets use the selected books without that matchup-only control.
+          Open <strong>Devig</strong> to choose which books feed <strong>EV</strong>, <strong>Kelly</strong>, and <strong>CS</strong>, split weights between them, and (for head-to-heads) pick a <strong>method</strong> that nudges consensus tighter or looser versus the board. Win and place markets use the selected books without that matchup-only control.
         </p>
         <p class="text-muted ev-help-devig-lede">
           <strong>Tip:</strong> Try <strong>Average</strong> or <strong>Multiplicative</strong> first. Use <strong>Worst case</strong> when you want a cautious read on an edge.
@@ -1280,6 +1280,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=105"></script>
+  <script src="app.js?v=106"></script>
 </body>
 </html>

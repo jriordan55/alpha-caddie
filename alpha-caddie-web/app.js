@@ -4396,7 +4396,7 @@ function syncEvBoostPctInputDisabled() {
   inp.disabled = sel.value !== "custom";
 }
 
-/** Kelly stake in $: full Kelly capped at 25% of bankroll and at 1 unit (bankroll / 100). */
+/** Kelly stake in $: quarter Kelly, still capped at 1 unit (bankroll / 100). */
 function evKellyDollarsFromDecimal(modelPct, dec, bankroll) {
   if (!Number.isFinite(modelPct) || modelPct <= 0 || !Number.isFinite(dec) || dec <= 1) return NaN;
   if (!Number.isFinite(bankroll) || bankroll <= 0) return NaN;
@@ -4404,7 +4404,7 @@ function evKellyDollarsFromDecimal(modelPct, dec, bankroll) {
   if (edge <= 0) return 0;
   const den = dec - 1;
   if (den <= 0) return NaN;
-  const f = edge / den;
+  const f = (edge / den) * 0.25;
   if (!Number.isFinite(f) || f <= 0) return NaN;
   const oneUnitDollars = bankroll / 100;
   return Math.min(Math.min(f, 0.25) * bankroll, oneUnitDollars);
@@ -4520,6 +4520,12 @@ function evConsensusWeightForBook(bk, prefs) {
   const w = num(prefs.bookWeights[k], NaN);
   if (Number.isFinite(w) && w > 0) return w;
   return 0;
+}
+
+function evDevigAffectsEvAndKelly(prefs) {
+  if (!prefs) return false;
+  const method = evDevigMethodValid(prefs.method) ? prefs.method : "none";
+  return method !== "none" || prefs.consensusMode === "single" || prefs.consensusMode === "split";
 }
 
 function sanitizeEvDevigBookKey(bookRaw) {
@@ -5300,10 +5306,18 @@ function buildEvTable() {
   const b = String(document.getElementById("ev-filter-book")?.value || "");
   const bankroll = num(document.getElementById("ev-bankroll")?.value, 1000);
   const boostPct = evProfitBoostPctFromUi();
+  const devigPrefs = loadEvDevigPrefs();
+  const useDevigProbForEv = evDevigAffectsEvAndKelly(devigPrefs);
+  const evProbForRow = (r) => {
+    const pDevig = num(r.consensusP, NaN);
+    if (useDevigProbForEv && Number.isFinite(pDevig) && pDevig > 0 && pDevig < 1) return pDevig;
+    return r.modelPct;
+  };
   const modelEvWithBoost = (r) => {
     const d0 = num(r.bestDec, NaN);
     const d = decimalWithProfitBoost(d0, boostPct);
-    return Number.isFinite(d) && d > 1 && Number.isFinite(r.modelPct) ? r.modelPct * d - 1 : NaN;
+    const p = evProbForRow(r);
+    return Number.isFinite(d) && d > 1 && Number.isFinite(p) ? p * d - 1 : NaN;
   };
   const gLow = g.toLowerCase();
   let out = rows
@@ -5315,10 +5329,11 @@ function buildEvTable() {
       const dec0 = num(r.bestDec, NaN);
       const dec = decimalWithProfitBoost(dec0, boostPct);
       const bookImp = Number.isFinite(dec) && dec > 1 ? 1 / dec : NaN;
+      const evProb = evProbForRow(r);
       const mEv = modelEvWithBoost(r);
-      const kelly = evKellyDollarsFromDecimal(r.modelPct, dec, bankroll);
-      const deltaPct = Number.isFinite(r.modelPct) && Number.isFinite(bookImp) ? (r.modelPct - bookImp) * 100 : NaN;
-      return { ...r, _dec: dec, _bookImp: bookImp, _modelEv: mEv, _kelly: kelly, _deltaPct: deltaPct };
+      const kelly = evKellyDollarsFromDecimal(evProb, dec, bankroll);
+      const deltaPct = Number.isFinite(evProb) && Number.isFinite(bookImp) ? (evProb - bookImp) * 100 : NaN;
+      return { ...r, _dec: dec, _bookImp: bookImp, _evProb: evProb, _modelEv: mEv, _kelly: kelly, _deltaPct: deltaPct };
     })
     .filter((r) => {
       const hasSportsbookOdds =
