@@ -5665,7 +5665,8 @@ function renderMatchupAnalysisPricing(host, entry) {
   addRow("Edge", (td, s) => {
     if (Number.isFinite(s.edge)) {
       td.textContent = `${(s.edge * 100).toFixed(1)}%`;
-      td.classList.add(s.edge >= 0 ? "ev-pos" : "ev-neg");
+      if (s.edge > 0) td.classList.add("ev-pos");
+      else if (s.edge < 0) td.classList.add("ev-neg");
     } else td.textContent = "—";
   });
   addRow("Odds", (td, s) => {
@@ -6023,14 +6024,15 @@ function buildMatchupAnalysisTool() {
       } else {
         const rawWho = diff > 0 ? entry.left.name : entry.right.name;
         const who = displayGolferName(String(rawWho || ""));
+        const adv = Math.abs(diff);
         if (keyMetric.startsWith("sg_")) {
-          tdAdv.textContent = `${who} ${diff > 0 ? "+" : ""}${diff.toFixed(2)} strokes`;
+          tdAdv.textContent = `${who} +${adv.toFixed(2)} strokes`;
         } else if (keyMetric === "distance") {
-          tdAdv.textContent = `${who} ${diff > 0 ? "+" : ""}${Math.round(diff)} yds`;
+          tdAdv.textContent = `${who} +${Math.round(adv)} yds`;
         } else {
-          tdAdv.textContent = `${who} ${diff > 0 ? "+" : ""}${diff.toFixed(1)} pts`;
+          tdAdv.textContent = `${who} +${adv.toFixed(1)} pts`;
         }
-        tdAdv.className = diff > 0 ? "ev-pos" : "ev-neg";
+        tdAdv.className = "ev-pos";
       }
       tr.appendChild(tdMetric);
       tr.appendChild(tdA);
