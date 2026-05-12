@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Refresh sportsbook columns: scrapes the DataGolf finish-tool page for outright EV data, fetches
- * matchup odds, then replaces parseable outright book columns with scraped sportsbook pages.
+ * Refresh sportsbook columns: fetches DataGolf finish-position outrights API + matchup odds,
+ * then replaces parseable outright book columns with scraped sportsbook pages.
  *
  * Use between full `npm run fetch:dg` / R exports so the static app sees current lines without rebuilding players.
  * Preflight: compares `/field-updates` to projections (week key + fuzzy title); on mismatch runs `fetch-datagolf.mjs`
@@ -13,8 +13,7 @@
  *
  * Env: DATAGOLF_API_KEY or datagolf.local.json; GOLF_MODEL_DIR (repo root); GOLF_DATAGOLF_TOUR / GOLF_TOUR fallback when
  *      projections.json lacks datagolf_feed_tour (written by fetch-datagolf when multiple tours are compared).
- *      Outright EV rows: scraped from https://datagolf.com/betting-tool-finish (rendered page, not the
- *      DataGolf outrights API). Use DATAGOLF_PLAYWRIGHT_STORAGE_STATE for a logged-in Scratch session.
+ *      Outright EV rows: DataGolf betting-tools/outrights API, which backs the Finish Position Betting Tool.
  *      GOLF_SKIP_PROPS_CSV=1 — do not merge data/player_props_*.csv into projections.props (Model O/U DK lines).
  *      GOLF_SKIP_DK_OU=1 — do not pull DK round props (see draftkings-ou-props.mjs).
  *      GOLF_SKIP_MODEL_FALLBACK_OU=1 — do not synthesize GIR / fairways / putts from projections.players for players DK omits.
@@ -40,7 +39,7 @@ import {
   titleTokenOverlapRatio,
   tokenizeEventTitle,
 } from "./dg-events-align.mjs";
-import { fetchDataGolfFinishToolOutrightsFromPage } from "./datagolf-finish-tool-page-scraper.mjs";
+import { fetchDataGolfOutrightsApi } from "./datagolf-outrights-api.mjs";
 import { fetchDraftKingsOuProps } from "./draftkings-ou-props.mjs";
 import { fetchSportsbookOutrightsFromUrls } from "./sportsbook-outrights-scraper.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -263,6 +262,8 @@ function mergeScrapedOutrightsIntoMarket(existingPack, scrapedPack) {
     const id = Math.round(num(r.dg_id, NaN));
     if (!Number.isFinite(id)) continue;
     const out = baseById.get(id) || { dg_id: id, player_name: String(r.player_name || "").trim() };
+    const dgModel = num(r.dg_model, NaN);
+    if (Number.isFinite(dgModel) && dgModel > 0) out.dg_model = dgModel;
     for (const bk of scrapedPack.bookKeys || []) {
       if (String(bk).toLowerCase() === "draftkings" && !useScrapedDraftKings) continue;
       const pct = num(r[bk], NaN);
@@ -428,14 +429,14 @@ async function main() {
 
   let outrights = { ...(payload.outrights && typeof payload.outrights === "object" ? payload.outrights : {}) };
   try {
-    console.log("Scraping DataGolf finish tool page for outright EV data…");
-    const scrapedFinish = await fetchDataGolfFinishToolOutrightsFromPage({ players: payload.players });
-    for (const msg of scrapedFinish.logs || []) console.log("[datagolf-finish-tool]", msg);
-    if (scrapedFinish.outrights && Object.keys(scrapedFinish.outrights).length) {
-      outrights = mergeScrapedOutrights(outrights, scrapedFinish.outrights);
+    console.log("Fetching DataGolf betting-tools/outrights for finish-position EV data…");
+    const dgOutrights = await fetchDataGolfOutrightsApi({ apiKey: key, tour: tourForFeeds, oddsFormat: "percent" });
+    for (const msg of dgOutrights.logs || []) console.log("[datagolf-outrights]", msg);
+    if (dgOutrights.outrights && Object.keys(dgOutrights.outrights).length) {
+      outrights = mergeScrapedOutrights(outrights, dgOutrights.outrights);
     }
   } catch (e) {
-    console.warn("[datagolf-finish-tool] scrape skipped; keeping existing outright rows:", e.message || e);
+    console.warn("[datagolf-outrights] skipped; keeping existing outright rows:", e.message || e);
   }
 
   let sportsbookOutrights = {};

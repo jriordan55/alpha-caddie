@@ -35,8 +35,7 @@
  * Set ALPHA_CADDIE_EMBED_HISTORY=0 to skip that step. Set ALPHA_CADDIE_PGA_HISTORY=1 to run
  * the pgatouR history script after the CSV build (embed runs again after that).
  *
- * Outright EV rows are scraped from https://datagolf.com/betting-tool-finish (rendered page, implied %).
- * Provide DATAGOLF_PLAYWRIGHT_STORAGE_STATE for a logged-in Scratch session.
+ * Outright EV rows use betting-tools/outrights, which backs the Finish Position Betting Tool.
  * preds/pre-tournament: GOLF_PRE_TOURNAMENT_ODDS_FORMAT defaults to decimal (docs show decimal odds; percent is ambiguous).
  */
 
@@ -52,7 +51,7 @@ import {
   foldComparableTitle,
   titleTokenOverlapRatio,
 } from "./dg-events-align.mjs";
-import { fetchDataGolfFinishToolOutrightsFromPage } from "./datagolf-finish-tool-page-scraper.mjs";
+import { fetchDataGolfOutrightsApi } from "./datagolf-outrights-api.mjs";
 import { holeParsFromLiveHoleStatsPayload } from "./dg-live-hole-pars.mjs";
 import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
 import { resolveGolfModelDir } from "./resolve-golf-model-dir.mjs";
@@ -1384,12 +1383,12 @@ async function main() {
 
   let outrights = {};
   try {
-    console.log("Scraping DataGolf finish tool page for outright EV data…");
-    const scrapedFinish = await fetchDataGolfFinishToolOutrightsFromPage({ players });
-    for (const msg of scrapedFinish.logs || []) console.log("[datagolf-finish-tool]", msg);
-    outrights = scrapedFinish.outrights || {};
+    console.log("Fetching DataGolf betting-tools/outrights for finish-position EV data…");
+    const dgOutrights = await fetchDataGolfOutrightsApi({ apiKey: key, tour: tourForFeeds, oddsFormat: "percent" });
+    for (const msg of dgOutrights.logs || []) console.log("[datagolf-outrights]", msg);
+    outrights = dgOutrights.outrights || {};
   } catch (e) {
-    console.warn("[datagolf-finish-tool] scrape skipped; fetch:book-odds can merge sportsbook lines later:", e.message || e);
+    console.warn("[datagolf-outrights] skipped; fetch:book-odds can merge sportsbook lines later:", e.message || e);
   }
 
   /** betting-tools/matchups — same markets as Shiny (decimal odds); stored raw for browser (no CORS). */
@@ -1455,7 +1454,7 @@ async function main() {
     display_round_label: displayRoundLabel(dr, tz),
     updated_at: new Date().toISOString().replace(/\.\d{3}Z$/, "Z"),
     source:
-      "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, fantasy-projection-defaults, preds/pre-tournament, betting-tools/matchups) + scraped DataGolf finish-tool outrights",
+      "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, fantasy-projection-defaults, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
     /** Web app: book columns are implied % (0–100); convert to American in UI like Shiny pct_to_american */
     outrights_odds_format: "percent",
     /** Stored raw from betting-tools/matchups with odds_format=decimal */
