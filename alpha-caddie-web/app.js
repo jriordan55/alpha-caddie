@@ -4749,6 +4749,47 @@ function matchupMarketProbWithFallback(filteredOddsObj, sideKey, prefs, isThree 
   return NaN;
 }
 
+function matchupAnalysisOddsWithoutDataGolf(oddsObj) {
+  const out = {};
+  if (!oddsObj || typeof oddsObj !== "object") return out;
+  for (const [bk, pack] of Object.entries(oddsObj)) {
+    const k = normalizeEvSportsbookKey(bk);
+    if (!k || k === "datagolf") continue;
+    if (!pack || typeof pack !== "object") continue;
+    out[k] = pack;
+  }
+  return out;
+}
+
+function matchupAnalysisMarketProbSide(oddsObj, sideKey, isThree = false) {
+  const want = String(sideKey || "").toLowerCase();
+  const vals = [];
+  for (const pack of Object.values(oddsObj || {})) {
+    if (!pack || typeof pack !== "object") continue;
+    if (isThree) {
+      if (!["p1", "p2", "p3"].includes(want)) continue;
+      const d1 = num(pack.p1, NaN);
+      const d2 = num(pack.p2, NaN);
+      const d3 = num(pack.p3, NaN);
+      if (!Number.isFinite(d1) || d1 <= 1 || !Number.isFinite(d2) || d2 <= 1 || !Number.isFinite(d3) || d3 <= 1) continue;
+      const q1 = 1 / d1;
+      const q2 = 1 / d2;
+      const q3 = 1 / d3;
+      const s = q1 + q2 + q3;
+      if (s > 0) vals.push(want === "p1" ? q1 / s : want === "p2" ? q2 / s : q3 / s);
+      continue;
+    }
+    const d1 = num(pack.p1, NaN);
+    const d2 = num(pack.p2, NaN);
+    if (!Number.isFinite(d1) || d1 <= 1 || !Number.isFinite(d2) || d2 <= 1) continue;
+    const q1 = 1 / d1;
+    const q2 = 1 / d2;
+    const s = q1 + q2;
+    if (s > 0) vals.push(want === "p1" ? q1 / s : q2 / s);
+  }
+  return vals.length ? vals.reduce((a, c) => a + c, 0) / vals.length : NaN;
+}
+
 function bestBookDecimalForSideWithFallback(oddsObj, sideKey, prefs, opts = {}) {
   const filtered = filterOddsObjectForEvSportsbooks(oddsObj || {}, opts);
   for (const bk of Object.keys(filtered)) {
@@ -5633,7 +5674,7 @@ function renderMatchupAnalysisPricing(host, entry) {
     td.textContent =
       Number.isFinite(s.book?.dec) && s.book.dec > 1 ? formatAmerican(americanFromDecimal(s.book.dec)) : "—";
   });
-  addRow("Book", (td, s) => {
+  addRow("Best Book", (td, s) => {
     if (s.book?.book) td.innerHTML = bookBadgeHtml(s.book.book);
     else td.textContent = "—";
   });
@@ -5682,7 +5723,6 @@ function buildMatchupAnalysisTool() {
   if (!sgBody) return;
   sgBody.innerHTML = "";
   if (pricingHost) pricingHost.innerHTML = "";
-  const devigPrefs = loadEvDevigPrefs();
   const key = String(marketEl?.value || "round_matchups");
   const pack = DATA.matchups && DATA.matchups[key];
   const list = pack && pack.match_list;
@@ -5743,20 +5783,19 @@ function buildMatchupAnalysisTool() {
     const row2 = projectionPlayerRowForModelByIdOrName(id2, m.p2_player_name, r);
     const row3 = projectionPlayerRowForModelByIdOrName(id3, m.p3_player_name, r);
     const odds = m.odds || {};
-    const matchupBookOpts = { allowDatagolf: true };
-    const oddsEv = filterOddsObjectForEvSportsbooks(odds, matchupBookOpts);
-    const b1 = bestBookDecimalForSideWithFallback(odds, "p1", devigPrefs, matchupBookOpts);
-    const b2 = bestBookDecimalForSideWithFallback(odds, "p2", devigPrefs, matchupBookOpts);
-    const b3 = bestBookDecimalForSideWithFallback(odds, "p3", devigPrefs, matchupBookOpts);
+    const oddsForAnalysis = matchupAnalysisOddsWithoutDataGolf(odds);
+    const b1 = bestBookDecimalForSide(oddsForAnalysis, "p1");
+    const b2 = bestBookDecimalForSide(oddsForAnalysis, "p2");
+    const b3 = bestBookDecimalForSide(oddsForAnalysis, "p3");
     const isThree = key === "3_balls" && Number.isFinite(id3) && id3 > 0;
     const mu1 = effectiveMuSg(row1, id1, key);
     const mu2 = effectiveMuSg(row2, id2, key);
     const mu3 = effectiveMuSg(row3, id3, key);
     if (isThree) {
       const [p1, p2, p3] = threeBallModelProbsLiveBlended(mu1, mu2, mu3, row1, row2, row3);
-      const mp1 = matchupMarketProbWithFallback(oddsEv, "p1", devigPrefs, true);
-      const mp2 = matchupMarketProbWithFallback(oddsEv, "p2", devigPrefs, true);
-      const mp3 = matchupMarketProbWithFallback(oddsEv, "p3", devigPrefs, true);
+      const mp1 = matchupAnalysisMarketProbSide(oddsForAnalysis, "p1", true);
+      const mp2 = matchupAnalysisMarketProbSide(oddsForAnalysis, "p2", true);
+      const mp3 = matchupAnalysisMarketProbSide(oddsForAnalysis, "p3", true);
       const ev1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
       const ev2 = Number.isFinite(b2.dec) ? p2 * b2.dec - 1 : NaN;
       const ev3 = Number.isFinite(b3.dec) ? p3 * b3.dec - 1 : NaN;
@@ -5802,8 +5841,8 @@ function buildMatchupAnalysisTool() {
     }
     const p1 = matchupWinProbLiveBlended(mu1, mu2, key, row1, row2);
     const p2 = 1 - p1;
-    const marketP1 = matchupMarketProbWithFallback(oddsEv, "p1", devigPrefs, false);
-    const marketP2 = matchupMarketProbWithFallback(oddsEv, "p2", devigPrefs, false);
+    const marketP1 = matchupAnalysisMarketProbSide(oddsForAnalysis, "p1", false);
+    const marketP2 = matchupAnalysisMarketProbSide(oddsForAnalysis, "p2", false);
     const ev1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
     const ev2 = Number.isFinite(b2.dec) ? p2 * b2.dec - 1 : NaN;
     const best =
