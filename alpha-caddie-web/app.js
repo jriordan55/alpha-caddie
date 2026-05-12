@@ -5199,6 +5199,7 @@ function fillEvFilters(rows) {
   const bPrev = b.value;
   const gSet = new Set(rows.map((r) => r.golfer).filter(Boolean));
   const mSet = new Set(rows.map((r) => r.market).filter(Boolean));
+  for (const label of ["Tournament Matchups", "Round Matchups", "3 Balls"]) mSet.add(label);
   const bSet = new Set(rows.map((r) => r.bestBook).filter(Boolean));
   const refill = (sel, vals) => {
     sel.innerHTML = '<option value="">All</option>';
