@@ -2022,6 +2022,25 @@ function ouRoundOuPropsForLines() {
   return merged.length ? merged : props;
 }
 
+function draftKingsRoundPropOddsAvailable() {
+  const props = Array.isArray(DATA.props) ? DATA.props : [];
+  return props.some((r) => {
+    const source = String(r.source || "").trim().toLowerCase();
+    if (source !== "draftkings") return false;
+    return (
+      Number.isFinite(enforceHalfLine(num(r.line, NaN))) &&
+      Number.isFinite(num(r.over_odds, NaN)) &&
+      Number.isFinite(num(r.under_odds, NaN))
+    );
+  });
+}
+
+function updateOuSyntheticOddsNoteVisibility() {
+  const el = document.getElementById("ou-synthetic-odds-note");
+  if (!el) return;
+  el.hidden = draftKingsRoundPropOddsAvailable();
+}
+
 /**
  * Columns for the Round projections grid + Market filter.
  * With a loaded field, always list every standard market so Birdies/GIR/etc. stay visible even when DraftKings
@@ -2459,9 +2478,14 @@ function syncForecastWaveBannerTexts() {
   const morning = slots && typeof slots === "object" ? slots.morning : null;
   const afternoon = slots && typeof slots === "object" ? slots.afternoon : null;
   const html = weatherWaveForecastBannerInnerHtml(morning, afternoon);
+  const status = String(DATA.meta?.forecast_weather_status || "");
+  const forecastLoaded =
+    Boolean(DATA.meta?.forecast_weather_updated_at) &&
+    !["open_meteo_fetch_failed", "empty_hourly", "no_course_coords", "no_players"].includes(status);
   for (const id of ["ou-weather-wave-summary", "ev-weather-wave-summary"]) {
     const el = document.getElementById(id);
     if (!el) continue;
+    el.hidden = false;
     if (html) {
       el.innerHTML = html;
       el.classList.add("weather-wave-banner");
@@ -2469,7 +2493,14 @@ function syncForecastWaveBannerTexts() {
       el.classList.remove("weather-wave-banner");
       const raw = DATA.meta?.forecast_wave_summary;
       const text = typeof raw === "string" ? raw.trim() : "";
-      el.textContent = text || fallback;
+      if (text) {
+        el.textContent = text;
+      } else if (forecastLoaded) {
+        el.textContent = "";
+        el.hidden = true;
+      } else {
+        el.textContent = fallback;
+      }
     }
   }
 }
@@ -3658,6 +3689,7 @@ function buildOuProjDetailPanel(player, col, side, mu, pick, rawName) {
 function buildOuTable() {
   const table = document.getElementById("table-ou");
   if (!table) return;
+  updateOuSyntheticOddsNoteVisibility();
   initOuTableSortOnce();
   ouProjExpandedDetail = null;
   const round = getOuRound();
