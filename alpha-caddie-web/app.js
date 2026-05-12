@@ -11372,18 +11372,44 @@ function liveRoughFiveMults() {
   const shotN = clamp(Math.round(num(document.getElementById("hh-shot-num")?.value, 1)), 1, 18);
   const phase = clamp((shotN - 1) / 7, 0, 1);
   let lieT = 0;
-  if (lie === "Sand") lieT = 0.52;
-  else if (lie === "Rough") lieT = 0.34;
-  const distT = clamp((dist - 132) / 340, -0.1, 0.2) * (1 - 0.3 * phase);
+  if (lie === "Sand") lieT = 0.72;
+  else if (lie === "Rough") lieT = 0.52;
+  let distT = clamp((dist - 132) / 340, -0.1, 0.2) * (1 - 0.3 * phase);
+  /* Short-sided rough/sand: do not treat “few yards left” as easy — keep difficulty positive. */
+  if (lie === "Rough" || lie === "Sand") {
+    const short = Number.isFinite(dist) && dist >= 0 && dist < 95;
+    if (short) {
+      const bump = clamp((95 - dist) / 95, 0, 1) * (lie === "Sand" ? 0.14 : 0.1);
+      distT = Math.max(distT, 0.06 + bump);
+    } else if (distT < 0.04) distT = 0.04;
+  }
   const puttT = clamp((putt - 9) / 48, -0.08, 0.16) * (0.35 + 0.65 * phase);
-  const T = clamp(lieT + distT + puttT, -0.15, 1.25);
+  const T = clamp(lieT + distT + puttT, -0.08, 1.35);
   return {
-    eagle: clamp(1 - 0.55 * T, 0.3, 1.15),
-    birdie: clamp(1 - 0.32 * T, 0.45, 1.12),
-    par: 1,
-    bogey: clamp(1 + 0.36 * T, 0.72, 1.75),
-    double: clamp(1 + 0.58 * T, 0.55, 2.1),
+    eagle: clamp(1 - 0.58 * T, 0.22, 1.08),
+    birdie: clamp(1 - 0.44 * T, 0.32, 1.08),
+    par: clamp(1 + 0.05 * T, 0.92, 1.18),
+    bogey: clamp(1 + 0.48 * T, 0.85, 1.95),
+    double: clamp(1 + 0.72 * T, 0.65, 2.25),
   };
+}
+
+/** When live inputs are on and not putting, tilt birdie/par/bogey+ toward trouble in rough/sand vs fairway. */
+function hangoutLiveLieThreeWayTilt(three, lieRaw, shotNum, distYds) {
+  const lie = String(lieRaw || "Fairway");
+  if (lie === "Green" || lie === "Fairway") return three;
+  const sn = clamp(Math.round(num(shotNum, 1)), 1, 18);
+  const late = clamp((sn - 1) / 6.5, 0, 1);
+  let u = lie === "Sand" ? 0.34 : 0.22;
+  u += late * (lie === "Sand" ? 0.14 : 0.1);
+  const d = num(distYds, NaN);
+  if (Number.isFinite(d) && d >= 0 && d < 90) u += 0.08 * (1 - d / 90);
+  u = clamp(u, 0, 0.62);
+  return hangoutNormThree({
+    birdie: three.birdie * Math.exp(-u),
+    par: three.par,
+    bogeyPlus: three.bogeyPlus * Math.exp(u),
+  });
 }
 
 function hangoutAmericanForThreeWayProb(p) {
@@ -12049,6 +12075,11 @@ function runHangoutSimulate() {
       };
     } else {
       three = hangoutNormThree(three);
+      if (hangoutLiveOn()) {
+        const lieRaw = String(document.getElementById("hh-lie")?.value || "Fairway");
+        const distLive = num(document.getElementById("hh-dist-yds")?.value, NaN);
+        three = hangoutLiveLieThreeWayTilt(three, lieRaw, shotN, distLive);
+      }
     }
     hangoutLastThreeProbs = three;
     const bogM =
