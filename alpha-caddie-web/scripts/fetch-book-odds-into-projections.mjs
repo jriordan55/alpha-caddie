@@ -74,7 +74,12 @@ function inferDraftKingsLeagueUrlFromProjections(payload) {
   const slug = String(
     payload?.dk_league_slug || payload?.draftkings_league_slug || payload?.dk_event_slug || "",
   ).trim();
-  if (slug) return `https://sportsbook.draftkings.com/leagues/golf/${slug}?category=round`;
+  if (slug) {
+    if (slug.toLowerCase() === "pga-championship") {
+      return "https://sportsbook.draftkings.com/leagues/golf/uspga-championship?category=round";
+    }
+    return `https://sportsbook.draftkings.com/leagues/golf/${slug}?category=round`;
+  }
   const name = String(payload?.event_name || "").trim();
   if (!name) return "";
   const s = name
@@ -112,6 +117,67 @@ async function fetchDg(path, params, key) {
 function num(x, fallback = NaN) {
   const n = Number(x);
   return Number.isFinite(n) ? n : fallback;
+}
+
+/** Match DataGolf `player_name` row for a DraftKings title substring (e.g. "Scottie Scheffler" vs "Scheffler, Scottie"). */
+function displayGolferName(nameRaw) {
+  const s = String(nameRaw || "").trim();
+  const m = s.match(/^([^,]+),\s*(.+)$/);
+  if (m) return `${m[2].trim()} ${m[1].trim()}`.trim();
+  return s;
+}
+
+function normNameLoose(s) {
+  return String(s || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function matchProjectionPlayerByDkLabel(players, dkLabel) {
+  if (!Array.isArray(players) || !players.length) return null;
+  const raw = String(dkLabel || "").trim();
+  if (!raw) return null;
+  const dkl = raw.toLowerCase();
+  const dkn = normNameLoose(raw);
+  for (const p of players) {
+    const pn = String(p.player_name || "").trim();
+    if (!pn) continue;
+    if (pn.toLowerCase() === dkl) return p;
+    if (displayGolferName(pn).toLowerCase() === dkl) return p;
+    if (normNameLoose(displayGolferName(pn)) === dkn) return p;
+    if (normNameLoose(pn) === dkn) return p;
+  }
+  return null;
+}
+
+/** Align DK scrape `player_name` / `dg_id` with DataGolf field rows so merge keys + DK-coverage checks match model fallbacks. */
+function canonicalizeDkOuPropsAgainstProjections(dkProps, players) {
+  if (!Array.isArray(dkProps) || !dkProps.length) return dkProps;
+  if (!Array.isArray(players) || !players.length) return dkProps;
+  const officialNameByDgId = new Map();
+  for (const p of players) {
+    const id = Math.round(num(p.dg_id, NaN));
+    if (!Number.isFinite(id) || id <= 0) continue;
+    const pn = String(p.player_name || "").trim();
+    if (!pn) continue;
+    if (!officialNameByDgId.has(id)) officialNameByDgId.set(id, pn);
+  }
+  for (const r of dkProps) {
+    let id = Math.round(num(r.dg_id, NaN));
+    if (Number.isFinite(id) && id > 0) {
+      const canon = officialNameByDgId.get(id);
+      if (canon) r.player_name = canon;
+      continue;
+    }
+    const row = matchProjectionPlayerByDkLabel(players, r.player_name);
+    if (row) {
+      r.player_name = String(row.player_name || "").trim();
+      id = Math.round(num(row.dg_id, NaN));
+      if (Number.isFinite(id) && id > 0) r.dg_id = id;
+    }
+  }
+  return dkProps;
 }
 
 function snapHalfLine(x) {
@@ -509,6 +575,7 @@ async function main() {
           ...(dkLeagueUrl ? { leagueUrl: dkLeagueUrl } : {}),
         });
         dkProps = withPropSource(dk.props || [], "draftkings");
+        canonicalizeDkOuPropsAgainstProjections(dkProps, payload.players);
         if (!dkProps.length && process.env.GOLF_SKIP_DK_OU !== "1") {
           console.warn(
             "DraftKings O/U:",

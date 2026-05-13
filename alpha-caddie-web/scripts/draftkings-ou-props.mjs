@@ -636,7 +636,12 @@ function inferLeagueUrlFromPayload(payload) {
   const slug = String(
     payload.dk_league_slug || payload.draftkings_league_slug || payload.dk_event_slug || "",
   ).trim();
-  if (slug) return `https://sportsbook.draftkings.com/leagues/golf/${slug}?category=round`;
+  if (slug) {
+    if (slug.toLowerCase() === "pga-championship") {
+      return "https://sportsbook.draftkings.com/leagues/golf/uspga-championship?category=round";
+    }
+    return `https://sportsbook.draftkings.com/leagues/golf/${slug}?category=round`;
+  }
   const name = String(payload.event_name || "").trim();
   if (!name) return "";
   const s = name
