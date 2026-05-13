@@ -75,6 +75,9 @@ const server = http.createServer((req, res) => {
       res.setHeader("Pragma", "no-cache");
       res.setHeader("Expires", "0");
       res.setHeader("Surrogate-Control", "no-store");
+    } else if (ext === ".html" || ext === ".htm") {
+      /* Pick up new ?v= on app.js/styles without relying on CDN defaults (mobile Safari caches aggressively). */
+      res.setHeader("Cache-Control", "max-age=0, must-revalidate");
     }
     res.end(data);
   });
