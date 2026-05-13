@@ -1,6 +1,8 @@
 /**
  * Pull PGA field + skill + fantasy + pre-tournament probs from DataGolf (same idea as
  * round_projections.R RAW_PROJECTIONS / GOLF_RAW_PROJECTIONS=1) and write projections.json.
+ * Fairways: blend preds/player-decompositions `driving_acc` (0–1 FW rate) when present, else
+ * SG:OTT vs field mean + total-SG tilt (fantasy defaults alone compress the field ~8 FW for everyone).
  * R2–R4 rows: mean SG is scaled by per-round multipliers (default matches R shot-MC fallback
  * 1, 0.99, 0.97, 0.95) and counts/GIR/FW are re-derived so Model O/U changes when the round
  * selector changes. Override: GOLF_NODE_ROUND_MU_MULT=1,0.99,0.97,0.95
@@ -347,13 +349,6 @@ function resolveHoleParsForEvent({ fieldRaw, course_used, event_name, field_upda
 const RAW_ROUND_SD = Number(process.env.GOLF_RAW_ROUND_SD) || 2.75;
 const COURSE_PAR_18 = Number(process.env.GOLF_COURSE_PAR) || 72;
 const N_FAIRWAY_HOLES = Number(process.env.GOLF_N_FAIRWAY_HOLES) || 14;
-/** When fantasy omits fairways, mu_sg-only impute compresses the field (~0.7 FW spread); nudge by driving-accuracy z vs tour. */
-const FIELD_FW_MIN_N = 8;
-const FIELD_FW_ACC_STD_FLOOR = 0.55;
-const FIELD_FW_NUDGE_K = 0.46;
-const FIELD_FW_NUDGE_CAP = 1.45;
-/** When DG fantasy includes FW, still blend a fraction of accuracy z (fantasy often compresses vs OTT skill). */
-const FIELD_FW_FANTASY_Z_SCALE = 0.36;
 const TOUR = (process.env.GOLF_DATAGOLF_TOUR || process.env.GOLF_TOUR || "pga").trim() || "pga";
 
 const WEEKDAYS = ["Thursday", "Friday", "Saturday", "Sunday"];
@@ -604,33 +599,25 @@ function clampMuSg(m) {
   return Math.max(-4, Math.min(4, x));
 }
 
-function drivingAccPercentForFairways(acc) {
-  const a = num(acc, NaN);
-  if (!Number.isFinite(a)) return NaN;
-  if (a > -1 && a < 1) return a * 100;
-  return a;
+/** μ-only fairways fallback (same shape as legacy impute). */
+function fairwaysMuImputeOnly(stpVec, nFw) {
+  return Math.max(4, Math.min(nFw, 0.55 * nFw - 0.15 * stpVec));
 }
 
-/** Map dg_id → z-score of driving accuracy (%); null if field too small or flat. */
-function fairwaysDrivingZByDgId(baseRows) {
-  const vals = [];
-  for (const r of baseRows) {
-    const a = drivingAccPercentForFairways(r.driving_accuracy);
-    if (Number.isFinite(a)) vals.push(a);
-  }
-  if (vals.length < FIELD_FW_MIN_N) return null;
-  const mean = vals.reduce((s, x) => s + x, 0) / vals.length;
-  let vsum = 0;
-  for (const x of vals) vsum += (x - mean) ** 2;
-  const std = Math.sqrt(vsum / vals.length);
-  if (!Number.isFinite(std) || std < FIELD_FW_ACC_STD_FLOOR) return null;
-  const m = new Map();
-  for (const r of baseRows) {
-    const a = drivingAccPercentForFairways(r.driving_accuracy);
-    if (!Number.isFinite(a)) continue;
-    m.set(r.dg_id, (a - mean) / std);
-  }
-  return m;
+/**
+ * Expected fairways (N_fw hole scale) from SG:OTT vs the field mean + small total-SG tilt.
+ * Fantasy defaults + μ-only formulas cluster everyone ~8; R uses OTT / driving_acc for FW calibration.
+ */
+function fairwaysExpectedFromSkill(muSg, sgOtt, nFw, fieldMeanOtt) {
+  const stp = -num(muSg, 0);
+  const fallback = fairwaysMuImputeOnly(stp, nFw);
+  const o = num(sgOtt, NaN);
+  const m = num(fieldMeanOtt, NaN);
+  if (!Number.isFinite(o) || !Number.isFinite(m)) return fallback;
+  let rate = 0.58 + 0.48 * (o - m) + 0.032 * stp;
+  rate = Math.max(0.5, Math.min(0.74, rate));
+  const ottFw = Math.max(4, Math.min(nFw, rate * nFw));
+  return Math.max(4, Math.min(nFw, 0.2 * fallback + 0.8 * ottFw));
 }
 
 /** Default matches R round_projections Gaussian-round mu_mult when ROUND_HIST_SG_MULT is unset. */
@@ -645,12 +632,15 @@ function parseRoundMuMult() {
   return parts.slice(0, 4);
 }
 
-function derivedStatsFromMuSg(muRaw, nFairwayHoles) {
+function derivedStatsFromMuSg(muRaw, nFairwayHoles, opts = {}) {
   const mu_sg = clampMuSg(muRaw);
   const im = imputeCountsFromNegMu(mu_sg);
   const stpVec = -mu_sg;
   const gir = Math.max(6, Math.min(16, 11.5 - 0.25 * stpVec));
-  const fairways = Math.max(4, Math.min(nFairwayHoles, 0.55 * nFairwayHoles - 0.15 * stpVec));
+  let fairways = Math.max(4, Math.min(nFairwayHoles, 0.55 * nFairwayHoles - 0.15 * stpVec));
+  if (Number.isFinite(opts.sg_ott) && Number.isFinite(opts.fieldMeanOtt)) {
+    fairways = fairwaysExpectedFromSkill(mu_sg, opts.sg_ott, nFairwayHoles, opts.fieldMeanOtt);
+  }
   const putts = Math.max(22, Math.min(35, 28.5 + 0.32 * stpVec - 0.1 * (gir - 11)));
   return {
     mu_sg,
@@ -1254,8 +1244,18 @@ async function main() {
     });
   }
 
+  const ottSamples = [];
+  for (const fr of fieldRows) {
+    const sid = Math.round(num(fr.dg_id, NaN));
+    if (!Number.isFinite(sid)) continue;
+    const sk = skillByDg.get(sid);
+    const o = num(sk?.sg_ott, NaN);
+    if (Number.isFinite(o)) ottSamples.push(o);
+  }
+  const fieldMeanOtt =
+    ottSamples.length >= 8 ? ottSamples.reduce((a, b) => a + b, 0) / ottSamples.length : NaN;
+
   const base = [];
-  const imputedFairwaysDg = new Set();
   for (const fr of fieldRows) {
     const id = fr.dg_id;
     const skRow = skillByDg.get(id);
@@ -1283,11 +1283,9 @@ async function main() {
     let bogeys = num(fx.bogeys);
     let doubles = num(fx.doubles);
     let gir = scalarOrNaN(fx.gir);
-    let fairways = scalarOrNaN(fx.fairways);
     if (!Number.isFinite(driving_distance)) driving_distance = num(fx.driving_distance);
 
     if (Number.isFinite(gir) && gir > 0 && gir <= 1) gir *= 18;
-    if (Number.isFinite(fairways) && fairways > 0 && fairways <= 1) fairways *= N_FAIRWAY_HOLES;
 
     const im = imputeCountsFromNegMu(mu_sg);
     if (!Number.isFinite(eagles)) eagles = im.eagles;
@@ -1298,10 +1296,25 @@ async function main() {
 
     const stpVec = -mu_sg;
     if (!Number.isFinite(gir)) gir = Math.max(6, Math.min(16, 11.5 - 0.25 * stpVec));
-    let fairwaysImputed = false;
+
+    const decompFwRate = num(skRow?.driving_acc, NaN);
+    let fairways = NaN;
+    if (Number.isFinite(decompFwRate) && decompFwRate > 0.05 && decompFwRate < 0.95) {
+      fairways = Math.max(4, Math.min(N_FAIRWAY_HOLES, decompFwRate * N_FAIRWAY_HOLES));
+    }
+
+    let fxFw = scalarOrNaN(fx.fairways);
+    if (Number.isFinite(fxFw) && fxFw > 0 && fxFw <= 1) fxFw *= N_FAIRWAY_HOLES;
+
+    const ottFw = fairwaysExpectedFromSkill(mu_sg, skRow?.sg_ott, N_FAIRWAY_HOLES, fieldMeanOtt);
     if (!Number.isFinite(fairways)) {
-      fairways = Math.max(4, Math.min(N_FAIRWAY_HOLES, 0.55 * N_FAIRWAY_HOLES - 0.15 * stpVec));
-      fairwaysImputed = true;
+      if (Number.isFinite(fxFw)) {
+        fairways = Math.max(4, Math.min(N_FAIRWAY_HOLES, 0.38 * fxFw + 0.62 * ottFw));
+      } else {
+        fairways = ottFw;
+      }
+    } else {
+      fairways = Math.max(4, Math.min(N_FAIRWAY_HOLES, 0.42 * fairways + 0.58 * ottFw));
     }
 
     const putts = Math.max(22, Math.min(35, 28.5 + 0.32 * stpVec - 0.1 * (gir - 11)));
@@ -1340,19 +1353,7 @@ async function main() {
       rowOut.avg_driving_distance = dyInt;
     }
     if (Number.isFinite(driving_accuracy)) rowOut.driving_accuracy = driving_accuracy;
-    if (fairwaysImputed) imputedFairwaysDg.add(id);
     base.push(rowOut);
-  }
-
-  const fwZByDg = fairwaysDrivingZByDgId(base);
-  if (fwZByDg) {
-    for (const row of base) {
-      const z = fwZByDg.get(row.dg_id);
-      if (!Number.isFinite(z)) continue;
-      const scale = imputedFairwaysDg.has(row.dg_id) ? 1 : FIELD_FW_FANTASY_Z_SCALE;
-      const d = Math.max(-FIELD_FW_NUDGE_CAP, Math.min(FIELD_FW_NUDGE_CAP, z * FIELD_FW_NUDGE_K * scale));
-      row.fairways = Math.max(4, Math.min(N_FAIRWAY_HOLES, row.fairways + d));
-    }
   }
 
   const score_to_par = (mu) => -num(mu, 0);
@@ -1392,14 +1393,10 @@ async function main() {
           putts: row.putts,
         };
       } else {
-        st = derivedStatsFromMuSg(row.mu_sg * mult, N_FAIRWAY_HOLES);
-        if (fwZByDg) {
-          const z = fwZByDg.get(row.dg_id);
-          if (Number.isFinite(z)) {
-            const d = Math.max(-FIELD_FW_NUDGE_CAP, Math.min(FIELD_FW_NUDGE_CAP, z * FIELD_FW_NUDGE_K));
-            st.fairways = Math.max(4, Math.min(N_FAIRWAY_HOLES, st.fairways + d));
-          }
-        }
+        st = derivedStatsFromMuSg(row.mu_sg * mult, N_FAIRWAY_HOLES, {
+          sg_ott: row.sg_ott,
+          fieldMeanOtt,
+        });
       }
       const stp = score_to_par(st.mu_sg);
       const ts = total_score(st.mu_sg);
