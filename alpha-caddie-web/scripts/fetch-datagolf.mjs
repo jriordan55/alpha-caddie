@@ -739,6 +739,16 @@ function isPlausibleDrivingDistanceYds(y) {
   return Number.isFinite(v) && v >= 235 && v <= 380;
 }
 
+/** Yards for modeling (FW): measured carry/roll when present, else neutral + DG yards-vs-tour rating. */
+function impliedDrivingYardsFromSkillRow(sk) {
+  if (!sk || typeof sk !== "object") return NaN;
+  const y = num(sk.driving_distance, NaN);
+  if (Number.isFinite(y) && isPlausibleDrivingDistanceYds(y)) return y;
+  const rt = num(sk.driving_distance_rating, NaN);
+  if (Number.isFinite(rt) && rt >= -55 && rt <= 55) return 302 + rt;
+  return NaN;
+}
+
 /** Skill-only fairways: plausible FW% from decompositions → count; else SG:OTT model (no fantasy blend). */
 function projectedFairwaysFromSkillOnly(mu_sg, skRow, nFw, fieldMeanOtt, drivingDistYds, fieldMeanDrive) {
   const fw01 = fairwayRate01FromDrivingSkill(skRow, nFw);
@@ -1132,24 +1142,38 @@ function skillPillarsFromSkillRow(row) {
   };
 }
 
-/** Driving distance + accuracy skill ratings, from skill-ratings / decompositions column aliases. */
+/** Driving distance + accuracy from preds/skill-ratings (+ decompositions). Distance may be absolute yards (≈235–380) or DG "yards vs tour average" (≈±50). */
 function drivingAttrsFromSkillBag(row) {
-  if (!row || typeof row !== "object") {
-    return { driving_distance: NaN, driving_accuracy: NaN, driving_dist: NaN, driving_acc: NaN };
-  }
+  const empty = {
+    driving_distance: NaN,
+    driving_accuracy: NaN,
+    driving_dist: NaN,
+    driving_acc: NaN,
+    driving_distance_rating: NaN,
+  };
+  if (!row || typeof row !== "object") return empty;
   const bag = normalizedScalarBag(row);
+  const distRatingOnly = pickFromBag(bag, [
+    "driving_distance_rating",
+    "driving_distance_skill",
+    "driving_dist_skill",
+    "distance_skill",
+    "distance_vs_avg",
+    "driving_distance_vs_avg",
+    "dd_skill",
+  ]);
   const dist = pickFromBag(bag, [
     "avg_driving_distance",
     "average_driving_distance",
     "mean_driving_distance",
     "avg_drive_distance",
     "avg_drive_dist",
-    "driving_distance",
-    "drive_distance",
-    "distance",
     "driving_dist",
     "predicted_driving_distance",
     "predicted_avg_driving_distance",
+    "driving_distance",
+    "drive_distance",
+    "distance",
     "dd",
     "ott_distance",
   ]);
@@ -1167,7 +1191,21 @@ function drivingAttrsFromSkillBag(row) {
     "fw_accuracy",
   ]);
   const accRating = Number.isFinite(acc) && acc > -1 && acc < 1 ? acc * 100 : acc;
-  return { driving_distance: dist, driving_accuracy: accRating, driving_dist: dist, driving_acc: acc };
+  let driving_distance = NaN;
+  let driving_dist = NaN;
+  let driving_distance_rating = NaN;
+  if (Number.isFinite(distRatingOnly) && distRatingOnly >= -55 && distRatingOnly <= 55) {
+    driving_distance_rating = distRatingOnly;
+  }
+  if (Number.isFinite(dist)) {
+    if (isPlausibleDrivingDistanceYds(dist)) {
+      driving_distance = dist;
+      driving_dist = dist;
+    } else if (!Number.isFinite(driving_distance_rating) && dist >= -55 && dist <= 55) {
+      driving_distance_rating = dist;
+    }
+  }
+  return { driving_distance, driving_accuracy: accRating, driving_dist, driving_acc, driving_distance_rating };
 }
 
 function mergeSkillDrivingProfile(mergedRow) {
@@ -1677,7 +1715,7 @@ async function main() {
     const sid = Math.round(num(fr.dg_id, NaN));
     if (!Number.isFinite(sid)) continue;
     const sk = skillByDg.get(sid);
-    const d = num(sk?.driving_distance, NaN);
+    const d = impliedDrivingYardsFromSkillRow(sk);
     if (Number.isFinite(d) && d >= 240 && d <= 345) distSamples.push(d);
   }
   const fieldMeanDrive =
@@ -1730,7 +1768,9 @@ async function main() {
     const stpVec = -mu_sg;
     const gir = girExpectedFromSkill(mu_sg, skRow?.sg_app, 18, fieldMeanApp);
 
-    const distForFw = isPlausibleDrivingDistanceYds(driving_distance) ? driving_distance : NaN;
+    const distForFw = isPlausibleDrivingDistanceYds(driving_distance)
+      ? driving_distance
+      : impliedDrivingYardsFromSkillRow(skRow);
     const fairways = projectedFairwaysFromSkillOnly(
       mu_sg,
       skRow,
@@ -1769,6 +1809,9 @@ async function main() {
       }
       if (Number.isFinite(skRow.driving_dist)) rowOut.driving_dist = skRow.driving_dist;
       if (Number.isFinite(skRow.driving_acc)) rowOut.driving_acc = skRow.driving_acc;
+      if (Number.isFinite(skRow.driving_distance_rating)) {
+        rowOut.driving_distance_rating = skRow.driving_distance_rating;
+      }
     }
     if (isPlausibleDrivingDistanceYds(driving_distance)) {
       const dyInt = Math.round(driving_distance);
@@ -1869,6 +1912,9 @@ async function main() {
         const dy = Math.round(row.driving_distance);
         pl.avg_driving_distance = dy;
         pl.driving_distance = dy;
+      }
+      if (Number.isFinite(row.driving_distance_rating)) {
+        pl.driving_distance_rating = Math.round(row.driving_distance_rating * 100) / 100;
       }
       if (Number.isFinite(row.driving_accuracy)) {
         const da = row.driving_accuracy;

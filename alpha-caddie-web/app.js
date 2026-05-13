@@ -5682,6 +5682,7 @@ function mergedPlayerRowForDrivingFields(row) {
     "avg_drive_distance",
     "predicted_driving_distance",
     "predicted_avg_driving_distance",
+    "driving_distance_rating",
     "driving_acc",
     "driving_accuracy",
   ];
@@ -5704,6 +5705,8 @@ function matchupAnalysisMetricValue(row, key) {
     return num(row.mu_sg, NaN);
   }
   if (key === "distance") {
+    const rt = num(row.driving_distance_rating, NaN);
+    if (Number.isFinite(rt) && rt >= -55 && rt <= 55) return drivingDistanceSkillRating(rt);
     const cands = [
       num(row.driving_dist, NaN),
       num(row.avg_driving_distance, NaN),
@@ -5714,11 +5717,7 @@ function matchupAnalysisMetricValue(row, key) {
       num(row.predicted_avg_driving_distance, NaN),
     ];
     for (const v of cands) {
-      if (Number.isFinite(v)) return drivingDistanceSkillRating(v);
-    }
-    const ott = num(row.sg_ott, NaN);
-    if (Number.isFinite(ott)) {
-      return clamp(302 + ott * 9, 268, 335);
+      if (Number.isFinite(v) && v >= 235 && v <= 380) return drivingDistanceSkillRating(v);
     }
     return NaN;
   }
@@ -6195,13 +6194,12 @@ function buildMatchupAnalysisTool() {
 /** --- Course fit tab (skill-shape radar, venue similarity, fit leaderboard) --- */
 const COURSE_FIT_AXIS_KEYS = ["dist", "acc", "app", "arg", "putt"];
 
-/** Raw scalars for radar [driving distance rating, accuracy rating, sg_app, sg_arg, sg_putt]. */
+/** Legacy 5-axis helper: yards when measured, else implied carry from DG yards-vs-tour rating. */
 function courseFitRawProfile(row) {
   if (!row || typeof row !== "object") return COURSE_FIT_AXIS_KEYS.map(() => NaN);
-  const d = drivingDistanceSkillRating(
-    num(row.driving_dist ?? row.avg_driving_distance ?? row.driving_distance, NaN)
-  );
-  const acc = drivingAccuracySkillRating(num(row.driving_acc ?? row.driving_accuracy, NaN));
+  const m = mergedPlayerRowForDrivingFields(row);
+  const d = drivingDistanceSkillRating(num(playerDrivingDistanceYds(m), NaN));
+  const acc = drivingAccuracySkillRating(num(m.driving_acc ?? m.driving_accuracy, NaN));
   return [d, acc, num(row.sg_app, NaN), num(row.sg_arg, NaN), num(row.sg_putt, NaN)];
 }
 
@@ -7239,7 +7237,11 @@ function playerDrivingAccuracyFrac(mrow) {
 }
 
 function playerDrivingDistanceYds(mrow) {
-  return num(mrow?.driving_dist ?? mrow?.avg_driving_distance ?? mrow?.driving_distance, NaN);
+  const y = num(mrow?.driving_dist ?? mrow?.avg_driving_distance ?? mrow?.driving_distance, NaN);
+  if (Number.isFinite(y) && y >= 235 && y <= 380) return y;
+  const rt = num(mrow?.driving_distance_rating, NaN);
+  if (Number.isFinite(rt) && rt >= -55 && rt <= 55) return 302 + rt;
+  return NaN;
 }
 
 function courseFitPlayerRadarAxisRaw(mrow, axisIndex) {
