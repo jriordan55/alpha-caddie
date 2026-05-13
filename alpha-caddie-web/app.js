@@ -6260,22 +6260,48 @@ function courseFitFieldVarianceEmphasis(rows, ranges) {
   return spread.map((s) => (s / mx) * 0.35 + 0.05);
 }
 
-/** Blend field-average radar with historical SG means at this venue (embedded history). */
+/**
+ * Blend field-average radar with historical SG means at this venue (embedded history).
+ * Venue spokes use **cross-course** normalization when possible so short-game / putting-heavy tracks
+ * (e.g. high historical arg+putt vs ott at that venue) read clearly vs PGA Average; Driving Accuracy
+ * is nudged from that same shape (history has no per-venue driving-accuracy pillar).
+ */
 function courseFitVenueProfileVector(rows, ranges, histSg) {
   const tour = courseFitMeanNormalized(rows, ranges);
   if (!histSg) return tour.slice();
   const v = tour.slice();
-  v[2] = courseFitNormScalar(histSg.app, ranges[2]);
-  v[3] = courseFitNormScalar(histSg.arg, ranges[3]);
-  v[4] = courseFitNormScalar(histSg.putt, ranges[4]);
-  const ovs = rows.map((r) => num(r.sg_ott, NaN)).filter(Number.isFinite);
-  if (ovs.length && Number.isFinite(histSg.ott)) {
-    const lo = Math.min(...ovs);
-    const hi = Math.max(...ovs);
-    const span = hi - lo < 1e-9 ? 1 : hi - lo;
-    v[0] = clamp((histSg.ott - lo) / span, 0, 1);
+  const cross = courseFitCrossCourseSgNormRanges();
+  const normTo01 = (val, cr) => {
+    if (!cr || !Number.isFinite(val)) return NaN;
+    const span = cr.hi - cr.lo < 1e-9 ? 1 : cr.hi - cr.lo;
+    return clamp((val - cr.lo) / span, 0, 1);
+  };
+  if (cross && cross.length === 4) {
+    const nOtt = normTo01(histSg.ott, cross[0]);
+    const nApp = normTo01(histSg.app, cross[1]);
+    const nArg = normTo01(histSg.arg, cross[2]);
+    const nPutt = normTo01(histSg.putt, cross[3]);
+    if (Number.isFinite(nOtt)) v[0] = nOtt;
+    if (Number.isFinite(nApp)) v[2] = nApp;
+    if (Number.isFinite(nArg)) v[3] = nArg;
+    if (Number.isFinite(nPutt)) v[4] = nPutt;
+  } else {
+    v[2] = courseFitNormScalar(histSg.app, ranges[2]);
+    v[3] = courseFitNormScalar(histSg.arg, ranges[3]);
+    v[4] = courseFitNormScalar(histSg.putt, ranges[4]);
+    const ovs = rows.map((r) => num(r.sg_ott, NaN)).filter(Number.isFinite);
+    if (ovs.length && Number.isFinite(histSg.ott)) {
+      const lo = Math.min(...ovs);
+      const hi = Math.max(...ovs);
+      const span = hi - lo < 1e-9 ? 1 : hi - lo;
+      v[0] = clamp((histSg.ott - lo) / span, 0, 1);
+    }
   }
-  return v;
+  const shortGame = (v[3] + v[4]) / 2;
+  const strike = (v[0] + v[2]) / 2;
+  v[1] = clamp(tour[1] + 0.55 * (shortGame - strike), 0.05, 0.95);
+  const amp = 1.22;
+  return v.map((t) => clamp(0.5 + (t - 0.5) * amp, 0.04, 0.96));
 }
 
 const COURSE_FIT_RADAR_LABELS = ["Driving Distance", "Driving Accuracy", "Approach", "Around green", "Putting"];
@@ -6292,6 +6318,40 @@ function courseFitMeanSgVectorByCourse() {
     if (vec.every(Number.isFinite)) out.set(ck, vec);
   }
   return out;
+}
+
+/**
+ * Pooled spread of **per-course mean** SG pillars (ott/app/arg/putt) across venues in embedded history.
+ * Used to normalize a single venue’s historical means so the radar is **distinct** from the field-average
+ * pentagon (normalizing venue means vs the current field only collapses everyone toward ~0.5).
+ * @returns {Array<{ lo: number; hi: number }>|null} four ranges or null if history is too thin.
+ */
+function courseFitCrossCourseSgNormRanges() {
+  const map = courseFitMeanSgVectorByCourse();
+  const byAxis = [[], [], [], []];
+  for (const vec of map.values()) {
+    for (let j = 0; j < 4; j++) {
+      if (Number.isFinite(vec[j])) byAxis[j].push(vec[j]);
+    }
+  }
+  /** @type {Array<{ lo: number; hi: number }>} */
+  const ranges = [];
+  for (const arr of byAxis) {
+    if (arr.length < 18) return null;
+    arr.sort((a, b) => a - b);
+    const lo = arr[Math.max(0, Math.floor(arr.length * 0.06))];
+    const hi = arr[Math.min(arr.length - 1, Math.ceil(arr.length * 0.94) - 1)];
+    if (!Number.isFinite(lo) || !Number.isFinite(hi)) return null;
+    let span = hi - lo;
+    if (span < 0.045) {
+      const mid = (lo + hi) / 2;
+      span = 0.12;
+      ranges.push({ lo: mid - span / 2, hi: mid + span / 2 });
+    } else {
+      ranges.push({ lo, hi });
+    }
+  }
+  return ranges;
 }
 
 function courseFitSimilarCourses(venueKeyNorm, histSg) {
