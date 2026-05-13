@@ -620,6 +620,20 @@ function fairwaysExpectedFromSkill(muSg, sgOtt, nFw, fieldMeanOtt) {
   return Math.max(4, Math.min(nFw, 0.2 * fallback + 0.8 * ottFw));
 }
 
+/** Expected GIR count (18-hole scale) from SG:APP vs field mean + small total-SG tilt (mirrors FW/OTT path). */
+function girExpectedFromSkill(muSg, sgApp, nGirHoles, fieldMeanApp) {
+  const mu = clampMuSg(muSg);
+  const stp = -mu;
+  const fallback = Math.max(6, Math.min(16, 11.5 - 0.25 * stp));
+  const a = num(sgApp, NaN);
+  const m = num(fieldMeanApp, NaN);
+  if (!Number.isFinite(a) || !Number.isFinite(m)) return fallback;
+  let rate = 0.62 + 0.32 * (a - m) + 0.024 * stp;
+  rate = Math.max(0.52, Math.min(0.78, rate));
+  const appGir = Math.max(6, Math.min(16, rate * nGirHoles));
+  return Math.max(6, Math.min(16, 0.22 * fallback + 0.78 * appGir));
+}
+
 /** Default matches R round_projections Gaussian-round mu_mult when ROUND_HIST_SG_MULT is unset. */
 function parseRoundMuMult() {
   const def = [1, 0.99, 0.97, 0.95];
@@ -636,7 +650,11 @@ function derivedStatsFromMuSg(muRaw, nFairwayHoles, opts = {}) {
   const mu_sg = clampMuSg(muRaw);
   const im = imputeCountsFromNegMu(mu_sg);
   const stpVec = -mu_sg;
-  const gir = Math.max(6, Math.min(16, 11.5 - 0.25 * stpVec));
+  const nGir = Number.isFinite(opts.nGirHoles) ? opts.nGirHoles : 18;
+  let gir = Math.max(6, Math.min(16, 11.5 - 0.25 * stpVec));
+  if (Number.isFinite(opts.sg_app) && Number.isFinite(opts.fieldMeanApp)) {
+    gir = girExpectedFromSkill(mu_sg, opts.sg_app, nGir, opts.fieldMeanApp);
+  }
   let fairways = Math.max(4, Math.min(nFairwayHoles, 0.55 * nFairwayHoles - 0.15 * stpVec));
   if (Number.isFinite(opts.sg_ott) && Number.isFinite(opts.fieldMeanOtt)) {
     fairways = fairwaysExpectedFromSkill(mu_sg, opts.sg_ott, nFairwayHoles, opts.fieldMeanOtt);
@@ -1255,6 +1273,17 @@ async function main() {
   const fieldMeanOtt =
     ottSamples.length >= 8 ? ottSamples.reduce((a, b) => a + b, 0) / ottSamples.length : NaN;
 
+  const appSamples = [];
+  for (const fr of fieldRows) {
+    const sid = Math.round(num(fr.dg_id, NaN));
+    if (!Number.isFinite(sid)) continue;
+    const sk = skillByDg.get(sid);
+    const a = num(sk?.sg_app, NaN);
+    if (Number.isFinite(a)) appSamples.push(a);
+  }
+  const fieldMeanApp =
+    appSamples.length >= 8 ? appSamples.reduce((a, b) => a + b, 0) / appSamples.length : NaN;
+
   const base = [];
   for (const fr of fieldRows) {
     const id = fr.dg_id;
@@ -1295,7 +1324,9 @@ async function main() {
     if (!Number.isFinite(doubles)) doubles = im.doubles;
 
     const stpVec = -mu_sg;
-    if (!Number.isFinite(gir)) gir = Math.max(6, Math.min(16, 11.5 - 0.25 * stpVec));
+    const appGir = girExpectedFromSkill(mu_sg, skRow?.sg_app, 18, fieldMeanApp);
+    if (!Number.isFinite(gir)) gir = appGir;
+    else gir = Math.max(6, Math.min(16, 0.34 * gir + 0.66 * appGir));
 
     const decompFwRate = num(skRow?.driving_acc, NaN);
     let fairways = NaN;
@@ -1396,6 +1427,9 @@ async function main() {
         st = derivedStatsFromMuSg(row.mu_sg * mult, N_FAIRWAY_HOLES, {
           sg_ott: row.sg_ott,
           fieldMeanOtt,
+          sg_app: row.sg_app,
+          fieldMeanApp,
+          nGirHoles: 18,
         });
       }
       const stp = score_to_par(st.mu_sg);

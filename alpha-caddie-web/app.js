@@ -9729,13 +9729,15 @@ function historyScalarOrNaN(v) {
 }
 
 /**
- * GIR / fairways: values in (0, 1] are share-of-holes (e.g. 0.72 → counts); integer-ish values in (1, holes]
- * are already hole counts (do not multiply by holes — that was a bug for values like 11.2).
+ * GIR / fairways: values in (0, 1] are share-of-holes (e.g. 0.72 → integer hole counts); values in (1, holes]
+ * are expected counts from history or projections — keep fractional scale (do not `Math.round` to whole holes;
+ * that turned 9.91 fairways / 11.88 GIR into 10 / 12 for O-U means).
  */
 function girFairwaysCountFromRawForOu(v, holes) {
   const n = historyScalarOrNaN(v);
   if (!Number.isFinite(n)) return NaN;
   if (n > 0 && n <= 1.0001) return Math.min(holes, Math.max(0, Math.round(n * holes)));
+  if (n > 1.0001 && n <= holes + 1e-6) return Math.min(holes, Math.max(0, n));
   return Math.min(holes, Math.max(0, Math.round(n)));
 }
 
