@@ -3413,12 +3413,9 @@ function ouSortedPlayerRowsProjection(round) {
   return rows;
 }
 
-/** Main grid Proj column: GIR / fairways vary slowly among elites — one decimal collapses many rows to the same label. */
-function formatOuProjectedMean(mu, market) {
-  if (!Number.isFinite(mu)) return "—";
-  const mKey = ouModelMarketKey(market) || "Total score";
-  if (mKey === "GIR" || mKey === "Fairways hit") return mu.toFixed(2);
-  return mu.toFixed(1);
+/** Main grid Proj column (one decimal). */
+function formatOuProjectedMean(mu) {
+  return Number.isFinite(mu) ? mu.toFixed(1) : "—";
 }
 
 function projectionSortComparable(val, dir) {
@@ -3850,7 +3847,7 @@ function buildOuTable() {
 
     const muTd = document.createElement("td");
     muTd.className = "ou-cell ou-proj-long-td num ou-proj-td-mu";
-    muTd.textContent = formatOuProjectedMean(mu, col.market);
+    muTd.textContent = formatOuProjectedMean(mu);
     tr.appendChild(muTd);
 
     const lineTd = document.createElement("td");

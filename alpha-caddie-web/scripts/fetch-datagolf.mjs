@@ -1,11 +1,9 @@
 /**
  * Pull PGA field + skill + fantasy + pre-tournament probs from DataGolf (same idea as
  * round_projections.R RAW_PROJECTIONS / GOLF_RAW_PROJECTIONS=1) and write projections.json.
- * Fairways: blend preds/player-decompositions `driving_acc` (0–1 FW rate) when present, else
- * SG:OTT vs field mean + total-SG tilt (fantasy defaults alone compress the field ~8 FW for everyone).
- * R2–R4 rows: mean SG is scaled by per-round multipliers (default matches R shot-MC fallback
- * 1, 0.99, 0.97, 0.95) and counts/GIR/FW are re-derived so Model O/U changes when the round
- * selector changes. Override: GOLF_NODE_ROUND_MU_MULT=1,0.99,0.97,0.95
+ * Fairways: decomp `driving_acc` blended with SG:OTT vs **median** field OTT (mean jams elites on the FW-rate cap)
+ * plus optional driving-distance vs field mean; fantasy down-weighted. GIR: fantasy + SG:APP vs **median** field APP.
+ * R2–R4 rows re-derive counts from scaled μ_SG (default multipliers 1, 0.99, 0.97, 0.95 — override GOLF_NODE_ROUND_MU_MULT).
  *
  * Usage (from alpha-caddie-web/):
  *   set DATAGOLF_API_KEY=your_key
@@ -599,6 +597,14 @@ function clampMuSg(m) {
   return Math.max(-4, Math.min(4, x));
 }
 
+/** Robust field center for SG pillars (mean is pulled by long left tail and jams elites on FW/GIR caps). */
+function fieldSkillMedian(samples) {
+  const a = (samples || []).filter((x) => Number.isFinite(x)).slice().sort((p, q) => p - q);
+  if (a.length < 8) return NaN;
+  const mid = Math.floor(a.length / 2);
+  return a.length % 2 ? a[mid] : (a[mid - 1] + a[mid]) / 2;
+}
+
 /** μ-only fairways fallback (same shape as legacy impute). */
 function fairwaysMuImputeOnly(stpVec, nFw) {
   return Math.max(4, Math.min(nFw, 0.55 * nFw - 0.15 * stpVec));
@@ -608,16 +614,23 @@ function fairwaysMuImputeOnly(stpVec, nFw) {
  * Expected fairways (N_fw hole scale) from SG:OTT vs the field mean + small total-SG tilt.
  * Fantasy defaults + μ-only formulas cluster everyone ~8; R uses OTT / driving_acc for FW calibration.
  */
-function fairwaysExpectedFromSkill(muSg, sgOtt, nFw, fieldMeanOtt) {
+function fairwaysExpectedFromSkill(muSg, sgOtt, nFw, fieldMeanOtt, drivingDistYds, fieldMeanDrive) {
   const stp = -num(muSg, 0);
   const fallback = fairwaysMuImputeOnly(stp, nFw);
   const o = num(sgOtt, NaN);
   const m = num(fieldMeanOtt, NaN);
   if (!Number.isFinite(o) || !Number.isFinite(m)) return fallback;
-  let rate = 0.58 + 0.48 * (o - m) + 0.032 * stp;
-  rate = Math.max(0.5, Math.min(0.74, rate));
-  const ottFw = Math.max(4, Math.min(nFw, rate * nFw));
-  return Math.max(4, Math.min(nFw, 0.2 * fallback + 0.8 * ottFw));
+  let rate = 0.56 + 0.3 * (o - m) + 0.034 * stp;
+  rate = Math.max(0.44, Math.min(0.79, rate));
+  let ottFw = Math.max(4, Math.min(nFw, rate * nFw));
+  ottFw = Math.max(4, Math.min(nFw, 0.1 * fallback + 0.9 * ottFw));
+  const dy = num(drivingDistYds, NaN);
+  const my = num(fieldMeanDrive, NaN);
+  if (Number.isFinite(dy) && Number.isFinite(my) && dy >= 240 && dy <= 345 && my >= 265 && my <= 315) {
+    const adj = Math.max(-1.45, Math.min(1.45, -0.021 * (dy - my)));
+    ottFw = Math.max(4, Math.min(nFw, ottFw + adj));
+  }
+  return ottFw;
 }
 
 /** Expected GIR count (18-hole scale) from SG:APP vs field mean + small total-SG tilt (mirrors FW/OTT path). */
@@ -628,10 +641,10 @@ function girExpectedFromSkill(muSg, sgApp, nGirHoles, fieldMeanApp) {
   const a = num(sgApp, NaN);
   const m = num(fieldMeanApp, NaN);
   if (!Number.isFinite(a) || !Number.isFinite(m)) return fallback;
-  let rate = 0.62 + 0.32 * (a - m) + 0.024 * stp;
-  rate = Math.max(0.52, Math.min(0.78, rate));
+  let rate = 0.6 + 0.34 * (a - m) + 0.026 * stp;
+  rate = Math.max(0.48, Math.min(0.82, rate));
   const appGir = Math.max(6, Math.min(16, rate * nGirHoles));
-  return Math.max(6, Math.min(16, 0.22 * fallback + 0.78 * appGir));
+  return Math.max(6, Math.min(16, 0.14 * fallback + 0.86 * appGir));
 }
 
 /** Default matches R round_projections Gaussian-round mu_mult when ROUND_HIST_SG_MULT is unset. */
@@ -657,7 +670,14 @@ function derivedStatsFromMuSg(muRaw, nFairwayHoles, opts = {}) {
   }
   let fairways = Math.max(4, Math.min(nFairwayHoles, 0.55 * nFairwayHoles - 0.15 * stpVec));
   if (Number.isFinite(opts.sg_ott) && Number.isFinite(opts.fieldMeanOtt)) {
-    fairways = fairwaysExpectedFromSkill(mu_sg, opts.sg_ott, nFairwayHoles, opts.fieldMeanOtt);
+    fairways = fairwaysExpectedFromSkill(
+      mu_sg,
+      opts.sg_ott,
+      nFairwayHoles,
+      opts.fieldMeanOtt,
+      opts.driving_distance,
+      opts.fieldMeanDrive,
+    );
   }
   const putts = Math.max(22, Math.min(35, 28.5 + 0.32 * stpVec - 0.1 * (gir - 11)));
   return {
@@ -1270,8 +1290,8 @@ async function main() {
     const o = num(sk?.sg_ott, NaN);
     if (Number.isFinite(o)) ottSamples.push(o);
   }
-  const fieldMeanOtt =
-    ottSamples.length >= 8 ? ottSamples.reduce((a, b) => a + b, 0) / ottSamples.length : NaN;
+  /** Median SG:OTT in this field (mean is too low vs elite cluster and pins FW rate at the cap). */
+  const fieldMeanOtt = fieldSkillMedian(ottSamples);
 
   const appSamples = [];
   for (const fr of fieldRows) {
@@ -1281,8 +1301,19 @@ async function main() {
     const a = num(sk?.sg_app, NaN);
     if (Number.isFinite(a)) appSamples.push(a);
   }
-  const fieldMeanApp =
-    appSamples.length >= 8 ? appSamples.reduce((a, b) => a + b, 0) / appSamples.length : NaN;
+  /** Median SG:APP in this field (same robustness as OTT for GIR rate). */
+  const fieldMeanApp = fieldSkillMedian(appSamples);
+
+  const distSamples = [];
+  for (const fr of fieldRows) {
+    const sid = Math.round(num(fr.dg_id, NaN));
+    if (!Number.isFinite(sid)) continue;
+    const sk = skillByDg.get(sid);
+    const d = num(sk?.driving_distance, NaN);
+    if (Number.isFinite(d) && d >= 240 && d <= 345) distSamples.push(d);
+  }
+  const fieldMeanDrive =
+    distSamples.length >= 8 ? distSamples.reduce((a, b) => a + b, 0) / distSamples.length : NaN;
 
   const base = [];
   for (const fr of fieldRows) {
@@ -1326,7 +1357,7 @@ async function main() {
     const stpVec = -mu_sg;
     const appGir = girExpectedFromSkill(mu_sg, skRow?.sg_app, 18, fieldMeanApp);
     if (!Number.isFinite(gir)) gir = appGir;
-    else gir = Math.max(6, Math.min(16, 0.34 * gir + 0.66 * appGir));
+    else gir = Math.max(6, Math.min(16, 0.22 * gir + 0.78 * appGir));
 
     const decompFwRate = num(skRow?.driving_acc, NaN);
     let fairways = NaN;
@@ -1337,15 +1368,22 @@ async function main() {
     let fxFw = scalarOrNaN(fx.fairways);
     if (Number.isFinite(fxFw) && fxFw > 0 && fxFw <= 1) fxFw *= N_FAIRWAY_HOLES;
 
-    const ottFw = fairwaysExpectedFromSkill(mu_sg, skRow?.sg_ott, N_FAIRWAY_HOLES, fieldMeanOtt);
+    const ottFw = fairwaysExpectedFromSkill(
+      mu_sg,
+      skRow?.sg_ott,
+      N_FAIRWAY_HOLES,
+      fieldMeanOtt,
+      driving_distance,
+      fieldMeanDrive,
+    );
     if (!Number.isFinite(fairways)) {
       if (Number.isFinite(fxFw)) {
-        fairways = Math.max(4, Math.min(N_FAIRWAY_HOLES, 0.38 * fxFw + 0.62 * ottFw));
+        fairways = Math.max(4, Math.min(N_FAIRWAY_HOLES, 0.15 * fxFw + 0.85 * ottFw));
       } else {
         fairways = ottFw;
       }
     } else {
-      fairways = Math.max(4, Math.min(N_FAIRWAY_HOLES, 0.42 * fairways + 0.58 * ottFw));
+      fairways = Math.max(4, Math.min(N_FAIRWAY_HOLES, 0.35 * fairways + 0.65 * ottFw));
     }
 
     const putts = Math.max(22, Math.min(35, 28.5 + 0.32 * stpVec - 0.1 * (gir - 11)));
@@ -1430,6 +1468,8 @@ async function main() {
           sg_app: row.sg_app,
           fieldMeanApp,
           nGirHoles: 18,
+          driving_distance: row.driving_distance,
+          fieldMeanDrive,
         });
       }
       const stp = score_to_par(st.mu_sg);
