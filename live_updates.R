@@ -32,7 +32,7 @@ COL_ORDER <- c(
   "player_name", "dg_id", "fin_text", "round_num", "course_name", "course_num", "course_par",
   "start_hole", "teetime", "round_score", "sg_putt", "sg_arg", "sg_app", "sg_ott", "sg_t2g", "sg_total",
   "driving_dist", "driving_acc", "gir", "scrambling", "prox_rgh", "prox_fw", "great_shots", "poor_shots",
-  "eagles_or_better", "birdies", "pars", "bogies", "doubles_or_worse"
+  "eagles_or_better", "birdies", "pars", "bogies", "doubles_or_worse", "putts"
 )
 
 # Map API column name variants (e.g. from CSV) to our canonical names

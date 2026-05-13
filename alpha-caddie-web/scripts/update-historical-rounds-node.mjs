@@ -19,6 +19,9 @@
  *   GOLF_DG_MAX_ATTEMPTS — retries per request on 429/5xx (default 12)
  *   GOLF_HISTORICAL_ROUNDS_FAIL_ON_PARTIAL=1 — exit 1 if any tour/year slice failed or returned empty (default: warn only,
  *     exit 0 after writing CSV so npm run push:all / CI can finish when DataGolf has transient gaps)
+ *
+ * Round putts: when DataGolf JSON/CSV includes putts (e.g. some LIV rows), this merge stores column `putts`.
+ * Separately, `npm run build:history` can merge pgatouR-derived shot aggregates (all_shots_*_round_*.csv) for counting stats.
  */
 
 import fs from "fs";
@@ -72,6 +75,7 @@ const COL_ORDER = [
   "pars",
   "bogies",
   "doubles_or_worse",
+  "putts",
 ];
 
 function loadApiKey() {
@@ -225,6 +229,17 @@ function eventCompletedChr(x) {
   return str;
 }
 
+/** Integer putts per round when DataGolf supplies them (field names vary by feed/version). */
+function roundPuttsFromPayload(r) {
+  if (!r || typeof r !== "object") return "";
+  const keys = ["putts", "Putts", "num_putts", "putts_total", "total_putts", "round_putts"];
+  for (const k of keys) {
+    const v = Number(r[k]);
+    if (Number.isFinite(v) && v >= 5 && v <= 60) return Math.round(v);
+  }
+  return "";
+}
+
 function roundToRow(r, roundNum, evInfo, dgId, playerName, finText) {
   const scoreVal = r.score ?? r.round_score ?? r.Score;
   if (scoreVal == null || scoreVal === "") return null;
@@ -266,6 +281,7 @@ function roundToRow(r, roundNum, evInfo, dgId, playerName, finText) {
     pars: r.pars ?? "",
     bogies: r.bogies ?? "",
     doubles_or_worse: r.doubles_or_worse ?? "",
+    putts: roundPuttsFromPayload(r),
   };
 }
 
@@ -374,6 +390,10 @@ async function fetchYearCsv(year, tour, key) {
     if (o.round_num == null && o.round != null) o.round_num = o.round;
     if (!o.player_name && o.player) o.player_name = o.player;
     o.event_completed = eventCompletedChr(o.event_completed);
+    if ((o.putts == null || o.putts === "") && raw) {
+      const p = roundPuttsFromPayload(raw);
+      if (p !== "") o.putts = p;
+    }
     return o;
   });
 }

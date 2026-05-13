@@ -73,7 +73,8 @@ round_to_row_live <- function(r, round_num, event_info, player_dg_id, player_nam
     birdies          = as.numeric(r$birdies %||% NA_real_),
     pars             = as.numeric(r$pars %||% NA_real_),
     bogies           = as.numeric(r$bogies %||% NA_real_),
-    doubles_or_worse = as.numeric(r$doubles_or_worse %||% NA_real_)
+    doubles_or_worse = as.numeric(r$doubles_or_worse %||% NA_real_),
+    putts            = as.numeric(r$putts %||% r$num_putts %||% NA_real_)
   )
 }
 
@@ -171,7 +172,7 @@ COL_ORDER_LIVE <- c(
   "player_name", "dg_id", "fin_text", "round_num", "course_name", "course_num", "course_par",
   "start_hole", "teetime", "round_score", "sg_putt", "sg_arg", "sg_app", "sg_ott", "sg_t2g", "sg_total",
   "driving_dist", "driving_acc", "gir", "scrambling", "prox_rgh", "prox_fw", "great_shots", "poor_shots",
-  "eagles_or_better", "birdies", "pars", "bogies", "doubles_or_worse"
+  "eagles_or_better", "birdies", "pars", "bogies", "doubles_or_worse", "putts"
 )
 
 #' DataGolf CSV may parse event_completed as Date; on-disk CSV is m/d/yyyy character. Unify for bind_rows + web.

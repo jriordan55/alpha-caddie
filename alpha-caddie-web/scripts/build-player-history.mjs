@@ -25,9 +25,10 @@
  * use the newest historical_rounds_all_with_tournament_metadata*.csv (snapshots are often partial).
  * Historical Trends and weather/meta filters use only this rounds CSV (+ join columns if present).
  * Shot-derived round stats (putts / refreshed GIR & FW): when
- * data/all_shots_2022_2026_round_fairways_gir_putts.csv exists under repo or alpha-caddie-web/data,
- * merges onto PGA rounds by (dg_id or player name) + event date + round (see loadShotsRoundAggMaps).
- * Set GOLF_SKIP_SHOTS_ROUND_AGG_MERGE=1 to skip (Historical Trends putts stay blank — rounds CSV has no putts column).
+ * data/all_shots_2022_2026_round_fairways_gir_putts.csv exists (from pgatouR `pga_shot_details` via
+ * npm run refresh:shots + build_shots_round_aggregate.py), merges onto rounds by (dg_id or player name)
+ * + event date + round (see loadShotsRoundAggMaps). CSV column `putts` from DataGolf (when present) is used first.
+ * Set GOLF_SKIP_SHOTS_ROUND_AGG_MERGE=1 to skip that merge.
  */
 
 import fs from "fs";
@@ -666,34 +667,6 @@ function stripGirFairwaysPuttsIfGarbage(mf) {
   }
 }
 
-/**
- * LIV rounds often lack putts in CSV and in the shot-round aggregate. When both GIR and fairways counts
- * are present (from CSV or shot merge), derive expected putts from them; otherwise leave null.
- */
-function imputeLivPuttsIfStillMissing(mf, row) {
-  if (String(row.tour || "").toLowerCase() !== "liv") return;
-  if (mf.putts != null && Number.isFinite(mf.putts)) return;
-  let gir = mf.gir;
-  let fw = mf.fairways;
-  if (!Number.isFinite(gir)) {
-    const rawG = num(row.gir);
-    if (Number.isFinite(rawG)) gir = countFromRateOrRaw(rawG, 18);
-  }
-  if (!Number.isFinite(fw)) {
-    const rawFa = num(row.driving_acc);
-    if (Number.isFinite(rawFa)) fw = countFromRateOrRaw(rawFa, 14);
-  }
-  if (!Number.isFinite(gir) || !Number.isFinite(fw)) return;
-  gir = Math.max(0, Math.min(18, Math.round(gir)));
-  fw = Math.max(0, Math.min(14, Math.round(fw)));
-  const missGir = 18 - gir;
-  // GIR holes: mostly two-putt with some one-putts; miss-GIR: chip/pitch sequences use more putts on average.
-  let est = gir * 1.76 + missGir * 2.08;
-  // Fewer fairways → more recovery / longer approaches on average → modest putt bump on non-driver holes proxy.
-  est += (14 - fw) * 0.06;
-  mf.putts = Math.round(Math.max(17, Math.min(39, est)));
-}
-
 function metricFields(row) {
   const gir = num(row.gir);
   const fa = num(row.driving_acc);
@@ -701,6 +674,9 @@ function metricFields(row) {
   let fwCount = Number.isFinite(fa) ? countFromRateOrRaw(fa, 14) : null;
   if (girCount === 0 || girCount === 1) girCount = null;
   if (fwCount === 0 || fwCount === 1) fwCount = null;
+  const ptRaw = num(row.putts, NaN);
+  let puttsCount = null;
+  if (Number.isFinite(ptRaw) && ptRaw > 1.5 && ptRaw < 80) puttsCount = Math.round(ptRaw);
   return {
     round_score: num(row.round_score),
     birdies: num(row.birdies),
@@ -708,8 +684,8 @@ function metricFields(row) {
     bogies: num(row.bogies),
     gir: girCount,
     fairways: fwCount,
-    /** Filled from shot CSV aggregate when matched; else null. */
-    putts: null,
+    /** From historical_rounds_all.csv when DataGolf supplies `putts`; else filled from shot-round aggregate. */
+    putts: puttsCount,
     eagles_or_better: num(row.eagles_or_better),
     doubles_or_worse: num(row.doubles_or_worse),
   };
@@ -989,7 +965,6 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg) {
       if (shotOv.fairways != null) mf.fairways = shotOv.fairways;
     }
     stripGirFairwaysPuttsIfGarbage(mf);
-    imputeLivPuttsIfStillMissing(mf, row);
     const rec = {
       sortKey,
       event_completed: String(row.event_completed || ""),
