@@ -9294,7 +9294,9 @@ function selectedPropsHumidityRangeFilter() {
 }
 
 function selectedPropsCourseFilter() {
-  return String(document.getElementById("props-filter-course")?.value || "").trim().toLowerCase();
+  const raw = String(document.getElementById("props-filter-course")?.value || "").trim();
+  if (!raw) return "";
+  return normCourseNameKey(raw);
 }
 
 function parseWeatherNumber(v) {
@@ -9366,19 +9368,26 @@ function refreshPropsFilterOptionsForGolfer(dgId) {
   const rounds = historyRoundsForDg(dgId).filter((r) => !historyRoundIsPlaceholderAllMarketsZero(r));
   if (courseSel) {
     const prev = courseSel.value;
-    const set = new Set();
+    /** @type {Map<string, string>} canonical key → pretty label */
+    const byKey = new Map();
     for (const r of rounds) {
       const cn = String(r?.course_name || "").trim();
-      if (cn) set.add(cn);
+      if (!cn) continue;
+      const k = normCourseNameKey(cn);
+      if (!k) continue;
+      if (!byKey.has(k)) byKey.set(k, courseFitPrettyCourseKey(k));
     }
     courseSel.innerHTML = '<option value="">All</option>';
-    [...set].sort((a, b) => a.localeCompare(b)).forEach((cn) => {
-      const op = document.createElement("option");
-      op.value = cn;
-      op.textContent = cn;
-      courseSel.appendChild(op);
-    });
-    if ([...courseSel.options].some((o) => o.value === prev)) courseSel.value = prev;
+    [...byKey.entries()]
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .forEach(([k, label]) => {
+        const op = document.createElement("option");
+        op.value = k;
+        op.textContent = label;
+        courseSel.appendChild(op);
+      });
+    const prevK = prev ? normCourseNameKey(prev) : "";
+    if (prevK && [...courseSel.options].some((o) => o.value === prevK)) courseSel.value = prevK;
   }
 }
 
@@ -9452,16 +9461,30 @@ function courseNameMatchesVenueLoose(courseNameRaw, venueRaw) {
   return false;
 }
 
+/**
+ * Known duplicate venue labels in feeds/history (after internal normalization) → one canonical key.
+ * Keys must match the post-normalization lowercase string from `normCourseNameKey` pipeline.
+ */
+const COURSE_NAME_CANONICAL_KEYS = Object.freeze({
+  albany: "albany golf club",
+  "albany bahamas": "albany golf club",
+});
+
 /** Course-name canonical key for filters/matching (e.g. "Trump National Doral" vs "(Blue Monster)"). */
 function normCourseNameKey(raw) {
-  return String(raw || "")
-    .toLowerCase()
-    .replace(/\([^)]*\)/g, " ")
-    .replace(/\b(blue monster|stadium course|championship course|club de golf)\b/g, " ")
-    .replace(/&/g, " and ")
-    .replace(/[^a-z0-9]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+  let s = String(raw || "").trim().toLowerCase();
+  s = s.replace(/\([^)]*\)/g, " ");
+  s = s.replace(/\b(blue monster|stadium course|championship course|club de golf)\b/g, " ");
+  s = s.replace(/&/g, " and ");
+  /* Unify "… Gc" / "… Cc" / dotted forms with spelled-out club types (DataGolf vs CSV vs history). */
+  s = s.replace(/\bc\.?\s*c\.?\b/gi, "country club");
+  s = s.replace(/\bg\.?\s*c\.?\b/gi, "golf club");
+  s = s.replace(/\bgolf club(\s+golf club)+\b/gi, "golf club");
+  s = s.replace(/\bcountry club(\s+country club)+\b/gi, "country club");
+  s = s.replace(/[^a-z0-9]+/g, " ");
+  s = s.replace(/\s+/g, " ").trim();
+  const alias = COURSE_NAME_CANONICAL_KEYS[s];
+  return alias || s;
 }
 
 /** Schedule title match + prefix / normalized fallbacks (sponsor-heavy titles vs short CSV names). */
@@ -10619,9 +10642,10 @@ function propsCourseDisplay(s) {
   const r = s && s._hist;
   if (r && typeof r === "object") {
     const c = propsCourseNameFromRow(r);
-    if (c) return c;
+    if (c) return courseFitPrettyCourseKey(normCourseNameKey(c));
   }
-  return String(s?.course ?? "").trim() || "—";
+  const raw = String(s?.course ?? "").trim();
+  return raw ? courseFitPrettyCourseKey(normCourseNameKey(raw)) : "—";
 }
 
 function pointInPropsChartHitRegion(canvasX, canvasY) {

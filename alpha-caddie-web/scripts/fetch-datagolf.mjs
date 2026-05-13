@@ -78,6 +78,32 @@ function normHoleKey(s) {
     .trim();
 }
 
+/** Same rules as browser `normCourseNameKey` (app.js) — keep course_used aligned with embedded history keys. */
+function normCourseNameKeyFetch(raw) {
+  let s = String(raw || "").trim().toLowerCase();
+  s = s.replace(/\([^)]*\)/g, " ");
+  s = s.replace(/\b(blue monster|stadium course|championship course|club de golf)\b/g, " ");
+  s = s.replace(/&/g, " and ");
+  s = s.replace(/\bc\.?\s*c\.?\b/gi, "country club");
+  s = s.replace(/\bg\.?\s*c\.?\b/gi, "golf club");
+  s = s.replace(/\bgolf club(\s+golf club)+\b/gi, "golf club");
+  s = s.replace(/\bcountry club(\s+country club)+\b/gi, "country club");
+  s = s.replace(/[^a-z0-9]+/g, " ");
+  s = s.replace(/\s+/g, " ").trim();
+  const aliases = {
+    albany: "albany golf club",
+    "albany bahamas": "albany golf club",
+  };
+  return aliases[s] || s;
+}
+
+/** Title-case label for projections/meta after normalizing abbreviations (Gc/Cc, etc.). */
+function canonicalCourseLabelForProjections(raw) {
+  const k = normCourseNameKeyFetch(raw);
+  if (!k) return String(raw || "").trim();
+  return k.replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
 function parseCsvLine(line) {
   const fields = [];
   let i = 0;
@@ -1600,6 +1626,8 @@ async function main() {
       `Hole pars: ${hole_pars_source}${holeRes.detail ? ` (${holeRes.detail})` : ""} — course_par_18=${course_par_18}, fairway hole scale=${fairwayHolesThisCourse}`,
     );
   }
+
+  course_used = canonicalCourseLabelForProjections(course_used);
 
   const pretStrokesByDg = new Map();
   for (const row of pretList) {
