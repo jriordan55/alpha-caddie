@@ -5,8 +5,9 @@
  * par-4/5 layout when hole pars are known. Scoring uses **course_par_18** from resolved hole pars (not a fixed 72).
  * Optional **preds/pre-tournament** per-round stroke column (when present in the feed) nudges μ_sg toward that baseline.
  * GIR / fairways: fantasy + SG pillars vs **median** field, with blend weights from historical CSV (GIR~APP, FW~OTT R²).
- * Hole counts: historical rounds regress counts vs (round_score − course_par), shrunk toward legacy; then bird/par/bog
- * are solved so implied strokes vs par matches **score_to_par = −μ_sg** (consistent with course_par_18 + total_score).
+ * Hole counts: historical rounds regress eagles/birdies/bogeys/doubles vs (round_score − course_par), shrunk with a
+ * ceiling so legacy μ curves still spread the field; pars are residual. A **soft** bird/bog nudge partially aligns
+ * implied strokes vs par with **score_to_par = −μ_sg** without collapsing pars across players.
  * R2–R4 rows re-derive from scaled μ_SG (default multipliers 1, 0.99, 0.97, 0.95 — GOLF_NODE_ROUND_MU_MULT).
  * Set GOLF_SKIP_HIST_STATS_ON_FETCH=1 to skip the historical CSV calibration pass (counts + blend weights).
  * Usage (from alpha-caddie-web/):
@@ -597,52 +598,42 @@ function imputeCountsFromNegMu(muSg) {
 }
 
 /**
- * Given eagles + doubles (fixed), solve birdies/pars/bogeys so Σ holes = 18 and
- * `bogeys − birdies = targetStp + 2*eagles − 2*doubles` (equivalent to strokes vs par from counts).
+ * Nudge bird/bog (pars residual) toward `targetStp` without re-solving to a single narrow `pars` band for the field.
+ * `strength` ∈ (0,1]: fraction of score-vs-par gap to close in one pass.
  */
-function solveBirdParBogForExpectedStp(eagles, doubles, targetStp, parHint) {
-  const e = Math.max(0, num(eagles, 0));
-  const d = Math.max(0, num(doubles, 0));
-  const K = targetStp + 2 * e - 2 * d;
-  const U = 18 - e - d;
-  const pmin = 0.12;
-  const bmin = 0.12;
-  const gmin = 0.12;
-  const pMaxBird = U - K - 2 * bmin;
-  const pMaxBog = U + K - 2 * gmin;
-  const pHi = Math.min(pMaxBird, pMaxBog, U - bmin - gmin);
-  const pLo = pmin;
-  if (!(pHi >= pLo - 1e-6)) return null;
-
-  let p = Number.isFinite(parHint) ? parHint : (pLo + pHi) / 2;
-  p = Math.max(pLo, Math.min(pHi, p));
-  let bird = (U - p - K) / 2;
-  let bog = (U - p + K) / 2;
-  for (let i = 0; i < 24; i++) {
-    if (bird >= bmin - 1e-9 && bog >= gmin - 1e-9) break;
-    if (bird < bmin) p -= 2 * (bmin - bird);
-    else if (bog < gmin) p -= 2 * (gmin - bog);
-    p = Math.max(pLo, Math.min(pHi, p));
-    bird = (U - p - K) / 2;
-    bog = (U - p + K) / 2;
+function softAlignHoleCountsToStp(counts, targetStp, strength = 0.58) {
+  const e = Math.max(0, num(counts.eagles, 0));
+  const d = Math.max(0, num(counts.doubles, 0));
+  let b = num(counts.birdies, 0);
+  let p = num(counts.pars, 0);
+  let bg = num(counts.bogeys, 0);
+  const t = num(targetStp, 0);
+  const st = Math.max(0.08, Math.min(1, strength));
+  const hat = -b - 2 * e + bg + 2 * d;
+  const diff = t - hat;
+  const delta = (st * diff) / 2;
+  b = Math.max(0.15, b - delta);
+  bg = Math.max(0.15, bg + delta);
+  p = 18 - e - d - b - bg;
+  if (p < 0.12) {
+    const need = 0.12 - p;
+    const take = Math.min(need / 2, b - 0.15, bg - 0.15);
+    b -= take;
+    bg -= take;
+    p = 18 - e - d - b - bg;
   }
-  if (bird < bmin - 0.02 || bog < gmin - 0.02) return null;
-  return { birdies: bird, pars: p, bogeys: bog };
-}
-
-/** Adjust birdie/par/bogey mix so implied strokes vs par matches expected round score vs course par (−μ_sg). */
-function holeCountsMatchingExpectedStp(counts, targetStp) {
-  const e = num(counts.eagles, 0);
-  const d = num(counts.doubles, 0);
-  const sol = solveBirdParBogForExpectedStp(e, d, num(targetStp, 0), counts.pars);
-  if (!sol) return null;
-  return {
-    eagles: e,
-    birdies: sol.birdies,
-    pars: sol.pars,
-    bogeys: sol.bogeys,
-    doubles: d,
-  };
+  const s = e + b + p + bg + d;
+  if (s > 0.01 && Math.abs(s - 18) > 0.01) {
+    const k = 18 / s;
+    return {
+      eagles: e * k,
+      birdies: b * k,
+      pars: p * k,
+      bogeys: bg * k,
+      doubles: d * k,
+    };
+  }
+  return { eagles: e, birdies: b, pars: Math.max(0.12, p), bogeys: bg, doubles: d };
 }
 
 function imputeCountsWithHistory(muSg, countFit) {
@@ -651,11 +642,14 @@ function imputeCountsWithHistory(muSg, countFit) {
   const x = Math.max(-8, Math.min(8, stp));
   if (!countFit || countFit.n_counts < 800 || !countFit.slopes) return { ...legacy };
 
-  const shrink = countFit.n_counts / (countFit.n_counts + 2000);
-  const keys = ["eagles", "birdies", "pars", "bogeys", "doubles"];
+  /** Cap how much population OLS can override per-player legacy μ curves (large n else → one profile per μ). */
+  const rawShrink = countFit.n_counts / (countFit.n_counts + 2000);
+  const shrink = Math.min(0.38, rawShrink);
+  /** Do not regress `pars` vs stp — it is nearly collinear with bird/bog in data and kills cross-player spread; derive from the other four after blend. */
+  const keysNoPar = ["eagles", "birdies", "bogeys", "doubles"];
   /** @type {Record<string, number>} */
-  const out = {};
-  for (const k of keys) {
+  const out = { pars: legacy.pars };
+  for (const k of keysNoPar) {
     const c = countFit.slopes[k];
     if (!c || !Number.isFinite(c.a) || !Number.isFinite(c.b)) {
       out[k] = legacy[k];
@@ -666,10 +660,11 @@ function imputeCountsWithHistory(muSg, countFit) {
     out[k] = shrink * pred + (1 - shrink) * legacy[k];
     out[k] = Math.max(lo, out[k]);
   }
-  let s = keys.reduce((acc, k) => acc + out[k], 0);
+  out.pars = Math.max(0.2, 18 - out.eagles - out.birdies - out.bogeys - out.doubles);
+  let s = out.eagles + out.birdies + out.pars + out.bogeys + out.doubles;
   if (!(s > 0.1)) return { ...legacy };
   const kf = 18 / s;
-  for (const k of keys) out[k] *= kf;
+  for (const k of ["eagles", "birdies", "pars", "bogeys", "doubles"]) out[k] *= kf;
   return {
     eagles: out.eagles,
     birdies: out.birdies,
@@ -687,17 +682,31 @@ function r2EffFromSample(n, r2, priorN, priorR2) {
 
 function blendWeightGirFromHistory(n, r2) {
   const re = r2EffFromSample(n, r2, 500, 0.55);
-  return Math.max(0.58, Math.min(0.88, 0.66 + 0.22 * re));
+  /** Keep skill pillar primary; fantasy is a light nudge (historical R² is modest). */
+  return Math.max(0.72, Math.min(0.86, 0.76 + 0.14 * re));
 }
 
 function blendWeightOttFantasyFromHistory(n, r2) {
-  const re = r2EffFromSample(n, r2, 500, 0.6);
-  return Math.max(0.62, Math.min(0.92, 0.7 + 0.22 * re));
+  const re = r2EffFromSample(n, r2, 500, 0.58);
+  /** Weight on SG:OTT path — high floor so DK fairways do not dominate when OTT explains little variance. */
+  return Math.max(0.82, Math.min(0.91, 0.84 + 0.12 * re));
 }
 
 function blendWeightOttDecompFromHistory(n, r2) {
   const re = r2EffFromSample(n, r2, 500, 0.52);
-  return Math.max(0.52, Math.min(0.8, 0.55 + 0.25 * re));
+  return Math.max(0.62, Math.min(0.78, 0.66 + 0.12 * re));
+}
+
+/** Fairways hit rate 0–1 from skill row (percent 6–100 or decimal 0–1). Prefer `driving_accuracy` when both exist so a decomp skill index in `driving_acc` does not block a pct in `driving_accuracy`. */
+function fairwayRate01FromDrivingSkill(skRow) {
+  if (!skRow || typeof skRow !== "object") return NaN;
+  const cands = [num(skRow.driving_accuracy, NaN), num(skRow.driving_acc, NaN)];
+  for (const a of cands) {
+    if (!Number.isFinite(a)) continue;
+    if (a > 5 && a <= 100) return a / 100;
+    if (a > 0 && a <= 1) return a;
+  }
+  return NaN;
 }
 
 /**
@@ -968,8 +977,7 @@ function derivedStatsFromMuSg(muRaw, nFairwayHoles, opts = {}) {
   const mu_sg = clampMuSg(muRaw);
   const targetStp = -mu_sg;
   let im = imputeCountsWithHistory(mu_sg, opts.histCountFit);
-  const aligned = holeCountsMatchingExpectedStp(im, targetStp);
-  if (aligned) im = aligned;
+  im = softAlignHoleCountsToStp(im, targetStp);
   const stpVec = -mu_sg;
   const nGir = Number.isFinite(opts.nGirHoles) ? opts.nGirHoles : 18;
   let gir = Math.max(6, Math.min(16, 11.5 - 0.25 * stpVec));
@@ -1410,7 +1418,7 @@ async function main() {
     const id = num(row.dg_id ?? row.dgId, NaN);
     if (!Number.isFinite(id)) continue;
     const bc = firstNumCol(row, ["birdies", "birdie", "proj_birdies"]);
-    const pc = firstNumCol(row, ["pars", "par"]);
+    const pc = firstNumCol(row, ["pars", "par", "proj_pars", "projected_pars", "pars_proj", "regulation_pars"]);
     const bgc = firstNumCol(row, ["bogeys", "bogey", "bogies"]);
     const egc = firstNumCol(row, ["eagles", "eagle_or_better"]);
     const dbc = firstNumCol(row, ["doubles", "double_bogeys", "doubles_or_worse"]);
@@ -1728,8 +1736,12 @@ async function main() {
     if (!Number.isFinite(bogeys)) bogeys = im.bogeys;
     if (!Number.isFinite(doubles)) doubles = im.doubles;
 
-    const alignedCounts = holeCountsMatchingExpectedStp({ eagles, birdies, pars, bogeys, doubles }, -mu_sg);
-    if (alignedCounts) {
+    const fxBirdParBog =
+      Number.isFinite(num(fx.birdies)) &&
+      Number.isFinite(num(fx.pars)) &&
+      Number.isFinite(num(fx.bogeys));
+    if (!fxBirdParBog) {
+      const alignedCounts = softAlignHoleCountsToStp({ eagles, birdies, pars, bogeys, doubles }, -mu_sg);
       eagles = alignedCounts.eagles;
       birdies = alignedCounts.birdies;
       pars = alignedCounts.pars;
@@ -1743,7 +1755,7 @@ async function main() {
     if (!Number.isFinite(gir)) gir = appGir;
     else gir = Math.max(6, Math.min(16, (1 - wGir) * gir + wGir * appGir));
 
-    const decompFwRate = num(skRow?.driving_acc, NaN);
+    const decompFwRate = fairwayRate01FromDrivingSkill(skRow);
     let fairways = NaN;
     if (Number.isFinite(decompFwRate) && decompFwRate > 0.05 && decompFwRate < 0.95) {
       fairways = Math.max(4, Math.min(fairwayHolesThisCourse, decompFwRate * fairwayHolesThisCourse));
