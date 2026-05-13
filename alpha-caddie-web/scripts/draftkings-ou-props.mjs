@@ -644,6 +644,9 @@ function inferLeagueUrlFromPayload(payload) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
   if (!s) return "";
+  if (s === "pga-championship") {
+    return "https://sportsbook.draftkings.com/leagues/golf/uspga-championship?category=round";
+  }
   return `https://sportsbook.draftkings.com/leagues/golf/${s}?category=round`;
 }
 

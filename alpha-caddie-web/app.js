@@ -1437,10 +1437,24 @@ function mergeDatagolfInPlayPayload(j) {
   // Only overlay placement probabilities when in-play bundle and projections refer to the same tournament.
   // A cross-event merge can produce near-certain model prices against unrelated outright books.
   if (!eventAligned) {
-    for (const p of DATA.players || []) {
-      delete p.dg_teetime_local;
-      delete p.dg_tee_wave;
-      delete p.dg_auto_weather;
+    /* preds/in-play `info.event_name` can lag a week while field-updates already match this event.
+       Still merge tee times + date_start from field_updates so Open-Meteo / per-tee weather works. */
+    const fu = j.field_updates && typeof j.field_updates === "object" ? j.field_updates : null;
+    const fuEvent = String(fu?.event_name ?? fu?.eventName ?? "").trim();
+    const fuAligns =
+      fu &&
+      (!fuEvent ||
+        !modelEvent ||
+        eventNameMatchesCurrentSchedule(fuEvent, modelEvent) ||
+        eventNameMatchesCurrentSchedule(modelEvent, fuEvent));
+    if (fuAligns) {
+      mergeDgFieldTeeTimesIntoPlayers(fu);
+    } else {
+      for (const p of DATA.players || []) {
+        delete p.dg_teetime_local;
+        delete p.dg_tee_wave;
+        delete p.dg_auto_weather;
+      }
     }
     if (DATA.meta) {
       DATA.meta.datagolf_live_event_mismatch = `${inPlayEvent} vs ${modelEvent}`;
@@ -2193,6 +2207,8 @@ const WEATHER_UI_IDS = [];
 
 /** Normalized course_used → lat/lon for hourly forecast at venue (extend as needed). */
 const COURSE_COORDINATES_BY_NAME = {
+  /** 2026 PGA Championship host (Newtown Square, PA) — venue forecast + tee-time weather. */
+  "aronimink golf club": { lat: 39.991, lon: -75.308 },
   "quail hollow club": { lat: 35.1158, lon: -80.8529 },
   "augusta national golf club": { lat: 33.503, lon: -82.0199 },
   "the stadium course at tpc sawgrass": { lat: 30.198, lon: -81.394 },
