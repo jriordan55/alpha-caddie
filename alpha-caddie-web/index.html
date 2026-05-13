@@ -545,7 +545,19 @@
           </select>
         </label>
         <label class="toolbar-label">Matchup
-          <select id="analysis-matchup-select" aria-label="Choose matchup"></select>
+          <div class="golfer-combobox-wrap golfer-suggest-anchor">
+            <input
+              type="search"
+              id="analysis-matchup-select-search"
+              class="golfer-combobox-input"
+              placeholder="Search by player name…"
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="Search matchups by player name"
+            />
+            <div id="analysis-matchup-select-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Matchup suggestions"></div>
+            <select id="analysis-matchup-select" aria-label="Choose matchup" hidden></select>
+          </div>
         </label>
         <p id="analysis-market-note" class="text-muted matchup-analysis-note" hidden></p>
       </div>

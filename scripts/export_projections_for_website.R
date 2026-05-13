@@ -200,7 +200,7 @@ want <- c(
   "gir", "fairways", "eagles", "birdies", "pars", "bogeys", "doubles",
   "win", "top_5", "top_10", "top_20", "make_cut",
   "course_used", "mu_sg", "implied_mu_sg", "position", "round_label", "next_round",
-  "driving_dist", "sg_app"
+  "driving_dist", "driving_distance_rating", "driving_acc", "driving_accuracy", "sg_app"
 )
 cols <- intersect(want, names(tbl))
 players <- tbl[, cols, drop = FALSE]

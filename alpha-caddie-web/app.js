@@ -4792,6 +4792,38 @@ function matchupConsensusThreeWaySide(oddsObj, sideKey, prefs) {
   return items.reduce((sum, it) => sum + it.w * it.v, 0) / tw;
 }
 
+/**
+ * Implied win probability for a matchup side. Uses +EV devig / book prefs when possible; if those
+ * exclude every book that posted the line (e.g. split set to a book with no price), falls back to
+ * all allowed books, then to any non–DataGolf book with valid decimals.
+ */
+function matchupMarketImpliedProbSide(rawOdds, filteredEvOdds, sideKey, prefs, isThree = false) {
+  if (isThree) {
+    let p = matchupConsensusThreeWaySide(filteredEvOdds, sideKey, prefs);
+    if (Number.isFinite(p)) return p;
+    const widePrefs = {
+      ...prefs,
+      books: null,
+      bookWeights: null,
+      consensusMode: "market",
+    };
+    p = matchupConsensusThreeWaySide(filteredEvOdds, sideKey, widePrefs);
+    if (Number.isFinite(p)) return p;
+    return matchupAnalysisMarketProbSide(matchupAnalysisOddsWithoutDataGolf(rawOdds || {}), sideKey, true);
+  }
+  let p = matchupConsensusSide(filteredEvOdds, sideKey, prefs);
+  if (Number.isFinite(p)) return p;
+  const widePrefs = {
+    ...prefs,
+    books: null,
+    bookWeights: null,
+    consensusMode: "market",
+  };
+  p = matchupConsensusSide(filteredEvOdds, sideKey, widePrefs);
+  if (Number.isFinite(p)) return p;
+  return matchupAnalysisMarketProbSide(matchupAnalysisOddsWithoutDataGolf(rawOdds || {}), sideKey, false);
+}
+
 function matchupConsensusSide(oddsObj, sideKey, prefs) {
   const items = [];
   const method = evDevigMethodValid(prefs.method) ? prefs.method : "none";
@@ -5682,6 +5714,7 @@ function mergedPlayerRowForDrivingFields(row) {
     "avg_drive_distance",
     "predicted_driving_distance",
     "predicted_avg_driving_distance",
+    "adj_driving_distance",
     "driving_distance_rating",
     "driving_acc",
     "driving_accuracy",
@@ -5705,21 +5738,8 @@ function matchupAnalysisMetricValue(row, key) {
     return num(row.mu_sg, NaN);
   }
   if (key === "distance") {
-    const rt = num(row.driving_distance_rating, NaN);
-    if (Number.isFinite(rt) && rt >= -55 && rt <= 55) return drivingDistanceSkillRating(rt);
-    const cands = [
-      num(row.driving_dist, NaN),
-      num(row.avg_driving_distance, NaN),
-      num(row.average_driving_distance, NaN),
-      num(row.avg_drive_distance, NaN),
-      num(row.driving_distance, NaN),
-      num(row.predicted_driving_distance, NaN),
-      num(row.predicted_avg_driving_distance, NaN),
-    ];
-    for (const v of cands) {
-      if (Number.isFinite(v) && v >= 235 && v <= 380) return drivingDistanceSkillRating(v);
-    }
-    return NaN;
+    const yds = playerDrivingDistanceYds(row);
+    return Number.isFinite(yds) ? yds : NaN;
   }
   if (key === "accuracy") {
     const cands = [
@@ -5842,6 +5862,15 @@ function matchupAnalysisShortPlayerHead(fullName) {
 function buildMatchupAnalysisTool() {
   const pricingHost = document.getElementById("matchup-analysis-pricing");
   const matchupPickEl = document.getElementById("analysis-matchup-select");
+  const setMatchupPickUiHidden = (hidden) => {
+    const wrap = matchupPickEl?.closest(".golfer-combobox-wrap");
+    if (wrap) wrap.hidden = hidden;
+    if (matchupPickEl) matchupPickEl.hidden = hidden;
+    if (hidden) {
+      const s = document.getElementById("analysis-matchup-select-search");
+      if (s) s.value = "";
+    }
+  };
   const sgBody = document.querySelector("#table-matchup-analysis-sg tbody");
   const marketEl = document.getElementById("analysis-market");
   const note = document.getElementById("analysis-market-note");
@@ -5867,7 +5896,7 @@ function buildMatchupAnalysisTool() {
     }
     if (matchupPickEl) {
       matchupPickEl.innerHTML = "";
-      matchupPickEl.hidden = true;
+      setMatchupPickUiHidden(true);
     }
     return;
   }
@@ -5875,7 +5904,7 @@ function buildMatchupAnalysisTool() {
   if (!Array.isArray(list) || !list.length) {
     if (matchupPickEl) {
       matchupPickEl.innerHTML = "";
-      matchupPickEl.hidden = true;
+      setMatchupPickUiHidden(true);
     }
     return;
   }
@@ -5900,7 +5929,8 @@ function buildMatchupAnalysisTool() {
     const row1 = projectionPlayerRowForModelByIdOrName(id1, m.p1_player_name, r);
     const row2 = projectionPlayerRowForModelByIdOrName(id2, m.p2_player_name, r);
     const row3 = projectionPlayerRowForModelByIdOrName(id3, m.p3_player_name, r);
-    const oddsEv = filterOddsObjectForEvSportsbooks(m.odds || {}, {});
+    const rawOdds = m.odds || {};
+    const oddsEv = filterOddsObjectForEvSportsbooks(rawOdds, {});
     const b1 = bestBookDecimalForSideWithFallback(oddsEv, "p1", devigPrefs);
     const b2 = bestBookDecimalForSideWithFallback(oddsEv, "p2", devigPrefs);
     const b3 = bestBookDecimalForSideWithFallback(oddsEv, "p3", devigPrefs);
@@ -5910,9 +5940,9 @@ function buildMatchupAnalysisTool() {
     const mu3 = effectiveMuSg(row3, id3, key);
     if (isThree) {
       const [p1, p2, p3] = threeBallModelProbsLiveBlended(mu1, mu2, mu3, row1, row2, row3);
-      const mp1 = matchupConsensusThreeWaySide(oddsEv, "p1", devigPrefs);
-      const mp2 = matchupConsensusThreeWaySide(oddsEv, "p2", devigPrefs);
-      const mp3 = matchupConsensusThreeWaySide(oddsEv, "p3", devigPrefs);
+      const mp1 = matchupMarketImpliedProbSide(rawOdds, oddsEv, "p1", devigPrefs, true);
+      const mp2 = matchupMarketImpliedProbSide(rawOdds, oddsEv, "p2", devigPrefs, true);
+      const mp3 = matchupMarketImpliedProbSide(rawOdds, oddsEv, "p3", devigPrefs, true);
       const ev1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
       const ev2 = Number.isFinite(b2.dec) ? p2 * b2.dec - 1 : NaN;
       const ev3 = Number.isFinite(b3.dec) ? p3 * b3.dec - 1 : NaN;
@@ -5958,8 +5988,8 @@ function buildMatchupAnalysisTool() {
     }
     const p1 = matchupWinProbLiveBlended(mu1, mu2, key, row1, row2);
     const p2 = 1 - p1;
-    const marketP1 = matchupConsensusSide(oddsEv, "p1", devigPrefs);
-    const marketP2 = matchupConsensusSide(oddsEv, "p2", devigPrefs);
+    const marketP1 = matchupMarketImpliedProbSide(rawOdds, oddsEv, "p1", devigPrefs, false);
+    const marketP2 = matchupMarketImpliedProbSide(rawOdds, oddsEv, "p2", devigPrefs, false);
     const ev1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
     const ev2 = Number.isFinite(b2.dec) ? p2 * b2.dec - 1 : NaN;
     const best =
@@ -6015,7 +6045,7 @@ function buildMatchupAnalysisTool() {
   if (!rows.length) {
     if (matchupPickEl) {
       matchupPickEl.innerHTML = "";
-      matchupPickEl.hidden = true;
+      setMatchupPickUiHidden(true);
     }
     return;
   }
@@ -6024,7 +6054,7 @@ function buildMatchupAnalysisTool() {
   const selected = rows.find((x) => x.key === matchupAnalysisSelectedKey) || rows[0];
 
   if (matchupPickEl) {
-    matchupPickEl.hidden = false;
+    setMatchupPickUiHidden(false);
     matchupPickEl.innerHTML = "";
     for (const item of rows) {
       const opt = document.createElement("option");
@@ -6033,6 +6063,7 @@ function buildMatchupAnalysisTool() {
       matchupPickEl.appendChild(opt);
     }
     matchupPickEl.value = selected.key;
+    refreshGolferComboboxFromSelect("analysis-matchup-select");
   }
   renderMatchupAnalysisPricing(pricingHost, selected);
 
@@ -7237,7 +7268,14 @@ function playerDrivingAccuracyFrac(mrow) {
 }
 
 function playerDrivingDistanceYds(mrow) {
-  const y = num(mrow?.driving_dist ?? mrow?.avg_driving_distance ?? mrow?.driving_distance, NaN);
+  const y = num(
+    mrow?.driving_dist ??
+      mrow?.avg_driving_distance ??
+      mrow?.driving_distance ??
+      mrow?.adj_driving_distance ??
+      mrow?.average_driving_distance,
+    NaN,
+  );
   if (Number.isFinite(y) && y >= 235 && y <= 380) return y;
   const rt = num(mrow?.driving_distance_rating, NaN);
   if (Number.isFinite(rt) && rt >= -55 && rt <= 55) return 302 + rt;
@@ -7583,12 +7621,6 @@ function buildCourseFitTab() {
   }
 
   const venueEmphasisAxes = courseFitVenueEmphasisAxisIndices(tour5, venue5);
-  const emphasisLabel =
-    venueEmphasisAxes.length === 2
-      ? `${COURSE_FIT_RADAR_SPOKE_LABELS[venueEmphasisAxes[0]]} · ${COURSE_FIT_RADAR_SPOKE_LABELS[venueEmphasisAxes[1]]}`
-      : venueEmphasisAxes.length === 1
-        ? COURSE_FIT_RADAR_SPOKE_LABELS[venueEmphasisAxes[0]] || ""
-        : "";
 
   const search = String(document.getElementById("course-fit-search")?.value || "")
     .trim()
@@ -7603,9 +7635,7 @@ function buildCourseFitTab() {
 
   tbody.innerHTML = "";
   if (theadHeading) {
-    theadHeading.textContent = emphasisLabel
-      ? `Who fits ${venueName}? — emphasizes ${emphasisLabel}`
-      : `Who fits ${venueName}?`;
+    theadHeading.textContent = `Who fits ${venueName}?`;
   }
 
   const marketKeys = ["win", "top_5", "top_10", "top_20"];
@@ -7652,7 +7682,7 @@ function buildCourseFitTab() {
     tr.appendChild(td);
     tbody.appendChild(tr);
   } else {
-    for (const row of displayRows.slice(0, 120)) {
+    for (const row of displayRows.slice(0, 20)) {
       const tr = document.createElement("tr");
       const tdN = document.createElement("td");
       tdN.textContent = row.nm;
@@ -8917,7 +8947,14 @@ function wireGolferSuggestComboOnce(selectId) {
 }
 
 /** `select` + `#${id}-search` + `#${id}-suggest` panel — wire once after DOM. */
-const GOLFER_COMBO_SELECT_IDS = ["prop-golfer", "live-prop-golfer", "course-fit-player", "hh-player", "ev-filter-golfer"];
+const GOLFER_COMBO_SELECT_IDS = [
+  "prop-golfer",
+  "live-prop-golfer",
+  "course-fit-player",
+  "hh-player",
+  "ev-filter-golfer",
+  "analysis-matchup-select",
+];
 
 function syncGolferComboSearchFromSelect(selectId) {
   const sel = document.getElementById(selectId);
