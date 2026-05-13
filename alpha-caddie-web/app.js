@@ -10396,6 +10396,8 @@ function propsChartAxisLabel(completed) {
 
 /**
  * One string per bar for the x-axis (M/D; adds 'YY when the same calendar label spans multiple years).
+ * When several rounds share the same display date (same tournament end date, live merge, etc.), append R1…R4
+ * so consecutive bars are not indistinguishable.
  */
 function buildPropsTrendXAxisLabels(series) {
   if (!series.length) return [];
@@ -10413,7 +10415,22 @@ function buildPropsTrendXAxisLabels(series) {
       sameBaseIdx.map((j) => num(series[j]._hist?.year, NaN)).filter((y) => Number.isFinite(y) && y >= 1990)
     );
     if (years.size > 1 && Number.isFinite(yr)) return `${b} '${String(yr).slice(-2)}`;
-    return b;
+    const rn = Math.round(num(r?.round_num, NaN));
+    if (Number.isFinite(rn) && rn >= 1 && rn <= 5) {
+      let dupRn = false;
+      for (let j = 0; j < i; j++) {
+        if (bases[j] !== b) continue;
+        const rj = series[j]._hist;
+        if (Math.round(num(rj?.round_num, NaN)) === rn) {
+          dupRn = true;
+          break;
+        }
+      }
+      if (!dupRn) return `${b} R${rn}`;
+    }
+    let seq = 1;
+    for (let j = 0; j < i; j++) if (bases[j] === b) seq++;
+    return `${b} (${seq})`;
   });
 }
 
