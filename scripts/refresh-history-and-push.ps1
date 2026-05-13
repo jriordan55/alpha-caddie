@@ -25,6 +25,10 @@ $ErrorActionPreference = "Stop"
 #   • player-history/by-dg/*.json + manifest.json — hole-level score rows (hole_data.csv join in build-player-history.mjs);
 #     Hole Hangout fetches shards at player-history/by-dg/{dg_id}.json. Staged below with other history artifacts.
 #
+# Alpha Caddie browser shell (props trends dates, cache-busted index.html, etc.): alpha-caddie-web/app.js +
+#   index.html are listed in $artifacts so `npm run push:artifacts-only` still publishes UI edits alongside
+#   data. Default `npm run push:all` also runs `git add -A`, which stages any other web changes.
+#
 # Matchup Analysis Tool stays fresh when these commands succeed:
 #   fetch:dg  → projections.players (SG pillars + merged preds/live-tournament-stats driving when DG serves it),
 #               projections.matchups (betting-tools/matchups), approach_skill_ytd.json (Course Fit shot bins)
@@ -106,6 +110,8 @@ if (Test-Path $asL12Src) {
 Set-Location $repoRoot
 
 $artifacts = @(
+  "alpha-caddie-web/app.js",
+  "alpha-caddie-web/index.html",
   "alpha-caddie-web/projections.json",
   "alpha-caddie-web/live-in-play.json",
   "alpha-caddie-web/approach_skill_ytd.json",
