@@ -10369,6 +10369,38 @@ function modelForHistoryRow(statKey, row) {
   return base + pricingModelHistoryNudge(statKey, dgId) + liveCoursePropHistoryNudge(statKey) + liveRound;
 }
 
+/**
+ * Chart date string for a history round. CSV rows often reuse one `event_completed` for every round of an event;
+ * `sortKey` is YYYYMMDD*10+round_num (see build-player-history). Treat that calendar day as **round 1** and add
+ * (round_num−1) days so the x-axis shows 5/4, 5/5, 5/6, … Live-merge rows already carry per-round dates.
+ */
+function propsTrendChartDateFromRow(r) {
+  if (!r || typeof r !== "object") return "";
+  const sk = Math.round(num(r.sortKey, NaN));
+  if (Number.isFinite(sk) && sk > 9_999_999) {
+    const base = Math.floor(sk / 10);
+    const rnTail = sk % 10;
+    const rnRow = Math.round(num(r.round_num, NaN));
+    const rnd =
+      Number.isFinite(rnRow) && rnRow >= 1 && rnRow <= 5
+        ? rnRow
+        : Number.isFinite(rnTail) && rnTail >= 1 && rnTail <= 9
+          ? rnTail
+          : 1;
+    if (base >= 19_000_000 && base <= 2_100_1231) {
+      const y = Math.floor(base / 10000);
+      const mo = Math.floor((base % 10000) / 100);
+      const d = base % 100;
+      if (y >= 1990 && y <= 2100 && mo >= 1 && mo <= 12 && d >= 1 && d <= 31) {
+        const ms = Date.UTC(y, mo - 1, d) + (rnd - 1) * 86400000;
+        const dt = new Date(ms);
+        return `${dt.getUTCMonth() + 1}/${dt.getUTCDate()}/${dt.getUTCFullYear()}`;
+      }
+    }
+  }
+  return String(r.event_completed || "").trim();
+}
+
 function shortPropsDateLabel(completed) {
   const t = String(completed || "").trim();
   const p = t.split("/");
@@ -10396,8 +10428,6 @@ function propsChartAxisLabel(completed) {
 
 /**
  * One string per bar for the x-axis (M/D; adds 'YY when the same calendar label spans multiple years).
- * When several rounds share the same display date (same tournament end date, live merge, etc.), append R1…R4
- * so consecutive bars are not indistinguishable.
  */
 function buildPropsTrendXAxisLabels(series) {
   if (!series.length) return [];
@@ -10415,22 +10445,7 @@ function buildPropsTrendXAxisLabels(series) {
       sameBaseIdx.map((j) => num(series[j]._hist?.year, NaN)).filter((y) => Number.isFinite(y) && y >= 1990)
     );
     if (years.size > 1 && Number.isFinite(yr)) return `${b} '${String(yr).slice(-2)}`;
-    const rn = Math.round(num(r?.round_num, NaN));
-    if (Number.isFinite(rn) && rn >= 1 && rn <= 5) {
-      let dupRn = false;
-      for (let j = 0; j < i; j++) {
-        if (bases[j] !== b) continue;
-        const rj = series[j]._hist;
-        if (Math.round(num(rj?.round_num, NaN)) === rn) {
-          dupRn = true;
-          break;
-        }
-      }
-      if (!dupRn) return `${b} R${rn}`;
-    }
-    let seq = 1;
-    for (let j = 0; j < i; j++) if (bases[j] === b) seq++;
-    return `${b} (${seq})`;
+    return b;
   });
 }
 
@@ -10982,7 +10997,7 @@ function renderPropsTrends() {
     const m = modelForHistoryRow(statKey, { ...r, _playerName: playerRow?.player_name });
     seriesFull.push({
       _hist: r,
-      date: r.event_completed || "",
+      date: propsTrendChartDateFromRow(r),
       course: propsCourseNameFromRow(r),
       actual,
       model: m,
