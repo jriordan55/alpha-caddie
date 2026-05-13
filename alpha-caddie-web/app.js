@@ -7360,10 +7360,10 @@ function courseFitVenueEmphasisAxisIndices(tour5, venue5) {
   ) {
     out.push(scored[1].i);
   }
-  return out;
+  return out.slice(0, 2);
 }
 
-/** Fit and category using only `axisIdxs` (venue emphasis); category lists 1–2 edges where the player is positive. */
+/** Fit sums venue-emphasis axes; category is exactly one of those axes — where this player’s edge is largest (at most two distinct labels in the column). */
 function courseFitPlayerCatAndFitOnAxes(tour5, venue5, player5, axisIdxs) {
   if (!player5?.length || !venue5?.length || !tour5?.length || !axisIdxs?.length) {
     return { cat: "—", fit: 0 };
@@ -7379,16 +7379,10 @@ function courseFitPlayerCatAndFitOnAxes(tour5, venue5, player5, axisIdxs) {
     contribs.push({ i, c });
   }
   if (!contribs.length) return { cat: "—", fit: 0 };
-  const pos = contribs.filter((x) => x.c > 0).sort((a, b) => b.c - a.c);
-  if (pos.length) {
-    const lab0 = COURSE_FIT_RADAR_SPOKE_LABELS[pos[0].i] || "—";
-    if (pos.length > 1 && pos[1].c >= pos[0].c * 0.45) {
-      const lab1 = COURSE_FIT_RADAR_SPOKE_LABELS[pos[1].i] || "";
-      return { cat: lab1 ? `${lab0} · ${lab1}` : lab0, fit };
-    }
-    return { cat: lab0, fit };
-  }
-  return { cat: "—", fit };
+  contribs.sort((a, b) => (b.c !== a.c ? b.c - a.c : a.i - b.i));
+  const top = contribs[0];
+  if (!top || top.c <= 0) return { cat: "—", fit };
+  return { cat: COURSE_FIT_RADAR_SPOKE_LABELS[top.i] || "—", fit };
 }
 
 function courseTableStaticDifficultyD() {
