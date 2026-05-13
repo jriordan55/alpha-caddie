@@ -6163,19 +6163,10 @@ function courseFitMeanNormalized(rows, ranges) {
 
 let courseFitCourseStatsHistoryRef = null;
 let courseFitCourseStatsCache = null;
-/** Bump when `normCourseNameKey` changes so cached per-course SG buckets re-merge (same HISTORY object). */
-const COURSE_FIT_STATS_NORM_VERSION = 4;
-let courseFitCourseStatsNormVersionRef = 0;
 
 function courseFitCourseStatsByCourse() {
   if (!HISTORY._ok || !HISTORY.byDgId) return new Map();
-  if (
-    courseFitCourseStatsCache &&
-    courseFitCourseStatsHistoryRef === HISTORY.byDgId &&
-    courseFitCourseStatsNormVersionRef === COURSE_FIT_STATS_NORM_VERSION
-  ) {
-    return courseFitCourseStatsCache;
-  }
+  if (courseFitCourseStatsCache && courseFitCourseStatsHistoryRef === HISTORY.byDgId) return courseFitCourseStatsCache;
   const keys = ["sg_ott", "sg_app", "sg_arg", "sg_putt"];
   /** @type {Map<string, { sum: number[]; ct: number[] }>} */
   const acc = new Map();
@@ -6197,7 +6188,6 @@ function courseFitCourseStatsByCourse() {
     }
   }
   courseFitCourseStatsHistoryRef = HISTORY.byDgId;
-  courseFitCourseStatsNormVersionRef = COURSE_FIT_STATS_NORM_VERSION;
   courseFitCourseStatsCache = acc;
   return acc;
 }
@@ -6314,9 +6304,9 @@ function courseFitVenueProfileVector(rows, ranges, histSg) {
   }
   const shortGame = (v[3] + v[4]) / 2;
   const strike = (v[0] + v[2]) / 2;
-  v[1] = clamp(tour[1] + 0.38 * (shortGame - strike), 0.06, 0.94);
-  const amp = 1.06;
-  return v.map((t) => clamp(0.5 + (t - 0.5) * amp, 0.06, 0.94));
+  v[1] = clamp(tour[1] + 0.55 * (shortGame - strike), 0.05, 0.95);
+  const amp = 1.22;
+  return v.map((t) => clamp(0.5 + (t - 0.5) * amp, 0.04, 0.96));
 }
 
 const COURSE_FIT_RADAR_LABELS = ["Driving Distance", "Driving Accuracy", "Approach", "Around green", "Putting"];
@@ -6400,9 +6390,8 @@ function courseFitBestCategoryAndFit(playerN, emphasis) {
       bestI = i;
     }
   }
-  /** Signed dot product so “below average on emphasized axis” scores negative; table still lists golfers. */
   const strokeLike =
-    emphasis.reduce((s, e, i) => s + e * (playerN[i] - 0.5), 0) * 2.4;
+    emphasis.reduce((s, e, i) => s + Math.max(0, e) * (playerN[i] - 0.5), 0) * 2.4;
   return { cat: COURSE_FIT_RADAR_LABELS[bestI] || "—", fit: strokeLike };
 }
 
@@ -6635,9 +6624,8 @@ function drawCourseFitRadar(canvas, tour5, venue5, player5, similar5) {
   for (let i = 0; i < n; i++) {
     const a = angleAt(i);
     const lab = COURSE_FIT_RADAR_LABELS[i] || "";
-    const lr = R + 38;
-    const xr = cx + lr * Math.cos(a);
-    const yr = cy + lr * Math.sin(a);
+    const xr = cx + (R + 28) * Math.cos(a);
+    const yr = cy + (R + 28) * Math.sin(a);
     const words = lab.split(" ");
     words.forEach((w, j) => {
       ctx.fillText(w, xr, yr + j * 12 - ((words.length - 1) * 6));
@@ -7369,12 +7357,10 @@ function buildCourseFitTab() {
 
   const marketKeys = ["win", "top_5", "top_10", "top_20"];
   const displayRows = [];
-  const hasPositiveFit = ranked.some((x) => x.fit > 1e-6);
   for (const row of ranked) {
     const nm = displayGolferName(String(row.r.player_name || ""));
     if (search && !nm.toLowerCase().includes(search)) continue;
-    if (hasPositiveFit && !(row.fit > 1e-6)) break;
-    if (!hasPositiveFit && displayRows.length >= 60) break;
+    if (!(row.fit > 0)) break;
     const dgId = Math.round(num(row.r.dg_id, NaN));
     const odds = {};
     for (const mk of marketKeys) odds[mk] = courseFitOutrightBestPriceOdds(mk, dgId);
@@ -9487,7 +9473,6 @@ function courseNameMatchesVenueLoose(courseNameRaw, venueRaw) {
 const COURSE_NAME_CANONICAL_KEYS = Object.freeze({
   albany: "albany golf club",
   "albany bahamas": "albany golf club",
-  "sea island resort": "sea island golf club",
 });
 
 /** Course-name canonical key for filters/matching (e.g. "Trump National Doral" vs "(Blue Monster)"). */
@@ -9496,15 +9481,11 @@ function normCourseNameKey(raw) {
   s = s.replace(/\([^)]*\)/g, " ");
   s = s.replace(/\b(blue monster|stadium course|championship course|club de golf)\b/g, " ");
   s = s.replace(/&/g, " and ");
-  /* Venue / feed variants (Harbour Town Gl vs … Golf Links, TPC Sawgrass The Players, etc.). */
-  s = s.replace(/\bthe players\b/gi, " ");
-  /* Unify "… Gc" / "… Cc" / "… Gl" / dotted forms (DataGolf vs CSV vs history). */
+  /* Unify "… Gc" / "… Cc" / dotted forms with spelled-out club types (DataGolf vs CSV vs history). */
   s = s.replace(/\bc\.?\s*c\.?\b/gi, "country club");
   s = s.replace(/\bg\.?\s*c\.?\b/gi, "golf club");
-  s = s.replace(/\bg\.?\s*l\.?\b/gi, "golf links");
   s = s.replace(/\bgolf club(\s+golf club)+\b/gi, "golf club");
   s = s.replace(/\bcountry club(\s+country club)+\b/gi, "country club");
-  s = s.replace(/\bgolf links(\s+golf links)+\b/gi, "golf links");
   s = s.replace(/[^a-z0-9]+/g, " ");
   s = s.replace(/\s+/g, " ").trim();
   const alias = COURSE_NAME_CANONICAL_KEYS[s];
