@@ -354,6 +354,8 @@ let resultsTimeRange = "all";
 /** Hit regions for Results chart win-marker tooltips (canvas). */
 let resultsChartHitRegions = [];
 let matchupAnalysisSelectedKey = "";
+/** Full matchup list for the active market (search / suggest); `<select>` may list fewer. */
+let matchupAnalysisRowsCache = [];
 let propsTrendsLineContextKey = "";
 /** Perf caches for pricing-mode recomputes (cleared when history/context changes). */
 const HISTORY_ROUNDS_CHRONO_CACHE = new Map();
@@ -630,6 +632,33 @@ function impliedProbFromAmerican(a) {
   const d = decimalFromAmerican(a);
   if (!Number.isFinite(d) || d <= 0) return NaN;
   return 1 / d;
+}
+
+/** Decimal odds for one matchup line (handles `matchups_odds_format` + mis-tagged American in decimal feeds). */
+function matchupOddsDecodeScalar(raw) {
+  const v = num(raw, NaN);
+  if (!Number.isFinite(v) || v === 0) return NaN;
+  const fmt = String(DATA?.meta?.matchups_odds_format || "").toLowerCase();
+  if (fmt === "american" || fmt === "us") return decimalFromAmerican(Math.round(v));
+  if (v > 1 && v <= 80) return v;
+  if (v >= 100 || v <= -1) return decimalFromAmerican(Math.round(v));
+  if (v > 80 && v < 100 && Number.isInteger(v)) return decimalFromAmerican(Math.round(v));
+  return NaN;
+}
+
+function matchupOddsTwoWayFromPack(pack) {
+  if (!pack || typeof pack !== "object") return { d1: NaN, d2: NaN };
+  const d1 = matchupOddsDecodeScalar(pack.p1 ?? pack.P1 ?? pack.player_1 ?? pack.line_1 ?? pack.home);
+  const d2 = matchupOddsDecodeScalar(pack.p2 ?? pack.P2 ?? pack.player_2 ?? pack.line_2 ?? pack.away);
+  return { d1, d2 };
+}
+
+function matchupOddsThreeWayFromPack(pack) {
+  if (!pack || typeof pack !== "object") return { d1: NaN, d2: NaN, d3: NaN };
+  const d1 = matchupOddsDecodeScalar(pack.p1 ?? pack.P1 ?? pack.player_1 ?? pack.line_1 ?? pack.home);
+  const d2 = matchupOddsDecodeScalar(pack.p2 ?? pack.P2 ?? pack.player_2 ?? pack.line_2 ?? pack.away);
+  const d3 = matchupOddsDecodeScalar(pack.p3 ?? pack.P3 ?? pack.player_3 ?? pack.line_3);
+  return { d1, d2, d3 };
 }
 
 function americanFromImpliedProb(p) {
@@ -4774,9 +4803,7 @@ function matchupConsensusThreeWaySide(oddsObj, sideKey, prefs) {
     const wB = evConsensusWeightForBook(bk, prefs);
     if (prefs.bookWeights && wB <= 0) continue;
     const pack = oddsObj[bk];
-    const d1 = num(pack?.p1, NaN);
-    const d2 = num(pack?.p2, NaN);
-    const d3 = num(pack?.p3, NaN);
+    const { d1, d2, d3 } = matchupOddsThreeWayFromPack(pack);
     if (!Number.isFinite(d1) || d1 <= 1 || !Number.isFinite(d2) || d2 <= 1 || !Number.isFinite(d3) || d3 <= 1) continue;
     const q1 = 1 / d1;
     const q2 = 1 / d2;
@@ -4827,33 +4854,33 @@ function matchupMarketImpliedProbSide(rawOdds, filteredEvOdds, sideKey, prefs, i
 function matchupConsensusSide(oddsObj, sideKey, prefs) {
   const items = [];
   const method = evDevigMethodValid(prefs.method) ? prefs.method : "none";
+  const want = String(sideKey || "").toLowerCase();
   for (const bk of Object.keys(oddsObj || {})) {
     if (!evBookAllowedInConsensus(bk, prefs, { allowDatagolf: true })) continue;
     const wB = evConsensusWeightForBook(bk, prefs);
     if (prefs.bookWeights && wB <= 0) continue;
     const pack = oddsObj[bk];
-    const d1 = num(pack?.p1, NaN);
-    const d2 = num(pack?.p2, NaN);
+    const { d1, d2 } = matchupOddsTwoWayFromPack(pack);
+    if (!Number.isFinite(d1) || d1 <= 1 || !Number.isFinite(d2) || d2 <= 1) continue;
     if (method !== "none") {
-      if (!Number.isFinite(d1) || d1 <= 1 || !Number.isFinite(d2) || d2 <= 1) continue;
       const q1 = 1 / d1;
       const q2 = 1 / d2;
       const pFair = devigFairForSide(q1, q2, method, sideKey);
       if (!Number.isFinite(pFair)) continue;
       items.push({ bk, v: pFair, w: wB });
     } else {
-      const d = num(pack?.[sideKey], NaN);
-      if (Number.isFinite(d) && d > 1) items.push({ bk, v: d, w: wB });
+      const q1 = 1 / d1;
+      const q2 = 1 / d2;
+      const s = q1 + q2;
+      if (s <= 0) continue;
+      const imp = want === "p1" ? q1 / s : q2 / s;
+      items.push({ bk, v: imp, w: wB });
     }
   }
   if (!items.length) return NaN;
   const tw = items.reduce((s, it) => s + it.w, 0);
   if (tw <= 0) return NaN;
-  const blend = items.reduce((s, it) => s + it.w * it.v, 0) / tw;
-  if (method === "none") {
-    return blend > 1 ? 1 / blend : NaN;
-  }
-  return blend;
+  return items.reduce((s, it) => s + it.w * it.v, 0) / tw;
 }
 
 function matchupMarketProbWithFallback(filteredOddsObj, sideKey, prefs, isThree = false) {
@@ -4883,9 +4910,7 @@ function matchupAnalysisMarketProbSide(oddsObj, sideKey, isThree = false) {
     if (!pack || typeof pack !== "object") continue;
     if (isThree) {
       if (!["p1", "p2", "p3"].includes(want)) continue;
-      const d1 = num(pack.p1, NaN);
-      const d2 = num(pack.p2, NaN);
-      const d3 = num(pack.p3, NaN);
+      const { d1, d2, d3 } = matchupOddsThreeWayFromPack(pack);
       if (!Number.isFinite(d1) || d1 <= 1 || !Number.isFinite(d2) || d2 <= 1 || !Number.isFinite(d3) || d3 <= 1) continue;
       const q1 = 1 / d1;
       const q2 = 1 / d2;
@@ -4894,8 +4919,7 @@ function matchupAnalysisMarketProbSide(oddsObj, sideKey, isThree = false) {
       if (s > 0) vals.push(want === "p1" ? q1 / s : want === "p2" ? q2 / s : q3 / s);
       continue;
     }
-    const d1 = num(pack.p1, NaN);
-    const d2 = num(pack.p2, NaN);
+    const { d1, d2 } = matchupOddsTwoWayFromPack(pack);
     if (!Number.isFinite(d1) || d1 <= 1 || !Number.isFinite(d2) || d2 <= 1) continue;
     const q1 = 1 / d1;
     const q2 = 1 / d2;
@@ -5661,7 +5685,14 @@ function bestBookDecimalForSide(oddsObj, side /* 'p1'|'p2'|'p3' */, opts = {}) {
     if (normalizeEvSportsbookKey(bk) === "datagolf" && !opts.allowDatagolf) continue;
     const pack = oddsObj[bk];
     if (!pack || typeof pack !== "object") continue;
-    const d = num(pack[side], NaN);
+    let d = NaN;
+    if (side === "p3") {
+      const t = matchupOddsThreeWayFromPack(pack);
+      d = t.d3;
+    } else {
+      const t = matchupOddsTwoWayFromPack(pack);
+      d = side === "p1" ? t.d1 : t.d2;
+    }
     if (!Number.isFinite(d) || d <= 1) continue;
     if (!Number.isFinite(bestD) || d > bestD) {
       bestD = d;
@@ -5681,7 +5712,14 @@ function bestBookDecimalForSideEvPrefs(oddsObj, side /* 'p1'|'p2'|'p3' */, prefs
     if (!evBookAllowedInConsensus(bk, prefs, opts)) continue;
     const pack = filtered[bk];
     if (!pack || typeof pack !== "object") continue;
-    const d = num(pack[side], NaN);
+    let d = NaN;
+    if (side === "p3") {
+      const t = matchupOddsThreeWayFromPack(pack);
+      d = t.d3;
+    } else {
+      const t = matchupOddsTwoWayFromPack(pack);
+      d = side === "p1" ? t.d1 : t.d2;
+    }
     if (!Number.isFinite(d) || d <= 1) continue;
     if (!Number.isFinite(bestD) || d > bestD) {
       bestD = d;
@@ -5898,6 +5936,7 @@ function buildMatchupAnalysisTool() {
       matchupPickEl.innerHTML = "";
       setMatchupPickUiHidden(true);
     }
+    matchupAnalysisRowsCache = [];
     return;
   }
   if (note) note.hidden = true;
@@ -5906,6 +5945,7 @@ function buildMatchupAnalysisTool() {
       matchupPickEl.innerHTML = "";
       setMatchupPickUiHidden(true);
     }
+    matchupAnalysisRowsCache = [];
     return;
   }
 
@@ -6042,7 +6082,9 @@ function buildMatchupAnalysisTool() {
   }
 
   rows.sort((a, b) => num(b.best?.edge, -99) - num(a.best?.edge, -99));
+  matchupAnalysisRowsCache = rows;
   if (!rows.length) {
+    matchupAnalysisRowsCache = [];
     if (matchupPickEl) {
       matchupPickEl.innerHTML = "";
       setMatchupPickUiHidden(true);
@@ -6053,10 +6095,18 @@ function buildMatchupAnalysisTool() {
   if (!rows.some((x) => x.key === matchupAnalysisSelectedKey)) matchupAnalysisSelectedKey = rows[0].key;
   const selected = rows.find((x) => x.key === matchupAnalysisSelectedKey) || rows[0];
 
+  const MATCHUP_SELECT_MAX = 20;
+  let uiRows = rows.slice(0, MATCHUP_SELECT_MAX);
+  const sk = matchupAnalysisSelectedKey;
+  if (sk && !uiRows.some((x) => x.key === sk)) {
+    const keep = rows.find((x) => x.key === sk);
+    if (keep) uiRows = [keep, ...rows.filter((x) => x.key !== sk).slice(0, MATCHUP_SELECT_MAX - 1)];
+  }
+
   if (matchupPickEl) {
     setMatchupPickUiHidden(false);
     matchupPickEl.innerHTML = "";
-    for (const item of rows) {
+    for (const item of uiRows) {
       const opt = document.createElement("option");
       opt.value = item.key;
       opt.textContent = item.matchup;
@@ -7268,17 +7318,24 @@ function playerDrivingAccuracyFrac(mrow) {
 }
 
 function playerDrivingDistanceYds(mrow) {
-  const y = num(
-    mrow?.driving_dist ??
-      mrow?.avg_driving_distance ??
-      mrow?.driving_distance ??
-      mrow?.adj_driving_distance ??
-      mrow?.average_driving_distance,
-    NaN,
-  );
-  if (Number.isFinite(y) && y >= 235 && y <= 380) return y;
-  const rt = num(mrow?.driving_distance_rating, NaN);
-  if (Number.isFinite(rt) && rt >= -55 && rt <= 55) return 302 + rt;
+  if (!mrow || typeof mrow !== "object") return NaN;
+  const yardCandidates = [
+    mrow.driving_distance,
+    mrow.avg_driving_distance,
+    mrow.adj_driving_distance,
+    mrow.average_driving_distance,
+    mrow.predicted_driving_distance,
+    mrow.predicted_avg_driving_distance,
+  ];
+  for (const c of yardCandidates) {
+    const y = num(c, NaN);
+    if (Number.isFinite(y) && y >= 235 && y <= 380) return y;
+  }
+  const dDist = num(mrow.driving_dist, NaN);
+  if (Number.isFinite(dDist) && dDist >= 235 && dDist <= 380) return dDist;
+  let rt = num(mrow.driving_distance_rating, NaN);
+  if (!Number.isFinite(rt) && Number.isFinite(dDist) && dDist >= -120 && dDist <= 120) rt = dDist;
+  if (Number.isFinite(rt) && rt >= -120 && rt <= 120) return 302 + rt;
   return NaN;
 }
 
@@ -8809,6 +8866,23 @@ function golferNameMatchesQuery(nameRaw, qLower) {
   return parts.every((t) => disp.includes(t) || raw.includes(t));
 }
 
+/** Match full matchup label (`A vs B` / 3-ball) or either side for combobox search. */
+function matchupRowLabelMatchesQuery(labelRaw, qLower) {
+  const q = String(qLower || "").trim().toLowerCase();
+  if (!q) return false;
+  const label = String(labelRaw || "").trim();
+  if (!label) return false;
+  if (golferNameMatchesQuery(label, q)) return true;
+  const disp = displayGolferName(label).trim().toLowerCase();
+  if (disp === q || disp.includes(q)) return true;
+  const segs = disp.split(/\s+vs\s+|\s*\/\s*/).map((s) => s.trim()).filter(Boolean);
+  const toks = q.split(/\s+/).filter((t) => t.length >= 2);
+  if (segs.length >= 2 && toks.length) {
+    if (segs.some((seg) => toks.every((t) => seg.includes(t)))) return true;
+  }
+  return false;
+}
+
 /** Themed custom list (native `<datalist>` popups cannot match dark UI). */
 const GOLFER_SUGGEST_PANEL_MAX = 80;
 
@@ -8826,9 +8900,11 @@ function golferSuggestWriteLabels(panel, labels) {
 function filterGolferSuggestLabels(names, qRaw) {
   const q = String(qRaw || "").trim().toLowerCase();
   if (!q) return names.slice(0, GOLFER_SUGGEST_PANEL_MAX);
+  const useMatchup = names.some((n) => /\s+vs\s+|\s+\/\s+/.test(String(n)));
   const out = [];
   for (const name of names) {
-    if (golferNameMatchesQuery(name, q)) out.push(name);
+    const ok = useMatchup ? matchupRowLabelMatchesQuery(name, q) : golferNameMatchesQuery(name, q);
+    if (ok) out.push(name);
     if (out.length >= GOLFER_SUGGEST_PANEL_MAX) break;
   }
   return out;
@@ -8983,6 +9059,14 @@ function commitGolferComboSearchToSelect(selectId) {
   let hit = [...sel.options].find((o) => String(o.textContent || "").trim().toLowerCase() === qLow);
   if (!hit) hit = [...sel.options].find((o) => String(o.textContent || "").toLowerCase().includes(qLow));
   if (!hit) hit = [...sel.options].find((o) => String(o.value || "") === q);
+  if (!hit && selectId === "analysis-matchup-select" && matchupAnalysisRowsCache.length) {
+    const row = matchupAnalysisRowsCache.find((r) => matchupRowLabelMatchesQuery(r.matchup, qLow));
+    if (row) {
+      matchupAnalysisSelectedKey = row.key;
+      buildMatchupAnalysisTool();
+      return;
+    }
+  }
   if (hit) {
     sel.value = String(hit.value);
     search.value = String(hit.value || "") === "" ? "" : String(hit.textContent || "").trim();
@@ -8996,10 +9080,15 @@ function refreshGolferComboboxFromSelect(selectId) {
   const panel = document.getElementById(`${selectId}-suggest`);
   const search = document.getElementById(`${selectId}-search`);
   if (!sel || !panel) return;
-  const labels = [...sel.querySelectorAll("option")]
-    .filter((o) => String(o.value || "") !== "")
-    .map((o) => String(o.textContent || "").trim())
-    .filter(Boolean);
+  let labels;
+  if (selectId === "analysis-matchup-select" && matchupAnalysisRowsCache.length) {
+    labels = matchupAnalysisRowsCache.map((r) => String(r.matchup || "").trim()).filter(Boolean);
+  } else {
+    labels = [...sel.querySelectorAll("option")]
+      .filter((o) => String(o.value || "") !== "")
+      .map((o) => String(o.textContent || "").trim())
+      .filter(Boolean);
+  }
   golferSuggestWriteLabels(panel, labels);
   reopenGolferSuggestIfSearchFocused(search, panel, () => {
     commitGolferComboSearchToSelect(selectId);
