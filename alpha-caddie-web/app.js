@@ -8335,7 +8335,7 @@ async function loadPlayerHistoryBucket(dgId) {
  * over HTTP; use embedded script as fallback or for file:// demos.
  */
 async function loadPlayerHistory() {
-  if (HISTORY._ok) return;
+  if (HISTORY._ok && !HISTORY._partial) return;
   if (playerHistoryLoadPromise) return playerHistoryLoadPromise;
   HISTORY = { ...HISTORY, _loading: true };
   playerHistoryLoadPromise = (async () => {
@@ -10293,7 +10293,9 @@ function renderPropsHitRateAndTopTable(statKey, line, winN) {
     const td = document.createElement("td");
     td.colSpan = 6;
     td.className = "text-muted";
-    td.textContent = "Selected-player history loaded. Full-field rankings are skipped on mobile to keep the page responsive.";
+    td.textContent = window.matchMedia("(max-width: 699px)").matches
+      ? "Selected-player history loaded. Full-field rankings are skipped on mobile to keep the page responsive."
+      : "Loading full-field rankings…";
     tr.appendChild(td);
     tbody.appendChild(tr);
     paintPropsTopTableSortHeaders();
@@ -12292,7 +12294,15 @@ function ensurePlayerHistoryLoadedForTab(tab) {
   if (!["props", "course-fit", "hangout"].includes(String(tab || ""))) return Promise.resolve();
   const p =
     tab === "props"
-      ? loadPlayerHistoryBucket(selectedDgId())
+      ? (async () => {
+          await loadPlayerHistoryBucket(selectedDgId());
+          if (HISTORY._partial) {
+            void loadPlayerHistory().finally(() => {
+              if (activeAppTabId() === "props") renderPropsTrends();
+            });
+          }
+          return true;
+        })()
       : tab === "hangout"
         ? loadPlayerHistoryBucket(selectedHangoutDgId())
         : HISTORY._ok && !HISTORY._partial

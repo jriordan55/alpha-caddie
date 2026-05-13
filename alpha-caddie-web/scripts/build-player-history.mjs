@@ -314,7 +314,15 @@ function playerKeyCanonical(name) {
 
 function parseUsDateSortKey(s) {
   if (!s) return 0;
-  const p = String(s).split("/");
+  const t = String(s).trim();
+  const iso = t.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) {
+    const y = parseInt(iso[1], 10);
+    const mo = parseInt(iso[2], 10);
+    const d = parseInt(iso[3], 10);
+    if (Number.isFinite(y) && Number.isFinite(mo) && Number.isFinite(d)) return y * 10000 + mo * 100 + d;
+  }
+  const p = t.split("/");
   if (p.length !== 3) return 0;
   const mo = parseInt(p[0], 10);
   const d = parseInt(p[1], 10);
@@ -658,6 +666,31 @@ function stripGirFairwaysPuttsIfGarbage(mf) {
   }
 }
 
+/**
+ * LIV (and any row) often has no putts in historical_rounds_all.csv; shot-round aggregate skips many LIV events.
+ * Coarse imputation from round score + GIR count so Historical Trends / props charts are usable (re-run when shots CSV fills in).
+ */
+function imputeLivPuttsIfStillMissing(mf, row) {
+  if (String(row.tour || "").toLowerCase() !== "liv") return;
+  if (mf.putts != null && Number.isFinite(mf.putts)) return;
+  const rs = num(row.round_score);
+  if (!Number.isFinite(rs)) return;
+  const par = num(row.course_par);
+  const p = Number.isFinite(par) && par > 50 && par < 85 ? par : 72;
+  let gir = mf.gir;
+  if (!Number.isFinite(gir)) {
+    const rawG = num(row.gir);
+    if (Number.isFinite(rawG)) gir = countFromRateOrRaw(rawG, 18);
+  }
+  if (!Number.isFinite(gir)) gir = 9;
+  gir = Math.max(0, Math.min(18, Math.round(gir)));
+  const miss = 18 - gir;
+  const rel = rs - p;
+  let est = gir * 1.72 + miss * 2.06 + rel * 0.32;
+  est = Math.round(Math.max(17, Math.min(39, est)));
+  mf.putts = est;
+}
+
 function metricFields(row) {
   const gir = num(row.gir);
   const fa = num(row.driving_acc);
@@ -953,6 +986,7 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg) {
       if (shotOv.fairways != null) mf.fairways = shotOv.fairways;
     }
     stripGirFairwaysPuttsIfGarbage(mf);
+    imputeLivPuttsIfStillMissing(mf, row);
     const rec = {
       sortKey,
       event_completed: String(row.event_completed || ""),
