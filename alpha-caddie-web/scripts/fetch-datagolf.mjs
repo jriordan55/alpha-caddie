@@ -1,15 +1,16 @@
 /**
- * Pull PGA field + skill + fantasy + pre-tournament probs from DataGolf (same idea as
+ * Pull PGA field + skill + pre-tournament probs from DataGolf (same idea as
  * round_projections.R RAW_PROJECTIONS / GOLF_RAW_PROJECTIONS=1) and write projections.json.
- * Fairways: decomp `driving_acc` blended with SG:OTT vs **median** field OTT; fairway count scales to this course’s
- * par-4/5 layout when hole pars are known. Scoring uses **course_par_18** from resolved hole pars (not a fixed 72).
+ * Counting stats and GIR/fairways are **skill-only** (no fantasy-projection-defaults). Fairways: regulation FW% from
+ * skill when plausible, else SG:OTT vs **median** field OTT; fairway count scales to this course’s par-4/5 layout.
+ * Scoring uses **course_par_18** from resolved hole pars (not a fixed 72).
  * Optional **preds/pre-tournament** per-round stroke column (when present in the feed) nudges μ_sg toward that baseline.
- * GIR / fairways: fantasy + SG pillars vs **median** field, with blend weights from historical CSV (GIR~APP, FW~OTT R²).
+ * Historical CSV still calibrates count curves vs (score−par); GIR uses SG:APP vs median field (no fantasy blend).
  * Hole counts: historical rounds regress eagles/birdies/bogeys/doubles vs (round_score − course_par), shrunk with a
  * ceiling so legacy μ curves still spread the field; pars are residual. A **soft** bird/bog nudge partially aligns
  * implied strokes vs par with **score_to_par = −μ_sg** without collapsing pars across players.
- * R2–R4 rows re-derive from scaled μ_SG (default multipliers 1, 0.99, 0.97, 0.95 — GOLF_NODE_ROUND_MU_MULT).
- * Set GOLF_SKIP_HIST_STATS_ON_FETCH=1 to skip the historical CSV calibration pass (counts + blend weights).
+ * R2–R4 rows re-derive from scaled μ_SG (default multipliers 1, 0.945, 0.885, 0.82 — override GOLF_NODE_ROUND_MU_MULT).
+ * Set GOLF_SKIP_HIST_STATS_ON_FETCH=1 to skip the historical CSV calibration pass (count curves only; GIR/FW are skill-only).
  * Usage (from alpha-caddie-web/):
  *   set DATAGOLF_API_KEY=your_key
  *   npm run fetch:dg
@@ -571,7 +572,7 @@ function num(x, fallback = NaN) {
   return Number.isFinite(n) ? n : fallback;
 }
 
-/** Like browser `historyScalarOrNaN`: `Number(null) === 0` must not fake fantasy stats. */
+/** Like browser `historyScalarOrNaN`: `Number(null) === 0` must not coerce missing history into fake stats. */
 function scalarOrNaN(v) {
   if (v == null || v === "") return NaN;
   const n = Number(v);
@@ -674,44 +675,51 @@ function imputeCountsWithHistory(muSg, countFit) {
   };
 }
 
-function r2EffFromSample(n, r2, priorN, priorR2) {
-  const r = Number.isFinite(r2) ? r2 : 0;
-  const nn = Math.max(0, n);
-  return (nn * r + priorN * priorR2) / (nn + priorN);
-}
-
-function blendWeightGirFromHistory(n, r2) {
-  const re = r2EffFromSample(n, r2, 500, 0.55);
-  /** Keep skill pillar primary; fantasy is a light nudge (historical R² is modest). */
-  return Math.max(0.72, Math.min(0.86, 0.76 + 0.14 * re));
-}
-
-function blendWeightOttFantasyFromHistory(n, r2) {
-  const re = r2EffFromSample(n, r2, 500, 0.58);
-  /** Weight on SG:OTT path — high floor so DK fairways do not dominate when OTT explains little variance. */
-  return Math.max(0.82, Math.min(0.91, 0.84 + 0.12 * re));
-}
-
-function blendWeightOttDecompFromHistory(n, r2) {
-  const re = r2EffFromSample(n, r2, 500, 0.52);
-  return Math.max(0.62, Math.min(0.78, 0.66 + 0.12 * re));
-}
-
-/** Fairways hit rate 0–1 from skill row (percent 6–100 or decimal 0–1). Prefer `driving_accuracy` when both exist so a decomp skill index in `driving_acc` does not block a pct in `driving_accuracy`. */
-function fairwayRate01FromDrivingSkill(skRow) {
+/**
+ * Fairway hit rate 0–1 from skill row. Percent columns are typically 40–90; single digits (e.g. 9.8) are not FW%.
+ * Prefer `driving_accuracy` before `driving_acc` when the former looks like a percent.
+ */
+function fairwayRate01FromDrivingSkill(skRow, nFw = N_FAIRWAY_HOLES) {
   if (!skRow || typeof skRow !== "object") return NaN;
-  const cands = [num(skRow.driving_accuracy, NaN), num(skRow.driving_acc, NaN)];
+  const denom = Number.isFinite(nFw) && nFw > 0 ? nFw : N_FAIRWAY_HOLES;
+  const cands = [num(skRow.driving_accuracy, NaN), num(skRow.driving_acc, NaN)].filter((x) => Number.isFinite(x));
   for (const a of cands) {
-    if (!Number.isFinite(a)) continue;
-    if (a > 5 && a <= 100) return a / 100;
-    if (a > 0 && a <= 1) return a;
+    if (a >= 35 && a <= 95) {
+      const r = a / 100;
+      if (r >= 0.38 && r <= 0.92) return r;
+    }
+  }
+  for (const a of cands) {
+    if (a > 0 && a <= 1) {
+      const r = a;
+      if (r >= 0.38 && r <= 0.92) return r;
+    }
+  }
+  for (const a of cands) {
+    if (a >= 4.5 && a <= Math.min(14.5, denom + 0.5)) {
+      const r = a / denom;
+      if (r >= 0.38 && r <= 0.92) return r;
+    }
   }
   return NaN;
 }
 
+function isPlausibleDrivingDistanceYds(y) {
+  const v = num(y, NaN);
+  return Number.isFinite(v) && v >= 235 && v <= 380;
+}
+
+/** Skill-only fairways: plausible FW% from decompositions → count; else SG:OTT model (no fantasy blend). */
+function projectedFairwaysFromSkillOnly(mu_sg, skRow, nFw, fieldMeanOtt, drivingDistYds, fieldMeanDrive) {
+  const fw01 = fairwayRate01FromDrivingSkill(skRow, nFw);
+  const ottFw = fairwaysExpectedFromSkill(mu_sg, skRow?.sg_ott, nFw, fieldMeanOtt, drivingDistYds, fieldMeanDrive);
+  if (Number.isFinite(fw01)) return Math.max(4, Math.min(nFw, fw01 * nFw));
+  return Math.max(4, Math.min(nFw, ottFw));
+}
+
 /**
  * Stream `data/historical_rounds_all.csv`: OLS of hole counts vs (round_score − course_par), and R² for GIR~APP / FW~OTT.
- * Used for fantasy↔skill blend weights and count curves (shrunk toward legacy when n is modest).
+ * Used for count-curve calibration (historical R² still logged for diagnostics).
  */
 async function loadHistoricalCsvCalibration(modelRoot) {
   const empty = {
@@ -723,7 +731,7 @@ async function loadHistoricalCsvCalibration(modelRoot) {
     r2_fw_ott: NaN,
     slopes: null,
     w_gir_skill: 0.78,
-    w_ott_fantasy: 0.85,
+    w_ott_skill: 0.85,
     w_ott_decomp: 0.65,
     csv_path: null,
   };
@@ -856,17 +864,17 @@ async function loadHistoricalCsvCalibration(modelRoot) {
     if (vxo > 1e-8 && vyf > 1e-8) out.r2_fw_ott = (cof * cof) / (vxo * vyf);
   }
 
-  out.w_gir_skill = blendWeightGirFromHistory(ng, out.r2_gir_app);
-  out.w_ott_fantasy = blendWeightOttFantasyFromHistory(nf, out.r2_fw_ott);
-  out.w_ott_decomp = blendWeightOttDecompFromHistory(nf, out.r2_fw_ott);
+  out.w_gir_skill = 1;
+  out.w_ott_skill = 1;
+  out.w_ott_decomp = 1;
 
   if (n >= 400) {
     console.log(
-      `[fetch-dg] historical calibration: n_counts=${n}, n_gir_app=${ng} (R²≈${Number.isFinite(out.r2_gir_app) ? out.r2_gir_app.toFixed(3) : "?"}), n_fw_ott=${nf} (R²≈${Number.isFinite(out.r2_fw_ott) ? out.r2_fw_ott.toFixed(3) : "?"}); blend w_gir_skill=${out.w_gir_skill.toFixed(2)}, w_ott_fx=${out.w_ott_fantasy.toFixed(2)}, w_ott_decomp=${out.w_ott_decomp.toFixed(2)}`,
+      `[fetch-dg] historical calibration: n_counts=${n}, n_gir_app=${ng} (R²≈${Number.isFinite(out.r2_gir_app) ? out.r2_gir_app.toFixed(3) : "?"}), n_fw_ott=${nf} (R²≈${Number.isFinite(out.r2_fw_ott) ? out.r2_fw_ott.toFixed(3) : "?"}); projections use skill-only GIR/fairways (blend weights=1)`,
     );
   } else {
     console.log(
-      `[fetch-dg] historical calibration: only ${n} scored rounds in CSV (need ≥400 for count regression / stable R²) — using legacy count curve + default blends`,
+      `[fetch-dg] historical calibration: only ${n} scored rounds in CSV (need ≥400 for count regression / stable R²) — using legacy count curve`,
     );
   }
 
@@ -925,19 +933,19 @@ function fairwaysMuImputeOnly(stpVec, nFw) {
 }
 
 /**
- * Expected fairways (N_fw hole scale) from SG:OTT vs the field mean + small total-SG tilt.
- * Fantasy defaults + μ-only formulas cluster everyone ~8; R uses OTT / driving_acc for FW calibration.
+ * Expected fairways (N_fw hole scale) from SG:OTT vs the field median + small total-SG tilt (μ-only fallback mixed in lightly).
  */
 function fairwaysExpectedFromSkill(muSg, sgOtt, nFw, fieldMeanOtt, drivingDistYds, fieldMeanDrive) {
-  const stp = -num(muSg, 0);
+  const mu = clampMuSg(muSg);
+  const stp = -mu;
   const fallback = fairwaysMuImputeOnly(stp, nFw);
   const o = num(sgOtt, NaN);
   const m = num(fieldMeanOtt, NaN);
   if (!Number.isFinite(o) || !Number.isFinite(m)) return fallback;
-  let rate = 0.56 + 0.3 * (o - m) + 0.034 * stp;
-  rate = Math.max(0.44, Math.min(0.79, rate));
+  let rate = 0.56 + 0.72 * (o - m) + 0.08 * mu;
+  rate = Math.max(0.4, Math.min(0.84, rate));
   let ottFw = Math.max(4, Math.min(nFw, rate * nFw));
-  ottFw = Math.max(4, Math.min(nFw, 0.1 * fallback + 0.9 * ottFw));
+  ottFw = Math.max(4, Math.min(nFw, 0.02 * fallback + 0.98 * ottFw));
   const dy = num(drivingDistYds, NaN);
   const my = num(fieldMeanDrive, NaN);
   if (Number.isFinite(dy) && Number.isFinite(my) && dy >= 240 && dy <= 345 && my >= 265 && my <= 315) {
@@ -955,15 +963,15 @@ function girExpectedFromSkill(muSg, sgApp, nGirHoles, fieldMeanApp) {
   const a = num(sgApp, NaN);
   const m = num(fieldMeanApp, NaN);
   if (!Number.isFinite(a) || !Number.isFinite(m)) return fallback;
-  let rate = 0.6 + 0.34 * (a - m) + 0.026 * stp;
+  let rate = 0.6 + 0.34 * (a - m) + 0.04 * mu;
   rate = Math.max(0.48, Math.min(0.82, rate));
   const appGir = Math.max(6, Math.min(16, rate * nGirHoles));
   return Math.max(6, Math.min(16, 0.14 * fallback + 0.86 * appGir));
 }
 
-/** Default matches R round_projections Gaussian-round mu_mult when ROUND_HIST_SG_MULT is unset. */
+/** Default widens R2–R4 vs R1 so per-round projections separate (override GOLF_NODE_ROUND_MU_MULT). */
 function parseRoundMuMult() {
-  const def = [1, 0.99, 0.97, 0.95];
+  const def = [1, 0.945, 0.885, 0.82];
   const raw = process.env.GOLF_NODE_ROUND_MU_MULT;
   if (raw == null || !String(raw).trim()) return def;
   const parts = String(raw)
@@ -980,21 +988,20 @@ function derivedStatsFromMuSg(muRaw, nFairwayHoles, opts = {}) {
   im = softAlignHoleCountsToStp(im, targetStp);
   const stpVec = -mu_sg;
   const nGir = Number.isFinite(opts.nGirHoles) ? opts.nGirHoles : 18;
+  const skR = opts.skRow;
   let gir = Math.max(6, Math.min(16, 11.5 - 0.25 * stpVec));
   if (Number.isFinite(opts.sg_app) && Number.isFinite(opts.fieldMeanApp)) {
     gir = girExpectedFromSkill(mu_sg, opts.sg_app, nGir, opts.fieldMeanApp);
   }
-  let fairways = Math.max(4, Math.min(nFairwayHoles, 0.55 * nFairwayHoles - 0.15 * stpVec));
-  if (Number.isFinite(opts.sg_ott) && Number.isFinite(opts.fieldMeanOtt)) {
-    fairways = fairwaysExpectedFromSkill(
-      mu_sg,
-      opts.sg_ott,
-      nFairwayHoles,
-      opts.fieldMeanOtt,
-      opts.driving_distance,
-      opts.fieldMeanDrive,
-    );
-  }
+  const distFw = isPlausibleDrivingDistanceYds(opts.driving_distance) ? opts.driving_distance : NaN;
+  const fairways = projectedFairwaysFromSkillOnly(
+    mu_sg,
+    skR,
+    nFairwayHoles,
+    opts.fieldMeanOtt,
+    distFw,
+    opts.fieldMeanDrive,
+  );
   const putts = Math.max(22, Math.min(35, 28.5 + 0.32 * stpVec - 0.1 * (gir - 11)));
   return {
     mu_sg,
@@ -1400,49 +1407,6 @@ async function main() {
     );
   }
 
-  console.log("Fetching fantasy-projection-defaults…");
-  let fantasyList = [];
-  try {
-    const fant = await fetchDg(
-      "/preds/fantasy-projection-defaults",
-      { tour: tourForFeeds, site: "draftkings", slate: "main", file_format: "json" },
-      key
-    );
-    fantasyList = rowsFromResponse(fant);
-  } catch (e) {
-    console.warn("Fantasy defaults skipped:", e.message);
-  }
-
-  const fantasyByDg = new Map();
-  for (const row of fantasyList) {
-    const id = num(row.dg_id ?? row.dgId, NaN);
-    if (!Number.isFinite(id)) continue;
-    const bc = firstNumCol(row, ["birdies", "birdie", "proj_birdies"]);
-    const pc = firstNumCol(row, ["pars", "par", "proj_pars", "projected_pars", "pars_proj", "regulation_pars"]);
-    const bgc = firstNumCol(row, ["bogeys", "bogey", "bogies"]);
-    const egc = firstNumCol(row, ["eagles", "eagle_or_better"]);
-    const dbc = firstNumCol(row, ["doubles", "double_bogeys", "doubles_or_worse"]);
-    const gc = firstNumCol(row, ["gir", "greens_in_regulation", "gir_count"]);
-    const fc = firstNumCol(row, ["fairways", "driving_accuracy", "fw", "fairway"]);
-    const ddc = firstNumCol(row, [
-      "avg_driving_distance",
-      "average_driving_distance",
-      "driving_distance",
-      "drive_distance",
-      "distance",
-    ]);
-    fantasyByDg.set(Math.round(id), {
-      birdies: bc ? num(row[bc]) : NaN,
-      pars: pc ? num(row[pc]) : NaN,
-      bogeys: bgc ? num(row[bgc]) : NaN,
-      eagles: egc ? num(row[egc]) : NaN,
-      doubles: dbc ? num(row[dbc]) : NaN,
-      gir: gc ? num(row[gc]) : NaN,
-      fairways: fc ? num(row[fc]) : NaN,
-      driving_distance: ddc ? num(row[ddc]) : NaN,
-    });
-  }
-
   /** event_avg driving distance (yards) + accuracy from preds/live-tournament-stats — matches DG Live Stats feed. */
   let liveDrivingByDg = new Map();
   try {
@@ -1650,7 +1614,7 @@ async function main() {
     );
   } else if (pretList.length) {
     console.log(
-      `[fetch-dg] preds/pre-tournament: ${pretList.length} rows — placement-only baseline (no per-round stroke column); μ_sg uses skill + fantasy.`,
+      `[fetch-dg] preds/pre-tournament: ${pretList.length} rows — placement-only baseline (no per-round stroke column); μ_sg uses skill ratings.`,
     );
   }
 
@@ -1706,9 +1670,9 @@ async function main() {
 
     const liveDv = liveDrivingByDg.get(id);
     let driving_distance =
-      skRow && Number.isFinite(skRow.driving_distance)
+      skRow && Number.isFinite(skRow.driving_distance) && isPlausibleDrivingDistanceYds(skRow.driving_distance)
         ? skRow.driving_distance
-        : liveDv && Number.isFinite(liveDv.distance)
+        : liveDv && Number.isFinite(liveDv.distance) && isPlausibleDrivingDistanceYds(liveDv.distance)
           ? liveDv.distance
           : NaN;
     let driving_accuracy =
@@ -1718,71 +1682,31 @@ async function main() {
           ? liveDv.accuracy
           : NaN;
 
-    const fx = fantasyByDg.get(id) || {};
-    let eagles = num(fx.eagles);
-    let birdies = num(fx.birdies);
-    let pars = num(fx.pars);
-    let bogeys = num(fx.bogeys);
-    let doubles = num(fx.doubles);
-    let gir = scalarOrNaN(fx.gir);
-    if (!Number.isFinite(driving_distance)) driving_distance = num(fx.driving_distance);
-
-    if (Number.isFinite(gir) && gir > 0 && gir <= 1) gir *= 18;
-
     const im = imputeCountsWithHistory(mu_sg, histCalib);
-    if (!Number.isFinite(eagles)) eagles = im.eagles;
-    if (!Number.isFinite(birdies)) birdies = im.birdies;
-    if (!Number.isFinite(pars)) pars = im.pars;
-    if (!Number.isFinite(bogeys)) bogeys = im.bogeys;
-    if (!Number.isFinite(doubles)) doubles = im.doubles;
-
-    const fxBirdParBog =
-      Number.isFinite(num(fx.birdies)) &&
-      Number.isFinite(num(fx.pars)) &&
-      Number.isFinite(num(fx.bogeys));
-    if (!fxBirdParBog) {
-      const alignedCounts = softAlignHoleCountsToStp({ eagles, birdies, pars, bogeys, doubles }, -mu_sg);
-      eagles = alignedCounts.eagles;
-      birdies = alignedCounts.birdies;
-      pars = alignedCounts.pars;
-      bogeys = alignedCounts.bogeys;
-      doubles = alignedCounts.doubles;
-    }
+    let eagles = im.eagles;
+    let birdies = im.birdies;
+    let pars = im.pars;
+    let bogeys = im.bogeys;
+    let doubles = im.doubles;
+    const alignedCounts = softAlignHoleCountsToStp({ eagles, birdies, pars, bogeys, doubles }, -mu_sg);
+    eagles = alignedCounts.eagles;
+    birdies = alignedCounts.birdies;
+    pars = alignedCounts.pars;
+    bogeys = alignedCounts.bogeys;
+    doubles = alignedCounts.doubles;
 
     const stpVec = -mu_sg;
-    const wGir = histCalib.w_gir_skill;
-    const appGir = girExpectedFromSkill(mu_sg, skRow?.sg_app, 18, fieldMeanApp);
-    if (!Number.isFinite(gir)) gir = appGir;
-    else gir = Math.max(6, Math.min(16, (1 - wGir) * gir + wGir * appGir));
+    const gir = girExpectedFromSkill(mu_sg, skRow?.sg_app, 18, fieldMeanApp);
 
-    const decompFwRate = fairwayRate01FromDrivingSkill(skRow);
-    let fairways = NaN;
-    if (Number.isFinite(decompFwRate) && decompFwRate > 0.05 && decompFwRate < 0.95) {
-      fairways = Math.max(4, Math.min(fairwayHolesThisCourse, decompFwRate * fairwayHolesThisCourse));
-    }
-
-    let fxFw = scalarOrNaN(fx.fairways);
-    if (Number.isFinite(fxFw) && fxFw > 0 && fxFw <= 1) fxFw *= fairwayHolesThisCourse;
-
-    const ottFw = fairwaysExpectedFromSkill(
+    const distForFw = isPlausibleDrivingDistanceYds(driving_distance) ? driving_distance : NaN;
+    const fairways = projectedFairwaysFromSkillOnly(
       mu_sg,
-      skRow?.sg_ott,
+      skRow,
       fairwayHolesThisCourse,
       fieldMeanOtt,
-      driving_distance,
+      distForFw,
       fieldMeanDrive,
     );
-    const wOttFx = histCalib.w_ott_fantasy;
-    const wOttDc = histCalib.w_ott_decomp;
-    if (!Number.isFinite(fairways)) {
-      if (Number.isFinite(fxFw)) {
-        fairways = Math.max(4, Math.min(fairwayHolesThisCourse, (1 - wOttFx) * fxFw + wOttFx * ottFw));
-      } else {
-        fairways = ottFw;
-      }
-    } else {
-      fairways = Math.max(4, Math.min(fairwayHolesThisCourse, (1 - wOttDc) * fairways + wOttDc * ottFw));
-    }
 
     const putts = Math.max(22, Math.min(35, 28.5 + 0.32 * stpVec - 0.1 * (gir - 11)));
 
@@ -1814,7 +1738,7 @@ async function main() {
       if (Number.isFinite(skRow.driving_dist)) rowOut.driving_dist = skRow.driving_dist;
       if (Number.isFinite(skRow.driving_acc)) rowOut.driving_acc = skRow.driving_acc;
     }
-    if (Number.isFinite(driving_distance)) {
+    if (isPlausibleDrivingDistanceYds(driving_distance)) {
       const dyInt = Math.round(driving_distance);
       rowOut.driving_distance = dyInt;
       rowOut.avg_driving_distance = dyInt;
@@ -1860,15 +1784,19 @@ async function main() {
           putts: row.putts,
         };
       } else {
+        const skRowR = skillByDg.get(row.dg_id);
+        const distR =
+          isPlausibleDrivingDistanceYds(row.driving_distance) ? row.driving_distance : NaN;
         st = derivedStatsFromMuSg(row.mu_sg * mult, fairwayHolesThisCourse, {
           sg_ott: row.sg_ott,
           fieldMeanOtt,
           sg_app: row.sg_app,
           fieldMeanApp,
           nGirHoles: 18,
-          driving_distance: row.driving_distance,
+          driving_distance: distR,
           fieldMeanDrive,
           histCountFit: histCalib,
+          skRow: skRowR,
         });
       }
       const stp = score_to_par(st.mu_sg);
@@ -1910,8 +1838,11 @@ async function main() {
         pl.avg_driving_distance = dy;
         pl.driving_distance = dy;
       }
-      if (Number.isFinite(row.driving_accuracy)) pl.driving_accuracy = Math.round(row.driving_accuracy * 10) / 10;
-      else {
+      if (Number.isFinite(row.driving_accuracy)) {
+        const da = row.driving_accuracy;
+        pl.driving_accuracy =
+          da > 0 && da <= 1 ? Math.round(da * 1000) / 10 : Math.round(da * 10) / 10;
+      } else {
         const fw = st.fairways;
         if (Number.isFinite(fw) && fw > 1.02) {
           pl.driving_accuracy = Math.round(((fw / fairwayHolesThisCourse) * 100) * 10) / 10;
@@ -1961,7 +1892,7 @@ async function main() {
     display_round_label: displayRoundLabel(dr, tz),
     updated_at: new Date().toISOString().replace(/\.\d{3}Z$/, "Z"),
     source:
-      "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, fantasy-projection-defaults, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
+      "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
     /** Web app: book columns are implied % (0–100); convert to American in UI like Shiny pct_to_american */
     outrights_odds_format: "percent",
     /** Stored raw from betting-tools/matchups with odds_format=decimal */
@@ -1990,7 +1921,7 @@ async function main() {
       r2_gir_app: Number.isFinite(histCalib.r2_gir_app) ? Math.round(histCalib.r2_gir_app * 10000) / 10000 : null,
       r2_fw_ott: Number.isFinite(histCalib.r2_fw_ott) ? Math.round(histCalib.r2_fw_ott * 10000) / 10000 : null,
       w_gir_skill: Math.round(histCalib.w_gir_skill * 1000) / 1000,
-      w_ott_fantasy: Math.round(histCalib.w_ott_fantasy * 1000) / 1000,
+      w_ott_skill: Math.round(histCalib.w_ott_skill * 1000) / 1000,
       w_ott_decomp: Math.round(histCalib.w_ott_decomp * 1000) / 1000,
     },
     players,
