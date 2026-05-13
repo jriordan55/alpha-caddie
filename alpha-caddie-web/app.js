@@ -6360,7 +6360,7 @@ function courseFitVenueProfileVector(rows, ranges, histSg) {
   return v;
 }
 
-/** Radar spoke text (Course Fit canvas). */
+/** Radar spokes + Who-fits category names (Course Fit). */
 const COURSE_FIT_RADAR_SPOKE_LABELS = [
   "Driving Accuracy",
   "Off the Tee",
@@ -6368,15 +6368,6 @@ const COURSE_FIT_RADAR_SPOKE_LABELS = [
   "Around the Green",
   "Putting",
   "Driving Distance",
-];
-/** Who-fits category column uses Rating on driving axes. */
-const COURSE_FIT_RADAR_CATEGORY_LABELS = [
-  "Driving Accuracy Rating",
-  "Off the Tee",
-  "Approach",
-  "Around the Green",
-  "Putting",
-  "Driving Distance Rating",
 ];
 
 /** Per-course mean SG vector [ott,app,arg,putt] from embedded history (for similarity). */
@@ -6417,7 +6408,7 @@ function courseFitPlayerPool() {
 function courseFitBestCategoryAndFit(playerN, emphasis) {
   let bestI = 0;
   let best = -Infinity;
-  const n = Math.min(playerN.length, emphasis.length, COURSE_FIT_RADAR_CATEGORY_LABELS.length);
+  const n = Math.min(playerN.length, emphasis.length, COURSE_FIT_RADAR_SPOKE_LABELS.length);
   for (let i = 0; i < n; i++) {
     const c = Math.max(0, emphasis[i]) * (playerN[i] - 0.5);
     if (c > best) {
@@ -6427,7 +6418,7 @@ function courseFitBestCategoryAndFit(playerN, emphasis) {
   }
   const strokeLike =
     emphasis.reduce((s, e, i) => s + Math.max(0, e) * (playerN[i] - 0.5), 0) * 2.4;
-  return { cat: COURSE_FIT_RADAR_CATEGORY_LABELS[bestI] || "—", fit: strokeLike };
+  return { cat: COURSE_FIT_RADAR_SPOKE_LABELS[bestI] || "—", fit: strokeLike };
 }
 
 /** Legacy: best +EV book for one outright market (make_cut / mc or fallback). */
@@ -7348,23 +7339,56 @@ function courseFitSimilarCoursesFromCourseTable(activeVk, venueRow) {
   return out.slice(0, 12);
 }
 
-function courseFitCategoryAndFitCourseTable(prow, tour5, venue5, player5) {
-  if (!prow || !player5?.length || !venue5?.length) return { cat: "—", fit: 0 };
-  let bestI = 0;
-  let bestC = -Infinity;
-  let fit = 0;
-  const n = Math.min(venue5.length, tour5.length, player5.length, COURSE_FIT_RADAR_CATEGORY_LABELS.length);
+/**
+ * One or two axis indices where this venue differs most from tour / field average
+ * (|venue − field|); the Who-fits table scores only these so categories stay focused.
+ */
+function courseFitVenueEmphasisAxisIndices(tour5, venue5) {
+  const n = Math.min(tour5?.length || 0, venue5?.length || 0, COURSE_FIT_RADAR_SPOKE_LABELS.length);
+  if (n < 1) return [];
+  const scored = [];
   for (let i = 0; i < n; i++) {
+    const stress = venue5[i] - tour5[i];
+    scored.push({ i, abs: Math.abs(stress) });
+  }
+  scored.sort((a, b) => b.abs - a.abs);
+  if (!scored[0]?.abs || scored[0].abs < 1e-6) return [scored[0].i];
+  const out = [scored[0].i];
+  if (
+    scored.length > 1 &&
+    scored[1].abs >= scored[0].abs * 0.35
+  ) {
+    out.push(scored[1].i);
+  }
+  return out;
+}
+
+/** Fit and category using only `axisIdxs` (venue emphasis); category lists 1–2 edges where the player is positive. */
+function courseFitPlayerCatAndFitOnAxes(tour5, venue5, player5, axisIdxs) {
+  if (!player5?.length || !venue5?.length || !tour5?.length || !axisIdxs?.length) {
+    return { cat: "—", fit: 0 };
+  }
+  const contribs = [];
+  let fit = 0;
+  for (const i of axisIdxs) {
+    if (i < 0 || i >= player5.length) continue;
     const stress = venue5[i] - tour5[i];
     const skill = player5[i] - 0.5;
     const c = stress * skill;
     fit += c;
-    if (c > bestC) {
-      bestC = c;
-      bestI = i;
-    }
+    contribs.push({ i, c });
   }
-  return { cat: COURSE_FIT_RADAR_CATEGORY_LABELS[bestI] || "—", fit };
+  if (!contribs.length) return { cat: "—", fit: 0 };
+  const pos = contribs.filter((x) => x.c > 0).sort((a, b) => b.c - a.c);
+  if (pos.length) {
+    const lab0 = COURSE_FIT_RADAR_SPOKE_LABELS[pos[0].i] || "—";
+    if (pos.length > 1 && pos[1].c >= pos[0].c * 0.45) {
+      const lab1 = COURSE_FIT_RADAR_SPOKE_LABELS[pos[1].i] || "";
+      return { cat: lab1 ? `${lab0} · ${lab1}` : lab0, fit };
+    }
+    return { cat: lab0, fit };
+  }
+  return { cat: "—", fit };
 }
 
 function courseTableStaticDifficultyD() {
@@ -7457,10 +7481,7 @@ function buildCourseFitTab() {
     ? courseFitSimilarSelectedKey.replace(/\b\w/g, (c) => c.toUpperCase())
     : "";
 
-  if (capEl) {
-    const src = ctRow?.course ? ` · ${String(ctRow.course)} (course_table.csv)` : " · course_table.csv";
-    capEl.textContent = `${venueName}${src}`;
-  }
+  if (capEl) capEl.textContent = venueName;
 
   if (sel) {
     const prev = sel.value;
@@ -7500,14 +7521,13 @@ function buildCourseFitTab() {
     const selectedGolferName =
       (prow && displayGolferName(String(prow.player_name || ""))) || "Selected golfer";
     let html =
-      '<span class="course-fit-leg-item"><span class="course-fit-leg-dash"></span> PGA layout (avg · course_table)</span>' +
+      '<span class="course-fit-leg-item"><span class="course-fit-leg-dash"></span> Field Avg</span>' +
       `<span class="course-fit-leg-item"><span class="course-fit-leg-green"></span> ${escapeHtml(venueName)}</span>`;
     if (similar5 && similarDisplayName) {
       html +=
         `<span class="course-fit-leg-item"><span class="course-fit-leg-blue" aria-hidden="true"></span> ${escapeHtml(similarDisplayName)}</span>`;
     }
-    html +=
-      `<span class="course-fit-leg-item"><span class="course-fit-leg-gold"></span> ${escapeHtml(selectedGolferName)} (skill vs same axes)</span>`;
+    html += `<span class="course-fit-leg-item"><span class="course-fit-leg-gold"></span> ${escapeHtml(selectedGolferName)}</span>`;
     legEl.innerHTML = html;
   }
 
@@ -7547,19 +7567,31 @@ function buildCourseFitTab() {
     }
   }
 
+  const venueEmphasisAxes = courseFitVenueEmphasisAxisIndices(tour5, venue5);
+  const emphasisLabel =
+    venueEmphasisAxes.length === 2
+      ? `${COURSE_FIT_RADAR_SPOKE_LABELS[venueEmphasisAxes[0]]} · ${COURSE_FIT_RADAR_SPOKE_LABELS[venueEmphasisAxes[1]]}`
+      : venueEmphasisAxes.length === 1
+        ? COURSE_FIT_RADAR_SPOKE_LABELS[venueEmphasisAxes[0]] || ""
+        : "";
+
   const search = String(document.getElementById("course-fit-search")?.value || "")
     .trim()
     .toLowerCase();
   const ranked = [];
   for (const r of rows) {
     const playerN = courseFitPlayerRadarVectorMerged(rows, r);
-    const { cat, fit } = courseFitCategoryAndFitCourseTable(r, tour5, venue5, playerN);
+    const { cat, fit } = courseFitPlayerCatAndFitOnAxes(tour5, venue5, playerN, venueEmphasisAxes);
     ranked.push({ r, cat, fit });
   }
   ranked.sort((a, b) => b.fit - a.fit);
 
   tbody.innerHTML = "";
-  if (theadHeading) theadHeading.textContent = `Who fits ${venueName}? (course_table stress × skill)`;
+  if (theadHeading) {
+    theadHeading.textContent = emphasisLabel
+      ? `Who fits ${venueName}? — emphasizes ${emphasisLabel}`
+      : `Who fits ${venueName}?`;
+  }
 
   const marketKeys = ["win", "top_5", "top_10", "top_20"];
   const displayRows = [];
@@ -7610,7 +7642,7 @@ function buildCourseFitTab() {
       const tdN = document.createElement("td");
       tdN.textContent = row.nm;
       const tdC = document.createElement("td");
-      tdC.className = "num";
+      tdC.className = row.cat && row.cat !== "—" ? "num ev-pos" : "num";
       tdC.textContent = row.cat;
       const tdF = document.createElement("td");
       tdF.className = `num ${row.fit >= 0 ? "ev-pos" : "ev-neg"}`;

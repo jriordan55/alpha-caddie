@@ -389,7 +389,7 @@
                     <th
                       class="num sortable"
                       scope="col"
-                      title="Approximate strokes-gained style edge vs the field on the skills this venue emphasizes (see Category). Higher values mean the golfer’s shape aligns better with the venue profile."
+                      title="Edge on the 1–2 skills this layout emphasizes vs tour average (see table title). Higher means the player’s profile lines up better on those axes."
                       data-course-fit-sort="fit"
                       aria-sort="descending"
                     >
@@ -1287,11 +1287,11 @@
           <dt>Course filter</dt>
           <dd>Choose which venue’s historical profile drives the green venue curve and the similarity list; it defaults to this week’s course from projections.</dd>
           <dt>Radar</dt>
-          <dd>Each spoke is a skill area (for example driving or putting). The shapes show <strong>PGA average</strong> (the dashed baseline), <strong>venue emphasis</strong> for the course you picked (when history is available), an optional <strong>comparison course</strong> from the similarity list (blue), and your <strong>selected golfer</strong>. Larger separation means a bigger gap between that golfer and the baseline on that spoke.</dd>
+          <dd>Each spoke is a skill area (for example driving or putting). The shapes show <strong>Field Avg</strong> (dashed baseline), the <strong>selected course</strong> profile (green), an optional <strong>comparison course</strong> from the similarity list (blue), and your <strong>selected golfer</strong> (gold). Larger separation means a bigger gap between that golfer and the baseline on that spoke.</dd>
           <dt>Course similarity</dt>
           <dd>A ranked list of other venues whose historical shape is closest to this one. <strong>Click</strong> a row to highlight it and draw that course’s profile on the radar; click again to clear.</dd>
           <dt>Who fits…?</dt>
-          <dd>Players sorted by how well their skill mix matches the venue emphasis. Positive numbers mean the model sees a better-than-average stylistic fit for this track. Use the search box to narrow the list.</dd>
+          <dd>The table title names the one or two skills this layout stresses most vs tour average. Each player’s <strong>Category</strong> lists only edges they have on <em>those</em> skills (up to two, or “—” if neither is positive). <strong>Fit</strong> is the combined edge on those same axes. Use the search box to narrow the list.</dd>
         </dl>
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-cf-shots-h">
@@ -1311,6 +1311,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=143"></script>
+  <script src="app.js?v=144"></script>
 </body>
 </html>
