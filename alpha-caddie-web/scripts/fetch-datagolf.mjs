@@ -2055,6 +2055,18 @@ async function main() {
   }
 
   mirrorModelDataToWeb(GOLF_MODEL_ROOT, ROOT);
+
+  const buildCourseTable = join(__dirname, "build-course-table-json.mjs");
+  if (existsSync(buildCourseTable)) {
+    const bt = spawnSync(process.execPath, [buildCourseTable], {
+      cwd: ROOT,
+      stdio: "inherit",
+      env: process.env,
+    });
+    if (bt.status !== 0) {
+      console.warn("build-course-table-json.mjs exited with code", bt.status, "— continuing.");
+    }
+  }
 }
 
 main().catch((e) => {

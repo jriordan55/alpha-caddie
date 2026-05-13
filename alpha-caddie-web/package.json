@@ -16,6 +16,7 @@
     "sync:data-to-web": "node scripts/sync-historical-csv.mjs",
     "build:shots-web": "node scripts/build-player-shots-web.mjs",
     "build:results": "node scripts/build-results-backtest.mjs",
+    "build:course-table": "node scripts/build-course-table-json.mjs",
     "build:history": "node scripts/build-player-history.mjs && node scripts/embed-player-history.mjs && node scripts/build-player-shots-web.mjs",
     "build:history:pga": "node scripts/run-build-history-pga.mjs",
     "embed:history": "node scripts/embed-player-history.mjs",

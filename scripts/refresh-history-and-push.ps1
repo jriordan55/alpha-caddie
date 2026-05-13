@@ -9,12 +9,15 @@ param(
 $ErrorActionPreference = "Stop"
 #
 # Course fit tab — generated artifacts this pipeline must publish:
+#   • course-table.json — built from data/course_table.csv (course mapping for Course Fit radar, similarity,
+#     fit table, and static live-prop difficulty prior). Built by npm run build:course-table after each fetch:dg
+#     and again in push:all after fetch:dg; mirrored to website/public/data/course-table.json.
 #   • projections.json — field + meta.course_used (fetch:dg); outrights win/top5/10/20/cut after fetch:book-odds merge into DATA.outrights
 #     (same Scratch API as datagolf.com/betting-tool-finish IMPLIED %). fetch:finish-tool re-merges that feed so the standalone script stays exercised;
 #     set GOLF_FINISH_TOOL_PLAYWRIGHT=1 (+ optional DATAGOLF_PLAYWRIGHT_STORAGE_STATE) to capture browser JSON instead of direct API for missing markets.
 #   • approach_skill_ytd.json — Predicted shot distance bins (fetch:dg preds/approach-skill); optional approach_skill_l12.json fallback if present.
-#   • embedded-player-round-history.js (+ CSV / player_round_history.json / player-history shards) — radar, venue SG,
-#     similarity, and Hole Hangout hole-level priors (build:history after fetch:dg).
+#   • embedded-player-round-history.js (+ CSV / player_round_history.json / player-history shards) — Hole Hangout
+#     hole-level priors (build:history after fetch:dg). Course Fit uses course-table.json for layout vs field SG.
 #
 # Hole Hangout — hole pars per hole for the active course/event:
 #   • fetch:dg calls preds/live-hole-stats and writes hole_pars / hole_pars_source (live_hole_stats when DG serves it).
@@ -65,6 +68,7 @@ function Run-Step([string] $label, [scriptblock] $command) {
 }
 
 Run-Step "Running fetch:dg ..." { npm run fetch:dg }
+Run-Step "Building course-table.json (course mapping) ..." { npm run build:course-table }
 Run-Step "Running fetch:in-play ..." { npm run fetch:in-play }
 Run-Step "Merging live_hole_stats into projections (Hole Hangout pars) ..." { npm run merge:live-hole-pars-into-projections }
 Remove-Item Env:\GOLF_SKIP_DK_OU -ErrorAction SilentlyContinue
@@ -93,6 +97,13 @@ if (Test-Path $projSrc) {
   Write-Host "Mirrored projections.json -> website/public/data/projections.json"
 }
 
+$courseTableSrc = Join-Path $webRoot "course-table.json"
+$courseTableDest = Join-Path $webDataDir "course-table.json"
+if (Test-Path $courseTableSrc) {
+  Copy-Item -Path $courseTableSrc -Destination $courseTableDest -Force
+  Write-Host "Mirrored course-table.json -> website/public/data/course-table.json"
+}
+
 $asSrc = Join-Path $webRoot "approach_skill_ytd.json"
 $asDest = Join-Path $webDataDir "approach_skill_ytd.json"
 if (Test-Path $asSrc) {
@@ -116,11 +127,13 @@ $artifacts = @(
   "alpha-caddie-web/live-in-play.json",
   "alpha-caddie-web/approach_skill_ytd.json",
   "alpha-caddie-web/approach_skill_l12.json",
-  "alpha-caddie-web/course_holes.json",
+  "alpha-caddie-web/course-table.json",
+  "alpha-caddie-web/data/course_table.csv",
   "alpha-caddie-web/hole_pars_from_shots.json",
   "alpha-caddie-web/player_shots_web.json",
   "alpha-caddie-web/player-history",
   "website/public/data/projections.json",
+  "website/public/data/course-table.json",
   "website/public/data/live-in-play.json",
   "website/public/data/approach_skill_ytd.json",
   "website/public/data/approach_skill_l12.json",

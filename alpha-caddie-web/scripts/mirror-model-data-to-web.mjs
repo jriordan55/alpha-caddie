@@ -99,6 +99,12 @@ export function mirrorModelDataToWeb(repoRoot, webRoot, options = {}) {
     if (ok) copied.push("hole_data.csv");
   }
 
+  const courseTable = path.join(repoRoot, "data", "course_table.csv");
+  if (fs.existsSync(courseTable)) {
+    const ok = copyFileRetry(courseTable, path.join(webData, "course_table.csv"), "course_table.csv");
+    if (ok) copied.push("course_table.csv");
+  }
+
   if (copied.length) {
     console.log("[mirror-model-data-to-web]", copied.join(", "), "→", webData);
   }

@@ -343,6 +343,9 @@ let approachSkillYtdCache = null;
 let approachSkillYtdLoadPromise = null;
 /** Built by build:shots-web from all_shots_*.csv — unrelated to Historical Trends (round history JSON). */
 let SHOTS = { meta: {}, byDgId: {}, _ok: false };
+/** Built from data/course_table.json (see scripts/build-course-table-json.mjs, npm run build:course-table). */
+let COURSE_TABLE_PAYLOAD = null;
+let courseTableJsonLoadPromise = null;
 let RESULTS = { loaded: false, loading: false, error: "", payload: null };
 /** Chronological bet tuples for Kelly ROI — from `data/results_kelly_bets.json` (see build-results-backtest.mjs). */
 let KELLY = { loaded: false, loading: false, error: "", payload: null };
@@ -802,6 +805,39 @@ function liveInPlayJsonUrl() {
   } catch (_) {
     return "live-in-play.json";
   }
+}
+
+function courseTableJsonUrl() {
+  const base = projectionsJsonUrl().trim();
+  if (!base) return "course-table.json";
+  try {
+    const u = new URL(base, typeof location !== "undefined" ? location.href : undefined);
+    u.pathname = u.pathname.replace(/[^/]+$/, "course-table.json");
+    u.search = "";
+    u.hash = "";
+    return u.toString();
+  } catch (_) {
+    return "course-table.json";
+  }
+}
+
+/** Loads course-table.json once; used by Course Fit, static course difficulty prior for live props, etc. */
+async function loadCourseTableJson() {
+  if (COURSE_TABLE_PAYLOAD) return COURSE_TABLE_PAYLOAD;
+  if (courseTableJsonLoadPromise) return courseTableJsonLoadPromise;
+  courseTableJsonLoadPromise = (async () => {
+    try {
+      const res = await fetch(cacheBustFetchUrl(courseTableJsonUrl()), { cache: "no-store" });
+      if (!res.ok) throw new Error(String(res.status));
+      COURSE_TABLE_PAYLOAD = await res.json();
+    } catch {
+      COURSE_TABLE_PAYLOAD = null;
+    } finally {
+      courseTableJsonLoadPromise = null;
+    }
+    return COURSE_TABLE_PAYLOAD;
+  })();
+  return courseTableJsonLoadPromise;
 }
 
 function datagolfLivePollingDisabledExplicitly() {
@@ -1857,6 +1893,7 @@ function applyPayload(raw) {
   };
   approachSkillYtdCache = null;
   approachSkillYtdLoadPromise = null;
+  COURSE_TABLE_PAYLOAD = null;
   const nextFieldFp = playerDgFingerprint(players);
   if (prevFieldFp !== nextFieldFp) lastDatagolfInPlayToken = "";
 }
@@ -2791,11 +2828,16 @@ function hasStartedLiveRoundData() {
 }
 
 function liveCourseDifficultyDForMu() {
-  if (!hasStartedLiveRoundData()) return 0;
-  const exR = num(DATA?.meta?.live_course_round_excess_strokes, NaN);
-  if (!Number.isFinite(exR)) return 0;
-  const k = exR < 0 ? LIVE_COURSE_EXCESS_TO_STROKE_K_EASY : LIVE_COURSE_EXCESS_TO_STROKE_K_HARD;
-  return clamp(exR * k, LIVE_COURSE_D_CLAMP_NEG, LIVE_COURSE_D_CLAMP_POS);
+  if (hasStartedLiveRoundData()) {
+    const exR = num(DATA?.meta?.live_course_round_excess_strokes, NaN);
+    if (Number.isFinite(exR)) {
+      const k = exR < 0 ? LIVE_COURSE_EXCESS_TO_STROKE_K_EASY : LIVE_COURSE_EXCESS_TO_STROKE_K_HARD;
+      return clamp(exR * k, LIVE_COURSE_D_CLAMP_NEG, LIVE_COURSE_D_CLAMP_POS);
+    }
+  }
+  const d0 = courseTableStaticDifficultyD();
+  if (!Number.isFinite(d0) || d0 === 0) return 0;
+  return clamp(d0 * 0.42, -0.85, 1.45);
 }
 
 /**
@@ -6293,7 +6335,7 @@ function courseFitVenueProfileVector(rows, ranges, histSg) {
   return v;
 }
 
-const COURSE_FIT_RADAR_LABELS = ["Driving Distance", "Driving Accuracy", "Approach", "Around green", "Putting"];
+const COURSE_FIT_RADAR_LABELS = ["OTT (course)", "APP (course)", "ARG (course)", "PUTT (course)", "vs par"];
 
 /** Per-course mean SG vector [ott,app,arg,putt] from embedded history (for similarity). */
 function courseFitMeanSgVectorByCourse() {
@@ -7119,6 +7161,137 @@ function buildCourseFitShotBinsTable(rows, approachPayload, venueName, searchSho
   ensureCourseFitBinTooltipHandlers();
 }
 
+function courseFitRadarKeysFromTable() {
+  const k = COURSE_TABLE_PAYLOAD?.radarKeys;
+  return Array.isArray(k) && k.length === 5 ? k : ["ott_sg", "app_sg", "arg_sg", "putt_sg", "adj_score_to_par"];
+}
+
+function resolveCourseTableRowForNormKey(activeVk) {
+  const p = COURSE_TABLE_PAYLOAD;
+  if (!p?.byNormKey || !activeVk) return null;
+  if (p.byNormKey[activeVk]) return p.byNormKey[activeVk];
+  let best = null;
+  let bestScore = 0;
+  for (const key of Object.keys(p.byNormKey)) {
+    let score = 0;
+    if (key === activeVk) score = 10000;
+    else if (activeVk.length >= 5 && (key.includes(activeVk) || activeVk.includes(key)))
+      score = 500 + Math.min(key.length, activeVk.length);
+    else {
+      const vt = activeVk.split(" ").filter((t) => t.length > 2);
+      const kt = key.split(" ").filter((t) => t.length > 2);
+      for (const t of vt) {
+        if (kt.some((u) => u === t || (t.length >= 4 && (u.startsWith(t) || t.startsWith(u))))) score += 22;
+      }
+    }
+    if (score > bestScore) {
+      bestScore = score;
+      best = p.byNormKey[key];
+    }
+  }
+  return bestScore >= 22 ? best : null;
+}
+
+function courseTableScalarNormTo01(v, col) {
+  const r = COURSE_TABLE_PAYLOAD?.ranges?.[col];
+  if (!Number.isFinite(v) || !r || !Number.isFinite(r.lo) || !Number.isFinite(r.hi)) return 0.5;
+  const span = r.hi - r.lo < 1e-9 ? 1 : r.hi - r.lo;
+  return clamp((v - r.lo) / span, 0, 1);
+}
+
+function courseFitTour5FromCourseTable() {
+  const keys = courseFitRadarKeysFromTable();
+  const means = COURSE_TABLE_PAYLOAD?.means || {};
+  return keys.map((col) => courseTableScalarNormTo01(num(means[col], NaN), col));
+}
+
+function courseFitVenue5FromCourseTableRow(row) {
+  const keys = courseFitRadarKeysFromTable();
+  if (!row) return courseFitTour5FromCourseTable();
+  return keys.map((col) => courseTableScalarNormTo01(num(row[col], NaN), col));
+}
+
+function courseFitMergedLoHiForCol(col, fieldSamples) {
+  const tr = COURSE_TABLE_PAYLOAD?.ranges?.[col];
+  const ff = fieldSamples.filter(Number.isFinite);
+  const flo = ff.length ? Math.min(...ff) : NaN;
+  const fhi = ff.length ? Math.max(...ff) : NaN;
+  if (!tr) {
+    if (!Number.isFinite(flo) || !Number.isFinite(fhi)) return { lo: 0, hi: 1 };
+    return { lo: flo, hi: fhi <= flo ? flo + 1e-3 : fhi };
+  }
+  if (!ff.length) return { lo: tr.lo, hi: tr.hi };
+  return { lo: Math.min(tr.lo, flo), hi: Math.max(tr.hi, fhi) };
+}
+
+/** Player SG / μ on same five axes as `courseFitRadarKeysFromTable()` (merged field + table ranges). */
+function courseFitPlayer5Merged(rows, prow) {
+  const keys = courseFitRadarKeysFromTable();
+  const pcols = ["sg_ott", "sg_app", "sg_arg", "sg_putt", "mu_sg"];
+  if (!prow) return keys.map(() => 0.5);
+  const out = [];
+  for (let i = 0; i < keys.length; i++) {
+    const samples = rows.map((r) => num(r[pcols[i]], NaN));
+    const { lo, hi } = courseFitMergedLoHiForCol(keys[i], samples);
+    const pv = num(prow[pcols[i]], NaN);
+    if (!Number.isFinite(pv)) {
+      out.push(0.5);
+      continue;
+    }
+    const span = hi - lo < 1e-9 ? 1 : hi - lo;
+    out.push(clamp((pv - lo) / span, 0, 1));
+  }
+  return out;
+}
+
+function courseFitSimilarCoursesFromCourseTable(activeVk, venueRow) {
+  const p = COURSE_TABLE_PAYLOAD;
+  const keys = courseFitRadarKeysFromTable();
+  if (!p?.rows?.length || !venueRow) return [];
+  const ref = keys.map((k) => num(venueRow[k], NaN));
+  if (!ref.every(Number.isFinite)) return [];
+  const out = [];
+  for (const row of p.rows) {
+    const nk = row._normKey || normCourseNameKey(String(row.course || ""));
+    if (!nk || nk === activeVk) continue;
+    const vec = keys.map((k) => num(row[k], NaN));
+    if (!vec.every(Number.isFinite)) continue;
+    const d = Math.hypot(...vec.map((x, j) => x - ref[j]));
+    out.push({ ck: nk, dist: d, sim: 1 / (1 + d) });
+  }
+  out.sort((a, b) => b.sim - a.sim);
+  return out.slice(0, 12);
+}
+
+function courseFitCategoryAndFitCourseTable(prow, tour5, venue5, player5) {
+  if (!prow || !player5?.length || !venue5?.length) return { cat: "—", fit: 0 };
+  let bestI = 0;
+  let bestC = -Infinity;
+  let fit = 0;
+  const n = Math.min(venue5.length, tour5.length, player5.length, COURSE_FIT_RADAR_LABELS.length);
+  for (let i = 0; i < n; i++) {
+    const stress = venue5[i] - tour5[i];
+    const skill = player5[i] - 0.5;
+    const c = stress * skill;
+    fit += c;
+    if (c > bestC) {
+      bestC = c;
+      bestI = i;
+    }
+  }
+  return { cat: COURSE_FIT_RADAR_LABELS[bestI] || "—", fit };
+}
+
+function courseTableStaticDifficultyD() {
+  const ev = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
+  if (!ev) return 0;
+  const row = resolveCourseTableRowForNormKey(normCourseNameKey(ev));
+  const v = num(row?.adj_score_to_par, NaN);
+  const m = num(COURSE_TABLE_PAYLOAD?.means?.adj_score_to_par, NaN);
+  if (!Number.isFinite(v) || !Number.isFinite(m)) return 0;
+  return clamp(v - m, -3, 5);
+}
+
 function buildCourseFitTab() {
   const capEl = document.getElementById("course-fit-radar-caption");
   const legEl = document.getElementById("course-fit-radar-legend");
@@ -7130,6 +7303,15 @@ function buildCourseFitTab() {
   const canvas = document.getElementById("course-fit-radar-canvas");
   if (!tbody || !canvas) return;
 
+  if (!COURSE_TABLE_PAYLOAD?.rows?.length) {
+    void loadCourseTableJson().then(() => {
+      if (activeAppTabId() === "course-fit") buildCourseFitTab();
+    });
+    if (capEl) capEl.textContent = "Loading course_table map…";
+    if (legEl) legEl.innerHTML = "";
+    return;
+  }
+
   const eventVenueName = String(DATA?.meta?.course_used || DATA?.course_used || "this venue").trim() || "this venue";
   const eventVk = normCourseNameKey(eventVenueName);
   if (courseFitVenueEventKeyTracked !== eventVk) {
@@ -7139,8 +7321,7 @@ function buildCourseFitTab() {
     courseFitGolferDefaultApplied = false;
   }
 
-  const mapCourses = courseFitMeanSgVectorByCourse();
-  let courseKeys = [...mapCourses.keys()].sort((a, b) => a.localeCompare(b));
+  let courseKeys = Object.keys(COURSE_TABLE_PAYLOAD.byNormKey || {}).sort((a, b) => a.localeCompare(b));
   if (eventVk && !courseKeys.includes(eventVk)) {
     courseKeys.push(eventVk);
     courseKeys.sort((a, b) => a.localeCompare(b));
@@ -7173,37 +7354,27 @@ function buildCourseFitTab() {
   const vk = activeVk;
 
   const rows = courseFitPlayerPool();
-  const ranges = courseFitMinMaxFromRows(rows);
-  const resolvedVenue = courseFitResolveHistSgForVenue(vk);
-  const histSg = resolvedVenue?.histSg ?? null;
-  const venueProfileKey = resolvedVenue?.resolvedKey ?? vk;
-  const tour5 = courseFitMeanNormalized(rows, ranges);
-  const venue5 = courseFitVenueProfileVector(rows, ranges, histSg);
-  let emphasis = venue5.map((v, i) => v - tour5[i]);
-  if (emphasis.every((e) => Math.abs(e) < 1e-9)) {
-    emphasis = courseFitFieldVarianceEmphasis(rows, ranges);
-  }
-
-  const similarRanked = courseFitSimilarCourses(venueProfileKey, histSg);
+  const ctRow = resolveCourseTableRowForNormKey(vk);
+  const tour5 = courseFitTour5FromCourseTable();
+  const venue5 = courseFitVenue5FromCourseTableRow(ctRow);
+  const similarRanked = courseFitSimilarCoursesFromCourseTable(vk, ctRow);
   const similarKeys = new Set(similarRanked.map((x) => x.ck));
   if (courseFitSimilarSelectedKey && !similarKeys.has(courseFitSimilarSelectedKey)) {
     courseFitSimilarSelectedKey = null;
   }
-  let similarHist =
-    courseFitSimilarSelectedKey ? courseFitVenueHistoricalSgMeans(courseFitSimilarSelectedKey) : null;
-  if (courseFitSimilarSelectedKey && !similarHist) {
-    courseFitSimilarSelectedKey = null;
-    similarHist = null;
-  }
-  const similar5 =
-    similarHist && courseFitSimilarSelectedKey ? courseFitVenueProfileVector(rows, ranges, similarHist) : null;
+  const similarRow =
+    courseFitSimilarSelectedKey && COURSE_TABLE_PAYLOAD?.byNormKey?.[courseFitSimilarSelectedKey]
+      ? COURSE_TABLE_PAYLOAD.byNormKey[courseFitSimilarSelectedKey]
+      : null;
+  const similar5 = similarRow ? courseFitVenue5FromCourseTableRow(similarRow) : null;
 
   const similarDisplayName = courseFitSimilarSelectedKey
     ? courseFitSimilarSelectedKey.replace(/\b\w/g, (c) => c.toUpperCase())
     : "";
 
   if (capEl) {
-    capEl.textContent = venueName;
+    const src = ctRow?.course ? ` · ${String(ctRow.course)} (course_table.csv)` : " · course_table.csv";
+    capEl.textContent = `${venueName}${src}`;
   }
 
   if (sel) {
@@ -7238,20 +7409,20 @@ function buildCourseFitTab() {
 
   const dgSel = Math.round(num(sel?.value, NaN));
   const prow = rows.find((r) => Math.round(num(r.dg_id, NaN)) === dgSel);
-  const player5 = prow ? courseFitNormalizeRaw(courseFitRawProfile(prow), ranges) : tour5.map(() => 0.5);
+  const player5 = courseFitPlayer5Merged(rows, prow);
 
   if (legEl) {
     const selectedGolferName =
       (prow && displayGolferName(String(prow.player_name || ""))) || "Selected golfer";
     let html =
-      '<span class="course-fit-leg-item"><span class="course-fit-leg-dash"></span> PGA Average</span>' +
+      '<span class="course-fit-leg-item"><span class="course-fit-leg-dash"></span> PGA layout (avg · course_table)</span>' +
       `<span class="course-fit-leg-item"><span class="course-fit-leg-green"></span> ${escapeHtml(venueName)}</span>`;
     if (similar5 && similarDisplayName) {
       html +=
         `<span class="course-fit-leg-item"><span class="course-fit-leg-blue" aria-hidden="true"></span> ${escapeHtml(similarDisplayName)}</span>`;
     }
     html +=
-      `<span class="course-fit-leg-item"><span class="course-fit-leg-gold"></span> ${escapeHtml(selectedGolferName)}</span>`;
+      `<span class="course-fit-leg-item"><span class="course-fit-leg-gold"></span> ${escapeHtml(selectedGolferName)} (skill vs same axes)</span>`;
     legEl.innerHTML = html;
   }
 
@@ -7296,21 +7467,20 @@ function buildCourseFitTab() {
     .toLowerCase();
   const ranked = [];
   for (const r of rows) {
-    const nv = courseFitNormalizeRaw(courseFitRawProfile(r), ranges);
-    const { cat, fit } = courseFitBestCategoryAndFit(nv, emphasis);
+    const playerN = courseFitPlayer5Merged(rows, r);
+    const { cat, fit } = courseFitCategoryAndFitCourseTable(r, tour5, venue5, playerN);
     ranked.push({ r, cat, fit });
   }
   ranked.sort((a, b) => b.fit - a.fit);
 
   tbody.innerHTML = "";
-  if (theadHeading) theadHeading.textContent = `Who fits ${venueName}?`;
+  if (theadHeading) theadHeading.textContent = `Who fits ${venueName}? (course_table stress × skill)`;
 
   const marketKeys = ["win", "top_5", "top_10", "top_20"];
   const displayRows = [];
   for (const row of ranked) {
     const nm = displayGolferName(String(row.r.player_name || ""));
     if (search && !nm.toLowerCase().includes(search)) continue;
-    if (!(row.fit > 0)) break;
     const dgId = Math.round(num(row.r.dg_id, NaN));
     const odds = {};
     for (const mk of marketKeys) odds[mk] = courseFitOutrightBestPriceOdds(mk, dgId);
@@ -7341,27 +7511,37 @@ function buildCourseFitTab() {
     return fitCmp || a.nm.localeCompare(b.nm);
   });
 
-  for (const row of displayRows) {
+  if (!displayRows.length) {
     const tr = document.createElement("tr");
-    const tdN = document.createElement("td");
-    tdN.textContent = row.nm;
-    const tdC = document.createElement("td");
-    tdC.className = "num";
-    tdC.textContent = row.cat;
-    const tdF = document.createElement("td");
-    tdF.className = `num ${row.fit >= 0 ? "ev-pos" : "ev-neg"}`;
-    tdF.textContent = `${row.fit >= 0 ? "+" : ""}${row.fit.toFixed(2)}`;
-    tr.appendChild(tdN);
-    tr.appendChild(tdC);
-    tr.appendChild(tdF);
-    for (const mk of marketKeys) {
-      const tdO = document.createElement("td");
-      tdO.className = "num course-fit-out-td";
-      const ob = row.odds?.[mk] || { html: "—" };
-      tdO.innerHTML = ob.html;
-      tr.appendChild(tdO);
-    }
+    const td = document.createElement("td");
+    td.colSpan = 7;
+    td.className = "text-muted";
+    td.textContent = "No players match this search.";
+    tr.appendChild(td);
     tbody.appendChild(tr);
+  } else {
+    for (const row of displayRows.slice(0, 120)) {
+      const tr = document.createElement("tr");
+      const tdN = document.createElement("td");
+      tdN.textContent = row.nm;
+      const tdC = document.createElement("td");
+      tdC.className = "num";
+      tdC.textContent = row.cat;
+      const tdF = document.createElement("td");
+      tdF.className = `num ${row.fit >= 0 ? "ev-pos" : "ev-neg"}`;
+      tdF.textContent = `${row.fit >= 0 ? "+" : ""}${row.fit.toFixed(2)}`;
+      tr.appendChild(tdN);
+      tr.appendChild(tdC);
+      tr.appendChild(tdF);
+      for (const mk of marketKeys) {
+        const tdO = document.createElement("td");
+        tdO.className = "num course-fit-out-td";
+        const ob = row.odds?.[mk] || { html: "—" };
+        tdO.innerHTML = ob.html;
+        tr.appendChild(tdO);
+      }
+      tbody.appendChild(tr);
+    }
   }
   updateCourseFitTableSortIndicators();
 
@@ -12298,6 +12478,7 @@ async function loadProjections(opts = {}) {
     if (!isFileProtocol()) {
       await fetchAndMergeDatagolfLiveInPlay({ force: true });
     }
+    await loadCourseTableJson();
     refreshAll();
     updateStatusBar();
     stopDatagolfLivePolling();
