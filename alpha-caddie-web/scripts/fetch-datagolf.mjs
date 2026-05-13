@@ -347,6 +347,13 @@ function resolveHoleParsForEvent({ fieldRaw, course_used, event_name, field_upda
 const RAW_ROUND_SD = Number(process.env.GOLF_RAW_ROUND_SD) || 2.75;
 const COURSE_PAR_18 = Number(process.env.GOLF_COURSE_PAR) || 72;
 const N_FAIRWAY_HOLES = Number(process.env.GOLF_N_FAIRWAY_HOLES) || 14;
+/** When fantasy omits fairways, mu_sg-only impute compresses the field (~0.7 FW spread); nudge by driving-accuracy z vs tour. */
+const FIELD_FW_MIN_N = 8;
+const FIELD_FW_ACC_STD_FLOOR = 0.55;
+const FIELD_FW_NUDGE_K = 0.46;
+const FIELD_FW_NUDGE_CAP = 1.45;
+/** When DG fantasy includes FW, still blend a fraction of accuracy z (fantasy often compresses vs OTT skill). */
+const FIELD_FW_FANTASY_Z_SCALE = 0.36;
 const TOUR = (process.env.GOLF_DATAGOLF_TOUR || process.env.GOLF_TOUR || "pga").trim() || "pga";
 
 const WEEKDAYS = ["Thursday", "Friday", "Saturday", "Sunday"];
@@ -565,6 +572,13 @@ function num(x, fallback = NaN) {
   return Number.isFinite(n) ? n : fallback;
 }
 
+/** Like browser `historyScalarOrNaN`: `Number(null) === 0` must not fake fantasy stats. */
+function scalarOrNaN(v) {
+  if (v == null || v === "") return NaN;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : NaN;
+}
+
 function imputeCountsFromNegMu(muSg) {
   let stp = -num(muSg, 0);
   stp = Math.max(-8, Math.min(8, stp));
@@ -588,6 +602,35 @@ function clampMuSg(m) {
   const x = num(m, 0);
   if (!Number.isFinite(x)) return 0;
   return Math.max(-4, Math.min(4, x));
+}
+
+function drivingAccPercentForFairways(acc) {
+  const a = num(acc, NaN);
+  if (!Number.isFinite(a)) return NaN;
+  if (a > -1 && a < 1) return a * 100;
+  return a;
+}
+
+/** Map dg_id → z-score of driving accuracy (%); null if field too small or flat. */
+function fairwaysDrivingZByDgId(baseRows) {
+  const vals = [];
+  for (const r of baseRows) {
+    const a = drivingAccPercentForFairways(r.driving_accuracy);
+    if (Number.isFinite(a)) vals.push(a);
+  }
+  if (vals.length < FIELD_FW_MIN_N) return null;
+  const mean = vals.reduce((s, x) => s + x, 0) / vals.length;
+  let vsum = 0;
+  for (const x of vals) vsum += (x - mean) ** 2;
+  const std = Math.sqrt(vsum / vals.length);
+  if (!Number.isFinite(std) || std < FIELD_FW_ACC_STD_FLOOR) return null;
+  const m = new Map();
+  for (const r of baseRows) {
+    const a = drivingAccPercentForFairways(r.driving_accuracy);
+    if (!Number.isFinite(a)) continue;
+    m.set(r.dg_id, (a - mean) / std);
+  }
+  return m;
 }
 
 /** Default matches R round_projections Gaussian-round mu_mult when ROUND_HIST_SG_MULT is unset. */
@@ -1212,6 +1255,7 @@ async function main() {
   }
 
   const base = [];
+  const imputedFairwaysDg = new Set();
   for (const fr of fieldRows) {
     const id = fr.dg_id;
     const skRow = skillByDg.get(id);
@@ -1238,8 +1282,8 @@ async function main() {
     let pars = num(fx.pars);
     let bogeys = num(fx.bogeys);
     let doubles = num(fx.doubles);
-    let gir = num(fx.gir);
-    let fairways = num(fx.fairways);
+    let gir = scalarOrNaN(fx.gir);
+    let fairways = scalarOrNaN(fx.fairways);
     if (!Number.isFinite(driving_distance)) driving_distance = num(fx.driving_distance);
 
     if (Number.isFinite(gir) && gir > 0 && gir <= 1) gir *= 18;
@@ -1254,8 +1298,11 @@ async function main() {
 
     const stpVec = -mu_sg;
     if (!Number.isFinite(gir)) gir = Math.max(6, Math.min(16, 11.5 - 0.25 * stpVec));
-    if (!Number.isFinite(fairways))
+    let fairwaysImputed = false;
+    if (!Number.isFinite(fairways)) {
       fairways = Math.max(4, Math.min(N_FAIRWAY_HOLES, 0.55 * N_FAIRWAY_HOLES - 0.15 * stpVec));
+      fairwaysImputed = true;
+    }
 
     const putts = Math.max(22, Math.min(35, 28.5 + 0.32 * stpVec - 0.1 * (gir - 11)));
 
@@ -1293,7 +1340,19 @@ async function main() {
       rowOut.avg_driving_distance = dyInt;
     }
     if (Number.isFinite(driving_accuracy)) rowOut.driving_accuracy = driving_accuracy;
+    if (fairwaysImputed) imputedFairwaysDg.add(id);
     base.push(rowOut);
+  }
+
+  const fwZByDg = fairwaysDrivingZByDgId(base);
+  if (fwZByDg) {
+    for (const row of base) {
+      const z = fwZByDg.get(row.dg_id);
+      if (!Number.isFinite(z)) continue;
+      const scale = imputedFairwaysDg.has(row.dg_id) ? 1 : FIELD_FW_FANTASY_Z_SCALE;
+      const d = Math.max(-FIELD_FW_NUDGE_CAP, Math.min(FIELD_FW_NUDGE_CAP, z * FIELD_FW_NUDGE_K * scale));
+      row.fairways = Math.max(4, Math.min(N_FAIRWAY_HOLES, row.fairways + d));
+    }
   }
 
   const score_to_par = (mu) => -num(mu, 0);
@@ -1334,6 +1393,13 @@ async function main() {
         };
       } else {
         st = derivedStatsFromMuSg(row.mu_sg * mult, N_FAIRWAY_HOLES);
+        if (fwZByDg) {
+          const z = fwZByDg.get(row.dg_id);
+          if (Number.isFinite(z)) {
+            const d = Math.max(-FIELD_FW_NUDGE_CAP, Math.min(FIELD_FW_NUDGE_CAP, z * FIELD_FW_NUDGE_K));
+            st.fairways = Math.max(4, Math.min(N_FAIRWAY_HOLES, st.fairways + d));
+          }
+        }
       }
       const stp = score_to_par(st.mu_sg);
       const ts = total_score(st.mu_sg);
