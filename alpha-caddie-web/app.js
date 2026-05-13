@@ -9985,14 +9985,14 @@ function roundsMatchingCurrentCourseOnly(dgId) {
 
 /** Field-wide current-course rounds (all players) for this season, for the Current course avg KPI. */
 function roundsMatchingCurrentCourseOnlyFieldSeason() {
-  const venueKey = normCourseNameKey(venueCourseName());
-  if (!venueKey) return [];
+  const venueRaw = String(DATA.meta?.course_used || DATA.course_used || "").trim();
+  if (!venueRaw) return [];
   const out = [];
   for (const rec of Object.values(HISTORY.byDgId || {})) {
     if (!rec || !Array.isArray(rec.rounds)) continue;
     for (const r of rec.rounds) {
       if (historyRoundIsPlaceholderAllMarketsZero(r)) continue;
-      if (normCourseNameKey(r.course_name) !== venueKey) continue;
+      if (!courseNameMatchesVenueLoose(r.course_name, venueRaw)) continue;
       if (historyRoundSeasonYear(r) !== PROPS_TREND_DISPLAY_SEASON_YEAR) continue;
       out.push(r);
     }
@@ -10002,14 +10002,14 @@ function roundsMatchingCurrentCourseOnlyFieldSeason() {
 
 /** Field-wide current-course rounds (all players), all seasons. */
 function roundsMatchingCurrentCourseOnlyFieldAllTime() {
-  const venueKey = normCourseNameKey(venueCourseName());
-  if (!venueKey) return [];
+  const venueRaw = String(DATA.meta?.course_used || DATA.course_used || "").trim();
+  if (!venueRaw) return [];
   const out = [];
   for (const rec of Object.values(HISTORY.byDgId || {})) {
     if (!rec || !Array.isArray(rec.rounds)) continue;
     for (const r of rec.rounds) {
       if (historyRoundIsPlaceholderAllMarketsZero(r)) continue;
-      if (normCourseNameKey(r.course_name) !== venueKey) continue;
+      if (!courseNameMatchesVenueLoose(r.course_name, venueRaw)) continue;
       out.push(r);
     }
   }
@@ -10183,12 +10183,9 @@ function paintPropsTrendKpiRow(statKey, hitSt, graphSeries, dgId) {
   addKpi("Graph avg", graphMean);
   addKpi(
     `${PROPS_TREND_DISPLAY_SEASON_YEAR} course avg`,
-    HISTORY._partial ? NaN : propsTrendMeanActual(statKey, roundsMatchingCurrentCourseOnlyFieldSeason())
+    propsTrendMeanActual(statKey, roundsMatchingCurrentCourseOnlyFieldSeason()),
   );
-  addKpi(
-    "All-time course avg",
-    HISTORY._partial ? NaN : propsTrendMeanActual(statKey, roundsMatchingCurrentCourseOnlyFieldAllTime())
-  );
+  addKpi("All-time course avg", propsTrendMeanActual(statKey, roundsMatchingCurrentCourseOnlyFieldAllTime()));
 
   if (hitSt && hitSt.valid > 0) {
     const lowerBetter = propsStatLowerIsBetter(statKey);
