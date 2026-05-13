@@ -1,8 +1,10 @@
 /**
  * Pull PGA field + skill + fantasy + pre-tournament probs from DataGolf (same idea as
  * round_projections.R RAW_PROJECTIONS / GOLF_RAW_PROJECTIONS=1) and write projections.json.
- * Fairways: decomp `driving_acc` blended with SG:OTT vs **median** field OTT (mean jams elites on the FW-rate cap)
- * plus optional driving-distance vs field mean; fantasy down-weighted. GIR: fantasy + SG:APP vs **median** field APP.
+ * Fairways: decomp `driving_acc` blended with SG:OTT vs **median** field OTT; fairway count scales to this course’s
+ * par-4/5 layout when hole pars are known. Scoring uses **course_par_18** from resolved hole pars (not a fixed 72).
+ * Optional **preds/pre-tournament** per-round stroke column (when present in the feed) nudges μ_sg toward that baseline.
+ * GIR: fantasy + SG:APP vs **median** field APP.
  * R2–R4 rows re-derive counts from scaled μ_SG (default multipliers 1, 0.99, 0.97, 0.95 — override GOLF_NODE_ROUND_MU_MULT).
  *
  * Usage (from alpha-caddie-web/):
@@ -603,6 +605,38 @@ function fieldSkillMedian(samples) {
   if (a.length < 8) return NaN;
   const mid = Math.floor(a.length / 2);
   return a.length % 2 ? a[mid] : (a[mid - 1] + a[mid]) / 2;
+}
+
+/** Regulation fairways scale (~14); derive from par-4/5 count when hole pars are known for this course. */
+function fairwayHoleCountFromPars(pars, fallback = N_FAIRWAY_HOLES) {
+  if (!Array.isArray(pars) || pars.length !== 18) return fallback;
+  let n = 0;
+  for (const p of pars) {
+    const v = Math.round(num(p, NaN));
+    if (v === 4 || v === 5) n++;
+  }
+  if (n < 10 || n > 18) return fallback;
+  return Math.min(14, Math.max(11, n));
+}
+
+/** preds/pre-tournament baseline_history_fit: expected strokes this round for this course (column names vary). */
+function pretExpectedStrokesThisRound(row) {
+  if (!row || typeof row !== "object") return NaN;
+  const c = firstNumCol(row, [
+    "predicted_round_score",
+    "predicted_score",
+    "round_score",
+    "avg_score",
+    "average_score",
+    "adjusted_round_score",
+    "adj_round_score",
+    "model_prediction",
+    "pred_score",
+  ]);
+  if (!c) return NaN;
+  const v = num(row[c], NaN);
+  if (!Number.isFinite(v) || v < 54 || v > 95) return NaN;
+  return v;
 }
 
 /** μ-only fairways fallback (same shape as legacy impute). */
@@ -1282,6 +1316,59 @@ async function main() {
     });
   }
 
+  let liveHoleStatsForPars = null;
+  if (String(process.env.GOLF_SKIP_LIVE_HOLE_STATS_HOLE_PARS || "").trim() !== "1") {
+    try {
+      console.log("Fetching preds/live-hole-stats (hole pars + course par for projections)…");
+      liveHoleStatsForPars = await fetchDg(
+        "/preds/live-hole-stats",
+        { tour: tourForFeeds, file_format: "json" },
+        key,
+      );
+    } catch (e) {
+      console.warn("preds/live-hole-stats skipped:", e.message || e);
+    }
+  }
+
+  const holeRes = resolveHoleParsForEvent({
+    fieldRaw,
+    course_used,
+    event_name,
+    field_updates_course_used,
+    liveHoleStats: liveHoleStatsForPars,
+  });
+  const hole_pars = holeRes.pars.map((x) => Math.round(num(x, 4)));
+  const course_par_18 =
+    hole_pars.length === 18 ? hole_pars.reduce((sum, p) => sum + Math.round(num(p, 4)), 0) : COURSE_PAR_18;
+  const fairwayHolesThisCourse = fairwayHoleCountFromPars(hole_pars, N_FAIRWAY_HOLES);
+  const hole_pars_source = holeRes.source;
+  if (hole_pars_source === "generic") {
+    console.warn(
+      "Hole pars: no course/event match in course_holes*.json or CSV — using generic layout; add course_holes.local.json for this venue.",
+    );
+  } else {
+    console.log(
+      `Hole pars: ${hole_pars_source}${holeRes.detail ? ` (${holeRes.detail})` : ""} — course_par_18=${course_par_18}, fairway hole scale=${fairwayHolesThisCourse}`,
+    );
+  }
+
+  const pretStrokesByDg = new Map();
+  for (const row of pretList) {
+    const pid = Math.round(num(row.dg_id ?? row.id ?? row.dgId, NaN));
+    if (!Number.isFinite(pid)) continue;
+    const ex = pretExpectedStrokesThisRound(row);
+    if (Number.isFinite(ex)) pretStrokesByDg.set(pid, ex);
+  }
+  if (pretStrokesByDg.size >= Math.min(40, Math.max(12, Math.floor(fieldRows.length * 0.25)))) {
+    console.log(
+      `[fetch-dg] preds/pre-tournament expected round strokes for ${pretStrokesByDg.size}/${fieldRows.length} players (course-aware μ_sg nudge)`,
+    );
+  } else if (pretList.length) {
+    console.log(
+      `[fetch-dg] preds/pre-tournament: ${pretList.length} rows — placement-only baseline (no per-round stroke column); μ_sg uses skill + fantasy.`,
+    );
+  }
+
   const ottSamples = [];
   for (const fr of fieldRows) {
     const sid = Math.round(num(fr.dg_id, NaN));
@@ -1321,6 +1408,14 @@ async function main() {
     const skRow = skillByDg.get(id);
     let mu_sg = skRow && Number.isFinite(skRow.sg_total) ? skRow.sg_total : 0;
     if (!Number.isFinite(mu_sg)) mu_sg = 0;
+
+    if (pretStrokesByDg.size) {
+      const dgS = pretStrokesByDg.get(id);
+      if (Number.isFinite(dgS) && Number.isFinite(course_par_18)) {
+        const modelS = course_par_18 - mu_sg;
+        if (Number.isFinite(modelS)) mu_sg = clampMuSg(mu_sg - 0.22 * (dgS - modelS));
+      }
+    }
 
     const liveDv = liveDrivingByDg.get(id);
     let driving_distance =
@@ -1362,28 +1457,28 @@ async function main() {
     const decompFwRate = num(skRow?.driving_acc, NaN);
     let fairways = NaN;
     if (Number.isFinite(decompFwRate) && decompFwRate > 0.05 && decompFwRate < 0.95) {
-      fairways = Math.max(4, Math.min(N_FAIRWAY_HOLES, decompFwRate * N_FAIRWAY_HOLES));
+      fairways = Math.max(4, Math.min(fairwayHolesThisCourse, decompFwRate * fairwayHolesThisCourse));
     }
 
     let fxFw = scalarOrNaN(fx.fairways);
-    if (Number.isFinite(fxFw) && fxFw > 0 && fxFw <= 1) fxFw *= N_FAIRWAY_HOLES;
+    if (Number.isFinite(fxFw) && fxFw > 0 && fxFw <= 1) fxFw *= fairwayHolesThisCourse;
 
     const ottFw = fairwaysExpectedFromSkill(
       mu_sg,
       skRow?.sg_ott,
-      N_FAIRWAY_HOLES,
+      fairwayHolesThisCourse,
       fieldMeanOtt,
       driving_distance,
       fieldMeanDrive,
     );
     if (!Number.isFinite(fairways)) {
       if (Number.isFinite(fxFw)) {
-        fairways = Math.max(4, Math.min(N_FAIRWAY_HOLES, 0.15 * fxFw + 0.85 * ottFw));
+        fairways = Math.max(4, Math.min(fairwayHolesThisCourse, 0.15 * fxFw + 0.85 * ottFw));
       } else {
         fairways = ottFw;
       }
     } else {
-      fairways = Math.max(4, Math.min(N_FAIRWAY_HOLES, 0.35 * fairways + 0.65 * ottFw));
+      fairways = Math.max(4, Math.min(fairwayHolesThisCourse, 0.35 * fairways + 0.65 * ottFw));
     }
 
     const putts = Math.max(22, Math.min(35, 28.5 + 0.32 * stpVec - 0.1 * (gir - 11)));
@@ -1426,7 +1521,7 @@ async function main() {
   }
 
   const score_to_par = (mu) => -num(mu, 0);
-  const total_score = (mu) => COURSE_PAR_18 + score_to_par(mu);
+  const total_score = (mu) => course_par_18 + score_to_par(mu);
 
   base.sort((a, b) => total_score(a.mu_sg) - total_score(b.mu_sg));
   const posMap = new Map(base.map((r, i) => [r.dg_id, i + 1]));
@@ -1462,7 +1557,7 @@ async function main() {
           putts: row.putts,
         };
       } else {
-        st = derivedStatsFromMuSg(row.mu_sg * mult, N_FAIRWAY_HOLES, {
+        st = derivedStatsFromMuSg(row.mu_sg * mult, fairwayHolesThisCourse, {
           sg_ott: row.sg_ott,
           fieldMeanOtt,
           sg_app: row.sg_app,
@@ -1515,7 +1610,7 @@ async function main() {
       else {
         const fw = st.fairways;
         if (Number.isFinite(fw) && fw > 1.02) {
-          pl.driving_accuracy = Math.round(((fw / N_FAIRWAY_HOLES) * 100) * 10) / 10;
+          pl.driving_accuracy = Math.round(((fw / fairwayHolesThisCourse) * 100) * 10) / 10;
         }
       }
       players.push(pl);
@@ -1549,40 +1644,6 @@ async function main() {
     }
   }
 
-  let liveHoleStatsForPars = null;
-  if (String(process.env.GOLF_SKIP_LIVE_HOLE_STATS_HOLE_PARS || "").trim() !== "1") {
-    try {
-      console.log("Fetching preds/live-hole-stats (per-hole par layout for Hole Hangout)…");
-      liveHoleStatsForPars = await fetchDg(
-        "/preds/live-hole-stats",
-        { tour: tourForFeeds, file_format: "json" },
-        key,
-      );
-    } catch (e) {
-      console.warn("preds/live-hole-stats skipped:", e.message || e);
-    }
-  }
-
-  const holeRes = resolveHoleParsForEvent({
-    fieldRaw,
-    course_used,
-    event_name,
-    field_updates_course_used,
-    liveHoleStats: liveHoleStatsForPars,
-  });
-  const hole_pars = holeRes.pars.map((x) => Math.round(num(x, 4)));
-  const course_par_18 = hole_pars.length === 18 ? hole_pars.reduce((sum, p) => sum + Math.round(num(p, 4)), 0) : COURSE_PAR_18;
-  const hole_pars_source = holeRes.source;
-  if (hole_pars_source === "generic") {
-    console.warn(
-      "Hole Hangout: no course/event match in course_holes*.json or CSV — using generic 18-hole par layout. Add pars to course_holes.json or course_holes.local.json."
-    );
-  } else {
-    console.log(
-      `Hole Hangout hole pars: ${hole_pars_source}${holeRes.detail ? ` (${holeRes.detail})` : ""}`
-    );
-  }
-
   const payload = {
     event_name,
     course_used,
@@ -1612,6 +1673,10 @@ async function main() {
     course_par_18,
     hole_pars,
     hole_pars_source,
+    projection_course_basis: {
+      fairway_holes_modeled: fairwayHolesThisCourse,
+      pret_expected_round_strokes_players: pretStrokesByDg.size,
+    },
     players,
     props: [],
     outrights,
