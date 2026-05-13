@@ -5669,7 +5669,32 @@ function drivingAccuracySkillRating(raw) {
   return raw > -1 && raw < 1 ? raw * 100 : raw;
 }
 
+/** Fill missing driving_* fields from another projection row with the same dg_id. */
+function mergedPlayerRowForDrivingFields(row) {
+  if (!row || typeof row !== "object") return row;
+  const id = Math.round(num(row.dg_id, NaN));
+  if (!Number.isFinite(id)) return row;
+  const keys = [
+    "driving_dist",
+    "avg_driving_distance",
+    "driving_distance",
+    "average_driving_distance",
+    "avg_drive_distance",
+    "driving_acc",
+    "driving_accuracy",
+  ];
+  const out = { ...row };
+  for (const p of DATA.players || []) {
+    if (Math.round(num(p.dg_id, NaN)) !== id) continue;
+    for (const k of keys) {
+      if (!Number.isFinite(num(out[k], NaN)) && Number.isFinite(num(p[k], NaN))) out[k] = p[k];
+    }
+  }
+  return out;
+}
+
 function matchupAnalysisMetricValue(row, key) {
+  row = mergedPlayerRowForDrivingFields(row);
   if (!row) return NaN;
   if (key === "sg_total") {
     const base = num(row.sg_total, NaN);
@@ -6030,12 +6055,12 @@ function buildMatchupAnalysisTool() {
     const metrics = [
       ["SG: Total", "sg_total"],
       ["SG: Tee-to-Green", "sg_t2g"],
-      ["SG: Off the Tee", "sg_ott"],
-      ["SG: Approach", "sg_app"],
-      ["SG: Around Green", "sg_arg"],
-      ["SG: Putting", "sg_putt"],
-      ["Driving distance rating", "distance"],
-      ["Accuracy rating", "accuracy"],
+      ["Driving Accuracy Rating", "accuracy"],
+      ["Off the Tee", "sg_ott"],
+      ["Approach", "sg_app"],
+      ["Around the Green", "sg_arg"],
+      ["Putting", "sg_putt"],
+      ["Driving Distance Rating", "distance"],
     ];
     const barPctMatchup = (kind, v, samples) => {
       const finite = (samples || []).filter((x) => Number.isFinite(x));
@@ -6335,7 +6360,24 @@ function courseFitVenueProfileVector(rows, ranges, histSg) {
   return v;
 }
 
-const COURSE_FIT_RADAR_LABELS = ["OTT (course)", "APP (course)", "ARG (course)", "PUTT (course)", "vs par"];
+/** Radar spoke text (Course Fit canvas). */
+const COURSE_FIT_RADAR_SPOKE_LABELS = [
+  "Driving Accuracy",
+  "Off the Tee",
+  "Approach",
+  "Around the Green",
+  "Putting",
+  "Driving Distance",
+];
+/** Who-fits category column uses Rating on driving axes. */
+const COURSE_FIT_RADAR_CATEGORY_LABELS = [
+  "Driving Accuracy Rating",
+  "Off the Tee",
+  "Approach",
+  "Around the Green",
+  "Putting",
+  "Driving Distance Rating",
+];
 
 /** Per-course mean SG vector [ott,app,arg,putt] from embedded history (for similarity). */
 function courseFitMeanSgVectorByCourse() {
@@ -6375,7 +6417,8 @@ function courseFitPlayerPool() {
 function courseFitBestCategoryAndFit(playerN, emphasis) {
   let bestI = 0;
   let best = -Infinity;
-  for (let i = 0; i < 5; i++) {
+  const n = Math.min(playerN.length, emphasis.length, COURSE_FIT_RADAR_CATEGORY_LABELS.length);
+  for (let i = 0; i < n; i++) {
     const c = Math.max(0, emphasis[i]) * (playerN[i] - 0.5);
     if (c > best) {
       best = c;
@@ -6384,7 +6427,7 @@ function courseFitBestCategoryAndFit(playerN, emphasis) {
   }
   const strokeLike =
     emphasis.reduce((s, e, i) => s + Math.max(0, e) * (playerN[i] - 0.5), 0) * 2.4;
-  return { cat: COURSE_FIT_RADAR_LABELS[bestI] || "—", fit: strokeLike };
+  return { cat: COURSE_FIT_RADAR_CATEGORY_LABELS[bestI] || "—", fit: strokeLike };
 }
 
 /** Legacy: best +EV book for one outright market (make_cut / mc or fallback). */
@@ -6552,7 +6595,16 @@ function drawCourseFitRadar(canvas, tour5, venue5, player5, similar5) {
   const cx = W / 2;
   const cy = H / 2 + 8;
   const R = Math.min(W, H) * 0.36;
-  const n = 5;
+  const n = 6;
+  const padRadar = (arr) => {
+    const a = Array.isArray(arr) ? arr.map((x) => num(x, 0.5)) : [];
+    while (a.length < n) a.push(0.5);
+    return a.slice(0, n);
+  };
+  const tV = padRadar(tour5);
+  const vV = padRadar(venue5);
+  const pV = padRadar(player5);
+  const sV = similar5 && similar5.length >= n ? padRadar(similar5) : null;
   const tau = (Math.PI * 2) / n;
   const angleAt = (i) => -Math.PI / 2 + i * tau;
 
@@ -6602,25 +6654,25 @@ function drawCourseFitRadar(canvas, tour5, venue5, player5, similar5) {
     ctx.setLineDash([]);
   };
 
-  poly(tour5, "rgba(140,148,168,0.95)", null, [6, 4]);
-  poly(venue5, "rgba(0,196,107,0.95)", "rgba(0,196,107,0.14)", []);
-  if (similar5 && similar5.length === 5) {
-    poly(similar5, "rgba(156, 162, 180, 0.95)", "rgba(156, 162, 180, 0.12)", []);
+  poly(tV, "rgba(140,148,168,0.95)", null, [6, 4]);
+  poly(vV, "rgba(0,196,107,0.95)", "rgba(0,196,107,0.14)", []);
+  if (sV) {
+    poly(sV, "rgba(156, 162, 180, 0.95)", "rgba(156, 162, 180, 0.12)", []);
   }
-  poly(player5, "rgba(245,166,35,0.98)", "rgba(245,166,35,0.12)", []);
+  poly(pV, "rgba(245,166,35,0.98)", "rgba(245,166,35,0.12)", []);
 
   ctx.fillStyle = "rgba(180,186,198,0.95)";
-  ctx.font = "600 11px DM Sans, system-ui, sans-serif";
+  ctx.font = "600 10px DM Sans, system-ui, sans-serif";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   for (let i = 0; i < n; i++) {
     const a = angleAt(i);
-    const lab = COURSE_FIT_RADAR_LABELS[i] || "";
-    const xr = cx + (R + 28) * Math.cos(a);
-    const yr = cy + (R + 28) * Math.sin(a);
-    const words = lab.split(" ");
+    const lab = COURSE_FIT_RADAR_SPOKE_LABELS[i] || "";
+    const xr = cx + (R + 30) * Math.cos(a);
+    const yr = cy + (R + 30) * Math.sin(a);
+    const words = lab.split(/\s+/).filter(Boolean);
     words.forEach((w, j) => {
-      ctx.fillText(w, xr, yr + j * 12 - ((words.length - 1) * 6));
+      ctx.fillText(w, xr, yr + j * 11 - ((words.length - 1) * 5.5));
     });
   }
 }
@@ -7161,9 +7213,39 @@ function buildCourseFitShotBinsTable(rows, approachPayload, venueName, searchSho
   ensureCourseFitBinTooltipHandlers();
 }
 
+const COURSE_FIT_TABLE_RADAR_KEYS_DEFAULT = Object.freeze([
+  "adj_driving_accuracy",
+  "ott_sg",
+  "app_sg",
+  "arg_sg",
+  "putt_sg",
+  "adj_driving_distance",
+]);
+
+function playerDrivingAccuracyFrac(mrow) {
+  const da = num(mrow?.driving_accuracy ?? mrow?.driving_acc, NaN);
+  if (!Number.isFinite(da)) return NaN;
+  return da > 1 ? da / 100 : da;
+}
+
+function playerDrivingDistanceYds(mrow) {
+  return num(mrow?.driving_dist ?? mrow?.avg_driving_distance ?? mrow?.driving_distance, NaN);
+}
+
+function courseFitPlayerRadarAxisRaw(mrow, axisIndex) {
+  if (axisIndex === 0) return playerDrivingAccuracyFrac(mrow);
+  if (axisIndex === 1) return num(mrow?.sg_ott, NaN);
+  if (axisIndex === 2) return num(mrow?.sg_app, NaN);
+  if (axisIndex === 3) return num(mrow?.sg_arg, NaN);
+  if (axisIndex === 4) return num(mrow?.sg_putt, NaN);
+  if (axisIndex === 5) return playerDrivingDistanceYds(mrow);
+  return NaN;
+}
+
 function courseFitRadarKeysFromTable() {
   const k = COURSE_TABLE_PAYLOAD?.radarKeys;
-  return Array.isArray(k) && k.length === 5 ? k : ["ott_sg", "app_sg", "arg_sg", "putt_sg", "adj_score_to_par"];
+  if (Array.isArray(k) && k.length === 6) return k;
+  return [...COURSE_FIT_TABLE_RADAR_KEYS_DEFAULT];
 }
 
 function resolveCourseTableRowForNormKey(activeVk) {
@@ -7224,16 +7306,19 @@ function courseFitMergedLoHiForCol(col, fieldSamples) {
   return { lo: Math.min(tr.lo, flo), hi: Math.max(tr.hi, fhi) };
 }
 
-/** Player SG / μ on same five axes as `courseFitRadarKeysFromTable()` (merged field + table ranges). */
-function courseFitPlayer5Merged(rows, prow) {
+/** Player profile on the same axes as `courseFitRadarKeysFromTable()` (merged field + course_table ranges). */
+function courseFitPlayerRadarVectorMerged(rows, prow) {
   const keys = courseFitRadarKeysFromTable();
-  const pcols = ["sg_ott", "sg_app", "sg_arg", "sg_putt", "mu_sg"];
   if (!prow) return keys.map(() => 0.5);
+  const prm = mergedPlayerRowForDrivingFields(prow);
   const out = [];
   for (let i = 0; i < keys.length; i++) {
-    const samples = rows.map((r) => num(r[pcols[i]], NaN));
-    const { lo, hi } = courseFitMergedLoHiForCol(keys[i], samples);
-    const pv = num(prow[pcols[i]], NaN);
+    const col = keys[i];
+    const samples = rows
+      .map((r) => courseFitPlayerRadarAxisRaw(mergedPlayerRowForDrivingFields(r), i))
+      .filter(Number.isFinite);
+    const { lo, hi } = courseFitMergedLoHiForCol(col, samples);
+    const pv = courseFitPlayerRadarAxisRaw(prm, i);
     if (!Number.isFinite(pv)) {
       out.push(0.5);
       continue;
@@ -7268,7 +7353,7 @@ function courseFitCategoryAndFitCourseTable(prow, tour5, venue5, player5) {
   let bestI = 0;
   let bestC = -Infinity;
   let fit = 0;
-  const n = Math.min(venue5.length, tour5.length, player5.length, COURSE_FIT_RADAR_LABELS.length);
+  const n = Math.min(venue5.length, tour5.length, player5.length, COURSE_FIT_RADAR_CATEGORY_LABELS.length);
   for (let i = 0; i < n; i++) {
     const stress = venue5[i] - tour5[i];
     const skill = player5[i] - 0.5;
@@ -7279,7 +7364,7 @@ function courseFitCategoryAndFitCourseTable(prow, tour5, venue5, player5) {
       bestI = i;
     }
   }
-  return { cat: COURSE_FIT_RADAR_LABELS[bestI] || "—", fit };
+  return { cat: COURSE_FIT_RADAR_CATEGORY_LABELS[bestI] || "—", fit };
 }
 
 function courseTableStaticDifficultyD() {
@@ -7409,7 +7494,7 @@ function buildCourseFitTab() {
 
   const dgSel = Math.round(num(sel?.value, NaN));
   const prow = rows.find((r) => Math.round(num(r.dg_id, NaN)) === dgSel);
-  const player5 = courseFitPlayer5Merged(rows, prow);
+  const player5 = courseFitPlayerRadarVectorMerged(rows, prow);
 
   if (legEl) {
     const selectedGolferName =
@@ -7467,7 +7552,7 @@ function buildCourseFitTab() {
     .toLowerCase();
   const ranked = [];
   for (const r of rows) {
-    const playerN = courseFitPlayer5Merged(rows, r);
+    const playerN = courseFitPlayerRadarVectorMerged(rows, r);
     const { cat, fit } = courseFitCategoryAndFitCourseTable(r, tour5, venue5, playerN);
     ranked.push({ r, cat, fit });
   }
@@ -7997,6 +8082,32 @@ function outrightProbWithLiveScoreNudge(rowPlayer, marketKey, baseP) {
   return clamp(outrightInvlogit(t), 1e-6, 1 - 1e-6);
 }
 
+/** +EV / model American: tilt placement probs using the same μ_SG bonus as O/U (pricing mode + skill). */
+function outrightProbWithPricingModeNudge(rowPlayer, marketKey, baseP) {
+  if (!Number.isFinite(baseP) || baseP <= 0 || baseP >= 1) return baseP;
+  const id = Math.round(num(rowPlayer?.dg_id, NaN));
+  if (!Number.isFinite(id)) return baseP;
+  const b = pricingModeMuSgBonus(id);
+  if (!Number.isFinite(b) || Math.abs(b) < 1e-10) return baseP;
+  const mk = String(marketKey || "");
+  const k =
+    mk === "win"
+      ? 0.52
+      : mk === "top_5"
+        ? 0.36
+        : mk === "top_10"
+          ? 0.26
+          : mk === "top_20"
+            ? 0.18
+            : mk === "make_cut" || mk === "mc"
+              ? 0.22
+              : mk === "frl"
+                ? 0.42
+                : 0.3;
+  const t = outrightLogit(baseP) + k * b;
+  return clamp(outrightInvlogit(t), 1e-6, 1 - 1e-6);
+}
+
 function modelProbOutrightMarket(rowPlayer, marketKey) {
   const col =
     marketKey === "win"
@@ -8026,12 +8137,12 @@ function modelProbOutrightMarket(rowPlayer, marketKey) {
     }
   }
   if (marketKey === "mc") {
-    const pCutN = outrightProbWithLiveScoreNudge(rowPlayer, "make_cut", baseP);
-    return clamp(1 - pCutN, 1e-6, 1 - 1e-6);
+    let pCut = outrightProbWithLiveScoreNudge(rowPlayer, "make_cut", baseP);
+    pCut = outrightProbWithPricingModeNudge(rowPlayer, "make_cut", pCut);
+    return clamp(1 - pCut, 1e-6, 1 - 1e-6);
   }
   baseP = outrightProbWithLiveScoreNudge(rowPlayer, marketKey, baseP);
-  // Placement probs from DataGolf are already event-conditional; additive logit shifts
-  // (weather / pricing-mode) blow up rare events — use raw p for model price & +EV.
+  baseP = outrightProbWithPricingModeNudge(rowPlayer, marketKey, baseP);
   return clamp(baseP, 1e-6, 1 - 1e-6);
 }
 
@@ -8043,12 +8154,23 @@ function modelProbOutrightFromRowOrProjections(outrightRow, marketKey, opts) {
   const evLb = opts && opts.evLiveLeaderboard === true && outrightEvLiveLeaderboardModelEnabled();
   if (evLb) {
     const pLb = modelProbOutrightLiveLeaderboardEvLookup(outrightRow, marketKey);
-    if (Number.isFinite(pLb) && pLb > 0) return pLb;
+    if (Number.isFinite(pLb) && pLb > 0) {
+      let prowLb = Number.isFinite(id) ? projectionRowWithPlacementMerged(id) : null;
+      if (!prowLb && outrightRow?.player_name) {
+        prowLb = projectionPlayerRowForModelByIdOrName(NaN, outrightRow.player_name, getModelRoundForEv());
+      }
+      return outrightProbWithPricingModeNudge(prowLb || {}, marketKey, pLb);
+    }
   }
   const id = Math.round(num(outrightRow?.dg_id, NaN));
   const scrapedModelPct = num(outrightRow?.dg_model, NaN);
   if (Number.isFinite(scrapedModelPct) && scrapedModelPct > 0 && scrapedModelPct < 100) {
-    return clamp(scrapedModelPct / 100, 1e-6, 1 - 1e-6);
+    let prowSc = Number.isFinite(id) ? projectionRowWithPlacementMerged(id) : null;
+    if (!prowSc && outrightRow?.player_name) {
+      prowSc = projectionPlayerRowForModelByIdOrName(NaN, outrightRow.player_name, getModelRoundForEv());
+    }
+    const p0 = clamp(scrapedModelPct / 100, 1e-6, 1 - 1e-6);
+    return outrightProbWithPricingModeNudge(prowSc || {}, marketKey, p0);
   }
   let prow = Number.isFinite(id) ? projectionRowWithPlacementMerged(id) : null;
   if (!prow && outrightRow?.player_name) {
@@ -10416,7 +10538,7 @@ function paintPropsTrendKpiRow(statKey, hitSt, graphSeries, dgId) {
     propsTrendMeanActual(statKey, atVenueSeason),
   );
   const venueFallbackLabel =
-    atVenueSeason.length ? "All-time course avg" : atVenueAll.length ? "Venue field avg (prior visits)" : "All-time course avg";
+    atVenueSeason.length ? "All-time course avg" : atVenueAll.length ? "All Time Course Avg" : "All-time course avg";
   addKpi(venueFallbackLabel, propsTrendMeanActual(statKey, atVenueAll));
 
   if (hitSt && hitSt.valid > 0) {

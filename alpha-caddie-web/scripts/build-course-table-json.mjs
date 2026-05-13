@@ -70,8 +70,15 @@ const NUMERIC_HEADERS = new Set([
   "adj_ob",
 ]);
 
-/** Same 5 axes as Course Fit radar (course stress vs player SG pillars). */
-const COURSE_FIT_TABLE_RADAR_KEYS = ["ott_sg", "app_sg", "arg_sg", "putt_sg", "adj_score_to_par"];
+/** Same six axes as Course Fit radar (course stress vs player profile). */
+const COURSE_FIT_TABLE_RADAR_KEYS = [
+  "adj_driving_accuracy",
+  "ott_sg",
+  "app_sg",
+  "arg_sg",
+  "putt_sg",
+  "adj_driving_distance",
+];
 
 function main() {
   const csvPath = path.join(REPO_ROOT, "data", "course_table.csv");
