@@ -6163,10 +6163,19 @@ function courseFitMeanNormalized(rows, ranges) {
 
 let courseFitCourseStatsHistoryRef = null;
 let courseFitCourseStatsCache = null;
+/** Bump when `normCourseNameKey` changes so per-course SG buckets re-merge. */
+const COURSE_FIT_STATS_NORM_VERSION = 1;
+let courseFitCourseStatsNormVersionRef = 0;
 
 function courseFitCourseStatsByCourse() {
   if (!HISTORY._ok || !HISTORY.byDgId) return new Map();
-  if (courseFitCourseStatsCache && courseFitCourseStatsHistoryRef === HISTORY.byDgId) return courseFitCourseStatsCache;
+  if (
+    courseFitCourseStatsCache &&
+    courseFitCourseStatsHistoryRef === HISTORY.byDgId &&
+    courseFitCourseStatsNormVersionRef === COURSE_FIT_STATS_NORM_VERSION
+  ) {
+    return courseFitCourseStatsCache;
+  }
   const keys = ["sg_ott", "sg_app", "sg_arg", "sg_putt"];
   /** @type {Map<string, { sum: number[]; ct: number[] }>} */
   const acc = new Map();
@@ -6188,6 +6197,7 @@ function courseFitCourseStatsByCourse() {
     }
   }
   courseFitCourseStatsHistoryRef = HISTORY.byDgId;
+  courseFitCourseStatsNormVersionRef = COURSE_FIT_STATS_NORM_VERSION;
   courseFitCourseStatsCache = acc;
   return acc;
 }
@@ -9322,6 +9332,11 @@ function refreshPropsFilterOptionsForGolfer(dgId) {
       if (!k) continue;
       if (!byKey.has(k)) byKey.set(k, courseFitPrettyCourseKey(k));
     }
+    const metaVenue = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
+    if (metaVenue) {
+      const mk = normCourseNameKey(metaVenue);
+      if (mk && !byKey.has(mk)) byKey.set(mk, courseFitPrettyCourseKey(mk));
+    }
     courseSel.innerHTML = '<option value="">All</option>';
     [...byKey.entries()]
       .sort((a, b) => a[0].localeCompare(b[0]))
@@ -9413,6 +9428,7 @@ function courseNameMatchesVenueLoose(courseNameRaw, venueRaw) {
 const COURSE_NAME_CANONICAL_KEYS = Object.freeze({
   albany: "albany golf club",
   "albany bahamas": "albany golf club",
+  "sea island resort": "sea island golf club",
 });
 
 /** Course-name canonical key for filters/matching (e.g. "Trump National Doral" vs "(Blue Monster)"). */
@@ -9421,11 +9437,15 @@ function normCourseNameKey(raw) {
   s = s.replace(/\([^)]*\)/g, " ");
   s = s.replace(/\b(blue monster|stadium course|championship course|club de golf)\b/g, " ");
   s = s.replace(/&/g, " and ");
-  /* Unify "… Gc" / "… Cc" / dotted forms with spelled-out club types (DataGolf vs CSV vs history). */
+  /* Venue / feed variants (TPC Sawgrass "The Players", Harbour Town Gl vs Golf Links, etc.). */
+  s = s.replace(/\bthe players\b/gi, " ");
+  /* Unify "… Gc" / "… Cc" / "… Gl" / dotted forms (DataGolf vs CSV vs history). */
   s = s.replace(/\bc\.?\s*c\.?\b/gi, "country club");
   s = s.replace(/\bg\.?\s*c\.?\b/gi, "golf club");
+  s = s.replace(/\bg\.?\s*l\.?\b/gi, "golf links");
   s = s.replace(/\bgolf club(\s+golf club)+\b/gi, "golf club");
   s = s.replace(/\bcountry club(\s+country club)+\b/gi, "country club");
+  s = s.replace(/\bgolf links(\s+golf links)+\b/gi, "golf links");
   s = s.replace(/[^a-z0-9]+/g, " ");
   s = s.replace(/\s+/g, " ").trim();
   const alias = COURSE_NAME_CANONICAL_KEYS[s];
@@ -10209,11 +10229,15 @@ function paintPropsTrendKpiRow(statKey, hitSt, graphSeries, dgId) {
   addKpi("All-time avg", allMean);
   addKpi("Season avg", seasonMean);
   addKpi("Graph avg", graphMean);
+  const atVenueSeason = roundsMatchingCurrentCourseOnlyFieldSeason();
+  const atVenueAll = roundsMatchingCurrentCourseOnlyFieldAllTime();
   addKpi(
     `${PROPS_TREND_DISPLAY_SEASON_YEAR} course avg`,
-    propsTrendMeanActual(statKey, roundsMatchingCurrentCourseOnlyFieldSeason()),
+    propsTrendMeanActual(statKey, atVenueSeason),
   );
-  addKpi("All-time course avg", propsTrendMeanActual(statKey, roundsMatchingCurrentCourseOnlyFieldAllTime()));
+  const venueFallbackLabel =
+    atVenueSeason.length ? "All-time course avg" : atVenueAll.length ? "Venue field avg (prior visits)" : "All-time course avg";
+  addKpi(venueFallbackLabel, propsTrendMeanActual(statKey, atVenueAll));
 
   if (hitSt && hitSt.valid > 0) {
     const lowerBetter = propsStatLowerIsBetter(statKey);
