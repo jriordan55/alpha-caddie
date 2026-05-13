@@ -4,9 +4,11 @@
  * Fairways: decomp `driving_acc` blended with SG:OTT vs **median** field OTT; fairway count scales to this course’s
  * par-4/5 layout when hole pars are known. Scoring uses **course_par_18** from resolved hole pars (not a fixed 72).
  * Optional **preds/pre-tournament** per-round stroke column (when present in the feed) nudges μ_sg toward that baseline.
- * GIR: fantasy + SG:APP vs **median** field APP.
- * R2–R4 rows re-derive counts from scaled μ_SG (default multipliers 1, 0.99, 0.97, 0.95 — override GOLF_NODE_ROUND_MU_MULT).
- *
+ * GIR / fairways: fantasy + SG pillars vs **median** field, with blend weights from historical CSV (GIR~APP, FW~OTT R²).
+ * Hole counts: historical rounds regress counts vs (round_score − course_par), shrunk toward legacy; then bird/par/bog
+ * are solved so implied strokes vs par matches **score_to_par = −μ_sg** (consistent with course_par_18 + total_score).
+ * R2–R4 rows re-derive from scaled μ_SG (default multipliers 1, 0.99, 0.97, 0.95 — GOLF_NODE_ROUND_MU_MULT).
+ * Set GOLF_SKIP_HIST_STATS_ON_FETCH=1 to skip the historical CSV calibration pass (counts + blend weights).
  * Usage (from alpha-caddie-web/):
  *   set DATAGOLF_API_KEY=your_key
  *   npm run fetch:dg
@@ -42,8 +44,9 @@
  */
 
 import { spawnSync } from "child_process";
-import { existsSync, readFileSync, writeFileSync } from "fs";
+import { createReadStream, existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
+import { parse } from "csv-parse";
 import { fileURLToPath } from "url";
 import { findRscriptSync } from "./find-rscript.mjs";
 import {
@@ -593,6 +596,274 @@ function imputeCountsFromNegMu(muSg) {
   };
 }
 
+/**
+ * Given eagles + doubles (fixed), solve birdies/pars/bogeys so Σ holes = 18 and
+ * `bogeys − birdies = targetStp + 2*eagles − 2*doubles` (equivalent to strokes vs par from counts).
+ */
+function solveBirdParBogForExpectedStp(eagles, doubles, targetStp, parHint) {
+  const e = Math.max(0, num(eagles, 0));
+  const d = Math.max(0, num(doubles, 0));
+  const K = targetStp + 2 * e - 2 * d;
+  const U = 18 - e - d;
+  const pmin = 0.12;
+  const bmin = 0.12;
+  const gmin = 0.12;
+  const pMaxBird = U - K - 2 * bmin;
+  const pMaxBog = U + K - 2 * gmin;
+  const pHi = Math.min(pMaxBird, pMaxBog, U - bmin - gmin);
+  const pLo = pmin;
+  if (!(pHi >= pLo - 1e-6)) return null;
+
+  let p = Number.isFinite(parHint) ? parHint : (pLo + pHi) / 2;
+  p = Math.max(pLo, Math.min(pHi, p));
+  let bird = (U - p - K) / 2;
+  let bog = (U - p + K) / 2;
+  for (let i = 0; i < 24; i++) {
+    if (bird >= bmin - 1e-9 && bog >= gmin - 1e-9) break;
+    if (bird < bmin) p -= 2 * (bmin - bird);
+    else if (bog < gmin) p -= 2 * (gmin - bog);
+    p = Math.max(pLo, Math.min(pHi, p));
+    bird = (U - p - K) / 2;
+    bog = (U - p + K) / 2;
+  }
+  if (bird < bmin - 0.02 || bog < gmin - 0.02) return null;
+  return { birdies: bird, pars: p, bogeys: bog };
+}
+
+/** Adjust birdie/par/bogey mix so implied strokes vs par matches expected round score vs course par (−μ_sg). */
+function holeCountsMatchingExpectedStp(counts, targetStp) {
+  const e = num(counts.eagles, 0);
+  const d = num(counts.doubles, 0);
+  const sol = solveBirdParBogForExpectedStp(e, d, num(targetStp, 0), counts.pars);
+  if (!sol) return null;
+  return {
+    eagles: e,
+    birdies: sol.birdies,
+    pars: sol.pars,
+    bogeys: sol.bogeys,
+    doubles: d,
+  };
+}
+
+function imputeCountsWithHistory(muSg, countFit) {
+  const legacy = imputeCountsFromNegMu(muSg);
+  const stp = -clampMuSg(muSg);
+  const x = Math.max(-8, Math.min(8, stp));
+  if (!countFit || countFit.n_counts < 800 || !countFit.slopes) return { ...legacy };
+
+  const shrink = countFit.n_counts / (countFit.n_counts + 2000);
+  const keys = ["eagles", "birdies", "pars", "bogeys", "doubles"];
+  /** @type {Record<string, number>} */
+  const out = {};
+  for (const k of keys) {
+    const c = countFit.slopes[k];
+    if (!c || !Number.isFinite(c.a) || !Number.isFinite(c.b)) {
+      out[k] = legacy[k];
+      continue;
+    }
+    const pred = c.a + c.b * x;
+    const lo = k === "eagles" || k === "doubles" ? 0.04 : 0.2;
+    out[k] = shrink * pred + (1 - shrink) * legacy[k];
+    out[k] = Math.max(lo, out[k]);
+  }
+  let s = keys.reduce((acc, k) => acc + out[k], 0);
+  if (!(s > 0.1)) return { ...legacy };
+  const kf = 18 / s;
+  for (const k of keys) out[k] *= kf;
+  return {
+    eagles: out.eagles,
+    birdies: out.birdies,
+    pars: out.pars,
+    bogeys: out.bogeys,
+    doubles: out.doubles,
+  };
+}
+
+function r2EffFromSample(n, r2, priorN, priorR2) {
+  const r = Number.isFinite(r2) ? r2 : 0;
+  const nn = Math.max(0, n);
+  return (nn * r + priorN * priorR2) / (nn + priorN);
+}
+
+function blendWeightGirFromHistory(n, r2) {
+  const re = r2EffFromSample(n, r2, 500, 0.55);
+  return Math.max(0.58, Math.min(0.88, 0.66 + 0.22 * re));
+}
+
+function blendWeightOttFantasyFromHistory(n, r2) {
+  const re = r2EffFromSample(n, r2, 500, 0.6);
+  return Math.max(0.62, Math.min(0.92, 0.7 + 0.22 * re));
+}
+
+function blendWeightOttDecompFromHistory(n, r2) {
+  const re = r2EffFromSample(n, r2, 500, 0.52);
+  return Math.max(0.52, Math.min(0.8, 0.55 + 0.25 * re));
+}
+
+/**
+ * Stream `data/historical_rounds_all.csv`: OLS of hole counts vs (round_score − course_par), and R² for GIR~APP / FW~OTT.
+ * Used for fantasy↔skill blend weights and count curves (shrunk toward legacy when n is modest).
+ */
+async function loadHistoricalCsvCalibration(modelRoot) {
+  const empty = {
+    skipped: false,
+    n_counts: 0,
+    n_gir_app: 0,
+    n_fw_ott: 0,
+    r2_gir_app: NaN,
+    r2_fw_ott: NaN,
+    slopes: null,
+    w_gir_skill: 0.78,
+    w_ott_fantasy: 0.85,
+    w_ott_decomp: 0.65,
+    csv_path: null,
+  };
+  if (String(process.env.GOLF_SKIP_HIST_STATS_ON_FETCH || "").trim() === "1") {
+    return { ...empty, skipped: true };
+  }
+  const csvPath = join(modelRoot, "data", "historical_rounds_all.csv");
+  if (!existsSync(csvPath)) return { ...empty, csv_path: csvPath };
+
+  let n = 0;
+  let sx = 0;
+  let sx2 = 0;
+  const sy = { eagles: 0, birdies: 0, pars: 0, bogeys: 0, doubles: 0 };
+  const sxy = { eagles: 0, birdies: 0, pars: 0, bogeys: 0, doubles: 0 };
+
+  let ng = 0;
+  let sga = 0;
+  let sg2a = 0;
+  let sgG = 0;
+  let g2 = 0;
+  let sgAg = 0;
+
+  let nf = 0;
+  let sgo = 0;
+  let sg2o = 0;
+  let sgF = 0;
+  let f2 = 0;
+  let sgOf = 0;
+
+  await new Promise((resolve, reject) => {
+    const parser = createReadStream(csvPath).pipe(
+      parse({
+        columns: true,
+        relax_quotes: true,
+        relax_column_count: true,
+        skip_records_with_error: true,
+      }),
+    );
+    parser.on("data", (row) => {
+      const tour = String(row.tour || "").toLowerCase();
+      if (tour !== "pga" && tour !== "liv") return;
+
+      const cp = num(row.course_par, NaN);
+      const rs = num(row.round_score, NaN);
+      if (!Number.isFinite(cp) || cp < 63 || cp > 76) return;
+      if (!Number.isFinite(rs) || rs < 55 || rs > 95) return;
+
+      const e = num(row.eagles_or_better, NaN);
+      const b = num(row.birdies, NaN);
+      const p = num(row.pars, NaN);
+      const bg = num(row.bogies, NaN);
+      const d = num(row.doubles_or_worse, NaN);
+      if (![e, b, p, bg, d].every((v) => Number.isFinite(v) && v >= 0 && v <= 18)) return;
+      const sumH = e + b + p + bg + d;
+      if (Math.abs(sumH - 18) > 0.51) return;
+
+      const stpRaw = rs - cp;
+      const x = Math.max(-10, Math.min(10, stpRaw));
+      n++;
+      sx += x;
+      sx2 += x * x;
+      sy.eagles += e;
+      sy.birdies += b;
+      sy.pars += p;
+      sy.bogeys += bg;
+      sy.doubles += d;
+      sxy.eagles += x * e;
+      sxy.birdies += x * b;
+      sxy.pars += x * p;
+      sxy.bogeys += x * bg;
+      sxy.doubles += x * d;
+
+      const sgApp = num(row.sg_app, NaN);
+      const girR = num(row.gir, NaN);
+      if (Number.isFinite(sgApp) && Number.isFinite(girR) && girR > 0.05 && girR < 0.995) {
+        const gc = girR * 18;
+        ng++;
+        sga += sgApp;
+        sg2a += sgApp * sgApp;
+        sgG += gc;
+        g2 += gc * gc;
+        sgAg += sgApp * gc;
+      }
+
+      const sgOtt = num(row.sg_ott, NaN);
+      const da = num(row.driving_acc, NaN);
+      if (Number.isFinite(sgOtt) && Number.isFinite(da) && da > 0.05 && da < 0.995) {
+        const fc = da * 14;
+        nf++;
+        sgo += sgOtt;
+        sg2o += sgOtt * sgOtt;
+        sgF += fc;
+        f2 += fc * fc;
+        sgOf += sgOtt * fc;
+      }
+    });
+    parser.on("end", resolve);
+    parser.on("error", reject);
+  });
+
+  /** @type {typeof empty} */
+  const out = { ...empty, csv_path: csvPath, n_counts: n, n_gir_app: ng, n_fw_ott: nf };
+
+  if (n >= 400) {
+    const vx = sx2 - (sx * sx) / n;
+    if (vx > 1e-6) {
+      /** @type {Record<string, { a: number; b: number }>} */
+      const slopes = {};
+      for (const k of ["eagles", "birdies", "pars", "bogeys", "doubles"]) {
+        const vy = sy[k];
+        const cov = sxy[k] - (sx * vy) / n;
+        const b = cov / vx;
+        const a = vy / n - b * (sx / n);
+        slopes[k] = { a, b };
+      }
+      out.slopes = slopes;
+    }
+  }
+
+  if (ng >= 400) {
+    const vxa = sg2a - (sga * sga) / ng;
+    const vyg = g2 - (sgG * sgG) / ng;
+    const cag = sgAg - (sga * sgG) / ng;
+    if (vxa > 1e-8 && vyg > 1e-8) out.r2_gir_app = (cag * cag) / (vxa * vyg);
+  }
+  if (nf >= 400) {
+    const vxo = sg2o - (sgo * sgo) / nf;
+    const vyf = f2 - (sgF * sgF) / nf;
+    const cof = sgOf - (sgo * sgF) / nf;
+    if (vxo > 1e-8 && vyf > 1e-8) out.r2_fw_ott = (cof * cof) / (vxo * vyf);
+  }
+
+  out.w_gir_skill = blendWeightGirFromHistory(ng, out.r2_gir_app);
+  out.w_ott_fantasy = blendWeightOttFantasyFromHistory(nf, out.r2_fw_ott);
+  out.w_ott_decomp = blendWeightOttDecompFromHistory(nf, out.r2_fw_ott);
+
+  if (n >= 400) {
+    console.log(
+      `[fetch-dg] historical calibration: n_counts=${n}, n_gir_app=${ng} (R²≈${Number.isFinite(out.r2_gir_app) ? out.r2_gir_app.toFixed(3) : "?"}), n_fw_ott=${nf} (R²≈${Number.isFinite(out.r2_fw_ott) ? out.r2_fw_ott.toFixed(3) : "?"}); blend w_gir_skill=${out.w_gir_skill.toFixed(2)}, w_ott_fx=${out.w_ott_fantasy.toFixed(2)}, w_ott_decomp=${out.w_ott_decomp.toFixed(2)}`,
+    );
+  } else {
+    console.log(
+      `[fetch-dg] historical calibration: only ${n} scored rounds in CSV (need ≥400 for count regression / stable R²) — using legacy count curve + default blends`,
+    );
+  }
+
+  return out;
+}
+
 function clampMuSg(m) {
   const x = num(m, 0);
   if (!Number.isFinite(x)) return 0;
@@ -695,7 +966,10 @@ function parseRoundMuMult() {
 
 function derivedStatsFromMuSg(muRaw, nFairwayHoles, opts = {}) {
   const mu_sg = clampMuSg(muRaw);
-  const im = imputeCountsFromNegMu(mu_sg);
+  const targetStp = -mu_sg;
+  let im = imputeCountsWithHistory(mu_sg, opts.histCountFit);
+  const aligned = holeCountsMatchingExpectedStp(im, targetStp);
+  if (aligned) im = aligned;
   const stpVec = -mu_sg;
   const nGir = Number.isFinite(opts.nGirHoles) ? opts.nGirHoles : 18;
   let gir = Math.max(6, Math.min(16, 11.5 - 0.25 * stpVec));
@@ -923,6 +1197,9 @@ async function main() {
     );
     process.exit(1);
   }
+
+  /** Runs in parallel with DataGolf fetches — stream PGA/LIV historical CSV for count vs (score−par) and blend R². */
+  const histCalibPromise = loadHistoricalCsvCalibration(GOLF_MODEL_ROOT);
 
   /** Dual-field weeks: `pga` feed may lag while `opp` already shows this week's opposite-field event. */
   function fieldUpdateTourCandidates() {
@@ -1402,6 +1679,8 @@ async function main() {
   const fieldMeanDrive =
     distSamples.length >= 8 ? distSamples.reduce((a, b) => a + b, 0) / distSamples.length : NaN;
 
+  const histCalib = await histCalibPromise;
+
   const base = [];
   for (const fr of fieldRows) {
     const id = fr.dg_id;
@@ -1442,17 +1721,27 @@ async function main() {
 
     if (Number.isFinite(gir) && gir > 0 && gir <= 1) gir *= 18;
 
-    const im = imputeCountsFromNegMu(mu_sg);
+    const im = imputeCountsWithHistory(mu_sg, histCalib);
     if (!Number.isFinite(eagles)) eagles = im.eagles;
     if (!Number.isFinite(birdies)) birdies = im.birdies;
     if (!Number.isFinite(pars)) pars = im.pars;
     if (!Number.isFinite(bogeys)) bogeys = im.bogeys;
     if (!Number.isFinite(doubles)) doubles = im.doubles;
 
+    const alignedCounts = holeCountsMatchingExpectedStp({ eagles, birdies, pars, bogeys, doubles }, -mu_sg);
+    if (alignedCounts) {
+      eagles = alignedCounts.eagles;
+      birdies = alignedCounts.birdies;
+      pars = alignedCounts.pars;
+      bogeys = alignedCounts.bogeys;
+      doubles = alignedCounts.doubles;
+    }
+
     const stpVec = -mu_sg;
+    const wGir = histCalib.w_gir_skill;
     const appGir = girExpectedFromSkill(mu_sg, skRow?.sg_app, 18, fieldMeanApp);
     if (!Number.isFinite(gir)) gir = appGir;
-    else gir = Math.max(6, Math.min(16, 0.22 * gir + 0.78 * appGir));
+    else gir = Math.max(6, Math.min(16, (1 - wGir) * gir + wGir * appGir));
 
     const decompFwRate = num(skRow?.driving_acc, NaN);
     let fairways = NaN;
@@ -1471,14 +1760,16 @@ async function main() {
       driving_distance,
       fieldMeanDrive,
     );
+    const wOttFx = histCalib.w_ott_fantasy;
+    const wOttDc = histCalib.w_ott_decomp;
     if (!Number.isFinite(fairways)) {
       if (Number.isFinite(fxFw)) {
-        fairways = Math.max(4, Math.min(fairwayHolesThisCourse, 0.15 * fxFw + 0.85 * ottFw));
+        fairways = Math.max(4, Math.min(fairwayHolesThisCourse, (1 - wOttFx) * fxFw + wOttFx * ottFw));
       } else {
         fairways = ottFw;
       }
     } else {
-      fairways = Math.max(4, Math.min(fairwayHolesThisCourse, 0.35 * fairways + 0.65 * ottFw));
+      fairways = Math.max(4, Math.min(fairwayHolesThisCourse, (1 - wOttDc) * fairways + wOttDc * ottFw));
     }
 
     const putts = Math.max(22, Math.min(35, 28.5 + 0.32 * stpVec - 0.1 * (gir - 11)));
@@ -1565,6 +1856,7 @@ async function main() {
           nGirHoles: 18,
           driving_distance: row.driving_distance,
           fieldMeanDrive,
+          histCountFit: histCalib,
         });
       }
       const stp = score_to_par(st.mu_sg);
@@ -1676,6 +1968,18 @@ async function main() {
     projection_course_basis: {
       fairway_holes_modeled: fairwayHolesThisCourse,
       pret_expected_round_strokes_players: pretStrokesByDg.size,
+    },
+    historical_projection_calibration: {
+      skipped: !!histCalib.skipped,
+      csv_path: histCalib.csv_path || undefined,
+      n_counts: histCalib.n_counts,
+      n_gir_app: histCalib.n_gir_app,
+      n_fw_ott: histCalib.n_fw_ott,
+      r2_gir_app: Number.isFinite(histCalib.r2_gir_app) ? Math.round(histCalib.r2_gir_app * 10000) / 10000 : null,
+      r2_fw_ott: Number.isFinite(histCalib.r2_fw_ott) ? Math.round(histCalib.r2_fw_ott * 10000) / 10000 : null,
+      w_gir_skill: Math.round(histCalib.w_gir_skill * 1000) / 1000,
+      w_ott_fantasy: Math.round(histCalib.w_ott_fantasy * 1000) / 1000,
+      w_ott_decomp: Math.round(histCalib.w_ott_decomp * 1000) / 1000,
     },
     players,
     props: [],
