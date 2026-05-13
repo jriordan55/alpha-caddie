@@ -67,6 +67,21 @@ function Run-Step([string] $label, [scriptblock] $command) {
   }
 }
 
+# When fetch output matches HEAD exactly, still bump app.js?v= so deploys pick up fresh HTML/JS.
+function Bump-AlphaCaddieAppJsCache([string] $Root) {
+  $idx = Join-Path $Root "alpha-caddie-web\index.html"
+  if (-not (Test-Path $idx)) { return $false }
+  $enc = New-Object System.Text.UTF8Encoding $false
+  $c = [System.IO.File]::ReadAllText($idx, $enc)
+  if ($c -notmatch 'app\.js\?v=(\d+)') { return $false }
+  $n = [int]$Matches[1]
+  $n2 = $n + 1
+  $c2 = [regex]::Replace($c, 'app\.js\?v=\d+', "app.js?v=$n2")
+  [System.IO.File]::WriteAllText($idx, $c2, $enc)
+  Write-Host "Bumped alpha-caddie-web/index.html app.js cache version to v=$n2 (so push:all always has a deployable delta when data JSON matched HEAD)."
+  return $true
+}
+
 Run-Step "Running fetch:dg ..." { npm run fetch:dg }
 Run-Step "Building course-table.json (course mapping) ..." { npm run build:course-table }
 Run-Step "Running fetch:in-play ..." { npm run fetch:in-play }
@@ -159,8 +174,19 @@ if ($ArtifactsOnly) {
 
 git -C $repoRoot diff --cached --quiet
 if ($LASTEXITCODE -eq 0) {
-  Write-Host "No staged changes; nothing to commit."
-  exit 0
+  if (Bump-AlphaCaddieAppJsCache $repoRoot) {
+    git -C $repoRoot add -f -- "alpha-caddie-web/index.html"
+    git -C $repoRoot diff --cached --quiet
+  }
+  if ($LASTEXITCODE -eq 0) {
+    Write-Host "No staged changes after cache-bust attempt; on-disk mirrors under website/public/data/ were still updated above."
+    if (-not $SkipPush) {
+      $branchEarly = git -C $repoRoot rev-parse --abbrev-ref HEAD
+      Write-Host "Pushing origin $branchEarly (in case local commits were already present) ..."
+      git -C $repoRoot push origin $branchEarly
+    }
+    exit 0
+  }
 }
 
 if ([string]::IsNullOrWhiteSpace($CommitMessage)) {

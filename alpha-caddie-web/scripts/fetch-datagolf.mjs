@@ -1205,7 +1205,13 @@ function drivingAttrsFromSkillBag(row) {
       driving_distance_rating = dist;
     }
   }
-  return { driving_distance, driving_accuracy: accRating, driving_dist, driving_acc, driving_distance_rating };
+  return {
+    driving_distance,
+    driving_accuracy: accRating,
+    driving_dist,
+    driving_acc: accRating,
+    driving_distance_rating,
+  };
 }
 
 function mergeSkillDrivingProfile(mergedRow) {
