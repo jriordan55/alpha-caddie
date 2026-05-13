@@ -2520,7 +2520,7 @@ function syncForecastWaveBannerTexts() {
   const forecastLoaded =
     Boolean(DATA.meta?.forecast_weather_updated_at) &&
     !["open_meteo_fetch_failed", "empty_hourly", "no_course_coords", "no_players"].includes(status);
-  for (const id of ["ou-weather-wave-summary", "ev-weather-wave-summary"]) {
+  for (const id of ["ou-weather-wave-summary", "ev-weather-wave-summary", "hh-weather-wave-summary"]) {
     const el = document.getElementById(id);
     if (!el) continue;
     el.hidden = false;
@@ -5680,6 +5680,8 @@ function mergedPlayerRowForDrivingFields(row) {
     "driving_distance",
     "average_driving_distance",
     "avg_drive_distance",
+    "predicted_driving_distance",
+    "predicted_avg_driving_distance",
     "driving_acc",
     "driving_accuracy",
   ];
@@ -5708,9 +5710,15 @@ function matchupAnalysisMetricValue(row, key) {
       num(row.average_driving_distance, NaN),
       num(row.avg_drive_distance, NaN),
       num(row.driving_distance, NaN),
+      num(row.predicted_driving_distance, NaN),
+      num(row.predicted_avg_driving_distance, NaN),
     ];
     for (const v of cands) {
       if (Number.isFinite(v)) return drivingDistanceSkillRating(v);
+    }
+    const ott = num(row.sg_ott, NaN);
+    if (Number.isFinite(ott)) {
+      return clamp(302 + ott * 9, 268, 335);
     }
     return NaN;
   }
@@ -5846,6 +5854,11 @@ function buildMatchupAnalysisTool() {
   const list = pack && pack.match_list;
   const titleA = document.getElementById("analysis-sg-player-a");
   const titleB = document.getElementById("analysis-sg-player-b");
+  const sgHeading = document.getElementById("matchup-analysis-sg-heading");
+  const sgWrap = document.getElementById("matchup-analysis-sg-wrap");
+  const hideSgTableMarket = key === "3_balls";
+  if (sgHeading) sgHeading.hidden = hideSgTableMarket;
+  if (sgWrap) sgWrap.hidden = hideSgTableMarket;
   if (titleA) titleA.textContent = "Player A";
   if (titleB) titleB.textContent = "Player B";
   if (typeof list === "string") {
@@ -5869,6 +5882,7 @@ function buildMatchupAnalysisTool() {
   }
 
   const r = getModelRoundForEv();
+  const devigPrefs = loadEvDevigPrefs();
   const fieldRows = matchupAnalysisFieldRowsForRound(r);
   const sgMetricKeys = ["sg_total", "sg_t2g", "sg_ott", "sg_app", "sg_arg", "sg_putt", "distance", "accuracy"];
   /** @type {Record<string, number[]>} */
@@ -5887,20 +5901,19 @@ function buildMatchupAnalysisTool() {
     const row1 = projectionPlayerRowForModelByIdOrName(id1, m.p1_player_name, r);
     const row2 = projectionPlayerRowForModelByIdOrName(id2, m.p2_player_name, r);
     const row3 = projectionPlayerRowForModelByIdOrName(id3, m.p3_player_name, r);
-    const odds = m.odds || {};
-    const oddsForAnalysis = matchupAnalysisOddsWithoutDataGolf(odds);
-    const b1 = bestBookDecimalForSide(oddsForAnalysis, "p1");
-    const b2 = bestBookDecimalForSide(oddsForAnalysis, "p2");
-    const b3 = bestBookDecimalForSide(oddsForAnalysis, "p3");
+    const oddsEv = filterOddsObjectForEvSportsbooks(m.odds || {}, {});
+    const b1 = bestBookDecimalForSideWithFallback(oddsEv, "p1", devigPrefs);
+    const b2 = bestBookDecimalForSideWithFallback(oddsEv, "p2", devigPrefs);
+    const b3 = bestBookDecimalForSideWithFallback(oddsEv, "p3", devigPrefs);
     const isThree = key === "3_balls" && Number.isFinite(id3) && id3 > 0;
     const mu1 = effectiveMuSg(row1, id1, key);
     const mu2 = effectiveMuSg(row2, id2, key);
     const mu3 = effectiveMuSg(row3, id3, key);
     if (isThree) {
       const [p1, p2, p3] = threeBallModelProbsLiveBlended(mu1, mu2, mu3, row1, row2, row3);
-      const mp1 = matchupAnalysisMarketProbSide(oddsForAnalysis, "p1", true);
-      const mp2 = matchupAnalysisMarketProbSide(oddsForAnalysis, "p2", true);
-      const mp3 = matchupAnalysisMarketProbSide(oddsForAnalysis, "p3", true);
+      const mp1 = matchupConsensusThreeWaySide(oddsEv, "p1", devigPrefs);
+      const mp2 = matchupConsensusThreeWaySide(oddsEv, "p2", devigPrefs);
+      const mp3 = matchupConsensusThreeWaySide(oddsEv, "p3", devigPrefs);
       const ev1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
       const ev2 = Number.isFinite(b2.dec) ? p2 * b2.dec - 1 : NaN;
       const ev3 = Number.isFinite(b3.dec) ? p3 * b3.dec - 1 : NaN;
@@ -5946,8 +5959,8 @@ function buildMatchupAnalysisTool() {
     }
     const p1 = matchupWinProbLiveBlended(mu1, mu2, key, row1, row2);
     const p2 = 1 - p1;
-    const marketP1 = matchupAnalysisMarketProbSide(oddsForAnalysis, "p1", false);
-    const marketP2 = matchupAnalysisMarketProbSide(oddsForAnalysis, "p2", false);
+    const marketP1 = matchupConsensusSide(oddsEv, "p1", devigPrefs);
+    const marketP2 = matchupConsensusSide(oddsEv, "p2", devigPrefs);
     const ev1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
     const ev2 = Number.isFinite(b2.dec) ? p2 * b2.dec - 1 : NaN;
     const best =
@@ -6024,16 +6037,16 @@ function buildMatchupAnalysisTool() {
   }
   renderMatchupAnalysisPricing(pricingHost, selected);
 
+  const hideSgTable = hideSgTableMarket;
+
   const renderSgBreakdown = (entry) => {
     sgBody.innerHTML = "";
-    if (!entry || entry.isThree || !entry.left || !entry.right) {
+    if (!entry || !entry.left || !entry.right) {
       const tr = document.createElement("tr");
       const td = document.createElement("td");
       td.colSpan = 6;
       td.className = "text-muted";
-      td.textContent = entry?.isThree
-        ? "Strokes gained breakdown applies to head-to-head markets only; switch Market to Round or Tournament matchups."
-        : "Select a head-to-head matchup.";
+      td.textContent = "Select a head-to-head matchup.";
       tr.appendChild(td);
       sgBody.appendChild(tr);
       return;
@@ -6056,9 +6069,9 @@ function buildMatchupAnalysisTool() {
       ["SG: Total", "sg_total"],
       ["SG: Tee-to-Green", "sg_t2g"],
       ["Driving Accuracy Rating", "accuracy"],
-      ["Off the Tee", "sg_ott"],
+      ["Off Tee", "sg_ott"],
       ["Approach", "sg_app"],
-      ["Around the Green", "sg_arg"],
+      ["Around Green", "sg_arg"],
       ["Putting", "sg_putt"],
       ["Driving Distance Rating", "distance"],
     ];
@@ -6170,7 +6183,13 @@ function buildMatchupAnalysisTool() {
     }
   };
 
-  renderSgBreakdown(selected);
+  if (!hideSgTable) {
+    renderSgBreakdown(selected);
+  } else {
+    sgBody.innerHTML = "";
+    if (titleA) titleA.textContent = "Player A";
+    if (titleB) titleB.textContent = "Player B";
+  }
 }
 
 /** --- Course fit tab (skill-shape radar, venue similarity, fit leaderboard) --- */
@@ -6363,9 +6382,9 @@ function courseFitVenueProfileVector(rows, ranges, histSg) {
 /** Radar spokes + Who-fits category names (Course Fit). */
 const COURSE_FIT_RADAR_SPOKE_LABELS = [
   "Driving Accuracy",
-  "Off the Tee",
+  "Off Tee",
   "Approach",
-  "Around the Green",
+  "Around Green",
   "Putting",
   "Driving Distance",
 ];

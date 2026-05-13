@@ -551,8 +551,8 @@
       </div>
       <h3 class="section-heading">Prices &amp; edge</h3>
       <div id="matchup-analysis-pricing" class="table-wrap leaderboard-card outrights-table-wrap"></div>
-      <h3 class="section-heading">Strokes gained vs field</h3>
-      <div class="table-wrap leaderboard-card outrights-table-wrap">
+      <h3 class="section-heading" id="matchup-analysis-sg-heading">Strokes gained vs field</h3>
+      <div id="matchup-analysis-sg-wrap" class="table-wrap leaderboard-card outrights-table-wrap">
         <table class="data-table data-table-outrights" id="table-matchup-analysis-sg">
           <thead>
             <tr>
@@ -798,9 +798,7 @@
         <h3>Hole &amp; player</h3>
         <div class="toolbar weather-toolbar weather-toolbar-compact" aria-label="Weather">
           <span class="weather-toolbar-title">Weather</span>
-          <p class="weather-auto-note text-muted">
-            Uses forecast + tee time for the selected golfer / round (same engine as projections).
-          </p>
+          <div id="hh-weather-wave-summary" class="weather-auto-note text-muted" role="status" aria-live="polite"></div>
         </div>
         <div class="toolbar weather-toolbar weather-toolbar-compact pricing-toolbar" aria-label="Pricing mode">
           <span class="weather-toolbar-title">Pricing</span>
@@ -1166,11 +1164,12 @@
           <dt>Market</dt><dd class="text-muted">Implied win probability from the posted prices.</dd>
           <dt>Edge</dt><dd class="text-muted">Expected value vs fair at the price shown (positive is favorable).</dd>
           <dt>Odds</dt><dd class="text-muted">American odds for that golfer at the listed book.</dd>
-          <dt>Best Book</dt><dd class="text-muted">Best non-DataGolf sportsbook offering that line.</dd>
+          <dt>Best Book</dt><dd class="text-muted">Best decimal price among the same sportsbooks used on the +EV tab (respects your Devig book toggles).</dd>
         </dl>
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-ma-sg-cols-h">
         <h4 class="ev-devig-section-title" id="tab-help-ma-sg-cols-h">Strokes gained vs field</h4>
+        <p class="text-muted ev-help-devig-lede">Shown for head-to-head markets only. The section is hidden for 3-balls.</p>
         <dl class="ev-help-dl">
           <dt>Metric</dt><dd class="text-muted">Stat being compared on that row.</dd>
           <dt>Golfer columns</dt><dd class="text-muted">That golfer’s value for the metric, with a bar for scale.</dd>
@@ -1254,7 +1253,7 @@
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-hh-weather-h">
         <h4 class="ev-devig-section-title" id="tab-help-hh-weather-h">Weather</h4>
-        <p class="text-muted ev-help-devig-lede">These sliders stay in sync with the rest of the app; change them the same way as on Round projections to reflect wind and conditions.</p>
+        <p class="text-muted ev-help-devig-lede">The <strong>Weather</strong> line shows the same morning / afternoon forecast summary as Round projections (venue hourly feed + tee waves).</p>
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-hh-pricing-h">
         <h4 class="ev-devig-section-title" id="tab-help-hh-pricing-h">Pricing</h4>
@@ -1311,6 +1310,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=145"></script>
+  <script src="app.js?v=146"></script>
 </body>
 </html>
