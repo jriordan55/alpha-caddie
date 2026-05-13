@@ -667,28 +667,31 @@ function stripGirFairwaysPuttsIfGarbage(mf) {
 }
 
 /**
- * LIV (and any row) often has no putts in historical_rounds_all.csv; shot-round aggregate skips many LIV events.
- * Coarse imputation from round score + GIR count so Historical Trends / props charts are usable (re-run when shots CSV fills in).
+ * LIV rounds often lack putts in CSV and in the shot-round aggregate. When both GIR and fairways counts
+ * are present (from CSV or shot merge), derive expected putts from them; otherwise leave null.
  */
 function imputeLivPuttsIfStillMissing(mf, row) {
   if (String(row.tour || "").toLowerCase() !== "liv") return;
   if (mf.putts != null && Number.isFinite(mf.putts)) return;
-  const rs = num(row.round_score);
-  if (!Number.isFinite(rs)) return;
-  const par = num(row.course_par);
-  const p = Number.isFinite(par) && par > 50 && par < 85 ? par : 72;
   let gir = mf.gir;
+  let fw = mf.fairways;
   if (!Number.isFinite(gir)) {
     const rawG = num(row.gir);
     if (Number.isFinite(rawG)) gir = countFromRateOrRaw(rawG, 18);
   }
-  if (!Number.isFinite(gir)) gir = 9;
+  if (!Number.isFinite(fw)) {
+    const rawFa = num(row.driving_acc);
+    if (Number.isFinite(rawFa)) fw = countFromRateOrRaw(rawFa, 14);
+  }
+  if (!Number.isFinite(gir) || !Number.isFinite(fw)) return;
   gir = Math.max(0, Math.min(18, Math.round(gir)));
-  const miss = 18 - gir;
-  const rel = rs - p;
-  let est = gir * 1.72 + miss * 2.06 + rel * 0.32;
-  est = Math.round(Math.max(17, Math.min(39, est)));
-  mf.putts = est;
+  fw = Math.max(0, Math.min(14, Math.round(fw)));
+  const missGir = 18 - gir;
+  // GIR holes: mostly two-putt with some one-putts; miss-GIR: chip/pitch sequences use more putts on average.
+  let est = gir * 1.76 + missGir * 2.08;
+  // Fewer fairways → more recovery / longer approaches on average → modest putt bump on non-driver holes proxy.
+  est += (14 - fw) * 0.06;
+  mf.putts = Math.round(Math.max(17, Math.min(39, est)));
 }
 
 function metricFields(row) {
