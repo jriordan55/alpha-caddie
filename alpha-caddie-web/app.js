@@ -5214,7 +5214,6 @@ function collectUnifiedEvRows() {
       const id = Math.round(num(row.dg_id, NaN));
       if (elim.size && elim.has(id) && mk !== "make_cut" && mk !== "mc") continue;
       let modelP = modelProbOutrightFromRowOrProjections(row, mk, evLbOpts);
-      modelP = modelProbOutrightFromRowOrProjections(row, mk, evLbOpts);
       const modelOk = Number.isFinite(modelP) && modelP > 0;
       const decItems = [];
       for (const bk of books) {
@@ -5243,6 +5242,8 @@ function collectUnifiedEvRows() {
                     : "First Round Leader";
       const betLabel =
         mk === "mc" ? "Miss Cut" : mk === "make_cut" ? "Make Cut" : mk === "frl" ? "FRL" : mk.replace("_", " ").toUpperCase();
+      /** One row per golfer × market: keep only the best posted price (highest decimal = best for the bettor). */
+      const byBook = [];
       for (const bk of books) {
         const bkNorm = normalizeEvSportsbookKey(bk);
         if (devigOfferExcludedBooks.has(bkNorm)) continue;
@@ -5254,18 +5255,22 @@ function collectUnifiedEvRows() {
         if (!Number.isFinite(modelEv)) continue;
         const am = Math.round(americanFromImpliedProb(pBook));
         const dec = 1 / pBook;
-        rows.push({
-          golfer: displayGolferName(String(row.player_name || "")),
-          market: marketLabel,
-          bet: betLabel,
-          modelPct: modelP,
-          modelEv,
-          bestBook: bkNorm,
-          bestBookOdds: Number.isFinite(am) ? formatAmerican(am) : "—",
-          bestDec: dec,
-          consensusP: marketP,
-        });
+        byBook.push({ bkNorm, dec, pBook, modelEv, am });
       }
+      if (!byBook.length) continue;
+      byBook.sort((a, b) => b.dec - a.dec || String(a.bkNorm).localeCompare(String(b.bkNorm)));
+      const best = byBook[0];
+      rows.push({
+        golfer: displayGolferName(String(row.player_name || "")),
+        market: marketLabel,
+        bet: betLabel,
+        modelPct: modelP,
+        modelEv: best.modelEv,
+        bestBook: best.bkNorm,
+        bestBookOdds: Number.isFinite(best.am) ? formatAmerican(best.am) : "—",
+        bestDec: best.dec,
+        consensusP: marketP,
+      });
     }
   }
   return rows;
