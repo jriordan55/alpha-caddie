@@ -1433,8 +1433,9 @@ body {
   border-bottom: 1px solid var(--golf-border);
   background: var(--golf-surface-mid);
 }
-#table-ou thead th:first-child,
-#table-ou tbody td:first-child {
+/* Leaderboard-style first column: do not apply to round O/U long rows (.ou-proj-td-golfer) or colspan detail cells — WebKit can mis-layout sticky + wide tables when max-width:0 hits the wrong td. */
+#table-ou thead th:first-child:not(.ou-proj-th-golfer),
+#table-ou tbody td:first-child:not(.ou-proj-td-golfer):not(.ou-proj-detail-td) {
   width: 26%;
   min-width: 210px;
   max-width: 0;
@@ -1443,7 +1444,7 @@ body {
   white-space: nowrap;
   text-align: left;
 }
-#table-ou tbody td:first-child {
+#table-ou tbody td:first-child:not(.ou-proj-td-golfer):not(.ou-proj-detail-td) {
   font-size: 0.96rem;
   font-weight: 700;
   letter-spacing: 0.01em;
@@ -1487,6 +1488,9 @@ body {
   left: 0;
   z-index: 2;
   box-shadow: 6px 0 18px -8px rgba(0, 0, 0, 0.75);
+  /* iOS Safari: promote sticky layer so scrolling numeric columns do not paint/clip incorrectly */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 #table-ou.table-ou-projections thead th.ou-proj-th-golfer {
   z-index: 4;
@@ -1638,7 +1642,10 @@ body {
 #table-ou.table-ou-projections tr.ou-proj-data-row.ou-proj-row-expanded td:first-child {
   box-shadow: inset 3px 0 0 var(--golf-green);
 }
-#table-ou.table-ou-projections tr.ou-proj-detail-tr td.ou-proj-detail-td {
+#table-ou.table-ou-projections tr.ou-proj-detail-tr > td.ou-proj-detail-td {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
   padding: 0;
   border-bottom: 1px solid var(--golf-border);
   background: var(--golf-bg);

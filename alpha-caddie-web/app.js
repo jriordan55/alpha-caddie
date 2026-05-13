@@ -3040,7 +3040,8 @@ function sigmaForOu(market, row) {
     return 2.75 * weatherMult * liveShrink;
   }
   const muFull = ouMeanCountingStat(mKey, row);
-  const muAbs = Number.isFinite(muFull) && muFull > 0 ? Math.abs(muFull) : Math.abs(num(row[rec.field], NaN));
+  const muFallback = ouFallbackScalarForProjectedMean(mKey, row, rec);
+  const muAbs = Number.isFinite(muFull) && muFull > 0 ? Math.abs(muFull) : Math.abs(num(muFallback, NaN));
   if (!Number.isFinite(muAbs) || muAbs <= 0) return 2.75 * weatherMult * liveShrink;
   return sigmaOuDiscreteCounting(mKey, muAbs) * weatherMult * liveShrink;
 }
@@ -3053,8 +3054,9 @@ function ouProjectedMean(market, row) {
   const liveRoundAdj = mKey === "Total score" ? liveCurrentRoundTotalScoreMuDelta(row) : 0;
   const countLive = livePartialRoundCountPropAdjust(mKey, row);
   const baseMean = ouMeanCountingStat(mKey, row);
+  const baseScalar = Number.isFinite(baseMean) ? baseMean : ouFallbackScalarForProjectedMean(mKey, row, rec);
   return (
-    (Number.isFinite(baseMean) ? baseMean : num(row[rec.field], NaN)) +
+    baseScalar +
     statWeatherMuAdjustment(mKey, row) +
     liveCourseOUMuAdjustment(mKey) +
     liveRoundAdj +
@@ -9741,11 +9743,19 @@ function historyGirOrFairwaysCount(v, holes) {
   return girFairwaysCountFromRawForOu(v, holes);
 }
 
+/** Fallback μ when `ouMeanCountingStat` is NaN — must not use `num(null)` (Number(null) is 0). */
+function ouFallbackScalarForProjectedMean(mKey, row, rec) {
+  const v = historyScalarOrNaN(row?.[rec.field]);
+  if (mKey === "GIR") return girFairwaysCountFromRawForOu(v, 18);
+  if (mKey === "Fairways hit") return girFairwaysCountFromRawForOu(v, 14);
+  return v;
+}
+
 /** Mean for O/U +EV: GIR / fairways as hole counts when projections store rates. */
 function ouMeanCountingStat(market, row) {
   const mKey = ouModelMarketKey(market) || "Total score";
   const rec = ouStatRec(mKey);
-  const raw = num(row?.[rec.field], NaN);
+  const raw = historyScalarOrNaN(row?.[rec.field]);
   if (!Number.isFinite(raw)) return NaN;
   if (mKey === "GIR") return girFairwaysCountFromRawForOu(raw, 18);
   if (mKey === "Fairways hit") return girFairwaysCountFromRawForOu(raw, 14);
