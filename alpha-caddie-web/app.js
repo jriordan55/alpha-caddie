@@ -3900,6 +3900,7 @@ function buildOuTable() {
     tr.appendChild(td);
     tbody.appendChild(tr);
   } else {
+  const ouTbodyFrag = document.createDocumentFragment();
   for (const r of flatRows) {
     const tr = document.createElement("tr");
     tr.className = "ou-proj-long-tr ou-proj-data-row";
@@ -4007,7 +4008,7 @@ function buildOuTable() {
         tr.title = `${col.label} · μ ${mu.toFixed(2)} · σ ${sig.toFixed(2)} · ${side === "over" ? "Over" : "Under"}`;
       }
     }
-    tbody.appendChild(tr);
+    ouTbodyFrag.appendChild(tr);
     if (ouProjExpandedKey === expandKey) {
       const dtr = document.createElement("tr");
       dtr.className = "ou-proj-detail-tr";
@@ -4016,9 +4017,10 @@ function buildOuTable() {
       dtd.className = "ou-proj-detail-td";
       dtd.appendChild(buildOuProjDetailPanel(player, col, side, mu, pick, rawName));
       dtr.appendChild(dtd);
-      tbody.appendChild(dtr);
+      ouTbodyFrag.appendChild(dtr);
     }
   }
+  tbody.appendChild(ouTbodyFrag);
   }
 
   updateOuSortIndicators();
@@ -5650,6 +5652,7 @@ function buildEvTable() {
     if (t === "—" || t === "-" || t === "–") return "";
     return String(s ?? "");
   };
+  const evFrag = document.createDocumentFragment();
   for (const r of out) {
     const tr = document.createElement("tr");
     const mkTd = (txt, cls = "") => {
@@ -5694,8 +5697,9 @@ function buildEvTable() {
     tr.appendChild(mkTd(evCell(deltaStr), "num"));
     tr.appendChild(mkTd(evCell(r.market), ""));
     tr.appendChild(mkTd(evCell(r.bet), ""));
-    tbody.appendChild(tr);
+    evFrag.appendChild(tr);
   }
+  tbody.appendChild(evFrag);
 }
 
 /**
@@ -12862,7 +12866,18 @@ function yieldToMain() {
   });
 }
 
-/** Rebuild all tables/lists from `DATA` after projections (or live merge). Yields between chunks so first paint is not blocked. */
+/** Live merge + course table: not needed for first paint; load after projections UI, then refresh affected tabs. */
+function prefetchPostProjectionsSidecarsAfterPaint() {
+  const jobs = [];
+  if (!isFileProtocol()) jobs.push(fetchAndMergeDatagolfLiveInPlay({ force: true }));
+  jobs.push(loadCourseTableJson());
+  return Promise.all(jobs).finally(() => {
+    refreshPricingAffectedViews();
+    updateStatusBar();
+  });
+}
+
+/** Rebuild all tables/lists from `DATA` after projections load. Yields between chunks so the main thread can breathe. */
 async function refreshAll() {
   syncLbRoundToTournamentModelRound();
   updateRoundLabels();
@@ -12909,12 +12924,9 @@ async function loadProjections(opts = {}) {
 
   const finishOk = async () => {
     lastProjectionsLoadedAtMs = Date.now();
-    const sidecars = [];
-    if (reloadSidecar) sidecars.push(loadPlayerShots());
-    // One merge from live-in-play.json even when client polling is off (fixes stale outright model vs books).
-    if (!isFileProtocol()) sidecars.push(fetchAndMergeDatagolfLiveInPlay({ force: true }));
-    sidecars.push(loadCourseTableJson());
-    await Promise.all(sidecars);
+    const blocking = [];
+    if (reloadSidecar) blocking.push(loadPlayerShots());
+    await Promise.all(blocking);
     await yieldToMain();
     await refreshAll();
     updateStatusBar();
@@ -12922,6 +12934,9 @@ async function loadProjections(opts = {}) {
     if (datagolfLiveOverlayEnabled() && !isFileProtocol()) {
       startDatagolfLivePolling();
     }
+    requestAnimationFrame(() => {
+      void prefetchPostProjectionsSidecarsAfterPaint();
+    });
   };
 
   try {
