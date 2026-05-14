@@ -12854,15 +12854,26 @@ function updateHangout() {
   scheduleHangoutSimulateDebounced();
 }
 
-function refreshAll() {
+/** Yield one frame so the browser can paint / handle input before more main-thread work. */
+function yieldToMain() {
+  return new Promise((resolve) => {
+    if (typeof requestAnimationFrame === "function") requestAnimationFrame(() => resolve());
+    else setTimeout(resolve, 0);
+  });
+}
+
+/** Rebuild all tables/lists from `DATA` after projections (or live merge). Yields between chunks so first paint is not blocked. */
+async function refreshAll() {
   syncLbRoundToTournamentModelRound();
   updateRoundLabels();
   buildOuTable();
+  await yieldToMain();
   buildEvTable();
   buildMatchupsTable();
   buildOutrightsTable();
   fillPropGolferSelect();
   fillLivePropGolferSelect();
+  await yieldToMain();
   /* Do not syncLivePropBookLineAndOddsFromDk here — background refresh would wipe manual live line / odds. */
   const tab = activeAppTabId();
   if (tab === "props") {
@@ -12876,6 +12887,7 @@ function refreshAll() {
   }
   if (tab === "course-fit") {
     void ensurePlayerHistoryLoadedForTab("course-fit");
+    await yieldToMain();
     buildCourseFitTab();
   }
 }
@@ -12897,15 +12909,14 @@ async function loadProjections(opts = {}) {
 
   const finishOk = async () => {
     lastProjectionsLoadedAtMs = Date.now();
-    if (reloadSidecar) {
-      await loadPlayerShots();
-    }
+    const sidecars = [];
+    if (reloadSidecar) sidecars.push(loadPlayerShots());
     // One merge from live-in-play.json even when client polling is off (fixes stale outright model vs books).
-    if (!isFileProtocol()) {
-      await fetchAndMergeDatagolfLiveInPlay({ force: true });
-    }
-    await loadCourseTableJson();
-    refreshAll();
+    if (!isFileProtocol()) sidecars.push(fetchAndMergeDatagolfLiveInPlay({ force: true }));
+    sidecars.push(loadCourseTableJson());
+    await Promise.all(sidecars);
+    await yieldToMain();
+    await refreshAll();
     updateStatusBar();
     stopDatagolfLivePolling();
     if (datagolfLiveOverlayEnabled() && !isFileProtocol()) {
