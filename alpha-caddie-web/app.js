@@ -10404,7 +10404,7 @@ function actualForRoundRow(statKey, row) {
     return v === 0 || v === 1 ? NaN : v;
   }
   if (statKey === "fairways") {
-    const v = historyGirOrFairwaysCount(row.fairways, 14);
+    const v = historyGirOrFairwaysCount(row.fairways, fairwayHolesModeledFromData());
     return v === 0 || v === 1 ? NaN : v;
   }
   if (statKey === "putts") {

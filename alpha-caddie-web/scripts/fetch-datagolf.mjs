@@ -749,12 +749,18 @@ function fairwayHitsExpectation(x, nFw) {
   return x;
 }
 
-/** Skill-only fairways: decomposition rate → count, else SG:OTT model (no fantasy blend). */
+/** Skill-only fairways: blend driving-field rate with SG:OTT expectation; never trust (0,1) scalars alone. */
 function projectedFairwaysFromSkillOnly(mu_sg, skRow, nFw, fieldMeanOtt, drivingDistYds, fieldMeanDrive) {
-  const fw01 = fairwayRate01FromDrivingSkill(skRow, nFw);
   const ottFw = fairwaysExpectedFromSkill(mu_sg, skRow?.sg_ott, nFw, fieldMeanOtt, drivingDistYds, fieldMeanDrive);
-  if (Number.isFinite(fw01)) return fairwayHitsExpectation(fw01 * nFw, nFw);
-  return fairwayHitsExpectation(ottFw, nFw);
+  const fw01 = fairwayRate01FromDrivingSkill(skRow, nFw);
+  if (!Number.isFinite(ottFw)) {
+    return Number.isFinite(fw01) ? fairwayHitsExpectation(fw01 * nFw, nFw) : NaN;
+  }
+  if (!Number.isFinite(fw01)) return fairwayHitsExpectation(ottFw, nFw);
+  const fromDrv = fw01 * nFw;
+  const diff = Math.abs(fromDrv - ottFw);
+  if (diff > 1.5) return fairwayHitsExpectation(ottFw, nFw);
+  return fairwayHitsExpectation(0.25 * fromDrv + 0.75 * ottFw, nFw);
 }
 
 /**

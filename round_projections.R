@@ -1505,14 +1505,26 @@ if (nrow(dg) == 0) {
           is.finite(gir_m) ~ gir_m,
           TRUE ~ NA_real_
         ),
+        # Historical fw_m: fraction (0–1], count on par-4/5 holes, or percent (15–100 when > n_fw).
+        fw_hist_n = dplyr::case_when(
+          is.finite(fw_m) & fw_m > 0 & fw_m <= 1 ~ fw_m * n_fw_holes_proj,
+          is.finite(fw_m) & fw_m > as.numeric(n_fw_holes_proj) & fw_m <= 100 ~ (fw_m / 100) * n_fw_holes_proj,
+          is.finite(fw_m) & fw_m > 1 & fw_m <= as.numeric(n_fw_holes_proj) ~ fw_m,
+          is.finite(fw_m) ~ fw_m,
+          TRUE ~ NA_real_
+        ),
+        # Shot MC fairways can sit far below course/historical driving — prefer historical when they diverge.
         fairways = dplyr::case_when(
+          is.finite(s_fairways) & is.finite(fw_hist_n) & abs(s_fairways - fw_hist_n) > 2.5 ~ fw_hist_n,
           is.finite(s_fairways) ~ s_fairways,
-          is.finite(fw_m) & fw_m <= 1 ~ fw_m * n_fw_holes_proj,
+          is.finite(fw_m) & fw_m > 0 & fw_m <= 1 ~ fw_m * n_fw_holes_proj,
+          is.finite(fw_m) & fw_m > as.numeric(n_fw_holes_proj) & fw_m <= 100 ~ (fw_m / 100) * n_fw_holes_proj,
+          is.finite(fw_m) & fw_m > 1 & fw_m <= as.numeric(n_fw_holes_proj) ~ fw_m,
           is.finite(fw_m) ~ fw_m,
           TRUE ~ NA_real_
         )
       ) %>%
-      dplyr::select(-dplyr::any_of(c("gir_m_pl", "fw_m_pl", "gir_m", "fw_m", "s_gir", "s_fairways")))
+      dplyr::select(-dplyr::any_of(c("gir_m_pl", "fw_m_pl", "gir_m", "fw_m", "fw_hist_n", "s_gir", "s_fairways")))
     dg_r <- dg_r %>%
       mutate(
         round       = r,
