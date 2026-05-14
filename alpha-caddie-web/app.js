@@ -10057,6 +10057,41 @@ function meanNumFromRounds(rounds, key) {
   return vals.reduce((a, b) => a + b, 0) / vals.length;
 }
 
+/** Map pricing UI skill value to projection / history SG column (e.g. `sg_putt`). */
+function pricingSkillColumnKeyFromRaw(skillRaw) {
+  const skRaw = String(skillRaw || "sg_total").toLowerCase();
+  return skRaw === "default" ? "sg_total" : PRICING_SKILL_COLUMNS.includes(skRaw) ? skRaw : "sg_total";
+}
+
+/**
+ * Skill-focus fallback when round history is short or lacks the chosen pillar: player SG vs field median
+ * on the active model round so +EV Model odds respond to the Skill dropdown (Outright Win, matchups, O/U).
+ */
+function projectionSkillFocusNudgeFromField(dgId, skillKey) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id) || !PRICING_SKILL_COLUMNS.includes(skillKey)) return 0;
+  const prRound = getModelRoundForEv();
+  const row = projectionPlayerRowForModel(id, prRound);
+  if (!row) return 0;
+  const v = num(row[skillKey], NaN);
+  if (!Number.isFinite(v)) return 0;
+  const vals = [];
+  for (const p of DATA.players || []) {
+    const pid = Math.round(num(p.dg_id, NaN));
+    if (!Number.isFinite(pid)) continue;
+    const pr = projectionPlayerRowForModel(pid, prRound);
+    if (!pr) continue;
+    const x = num(pr[skillKey], NaN);
+    if (Number.isFinite(x)) vals.push(x);
+  }
+  if (vals.length < 8) return 0;
+  vals.sort((a, b) => a - b);
+  const mid = Math.floor(vals.length / 2);
+  const median = vals.length % 2 === 1 ? vals[mid] : (vals[mid - 1] + vals[mid]) / 2;
+  const delta = v - median;
+  return clamp(delta * 0.32, -0.35, 0.35);
+}
+
 function courseNameMatchesVenue(courseNameRaw, venueRaw) {
   const c = String(courseNameRaw || "").trim().toLowerCase();
   const v = String(venueRaw || "").trim().toLowerCase();
@@ -10094,6 +10129,12 @@ function pricingModeMuSgBonusForMode(dgId, modeRaw, skillRaw = PRICING_STATE.ski
 
   const rounds = historyRoundsChronoNewestFirst(id);
   if (rounds.length < 4) {
+    if (mode === "skill") {
+      const sk0 = pricingSkillColumnKeyFromRaw(skillRaw);
+      const fb0 = projectionSkillFocusNudgeFromField(id, sk0);
+      PRICING_MU_BONUS_CACHE.set(cacheKey, fb0);
+      return fb0;
+    }
     PRICING_MU_BONUS_CACHE.set(cacheKey, 0);
     return 0;
   }
@@ -10151,9 +10192,7 @@ function pricingModeMuSgBonusForMode(dgId, modeRaw, skillRaw = PRICING_STATE.ski
   }
 
   if (mode === "skill") {
-    const skRaw = String(skillRaw || "sg_total").toLowerCase();
-    const sk =
-      skRaw === "default" ? "sg_total" : PRICING_SKILL_COLUMNS.includes(skRaw) ? skRaw : "sg_total";
+    const sk = pricingSkillColumnKeyFromRaw(skillRaw);
     const nRec = Math.min(8, Math.max(3, Math.floor(rounds.length / 2)));
     const recent = rounds.slice(0, nRec);
     const older = rounds.slice(nRec, Math.min(rounds.length, nRec + 24));
@@ -10164,8 +10203,9 @@ function pricingModeMuSgBonusForMode(dgId, modeRaw, skillRaw = PRICING_STATE.ski
       PRICING_MU_BONUS_CACHE.set(cacheKey, out);
       return out;
     }
-    PRICING_MU_BONUS_CACHE.set(cacheKey, 0);
-    return 0;
+    const fb = projectionSkillFocusNudgeFromField(id, sk);
+    PRICING_MU_BONUS_CACHE.set(cacheKey, fb);
+    return fb;
   }
 
   PRICING_MU_BONUS_CACHE.set(cacheKey, 0);
