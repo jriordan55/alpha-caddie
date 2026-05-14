@@ -2740,17 +2740,8 @@ function refreshPricingAffectedViews() {
   if (tab === "live-prop") return void renderLivePropPredictor();
   if (tab === "hangout") return void scheduleHangoutSimulateDebounced();
   if (tab === "course-fit") return void buildCourseFitTab();
-  // Fallback for early boot / unknown tab.
+  /* Unknown / very early tab state — refresh round projections only (avoid rebuilding every hidden panel). */
   buildOuTable();
-  buildEvTable();
-  buildMatchupsTable();
-  buildMatchupAnalysisTool();
-  buildOutrightsTable();
-  renderPropsTrends();
-  updatePropsFooterEv();
-  renderLivePropPredictor();
-  scheduleHangoutSimulateDebounced();
-  buildCourseFitTab();
 }
 
 function weatherScalarFromInput(raw, cur, lo, hi) {
@@ -12894,20 +12885,25 @@ function prefetchPostProjectionsSidecarsAfterPaint() {
   });
 }
 
-/** Rebuild all tables/lists from `DATA` after projections load. Yields between chunks so the main thread can breathe. */
+/** Rebuild projection-driven UI for the visible tab only (avoids rebuilding +EV / matchups / O/U grids on every poll). */
 async function refreshAll() {
   syncLbRoundToTournamentModelRound();
   updateRoundLabels();
-  buildOuTable();
-  await yieldToMain();
-  buildEvTable();
-  buildMatchupsTable();
-  buildOutrightsTable();
   fillPropGolferSelect();
   fillLivePropGolferSelect();
+
+  const tab = activeAppTabId() || "ou";
+  if (tab === "ou") buildOuTable();
+  else if (tab === "ev") buildEvTable();
+  else if (tab === "matchup-analysis") buildMatchupAnalysisTool();
+
+  const pm = document.getElementById("panel-matchups");
+  if (pm && !pm.hidden) buildMatchupsTable();
+  const po = document.getElementById("panel-outrights");
+  if (po && !po.hidden) buildOutrightsTable();
+
   await yieldToMain();
-  /* Do not syncLivePropBookLineAndOddsFromDk here — background refresh would wipe manual live line / odds. */
-  const tab = activeAppTabId();
+
   if (tab === "props") {
     void ensurePlayerHistoryLoadedForTab("props");
     renderPropsTrends();
@@ -14061,6 +14057,7 @@ function initTabs() {
       });
       if (tab === "ou")
         requestAnimationFrame(() => {
+          buildOuTable();
           syncOuChartCard();
           const ouProjCanvas = document.querySelector("#table-ou tbody .ou-proj-detail-canvas");
           if (ouProjCanvas && ouProjExpandedDetail) {
@@ -14160,10 +14157,14 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("lb-round")?.addEventListener("change", () => {
     ouProjExpandedKey = "";
     updateRoundLabels();
-    buildOuTable();
-    buildEvTable();
-    buildMatchupsTable();
-    buildMatchupAnalysisTool();
+    const t = activeAppTabId() || "ou";
+    if (t === "ou") buildOuTable();
+    if (t === "ev") buildEvTable();
+    const pm = document.getElementById("panel-matchups");
+    if (pm && !pm.hidden) buildMatchupsTable();
+    const po = document.getElementById("panel-outrights");
+    if (po && !po.hidden) buildOutrightsTable();
+    if (activeAppTabId() === "matchup-analysis") buildMatchupAnalysisTool();
     if (activeAppTabId() === "props") renderPropsTrends();
     syncLivePropBookLineAndOddsFromDk();
     if (activeAppTabId() === "live-prop") renderLivePropPredictor();
