@@ -5379,11 +5379,22 @@ function collectUnifiedEvRows() {
 function fillEvFilters(rows) {
   const g = document.getElementById("ev-filter-golfer");
   const m = document.getElementById("ev-filter-market");
-  const b = document.getElementById("ev-filter-book");
-  if (!g || !m || !b) return;
+  const booksList = document.getElementById("ev-filter-books-list");
+  const booksAll = document.getElementById("ev-filter-books-all");
+  if (!g || !m || !booksList || !booksAll) return;
+  initEvBookFilterCheckboxesOnce();
   const gPrev = g.value;
   const mPrev = m.value;
-  const bPrev = b.value;
+  const bSelected = new Set();
+  if (!booksAll.checked) {
+    booksList.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+      const el = /** @type {HTMLInputElement} */ (cb);
+      if (el.checked) {
+        const k = normalizeEvSportsbookKey(el.value);
+        if (k) bSelected.add(k);
+      }
+    });
+  }
   const gSet = new Set(rows.map((r) => r.golfer).filter(Boolean));
   const mSet = new Set(rows.map((r) => r.market).filter(Boolean));
   for (const label of ["Tournament Matchups", "Round Matchups", "3 Balls"]) mSet.add(label);
@@ -5397,17 +5408,69 @@ function fillEvFilters(rows) {
     [...vals].sort((a, c) => String(a).localeCompare(String(c))).forEach((v) => {
       const op = document.createElement("option");
       op.value = String(v);
-      op.textContent = sel === b ? bookMeta(v).label : String(v);
+      op.textContent = sel === g ? String(v) : String(v);
       sel.appendChild(op);
     });
   };
   refill(g, gSet);
   refill(m, mSet);
-  refill(b, bSet);
+  booksList.innerHTML = "";
+  for (const v of [...bSet].sort((a, c) => String(a).localeCompare(String(c)))) {
+    const lab = document.createElement("label");
+    lab.className = "ev-filter-book-check";
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.value = String(v);
+    const nk = normalizeEvSportsbookKey(v);
+    cb.checked = !booksAll.checked && bSelected.has(nk);
+    lab.appendChild(cb);
+    lab.appendChild(document.createTextNode(bookMeta(v).label));
+    booksList.appendChild(lab);
+  }
+  const anyBookChecked = [...booksList.querySelectorAll('input[type="checkbox"]')].some(
+    (cb) => /** @type {HTMLInputElement} */ (cb).checked,
+  );
+  booksAll.checked = !anyBookChecked;
   if ([...g.options].some((o) => o.value === gPrev)) g.value = gPrev;
   if ([...m.options].some((o) => o.value === mPrev)) m.value = mPrev;
-  if ([...b.options].some((o) => o.value === bPrev)) b.value = bPrev;
   refreshGolferComboboxFromSelect("ev-filter-golfer");
+}
+
+/** +EV “Best books” filter: `null` = all books; else row must match one of the checked keys. */
+function selectedEvFilterBookSet() {
+  const allEl = document.getElementById("ev-filter-books-all");
+  const list = document.getElementById("ev-filter-books-list");
+  if (!list) return null;
+  if (!allEl || allEl.checked) return null;
+  const set = new Set();
+  for (const cb of list.querySelectorAll('input[type="checkbox"]')) {
+    const el = /** @type {HTMLInputElement} */ (cb);
+    if (!el.checked) continue;
+    const k = normalizeEvSportsbookKey(el.value);
+    if (k) set.add(k);
+  }
+  return set.size ? set : null;
+}
+
+function initEvBookFilterCheckboxesOnce() {
+  const wrap = document.getElementById("ev-filter-books-wrap");
+  if (!wrap || wrap.dataset.evBookFilterWired === "1") return;
+  wrap.dataset.evBookFilterWired = "1";
+  wrap.addEventListener("change", (e) => {
+    const t = e.target;
+    if (!(t instanceof HTMLInputElement) || t.type !== "checkbox") return;
+    if (t.id === "ev-filter-books-all") {
+      if (t.checked) {
+        wrap.querySelectorAll('#ev-filter-books-list input[type="checkbox"]').forEach((cb) => {
+          /** @type {HTMLInputElement} */ (cb).checked = false;
+        });
+      }
+    } else if (t.checked) {
+      const allEl = document.getElementById("ev-filter-books-all");
+      if (allEl) allEl.checked = false;
+    }
+    buildEvTable();
+  });
 }
 
 let evSort = { key: "model_ev", dir: -1 };
@@ -5511,7 +5574,7 @@ function buildEvTable() {
       ? gTyping || gCommitted
       : gCommitted || gTyping;
   const m = String(document.getElementById("ev-filter-market")?.value || "");
-  const b = String(document.getElementById("ev-filter-book")?.value || "");
+  const bookFilter = selectedEvFilterBookSet();
   const bankroll = num(document.getElementById("ev-bankroll")?.value, 1000);
   const boostPct = evProfitBoostPctFromUi();
   const devigPrefs = loadEvDevigPrefs();
@@ -5535,7 +5598,7 @@ function buildEvTable() {
       const rowBook = normalizeEvSportsbookKey(r.bestBook);
       if (!evSportsbookAllowed(rowBook)) return false;
       const okG = !g || String(r.golfer || "").toLowerCase().includes(gLow);
-      return okG && (!m || r.market === m) && (!b || rowBook === b);
+      return okG && (!m || r.market === m) && (!bookFilter || bookFilter.has(rowBook));
     })
     .map((r) => {
       const dec0 = num(r.bestDec, NaN);
@@ -5568,7 +5631,16 @@ function buildEvTable() {
     tbody.appendChild(tr);
     return;
   }
-  const evDash = (s) => (s === "—" ? "" : s);
+  const evDash = (s) => {
+    const t = String(s ?? "").trim();
+    if (t === "—" || t === "-" || t === "–") return "";
+    return String(s ?? "");
+  };
+  const evCell = (s) => {
+    const t = String(s ?? "").trim();
+    if (t === "—" || t === "-" || t === "–") return "";
+    return String(s ?? "");
+  };
   for (const r of out) {
     const tr = document.createElement("tr");
     const mkTd = (txt, cls = "") => {
@@ -5592,7 +5664,7 @@ function buildEvTable() {
     const modelEvTd = mkTd(Number.isFinite(mEv) ? `${(mEv * 100).toFixed(1)}%` : "", "num");
     if (Number.isFinite(mEv)) modelEvTd.classList.add(mEv >= 0 ? "ev-pos" : "ev-neg");
     tr.appendChild(modelEvTd);
-    tr.appendChild(mkTd(kellyStr, "num"));
+    tr.appendChild(mkTd(evCell(kellyStr), "num"));
     const bb = document.createElement("td");
     bb.className = "num best-book-td";
     if (r.bestBook) {
@@ -5603,16 +5675,16 @@ function buildEvTable() {
       bb.innerHTML = `${bookBadgeHtml(r.bestBook)} <span class="best-book-odds">${evDash(oddsDisp)}</span>`;
     }
     tr.appendChild(bb);
-    tr.appendChild(mkTd(r.golfer));
+    tr.appendChild(mkTd(evCell(r.golfer), ""));
     const modelTd = document.createElement("td");
     modelTd.className = "num";
-    modelTd.textContent = modelAmericanFromProb(r.modelPct);
+    modelTd.textContent = evCell(modelAmericanFromProb(r.modelPct));
     tr.appendChild(modelTd);
-    tr.appendChild(mkTd(modelAmericanFromProb(r.consensusP), "num"));
-    tr.appendChild(mkTd(impliedStr, "num"));
-    tr.appendChild(mkTd(deltaStr, "num"));
-    tr.appendChild(mkTd(r.market));
-    tr.appendChild(mkTd(r.bet));
+    tr.appendChild(mkTd(evCell(modelAmericanFromProb(r.consensusP)), "num"));
+    tr.appendChild(mkTd(evCell(impliedStr), "num"));
+    tr.appendChild(mkTd(evCell(deltaStr), "num"));
+    tr.appendChild(mkTd(evCell(r.market), ""));
+    tr.appendChild(mkTd(evCell(r.bet), ""));
     tbody.appendChild(tr);
   }
 }
@@ -14196,7 +14268,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   document.getElementById("outright-market")?.addEventListener("change", () => buildOutrightsTable());
   document.getElementById("matchups-market")?.addEventListener("change", () => buildMatchupsTable());
-  ["ev-filter-golfer", "ev-filter-market", "ev-filter-book"].forEach((id) =>
+  ["ev-filter-golfer", "ev-filter-market"].forEach((id) =>
     document.getElementById(id)?.addEventListener("change", () => buildEvTable()),
   );
   {
