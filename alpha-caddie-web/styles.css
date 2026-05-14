@@ -4369,12 +4369,23 @@ th.matchup-analysis-best-pick {
     white-space: normal;
   }
   .toolbar select,
-  .toolbar input {
+  .toolbar input:not([type="checkbox"]):not([type="radio"]) {
     margin-left: 0 !important;
     width: 100%;
     max-width: 100%;
     min-height: 44px;
     font-size: 16px;
+  }
+  /* Exclude from full-width 44px rule (breaks +EV book checkboxes on narrow viewports). */
+  .toolbar input[type="checkbox"],
+  .toolbar input[type="radio"] {
+    margin-left: 0 !important;
+    width: 1.25rem;
+    height: 1.25rem;
+    min-height: 0;
+    max-width: none;
+    flex-shrink: 0;
+    vertical-align: middle;
   }
   .weather-toolbar-title {
     margin-right: 0;
