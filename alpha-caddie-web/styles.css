@@ -219,42 +219,15 @@ body {
   margin-left: 0;
 }
 
-/* +EV: multi-select which books can appear as “best book” for a row */
+/* +EV: which book can appear as “best book” for a row (compact select) */
 .ev-filter-books-toolbar-label {
   min-width: 0;
   max-width: min(420px, 100%);
 }
-.ev-filter-books-wrap {
-  margin-left: 8px;
-  padding: 8px 10px;
-  background: var(--golf-elevated-soft);
-  border: 1px solid var(--golf-border);
-  border-radius: 10px;
-  max-width: 100%;
-}
-.ev-filter-books-all {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-bottom: 6px;
-  cursor: pointer;
-}
-.ev-filter-books-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 12px;
-  max-height: 7.5rem;
-  overflow-y: auto;
-}
-.ev-filter-book-check {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.78rem;
-  cursor: pointer;
-  white-space: nowrap;
+.ev-filter-books-select {
+  min-width: 0;
+  width: 100%;
+  max-width: min(420px, 100%);
 }
 
 /* Round projections — toolbar (round + golfer); legacy line tools may be hidden */

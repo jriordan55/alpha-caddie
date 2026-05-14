@@ -5381,22 +5381,12 @@ function collectUnifiedEvRows() {
 function fillEvFilters(rows) {
   const g = document.getElementById("ev-filter-golfer");
   const m = document.getElementById("ev-filter-market");
-  const booksList = document.getElementById("ev-filter-books-list");
-  const booksAll = document.getElementById("ev-filter-books-all");
-  if (!g || !m || !booksList || !booksAll) return;
-  initEvBookFilterCheckboxesOnce();
+  const booksSel = document.getElementById("ev-filter-books-select");
+  if (!g || !m || !booksSel) return;
   const gPrev = g.value;
   const mPrev = m.value;
-  const bSelected = new Set();
-  if (!booksAll.checked) {
-    booksList.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
-      const el = /** @type {HTMLInputElement} */ (cb);
-      if (el.checked) {
-        const k = normalizeEvSportsbookKey(el.value);
-        if (k) bSelected.add(k);
-      }
-    });
-  }
+  const booksPrevVal = String(booksSel.value || "").trim();
+  const booksPrevKey = booksPrevVal ? normalizeEvSportsbookKey(booksPrevVal) : "";
   const gSet = new Set(rows.map((r) => r.golfer).filter(Boolean));
   const mSet = new Set(rows.map((r) => r.market).filter(Boolean));
   for (const label of ["Tournament Matchups", "Round Matchups", "3 Balls"]) mSet.add(label);
@@ -5416,63 +5406,39 @@ function fillEvFilters(rows) {
   };
   refill(g, gSet);
   refill(m, mSet);
-  booksList.innerHTML = "";
+  booksSel.innerHTML = "";
+  const allBooksOp = document.createElement("option");
+  allBooksOp.value = "";
+  allBooksOp.textContent = "All books";
+  booksSel.appendChild(allBooksOp);
   for (const v of [...bSet].sort((a, c) => String(a).localeCompare(String(c)))) {
-    const lab = document.createElement("label");
-    lab.className = "ev-filter-book-check";
-    const cb = document.createElement("input");
-    cb.type = "checkbox";
-    cb.value = String(v);
-    const nk = normalizeEvSportsbookKey(v);
-    cb.checked = !booksAll.checked && bSelected.has(nk);
-    lab.appendChild(cb);
-    lab.appendChild(document.createTextNode(bookMeta(v).label));
-    booksList.appendChild(lab);
+    const op = document.createElement("option");
+    op.value = String(v);
+    op.textContent = bookMeta(v).label;
+    booksSel.appendChild(op);
   }
-  const anyBookChecked = [...booksList.querySelectorAll('input[type="checkbox"]')].some(
-    (cb) => /** @type {HTMLInputElement} */ (cb).checked,
-  );
-  booksAll.checked = !anyBookChecked;
+  if (booksPrevKey) {
+    const match = [...booksSel.options].find(
+      (o) => o.value && normalizeEvSportsbookKey(o.value) === booksPrevKey,
+    );
+    booksSel.value = match ? match.value : "";
+  } else {
+    booksSel.value = "";
+  }
   if ([...g.options].some((o) => o.value === gPrev)) g.value = gPrev;
   if ([...m.options].some((o) => o.value === mPrev)) m.value = mPrev;
   refreshGolferComboboxFromSelect("ev-filter-golfer");
 }
 
-/** +EV “Best books” filter: `null` = all books; else row must match one of the checked keys. */
+/** +EV “Best books” filter: `null` = all books; else row must match that book (single-select). */
 function selectedEvFilterBookSet() {
-  const allEl = document.getElementById("ev-filter-books-all");
-  const list = document.getElementById("ev-filter-books-list");
-  if (!list) return null;
-  if (!allEl || allEl.checked) return null;
-  const set = new Set();
-  for (const cb of list.querySelectorAll('input[type="checkbox"]')) {
-    const el = /** @type {HTMLInputElement} */ (cb);
-    if (!el.checked) continue;
-    const k = normalizeEvSportsbookKey(el.value);
-    if (k) set.add(k);
-  }
-  return set.size ? set : null;
-}
-
-function initEvBookFilterCheckboxesOnce() {
-  const wrap = document.getElementById("ev-filter-books-wrap");
-  if (!wrap || wrap.dataset.evBookFilterWired === "1") return;
-  wrap.dataset.evBookFilterWired = "1";
-  wrap.addEventListener("change", (e) => {
-    const t = e.target;
-    if (!(t instanceof HTMLInputElement) || t.type !== "checkbox") return;
-    if (t.id === "ev-filter-books-all") {
-      if (t.checked) {
-        wrap.querySelectorAll('#ev-filter-books-list input[type="checkbox"]').forEach((cb) => {
-          /** @type {HTMLInputElement} */ (cb).checked = false;
-        });
-      }
-    } else if (t.checked) {
-      const allEl = document.getElementById("ev-filter-books-all");
-      if (allEl) allEl.checked = false;
-    }
-    buildEvTable();
-  });
+  const sel = document.getElementById("ev-filter-books-select");
+  if (!sel) return null;
+  const raw = String(sel.value || "").trim();
+  if (!raw) return null;
+  const k = normalizeEvSportsbookKey(raw);
+  if (!k) return null;
+  return new Set([k]);
 }
 
 let evSort = { key: "model_ev", dir: -1 };
@@ -14325,7 +14291,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   document.getElementById("outright-market")?.addEventListener("change", () => buildOutrightsTable());
   document.getElementById("matchups-market")?.addEventListener("change", () => buildMatchupsTable());
-  ["ev-filter-golfer", "ev-filter-market"].forEach((id) =>
+  ["ev-filter-golfer", "ev-filter-market", "ev-filter-books-select"].forEach((id) =>
     document.getElementById(id)?.addEventListener("change", () => buildEvTable()),
   );
   {

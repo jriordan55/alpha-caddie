@@ -625,10 +625,9 @@
           </select>
         </label>
         <label class="toolbar-label ev-filter-books-toolbar-label">Best books
-          <div id="ev-filter-books-wrap" class="ev-filter-books-wrap" role="group" aria-label="Filter by best book">
-            <label class="ev-filter-books-all"><input type="checkbox" id="ev-filter-books-all" checked /> All books</label>
-            <div id="ev-filter-books-list" class="ev-filter-books-list"></div>
-          </div>
+          <select id="ev-filter-books-select" class="ev-filter-books-select" aria-label="Filter by best book">
+            <option value="">All books</option>
+          </select>
         </label>
         <label class="toolbar-label">Max odds
           <input id="ev-filter-max-odds" type="number" step="100" value="10000" title="Hide rows at this American price or longer. Default excludes +10000 and above." />
@@ -1028,7 +1027,7 @@
           <dt>Market</dt>
           <dd>Show only one product type (for example round matchups, tournament matchups, win, top 10).</dd>
           <dt>Best books</dt>
-          <dd>Check one or more sportsbooks to keep only rows where the best price for that bet is at one of them. Leave <strong>All books</strong> on to show every book.</dd>
+          <dd>Pick one sportsbook to keep only rows where the best price for that bet is there, or <strong>All books</strong> to show every book.</dd>
           <dt>Max odds</dt>
           <dd>Hide longshots at that American price or longer. The default <strong>10000</strong> keeps odds below +10000.</dd>
           <dt>Bankroll ($)</dt>
