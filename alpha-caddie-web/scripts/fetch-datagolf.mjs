@@ -2121,10 +2121,10 @@ async function main() {
     outrights_odds_format: "percent",
     /** Stored raw from betting-tools/matchups with odds_format=decimal */
     matchups_odds_format: "decimal",
-    /** Same-origin browser polls only; server pushes DataGolf via serve-with-refresh pollers. */
-    projections_poll_interval_sec: 20,
-    datagolf_live_poll_interval_sec: 20,
-    poll_datagolf_live_predictions: true,
+    /** Same-origin browser polls only; set >0 to enable silent projections reload (or ?poll=sec). */
+    projections_poll_interval_sec: 0,
+    datagolf_live_poll_interval_sec: 0,
+    poll_datagolf_live_predictions: false,
     /** +EV / outrights: raw export probs (no model↔consensus blend line; no live-board nudges unless enabled). */
     outrights_model_blend_weight: 1,
     outright_win_score_blend: 0,

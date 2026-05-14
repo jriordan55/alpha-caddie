@@ -244,9 +244,10 @@ payload <- list(
   players = players,
   props = props_df
 )
-# Browser silent-refresh interval for projections.json (book odds / +EV). Override: GOLF_CLIENT_PROJECTIONS_POLL_SEC
-proj_poll_sec <- suppressWarnings(as.integer(Sys.getenv("GOLF_CLIENT_PROJECTIONS_POLL_SEC", "30")))
-if (!is.finite(proj_poll_sec) || proj_poll_sec < 15L) proj_poll_sec <- 30L
+# Browser silent-refresh interval for projections.json (0 = off; 15–3600 sec). Override: GOLF_CLIENT_PROJECTIONS_POLL_SEC
+proj_poll_sec <- suppressWarnings(as.integer(Sys.getenv("GOLF_CLIENT_PROJECTIONS_POLL_SEC", "0")))
+if (!is.finite(proj_poll_sec) || proj_poll_sec < 0L) proj_poll_sec <- 0L
+if (proj_poll_sec > 0L && proj_poll_sec < 15L) proj_poll_sec <- 15L
 if (proj_poll_sec > 3600L) proj_poll_sec <- 3600L
 payload$projections_poll_interval_sec <- proj_poll_sec
 if (poll_live) {

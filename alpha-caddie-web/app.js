@@ -2,7 +2,8 @@
  * AlphaCaddie — demo grid is bundled; over HTTP the app loads projections.json (same schema as
  * scripts/export_projections_for_website.R after round_projections.R → simulated_round_static.rds).
  * Export writes both website/public/data/projections.json and alpha-caddie-web/projections.json.
- * Auto-refresh: default ~30s chained polls (?poll=0 off). meta.projections_poll_interval_sec (15–3600) overrides.
+ * Background projections reload: off by default. Enable with ?poll=30 (15–3600s) or meta.projections_poll_interval_sec.
+ * Disable explicitly: ?poll=0. Value 0 in meta turns polling off.
  * Override URL: ?projections=/path.json
  * or window.__ALPHA_CADDIE_PROJECTIONS_URL__. Round history: embedded-player-round-history.js;
  * player_round_history.json + player_shots_web.json when served over HTTP.
@@ -20,9 +21,8 @@
  * projections.json: player win/top_* are implied probs (0–1) from preds/pre-tournament (default API decimal odds).
  * Outrights book columns: implied % (0–100) from DataGolf `betting-tools/outrights` (same markets as
  * https://datagolf.com/betting-tool-finish; fetch scripts default odds_format=percent to match IMPLIED %). Over HTTP
- * the app refetches live-in-play.json often (default ~30s) but only re-merges when the bundle token
- * changes (in-play last_update + live feed timestamps). Opt out: ?liveInPlay=0
- * or ?liveInPlayPoll=0, or meta.poll_datagolf_live_predictions: false. Poll interval: ?liveInPlayPoll=90
+ * the app can refetch live-in-play.json on an interval when meta.poll_datagolf_live_predictions is true
+ * or ?liveOverlay=1 / ?liveInPlay=1. Opt out: ?liveInPlay=0 or ?liveInPlayPoll=0. Poll interval: ?liveInPlayPoll=90
  * (seconds, 15–600). Never embed a DG API key in the browser.
  */
 
@@ -888,20 +888,19 @@ function datagolfLivePollingDisabledExplicitly() {
   return false;
 }
 
-/** Refetch live-in-play.json on an interval when not file:// and not explicitly disabled. */
+/** Refetch live-in-play.json on an interval when meta opts in or URL forces live overlay (default off). */
 function datagolfLiveOverlayEnabled() {
   try {
     const q = new URLSearchParams(window.location.search);
     if (q.get("liveOverlay") === "1" || q.get("liveInPlay") === "1") return true;
   } catch (_) {}
   if (datagolfLivePollingDisabledExplicitly()) return false;
-  if (DATA?.meta?.poll_datagolf_live_predictions === true) return true;
-  return !isFileProtocol();
+  return DATA?.meta?.poll_datagolf_live_predictions === true;
 }
 
 /**
  * How often to check live-in-play.json. Merges only when dgInPlayUpdateToken() changes (DataGolf last_update).
- * Default 30s — catches their ~5 min model refresh without long gaps; periodic force-merge also reapplies JSON.
+ * Default off (0); meta.datagolf_live_poll_interval_sec 15–600 when live polling is enabled.
  */
 function datagolfLivePollIntervalMs() {
   try {
@@ -912,9 +911,10 @@ function datagolfLivePollIntervalMs() {
       return Math.min(600, Math.max(15, sec)) * 1000;
     }
   } catch (_) {}
-  const sec = num(DATA.meta?.datagolf_live_poll_interval_sec, 30);
-  if (!Number.isFinite(sec) || sec < 15) return 30 * 1000;
-  return Math.min(600, Math.max(15, sec)) * 1000;
+  const sec = num(DATA?.meta?.datagolf_live_poll_interval_sec, 0);
+  if (!Number.isFinite(sec) || sec <= 0) return 0;
+  if (sec < 15) return 15 * 1000;
+  return Math.min(600, sec) * 1000;
 }
 
 /** First non-null field from row (JSON API may use snake_case or camelCase). */
@@ -1850,8 +1850,8 @@ function startDatagolfLivePolling() {
 }
 
 /**
- * Interval for silent projections reload; 0 = disabled.
- * URL ?poll= overrides; else meta.projections_poll_interval_sec (15–3600); else 30s.
+ * Interval for silent projections reload; 0 = disabled (default when meta omits or sets 0).
+ * URL ?poll= overrides; else meta.projections_poll_interval_sec (0 or 15–3600).
  */
 function projectionsPollIntervalMs() {
   if (isFileProtocol()) return 0;
@@ -1859,8 +1859,9 @@ function projectionsPollIntervalMs() {
     const raw = new URLSearchParams(window.location.search).get("poll");
     if (raw === null || raw === "") {
       const msec = num(DATA?.meta?.projections_poll_interval_sec, NaN);
+      if (Number.isFinite(msec) && msec === 0) return 0;
       if (Number.isFinite(msec) && msec >= 15 && msec <= 3600) return msec * 1000;
-      return 30 * 1000;
+      return 0;
     }
     const t = String(raw).trim().toLowerCase();
     if (t === "0" || t === "false" || t === "off" || t === "no") return 0;
@@ -1868,7 +1869,7 @@ function projectionsPollIntervalMs() {
     if (!Number.isFinite(sec) || sec <= 0) return 0;
     return Math.min(3600, Math.max(15, sec)) * 1000;
   } catch (_) {}
-  return 30 * 1000;
+  return 0;
 }
 
 /** Chain timeouts so the next poll only starts after the previous load finishes (setInterval was skipping while inFlight). */
@@ -14620,13 +14621,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState !== "visible") return;
+    const pollMs = projectionsPollIntervalMs();
     const now = Date.now();
-    if (!isFileProtocol() && now - lastDocVisibleProjectionsRefetchAt > 8000) {
+    if (pollMs > 0 && !isFileProtocol() && now - lastDocVisibleProjectionsRefetchAt > 8000) {
       lastDocVisibleProjectionsRefetchAt = now;
       void loadProjections({ silent: true, reloadSidecar: false });
       return;
     }
-    if (activeAppTabId() === "ev" && !isFileProtocol()) {
+    if (pollMs > 0 && activeAppTabId() === "ev" && !isFileProtocol()) {
       void loadProjections({ silent: true, reloadSidecar: false });
       return;
     }
@@ -14635,11 +14637,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.addEventListener("online", () => {
     if (isFileProtocol()) return;
-    void loadProjections({ silent: true, reloadSidecar: false });
+    if (projectionsPollIntervalMs() > 0) void loadProjections({ silent: true, reloadSidecar: false });
   });
 
   window.addEventListener("pageshow", (ev) => {
     if (!ev.persisted || isFileProtocol()) return;
+    if (projectionsPollIntervalMs() <= 0) return;
     lastDocVisibleProjectionsRefetchAt = Date.now();
     void loadProjections({ silent: true, reloadSidecar: false });
   });
