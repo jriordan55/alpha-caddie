@@ -12,6 +12,7 @@
  * implied strokes vs par with **score_to_par = −μ_sg** without collapsing pars across players.
  * R2–R4 rows re-derive from scaled μ_SG (default multipliers 1, 0.945, 0.885, 0.82 — override GOLF_NODE_ROUND_MU_MULT).
  * Set GOLF_SKIP_HIST_STATS_ON_FETCH=1 to skip the historical CSV calibration pass (count curves only; GIR/FW are skill-only).
+ * Set GOLF_RESET_PROPS=1 so fetch:dg does not copy prior `props` from projections.json (default: preserve DK round O/U when the same week/event).
  * Usage (from alpha-caddie-web/):
  *   set DATAGOLF_API_KEY=your_key
  *   npm run fetch:dg
@@ -749,12 +750,23 @@ function fairwayHitsExpectation(x, nFw) {
   return x;
 }
 
-/** Fairway count vs skill proxy x ≈ −μ_sg (same scale as clamped round_score−course_par in historical CSV). */
-function fairwaysFromHistoricalStp(mu_sg, nFw, histCalib) {
+/**
+ * Tour FW vs strokes-to-par line, evaluated at skill proxy x ≈ −μ_sg, then nudged by OTT vs field and overall μ_sg
+ * (population line alone sits low for elite drivers because x is compressed vs real round score − par).
+ */
+function fairwaysFromHistoricalStp(mu_sg, nFw, histCalib, fieldMeanOtt, skRow) {
   const ln = histCalib?.fw_stp_line;
   if (!ln || !Number.isFinite(ln.a) || !Number.isFinite(ln.b)) return NaN;
   const x = Math.max(-10, Math.min(10, -clampMuSg(mu_sg)));
-  const raw = ln.a + ln.b * x;
+  let raw = ln.a + ln.b * x;
+  const mu = clampMuSg(mu_sg);
+  raw += 0.48 * Math.max(0, Math.min(2.5, mu));
+  const ott = num(skRow?.sg_ott, NaN);
+  const fo = num(fieldMeanOtt, NaN);
+  if (Number.isFinite(ott) && Number.isFinite(fo)) {
+    const edge = Math.max(-0.45, Math.min(1.15, ott - fo));
+    raw += 2.05 * edge;
+  }
   return fairwayHitsExpectation(raw, nFw);
 }
 
@@ -772,13 +784,13 @@ function projectedFairwaysFromSkillOnly(
   histCalib,
 ) {
   const ottFw = fairwaysExpectedFromSkill(mu_sg, skRow?.sg_ott, nFw, fieldMeanOtt, drivingDistYds, fieldMeanDrive);
-  const histFw = fairwaysFromHistoricalStp(mu_sg, nFw, histCalib);
+  const histFw = fairwaysFromHistoricalStp(mu_sg, nFw, histCalib, fieldMeanOtt, skRow);
   const fw01 = fairwayRate01FromDrivingSkill(skRow, nFw);
   const fromDrv = Number.isFinite(fw01) ? fw01 * nFw : NaN;
 
   let y = ottFw;
   if (Number.isFinite(histFw)) {
-    y = Number.isFinite(y) ? 0.36 * y + 0.64 * histFw : histFw;
+    y = Number.isFinite(y) ? 0.07 * y + 0.93 * histFw : histFw;
   }
   if (!Number.isFinite(y)) {
     return Number.isFinite(fromDrv) ? fairwayHitsExpectation(fromDrv, nFw) : NaN;
@@ -789,6 +801,32 @@ function projectedFairwaysFromSkillOnly(
     return fairwayHitsExpectation(0.28 * fromDrv + 0.72 * y, nFw);
   }
   return fairwayHitsExpectation(y, nFw);
+}
+
+/**
+ * Re-fetching DataGolf overwrites projections.json with `props: []` unless we carry forward prior DK / CSV rows
+ * for the same event week. Set `GOLF_RESET_PROPS=1` to force an empty props array.
+ */
+function tryPreservePropsFromDisk(outPath, eventName, courseUsed) {
+  if (String(process.env.GOLF_RESET_PROPS || "").trim() === "1") return [];
+  try {
+    if (!existsSync(outPath)) return [];
+    const prev = JSON.parse(readFileSync(outPath, "utf8"));
+    if (!Array.isArray(prev.props) || !prev.props.length) return [];
+    const wk = fieldWeekKey(eventName, courseUsed);
+    const prevWk = String(prev.datagolf_field_week_key || "").trim();
+    const sameWeek = Boolean(wk && prevWk && wk === prevWk);
+    const sameEvent =
+      eventsLikelySame(String(prev.event_name || "").trim(), String(eventName || "").trim()) &&
+      !coursesClearlyDistinct(String(prev.course_used || "").trim(), String(courseUsed || "").trim());
+    if (sameWeek || sameEvent) {
+      console.log(`[fetch-dg] preserving ${prev.props.length} props from prior projections.json`);
+      return prev.props;
+    }
+  } catch (e) {
+    console.warn("[fetch-dg] could not merge prior props:", e?.message || e);
+  }
+  return [];
 }
 
 /**
@@ -2032,6 +2070,9 @@ async function main() {
     }
   }
 
+  const projectionsOutPath = join(ROOT, "projections.json");
+  const preservedProps = tryPreservePropsFromDisk(projectionsOutPath, event_name, course_used);
+
   const payload = {
     event_name,
     course_used,
@@ -2086,15 +2127,19 @@ async function main() {
       w_ott_decomp: Math.round(histCalib.w_ott_decomp * 1000) / 1000,
     },
     players,
-    props: [],
+    props: preservedProps,
     outrights,
     matchups,
   };
 
-  const outPath = join(ROOT, "projections.json");
-  writeFileSync(outPath, JSON.stringify(payload, null, 2), "utf8");
+  writeFileSync(projectionsOutPath, JSON.stringify(payload, null, 2), "utf8");
+  if (!preservedProps.length) {
+    console.log(
+      "[fetch-dg] props[] empty — run `npm run fetch:book-odds` (DraftKings round O/U) after fetch:dg unless you set GOLF_RESET_PROPS=1 and intentionally cleared lines.",
+    );
+  }
   console.log(
-    `Wrote ${players.length} projection rows (${fieldRows.length} players × 4 rounds), outrights: ${Object.keys(outrights).join(", ")}, matchups: ${Object.keys(matchups).join(", ")} -> ${outPath}`
+    `Wrote ${players.length} projection rows (${fieldRows.length} players × 4 rounds), outrights: ${Object.keys(outrights).join(", ")}, matchups: ${Object.keys(matchups).join(", ")} -> ${projectionsOutPath}`
   );
 
   const rscriptCmd = findRscriptSync();
