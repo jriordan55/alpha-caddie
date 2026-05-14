@@ -5919,7 +5919,8 @@ function buildMatchupAnalysisTool() {
   const setMatchupPickUiHidden = (hidden) => {
     const wrap = matchupPickEl?.closest(".golfer-combobox-wrap");
     if (wrap) wrap.hidden = hidden;
-    if (matchupPickEl) matchupPickEl.hidden = hidden;
+    // Native `<select>` stays hidden: only the search field + suggest panel are visible (never show two pickers).
+    if (matchupPickEl) matchupPickEl.hidden = true;
     if (hidden) {
       const s = document.getElementById("analysis-matchup-select-search");
       if (s) s.value = "";
@@ -9027,7 +9028,10 @@ function wireGolferSuggestComboOnce(selectId) {
       commitGolferComboSearchToSelect(selectId);
       sel.dispatchEvent(new Event("change", { bubbles: true }));
     });
-  search.addEventListener("focus", refreshPanel);
+  // Matchup Analysis: do not open the suggestion list on focus alone (avoids a second “dropdown” feel); click or typing opens it.
+  const openSuggestOnFocusOnly = selectId !== "analysis-matchup-select";
+  if (openSuggestOnFocusOnly) search.addEventListener("focus", refreshPanel);
+  else search.addEventListener("click", refreshPanel);
   search.addEventListener("input", refreshPanel);
   search.addEventListener("blur", () => {
     setTimeout(() => {

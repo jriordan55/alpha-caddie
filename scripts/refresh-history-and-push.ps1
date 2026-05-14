@@ -21,8 +21,9 @@ $ErrorActionPreference = "Stop"
 #
 # Hole Hangout — hole pars per hole for the active course/event:
 #   • fetch:dg calls preds/live-hole-stats and writes hole_pars / hole_pars_source (live_hole_stats when DG serves it).
-#   • fetch:in-play → live-in-play.json (bundled live_hole_stats); then merge:live-hole-pars-into-projections re-aligns
-#     projections.json from that bundle so push:all publishes the same per-hole table as the live feed.
+#   • fetch:in-play → live-in-play.json (bundled live_hole_stats); merge:live-hole-pars-into-projections (after fetch:book-odds)
+#     re-aligns projections.json from that bundle so push:all publishes the same per-hole table as the live feed even when
+#     fetch:book-odds runs inline fetch:dg and refreshes the JSON.
 #   • course_holes.json — bundled overrides / gaps (committed); course_holes.local.json is gitignored for secrets.
 #   • hole_pars_from_shots.json — fallback map from build:history (build-player-shots-web.mjs) after rounds CSV refresh.
 #   • player-history/by-dg/*.json + manifest.json — hole-level score rows (hole_data.csv join in build-player-history.mjs);
@@ -35,12 +36,15 @@ $ErrorActionPreference = "Stop"
 # Matchup Analysis Tool stays fresh when these commands succeed:
 #   fetch:dg  → projections.players (SG pillars + merged preds/live-tournament-stats driving when DG serves it),
 #               projections.matchups (betting-tools/matchups), approach_skill_ytd.json (Course Fit shot bins)
-#   fetch:book-odds → refreshed matchup/outright odds on projections.json
+#   fetch:book-odds → matchup/outright odds + DraftKings round O/U props (Playwright) merged into projections.json
 #   fetch:in-play → live-in-play.json → browser overlays placement win probs + live_tournament_stats distance/accuracy onto DATA.players
+#   merge:live-hole-pars-into-projections runs AFTER fetch:book-odds + fetch:finish-tool so an inline fetch:dg inside
+#   book-odds does not leave projections without live_hole_stats hole_pars (tee-adjacent UI + consistency with Hole Hangout).
 # Mirrors below copy projections + live + approach_skill *.json into website/public/data/ so both apps ship the same JSON.
 #
 # Round-projections / +EV weather: tee times live in live-in-play.json (field_updates from fetch:in-play);
-# venue hourly forecast + banners resolve in the browser (app.js). Previously unstaged UI files excluded weather from this push — UI ships here when changed.
+# venue hourly forecast + banners resolve in the browser (app.js). merge:live-hole-pars runs late so course par / hole
+# table stays aligned with live feed after DK odds refresh. Previously unstaged UI files excluded weather from this push — UI ships here when changed.
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $webRoot = Join-Path $repoRoot "alpha-caddie-web"
@@ -85,12 +89,12 @@ function Bump-AlphaCaddieAppJsCache([string] $Root) {
 Run-Step "Running fetch:dg ..." { npm run fetch:dg }
 Run-Step "Building course-table.json (course mapping) ..." { npm run build:course-table }
 Run-Step "Running fetch:in-play ..." { npm run fetch:in-play }
-Run-Step "Merging live_hole_stats into projections (Hole Hangout pars) ..." { npm run merge:live-hole-pars-into-projections }
 Remove-Item Env:\GOLF_SKIP_DK_OU -ErrorAction SilentlyContinue
 Remove-Item Env:\PERFECT_SKIP_FETCH_DK_OU -ErrorAction SilentlyContinue
-Run-Step "Running fetch:dk-ou ..." { npm run fetch:dk-ou }
-Run-Step "Running fetch:book-odds ..." { npm run fetch:book-odds }
+# fetch:book-odds pulls DK round props (Birdies/Total Score/GIR/etc.) via Playwright — no separate fetch:dk-ou (would duplicate Chromium).
+Run-Step "Running fetch:book-odds (matchups, outrights, DK round O/U props) ..." { npm run fetch:book-odds }
 Run-Step 'Running fetch:finish-tool — outrights, same Scratch feed as DG Finish Position; runs after book-odds ...' { npm run fetch:finish-tool }
+Run-Step "Merging live_hole_stats into projections (after book odds; preserves pars if book-odds ran inline fetch:dg) ..." { npm run merge:live-hole-pars-into-projections }
 Run-Step "Running update:rounds ..." { npm run update:rounds }
 Run-Step "Running build:history ..." { npm run build:history }
 

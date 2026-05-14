@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * After fetch:in-play, align projections.json hole_pars with live-in-play.json live_hole_stats
- * (same per-hole table as preds/live-hole-stats). npm run push:all runs this so published data matches DG hole stats.
+ * (same per-hole table as preds/live-hole-stats). npm run push:all runs this after fetch:book-odds so an inline
+ * fetch:dg inside book-odds does not leave projections without live_hole_stats pars before publish.
  */
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
