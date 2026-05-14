@@ -547,6 +547,13 @@ function getModelRoundForEv() {
   return getOuRound();
 }
 
+/** Regulation fairway opportunities from projections meta (pars-based in fetch-datagolf); 14 when absent. */
+function fairwayHolesModeledFromData() {
+  const n = num(DATA?.meta?.projection_course_basis?.fairway_holes_modeled, NaN);
+  if (Number.isFinite(n) && n > 0) return Math.round(n);
+  return 14;
+}
+
 /**
  * When the event advances (DataGolf live round or export display_round), move the shared Round
  * selector forward so O/U, +EV, and matchups read projection rows for the active round and live
@@ -3101,9 +3108,11 @@ function sigmaOuDiscreteCounting(market, muAbs) {
     return Math.max(1.05, Math.sqrt(n * p * (1 - p)));
   }
   if (market === "Fairways hit") {
-    const n = 14;
-    const p = clamp(m / n, 0.07, 0.93);
-    return Math.max(0.95, Math.sqrt(n * p * (1 - p)));
+    const n = fairwayHolesModeledFromData();
+    if (!Number.isFinite(n) || n <= 0) return 2.4;
+    const p0 = m / n;
+    const p = Number.isFinite(p0) ? Math.min(1 - 1e-12, Math.max(1e-12, p0)) : 0.5;
+    return Math.sqrt(n * p * (1 - p));
   }
   if (market === "Putts") {
     return clamp(Math.sqrt(m * 1.15), 2.35, 5.85);
@@ -9402,7 +9411,7 @@ function livePropModelRemainderSigma(marketLabel, rowClean, statKey, completedHo
   if (!Number.isFinite(muFull) || !Number.isFinite(sigFull)) return { muRem: NaN, sigRem: NaN };
   if (rem <= 0) return { muRem: 0, sigRem: Math.max(0.08, sigFull * 0.06) };
   if (statKey === "fairways") {
-    const denom = 14;
+    const denom = fairwayHolesModeledFromData();
     const remU = Math.max(1, Math.round((denom / 18) * rem));
     return {
       muRem: (muFull / denom) * remU,
@@ -10391,7 +10400,7 @@ function historyGirOrFairwaysCount(v, holes) {
 function ouFallbackScalarForProjectedMean(mKey, row, rec) {
   const v = historyScalarOrNaN(row?.[rec.field]);
   if (mKey === "GIR") return girFairwaysCountFromRawForOu(v, 18);
-  if (mKey === "Fairways hit") return girFairwaysCountFromRawForOu(v, 14);
+  if (mKey === "Fairways hit") return girFairwaysCountFromRawForOu(v, fairwayHolesModeledFromData());
   return v;
 }
 
@@ -10402,7 +10411,7 @@ function ouMeanCountingStat(market, row) {
   const raw = historyScalarOrNaN(row?.[rec.field]);
   if (!Number.isFinite(raw)) return NaN;
   if (mKey === "GIR") return girFairwaysCountFromRawForOu(raw, 18);
-  if (mKey === "Fairways hit") return girFairwaysCountFromRawForOu(raw, 14);
+  if (mKey === "Fairways hit") return girFairwaysCountFromRawForOu(raw, fairwayHolesModeledFromData());
   return raw;
 }
 
@@ -10451,7 +10460,11 @@ function clampPropLineForMarket(statKey, line) {
   if (!Number.isFinite(s)) return NaN;
   if (statKey === "total") return clamp(s, 50.5, 99.5);
   if (statKey === "gir") return clamp(s, 4.5, 16.5);
-  if (statKey === "fairways") return clamp(s, 2.5, 13.5);
+  if (statKey === "fairways") {
+    const nFw = fairwayHolesModeledFromData();
+    const hi = Number.isFinite(nFw) && nFw >= 1 ? nFw - 0.5 : 13.5;
+    return clamp(s, 0.5, hi);
+  }
   if (statKey === "putts") return clamp(s, 22.5, 36.5);
   return clamp(s, 0.5, 29.5);
 }
@@ -11018,7 +11031,7 @@ function modelForHistoryRow(statKey, row) {
   else if (statKey === "pars") base = num(r.pars, NaN);
   else if (statKey === "bogeys") base = num(r.bogeys, NaN);
   else if (statKey === "gir") base = girFairwaysCountFromRawForOu(num(r.gir, NaN), 18);
-  else if (statKey === "fairways") base = girFairwaysCountFromRawForOu(num(r.fairways, NaN), 14);
+  else if (statKey === "fairways") base = girFairwaysCountFromRawForOu(num(r.fairways, NaN), fairwayHolesModeledFromData());
   else if (statKey === "putts") base = num(r.putts, NaN);
   if (!Number.isFinite(base)) return NaN;
   const liveRound =
@@ -11589,7 +11602,7 @@ function renderPropsTrends() {
                 const c =
                   statKey === "gir"
                     ? girFairwaysCountFromRawForOu(num(rproj?.gir, NaN), 18)
-                    : girFairwaysCountFromRawForOu(num(rproj?.fairways, NaN), 14);
+                    : girFairwaysCountFromRawForOu(num(rproj?.fairways, NaN), fairwayHolesModeledFromData());
                 return Number.isFinite(c) ? c : defaultPropLineForStat(statKey);
               })()
             : num(rproj?.[statKey === "fairways" ? "fairways" : statKey], defaultPropLineForStat(statKey));
@@ -11634,7 +11647,7 @@ function renderPropsTrends() {
               const c =
                 statKey === "gir"
                   ? girFairwaysCountFromRawForOu(num(rproj?.gir, NaN), 18)
-                  : girFairwaysCountFromRawForOu(num(rproj?.fairways, NaN), 14);
+                  : girFairwaysCountFromRawForOu(num(rproj?.fairways, NaN), fairwayHolesModeledFromData());
               return Number.isFinite(c) ? c : defaultPropLineForStat(statKey);
             })()
           : num(rproj?.[statKey === "fairways" ? "fairways" : statKey], defaultPropLineForStat(statKey));

@@ -1,8 +1,9 @@
 /**
  * Pull PGA field + skill + pre-tournament probs from DataGolf (same idea as
  * round_projections.R RAW_PROJECTIONS / GOLF_RAW_PROJECTIONS=1) and write projections.json.
- * Counting stats and GIR/fairways are **skill-only** (no fantasy-projection-defaults). Fairways: regulation FW% from
- * skill when plausible, else SG:OTT vs **median** field OTT; fairway count scales to this course’s par-4/5 layout.
+ * Counting stats and GIR/fairways are **skill-only** (no fantasy-projection-defaults). Fairways: FW% from skill when
+ * parsable, else SG:OTT vs **median** field OTT; fairway **opportunities** = par-4 + par-5 count from hole pars (no
+ * heuristic hole-scale clamps). Expected hits are rate × n_fw, bounded only to [0, n_fw] (physical).
  * Scoring uses **course_par_18** from resolved hole pars (not a fixed 72).
  * Optional **preds/pre-tournament** per-round stroke column (when present in the feed) nudges μ_sg toward that baseline.
  * Historical CSV still calibrates count curves vs (score−par); GIR uses SG:APP vs median field (no fantasy blend).
@@ -706,30 +707,21 @@ function imputeCountsWithHistory(muSg, countFit) {
 }
 
 /**
- * Fairway hit rate 0–1 from skill row. Percent columns are typically 40–90; single digits (e.g. 9.8) are not FW%.
- * Prefer `driving_accuracy` before `driving_acc` when the former looks like a percent.
+ * Fairway hit rate 0–1 from skill row: (0,1] share, else count on this course’s n_fw, else percent 0–100.
+ * `driving_accuracy` is tried before `driving_acc`.
  */
 function fairwayRate01FromDrivingSkill(skRow, nFw = N_FAIRWAY_HOLES) {
   if (!skRow || typeof skRow !== "object") return NaN;
   const denom = Number.isFinite(nFw) && nFw > 0 ? nFw : N_FAIRWAY_HOLES;
   const cands = [num(skRow.driving_accuracy, NaN), num(skRow.driving_acc, NaN)].filter((x) => Number.isFinite(x));
   for (const a of cands) {
-    if (a >= 35 && a <= 95) {
-      const r = a / 100;
-      if (r >= 0.38 && r <= 0.92) return r;
-    }
+    if (a > 0 && a < 1) return a;
   }
   for (const a of cands) {
-    if (a > 0 && a <= 1) {
-      const r = a;
-      if (r >= 0.38 && r <= 0.92) return r;
-    }
+    if (a >= 0 && a <= denom) return a / denom;
   }
   for (const a of cands) {
-    if (a >= 4.5 && a <= Math.min(14.5, denom + 0.5)) {
-      const r = a / denom;
-      if (r >= 0.38 && r <= 0.92) return r;
-    }
+    if (a > 1 && a <= 100) return a / 100;
   }
   return NaN;
 }
@@ -749,12 +741,20 @@ function impliedDrivingYardsFromSkillRow(sk) {
   return NaN;
 }
 
-/** Skill-only fairways: plausible FW% from decompositions → count; else SG:OTT model (no fantasy blend). */
+/** Expected fairways in [0, n_fw]: cannot exceed driving holes or be negative (count stat, not a tuned model cap). */
+function fairwayHitsExpectation(x, nFw) {
+  if (!Number.isFinite(nFw) || nFw <= 0 || !Number.isFinite(x)) return NaN;
+  if (x <= 0) return 0;
+  if (x >= nFw) return nFw;
+  return x;
+}
+
+/** Skill-only fairways: decomposition rate → count, else SG:OTT model (no fantasy blend). */
 function projectedFairwaysFromSkillOnly(mu_sg, skRow, nFw, fieldMeanOtt, drivingDistYds, fieldMeanDrive) {
   const fw01 = fairwayRate01FromDrivingSkill(skRow, nFw);
   const ottFw = fairwaysExpectedFromSkill(mu_sg, skRow?.sg_ott, nFw, fieldMeanOtt, drivingDistYds, fieldMeanDrive);
-  if (Number.isFinite(fw01)) return Math.max(4, Math.min(nFw, fw01 * nFw));
-  return Math.max(4, Math.min(nFw, ottFw));
+  if (Number.isFinite(fw01)) return fairwayHitsExpectation(fw01 * nFw, nFw);
+  return fairwayHitsExpectation(ottFw, nFw);
 }
 
 /**
@@ -935,16 +935,17 @@ function fieldSkillMedian(samples) {
   return a.length % 2 ? a[mid] : (a[mid - 1] + a[mid]) / 2;
 }
 
-/** Regulation fairways scale (~14); derive from par-4/5 count when hole pars are known for this course. */
+/** Fairway opportunities = # of par-4 + par-5 holes (driving holes) when all 18 pars are valid 3–5. */
 function fairwayHoleCountFromPars(pars, fallback = N_FAIRWAY_HOLES) {
   if (!Array.isArray(pars) || pars.length !== 18) return fallback;
   let n = 0;
   for (const p of pars) {
     const v = Math.round(num(p, NaN));
+    if (!Number.isFinite(v) || v < 3 || v > 5) return fallback;
     if (v === 4 || v === 5) n++;
   }
-  if (n < 10 || n > 18) return fallback;
-  return Math.min(14, Math.max(11, n));
+  if (n < 1) return fallback;
+  return n;
 }
 
 /** preds/pre-tournament baseline_history_fit: expected strokes this round for this course (column names vary). */
@@ -967,9 +968,10 @@ function pretExpectedStrokesThisRound(row) {
   return v;
 }
 
-/** μ-only fairways fallback (same shape as legacy impute). */
+/** μ-only fairways fallback: linear expected count vs strokes-to-par on n_fw scale. */
 function fairwaysMuImputeOnly(stpVec, nFw) {
-  return Math.max(4, Math.min(nFw, 0.55 * nFw - 0.15 * stpVec));
+  if (!Number.isFinite(nFw) || nFw <= 0) return NaN;
+  return 0.55 * nFw - 0.15 * stpVec;
 }
 
 /**
@@ -981,18 +983,16 @@ function fairwaysExpectedFromSkill(muSg, sgOtt, nFw, fieldMeanOtt, drivingDistYd
   const fallback = fairwaysMuImputeOnly(stp, nFw);
   const o = num(sgOtt, NaN);
   const m = num(fieldMeanOtt, NaN);
-  if (!Number.isFinite(o) || !Number.isFinite(m)) return fallback;
+  if (!Number.isFinite(o) || !Number.isFinite(m)) return fairwayHitsExpectation(fallback, nFw);
   let rate = 0.56 + 0.72 * (o - m) + 0.08 * mu;
-  rate = Math.max(0.4, Math.min(0.84, rate));
-  let ottFw = Math.max(4, Math.min(nFw, rate * nFw));
-  ottFw = Math.max(4, Math.min(nFw, 0.02 * fallback + 0.98 * ottFw));
+  let ottFw = rate * nFw;
+  if (Number.isFinite(fallback)) ottFw = 0.02 * fallback + 0.98 * ottFw;
   const dy = num(drivingDistYds, NaN);
   const my = num(fieldMeanDrive, NaN);
   if (Number.isFinite(dy) && Number.isFinite(my) && dy >= 240 && dy <= 345 && my >= 265 && my <= 315) {
-    const adj = Math.max(-1.45, Math.min(1.45, -0.021 * (dy - my)));
-    ottFw = Math.max(4, Math.min(nFw, ottFw + adj));
+    ottFw += -0.021 * (dy - my);
   }
-  return ottFw;
+  return fairwayHitsExpectation(ottFw, nFw);
 }
 
 /** Expected GIR count (18-hole scale) from SG:APP vs field mean + small total-SG tilt (mirrors FW/OTT path). */
@@ -1190,7 +1190,7 @@ function drivingAttrsFromSkillBag(row) {
     "fairway_accuracy",
     "fw_accuracy",
   ]);
-  const accRating = Number.isFinite(acc) && acc > -1 && acc < 1 ? acc * 100 : acc;
+  const accRating = Number.isFinite(acc) && acc > 0 && acc <= 1 ? acc * 100 : acc;
   let driving_distance = NaN;
   let driving_dist = NaN;
   let driving_distance_rating = NaN;
