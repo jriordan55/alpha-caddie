@@ -508,9 +508,31 @@
                 <option value="putts">Putts</option>
               </select>
             </label>
+            <label class="toolbar-label live-prop-field-span">Starting hole
+              <select id="live-prop-start-hole" class="live-prop-input" aria-label="First hole of this round (shotgun or split tees)" title="Playing order: e.g. 10 → 11 … 18, then 1 … 9">
+                <option value="1" selected>1 (front)</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10 (back)</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+              </select>
+            </label>
             <div class="live-prop-field-span live-prop-through-field" role="group" aria-label="Holes completed">
               <span class="live-prop-through-label">Through</span>
-              <input id="live-prop-through-holes" class="live-prop-input live-prop-input-number" type="number" min="0" max="17" step="1" value="6" inputmode="numeric" aria-label="Number of holes completed" />
+              <input id="live-prop-through-holes" class="live-prop-input live-prop-input-number" type="number" min="0" max="18" step="1" value="6" inputmode="numeric" aria-label="Number of holes completed" />
               <span class="live-prop-through-suffix">holes</span>
             </div>
             <label class="toolbar-label live-prop-field-span"><span id="live-prop-current-label">Current total</span>
@@ -1150,11 +1172,15 @@
         <h4 class="ev-devig-section-title" id="tab-help-live-prop-how-h">How to fill it in</h4>
         <dl class="ev-help-dl">
           <dt>Through … holes</dt>
-          <dd>How many holes are finished (0–17). Stat total is only through those holes.</dd>
+          <dd>How many holes are finished (0–18), in order from <strong>Starting hole</strong> (e.g. start 10 → holes 10–18 then 1–9). Round score “to par” uses each hole’s par from the current course.</dd>
+          <dt>Starting hole</dt>
+          <dd>Shotgun or split-tee order: the first hole you played this round (1 or 10, etc.). Historical checkpoints use the same order when hole-by-hole data exists.</dd>
+          <dt>Fairways hit</dt>
+          <dd>Par 3s are not fairway holes; remainder mean and volatility use only par 4/5 holes from <code>projections.json</code> hole pars for this venue.</dd>
           <dt>Round score, birdies, pars, bogeys</dt>
           <dd>Where history includes hole-by-hole scores for a round, we learn the distribution of “what’s left” after your checkpoint and blend it with the model.</dd>
           <dt>GIR, fairways, putts</dt>
-          <dd>Hole files rarely break these down per hole; we scale the Round projection mean and volatility to the holes remaining.</dd>
+          <dd>Hole files rarely break these down per hole; we scale the Round projection mean and volatility to the holes remaining (fairways: par 3s excluded when course hole pars exist).</dd>
           <dt>Weather &amp; pricing</dt>
           <dd>Uses the same global Weather and Pricing controls as the Round projections tab — adjust there first.</dd>
           <dt>Live line &amp; prices</dt>

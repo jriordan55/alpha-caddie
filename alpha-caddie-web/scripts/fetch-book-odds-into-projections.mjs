@@ -16,6 +16,7 @@
  *      Outright EV rows: DataGolf betting-tools/outrights API, which backs the Finish Position Betting Tool.
  *      GOLF_SKIP_PROPS_CSV=1 — do not merge data/player_props_*.csv into projections.props (Model O/U DK lines).
  *      GOLF_SKIP_DK_OU=1 — do not pull DK round props (see draftkings-ou-props.mjs).
+ *      GOLF_SKIP_DK_ROUND_AUDIT_CSV=1 — do not append alpha-caddie-web/data/dk_round_projection_audit.csv after merge.
  *      GOLF_SKIP_MODEL_FALLBACK_OU=1 — do not synthesize GIR / fairways / putts from projections.players for players DK omits.
  *      GIR/FW/Putts: each run drops stale csv+model_fallback rows for those markets, then re-adds model lines from current
  *      payload.players for any player DK does not supply (DK rows stay authoritative when present).
@@ -42,6 +43,7 @@ import {
 import { fetchDataGolfOutrightsApi } from "./datagolf-outrights-api.mjs";
 import { fetchDraftKingsOuProps } from "./draftkings-ou-props.mjs";
 import { fetchSportsbookOutrightsFromUrls } from "./sportsbook-outrights-scraper.mjs";
+import { appendDkRoundProjectionAuditCsv } from "./export-dk-round-model-audit-csv.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
 const GOLF_MODEL_ROOT = process.env.GOLF_MODEL_DIR?.trim()
@@ -656,6 +658,17 @@ async function main() {
   if (existsSync(websiteDataDir)) {
     writeFileSync(websiteProj, outJson, "utf8");
     console.log("Wrote", websiteProj);
+  }
+
+  if (String(process.env.GOLF_SKIP_DK_OU || "").trim() !== "1") {
+    try {
+      const audit = appendDkRoundProjectionAuditCsv(next);
+      if (audit.appended > 0) {
+        console.log(`[fetch-book-odds] DK round audit CSV +${audit.appended} rows -> ${audit.path}`);
+      }
+    } catch (e) {
+      console.warn("[fetch-book-odds] DK round audit CSV:", e.message || e);
+    }
   }
 }
 

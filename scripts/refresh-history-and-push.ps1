@@ -36,7 +36,8 @@ $ErrorActionPreference = "Stop"
 # Matchup Analysis Tool stays fresh when these commands succeed:
 #   fetch:dg  → projections.players (SG pillars + merged preds/live-tournament-stats driving when DG serves it),
 #               projections.matchups (betting-tools/matchups), approach_skill_ytd.json (Course Fit shot bins)
-#   fetch:book-odds → matchup/outright odds + DraftKings round O/U props (Playwright) merged into projections.json
+#   fetch:book-odds → matchup/outright odds + DraftKings round O/U props (Playwright) merged into projections.json;
+#     appends alpha-caddie-web/data/dk_round_projection_audit.csv (DK line + model round stats per prop).
 #   fetch:in-play → live-in-play.json → browser overlays placement win probs + live_tournament_stats distance/accuracy onto DATA.players
 #   merge:live-hole-pars-into-projections runs AFTER fetch:book-odds + fetch:finish-tool so an inline fetch:dg inside
 #   book-odds does not leave projections without live_hole_stats hole_pars (tee-adjacent UI + consistency with Hole Hangout).
@@ -148,6 +149,7 @@ $artifacts = @(
   "alpha-caddie-web/approach_skill_l12.json",
   "alpha-caddie-web/course-table.json",
   "alpha-caddie-web/data/course_table.csv",
+  "alpha-caddie-web/data/dk_round_projection_audit.csv",
   "alpha-caddie-web/hole_pars_from_shots.json",
   "alpha-caddie-web/player_shots_web.json",
   "alpha-caddie-web/player-history",

@@ -9300,6 +9300,65 @@ function livePropSampleMeanStd(xs) {
   return { mean, std: Math.sqrt(v / (n - 1)), n };
 }
 
+/** Shotgun / split tees: playing order from `startHole` (1–18), wrapping (e.g. 10 → … → 18 → 1 → … → 9). */
+function livePropPlayOrder(startHole) {
+  const s = Math.round(num(startHole, NaN));
+  const start = Number.isFinite(s) && s >= 1 && s <= 18 ? s : 1;
+  const out = [];
+  for (let i = 0; i < 18; i++) {
+    let h = start + i;
+    if (h > 18) h -= 18;
+    out.push(h);
+  }
+  return out;
+}
+
+function livePropHoleParFromCard(holePars, holeNum1) {
+  const hn = Math.round(num(holeNum1, NaN));
+  if (!Array.isArray(holePars) || holePars.length < 18 || hn < 1 || hn > 18) return NaN;
+  return num(holePars[hn - 1], NaN);
+}
+
+/** Sum par for the first N holes completed in `playOrder` using `meta.hole_pars` (hole numbers 1–18 on the card). */
+function courseParSumPlayOrderThru(holePars, playOrder, nCompleted) {
+  const n = Math.min(18, Math.max(0, Math.floor(num(nCompleted, NaN))));
+  if (!n) return 0;
+  if (!Array.isArray(holePars) || holePars.length < 18 || !Array.isArray(playOrder) || playOrder.length < 18) return NaN;
+  let s = 0;
+  for (let i = 0; i < n; i++) {
+    const p = livePropHoleParFromCard(holePars, playOrder[i]);
+    if (!Number.isFinite(p)) return NaN;
+    s += p;
+  }
+  return s;
+}
+
+/** Fairway-eligible holes on the card (excludes par 3s) using current course `hole_pars`. */
+function livePropFairwayOppFullFromPars(holePars) {
+  if (!Array.isArray(holePars) || holePars.length < 18) return NaN;
+  let c = 0;
+  for (let i = 0; i < 18; i++) {
+    const p = num(holePars[i], NaN);
+    if (!Number.isFinite(p)) return NaN;
+    if (p !== 3) c += 1;
+  }
+  return c;
+}
+
+/** Fairway opportunities in the first `nCompleted` holes of `playOrder` (par 3s excluded). */
+function livePropFairwayOppPlayedThru(holePars, playOrder, nCompleted) {
+  const n = Math.min(18, Math.max(0, Math.floor(num(nCompleted, NaN))));
+  if (!n) return 0;
+  if (!Array.isArray(holePars) || holePars.length < 18 || !Array.isArray(playOrder) || playOrder.length < 18) return NaN;
+  let c = 0;
+  for (let i = 0; i < n; i++) {
+    const p = livePropHoleParFromCard(holePars, playOrder[i]);
+    if (!Number.isFinite(p)) return NaN;
+    if (p !== 3) c += 1;
+  }
+  return c;
+}
+
 function livePropDedupeHolesSorted(holes) {
   const byHole = new Map();
   if (!Array.isArray(holes)) return [];
@@ -9328,30 +9387,39 @@ function livePropHolesForRound(pkey, r) {
   return fuzzy;
 }
 
-function livePropHolesCoverCompleted(holes, completedHoles) {
+function livePropHolesCoverCompleted(holes, playOrder, completedHoles) {
   const deduped = livePropDedupeHolesSorted(holes);
   if (!deduped.length || completedHoles < 1) return false;
+  if (!Array.isArray(playOrder) || playOrder.length < 18) return false;
   const have = new Set();
   for (const h of deduped) {
     const hn = Math.round(num(h.hole, NaN));
     if (Number.isFinite(hn)) have.add(hn);
   }
-  for (let hi = 1; hi <= completedHoles; hi++) {
-    if (!have.has(hi)) return false;
+  const n = Math.min(18, Math.max(0, Math.round(completedHoles)));
+  for (let i = 0; i < n; i++) {
+    if (!have.has(playOrder[i])) return false;
   }
   return true;
 }
 
-function livePropCumulativeFromHoles(holes, completedHoles, statKey) {
-  if (!Array.isArray(holes) || completedHoles < 1) return NaN;
-  const sorted = livePropDedupeHolesSorted(holes);
+function livePropCumulativeFromHoles(holes, playOrder, completedHoles, statKey) {
+  if (!Array.isArray(holes) || !Array.isArray(playOrder) || playOrder.length < 18 || completedHoles < 1) return NaN;
+  const byHole = new Map();
+  for (const h of holes) {
+    const hn = Math.round(num(h.hole, NaN));
+    if (!Number.isFinite(hn) || hn < 1 || hn > 18) continue;
+    byHole.set(hn, h);
+  }
+  const n = Math.min(18, Math.max(0, Math.round(completedHoles)));
   let strokes = 0;
   let birdies = 0;
   let pars = 0;
   let bogeys = 0;
-  for (const h of sorted) {
-    const hn = Math.round(num(h.hole, NaN));
-    if (!Number.isFinite(hn) || hn > completedHoles) continue;
+  for (let i = 0; i < n; i++) {
+    const hn = playOrder[i];
+    const h = byHole.get(hn);
+    if (!h) return NaN;
     const par = num(h.par, NaN);
     const sc = num(h.score, NaN);
     if (!Number.isFinite(sc) || !Number.isFinite(par)) continue;
@@ -9368,7 +9436,7 @@ function livePropCumulativeFromHoles(holes, completedHoles, statKey) {
   return NaN;
 }
 
-function livePropHistoricalRemainders(dgId, statKey, completedHoles, maxRounds) {
+function livePropHistoricalRemainders(dgId, statKey, completedHoles, maxRounds, playOrder) {
   const samples = [];
   let holeBacked = 0;
   const rec = HISTORY.byDgId && HISTORY.byDgId[String(dgId)];
@@ -9378,6 +9446,7 @@ function livePropHistoricalRemainders(dgId, statKey, completedHoles, maxRounds) 
   const rounds = rec.rounds.slice().sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
   const cap =
     Number.isFinite(maxRounds) && maxRounds > 0 ? Math.min(maxRounds, rounds.length) : rounds.length;
+  const ord = Array.isArray(playOrder) && playOrder.length >= 18 ? playOrder : livePropPlayOrder(1);
   for (let i = 0; i < cap; i++) {
     const r = rounds[i];
     const fin = actualForRoundRow(statKey, r);
@@ -9388,10 +9457,10 @@ function livePropHistoricalRemainders(dgId, statKey, completedHoles, maxRounds) 
     if (
       completedHoles >= 1 &&
       holes &&
-      livePropHolesCoverCompleted(holes, completedHoles) &&
+      livePropHolesCoverCompleted(holes, ord, completedHoles) &&
       (statKey === "total" || statKey === "birdies" || statKey === "pars" || statKey === "bogeys")
     ) {
-      cum = livePropCumulativeFromHoles(holes, completedHoles, statKey);
+      cum = livePropCumulativeFromHoles(holes, ord, completedHoles, statKey);
       if (Number.isFinite(cum)) usedHoleBack = true;
     }
     if (!Number.isFinite(cum)) {
@@ -9404,30 +9473,49 @@ function livePropHistoricalRemainders(dgId, statKey, completedHoles, maxRounds) 
   return { samples, holeBacked, n: samples.length };
 }
 
-function livePropModelRemainderSigma(marketLabel, rowClean, statKey, completedHoles) {
-  const rem = clamp(18 - completedHoles, 0, 18);
+function livePropModelRemainderSigma(marketLabel, rowClean, statKey, completedHoles, opts = {}) {
+  const playOrder = Array.isArray(opts.playOrder) && opts.playOrder.length >= 18 ? opts.playOrder : livePropPlayOrder(1);
+  const holePars = opts.holePars;
+  const remHoles = clamp(18 - completedHoles, 0, 18);
   const muFull = ouProjectedMean(marketLabel, rowClean);
   const sigFull = sigmaForOu(marketLabel, rowClean);
   if (!Number.isFinite(muFull) || !Number.isFinite(sigFull)) return { muRem: NaN, sigRem: NaN };
-  if (rem <= 0) return { muRem: 0, sigRem: Math.max(0.08, sigFull * 0.06) };
+
   if (statKey === "fairways") {
-    const denom = fairwayHolesModeledFromData();
-    const remU = Math.max(1, Math.round((denom / 18) * rem));
+    let fullFair = NaN;
+    let playedFair = 0;
+    if (Array.isArray(holePars) && holePars.length >= 18) {
+      fullFair = livePropFairwayOppFullFromPars(holePars);
+      playedFair = livePropFairwayOppPlayedThru(holePars, playOrder, completedHoles);
+    }
+    if (!Number.isFinite(fullFair) || fullFair < 1) {
+      if (remHoles <= 0) return { muRem: 0, sigRem: Math.max(0.08, sigFull * 0.06) };
+      const denom = fairwayHolesModeledFromData();
+      const remU = Math.max(1, Math.round((denom / 18) * remHoles));
+      return {
+        muRem: (muFull / denom) * remU,
+        sigRem: Math.max(0.2, sigFull * Math.sqrt(remU / denom)),
+      };
+    }
+    const remFair = Math.max(0, fullFair - playedFair);
+    if (remFair <= 0) return { muRem: 0, sigRem: Math.max(0.08, sigFull * 0.06) };
     return {
-      muRem: (muFull / denom) * remU,
-      sigRem: Math.max(0.2, sigFull * Math.sqrt(remU / denom)),
+      muRem: (muFull / fullFair) * remFair,
+      sigRem: Math.max(0.2, sigFull * Math.sqrt(remFair / fullFair)),
     };
   }
+
+  if (remHoles <= 0) return { muRem: 0, sigRem: Math.max(0.08, sigFull * 0.06) };
   if (statKey === "gir" || statKey === "putts") {
     const denom = 18;
     return {
-      muRem: (muFull / denom) * rem,
-      sigRem: Math.max(0.25, sigFull * Math.sqrt(rem / denom)),
+      muRem: (muFull / denom) * remHoles,
+      sigRem: Math.max(0.25, sigFull * Math.sqrt(remHoles / denom)),
     };
   }
   return {
-    muRem: muFull * (rem / 18),
-    sigRem: Math.max(0.15, sigFull * Math.sqrt(rem / 18)),
+    muRem: muFull * (remHoles / 18),
+    sigRem: Math.max(0.15, sigFull * Math.sqrt(remHoles / 18)),
   };
 }
 
@@ -9437,6 +9525,9 @@ function renderLivePropPredictor() {
 
   const dg = Math.round(num(document.getElementById("live-prop-golfer")?.value, NaN));
   const statKey = String(document.getElementById("live-prop-market")?.value || "total");
+  const startHoleRaw = Math.round(num(document.getElementById("live-prop-start-hole")?.value, NaN));
+  const startHole = Number.isFinite(startHoleRaw) && startHoleRaw >= 1 && startHoleRaw <= 18 ? startHoleRaw : 1;
+  const playOrder = livePropPlayOrder(startHole);
   const throughHoles = Math.round(num(document.getElementById("live-prop-through-holes")?.value, NaN));
   const curRaw = num(document.getElementById("live-prop-current")?.value, NaN);
   const lineRaw = num(document.getElementById("live-prop-line")?.value, NaN);
@@ -9444,11 +9535,11 @@ function renderLivePropPredictor() {
   const oAm = num(document.getElementById("live-prop-over-am")?.value, NaN);
   const uAm = num(document.getElementById("live-prop-under-am")?.value, NaN);
 
-  const completed = Number.isFinite(throughHoles) ? clamp(throughHoles, 0, 17) : NaN;
+  const completed = Number.isFinite(throughHoles) ? clamp(throughHoles, 0, 18) : NaN;
   const isRoundScoreMarket = statKey === "total";
   const par18 = num(DATA?.meta?.course_par_18, NaN);
   const holePars = DATA?.meta?.hole_pars;
-  let parThru = courseParSumFirstNHoles(holePars, completed);
+  let parThru = courseParSumPlayOrderThru(holePars, playOrder, completed);
   if (!Number.isFinite(parThru)) {
     parThru = Number.isFinite(par18) && Number.isFinite(completed) ? (par18 / 18) * completed : NaN;
   }
@@ -9467,7 +9558,7 @@ function renderLivePropPredictor() {
     !Number.isFinite(dg) ||
     !Number.isFinite(throughHoles) ||
     throughHoles < 0 ||
-    throughHoles > 17 ||
+    throughHoles > 18 ||
     !Number.isFinite(curRaw) ||
     (!isRoundScoreMarket && curRaw < 0) ||
     (isRoundScoreMarket && !Number.isFinite(parThru)) ||
@@ -9486,12 +9577,12 @@ function renderLivePropPredictor() {
   let sigRem;
 
   if (statKey === "gir" || statKey === "fairways" || statKey === "putts") {
-    const m = livePropModelRemainderSigma(marketLabel, rowClean, statKey, completed);
+    const m = livePropModelRemainderSigma(marketLabel, rowClean, statKey, completed, { playOrder, holePars });
     muRem = m.muRem;
     sigRem = m.sigRem;
   } else {
-    const { samples } = livePropHistoricalRemainders(dg, statKey, completed);
-    const mMod = livePropModelRemainderSigma(marketLabel, rowClean, statKey, completed);
+    const { samples } = livePropHistoricalRemainders(dg, statKey, completed, undefined, playOrder);
+    const mMod = livePropModelRemainderSigma(marketLabel, rowClean, statKey, completed, { playOrder, holePars });
     const { mean: muHist, std: sigHist, n: nEff } = livePropSampleMeanStd(samples);
     const w = Math.min(1, nEff / 26);
     if (histOk && nEff >= 6 && Number.isFinite(muHist) && Number.isFinite(sigHist)) {
@@ -9609,15 +9700,18 @@ function syncLivePropBookLineAndOddsFromDk() {
 function syncLivePropCurrentInputLabel() {
   const statKey = String(document.getElementById("live-prop-market")?.value || "total");
   const through = Math.round(num(document.getElementById("live-prop-through-holes")?.value, NaN));
+  const startHoleRaw = Math.round(num(document.getElementById("live-prop-start-hole")?.value, NaN));
+  const startHole = Number.isFinite(startHoleRaw) && startHoleRaw >= 1 && startHoleRaw <= 18 ? startHoleRaw : 1;
+  const playOrder = livePropPlayOrder(startHole);
   const labelEl = document.getElementById("live-prop-current-label");
   const inputEl = document.getElementById("live-prop-current");
   if (!labelEl || !inputEl) return;
   if (statKey === "total") {
     const par18 = num(DATA?.meta?.course_par_18, NaN);
     const holePars = DATA?.meta?.hole_pars;
-    let parThru = courseParSumFirstNHoles(holePars, through);
+    let parThru = courseParSumPlayOrderThru(holePars, playOrder, through);
     if (!Number.isFinite(parThru) && Number.isFinite(par18) && Number.isFinite(through)) {
-      parThru = (par18 / 18) * clamp(through, 0, 17);
+      parThru = (par18 / 18) * clamp(through, 0, 18);
     }
     labelEl.textContent = "Current to par";
     inputEl.min = "-18";
@@ -9636,6 +9730,8 @@ function initLivePropPredictorUi() {
   if (marketEl && [...marketEl.options].some((o) => o.value === "birdies")) marketEl.value = "birdies";
   const throughEl = document.getElementById("live-prop-through-holes");
   if (throughEl) throughEl.value = "6";
+  const startHoleEl = document.getElementById("live-prop-start-hole");
+  if (startHoleEl) startHoleEl.value = "1";
   const currentEl = document.getElementById("live-prop-current");
   if (currentEl) currentEl.value = "2";
   const lineEl = document.getElementById("live-prop-line");
@@ -9644,6 +9740,7 @@ function initLivePropPredictorUi() {
   const ids = [
     "live-prop-golfer",
     "live-prop-market",
+    "live-prop-start-hole",
     "live-prop-through-holes",
     "live-prop-current",
     "live-prop-line",
@@ -9653,11 +9750,15 @@ function initLivePropPredictorUi() {
   for (const id of ids) {
     document.getElementById(id)?.addEventListener("change", () => {
       if (id === "live-prop-market" || id === "live-prop-golfer") syncLivePropBookLineAndOddsFromDk();
-      if (id === "live-prop-market" || id === "live-prop-through-holes") syncLivePropCurrentInputLabel();
+      if (id === "live-prop-market" || id === "live-prop-through-holes" || id === "live-prop-start-hole") {
+        syncLivePropCurrentInputLabel();
+      }
       renderLivePropPredictor();
     });
     document.getElementById(id)?.addEventListener("input", () => {
-      if (id === "live-prop-market" || id === "live-prop-through-holes") syncLivePropCurrentInputLabel();
+      if (id === "live-prop-market" || id === "live-prop-through-holes" || id === "live-prop-start-hole") {
+        syncLivePropCurrentInputLabel();
+      }
       renderLivePropPredictor();
     });
   }

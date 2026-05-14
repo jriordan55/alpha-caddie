@@ -8,7 +8,8 @@
  * Port: PORT env or 5173.
  *
  * Runs `draftkings-ou-props.mjs` (same as `npm run fetch:dk-ou`) before `fetch:book-odds` so DraftKings round
- * props are probed against `projections.json` first; book-odds then merges DK + books into JSON (Playwright twice).
+ * props are probed against `projections.json` first; book-odds then merges DK + books into JSON (Playwright twice)
+ * and appends `data/dk_round_projection_audit.csv` when DK props merge.
  * Skip the standalone probe: PERFECT_SKIP_FETCH_DK_OU=1
  *
  * DK URL: set DK_LEAGUE_URL (e.g. Truist round page) or rely on slug from projections.event_name.
