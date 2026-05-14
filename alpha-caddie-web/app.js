@@ -2703,14 +2703,15 @@ function syncPricingUiFromState() {
     if (modeEl) modeEl.value = PRICING_STATE.mode;
     if (skillEl) {
       skillEl.value = PRICING_STATE.skill;
-      skillEl.disabled = PRICING_STATE.mode === "default";
+      // Skill pillar only affects μ_SG nudge in "Skill focus"; recent/course use fixed SG history shapes.
+      skillEl.disabled = PRICING_STATE.mode !== "skill";
     }
   }
   updatePricingSkillLabelsVisibility();
 }
 
 function updatePricingSkillLabelsVisibility() {
-  const show = PRICING_STATE.mode === "skill" || PRICING_STATE.mode === "default";
+  const show = PRICING_STATE.mode === "skill";
   for (const ids of PRICING_UI_IDS) {
     const lab = document.getElementById(ids.skillLabel);
     if (lab) lab.hidden = !show;
@@ -8302,6 +8303,7 @@ function modelProbOutrightMarket(rowPlayer, marketKey) {
  * When `opts.evLiveLeaderboard` (+EV during live events only), tries leaderboard `current_score` model first — see file header.
  */
 function modelProbOutrightFromRowOrProjections(outrightRow, marketKey, opts) {
+  const id = Math.round(num(outrightRow?.dg_id, NaN));
   const evLb = opts && opts.evLiveLeaderboard === true && outrightEvLiveLeaderboardModelEnabled();
   if (evLb) {
     const pLb = modelProbOutrightLiveLeaderboardEvLookup(outrightRow, marketKey);
@@ -8313,7 +8315,6 @@ function modelProbOutrightFromRowOrProjections(outrightRow, marketKey, opts) {
       return outrightProbWithPricingModeNudge(prowLb || {}, marketKey, pLb);
     }
   }
-  const id = Math.round(num(outrightRow?.dg_id, NaN));
   const scrapedModelPct = num(outrightRow?.dg_model, NaN);
   if (Number.isFinite(scrapedModelPct) && scrapedModelPct > 0 && scrapedModelPct < 100) {
     let prowSc = Number.isFinite(id) ? projectionRowWithPlacementMerged(id) : null;
@@ -13975,6 +13976,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!el) continue;
       el.addEventListener("change", () => {
         PRICING_STATE = pricingFromUiIds(ids);
+        PRICING_MU_BONUS_CACHE.clear();
         syncPricingUiFromState();
         refreshPricingAffectedViews();
       });
