@@ -5629,6 +5629,23 @@ function buildEvTable() {
       if (Number.isFinite(maxAmericanOdds) && Number.isFinite(r._am) && r._am >= maxAmericanOdds) return false;
       return true;
     });
+  /** Drop pathological model-EV rows, then cap count: pool = top 500 by model EV (desc), then apply table sort. */
+  const EV_TABLE_MODEL_EV_ABS_MAX = 0.5;
+  const EV_TABLE_MAX_ROWS = 500;
+  out = out.filter((r) => {
+    const me = num(r._modelEv, NaN);
+    if (!Number.isFinite(me)) return true;
+    return me <= EV_TABLE_MODEL_EV_ABS_MAX && me >= -EV_TABLE_MODEL_EV_ABS_MAX;
+  });
+  out.sort((a, b) => {
+    const ma = num(a._modelEv, NaN);
+    const mb = num(b._modelEv, NaN);
+    if (!Number.isFinite(ma) && !Number.isFinite(mb)) return 0;
+    if (!Number.isFinite(ma)) return 1;
+    if (!Number.isFinite(mb)) return -1;
+    return mb - ma;
+  });
+  if (out.length > EV_TABLE_MAX_ROWS) out = out.slice(0, EV_TABLE_MAX_ROWS);
   out = out.slice().sort((a, c) => compareEvRows(a, c, evSort.key, evSort.dir));
   updateEvSortIndicators();
   tbody.innerHTML = "";
