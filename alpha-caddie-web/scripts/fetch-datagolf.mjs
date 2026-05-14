@@ -1,9 +1,9 @@
 /**
  * Pull PGA field + skill + pre-tournament probs from DataGolf (same idea as
  * round_projections.R RAW_PROJECTIONS / GOLF_RAW_PROJECTIONS=1) and write projections.json.
- * Counting stats and GIR/fairways are **skill-only** (no fantasy-projection-defaults). Fairways: FW% from skill when
- * parsable, else SG:OTT vs **median** field OTT; fairway **opportunities** = par-4 + par-5 count from hole pars (no
- * heuristic hole-scale clamps). Expected hits are rate × n_fw, bounded only to [0, n_fw] (physical).
+ * Counting stats and GIR/fairways are **skill + historical** from `data/historical_rounds_all.csv` when sample is
+ * large enough. Fairways: blend SG:OTT vs field, optional driving-field rate, and a **tour-wide FW vs strokes-to-par**
+ * regression (driving_acc as fraction, count, or percent) so OTT and miscoded driving scalars cannot both pin FW low.
  * Scoring uses **course_par_18** from resolved hole pars (not a fixed 72).
  * Optional **preds/pre-tournament** per-round stroke column (when present in the feed) nudges μ_sg toward that baseline.
  * Historical CSV still calibrates count curves vs (score−par); GIR uses SG:APP vs median field (no fantasy blend).
@@ -749,18 +749,46 @@ function fairwayHitsExpectation(x, nFw) {
   return x;
 }
 
-/** Skill-only fairways: blend driving-field rate with SG:OTT expectation; never trust (0,1) scalars alone. */
-function projectedFairwaysFromSkillOnly(mu_sg, skRow, nFw, fieldMeanOtt, drivingDistYds, fieldMeanDrive) {
+/** Fairway count vs skill proxy x ≈ −μ_sg (same scale as clamped round_score−course_par in historical CSV). */
+function fairwaysFromHistoricalStp(mu_sg, nFw, histCalib) {
+  const ln = histCalib?.fw_stp_line;
+  if (!ln || !Number.isFinite(ln.a) || !Number.isFinite(ln.b)) return NaN;
+  const x = Math.max(-10, Math.min(10, -clampMuSg(mu_sg)));
+  const raw = ln.a + ln.b * x;
+  return fairwayHitsExpectation(raw, nFw);
+}
+
+/**
+ * Fairways: SG:OTT curve + historical tour regression vs skill proxy + optional driving-field rate.
+ * OTT and driving-only can both sit ~6; historical regression anchors counts to real rounds.
+ */
+function projectedFairwaysFromSkillOnly(
+  mu_sg,
+  skRow,
+  nFw,
+  fieldMeanOtt,
+  drivingDistYds,
+  fieldMeanDrive,
+  histCalib,
+) {
   const ottFw = fairwaysExpectedFromSkill(mu_sg, skRow?.sg_ott, nFw, fieldMeanOtt, drivingDistYds, fieldMeanDrive);
+  const histFw = fairwaysFromHistoricalStp(mu_sg, nFw, histCalib);
   const fw01 = fairwayRate01FromDrivingSkill(skRow, nFw);
-  if (!Number.isFinite(ottFw)) {
-    return Number.isFinite(fw01) ? fairwayHitsExpectation(fw01 * nFw, nFw) : NaN;
+  const fromDrv = Number.isFinite(fw01) ? fw01 * nFw : NaN;
+
+  let y = ottFw;
+  if (Number.isFinite(histFw)) {
+    y = Number.isFinite(y) ? 0.36 * y + 0.64 * histFw : histFw;
   }
-  if (!Number.isFinite(fw01)) return fairwayHitsExpectation(ottFw, nFw);
-  const fromDrv = fw01 * nFw;
-  const diff = Math.abs(fromDrv - ottFw);
-  if (diff > 1.5) return fairwayHitsExpectation(ottFw, nFw);
-  return fairwayHitsExpectation(0.25 * fromDrv + 0.75 * ottFw, nFw);
+  if (!Number.isFinite(y)) {
+    return Number.isFinite(fromDrv) ? fairwayHitsExpectation(fromDrv, nFw) : NaN;
+  }
+  if (Number.isFinite(fromDrv)) {
+    const diff = Math.abs(fromDrv - y);
+    if (diff > 1.65) return fairwayHitsExpectation(y, nFw);
+    return fairwayHitsExpectation(0.28 * fromDrv + 0.72 * y, nFw);
+  }
+  return fairwayHitsExpectation(y, nFw);
 }
 
 /**
@@ -773,9 +801,11 @@ async function loadHistoricalCsvCalibration(modelRoot) {
     n_counts: 0,
     n_gir_app: 0,
     n_fw_ott: 0,
+    n_fw_stp: 0,
     r2_gir_app: NaN,
     r2_fw_ott: NaN,
     slopes: null,
+    fw_stp_line: null,
     w_gir_skill: 0.78,
     w_ott_skill: 0.85,
     w_ott_decomp: 0.65,
@@ -806,6 +836,12 @@ async function loadHistoricalCsvCalibration(modelRoot) {
   let sgF = 0;
   let f2 = 0;
   let sgOf = 0;
+
+  let nFwR = 0;
+  let sxFw = 0;
+  let sFwR = 0;
+  let sxxFw = 0;
+  let sfxFw = 0;
 
   await new Promise((resolve, reject) => {
     const parser = createReadStream(csvPath).pipe(
@@ -865,7 +901,7 @@ async function loadHistoricalCsvCalibration(modelRoot) {
       const sgOtt = num(row.sg_ott, NaN);
       const da = num(row.driving_acc, NaN);
       if (Number.isFinite(sgOtt) && Number.isFinite(da) && da > 0.05 && da < 0.995) {
-        const fc = da * 14;
+        const fc = da * N_FAIRWAY_HOLES;
         nf++;
         sgo += sgOtt;
         sg2o += sgOtt * sgOtt;
@@ -873,13 +909,27 @@ async function loadHistoricalCsvCalibration(modelRoot) {
         f2 += fc * fc;
         sgOf += sgOtt * fc;
       }
+
+      let fwCt = NaN;
+      if (Number.isFinite(da)) {
+        if (da > 0.05 && da < 0.995) fwCt = da * N_FAIRWAY_HOLES;
+        else if (da > 1 && da <= N_FAIRWAY_HOLES) fwCt = da;
+        else if (da > N_FAIRWAY_HOLES && da <= 100) fwCt = (da / 100) * N_FAIRWAY_HOLES;
+      }
+      if (Number.isFinite(fwCt) && fwCt >= 0 && fwCt <= N_FAIRWAY_HOLES + 0.01) {
+        nFwR++;
+        sxFw += x;
+        sFwR += fwCt;
+        sxxFw += x * x;
+        sfxFw += x * fwCt;
+      }
     });
     parser.on("end", resolve);
     parser.on("error", reject);
   });
 
   /** @type {typeof empty} */
-  const out = { ...empty, csv_path: csvPath, n_counts: n, n_gir_app: ng, n_fw_ott: nf };
+  const out = { ...empty, csv_path: csvPath, n_counts: n, n_gir_app: ng, n_fw_ott: nf, n_fw_stp: nFwR };
 
   if (n >= 400) {
     const vx = sx2 - (sx * sx) / n;
@@ -910,13 +960,24 @@ async function loadHistoricalCsvCalibration(modelRoot) {
     if (vxo > 1e-8 && vyf > 1e-8) out.r2_fw_ott = (cof * cof) / (vxo * vyf);
   }
 
+  if (nFwR >= 400) {
+    const denom = nFwR * sxxFw - sxFw * sxFw;
+    if (denom > 1e-6) {
+      const bFw = (nFwR * sfxFw - sxFw * sFwR) / denom;
+      const aFw = (sFwR - bFw * sxFw) / nFwR;
+      if (Number.isFinite(aFw) && Number.isFinite(bFw) && Math.abs(bFw) < 0.65) {
+        out.fw_stp_line = { a: aFw, b: bFw, n: nFwR };
+      }
+    }
+  }
+
   out.w_gir_skill = 1;
   out.w_ott_skill = 1;
   out.w_ott_decomp = 1;
 
   if (n >= 400) {
     console.log(
-      `[fetch-dg] historical calibration: n_counts=${n}, n_gir_app=${ng} (R²≈${Number.isFinite(out.r2_gir_app) ? out.r2_gir_app.toFixed(3) : "?"}), n_fw_ott=${nf} (R²≈${Number.isFinite(out.r2_fw_ott) ? out.r2_fw_ott.toFixed(3) : "?"}); projections use skill-only GIR/fairways (blend weights=1)`,
+      `[fetch-dg] historical calibration: n_counts=${n}, n_gir_app=${ng} (R²≈${Number.isFinite(out.r2_gir_app) ? out.r2_gir_app.toFixed(3) : "?"}), n_fw_ott=${nf} (R²≈${Number.isFinite(out.r2_fw_ott) ? out.r2_fw_ott.toFixed(3) : "?"}), n_fw_stp=${nFwR}${out.fw_stp_line ? " (FW~stp line fit)" : ""}; projections blend GIR/fairways vs historical`,
     );
   } else {
     console.log(
@@ -1047,6 +1108,7 @@ function derivedStatsFromMuSg(muRaw, nFairwayHoles, opts = {}) {
     opts.fieldMeanOtt,
     distFw,
     opts.fieldMeanDrive,
+    opts.histCountFit,
   );
   const putts = Math.max(22, Math.min(35, 28.5 + 0.32 * stpVec - 0.1 * (gir - 11)));
   return {
@@ -1790,6 +1852,7 @@ async function main() {
       fieldMeanOtt,
       distForFw,
       fieldMeanDrive,
+      histCalib,
     );
 
     const putts = Math.max(22, Math.min(35, 28.5 + 0.32 * stpVec - 0.1 * (gir - 11)));
@@ -2008,6 +2071,14 @@ async function main() {
       n_counts: histCalib.n_counts,
       n_gir_app: histCalib.n_gir_app,
       n_fw_ott: histCalib.n_fw_ott,
+      n_fw_stp: histCalib.n_fw_stp,
+      fw_stp_line: histCalib.fw_stp_line
+        ? {
+            a: Math.round(histCalib.fw_stp_line.a * 10000) / 10000,
+            b: Math.round(histCalib.fw_stp_line.b * 10000) / 10000,
+            n: histCalib.fw_stp_line.n,
+          }
+        : null,
       r2_gir_app: Number.isFinite(histCalib.r2_gir_app) ? Math.round(histCalib.r2_gir_app * 10000) / 10000 : null,
       r2_fw_ott: Number.isFinite(histCalib.r2_fw_ott) ? Math.round(histCalib.r2_fw_ott * 10000) / 10000 : null,
       w_gir_skill: Math.round(histCalib.w_gir_skill * 1000) / 1000,
