@@ -381,6 +381,21 @@ function num(v, d) {
   return Number.isFinite(n) ? n : d;
 }
 
+/**
+ * Conservative “model” round from bundle meta: min of export display_round, live current_round,
+ * and field-updates current_round when present — avoids calendar-only export sitting on R2 before R2 is live.
+ */
+function effectiveUiModelRoundFromMeta() {
+  const m = DATA?.meta || {};
+  const ex = Math.round(num(m.display_round, NaN));
+  const live = Math.round(num(m.datagolf_live_current_round, NaN));
+  const field = Math.round(num(m.datagolf_field_current_round, NaN));
+  const ok = (x) => Number.isFinite(x) && x >= 1 && x <= 4;
+  const parts = [ex, live, field].filter(ok);
+  if (!parts.length) return NaN;
+  return Math.min(...parts);
+}
+
 /** Results tab removed from `index.html`; keep guards so leftover JS does not touch missing DOM. */
 function resultsFeatureEnabled() {
   try {
@@ -426,7 +441,7 @@ function projectionPlayerRowForModel(dgId, preferredRound) {
   if (!Number.isFinite(id)) return null;
   const pr = Math.round(num(preferredRound, NaN));
   const liveR = Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
-  const metaDr = displayRoundMetaThursdayClamp(Math.round(num(DATA?.meta?.display_round, NaN)));
+  const metaDr = effectiveUiModelRoundFromMeta();
   const candidates = (DATA.players || []).filter((p) => Math.round(num(p.dg_id, NaN)) === id);
   if (!candidates.length) return null;
   // After 8pm ET on Sunday, never use prior-round fallbacks.
@@ -457,7 +472,7 @@ function projectionPlayerRowForModelByIdOrName(dgId, playerName, preferredRound)
   if (!pKey) return null;
   const pr = Math.round(num(preferredRound, NaN));
   const liveR = Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
-  const metaDr = displayRoundMetaThursdayClamp(Math.round(num(DATA?.meta?.display_round, NaN)));
+  const metaDr = effectiveUiModelRoundFromMeta();
   const candidates = (DATA.players || []).filter((p) => playerKeyFromName(p?.player_name) === pKey);
   if (!candidates.length) return null;
   // After 8pm ET on Sunday, never use prior-round fallbacks.
@@ -539,12 +554,10 @@ function projectionRowWithPlacementMerged(dgId) {
 /** Round for outright / placement +EV: live DG → export display_round → O/U picker (not leaderboard-only R1). */
 function getModelRoundForEv() {
   if (isAfterSunday8pmEt()) return 1;
-  const m = DATA.meta || {};
+  const m = DATA?.meta || {};
   const liveR = Math.round(num(m.datagolf_live_current_round, NaN));
   if (Number.isFinite(liveR) && liveR >= 1 && liveR <= 4) return liveR;
-  const dr = Math.round(num(m.display_round, NaN));
-  if (Number.isFinite(dr) && dr >= 1 && dr <= 4) return displayRoundMetaThursdayClamp(dr);
-  return getOuRound();
+  return ouDisplayRoundAuto();
 }
 
 /** Regulation fairway opportunities from projections meta (pars-based in fetch-datagolf); 14 when absent. */
@@ -555,10 +568,10 @@ function fairwayHolesModeledFromData() {
 }
 
 /**
- * When the event advances (DataGolf live round or export display_round), move the shared Round
- * selector forward so O/U, +EV, and matchups read projection rows for the active round and live
- * score adjustments stay aligned. Never moves backward (user can pick an earlier round).
- * When live reports a round, it wins over export display_round (calendar bumps could show R2 while R1 is still live).
+ * When the event advances (DataGolf live round or export display_round), align the shared Round
+ * selector so O/U, +EV, and matchups read projection rows for the active round. Live current_round
+ * can move the picker up or down to correct stale export display_round. Without live, only advance
+ * forward from export (user can still pick an earlier round manually).
  */
 function syncLbRoundToTournamentModelRound() {
   const sel = document.getElementById("lb-round");
@@ -567,24 +580,33 @@ function syncLbRoundToTournamentModelRound() {
   const liveR = mismatch
     ? NaN
     : Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
-  const dr = Math.round(num(DATA?.meta?.display_round, NaN));
+  const drEff = effectiveUiModelRoundFromMeta();
+  const drExport = Math.round(num(DATA?.meta?.display_round, NaN));
   /* Live file from a different tournament can leave the picker on R4 while projections are R1 — snap back. */
-  if (mismatch && Number.isFinite(dr) && dr >= 1 && dr <= 4) {
+  if (mismatch && Number.isFinite(drExport) && drExport >= 1 && drExport <= 4) {
     const curSnap = Math.round(num(sel.value, NaN));
-    if (!Number.isFinite(curSnap) || curSnap !== dr) {
-      sel.value = String(dr);
+    if (!Number.isFinite(curSnap) || curSnap !== drExport) {
+      sel.value = String(drExport);
       return true;
     }
     return false;
   }
+  const fromLive = Number.isFinite(liveR) && liveR >= 1 && liveR <= 4;
   let target = 0;
-  if (Number.isFinite(liveR) && liveR >= 1 && liveR <= 4) target = liveR;
-  else if (Number.isFinite(dr) && dr >= 1 && dr <= 4) target = dr;
+  if (fromLive) target = liveR;
+  else if (Number.isFinite(drEff) && drEff >= 1 && drEff <= 4) target = drEff;
   if (target < 1) return false;
   const cur = Math.round(num(sel.value, NaN));
   if (!Number.isFinite(cur) || cur < 1 || cur > 4) {
     sel.value = String(target);
     return true;
+  }
+  if (fromLive) {
+    if (target !== cur) {
+      sel.value = String(target);
+      return true;
+    }
+    return false;
   }
   if (target > cur) {
     sel.value = String(target);
@@ -1950,33 +1972,10 @@ function applyPayload(raw) {
   if (prevFieldFp !== nextFieldFp) lastDatagolfInPlayToken = "";
 }
 
-/** If ET is Thursday, never treat export `display_round` as R2+ (R1 often runs past 9pm ET). */
-function displayRoundMetaThursdayClamp(r) {
-  let out = Math.round(num(r, NaN));
-  if (!Number.isFinite(out) || out < 1 || out > 4) return out;
-  try {
-    const wd = (
-      new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", weekday: "short" })
-        .formatToParts(new Date())
-        .find((p) => p.type === "weekday") || {}
-    ).value;
-    if (wd === "Thu" && out >= 2) out = 1;
-  } catch (_) {}
-  return out;
-}
-
+/** O/U + model default round from meta (min of export / live / field); **1** if unknown — avoids Fri pre-load → R2. */
 function ouDisplayRoundAuto() {
-  const dr = num(DATA.meta.display_round, NaN);
-  if (Number.isFinite(dr) && dr >= 1 && dr <= 4) {
-    return displayRoundMetaThursdayClamp(dr);
-  }
-  try {
-    const wd = (
-      new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", weekday: "short" }).formatToParts(new Date()).find((p) => p.type === "weekday") || {}
-    ).value;
-    const map = { Wed: 1, Thu: 1, Fri: 2, Sat: 3, Sun: 4, Mon: 4, Tue: 3 };
-    if (wd && map[wd]) return map[wd];
-  } catch (_) {}
+  const eff = effectiveUiModelRoundFromMeta();
+  if (Number.isFinite(eff) && eff >= 1 && eff <= 4) return eff;
   return 1;
 }
 
@@ -1992,10 +1991,10 @@ function getOuRound() {
 function tournamentMaxEffectiveRound() {
   const mm = String(DATA?.meta?.datagolf_live_event_mismatch || "").trim();
   const liveR = mm ? NaN : Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
-  const dr = Math.round(num(DATA?.meta?.display_round, NaN));
+  const drEff = effectiveUiModelRoundFromMeta();
   const ou = Math.round(getOuRound());
   const liveOk = Number.isFinite(liveR) && liveR >= 1 ? liveR : 0;
-  const drOk = Number.isFinite(dr) && dr >= 1 ? dr : 0;
+  const drOk = Number.isFinite(drEff) && drEff >= 1 ? drEff : 0;
   const ouOk = Number.isFinite(ou) && ou >= 1 ? ou : 0;
   /* When live reports a round, do not treat stale export display_round as “ahead” of live (calendar R2 bump). */
   if (liveOk) return Math.max(liveOk, ouOk);
@@ -2044,12 +2043,15 @@ function updateRoundLabels() {
   const ar = document.getElementById("auto-round");
   const meta = DATA.meta || {};
   const dr = ouDisplayRoundAuto();
+  const exportedR = Math.round(num(meta.display_round, NaN));
   if (ar) {
     ar.hidden = true;
-    ar.textContent =
-      meta.display_round_label && String(meta.display_round_label).trim()
-        ? String(meta.display_round_label).replace(/\s*\([^)]*America\/New_York[^)]*\)\s*/i, "").trim()
-        : `R${dr}`;
+    const rawLabel = meta.display_round_label && String(meta.display_round_label).trim();
+    if (rawLabel && Number.isFinite(exportedR) && exportedR === dr) {
+      ar.textContent = rawLabel.replace(/\s*\([^)]*America\/New_York[^)]*\)\s*/i, "").trim();
+    } else {
+      ar.textContent = `R${dr}`;
+    }
   }
 }
 

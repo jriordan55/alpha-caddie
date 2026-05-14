@@ -1348,34 +1348,6 @@ function normProb01(v, oddsFormat = "percent") {
   return x;
 }
 
-function ouDisplayRoundAuto(now = new Date(), tz = "America/New_York") {
-  const fmt = new Intl.DateTimeFormat("en-US", {
-    timeZone: tz,
-    weekday: "short",
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-    hour12: false,
-  });
-  const parts = fmt.formatToParts(now);
-  const getNum = (t) => parseInt(parts.find((p) => p.type === t)?.value, 10);
-  const wdayStr = parts.find((p) => p.type === "weekday")?.value;
-  const map = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
-  const wday = map[wdayStr] ?? 0;
-  const hourDec = getNum("hour") + getNum("minute") / 60 + getNum("second") / 3600;
-  const after9pm = hourDec >= 21;
-  if (wday === 0 && after9pm) return 1;
-  if (wday >= 1 && wday <= 3) return 1;
-  if (wday === 4 && !after9pm) return 1;
-  if (wday === 4 && after9pm) return 2;
-  if (wday === 5 && !after9pm) return 2;
-  if (wday === 5 && after9pm) return 3;
-  if (wday === 6 && !after9pm) return 3;
-  if (wday === 6 && after9pm) return 4;
-  if (wday === 0 && !after9pm) return 4;
-  return 1;
-}
-
 /** `current_round` from field-updates / live-hole-stats when present (1–4). */
 function dgCurrentRoundFromFieldOrLiveHole(fieldRaw, liveHoleStats) {
   const a = num(fieldRaw?.current_round ?? fieldRaw?.currentRound, NaN);
@@ -1389,21 +1361,11 @@ function dgCurrentRoundFromFieldOrLiveHole(fieldRaw, liveHoleStats) {
   return NaN;
 }
 
-/**
- * Export `display_round`: prefer API current_round; otherwise calendar heuristics except Thursday ET
- * never jumps past R1 (calendar previously returned R2 after 9pm Thursday while R1 was still live).
- */
-function displayRoundForProjectionsMeta(fieldRaw, liveHoleStats, now, tz) {
+/** Export `display_round`: DataGolf `current_round` only; default **1** if absent (calendar day ≠ on-course round). */
+function exportDisplayRoundFromDgField(fieldRaw, liveHoleStats) {
   const api = dgCurrentRoundFromFieldOrLiveHole(fieldRaw, liveHoleStats);
-  if (Number.isFinite(api)) return api;
-  const cal = ouDisplayRoundAuto(now, tz);
-  const fmt = new Intl.DateTimeFormat("en-US", {
-    timeZone: tz,
-    weekday: "short",
-  });
-  const wdayStr = fmt.formatToParts(now).find((p) => p.type === "weekday")?.value;
-  if (wdayStr === "Thu" && cal >= 2) return 1;
-  return cal;
+  if (Number.isFinite(api) && api >= 1 && api <= 4) return Math.round(api);
+  return 1;
 }
 
 function displayRoundLabel(r, tz) {
@@ -1972,7 +1934,8 @@ async function main() {
   const posMap = new Map(base.map((r, i) => [r.dg_id, i + 1]));
 
   const tz = process.env.GOLF_OU_TZ || "America/New_York";
-  const dr = displayRoundForProjectionsMeta(fieldRaw, liveHoleStatsForPars, new Date(), tz);
+  const fieldApiRound = dgCurrentRoundFromFieldOrLiveHole(fieldRaw, liveHoleStatsForPars);
+  const dr = exportDisplayRoundFromDgField(fieldRaw, liveHoleStatsForPars);
   const roundMuMult = parseRoundMuMult();
 
   function stripGirFairwaysPuttsIfTiny(o) {
@@ -2112,6 +2075,9 @@ async function main() {
     datagolf_schedule_anchor_event: anchor?.name || undefined,
     /** Stable compare for fetch-book-odds vs `/field-updates` (surpasses fuzzy-only title bugs). */
     datagolf_field_week_key: fieldWeekKey(event_name, course_used),
+    ...(Number.isFinite(fieldApiRound) && fieldApiRound >= 1 && fieldApiRound <= 4
+      ? { datagolf_field_current_round: Math.round(fieldApiRound) }
+      : {}),
     display_round: dr,
     display_round_label: displayRoundLabel(dr, tz),
     updated_at: new Date().toISOString().replace(/\.\d{3}Z$/, "Z"),
