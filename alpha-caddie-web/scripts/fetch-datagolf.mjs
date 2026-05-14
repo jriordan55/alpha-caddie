@@ -1376,6 +1376,36 @@ function ouDisplayRoundAuto(now = new Date(), tz = "America/New_York") {
   return 1;
 }
 
+/** `current_round` from field-updates / live-hole-stats when present (1–4). */
+function dgCurrentRoundFromFieldOrLiveHole(fieldRaw, liveHoleStats) {
+  const a = num(fieldRaw?.current_round ?? fieldRaw?.currentRound, NaN);
+  const b = num(
+    liveHoleStats?.current_round ?? liveHoleStats?.info?.current_round,
+    NaN,
+  );
+  for (const x of [a, b]) {
+    if (Number.isFinite(x) && x >= 1 && x <= 4) return Math.round(x);
+  }
+  return NaN;
+}
+
+/**
+ * Export `display_round`: prefer API current_round; otherwise calendar heuristics except Thursday ET
+ * never jumps past R1 (calendar previously returned R2 after 9pm Thursday while R1 was still live).
+ */
+function displayRoundForProjectionsMeta(fieldRaw, liveHoleStats, now, tz) {
+  const api = dgCurrentRoundFromFieldOrLiveHole(fieldRaw, liveHoleStats);
+  if (Number.isFinite(api)) return api;
+  const cal = ouDisplayRoundAuto(now, tz);
+  const fmt = new Intl.DateTimeFormat("en-US", {
+    timeZone: tz,
+    weekday: "short",
+  });
+  const wdayStr = fmt.formatToParts(now).find((p) => p.type === "weekday")?.value;
+  if (wdayStr === "Thu" && cal >= 2) return 1;
+  return cal;
+}
+
 function displayRoundLabel(r, tz) {
   const lab =
     r === 1 ? "R1 — next Thursday" : r === 2 ? "R2 — Friday" : r === 3 ? "R3 — Saturday" : r === 4 ? "R4 — Sunday" : `R${r}`;
@@ -1942,7 +1972,7 @@ async function main() {
   const posMap = new Map(base.map((r, i) => [r.dg_id, i + 1]));
 
   const tz = process.env.GOLF_OU_TZ || "America/New_York";
-  const dr = ouDisplayRoundAuto(new Date(), tz);
+  const dr = displayRoundForProjectionsMeta(fieldRaw, liveHoleStatsForPars, new Date(), tz);
   const roundMuMult = parseRoundMuMult();
 
   function stripGirFairwaysPuttsIfTiny(o) {

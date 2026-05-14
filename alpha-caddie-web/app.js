@@ -426,7 +426,7 @@ function projectionPlayerRowForModel(dgId, preferredRound) {
   if (!Number.isFinite(id)) return null;
   const pr = Math.round(num(preferredRound, NaN));
   const liveR = Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
-  const metaDr = Math.round(num(DATA?.meta?.display_round, NaN));
+  const metaDr = displayRoundMetaThursdayClamp(Math.round(num(DATA?.meta?.display_round, NaN)));
   const candidates = (DATA.players || []).filter((p) => Math.round(num(p.dg_id, NaN)) === id);
   if (!candidates.length) return null;
   // After 8pm ET on Sunday, never use prior-round fallbacks.
@@ -457,7 +457,7 @@ function projectionPlayerRowForModelByIdOrName(dgId, playerName, preferredRound)
   if (!pKey) return null;
   const pr = Math.round(num(preferredRound, NaN));
   const liveR = Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
-  const metaDr = Math.round(num(DATA?.meta?.display_round, NaN));
+  const metaDr = displayRoundMetaThursdayClamp(Math.round(num(DATA?.meta?.display_round, NaN)));
   const candidates = (DATA.players || []).filter((p) => playerKeyFromName(p?.player_name) === pKey);
   if (!candidates.length) return null;
   // After 8pm ET on Sunday, never use prior-round fallbacks.
@@ -543,7 +543,7 @@ function getModelRoundForEv() {
   const liveR = Math.round(num(m.datagolf_live_current_round, NaN));
   if (Number.isFinite(liveR) && liveR >= 1 && liveR <= 4) return liveR;
   const dr = Math.round(num(m.display_round, NaN));
-  if (Number.isFinite(dr) && dr >= 1 && dr <= 4) return dr;
+  if (Number.isFinite(dr) && dr >= 1 && dr <= 4) return displayRoundMetaThursdayClamp(dr);
   return getOuRound();
 }
 
@@ -558,6 +558,7 @@ function fairwayHolesModeledFromData() {
  * When the event advances (DataGolf live round or export display_round), move the shared Round
  * selector forward so O/U, +EV, and matchups read projection rows for the active round and live
  * score adjustments stay aligned. Never moves backward (user can pick an earlier round).
+ * When live reports a round, it wins over export display_round (calendar bumps could show R2 while R1 is still live).
  */
 function syncLbRoundToTournamentModelRound() {
   const sel = document.getElementById("lb-round");
@@ -577,8 +578,8 @@ function syncLbRoundToTournamentModelRound() {
     return false;
   }
   let target = 0;
-  if (Number.isFinite(liveR) && liveR >= 1 && liveR <= 4) target = Math.max(target, liveR);
-  if (Number.isFinite(dr) && dr >= 1 && dr <= 4) target = Math.max(target, dr);
+  if (Number.isFinite(liveR) && liveR >= 1 && liveR <= 4) target = liveR;
+  else if (Number.isFinite(dr) && dr >= 1 && dr <= 4) target = dr;
   if (target < 1) return false;
   const cur = Math.round(num(sel.value, NaN));
   if (!Number.isFinite(cur) || cur < 1 || cur > 4) {
@@ -1948,9 +1949,26 @@ function applyPayload(raw) {
   if (prevFieldFp !== nextFieldFp) lastDatagolfInPlayToken = "";
 }
 
+/** If ET is Thursday, never treat export `display_round` as R2+ (R1 often runs past 9pm ET). */
+function displayRoundMetaThursdayClamp(r) {
+  let out = Math.round(num(r, NaN));
+  if (!Number.isFinite(out) || out < 1 || out > 4) return out;
+  try {
+    const wd = (
+      new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", weekday: "short" })
+        .formatToParts(new Date())
+        .find((p) => p.type === "weekday") || {}
+    ).value;
+    if (wd === "Thu" && out >= 2) out = 1;
+  } catch (_) {}
+  return out;
+}
+
 function ouDisplayRoundAuto() {
   const dr = num(DATA.meta.display_round, NaN);
-  if (Number.isFinite(dr) && dr >= 1 && dr <= 4) return Math.round(dr);
+  if (Number.isFinite(dr) && dr >= 1 && dr <= 4) {
+    return displayRoundMetaThursdayClamp(dr);
+  }
   try {
     const wd = (
       new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", weekday: "short" }).formatToParts(new Date()).find((p) => p.type === "weekday") || {}
@@ -1975,11 +1993,12 @@ function tournamentMaxEffectiveRound() {
   const liveR = mm ? NaN : Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
   const dr = Math.round(num(DATA?.meta?.display_round, NaN));
   const ou = Math.round(getOuRound());
-  return Math.max(
-    Number.isFinite(liveR) && liveR >= 1 ? liveR : 0,
-    Number.isFinite(dr) && dr >= 1 ? dr : 0,
-    Number.isFinite(ou) && ou >= 1 ? ou : 0
-  );
+  const liveOk = Number.isFinite(liveR) && liveR >= 1 ? liveR : 0;
+  const drOk = Number.isFinite(dr) && dr >= 1 ? dr : 0;
+  const ouOk = Number.isFinite(ou) && ou >= 1 ? ou : 0;
+  /* When live reports a round, do not treat stale export display_round as “ahead” of live (calendar R2 bump). */
+  if (liveOk) return Math.max(liveOk, ouOk);
+  return Math.max(drOk, ouOk);
 }
 
 /**
