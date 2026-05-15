@@ -10113,6 +10113,248 @@ function selectedPropsCourseFilter() {
   return normCourseNameKey(raw);
 }
 
+function propsCourseWindowModeOn() {
+  return Boolean(document.getElementById("props-filter-course-window")?.checked);
+}
+
+/** Course date window: course dropdown required; at least one date bound set. */
+function propsCourseWindowModeActive() {
+  if (!propsCourseWindowModeOn()) return false;
+  if (!selectedPropsCourseFilter()) return false;
+  const from = String(document.getElementById("props-filter-date-from")?.value || "").trim();
+  const to = String(document.getElementById("props-filter-date-to")?.value || "").trim();
+  return Boolean(from || to);
+}
+
+function propsCourseWindowDateInputToUtcMs(raw, endOfDay) {
+  const s = String(raw || "").trim();
+  const m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return NaN;
+  const y = Number(m[1]);
+  const mo = Number(m[2]);
+  const d = Number(m[3]);
+  if (!Number.isFinite(y) || !Number.isFinite(mo) || !Number.isFinite(d)) return NaN;
+  return endOfDay ? Date.UTC(y, mo - 1, d, 23, 59, 59, 999) : Date.UTC(y, mo - 1, d);
+}
+
+function propsCourseWindowDateFromMs() {
+  return propsCourseWindowDateInputToUtcMs(document.getElementById("props-filter-date-from")?.value, false);
+}
+
+function propsCourseWindowDateToMs() {
+  return propsCourseWindowDateInputToUtcMs(document.getElementById("props-filter-date-to")?.value, true);
+}
+
+function propsCourseWindowDateRangeLabel() {
+  const from = String(document.getElementById("props-filter-date-from")?.value || "").trim();
+  const to = String(document.getElementById("props-filter-date-to")?.value || "").trim();
+  if (from && to) return `${from} – ${to}`;
+  if (from) return `from ${from}`;
+  if (to) return `through ${to}`;
+  return "";
+}
+
+function historyRoundMatchesCourseKey(row, courseKey) {
+  if (!row || !courseKey) return false;
+  return normCourseNameKey(row.course_name) === courseKey;
+}
+
+function historyRoundInCourseDateWindow(row, fromMs, toMs) {
+  const ms = historyRoundChartDateUtcMs(row);
+  if (!Number.isFinite(ms)) return true;
+  if (Number.isFinite(fromMs) && ms < fromMs) return false;
+  if (Number.isFinite(toMs) && ms > toMs) return false;
+  return true;
+}
+
+function applyPropsSidebarWeatherFiltersToRounds(list) {
+  let out = filterHistoryRoundsByTempRange(list);
+  const windBucket = selectedPropsWindRangeFilter();
+  if (windBucket) {
+    out = out.filter((r) =>
+      weatherRangeMatch("wind", windBucket, parseWeatherNumber(r?.pga_meta_weather_wind_mph ?? r?.weather_wind_mph)),
+    );
+  }
+  const humidityBucket = selectedPropsHumidityRangeFilter();
+  if (humidityBucket) {
+    out = out.filter((r) =>
+      weatherRangeMatch(
+        "humidity",
+        humidityBucket,
+        parseWeatherNumber(r?.pga_meta_weather_humidity ?? r?.weather_humidity),
+      ),
+    );
+  }
+  return out;
+}
+
+/** All player-round rows at one course in a date window (field view for Historical Trends). */
+function collectCourseWindowRoundEntriesFixed() {
+  const courseKey = selectedPropsCourseFilter();
+  if (!courseKey || !HISTORY?.byDgId) return [];
+  const fromMs = propsCourseWindowDateFromMs();
+  const toMs = propsCourseWindowDateToMs();
+  const raw = [];
+  for (const [dgStr, rec] of Object.entries(HISTORY.byDgId)) {
+    const dgId = Math.round(num(dgStr, NaN));
+    if (!Number.isFinite(dgId)) continue;
+    const playerName = propsPlayerDisplayNameForDg(dgId);
+    for (const r of rec.rounds || []) {
+      if (!historyRoundCountsAsActual(r)) continue;
+      if (!historyRoundMatchesCourseKey(r, courseKey)) continue;
+      if (!historyRoundInCourseDateWindow(r, fromMs, toMs)) continue;
+      raw.push({ row: r, dgId, playerName });
+    }
+  }
+  raw.sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
+  const rowsOnly = applyPropsSidebarWeatherFiltersToRounds(raw.map((e) => e.row));
+  const rowSet = new Set(rowsOnly);
+  return raw.filter((e) => rowSet.has(e.row));
+}
+
+function propsCourseWindowEntriesForChart(winN) {
+  let list = collectCourseWindowRoundEntriesFixed();
+  const wn = clamp(
+    Math.round(num(winN, PROPS_HISTORY_ROUND_DEFAULT)),
+    PROPS_HISTORY_ROUND_MIN,
+    PROPS_HISTORY_ROUND_MAX,
+  );
+  if (list.length > wn) list = list.slice(-wn);
+  return list;
+}
+
+function propsFullHitStatsFromRoundList(statKey, line, rounds) {
+  if (!Number.isFinite(line)) return { valid: 0, over: 0, under: 0, overRate: NaN, underRate: NaN };
+  let valid = 0;
+  let over = 0;
+  let under = 0;
+  for (const r of rounds) {
+    const a = actualForRoundRow(statKey, r);
+    if (!Number.isFinite(a)) continue;
+    valid++;
+    if (a > line) over++;
+    else if (a < line) under++;
+  }
+  return {
+    valid,
+    over,
+    under,
+    overRate: valid > 0 ? over / valid : NaN,
+    underRate: valid > 0 ? under / valid : NaN,
+  };
+}
+
+function propsCourseWindowFieldHitStats(statKey, line, winN) {
+  const rounds = propsCourseWindowEntriesForChart(winN).map((e) => e.row);
+  return propsFullHitStatsFromRoundList(statKey, line, rounds);
+}
+
+function propsFullHitStatsForDgCourseWindow(dgId, statKey, line) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return { valid: 0, over: 0, under: 0, overRate: NaN, underRate: NaN };
+  const rounds = collectCourseWindowRoundEntriesFixed()
+    .filter((e) => e.dgId === id)
+    .map((e) => e.row);
+  return propsFullHitStatsFromRoundList(statKey, line, rounds);
+}
+
+function refreshPropsCourseFilterOptionsAllPlayers() {
+  const courseSel = document.getElementById("props-filter-course");
+  if (!courseSel) return;
+  const prev = courseSel.value;
+  const byKey = new Map();
+  for (const rec of Object.values(HISTORY.byDgId || {})) {
+    if (!rec || !Array.isArray(rec.rounds)) continue;
+    for (const r of rec.rounds) {
+      if (historyRoundIsPlaceholderAllMarketsZero(r)) continue;
+      const cn = String(r?.course_name || "").trim();
+      if (!cn) continue;
+      const k = normCourseNameKey(cn);
+      if (!k) continue;
+      if (!byKey.has(k)) byKey.set(k, courseFitPrettyCourseKey(k));
+    }
+  }
+  const metaVenue = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
+  if (metaVenue) {
+    const mk = normCourseNameKey(metaVenue);
+    if (mk && !byKey.has(mk)) byKey.set(mk, courseFitPrettyCourseKey(mk));
+  }
+  courseSel.innerHTML = '<option value="">All</option>';
+  [...byKey.entries()]
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .forEach(([k, label]) => {
+      const op = document.createElement("option");
+      op.value = k;
+      op.textContent = label;
+      courseSel.appendChild(op);
+    });
+  const prevK = prev ? normCourseNameKey(prev) : "";
+  if (prevK && [...courseSel.options].some((o) => o.value === prevK)) courseSel.value = prevK;
+}
+
+function defaultLineForCourseWindow(statKey, entries) {
+  const vals = entries
+    .map((e) => actualForRoundRow(statKey, e.row))
+    .filter((x) => Number.isFinite(x));
+  if (vals.length) {
+    const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
+    return clampPropLineForMarket(statKey, snapPropLineToDotFive(mean));
+  }
+  return clampPropLineForMarket(statKey, defaultPropLineForStat(statKey));
+}
+
+function paintPropsTrendKpiRowCourseWindow(statKey, hitSt, graphSeries, entries) {
+  const el = document.getElementById("props-trends-kpis");
+  if (!el) return;
+  el.replaceChildren();
+  const rounds = entries.map((e) => e.row);
+  const playerIds = new Set(entries.map((e) => e.dgId));
+  const vals = (graphSeries || []).map((s) => s.actual).filter((x) => Number.isFinite(x));
+  const graphMean = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : NaN;
+  const fieldMean = propsTrendMeanActual(statKey, rounds);
+
+  const addKpi = (label, val, cls) => {
+    const wrap = document.createElement("div");
+    wrap.className = "props-trends-kpi";
+    const lab = document.createElement("span");
+    lab.className = "props-trends-kpi-lab";
+    lab.textContent = label;
+    const v = document.createElement("span");
+    v.className = "props-trends-kpi-val" + (cls ? ` ${cls}` : "");
+    v.textContent = formatPropsTrendKpiValue(statKey, val);
+    wrap.appendChild(lab);
+    wrap.appendChild(v);
+    el.appendChild(wrap);
+  };
+
+  addKpi("Field avg (window)", fieldMean);
+  addKpi("Graph avg", graphMean);
+  addKpi("Rounds", rounds.length, "");
+  addKpi("Players", playerIds.size, "");
+
+  if (hitSt && hitSt.valid > 0) {
+    const lowerBetter = propsStatLowerIsBetter(statKey);
+    const addRateKpi = (label, rate, wins, total, side) => {
+      const wrap = document.createElement("div");
+      wrap.className = "props-trends-kpi";
+      const lab = document.createElement("span");
+      lab.className = "props-trends-kpi-lab";
+      lab.textContent = label;
+      const val = document.createElement("span");
+      val.className = "props-trends-kpi-val";
+      val.textContent = Number.isFinite(rate) ? `${(rate * 100).toFixed(1)}% (${wins}/${total})` : "—";
+      const isUnderSide = side === "under";
+      const greenSide = lowerBetter ? isUnderSide : !isUnderSide;
+      val.classList.add(greenSide ? "ev-pos" : "ev-neg");
+      wrap.appendChild(lab);
+      wrap.appendChild(val);
+      el.appendChild(wrap);
+    };
+    addRateKpi("Over hit rate", hitSt.overRate, hitSt.over, hitSt.valid, "over");
+    addRateKpi("Under hit rate", hitSt.underRate, hitSt.under, hitSt.valid, "under");
+  }
+}
+
 function parseWeatherNumber(v) {
   const n = num(v, NaN);
   if (Number.isFinite(n)) return n;
@@ -10177,6 +10419,10 @@ function propsConditionLabel(key) {
 }
 
 function refreshPropsFilterOptionsForGolfer(dgId) {
+  if (propsCourseWindowModeOn()) {
+    refreshPropsCourseFilterOptionsAllPlayers();
+    return;
+  }
   const courseSel = document.getElementById("props-filter-course");
   if (!courseSel) return;
   const rounds = historyRoundsForDg(dgId).filter((r) => !historyRoundIsPlaceholderAllMarketsZero(r));
@@ -10680,7 +10926,10 @@ function propsTrendLineContextKeyFromDom() {
   const course = selectedPropsCourseFilter() || "all";
   const pm = PRICING_STATE.mode || "default";
   const ps = PRICING_STATE.skill === "default" ? "default" : pricingSkillHistoryKey();
-  return `${dg}|${sk}|${courseFilterOn() ? 1 : 0}|${winNKey}|${temp}|${wind}|${hum}|${course}|${pm}|${ps}`;
+  const cw = propsCourseWindowModeActive() ? 1 : 0;
+  const df = String(document.getElementById("props-filter-date-from")?.value || "");
+  const dt = String(document.getElementById("props-filter-date-to")?.value || "");
+  return `${dg}|${sk}|${courseFilterOn() ? 1 : 0}|${winNKey}|${temp}|${wind}|${hum}|${course}|${pm}|${ps}|${cw}|${df}|${dt}`;
 }
 
 /** After user changes line or steppers so projection logic does not overwrite the input. */
@@ -10694,6 +10943,7 @@ function lockPropsTrendLineContextToCurrentFilter() {
  * uses 1 so you still see the whole field when sample sizes are small per player.
  */
 function propsTopHitMinRoundsForFilter() {
+  if (propsCourseWindowModeActive()) return 1;
   if (courseFilterOn()) return 1;
   if (selectedPropsCourseFilter()) return 1;
   if (propsTempFilterActive()) return 1;
@@ -11020,6 +11270,7 @@ function roundsMatchingCurrentCourseOnlyFieldAllTime() {
 function formatPropsTrendKpiValue(statKey, v) {
   if (!Number.isFinite(v)) return "—";
   void statKey;
+  if (Math.abs(v - Math.round(v)) < 1e-9) return String(Math.round(v));
   return v.toFixed(1);
 }
 
@@ -11280,7 +11531,9 @@ function renderPropsHitRateAndTopTable(statKey, line, winN) {
     PROPS_HISTORY_ROUND_MAX
   );
   const dg = selectedDgId();
-  const st = propsFullHitStatsForDg(dg, statKey, line, wn);
+  const st = propsCourseWindowModeActive()
+    ? propsCourseWindowFieldHitStats(statKey, line, wn)
+    : propsFullHitStatsForDg(dg, statKey, line, wn);
   if (block) {
     block.hidden = false;
     block.classList.toggle("props-ou-lower-is-better", propsStatLowerIsBetter(statKey));
@@ -11322,7 +11575,9 @@ function renderPropsHitRateAndTopTable(statKey, line, winN) {
     .filter((x) => Number.isFinite(x));
   const rows = [];
   for (const id of ids) {
-    const s = propsFullHitStatsForDg(id, statKey, line, wn, true);
+    const s = propsCourseWindowModeActive()
+      ? propsFullHitStatsForDgCourseWindow(id, statKey, line)
+      : propsFullHitStatsForDg(id, statKey, line, wn, true);
     if (s.valid < minR) continue;
     rows.push({
       dgId: id,
@@ -11631,6 +11886,7 @@ function showPropsChartTooltip(canvas, ev, hit) {
     tip.appendChild(div);
   };
   row("Date", hit.date || "—");
+  if (hit.playerName) row("Golfer", hit.playerName);
   row("Value", propsChartFormatValue(hit.statKey, hit.actual));
   row("Course", propsCourseDisplay(hit));
   tip.hidden = false;
@@ -11822,6 +12078,7 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
       h: yBase - pad.t,
       _hist: series[i]._hist,
       date: String(series[i].date || "").trim() || "—",
+      playerName: String(series[i].playerName || "").trim(),
       actual: v,
       statKey,
     });
@@ -11895,7 +12152,123 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
   ctx.textAlign = "left";
 }
 
+function syncPropsCourseWindowUiState() {
+  const on = propsCourseWindowModeActive();
+  const hdr = document.getElementById("props-trends-header");
+  if (hdr) hdr.classList.toggle("props-course-window-active", on);
+  const curCourse = document.getElementById("props-filter-current-course");
+  if (curCourse && propsCourseWindowModeOn()) curCourse.checked = false;
+}
+
+function renderPropsTrendsCourseWindow() {
+  syncPropsCourseWindowUiState();
+  if (propsCourseWindowModeActive() && HISTORY._partial && activeAppTabId() === "props") {
+    void ensurePlayerHistoryLoadedForTab("props");
+  }
+  const empty = document.getElementById("props-chart-empty");
+  const titleEl = document.getElementById("props-trends-title");
+  const subEl = document.getElementById("props-trends-sub");
+  const flagEl = document.getElementById("props-flag");
+  const statKey = statKeyFromPropSelect();
+  if (propsTopTableSortStatKey !== statKey) {
+    propsTopTableSort = { key: "overRate", dir: -1 };
+    propsTopTableSortStatKey = statKey;
+  }
+  refreshPropsCourseFilterOptionsAllPlayers();
+  const courseKey = selectedPropsCourseFilter();
+  const courseLabel = courseKey ? courseFitPrettyCourseKey(courseKey) : "—";
+  if (flagEl) flagEl.hidden = true;
+  if (titleEl) titleEl.textContent = courseLabel;
+  if (subEl) {
+    const dr = propsCourseWindowDateRangeLabel();
+    const mkt = propMarketLabelFromKey(statKey);
+    subEl.textContent = dr ? `${mkt} · ${dr} · field rounds at this course` : `${mkt} · pick course and date range`;
+  }
+  const nWinEl = document.getElementById("props-window-n");
+  const winN = clamp(
+    Math.round(num(nWinEl?.value, PROPS_HISTORY_ROUND_DEFAULT)),
+    PROPS_HISTORY_ROUND_MIN,
+    PROPS_HISTORY_ROUND_MAX,
+  );
+  if (nWinEl) nWinEl.value = String(winN);
+
+  if (!propsCourseWindowModeActive()) {
+    if (empty) {
+      empty.hidden = false;
+      empty.textContent = "Select a course and at least one date (From or To) for course date window.";
+    }
+    drawPropsTrendCanvas([], NaN, statKey);
+    paintPropsTrendsInsightHeader(null, statKey, NaN, { valid: 0, over: 0, under: 0, overRate: NaN, underRate: NaN }, [], NaN);
+    const bookWrap = document.getElementById("props-trends-book-lines");
+    if (bookWrap) bookWrap.replaceChildren();
+    renderPropsHitRateAndTopTable(statKey, NaN, winN);
+    return;
+  }
+
+  if (!HISTORY._ok) {
+    if (empty) {
+      empty.hidden = false;
+      empty.textContent = HISTORY._loading ? "Loading player history..." : "No history file.";
+    }
+    drawPropsTrendCanvas([], NaN, statKey);
+    renderPropsHitRateAndTopTable(statKey, NaN, winN);
+    return;
+  }
+  if (empty) empty.hidden = true;
+
+  const lineInp = document.getElementById("prop-line");
+  const ctxKey = propsTrendLineContextKeyFromDom();
+  const lineEditing = Boolean(lineInp && document.activeElement === lineInp);
+  const entriesAll = collectCourseWindowRoundEntriesFixed();
+  let line = clampPropLineForMarket(statKey, snapPropLineToDotFive(lineInp?.value));
+  if (lineEditing && !Number.isFinite(line) && Number.isFinite(propsTrendLastGoodLine)) {
+    line = propsTrendLastGoodLine;
+  }
+  if (!lineEditing && (!Number.isFinite(line) || propsTrendsLineContextKey !== ctxKey)) {
+    line = defaultLineForCourseWindow(statKey, entriesAll);
+    if (lineInp) lineInp.value = formatPropLineValueForInput(line);
+    propsTrendsLineContextKey = ctxKey;
+  } else if (!lineEditing && lineInp) {
+    lineInp.value = formatPropLineValueForInput(line);
+  }
+  if (Number.isFinite(line)) propsTrendLastGoodLine = line;
+
+  const chartEntries = propsCourseWindowEntriesForChart(winN);
+  const seriesChart = [];
+  for (const e of chartEntries) {
+    const actual = actualForRoundRow(statKey, e.row);
+    if (!Number.isFinite(actual)) continue;
+    seriesChart.push({
+      actual,
+      date: propsTrendChartDateFromRow(e.row),
+      playerName: e.playerName,
+      _hist: e.row,
+    });
+  }
+
+  if (!seriesChart.length) {
+    if (empty) {
+      empty.hidden = false;
+      empty.textContent = "No completed rounds at this course in the selected date range.";
+    }
+  }
+
+  drawPropsTrendCanvas(seriesChart, line, statKey);
+  const hitSt = propsCourseWindowFieldHitStats(statKey, line, winN);
+  const bookWrap = document.getElementById("props-trends-book-lines");
+  if (bookWrap) bookWrap.replaceChildren();
+  paintPropsTrendKpiRowCourseWindow(statKey, hitSt, seriesChart, chartEntries.length ? chartEntries : entriesAll);
+  const chartLeg = document.getElementById("props-chart-line-legend");
+  if (chartLeg) chartLeg.hidden = !Number.isFinite(line);
+  renderPropsHitRateAndTopTable(statKey, line, winN);
+}
+
 function renderPropsTrends() {
+  if (propsCourseWindowModeOn()) {
+    renderPropsTrendsCourseWindow();
+    return;
+  }
+  syncPropsCourseWindowUiState();
   const dg = selectedDgId();
   const selectedHistoryMissing = Number.isFinite(dg) && !historyBucketLoaded(dg);
   if (selectedHistoryMissing && !historyBucketLoading(dg) && activeAppTabId() === "props") {
@@ -11912,6 +12285,8 @@ function renderPropsTrends() {
   }
   const playerRow =
     DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === dg && samePlayerRound(p, 1)) || DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === dg);
+  const flagEl = document.getElementById("props-flag");
+  if (flagEl) flagEl.hidden = false;
   if (playerRow) {
     setPropsCountryFlag(playerRow);
     if (titleEl) titleEl.textContent = displayGolferName(playerRow.player_name) || "—";
@@ -14789,6 +15164,9 @@ document.addEventListener("DOMContentLoaded", () => {
     "props-filter-wind-range",
     "props-filter-humidity-range",
     "props-filter-course",
+    "props-filter-course-window",
+    "props-filter-date-from",
+    "props-filter-date-to",
     "props-window-n",
   ];
   propsIds.forEach((id) => {
@@ -14804,6 +15182,10 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
       el.addEventListener("input", () => renderPropsTrends());
     }
+  });
+  document.getElementById("props-filter-course-window")?.addEventListener("change", () => {
+    if (propsCourseWindowModeOn()) refreshPropsCourseFilterOptionsAllPlayers();
+    renderPropsTrends();
   });
   document.getElementById("props-top-hits-emoji-toggle")?.addEventListener("click", () => {
     propsTopHitsFitMode = propsTopHitsFitMode === "fire" ? "ice" : "fire";

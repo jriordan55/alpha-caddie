@@ -260,6 +260,21 @@
                 <option value="">All</option>
               </select>
             </label>
+            <div class="props-filter-course-window-group">
+              <label class="props-sidebar-label props-filter-row" for="props-filter-course-window">
+                <input type="checkbox" id="props-filter-course-window" />
+                <span>Course date window</span>
+              </label>
+              <p class="text-muted props-course-window-hint">Chart and KPIs show all players at the chosen course between these dates (hover a bar for golfer).</p>
+              <div class="props-filter-date-range-inputs">
+                <label class="toolbar-label">From
+                  <input type="date" id="props-filter-date-from" class="props-date-filter-input" title="Start date (inclusive)" />
+                </label>
+                <label class="toolbar-label">To
+                  <input type="date" id="props-filter-date-to" class="props-date-filter-input" title="End date (inclusive)" />
+                </label>
+              </div>
+            </div>
           </div>
           <label class="props-sidebar-label">Golfer
             <div class="golfer-combobox-wrap golfer-suggest-anchor">

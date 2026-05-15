@@ -2740,6 +2740,38 @@ th.matchup-analysis-best-pick {
   gap: 10px 12px;
   align-items: end;
 }
+
+.props-filter-course-window-group {
+  flex: 1 1 100%;
+  min-width: 0;
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--golf-border, rgba(255, 255, 255, 0.08));
+}
+.props-course-window-hint {
+  font-size: 0.72rem;
+  line-height: 1.35;
+  margin: 4px 0 8px;
+}
+.props-filter-date-range-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 10px;
+  align-items: end;
+}
+.props-date-filter-input {
+  width: 100%;
+  max-width: 11rem;
+  font: inherit;
+  color: inherit;
+  background: var(--golf-surface-2, #12151a);
+  border: 1px solid var(--golf-border, rgba(255, 255, 255, 0.12));
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+.props-trends-header.props-course-window-active .props-country-flag {
+  opacity: 0.35;
+}
 @media (max-width: 420px) {
   .props-filter-temp-range-inputs {
     grid-template-columns: 1fr;
