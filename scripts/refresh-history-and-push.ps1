@@ -41,6 +41,7 @@ $ErrorActionPreference = "Stop"
 #               projections.matchups (betting-tools/matchups), approach_skill_ytd.json (Course Fit shot bins)
 #   fetch:book-odds → matchup/outright odds + DraftKings round O/U props (Playwright) merged into projections.json;
 #     appends alpha-caddie-web/data/dk_round_projection_audit.csv (DK line + model round stats per prop).
+#   export:round-projection-vs-actual — alpha-caddie-web/data/round_projection_vs_actual.csv (model vs actual per player×round).
 #   fetch:in-play → live-in-play.json → browser overlays placement win probs + live_tournament_stats distance/accuracy onto DATA.players
 #   merge:live-hole-pars-into-projections runs AFTER fetch:book-odds + fetch:finish-tool so an inline fetch:dg inside
 #   book-odds does not leave projections without live_hole_stats hole_pars (tee-adjacent UI + consistency with Hole Hangout).
@@ -104,6 +105,7 @@ Run-Step "Running fetch:book-odds (matchups, outrights, DK round O/U props) ..."
 Run-Step 'Running fetch:finish-tool — outrights, same Scratch feed as DG Finish Position; runs after book-odds ...' { npm run fetch:finish-tool }
 Run-Step "Merging live_hole_stats into projections (after book odds; preserves pars if book-odds ran inline fetch:dg) ..." { npm run merge:live-hole-pars-into-projections }
 Run-Step "Running update:rounds (historical CSV + Historical Trends: player_round_history / embed / shards / shots web) ..." { npm run update:rounds }
+Run-Step "Writing round_projection_vs_actual.csv (model projections vs actual round results) ..." { npm run export:round-projection-vs-actual }
 
 $webDataDir = Join-Path $repoRoot "website/public/data"
 if (-not (Test-Path $webDataDir)) {
@@ -156,6 +158,7 @@ $artifacts = @(
   "alpha-caddie-web/course-table.json",
   "alpha-caddie-web/data/course_table.csv",
   "alpha-caddie-web/data/dk_round_projection_audit.csv",
+  "alpha-caddie-web/data/round_projection_vs_actual.csv",
   "alpha-caddie-web/hole_pars_from_shots.json",
   "alpha-caddie-web/player_shots_web.json",
   "alpha-caddie-web/player-history",

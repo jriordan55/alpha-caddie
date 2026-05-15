@@ -8,6 +8,7 @@
     "merge:live-hole-pars-into-projections": "node scripts/merge-live-hole-pars-into-projections.mjs",
     "fetch:book-odds": "node scripts/fetch-book-odds-into-projections.mjs",
     "export:dk-round-audit-csv": "node scripts/export-dk-round-model-audit-csv.mjs",
+    "export:round-projection-vs-actual": "node scripts/export-round-projection-vs-actual-csv.mjs",
     "fetch:finish-tool": "node scripts/fetch-datagolf-finish-tool-outrights.mjs",
     "refresh": "node scripts/refresh-fresh.mjs",
     "refresh:app": "node scripts/refresh-app-data.mjs",

@@ -14,6 +14,7 @@
     "sync:rounds-csv": "npm run sync:rounds-csv --prefix alpha-caddie-web",
     "fetch:book-odds": "npm run fetch:book-odds --prefix alpha-caddie-web",
     "export:dk-round-audit-csv": "npm run export:dk-round-audit-csv --prefix alpha-caddie-web",
+    "export:round-projection-vs-actual": "npm run export:round-projection-vs-actual --prefix alpha-caddie-web",
     "fetch:finish-tool": "npm run fetch:finish-tool --prefix alpha-caddie-web",
     "refresh:app": "npm run refresh:app --prefix alpha-caddie-web",
     "refresh:app:live": "npm run refresh:app:live --prefix alpha-caddie-web",

@@ -61,6 +61,12 @@ import {
   titleTokenOverlapRatio,
 } from "./dg-events-align.mjs";
 import { fetchDataGolfOutrightsApi } from "./datagolf-outrights-api.mjs";
+import {
+  blendedPriorRoundCourseExcess,
+  buildWithinEventFormMap,
+  courseDifficultyStrokeShift,
+  loadEventRoundContextFromHistoricalCsv,
+} from "./course-round-adjustments.mjs";
 import { holeParsFromLiveHoleStatsPayload } from "./dg-live-hole-pars.mjs";
 import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
 import { applyHistoricalRoundsMergeDefaults } from "./historical-rounds-merge-env.mjs";
@@ -1939,6 +1945,43 @@ async function main() {
   const dr = exportDisplayRoundFromDgField(fieldRaw, liveHoleStatsForPars);
   const roundMuMult = parseRoundMuMult();
 
+  const applyPriorRoundAdj =
+    String(process.env.GOLF_COURSE_PRIOR_ROUND_DIFFICULTY ?? "1").trim() !== "0";
+  const formK = num(process.env.GOLF_WITHIN_EVENT_FORM_CARRY, 0.02);
+  const formCap = num(process.env.GOLF_WITHIN_EVENT_FORM_CAP, 0.3);
+  let histEventCtx = null;
+  if (applyPriorRoundAdj && event_name && histCalib.csv_path && existsSync(histCalib.csv_path)) {
+    histEventCtx = await loadEventRoundContextFromHistoricalCsv(histCalib.csv_path, event_name);
+  }
+  const withinFormMap =
+    formK !== 0 && histEventCtx
+      ? buildWithinEventFormMap(
+          histEventCtx,
+          base.map((r) => ({ dg_id: r.dg_id, mu_sg: r.mu_sg })),
+          formK,
+          formCap,
+        )
+      : new Map();
+  const priorCourseExcessByRound = {};
+  const priorCourseStrokeShiftByRound = {};
+  if (applyPriorRoundAdj) {
+    for (let r = 1; r <= 4; r++) {
+      const ex = blendedPriorRoundCourseExcess(liveHoleStatsForPars, histEventCtx, r);
+      priorCourseExcessByRound[r] = Number.isFinite(ex) ? Math.round(ex * 1000) / 1000 : null;
+      priorCourseStrokeShiftByRound[r] = Number.isFinite(ex)
+        ? Math.round(courseDifficultyStrokeShift(ex) * 1000) / 1000
+        : 0;
+    }
+    const parts = [2, 3, 4]
+      .filter((r) => Number.isFinite(priorCourseExcessByRound[r]))
+      .map((r) => `R${r}:${priorCourseExcessByRound[r]}`);
+    if (parts.length) {
+      console.log(
+        `[fetch-dg] Prior-round course scoring vs par (excess strokes, + = harder): ${parts.join(", ")} → applied to μ_SG / total_score for that round`,
+      );
+    }
+  }
+
   function stripGirFairwaysPuttsIfTiny(o) {
     if (!o || typeof o !== "object") return;
     for (const k of ["gir", "fairways", "putts"]) {
@@ -1950,9 +1993,17 @@ async function main() {
   const players = [];
   for (let r = 1; r <= 4; r++) {
     const mult = num(roundMuMult[r - 1], 1);
+    const strokeShiftPrior = applyPriorRoundAdj ? num(priorCourseStrokeShiftByRound[r], 0) : 0;
     for (const row of base) {
+      const formShift = formK !== 0 ? num(withinFormMap.get(`${row.dg_id}|${r}`), 0) : 0;
+      let muForRound = r === 1 ? row.mu_sg : row.mu_sg * mult;
+      if (applyPriorRoundAdj) {
+        muForRound = muForRound - strokeShiftPrior + formShift;
+      }
+      muForRound = clampMuSg(muForRound);
+
       let st;
-      if (r === 1) {
+      if (r === 1 && strokeShiftPrior === 0 && formShift === 0) {
         st = {
           mu_sg: row.mu_sg,
           implied_mu_sg: row.implied_mu_sg,
@@ -1965,11 +2016,25 @@ async function main() {
           fairways: row.fairways,
           putts: row.putts,
         };
+      } else if (r === 1) {
+        st = derivedStatsFromMuSg(muForRound, fairwayHolesThisCourse, {
+          sg_ott: row.sg_ott,
+          fieldMeanOtt,
+          sg_app: row.sg_app,
+          fieldMeanApp,
+          nGirHoles: 18,
+          driving_distance: isPlausibleDrivingDistanceYds(row.driving_distance)
+            ? row.driving_distance
+            : NaN,
+          fieldMeanDrive,
+          histCountFit: histCalib,
+          skRow: skillByDg.get(row.dg_id),
+        });
       } else {
         const skRowR = skillByDg.get(row.dg_id);
         const distR =
           isPlausibleDrivingDistanceYds(row.driving_distance) ? row.driving_distance : NaN;
-        st = derivedStatsFromMuSg(row.mu_sg * mult, fairwayHolesThisCourse, {
+        st = derivedStatsFromMuSg(muForRound, fairwayHolesThisCourse, {
           sg_ott: row.sg_ott,
           fieldMeanOtt,
           sg_app: row.sg_app,
@@ -1993,6 +2058,12 @@ async function main() {
         position: posMap.get(row.dg_id),
         mu_sg: Math.round(st.mu_sg * 1000) / 1000,
         implied_mu_sg: Math.round(st.implied_mu_sg * 1000) / 1000,
+        ...(applyPriorRoundAdj && (strokeShiftPrior !== 0 || formShift !== 0)
+          ? {
+              prior_round_course_stroke_shift: Math.round(strokeShiftPrior * 1000) / 1000,
+              within_event_form_shift: Math.round(formShift * 1000) / 1000,
+            }
+          : {}),
         score_to_par: Math.round(stp * 100) / 100,
         total_score: Math.round(ts * 100) / 100,
         round_sd: RAW_ROUND_SD,
@@ -2099,6 +2170,13 @@ async function main() {
     course_par_18,
     hole_pars,
     hole_pars_source,
+    prior_round_course_excess_strokes: priorCourseExcessByRound,
+    prior_round_course_stroke_shift: priorCourseStrokeShiftByRound,
+    projection_round_adjustments: {
+      course_prior_round_difficulty: applyPriorRoundAdj,
+      within_event_form_carry: formK,
+      within_event_form_cap: formCap,
+    },
     projection_course_basis: {
       fairway_holes_modeled: fairwayHolesThisCourse,
       pret_expected_round_strokes_players: pretStrokesByDg.size,
