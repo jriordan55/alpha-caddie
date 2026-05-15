@@ -2748,6 +2748,12 @@ th.matchup-analysis-best-pick {
   padding-top: 8px;
   border-top: 1px solid var(--golf-border, rgba(255, 255, 255, 0.08));
 }
+.props-course-session-extra {
+  margin-top: 4px;
+}
+.props-course-session-extra .props-course-window-hint {
+  margin-top: 0;
+}
 .props-course-window-hint {
   font-size: 0.72rem;
   line-height: 1.35;

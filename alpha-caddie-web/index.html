@@ -265,12 +265,14 @@
                 <input type="checkbox" id="props-filter-course-window" />
                 <span>Field by course &amp; date</span>
               </label>
-              <p class="text-muted props-course-window-hint">Choose a course, then a round date played there (only days with completed rounds are listed). Hover a bar for golfer.</p>
-              <label class="toolbar-label props-course-session-date-label">Round date
-                <select id="props-filter-course-session-date" class="props-course-session-date-select" title="Days with completed rounds at this course">
-                  <option value="">Pick a date…</option>
-                </select>
-              </label>
+              <div id="props-course-session-extra" class="props-course-session-extra" hidden>
+                <p class="text-muted props-course-window-hint">Choose a course, then a round date played there (only days with completed rounds are listed). Hover a bar for golfer.</p>
+                <label class="toolbar-label props-course-session-date-label">Round date
+                  <select id="props-filter-course-session-date" class="props-course-session-date-select" title="Days with completed rounds at this course">
+                    <option value="">Pick a date…</option>
+                  </select>
+                </label>
+              </div>
             </div>
           </div>
           <label class="props-sidebar-label">Golfer
