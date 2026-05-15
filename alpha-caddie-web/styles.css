@@ -2753,15 +2753,16 @@ th.matchup-analysis-best-pick {
   line-height: 1.35;
   margin: 4px 0 8px;
 }
-.props-filter-date-range-inputs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 10px;
-  align-items: end;
-}
-.props-date-filter-input {
+.props-course-session-date-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   width: 100%;
-  max-width: 11rem;
+  max-width: 100%;
+}
+.props-course-session-date-select {
+  width: 100%;
+  max-width: 16rem;
   font: inherit;
   color: inherit;
   background: var(--golf-surface-2, #12151a);

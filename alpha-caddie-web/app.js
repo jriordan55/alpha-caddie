@@ -10153,47 +10153,95 @@ function ensurePropsCourseSelectedForWindow() {
   return false;
 }
 
-function ensurePropsCourseWindowDateDefaults() {
-  if (!propsCourseWindowModeOn()) return;
-  const fromEl = document.getElementById("props-filter-date-from");
-  const toEl = document.getElementById("props-filter-date-to");
-  if (!fromEl || !toEl) return;
-  if (fromEl.value && toEl.value) return;
-  let startIso = String(DATA?.meta?.datagolf_field_date_start || "").match(/^(\d{4}-\d{2}-\d{2})/);
-  if (!startIso) {
-    const cr = Math.round(num(DATA?.meta?.datagolf_field_current_round ?? DATA?.meta?.display_round, NaN));
-    const upd = String(DATA?.meta?.updated_at || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
-    if (upd && Number.isFinite(cr) && cr >= 1 && cr <= 4) {
-      const t = Date.UTC(+upd[1], +upd[2] - 1, +upd[3]) - (cr - 1) * 86400000;
-      const d = new Date(t);
-      startIso = [
-        String(d.getUTCFullYear()),
-        String(d.getUTCMonth() + 1).padStart(2, "0"),
-        String(d.getUTCDate()).padStart(2, "0"),
-      ];
+/** UTC calendar day of the trends chart timestamp for one round row → `YYYY-MM-DD`. */
+function historyRoundChartUtcIsoDay(row) {
+  const ms = historyRoundChartDateUtcMs(row);
+  if (!Number.isFinite(ms)) return "";
+  const d = new Date(ms);
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+}
+
+function distinctCompletedRoundDatesAtCourse(courseKey) {
+  if (!courseKey || !HISTORY?.byDgId) return [];
+  const set = new Set();
+  for (const rec of Object.values(HISTORY.byDgId)) {
+    for (const r of rec.rounds || []) {
+      if (!historyRoundCountsAsActual(r)) continue;
+      if (!historyRoundMatchesCourseKey(r, courseKey)) continue;
+      const iso = historyRoundChartUtcIsoDay(r);
+      if (iso) set.add(iso);
     }
   }
-  if (!startIso) return;
-  const start = `${startIso[1]}-${startIso[2]}-${startIso[3]}`;
-  if (!fromEl.value) fromEl.value = start;
-  if (!toEl.value) {
-    const t = Date.UTC(+startIso[1], +startIso[2] - 1, +startIso[3]) + 3 * 86400000;
-    const d = new Date(t);
-    toEl.value = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+  return [...set].sort((a, b) => b.localeCompare(a));
+}
+
+function formatPropsCourseSessionDateLabel(isoRaw) {
+  const m = String(isoRaw || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return String(isoRaw || "").trim() || "—";
+  const mo = Number(m[2]);
+  const d = Number(m[3]);
+  const y = Number(m[1]);
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  return `${months[mo - 1]} ${d}, ${y}`;
+}
+
+/** Prefer tournament round-1 day from projections meta when it appears in history for this course. */
+function propsEventPreferredSessionDateIso(sortedDescDays) {
+  const ds = String(DATA?.meta?.datagolf_field_date_start || "").match(/^(\d{4}-\d{2}-\d{2})/);
+  if (ds) {
+    const s = ds[1];
+    if (sortedDescDays.includes(s)) return s;
   }
+  const cr = Math.round(num(DATA?.meta?.datagolf_field_current_round ?? DATA?.meta?.display_round, NaN));
+  const upd = String(DATA?.meta?.updated_at || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (upd && Number.isFinite(cr) && cr >= 1 && cr <= 4) {
+    const t = Date.UTC(+upd[1], +upd[2] - 1, +upd[3]) - (cr - 1) * 86400000;
+    const d = new Date(t);
+    const s = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+    if (sortedDescDays.includes(s)) return s;
+  }
+  return "";
+}
+
+function refreshPropsCourseSessionDateOptions() {
+  const sel = document.getElementById("props-filter-course-session-date");
+  if (!sel) return;
+  const courseKey = selectedPropsCourseFilter();
+  const prev = String(sel.value || "").trim();
+  sel.replaceChildren();
+  const ph = document.createElement("option");
+  ph.value = "";
+  ph.textContent = "Pick a date…";
+  sel.appendChild(ph);
+  if (!courseKey || !HISTORY?._ok) {
+    sel.value = "";
+    return;
+  }
+  const days = distinctCompletedRoundDatesAtCourse(courseKey);
+  for (const iso of days) {
+    const op = document.createElement("option");
+    op.value = iso;
+    op.textContent = formatPropsCourseSessionDateLabel(iso);
+    sel.appendChild(op);
+  }
+  if (prev && days.includes(prev)) sel.value = prev;
+  else if (days.length) sel.value = propsEventPreferredSessionDateIso(days) || days[0];
+  else sel.value = "";
+}
+
+function selectedPropsCourseSessionDateIso() {
+  return String(document.getElementById("props-filter-course-session-date")?.value || "").trim();
 }
 
 function propsCourseWindowModeOn() {
   return Boolean(document.getElementById("props-filter-course-window")?.checked);
 }
 
-/** Course date window: course dropdown required; at least one date bound set. */
+/** Field-by-course mode: course required; one session day chosen from dropdown. */
 function propsCourseWindowModeActive() {
   if (!propsCourseWindowModeOn()) return false;
   if (!selectedPropsCourseFilter()) return false;
-  const from = String(document.getElementById("props-filter-date-from")?.value || "").trim();
-  const to = String(document.getElementById("props-filter-date-to")?.value || "").trim();
-  return Boolean(from || to);
+  return Boolean(selectedPropsCourseSessionDateIso());
 }
 
 function propsCourseWindowDateInputToUtcMs(raw, endOfDay) {
@@ -10205,23 +10253,6 @@ function propsCourseWindowDateInputToUtcMs(raw, endOfDay) {
   const d = Number(m[3]);
   if (!Number.isFinite(y) || !Number.isFinite(mo) || !Number.isFinite(d)) return NaN;
   return endOfDay ? Date.UTC(y, mo - 1, d, 23, 59, 59, 999) : Date.UTC(y, mo - 1, d);
-}
-
-function propsCourseWindowDateFromMs() {
-  return propsCourseWindowDateInputToUtcMs(document.getElementById("props-filter-date-from")?.value, false);
-}
-
-function propsCourseWindowDateToMs() {
-  return propsCourseWindowDateInputToUtcMs(document.getElementById("props-filter-date-to")?.value, true);
-}
-
-function propsCourseWindowDateRangeLabel() {
-  const from = String(document.getElementById("props-filter-date-from")?.value || "").trim();
-  const to = String(document.getElementById("props-filter-date-to")?.value || "").trim();
-  if (from && to) return `${from} – ${to}`;
-  if (from) return `from ${from}`;
-  if (to) return `through ${to}`;
-  return "";
 }
 
 function historyRoundMatchesCourseKey(row, courseKey) {
@@ -10258,12 +10289,14 @@ function applyPropsSidebarWeatherFiltersToRounds(list) {
   return out;
 }
 
-/** All player-round rows at one course in a date window (field view for Historical Trends). */
+/** All player-round rows at one course on the selected calendar day (field view for Historical Trends). */
 function collectCourseWindowRoundEntriesFixed() {
   const courseKey = selectedPropsCourseFilter();
   if (!courseKey || !HISTORY?.byDgId) return [];
-  const fromMs = propsCourseWindowDateFromMs();
-  const toMs = propsCourseWindowDateToMs();
+  const iso = selectedPropsCourseSessionDateIso();
+  if (!iso) return [];
+  const fromMs = propsCourseWindowDateInputToUtcMs(iso, false);
+  const toMs = propsCourseWindowDateInputToUtcMs(iso, true);
   const raw = [];
   for (const [dgStr, rec] of Object.entries(HISTORY.byDgId)) {
     const dgId = Math.round(num(dgStr, NaN));
@@ -10401,7 +10434,7 @@ function paintPropsTrendKpiRowCourseWindow(statKey, hitSt, graphSeries, entries)
     el.appendChild(wrap);
   };
 
-  addKpi("Field avg (window)", fieldMean);
+  addKpi("Field avg (day)", fieldMean);
   addKpi("Graph avg", graphMean);
   addKpi("Rounds", rounds.length, "");
   addKpi("Players", playerIds.size, "");
@@ -11001,9 +11034,8 @@ function propsTrendLineContextKeyFromDom() {
   const pm = PRICING_STATE.mode || "default";
   const ps = PRICING_STATE.skill === "default" ? "default" : pricingSkillHistoryKey();
   const cw = propsCourseWindowModeActive() ? 1 : 0;
-  const df = String(document.getElementById("props-filter-date-from")?.value || "");
-  const dt = String(document.getElementById("props-filter-date-to")?.value || "");
-  return `${dg}|${sk}|${courseFilterOn() ? 1 : 0}|${winNKey}|${temp}|${wind}|${hum}|${course}|${pm}|${ps}|${cw}|${df}|${dt}`;
+  const sess = cw ? String(document.getElementById("props-filter-course-session-date")?.value || "") : "";
+  return `${dg}|${sk}|${courseFilterOn() ? 1 : 0}|${winNKey}|${temp}|${wind}|${hum}|${course}|${pm}|${ps}|${cw}|${sess}`;
 }
 
 /** After user changes line or steppers so projection logic does not overwrite the input. */
@@ -12248,9 +12280,9 @@ function renderPropsTrendsCourseWindow() {
     propsTopTableSort = { key: "overRate", dir: -1 };
     propsTopTableSortStatKey = statKey;
   }
-  ensurePropsCourseWindowDateDefaults();
   refreshPropsCourseFilterOptionsAllPlayers();
   ensurePropsCourseSelectedForWindow();
+  refreshPropsCourseSessionDateOptions();
   const courseKey = selectedPropsCourseFilter();
   const courseLabel = courseKey
     ? courseFitPrettyCourseKey(courseKey)
@@ -12260,9 +12292,10 @@ function renderPropsTrendsCourseWindow() {
   if (flagEl) flagEl.hidden = true;
   if (titleEl) titleEl.textContent = courseLabel;
   if (subEl) {
-    const dr = propsCourseWindowDateRangeLabel();
+    const iso = selectedPropsCourseSessionDateIso();
+    const dr = iso ? formatPropsCourseSessionDateLabel(iso) : "";
     const mkt = propMarketLabelFromKey(statKey);
-    subEl.textContent = dr ? `${mkt} · ${dr} · field rounds at this course` : `${mkt} · pick course and date range`;
+    subEl.textContent = dr ? `${mkt} · ${dr} · field rounds at this course` : `${mkt} · pick course and round date`;
   }
   const nWinEl = document.getElementById("props-window-n");
   const winN = clamp(
@@ -12276,15 +12309,15 @@ function renderPropsTrendsCourseWindow() {
     if (empty) {
       empty.hidden = false;
       const needCourse = !selectedPropsCourseFilter();
-      const needDate =
-        !String(document.getElementById("props-filter-date-from")?.value || "").trim() &&
-        !String(document.getElementById("props-filter-date-to")?.value || "").trim();
+      const needDate = !selectedPropsCourseSessionDateIso();
       if (needCourse && needDate) {
-        empty.textContent = "Select a course and at least one date (From or To) for course date window.";
+        empty.textContent = "Select a course and a round date (field-by-course mode).";
       } else if (needCourse) {
         empty.textContent = "Select a course (not “Select course…”) to load field rounds at this venue.";
+      } else if (needDate && HISTORY._ok && distinctCompletedRoundDatesAtCourse(selectedPropsCourseFilter()).length === 0) {
+        empty.textContent = "No completed rounds in history for this course yet (refresh data or pick another venue).";
       } else {
-        empty.textContent = "Set at least one date (From or To) for the course date window.";
+        empty.textContent = "Pick a round date from the list for this course.";
       }
     }
     drawPropsTrendCanvas([], NaN, statKey);
@@ -12348,7 +12381,7 @@ function renderPropsTrendsCourseWindow() {
       const nAll = entriesAll.length;
       empty.textContent = nAll
         ? "No chartable stat values for these rounds (try another market)."
-        : "No completed rounds at this course in the selected date range. Widen the dates or pick a course with prior events here.";
+        : "No rounds at this course on that date after filters. Pick another date or relax weather filters.";
     }
   }
 
@@ -15264,8 +15297,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "props-filter-humidity-range",
     "props-filter-course",
     "props-filter-course-window",
-    "props-filter-date-from",
-    "props-filter-date-to",
+    "props-filter-course-session-date",
     "props-window-n",
   ];
   propsIds.forEach((id) => {
@@ -15284,9 +15316,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   document.getElementById("props-filter-course-window")?.addEventListener("change", () => {
     if (propsCourseWindowModeOn()) {
-      ensurePropsCourseWindowDateDefaults();
       refreshPropsCourseFilterOptionsAllPlayers();
       ensurePropsCourseSelectedForWindow();
+      refreshPropsCourseSessionDateOptions();
     }
     renderPropsTrends();
   });
