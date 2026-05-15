@@ -362,6 +362,7 @@ const HISTORY_ROUNDS_CHRONO_CACHE = new Map();
 const PRICING_MU_BONUS_CACHE = new Map();
 /** Last valid line used when the input is mid-edit or empty. */
 let propsTrendLastGoodLine = NaN;
+let propsCourseWindowLiveFetchQueued = false;
 /** Top-10 table sort: `dir` 1 = ascending, -1 = descending (higher values first). */
 let propsTopTableSort = /** @type {{ key: "overRate" | "underRate" | "over" | "under" | "name", dir: -1 | 1 }} */ ({
   key: "overRate",
@@ -1718,7 +1719,22 @@ function mergeLiveInPlayIntoRoundHistory(j) {
     eventNameMatchesCurrentSchedule(modelEvent, inPlayEvent);
   if (!eventAligned) return 0;
 
-  const dateStartIso = String(fu.date_start || info.date_start || "").trim();
+  let dateStartIso = String(fu.date_start || info.date_start || DATA?.meta?.datagolf_field_date_start || "").trim();
+  if (!/^\d{4}-\d{2}-\d{2}/.test(dateStartIso)) {
+    const lastUp = String(info.last_update || "").trim();
+    const isoM = lastUp.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    const cr = Math.round(
+      num(
+        fu.current_round ?? info.current_round ?? DATA?.meta?.datagolf_field_current_round ?? DATA?.meta?.display_round,
+        NaN,
+      ),
+    );
+    if (isoM && Number.isFinite(cr) && cr >= 1 && cr <= 4) {
+      const t = Date.UTC(+isoM[1], +isoM[2] - 1, +isoM[3]) - (cr - 1) * 86400000;
+      const d = new Date(t);
+      dateStartIso = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+    }
+  }
   if (liveHistDateStartIsFuture(dateStartIso)) return 0;
   const eventName = String(modelEvent || fu.event_name || info.event_name || "").trim();
   if (!eventName) return 0;
@@ -10113,6 +10129,60 @@ function selectedPropsCourseFilter() {
   return normCourseNameKey(raw);
 }
 
+/** Event venue key for Historical Trends course window (projections meta). */
+function propsEventVenueCourseKey() {
+  const metaVenue = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
+  return metaVenue ? normCourseNameKey(metaVenue) : "";
+}
+
+function ensurePropsCourseSelectedForWindow() {
+  if (!propsCourseWindowModeOn()) return false;
+  const courseSel = document.getElementById("props-filter-course");
+  if (!courseSel) return false;
+  if (selectedPropsCourseFilter()) return false;
+  const prefer = propsEventVenueCourseKey();
+  if (prefer && [...courseSel.options].some((o) => o.value === prefer)) {
+    courseSel.value = prefer;
+    return true;
+  }
+  const opts = [...courseSel.options].filter((o) => String(o.value || "").trim());
+  if (opts.length === 1) {
+    courseSel.value = opts[0].value;
+    return true;
+  }
+  return false;
+}
+
+function ensurePropsCourseWindowDateDefaults() {
+  if (!propsCourseWindowModeOn()) return;
+  const fromEl = document.getElementById("props-filter-date-from");
+  const toEl = document.getElementById("props-filter-date-to");
+  if (!fromEl || !toEl) return;
+  if (fromEl.value && toEl.value) return;
+  let startIso = String(DATA?.meta?.datagolf_field_date_start || "").match(/^(\d{4}-\d{2}-\d{2})/);
+  if (!startIso) {
+    const cr = Math.round(num(DATA?.meta?.datagolf_field_current_round ?? DATA?.meta?.display_round, NaN));
+    const upd = String(DATA?.meta?.updated_at || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (upd && Number.isFinite(cr) && cr >= 1 && cr <= 4) {
+      const t = Date.UTC(+upd[1], +upd[2] - 1, +upd[3]) - (cr - 1) * 86400000;
+      const d = new Date(t);
+      startIso = [
+        String(d.getUTCFullYear()),
+        String(d.getUTCMonth() + 1).padStart(2, "0"),
+        String(d.getUTCDate()).padStart(2, "0"),
+      ];
+    }
+  }
+  if (!startIso) return;
+  const start = `${startIso[1]}-${startIso[2]}-${startIso[3]}`;
+  if (!fromEl.value) fromEl.value = start;
+  if (!toEl.value) {
+    const t = Date.UTC(+startIso[1], +startIso[2] - 1, +startIso[3]) + 3 * 86400000;
+    const d = new Date(t);
+    toEl.value = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+  }
+}
+
 function propsCourseWindowModeOn() {
   return Boolean(document.getElementById("props-filter-course-window")?.checked);
 }
@@ -10279,7 +10349,10 @@ function refreshPropsCourseFilterOptionsAllPlayers() {
     const mk = normCourseNameKey(metaVenue);
     if (mk && !byKey.has(mk)) byKey.set(mk, courseFitPrettyCourseKey(mk));
   }
-  courseSel.innerHTML = '<option value="">All</option>';
+  const windowOn = propsCourseWindowModeOn();
+  courseSel.innerHTML = windowOn
+    ? '<option value="">Select course…</option>'
+    : '<option value="">All</option>';
   [...byKey.entries()]
     .sort((a, b) => a[0].localeCompare(b[0]))
     .forEach(([k, label]) => {
@@ -10290,6 +10363,7 @@ function refreshPropsCourseFilterOptionsAllPlayers() {
     });
   const prevK = prev ? normCourseNameKey(prev) : "";
   if (prevK && [...courseSel.options].some((o) => o.value === prevK)) courseSel.value = prevK;
+  if (windowOn) ensurePropsCourseSelectedForWindow();
 }
 
 function defaultLineForCourseWindow(statKey, entries) {
@@ -12174,9 +12248,15 @@ function renderPropsTrendsCourseWindow() {
     propsTopTableSort = { key: "overRate", dir: -1 };
     propsTopTableSortStatKey = statKey;
   }
+  ensurePropsCourseWindowDateDefaults();
   refreshPropsCourseFilterOptionsAllPlayers();
+  ensurePropsCourseSelectedForWindow();
   const courseKey = selectedPropsCourseFilter();
-  const courseLabel = courseKey ? courseFitPrettyCourseKey(courseKey) : "—";
+  const courseLabel = courseKey
+    ? courseFitPrettyCourseKey(courseKey)
+    : propsEventVenueCourseKey()
+      ? courseFitPrettyCourseKey(propsEventVenueCourseKey())
+      : "—";
   if (flagEl) flagEl.hidden = true;
   if (titleEl) titleEl.textContent = courseLabel;
   if (subEl) {
@@ -12195,7 +12275,17 @@ function renderPropsTrendsCourseWindow() {
   if (!propsCourseWindowModeActive()) {
     if (empty) {
       empty.hidden = false;
-      empty.textContent = "Select a course and at least one date (From or To) for course date window.";
+      const needCourse = !selectedPropsCourseFilter();
+      const needDate =
+        !String(document.getElementById("props-filter-date-from")?.value || "").trim() &&
+        !String(document.getElementById("props-filter-date-to")?.value || "").trim();
+      if (needCourse && needDate) {
+        empty.textContent = "Select a course and at least one date (From or To) for course date window.";
+      } else if (needCourse) {
+        empty.textContent = "Select a course (not “Select course…”) to load field rounds at this venue.";
+      } else {
+        empty.textContent = "Set at least one date (From or To) for the course date window.";
+      }
     }
     drawPropsTrendCanvas([], NaN, statKey);
     paintPropsTrendsInsightHeader(null, statKey, NaN, { valid: 0, over: 0, under: 0, overRate: NaN, underRate: NaN }, [], NaN);
@@ -12213,6 +12303,12 @@ function renderPropsTrendsCourseWindow() {
     drawPropsTrendCanvas([], NaN, statKey);
     renderPropsHitRateAndTopTable(statKey, NaN, winN);
     return;
+  }
+  if (propsCourseWindowModeActive() && !isFileProtocol() && !propsCourseWindowLiveFetchQueued) {
+    propsCourseWindowLiveFetchQueued = true;
+    void fetchAndMergeDatagolfLiveInPlay({ force: true }).finally(() => {
+      propsCourseWindowLiveFetchQueued = false;
+    });
   }
   if (empty) empty.hidden = true;
 
@@ -12249,7 +12345,10 @@ function renderPropsTrendsCourseWindow() {
   if (!seriesChart.length) {
     if (empty) {
       empty.hidden = false;
-      empty.textContent = "No completed rounds at this course in the selected date range.";
+      const nAll = entriesAll.length;
+      empty.textContent = nAll
+        ? "No chartable stat values for these rounds (try another market)."
+        : "No completed rounds at this course in the selected date range. Widen the dates or pick a course with prior events here.";
     }
   }
 
@@ -15184,7 +15283,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
   document.getElementById("props-filter-course-window")?.addEventListener("change", () => {
-    if (propsCourseWindowModeOn()) refreshPropsCourseFilterOptionsAllPlayers();
+    if (propsCourseWindowModeOn()) {
+      ensurePropsCourseWindowDateDefaults();
+      refreshPropsCourseFilterOptionsAllPlayers();
+      ensurePropsCourseSelectedForWindow();
+    }
     renderPropsTrends();
   });
   document.getElementById("props-top-hits-emoji-toggle")?.addEventListener("click", () => {
