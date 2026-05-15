@@ -7,6 +7,7 @@ import { spawnSync } from "child_process";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { applyHistoricalRoundsMergeDefaults } from "./historical-rounds-merge-env.mjs";
 import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -43,7 +44,11 @@ if (!key) {
 const result = spawnSync(process.execPath, [roundsScript], {
   stdio: "inherit",
   cwd: WEB_ROOT,
-  env: { ...process.env, GOLF_MODEL_DIR: REPO_ROOT, DATAGOLF_API_KEY: key },
+  env: applyHistoricalRoundsMergeDefaults({
+    ...process.env,
+    GOLF_MODEL_DIR: REPO_ROOT,
+    DATAGOLF_API_KEY: key,
+  }),
 });
 
 const code = result.status ?? 1;

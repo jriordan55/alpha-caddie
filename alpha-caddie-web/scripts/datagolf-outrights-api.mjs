@@ -6,6 +6,17 @@ function num(x, fallback = NaN) {
   return Number.isFinite(n) ? n : fallback;
 }
 
+function sleep(ms) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+/** Parse DataGolf 429 body: "Your suspension will end in 5 minutes." */
+function suspensionWaitMsFromBody(text) {
+  const m = String(text || "").match(/end in (\d+)\s*minute/i);
+  if (m) return Math.min(600_000, Math.max(30_000, parseInt(m[1], 10) * 60_000));
+  return null;
+}
+
 function rowsFromOutrightsResponse(raw) {
   if (raw == null) return [];
   if (Array.isArray(raw)) return raw;
@@ -77,16 +88,62 @@ async function fetchDataGolfJson(path, params, apiKey) {
   const url = new URL(`https://feeds.datagolf.com${path}`);
   for (const [key, value] of Object.entries(params || {})) url.searchParams.set(key, String(value));
   url.searchParams.set("key", apiKey);
-  const res = await fetch(url.toString(), { headers: { Accept: "application/json" } });
-  if (!res.ok) throw new Error(`${path} HTTP ${res.status}: ${await res.text().catch(() => "")}`);
-  return res.json();
+
+  const maxAttempts = Math.max(4, Math.min(20, Number(process.env.GOLF_DG_MAX_ATTEMPTS || 12)));
+  let lastStatus;
+  let lastBody = "";
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const res = await fetch(url.toString(), { headers: { Accept: "application/json" } });
+    if (res.ok) return res.json();
+
+    lastStatus = res.status;
+    lastBody = await res.text().catch(() => "");
+
+    if ([429, 500, 502, 503, 504].includes(res.status)) {
+      let waitMs = Math.min(25_000 + attempt * 8_000, 120_000);
+      const suspensionMs = suspensionWaitMsFromBody(lastBody);
+      if (suspensionMs != null) waitMs = Math.max(waitMs, suspensionMs);
+      const ra = res.headers.get("retry-after");
+      if (ra) {
+        const sec = parseInt(ra, 10);
+        if (Number.isFinite(sec) && sec > 0) waitMs = Math.max(waitMs, sec * 1000);
+      }
+      console.warn(
+        `[datagolf-outrights] ${path} HTTP ${res.status} retry ${attempt}/${maxAttempts}; waiting ${Math.round(waitMs / 1000)}s…`,
+      );
+      await sleep(waitMs);
+      continue;
+    }
+
+    throw new Error(`${path} HTTP ${res.status}: ${lastBody}`);
+  }
+
+  throw new Error(`${path} HTTP ${lastStatus ?? "?"} after ${maxAttempts} attempts: ${lastBody}`);
 }
 
-export async function fetchDataGolfOutrightsApi({ apiKey, tour = "pga", oddsFormat = "percent", markets = OUTRIGHTS_MARKETS } = {}) {
+/**
+ * @param {{ apiKey: string, tour?: string, oddsFormat?: string, markets?: string[], delayMs?: number }} opts
+ */
+export async function fetchDataGolfOutrightsApi({
+  apiKey,
+  tour = "pga",
+  oddsFormat = "percent",
+  markets = OUTRIGHTS_MARKETS,
+  delayMs,
+} = {}) {
   if (!apiKey) throw new Error("Missing DataGolf API key");
+  const pauseMs = Math.max(
+    0,
+    Number(delayMs ?? process.env.GOLF_DG_OUTRIGHTS_DELAY_MS ?? process.env.GOLF_DG_ROUNDS_DELAY_MS ?? 2000),
+  );
   const outrights = {};
   const logs = [];
-  for (const market of markets) {
+  const list = [...markets];
+
+  for (let i = 0; i < list.length; i++) {
+    const market = list[i];
+    if (i > 0 && pauseMs > 0) await sleep(pauseMs);
     const raw = await fetchDataGolfJson(
       "/betting-tools/outrights",
       { tour, market, odds_format: oddsFormat, file_format: "json" },
@@ -98,4 +155,3 @@ export async function fetchDataGolfOutrightsApi({ apiKey, tour = "pga", oddsForm
   }
   return { outrights, logs };
 }
-

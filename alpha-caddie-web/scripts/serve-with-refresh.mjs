@@ -61,6 +61,7 @@ import { eventsLikelySame } from "./dg-events-align.mjs";
 import { findRscriptSync } from "./find-rscript.mjs";
 import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
 import { ensureAlphaCaddieStaticArtifacts, renderHistoricalTrendsPayloadBroken } from "./ensure-static-data-files.mjs";
+import { applyHistoricalRoundsMergeDefaults } from "./historical-rounds-merge-env.mjs";
 import { resolveGolfModelDir } from "./resolve-golf-model-dir.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -126,12 +127,12 @@ function repairRenderHistoricalTrendsIfNeeded() {
   const mergeBuildEmbed = (mergeEnv, logLine) => {
     console.warn("[alpha-caddie-web] Render repair:", logLine);
     if (fs.existsSync(roundsNode)) {
-      const u = spawnSync(process.execPath, [roundsNode], {
-        cwd: WEB_ROOT,
-        stdio: "inherit",
-        env: mergeEnv,
-      });
-      if (u.status !== 0) console.warn("[alpha-caddie-web] Render repair: update-historical-rounds-node exited", u.status);
+    const u = spawnSync(process.execPath, [roundsNode], {
+      cwd: WEB_ROOT,
+      stdio: "inherit",
+      env: applyHistoricalRoundsMergeDefaults(mergeEnv),
+    });
+    if (u.status !== 0) console.warn("[alpha-caddie-web] Render repair: update-historical-rounds-node exited", u.status);
     }
     if (fs.existsSync(buildHist)) {
       const h = spawnSync(process.execPath, [buildHist], {
@@ -214,7 +215,7 @@ function repairRenderHistoricalTrendsIfNeeded() {
     const u3 = spawnSync(process.execPath, [roundsNode], {
       cwd: WEB_ROOT,
       stdio: "inherit",
-      env: fullMergeEnv,
+      env: applyHistoricalRoundsMergeDefaults(fullMergeEnv),
     });
     if (u3.status !== 0) console.warn("[alpha-caddie-web] Render repair (full merge): update-historical-rounds-node exited", u3.status);
   }
@@ -303,7 +304,7 @@ function refreshBeforeServe() {
     const u = spawnSync(process.execPath, [roundsNode], {
       cwd: WEB_ROOT,
       stdio: "inherit",
-      env: roundsEnv,
+      env: applyHistoricalRoundsMergeDefaults(roundsEnv),
     });
     if (u.status !== 0) {
       console.warn("[alpha-caddie-web] Rounds update failed (code", u.status, "); continuing with existing CSV.");

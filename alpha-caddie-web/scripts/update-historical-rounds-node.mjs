@@ -14,6 +14,8 @@
  *     keep all older rows already on disk (does NOT trim 2004+ history). Use for fast merges. Omit or set "0" with FULL_HISTORY for uncapped.
  *   GOLF_HISTORICAL_ROUNDS_LIGHT=1 — only current + prior calendar year (fast; **destructive**: trims CSV to those years)
  *   Default without the above: fetch 2004–current (PGA); LIV rows start 2017 (skipped automatically per tour).
+ *   Callers (fetch:dg, update:rounds) apply `applyHistoricalRoundsMergeDefaults` so the default is last 3 calendar
+ *   years only unless GOLF_HISTORICAL_ROUNDS_FETCH_ALL_YEARS=1 or FULL_HISTORY=1 or GOLF_HISTORICAL_ROUNDS_YEARS is set.
  *   GOLF_ROUNDS_PREFER_CSV_FIRST / GOLF_ROUNDS_PREFER_JSON_FIRST — same idea as live_data.R
  *   GOLF_DG_ROUNDS_DELAY_MS — ms between each tour/year request (default 1500; reduces 429s)
  *   GOLF_DG_MAX_ATTEMPTS — retries per request on 429/5xx (default 12)

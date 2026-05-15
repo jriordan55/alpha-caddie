@@ -63,6 +63,7 @@ import {
 import { fetchDataGolfOutrightsApi } from "./datagolf-outrights-api.mjs";
 import { holeParsFromLiveHoleStatsPayload } from "./dg-live-hole-pars.mjs";
 import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
+import { applyHistoricalRoundsMergeDefaults } from "./historical-rounds-merge-env.mjs";
 import { resolveGolfModelDir } from "./resolve-golf-model-dir.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -2140,8 +2141,11 @@ async function main() {
 
   const rscriptCmd = findRscriptSync();
   const renderHost = String(process.env.RENDER || "").toLowerCase() === "true";
-  const skipHistoryEnv = String(process.env.GOLF_SKIP_HISTORY_ON_FETCH_DG || "").trim();
-  const skipHistoryOnFetchDg = skipHistoryEnv === "1" || (renderHost && skipHistoryEnv !== "0");
+  const skipHistoryEnv = String(process.env.GOLF_SKIP_HISTORY_ON_FETCH_DG ?? "").trim();
+  const skipHistoryOnFetchDg =
+    skipHistoryEnv === "0"
+      ? false
+      : skipHistoryEnv === "1" || skipHistoryEnv === "" || (renderHost && skipHistoryEnv !== "0");
   const updateRoundsNode = join(__dirname, "update-historical-rounds-node.mjs");
   if (skipHistoryOnFetchDg) {
     console.log(
@@ -2152,7 +2156,11 @@ async function main() {
     const ur = spawnSync(process.execPath, [updateRoundsNode], {
       cwd: ROOT,
       stdio: "inherit",
-      env: { ...process.env, GOLF_MODEL_DIR: GOLF_MODEL_ROOT, DATAGOLF_API_KEY: key },
+      env: applyHistoricalRoundsMergeDefaults({
+        ...process.env,
+        GOLF_MODEL_DIR: GOLF_MODEL_ROOT,
+        DATAGOLF_API_KEY: key,
+      }),
     });
     if (ur.status !== 0) {
       console.warn(

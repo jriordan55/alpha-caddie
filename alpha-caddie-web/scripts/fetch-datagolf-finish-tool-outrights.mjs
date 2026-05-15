@@ -32,6 +32,15 @@ function loadApiKey() {
   }
 }
 
+function outrightsLookPopulated(outrights) {
+  if (!outrights || typeof outrights !== "object") return false;
+  for (const key of ["win", "top_5", "top_10", "top_20"]) {
+    const rows = outrights[key]?.rows;
+    if (Array.isArray(rows) && rows.length > 0) return true;
+  }
+  return false;
+}
+
 function mergeOutrightPacks(existingPack, scrapedPack) {
   if (!scrapedPack || !Array.isArray(scrapedPack.rows) || !scrapedPack.rows.length) return existingPack;
   const byId = new Map();
@@ -71,9 +80,25 @@ async function main() {
   }
 
   const outrights = { ...(payload.outrights && typeof payload.outrights === "object" ? payload.outrights : {}) };
+  const hadOutrights = outrightsLookPopulated(outrights);
   const tourForFeeds = String(payload.datagolf_feed_tour || process.env.GOLF_DATAGOLF_TOUR || process.env.GOLF_TOUR || "pga").trim().toLowerCase() || "pga";
   console.log("[fetch:finish-tool] Fetching DataGolf betting-tools/outrights…");
-  const dgOutrights = await fetchDataGolfOutrightsApi({ apiKey, tour: tourForFeeds, oddsFormat: "percent" });
+  let dgOutrights;
+  try {
+    dgOutrights = await fetchDataGolfOutrightsApi({ apiKey, tour: tourForFeeds, oddsFormat: "percent" });
+  } catch (e) {
+    const msg = e?.message || String(e);
+    const rateLimited = /429|rate limit/i.test(msg);
+    const failHard = String(process.env.GOLF_FINISH_TOOL_FAIL_ON_RATE_LIMIT || "").trim() === "1";
+    if (rateLimited && hadOutrights && !failHard) {
+      console.warn(
+        "[fetch:finish-tool] Rate limited — keeping outrights already in projections.json from fetch:dg / fetch:book-odds.",
+      );
+      console.warn("[fetch:finish-tool]", msg);
+      process.exit(0);
+    }
+    throw e;
+  }
   for (const msg of dgOutrights.logs || []) console.log("[fetch:finish-tool]", msg);
   for (const [market, pack] of Object.entries(dgOutrights.outrights || {})) {
     outrights[market] = mergeOutrightPacks(outrights[market], pack);
