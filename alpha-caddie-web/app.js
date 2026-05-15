@@ -380,6 +380,8 @@ let courseWindowRoundEntriesCacheSig = "";
 let courseWindowRoundEntriesCache = null;
 /** Last built session-date `<select>` signature to skip redundant DOM rebuilds. */
 let propsSessionDateOptsSig = "";
+let filteredHistoryRoundsMemoSigStored = "";
+const filteredHistoryRoundsMemoByDgId = new Map();
 
 /** Top-10 table sort: `dir` 1 = ascending, -1 = descending (higher values first). */
 let propsTopTableSort = /** @type {{ key: "overRate" | "underRate" | "over" | "under" | "name", dir: -1 | 1 }} */ ({
@@ -10786,8 +10788,31 @@ function currentTournamentContextMatchesRound(r) {
   return false;
 }
 
+function filteredHistoryRoundsMemoSig() {
+  return [
+    historyMutationEpoch,
+    courseFilterOn() ? 1 : 0,
+    venueCourseName(),
+    String(DATA?.meta?.event_name || ""),
+    selectedPropsCourseFilter() || "",
+    propsTrendTempContextKey(),
+    selectedPropsWindRangeFilter() || "",
+    selectedPropsHumidityRangeFilter() || "",
+  ].join("\x1f");
+}
+
 function filteredHistoryRounds(dgId) {
-  let list = historyRoundsForDg(dgId);
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return [];
+  const ms = filteredHistoryRoundsMemoSig();
+  if (ms !== filteredHistoryRoundsMemoSigStored) {
+    filteredHistoryRoundsMemoSigStored = ms;
+    filteredHistoryRoundsMemoByDgId.clear();
+  }
+  const memoHit = filteredHistoryRoundsMemoByDgId.get(id);
+  if (memoHit) return memoHit;
+
+  let list = historyRoundsForDg(id);
   if (courseFilterOn()) {
     const vn = venueCourseName();
     const metaEvent = String(DATA.meta.event_name || "").trim();
@@ -10833,6 +10858,7 @@ function filteredHistoryRounds(dgId) {
     }
   }
   list.sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
+  filteredHistoryRoundsMemoByDgId.set(id, list);
   return list;
 }
 
@@ -11281,6 +11307,36 @@ function propsPlayerDisplayNameForDg(dgId) {
     DATA.players.find((x) => Math.round(num(x.dg_id, NaN)) === id && samePlayerRound(x, 1)) ||
     DATA.players.find((x) => Math.round(num(x.dg_id, NaN)) === id);
   return p ? displayGolferName(p.player_name) : `DG ${id}`;
+}
+
+/** O(players) lookup for leaderboard rows — avoid repeating linear scans over `DATA.players` per dg_id. */
+function buildPropsGolferDisplayNameMap() {
+  const m = new Map();
+  const players = DATA.players || [];
+  for (const p of players) {
+    const pid = Math.round(num(p.dg_id, NaN));
+    if (!Number.isFinite(pid)) continue;
+    if (samePlayerRound(p, 1)) m.set(pid, displayGolferName(p.player_name));
+  }
+  for (const p of players) {
+    const pid = Math.round(num(p.dg_id, NaN));
+    if (!Number.isFinite(pid) || m.has(pid)) continue;
+    m.set(pid, displayGolferName(p.player_name));
+  }
+  return m;
+}
+
+/** Max rows that could count toward O/U (finite actual on this market); filters only remove rounds. Used to prune leaderboard work. */
+function propsMaxFiniteMarketRoundsUpperBound(dgId, statKey) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return 0;
+  let n = 0;
+  for (const r of historyRoundsForDg(id)) {
+    if (historyRoundIsPlaceholderAllMarketsZero(r)) continue;
+    if (!Number.isFinite(actualForRoundRow(statKey, r))) continue;
+    n++;
+  }
+  return n;
 }
 
 const FIRE3 = String.fromCodePoint(0x1f525).repeat(3);
@@ -11741,15 +11797,22 @@ function renderPropsHitRateAndTopTable(statKey, line, winN) {
       courseWindowRoundsByDg.get(id).push(e.row);
     }
   }
+  const nameByDg = buildPropsGolferDisplayNameMap();
   const rows = [];
   for (const id of ids) {
+    if (
+      !propsCourseWindowModeActive() &&
+      propsMaxFiniteMarketRoundsUpperBound(id, statKey) < minR
+    ) {
+      continue;
+    }
     const s = propsCourseWindowModeActive()
       ? propsFullHitStatsFromRoundList(statKey, line, courseWindowRoundsByDg?.get(id) || [])
       : propsFullHitStatsForDg(id, statKey, line, wn, true);
     if (s.valid < minR) continue;
     rows.push({
       dgId: id,
-      name: propsPlayerDisplayNameForDg(id),
+      name: nameByDg.get(id) || `DG ${id}`,
       valid: s.valid,
       over: s.over,
       under: s.under,
@@ -11757,7 +11820,6 @@ function renderPropsHitRateAndTopTable(statKey, line, winN) {
       underRate: s.underRate,
     });
   }
-  const poolSize = rows.length;
   propsTopTableSortInPlace(rows, statKey);
   const top = rows.slice(0, 10);
   if (!top.length) {
