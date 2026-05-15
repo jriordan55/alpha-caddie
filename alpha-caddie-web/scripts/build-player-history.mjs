@@ -382,6 +382,49 @@ function eventCompletedIsFutureMdY(s) {
   return Number.isFinite(t) && t > todayDateOnlyUtcMs();
 }
 
+/** Chart x-axis date from sortKey + round_num (matches app.js propsTrendChartDateFromRow). */
+function historyRoundChartDateUtcMs(row) {
+  if (!row || typeof row !== "object") return NaN;
+  const sk = Math.round(num(row.sortKey, NaN));
+  let y = NaN;
+  let mo = NaN;
+  let d = NaN;
+  let rnd = Math.round(num(row.round_num, NaN));
+  if (!Number.isFinite(rnd) || rnd < 1) rnd = 1;
+  if (Number.isFinite(sk) && sk > 9_999_999) {
+    const base = Math.floor(sk / 10);
+    const rnTail = sk % 10;
+    if (Number.isFinite(rnTail) && rnTail >= 1 && rnTail <= 9) rnd = rnTail;
+    if (base >= 19_000_000 && base <= 2_100_1231) {
+      y = Math.floor(base / 10000);
+      mo = Math.floor((base % 10000) / 100);
+      d = base % 100;
+    }
+  }
+  if (!Number.isFinite(y)) {
+    const ec = String(row.event_completed || "").trim();
+    const mdy = ec.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (!mdy) return NaN;
+    mo = Number(mdy[1]);
+    d = Number(mdy[2]);
+    y = Number(mdy[3]);
+  }
+  return Date.UTC(y, mo - 1, d) + (rnd - 1) * 86400000;
+}
+
+function historyRoundChartDateIsFuture(row) {
+  const ms = historyRoundChartDateUtcMs(row);
+  if (!Number.isFinite(ms)) return eventCompletedIsFutureMdY(row?.event_completed);
+  return ms > todayDateOnlyUtcMs();
+}
+
+function liveInPlayGrossForRound(inPlayRow, rnd) {
+  if (!inPlayRow) return NaN;
+  const r = Math.round(num(rnd, NaN));
+  if (!Number.isFinite(r) || r < 1 || r > 4) return NaN;
+  return num(inPlayRow[`R${r}`] ?? inPlayRow[`r${r}`], NaN);
+}
+
 function liveHistoryEventsLikelySame(a, b) {
   const fa = foldComparableTitle(a);
   const fb = foldComparableTitle(b);
@@ -506,25 +549,19 @@ function loadLiveRoundSnapshotByDg() {
       for (let rnd = 1; rnd <= pr; rnd++) {
         const eventDate = eventCompletedMdYForRound(dateStartIso, rnd);
         if (!eventDate) continue;
-        const grossKey = r[`R${rnd}`] ?? r[`r${rnd}`];
-        const gross = num(grossKey, NaN);
+        const gross = liveInPlayGrossForRound(r, rnd);
         let roundScore = NaN;
-        let sgRow = null;
+        if (eventCompletedIsFutureMdY(eventDate) || historyRoundChartDateIsFuture({ event_completed: eventDate, round_num: rnd }))
+          continue;
         if (rnd < pr) {
           if (Number.isFinite(gross)) roundScore = Math.round(gross * 10) / 10;
-        } else {
-          if (Number.isFinite(gross)) {
-            roundScore = Math.round(gross * 10) / 10;
-          } else if (Number.isFinite(today) && Number.isFinite(coursePar)) {
-            roundScore = Math.round((coursePar + today) * 10) / 10;
-            sgRow = r;
-          }
+        } else if (rnd === pr && Number.isFinite(gross)) {
+          roundScore = Math.round(gross * 10) / 10;
         }
         if (!Number.isFinite(roundScore)) continue;
 
         const eventYear = parseInt(String(eventDate).split("/")[2] || "", 10);
         const pp = projByDgRound.get(`${dg}|${rnd}`);
-        const sgSrc = sgRow || null;
         out.push({
           dg_id: dg,
           sortKey: parseUsDateSortKey(eventDate) * 10 + rnd,
@@ -548,12 +585,12 @@ function loadLiveRoundSnapshotByDg() {
           weather_wind_mph: null,
           weather_humidity: null,
           weather_condition: "",
-          sg_putt: sgSrc && Number.isFinite(num(sgSrc?.sg_putt, NaN)) ? num(sgSrc.sg_putt, NaN) : null,
-          sg_app: sgSrc && Number.isFinite(num(sgSrc?.sg_app, NaN)) ? num(sgSrc.sg_app, NaN) : null,
-          sg_arg: sgSrc && Number.isFinite(num(sgSrc?.sg_arg, NaN)) ? num(sgSrc.sg_arg, NaN) : null,
-          sg_ott: sgSrc && Number.isFinite(num(sgSrc?.sg_ott, NaN)) ? num(sgSrc.sg_ott, NaN) : null,
-          sg_t2g: sgSrc && Number.isFinite(num(sgSrc?.sg_t2g, NaN)) ? num(sgSrc.sg_t2g, NaN) : null,
-          sg_total: sgSrc && Number.isFinite(num(sgSrc?.sg_total, NaN)) ? num(sgSrc.sg_total, NaN) : null,
+          sg_putt: Number.isFinite(num(r?.sg_putt, NaN)) ? num(r.sg_putt, NaN) : null,
+          sg_app: Number.isFinite(num(r?.sg_app, NaN)) ? num(r.sg_app, NaN) : null,
+          sg_arg: Number.isFinite(num(r?.sg_arg, NaN)) ? num(r.sg_arg, NaN) : null,
+          sg_ott: Number.isFinite(num(r?.sg_ott, NaN)) ? num(r.sg_ott, NaN) : null,
+          sg_t2g: Number.isFinite(num(r?.sg_t2g, NaN)) ? num(r.sg_t2g, NaN) : null,
+          sg_total: Number.isFinite(num(r?.sg_total, NaN)) ? num(r.sg_total, NaN) : null,
           current_score: rnd === pr && Number.isFinite(currentScore) ? currentScore : null,
           today: rnd === pr && Number.isFinite(today) ? today : null,
           _from_live_in_play: true,
@@ -561,8 +598,9 @@ function loadLiveRoundSnapshotByDg() {
       }
     } else {
       const roundNum = pr;
-      if (!Number.isFinite(today) || !Number.isFinite(coursePar)) continue;
-      const roundScore = Math.round((coursePar + today) * 10) / 10;
+      const gross = liveInPlayGrossForRound(r, roundNum);
+      if (!Number.isFinite(gross)) continue;
+      const roundScore = Math.round(gross * 10) / 10;
       const eventDate = isoDateMdY(live?.info?.last_update || live?.last_update || new Date().toISOString());
       const eventYear = parseInt(String(eventDate).split("/")[2] || "", 10);
       const pp = projByDgRound.get(`${dg}|${roundNum}`);
@@ -612,7 +650,7 @@ function upsertLiveRoundRows(byDgId, liveByDg) {
   for (const liveRec of liveList) {
     const dg = Math.round(num(liveRec?.dg_id, NaN));
     if (!Number.isFinite(dg)) continue;
-    if (eventCompletedIsFutureMdY(liveRec.event_completed)) continue;
+    if (eventCompletedIsFutureMdY(liveRec.event_completed) || historyRoundChartDateIsFuture(liveRec)) continue;
     const bucket = byDgId.get(dg);
     if (!bucket || !Array.isArray(bucket.rounds)) continue;
     const wantEvt = normEvt(liveRec.event_name);
@@ -927,7 +965,7 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg) {
     if (!Number.isFinite(dg) || !allowedDgIds.has(dg)) continue;
     const rs = num(row.round_score);
     if (!Number.isFinite(rs)) continue;
-    if (eventCompletedIsFutureMdY(row.event_completed)) continue;
+    if (eventCompletedIsFutureMdY(row.event_completed) || historyRoundChartDateIsFuture(row)) continue;
 
     const eid = Math.round(num(row.event_id));
     const metaPatch =
@@ -986,6 +1024,9 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg) {
   }
 
   for (const [, bucket] of byDgId) {
+    bucket.rounds = bucket.rounds.filter(
+      (r) => !eventCompletedIsFutureMdY(r.event_completed) && !historyRoundChartDateIsFuture(r),
+    );
     bucket.rounds.sort((a, b) => a.sortKey - b.sortKey);
     if (bucket.rounds.length > MAX_ROUNDS_PER_PLAYER) bucket.rounds = bucket.rounds.slice(-MAX_ROUNDS_PER_PLAYER);
   }
@@ -1069,6 +1110,18 @@ async function main() {
   const liveRoundByDg = loadLiveRoundSnapshotByDg();
   const liveRoundList = normalizeLiveRoundList(liveRoundByDg);
   const liveMergedRows = upsertLiveRoundRows(byDgId, liveRoundByDg);
+  let futureRoundsStripped = 0;
+  for (const [, bucket] of byDgId) {
+    if (!bucket?.rounds) continue;
+    const before = bucket.rounds.length;
+    bucket.rounds = bucket.rounds.filter(
+      (r) => !eventCompletedIsFutureMdY(r.event_completed) && !historyRoundChartDateIsFuture(r),
+    );
+    futureRoundsStripped += before - bucket.rounds.length;
+  }
+  if (futureRoundsStripped > 0) {
+    console.log("[build-player-history] Removed", futureRoundsStripped, "future/unplayed round row(s) from history export");
+  }
   const livePlayerCount = new Set(liveRoundList.map((r) => r.dg_id).filter((id) => Number.isFinite(id))).size;
   console.log("Players with rounds:", byDgId.size);
   if (liveMergedRows > 0) {

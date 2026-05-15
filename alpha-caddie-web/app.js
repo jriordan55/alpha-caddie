@@ -1035,45 +1035,63 @@ function dgLiveHoleStatsTargetRoundNum(payload) {
  * Per course: sum over holes of (avg_score − par) for one round; return mean across courses.
  * `minThru` drops thin holes (early wave).
  */
+function liveCourseRoundExcessForRoundNum(payload, roundNum, minThru = 4) {
+  if (!payload || typeof payload !== "object") return NaN;
+  const courses = payload.courses;
+  if (!Array.isArray(courses) || !courses.length) return NaN;
+  const rn = Math.round(num(roundNum, NaN));
+  if (!Number.isFinite(rn) || rn < 1) return NaN;
+
+  const perCourse = [];
+  for (const c of courses) {
+    const rounds = c.rounds;
+    if (!Array.isArray(rounds)) continue;
+    let sum = 0;
+    let nh = 0;
+    for (const rr of rounds) {
+      if (Math.round(num(rr.round_num, NaN)) !== rn) continue;
+      const holes = rr.holes;
+      if (!Array.isArray(holes)) continue;
+      for (const h of holes) {
+        const par = num(h.par, NaN);
+        const total = h.total && typeof h.total === "object" ? h.total : {};
+        const avg = num(total.avg_score, NaN);
+        const th = num(total.players_thru, NaN);
+        if (!Number.isFinite(par) || !Number.isFinite(avg)) continue;
+        if (Number.isFinite(th) && th < minThru) continue;
+        sum += avg - par;
+        nh++;
+      }
+    }
+    if (nh > 0) perCourse.push(sum);
+  }
+  if (!perCourse.length) return NaN;
+  if (perCourse.length === 1) return perCourse[0];
+  const mean = perCourse.reduce((a, b) => a + b, 0) / perCourse.length;
+  const mx = Math.max(...perCourse);
+  return mean + 0.5 * (mx - mean);
+}
+
+/** Mean field excess vs par for completed rounds 1..targetRound−1 (live hole stats). */
+function priorRoundsMeanExcessFromLiveHoleStats(payload, targetRound, minThru = 4) {
+  const tr = Math.round(num(targetRound, NaN));
+  if (!Number.isFinite(tr) || tr < 2) return NaN;
+  const exs = [];
+  for (let rn = 1; rn < tr; rn++) {
+    const ex = liveCourseRoundExcessForRoundNum(payload, rn, minThru);
+    if (Number.isFinite(ex)) exs.push(ex);
+  }
+  if (!exs.length) return NaN;
+  return exs.reduce((a, b) => a + b, 0) / exs.length;
+}
+
 function liveCourseRoundExcessFromHoleStats(payload, minThru = 4) {
   if (!payload || typeof payload !== "object") return NaN;
   const courses = payload.courses;
   if (!Array.isArray(courses) || !courses.length) return NaN;
 
-  const sumForRound = (rn) => {
-    const perCourse = [];
-    for (const c of courses) {
-      const rounds = c.rounds;
-      if (!Array.isArray(rounds)) continue;
-      let sum = 0;
-      let nh = 0;
-      for (const rr of rounds) {
-        if (num(rr.round_num, NaN) !== rn) continue;
-        const holes = rr.holes;
-        if (!Array.isArray(holes)) continue;
-        for (const h of holes) {
-          const par = num(h.par, NaN);
-          const total = h.total && typeof h.total === "object" ? h.total : {};
-          const avg = num(total.avg_score, NaN);
-          const th = num(total.players_thru, NaN);
-          if (!Number.isFinite(par) || !Number.isFinite(avg)) continue;
-          if (Number.isFinite(th) && th < minThru) continue;
-          sum += avg - par;
-          nh++;
-        }
-      }
-      if (nh > 0) perCourse.push(sum);
-    }
-    if (!perCourse.length) return NaN;
-    if (perCourse.length === 1) return perCourse[0];
-    const mean = perCourse.reduce((a, b) => a + b, 0) / perCourse.length;
-    const mx = Math.max(...perCourse);
-    /* Multi-course events: pure mean dilutes a tough track — blend toward the harder course. */
-    return mean + 0.5 * (mx - mean);
-  };
-
   let targetRn = dgLiveHoleStatsTargetRoundNum(payload);
-  let ex = Number.isFinite(targetRn) ? sumForRound(targetRn) : NaN;
+  let ex = Number.isFinite(targetRn) ? liveCourseRoundExcessForRoundNum(payload, targetRn, minThru) : NaN;
   if (!Number.isFinite(ex)) {
     let maxR = NaN;
     for (const c of courses) {
@@ -1082,7 +1100,7 @@ function liveCourseRoundExcessFromHoleStats(payload, minThru = 4) {
         if (Number.isFinite(rn)) maxR = Number.isFinite(maxR) ? Math.max(maxR, rn) : rn;
       }
     }
-    if (Number.isFinite(maxR)) ex = sumForRound(maxR);
+    if (Number.isFinite(maxR)) ex = liveCourseRoundExcessForRoundNum(payload, maxR, minThru);
   }
   return ex;
 }
@@ -1252,6 +1270,7 @@ function mergeDatagolfLiveCourseMeta(j) {
       } else {
         clearKeys(["live_course_round_excess_strokes"]);
       }
+      if (refreshPriorRoundCourseMetaFromLiveHoleStats(lh)) touched = true;
 
       const lhEv = String(lh.event_name ?? "").trim();
       const modelEv = String(DATA.meta?.event_name ?? "").trim();
@@ -1618,8 +1637,47 @@ function projectionRowForDgRound(dgId, rnd) {
 
 const MAX_HISTORY_ROUNDS_PER_PLAYER = 2000;
 
+function dgInPlayRowForId(dgId) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return null;
+  const rows = Array.isArray(DATA?.data) ? DATA.data : [];
+  return rows.find((x) => Math.round(num(x?.dg_id ?? x?.dgId, NaN)) === id) || null;
+}
+
+function liveInPlayGrossForRound(inPlayRow, rnd) {
+  if (!inPlayRow) return NaN;
+  const r = Math.round(num(rnd, NaN));
+  if (!Number.isFinite(r) || r < 1 || r > 4) return NaN;
+  return num(inPlayRow[`R${r}`] ?? inPlayRow[`r${r}`], NaN);
+}
+
+function currentEventLiveRoundNum() {
+  const mismatch = String(DATA?.meta?.datagolf_live_event_mismatch || "").trim();
+  if (mismatch) return NaN;
+  const liveR = Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
+  return Number.isFinite(liveR) && liveR >= 1 && liveR <= 4 ? liveR : NaN;
+}
+
+function currentTournamentProgressRoundCap() {
+  const liveR = currentEventLiveRoundNum();
+  if (Number.isFinite(liveR)) return liveR;
+  const dr = Math.round(num(DATA?.meta?.display_round, NaN));
+  return Number.isFinite(dr) && dr >= 1 && dr <= 4 ? dr : NaN;
+}
+
+function historyRoundMatchesCurrentEvent(row) {
+  if (!row || typeof row !== "object") return false;
+  const metaEvent = String(DATA?.meta?.event_name || "").trim();
+  if (!metaEvent) return false;
+  return (
+    eventNameMatchesCurrentSchedule(row.event_name, metaEvent) ||
+    scheduleNameMatchesMeta(row.event_name, metaEvent)
+  );
+}
+
 function upsertHistoryBucketLiveRound(dgId, liveRec) {
   if (historyDateMdYIsFuture(liveRec?.event_completed)) return false;
+  if (historyRoundChartDateIsFuture(liveRec)) return false;
   const bucket = HISTORY.byDgId[String(dgId)];
   if (!bucket || !Array.isArray(bucket.rounds)) return false;
   const wantEvt = liveHistNormEvtKey(liveRec.event_name);
@@ -1706,15 +1764,12 @@ function mergeLiveInPlayIntoRoundHistory(j) {
         if (!eventDate) continue;
         const gross = num(r[`R${rnd}`] ?? r[`r${rnd}`], NaN);
         let roundScore = NaN;
-        let sgRow = null;
+        if (historyDateMdYIsFuture(eventDate) || historyRoundChartDateIsFuture({ event_completed: eventDate, round_num: rnd }))
+          continue;
         if (rnd < pr) {
           if (Number.isFinite(gross)) roundScore = Math.round(gross * 10) / 10;
-        } else {
-          if (Number.isFinite(gross)) roundScore = Math.round(gross * 10) / 10;
-          else if (Number.isFinite(today) && Number.isFinite(coursePar)) {
-            roundScore = Math.round((coursePar + today) * 10) / 10;
-            sgRow = r;
-          }
+        } else if (rnd === pr && Number.isFinite(gross)) {
+          roundScore = Math.round(gross * 10) / 10;
         }
         if (!Number.isFinite(roundScore)) continue;
 
@@ -1744,21 +1799,23 @@ function mergeLiveInPlayIntoRoundHistory(j) {
           weather_wind_mph: null,
           weather_humidity: null,
           weather_condition: "",
-          sg_putt: sgRow && Number.isFinite(num(sgRow.sg_putt, NaN)) ? num(sgRow.sg_putt, NaN) : null,
-          sg_app: sgRow && Number.isFinite(num(sgRow.sg_app, NaN)) ? num(sgRow.sg_app, NaN) : null,
-          sg_arg: sgRow && Number.isFinite(num(sgRow.sg_arg, NaN)) ? num(sgRow.sg_arg, NaN) : null,
-          sg_ott: sgRow && Number.isFinite(num(sgRow.sg_ott, NaN)) ? num(sgRow.sg_ott, NaN) : null,
-          sg_t2g: sgRow && Number.isFinite(num(sgRow.sg_t2g, NaN)) ? num(sgRow.sg_t2g, NaN) : null,
-          sg_total: sgRow && Number.isFinite(num(sgRow.sg_total, NaN)) ? num(sgRow.sg_total, NaN) : null,
+          sg_putt: Number.isFinite(num(r.sg_putt, NaN)) ? num(r.sg_putt, NaN) : null,
+          sg_app: Number.isFinite(num(r.sg_app, NaN)) ? num(r.sg_app, NaN) : null,
+          sg_arg: Number.isFinite(num(r.sg_arg, NaN)) ? num(r.sg_arg, NaN) : null,
+          sg_ott: Number.isFinite(num(r.sg_ott, NaN)) ? num(r.sg_ott, NaN) : null,
+          sg_t2g: Number.isFinite(num(r.sg_t2g, NaN)) ? num(r.sg_t2g, NaN) : null,
+          sg_total: Number.isFinite(num(r.sg_total, NaN)) ? num(r.sg_total, NaN) : null,
           current_score: rnd === pr && Number.isFinite(currentScore) ? currentScore : null,
           today: rnd === pr && Number.isFinite(today) ? today : null,
           _from_live_in_play: true,
         };
         if (upsertHistoryBucketLiveRound(dg, liveRec)) merged++;
       }
-    } else if (Number.isFinite(today) && Number.isFinite(coursePar)) {
+    } else {
       const roundNum = pr;
-      const roundScore = Math.round((coursePar + today) * 10) / 10;
+      const gross = liveInPlayGrossForRound(r, roundNum);
+      if (!Number.isFinite(gross)) continue;
+      const roundScore = Math.round(gross * 10) / 10;
       let eventDate = "";
       const isoM = lastUp.match(/^(\d{4})-(\d{2})-(\d{2})/);
       if (isoM) eventDate = `${parseInt(isoM[2], 10)}/${parseInt(isoM[3], 10)}/${parseInt(isoM[1], 10)}`;
@@ -1766,6 +1823,7 @@ function mergeLiveInPlayIntoRoundHistory(j) {
         const d = new Date();
         eventDate = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
       }
+      if (historyDateMdYIsFuture(eventDate)) continue;
       const eventYear = parseInt(String(eventDate).split("/")[2] || "", 10);
       const pp = projectionRowForDgRound(dg, roundNum);
       const chronoBase = parseEventCompletedChronoBase(eventDate);
@@ -1779,7 +1837,7 @@ function mergeLiveInPlayIntoRoundHistory(j) {
         course_name: courseName,
         round_num: roundNum,
         fin_text: "",
-        round_score: Number.isFinite(roundScore) ? roundScore : null,
+        round_score: roundScore,
         birdies: pp && Number.isFinite(num(pp.birdies, NaN)) ? num(pp.birdies, NaN) : null,
         pars: pp && Number.isFinite(num(pp.pars, NaN)) ? num(pp.pars, NaN) : null,
         bogies: pp && Number.isFinite(num(pp.bogeys, NaN)) ? num(pp.bogeys, NaN) : null,
@@ -1802,11 +1860,13 @@ function mergeLiveInPlayIntoRoundHistory(j) {
         today: Number.isFinite(today) ? today : null,
         _from_live_in_play: true,
       };
+      if (historyRoundChartDateIsFuture(liveRec)) continue;
       if (upsertHistoryBucketLiveRound(dg, liveRec)) merged++;
     }
   }
 
   if (merged > 0) {
+    scrubNonActualRoundsFromHistoryBuckets();
     HISTORY_ROUNDS_CHRONO_CACHE.clear();
     PRICING_MU_BONUS_CACHE.clear();
   }
@@ -2196,9 +2256,8 @@ function ouModelMarketKey(market) {
 }
 
 /**
- * Live-hole field difficulty nudges counting props (GIR, FW, putts, …) from `meta.live_course_round_excess_strokes`.
- * When `in_play_affects_round_odds` is false, damp heavily: stale or wrong-event hole bundles otherwise shift
- * everyone's means one direction and +EV piles on one O/U side.
+ * Damp in-round live-hole nudges on non-total props when `in_play_affects_round_odds` is false.
+ * Prior-round course difficulty uses `meta.prior_round_course_stroke_shift` via combinedCourseDifficultyOUMuAdjustment.
  */
 function liveCourseOuNonTotalScale() {
   return inPlayAffectsRoundOdds() ? 1 : 0.28;
@@ -2877,6 +2936,11 @@ const LIVE_COURSE_EXCESS_TO_STROKE_K_HARD = 1.5;
 const LIVE_COURSE_EXCESS_TO_STROKE_K_EASY = 0.8;
 const LIVE_COURSE_D_CLAMP_NEG = -1.6;
 const LIVE_COURSE_D_CLAMP_POS = 3.4;
+/** Prior completed rounds at this event (fetch-datagolf / course-round-adjustments.mjs defaults). */
+const PRIOR_ROUND_EXCESS_TO_STROKE_K_HARD = 1.5;
+const PRIOR_ROUND_EXCESS_TO_STROKE_K_EASY = 0.8;
+const PRIOR_ROUND_STROKE_SHIFT_CLAMP_NEG = -1.2;
+const PRIOR_ROUND_STROKE_SHIFT_CLAMP_POS = 2.15;
 
 /** True only after tournament play has actually started (at least one player has begun the live round). */
 function hasStartedLiveRoundData() {
@@ -2906,12 +2970,62 @@ function liveCourseDifficultyDForMu() {
   return clamp(d0 * 0.42, -0.85, 1.45);
 }
 
-/**
- * Field scoring vs par from DataGolf live-hole-stats (current round): sum_h (avg_score − par) per course,
- * then mean across courses. Positive ⇒ course playing hard vs par → higher expected totals / bogeys.
- */
-function liveCourseOUMuAdjustment(market) {
-  const d = liveCourseDifficultyDForMu();
+/** Stroke shift from prior-round field excess (+ = harder vs par). Mirrors course-round-adjustments.mjs. */
+function courseDifficultyStrokeShiftFromExcess(excessStrokes) {
+  const exR = num(excessStrokes, NaN);
+  if (!Number.isFinite(exR) || exR === 0) return 0;
+  const k = exR < 0 ? PRIOR_ROUND_EXCESS_TO_STROKE_K_EASY : PRIOR_ROUND_EXCESS_TO_STROKE_K_HARD;
+  return clamp(exR * k, PRIOR_ROUND_STROKE_SHIFT_CLAMP_NEG, PRIOR_ROUND_STROKE_SHIFT_CLAMP_POS);
+}
+
+/** Refresh meta prior-round course difficulty from live hole stats (blend with fetch/historical when present). */
+function refreshPriorRoundCourseMetaFromLiveHoleStats(lh) {
+  if (!lh || typeof lh !== "object") return false;
+  if (!DATA.meta) DATA.meta = {};
+  const prevEx = DATA.meta.prior_round_course_excess_strokes;
+  const prevSh = DATA.meta.prior_round_course_stroke_shift;
+  const nextEx =
+    prevEx && typeof prevEx === "object" ? { ...prevEx } : { 1: 0, 2: 0, 3: 0, 4: 0 };
+  const nextSh =
+    prevSh && typeof prevSh === "object" ? { ...prevSh } : { 1: 0, 2: 0, 3: 0, 4: 0 };
+  let touched = false;
+  for (let tr = 2; tr <= 4; tr++) {
+    const liveEx = priorRoundsMeanExcessFromLiveHoleStats(lh, tr);
+    if (!Number.isFinite(liveEx)) continue;
+    const histEx = num(nextEx[String(tr)] ?? nextEx[tr], NaN);
+    const ex = Number.isFinite(histEx) && histEx !== 0 ? 0.55 * liveEx + 0.45 * histEx : liveEx;
+    const sh = courseDifficultyStrokeShiftFromExcess(ex);
+    const exR = Math.round(ex * 1000) / 1000;
+    const shR = Math.round(sh * 1000) / 1000;
+    if (nextEx[tr] !== exR) touched = true;
+    if (nextSh[tr] !== shR) touched = true;
+    nextEx[tr] = exR;
+    nextSh[tr] = shR;
+  }
+  if (touched) {
+    DATA.meta.prior_round_course_excess_strokes = nextEx;
+    DATA.meta.prior_round_course_stroke_shift = nextSh;
+  }
+  return touched;
+}
+
+function priorRoundCourseStrokeShiftBakedOnRow(row) {
+  return Object.prototype.hasOwnProperty.call(row || {}, "prior_round_course_stroke_shift");
+}
+
+/** Prior-round stroke shift for this projection row (0 when fetch:dg already baked into μ / totals). */
+function priorRoundCourseStrokeShiftForProjectionRow(row) {
+  if (priorRoundCourseStrokeShiftBakedOnRow(row)) return 0;
+  const rnd = Math.round(num(row?.round, NaN));
+  if (!Number.isFinite(rnd) || rnd < 2) return 0;
+  const pack = DATA?.meta?.prior_round_course_stroke_shift;
+  if (!pack || typeof pack !== "object") return 0;
+  const v = num(pack[String(rnd)] ?? pack[rnd], NaN);
+  return Number.isFinite(v) ? v : 0;
+}
+
+/** Map stroke-unit difficulty `d` into O/U counting-stat means (+d ⇒ harder ⇒ higher totals / bogeys). */
+function ouMuAdjustmentFromCourseDifficultyD(market, d) {
   if (!Number.isFinite(d) || d === 0) return 0;
   const mKey = ouModelMarketKey(market) || "Total score";
   const scale = mKey === "Total score" ? 1 : liveCourseOuNonTotalScale();
@@ -2925,16 +3039,51 @@ function liveCourseOUMuAdjustment(market) {
   return 0;
 }
 
-function liveCoursePropHistoryNudge(statKey) {
-  const d = liveCourseDifficultyDForMu();
-  if (statKey === "total") return d;
-  if (statKey === "bogeys") return 0.48 * d;
-  if (statKey === "birdies") return -0.55 * d;
-  if (statKey === "pars") return -0.11 * d;
-  if (statKey === "putts") return 0.42 * d;
-  if (statKey === "gir") return -0.28 * d;
-  if (statKey === "fairways") return -0.2 * d;
-  return 0;
+function priorRoundCourseOUMuAdjustment(market, row) {
+  return ouMuAdjustmentFromCourseDifficultyD(market, priorRoundCourseStrokeShiftForProjectionRow(row));
+}
+
+/** In-round live hole-stats difficulty for the active live round only. */
+function liveCourseOUMuAdjustmentForRound(market, targetRound) {
+  const tr = Math.round(num(targetRound, NaN));
+  const liveR = Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
+  if (!Number.isFinite(tr) || !Number.isFinite(liveR) || tr !== liveR) return 0;
+  return ouMuAdjustmentFromCourseDifficultyD(market, liveCourseDifficultyDForMu());
+}
+
+/**
+ * Prior rounds at this venue + in-round live difficulty for `row.round`.
+ * Used by Round projections, +EV props, Historical Trends model line, Live Prop, etc.
+ */
+function combinedCourseDifficultyOUMuAdjustment(market, row) {
+  if (!row || typeof row !== "object") return 0;
+  const tr = Math.round(num(row.round, NaN));
+  return (
+    priorRoundCourseOUMuAdjustment(market, row) +
+    (Number.isFinite(tr) ? liveCourseOUMuAdjustmentForRound(market, tr) : 0)
+  );
+}
+
+/** @deprecated Use combinedCourseDifficultyOUMuAdjustment with a projection row when possible. */
+function liveCourseOUMuAdjustment(market) {
+  return ouMuAdjustmentFromCourseDifficultyD(market, liveCourseDifficultyDForMu());
+}
+
+function liveCoursePropHistoryNudge(statKey, projectionRowOpt) {
+  const market = ouMarketKeyFromStatKey(statKey);
+  if (projectionRowOpt && typeof projectionRowOpt === "object") {
+    return combinedCourseDifficultyOUMuAdjustment(market, projectionRowOpt);
+  }
+  return liveCourseOUMuAdjustment(market);
+}
+
+/** μ_SG delta from prior-round course hardness when projections were not rebuilt by fetch:dg. */
+function priorRoundCourseMuSgDelta(row) {
+  if (!row || priorRoundCourseStrokeShiftBakedOnRow(row)) return 0;
+  const shift = priorRoundCourseStrokeShiftForProjectionRow(row);
+  const form = num(row?.within_event_form_shift, NaN);
+  const formAdj = Number.isFinite(form) ? form : 0;
+  return -shift + formAdj;
 }
 
 /** Sum par for holes 1..n (n = holes completed, e.g. thru=14 → first 14 holes). */
@@ -3168,7 +3317,7 @@ function ouProjectedMean(market, row) {
   return (
     baseScalar +
     statWeatherMuAdjustment(mKey, row) +
-    liveCourseOUMuAdjustment(mKey) +
+    combinedCourseDifficultyOUMuAdjustment(mKey, row) +
     liveRoundAdj +
     countLive.muDelta +
     pricingStatMuAdjustment(mKey, dgId)
@@ -8789,13 +8938,59 @@ function historyDateMdYIsFuture(s) {
   return Number.isFinite(t) && t > today;
 }
 
+/** Calendar day shown on the trends chart (sortKey + round_num), as UTC midnight ms. */
+function historyRoundChartDateUtcMs(row) {
+  if (!row || typeof row !== "object") return NaN;
+  const sk = Math.round(num(row.sortKey, NaN));
+  let y = NaN;
+  let mo = NaN;
+  let d = NaN;
+  let rnd = Math.round(num(row.round_num, NaN));
+  if (!Number.isFinite(rnd) || rnd < 1) rnd = 1;
+  if (Number.isFinite(sk) && sk > 9_999_999) {
+    const base = Math.floor(sk / 10);
+    const rnTail = sk % 10;
+    if (Number.isFinite(rnTail) && rnTail >= 1 && rnTail <= 9) rnd = rnTail;
+    if (base >= 19_000_000 && base <= 2_100_1231) {
+      y = Math.floor(base / 10000);
+      mo = Math.floor((base % 10000) / 100);
+      d = base % 100;
+    }
+  }
+  if (!Number.isFinite(y)) {
+    const ec = String(row.event_completed || "").trim();
+    const mdy = ec.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    const iso = ec.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (mdy) {
+      mo = Number(mdy[1]);
+      d = Number(mdy[2]);
+      y = Number(mdy[3]);
+    } else if (iso) {
+      y = Number(iso[1]);
+      mo = Number(iso[2]);
+      d = Number(iso[3]);
+    } else return NaN;
+  }
+  return Date.UTC(y, mo - 1, d) + (rnd - 1) * 86400000;
+}
+
+function historyRoundChartDateIsFuture(row) {
+  const ms = historyRoundChartDateUtcMs(row);
+  if (!Number.isFinite(ms)) return historyDateMdYIsFuture(row?.event_completed);
+  const now = new Date();
+  const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  return ms > today;
+}
+
 function sanitizePlayerHistoryPayload(payload) {
   if (!payload || typeof payload !== "object" || !payload.byDgId || typeof payload.byDgId !== "object") return payload;
   let removed = 0;
   for (const bucket of Object.values(payload.byDgId)) {
     if (!bucket || !Array.isArray(bucket.rounds)) continue;
     const before = bucket.rounds.length;
-    bucket.rounds = bucket.rounds.filter((r) => !historyDateMdYIsFuture(r?.event_completed));
+    bucket.rounds = bucket.rounds.filter(
+      (r) => !historyDateMdYIsFuture(r?.event_completed) && !historyRoundChartDateIsFuture(r),
+    );
     removed += before - bucket.rounds.length;
   }
   if (removed > 0) {
@@ -8809,6 +9004,7 @@ function applyPlayerHistoryPayload(payload, opts = {}) {
   HISTORY = { ...clean, _ok: true, _loading: false, _partial: Boolean(opts.partial) };
   HISTORY_ROUNDS_CHRONO_CACHE.clear();
   PRICING_MU_BONUS_CACHE.clear();
+  if (DATA?.meta?.event_name) scrubNonActualRoundsFromHistoryBuckets();
 }
 
 function mergePlayerHistoryPartialPayload(payload) {
@@ -9780,7 +9976,7 @@ function statKeyFromPropSelect() {
 function historyRoundsForDg(dgId) {
   const rec = HISTORY.byDgId && HISTORY.byDgId[String(dgId)];
   if (!rec || !Array.isArray(rec.rounds)) return [];
-  return rec.rounds.filter((r) => !historyDateMdYIsFuture(r?.event_completed));
+  return rec.rounds.filter((r) => historyRoundCountsAsActual(r));
 }
 
 /** YYYYMMDD * 10 + round_num; matches build-player-history sortKey when present, else parses event_completed. */
@@ -10039,6 +10235,51 @@ function historyRoundIsPlaceholderAllMarketsZero(row) {
   const countsAllZero = b === 0 && p === 0 && bg === 0 && g === 0 && f === 0 && pt === 0;
   const noRealTotal = !Number.isFinite(t) || t <= 0;
   return countsAllZero && noRealTotal;
+}
+
+/**
+ * Historical Trends / hit-rate: only rounds that have actually been completed (not scheduled future days,
+ * not in-progress live projections, not round_num ahead of the live tournament).
+ */
+function historyRoundCountsAsActual(row) {
+  if (!row || typeof row !== "object") return false;
+  if (historyRoundIsPlaceholderAllMarketsZero(row)) return false;
+  if (historyDateMdYIsFuture(row.event_completed)) return false;
+  if (historyRoundChartDateIsFuture(row)) return false;
+
+  if (historyRoundMatchesCurrentEvent(row)) {
+    const rnd = Math.round(num(row.round_num, NaN));
+    const cap = currentTournamentProgressRoundCap();
+    if (Number.isFinite(rnd) && Number.isFinite(cap) && rnd > cap) return false;
+
+    if (row._from_live_in_play) {
+      const liveR = currentEventLiveRoundNum();
+      if (Number.isFinite(rnd) && Number.isFinite(liveR)) {
+        if (rnd > liveR) return false;
+        if (rnd === liveR) {
+          const gross = liveInPlayGrossForRound(dgInPlayRowForId(row.dg_id), rnd);
+          if (!Number.isFinite(gross)) return false;
+        }
+      }
+    }
+  }
+  return true;
+}
+
+function scrubNonActualRoundsFromHistoryBuckets() {
+  if (!HISTORY?.byDgId || typeof HISTORY.byDgId !== "object") return 0;
+  let removed = 0;
+  for (const bucket of Object.values(HISTORY.byDgId)) {
+    if (!bucket || !Array.isArray(bucket.rounds)) continue;
+    const before = bucket.rounds.length;
+    bucket.rounds = bucket.rounds.filter((r) => historyRoundCountsAsActual(r));
+    removed += before - bucket.rounds.length;
+  }
+  if (removed > 0) {
+    HISTORY_ROUNDS_CHRONO_CACHE.clear();
+    PRICING_MU_BONUS_CACHE.clear();
+  }
+  return removed;
 }
 
 /** Loose match for schedule titles (e.g. “THE MASTERS” vs “Masters Tournament”). */
@@ -10390,7 +10631,12 @@ function effectiveMuSg(row, dgIdOpt, matchupMarketKind) {
   const base = weatherAdjustedMuSg(row);
   const id = Number.isFinite(dgIdOpt) ? Math.round(dgIdOpt) : Math.round(num(row?.dg_id, NaN));
   if (!Number.isFinite(base) || !Number.isFinite(id)) return base;
-  return base + pricingModeMuSgBonus(id) + liveMuSgDeltaForMatchupRow(row, matchupMarketKind);
+  return (
+    base +
+    pricingModeMuSgBonus(id) +
+    priorRoundCourseMuSgDelta(row) +
+    liveMuSgDeltaForMatchupRow(row, matchupMarketKind)
+  );
 }
 
 function pricingStatMuAdjustment(market, dgId) {
@@ -11137,7 +11383,12 @@ function modelForHistoryRow(statKey, row) {
   if (!Number.isFinite(base)) return NaN;
   const liveRound =
     statKey === "total" && inPlayAffectsRoundOdds() ? liveCurrentRoundTotalScoreMuDelta(r) : 0;
-  return base + pricingModelHistoryNudge(statKey, dgId) + liveCoursePropHistoryNudge(statKey) + liveRound;
+  return (
+    base +
+    pricingModelHistoryNudge(statKey, dgId) +
+    combinedCourseDifficultyOUMuAdjustment(ouMarketKeyFromStatKey(statKey), r) +
+    liveRound
+  );
 }
 
 /**
@@ -13029,6 +13280,7 @@ async function loadProjections(opts = {}) {
     const blocking = [];
     if (reloadSidecar) blocking.push(loadPlayerShots());
     await Promise.all(blocking);
+    if (HISTORY._ok) scrubNonActualRoundsFromHistoryBuckets();
     await yieldToMain();
     await refreshAll();
     updateStatusBar();
