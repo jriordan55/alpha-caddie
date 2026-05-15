@@ -482,7 +482,12 @@ async function main() {
         const r = spawnSync(process.execPath, [dgScript], {
           cwd: WEB_ROOT,
           stdio: "inherit",
-          env: { ...process.env, GOLF_MODEL_DIR: GOLF_MODEL_ROOT, DATAGOLF_API_KEY: key },
+          env: {
+            ...process.env,
+            GOLF_MODEL_DIR: GOLF_MODEL_ROOT,
+            DATAGOLF_API_KEY: key,
+            GOLF_SKIP_HISTORY_ON_FETCH_DG: "1",
+          },
         });
         if (r.status !== 0) {
           console.warn("[fetch-book-odds] fetch:dg exited", r.status, "— merging book odds into existing projections.");

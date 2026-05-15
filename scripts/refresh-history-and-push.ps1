@@ -17,7 +17,10 @@ $ErrorActionPreference = "Stop"
 #     set GOLF_FINISH_TOOL_PLAYWRIGHT=1 (+ optional DATAGOLF_PLAYWRIGHT_STORAGE_STATE) to capture browser JSON instead of direct API for missing markets.
 #   • approach_skill_ytd.json — Predicted shot distance bins (fetch:dg preds/approach-skill); optional approach_skill_l12.json fallback if present.
 #   • embedded-player-round-history.js (+ CSV / player_round_history.json / player-history shards) — Hole Hangout
-#     hole-level priors (build:history after fetch:dg). Course Fit uses course-table.json for layout vs field SG.
+#     hole-level priors and **Historical Trends** (update:rounds + build:history; live round rows merged when live-in-play.json exists).
+#     Default push:all sets GOLF_HISTORICAL_ROUNDS_FULL_HISTORY=1; **update:rounds** (after fetch:in-play) refreshes
+#     historical_rounds_all.csv + player_round_history / embed / shards once. fetch:dg skips that merge (faster; live rows merge in).
+#     Course Fit uses course-table.json for layout vs field SG.
 #
 # Hole Hangout — hole pars per hole for the active course/event:
 #   • fetch:dg calls preds/live-hole-stats and writes hole_pars / hole_pars_source (live_hole_stats when DG serves it).
@@ -58,10 +61,14 @@ Set-Location $webRoot
 
 if (-not $NoFullHistory) {
   $env:GOLF_HISTORICAL_ROUNDS_FULL_HISTORY = "1"
+  $env:GOLF_SKIP_HISTORY_ON_FETCH_DG = "1"
   Remove-Item Env:\GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS -ErrorAction SilentlyContinue
-  Write-Host "Using FULL history merge (2004->present PGA + LIV rules)."
+  Remove-Item Env:\GOLF_HISTORICAL_ROUNDS_FETCH_ALL_YEARS -ErrorAction SilentlyContinue
+  Write-Host "Historical Trends: one full CSV merge + build via update:rounds (after in-play). fetch:dg skips duplicate history work."
 } else {
-  Write-Host "Running without FULL history override."
+  $env:GOLF_SKIP_HISTORY_ON_FETCH_DG = "1"
+  Remove-Item Env:\GOLF_HISTORICAL_ROUNDS_FULL_HISTORY -ErrorAction SilentlyContinue
+  Write-Host "NoFullHistory: update:rounds uses default year rules (not FULL_HISTORY=1)."
 }
 
 function Run-Step([string] $label, [scriptblock] $command) {
@@ -96,8 +103,7 @@ Remove-Item Env:\PERFECT_SKIP_FETCH_DK_OU -ErrorAction SilentlyContinue
 Run-Step "Running fetch:book-odds (matchups, outrights, DK round O/U props) ..." { npm run fetch:book-odds }
 Run-Step 'Running fetch:finish-tool — outrights, same Scratch feed as DG Finish Position; runs after book-odds ...' { npm run fetch:finish-tool }
 Run-Step "Merging live_hole_stats into projections (after book odds; preserves pars if book-odds ran inline fetch:dg) ..." { npm run merge:live-hole-pars-into-projections }
-Run-Step "Running update:rounds ..." { npm run update:rounds }
-Run-Step "Running build:history ..." { npm run build:history }
+Run-Step "Running update:rounds (historical CSV + Historical Trends: player_round_history / embed / shards / shots web) ..." { npm run update:rounds }
 
 $webDataDir = Join-Path $repoRoot "website/public/data"
 if (-not (Test-Path $webDataDir)) {
