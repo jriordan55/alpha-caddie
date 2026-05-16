@@ -1071,6 +1071,7 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg) {
       course_name: courseRaw || eventName,
       round_num: parseInt(row.round_num, 10) || 1,
       fin_text: String(row.fin_text || ""),
+      _from_dg_historical_rounds: true,
       ...mf,
       ...weatherFields(rowForWeather),
       ...sgFields(row),
@@ -1166,9 +1167,8 @@ async function main() {
   const pgaMetaOverlay = METADATA_OVERLAY_CSV ? await loadPgaMetaOverlayFromCsv(METADATA_OVERLAY_CSV) : new Map();
   const shotsAgg = await loadShotsRoundAggMaps();
   const { byDgId, allowedTriples } = await streamRounds(allowed, pgaMetaOverlay, shotsAgg);
-  const liveRoundByDg = loadLiveRoundSnapshotByDg();
-  const liveRoundList = normalizeLiveRoundList(liveRoundByDg);
-  const liveMergedRows = upsertLiveRoundRows(byDgId, liveRoundByDg);
+  /* Historical Trends: round score / birdies / pars / bogeys come only from historical-raw-data/rounds (CSV), not preds/in-play. */
+  const liveMergedRows = 0;
   let futureRoundsStripped = 0;
   for (const [, bucket] of byDgId) {
     if (!bucket?.rounds) continue;
@@ -1181,17 +1181,10 @@ async function main() {
   if (futureRoundsStripped > 0) {
     console.log("[build-player-history] Removed", futureRoundsStripped, "future/unplayed round row(s) from history export");
   }
-  const livePlayerCount = new Set(liveRoundList.map((r) => r.dg_id).filter((id) => Number.isFinite(id))).size;
   console.log("Players with rounds:", byDgId.size);
-  if (liveMergedRows > 0) {
-    console.log(
-      "[build-player-history] live round snapshot:",
-      liveMergedRows,
-      "row(s) merged for",
-      livePlayerCount,
-      "player(s) from live-in-play.json",
-    );
-  }
+  console.log(
+    "[build-player-history] Historical Trends counting stats: historical-raw-data/rounds CSV only (live-in-play not merged into export).",
+  );
   if (allowed.size > 0 && byDgId.size === 0 && fs.existsSync(ROUNDS_CSV)) {
     console.warn(
       "[build-player-history] 0 players matched: projections have",
