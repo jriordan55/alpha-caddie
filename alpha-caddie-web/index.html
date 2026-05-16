@@ -266,12 +266,17 @@
                 <span>Field by course &amp; date</span>
               </label>
               <div id="props-course-session-extra" class="props-course-session-extra" hidden>
-                <p class="text-muted props-course-window-hint">Choose a course, then a round date played there (only days with completed rounds are listed). Hover a bar for golfer.</p>
-                <label class="toolbar-label props-course-session-date-label">Round date
-                  <select id="props-filter-course-session-date" class="props-course-session-date-select" title="Days with completed rounds at this course">
-                    <option value="">Pick a date…</option>
-                  </select>
-                </label>
+                <p class="text-muted props-course-window-hint">
+                  Chart and KPIs are all players at this course between the dates below (hover a bar for golfer). Leave one blank for open-ended range.
+                </p>
+                <div class="props-filter-date-range-inputs">
+                  <label class="toolbar-label">From
+                    <input type="date" id="props-filter-date-from" class="props-date-filter-input" title="Start date (inclusive)" />
+                  </label>
+                  <label class="toolbar-label">To
+                    <input type="date" id="props-filter-date-to" class="props-date-filter-input" title="End date (inclusive)" />
+                  </label>
+                </div>
               </div>
             </div>
           </div>

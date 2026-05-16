@@ -368,18 +368,18 @@ let historyMutationEpoch = 0;
 function bumpHistoryMutationEpoch() {
   historyMutationEpoch++;
 }
-/** courseKey → cached distinct round dates at course (invalidates via historyMutationEpoch). */
-const distinctCourseSessionDatesCache = new Map();
 /** Cached sorted course dropdown rows from full history scan. */
 let propsAllPlayersCourseOptsCacheKey = "";
 /** @type {[string, string][] | null} */
 let propsAllPlayersCourseOptsEntries = null;
+/** courseKey → cached distinct UTC calendar days with completed rounds at that venue (`historyMutationEpoch` invalidates). */
+const distinctCourseSessionDatesCache = new Map();
+/** Last course key applied by `ensurePropsCourseWindowDateDefaults` (dropdown-equivalent resets on change). */
+let propsCourseWindowDateDefaultsCourseTracked = "";
 /** Last collectCourseWindowRoundEntriesFixed signature within one UI tick (heavy scan). */
 let courseWindowRoundEntriesCacheSig = "";
 /** @type {Array<{ row: object, dgId: number, playerName: string }> | null} */
 let courseWindowRoundEntriesCache = null;
-/** Last built session-date `<select>` signature to skip redundant DOM rebuilds. */
-let propsSessionDateOptsSig = "";
 let filteredHistoryRoundsMemoSigStored = "";
 const filteredHistoryRoundsMemoByDgId = new Map();
 
@@ -10231,60 +10231,59 @@ function propsEventPreferredSessionDateIso(sortedDescDays) {
   return "";
 }
 
-function refreshPropsCourseSessionDateOptions() {
-  const sel = document.getElementById("props-filter-course-session-date");
-  if (!sel) return;
+/** Match old session dropdown: pick defaults when entering field-by-course or changing course while dates are unset. */
+function ensurePropsCourseWindowDateDefaults() {
+  if (!propsCourseWindowModeOn()) {
+    propsCourseWindowDateDefaultsCourseTracked = "";
+    return;
+  }
   const courseKey = selectedPropsCourseFilter();
-  const prev = String(sel.value || "").trim();
-  if (!courseKey || !HISTORY?._ok) {
-    propsSessionDateOptsSig = "";
-    if (sel.options.length === 1 && sel.options[0]?.value === "") return;
-    sel.replaceChildren();
-    const ph0 = document.createElement("option");
-    ph0.value = "";
-    ph0.textContent = "Pick a date…";
-    sel.appendChild(ph0);
-    sel.value = "";
-    return;
-  }
-  const days = distinctCompletedRoundDatesAtCourse(courseKey);
-  const sig = `${courseKey}|${historyMutationEpoch}|${days.join(",")}`;
-  if (sig === propsSessionDateOptsSig && sel.options.length === days.length + 1) {
-    if (prev && days.includes(prev)) sel.value = prev;
-    else if (days.length) sel.value = propsEventPreferredSessionDateIso(days) || days[0];
-    else sel.value = "";
-    return;
-  }
-  propsSessionDateOptsSig = sig;
-  sel.replaceChildren();
-  const ph = document.createElement("option");
-  ph.value = "";
-  ph.textContent = "Pick a date…";
-  sel.appendChild(ph);
-  for (const iso of days) {
-    const op = document.createElement("option");
-    op.value = iso;
-    op.textContent = formatPropsCourseSessionDateLabel(iso);
-    sel.appendChild(op);
-  }
-  if (prev && days.includes(prev)) sel.value = prev;
-  else if (days.length) sel.value = propsEventPreferredSessionDateIso(days) || days[0];
-  else sel.value = "";
-}
+  const fromEl = document.getElementById("props-filter-date-from");
+  const toEl = document.getElementById("props-filter-date-to");
+  if (!fromEl || !toEl || !courseKey || !HISTORY?._ok) return;
 
-function selectedPropsCourseSessionDateIso() {
-  return String(document.getElementById("props-filter-course-session-date")?.value || "").trim();
+  const applyDefaultIso = (isoFallback) => {
+    if (isoFallback) {
+      fromEl.value = isoFallback;
+      toEl.value = isoFallback;
+    } else {
+      fromEl.value = "";
+      toEl.value = "";
+    }
+  };
+
+  const days = distinctCompletedRoundDatesAtCourse(courseKey);
+
+  const bumpedCourse = courseKey !== propsCourseWindowDateDefaultsCourseTracked;
+  propsCourseWindowDateDefaultsCourseTracked = courseKey;
+
+  const fromRaw = String(fromEl.value || "").trim();
+  const toRaw = String(toEl.value || "").trim();
+
+  const pickPreferred = () =>
+    propsEventPreferredSessionDateIso(days) || (days.length ? days[0] : "");
+
+  if (!bumpedCourse) {
+    if (!fromRaw && !toRaw) applyDefaultIso(pickPreferred());
+    return;
+  }
+
+  const prevIso = fromRaw && toRaw && fromRaw === toRaw ? fromRaw : "";
+  if (prevIso && days.includes(prevIso)) applyDefaultIso(prevIso);
+  else applyDefaultIso(pickPreferred());
 }
 
 function propsCourseWindowModeOn() {
   return Boolean(document.getElementById("props-filter-course-window")?.checked);
 }
 
-/** Field-by-course mode: course required; one session day chosen from dropdown. */
+/** Field-by-course mode: course required; inclusive date range (`from` and/or `to`). */
 function propsCourseWindowModeActive() {
   if (!propsCourseWindowModeOn()) return false;
   if (!selectedPropsCourseFilter()) return false;
-  return Boolean(selectedPropsCourseSessionDateIso());
+  const fromRaw = String(document.getElementById("props-filter-date-from")?.value || "").trim();
+  const toRaw = String(document.getElementById("props-filter-date-to")?.value || "").trim();
+  return Boolean(fromRaw || toRaw);
 }
 
 function propsCourseWindowDateInputToUtcMs(raw, endOfDay) {
@@ -10296,6 +10295,17 @@ function propsCourseWindowDateInputToUtcMs(raw, endOfDay) {
   const d = Number(m[3]);
   if (!Number.isFinite(y) || !Number.isFinite(mo) || !Number.isFinite(d)) return NaN;
   return endOfDay ? Date.UTC(y, mo - 1, d, 23, 59, 59, 999) : Date.UTC(y, mo - 1, d);
+}
+
+function propsCourseWindowDateRangeLabel() {
+  const fromRaw = String(document.getElementById("props-filter-date-from")?.value || "").trim();
+  const toRaw = String(document.getElementById("props-filter-date-to")?.value || "").trim();
+  if (!fromRaw && !toRaw) return "";
+  const f = formatPropsCourseSessionDateLabel;
+  if (fromRaw && toRaw && fromRaw === toRaw) return f(fromRaw);
+  if (fromRaw && !toRaw) return `${f(fromRaw)} → …`;
+  if (!fromRaw && toRaw) return `… → ${f(toRaw)}`;
+  return `${f(fromRaw)} – ${f(toRaw)}`;
 }
 
 function historyRoundMatchesCourseKey(row, courseKey) {
@@ -10332,16 +10342,18 @@ function applyPropsSidebarWeatherFiltersToRounds(list) {
   return out;
 }
 
-/** All player-round rows at one course on the selected calendar day (field view for Historical Trends). */
+/** All player-round rows at one course inside the inclusive date window (Historical Trends field view). */
 function collectCourseWindowRoundEntriesFixed() {
   const courseKey = selectedPropsCourseFilter();
   if (!courseKey || !HISTORY?.byDgId) return [];
-  const iso = selectedPropsCourseSessionDateIso();
-  if (!iso) return [];
+  const fromRaw = String(document.getElementById("props-filter-date-from")?.value || "").trim();
+  const toRaw = String(document.getElementById("props-filter-date-to")?.value || "").trim();
+  if (!fromRaw && !toRaw) return [];
   const sig = [
     historyMutationEpoch,
     courseKey,
-    iso,
+    fromRaw,
+    toRaw,
     propsTrendTempContextKey(),
     selectedPropsWindRangeFilter() || "",
     selectedPropsHumidityRangeFilter() || "",
@@ -10349,8 +10361,8 @@ function collectCourseWindowRoundEntriesFixed() {
   if (sig === courseWindowRoundEntriesCacheSig && courseWindowRoundEntriesCache) {
     return courseWindowRoundEntriesCache;
   }
-  const fromMs = propsCourseWindowDateInputToUtcMs(iso, false);
-  const toMs = propsCourseWindowDateInputToUtcMs(iso, true);
+  const fromMs = propsCourseWindowDateInputToUtcMs(fromRaw, false);
+  const toMs = propsCourseWindowDateInputToUtcMs(toRaw, true);
   const raw = [];
   for (const [dgStr, rec] of Object.entries(HISTORY.byDgId)) {
     const dgId = Math.round(num(dgStr, NaN));
@@ -10487,7 +10499,7 @@ function paintPropsTrendKpiRowCourseWindow(statKey, hitSt, graphSeries, entries)
     el.appendChild(wrap);
   };
 
-  addKpi("Field avg (day)", fieldMean);
+  addKpi("Field avg (window)", fieldMean);
   addKpi("Graph avg", graphMean);
   addKpi("Rounds", rounds.length, "");
   addKpi("Players", playerIds.size, "");
@@ -10624,6 +10636,26 @@ function propsMarketHigherIsBetter(statKey) {
 /** Round score / bogeys / putts: lower actual is better for O/U coloring (over line = red). */
 function propsStatLowerIsBetter(statKey) {
   return !propsMarketHigherIsBetter(statKey);
+}
+
+/**
+ * Field-by-course & date: order bars left-to-right — worst/highest first for score-like markets,
+ * best/lowest first for counting markets where more is better (birdies, pars, fairways, GIR).
+ */
+function sortPropsFieldByCourseSeriesChart(statKey, series) {
+  if (!series || series.length < 2) return;
+  const hi = propsMarketHigherIsBetter(statKey);
+  series.sort((a, b) => {
+    const va = num(a.actual, NaN);
+    const vb = num(b.actual, NaN);
+    const fa = Number.isFinite(va);
+    const fb = Number.isFinite(vb);
+    if (fa && fb && va !== vb) return hi ? va - vb : vb - va;
+    if (fa !== fb) return fa ? -1 : 1;
+    const pa = String(a.playerName || "").localeCompare(String(b.playerName || ""));
+    if (pa !== 0) return pa;
+    return String(a.date || "").localeCompare(String(b.date || ""));
+  });
 }
 
 /**
@@ -11112,8 +11144,10 @@ function propsTrendLineContextKeyFromDom() {
   const pm = PRICING_STATE.mode || "default";
   const ps = PRICING_STATE.skill === "default" ? "default" : pricingSkillHistoryKey();
   const cw = propsCourseWindowModeActive() ? 1 : 0;
-  const sess = cw ? String(document.getElementById("props-filter-course-session-date")?.value || "") : "";
-  return `${dg}|${sk}|${courseFilterOn() ? 1 : 0}|${winNKey}|${temp}|${wind}|${hum}|${course}|${pm}|${ps}|${cw}|${sess}`;
+  const winDates = cw
+    ? `${String(document.getElementById("props-filter-date-from")?.value || "")}|${String(document.getElementById("props-filter-date-to")?.value || "")}`
+    : "";
+  return `${dg}|${sk}|${courseFilterOn() ? 1 : 0}|${winNKey}|${temp}|${wind}|${hum}|${course}|${pm}|${ps}|${cw}|${winDates}`;
 }
 
 /** After user changes line or steppers so projection logic does not overwrite the input. */
@@ -12409,7 +12443,7 @@ function renderPropsTrendsCourseWindow() {
   }
   refreshPropsCourseFilterOptionsAllPlayers();
   ensurePropsCourseSelectedForWindow();
-  refreshPropsCourseSessionDateOptions();
+  ensurePropsCourseWindowDateDefaults();
   const courseKey = selectedPropsCourseFilter();
   const courseLabel = courseKey
     ? courseFitPrettyCourseKey(courseKey)
@@ -12419,10 +12453,12 @@ function renderPropsTrendsCourseWindow() {
   if (flagEl) flagEl.hidden = true;
   if (titleEl) titleEl.textContent = courseLabel;
   if (subEl) {
-    const iso = selectedPropsCourseSessionDateIso();
-    const dr = iso ? formatPropsCourseSessionDateLabel(iso) : "";
+    const dr = propsCourseWindowDateRangeLabel();
     const mkt = propMarketLabelFromKey(statKey);
-    subEl.textContent = dr ? `${mkt} · ${dr} · field rounds at this course` : `${mkt} · pick course and round date`;
+    const sortHint = propsMarketHigherIsBetter(statKey) ? "bars least→greatest" : "bars greatest→least";
+    subEl.textContent = dr
+      ? `${mkt} · ${dr} · field rounds at this course · ${sortHint}`
+      : `${mkt} · pick course and an inclusive From/To window (either end can be blank for open-ended)`;
   }
   const nWinEl = document.getElementById("props-window-n");
   const winN = clamp(
@@ -12436,15 +12472,18 @@ function renderPropsTrendsCourseWindow() {
     if (empty) {
       empty.hidden = false;
       const needCourse = !selectedPropsCourseFilter();
-      const needDate = !selectedPropsCourseSessionDateIso();
-      if (needCourse && needDate) {
-        empty.textContent = "Select a course and a round date (field-by-course mode).";
+      const fromBlank = !String(document.getElementById("props-filter-date-from")?.value || "").trim();
+      const toBlank = !String(document.getElementById("props-filter-date-to")?.value || "").trim();
+      const needDates = fromBlank && toBlank;
+      if (needCourse && needDates) {
+        empty.textContent = "Select a course and set at least one of From / To dates (field-by-course mode).";
       } else if (needCourse) {
         empty.textContent = "Select a course (not “Select course…”) to load field rounds at this venue.";
-      } else if (needDate && HISTORY._ok && distinctCompletedRoundDatesAtCourse(selectedPropsCourseFilter()).length === 0) {
+      } else if (needDates && HISTORY._ok && distinctCompletedRoundDatesAtCourse(selectedPropsCourseFilter()).length === 0) {
         empty.textContent = "No completed rounds in history for this course yet (refresh data or pick another venue).";
       } else {
-        empty.textContent = "Pick a round date from the list for this course.";
+        empty.textContent =
+          "Set at least one of From / To dates (leave the other blank for an open-ended range), or widen the dates you chose.";
       }
     }
     drawPropsTrendCanvas([], NaN, statKey);
@@ -12503,6 +12542,8 @@ function renderPropsTrendsCourseWindow() {
       _hist: e.row,
     });
   }
+
+  sortPropsFieldByCourseSeriesChart(statKey, seriesChart);
 
   if (!seriesChart.length) {
     if (empty) {
@@ -15430,7 +15471,8 @@ document.addEventListener("DOMContentLoaded", () => {
     "props-filter-humidity-range",
     "props-filter-course",
     "props-filter-course-window",
-    "props-filter-course-session-date",
+    "props-filter-date-from",
+    "props-filter-date-to",
     "props-window-n",
   ];
   propsIds.forEach((id) => {
@@ -15442,7 +15484,9 @@ document.addEventListener("DOMContentLoaded", () => {
       id === "props-filter-temp-min" ||
       id === "props-filter-temp-max" ||
       id === "props-filter-wind-range" ||
-      id === "props-filter-humidity-range"
+      id === "props-filter-humidity-range" ||
+      id === "props-filter-date-from" ||
+      id === "props-filter-date-to"
     ) {
       el.addEventListener("input", () => renderPropsTrends());
     }
@@ -15451,7 +15495,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (propsCourseWindowModeOn()) {
       refreshPropsCourseFilterOptionsAllPlayers();
       ensurePropsCourseSelectedForWindow();
-      refreshPropsCourseSessionDateOptions();
+      ensurePropsCourseWindowDateDefaults();
+    } else {
+      propsCourseWindowDateDefaultsCourseTracked = "";
     }
     renderPropsTrends();
   });

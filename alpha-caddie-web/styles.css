@@ -2759,16 +2759,15 @@ th.matchup-analysis-best-pick {
   line-height: 1.35;
   margin: 4px 0 8px;
 }
-.props-course-session-date-label {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  width: 100%;
-  max-width: 100%;
+.props-filter-date-range-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 10px;
+  align-items: end;
 }
-.props-course-session-date-select {
+.props-date-filter-input {
   width: 100%;
-  max-width: 16rem;
+  max-width: 13rem;
   font: inherit;
   color: inherit;
   background: var(--golf-surface-2, #12151a);
@@ -2781,6 +2780,9 @@ th.matchup-analysis-best-pick {
 }
 @media (max-width: 420px) {
   .props-filter-temp-range-inputs {
+    grid-template-columns: 1fr;
+  }
+  .props-filter-date-range-inputs {
     grid-template-columns: 1fr;
   }
 }
