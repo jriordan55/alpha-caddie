@@ -1743,8 +1743,18 @@ function historyRoundMatchesCurrentEvent(row) {
 function upsertHistoryBucketLiveRound(dgId, liveRec) {
   if (historyDateMdYIsFuture(liveRec?.event_completed)) return false;
   if (historyRoundChartDateIsFuture(liveRec)) return false;
-  const bucket = HISTORY.byDgId[String(dgId)];
-  if (!bucket || !Array.isArray(bucket.rounds)) return false;
+  const key = String(dgId);
+  let bucket = HISTORY.byDgId[key];
+  if (!bucket || !Array.isArray(bucket.rounds)) {
+    HISTORY.byDgId[key] = {
+      dg_id: dgId,
+      player_name: String(liveRec?.player_name || "").trim(),
+      rounds: [],
+    };
+    bucket = HISTORY.byDgId[key];
+  } else if (!bucket.player_name && liveRec?.player_name) {
+    bucket.player_name = String(liveRec.player_name).trim();
+  }
   const wantEvt = liveHistNormEvtKey(liveRec.event_name);
   const wantYr = parseInt(String(liveRec.year || ""), 10);
   const wantRnd = parseInt(String(liveRec.round_num || ""), 10);
@@ -1831,6 +1841,7 @@ function mergeLiveInPlayIntoRoundHistory(j) {
   for (const r of j.data) {
     const dg = Math.round(num(r?.dg_id ?? r?.dgId, NaN));
     if (!Number.isFinite(dg)) continue;
+    const plyName = String(r.player_name || r.playerName || "").trim();
     const playerRound = Math.round(num(r?.round, NaN));
     const pr = Number.isFinite(playerRound) && playerRound >= 1 && playerRound <= 4 ? playerRound : fallbackRoundNum;
     if (!Number.isFinite(pr) || pr < 1 || pr > 4) continue;
@@ -1858,6 +1869,7 @@ function mergeLiveInPlayIntoRoundHistory(j) {
         const chronoBase = parseEventCompletedChronoBase(eventDate);
         const liveRec = {
           dg_id: dg,
+          player_name: plyName,
           sortKey: chronoBase * 10 + rnd,
           event_completed: eventDate,
           year: Number.isFinite(eventYear) ? eventYear : new Date().getFullYear(),
@@ -1909,6 +1921,7 @@ function mergeLiveInPlayIntoRoundHistory(j) {
       const chronoBase = parseEventCompletedChronoBase(eventDate);
       const liveRec = {
         dg_id: dg,
+        player_name: plyName,
         sortKey: chronoBase * 10 + roundNum,
         event_completed: eventDate,
         year: Number.isFinite(eventYear) ? eventYear : new Date().getFullYear(),

@@ -7,7 +7,7 @@
   "datagolf_field_current_round": 3,
   "display_round": 3,
   "display_round_label": "R3 — Saturday (auto, America/New_York)",
-  "updated_at": "2026-05-16T03:20:50Z",
+  "updated_at": "2026-05-16T04:17:32Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -35441,15 +35441,2240 @@
   "matchups": {
     "tournament_matchups": {
       "event_name": "PGA Championship",
-      "last_updated": "2026-05-16 02:31:00 UTC",
+      "last_updated": "2026-05-16 03:31:00 UTC",
       "market": "tournament_matchups",
       "match_list": "No tournament_matchups being offered right now."
     },
     "round_matchups": {
       "event_name": "PGA Championship",
-      "last_updated": "2026-05-16 02:31:00 UTC",
+      "last_updated": "2026-05-16 03:31:00 UTC",
       "market": "round_matchups",
       "match_list": [
+        {
+          "odds": {
+            "bet365": {
+              "p1": 1.76923,
+              "p2": 2.45,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 1.8684603886397608,
+              "p2": 2.7476301689792555,
+              "tie": 9.91571641051066
+            },
+            "pointsbet": {
+              "p1": 1.7143,
+              "p2": 2.55,
+              "tie": 7
+            }
+          },
+          "p1_dg_id": 10419,
+          "p1_player_name": "Noren, Alex",
+          "p2_dg_id": 13508,
+          "p2_player_name": "Vegas, Jhonattan",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 1.62,
+              "p2": 2.3
+            },
+            "caesars": {
+              "p1": 1.5,
+              "p2": 2.3
+            },
+            "datagolf": {
+              "p1": 1.680026158445441,
+              "p2": 2.4705316664376977
+            },
+            "draftkings": {
+              "p1": 1.5952381,
+              "p2": 2.34
+            },
+            "unibet": {
+              "p1": 1.57143,
+              "p2": 2.35
+            }
+          },
+          "p1_dg_id": 10419,
+          "p1_player_name": "Noren, Alex",
+          "p2_dg_id": 13508,
+          "p2_player_name": "Vegas, Jhonattan",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 1.74627,
+              "p2": 2.5,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 1.8019641409135956,
+              "p2": 2.8824673920876274,
+              "tie": 10.191082802547774
+            },
+            "pointsbet": {
+              "p1": 1.6667,
+              "p2": 2.6,
+              "tie": 7.5
+            }
+          },
+          "p1_dg_id": 23602,
+          "p1_player_name": "Hojgaard, Nicolai",
+          "p2_dg_id": 29197,
+          "p2_player_name": "Brennan, Michael",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 1.55,
+              "p2": 2.5
+            },
+            "caesars": {
+              "p1": 1.52632,
+              "p2": 2.5
+            },
+            "datagolf": {
+              "p1": 1.625146409586449,
+              "p2": 2.5996252792390293
+            },
+            "draftkings": {
+              "p1": 1.57471265,
+              "p2": 2.4
+            },
+            "unibet": {
+              "p1": 1.55556,
+              "p2": 2.4
+            }
+          },
+          "p1_dg_id": 23602,
+          "p1_player_name": "Hojgaard, Nicolai",
+          "p2_dg_id": 29197,
+          "p2_player_name": "Brennan, Michael",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 1.90909,
+              "p2": 2.2,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 1.972289334845422,
+              "p2": 2.5692080416211702,
+              "tie": 9.638554216867464
+            },
+            "pointsbet": {
+              "p1": 1.8696,
+              "p2": 2.2,
+              "tie": 7
+            }
+          },
+          "p1_dg_id": 17780,
+          "p1_player_name": "Pendrith, Taylor",
+          "p2_dg_id": 32457,
+          "p2_player_name": "Keefer, Johnny",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 1.69,
+              "p2": 2.2
+            },
+            "caesars": {
+              "p1": 1.71429,
+              "p2": 2.1
+            },
+            "datagolf": {
+              "p1": 1.7676643163552095,
+              "p2": 2.302652707302974
+            },
+            "draftkings": {
+              "p1": 1.71428572,
+              "p2": 2.1
+            },
+            "unibet": {
+              "p1": 1.67568,
+              "p2": 2.16
+            }
+          },
+          "p1_dg_id": 17780,
+          "p1_player_name": "Pendrith, Taylor",
+          "p2_dg_id": 32457,
+          "p2_player_name": "Keefer, Johnny",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 1.95238,
+              "p2": 2.15,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.063983488132095,
+              "p2": 2.4167724004591866,
+              "tie": 9.830425165888418
+            },
+            "pointsbet": {
+              "p1": 1.8696,
+              "p2": 2.25,
+              "tie": 7
+            }
+          },
+          "p1_dg_id": 18103,
+          "p1_player_name": "Bezuidenhout, Christiaan",
+          "p2_dg_id": 29770,
+          "p2_player_name": "Mouw, William",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 1.69,
+              "p2": 2.2
+            },
+            "caesars": {
+              "p1": 1.71429,
+              "p2": 2.1
+            },
+            "datagolf": {
+              "p1": 1.8540247678018575,
+              "p2": 2.1709262280224757
+            },
+            "draftkings": {
+              "p1": 1.69444445,
+              "p2": 2.15
+            },
+            "unibet": {
+              "p1": 1.73529,
+              "p2": 2.06
+            }
+          },
+          "p1_dg_id": 18103,
+          "p1_player_name": "Bezuidenhout, Christiaan",
+          "p2_dg_id": 29770,
+          "p2_player_name": "Mouw, William",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 1.6135,
+              "p2": 2.87,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 1.5888147442008262,
+              "p2": 3.615982643283312,
+              "tie": 10.632642211589577
+            },
+            "pointsbet": {
+              "p1": 1.4546,
+              "p2": 3.25,
+              "tie": 8
+            }
+          },
+          "p1_dg_id": 13900,
+          "p1_player_name": "Lowry, Shane",
+          "p2_dg_id": 18628,
+          "p2_player_name": "Campbell, Brian",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 1.4,
+              "p2": 3
+            },
+            "caesars": {
+              "p1": 1.35714,
+              "p2": 3.1
+            },
+            "datagolf": {
+              "p1": 1.4393867175087385,
+              "p2": 3.2758994756825164
+            },
+            "draftkings": {
+              "p1": 1.40816327,
+              "p2": 2.96
+            },
+            "unibet": {
+              "p1": 1.37736,
+              "p2": 3.05
+            }
+          },
+          "p1_dg_id": 13900,
+          "p1_player_name": "Lowry, Shane",
+          "p2_dg_id": 18628,
+          "p2_player_name": "Campbell, Brian",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 1.95238,
+              "p2": 2.15,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.1666125013541326,
+              "p2": 2.3013635579080605,
+              "tie": 9.622323791195575
+            },
+            "pointsbet": {
+              "p1": 1.8696,
+              "p2": 2.2,
+              "tie": 7
+            }
+          },
+          "p1_dg_id": 17606,
+          "p1_player_name": "Berger, Daniel",
+          "p2_dg_id": 23841,
+          "p2_player_name": "Neergaard-Petersen, Rasmus",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betcris": {
+              "p1": 1.82645,
+              "p2": 1.91743
+            },
+            "betmgm": {
+              "p1": 1.77,
+              "p2": 2.1
+            },
+            "caesars": {
+              "p1": 1.74074,
+              "p2": 2.05
+            },
+            "datagolf": {
+              "p1": 1.9414472971509042,
+              "p2": 2.0621943501524655
+            },
+            "draftkings": {
+              "p1": 1.72463769,
+              "p2": 2.1
+            },
+            "unibet": {
+              "p1": 1.81967,
+              "p2": 1.95238
+            }
+          },
+          "p1_dg_id": 17606,
+          "p1_player_name": "Berger, Daniel",
+          "p2_dg_id": 23841,
+          "p2_player_name": "Neergaard-Petersen, Rasmus",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.7,
+              "p2": 1.66667,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 3.094538140182578,
+              "p2": 1.7144571600017144,
+              "tie": 10.6866150146941
+            },
+            "pointsbet": {
+              "p1": 2.5,
+              "p2": 1.7143,
+              "tie": 7.5
+            }
+          },
+          "p1_dg_id": 4163,
+          "p1_player_name": "Donald, Luke",
+          "p2_dg_id": 24200,
+          "p2_player_name": "Smylie, Elvis",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "caesars": {
+              "p1": 2.4,
+              "p2": 1.55556
+            },
+            "datagolf": {
+              "p1": 2.804966733714994,
+              "p2": 1.554026831254554
+            },
+            "unibet": {
+              "p1": 2.6,
+              "p2": 1.5
+            }
+          },
+          "p1_dg_id": 4163,
+          "p1_player_name": "Donald, Luke",
+          "p2_dg_id": 24200,
+          "p2_player_name": "Smylie, Elvis",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.2,
+              "p2": 1.90909,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.425712553062462,
+              "p2": 2.0579307506302413,
+              "tie": 9.820770930518046
+            },
+            "pointsbet": {
+              "p1": 2.15,
+              "p2": 1.9091,
+              "tie": 7
+            }
+          },
+          "p1_dg_id": 13764,
+          "p1_player_name": "Parry, John",
+          "p2_dg_id": 17543,
+          "p2_player_name": "Kim, Michael",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 2.05,
+              "p2": 1.8
+            },
+            "caesars": {
+              "p1": 2.05,
+              "p2": 1.74074
+            },
+            "datagolf": {
+              "p1": 2.1787143723468767,
+              "p2": 1.8483819519473168
+            },
+            "draftkings": {
+              "p1": 1.96153847,
+              "p2": 1.81967214
+            },
+            "unibet": {
+              "p1": 2.1,
+              "p2": 1.71942
+            }
+          },
+          "p1_dg_id": 13764,
+          "p1_player_name": "Parry, John",
+          "p2_dg_id": 17543,
+          "p2_player_name": "Kim, Michael",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 3,
+              "p2": 1.55556,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 3.912745769343637,
+              "p2": 1.5230552488291513,
+              "tie": 11.383039271485488
+            },
+            "pointsbet": {
+              "p1": 3,
+              "p2": 1.5264,
+              "tie": 8
+            }
+          },
+          "p1_dg_id": 5716,
+          "p1_player_name": "Harrington, Padraig",
+          "p2_dg_id": 21407,
+          "p2_player_name": "Reitan, Kristoffer",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 3,
+              "p2": 1.4
+            },
+            "caesars": {
+              "p1": 3,
+              "p2": 1.38462
+            },
+            "datagolf": {
+              "p1": 3.5690110535067987,
+              "p2": 1.3892548452195104
+            },
+            "draftkings": {
+              "p1": 2.94,
+              "p2": 1.40816327
+            },
+            "unibet": {
+              "p1": 3.3,
+              "p2": 1.32787
+            }
+          },
+          "p1_dg_id": 5716,
+          "p1_player_name": "Harrington, Padraig",
+          "p2_dg_id": 21407,
+          "p2_player_name": "Reitan, Kristoffer",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 1.8,
+              "p2": 2.37,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.015824220128005,
+              "p2": 2.4870981782005845,
+              "tie": 9.818360333824257
+            },
+            "pointsbet": {
+              "p1": 1.9091,
+              "p2": 2.15,
+              "tie": 7
+            }
+          },
+          "p1_dg_id": 12423,
+          "p1_player_name": "Kirk, Chris",
+          "p2_dg_id": 20766,
+          "p2_player_name": "Brown, Dan",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 1.75,
+              "p2": 2.1
+            },
+            "betonline": {
+              "p1": 1.74074,
+              "p2": 2.13
+            },
+            "caesars": {
+              "p1": 1.74074,
+              "p2": 2.05
+            },
+            "datagolf": {
+              "p1": 1.8105125233079677,
+              "p2": 2.233787228750855
+            },
+            "draftkings": {
+              "p1": 1.83333334,
+              "p2": 1.95238096
+            },
+            "unibet": {
+              "p1": 1.71942,
+              "p2": 2.1
+            }
+          },
+          "p1_dg_id": 12423,
+          "p1_player_name": "Kirk, Chris",
+          "p2_dg_id": 20766,
+          "p2_player_name": "Brown, Dan",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 1.83333,
+              "p2": 2.3,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.052229234005438,
+              "p2": 2.426153939467459,
+              "tie": 9.945300845350575
+            },
+            "pointsbet": {
+              "p1": 1.8334,
+              "p2": 2.25,
+              "tie": 7.5
+            }
+          },
+          "p1_dg_id": 6093,
+          "p1_player_name": "Rose, Justin",
+          "p2_dg_id": 8825,
+          "p2_player_name": "Harman, Brian",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 1.69,
+              "p2": 2.2
+            },
+            "caesars": {
+              "p1": 1.68966,
+              "p2": 2.15
+            },
+            "datagolf": {
+              "p1": 1.8458775845261919,
+              "p2": 2.182204160854006
+            },
+            "draftkings": {
+              "p1": 1.67567568,
+              "p2": 2.18
+            },
+            "unibet": {
+              "p1": 1.71942,
+              "p2": 2.1
+            }
+          },
+          "p1_dg_id": 6093,
+          "p1_player_name": "Rose, Justin",
+          "p2_dg_id": 8825,
+          "p2_player_name": "Harman, Brian",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.37,
+              "p2": 1.8,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.624844149878601,
+              "p2": 1.9338619222587508,
+              "tie": 9.811135638950216
+            },
+            "pointsbet": {
+              "p1": 2.5,
+              "p2": 1.7408,
+              "tie": 7
+            }
+          },
+          "p1_dg_id": 23816,
+          "p1_player_name": "Valimaki, Sami",
+          "p2_dg_id": 23838,
+          "p2_player_name": "Hojgaard, Rasmus",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "caesars": {
+              "p1": 2.3,
+              "p2": 1.58824
+            },
+            "datagolf": {
+              "p1": 2.3573069099022246,
+              "p2": 1.7367530458325275
+            },
+            "draftkings": {
+              "p1": 2.15,
+              "p2": 1.69444445
+            },
+            "unibet": {
+              "p1": 2.2,
+              "p2": 1.65789
+            }
+          },
+          "p1_dg_id": 23816,
+          "p1_player_name": "Valimaki, Sami",
+          "p2_dg_id": 23838,
+          "p2_player_name": "Hojgaard, Rasmus",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.37,
+              "p2": 1.8,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 3.076449776957391,
+              "p2": 1.7172541106770274,
+              "tie": 10.796221322537116
+            },
+            "pointsbet": {
+              "p1": 2.6,
+              "p2": 1.625,
+              "tie": 7.5
+            }
+          },
+          "p1_dg_id": 15756,
+          "p1_player_name": "Higa, Kazuki",
+          "p2_dg_id": 20084,
+          "p2_player_name": "Lindberg, Mikael",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 2.4,
+              "p2": 1.57
+            },
+            "caesars": {
+              "p1": 2.6,
+              "p2": 1.5
+            },
+            "datagolf": {
+              "p1": 2.791493616366713,
+              "p2": 1.5581934486755677
+            },
+            "draftkings": {
+              "p1": 2.28,
+              "p2": 1.61728396
+            },
+            "unibet": {
+              "p1": 2.6,
+              "p2": 1.5
+            }
+          },
+          "p1_dg_id": 15756,
+          "p1_player_name": "Higa, Kazuki",
+          "p2_dg_id": 20084,
+          "p2_player_name": "Lindberg, Mikael",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.3,
+              "p2": 1.83333,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.623638987275351,
+              "p2": 1.9270607505901625,
+              "tie": 10.007505629221912
+            },
+            "pointsbet": {
+              "p1": 2.25,
+              "p2": 1.8334,
+              "tie": 7.5
+            }
+          },
+          "p1_dg_id": 17365,
+          "p1_player_name": "Mitchell, Keith",
+          "p2_dg_id": 19483,
+          "p2_player_name": "Burns, Sam",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 2.2,
+              "p2": 1.69
+            },
+            "caesars": {
+              "p1": 2.1,
+              "p2": 1.71429
+            },
+            "datagolf": {
+              "p1": 2.3614718614718613,
+              "p2": 1.7344992050874404
+            },
+            "draftkings": {
+              "p1": 2.2,
+              "p2": 1.66666667
+            },
+            "unibet": {
+              "p1": 2.2,
+              "p2": 1.65789
+            }
+          },
+          "p1_dg_id": 17365,
+          "p1_player_name": "Mitchell, Keith",
+          "p2_dg_id": 19483,
+          "p2_player_name": "Burns, Sam",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.6,
+              "p2": 1.6993,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 3.548301250776191,
+              "p2": 1.5915963711602739,
+              "tie": 11.126564673157159
+            },
+            "pointsbet": {
+              "p1": 2.7,
+              "p2": 1.625,
+              "tie": 7.5
+            }
+          },
+          "p1_dg_id": 15575,
+          "p1_player_name": "Hoge, Tom",
+          "p2_dg_id": 18079,
+          "p2_player_name": "Niemann, Joaquin",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 2.65,
+              "p2": 1.5
+            },
+            "caesars": {
+              "p1": 2.6,
+              "p2": 1.5
+            },
+            "datagolf": {
+              "p1": 3.2293976758626806,
+              "p2": 1.4485516473022442
+            },
+            "draftkings": {
+              "p1": 2.64,
+              "p2": 1.48780488
+            },
+            "unibet": {
+              "p1": 3.05,
+              "p2": 1.37736
+            }
+          },
+          "p1_dg_id": 15575,
+          "p1_player_name": "Hoge, Tom",
+          "p2_dg_id": 18079,
+          "p2_player_name": "Niemann, Joaquin",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.45,
+              "p2": 1.76923,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.4285107158035335,
+              "p2": 2.0749040356883492,
+              "tie": 9.409550693954364
+            },
+            "pointsbet": {
+              "p1": 2.25,
+              "p2": 1.8334,
+              "tie": 7
+            }
+          },
+          "p1_dg_id": 19870,
+          "p1_player_name": "McCarthy, Denny",
+          "p2_dg_id": 25362,
+          "p2_player_name": "Fitzpatrick, Alex",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 2.1,
+              "p2": 1.77
+            },
+            "caesars": {
+              "p1": 2.1,
+              "p2": 1.71429
+            },
+            "datagolf": {
+              "p1": 2.1704207394815134,
+              "p2": 1.8543936092955702
+            },
+            "draftkings": {
+              "p1": 2.05,
+              "p2": 1.75757576
+            },
+            "unibet": {
+              "p1": 2.1,
+              "p2": 1.71942
+            }
+          },
+          "p1_dg_id": 19870,
+          "p1_player_name": "McCarthy, Denny",
+          "p2_dg_id": 25362,
+          "p2_player_name": "Fitzpatrick, Alex",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.45,
+              "p2": 1.76923,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.9472443265546713,
+              "p2": 1.785794008661101,
+              "tie": 9.928021841648045
+            },
+            "pointsbet": {
+              "p1": 2.6,
+              "p2": 1.6667,
+              "tie": 7.5
+            }
+          },
+          "p1_dg_id": 24956,
+          "p1_player_name": "Blanchet, Chandler",
+          "p2_dg_id": 25569,
+          "p2_player_name": "Stevens, Sam",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 2.35,
+              "p2": 1.62
+            },
+            "caesars": {
+              "p1": 2.5,
+              "p2": 1.52632
+            },
+            "datagolf": {
+              "p1": 2.6503831417624526,
+              "p2": 1.6059199071387118
+            },
+            "draftkings": {
+              "p1": 2.32,
+              "p2": 1.60240964
+            },
+            "unibet": {
+              "p1": 2.5,
+              "p2": 1.53763
+            }
+          },
+          "p1_dg_id": 24956,
+          "p1_player_name": "Blanchet, Chandler",
+          "p2_dg_id": 25569,
+          "p2_player_name": "Stevens, Sam",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 3.75,
+              "p2": 1.41667,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 5.027652086475616,
+              "p2": 1.3839393834550047,
+              "tie": 12.734797835084358
+            },
+            "pointsbet": {
+              "p1": 3.9,
+              "p2": 1.3226,
+              "tie": 8.5
+            }
+          },
+          "p1_dg_id": 8117,
+          "p1_player_name": "Kaymer, Martin",
+          "p2_dg_id": 17646,
+          "p2_player_name": "Fitzpatrick, Matt",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 4.5,
+              "p2": 1.2
+            },
+            "caesars": {
+              "p1": 3.9,
+              "p2": 1.23529
+            },
+            "datagolf": {
+              "p1": 4.6328557063851195,
+              "p2": 1.2752655433692004
+            },
+            "draftkings": {
+              "p1": 4.25,
+              "p2": 1.24390244
+            },
+            "unibet": {
+              "p1": 4.2,
+              "p2": 1.21978
+            }
+          },
+          "p1_dg_id": 8117,
+          "p1_player_name": "Kaymer, Martin",
+          "p2_dg_id": 17646,
+          "p2_player_name": "Fitzpatrick, Matt",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 1.90909,
+              "p2": 2.2,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.0575073298698627,
+              "p2": 2.4232143938935,
+              "tie": 9.871668311944713
+            },
+            "pointsbet": {
+              "p1": 1.8334,
+              "p2": 2.25,
+              "tie": 7.5
+            }
+          },
+          "p1_dg_id": 20706,
+          "p1_player_name": "Wallace, Matt",
+          "p2_dg_id": 26947,
+          "p2_player_name": "Jarvis, Casey",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betcris": {
+              "p1": 1.68027,
+              "p2": 2.17
+            },
+            "betmgm": {
+              "p1": 1.83,
+              "p2": 2
+            },
+            "caesars": {
+              "p1": 1.71429,
+              "p2": 2.1
+            },
+            "datagolf": {
+              "p1": 1.8490818373540456,
+              "p2": 2.177742775792088
+            },
+            "draftkings": {
+              "p1": 1.81967214,
+              "p2": 1.96153847
+            },
+            "unibet": {
+              "p1": 1.73529,
+              "p2": 2.06
+            }
+          },
+          "p1_dg_id": 20706,
+          "p1_player_name": "Wallace, Matt",
+          "p2_dg_id": 26947,
+          "p2_player_name": "Jarvis, Casey",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.37,
+              "p2": 1.8,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.9908778226409454,
+              "p2": 1.760330942217137,
+              "tie": 10.24852677427619
+            },
+            "pointsbet": {
+              "p1": 2.5,
+              "p2": 1.7143,
+              "tie": 7.5
+            }
+          },
+          "p1_dg_id": 12422,
+          "p1_player_name": "Johnson, Dustin",
+          "p2_dg_id": 14636,
+          "p2_player_name": "Spieth, Jordan",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 2.2,
+              "p2": 1.67
+            },
+            "caesars": {
+              "p1": 2.35,
+              "p2": 1.57143
+            },
+            "datagolf": {
+              "p1": 2.6990429190967555,
+              "p2": 1.5885666505302998
+            },
+            "draftkings": {
+              "p1": 2.3,
+              "p2": 1.61728396
+            },
+            "pinnacle": {
+              "p1": 2.52,
+              "p2": 1.526
+            },
+            "unibet": {
+              "p1": 2.55,
+              "p2": 1.51282
+            }
+          },
+          "p1_dg_id": 12422,
+          "p1_player_name": "Johnson, Dustin",
+          "p2_dg_id": 14636,
+          "p2_player_name": "Spieth, Jordan",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 1.72464,
+              "p2": 2.5,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 1.773049645390071,
+              "p2": 2.942258183155572,
+              "tie": 10.403120936280876
+            },
+            "pointsbet": {
+              "p1": 1.7408,
+              "p2": 2.4,
+              "tie": 8
+            }
+          },
+          "p1_dg_id": 10091,
+          "p1_player_name": "McIlroy, Rory",
+          "p2_dg_id": 16243,
+          "p2_player_name": "Koepka, Brooks",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betcris": {
+              "p1": 1.53476,
+              "p2": 2.48
+            },
+            "caesars": {
+              "p1": 1.60606,
+              "p2": 2.27
+            },
+            "datagolf": {
+              "p1": 1.6026152482269502,
+              "p2": 2.6594336152997426
+            },
+            "draftkings": {
+              "p1": 1.625,
+              "p2": 2.28
+            },
+            "pinnacle": {
+              "p1": 1.549,
+              "p2": 2.47
+            },
+            "unibet": {
+              "p1": 1.53763,
+              "p2": 2.5
+            }
+          },
+          "p1_dg_id": 10091,
+          "p1_player_name": "McIlroy, Rory",
+          "p2_dg_id": 16243,
+          "p2_player_name": "Koepka, Brooks",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.3,
+              "p2": 1.83333,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.7706587241116574,
+              "p2": 1.8613308515588645,
+              "tie": 9.82077093051804
+            },
+            "pointsbet": {
+              "p1": 2.5,
+              "p2": 1.7408,
+              "tie": 7.5
+            }
+          },
+          "p1_dg_id": 12965,
+          "p1_player_name": "Fowler, Rickie",
+          "p2_dg_id": 19895,
+          "p2_player_name": "Schauffele, Xander",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betcris": {
+              "p1": 2.28,
+              "p2": 1.62112
+            },
+            "betmgm": {
+              "p1": 2.25,
+              "p2": 1.67
+            },
+            "caesars": {
+              "p1": 2.3,
+              "p2": 1.58824
+            },
+            "datagolf": {
+              "p1": 2.488536399528988,
+              "p2": 1.671800837598883
+            },
+            "draftkings": {
+              "p1": 2.24,
+              "p2": 1.64935065
+            },
+            "pinnacle": {
+              "p1": 2.28,
+              "p2": 1.636
+            },
+            "unibet": {
+              "p1": 2.2,
+              "p2": 1.65789
+            }
+          },
+          "p1_dg_id": 12965,
+          "p1_player_name": "Fowler, Rickie",
+          "p2_dg_id": 19895,
+          "p2_player_name": "Schauffele, Xander",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.1,
+              "p2": 2,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.3280176929344663,
+              "p2": 2.1475357027810587,
+              "tie": 9.541984732824426
+            },
+            "pointsbet": {
+              "p1": 2.2,
+              "p2": 1.9091,
+              "tie": 7
+            }
+          },
+          "p1_dg_id": 14502,
+          "p1_player_name": "Cauley, Bud",
+          "p2_dg_id": 23014,
+          "p2_player_name": "Theegala, Sahith",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betcris": {
+              "p1": 1.84746,
+              "p2": 1.89286
+            },
+            "betmgm": {
+              "p1": 1.95,
+              "p2": 1.87
+            },
+            "caesars": {
+              "p1": 2.05,
+              "p2": 1.74074
+            },
+            "datagolf": {
+              "p1": 2.084041438714934,
+              "p2": 1.9224739611296038
+            },
+            "draftkings": {
+              "p1": 1.92592593,
+              "p2": 1.84745763
+            },
+            "pinnacle": {
+              "p1": 1.961,
+              "p2": 1.862
+            },
+            "unibet": {
+              "p1": 1.93458,
+              "p2": 1.83333
+            }
+          },
+          "p1_dg_id": 14502,
+          "p1_player_name": "Cauley, Bud",
+          "p2_dg_id": 23014,
+          "p2_player_name": "Theegala, Sahith",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 1.86957,
+              "p2": 2.25,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.0595201318092884,
+              "p2": 2.429838415745353,
+              "tie": 9.718172983479102
+            },
+            "pointsbet": {
+              "p1": 1.9524,
+              "p2": 2.1,
+              "tie": 7
+            }
+          },
+          "p1_dg_id": 24968,
+          "p1_player_name": "Griffin, Ben",
+          "p2_dg_id": 29767,
+          "p2_player_name": "Gerard, Ryan",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betcris": {
+              "p1": 1.75188,
+              "p2": 2.03
+            },
+            "betmgm": {
+              "p1": 1.8,
+              "p2": 2.05
+            },
+            "caesars": {
+              "p1": 1.8,
+              "p2": 1.95238
+            },
+            "datagolf": {
+              "p1": 1.8475955102461128,
+              "p2": 2.1798080427651563
+            },
+            "draftkings": {
+              "p1": 1.73529412,
+              "p2": 2.08
+            },
+            "pinnacle": {
+              "p1": 1.757,
+              "p2": 2.09
+            },
+            "unibet": {
+              "p1": 1.75758,
+              "p2": 2.04
+            }
+          },
+          "p1_dg_id": 24968,
+          "p1_player_name": "Griffin, Ben",
+          "p2_dg_id": 29767,
+          "p2_player_name": "Gerard, Ryan",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.9,
+              "p2": 1.57143,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 3.0546009927453226,
+              "p2": 1.730777551815153,
+              "tie": 10.54296257248287
+            },
+            "pointsbet": {
+              "p1": 2.85,
+              "p2": 1.5715,
+              "tie": 7.5
+            }
+          },
+          "p1_dg_id": 20722,
+          "p1_player_name": "Schmid, Matti",
+          "p2_dg_id": 22085,
+          "p2_player_name": "Morikawa, Collin",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "caesars": {
+              "p1": 2.8,
+              "p2": 1.41667
+            },
+            "datagolf": {
+              "p1": 2.7648720885834295,
+              "p2": 1.566613301025486
+            },
+            "unibet": {
+              "p1": 2.45,
+              "p2": 1.53763
+            }
+          },
+          "p1_dg_id": 20722,
+          "p1_player_name": "Schmid, Matti",
+          "p2_dg_id": 22085,
+          "p2_player_name": "Morikawa, Collin",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.05,
+              "p2": 2.05,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.3276112889147513,
+              "p2": 2.156799309824221,
+              "tie": 9.369875849144993
+            },
+            "pointsbet": {
+              "p1": 2.15,
+              "p2": 1.9524,
+              "tie": 6.5
+            }
+          },
+          "p1_dg_id": 13126,
+          "p1_player_name": "Taylor, Nick",
+          "p2_dg_id": 17576,
+          "p2_player_name": "Conners, Corey",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betcris": {
+              "p1": 2.02,
+              "p2": 1.75758
+            },
+            "betmgm": {
+              "p1": 1.95,
+              "p2": 1.87
+            },
+            "caesars": {
+              "p1": 1.95238,
+              "p2": 1.8
+            },
+            "datagolf": {
+              "p1": 2.079196974105325,
+              "p2": 1.9266149034832312
+            },
+            "draftkings": {
+              "p1": 1.95238096,
+              "p2": 1.83333334
+            },
+            "pinnacle": {
+              "p1": 1.99,
+              "p2": 1.833
+            },
+            "unibet": {
+              "p1": 1.93458,
+              "p2": 1.83333
+            }
+          },
+          "p1_dg_id": 13126,
+          "p1_player_name": "Taylor, Nick",
+          "p2_dg_id": 17576,
+          "p2_player_name": "Conners, Corey",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 1.53191,
+              "p2": 3,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 1.5192950470981463,
+              "p2": 3.940498473056842,
+              "tie": 11.360408974723088
+            },
+            "pointsbet": {
+              "p1": 1.625,
+              "p2": 2.75,
+              "tie": 7.5
+            }
+          },
+          "p1_dg_id": 21362,
+          "p1_player_name": "Hillier, Daniel",
+          "p2_dg_id": 25439,
+          "p2_player_name": "Kern, Ben",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "caesars": {
+              "p1": 1.47619,
+              "p2": 2.65
+            },
+            "datagolf": {
+              "p1": 1.3855591005773322,
+              "p2": 3.5936360949660147
+            },
+            "unibet": {
+              "p1": 1.4,
+              "p2": 2.95
+            }
+          },
+          "p1_dg_id": 21362,
+          "p1_player_name": "Hillier, Daniel",
+          "p2_dg_id": 25439,
+          "p2_player_name": "Kern, Ben",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.1,
+              "p2": 2,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.365883953392086,
+              "p2": 2.1085925144965736,
+              "tie": 9.701673538685426
+            },
+            "pointsbet": {
+              "p1": 2.35,
+              "p2": 1.8334,
+              "tie": 6.5
+            }
+          },
+          "p1_dg_id": 11889,
+          "p1_player_name": "Fox, Ryan",
+          "p2_dg_id": 22760,
+          "p2_player_name": "Hisatsune, Ryo",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betcris": {
+              "p1": 2.11,
+              "p2": 1.70922
+            },
+            "betmgm": {
+              "p1": 1.95,
+              "p2": 1.87
+            },
+            "betonline": {
+              "p1": 2.09,
+              "p2": 1.76923
+            },
+            "caesars": {
+              "p1": 2.15,
+              "p2": 1.68966
+            },
+            "datagolf": {
+              "p1": 2.1220204648961967,
+              "p2": 1.8912493410648392
+            },
+            "draftkings": {
+              "p1": 1.96153847,
+              "p2": 1.83333334
+            },
+            "pinnacle": {
+              "p1": 1.97,
+              "p2": 1.847
+            },
+            "unibet": {
+              "p1": 1.93458,
+              "p2": 1.83333
+            }
+          },
+          "p1_dg_id": 11889,
+          "p1_player_name": "Fox, Ryan",
+          "p2_dg_id": 22760,
+          "p2_player_name": "Hisatsune, Ryo",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.05,
+              "p2": 2.05,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.34439104442621,
+              "p2": 2.124156975200467,
+              "tie": 9.739469198928656
+            },
+            "pointsbet": {
+              "p1": 2,
+              "p2": 2.05,
+              "tie": 7
+            }
+          },
+          "p1_dg_id": 15856,
+          "p1_player_name": "Smith, Cameron",
+          "p2_dg_id": 23504,
+          "p2_player_name": "Hoey, Rico",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 1.91,
+              "p2": 1.91
+            },
+            "caesars": {
+              "p1": 1.83333,
+              "p2": 1.90909
+            },
+            "datagolf": {
+              "p1": 2.103680693939749,
+              "p2": 1.9060591577717592
+            },
+            "draftkings": {
+              "p1": 1.84745763,
+              "p2": 1.95238096
+            },
+            "pinnacle": {
+              "p1": 1.917,
+              "p2": 1.9
+            },
+            "unibet": {
+              "p1": 1.87719,
+              "p2": 1.87719
+            }
+          },
+          "p1_dg_id": 15856,
+          "p1_player_name": "Smith, Cameron",
+          "p2_dg_id": 23504,
+          "p2_player_name": "Hoey, Rico",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 1.6993,
+              "p2": 2.6,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 1.8242349614630367,
+              "p2": 2.864508736751647,
+              "tie": 9.734728644439036
+            }
+          },
+          "p1_dg_id": 14838,
+          "p1_player_name": "Reed, Patrick",
+          "p2_dg_id": 15310,
+          "p2_player_name": "Li, Haotong",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betcris": {
+              "p1": 1.68966,
+              "p2": 2.15
+            },
+            "betmgm": {
+              "p1": 1.62,
+              "p2": 2.35
+            },
+            "caesars": {
+              "p1": 1.60606,
+              "p2": 2.27
+            },
+            "datagolf": {
+              "p1": 1.636840425046746,
+              "p2": 2.570252076768834
+            },
+            "draftkings": {
+              "p1": 1.60240964,
+              "p2": 2.32
+            },
+            "pinnacle": {
+              "p1": 1.574,
+              "p2": 2.41
+            },
+            "unibet": {
+              "p1": 1.5988,
+              "p2": 2.3
+            }
+          },
+          "p1_dg_id": 14838,
+          "p1_player_name": "Reed, Patrick",
+          "p2_dg_id": 15310,
+          "p2_player_name": "Li, Haotong",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 3.2,
+              "p2": 1.52632,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 3.6114120621162877,
+              "p2": 1.591089896579157,
+              "tie": 10.570824524312883
+            }
+          },
+          "p1_dg_id": 14704,
+          "p1_player_name": "Putnam, Andrew",
+          "p2_dg_id": 19195,
+          "p2_player_name": "Rahm, Jon",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 3.25,
+              "p2": 1.35
+            },
+            "caesars": {
+              "p1": 3.3,
+              "p2": 1.32258
+            },
+            "datagolf": {
+              "p1": 3.269772481040087,
+              "p2": 1.4405727923627687
+            },
+            "draftkings": {
+              "p1": 3.4,
+              "p2": 1.32258065
+            },
+            "pinnacle": {
+              "p1": 3.02,
+              "p2": 1.378
+            },
+            "unibet": {
+              "p1": 2.8,
+              "p2": 1.43478
+            }
+          },
+          "p1_dg_id": 14704,
+          "p1_player_name": "Putnam, Andrew",
+          "p2_dg_id": 19195,
+          "p2_player_name": "Rahm, Jon",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.37,
+              "p2": 1.8,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.69124672004306,
+              "p2": 1.9003278065466291,
+              "tie": 9.784735812133077
+            }
+          },
+          "p1_dg_id": 9771,
+          "p1_player_name": "Day, Jason",
+          "p2_dg_id": 15466,
+          "p2_player_name": "Cantlay, Patrick",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 2.2,
+              "p2": 1.69
+            },
+            "caesars": {
+              "p1": 2.27,
+              "p2": 1.60606
+            },
+            "datagolf": {
+              "p1": 2.4162013052546594,
+              "p2": 1.7061143047175638
+            },
+            "draftkings": {
+              "p1": 2.18,
+              "p2": 1.67567568
+            },
+            "pinnacle": {
+              "p1": 2.2,
+              "p2": 1.68
+            },
+            "unibet": {
+              "p1": 2.12,
+              "p2": 1.6993
+            }
+          },
+          "p1_dg_id": 9771,
+          "p1_player_name": "Day, Jason",
+          "p2_dg_id": 15466,
+          "p2_player_name": "Cantlay, Patrick",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.2,
+              "p2": 1.90909,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.6092628832354863,
+              "p2": 1.9455252918287937,
+              "tie": 9.7323600973236
+            }
+          },
+          "p1_dg_id": 18554,
+          "p1_player_name": "Rai, Aaron",
+          "p2_dg_id": 21891,
+          "p2_player_name": "Kitayama, Kurt",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betcris": {
+              "p1": 2.21,
+              "p2": 1.65789
+            },
+            "betmgm": {
+              "p1": 2.2,
+              "p2": 1.69
+            },
+            "caesars": {
+              "p1": 2.1,
+              "p2": 1.71429
+            },
+            "datagolf": {
+              "p1": 2.3411611219830397,
+              "p2": 1.7456225680933852
+            },
+            "draftkings": {
+              "p1": 2.12,
+              "p2": 1.70422536
+            },
+            "pinnacle": {
+              "p1": 2.2,
+              "p2": 1.68
+            },
+            "unibet": {
+              "p1": 2.12,
+              "p2": 1.6993
+            }
+          },
+          "p1_dg_id": 18554,
+          "p1_player_name": "Rai, Aaron",
+          "p2_dg_id": 21891,
+          "p2_player_name": "Kitayama, Kurt",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 3.3,
+              "p2": 1.47619,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 3.178134435086604,
+              "p2": 1.6947716295229218,
+              "tie": 10.493179433368304
+            }
+          },
+          "p1_dg_id": 23475,
+          "p1_player_name": "Novak, Andrew",
+          "p2_dg_id": 23950,
+          "p2_player_name": "Aberg, Ludvig",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 2.9,
+              "p2": 1.42
+            },
+            "caesars": {
+              "p1": 2.65,
+              "p2": 1.47619
+            },
+            "datagolf": {
+              "p1": 2.8752582234228505,
+              "p2": 1.5332598932293875
+            },
+            "draftkings": {
+              "p1": 2.86,
+              "p2": 1.42553192
+            },
+            "pinnacle": {
+              "p1": 2.66,
+              "p2": 1.48
+            },
+            "unibet": {
+              "p1": 2.55,
+              "p2": 1.5
+            }
+          },
+          "p1_dg_id": 23475,
+          "p1_player_name": "Novak, Andrew",
+          "p2_dg_id": 23950,
+          "p2_player_name": "Aberg, Ludvig",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.15,
+              "p2": 1.95238,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.383080131069407,
+              "p2": 2.099517111064455,
+              "tie": 9.608455440787896
+            }
+          },
+          "p1_dg_id": 14577,
+          "p1_player_name": "English, Harris",
+          "p2_dg_id": 14609,
+          "p2_player_name": "Kim, Si Woo",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betcris": {
+              "p1": 2.1,
+              "p2": 1.71429
+            },
+            "betmgm": {
+              "p1": 2.1,
+              "p2": 1.77
+            },
+            "caesars": {
+              "p1": 2.15,
+              "p2": 1.68966
+            },
+            "datagolf": {
+              "p1": 2.135061066428359,
+              "p2": 1.8810098677304221
+            },
+            "draftkings": {
+              "p1": 2.1,
+              "p2": 1.72463769
+            },
+            "pinnacle": {
+              "p1": 2.06,
+              "p2": 1.775
+            },
+            "unibet": {
+              "p1": 2.04,
+              "p2": 1.75758
+            }
+          },
+          "p1_dg_id": 14577,
+          "p1_player_name": "English, Harris",
+          "p2_dg_id": 14609,
+          "p2_player_name": "Kim, Si Woo",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 1.45455,
+              "p2": 3.4,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 1.5749891719494429,
+              "p2": 3.6546368204659663,
+              "tie": 10.934937124111533
+            }
+          },
+          "p1_dg_id": 18417,
+          "p1_player_name": "Scheffler, Scottie",
+          "p2_dg_id": 28984,
+          "p2_player_name": "Puig, David",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betmgm": {
+              "p1": 1.33,
+              "p2": 3.4
+            },
+            "caesars": {
+              "p1": 1.3125,
+              "p2": 3.4
+            },
+            "datagolf": {
+              "p1": 1.4309564121746663,
+              "p2": 3.320420283234354
+            },
+            "draftkings": {
+              "p1": 1.28571429,
+              "p2": 3.6
+            },
+            "pinnacle": {
+              "p1": 1.361,
+              "p2": 3.11
+            },
+            "unibet": {
+              "p1": 1.4,
+              "p2": 2.95
+            }
+          },
+          "p1_dg_id": 18417,
+          "p1_player_name": "Scheffler, Scottie",
+          "p2_dg_id": 28984,
+          "p2_player_name": "Puig, David",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.5,
+              "p2": 1.72464,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.868823065337445,
+              "p2": 1.8044027426921687,
+              "tie": 10.285420416559537
+            }
+          },
+          "p1_dg_id": 14139,
+          "p1_player_name": "Thomas, Justin",
+          "p2_dg_id": 26651,
+          "p2_player_name": "Young, Cameron",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betcris": {
+              "p1": 2.21,
+              "p2": 1.65789
+            },
+            "betmgm": {
+              "p1": 2.35,
+              "p2": 1.62
+            },
+            "caesars": {
+              "p1": 2.35,
+              "p2": 1.57143
+            },
+            "datagolf": {
+              "p1": 2.5899017428100124,
+              "p2": 1.628969686033923
+            },
+            "draftkings": {
+              "p1": 2.28,
+              "p2": 1.61728396
+            },
+            "pinnacle": {
+              "p1": 2.43,
+              "p2": 1.568
+            },
+            "unibet": {
+              "p1": 2.3,
+              "p2": 1.5988
+            }
+          },
+          "p1_dg_id": 14139,
+          "p1_player_name": "Thomas, Justin",
+          "p2_dg_id": 26651,
+          "p2_player_name": "Young, Cameron",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 1.72464,
+              "p2": 2.5,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 1.7921146953405016,
+              "p2": 2.9231218941829873,
+              "tie": 10.010010010010017
+            }
+          },
+          "p1_dg_id": 16841,
+          "p1_player_name": "Lee, Min Woo",
+          "p2_dg_id": 23465,
+          "p2_player_name": "Greyserman, Max",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betcris": {
+              "p1": 1.55556,
+              "p2": 2.43
+            },
+            "betmgm": {
+              "p1": 1.57,
+              "p2": 2.45
+            },
+            "caesars": {
+              "p1": 1.55556,
+              "p2": 2.4
+            },
+            "datagolf": {
+              "p1": 1.6130824372759855,
+              "p2": 2.6311020169541077
+            },
+            "draftkings": {
+              "p1": 1.54945055,
+              "p2": 2.44
+            },
+            "pinnacle": {
+              "p1": 1.555,
+              "p2": 2.46
+            },
+            "unibet": {
+              "p1": 1.5988,
+              "p2": 2.3
+            }
+          },
+          "p1_dg_id": 16841,
+          "p1_player_name": "Lee, Min Woo",
+          "p2_dg_id": 23465,
+          "p2_player_name": "Greyserman, Max",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.05,
+              "p2": 2.05,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.1020547585264597,
+              "p2": 2.352387673488591,
+              "tie": 10.083186286866644
+            }
+          },
+          "p1_dg_id": 16394,
+          "p1_player_name": "Jaeger, Stephan",
+          "p2_dg_id": 27900,
+          "p2_player_name": "Potgieter, Aldrich",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betcris": {
+              "p1": 1.97087,
+              "p2": 1.7874
+            },
+            "betmgm": {
+              "p1": 1.91,
+              "p2": 1.91
+            },
+            "caesars": {
+              "p1": 1.86957,
+              "p2": 1.86957
+            },
+            "datagolf": {
+              "p1": 1.8935834778495981,
+              "p2": 2.11908962597036
+            },
+            "draftkings": {
+              "p1": 1.89285715,
+              "p2": 1.89285715
+            },
+            "pinnacle": {
+              "p1": 1.854,
+              "p2": 1.961
+            },
+            "unibet": {
+              "p1": 1.83333,
+              "p2": 1.93458
+            }
+          },
+          "p1_dg_id": 16394,
+          "p1_player_name": "Jaeger, Stephan",
+          "p2_dg_id": 27900,
+          "p2_player_name": "Potgieter, Aldrich",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.2,
+              "p2": 1.90909,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.3304591004427873,
+              "p2": 2.1389230522431952,
+              "tie": 9.67351874244257
+            }
+          },
+          "p1_dg_id": 13562,
+          "p1_player_name": "Matsuyama, Hideki",
+          "p2_dg_id": 27774,
+          "p2_player_name": "Gotterup, Chris",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "betcris": {
+              "p1": 1.9434,
+              "p2": 1.80645
+            },
+            "betmgm": {
+              "p1": 2.05,
+              "p2": 1.77
+            },
+            "caesars": {
+              "p1": 1.86957,
+              "p2": 1.86957
+            },
+            "datagolf": {
+              "p1": 2.089547890934514,
+              "p2": 1.9178118817175551
+            },
+            "draftkings": {
+              "p1": 1.81967214,
+              "p2": 1.96153847
+            },
+            "pinnacle": {
+              "p1": 1.952,
+              "p2": 1.869
+            },
+            "unibet": {
+              "p1": 1.93458,
+              "p2": 1.83333
+            }
+          },
+          "p1_dg_id": 13562,
+          "p1_player_name": "Matsuyama, Hideki",
+          "p2_dg_id": 27774,
+          "p2_player_name": "Gotterup, Chris",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "bet365": {
+              "p1": 2.1,
+              "p2": 2,
+              "tie": 8.5
+            },
+            "datagolf": {
+              "p1": 2.4295432458697763,
+              "p2": 2.066756226103131,
+              "tie": 9.564801530368243
+            }
+          },
+          "p1_dg_id": 18474,
+          "p1_player_name": "Smalley, Alex",
+          "p2_dg_id": 18634,
+          "p2_player_name": "McNealy, Maverick",
+          "ties": "separate bet offered"
+        },
+        {
+          "odds": {
+            "caesars": {
+              "p1": 2.05,
+              "p2": 1.74074
+            },
+            "datagolf": {
+              "p1": 2.1755344995140917,
+              "p2": 1.850676862664049
+            },
+            "draftkings": {
+              "p1": 2,
+              "p2": 1.8
+            },
+            "pinnacle": {
+              "p1": 2.03,
+              "p2": 1.8
+            },
+            "unibet": {
+              "p1": 2.04,
+              "p2": 1.75758
+            }
+          },
+          "p1_dg_id": 18474,
+          "p1_player_name": "Smalley, Alex",
+          "p2_dg_id": 18634,
+          "p2_player_name": "McNealy, Maverick",
+          "ties": "void"
+        },
         {
           "odds": {
             "betonline": {
@@ -35499,58 +37724,6 @@
           "p1_player_name": "Rose, Justin",
           "p2_dg_id": 21407,
           "p2_player_name": "Reitan, Kristoffer",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 2.015824220128005,
-              "p2": 2.4870981782005845,
-              "tie": 9.818360333824257
-            },
-            "pointsbet": {
-              "p1": 1.9091,
-              "p2": 2.15,
-              "tie": 6.5
-            }
-          },
-          "p1_dg_id": 12423,
-          "p1_player_name": "Kirk, Chris",
-          "p2_dg_id": 20766,
-          "p2_player_name": "Brown, Dan",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 1.91,
-              "p2": 1.91
-            },
-            "betonline": {
-              "p1": 1.74074,
-              "p2": 2.13
-            },
-            "caesars": {
-              "p1": 1.74074,
-              "p2": 2.05
-            },
-            "datagolf": {
-              "p1": 1.8105125233079677,
-              "p2": 2.233787228750855
-            },
-            "draftkings": {
-              "p1": 1.83333334,
-              "p2": 1.95238096
-            },
-            "unibet": {
-              "p1": 1.71942,
-              "p2": 2.1
-            }
-          },
-          "p1_dg_id": 12423,
-          "p1_player_name": "Kirk, Chris",
-          "p2_dg_id": 20766,
-          "p2_player_name": "Brown, Dan",
           "ties": "void"
         },
         {
@@ -35776,66 +37949,6 @@
         },
         {
           "odds": {
-            "datagolf": {
-              "p1": 2.365883953392086,
-              "p2": 2.1085925144965736,
-              "tie": 9.701673538685426
-            },
-            "pointsbet": {
-              "p1": 2.35,
-              "p2": 1.8334,
-              "tie": 6.5
-            }
-          },
-          "p1_dg_id": 11889,
-          "p1_player_name": "Fox, Ryan",
-          "p2_dg_id": 22760,
-          "p2_player_name": "Hisatsune, Ryo",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betcris": {
-              "p1": 2.11,
-              "p2": 1.70922
-            },
-            "betmgm": {
-              "p1": 1.95,
-              "p2": 1.87
-            },
-            "betonline": {
-              "p1": 2.09,
-              "p2": 1.76923
-            },
-            "caesars": {
-              "p1": 2.1,
-              "p2": 1.71429
-            },
-            "datagolf": {
-              "p1": 2.1220204648961967,
-              "p2": 1.8912493410648392
-            },
-            "draftkings": {
-              "p1": 1.96153847,
-              "p2": 1.83333334
-            },
-            "pinnacle": {
-              "p1": 1.97,
-              "p2": 1.847
-            },
-            "unibet": {
-              "p1": 1.93458,
-              "p2": 1.83333
-            }
-          },
-          "p1_dg_id": 11889,
-          "p1_player_name": "Fox, Ryan",
-          "p2_dg_id": 22760,
-          "p2_player_name": "Hisatsune, Ryo",
-          "ties": "void"
-        },
-        {
-          "odds": {
             "betonline": {
               "p1": 1.83333,
               "p2": 2
@@ -35854,8 +37967,8 @@
         {
           "odds": {
             "betonline": {
-              "p1": 2.13,
-              "p2": 1.74074
+              "p1": 2.23,
+              "p2": 1.67568
             },
             "datagolf": {
               "p1": 2.2558635394456292,
@@ -35926,8 +38039,8 @@
         {
           "odds": {
             "betonline": {
-              "p1": 2,
-              "p2": 1.83333
+              "p1": 1.95238,
+              "p2": 1.86957
             },
             "datagolf": {
               "p1": 2.1192897877594215,
@@ -36060,1761 +38173,6 @@
         },
         {
           "odds": {
-            "datagolf": {
-              "p1": 2.9908778226409454,
-              "p2": 1.760330942217137,
-              "tie": 10.24852677427619
-            },
-            "pointsbet": {
-              "p1": 2.5,
-              "p2": 1.7143,
-              "tie": 7.5
-            }
-          },
-          "p1_dg_id": 12422,
-          "p1_player_name": "Johnson, Dustin",
-          "p2_dg_id": 14636,
-          "p2_player_name": "Spieth, Jordan",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 2.35,
-              "p2": 1.62
-            },
-            "caesars": {
-              "p1": 2.35,
-              "p2": 1.57143
-            },
-            "datagolf": {
-              "p1": 2.6990429190967555,
-              "p2": 1.5885666505302998
-            },
-            "draftkings": {
-              "p1": 2.3,
-              "p2": 1.61728396
-            },
-            "pinnacle": {
-              "p1": 2.52,
-              "p2": 1.526
-            },
-            "unibet": {
-              "p1": 2.55,
-              "p2": 1.51282
-            }
-          },
-          "p1_dg_id": 12422,
-          "p1_player_name": "Johnson, Dustin",
-          "p2_dg_id": 14636,
-          "p2_player_name": "Spieth, Jordan",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 1.773049645390071,
-              "p2": 2.942258183155572,
-              "tie": 10.403120936280876
-            },
-            "pointsbet": {
-              "p1": 1.7408,
-              "p2": 2.4,
-              "tie": 7.5
-            }
-          },
-          "p1_dg_id": 10091,
-          "p1_player_name": "McIlroy, Rory",
-          "p2_dg_id": 16243,
-          "p2_player_name": "Koepka, Brooks",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betcris": {
-              "p1": 1.50761,
-              "p2": 2.55
-            },
-            "caesars": {
-              "p1": 1.60606,
-              "p2": 2.27
-            },
-            "datagolf": {
-              "p1": 1.6026152482269502,
-              "p2": 2.6594336152997426
-            },
-            "draftkings": {
-              "p1": 1.625,
-              "p2": 2.28
-            },
-            "pinnacle": {
-              "p1": 1.549,
-              "p2": 2.47
-            },
-            "unibet": {
-              "p1": 1.53763,
-              "p2": 2.5
-            }
-          },
-          "p1_dg_id": 10091,
-          "p1_player_name": "McIlroy, Rory",
-          "p2_dg_id": 16243,
-          "p2_player_name": "Koepka, Brooks",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 2.7706587241116574,
-              "p2": 1.8613308515588645,
-              "tie": 9.82077093051804
-            },
-            "pointsbet": {
-              "p1": 2.5,
-              "p2": 1.7408,
-              "tie": 7.5
-            }
-          },
-          "p1_dg_id": 12965,
-          "p1_player_name": "Fowler, Rickie",
-          "p2_dg_id": 19895,
-          "p2_player_name": "Schauffele, Xander",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betcris": {
-              "p1": 2.35,
-              "p2": 1.58824
-            },
-            "betmgm": {
-              "p1": 2.25,
-              "p2": 1.67
-            },
-            "caesars": {
-              "p1": 2.3,
-              "p2": 1.58824
-            },
-            "datagolf": {
-              "p1": 2.488536399528988,
-              "p2": 1.671800837598883
-            },
-            "draftkings": {
-              "p1": 2.24,
-              "p2": 1.64935065
-            },
-            "pinnacle": {
-              "p1": 2.28,
-              "p2": 1.636
-            },
-            "unibet": {
-              "p1": 2.2,
-              "p2": 1.65789
-            }
-          },
-          "p1_dg_id": 12965,
-          "p1_player_name": "Fowler, Rickie",
-          "p2_dg_id": 19895,
-          "p2_player_name": "Schauffele, Xander",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 2.3280176929344663,
-              "p2": 2.1475357027810587,
-              "tie": 9.541984732824426
-            },
-            "pointsbet": {
-              "p1": 2.2,
-              "p2": 1.9091,
-              "tie": 7
-            }
-          },
-          "p1_dg_id": 14502,
-          "p1_player_name": "Cauley, Bud",
-          "p2_dg_id": 23014,
-          "p2_player_name": "Theegala, Sahith",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betcris": {
-              "p1": 1.84746,
-              "p2": 1.89286
-            },
-            "betmgm": {
-              "p1": 1.95,
-              "p2": 1.87
-            },
-            "caesars": {
-              "p1": 2.05,
-              "p2": 1.74074
-            },
-            "datagolf": {
-              "p1": 2.084041438714934,
-              "p2": 1.9224739611296038
-            },
-            "draftkings": {
-              "p1": 1.92592593,
-              "p2": 1.84745763
-            },
-            "pinnacle": {
-              "p1": 1.961,
-              "p2": 1.862
-            },
-            "unibet": {
-              "p1": 1.93458,
-              "p2": 1.83333
-            }
-          },
-          "p1_dg_id": 14502,
-          "p1_player_name": "Cauley, Bud",
-          "p2_dg_id": 23014,
-          "p2_player_name": "Theegala, Sahith",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 2.0595201318092884,
-              "p2": 2.429838415745353,
-              "tie": 9.718172983479102
-            },
-            "pointsbet": {
-              "p1": 1.9524,
-              "p2": 2.1,
-              "tie": 6.5
-            }
-          },
-          "p1_dg_id": 24968,
-          "p1_player_name": "Griffin, Ben",
-          "p2_dg_id": 29767,
-          "p2_player_name": "Gerard, Ryan",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betcris": {
-              "p1": 1.75188,
-              "p2": 2.03
-            },
-            "betmgm": {
-              "p1": 1.8,
-              "p2": 2.05
-            },
-            "caesars": {
-              "p1": 1.8,
-              "p2": 1.95238
-            },
-            "datagolf": {
-              "p1": 1.8475955102461128,
-              "p2": 2.1798080427651563
-            },
-            "draftkings": {
-              "p1": 1.73529412,
-              "p2": 2.08
-            },
-            "pinnacle": {
-              "p1": 1.757,
-              "p2": 2.09
-            },
-            "unibet": {
-              "p1": 1.75758,
-              "p2": 2.04
-            }
-          },
-          "p1_dg_id": 24968,
-          "p1_player_name": "Griffin, Ben",
-          "p2_dg_id": 29767,
-          "p2_player_name": "Gerard, Ryan",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 2.3276112889147513,
-              "p2": 2.156799309824221,
-              "tie": 9.369875849144993
-            },
-            "pointsbet": {
-              "p1": 2.1,
-              "p2": 2,
-              "tie": 7
-            }
-          },
-          "p1_dg_id": 13126,
-          "p1_player_name": "Taylor, Nick",
-          "p2_dg_id": 17576,
-          "p2_player_name": "Conners, Corey",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betcris": {
-              "p1": 2.02,
-              "p2": 1.75758
-            },
-            "betmgm": {
-              "p1": 1.95,
-              "p2": 1.87
-            },
-            "caesars": {
-              "p1": 1.95238,
-              "p2": 1.8
-            },
-            "datagolf": {
-              "p1": 2.079196974105325,
-              "p2": 1.9266149034832312
-            },
-            "draftkings": {
-              "p1": 1.95238096,
-              "p2": 1.83333334
-            },
-            "pinnacle": {
-              "p1": 1.99,
-              "p2": 1.833
-            },
-            "unibet": {
-              "p1": 1.93458,
-              "p2": 1.83333
-            }
-          },
-          "p1_dg_id": 13126,
-          "p1_player_name": "Taylor, Nick",
-          "p2_dg_id": 17576,
-          "p2_player_name": "Conners, Corey",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 2.34439104442621,
-              "p2": 2.124156975200467,
-              "tie": 9.739469198928656
-            },
-            "pointsbet": {
-              "p1": 2.05,
-              "p2": 2.05,
-              "tie": 7
-            }
-          },
-          "p1_dg_id": 15856,
-          "p1_player_name": "Smith, Cameron",
-          "p2_dg_id": 23504,
-          "p2_player_name": "Hoey, Rico",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 1.91,
-              "p2": 1.91
-            },
-            "caesars": {
-              "p1": 1.86957,
-              "p2": 1.86957
-            },
-            "datagolf": {
-              "p1": 2.103680693939749,
-              "p2": 1.9060591577717592
-            },
-            "draftkings": {
-              "p1": 1.84745763,
-              "p2": 1.95238096
-            },
-            "pinnacle": {
-              "p1": 1.917,
-              "p2": 1.9
-            },
-            "unibet": {
-              "p1": 1.87719,
-              "p2": 1.87719
-            }
-          },
-          "p1_dg_id": 15856,
-          "p1_player_name": "Smith, Cameron",
-          "p2_dg_id": 23504,
-          "p2_player_name": "Hoey, Rico",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 1.8242349614630367,
-              "p2": 2.864508736751647,
-              "tie": 9.734728644439036
-            },
-            "pointsbet": {
-              "p1": 1.7693,
-              "p2": 2.5,
-              "tie": 7
-            }
-          },
-          "p1_dg_id": 14838,
-          "p1_player_name": "Reed, Patrick",
-          "p2_dg_id": 15310,
-          "p2_player_name": "Li, Haotong",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betcris": {
-              "p1": 1.68966,
-              "p2": 2.15
-            },
-            "betmgm": {
-              "p1": 1.62,
-              "p2": 2.35
-            },
-            "caesars": {
-              "p1": 1.60606,
-              "p2": 2.27
-            },
-            "datagolf": {
-              "p1": 1.636840425046746,
-              "p2": 2.570252076768834
-            },
-            "draftkings": {
-              "p1": 1.60240964,
-              "p2": 2.32
-            },
-            "pinnacle": {
-              "p1": 1.543,
-              "p2": 2.49
-            },
-            "unibet": {
-              "p1": 1.5988,
-              "p2": 2.3
-            }
-          },
-          "p1_dg_id": 14838,
-          "p1_player_name": "Reed, Patrick",
-          "p2_dg_id": 15310,
-          "p2_player_name": "Li, Haotong",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 3.25,
-              "p2": 1.35
-            },
-            "caesars": {
-              "p1": 3.3,
-              "p2": 1.32258
-            },
-            "datagolf": {
-              "p1": 3.269772481040087,
-              "p2": 1.4405727923627687
-            },
-            "draftkings": {
-              "p1": 3.4,
-              "p2": 1.32258065
-            },
-            "pinnacle": {
-              "p1": 3.02,
-              "p2": 1.378
-            },
-            "unibet": {
-              "p1": 2.8,
-              "p2": 1.43478
-            }
-          },
-          "p1_dg_id": 14704,
-          "p1_player_name": "Putnam, Andrew",
-          "p2_dg_id": 19195,
-          "p2_player_name": "Rahm, Jon",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 2.2,
-              "p2": 1.69
-            },
-            "caesars": {
-              "p1": 2.27,
-              "p2": 1.60606
-            },
-            "datagolf": {
-              "p1": 2.4162013052546594,
-              "p2": 1.7061143047175638
-            },
-            "draftkings": {
-              "p1": 2.18,
-              "p2": 1.67567568
-            },
-            "pinnacle": {
-              "p1": 2.23,
-              "p2": 1.662
-            },
-            "unibet": {
-              "p1": 2.12,
-              "p2": 1.6993
-            }
-          },
-          "p1_dg_id": 9771,
-          "p1_player_name": "Day, Jason",
-          "p2_dg_id": 15466,
-          "p2_player_name": "Cantlay, Patrick",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "betcris": {
-              "p1": 2.21,
-              "p2": 1.65789
-            },
-            "betmgm": {
-              "p1": 2.2,
-              "p2": 1.69
-            },
-            "caesars": {
-              "p1": 2.1,
-              "p2": 1.71429
-            },
-            "datagolf": {
-              "p1": 2.3411611219830397,
-              "p2": 1.7456225680933852
-            },
-            "draftkings": {
-              "p1": 2.12,
-              "p2": 1.70422536
-            },
-            "pinnacle": {
-              "p1": 2.2,
-              "p2": 1.68
-            },
-            "unibet": {
-              "p1": 2.12,
-              "p2": 1.6993
-            }
-          },
-          "p1_dg_id": 18554,
-          "p1_player_name": "Rai, Aaron",
-          "p2_dg_id": 21891,
-          "p2_player_name": "Kitayama, Kurt",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 2.9,
-              "p2": 1.42
-            },
-            "caesars": {
-              "p1": 2.65,
-              "p2": 1.47619
-            },
-            "datagolf": {
-              "p1": 2.8752582234228505,
-              "p2": 1.5332598932293875
-            },
-            "draftkings": {
-              "p1": 2.86,
-              "p2": 1.42553192
-            },
-            "pinnacle": {
-              "p1": 2.66,
-              "p2": 1.48
-            },
-            "unibet": {
-              "p1": 2.55,
-              "p2": 1.5
-            }
-          },
-          "p1_dg_id": 23475,
-          "p1_player_name": "Novak, Andrew",
-          "p2_dg_id": 23950,
-          "p2_player_name": "Aberg, Ludvig",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "betcris": {
-              "p1": 2.1,
-              "p2": 1.71429
-            },
-            "betmgm": {
-              "p1": 2.1,
-              "p2": 1.77
-            },
-            "caesars": {
-              "p1": 2.15,
-              "p2": 1.68966
-            },
-            "datagolf": {
-              "p1": 2.135061066428359,
-              "p2": 1.8810098677304221
-            },
-            "draftkings": {
-              "p1": 2.1,
-              "p2": 1.72463769
-            },
-            "pinnacle": {
-              "p1": 2.02,
-              "p2": 1.813
-            },
-            "unibet": {
-              "p1": 2.04,
-              "p2": 1.75758
-            }
-          },
-          "p1_dg_id": 14577,
-          "p1_player_name": "English, Harris",
-          "p2_dg_id": 14609,
-          "p2_player_name": "Kim, Si Woo",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 1.28,
-              "p2": 3.75
-            },
-            "caesars": {
-              "p1": 1.3125,
-              "p2": 3.4
-            },
-            "datagolf": {
-              "p1": 1.4309564121746663,
-              "p2": 3.320420283234354
-            },
-            "draftkings": {
-              "p1": 1.28571429,
-              "p2": 3.8
-            },
-            "pinnacle": {
-              "p1": 1.427,
-              "p2": 2.82
-            },
-            "unibet": {
-              "p1": 1.4,
-              "p2": 2.95
-            }
-          },
-          "p1_dg_id": 18417,
-          "p1_player_name": "Scheffler, Scottie",
-          "p2_dg_id": 28984,
-          "p2_player_name": "Puig, David",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "betcris": {
-              "p1": 2.21,
-              "p2": 1.65789
-            },
-            "betmgm": {
-              "p1": 2.35,
-              "p2": 1.62
-            },
-            "caesars": {
-              "p1": 2.35,
-              "p2": 1.57143
-            },
-            "datagolf": {
-              "p1": 2.5899017428100124,
-              "p2": 1.628969686033923
-            },
-            "draftkings": {
-              "p1": 2.28,
-              "p2": 1.61728396
-            },
-            "pinnacle": {
-              "p1": 2.51,
-              "p2": 1.534
-            },
-            "unibet": {
-              "p1": 2.3,
-              "p2": 1.5988
-            }
-          },
-          "p1_dg_id": 14139,
-          "p1_player_name": "Thomas, Justin",
-          "p2_dg_id": 26651,
-          "p2_player_name": "Young, Cameron",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "betcris": {
-              "p1": 1.55556,
-              "p2": 2.43
-            },
-            "betmgm": {
-              "p1": 1.57,
-              "p2": 2.45
-            },
-            "caesars": {
-              "p1": 1.55556,
-              "p2": 2.4
-            },
-            "datagolf": {
-              "p1": 1.6130824372759855,
-              "p2": 2.6311020169541077
-            },
-            "draftkings": {
-              "p1": 1.54945055,
-              "p2": 2.44
-            },
-            "pinnacle": {
-              "p1": 1.555,
-              "p2": 2.46
-            },
-            "unibet": {
-              "p1": 1.5988,
-              "p2": 2.3
-            }
-          },
-          "p1_dg_id": 16841,
-          "p1_player_name": "Lee, Min Woo",
-          "p2_dg_id": 23465,
-          "p2_player_name": "Greyserman, Max",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "betcris": {
-              "p1": 1.97087,
-              "p2": 1.7874
-            },
-            "betmgm": {
-              "p1": 1.91,
-              "p2": 1.91
-            },
-            "caesars": {
-              "p1": 1.86957,
-              "p2": 1.86957
-            },
-            "datagolf": {
-              "p1": 1.8935834778495981,
-              "p2": 2.11908962597036
-            },
-            "draftkings": {
-              "p1": 1.89285715,
-              "p2": 1.89285715
-            },
-            "pinnacle": {
-              "p1": 1.854,
-              "p2": 1.97
-            },
-            "unibet": {
-              "p1": 1.83333,
-              "p2": 1.93458
-            }
-          },
-          "p1_dg_id": 16394,
-          "p1_player_name": "Jaeger, Stephan",
-          "p2_dg_id": 27900,
-          "p2_player_name": "Potgieter, Aldrich",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "betcris": {
-              "p1": 1.9434,
-              "p2": 1.80645
-            },
-            "betmgm": {
-              "p1": 1.8,
-              "p2": 2.05
-            },
-            "caesars": {
-              "p1": 1.86957,
-              "p2": 1.86957
-            },
-            "datagolf": {
-              "p1": 2.089547890934514,
-              "p2": 1.9178118817175551
-            },
-            "draftkings": {
-              "p1": 1.81967214,
-              "p2": 1.96153847
-            },
-            "pinnacle": {
-              "p1": 1.97,
-              "p2": 1.854
-            },
-            "unibet": {
-              "p1": 1.93458,
-              "p2": 1.83333
-            }
-          },
-          "p1_dg_id": 13562,
-          "p1_player_name": "Matsuyama, Hideki",
-          "p2_dg_id": 27774,
-          "p2_player_name": "Gotterup, Chris",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "caesars": {
-              "p1": 2.05,
-              "p2": 1.74074
-            },
-            "datagolf": {
-              "p1": 2.1755344995140917,
-              "p2": 1.850676862664049
-            },
-            "draftkings": {
-              "p1": 2,
-              "p2": 1.8
-            },
-            "pinnacle": {
-              "p1": 2.03,
-              "p2": 1.8
-            },
-            "unibet": {
-              "p1": 2.04,
-              "p2": 1.75758
-            }
-          },
-          "p1_dg_id": 18474,
-          "p1_player_name": "Smalley, Alex",
-          "p2_dg_id": 18634,
-          "p2_player_name": "McNealy, Maverick",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 1.8684603886397608,
-              "p2": 2.7476301689792555,
-              "tie": 9.91571641051066
-            },
-            "pointsbet": {
-              "p1": 1.7143,
-              "p2": 2.55,
-              "tie": 7
-            }
-          },
-          "p1_dg_id": 10419,
-          "p1_player_name": "Noren, Alex",
-          "p2_dg_id": 13508,
-          "p2_player_name": "Vegas, Jhonattan",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 1.62,
-              "p2": 2.3
-            },
-            "caesars": {
-              "p1": 1.52632,
-              "p2": 2.5
-            },
-            "datagolf": {
-              "p1": 1.680026158445441,
-              "p2": 2.4705316664376977
-            },
-            "draftkings": {
-              "p1": 1.5952381,
-              "p2": 2.34
-            },
-            "unibet": {
-              "p1": 1.57143,
-              "p2": 2.35
-            }
-          },
-          "p1_dg_id": 10419,
-          "p1_player_name": "Noren, Alex",
-          "p2_dg_id": 13508,
-          "p2_player_name": "Vegas, Jhonattan",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 1.8019641409135956,
-              "p2": 2.8824673920876274,
-              "tie": 10.191082802547774
-            },
-            "pointsbet": {
-              "p1": 1.6667,
-              "p2": 2.55,
-              "tie": 7.5
-            }
-          },
-          "p1_dg_id": 23602,
-          "p1_player_name": "Hojgaard, Nicolai",
-          "p2_dg_id": 29197,
-          "p2_player_name": "Brennan, Michael",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 1.55,
-              "p2": 2.5
-            },
-            "caesars": {
-              "p1": 1.52632,
-              "p2": 2.5
-            },
-            "datagolf": {
-              "p1": 1.625146409586449,
-              "p2": 2.5996252792390293
-            },
-            "draftkings": {
-              "p1": 1.57471265,
-              "p2": 2.4
-            },
-            "unibet": {
-              "p1": 1.55556,
-              "p2": 2.4
-            }
-          },
-          "p1_dg_id": 23602,
-          "p1_player_name": "Hojgaard, Nicolai",
-          "p2_dg_id": 29197,
-          "p2_player_name": "Brennan, Michael",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 1.972289334845422,
-              "p2": 2.5692080416211702,
-              "tie": 9.638554216867464
-            },
-            "pointsbet": {
-              "p1": 1.8696,
-              "p2": 2.2,
-              "tie": 7
-            }
-          },
-          "p1_dg_id": 17780,
-          "p1_player_name": "Pendrith, Taylor",
-          "p2_dg_id": 32457,
-          "p2_player_name": "Keefer, Johnny",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 1.69,
-              "p2": 2.2
-            },
-            "caesars": {
-              "p1": 1.71429,
-              "p2": 2.1
-            },
-            "datagolf": {
-              "p1": 1.7676643163552095,
-              "p2": 2.302652707302974
-            },
-            "draftkings": {
-              "p1": 1.71428572,
-              "p2": 2.1
-            },
-            "unibet": {
-              "p1": 1.67568,
-              "p2": 2.16
-            }
-          },
-          "p1_dg_id": 17780,
-          "p1_player_name": "Pendrith, Taylor",
-          "p2_dg_id": 32457,
-          "p2_player_name": "Keefer, Johnny",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 2.063983488132095,
-              "p2": 2.4167724004591866,
-              "tie": 9.830425165888418
-            },
-            "pointsbet": {
-              "p1": 1.8696,
-              "p2": 2.25,
-              "tie": 7
-            }
-          },
-          "p1_dg_id": 18103,
-          "p1_player_name": "Bezuidenhout, Christiaan",
-          "p2_dg_id": 29770,
-          "p2_player_name": "Mouw, William",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 1.69,
-              "p2": 2.2
-            },
-            "caesars": {
-              "p1": 1.71429,
-              "p2": 2.1
-            },
-            "datagolf": {
-              "p1": 1.8540247678018575,
-              "p2": 2.1709262280224757
-            },
-            "draftkings": {
-              "p1": 1.69444445,
-              "p2": 2.15
-            },
-            "unibet": {
-              "p1": 1.73529,
-              "p2": 2.06
-            }
-          },
-          "p1_dg_id": 18103,
-          "p1_player_name": "Bezuidenhout, Christiaan",
-          "p2_dg_id": 29770,
-          "p2_player_name": "Mouw, William",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 1.5888147442008262,
-              "p2": 3.615982643283312,
-              "tie": 10.632642211589577
-            },
-            "pointsbet": {
-              "p1": 1.4546,
-              "p2": 3.25,
-              "tie": 8
-            }
-          },
-          "p1_dg_id": 13900,
-          "p1_player_name": "Lowry, Shane",
-          "p2_dg_id": 18628,
-          "p2_player_name": "Campbell, Brian",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 1.4,
-              "p2": 3
-            },
-            "caesars": {
-              "p1": 1.35714,
-              "p2": 3.1
-            },
-            "datagolf": {
-              "p1": 1.4393867175087385,
-              "p2": 3.2758994756825164
-            },
-            "draftkings": {
-              "p1": 1.40816327,
-              "p2": 2.96
-            },
-            "unibet": {
-              "p1": 1.37736,
-              "p2": 3.05
-            }
-          },
-          "p1_dg_id": 13900,
-          "p1_player_name": "Lowry, Shane",
-          "p2_dg_id": 18628,
-          "p2_player_name": "Campbell, Brian",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 2.1666125013541326,
-              "p2": 2.3013635579080605,
-              "tie": 9.622323791195575
-            },
-            "pointsbet": {
-              "p1": 1.8696,
-              "p2": 2.2,
-              "tie": 7.5
-            }
-          },
-          "p1_dg_id": 17606,
-          "p1_player_name": "Berger, Daniel",
-          "p2_dg_id": 23841,
-          "p2_player_name": "Neergaard-Petersen, Rasmus",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betcris": {
-              "p1": 1.82645,
-              "p2": 1.91743
-            },
-            "caesars": {
-              "p1": 1.74074,
-              "p2": 2.05
-            },
-            "datagolf": {
-              "p1": 1.9414472971509042,
-              "p2": 2.0621943501524655
-            },
-            "draftkings": {
-              "p1": 1.72463769,
-              "p2": 2.1
-            },
-            "unibet": {
-              "p1": 1.81967,
-              "p2": 1.95238
-            }
-          },
-          "p1_dg_id": 17606,
-          "p1_player_name": "Berger, Daniel",
-          "p2_dg_id": 23841,
-          "p2_player_name": "Neergaard-Petersen, Rasmus",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 3.094538140182578,
-              "p2": 1.7144571600017144,
-              "tie": 10.6866150146941
-            },
-            "pointsbet": {
-              "p1": 2.5,
-              "p2": 1.7143,
-              "tie": 8
-            }
-          },
-          "p1_dg_id": 4163,
-          "p1_player_name": "Donald, Luke",
-          "p2_dg_id": 24200,
-          "p2_player_name": "Smylie, Elvis",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "caesars": {
-              "p1": 2.4,
-              "p2": 1.55556
-            },
-            "datagolf": {
-              "p1": 2.804966733714994,
-              "p2": 1.554026831254554
-            },
-            "unibet": {
-              "p1": 2.6,
-              "p2": 1.5
-            }
-          },
-          "p1_dg_id": 4163,
-          "p1_player_name": "Donald, Luke",
-          "p2_dg_id": 24200,
-          "p2_player_name": "Smylie, Elvis",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 2.425712553062462,
-              "p2": 2.0579307506302413,
-              "tie": 9.820770930518046
-            },
-            "pointsbet": {
-              "p1": 2.05,
-              "p2": 2.05,
-              "tie": 6.5
-            }
-          },
-          "p1_dg_id": 13764,
-          "p1_player_name": "Parry, John",
-          "p2_dg_id": 17543,
-          "p2_player_name": "Kim, Michael",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 2.05,
-              "p2": 1.8
-            },
-            "caesars": {
-              "p1": 1.90909,
-              "p2": 1.83333
-            },
-            "datagolf": {
-              "p1": 2.1787143723468767,
-              "p2": 1.8483819519473168
-            },
-            "draftkings": {
-              "p1": 1.96153847,
-              "p2": 1.81967214
-            },
-            "unibet": {
-              "p1": 2.1,
-              "p2": 1.71942
-            }
-          },
-          "p1_dg_id": 13764,
-          "p1_player_name": "Parry, John",
-          "p2_dg_id": 17543,
-          "p2_player_name": "Kim, Michael",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 3.912745769343637,
-              "p2": 1.5230552488291513,
-              "tie": 11.383039271485488
-            },
-            "pointsbet": {
-              "p1": 3,
-              "p2": 1.5264,
-              "tie": 8
-            }
-          },
-          "p1_dg_id": 5716,
-          "p1_player_name": "Harrington, Padraig",
-          "p2_dg_id": 21407,
-          "p2_player_name": "Reitan, Kristoffer",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 3,
-              "p2": 1.4
-            },
-            "caesars": {
-              "p1": 3,
-              "p2": 1.38462
-            },
-            "datagolf": {
-              "p1": 3.5690110535067987,
-              "p2": 1.3892548452195104
-            },
-            "draftkings": {
-              "p1": 2.94,
-              "p2": 1.40816327
-            },
-            "unibet": {
-              "p1": 3.3,
-              "p2": 1.32787
-            }
-          },
-          "p1_dg_id": 5716,
-          "p1_player_name": "Harrington, Padraig",
-          "p2_dg_id": 21407,
-          "p2_player_name": "Reitan, Kristoffer",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 2.052229234005438,
-              "p2": 2.426153939467459,
-              "tie": 9.945300845350575
-            },
-            "pointsbet": {
-              "p1": 1.8334,
-              "p2": 2.25,
-              "tie": 7.5
-            }
-          },
-          "p1_dg_id": 6093,
-          "p1_player_name": "Rose, Justin",
-          "p2_dg_id": 8825,
-          "p2_player_name": "Harman, Brian",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 1.69,
-              "p2": 2.2
-            },
-            "caesars": {
-              "p1": 1.68966,
-              "p2": 2.15
-            },
-            "datagolf": {
-              "p1": 1.8458775845261919,
-              "p2": 2.182204160854006
-            },
-            "draftkings": {
-              "p1": 1.67567568,
-              "p2": 2.18
-            },
-            "unibet": {
-              "p1": 1.71942,
-              "p2": 2.1
-            }
-          },
-          "p1_dg_id": 6093,
-          "p1_player_name": "Rose, Justin",
-          "p2_dg_id": 8825,
-          "p2_player_name": "Harman, Brian",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 2.624844149878601,
-              "p2": 1.9338619222587508,
-              "tie": 9.811135638950216
-            },
-            "pointsbet": {
-              "p1": 2.5,
-              "p2": 1.7408,
-              "tie": 7
-            }
-          },
-          "p1_dg_id": 23816,
-          "p1_player_name": "Valimaki, Sami",
-          "p2_dg_id": 23838,
-          "p2_player_name": "Hojgaard, Rasmus",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "caesars": {
-              "p1": 2.3,
-              "p2": 1.58824
-            },
-            "datagolf": {
-              "p1": 2.3573069099022246,
-              "p2": 1.7367530458325275
-            },
-            "draftkings": {
-              "p1": 2.15,
-              "p2": 1.69444445
-            },
-            "unibet": {
-              "p1": 2.2,
-              "p2": 1.65789
-            }
-          },
-          "p1_dg_id": 23816,
-          "p1_player_name": "Valimaki, Sami",
-          "p2_dg_id": 23838,
-          "p2_player_name": "Hojgaard, Rasmus",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 3.076449776957391,
-              "p2": 1.7172541106770274,
-              "tie": 10.796221322537116
-            },
-            "pointsbet": {
-              "p1": 2.6,
-              "p2": 1.625,
-              "tie": 7.5
-            }
-          },
-          "p1_dg_id": 15756,
-          "p1_player_name": "Higa, Kazuki",
-          "p2_dg_id": 20084,
-          "p2_player_name": "Lindberg, Mikael",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 2.25,
-              "p2": 1.67
-            },
-            "caesars": {
-              "p1": 2.6,
-              "p2": 1.5
-            },
-            "datagolf": {
-              "p1": 2.791493616366713,
-              "p2": 1.5581934486755677
-            },
-            "draftkings": {
-              "p1": 2.28,
-              "p2": 1.61728396
-            },
-            "unibet": {
-              "p1": 2.6,
-              "p2": 1.5
-            }
-          },
-          "p1_dg_id": 15756,
-          "p1_player_name": "Higa, Kazuki",
-          "p2_dg_id": 20084,
-          "p2_player_name": "Lindberg, Mikael",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 2.623638987275351,
-              "p2": 1.9270607505901625,
-              "tie": 10.007505629221912
-            },
-            "pointsbet": {
-              "p1": 2.25,
-              "p2": 1.8334,
-              "tie": 7
-            }
-          },
-          "p1_dg_id": 17365,
-          "p1_player_name": "Mitchell, Keith",
-          "p2_dg_id": 19483,
-          "p2_player_name": "Burns, Sam",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 2.2,
-              "p2": 1.69
-            },
-            "caesars": {
-              "p1": 2.1,
-              "p2": 1.71429
-            },
-            "datagolf": {
-              "p1": 2.3614718614718613,
-              "p2": 1.7344992050874404
-            },
-            "draftkings": {
-              "p1": 2.2,
-              "p2": 1.66666667
-            },
-            "unibet": {
-              "p1": 2.2,
-              "p2": 1.65789
-            }
-          },
-          "p1_dg_id": 17365,
-          "p1_player_name": "Mitchell, Keith",
-          "p2_dg_id": 19483,
-          "p2_player_name": "Burns, Sam",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 3.548301250776191,
-              "p2": 1.5915963711602739,
-              "tie": 11.126564673157159
-            },
-            "pointsbet": {
-              "p1": 2.7,
-              "p2": 1.625,
-              "tie": 7.5
-            }
-          },
-          "p1_dg_id": 15575,
-          "p1_player_name": "Hoge, Tom",
-          "p2_dg_id": 18079,
-          "p2_player_name": "Niemann, Joaquin",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 2.65,
-              "p2": 1.5
-            },
-            "caesars": {
-              "p1": 2.6,
-              "p2": 1.5
-            },
-            "datagolf": {
-              "p1": 3.2293976758626806,
-              "p2": 1.4485516473022442
-            },
-            "draftkings": {
-              "p1": 2.64,
-              "p2": 1.48780488
-            },
-            "unibet": {
-              "p1": 3.05,
-              "p2": 1.37736
-            }
-          },
-          "p1_dg_id": 15575,
-          "p1_player_name": "Hoge, Tom",
-          "p2_dg_id": 18079,
-          "p2_player_name": "Niemann, Joaquin",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 2.4285107158035335,
-              "p2": 2.0749040356883492,
-              "tie": 9.409550693954364
-            },
-            "pointsbet": {
-              "p1": 2.25,
-              "p2": 1.8696,
-              "tie": 7
-            }
-          },
-          "p1_dg_id": 19870,
-          "p1_player_name": "McCarthy, Denny",
-          "p2_dg_id": 25362,
-          "p2_player_name": "Fitzpatrick, Alex",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 2.1,
-              "p2": 1.77
-            },
-            "caesars": {
-              "p1": 2.1,
-              "p2": 1.71429
-            },
-            "datagolf": {
-              "p1": 2.1704207394815134,
-              "p2": 1.8543936092955702
-            },
-            "draftkings": {
-              "p1": 2.05,
-              "p2": 1.75757576
-            },
-            "unibet": {
-              "p1": 2.1,
-              "p2": 1.71942
-            }
-          },
-          "p1_dg_id": 19870,
-          "p1_player_name": "McCarthy, Denny",
-          "p2_dg_id": 25362,
-          "p2_player_name": "Fitzpatrick, Alex",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 2.9472443265546713,
-              "p2": 1.785794008661101,
-              "tie": 9.928021841648045
-            },
-            "pointsbet": {
-              "p1": 2.6,
-              "p2": 1.6667,
-              "tie": 7.5
-            }
-          },
-          "p1_dg_id": 24956,
-          "p1_player_name": "Blanchet, Chandler",
-          "p2_dg_id": 25569,
-          "p2_player_name": "Stevens, Sam",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 2.35,
-              "p2": 1.62
-            },
-            "caesars": {
-              "p1": 2.5,
-              "p2": 1.52632
-            },
-            "datagolf": {
-              "p1": 2.6503831417624526,
-              "p2": 1.6059199071387118
-            },
-            "draftkings": {
-              "p1": 2.32,
-              "p2": 1.60240964
-            },
-            "unibet": {
-              "p1": 2.5,
-              "p2": 1.53763
-            }
-          },
-          "p1_dg_id": 24956,
-          "p1_player_name": "Blanchet, Chandler",
-          "p2_dg_id": 25569,
-          "p2_player_name": "Stevens, Sam",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 5.027652086475616,
-              "p2": 1.3839393834550047,
-              "tie": 12.734797835084358
-            },
-            "pointsbet": {
-              "p1": 3.9,
-              "p2": 1.3226,
-              "tie": 8.5
-            }
-          },
-          "p1_dg_id": 8117,
-          "p1_player_name": "Kaymer, Martin",
-          "p2_dg_id": 17646,
-          "p2_player_name": "Fitzpatrick, Matt",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betmgm": {
-              "p1": 4.5,
-              "p2": 1.2
-            },
-            "caesars": {
-              "p1": 3.9,
-              "p2": 1.23529
-            },
-            "datagolf": {
-              "p1": 4.6328557063851195,
-              "p2": 1.2752655433692004
-            },
-            "draftkings": {
-              "p1": 4.25,
-              "p2": 1.24390244
-            },
-            "unibet": {
-              "p1": 4.2,
-              "p2": 1.21978
-            }
-          },
-          "p1_dg_id": 8117,
-          "p1_player_name": "Kaymer, Martin",
-          "p2_dg_id": 17646,
-          "p2_player_name": "Fitzpatrick, Matt",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 2.0575073298698627,
-              "p2": 2.4232143938935,
-              "tie": 9.871668311944713
-            },
-            "pointsbet": {
-              "p1": 1.8334,
-              "p2": 2.25,
-              "tie": 7.5
-            }
-          },
-          "p1_dg_id": 20706,
-          "p1_player_name": "Wallace, Matt",
-          "p2_dg_id": 26947,
-          "p2_player_name": "Jarvis, Casey",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "betcris": {
-              "p1": 1.68027,
-              "p2": 2.17
-            },
-            "betmgm": {
-              "p1": 1.83,
-              "p2": 2
-            },
-            "caesars": {
-              "p1": 1.71429,
-              "p2": 2.1
-            },
-            "datagolf": {
-              "p1": 1.8490818373540456,
-              "p2": 2.177742775792088
-            },
-            "draftkings": {
-              "p1": 1.81967214,
-              "p2": 1.96153847
-            },
-            "unibet": {
-              "p1": 1.73529,
-              "p2": 2.06
-            }
-          },
-          "p1_dg_id": 20706,
-          "p1_player_name": "Wallace, Matt",
-          "p2_dg_id": 26947,
-          "p2_player_name": "Jarvis, Casey",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 3.0546009927453226,
-              "p2": 1.730777551815153,
-              "tie": 10.54296257248287
-            },
-            "pointsbet": {
-              "p1": 2.85,
-              "p2": 1.5715,
-              "tie": 8
-            }
-          },
-          "p1_dg_id": 20722,
-          "p1_player_name": "Schmid, Matti",
-          "p2_dg_id": 22085,
-          "p2_player_name": "Morikawa, Collin",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "caesars": {
-              "p1": 2.8,
-              "p2": 1.41667
-            },
-            "datagolf": {
-              "p1": 2.7648720885834295,
-              "p2": 1.566613301025486
-            },
-            "unibet": {
-              "p1": 2.45,
-              "p2": 1.53763
-            }
-          },
-          "p1_dg_id": 20722,
-          "p1_player_name": "Schmid, Matti",
-          "p2_dg_id": 22085,
-          "p2_player_name": "Morikawa, Collin",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "datagolf": {
-              "p1": 1.5192950470981463,
-              "p2": 3.940498473056842,
-              "tie": 11.360408974723088
-            },
-            "pointsbet": {
-              "p1": 1.625,
-              "p2": 2.75,
-              "tie": 7.5
-            }
-          },
-          "p1_dg_id": 21362,
-          "p1_player_name": "Hillier, Daniel",
-          "p2_dg_id": 25439,
-          "p2_player_name": "Kern, Ben",
-          "ties": "separate bet offered"
-        },
-        {
-          "odds": {
-            "caesars": {
-              "p1": 1.47619,
-              "p2": 2.65
-            },
-            "datagolf": {
-              "p1": 1.3855591005773322,
-              "p2": 3.5936360949660147
-            },
-            "unibet": {
-              "p1": 1.4,
-              "p2": 2.95
-            }
-          },
-          "p1_dg_id": 21362,
-          "p1_player_name": "Hillier, Daniel",
-          "p2_dg_id": 25439,
-          "p2_player_name": "Kern, Ben",
-          "ties": "void"
-        },
-        {
-          "odds": {
             "betcris": {
               "p1": 2.05,
               "p2": 1.74074
@@ -37833,8 +38191,8 @@
         {
           "odds": {
             "betcris": {
-              "p1": 2.1,
-              "p2": 1.71429
+              "p1": 2.06,
+              "p2": 1.73529
             },
             "datagolf": {
               "p1": 2.0478151452756808,
@@ -37901,8 +38259,8 @@
         {
           "odds": {
             "betcris": {
-              "p1": 1.71942,
-              "p2": 2.09
+              "p1": 1.75758,
+              "p2": 2.02
             },
             "datagolf": {
               "p1": 1.8714367308790694,
@@ -38054,8 +38412,8 @@
         {
           "odds": {
             "betcris": {
-              "p1": 2.11,
-              "p2": 1.70922
+              "p1": 2.04,
+              "p2": 1.74627
             },
             "datagolf": {
               "p1": 1.9904261206419482,
@@ -38088,8 +38446,8 @@
         {
           "odds": {
             "betcris": {
-              "p1": 1.6135,
-              "p2": 2.3
+              "p1": 1.64935,
+              "p2": 2.23
             },
             "datagolf": {
               "p1": 1.7560580790738742,
@@ -38105,8 +38463,8 @@
         {
           "odds": {
             "betcris": {
-              "p1": 2.31,
-              "p2": 1.60976
+              "p1": 2.29,
+              "p2": 1.61728
             },
             "datagolf": {
               "p1": 2.208900943105468,
@@ -38139,8 +38497,8 @@
         {
           "odds": {
             "betcris": {
-              "p1": 1.52632,
-              "p2": 2.5
+              "p1": 1.54945,
+              "p2": 2.44
             },
             "datagolf": {
               "p1": 1.6564860880781278,
@@ -38243,10 +38601,10 @@
     },
     "3_balls": {
       "event_name": "PGA Championship",
-      "last_updated": "2026-05-16 02:31:00 UTC",
+      "last_updated": "2026-05-16 03:31:00 UTC",
       "market": "3_balls",
       "match_list": "No 3_balls being offered right now."
     }
   },
-  "book_odds_refreshed_at": "2026-05-16T03:20:50Z"
+  "book_odds_refreshed_at": "2026-05-16T04:17:32Z"
 }

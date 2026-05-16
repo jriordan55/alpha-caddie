@@ -48,8 +48,8 @@ $ErrorActionPreference = "Stop"
 #      so today’s tournament round survives scrub; scripts/fetch-live-in-play.mjs can carry forward dropped R1–R3 gross columns.)
 #   merge:live-hole-pars-into-projections runs AFTER fetch:book-odds + fetch:finish-tool so an inline fetch:dg inside
 #   book-odds does not leave projections without live_hole_stats hole_pars (tee-adjacent UI + consistency with Hole Hangout).
-#   merge:live-round-meta-into-projections bumps display_round field_updates+live_hole_stats and reapplies μ_SG prior-round
-#   strokes (blend vs historical CSV) — after odds so full fetch:dg is not re-run; before update:rounds.
+#   merge:live-round-meta-into-projections bumps display_round from live-in-play + reapplies μ_SG prior-round
+#   strokes (blend vs historical CSV); projections keep the full tournament field for Historical Trends. Before update:rounds.
 # Mirrors below copy projections + live + approach_skill *.json into website/public/data/ so both apps ship the same JSON.
 #
 # Round-projections / +EV weather: tee times live in live-in-play.json (field_updates from fetch:in-play);

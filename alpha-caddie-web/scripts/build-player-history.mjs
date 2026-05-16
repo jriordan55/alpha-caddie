@@ -4,7 +4,8 @@
  *   - historical_rounds_all.csv (PGA + LIV rows; refresh with npm run update:rounds / fetch:dg)
  *   - optional hole_data.csv (hole-by-hole rows; joined by player + event + round)
  *
- * Only players present in projections.json (unique dg_id) are included to keep the file small.
+ * Allowed dg_ids: union of projections.json, preds/in-play `data`, and field_updates field list
+ * so Historical Trends “field by course & date” includes the **full tournament field** (not post-cut only).
  *
  * Env:
  *   GOLF_MODEL_DIR   - repo root (parent of alpha-caddie-web). Default: parent of this package.
@@ -538,6 +539,8 @@ function loadLiveRoundSnapshotByDg() {
     const dg = Math.round(num(r?.dg_id ?? r?.dgId, NaN));
     if (!Number.isFinite(dg)) continue;
 
+    const displayName = String(r?.player_name ?? r?.playerName ?? "").trim();
+
     const playerRound = Math.round(num(r?.round, NaN));
     const pr = Number.isFinite(playerRound) && playerRound >= 1 && playerRound <= 4 ? playerRound : fallbackRoundNum;
     if (!Number.isFinite(pr) || pr < 1 || pr > 4) continue;
@@ -564,6 +567,7 @@ function loadLiveRoundSnapshotByDg() {
         const pp = projByDgRound.get(`${dg}|${rnd}`);
         out.push({
           dg_id: dg,
+          player_name: displayName,
           sortKey: parseUsDateSortKey(eventDate) * 10 + rnd,
           event_completed: eventDate,
           year: Number.isFinite(eventYear) ? eventYear : new Date().getFullYear(),
@@ -606,6 +610,7 @@ function loadLiveRoundSnapshotByDg() {
       const pp = projByDgRound.get(`${dg}|${roundNum}`);
       out.push({
         dg_id: dg,
+        player_name: displayName,
         sortKey: parseUsDateSortKey(eventDate) * 10 + roundNum,
         event_completed: eventDate,
         year: Number.isFinite(eventYear) ? eventYear : new Date().getFullYear(),
@@ -651,8 +656,17 @@ function upsertLiveRoundRows(byDgId, liveByDg) {
     const dg = Math.round(num(liveRec?.dg_id, NaN));
     if (!Number.isFinite(dg)) continue;
     if (eventCompletedIsFutureMdY(liveRec.event_completed) || historyRoundChartDateIsFuture(liveRec)) continue;
-    const bucket = byDgId.get(dg);
-    if (!bucket || !Array.isArray(bucket.rounds)) continue;
+    let bucket = byDgId.get(dg);
+    if (!bucket || !Array.isArray(bucket.rounds)) {
+      byDgId.set(dg, {
+        dg_id: dg,
+        player_name: String(liveRec.player_name || "").trim(),
+        rounds: [],
+      });
+      bucket = byDgId.get(dg);
+    } else if (!bucket.player_name && liveRec.player_name) {
+      bucket.player_name = String(liveRec.player_name).trim();
+    }
     const wantEvt = normEvt(liveRec.event_name);
     const wantYr = parseInt(String(liveRec.year || ""), 10);
     const wantRnd = parseInt(String(liveRec.round_num || ""), 10);
@@ -674,17 +688,48 @@ function upsertLiveRoundRows(byDgId, liveByDg) {
   return n;
 }
 
+/** Field-update style JSON: dg_id roster can be broader than preds/in-play `data` (full tournament). */
+function fieldRowsFromLiveUpdates(fu) {
+  if (!fu || typeof fu !== "object") return [];
+  const f = fu.field ?? fu.field_updates ?? fu.players ?? fu.data;
+  return Array.isArray(f) ? f : [];
+}
+
 function loadAllowedDgIds() {
-  if (!fs.existsSync(PROJECTIONS_JSON)) {
-    console.warn("No projections.json — export will include no players (add projections or run fetch:dg).");
-    return new Set();
-  }
-  const raw = JSON.parse(fs.readFileSync(PROJECTIONS_JSON, "utf8"));
+  /** @type {Set<number>} */
   const ids = new Set();
-  for (const p of raw.players || []) {
-    const id = Math.round(num(p.dg_id));
-    if (Number.isFinite(id)) ids.add(id);
+
+  if (fs.existsSync(PROJECTIONS_JSON)) {
+    try {
+      const raw = JSON.parse(fs.readFileSync(PROJECTIONS_JSON, "utf8"));
+      for (const p of raw.players || []) {
+        const id = Math.round(num(p.dg_id));
+        if (Number.isFinite(id)) ids.add(id);
+      }
+    } catch {
+      console.warn("[build-player-history] projections.json parse failed — allowlist may be incomplete");
+    }
+  } else {
+    console.warn("No projections.json — allowlist falls back to live-in-play ids only.");
   }
+
+  if (fs.existsSync(LIVE_IN_PLAY_JSON)) {
+    try {
+      const live = JSON.parse(fs.readFileSync(LIVE_IN_PLAY_JSON, "utf8"));
+      for (const row of Array.isArray(live.data) ? live.data : []) {
+        const id = Math.round(num(row?.dg_id ?? row?.dgId, NaN));
+        if (Number.isFinite(id)) ids.add(id);
+      }
+      const fu = live.field_updates && typeof live.field_updates === "object" ? live.field_updates : null;
+      for (const p of fieldRowsFromLiveUpdates(fu)) {
+        const id = Math.round(num(p?.dg_id ?? p?.dgId, NaN));
+        if (Number.isFinite(id)) ids.add(id);
+      }
+    } catch {
+      /* ignore malformed live snapshot */
+    }
+  }
+
   return ids;
 }
 
@@ -1091,7 +1136,7 @@ async function main() {
   console.log("min_year (CSV filter):", MIN_YEAR, "| max_rounds/player:", MAX_ROUNDS_PER_PLAYER);
   console.log("Holes CSV:", HOLES_CSV || "(skip)");
   const allowed = loadAllowedDgIds();
-  console.log("Allowed dg_ids from projections:", allowed.size);
+  console.log("Allowed dg_ids (projections ∪ live-in-play ∪ field-updates):", allowed.size);
 
   if (!fs.existsSync(ROUNDS_CSV)) {
     console.error("[build-player-history] Missing rounds CSV — run fetch:dg / update:rounds merge first:", ROUNDS_CSV);
