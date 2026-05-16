@@ -9036,6 +9036,11 @@ function historyDateMdYIsFuture(s) {
   return Number.isFinite(t) && t > today;
 }
 
+/** CSV history rows encode Thursday (etc.) in sortKey and advance calendar days via round_num; live-merge rows already store each round's real calendar day (`_from_live_in_play`). */
+function historyRoundChartUsesR1AnchorSortKey(row) {
+  return !(row && row._from_live_in_play);
+}
+
 /** Calendar day shown on the trends chart (sortKey + round_num), as UTC midnight ms. */
 function historyRoundChartDateUtcMs(row) {
   if (!row || typeof row !== "object") return NaN;
@@ -9069,7 +9074,8 @@ function historyRoundChartDateUtcMs(row) {
       d = Number(iso[3]);
     } else return NaN;
   }
-  return Date.UTC(y, mo - 1, d) + (rnd - 1) * 86400000;
+  const dayBump = historyRoundChartUsesR1AnchorSortKey(row) ? Math.max(0, rnd - 1) : 0;
+  return Date.UTC(y, mo - 1, d) + dayBump * 86400000;
 }
 
 function historyRoundChartDateIsFuture(row) {
@@ -9730,6 +9736,43 @@ function livePropCumulativeFromHoles(holes, playOrder, completedHoles, statKey) 
   if (statKey === "pars") return pars;
   if (statKey === "bogeys") return bogeys;
   return NaN;
+}
+
+/** Full-round counting stats from 18 scored holes (overrides projection placeholders on merged live rows when hole JSON exists). */
+function historyFullRoundCountingStatFromHoles(statKey, holes) {
+  if (!Array.isArray(holes) || holes.length < 1) return NaN;
+  const deduped = livePropDedupeHolesSorted(holes);
+  if (deduped.length !== 18) return NaN;
+  let strokes = 0;
+  let birdies = 0;
+  let pars = 0;
+  let bogeys = 0;
+  for (const h of deduped) {
+    const par = num(h.par, NaN);
+    const sc = num(h.score, NaN);
+    if (!Number.isFinite(sc) || !Number.isFinite(par)) return NaN;
+    strokes += sc;
+    const rel = sc - par;
+    if (rel === -1) birdies += 1;
+    if (rel === 0) pars += 1;
+    if (rel >= 1) bogeys += 1;
+  }
+  if (statKey === "total") return strokes;
+  if (statKey === "birdies") return birdies;
+  if (statKey === "pars") return pars;
+  if (statKey === "bogeys") return bogeys;
+  return NaN;
+}
+
+function historyTrendRowHoleArray(row) {
+  if (!row || typeof row !== "object") return null;
+  const dg = Math.round(num(row.dg_id, NaN));
+  if (!Number.isFinite(dg)) return null;
+  const rec = HISTORY.byDgId && HISTORY.byDgId[String(dg)];
+  const pname = String(rec?.player_name || "").trim();
+  if (!pname) return null;
+  const pkey = playerKeyFromName(pname);
+  return livePropHolesForRound(pkey, row);
 }
 
 function livePropHistoricalRemainders(dgId, statKey, completedHoles, maxRounds, playOrder) {
@@ -10889,7 +10932,7 @@ function filteredHistoryRoundsMemoSig() {
     courseFilterOn() ? 1 : 0,
     venueCourseName(),
     String(DATA?.meta?.event_name || ""),
-    selectedPropsCourseFilter() || "",
+    propsCourseWindowModeActive() ? selectedPropsCourseFilter() || "" : "",
     propsTrendTempContextKey(),
     selectedPropsWindRangeFilter() || "",
     selectedPropsHumidityRangeFilter() || "",
@@ -10915,7 +10958,7 @@ function filteredHistoryRounds(dgId) {
       list = list.filter((r) => currentTournamentContextMatchesRound(r));
     }
   }
-  const courseFilter = selectedPropsCourseFilter();
+  const courseFilter = propsCourseWindowModeActive() ? selectedPropsCourseFilter() : "";
   if (courseFilter) {
     list = list.filter((r) => normCourseNameKey(r.course_name) === normCourseNameKey(courseFilter));
   }
@@ -11203,7 +11246,7 @@ function propsTrendLineContextKeyFromDom() {
   const temp = propsTrendTempContextKey();
   const wind = selectedPropsWindRangeFilter() || "all";
   const hum = selectedPropsHumidityRangeFilter() || "all";
-  const course = selectedPropsCourseFilter() || "all";
+  const course = propsCourseWindowModeActive() ? selectedPropsCourseFilter() || "all" : "all";
   const pm = PRICING_STATE.mode || "default";
   const ps = PRICING_STATE.skill === "default" ? "default" : pricingSkillHistoryKey();
   const cw = propsCourseWindowModeActive() ? 1 : 0;
@@ -11220,13 +11263,12 @@ function lockPropsTrendLineContextToCurrentFilter() {
 
 /**
  * Min rounds to list a player in the trends table. Full-field default is high for stability;
- * any narrow filter (this event’s course, a specific course from the dropdown, or weather buckets)
+ * any narrow filter (this event’s course, field-by-course window + venue, or weather buckets)
  * uses 1 so you still see the whole field when sample sizes are small per player.
  */
 function propsTopHitMinRoundsForFilter() {
   if (propsCourseWindowModeActive()) return 1;
   if (courseFilterOn()) return 1;
-  if (selectedPropsCourseFilter()) return 1;
   if (propsTempFilterActive()) return 1;
   if (selectedPropsWindRangeFilter()) return 1;
   if (selectedPropsHumidityRangeFilter()) return 1;
@@ -11295,10 +11337,27 @@ function ouMeanCountingStat(market, row) {
 
 function actualForRoundRow(statKey, row) {
   if (!row || typeof row !== "object") return NaN;
-  if (statKey === "total") return historyScalarOrNaN(row.round_score);
-  if (statKey === "birdies") return historyScalarOrNaN(row.birdies);
-  if (statKey === "pars") return historyScalarOrNaN(row.pars);
-  if (statKey === "bogeys") return historyScalarOrNaN(row.bogies ?? row.bogeys);
+  const holes = historyTrendRowHoleArray(row);
+  if (statKey === "total") {
+    const v = historyFullRoundCountingStatFromHoles("total", holes);
+    if (Number.isFinite(v)) return v;
+    return historyScalarOrNaN(row.round_score);
+  }
+  if (statKey === "birdies") {
+    const v = historyFullRoundCountingStatFromHoles("birdies", holes);
+    if (Number.isFinite(v)) return v;
+    return historyScalarOrNaN(row.birdies);
+  }
+  if (statKey === "pars") {
+    const v = historyFullRoundCountingStatFromHoles("pars", holes);
+    if (Number.isFinite(v)) return v;
+    return historyScalarOrNaN(row.pars);
+  }
+  if (statKey === "bogeys") {
+    const v = historyFullRoundCountingStatFromHoles("bogeys", holes);
+    if (Number.isFinite(v)) return v;
+    return historyScalarOrNaN(row.bogies ?? row.bogeys);
+  }
   if (statKey === "gir") {
     const v = historyGirOrFairwaysCount(row.gir, 18);
     return v === 0 || v === 1 ? NaN : v;
@@ -11512,10 +11571,10 @@ function propsTrendMeanActual(statKey, rounds) {
 }
 
 function propsTrendCourseFilterActive() {
-  return Boolean(courseFilterOn() || selectedPropsCourseFilter());
+  return Boolean(courseFilterOn() || (propsCourseWindowModeActive() && selectedPropsCourseFilter()));
 }
 
-/** Course-only slice of career history (sidebar “Current course” and/or Course dropdown); ignores weather & graph window. */
+/** Course-only slice of career history (“Current course only” and/or Course dropdown while field-by-course window is on); ignores weather & graph window. */
 function roundsMatchingCourseSelectionOnly(dgId) {
   const id = Math.round(num(dgId, NaN));
   if (!Number.isFinite(id)) return [];
@@ -11526,7 +11585,7 @@ function roundsMatchingCourseSelectionOnly(dgId) {
     const metaEvent = String(DATA.meta?.event_name || "").trim();
     if (vn || metaEvent) list = list.filter((r) => currentTournamentContextMatchesRound(r));
   }
-  const courseSel = selectedPropsCourseFilter();
+  const courseSel = propsCourseWindowModeActive() ? selectedPropsCourseFilter() : "";
   if (courseSel) list = list.filter((r) => normCourseNameKey(r.course_name) === normCourseNameKey(courseSel));
   return list;
 }
@@ -11976,10 +12035,15 @@ function modelForHistoryRow(statKey, row) {
 /**
  * Chart date string for a history round. CSV rows often reuse one `event_completed` for every round of an event;
  * `sortKey` is YYYYMMDD*10+round_num (see build-player-history). Treat that calendar day as **round 1** and add
- * (round_num−1) days so the x-axis shows 5/4, 5/5, 5/6, … Live-merge rows already carry per-round dates.
+ * (round_num−1) days so the x-axis shows 5/4, 5/5, 5/6, … Live-merge rows (`_from_live_in_play`) already use
+ * the true calendar day — do not add the extra bump (would shift R2+ incorrectly).
  */
 function propsTrendChartDateFromRow(r) {
   if (!r || typeof r !== "object") return "";
+  if (r._from_live_in_play) {
+    const ec = String(r.event_completed || "").trim();
+    if (ec) return ec;
+  }
   const sk = Math.round(num(r.sortKey, NaN));
   if (Number.isFinite(sk) && sk > 9_999_999) {
     const base = Math.floor(sk / 10);
@@ -11996,7 +12060,8 @@ function propsTrendChartDateFromRow(r) {
       const mo = Math.floor((base % 10000) / 100);
       const d = base % 100;
       if (y >= 1990 && y <= 2100 && mo >= 1 && mo <= 12 && d >= 1 && d <= 31) {
-        const ms = Date.UTC(y, mo - 1, d) + (rnd - 1) * 86400000;
+        const bump = historyRoundChartUsesR1AnchorSortKey(r) ? Math.max(0, rnd - 1) : 0;
+        const ms = Date.UTC(y, mo - 1, d) + bump * 86400000;
         const dt = new Date(ms);
         return `${dt.getUTCMonth() + 1}/${dt.getUTCDate()}/${dt.getUTCFullYear()}`;
       }
