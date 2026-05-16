@@ -403,8 +403,9 @@ function num(v, d) {
 }
 
 /**
- * Conservative “model” round from bundle meta: min of export display_round, live current_round,
- * and field-updates current_round when present — avoids calendar-only export sitting on R2 before R2 is live.
+ * “Model” round from projections meta: default min(display, live overlay, field API) so calendar export
+ * does not sit on R2 before the field is live — but when preds/in-play overlay lags after a rollover and
+ * export+field already agree on the higher round, trust that max (push:all merge + multi-source round).
  */
 function effectiveUiModelRoundFromMeta() {
   const m = DATA?.meta || {};
@@ -414,7 +415,10 @@ function effectiveUiModelRoundFromMeta() {
   const ok = (x) => Number.isFinite(x) && x >= 1 && x <= 4;
   const parts = [ex, live, field].filter(ok);
   if (!parts.length) return NaN;
-  return Math.min(...parts);
+  const mn = Math.min(...parts);
+  const mx = Math.max(...parts);
+  if (mx > mn && ok(live) && live === mn && ok(ex) && ok(field) && ex === field && field === mx) return mx;
+  return mn;
 }
 
 /** Results tab removed from `index.html`; keep guards so leftover JS does not touch missing DOM. */
@@ -1480,6 +1484,40 @@ function mergeDgFieldScoresFromBundleIntoData(dataRows, fieldUpdatesRaw) {
 }
 
 /**
+ * Highest plausible tournament round (1–4) from the full live bundle.
+ * preds/in-play `info.current_round` alone often lags after a rollover while field_updates,
+ * live_hole_stats, or player `round` rows already show the next round.
+ */
+function dgLiveBundleConsensusCurrentRound(j) {
+  if (!j || typeof j !== "object") return NaN;
+  const info = j.info && typeof j.info === "object" ? j.info : {};
+  /** @type {number[]} */
+  const cands = [];
+  const push = (v) => {
+    const r = Math.round(num(v, NaN));
+    if (Number.isFinite(r) && r >= 1 && r <= 4) cands.push(r);
+  };
+  push(info.current_round);
+  push(j.current_round);
+  const lh = j.live_hole_stats;
+  if (lh && typeof lh === "object") {
+    push(lh.current_round);
+    const lhi = lh.info && typeof lh.info === "object" ? lh.info : {};
+    push(lhi.current_round);
+  }
+  const fu = j.field_updates;
+  if (fu && typeof fu === "object") push(fu.current_round ?? fu.currentRound);
+  for (const row of Array.isArray(j.data) ? j.data : []) {
+    if (row && typeof row === "object") push(row.round ?? row.Round);
+  }
+  push(DATA?.meta?.display_round);
+  push(DATA?.meta?.datagolf_field_current_round);
+  push(DATA?.meta?.datagolf_live_current_round);
+  if (!cands.length) return NaN;
+  return Math.max(...cands);
+}
+
+/**
  * Merge DataGolf preds/in-play `data` rows into DATA.players:
  * win, top_5, top_10, top_20, make_cut (and mc → make_cut when make_cut absent).
  * Placement probs are tournament-wide — update every round row for that dg_id.
@@ -1490,7 +1528,7 @@ function mergeDatagolfInPlayPayload(j) {
   let drivingTouched = false;
   if (!Array.isArray(j.data)) return metaTouched;
   const info = j.info && typeof j.info === "object" ? j.info : {};
-  const currentRound = num(info.current_round, NaN);
+  const currentRound = dgLiveBundleConsensusCurrentRound(j);
   const lastUpdate = info.last_update != null ? String(info.last_update) : "";
   const inPlayEvent = String(
     info.event_name ||
@@ -2075,7 +2113,7 @@ function applyPayload(raw) {
   if (prevFieldFp !== nextFieldFp) lastDatagolfInPlayToken = "";
 }
 
-/** O/U + model default round from meta (min of export / live / field); **1** if unknown — avoids Fri pre-load → R2. */
+/** O/U + model default round from meta (see effectiveUiModelRoundFromMeta); **1** if unknown. */
 function ouDisplayRoundAuto() {
   const eff = effectiveUiModelRoundFromMeta();
   if (Number.isFinite(eff) && eff >= 1 && eff <= 4) return eff;

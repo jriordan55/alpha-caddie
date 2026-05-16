@@ -17,6 +17,7 @@
  * Env: GOLF_MODEL_DIR → repo root (parent of alpha-caddie-web). Uses data/historical_rounds_all.csv
  * when present. GOLF_COURSE_PRIOR_ROUND_DIFFICULTY=0 skips mu adjustments (still updates rounds).
  * Optional: GOLF_POST_CUT_MIN_LIVE_IDS, GOLF_POST_CUT_SHRINK_AT_LEAST, GOLF_POST_CUT_MIN_KEEP_FRAC.
+ * GOLF_MERGE_LIVE_ROUND_META_IGNORE_WEEK_KEY=1 — run merge even when field week key does not match projections.
  */
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
@@ -200,13 +201,16 @@ async function main() {
     process.exit(0);
   }
 
-  const lh = live.live_hole_stats;
-  const fieldRaw = live.field_updates && typeof live.field_updates === "object" ? live.field_updates : null;
-  if (!lh || typeof lh !== "object") {
-    console.log("merge-live-round-meta: live-in-play has no live_hole_stats — skip");
-    process.exit(0);
+  const lhRaw = live.live_hole_stats;
+  const hasLh = lhRaw && typeof lhRaw === "object";
+  if (!hasLh) {
+    console.warn(
+      "merge-live-round-meta: live-in-play has no live_hole_stats — display_round + post-cut prune only (no prior-hole μ bump).",
+    );
   }
+  const lhEffective = hasLh ? lhRaw : {};
 
+  const fieldRaw = live.field_updates && typeof live.field_updates === "object" ? live.field_updates : null;
   const projEvent = String(proj.event_name || "").trim();
   const fuEvent = String(fieldRaw?.event_name || fieldRaw?.eventName || "").trim();
   const liveInfoEv = String(live?.info?.event_name || live?.event_name || "").trim();
@@ -217,27 +221,43 @@ async function main() {
   }
 
   const projKey = String(proj.datagolf_field_week_key || "").trim();
-  const fuCourse = String(fieldRaw?.course_name || fieldRaw?.course || "").trim();
-  const fuKey = liveEv ? fieldWeekKey(liveEv, fuCourse) : "";
-  if (projKey && fuKey && !fieldWeekKeysRoughMatch(projKey, fuKey)) {
+  const fuCourseFromField = String(fieldRaw?.course_name || fieldRaw?.course || "").trim();
+  const fuCourseForKey = fuCourseFromField || String(proj.course_used || "").trim();
+  const evForKey = String(liveEv || projEvent || "").trim();
+  const fuKey = evForKey ? fieldWeekKey(evForKey, fuCourseForKey) : "";
+  const ignoreWeek =
+    String(process.env.GOLF_MERGE_LIVE_ROUND_META_IGNORE_WEEK_KEY || "").trim() === "1";
+  if (!ignoreWeek && projKey && fuKey && !fieldWeekKeysRoughMatch(projKey, fuKey)) {
     console.warn(`merge-live-round-meta: week key mismatch proj=${projKey} vs live=${fuKey} — skip`);
+    console.warn(
+      "merge-live-round-meta: set GOLF_MERGE_LIVE_ROUND_META_IGNORE_WEEK_KEY=1 to override (only if you are sure it is the same event).",
+    );
     process.exit(0);
   }
 
-  const dr = exportDisplayRoundFromLiveBundle(live, fieldRaw, lh);
+  const dr = exportDisplayRoundFromLiveBundle(live, fieldRaw, lhEffective);
   const tz = process.env.GOLF_OU_TZ || "America/New_York";
 
   const prevDr = Math.round(num(proj.display_round, NaN));
   proj.display_round = dr;
   proj.display_round_label = displayRoundLabel(dr, tz);
   if (Number.isFinite(dr) && dr >= 1 && dr <= 4) {
-    proj.datagolf_field_current_round = Math.round(dr);
+    const r = Math.round(dr);
+    proj.datagolf_field_current_round = r;
+    /** Keeps disk JSON aligned with merge: preds/in-play poll alone often lags info.current_round. */
+    proj.datagolf_live_current_round = r;
   }
 
   const pruned = prunePostCutProjectionPlayers(proj.players, live, dr);
   if (pruned.note && Array.isArray(pruned.players)) {
     proj.players = pruned.players;
     console.log(`merge-live-round-meta: ${pruned.note}`);
+  }
+
+  if (!hasLh) {
+    writeFileSync(projPath, JSON.stringify(proj, null, 2), "utf8");
+    console.log(`merge-live-round-meta: display_round ${prevDr}→${dr} (no live_hole_stats μ path); wrote ${projPath}`);
+    return;
   }
 
   const applyPriorRoundAdj = String(process.env.GOLF_COURSE_PRIOR_ROUND_DIFFICULTY ?? "1").trim() !== "0";
@@ -257,7 +277,7 @@ async function main() {
   const priorCourseExcessByRound = {};
   const priorCourseStrokeShiftByRound = {};
   for (let r = 1; r <= 4; r++) {
-    const ex = blendedPriorRoundCourseExcess(lh, histEventCtx, r);
+    const ex = blendedPriorRoundCourseExcess(lhRaw, histEventCtx, r);
     priorCourseExcessByRound[r] = Number.isFinite(ex) ? Math.round(ex * 1000) / 1000 : null;
     priorCourseStrokeShiftByRound[r] = Number.isFinite(ex)
       ? Math.round(courseDifficultyStrokeShift(ex) * 1000) / 1000
