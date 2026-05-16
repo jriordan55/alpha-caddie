@@ -6,6 +6,7 @@
     "fetch:dg": "node scripts/fetch-datagolf.mjs",
     "fetch:in-play": "node scripts/fetch-live-in-play.mjs",
     "merge:live-hole-pars-into-projections": "node scripts/merge-live-hole-pars-into-projections.mjs",
+    "merge:live-round-meta-into-projections": "node scripts/merge-live-round-meta-into-projections.mjs",
     "fetch:book-odds": "node scripts/fetch-book-odds-into-projections.mjs",
     "export:dk-round-audit-csv": "node scripts/export-dk-round-model-audit-csv.mjs",
     "export:round-projection-vs-actual": "node scripts/export-round-projection-vs-actual-csv.mjs",

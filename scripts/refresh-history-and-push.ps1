@@ -48,6 +48,8 @@ $ErrorActionPreference = "Stop"
 #      so today’s tournament round survives scrub; scripts/fetch-live-in-play.mjs can carry forward dropped R1–R3 gross columns.)
 #   merge:live-hole-pars-into-projections runs AFTER fetch:book-odds + fetch:finish-tool so an inline fetch:dg inside
 #   book-odds does not leave projections without live_hole_stats hole_pars (tee-adjacent UI + consistency with Hole Hangout).
+#   merge:live-round-meta-into-projections bumps display_round field_updates+live_hole_stats and reapplies μ_SG prior-round
+#   strokes (blend vs historical CSV) — after odds so full fetch:dg is not re-run; before update:rounds.
 # Mirrors below copy projections + live + approach_skill *.json into website/public/data/ so both apps ship the same JSON.
 #
 # Round-projections / +EV weather: tee times live in live-in-play.json (field_updates from fetch:in-play);
@@ -107,6 +109,7 @@ Remove-Item Env:\PERFECT_SKIP_FETCH_DK_OU -ErrorAction SilentlyContinue
 Run-Step "Running fetch:book-odds (matchups, outrights, DK round O/U props) ..." { npm run fetch:book-odds }
 Run-Step 'Running fetch:finish-tool — outrights, same Scratch feed as DG Finish Position; runs after book-odds ...' { npm run fetch:finish-tool }
 Run-Step "Merging live_hole_stats into projections (after book odds; preserves pars if book-odds ran inline fetch:dg) ..." { npm run merge:live-hole-pars-into-projections }
+Run-Step "Merging tournament round + prior-round course difficulty from live-in-play → projections …" { npm run merge:live-round-meta-into-projections }
 Run-Step "Running update:rounds (historical CSV + Historical Trends: player_round_history / embed / shards / shots web) ..." { npm run update:rounds }
 Run-Step "Writing round_projection_vs_actual.csv (model projections vs actual round results) ..." { npm run export:round-projection-vs-actual }
 
