@@ -14,6 +14,10 @@
  * Writes alpha-caddie-web/live-in-play.json. Scores from field-updates are merged onto each
  * preds/in-play `data` row by `dg_id` so the browser model (outrights, +EV) tracks the live board.
  *
+ * Completed-round gross columns (`R1`–`R3`) are merged forward from the previous on-disk snapshot when the fresh
+ * preds/in-play payload omits them after a round rollover (field-updates only refreshes `current_score`).
+ * That keeps `build-player-history` / Historical Trends whole during `npm run push:all` until historical-raw-data catches up.
+ *
  * Env:
  *   DATAGOLF_API_KEY or datagolf.local.json { apiKey }
  *   GOLF_MODEL_DIR — repo root (parent of alpha-caddie-web)
@@ -274,6 +278,90 @@ function mergeFieldScoresIntoInPlayRows(dataRows, fieldRaw) {
   return n;
 }
 
+/** Gross strokes for completed round `rnd` on preds/in-play row (`R1` / `r1`, …). */
+function grossForRoundColumn(row, rnd) {
+  const r = Math.round(Number(rnd));
+  if (!Number.isFinite(r) || r < 1 || r > 4) return NaN;
+  return num(row[`R${r}`] ?? row[`r${r}`], NaN);
+}
+
+/**
+ * When the tournament advances, preds/in-play sometimes drops completed `R*` gross columns while still
+ * supplying `current_score` / today — `npm run push:all` would then overwrite live-in-play.json and
+ * `build-player-history` would lose prior-round rows until historical-raw-data catches up.
+ * Merge missing prior-round gross from the last on-disk snapshot for the same event.
+ */
+function mergeCarryForwardPriorRoundGross(dataRows, prevDataRows, tournamentRoundFallback) {
+  if (!Array.isArray(dataRows) || !dataRows.length || !Array.isArray(prevDataRows) || !prevDataRows.length)
+    return 0;
+  const prevByDg = new Map();
+  for (const pr of prevDataRows) {
+    const id = Math.round(num(pr?.dg_id ?? pr?.dgId));
+    if (Number.isFinite(id)) prevByDg.set(id, pr);
+  }
+  let carried = 0;
+  const fb = Math.round(num(tournamentRoundFallback, NaN));
+  for (const row of dataRows) {
+    const id = Math.round(num(row?.dg_id ?? row?.dgId));
+    if (!Number.isFinite(id)) continue;
+    const prevRow = prevByDg.get(id);
+    if (!prevRow) continue;
+    const playerR = Math.round(num(row?.round ?? row?.Round, NaN));
+    const prEff =
+      Number.isFinite(playerR) && playerR >= 1 && playerR <= 4 ? playerR : Number.isFinite(fb) ? fb : NaN;
+    if (!Number.isFinite(prEff) || prEff < 2) continue;
+    for (let rnd = 1; rnd < prEff; rnd++) {
+      if (Number.isFinite(grossForRoundColumn(row, rnd))) continue;
+      const pg = grossForRoundColumn(prevRow, rnd);
+      if (!Number.isFinite(pg)) continue;
+      row[`R${rnd}`] = pg;
+      carried++;
+    }
+  }
+  return carried;
+}
+
+function tournamentRoundFallbackFromBundle(parsed, fieldRaw, projectionsRoot) {
+  const meta =
+    projectionsRoot?.meta && typeof projectionsRoot.meta === "object" ? projectionsRoot.meta : {};
+  const fu = fieldRaw && typeof fieldRaw === "object" ? fieldRaw : {};
+  const roundCandidates = [
+    meta.datagolf_live_current_round,
+    meta.display_round,
+    fu.current_round,
+    parsed?.info?.current_round,
+    parsed?.current_round,
+  ];
+  const rows = Array.isArray(parsed?.data) ? parsed.data : [];
+  for (const r of rows) roundCandidates.push(r?.round);
+  for (const cand of roundCandidates) {
+    const rn = Math.round(num(cand, NaN));
+    if (Number.isFinite(rn) && rn >= 1 && rn <= 4) return rn;
+  }
+  return NaN;
+}
+
+function liveBundlesSameEvent(prevBundle, parsed, fieldRaw) {
+  const pfu =
+    prevBundle?.field_updates && typeof prevBundle.field_updates === "object"
+      ? prevBundle.field_updates
+      : null;
+  const nfu = fieldRaw && typeof fieldRaw === "object" ? fieldRaw : null;
+  const pid =
+    pfu && pfu.event_id != null && String(pfu.event_id).trim() !== ""
+      ? String(pfu.event_id).trim()
+      : "";
+  const nid =
+    nfu && nfu.event_id != null && String(nfu.event_id).trim() !== ""
+      ? String(nfu.event_id).trim()
+      : "";
+  if (pid && nid && pid === nid) return true;
+  const pName = String(pfu?.event_name || prevBundle?.info?.event_name || "").trim();
+  const nName = String(nfu?.event_name || parsed?.info?.event_name || "").trim();
+  if (!pName || !nName) return false;
+  return eventsLikelySame(pName, nName);
+}
+
 function hashDjb2(str) {
   let h = 5381;
   for (let i = 0; i < str.length; i++) {
@@ -289,7 +377,8 @@ function scoreDigestFromInPlayData(data) {
     const id = r?.dg_id ?? r?.dgId ?? "";
     const cs = r?.current_score ?? r?.currentScore ?? "";
     const td = r?.today ?? r?.Today ?? "";
-    chunks.push(`${id}:${cs}:${td}`);
+    const rSlots = [1, 2, 3, 4].map((k) => String(r[`R${k}`] ?? r[`r${k}`] ?? "")).join(",");
+    chunks.push(`${id}:${cs}:${td}:${rSlots}`);
   }
   chunks.sort();
   return `${data.length}:${hashDjb2(chunks.join("|"))}`;
@@ -366,6 +455,31 @@ async function main() {
     console.log(`[fetch-live-in-play] merged field-updates scores onto ${scoreMergeCount} in-play row(s)`);
   }
 
+  const liveOutPath = path.join(WEB_ROOT, "live-in-play.json");
+  let prevDiskBundle = null;
+  try {
+    if (fs.existsSync(liveOutPath)) {
+      prevDiskBundle = JSON.parse(fs.readFileSync(liveOutPath, "utf8"));
+    }
+  } catch {
+    prevDiskBundle = null;
+  }
+  const projectionsSnapshot = readProjectionsRoot();
+  const fbRound = tournamentRoundFallbackFromBundle(parsed, fieldUpdates, projectionsSnapshot);
+  if (
+    prevDiskBundle &&
+    Array.isArray(prevDiskBundle.data) &&
+    prevDiskBundle.data.length &&
+    liveBundlesSameEvent(prevDiskBundle, parsed, fieldUpdates)
+  ) {
+    const nCarry = mergeCarryForwardPriorRoundGross(parsed.data, prevDiskBundle.data, fbRound);
+    if (nCarry > 0) {
+      console.log(
+        `[fetch-live-in-play] carried forward ${nCarry} prior-round gross score slot(s) from previous live-in-play.json`,
+      );
+    }
+  }
+
   let liveTournamentStats = null;
   let liveHoleStats = null;
   try {
@@ -388,8 +502,7 @@ async function main() {
     ...(liveHoleStats && typeof liveHoleStats === "object" ? { live_hole_stats: liveHoleStats } : {}),
   };
 
-  const out = path.join(WEB_ROOT, "live-in-play.json");
-  fs.mkdirSync(path.dirname(out), { recursive: true });
+  fs.mkdirSync(path.dirname(liveOutPath), { recursive: true });
   const token = compositeLiveBundleToken(parsed, liveTournamentStats, liveHoleStats, fieldUpdates);
   const pm = readProjectionsRoot();
   const infoEv = String(parsed?.info?.event_name || "").trim();
@@ -400,9 +513,9 @@ async function main() {
       `[fetch-live-in-play] preds/in-play info.event_name "${infoEv}" vs projections "${projEv}" — stale in-play event metadata detected`
     );
   }
-  if (token && fs.existsSync(out)) {
+  if (token && fs.existsSync(liveOutPath)) {
     try {
-      const prev = JSON.parse(fs.readFileSync(out, "utf8"));
+      const prev = JSON.parse(fs.readFileSync(liveOutPath, "utf8"));
       const prevTok = compositeLiveBundleToken(
         { ...prev, data: Array.isArray(prev.data) ? prev.data : [] },
         prev.live_tournament_stats,
@@ -429,9 +542,9 @@ async function main() {
       /* rewrite if parse fails */
     }
   }
-  fs.writeFileSync(out, JSON.stringify(bundle, null, 2), "utf8");
+  fs.writeFileSync(liveOutPath, JSON.stringify(bundle, null, 2), "utf8");
   console.log(
-    `[fetch-live-in-play] wrote ${out} (${parsed.data.length} players, tour=${tourUsed}, odds_format=${oddsFormat}; field_scores=${scoreMergeCount > 0 ? "yes" : "no"}; live feeds=${liveTournamentStats ? "t" : "-"}${liveHoleStats ? "h" : "-"})`
+    `[fetch-live-in-play] wrote ${liveOutPath} (${parsed.data.length} players, tour=${tourUsed}, odds_format=${oddsFormat}; field_scores=${scoreMergeCount > 0 ? "yes" : "no"}; live feeds=${liveTournamentStats ? "t" : "-"}${liveHoleStats ? "h" : "-"})`
   );
 }
 
