@@ -325,20 +325,21 @@ function tournamentRoundFallbackFromBundle(parsed, fieldRaw, projectionsRoot) {
   const meta =
     projectionsRoot?.meta && typeof projectionsRoot.meta === "object" ? projectionsRoot.meta : {};
   const fu = fieldRaw && typeof fieldRaw === "object" ? fieldRaw : {};
-  const roundCandidates = [
-    meta.datagolf_live_current_round,
-    meta.display_round,
-    fu.current_round,
-    parsed?.info?.current_round,
-    parsed?.current_round,
-  ];
+  /** Max — any single stale source must not suppress a higher verified round */
+  let best = NaN;
+  const push = (cand) => {
+    const rn = Math.round(num(cand));
+    if (!Number.isFinite(rn) || rn < 1 || rn > 4) return;
+    best = Number.isFinite(best) ? Math.max(best, rn) : rn;
+  };
+  push(meta.datagolf_live_current_round);
+  push(meta.display_round);
+  push(fu.current_round);
+  push(parsed?.info?.current_round);
+  push(parsed?.current_round);
   const rows = Array.isArray(parsed?.data) ? parsed.data : [];
-  for (const r of rows) roundCandidates.push(r?.round);
-  for (const cand of roundCandidates) {
-    const rn = Math.round(num(cand, NaN));
-    if (Number.isFinite(rn) && rn >= 1 && rn <= 4) return rn;
-  }
-  return NaN;
+  for (const r of rows) push(r?.round);
+  return best;
 }
 
 function liveBundlesSameEvent(prevBundle, parsed, fieldRaw) {

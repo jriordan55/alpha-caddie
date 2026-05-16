@@ -10,8 +10,13 @@
  * clobber fetch:book-odds / finish-tool merges). Applies the same blending as fetch-datagolf:
  * blendedPriorRoundCourseExcess live_hole_stats + historical_rounds_all.csv.
  *
+ * Round label: max(field_updates.current_round, live_hole_stats current_round / info, preds/in-play
+ * meta + player rows `round`) so field-updates lag does not stall R3→R4. When display_round≥3,
+ * trims projection.players to weekend field (shrunk preds/in-play roster or CUT/WD status).
+ *
  * Env: GOLF_MODEL_DIR → repo root (parent of alpha-caddie-web). Uses data/historical_rounds_all.csv
  * when present. GOLF_COURSE_PRIOR_ROUND_DIFFICULTY=0 skips mu adjustments (still updates rounds).
+ * Optional: GOLF_POST_CUT_MIN_LIVE_IDS, GOLF_POST_CUT_SHRINK_AT_LEAST, GOLF_POST_CUT_MIN_KEEP_FRAC.
  */
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
@@ -22,29 +27,133 @@ import {
   loadEventRoundContextFromHistoricalCsv,
 } from "./course-round-adjustments.mjs";
 import { eventsLikelySame, fieldWeekKey, fieldWeekKeysRoughMatch } from "./dg-events-align.mjs";
+import { exportDisplayRoundFromLiveBundle, num } from "./dg-display-round-from-bundle.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
 
-function num(x, fallback = NaN) {
-  const n = Number(x);
-  return Number.isFinite(n) ? n : fallback;
+function isEliminatedProjectionRow(pl) {
+  if (!pl || typeof pl !== "object") return false;
+  const mc = pl.make_cut;
+  if (mc === false) return true;
+  if (mc === true) return false;
+  if (typeof mc === "boolean") return !mc;
+  if (mc == null || mc === "") return false;
+  const n = num(mc, NaN);
+  if (Number.isFinite(n) && n <= 0) return true;
+  const pos = String(pl.current_pos || "");
+  return /\b(CUT|WD|DQ|MDF|DNS|W\/D|RET)\b/i.test(pos);
 }
 
-/** Match fetch-datagolf.mjs */
-function dgCurrentRoundFromFieldOrLiveHole(fieldRaw, liveHoleStats) {
-  const a = num(fieldRaw?.current_round ?? fieldRaw?.currentRound, NaN);
-  const b = num(liveHoleStats?.current_round ?? liveHoleStats?.info?.current_round, NaN);
-  for (const x of [a, b]) {
-    if (Number.isFinite(x) && x >= 1 && x <= 4) return Math.round(x);
+function isEliminatedLiveRow(inPlayRow) {
+  if (!inPlayRow || typeof inPlayRow !== "object") return false;
+  const thruRaw = inPlayRow.thru ?? inPlayRow.Thru;
+  if (thruRaw != null && thruRaw !== "") {
+    const s = String(thruRaw).trim();
+    const u = s.toUpperCase();
+    if (u.includes("CUT")) return true;
+    if (/\b(WD|DQ|MDF|DNS|RET)\b/i.test(s)) return true;
   }
-  return NaN;
+  const pos = String(inPlayRow.position ?? inPlayRow.Position ?? "").trim();
+  return /\b(CUT|WD|DQ|MDF|DNS|W\/D|RET)\b/i.test(pos);
 }
 
-function exportDisplayRoundFromDgField(fieldRaw, liveHoleStats) {
-  const api = dgCurrentRoundFromFieldOrLiveHole(fieldRaw, liveHoleStats);
-  if (Number.isFinite(api) && api >= 1 && api <= 4) return Math.round(api);
-  return 1;
+function pickBestStatusRow(rows) {
+  let best = null;
+  let br = NaN;
+  for (const p of rows) {
+    const rr = Math.round(num(p?.round, NaN));
+    if (!Number.isFinite(rr)) continue;
+    if (!best || rr >= br) {
+      best = p;
+      br = rr;
+    }
+  }
+  return best || rows[0] || null;
+}
+
+/**
+ * R3+: keep only players still in the event. Prefer preds/in-play roster when it shrunk vs projections;
+ * else drop dg_ids flagged eliminated (mirror app.js isPlayerEliminatedFromEvent).
+ */
+function prunePostCutProjectionPlayers(players, live, dr) {
+  if (!Array.isArray(players) || dr < 3) return { players, note: "" };
+
+  /** @type {Set<number>} */
+  const uniqProj = new Set();
+  for (const p of players) {
+    const id = Math.round(num(p?.dg_id, NaN));
+    if (Number.isFinite(id)) uniqProj.add(id);
+  }
+  const uSize = uniqProj.size;
+  if (uSize < 8) return { players, note: "" };
+
+  const MIN_LIVE = Math.max(20, Number(process.env.GOLF_POST_CUT_MIN_LIVE_IDS || 35));
+  const SHRINK_AT_LEAST = Math.max(12, Number(process.env.GOLF_POST_CUT_SHRINK_AT_LEAST || 15));
+
+  const liveRows = Array.isArray(live?.data) ? live.data : [];
+  /** @type {Map<number, object>} */
+  const liveByDg = new Map();
+  /** @type {Set<number>} */
+  const liveIds = new Set();
+  for (const r of liveRows) {
+    const id = Math.round(num(r?.dg_id ?? r?.dgId, NaN));
+    if (Number.isFinite(id)) {
+      liveIds.add(id);
+      if (!liveByDg.has(id)) liveByDg.set(id, r);
+    }
+  }
+
+  /** @type {Set<number>} */
+  let keep;
+  let note = "";
+  const liveLooksCut = liveIds.size >= MIN_LIVE && liveIds.size <= uSize - SHRINK_AT_LEAST;
+
+  if (liveLooksCut) {
+    keep = liveIds;
+    note = `post-cut: preds/in-play roster ${liveIds.size} dg_id(s) (had ${uSize})`;
+  } else {
+    const byId = new Map();
+    for (const p of players) {
+      const id = Math.round(num(p?.dg_id, NaN));
+      if (!Number.isFinite(id)) continue;
+      if (!byId.has(id)) byId.set(id, []);
+      byId.get(id).push(p);
+    }
+    keep = new Set();
+    for (const [, rows] of byId) {
+      const row = pickBestStatusRow(rows);
+      const id = row ? Math.round(num(row.dg_id, NaN)) : NaN;
+      if (!Number.isFinite(id)) continue;
+      if (isEliminatedProjectionRow(row) || isEliminatedLiveRow(liveByDg.get(id))) continue;
+      keep.add(id);
+    }
+    if (!keep.size) return { players, note: "" };
+    note = `post-cut: status filter ${keep.size}/${uSize} dg_id(s)`;
+  }
+
+  const minKeepFrac = Number(process.env.GOLF_POST_CUT_MIN_KEEP_FRAC || 0.25);
+  const minKeepRows = Math.max(MIN_LIVE, Math.floor(uSize * minKeepFrac));
+  if (keep.size < minKeepRows) {
+    console.warn(
+      `merge-live-round-meta: post-cut prune would keep only ${keep.size} dg_id(s); need ≥${minKeepRows} — skipping`,
+    );
+    return { players, note: "" };
+  }
+
+  const out = [];
+  let droppedRows = 0;
+  for (const p of players) {
+    const id = Math.round(num(p?.dg_id, NaN));
+    if (Number.isFinite(id) && keep.has(id)) out.push(p);
+    else droppedRows++;
+  }
+  if (droppedRows === 0) return { players, note: "" };
+
+  return {
+    players: out,
+    note: `${note}; dropped ${droppedRows} projection row(s)`,
+  };
 }
 
 function displayRoundLabel(r, tz) {
@@ -115,15 +224,20 @@ async function main() {
     process.exit(0);
   }
 
-  const fieldApiRound = dgCurrentRoundFromFieldOrLiveHole(fieldRaw, lh);
-  const dr = exportDisplayRoundFromDgField(fieldRaw, lh);
+  const dr = exportDisplayRoundFromLiveBundle(live, fieldRaw, lh);
   const tz = process.env.GOLF_OU_TZ || "America/New_York";
 
   const prevDr = Math.round(num(proj.display_round, NaN));
   proj.display_round = dr;
   proj.display_round_label = displayRoundLabel(dr, tz);
-  if (Number.isFinite(fieldApiRound) && fieldApiRound >= 1 && fieldApiRound <= 4) {
-    proj.datagolf_field_current_round = Math.round(fieldApiRound);
+  if (Number.isFinite(dr) && dr >= 1 && dr <= 4) {
+    proj.datagolf_field_current_round = Math.round(dr);
+  }
+
+  const pruned = prunePostCutProjectionPlayers(proj.players, live, dr);
+  if (pruned.note && Array.isArray(pruned.players)) {
+    proj.players = pruned.players;
+    console.log(`merge-live-round-meta: ${pruned.note}`);
   }
 
   const applyPriorRoundAdj = String(process.env.GOLF_COURSE_PRIOR_ROUND_DIFFICULTY ?? "1").trim() !== "0";

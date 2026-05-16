@@ -71,6 +71,7 @@ import { holeParsFromLiveHoleStatsPayload } from "./dg-live-hole-pars.mjs";
 import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
 import { applyHistoricalRoundsMergeDefaults } from "./historical-rounds-merge-env.mjs";
 import { resolveGolfModelDir } from "./resolve-golf-model-dir.mjs";
+import { maxRoundFromFieldAndLiveHole } from "./dg-display-round-from-bundle.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -1355,17 +1356,9 @@ function normProb01(v, oddsFormat = "percent") {
   return x;
 }
 
-/** `current_round` from field-updates / live-hole-stats when present (1–4). */
+/** `current_round`: max(field-updates, live-hole-stats) — field can lag after a round ends. */
 function dgCurrentRoundFromFieldOrLiveHole(fieldRaw, liveHoleStats) {
-  const a = num(fieldRaw?.current_round ?? fieldRaw?.currentRound, NaN);
-  const b = num(
-    liveHoleStats?.current_round ?? liveHoleStats?.info?.current_round,
-    NaN,
-  );
-  for (const x of [a, b]) {
-    if (Number.isFinite(x) && x >= 1 && x <= 4) return Math.round(x);
-  }
-  return NaN;
+  return maxRoundFromFieldAndLiveHole(fieldRaw, liveHoleStats);
 }
 
 /** Export `display_round`: DataGolf `current_round` only; default **1** if absent (calendar day ≠ on-course round). */
