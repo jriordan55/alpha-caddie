@@ -7,6 +7,34 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+
+function Resolve-GolfRepoRoot([string] $ScriptsDir) {
+  $gitOut = & git -C $ScriptsDir rev-parse --show-toplevel 2>$null
+  if ($LASTEXITCODE -eq 0 -and $gitOut) {
+    $t = "$gitOut".Trim()
+    if ($t -ne "" -and (Test-Path (Join-Path $t ".git"))) {
+      return $t
+    }
+  }
+  return [string](Resolve-Path (Join-Path $ScriptsDir "..")).Path
+}
+
+function Invoke-NpmCli([Parameter(ValueFromRemainingArguments = $true)][string[]] $NpmArgs) {
+  $npmCmd = Get-Command npm.cmd -ErrorAction SilentlyContinue
+  if (-not $npmCmd) {
+    $npmCmd = Get-Command npm -ErrorAction Stop
+  }
+  $exe = if ($npmCmd.Path) { $npmCmd.Path } else { $npmCmd.Source }
+  & $exe @NpmArgs
+}
+
+function Run-Npm([string] $Label, [Parameter(ValueFromRemainingArguments = $true)][string[]] $NpmArgs) {
+  Write-Host $Label
+  Invoke-NpmCli @NpmArgs
+  if ($LASTEXITCODE -ne 0) {
+    throw "$Label failed with exit code $LASTEXITCODE"
+  }
+}
 #
 # Course fit tab — generated artifacts this pipeline must publish:
 #   • course-table.json — built from data/course_table.csv (course mapping for Course Fit radar, similarity,
@@ -56,7 +84,8 @@ $ErrorActionPreference = "Stop"
 # venue hourly forecast + banners resolve in the browser (app.js). merge:live-hole-pars runs late so course par / hole
 # table stays aligned with live feed after DK odds refresh. Previously unstaged UI files excluded weather from this push — UI ships here when changed.
 
-$repoRoot = Split-Path -Parent $PSScriptRoot
+$scriptsDir = $PSScriptRoot
+$repoRoot = Resolve-GolfRepoRoot $scriptsDir
 $webRoot = Join-Path $repoRoot "alpha-caddie-web"
 
 if (-not (Test-Path (Join-Path $webRoot "package.json"))) {
@@ -77,17 +106,9 @@ if (-not $NoFullHistory) {
   Write-Host "NoFullHistory: update:rounds uses default year rules (not FULL_HISTORY=1)."
 }
 
-function Run-Step([string] $label, [scriptblock] $command) {
-  Write-Host $label
-  & $command
-  if ($LASTEXITCODE -ne 0) {
-    throw "$label failed with exit code $LASTEXITCODE"
-  }
-}
-
 # When fetch output matches HEAD exactly, still bump app.js?v= so deploys pick up fresh HTML/JS.
-function Bump-AlphaCaddieAppJsCache([string] $Root) {
-  $idx = Join-Path $Root "alpha-caddie-web\index.html"
+function Bump-AlphaCaddieAppJsCache([string] $AlphaCaddieWebRoot) {
+  $idx = Join-Path $AlphaCaddieWebRoot "index.html"
   if (-not (Test-Path $idx)) { return $false }
   $enc = New-Object System.Text.UTF8Encoding $false
   $c = [System.IO.File]::ReadAllText($idx, $enc)
@@ -100,18 +121,18 @@ function Bump-AlphaCaddieAppJsCache([string] $Root) {
   return $true
 }
 
-Run-Step "Running fetch:dg ..." { npm run fetch:dg }
-Run-Step "Building course-table.json (course mapping) ..." { npm run build:course-table }
-Run-Step "Running fetch:in-play ..." { npm run fetch:in-play }
+Run-Npm "Running fetch:dg ..." run fetch:dg
+Run-Npm "Building course-table.json (course mapping) ..." run build:course-table
+Run-Npm "Running fetch:in-play ..." run fetch:in-play
 Remove-Item Env:\GOLF_SKIP_DK_OU -ErrorAction SilentlyContinue
 Remove-Item Env:\PERFECT_SKIP_FETCH_DK_OU -ErrorAction SilentlyContinue
 # fetch:book-odds pulls DK round props (Birdies/Total Score/GIR/etc.) via Playwright — no separate fetch:dk-ou (would duplicate Chromium).
-Run-Step "Running fetch:book-odds (matchups, outrights, DK round O/U props) ..." { npm run fetch:book-odds }
-Run-Step 'Running fetch:finish-tool — outrights, same Scratch feed as DG Finish Position; runs after book-odds ...' { npm run fetch:finish-tool }
-Run-Step "Merging live_hole_stats into projections (after book odds; preserves pars if book-odds ran inline fetch:dg) ..." { npm run merge:live-hole-pars-into-projections }
-Run-Step "Merging tournament round + prior-round course difficulty from live-in-play → projections …" { npm run merge:live-round-meta-into-projections }
-Run-Step "Running update:rounds (historical CSV + Historical Trends: player_round_history / embed / shards / shots web) ..." { npm run update:rounds }
-Run-Step "Writing round_projection_vs_actual.csv (model projections vs actual round results) ..." { npm run export:round-projection-vs-actual }
+Run-Npm "Running fetch:book-odds (matchups, outrights, DK round O/U props) ..." run fetch:book-odds
+Run-Npm 'Running fetch:finish-tool — outrights, same Scratch feed as DG Finish Position; runs after book-odds ...' run fetch:finish-tool
+Run-Npm "Merging live_hole_stats into projections (after book odds; preserves pars if book-odds ran inline fetch:dg) ..." run merge:live-hole-pars-into-projections
+Run-Npm "Merging tournament round + prior-round course difficulty from live-in-play → projections …" run merge:live-round-meta-into-projections
+Run-Npm "Running update:rounds (historical CSV + Historical Trends: player_round_history / embed / shards / shots web) ..." run update:rounds
+Run-Npm "Writing round_projection_vs_actual.csv (model projections vs actual round results) ..." run export:round-projection-vs-actual
 
 $webDataDir = Join-Path $repoRoot "website/public/data"
 if (-not (Test-Path $webDataDir)) {
@@ -195,7 +216,7 @@ if ($ArtifactsOnly) {
 
 git -C $repoRoot diff --cached --quiet
 if ($LASTEXITCODE -eq 0) {
-  if (Bump-AlphaCaddieAppJsCache $repoRoot) {
+  if (Bump-AlphaCaddieAppJsCache $webRoot) {
     git -C $repoRoot add -f -- "alpha-caddie-web/index.html"
     git -C $repoRoot diff --cached --quiet
   }

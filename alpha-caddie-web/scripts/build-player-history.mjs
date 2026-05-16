@@ -504,15 +504,6 @@ function loadLiveRoundSnapshotByDg() {
   );
   const eventIdStr = fu.event_id != null && fu.event_id !== "" ? String(fu.event_id) : "";
 
-  const projRows = Array.isArray(proj?.players) ? proj.players : [];
-  const projByDgRound = new Map();
-  for (const p of projRows) {
-    const pdg = Math.round(num(p?.dg_id, NaN));
-    const pr = Math.round(num(p?.round, NaN));
-    if (!Number.isFinite(pdg) || !Number.isFinite(pr) || pr < 1 || pr > 4) continue;
-    projByDgRound.set(`${pdg}|${pr}`, p);
-  }
-
   const roundCandidates = [
     meta.datagolf_live_current_round,
     meta.display_round,
@@ -564,7 +555,6 @@ function loadLiveRoundSnapshotByDg() {
         if (!Number.isFinite(roundScore)) continue;
 
         const eventYear = parseInt(String(eventDate).split("/")[2] || "", 10);
-        const pp = projByDgRound.get(`${dg}|${rnd}`);
         out.push({
           dg_id: dg,
           player_name: displayName,
@@ -577,12 +567,12 @@ function loadLiveRoundSnapshotByDg() {
           round_num: rnd,
           fin_text: "",
           round_score: roundScore,
-          birdies: Number.isFinite(num(pp?.birdies, NaN)) ? num(pp?.birdies, NaN) : null,
-          pars: Number.isFinite(num(pp?.pars, NaN)) ? num(pp?.pars, NaN) : null,
-          bogies: Number.isFinite(num(pp?.bogeys, NaN)) ? num(pp?.bogeys, NaN) : null,
-          gir: Number.isFinite(num(pp?.gir, NaN)) ? num(pp?.gir, NaN) : null,
-          fairways: Number.isFinite(num(pp?.fairways, NaN)) ? num(pp?.fairways, NaN) : null,
-          putts: Number.isFinite(num(pp?.putts, NaN)) ? num(pp?.putts, NaN) : null,
+          birdies: null,
+          pars: null,
+          bogies: null,
+          gir: null,
+          fairways: null,
+          putts: null,
           eagles_or_better: null,
           doubles_or_worse: null,
           weather_temp_f: null,
@@ -607,7 +597,6 @@ function loadLiveRoundSnapshotByDg() {
       const roundScore = Math.round(gross * 10) / 10;
       const eventDate = isoDateMdY(live?.info?.last_update || live?.last_update || new Date().toISOString());
       const eventYear = parseInt(String(eventDate).split("/")[2] || "", 10);
-      const pp = projByDgRound.get(`${dg}|${roundNum}`);
       out.push({
         dg_id: dg,
         player_name: displayName,
@@ -620,12 +609,12 @@ function loadLiveRoundSnapshotByDg() {
         round_num: roundNum,
         fin_text: "",
         round_score: Number.isFinite(roundScore) ? roundScore : null,
-        birdies: Number.isFinite(num(pp?.birdies, NaN)) ? num(pp?.birdies, NaN) : null,
-        pars: Number.isFinite(num(pp?.pars, NaN)) ? num(pp?.pars, NaN) : null,
-        bogies: Number.isFinite(num(pp?.bogeys, NaN)) ? num(pp?.bogeys, NaN) : null,
-        gir: Number.isFinite(num(pp?.gir, NaN)) ? num(pp?.gir, NaN) : null,
-        fairways: Number.isFinite(num(pp?.fairways, NaN)) ? num(pp?.fairways, NaN) : null,
-        putts: Number.isFinite(num(pp?.putts, NaN)) ? num(pp?.putts, NaN) : null,
+        birdies: null,
+        pars: null,
+        bogies: null,
+        gir: null,
+        fairways: null,
+        putts: null,
         eagles_or_better: null,
         doubles_or_worse: null,
         weather_temp_f: null,
@@ -646,6 +635,29 @@ function loadLiveRoundSnapshotByDg() {
   }
 
   return out.length ? out : null;
+}
+
+const LIVE_HISTORY_COUNTING_KEYS = ["birdies", "pars", "bogies", "bogeys", "gir", "fairways", "putts"];
+
+function historyRowHasStoredCountingStat(row, key) {
+  if (!row || typeof row !== "object") return false;
+  const v = row[key];
+  if (v == null || v === "") return false;
+  const n = Number(v);
+  if (!Number.isFinite(n)) return false;
+  if ((key === "gir" || key === "fairways" || key === "putts") && (n === 0 || n === 1)) return false;
+  return true;
+}
+
+/** Live preds rows carry gross score only — never overwrite CSV GIR/FW/putts with projection formulas. */
+function mergeLiveInPlayOntoHistoryRound(existing, liveRec) {
+  const out = { ...existing, ...liveRec };
+  if (!liveRec?._from_live_in_play) return out;
+  for (const k of LIVE_HISTORY_COUNTING_KEYS) {
+    if (historyRowHasStoredCountingStat(existing, k)) out[k] = existing[k];
+    else out[k] = existing[k] ?? null;
+  }
+  return out;
 }
 
 function upsertLiveRoundRows(byDgId, liveByDg) {
@@ -679,7 +691,7 @@ function upsertLiveRoundRows(byDgId, liveByDg) {
       hitIdx = i;
       break;
     }
-    if (hitIdx >= 0) bucket.rounds[hitIdx] = { ...bucket.rounds[hitIdx], ...liveRec };
+    if (hitIdx >= 0) bucket.rounds[hitIdx] = mergeLiveInPlayOntoHistoryRound(bucket.rounds[hitIdx], liveRec);
     else bucket.rounds.push(liveRec);
     bucket.rounds.sort((a, b) => num(a.sortKey, 0) - num(b.sortKey, 0));
     if (bucket.rounds.length > MAX_ROUNDS_PER_PLAYER) bucket.rounds = bucket.rounds.slice(-MAX_ROUNDS_PER_PLAYER);
@@ -752,9 +764,11 @@ function stripGirFairwaysPuttsIfGarbage(mf) {
 
 function metricFields(row) {
   const gir = num(row.gir);
-  const fa = num(row.driving_acc);
+  const faDirect = num(row.fairways, NaN);
+  const da = num(row.driving_acc, NaN);
+  const fwRaw = Number.isFinite(faDirect) ? faDirect : da;
   let girCount = Number.isFinite(gir) ? countFromRateOrRaw(gir, 18) : null;
-  let fwCount = Number.isFinite(fa) ? countFromRateOrRaw(fa, 14) : null;
+  let fwCount = Number.isFinite(fwRaw) ? countFromRateOrRaw(fwRaw, 14) : null;
   if (girCount === 0 || girCount === 1) girCount = null;
   if (fwCount === 0 || fwCount === 1) fwCount = null;
   const ptRaw = num(row.putts, NaN);

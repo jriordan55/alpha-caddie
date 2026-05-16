@@ -36,7 +36,13 @@
     "dev": "node scripts/serve-with-refresh.mjs",
     "start:fast": "node scripts/serve-with-refresh.mjs --fast",
     "dev:fast": "node scripts/serve-with-refresh.mjs --fast",
-    "serve:only": "npx --yes serve . -p 5173"
+    "serve:only": "npx --yes serve . -p 5173",
+    "push:all": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/refresh-history-and-push.ps1",
+    "push all": "npm run push:all",
+    "push:all:pull-first": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/refresh-history-and-push.ps1 -PullFirst",
+    "push:artifacts-only": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/refresh-history-and-push.ps1 -ArtifactsOnly",
+    "push:live-once": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/live-in-play-push-once.ps1",
+    "push:live-loop": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/tournament-live-push-loop.ps1"
   },
   "dependencies": {
     "csv-parse": "^5.6.0",

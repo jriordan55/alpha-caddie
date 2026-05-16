@@ -1740,6 +1740,30 @@ function historyRoundMatchesCurrentEvent(row) {
   );
 }
 
+/** Counting stats on live-merge rows must not come from projections.json (μ_SG formulas). */
+const LIVE_HISTORY_COUNTING_KEYS = ["birdies", "pars", "bogies", "bogeys", "gir", "fairways", "putts"];
+
+function historyRowHasStoredCountingStat(row, key) {
+  if (!row || typeof row !== "object") return false;
+  const v = row[key];
+  if (v == null || v === "") return false;
+  const n = Number(v);
+  if (!Number.isFinite(n)) return false;
+  if ((key === "gir" || key === "fairways" || key === "putts") && (n === 0 || n === 1)) return false;
+  return true;
+}
+
+/** Keep CSV / shot-aggregate actuals; live-in-play only updates score, dates, SG, placement. */
+function mergeLiveInPlayOntoHistoryRound(existing, liveRec) {
+  const out = { ...existing, ...liveRec };
+  if (!liveRec || !liveRec._from_live_in_play) return out;
+  for (const k of LIVE_HISTORY_COUNTING_KEYS) {
+    if (historyRowHasStoredCountingStat(existing, k)) out[k] = existing[k];
+    else out[k] = existing[k] ?? null;
+  }
+  return out;
+}
+
 function upsertHistoryBucketLiveRound(dgId, liveRec) {
   if (historyDateMdYIsFuture(liveRec?.event_completed)) return false;
   if (historyRoundChartDateIsFuture(liveRec)) return false;
@@ -1767,7 +1791,7 @@ function upsertHistoryBucketLiveRound(dgId, liveRec) {
     hitIdx = i;
     break;
   }
-  if (hitIdx >= 0) bucket.rounds[hitIdx] = { ...bucket.rounds[hitIdx], ...liveRec };
+  if (hitIdx >= 0) bucket.rounds[hitIdx] = mergeLiveInPlayOntoHistoryRound(bucket.rounds[hitIdx], liveRec);
   else bucket.rounds.push(liveRec);
   bucket.rounds.sort((a, b) => num(a.sortKey, 0) - num(b.sortKey, 0));
   if (bucket.rounds.length > MAX_HISTORY_ROUNDS_PER_PLAYER) bucket.rounds = bucket.rounds.slice(-MAX_HISTORY_ROUNDS_PER_PLAYER);
@@ -1865,7 +1889,6 @@ function mergeLiveInPlayIntoRoundHistory(j) {
         if (!Number.isFinite(roundScore)) continue;
 
         const eventYear = parseInt(String(eventDate).split("/")[2] || "", 10);
-        const pp = projectionRowForDgRound(dg, rnd);
         const chronoBase = parseEventCompletedChronoBase(eventDate);
         const liveRec = {
           dg_id: dg,
@@ -1879,12 +1902,12 @@ function mergeLiveInPlayIntoRoundHistory(j) {
           round_num: rnd,
           fin_text: "",
           round_score: roundScore,
-          birdies: pp && Number.isFinite(num(pp.birdies, NaN)) ? num(pp.birdies, NaN) : null,
-          pars: pp && Number.isFinite(num(pp.pars, NaN)) ? num(pp.pars, NaN) : null,
-          bogies: pp && Number.isFinite(num(pp.bogeys, NaN)) ? num(pp.bogeys, NaN) : null,
-          gir: pp && Number.isFinite(num(pp.gir, NaN)) ? num(pp.gir, NaN) : null,
-          fairways: pp && Number.isFinite(num(pp.fairways, NaN)) ? num(pp.fairways, NaN) : null,
-          putts: pp && Number.isFinite(num(pp.putts, NaN)) ? num(pp.putts, NaN) : null,
+          birdies: null,
+          pars: null,
+          bogies: null,
+          gir: null,
+          fairways: null,
+          putts: null,
           eagles_or_better: null,
           doubles_or_worse: null,
           weather_temp_f: null,
@@ -1917,7 +1940,6 @@ function mergeLiveInPlayIntoRoundHistory(j) {
       }
       if (historyDateMdYIsFuture(eventDate)) continue;
       const eventYear = parseInt(String(eventDate).split("/")[2] || "", 10);
-      const pp = projectionRowForDgRound(dg, roundNum);
       const chronoBase = parseEventCompletedChronoBase(eventDate);
       const liveRec = {
         dg_id: dg,
@@ -1931,12 +1953,12 @@ function mergeLiveInPlayIntoRoundHistory(j) {
         round_num: roundNum,
         fin_text: "",
         round_score: roundScore,
-        birdies: pp && Number.isFinite(num(pp.birdies, NaN)) ? num(pp.birdies, NaN) : null,
-        pars: pp && Number.isFinite(num(pp.pars, NaN)) ? num(pp.pars, NaN) : null,
-        bogies: pp && Number.isFinite(num(pp.bogeys, NaN)) ? num(pp.bogeys, NaN) : null,
-        gir: pp && Number.isFinite(num(pp.gir, NaN)) ? num(pp.gir, NaN) : null,
-        fairways: pp && Number.isFinite(num(pp.fairways, NaN)) ? num(pp.fairways, NaN) : null,
-        putts: pp && Number.isFinite(num(pp.putts, NaN)) ? num(pp.putts, NaN) : null,
+        birdies: null,
+        pars: null,
+        bogies: null,
+        gir: null,
+        fairways: null,
+        putts: null,
         eagles_or_better: null,
         doubles_or_worse: null,
         weather_temp_f: null,
