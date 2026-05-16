@@ -3,7 +3,7 @@
  * DataGolf live bundle for the static app:
  * - preds/in-play (placement probs)
  * - field-updates (authoritative live leaderboard `current_score` / to-par when DG exposes it)
- * - preds/live-tournament-stats (field SG / traditional stats)
+ * - preds/live-tournament-stats (per-round Live Tournament Stats — round score / birdies / pars / bogeys for Historical Trends)
  * - preds/live-hole-stats (hole scoring vs par — drives live “course difficulty” pricing)
  *
  * https://feeds.datagolf.com/preds/in-play?tour=[tour]&dead_heat=[no|yes]&odds_format=[percent|...]&file_format=json
@@ -33,6 +33,11 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { eventsLikelySame, fieldWeekKey, fieldWeekKeysRoughMatch } from "./dg-events-align.mjs";
+import {
+  buildLiveRoundActualsByDg,
+  fetchLiveTournamentStatsByRound,
+  liveTournamentStatsUrl,
+} from "./dg-live-tournament-stats.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -187,19 +192,6 @@ function fieldUpdatesUrl(key, tour) {
   return u.href;
 }
 
-function liveTournamentStatsUrl(key) {
-  const u = new URL("https://feeds.datagolf.com/preds/live-tournament-stats");
-  u.searchParams.set(
-    "stats",
-    String(process.env.GOLF_LIVE_TOURNAMENT_STATS_STATS || "").trim() ||
-      "sg_ott,distance,accuracy,sg_app,gir,prox_fw,sg_putt,scrambling"
-  );
-  u.searchParams.set("round", String(process.env.GOLF_LIVE_TOURNAMENT_STATS_ROUND || "event_avg").trim() || "event_avg");
-  u.searchParams.set("display", "value");
-  u.searchParams.set("file_format", "json");
-  u.searchParams.set("key", key);
-  return u.href;
-}
 
 function liveHoleStatsUrl(key, tour) {
   const u = new URL("https://feeds.datagolf.com/preds/live-hole-stats");
@@ -482,11 +474,49 @@ async function main() {
   }
 
   let liveTournamentStats = null;
+  let liveTournamentStatsByRound = null;
+  let liveRoundActualsByDg = null;
   let liveHoleStats = null;
   try {
-    liveTournamentStats = await dgGetJson(liveTournamentStatsUrl(key));
+    liveTournamentStats = await dgGetJson(
+      liveTournamentStatsUrl(
+        key,
+        String(process.env.GOLF_LIVE_TOURNAMENT_STATS_ROUND || "event_avg").trim() || "event_avg",
+      ),
+    );
   } catch (e) {
-    console.warn("[fetch-live-in-play] live-tournament-stats:", e.message || e);
+    console.warn("[fetch-live-in-play] live-tournament-stats (event_avg):", e.message || e);
+  }
+  try {
+    liveTournamentStatsByRound = await fetchLiveTournamentStatsByRound(key, dgGetJson);
+    const inPlayByDg = new Map();
+    for (const row of parsed.data) {
+      const id = Math.round(num(row?.dg_id ?? row?.dgId, NaN));
+      if (Number.isFinite(id)) inPlayByDg.set(id, row);
+    }
+    const fu = fieldUpdates && typeof fieldUpdates === "object" ? fieldUpdates : {};
+    const roundPar = num(fu.course_par ?? fu.coursePar ?? projectionsSnapshot?.course_par_18, NaN);
+    const maxRound = Math.round(
+      num(
+        fu.current_round ??
+          parsed?.info?.current_round ??
+          projectionsSnapshot?.datagolf_live_current_round ??
+          projectionsSnapshot?.display_round,
+        4,
+      ),
+    );
+    liveRoundActualsByDg = buildLiveRoundActualsByDg(liveTournamentStatsByRound, inPlayByDg, {
+      roundPar: Number.isFinite(roundPar) ? roundPar : 72,
+      maxRound: Number.isFinite(maxRound) ? maxRound : 4,
+    });
+    const nPlayers = Object.keys(liveRoundActualsByDg).length;
+    if (nPlayers > 0) {
+      console.log(
+        `[fetch-live-in-play] live-tournament-stats per-round: ${nPlayers} player(s) with round score / birdies / pars / bogeys`,
+      );
+    }
+  } catch (e) {
+    console.warn("[fetch-live-in-play] live-tournament-stats by round:", e.message || e);
   }
   try {
     liveHoleStats = await dgGetJson(liveHoleStatsUrl(key, tourUsed));
@@ -499,6 +529,12 @@ async function main() {
     ...(fieldUpdates && typeof fieldUpdates === "object" ? { field_updates: fieldUpdates } : {}),
     ...(liveTournamentStats && typeof liveTournamentStats === "object"
       ? { live_tournament_stats: liveTournamentStats }
+      : {}),
+    ...(liveTournamentStatsByRound && typeof liveTournamentStatsByRound === "object"
+      ? { live_tournament_stats_by_round: liveTournamentStatsByRound }
+      : {}),
+    ...(liveRoundActualsByDg && typeof liveRoundActualsByDg === "object"
+      ? { live_round_actuals_by_dg: liveRoundActualsByDg }
       : {}),
     ...(liveHoleStats && typeof liveHoleStats === "object" ? { live_hole_stats: liveHoleStats } : {}),
   };
