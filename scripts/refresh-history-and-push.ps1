@@ -20,6 +20,7 @@ $ErrorActionPreference = "Stop"
 #     hole-level priors and **Historical Trends** (update:rounds + build:history; live round rows merged when live-in-play.json exists).
 #     Default push:all sets GOLF_HISTORICAL_ROUNDS_FULL_HISTORY=1; **update:rounds** (after fetch:in-play) refreshes
 #     historical_rounds_all.csv + player_round_history / embed / shards once. fetch:dg skips that merge (faster; live rows merge in).
+#     fetch:in-play writes live-in-play.json before update:rounds so build-player-history can merge rounds that lag historical-raw-data.
 #     Course Fit uses course-table.json for layout vs field SG.
 #
 # Hole Hangout — hole pars per hole for the active course/event:
@@ -43,6 +44,8 @@ $ErrorActionPreference = "Stop"
 #     appends alpha-caddie-web/data/dk_round_projection_audit.csv (DK line + model round stats per prop).
 #   export:round-projection-vs-actual — alpha-caddie-web/data/round_projection_vs_actual.csv (model vs actual per player×round).
 #   fetch:in-play → live-in-play.json → browser overlays placement win probs + live_tournament_stats distance/accuracy onto DATA.players
+#     (Historical Trends merges `preds/in-play.data` rows in app.js via DATA.live_in_play_snapshot + mergeLiveInPlayIntoRoundHistory
+#      so today’s tournament round survives scrub; scripts/fetch-live-in-play.mjs can carry forward dropped R1–R3 gross columns.)
 #   merge:live-hole-pars-into-projections runs AFTER fetch:book-odds + fetch:finish-tool so an inline fetch:dg inside
 #   book-odds does not leave projections without live_hole_stats hole_pars (tee-adjacent UI + consistency with Hole Hangout).
 # Mirrors below copy projections + live + approach_skill *.json into website/public/data/ so both apps ship the same JSON.

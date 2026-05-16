@@ -1507,6 +1507,7 @@ function mergeDatagolfInPlayPayload(j) {
   // Only overlay placement probabilities when in-play bundle and projections refer to the same tournament.
   // A cross-event merge can produce near-certain model prices against unrelated outright books.
   if (!eventAligned) {
+    delete DATA.live_in_play_snapshot;
     /* preds/in-play `info.event_name` can lag a week while field-updates already match this event.
        Still merge tee times + date_start from field_updates so Open-Meteo / per-tee weather works. */
     const fu = j.field_updates && typeof j.field_updates === "object" ? j.field_updates : null;
@@ -1535,6 +1536,7 @@ function mergeDatagolfInPlayPayload(j) {
     return metaTouched;
   }
   if (DATA.meta) delete DATA.meta.datagolf_live_event_mismatch;
+  DATA.live_in_play_snapshot = j.data;
   drivingTouched = mergeLiveTournamentDrivingIntoPlayers(j);
   if (j.field_updates && typeof j.field_updates === "object") {
     mergeDgFieldScoresFromBundleIntoData(j.data, j.field_updates);
@@ -1661,8 +1663,12 @@ const MAX_HISTORY_ROUNDS_PER_PLAYER = 2000;
 function dgInPlayRowForId(dgId) {
   const id = Math.round(num(dgId, NaN));
   if (!Number.isFinite(id)) return null;
-  const rows = Array.isArray(DATA?.data) ? DATA.data : [];
-  return rows.find((x) => Math.round(num(x?.dg_id ?? x?.dgId, NaN)) === id) || null;
+  const snap = Array.isArray(DATA?.live_in_play_snapshot)
+    ? DATA.live_in_play_snapshot
+    : Array.isArray(DATA?.data)
+      ? DATA.data
+      : [];
+  return snap.find((x) => Math.round(num(x?.dg_id ?? x?.dgId, NaN)) === id) || null;
 }
 
 function liveInPlayGrossForRound(inPlayRow, rnd) {
@@ -2984,11 +2990,15 @@ function hasStartedLiveRoundData() {
   if (!inPlayAffectsRoundOdds()) return false;
   const liveR = Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
   if (!Number.isFinite(liveR) || liveR < 1 || liveR > 4) return false;
-  const rows = Array.isArray(DATA?.data) ? DATA.data : [];
+  const rows = Array.isArray(DATA?.live_in_play_snapshot)
+    ? DATA.live_in_play_snapshot
+    : Array.isArray(DATA?.data)
+      ? DATA.data
+      : [];
   for (const r of rows) {
     const rr = Math.round(num(r?.round, NaN));
     if (rr !== liveR) continue;
-    const thru = Math.round(num(r?.dg_live_thru, NaN));
+    const thru = Math.round(num(r?.thru ?? r?.Thru, NaN));
     if (Number.isFinite(thru) && thru >= 1) return true;
   }
   return false;
@@ -10695,7 +10705,9 @@ function historyRoundCountsAsActual(row) {
       if (Number.isFinite(rnd) && Number.isFinite(liveR)) {
         if (rnd > liveR) return false;
         if (rnd === liveR) {
-          const gross = liveInPlayGrossForRound(dgInPlayRowForId(row.dg_id), rnd);
+          const bundleRow = dgInPlayRowForId(row.dg_id);
+          let gross = liveInPlayGrossForRound(bundleRow, rnd);
+          if (!Number.isFinite(gross)) gross = num(row.round_score, NaN);
           if (!Number.isFinite(gross)) return false;
         }
       }
