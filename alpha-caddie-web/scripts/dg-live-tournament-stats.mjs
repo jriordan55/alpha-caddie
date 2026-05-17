@@ -178,37 +178,159 @@ export function parseLiveTournamentStatsCounting(statsRow, inPlayRow, roundPar, 
   return out;
 }
 
+function mergeRoundActualIntoMap(byDg, dg, rnd, parsed, source) {
+  if (!parsed || typeof parsed !== "object") return;
+  const key = String(dg);
+  if (!byDg[key]) byDg[key] = {};
+  const rk = String(rnd);
+  const prev = byDg[key][rk];
+  if (prev && typeof prev === "object") {
+    const merged = { ...prev, ...parsed };
+    if (Number.isFinite(num(prev.round_score, NaN)) && !Number.isFinite(num(parsed.round_score, NaN)))
+      merged.round_score = prev.round_score;
+    for (const k of ["birdies", "pars", "bogeys", "gir", "thru"]) {
+      if (Number.isFinite(num(prev[k], NaN)) && !Number.isFinite(num(parsed[k], NaN))) merged[k] = prev[k];
+    }
+    byDg[key][rk] = { ...merged, source: prev.source || source };
+    return;
+  }
+  byDg[key][rk] = { ...parsed, source };
+}
+
+/** Gross-only row from preds/in-play `R1`…`R4` when LTS has no row for that round. */
+export function parseInPlayGrossRoundActual(inPlayRow, roundNum, roundPar) {
+  if (!inPlayRow || typeof inPlayRow !== "object") return null;
+  const rnd = Math.round(num(roundNum, NaN));
+  if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) return null;
+  const roundScore = grossFromInPlayRow(inPlayRow, rnd);
+  if (!Number.isFinite(roundScore)) return null;
+  const playerR = Math.round(num(inPlayRow.round ?? inPlayRow.Round, NaN));
+  const thru =
+    playerR === rnd
+      ? Math.round(num(inPlayRow.thru ?? inPlayRow.Thru ?? inPlayRow.thru_hole, NaN))
+      : 18;
+  const ipCount =
+    playerR === rnd && Number.isFinite(thru) && thru > 0
+      ? countingFromInPlayRow(inPlayRow, thru)
+      : {};
+  const out = {
+    round_score: Math.round(roundScore * 10) / 10,
+    birdies: Number.isFinite(ipCount.birdies) ? Math.round(ipCount.birdies) : null,
+    pars: Number.isFinite(ipCount.pars) ? Math.round(ipCount.pars) : null,
+    bogeys: Number.isFinite(ipCount.bogeys) ? Math.round(ipCount.bogeys) : null,
+    gir: null,
+    thru: Number.isFinite(thru) && thru > 0 ? thru : 18,
+    today: null,
+    sg_putt: NaN,
+    sg_app: NaN,
+    sg_arg: NaN,
+    sg_ott: NaN,
+    sg_t2g: NaN,
+    sg_total: NaN,
+  };
+  if (playerR === rnd) {
+    const today = num(inPlayRow.today ?? inPlayRow.Today, NaN);
+    if (Number.isFinite(today)) out.today = today;
+    for (const k of ["sg_putt", "sg_app", "sg_arg", "sg_ott", "sg_t2g", "sg_total"]) {
+      const v = num(inPlayRow[k], NaN);
+      if (Number.isFinite(v)) out[k] = v;
+    }
+  }
+  void roundPar;
+  return out;
+}
+
 /**
  * @param {Record<string, unknown>} statsByRound — keys "1".."4" → API payload
  * @param {Map<number, object>} inPlayByDg
- * @param {{ roundPar?: number, maxRound?: number }} opts
+ * @param {{ roundPar?: number }} opts
  */
 export function buildLiveRoundActualsByDg(statsByRound, inPlayByDg, opts = {}) {
-  const roundPar = num(opts.roundPar, NaN);
-  const maxRound = Math.min(4, Math.max(1, Math.round(num(opts.maxRound, 4))));
+  const roundPar = Number.isFinite(num(opts.roundPar, NaN)) ? num(opts.roundPar, NaN) : 72;
   /** @type {Record<string, Record<string, object>>} */
   const byDg = {};
 
-  for (let rnd = 1; rnd <= maxRound; rnd++) {
-    const payload = statsByRound[String(rnd)];
-    const list = liveStatsList(payload);
-    if (!list.length) continue;
+  for (let rnd = 1; rnd <= 4; rnd++) {
+    const list = liveStatsList(statsByRound?.[String(rnd)]);
     for (const statsRow of list) {
       const dg = Math.round(num(statsRow.dg_id ?? statsRow.dgId, NaN));
       if (!Number.isFinite(dg)) continue;
       const ip = inPlayByDg.get(dg);
-      const parsed = parseLiveTournamentStatsCounting(
-        statsRow,
-        ip,
-        Number.isFinite(roundPar) ? roundPar : 72,
-        rnd,
-      );
+      const parsed = parseLiveTournamentStatsCounting(statsRow, ip, roundPar, rnd);
       if (!parsed) continue;
+      mergeRoundActualIntoMap(byDg, dg, rnd, parsed, "live_tournament_stats");
+    }
+  }
+
+  for (const [dg, ip] of inPlayByDg) {
+    for (let rnd = 1; rnd <= 4; rnd++) {
+      const gross = grossFromInPlayRow(ip, rnd);
+      if (!Number.isFinite(gross)) continue;
       const key = String(dg);
-      if (!byDg[key]) byDg[key] = {};
-      byDg[key][String(rnd)] = { ...parsed, source: "live_tournament_stats" };
+      const existing = byDg[key]?.[String(rnd)];
+      if (existing?.round_score != null && Number.isFinite(num(existing.round_score, NaN))) continue;
+      const parsed = parseInPlayGrossRoundActual(ip, rnd, roundPar);
+      if (!parsed) continue;
+      mergeRoundActualIntoMap(byDg, dg, rnd, parsed, "in_play_gross");
     }
   }
 
   return byDg;
+}
+
+/** Per-round player counts for fetch logging. */
+export function liveRoundActualsRoundCounts(byDg) {
+  /** @type {Record<string, number>} */
+  const counts = { "1": 0, "2": 0, "3": 0, "4": 0 };
+  if (!byDg || typeof byDg !== "object") return counts;
+  for (const per of Object.values(byDg)) {
+    if (!per || typeof per !== "object") continue;
+    for (const [rk, rec] of Object.entries(per)) {
+      if (!rec || typeof rec !== "object") continue;
+      if (Number.isFinite(num(rec.round_score, NaN))) counts[rk] = (counts[rk] || 0) + 1;
+    }
+  }
+  return counts;
+}
+
+/**
+ * Build or augment `live_round_actuals_by_dg` from a preds/in-play bundle
+ * (precomputed block, per-round LTS payloads, and/or in-play `R*` columns).
+ */
+export function resolveLiveRoundActualsByDg(bundle, opts = {}) {
+  if (!bundle || typeof bundle !== "object") return {};
+  const fu = bundle.field_updates && typeof bundle.field_updates === "object" ? bundle.field_updates : {};
+  const roundPar = Number.isFinite(num(opts.roundPar, NaN))
+    ? num(opts.roundPar, NaN)
+    : num(fu.course_par ?? fu.coursePar, 72) || 72;
+  const inPlayByDg = new Map();
+  for (const row of Array.isArray(bundle.data) ? bundle.data : []) {
+    const id = Math.round(num(row?.dg_id ?? row?.dgId, NaN));
+    if (Number.isFinite(id)) inPlayByDg.set(id, row);
+  }
+  const statsByRound =
+    bundle.live_tournament_stats_by_round && typeof bundle.live_tournament_stats_by_round === "object"
+      ? bundle.live_tournament_stats_by_round
+      : {};
+  const built = buildLiveRoundActualsByDg(statsByRound, inPlayByDg, { roundPar });
+  const pre = bundle.live_round_actuals_by_dg;
+  if (!pre || typeof pre !== "object") return built;
+  /** @type {Record<string, Record<string, object>>} */
+  const out = { ...pre };
+  for (const [dgKey, per] of Object.entries(built)) {
+    if (!per || typeof per !== "object") continue;
+    if (!out[dgKey]) out[dgKey] = {};
+    for (const [rk, rec] of Object.entries(per)) {
+      const prev = out[dgKey][rk];
+      if (prev && typeof prev === "object") {
+        const merged = { ...prev, ...rec };
+        if (Number.isFinite(num(prev.round_score, NaN)) && !Number.isFinite(num(rec.round_score, NaN)))
+          merged.round_score = prev.round_score;
+        out[dgKey][rk] = merged;
+      } else {
+        out[dgKey][rk] = rec;
+      }
+    }
+  }
+  return out;
 }

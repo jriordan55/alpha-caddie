@@ -845,6 +845,10 @@ let datagolfLivePollTimerId = 0;
 let lastDatagolfInPlayToken = "";
 /** Every N polls, merge anyway so make_cut / current_pos refresh if the file changes without last_update bumping. */
 let datagolfLivePeriodicForceTick = 0;
+/** Last preds/in-play bundle for Historical Trends (independent of live odds polling). */
+let lastLiveInPlayBundleForHistory = null;
+let liveTournamentHistoryMergeInFlight = null;
+let propsTrendsLiveHistoryFetchQueued = false;
 
 function projectionsJsonUrl() {
   if (typeof window !== "undefined" && window.__ALPHA_CADDIE_PROJECTIONS_URL__) {
@@ -1811,15 +1815,66 @@ function upsertHistoryBucketLiveRound(dgId, liveRec) {
   return true;
 }
 
+/** preds/in-play `R1`…`R4` gross when precomputed `live_round_actuals_by_dg` is missing or incomplete. */
+function syncFallbackLiveRoundActualsFromInPlay(j) {
+  /** @type {Record<string, Record<string, { round_score: number, source: string }>>} */
+  const byDg = {};
+  if (!j || !Array.isArray(j.data)) return byDg;
+  for (const row of j.data) {
+    const dg = Math.round(num(row?.dg_id ?? row?.dgId, NaN));
+    if (!Number.isFinite(dg)) continue;
+    for (let rnd = 1; rnd <= 4; rnd++) {
+      const g = num(row[`R${rnd}`] ?? row[`r${rnd}`], NaN);
+      if (!Number.isFinite(g) || g <= 0) continue;
+      const dk = String(dg);
+      const rk = String(rnd);
+      if (!byDg[dk]) byDg[dk] = {};
+      if (byDg[dk][rk]?.round_score != null) continue;
+      byDg[dk][rk] = { round_score: Math.round(g * 10) / 10, source: "in_play_gross" };
+    }
+  }
+  return byDg;
+}
+
+function mergeLiveRoundActualsMaps(pre, built) {
+  if (!built || typeof built !== "object") return pre && typeof pre === "object" ? pre : {};
+  if (!pre || typeof pre !== "object") return built;
+  const out = { ...pre };
+  for (const [dgKey, per] of Object.entries(built)) {
+    if (!per || typeof per !== "object") continue;
+    if (!out[dgKey]) out[dgKey] = {};
+    for (const [rk, rec] of Object.entries(per)) {
+      const prev = out[dgKey][rk];
+      if (prev && typeof prev === "object") {
+        const merged = { ...prev, ...rec };
+        if (Number.isFinite(num(prev.round_score, NaN)) && !Number.isFinite(num(rec.round_score, NaN)))
+          merged.round_score = prev.round_score;
+        out[dgKey][rk] = merged;
+      } else {
+        out[dgKey][rk] = rec;
+      }
+    }
+  }
+  return out;
+}
+
+function resolveLiveRoundActualsForHistory(j) {
+  const pre = j?.live_round_actuals_by_dg;
+  const fallback = syncFallbackLiveRoundActualsFromInPlay(j);
+  return mergeLiveRoundActualsMaps(
+    pre && typeof pre === "object" ? pre : null,
+    fallback,
+  );
+}
+
 /**
  * During live weeks (Thu–Sun): merge preds/live-tournament-stats round actuals into HISTORY for Historical Trends.
  * `fetch:in-play` builds `live_round_actuals_by_dg` from per-round Live Tournament Stats API pulls.
  */
 function mergeLiveInPlayIntoRoundHistory(j) {
   if (!j || typeof j !== "object" || !HISTORY._ok || !HISTORY.byDgId) return 0;
-  if (!inPlayAffectsRoundOdds()) return 0;
-  const actualsByDg = j.live_round_actuals_by_dg;
-  if (!actualsByDg || typeof actualsByDg !== "object") return 0;
+  const actualsByDg = resolveLiveRoundActualsForHistory(j);
+  if (!actualsByDg || typeof actualsByDg !== "object" || !Object.keys(actualsByDg).length) return 0;
 
   const info = j.info && typeof j.info === "object" ? j.info : {};
   const fu = j.field_updates && typeof j.field_updates === "object" ? j.field_updates : {};
@@ -1870,6 +1925,8 @@ function mergeLiveInPlayIntoRoundHistory(j) {
       if (!act || typeof act !== "object") continue;
       const rnd = Math.round(num(rndKey, NaN));
       if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
+      const actScore = num(act.round_score, NaN);
+      if (!Number.isFinite(actScore) || actScore <= 0) continue;
 
       let eventDate = "";
       if (dateStartIso) eventDate = eventCompletedMdYForRoundLiveHist(dateStartIso, rnd);
@@ -1922,6 +1979,70 @@ function mergeLiveInPlayIntoRoundHistory(j) {
     bumpHistoryMutationEpoch();
   }
   return merged;
+}
+
+function liveInPlayHistoryBundleWithActuals(j) {
+  if (!j || typeof j !== "object") return j;
+  return { ...j, live_round_actuals_by_dg: resolveLiveRoundActualsForHistory(j) };
+}
+
+function reapplyLiveInPlayHistoryMerge() {
+  if (!HISTORY._ok || !lastLiveInPlayBundleForHistory) return 0;
+  return mergeLiveInPlayIntoRoundHistory(liveInPlayHistoryBundleWithActuals(lastLiveInPlayBundleForHistory));
+}
+
+/**
+ * Fetch preds/in-play and merge completed live-week rounds into HISTORY for Historical Trends.
+ * Runs even when meta.poll_datagolf_live_predictions is false (odds overlay off).
+ */
+async function ensureLiveTournamentHistoryMerged(opts = {}) {
+  if (isFileProtocol()) return 0;
+  if (!DATA.players?.length) return 0;
+  if (opts.useCache !== false && HISTORY._ok && lastLiveInPlayBundleForHistory) {
+    const n = reapplyLiveInPlayHistoryMerge();
+    if (n > 0) {
+      refreshPricingAffectedViews();
+      updateStatusBar();
+    }
+    return n;
+  }
+  if (liveTournamentHistoryMergeInFlight) return liveTournamentHistoryMergeInFlight;
+  liveTournamentHistoryMergeInFlight = (async () => {
+    try {
+      const res = await fetch(cacheBustFetchUrl(liveInPlayJsonUrl()), { cache: "no-store" });
+      if (!res.ok) return 0;
+      const j = await res.json();
+      lastLiveInPlayBundleForHistory = j;
+      let histBundle = liveInPlayHistoryBundleWithActuals(j);
+      try {
+        const mod = await import("./scripts/dg-live-tournament-stats.mjs");
+        const fu = j.field_updates && typeof j.field_updates === "object" ? j.field_updates : {};
+        const roundPar = num(
+          fu.course_par ?? fu.coursePar ?? DATA?.meta?.course_par_18 ?? DATA?.meta?.course_par,
+          72,
+        );
+        const actuals = mod.resolveLiveRoundActualsByDg(j, {
+          roundPar: Number.isFinite(roundPar) ? roundPar : 72,
+        });
+        histBundle = { ...j, live_round_actuals_by_dg: actuals };
+        lastLiveInPlayBundleForHistory = histBundle;
+      } catch (_) {
+        /* resolveLiveRoundActualsForHistory fallback */
+      }
+      if (!HISTORY._ok) return 0;
+      const histMerged = mergeLiveInPlayIntoRoundHistory(histBundle);
+      if (histMerged > 0) {
+        refreshPricingAffectedViews();
+        updateStatusBar();
+      }
+      return histMerged;
+    } catch (_) {
+      return 0;
+    } finally {
+      liveTournamentHistoryMergeInFlight = null;
+    }
+  })();
+  return liveTournamentHistoryMergeInFlight;
 }
 
 /** Overlay live-tournament-stats counting actuals onto projection rows for the live tournament week. */
@@ -2008,10 +2129,30 @@ async function fetchAndMergeDatagolfLiveInPlay(opts = {}) {
     const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) return;
     const j = await res.json();
+    lastLiveInPlayBundleForHistory = j;
     const token = dgInPlayUpdateToken(j);
-    if (!force && token && lastDatagolfInPlayToken && token === lastDatagolfInPlayToken) return;
-    const merged = mergeDatagolfInPlayPayload(j);
-    const histMerged = mergeLiveInPlayIntoRoundHistory(j);
+    if (!force && token && lastDatagolfInPlayToken && token === lastDatagolfInPlayToken) {
+      if (HISTORY._ok) reapplyLiveInPlayHistoryMerge();
+      return;
+    }
+    let histBundle = j;
+    try {
+      const mod = await import("./scripts/dg-live-tournament-stats.mjs");
+      const fu = j.field_updates && typeof j.field_updates === "object" ? j.field_updates : {};
+      const roundPar = num(
+        fu.course_par ?? fu.coursePar ?? DATA?.meta?.course_par_18 ?? DATA?.meta?.course_par,
+        72,
+      );
+      const actuals = mod.resolveLiveRoundActualsByDg(j, {
+        roundPar: Number.isFinite(roundPar) ? roundPar : 72,
+      });
+      histBundle = { ...j, live_round_actuals_by_dg: actuals };
+      lastLiveInPlayBundleForHistory = histBundle;
+    } catch (_) {
+      /* sync fallback inside mergeLiveInPlayIntoRoundHistory */
+    }
+    const merged = datagolfLiveOverlayEnabled() ? mergeDatagolfInPlayPayload(j) : false;
+    const histMerged = HISTORY._ok ? mergeLiveInPlayIntoRoundHistory(histBundle) : 0;
     const roundBumped = syncLbRoundToTournamentModelRound();
     if (token) lastDatagolfInPlayToken = token;
     if (merged || roundBumped || histMerged > 0) {
@@ -9059,7 +9200,7 @@ function historyDateMdYIsFuture(s) {
 
 /** CSV history rows encode Thursday (etc.) in sortKey and advance calendar days via round_num; live-merge rows already store each round's real calendar day (`_from_live_in_play`). */
 function historyRoundChartUsesR1AnchorSortKey(row) {
-  return !(row && row._from_live_in_play);
+  return !(row && (row._from_live_in_play || row._from_live_tournament_stats));
 }
 
 /** Calendar day shown on the trends chart (sortKey + round_num), as UTC midnight ms. */
@@ -9149,6 +9290,14 @@ function applyPlayerHistoryPayload(payload, opts = {}) {
   PRICING_MU_BONUS_CACHE.clear();
   if (DATA?.meta?.event_name) scrubNonActualRoundsFromHistoryBuckets();
   bumpHistoryMutationEpoch();
+  const hm = reapplyLiveInPlayHistoryMerge();
+  if (!hm && !isFileProtocol()) {
+    void ensureLiveTournamentHistoryMerged({ useCache: false }).then((n) => {
+      if (n > 0 && activeAppTabId() === "props") renderPropsTrends();
+    });
+  } else if (hm > 0 && activeAppTabId() === "props") {
+    renderPropsTrends();
+  }
 }
 
 function mergePlayerHistoryPartialPayload(payload) {
@@ -9168,6 +9317,7 @@ function mergePlayerHistoryPartialPayload(payload) {
   }
   PRICING_MU_BONUS_CACHE.clear();
   bumpHistoryMutationEpoch();
+  reapplyLiveInPlayHistoryMerge();
   return true;
 }
 
@@ -10836,8 +10986,13 @@ function historyRoundCountsAsActual(row) {
 
   if (historyRoundMatchesCurrentEvent(row)) {
     const rnd = Math.round(num(row.round_num, NaN));
-    const cap = currentTournamentProgressRoundCap();
-    if (Number.isFinite(rnd) && Number.isFinite(cap) && rnd > cap) return false;
+    const rs = num(row.round_score, NaN);
+    const liveGrossLocked =
+      row._from_live_tournament_stats && Number.isFinite(rs) && rs > 0;
+    if (!liveGrossLocked) {
+      const cap = currentTournamentProgressRoundCap();
+      if (Number.isFinite(rnd) && Number.isFinite(cap) && rnd > cap) return false;
+    }
   }
   return true;
 }
@@ -12649,10 +12804,11 @@ function renderPropsTrendsCourseWindow() {
     renderPropsHitRateAndTopTable(statKey, NaN, winN);
     return;
   }
-  if (propsCourseWindowModeActive() && !isFileProtocol() && !propsCourseWindowLiveFetchQueued) {
+  if (!isFileProtocol() && !propsCourseWindowLiveFetchQueued) {
     propsCourseWindowLiveFetchQueued = true;
-    void fetchAndMergeDatagolfLiveInPlay({ force: true }).finally(() => {
+    void ensureLiveTournamentHistoryMerged({ useCache: true }).finally(() => {
       propsCourseWindowLiveFetchQueued = false;
+      if (activeAppTabId() === "props") renderPropsTrendsCourseWindow();
     });
   }
   if (empty) empty.hidden = true;
@@ -12800,6 +12956,13 @@ function renderPropsTrends() {
     drawPropsTrendCanvas([], lineEarly, statKey);
     renderPropsHitRateAndTopTable(statKey, lineEarly, wnEarly);
     return;
+  }
+  if (!isFileProtocol() && !propsTrendsLiveHistoryFetchQueued) {
+    propsTrendsLiveHistoryFetchQueued = true;
+    void ensureLiveTournamentHistoryMerged({ useCache: true }).then((n) => {
+      propsTrendsLiveHistoryFetchQueued = false;
+      if (n > 0 && activeAppTabId() === "props") renderPropsTrends();
+    });
   }
   if (empty) empty.hidden = true;
   const nWinEl = document.getElementById("props-window-n");
@@ -14044,7 +14207,10 @@ function yieldToMain() {
 /** Live merge + course table: not needed for first paint; load after projections UI, then refresh affected tabs. */
 function prefetchPostProjectionsSidecarsAfterPaint() {
   const jobs = [];
-  if (!isFileProtocol()) jobs.push(fetchAndMergeDatagolfLiveInPlay({ force: true }));
+  if (!isFileProtocol()) {
+    jobs.push(ensureLiveTournamentHistoryMerged({ useCache: false }));
+    if (datagolfLiveOverlayEnabled()) jobs.push(fetchAndMergeDatagolfLiveInPlay({ force: true }));
+  }
   jobs.push(loadCourseTableJson());
   return Promise.all(jobs).finally(() => {
     refreshPricingAffectedViews();

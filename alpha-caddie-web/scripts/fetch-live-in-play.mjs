@@ -34,7 +34,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { eventsLikelySame, fieldWeekKey, fieldWeekKeysRoughMatch } from "./dg-events-align.mjs";
 import {
-  buildLiveRoundActualsByDg,
+  liveRoundActualsRoundCounts,
+  resolveLiveRoundActualsByDg,
   fetchLiveTournamentStatsByRound,
   liveTournamentStatsUrl,
 } from "./dg-live-tournament-stats.mjs";
@@ -377,7 +378,7 @@ function scoreDigestFromInPlayData(data) {
   return `${data.length}:${hashDjb2(chunks.join("|"))}`;
 }
 
-function compositeLiveBundleToken(parsed, liveTournamentStats, liveHoleStats, fieldRaw) {
+function compositeLiveBundleToken(parsed, liveTournamentStats, liveHoleStats, fieldRaw, liveRoundActualsByDg) {
   const parts = [];
   const lu = parsed?.info?.last_update ?? parsed?.last_update;
   if (lu != null) parts.push(`lu:${String(lu).trim()}`);
@@ -387,6 +388,10 @@ function compositeLiveBundleToken(parsed, liveTournamentStats, liveHoleStats, fi
   if (lhu != null) parts.push(`lhs:${String(lhu).trim()}`);
   const flu = fieldRaw?.last_updated ?? fieldRaw?.last_update ?? fieldRaw?.updated_at;
   if (flu != null) parts.push(`fu:${String(flu).trim()}`);
+  if (liveRoundActualsByDg && typeof liveRoundActualsByDg === "object") {
+    const rc = liveRoundActualsRoundCounts(liveRoundActualsByDg);
+    parts.push(`lra:${rc["1"] || 0},${rc["2"] || 0},${rc["3"] || 0},${rc["4"] || 0}`);
+  }
   return parts.join("|");
 }
 
@@ -496,23 +501,19 @@ async function main() {
     }
     const fu = fieldUpdates && typeof fieldUpdates === "object" ? fieldUpdates : {};
     const roundPar = num(fu.course_par ?? fu.coursePar ?? projectionsSnapshot?.course_par_18, NaN);
-    const maxRound = Math.round(
-      num(
-        fu.current_round ??
-          parsed?.info?.current_round ??
-          projectionsSnapshot?.datagolf_live_current_round ??
-          projectionsSnapshot?.display_round,
-        4,
-      ),
-    );
-    liveRoundActualsByDg = buildLiveRoundActualsByDg(liveTournamentStatsByRound, inPlayByDg, {
+    const draftBundle = {
+      data: parsed.data,
+      field_updates: fu,
+      live_tournament_stats_by_round: liveTournamentStatsByRound,
+    };
+    liveRoundActualsByDg = resolveLiveRoundActualsByDg(draftBundle, {
       roundPar: Number.isFinite(roundPar) ? roundPar : 72,
-      maxRound: Number.isFinite(maxRound) ? maxRound : 4,
     });
     const nPlayers = Object.keys(liveRoundActualsByDg).length;
+    const rc = liveRoundActualsRoundCounts(liveRoundActualsByDg);
     if (nPlayers > 0) {
       console.log(
-        `[fetch-live-in-play] live-tournament-stats per-round: ${nPlayers} player(s) with round score / birdies / pars / bogeys`,
+        `[fetch-live-in-play] live round actuals: ${nPlayers} player(s); R1=${rc["1"] || 0} R2=${rc["2"] || 0} R3=${rc["3"] || 0} R4=${rc["4"] || 0} with gross`,
       );
     }
   } catch (e) {
@@ -540,7 +541,13 @@ async function main() {
   };
 
   fs.mkdirSync(path.dirname(liveOutPath), { recursive: true });
-  const token = compositeLiveBundleToken(parsed, liveTournamentStats, liveHoleStats, fieldUpdates);
+  const token = compositeLiveBundleToken(
+    parsed,
+    liveTournamentStats,
+    liveHoleStats,
+    fieldUpdates,
+    liveRoundActualsByDg,
+  );
   const pm = readProjectionsRoot();
   const infoEv = String(parsed?.info?.event_name || "").trim();
   const projEv = pm ? String(pm.event_name || "").trim() : "";
@@ -557,7 +564,8 @@ async function main() {
         { ...prev, data: Array.isArray(prev.data) ? prev.data : [] },
         prev.live_tournament_stats,
         prev.live_hole_stats,
-        prev.field_updates
+        prev.field_updates,
+        prev.live_round_actuals_by_dg,
       );
       if (prevTok && prevTok === token) {
         if (projInPlayEventMismatch) {

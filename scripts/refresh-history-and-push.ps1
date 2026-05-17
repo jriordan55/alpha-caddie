@@ -47,8 +47,9 @@ function Run-Npm([string] $Label, [Parameter(ValueFromRemainingArguments = $true
 #   • embedded-player-round-history.js (+ CSV / player_round_history.json / player-history shards) — Hole Hangout
 #     hole-level priors and **Historical Trends** (update:rounds + build:history; live round rows merged when live-in-play.json exists).
 #     Default push:all sets GOLF_HISTORICAL_ROUNDS_FULL_HISTORY=1; **update:rounds** (after fetch:in-play) refreshes
-#     historical_rounds_all.csv + player_round_history / embed / shards once. fetch:dg skips that merge (faster; live rows merge in).
-#     fetch:in-play writes live-in-play.json before update:rounds so build-player-history can merge rounds that lag historical-raw-data.
+#     historical_rounds_all.csv + player_round_history / embed / shards once. fetch:dg skips that merge (faster).
+#     fetch:in-play writes live-in-play.json (live_round_actuals_by_dg from preds/live-tournament-stats per round + R* gross)
+#     before update:rounds so build-player-history merges the live week into exported history (Aronimink / current PGA rounds).
 #     Course Fit uses course-table.json for layout vs field SG.
 #
 # Hole Hangout — hole pars per hole for the active course/event:
@@ -71,9 +72,9 @@ function Run-Npm([string] $Label, [Parameter(ValueFromRemainingArguments = $true
 #   fetch:book-odds → matchup/outright odds + DraftKings round O/U props (Playwright) merged into projections.json;
 #     appends alpha-caddie-web/data/dk_round_projection_audit.csv (DK line + model round stats per prop).
 #   export:round-projection-vs-actual — alpha-caddie-web/data/round_projection_vs_actual.csv (model vs actual per player×round).
-#   fetch:in-play → live-in-play.json → browser overlays placement win probs + live_tournament_stats distance/accuracy onto DATA.players
-#     (Historical Trends merges `preds/in-play.data` rows in app.js via DATA.live_in_play_snapshot + mergeLiveInPlayIntoRoundHistory
-#      so today’s tournament round survives scrub; scripts/fetch-live-in-play.mjs can carry forward dropped R1–R3 gross columns.)
+#   fetch:in-play → live-in-play.json (live_round_actuals_by_dg) → build-player-history merges into player_round_history + shards;
+#     browser also merges live-in-play on Historical Trends open (app.js ensureLiveTournamentHistoryMerged).
+#     fetch-live-in-play.mjs carries forward dropped R1–R3 gross columns when the field advances.
 #   merge:live-hole-pars-into-projections runs AFTER fetch:book-odds + fetch:finish-tool so an inline fetch:dg inside
 #   book-odds does not leave projections without live_hole_stats hole_pars (tee-adjacent UI + consistency with Hole Hangout).
 #   merge:live-round-meta-into-projections bumps display_round from live-in-play + reapplies μ_SG prior-round
