@@ -162,6 +162,7 @@ const METADATA_OVERLAY_CSV = resolveMetadataOverlayCsvPath();
 const HOLES_CSV = resolveHoleDataCsv();
 const PROJECTIONS_JSON = path.join(WEB_ROOT, "projections.json");
 const LIVE_IN_PLAY_JSON = path.join(WEB_ROOT, "live-in-play.json");
+const PGATOUR_EVENT_ROUNDS_JSON = path.join(WEB_ROOT, "data", "pgatour_event_rounds.json");
 const OUT_JSON = path.join(WEB_ROOT, "player_round_history.json");
 const SHARD_DIR = path.join(WEB_ROOT, "player-history", "by-dg");
 const SHARD_MANIFEST_JSON = path.join(WEB_ROOT, "player-history", "manifest.json");
@@ -205,11 +206,9 @@ function writePlayerHistoryShards(out) {
     const holesByPlayerKey = {};
     if (pkey && out.holesByPlayerKey?.[pkey]) holesByPlayerKey[pkey] = out.holesByPlayerKey[pkey];
     writeJsonAtomic(path.join(SHARD_DIR, `${id}.json`), {
-      meta: out.meta,
-      byDgId: {
-        [id]: bucket,
-      },
-      holesByPlayerKey,
+      dg_id: bucket.dg_id,
+      player_name: bucket.player_name,
+      rounds: bucket.rounds,
     });
     players.push({
       dg_id: Number(dgId),
@@ -586,6 +585,30 @@ function buildLiveHistoryRowsFromBundle() {
   return out.length ? out : loadLiveRoundSnapshotByDg();
 }
 
+/** Current-event rows from pgatouR (npm run refresh:pgatour-event / push:all). */
+function loadPgatourEventRoundRows() {
+  if (!fs.existsSync(PGATOUR_EVENT_ROUNDS_JSON)) return null;
+  try {
+    const raw = JSON.parse(fs.readFileSync(PGATOUR_EVENT_ROUNDS_JSON, "utf8"));
+    const list = Array.isArray(raw?.rounds) ? raw.rounds : [];
+    if (!list.length) return null;
+    const projEvent = fs.existsSync(PROJECTIONS_JSON)
+      ? String(JSON.parse(fs.readFileSync(PROJECTIONS_JSON, "utf8"))?.event_name || "").trim()
+      : "";
+    const metaEvent = String(raw?.meta?.event_name || "").trim();
+    if (projEvent && metaEvent && !eventsLikelySame(projEvent, metaEvent)) {
+      console.warn(
+        `[build-player-history] pgatour_event_rounds.json event "${metaEvent}" != projections "${projEvent}" — skip`,
+      );
+      return null;
+    }
+    return list.filter((r) => r && typeof r === "object" && r._from_pgatour);
+  } catch (e) {
+    console.warn("[build-player-history] pgatour_event_rounds.json:", e?.message || e);
+    return null;
+  }
+}
+
 /**
  * Fallback when live_tournament_stats payloads are empty: preds/in-play `R1`–`R4` gross only.
  */
@@ -790,12 +813,14 @@ function mergeLiveTournamentStatsOntoHistoryRound(existing, liveRec) {
     if (historyRowHasStoredCountingStat(existing, k)) out[k] = existing[k];
   }
   out._from_live_tournament_stats = true;
+  if (liveRec?._from_pgatour) out._from_pgatour = true;
   delete out._from_live_in_play;
   return out;
 }
 
 function mergeLiveOntoHistoryRound(existing, liveRec) {
-  if (liveRec?._from_live_tournament_stats) return mergeLiveTournamentStatsOntoHistoryRound(existing, liveRec);
+  if (liveRec?._from_live_tournament_stats || liveRec?._from_pgatour)
+    return mergeLiveTournamentStatsOntoHistoryRound(existing, liveRec);
   return mergeLiveInPlayOntoHistoryRound(existing, liveRec);
 }
 
@@ -1307,13 +1332,20 @@ async function main() {
   const shotsAgg = await loadShotsRoundAggMaps();
   const { byDgId, allowedTriples } = await streamRounds(allowed, pgaMetaOverlay, shotsAgg);
   let liveMergedRows = 0;
+  const pgaRows = loadPgatourEventRoundRows();
+  if (pgaRows?.length) {
+    const nPga = upsertLiveRoundRows(byDgId, pgaRows);
+    liveMergedRows += nPga;
+    console.log(`[build-player-history] Merged ${nPga} pgatouR event round row(s) from pgatour_event_rounds.json.`);
+  }
   const liveRows = buildLiveHistoryRowsFromBundle();
   if (liveRows?.length) {
-    liveMergedRows = upsertLiveRoundRows(byDgId, liveRows);
+    const nLive = upsertLiveRoundRows(byDgId, liveRows);
+    liveMergedRows += nLive;
     console.log(
-      `[build-player-history] Merged ${liveMergedRows} live-tournament round row(s) from live-in-play.json (preds/live-tournament-stats + in-play R* gross).`,
+      `[build-player-history] Merged ${nLive} live-tournament round row(s) from live-in-play.json (preds/live-tournament-stats + in-play R* gross).`,
     );
-  } else if (fs.existsSync(LIVE_IN_PLAY_JSON)) {
+  } else if (fs.existsSync(LIVE_IN_PLAY_JSON) && !pgaRows?.length) {
     console.log("[build-player-history] No live-week history rows to merge (check event alignment / date_start).");
   }
   let futureRoundsStripped = 0;
@@ -1379,6 +1411,9 @@ async function main() {
       max_rounds_per_player: MAX_ROUNDS_PER_PLAYER,
       players: byDgId.size,
       live_tournament_stats_merged: liveMergedRows,
+      pgatour_event_rounds_json: fs.existsSync(PGATOUR_EVENT_ROUNDS_JSON)
+        ? path.basename(PGATOUR_EVENT_ROUNDS_JSON)
+        : null,
     },
     byDgId: Object.fromEntries(
       [...byDgId.entries()].map(([k, v]) => [

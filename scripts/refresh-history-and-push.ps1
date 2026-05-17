@@ -125,6 +125,7 @@ function Bump-AlphaCaddieAppJsCache([string] $AlphaCaddieWebRoot) {
 Run-Npm "Running fetch:dg ..." run fetch:dg
 Run-Npm "Building course-table.json (course mapping) ..." run build:course-table
 Run-Npm "Running fetch:in-play ..." run fetch:in-play
+Run-Npm "Refreshing current-event PGA rounds from pgatouR ..." run refresh:pgatour-event
 Remove-Item Env:\GOLF_SKIP_DK_OU -ErrorAction SilentlyContinue
 Remove-Item Env:\PERFECT_SKIP_FETCH_DK_OU -ErrorAction SilentlyContinue
 # fetch:book-odds pulls DK round props (Birdies/Total Score/GIR/etc.) via Playwright — no separate fetch:dk-ou (would duplicate Chromium).
@@ -187,6 +188,7 @@ $artifacts = @(
   "alpha-caddie-web/data/course_table.csv",
   "alpha-caddie-web/data/dk_round_projection_audit.csv",
   "alpha-caddie-web/data/round_projection_vs_actual.csv",
+  "alpha-caddie-web/data/pgatour_event_rounds.json",
   "alpha-caddie-web/hole_pars_from_shots.json",
   "alpha-caddie-web/player_shots_web.json",
   "alpha-caddie-web/player-history",

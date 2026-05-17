@@ -18,6 +18,7 @@
     "refresh:live-dk-round": "node scripts/refresh-live-dk-round.mjs",
     "refresh:round-ev": "node scripts/refresh-round-ev-tabs.mjs",
     "fetch:dk-ou": "node scripts/draftkings-ou-props.mjs",
+    "refresh:pgatour-event": "node scripts/run-refresh-pgatour-event-rounds.mjs",
     "update:rounds": "node scripts/run-update-historical-rounds.mjs",
     "update:odds": "node scripts/update-historical-odds-node.mjs",
     "sync:rounds-csv": "node scripts/sync-historical-csv.mjs",

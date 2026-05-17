@@ -1,0 +1,246 @@
+#!/usr/bin/env Rscript
+# Current PGA tournament round rows from pgatouR scorecards (official hole-by-hole).
+# Writes alpha-caddie-web/data/pgatour_event_rounds.json for build-player-history merge.
+#
+# Usage: Rscript scripts/refresh_pgatour_event_rounds.R [repo_root]
+# npm: npm run refresh:pgatour-event (from alpha-caddie-web)
+
+args <- commandArgs(trailingOnly = TRUE)
+repo <- if (length(args) >= 1L) {
+  normalizePath(args[[1]], winslash = "/", mustWork = TRUE)
+} else {
+  rd <- Sys.getenv("GOLF_MODEL_DIR", unset = "")
+  if (nzchar(rd)) normalizePath(rd, winslash = "/", mustWork = TRUE) else normalizePath(getwd(), winslash = "/")
+}
+
+suppressPackageStartupMessages({
+  library(jsonlite)
+  library(dplyr)
+  library(tibble)
+})
+
+if (!requireNamespace("pgatouR", quietly = TRUE)) {
+  message("[refresh-pgatour-event] pgatouR not installed — skip (remotes::install_github('WalrusQuant/pgatouR'))")
+  quit(save = "no", status = 0L)
+}
+
+source(file.path(repo, "R", "scorecard.R"))
+source(file.path(repo, "R", "player_id_mapping.R"))
+
+norm_evt <- function(s) {
+  s <- tolower(trimws(as.character(s)))
+  gsub("[^a-z0-9]+", " ", s)
+}
+
+events_likely_same <- function(a, b) {
+  fa <- norm_evt(a)
+  fb <- norm_evt(b)
+  if (!nzchar(fa) || !nzchar(fb)) return(FALSE)
+  if (fa == fb) return(TRUE)
+  if (grepl(fa, fb, fixed = TRUE) || grepl(fb, fa, fixed = TRUE)) return(TRUE)
+  if (nchar(fa) >= 8 && grepl(substr(fa, 1, 8), fb, fixed = TRUE)) return(TRUE)
+  if (nchar(fb) >= 8 && grepl(substr(fb, 1, 8), fa, fixed = TRUE)) return(TRUE)
+  FALSE
+}
+
+pick_col <- function(df, candidates) {
+  hit <- candidates[candidates %in% names(df)]
+  if (length(hit)) hit[[1]] else NA_character_
+}
+
+format_us_mdy <- function(rd) {
+  if (!inherits(rd, "Date") || length(rd) != 1L || is.na(rd)) return("")
+  sprintf("%d/%d/%d", as.integer(format(rd, "%m")), as.integer(format(rd, "%d")), as.integer(format(rd, "%Y")))
+}
+
+tournament_anchor_date <- function(ssched_row) {
+  if (nrow(ssched_row) < 1L) return(as.Date(NA))
+  dd <- trimws(as.character(ssched_row$display_date[1]))
+  yr <- suppressWarnings(as.integer(as.character(ssched_row$year[1])))
+  regm <- gregexpr("[0-9]{1,2}/[0-9]{1,2}/[0-9]{2,4}", dd, perl = TRUE)
+  hits <- regmatches(dd, regm)[[1]]
+  if (length(hits) >= 1L) {
+    parts <- strsplit(hits[[1]], "/", fixed = TRUE)[[1]]
+    if (length(parts) == 3L) {
+      mo <- suppressWarnings(as.integer(parts[1]))
+      d <- suppressWarnings(as.integer(parts[2]))
+      yy <- suppressWarnings(as.integer(parts[3]))
+      if (yy < 100L) yy <- yy + if (yy >= 30L) 1900L else 2000L
+      if (!is.na(mo) && !is.na(d) && !is.na(yy)) {
+        return(suppressWarnings(as.Date(sprintf("%04d-%02d-%02d", yy, mo, d))))
+      }
+    }
+  }
+  if (!is.na(yr)) return(suppressWarnings(as.Date(sprintf("%s-07-01", yr))))
+  as.Date(NA)
+}
+
+round_played_date <- function(anchor, round_num) {
+  if (inherits(anchor, "Date") && !is.na(anchor)) return(anchor + (as.integer(round_num) - 1L))
+  as.Date(NA)
+}
+
+sort_key_from_date <- function(rd, round_num) {
+  if (!inherits(rd, "Date") || is.na(rd)) return(0L)
+  y <- as.integer(format(rd, "%Y"))
+  mo <- as.integer(format(rd, "%m"))
+  d <- as.integer(format(rd, "%d"))
+  (y * 10000L + mo * 100L + d) * 10L + as.integer(round_num)
+}
+
+proj_path <- file.path(repo, "alpha-caddie-web", "projections.json")
+out_path <- file.path(repo, "alpha-caddie-web", "data", "pgatour_event_rounds.json")
+map_path <- file.path(repo, "data", "pga_datagolf_player_map.csv")
+
+if (!file.exists(proj_path)) {
+  message("[refresh-pgatour-event] Missing projections.json — skip")
+  quit(save = "no", status = 0L)
+}
+
+pj <- jsonlite::fromJSON(proj_path, simplifyDataFrame = TRUE)
+event_name <- trimws(as.character(if (is.null(pj$event_name)) "" else pj$event_name))
+course_used <- trimws(as.character(if (is.null(pj$course_used)) "" else pj$course_used))
+if (!nzchar(event_name)) {
+  message("[refresh-pgatour-event] No event_name in projections — skip")
+  quit(save = "no", status = 0L)
+}
+
+cy <- as.integer(format(Sys.Date(), "%Y"))
+sched <- tryCatch(pgatouR::pga_schedule(cy), error = function(e) tibble())
+if (nrow(sched) == 0L) {
+  sched <- tryCatch(pgatouR::pga_schedule(cy - 1L), error = function(e) tibble())
+}
+if (nrow(sched) == 0L || !"tournament_id" %in% names(sched)) {
+  message("[refresh-pgatour-event] Empty schedule — skip")
+  quit(save = "no", status = 0L)
+}
+
+hit <- which(vapply(sched$tournament_name, function(n) events_likely_same(n, event_name), logical(1)))
+if (length(hit) == 0L && nzchar(course_used)) {
+  hit <- which(vapply(sched$course_name, function(cn) {
+    nc <- norm_evt(cn)
+    nv <- norm_evt(course_used)
+    nzchar(nc) && nzchar(nv) && (grepl(nv, nc, fixed = TRUE) || grepl(nc, nv, fixed = TRUE))
+  }, logical(1)))
+}
+if (length(hit) == 0L) {
+  message("[refresh-pgatour-event] No schedule row for event \"", event_name, "\" — skip")
+  quit(save = "no", status = 0L)
+}
+
+ss <- sched[hit[1], , drop = FALSE]
+tid <- as.character(ss$tournament_id[1])
+tourn_name <- as.character(ss$tournament_name[1])
+course_sched <- as.character(ss$course_name[1])
+anchor <- tournament_anchor_date(ss)
+year <- suppressWarnings(as.integer(ss$year[1]))
+if (is.na(year)) year <- cy
+
+map_df <- load_pga_datagolf_map(map_path)
+if (is.null(map_df) || nrow(map_df) == 0L) {
+  message("[refresh-pgatour-event] Missing pga_datagolf_player_map.csv — skip")
+  quit(save = "no", status = 0L)
+}
+
+pl <- unique(pj$players[, c("dg_id", "player_name"), drop = FALSE])
+pl <- pl[is.finite(pl$dg_id) & nzchar(as.character(pl$player_name)), , drop = FALSE]
+sleep_sec <- suppressWarnings(as.double(Sys.getenv("PGA_EVENT_SLEEP_SEC", unset = "0.08")))
+if (!is.finite(sleep_sec) || sleep_sec < 0) sleep_sec <- 0.08
+
+round_rows <- list()
+n_ok <- 0L
+
+for (i in seq_len(nrow(pl))) {
+  dg <- as.integer(pl$dg_id[i])
+  pname <- as.character(pl$player_name[i])
+  pga_id <- dg_id_to_pga_player_id(dg, map_df)
+  if (length(pga_id) != 1L || is.na(pga_id) || !nzchar(pga_id)) next
+  Sys.sleep(sleep_sec)
+  sc <- pga_scorecard_safe(tid, pga_id)
+  if (nrow(sc) == 0L) next
+
+  rcol <- pick_col(sc, c("round_number", "roundNumber"))
+  hcol <- pick_col(sc, c("hole_number", "holeNumber"))
+  pcol <- pick_col(sc, c("par"))
+  scol <- pick_col(sc, c("score"))
+  ccol <- pick_col(sc, c("course_name", "courseName"))
+  if (is.na(rcol) || is.na(hcol) || is.na(pcol) || is.na(scol)) next
+
+  rnums <- sort(unique(suppressWarnings(as.integer(sc[[rcol]]))))
+  rnums <- rnums[is.finite(rnums) & rnums >= 1L & rnums <= 4L]
+
+  for (rn in rnums) {
+    h <- sc[as.integer(sc[[rcol]]) == as.integer(rn), , drop = FALSE]
+    if (nrow(h) == 0L) next
+    cn <- course_sched
+    if (!is.na(ccol)) {
+      v <- as.character(h[[ccol]][1])
+      if (nzchar(v)) cn <- v
+    }
+    if (nzchar(course_used)) cn <- course_used
+
+    parv <- suppressWarnings(as.integer(h[[pcol]]))
+    scv <- suppressWarnings(as.integer(h[[scol]]))
+    ok <- is.finite(parv) & is.finite(scv)
+    if (!any(ok)) next
+    parv <- parv[ok]
+    scv <- scv[ok]
+    rel <- scv - parv
+    round_score <- as.integer(sum(scv))
+    if (!is.finite(round_score) || round_score <= 0L) next
+
+    rdate <- round_played_date(anchor, rn)
+    event_completed <- format_us_mdy(rdate)
+    sk <- sort_key_from_date(rdate, rn)
+
+    round_rows[[length(round_rows) + 1L]] <- list(
+      dg_id = dg,
+      player_name = pname,
+      sortKey = sk,
+      event_completed = event_completed,
+      year = as.integer(year),
+      event_name = tourn_name,
+      event_id = tid,
+      course_name = cn,
+      round_num = as.integer(rn),
+      fin_text = "",
+      round_score = round_score,
+      birdies = as.integer(sum(rel == -1L)),
+      pars = as.integer(sum(rel == 0L)),
+      bogies = as.integer(sum(rel == 1L)),
+      gir = NULL,
+      fairways = NULL,
+      putts = NULL,
+      eagles_or_better = as.integer(sum(rel <= -2L)),
+      doubles_or_worse = as.integer(sum(rel >= 2L)),
+      _from_pgatour = TRUE
+    )
+    n_ok <- n_ok + 1L
+  }
+}
+
+dir.create(dirname(out_path), recursive = TRUE, showWarnings = FALSE)
+payload <- list(
+  meta = list(
+    updated_at = format(as.POSIXct(Sys.time(), tz = "UTC"), "%Y-%m-%dT%H:%M:%SZ"),
+    source = "pgatouR::pga_scorecard",
+    event_name = event_name,
+    tournament_id = tid,
+    tournament_name = tourn_name,
+    course_name = if (nzchar(course_used)) course_used else course_sched,
+    round_rows = length(round_rows)
+  ),
+  rounds = round_rows
+)
+writeLines(jsonlite::toJSON(payload, pretty = TRUE, auto_unbox = TRUE, null = "null"), out_path, useBytes = TRUE)
+message(
+  "[refresh-pgatour-event] Wrote ",
+  out_path,
+  " — ",
+  length(round_rows),
+  " player-round row(s) for ",
+  tourn_name,
+  " (",
+  tid,
+  ")"
+)

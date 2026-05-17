@@ -153,6 +153,7 @@ if (!skipDg) {
 }
 
 run("fetch-live-in-play.mjs", "Live / in-play (fetch:in-play)");
+run("run-refresh-pgatour-event-rounds.mjs", "Current-event PGA rounds from pgatouR (refresh:pgatour-event)");
 run("fetch-book-odds-into-projections.mjs", "Sportsbook + DK round props (fetch:book-odds)");
 run("fetch-datagolf-finish-tool-outrights.mjs", "Finish-tool outrights (fetch:finish-tool)");
 run("merge-live-hole-pars-into-projections.mjs", "Merge live hole pars into projections");
