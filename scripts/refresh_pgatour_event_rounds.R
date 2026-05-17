@@ -221,6 +221,25 @@ for (i in seq_len(nrow(pl))) {
     round_score <- as.integer(sum(scv))
     if (!is.finite(round_score) || round_score <= 0L) next
 
+    gir_col <- pick_col(h, c("green_in_regulation", "green_in_reg", "gir", "GIR"))
+    fw_col <- pick_col(h, c("fairway_hit", "fairway", "fw", "FW"))
+    putt_col <- pick_col(h, c("putts", "num_putts", "putt"))
+    n_gir <- NA_integer_
+    n_fw <- NA_integer_
+    n_putts <- NA_integer_
+    if (!is.na(gir_col)) {
+      gv <- suppressWarnings(as.integer(h[[gir_col]][ok]))
+      if (length(gv)) n_gir <- as.integer(sum(gv == 1L, na.rm = TRUE))
+    }
+    if (!is.na(fw_col)) {
+      fv <- suppressWarnings(as.integer(h[[fw_col]][ok]))
+      if (length(fv)) n_fw <- as.integer(sum(fv == 1L, na.rm = TRUE))
+    }
+    if (!is.na(putt_col)) {
+      pv <- suppressWarnings(as.integer(h[[putt_col]][ok]))
+      if (length(pv) && all(is.finite(pv))) n_putts <- as.integer(sum(pv))
+    }
+
     rdate <- round_played_date(anchor, rn)
     event_completed <- format_us_mdy(rdate)
     sk <- sort_key_from_date(rdate, rn)
@@ -240,9 +259,9 @@ for (i in seq_len(nrow(pl))) {
       birdies = as.integer(sum(rel == -1L)),
       pars = as.integer(sum(rel == 0L)),
       bogies = as.integer(sum(rel == 1L)),
-      gir = NULL,
-      fairways = NULL,
-      putts = NULL,
+      gir = if (is.finite(n_gir) && n_gir >= 0L) n_gir else NULL,
+      fairways = if (is.finite(n_fw) && n_fw >= 0L) n_fw else NULL,
+      putts = if (is.finite(n_putts) && n_putts > 0L) n_putts else NULL,
       eagles_or_better = as.integer(sum(rel <= -2L)),
       doubles_or_worse = as.integer(sum(rel >= 2L)),
       "_from_pgatour" = TRUE

@@ -448,6 +448,18 @@ function buildExportLiveRoundCap() {
 function historyRoundChartDateIsFuture(row) {
   const rnd = Math.round(num(row?.round_num, NaN));
   const cap = buildExportLiveRoundCap();
+  const rs = num(row?.round_score, NaN);
+  if (
+    row?._from_pgatour &&
+    Number.isFinite(rs) &&
+    rs > 0 &&
+    Number.isFinite(rnd) &&
+    Number.isFinite(cap) &&
+    rnd <= cap &&
+    !eventCompletedIsFutureMdY(row?.event_completed)
+  ) {
+    return false;
+  }
   if (Number.isFinite(rnd) && Number.isFinite(cap) && rnd <= cap && row?._from_pgatour) {
     const ms = historyRoundChartDateUtcMs(row);
     if (Number.isFinite(ms) && ms <= todayDateOnlyUtcMs()) return false;
@@ -541,8 +553,16 @@ function buildLiveHistoryRowsFromBundle() {
     72,
   );
   const eventIdStr = fu.event_id != null && fu.event_id !== "" ? String(fu.event_id) : "";
+  const fairwayHoles = Math.round(
+    num(
+      proj?.projection_course_basis?.fairway_holes_modeled ??
+        meta.projection_course_basis?.fairway_holes_modeled,
+      NaN,
+    ),
+  );
   const actualsByDg = resolveLiveRoundActualsByDg(live, {
     roundPar: Number.isFinite(roundPar) ? roundPar : 72,
+    fairwayHoles: Number.isFinite(fairwayHoles) && fairwayHoles >= 1 ? fairwayHoles : 14,
   });
   if (!actualsByDg || typeof actualsByDg !== "object" || !Object.keys(actualsByDg).length) {
     return loadLiveRoundSnapshotByDg();
@@ -909,15 +929,92 @@ function mergeLiveInPlayOntoHistoryRound(existing, liveRec) {
   return out;
 }
 
+const LIVE_HISTORY_SG_KEYS = ["sg_putt", "sg_app", "sg_arg", "sg_ott", "sg_t2g", "sg_total"];
+
+/** Layer live LTS + shot aggregate onto pgatouR rows before upsert. */
+function enrichCurrentEventRowsWithLiveAndShots(rows, liveRows, shotsAgg) {
+  if (!Array.isArray(rows) || !rows.length) return rows;
+  const liveByKey = new Map();
+  for (const r of liveRows || []) {
+    const dg = Math.round(num(r?.dg_id, NaN));
+    if (!Number.isFinite(dg)) continue;
+    liveByKey.set(`${dg}|${r.year}|${r.round_num}|${normEvt(r.event_name)}`, r);
+  }
+  /** @type {Record<string, Record<string, object>>|null} */
+  let actualsByDg = null;
+  if (fs.existsSync(LIVE_IN_PLAY_JSON)) {
+    try {
+      const live = JSON.parse(fs.readFileSync(LIVE_IN_PLAY_JSON, "utf8"));
+      const proj = fs.existsSync(PROJECTIONS_JSON)
+        ? JSON.parse(fs.readFileSync(PROJECTIONS_JSON, "utf8"))
+        : {};
+      const meta = proj?.meta && typeof proj.meta === "object" ? proj.meta : {};
+      const fairwayHoles = Math.round(
+        num(proj?.projection_course_basis?.fairway_holes_modeled ?? meta.projection_course_basis?.fairway_holes_modeled, 14),
+      );
+      const roundPar = num(proj?.course_par_18 ?? meta.course_par_18, 72) || 72;
+      actualsByDg = resolveLiveRoundActualsByDg(live, {
+        roundPar,
+        fairwayHoles: Number.isFinite(fairwayHoles) && fairwayHoles >= 1 ? fairwayHoles : 14,
+      });
+    } catch {
+      /* ignore */
+    }
+  }
+  const byDgSk = shotsAgg?.byDgSk || new Map();
+  const byDgEvtYrRnd = shotsAgg?.byDgEvtYrRnd || new Map();
+  const byPkEvtYrRnd = shotsAgg?.byPkEvtYrRnd || new Map();
+  return rows.map((r) => {
+    const dg = Math.round(num(r.dg_id, NaN));
+    const sk = r.sortKey;
+    const evtKey = `${normEvt(r.event_name)}|${r.year}|${r.round_num}`;
+    const pk = playerKeyCanonical(String(r.player_name || ""));
+    const live = liveByKey.get(`${dg}|${r.year}|${r.round_num}|${normEvt(r.event_name)}`);
+    const act = actualsByDg?.[String(dg)]?.[String(r.round_num)];
+    const shotOv =
+      (Number.isFinite(dg) && Number.isFinite(sk) ? byDgSk.get(`${dg}|${sk}`) : undefined) ??
+      (Number.isFinite(dg) ? byDgEvtYrRnd.get(`${dg}|${evtKey}`) : undefined) ??
+      (pk ? byPkEvtYrRnd.get(`${pk}|${evtKey}`) : undefined) ??
+      null;
+    const out = { ...r };
+    if (act && typeof act === "object") {
+      const girRaw = num(act.gir, NaN);
+      if (Number.isFinite(girRaw)) out.gir = Math.round(girRaw <= 1 ? girRaw * 18 : girRaw);
+      if (Number.isFinite(num(act.fairways, NaN))) out.fairways = Math.round(num(act.fairways, NaN));
+      if (Number.isFinite(num(act.putts, NaN))) out.putts = Math.round(num(act.putts, NaN));
+      for (const k of LIVE_HISTORY_SG_KEYS) {
+        if (Number.isFinite(num(act[k], NaN))) out[k] = act[k];
+      }
+    }
+    for (const k of ["gir", "fairways", "putts", ...LIVE_HISTORY_SG_KEYS]) {
+      if (Number.isFinite(num(out[k], NaN))) continue;
+      if (live && Number.isFinite(num(live[k], NaN))) out[k] = live[k];
+    }
+    if (shotOv) {
+      if (shotOv.gir != null && !Number.isFinite(num(out.gir, NaN))) out.gir = shotOv.gir;
+      if (shotOv.fairways != null && !Number.isFinite(num(out.fairways, NaN))) out.fairways = shotOv.fairways;
+      if (shotOv.putts != null && !Number.isFinite(num(out.putts, NaN))) out.putts = shotOv.putts;
+    }
+    const mf = metricFields(out);
+    stripGirFairwaysPuttsIfGarbage(mf);
+    return { ...out, ...mf };
+  });
+}
+
 /** preds/live-tournament-stats during the live week — prefer CSV counting columns when already present. */
 function mergeLiveTournamentStatsOntoHistoryRound(existing, liveRec) {
   if (liveRec?._from_pgatour) {
-    return {
+    const out = {
       ...existing,
       ...liveRec,
       _from_pgatour: true,
       _from_live_tournament_stats: true,
     };
+    for (const k of [...LIVE_HISTORY_COUNTING_KEYS, ...LIVE_HISTORY_SG_KEYS]) {
+      if (Number.isFinite(num(liveRec[k], NaN))) out[k] = liveRec[k];
+      else if (Number.isFinite(num(existing[k], NaN))) out[k] = existing[k];
+    }
+    return scrubLivePlaceholderCountingOnRow(out);
   }
   const cleaned = sanitizeLiveCountingFields({ ...liveRec });
   const prev = sanitizeLivePlaceholderCountingOnRow(existing);
@@ -1472,8 +1569,9 @@ async function main() {
       `[build-player-history] Merged ${nLive} live-tournament round row(s) from live-in-play.json (preds/live-tournament-stats + in-play R* gross).`,
     );
   }
-  const pgaRows = loadPgatourEventRoundRows();
+  let pgaRows = loadPgatourEventRoundRows();
   if (pgaRows?.length) {
+    pgaRows = enrichCurrentEventRowsWithLiveAndShots(pgaRows, liveRows, shotsAgg);
     const nPga = upsertLiveRoundRows(byDgId, pgaRows);
     liveMergedRows += nPga;
     console.log(`[build-player-history] Merged ${nPga} pgatouR event round row(s) from pgatour_event_rounds.json.`);

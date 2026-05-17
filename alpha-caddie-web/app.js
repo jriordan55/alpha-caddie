@@ -1837,8 +1837,23 @@ function liveInPlayCountingFromRow(ipRow, thruRounded) {
   return { birdies, pars, bogeys, eagles };
 }
 
-/** Prefer CSV / pgatouR columns; never keep bogus live-stats placeholders (pars≈18, birdies=0). */
+const LIVE_HISTORY_SG_KEYS = ["sg_putt", "sg_app", "sg_arg", "sg_ott", "sg_t2g", "sg_total"];
+
+/** Prefer CSV / pgatouR birdies/pars; keep live GIR/FW/putts/SG when pgatouR only has scorecard counting. */
 function mergeLiveTournamentStatsOntoHistoryRound(existing, liveRec) {
+  if (liveRec?._from_pgatour) {
+    const out = {
+      ...existing,
+      ...liveRec,
+      _from_pgatour: true,
+      _from_live_tournament_stats: true,
+    };
+    for (const k of [...LIVE_HISTORY_COUNTING_KEYS, ...LIVE_HISTORY_SG_KEYS]) {
+      if (Number.isFinite(num(liveRec[k], NaN))) out[k] = liveRec[k];
+      else if (Number.isFinite(num(existing[k], NaN))) out[k] = existing[k];
+    }
+    return scrubLivePlaceholderCountingOnRow(out);
+  }
   const cleaned = scrubLivePlaceholderCountingOnRow(liveRec);
   const prev = scrubLivePlaceholderCountingOnRow(existing);
   const out = { ...existing, ...cleaned };
@@ -1849,7 +1864,6 @@ function mergeLiveTournamentStatsOntoHistoryRound(existing, liveRec) {
     else out[k] = cleaned[k] ?? null;
   }
   out._from_live_tournament_stats = true;
-  if (liveRec?._from_pgatour) out._from_pgatour = true;
   delete out._from_live_in_play;
   return out;
 }
@@ -2067,8 +2081,8 @@ function mergeLiveInPlayIntoRoundHistory(j) {
         pars,
         bogies: bogeys,
         gir: Number.isFinite(num(act.gir, NaN)) ? num(act.gir, NaN) : null,
-        fairways: null,
-        putts: null,
+        fairways: Number.isFinite(num(act.fairways, NaN)) ? num(act.fairways, NaN) : null,
+        putts: Number.isFinite(num(act.putts, NaN)) ? num(act.putts, NaN) : null,
         eagles_or_better: null,
         doubles_or_worse: null,
         weather_temp_f: null,
@@ -9338,7 +9352,7 @@ function historyRoundChartDateUtcMs(row) {
 function historyRoundChartDateIsFuture(row) {
   if (row && typeof row === "object") {
     const rnd = Math.round(num(row.round_num, NaN));
-    const cap = currentEventLiveRoundNum();
+    const cap = currentTournamentProgressRoundCap();
     if (historyRoundMatchesCurrentEvent(row) && Number.isFinite(rnd) && Number.isFinite(cap) && rnd <= cap) {
       const ms = historyRoundChartDateUtcMs(row);
       if (Number.isFinite(ms)) {
@@ -11690,14 +11704,9 @@ function actualForRoundRow(statKey, row) {
     return historyScalarOrNaN(row.bogies ?? row.bogeys);
   }
   if (statKey === "gir") {
-    const v = historyGirOrFairwaysCount(row.gir, 18);
+    const scrubbed = scrubLivePlaceholderCountingOnRow(row);
+    const v = historyGirOrFairwaysCount(scrubbed.gir, 18);
     if (v === 0 || v === 1) return NaN;
-    if (row._from_live_tournament_stats && !row._from_pgatour) {
-      const scrubbed = scrubLivePlaceholderCountingOnRow(row);
-      const gv = historyGirOrFairwaysCount(scrubbed.gir, 18);
-      if (gv === 0 || gv === 1) return NaN;
-      return gv;
-    }
     return v;
   }
   if (statKey === "fairways") {

@@ -143,7 +143,7 @@ export function sanitizeLiveCountingFields(act) {
  * @param {object} [inPlayRow]
  * @param {number} roundPar — regulation par for the course (typically 70–72)
  */
-export function parseLiveTournamentStatsCounting(statsRow, inPlayRow, roundPar, roundNum) {
+export function parseLiveTournamentStatsCounting(statsRow, inPlayRow, roundPar, roundNum, fairwayHoles = 14) {
   if (!statsRow || typeof statsRow !== "object") return null;
   const thru = Math.round(num(statsRow.thru ?? statsRow.Thru, NaN));
   const today = num(statsRow.today ?? statsRow.Today, NaN);
@@ -175,6 +175,14 @@ export function parseLiveTournamentStatsCounting(statsRow, inPlayRow, roundPar, 
 
   const girRaw = num(statsRow.gir, NaN);
   const gir = Number.isFinite(girRaw) && girRaw > 0 && girRaw <= 1.0001 ? Math.round(girRaw * 18) : girRaw;
+  const fwHoles =
+    Number.isFinite(num(fairwayHoles, NaN)) && fairwayHoles >= 1 ? Math.round(num(fairwayHoles, NaN)) : 14;
+  const accRaw = pickNum(statsRow, ["accuracy", "driving_accuracy", "fairways", "fw_pct"]);
+  let fairways = NaN;
+  if (Number.isFinite(accRaw)) {
+    if (accRaw > 0 && accRaw <= 1.0001) fairways = Math.round(accRaw * fwHoles);
+    else if (accRaw > 1 && accRaw <= fwHoles) fairways = Math.round(accRaw);
+  }
 
   const out = {
     round_score: Number.isFinite(roundScore) ? Math.round(roundScore * 10) / 10 : null,
@@ -182,6 +190,7 @@ export function parseLiveTournamentStatsCounting(statsRow, inPlayRow, roundPar, 
     pars: Number.isFinite(pars) ? Math.round(pars) : null,
     bogeys: Number.isFinite(bogeys) ? Math.round(bogeys) : null,
     gir: Number.isFinite(gir) ? gir : null,
+    fairways: Number.isFinite(fairways) ? fairways : null,
     thru: Number.isFinite(thru) ? thru : null,
     today: Number.isFinite(today) ? today : null,
     sg_putt: num(statsRow.sg_putt, NaN),
@@ -272,6 +281,7 @@ export function parseInPlayGrossRoundActual(inPlayRow, roundNum, roundPar) {
  */
 export function buildLiveRoundActualsByDg(statsByRound, inPlayByDg, opts = {}) {
   const roundPar = Number.isFinite(num(opts.roundPar, NaN)) ? num(opts.roundPar, NaN) : 72;
+  const fairwayHoles = Number.isFinite(num(opts.fairwayHoles, NaN)) ? Math.round(num(opts.fairwayHoles, NaN)) : 14;
   /** @type {Record<string, Record<string, object>>} */
   const byDg = {};
 
@@ -281,7 +291,7 @@ export function buildLiveRoundActualsByDg(statsByRound, inPlayByDg, opts = {}) {
       const dg = Math.round(num(statsRow.dg_id ?? statsRow.dgId, NaN));
       if (!Number.isFinite(dg)) continue;
       const ip = inPlayByDg.get(dg);
-      const parsed = parseLiveTournamentStatsCounting(statsRow, ip, roundPar, rnd);
+      const parsed = parseLiveTournamentStatsCounting(statsRow, ip, roundPar, rnd, fairwayHoles);
       if (!parsed) continue;
       mergeRoundActualIntoMap(byDg, dg, rnd, parsed, "live_tournament_stats");
     }
@@ -352,7 +362,8 @@ export function resolveLiveRoundActualsByDg(bundle, opts = {}) {
     bundle.live_tournament_stats_by_round && typeof bundle.live_tournament_stats_by_round === "object"
       ? bundle.live_tournament_stats_by_round
       : {};
-  const built = buildLiveRoundActualsByDg(statsByRound, inPlayByDg, { roundPar });
+  const fairwayHoles = Number.isFinite(num(opts.fairwayHoles, NaN)) ? Math.round(num(opts.fairwayHoles, NaN)) : 14;
+  const built = buildLiveRoundActualsByDg(statsByRound, inPlayByDg, { roundPar, fairwayHoles });
   const pre = bundle.live_round_actuals_by_dg;
   if (!pre || typeof pre !== "object") return built;
   /** @type {Record<string, Record<string, object>>} */
