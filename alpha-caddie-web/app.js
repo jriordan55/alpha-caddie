@@ -9303,16 +9303,34 @@ function mergePlayerHistoryPartialPayload(payload) {
   }
   PRICING_MU_BONUS_CACHE.clear();
   bumpHistoryMutationEpoch();
-  queueMicrotask(() => {
-    const hm = reapplyLiveInPlayHistoryMerge();
-    if (hm > 0 && activeAppTabId() === "props") renderPropsTrends();
-  });
   return true;
 }
 
 function historyBucketLoaded(dgId) {
   const id = Math.round(num(dgId, NaN));
-  return Number.isFinite(id) && Boolean(HISTORY.byDgId && HISTORY.byDgId[String(id)]);
+  const bucket = HISTORY.byDgId?.[String(id)];
+  return (
+    Number.isFinite(id) &&
+    Boolean(bucket && Array.isArray(bucket.rounds) && bucket.rounds.length > 0)
+  );
+}
+
+async function extractHistoryBucketFromEmbedded(dgId) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return false;
+  try {
+    await loadEmbeddedRoundHistoryScript();
+    const emb = embeddedRoundHistoryPayload();
+    const bucket = emb?.byDgId?.[String(id)];
+    if (!bucket || !Array.isArray(bucket.rounds) || !bucket.rounds.length) return false;
+    return mergePlayerHistoryPartialPayload({
+      meta: emb.meta || {},
+      byDgId: { [String(id)]: bucket },
+      holesByPlayerKey: {},
+    });
+  } catch (_) {
+    return false;
+  }
 }
 
 function historyBucketLoading(dgId) {
@@ -9330,15 +9348,22 @@ async function loadPlayerHistoryBucket(dgId) {
   }
   if (playerHistoryBucketLoadPromises.has(id)) return playerHistoryBucketLoadPromises.get(id);
   const p = (async () => {
+    const url = cacheBustFetchUrl(`player-history/by-dg/${id}.json`);
+    const fetchOpts = { cache: "no-store" };
+    if (typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function") {
+      fetchOpts.signal = AbortSignal.timeout(20000);
+    }
     try {
-      const res = await fetch(cacheBustFetchUrl(`player-history/by-dg/${id}.json`), { cache: "no-store" });
+      const res = await fetch(url, fetchOpts);
       if (res.ok) {
         const ok = mergePlayerHistoryPartialPayload(await res.json());
-        if (ok) return true;
+        if (ok && historyBucketLoaded(id)) return true;
       }
-    } catch (_) {}
-    await loadPlayerHistory();
-    return historyBucketLoaded(id);
+    } catch (_) {
+      /* shard missing, timeout, or parse error */
+    }
+    if (await extractHistoryBucketFromEmbedded(id)) return true;
+    return false;
   })();
   playerHistoryBucketLoadPromises.set(id, p);
   try {
@@ -9354,6 +9379,8 @@ async function loadPlayerHistoryBucket(dgId) {
  */
 async function loadPlayerHistory() {
   if (HISTORY._ok && !HISTORY._partial) return;
+  const selDg = selectedDgId();
+  if (Number.isFinite(selDg) && historyBucketLoaded(selDg)) return;
   if (playerHistoryLoadPromise) return playerHistoryLoadPromise;
   HISTORY = { ...HISTORY, _loading: true };
   playerHistoryLoadPromise = (async () => {
@@ -12867,15 +12894,24 @@ function renderPropsTrends() {
   }
   syncPropsCourseWindowUiState();
   const dg = selectedDgId();
-  const selectedHistoryMissing = Number.isFinite(dg) && !historyBucketLoaded(dg);
-  if (selectedHistoryMissing && !historyBucketLoading(dg) && activeAppTabId() === "props") {
-    void ensurePlayerHistoryLoadedForTab("props");
-  }
   const empty = document.getElementById("props-chart-empty");
   const titleEl = document.getElementById("props-trends-title");
   const subEl = document.getElementById("props-trends-sub");
   refreshPropsFilterOptionsForGolfer(dg);
   const statKey = statKeyFromPropSelect();
+  const selectedHistoryMissing = Number.isFinite(dg) && !historyBucketLoaded(dg);
+  if (selectedHistoryMissing && historyBucketLoading(dg)) {
+    if (empty) {
+      empty.hidden = false;
+      empty.textContent = "Loading player history...";
+    }
+    drawPropsTrendCanvas([], NaN, statKey);
+    renderPropsHitRateAndTopTable(statKey, NaN, PROPS_HISTORY_ROUND_DEFAULT);
+    return;
+  }
+  if (selectedHistoryMissing && activeAppTabId() === "props") {
+    void ensurePlayerHistoryLoadedForTab("props");
+  }
   if (propsTopTableSortStatKey !== statKey) {
     propsTopTableSort = { key: "overRate", dir: -1 };
     propsTopTableSortStatKey = statKey;
@@ -12948,14 +12984,16 @@ function renderPropsTrends() {
     renderPropsHitRateAndTopTable(statKey, lineEarly, wnEarly);
     return;
   }
+  if (empty) empty.hidden = true;
   if (!isFileProtocol() && !propsTrendsLiveHistoryFetchQueued) {
     propsTrendsLiveHistoryFetchQueued = true;
-    void ensureLiveTournamentHistoryMerged({ useCache: true }).then((n) => {
-      propsTrendsLiveHistoryFetchQueued = false;
-      if (n > 0 && activeAppTabId() === "props") renderPropsTrends();
-    });
+    window.setTimeout(() => {
+      void ensureLiveTournamentHistoryMerged({ useCache: true }).then((n) => {
+        propsTrendsLiveHistoryFetchQueued = false;
+        if (n > 0 && activeAppTabId() === "props") renderPropsTrends();
+      });
+    }, 0);
   }
-  if (empty) empty.hidden = true;
   const nWinEl = document.getElementById("props-window-n");
   const winN = clamp(
     Math.round(num(nWinEl?.value, PROPS_HISTORY_ROUND_DEFAULT)),
@@ -14229,7 +14267,7 @@ async function refreshAll() {
   await yieldToMain();
 
   if (tab === "props") {
-    void ensurePlayerHistoryLoadedForTab("props");
+    await ensurePlayerHistoryLoadedForTab("props");
     renderPropsTrends();
   }
   if (tab === "live-prop") renderLivePropPredictor();
@@ -14329,20 +14367,19 @@ function ensurePlayerHistoryLoadedForTab(tab) {
   const p =
     tab === "props"
       ? (async () => {
-          await loadPlayerHistoryBucket(selectedDgId());
-          if (HISTORY._partial && !historyBucketLoaded(selectedDgId())) {
-            void loadPlayerHistory().finally(() => {
-              if (activeAppTabId() === "props") renderPropsTrends();
-            });
-          }
-          return true;
+          const dg = selectedDgId();
+          if (!Number.isFinite(dg)) return false;
+          if (historyBucketLoaded(dg)) return true;
+          const ok = await loadPlayerHistoryBucket(dg);
+          if (!ok && !historyBucketLoaded(dg)) await extractHistoryBucketFromEmbedded(dg);
+          return historyBucketLoaded(dg);
         })()
       : tab === "hangout"
         ? loadPlayerHistoryBucket(selectedHangoutDgId())
         : HISTORY._ok && !HISTORY._partial
           ? Promise.resolve(true)
           : loadPlayerHistory();
-  p.then(() => {
+  return p.then(() => {
     if (activeAppTabId() !== tab) return;
     if (tab === "props") renderPropsTrends();
     if (tab === "course-fit") buildCourseFitTab();
@@ -14350,7 +14387,6 @@ function ensurePlayerHistoryLoadedForTab(tab) {
   }).catch(() => {
     if (activeAppTabId() === "props") renderPropsTrends();
   });
-  return p;
 }
 
 /** Rebuild +EV table from already-loaded DATA (book odds come from projections.json; optional background poll updates DATA). */
@@ -15409,7 +15445,6 @@ function initTabs() {
       if (tab === "props") {
         requestAnimationFrame(() => {
           void ensurePlayerHistoryLoadedForTab("props");
-          renderPropsTrends();
         });
       }
       if (tab === "matchup-analysis") {
