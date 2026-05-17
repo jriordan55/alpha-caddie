@@ -136,6 +136,38 @@ anchor <- tournament_anchor_date(ss)
 year <- suppressWarnings(as.integer(ss$year[1]))
 if (is.na(year)) year <- cy
 
+read_event_date_start_iso <- function() {
+  lip_paths <- c(
+    file.path(repo, "alpha-caddie-web", "live-in-play.json"),
+    file.path(repo, "website", "public", "data", "live-in-play.json")
+  )
+  for (p in lip_paths) {
+    if (!file.exists(p)) next
+    lip <- tryCatch(jsonlite::fromJSON(p, simplifyDataFrame = FALSE), error = function(e) NULL)
+    if (is.null(lip)) next
+    fu <- lip[["field_updates"]]
+    if (is.list(fu) && !is.null(fu[["date_start"]])) {
+      ds <- trimws(as.character(fu[["date_start"]]))
+      if (grepl("^\\d{4}-\\d{2}-\\d{2}", ds)) return(substr(ds, 1L, 10L))
+    }
+    info <- lip[["info"]]
+    if (is.list(info) && !is.null(info[["date_start"]])) {
+      ds <- trimws(as.character(info[["date_start"]]))
+      if (grepl("^\\d{4}-\\d{2}-\\d{2}", ds)) return(substr(ds, 1L, 10L))
+    }
+  }
+  ""
+}
+
+date_start_iso <- read_event_date_start_iso()
+if (nzchar(date_start_iso)) {
+  m <- regmatches(date_start_iso, regexpr("^\\d{4}-\\d{2}-\\d{2}", date_start_iso, perl = TRUE))
+  if (length(m) >= 1L) {
+    anchor <- suppressWarnings(as.Date(m[[1]]))
+    message("[refresh-pgatour-event] Using field date_start ", m[[1]], " for round played dates")
+  }
+}
+
 map_df <- load_pga_datagolf_map(map_path)
 if (is.null(map_df) || nrow(map_df) == 0L) {
   message("[refresh-pgatour-event] Missing pga_datagolf_player_map.csv — skip")
@@ -213,7 +245,7 @@ for (i in seq_len(nrow(pl))) {
       putts = NULL,
       eagles_or_better = as.integer(sum(rel <= -2L)),
       doubles_or_worse = as.integer(sum(rel >= 2L)),
-      _from_pgatour = TRUE
+      "_from_pgatour" = TRUE
     )
     n_ok <- n_ok + 1L
   }

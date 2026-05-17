@@ -39,7 +39,11 @@ import { createReadStream } from "fs";
 import { execFileSync } from "child_process";
 import { parse } from "csv-parse";
 import { eventsLikelySame, foldComparableTitle } from "./dg-events-align.mjs";
-import { resolveLiveRoundActualsByDg } from "./dg-live-tournament-stats.mjs";
+import {
+  resolveLiveRoundActualsByDg,
+  sanitizeLiveCountingFields,
+  countingFromInPlayRow,
+} from "./dg-live-tournament-stats.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -415,7 +419,39 @@ function historyRoundChartDateUtcMs(row) {
   return Date.UTC(y, mo - 1, d) + dayBump * 86400000;
 }
 
+function buildExportLiveRoundCap() {
+  if (!fs.existsSync(LIVE_IN_PLAY_JSON)) return NaN;
+  try {
+    const live = JSON.parse(fs.readFileSync(LIVE_IN_PLAY_JSON, "utf8"));
+    const fu = live?.field_updates && typeof live.field_updates === "object" ? live.field_updates : {};
+    const info = live?.info && typeof live.info === "object" ? live.info : {};
+    const cands = [fu.current_round, info.current_round, live?.current_round];
+    for (const c of cands) {
+      const r = Math.round(num(c, NaN));
+      if (Number.isFinite(r) && r >= 1 && r <= 4) return r;
+    }
+  } catch {
+    /* ignore */
+  }
+  if (fs.existsSync(PROJECTIONS_JSON)) {
+    try {
+      const proj = JSON.parse(fs.readFileSync(PROJECTIONS_JSON, "utf8"));
+      const r = Math.round(num(proj?.display_round ?? proj?.datagolf_field_current_round, NaN));
+      if (Number.isFinite(r) && r >= 1 && r <= 4) return r;
+    } catch {
+      /* ignore */
+    }
+  }
+  return NaN;
+}
+
 function historyRoundChartDateIsFuture(row) {
+  const rnd = Math.round(num(row?.round_num, NaN));
+  const cap = buildExportLiveRoundCap();
+  if (Number.isFinite(rnd) && Number.isFinite(cap) && rnd <= cap && row?._from_pgatour) {
+    const ms = historyRoundChartDateUtcMs(row);
+    if (Number.isFinite(ms) && ms <= todayDateOnlyUtcMs()) return false;
+  }
   const ms = historyRoundChartDateUtcMs(row);
   if (!Number.isFinite(ms)) return eventCompletedIsFutureMdY(row?.event_completed);
   return ms > todayDateOnlyUtcMs();
@@ -531,21 +567,37 @@ function buildLiveHistoryRowsFromBundle() {
       if (!act || typeof act !== "object") continue;
       const rnd = Math.round(num(rndKey, NaN));
       if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
-      const roundScore = num(act.round_score, NaN);
+      let roundScore = num(act.round_score, NaN);
+      const ipRow = rows.find((r) => Math.round(num(r?.dg_id ?? r?.dgId, NaN)) === dg);
+      const playerR = Math.round(num(ipRow?.round ?? ipRow?.Round, NaN));
+      if (ipRow) {
+        const g = liveInPlayGrossForRound(ipRow, rnd);
+        if (Number.isFinite(g)) roundScore = g;
+      }
       if (!Number.isFinite(roundScore) || roundScore <= 0) continue;
 
       const eventDate = dateStartIso ? eventCompletedMdYForRound(dateStartIso, rnd) : "";
       if (!eventDate) continue;
-      if (eventCompletedIsFutureMdY(eventDate) || historyRoundChartDateIsFuture({ event_completed: eventDate, round_num: rnd }))
+      if (eventCompletedIsFutureMdY(eventDate) || historyRoundChartDateIsFuture({ event_completed: eventDate, round_num: rnd, event_name: eventName }))
         continue;
 
       const eventYear = parseInt(String(eventDate).split("/")[2] || "", 10);
-      const ipRow = rows.find((r) => Math.round(num(r?.dg_id ?? r?.dgId, NaN)) === dg);
-      const today = ipRow && rnd === Math.round(num(ipRow?.round, NaN)) ? num(ipRow?.today, NaN) : NaN;
-      const currentScore =
-        ipRow && rnd === Math.round(num(ipRow?.round, NaN)) ? num(ipRow?.current_score, NaN) : NaN;
+      const today = ipRow && rnd === playerR ? num(ipRow?.today, NaN) : NaN;
+      const currentScore = ipRow && rnd === playerR ? num(ipRow?.current_score, NaN) : NaN;
 
-      out.push({
+      let birdies = Number.isFinite(num(act.birdies, NaN)) ? Math.round(num(act.birdies, NaN)) : null;
+      let pars = Number.isFinite(num(act.pars, NaN)) ? Math.round(num(act.pars, NaN)) : null;
+      let bogeys = Number.isFinite(num(act.bogeys, NaN)) ? Math.round(num(act.bogeys, NaN)) : null;
+      if (ipRow && playerR === rnd) {
+        const thru = Math.round(num(act.thru ?? ipRow.thru, NaN));
+        const ip = countingFromInPlayRow(ipRow, thru);
+        if (Number.isFinite(ip.birdies)) birdies = Math.round(ip.birdies);
+        if (Number.isFinite(ip.pars)) pars = Math.round(ip.pars);
+        if (Number.isFinite(ip.bogeys)) bogeys = Math.round(ip.bogeys);
+      }
+
+      out.push(
+        sanitizeLiveCountingFields({
         dg_id: dg,
         player_name: displayName,
         sortKey: parseUsDateSortKey(eventDate) * 10 + rnd,
@@ -557,9 +609,9 @@ function buildLiveHistoryRowsFromBundle() {
         round_num: rnd,
         fin_text: "",
         round_score: Math.round(roundScore * 10) / 10,
-        birdies: Number.isFinite(num(act.birdies, NaN)) ? Math.round(num(act.birdies, NaN)) : null,
-        pars: Number.isFinite(num(act.pars, NaN)) ? Math.round(num(act.pars, NaN)) : null,
-        bogies: Number.isFinite(num(act.bogeys, NaN)) ? Math.round(num(act.bogeys, NaN)) : null,
+        birdies,
+        pars,
+        bogies: bogeys,
         gir: Number.isFinite(num(act.gir, NaN)) ? num(act.gir, NaN) : null,
         fairways: null,
         putts: null,
@@ -578,11 +630,50 @@ function buildLiveHistoryRowsFromBundle() {
         current_score: Number.isFinite(currentScore) ? currentScore : null,
         today: Number.isFinite(today) ? today : null,
         _from_live_tournament_stats: true,
-      });
+        }),
+      );
     }
   }
 
   return out.length ? out : loadLiveRoundSnapshotByDg();
+}
+
+function resolveEventDateStartIsoForPgatour() {
+  const candidates = [
+    LIVE_IN_PLAY_JSON,
+    path.join(WEB_ROOT, "..", "website", "public", "data", "live-in-play.json"),
+  ];
+  for (const lip of candidates) {
+    if (!fs.existsSync(lip)) continue;
+    try {
+      const live = JSON.parse(fs.readFileSync(lip, "utf8"));
+      const fu = live?.field_updates && typeof live.field_updates === "object" ? live.field_updates : {};
+      const iso = String(fu.date_start || live?.info?.date_start || "").trim();
+      if (/^\d{4}-\d{2}-\d{2}/.test(iso)) return iso;
+    } catch {
+      /* next */
+    }
+  }
+  return "";
+}
+
+/** pgatouR schedule anchor can be wrong (e.g. Jul 1 fallback); align to DataGolf field date_start. */
+function normalizePgatourEventRoundDates(rows) {
+  const dateStartIso = resolveEventDateStartIsoForPgatour();
+  if (!dateStartIso || !Array.isArray(rows) || !rows.length) return rows;
+  return rows.map((r) => {
+    const rnd = Math.round(num(r?.round_num, NaN));
+    if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) return r;
+    const eventDate = eventCompletedMdYForRound(dateStartIso, rnd);
+    if (!eventDate) return r;
+    const eventYear = parseInt(String(eventDate).split("/")[2] || "", 10);
+    return {
+      ...r,
+      event_completed: eventDate,
+      sortKey: parseUsDateSortKey(eventDate) * 10 + rnd,
+      year: Number.isFinite(eventYear) ? eventYear : r.year,
+    };
+  });
 }
 
 /** Current-event rows from pgatouR (npm run refresh:pgatour-event / push:all). */
@@ -590,19 +681,23 @@ function loadPgatourEventRoundRows() {
   if (!fs.existsSync(PGATOUR_EVENT_ROUNDS_JSON)) return null;
   try {
     const raw = JSON.parse(fs.readFileSync(PGATOUR_EVENT_ROUNDS_JSON, "utf8"));
-    const list = Array.isArray(raw?.rounds) ? raw.rounds : [];
+    let list = Array.isArray(raw?.rounds) ? raw.rounds : [];
     if (!list.length) return null;
     const projEvent = fs.existsSync(PROJECTIONS_JSON)
       ? String(JSON.parse(fs.readFileSync(PROJECTIONS_JSON, "utf8"))?.event_name || "").trim()
       : "";
     const metaEvent = String(raw?.meta?.event_name || "").trim();
-    if (projEvent && metaEvent && !eventsLikelySame(projEvent, metaEvent)) {
+    const pe = foldComparableTitle(projEvent);
+    const me = foldComparableTitle(metaEvent);
+    if (projEvent && metaEvent && pe !== me && !eventsLikelySame(projEvent, metaEvent)) {
       console.warn(
         `[build-player-history] pgatour_event_rounds.json event "${metaEvent}" != projections "${projEvent}" — skip`,
       );
       return null;
     }
-    return list.filter((r) => r && typeof r === "object" && r._from_pgatour);
+    list = list.filter((r) => r && typeof r === "object" && r._from_pgatour);
+    list = normalizePgatourEventRoundDates(list);
+    return list;
   } catch (e) {
     console.warn("[build-player-history] pgatour_event_rounds.json:", e?.message || e);
     return null;
@@ -792,6 +887,14 @@ function historyRowHasStoredCountingStat(row, key) {
   const n = Number(v);
   if (!Number.isFinite(n)) return false;
   if ((key === "gir" || key === "fairways" || key === "putts") && (n === 0 || n === 1)) return false;
+  if (
+    (key === "birdies" || key === "pars" || key === "bogies" || key === "bogeys") &&
+    n === 0 &&
+    row._from_live_tournament_stats &&
+    !row._from_pgatour
+  ) {
+    return false;
+  }
   return true;
 }
 
@@ -808,14 +911,43 @@ function mergeLiveInPlayOntoHistoryRound(existing, liveRec) {
 
 /** preds/live-tournament-stats during the live week — prefer CSV counting columns when already present. */
 function mergeLiveTournamentStatsOntoHistoryRound(existing, liveRec) {
-  const out = { ...existing, ...liveRec };
+  if (liveRec?._from_pgatour) {
+    return {
+      ...existing,
+      ...liveRec,
+      _from_pgatour: true,
+      _from_live_tournament_stats: true,
+    };
+  }
+  const cleaned = sanitizeLiveCountingFields({ ...liveRec });
+  const prev = sanitizeLivePlaceholderCountingOnRow(existing);
+  const out = { ...existing, ...cleaned };
   for (const k of LIVE_HISTORY_COUNTING_KEYS) {
-    if (historyRowHasStoredCountingStat(existing, k)) out[k] = existing[k];
+    if (historyRowHasStoredCountingStat(prev, k) && historyLiveCountingTrusted(prev)) out[k] = prev[k];
+    else if (Number.isFinite(num(cleaned[k], NaN))) out[k] = cleaned[k];
+    else if (historyLiveCountingTrusted(prev)) out[k] = prev[k];
+    else out[k] = cleaned[k] ?? null;
   }
   out._from_live_tournament_stats = true;
-  if (liveRec?._from_pgatour) out._from_pgatour = true;
   delete out._from_live_in_play;
   return out;
+}
+
+function scrubLivePlaceholderCountingOnRow(row) {
+  return sanitizeLiveCountingFields(row && typeof row === "object" ? { ...row } : row);
+}
+
+function historyLiveCountingTrusted(row) {
+  if (!row || typeof row !== "object") return false;
+  if (row._from_pgatour || row._from_dg_historical_rounds) return true;
+  if (!row._from_live_tournament_stats && !row._from_live_in_play) return true;
+  const b = num(row.birdies, NaN);
+  const p = num(row.pars, NaN);
+  const bg = num(row.bogies ?? row.bogeys, NaN);
+  if (Number.isFinite(b) || Number.isFinite(bg)) return true;
+  if (Number.isFinite(p) && p > 0 && p < 14) return true;
+  if (Number.isFinite(p) && p >= 10 && (!Number.isFinite(b) || b === 0) && (!Number.isFinite(bg) || bg === 0)) return false;
+  return false;
 }
 
 function mergeLiveOntoHistoryRound(existing, liveRec) {
@@ -1332,12 +1464,6 @@ async function main() {
   const shotsAgg = await loadShotsRoundAggMaps();
   const { byDgId, allowedTriples } = await streamRounds(allowed, pgaMetaOverlay, shotsAgg);
   let liveMergedRows = 0;
-  const pgaRows = loadPgatourEventRoundRows();
-  if (pgaRows?.length) {
-    const nPga = upsertLiveRoundRows(byDgId, pgaRows);
-    liveMergedRows += nPga;
-    console.log(`[build-player-history] Merged ${nPga} pgatouR event round row(s) from pgatour_event_rounds.json.`);
-  }
   const liveRows = buildLiveHistoryRowsFromBundle();
   if (liveRows?.length) {
     const nLive = upsertLiveRoundRows(byDgId, liveRows);
@@ -1345,7 +1471,13 @@ async function main() {
     console.log(
       `[build-player-history] Merged ${nLive} live-tournament round row(s) from live-in-play.json (preds/live-tournament-stats + in-play R* gross).`,
     );
-  } else if (fs.existsSync(LIVE_IN_PLAY_JSON) && !pgaRows?.length) {
+  }
+  const pgaRows = loadPgatourEventRoundRows();
+  if (pgaRows?.length) {
+    const nPga = upsertLiveRoundRows(byDgId, pgaRows);
+    liveMergedRows += nPga;
+    console.log(`[build-player-history] Merged ${nPga} pgatouR event round row(s) from pgatour_event_rounds.json.`);
+  } else if (fs.existsSync(LIVE_IN_PLAY_JSON) && !liveRows?.length) {
     console.log("[build-player-history] No live-week history rows to merge (check event alignment / date_start).");
   }
   let futureRoundsStripped = 0;

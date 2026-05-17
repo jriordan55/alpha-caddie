@@ -114,6 +114,29 @@ export function countingFromInPlayRow(ipRow, thruRounded) {
   return { birdies, pars, bogeys, eagles };
 }
 
+/** Drop DG live-stats placeholders (e.g. pars=18 with no birdies/bogeys). */
+export function sanitizeLiveCountingFields(act) {
+  if (!act || typeof act !== "object") return act;
+  const thru = Math.round(num(act.thru, NaN));
+  let b = num(act.birdies, NaN);
+  let p = num(act.pars, NaN);
+  let bg = num(act.bogeys, NaN);
+  const gir = num(act.gir, NaN);
+  if (Number.isFinite(p) && (p >= 14 || (Number.isFinite(thru) && thru >= 10 && p >= thru - 1))) {
+    if (!Number.isFinite(b) && !Number.isFinite(bg)) p = NaN;
+  }
+  if (b === 0 && bg === 0 && Number.isFinite(p) && p >= 10) {
+    b = NaN;
+    p = NaN;
+    bg = NaN;
+  }
+  if (Number.isFinite(gir) && Number.isFinite(p) && Math.round(gir) === Math.round(p)) p = NaN;
+  act.birdies = Number.isFinite(b) ? Math.round(b) : null;
+  act.pars = Number.isFinite(p) ? Math.round(p) : null;
+  act.bogeys = Number.isFinite(bg) ? Math.round(bg) : null;
+  return act;
+}
+
 /**
  * One player-round from live-tournament-stats `live_stats[]` (+ optional preds/in-play row for gross fallback).
  * @param {object} statsRow
@@ -168,6 +191,8 @@ export function parseLiveTournamentStatsCounting(statsRow, inPlayRow, roundPar, 
     sg_t2g: num(statsRow.sg_t2g, NaN),
     sg_total: num(statsRow.sg_total, NaN),
   };
+
+  sanitizeLiveCountingFields(out);
 
   const hasCounting =
     Number.isFinite(out.round_score) ||
@@ -236,7 +261,7 @@ export function parseInPlayGrossRoundActual(inPlayRow, roundNum, roundPar) {
       if (Number.isFinite(v)) out[k] = v;
     }
   }
-  void roundPar;
+  sanitizeLiveCountingFields(out);
   return out;
 }
 
@@ -263,15 +288,30 @@ export function buildLiveRoundActualsByDg(statsByRound, inPlayByDg, opts = {}) {
   }
 
   for (const [dg, ip] of inPlayByDg) {
+    const playerR = Math.round(num(ip.round ?? ip.Round, NaN));
     for (let rnd = 1; rnd <= 4; rnd++) {
       const gross = grossFromInPlayRow(ip, rnd);
       if (!Number.isFinite(gross)) continue;
       const key = String(dg);
-      const existing = byDg[key]?.[String(rnd)];
-      if (existing?.round_score != null && Number.isFinite(num(existing.round_score, NaN))) continue;
-      const parsed = parseInPlayGrossRoundActual(ip, rnd, roundPar);
-      if (!parsed) continue;
-      mergeRoundActualIntoMap(byDg, dg, rnd, parsed, "in_play_gross");
+      const rk = String(rnd);
+      const prev = byDg[key]?.[rk] && typeof byDg[key][rk] === "object" ? byDg[key][rk] : {};
+      const fromIp = parseInPlayGrossRoundActual(ip, rnd, roundPar);
+      /** @type {Record<string, unknown>} */
+      const next = {
+        ...prev,
+        round_score: Math.round(gross * 10) / 10,
+        source: prev.source || "in_play_gross",
+      };
+      if (fromIp && playerR === rnd) {
+        if (Number.isFinite(num(fromIp.birdies, NaN))) next.birdies = fromIp.birdies;
+        if (Number.isFinite(num(fromIp.pars, NaN))) next.pars = fromIp.pars;
+        if (Number.isFinite(num(fromIp.bogeys, NaN))) next.bogeys = fromIp.bogeys;
+        if (Number.isFinite(num(fromIp.today, NaN))) next.today = fromIp.today;
+        if (Number.isFinite(num(fromIp.thru, NaN))) next.thru = fromIp.thru;
+      }
+      sanitizeLiveCountingFields(next);
+      if (!byDg[key]) byDg[key] = {};
+      byDg[key][rk] = next;
     }
   }
 
