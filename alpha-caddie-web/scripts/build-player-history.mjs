@@ -1507,7 +1507,6 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg) {
     const rowForWeather = metaPatch ? { ...row, ...metaPatch } : row;
 
     const rnd = parseInt(row.round_num, 10) || 1;
-    const tour = String(row.tour || "").toLowerCase();
     const eventDate = roundEventCompletedMdYFromEventEnd(row.event_completed, rnd, tour);
     const sortKey = parseEventCompletedChronoBase(eventDate) * 10 + rnd;
     const eventName = String(row.event_name || "").trim();
