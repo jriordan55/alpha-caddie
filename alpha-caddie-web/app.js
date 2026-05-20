@@ -417,8 +417,10 @@ let propsFieldVenueRoundsCache = { season: [], all: [] };
 let propsCourseRoundIndexSig = "";
 /** @type {Map<string, { days: string[], entries: { row: object, dgId: number, playerName: string }[] }>} */
 const propsCourseRoundIndex = new Map();
-let propsFieldHistoryBgQueued = false;
 let propsCourseWindowRenderGen = 0;
+/** @type {{ courses?: { course_key: string, file: string }[] } | null} */
+let propsCoursesManifestCache = null;
+let propsCoursesManifestPromise = null;
 /** Single-venue index for field-by-course (not all courses). */
 let propsSingleCourseIndexSig = "";
 /** @type {{ days: string[], entries: { row: object, dgId: number, playerName: string }[] } | null} */
@@ -10737,31 +10739,87 @@ function ensurePropsCourseWindowDateDefaultsFromMeta() {
   }
 }
 
+async function loadPropsCoursesManifest() {
+  if (propsCoursesManifestCache) return propsCoursesManifestCache;
+  if (propsCoursesManifestPromise) return propsCoursesManifestPromise;
+  propsCoursesManifestPromise = (async () => {
+    if (isFileProtocol()) return { courses: [] };
+    try {
+      const res = await fetch(cacheBustFetchUrl("player-history/courses-manifest.json"), { cache: "no-store" });
+      if (res.ok) {
+        propsCoursesManifestCache = await res.json();
+        return propsCoursesManifestCache;
+      }
+    } catch (_) {
+      /* manifest optional */
+    }
+    propsCoursesManifestCache = { courses: [] };
+    return propsCoursesManifestCache;
+  })().finally(() => {
+    propsCoursesManifestPromise = null;
+  });
+  return propsCoursesManifestPromise;
+}
+
+function propsCourseShardFilesToTry(courseKey) {
+  const files = new Set();
+  if (courseKey) files.add(propsCourseShardFileName(courseKey));
+  const venueRaw = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
+  for (const c of propsCoursesManifestCache?.courses || []) {
+    const ck = String(c.course_key || "").trim();
+    const file = String(c.file || "").trim();
+    if (!file) continue;
+    if (ck && normCourseNameKey(ck) === courseKey) files.add(file);
+    if (venueRaw && ck && courseNameMatchesVenueLoose(ck, venueRaw)) files.add(file);
+  }
+  return [...files];
+}
+
+function parsePropsCourseShardPayload(j) {
+  const entries = [];
+  for (const e of j.entries || []) {
+    const row = e.row && typeof e.row === "object" ? e.row : e;
+    const dgId = Math.round(num(e.dg_id ?? row?.dg_id, NaN));
+    if (!Number.isFinite(dgId)) continue;
+    entries.push({
+      row,
+      dgId,
+      playerName: String(e.player_name || row?.player_name || "").trim() || propsPlayerDisplayNameForDg(dgId),
+    });
+  }
+  const days = Array.isArray(j.days) ? j.days.map(String) : [];
+  return { days, entries };
+}
+
 async function fetchPropsCourseHistoryShard(courseKey) {
   if (!courseKey || isFileProtocol()) return null;
-  try {
-    const res = await fetch(
-      cacheBustFetchUrl(`player-history/by-course/${propsCourseShardFileName(courseKey)}`),
-      { cache: "no-store" },
-    );
-    if (!res.ok) return null;
-    const j = await res.json();
-    const entries = [];
-    for (const e of j.entries || []) {
-      const row = e.row && typeof e.row === "object" ? e.row : e;
-      const dgId = Math.round(num(e.dg_id ?? row?.dg_id, NaN));
-      if (!Number.isFinite(dgId)) continue;
-      entries.push({
-        row,
-        dgId,
-        playerName: String(e.player_name || row?.player_name || "").trim() || propsPlayerDisplayNameForDg(dgId),
-      });
+  await loadPropsCoursesManifest();
+  const files = propsCourseShardFilesToTry(courseKey);
+  for (const file of files) {
+    try {
+      const res = await fetch(cacheBustFetchUrl(`player-history/by-course/${file}`), { cache: "no-store" });
+      if (!res.ok) continue;
+      const parsed = parsePropsCourseShardPayload(await res.json());
+      if (parsed.entries.length) return parsed;
+    } catch (_) {
+      /* try next alias file */
     }
-    const days = Array.isArray(j.days) ? j.days.map(String) : [];
-    return { days, entries };
-  } catch (_) {
-    return null;
   }
+  return null;
+}
+
+/** True when in-memory scan is small enough not to freeze the tab. */
+function propsHistorySmallEnoughForMemoryCourseIndex() {
+  const by = HISTORY?.byDgId;
+  if (!by) return true;
+  const keys = Object.keys(by);
+  if (keys.length > 24) return false;
+  let rounds = 0;
+  for (const k of keys) {
+    rounds += by[k]?.rounds?.length || 0;
+    if (rounds > 4000) return false;
+  }
+  return true;
 }
 
 /** Scan in-memory history for one venue only, yielding so the tab stays responsive. */
@@ -10807,9 +10865,17 @@ async function ensurePropsCourseIndexForKeyAsync(courseKey) {
       propsStoreSingleCourseBucket(courseKey, shard);
       return shard;
     }
-    const built = await buildPropsSingleCourseIndexFromMemory(courseKey);
-    propsStoreSingleCourseBucket(courseKey, built);
-    return built;
+    if (propsHistorySmallEnoughForMemoryCourseIndex()) {
+      const built = await buildPropsSingleCourseIndexFromMemory(courseKey);
+      propsStoreSingleCourseBucket(courseKey, built);
+      return built;
+    }
+    const iso = propsDefaultSessionIsoFromMeta();
+    return {
+      days: iso ? [iso] : [],
+      entries: [],
+      shardMissing: true,
+    };
   })().finally(() => {
     propsSingleCourseIndexPromise = null;
   });
@@ -13129,26 +13195,6 @@ function scheduleRenderPropsTrends(ms = 200) {
   }, ms);
 }
 
-/**
- * Field-by-course needs all players who have rounds at this venue in history (not just this week's field).
- * Load full player_round_history.json once in the background without blocking the chart.
- */
-function queuePropsFieldHistoryBackgroundLoad() {
-  if (!propsCourseWindowModeOn()) return;
-  if (propsFieldHistoryBgQueued || playerHistoryLoadPromise) return;
-  propsFieldHistoryBgQueued = true;
-  void loadPlayerHistory()
-    .finally(() => {
-      propsFieldHistoryBgQueued = false;
-    })
-    .then(() => {
-      if (!propsCourseWindowModeOn() || activeAppTabId() !== "props") return;
-      propsSingleCourseIndexSig = "";
-      propsSingleCourseIndexCache = null;
-      renderPropsTrendsNow();
-    });
-}
-
 function paintPropsCourseWindowBuilding(message) {
   const empty = document.getElementById("props-chart-empty");
   if (empty) {
@@ -13164,7 +13210,7 @@ function renderPropsTrendsCourseWindow() {
   syncPropsCourseWindowUiState();
   refreshPropsCourseFilterOptionsAllPlayers();
   ensurePropsCourseWindowDateDefaultsFromMeta();
-  queuePropsFieldHistoryBackgroundLoad();
+  void loadPropsCoursesManifest();
 
   const courseKey = propsEffectiveCourseKey();
   if (!courseKey) {
@@ -13206,10 +13252,9 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
     const dr = propsCourseWindowDateRangeLabel();
     const mkt = propMarketLabelFromKey(statKey);
     const sortHint = propsMarketHigherIsBetter(statKey) ? "bars least→greatest" : "bars greatest→least";
-    const histNote =
-      HISTORY._partial && propsCourseWindowModeOn()
-        ? " · loading all players at this course…"
-        : "";
+    const histNote = courseBucket?.shardMissing
+      ? " · course data file missing on server (rebuild history)"
+      : "";
     subEl.textContent = dr
       ? `${mkt} · ${dr} · all players at ${courseLabel}${histNote} · ${sortHint}`
       : propsEventVenueCourseKey()
@@ -13265,7 +13310,11 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
     propsCourseWindowLiveFetchQueued = true;
     void ensureLiveTournamentHistoryMerged({ useCache: true }).finally(() => {
       propsCourseWindowLiveFetchQueued = false;
-      if (activeAppTabId() === "props") renderPropsTrendsCourseWindow();
+      if (activeAppTabId() === "props" && propsCourseWindowModeOn()) {
+        propsSingleCourseIndexSig = "";
+        propsSingleCourseIndexCache = null;
+        scheduleRenderPropsTrends(300);
+      }
     });
   }
   if (empty) empty.hidden = true;
@@ -13310,9 +13359,14 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
     if (empty) {
       empty.hidden = false;
       const nAll = entriesAll.length;
-      empty.textContent = nAll
-        ? "No chartable stat values for these rounds (try another market)."
-        : "No rounds at this course on that date after filters. Pick another date or relax weather filters.";
+      if (courseBucket?.shardMissing) {
+        empty.textContent =
+          "Field-by-course needs player-history/by-course data on the server. Run npm run build:history and redeploy (includes this venue).";
+      } else {
+        empty.textContent = nAll
+          ? "No chartable stat values for these rounds (try another market)."
+          : "No rounds at this course on that date after filters. Pick another date or relax weather filters.";
+      }
     }
   }
 

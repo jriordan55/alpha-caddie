@@ -44,6 +44,7 @@ import {
   sanitizeLiveCountingFields,
   countingFromInPlayRow,
 } from "./dg-live-tournament-stats.mjs";
+import { normCourseNameKey, courseShardFileName } from "./course-name-key.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -201,24 +202,6 @@ function writeJsonAtomic(outPath, payload) {
   fs.renameSync(tmpPath, outPath);
 }
 
-/** Match app.js `normCourseNameKey` / `propsCourseShardFileName` for Historical Trends field-by-course shards. */
-function normCourseNameKeyForShard(raw) {
-  let s = String(raw || "").trim().toLowerCase();
-  s = s.replace(/\([^)]*\)/g, " ");
-  s = s.replace(/\bthe players\b/gi, " ");
-  s = s.replace(/&/g, " and ");
-  s = s.replace(/[^a-z0-9]+/g, " ");
-  return s.replace(/\s+/g, " ").trim();
-}
-
-function courseShardFileName(courseKey) {
-  const safe = String(courseKey || "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 96);
-  return `${safe || "unknown"}.json`;
-}
-
 function chartUtcIsoDayFromHistoryRow(r) {
   const sk = Number(r?.sortKey);
   if (Number.isFinite(sk) && sk > 9_999_999) {
@@ -252,10 +235,13 @@ function writeCourseHistoryShards(out) {
       if (eventCompletedIsFutureMdY(r.event_completed) || historyRoundChartDateIsFuture(r)) continue;
       const rs = Number(r.round_score);
       if (!Number.isFinite(rs) || rs <= 0) continue;
-      const ck = normCourseNameKeyForShard(r.course_name);
+      const ck = normCourseNameKey(r.course_name);
       if (!ck) continue;
       let b = byCourse.get(ck);
-      if (!b) b = { dateSet: new Set(), entries: [] };
+      if (!b) {
+        b = { dateSet: new Set(), entries: [] };
+        byCourse.set(ck, b);
+      }
       b.entries.push({ dg_id: dg, player_name: playerName, row: r });
       const iso = chartUtcIsoDayFromHistoryRow(r);
       if (iso) b.dateSet.add(iso);
