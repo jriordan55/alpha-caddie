@@ -41,7 +41,8 @@
  *   GOLF_REFRESH_APP_FAST_HISTORY=1 — during step 7’s build:history: skip shots round-aggregate merge, and
  *     if you did not set GOLF_HISTORY_MIN_YEAR / GOLF_HISTORY_MAX_ROUNDS_PER_PLAYER, default to ~last
  *     10 seasons + 500 rounds/player (faster, less deep history in the JSON).
- *   CLI: `node scripts/refresh-app-data.mjs --no-history` | `--live-only` | `--fast-history` (same as env flags)
+ *   CLI: `--no-history` | `--live-only` skip step 7 only (no patch:current-event-history). Prefer **`npm run refresh:live`**
+ *     for the full live-week pipeline (odds + pgatouR patch on shards, no CSV rebuild).
  */
 import { spawnSync } from "child_process";
 import { copyFileSync, existsSync, mkdirSync } from "fs";

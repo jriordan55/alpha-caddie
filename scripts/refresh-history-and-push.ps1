@@ -1,6 +1,7 @@
 param(
   [switch] $SkipPush,
   [switch] $NoFullHistory,
+  [switch] $LiveWeekOnly,
   [switch] $ArtifactsOnly,
   [switch] $PullFirst,
   [string] $CommitMessage = ""
@@ -95,7 +96,10 @@ if (-not (Test-Path (Join-Path $webRoot "package.json"))) {
 
 Set-Location $webRoot
 
-if (-not $NoFullHistory) {
+if ($LiveWeekOnly) {
+  Remove-Item Env:\GOLF_HISTORICAL_ROUNDS_FULL_HISTORY -ErrorAction SilentlyContinue
+  Write-Host "LiveWeekOnly: npm run refresh:live (no update:rounds / no full build:history CSV scan)."
+} elseif (-not $NoFullHistory) {
   $env:GOLF_HISTORICAL_ROUNDS_FULL_HISTORY = "1"
   $env:GOLF_SKIP_HISTORY_ON_FETCH_DG = "1"
   Remove-Item Env:\GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS -ErrorAction SilentlyContinue
@@ -122,20 +126,24 @@ function Bump-AlphaCaddieAppJsCache([string] $AlphaCaddieWebRoot) {
   return $true
 }
 
-Run-Npm "Running fetch:dg ..." run fetch:dg
-Run-Npm "Building course-table.json (course mapping) ..." run build:course-table
-Run-Npm "Running fetch:in-play ..." run fetch:in-play
-Run-Npm "Refreshing current-event PGA rounds from pgatouR ..." run refresh:pgatour-event
-Remove-Item Env:\GOLF_SKIP_DK_OU -ErrorAction SilentlyContinue
-Remove-Item Env:\PERFECT_SKIP_FETCH_DK_OU -ErrorAction SilentlyContinue
-# fetch:book-odds pulls DK round props (Birdies/Total Score/GIR/etc.) via Playwright — no separate fetch:dk-ou (would duplicate Chromium).
-Run-Npm "Running fetch:book-odds (matchups, outrights, DK round O/U props) ..." run fetch:book-odds
-Run-Npm 'Running fetch:finish-tool — outrights, same Scratch feed as DG Finish Position; runs after book-odds ...' run fetch:finish-tool
-Run-Npm "Merging live_hole_stats into projections (after book odds; preserves pars if book-odds ran inline fetch:dg) ..." run merge:live-hole-pars-into-projections
-Run-Npm "Merging tournament round + prior-round course difficulty from live-in-play → projections …" run merge:live-round-meta-into-projections
-Run-Npm "Running update:rounds (historical CSV + Historical Trends: player_round_history / embed / shards / shots web) ..." run update:rounds
-Run-Npm "Patching current-event rounds (pgatouR + live GIR/FW into history shards) ..." run patch:current-event-history
-Run-Npm "Writing round_projection_vs_actual.csv (model projections vs actual round results) ..." run export:round-projection-vs-actual
+if ($LiveWeekOnly) {
+  Run-Npm "Live-week refresh (no full historical CSV / build:history) ..." run refresh:live
+} else {
+  Run-Npm "Running fetch:dg ..." run fetch:dg
+  Run-Npm "Building course-table.json (course mapping) ..." run build:course-table
+  Run-Npm "Running fetch:in-play ..." run fetch:in-play
+  Run-Npm "Refreshing current-event PGA rounds from pgatouR ..." run refresh:pgatour-event
+  Remove-Item Env:\GOLF_SKIP_DK_OU -ErrorAction SilentlyContinue
+  Remove-Item Env:\PERFECT_SKIP_FETCH_DK_OU -ErrorAction SilentlyContinue
+  # fetch:book-odds pulls DK round props (Birdies/Total Score/GIR/etc.) via Playwright — no separate fetch:dk-ou (would duplicate Chromium).
+  Run-Npm "Running fetch:book-odds (matchups, outrights, DK round O/U props) ..." run fetch:book-odds
+  Run-Npm 'Running fetch:finish-tool — outrights, same Scratch feed as DG Finish Position; runs after book-odds ...' run fetch:finish-tool
+  Run-Npm "Merging live_hole_stats into projections (after book odds; preserves pars if book-odds ran inline fetch:dg) ..." run merge:live-hole-pars-into-projections
+  Run-Npm "Merging tournament round + prior-round course difficulty from live-in-play → projections …" run merge:live-round-meta-into-projections
+  Run-Npm "Running update:rounds (historical CSV + Historical Trends: player_round_history / embed / shards / shots web) ..." run update:rounds
+  Run-Npm "Patching current-event rounds (pgatouR + live GIR/FW into history shards) ..." run patch:current-event-history
+  Run-Npm "Writing round_projection_vs_actual.csv (model projections vs actual round results) ..." run export:round-projection-vs-actual
+}
 
 $webDataDir = Join-Path $repoRoot "website/public/data"
 if (-not (Test-Path $webDataDir)) {
@@ -236,7 +244,11 @@ if ($LASTEXITCODE -eq 0) {
 }
 
 if ([string]::IsNullOrWhiteSpace($CommitMessage)) {
-  $CommitMessage = "chore(data): full refresh + publish $(Get-Date -Format 'yyyy-MM-dd')"
+  if ($LiveWeekOnly) {
+    $CommitMessage = "chore(data): live-week refresh $(Get-Date -Format 'yyyy-MM-dd')"
+  } else {
+    $CommitMessage = "chore(data): full refresh + publish $(Get-Date -Format 'yyyy-MM-dd')"
+  }
 }
 
 git -C $repoRoot commit -m $CommitMessage
