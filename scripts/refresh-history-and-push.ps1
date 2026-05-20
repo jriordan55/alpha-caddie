@@ -98,7 +98,7 @@ Set-Location $webRoot
 
 if ($LiveWeekOnly) {
   Remove-Item Env:\GOLF_HISTORICAL_ROUNDS_FULL_HISTORY -ErrorAction SilentlyContinue
-  Write-Host "LiveWeekOnly: npm run refresh:live (recent CSV merge + replace current-event shards; no full 2004->present build:history)."
+  Write-Host "LiveWeekOnly: npm run refresh:live (DG historical-raw-data CSV + live-tournament-stats + pgatouR -> build:history + course shards + embed; no 2004->present rebuild)."
 } elseif (-not $NoFullHistory) {
   $env:GOLF_HISTORICAL_ROUNDS_FULL_HISTORY = "1"
   $env:GOLF_SKIP_HISTORY_ON_FETCH_DG = "1"

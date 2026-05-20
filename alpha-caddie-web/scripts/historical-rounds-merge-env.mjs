@@ -23,3 +23,30 @@ export function applyHistoricalRoundsMergeDefaults(base) {
   }
   return out;
 }
+
+/**
+ * Env for `build-player-history` on live-week pushes (faster; still merges live LTS + pgatouR).
+ * @param {{ defaultLiveFast?: boolean }} [opts] — `refresh:live` passes `{ defaultLiveFast: true }`.
+ */
+export function fastHistoryBuildEnv(opts = {}) {
+  if (String(process.env.GOLF_HISTORICAL_ROUNDS_FULL_HISTORY || "").trim() === "1") return {};
+  const liveFast = String(process.env.GOLF_REFRESH_LIVE_FAST_HISTORY ?? "").trim();
+  const appFast = String(process.env.GOLF_REFRESH_APP_FAST_HISTORY || "").trim() === "1";
+  const useFast =
+    appFast || liveFast === "1" || (opts.defaultLiveFast === true && liveFast !== "0");
+  if (!useFast) return {};
+  const cy = new Date().getFullYear();
+  const defMin = Math.max(2010, cy - 10);
+  const out = { GOLF_SKIP_SHOTS_ROUND_AGG_MERGE: "1" };
+  /** Hole Hangout only — scanning ~170MB hole_data.csv can look hung for 15–30+ min. */
+  if (String(process.env.GOLF_BUILD_HISTORY_SKIP_HOLES || "").trim() !== "0") {
+    out.HOLE_DATA_CSV = "";
+  }
+  if (!String(process.env.GOLF_HISTORY_MIN_YEAR ?? "").trim()) {
+    out.GOLF_HISTORY_MIN_YEAR = String(defMin);
+  }
+  if (!String(process.env.GOLF_HISTORY_MAX_ROUNDS_PER_PLAYER ?? "").trim()) {
+    out.GOLF_HISTORY_MAX_ROUNDS_PER_PLAYER = "500";
+  }
+  return out;
+}

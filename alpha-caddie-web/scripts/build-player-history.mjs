@@ -686,6 +686,11 @@ function buildLiveHistoryRowsFromBundle() {
         if (Number.isFinite(ip.pars)) pars = Math.round(ip.pars);
         if (Number.isFinite(ip.bogeys)) bogeys = Math.round(ip.bogeys);
       }
+      const girRaw = num(act.gir, NaN);
+      let girVal = null;
+      if (Number.isFinite(girRaw)) girVal = Math.round(girRaw > 0 && girRaw <= 1.0001 ? girRaw * 18 : girRaw);
+      const fwVal = Number.isFinite(num(act.fairways, NaN)) ? Math.round(num(act.fairways, NaN)) : null;
+      const puttsVal = Number.isFinite(num(act.putts, NaN)) ? Math.round(num(act.putts, NaN)) : null;
 
       out.push(
         sanitizeLiveCountingFields({
@@ -703,9 +708,9 @@ function buildLiveHistoryRowsFromBundle() {
         birdies,
         pars,
         bogies: bogeys,
-        gir: Number.isFinite(num(act.gir, NaN)) ? num(act.gir, NaN) : null,
-        fairways: null,
-        putts: null,
+        gir: girVal,
+        fairways: fwVal,
+        putts: puttsVal,
         eagles_or_better: null,
         doubles_or_worse: null,
         weather_temp_f: null,
@@ -1458,6 +1463,15 @@ async function loadPgaMetaOverlayFromCsv(csvPath) {
   return map;
 }
 
+function logCsvScanProgress(phase, rowsScanned, matchedRows, extra = "") {
+  const interval = Math.max(50_000, parseInt(String(process.env.GOLF_BUILD_HISTORY_PROGRESS_EVERY || "200000"), 10) || 200000);
+  if (rowsScanned > 0 && rowsScanned % interval === 0) {
+    console.log(
+      `[build-player-history] ${phase}: scanned ${rowsScanned.toLocaleString()} CSV rows, kept ${matchedRows.toLocaleString()}${extra ? ` (${extra})` : ""}…`,
+    );
+  }
+}
+
 async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg) {
   const byDgId = new Map();
   const byDgSk = shotsAgg?.byDgSk || new Map();
@@ -1470,6 +1484,13 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg) {
     return { byDgId, allowedTriples: new Set() };
   }
 
+  console.log(
+    `[build-player-history] Scanning rounds CSV (${path.basename(ROUNDS_CSV)}; ${allowedDgIds.size} allowed dg_ids, min_year ${MIN_YEAR}) — usually 1–4 min…`,
+  );
+  let rowsScanned = 0;
+  let matchedRows = 0;
+  const t0 = Date.now();
+
   const parser = createReadStream(ROUNDS_CSV).pipe(
     parse({
       columns: true,
@@ -1480,6 +1501,8 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg) {
   );
 
   for await (const row of parser) {
+    rowsScanned++;
+    logCsvScanProgress("rounds CSV", rowsScanned, matchedRows);
     const tour = String(row.tour || "").toLowerCase();
     if (tour !== "pga" && tour !== "liv") continue;
     const yr = parseInt(row.year, 10);
@@ -1545,7 +1568,12 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg) {
     const bucket = byDgId.get(dg);
     if (!bucket.player_name) bucket.player_name = String(row.player_name || "");
     bucket.rounds.push(rec);
+    matchedRows++;
   }
+
+  console.log(
+    `[build-player-history] Rounds CSV done in ${((Date.now() - t0) / 1000).toFixed(1)}s — scanned ${rowsScanned.toLocaleString()} rows, kept ${matchedRows.toLocaleString()} for ${byDgId.size} player(s).`,
+  );
 
   for (const [, bucket] of byDgId) {
     bucket.rounds = bucket.rounds.filter(
@@ -1570,8 +1598,18 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg) {
 async function streamHoles(allowedTriples) {
   const holesByPlayerKey = {};
   if (!allowedTriples || allowedTriples.size === 0 || !HOLES_CSV || !fs.existsSync(HOLES_CSV)) {
+    if (HOLES_CSV === null || HOLES_CSV === "") {
+      console.log("[build-player-history] Hole-by-hole CSV skipped (HOLE_DATA_CSV empty — Historical Trends unaffected).");
+    }
     return holesByPlayerKey;
   }
+
+  console.log(
+    `[build-player-history] Scanning hole_data CSV (${path.basename(HOLES_CSV)}; can take 15–30+ min) — set HOLE_DATA_CSV="" on live push to skip…`,
+  );
+  let rowsScanned = 0;
+  let matchedRows = 0;
+  const t0 = Date.now();
 
   const parser = createReadStream(HOLES_CSV).pipe(
     parse({
@@ -1583,11 +1621,14 @@ async function streamHoles(allowedTriples) {
   );
 
   for await (const row of parser) {
+    rowsScanned++;
+    logCsvScanProgress("hole_data CSV", rowsScanned, matchedRows);
     const pk = playerKeyHole(row.player_name);
     const ev = normEvt(row.tournament_name);
     const rn = parseInt(row.round, 10) || 1;
     const triple = `${pk}|||${ev}|||${rn}`;
     if (!allowedTriples.has(triple)) continue;
+    matchedRows++;
 
     const uid = `${row.tournament_name || ""}\tR${rn}`;
     holesByPlayerKey[pk] ??= {};
@@ -1605,6 +1646,10 @@ async function streamHoles(allowedTriples) {
       holesByPlayerKey[pk][uid].sort((a, b) => a.hole - b.hole);
     }
   }
+
+  console.log(
+    `[build-player-history] hole_data done in ${((Date.now() - t0) / 1000).toFixed(1)}s — scanned ${rowsScanned.toLocaleString()} rows, matched ${matchedRows.toLocaleString()} hole rows for ${Object.keys(holesByPlayerKey).length} player(s).`,
+  );
 
   return holesByPlayerKey;
 }
@@ -1677,6 +1722,7 @@ async function main() {
   const holePlayerCount = Object.keys(holesByPlayerKey).length;
   console.log("Players with hole rows matched:", holePlayerCount);
 
+  console.log("[build-player-history] Serializing player_round_history.json (large JSON — may take 1–2 min)…");
   const out = {
     meta: {
       updated_at: new Date().toISOString(),

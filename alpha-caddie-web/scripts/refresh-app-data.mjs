@@ -48,6 +48,7 @@ import { spawnSync } from "child_process";
 import { copyFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { fastHistoryBuildEnv } from "./historical-rounds-merge-env.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -117,22 +118,6 @@ function historyMergeEnv() {
   return {};
 }
 
-/** Applied only to run-update-historical-rounds (so build-player-history sees these). */
-function fastHistoryEnv() {
-  if (String(process.env.GOLF_HISTORICAL_ROUNDS_FULL_HISTORY || "").trim() === "1") return {};
-  if (String(process.env.GOLF_REFRESH_APP_FAST_HISTORY || "").trim() !== "1") return {};
-  const cy = new Date().getFullYear();
-  const defMin = Math.max(2010, cy - 10);
-  const out = { GOLF_SKIP_SHOTS_ROUND_AGG_MERGE: "1" };
-  if (!String(process.env.GOLF_HISTORY_MIN_YEAR ?? "").trim()) {
-    out.GOLF_HISTORY_MIN_YEAR = String(defMin);
-  }
-  if (!String(process.env.GOLF_HISTORY_MAX_ROUNDS_PER_PLAYER ?? "").trim()) {
-    out.GOLF_HISTORY_MAX_ROUNDS_PER_PLAYER = "500";
-  }
-  return out;
-}
-
 const skipDg = String(process.env.GOLF_REFRESH_APP_SKIP_DG || "").trim() === "1";
 
 if (!skipDg) {
@@ -165,7 +150,7 @@ if (skipHistory) {
     "\n[refresh:app] Skipping update:rounds + build:history (GOLF_REFRESH_APP_SKIP_HISTORY=1 or --no-history). Existing player_round_history.json / shards unchanged.\n",
   );
 } else {
-  const fh = fastHistoryEnv();
+  const fh = fastHistoryBuildEnv();
   if (Object.keys(fh).length) {
     console.log(
       "\n[refresh:app] Fast history mode: skipping shots round-aggregate merge; default min_year ≈ last 10 seasons and max 500 rounds/player unless you set GOLF_HISTORY_*.\n",

@@ -1,26 +1,25 @@
 #!/usr/bin/env node
 /**
- * Live-week refresh: operational data + **recent tournament** in history/CSV, without a full 2004→present rebuild.
+ * Live-week refresh for `npm run push:live`:
+ *   - DataGolf historical-raw-data/rounds → CSV (recent years, twice: before + after live fetch)
+ *   - preds/live-tournament-stats (per round 1–4) + preds/in-play + field-updates → live-in-play.json
+ *   - pgatouR scorecards when R is installed
+ *   - fetch:dg projections (skill + preds/pre-tournament when pre; live stats when in play)
+ *   - build-player-history → player_round_history.json + per-player + by-course shards + embed
  *
  *   npm run refresh:live
  *
- * Skips:
- *   - GOLF_HISTORICAL_ROUNDS_FULL_HISTORY (entire DG archive re-merge)
- *   - build-player-history.mjs scanning all years into new shards from scratch
+ * Skips GOLF_HISTORICAL_ROUNDS_FULL_HISTORY (no 2004→present rebuild).
  *
- * Does:
- *   1) merge-recent-historical-rounds — last N years into historical_rounds_all.csv (current event scoring + SG)
- *   2) fetch:dg — round projections from skill-ratings (OTT/APP/PUT/T2G) + historical_calibration + course prior-round difficulty + within-event form from CSV
- *   3) in-play, pgatouR, book odds, finish-tool, projection merges
- *   4) rebuild-current-event-history-shards — **replace** all shard rows for this event (not patch-on-stale)
- *   5) embed, export, mirror website/public/data
- *
- * Env: DATAGOLF_API_KEY, GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS (default 2), GOLF_SKIP_DK_OU=1, etc.
+ * Env: DATAGOLF_API_KEY, GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS (default 2),
+ *   GOLF_REFRESH_LIVE_FAST_HISTORY=0 to scan full CSV depth (slower),
+ *   GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE=1 to skip the second CSV merge after live fetch.
  */
 import { spawnSync } from "child_process";
 import { copyFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { fastHistoryBuildEnv } from "./historical-rounds-merge-env.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -71,13 +70,14 @@ function mirrorWebsitePublicData() {
 
 const skipDg = String(process.env.GOLF_REFRESH_LIVE_SKIP_DG || "").trim() === "1";
 const recentYears = String(process.env.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "2").trim();
+const fh = fastHistoryBuildEnv({ defaultLiveFast: true });
 
-run("merge-recent-historical-rounds.mjs", `Merge recent historical rounds (${recentYears}yr CSV, for course-history in projections)`, {
+run("merge-recent-historical-rounds.mjs", `DataGolf historical-raw-data/rounds → CSV (${recentYears}yr, pre-fetch)`, {
   GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS: recentYears,
 });
 
 if (!skipDg) {
-  run("fetch-datagolf.mjs", "Field + round projections (μ_SG, SG pillars, course prior-round + within-event form)", {
+  run("fetch-datagolf.mjs", "Field + projections (μ_SG, preds/pre-tournament or live driving stats)", {
     GOLF_SKIP_HISTORY_ON_FETCH_DG: "1",
   });
   run("build-course-table-json.mjs", "Course table JSON (build:course-table)");
@@ -89,22 +89,50 @@ if (!skipDg) {
   }
 }
 
-run("fetch-live-in-play.mjs", "Live / in-play (fetch:in-play)");
-run("run-refresh-pgatour-event-rounds.mjs", "Current-event PGA rounds from pgatouR (refresh:pgatour-event)");
+run(
+  "fetch-live-in-play.mjs",
+  "Live feeds: preds/in-play + field-updates + preds/live-tournament-stats (R1–R4) → live-in-play.json",
+);
+run("run-refresh-pgatour-event-rounds.mjs", "pgatouR scorecards for current event (refresh:pgatour-event)");
 run("fetch-book-odds-into-projections.mjs", "Sportsbook + DK round props (fetch:book-odds)");
 run("fetch-datagolf-finish-tool-outrights.mjs", "Finish-tool outrights (fetch:finish-tool)");
 run("merge-live-hole-pars-into-projections.mjs", "Merge live hole pars into projections");
 run("merge-live-round-meta-into-projections.mjs", "Merge live round meta into projections");
-run("rebuild-current-event-history-shards.mjs", "Rebuild current-event history shards (replace event rows)");
-run("embed-player-history.mjs", "Re-embed history from shards (embed:history)");
+
+if (String(process.env.GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE || "").trim() !== "1") {
+  run(
+    "merge-recent-historical-rounds.mjs",
+    `DataGolf historical-raw-data/rounds → CSV (${recentYears}yr, post-live — completed rounds archive)`,
+    { GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS: recentYears },
+  );
+}
+
+if (Object.keys(fh).length) {
+  console.log(
+    "\n[refresh:live] Fast history build: skipping shots merge + 170MB hole_data.csv scan; ~last 10 seasons / 500 rounds per player. GOLF_REFRESH_LIVE_FAST_HISTORY=0 for full depth; GOLF_BUILD_HISTORY_SKIP_HOLES=0 to include holes.\n",
+  );
+}
+
+run(
+  "build-player-history.mjs",
+  "Historical Trends: CSV + live-tournament-stats + pgatouR → player_round_history + shards",
+  fh,
+);
+run("embed-player-history.mjs", "Embed history for static deploy (embed:history)");
 run("export-round-projection-vs-actual-csv.mjs", "Round projection vs actual CSV (export:round-projection-vs-actual)");
 
 mirrorWebsitePublicData();
 
 console.log(
-  "\n[refresh:live] Done — projections use course history + SG categories; current-event history rows were replaced (not patched onto stale data).",
+  "\n[refresh:live] Done — Historical Trends uses player_round_history.json / by-course shards built from:",
 );
 console.log(
-  "[refresh:live] For a full archive rebuild (2004→present), use push:all or refresh:app with GOLF_HISTORICAL_ROUNDS_FULL_HISTORY=1.",
+  "  • historical-raw-data/rounds (CSV), preds/live-tournament-stats + in-play (live week), pgatouR when available.",
+);
+console.log(
+  "  • Projections from fetch:dg (preds/pre-tournament pre-event; live stats + historical calibration in play).",
+);
+console.log(
+  "[refresh:live] For full archive (2004→present), use push:all or GOLF_HISTORICAL_ROUNDS_FULL_HISTORY=1.",
 );
 console.log("[refresh:live] Hard-refresh the browser (Ctrl+Shift+R). Publish: npm run push:live\n");
