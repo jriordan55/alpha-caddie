@@ -1,26 +1,21 @@
 #!/usr/bin/env node
 /**
- * Live-week refresh: same operational data as push:all **without** reloading full history.
+ * Live-week refresh: operational data + **recent tournament** in history/CSV, without a full 2004→present rebuild.
  *
  *   npm run refresh:live
  *
  * Skips:
- *   - DataGolf historical-raw-data/rounds → historical_rounds_all.csv merge (update:rounds)
- *   - build-player-history.mjs streaming the full ~70MB CSV into player_round_history.json
+ *   - GOLF_HISTORICAL_ROUNDS_FULL_HISTORY (entire DG archive re-merge)
+ *   - build-player-history.mjs scanning all years into new shards from scratch
  *
- * Still runs:
- *   - fetch:dg (field, projections, SG, hole pars, outrights, matchups) — no inline history merge
- *   - course-table, in-play, pgatouR current-event scorecards, book odds, finish-tool
- *   - live hole pars + display_round / course-difficulty merge into projections
- *   - patch-current-event-history (pgatouR + live GIR/fairways into existing shards only)
- *   - embed:history (compact bundle from existing shards)
- *   - round projection vs actual CSV
- *   - mirror JSON → website/public/data/
+ * Does:
+ *   1) merge-recent-historical-rounds — last N years into historical_rounds_all.csv (current event scoring + SG)
+ *   2) fetch:dg — round projections from skill-ratings (OTT/APP/PUT/T2G) + historical_calibration + course prior-round difficulty + within-event form from CSV
+ *   3) in-play, pgatouR, book odds, finish-tool, projection merges
+ *   4) rebuild-current-event-history-shards — **replace** all shard rows for this event (not patch-on-stale)
+ *   5) embed, export, mirror website/public/data
  *
- * For full history (2004→present CSV + rebuild all shards), use push:all or npm run refresh:app with
- * GOLF_HISTORICAL_ROUNDS_FULL_HISTORY=1.
- *
- * Env: DATAGOLF_API_KEY or datagolf.local.json, GOLF_MODEL_DIR, GOLF_SKIP_DK_OU=1, etc.
+ * Env: DATAGOLF_API_KEY, GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS (default 2), GOLF_SKIP_DK_OU=1, etc.
  */
 import { spawnSync } from "child_process";
 import { copyFileSync, existsSync, mkdirSync } from "fs";
@@ -75,9 +70,14 @@ function mirrorWebsitePublicData() {
 }
 
 const skipDg = String(process.env.GOLF_REFRESH_LIVE_SKIP_DG || "").trim() === "1";
+const recentYears = String(process.env.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "2").trim();
+
+run("merge-recent-historical-rounds.mjs", `Merge recent historical rounds (${recentYears}yr CSV, for course-history in projections)`, {
+  GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS: recentYears,
+});
 
 if (!skipDg) {
-  run("fetch-datagolf.mjs", "Field + model (fetch:dg, no historical CSV merge)", {
+  run("fetch-datagolf.mjs", "Field + round projections (μ_SG, SG pillars, course prior-round + within-event form)", {
     GOLF_SKIP_HISTORY_ON_FETCH_DG: "1",
   });
   run("build-course-table-json.mjs", "Course table JSON (build:course-table)");
@@ -95,16 +95,16 @@ run("fetch-book-odds-into-projections.mjs", "Sportsbook + DK round props (fetch:
 run("fetch-datagolf-finish-tool-outrights.mjs", "Finish-tool outrights (fetch:finish-tool)");
 run("merge-live-hole-pars-into-projections.mjs", "Merge live hole pars into projections");
 run("merge-live-round-meta-into-projections.mjs", "Merge live round meta into projections");
-run("patch-current-event-history-shards.mjs", "Patch current-event rows into history shards (patch:current-event-history)");
+run("rebuild-current-event-history-shards.mjs", "Rebuild current-event history shards (replace event rows)");
 run("embed-player-history.mjs", "Re-embed history from shards (embed:history)");
 run("export-round-projection-vs-actual-csv.mjs", "Round projection vs actual CSV (export:round-projection-vs-actual)");
 
 mirrorWebsitePublicData();
 
 console.log(
-  "\n[refresh:live] Done — projections, live-in-play, odds, and current-week history shards updated.",
+  "\n[refresh:live] Done — projections use course history + SG categories; current-event history rows were replaced (not patched onto stale data).",
 );
 console.log(
-  "[refresh:live] Full historical_rounds_all.csv / build:history were NOT run. Use push:all or refresh:app for that.",
+  "[refresh:live] For a full archive rebuild (2004→present), use push:all or refresh:app with GOLF_HISTORICAL_ROUNDS_FULL_HISTORY=1.",
 );
-console.log("[refresh:live] Hard-refresh the browser (Ctrl+Shift+R). Commit/publish: npm run push:live\n");
+console.log("[refresh:live] Hard-refresh the browser (Ctrl+Shift+R). Publish: npm run push:live\n");

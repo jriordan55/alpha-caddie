@@ -54,6 +54,12 @@ const result = spawnSync(process.execPath, [roundsScript], {
 const code = result.status ?? 1;
 if (code !== 0) process.exit(code);
 
+if (String(process.env.GOLF_UPDATE_ROUNDS_SKIP_BUILD || "").trim() === "1") {
+  console.log("[update:rounds] GOLF_UPDATE_ROUNDS_SKIP_BUILD=1 — CSV merge only; skipping build:history / embed / shots.");
+  mirrorModelDataToWeb(REPO_ROOT, WEB_ROOT);
+  process.exit(0);
+}
+
 const buildHist = path.join(WEB_ROOT, "scripts", "build-player-history.mjs");
 const embedHist = path.join(WEB_ROOT, "scripts", "embed-player-history.mjs");
 const buildShots = path.join(WEB_ROOT, "scripts", "build-player-shots-web.mjs");

@@ -19,6 +19,8 @@
     "merge:live-round-meta": "npm run merge:live-round-meta-into-projections --prefix alpha-caddie-web",
     "refresh:app": "npm run refresh:app --prefix alpha-caddie-web",
     "refresh:live": "npm run refresh:live --prefix alpha-caddie-web",
+    "merge:recent-rounds": "npm run merge:recent-rounds --prefix alpha-caddie-web",
+    "rebuild:current-event-history": "npm run rebuild:current-event-history --prefix alpha-caddie-web",
     "refresh:app:live": "npm run refresh:live --prefix alpha-caddie-web",
     "refresh:app:fasthist": "npm run refresh:app:fasthist --prefix alpha-caddie-web",
     "refresh:live-dk-round": "npm run refresh:live-dk-round --prefix alpha-caddie-web",
