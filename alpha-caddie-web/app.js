@@ -3827,7 +3827,7 @@ function ouPropsBookOddsFromIndex(idx, playerRow, line) {
   return hit || null;
 }
 
-function ouPropsRowsForMarketPlayer(market, playerRow) {
+function ouPropsRowsForMarketPlayer(market, playerRow, opts = {}) {
   const canon = ouPropsCanonicalMarket(market);
   const props = ouRoundOuPropsForLines();
   const out = [];
@@ -3848,14 +3848,14 @@ function ouPropsRowsForMarketPlayer(market, playerRow) {
     if (!sameById && !sameByName) continue;
     out.push({ line: L, over: o, under: u, source: String(r.source || "").trim().toLowerCase() });
   }
-  // Prefer DK rows when available for this exact player+market.
   const dkOnly = out.filter((r) => r.source === "draftkings");
+  if (opts.dkOnly) return dkOnly;
   if (dkOnly.length) return dkOnly;
   return out;
 }
 
-function chooseOuPropLineForProjection(market, playerRow, mu) {
-  const rows = ouPropsRowsForMarketPlayer(market, playerRow);
+function chooseOuPropLineForProjection(market, playerRow, mu, opts = {}) {
+  const rows = ouPropsRowsForMarketPlayer(market, playerRow, opts);
   if (!rows.length) return null;
   let best = rows[0];
   let bestDist = Number.POSITIVE_INFINITY;
@@ -4088,14 +4088,15 @@ function projectionSortComparable(val, dir) {
   return dir > 0 ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
 }
 
-/** One display row: golfer × DK market × Over|Under. */
+/** One display row: golfer × DK market × Over|Under (Round projections: DK lines only). */
 function ouProjectionFlatRowsForPlayers(players, cols) {
   const out = [];
   for (const player of players) {
     for (let colIdx = 0; colIdx < cols.length; colIdx++) {
       const col = cols[colIdx];
       const mu = ouProjectedMean(col.market, player);
-      const pick = chooseOuPropLineForProjection(col.market, player, mu);
+      const pick = chooseOuPropLineForProjection(col.market, player, mu, { dkOnly: true });
+      if (!pick) continue;
       for (const side of ["over", "under"]) {
         out.push({ player, col, colIdx, side, mu, pick });
       }
@@ -4464,6 +4465,16 @@ function buildOuTable() {
       "• Run one of: npm run fetch:book-odds · npm run refresh · npm run perfect\n" +
       "• DraftKings needs Chromium: npx playwright install chromium (see Render build).\n" +
       "• If DK opens the wrong event, set DK_LEAGUE_URL to your league URL with ?category=round.";
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+  } else if (!flatRows.length) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = projColCount;
+    td.className = "ou-cell ou-proj-long-td ou-proj-empty-td";
+    td.textContent = draftKingsRoundPropOddsAvailable()
+      ? "No DraftKings lines for this golfer, market, or filter. Rows with only model lines are hidden."
+      : "No DraftKings round O/U in projections.json yet — run fetch:book-odds with DK enabled.";
     tr.appendChild(td);
     tbody.appendChild(tr);
   } else {
