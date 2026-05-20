@@ -27,6 +27,7 @@ import {
   loadEventRoundContextFromHistoricalCsv,
 } from "./course-round-adjustments.mjs";
 import { eventsLikelySame, fieldWeekKey, fieldWeekKeysRoughMatch } from "./dg-events-align.mjs";
+import { normCourseNameKey } from "./course-name-key.mjs";
 import { exportDisplayRoundFromLiveBundle, num } from "./dg-display-round-from-bundle.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -138,15 +139,18 @@ async function main() {
     return;
   }
 
+  const projCourse = String(proj.course_used || fuCourseFromField || "").trim();
+  const courseKeyHist = normCourseNameKey(projCourse);
+
   let histEventCtx = null;
   if (projEvent && existsSync(roundsCsv)) {
-    histEventCtx = await loadEventRoundContextFromHistoricalCsv(roundsCsv, projEvent);
+    histEventCtx = await loadEventRoundContextFromHistoricalCsv(roundsCsv, projEvent, courseKeyHist);
   }
 
   const priorCourseExcessByRound = {};
   const priorCourseStrokeShiftByRound = {};
   for (let r = 1; r <= 4; r++) {
-    const ex = blendedPriorRoundCourseExcess(lhRaw, histEventCtx, r);
+    const ex = blendedPriorRoundCourseExcess(lhRaw, histEventCtx, r, projEvent, projCourse);
     priorCourseExcessByRound[r] = Number.isFinite(ex) ? Math.round(ex * 1000) / 1000 : null;
     priorCourseStrokeShiftByRound[r] = Number.isFinite(ex)
       ? Math.round(courseDifficultyStrokeShift(ex) * 1000) / 1000

@@ -68,6 +68,7 @@ import {
   loadEventRoundContextFromHistoricalCsv,
 } from "./course-round-adjustments.mjs";
 import { holeParsFromLiveHoleStatsPayload } from "./dg-live-hole-pars.mjs";
+import { normCourseNameKey } from "./course-name-key.mjs";
 import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
 import { applyHistoricalRoundsMergeDefaults } from "./historical-rounds-merge-env.mjs";
 import { resolveGolfModelDir } from "./resolve-golf-model-dir.mjs";
@@ -536,8 +537,9 @@ function pickBestScheduleAnchor(rows, graceDays = 3) {
     const o = row && typeof row === "object" ? row : {};
     const nm = String(o.event_name ?? o.name ?? o.tournament_name ?? "").trim();
     if (!nm) continue;
+    const crs = String(o.course_name ?? o.course ?? o.venue ?? o.location ?? "").trim();
     let sd = scheduleRowStartMs(o);
-    enriched.push({ nm, sd });
+    enriched.push({ nm, sd, crs });
   }
   if (!enriched.length) return null;
   const near = enriched.filter((x) => !Number.isFinite(x.sd) || x.sd >= now - GRACE_MS);
@@ -547,7 +549,7 @@ function pickBestScheduleAnchor(rows, graceDays = 3) {
     const bd = Number.isFinite(b.sd) ? b.sd : Infinity;
     return ad - bd;
   });
-  return { name: pool[0].nm };
+  return { name: pool[0].nm, course: pool[0].crs || "" };
 }
 
 /** Same idea as round_projections.R / live_data.R — canonical upcoming vs lagging field-updates labels. */
@@ -567,7 +569,7 @@ async function fetchCanonicalScheduleAnchor(scheduleTour, key) {
         continue;
       }
       const pick = pickBestScheduleAnchor(rows);
-      if (pick?.name) return { name: pick.name, upcoming_only: upcoming };
+      if (pick?.name) return { name: pick.name, course: pick.course || "", upcoming_only: upcoming };
     } catch (e) {
       console.warn(`get-schedule tour=${scheduleTour} upcoming=${upcoming}:`, e.message || e);
     }
@@ -841,7 +843,7 @@ function tryPreservePropsFromDisk(outPath, eventName, courseUsed) {
  * Stream `data/historical_rounds_all.csv`: OLS of hole counts vs (round_score − course_par), and R² for GIR~APP / FW~OTT.
  * Used for count-curve calibration (historical R² still logged for diagnostics).
  */
-async function loadHistoricalCsvCalibration(modelRoot) {
+async function loadHistoricalCsvCalibration(modelRoot, courseKeyOpt) {
   const empty = {
     skipped: false,
     n_counts: 0,
@@ -862,6 +864,9 @@ async function loadHistoricalCsvCalibration(modelRoot) {
   }
   const csvPath = join(modelRoot, "data", "historical_rounds_all.csv");
   if (!existsSync(csvPath)) return { ...empty, csv_path: csvPath };
+
+  const ckWant = courseKeyOpt ? normCourseNameKey(courseKeyOpt) : "";
+  const cy = new Date().getFullYear();
 
   let n = 0;
   let sx = 0;
@@ -901,6 +906,12 @@ async function loadHistoricalCsvCalibration(modelRoot) {
     parser.on("data", (row) => {
       const tour = String(row.tour || "").toLowerCase();
       if (tour !== "pga" && tour !== "liv") return;
+      if (ckWant) {
+        const ckRow = normCourseNameKey(row.course_name || row.Course_Name || "");
+        if (!ckRow || ckRow !== ckWant) return;
+        const yr = parseInt(row.year, 10);
+        if (Number.isFinite(yr) && yr < cy - 8) return;
+      }
 
       const cp = num(row.course_par, NaN);
       const rs = num(row.round_score, NaN);
@@ -1021,13 +1032,14 @@ async function loadHistoricalCsvCalibration(modelRoot) {
   out.w_ott_skill = 1;
   out.w_ott_decomp = 1;
 
+  const venueTag = ckWant ? ` at venue "${ckWant}"` : "";
   if (n >= 400) {
     console.log(
-      `[fetch-dg] historical calibration: n_counts=${n}, n_gir_app=${ng} (R²≈${Number.isFinite(out.r2_gir_app) ? out.r2_gir_app.toFixed(3) : "?"}), n_fw_ott=${nf} (R²≈${Number.isFinite(out.r2_fw_ott) ? out.r2_fw_ott.toFixed(3) : "?"}), n_fw_stp=${nFwR}${out.fw_stp_line ? " (FW~stp line fit)" : ""}; projections blend GIR/fairways vs historical`,
+      `[fetch-dg] historical calibration${venueTag}: n_counts=${n}, n_gir_app=${ng} (R²≈${Number.isFinite(out.r2_gir_app) ? out.r2_gir_app.toFixed(3) : "?"}), n_fw_ott=${nf} (R²≈${Number.isFinite(out.r2_fw_ott) ? out.r2_fw_ott.toFixed(3) : "?"}), n_fw_stp=${nFwR}${out.fw_stp_line ? " (FW~stp line fit)" : ""}; projections blend GIR/fairways vs historical`,
     );
   } else {
     console.log(
-      `[fetch-dg] historical calibration: only ${n} scored rounds in CSV (need ≥400 for count regression / stable R²) — using legacy count curve`,
+      `[fetch-dg] historical calibration${venueTag}: only ${n} scored rounds in CSV (need ≥400 for count regression / stable R²) — using legacy count curve`,
     );
   }
 
@@ -1385,9 +1397,6 @@ async function main() {
     process.exit(1);
   }
 
-  /** Runs in parallel with DataGolf fetches — stream PGA/LIV historical CSV for count vs (score−par) and blend R². */
-  const histCalibPromise = loadHistoricalCsvCalibration(GOLF_MODEL_ROOT);
-
   /** Dual-field weeks: `pga` feed may lag while `opp` already shows this week's opposite-field event. */
   function fieldUpdateTourCandidates() {
     const raw = String(process.env.GOLF_FIELD_UPDATES_TOUR_CANDIDATES || "").trim();
@@ -1410,7 +1419,8 @@ async function main() {
       const lu = raw.last_updated ?? raw.last_update ?? raw.updated_at;
       const ts = parseDgTimestamp(lu);
       const ev = String(raw.event_name || raw.eventName || "").trim();
-      scored.push({ tour, raw, fieldRowsTry, ts, n: fieldRowsTry.length, ev });
+      const crs = String(raw.course_name || raw.courseName || raw.course || "").trim();
+      scored.push({ tour, raw, fieldRowsTry, ts, n: fieldRowsTry.length, ev, crs });
     } catch (e) {
       console.warn(`field-updates tour=${tour}:`, e.message || e);
     }
@@ -1428,7 +1438,8 @@ async function main() {
   if (!skipSchedule) {
     anchor = await fetchCanonicalScheduleAnchor(TOUR, key);
     if (anchor) {
-      console.log(`[get-schedule] canonical upcoming: "${anchor.name}" (upcoming_only=${anchor.upcoming_only})`);
+      const ac = anchor.course ? ` @ ${anchor.course}` : "";
+      console.log(`[get-schedule] canonical upcoming: "${anchor.name}"${ac} (upcoming_only=${anchor.upcoming_only})`);
     } else {
       console.warn("[get-schedule] could not resolve upcoming event — preds/in-play fallback may decide.");
     }
@@ -1487,7 +1498,19 @@ async function main() {
   }
 
   poolUse.sort((a, b) => {
-    if (b.ts !== a.ts) return b.ts - a.ts;
+    const score = (s) => {
+      let v = s.ts || 0;
+      if (anchor?.name && fieldCandidateMatchesSchedule(s.ev, anchor.name)) v += 1e15;
+      if (anchor?.course && s.crs) {
+        const ac = foldComparableTitle(anchor.course);
+        const sc = foldComparableTitle(s.crs);
+        if (ac && sc && ac === sc) v += 1e14;
+        else if (coursesClearlyDistinct(anchor.course, s.crs)) v -= 1e14;
+      }
+      return v;
+    };
+    const d = score(b) - score(a);
+    if (d !== 0) return d;
     return toursTry.indexOf(a.tour) - toursTry.indexOf(b.tour);
   });
   const win = poolUse[0];
@@ -1774,6 +1797,11 @@ async function main() {
   }
 
   course_used = canonicalCourseLabelForProjections(course_used);
+  const courseKeyHist = normCourseNameKey(course_used);
+  if (courseKeyHist) {
+    console.log(`[fetch-dg] Venue-scoped history/calibration: ${courseKeyHist}`);
+  }
+  const histCalibPromise = loadHistoricalCsvCalibration(GOLF_MODEL_ROOT, courseKeyHist);
 
   const pretStrokesByDg = new Map();
   for (const row of pretList) {
@@ -1944,7 +1972,11 @@ async function main() {
   const formCap = num(process.env.GOLF_WITHIN_EVENT_FORM_CAP, 0.3);
   let histEventCtx = null;
   if (applyPriorRoundAdj && event_name && histCalib.csv_path && existsSync(histCalib.csv_path)) {
-    histEventCtx = await loadEventRoundContextFromHistoricalCsv(histCalib.csv_path, event_name);
+    histEventCtx = await loadEventRoundContextFromHistoricalCsv(
+      histCalib.csv_path,
+      event_name,
+      courseKeyHist,
+    );
   }
   const withinFormMap =
     formK !== 0 && histEventCtx
@@ -1959,7 +1991,13 @@ async function main() {
   const priorCourseStrokeShiftByRound = {};
   if (applyPriorRoundAdj) {
     for (let r = 1; r <= 4; r++) {
-      const ex = blendedPriorRoundCourseExcess(liveHoleStatsForPars, histEventCtx, r);
+      const ex = blendedPriorRoundCourseExcess(
+        liveHoleStatsForPars,
+        histEventCtx,
+        r,
+        event_name,
+        course_used,
+      );
       priorCourseExcessByRound[r] = Number.isFinite(ex) ? Math.round(ex * 1000) / 1000 : null;
       priorCourseStrokeShiftByRound[r] = Number.isFinite(ex)
         ? Math.round(courseDifficultyStrokeShift(ex) * 1000) / 1000

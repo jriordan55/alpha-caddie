@@ -43,6 +43,19 @@ export function courseNumsFromFieldRaw(fieldRaw) {
   return nums;
 }
 
+/** True when live-hole-stats event/course align with this week's projections venue. */
+export function liveHoleStatsUsableForProjections(lh, event_name, course_used) {
+  if (!lh || typeof lh !== "object") return false;
+  const lhEv = String(lh.event_name ?? "").trim();
+  const ev = String(event_name ?? "").trim();
+  if (lhEv && ev && foldComparableTitle(lhEv) !== foldComparableTitle(ev) && !eventsLikelySame(lhEv, ev)) {
+    return false;
+  }
+  const cu = String(course_used ?? "").trim();
+  if (!cu) return true;
+  return !!pickLiveHoleStatsCourseEntry(lh, cu, null);
+}
+
 export function pickLiveHoleStatsCourseEntry(lh, course_used, fieldRaw) {
   const courses = lh?.courses;
   if (!Array.isArray(courses) || !courses.length) return null;

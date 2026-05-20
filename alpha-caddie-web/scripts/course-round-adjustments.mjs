@@ -5,6 +5,8 @@
 import { createReadStream, existsSync } from "fs";
 import { parse } from "csv-parse";
 import { eventsLikelySame, foldComparableTitle } from "./dg-events-align.mjs";
+import { liveHoleStatsUsableForProjections } from "./dg-live-hole-pars.mjs";
+import { normCourseNameKey } from "./course-name-key.mjs";
 
 function num(x, fallback = NaN) {
   const n = Number(x);
@@ -16,15 +18,20 @@ function clamp(x, lo, hi) {
 }
 
 /** Sum_h (avg_score − par) for one round from preds/live-hole-stats (same as app.js). */
-export function liveCourseRoundExcessForRound(payload, roundNum, minThru = 4) {
+export function liveCourseRoundExcessForRound(payload, roundNum, minThru = 4, courseKeyOpt) {
   if (!payload || typeof payload !== "object") return NaN;
   const courses = payload.courses;
   if (!Array.isArray(courses) || !courses.length) return NaN;
   const rn = Math.round(num(roundNum, NaN));
   if (!Number.isFinite(rn) || rn < 1 || rn > 4) return NaN;
+  const ckWant = courseKeyOpt ? normCourseNameKey(courseKeyOpt) : "";
 
   const perCourse = [];
   for (const c of courses) {
+    if (ckWant) {
+      const ck = normCourseNameKey(c.course_name ?? c.courseName ?? "");
+      if (!ck || ck !== ckWant) continue;
+    }
     const rounds = c.rounds;
     if (!Array.isArray(rounds)) continue;
     let sum = 0;
@@ -54,12 +61,12 @@ export function liveCourseRoundExcessForRound(payload, roundNum, minThru = 4) {
 }
 
 /** Mean excess strokes for completed prior rounds 1..targetRound-1 (live hole stats). */
-export function priorRoundsExcessFromLiveHoleStats(liveHoleStats, targetRound, minThru = 4) {
+export function priorRoundsExcessFromLiveHoleStats(liveHoleStats, targetRound, minThru = 4, courseKeyOpt) {
   const tr = Math.round(num(targetRound, NaN));
   if (!Number.isFinite(tr) || tr < 2) return NaN;
   const exs = [];
   for (let rn = 1; rn < tr; rn++) {
-    const ex = liveCourseRoundExcessForRound(liveHoleStats, rn, minThru);
+    const ex = liveCourseRoundExcessForRound(liveHoleStats, rn, minThru, courseKeyOpt);
     if (Number.isFinite(ex)) exs.push(ex);
   }
   if (!exs.length) return NaN;
@@ -71,7 +78,7 @@ export function priorRoundsExcessFromLiveHoleStats(liveHoleStats, targetRound, m
  */
 
 /** Stream historical_rounds_all for current event — field scoring vs par by round + player SG rows. */
-export async function loadEventRoundContextFromHistoricalCsv(csvPath, eventName) {
+export async function loadEventRoundContextFromHistoricalCsv(csvPath, eventName, courseKeyOpt) {
   const ctx = {
     byRound: new Map(),
     playerRounds: [],
@@ -79,6 +86,7 @@ export async function loadEventRoundContextFromHistoricalCsv(csvPath, eventName)
   if (!eventName || !csvPath || !existsSync(csvPath)) return ctx;
 
   const cy = new Date().getFullYear();
+  const ckWant = courseKeyOpt ? normCourseNameKey(courseKeyOpt) : "";
 
   await new Promise((resolve, reject) => {
     const parser = createReadStream(csvPath).pipe(
@@ -91,6 +99,10 @@ export async function loadEventRoundContextFromHistoricalCsv(csvPath, eventName)
     );
     parser.on("data", (row) => {
       if (!eventsLikelySame(eventName, String(row.event_name || "").trim())) return;
+      if (ckWant) {
+        const ckRow = normCourseNameKey(row.course_name || row.Course_Name || "");
+        if (!ckRow || ckRow !== ckWant) return;
+      }
       const yr = parseInt(row.year, 10);
       if (Number.isFinite(yr) && (yr < cy - 1 || yr > cy + 1)) return;
 
@@ -134,8 +146,12 @@ export function priorRoundsExcessFromHistorical(ctx, targetRound) {
 }
 
 /** Blend live-hole-stats vs historical field excess (prefer live when both exist). */
-export function blendedPriorRoundCourseExcess(liveHoleStats, histCtx, targetRound) {
-  const liveEx = priorRoundsExcessFromLiveHoleStats(liveHoleStats, targetRound);
+export function blendedPriorRoundCourseExcess(liveHoleStats, histCtx, targetRound, eventName, courseKeyOpt) {
+  const ck = courseKeyOpt ? normCourseNameKey(courseKeyOpt) : "";
+  const liveOk =
+    liveHoleStats &&
+    liveHoleStatsUsableForProjections(liveHoleStats, eventName, courseKeyOpt || "");
+  const liveEx = liveOk ? priorRoundsExcessFromLiveHoleStats(liveHoleStats, targetRound, 4, ck || undefined) : NaN;
   const histEx = priorRoundsExcessFromHistorical(histCtx, targetRound);
   if (Number.isFinite(liveEx) && Number.isFinite(histEx)) return 0.55 * liveEx + 0.45 * histEx;
   if (Number.isFinite(liveEx)) return liveEx;
