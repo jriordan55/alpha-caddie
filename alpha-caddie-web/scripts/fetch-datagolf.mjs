@@ -62,10 +62,13 @@ import {
 } from "./dg-events-align.mjs";
 import { fetchDataGolfOutrightsApi } from "./datagolf-outrights-api.mjs";
 import {
+  applyVenueCourseFitToMu,
   blendedPriorRoundCourseExcess,
   buildWithinEventFormMap,
   courseDifficultyStrokeShift,
   loadEventRoundContextFromHistoricalCsv,
+  loadVenueHistoricalScoring,
+  resolveProjectionScoreToPar,
 } from "./course-round-adjustments.mjs";
 import { holeParsFromLiveHoleStatsPayload } from "./dg-live-hole-pars.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
@@ -1801,7 +1804,9 @@ async function main() {
   if (courseKeyHist) {
     console.log(`[fetch-dg] Venue-scoped history/calibration: ${courseKeyHist}`);
   }
+  const histCsvPath = join(GOLF_MODEL_ROOT, "data", "historical_rounds_all.csv");
   const histCalibPromise = loadHistoricalCsvCalibration(GOLF_MODEL_ROOT, courseKeyHist);
+  const venueScoringPromise = loadVenueHistoricalScoring(histCsvPath, courseKeyHist, course_used);
 
   const pretStrokesByDg = new Map();
   for (const row of pretList) {
@@ -1853,7 +1858,12 @@ async function main() {
   const fieldMeanDrive =
     distSamples.length >= 8 ? distSamples.reduce((a, b) => a + b, 0) / distSamples.length : NaN;
 
-  const histCalib = await histCalibPromise;
+  const [histCalib, venueScoring] = await Promise.all([histCalibPromise, venueScoringPromise]);
+  if (Number.isFinite(venueScoring.venueAvgStp)) {
+    console.log(
+      `[fetch-dg] Venue scoring baseline: ${venueScoring.venueAvgStp >= 0 ? "+" : ""}${venueScoring.venueAvgStp.toFixed(2)} vs par (${venueScoring.source}, n=${venueScoring.nVenueRounds} rounds)`,
+    );
+  }
 
   const base = [];
   for (const fr of fieldRows) {
@@ -1866,7 +1876,7 @@ async function main() {
       const dgS = pretStrokesByDg.get(id);
       if (Number.isFinite(dgS) && Number.isFinite(course_par_18)) {
         const modelS = course_par_18 - mu_sg;
-        if (Number.isFinite(modelS)) mu_sg = clampMuSg(mu_sg - 0.22 * (dgS - modelS));
+        if (Number.isFinite(modelS)) mu_sg = clampMuSg(mu_sg - 0.45 * (dgS - modelS));
       }
     }
 
@@ -1955,11 +1965,14 @@ async function main() {
     base.push(rowOut);
   }
 
-  const score_to_par = (mu) => -num(mu, 0);
-  const total_score = (mu) => course_par_18 + score_to_par(mu);
-
-  base.sort((a, b) => total_score(a.mu_sg) - total_score(b.mu_sg));
-  const posMap = new Map(base.map((r, i) => [r.dg_id, i + 1]));
+  const fieldMeanMu =
+    base.length > 0 ? base.reduce((s, r) => s + num(r.mu_sg, 0), 0) / base.length : 0;
+  for (const row of base) {
+    row.mu_sg = applyVenueCourseFitToMu(row.mu_sg, row.dg_id, venueScoring, fieldMeanMu);
+    row.implied_mu_sg = row.mu_sg;
+  }
+  const fieldMeanMuAdj =
+    base.length > 0 ? base.reduce((s, r) => s + num(r.mu_sg, 0), 0) / base.length : fieldMeanMu;
 
   const tz = process.env.GOLF_OU_TZ || "America/New_York";
   const fieldApiRound = dgCurrentRoundFromFieldOrLiveHole(fieldRaw, liveHoleStatsForPars);
@@ -2022,9 +2035,18 @@ async function main() {
   }
 
   const players = [];
+  const scoreSourceCounts = {
+    player_venue_hist: 0,
+    pret_tournament: 0,
+    skill_around_venue_mean: 0,
+    skill_around_round_venue_mean: 0,
+    skill_rating: 0,
+  };
   for (let r = 1; r <= 4; r++) {
     const mult = num(roundMuMult[r - 1], 1);
     const strokeShiftPrior = applyPriorRoundAdj ? num(priorCourseStrokeShiftByRound[r], 0) : 0;
+    /** @type {typeof players} */
+    const roundRows = [];
     for (const row of base) {
       const formShift = formK !== 0 ? num(withinFormMap.get(`${row.dg_id}|${r}`), 0) : 0;
       let muForRound = r === 1 ? row.mu_sg : row.mu_sg * mult;
@@ -2077,8 +2099,19 @@ async function main() {
           skRow: skRowR,
         });
       }
-      const stp = score_to_par(st.mu_sg);
-      const ts = total_score(st.mu_sg);
+      const pretScore = pretStrokesByDg.get(row.dg_id);
+      const scoreRes = resolveProjectionScoreToPar({
+        dg_id: row.dg_id,
+        round: r,
+        muForRound,
+        course_par_18,
+        venueScoring,
+        pretRoundScore: pretScore,
+        fieldMeanMu: fieldMeanMuAdj,
+      });
+      if (scoreRes.source in scoreSourceCounts) scoreSourceCounts[scoreRes.source]++;
+      const stp = scoreRes.stp;
+      const ts = course_par_18 + stp;
       const pl = {
         dg_id: row.dg_id,
         player_name: row.player_name,
@@ -2086,7 +2119,7 @@ async function main() {
         round: r,
         round_label: `R${r} (${WEEKDAYS[r - 1]})`,
         next_round: r,
-        position: posMap.get(row.dg_id),
+        position: 0,
         mu_sg: Math.round(st.mu_sg * 1000) / 1000,
         implied_mu_sg: Math.round(st.implied_mu_sg * 1000) / 1000,
         ...(applyPriorRoundAdj && (strokeShiftPrior !== 0 || formShift !== 0)
@@ -2135,8 +2168,17 @@ async function main() {
           pl.driving_accuracy = Math.round(((fw / fairwayHolesThisCourse) * 100) * 10) / 10;
         }
       }
-      players.push(pl);
+      roundRows.push(pl);
     }
+    roundRows.sort((a, b) => num(a.total_score, NaN) - num(b.total_score, NaN));
+    for (let i = 0; i < roundRows.length; i++) roundRows[i].position = i + 1;
+    players.push(...roundRows);
+  }
+  const srcParts = Object.entries(scoreSourceCounts)
+    .filter(([, n]) => n > 0)
+    .map(([k, n]) => `${k}:${n}`);
+  if (srcParts.length) {
+    console.log(`[fetch-dg] Round score sources (all rounds): ${srcParts.join(", ")}`);
   }
 
   let outrights = {};
@@ -2211,6 +2253,20 @@ async function main() {
     projection_course_basis: {
       fairway_holes_modeled: fairwayHolesThisCourse,
       pret_expected_round_strokes_players: pretStrokesByDg.size,
+      venue_avg_score_to_par: Number.isFinite(venueScoring.venueAvgStp)
+        ? Math.round(venueScoring.venueAvgStp * 1000) / 1000
+        : null,
+      venue_avg_round_score:
+        Number.isFinite(venueScoring.venueAvgStp) && Number.isFinite(course_par_18)
+          ? Math.round((course_par_18 + venueScoring.venueAvgStp) * 100) / 100
+          : null,
+      venue_scoring_source: venueScoring.source,
+      venue_historical_rounds: venueScoring.nVenueRounds,
+      field_avg_score_by_round: Object.fromEntries(
+        [...(venueScoring.fieldByRound || new Map()).entries()]
+          .filter(([, v]) => v?.n >= 25 && Number.isFinite(v.avgScore))
+          .map(([rnd, v]) => [String(rnd), Math.round(v.avgScore * 100) / 100]),
+      ),
     },
     historical_projection_calibration: {
       skipped: !!histCalib.skipped,
