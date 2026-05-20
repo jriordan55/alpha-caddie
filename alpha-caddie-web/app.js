@@ -412,7 +412,7 @@ let propsFieldVenueRoundsCache = { season: [], all: [] };
 let propsCourseRoundIndexSig = "";
 /** @type {Map<string, { days: string[], entries: { row: object, dgId: number, playerName: string }[] }>} */
 const propsCourseRoundIndex = new Map();
-let propsFieldHistoryLoadPromise = null;
+let propsFieldHistoryBgQueued = false;
 let propsCourseWindowRenderGen = 0;
 
 function num(v, d) {
@@ -10638,20 +10638,24 @@ function propsEventVenueCourseKey() {
   return metaVenue ? normCourseNameKey(metaVenue) : "";
 }
 
+/** Field-by-course mode always uses this week's venue from projections, not the golfer "All" filter. */
+function propsEffectiveCourseKey() {
+  if (!propsCourseWindowModeOn()) return selectedPropsCourseFilter();
+  return propsEventVenueCourseKey() || selectedPropsCourseFilter();
+}
+
 function ensurePropsCourseSelectedForWindow() {
   if (!propsCourseWindowModeOn()) return false;
   const courseSel = document.getElementById("props-filter-course");
   if (!courseSel) return false;
-  if (selectedPropsCourseFilter()) return false;
   const prefer = propsEventVenueCourseKey();
-  if (prefer && [...courseSel.options].some((o) => o.value === prefer)) {
-    courseSel.value = prefer;
-    return true;
-  }
-  const opts = [...courseSel.options].filter((o) => String(o.value || "").trim());
-  if (opts.length === 1) {
-    courseSel.value = opts[0].value;
-    return true;
+  if (!prefer) return false;
+  if ([...courseSel.options].some((o) => o.value === prefer)) {
+    if (courseSel.value !== prefer) {
+      courseSel.value = prefer;
+      return true;
+    }
+    return false;
   }
   return false;
 }
@@ -10747,7 +10751,7 @@ function ensurePropsCourseWindowDateDefaults() {
     propsCourseWindowDateDefaultsCourseTracked = "";
     return;
   }
-  const courseKey = selectedPropsCourseFilter();
+  const courseKey = propsEffectiveCourseKey();
   const fromEl = document.getElementById("props-filter-date-from");
   const toEl = document.getElementById("props-filter-date-to");
   if (!fromEl || !toEl || !courseKey || !HISTORY?._ok) return;
@@ -10787,10 +10791,10 @@ function propsCourseWindowModeOn() {
   return Boolean(document.getElementById("props-filter-course-window")?.checked);
 }
 
-/** Field-by-course mode: course required; inclusive date range (`from` and/or `to`). */
+/** Field-by-course mode: current-week venue + inclusive date range (`from` and/or `to`). */
 function propsCourseWindowModeActive() {
   if (!propsCourseWindowModeOn()) return false;
-  if (!selectedPropsCourseFilter()) return false;
+  if (!propsEffectiveCourseKey()) return false;
   const fromRaw = String(document.getElementById("props-filter-date-from")?.value || "").trim();
   const toRaw = String(document.getElementById("props-filter-date-to")?.value || "").trim();
   return Boolean(fromRaw || toRaw);
@@ -10948,18 +10952,24 @@ function refreshPropsCourseFilterOptionsAllPlayers() {
     propsAllPlayersCourseOptsCacheKey = optsCacheKey;
     propsAllPlayersCourseOptsEntries = sortedEntries;
   }
-  courseSel.innerHTML = windowOn
-    ? '<option value="">Select course…</option>'
-    : '<option value="">All</option>';
-  for (const [k, label] of sortedEntries) {
-    const op = document.createElement("option");
-    op.value = k;
-    op.textContent = label;
-    courseSel.appendChild(op);
+  courseSel.disabled = windowOn;
+  if (windowOn) {
+    const venueKey = propsEventVenueCourseKey();
+    courseSel.innerHTML = venueKey
+      ? `<option value="${venueKey}">${courseFitPrettyCourseKey(venueKey)}</option>`
+      : '<option value="">Current course unknown (check projections)</option>';
+    if (venueKey) courseSel.value = venueKey;
+  } else {
+    courseSel.innerHTML = '<option value="">All</option>';
+    for (const [k, label] of sortedEntries) {
+      const op = document.createElement("option");
+      op.value = k;
+      op.textContent = label;
+      courseSel.appendChild(op);
+    }
+    const prevK = prev ? normCourseNameKey(prev) : "";
+    if (prevK && [...courseSel.options].some((o) => o.value === prevK)) courseSel.value = prevK;
   }
-  const prevK = prev ? normCourseNameKey(prev) : "";
-  if (prevK && [...courseSel.options].some((o) => o.value === prevK)) courseSel.value = prevK;
-  if (windowOn) ensurePropsCourseSelectedForWindow();
 }
 
 function defaultLineForCourseWindow(statKey, entries) {
@@ -11324,7 +11334,7 @@ function filteredHistoryRoundsMemoSig() {
     courseFilterOn() ? 1 : 0,
     venueCourseName(),
     String(DATA?.meta?.event_name || ""),
-    propsCourseWindowModeActive() ? selectedPropsCourseFilter() || "" : "",
+    propsCourseWindowModeActive() ? propsEffectiveCourseKey() || "" : "",
     propsTrendTempContextKey(),
     selectedPropsWindRangeFilter() || "",
     selectedPropsHumidityRangeFilter() || "",
@@ -11350,7 +11360,7 @@ function filteredHistoryRounds(dgId) {
       list = list.filter((r) => currentTournamentContextMatchesRound(r));
     }
   }
-  const courseFilter = propsCourseWindowModeActive() ? selectedPropsCourseFilter() : "";
+  const courseFilter = propsCourseWindowModeActive() ? propsEffectiveCourseKey() : "";
   if (courseFilter) {
     list = list.filter((r) => normCourseNameKey(r.course_name) === normCourseNameKey(courseFilter));
   }
@@ -11638,7 +11648,7 @@ function propsTrendLineContextKeyFromDom() {
   const temp = propsTrendTempContextKey();
   const wind = selectedPropsWindRangeFilter() || "all";
   const hum = selectedPropsHumidityRangeFilter() || "all";
-  const course = propsCourseWindowModeActive() ? selectedPropsCourseFilter() || "all" : "all";
+  const course = propsCourseWindowModeActive() ? propsEffectiveCourseKey() || "all" : "all";
   const pm = PRICING_STATE.mode || "default";
   const ps = PRICING_STATE.skill === "default" ? "default" : pricingSkillHistoryKey();
   const cw = propsCourseWindowModeActive() ? 1 : 0;
@@ -11954,7 +11964,7 @@ function propsTrendMeanActual(statKey, rounds) {
 }
 
 function propsTrendCourseFilterActive() {
-  return Boolean(courseFilterOn() || (propsCourseWindowModeActive() && selectedPropsCourseFilter()));
+  return Boolean(courseFilterOn() || (propsCourseWindowModeActive() && propsEffectiveCourseKey()));
 }
 
 /** Course-only slice of career history (“Current course only” and/or Course dropdown while field-by-course window is on); ignores weather & graph window. */
@@ -11968,7 +11978,7 @@ function roundsMatchingCourseSelectionOnly(dgId) {
     const metaEvent = String(DATA.meta?.event_name || "").trim();
     if (vn || metaEvent) list = list.filter((r) => currentTournamentContextMatchesRound(r));
   }
-  const courseSel = propsCourseWindowModeActive() ? selectedPropsCourseFilter() : "";
+  const courseSel = propsCourseWindowModeActive() ? propsEffectiveCourseKey() : "";
   if (courseSel) list = list.filter((r) => normCourseNameKey(r.course_name) === normCourseNameKey(courseSel));
   return list;
 }
@@ -12318,7 +12328,7 @@ function renderPropsHitRateAndTopTable(statKey, line, winN) {
   }
   if (!tbody) return;
   tbody.innerHTML = "";
-  if (!propsFieldLeaderboardEnabled()) {
+  if (!propsCourseWindowModeActive() && !propsFieldLeaderboardEnabled()) {
     const tr = document.createElement("tr");
     const td = document.createElement("td");
     td.colSpan = 6;
@@ -12964,52 +12974,28 @@ function scheduleRenderPropsTrends(ms = 200) {
   }, ms);
 }
 
-/** Load round history for the current tournament field (field-by-course needs every player at the venue). */
-async function ensurePropsFieldHistoryLoaded() {
-  if (!propsCourseWindowModeOn()) return true;
-  if (propsFieldLeaderboardEnabled()) return true;
-  if (propsFieldHistoryLoadPromise) return propsFieldHistoryLoadPromise;
-  propsFieldHistoryLoadPromise = (async () => {
-    if (!HISTORY._ok) await loadPlayerHistory();
-    if (propsFieldLeaderboardEnabled()) return true;
-    const ids = [
-      ...new Set(
-        (DATA.players || []).map((p) => Math.round(num(p.dg_id, NaN))).filter((x) => Number.isFinite(x)),
-      ),
-    ];
-    const BATCH = 16;
-    for (let i = 0; i < ids.length; i += BATCH) {
-      await Promise.all(
-        ids.slice(i, i + BATCH).map((id) => (historyBucketLoaded(id) ? true : loadPlayerHistoryBucket(id))),
-      );
-    }
-    return propsFieldLeaderboardEnabled();
-  })().finally(() => {
-    propsFieldHistoryLoadPromise = null;
-  });
-  return propsFieldHistoryLoadPromise;
-}
-
-function paintPropsCourseWindowLoading(message) {
-  const empty = document.getElementById("props-chart-empty");
-  if (empty) {
-    empty.hidden = false;
-    empty.textContent = message;
-  }
-  drawPropsTrendCanvas([], NaN, statKeyFromPropSelect());
+/**
+ * Field-by-course needs all players who have rounds at this venue in history (not just this week's field).
+ * Load full player_round_history.json once in the background without blocking the chart.
+ */
+function queuePropsFieldHistoryBackgroundLoad() {
+  if (!propsCourseWindowModeOn()) return;
+  if (HISTORY._ok && !HISTORY._partial) return;
+  if (propsFieldHistoryBgQueued || playerHistoryLoadPromise) return;
+  propsFieldHistoryBgQueued = true;
+  void loadPlayerHistory()
+    .finally(() => {
+      propsFieldHistoryBgQueued = false;
+    })
+    .then(() => {
+      if (propsCourseWindowModeOn() && activeAppTabId() === "props") renderPropsTrendsNow();
+    });
 }
 
 function renderPropsTrendsCourseWindow() {
   const gen = ++propsCourseWindowRenderGen;
   syncPropsCourseWindowUiState();
-  if (propsCourseWindowModeOn() && !propsFieldLeaderboardEnabled()) {
-    paintPropsCourseWindowLoading("Loading field round history for this view…");
-    void ensurePropsFieldHistoryLoaded().then(() => {
-      if (gen !== propsCourseWindowRenderGen || activeAppTabId() !== "props") return;
-      renderPropsTrendsCourseWindowBody(gen);
-    });
-    return;
-  }
+  queuePropsFieldHistoryBackgroundLoad();
   renderPropsTrendsCourseWindowBody(gen);
 }
 
@@ -13026,23 +13012,24 @@ function renderPropsTrendsCourseWindowBody(gen) {
     propsTopTableSortStatKey = statKey;
   }
   refreshPropsCourseFilterOptionsAllPlayers();
-  ensurePropsCourseSelectedForWindow();
   ensurePropsCourseWindowDateDefaults();
-  const courseKey = selectedPropsCourseFilter();
-  const courseLabel = courseKey
-    ? courseFitPrettyCourseKey(courseKey)
-    : propsEventVenueCourseKey()
-      ? courseFitPrettyCourseKey(propsEventVenueCourseKey())
-      : "—";
+  const courseKey = propsEffectiveCourseKey();
+  const courseLabel = courseKey ? courseFitPrettyCourseKey(courseKey) : "—";
   if (flagEl) flagEl.hidden = true;
   if (titleEl) titleEl.textContent = courseLabel;
   if (subEl) {
     const dr = propsCourseWindowDateRangeLabel();
     const mkt = propMarketLabelFromKey(statKey);
     const sortHint = propsMarketHigherIsBetter(statKey) ? "bars least→greatest" : "bars greatest→least";
+    const histNote =
+      HISTORY._partial && propsCourseWindowModeOn()
+        ? " · loading all players at this course…"
+        : "";
     subEl.textContent = dr
-      ? `${mkt} · ${dr} · field rounds at this course · ${sortHint}`
-      : `${mkt} · pick course and an inclusive From/To window (either end can be blank for open-ended)`;
+      ? `${mkt} · ${dr} · all players at ${courseLabel}${histNote} · ${sortHint}`
+      : propsEventVenueCourseKey()
+        ? `${mkt} · set From/To dates for all players at ${courseLabel}${histNote}`
+        : `${mkt} · projections missing course_used — cannot scope field view`;
   }
   const nWinEl = document.getElementById("props-window-n");
   const winN = clamp(
@@ -13055,16 +13042,18 @@ function renderPropsTrendsCourseWindowBody(gen) {
   if (!propsCourseWindowModeActive()) {
     if (empty) {
       empty.hidden = false;
-      const needCourse = !selectedPropsCourseFilter();
+      const needVenue = !propsEventVenueCourseKey();
       const fromBlank = !String(document.getElementById("props-filter-date-from")?.value || "").trim();
       const toBlank = !String(document.getElementById("props-filter-date-to")?.value || "").trim();
       const needDates = fromBlank && toBlank;
-      if (needCourse && needDates) {
-        empty.textContent = "Select a course and set at least one of From / To dates (field-by-course mode).";
-      } else if (needCourse) {
-        empty.textContent = "Select a course (not “Select course…”) to load field rounds at this venue.";
-      } else if (needDates && HISTORY._ok && distinctCompletedRoundDatesAtCourse(selectedPropsCourseFilter()).length === 0) {
-        empty.textContent = "No completed rounds in history for this course yet (refresh data or pick another venue).";
+      const ck = propsEffectiveCourseKey();
+      if (needVenue) {
+        empty.textContent =
+          "Field-by-course uses this week’s venue from projections (course_used). Reload projections or turn off field mode.";
+      } else if (needDates) {
+        empty.textContent = `Set at least one of From / To dates for all players at ${courseFitPrettyCourseKey(ck)}.`;
+      } else if (HISTORY._ok && distinctCompletedRoundDatesAtCourse(ck).length === 0) {
+        empty.textContent = `No completed rounds in history for ${courseFitPrettyCourseKey(ck)} yet (refresh data).`;
       } else {
         empty.textContent =
           "Set at least one of From / To dates (leave the other blank for an open-ended range), or widen the dates you chose.";
