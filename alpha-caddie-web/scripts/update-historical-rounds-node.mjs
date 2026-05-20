@@ -30,6 +30,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { parse } from "csv-parse/sync";
+import { roundEventCompletedMdYFromEventEnd } from "./history-round-dates.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -247,11 +248,15 @@ function roundToRow(r, roundNum, evInfo, dgId, playerName, finText) {
   if (scoreVal == null || scoreVal === "") return null;
   const ei = evInfo;
   const idn = Math.round(Number(dgId));
+  const tour = String(ei.tour || "pga");
+  const eventEnd = eventCompletedChr(ei.event_completed);
+  const rnd = Math.round(Number(roundNum)) || 1;
+  const perRoundCompleted = roundEventCompletedMdYFromEventEnd(eventEnd, rnd, tour) || eventEnd;
   return {
-    tour: String(ei.tour || "pga"),
+    tour,
     year: Number(ei.year),
     season: Number(ei.season ?? ei.year),
-    event_completed: eventCompletedChr(ei.event_completed),
+    event_completed: perRoundCompleted,
     event_name: String(ei.event_name || ""),
     event_id: String(ei.event_id || ""),
     player_name: String(playerName || ""),

@@ -45,6 +45,11 @@ import {
   countingFromInPlayRow,
 } from "./dg-live-tournament-stats.mjs";
 import { normCourseNameKey, courseShardFileName } from "./course-name-key.mjs";
+import {
+  historyRoundChartUtcIsoDay,
+  roundEventCompletedMdYFromEventEnd,
+  parseEventCompletedChronoBase,
+} from "./history-round-dates.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -203,24 +208,7 @@ function writeJsonAtomic(outPath, payload) {
 }
 
 function chartUtcIsoDayFromHistoryRow(r) {
-  const sk = Number(r?.sortKey);
-  if (Number.isFinite(sk) && sk > 9_999_999) {
-    const base = Math.floor(sk / 10);
-    const y = Math.floor(base / 10000);
-    const mo = Math.floor((base % 10000) / 100);
-    const d = base % 100;
-    if (y >= 1990 && y <= 2100 && mo >= 1 && mo <= 12 && d >= 1 && d <= 31) {
-      return `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-    }
-  }
-  const ec = String(r?.event_completed || "").trim();
-  const mdy = ec.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-  if (mdy) {
-    return `${mdy[3]}-${String(mdy[1]).padStart(2, "0")}-${String(mdy[2]).padStart(2, "0")}`;
-  }
-  const iso = ec.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
-  return "";
+  return historyRoundChartUtcIsoDay(r);
 }
 
 /** Pre-aggregated rounds at each venue for fast Historical Trends “field by course & date”. */
@@ -1518,7 +1506,10 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg) {
       pgaMetaOverlay && Number.isFinite(eid) ? pgaMetaOverlay.get(`${eid}|${yr}`) : null;
     const rowForWeather = metaPatch ? { ...row, ...metaPatch } : row;
 
-    const sortKey = parseUsDateSortKey(row.event_completed) * 10 + (parseInt(row.round_num, 10) || 1);
+    const rnd = parseInt(row.round_num, 10) || 1;
+    const tour = String(row.tour || "").toLowerCase();
+    const eventDate = roundEventCompletedMdYFromEventEnd(row.event_completed, rnd, tour);
+    const sortKey = parseEventCompletedChronoBase(eventDate) * 10 + rnd;
     const eventName = String(row.event_name || "").trim();
     const evtNormHist = normEvt(eventName);
     const yrHist = parseInt(String(row.year || "").trim(), 10);
@@ -1551,7 +1542,7 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg) {
     stripGirFairwaysPuttsIfGarbage(mf);
     const rec = {
       sortKey,
-      event_completed: String(row.event_completed || ""),
+      event_completed: eventDate || String(row.event_completed || ""),
       year: yr,
       event_name: eventName,
       event_id: String(row.event_id || ""),

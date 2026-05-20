@@ -7,6 +7,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { normCourseNameKey, courseShardFileName } from "./course-name-key.mjs";
+import { historyRoundChartUtcIsoDay } from "./history-round-dates.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -15,24 +16,7 @@ const COURSE_SHARD_DIR = path.join(WEB_ROOT, "player-history", "by-course");
 const COURSES_MANIFEST_JSON = path.join(WEB_ROOT, "player-history", "courses-manifest.json");
 
 function chartUtcIsoDayFromHistoryRow(r) {
-  const sk = Number(r?.sortKey);
-  if (Number.isFinite(sk) && sk > 9_999_999) {
-    const base = Math.floor(sk / 10);
-    const y = Math.floor(base / 10000);
-    const mo = Math.floor((base % 10000) / 100);
-    const d = base % 100;
-    if (y >= 1990 && y <= 2100 && mo >= 1 && mo <= 12 && d >= 1 && d <= 31) {
-      return `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-    }
-  }
-  const ec = String(r?.event_completed || "").trim();
-  const mdy = ec.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-  if (mdy) {
-    return `${mdy[3]}-${String(mdy[1]).padStart(2, "0")}-${String(mdy[2]).padStart(2, "0")}`;
-  }
-  const iso = ec.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
-  return "";
+  return historyRoundChartUtcIsoDay(r);
 }
 
 function writeJsonAtomic(outPath, payload) {

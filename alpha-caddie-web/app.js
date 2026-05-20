@@ -9343,46 +9343,66 @@ function historyDateMdYIsFuture(s) {
   return Number.isFinite(t) && t > today;
 }
 
-/** CSV history rows encode Thursday (etc.) in sortKey and advance calendar days via round_num; live-merge rows already store each round's real calendar day (`_from_live_in_play`). */
-function historyRoundChartUsesR1AnchorSortKey(row) {
-  return !(row && (row._from_live_in_play || row._from_live_tournament_stats || row._from_pgatour));
+/** PGA/LIV stroke events: DG CSV uses event_completed = last day; spread rounds backward (R4 on that day). */
+function historyEventStrokeRoundCap(row) {
+  const t = String(row?.tour || "").toLowerCase();
+  return t === "liv" ? 3 : 4;
 }
 
-/** Calendar day shown on the trends chart (sortKey + round_num), as UTC midnight ms. */
-function historyRoundChartDateUtcMs(row) {
-  if (!row || typeof row !== "object") return NaN;
+function historyMdyFromChronoBase(chronoBase, dayOffset) {
+  if (!Number.isFinite(chronoBase) || chronoBase <= 0) return "";
+  const y = Math.floor(chronoBase / 10000);
+  const mo = Math.floor((chronoBase % 10000) / 100);
+  const d = chronoBase % 100;
+  const ms = Date.UTC(y, mo - 1, d) + Math.round(Number(dayOffset) || 0) * 86400000;
+  const dt = new Date(ms);
+  return `${dt.getUTCMonth() + 1}/${dt.getUTCDate()}/${dt.getUTCFullYear()}`;
+}
+
+function historyRowUsesEventEndAnchor(row) {
+  if (!row || typeof row !== "object") return false;
+  if (row._from_live_tournament_stats || row._from_pgatour || row._from_live_in_play) return false;
+  if (row._from_dg_historical_rounds) return true;
+  const ec = String(row.event_completed || "").trim();
+  if (!ec) return false;
   const sk = Math.round(num(row.sortKey, NaN));
-  let y = NaN;
-  let mo = NaN;
-  let d = NaN;
-  let rnd = Math.round(num(row.round_num, NaN));
-  if (!Number.isFinite(rnd) || rnd < 1) rnd = 1;
   if (Number.isFinite(sk) && sk > 9_999_999) {
-    const base = Math.floor(sk / 10);
-    const rnTail = sk % 10;
-    if (Number.isFinite(rnTail) && rnTail >= 1 && rnTail <= 9) rnd = rnTail;
-    if (base >= 19_000_000 && base <= 2_100_1231) {
-      y = Math.floor(base / 10000);
-      mo = Math.floor((base % 10000) / 100);
-      d = base % 100;
-    }
+    const skBase = Math.floor(sk / 10);
+    const ecBase = parseEventCompletedChronoBase(ec);
+    return ecBase > 0 && skBase === ecBase;
   }
-  if (!Number.isFinite(y)) {
-    const ec = String(row.event_completed || "").trim();
-    const mdy = ec.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-    const iso = ec.match(/^(\d{4})-(\d{2})-(\d{2})/);
-    if (mdy) {
-      mo = Number(mdy[1]);
-      d = Number(mdy[2]);
-      y = Number(mdy[3]);
-    } else if (iso) {
-      y = Number(iso[1]);
-      mo = Number(iso[2]);
-      d = Number(iso[3]);
-    } else return NaN;
+  return true;
+}
+
+function historyRoundDayOffsetFromEventAnchor(row) {
+  const rnd = Math.round(num(row?.round_num, NaN));
+  if (!Number.isFinite(rnd) || rnd < 1) return 0;
+  if (!historyRowUsesEventEndAnchor(row)) return 0;
+  const cap = historyEventStrokeRoundCap(row);
+  return -(Math.max(0, cap - rnd));
+}
+
+/** Play date M/D/YYYY for Historical Trends chart + date filters. */
+function historyRoundPlayMdY(row) {
+  if (!row || typeof row !== "object") return "";
+  const ec = String(row.event_completed || "").trim();
+  const offset = historyRoundDayOffsetFromEventAnchor(row);
+  if (offset !== 0 && ec) {
+    const base = parseEventCompletedChronoBase(ec);
+    if (base > 0) return historyMdyFromChronoBase(base, offset);
   }
-  const dayBump = historyRoundChartUsesR1AnchorSortKey(row) ? Math.max(0, rnd - 1) : 0;
-  return Date.UTC(y, mo - 1, d) + dayBump * 86400000;
+  return ec;
+}
+
+/** Calendar day shown on the trends chart, as UTC midnight ms. */
+function historyRoundChartDateUtcMs(row) {
+  const mdy = historyRoundPlayMdY(row);
+  const base = parseEventCompletedChronoBase(mdy);
+  if (!base) return NaN;
+  const y = Math.floor(base / 10000);
+  const mo = Math.floor((base % 10000) / 100);
+  const d = base % 100;
+  return Date.UTC(y, mo - 1, d);
 }
 
 function historyRoundChartDateIsFuture(row) {
@@ -10712,11 +10732,25 @@ function propsGetSingleCourseBucketSync(courseKey) {
   return null;
 }
 
-/** Default session date from projections (no history scan). */
+/** ISO YYYY-MM-DD for tournament round N from field week start (R1 = date_start). */
+function propsIsoFromFieldDateStartAndRound(dateStartIso, roundNum) {
+  const m = String(dateStartIso || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return "";
+  const rn = Math.round(num(roundNum, NaN));
+  if (!Number.isFinite(rn) || rn < 1 || rn > 4) return m[0];
+  const t = Date.UTC(+m[1], +m[2] - 1, +m[3]) + (rn - 1) * 86400000;
+  const d = new Date(t);
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+}
+
+/** Default session date from projections (current round when in play). */
 function propsDefaultSessionIsoFromMeta() {
   const ds = String(DATA?.meta?.datagolf_field_date_start || "").match(/^(\d{4}-\d{2}-\d{2})/);
-  if (ds) return ds[1];
   const cr = Math.round(num(DATA?.meta?.datagolf_field_current_round ?? DATA?.meta?.display_round, NaN));
+  if (ds && Number.isFinite(cr) && cr >= 1 && cr <= 4) {
+    return propsIsoFromFieldDateStartAndRound(ds[0], cr);
+  }
+  if (ds) return ds[1];
   const upd = String(DATA?.meta?.updated_at || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
   if (upd && Number.isFinite(cr) && cr >= 1 && cr <= 4) {
     const t = Date.UTC(+upd[1], +upd[2] - 1, +upd[3]) - (cr - 1) * 86400000;
@@ -10939,14 +10973,18 @@ function formatPropsCourseSessionDateLabel(isoRaw) {
   return `${months[mo - 1]} ${d}, ${y}`;
 }
 
-/** Prefer tournament round-1 day from projections meta when it appears in history for this course. */
+/** Prefer this week's round day from meta when it appears in course history. */
 function propsEventPreferredSessionDateIso(sortedDescDays) {
   const ds = String(DATA?.meta?.datagolf_field_date_start || "").match(/^(\d{4}-\d{2}-\d{2})/);
+  const cr = Math.round(num(DATA?.meta?.datagolf_field_current_round ?? DATA?.meta?.display_round, NaN));
+  if (ds && Number.isFinite(cr) && cr >= 1 && cr <= 4) {
+    const s = propsIsoFromFieldDateStartAndRound(ds[0], cr);
+    if (s && sortedDescDays.includes(s)) return s;
+  }
   if (ds) {
     const s = ds[1];
     if (sortedDescDays.includes(s)) return s;
   }
-  const cr = Math.round(num(DATA?.meta?.datagolf_field_current_round ?? DATA?.meta?.display_round, NaN));
   const upd = String(DATA?.meta?.updated_at || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
   if (upd && Number.isFinite(cr) && cr >= 1 && cr <= 4) {
     const t = Date.UTC(+upd[1], +upd[2] - 1, +upd[3]) - (cr - 1) * 86400000;
@@ -12656,42 +12694,9 @@ function modelForHistoryRow(statKey, row) {
   );
 }
 
-/**
- * Chart date string for a history round. CSV rows often reuse one `event_completed` for every round of an event;
- * `sortKey` is YYYYMMDD*10+round_num (see build-player-history). Treat that calendar day as **round 1** and add
- * (round_num−1) days so the x-axis shows 5/4, 5/5, 5/6, … Live-merge rows (`_from_live_in_play`) already use
- * the true calendar day — do not add the extra bump (would shift R2+ incorrectly).
- */
+/** Chart date string for a history round (see `historyRoundPlayMdY`). */
 function propsTrendChartDateFromRow(r) {
-  if (!r || typeof r !== "object") return "";
-  if (r._from_live_in_play) {
-    const ec = String(r.event_completed || "").trim();
-    if (ec) return ec;
-  }
-  const sk = Math.round(num(r.sortKey, NaN));
-  if (Number.isFinite(sk) && sk > 9_999_999) {
-    const base = Math.floor(sk / 10);
-    const rnTail = sk % 10;
-    const rnRow = Math.round(num(r.round_num, NaN));
-    const rnd =
-      Number.isFinite(rnRow) && rnRow >= 1 && rnRow <= 5
-        ? rnRow
-        : Number.isFinite(rnTail) && rnTail >= 1 && rnTail <= 9
-          ? rnTail
-          : 1;
-    if (base >= 19_000_000 && base <= 2_100_1231) {
-      const y = Math.floor(base / 10000);
-      const mo = Math.floor((base % 10000) / 100);
-      const d = base % 100;
-      if (y >= 1990 && y <= 2100 && mo >= 1 && mo <= 12 && d >= 1 && d <= 31) {
-        const bump = historyRoundChartUsesR1AnchorSortKey(r) ? Math.max(0, rnd - 1) : 0;
-        const ms = Date.UTC(y, mo - 1, d) + bump * 86400000;
-        const dt = new Date(ms);
-        return `${dt.getUTCMonth() + 1}/${dt.getUTCDate()}/${dt.getUTCFullYear()}`;
-      }
-    }
-  }
-  return String(r.event_completed || "").trim();
+  return historyRoundPlayMdY(r);
 }
 
 function shortPropsDateLabel(completed) {
