@@ -4,7 +4,8 @@
  * Counting stats and GIR/fairways are **skill + historical** from `data/historical_rounds_all.csv` when sample is
  * large enough. Fairways: blend SG:OTT vs field, optional driving-field rate, and a **tour-wide FW vs strokes-to-par**
  * regression (driving_acc as fraction, count, or percent) so OTT and miscoded driving scalars cannot both pin FW low.
- * Scoring uses **course_par_18** from resolved hole pars (not a fixed 72).
+ * Scoring uses **course_par_18** from resolved hole pars (not a fixed 72). Total score and all counting
+ * markets (birdies/pars/bogeys/GIR/fairways/putts) coalesce player + field history at this venue before skill fallbacks.
  * Optional **preds/pre-tournament** per-round stroke column (when present in the feed) nudges μ_sg toward that baseline.
  * Historical CSV still calibrates count curves vs (score−par); GIR uses SG:APP vs median field (no fantasy blend).
  * Hole counts: historical rounds regress eagles/birdies/bogeys/doubles vs (round_score − course_par), shrunk with a
@@ -68,6 +69,7 @@ import {
   courseDifficultyStrokeShift,
   loadEventRoundContextFromHistoricalCsv,
   loadVenueHistoricalScoring,
+  resolveProjectionCounts,
   resolveProjectionScoreToPar,
 } from "./course-round-adjustments.mjs";
 import { holeParsFromLiveHoleStatsPayload } from "./dg-live-hole-pars.mjs";
@@ -2112,6 +2114,32 @@ async function main() {
       if (scoreRes.source in scoreSourceCounts) scoreSourceCounts[scoreRes.source]++;
       const stp = scoreRes.stp;
       const ts = course_par_18 + stp;
+
+      const venueCounts = resolveProjectionCounts({
+        dg_id: row.dg_id,
+        round: r,
+        skillCounts: {
+          eagles: st.eagles,
+          birdies: st.birdies,
+          pars: st.pars,
+          bogeys: st.bogeys,
+          doubles: st.doubles,
+          gir: st.gir,
+          fairways: st.fairways,
+          putts: st.putts,
+        },
+        venueScoring,
+        targetStp: stp,
+        nFairwayHoles: fairwayHolesThisCourse,
+      });
+      st.eagles = venueCounts.eagles;
+      st.birdies = venueCounts.birdies;
+      st.pars = venueCounts.pars;
+      st.bogeys = venueCounts.bogeys;
+      st.doubles = venueCounts.doubles;
+      st.gir = venueCounts.gir;
+      st.fairways = venueCounts.fairways;
+      st.putts = venueCounts.putts;
       const pl = {
         dg_id: row.dg_id,
         player_name: row.player_name,
@@ -2267,6 +2295,24 @@ async function main() {
           .filter(([, v]) => v?.n >= 25 && Number.isFinite(v.avgScore))
           .map(([rnd, v]) => [String(rnd), Math.round(v.avgScore * 100) / 100]),
       ),
+      venue_avg_birdies: Number.isFinite(venueScoring.venueAvgBirdies)
+        ? Math.round(venueScoring.venueAvgBirdies * 100) / 100
+        : null,
+      venue_avg_pars: Number.isFinite(venueScoring.venueAvgPars)
+        ? Math.round(venueScoring.venueAvgPars * 100) / 100
+        : null,
+      venue_avg_bogeys: Number.isFinite(venueScoring.venueAvgBogeys)
+        ? Math.round(venueScoring.venueAvgBogeys * 100) / 100
+        : null,
+      venue_avg_gir: Number.isFinite(venueScoring.venueAvgGir)
+        ? Math.round(venueScoring.venueAvgGir * 100) / 100
+        : null,
+      venue_avg_fairways: Number.isFinite(venueScoring.venueAvgFairways)
+        ? Math.round(venueScoring.venueAvgFairways * 100) / 100
+        : null,
+      venue_avg_putts: Number.isFinite(venueScoring.venueAvgPutts)
+        ? Math.round(venueScoring.venueAvgPutts * 100) / 100
+        : null,
     },
     historical_projection_calibration: {
       skipped: !!histCalib.skipped,

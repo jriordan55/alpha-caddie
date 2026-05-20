@@ -12055,8 +12055,32 @@ function clampPropLineForMarket(statKey, line) {
   return clamp(s, 0.5, 29.5);
 }
 
-/** Default O/U line when projections or inputs do not supply one. */
+/** Default O/U line when projections or inputs do not supply one (prefer venue historical means). */
 function defaultPropLineForStat(statKey) {
+  const b = DATA?.meta?.projection_course_basis;
+  if (b && typeof b === "object") {
+    if (statKey === "total" && Number.isFinite(num(b.venue_avg_round_score, NaN))) {
+      return enforceHalfLine(num(b.venue_avg_round_score, NaN));
+    }
+    if (statKey === "birdies" && Number.isFinite(num(b.venue_avg_birdies, NaN))) {
+      return enforceHalfLine(num(b.venue_avg_birdies, NaN));
+    }
+    if (statKey === "pars" && Number.isFinite(num(b.venue_avg_pars, NaN))) {
+      return enforceHalfLine(num(b.venue_avg_pars, NaN));
+    }
+    if (statKey === "bogeys" && Number.isFinite(num(b.venue_avg_bogeys, NaN))) {
+      return enforceHalfLine(num(b.venue_avg_bogeys, NaN));
+    }
+    if (statKey === "gir" && Number.isFinite(num(b.venue_avg_gir, NaN))) {
+      return enforceHalfLine(num(b.venue_avg_gir, NaN));
+    }
+    if (statKey === "fairways" && Number.isFinite(num(b.venue_avg_fairways, NaN))) {
+      return enforceHalfLine(num(b.venue_avg_fairways, NaN));
+    }
+    if (statKey === "putts" && Number.isFinite(num(b.venue_avg_putts, NaN))) {
+      return enforceHalfLine(num(b.venue_avg_putts, NaN));
+    }
+  }
   if (statKey === "total") return 70.5;
   if (statKey === "gir") return 11.5;
   if (statKey === "fairways") return 8.5;

@@ -188,33 +188,58 @@ function snapHalfLine(x) {
   return Math.round(v - 0.5) + 0.5;
 }
 
-/** When DraftKings has no field O/U for GIR/FW/putts, expose model means as *.5 lines (-110/-110) so the UI loads. */
-function modelFallbackOuForMarket(players, market) {
-  const field =
-    market === "GIR" ? "gir" : market === "Fairways hit" ? "fairways" : market === "Putts" ? "putts" : "";
+/** All round O/U markets driven by venue-aware `projections.players` rows from fetch:dg. */
+const ALL_OU_COUNTING_MARKETS = [
+  "Total Score",
+  "Birdies",
+  "Pars",
+  "Bogeys",
+  "GIR",
+  "Fairways hit",
+  "Putts",
+];
+
+const OU_MARKET_PLAYER_FIELD = {
+  "Total Score": "total_score",
+  Birdies: "birdies",
+  Pars: "pars",
+  Bogeys: "bogeys",
+  GIR: "gir",
+  "Fairways hit": "fairways",
+  Putts: "putts",
+};
+
+/** When DraftKings omits a player/market, expose model projections as *.5 lines (-110/-110) for the UI. */
+function modelFallbackOuForMarket(players, market, preferredRound) {
+  const field = OU_MARKET_PLAYER_FIELD[market];
   if (!field || !Array.isArray(players)) return [];
   const holes = market === "GIR" ? 18 : market === "Fairways hit" ? 14 : null;
+  const wantRound = Math.round(num(preferredRound, NaN));
+  const roundFilter = Number.isFinite(wantRound) && wantRound >= 1 && wantRound <= 4 ? wantRound : null;
   const out = [];
   for (const p of players) {
+    if (roundFilter != null && Math.round(num(p.round, NaN)) !== roundFilter) continue;
     const pn = String(p.player_name || "").trim();
     if (!pn) continue;
     let x = num(p[field], NaN);
     if (!Number.isFinite(x)) continue;
     if (x === 0 || x === 1) continue;
     if (holes != null) {
-      /** (0, 1] = share of holes; (1, holes] = counts — do not treat 11.2 as a rate. */
       if (x > 0 && x <= 1.0001) {
         x = Math.min(holes, Math.max(0, Math.round(x * holes)));
       } else {
         x = Math.min(holes, Math.max(0, Math.round(x)));
       }
-    } else {
-      x = Math.round(x);
+    } else if (market !== "Total Score") {
+      x = Math.round(x * 10) / 10;
     }
     let L = snapHalfLine(x);
-    if (market === "GIR") L = Math.min(16.5, Math.max(4.5, L));
+    if (market === "Total Score") L = Math.min(85.5, Math.max(63.5, L));
+    else if (market === "GIR") L = Math.min(16.5, Math.max(4.5, L));
     else if (market === "Fairways hit") L = Math.min(13.5, Math.max(2.5, L));
     else if (market === "Putts") L = Math.min(36.5, Math.max(22.5, L));
+    else if (market === "Birdies" || market === "Bogeys") L = Math.min(8.5, Math.max(0.5, L));
+    else if (market === "Pars") L = Math.min(14.5, Math.max(4.5, L));
     if (!Number.isFinite(L)) continue;
     const dg = Math.round(num(p.dg_id, NaN));
     const o = { player_name: pn, line: L, over_odds: -110, under_odds: -110, market };
@@ -230,6 +255,7 @@ function withPropSource(rows, source) {
 }
 
 const OU_COUNTING_MARKETS_FW = ["GIR", "Fairways hit", "Putts"];
+const OU_COUNTING_MARKETS_ALL = ALL_OU_COUNTING_MARKETS;
 
 /** Stable key: dg_id when set, else normalized player name — paired with market for DK coverage checks. */
 function propPlayerMarketPresenceKey(r, market) {
@@ -629,8 +655,13 @@ async function main() {
     }
 
     if (String(process.env.GOLF_SKIP_MODEL_FALLBACK_OU || "").trim() !== "1") {
-      for (const mkt of OU_COUNTING_MARKETS_FW) {
-        const fresh = withPropSource(modelFallbackOuForMarket(payload.players, mkt), "model_fallback");
+      const modelRound =
+        Math.round(num(payload.display_round ?? payload.datagolf_field_current_round, NaN)) || 1;
+      for (const mkt of OU_COUNTING_MARKETS_ALL) {
+        const fresh = withPropSource(
+          modelFallbackOuForMarket(payload.players, mkt, modelRound),
+          "model_fallback",
+        );
         for (const r of fresh) {
           if (dkCountingPresence.has(propPlayerMarketPresenceKey(r, mkt))) continue;
           byKey.set(`${r.player_name}|${r.market}|${r.line}`, r);
@@ -649,7 +680,7 @@ async function main() {
         nCsv,
         "rows; DK auto:",
         nDk,
-        "rows; GIR/FW/Putts refreshed from players where DK omits)",
+        "rows; model O/U for all counting markets where DK omits)",
       );
     }
   }

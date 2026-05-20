@@ -216,17 +216,173 @@ export function buildWithinEventFormMap(ctx, basePlayers, k = 0.02, cap = 0.3) {
 }
 
 /**
- * @typedef {{ avgScore: number, avgStp: number, n: number }} VenueScoreAgg
+ * @typedef {{
+ *   avgScore: number,
+ *   avgStp: number,
+ *   n: number,
+ *   avgBirdies: number,
+ *   avgPars: number,
+ *   avgBogeys: number,
+ *   avgEagles: number,
+ *   avgDoubles: number,
+ *   avgGir: number,
+ *   avgFairways: number,
+ *   avgPutts: number,
+ * }} VenueScoreAgg
  * @typedef {{
  *   venueAvgStp: number,
  *   venueAvgScore: number,
  *   nVenueRounds: number,
  *   source: string,
+ *   venueAvgBirdies: number,
+ *   venueAvgPars: number,
+ *   venueAvgBogeys: number,
+ *   venueAvgGir: number,
+ *   venueAvgFairways: number,
+ *   venueAvgPutts: number,
  *   fieldByRound: Map<number, VenueScoreAgg>,
  *   playerByRound: Map<string, VenueScoreAgg>,
  *   courseFitByDg: Map<number, { avgSg: number, n: number }>,
  * }} VenueHistoricalScoring
  */
+
+function emptyVenueCountRaw() {
+  return {
+    sumScore: 0,
+    sumStp: 0,
+    n: 0,
+    sumBird: 0,
+    nBird: 0,
+    sumPar: 0,
+    nPar: 0,
+    sumBog: 0,
+    nBog: 0,
+    sumEag: 0,
+    nEag: 0,
+    sumDbl: 0,
+    nDbl: 0,
+    sumGir: 0,
+    nGir: 0,
+    sumFw: 0,
+    nFw: 0,
+    sumPutts: 0,
+    nPutts: 0,
+  };
+}
+
+function girOrFwToCount(raw, nHoles) {
+  const v = num(raw, NaN);
+  if (!Number.isFinite(v)) return NaN;
+  const nh = num(nHoles, 18);
+  if (v > 0 && v <= 1.0001) return v * nh;
+  if (v > 1 && v <= nh + 0.51) return v;
+  if (v > nh && v <= 100) return (v / 100) * nh;
+  return NaN;
+}
+
+function accumulateVenueCountRow(raw, row, nFairwayHoles = 14) {
+  const cp = num(row.course_par, NaN);
+  const rs = num(row.round_score, NaN);
+  if (!Number.isFinite(cp) || !Number.isFinite(rs)) return raw;
+  raw.n++;
+  raw.sumScore += rs;
+  raw.sumStp += rs - cp;
+
+  const b = num(row.birdies, NaN);
+  if (Number.isFinite(b) && b >= 0 && b <= 18) {
+    raw.sumBird += b;
+    raw.nBird++;
+  }
+  const p = num(row.pars, NaN);
+  if (Number.isFinite(p) && p >= 0 && p <= 18) {
+    raw.sumPar += p;
+    raw.nPar++;
+  }
+  const bg = num(row.bogies, NaN);
+  if (Number.isFinite(bg) && bg >= 0 && bg <= 18) {
+    raw.sumBog += bg;
+    raw.nBog++;
+  }
+  const e = num(row.eagles_or_better, NaN);
+  if (Number.isFinite(e) && e >= 0 && e <= 6) {
+    raw.sumEag += e;
+    raw.nEag++;
+  }
+  const d = num(row.doubles_or_worse, NaN);
+  if (Number.isFinite(d) && d >= 0 && d <= 10) {
+    raw.sumDbl += d;
+    raw.nDbl++;
+  }
+  const gc = girOrFwToCount(row.gir, 18);
+  if (Number.isFinite(gc)) {
+    raw.sumGir += gc;
+    raw.nGir++;
+  }
+  const fc = girOrFwToCount(row.driving_acc, nFairwayHoles);
+  if (Number.isFinite(fc)) {
+    raw.sumFw += fc;
+    raw.nFw++;
+  }
+  const put = num(row.putts, NaN);
+  if (Number.isFinite(put) && put >= 20 && put <= 40) {
+    raw.sumPutts += put;
+    raw.nPutts++;
+  }
+  return raw;
+}
+
+function finalizeVenueAgg(raw) {
+  const mean = (sum, n) => (n > 0 ? sum / n : NaN);
+  return {
+    avgScore: mean(raw.sumScore, raw.n),
+    avgStp: mean(raw.sumStp, raw.n),
+    n: raw.n,
+    avgBirdies: mean(raw.sumBird, raw.nBird),
+    avgPars: mean(raw.sumPar, raw.nPar),
+    avgBogeys: mean(raw.sumBog, raw.nBog),
+    avgEagles: mean(raw.sumEag, raw.nEag),
+    avgDoubles: mean(raw.sumDbl, raw.nDbl),
+    avgGir: mean(raw.sumGir, raw.nGir),
+    avgFairways: mean(raw.sumFw, raw.nFw),
+    avgPutts: mean(raw.sumPutts, raw.nPutts),
+  };
+}
+
+/** Nudge bird/bog toward target score-vs-par (pars residual). */
+function softAlignHoleCountsToStp(counts, targetStp, strength = 0.58) {
+  const e = Math.max(0, num(counts.eagles, 0));
+  const d = Math.max(0, num(counts.doubles, 0));
+  let b = num(counts.birdies, 0);
+  let p = num(counts.pars, 0);
+  let bg = num(counts.bogeys, 0);
+  const t = num(targetStp, 0);
+  const st = Math.max(0.08, Math.min(1, strength));
+  const hat = -b - 2 * e + bg + 2 * d;
+  const diff = t - hat;
+  const delta = (st * diff) / 2;
+  b = Math.max(0.15, b - delta);
+  bg = Math.max(0.15, bg + delta);
+  p = 18 - e - d - b - bg;
+  if (p < 0.12) {
+    const need = 0.12 - p;
+    const take = Math.min(need / 2, b - 0.15, bg - 0.15);
+    b -= take;
+    bg -= take;
+    p = 18 - e - d - b - bg;
+  }
+  const s = e + b + p + bg + d;
+  if (s > 0.01 && Math.abs(s - 18) > 0.01) {
+    const k = 18 / s;
+    return { eagles: e * k, birdies: b * k, pars: p * k, bogeys: bg * k, doubles: d * k };
+  }
+  return { eagles: e, birdies: b, pars: Math.max(0.12, p), bogeys: bg, doubles: d };
+}
+
+function coalesceVenueCount(playerVal, fieldVal, skillVal) {
+  if (Number.isFinite(playerVal)) return playerVal;
+  if (Number.isFinite(fieldVal)) return fieldVal;
+  return skillVal;
+}
 
 /** Stream all historical rounds at this venue (any event) — mirrors round_projections.R RAW hist path. */
 export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLabelOpt) {
@@ -249,12 +405,14 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
   }
 
   const cy = new Date().getFullYear();
-  let sumStp = 0;
-  let sumScore = 0;
-  let nVenue = 0;
-  /** @type {Map<number, { sumScore: number, sumStp: number, n: number }>} */
+  const nFairwayHoles = Math.max(
+    10,
+    Math.min(16, Math.round(num(process.env.GOLF_VENUE_HIST_N_FAIRWAY_HOLES, 14))),
+  );
+  let venueTotals = emptyVenueCountRaw();
+  /** @type {Map<number, ReturnType<typeof emptyVenueCountRaw>>} */
   const fieldRaw = new Map();
-  /** @type {Map<string, { sumScore: number, sumStp: number, n: number }>} */
+  /** @type {Map<string, ReturnType<typeof emptyVenueCountRaw>>} */
   const playerRaw = new Map();
   /** @type {Map<number, { sumSg: number, n: number }>} */
   const fitRaw = new Map();
@@ -282,25 +440,16 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
       const rnd = Math.round(num(row.round_num ?? row.round, NaN));
       if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) return;
 
-      const stp = rs - cp;
-      nVenue++;
-      sumStp += stp;
-      sumScore += rs;
+      venueTotals = accumulateVenueCountRow(venueTotals, row, nFairwayHoles);
 
-      const fr = fieldRaw.get(rnd) || { sumScore: 0, sumStp: 0, n: 0 };
-      fr.sumScore += rs;
-      fr.sumStp += stp;
-      fr.n++;
-      fieldRaw.set(rnd, fr);
+      const fr = fieldRaw.get(rnd) || emptyVenueCountRaw();
+      fieldRaw.set(rnd, accumulateVenueCountRow(fr, row, nFairwayHoles));
 
       const dg = Math.round(num(row.dg_id, NaN));
       if (Number.isFinite(dg)) {
         const pk = `${dg}|${rnd}`;
-        const pr = playerRaw.get(pk) || { sumScore: 0, sumStp: 0, n: 0 };
-        pr.sumScore += rs;
-        pr.sumStp += stp;
-        pr.n++;
-        playerRaw.set(pk, pr);
+        const pr = playerRaw.get(pk) || emptyVenueCountRaw();
+        playerRaw.set(pk, accumulateVenueCountRow(pr, row, nFairwayHoles));
 
         const sg = num(row.sg_total, NaN);
         if (Number.isFinite(sg)) {
@@ -315,25 +464,20 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
     parser.on("error", reject);
   });
 
-  const finalize = (raw) => ({
-    avgScore: raw.n > 0 ? raw.sumScore / raw.n : NaN,
-    avgStp: raw.n > 0 ? raw.sumStp / raw.n : NaN,
-    n: raw.n,
-  });
-
   const fieldByRound = new Map();
-  for (const [rnd, raw] of fieldRaw) fieldByRound.set(rnd, finalize(raw));
+  for (const [rnd, raw] of fieldRaw) fieldByRound.set(rnd, finalizeVenueAgg(raw));
 
   const playerByRound = new Map();
-  for (const [pk, raw] of playerRaw) playerByRound.set(pk, finalize(raw));
+  for (const [pk, raw] of playerRaw) playerByRound.set(pk, finalizeVenueAgg(raw));
 
   const courseFitByDg = new Map();
   for (const [dg, raw] of fitRaw) {
     courseFitByDg.set(dg, { avgSg: raw.sumSg / raw.n, n: raw.n });
   }
 
-  let venueAvgStp = nVenue >= 40 ? sumStp / nVenue : NaN;
-  let source = nVenue >= 40 ? "historical_csv" : "none";
+  const venueAgg = finalizeVenueAgg(venueTotals);
+  let venueAvgStp = venueAgg.n >= 40 ? venueAgg.avgStp : NaN;
+  let source = venueAgg.n >= 40 ? "historical_csv" : "none";
   if (!Number.isFinite(venueAvgStp)) {
     const adj = lookupAdjScoreToParFromCourseTable(courseLabelOpt || courseKeyOpt);
     if (Number.isFinite(adj)) {
@@ -344,13 +488,73 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
 
   return {
     venueAvgStp,
-    venueAvgScore: nVenue >= 40 ? sumScore / nVenue : NaN,
-    nVenueRounds: nVenue,
+    venueAvgScore: venueAgg.n >= 40 ? venueAgg.avgScore : NaN,
+    nVenueRounds: venueAgg.n,
     source,
+    venueAvgBirdies: venueAgg.avgBirdies,
+    venueAvgPars: venueAgg.avgPars,
+    venueAvgBogeys: venueAgg.avgBogeys,
+    venueAvgGir: venueAgg.avgGir,
+    venueAvgFairways: venueAgg.avgFairways,
+    venueAvgPutts: venueAgg.avgPutts,
     fieldByRound,
     playerByRound,
     courseFitByDg,
   };
+}
+
+/**
+ * Hole-count markets: player history at venue → field avg at venue (round) → skill-based projection.
+ * Aligns eagles/birdies/bogeys/doubles/pars to `targetStp` when score came from skill path.
+ */
+export function resolveProjectionCounts({
+  dg_id,
+  round,
+  skillCounts,
+  venueScoring,
+  targetStp,
+  nFairwayHoles = 14,
+  minPlayerRounds = 3,
+  minFieldRounds = 25,
+}) {
+  const sk = skillCounts || {};
+  const rnd = Math.round(num(round, NaN));
+  const pk = `${Math.round(num(dg_id, NaN))}|${rnd}`;
+  const pr = venueScoring?.playerByRound?.get(pk);
+  const fr = venueScoring?.fieldByRound?.get(rnd);
+  const prOk = pr && pr.n >= minPlayerRounds;
+  const frOk = fr && fr.n >= minFieldRounds;
+
+  let eagles = coalesceVenueCount(prOk ? pr.avgEagles : NaN, frOk ? fr.avgEagles : NaN, sk.eagles);
+  let birdies = coalesceVenueCount(prOk ? pr.avgBirdies : NaN, frOk ? fr.avgBirdies : NaN, sk.birdies);
+  let bogeys = coalesceVenueCount(prOk ? pr.avgBogeys : NaN, frOk ? fr.avgBogeys : NaN, sk.bogeys);
+  let doubles = coalesceVenueCount(prOk ? pr.avgDoubles : NaN, frOk ? fr.avgDoubles : NaN, sk.doubles);
+  let pars = coalesceVenueCount(prOk ? pr.avgPars : NaN, frOk ? fr.avgPars : NaN, sk.pars);
+  let gir = coalesceVenueCount(prOk ? pr.avgGir : NaN, frOk ? fr.avgGir : NaN, sk.gir);
+  let fairways = coalesceVenueCount(prOk ? pr.avgFairways : NaN, frOk ? fr.avgFairways : NaN, sk.fairways);
+  let putts = coalesceVenueCount(prOk ? pr.avgPutts : NaN, frOk ? fr.avgPutts : NaN, sk.putts);
+
+  eagles = Math.max(0, num(eagles, 0));
+  birdies = Math.max(0.15, num(birdies, 0));
+  bogeys = Math.max(0.15, num(bogeys, 0));
+  doubles = Math.max(0.04, num(doubles, 0));
+  if (!Number.isFinite(pars)) pars = Math.max(0.12, 18 - eagles - birdies - bogeys - doubles);
+
+  const t = num(targetStp, NaN);
+  if (Number.isFinite(t)) {
+    const aligned = softAlignHoleCountsToStp({ eagles, birdies, pars, bogeys, doubles }, t);
+    eagles = aligned.eagles;
+    birdies = aligned.birdies;
+    pars = aligned.pars;
+    bogeys = aligned.bogeys;
+    doubles = aligned.doubles;
+  }
+
+  if (Number.isFinite(gir)) gir = Math.max(6, Math.min(16, gir));
+  if (Number.isFinite(fairways)) fairways = Math.max(2, Math.min(nFairwayHoles + 0.5, fairways));
+  if (Number.isFinite(putts)) putts = Math.max(22, Math.min(36, putts));
+
+  return { eagles, birdies, pars, bogeys, doubles, gir, fairways, putts };
 }
 
 /** course_table.csv / course-table.json adj_score_to_par when CSV sample is thin. */
