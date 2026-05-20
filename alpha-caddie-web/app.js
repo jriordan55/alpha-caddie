@@ -371,6 +371,11 @@ function bumpHistoryMutationEpoch() {
   propsFieldVenueRoundsCache = { season: [], all: [] };
   propsCourseRoundIndexSig = "";
   propsCourseRoundIndex.clear();
+  propsSingleCourseIndexSig = "";
+  propsSingleCourseIndexCache = null;
+  propsSingleCourseIndexPromise = null;
+  propsSingleCourseIndexCourseKey = "";
+  propsCourseWindowLastEntries = null;
   courseWindowRoundEntriesCacheSig = "";
   courseWindowRoundEntriesCache = null;
 }
@@ -414,6 +419,17 @@ let propsCourseRoundIndexSig = "";
 const propsCourseRoundIndex = new Map();
 let propsFieldHistoryBgQueued = false;
 let propsCourseWindowRenderGen = 0;
+/** Single-venue index for field-by-course (not all courses). */
+let propsSingleCourseIndexSig = "";
+/** @type {{ days: string[], entries: { row: object, dgId: number, playerName: string }[] } | null} */
+let propsSingleCourseIndexCache = null;
+/** @type {Promise<{ days: string[], entries: { row: object, dgId: number, playerName: string }[] }> | null} */
+let propsSingleCourseIndexPromise = null;
+let propsSingleCourseIndexCourseKey = "";
+/** Last field-by-course entries used for chart + table (one collect per render). */
+let propsCourseWindowLastEntries = null;
+const PROPS_COURSE_WINDOW_MAX_CHART_BARS = 96;
+const PROPS_COURSE_INDEX_PLAYER_CHUNK = 8;
 
 function num(v, d) {
   const n = Number(v);
@@ -10668,9 +10684,140 @@ function historyRoundChartUtcIsoDay(row) {
   return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
 }
 
+/** Safe filename for `player-history/by-course/*.json` (must match build-player-history.mjs). */
+function propsCourseShardFileName(courseKey) {
+  const safe = String(courseKey || "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 96);
+  return `${safe || "unknown"}.json`;
+}
+
+function propsStoreSingleCourseBucket(courseKey, bucket) {
+  propsSingleCourseIndexSig = `${historyMutationEpoch}|${courseKey}`;
+  propsSingleCourseIndexCache = bucket;
+  propsCourseRoundIndex.set(courseKey, bucket);
+  const ep = historyMutationEpoch;
+  distinctCourseSessionDatesCache.set(courseKey, { epoch: ep, days: bucket.days });
+}
+
+function propsGetSingleCourseBucketSync(courseKey) {
+  if (!courseKey) return null;
+  const sig = `${historyMutationEpoch}|${courseKey}`;
+  if (propsSingleCourseIndexSig === sig && propsSingleCourseIndexCache) return propsSingleCourseIndexCache;
+  const fromMap = propsCourseRoundIndex.get(courseKey);
+  if (fromMap) return fromMap;
+  return null;
+}
+
+/** Default session date from projections (no history scan). */
+function propsDefaultSessionIsoFromMeta() {
+  const ds = String(DATA?.meta?.datagolf_field_date_start || "").match(/^(\d{4}-\d{2}-\d{2})/);
+  if (ds) return ds[1];
+  const cr = Math.round(num(DATA?.meta?.datagolf_field_current_round ?? DATA?.meta?.display_round, NaN));
+  const upd = String(DATA?.meta?.updated_at || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (upd && Number.isFinite(cr) && cr >= 1 && cr <= 4) {
+    const t = Date.UTC(+upd[1], +upd[2] - 1, +upd[3]) - (cr - 1) * 86400000;
+    const d = new Date(t);
+    return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+  }
+  return "";
+}
+
+function ensurePropsCourseWindowDateDefaultsFromMeta() {
+  if (!propsCourseWindowModeOn()) return;
+  const fromEl = document.getElementById("props-filter-date-from");
+  const toEl = document.getElementById("props-filter-date-to");
+  if (!fromEl || !toEl) return;
+  if (String(fromEl.value || "").trim() || String(toEl.value || "").trim()) return;
+  const iso = propsDefaultSessionIsoFromMeta();
+  if (iso) {
+    fromEl.value = iso;
+    toEl.value = iso;
+  }
+}
+
+async function fetchPropsCourseHistoryShard(courseKey) {
+  if (!courseKey || isFileProtocol()) return null;
+  try {
+    const res = await fetch(
+      cacheBustFetchUrl(`player-history/by-course/${propsCourseShardFileName(courseKey)}`),
+      { cache: "no-store" },
+    );
+    if (!res.ok) return null;
+    const j = await res.json();
+    const entries = [];
+    for (const e of j.entries || []) {
+      const row = e.row && typeof e.row === "object" ? e.row : e;
+      const dgId = Math.round(num(e.dg_id ?? row?.dg_id, NaN));
+      if (!Number.isFinite(dgId)) continue;
+      entries.push({
+        row,
+        dgId,
+        playerName: String(e.player_name || row?.player_name || "").trim() || propsPlayerDisplayNameForDg(dgId),
+      });
+    }
+    const days = Array.isArray(j.days) ? j.days.map(String) : [];
+    return { days, entries };
+  } catch (_) {
+    return null;
+  }
+}
+
+/** Scan in-memory history for one venue only, yielding so the tab stays responsive. */
+async function buildPropsSingleCourseIndexFromMemory(courseKey) {
+  const dateSet = new Set();
+  const entries = [];
+  if (!courseKey || !HISTORY?.byDgId) return { days: [], entries };
+  const nameByDg = buildPropsGolferDisplayNameMap();
+  const dgEntries = Object.entries(HISTORY.byDgId);
+  for (let i = 0; i < dgEntries.length; i += PROPS_COURSE_INDEX_PLAYER_CHUNK) {
+    for (const [dgStr, rec] of dgEntries.slice(i, i + PROPS_COURSE_INDEX_PLAYER_CHUNK)) {
+      const dgId = Math.round(num(dgStr, NaN));
+      if (!Number.isFinite(dgId) || !rec || !Array.isArray(rec.rounds)) continue;
+      const playerName = nameByDg.get(dgId) || propsPlayerDisplayNameForDg(dgId);
+      for (const r of rec.rounds) {
+        if (!historyRoundCountsAsActual(r)) continue;
+        if (normCourseNameKey(r.course_name) !== courseKey) continue;
+        entries.push({ row: r, dgId, playerName });
+        const iso = historyRoundChartUtcIsoDay(r);
+        if (iso) dateSet.add(iso);
+      }
+    }
+    if (i + PROPS_COURSE_INDEX_PLAYER_CHUNK < dgEntries.length) await yieldToMain();
+  }
+  return { days: [...dateSet].sort((a, b) => b.localeCompare(a)), entries };
+}
+
 /**
- * Build course → session-day + round-entry index once per history mutation (field-by-course mode).
- * Avoids re-scanning every player bucket on each checkbox toggle / filter change.
+ * Field-by-course: prefer prebuilt `player-history/by-course/*.json`, else chunked in-memory scan.
+ * Never builds the all-courses index (that was freezing the tab).
+ */
+async function ensurePropsCourseIndexForKeyAsync(courseKey) {
+  if (!courseKey) return { days: [], entries: [] };
+  const cached = propsGetSingleCourseBucketSync(courseKey);
+  if (cached) return cached;
+  if (propsSingleCourseIndexPromise && propsSingleCourseIndexCourseKey === courseKey) {
+    return propsSingleCourseIndexPromise;
+  }
+  propsSingleCourseIndexCourseKey = courseKey;
+  propsSingleCourseIndexPromise = (async () => {
+    const shard = await fetchPropsCourseHistoryShard(courseKey);
+    if (shard?.entries?.length) {
+      propsStoreSingleCourseBucket(courseKey, shard);
+      return shard;
+    }
+    const built = await buildPropsSingleCourseIndexFromMemory(courseKey);
+    propsStoreSingleCourseBucket(courseKey, built);
+    return built;
+  })().finally(() => {
+    propsSingleCourseIndexPromise = null;
+  });
+  return propsSingleCourseIndexPromise;
+}
+
+/**
+ * Build full course dropdown list only (single-player mode). Field-by-course skips this scan.
  */
 function rebuildPropsCourseRoundIndex() {
   const sig = String(historyMutationEpoch);
@@ -10708,13 +10855,12 @@ function rebuildPropsCourseRoundIndex() {
 
 function distinctCompletedRoundDatesAtCourse(courseKey) {
   if (!courseKey || !HISTORY?.byDgId) return [];
-  rebuildPropsCourseRoundIndex();
+  const bucket = propsGetSingleCourseBucketSync(courseKey);
+  if (bucket) return bucket.days;
   const ep = historyMutationEpoch;
   const hit = distinctCourseSessionDatesCache.get(courseKey);
-  const bucket = propsCourseRoundIndex.get(courseKey);
-  const days = bucket ? bucket.days : [];
-  distinctCourseSessionDatesCache.set(courseKey, { epoch: ep, days });
-  return days;
+  if (hit && hit.epoch === ep) return hit.days;
+  return [];
 }
 
 function formatPropsCourseSessionDateLabel(isoRaw) {
@@ -10766,7 +10912,11 @@ function ensurePropsCourseWindowDateDefaults() {
     }
   };
 
-  const days = distinctCompletedRoundDatesAtCourse(courseKey);
+  let days = distinctCompletedRoundDatesAtCourse(courseKey);
+  if (!days.length) {
+    const iso = propsDefaultSessionIsoFromMeta();
+    if (iso) days = [iso];
+  }
 
   const bumpedCourse = courseKey !== propsCourseWindowDateDefaultsCourseTracked;
   propsCourseWindowDateDefaultsCourseTracked = courseKey;
@@ -10857,8 +11007,8 @@ function applyPropsSidebarWeatherFiltersToRounds(list) {
 }
 
 /** All player-round rows at one course inside the inclusive date window (Historical Trends field view). */
-function collectCourseWindowRoundEntriesFixed() {
-  const courseKey = selectedPropsCourseFilter();
+function collectCourseWindowRoundEntriesFixed(bucketOpt) {
+  const courseKey = propsEffectiveCourseKey();
   if (!courseKey || !HISTORY?.byDgId) return [];
   const fromRaw = String(document.getElementById("props-filter-date-from")?.value || "").trim();
   const toRaw = String(document.getElementById("props-filter-date-to")?.value || "").trim();
@@ -10875,12 +11025,12 @@ function collectCourseWindowRoundEntriesFixed() {
   if (sig === courseWindowRoundEntriesCacheSig && courseWindowRoundEntriesCache) {
     return courseWindowRoundEntriesCache;
   }
-  rebuildPropsCourseRoundIndex();
+  const bucket = bucketOpt || propsGetSingleCourseBucketSync(courseKey);
+  if (!bucket) return [];
   const fromMs = propsCourseWindowDateInputToUtcMs(fromRaw, false);
   const toMs = propsCourseWindowDateInputToUtcMs(toRaw, true);
-  const bucket = propsCourseRoundIndex.get(courseKey);
   const raw = [];
-  for (const e of bucket?.entries || []) {
+  for (const e of bucket.entries) {
     if (!historyRoundInCourseDateWindow(e.row, fromMs, toMs)) continue;
     raw.push(e);
   }
@@ -10940,15 +11090,19 @@ function refreshPropsCourseFilterOptionsAllPlayers() {
   const optsCacheKey = `${historyMutationEpoch}|${windowOn ? 1 : 0}|${mkVenue}`;
   let sortedEntries = propsAllPlayersCourseOptsEntries;
   if (propsAllPlayersCourseOptsCacheKey !== optsCacheKey || !sortedEntries) {
-    rebuildPropsCourseRoundIndex();
-    const byKey = new Map();
-    for (const k of propsCourseRoundIndex.keys()) {
-      byKey.set(k, courseFitPrettyCourseKey(k));
+    if (windowOn) {
+      sortedEntries = mkVenue ? [[mkVenue, courseFitPrettyCourseKey(mkVenue)]] : [];
+    } else {
+      rebuildPropsCourseRoundIndex();
+      const byKey = new Map();
+      for (const k of propsCourseRoundIndex.keys()) {
+        byKey.set(k, courseFitPrettyCourseKey(k));
+      }
+      if (metaVenue) {
+        if (mkVenue && !byKey.has(mkVenue)) byKey.set(mkVenue, courseFitPrettyCourseKey(mkVenue));
+      }
+      sortedEntries = [...byKey.entries()].sort((a, b) => a[0].localeCompare(b[0]));
     }
-    if (metaVenue) {
-      if (mkVenue && !byKey.has(mkVenue)) byKey.set(mkVenue, courseFitPrettyCourseKey(mkVenue));
-    }
-    sortedEntries = [...byKey.entries()].sort((a, b) => a[0].localeCompare(b[0]));
     propsAllPlayersCourseOptsCacheKey = optsCacheKey;
     propsAllPlayersCourseOptsEntries = sortedEntries;
   }
@@ -12279,7 +12433,7 @@ function initPropsTopTableSortOnce() {
   });
 }
 
-function renderPropsHitRateAndTopTable(statKey, line, winN) {
+function renderPropsHitRateAndTopTable(statKey, line, winN, courseWindowEntriesOpt) {
   initPropsTopTableSortOnce();
   paintPropsTopHitsHeadUi(statKey, line);
   const block = document.getElementById("props-hit-rate-block");
@@ -12348,7 +12502,8 @@ function renderPropsHitRateAndTopTable(statKey, line, winN) {
   let courseWindowRoundsByDg = /** @type {Map<number, object[]> | null} */ (null);
   if (propsCourseWindowModeActive()) {
     courseWindowRoundsByDg = new Map();
-    for (const e of collectCourseWindowRoundEntriesFixed()) {
+    const list = courseWindowEntriesOpt || collectCourseWindowRoundEntriesFixed();
+    for (const e of list) {
       const id = e.dgId;
       if (!courseWindowRoundsByDg.has(id)) courseWindowRoundsByDg.set(id, []);
       courseWindowRoundsByDg.get(id).push(e.row);
@@ -12980,7 +13135,6 @@ function scheduleRenderPropsTrends(ms = 200) {
  */
 function queuePropsFieldHistoryBackgroundLoad() {
   if (!propsCourseWindowModeOn()) return;
-  if (HISTORY._ok && !HISTORY._partial) return;
   if (propsFieldHistoryBgQueued || playerHistoryLoadPromise) return;
   propsFieldHistoryBgQueued = true;
   void loadPlayerHistory()
@@ -12988,18 +13142,51 @@ function queuePropsFieldHistoryBackgroundLoad() {
       propsFieldHistoryBgQueued = false;
     })
     .then(() => {
-      if (propsCourseWindowModeOn() && activeAppTabId() === "props") renderPropsTrendsNow();
+      if (!propsCourseWindowModeOn() || activeAppTabId() !== "props") return;
+      propsSingleCourseIndexSig = "";
+      propsSingleCourseIndexCache = null;
+      renderPropsTrendsNow();
     });
+}
+
+function paintPropsCourseWindowBuilding(message) {
+  const empty = document.getElementById("props-chart-empty");
+  if (empty) {
+    empty.hidden = false;
+    empty.textContent = message;
+  }
+  drawPropsTrendCanvas([], NaN, statKeyFromPropSelect());
 }
 
 function renderPropsTrendsCourseWindow() {
   const gen = ++propsCourseWindowRenderGen;
+  propsCourseWindowLastEntries = null;
   syncPropsCourseWindowUiState();
+  refreshPropsCourseFilterOptionsAllPlayers();
+  ensurePropsCourseWindowDateDefaultsFromMeta();
   queuePropsFieldHistoryBackgroundLoad();
-  renderPropsTrendsCourseWindowBody(gen);
+
+  const courseKey = propsEffectiveCourseKey();
+  if (!courseKey) {
+    renderPropsTrendsCourseWindowBody(gen, null);
+    return;
+  }
+
+  const cached = propsGetSingleCourseBucketSync(courseKey);
+  if (cached) {
+    renderPropsTrendsCourseWindowBody(gen, cached);
+    return;
+  }
+
+  paintPropsCourseWindowBuilding("Loading all players at this course…");
+  void ensurePropsCourseIndexForKeyAsync(courseKey).then((bucket) => {
+    if (gen !== propsCourseWindowRenderGen || activeAppTabId() !== "props") return;
+    ensurePropsCourseWindowDateDefaults();
+    renderPropsTrendsCourseWindowBody(gen, bucket);
+  });
 }
 
-function renderPropsTrendsCourseWindowBody(gen) {
+function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   if (gen !== propsCourseWindowRenderGen) return;
   syncPropsCourseWindowUiState();
   const empty = document.getElementById("props-chart-empty");
@@ -13011,8 +13198,6 @@ function renderPropsTrendsCourseWindowBody(gen) {
     propsTopTableSort = { key: "overRate", dir: -1 };
     propsTopTableSortStatKey = statKey;
   }
-  refreshPropsCourseFilterOptionsAllPlayers();
-  ensurePropsCourseWindowDateDefaults();
   const courseKey = propsEffectiveCourseKey();
   const courseLabel = courseKey ? courseFitPrettyCourseKey(courseKey) : "—";
   if (flagEl) flagEl.hidden = true;
@@ -13088,7 +13273,8 @@ function renderPropsTrendsCourseWindowBody(gen) {
   const lineInp = document.getElementById("prop-line");
   const ctxKey = propsTrendLineContextKeyFromDom();
   const lineEditing = Boolean(lineInp && document.activeElement === lineInp);
-  const entriesAll = collectCourseWindowRoundEntriesFixed();
+  const entriesAll = collectCourseWindowRoundEntriesFixed(courseBucket);
+  propsCourseWindowLastEntries = entriesAll;
   let line = clampPropLineForMarket(statKey, snapPropLineToDotFive(lineInp?.value));
   if (lineEditing && !Number.isFinite(line) && Number.isFinite(propsTrendLastGoodLine)) {
     line = propsTrendLastGoodLine;
@@ -13103,7 +13289,8 @@ function renderPropsTrendsCourseWindowBody(gen) {
   if (Number.isFinite(line)) propsTrendLastGoodLine = line;
 
   let chartEntries = entriesAll;
-  if (chartEntries.length > winN) chartEntries = chartEntries.slice(-winN);
+  const chartCap = Math.min(winN, PROPS_COURSE_WINDOW_MAX_CHART_BARS);
+  if (chartEntries.length > chartCap) chartEntries = chartEntries.slice(-chartCap);
 
   const seriesChart = [];
   for (const e of chartEntries) {
@@ -13140,7 +13327,10 @@ function renderPropsTrendsCourseWindowBody(gen) {
   paintPropsTrendKpiRowCourseWindow(statKey, hitSt, seriesChart, chartEntries.length ? chartEntries : entriesAll);
   const chartLeg = document.getElementById("props-chart-line-legend");
   if (chartLeg) chartLeg.hidden = !Number.isFinite(line);
-  renderPropsHitRateAndTopTable(statKey, line, winN);
+  window.requestAnimationFrame(() => {
+    if (gen !== propsCourseWindowRenderGen) return;
+    renderPropsHitRateAndTopTable(statKey, line, winN, propsCourseWindowLastEntries);
+  });
 }
 
 function renderPropsTrends() {

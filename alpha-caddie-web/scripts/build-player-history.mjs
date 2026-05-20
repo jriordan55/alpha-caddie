@@ -170,6 +170,8 @@ const PGATOUR_EVENT_ROUNDS_JSON = path.join(WEB_ROOT, "data", "pgatour_event_rou
 const OUT_JSON = path.join(WEB_ROOT, "player_round_history.json");
 const SHARD_DIR = path.join(WEB_ROOT, "player-history", "by-dg");
 const SHARD_MANIFEST_JSON = path.join(WEB_ROOT, "player-history", "manifest.json");
+const COURSE_SHARD_DIR = path.join(WEB_ROOT, "player-history", "by-course");
+const COURSES_MANIFEST_JSON = path.join(WEB_ROOT, "player-history", "courses-manifest.json");
 
 function fmtBytes(n) {
   if (!Number.isFinite(n) || n < 0) return "—";
@@ -197,6 +199,89 @@ function writeJsonAtomic(outPath, payload) {
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
   fs.writeFileSync(tmpPath, JSON.stringify(payload), "utf8");
   fs.renameSync(tmpPath, outPath);
+}
+
+/** Match app.js `normCourseNameKey` / `propsCourseShardFileName` for Historical Trends field-by-course shards. */
+function normCourseNameKeyForShard(raw) {
+  let s = String(raw || "").trim().toLowerCase();
+  s = s.replace(/\([^)]*\)/g, " ");
+  s = s.replace(/\bthe players\b/gi, " ");
+  s = s.replace(/&/g, " and ");
+  s = s.replace(/[^a-z0-9]+/g, " ");
+  return s.replace(/\s+/g, " ").trim();
+}
+
+function courseShardFileName(courseKey) {
+  const safe = String(courseKey || "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 96);
+  return `${safe || "unknown"}.json`;
+}
+
+function chartUtcIsoDayFromHistoryRow(r) {
+  const sk = Number(r?.sortKey);
+  if (Number.isFinite(sk) && sk > 9_999_999) {
+    const base = Math.floor(sk / 10);
+    const y = Math.floor(base / 10000);
+    const mo = Math.floor((base % 10000) / 100);
+    const d = base % 100;
+    if (y >= 1990 && y <= 2100 && mo >= 1 && mo <= 12 && d >= 1 && d <= 31) {
+      return `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+    }
+  }
+  const ec = String(r?.event_completed || "").trim();
+  const mdy = ec.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (mdy) {
+    return `${mdy[3]}-${String(mdy[1]).padStart(2, "0")}-${String(mdy[2]).padStart(2, "0")}`;
+  }
+  const iso = ec.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
+  return "";
+}
+
+/** Pre-aggregated rounds at each venue for fast Historical Trends “field by course & date”. */
+function writeCourseHistoryShards(out) {
+  fs.mkdirSync(COURSE_SHARD_DIR, { recursive: true });
+  const byCourse = new Map();
+  for (const [dgId, bucket] of Object.entries(out.byDgId || {})) {
+    const dg = Math.round(Number(dgId));
+    if (!Number.isFinite(dg) || !bucket?.rounds) continue;
+    const playerName = String(bucket.player_name || "").trim();
+    for (const r of bucket.rounds) {
+      if (eventCompletedIsFutureMdY(r.event_completed) || historyRoundChartDateIsFuture(r)) continue;
+      const rs = Number(r.round_score);
+      if (!Number.isFinite(rs) || rs <= 0) continue;
+      const ck = normCourseNameKeyForShard(r.course_name);
+      if (!ck) continue;
+      let b = byCourse.get(ck);
+      if (!b) b = { dateSet: new Set(), entries: [] };
+      b.entries.push({ dg_id: dg, player_name: playerName, row: r });
+      const iso = chartUtcIsoDayFromHistoryRow(r);
+      if (iso) b.dateSet.add(iso);
+    }
+  }
+  const keep = new Set();
+  const courses = [];
+  for (const [courseKey, b] of byCourse) {
+    const file = courseShardFileName(courseKey);
+    keep.add(file);
+    const days = [...b.dateSet].sort((a, c) => c.localeCompare(a));
+    writeJsonAtomic(path.join(COURSE_SHARD_DIR, file), {
+      course_key: courseKey,
+      days,
+      entries: b.entries,
+    });
+    courses.push({ course_key: courseKey, file, days: days.length, entries: b.entries.length });
+  }
+  for (const entry of fs.readdirSync(COURSE_SHARD_DIR, { withFileTypes: true })) {
+    if (entry.isFile() && entry.name.endsWith(".json") && !keep.has(entry.name)) {
+      fs.unlinkSync(path.join(COURSE_SHARD_DIR, entry.name));
+    }
+  }
+  courses.sort((a, b) => a.course_key.localeCompare(b.course_key));
+  writeJsonAtomic(COURSES_MANIFEST_JSON, { meta: { updated_at: out.meta?.updated_at || new Date().toISOString() }, courses });
+  console.log("Wrote course history shards:", courses.length, "->", path.relative(WEB_ROOT, COURSE_SHARD_DIR));
 }
 
 function writePlayerHistoryShards(out) {
@@ -1694,6 +1779,7 @@ async function main() {
   const st = fs.statSync(OUT_JSON);
   console.log("Wrote", OUT_JSON, `(${fmtBytes(st.size)})`);
   writePlayerHistoryShards(out);
+  writeCourseHistoryShards(out);
 }
 
 main().catch((e) => {
