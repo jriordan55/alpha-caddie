@@ -11694,7 +11694,7 @@ function paintPropsTrendKpiRowCourseWindow(statKey, hitSt, graphSeries, entries)
   const atVenueAll = roundsMatchingCurrentCourseOnlyFieldAllTime();
   addKpi(
     `${PROPS_TREND_DISPLAY_SEASON_YEAR} course avg`,
-    propsTrendFieldVenueKpiValue(statKey, atVenueSeason),
+    propsTrendSeasonCourseKpiValue(statKey, atVenueSeason),
   );
   addKpi("All-time course avg", propsTrendFieldVenueKpiValue(statKey, atVenueAll));
   addKpi("Rounds", rounds.length, "");
@@ -12819,6 +12819,12 @@ function propsTrendFieldVenueKpiValue(statKey, rounds) {
   return propsTrendFieldVenueKpiFallback(statKey);
 }
 
+/** Season course avg: only from completed rounds at this venue in the display year (no projection fallback). */
+function propsTrendSeasonCourseKpiValue(statKey, seasonRoundsAtVenue) {
+  if (!seasonRoundsAtVenue?.length) return NaN;
+  return propsTrendMeanFieldVenueActual(statKey, seasonRoundsAtVenue);
+}
+
 function propsTrendCourseFilterActive() {
   return Boolean(courseFilterOn() || (propsCourseWindowModeActive() && propsEffectiveCourseKey()));
 }
@@ -13082,7 +13088,7 @@ function paintPropsTrendKpiRow(statKey, hitSt, graphSeries, dgId) {
   const atVenueAll = roundsMatchingCurrentCourseOnlyFieldAllTime();
   addKpi(
     `${PROPS_TREND_DISPLAY_SEASON_YEAR} course avg`,
-    propsTrendFieldVenueKpiValue(statKey, atVenueSeason),
+    propsTrendSeasonCourseKpiValue(statKey, atVenueSeason),
   );
   const venueFallbackLabel =
     atVenueSeason.length ? "All-time course avg" : atVenueAll.length ? "All Time Course Avg" : "All-time course avg";
