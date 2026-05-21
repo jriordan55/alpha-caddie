@@ -40,8 +40,17 @@ function girCount(row) {
 function fairwayCount(row) {
   const acc = num(row.driving_acc, NaN);
   if (!Number.isFinite(acc)) return NaN;
-  const p = acc > 0 && acc <= 1.0001 ? acc : acc / 14;
-  return Math.min(14, Math.max(0, Math.round(p * 14)));
+  const opp = fairwayOpportunitiesFromCoursePar(row.course_par);
+  const p = acc > 0 && acc <= 1.0001 ? acc : acc / opp;
+  return Math.min(opp, Math.max(0, Math.round(p * opp)));
+}
+
+/** Regulation driving holes from 18-hole par when per-hole pars are unavailable in CSV. */
+export function fairwayOpportunitiesFromCoursePar(coursePar) {
+  const cp = Math.round(num(coursePar, NaN));
+  if (!Number.isFinite(cp) || cp < 67 || cp > 74) return 14;
+  const par3 = Math.max(3, Math.min(6, 4 + (72 - cp)));
+  return Math.max(10, Math.min(15, 18 - par3));
 }
 
 /** @returns {boolean} */
@@ -75,12 +84,12 @@ export async function loadPgaTourMarketBenchmarks(modelRoot, opts = {}) {
   if (!Number.isFinite(minYear)) minYear = maxYear;
 
   const empty = {
-    "Total score": { mean: NaN, sd: NaN, higherBetter: false, holes: 18 },
-    Birdies: { mean: NaN, sd: NaN, higherBetter: true, holes: 18 },
-    Pars: { mean: NaN, sd: NaN, higherBetter: true, holes: 18 },
-    Bogeys: { mean: NaN, sd: NaN, higherBetter: false, holes: 18 },
-    GIR: { mean: NaN, sd: NaN, higherBetter: true, holes: 18 },
-    "Fairways hit": { mean: NaN, sd: NaN, higherBetter: true, holes: 14 },
+    "Total score": { mean: NaN, sd: NaN, higherBetter: false, unit: "strokes" },
+    Birdies: { mean: NaN, sd: NaN, higherBetter: true, unit: "count" },
+    Pars: { mean: NaN, sd: NaN, higherBetter: true, unit: "count" },
+    Bogeys: { mean: NaN, sd: NaN, higherBetter: false, unit: "count" },
+    GIR: { mean: NaN, sd: NaN, higherBetter: true, unit: "rate" },
+    "Fairways hit": { mean: NaN, sd: NaN, higherBetter: true, unit: "rate" },
     meta: { skipped: true, csv_path: csvPath, min_year: minYear, max_year: maxYear },
   };
   if (!existsSync(csvPath)) return empty;
@@ -89,8 +98,8 @@ export async function loadPgaTourMarketBenchmarks(modelRoot, opts = {}) {
   const birdies = [];
   const pars = [];
   const bogeys = [];
-  const gir = [];
-  const fw = [];
+  const girRates = [];
+  const fwRates = [];
 
   await new Promise((resolve, reject) => {
     const parser = createReadStream(csvPath).pipe(
@@ -113,8 +122,11 @@ export async function loadPgaTourMarketBenchmarks(modelRoot, opts = {}) {
       if (Number.isFinite(b) && b >= 0 && b <= 18) pushSample(birdies, b);
       if (Number.isFinite(p) && p >= 0 && p <= 18) pushSample(pars, p);
       if (Number.isFinite(bg) && bg >= 0 && bg <= 18) pushSample(bogeys, bg);
-      pushSample(gir, girCount(row));
-      pushSample(fw, fairwayCount(row));
+      const g = girCount(row);
+      if (Number.isFinite(g)) pushSample(girRates, g / 18);
+      const fw = fairwayCount(row);
+      const fwOpp = fairwayOpportunitiesFromCoursePar(row.course_par);
+      if (Number.isFinite(fw) && fwOpp > 0) pushSample(fwRates, fw / fwOpp);
     });
     parser.on("error", reject);
     parser.on("end", resolve);
@@ -124,16 +136,16 @@ export async function loadPgaTourMarketBenchmarks(modelRoot, opts = {}) {
   const mb = meanSd(birdies);
   const mp = meanSd(pars);
   const mbg = meanSd(bogeys);
-  const mg = meanSd(gir);
-  const mf = meanSd(fw);
+  const mg = meanSd(girRates);
+  const mf = meanSd(fwRates);
 
   return {
-    "Total score": { mean: ms.mean, sd: ms.sd, higherBetter: false, holes: 18 },
-    Birdies: { mean: mb.mean, sd: mb.sd, higherBetter: true, holes: 18 },
-    Pars: { mean: mp.mean, sd: mp.sd, higherBetter: true, holes: 18 },
-    Bogeys: { mean: mbg.mean, sd: mbg.sd, higherBetter: false, holes: 18 },
-    GIR: { mean: mg.mean, sd: mg.sd, higherBetter: true, holes: 18 },
-    "Fairways hit": { mean: mf.mean, sd: mf.sd, higherBetter: true, holes: 14 },
+    "Total score": { mean: ms.mean, sd: ms.sd, higherBetter: false, unit: "strokes" },
+    Birdies: { mean: mb.mean, sd: mb.sd, higherBetter: true, unit: "count" },
+    Pars: { mean: mp.mean, sd: mp.sd, higherBetter: true, unit: "count" },
+    Bogeys: { mean: mbg.mean, sd: mbg.sd, higherBetter: false, unit: "count" },
+    GIR: { mean: mg.mean, sd: mg.sd, higherBetter: true, unit: "rate" },
+    "Fairways hit": { mean: mf.mean, sd: mf.sd, higherBetter: true, unit: "rate" },
     meta: {
       skipped: false,
       csv_path: csvPath,
@@ -154,7 +166,7 @@ export function serializePgaTourMarketBenchmarks(raw) {
       mean: Number.isFinite(b.mean) ? Math.round(b.mean * 1000) / 1000 : null,
       sd: Number.isFinite(b.sd) ? Math.round(b.sd * 1000) / 1000 : null,
       higherBetter: !!b.higherBetter,
-      holes: Math.round(num(b.holes, 18)) || 18,
+      unit: b.unit || null,
     };
   }
   out.meta = raw.meta || {};

@@ -2667,12 +2667,12 @@ const OU_STAT_MAP = {
 
 /** Fallback PGA Tour μ/σ (2025–2026 rounds) when projections.json lacks `pga_tour_market_benchmarks`. */
 const OU_PGA_TOUR_BENCHMARK_FALLBACK = Object.freeze({
-  "Total score": { mean: 70.41, sd: 3.31, higherBetter: false, holes: 18 },
-  Birdies: { mean: 3.65, sd: 1.9, higherBetter: true, holes: 18 },
-  Pars: { mean: 10.81, sd: 2.89, higherBetter: true, holes: 18 },
-  Bogeys: { mean: 2.5, sd: 1.69, higherBetter: false, holes: 18 },
-  GIR: { mean: 10.74, sd: 4.1, higherBetter: true, holes: 18 },
-  "Fairways hit": { mean: 7.57, sd: 3.24, higherBetter: true, holes: 14 },
+  "Total score": { mean: 70.41, sd: 3.31, higherBetter: false, unit: "strokes" },
+  Birdies: { mean: 3.65, sd: 1.9, higherBetter: true, unit: "count" },
+  Pars: { mean: 10.81, sd: 2.89, higherBetter: true, unit: "count" },
+  Bogeys: { mean: 2.5, sd: 1.69, higherBetter: false, unit: "count" },
+  GIR: { mean: 0.597, sd: 0.228, higherBetter: true, unit: "rate" },
+  "Fairways hit": { mean: 0.541, sd: 0.228, higherBetter: true, unit: "rate" },
 });
 
 function ouPgaTourBenchmarkYearLabel() {
@@ -2683,35 +2683,60 @@ function ouPgaTourBenchmarkYearLabel() {
   return "2025–2026";
 }
 
+function ouMarketRatingOpportunities(mKey) {
+  if (mKey === "GIR") return 18;
+  if (mKey === "Fairways hit") return fairwayHolesModeledFromData();
+  return null;
+}
+
+/** Normalize baked benchmarks (rate for GIR/FW; legacy count rows → rate). */
+function ouNormalizePgaTourBenchmark(raw, mKey) {
+  if (!raw) return null;
+  const mean = num(raw.mean, NaN);
+  const sd = num(raw.sd, NaN);
+  if (!Number.isFinite(mean) || !Number.isFinite(sd) || sd <= 1e-6) return null;
+  const higherBetter = raw.higherBetter !== false;
+  let unit = String(raw.unit || "").trim();
+  if (!unit) {
+    if (mKey === "Total score") unit = "strokes";
+    else if (mKey === "GIR" || mKey === "Fairways hit") unit = mean <= 1.05 ? "rate" : "count";
+    else unit = "count";
+  }
+  if (unit === "rate") return { mean, sd, higherBetter, unit: "rate" };
+  if (unit === "strokes" || unit === "count") return { mean, sd, higherBetter, unit };
+  const opp = mKey === "GIR" ? 18 : Math.round(num(raw.holes, 14)) || 14;
+  return { mean: mean / opp, sd: sd / opp, higherBetter, unit: "rate" };
+}
+
 function ouPgaTourBenchmarkForMarket(market) {
   const mKey = ouModelMarketKey(market) || "Total score";
   const raw = DATA?.pga_tour_market_benchmarks?.[mKey];
-  if (raw && Number.isFinite(num(raw.mean, NaN)) && Number.isFinite(num(raw.sd, NaN)) && num(raw.sd, 0) > 1e-6) {
-    return {
-      mean: num(raw.mean),
-      sd: num(raw.sd),
-      higherBetter: raw.higherBetter !== false,
-      holes: Math.round(num(raw.holes, 18)) || 18,
-    };
-  }
-  return OU_PGA_TOUR_BENCHMARK_FALLBACK[mKey] || null;
+  const norm = ouNormalizePgaTourBenchmark(raw, mKey);
+  if (norm) return norm;
+  return ouNormalizePgaTourBenchmark(OU_PGA_TOUR_BENCHMARK_FALLBACK[mKey], mKey);
 }
 
 /**
- * Z-score of projected rate vs PGA Tour average for this market.
- * Higher rating = more birdies/pars/GIR/FW vs tour; lower round score / bogeys vs tour.
+ * Z-score vs PGA Tour average: strokes/counts in raw units; GIR/FW as rate per opportunity (18 / course FW holes).
  */
 function ouMarketRatingZ(market, projectedMean) {
+  const mKey = ouModelMarketKey(market) || "Total score";
   const mu = num(projectedMean, NaN);
   if (!Number.isFinite(mu)) return NaN;
   const b = ouPgaTourBenchmarkForMarket(market);
   if (!b) return NaN;
-  const holes = Math.max(1, Math.round(num(b.holes, 18)));
-  const tourPct = b.mean / holes;
-  const playerPct = mu / holes;
-  const sdPct = b.sd / holes;
-  if (!Number.isFinite(sdPct) || sdPct <= 1e-6) return NaN;
-  let z = (playerPct - tourPct) / sdPct;
+  let x = mu;
+  let tourMu = b.mean;
+  let tourSd = b.sd;
+  if (b.unit === "rate") {
+    const opp = ouMarketRatingOpportunities(mKey);
+    if (!Number.isFinite(opp) || opp <= 0) return NaN;
+    x = mu / opp;
+    tourMu = b.mean;
+    tourSd = b.sd;
+  }
+  if (!Number.isFinite(tourSd) || tourSd <= 1e-6) return NaN;
+  let z = (x - tourMu) / tourSd;
   if (!b.higherBetter) z = -z;
   return z;
 }
@@ -2722,16 +2747,34 @@ function formatOuMarketRating(z) {
   return `${s}${z.toFixed(2)}`;
 }
 
+function ouMarketRatingFormatValue(market, value, unit) {
+  const v = num(value, NaN);
+  if (!Number.isFinite(v)) return "—";
+  if (unit === "strokes") return v.toFixed(2);
+  return v.toFixed(1);
+}
+
+function ouMarketRatingTourAvgDisplay(market, bench) {
+  const mKey = ouModelMarketKey(market) || "Total score";
+  if (!bench) return "—";
+  if (bench.unit === "rate") {
+    const opp = ouMarketRatingOpportunities(mKey);
+    if (!Number.isFinite(opp) || opp <= 0) return "—";
+    return (bench.mean * opp).toFixed(1);
+  }
+  return ouMarketRatingFormatValue(market, bench.mean, bench.unit);
+}
+
 function ouMarketRatingTitle(market, mu, z) {
   const b = ouPgaTourBenchmarkForMarket(market);
   const yrs = ouPgaTourBenchmarkYearLabel();
+  const label = ouPropsCanonicalMarket(market);
   if (!b || !Number.isFinite(mu) || !Number.isFinite(z)) {
     return `Market rating vs PGA Tour average (${yrs})`;
   }
-  const holes = Math.max(1, Math.round(num(b.holes, 18)));
-  const tourPct = ((b.mean / holes) * 100).toFixed(1);
-  const playerPct = ((mu / holes) * 100).toFixed(1);
-  return `Z-score vs PGA Tour ${yrs} avg (${ouPropsCanonicalMarket(market)}: ${playerPct}% of ${holes} holes vs tour ${tourPct}%)`;
+  const playerStr = ouMarketRatingFormatValue(market, mu, b.unit === "rate" ? "count" : b.unit);
+  const tourStr = ouMarketRatingTourAvgDisplay(market, b);
+  return `Z-score vs PGA Tour ${yrs} avg (${label}: ${playerStr} vs tour ${tourStr})`;
 }
 
 /** Model O/U tab market order; displayed columns are dynamic from live DK props. */
@@ -4797,7 +4840,7 @@ function buildOuTable() {
     ["pr-market", "Market", "sortable ou-proj-long-th ou-proj-th-market"],
     ["pr-side", "Side", "sortable ou-proj-long-th num ou-proj-th-side"],
     ["pr-mu", "Proj", "sortable ou-proj-long-th num ou-proj-th-mu"],
-    ["pr-mkt-rating", "Market rating", "sortable ou-proj-long-th num ou-proj-th-mkt-rating"],
+    ["pr-mkt-rating", "Mkt", "sortable ou-proj-long-th num ou-proj-th-mkt-rating"],
     ["pr-line", "Line", "sortable ou-proj-long-th num ou-proj-th-line"],
     ["", "Book", "ou-proj-long-th num ou-proj-th-book"],
     ["pr-odds", "Odds", "sortable ou-proj-long-th num ou-proj-th-odds"],
@@ -4810,6 +4853,7 @@ function buildOuTable() {
     if (key) {
       th.dataset.sortKey = key;
       th.innerHTML = `${label}${sortInd}`;
+      if (key === "pr-mkt-rating") th.title = "Market rating (z vs PGA Tour 2025–2026)";
     } else {
       th.textContent = label;
       th.title = "DraftKings";
