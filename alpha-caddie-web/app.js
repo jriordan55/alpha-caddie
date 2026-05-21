@@ -73,7 +73,6 @@ const OU_LINE_RANGES = {
   Bogeys: [0.5, 1.5, 2.5, 3.5, 4.5, 5.5],
   GIR: [8.5, 9.5, 10.5, 11.5, 12.5, 13.5],
   "Fairways hit": [5.5, 6.5, 7.5, 8.5, 9.5, 10.5],
-  Putts: [26.5, 27.5, 28.5, 29.5, 30.5, 31.5],
 };
 
 /** DataGolf / OWGR-style codes → flagcdn.com slug (lowercase). */
@@ -2568,7 +2567,6 @@ const OU_STAT_MAP = {
   Bogeys: { field: "bogeys", sdKey: null },
   GIR: { field: "gir", sdKey: null },
   "Fairways hit": { field: "fairways", sdKey: null },
-  Putts: { field: "putts", sdKey: null },
 };
 
 /** Model O/U tab market order; displayed columns are dynamic from live DK props. */
@@ -2579,7 +2577,6 @@ const OU_PROJECTION_MARKETS = Object.freeze([
   { market: "Bogeys", label: "Bogeys" },
   { market: "GIR", label: "GIR" },
   { market: "Fairways hit", label: "Fairways" },
-  { market: "Putts", label: "Putts" },
 ]);
 
 /**
@@ -3818,7 +3815,8 @@ function setOuViewMode(mode) {
 
 function getOuMarket() {
   const el = document.getElementById("ou-market-filter");
-  return el && el.value ? el.value : "Total score";
+  const v = el && el.value ? el.value : "Total score";
+  return v === "Putts" ? "Total score" : v;
 }
 
 /** Round score & bogeys: chart shows P(over) (falls as line rises). Birdies/pars: P(under) (rises as line rises). */
@@ -4416,6 +4414,7 @@ function buildOuProjDetailPanel(player, col, side, mu, pick, rawName) {
 }
 
 function buildOuTable() {
+  ensureOuMarketFilterValid();
   const table = document.getElementById("table-ou");
   if (!table) return;
   updateOuSyntheticOddsNoteVisibility();
@@ -10598,7 +10597,23 @@ function selectedDgId() {
 
 function statKeyFromPropSelect() {
   const sel = document.getElementById("prop-stat");
-  return sel ? sel.value : "total";
+  const v = sel ? sel.value : "total";
+  return v === "putts" ? "total" : v;
+}
+
+/** Putting market removed from Historical Trends — reset stale saved selection. */
+function ensurePropsStatSelectValid() {
+  const sel = document.getElementById("prop-stat");
+  if (!sel || sel.value !== "putts") return;
+  sel.value = "total";
+}
+
+function ensureOuMarketFilterValid() {
+  const el = document.getElementById("ou-market-filter");
+  if (!el || el.value !== "Putts") return;
+  el.value = "Total score";
+  const lineInp = document.getElementById("ou-line-filter");
+  if (lineInp) lineInp.value = "70.5";
 }
 
 function historyRoundsForDg(dgId) {
@@ -13373,6 +13388,7 @@ function paintPropsCourseWindowBuilding(message) {
 }
 
 function renderPropsTrendsCourseWindow() {
+  ensurePropsStatSelectValid();
   const gen = ++propsCourseWindowRenderGen;
   propsCourseWindowLastEntries = null;
   syncPropsCourseWindowUiState();
@@ -13561,6 +13577,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
 }
 
 function renderPropsTrends() {
+  ensurePropsStatSelectValid();
   if (propsCourseWindowModeOn()) {
     renderPropsTrendsCourseWindow();
     return;
