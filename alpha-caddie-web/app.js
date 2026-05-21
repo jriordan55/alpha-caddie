@@ -361,7 +361,8 @@ const HISTORY_ROUNDS_CHRONO_CACHE = new Map();
 const PRICING_MU_BONUS_CACHE = new Map();
 /** Last valid line used when the input is mid-edit or empty. */
 let propsTrendLastGoodLine = NaN;
-let propsCourseWindowLiveFetchQueued = false;
+/** Field-by-course: one live-history merge per mode session (avoids re-render loop). */
+let propsCourseWindowLiveMergeAttempted = false;
 /** Increment when round-history payloads change so course/session caches invalidate cheaply. */
 let historyMutationEpoch = 0;
 function bumpHistoryMutationEpoch() {
@@ -1942,11 +1943,34 @@ function upsertHistoryBucketLiveRound(dgId, liveRec) {
     hitIdx = i;
     break;
   }
-  if (hitIdx >= 0) bucket.rounds[hitIdx] = mergeLiveInPlayOntoHistoryRound(bucket.rounds[hitIdx], liveRec);
-  else bucket.rounds.push(liveRec);
+  if (hitIdx >= 0) {
+    const prev = bucket.rounds[hitIdx];
+    const next = mergeLiveInPlayOntoHistoryRound(prev, liveRec);
+    const changed = liveHistoryRoundMateriallyChanged(prev, next);
+    bucket.rounds[hitIdx] = next;
+    bucket.rounds.sort((a, b) => num(a.sortKey, 0) - num(b.sortKey, 0));
+    if (bucket.rounds.length > MAX_HISTORY_ROUNDS_PER_PLAYER) {
+      bucket.rounds = bucket.rounds.slice(-MAX_HISTORY_ROUNDS_PER_PLAYER);
+    }
+    return changed;
+  }
+  bucket.rounds.push(liveRec);
   bucket.rounds.sort((a, b) => num(a.sortKey, 0) - num(b.sortKey, 0));
   if (bucket.rounds.length > MAX_HISTORY_ROUNDS_PER_PLAYER) bucket.rounds = bucket.rounds.slice(-MAX_HISTORY_ROUNDS_PER_PLAYER);
   return true;
+}
+
+function liveHistoryRoundMateriallyChanged(prev, next) {
+  if (!prev || !next) return true;
+  const keys = ["round_score", "birdies", "pars", "bogies", "bogeys", "gir", "fairways", "putts"];
+  for (const k of keys) {
+    const a = num(prev[k], NaN);
+    const b = num(next[k], NaN);
+    if (Number.isFinite(a) || Number.isFinite(b)) {
+      if (!Number.isFinite(a) || !Number.isFinite(b) || Math.abs(a - b) > 1e-6) return true;
+    }
+  }
+  return false;
 }
 
 /** preds/in-play `R1`…`R4` gross (+ active-round counting) when precomputed actuals are missing. */
@@ -10924,6 +10948,8 @@ function propsCourseWindowEntryDedupeKey(e) {
 /** Supplement prebuilt course shard with live-week rows from in-memory HISTORY (not yet in shard file). */
 function mergeMemoryCourseEntriesIntoBucket(bucket, courseKey) {
   if (!bucket || !courseKey || !HISTORY?.byDgId) return bucket;
+  const ep = historyMutationEpoch;
+  if (bucket._memoryMergeEpoch === ep) return bucket;
   const seen = new Set((bucket.entries || []).map(propsCourseWindowEntryDedupeKey));
   const dateSet = new Set(Array.isArray(bucket.days) ? bucket.days : []);
   const nameByDg = buildPropsGolferDisplayNameMap();
@@ -10955,6 +10981,7 @@ function mergeMemoryCourseEntriesIntoBucket(bucket, courseKey) {
     }
   }
   bucket.days = [...dateSet].sort((a, b) => b.localeCompare(a));
+  bucket._memoryMergeEpoch = ep;
   return bucket;
 }
 
@@ -13360,6 +13387,7 @@ function syncPropsCourseWindowUiState() {
   if (curCourse && modeOn) curCourse.checked = false;
   const roundsStepper = document.querySelector(".props-chart-steppers .props-stepper-block");
   if (roundsStepper) roundsStepper.hidden = modeOn;
+  if (!modeOn) propsCourseWindowLiveMergeAttempted = false;
 }
 
 /** Run Historical Trends immediately (cancels any pending debounced pass). */
@@ -13404,7 +13432,6 @@ function renderPropsTrendsCourseWindow() {
 
   const cached = propsGetSingleCourseBucketSync(courseKey);
   if (cached) {
-    mergeMemoryCourseEntriesIntoBucket(cached, courseKey);
     renderPropsTrendsCourseWindowBody(gen, cached);
     return;
   }
@@ -13491,17 +13518,17 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
     renderPropsHitRateAndTopTable(statKey, NaN, winN);
     return;
   }
-  if (!isFileProtocol() && !propsCourseWindowLiveFetchQueued) {
-    propsCourseWindowLiveFetchQueued = true;
-    void ensureLiveTournamentHistoryMerged({ useCache: true }).finally(() => {
-      propsCourseWindowLiveFetchQueued = false;
-      if (activeAppTabId() === "props" && propsCourseWindowModeOn()) {
+  if (!isFileProtocol() && !propsCourseWindowLiveMergeAttempted) {
+    propsCourseWindowLiveMergeAttempted = true;
+    void ensureLiveTournamentHistoryMerged({ useCache: true }).then((n) => {
+      if (n > 0 && activeAppTabId() === "props" && propsCourseWindowModeOn()) {
         propsSingleCourseIndexSig = "";
         propsSingleCourseIndexCache = null;
-        propsCourseRoundIndex.delete(propsEffectiveCourseKey() || "");
+        const ck = propsEffectiveCourseKey();
+        if (ck) propsCourseRoundIndex.delete(ck);
         courseWindowRoundEntriesCache = null;
         courseWindowRoundEntriesCacheSig = "";
-        scheduleRenderPropsTrends(300);
+        scheduleRenderPropsTrends(0);
       }
     });
   }
