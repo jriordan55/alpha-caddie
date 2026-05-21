@@ -25,6 +25,20 @@ export function normCourseNameKey(raw) {
   return alias || s;
 }
 
+/** Display labels: title-case normalized keys; keep **TPC** uppercase (not "Tpc" / "tpc"). */
+export function enforceCourseDisplayAcronyms(label) {
+  return String(label || "")
+    .replace(/\b(tpc)\b/gi, "TPC")
+    .replace(/\(tpc\b/gi, "(TPC")
+    .replace(/\btpc-/gi, "TPC-");
+}
+
+export function formatCourseLabelForDisplay(raw) {
+  const k = normCourseNameKey(raw);
+  if (!k) return enforceCourseDisplayAcronyms(String(raw || "").trim());
+  return enforceCourseDisplayAcronyms(k.replace(/\b\w/g, (c) => c.toUpperCase()));
+}
+
 export function courseShardFileName(courseKey) {
   const safe = String(courseKey || "")
     .replace(/[^a-z0-9]+/g, "-")

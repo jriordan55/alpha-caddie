@@ -11,6 +11,7 @@ import {
 } from "./lib/projections";
 import { fetchJson, type FieldUpdates } from "./api/datagolf";
 import { LB_OU_LINES, modelCountOuHtml, modelTotalScoreOuHtml } from "./lib/odds";
+import { formatCourseLabelForDisplay } from "./lib/course-display";
 
 const TZ = "America/New_York";
 
@@ -338,7 +339,8 @@ function mountApp() {
     const projRows = data ? filterByRound(data, roundNum) : [];
     const rows = mergeFieldAndProjections(fieldCache, projRows, roundNum);
     const ev = fieldCache?.event_name ?? data?.event_name ?? "";
-    const course = fieldCache?.course_name ?? "";
+    const courseRaw = fieldCache?.course_name ?? data?.course_used ?? "";
+    const course = courseRaw ? formatCourseLabelForDisplay(String(courseRaw)) : "";
     const day =
       roundNum === 1 ? "Thursday" : roundNum === 2 ? "Friday" : roundNum === 3 ? "Saturday" : "Sunday";
     muTitle.textContent = `Model O/U — ${stat} — R${roundNum} (${day})${course ? ` · ${course}` : ev ? ` · ${ev}` : ""}`;

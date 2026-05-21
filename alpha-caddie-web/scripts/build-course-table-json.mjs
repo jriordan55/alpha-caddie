@@ -9,6 +9,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { parse } from "csv-parse/sync";
 import { resolveGolfModelDir } from "./resolve-golf-model-dir.mjs";
+import { formatCourseLabelForDisplay } from "./course-name-key.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -101,8 +102,9 @@ function main() {
   const byNormKey = {};
 
   for (const rec of rows) {
-    const course = String(rec.course ?? "").trim();
-    if (!course) continue;
+    const courseRaw = String(rec.course ?? "").trim();
+    if (!courseRaw) continue;
+    const course = formatCourseLabelForDisplay(courseRaw) || courseRaw;
     const o = { course };
     for (const [k, v] of Object.entries(rec)) {
       if (k === "course") continue;

@@ -13,6 +13,7 @@
 import { appendFileSync, existsSync, mkdirSync, readFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
+import { formatCourseLabelForDisplay } from "./course-name-key.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -72,7 +73,7 @@ export function appendDkRoundProjectionAuditCsv(payload, opts = {}) {
   const bookAt = String(payload?.book_odds_refreshed_at || payload?.meta?.book_odds_refreshed_at || "").trim() || captured;
   const projAt = String(payload?.updated_at || "").trim() || captured;
   const event = String(payload?.event_name || "").trim();
-  const course = String(payload?.course_used || "").trim();
+  const course = formatCourseLabelForDisplay(String(payload?.course_used || "").trim());
 
   mkdirSync(dirname(outPath), { recursive: true });
   if (!existsSync(outPath) || readFileSync(outPath, "utf8").trim() === "") {

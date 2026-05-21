@@ -15,6 +15,7 @@ import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { parse } from "csv-parse";
 import { eventsLikelySame } from "./dg-events-align.mjs";
+import { formatCourseLabelForDisplay } from "./course-name-key.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -164,7 +165,7 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
 
   const payload = JSON.parse(readFileSync(projPath, "utf8"));
   const eventName = String(payload.event_name || "").trim();
-  const course = String(payload.course_used || "").trim();
+  const course = formatCourseLabelForDisplay(String(payload.course_used || "").trim());
   const displayRound = Math.round(num(payload.display_round, 1)) || 1;
   const projAt = String(payload.updated_at || "").trim();
   const exported = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");

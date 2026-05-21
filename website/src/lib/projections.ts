@@ -20,6 +20,7 @@ export type ProjectionPlayer = {
 
 export type ProjectionsFile = {
   event_name?: string;
+  course_used?: string;
   round?: number;
   updated_at?: string;
   players: ProjectionPlayer[];

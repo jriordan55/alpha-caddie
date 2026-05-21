@@ -44,7 +44,7 @@ import {
   sanitizeLiveCountingFields,
   countingFromInPlayRow,
 } from "./dg-live-tournament-stats.mjs";
-import { normCourseNameKey, courseShardFileName } from "./course-name-key.mjs";
+import { normCourseNameKey, courseShardFileName, formatCourseLabelForDisplay } from "./course-name-key.mjs";
 import {
   historyRoundChartUtcIsoDay,
   roundEventCompletedMdYFromEventEnd,
@@ -601,8 +601,9 @@ function buildLiveHistoryRowsFromBundle() {
     return null;
   }
 
-  const courseName =
+  let courseName =
     String(proj?.course_used || meta.course_used || fu.course_name || "").trim() || eventName;
+  courseName = formatCourseLabelForDisplay(courseName) || courseName;
   const roundPar = num(
     proj?.course_par_18 ??
       meta.course_par_18 ??
@@ -781,6 +782,12 @@ function loadPgatourEventRoundRows() {
     }
     list = list.filter((r) => r && typeof r === "object" && r._from_pgatour);
     list = normalizePgatourEventRoundDates(list);
+    list = list.map((r) => {
+      const cn = String(r.course_name || "").trim();
+      if (!cn) return r;
+      const pretty = formatCourseLabelForDisplay(cn);
+      return pretty && pretty !== cn ? { ...r, course_name: pretty } : r;
+    });
     return list;
   } catch (e) {
     console.warn("[build-player-history] pgatour_event_rounds.json:", e?.message || e);
@@ -824,8 +831,9 @@ function loadLiveRoundSnapshotByDg() {
     );
     return null;
   }
-  const courseName =
+  let courseName =
     String(proj?.course_used || meta.course_used || fu.course_name || "").trim() || eventName;
+  courseName = formatCourseLabelForDisplay(courseName) || courseName;
   const coursePar = num(
     proj?.course_par_18 ??
       meta.course_par_18 ??
@@ -1545,7 +1553,7 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg) {
       year: yr,
       event_name: eventName,
       event_id: String(row.event_id || ""),
-      course_name: courseRaw || eventName,
+      course_name: formatCourseLabelForDisplay(courseRaw) || courseRaw || eventName,
       round_num: parseInt(row.round_num, 10) || 1,
       fin_text: String(row.fin_text || ""),
       _from_dg_historical_rounds: true,

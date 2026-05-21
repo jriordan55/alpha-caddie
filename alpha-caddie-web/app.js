@@ -2093,7 +2093,9 @@ function mergeLiveInPlayIntoRoundHistory(j) {
 
   const eventName = String(modelEvent || fu.event_name || info.event_name || "").trim();
   if (!eventName) return 0;
-  const courseName = String(DATA?.meta?.course_used || fu.course_name || "").trim() || eventName;
+  const courseName =
+    formatCourseNameForDisplay(String(DATA?.meta?.course_used || fu.course_name || "").trim()) ||
+    eventName;
   const eventIdStr = fu.event_id != null && fu.event_id !== "" ? String(fu.event_id) : "";
 
   const inPlayRowByDg = new Map();
@@ -2472,6 +2474,7 @@ function applyPayload(raw) {
   const nextFieldFp = playerDgFingerprint(players);
   if (prevFieldFp !== nextFieldFp) lastDatagolfInPlayToken = "";
   hydrateBakedWeatherFromPlayerFields();
+  normalizeStoredCourseUsedLabels();
 }
 
 /** O/U + model default round from meta (see effectiveUiModelRoundFromMeta); **1** if unknown. */
@@ -2570,7 +2573,7 @@ function formatDataSizeBytes(n) {
 function metaEventVenueLabel() {
   const m = DATA.meta || {};
   const ev = m.event_name ? String(m.event_name).trim() : "";
-  const course = m.course_used ? String(m.course_used).trim() : "";
+  const course = m.course_used ? formatCourseNameForDisplay(m.course_used) : "";
   if (ev && course) return `${ev} · ${course}`;
   return ev || course || "";
 }
@@ -2586,7 +2589,7 @@ function updateStatusBar() {
   if (!el) return;
   const m = DATA.meta || {};
   const ev = m.event_name ? String(m.event_name).trim() : "";
-  const course = m.course_used ? String(m.course_used).trim() : "";
+  const course = m.course_used ? formatCourseNameForDisplay(m.course_used) : "";
   const line = metaEventVenueLabel() || "—";
   el.textContent = line;
   el.title = ev && course ? `${ev}\n${course}` : line;
@@ -7563,10 +7566,19 @@ function initCourseFitTableSortOnce() {
   updateCourseFitTableSortIndicators();
 }
 
+function enforceCourseDisplayAcronyms(label) {
+  return String(label || "")
+    .replace(/\b(tpc)\b/gi, "TPC")
+    .replace(/\(tpc\b/gi, "(TPC")
+    .replace(/\btpc-/gi, "TPC-");
+}
+
 function courseFitPrettyCourseKey(ck) {
-  return String(ck || "")
-    .trim()
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+  return enforceCourseDisplayAcronyms(
+    String(ck || "")
+      .trim()
+      .replace(/\b\w/g, (c) => c.toUpperCase()),
+  );
 }
 
 function initCourseFitSimilarListClick() {
@@ -8336,7 +8348,7 @@ function buildCourseFitTab() {
   const similar5 = similarRow ? courseFitVenue5FromCourseTableRow(similarRow) : null;
 
   const similarDisplayName = courseFitSimilarSelectedKey
-    ? courseFitSimilarSelectedKey.replace(/\b\w/g, (c) => c.toUpperCase())
+    ? courseFitPrettyCourseKey(courseFitSimilarSelectedKey)
     : "";
 
   if (capEl) capEl.textContent = venueName;
@@ -8418,7 +8430,7 @@ function buildCourseFitTab() {
         );
         if (courseFitSimilarSelectedKey === s.ck) li.classList.add("course-fit-similar-li-selected");
         li.innerHTML = `<span class="course-fit-sim-rank">${rank++}.</span><span class="course-fit-sim-name">${escapeHtml(
-          s.ck.replace(/\b\w/g, (c) => c.toUpperCase()),
+          courseFitPrettyCourseKey(s.ck),
         )}</span><span class="course-fit-sim-score">${(s.sim * 100).toFixed(0)}</span>`;
         simList.appendChild(li);
       }
@@ -8518,7 +8530,9 @@ function buildCourseFitTab() {
       .trim()
       .toLowerCase();
     void loadApproachSkillYtdJson().then((ap) => {
-      const shotVenueTitle = eventVk ? courseFitPrettyCourseKey(eventVk) : eventVenueName;
+      const shotVenueTitle = eventVk
+        ? courseFitPrettyCourseKey(eventVk)
+        : formatCourseNameForDisplay(eventVenueName);
       buildCourseFitShotBinsTable(rows, ap, shotVenueTitle, shotSearch);
     });
   }
@@ -9537,6 +9551,7 @@ function historyRoundChartDateIsFuture(row) {
 
 function sanitizePlayerHistoryPayload(payload) {
   if (!payload || typeof payload !== "object" || !payload.byDgId || typeof payload.byDgId !== "object") return payload;
+  normalizeHistoryCourseNamesInPayload(payload);
   let removed = 0;
   let liveRowsRemoved = 0;
   for (const bucket of Object.values(payload.byDgId)) {
@@ -10940,6 +10955,7 @@ function parsePropsCourseShardPayload(j) {
   const entries = [];
   for (const e of j.entries || []) {
     const row = e.row && typeof e.row === "object" ? e.row : e;
+    formatHistoryRoundCourseNameInPlace(row);
     const dgId = Math.round(num(e.dg_id ?? row?.dg_id, NaN));
     if (!Number.isFinite(dgId)) continue;
     entries.push({
@@ -11759,6 +11775,37 @@ function normCourseNameKey(raw) {
   s = s.replace(/\s+/g, " ").trim();
   const alias = COURSE_NAME_CANONICAL_KEYS[s];
   return alias || s;
+}
+
+function formatCourseNameForDisplay(raw) {
+  const k = normCourseNameKey(raw);
+  if (!k) return enforceCourseDisplayAcronyms(String(raw || "").trim());
+  return courseFitPrettyCourseKey(k);
+}
+
+function formatHistoryRoundCourseNameInPlace(r) {
+  if (!r || typeof r !== "object") return r;
+  const cn = String(r.course_name ?? "").trim();
+  if (!cn) return r;
+  const pretty = formatCourseNameForDisplay(cn);
+  if (pretty && pretty !== cn) r.course_name = pretty;
+  return r;
+}
+
+function normalizeHistoryCourseNamesInPayload(payload) {
+  if (!payload?.byDgId || typeof payload.byDgId !== "object") return;
+  for (const bucket of Object.values(payload.byDgId)) {
+    if (!bucket?.rounds) continue;
+    for (const r of bucket.rounds) formatHistoryRoundCourseNameInPlace(r);
+  }
+}
+
+function normalizeStoredCourseUsedLabels() {
+  const m = DATA.meta;
+  if (m && m.course_used) m.course_used = formatCourseNameForDisplay(m.course_used);
+  for (const p of DATA.players || []) {
+    if (p && p.course_used) p.course_used = formatCourseNameForDisplay(p.course_used);
+  }
 }
 
 /** Schedule title match + prefix / normalized fallbacks (sponsor-heavy titles vs short CSV names). */
@@ -13146,17 +13193,17 @@ function propsChartBarLayout(series, padL, innerW) {
 /** `course_name` from historical_rounds_all → JSON (only field used for “Course” in UI). */
 function propsCourseNameFromRow(r) {
   if (!r || typeof r !== "object") return "";
-  return String(r.course_name ?? "").trim();
+  return formatCourseNameForDisplay(String(r.course_name ?? "").trim());
 }
 
 function propsCourseDisplay(s) {
   const r = s && s._hist;
   if (r && typeof r === "object") {
     const c = propsCourseNameFromRow(r);
-    if (c) return courseFitPrettyCourseKey(normCourseNameKey(c));
+    if (c) return c;
   }
   const raw = String(s?.course ?? "").trim();
-  return raw ? courseFitPrettyCourseKey(normCourseNameKey(raw)) : "—";
+  return raw ? formatCourseNameForDisplay(raw) : "—";
 }
 
 function pointInPropsChartHitRegion(canvasX, canvasY) {
@@ -13941,7 +13988,7 @@ function updatePropsHoleCard() {
   for (const c of courseNames) {
     const o = document.createElement("option");
     o.value = c;
-    o.textContent = c;
+    o.textContent = formatCourseNameForDisplay(c);
     courseSel.appendChild(o);
   }
   if (prevCourse && courseNames.includes(prevCourse)) courseSel.value = prevCourse;
