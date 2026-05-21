@@ -4617,7 +4617,8 @@ function buildOuTable() {
       "No round O/U props in projections.json yet.\n\n" +
       "• Set DATAGOLF_API_KEY (Render dashboard or datagolf.local.json locally).\n" +
       "• Keep DraftKings enabled: do not set GOLF_SKIP_DK_OU=1 (omit it or use 0).\n" +
-      "• Run one of: npm run fetch:book-odds · npm run refresh · npm run perfect\n" +
+      "• Remote DK refresh: npm run push:dk-round-projections (Render URL + secret, or GitHub Actions)\n" +
+      "• Local scrape only: npm run update:dk-round-projections\n" +
       "• DraftKings needs Chromium: npx playwright install chromium (see Render build).\n" +
       "• If DK opens the wrong event, set DK_LEAGUE_URL to your league URL with ?category=round.";
     tr.appendChild(td);
@@ -4629,7 +4630,7 @@ function buildOuTable() {
     td.className = "ou-cell ou-proj-long-td ou-proj-empty-td";
     td.textContent = draftKingsRoundPropOddsAvailable()
       ? "No DraftKings lines for this golfer, market, or filter. Rows with only model lines are hidden."
-      : "No DraftKings round O/U in projections.json yet — run fetch:book-odds with DK enabled.";
+      : "No DraftKings round O/U in projections.json yet — run npm run update:dk-round-projections (or fetch:book-odds).";
     tr.appendChild(td);
     tbody.appendChild(tr);
   } else {
@@ -7580,10 +7581,125 @@ let courseFitVenueFilterKey = null;
 let courseFitVenueEventKeyTracked = "";
 let courseFitGolferDefaultApplied = false;
 let courseFitTableSortBound = false;
-let courseFitTableSort = { key: "fit", dir: -1 };
+let courseFitTableSort = { key: "archetype", dir: -1 };
+
+const COURSE_FIT_TABLE_AXIS_SHORT = Object.freeze([
+  "Drv Acc",
+  "Off Tee",
+  "Approach",
+  "Arg",
+  "Putt",
+  "Distance",
+]);
 
 function courseFitDefaultSortDir(key) {
-  return key === "golfer" || key === "category" ? 1 : -1;
+  if (key === "golfer") return 1;
+  if (key.startsWith("axis_")) return -1;
+  return -1;
+}
+
+function courseFitAxisStatsAcrossField(vals) {
+  const ff = vals.filter(Number.isFinite);
+  if (!ff.length) return { mean: 0, std: 1 };
+  const mean = ff.reduce((a, b) => a + b, 0) / ff.length;
+  const variance = ff.reduce((a, v) => a + (v - mean) ** 2, 0) / ff.length;
+  const std = Math.sqrt(variance) || 1e-6;
+  return { mean, std };
+}
+
+function courseFitZScore(v, stats) {
+  if (!Number.isFinite(v) || !stats) return NaN;
+  return (v - stats.mean) / stats.std;
+}
+
+/** Per radar axis: venue emphasis × player skill on that axis (same geometry as the chart). */
+function courseFitArchetypeAxisScores(tour5, venue5, player5) {
+  const n = Math.min(
+    tour5?.length || 0,
+    venue5?.length || 0,
+    player5?.length || 0,
+    COURSE_FIT_RADAR_SPOKE_LABELS.length,
+  );
+  const scores = [];
+  for (let i = 0; i < n; i++) {
+    const stress = venue5[i] - tour5[i];
+    const skill = player5[i] - 0.5;
+    scores.push(stress * skill);
+  }
+  while (scores.length < COURSE_FIT_RADAR_SPOKE_LABELS.length) scores.push(0);
+  return scores;
+}
+
+function courseFitArchetypeFitTotal(axisScores) {
+  return (axisScores || []).reduce((a, b) => a + (Number.isFinite(b) ? b : 0), 0) * 2.4;
+}
+
+/** Field z-scores per radar axis + combined archetype fit for the Who-fits table. */
+function courseFitArchetypeTableRows(rows, tour5, venue5) {
+  const nAx = COURSE_FIT_RADAR_SPOKE_LABELS.length;
+  const raw = rows.map((r) => {
+    const playerN = courseFitPlayerRadarVectorMerged(rows, r);
+    const axisScores = courseFitArchetypeAxisScores(tour5, venue5, playerN);
+    const archetypeRaw = axisScores.reduce((a, b) => a + b, 0);
+    return { r, axisScores, archetypeRaw, archetypeFit: courseFitArchetypeFitTotal(axisScores) };
+  });
+  const axisStats = Array.from({ length: nAx }, (_, j) =>
+    courseFitAxisStatsAcrossField(raw.map((x) => x.axisScores[j])),
+  );
+  const archStats = courseFitAxisStatsAcrossField(raw.map((x) => x.archetypeRaw));
+  return raw.map((x) => ({
+    ...x,
+    axisZ: x.axisScores.map((v, j) => courseFitZScore(v, axisStats[j])),
+    archetypeZ: courseFitZScore(x.archetypeRaw, archStats),
+  }));
+}
+
+function courseFitTableHeadColSpan() {
+  return 2 + COURSE_FIT_RADAR_SPOKE_LABELS.length + 4;
+}
+
+function ensureCourseFitTableHead() {
+  const table = document.getElementById("table-course-fit");
+  const thead = table?.querySelector("thead");
+  if (!thead) return;
+  const sortInd =
+    '<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span>';
+  const mkTh = (cls, sortKey, label, title) => {
+    const t = title ? ` title="${escapeHtml(title)}"` : "";
+    return `<th class="${cls} sortable" scope="col" data-course-fit-sort="${sortKey}" aria-sort="none"${t}>${escapeHtml(
+      label,
+    )}${sortInd}</th>`;
+  };
+  let hdr =
+    `<tr>${mkTh("", "golfer", "Golfer", "All players in the current tournament field")}`;
+  for (let i = 0; i < COURSE_FIT_RADAR_SPOKE_LABELS.length; i++) {
+    const full = COURSE_FIT_RADAR_SPOKE_LABELS[i];
+    const short = COURSE_FIT_TABLE_AXIS_SHORT[i] || full;
+    hdr += mkTh(
+      "num",
+      `axis_${i}`,
+      short,
+      `${full} — z-score vs field on archetype alignment (venue emphasis × skill)`,
+    );
+  }
+  hdr += mkTh(
+    "num",
+    "archetype",
+    "Archetype",
+    "Combined course-archetype fit (sum of axis alignments; higher = better match to this layout)",
+  );
+  hdr += mkTh("num course-fit-out-th", "win", "Winner", "Best available sportsbook winner odds");
+  hdr += mkTh("num course-fit-out-th", "top_5", "Top 5", "Best available sportsbook top 5 odds");
+  hdr += mkTh("num course-fit-out-th", "top_10", "Top 10", "Best available sportsbook top 10 odds");
+  hdr += mkTh("num course-fit-out-th", "top_20", "Top 20", "Best available sportsbook top 20 odds");
+  hdr += "</tr>";
+  thead.innerHTML = hdr;
+}
+
+function formatCourseFitZCell(z) {
+  if (!Number.isFinite(z)) return { text: "—", cls: "num" };
+  const cls = z >= 0.05 ? "num ev-pos" : z <= -0.05 ? "num ev-neg" : "num";
+  return { text: `${z >= 0 ? "+" : ""}${z.toFixed(2)}`, cls };
 }
 
 function updateCourseFitTableSortIndicators() {
@@ -7604,7 +7720,8 @@ function initCourseFitTableSortOnce() {
   const table = document.getElementById("table-course-fit");
   if (!table || courseFitTableSortBound) return;
   courseFitTableSortBound = true;
-  table.querySelector("thead")?.addEventListener("click", (ev) => {
+  ensureCourseFitTableHead();
+  table.addEventListener("click", (ev) => {
     const th = ev.target.closest("th.sortable[data-course-fit-sort]");
     if (!th || !table.contains(th)) return;
     const key = String(th.getAttribute("data-course-fit-sort") || "");
@@ -8483,27 +8600,21 @@ function buildCourseFitTab() {
     }
   }
 
-  const venueEmphasisAxes = courseFitVenueEmphasisAxisIndices(tour5, venue5);
+  ensureCourseFitTableHead();
 
   const search = String(document.getElementById("course-fit-search")?.value || "")
     .trim()
     .toLowerCase();
-  const ranked = [];
-  for (const r of rows) {
-    const playerN = courseFitPlayerRadarVectorMerged(rows, r);
-    const { cat, fit } = courseFitPlayerCatAndFitOnAxes(tour5, venue5, playerN, venueEmphasisAxes);
-    ranked.push({ r, cat, fit });
-  }
-  ranked.sort((a, b) => b.fit - a.fit);
+  const archetypeRows = courseFitArchetypeTableRows(rows, tour5, venue5);
 
   tbody.innerHTML = "";
   if (theadHeading) {
-    theadHeading.textContent = `Who fits ${venueName}?`;
+    theadHeading.textContent = `Field vs ${venueName} archetype`;
   }
 
   const marketKeys = ["win", "top_5", "top_10", "top_20"];
   const displayRows = [];
-  for (const row of ranked) {
+  for (const row of archetypeRows) {
     const nm = displayGolferName(String(row.r.player_name || ""));
     if (search && !nm.toLowerCase().includes(search)) continue;
     const dgId = Math.round(num(row.r.dg_id, NaN));
@@ -8512,16 +8623,30 @@ function buildCourseFitTab() {
     displayRows.push({ ...row, nm, dgId, odds });
   }
 
-  const sortKey = String(courseFitTableSort.key || "fit");
+  let sortKey = String(courseFitTableSort.key || "archetype");
+  if (sortKey === "fit" || sortKey === "category") sortKey = "archetype";
   const sortDir = courseFitTableSort.dir > 0 ? 1 : -1;
+  const axisSortMatch = /^axis_(\d+)$/.exec(sortKey);
   displayRows.sort((a, b) => {
     if (sortKey === "golfer") {
       const c = a.nm.localeCompare(b.nm);
-      return c * sortDir || b.fit - a.fit;
+      return c * sortDir || (b.archetypeZ - a.archetypeZ) * sortDir;
     }
-    if (sortKey === "category") {
-      const c = String(a.cat || "").localeCompare(String(b.cat || ""));
-      return c * sortDir || b.fit - a.fit;
+    if (axisSortMatch) {
+      const j = parseInt(axisSortMatch[1], 10);
+      const av = a.axisZ[j];
+      const bv = b.axisZ[j];
+      const af = Number.isFinite(av);
+      const bf = Number.isFinite(bv);
+      if (af !== bf) return af ? -1 : 1;
+      if (af && av !== bv) return (av - bv) * sortDir;
+      return (b.archetypeZ - a.archetypeZ) || a.nm.localeCompare(b.nm);
+    }
+    if (sortKey === "archetype") {
+      const az = a.archetypeZ;
+      const bz = b.archetypeZ;
+      if (Number.isFinite(az) && Number.isFinite(bz) && az !== bz) return (az - bz) * sortDir;
+      return (a.archetypeFit - b.archetypeFit) * sortDir || a.nm.localeCompare(b.nm);
     }
     if (marketKeys.includes(sortKey)) {
       const av = a.odds?.[sortKey]?.am;
@@ -8530,34 +8655,40 @@ function buildCourseFitTab() {
       const bf = Number.isFinite(bv);
       if (af !== bf) return af ? -1 : 1;
       if (af && av !== bv) return (av - bv) * sortDir;
-      return b.fit - a.fit || a.nm.localeCompare(b.nm);
+      return (b.archetypeZ - a.archetypeZ) || a.nm.localeCompare(b.nm);
     }
-    const fitCmp = (a.fit - b.fit) * sortDir;
-    return fitCmp || a.nm.localeCompare(b.nm);
+    return (b.archetypeZ - a.archetypeZ) || a.nm.localeCompare(b.nm);
   });
 
   if (!displayRows.length) {
     const tr = document.createElement("tr");
     const td = document.createElement("td");
-    td.colSpan = 7;
+    td.colSpan = courseFitTableHeadColSpan();
     td.className = "text-muted";
-    td.textContent = "No players match this search.";
+    td.textContent = rows.length
+      ? "No players match this search."
+      : "No players in the field for this round.";
     tr.appendChild(td);
     tbody.appendChild(tr);
   } else {
-    for (const row of displayRows.slice(0, 20)) {
+    for (const row of displayRows) {
       const tr = document.createElement("tr");
       const tdN = document.createElement("td");
       tdN.textContent = row.nm;
-      const tdC = document.createElement("td");
-      tdC.className = row.cat && row.cat !== "—" ? "num ev-pos" : "num";
-      tdC.textContent = row.cat;
-      const tdF = document.createElement("td");
-      tdF.className = `num ${row.fit >= 0 ? "ev-pos" : "ev-neg"}`;
-      tdF.textContent = `${row.fit >= 0 ? "+" : ""}${row.fit.toFixed(2)}`;
       tr.appendChild(tdN);
-      tr.appendChild(tdC);
-      tr.appendChild(tdF);
+      for (let j = 0; j < COURSE_FIT_RADAR_SPOKE_LABELS.length; j++) {
+        const tdZ = document.createElement("td");
+        const cell = formatCourseFitZCell(row.axisZ[j]);
+        tdZ.className = cell.cls;
+        tdZ.textContent = cell.text;
+        tr.appendChild(tdZ);
+      }
+      const tdA = document.createElement("td");
+      const archCell = formatCourseFitZCell(row.archetypeZ);
+      tdA.className = archCell.cls;
+      tdA.title = `Raw fit ${row.archetypeFit >= 0 ? "+" : ""}${row.archetypeFit.toFixed(2)}`;
+      tdA.textContent = archCell.text;
+      tr.appendChild(tdA);
       for (const mk of marketKeys) {
         const tdO = document.createElement("td");
         tdO.className = "num course-fit-out-td";

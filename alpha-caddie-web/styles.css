@@ -1014,6 +1014,13 @@ body {
 }
 .course-fit-table-wrap {
   margin-top: 4px;
+  overflow-x: auto;
+}
+.course-fit-table thead th.num {
+  font-size: 0.72rem;
+  white-space: nowrap;
+  padding-left: 6px;
+  padding-right: 6px;
 }
 .course-fit-table thead th.course-fit-out-th {
   font-size: 0.72rem;

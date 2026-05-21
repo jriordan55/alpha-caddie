@@ -1,0 +1,58 @@
+# Refresh DraftKings round O/U in projections.json and push to this repo (no local machine).
+# Run manually: Actions → "DraftKings round projections" → Run workflow
+# Or: npm run push:dk-round-projections (uses gh CLI when GOLF_ALPHA_CADDIE_URL is unset)
+
+name: DraftKings round projections
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Every 2 hours (UTC) — disable in GitHub UI if too frequent
+    - cron: "0 */2 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  refresh-and-push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: alpha-caddie-web/package-lock.json
+
+      - name: Install dependencies
+        working-directory: alpha-caddie-web
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        working-directory: alpha-caddie-web
+        run: npx playwright install --with-deps chromium
+
+      - name: Scrape DraftKings round props
+        env:
+          GOLF_MODEL_DIR: ${{ github.workspace }}
+          GOLF_SKIP_PROPS_CSV: "1"
+          DK_LEAGUE_URL: ${{ secrets.DK_LEAGUE_URL }}
+          DK_SITE_SEGMENT: ${{ secrets.DK_SITE_SEGMENT }}
+          DK_LEAGUE_ID: ${{ secrets.DK_LEAGUE_ID }}
+        working-directory: alpha-caddie-web
+        run: node scripts/update-dk-round-projections.mjs
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add alpha-caddie-web/projections.json website/public/data/projections.json alpha-caddie-web/data/dk_round_projection_audit.csv 2>/dev/null || true
+          git add alpha-caddie-web/projections.json website/public/data/projections.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "chore(data): DraftKings round projections [skip ci]"
+          git push

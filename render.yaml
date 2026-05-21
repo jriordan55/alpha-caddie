@@ -18,6 +18,9 @@
 # Historical Trends: GOLF_HISTORICAL_ROUNDS_FULL_HISTORY=1 merges PGA from 2004→current (+ LIV) — slow first boot; use RECENT_FETCH caps instead if deploy times out (unset FULL_HISTORY and set GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS).
 # Week rollover: fetch-book-odds also compares datagolf_field_week_key vs /field-updates (skip inline: GOLF_SKIP_INLINE_FETCH_DG_ON_EVENT_MISMATCH=1).
 #
+# Remote DK refresh (no local git): set GOLF_ADMIN_REFRESH_SECRET on Render, then locally:
+#   GOLF_ALPHA_CADDIE_URL=https://<your-service>.onrender.com GOLF_ADMIN_REFRESH_SECRET=<same> npm run push:dk-round-projections
+#
 # If the Round projections table is empty: delete GOLF_SKIP_DK_OU in the Render dashboard (env vars override this file).
 # With skip on, fetch-book-odds may not merge props; the UI falls back to csv/model_fallback rows when no DK tags exist.
 #

@@ -401,37 +401,7 @@
             </label>
             <div class="table-wrap course-fit-table-wrap">
               <table class="data-table course-fit-table" id="table-course-fit">
-                <thead>
-                  <tr>
-                    <th class="sortable" scope="col" data-course-fit-sort="golfer" aria-sort="none">
-                      Golfer<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span>
-                    </th>
-                    <th class="num sortable" scope="col" data-course-fit-sort="category" aria-sort="none">
-                      Category<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span>
-                    </th>
-                    <th
-                      class="num sortable"
-                      scope="col"
-                      title="Combined edge on the 1–2 layout-weighted skills vs tour average. Category shows which of those skills is that player’s stronger edge."
-                      data-course-fit-sort="fit"
-                      aria-sort="descending"
-                    >
-                      Fit (Δ SG)<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down active">▼</span></span>
-                    </th>
-                    <th class="num course-fit-out-th sortable" scope="col" title="Best available API sportsbook winner odds." data-course-fit-sort="win" aria-sort="none">
-                      Winner<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span>
-                    </th>
-                    <th class="num course-fit-out-th sortable" scope="col" title="Best available API sportsbook top 5 odds." data-course-fit-sort="top_5" aria-sort="none">
-                      Top 5<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span>
-                    </th>
-                    <th class="num course-fit-out-th sortable" scope="col" title="Best available API sportsbook top 10 odds." data-course-fit-sort="top_10" aria-sort="none">
-                      Top 10<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span>
-                    </th>
-                    <th class="num course-fit-out-th sortable" scope="col" title="Best available API sportsbook top 20 odds." data-course-fit-sort="top_20" aria-sort="none">
-                      Top 20<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span>
-                    </th>
-                  </tr>
-                </thead>
+                <thead><!-- headers built in app.js (radar z-scores + archetype) --></thead>
                 <tbody></tbody>
               </table>
             </div>
@@ -1350,8 +1320,8 @@
           <dd>Each spoke is a skill area (for example driving or putting). The shapes show <strong>Field Avg</strong> (dashed baseline), the <strong>selected course</strong> profile (green), an optional <strong>comparison course</strong> from the similarity list (blue), and your <strong>selected golfer</strong> (gold). Larger separation means a bigger gap between that golfer and the baseline on that spoke.</dd>
           <dt>Course similarity</dt>
           <dd>A ranked list of other venues whose historical shape is closest to this one. <strong>Click</strong> a row to highlight it and draw that course’s profile on the radar; click again to clear.</dd>
-          <dt>Who fits…?</dt>
-          <dd>The title names the one or two skills this layout stresses most vs tour average. Each row’s <strong>Category</strong> is <strong>one</strong> of those skills — whichever gives that player the larger positive edge (or “—” if neither is positive). <strong>Fit</strong> is still the combined edge on both emphasized axes so you can sort who matches the course overall.</dd>
+          <dt>Field vs archetype</dt>
+          <dd>Every player in the current field. Each radar spoke column is a <strong>z-score</strong> for how well that golfer matches this course’s emphasis on that skill (venue vs tour × skill vs field). <strong>Archetype</strong> is the combined z-score across all spokes — higher means a better overall match to this layout. Hover Archetype for the raw fit value.</dd>
         </dl>
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-cf-shots-h">
