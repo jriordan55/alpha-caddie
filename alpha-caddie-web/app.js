@@ -7581,7 +7581,7 @@ let courseFitVenueFilterKey = null;
 let courseFitVenueEventKeyTracked = "";
 let courseFitGolferDefaultApplied = false;
 let courseFitTableSortBound = false;
-let courseFitTableSort = { key: "archetype", dir: -1 };
+let courseFitTableSort = { key: "rating", dir: -1 };
 
 const COURSE_FIT_TABLE_AXIS_SHORT = Object.freeze([
   "Drv Acc",
@@ -7634,7 +7634,7 @@ function courseFitArchetypeFitTotal(axisScores) {
   return (axisScores || []).reduce((a, b) => a + (Number.isFinite(b) ? b : 0), 0) * 2.4;
 }
 
-/** Field z-scores per radar axis + combined archetype fit for the Who-fits table. */
+/** Field z-scores per radar axis + combined course rating for the ratings table. */
 function courseFitArchetypeTableRows(rows, tour5, venue5) {
   const nAx = COURSE_FIT_RADAR_SPOKE_LABELS.length;
   const raw = rows.map((r) => {
@@ -7679,14 +7679,14 @@ function ensureCourseFitTableHead() {
       "num",
       `axis_${i}`,
       short,
-      `${full} — z-score vs field on archetype alignment (venue emphasis × skill)`,
+      `${full} — course-fit rating vs field on this spoke (not strokes gained)`,
     );
   }
   hdr += mkTh(
     "num",
-    "archetype",
-    "Archetype",
-    "Combined course-archetype fit (sum of axis alignments; higher = better match to this layout)",
+    "rating",
+    "Course rating",
+    "Overall course-fit rating for this venue (combined across all radar spokes; not strokes gained)",
   );
   hdr += mkTh("num course-fit-out-th", "win", "Winner", "Best available sportsbook winner odds");
   hdr += mkTh("num course-fit-out-th", "top_5", "Top 5", "Best available sportsbook top 5 odds");
@@ -8609,7 +8609,7 @@ function buildCourseFitTab() {
 
   tbody.innerHTML = "";
   if (theadHeading) {
-    theadHeading.textContent = `Field vs ${venueName} archetype`;
+    theadHeading.textContent = `Course ratings — ${venueName}`;
   }
 
   const marketKeys = ["win", "top_5", "top_10", "top_20"];
@@ -8623,8 +8623,8 @@ function buildCourseFitTab() {
     displayRows.push({ ...row, nm, dgId, odds });
   }
 
-  let sortKey = String(courseFitTableSort.key || "archetype");
-  if (sortKey === "fit" || sortKey === "category") sortKey = "archetype";
+  let sortKey = String(courseFitTableSort.key || "rating");
+  if (sortKey === "fit" || sortKey === "category" || sortKey === "archetype") sortKey = "rating";
   const sortDir = courseFitTableSort.dir > 0 ? 1 : -1;
   const axisSortMatch = /^axis_(\d+)$/.exec(sortKey);
   displayRows.sort((a, b) => {
@@ -8642,7 +8642,7 @@ function buildCourseFitTab() {
       if (af && av !== bv) return (av - bv) * sortDir;
       return (b.archetypeZ - a.archetypeZ) || a.nm.localeCompare(b.nm);
     }
-    if (sortKey === "archetype") {
+    if (sortKey === "rating") {
       const az = a.archetypeZ;
       const bz = b.archetypeZ;
       if (Number.isFinite(az) && Number.isFinite(bz) && az !== bz) return (az - bz) * sortDir;
@@ -8681,12 +8681,13 @@ function buildCourseFitTab() {
         const cell = formatCourseFitZCell(row.axisZ[j]);
         tdZ.className = cell.cls;
         tdZ.textContent = cell.text;
+        tdZ.title = `${COURSE_FIT_RADAR_SPOKE_LABELS[j]} rating vs field (not strokes gained)`;
         tr.appendChild(tdZ);
       }
       const tdA = document.createElement("td");
       const archCell = formatCourseFitZCell(row.archetypeZ);
       tdA.className = archCell.cls;
-      tdA.title = `Raw fit ${row.archetypeFit >= 0 ? "+" : ""}${row.archetypeFit.toFixed(2)}`;
+      tdA.title = `Composite course-fit score ${row.archetypeFit >= 0 ? "+" : ""}${row.archetypeFit.toFixed(2)} (rating scale, not strokes gained)`;
       tdA.textContent = archCell.text;
       tr.appendChild(tdA);
       for (const mk of marketKeys) {

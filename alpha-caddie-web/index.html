@@ -394,14 +394,14 @@
             </div>
           </div>
           <div class="leaderboard-card course-fit-table-card">
-            <h3 class="course-fit-table-title" id="course-fit-table-heading">Who fits this venue?</h3>
+            <h3 class="course-fit-table-title" id="course-fit-table-heading">Course ratings</h3>
             <label class="course-fit-search-wrap">
               <span class="course-fit-search-icon" aria-hidden="true">⌕</span>
               <input type="search" id="course-fit-search" class="course-fit-search" placeholder="Find golfers…" autocomplete="off" />
             </label>
             <div class="table-wrap course-fit-table-wrap">
               <table class="data-table course-fit-table" id="table-course-fit">
-                <thead><!-- headers built in app.js (radar z-scores + archetype) --></thead>
+                <thead><!-- headers built in app.js (per-spoke + course rating) --></thead>
                 <tbody></tbody>
               </table>
             </div>
@@ -1307,7 +1307,7 @@
       </p>
       <section class="ev-help-section" aria-labelledby="tab-help-cf-subtabs-h">
         <h4 class="ev-devig-section-title" id="tab-help-cf-subtabs-h">Two views</h4>
-        <p class="text-muted ev-help-devig-lede"><strong>Adjustments</strong> — Radar chart, course similarity, and a ranked table. <strong>Predicted shot distance</strong> — A grid of how many shots per round the model expects in each distance bucket (putting, rough approach, fairway approach).</p>
+        <p class="text-muted ev-help-devig-lede"><strong>Adjustments</strong> — Radar chart, course similarity, and the <strong>course ratings</strong> table (full field). <strong>Predicted shot distance</strong> — A grid of how many shots per round the model expects in each distance bucket (putting, rough approach, fairway approach).</p>
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-cf-adj-h">
         <h4 class="ev-devig-section-title" id="tab-help-cf-adj-h">Adjustments</h4>
@@ -1317,11 +1317,32 @@
           <dt>Course filter</dt>
           <dd>Choose which venue’s historical profile drives the green venue curve and the similarity list; it defaults to this week’s course from projections.</dd>
           <dt>Radar</dt>
-          <dd>Each spoke is a skill area (for example driving or putting). The shapes show <strong>Field Avg</strong> (dashed baseline), the <strong>selected course</strong> profile (green), an optional <strong>comparison course</strong> from the similarity list (blue), and your <strong>selected golfer</strong> (gold). Larger separation means a bigger gap between that golfer and the baseline on that spoke.</dd>
+          <dd>Each spoke is a skill area (Driving Accuracy, Off Tee, Approach, Around Green, Putting, Driving Distance). The shapes show <strong>Field Avg</strong> (dashed baseline), the <strong>selected course</strong> profile (green), an optional <strong>comparison course</strong> from the similarity list (blue), and your <strong>selected golfer</strong> (gold). The chart uses normalized profiles (0–1), not strokes gained.</dd>
           <dt>Course similarity</dt>
           <dd>A ranked list of other venues whose historical shape is closest to this one. <strong>Click</strong> a row to highlight it and draw that course’s profile on the radar; click again to clear.</dd>
-          <dt>Field vs archetype</dt>
-          <dd>Every player in the current field. Each radar spoke column is a <strong>z-score</strong> for how well that golfer matches this course’s emphasis on that skill (venue vs tour × skill vs field). <strong>Archetype</strong> is the combined z-score across all spokes — higher means a better overall match to this layout. Hover Archetype for the raw fit value.</dd>
+        </dl>
+      </section>
+      <section class="ev-help-section" aria-labelledby="tab-help-cf-ratings-h">
+        <h4 class="ev-devig-section-title" id="tab-help-cf-ratings-h">Course ratings table</h4>
+        <p class="text-muted ev-help-devig-lede">
+          Lists <strong>every player</strong> in the current tournament field. All numeric cells are <strong>course-fit ratings</strong> (field-relative scores). They are <strong>not strokes gained</strong> and are not the same units as SG columns elsewhere in the app.
+        </p>
+        <dl class="ev-help-dl">
+          <dt>Golfer</dt>
+          <dd>Name only. Use the search box to filter.</dd>
+          <dt>Drv Acc, Off Tee, Approach, Arg, Putt, Distance</dt>
+          <dd>
+            One column per radar spoke. Each value is that player’s <strong>category rating</strong> for how well their game matches this course’s emphasis on that skill vs the rest of the field.
+            <strong>0</strong> ≈ average fit; <strong>positive</strong> = better than average for this layout; <strong>negative</strong> = worse. Computed from venue vs tour stress × where the player sits vs the field on that dimension, then z-scored across players in the table.
+          </dd>
+          <dt>Course rating</dt>
+          <dd>
+            <strong>Overall</strong> course-fit rating: combines all six spoke ratings into one number (also z-scored vs the field). Higher = stronger match to this venue’s profile. The table loads sorted by this column (best fits first). Hover a cell for the underlying composite score (still a rating, not SG).
+          </dd>
+          <dt>Winner, Top 5, Top 10, Top 20</dt>
+          <dd>Best available sportsbook outright prices for that player (separate from the rating columns).</dd>
+          <dt>Sort</dt>
+          <dd>Click any column header to sort. Green/red coloring only highlights positive vs negative ratings, not EV or SG.</dd>
         </dl>
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-cf-shots-h">
