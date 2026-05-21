@@ -1578,41 +1578,19 @@ body {
   text-align: left;
 }
 #table-ou.table-ou-projections .ou-proj-th-mu,
-#table-ou.table-ou-projections .ou-proj-td-mu,
-#table-ou.table-ou-projections .ou-proj-th-mkt-rating,
-#table-ou.table-ou-projections .ou-proj-td-mkt-rating,
-#table-ou.table-ou-projections .ou-proj-th-line,
-#table-ou.table-ou-projections .ou-proj-td-line,
-#table-ou.table-ou-projections .ou-proj-th-odds,
-#table-ou.table-ou-projections .ou-proj-td-odds,
-#table-ou.table-ou-projections .ou-proj-th-pmod,
-#table-ou.table-ou-projections .ou-proj-td-pmod,
-#table-ou.table-ou-projections .ou-proj-th-edge,
-#table-ou.table-ou-projections .ou-proj-td-edge {
-  width: 3.35rem;
-  min-width: 3.35rem;
-  max-width: 3.35rem;
-  padding-left: 6px;
-  padding-right: 6px;
-  box-sizing: border-box;
-  text-align: right;
-  white-space: nowrap;
-}
-#table-ou.table-ou-projections .ou-proj-th-mu,
 #table-ou.table-ou-projections .ou-proj-td-mu {
+  min-width: 3rem;
   font-weight: 800;
 }
 #table-ou.table-ou-projections .ou-proj-th-mkt-rating,
 #table-ou.table-ou-projections .ou-proj-td-mkt-rating {
+  min-width: 4.5rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
-#table-ou.table-ou-projections thead th.ou-proj-th-mkt-rating {
-  font-size: 0.68rem;
-  letter-spacing: 0.06em;
-}
 #table-ou.table-ou-projections .ou-proj-th-line,
 #table-ou.table-ou-projections .ou-proj-td-line {
+  min-width: 3rem;
   color: #f4ca3c;
   font-weight: 800;
 }
@@ -1656,10 +1634,16 @@ body {
 }
 #table-ou.table-ou-projections .ou-proj-th-odds,
 #table-ou.table-ou-projections .ou-proj-td-odds {
+  min-width: 3.5rem;
   font-weight: 700;
+}
+#table-ou.table-ou-projections .ou-proj-th-pmod,
+#table-ou.table-ou-projections .ou-proj-td-pmod {
+  min-width: 4.25rem;
 }
 #table-ou.table-ou-projections .ou-proj-th-edge,
 #table-ou.table-ou-projections .ou-proj-td-edge {
+  min-width: 4rem;
   font-weight: 800;
 }
 #table-ou.table-ou-projections td.ou-proj-td-edge.pos { color: #1ecf77; }

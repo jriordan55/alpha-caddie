@@ -2689,6 +2689,48 @@ function ouMarketRatingOpportunities(mKey) {
   return null;
 }
 
+const OU_MARKET_RATING_PLAYER_MIN_ROUNDS = 4;
+const OU_MARKET_RATING_PLAYER_MAX_ROUNDS = 24;
+
+function ouMarketRatingHistoryStatKey(mKey) {
+  if (mKey === "Total score") return "total";
+  if (mKey === "Birdies") return "birdies";
+  if (mKey === "Pars") return "pars";
+  if (mKey === "Bogeys") return "bogeys";
+  if (mKey === "GIR") return "gir";
+  if (mKey === "Fairways hit") return "fairways";
+  return "total";
+}
+
+/** Completed-round sample for market rating (prefer 2025–2026 when enough rounds exist). */
+function ouMarketRatingPlayerRounds(player) {
+  const id = Math.round(num(player?.dg_id, NaN));
+  if (!Number.isFinite(id)) return [];
+  const all = historyRoundsChronoNewestFirst(id).filter((r) => historyRoundCountsAsActual(r));
+  const y2025 = all.filter((r) => {
+    const y = parseInt(String(r.year ?? r.season ?? ""), 10);
+    return Number.isFinite(y) && y >= 2025 && y <= 2026;
+  });
+  const pool =
+    y2025.length >= OU_MARKET_RATING_PLAYER_MIN_ROUNDS ? y2025 : all;
+  return pool.slice(0, OU_MARKET_RATING_PLAYER_MAX_ROUNDS);
+}
+
+/** Player historical average for a market (counts / strokes), not the round projection μ. */
+function ouPlayerHistoricalAvgForMarket(market, player) {
+  const mKey = ouModelMarketKey(market) || "Total score";
+  const rounds = ouMarketRatingPlayerRounds(player);
+  if (rounds.length < OU_MARKET_RATING_PLAYER_MIN_ROUNDS) return NaN;
+  const statKey = ouMarketRatingHistoryStatKey(mKey);
+  const vals = [];
+  for (const r of rounds) {
+    const v = actualForRoundRow(statKey, r);
+    if (Number.isFinite(v)) vals.push(v);
+  }
+  if (vals.length < OU_MARKET_RATING_PLAYER_MIN_ROUNDS) return NaN;
+  return vals.reduce((a, b) => a + b, 0) / vals.length;
+}
+
 /** Normalize baked benchmarks (rate for GIR/FW; legacy count rows → rate). */
 function ouNormalizePgaTourBenchmark(raw, mKey) {
   if (!raw) return null;
@@ -2717,11 +2759,11 @@ function ouPgaTourBenchmarkForMarket(market) {
 }
 
 /**
- * Z-score vs PGA Tour average: strokes/counts in raw units; GIR/FW as rate per opportunity (18 / course FW holes).
+ * Z-score: player historical average vs PGA Tour average (strokes/counts; GIR/FW as rate per opportunity).
  */
-function ouMarketRatingZ(market, projectedMean) {
+function ouMarketRatingZ(market, playerAvg) {
   const mKey = ouModelMarketKey(market) || "Total score";
-  const mu = num(projectedMean, NaN);
+  const mu = num(playerAvg, NaN);
   if (!Number.isFinite(mu)) return NaN;
   const b = ouPgaTourBenchmarkForMarket(market);
   if (!b) return NaN;
@@ -2765,16 +2807,16 @@ function ouMarketRatingTourAvgDisplay(market, bench) {
   return ouMarketRatingFormatValue(market, bench.mean, bench.unit);
 }
 
-function ouMarketRatingTitle(market, mu, z) {
+function ouMarketRatingTitle(market, playerAvg, z) {
   const b = ouPgaTourBenchmarkForMarket(market);
   const yrs = ouPgaTourBenchmarkYearLabel();
   const label = ouPropsCanonicalMarket(market);
-  if (!b || !Number.isFinite(mu) || !Number.isFinite(z)) {
-    return `Market rating vs PGA Tour average (${yrs})`;
+  if (!b || !Number.isFinite(playerAvg) || !Number.isFinite(z)) {
+    return `Market rating: player avg vs PGA Tour avg (${yrs})`;
   }
-  const playerStr = ouMarketRatingFormatValue(market, mu, b.unit === "rate" ? "count" : b.unit);
+  const playerStr = ouMarketRatingFormatValue(market, playerAvg, b.unit === "rate" ? "count" : b.unit);
   const tourStr = ouMarketRatingTourAvgDisplay(market, b);
-  return `Z-score vs PGA Tour ${yrs} avg (${label}: ${playerStr} vs tour ${tourStr})`;
+  return `Z-score vs PGA Tour ${yrs} (${label}: player avg ${playerStr} vs tour avg ${tourStr})`;
 }
 
 /** Model O/U tab market order; displayed columns are dynamic from live DK props. */
@@ -4488,7 +4530,7 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
   const seen = new Set();
   const fieldIndex = buildOuProjectionFieldIndex(players);
   const hasDkLines = draftKingsRoundPropsOnly().length > 0;
-  const pushSides = (player, col, colIdx, mu, pick) => {
+  const pushSides = (player, col, colIdx, mu, pick, histPlayerOpt) => {
     const line = enforceHalfLine(num(pick?.line, NaN));
     if (!Number.isFinite(line)) return;
     const id = Math.round(num(player.dg_id, NaN));
@@ -4497,9 +4539,11 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
       Number.isFinite(id) && id > 0 ? `${id}|${col.label}|${line}` : `nm:${nameKey}|${col.label}|${line}`;
     if (seen.has(sig)) return;
     seen.add(sig);
-    const marketRatingZ = ouMarketRatingZ(col.market, mu);
+    const histPlayer = histPlayerOpt || player;
+    const playerAvg = ouPlayerHistoricalAvgForMarket(col.market, histPlayer);
+    const marketRatingZ = ouMarketRatingZ(col.market, playerAvg);
     for (const side of ["over", "under"]) {
-      out.push({ player, col, colIdx, side, mu, pick, marketRatingZ });
+      out.push({ player, col, colIdx, side, mu, pick, marketRatingZ, playerAvg });
     }
   };
 
@@ -4519,7 +4563,7 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
         under: num(r.under_odds, NaN),
         source: "draftkings",
       };
-      pushSides(player, col, colIdx, mu, pick);
+      pushSides(player, col, colIdx, mu, pick, fieldPlayer);
     }
   }
 
@@ -4530,7 +4574,7 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
       let pick = chooseOuPropLineForProjection(col.market, player, mu, { dkOnly: hasDkLines });
       if (!pick && !hasDkLines) pick = ouSyntheticModelPick(col.market, player, mu);
       if (!pick) continue;
-      pushSides(player, col, colIdx, mu, pick);
+      pushSides(player, col, colIdx, mu, pick, player);
     }
   }
 
@@ -4840,7 +4884,7 @@ function buildOuTable() {
     ["pr-market", "Market", "sortable ou-proj-long-th ou-proj-th-market"],
     ["pr-side", "Side", "sortable ou-proj-long-th num ou-proj-th-side"],
     ["pr-mu", "Proj", "sortable ou-proj-long-th num ou-proj-th-mu"],
-    ["pr-mkt-rating", "Mkt", "sortable ou-proj-long-th num ou-proj-th-mkt-rating"],
+    ["pr-mkt-rating", "Market rating", "sortable ou-proj-long-th num ou-proj-th-mkt-rating"],
     ["pr-line", "Line", "sortable ou-proj-long-th num ou-proj-th-line"],
     ["", "Book", "ou-proj-long-th num ou-proj-th-book"],
     ["pr-odds", "Odds", "sortable ou-proj-long-th num ou-proj-th-odds"],
@@ -4853,7 +4897,6 @@ function buildOuTable() {
     if (key) {
       th.dataset.sortKey = key;
       th.innerHTML = `${label}${sortInd}`;
-      if (key === "pr-mkt-rating") th.title = "Market rating (z vs PGA Tour 2025–2026)";
     } else {
       th.textContent = label;
       th.title = "DraftKings";
@@ -4931,7 +4974,7 @@ function buildOuTable() {
   for (const r of flatRows) {
     const tr = document.createElement("tr");
     tr.className = "ou-proj-long-tr ou-proj-data-row";
-    const { player, col, side, mu, pick, marketRatingZ } = r;
+    const { player, col, side, mu, pick, marketRatingZ, playerAvg } = r;
     const rawName = String(player.player_name || "");
     const expandKey = ouProjMakeExpandKey(rawName, col.label, side);
     tr.dataset.expandKey = expandKey;
@@ -4979,7 +5022,7 @@ function buildOuTable() {
     mktRatingTd.className = "ou-cell ou-proj-long-td num ou-proj-td-mkt-rating";
     const z = num(marketRatingZ, NaN);
     mktRatingTd.textContent = formatOuMarketRating(z);
-    mktRatingTd.title = ouMarketRatingTitle(col.market, mu, z);
+    mktRatingTd.title = ouMarketRatingTitle(col.market, num(playerAvg, NaN), z);
     if (Number.isFinite(z)) {
       if (z > 0.05) mktRatingTd.classList.add("pos");
       else if (z < -0.05) mktRatingTd.classList.add("neg");
