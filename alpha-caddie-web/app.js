@@ -2705,20 +2705,6 @@ function updateOuSyntheticOddsNoteVisibility() {
   const el = document.getElementById("ou-synthetic-odds-note");
   if (!el) return;
   el.hidden = draftKingsRoundPropOddsAvailable();
-  if (!el.hidden) return;
-  const props = ouRoundOuPropsForLines();
-  const hasFallback = props.some((r) => {
-    const s = String(r.source || "").trim().toLowerCase();
-    return (
-      (s === "model_fallback" || s === "csv") &&
-      Number.isFinite(enforceHalfLine(num(r.line, NaN))) &&
-      Number.isFinite(num(r.over_odds, NaN)) &&
-      Number.isFinite(num(r.under_odds, NaN))
-    );
-  });
-  el.textContent = hasFallback
-    ? "DraftKings has not posted full-field round props yet — Model columns use -110 on the projection line."
-    : "Odds are synthetic until DraftKings odds open.";
 }
 
 /**
@@ -3956,11 +3942,50 @@ function ouPropPlayerKeyDisplay(name) {
     .toLowerCase();
 }
 
+function ouPropPlayerKeyLoose(name) {
+  return String(name || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+/** DraftKings round O/U rows only (Round projections tab). */
+function draftKingsRoundPropsOnly() {
+  return (Array.isArray(DATA.props) ? DATA.props : []).filter((r) => {
+    if (String(r.source || "").trim().toLowerCase() !== "draftkings") return false;
+    const L = enforceHalfLine(num(r.line, NaN));
+    const o = num(r.over_odds, NaN);
+    const u = num(r.under_odds, NaN);
+    return Number.isFinite(L) && Number.isFinite(o) && Number.isFinite(u);
+  });
+}
+
+/** Match projections field row to a props row (dg_id + display/raw/loose name). */
+function ouPropRowMatchesPlayer(propRow, playerRow) {
+  if (!propRow || !playerRow) return false;
+  const wantId = Math.round(num(playerRow.dg_id, NaN));
+  const rid = Math.round(num(propRow.dg_id, NaN));
+  if (Number.isFinite(wantId) && wantId > 0 && rid === wantId) return true;
+  const wantRaw = ouPropPlayerKeyRaw(playerRow.player_name || "");
+  const wantDisp = ouPropPlayerKeyDisplay(playerRow.player_name || "");
+  const wantLoose = ouPropPlayerKeyLoose(displayGolferName(playerRow.player_name || ""));
+  const rRaw = ouPropPlayerKeyRaw(propRow.player_name || "");
+  const rDisp = ouPropPlayerKeyDisplay(propRow.player_name || "");
+  const rLoose = ouPropPlayerKeyLoose(displayGolferName(propRow.player_name || ""));
+  if (wantRaw && rRaw && wantRaw === rRaw) return true;
+  if (wantDisp && rDisp && wantDisp === rDisp) return true;
+  if (wantLoose && rLoose && wantLoose === rLoose) return true;
+  if (wantLoose.length >= 4 && rLoose.length >= 4 && (wantLoose.includes(rLoose) || rLoose.includes(wantLoose))) return true;
+  if (golferNameMatchesQuery(propRow.player_name, wantRaw)) return true;
+  if (golferNameMatchesQuery(playerRow.player_name, rRaw)) return true;
+  return false;
+}
+
 /** Map id:${dgId}:${line} / nm:${name}:${line} → { over, under } American odds. */
-function ouBuildPropsOddsIndex(market) {
+function ouBuildPropsOddsIndex(market, opts = {}) {
   const canon = ouPropsCanonicalMarket(market);
   const map = new Map();
-  const props = ouRoundOuPropsForLines();
+  const props = opts.dkOnly ? draftKingsRoundPropsOnly() : ouRoundOuPropsForLines();
   for (const r of props) {
     if (String(r.market || "").trim() !== canon) continue;
     const L = enforceHalfLine(num(r.line, NaN));
@@ -3974,6 +3999,8 @@ function ouBuildPropsOddsIndex(market) {
     if (raw) {
       map.set(`nm:${ouPropPlayerKeyRaw(raw)}:${L}`, { over: o, under: u });
       map.set(`nm:${ouPropPlayerKeyDisplay(raw)}:${L}`, { over: o, under: u });
+      map.set(`nm:${ouPropPlayerKeyLoose(raw)}:${L}`, { over: o, under: u });
+      map.set(`nm:${ouPropPlayerKeyLoose(displayGolferName(raw))}:${L}`, { over: o, under: u });
     }
   }
   return map;
@@ -3997,27 +4024,19 @@ function ouPropsBookOddsFromIndex(idx, playerRow, line) {
 
 function ouPropsRowsForMarketPlayer(market, playerRow, opts = {}) {
   const canon = ouPropsCanonicalMarket(market);
-  const props = ouRoundOuPropsForLines();
+  const props = opts.dkOnly ? draftKingsRoundPropsOnly() : ouRoundOuPropsForLines();
   const out = [];
-  const wantId = Math.round(num(playerRow?.dg_id, NaN));
-  const wantRaw = ouPropPlayerKeyRaw(playerRow?.player_name || "");
-  const wantDisp = ouPropPlayerKeyDisplay(playerRow?.player_name || "");
   for (const r of props) {
     if (String(r.market || "").trim() !== canon) continue;
     const L = enforceHalfLine(num(r.line, NaN));
     const o = num(r.over_odds, NaN);
     const u = num(r.under_odds, NaN);
     if (!Number.isFinite(L) || !Number.isFinite(o) || !Number.isFinite(u)) continue;
-    const rid = Math.round(num(r.dg_id, NaN));
-    const rRaw = ouPropPlayerKeyRaw(r.player_name || "");
-    const rDisp = ouPropPlayerKeyDisplay(r.player_name || "");
-    const sameById = Number.isFinite(wantId) && wantId > 0 && rid === wantId;
-    const sameByName = (wantRaw && rRaw && wantRaw === rRaw) || (wantDisp && rDisp && wantDisp === rDisp);
-    if (!sameById && !sameByName) continue;
+    if (!ouPropRowMatchesPlayer(r, playerRow)) continue;
     out.push({ line: L, over: o, under: u, source: String(r.source || "").trim().toLowerCase() });
   }
+  if (opts.dkOnly) return out;
   const dkOnly = out.filter((r) => r.source === "draftkings");
-  if (opts.dkOnly) return dkOnly;
   if (dkOnly.length) return dkOnly;
   return out;
 }
@@ -4066,7 +4085,7 @@ function syncOuToolbarOddsFromProps(market, lineSel, round) {
   if (!want) return;
   const row = DATA.players.find((p) => String(p.player_name || "").trim() === want && samePlayerRound(p, r));
   if (!row) return;
-  const idx = ouBuildPropsOddsIndex(market);
+  const idx = ouBuildPropsOddsIndex(market, { dkOnly: true });
   const L = enforceHalfLine(lineSel);
   if (!Number.isFinite(L)) return;
   const pk = ouPropsBookOddsFromIndex(idx, row, L);
@@ -4256,20 +4275,54 @@ function projectionSortComparable(val, dir) {
   return dir > 0 ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
 }
 
-/** One display row: golfer × market × Over|Under (prefers DK; uses model_fallback / CSV when DK omits). */
+/** One display row: golfer × DK market × Over|Under (only posted DraftKings lines). */
 function ouProjectionFlatRowsForPlayers(players, cols) {
   const out = [];
+  const seen = new Set();
+  const pushSides = (player, col, colIdx, mu, pick) => {
+    const id = Math.round(num(player.dg_id, NaN));
+    const line = enforceHalfLine(num(pick?.line, NaN));
+    if (!Number.isFinite(id) || !Number.isFinite(line)) return;
+    const sig = `${id}|${col.label}|${line}`;
+    if (seen.has(sig)) return;
+    seen.add(sig);
+    for (const side of ["over", "under"]) {
+      out.push({ player, col, colIdx, side, mu, pick });
+    }
+  };
+
   for (const player of players) {
     for (let colIdx = 0; colIdx < cols.length; colIdx++) {
       const col = cols[colIdx];
       const mu = ouProjectedMean(col.market, player);
-      const pick = chooseOuPropLineForProjection(col.market, player, mu);
+      const pick = chooseOuPropLineForProjection(col.market, player, mu, { dkOnly: true });
       if (!pick) continue;
-      for (const side of ["over", "under"]) {
-        out.push({ player, col, colIdx, side, mu, pick });
-      }
+      pushSides(player, col, colIdx, mu, pick);
     }
   }
+
+  for (const r of draftKingsRoundPropsOnly()) {
+    const canon = String(r.market || "").trim();
+    const colIdx = cols.findIndex((c) => ouPropsCanonicalMarket(c.market) === canon);
+    if (colIdx < 0) continue;
+    const col = cols[colIdx];
+    let player = null;
+    const rid = Math.round(num(r.dg_id, NaN));
+    if (Number.isFinite(rid) && rid > 0) {
+      player = players.find((p) => Math.round(num(p.dg_id, NaN)) === rid) || null;
+    }
+    if (!player) player = players.find((p) => ouPropRowMatchesPlayer(r, p)) || null;
+    if (!player) continue;
+    const mu = ouProjectedMean(col.market, player);
+    const pick = {
+      line: enforceHalfLine(num(r.line, NaN)),
+      over: num(r.over_odds, NaN),
+      under: num(r.under_odds, NaN),
+      source: "draftkings",
+    };
+    pushSides(player, col, colIdx, mu, pick);
+  }
+
   return out;
 }
 
@@ -4642,9 +4695,9 @@ function buildOuTable() {
     const td = document.createElement("td");
     td.colSpan = projColCount;
     td.className = "ou-cell ou-proj-long-td ou-proj-empty-td";
-    td.textContent = ouRoundOuPropsForLines().length
-      ? "No lines for this golfer, market, or filter (check projections.props and the active round)."
-      : "No round O/U in projections.json yet — run npm run update:dk-round-projections (or fetch:book-odds).";
+    td.textContent = draftKingsRoundPropOddsAvailable()
+      ? "No DraftKings lines for this golfer, market, or filter."
+      : "No DraftKings round O/U in projections.json yet — run npm run update:dk-round-projections (or fetch:book-odds).";
     tr.appendChild(td);
     tbody.appendChild(tr);
   } else {
@@ -4703,34 +4756,20 @@ function buildOuTable() {
 
     const bookTd = document.createElement("td");
     bookTd.className = "ou-cell ou-proj-long-td num ou-proj-td-book";
-    const bookSrc = String(pick?.source || "").trim().toLowerCase();
-    if (bookSrc === "draftkings") {
-      const bookWrap = document.createElement("span");
-      bookWrap.className = "ou-proj-book-logo-wrap";
-      const bookImg = document.createElement("img");
-      bookImg.className = "ou-proj-book-logo-img";
-      bookImg.alt = "DraftKings";
-      bookImg.loading = "lazy";
-      const bookFb = document.createElement("span");
-      bookFb.className = "ou-proj-book-logo-fallback";
-      bookFb.textContent = "DK";
-      bookFb.style.display = "none";
-      bookWrap.appendChild(bookImg);
-      bookWrap.appendChild(bookFb);
-      bookTd.appendChild(bookWrap);
-      attachBookLogoWithFallback(bookImg, bookFb, SPORTSBOOK_META.draftkings.domain);
-    } else {
-      const bookLbl = document.createElement("span");
-      bookLbl.className = "ou-proj-book-src-label";
-      bookLbl.textContent = bookSrc === "model_fallback" ? "Model" : bookSrc === "csv" ? "CSV" : "—";
-      bookLbl.title =
-        bookSrc === "model_fallback"
-          ? "Synthetic -110 line from model projection (DraftKings did not post this market)"
-          : bookSrc === "csv"
-            ? "Line from player_props CSV"
-            : "";
-      bookTd.appendChild(bookLbl);
-    }
+    const bookWrap = document.createElement("span");
+    bookWrap.className = "ou-proj-book-logo-wrap";
+    const bookImg = document.createElement("img");
+    bookImg.className = "ou-proj-book-logo-img";
+    bookImg.alt = "DraftKings";
+    bookImg.loading = "lazy";
+    const bookFb = document.createElement("span");
+    bookFb.className = "ou-proj-book-logo-fallback";
+    bookFb.textContent = "DK";
+    bookFb.style.display = "none";
+    bookWrap.appendChild(bookImg);
+    bookWrap.appendChild(bookFb);
+    bookTd.appendChild(bookWrap);
+    attachBookLogoWithFallback(bookImg, bookFb, SPORTSBOOK_META.draftkings.domain);
     tr.appendChild(bookTd);
 
     const oddsTd = document.createElement("td");
