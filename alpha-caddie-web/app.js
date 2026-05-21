@@ -430,7 +430,8 @@ let propsSingleCourseIndexPromise = null;
 let propsSingleCourseIndexCourseKey = "";
 /** Last field-by-course entries used for chart + table (one collect per render). */
 let propsCourseWindowLastEntries = null;
-const PROPS_COURSE_WINDOW_MAX_CHART_BARS = 96;
+/** Field-by-course chart: no winN cap — canvas scrolls/fits all bars in the date window (perf guard only). */
+const PROPS_COURSE_WINDOW_MAX_CHART_BARS = 640;
 const PROPS_COURSE_INDEX_PLAYER_CHUNK = 8;
 
 function num(v, d) {
@@ -10895,6 +10896,53 @@ function parsePropsCourseShardPayload(j) {
   return { days, entries };
 }
 
+function propsCourseWindowEntryDedupeKey(e) {
+  const r = e?.row;
+  const sk = Math.round(num(r?.sortKey, NaN));
+  if (Number.isFinite(sk) && sk > 0) return `${e.dgId}|${sk}`;
+  const yr = Math.round(num(r?.year, NaN));
+  const rn = Math.round(num(r?.round_num, NaN));
+  const ev = String(r?.event_name || "").trim().toLowerCase();
+  return `${e.dgId}|${yr}|${rn}|${ev}`;
+}
+
+/** Supplement prebuilt course shard with live-week rows from in-memory HISTORY (not yet in shard file). */
+function mergeMemoryCourseEntriesIntoBucket(bucket, courseKey) {
+  if (!bucket || !courseKey || !HISTORY?.byDgId) return bucket;
+  const seen = new Set((bucket.entries || []).map(propsCourseWindowEntryDedupeKey));
+  const dateSet = new Set(Array.isArray(bucket.days) ? bucket.days : []);
+  const nameByDg = buildPropsGolferDisplayNameMap();
+  const dgIds = new Set();
+  if (Array.isArray(DATA?.players)) {
+    for (const p of DATA.players) {
+      const id = Math.round(num(p.dg_id, NaN));
+      if (Number.isFinite(id)) dgIds.add(id);
+    }
+  }
+  const scanAll = propsHistorySmallEnoughForMemoryCourseIndex();
+  const sources = scanAll
+    ? Object.entries(HISTORY.byDgId)
+    : [...dgIds].map((id) => [String(id), HISTORY.byDgId[String(id)]]);
+  for (const [dgStr, rec] of sources) {
+    const dgId = Math.round(num(dgStr, NaN));
+    if (!Number.isFinite(dgId) || !rec || !Array.isArray(rec.rounds)) continue;
+    const playerName = nameByDg.get(dgId) || propsPlayerDisplayNameForDg(dgId);
+    for (const r of rec.rounds) {
+      if (!historyRoundCountsAsActual(r)) continue;
+      if (normCourseNameKey(r.course_name) !== courseKey) continue;
+      const entry = { row: r, dgId, playerName };
+      const key = propsCourseWindowEntryDedupeKey(entry);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      bucket.entries.push(entry);
+      const iso = historyRoundChartUtcIsoDay(r);
+      if (iso) dateSet.add(iso);
+    }
+  }
+  bucket.days = [...dateSet].sort((a, b) => b.localeCompare(a));
+  return bucket;
+}
+
 async function fetchPropsCourseHistoryShard(courseKey) {
   if (!courseKey || isFileProtocol()) return null;
   await loadPropsCoursesManifest();
@@ -10966,6 +11014,7 @@ async function ensurePropsCourseIndexForKeyAsync(courseKey) {
   propsSingleCourseIndexPromise = (async () => {
     const shard = await fetchPropsCourseHistoryShard(courseKey);
     if (shard?.entries?.length) {
+      mergeMemoryCourseEntriesIntoBucket(shard, courseKey);
       propsStoreSingleCourseBucket(courseKey, shard);
       return shard;
     }
@@ -11201,8 +11250,13 @@ function collectCourseWindowRoundEntriesFixed(bucketOpt) {
   }
   const bucket = bucketOpt || propsGetSingleCourseBucketSync(courseKey);
   if (!bucket) return [];
-  const fromMs = propsCourseWindowDateInputToUtcMs(fromRaw, false);
-  const toMs = propsCourseWindowDateInputToUtcMs(toRaw, true);
+  let fromMs = propsCourseWindowDateInputToUtcMs(fromRaw, false);
+  let toMs = propsCourseWindowDateInputToUtcMs(toRaw, true);
+  if (Number.isFinite(fromMs) && Number.isFinite(toMs) && fromMs > toMs) {
+    const swap = fromMs;
+    fromMs = toMs;
+    toMs = swap;
+  }
   const raw = [];
   for (const e of bucket.entries) {
     if (!historyRoundInCourseDateWindow(e.row, fromMs, toMs)) continue;
@@ -11218,14 +11272,27 @@ function collectCourseWindowRoundEntriesFixed(bucketOpt) {
 }
 
 function propsCourseWindowEntriesForChart(winN) {
-  let list = collectCourseWindowRoundEntriesFixed();
+  const list = collectCourseWindowRoundEntriesFixed();
+  if (propsCourseWindowModeActive()) return list;
   const wn = clamp(
     Math.round(num(winN, PROPS_HISTORY_ROUND_DEFAULT)),
     PROPS_HISTORY_ROUND_MIN,
     PROPS_HISTORY_ROUND_MAX,
   );
-  if (list.length > wn) list = list.slice(-wn);
+  if (list.length > wn) return list.slice(-wn);
   return list;
+}
+
+/** When the date window has more bars than we paint, sample evenly (not slice(-N) which drops early days). */
+function sampleCourseWindowChartEntriesEvenly(entries, cap) {
+  if (!entries?.length || entries.length <= cap) return entries || [];
+  const out = [];
+  const n = entries.length;
+  for (let i = 0; i < cap; i++) {
+    const idx = cap <= 1 ? 0 : Math.round((i * (n - 1)) / (cap - 1));
+    out.push(entries[idx]);
+  }
+  return out;
 }
 
 function propsFullHitStatsFromRoundList(statKey, line, rounds) {
@@ -13276,6 +13343,8 @@ function syncPropsCourseWindowUiState() {
   if (sessExtra) sessExtra.hidden = !modeOn;
   const curCourse = document.getElementById("props-filter-current-course");
   if (curCourse && modeOn) curCourse.checked = false;
+  const roundsStepper = document.querySelector(".props-chart-steppers .props-stepper-block");
+  if (roundsStepper) roundsStepper.hidden = modeOn;
 }
 
 /** Run Historical Trends immediately (cancels any pending debounced pass). */
@@ -13319,6 +13388,7 @@ function renderPropsTrendsCourseWindow() {
 
   const cached = propsGetSingleCourseBucketSync(courseKey);
   if (cached) {
+    mergeMemoryCourseEntriesIntoBucket(cached, courseKey);
     renderPropsTrendsCourseWindowBody(gen, cached);
     return;
   }
@@ -13412,6 +13482,9 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
       if (activeAppTabId() === "props" && propsCourseWindowModeOn()) {
         propsSingleCourseIndexSig = "";
         propsSingleCourseIndexCache = null;
+        propsCourseRoundIndex.delete(propsEffectiveCourseKey() || "");
+        courseWindowRoundEntriesCache = null;
+        courseWindowRoundEntriesCacheSig = "";
         scheduleRenderPropsTrends(300);
       }
     });
@@ -13437,8 +13510,9 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   if (Number.isFinite(line)) propsTrendLastGoodLine = line;
 
   let chartEntries = entriesAll;
-  const chartCap = Math.min(winN, PROPS_COURSE_WINDOW_MAX_CHART_BARS);
-  if (chartEntries.length > chartCap) chartEntries = chartEntries.slice(-chartCap);
+  if (chartEntries.length > PROPS_COURSE_WINDOW_MAX_CHART_BARS) {
+    chartEntries = sampleCourseWindowChartEntriesEvenly(chartEntries, PROPS_COURSE_WINDOW_MAX_CHART_BARS);
+  }
 
   const seriesChart = [];
   for (const e of chartEntries) {
@@ -13473,11 +13547,11 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   const hitSt = propsFullHitStatsFromRoundList(
     statKey,
     line,
-    chartEntries.map((e) => e.row),
+    entriesAll.map((e) => e.row),
   );
   const bookWrap = document.getElementById("props-trends-book-lines");
   if (bookWrap) bookWrap.replaceChildren();
-  paintPropsTrendKpiRowCourseWindow(statKey, hitSt, seriesChart, chartEntries.length ? chartEntries : entriesAll);
+  paintPropsTrendKpiRowCourseWindow(statKey, hitSt, seriesChart, entriesAll);
   const chartLeg = document.getElementById("props-chart-line-legend");
   if (chartLeg) chartLeg.hidden = !Number.isFinite(line);
   window.requestAnimationFrame(() => {
