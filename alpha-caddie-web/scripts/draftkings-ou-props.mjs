@@ -22,6 +22,7 @@ import { existsSync, readFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { chromium } from "playwright";
+import { matchPlayerByGolferLabel } from "./golfer-name-match.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -208,7 +209,7 @@ function buildProbeOrder(stat, preferredSub, allLeagueSubIds) {
   return out;
 }
 
-async function pickSubcategoryForStat(api, leagueId, siteSegment, stat, preferredSub, allLeagueSubIds, dgByNameLower) {
+async function pickSubcategoryForStat(api, leagueId, siteSegment, stat, preferredSub, allLeagueSubIds, players) {
   const candidates = buildProbeOrder(stat, preferredSub, allLeagueSubIds);
   let bestSub = "";
   let bestScore = 0;
@@ -228,7 +229,7 @@ async function pickSubcategoryForStat(api, leagueId, siteSegment, stat, preferre
     const mk = Array.isArray(body?.markets) ? body.markets : [];
     const sample = mk.slice(0, 20).map((m) => m.name);
     if (!sample.some((n) => isGoodPlayerRoundSampleName(stat, n))) continue;
-    const nParsed = propsFromMarketsBody(body, stat, dgByNameLower).length;
+    const nParsed = propsFromMarketsBody(body, stat, players).length;
     if (nParsed > bestScore) {
       bestScore = nParsed;
       bestSub = sub;
@@ -294,7 +295,7 @@ function logUnparsedSample(stat, body, reason) {
   }
 }
 
-function propsFromMarketsBody(body, stat, dgByNameLower) {
+function propsFromMarketsBody(body, stat, players) {
   const markets = body?.markets;
   const selections = flattenSelectionsFromBody(body);
   if (!Array.isArray(markets) || !markets.length) return [];
@@ -346,10 +347,21 @@ function propsFromMarketsBody(body, stat, dgByNameLower) {
     const over = americanFromSelection(overSel);
     const under = americanFromSelection(underSel);
     if (!Number.isFinite(over) || !Number.isFinite(under)) continue;
-    const player_name = parsed.dkPlayer;
-    const o = { player_name, line, over_odds: over, under_odds: under, market: stat };
-    const dg = dgByNameLower.get(player_name.toLowerCase());
-    if (Number.isFinite(dg) && dg > 0) o.dg_id = dg;
+    const dkLabel = parsed.dkPlayer;
+    const matched = matchPlayerByGolferLabel(players, dkLabel);
+    const player_name = matched ? String(matched.player_name || "").trim() : dkLabel;
+    const o = {
+      player_name,
+      line,
+      over_odds: over,
+      under_odds: under,
+      market: stat,
+      round_num: parsed.round,
+    };
+    if (matched) {
+      const dg = Math.round(Number(matched.dg_id));
+      if (Number.isFinite(dg) && dg > 0) o.dg_id = dg;
+    }
     out.push(o);
   }
   return out;
@@ -367,7 +379,6 @@ export async function fetchDraftKingsOuProps(opts = {}) {
   const leagueUrl = opts.leagueUrl || DEFAULT_URL;
   const requestedLeagueId = String(opts.leagueId || LEAGUE_ID || "").trim();
   const siteSegment = opts.siteSegment || SITE;
-  const dgByNameLower = buildDgLookup(players);
   console.log(
     `[draftkings-ou] url=${leagueUrl} site=${siteSegment} players=${Array.isArray(players) ? players.length : 0}`,
   );
@@ -541,7 +552,7 @@ export async function fetchDraftKingsOuProps(opts = {}) {
     if (overrides[st]) continue;
     const pref = statToSub[st] || "";
     if (!pref && !(PROBE_SUBS_FIRST[st] || []).length && st !== "Fairways hit" && st !== "GIR") continue;
-    const picked = await pickSubcategoryForStat(api, leagueId, siteSegment, st, pref, allLeagueSubIds, dgByNameLower);
+    const picked = await pickSubcategoryForStat(api, leagueId, siteSegment, st, pref, allLeagueSubIds, players);
     if (picked) {
       statToSub[st] = picked;
       subcatsUsed[st] = picked;
@@ -577,7 +588,7 @@ export async function fetchDraftKingsOuProps(opts = {}) {
       }
       const body = await res.json();
       if (!Array.isArray(body?.markets)) apiBadShape++;
-      const chunk = propsFromMarketsBody(body, stat, dgByNameLower);
+      const chunk = propsFromMarketsBody(body, stat, players);
       all.push(...chunk);
       if (!chunk.length && Array.isArray(body?.markets) && body.markets.length)
         logUnparsedSample(stat, body, "no-rows");
@@ -594,7 +605,7 @@ export async function fetchDraftKingsOuProps(opts = {}) {
       }
       const body = await res.json();
       if (!Array.isArray(body?.markets)) apiBadShape++;
-      const chunkTs = propsFromMarketsBody(body, "Total Score", dgByNameLower);
+      const chunkTs = propsFromMarketsBody(body, "Total Score", players);
       all.push(...chunkTs);
       if (!chunkTs.length && Array.isArray(body?.markets) && body.markets.length)
         logUnparsedSample("Total Score", body, "no-rows");
@@ -608,7 +619,8 @@ export async function fetchDraftKingsOuProps(opts = {}) {
 
   const dedup = new Map();
   for (const r of all) {
-    dedup.set(`${r.player_name}|${r.market}|${r.line}`, r);
+    const rk = Number.isFinite(Number(r.round_num)) ? `|R${r.round_num}` : "";
+    dedup.set(`${r.player_name}|${r.market}|${r.line}${rk}`, r);
   }
   const props = [...dedup.values()];
   if (!props.length && nAttempts > 0) {

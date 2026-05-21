@@ -3949,10 +3949,55 @@ function ouPropPlayerKeyLoose(name) {
     .trim();
 }
 
-/** DraftKings round O/U rows only (Round projections tab). */
+function ouGolferNameMatchParts(name) {
+  const disp = displayGolferName(name);
+  const loose = ouPropPlayerKeyLoose(disp || name);
+  const parts = loose.split(/\s+/).filter((t) => t.length >= 2);
+  return { loose, parts, last: parts.length ? parts[parts.length - 1] : "" };
+}
+
+function ouFirstNamesLikelySame(a, b) {
+  if (!a || !b) return false;
+  const la = String(a).toLowerCase();
+  const lb = String(b).toLowerCase();
+  if (la === lb) return true;
+  if (la.length >= 2 && lb.length >= 2 && (la.startsWith(lb) || lb.startsWith(la))) return true;
+  if (la.length >= 3 && lb.length >= 3 && la.slice(0, 3) === lb.slice(0, 3)) return true;
+  return false;
+}
+
+/** DK labels vs DataGolf field names (John/Johnny, Matti/Matthias, Last/First order). */
+function golferNamesLikelySame(nameA, nameB) {
+  const a = String(nameA || "").trim();
+  const b = String(nameB || "").trim();
+  if (!a || !b) return false;
+  if (a.toLowerCase() === b.toLowerCase()) return true;
+  const ta = ouGolferNameMatchParts(a);
+  const tb = ouGolferNameMatchParts(b);
+  if (ta.loose && tb.loose && ta.loose === tb.loose) return true;
+  if (!ta.last || !tb.last || ta.last !== tb.last) return false;
+  if (ta.parts.length >= 2 && tb.parts.length >= 2) {
+    if (ouFirstNamesLikelySame(ta.parts[0], tb.parts[0])) return true;
+  }
+  const setB = new Set(tb.parts);
+  const overlap = ta.parts.filter((t) => setB.has(t)).length;
+  if (overlap >= 2) return true;
+  if (overlap >= 1 && ta.parts.length <= 2 && tb.parts.length <= 2) {
+    return ouFirstNamesLikelySame(ta.parts[0], tb.parts[0]);
+  }
+  if (ta.loose.length >= 4 && tb.loose.length >= 4) {
+    if (ta.loose.includes(tb.loose) || tb.loose.includes(ta.loose)) return true;
+  }
+  return false;
+}
+
+/** DraftKings round O/U rows only (Round projections tab), for the toolbar round when known. */
 function draftKingsRoundPropsOnly() {
+  const wantR = Math.round(getOuRound());
   return (Array.isArray(DATA.props) ? DATA.props : []).filter((r) => {
     if (String(r.source || "").trim().toLowerCase() !== "draftkings") return false;
+    const pr = Math.round(num(r.round_num, NaN));
+    if (Number.isFinite(pr) && pr >= 1 && pr <= 4 && pr !== wantR) return false;
     const L = enforceHalfLine(num(r.line, NaN));
     const o = num(r.over_odds, NaN);
     const u = num(r.under_odds, NaN);
@@ -3960,7 +4005,7 @@ function draftKingsRoundPropsOnly() {
   });
 }
 
-/** Match projections field row to a props row (dg_id + display/raw/loose name). */
+/** Match projections field row to a props row (dg_id + display/raw/loose/fuzzy name). */
 function ouPropRowMatchesPlayer(propRow, playerRow) {
   if (!propRow || !playerRow) return false;
   const wantId = Math.round(num(playerRow.dg_id, NaN));
@@ -3975,10 +4020,31 @@ function ouPropRowMatchesPlayer(propRow, playerRow) {
   if (wantRaw && rRaw && wantRaw === rRaw) return true;
   if (wantDisp && rDisp && wantDisp === rDisp) return true;
   if (wantLoose && rLoose && wantLoose === rLoose) return true;
-  if (wantLoose.length >= 4 && rLoose.length >= 4 && (wantLoose.includes(rLoose) || rLoose.includes(wantLoose))) return true;
+  if (golferNamesLikelySame(playerRow.player_name, propRow.player_name)) return true;
   if (golferNameMatchesQuery(propRow.player_name, wantRaw)) return true;
   if (golferNameMatchesQuery(playerRow.player_name, rRaw)) return true;
   return false;
+}
+
+function buildOuProjectionFieldIndex(players) {
+  const byId = new Map();
+  const list = [];
+  for (const p of players) {
+    const id = Math.round(num(p.dg_id, NaN));
+    if (Number.isFinite(id) && id > 0) byId.set(id, p);
+    list.push(p);
+  }
+  return { byId, list };
+}
+
+function resolveFieldPlayerForDkProp(propRow, index) {
+  if (!propRow || !index) return null;
+  const rid = Math.round(num(propRow.dg_id, NaN));
+  if (Number.isFinite(rid) && rid > 0 && index.byId.has(rid)) return index.byId.get(rid);
+  for (const p of index.list) {
+    if (ouPropRowMatchesPlayer(propRow, p)) return p;
+  }
+  return null;
 }
 
 /** Map id:${dgId}:${line} / nm:${name}:${line} → { over, under } American odds. */
@@ -4279,6 +4345,7 @@ function projectionSortComparable(val, dir) {
 function ouProjectionFlatRowsForPlayers(players, cols) {
   const out = [];
   const seen = new Set();
+  const fieldIndex = buildOuProjectionFieldIndex(players);
   const pushSides = (player, col, colIdx, mu, pick) => {
     const id = Math.round(num(player.dg_id, NaN));
     const line = enforceHalfLine(num(pick?.line, NaN));
@@ -4306,12 +4373,7 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
     const colIdx = cols.findIndex((c) => ouPropsCanonicalMarket(c.market) === canon);
     if (colIdx < 0) continue;
     const col = cols[colIdx];
-    let player = null;
-    const rid = Math.round(num(r.dg_id, NaN));
-    if (Number.isFinite(rid) && rid > 0) {
-      player = players.find((p) => Math.round(num(p.dg_id, NaN)) === rid) || null;
-    }
-    if (!player) player = players.find((p) => ouPropRowMatchesPlayer(r, p)) || null;
+    const player = resolveFieldPlayerForDkProp(r, fieldIndex);
     if (!player) continue;
     const mu = ouProjectedMean(col.market, player);
     const pick = {

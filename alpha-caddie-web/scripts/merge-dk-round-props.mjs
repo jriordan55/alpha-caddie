@@ -6,6 +6,7 @@ import { parse } from "csv-parse/sync";
 import { existsSync, readFileSync } from "fs";
 import { join, resolve } from "path";
 import { fetchDraftKingsOuProps } from "./draftkings-ou-props.mjs";
+import { matchPlayerByGolferLabel } from "./golfer-name-match.mjs";
 
 export function num(x, fallback = NaN) {
   const n = Number(x);
@@ -52,23 +53,6 @@ function normNameLoose(s) {
     .trim();
 }
 
-function matchProjectionPlayerByDkLabel(players, dkLabel) {
-  if (!Array.isArray(players) || !players.length) return null;
-  const raw = String(dkLabel || "").trim();
-  if (!raw) return null;
-  const dkl = raw.toLowerCase();
-  const dkn = normNameLoose(raw);
-  for (const p of players) {
-    const pn = String(p.player_name || "").trim();
-    if (!pn) continue;
-    if (pn.toLowerCase() === dkl) return p;
-    if (displayGolferName(pn).toLowerCase() === dkl) return p;
-    if (normNameLoose(displayGolferName(pn)) === dkn) return p;
-    if (normNameLoose(pn) === dkn) return p;
-  }
-  return null;
-}
-
 export function canonicalizeDkOuPropsAgainstProjections(dkProps, players) {
   if (!Array.isArray(dkProps) || !dkProps.length) return dkProps;
   if (!Array.isArray(players) || !players.length) return dkProps;
@@ -87,7 +71,7 @@ export function canonicalizeDkOuPropsAgainstProjections(dkProps, players) {
       if (canon) r.player_name = canon;
       continue;
     }
-    const row = matchProjectionPlayerByDkLabel(players, r.player_name);
+    const row = matchPlayerByGolferLabel(players, r.player_name);
     if (row) {
       r.player_name = String(row.player_name || "").trim();
       id = Math.round(num(row.dg_id, NaN));
