@@ -11661,6 +11661,14 @@ function paintPropsTrendKpiRowCourseWindow(statKey, hitSt, graphSeries, entries)
 
   addKpi("Field avg (window)", fieldMean);
   addKpi("Graph avg", graphMean);
+  ensurePropsFieldVenueHistoryLoaded();
+  const atVenueSeason = roundsMatchingCurrentCourseOnlyFieldSeason();
+  const atVenueAll = roundsMatchingCurrentCourseOnlyFieldAllTime();
+  addKpi(
+    `${PROPS_TREND_DISPLAY_SEASON_YEAR} course avg`,
+    propsTrendFieldVenueKpiValue(statKey, atVenueSeason),
+  );
+  addKpi("All-time course avg", propsTrendFieldVenueKpiValue(statKey, atVenueAll));
   addKpi("Rounds", rounds.length, "");
   addKpi("Players", playerIds.size, "");
 
@@ -12420,6 +12428,16 @@ function ouMeanCountingStat(market, row) {
   return raw;
 }
 
+/** Field-wide course KPI means: completed rounds only; total uses any posted gross (incl. live week). */
+function actualForFieldVenueKpiRow(statKey, row) {
+  if (!row || typeof row !== "object" || !historyRoundCountsAsActual(row)) return NaN;
+  if (statKey === "total") {
+    const rs = historyScalarOrNaN(row.round_score);
+    return Number.isFinite(rs) && rs > 0 ? rs : NaN;
+  }
+  return actualForRoundRow(statKey, row);
+}
+
 function actualForRoundRow(statKey, row) {
   if (!row || typeof row !== "object") return NaN;
   if (statKey === "total" || statKey === "birdies" || statKey === "pars" || statKey === "bogeys") {
@@ -12741,6 +12759,38 @@ function propsTrendMeanActual(statKey, rounds) {
   return n > 0 ? sum / n : NaN;
 }
 
+function propsTrendMeanFieldVenueActual(statKey, rounds) {
+  let sum = 0;
+  let n = 0;
+  for (const r of rounds) {
+    const a = actualForFieldVenueKpiRow(statKey, r);
+    if (!Number.isFinite(a)) continue;
+    sum += a;
+    n++;
+  }
+  return n > 0 ? sum / n : NaN;
+}
+
+/** Baked venue means from projections when field history is not loaded yet. */
+function propsTrendFieldVenueKpiFallback(statKey) {
+  const b = DATA?.meta?.projection_course_basis;
+  if (!b || typeof b !== "object") return NaN;
+  if (statKey === "total") return num(b.venue_avg_round_score, NaN);
+  if (statKey === "birdies") return num(b.venue_avg_birdies, NaN);
+  if (statKey === "pars") return num(b.venue_avg_pars, NaN);
+  if (statKey === "bogeys") return num(b.venue_avg_bogeys, NaN);
+  if (statKey === "gir") return num(b.venue_avg_gir, NaN);
+  if (statKey === "fairways") return num(b.venue_avg_fairways, NaN);
+  if (statKey === "putts") return num(b.venue_avg_putts, NaN);
+  return NaN;
+}
+
+function propsTrendFieldVenueKpiValue(statKey, rounds) {
+  const mean = propsTrendMeanFieldVenueActual(statKey, rounds);
+  if (Number.isFinite(mean)) return mean;
+  return propsTrendFieldVenueKpiFallback(statKey);
+}
+
 function propsTrendCourseFilterActive() {
   return Boolean(courseFilterOn() || (propsCourseWindowModeActive() && propsEffectiveCourseKey()));
 }
@@ -12781,10 +12831,26 @@ function propsFieldLeaderboardEnabled() {
   return Object.keys(HISTORY.byDgId || {}).length >= 20;
 }
 
+/** Field course KPIs can use partial history; leaderboard still needs propsFieldLeaderboardEnabled(). */
+function propsFieldVenueKpisEnabled() {
+  const venueRaw = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
+  if (!venueRaw || !HISTORY._ok) return false;
+  return Object.keys(HISTORY.byDgId || {}).length >= 1;
+}
+
+/** Load full player history in the background so All-time / season course KPIs can populate. */
+function ensurePropsFieldVenueHistoryLoaded() {
+  if (propsFieldLeaderboardEnabled() || isFileProtocol()) return;
+  if (playerHistoryLoadPromise || HISTORY._loading) return;
+  void loadPlayerHistory().then(() => {
+    if (activeAppTabId() === "props") scheduleRenderPropsTrends(0);
+  });
+}
+
 function rebuildPropsFieldVenueRoundsCache() {
   const venueRaw = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
   const sig = `${historyMutationEpoch}|${normCourseNameKey(venueRaw)}`;
-  if (!venueRaw || !propsFieldLeaderboardEnabled()) {
+  if (!venueRaw || !propsFieldVenueKpisEnabled()) {
     propsFieldVenueRoundsCacheSig = sig;
     propsFieldVenueRoundsCache = { season: [], all: [] };
     return;
@@ -12983,15 +13049,16 @@ function paintPropsTrendKpiRow(statKey, hitSt, graphSeries, dgId) {
   addKpi("All-time avg", allMean);
   addKpi("Season avg", seasonMean);
   addKpi("Graph avg", graphMean);
+  ensurePropsFieldVenueHistoryLoaded();
   const atVenueSeason = roundsMatchingCurrentCourseOnlyFieldSeason();
   const atVenueAll = roundsMatchingCurrentCourseOnlyFieldAllTime();
   addKpi(
     `${PROPS_TREND_DISPLAY_SEASON_YEAR} course avg`,
-    propsTrendMeanActual(statKey, atVenueSeason),
+    propsTrendFieldVenueKpiValue(statKey, atVenueSeason),
   );
   const venueFallbackLabel =
     atVenueSeason.length ? "All-time course avg" : atVenueAll.length ? "All Time Course Avg" : "All-time course avg";
-  addKpi(venueFallbackLabel, propsTrendMeanActual(statKey, atVenueAll));
+  addKpi(venueFallbackLabel, propsTrendFieldVenueKpiValue(statKey, atVenueAll));
 
   if (hitSt && hitSt.valid > 0) {
     const lowerBetter = propsStatLowerIsBetter(statKey);
@@ -15431,9 +15498,13 @@ function ensurePlayerHistoryLoadedForTab(tab) {
       ? (async () => {
           const dg = selectedDgId();
           if (!Number.isFinite(dg)) return false;
-          if (historyBucketLoaded(dg)) return true;
-          const ok = await loadPlayerHistoryBucket(dg);
-          if (!ok && !historyBucketLoaded(dg)) await extractHistoryBucketFromEmbedded(dg);
+          if (!historyBucketLoaded(dg)) {
+            const ok = await loadPlayerHistoryBucket(dg);
+            if (!ok && !historyBucketLoaded(dg)) await extractHistoryBucketFromEmbedded(dg);
+          }
+          if (!propsFieldLeaderboardEnabled() && !playerHistoryLoadPromise && !HISTORY._loading) {
+            void loadPlayerHistory();
+          }
           return historyBucketLoaded(dg);
         })()
       : tab === "hangout"
