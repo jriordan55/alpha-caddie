@@ -1582,6 +1582,12 @@ body {
   min-width: 3rem;
   font-weight: 800;
 }
+#table-ou.table-ou-projections .ou-proj-th-mkt-rating,
+#table-ou.table-ou-projections .ou-proj-td-mkt-rating {
+  min-width: 4.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
 #table-ou.table-ou-projections .ou-proj-th-line,
 #table-ou.table-ou-projections .ou-proj-td-line {
   min-width: 3rem;

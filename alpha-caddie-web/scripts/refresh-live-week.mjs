@@ -6,6 +6,7 @@
  *   - pgatouR scorecards when R is installed
  *   - fetch:dg projections (skill + preds/pre-tournament when pre; live stats when in play)
  *   - bake-weather-into-projections → Open-Meteo per-tee weather baked into projections.json
+ *   - export-round-projection-vs-actual → data/round_projection_vs_actual.csv (model vs actual per player×round)
  *   - build-player-history → player_round_history.json + per-player + by-course shards + embed
  *
  *   npm run refresh:live
@@ -15,6 +16,7 @@
  * Env: DATAGOLF_API_KEY, GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS (default 2),
  *   GOLF_REFRESH_LIVE_FAST_HISTORY=0 to scan full CSV depth (slower),
  *   GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE=1 to skip the second CSV merge after live fetch.
+ *   GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL=1 to skip data/round_projection_vs_actual.csv export.
  */
 import { spawnSync } from "child_process";
 import { copyFileSync, existsSync, mkdirSync } from "fs";
@@ -112,6 +114,13 @@ if (String(process.env.GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE || "").trim() !== "
   );
 }
 
+if (String(process.env.GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL || "").trim() !== "1") {
+  run(
+    "export-round-projection-vs-actual-csv.mjs",
+    "Round projection vs actual CSV (round_projection_vs_actual.csv)",
+  );
+}
+
 if (Object.keys(fh).length) {
   console.log(
     "\n[refresh:live] Fast history build: skipping shots merge + 170MB hole_data.csv scan; ~last 10 seasons / 500 rounds per player. GOLF_REFRESH_LIVE_FAST_HISTORY=0 for full depth; GOLF_BUILD_HISTORY_SKIP_HOLES=0 to include holes.\n",
@@ -124,7 +133,6 @@ run(
   fh,
 );
 run("embed-player-history.mjs", "Embed history for static deploy (embed:history)");
-run("export-round-projection-vs-actual-csv.mjs", "Round projection vs actual CSV (export:round-projection-vs-actual)");
 
 mirrorWebsitePublicData();
 

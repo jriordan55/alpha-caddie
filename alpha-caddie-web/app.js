@@ -2665,6 +2665,64 @@ const OU_STAT_MAP = {
   "Fairways hit": { field: "fairways", sdKey: null },
 };
 
+/** Fallback PGA Tour μ/σ (counts per round) when projections.json lacks `pga_tour_market_benchmarks`. */
+const OU_PGA_TOUR_BENCHMARK_FALLBACK = Object.freeze({
+  "Total score": { mean: 71.12, sd: 2.82, higherBetter: false, holes: 18 },
+  Birdies: { mean: 3.98, sd: 1.18, higherBetter: true, holes: 18 },
+  Pars: { mean: 11.02, sd: 1.32, higherBetter: true, holes: 18 },
+  Bogeys: { mean: 2.68, sd: 1.08, higherBetter: false, holes: 18 },
+  GIR: { mean: 11.35, sd: 2.4, higherBetter: true, holes: 18 },
+  "Fairways hit": { mean: 8.42, sd: 2.1, higherBetter: true, holes: 14 },
+});
+
+function ouPgaTourBenchmarkForMarket(market) {
+  const mKey = ouModelMarketKey(market) || "Total score";
+  const raw = DATA?.pga_tour_market_benchmarks?.[mKey];
+  if (raw && Number.isFinite(num(raw.mean, NaN)) && Number.isFinite(num(raw.sd, NaN)) && num(raw.sd, 0) > 1e-6) {
+    return {
+      mean: num(raw.mean),
+      sd: num(raw.sd),
+      higherBetter: raw.higherBetter !== false,
+      holes: Math.round(num(raw.holes, 18)) || 18,
+    };
+  }
+  return OU_PGA_TOUR_BENCHMARK_FALLBACK[mKey] || null;
+}
+
+/**
+ * Z-score of projected rate vs PGA Tour average for this market.
+ * Higher rating = more birdies/pars/GIR/FW vs tour; lower round score / bogeys vs tour.
+ */
+function ouMarketRatingZ(market, projectedMean) {
+  const mu = num(projectedMean, NaN);
+  if (!Number.isFinite(mu)) return NaN;
+  const b = ouPgaTourBenchmarkForMarket(market);
+  if (!b) return NaN;
+  const holes = Math.max(1, Math.round(num(b.holes, 18)));
+  const tourPct = b.mean / holes;
+  const playerPct = mu / holes;
+  const sdPct = b.sd / holes;
+  if (!Number.isFinite(sdPct) || sdPct <= 1e-6) return NaN;
+  let z = (playerPct - tourPct) / sdPct;
+  if (!b.higherBetter) z = -z;
+  return z;
+}
+
+function formatOuMarketRating(z) {
+  if (!Number.isFinite(z)) return "—";
+  const s = z >= 0 ? "+" : "";
+  return `${s}${z.toFixed(2)}`;
+}
+
+function ouMarketRatingTitle(market, mu, z) {
+  const b = ouPgaTourBenchmarkForMarket(market);
+  if (!b || !Number.isFinite(mu) || !Number.isFinite(z)) return "Market rating vs PGA Tour average";
+  const holes = Math.max(1, Math.round(num(b.holes, 18)));
+  const tourPct = ((b.mean / holes) * 100).toFixed(1);
+  const playerPct = ((mu / holes) * 100).toFixed(1);
+  return `Z-score vs PGA Tour avg (${ouPropsCanonicalMarket(market)}: ${playerPct}% of ${holes} holes vs tour ${tourPct}%)`;
+}
+
 /** Model O/U tab market order; displayed columns are dynamic from live DK props. */
 const OU_PROJECTION_MARKETS = Object.freeze([
   { market: "Total score", label: "Round score" },
@@ -4284,6 +4342,7 @@ function initOuTableSortOnce() {
       if (key === "golfer" || key === "pr-golfer") ouTableSort.dir = 1;
       else if (key === "pr-market" || key === "pr-side") ouTableSort.dir = 1;
       else if (key === "pr-mu") ouTableSort.dir = -1;
+      else if (key === "pr-mkt-rating") ouTableSort.dir = -1;
       else if (key === "pr-line") ouTableSort.dir = 1;
       else if (key === "pr-odds" || key === "pr-pmod" || key === "pr-edge") ouTableSort.dir = -1;
       else ouTableSort.dir = -1;
@@ -4368,8 +4427,9 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
       Number.isFinite(id) && id > 0 ? `${id}|${col.label}|${line}` : `nm:${nameKey}|${col.label}|${line}`;
     if (seen.has(sig)) return;
     seen.add(sig);
+    const marketRatingZ = ouMarketRatingZ(col.market, mu);
     for (const side of ["over", "under"]) {
-      out.push({ player, col, colIdx, side, mu, pick });
+      out.push({ player, col, colIdx, side, mu, pick, marketRatingZ });
     }
   };
 
@@ -4432,6 +4492,7 @@ function ouTableSortValueProjRow(row, sortKey) {
   if (sortKey === "pr-market") return colIdx;
   if (sortKey === "pr-side") return side === "over" ? 0 : 1;
   if (sortKey === "pr-mu") return mu;
+  if (sortKey === "pr-mkt-rating") return Number.isFinite(row.marketRatingZ) ? row.marketRatingZ : NaN;
   if (sortKey === "pr-line") return pick && Number.isFinite(pick.line) ? pick.line : NaN;
   if (sortKey === "pr-odds") {
     if (!pick) return NaN;
@@ -4706,6 +4767,7 @@ function buildOuTable() {
     ["pr-market", "Market", "sortable ou-proj-long-th ou-proj-th-market"],
     ["pr-side", "Side", "sortable ou-proj-long-th num ou-proj-th-side"],
     ["pr-mu", "Proj", "sortable ou-proj-long-th num ou-proj-th-mu"],
+    ["pr-mkt-rating", "Market rating", "sortable ou-proj-long-th num ou-proj-th-mkt-rating"],
     ["pr-line", "Line", "sortable ou-proj-long-th num ou-proj-th-line"],
     ["", "Book", "ou-proj-long-th num ou-proj-th-book"],
     ["pr-odds", "Odds", "sortable ou-proj-long-th num ou-proj-th-odds"],
@@ -4796,7 +4858,7 @@ function buildOuTable() {
   for (const r of flatRows) {
     const tr = document.createElement("tr");
     tr.className = "ou-proj-long-tr ou-proj-data-row";
-    const { player, col, side, mu, pick } = r;
+    const { player, col, side, mu, pick, marketRatingZ } = r;
     const rawName = String(player.player_name || "");
     const expandKey = ouProjMakeExpandKey(rawName, col.label, side);
     tr.dataset.expandKey = expandKey;
@@ -4839,6 +4901,16 @@ function buildOuTable() {
     muTd.className = "ou-cell ou-proj-long-td num ou-proj-td-mu";
     muTd.textContent = formatOuProjectedMean(mu);
     tr.appendChild(muTd);
+
+    const mktRatingTd = document.createElement("td");
+    mktRatingTd.className = "ou-cell ou-proj-long-td num ou-proj-td-mkt-rating";
+    const z = num(marketRatingZ, NaN);
+    mktRatingTd.textContent = formatOuMarketRating(z);
+    mktRatingTd.title = ouMarketRatingTitle(col.market, mu, z);
+    if (Number.isFinite(z)) {
+      mktRatingTd.classList.add(z > 0.05 ? "pos" : z < -0.05 ? "neg" : "");
+    }
+    tr.appendChild(mktRatingTd);
 
     const lineTd = document.createElement("td");
     lineTd.className = "ou-cell ou-proj-long-td num ou-proj-td-line";

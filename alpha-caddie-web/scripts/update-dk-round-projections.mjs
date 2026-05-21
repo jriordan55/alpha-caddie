@@ -14,6 +14,7 @@
  *   GOLF_SKIP_PROPS_CSV=1 — do not merge data/player_props_*.csv (default for this command)
  *   GOLF_SKIP_MODEL_FALLBACK_OU=1 — DK rows only; no synthetic -110 lines when DK omits GIR/etc.
  *   GOLF_SKIP_DK_ROUND_AUDIT_CSV=1 — skip dk_round_projection_audit.csv append
+ *   GOLF_SKIP_ROUND_PROJECTIONS_CSV=1 — skip data/round_projections.csv snapshot
  *   DK_LEAGUE_URL, DK_SITE_SEGMENT, DK_LEAGUE_ID
  *   GOLF_MODEL_DIR — repo root (parent of alpha-caddie-web)
  */
@@ -21,6 +22,7 @@ import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { appendDkRoundProjectionAuditCsv } from "./export-dk-round-model-audit-csv.mjs";
+import { writeRoundProjectionsCsv } from "./export-round-projections-csv.mjs";
 import { refreshRoundProjectionProps } from "./merge-dk-round-props.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -98,6 +100,17 @@ async function main() {
       }
     } catch (e) {
       console.warn("[update:dk-round-projections] DK audit CSV:", e.message || e);
+    }
+  }
+
+  if (String(process.env.GOLF_SKIP_ROUND_PROJECTIONS_CSV || "").trim() !== "1") {
+    try {
+      const snap = writeRoundProjectionsCsv(next);
+      console.log(
+        `[update:dk-round-projections] Round projections CSV ${snap.rows} rows -> ${snap.path}`,
+      );
+    } catch (e) {
+      console.warn("[update:dk-round-projections] Round projections CSV:", e.message || e);
     }
   }
 

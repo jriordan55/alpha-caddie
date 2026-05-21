@@ -13,6 +13,7 @@
     "push:dk-round-projections": "node scripts/trigger-dk-round-projections-remote.mjs",
     "push:dk-round-projections:git": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/dk-round-projections-push-once.ps1",
     "export:dk-round-audit-csv": "node scripts/export-dk-round-model-audit-csv.mjs",
+    "export:round-projections-csv": "node scripts/export-round-projections-csv.mjs",
     "export:round-projection-vs-actual": "node scripts/export-round-projection-vs-actual-csv.mjs",
     "fetch:finish-tool": "node scripts/fetch-datagolf-finish-tool-outrights.mjs",
     "refresh": "node scripts/refresh-fresh.mjs",

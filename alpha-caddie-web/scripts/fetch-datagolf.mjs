@@ -74,6 +74,10 @@ import {
 } from "./course-round-adjustments.mjs";
 import { holeParsFromLiveHoleStatsPayload } from "./dg-live-hole-pars.mjs";
 import { normCourseNameKey, formatCourseLabelForDisplay } from "./course-name-key.mjs";
+import {
+  loadPgaTourMarketBenchmarks,
+  serializePgaTourMarketBenchmarks,
+} from "./pga-tour-market-benchmarks.mjs";
 import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
 import { applyHistoricalRoundsMergeDefaults } from "./historical-rounds-merge-env.mjs";
 import { resolveGolfModelDir } from "./resolve-golf-model-dir.mjs";
@@ -1784,6 +1788,9 @@ async function main() {
   const histCsvPath = join(GOLF_MODEL_ROOT, "data", "historical_rounds_all.csv");
   const histCalibPromise = loadHistoricalCsvCalibration(GOLF_MODEL_ROOT, courseKeyHist);
   const venueScoringPromise = loadVenueHistoricalScoring(histCsvPath, courseKeyHist, course_used);
+  const pgaBenchPromise = loadPgaTourMarketBenchmarks(GOLF_MODEL_ROOT, {
+    recentYears: Math.round(num(process.env.GOLF_PGA_TOUR_BENCHMARK_YEARS, 6)) || 6,
+  });
 
   const pretStrokesByDg = new Map();
   for (const row of pretList) {
@@ -1835,7 +1842,18 @@ async function main() {
   const fieldMeanDrive =
     distSamples.length >= 8 ? distSamples.reduce((a, b) => a + b, 0) / distSamples.length : NaN;
 
-  const [histCalib, venueScoring] = await Promise.all([histCalibPromise, venueScoringPromise]);
+  const [histCalib, venueScoring, pgaTourBenchRaw] = await Promise.all([
+    histCalibPromise,
+    venueScoringPromise,
+    pgaBenchPromise,
+  ]);
+  const pga_tour_market_benchmarks = serializePgaTourMarketBenchmarks(pgaTourBenchRaw);
+  if (!pgaTourBenchRaw?.meta?.skipped) {
+    const b = pga_tour_market_benchmarks["Total score"];
+    console.log(
+      `[fetch-dg] PGA Tour market benchmarks (≈${pgaTourBenchRaw.meta?.min_year || "?"}+): score μ=${b?.mean} σ=${b?.sd}`,
+    );
+  }
   if (Number.isFinite(venueScoring.venueAvgStp)) {
     console.log(
       `[fetch-dg] Venue scoring baseline: ${venueScoring.venueAvgStp >= 0 ? "+" : ""}${venueScoring.venueAvgStp.toFixed(2)} vs par (${venueScoring.source}, n=${venueScoring.nVenueRounds} rounds)`,
@@ -2293,6 +2311,7 @@ async function main() {
         ? Math.round(venueScoring.venueAvgPutts * 100) / 100
         : null,
     },
+    pga_tour_market_benchmarks,
     historical_projection_calibration: {
       skipped: !!histCalib.skipped,
       csv_path: histCalib.csv_path || undefined,

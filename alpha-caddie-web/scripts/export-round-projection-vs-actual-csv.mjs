@@ -7,8 +7,9 @@
  * Actuals: `data/historical_rounds_all.csv` (same event, dg_id, round_num), then live-in-play R1–R4
  * gross scores for the active event when the round is complete but CSV lags.
  *
- * Output: alpha-caddie-web/data/round_projection_vs_actual.csv
- * `npm run push:all` runs this after update:rounds.
+ * Output: alpha-caddie-web/data/round_projection_vs_actual.csv (overwrite each run)
+ * `npm run push:live` (refresh:live) runs after live merges + post-live CSV merge.
+ * `npm run push:all` runs after update:rounds.
  */
 import { createReadStream, existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
