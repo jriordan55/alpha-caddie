@@ -2705,6 +2705,20 @@ function updateOuSyntheticOddsNoteVisibility() {
   const el = document.getElementById("ou-synthetic-odds-note");
   if (!el) return;
   el.hidden = draftKingsRoundPropOddsAvailable();
+  if (!el.hidden) return;
+  const props = ouRoundOuPropsForLines();
+  const hasFallback = props.some((r) => {
+    const s = String(r.source || "").trim().toLowerCase();
+    return (
+      (s === "model_fallback" || s === "csv") &&
+      Number.isFinite(enforceHalfLine(num(r.line, NaN))) &&
+      Number.isFinite(num(r.over_odds, NaN)) &&
+      Number.isFinite(num(r.under_odds, NaN))
+    );
+  });
+  el.textContent = hasFallback
+    ? "DraftKings has not posted full-field round props yet — Model columns use -110 on the projection line."
+    : "Odds are synthetic until DraftKings odds open.";
 }
 
 /**
@@ -4242,14 +4256,14 @@ function projectionSortComparable(val, dir) {
   return dir > 0 ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
 }
 
-/** One display row: golfer × DK market × Over|Under (Round projections: DK lines only). */
+/** One display row: golfer × market × Over|Under (prefers DK; uses model_fallback / CSV when DK omits). */
 function ouProjectionFlatRowsForPlayers(players, cols) {
   const out = [];
   for (const player of players) {
     for (let colIdx = 0; colIdx < cols.length; colIdx++) {
       const col = cols[colIdx];
       const mu = ouProjectedMean(col.market, player);
-      const pick = chooseOuPropLineForProjection(col.market, player, mu, { dkOnly: true });
+      const pick = chooseOuPropLineForProjection(col.market, player, mu);
       if (!pick) continue;
       for (const side of ["over", "under"]) {
         out.push({ player, col, colIdx, side, mu, pick });
@@ -4628,9 +4642,9 @@ function buildOuTable() {
     const td = document.createElement("td");
     td.colSpan = projColCount;
     td.className = "ou-cell ou-proj-long-td ou-proj-empty-td";
-    td.textContent = draftKingsRoundPropOddsAvailable()
-      ? "No DraftKings lines for this golfer, market, or filter. Rows with only model lines are hidden."
-      : "No DraftKings round O/U in projections.json yet — run npm run update:dk-round-projections (or fetch:book-odds).";
+    td.textContent = ouRoundOuPropsForLines().length
+      ? "No lines for this golfer, market, or filter (check projections.props and the active round)."
+      : "No round O/U in projections.json yet — run npm run update:dk-round-projections (or fetch:book-odds).";
     tr.appendChild(td);
     tbody.appendChild(tr);
   } else {
@@ -4689,20 +4703,34 @@ function buildOuTable() {
 
     const bookTd = document.createElement("td");
     bookTd.className = "ou-cell ou-proj-long-td num ou-proj-td-book";
-    const bookWrap = document.createElement("span");
-    bookWrap.className = "ou-proj-book-logo-wrap";
-    const bookImg = document.createElement("img");
-    bookImg.className = "ou-proj-book-logo-img";
-    bookImg.alt = "DraftKings";
-    bookImg.loading = "lazy";
-    const bookFb = document.createElement("span");
-    bookFb.className = "ou-proj-book-logo-fallback";
-    bookFb.textContent = "DK";
-    bookFb.style.display = "none";
-    bookWrap.appendChild(bookImg);
-    bookWrap.appendChild(bookFb);
-    bookTd.appendChild(bookWrap);
-    attachBookLogoWithFallback(bookImg, bookFb, SPORTSBOOK_META.draftkings.domain);
+    const bookSrc = String(pick?.source || "").trim().toLowerCase();
+    if (bookSrc === "draftkings") {
+      const bookWrap = document.createElement("span");
+      bookWrap.className = "ou-proj-book-logo-wrap";
+      const bookImg = document.createElement("img");
+      bookImg.className = "ou-proj-book-logo-img";
+      bookImg.alt = "DraftKings";
+      bookImg.loading = "lazy";
+      const bookFb = document.createElement("span");
+      bookFb.className = "ou-proj-book-logo-fallback";
+      bookFb.textContent = "DK";
+      bookFb.style.display = "none";
+      bookWrap.appendChild(bookImg);
+      bookWrap.appendChild(bookFb);
+      bookTd.appendChild(bookWrap);
+      attachBookLogoWithFallback(bookImg, bookFb, SPORTSBOOK_META.draftkings.domain);
+    } else {
+      const bookLbl = document.createElement("span");
+      bookLbl.className = "ou-proj-book-src-label";
+      bookLbl.textContent = bookSrc === "model_fallback" ? "Model" : bookSrc === "csv" ? "CSV" : "—";
+      bookLbl.title =
+        bookSrc === "model_fallback"
+          ? "Synthetic -110 line from model projection (DraftKings did not post this market)"
+          : bookSrc === "csv"
+            ? "Line from player_props CSV"
+            : "";
+      bookTd.appendChild(bookLbl);
+    }
     tr.appendChild(bookTd);
 
     const oddsTd = document.createElement("td");

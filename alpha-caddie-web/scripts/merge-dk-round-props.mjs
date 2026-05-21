@@ -167,20 +167,68 @@ function withPropSource(rows, source) {
   return (Array.isArray(rows) ? rows : []).map((r) => ({ ...r, source: s }));
 }
 
-const OU_COUNTING_MARKETS_FW = ["GIR", "Fairways hit", "Putts"];
-const OU_COUNTING_MARKETS_ALL = ALL_OU_COUNTING_MARKETS;
-
 function propPlayerMarketPresenceKey(r, market) {
   const id = Math.round(num(r.dg_id, NaN));
   if (Number.isFinite(id) && id > 0) return `id:${id}|${market}`;
   return `nm:${String(r.player_name || "").trim().toLowerCase()}|${market}`;
 }
 
+function propRowHasPostableOdds(r) {
+  return (
+    Number.isFinite(snapHalfLine(num(r?.line, NaN))) &&
+    Number.isFinite(num(r?.over_odds, NaN)) &&
+    Number.isFinite(num(r?.under_odds, NaN))
+  );
+}
+
+/** Active field for the projection round (one row per dg_id). */
+export function roundProjectionActivePlayers(players, preferredRound) {
+  const wantRound = Math.round(num(preferredRound, NaN));
+  const roundFilter = Number.isFinite(wantRound) && wantRound >= 1 && wantRound <= 4 ? wantRound : null;
+  const seen = new Set();
+  const out = [];
+  for (const p of players || []) {
+    if (roundFilter != null && Math.round(num(p.round, NaN)) !== roundFilter) continue;
+    const id = Math.round(num(p.dg_id, NaN));
+    if (!Number.isFinite(id) || id <= 0 || seen.has(id)) continue;
+    const pn = String(p.player_name || "").trim();
+    if (!pn) continue;
+    seen.add(id);
+    out.push(p);
+  }
+  return out;
+}
+
+function propRowMatchesPlayerMarket(r, player, market) {
+  if (String(r.market || "").trim() !== market) return false;
+  if (!propRowHasPostableOdds(r)) return false;
+  const wantId = Math.round(num(player.dg_id, NaN));
+  const rid = Math.round(num(r.dg_id, NaN));
+  if (Number.isFinite(wantId) && wantId > 0 && rid === wantId) return true;
+  const pn = String(player.player_name || "").trim().toLowerCase();
+  const rn = String(r.player_name || "").trim().toLowerCase();
+  if (pn && rn && pn === rn) return true;
+  return normNameLoose(displayGolferName(player.player_name)) === normNameLoose(displayGolferName(r.player_name));
+}
+
+/** Every active player should have O/U for each counting market (DK, CSV, or model_fallback). */
+export function validateRoundProjectionPropsCoverage(players, props, preferredRound) {
+  const active = roundProjectionActivePlayers(players, preferredRound);
+  const missing = [];
+  for (const p of active) {
+    for (const mkt of ALL_OU_COUNTING_MARKETS) {
+      const hit = (props || []).some((r) => propRowMatchesPlayerMarket(r, p, mkt));
+      if (!hit) missing.push({ dg_id: p.dg_id, player_name: p.player_name, market: mkt });
+    }
+  }
+  return { ok: missing.length === 0, missing, activeCount: active.length };
+}
+
 function stripNonDkCountingProps(byKey) {
   for (const key of [...byKey.keys()]) {
     const r = byKey.get(key);
     const m = String(r.market || "").trim();
-    if (!OU_COUNTING_MARKETS_FW.includes(m)) continue;
+    if (!ALL_OU_COUNTING_MARKETS.includes(m)) continue;
     const src = String(r.source || "").trim().toLowerCase();
     if (src === "csv" || src === "model_fallback") byKey.delete(key);
   }
@@ -328,24 +376,64 @@ export async function refreshRoundProjectionProps(payload, golfModelRoot) {
 
   stripNonDkCountingProps(byKey);
 
-  const dkCountingPresence = new Set();
+  const dkPlayerMarketPresence = new Set();
   for (const r of dkProps) {
     const m = String(r.market || "").trim();
-    if (!OU_COUNTING_MARKETS_FW.includes(m)) continue;
-    dkCountingPresence.add(propPlayerMarketPresenceKey(r, m));
+    if (!ALL_OU_COUNTING_MARKETS.includes(m)) continue;
+    dkPlayerMarketPresence.add(propPlayerMarketPresenceKey(r, m));
   }
 
+  const modelRound = Math.round(num(payload.display_round ?? payload.datagolf_field_current_round, NaN)) || 1;
+
   if (!skipModelFallback) {
-    const modelRound = Math.round(num(payload.display_round ?? payload.datagolf_field_current_round, NaN)) || 1;
-    for (const mkt of OU_COUNTING_MARKETS_ALL) {
+    for (const mkt of ALL_OU_COUNTING_MARKETS) {
       const fresh = withPropSource(modelFallbackOuForMarket(payload.players, mkt, modelRound), "model_fallback");
       for (const r of fresh) {
-        if (dkCountingPresence.has(propPlayerMarketPresenceKey(r, mkt))) continue;
+        if (dkPlayerMarketPresence.has(propPlayerMarketPresenceKey(r, mkt))) continue;
         byKey.set(`${r.player_name}|${r.market}|${r.line}`, r);
       }
     }
   }
 
-  const merged = [...byKey.values()];
-  return { props: merged, nCsv: csvProps.length, nDk: dkProps.length, dkError, subcatsUsed };
+  let merged = [...byKey.values()];
+
+  if (!skipModelFallback) {
+    const presence = new Set();
+    for (const r of merged) {
+      if (!propRowHasPostableOdds(r)) continue;
+      presence.add(propPlayerMarketPresenceKey(r, String(r.market || "").trim()));
+    }
+    let gapFill = 0;
+    for (const mkt of ALL_OU_COUNTING_MARKETS) {
+      for (const r of withPropSource(modelFallbackOuForMarket(payload.players, mkt, modelRound), "model_fallback")) {
+        const pk = propPlayerMarketPresenceKey(r, mkt);
+        if (presence.has(pk)) continue;
+        merged.push(r);
+        presence.add(pk);
+        gapFill++;
+      }
+    }
+    if (gapFill > 0) {
+      console.warn(`[dk-round-props] filled ${gapFill} missing player×market lines with model_fallback`);
+    }
+  }
+
+  const coverage = validateRoundProjectionPropsCoverage(payload.players, merged, modelRound);
+  if (!coverage.ok) {
+    const sample = coverage.missing
+      .slice(0, 8)
+      .map((m) => `${m.player_name || m.dg_id} ${m.market}`)
+      .join("; ");
+    const msg = `[dk-round-props] ${coverage.missing.length}/${coverage.activeCount * ALL_OU_COUNTING_MARKETS.length} player×market pairs still lack lines after merge${sample ? ` (e.g. ${sample})` : ""}`;
+    if (skipModelFallback) console.error(msg);
+    else console.warn(msg);
+  } else {
+    const nDkPm = dkPlayerMarketPresence.size;
+    const nActive = coverage.activeCount;
+    console.log(
+      `[dk-round-props] coverage OK — ${nActive} players × ${ALL_OU_COUNTING_MARKETS.length} markets; DK posted for ${nDkPm} player×market pairs`,
+    );
+  }
+
+  return { props: merged, nCsv: csvProps.length, nDk: dkProps.length, dkError, subcatsUsed, coverage };
 }

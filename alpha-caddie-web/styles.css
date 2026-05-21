@@ -1612,6 +1612,13 @@ body {
   background: var(--golf-elevated-soft);
   border: 1px solid var(--golf-border);
 }
+#table-ou.table-ou-projections .ou-proj-book-src-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--muted, #9ca0ac);
+  text-transform: uppercase;
+}
 #table-ou.table-ou-projections .ou-proj-book-logo-fallback {
   display: none;
   align-items: center;
