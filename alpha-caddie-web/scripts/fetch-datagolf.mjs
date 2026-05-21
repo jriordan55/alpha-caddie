@@ -77,7 +77,10 @@ import { normCourseNameKey, formatCourseLabelForDisplay } from "./course-name-ke
 import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
 import { applyHistoricalRoundsMergeDefaults } from "./historical-rounds-merge-env.mjs";
 import { resolveGolfModelDir } from "./resolve-golf-model-dir.mjs";
-import { maxRoundFromFieldAndLiveHole } from "./dg-display-round-from-bundle.mjs";
+import {
+  dateStartIsFuture,
+  maxRoundFromFieldAndLiveHole,
+} from "./dg-display-round-from-bundle.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -1350,6 +1353,8 @@ function dgCurrentRoundFromFieldOrLiveHole(fieldRaw, liveHoleStats) {
 
 /** Export `display_round`: DataGolf `current_round` only; default **1** if absent (calendar day ≠ on-course round). */
 function exportDisplayRoundFromDgField(fieldRaw, liveHoleStats) {
+  const ds = String(fieldRaw?.date_start ?? fieldRaw?.dateStart ?? "").trim();
+  if (dateStartIsFuture(ds)) return 1;
   const api = dgCurrentRoundFromFieldOrLiveHole(fieldRaw, liveHoleStats);
   if (Number.isFinite(api) && api >= 1 && api <= 4) return Math.round(api);
   return 1;
@@ -1947,7 +1952,10 @@ async function main() {
     base.length > 0 ? base.reduce((s, r) => s + num(r.mu_sg, 0), 0) / base.length : fieldMeanMu;
 
   const tz = process.env.GOLF_OU_TZ || "America/New_York";
-  const fieldApiRound = dgCurrentRoundFromFieldOrLiveHole(fieldRaw, liveHoleStatsForPars);
+  const fieldDateStart = String(fieldRaw?.date_start ?? fieldRaw?.dateStart ?? "").trim();
+  const preTournamentWeek = dateStartIsFuture(fieldDateStart);
+  let fieldApiRound = dgCurrentRoundFromFieldOrLiveHole(fieldRaw, liveHoleStatsForPars);
+  if (preTournamentWeek) fieldApiRound = 1;
   const dr = exportDisplayRoundFromDgField(fieldRaw, liveHoleStatsForPars);
   const roundMuMult = parseRoundMuMult();
 
@@ -2218,6 +2226,7 @@ async function main() {
     datagolf_schedule_anchor_event: anchor?.name || undefined,
     /** Stable compare for fetch-book-odds vs `/field-updates` (surpasses fuzzy-only title bugs). */
     datagolf_field_week_key: fieldWeekKey(event_name, course_used),
+    ...(fieldDateStart ? { datagolf_field_date_start: fieldDateStart } : {}),
     ...(Number.isFinite(fieldApiRound) && fieldApiRound >= 1 && fieldApiRound <= 4
       ? { datagolf_field_current_round: Math.round(fieldApiRound) }
       : {}),

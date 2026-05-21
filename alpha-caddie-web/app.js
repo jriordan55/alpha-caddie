@@ -449,7 +449,43 @@ function num(v, d) {
  * does not sit on R2 before the field is live — but when preds/in-play overlay lags after a rollover and
  * export+field already agree on the higher round, trust that max (push:all merge + multi-source round).
  */
+function enforceCourseDisplayAcronyms(label) {
+  return String(label || "")
+    .replace(/\b(tpc)\b/gi, "TPC")
+    .replace(/\(tpc\b/gi, "(TPC")
+    .replace(/\btpc-/gi, "TPC-");
+}
+
+function tournamentDateStartIso() {
+  const m = DATA?.meta || {};
+  const fromMeta = String(
+    m.datagolf_field_date_start || (m.meta && m.meta.datagolf_field_date_start) || "",
+  ).trim();
+  if (fromMeta) return fromMeta;
+  const fu = lastLiveInPlayBundleForHistory?.field_updates;
+  if (fu && typeof fu === "object") {
+    return String(fu.date_start ?? fu.dateStart ?? "").trim();
+  }
+  return "";
+}
+
+function eventTournamentWeekNotStarted() {
+  return liveHistDateStartIsFuture(tournamentDateStartIso());
+}
+
+/** Before `date_start`, stale live/export rounds (e.g. R4 from last week) must not drive the UI. */
+function applyPreTournamentRoundMeta() {
+  if (!DATA.meta || !eventTournamentWeekNotStarted()) return false;
+  const prev = Math.round(num(DATA.meta.display_round, NaN));
+  DATA.meta.display_round = 1;
+  DATA.meta.datagolf_field_current_round = 1;
+  delete DATA.meta.datagolf_live_current_round;
+  DATA.meta.display_round_label = "R1 — Thursday (pre-tournament)";
+  return !Number.isFinite(prev) || prev !== 1;
+}
+
 function effectiveUiModelRoundFromMeta() {
+  if (eventTournamentWeekNotStarted()) return 1;
   const m = DATA?.meta || {};
   const ex = Math.round(num(m.display_round, NaN));
   const live = Math.round(num(m.datagolf_live_current_round, NaN));
@@ -643,6 +679,14 @@ function fairwayHolesModeledFromData() {
 function syncLbRoundToTournamentModelRound() {
   const sel = document.getElementById("lb-round");
   if (!sel || isAfterSunday8pmEt()) return false;
+  if (eventTournamentWeekNotStarted()) {
+    const curPre = Math.round(num(sel.value, NaN));
+    if (!Number.isFinite(curPre) || curPre !== 1) {
+      sel.value = "1";
+      return true;
+    }
+    return false;
+  }
   const mismatch = String(DATA?.meta?.datagolf_live_event_mismatch || "").trim();
   const liveR = mismatch
     ? NaN
@@ -1546,6 +1590,7 @@ function mergeDgFieldScoresFromBundleIntoData(dataRows, fieldUpdatesRaw) {
  * live_hole_stats, or player `round` rows already show the next round.
  */
 function dgLiveBundleConsensusCurrentRound(j) {
+  if (eventTournamentWeekNotStarted()) return 1;
   if (!j || typeof j !== "object") return NaN;
   const info = j.info && typeof j.info === "object" ? j.info : {};
   /** @type {number[]} */
@@ -1585,6 +1630,9 @@ function mergeDatagolfInPlayPayload(j) {
   let drivingTouched = false;
   if (!Array.isArray(j.data)) return metaTouched;
   const info = j.info && typeof j.info === "object" ? j.info : {};
+  if (j.field_updates && typeof j.field_updates === "object") {
+    mergeDgFieldTeeTimesIntoPlayers(j.field_updates);
+  }
   const currentRound = dgLiveBundleConsensusCurrentRound(j);
   const lastUpdate = info.last_update != null ? String(info.last_update) : "";
   const inPlayEvent = String(
@@ -1635,7 +1683,6 @@ function mergeDatagolfInPlayPayload(j) {
   drivingTouched = mergeLiveTournamentDrivingIntoPlayers(j);
   if (j.field_updates && typeof j.field_updates === "object") {
     mergeDgFieldScoresFromBundleIntoData(j.data, j.field_updates);
-    mergeDgFieldTeeTimesIntoPlayers(j.field_updates);
   }
   let touched = 0;
   const countingTouched = mergeLiveTournamentCountingIntoProjections(j);
@@ -1700,7 +1747,12 @@ function mergeDatagolfInPlayPayload(j) {
   }
   if (DATA.meta) {
     if (lastUpdate) DATA.meta.datagolf_live_last_update = lastUpdate;
-    if (Number.isFinite(currentRound)) DATA.meta.datagolf_live_current_round = currentRound;
+    if (Number.isFinite(currentRound) && !eventTournamentWeekNotStarted()) {
+      DATA.meta.datagolf_live_current_round = currentRound;
+    } else {
+      delete DATA.meta.datagolf_live_current_round;
+    }
+    applyPreTournamentRoundMeta();
     DATA.meta.datagolf_live_placement_rows_merged = touched;
     if (
       touched > 0 &&
@@ -2475,6 +2527,7 @@ function applyPayload(raw) {
   if (prevFieldFp !== nextFieldFp) lastDatagolfInPlayToken = "";
   hydrateBakedWeatherFromPlayerFields();
   normalizeStoredCourseUsedLabels();
+  applyPreTournamentRoundMeta();
 }
 
 /** O/U + model default round from meta (see effectiveUiModelRoundFromMeta); **1** if unknown. */
@@ -2574,8 +2627,8 @@ function metaEventVenueLabel() {
   const m = DATA.meta || {};
   const ev = m.event_name ? String(m.event_name).trim() : "";
   const course = m.course_used ? formatCourseNameForDisplay(m.course_used) : "";
-  if (ev && course) return `${ev} · ${course}`;
-  return ev || course || "";
+  if (ev && course) return enforceCourseDisplayAcronyms(`${ev} · ${course}`);
+  return enforceCourseDisplayAcronyms(ev || course || "");
 }
 
 function metaEventVenueHtmlNote() {
@@ -7564,13 +7617,6 @@ function initCourseFitTableSortOnce() {
     buildCourseFitTab();
   });
   updateCourseFitTableSortIndicators();
-}
-
-function enforceCourseDisplayAcronyms(label) {
-  return String(label || "")
-    .replace(/\b(tpc)\b/gi, "TPC")
-    .replace(/\(tpc\b/gi, "(TPC")
-    .replace(/\btpc-/gi, "TPC-");
 }
 
 function courseFitPrettyCourseKey(ck) {

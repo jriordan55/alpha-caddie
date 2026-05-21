@@ -5,6 +5,16 @@ export function num(x, fallback = NaN) {
   return Number.isFinite(n) ? n : fallback;
 }
 
+/** True when field `date_start` (YYYY-MM-DD) is after today's UTC calendar day. */
+export function dateStartIsFuture(dateStartIso) {
+  const m = String(dateStartIso || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return false;
+  const start = Date.UTC(+m[1], +m[2] - 1, +m[3]);
+  const now = new Date();
+  const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  return Number.isFinite(start) && start > today;
+}
+
 /**
  * Highest plausible on-course round in 1..4 across DataGolf sources.
  * field-updates can lag preds/in-play / live-hole-stats after a rollover — use max(),
@@ -46,6 +56,10 @@ export function maxTournamentRoundFromLiveBundle(live, fieldRaw, liveHoleStats) 
 }
 
 export function exportDisplayRoundFromLiveBundle(live, fieldRaw, liveHoleStats) {
+  const ds = String(
+    fieldRaw?.date_start ?? fieldRaw?.dateStart ?? live?.field_updates?.date_start ?? "",
+  ).trim();
+  if (dateStartIsFuture(ds)) return 1;
   const m = maxTournamentRoundFromLiveBundle(live, fieldRaw, liveHoleStats);
   if (Number.isFinite(m) && m >= 1 && m <= 4) return Math.round(m);
   return 1;
