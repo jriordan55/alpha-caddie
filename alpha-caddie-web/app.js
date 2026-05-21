@@ -378,6 +378,7 @@ function bumpHistoryMutationEpoch() {
   propsCourseWindowLastEntries = null;
   courseWindowRoundEntriesCacheSig = "";
   courseWindowRoundEntriesCache = null;
+  propsDgIdNameManifestUiRefreshDone = false;
 }
 /** Cached sorted course dropdown rows from full history scan. */
 let propsAllPlayersCourseOptsCacheKey = "";
@@ -421,6 +422,10 @@ let propsCourseWindowRenderGen = 0;
 /** @type {{ courses?: { course_key: string, file: string }[] } | null} */
 let propsCoursesManifestCache = null;
 let propsCoursesManifestPromise = null;
+/** dg_id → display name from player-history/manifest.json (full archive field). */
+let propsDgIdNameById = null;
+let propsDgIdNameManifestPromise = null;
+let propsDgIdNameManifestUiRefreshDone = false;
 /** Single-venue index for field-by-course (not all courses). */
 let propsSingleCourseIndexSig = "";
 /** @type {{ days: string[], entries: { row: object, dgId: number, playerName: string }[] } | null} */
@@ -686,6 +691,17 @@ function displayGolferName(name) {
   const s = String(name || "").trim();
   const m = s.match(/^([^,]+),\s*(.+)$/);
   if (m) return `${m[2].trim()} ${m[1].trim()}`.trim();
+  return s;
+}
+
+/** Never show synthetic `DG 12345` labels in the UI. */
+function isDgPlaceholderDisplayName(name) {
+  return /^DG\s*\d+\s*$/i.test(String(name || "").trim());
+}
+
+function normalizeGolferDisplayName(raw) {
+  const s = displayGolferName(String(raw || "").trim());
+  if (!s || isDgPlaceholderDisplayName(s)) return "";
   return s;
 }
 
@@ -9567,6 +9583,7 @@ function applyPlayerHistoryPayload(payload, opts = {}) {
   PRICING_MU_BONUS_CACHE.clear();
   if (DATA?.meta?.event_name) scrubNonActualRoundsFromHistoryBuckets();
   bumpHistoryMutationEpoch();
+  void ensurePropsDgIdNameManifestLoaded();
 }
 
 function normalizeHistoryShardPayload(payload) {
@@ -10928,7 +10945,7 @@ function parsePropsCourseShardPayload(j) {
     entries.push({
       row,
       dgId,
-      playerName: String(e.player_name || row?.player_name || "").trim() || propsPlayerDisplayNameForDg(dgId),
+      playerName: resolveGolferDisplayNameForDg(dgId, e.player_name || row?.player_name),
     });
   }
   const days = Array.isArray(j.days) ? j.days.map(String) : [];
@@ -10967,7 +10984,7 @@ function mergeMemoryCourseEntriesIntoBucket(bucket, courseKey) {
   for (const [dgStr, rec] of sources) {
     const dgId = Math.round(num(dgStr, NaN));
     if (!Number.isFinite(dgId) || !rec || !Array.isArray(rec.rounds)) continue;
-    const playerName = nameByDg.get(dgId) || propsPlayerDisplayNameForDg(dgId);
+    const playerName = resolveGolferDisplayNameForDg(dgId, nameByDg.get(dgId), nameByDg);
     for (const r of rec.rounds) {
       if (!historyRoundCountsAsActual(r)) continue;
       if (normCourseNameKey(r.course_name) !== courseKey) continue;
@@ -11027,7 +11044,7 @@ async function buildPropsSingleCourseIndexFromMemory(courseKey) {
     for (const [dgStr, rec] of dgEntries.slice(i, i + PROPS_COURSE_INDEX_PLAYER_CHUNK)) {
       const dgId = Math.round(num(dgStr, NaN));
       if (!Number.isFinite(dgId) || !rec || !Array.isArray(rec.rounds)) continue;
-      const playerName = nameByDg.get(dgId) || propsPlayerDisplayNameForDg(dgId);
+      const playerName = resolveGolferDisplayNameForDg(dgId, nameByDg.get(dgId), nameByDg);
       for (const r of rec.rounds) {
         if (!historyRoundCountsAsActual(r)) continue;
         if (normCourseNameKey(r.course_name) !== courseKey) continue;
@@ -11091,7 +11108,7 @@ function rebuildPropsCourseRoundIndex() {
   for (const [dgStr, rec] of Object.entries(HISTORY.byDgId)) {
     const dgId = Math.round(num(dgStr, NaN));
     if (!Number.isFinite(dgId) || !rec || !Array.isArray(rec.rounds)) continue;
-    const playerName = nameByDg.get(dgId) || propsPlayerDisplayNameForDg(dgId);
+    const playerName = resolveGolferDisplayNameForDg(dgId, nameByDg.get(dgId), nameByDg);
     for (const r of rec.rounds) {
       if (!historyRoundCountsAsActual(r)) continue;
       const ck = normCourseNameKey(r.course_name);
@@ -11425,7 +11442,11 @@ function paintPropsTrendKpiRowCourseWindow(statKey, hitSt, graphSeries, entries)
   if (!el) return;
   el.replaceChildren();
   const rounds = entries.map((e) => e.row);
-  const playerIds = new Set(entries.map((e) => e.dgId));
+  const playerIds = new Set(
+    entries
+      .filter((e) => e && Number.isFinite(num(e.dgId, NaN)) && String(e.playerName || "").trim())
+      .map((e) => e.dgId),
+  );
   const vals = (graphSeries || []).map((s) => s.actual).filter((x) => Number.isFinite(x));
   const graphMean = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : NaN;
   const fieldMean = propsTrendMeanActual(statKey, rounds);
@@ -12308,28 +12329,99 @@ function propsFullHitStatsForDg(dgId, statKey, line, winN, forLeaderboardTable =
   };
 }
 
-function propsPlayerDisplayNameForDg(dgId) {
-  const id = Math.round(num(dgId, NaN));
-  if (!Number.isFinite(id)) return "—";
-  const p =
-    DATA.players.find((x) => Math.round(num(x.dg_id, NaN)) === id && samePlayerRound(x, 1)) ||
-    DATA.players.find((x) => Math.round(num(x.dg_id, NaN)) === id);
-  return p ? displayGolferName(p.player_name) : `DG ${id}`;
+function ensurePropsDgIdNameManifestLoaded() {
+  if (propsDgIdNameById) return Promise.resolve(propsDgIdNameById);
+  if (propsDgIdNameManifestPromise) return propsDgIdNameManifestPromise;
+  propsDgIdNameManifestPromise = (async () => {
+    if (isFileProtocol()) {
+      propsDgIdNameById = new Map();
+      return propsDgIdNameById;
+    }
+    try {
+      const res = await fetch(cacheBustFetchUrl("player-history/manifest.json"), { cache: "no-store" });
+      if (res.ok) {
+        const j = await res.json();
+        const m = new Map();
+        for (const p of j.players || []) {
+          const id = Math.round(num(p.dg_id, NaN));
+          const nm = normalizeGolferDisplayName(p.player_name);
+          if (Number.isFinite(id) && nm) m.set(id, nm);
+        }
+        propsDgIdNameById = m;
+        return m;
+      }
+    } catch (_) {
+      /* manifest optional */
+    }
+    propsDgIdNameById = new Map();
+    return propsDgIdNameById;
+  })().finally(() => {
+    propsDgIdNameManifestPromise = null;
+  });
+  return propsDgIdNameManifestPromise;
 }
 
-/** O(players) lookup for leaderboard rows — avoid repeating linear scans over `DATA.players` per dg_id. */
+function golferDisplayNameFromHistoryBucket(dgId) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id) || !HISTORY?.byDgId) return "";
+  const rec = HISTORY.byDgId[String(id)];
+  if (!rec) return "";
+  const bucketNm = normalizeGolferDisplayName(rec.player_name);
+  if (bucketNm) return bucketNm;
+  const rounds = Array.isArray(rec.rounds) ? rec.rounds : [];
+  for (let i = rounds.length - 1; i >= 0; i--) {
+    const rn = normalizeGolferDisplayName(rounds[i]?.player_name);
+    if (rn) return rn;
+  }
+  return "";
+}
+
+/**
+ * Resolve a golfer label for Historical Trends / field-by-course (never `DG {id}`).
+ * @param {number} dgId
+ * @param {string} [hintName] — shard row / entry hint
+ * @param {Map<number, string>} [nameByDgOpt]
+ */
+function resolveGolferDisplayNameForDg(dgId, hintName = "", nameByDgOpt = null) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return "";
+  const hint = normalizeGolferDisplayName(hintName);
+  if (hint) return hint;
+  const map = nameByDgOpt || buildPropsGolferDisplayNameMap();
+  const fromMap = map.get(id);
+  if (fromMap) return fromMap;
+  const fromHist = golferDisplayNameFromHistoryBucket(id);
+  if (fromHist) return fromHist;
+  if (propsDgIdNameById?.has(id)) return propsDgIdNameById.get(id) || "";
+  return "";
+}
+
+function propsPlayerDisplayNameForDg(dgId, hintName = "") {
+  return resolveGolferDisplayNameForDg(dgId, hintName) || "—";
+}
+
+/** O(players + history + manifest) lookup for leaderboard rows. */
 function buildPropsGolferDisplayNameMap() {
   const m = new Map();
   const players = DATA.players || [];
   for (const p of players) {
     const pid = Math.round(num(p.dg_id, NaN));
     if (!Number.isFinite(pid)) continue;
-    if (samePlayerRound(p, 1)) m.set(pid, displayGolferName(p.player_name));
+    const nm = normalizeGolferDisplayName(p.player_name);
+    if (nm) m.set(pid, nm);
   }
-  for (const p of players) {
-    const pid = Math.round(num(p.dg_id, NaN));
-    if (!Number.isFinite(pid) || m.has(pid)) continue;
-    m.set(pid, displayGolferName(p.player_name));
+  if (HISTORY?.byDgId) {
+    for (const [dgStr, rec] of Object.entries(HISTORY.byDgId)) {
+      const pid = Math.round(num(dgStr, NaN));
+      if (!Number.isFinite(pid) || m.has(pid)) continue;
+      const nm = golferDisplayNameFromHistoryBucket(pid);
+      if (nm) m.set(pid, nm);
+    }
+  }
+  if (propsDgIdNameById?.size) {
+    for (const [pid, nm] of propsDgIdNameById) {
+      if (!m.has(pid) && nm) m.set(pid, nm);
+    }
   }
   return m;
 }
@@ -12822,6 +12914,15 @@ function renderPropsHitRateAndTopTable(statKey, line, winN, courseWindowEntriesO
         .map((k) => num(k, NaN))
         .filter((x) => Number.isFinite(x));
   const nameByDg = buildPropsGolferDisplayNameMap();
+  const courseWindowNameByDg = new Map();
+  if (propsCourseWindowModeActive() && courseWindowEntriesOpt?.length) {
+    for (const e of courseWindowEntriesOpt) {
+      const id = Math.round(num(e.dgId, NaN));
+      if (!Number.isFinite(id) || courseWindowNameByDg.has(id)) continue;
+      const nm = resolveGolferDisplayNameForDg(id, e.playerName, nameByDg);
+      if (nm) courseWindowNameByDg.set(id, nm);
+    }
+  }
   const rows = [];
   for (const id of ids) {
     if (!propsCourseWindowModeActive() && propsMaxFiniteMarketRoundsUpperBound(id, statKey, minR) < minR) {
@@ -12831,9 +12932,13 @@ function renderPropsHitRateAndTopTable(statKey, line, winN, courseWindowEntriesO
       ? propsFullHitStatsFromRoundList(statKey, line, courseWindowRoundsByDg?.get(id) || [])
       : propsFullHitStatsForDg(id, statKey, line, wn, true);
     if (s.valid < minR) continue;
+    const name = propsCourseWindowModeActive()
+      ? courseWindowNameByDg.get(id) || resolveGolferDisplayNameForDg(id, "", nameByDg)
+      : resolveGolferDisplayNameForDg(id, nameByDg.get(id), nameByDg);
+    if (!name) continue;
     rows.push({
       dgId: id,
-      name: nameByDg.get(id) || `DG ${id}`,
+      name,
       valid: s.valid,
       over: s.over,
       under: s.under,
@@ -13557,14 +13662,17 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
     chartEntries = sampleCourseWindowChartEntriesEvenly(chartEntries, PROPS_COURSE_WINDOW_MAX_CHART_BARS);
   }
 
+  const nameByDgChart = buildPropsGolferDisplayNameMap();
   const seriesChart = [];
   for (const e of chartEntries) {
     const actual = actualForRoundRow(statKey, e.row);
     if (!Number.isFinite(actual)) continue;
+    const playerName = resolveGolferDisplayNameForDg(e.dgId, e.playerName, nameByDgChart);
+    if (!playerName) continue;
     seriesChart.push({
       actual,
       date: propsTrendChartDateFromRow(e.row),
-      playerName: e.playerName,
+      playerName,
       _hist: e.row,
     });
   }
@@ -13605,6 +13713,11 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
 
 function renderPropsTrends() {
   ensurePropsStatSelectValid();
+  void ensurePropsDgIdNameManifestLoaded().then((m) => {
+    if (!m?.size || activeAppTabId() !== "props" || propsDgIdNameManifestUiRefreshDone) return;
+    propsDgIdNameManifestUiRefreshDone = true;
+    scheduleRenderPropsTrends(0);
+  });
   if (propsCourseWindowModeOn()) {
     renderPropsTrendsCourseWindow();
     return;
