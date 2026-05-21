@@ -8,7 +8,7 @@
   "datagolf_field_current_round": 1,
   "display_round": 1,
   "display_round_label": "R1 — next Thursday (auto, America/New_York)",
-  "updated_at": "2026-05-21T21:40:35Z",
+  "updated_at": "2026-05-21T23:06:37Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -21337,520 +21337,20 @@
   ],
   "props": [
     {
-      "player_name": "Meissner, Mac",
-      "line": 4.5,
-      "over_odds": -114,
-      "under_odds": -132,
-      "market": "Birdies",
-      "round_num": 1,
-      "dg_id": 28159,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Schmid, Matti",
-      "line": 4.5,
-      "over_odds": -156,
-      "under_odds": 104,
-      "market": "Birdies",
-      "round_num": 1,
-      "dg_id": 20722,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Eckroat, Austin",
-      "line": 4.5,
-      "over_odds": -162,
-      "under_odds": 108,
-      "market": "Birdies",
-      "round_num": 1,
-      "dg_id": 26653,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Hisatsune, Ryo",
-      "line": 2.5,
-      "over_odds": -160,
-      "under_odds": 106,
-      "market": "Birdies",
-      "round_num": 1,
-      "dg_id": 22760,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Coody, Pierceson",
-      "line": 5.5,
-      "over_odds": -172,
-      "under_odds": 115,
-      "market": "Birdies",
-      "round_num": 1,
-      "dg_id": 28309,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Thompson, Davis",
-      "line": 5.5,
-      "over_odds": 194,
-      "under_odds": -290,
-      "market": "Birdies",
-      "round_num": 1,
-      "dg_id": 27364,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Im, Sungjae",
-      "line": 4.5,
-      "over_odds": -275,
-      "under_odds": 180,
-      "market": "Birdies",
-      "round_num": 1,
-      "dg_id": 17488,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Spieth, Jordan",
-      "line": 5.5,
-      "over_odds": -156,
-      "under_odds": 105,
-      "market": "Birdies",
-      "round_num": 1,
-      "dg_id": 14636,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Kirk, Chris",
-      "line": 4.5,
-      "over_odds": -220,
-      "under_odds": 144,
-      "market": "Birdies",
-      "round_num": 1,
-      "dg_id": 12423,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Greyserman, Max",
-      "line": 3.5,
-      "over_odds": 152,
-      "under_odds": -230,
-      "market": "Birdies",
-      "round_num": 1,
-      "dg_id": 23465,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Pendrith, Taylor",
-      "line": 4.5,
-      "over_odds": 154,
-      "under_odds": -235,
-      "market": "Birdies",
-      "round_num": 1,
-      "dg_id": 17780,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Olesen, Thorbjorn",
-      "line": 3.5,
-      "over_odds": 128,
-      "under_odds": -194,
-      "market": "Birdies",
-      "round_num": 1,
-      "dg_id": 13412,
-      "source": "draftkings"
-    },
-    {
       "player_name": "Hossler, Beau",
-      "line": 3.5,
-      "over_odds": -170,
-      "under_odds": 112,
+      "line": 5.5,
+      "over_odds": 130,
+      "under_odds": -196,
       "market": "Birdies",
       "round_num": 1,
       "dg_id": 15470,
       "source": "draftkings"
     },
     {
-      "player_name": "Meissner, Mac",
-      "line": 12.5,
-      "over_odds": 118,
-      "under_odds": -178,
-      "market": "Pars",
-      "round_num": 1,
-      "dg_id": 28159,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Hisatsune, Ryo",
-      "line": 13.5,
-      "over_odds": -200,
-      "under_odds": 134,
-      "market": "Pars",
-      "round_num": 1,
-      "dg_id": 22760,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Coody, Pierceson",
-      "line": 10.5,
-      "over_odds": -178,
-      "under_odds": 118,
-      "market": "Pars",
-      "round_num": 1,
-      "dg_id": 28309,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Thompson, Davis",
-      "line": 11.5,
-      "over_odds": -134,
-      "under_odds": -112,
-      "market": "Pars",
-      "round_num": 1,
-      "dg_id": 27364,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Spieth, Jordan",
-      "line": 8.5,
-      "over_odds": -220,
-      "under_odds": 144,
-      "market": "Pars",
-      "round_num": 1,
-      "dg_id": 14636,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Im, Sungjae",
-      "line": 11.5,
-      "over_odds": -110,
-      "under_odds": -138,
-      "market": "Pars",
-      "round_num": 1,
-      "dg_id": 17488,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Pendrith, Taylor",
-      "line": 13.5,
-      "over_odds": 130,
-      "under_odds": -194,
-      "market": "Pars",
-      "round_num": 1,
-      "dg_id": 17780,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Meissner, Mac",
-      "line": 1.5,
-      "over_odds": 400,
-      "under_odds": -650,
-      "market": "Bogeys",
-      "round_num": 1,
-      "dg_id": 28159,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Coody, Pierceson",
-      "line": 1.5,
-      "over_odds": -102,
-      "under_odds": -148,
-      "market": "Bogeys",
-      "round_num": 1,
-      "dg_id": 28309,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Hisatsune, Ryo",
-      "line": 1.5,
-      "over_odds": 108,
-      "under_odds": -162,
-      "market": "Bogeys",
-      "round_num": 1,
-      "dg_id": 22760,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Thompson, Davis",
-      "line": 1.5,
-      "over_odds": 154,
-      "under_odds": -230,
-      "market": "Bogeys",
-      "round_num": 1,
-      "dg_id": 27364,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Spieth, Jordan",
-      "line": 3.5,
-      "over_odds": 122,
-      "under_odds": -184,
-      "market": "Bogeys",
-      "round_num": 1,
-      "dg_id": 14636,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Im, Sungjae",
-      "line": 1.5,
-      "over_odds": -114,
-      "under_odds": -132,
-      "market": "Bogeys",
-      "round_num": 1,
-      "dg_id": 17488,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Meissner, Mac",
-      "line": 10.5,
-      "over_odds": -250,
-      "under_odds": 180,
-      "market": "GIR",
-      "round_num": 1,
-      "dg_id": 28159,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Coody, Pierceson",
-      "line": 11.5,
-      "over_odds": -160,
-      "under_odds": 116,
-      "market": "GIR",
-      "round_num": 1,
-      "dg_id": 28309,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Hisatsune, Ryo",
-      "line": 13.5,
-      "over_odds": -200,
-      "under_odds": 146,
-      "market": "GIR",
-      "round_num": 1,
-      "dg_id": 22760,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Thompson, Davis",
-      "line": 14.5,
-      "over_odds": 196,
-      "under_odds": -270,
-      "market": "GIR",
-      "round_num": 1,
-      "dg_id": 27364,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Spieth, Jordan",
-      "line": 13.5,
-      "over_odds": -166,
-      "under_odds": 120,
-      "market": "GIR",
-      "round_num": 1,
-      "dg_id": 14636,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Im, Sungjae",
-      "line": 11.5,
-      "over_odds": -104,
-      "under_odds": -132,
-      "market": "GIR",
-      "round_num": 1,
-      "dg_id": 17488,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Pendrith, Taylor",
-      "line": 16.5,
-      "over_odds": -154,
-      "under_odds": 112,
-      "market": "GIR",
-      "round_num": 1,
-      "dg_id": 17780,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Meissner, Mac",
-      "line": 7.5,
-      "over_odds": -230,
-      "under_odds": 158,
-      "market": "Fairways hit",
-      "round_num": 1,
-      "dg_id": 28159,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Hisatsune, Ryo",
-      "line": 11.5,
-      "over_odds": 102,
-      "under_odds": -146,
-      "market": "Fairways hit",
-      "round_num": 1,
-      "dg_id": 22760,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Coody, Pierceson",
-      "line": 12.5,
-      "over_odds": 126,
-      "under_odds": -182,
-      "market": "Fairways hit",
-      "round_num": 1,
-      "dg_id": 28309,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Thompson, Davis",
-      "line": 9.5,
-      "over_odds": 170,
-      "under_odds": -245,
-      "market": "Fairways hit",
-      "round_num": 1,
-      "dg_id": 27364,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Spieth, Jordan",
-      "line": 7.5,
-      "over_odds": 122,
-      "under_odds": -174,
-      "market": "Fairways hit",
-      "round_num": 1,
-      "dg_id": 14636,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Im, Sungjae",
-      "line": 9.5,
-      "over_odds": 102,
-      "under_odds": -148,
-      "market": "Fairways hit",
-      "round_num": 1,
-      "dg_id": 17488,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Meissner, Mac",
-      "line": 67.5,
-      "over_odds": -210,
-      "under_odds": 112,
-      "market": "Total Score",
-      "round_num": 1,
-      "dg_id": 28159,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Hisatsune, Ryo",
-      "line": 67.5,
-      "over_odds": -184,
-      "under_odds": 128,
-      "market": "Total Score",
-      "round_num": 1,
-      "dg_id": 22760,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Eckroat, Austin",
-      "line": 66.5,
-      "over_odds": -160,
-      "under_odds": 112,
-      "market": "Total Score",
-      "round_num": 1,
-      "dg_id": 26653,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Schmid, Matti",
-      "line": 68.5,
-      "over_odds": -210,
-      "under_odds": 146,
-      "market": "Total Score",
-      "round_num": 1,
-      "dg_id": 20722,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Coody, Pierceson",
-      "line": 66.5,
-      "over_odds": -182,
-      "under_odds": 128,
-      "market": "Total Score",
-      "round_num": 1,
-      "dg_id": 28309,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Thompson, Davis",
-      "line": 67.5,
-      "over_odds": 116,
-      "under_odds": -170,
-      "market": "Total Score",
-      "round_num": 1,
-      "dg_id": 27364,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Kirk, Chris",
-      "line": 67.5,
-      "over_odds": -168,
-      "under_odds": 118,
-      "market": "Total Score",
-      "round_num": 1,
-      "dg_id": 12423,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Spieth, Jordan",
-      "line": 68.5,
-      "over_odds": -166,
-      "under_odds": 116,
-      "market": "Total Score",
-      "round_num": 1,
-      "dg_id": 14636,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Im, Sungjae",
-      "line": 67.5,
-      "over_odds": -136,
-      "under_odds": -105,
-      "market": "Total Score",
-      "round_num": 1,
-      "dg_id": 17488,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Greyserman, Max",
-      "line": 70.5,
-      "over_odds": -184,
-      "under_odds": -122,
-      "market": "Total Score",
-      "round_num": 1,
-      "dg_id": 23465,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Pendrith, Taylor",
-      "line": 67.5,
-      "over_odds": -112,
-      "under_odds": -128,
-      "market": "Total Score",
-      "round_num": 1,
-      "dg_id": 17780,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Olesen, Thorbjorn",
-      "line": 71.5,
-      "over_odds": -112,
-      "under_odds": -128,
-      "market": "Total Score",
-      "round_num": 1,
-      "dg_id": 13412,
-      "source": "draftkings"
-    },
-    {
       "player_name": "Hossler, Beau",
-      "line": 68.5,
-      "over_odds": 120,
-      "under_odds": -172,
+      "line": 65.5,
+      "over_odds": -250,
+      "under_odds": 175,
       "market": "Total Score",
       "round_num": 1,
       "dg_id": 15470,
@@ -21917,6 +21417,15 @@
       "under_odds": -110,
       "market": "Total Score",
       "dg_id": 22051,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Spieth, Jordan",
+      "line": 66.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 14636,
       "source": "model_fallback"
     },
     {
@@ -22010,6 +21519,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Hisatsune, Ryo",
+      "line": 67.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 22760,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Hoge, Tom",
       "line": 67.5,
       "over_odds": -110,
@@ -22034,6 +21552,24 @@
       "under_odds": -110,
       "market": "Total Score",
       "dg_id": 6169,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Thompson, Davis",
+      "line": 67.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 27364,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Pendrith, Taylor",
+      "line": 67.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 17780,
       "source": "model_fallback"
     },
     {
@@ -22091,12 +21627,39 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Olesen, Thorbjorn",
+      "line": 68.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 13412,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Smith, Jordan",
       "line": 68.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
       "dg_id": 18586,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Im, Sungjae",
+      "line": 68.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 17488,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Eckroat, Austin",
+      "line": 68.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 26653,
       "source": "model_fallback"
     },
     {
@@ -22142,6 +21705,15 @@
       "under_odds": -110,
       "market": "Total Score",
       "dg_id": 18424,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Greyserman, Max",
+      "line": 68.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 23465,
       "source": "model_fallback"
     },
     {
@@ -22223,6 +21795,15 @@
       "under_odds": -110,
       "market": "Total Score",
       "dg_id": 29770,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Kirk, Chris",
+      "line": 68.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 12423,
       "source": "model_fallback"
     },
     {
@@ -22991,6 +22572,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Coody, Pierceson",
+      "line": 69.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 28309,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Paul, Jeremy",
       "line": 69.5,
       "over_odds": -110,
@@ -23051,6 +22641,24 @@
       "under_odds": -110,
       "market": "Total Score",
       "dg_id": 9586,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Schmid, Matti",
+      "line": 71.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 20722,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Meissner, Mac",
+      "line": 71.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 28159,
       "source": "model_fallback"
     },
     {
@@ -23126,6 +22734,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Spieth, Jordan",
+      "line": 4.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 14636,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Schenk, Adam",
       "line": 5.5,
       "over_odds": -110,
@@ -23216,6 +22833,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Hisatsune, Ryo",
+      "line": 4.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 22760,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Hoge, Tom",
       "line": 4.5,
       "over_odds": -110,
@@ -23240,6 +22866,24 @@
       "under_odds": -110,
       "market": "Birdies",
       "dg_id": 6169,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Thompson, Davis",
+      "line": 4.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 27364,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Pendrith, Taylor",
+      "line": 4.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 17780,
       "source": "model_fallback"
     },
     {
@@ -23297,12 +22941,39 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Olesen, Thorbjorn",
+      "line": 4.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 13412,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Smith, Jordan",
       "line": 4.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Birdies",
       "dg_id": 18586,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Im, Sungjae",
+      "line": 4.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 17488,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Eckroat, Austin",
+      "line": 4.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 26653,
       "source": "model_fallback"
     },
     {
@@ -23348,6 +23019,15 @@
       "under_odds": -110,
       "market": "Birdies",
       "dg_id": 18424,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Greyserman, Max",
+      "line": 4.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 23465,
       "source": "model_fallback"
     },
     {
@@ -23429,6 +23109,15 @@
       "under_odds": -110,
       "market": "Birdies",
       "dg_id": 29770,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Kirk, Chris",
+      "line": 4.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 12423,
       "source": "model_fallback"
     },
     {
@@ -24197,6 +23886,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Coody, Pierceson",
+      "line": 2.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 28309,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Paul, Jeremy",
       "line": 3.5,
       "over_odds": -110,
@@ -24257,6 +23955,24 @@
       "under_odds": -110,
       "market": "Birdies",
       "dg_id": 9586,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Schmid, Matti",
+      "line": 4.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 20722,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Meissner, Mac",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 28159,
       "source": "model_fallback"
     },
     {
@@ -24329,6 +24045,15 @@
       "under_odds": -110,
       "market": "Pars",
       "dg_id": 22051,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Spieth, Jordan",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 14636,
       "source": "model_fallback"
     },
     {
@@ -24422,6 +24147,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Hisatsune, Ryo",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 22760,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Hoge, Tom",
       "line": 12.5,
       "over_odds": -110,
@@ -24446,6 +24180,24 @@
       "under_odds": -110,
       "market": "Pars",
       "dg_id": 6169,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Thompson, Davis",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 27364,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Pendrith, Taylor",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 17780,
       "source": "model_fallback"
     },
     {
@@ -24518,6 +24270,15 @@
       "under_odds": -110,
       "market": "Pars",
       "dg_id": 18586,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Im, Sungjae",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 17488,
       "source": "model_fallback"
     },
     {
@@ -25448,6 +25209,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Coody, Pierceson",
+      "line": 12.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 28309,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Paul, Jeremy",
       "line": 11.5,
       "over_odds": -110,
@@ -25520,6 +25290,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Meissner, Mac",
+      "line": 10.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 28159,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Montgomery, Taylor",
       "line": 8.5,
       "over_odds": -110,
@@ -25589,6 +25368,15 @@
       "under_odds": -110,
       "market": "Bogeys",
       "dg_id": 22051,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Spieth, Jordan",
+      "line": 1.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 14636,
       "source": "model_fallback"
     },
     {
@@ -25682,6 +25470,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Hisatsune, Ryo",
+      "line": 1.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 22760,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Hoge, Tom",
       "line": 1.5,
       "over_odds": -110,
@@ -25706,6 +25503,15 @@
       "under_odds": -110,
       "market": "Bogeys",
       "dg_id": 6169,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Thompson, Davis",
+      "line": 1.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 27364,
       "source": "model_fallback"
     },
     {
@@ -25790,6 +25596,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Im, Sungjae",
+      "line": 1.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 17488,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Eckroat, Austin",
       "line": 1.5,
       "over_odds": -110,
@@ -26717,6 +26532,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Coody, Pierceson",
+      "line": 2.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 28309,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Paul, Jeremy",
       "line": 2.5,
       "over_odds": -110,
@@ -26789,6 +26613,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Meissner, Mac",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 28159,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Montgomery, Taylor",
       "line": 5.5,
       "over_odds": -110,
@@ -26858,6 +26691,15 @@
       "under_odds": -110,
       "market": "GIR",
       "dg_id": 22051,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Spieth, Jordan",
+      "line": 14.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 14636,
       "source": "model_fallback"
     },
     {
@@ -26951,6 +26793,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Hisatsune, Ryo",
+      "line": 13.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 22760,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Hoge, Tom",
       "line": 13.5,
       "over_odds": -110,
@@ -26975,6 +26826,24 @@
       "under_odds": -110,
       "market": "GIR",
       "dg_id": 6169,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Thompson, Davis",
+      "line": 13.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 27364,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Pendrith, Taylor",
+      "line": 13.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 17780,
       "source": "model_fallback"
     },
     {
@@ -27047,6 +26916,15 @@
       "under_odds": -110,
       "market": "GIR",
       "dg_id": 18586,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Im, Sungjae",
+      "line": 13.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 17488,
       "source": "model_fallback"
     },
     {
@@ -27977,6 +27855,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Coody, Pierceson",
+      "line": 14.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 28309,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Paul, Jeremy",
       "line": 13.5,
       "over_odds": -110,
@@ -28049,6 +27936,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Meissner, Mac",
+      "line": 12.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 28159,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Montgomery, Taylor",
       "line": 10.5,
       "over_odds": -110,
@@ -28118,6 +28014,15 @@
       "under_odds": -110,
       "market": "Fairways hit",
       "dg_id": 22051,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Spieth, Jordan",
+      "line": 9.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Fairways hit",
+      "dg_id": 14636,
       "source": "model_fallback"
     },
     {
@@ -28211,6 +28116,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Hisatsune, Ryo",
+      "line": 9.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Fairways hit",
+      "dg_id": 22760,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Hoge, Tom",
       "line": 10.5,
       "over_odds": -110,
@@ -28235,6 +28149,15 @@
       "under_odds": -110,
       "market": "Fairways hit",
       "dg_id": 6169,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Thompson, Davis",
+      "line": 9.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Fairways hit",
+      "dg_id": 27364,
       "source": "model_fallback"
     },
     {
@@ -28316,6 +28239,15 @@
       "under_odds": -110,
       "market": "Fairways hit",
       "dg_id": 18586,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Im, Sungjae",
+      "line": 9.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Fairways hit",
+      "dg_id": 17488,
       "source": "model_fallback"
     },
     {
@@ -29246,6 +29178,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Coody, Pierceson",
+      "line": 8.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Fairways hit",
+      "dg_id": 28309,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Paul, Jeremy",
       "line": 9.5,
       "over_odds": -110,
@@ -29315,6 +29256,15 @@
       "under_odds": -110,
       "market": "Fairways hit",
       "dg_id": 20722,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Meissner, Mac",
+      "line": 7.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Fairways hit",
+      "dg_id": 28159,
       "source": "model_fallback"
     },
     {
@@ -51256,6 +51206,6 @@
       "round_num": 1
     }
   },
-  "book_odds_refreshed_at": "2026-05-21T21:40:35Z",
-  "dk_round_props_refreshed_at": "2026-05-21T21:40:35Z"
+  "book_odds_refreshed_at": "2026-05-21T23:06:37Z",
+  "dk_round_props_refreshed_at": "2026-05-21T23:06:37Z"
 }
