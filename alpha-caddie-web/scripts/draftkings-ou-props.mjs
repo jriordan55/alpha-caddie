@@ -209,10 +209,23 @@ function buildProbeOrder(stat, preferredSub, allLeagueSubIds) {
   return out;
 }
 
-async function pickSubcategoryForStat(api, leagueId, siteSegment, stat, preferredSub, allLeagueSubIds, players) {
+/** All subcategory ids that return per-player round O/U rows for `stat` (merge every hit, not just the largest). */
+async function findAllSubcategoriesForStat(
+  api,
+  leagueId,
+  siteSegment,
+  stat,
+  preferredSub,
+  navSubs,
+  allLeagueSubIds,
+  players,
+) {
   const candidates = buildProbeOrder(stat, preferredSub, allLeagueSubIds);
-  let bestSub = "";
-  let bestScore = 0;
+  for (const id of navSubs || []) {
+    const s = String(id || "").trim();
+    if (s && !candidates.includes(s)) candidates.unshift(s);
+  }
+  const hits = [];
   const seen = new Set();
   for (const sub of candidates) {
     if (!sub || seen.has(sub)) continue;
@@ -230,14 +243,11 @@ async function pickSubcategoryForStat(api, leagueId, siteSegment, stat, preferre
     const sample = mk.slice(0, 20).map((m) => m.name);
     if (!sample.some((n) => isGoodPlayerRoundSampleName(stat, n))) continue;
     const nParsed = propsFromMarketsBody(body, stat, players).length;
-    if (nParsed > bestScore) {
-      bestScore = nParsed;
-      bestSub = sub;
-      if (nParsed >= 12) break;
-    }
+    if (nParsed > 0) hits.push({ sub, nParsed });
     await new Promise((r) => setTimeout(r, 45));
   }
-  return bestScore > 0 ? bestSub : "";
+  hits.sort((a, b) => b.nParsed - a.nParsed);
+  return [...new Set(hits.map((h) => h.sub))];
 }
 
 function lineFromSelection(s) {
@@ -426,7 +436,13 @@ export async function fetchDraftKingsOuProps(opts = {}) {
   const nav = await page.evaluate((lidRaw) => {
     const ini = window.__INITIAL_STATE__;
     if (!ini)
-      return { seoMap: {}, roundScoreSubs: [], detectedLeagueId: "", allSubIdsForLeague: [] };
+      return {
+        seoMap: {},
+        subsByStat: {},
+        roundScoreSubs: [],
+        detectedLeagueId: "",
+        allSubIdsForLeague: [],
+      };
     const requested = String(lidRaw || "").trim();
     const seoToStat = {
       "birdies-or-better": "Birdies",
@@ -446,6 +462,7 @@ export async function fetchDraftKingsOuProps(opts = {}) {
       [/(?:total\s+)?putts?/i, "Putts"],
     ];
     const bySeo = {};
+    const subsByStat = {};
     const roundScoreSubs = new Set();
     const leagueRows = [];
     function walk(o, depth) {
@@ -497,7 +514,11 @@ export async function fetchDraftKingsOuProps(opts = {}) {
     for (const r of leagueRows) {
       if (detectedLeagueId && r.leagueId !== detectedLeagueId) continue;
       if (r.seo) bySeo[r.seo] = r.subcategoryId;
-      if (r.stat) bySeo[`__stat__${r.stat}`] = r.subcategoryId;
+      if (r.stat) {
+        bySeo[`__stat__${r.stat}`] = r.subcategoryId;
+        if (!subsByStat[r.stat]) subsByStat[r.stat] = [];
+        if (!subsByStat[r.stat].includes(r.subcategoryId)) subsByStat[r.stat].push(r.subcategoryId);
+      }
     }
     const scoreSubs = [];
     for (const tag of roundScoreSubs) {
@@ -511,6 +532,7 @@ export async function fetchDraftKingsOuProps(opts = {}) {
     }
     return {
       seoMap: bySeo,
+      subsByStat,
       roundScoreSubs: scoreSubs,
       detectedLeagueId,
       allSubIdsForLeague: [...allSubs].sort(),
@@ -535,34 +557,54 @@ export async function fetchDraftKingsOuProps(opts = {}) {
   }
   roundScoreSubs = [...new Set(roundScoreSubs.map(String).filter(Boolean))];
 
+  const subsByStatNav = nav.subsByStat || {};
   const subcatsUsed = {};
-  const statToSub = {};
+  const statToSubs = {};
+  const addStatSubs = (stat, subOrList) => {
+    const list = Array.isArray(subOrList) ? subOrList : subOrList ? [subOrList] : [];
+    if (!list.length) return;
+    if (!statToSubs[stat]) statToSubs[stat] = [];
+    for (const id of list) {
+      const s = String(id || "").trim();
+      if (s && !statToSubs[stat].includes(s)) statToSubs[stat].push(s);
+    }
+  };
   for (const [seo, stat] of Object.entries(STAT_BY_SEO)) {
     const fromNav = bySeo[seo] || bySeo[`__stat__${stat}`];
     const fromEnv = overrides[stat];
-    const sub = fromEnv || fromNav || FALLBACK_SUBCAT_BY_STAT[stat];
-    if (!sub) continue;
-    statToSub[stat] = sub;
-    subcatsUsed[stat] = sub;
+    const navList = subsByStatNav[stat] || [];
+    addStatSubs(stat, fromEnv || navList.length ? navList : fromNav ? [fromNav] : []);
+    if (!statToSubs[stat]?.length && FALLBACK_SUBCAT_BY_STAT[stat]) {
+      addStatSubs(stat, FALLBACK_SUBCAT_BY_STAT[stat]);
+    }
   }
 
   const allLeagueSubIds = Array.isArray(nav.allSubIdsForLeague) ? nav.allSubIdsForLeague : [];
   const api = ctx.request;
   for (const st of ["Putts", "GIR", "Fairways hit", "Birdies", "Pars", "Bogeys"]) {
     if (overrides[st]) continue;
-    const pref = statToSub[st] || "";
+    const pref = statToSubs[st]?.[0] || "";
     if (!pref && !(PROBE_SUBS_FIRST[st] || []).length && st !== "Fairways hit" && st !== "GIR") continue;
-    const picked = await pickSubcategoryForStat(api, leagueId, siteSegment, st, pref, allLeagueSubIds, players);
-    if (picked) {
-      statToSub[st] = picked;
-      subcatsUsed[st] = picked;
-    } else if (statToSub[st]) {
-      delete statToSub[st];
+    const picked = await findAllSubcategoriesForStat(
+      api,
+      leagueId,
+      siteSegment,
+      st,
+      pref,
+      statToSubs[st] || [],
+      allLeagueSubIds,
+      players,
+    );
+    if (picked.length) {
+      statToSubs[st] = picked;
+      subcatsUsed[st] = picked.join(",");
+    } else if (statToSubs[st]?.length) {
+      delete statToSubs[st];
       delete subcatsUsed[st];
     }
   }
 
-  if (Object.keys(statToSub).length === 0 && roundScoreSubs.length === 0) {
+  if (Object.keys(statToSubs).length === 0 && roundScoreSubs.length === 0) {
     await browser.close();
     return {
       props: [],
@@ -571,28 +613,33 @@ export async function fetchDraftKingsOuProps(opts = {}) {
     };
   }
 
-  const nAttempts = Object.keys(statToSub).length + roundScoreSubs.length;
+  const nAttempts =
+    Object.values(statToSubs).reduce((n, subs) => n + (subs?.length || 0), 0) + roundScoreSubs.length;
   const all = [];
   let apiFail = 0;
   let apiBadShape = 0;
   try {
-    const entries = Object.entries(statToSub);
+    const entries = Object.entries(statToSubs);
     for (let i = 0; i < entries.length; i++) {
-      const [stat, sub] = entries[i];
-      const u = marketsUrl(leagueId, sub, siteSegment);
-      const res = await api.get(u, { timeout: 60000 });
-      if (!res.ok()) {
-        apiFail++;
-        console.warn(`[draftkings-ou] markets HTTP ${res.status()} stat=${stat} sub=${sub}`);
-        continue;
+      const [stat, subs] = entries[i];
+      for (let j = 0; j < subs.length; j++) {
+        const sub = subs[j];
+        const u = marketsUrl(leagueId, sub, siteSegment);
+        const res = await api.get(u, { timeout: 60000 });
+        if (!res.ok()) {
+          apiFail++;
+          console.warn(`[draftkings-ou] markets HTTP ${res.status()} stat=${stat} sub=${sub}`);
+          continue;
+        }
+        const body = await res.json();
+        if (!Array.isArray(body?.markets)) apiBadShape++;
+        const chunk = propsFromMarketsBody(body, stat, players);
+        all.push(...chunk);
+        if (!chunk.length && Array.isArray(body?.markets) && body.markets.length)
+          logUnparsedSample(stat, body, "no-rows");
+        if (j < subs.length - 1) await page.waitForTimeout(250);
       }
-      const body = await res.json();
-      if (!Array.isArray(body?.markets)) apiBadShape++;
-      const chunk = propsFromMarketsBody(body, stat, players);
-      all.push(...chunk);
-      if (!chunk.length && Array.isArray(body?.markets) && body.markets.length)
-        logUnparsedSample(stat, body, "no-rows");
-      await page.waitForTimeout(250);
+      if (i < entries.length - 1) await page.waitForTimeout(250);
     }
     for (let i = 0; i < roundScoreSubs.length; i++) {
       const sub = roundScoreSubs[i];

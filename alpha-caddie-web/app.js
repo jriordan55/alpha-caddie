@@ -4341,22 +4341,55 @@ function projectionSortComparable(val, dir) {
   return dir > 0 ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
 }
 
+/** Synthetic field row for DK props that do not match the current projections field. */
+function ouProjectionPlayerFromDkProp(propRow, fieldPlayer) {
+  if (fieldPlayer) return fieldPlayer;
+  const pn = String(propRow?.player_name || "").trim();
+  if (!pn) return null;
+  const id = Math.round(num(propRow?.dg_id, NaN));
+  return {
+    player_name: pn,
+    dg_id: Number.isFinite(id) && id > 0 ? id : NaN,
+    country: "",
+  };
+}
+
 /** One display row: golfer × DK market × Over|Under (only posted DraftKings lines). */
 function ouProjectionFlatRowsForPlayers(players, cols) {
   const out = [];
   const seen = new Set();
   const fieldIndex = buildOuProjectionFieldIndex(players);
   const pushSides = (player, col, colIdx, mu, pick) => {
-    const id = Math.round(num(player.dg_id, NaN));
     const line = enforceHalfLine(num(pick?.line, NaN));
-    if (!Number.isFinite(id) || !Number.isFinite(line)) return;
-    const sig = `${id}|${col.label}|${line}`;
+    if (!Number.isFinite(line)) return;
+    const id = Math.round(num(player.dg_id, NaN));
+    const nameKey = ouPropPlayerKeyLoose(displayGolferName(player.player_name || ""));
+    const sig =
+      Number.isFinite(id) && id > 0 ? `${id}|${col.label}|${line}` : `nm:${nameKey}|${col.label}|${line}`;
     if (seen.has(sig)) return;
     seen.add(sig);
     for (const side of ["over", "under"]) {
       out.push({ player, col, colIdx, side, mu, pick });
     }
   };
+
+  for (const r of draftKingsRoundPropsOnly()) {
+    const canon = String(r.market || "").trim();
+    const colIdx = cols.findIndex((c) => ouPropsCanonicalMarket(c.market) === canon);
+    if (colIdx < 0) continue;
+    const col = cols[colIdx];
+    const fieldPlayer = resolveFieldPlayerForDkProp(r, fieldIndex);
+    const player = ouProjectionPlayerFromDkProp(r, fieldPlayer);
+    if (!player) continue;
+    const mu = fieldPlayer ? ouProjectedMean(col.market, fieldPlayer) : NaN;
+    const pick = {
+      line: enforceHalfLine(num(r.line, NaN)),
+      over: num(r.over_odds, NaN),
+      under: num(r.under_odds, NaN),
+      source: "draftkings",
+    };
+    pushSides(player, col, colIdx, mu, pick);
+  }
 
   for (const player of players) {
     for (let colIdx = 0; colIdx < cols.length; colIdx++) {
@@ -4368,24 +4401,17 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
     }
   }
 
-  for (const r of draftKingsRoundPropsOnly()) {
-    const canon = String(r.market || "").trim();
-    const colIdx = cols.findIndex((c) => ouPropsCanonicalMarket(c.market) === canon);
-    if (colIdx < 0) continue;
-    const col = cols[colIdx];
-    const player = resolveFieldPlayerForDkProp(r, fieldIndex);
-    if (!player) continue;
-    const mu = ouProjectedMean(col.market, player);
-    const pick = {
-      line: enforceHalfLine(num(r.line, NaN)),
-      over: num(r.over_odds, NaN),
-      under: num(r.under_odds, NaN),
-      source: "draftkings",
-    };
-    pushSides(player, col, colIdx, mu, pick);
-  }
-
   return out;
+}
+
+/** DraftKings golfers with at least one line for the active O/U round (for status messaging). */
+function draftKingsRoundGolferCount() {
+  const names = new Set();
+  for (const r of draftKingsRoundPropsOnly()) {
+    const pn = String(r.player_name || "").trim();
+    if (pn) names.add(pn);
+  }
+  return names.size;
 }
 
 function ouProjectionRowStatOrder(a, b) {
@@ -4757,8 +4783,11 @@ function buildOuTable() {
     const td = document.createElement("td");
     td.colSpan = projColCount;
     td.className = "ou-cell ou-proj-long-td ou-proj-empty-td";
+    const dkN = draftKingsRoundGolferCount();
     td.textContent = draftKingsRoundPropOddsAvailable()
-      ? "No DraftKings lines for this golfer, market, or filter."
+      ? dkN > 0
+        ? `No DraftKings lines for this golfer, market, or filter. (${dkN} golfers have DK lines in projections.json for R${Math.round(getOuRound())}; GIR/Putts are often not offered on DK round tabs.)`
+        : "No DraftKings lines for this golfer, market, or filter."
       : "No DraftKings round O/U in projections.json yet — run npm run update:dk-round-projections (or fetch:book-odds).";
     tr.appendChild(td);
     tbody.appendChild(tr);
