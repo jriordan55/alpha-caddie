@@ -6,6 +6,7 @@
  *   - pgatouR scorecards when R is installed
  *   - fetch:dg projections (skill + preds/pre-tournament when pre; live stats when in play)
  *   - bake-weather-into-projections → Open-Meteo per-tee weather baked into projections.json
+ *   - refresh-pga-tour-market-benchmarks → pga_tour_market_benchmarks on projections.json (2025–2026 PGA rounds, after post-live CSV merge)
  *   - export-round-projection-vs-actual → data/round_projection_vs_actual.csv (model vs actual per player×round)
  *   - build-player-history → player_round_history.json + per-player + by-course shards + embed
  *
@@ -113,6 +114,11 @@ if (String(process.env.GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE || "").trim() !== "
     { GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS: recentYears },
   );
 }
+
+run(
+  "refresh-pga-tour-market-benchmarks.mjs",
+  "PGA Tour 2025–2026 market benchmarks → projections.json (Market rating)",
+);
 
 if (String(process.env.GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL || "").trim() !== "1") {
   run(

@@ -2665,15 +2665,23 @@ const OU_STAT_MAP = {
   "Fairways hit": { field: "fairways", sdKey: null },
 };
 
-/** Fallback PGA Tour μ/σ (counts per round) when projections.json lacks `pga_tour_market_benchmarks`. */
+/** Fallback PGA Tour μ/σ (2025–2026 rounds) when projections.json lacks `pga_tour_market_benchmarks`. */
 const OU_PGA_TOUR_BENCHMARK_FALLBACK = Object.freeze({
-  "Total score": { mean: 71.12, sd: 2.82, higherBetter: false, holes: 18 },
-  Birdies: { mean: 3.98, sd: 1.18, higherBetter: true, holes: 18 },
-  Pars: { mean: 11.02, sd: 1.32, higherBetter: true, holes: 18 },
-  Bogeys: { mean: 2.68, sd: 1.08, higherBetter: false, holes: 18 },
-  GIR: { mean: 11.35, sd: 2.4, higherBetter: true, holes: 18 },
-  "Fairways hit": { mean: 8.42, sd: 2.1, higherBetter: true, holes: 14 },
+  "Total score": { mean: 70.41, sd: 3.31, higherBetter: false, holes: 18 },
+  Birdies: { mean: 3.65, sd: 1.9, higherBetter: true, holes: 18 },
+  Pars: { mean: 10.81, sd: 2.89, higherBetter: true, holes: 18 },
+  Bogeys: { mean: 2.5, sd: 1.69, higherBetter: false, holes: 18 },
+  GIR: { mean: 10.74, sd: 4.1, higherBetter: true, holes: 18 },
+  "Fairways hit": { mean: 7.57, sd: 3.24, higherBetter: true, holes: 14 },
 });
+
+function ouPgaTourBenchmarkYearLabel() {
+  const meta = DATA?.pga_tour_market_benchmarks?.meta;
+  const y0 = Math.round(num(meta?.min_year, NaN));
+  const y1 = Math.round(num(meta?.max_year, NaN));
+  if (Number.isFinite(y0) && Number.isFinite(y1)) return y0 === y1 ? String(y0) : `${y0}–${y1}`;
+  return "2025–2026";
+}
 
 function ouPgaTourBenchmarkForMarket(market) {
   const mKey = ouModelMarketKey(market) || "Total score";
@@ -2716,11 +2724,14 @@ function formatOuMarketRating(z) {
 
 function ouMarketRatingTitle(market, mu, z) {
   const b = ouPgaTourBenchmarkForMarket(market);
-  if (!b || !Number.isFinite(mu) || !Number.isFinite(z)) return "Market rating vs PGA Tour average";
+  const yrs = ouPgaTourBenchmarkYearLabel();
+  if (!b || !Number.isFinite(mu) || !Number.isFinite(z)) {
+    return `Market rating vs PGA Tour average (${yrs})`;
+  }
   const holes = Math.max(1, Math.round(num(b.holes, 18)));
   const tourPct = ((b.mean / holes) * 100).toFixed(1);
   const playerPct = ((mu / holes) * 100).toFixed(1);
-  return `Z-score vs PGA Tour avg (${ouPropsCanonicalMarket(market)}: ${playerPct}% of ${holes} holes vs tour ${tourPct}%)`;
+  return `Z-score vs PGA Tour ${yrs} avg (${ouPropsCanonicalMarket(market)}: ${playerPct}% of ${holes} holes vs tour ${tourPct}%)`;
 }
 
 /** Model O/U tab market order; displayed columns are dynamic from live DK props. */

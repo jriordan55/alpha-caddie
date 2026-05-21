@@ -8,6 +8,7 @@
     "merge:live-hole-pars-into-projections": "node scripts/merge-live-hole-pars-into-projections.mjs",
     "merge:live-round-meta-into-projections": "node scripts/merge-live-round-meta-into-projections.mjs",
     "bake:weather": "node scripts/bake-weather-into-projections.mjs",
+    "refresh:market-benchmarks": "node scripts/refresh-pga-tour-market-benchmarks.mjs",
     "fetch:book-odds": "node scripts/fetch-book-odds-into-projections.mjs",
     "update:dk-round-projections": "node scripts/update-dk-round-projections.mjs",
     "push:dk-round-projections": "node scripts/trigger-dk-round-projections-remote.mjs",

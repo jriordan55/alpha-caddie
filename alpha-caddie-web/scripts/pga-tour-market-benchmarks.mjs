@@ -44,15 +44,36 @@ function fairwayCount(row) {
   return Math.min(14, Math.max(0, Math.round(p * 14)));
 }
 
+/** @returns {boolean} */
+function yearInBenchmarkWindow(yr, minYear, maxYear) {
+  if (!Number.isFinite(yr)) return false;
+  if (Number.isFinite(minYear) && yr < minYear) return false;
+  if (Number.isFinite(maxYear) && yr > maxYear) return false;
+  return true;
+}
+
 /**
  * @param {string} modelRoot — repo root with data/historical_rounds_all.csv
- * @param {{ recentYears?: number }} [opts]
+ * @param {{ minYear?: number, maxYear?: number, recentYears?: number }} [opts]
+ *   Default window: 2025–2026. Set `recentYears` (3–12) for a rolling window ending in the current calendar year instead.
  */
 export async function loadPgaTourMarketBenchmarks(modelRoot, opts = {}) {
-  const years = Math.max(3, Math.min(12, Math.round(num(opts.recentYears, 6) || 6)));
-  const cy = new Date().getFullYear();
-  const minYear = cy - years;
   const csvPath = join(modelRoot, "data", "historical_rounds_all.csv");
+  const cy = new Date().getFullYear();
+  let minYear = num(opts.minYear, NaN);
+  let maxYear = num(opts.maxYear, NaN);
+  if (!Number.isFinite(minYear) && !Number.isFinite(maxYear) && opts.recentYears != null) {
+    const years = Math.max(3, Math.min(12, Math.round(num(opts.recentYears, 6) || 6)));
+    minYear = cy - years;
+    maxYear = cy;
+  }
+  if (!Number.isFinite(minYear) && !Number.isFinite(maxYear)) {
+    minYear = 2025;
+    maxYear = 2026;
+  }
+  if (!Number.isFinite(maxYear)) maxYear = cy;
+  if (!Number.isFinite(minYear)) minYear = maxYear;
+
   const empty = {
     "Total score": { mean: NaN, sd: NaN, higherBetter: false, holes: 18 },
     Birdies: { mean: NaN, sd: NaN, higherBetter: true, holes: 18 },
@@ -60,7 +81,7 @@ export async function loadPgaTourMarketBenchmarks(modelRoot, opts = {}) {
     Bogeys: { mean: NaN, sd: NaN, higherBetter: false, holes: 18 },
     GIR: { mean: NaN, sd: NaN, higherBetter: true, holes: 18 },
     "Fairways hit": { mean: NaN, sd: NaN, higherBetter: true, holes: 14 },
-    meta: { skipped: true, csv_path: csvPath, min_year: minYear },
+    meta: { skipped: true, csv_path: csvPath, min_year: minYear, max_year: maxYear },
   };
   if (!existsSync(csvPath)) return empty;
 
@@ -83,7 +104,7 @@ export async function loadPgaTourMarketBenchmarks(modelRoot, opts = {}) {
     parser.on("data", (row) => {
       if (String(row.tour || "").toLowerCase() !== "pga") return;
       const yr = parseInt(row.year, 10);
-      if (Number.isFinite(yr) && yr < minYear) return;
+      if (!yearInBenchmarkWindow(yr, minYear, maxYear)) return;
       const rs = num(row.round_score, NaN);
       if (Number.isFinite(rs) && rs >= 55 && rs <= 95) pushSample(score, rs);
       const b = num(row.birdies, NaN);
@@ -117,6 +138,7 @@ export async function loadPgaTourMarketBenchmarks(modelRoot, opts = {}) {
       skipped: false,
       csv_path: csvPath,
       min_year: minYear,
+      max_year: maxYear,
       n: { score: ms.n, birdies: mb.n, pars: mp.n, bogeys: mbg.n, gir: mg.n, fairways: mf.n },
     },
   };

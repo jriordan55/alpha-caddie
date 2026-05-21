@@ -1788,8 +1788,11 @@ async function main() {
   const histCsvPath = join(GOLF_MODEL_ROOT, "data", "historical_rounds_all.csv");
   const histCalibPromise = loadHistoricalCsvCalibration(GOLF_MODEL_ROOT, courseKeyHist);
   const venueScoringPromise = loadVenueHistoricalScoring(histCsvPath, courseKeyHist, course_used);
+  const pgaBenchMinYear = Math.round(num(process.env.GOLF_PGA_TOUR_BENCHMARK_MIN_YEAR, 2025)) || 2025;
+  const pgaBenchMaxYear = Math.round(num(process.env.GOLF_PGA_TOUR_BENCHMARK_MAX_YEAR, 2026)) || 2026;
   const pgaBenchPromise = loadPgaTourMarketBenchmarks(GOLF_MODEL_ROOT, {
-    recentYears: Math.round(num(process.env.GOLF_PGA_TOUR_BENCHMARK_YEARS, 6)) || 6,
+    minYear: pgaBenchMinYear,
+    maxYear: pgaBenchMaxYear,
   });
 
   const pretStrokesByDg = new Map();
@@ -1851,7 +1854,7 @@ async function main() {
   if (!pgaTourBenchRaw?.meta?.skipped) {
     const b = pga_tour_market_benchmarks["Total score"];
     console.log(
-      `[fetch-dg] PGA Tour market benchmarks (≈${pgaTourBenchRaw.meta?.min_year || "?"}+): score μ=${b?.mean} σ=${b?.sd}`,
+      `[fetch-dg] PGA Tour market benchmarks (${pgaTourBenchRaw.meta?.min_year || "?"}–${pgaTourBenchRaw.meta?.max_year || "?"}): score μ=${b?.mean} σ=${b?.sd}`,
     );
   }
   if (Number.isFinite(venueScoring.venueAvgStp)) {
