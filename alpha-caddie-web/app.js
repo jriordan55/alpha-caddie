@@ -2431,6 +2431,7 @@ function applyPayload(raw) {
   COURSE_TABLE_PAYLOAD = null;
   const nextFieldFp = playerDgFingerprint(players);
   if (prevFieldFp !== nextFieldFp) lastDatagolfInPlayToken = "";
+  hydrateBakedWeatherFromPlayerFields();
 }
 
 /** O/U + model default round from meta (see effectiveUiModelRoundFromMeta); **1** if unknown. */
@@ -2702,6 +2703,7 @@ const COURSE_COORDINATES_BY_NAME = {
   "augusta national golf club": { lat: 33.503, lon: -82.0199 },
   "the stadium course at tpc sawgrass": { lat: 30.198, lon: -81.394 },
   "tpc sawgrass": { lat: 30.198, lon: -81.394 },
+  "tpc craig ranch": { lat: 33.1972, lon: -96.7314 },
   "oak hill country club": { lat: 43.1227, lon: -77.5229 },
   "torrey pines golf course": { lat: 32.8955, lon: -117.246 },
   "the oceans course at half moon bay golf links": { lat: 37.4636, lon: -122.449 },
@@ -3036,11 +3038,62 @@ function finalizeForecastWaveSummary(hourlyOrNull) {
     const { morning, afternoon } = computeMorningAfternoonForecastSnapshots(hourlyOrNull, DATA.players);
     DATA.meta.forecast_wave_slots = { morning, afternoon };
     DATA.meta.forecast_wave_summary = buildForecastWaveSummaryString(morning, afternoon);
+  } else if (DATA.meta.forecast_wave_slots && typeof DATA.meta.forecast_wave_slots === "object") {
+    const slots = DATA.meta.forecast_wave_slots;
+    const morning = slots.morning ?? null;
+    const afternoon = slots.afternoon ?? null;
+    if (!String(DATA.meta.forecast_wave_summary || "").trim()) {
+      DATA.meta.forecast_wave_summary = buildForecastWaveSummaryString(morning, afternoon);
+    }
   } else {
     DATA.meta.forecast_wave_slots = { morning: null, afternoon: null };
     DATA.meta.forecast_wave_summary = "";
   }
   syncForecastWaveBannerTexts();
+}
+
+/** Trust server-baked Open-Meteo on projections.json (push:live / bake:weather) for several hours. */
+const BAKED_FORECAST_WEATHER_MAX_AGE_MS = 6 * 60 * 60 * 1000;
+
+function projectionsWeatherUsableFromBaked() {
+  if (!DATA.meta || !DATA.players?.length) return false;
+  const st = String(DATA.meta.forecast_weather_status || "");
+  if (["open_meteo_fetch_failed", "empty_hourly", "no_course_coords", "no_players"].includes(st)) return false;
+  const at = DATA.meta.forecast_weather_updated_at;
+  if (!at) return false;
+  const age = Date.now() - Date.parse(at);
+  if (!Number.isFinite(age) || age < 0 || age > BAKED_FORECAST_WEATHER_MAX_AGE_MS) return false;
+  return DATA.players.some((p) => {
+    if (Number.isFinite(num(p.weather_temp_f, NaN))) return true;
+    const auto = p.dg_auto_weather;
+    return auto && typeof auto === "object" && Number.isFinite(num(auto.tempF, NaN));
+  });
+}
+
+/** Sync baked weather_* columns ↔ dg_auto_weather after loading projections.json. */
+function hydrateBakedWeatherFromPlayerFields() {
+  if (!DATA.players?.length) return;
+  for (const p of DATA.players) {
+    const t = num(p.weather_temp_f, NaN);
+    const w = num(p.weather_wind_mph, NaN);
+    const h = num(p.weather_humidity, NaN);
+    if (Number.isFinite(t) && Number.isFinite(w) && Number.isFinite(h)) {
+      p.dg_auto_weather = {
+        tempF: t,
+        windMph: w,
+        humidityPct: h,
+        condition: String(p.weather_condition || p.dg_auto_weather?.condition || "default").toLowerCase(),
+      };
+      continue;
+    }
+    const auto = p.dg_auto_weather;
+    if (auto && typeof auto === "object" && Number.isFinite(num(auto.tempF, NaN))) {
+      p.weather_temp_f = Math.round(auto.tempF * 10) / 10;
+      p.weather_wind_mph = Math.round(num(auto.windMph, 0) * 10) / 10;
+      p.weather_humidity = Math.round(num(auto.humidityPct, 0));
+      p.weather_condition = String(auto.condition || "default").toLowerCase();
+    }
+  }
 }
 
 function syncForecastWaveBannerTexts() {
@@ -3083,6 +3136,12 @@ function syncForecastWaveBannerTexts() {
  */
 async function refreshForecastWeatherFromOpenMeteo() {
   if (typeof fetch !== "function") return false;
+  if (projectionsWeatherUsableFromBaked()) {
+    hydrateBakedWeatherFromPlayerFields();
+    finalizeForecastWaveSummary(null);
+    PRICING_MU_BONUS_CACHE.clear();
+    return true;
+  }
   const coords = courseCoordinatesFromMeta();
   const tz = forecastTimezoneFromMeta();
   if (!DATA.meta) DATA.meta = {};
@@ -14844,6 +14903,13 @@ async function loadProjections(opts = {}) {
     await Promise.all(blocking);
     if (HISTORY._ok) scrubNonActualRoundsFromHistoryBuckets();
     await yieldToMain();
+    hydrateBakedWeatherFromPlayerFields();
+    if (!projectionsWeatherUsableFromBaked()) {
+      await refreshForecastWeatherFromOpenMeteo();
+    } else {
+      finalizeForecastWaveSummary(null);
+      PRICING_MU_BONUS_CACHE.clear();
+    }
     await refreshAll();
     updateStatusBar();
     stopDatagolfLivePolling();

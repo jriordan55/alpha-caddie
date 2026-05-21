@@ -5,6 +5,7 @@
  *   - preds/live-tournament-stats (per round 1–4) + preds/in-play + field-updates → live-in-play.json
  *   - pgatouR scorecards when R is installed
  *   - fetch:dg projections (skill + preds/pre-tournament when pre; live stats when in play)
+ *   - bake-weather-into-projections → Open-Meteo per-tee weather baked into projections.json
  *   - build-player-history → player_round_history.json + per-player + by-course shards + embed
  *
  *   npm run refresh:live
@@ -98,6 +99,10 @@ run("fetch-book-odds-into-projections.mjs", "Sportsbook + DK round props (fetch:
 run("fetch-datagolf-finish-tool-outrights.mjs", "Finish-tool outrights (fetch:finish-tool)");
 run("merge-live-hole-pars-into-projections.mjs", "Merge live hole pars into projections");
 run("merge-live-round-meta-into-projections.mjs", "Merge live round meta into projections");
+run(
+  "bake-weather-into-projections.mjs",
+  "Open-Meteo tee-time weather → projections.json (bake:weather)",
+);
 
 if (String(process.env.GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE || "").trim() !== "1") {
   run(

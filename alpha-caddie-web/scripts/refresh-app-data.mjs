@@ -14,7 +14,8 @@
  *   1) fetch-datagolf.mjs — field, round projections, SG, live-hole-stats, outrights, matchups
  *      (skips the inline history CSV rebuild; step 7 does a controlled merge instead)
  *   2) build-course-table-json.mjs — course-table.json (same as npm run build:course-table)
- *   3) fetch-live-in-play.mjs — tee times + live feeds (browser weather uses tee times + Open-Meteo)
+ *   3) fetch-live-in-play.mjs — tee times + live feeds
+ *   6b) bake-weather-into-projections.mjs — Open-Meteo weather baked into projections.json
  *   4) fetch-book-odds-into-projections.mjs — books + DK round O/U; appends data/dk_round_projection_audit.csv
  *      (Excel-friendly CSV: model_total_score, model_birdies, model_pars, model_bogeys, model_gir, …)
  *   5) fetch-datagolf-finish-tool-outrights.mjs
@@ -143,6 +144,10 @@ run("run-refresh-pgatour-event-rounds.mjs", "Current-event PGA rounds from pgato
 run("fetch-book-odds-into-projections.mjs", "Sportsbook + DK round props (fetch:book-odds)");
 run("fetch-datagolf-finish-tool-outrights.mjs", "Finish-tool outrights (fetch:finish-tool)");
 run("merge-live-hole-pars-into-projections.mjs", "Merge live hole pars into projections");
+run(
+  "bake-weather-into-projections.mjs",
+  "Open-Meteo tee-time weather → projections.json (bake:weather)",
+);
 
 const skipHistory = String(process.env.GOLF_REFRESH_APP_SKIP_HISTORY || "").trim() === "1";
 if (skipHistory) {
@@ -166,5 +171,5 @@ if (skipHistory) {
 mirrorWebsitePublicData();
 
 console.log(
-  "\n[refresh:app] Done. Weather in the app refreshes from Open-Meteo using tee times in live-in-play.json — hard-refresh the browser if needed. No git commit/push (use push:all for that).\n",
+  "\n[refresh:app] Done. Weather is baked into projections.json (bake:weather) — hard-refresh the browser if needed. No git commit/push (use push:all for that).\n",
 );

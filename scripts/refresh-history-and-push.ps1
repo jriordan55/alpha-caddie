@@ -82,9 +82,9 @@ function Run-Npm([string] $Label, [Parameter(ValueFromRemainingArguments = $true
 #   strokes (blend vs historical CSV); projections keep the full tournament field for Historical Trends. Before update:rounds.
 # Mirrors below copy projections + live + approach_skill *.json into website/public/data/ so both apps ship the same JSON.
 #
-# Round-projections / +EV weather: tee times live in live-in-play.json (field_updates from fetch:in-play);
-# venue hourly forecast + banners resolve in the browser (app.js). merge:live-hole-pars runs late so course par / hole
-# table stays aligned with live feed after DK odds refresh. Previously unstaged UI files excluded weather from this push — UI ships here when changed.
+# Round-projections / +EV weather: refresh:live runs bake:weather after merge:live-round-meta (Open-Meteo per-tee
+# slices + forecast_wave_* baked into projections.json; browser re-fetches only when bake is stale). Tee times from
+# live-in-play field_updates. merge:live-hole-pars runs late so course par / hole table stays aligned after DK refresh.
 
 $scriptsDir = $PSScriptRoot
 $repoRoot = Resolve-GolfRepoRoot $scriptsDir
