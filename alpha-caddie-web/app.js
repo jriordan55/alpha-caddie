@@ -11796,6 +11796,8 @@ function propsFilterDraftKingsOnlyOn() {
 function propsTrendPlayerHasDraftKingsLine(dgId, playerName, statKey) {
   if (!draftKingsRoundPropsOnly().length) return false;
   const market = ouMarketKeyFromStatKey(statKey);
+  const row = { dg_id: dgId, player_name: playerName };
+  if (ouPropsRowsForMarketPlayer(market, row, { dkOnly: true }).length) return true;
   return Boolean(courseFitFindDraftKingsOuProp(dgId, playerName, market));
 }
 
@@ -11804,12 +11806,75 @@ function filterCourseWindowEntriesForDraftKings(entries, statKey) {
   return (entries || []).filter((e) => propsTrendPlayerHasDraftKingsLine(e.dgId, e.playerName, statKey));
 }
 
-/** Round projections tab field for the O/U toolbar round (post-cut list respects eliminations). */
+/** Round projections / O/U grid field for the toolbar round (same pool as the O/U table). */
 function roundProjectionPlayersForOuRound() {
   const r = Math.round(getOuRound());
-  let rows = (DATA.players || []).filter((p) => samePlayerRound(p, r));
-  if (tournamentPostCutListPhase()) rows = rows.filter((p) => !isPlayerEliminatedFromEvent(p));
+  let rows = ouSortedPlayerRows("Total score", r);
+  if (!rows.length) {
+    const alt = Math.round(effectiveUiModelRoundFromMeta());
+    if (Number.isFinite(alt) && alt !== r) rows = ouSortedPlayerRows("Total score", alt);
+  }
   return rows;
+}
+
+function propsTrendIndexCourseEntriesByDg(bucket, courseKey, fieldDgIds) {
+  const byDg = new Map();
+  const add = (e) => {
+    const id = e.dgId;
+    if (!Number.isFinite(id)) return;
+    if (!byDg.has(id)) byDg.set(id, []);
+    byDg.get(id).push(e);
+  };
+  for (const e of bucket?.entries || []) add(e);
+  if (!courseKey || !HISTORY?.byDgId || !fieldDgIds?.size) return byDg;
+  const nameByDg = buildPropsGolferDisplayNameMap();
+  for (const id of fieldDgIds) {
+    const rec = HISTORY.byDgId[String(id)];
+    if (!rec || !Array.isArray(rec.rounds)) continue;
+    const playerName = resolveGolferDisplayNameForDg(id, rec.player_name, nameByDg);
+    for (const r of rec.rounds) {
+      if (normCourseNameKey(r.course_name) !== courseKey) continue;
+      if (!historyRoundCountsAsActual(r)) continue;
+      add({ row: r, dgId: id, playerName });
+    }
+  }
+  return byDg;
+}
+
+function pickCourseWindowEntriesForPlayer(entries, fromMs, toMs) {
+  const list = entries || [];
+  let inWin = list.filter((e) => historyRoundInCourseDateWindow(e.row, fromMs, toMs));
+  if (!inWin.length && list.length) {
+    const sorted = [...list].sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
+    inWin = [sorted[sorted.length - 1]];
+  }
+  return inWin;
+}
+
+function applyChartActualToHistoryRow(statKey, row, chartActual) {
+  if (!row || typeof row !== "object" || !Number.isFinite(chartActual)) return row;
+  const out = { ...row, _from_dg_historical_rounds: true };
+  if (statKey === "total") out.round_score = chartActual;
+  else if (statKey === "birdies") out.birdies = chartActual;
+  else if (statKey === "pars") out.pars = chartActual;
+  else if (statKey === "bogeys") out.bogies = chartActual;
+  else if (statKey === "gir") out.gir = chartActual;
+  else if (statKey === "fairways") out.fairways = chartActual;
+  else if (statKey === "putts") out.putts = chartActual;
+  return out;
+}
+
+/** One chart value per DK golfer: venue history when chartable, else round projection mean. */
+function chartActualForDraftKingsCourseWindow(statKey, entry, playerRow) {
+  const market = ouMarketKeyFromStatKey(statKey);
+  if (Number.isFinite(entry?.chartActual)) return entry.chartActual;
+  if (entry?.row && !entry.row._from_projection_chart) {
+    let actual = actualForRoundRow(statKey, entry.row);
+    if (!Number.isFinite(actual)) actual = actualForFieldVenueKpiRow(statKey, entry.row);
+    if (Number.isFinite(actual)) return actual;
+  }
+  if (playerRow) return ouProjectedMean(market, playerRow);
+  return NaN;
 }
 
 function propsCourseWindowDateBoundsMs() {
@@ -11832,43 +11897,71 @@ function propsCourseWindowDateBoundsMs() {
  */
 function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey) {
   const courseKey = propsEffectiveCourseKey();
-  if (!courseKey || !bucket?.entries?.length) return [];
+  if (!courseKey) return [];
   const bounds = propsCourseWindowDateBoundsMs();
   if (!bounds.ok) return [];
   const { fromMs, toMs } = bounds;
-
-  const byDg = new Map();
-  for (const e of bucket.entries) {
-    const id = e.dgId;
-    if (!byDg.has(id)) byDg.set(id, []);
-    byDg.get(id).push(e);
-  }
+  const market = ouMarketKeyFromStatKey(statKey);
 
   const nameByDg = buildPropsGolferDisplayNameMap();
+  const fieldPlayers = roundProjectionPlayersForOuRound();
+  const fieldDgIds = new Set(
+    fieldPlayers.map((p) => Math.round(num(p.dg_id, NaN))).filter((id) => Number.isFinite(id)),
+  );
+  const byDg = propsTrendIndexCourseEntriesByDg(bucket, courseKey, fieldDgIds);
+
+  const sessionIso =
+    String(document.getElementById("props-filter-date-to")?.value || "").trim() ||
+    String(document.getElementById("props-filter-date-from")?.value || "").trim() ||
+    propsDefaultSessionIsoFromMeta();
+
   const raw = [];
-  for (const p of roundProjectionPlayersForOuRound()) {
+  for (const p of fieldPlayers) {
     const dgId = Math.round(num(p.dg_id, NaN));
     if (!Number.isFinite(dgId)) continue;
     const playerName = resolveGolferDisplayNameForDg(dgId, p.player_name, nameByDg);
     if (!propsTrendPlayerHasDraftKingsLine(dgId, playerName, statKey)) continue;
 
-    let entries = (byDg.get(dgId) || []).filter((e) => historyRoundInCourseDateWindow(e.row, fromMs, toMs));
-    if (!entries.length) {
-      const all = byDg.get(dgId) || [];
-      if (all.length) {
-        all.sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
-        entries = [all[all.length - 1]];
-      }
+    const hist = pickCourseWindowEntriesForPlayer(byDg.get(dgId) || [], fromMs, toMs);
+    const pick = hist.length ? hist[hist.length - 1] : null;
+    let chartActual = NaN;
+    let row = pick?.row ? { ...pick.row } : null;
+    if (pick) chartActual = chartActualForDraftKingsCourseWindow(statKey, { ...pick, chartActual: pick.chartActual }, p);
+    if (!Number.isFinite(chartActual)) chartActual = ouProjectedMean(market, p);
+    if (!Number.isFinite(chartActual)) continue;
+    if (!row) {
+      row = {
+        dg_id: dgId,
+        player_name: playerName,
+        _from_projection_chart: true,
+        chart_session_iso: sessionIso,
+      };
     }
-    for (const e of entries) {
-      raw.push({ row: e.row, dgId, playerName: playerName || e.playerName });
+    if (!Number.isFinite(actualForRoundRow(statKey, row))) {
+      row = applyChartActualToHistoryRow(statKey, row, chartActual);
+      row._from_projection_chart = !pick;
+      if (sessionIso) row.chart_session_iso = sessionIso;
     }
+
+    raw.push({
+      row,
+      dgId,
+      playerName: playerName || pick?.playerName,
+      chartActual,
+    });
   }
 
-  raw.sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
-  const rowsOnly = applyPropsSidebarWeatherFiltersToRounds(raw.map((e) => e.row));
+  raw.sort((a, b) => {
+    const da = num(a.chartActual, NaN);
+    const db = num(b.chartActual, NaN);
+    if (Number.isFinite(da) && Number.isFinite(db) && da !== db) return da - db;
+    return String(a.playerName || "").localeCompare(String(b.playerName || ""));
+  });
+
+  const histRows = raw.filter((e) => !e.row?._from_projection_chart).map((e) => e.row);
+  const rowsOnly = applyPropsSidebarWeatherFiltersToRounds(histRows);
   const rowSet = new Set(rowsOnly);
-  return raw.filter((e) => rowSet.has(e.row));
+  return raw.filter((e) => e.row?._from_projection_chart || rowSet.has(e.row));
 }
 
 function propsCourseWindowDateInputToUtcMs(raw, endOfDay) {
@@ -11954,7 +12047,7 @@ function collectCourseWindowRoundEntriesFixed(bucketOpt) {
   const bucket = bucketOpt || propsGetSingleCourseBucketSync(courseKey);
   if (!bucket) return [];
   if (dkProj) {
-    const out = collectCourseWindowDraftKingsProjectionEntries(bucket, statKey);
+    const out = collectCourseWindowDraftKingsProjectionEntries(bucket || { entries: [] }, statKey);
     courseWindowRoundEntriesCacheSig = sig;
     courseWindowRoundEntriesCache = out;
     return out;
@@ -14514,16 +14607,28 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   const nameByDgChart = buildPropsGolferDisplayNameMap();
   const seriesChart = [];
   for (const e of chartEntries) {
-    const actual = actualForRoundRow(statKey, e.row);
+    const playerRow =
+      dkOnly && Number.isFinite(e.dgId)
+        ? projectionPlayerRowForModel(e.dgId, getOuRound()) ||
+          DATA.players?.find((p) => Math.round(num(p.dg_id, NaN)) === e.dgId)
+        : null;
+    const actual = dkOnly
+      ? chartActualForDraftKingsCourseWindow(statKey, e, playerRow)
+      : actualForRoundRow(statKey, e.row);
     if (!Number.isFinite(actual)) continue;
     const playerName = resolveGolferDisplayNameForDg(e.dgId, e.playerName, nameByDgChart);
     if (!playerName) continue;
+    const date =
+      e.row?._from_projection_chart && e.row?.chart_session_iso
+        ? e.row.chart_session_iso
+        : propsTrendChartDateFromRow(e.row);
     seriesChart.push({
       actual,
-      date: propsTrendChartDateFromRow(e.row),
+      date,
       playerName,
       dgId: e.dgId,
-      _hist: e.row,
+      _hist: e.row?._from_projection_chart ? null : e.row,
+      _projection: Boolean(e.row?._from_projection_chart),
     });
   }
 
