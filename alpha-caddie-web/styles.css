@@ -2835,6 +2835,8 @@ th.matchup-analysis-best-pick {
 .props-chart-tooltip {
   position: absolute;
   z-index: 6;
+  left: 0;
+  top: 0;
   min-width: 10rem;
   max-width: min(18rem, calc(100% - 16px));
   padding: 10px 12px;
@@ -2846,6 +2848,8 @@ th.matchup-analysis-best-pick {
   line-height: 1.35;
   pointer-events: none;
   color: var(--golf-text);
+  will-change: left, top;
+  contain: layout style;
 }
 .props-chart-tooltip .props-tip-row {
   margin-top: 8px;

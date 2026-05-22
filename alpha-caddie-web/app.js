@@ -415,6 +415,12 @@ let propsChartHoverLayout = { padL: 0, slotW: 0, n: 0 };
 let propsChartTooltipPinned = false;
 let propsChartTipLastKey = "";
 let propsChartHoverRaf = 0;
+/** @type {{ canvas: HTMLCanvasElement, clientX: number, clientY: number } | null} */
+let propsChartHoverPending = null;
+let propsChartHoverIndex = -1;
+let propsChartTipSize = { w: 168, h: 92 };
+/** @type {DOMRect | null} */
+let propsChartWrapRectCache = null;
 /** @type {{ date: HTMLElement, golfer: HTMLElement, value: HTMLElement, course: HTMLElement } | null} */
 let propsChartTipNodes = null;
 /** When the requested session day has no rounds, we chart the nearest day in course history. */
@@ -14156,24 +14162,23 @@ function pointInPropsChartHitRegion(canvasX, canvasY) {
   return propsChartHitRegions.some((r) => canvasX >= r.x0 && canvasX < r.x0 + r.w && canvasY >= r.y0 && canvasY < r.y0 + r.h);
 }
 
-/** Hit regions are equal-width column slots; index from x for large field charts. */
-function pickPropsChartHit(canvasX, canvasY) {
+/** Column index from x (equal-width slots; ignores y so x-axis labels do not flicker). */
+function propsChartHitIndexAtX(canvasX) {
   const L = propsChartHoverLayout;
-  if (L.n > 0 && L.n === propsChartHitRegions.length && L.slotW > 0) {
-    const i = Math.min(L.n - 1, Math.max(0, Math.floor((canvasX - L.padL) / L.slotW)));
-    const r = propsChartHitRegions[i];
-    if (r && canvasX >= r.x0 && canvasX < r.x0 + r.w && canvasY >= r.y0 && canvasY < r.y0 + r.h) return r;
-    return null;
-  }
-  for (const r of propsChartHitRegions) {
-    if (canvasX >= r.x0 && canvasX < r.x0 + r.w && canvasY >= r.y0 && canvasY < r.y0 + r.h) return r;
-  }
-  return null;
+  if (!L.n || !L.slotW || L.n !== propsChartHitRegions.length) return -1;
+  if (canvasX < L.padL || canvasX > L.padL + L.n * L.slotW) return -1;
+  return Math.min(L.n - 1, Math.max(0, Math.floor((canvasX - L.padL) / L.slotW)));
+}
+
+function pickPropsChartHitByIndex(idx) {
+  if (idx < 0 || idx >= propsChartHitRegions.length) return null;
+  return propsChartHitRegions[idx];
 }
 
 function hidePropsChartTooltip() {
   propsChartTooltipPinned = false;
   propsChartTipLastKey = "";
+  propsChartHoverIndex = -1;
   const tip = document.getElementById("props-chart-tooltip");
   if (tip) tip.hidden = true;
 }
@@ -14222,35 +14227,40 @@ function canvasCoordsFromEvent(canvas, ev) {
   };
 }
 
-function showPropsChartTooltip(canvas, ev, hit) {
+function positionPropsChartTooltipAtBar(wrap, tip, hit) {
+  if (!wrap || !tip || !hit) return;
+  if (!propsChartWrapRectCache) propsChartWrapRectCache = wrap.getBoundingClientRect();
+  const padWrap = 8;
+  const tw = propsChartTipSize.w;
+  const th = propsChartTipSize.h;
+  const maxW = Math.max(40, wrap.clientWidth - padWrap * 2);
+  let left = hit.x0 + hit.w / 2 - tw / 2;
+  let top = Math.max(padWrap, hit.y0 - th - 8);
+  left = clamp(left, padWrap, maxW - tw + padWrap);
+  tip.style.left = `${Math.round(left)}px`;
+  tip.style.top = `${Math.round(top)}px`;
+}
+
+function showPropsChartTooltip(canvas, hit) {
   const wrap = canvas.closest(".props-trends-chart-wrap");
   const tip = document.getElementById("props-chart-tooltip");
   if (!wrap || !tip) return;
   const tipKey = `${hit.playerName || ""}|${hit.date || ""}|${hit.actual}|${hit.statKey}`;
   const nodes = ensurePropsChartTooltipNodes(tip);
-  if (tipKey !== propsChartTipLastKey) {
+  const contentChanged = tipKey !== propsChartTipLastKey;
+  if (contentChanged) {
     propsChartTipLastKey = tipKey;
     nodes.date.textContent = hit.date || "—";
     nodes.golfer.textContent = hit.playerName || "—";
     nodes.golfer.parentElement.hidden = !hit.playerName;
     nodes.value.textContent = propsChartFormatValue(hit.statKey, hit.actual);
     nodes.course.textContent = propsCourseDisplay(hit);
+    tip.hidden = false;
+    propsChartTipSize = { w: tip.offsetWidth, h: tip.offsetHeight };
+  } else {
+    tip.hidden = false;
   }
-  tip.hidden = false;
-  const padWrap = 8;
-  const wRect = wrap.getBoundingClientRect();
-  let left = ev.clientX - wRect.left + 10;
-  let top = ev.clientY - wRect.top + 10;
-  tip.style.left = `${left}px`;
-  tip.style.top = `${top}px`;
-  const tw = tip.offsetWidth;
-  const th = tip.offsetHeight;
-  const maxL = wrap.clientWidth - tw - padWrap;
-  const maxT = wrap.clientHeight - th - padWrap;
-  if (left > maxL) left = Math.max(padWrap, maxL);
-  if (top > maxT) top = Math.max(padWrap, maxT);
-  tip.style.left = `${left}px`;
-  tip.style.top = `${top}px`;
+  positionPropsChartTooltipAtBar(wrap, tip, hit);
 }
 
 /** Y-axis ticks: integers for round score / counting stats so grid lines match numeric labels. */
@@ -14309,6 +14319,8 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
   propsChartHitRegions = [];
   propsChartHoverLayout = { padL: 0, slotW: 0, n: 0 };
   propsChartTipLastKey = "";
+  propsChartHoverIndex = -1;
+  propsChartWrapRectCache = null;
   hidePropsChartTooltip();
   const canvas = document.getElementById("props-trend-canvas");
   const wrap = canvas?.closest(".props-trends-chart-wrap");
@@ -17844,45 +17856,86 @@ document.addEventListener("DOMContentLoaded", () => {
     el.addEventListener("change", () => onHangoutLiveFieldChanged());
   });
   const trendCanvas = document.getElementById("props-trend-canvas");
-  function updatePropsTrendChartHoverInner(canvas, ev) {
-    if (!canvas || !propsChartHitRegions.length) {
-      if (canvas) canvas.style.cursor = "";
+  function propsChartPointerToCanvasXY(canvas, clientX, clientY) {
+    const rect = canvas.getBoundingClientRect();
+    const lw = canvas.clientWidth || rect.width;
+    const lh = canvas.clientHeight || rect.height;
+    if (rect.width <= 0 || rect.height <= 0) return { x: 0, y: 0 };
+    return {
+      x: ((clientX - rect.left) / rect.width) * lw,
+      y: ((clientY - rect.top) / rect.height) * lh,
+    };
+  }
+  function runPropsTrendChartHoverFrame() {
+    propsChartHoverRaf = 0;
+    const pending = propsChartHoverPending;
+    propsChartHoverPending = null;
+    if (!pending?.canvas) return;
+    const canvas = pending.canvas;
+    if (!propsChartHitRegions.length) {
+      canvas.style.cursor = "";
       if (!propsChartTooltipPinned) hidePropsChartTooltip();
       return;
     }
-    const { x, y } = canvasCoordsFromEvent(canvas, ev);
-    const hit = pickPropsChartHit(x, y);
-    canvas.style.cursor = hit ? "pointer" : "default";
-    if (propsChartTooltipPinned) return;
-    if (!hit) {
-      hidePropsChartTooltip();
+    const { x } = propsChartPointerToCanvasXY(canvas, pending.clientX, pending.clientY);
+    const idx = propsChartHitIndexAtX(x);
+    canvas.style.cursor = idx >= 0 ? "pointer" : "default";
+    if (propsChartTooltipPinned) {
+      if (propsChartHoverPending) propsChartHoverRaf = window.requestAnimationFrame(runPropsTrendChartHoverFrame);
       return;
     }
-    showPropsChartTooltip(canvas, ev, hit);
+    if (idx < 0) {
+      if (propsChartHoverIndex >= 0) hidePropsChartTooltip();
+      if (propsChartHoverPending) propsChartHoverRaf = window.requestAnimationFrame(runPropsTrendChartHoverFrame);
+      return;
+    }
+    if (idx !== propsChartHoverIndex) {
+      propsChartHoverIndex = idx;
+      const hit = pickPropsChartHitByIndex(idx);
+      if (!hit) hidePropsChartTooltip();
+      else showPropsChartTooltip(canvas, hit);
+    }
+    if (propsChartHoverPending) propsChartHoverRaf = window.requestAnimationFrame(runPropsTrendChartHoverFrame);
   }
   function updatePropsTrendChartHover(canvas, ev) {
-    if (propsChartHoverRaf) return;
-    propsChartHoverRaf = window.requestAnimationFrame(() => {
-      propsChartHoverRaf = 0;
-      updatePropsTrendChartHoverInner(canvas, ev);
-    });
+    propsChartHoverPending = { canvas, clientX: ev.clientX, clientY: ev.clientY };
+    if (!propsChartHoverRaf) {
+      propsChartHoverRaf = window.requestAnimationFrame(runPropsTrendChartHoverFrame);
+    }
   }
   function pinPropsTrendChartTooltip(canvas, ev) {
     if (!canvas || !propsChartHitRegions.length) return;
-    const { x, y } = canvasCoordsFromEvent(canvas, ev);
-    const hit = pickPropsChartHit(x, y);
+    const { x } = propsChartPointerToCanvasXY(canvas, ev.clientX, ev.clientY);
+    const idx = propsChartHitIndexAtX(x);
+    const hit = pickPropsChartHitByIndex(idx);
     if (!hit) {
       hidePropsChartTooltip();
       return;
     }
+    propsChartHoverIndex = idx;
     propsChartTooltipPinned = true;
-    showPropsChartTooltip(canvas, ev, hit);
+    showPropsChartTooltip(canvas, hit);
   }
   function leavePropsTrendChart(canvas) {
+    propsChartHoverPending = null;
+    if (propsChartHoverRaf) {
+      window.cancelAnimationFrame(propsChartHoverRaf);
+      propsChartHoverRaf = 0;
+    }
     if (canvas) canvas.style.cursor = "";
     if (!propsChartTooltipPinned) hidePropsChartTooltip();
   }
   if (trendCanvas) {
+    const chartWrap = trendCanvas.closest(".props-trends-chart-wrap");
+    if (chartWrap) {
+      window.addEventListener(
+        "resize",
+        () => {
+          propsChartWrapRectCache = null;
+        },
+        { passive: true },
+      );
+    }
     if (window.PointerEvent) {
       trendCanvas.addEventListener("pointermove", (ev) => updatePropsTrendChartHover(trendCanvas, ev));
       trendCanvas.addEventListener("pointerdown", (ev) => pinPropsTrendChartTooltip(trendCanvas, ev));
