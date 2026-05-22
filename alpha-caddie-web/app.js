@@ -11804,6 +11804,73 @@ function filterCourseWindowEntriesForDraftKings(entries, statKey) {
   return (entries || []).filter((e) => propsTrendPlayerHasDraftKingsLine(e.dgId, e.playerName, statKey));
 }
 
+/** Round projections tab field for the O/U toolbar round (post-cut list respects eliminations). */
+function roundProjectionPlayersForOuRound() {
+  const r = Math.round(getOuRound());
+  let rows = (DATA.players || []).filter((p) => samePlayerRound(p, r));
+  if (tournamentPostCutListPhase()) rows = rows.filter((p) => !isPlayerEliminatedFromEvent(p));
+  return rows;
+}
+
+function propsCourseWindowDateBoundsMs() {
+  const fromRaw = String(document.getElementById("props-filter-date-from")?.value || "").trim();
+  const toRaw = String(document.getElementById("props-filter-date-to")?.value || "").trim();
+  if (!fromRaw && !toRaw) return { ok: false, fromMs: NaN, toMs: NaN };
+  let fromMs = propsCourseWindowDateInputToUtcMs(fromRaw, false);
+  let toMs = propsCourseWindowDateInputToUtcMs(toRaw, true);
+  if (Number.isFinite(fromMs) && Number.isFinite(toMs) && fromMs > toMs) {
+    const swap = fromMs;
+    fromMs = toMs;
+    toMs = swap;
+  }
+  return { ok: true, fromMs, toMs };
+}
+
+/**
+ * Field-by-course + DraftKings: chart golfers from round projections who have DK lines,
+ * using course history in the date window (or each player's latest round at the venue if none).
+ */
+function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey) {
+  const courseKey = propsEffectiveCourseKey();
+  if (!courseKey || !bucket?.entries?.length) return [];
+  const bounds = propsCourseWindowDateBoundsMs();
+  if (!bounds.ok) return [];
+  const { fromMs, toMs } = bounds;
+
+  const byDg = new Map();
+  for (const e of bucket.entries) {
+    const id = e.dgId;
+    if (!byDg.has(id)) byDg.set(id, []);
+    byDg.get(id).push(e);
+  }
+
+  const nameByDg = buildPropsGolferDisplayNameMap();
+  const raw = [];
+  for (const p of roundProjectionPlayersForOuRound()) {
+    const dgId = Math.round(num(p.dg_id, NaN));
+    if (!Number.isFinite(dgId)) continue;
+    const playerName = resolveGolferDisplayNameForDg(dgId, p.player_name, nameByDg);
+    if (!propsTrendPlayerHasDraftKingsLine(dgId, playerName, statKey)) continue;
+
+    let entries = (byDg.get(dgId) || []).filter((e) => historyRoundInCourseDateWindow(e.row, fromMs, toMs));
+    if (!entries.length) {
+      const all = byDg.get(dgId) || [];
+      if (all.length) {
+        all.sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
+        entries = [all[all.length - 1]];
+      }
+    }
+    for (const e of entries) {
+      raw.push({ row: e.row, dgId, playerName: playerName || e.playerName });
+    }
+  }
+
+  raw.sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
+  const rowsOnly = applyPropsSidebarWeatherFiltersToRounds(raw.map((e) => e.row));
+  const rowSet = new Set(rowsOnly);
+  return raw.filter((e) => rowSet.has(e.row));
+}
+
 function propsCourseWindowDateInputToUtcMs(raw, endOfDay) {
   const s = String(raw || "").trim();
   const m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
@@ -11867,27 +11934,33 @@ function collectCourseWindowRoundEntriesFixed(bucketOpt) {
   const fromRaw = String(document.getElementById("props-filter-date-from")?.value || "").trim();
   const toRaw = String(document.getElementById("props-filter-date-to")?.value || "").trim();
   if (!fromRaw && !toRaw) return [];
+  const statKey = statKeyFromPropSelect();
+  const dkProj = propsFilterDraftKingsOnlyOn();
   const sig = [
     historyMutationEpoch,
     courseKey,
     fromRaw,
     toRaw,
+    dkProj ? `dkproj|${statKey}` : "",
     propsTrendTempContextKey(),
     selectedPropsWindRangeFilter() || "",
     selectedPropsHumidityRangeFilter() || "",
+    playerDgFingerprint(DATA.players),
+    draftKingsRoundPropsOnly().length,
   ].join("|");
   if (sig === courseWindowRoundEntriesCacheSig && courseWindowRoundEntriesCache) {
     return courseWindowRoundEntriesCache;
   }
   const bucket = bucketOpt || propsGetSingleCourseBucketSync(courseKey);
   if (!bucket) return [];
-  let fromMs = propsCourseWindowDateInputToUtcMs(fromRaw, false);
-  let toMs = propsCourseWindowDateInputToUtcMs(toRaw, true);
-  if (Number.isFinite(fromMs) && Number.isFinite(toMs) && fromMs > toMs) {
-    const swap = fromMs;
-    fromMs = toMs;
-    toMs = swap;
+  if (dkProj) {
+    const out = collectCourseWindowDraftKingsProjectionEntries(bucket, statKey);
+    courseWindowRoundEntriesCacheSig = sig;
+    courseWindowRoundEntriesCache = out;
+    return out;
   }
+  const bounds = propsCourseWindowDateBoundsMs();
+  const { fromMs, toMs } = bounds;
   const raw = [];
   for (const e of bucket.entries) {
     if (!historyRoundInCourseDateWindow(e.row, fromMs, toMs)) continue;
@@ -14344,7 +14417,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
       : "";
     const dkNote = propsFilterDraftKingsOnlyOn()
       ? draftKingsRoundPropsOnly().length
-        ? " · DraftKings lines only"
+        ? " · DK round projections (latest at course if no round on date)"
         : " · no DraftKings props loaded"
       : "";
     subEl.textContent = dr
@@ -14417,16 +14490,15 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   const lineInp = document.getElementById("prop-line");
   const ctxKey = propsTrendLineContextKeyFromDom();
   const lineEditing = Boolean(lineInp && document.activeElement === lineInp);
-  const entriesAll = collectCourseWindowRoundEntriesFixed(courseBucket);
   const dkOnly = propsFilterDraftKingsOnlyOn();
-  const entriesView = filterCourseWindowEntriesForDraftKings(entriesAll, statKey);
-  propsCourseWindowLastEntries = dkOnly ? entriesView : entriesAll;
+  const entriesAll = collectCourseWindowRoundEntriesFixed(courseBucket);
+  propsCourseWindowLastEntries = entriesAll;
   let line = clampPropLineForMarket(statKey, snapPropLineToDotFive(lineInp?.value));
   if (lineEditing && !Number.isFinite(line) && Number.isFinite(propsTrendLastGoodLine)) {
     line = propsTrendLastGoodLine;
   }
   if (!lineEditing && (!Number.isFinite(line) || propsTrendsLineContextKey !== ctxKey)) {
-    line = defaultLineForCourseWindow(statKey, entriesView);
+    line = defaultLineForCourseWindow(statKey, entriesAll);
     if (lineInp) lineInp.value = formatPropLineValueForInput(line);
     propsTrendsLineContextKey = ctxKey;
   } else if (!lineEditing && lineInp) {
@@ -14434,7 +14506,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   }
   if (Number.isFinite(line)) propsTrendLastGoodLine = line;
 
-  let chartEntries = entriesView;
+  let chartEntries = entriesAll;
   if (chartEntries.length > PROPS_COURSE_WINDOW_MAX_CHART_BARS) {
     chartEntries = sampleCourseWindowChartEntriesEvenly(chartEntries, PROPS_COURSE_WINDOW_MAX_CHART_BARS);
   }
@@ -14464,10 +14536,21 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
       if (courseBucket?.shardMissing) {
         empty.textContent =
           "Field-by-course needs player-history/by-course data on the server. Run npm run build:history and redeploy (includes this venue).";
-      } else if (dkOnly && nAll) {
-        empty.textContent = draftKingsRoundPropsOnly().length
-          ? `No chartable rounds for players with DraftKings ${propMarketLabelFromKey(statKey)} lines (${nAll} rounds in range).`
-          : "No DraftKings props loaded for this round — load props or turn off the DK filter.";
+      } else if (dkOnly) {
+        const dkField = roundProjectionPlayersForOuRound().filter((p) =>
+          propsTrendPlayerHasDraftKingsLine(
+            Math.round(num(p.dg_id, NaN)),
+            resolveGolferDisplayNameForDg(Math.round(num(p.dg_id, NaN)), p.player_name, buildPropsGolferDisplayNameMap()),
+            statKey,
+          ),
+        ).length;
+        if (!draftKingsRoundPropsOnly().length) {
+          empty.textContent = "No DraftKings props loaded for this round — load props or turn off the DK filter.";
+        } else if (!dkField) {
+          empty.textContent = `No round-projection golfers with DraftKings ${propMarketLabelFromKey(statKey)} lines.`;
+        } else {
+          empty.textContent = `No chartable ${propMarketLabelFromKey(statKey)} values at ${courseLabel} for ${dkField} DK golfers (try another market or relax weather filters).`;
+        }
       } else {
         empty.textContent = nAll
           ? "No chartable stat values for these rounds (try another market)."
@@ -14480,11 +14563,11 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   const hitSt = propsFullHitStatsFromRoundList(
     statKey,
     line,
-    entriesView.map((e) => e.row),
+    entriesAll.map((e) => e.row),
   );
   const bookWrap = document.getElementById("props-trends-book-lines");
   if (bookWrap) bookWrap.replaceChildren();
-  paintPropsTrendKpiRowCourseWindow(statKey, hitSt, seriesChart, entriesView);
+  paintPropsTrendKpiRowCourseWindow(statKey, hitSt, seriesChart, entriesAll);
   const chartLeg = document.getElementById("props-chart-line-legend");
   if (chartLeg) chartLeg.hidden = !Number.isFinite(line);
   window.requestAnimationFrame(() => {
