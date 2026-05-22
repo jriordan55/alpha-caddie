@@ -1967,7 +1967,13 @@ function liveInPlayCountingFromRow(ipRow, thruRounded) {
     const e = Number.isFinite(eagles) ? eagles : 0;
     pars = Math.max(0, Math.min(th, th - b - bg - e));
   }
-  return { birdies, pars, bogeys, eagles };
+  const birdiesOnly = birdies;
+  let birdiesForMarket = NaN;
+  if (Number.isFinite(birdiesOnly) || Number.isFinite(eagles)) {
+    birdiesForMarket =
+      (Number.isFinite(birdiesOnly) ? birdiesOnly : 0) + (Number.isFinite(eagles) ? eagles : 0);
+  }
+  return { birdies: birdiesForMarket, pars, bogeys, eagles, birdies_only: birdiesOnly };
 }
 
 const LIVE_HISTORY_SG_KEYS = ["sg_putt", "sg_app", "sg_arg", "sg_ott", "sg_t2g", "sg_total"];
@@ -3953,7 +3959,7 @@ function livePartialRoundCountPropAdjust(market, row) {
 
   const rate = muFull / 18;
   let soFar;
-  if (market === "Birdies") soFar = b;
+  if (market === "Birdies") soFar = b + eagles;
   else if (market === "Bogeys") soFar = bg;
   else soFar = pSo;
 
@@ -11092,7 +11098,7 @@ function livePropCumulativeFromHoles(holes, playOrder, completedHoles, statKey) 
     if (!Number.isFinite(sc) || !Number.isFinite(par)) continue;
     strokes += sc;
     const rel = sc - par;
-    if (rel === -1) birdies += 1;
+    if (rel <= -1) birdies += 1;
     if (rel === 0) pars += 1;
     if (rel >= 1) bogeys += 1;
   }
@@ -11118,7 +11124,7 @@ function historyFullRoundCountingStatFromHoles(statKey, holes) {
     if (!Number.isFinite(sc) || !Number.isFinite(par)) return NaN;
     strokes += sc;
     const rel = sc - par;
-    if (rel === -1) birdies += 1;
+    if (rel <= -1) birdies += 1;
     if (rel === 0) pars += 1;
     if (rel >= 1) bogeys += 1;
   }
@@ -13333,6 +13339,17 @@ function historyScalarOrNaN(v) {
   return Number.isFinite(n) ? n : NaN;
 }
 
+/** Birdies O/U and trends: eagles (and eagles_or_better) count toward birdies, same as sportsbook markets. */
+function birdiesPlusEaglesFromRow(row) {
+  if (!row || typeof row !== "object") return NaN;
+  const b = historyScalarOrNaN(row.birdies);
+  const eob = historyScalarOrNaN(row.eagles_or_better);
+  const eg = historyScalarOrNaN(row.eagles);
+  const eagleAdd = Number.isFinite(eob) ? eob : Number.isFinite(eg) ? eg : 0;
+  if (!Number.isFinite(b) && !Number.isFinite(eob) && !Number.isFinite(eg)) return NaN;
+  return (Number.isFinite(b) ? b : 0) + eagleAdd;
+}
+
 /**
  * GIR / fairways: values in (0, 1] are share-of-holes (e.g. 0.72 → integer hole counts); values in (1, holes]
  * are expected counts from history or projections — keep fractional scale (do not `Math.round` to whole holes;
@@ -13352,6 +13369,7 @@ function historyGirOrFairwaysCount(v, holes) {
 
 /** Fallback μ when `ouMeanCountingStat` is NaN — must not use `num(null)` (Number(null) is 0). */
 function ouFallbackScalarForProjectedMean(mKey, row, rec) {
+  if (mKey === "Birdies") return birdiesPlusEaglesFromRow(row);
   const v = historyScalarOrNaN(row?.[rec.field]);
   if (mKey === "GIR") return girFairwaysCountFromRawForOu(v, 18);
   if (mKey === "Fairways hit") return girFairwaysCountFromRawForOu(v, fairwayHolesModeledFromData());
@@ -13362,6 +13380,7 @@ function ouFallbackScalarForProjectedMean(mKey, row, rec) {
 function ouMeanCountingStat(market, row) {
   const mKey = ouModelMarketKey(market) || "Total score";
   const rec = ouStatRec(mKey);
+  if (mKey === "Birdies") return birdiesPlusEaglesFromRow(row);
   const raw = historyScalarOrNaN(row?.[rec.field]);
   if (!Number.isFinite(raw)) return NaN;
   if (mKey === "GIR") return girFairwaysCountFromRawForOu(raw, 18);
@@ -13385,7 +13404,7 @@ function actualForRoundRow(statKey, row) {
     if (!historyRowFromDgHistoricalRoundsApi(row)) return NaN;
     if (statKey === "total") return historyScalarOrNaN(row.round_score);
     if (!historyLiveCountingTrusted(row)) return NaN;
-    if (statKey === "birdies") return historyScalarOrNaN(row.birdies);
+    if (statKey === "birdies") return birdiesPlusEaglesFromRow(row);
     if (statKey === "pars") return historyScalarOrNaN(row.pars);
     return historyScalarOrNaN(row.bogies ?? row.bogeys);
   }
@@ -14304,7 +14323,7 @@ function modelForHistoryRow(statKey, row) {
   const dgId = Math.round(num(r.dg_id, NaN));
   let base = NaN;
   if (statKey === "total") base = num(r.total_score, NaN);
-  else if (statKey === "birdies") base = num(r.birdies, NaN);
+  else if (statKey === "birdies") base = birdiesPlusEaglesFromRow(r);
   else if (statKey === "pars") base = num(r.pars, NaN);
   else if (statKey === "bogeys") base = num(r.bogeys, NaN);
   else if (statKey === "gir") base = girFairwaysCountFromRawForOu(num(r.gir, NaN), 18);
@@ -15275,15 +15294,17 @@ function renderPropsTrends() {
     const fallbackRaw =
       statKey === "total"
         ? num(rproj?.total_score, defaultPropLineForStat(statKey))
-        : statKey === "gir" || statKey === "fairways"
-          ? (() => {
-              const c =
-                statKey === "gir"
-                  ? girFairwaysCountFromRawForOu(num(rproj?.gir, NaN), 18)
-                  : girFairwaysCountFromRawForOu(num(rproj?.fairways, NaN), fairwayHolesModeledFromData());
-              return Number.isFinite(c) ? c : defaultPropLineForStat(statKey);
-            })()
-          : num(rproj?.[statKey === "fairways" ? "fairways" : statKey], defaultPropLineForStat(statKey));
+        : statKey === "birdies"
+          ? birdiesPlusEaglesFromRow(rproj)
+          : statKey === "gir" || statKey === "fairways"
+            ? (() => {
+                const c =
+                  statKey === "gir"
+                    ? girFairwaysCountFromRawForOu(num(rproj?.gir, NaN), 18)
+                    : girFairwaysCountFromRawForOu(num(rproj?.fairways, NaN), fairwayHolesModeledFromData());
+                return Number.isFinite(c) ? c : defaultPropLineForStat(statKey);
+              })()
+            : num(rproj?.[statKey === "fairways" ? "fairways" : statKey], defaultPropLineForStat(statKey));
     line = clampPropLineForMarket(statKey, snapPropLineToDotFive(fallbackRaw));
     if (!Number.isFinite(line)) line = clampPropLineForMarket(statKey, defaultPropLineForStat(statKey));
     if (lineInp) lineInp.value = formatPropLineValueForInput(line);
