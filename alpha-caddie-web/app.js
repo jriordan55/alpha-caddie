@@ -359,6 +359,8 @@ let propsTrendsLineContextKey = "";
 /** Perf caches for pricing-mode recomputes (cleared when history/context changes). */
 const HISTORY_ROUNDS_CHRONO_CACHE = new Map();
 const PRICING_MU_BONUS_CACHE = new Map();
+const OU_MARKET_RATING_ROUNDS_CACHE = new Map();
+const OU_MARKET_RATING_CACHE = new Map();
 /** Last valid line used when the input is mid-edit or empty. */
 let propsTrendLastGoodLine = NaN;
 /** Field-by-course: one live-history merge per mode session (avoids re-render loop). */
@@ -382,6 +384,8 @@ function bumpHistoryMutationEpoch() {
   courseWindowRoundEntriesCacheSig = "";
   courseWindowRoundEntriesCache = null;
   propsDgIdNameManifestUiRefreshDone = false;
+  OU_MARKET_RATING_ROUNDS_CACHE.clear();
+  OU_MARKET_RATING_CACHE.clear();
 }
 /** Cached sorted course dropdown rows from full history scan. */
 let propsAllPlayersCourseOptsCacheKey = "";
@@ -416,6 +420,8 @@ let propsChartTooltipPinned = false;
 let propsChartTipLastKey = "";
 /** Sticky column while hovering dense field charts (stops tooltip/bar flicker between neighbors). */
 let propsChartStickyHitIndex = -1;
+/** Last pointer event on trends chart (restore hover after canvas redraw). */
+let propsChartLastPointer = null;
 /** @type {HTMLElement | null} */
 let propsChartHoverWrapEl = null;
 /** @type {DOMRect | null} */
@@ -2727,6 +2733,8 @@ function ouMarketRatingHistoryStatKey(mKey) {
 function ouMarketRatingPlayerRounds(player) {
   const id = Math.round(num(player?.dg_id, NaN));
   if (!Number.isFinite(id)) return [];
+  const cacheKey = `${historyMutationEpoch}|${id}`;
+  if (OU_MARKET_RATING_ROUNDS_CACHE.has(cacheKey)) return OU_MARKET_RATING_ROUNDS_CACHE.get(cacheKey) || [];
   const all = historyRoundsChronoNewestFirst(id).filter((r) => historyRoundCountsAsActual(r));
   const y2025 = all.filter((r) => {
     const y = parseInt(String(r.year ?? r.season ?? ""), 10);
@@ -2734,7 +2742,9 @@ function ouMarketRatingPlayerRounds(player) {
   });
   const pool =
     y2025.length >= OU_MARKET_RATING_PLAYER_MIN_ROUNDS ? y2025 : all;
-  return pool.slice(0, OU_MARKET_RATING_PLAYER_MAX_ROUNDS);
+  const out = pool.slice(0, OU_MARKET_RATING_PLAYER_MAX_ROUNDS);
+  OU_MARKET_RATING_ROUNDS_CACHE.set(cacheKey, out);
+  return out;
 }
 
 /** Player historical average for a market (counts / strokes), not the round projection μ. */
@@ -2750,6 +2760,25 @@ function ouPlayerHistoricalAvgForMarket(market, player) {
   }
   if (vals.length < OU_MARKET_RATING_PLAYER_MIN_ROUNDS) return NaN;
   return vals.reduce((a, b) => a + b, 0) / vals.length;
+}
+
+function ouCachedMarketRating(market, player) {
+  const id = Math.round(num(player?.dg_id, NaN));
+  const mKey = ouModelMarketKey(market) || "Total score";
+  const cacheKey = `${historyMutationEpoch}|${id}|${mKey}`;
+  if (OU_MARKET_RATING_CACHE.has(cacheKey)) return OU_MARKET_RATING_CACHE.get(cacheKey);
+  const playerAvg = ouPlayerHistoricalAvgForMarket(market, player);
+  const hit = { playerAvg, marketRatingZ: ouMarketRatingZ(market, playerAvg) };
+  OU_MARKET_RATING_CACHE.set(cacheKey, hit);
+  return hit;
+}
+
+function prewarmOuMarketRatingCache(players, cols) {
+  for (const p of players) {
+    for (const col of cols) {
+      ouCachedMarketRating(col.market, p);
+    }
+  }
 }
 
 /** Normalize baked benchmarks (rate for GIR/FW; legacy count rows → rate). */
@@ -4561,8 +4590,7 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
     if (seen.has(sig)) return;
     seen.add(sig);
     const histPlayer = histPlayerOpt || player;
-    const playerAvg = ouPlayerHistoricalAvgForMarket(col.market, histPlayer);
-    const marketRatingZ = ouMarketRatingZ(col.market, playerAvg);
+    const { playerAvg, marketRatingZ } = ouCachedMarketRating(col.market, histPlayer);
     for (const side of ["over", "under"]) {
       out.push({ player, col, colIdx, side, mu, pick, marketRatingZ, playerAvg });
     }
@@ -4945,6 +4973,7 @@ function buildOuTable() {
   const q = pf && pf instanceof HTMLInputElement ? String(pf.value || "").trim().toLowerCase() : "";
   const playersFiltered = !q ? allRows.slice() : allRows.filter((p) => golferNameMatchesQuery(String(p.player_name || ""), q));
 
+  prewarmOuMarketRatingCache(playersFiltered, cols);
   let flatRows = ouProjectionFlatRowsForPlayers(playersFiltered, cols);
   const projMarketSel = String(document.getElementById("ou-proj-market-filter")?.value || "").trim();
   if (projMarketSel) flatRows = flatRows.filter((r) => String(r.col.label) === projMarketSel);
@@ -12739,6 +12768,35 @@ function meanNumFromRounds(rounds, key) {
   return vals.reduce((a, b) => a + b, 0) / vals.length;
 }
 
+/** Newest-first rounds; index 0 = most recent (decay 0.86^i). */
+function meanNumFromRoundsRecencyWeighted(rounds, key, decay = 0.86) {
+  if (!rounds?.length) return NaN;
+  let sum = 0;
+  let wsum = 0;
+  for (let i = 0; i < rounds.length; i++) {
+    const v = num(rounds[i][key], NaN);
+    if (!Number.isFinite(v)) continue;
+    const w = decay ** i;
+    sum += v * w;
+    wsum += w;
+  }
+  return wsum > 0 ? sum / wsum : NaN;
+}
+
+function meanNumFromRoundsRecencyWeightedStat(rounds, statKey, decay = 0.86) {
+  if (!rounds?.length) return NaN;
+  let sum = 0;
+  let wsum = 0;
+  for (let i = 0; i < rounds.length; i++) {
+    const v = actualForFieldVenueKpiRow(statKey, rounds[i]);
+    if (!Number.isFinite(v)) continue;
+    const w = decay ** i;
+    sum += v * w;
+    wsum += w;
+  }
+  return wsum > 0 ? sum / wsum : NaN;
+}
+
 /** Map pricing UI skill value to projection / history SG column (e.g. `sg_putt`). */
 function pricingSkillColumnKeyFromRaw(skillRaw) {
   const skRaw = String(skillRaw || "sg_total").toLowerCase();
@@ -12855,17 +12913,17 @@ function pricingModeMuSgBonusForMode(dgId, modeRaw, skillRaw = PRICING_STATE.ski
       return 0;
     }
     const other = rounds.filter((r) => !courseNameMatchesVenue(r.course_name, vn));
-    const hMean = meanNumFromRounds(here, "sg_total");
-    const oMean = meanNumFromRounds(other.length ? other : rounds, "sg_total");
+    const hMean = meanNumFromRoundsRecencyWeighted(here, "sg_total", 0.84);
+    const oMean = meanNumFromRoundsRecencyWeighted(other.length ? other : rounds, "sg_total", 0.9);
     if (Number.isFinite(hMean) && Number.isFinite(oMean)) {
-      const out = clamp((hMean - oMean) * 0.75, -0.35, 0.35);
+      const out = clamp((hMean - oMean) * 1.05, -0.42, 0.42);
       PRICING_MU_BONUS_CACHE.set(cacheKey, out);
       return out;
     }
-    const hSc = meanNumFromRounds(here, "round_score");
-    const oSc = meanNumFromRounds(other.length ? other : rounds, "round_score");
+    const hSc = meanNumFromRoundsRecencyWeighted(here, "round_score", 0.84);
+    const oSc = meanNumFromRoundsRecencyWeighted(other.length ? other : rounds, "round_score", 0.9);
     if (Number.isFinite(hSc) && Number.isFinite(oSc)) {
-      const out = clamp(((oSc - hSc) / 6) * 0.7, -0.35, 0.35);
+      const out = clamp(((oSc - hSc) / 6) * 0.95, -0.42, 0.42);
       PRICING_MU_BONUS_CACHE.set(cacheKey, out);
       return out;
     }
@@ -12913,17 +12971,44 @@ function effectiveMuSg(row, dgIdOpt, matchupMarketKind) {
   );
 }
 
+function pricingCourseVenueStatMuNudge(market, dgId) {
+  if (String(PRICING_STATE.mode || "").toLowerCase() !== "course") return 0;
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return 0;
+  const vn = venueCourseName();
+  if (!vn) return 0;
+  const rounds = historyRoundsChronoNewestFirst(id);
+  const here = rounds.filter((r) => courseNameMatchesVenue(r.course_name, vn));
+  if (here.length < 2) return 0;
+  const mKey = ouModelMarketKey(market) || "Total score";
+  const statKey = ouMarketRatingHistoryStatKey(mKey);
+  const venueAvg = meanNumFromRoundsRecencyWeightedStat(here, statKey, 0.82);
+  const broadAvg = meanNumFromRoundsRecencyWeightedStat(rounds, statKey, 0.9);
+  if (!Number.isFinite(venueAvg) || !Number.isFinite(broadAvg)) return 0;
+  const delta = venueAvg - broadAvg;
+  if (mKey === "Total score") return clamp(-delta * 0.55, -2.8, 2.8);
+  if (mKey === "Bogeys") return clamp(delta * 0.42, -1.8, 1.8);
+  if (mKey === "Birdies") return clamp(delta * 0.48, -1.8, 1.8);
+  if (mKey === "Pars") return clamp(delta * 0.12, -1.2, 1.2);
+  if (mKey === "GIR") return clamp(delta * 3.2, -2.2, 2.2);
+  if (mKey === "Fairways hit") return clamp(delta * 2.4, -2.2, 2.2);
+  if (mKey === "Putts") return clamp(-delta * 0.38, -2.2, 2.2);
+  return 0;
+}
+
 function pricingStatMuAdjustment(market, dgId) {
   const b = pricingModeMuSgBonus(dgId);
-  if (!Number.isFinite(b) || b === 0) return 0;
-  if (market === "Total score") return -1.05 * b;
-  if (market === "Bogeys") return -0.45 * b;
-  if (market === "Birdies") return 0.5 * b;
-  if (market === "Pars") return 0.08 * b;
-  if (market === "GIR") return 0.35 * b;
-  if (market === "Fairways hit") return 0.22 * b;
-  if (market === "Putts") return -0.32 * b;
-  return 0;
+  let out = 0;
+  if (Number.isFinite(b) && b !== 0) {
+    if (market === "Total score") out = -1.05 * b;
+    else if (market === "Bogeys") out = -0.45 * b;
+    else if (market === "Birdies") out = 0.5 * b;
+    else if (market === "Pars") out = 0.08 * b;
+    else if (market === "GIR") out = 0.35 * b;
+    else if (market === "Fairways hit") out = 0.22 * b;
+    else if (market === "Putts") out = -0.32 * b;
+  }
+  return out + pricingCourseVenueStatMuNudge(market, dgId);
 }
 
 function pricingModelHistoryNudge(statKey, dgId) {
@@ -14163,35 +14248,22 @@ function propsChartHitIndexAtX(canvasX) {
 }
 
 function pickPropsChartHit(canvasX, canvasY) {
+  const L = propsChartHoverLayout;
+  const inCols = L.n > 0 && canvasX >= L.padL && canvasX <= L.padL + L.n * L.slotW;
   let idx = propsChartHitIndexAtX(canvasX);
   if (idx < 0 || idx >= propsChartHitRegions.length) {
-    propsChartStickyHitIndex = -1;
+    if (inCols && propsChartStickyHitIndex >= 0) {
+      return propsChartHitRegions[propsChartStickyHitIndex] || null;
+    }
+    if (!inCols) propsChartStickyHitIndex = -1;
     return null;
   }
-  const L = propsChartHoverLayout;
-  if (L.n > 12) {
-    if (
-      propsChartStickyHitIndex >= 0 &&
-      propsChartStickyHitIndex < propsChartHitRegions.length &&
-      idx !== propsChartStickyHitIndex
-    ) {
-      const stick = propsChartHitRegions[propsChartStickyHitIndex];
-      const next = propsChartHitRegions[idx];
-      if (stick && next) {
-        const boundary = (stick.x0 + stick.w + next.x0) / 2;
-        if (idx > propsChartStickyHitIndex && canvasX < boundary) idx = propsChartStickyHitIndex;
-        else if (idx < propsChartStickyHitIndex && canvasX > boundary) idx = propsChartStickyHitIndex;
-      }
-    }
-    propsChartStickyHitIndex = idx;
-    return propsChartHitRegions[idx] || null;
-  }
   propsChartStickyHitIndex = idx;
+  if (L.n > 12) return propsChartHitRegions[idx] || null;
   const r = propsChartHitRegions[idx];
   if (!r) return null;
   if (canvasY >= r.y0 && canvasY < r.y0 + r.h) return r;
-  propsChartStickyHitIndex = -1;
-  return null;
+  return inCols ? r : null;
 }
 
 function hidePropsChartTooltip() {
@@ -14284,6 +14356,32 @@ function showPropsChartTooltip(canvas, ev, hit) {
   tip.style.top = `${top}px`;
 }
 
+function updatePropsTrendChartHover(canvas, ev) {
+  if (ev) propsChartLastPointer = ev;
+  if (!canvas || !propsChartHitRegions.length) {
+    if (canvas) canvas.style.cursor = "";
+    if (!propsChartTooltipPinned) hidePropsChartTooltip();
+    return;
+  }
+  const { x, y } = canvasCoordsFromEvent(canvas, ev || propsChartLastPointer);
+  const L = propsChartHoverLayout;
+  const inCols = L.n > 0 && x >= L.padL && x <= L.padL + L.n * L.slotW;
+  const hit = pickPropsChartHit(x, y);
+  canvas.style.cursor = hit ? "pointer" : "default";
+  if (propsChartTooltipPinned) return;
+  if (!hit) {
+    if (!inCols) hidePropsChartTooltip();
+    return;
+  }
+  showPropsChartTooltip(canvas, ev || propsChartLastPointer, hit);
+}
+
+function refreshPropsChartHoverAfterDraw() {
+  const canvas = document.getElementById("props-trend-canvas");
+  if (!canvas || !propsChartLastPointer || !propsChartHitRegions.length) return;
+  updatePropsTrendChartHover(canvas, propsChartLastPointer);
+}
+
 /** Y-axis ticks: integers for round score / counting stats so grid lines match numeric labels. */
 function propsChartYTickValues(minV, maxV, statKey) {
   const intLike =
@@ -14337,11 +14435,9 @@ function syncPropsTrendCanvasCssBox(canvas, cssW, cssH) {
 
 /** `series` items: `{ actual, date?, _hist? }` — `_hist` is raw round row (course_name, …). */
 function drawPropsTrendCanvas(series, lineY, statKey) {
+  const plot = (series || []).filter((s) => Number.isFinite(num(s.actual, NaN)));
   propsChartHitRegions = [];
   propsChartHoverLayout = { padL: 0, slotW: 0, n: 0 };
-  propsChartTipLastKey = "";
-  propsChartStickyHitIndex = -1;
-  hidePropsChartTooltip();
   const canvas = document.getElementById("props-trend-canvas");
   const wrap = canvas?.closest(".props-trends-chart-wrap");
   if (!canvas || !canvas.getContext) return;
@@ -14360,20 +14456,16 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
     c0.fillRect(0, 0, cssW0, cssH0);
   }
 
-  if (!series.length) {
+  if (!plot.length) {
     const vis = wrap && wrap.clientWidth > 80 ? wrap.clientWidth - 28 : 800;
     const cssH0 = Math.round(clamp(vis * 0.48, 240, Math.min(420, vhCap)));
     paintEmptyBackground(vis, cssH0);
+    propsChartCache = { series: plot, lineY, statKey };
     return;
   }
-  const vals = series.map((s) => s.actual).filter((x) => Number.isFinite(x));
-  if (!vals.length) {
-    const vis = wrap && wrap.clientWidth > 80 ? wrap.clientWidth - 28 : 800;
-    paintEmptyBackground(vis, Math.round(clamp(vis * 0.48, 240, Math.min(420, vhCap))));
-    return;
-  }
+  const vals = plot.map((s) => s.actual);
 
-  const n = series.length;
+  const n = plot.length;
   const visibleW = wrap && wrap.clientWidth > 80 ? wrap.clientWidth - 28 : 400;
   const pad = { l: 42, r: 14, t: 12, b: n > 12 ? 54 : 46 };
   const innerW = Math.max(80, visibleW - pad.l - pad.r);
@@ -14441,19 +14533,18 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
   ctx.stroke();
   const slotW = innerW / n;
   propsChartHoverLayout = { padL: pad.l, slotW, n };
-  const xAxisPerBar = buildPropsTrendXAxisLabels(series);
-  const { xCenter, barW } = propsChartBarLayout(series, pad.l, innerW);
+  const xAxisPerBar = buildPropsTrendXAxisLabels(plot);
+  const { xCenter, barW } = propsChartBarLayout(plot, pad.l, innerW);
   const lowerIsBetter = propsStatLowerIsBetter(statKey);
   for (let i = 0; i < n; i++) {
-    const v = series[i].actual;
-    if (!Number.isFinite(v)) continue;
+    const v = plot[i].actual;
     const bw = barW[i];
     const xc = xCenter[i];
     const x0 = Math.max(pad.l, Math.min(xc - bw / 2, pad.l + innerW - bw));
     const yTop = yScale(v);
     const hBar = Math.max(1, yBase - yTop);
     const slotLeft = pad.l + i * slotW;
-    const hist = series[i]._hist;
+    const hist = plot[i]._hist;
     const venueLbl = propsEffectiveCourseKey() ? courseFitPrettyCourseKey(propsEffectiveCourseKey()) : "";
     propsChartHitRegions.push({
       x0: slotLeft,
@@ -14461,9 +14552,9 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
       w: Math.max(1, slotW),
       h: yBase - pad.t,
       _hist: hist,
-      date: String(series[i].date || "").trim() || "—",
-      playerName: String(series[i].playerName || "").trim(),
-      dgId: series[i].dgId,
+      date: String(plot[i].date || "").trim() || "—",
+      playerName: String(plot[i].playerName || "").trim(),
+      dgId: plot[i].dgId,
       courseLabel: hist ? propsCourseNameFromRow(hist) : venueLbl,
       actual: v,
       statKey,
@@ -14536,6 +14627,8 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
     ctx.fillText(lab, cx, h - 10);
   }
   ctx.textAlign = "left";
+  propsChartCache = { series: plot, lineY, statKey };
+  refreshPropsChartHoverAfterDraw();
 }
 
 function syncPropsCourseWindowUiState() {
@@ -17883,22 +17976,6 @@ document.addEventListener("DOMContentLoaded", () => {
     el.addEventListener("change", () => onHangoutLiveFieldChanged());
   });
   const trendCanvas = document.getElementById("props-trend-canvas");
-  function updatePropsTrendChartHover(canvas, ev) {
-    if (!canvas || !propsChartHitRegions.length) {
-      if (canvas) canvas.style.cursor = "";
-      if (!propsChartTooltipPinned) hidePropsChartTooltip();
-      return;
-    }
-    const { x, y } = canvasCoordsFromEvent(canvas, ev);
-    const hit = pickPropsChartHit(x, y);
-    canvas.style.cursor = hit ? "pointer" : "default";
-    if (propsChartTooltipPinned) return;
-    if (!hit) {
-      hidePropsChartTooltip();
-      return;
-    }
-    showPropsChartTooltip(canvas, ev, hit);
-  }
   function pinPropsTrendChartTooltip(canvas, ev) {
     if (!canvas || !propsChartHitRegions.length) return;
     const { x, y } = canvasCoordsFromEvent(canvas, ev);
@@ -17911,6 +17988,7 @@ document.addEventListener("DOMContentLoaded", () => {
     showPropsChartTooltip(canvas, ev, hit);
   }
   function leavePropsTrendChart(canvas) {
+    propsChartLastPointer = null;
     propsChartHoverWrapEl = null;
     propsChartHoverWrapRect = null;
     if (canvas) canvas.style.cursor = "";
