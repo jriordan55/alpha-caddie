@@ -11788,6 +11788,22 @@ function propsCourseWindowModeActive() {
   return Boolean(fromRaw || toRaw);
 }
 
+/** Field-by-course chart: only players with a DraftKings O/U line for the selected stat. */
+function propsFilterDraftKingsOnlyOn() {
+  return Boolean(document.getElementById("props-filter-draftkings-only")?.checked);
+}
+
+function propsTrendPlayerHasDraftKingsLine(dgId, playerName, statKey) {
+  if (!draftKingsRoundPropsOnly().length) return false;
+  const market = ouMarketKeyFromStatKey(statKey);
+  return Boolean(courseFitFindDraftKingsOuProp(dgId, playerName, market));
+}
+
+function filterCourseWindowEntriesForDraftKings(entries, statKey) {
+  if (!propsFilterDraftKingsOnlyOn()) return entries || [];
+  return (entries || []).filter((e) => propsTrendPlayerHasDraftKingsLine(e.dgId, e.playerName, statKey));
+}
+
 function propsCourseWindowDateInputToUtcMs(raw, endOfDay) {
   const s = String(raw || "").trim();
   const m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
@@ -12015,6 +12031,7 @@ function paintPropsTrendKpiRowCourseWindow(statKey, hitSt, graphSeries, entries)
   const vals = (graphSeries || []).map((s) => s.actual).filter((x) => Number.isFinite(x));
   const graphMean = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : NaN;
   const fieldMean = propsTrendMeanActual(statKey, rounds);
+  const dkOnly = propsFilterDraftKingsOnlyOn();
 
   const addKpi = (label, val, cls) => {
     const wrap = document.createElement("div");
@@ -12030,8 +12047,8 @@ function paintPropsTrendKpiRowCourseWindow(statKey, hitSt, graphSeries, entries)
     el.appendChild(wrap);
   };
 
-  addKpi("Field avg (window)", fieldMean);
-  addKpi("Graph avg", graphMean);
+  addKpi(dkOnly ? "DK field avg (window)" : "Field avg (window)", fieldMean);
+  addKpi(dkOnly ? "DK graph avg" : "Graph avg", graphMean);
   ensurePropsFieldVenueHistoryLoaded();
   const atVenueSeason = roundsMatchingCurrentCourseOnlyFieldSeason();
   const atVenueAll = roundsMatchingCurrentCourseOnlyFieldAllTime();
@@ -12717,10 +12734,11 @@ function propsTrendLineContextKeyFromDom() {
   const pm = PRICING_STATE.mode || "default";
   const ps = PRICING_STATE.skill === "default" ? "default" : pricingSkillHistoryKey();
   const cw = propsCourseWindowModeActive() ? 1 : 0;
+  const dk = propsFilterDraftKingsOnlyOn() ? 1 : 0;
   const winDates = cw
     ? `${String(document.getElementById("props-filter-date-from")?.value || "")}|${String(document.getElementById("props-filter-date-to")?.value || "")}`
     : "";
-  return `${dg}|${sk}|${courseFilterOn() ? 1 : 0}|${winNKey}|${temp}|${wind}|${hum}|${course}|${pm}|${ps}|${cw}|${winDates}`;
+  return `${dg}|${sk}|${courseFilterOn() ? 1 : 0}|${winNKey}|${temp}|${wind}|${hum}|${course}|${pm}|${ps}|${cw}|${winDates}|${dk}`;
 }
 
 /** After user changes line or steppers so projection logic does not overwrite the input. */
@@ -14324,8 +14342,13 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
     const histNote = courseBucket?.shardMissing
       ? " · course data file missing on server (rebuild history)"
       : "";
+    const dkNote = propsFilterDraftKingsOnlyOn()
+      ? draftKingsRoundPropsOnly().length
+        ? " · DraftKings lines only"
+        : " · no DraftKings props loaded"
+      : "";
     subEl.textContent = dr
-      ? `${mkt} · ${dr} · all players at ${courseLabel}${histNote} · ${sortHint}`
+      ? `${mkt} · ${dr} · all players at ${courseLabel}${dkNote}${histNote} · ${sortHint}`
       : propsEventVenueCourseKey()
         ? `${mkt} · set From/To dates for all players at ${courseLabel}${histNote}`
         : `${mkt} · projections missing course_used — cannot scope field view`;
@@ -14395,13 +14418,15 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   const ctxKey = propsTrendLineContextKeyFromDom();
   const lineEditing = Boolean(lineInp && document.activeElement === lineInp);
   const entriesAll = collectCourseWindowRoundEntriesFixed(courseBucket);
-  propsCourseWindowLastEntries = entriesAll;
+  const dkOnly = propsFilterDraftKingsOnlyOn();
+  const entriesView = filterCourseWindowEntriesForDraftKings(entriesAll, statKey);
+  propsCourseWindowLastEntries = dkOnly ? entriesView : entriesAll;
   let line = clampPropLineForMarket(statKey, snapPropLineToDotFive(lineInp?.value));
   if (lineEditing && !Number.isFinite(line) && Number.isFinite(propsTrendLastGoodLine)) {
     line = propsTrendLastGoodLine;
   }
   if (!lineEditing && (!Number.isFinite(line) || propsTrendsLineContextKey !== ctxKey)) {
-    line = defaultLineForCourseWindow(statKey, entriesAll);
+    line = defaultLineForCourseWindow(statKey, entriesView);
     if (lineInp) lineInp.value = formatPropLineValueForInput(line);
     propsTrendsLineContextKey = ctxKey;
   } else if (!lineEditing && lineInp) {
@@ -14409,7 +14434,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   }
   if (Number.isFinite(line)) propsTrendLastGoodLine = line;
 
-  let chartEntries = entriesAll;
+  let chartEntries = entriesView;
   if (chartEntries.length > PROPS_COURSE_WINDOW_MAX_CHART_BARS) {
     chartEntries = sampleCourseWindowChartEntriesEvenly(chartEntries, PROPS_COURSE_WINDOW_MAX_CHART_BARS);
   }
@@ -14425,6 +14450,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
       actual,
       date: propsTrendChartDateFromRow(e.row),
       playerName,
+      dgId: e.dgId,
       _hist: e.row,
     });
   }
@@ -14438,6 +14464,10 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
       if (courseBucket?.shardMissing) {
         empty.textContent =
           "Field-by-course needs player-history/by-course data on the server. Run npm run build:history and redeploy (includes this venue).";
+      } else if (dkOnly && nAll) {
+        empty.textContent = draftKingsRoundPropsOnly().length
+          ? `No chartable rounds for players with DraftKings ${propMarketLabelFromKey(statKey)} lines (${nAll} rounds in range).`
+          : "No DraftKings props loaded for this round — load props or turn off the DK filter.";
       } else {
         empty.textContent = nAll
           ? "No chartable stat values for these rounds (try another market)."
@@ -14450,11 +14480,11 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   const hitSt = propsFullHitStatsFromRoundList(
     statKey,
     line,
-    entriesAll.map((e) => e.row),
+    entriesView.map((e) => e.row),
   );
   const bookWrap = document.getElementById("props-trends-book-lines");
   if (bookWrap) bookWrap.replaceChildren();
-  paintPropsTrendKpiRowCourseWindow(statKey, hitSt, seriesChart, entriesAll);
+  paintPropsTrendKpiRowCourseWindow(statKey, hitSt, seriesChart, entriesView);
   const chartLeg = document.getElementById("props-chart-line-legend");
   if (chartLeg) chartLeg.hidden = !Number.isFinite(line);
   window.requestAnimationFrame(() => {
@@ -17403,6 +17433,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "props-filter-humidity-range",
     "props-filter-course",
     "props-filter-course-window",
+    "props-filter-draftkings-only",
     "props-filter-date-from",
     "props-filter-date-to",
     "props-window-n",
