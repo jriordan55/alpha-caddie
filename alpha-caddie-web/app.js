@@ -369,6 +369,9 @@ function bumpHistoryMutationEpoch() {
   historyMutationEpoch++;
   propsFieldVenueRoundsCacheSig = "";
   propsFieldVenueRoundsCache = { season: [], all: [] };
+  propsFieldVenueShardCacheSig = "";
+  propsFieldVenueShardCache = { season: [], all: [], ready: false };
+  propsFieldVenueShardPromise = null;
   propsCourseRoundIndexSig = "";
   propsCourseRoundIndex.clear();
   propsSingleCourseIndexSig = "";
@@ -414,6 +417,11 @@ let propsTrendsRenderDebounceT = 0;
 let propsFieldVenueRoundsCacheSig = "";
 /** @type {{ season: object[], all: object[] }} */
 let propsFieldVenueRoundsCache = { season: [], all: [] };
+/** All players at event venue from `player-history/by-course` shard (true all-time, not partial HISTORY). */
+let propsFieldVenueShardCacheSig = "";
+/** @type {{ season: object[], all: object[], ready: boolean }} */
+let propsFieldVenueShardCache = { season: [], all: [], ready: false };
+let propsFieldVenueShardPromise = null;
 /** One-pass index: courseKey → sorted session ISO days + all round entries at that venue. */
 let propsCourseRoundIndexSig = "";
 /** @type {Map<string, { days: string[], entries: { row: object, dgId: number, playerName: string }[] }>} */
@@ -11988,6 +11996,15 @@ function defaultLineForCourseWindow(statKey, entries) {
 function paintPropsTrendKpiRowCourseWindow(statKey, hitSt, graphSeries, entries) {
   const el = document.getElementById("props-trends-kpis");
   if (!el) return;
+  if (!propsFieldVenueShardCache.ready && propsEventVenueCourseKey()) {
+    el.replaceChildren();
+    const wait = document.createElement("p");
+    wait.className = "text-muted";
+    wait.textContent = "Loading course history for venue KPIs…";
+    el.appendChild(wait);
+    ensurePropsFieldVenueHistoryLoaded();
+    return;
+  }
   el.replaceChildren();
   const rounds = entries.map((e) => e.row);
   const playerIds = new Set(
@@ -12022,7 +12039,10 @@ function paintPropsTrendKpiRowCourseWindow(statKey, hitSt, graphSeries, entries)
     `${PROPS_TREND_DISPLAY_SEASON_YEAR} course avg`,
     propsTrendSeasonCourseKpiValue(statKey, atVenueSeason),
   );
-  addKpi("All-time course avg", propsTrendFieldVenueKpiValue(statKey, atVenueAll));
+  addKpi(
+    "All-time course avg",
+    propsTrendFieldVenueKpiValue(statKey, atVenueAll, { allowMetaFallback: false }),
+  );
   addKpi("Rounds", rounds.length, "");
   addKpi("Players", playerIds.size, "");
 
@@ -13139,10 +13159,33 @@ function propsTrendFieldVenueKpiFallback(statKey) {
   return NaN;
 }
 
-function propsTrendFieldVenueKpiValue(statKey, rounds) {
+function propsTrendFieldVenueKpiValue(statKey, rounds, opts = {}) {
   const mean = propsTrendMeanFieldVenueActual(statKey, rounds);
   if (Number.isFinite(mean)) return mean;
+  if (opts.allowMetaFallback === false) return NaN;
   return propsTrendFieldVenueKpiFallback(statKey);
+}
+
+function propsVenueRoundDedupeKey(row) {
+  const dg = Math.round(num(row?.dg_id, NaN));
+  const sk = Math.round(num(row?.sortKey, NaN));
+  if (Number.isFinite(sk) && sk > 0) return `${dg}|${sk}`;
+  const yr = historyRoundSeasonYear(row);
+  const rn = Math.round(num(row?.round_num, NaN));
+  const ev = String(row?.event_name || "").trim().toLowerCase();
+  return `${dg}|${yr}|${rn}|${ev}`;
+}
+
+function mergePropsVenueRoundRowsUnique(primary, extra) {
+  const out = [...(primary || [])];
+  const seen = new Set(out.map(propsVenueRoundDedupeKey));
+  for (const r of extra || []) {
+    const k = propsVenueRoundDedupeKey(r);
+    if (seen.has(k)) continue;
+    seen.add(k);
+    out.push(r);
+  }
+  return out;
 }
 
 /** Season course avg: only from completed rounds at this venue in the display year (no projection fallback). */
@@ -13198,16 +13241,8 @@ function propsFieldVenueKpisEnabled() {
   return Object.keys(HISTORY.byDgId || {}).length >= 1;
 }
 
-/** Load full player history in the background so All-time / season course KPIs can populate. */
-function ensurePropsFieldVenueHistoryLoaded() {
-  if (propsFieldLeaderboardEnabled() || isFileProtocol()) return;
-  if (playerHistoryLoadPromise || HISTORY._loading) return;
-  void loadPlayerHistory().then(() => {
-    if (activeAppTabId() === "props") scheduleRenderPropsTrends(0);
-  });
-}
-
-function rebuildPropsFieldVenueRoundsCache() {
+/** In-memory field rounds at venue (partial on live week) — supplements season KPI after shard load. */
+function rebuildPropsFieldVenueMemorySupplement() {
   const venueRaw = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
   const sig = `${historyMutationEpoch}|${normCourseNameKey(venueRaw)}`;
   if (!venueRaw || !propsFieldVenueKpisEnabled()) {
@@ -13231,15 +13266,70 @@ function rebuildPropsFieldVenueRoundsCache() {
   propsFieldVenueRoundsCache = { season, all };
 }
 
-/** Field-wide current-course rounds (all players) for this season, for the Current course avg KPI. */
+/**
+ * True all-time + season field venue KPIs from prebuilt by-course history (not partial in-memory field load).
+ */
+async function ensurePropsFieldVenueShardRoundsLoaded() {
+  const venueRaw = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
+  const courseKey = normCourseNameKey(venueRaw);
+  const sig = `${historyMutationEpoch}|${courseKey}`;
+  if (!courseKey || !propsFieldVenueKpisEnabled()) {
+    propsFieldVenueShardCacheSig = sig;
+    propsFieldVenueShardCache = { season: [], all: [], ready: true };
+    return propsFieldVenueShardCache;
+  }
+  if (propsFieldVenueShardCacheSig === sig && propsFieldVenueShardCache.ready) {
+    return propsFieldVenueShardCache;
+  }
+  if (propsFieldVenueShardPromise) return propsFieldVenueShardPromise;
+
+  propsFieldVenueShardPromise = (async () => {
+    rebuildPropsFieldVenueMemorySupplement();
+    const bucket = await ensurePropsCourseIndexForKeyAsync(courseKey);
+    const allShard = [];
+    for (const e of bucket.entries || []) {
+      const r = e.row;
+      if (!r || historyRoundIsPlaceholderAllMarketsZero(r)) continue;
+      if (!historyRoundCountsAsActual(r)) continue;
+      allShard.push(r);
+    }
+    const all = mergePropsVenueRoundRowsUnique(allShard, propsFieldVenueRoundsCache.all);
+    const seasonShard = allShard.filter(
+      (r) => historyRoundSeasonYear(r) === PROPS_TREND_DISPLAY_SEASON_YEAR,
+    );
+    const season = mergePropsVenueRoundRowsUnique(seasonShard, propsFieldVenueRoundsCache.season);
+    propsFieldVenueShardCache = { season, all, ready: true };
+    propsFieldVenueShardCacheSig = sig;
+    return propsFieldVenueShardCache;
+  })().finally(() => {
+    propsFieldVenueShardPromise = null;
+  });
+  return propsFieldVenueShardPromise;
+}
+
+/** Load venue shard + optional full player history for field leaderboard. */
+function ensurePropsFieldVenueHistoryLoaded() {
+  if (isFileProtocol()) return;
+  void ensurePropsFieldVenueShardRoundsLoaded().then(() => {
+    if (activeAppTabId() === "props") scheduleRenderPropsTrends(0);
+  });
+  if (propsFieldLeaderboardEnabled() || playerHistoryLoadPromise || HISTORY._loading) return;
+  void loadPlayerHistory().then(() => {
+    if (activeAppTabId() === "props") scheduleRenderPropsTrends(0);
+  });
+}
+
+/** Field-wide current-course rounds (all players) for this season KPI. */
 function roundsMatchingCurrentCourseOnlyFieldSeason() {
-  rebuildPropsFieldVenueRoundsCache();
+  if (propsFieldVenueShardCache.ready) return propsFieldVenueShardCache.season;
+  rebuildPropsFieldVenueMemorySupplement();
   return propsFieldVenueRoundsCache.season;
 }
 
-/** Field-wide current-course rounds (all players), all seasons. */
+/** Field-wide rounds at this venue across all seasons (by-course shard). */
 function roundsMatchingCurrentCourseOnlyFieldAllTime() {
-  rebuildPropsFieldVenueRoundsCache();
+  if (propsFieldVenueShardCache.ready) return propsFieldVenueShardCache.all;
+  rebuildPropsFieldVenueMemorySupplement();
   return propsFieldVenueRoundsCache.all;
 }
 
@@ -13380,6 +13470,15 @@ function paintPropsTrendBookRows(playerRow, statKey, lineHint, hitSt) {
 function paintPropsTrendKpiRow(statKey, hitSt, graphSeries, dgId) {
   const el = document.getElementById("props-trends-kpis");
   if (!el) return;
+  if (!propsFieldVenueShardCache.ready && propsFieldVenueKpisEnabled()) {
+    el.replaceChildren();
+    const wait = document.createElement("p");
+    wait.className = "text-muted";
+    wait.textContent = "Loading course history for venue KPIs…";
+    el.appendChild(wait);
+    ensurePropsFieldVenueHistoryLoaded();
+    return;
+  }
   el.replaceChildren();
   const id = Math.round(num(dgId, NaN));
   if (!Number.isFinite(id)) return;
@@ -13416,9 +13515,10 @@ function paintPropsTrendKpiRow(statKey, hitSt, graphSeries, dgId) {
     `${PROPS_TREND_DISPLAY_SEASON_YEAR} course avg`,
     propsTrendSeasonCourseKpiValue(statKey, atVenueSeason),
   );
-  const venueFallbackLabel =
-    atVenueSeason.length ? "All-time course avg" : atVenueAll.length ? "All Time Course Avg" : "All-time course avg";
-  addKpi(venueFallbackLabel, propsTrendFieldVenueKpiValue(statKey, atVenueAll));
+  addKpi(
+    "All-time course avg",
+    propsTrendFieldVenueKpiValue(statKey, atVenueAll, { allowMetaFallback: false }),
+  );
 
   if (hitSt && hitSt.valid > 0) {
     const lowerBetter = propsStatLowerIsBetter(statKey);
@@ -14365,6 +14465,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
 
 function renderPropsTrends() {
   ensurePropsStatSelectValid();
+  if (propsFieldVenueKpisEnabled()) ensurePropsFieldVenueHistoryLoaded();
   void ensurePropsDgIdNameManifestLoaded().then((m) => {
     if (!m?.size || activeAppTabId() !== "props" || propsDgIdNameManifestUiRefreshDone) return;
     propsDgIdNameManifestUiRefreshDone = true;
