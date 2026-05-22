@@ -2719,6 +2719,10 @@ function ouMarketRatingOpportunities(mKey) {
 const OU_MARKET_RATING_PLAYER_MIN_ROUNDS = 4;
 const OU_MARKET_RATING_PLAYER_MAX_ROUNDS = 24;
 
+function ouMarketRatingHistoryReady() {
+  return Boolean(HISTORY?._ok) && !HISTORY._loading && !HISTORY._partial;
+}
+
 function ouMarketRatingHistoryStatKey(mKey) {
   if (mKey === "Total score") return "total";
   if (mKey === "Birdies") return "birdies";
@@ -2743,7 +2747,7 @@ function ouMarketRatingPlayerRounds(player) {
   const pool =
     y2025.length >= OU_MARKET_RATING_PLAYER_MIN_ROUNDS ? y2025 : all;
   const out = pool.slice(0, OU_MARKET_RATING_PLAYER_MAX_ROUNDS);
-  OU_MARKET_RATING_ROUNDS_CACHE.set(cacheKey, out);
+  if (ouMarketRatingHistoryReady()) OU_MARKET_RATING_ROUNDS_CACHE.set(cacheKey, out);
   return out;
 }
 
@@ -2769,7 +2773,7 @@ function ouCachedMarketRating(market, player) {
   if (OU_MARKET_RATING_CACHE.has(cacheKey)) return OU_MARKET_RATING_CACHE.get(cacheKey);
   const playerAvg = ouPlayerHistoricalAvgForMarket(market, player);
   const hit = { playerAvg, marketRatingZ: ouMarketRatingZ(market, playerAvg) };
-  OU_MARKET_RATING_CACHE.set(cacheKey, hit);
+  if (ouMarketRatingHistoryReady()) OU_MARKET_RATING_CACHE.set(cacheKey, hit);
   return hit;
 }
 
@@ -4973,6 +4977,7 @@ function buildOuTable() {
   const q = pf && pf instanceof HTMLInputElement ? String(pf.value || "").trim().toLowerCase() : "";
   const playersFiltered = !q ? allRows.slice() : allRows.filter((p) => golferNameMatchesQuery(String(p.player_name || ""), q));
 
+  if (!ouMarketRatingHistoryReady()) void ensurePlayerHistoryLoadedForTab("ou");
   prewarmOuMarketRatingCache(playersFiltered, cols);
   let flatRows = ouProjectionFlatRowsForPlayers(playersFiltered, cols);
   const projMarketSel = String(document.getElementById("ou-proj-market-filter")?.value || "").trim();
@@ -5071,7 +5076,8 @@ function buildOuTable() {
     const mktRatingTd = document.createElement("td");
     mktRatingTd.className = "ou-cell ou-proj-long-td num ou-proj-td-mkt-rating";
     const z = num(marketRatingZ, NaN);
-    mktRatingTd.textContent = formatOuMarketRating(z);
+    mktRatingTd.textContent =
+      !Number.isFinite(z) && !ouMarketRatingHistoryReady() ? "…" : formatOuMarketRating(z);
     mktRatingTd.title = ouMarketRatingTitle(col.market, num(playerAvg, NaN), z);
     if (Number.isFinite(z)) {
       if (z > 0.05) mktRatingTd.classList.add("pos");
@@ -10181,6 +10187,9 @@ function applyPlayerHistoryPayload(payload, opts = {}) {
   if (DATA?.meta?.event_name) scrubNonActualRoundsFromHistoryBuckets();
   bumpHistoryMutationEpoch();
   void ensurePropsDgIdNameManifestLoaded();
+  if (!opts.partial && activeAppTabId() === "ou") {
+    requestAnimationFrame(() => buildOuTable());
+  }
 }
 
 function normalizeHistoryShardPayload(payload) {
@@ -16274,8 +16283,10 @@ async function refreshAll() {
   fillLivePropGolferSelect();
 
   const tab = activeAppTabId() || "ou";
-  if (tab === "ou") buildOuTable();
-  else if (tab === "ev") buildEvTable();
+  if (tab === "ou") {
+    buildOuTable();
+    void ensurePlayerHistoryLoadedForTab("ou");
+  } else if (tab === "ev") buildEvTable();
   else if (tab === "matchup-analysis") buildMatchupAnalysisTool();
 
   const pm = document.getElementById("panel-matchups");
@@ -16389,7 +16400,7 @@ function activeAppTabId() {
 }
 
 function ensurePlayerHistoryLoadedForTab(tab) {
-  if (!["props", "course-fit", "hangout"].includes(String(tab || ""))) return Promise.resolve();
+  if (!["props", "course-fit", "hangout", "ou"].includes(String(tab || ""))) return Promise.resolve();
   const p =
     tab === "props"
       ? (async () => {
@@ -16414,8 +16425,10 @@ function ensurePlayerHistoryLoadedForTab(tab) {
     if (tab === "props") renderPropsTrendsNow();
     if (tab === "course-fit") buildCourseFitTab();
     if (tab === "hangout") scheduleHangoutSimulateDebounced(0);
+    if (tab === "ou") buildOuTable();
   }).catch(() => {
     if (activeAppTabId() === "props") renderPropsTrendsNow();
+    if (activeAppTabId() === "ou") buildOuTable();
   });
 }
 
@@ -17448,6 +17461,7 @@ function initTabs() {
       });
       if (tab === "ou")
         requestAnimationFrame(() => {
+          void ensurePlayerHistoryLoadedForTab("ou");
           buildOuTable();
           syncOuChartCard();
           const ouProjCanvas = document.querySelector("#table-ou tbody .ou-proj-detail-canvas");
