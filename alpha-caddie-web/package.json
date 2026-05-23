@@ -51,7 +51,7 @@
     "dev:fast": "node scripts/serve-with-refresh.mjs --fast",
     "serve:only": "npx --yes serve . -p 5173",
     "push:all": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/refresh-history-and-push.ps1",
-    "push:live": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/refresh-history-and-push.ps1 -LiveWeekOnly",
+    "push:live": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/refresh-history-and-push.ps1 -LiveWeekOnly -PullFirst",
     "push all": "npm run push:all",
     "push:all:pull-first": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/refresh-history-and-push.ps1 -PullFirst",
     "push:artifacts-only": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/refresh-history-and-push.ps1 -ArtifactsOnly",
