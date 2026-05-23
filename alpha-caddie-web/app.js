@@ -383,6 +383,9 @@ function bumpHistoryMutationEpoch() {
   propsCourseWindowLastEntries = null;
   courseWindowRoundEntriesCacheSig = "";
   courseWindowRoundEntriesCache = null;
+  dkAuditPropsLineKeys = null;
+  dkAuditPropsCacheSig = "";
+  dkAuditPropsLoadPromise = null;
   propsDgIdNameManifestUiRefreshDone = false;
   OU_MARKET_RATING_ROUNDS_CACHE.clear();
   OU_MARKET_RATING_CACHE.clear();
@@ -400,6 +403,10 @@ let propsCourseWindowDateDefaultsCourseTracked = "";
 let courseWindowRoundEntriesCacheSig = "";
 /** @type {Array<{ row: object, dgId: number, playerName: string }> | null} */
 let courseWindowRoundEntriesCache = null;
+/** @type {Set<string> | null} keys `${dgId}|${round}|${market}` from dk_round_projection_audit.csv */
+let dkAuditPropsLineKeys = null;
+let dkAuditPropsCacheSig = "";
+let dkAuditPropsLoadPromise = null;
 let filteredHistoryRoundsMemoSigStored = "";
 const filteredHistoryRoundsMemoByDgId = new Map();
 
@@ -3239,8 +3246,8 @@ function escapeHtmlText(s) {
     .replace(/"/g, "&quot;");
 }
 
-/** Stacked morning / afternoon rows for WEATHER toolbars (theme classes in CSS). */
-function weatherWaveForecastBannerInnerHtml(morningSnap, afternoonSnap) {
+/** Stacked morning / afternoon / pin-sheet rows for WEATHER toolbars. */
+function weatherWaveForecastBannerInnerHtml(morningSnap, afternoonSnap, pinMeta) {
   const bits = [];
   if (morningSnap) {
     const line = formatWeatherSnapshotCompact(morningSnap);
@@ -3257,6 +3264,15 @@ function weatherWaveForecastBannerInnerHtml(morningSnap, afternoonSnap) {
       const em = weatherConditionEmoji(afternoonSnap.condition);
       bits.push(
         `<div class="weather-wave-line"><span class="weather-wave-emoji" aria-hidden="true">${em}</span><span class="weather-wave-copy"><strong class="weather-wave-kicker">Afternoon tees</strong><span class="weather-wave-sep"> · </span><span class="weather-wave-stats">${escapeHtmlText(line)}</span></span></div>`,
+      );
+    }
+  }
+  if (pinMeta && typeof pinMeta === "object") {
+    const pinSummary = String(pinMeta.summary || "").trim();
+    if (pinSummary) {
+      const rnd = Math.round(num(pinMeta.round, NaN));
+      bits.push(
+        `<div class="weather-wave-line pin-sheet-line"><span class="weather-wave-emoji" aria-hidden="true">📍</span><span class="weather-wave-copy"><strong class="weather-wave-kicker">Pin sheet${Number.isFinite(rnd) ? ` R${rnd}` : ""}</strong><span class="weather-wave-sep"> · </span><span class="weather-wave-stats">${escapeHtmlText(pinSummary)}</span></span></div>`,
       );
     }
   }
@@ -3449,7 +3465,7 @@ function syncForecastWaveBannerTexts() {
   const slots = DATA.meta?.forecast_wave_slots;
   const morning = slots && typeof slots === "object" ? slots.morning : null;
   const afternoon = slots && typeof slots === "object" ? slots.afternoon : null;
-  const html = weatherWaveForecastBannerInnerHtml(morning, afternoon);
+  const html = weatherWaveForecastBannerInnerHtml(morning, afternoon, DATA.meta?.pin_sheet);
   const status = String(DATA.meta?.forecast_weather_status || "");
   const forecastLoaded =
     Boolean(DATA.meta?.forecast_weather_updated_at) &&
@@ -4288,24 +4304,130 @@ function scheduleBuildOuTable(immediate = false) {
   });
 }
 
-/** DraftKings round O/U rows only (Round projections tab), for the toolbar round when known. */
-function draftKingsRoundPropsOnly() {
-  const wantR = Math.round(getOuRound());
+/** DraftKings round O/U rows only (Round projections tab). Default: toolbar round; `allRounds` keeps every round in DATA.props. */
+function draftKingsRoundPropsOnly(allRounds = false) {
+  const wantR = allRounds ? NaN : Math.round(getOuRound());
   const propsLen = Array.isArray(DATA.props) ? DATA.props.length : 0;
-  const sig = `r${wantR}|n${propsLen}|rev${projectionsDataRev}`;
-  if (ouDkRoundPropsCacheSig === sig) return ouDkRoundPropsCache;
+  const sig = `${allRounds ? "all" : `r${wantR}`}|n${propsLen}|rev${projectionsDataRev}`;
+  if (!allRounds && ouDkRoundPropsCacheSig === sig) return ouDkRoundPropsCache;
   const out = (Array.isArray(DATA.props) ? DATA.props : []).filter((r) => {
     if (String(r.source || "").trim().toLowerCase() !== "draftkings") return false;
     const pr = Math.round(num(r.round_num, NaN));
-    if (Number.isFinite(pr) && pr >= 1 && pr <= 4 && pr !== wantR) return false;
+    if (!allRounds && Number.isFinite(pr) && pr >= 1 && pr <= 4 && pr !== wantR) return false;
     const L = enforceHalfLine(num(r.line, NaN));
     const o = num(r.over_odds, NaN);
     const u = num(r.under_odds, NaN);
     return Number.isFinite(L) && Number.isFinite(o) && Number.isFinite(u);
   });
-  ouDkRoundPropsCacheSig = sig;
-  ouDkRoundPropsCache = out;
+  if (!allRounds) {
+    ouDkRoundPropsCacheSig = sig;
+    ouDkRoundPropsCache = out;
+  }
   return out;
+}
+
+function parseDkAuditCsvRow(line) {
+  const out = [];
+  let cur = "";
+  let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (inQ) {
+      if (ch === '"') {
+        if (line[i + 1] === '"') {
+          cur += '"';
+          i++;
+        } else inQ = false;
+      } else cur += ch;
+    } else if (ch === '"') inQ = true;
+    else if (ch === ",") {
+      out.push(cur);
+      cur = "";
+    } else cur += ch;
+  }
+  out.push(cur);
+  return out;
+}
+
+function propsEventNameForDkAudit() {
+  return String(DATA?.meta?.event_name || DATA?.meta?.datagolf_event_name || "").trim();
+}
+
+function dkAuditEventMatchesCurrent(evRaw) {
+  const meta = propsEventNameForDkAudit();
+  const ev = String(evRaw || "").trim();
+  if (!meta || !ev) return false;
+  return eventNameMatchesCurrentSchedule(ev, meta) || scheduleNameMatchesMeta(ev, meta);
+}
+
+function buildDkAuditPropsLineKeysFromCsvText(text) {
+  const lines = String(text || "")
+    .split(/\r?\n/)
+    .filter((ln) => ln.trim());
+  if (!lines.length) return new Set();
+  const hdr = parseDkAuditCsvRow(lines[0]);
+  const col = (name) => hdr.indexOf(name);
+  const iEv = col("event_name");
+  const iRnd = col("display_round");
+  const iDg = col("dg_id");
+  const iMkt = col("market");
+  const iCap = col("captured_at");
+  const iLine = col("dk_line");
+  const iOver = col("over_odds");
+  const iUnder = col("under_odds");
+  if (iEv < 0 || iRnd < 0 || iDg < 0 || iMkt < 0) return new Set();
+
+  const bestCap = new Map();
+  const keys = new Set();
+  for (let li = 1; li < lines.length; li++) {
+    const cols = parseDkAuditCsvRow(lines[li]);
+    if (!dkAuditEventMatchesCurrent(cols[iEv])) continue;
+    const rnd = Math.round(num(cols[iRnd], NaN));
+    const dg = Math.round(num(cols[iDg], NaN));
+    const market = String(cols[iMkt] || "").trim();
+    if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4 || !Number.isFinite(dg) || !market) continue;
+    const line = num(iLine >= 0 ? cols[iLine] : NaN, NaN);
+    const over = num(iOver >= 0 ? cols[iOver] : NaN, NaN);
+    const under = num(iUnder >= 0 ? cols[iUnder] : NaN, NaN);
+    if (!Number.isFinite(line) || !Number.isFinite(over) || !Number.isFinite(under)) continue;
+    const key = `${dg}|${rnd}|${market}`;
+    const capturedMs = iCap >= 0 ? Date.parse(String(cols[iCap] || "").trim()) : NaN;
+    const prev = bestCap.get(key);
+    if (!Number.isFinite(prev) || (Number.isFinite(capturedMs) && capturedMs > prev)) {
+      bestCap.set(key, Number.isFinite(capturedMs) ? capturedMs : 0);
+      keys.add(key);
+    }
+  }
+  return keys;
+}
+
+function ensureDkAuditPropsIndexLoaded() {
+  const metaEv = propsEventNameForDkAudit();
+  const sig = `${metaEv}|rev${projectionsDataRev}`;
+  if (dkAuditPropsCacheSig === sig && dkAuditPropsLineKeys) return Promise.resolve(dkAuditPropsLineKeys);
+  if (dkAuditPropsLoadPromise) return dkAuditPropsLoadPromise;
+  dkAuditPropsLoadPromise = (async () => {
+    let keys = new Set();
+    try {
+      const res = await fetch(cacheBustFetchUrl("data/dk_round_projection_audit.csv"), { cache: "no-store" });
+      if (res.ok) keys = buildDkAuditPropsLineKeysFromCsvText(await res.text());
+    } catch {
+      keys = new Set();
+    }
+    dkAuditPropsLineKeys = keys;
+    dkAuditPropsCacheSig = sig;
+    courseWindowRoundEntriesCache = null;
+    courseWindowRoundEntriesCacheSig = "";
+    return keys;
+  })().finally(() => {
+    dkAuditPropsLoadPromise = null;
+  });
+  return dkAuditPropsLoadPromise;
+}
+
+function draftKingsTournamentPropsAvailable() {
+  if (dkAuditPropsLineKeys?.size) return true;
+  return draftKingsRoundPropsOnly(true).length > 0 || draftKingsRoundPropsOnly().length > 0;
 }
 
 /** Match projections field row to a props row (dg_id + display/raw/loose/fuzzy name). */
@@ -4523,10 +4645,13 @@ function ouPropsBookOddsFromIndex(idx, playerRow, line) {
 
 function ouPropsRowsForMarketPlayer(market, playerRow, opts = {}) {
   const canon = ouPropsCanonicalMarket(market);
-  const props = opts.dkOnly ? draftKingsRoundPropsOnly() : ouRoundOuPropsForLines();
+  const props = opts.dkOnly ? draftKingsRoundPropsOnly(Boolean(opts.allDkRounds)) : ouRoundOuPropsForLines();
+  const wantR = Number.isFinite(Math.round(num(opts.roundNum, NaN))) ? Math.round(num(opts.roundNum, NaN)) : NaN;
   const out = [];
   for (const r of props) {
     if (String(r.market || "").trim() !== canon) continue;
+    const pr = Math.round(num(r.round_num, NaN));
+    if (Number.isFinite(wantR) && Number.isFinite(pr) && pr !== wantR) continue;
     const L = enforceHalfLine(num(r.line, NaN));
     const o = num(r.over_odds, NaN);
     const u = num(r.under_odds, NaN);
@@ -12133,11 +12258,29 @@ function propsFilterDraftKingsOnlyOn() {
 }
 
 function propsTrendPlayerHasDraftKingsLine(dgId, playerName, statKey) {
-  if (!draftKingsRoundPropsOnly().length) return false;
+  if (!draftKingsTournamentPropsAvailable()) return false;
   const market = ouMarketKeyFromStatKey(statKey);
+  const canon = ouPropsCanonicalMarket(market);
+  const id = Math.round(num(dgId, NaN));
+  if (Number.isFinite(id) && dkAuditPropsLineKeys?.size) {
+    for (const key of dkAuditPropsLineKeys) {
+      if (key.startsWith(`${id}|`) && key.endsWith(`|${canon}`)) return true;
+    }
+  }
   const row = { dg_id: dgId, player_name: playerName };
-  if (ouPropsRowsForMarketPlayer(market, row, { dkOnly: true }).length) return true;
+  if (ouPropsRowsForMarketPlayer(market, row, { dkOnly: true, allDkRounds: true }).length) return true;
   return Boolean(courseFitFindDraftKingsOuProp(dgId, playerName, market));
+}
+
+function propsTrendPlayerHasDraftKingsLineForRound(dgId, playerName, statKey, roundNum) {
+  const rnd = Math.round(num(roundNum, NaN));
+  if (!Number.isFinite(rnd)) return false;
+  const market = ouMarketKeyFromStatKey(statKey);
+  const canon = ouPropsCanonicalMarket(market);
+  const id = Math.round(num(dgId, NaN));
+  if (Number.isFinite(id) && dkAuditPropsLineKeys?.has(`${id}|${rnd}|${canon}`)) return true;
+  const row = { dg_id: dgId, player_name: playerName };
+  return ouPropsRowsForMarketPlayer(market, row, { dkOnly: true, allDkRounds: true, roundNum: rnd }).length > 0;
 }
 
 function filterCourseWindowEntriesForDraftKings(entries, statKey) {
@@ -12231,8 +12374,7 @@ function propsCourseWindowDateBoundsMs() {
 }
 
 /**
- * Field-by-course + DraftKings: chart golfers from round projections who have DK lines,
- * using course history in the date window (or each player's latest round at the venue if none).
+ * Field-by-course + DraftKings: one bar per golfer per tournament round with a DK line and chartable actual.
  */
 function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey) {
   const courseKey = propsEffectiveCourseKey();
@@ -12240,7 +12382,6 @@ function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey) {
   const bounds = propsCourseWindowDateBoundsMs();
   if (!bounds.ok) return [];
   const { fromMs, toMs } = bounds;
-  const market = ouMarketKeyFromStatKey(statKey);
 
   const nameByDg = buildPropsGolferDisplayNameMap();
   const fieldPlayers = roundProjectionPlayersForOuRound();
@@ -12249,51 +12390,49 @@ function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey) {
   );
   const byDg = propsTrendIndexCourseEntriesByDg(bucket, courseKey, fieldDgIds);
 
-  const sessionIso =
-    String(document.getElementById("props-filter-date-to")?.value || "").trim() ||
-    String(document.getElementById("props-filter-date-from")?.value || "").trim() ||
-    propsDefaultSessionIsoFromMeta();
-
   const raw = [];
+  const seen = new Set();
   for (const p of fieldPlayers) {
     const dgId = Math.round(num(p.dg_id, NaN));
     if (!Number.isFinite(dgId)) continue;
     const playerName = resolveGolferDisplayNameForDg(dgId, p.player_name, nameByDg);
-    if (!propsTrendPlayerHasDraftKingsLine(dgId, playerName, statKey)) continue;
+    const histAll = (byDg.get(dgId) || []).filter(
+      (e) =>
+        historyRoundInCourseDateWindow(e.row, fromMs, toMs) &&
+        historyRoundMatchesCurrentEvent(e.row) &&
+        historyRoundCountsAsActual(e.row),
+    );
+    histAll.sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
 
-    const hist = pickCourseWindowEntriesForPlayer(byDg.get(dgId) || [], fromMs, toMs);
-    const pick = hist.length ? hist[hist.length - 1] : null;
-    let chartActual = NaN;
-    let row = pick?.row ? { ...pick.row } : null;
-    if (pick) chartActual = chartActualForDraftKingsCourseWindow(statKey, { ...pick, chartActual: pick.chartActual }, p);
-    if (!Number.isFinite(chartActual)) chartActual = ouProjectedMean(market, p);
-    if (!Number.isFinite(chartActual)) continue;
-    if (!row) {
-      row = {
-        dg_id: dgId,
-        player_name: playerName,
-        _from_projection_chart: true,
-        chart_session_iso: sessionIso,
-      };
-    }
-    if (!Number.isFinite(actualForRoundRow(statKey, row))) {
-      row = applyChartActualToHistoryRow(statKey, row, chartActual);
-      row._from_projection_chart = !pick;
-      if (sessionIso) row.chart_session_iso = sessionIso;
-    }
+    for (const pick of histAll) {
+      const rnd = Math.round(num(pick.row?.round_num, NaN));
+      if (!Number.isFinite(rnd)) continue;
+      if (!propsTrendPlayerHasDraftKingsLineForRound(dgId, playerName, statKey, rnd)) continue;
+      const dedupe = `${dgId}|${rnd}`;
+      if (seen.has(dedupe)) continue;
+      seen.add(dedupe);
 
-    raw.push({
-      row,
-      dgId,
-      playerName: playerName || pick?.playerName,
-      chartActual,
-    });
+      const chartActual = chartActualForDraftKingsCourseWindow(statKey, pick, p);
+      if (!Number.isFinite(chartActual)) continue;
+
+      let row = { ...pick.row };
+      if (!Number.isFinite(actualForRoundRow(statKey, row))) {
+        row = applyChartActualToHistoryRow(statKey, row, chartActual);
+      }
+
+      raw.push({
+        row,
+        dgId,
+        playerName: playerName || pick.playerName,
+        chartActual,
+      });
+    }
   }
 
-  const histRows = raw.filter((e) => !e.row?._from_projection_chart).map((e) => e.row);
+  const histRows = raw.map((e) => e.row);
   const rowsOnly = applyPropsSidebarWeatherFiltersToRounds(histRows);
   const rowSet = new Set(rowsOnly);
-  return raw.filter((e) => e.row?._from_projection_chart || rowSet.has(e.row));
+  return raw.filter((e) => rowSet.has(e.row));
 }
 
 function propsCourseWindowDateInputToUtcMs(raw, endOfDay) {
@@ -12412,7 +12551,7 @@ function collectCourseWindowRoundEntriesFixed(bucketOpt) {
     courseKey,
     fromRaw,
     toRaw,
-    dkProj ? `dkproj|${statKey}|${playerDgFingerprint(DATA.players)}|${draftKingsRoundPropsOnly().length}` : "",
+    dkProj ? `dkproj|${statKey}|${playerDgFingerprint(DATA.players)}|${dkAuditPropsCacheSig}|${dkAuditPropsLineKeys?.size ?? 0}|${draftKingsRoundPropsOnly(true).length}` : "",
     propsTrendTempContextKey(),
     selectedPropsWindRangeFilter() || "",
     selectedPropsHumidityRangeFilter() || "",
@@ -14995,9 +15134,21 @@ function renderPropsTrendsCourseWindow() {
     return;
   }
 
+  const paintBody = (bucket) => {
+    if (propsFilterDraftKingsOnlyOn()) {
+      paintPropsCourseWindowBuilding("Loading DraftKings tournament lines…");
+      void ensureDkAuditPropsIndexLoaded().then(() => {
+        if (gen !== propsCourseWindowRenderGen || activeAppTabId() !== "props") return;
+        renderPropsTrendsCourseWindowBody(gen, bucket);
+      });
+      return;
+    }
+    renderPropsTrendsCourseWindowBody(gen, bucket);
+  };
+
   const cached = propsGetSingleCourseBucketSync(courseKey);
   if (cached) {
-    renderPropsTrendsCourseWindowBody(gen, cached);
+    paintBody(cached);
     return;
   }
 
@@ -15005,7 +15156,7 @@ function renderPropsTrendsCourseWindow() {
   void ensurePropsCourseIndexForKeyAsync(courseKey).then((bucket) => {
     if (gen !== propsCourseWindowRenderGen || activeAppTabId() !== "props") return;
     ensurePropsCourseWindowDateDefaults();
-    renderPropsTrendsCourseWindowBody(gen, bucket);
+    paintBody(bucket);
   });
 }
 
@@ -15033,8 +15184,8 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
       ? " · course data file missing on server (rebuild history)"
       : "";
     const dkNote = propsFilterDraftKingsOnlyOn()
-      ? draftKingsRoundPropsOnly().length
-        ? " · DK round projections (latest at course if no round on date)"
+      ? draftKingsTournamentPropsAvailable()
+        ? " · DK round projections (each tournament round at venue)"
         : " · no DraftKings props loaded"
       : "";
     const fallbackNote = propsCourseWindowDateFallbackIso
@@ -15179,8 +15330,8 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
             statKey,
           ),
         ).length;
-        if (!draftKingsRoundPropsOnly().length) {
-          empty.textContent = "No DraftKings props loaded for this round — load props or turn off the DK filter.";
+        if (!draftKingsTournamentPropsAvailable()) {
+          empty.textContent = "No DraftKings props loaded for this tournament — load props or turn off the DK filter.";
         } else if (!dkField) {
           empty.textContent = `No round-projection golfers with DraftKings ${propMarketLabelFromKey(statKey)} lines.`;
         } else {
