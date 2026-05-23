@@ -5,8 +5,9 @@
  *
  *   npm run export:round-projection-vs-actual
  *
- * Actuals: `data/historical_rounds_all.csv` (same event, dg_id, round_num), then live-in-play R1–R4
- * gross scores for the active event when the round is complete but CSV lags.
+ * Actuals (same priority as build-player-history): pgatour_event_rounds.json for the current event,
+ * then preds/live-tournament-stats + in-play R1–R4 via live-in-play.json, then historical_rounds_all.csv
+ * only for the matching event title + calendar year (never prior Byron Nelsons).
  * Birdies actuals include eagles (and eagles_or_better).
  * Book lines/odds: last DK capture in dk_round_projection_audit.csv strictly before that round's
  * first tee time (not live projections.props refreshes mid-round).
@@ -28,7 +29,8 @@ import {
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { parse } from "csv-parse";
-import { eventsLikelySame } from "./dg-events-align.mjs";
+import { eventsLikelySame, foldComparableTitle } from "./dg-events-align.mjs";
+import { resolveLiveRoundActualsByDg } from "./dg-live-tournament-stats.mjs";
 import { formatCourseLabelForDisplay } from "./course-name-key.mjs";
 import {
   EXPORT_ACTUAL_COLS,
@@ -130,16 +132,174 @@ function resolveHistCsv() {
 
 /** Same scaling as build-player-history.mjs (rate 0–1 vs raw counts). */
 function countFromRateOrRaw(raw, holes) {
+  if (raw == null || raw === "") return NaN;
   const n = num(raw, NaN);
-  if (!Number.isFinite(n)) return NaN;
-  if (n > 0 && n <= 1.0001) return Math.min(holes, Math.max(0, Math.round(n * holes)));
+  if (!Number.isFinite(n) || n === 0) return NaN;
+  if (n > 0 && n <= 1.0001) {
+    const c = Math.round(n * holes);
+    if (c <= 1) return NaN;
+    return Math.min(holes, Math.max(0, c));
+  }
+  if (n > 1.0001 && n <= holes + 1e-6) return Math.min(holes, Math.max(0, n));
   return Math.min(holes, Math.max(0, Math.round(n)));
 }
 
-async function loadActualsFromHistorical(eventName, csvPath, fairwayHoles) {
-  const map = new Map();
-  if (!eventName || !existsSync(csvPath)) return map;
+function eventYearFromPayload(payload) {
+  const ds = String(
+    payload?.datagolf_field_date_start || payload?.meta?.datagolf_field_date_start || "",
+  ).trim();
+  const y = parseInt(ds.slice(0, 4), 10);
+  return Number.isFinite(y) ? y : NaN;
+}
 
+function yearFromEventCompleted(ec) {
+  const m = String(ec || "").trim().match(/(\d{4})\s*$/);
+  return m ? parseInt(m[1], 10) : NaN;
+}
+
+/** Same event week only — not every prior "Byron Nelson" in the archive. */
+function historicalRowMatchesCurrentWeek(row, eventName, eventYear) {
+  const ev = String(row.event_name || "").trim();
+  if (!ev || !eventName) return false;
+  if (foldComparableTitle(ev) !== foldComparableTitle(eventName)) return false;
+  const ry = Math.round(num(row.year, NaN)) || yearFromEventCompleted(row.event_completed);
+  if (Number.isFinite(eventYear) && Number.isFinite(ry) && ry !== eventYear) return false;
+  return true;
+}
+
+function mergeActualEntry(map, dg, rnd, patch, opts = {}) {
+  const key = `${dg}|${rnd}`;
+  const prev = map.get(key) || {};
+  const out = { ...prev };
+  const onlyIfMissing = Boolean(opts.onlyIfMissing);
+  const fields =
+    opts.fields ||
+    ["total_score", "birdies", "pars", "bogeys", "gir", "fairways", "putts"];
+  for (const k of fields) {
+    if (!Number.isFinite(patch[k])) continue;
+    if (onlyIfMissing && Number.isFinite(prev[k])) continue;
+    out[k] = patch[k];
+  }
+  if (patch.source) {
+    out.source =
+      prev.source && prev.source !== patch.source ? `${prev.source}+${patch.source}` : patch.source;
+  }
+  map.set(key, out);
+}
+
+function patchFromLiveRoundAct(act, fairwayHoles) {
+  if (!act || typeof act !== "object") return null;
+  const score = num(act.round_score, NaN);
+  const birdies = birdiesPlusEaglesFromRow(act);
+  const pars = num(act.pars, NaN);
+  const bogeys = num(act.bogeys ?? act.bogies, NaN);
+  const gir = countFromRateOrRaw(act.gir, 18);
+  const fairways = countFromRateOrRaw(act.fairways, fairwayHoles);
+  const puttsRaw = num(act.putts, NaN);
+  const putts = Number.isFinite(puttsRaw) && puttsRaw > 1.5 && puttsRaw < 80 ? Math.round(puttsRaw) : NaN;
+  if (
+    !Number.isFinite(score) &&
+    !Number.isFinite(birdies) &&
+    !Number.isFinite(pars) &&
+    !Number.isFinite(bogeys)
+  ) {
+    return null;
+  }
+  return {
+    total_score: Number.isFinite(score) ? Math.round(score * 10) / 10 : NaN,
+    birdies,
+    pars,
+    bogeys,
+    gir,
+    fairways,
+    putts,
+    source: String(act.source || "live").trim() || "live",
+  };
+}
+
+function overlayPgatourEventActuals(map, eventName, webRoot, fairwayHoles = 14) {
+  const pgPath = join(webRoot, "data", "pgatour_event_rounds.json");
+  if (!eventName || !existsSync(pgPath)) return 0;
+  let raw;
+  try {
+    raw = JSON.parse(readFileSync(pgPath, "utf8"));
+  } catch {
+    return 0;
+  }
+  const metaEvent = String(raw?.meta?.event_name || "").trim();
+  if (metaEvent && foldComparableTitle(metaEvent) !== foldComparableTitle(eventName)) {
+    if (!eventsLikelySame(eventName, metaEvent)) return 0;
+  }
+  const list = (Array.isArray(raw?.rounds) ? raw.rounds : []).filter((r) => r?._from_pgatour);
+  let n = 0;
+  for (const r of list) {
+    const dg = Math.round(num(r.dg_id, NaN));
+    const rnd = Math.round(num(r.round_num, NaN));
+    const score = num(r.round_score, NaN);
+    if (!Number.isFinite(dg) || !Number.isFinite(rnd) || rnd < 1 || rnd > 4 || !Number.isFinite(score) || score <= 0)
+      continue;
+    const pgPatch = {
+      total_score: Math.round(score * 10) / 10,
+      birdies: birdiesPlusEaglesFromRow(r),
+      pars: num(r.pars, NaN),
+      bogeys: num(r.bogies ?? r.bogeys, NaN),
+      source: "pgatour",
+    };
+    const gir = countFromRateOrRaw(r.gir, 18);
+    const fairways = countFromRateOrRaw(r.fairways, fairwayHoles);
+    const puttsRaw = num(r.putts, NaN);
+    const putts =
+      Number.isFinite(puttsRaw) && puttsRaw > 1.5 && puttsRaw < 80 ? Math.round(puttsRaw) : NaN;
+    if (Number.isFinite(gir)) pgPatch.gir = gir;
+    if (Number.isFinite(fairways)) pgPatch.fairways = fairways;
+    if (Number.isFinite(putts)) pgPatch.putts = putts;
+    mergeActualEntry(map, dg, rnd, pgPatch);
+    n++;
+  }
+  return n;
+}
+
+function overlayLiveRoundActuals(map, eventName, livePath, payload, fairwayHoles) {
+  if (!existsSync(livePath)) return 0;
+  let live;
+  try {
+    live = JSON.parse(readFileSync(livePath, "utf8"));
+  } catch {
+    return 0;
+  }
+  const fu = live.field_updates && typeof live.field_updates === "object" ? live.field_updates : {};
+  const liveEvent = String(fu.event_name || live?.info?.event_name || live?.live_tournament_stats?.event_name || "").trim();
+  if (liveEvent && eventName && !eventsLikelySame(eventName, liveEvent)) return 0;
+
+  const meta = payload?.meta && typeof payload.meta === "object" ? payload.meta : {};
+  const roundPar =
+    num(payload?.course_par_18 ?? meta.course_par_18 ?? fu.course_par ?? live?.info?.course_par, NaN) || 72;
+  const actualsByDg = resolveLiveRoundActualsByDg(live, { roundPar, fairwayHoles });
+  let n = 0;
+  for (const [dgKey, perRound] of Object.entries(actualsByDg || {})) {
+    const dg = Math.round(num(dgKey, NaN));
+    if (!Number.isFinite(dg) || !perRound || typeof perRound !== "object") continue;
+    for (const [rndKey, act] of Object.entries(perRound)) {
+      const rnd = Math.round(num(rndKey, NaN));
+      if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
+      const patch = patchFromLiveRoundAct(act, fairwayHoles);
+      if (!patch) continue;
+      mergeActualEntry(map, dg, rnd, patch, {
+        onlyIfMissing: true,
+        fields: ["total_score", "birdies", "pars", "bogeys"],
+      });
+      mergeActualEntry(map, dg, rnd, patch, {
+        fields: ["gir", "fairways", "putts"],
+      });
+      n++;
+    }
+  }
+  return n;
+}
+
+async function fillHistoricalActualGaps(map, eventName, eventYear, csvPath, fairwayHoles) {
+  if (!eventName || !existsSync(csvPath)) return 0;
+  let n = 0;
   const parser = createReadStream(csvPath).pipe(
     parse({
       columns: true,
@@ -150,74 +310,53 @@ async function loadActualsFromHistorical(eventName, csvPath, fairwayHoles) {
   );
 
   for await (const row of parser) {
-    const ev = String(row.event_name || "").trim();
-    if (!eventsLikelySame(eventName, ev)) continue;
+    if (!historicalRowMatchesCurrentWeek(row, eventName, eventYear)) continue;
     const dg = Math.round(num(row.dg_id));
     const rnd = Math.round(num(row.round_num));
     if (!Number.isFinite(dg) || !Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
+    const key = `${dg}|${rnd}`;
+    const prev = map.get(key) || {};
     const score = num(row.round_score);
     if (!Number.isFinite(score)) continue;
 
-    const gir = countFromRateOrRaw(row.gir, 18);
-    const fairways = countFromRateOrRaw(row.driving_acc, fairwayHoles);
-    const puttsRaw = num(row.putts);
-    const putts = Number.isFinite(puttsRaw) && puttsRaw > 1.5 && puttsRaw < 80 ? Math.round(puttsRaw) : NaN;
-    const birdies = birdiesPlusEaglesFromRow(row);
-
-    map.set(`${dg}|${rnd}`, {
+    const patch = {
       total_score: Math.round(score * 10) / 10,
-      birdies,
-      pars: num(row.pars),
-      bogeys: num(row.bogies),
-      gir,
-      fairways,
-      putts,
+      birdies: birdiesPlusEaglesFromRow(row),
+      pars: num(row.pars, NaN),
+      bogeys: num(row.bogies, NaN),
+      gir: countFromRateOrRaw(row.gir, 18),
+      fairways: countFromRateOrRaw(row.driving_acc, fairwayHoles),
+      putts: NaN,
       source: "historical_rounds",
-    });
+    };
+    const puttsRaw = num(row.putts);
+    if (Number.isFinite(puttsRaw) && puttsRaw > 1.5 && puttsRaw < 80) patch.putts = Math.round(puttsRaw);
+
+    let merged = false;
+    for (const k of ["total_score", "birdies", "pars", "bogeys", "gir", "fairways", "putts"]) {
+      if (!Number.isFinite(prev[k]) && Number.isFinite(patch[k])) merged = true;
+    }
+    if (!merged && Number.isFinite(prev.total_score)) continue;
+
+    mergeActualEntry(map, dg, rnd, patch);
+    n++;
   }
-  return map;
+  return n;
 }
 
-function overlayLiveInPlayActuals(eventName, actuals, livePath, projections) {
-  if (!existsSync(livePath)) return;
-  let live;
-  try {
-    live = JSON.parse(readFileSync(livePath, "utf8"));
-  } catch {
-    return;
-  }
-  const rows = Array.isArray(live?.data) ? live.data : [];
-  if (!rows.length) return;
+export async function buildActualsMapForEvent(payload, opts = {}) {
+  const eventName = String(payload.event_name || "").trim();
+  const eventYear = eventYearFromPayload(payload);
+  const fairwayHoles = opts.fairwayHoles ?? 14;
+  const livePath = opts.livePath || join(WEB_ROOT, "live-in-play.json");
+  const histPath = opts.histPath || resolveHistCsv();
+  const map = new Map();
 
-  const fu = live.field_updates && typeof live.field_updates === "object" ? live.field_updates : {};
-  const liveEvent = String(fu.event_name || live?.info?.event_name || "").trim();
-  if (liveEvent && eventName && !eventsLikelySame(eventName, liveEvent)) return;
+  const liveN = overlayLiveRoundActuals(map, eventName, livePath, payload, fairwayHoles);
+  const pgN = overlayPgatourEventActuals(map, eventName, WEB_ROOT, fairwayHoles);
+  const histN = await fillHistoricalActualGaps(map, eventName, eventYear, histPath, fairwayHoles);
 
-  const meta = projections?.meta && typeof projections.meta === "object" ? projections.meta : projections;
-  let currentRound = Math.round(
-    num(meta.datagolf_live_current_round ?? meta.display_round ?? fu.current_round ?? live?.info?.current_round, NaN),
-  );
-  if (!Number.isFinite(currentRound) || currentRound < 1) currentRound = 4;
-
-  for (const r of rows) {
-    const dg = Math.round(num(r?.dg_id ?? r?.dgId));
-    if (!Number.isFinite(dg)) continue;
-    for (let rnd = 1; rnd <= 4; rnd++) {
-      const gross = num(r[`R${rnd}`] ?? r[`r${rnd}`], NaN);
-      if (!Number.isFinite(gross)) continue;
-      if (rnd > currentRound && String(meta?.date_start || fu.date_start || "").trim()) continue;
-
-      const key = `${dg}|${rnd}`;
-      const prev = actuals.get(key) || {};
-      const score = Math.round(gross * 10) / 10;
-      actuals.set(key, {
-        ...prev,
-        total_score: score,
-        source:
-          prev.source === "historical_rounds" && Number.isFinite(prev.birdies) ? "historical_rounds" : "live_in_play",
-      });
-    }
-  }
+  return { map, pgN, liveN, histN, eventYear };
 }
 
 function actualForMarket(act, marketKey) {
@@ -255,8 +394,11 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
   const fairwayHoles = Math.round(num(payload.projection_course_basis?.fairway_holes_modeled, 14)) || 14;
 
   const histPath = resolveHistCsv();
-  const actuals = await loadActualsFromHistorical(eventName, histPath, fairwayHoles);
-  overlayLiveInPlayActuals(eventName, actuals, livePath, payload);
+  const { map: actuals, pgN, liveN, histN } = await buildActualsMapForEvent(payload, {
+    fairwayHoles,
+    livePath,
+    histPath,
+  });
 
   const roundStartUtcMs = buildRoundStartUtcMs(players, payload);
   const auditPath = opts.dkAuditPath || defaultDkAuditPath(WEB_ROOT);
@@ -362,7 +504,18 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
   }
 
   persistCsv(outPath, lines.join(""));
-  const finalPath = ensureRoundProjectionCsvPublished(outPath);
+  let finalPath = outPath;
+  try {
+    finalPath = ensureRoundProjectionCsvPublished(outPath);
+  } catch (e) {
+    const alt = `${outPath}.new`;
+    if (existsSync(alt)) {
+      console.warn(String(e?.message || e));
+      finalPath = alt;
+    } else {
+      throw e;
+    }
+  }
   const rowCount = lines.length - 1;
   return {
     path: finalPath,
@@ -371,10 +524,11 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
     skippedNoOdds,
     eventName,
     pricingModes: EXPORT_PRICING_MODES.length,
+    actualSources: { pgatour: pgN, live: liveN, historical: histN },
   };
 }
 
-/** Write via temp file; on lock, stage `.new` and throw so push:live does not commit a stale CSV. */
+/** Write via temp file; on lock, stage `.new` and warn (push:live can still finish). */
 function persistCsv(outPath, content) {
   mkdirSync(dirname(outPath), { recursive: true });
   const tmp = `${outPath}.tmp`;
@@ -386,6 +540,7 @@ function persistCsv(outPath, content) {
       if (e?.code !== "ENOENT") throw e;
     }
     renameSync(tmp, outPath);
+    return outPath;
   } catch (e) {
     if (e?.code !== "EBUSY" && e?.code !== "EPERM" && e?.code !== "EACCES") throw e;
     const alt = `${outPath}.new`;
@@ -395,9 +550,10 @@ function persistCsv(outPath, content) {
       if (err?.code !== "ENOENT") throw err;
     }
     renameSync(tmp, alt);
-    throw new Error(
+    console.warn(
       `[round-projection-vs-actual] ${outPath} is locked (close Excel/editor). Fresh export is at ${alt}.`,
     );
+    return alt;
   }
 }
 
@@ -419,12 +575,13 @@ export function ensureRoundProjectionCsvPublished(outPath = DEFAULT_OUT) {
 }
 
 async function main() {
-  const { path, rows, withActual, skippedNoOdds, eventName, pricingModes } =
+  const { path, rows, withActual, skippedNoOdds, eventName, pricingModes, actualSources } =
     await writeRoundProjectionVsActualCsv();
+  const src = actualSources || {};
   console.log(
     `[round-projection-vs-actual] Wrote ${rows} row(s) with book odds on ≥1 market` +
       (skippedNoOdds ? ` (skipped ${skippedNoOdds} row(s) with no odds)` : "") +
-      `; ${withActual} player-rounds with actual score; ${pricingModes} pricing modes when odds exist -> ${path}` +
+      `; ${withActual} player-rounds with actual score; actuals pgatour=${src.pgatour ?? 0} live=${src.live ?? 0} historical=${src.historical ?? 0}; ${pricingModes} pricing modes -> ${path}` +
       (eventName ? ` (${eventName})` : ""),
   );
 }

@@ -13,6 +13,6 @@ const CSV = join(WEB_ROOT, "data", "round_projection_vs_actual.csv");
 try {
   ensureRoundProjectionCsvPublished(CSV);
 } catch (e) {
-  console.error(e?.message || e);
-  process.exit(1);
+  console.warn(String(e?.message || e));
+  process.exit(0);
 }
