@@ -9,9 +9,11 @@
  * then preds/live-tournament-stats + in-play R1–R4 via live-in-play.json, then historical_rounds_all.csv
  * only for the matching event title + calendar year (never prior Byron Nelsons).
  * Birdies actuals include eagles (and eagles_or_better).
- * Book lines/odds: last DK capture in dk_round_projection_audit.csv strictly before that round's
- * first tee time (not live projections.props refreshes mid-round).
- * Rows with no posted odds on any market are omitted.
+ * Book lines/odds: closing pre-round lines from dk_round_projection_audit.csv (last capture before
+ * that round's first tee). Upcoming / in-progress rounds without a pre-round line use current
+ * projections.props DraftKings rows (book_odds_source=live_snapshot) so R3/R4 lines are still exported.
+ * Completed rounds never use live props for book lines (pre vs actual comparison stays honest).
+ * Rows with no book odds and no completed round score are omitted.
  *
  * Output: alpha-caddie-web/data/round_projection_vs_actual.csv (overwrite each run)
  * `npm run push:live` (refresh:live) runs this after live merges + post-live CSV merge.
@@ -67,6 +69,7 @@ const HEADER =
   "exported_at,projections_updated_at,event_name,course_used,display_round,round,pricing_mode,pricing_skill,dg_id,player_name," +
   [
     ...EXPORT_ACTUAL_COLS,
+    "book_odds_source",
     ...EXPORT_MODEL_LINE_COLS,
     ...EXPORT_BOOK_LINE_COLS,
     ...EXPORT_OVER_ODDS_COLS,
@@ -90,6 +93,43 @@ function fmtActual(marketKey, v) {
 
 function dkPropForPlayer(dkIndex, dg, rnd, propsMarket) {
   return dkIndex.get(`${dg}|${rnd}|${propsMarket}`) || null;
+}
+
+/** Current DK scrape in projections.json keyed like the audit index. */
+function buildLiveDkPropsFromProjections(payload) {
+  const map = new Map();
+  for (const r of Array.isArray(payload?.props) ? payload.props : []) {
+    if (String(r.source || "").trim().toLowerCase() !== "draftkings") continue;
+    const dg = Math.round(num(r.dg_id, NaN));
+    const rnd = Math.round(num(r.round_num, NaN));
+    const market = String(r.market || "").trim();
+    const line = num(r.line, NaN);
+    const over = num(r.over_odds, NaN);
+    const under = num(r.under_odds, NaN);
+    if (!Number.isFinite(dg) || !Number.isFinite(rnd) || rnd < 1 || rnd > 4 || !market) continue;
+    if (!Number.isFinite(line) || !Number.isFinite(over) || !Number.isFinite(under)) continue;
+    map.set(`${dg}|${rnd}|${market}`, { line, over, under });
+  }
+  return map;
+}
+
+function roundHasCompletedScore(actuals, dg, rnd) {
+  const act = actuals.get(`${dg}|${rnd}`);
+  const score = num(act?.total_score, NaN);
+  return Number.isFinite(score) && score > 0;
+}
+
+/**
+ * Pre-round audit line when available; otherwise live DK props for rounds not yet completed.
+ */
+function dkPropForExport(preRoundIndex, liveIndex, dg, rnd, propsMarket, actuals) {
+  const key = `${dg}|${rnd}|${propsMarket}`;
+  const pre = preRoundIndex.get(key);
+  if (pre) return { ...pre, oddsSource: "pre_round_audit" };
+  if (roundHasCompletedScore(actuals, dg, rnd)) return null;
+  const live = liveIndex.get(key);
+  if (live) return { ...live, oddsSource: "live_snapshot" };
+  return null;
 }
 
 /** Keep row only when at least one market has posted over or under American odds. */
@@ -402,11 +442,14 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
 
   const roundStartUtcMs = buildRoundStartUtcMs(players, payload);
   const auditPath = opts.dkAuditPath || defaultDkAuditPath(WEB_ROOT);
-  const dkIndex = await loadPreRoundDkPropsFromAudit(eventName, auditPath, roundStartUtcMs);
+  const preRoundDkIndex = await loadPreRoundDkPropsFromAudit(eventName, auditPath, roundStartUtcMs);
+  const liveDkIndex = buildLiveDkPropsFromProjections(payload);
   const ctx = createProjectionContext({ ...payload, _webRoot: WEB_ROOT });
   const lines = [HEADER];
   let withActual = 0;
-  let skippedNoOdds = 0;
+  let skippedEmpty = 0;
+  let preRoundOddsRows = 0;
+  let liveSnapshotOddsRows = 0;
 
   for (const p of players) {
     const dg = Math.round(num(p?.dg_id));
@@ -420,6 +463,7 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
       const rowCells = Object.fromEntries(
         [
           ...EXPORT_ACTUAL_COLS,
+          "book_odds_source",
           ...EXPORT_MODEL_LINE_COLS,
           ...EXPORT_BOOK_LINE_COLS,
           ...EXPORT_OVER_ODDS_COLS,
@@ -434,25 +478,30 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
         rowCells[spec.actualCol] = fmtActual(spec.key, actualForMarket(act, spec.key));
       }
       rowCells.actual_source = act.source || "";
+      rowCells.book_odds_source = "";
 
       let bestEdge = NaN;
+      let rowOddsSource = "";
 
       for (const spec of EXPORT_MARKETS) {
         const mu = ouProjectedMeanForMode(spec.market, p, payload, pm.mode, pm.skill, ctx);
         const modelLine = spec.market === "Total score" ? mu : enforceHalfLine(mu);
         rowCells[spec.lineCol] = fmtLine(spec.market, mu);
 
-        const dk = dkPropForPlayer(dkIndex, dg, rnd, spec.propsMarket);
+        const dk = dkPropForExport(preRoundDkIndex, liveDkIndex, dg, rnd, spec.propsMarket, actuals);
         const bookLine = dk ? enforceHalfLine(dk.line) : NaN;
         const gradeLine = Number.isFinite(bookLine) ? bookLine : modelLine;
         if (dk) {
+          if (!rowOddsSource) rowOddsSource = dk.oddsSource;
           rowCells[spec.bookLineCol] = fmtLine(spec.market, bookLine);
           rowCells[spec.overOddsCol] = formatAmericanOdds(dk.over);
           rowCells[spec.underOddsCol] = formatAmericanOdds(dk.under);
         }
 
         const actual = actualForMarket(act, spec.key);
-        const sides = ouSideResults(spec.market, actual, gradeLine);
+        const sides = Number.isFinite(actual)
+          ? ouSideResults(spec.market, actual, gradeLine)
+          : { over: "", under: "" };
         rowCells[spec.overCol] = sides.over;
         rowCells[spec.underCol] = sides.under;
 
@@ -471,12 +520,17 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
         }
       }
 
+      rowCells.book_odds_source = rowOddsSource;
       rowCells.edge = Number.isFinite(bestEdge) ? (Math.round(bestEdge * 10) / 10).toFixed(1) : "";
 
-      if (!rowHasAnyBookOdds(rowCells)) {
-        skippedNoOdds++;
+      const hasBook = rowHasAnyBookOdds(rowCells);
+      const hasCompleted = roundHasCompletedScore(actuals, dg, rnd);
+      if (!hasBook && !hasCompleted) {
+        skippedEmpty++;
         continue;
       }
+      if (rowOddsSource === "pre_round_audit") preRoundOddsRows++;
+      else if (rowOddsSource === "live_snapshot") liveSnapshotOddsRows++;
 
       const rowOrder = [
         exported,
@@ -490,6 +544,7 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
         dg,
         String(p?.player_name || "").trim(),
         ...EXPORT_ACTUAL_COLS.map((c) => rowCells[c]),
+        rowCells.book_odds_source,
         ...EXPORT_MODEL_LINE_COLS.map((c) => rowCells[c]),
         ...EXPORT_BOOK_LINE_COLS.map((c) => rowCells[c]),
         ...EXPORT_OVER_ODDS_COLS.map((c) => rowCells[c]),
@@ -521,7 +576,9 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
     path: finalPath,
     rows: rowCount,
     withActual,
-    skippedNoOdds,
+    skippedNoOdds: skippedEmpty,
+    preRoundOddsRows,
+    liveSnapshotOddsRows,
     eventName,
     pricingModes: EXPORT_PRICING_MODES.length,
     actualSources: { pgatour: pgN, live: liveN, historical: histN },
@@ -575,12 +632,22 @@ export function ensureRoundProjectionCsvPublished(outPath = DEFAULT_OUT) {
 }
 
 async function main() {
-  const { path, rows, withActual, skippedNoOdds, eventName, pricingModes, actualSources } =
-    await writeRoundProjectionVsActualCsv();
+  const {
+    path,
+    rows,
+    withActual,
+    skippedNoOdds,
+    preRoundOddsRows,
+    liveSnapshotOddsRows,
+    eventName,
+    pricingModes,
+    actualSources,
+  } = await writeRoundProjectionVsActualCsv();
   const src = actualSources || {};
   console.log(
-    `[round-projection-vs-actual] Wrote ${rows} row(s) with book odds on ≥1 market` +
-      (skippedNoOdds ? ` (skipped ${skippedNoOdds} row(s) with no odds)` : "") +
+    `[round-projection-vs-actual] Wrote ${rows} row(s)` +
+      (skippedNoOdds ? ` (skipped ${skippedNoOdds} with no odds or completed score)` : "") +
+      `; book_odds pre_round_audit=${preRoundOddsRows ?? 0} live_snapshot=${liveSnapshotOddsRows ?? 0}` +
       `; ${withActual} player-rounds with actual score; actuals pgatour=${src.pgatour ?? 0} live=${src.live ?? 0} historical=${src.historical ?? 0}; ${pricingModes} pricing modes -> ${path}` +
       (eventName ? ` (${eventName})` : ""),
   );
