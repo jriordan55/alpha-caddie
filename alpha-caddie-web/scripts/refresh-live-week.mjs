@@ -18,6 +18,8 @@
  *   GOLF_REFRESH_LIVE_FAST_HISTORY=0 to scan full CSV depth (slower),
  *   GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE=1 to skip the second CSV merge after live fetch.
  *   GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL=1 to skip data/round_projection_vs_actual.csv export.
+ *   GOLF_SKIP_PIN_SHEET=1 to skip pin-sheet adjustments (data/pin_sheets/pin_sheet_active.json).
+ *   GOLF_PIN_SHEET_VISION=1 + OPENAI_API_KEY — parse data/pin_sheets/pin_sheet.png before apply.
  */
 import { spawnSync } from "child_process";
 import { copyFileSync, existsSync, mkdirSync } from "fs";
@@ -106,6 +108,13 @@ run(
   "bake-weather-into-projections.mjs",
   "Open-Meteo tee-time weather → projections.json (bake:weather)",
 );
+
+if (String(process.env.GOLF_SKIP_PIN_SHEET || "").trim() !== "1") {
+  run(
+    "apply-pin-sheet-to-projections.mjs",
+    "Pin sheet setup → projections.json (birdies/bogeys/total/GIR/fairways for display round)",
+  );
+}
 
 if (String(process.env.GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE || "").trim() !== "1") {
   run(

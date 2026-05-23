@@ -1,0 +1,26 @@
+{
+  "event_name": "THE CJ CUP Byron Nelson",
+  "round": 3,
+  "source": "screenshot",
+  "analyst_note": "ShotLink R3 pin sheet — back pins 2,4,7,17; front-friendly 6,9,12; tucked 10,15,16 (15 by water).",
+  "holes": [
+    { "hole": 1, "green_depth_yds": 37, "pin_from_front_yds": 8, "pin_from_side_yds": 5, "pin_side": "L" },
+    { "hole": 2, "green_depth_yds": 43, "pin_from_front_yds": 38, "pin_from_side_yds": 7, "pin_side": "R", "note": "back pin" },
+    { "hole": 3, "green_depth_yds": 36, "pin_from_front_yds": 8, "pin_from_side_yds": 6, "pin_side": "R" },
+    { "hole": 4, "green_depth_yds": 47, "pin_from_front_yds": 40, "pin_from_side_yds": 6, "pin_side": "R", "note": "back pin" },
+    { "hole": 5, "green_depth_yds": 32, "pin_from_front_yds": 16, "pin_from_side_yds": 7, "pin_side": "L" },
+    { "hole": 6, "green_depth_yds": 36, "pin_from_front_yds": 6, "pin_from_side_yds": 5, "pin_side": "L", "note": "front pin" },
+    { "hole": 7, "green_depth_yds": 36, "pin_from_front_yds": 28, "pin_from_side_yds": 7, "pin_side": "L", "note": "back pin" },
+    { "hole": 8, "green_depth_yds": 32, "pin_from_front_yds": 17, "pin_from_side_yds": 9, "pin_side": "R" },
+    { "hole": 9, "green_depth_yds": 36, "pin_from_front_yds": 6, "pin_from_side_yds": 5, "pin_side": "L", "note": "front pin" },
+    { "hole": 10, "green_depth_yds": 29, "pin_from_front_yds": 22, "pin_from_side_yds": 4, "pin_side": "L", "note": "tucked left" },
+    { "hole": 11, "green_depth_yds": 39, "pin_from_front_yds": 20, "pin_from_side_yds": 5, "pin_side": "L" },
+    { "hole": 12, "green_depth_yds": 32, "pin_from_front_yds": 5, "pin_from_side_yds": 5, "pin_side": "R", "note": "front pin" },
+    { "hole": 13, "green_depth_yds": 36, "pin_from_front_yds": 12, "pin_from_side_yds": 8, "pin_side": "R" },
+    { "hole": 14, "green_depth_yds": 40, "pin_from_front_yds": 15, "pin_from_side_yds": 7, "pin_side": "R" },
+    { "hole": 15, "green_depth_yds": 38, "pin_from_front_yds": 6, "pin_from_side_yds": 4, "pin_side": "L", "near_hazard": true, "note": "front, water left" },
+    { "hole": 16, "green_depth_yds": 35, "pin_from_front_yds": 11, "pin_from_side_yds": 13, "pin_side": "L" },
+    { "hole": 17, "green_depth_yds": 34, "pin_from_front_yds": 28, "pin_from_side_yds": 6, "pin_side": "R", "note": "back pin" },
+    { "hole": 18, "green_depth_yds": 35, "pin_from_front_yds": 11, "pin_from_side_yds": 6, "pin_side": "L" }
+  ]
+}
