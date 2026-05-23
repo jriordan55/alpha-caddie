@@ -142,6 +142,59 @@ function Promote-RoundProjectionVsActualCsv([string] $AlphaCaddieWebRoot) {
   }
 }
 
+# During rebase, --theirs is the local refresh commit being replayed (not origin/main).
+$script:RebaseDataConflictPaths = @(
+  "alpha-caddie-web/data/dk_round_projection_audit.csv",
+  "alpha-caddie-web/projections.json",
+  "website/public/data/projections.json",
+  "alpha-caddie-web/live-in-play.json",
+  "website/public/data/live-in-play.json"
+)
+
+function Resolve-RebaseDataConflicts([string] $Root) {
+  $conflicted = @(git -C $Root diff --name-only --diff-filter=U 2>$null | Where-Object { $_ -ne "" })
+  if ($conflicted.Count -eq 0) { return $false }
+  $touched = $false
+  foreach ($p in $script:RebaseDataConflictPaths) {
+    if ($conflicted -contains $p) {
+      git -C $Root checkout --theirs -- $p
+      if ($LASTEXITCODE -ne 0) { continue }
+      git -C $Root add -- $p
+      Write-Host "Rebase: kept local refresh for $p"
+      $touched = $true
+    }
+  }
+  return $touched
+}
+
+function Invoke-GitPullRebasePublish([string] $Root, [string] $Branch) {
+  Write-Host "Pulling latest origin/$Branch with rebase ..."
+  git -C $Root pull --rebase origin $Branch
+  while ($LASTEXITCODE -ne 0) {
+    if (Resolve-RebaseDataConflicts $Root) {
+      git -C $Root -c core.editor=true rebase --continue
+      continue
+    }
+    throw "git pull --rebase failed (resolve conflicts manually, then push)."
+  }
+}
+
+function Invoke-GitPushPublish([string] $Root, [string] $Branch, [switch] $SyncFirst) {
+  if ($SyncFirst) {
+    Invoke-GitPullRebasePublish $Root $Branch
+  }
+  Write-Host "Pushing origin $Branch ..."
+  git -C $Root push origin $Branch
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host "Push rejected (remote has newer commits — often DraftKings GitHub Action). Syncing and retrying once ..."
+    Invoke-GitPullRebasePublish $Root $Branch
+    git -C $Root push origin $Branch
+    if ($LASTEXITCODE -ne 0) {
+      throw "git push failed with exit code $LASTEXITCODE"
+    }
+  }
+}
+
 if ($LiveWeekOnly) {
   Run-Npm "Live-week refresh (no full historical CSV / build:history) ..." run refresh:live
   Promote-RoundProjectionVsActualCsv $webRoot
@@ -281,17 +334,6 @@ if ($SkipPush) {
 }
 
 $branch = git -C $repoRoot rev-parse --abbrev-ref HEAD
-if ($PullFirst) {
-  Write-Host "Pulling latest origin/$branch with rebase ..."
-  git -C $repoRoot pull --rebase origin $branch
-  if ($LASTEXITCODE -ne 0) {
-    throw "git pull --rebase failed with exit code $LASTEXITCODE"
-  }
-}
-Write-Host "Pushing origin $branch ..."
-git -C $repoRoot push origin $branch
-if ($LASTEXITCODE -ne 0) {
-  throw "git push failed with exit code $LASTEXITCODE"
-}
+Invoke-GitPushPublish $repoRoot $branch -SyncFirst:$PullFirst
 
 Write-Host "Done: refreshed artifacts pushed (no Results build)."
