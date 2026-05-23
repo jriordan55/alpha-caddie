@@ -4,6 +4,7 @@
  */
 import { eventsLikelySame, fieldWeekKey, fieldWeekKeysRoughMatch } from "./dg-events-align.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
+import { summarizeHourlyWeatherSlice } from "./open-meteo-weather-classify.mjs";
 
 function num(x, fallback = NaN) {
   const n = Number(x);
@@ -55,7 +56,7 @@ export function openMeteoForecastUrl(lat, lon, timezone) {
   u.searchParams.set("longitude", String(lon));
   u.searchParams.set(
     "hourly",
-    "temperature_2m,relativehumidity_2m,precipitation_probability,windspeed_10m,weathercode",
+    "temperature_2m,relativehumidity_2m,precipitation_probability,precipitation,windspeed_10m,weathercode",
   );
   u.searchParams.set("windspeed_unit", "mph");
   u.searchParams.set("temperature_unit", "fahrenheit");
@@ -96,56 +97,8 @@ export function hourlyIndexForDgTeetime(timesArr, teetimeStr) {
   return lastSameDay;
 }
 
-function openMeteoConditionFromHourSlice(codeWorst, maxPrecipProb) {
-  const p = num(maxPrecipProb, 0);
-  const c = Math.round(num(codeWorst, NaN));
-  const rainyCodes = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82];
-  const stormCodes = [95, 96, 99];
-  if (stormCodes.includes(c)) return "storm";
-  if (p >= 55 || rainyCodes.includes(c)) return "rain";
-  if (p >= 30 && (rainyCodes.includes(c) || c >= 51)) return "rain";
-  if ([45, 48].includes(c)) return "cloudy";
-  if (c <= 3 && p < 18) return "clear";
-  if (c === 3) return "cloudy";
-  return "cloudy";
-}
-
 export function hourlySliceWeatherSnapshot(hourly, startIdx, spanHours) {
-  const times = hourly?.time;
-  const T = hourly?.temperature_2m;
-  const W = hourly?.windspeed_10m;
-  const H = hourly?.relativehumidity_2m;
-  const P = hourly?.precipitation_probability;
-  const C = hourly?.weathercode;
-  if (!Array.isArray(times) || startIdx < 0 || startIdx >= times.length) return null;
-  const end = Math.min(times.length, startIdx + spanHours);
-  let nt = 0,
-    sT = 0,
-    sW = 0,
-    sH = 0,
-    worstCode = -999,
-    maxPP = 0;
-  for (let i = startIdx; i < end; i++) {
-    const ti = num(T?.[i], NaN);
-    if (!Number.isFinite(ti)) continue;
-    sT += ti;
-    sW += num(W?.[i], 0);
-    sH += num(H?.[i], 0);
-    const cc = num(C?.[i], NaN);
-    if (Number.isFinite(cc) && cc > worstCode) worstCode = cc;
-    const pp = num(P?.[i], 0);
-    if (pp > maxPP) maxPP = pp;
-    nt++;
-  }
-  if (!nt) return null;
-  const cond =
-    worstCode > -999 ? openMeteoConditionFromHourSlice(worstCode, maxPP) : openMeteoConditionFromHourSlice(NaN, maxPP);
-  return {
-    tempF: sT / nt,
-    windMph: sW / nt,
-    humidityPct: sH / nt,
-    condition: cond,
-  };
+  return summarizeHourlyWeatherSlice(hourly, startIdx, spanHours);
 }
 
 function medianFinite(vals) {
@@ -180,24 +133,37 @@ function forecastAnchorDateYmd(hourly, players, meta) {
   if (!Array.isArray(times) || !times.length) return "";
   const hasDay = (ymd) => times.some((t) => String(t || "").slice(0, 10) === ymd);
 
+  const majorityTeeDate = (roundFilter) => {
+    const counts = new Map();
+    for (const pl of players || []) {
+      if (roundFilter != null && Math.round(num(pl?.round, NaN)) !== roundFilter) continue;
+      const tt = parseDgTeetimeParts(pl?.dg_teetime_local);
+      if (!tt || !hasDay(tt.ymd)) continue;
+      counts.set(tt.ymd, (counts.get(tt.ymd) || 0) + 1);
+    }
+    let best = "";
+    let bestN = -1;
+    for (const [ymd, n] of counts) {
+      if (n > bestN) {
+        bestN = n;
+        best = ymd;
+      }
+    }
+    return best;
+  };
+
+  const displayRound = Math.round(num(meta?.display_round ?? meta?.datagolf_live_current_round, NaN));
+  if (Number.isFinite(displayRound) && displayRound >= 1) {
+    const roundDay = majorityTeeDate(displayRound);
+    if (roundDay) return roundDay;
+  }
+
+  const fieldDay = majorityTeeDate(null);
+  if (fieldDay) return fieldDay;
+
   const ds = String(meta?.datagolf_field_date_start || "").match(/^(\d{4}-\d{2}-\d{2})/);
   if (ds && hasDay(ds[1])) return ds[1];
 
-  const counts = new Map();
-  for (const pl of players || []) {
-    const tt = parseDgTeetimeParts(pl?.dg_teetime_local);
-    if (!tt || !hasDay(tt.ymd)) continue;
-    counts.set(tt.ymd, (counts.get(tt.ymd) || 0) + 1);
-  }
-  let best = "";
-  let bestN = -1;
-  for (const [ymd, n] of counts) {
-    if (n > bestN) {
-      bestN = n;
-      best = ymd;
-    }
-  }
-  if (best) return best;
   return String(times[0]).slice(0, 10);
 }
 

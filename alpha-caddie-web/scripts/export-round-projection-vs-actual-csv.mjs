@@ -15,7 +15,16 @@
  * Output: alpha-caddie-web/data/round_projection_vs_actual.csv (overwrite each run)
  * `npm run push:live` (refresh:live) runs this after live merges + post-live CSV merge.
  */
-import { createReadStream, existsSync, mkdirSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "fs";
+import {
+  copyFileSync,
+  createReadStream,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  renameSync,
+  unlinkSync,
+  writeFileSync,
+} from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { parse } from "csv-parse";
@@ -352,10 +361,11 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
     }
   }
 
-  const writtenPath = persistCsv(outPath, lines.join(""));
+  persistCsv(outPath, lines.join(""));
+  const finalPath = ensureRoundProjectionCsvPublished(outPath);
   const rowCount = lines.length - 1;
   return {
-    path: writtenPath,
+    path: finalPath,
     rows: rowCount,
     withActual,
     skippedNoOdds,
@@ -364,7 +374,7 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
   };
 }
 
-/** Write via temp rename; if the target is open (Excel), fall back to `.new` beside it. */
+/** Write via temp file; on lock, stage `.new` and throw so push:live does not commit a stale CSV. */
 function persistCsv(outPath, content) {
   mkdirSync(dirname(outPath), { recursive: true });
   const tmp = `${outPath}.tmp`;
@@ -376,7 +386,6 @@ function persistCsv(outPath, content) {
       if (e?.code !== "ENOENT") throw e;
     }
     renameSync(tmp, outPath);
-    return outPath;
   } catch (e) {
     if (e?.code !== "EBUSY" && e?.code !== "EPERM" && e?.code !== "EACCES") throw e;
     const alt = `${outPath}.new`;
@@ -386,10 +395,26 @@ function persistCsv(outPath, content) {
       if (err?.code !== "ENOENT") throw err;
     }
     renameSync(tmp, alt);
-    console.warn(
-      `[round-projection-vs-actual] ${outPath} is locked (close Excel/editor). Wrote ${alt} — re-run export after closing.`,
+    throw new Error(
+      `[round-projection-vs-actual] ${outPath} is locked (close Excel/editor). Fresh export is at ${alt}.`,
     );
-    return alt;
+  }
+}
+
+/** Promote `.new` → main CSV after a locked write; required before push:live can succeed. */
+export function ensureRoundProjectionCsvPublished(outPath = DEFAULT_OUT) {
+  const alt = `${outPath}.new`;
+  if (!existsSync(alt)) return outPath;
+  try {
+    copyFileSync(alt, outPath);
+    unlinkSync(alt);
+    console.log(`[round-projection-vs-actual] Promoted ${alt} -> ${outPath}`);
+    return outPath;
+  } catch (e) {
+    throw new Error(
+      `[round-projection-vs-actual] ${outPath} is still locked (close Excel/editor). Fresh export remains at ${alt}.`,
+      { cause: e },
+    );
   }
 }
 

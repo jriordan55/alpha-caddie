@@ -125,6 +125,10 @@ if (String(process.env.GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL || "").trim() !== "1
     "export-round-projection-vs-actual-csv.mjs",
     "Round projection vs actual CSV (round_projection_vs_actual.csv)",
   );
+  run(
+    "promote-round-projection-vs-actual-csv.mjs",
+    "Publish round_projection_vs_actual.csv (promote .new if Excel had file open)",
+  );
 }
 
 if (Object.keys(fh).length) {

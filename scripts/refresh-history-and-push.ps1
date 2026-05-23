@@ -128,8 +128,23 @@ function Bump-AlphaCaddieAppJsCache([string] $AlphaCaddieWebRoot) {
   return $true
 }
 
+function Promote-RoundProjectionVsActualCsv([string] $AlphaCaddieWebRoot) {
+  $csv = Join-Path $AlphaCaddieWebRoot "data\round_projection_vs_actual.csv"
+  $staged = Join-Path $AlphaCaddieWebRoot "data\round_projection_vs_actual.csv.new"
+  if (-not (Test-Path $staged)) { return }
+  Write-Host "Promoting round_projection_vs_actual.csv.new -> round_projection_vs_actual.csv (close Excel if this fails) ..."
+  try {
+    Copy-Item -Path $staged -Destination $csv -Force -ErrorAction Stop
+    Remove-Item -Path $staged -Force -ErrorAction Stop
+    Write-Host "Promoted round_projection_vs_actual.csv"
+  } catch {
+    throw "Could not update round_projection_vs_actual.csv - close Excel/editor and re-run push:live. Fresh data is in data/round_projection_vs_actual.csv.new"
+  }
+}
+
 if ($LiveWeekOnly) {
   Run-Npm "Live-week refresh (no full historical CSV / build:history) ..." run refresh:live
+  Promote-RoundProjectionVsActualCsv $webRoot
 } else {
   Run-Npm "Running fetch:dg ..." run fetch:dg
   Run-Npm "Building course-table.json (course mapping) ..." run build:course-table
@@ -145,6 +160,7 @@ if ($LiveWeekOnly) {
   Run-Npm "Running update:rounds (historical CSV + Historical Trends: player_round_history / embed / shards / shots web) ..." run update:rounds
   Run-Npm "Patching current-event rounds (pgatouR + live GIR/FW into history shards) ..." run patch:current-event-history
   Run-Npm "Writing round_projection_vs_actual.csv (model projections vs actual round results) ..." run export:round-projection-vs-actual
+  Promote-RoundProjectionVsActualCsv $webRoot
 }
 
 $webDataDir = Join-Path $repoRoot "website/public/data"

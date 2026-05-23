@@ -3055,7 +3055,7 @@ function openMeteoForecastUrl(lat, lon, timezone) {
   u.searchParams.set("longitude", String(lon));
   u.searchParams.set(
     "hourly",
-    "temperature_2m,relativehumidity_2m,precipitation_probability,windspeed_10m,weathercode",
+    "temperature_2m,relativehumidity_2m,precipitation_probability,precipitation,windspeed_10m,weathercode",
   );
   u.searchParams.set("windspeed_unit", "mph");
   u.searchParams.set("temperature_unit", "fahrenheit");
@@ -3098,17 +3098,36 @@ function hourlyIndexForDgTeetime(timesArr, teetimeStr) {
   return lastSameDay;
 }
 
-function openMeteoConditionFromHourSlice(codeWorst, maxPrecipProb) {
+function weatherCodeSeverity(c) {
+  const code = Math.round(num(c, NaN));
+  if (!Number.isFinite(code)) return 0;
+  const stormCodes = [95, 96, 99];
+  const rainyCodes = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82];
+  if (stormCodes.includes(code)) return 50;
+  if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return 40;
+  if ([51, 53, 55, 56, 57].includes(code)) return 35;
+  if ([45, 48].includes(code)) return 25;
+  if (code === 3) return 20;
+  if (code === 2) return 15;
+  if (code === 1) return 5;
+  return 0;
+}
+
+function openMeteoConditionFromHourSlice(codeWorst, maxPrecipProb, maxPrecipMm = 0, maxWindMph = 0) {
   const p = num(maxPrecipProb, 0);
+  const mm = num(maxPrecipMm, 0);
   const c = Math.round(num(codeWorst, NaN));
+  const w = num(maxWindMph, 0);
   const rainyCodes = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82];
   const stormCodes = [95, 96, 99];
   if (stormCodes.includes(c)) return "storm";
-  if (p >= 55 || rainyCodes.includes(c)) return "rain";
-  if (p >= 30 && (rainyCodes.includes(c) || c >= 51)) return "rain";
-  if ([45, 48].includes(c)) return "cloudy";
-  if (c <= 3 && p < 18) return "clear";
-  if (c === 3) return "cloudy";
+  if (mm >= 0.05 || rainyCodes.includes(c)) return "rain";
+  if (p >= 40 || (p >= 28 && (rainyCodes.includes(c) || c === 3))) return "rain";
+  if (p >= 22 && c >= 51) return "rain";
+  if (w >= 18 && p < 35 && !rainyCodes.includes(c) && !stormCodes.includes(c)) return "windy";
+  if ([45, 48, 2, 3].includes(c)) return "cloudy";
+  if (Number.isFinite(c) && c <= 1 && p < 15 && mm < 0.02) return "clear";
+  if (c === 0) return "clear";
   return "cloudy";
 }
 
@@ -3118,32 +3137,43 @@ function hourlySliceWeatherSnapshot(hourly, startIdx, spanHours) {
   const W = hourly?.windspeed_10m;
   const H = hourly?.relativehumidity_2m;
   const P = hourly?.precipitation_probability;
+  const R = hourly?.precipitation;
   const C = hourly?.weathercode;
   if (!Array.isArray(times) || startIdx < 0 || startIdx >= times.length) return null;
   const end = Math.min(times.length, startIdx + spanHours);
-  let nt = 0,
-    sT = 0,
-    sW = 0,
-    sH = 0,
-    sP = 0,
-    worstCode = -999,
-    maxPP = 0;
+  let nt = 0;
+  let sT = 0;
+  let sW = 0;
+  let sH = 0;
+  let worstCode = NaN;
+  let worstRank = -1;
+  let maxPP = 0;
+  let maxMm = 0;
+  let maxWind = 0;
   for (let i = startIdx; i < end; i++) {
     const ti = num(T?.[i], NaN);
     if (!Number.isFinite(ti)) continue;
     sT += ti;
-    sW += num(W?.[i], 0);
+    const wi = num(W?.[i], 0);
+    sW += wi;
+    if (wi > maxWind) maxWind = wi;
     sH += num(H?.[i], 0);
-    sP += num(P?.[i], 0);
     const cc = num(C?.[i], NaN);
-    if (Number.isFinite(cc) && cc > worstCode) worstCode = cc;
+    if (Number.isFinite(cc)) {
+      const rank = weatherCodeSeverity(cc);
+      if (rank > worstRank) {
+        worstRank = rank;
+        worstCode = cc;
+      }
+    }
     const pp = num(P?.[i], 0);
     if (pp > maxPP) maxPP = pp;
+    const mm = num(R?.[i], 0);
+    if (mm > maxMm) maxMm = mm;
     nt++;
   }
   if (!nt) return null;
-  const cond =
-    worstCode > -999 ? openMeteoConditionFromHourSlice(worstCode, maxPP) : openMeteoConditionFromHourSlice(NaN, maxPP);
+  const cond = openMeteoConditionFromHourSlice(worstCode, maxPP, maxMm, maxWind);
   return {
     tempF: sT / nt,
     windMph: sW / nt,
@@ -3243,30 +3273,45 @@ function formatWeatherSnapshotCompact(w) {
   return `${w.tempF.toFixed(1)}°F · ${w.windMph.toFixed(1)} mph · ${w.humidityPct.toFixed(0)}% · ${em} ${lab}`;
 }
 
-/** Pick a calendar day that exists in Open-Meteo hourly times (field date or majority tee date). */
+/** Pick forecast day: current display_round tee majority, then field majority, then event start. */
 function forecastAnchorDateYmd(hourly) {
   const times = hourly?.time;
   if (!Array.isArray(times) || !times.length) return "";
   const hasDay = (ymd) => times.some((t) => String(t || "").slice(0, 10) === ymd);
 
+  const majorityTeeDate = (roundFilter) => {
+    const counts = new Map();
+    for (const pl of DATA.players || []) {
+      if (roundFilter != null && Math.round(num(pl?.round, NaN)) !== roundFilter) continue;
+      const tt = parseDgTeetimeParts(pl?.dg_teetime_local);
+      if (!tt || !hasDay(tt.ymd)) continue;
+      counts.set(tt.ymd, (counts.get(tt.ymd) || 0) + 1);
+    }
+    let best = "";
+    let bestN = -1;
+    for (const [ymd, n] of counts) {
+      if (n > bestN) {
+        bestN = n;
+        best = ymd;
+      }
+    }
+    return best;
+  };
+
+  const displayRound = Math.round(
+    num(DATA?.meta?.display_round ?? DATA?.meta?.datagolf_live_current_round, NaN),
+  );
+  if (Number.isFinite(displayRound) && displayRound >= 1) {
+    const roundDay = majorityTeeDate(displayRound);
+    if (roundDay) return roundDay;
+  }
+
+  const fieldDay = majorityTeeDate(null);
+  if (fieldDay) return fieldDay;
+
   const ds = String(DATA?.meta?.datagolf_field_date_start || "").match(/^(\d{4}-\d{2}-\d{2})/);
   if (ds && hasDay(ds[1])) return ds[1];
 
-  const counts = new Map();
-  for (const pl of DATA.players || []) {
-    const tt = parseDgTeetimeParts(pl?.dg_teetime_local);
-    if (!tt || !hasDay(tt.ymd)) continue;
-    counts.set(tt.ymd, (counts.get(tt.ymd) || 0) + 1);
-  }
-  let best = "";
-  let bestN = -1;
-  for (const [ymd, n] of counts) {
-    if (n > bestN) {
-      bestN = n;
-      best = ymd;
-    }
-  }
-  if (best) return best;
   return String(times[0]).slice(0, 10);
 }
 
@@ -3297,8 +3342,7 @@ function hourlyIndexNearLocalHour(hourly, dateYmd, hour) {
  * Banner summary: fixed local morning (~8:00) vs afternoon (~15:00) on a day present in the hourly API —
  * avoids collapsing both waves to one slot when tee strings disagree with the timeline or index clamping.
  */
-function computeMorningAfternoonForecastSnapshots(hourly, players) {
-  void players;
+function computeMorningAfternoonForecastSnapshots(hourly) {
   if (!hourly) return { morning: null, afternoon: null };
   const timesArr = hourly.time;
   if (!Array.isArray(timesArr) || !timesArr.length) return { morning: null, afternoon: null };
@@ -3504,6 +3548,10 @@ async function refreshForecastWeatherFromOpenMeteo() {
     }
     if (snap && Number.isFinite(snap.tempF) && Number.isFinite(snap.windMph) && Number.isFinite(snap.humidityPct)) {
       p.dg_auto_weather = snap;
+      p.weather_temp_f = Math.round(snap.tempF * 10) / 10;
+      p.weather_wind_mph = Math.round(snap.windMph * 10) / 10;
+      p.weather_humidity = Math.round(snap.humidityPct);
+      p.weather_condition = String(snap.condition || "default").toLowerCase();
     } else delete p.dg_auto_weather;
   }
 
