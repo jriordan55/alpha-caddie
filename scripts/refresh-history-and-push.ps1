@@ -186,7 +186,7 @@ function Invoke-GitPushPublish([string] $Root, [string] $Branch, [switch] $SyncF
   Write-Host "Pushing origin $Branch ..."
   git -C $Root push origin $Branch
   if ($LASTEXITCODE -ne 0) {
-    Write-Host "Push rejected (remote has newer commits — often DraftKings GitHub Action). Syncing and retrying once ..."
+    Write-Host "Push rejected (remote has newer commits - often DraftKings GitHub Action). Syncing and retrying once ..."
     Invoke-GitPullRebasePublish $Root $Branch
     git -C $Root push origin $Branch
     if ($LASTEXITCODE -ne 0) {
