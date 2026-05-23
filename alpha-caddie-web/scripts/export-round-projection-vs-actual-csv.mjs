@@ -10,6 +10,7 @@
  * Birdies actuals include eagles (and eagles_or_better).
  * Book lines/odds: last DK capture in dk_round_projection_audit.csv strictly before that round's
  * first tee time (not live projections.props refreshes mid-round).
+ * Rows with no posted odds on any market are omitted.
  *
  * Output: alpha-caddie-web/data/round_projection_vs_actual.csv (overwrite each run)
  * `npm run push:live` (refresh:live) runs this after live merges + post-live CSV merge.
@@ -78,6 +79,17 @@ function fmtActual(marketKey, v) {
 
 function dkPropForPlayer(dkIndex, dg, rnd, propsMarket) {
   return dkIndex.get(`${dg}|${rnd}|${propsMarket}`) || null;
+}
+
+/** Keep row only when at least one market has posted over or under American odds. */
+function rowHasAnyBookOdds(rowCells) {
+  for (const col of EXPORT_OVER_ODDS_COLS) {
+    if (String(rowCells[col] ?? "").trim()) return true;
+  }
+  for (const col of EXPORT_UNDER_ODDS_COLS) {
+    if (String(rowCells[col] ?? "").trim()) return true;
+  }
+  return false;
 }
 
 function csvCell(v) {
@@ -243,6 +255,7 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
   const ctx = createProjectionContext({ ...payload, _webRoot: WEB_ROOT });
   const lines = [HEADER];
   let withActual = 0;
+  let skippedNoOdds = 0;
 
   for (const p of players) {
     const dg = Math.round(num(p?.dg_id));
@@ -309,6 +322,11 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
 
       rowCells.edge = Number.isFinite(bestEdge) ? (Math.round(bestEdge * 10) / 10).toFixed(1) : "";
 
+      if (!rowHasAnyBookOdds(rowCells)) {
+        skippedNoOdds++;
+        continue;
+      }
+
       const rowOrder = [
         exported,
         projAt,
@@ -336,7 +354,14 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
 
   const writtenPath = persistCsv(outPath, lines.join(""));
   const rowCount = lines.length - 1;
-  return { path: writtenPath, rows: rowCount, withActual, eventName, pricingModes: EXPORT_PRICING_MODES.length };
+  return {
+    path: writtenPath,
+    rows: rowCount,
+    withActual,
+    skippedNoOdds,
+    eventName,
+    pricingModes: EXPORT_PRICING_MODES.length,
+  };
 }
 
 /** Write via temp rename; if the target is open (Excel), fall back to `.new` beside it. */
@@ -369,9 +394,12 @@ function persistCsv(outPath, content) {
 }
 
 async function main() {
-  const { path, rows, withActual, eventName, pricingModes } = await writeRoundProjectionVsActualCsv();
+  const { path, rows, withActual, skippedNoOdds, eventName, pricingModes } =
+    await writeRoundProjectionVsActualCsv();
   console.log(
-    `[round-projection-vs-actual] Wrote ${rows} row(s) (${withActual} player-rounds with actual score; ${pricingModes} pricing modes each) -> ${path}` +
+    `[round-projection-vs-actual] Wrote ${rows} row(s) with book odds on ≥1 market` +
+      (skippedNoOdds ? ` (skipped ${skippedNoOdds} row(s) with no odds)` : "") +
+      `; ${withActual} player-rounds with actual score; ${pricingModes} pricing modes when odds exist -> ${path}` +
       (eventName ? ` (${eventName})` : ""),
   );
 }
