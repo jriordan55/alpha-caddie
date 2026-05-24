@@ -14661,14 +14661,68 @@ function propsChartXAxisDateLabels(perBarLabels, innerW) {
 }
 
 /**
- * Equal spacing per round (rolling window). Time-based x was misleading with multi-year history
- * (years squashed left, recent rounds sparse right).
+ * Equal spacing per round (rolling window). Time-based x when "Current course only" shows
+ * multi-year venue history so calendar gaps appear between seasons.
  */
-function propsChartBarLayout(series, padL, innerW) {
+function propsChartSeriesUtcMs(series) {
+  return series.map((s) => {
+    const hist = s?._hist;
+    if (hist && typeof hist === "object") {
+      const ms = historyRoundChartDateUtcMs(hist);
+      if (Number.isFinite(ms)) return ms;
+    }
+    const base = parseEventCompletedChronoBase(s?.date || "");
+    if (base > 0) {
+      const y = Math.floor(base / 10000);
+      const mo = Math.floor((base % 10000) / 100);
+      const d = base % 100;
+      return Date.UTC(y, mo - 1, d);
+    }
+    return NaN;
+  });
+}
+
+function propsChartUseTimeBasedLayout() {
+  return courseFilterOn();
+}
+
+function propsChartBarLayout(series, padL, innerW, opts = {}) {
   const n = series.length;
   const xCenter = new Array(n);
   const barW = new Array(n);
   if (n === 0) return { xCenter, barW };
+
+  const timeBased = Boolean(opts.timeBased) && n > 1;
+  if (timeBased) {
+    const times = propsChartSeriesUtcMs(series);
+    const validTimes = times.filter(Number.isFinite);
+    if (validTimes.length >= 2) {
+      let minT = Math.min(...validTimes);
+      let maxT = Math.max(...validTimes);
+      if (maxT <= minT) maxT = minT + 86400000;
+      const margin = innerW * 0.03;
+      const usable = Math.max(1, innerW - 2 * margin);
+      for (let i = 0; i < n; i++) {
+        const t = times[i];
+        if (Number.isFinite(t)) {
+          xCenter[i] = padL + margin + ((t - minT) / (maxT - minT)) * usable;
+        } else {
+          xCenter[i] = padL + margin + (i / Math.max(1, n - 1)) * usable;
+        }
+      }
+      for (let i = 0; i < n; i++) {
+        let halfGap;
+        if (n === 1) halfGap = usable / 2;
+        else if (i === 0) halfGap = Math.max(1, (xCenter[1] - xCenter[0]) / 2);
+        else if (i === n - 1) halfGap = Math.max(1, (xCenter[i] - xCenter[i - 1]) / 2);
+        else halfGap = Math.max(1, Math.min(xCenter[i + 1] - xCenter[i], xCenter[i] - xCenter[i - 1]) / 2);
+        const maxBar = n > 48 ? 14 : n > 24 ? 20 : 28;
+        barW[i] = Math.max(3, Math.min(maxBar, halfGap * 1.15));
+      }
+      return { xCenter, barW };
+    }
+  }
+
   const slotEq = innerW / n;
   const bwFrac = n > 48 ? 0.44 : n > 24 ? 0.56 : 0.72;
   const minBarPx = n > 48 ? 4 : n > 24 ? 6 : 10;
@@ -14704,17 +14758,32 @@ function pointInPropsChartHitRegion(canvasX, canvasY) {
   return propsChartHitRegions.some((r) => canvasX >= r.x0 && canvasX < r.x0 + r.w && canvasY >= r.y0 && canvasY < r.y0 + r.h);
 }
 
-/** Column index from x (center-weighted; equal-width slots). */
+/** Column index from x (center-weighted; equal-width slots or nearest time slot). */
 function propsChartHitIndexAtX(canvasX) {
   const L = propsChartHoverLayout;
-  if (!L.n || !L.slotW || L.n !== propsChartHitRegions.length) return -1;
-  if (canvasX < L.padL || canvasX > L.padL + L.n * L.slotW) return -1;
+  if (!L.n || L.n !== propsChartHitRegions.length) return -1;
+  const chartRight = Number.isFinite(L.padR) ? L.padR : L.padL + L.n * (L.slotW || 0);
+  if (canvasX < L.padL || canvasX > chartRight) return -1;
+  if (L.timeBased && Array.isArray(L.xCenters) && L.xCenters.length === L.n) {
+    let best = -1;
+    let bestDist = Infinity;
+    for (let i = 0; i < L.n; i++) {
+      const d = Math.abs(canvasX - L.xCenters[i]);
+      if (d < bestDist) {
+        bestDist = d;
+        best = i;
+      }
+    }
+    return best;
+  }
+  if (!L.slotW) return -1;
   return Math.min(L.n - 1, Math.max(0, Math.round((canvasX - L.padL - L.slotW * 0.5) / L.slotW)));
 }
 
 function pickPropsChartHit(canvasX, canvasY) {
   const L = propsChartHoverLayout;
-  const inCols = L.n > 0 && canvasX >= L.padL && canvasX <= L.padL + L.n * L.slotW;
+  const chartRight = Number.isFinite(L.padR) ? L.padR : L.padL + L.n * (L.slotW || 0);
+  const inCols = L.n > 0 && canvasX >= L.padL && canvasX <= chartRight;
   let idx = propsChartHitIndexAtX(canvasX);
   if (idx < 0 || idx >= propsChartHitRegions.length) {
     if (inCols && propsChartStickyHitIndex >= 0) {
@@ -14830,7 +14899,8 @@ function updatePropsTrendChartHover(canvas, ev) {
   }
   const { x, y } = canvasCoordsFromEvent(canvas, ev || propsChartLastPointer);
   const L = propsChartHoverLayout;
-  const inCols = L.n > 0 && x >= L.padL && x <= L.padL + L.n * L.slotW;
+  const chartRight = Number.isFinite(L.padR) ? L.padR : L.padL + L.n * (L.slotW || 0);
+  const inCols = L.n > 0 && x >= L.padL && x <= chartRight;
   const hit = pickPropsChartHit(x, y);
   canvas.style.cursor = hit ? "pointer" : "default";
   if (propsChartTooltipPinned) return;
@@ -14997,9 +15067,17 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
   ctx.lineTo(w - pad.r, h - pad.b);
   ctx.stroke();
   const slotW = innerW / n;
-  propsChartHoverLayout = { padL: pad.l, slotW, n };
+  const timeBased = propsChartUseTimeBasedLayout();
   const xAxisPerBar = buildPropsTrendXAxisLabels(plot);
-  const { xCenter, barW } = propsChartBarLayout(plot, pad.l, innerW);
+  const { xCenter, barW } = propsChartBarLayout(plot, pad.l, innerW, { timeBased });
+  propsChartHoverLayout = {
+    padL: pad.l,
+    padR: pad.l + innerW,
+    slotW,
+    n,
+    timeBased,
+    xCenters: xCenter.slice(),
+  };
   const lowerIsBetter = propsStatLowerIsBetter(statKey);
   for (let i = 0; i < n; i++) {
     const v = plot[i].actual;
@@ -15008,13 +15086,13 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
     const x0 = Math.max(pad.l, Math.min(xc - bw / 2, pad.l + innerW - bw));
     const yTop = yScale(v);
     const hBar = Math.max(1, yBase - yTop);
-    const slotLeft = pad.l + i * slotW;
+    const hitPad = Math.max(bw * 0.35, 3);
     const hist = plot[i]._hist;
     const venueLbl = propsEffectiveCourseKey() ? courseFitPrettyCourseKey(propsEffectiveCourseKey()) : "";
     propsChartHitRegions.push({
-      x0: slotLeft,
+      x0: x0 - hitPad,
       y0: pad.t,
-      w: Math.max(1, slotW),
+      w: Math.max(1, bw + hitPad * 2),
       h: yBase - pad.t,
       _hist: hist,
       date: String(plot[i].date || "").trim() || "—",
