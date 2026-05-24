@@ -15,7 +15,10 @@
  * Completed rounds never use live props for book lines (pre vs actual comparison stays honest).
  * Rows with no book odds and no completed round score are omitted.
  *
- * Output: alpha-caddie-web/data/round_projection_vs_actual.csv (overwrite each run)
+ * Output:
+ *   alpha-caddie-web/data/round_projection_vs_actual.csv (detail rows)
+ *   alpha-caddie-web/data/round_projection_vs_actual_summary.csv (RMSE/MAE + EV-threshold units)
+ *   alpha-caddie-web/data/round_projection_vs_actual.xlsx (detail + summary tabs)
  * `npm run push:live` (refresh:live) runs this after live merges + post-live CSV merge.
  */
 import {
@@ -57,6 +60,10 @@ import {
   defaultDkAuditPath,
   loadPreRoundDkPropsFromAudit,
 } from "./dk-pre-round-props.mjs";
+import {
+  buildRoundProjectionVsActualSummary,
+  writeRoundProjectionVsActualWorkbook,
+} from "./round-projection-vs-actual-summary.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -64,6 +71,8 @@ const REPO_ROOT = process.env.GOLF_MODEL_DIR?.trim()
   ? resolve(process.env.GOLF_MODEL_DIR.trim())
   : resolve(WEB_ROOT, "..");
 const DEFAULT_OUT = join(WEB_ROOT, "data", "round_projection_vs_actual.csv");
+const DEFAULT_SUMMARY_OUT = join(WEB_ROOT, "data", "round_projection_vs_actual_summary.csv");
+const DEFAULT_XLSX_OUT = join(WEB_ROOT, "data", "round_projection_vs_actual.xlsx");
 
 const HEADER =
   "exported_at,projections_updated_at,event_name,course_used,display_round,round,pricing_mode,pricing_skill,dg_id,player_name," +
@@ -446,6 +455,7 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
   const liveDkIndex = buildLiveDkPropsFromProjections(payload);
   const ctx = createProjectionContext({ ...payload, _webRoot: WEB_ROOT });
   const lines = [HEADER];
+  const summarySamples = [];
   let withActual = 0;
   let skippedEmpty = 0;
   let preRoundOddsRows = 0;
@@ -482,6 +492,7 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
 
       let bestEdge = NaN;
       let rowOddsSource = "";
+      const rowMarketSamples = [];
 
       for (const spec of EXPORT_MARKETS) {
         const mu = ouProjectedMeanForMode(spec.market, p, payload, pm.mode, pm.skill, ctx);
@@ -514,10 +525,25 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
           payload,
           dk?.over,
           dk?.under,
-        ).best;
-        if (Number.isFinite(edge) && (!Number.isFinite(bestEdge) || edge > bestEdge)) {
-          bestEdge = edge;
+        );
+        if (Number.isFinite(edge.best) && (!Number.isFinite(bestEdge) || edge.best > bestEdge)) {
+          bestEdge = edge.best;
         }
+
+        rowMarketSamples.push({
+          pricingMode: pm.mode,
+          pricingSkill: pm.skill,
+          marketKey: spec.key,
+          modelLine: Number.isFinite(modelLine) ? modelLine : NaN,
+          bookLine: Number.isFinite(bookLine) ? bookLine : NaN,
+          edgeOver: edge.edgeOver,
+          edgeUnder: edge.edgeUnder,
+          overOdds: dk?.over,
+          underOdds: dk?.under,
+          overResult: sides.over,
+          underResult: sides.under,
+          hasActual: Number.isFinite(actual),
+        });
       }
 
       rowCells.book_odds_source = rowOddsSource;
@@ -528,6 +554,9 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
       if (!hasBook && !hasCompleted) {
         skippedEmpty++;
         continue;
+      }
+      for (const sm of rowMarketSamples) {
+        summarySamples.push({ ...sm, bookOddsSource: rowOddsSource });
       }
       if (rowOddsSource === "pre_round_audit") preRoundOddsRows++;
       else if (rowOddsSource === "live_snapshot") liveSnapshotOddsRows++;
@@ -558,23 +587,48 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
     }
   }
 
-  persistCsv(outPath, lines.join(""));
-  let finalPath = outPath;
+  const detailContent = lines.join("");
+  persistCsv(outPath, detailContent);
+  const summaryPath = opts.summaryPath || DEFAULT_SUMMARY_OUT;
+  const xlsxPath = opts.xlsxPath || DEFAULT_XLSX_OUT;
+  const summaryMeta = {
+    exported,
+    projectionsUpdatedAt: projAt,
+    eventName,
+    course,
+    displayRound,
+  };
+  const summaryContent = buildRoundProjectionVsActualSummary(summarySamples, summaryMeta);
+  persistCsv(summaryPath, summaryContent);
+  let xlsxWritten = false;
   try {
-    finalPath = ensureRoundProjectionCsvPublished(outPath);
+    xlsxWritten = await writeRoundProjectionVsActualWorkbook(outPath, summaryContent, xlsxPath);
+  } catch (e) {
+    console.warn(`[round-projection-vs-actual] xlsx write failed: ${e?.message || e}`);
+  }
+  let finalPath = outPath;
+  let finalSummaryPath = summaryPath;
+  try {
+    finalPath = ensureRoundProjectionArtifactsPublished(outPath, summaryPath, xlsxPath);
+    finalSummaryPath = summaryPath;
   } catch (e) {
     const alt = `${outPath}.new`;
     if (existsSync(alt)) {
       console.warn(String(e?.message || e));
       finalPath = alt;
+      if (existsSync(`${summaryPath}.new`)) finalSummaryPath = `${summaryPath}.new`;
     } else {
       throw e;
     }
   }
   const rowCount = lines.length - 1;
+  const summaryRowCount = Math.max(0, summaryContent.split("\n").filter(Boolean).length - 1);
   return {
     path: finalPath,
+    summaryPath: finalSummaryPath,
+    xlsxPath: xlsxWritten ? xlsxPath : "",
     rows: rowCount,
+    summaryRows: summaryRowCount,
     withActual,
     skippedNoOdds: skippedEmpty,
     preRoundOddsRows,
@@ -614,6 +668,18 @@ function persistCsv(outPath, content) {
   }
 }
 
+/** Promote `.new` → main CSV / summary / xlsx after a locked write; required before push:live can succeed. */
+export function ensureRoundProjectionArtifactsPublished(
+  outPath = DEFAULT_OUT,
+  summaryPath = DEFAULT_SUMMARY_OUT,
+  xlsxPath = DEFAULT_XLSX_OUT,
+) {
+  ensureRoundProjectionCsvPublished(outPath);
+  ensureRoundProjectionCsvPublished(summaryPath);
+  ensureRoundProjectionCsvPublished(xlsxPath);
+  return outPath;
+}
+
 /** Promote `.new` → main CSV after a locked write; required before push:live can succeed. */
 export function ensureRoundProjectionCsvPublished(outPath = DEFAULT_OUT) {
   const alt = `${outPath}.new`;
@@ -634,7 +700,10 @@ export function ensureRoundProjectionCsvPublished(outPath = DEFAULT_OUT) {
 async function main() {
   const {
     path,
+    summaryPath,
+    xlsxPath,
     rows,
+    summaryRows,
     withActual,
     skippedNoOdds,
     preRoundOddsRows,
@@ -645,10 +714,13 @@ async function main() {
   } = await writeRoundProjectionVsActualCsv();
   const src = actualSources || {};
   console.log(
-    `[round-projection-vs-actual] Wrote ${rows} row(s)` +
+    `[round-projection-vs-actual] Wrote ${rows} detail row(s)` +
+      (summaryRows ? ` + ${summaryRows} summary row(s)` : "") +
       (skippedNoOdds ? ` (skipped ${skippedNoOdds} with no odds or completed score)` : "") +
       `; book_odds pre_round_audit=${preRoundOddsRows ?? 0} live_snapshot=${liveSnapshotOddsRows ?? 0}` +
       `; ${withActual} player-rounds with actual score; actuals pgatour=${src.pgatour ?? 0} live=${src.live ?? 0} historical=${src.historical ?? 0}; ${pricingModes} pricing modes -> ${path}` +
+      (summaryPath ? ` | summary ${summaryPath}` : "") +
+      (xlsxPath ? ` | xlsx ${xlsxPath}` : "") +
       (eventName ? ` (${eventName})` : ""),
   );
 }

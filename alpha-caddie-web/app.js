@@ -11878,6 +11878,25 @@ function propsGetSingleCourseBucketSync(courseKey) {
   return null;
 }
 
+/** Calendar year for the active field week (from datagolf_field_date_start). */
+function currentEventSeasonYearFromMeta() {
+  const ds = String(DATA?.meta?.datagolf_field_date_start || "").match(/^(\d{4})-/);
+  if (!ds) return NaN;
+  const y = parseInt(ds[1], 10);
+  return Number.isFinite(y) ? y : NaN;
+}
+
+/** Chart play date M/D/YYYY from tournament week start + round_num (DK field-by-course). */
+function propsTrendChartDateFromFieldRound(row) {
+  const ds = String(DATA?.meta?.datagolf_field_date_start || "").match(/^(\d{4}-\d{2}-\d{2})/);
+  const rnd = Math.round(num(row?.round_num, NaN));
+  if (!ds || !Number.isFinite(rnd)) return "";
+  const iso = propsIsoFromFieldDateStartAndRound(ds[0], rnd);
+  const m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return "";
+  return `${Number(m[2])}/${Number(m[3])}/${m[1]}`;
+}
+
 /** ISO YYYY-MM-DD for tournament round N from field week start (R1 = date_start). */
 function propsIsoFromFieldDateStartAndRound(dateStartIso, roundNum) {
   const m = String(dateStartIso || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
@@ -12389,7 +12408,7 @@ function propsCourseWindowDateBoundsMs() {
 
 /**
  * Field-by-course + DraftKings: one bar per golfer per current-tournament round with a DK line and chartable actual.
- * Uses all completed rounds at the venue for this event (not sliced by the From/To date pickers).
+ * Chart dates use this week's field date_start + round_num (not prior-year venue rows).
  */
 function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey) {
   const courseKey = propsEffectiveCourseKey();
@@ -12402,6 +12421,7 @@ function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey) {
   );
   const byDg = propsTrendIndexCourseEntriesByDg(bucket, courseKey, fieldDgIds);
   const cap = currentTournamentProgressRoundCap();
+  const eventYear = currentEventSeasonYearFromMeta();
 
   const raw = [];
   const seen = new Set();
@@ -12411,6 +12431,7 @@ function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey) {
     const playerName = resolveGolferDisplayNameForDg(dgId, p.player_name, nameByDg);
     const histAll = (byDg.get(dgId) || []).filter((e) => {
       if (!historyRoundMatchesCurrentEvent(e.row)) return false;
+      if (Number.isFinite(eventYear) && historyRoundSeasonYear(e.row) !== eventYear) return false;
       if (!historyRoundCountsAsActual(e.row)) return false;
       const rnd = Math.round(num(e.row?.round_num, NaN));
       if (Number.isFinite(cap) && Number.isFinite(rnd) && rnd > cap) return false;
@@ -12433,6 +12454,11 @@ function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey) {
       if (!Number.isFinite(actualForRoundRow(statKey, row))) {
         row = applyChartActualToHistoryRow(statKey, row, chartActual);
       }
+      const playIso = propsIsoFromFieldDateStartAndRound(
+        String(DATA?.meta?.datagolf_field_date_start || "").match(/^(\d{4}-\d{2}-\d{2})/)?.[0] || "",
+        rnd,
+      );
+      if (playIso) row.chart_session_iso = playIso;
 
       raw.push({
         row,
@@ -14739,7 +14765,8 @@ function hidePropsChartTooltip() {
 }
 
 function ensurePropsChartTooltipNodes(tip) {
-  if (propsChartTipNodes) return propsChartTipNodes;
+  if (propsChartTipNodes?.round) return propsChartTipNodes;
+  propsChartTipNodes = null;
   tip.replaceChildren();
   const mk = (label) => {
     const div = document.createElement("div");
@@ -14755,6 +14782,7 @@ function ensurePropsChartTooltipNodes(tip) {
   };
   propsChartTipNodes = {
     date: mk("Date"),
+    round: mk("Round"),
     golfer: mk("Golfer"),
     value: mk("Value"),
     course: mk("Course"),
@@ -14786,12 +14814,17 @@ function showPropsChartTooltip(canvas, ev, hit) {
   const wrap = canvas.closest(".props-trends-chart-wrap");
   const tip = document.getElementById("props-chart-tooltip");
   if (!wrap || !tip) return;
-  const tipKey = `${Math.round(num(hit.dgId, -1))}|${hit.statKey}|${hit.actual}`;
+  const tipKey = `${Math.round(num(hit.dgId, -1))}|${hit.statKey}|${hit.actual}|R${hit.roundNum ?? ""}`;
   const nodes = ensurePropsChartTooltipNodes(tip);
   const contentChanged = tipKey !== propsChartTipLastKey;
   if (contentChanged) {
     propsChartTipLastKey = tipKey;
     nodes.date.textContent = hit.date || "—";
+    const rnd = Math.round(num(hit.roundNum, NaN));
+    if (nodes.round) {
+      nodes.round.textContent = Number.isFinite(rnd) && rnd >= 1 && rnd <= 4 ? `R${rnd}` : "—";
+      nodes.round.parentElement.hidden = !(Number.isFinite(rnd) && rnd >= 1 && rnd <= 4);
+    }
     nodes.golfer.textContent = hit.playerName || "—";
     nodes.golfer.parentElement.hidden = !hit.playerName;
     nodes.value.textContent = propsChartFormatValue(hit.statKey, hit.actual);
@@ -15010,6 +15043,10 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
     const slotLeft = pad.l + i * slotW;
     const hist = plot[i]._hist;
     const venueLbl = propsEffectiveCourseKey() ? courseFitPrettyCourseKey(propsEffectiveCourseKey()) : "";
+    const rnd =
+      Number.isFinite(plot[i].roundNum) && plot[i].roundNum >= 1
+        ? plot[i].roundNum
+        : Math.round(num(hist?.round_num, NaN));
     propsChartHitRegions.push({
       x0: slotLeft,
       y0: pad.t,
@@ -15019,6 +15056,7 @@ function drawPropsTrendCanvas(series, lineY, statKey) {
       date: String(plot[i].date || "").trim() || "—",
       playerName: String(plot[i].playerName || "").trim(),
       dgId: plot[i].dgId,
+      roundNum: Number.isFinite(rnd) && rnd >= 1 && rnd <= 4 ? rnd : NaN,
       courseLabel: hist ? propsCourseNameFromRow(hist) : venueLbl,
       actual: v,
       statKey,
@@ -15316,8 +15354,9 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
     if (!Number.isFinite(actual)) continue;
     const playerName = resolveGolferDisplayNameForDg(e.dgId, e.playerName, nameByDgChart);
     if (!playerName) continue;
-    const date =
-      e.row?._from_projection_chart && e.row?.chart_session_iso
+    const date = dkOnly
+      ? propsTrendChartDateFromFieldRound(e.row) || propsTrendChartDateFromRow(e.row)
+      : e.row?._from_projection_chart && e.row?.chart_session_iso
         ? e.row.chart_session_iso
         : propsTrendChartDateFromRow(e.row);
     seriesChart.push({
@@ -15325,6 +15364,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
       date,
       playerName,
       dgId: e.dgId,
+      roundNum: Math.round(num(e.row?.round_num, NaN)),
       _hist: e.row?._from_projection_chart ? null : e.row,
       _projection: Boolean(e.row?._from_projection_chart),
     });
@@ -15545,7 +15585,12 @@ function renderPropsTrends() {
       dif: Number.isFinite(m) ? actual - m : NaN,
     });
   }
-  const seriesChart = seriesFull.map((s) => ({ actual: s.actual, date: s.date, _hist: s._hist }));
+  const seriesChart = seriesFull.map((s) => ({
+    actual: s.actual,
+    date: s.date,
+    _hist: s._hist,
+    roundNum: Math.round(num(s._hist?.round_num, NaN)),
+  }));
   drawPropsTrendCanvas(seriesChart, line, statKey);
   const stNow = propsFullHitStatsForDg(dg, statKey, line, winN);
   paintPropsTrendsInsightHeader(playerRow, statKey, line, stNow, seriesChart, dg);

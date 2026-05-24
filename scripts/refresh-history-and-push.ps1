@@ -129,16 +129,23 @@ function Bump-AlphaCaddieAppJsCache([string] $AlphaCaddieWebRoot) {
 }
 
 function Promote-RoundProjectionVsActualCsv([string] $AlphaCaddieWebRoot) {
-  $csv = Join-Path $AlphaCaddieWebRoot "data\round_projection_vs_actual.csv"
-  $staged = Join-Path $AlphaCaddieWebRoot "data\round_projection_vs_actual.csv.new"
-  if (-not (Test-Path $staged)) { return }
-  Write-Host "Promoting round_projection_vs_actual.csv.new -> round_projection_vs_actual.csv (close Excel if this fails) ..."
-  try {
-    Copy-Item -Path $staged -Destination $csv -Force -ErrorAction Stop
-    Remove-Item -Path $staged -Force -ErrorAction Stop
-    Write-Host "Promoted round_projection_vs_actual.csv"
-  } catch {
-    throw "Could not update round_projection_vs_actual.csv - close Excel/editor and re-run push:live. Fresh data is in data/round_projection_vs_actual.csv.new"
+  $names = @(
+    "round_projection_vs_actual.csv",
+    "round_projection_vs_actual_summary.csv",
+    "round_projection_vs_actual.xlsx"
+  )
+  foreach ($name in $names) {
+    $csv = Join-Path $AlphaCaddieWebRoot "data\$name"
+    $staged = Join-Path $AlphaCaddieWebRoot "data\$name.new"
+    if (-not (Test-Path $staged)) { continue }
+    Write-Host "Promoting data\$name.new -> data\$name (close Excel if this fails) ..."
+    try {
+      Copy-Item -Path $staged -Destination $csv -Force -ErrorAction Stop
+      Remove-Item -Path $staged -Force -ErrorAction Stop
+      Write-Host "Promoted data\$name"
+    } catch {
+      throw "Could not update data\$name - close Excel/editor and re-run push:live. Fresh data is in data\$name.new"
+    }
   }
 }
 
@@ -269,6 +276,8 @@ $artifacts = @(
   "alpha-caddie-web/data/dk_round_projection_audit.csv",
   "alpha-caddie-web/data/pin_sheets/pin_sheet_active.json",
   "alpha-caddie-web/data/round_projection_vs_actual.csv",
+  "alpha-caddie-web/data/round_projection_vs_actual_summary.csv",
+  "alpha-caddie-web/data/round_projection_vs_actual.xlsx",
   "alpha-caddie-web/data/pgatour_event_rounds.json",
   "alpha-caddie-web/hole_pars_from_shots.json",
   "alpha-caddie-web/player_shots_web.json",
