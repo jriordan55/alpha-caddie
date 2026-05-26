@@ -473,8 +473,7 @@ function historyRoundChartDateUtcMs(row) {
     d = Number(mdy[2]);
     y = Number(mdy[3]);
   }
-  const dayBump =
-    row?._from_live_tournament_stats || row?._from_live_in_play ? 0 : Math.max(0, rnd - 1);
+  const dayBump = 0;
   return Date.UTC(y, mo - 1, d) + dayBump * 86400000;
 }
 

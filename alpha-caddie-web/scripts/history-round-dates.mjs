@@ -43,7 +43,7 @@ export function mdyFromChronoBase(chronoBase, dayOffset) {
 export function historyRowUsesEventEndAnchor(row) {
   if (!row || typeof row !== "object") return false;
   if (row._from_live_tournament_stats || row._from_pgatour || row._from_live_in_play) return false;
-  if (row._from_dg_historical_rounds) return true;
+  if (row._from_dg_historical_rounds) return false;
   const ec = String(row.event_completed || "").trim();
   if (!ec) return false;
   const sk = Number(row.sortKey);
