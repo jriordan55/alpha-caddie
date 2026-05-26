@@ -8,7 +8,7 @@
   "datagolf_field_current_round": 1,
   "display_round": 1,
   "display_round_label": "R1 — next Thursday (auto, America/New_York)",
-  "updated_at": "2026-05-26T17:16:52Z",
+  "updated_at": "2026-05-26T18:30:32Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -22559,6 +22559,86 @@
   ],
   "props": [
     {
+      "player_name": "Mitchell, Keith",
+      "line": 3.5,
+      "over_odds": -132,
+      "under_odds": -108,
+      "market": "Birdies",
+      "round_num": 1,
+      "dg_id": 17365,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Jaeger, Stephan",
+      "line": 3.5,
+      "over_odds": -104,
+      "under_odds": -136,
+      "market": "Birdies",
+      "round_num": 1,
+      "dg_id": 16394,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Theegala, Sahith",
+      "line": 3.5,
+      "over_odds": -106,
+      "under_odds": -132,
+      "market": "Birdies",
+      "round_num": 1,
+      "dg_id": 23014,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Mitchell, Keith",
+      "line": 11.5,
+      "over_odds": -124,
+      "under_odds": -115,
+      "market": "Pars",
+      "round_num": 1,
+      "dg_id": 17365,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Mitchell, Keith",
+      "line": 2.5,
+      "over_odds": -144,
+      "under_odds": 102,
+      "market": "Bogeys",
+      "round_num": 1,
+      "dg_id": 17365,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Mitchell, Keith",
+      "line": 69.5,
+      "over_odds": -106,
+      "under_odds": -126,
+      "market": "Total Score",
+      "round_num": 1,
+      "dg_id": 17365,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Jaeger, Stephan",
+      "line": 69.5,
+      "over_odds": -130,
+      "under_odds": -104,
+      "market": "Total Score",
+      "round_num": 1,
+      "dg_id": 16394,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Theegala, Sahith",
+      "line": 69.5,
+      "over_odds": -124,
+      "under_odds": -110,
+      "market": "Total Score",
+      "round_num": 1,
+      "dg_id": 23014,
+      "source": "draftkings"
+    },
+    {
       "player_name": "Griffin, Ben",
       "line": 68.5,
       "over_odds": -110,
@@ -23099,15 +23179,6 @@
       "source": "model_fallback"
     },
     {
-      "player_name": "Theegala, Sahith",
-      "line": 71.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "Total Score",
-      "dg_id": 23014,
-      "source": "model_fallback"
-    },
-    {
       "player_name": "Yellamaraju, Sudarshan",
       "line": 71.5,
       "over_odds": -110,
@@ -23207,15 +23278,6 @@
       "source": "model_fallback"
     },
     {
-      "player_name": "Mitchell, Keith",
-      "line": 71.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "Total Score",
-      "dg_id": 17365,
-      "source": "model_fallback"
-    },
-    {
       "player_name": "Parry, John",
       "line": 71.5,
       "over_odds": -110,
@@ -23303,15 +23365,6 @@
       "under_odds": -110,
       "market": "Total Score",
       "dg_id": 19846,
-      "source": "model_fallback"
-    },
-    {
-      "player_name": "Jaeger, Stephan",
-      "line": 71.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "Total Score",
-      "dg_id": 16394,
       "source": "model_fallback"
     },
     {
@@ -24287,15 +24340,6 @@
       "source": "model_fallback"
     },
     {
-      "player_name": "Theegala, Sahith",
-      "line": 3.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "Birdies",
-      "dg_id": 23014,
-      "source": "model_fallback"
-    },
-    {
       "player_name": "Yellamaraju, Sudarshan",
       "line": 3.5,
       "over_odds": -110,
@@ -24395,15 +24439,6 @@
       "source": "model_fallback"
     },
     {
-      "player_name": "Mitchell, Keith",
-      "line": 3.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "Birdies",
-      "dg_id": 17365,
-      "source": "model_fallback"
-    },
-    {
       "player_name": "Parry, John",
       "line": 3.5,
       "over_odds": -110,
@@ -24491,15 +24526,6 @@
       "under_odds": -110,
       "market": "Birdies",
       "dg_id": 19846,
-      "source": "model_fallback"
-    },
-    {
-      "player_name": "Jaeger, Stephan",
-      "line": 3.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "Birdies",
-      "dg_id": 16394,
       "source": "model_fallback"
     },
     {
@@ -25580,15 +25606,6 @@
       "under_odds": -110,
       "market": "Pars",
       "dg_id": 22002,
-      "source": "model_fallback"
-    },
-    {
-      "player_name": "Mitchell, Keith",
-      "line": 10.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "Pars",
-      "dg_id": 17365,
       "source": "model_fallback"
     },
     {
@@ -26768,15 +26785,6 @@
       "under_odds": -110,
       "market": "Bogeys",
       "dg_id": 22002,
-      "source": "model_fallback"
-    },
-    {
-      "player_name": "Mitchell, Keith",
-      "line": 3.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "Bogeys",
-      "dg_id": 17365,
       "source": "model_fallback"
     },
     {
@@ -45242,7 +45250,7 @@
       "match_list": "No 3_balls being offered right now."
     }
   },
-  "book_odds_refreshed_at": "2026-05-26T17:16:52Z",
+  "book_odds_refreshed_at": "2026-05-26T18:30:32Z",
   "datagolf_live_current_round": 1,
   "meta": {
     "datagolf_field_date_start": "2026-05-28",
@@ -45269,5 +45277,6 @@
       }
     },
     "forecast_wave_summary": "Morning tees: 74.7°F · 5.6 mph · 78% · clear.\nAfternoon tees: 87.9°F · 7.2 mph · 50% · cloudy."
-  }
+  },
+  "dk_round_props_refreshed_at": "2026-05-26T18:30:32Z"
 }
