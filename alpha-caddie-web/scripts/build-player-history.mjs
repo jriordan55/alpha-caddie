@@ -1703,6 +1703,35 @@ async function main() {
   if (futureRoundsStripped > 0) {
     console.log("[build-player-history] Removed", futureRoundsStripped, "future/unplayed round row(s) from history export");
   }
+
+  // --- Regression guard: detect double-offset or dayBump bugs ---
+  {
+    const today = todayDateOnlyUtcMs();
+    let dateErrors = 0;
+    for (const [, bucket] of byDgId) {
+      if (!bucket?.rounds) continue;
+      for (const r of bucket.rounds) {
+        if (!r._from_dg_historical_rounds) continue;
+        const rs = num(r.round_score, NaN);
+        if (!Number.isFinite(rs) || rs <= 0) continue;
+        const ecBase = parseEventCompletedChronoBase(r.event_completed);
+        if (!ecBase) continue;
+        const skBase = Number.isFinite(r.sortKey) ? Math.floor(r.sortKey / 10) : 0;
+        if (skBase > 0 && skBase !== ecBase) {
+          if (dateErrors++ < 3) console.error(`[build-player-history] DATE BUG: sortKey date ${skBase} != event_completed date ${ecBase} for dg_id=${r.dg_id} R${r.round_num} ${r.event_name}`);
+        }
+        const chartMs = historyRoundChartDateUtcMs(r);
+        if (Number.isFinite(chartMs) && chartMs > today) {
+          if (dateErrors++ < 3) console.error(`[build-player-history] FUTURE BUG: chartDate > today for dg_id=${r.dg_id} R${r.round_num} ec=${r.event_completed} (score=${rs})`);
+        }
+      }
+    }
+    if (dateErrors > 0) {
+      console.error(`[build-player-history] FATAL: ${dateErrors} round date error(s) detected. Fix historyRoundChartDateUtcMs or roundEventCompletedMdYFromEventEnd.`);
+      process.exit(1);
+    }
+  }
+
   console.log("Players with rounds:", byDgId.size);
   console.log(
     "[build-player-history] Historical Trends: CSV (historical-raw-data/rounds) + live-week rows from live-in-play when present.",
