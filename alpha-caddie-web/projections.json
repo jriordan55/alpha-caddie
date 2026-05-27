@@ -8,7 +8,7 @@
   "datagolf_field_current_round": 1,
   "display_round": 1,
   "display_round_label": "R1 — next Thursday (auto, America/New_York)",
-  "updated_at": "2026-05-27T17:21:46Z",
+  "updated_at": "2026-05-27T23:21:50Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -38707,8 +38707,8 @@
     {
       "player_name": "MacIntyre, Robert",
       "line": 11.5,
-      "over_odds": -112,
-      "under_odds": -122,
+      "over_odds": -114,
+      "under_odds": -120,
       "market": "GIR",
       "round_num": 1,
       "dg_id": 23323,
@@ -38717,8 +38717,8 @@
     {
       "player_name": "Mitchell, Keith",
       "line": 11.5,
-      "over_odds": -112,
-      "under_odds": -122,
+      "over_odds": -114,
+      "under_odds": -120,
       "market": "GIR",
       "round_num": 1,
       "dg_id": 17365,
@@ -38727,8 +38727,8 @@
     {
       "player_name": "Fowler, Rickie",
       "line": 11.5,
-      "over_odds": 106,
-      "under_odds": -146,
+      "over_odds": 105,
+      "under_odds": -144,
       "market": "GIR",
       "round_num": 1,
       "dg_id": 12965,
@@ -38737,8 +38737,8 @@
     {
       "player_name": "Thomas, Justin",
       "line": 11.5,
-      "over_odds": 120,
-      "under_odds": -166,
+      "over_odds": 118,
+      "under_odds": -162,
       "market": "GIR",
       "round_num": 1,
       "dg_id": 14139,
@@ -38747,8 +38747,8 @@
     {
       "player_name": "Griffin, Ben",
       "line": 11.5,
-      "over_odds": -104,
-      "under_odds": -132,
+      "over_odds": -106,
+      "under_odds": -130,
       "market": "GIR",
       "round_num": 1,
       "dg_id": 24968,
@@ -38757,8 +38757,8 @@
     {
       "player_name": "Bradley, Keegan",
       "line": 11.5,
-      "over_odds": 108,
-      "under_odds": -150,
+      "over_odds": 106,
+      "under_odds": -146,
       "market": "GIR",
       "round_num": 1,
       "dg_id": 13872,
@@ -38767,8 +38767,8 @@
     {
       "player_name": "Henley, Russell",
       "line": 11.5,
-      "over_odds": -108,
-      "under_odds": -128,
+      "over_odds": -110,
+      "under_odds": -125,
       "market": "GIR",
       "round_num": 1,
       "dg_id": 14578,
@@ -38777,8 +38777,8 @@
     {
       "player_name": "Hall, Harry",
       "line": 10.5,
-      "over_odds": -138,
-      "under_odds": 100,
+      "over_odds": -140,
+      "under_odds": 102,
       "market": "GIR",
       "round_num": 1,
       "dg_id": 27194,
@@ -38787,8 +38787,8 @@
     {
       "player_name": "Aberg, Ludvig",
       "line": 11.5,
-      "over_odds": -154,
-      "under_odds": 112,
+      "over_odds": -156,
+      "under_odds": 115,
       "market": "GIR",
       "round_num": 1,
       "dg_id": 23950,
@@ -38797,8 +38797,8 @@
     {
       "player_name": "Smalley, Alex",
       "line": 11.5,
-      "over_odds": -114,
-      "under_odds": -122,
+      "over_odds": -115,
+      "under_odds": -120,
       "market": "GIR",
       "round_num": 1,
       "dg_id": 18474,
@@ -38807,8 +38807,8 @@
     {
       "player_name": "Matsuyama, Hideki",
       "line": 11.5,
-      "over_odds": 112,
-      "under_odds": -154,
+      "over_odds": 110,
+      "under_odds": -152,
       "market": "GIR",
       "round_num": 1,
       "dg_id": 13562,
@@ -38817,8 +38817,8 @@
     {
       "player_name": "Gerard, Ryan",
       "line": 11.5,
-      "over_odds": 100,
-      "under_odds": -138,
+      "over_odds": -102,
+      "under_odds": -136,
       "market": "GIR",
       "round_num": 1,
       "dg_id": 29767,
@@ -38827,8 +38827,8 @@
     {
       "player_name": "Spaun, J.J.",
       "line": 11.5,
-      "over_odds": -154,
-      "under_odds": 112,
+      "over_odds": -158,
+      "under_odds": 115,
       "market": "GIR",
       "round_num": 1,
       "dg_id": 17536,
@@ -38837,8 +38837,8 @@
     {
       "player_name": "Hisatsune, Ryo",
       "line": 11.5,
-      "over_odds": -150,
-      "under_odds": 110,
+      "over_odds": -152,
+      "under_odds": 112,
       "market": "GIR",
       "round_num": 1,
       "dg_id": 22760,
@@ -38847,11 +38847,21 @@
     {
       "player_name": "Bhatia, Akshay",
       "line": 11.5,
-      "over_odds": -108,
-      "under_odds": -126,
+      "over_odds": -110,
+      "under_odds": -124,
       "market": "GIR",
       "round_num": 1,
       "dg_id": 26096,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Im, Sungjae",
+      "line": 10.5,
+      "over_odds": -130,
+      "under_odds": -105,
+      "market": "GIR",
+      "round_num": 1,
+      "dg_id": 17488,
       "source": "draftkings"
     },
     {
@@ -39198,7 +39208,7 @@
       "player_name": "Coody, Pierceson",
       "line": 69.5,
       "over_odds": -114,
-      "under_odds": -118,
+      "under_odds": -126,
       "market": "Total Score",
       "round_num": 1,
       "dg_id": 28309,
@@ -39218,7 +39228,7 @@
       "player_name": "Meissner, Mac",
       "line": 69.5,
       "over_odds": -115,
-      "under_odds": -118,
+      "under_odds": -126,
       "market": "Total Score",
       "round_num": 1,
       "dg_id": 28159,
@@ -39328,7 +39338,7 @@
       "player_name": "Im, Sungjae",
       "line": 69.5,
       "over_odds": -108,
-      "under_odds": -124,
+      "under_odds": -134,
       "market": "Total Score",
       "round_num": 1,
       "dg_id": 17488,
@@ -39438,7 +39448,7 @@
       "player_name": "Henley, Russell",
       "line": 68.5,
       "over_odds": -144,
-      "under_odds": 106,
+      "under_odds": 100,
       "market": "Total Score",
       "round_num": 1,
       "dg_id": 14578,
@@ -39447,8 +39457,8 @@
     {
       "player_name": "Hall, Harry",
       "line": 69.5,
-      "over_odds": -108,
-      "under_odds": -124,
+      "over_odds": -102,
+      "under_odds": -134,
       "market": "Total Score",
       "round_num": 1,
       "dg_id": 27194,
@@ -39512,7 +39522,7 @@
     },
     {
       "player_name": "Glover, Lucas",
-      "line": 69.5,
+      "line": 68.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
@@ -39521,7 +39531,7 @@
     },
     {
       "player_name": "Hossler, Beau",
-      "line": 69.5,
+      "line": 68.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
@@ -39611,7 +39621,7 @@
     },
     {
       "player_name": "Hubbard, Mark",
-      "line": 70.5,
+      "line": 69.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
@@ -39620,7 +39630,7 @@
     },
     {
       "player_name": "Lipsky, David",
-      "line": 70.5,
+      "line": 69.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
@@ -39701,7 +39711,7 @@
     },
     {
       "player_name": "Ramey, Chad",
-      "line": 71.5,
+      "line": 70.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
@@ -40106,7 +40116,7 @@
     },
     {
       "player_name": "Kisner, Kevin",
-      "line": 72.5,
+      "line": 71.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
@@ -40115,7 +40125,7 @@
     },
     {
       "player_name": "Snedeker, Brandt",
-      "line": 72.5,
+      "line": 71.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
@@ -40124,7 +40134,7 @@
     },
     {
       "player_name": "Griffin, Lanto",
-      "line": 72.5,
+      "line": 71.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
@@ -40133,7 +40143,7 @@
     },
     {
       "player_name": "Springer, Hayden",
-      "line": 72.5,
+      "line": 71.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
@@ -40142,7 +40152,7 @@
     },
     {
       "player_name": "Fishburn, Patrick",
-      "line": 72.5,
+      "line": 71.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
@@ -40151,7 +40161,7 @@
     },
     {
       "player_name": "Kuchar, Matt",
-      "line": 72.5,
+      "line": 71.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
@@ -40160,7 +40170,7 @@
     },
     {
       "player_name": "Lebioda, Hank",
-      "line": 72.5,
+      "line": 71.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
@@ -40169,7 +40179,7 @@
     },
     {
       "player_name": "Hirata, Kensei",
-      "line": 72.5,
+      "line": 71.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
@@ -40295,7 +40305,7 @@
     },
     {
       "player_name": "Blair, Zac",
-      "line": 73.5,
+      "line": 72.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
@@ -40304,7 +40314,7 @@
     },
     {
       "player_name": "Higgo, Garrick",
-      "line": 73.5,
+      "line": 72.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
@@ -40313,7 +40323,7 @@
     },
     {
       "player_name": "Van Rooyen, Erik",
-      "line": 74.5,
+      "line": 73.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
@@ -40538,7 +40548,7 @@
     },
     {
       "player_name": "Hoey, Rico",
-      "line": 2.5,
+      "line": 3.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Birdies",
@@ -40547,7 +40557,7 @@
     },
     {
       "player_name": "Yellamaraju, Sudarshan",
-      "line": 2.5,
+      "line": 3.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Birdies",
@@ -40556,7 +40566,7 @@
     },
     {
       "player_name": "Olesen, Thorbjorn",
-      "line": 2.5,
+      "line": 3.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Birdies",
@@ -40574,7 +40584,7 @@
     },
     {
       "player_name": "Castillo, Ricky",
-      "line": 2.5,
+      "line": 3.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Birdies",
@@ -42221,7 +42231,7 @@
     },
     {
       "player_name": "Riley, Davis",
-      "line": 2.5,
+      "line": 1.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Bogeys",
@@ -42266,7 +42276,7 @@
     },
     {
       "player_name": "Kirk, Chris",
-      "line": 2.5,
+      "line": 1.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Bogeys",
@@ -42320,7 +42330,7 @@
     },
     {
       "player_name": "Hubbard, Mark",
-      "line": 2.5,
+      "line": 1.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Bogeys",
@@ -42338,7 +42348,7 @@
     },
     {
       "player_name": "Rodgers, Patrick",
-      "line": 1.5,
+      "line": 0.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Bogeys",
@@ -42959,7 +42969,7 @@
     },
     {
       "player_name": "Kisner, Kevin",
-      "line": 3.5,
+      "line": 2.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Bogeys",
@@ -43040,7 +43050,7 @@
     },
     {
       "player_name": "Peterson, Paul",
-      "line": 3.5,
+      "line": 2.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Bogeys",
@@ -43049,7 +43059,7 @@
     },
     {
       "player_name": "VanDerLaan, John",
-      "line": 3.5,
+      "line": 2.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Bogeys",
@@ -43058,7 +43068,7 @@
     },
     {
       "player_name": "Skinns, David",
-      "line": 3.5,
+      "line": 2.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Bogeys",
@@ -43067,7 +43077,7 @@
     },
     {
       "player_name": "Clanton, Luke",
-      "line": 3.5,
+      "line": 2.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Bogeys",
@@ -43076,7 +43086,7 @@
     },
     {
       "player_name": "Dunlap, Nick",
-      "line": 3.5,
+      "line": 2.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Bogeys",
@@ -43085,7 +43095,7 @@
     },
     {
       "player_name": "Schenk, Adam",
-      "line": 2.5,
+      "line": 1.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Bogeys",
@@ -43094,7 +43104,7 @@
     },
     {
       "player_name": "Phillips, Chandler",
-      "line": 3.5,
+      "line": 2.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Bogeys",
@@ -43417,15 +43427,6 @@
       "source": "model_fallback"
     },
     {
-      "player_name": "Im, Sungjae",
-      "line": 11.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "GIR",
-      "dg_id": 17488,
-      "source": "model_fallback"
-    },
-    {
       "player_name": "Kim, Michael",
       "line": 12.5,
       "over_odds": -110,
@@ -45524,7 +45525,7 @@
     },
     {
       "player_name": "Hardy, Nick",
-      "line": 29.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -45533,7 +45534,7 @@
     },
     {
       "player_name": "Hisatsune, Ryo",
-      "line": 28.5,
+      "line": 27.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -46289,7 +46290,7 @@
     },
     {
       "player_name": "Schenk, Adam",
-      "line": 29.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -46316,7 +46317,7 @@
     },
     {
       "player_name": "Garnett, Brice",
-      "line": 29.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -46325,7 +46326,7 @@
     },
     {
       "player_name": "Walker, Danny",
-      "line": 29.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -65418,7 +65419,7 @@
       "round_num": 1
     }
   },
-  "book_odds_refreshed_at": "2026-05-27T17:21:46Z",
+  "book_odds_refreshed_at": "2026-05-27T23:21:50Z",
   "datagolf_live_current_round": 1,
   "meta": {
     "datagolf_field_date_start": "2026-05-28",
@@ -65448,7 +65449,7 @@
     "projection_counts_weather_baked": true,
     "projection_counts_weather_baked_at": "2026-05-27T22:52:42Z"
   },
-  "dk_round_props_refreshed_at": "2026-05-27T17:21:46Z",
+  "dk_round_props_refreshed_at": "2026-05-27T23:21:50Z",
   "pga_tour_course_benchmarks": {
     "Total score": {
       "mean": 70.692,
