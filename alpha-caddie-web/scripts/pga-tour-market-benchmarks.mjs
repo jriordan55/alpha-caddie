@@ -157,8 +157,9 @@ export async function loadPgaTourMarketBenchmarks(modelRoot, opts = {}) {
   };
 }
 
-const COURSE_BENCHMARK_MIN_ROUNDS = 80;
-const COURSE_BENCHMARK_MIN_VENUES = 12;
+/** Min completed rounds at a venue before it counts toward cross-course averages. */
+const COURSE_BENCHMARK_MIN_ROUNDS = 24;
+const COURSE_BENCHMARK_MIN_VENUES = 6;
 
 function emptyCourseAgg() {
   return { n: 0, sumScore: 0, sumBirdies: 0, sumPars: 0, sumBogeys: 0, sumGir: 0, sumFw: 0, sumFwOpp: 0 };
@@ -188,9 +189,14 @@ export async function loadPgaTourCourseBenchmarks(modelRoot, opts = {}) {
   const cy = new Date().getFullYear();
   let minYear = num(opts.minYear, NaN);
   let maxYear = num(opts.maxYear, NaN);
+  if (!Number.isFinite(minYear) && !Number.isFinite(maxYear) && opts.recentYears != null) {
+    const years = Math.max(4, Math.min(20, Math.round(num(opts.recentYears, 12) || 12)));
+    minYear = cy - years;
+    maxYear = cy;
+  }
   if (!Number.isFinite(minYear) && !Number.isFinite(maxYear)) {
-    minYear = 2025;
-    maxYear = 2026;
+    minYear = cy - 12;
+    maxYear = cy;
   }
   if (!Number.isFinite(maxYear)) maxYear = cy;
   if (!Number.isFinite(minYear)) minYear = maxYear;

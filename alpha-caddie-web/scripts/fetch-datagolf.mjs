@@ -1794,7 +1794,7 @@ async function main() {
   const pgaBenchMaxYear = Math.round(num(process.env.GOLF_PGA_TOUR_BENCHMARK_MAX_YEAR, 2026)) || 2026;
   const pgaBenchOpts = { minYear: pgaBenchMinYear, maxYear: pgaBenchMaxYear };
   const pgaBenchPromise = loadPgaTourMarketBenchmarks(GOLF_MODEL_ROOT, pgaBenchOpts);
-  const pgaCourseBenchPromise = loadPgaTourCourseBenchmarks(GOLF_MODEL_ROOT, pgaBenchOpts);
+  const pgaCourseBenchPromise = loadPgaTourCourseBenchmarks(GOLF_MODEL_ROOT, { recentYears: 12 });
 
   const pretStrokesByDg = new Map();
   for (const row of pretList) {

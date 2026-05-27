@@ -2734,12 +2734,39 @@ function ouProjectionsBenchmarksRoot() {
   return DATA?.meta?.pga_tour_market_benchmarks ? DATA.meta : DATA;
 }
 
-function ouPgaTourBenchmarkYearLabel() {
-  const meta = ouProjectionsBenchmarksRoot().pga_tour_market_benchmarks?.meta;
+function ouBenchmarkYearLabel(meta) {
   const y0 = Math.round(num(meta?.min_year, NaN));
   const y1 = Math.round(num(meta?.max_year, NaN));
   if (Number.isFinite(y0) && Number.isFinite(y1)) return y0 === y1 ? String(y0) : `${y0}–${y1}`;
   return "2025–2026";
+}
+
+function ouPgaTourBenchmarkYearLabel() {
+  return ouBenchmarkYearLabel(ouProjectionsBenchmarksRoot().pga_tour_market_benchmarks?.meta);
+}
+
+function ouCourseBenchmarkYearLabel() {
+  return ouBenchmarkYearLabel(ouProjectionsBenchmarksRoot().pga_tour_course_benchmarks?.meta);
+}
+
+function ouCourseBenchmarkVenueCount(market) {
+  const mKey = ouModelMarketKey(market) || "Total score";
+  const key =
+    mKey === "Total score"
+      ? "score"
+      : mKey === "Birdies"
+        ? "birdies"
+        : mKey === "Pars"
+          ? "pars"
+          : mKey === "Bogeys"
+            ? "bogeys"
+            : mKey === "GIR"
+              ? "gir"
+              : mKey === "Fairways hit"
+                ? "fairways"
+                : "";
+  const nc = ouProjectionsBenchmarksRoot().pga_tour_course_benchmarks?.meta?.n_courses;
+  return key && nc && typeof nc === "object" ? Math.round(num(nc[key], NaN)) : NaN;
 }
 
 function ouMarketRatingOpportunities(mKey) {
@@ -2992,31 +3019,31 @@ function ouMarketRatingTourAvgDisplay(market, bench) {
   return ouMarketRatingFormatValue(market, bench.mean, bench.unit);
 }
 
-function ouMarketRatingTitle(market, playerAvg, z, rating100) {
+function ouMarketRatingTitle(market, playerAvg) {
   const b = ouPgaTourBenchmarkForMarket(market);
   const yrs = ouPgaTourBenchmarkYearLabel();
   const label = ouPropsCanonicalMarket(market);
-  const scoreStr = Number.isFinite(rating100) ? ` (${rating100}/100)` : "";
-  if (!b || !Number.isFinite(playerAvg) || !Number.isFinite(z)) {
-    return `Market rating${scoreStr}: player avg vs PGA Tour avg (${yrs}). 50 ≈ tour average.`;
+  if (!b || !Number.isFinite(playerAvg)) {
+    return `Market rating: player avg vs PGA Tour avg (${yrs})`;
   }
   const playerStr = ouMarketRatingFormatValue(market, playerAvg, b.unit === "rate" ? "count" : b.unit);
   const tourStr = ouMarketRatingTourAvgDisplay(market, b);
-  return `Market rating${scoreStr}: player vs PGA Tour ${yrs} (${label}: avg ${playerStr} vs tour ${tourStr}). 50 ≈ tour average; higher = more of this stat.`;
+  return `Market rating (${label}: player avg ${playerStr} vs tour avg ${tourStr}, ${yrs})`;
 }
 
-function ouCourseRatingTitle(market, venueVal, z, rating100) {
+function ouCourseRatingTitle(market, venueVal) {
   const b = ouPgaTourCourseBenchmarkForMarket(market);
-  const yrs = ouPgaTourBenchmarkYearLabel();
+  const yrs = ouCourseBenchmarkYearLabel();
   const label = ouPropsCanonicalMarket(market);
-  const course = String(DATA?.course_used || DATA?.meta?.course_used || "").trim() || "This course";
-  const scoreStr = Number.isFinite(rating100) ? ` (${rating100}/100)` : "";
-  if (!b || !Number.isFinite(venueVal) || !Number.isFinite(z)) {
-    return `Course rating${scoreStr}: ${course} vs other PGA venues (${yrs}). 50 ≈ typical course.`;
+  const nCourses = ouCourseBenchmarkVenueCount(market);
+  const nSuffix =
+    Number.isFinite(nCourses) && nCourses > 0 ? `, ${nCourses} courses` : "";
+  if (!b || !Number.isFinite(venueVal)) {
+    return `Course rating: venue avg vs all course averages (${yrs})`;
   }
   const venueStr = ouMarketRatingFormatValue(market, venueVal, b.unit === "rate" ? "count" : b.unit);
   const crossStr = ouMarketRatingTourAvgDisplay(market, b);
-  return `Course rating${scoreStr}: ${course} vs other venues (${label}: venue avg ${venueStr} vs cross-course avg ${crossStr}). 50 ≈ typical course; higher = more ${label.toLowerCase()} than most courses.`;
+  return `Course rating (${label}: venue avg ${venueStr} vs all courses avg ${crossStr}${nSuffix}, ${yrs})`;
 }
 
 /** Model O/U tab market order; displayed columns are dynamic from live DK props. */
@@ -5672,7 +5699,7 @@ function buildOuTable() {
     mktRatingTd.className = `ou-cell ou-proj-long-td ${ouRating100CellClass(mkt100)} ou-proj-td-mkt-rating`;
     mktRatingTd.textContent =
       !Number.isFinite(mkt100) && !ouMarketRatingHistoryReady() ? "…" : formatOuRating100(mkt100);
-    mktRatingTd.title = ouMarketRatingTitle(col.market, num(playerAvg, NaN), mktZ, mkt100);
+    mktRatingTd.title = ouMarketRatingTitle(col.market, num(playerAvg, NaN));
     tr.appendChild(mktRatingTd);
 
     const courseRatingTd = document.createElement("td");
@@ -5680,7 +5707,7 @@ function buildOuTable() {
     const crs100 = num(courseRating100, NaN);
     courseRatingTd.className = `ou-cell ou-proj-long-td ${ouRating100CellClass(crs100)} ou-proj-td-course-rating`;
     courseRatingTd.textContent = formatOuRating100(crs100);
-    courseRatingTd.title = ouCourseRatingTitle(col.market, num(venueVal, NaN), crsZ, crs100);
+    courseRatingTd.title = ouCourseRatingTitle(col.market, num(venueVal, NaN));
     tr.appendChild(courseRatingTd);
 
     const lineTd = document.createElement("td");

@@ -53833,53 +53833,53 @@
   "dk_round_props_refreshed_at": "2026-05-27T17:21:46Z",
   "pga_tour_course_benchmarks": {
     "Total score": {
-      "mean": 70.267,
-      "sd": 1.418,
+      "mean": 70.692,
+      "sd": 1.343,
       "higherBetter": false,
       "unit": "strokes"
     },
     "Birdies": {
-      "mean": 3.87,
-      "sd": 0.703,
+      "mean": 3.649,
+      "sd": 0.664,
       "higherBetter": true,
       "unit": "count"
     },
     "Pars": {
-      "mean": 11.151,
-      "sd": 0.378,
+      "mean": 11.182,
+      "sd": 0.34,
       "higherBetter": true,
       "unit": "count"
     },
     "Bogeys": {
-      "mean": 2.539,
-      "sd": 0.613,
+      "mean": 2.719,
+      "sd": 0.621,
       "higherBetter": false,
       "unit": "count"
     },
     "GIR": {
-      "mean": 0.653,
-      "sd": 0.069,
+      "mean": 0.608,
+      "sd": 0.114,
       "higherBetter": true,
       "unit": "rate"
     },
     "Fairways hit": {
-      "mean": 0.568,
-      "sd": 0.162,
+      "mean": 0.581,
+      "sd": 0.122,
       "higherBetter": true,
       "unit": "rate"
     },
     "meta": {
       "skipped": false,
       "csv_path": "C:\\Users\\student\\Documents\\golfModel\\data\\historical_rounds_all.csv",
-      "min_year": 2025,
+      "min_year": 2014,
       "max_year": 2026,
       "n_courses": {
-        "score": 57,
-        "birdies": 57,
-        "pars": 57,
-        "bogeys": 57,
-        "gir": 54,
-        "fairways": 57
+        "score": 88,
+        "birdies": 88,
+        "pars": 88,
+        "bogeys": 88,
+        "gir": 83,
+        "fairways": 87
       }
     }
   }

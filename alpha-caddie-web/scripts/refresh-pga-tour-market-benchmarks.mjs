@@ -46,7 +46,7 @@ async function main() {
   const benchOpts = { minYear, maxYear };
   const [raw, rawCourse] = await Promise.all([
     loadPgaTourMarketBenchmarks(modelRoot, benchOpts),
-    loadPgaTourCourseBenchmarks(modelRoot, benchOpts),
+    loadPgaTourCourseBenchmarks(modelRoot, { recentYears: 12 }),
   ]);
   proj.pga_tour_market_benchmarks = serializePgaTourMarketBenchmarks(raw);
   proj.pga_tour_course_benchmarks = serializePgaTourCourseBenchmarks(rawCourse);
