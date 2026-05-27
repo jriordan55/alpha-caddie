@@ -173,8 +173,88 @@ export function buildRoundProjectionVsActualSummary(samples, meta) {
     );
   }
 
+  const mktLineAcc = new Map();
+  const mktEvAcc = new Map();
+  for (const acc of lineAcc.values()) {
+    if (!acc.n) continue;
+    const mk = acc.marketKey;
+    let m = mktLineAcc.get(mk);
+    if (!m) { m = { marketKey: mk, sq: 0, abs: 0, n: 0 }; mktLineAcc.set(mk, m); }
+    m.sq += acc.sq;
+    m.abs += acc.abs;
+    m.n += acc.n;
+  }
+  for (const acc of evAcc.values()) {
+    const mk = acc.marketKey;
+    const ek = `${mk}\x1f${acc.threshold}\x1f${acc.side}`;
+    let m = mktEvAcc.get(ek);
+    if (!m) {
+      m = { marketKey: mk, threshold: acc.threshold, side: acc.side, ...emptyEvAcc() };
+      mktEvAcc.set(ek, m);
+    }
+    m.bets += acc.bets;
+    m.wins += acc.wins;
+    m.losses += acc.losses;
+    m.pushes += acc.pushes;
+    m.units += acc.units;
+  }
+
+  for (const m of mktLineAcc.values()) {
+    const rmse = Math.sqrt(m.sq / m.n);
+    const mae = m.abs / m.n;
+    rows.push(
+      [
+        "model_vs_book_by_market",
+        ...base,
+        "(all)",
+        "(all)",
+        MARKET_LABEL[m.marketKey] || m.marketKey,
+        fmtNum(rmse, 3),
+        fmtNum(mae, 3),
+        m.n,
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+      ].map(csvCell).join(","),
+    );
+  }
+
+  for (const m of mktEvAcc.values()) {
+    const roi = m.bets > 0 ? (m.units / m.bets) * 100 : NaN;
+    rows.push(
+      [
+        "ev_backtest_by_market",
+        ...base,
+        "(all)",
+        "(all)",
+        MARKET_LABEL[m.marketKey] || m.marketKey,
+        "",
+        "",
+        "",
+        fmtPct(m.threshold),
+        m.side,
+        m.bets,
+        m.wins,
+        m.losses,
+        m.pushes,
+        fmtNum(m.units, 2),
+        fmtNum(roi, 1),
+      ].map(csvCell).join(","),
+    );
+  }
+
   rows.sort((a, b) => {
-    const sectionRank = (r) => (r.startsWith("model_vs_book") ? 0 : 1);
+    const sectionRank = (r) => {
+      if (r.startsWith("model_vs_book_by_market")) return 2;
+      if (r.startsWith("model_vs_book")) return 0;
+      if (r.startsWith("ev_backtest_by_market")) return 3;
+      return 1;
+    };
     const ra = sectionRank(a);
     const rb = sectionRank(b);
     if (ra !== rb) return ra - rb;

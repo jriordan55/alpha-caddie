@@ -158,6 +158,422 @@ function csvCell(v) {
   return s;
 }
 
+/**
+ * Read prior-event detail rows from the existing CSV so the detail tab accumulates across events.
+ * If none exist, backfill from the DK audit + historical actuals for all past events.
+ * Returns { priorLines: string[], priorSummarySamples: object[] }.
+ */
+async function loadPriorEventRows(csvPath, summaryPath, currentEventName, opts = {}) {
+  const priorLines = [];
+  const priorSummaryRows = [];
+  if (existsSync(csvPath)) {
+    const raw = readFileSync(csvPath, "utf8");
+    const rows = raw.split(/\r?\n/).filter(Boolean);
+    if (rows.length >= 2) {
+      const cols = rows[0].split(",");
+      const iEvent = cols.indexOf("event_name");
+      if (iEvent >= 0) {
+        for (let i = 1; i < rows.length; i++) {
+          const cells = parseCsvRow(rows[i]);
+          const ev = (cells[iEvent] || "").trim();
+          if (!ev || eventsLikelySame(currentEventName, ev)) continue;
+          priorLines.push(rows[i] + "\n");
+        }
+      }
+    }
+  }
+
+  let summaryHasPrior = false;
+  if (existsSync(summaryPath)) {
+    const sumRaw = readFileSync(summaryPath, "utf8");
+    const sumLines = sumRaw.split(/\r?\n/).filter(Boolean);
+    if (sumLines.length > 1) {
+      const hdrCols = sumLines[0].split(",");
+      const evIdx = hdrCols.indexOf("event_name");
+      if (evIdx >= 0) {
+        for (let i = 1; i < sumLines.length; i++) {
+          const cells = parseCsvRow(sumLines[i]);
+          const ev = (cells[evIdx] || "").trim();
+          if (ev && !eventsLikelySame(currentEventName, ev)) {
+            summaryHasPrior = true;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  if (summaryHasPrior) return { priorLines, priorSummaryRows };
+
+  const auditPath = opts.auditPath || defaultDkAuditPath(WEB_ROOT);
+  const histPath = opts.histPath || resolveHistCsv();
+  if (!existsSync(auditPath)) return { priorLines, priorSummaryRows };
+
+  const backfill = await backfillFromAudit(auditPath, histPath, currentEventName, opts.fairwayHoles || 14);
+  if (priorLines.length === 0) priorLines.push(...backfill.lines);
+  priorSummaryRows.push(...backfill.summaryRows);
+  if (backfill.lines.length > 0) {
+    console.log(`[round-projection-vs-actual] Backfilled ${backfill.lines.length} prior-event detail row(s) from DK audit`);
+  }
+  return { priorLines, priorSummaryRows };
+}
+
+/**
+ * Rebuild detail rows for prior events from DK audit + historical actuals.
+ * Uses the last pre-round capture per player×round×market as the snapshot.
+ */
+async function backfillFromAudit(auditPath, histPath, currentEventName, fairwayHoles) {
+  const MARKET_MODEL_COL = {
+    "Total Score": "model_total_score",
+    Birdies: "model_birdies",
+    Pars: "model_pars",
+    Bogeys: "model_bogeys",
+    GIR: "model_gir",
+    "Fairways hit": "model_fairways",
+  };
+  const MARKET_KEY = {
+    "Total Score": "total",
+    Birdies: "birdies",
+    Pars: "pars",
+    Bogeys: "bogeys",
+    GIR: "gir",
+    "Fairways hit": "fairways",
+  };
+
+  const auditByEvent = new Map();
+  const auditParser = createReadStream(auditPath).pipe(
+    parse({ columns: true, relax_quotes: true, relax_column_count: true, skip_records_with_error: true }),
+  );
+  for await (const row of auditParser) {
+    const ev = String(row.event_name || "").trim();
+    if (!ev || eventsLikelySame(currentEventName, ev)) continue;
+    const rnd = Math.round(num(row.display_round));
+    const dg = Math.round(num(row.dg_id));
+    const market = String(row.market || "").trim();
+    if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4 || !Number.isFinite(dg) || !market) continue;
+
+    if (!auditByEvent.has(ev)) auditByEvent.set(ev, new Map());
+    const evMap = auditByEvent.get(ev);
+    const pk = `${dg}|${rnd}|${market}`;
+    const capturedMs = Date.parse(String(row.captured_at || ""));
+    const prev = evMap.get(pk);
+    if (prev && prev.capturedMs >= capturedMs) continue;
+    evMap.set(pk, {
+      capturedMs,
+      projAt: String(row.projections_updated_at || "").trim(),
+      course: String(row.course_used || "").trim(),
+      displayRound: rnd,
+      dg,
+      playerName: String(row.player_name || "").trim(),
+      market,
+      dkLine: num(row.dk_line, NaN),
+      overOdds: num(row.over_odds, NaN),
+      underOdds: num(row.under_odds, NaN),
+      modelTotal: num(row.model_total_score, NaN),
+      modelBirdies: num(row.model_birdies, NaN),
+      modelPars: num(row.model_pars, NaN),
+      modelBogeys: num(row.model_bogeys, NaN),
+      modelGir: num(row.model_gir, NaN),
+      modelFairways: num(row.model_fairways, NaN),
+    });
+  }
+
+  const allActuals = new Map();
+  if (existsSync(histPath)) {
+    const histParser = createReadStream(histPath).pipe(
+      parse({ columns: true, relax_quotes: true, relax_column_count: true, skip_records_with_error: true }),
+    );
+    for await (const row of histParser) {
+      const ev = String(row.event_name || "").trim();
+      if (!ev || eventsLikelySame(currentEventName, ev)) continue;
+      if (!auditByEvent.has(ev)) continue;
+      const dg = Math.round(num(row.dg_id));
+      const rnd = Math.round(num(row.round_num));
+      if (!Number.isFinite(dg) || !Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
+      const score = num(row.round_score);
+      if (!Number.isFinite(score)) continue;
+      const key = `${ev}\x1f${dg}|${rnd}`;
+      allActuals.set(key, {
+        total_score: Math.round(score * 10) / 10,
+        birdies: birdiesPlusEaglesFromRow(row),
+        pars: num(row.pars, NaN),
+        bogeys: num(row.bogies, NaN),
+        gir: countFromRateOrRaw(row.gir, 18),
+        fairways: countFromRateOrRaw(row.driving_acc, fairwayHoles),
+      });
+    }
+  }
+
+  const resultLines = [];
+  const samples = [];
+
+  for (const [ev, evMap] of auditByEvent) {
+    const playerRounds = new Map();
+    for (const [, snap] of evMap) {
+      const prKey = `${snap.dg}|${snap.displayRound}`;
+      if (!playerRounds.has(prKey)) {
+        playerRounds.set(prKey, {
+          dg: snap.dg, rnd: snap.displayRound, playerName: snap.playerName,
+          course: snap.course, projAt: snap.projAt, markets: {},
+        });
+      }
+      const pr = playerRounds.get(prKey);
+      pr.markets[snap.market] = snap;
+    }
+
+    for (const [, pr] of playerRounds) {
+      const act = allActuals.get(`${ev}\x1f${pr.dg}|${pr.rnd}`) || {};
+      const hasCompleted = Number.isFinite(act.total_score);
+      let hasBookOdds = false;
+      const exported = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
+
+      const rowCells = {};
+      for (const spec of EXPORT_MARKETS) {
+        const snap = pr.markets[spec.propsMarket];
+        const modelCol = MARKET_MODEL_COL[spec.propsMarket];
+        const modelVal = snap ? num(snap[modelCol?.replace("model_", "model") ? Object.keys(snap).find(k => k.startsWith("model") && MARKET_KEY[spec.propsMarket] && k.includes(MARKET_KEY[spec.propsMarket].substring(0,3))) : undefined], NaN) : NaN;
+        const modelLine = snap
+          ? (spec.propsMarket === "Total Score" ? snap.modelTotal : enforceHalfLine(
+              spec.key === "birdies" ? snap.modelBirdies :
+              spec.key === "pars" ? snap.modelPars :
+              spec.key === "bogeys" ? snap.modelBogeys :
+              spec.key === "gir" ? snap.modelGir :
+              spec.key === "fairways" ? snap.modelFairways : NaN
+            ))
+          : NaN;
+        const bookLine = snap ? enforceHalfLine(snap.dkLine) : NaN;
+        const overOdds = snap?.overOdds;
+        const underOdds = snap?.underOdds;
+        if (Number.isFinite(overOdds) || Number.isFinite(underOdds)) hasBookOdds = true;
+
+        rowCells[spec.lineCol] = fmtLine(spec.market, modelLine);
+        rowCells[spec.bookLineCol] = Number.isFinite(bookLine) ? fmtLine(spec.market, bookLine) : "";
+        rowCells[spec.overOddsCol] = formatAmericanOdds(overOdds);
+        rowCells[spec.underOddsCol] = formatAmericanOdds(underOdds);
+
+        const actual = actualForMarket(act, spec.key);
+        const gradeLine = Number.isFinite(bookLine) ? bookLine : modelLine;
+        const sides = Number.isFinite(actual)
+          ? ouSideResults(spec.market, actual, gradeLine)
+          : { over: "", under: "" };
+        rowCells[spec.overCol] = sides.over;
+        rowCells[spec.underCol] = sides.under;
+        rowCells[spec.actualCol] = fmtActual(spec.key, actual);
+
+        if (Number.isFinite(modelLine) && Number.isFinite(bookLine)) {
+          const diff = modelLine - bookLine;
+          samples.push({
+            _eventName: ev,
+            _course: formatCourseLabelForDisplay(pr.course),
+            pricingMode: "default",
+            pricingSkill: "default",
+            marketKey: spec.key,
+            modelLine,
+            bookLine,
+            edgeOver: Math.abs(diff),
+            edgeUnder: Math.abs(diff),
+            overOdds,
+            underOdds,
+            overResult: sides.over,
+            underResult: sides.under,
+            hasActual: hasCompleted,
+            bookOddsSource: "pre_round_audit",
+          });
+        }
+      }
+
+      if (!hasBookOdds && !hasCompleted) continue;
+
+      const rowOrder = [
+        exported,
+        pr.projAt,
+        ev,
+        formatCourseLabelForDisplay(pr.course),
+        pr.rnd,
+        pr.rnd,
+        "default",
+        "default",
+        pr.dg,
+        pr.playerName,
+        ...EXPORT_ACTUAL_COLS.map((c) => rowCells[c] || (c === "actual_source" && hasCompleted ? "historical_rounds" : "") || ""),
+        "pre_round_audit",
+        ...EXPORT_MODEL_LINE_COLS.map((c) => rowCells[c] || ""),
+        ...EXPORT_BOOK_LINE_COLS.map((c) => rowCells[c] || ""),
+        ...EXPORT_OVER_ODDS_COLS.map((c) => rowCells[c] || ""),
+        ...EXPORT_UNDER_ODDS_COLS.map((c) => rowCells[c] || ""),
+        ...EXPORT_OVER_RESULT_COLS.map((c) => rowCells[c] || ""),
+        ...EXPORT_UNDER_RESULT_COLS.map((c) => rowCells[c] || ""),
+        "",
+      ];
+      resultLines.push(rowOrder.map(csvCell).join(",") + "\n");
+    }
+  }
+
+  const summaryRows = [];
+  const samplesByEvent = new Map();
+  for (const s of samples) {
+    const sev = s._eventName || "unknown";
+    if (!samplesByEvent.has(sev)) samplesByEvent.set(sev, { samples: [], course: "", projAt: "" });
+    const bucket = samplesByEvent.get(sev);
+    bucket.samples.push(s);
+    if (!bucket.course && s._course) bucket.course = s._course;
+  }
+  for (const [sev, bucket] of samplesByEvent) {
+    const evMeta = {
+      exported: new Date().toISOString().replace(/\.\d{3}Z$/, "Z"),
+      projectionsUpdatedAt: bucket.projAt || "",
+      eventName: sev,
+      course: bucket.course || "",
+      displayRound: "",
+    };
+    const content = buildRoundProjectionVsActualSummary(bucket.samples, evMeta);
+    const rows = content.split(/\r?\n/).filter(Boolean).slice(1);
+    summaryRows.push(...rows);
+  }
+
+  return { lines: resultLines, summaryRows };
+}
+
+function parseCsvRow(line) {
+  const out = [];
+  let cur = "";
+  let q = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (q && line[i + 1] === '"') { cur += '"'; i++; }
+      else q = !q;
+      continue;
+    }
+    if (ch === "," && !q) { out.push(cur); cur = ""; continue; }
+    cur += ch;
+  }
+  out.push(cur);
+  return out;
+}
+
+/**
+ * Build cumulative summary: preserve prior-event rows from existing summary CSV,
+ * add backfill rows for newly discovered prior events, and regenerate current-event rows.
+ */
+function buildCumulativeSummaryWithBackfill(summaryPath, currentEventName, currentSamples, currentMeta, backfillSummaryRows) {
+  const currentContent = buildRoundProjectionVsActualSummary(currentSamples, currentMeta);
+  const currentRows = currentContent.split(/\r?\n/).filter(Boolean).slice(1);
+
+  let priorRows = [];
+  if (existsSync(summaryPath)) {
+    const existing = readFileSync(summaryPath, "utf8");
+    const existingLines = existing.split(/\r?\n/).filter(Boolean);
+    if (existingLines.length > 1) {
+      const hdrCols = existingLines[0].split(",");
+      const evIdx = hdrCols.indexOf("event_name");
+      if (evIdx >= 0) {
+        for (let i = 1; i < existingLines.length; i++) {
+          const cells = parseCsvRow(existingLines[i]);
+          const ev = (cells[evIdx] || "").trim();
+          if (ev && !eventsLikelySame(currentEventName, ev)) {
+            priorRows.push(existingLines[i]);
+          }
+        }
+      }
+    }
+  }
+
+  if (priorRows.length === 0 && backfillSummaryRows && backfillSummaryRows.length > 0) {
+    priorRows = backfillSummaryRows;
+  }
+
+  const SUMMARY_HEADER =
+    "section,exported_at,projections_updated_at,event_name,course_used,display_round,pricing_mode,pricing_skill,market,rmse,mae,n_line_pairs,ev_threshold_pct,bet_side,bets,wins,losses,pushes,units_net,roi_pct\n";
+  const perEventRows = [...priorRows, ...currentRows];
+
+  const crossEventRows = buildCrossEventAggregation(perEventRows);
+
+  const allRows = [...perEventRows, ...crossEventRows];
+  if (allRows.length === 0) return SUMMARY_HEADER;
+  return SUMMARY_HEADER + allRows.map((r) => `${r}\n`).join("");
+}
+
+/**
+ * Aggregate ev_backtest rows across all events by market × EV threshold × side.
+ * Also aggregates model_vs_book by market across events.
+ */
+function buildCrossEventAggregation(perEventRows) {
+  const lineAgg = new Map();
+  const evAgg = new Map();
+  const exported = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
+
+  for (const row of perEventRows) {
+    const cells = parseCsvRow(row);
+    const section = (cells[0] || "").trim();
+
+    if (section === "model_vs_book") {
+      const market = (cells[8] || "").trim();
+      const rmse = Number(cells[9]);
+      const mae = Number(cells[10]);
+      const n = Number(cells[11]);
+      if (!market || !Number.isFinite(n) || n <= 0) continue;
+      let m = lineAgg.get(market);
+      if (!m) { m = { market, sq: 0, abs: 0, n: 0 }; lineAgg.set(market, m); }
+      m.sq += rmse * rmse * n;
+      m.abs += mae * n;
+      m.n += n;
+    } else if (section === "ev_backtest") {
+      const market = (cells[8] || "").trim();
+      const threshold = (cells[12] || "").trim();
+      const side = (cells[13] || "").trim();
+      const bets = Number(cells[14]);
+      const wins = Number(cells[15]);
+      const losses = Number(cells[16]);
+      const pushes = Number(cells[17]);
+      const units = Number(cells[18]);
+      if (!market || !Number.isFinite(bets) || bets <= 0) continue;
+      const ek = `${market}\x1f${threshold}\x1f${side}`;
+      let m = evAgg.get(ek);
+      if (!m) { m = { market, threshold, side, bets: 0, wins: 0, losses: 0, pushes: 0, units: 0 }; evAgg.set(ek, m); }
+      m.bets += bets;
+      m.wins += wins;
+      m.losses += losses;
+      m.pushes += pushes;
+      m.units += Number.isFinite(units) ? units : 0;
+    }
+  }
+
+  const out = [];
+  for (const m of lineAgg.values()) {
+    const rmse = Math.sqrt(m.sq / m.n);
+    const mae = m.abs / m.n;
+    out.push(
+      [
+        "model_vs_book_all",
+        exported, "", "(all events)", "", "",
+        "(all)", "(all)", m.market,
+        fmtN(rmse, 3), fmtN(mae, 3), m.n,
+        "", "", "", "", "", "", "", "",
+      ].map(csvCell).join(","),
+    );
+  }
+  for (const m of evAgg.values()) {
+    const roi = m.bets > 0 ? (m.units / m.bets) * 100 : NaN;
+    out.push(
+      [
+        "ev_backtest_all",
+        exported, "", "(all events)", "", "",
+        "(all)", "(all)", m.market,
+        "", "", "",
+        m.threshold, m.side, m.bets, m.wins, m.losses, m.pushes,
+        fmtN(m.units, 2), fmtN(roi, 1),
+      ].map(csvCell).join(","),
+    );
+  }
+  return out;
+}
+
+function fmtN(v, digits) {
+  if (!Number.isFinite(v)) return "";
+  return (Math.round(v * 10 ** digits) / 10 ** digits).toFixed(digits);
+}
+
 function fmt(v) {
   return Number.isFinite(v) ? v : "";
 }
@@ -587,9 +1003,14 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
     }
   }
 
-  const detailContent = lines.join("");
-  persistCsv(outPath, detailContent);
   const summaryPath = opts.summaryPath || DEFAULT_SUMMARY_OUT;
+  const { priorLines, priorSummaryRows } = await loadPriorEventRows(outPath, summaryPath, eventName, {
+    auditPath: opts.dkAuditPath || defaultDkAuditPath(WEB_ROOT),
+    histPath: resolveHistCsv(),
+    fairwayHoles,
+  });
+  const detailContent = [HEADER, ...priorLines, ...lines.slice(1)].join("");
+  persistCsv(outPath, detailContent);
   const xlsxPath = opts.xlsxPath || DEFAULT_XLSX_OUT;
   const summaryMeta = {
     exported,
@@ -598,7 +1019,7 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
     course,
     displayRound,
   };
-  const summaryContent = buildRoundProjectionVsActualSummary(summarySamples, summaryMeta);
+  const summaryContent = buildCumulativeSummaryWithBackfill(summaryPath, eventName, summarySamples, summaryMeta, priorSummaryRows);
   persistCsv(summaryPath, summaryContent);
   let xlsxWritten = false;
   try {
@@ -621,7 +1042,7 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
       throw e;
     }
   }
-  const rowCount = lines.length - 1;
+  const rowCount = lines.length - 1 + priorLines.length;
   const summaryRowCount = Math.max(0, summaryContent.split("\n").filter(Boolean).length - 1);
   return {
     path: finalPath,
