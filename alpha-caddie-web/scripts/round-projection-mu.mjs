@@ -5,6 +5,10 @@
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
 import { normCourseNameKey } from "./course-name-key.mjs";
+import {
+  effectiveWeatherForRow,
+  statWeatherMuAdjustment,
+} from "./weather-projection-adjustments.mjs";
 
 export const EXPORT_MARKETS = [
   {
@@ -106,13 +110,6 @@ const OU_STAT_MAP = {
 };
 
 const PRICING_SKILL_COLUMNS = ["sg_total", "sg_ott", "sg_app", "sg_arg", "sg_putt", "sg_t2g"];
-const WEATHER_CONDITION_SIGMA_DELTA = {
-  clear: 0,
-  cloudy: 0.1,
-  rain: 0.2,
-  windy: 0.15,
-  storm: 0.28,
-};
 
 export function num(v) {
   const n = Number(v);
@@ -400,53 +397,6 @@ function pricingStatMuAdjustment(market, dgId, modeRaw, skillRaw, ctx) {
   return out + pricingCourseVenueStatMuNudge(market, dgId, modeRaw, ctx);
 }
 
-function effectiveWeatherForRow(row) {
-  const auto = row?.dg_auto_weather;
-  if (
-    auto &&
-    typeof auto === "object" &&
-    Number.isFinite(num(auto.tempF)) &&
-    Number.isFinite(num(auto.windMph)) &&
-    Number.isFinite(num(auto.humidityPct))
-  ) {
-    return {
-      tempF: auto.tempF,
-      windMph: auto.windMph,
-      humidityPct: auto.humidityPct,
-      condition: String(auto.condition || "default").toLowerCase(),
-    };
-  }
-  return {
-    tempF: num(row?.weather_temp_f, 72),
-    windMph: num(row?.weather_wind_mph, 8),
-    humidityPct: num(row?.weather_humidity, 50),
-    condition: String(row?.weather_condition || "default").toLowerCase(),
-  };
-}
-
-function weatherDifficultyDeltaFromSnapshot(w) {
-  const wind = num(w.windMph, NaN);
-  const hum = num(w.humidityPct, NaN);
-  if (!Number.isFinite(wind) || !Number.isFinite(hum)) return NaN;
-  const windVar = clamp((wind - 8) * 0.06, -0.35, 0.55);
-  const humVar = clamp((hum - 55) * 0.004, -0.12, 0.18);
-  if (w.condition === "default") return clamp(windVar + humVar, -0.35, 0.55);
-  const condVar = WEATHER_CONDITION_SIGMA_DELTA[w.condition] ?? 0;
-  return clamp(windVar + humVar + condVar * 0.35, -0.35, 0.65);
-}
-
-function statWeatherMuAdjustment(market, row) {
-  const d = weatherDifficultyDeltaFromSnapshot(effectiveWeatherForRow(row));
-  if (!Number.isFinite(d)) return 0;
-  if (market === "Total score") return d;
-  if (market === "Bogeys") return 0.45 * d;
-  if (market === "Birdies") return -0.5 * d;
-  if (market === "Putts") return 0.35 * d;
-  if (market === "GIR") return -0.22 * d;
-  if (market === "Fairways hit") return -0.14 * d;
-  return 0;
-}
-
 function liveRowMatchesRound(row, meta) {
   const liveR = Math.round(num(meta?.datagolf_live_current_round ?? meta?.display_round, NaN));
   const pr = Math.round(num(row?.round, NaN));
@@ -527,11 +477,12 @@ export function ouProjectedMeanForMode(market, row, meta, pricingMode, pricingSk
   const base = ouMeanCountingStat(market, row, fwHoles);
   if (!Number.isFinite(base)) return NaN;
   const countLive = livePartialRoundCountPropAdjust(market, row, meta);
+  const weatherAdj =
+    meta?.projection_counts_weather_baked && row?.weather_counts_baked
+      ? 0
+      : statWeatherMuAdjustment(market, row);
   return (
-    base +
-    statWeatherMuAdjustment(market, row) +
-    countLive.muDelta +
-    pricingStatMuAdjustment(market, dgId, pricingMode, pricingSkill, ctx)
+    base + weatherAdj + countLive.muDelta + pricingStatMuAdjustment(market, dgId, pricingMode, pricingSkill, ctx)
   );
 }
 

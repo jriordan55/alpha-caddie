@@ -5,6 +5,7 @@
 import { eventsLikelySame, fieldWeekKey, fieldWeekKeysRoughMatch } from "./dg-events-align.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
 import { summarizeHourlyWeatherSlice } from "./open-meteo-weather-classify.mjs";
+import { applyWeatherBakedCountsToAllPlayers } from "./weather-projection-adjustments.mjs";
 
 function num(x, fallback = NaN) {
   const n = Number(x);
@@ -389,10 +390,13 @@ export async function bakeOpenMeteoWeatherIntoProjections(proj, opts = {}) {
   meta.forecast_wave_slots = { morning, afternoon };
   meta.forecast_wave_summary = buildForecastWaveSummaryString(morning, afternoon);
 
+  const countsBaked = applyWeatherBakedCountsToAllPlayers(proj);
+
   return {
     status: meta.forecast_weather_status,
     playerCount: players.length,
     playersWithWeather,
     teeMatches: perTeeSamples.length,
+    countsWeatherBaked: countsBaked,
   };
 }

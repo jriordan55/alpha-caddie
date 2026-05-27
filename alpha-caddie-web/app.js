@@ -3148,10 +3148,10 @@ const WEATHER_DEFAULTS = Object.freeze({
 const WEATHER_CONDITION_MEAN_DELTA = Object.freeze({
   default: 0,
   clear: 0,
-  cloudy: 0.1,
+  cloudy: 0.04,
   windy: 0.22,
-  rain: 0.45,
-  storm: 0.8,
+  rain: -0.38,
+  storm: 0.12,
 });
 
 const WEATHER_CONDITION_SIGMA_DELTA = Object.freeze({
@@ -3159,7 +3159,7 @@ const WEATHER_CONDITION_SIGMA_DELTA = Object.freeze({
   clear: 0,
   cloudy: 0.02,
   windy: 0.05,
-  rain: 0.09,
+  rain: 0.06,
   storm: 0.14,
 });
 
@@ -3853,13 +3853,24 @@ function syncWeatherUiFromState() {
 
 function weatherDifficultyDeltaFromSnapshot(w) {
   if (!w || typeof w !== "object") return 0;
-  const tempAdj = w.tempF >= 72 ? 0.03 * (w.tempF - 72) : 0.02 * (w.tempF - 72);
-  const windAdj = 0.045 * Math.max(0, w.windMph - 8);
-  const humAdj = 0.012 * Math.max(0, w.humidityPct - 55);
-  const sliderPart = tempAdj + windAdj + humAdj;
-  if (w.condition === "default") return sliderPart;
-  const condAdj = WEATHER_CONDITION_MEAN_DELTA[w.condition] ?? 0;
-  return sliderPart + condAdj;
+  const tempF = num(w.tempF, 72);
+  const wind = num(w.windMph, 8);
+  const hum = num(w.humidityPct, 55);
+  const cond = String(w.condition || "default").toLowerCase();
+  let tempAdj = tempF >= 72 ? 0.03 * (tempF - 72) : 0.02 * (tempF - 72);
+  if (wind < 9 && cond !== "windy" && cond !== "storm") tempAdj *= 0.35;
+  const windAdj = 0.045 * (wind - 8);
+  const humAdj = 0.006 * (hum - 55);
+  let d = tempAdj + windAdj + humAdj;
+  if (cond !== "default") d += WEATHER_CONDITION_MEAN_DELTA[cond] ?? 0;
+  const softTurf =
+    cond === "rain" || (wind < 9 && cond !== "windy" && cond !== "storm");
+  if (softTurf) d -= 0.12;
+  return clamp(d, -0.65, 0.85);
+}
+
+function projectionCountsWeatherBaked(row) {
+  return Boolean(DATA?.meta?.projection_counts_weather_baked && row?.weather_counts_baked);
 }
 
 function weatherDifficultyDelta() {
@@ -3907,6 +3918,7 @@ function formatEffectiveWeatherLine(row) {
 }
 
 function statWeatherMuAdjustment(market, row) {
+  if (projectionCountsWeatherBaked(row)) return 0;
   const d = weatherDifficultyDeltaFromSnapshot(effectiveWeatherForProjectionRow(row));
   if (!Number.isFinite(d)) return 0;
   if (market === "Total score") return d;
@@ -4224,6 +4236,7 @@ function sigmaLiveRoundShrinkForTotalScore(row, rec) {
 }
 
 function playerSkillWeatherEdge(row) {
+  if (projectionCountsWeatherBaked(row)) return 0;
   const baseSg = modeledMuSgFromRow(row);
   const roundSd = num(row?.round_sd, NaN);
   const sgEdge = Number.isFinite(baseSg) ? baseSg * 0.12 : 0;
@@ -4234,6 +4247,7 @@ function playerSkillWeatherEdge(row) {
 function weatherAdjustedMuSg(row) {
   const base = modeledMuSgFromRow(row);
   if (!Number.isFinite(base)) return NaN;
+  if (projectionCountsWeatherBaked(row)) return base;
   return base + playerSkillWeatherEdge(row);
 }
 
@@ -4286,7 +4300,9 @@ function sigmaOuDiscreteCounting(market, muAbs) {
 function sigmaForOu(market, row) {
   const mKey = ouModelMarketKey(market) || "Total score";
   const rec = ouStatRec(mKey);
-  const weatherMult = weatherSigmaMultiplierFromSnapshot(effectiveWeatherForProjectionRow(row));
+  const weatherMult = projectionCountsWeatherBaked(row)
+    ? 1
+    : weatherSigmaMultiplierFromSnapshot(effectiveWeatherForProjectionRow(row));
   const liveShrink = sigmaLiveRoundShrinkForTotalScore(row, rec);
   if (rec.sdKey) {
     const s = num(row[rec.sdKey], NaN);

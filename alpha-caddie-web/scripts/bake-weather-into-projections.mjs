@@ -51,7 +51,7 @@ async function main() {
   const result = await bakeOpenMeteoWeatherIntoProjections(proj, { fieldUpdates });
   writeFileSync(projPath, `${JSON.stringify(proj, null, 2)}\n`, "utf8");
   console.log(
-    `[bake-weather] status=${result.status} players=${result.playersWithWeather}/${result.playerCount} tee_slices=${result.teeMatches}`,
+    `[bake-weather] status=${result.status} players=${result.playersWithWeather}/${result.playerCount} tee_slices=${result.teeMatches} counts_baked=${result.countsWeatherBaked ?? 0}`,
   );
   /* Weather is best-effort — do not fail push:live on API/network issues. */
   process.exit(0);
