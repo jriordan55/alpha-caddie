@@ -8457,22 +8457,23 @@ function courseFitArchetypeFitTotal(axisScores) {
   return (axisScores || []).reduce((a, b) => a + (Number.isFinite(b) ? b : 0), 0) * 2.4;
 }
 
-/** Field z-scores per radar axis + combined course rating for the ratings table. */
+/** Field z-scores per radar axis (player skill) + combined course rating (venue fit) for the ratings table. */
 function courseFitArchetypeTableRows(rows, tour5, venue5) {
   const nAx = COURSE_FIT_RADAR_SPOKE_LABELS.length;
   const raw = rows.map((r) => {
     const playerN = courseFitPlayerRadarVectorMerged(rows, r);
     const axisScores = courseFitArchetypeAxisScores(tour5, venue5, playerN);
     const archetypeRaw = axisScores.reduce((a, b) => a + b, 0);
-    return { r, axisScores, archetypeRaw, archetypeFit: courseFitArchetypeFitTotal(axisScores) };
+    const skillRaw = playerN.map((v) => (Number.isFinite(v) ? v - 0.5 : NaN));
+    return { r, axisScores, skillRaw, archetypeRaw, archetypeFit: courseFitArchetypeFitTotal(axisScores) };
   });
-  const axisStats = Array.from({ length: nAx }, (_, j) =>
-    courseFitAxisStatsAcrossField(raw.map((x) => x.axisScores[j])),
+  const skillStats = Array.from({ length: nAx }, (_, j) =>
+    courseFitAxisStatsAcrossField(raw.map((x) => x.skillRaw[j])),
   );
   const archStats = courseFitAxisStatsAcrossField(raw.map((x) => x.archetypeRaw));
   return raw.map((x) => ({
     ...x,
-    axisZ: x.axisScores.map((v, j) => courseFitZScore(v, axisStats[j])),
+    axisZ: x.skillRaw.map((v, j) => courseFitZScore(v, skillStats[j])),
     archetypeZ: courseFitZScore(x.archetypeRaw, archStats),
   }));
 }
@@ -8502,7 +8503,7 @@ function ensureCourseFitTableHead() {
       "num",
       `axis_${i}`,
       short,
-      `${full} — course-fit rating vs field on this spoke (not strokes gained)`,
+      `${full} — player skill vs field on this spoke (higher = stronger; not venue-weighted fit)`,
     );
   }
   hdr += mkTh(
@@ -9504,7 +9505,7 @@ function buildCourseFitTab() {
         const cell = formatCourseFitZCell(row.axisZ[j]);
         tdZ.className = cell.cls;
         tdZ.textContent = cell.text;
-        tdZ.title = `${COURSE_FIT_RADAR_SPOKE_LABELS[j]} rating vs field (not strokes gained)`;
+        tdZ.title = `${COURSE_FIT_RADAR_SPOKE_LABELS[j]} — skill vs field (green = above-average on this spoke)`;
         tr.appendChild(tdZ);
       }
       const tdA = document.createElement("td");

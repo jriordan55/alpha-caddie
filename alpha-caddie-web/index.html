@@ -1336,8 +1336,8 @@
           <dd>Name only. Use the search box to filter.</dd>
           <dt>Drv Acc, Off Tee, Approach, Arg, Putt, Distance</dt>
           <dd>
-            One column per radar spoke. Each value is that player’s <strong>category rating</strong> for how well their game matches this course’s emphasis on that skill vs the rest of the field.
-            <strong>0</strong> ≈ average fit; <strong>positive</strong> = better than average for this layout; <strong>negative</strong> = worse. Computed from venue vs tour stress × where the player sits vs the field on that dimension, then z-scored across players in the table.
+            One column per radar spoke. Each value is that player’s <strong>skill vs the field</strong> on that dimension (z-scored across everyone in the table).
+            <strong>0</strong> ≈ average; <strong>positive</strong> = stronger than the field on that spoke; <strong>negative</strong> = weaker. These are not strokes gained and are not weighted by this course’s emphasis — see <strong>Course rating</strong> for overall venue fit.
           </dd>
           <dt>Course rating</dt>
           <dd>
@@ -1366,6 +1366,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=195"></script>
+  <script src="app.js?v=196"></script>
 </body>
 </html>
