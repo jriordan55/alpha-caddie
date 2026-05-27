@@ -8477,32 +8477,30 @@ function courseFitPlayerCourseFitRaw(row, ctRow) {
   return fit;
 }
 
-/** Field z-scores per radar axis (player skill) + combined course rating (R course-fit) for the ratings table. */
-function courseFitArchetypeTableRows(rows, tourCourseMean5, venue5, ctRow) {
+/** Field z-scores per radar axis (player skill) + venue-weighted course rating for the ratings table. */
+function courseFitArchetypeTableRows(rows, _tourCourseMean5, venue5, _ctRow) {
   const nAx = COURSE_FIT_RADAR_SPOKE_LABELS.length;
   const raw = rows.map((r) => {
     const playerN = courseFitPlayerRadarVectorMerged(rows, r);
-    const axisScores = courseFitArchetypeAxisScores(tourCourseMean5, venue5, playerN);
-    const fitRaw = courseFitPlayerCourseFitRaw(r, ctRow);
-    const archetypeRaw = Number.isFinite(fitRaw)
-      ? fitRaw
-      : axisScores.reduce((a, b) => a + b, 0);
     const skillRaw = playerN.map((v) => (Number.isFinite(v) ? v - 0.5 : NaN));
-    return {
-      r,
-      axisScores,
-      skillRaw,
-      archetypeRaw,
-      archetypeFit: Number.isFinite(fitRaw) ? fitRaw : courseFitArchetypeFitTotal(axisScores),
-    };
+    return { r, skillRaw };
   });
   const skillStats = Array.from({ length: nAx }, (_, j) =>
     courseFitAxisStatsAcrossField(raw.map((x) => x.skillRaw[j])),
   );
-  const archStats = courseFitAxisStatsAcrossField(raw.map((x) => x.archetypeRaw));
-  return raw.map((x) => ({
+  const withAxisZ = raw.map((x) => {
+    const axisZ = x.skillRaw.map((v, j) => courseFitZScore(v, skillStats[j]));
+    let archetypeRaw = 0;
+    for (let j = 0; j < nAx; j++) {
+      const z = axisZ[j];
+      const w = venue5?.[j];
+      if (Number.isFinite(z) && Number.isFinite(w)) archetypeRaw += z * w;
+    }
+    return { ...x, axisZ, archetypeRaw, archetypeFit: archetypeRaw };
+  });
+  const archStats = courseFitAxisStatsAcrossField(withAxisZ.map((x) => x.archetypeRaw));
+  return withAxisZ.map((x) => ({
     ...x,
-    axisZ: x.skillRaw.map((v, j) => courseFitZScore(v, skillStats[j])),
     archetypeZ: courseFitZScore(x.archetypeRaw, archStats),
   }));
 }
@@ -8539,7 +8537,7 @@ function ensureCourseFitTableHead() {
     "num",
     "rating",
     "Course rating",
-    "Overall course-fit rating for this venue (combined across all radar spokes; not strokes gained)",
+    "Overall fit to this venue: sum of spoke z-scores weighted by the venue radar profile (not projection coeffs)",
   );
   hdr += mkTh("num course-fit-out-th", "win", "Winner", "Best available sportsbook winner odds");
   hdr += mkTh("num course-fit-out-th", "top_5", "Top 5", "Best available sportsbook top 5 odds");
@@ -9592,7 +9590,7 @@ function buildCourseFitTab() {
       const tdA = document.createElement("td");
       const archCell = formatCourseFitZCell(row.archetypeZ);
       tdA.className = archCell.cls;
-      tdA.title = `Course-fit adjustment ${row.archetypeFit >= 0 ? "+" : ""}${row.archetypeFit.toFixed(2)} (sg × course_table, same as projections)`;
+      tdA.title = `Venue-weighted fit ${row.archetypeFit >= 0 ? "+" : ""}${row.archetypeFit.toFixed(2)} (Σ spoke z × venue demand; matches radar emphasis)`;
       tdA.textContent = archCell.text;
       tr.appendChild(tdA);
       for (const mk of marketKeys) {
