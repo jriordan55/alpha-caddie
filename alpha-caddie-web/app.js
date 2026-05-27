@@ -361,6 +361,7 @@ const HISTORY_ROUNDS_CHRONO_CACHE = new Map();
 const PRICING_MU_BONUS_CACHE = new Map();
 const OU_MARKET_RATING_ROUNDS_CACHE = new Map();
 const OU_MARKET_RATING_CACHE = new Map();
+const OU_COURSE_RATING_CACHE = new Map();
 /** Last valid line used when the input is mid-edit or empty. */
 let propsTrendLastGoodLine = NaN;
 /** Field-by-course: one live-history merge per mode session (avoids re-render loop). */
@@ -389,6 +390,7 @@ function bumpHistoryMutationEpoch() {
   propsDgIdNameManifestUiRefreshDone = false;
   OU_MARKET_RATING_ROUNDS_CACHE.clear();
   OU_MARKET_RATING_CACHE.clear();
+  OU_COURSE_RATING_CACHE.clear();
   ouInvalidateProjectionPerfCaches();
 }
 /** Cached sorted course dropdown rows from full history scan. */
@@ -2718,8 +2720,22 @@ const OU_PGA_TOUR_BENCHMARK_FALLBACK = Object.freeze({
   "Fairways hit": { mean: 0.541, sd: 0.228, higherBetter: true, unit: "rate" },
 });
 
+/** Fallback cross-venue μ/σ when projections.json lacks `pga_tour_course_benchmarks`. */
+const OU_PGA_TOUR_COURSE_BENCHMARK_FALLBACK = Object.freeze({
+  "Total score": { mean: 71.05, sd: 0.72, higherBetter: false, unit: "strokes" },
+  Birdies: { mean: 3.42, sd: 0.38, higherBetter: true, unit: "count" },
+  Pars: { mean: 10.95, sd: 0.55, higherBetter: true, unit: "count" },
+  Bogeys: { mean: 2.68, sd: 0.32, higherBetter: false, unit: "count" },
+  GIR: { mean: 0.584, sd: 0.032, higherBetter: true, unit: "rate" },
+  "Fairways hit": { mean: 0.538, sd: 0.034, higherBetter: true, unit: "rate" },
+});
+
+function ouProjectionsBenchmarksRoot() {
+  return DATA?.meta?.pga_tour_market_benchmarks ? DATA.meta : DATA;
+}
+
 function ouPgaTourBenchmarkYearLabel() {
-  const meta = DATA?.pga_tour_market_benchmarks?.meta;
+  const meta = ouProjectionsBenchmarksRoot().pga_tour_market_benchmarks?.meta;
   const y0 = Math.round(num(meta?.min_year, NaN));
   const y1 = Math.round(num(meta?.max_year, NaN));
   if (Number.isFinite(y0) && Number.isFinite(y1)) return y0 === y1 ? String(y0) : `${y0}–${y1}`;
@@ -2788,8 +2804,27 @@ function ouCachedMarketRating(market, player) {
   const cacheKey = `${historyMutationEpoch}|${id}|${mKey}`;
   if (OU_MARKET_RATING_CACHE.has(cacheKey)) return OU_MARKET_RATING_CACHE.get(cacheKey);
   const playerAvg = ouPlayerHistoricalAvgForMarket(market, player);
-  const hit = { playerAvg, marketRatingZ: ouMarketRatingZ(market, playerAvg) };
+  const marketRatingZ = ouMarketRatingZ(market, playerAvg);
+  const hit = {
+    playerAvg,
+    marketRatingZ,
+    marketRating100: ouZToRating100(marketRatingZ),
+  };
   if (ouMarketRatingHistoryReady()) OU_MARKET_RATING_CACHE.set(cacheKey, hit);
+  return hit;
+}
+
+function ouCachedCourseRating(market) {
+  const mKey = ouModelMarketKey(market) || "Total score";
+  if (OU_COURSE_RATING_CACHE.has(mKey)) return OU_COURSE_RATING_CACHE.get(mKey);
+  const venueVal = ouVenueHistoricalValueForMarket(market);
+  const courseRatingZ = ouCourseRatingZ(market, venueVal);
+  const hit = {
+    venueVal,
+    courseRatingZ,
+    courseRating100: ouZToRating100(courseRatingZ),
+  };
+  OU_COURSE_RATING_CACHE.set(mKey, hit);
   return hit;
 }
 
@@ -2822,10 +2857,43 @@ function ouNormalizePgaTourBenchmark(raw, mKey) {
 
 function ouPgaTourBenchmarkForMarket(market) {
   const mKey = ouModelMarketKey(market) || "Total score";
-  const raw = DATA?.pga_tour_market_benchmarks?.[mKey];
+  const root = ouProjectionsBenchmarksRoot();
+  const raw = root.pga_tour_market_benchmarks?.[mKey];
   const norm = ouNormalizePgaTourBenchmark(raw, mKey);
   if (norm) return norm;
   return ouNormalizePgaTourBenchmark(OU_PGA_TOUR_BENCHMARK_FALLBACK[mKey], mKey);
+}
+
+function ouPgaTourCourseBenchmarkForMarket(market) {
+  const mKey = ouModelMarketKey(market) || "Total score";
+  const root = ouProjectionsBenchmarksRoot();
+  const raw = root.pga_tour_course_benchmarks?.[mKey];
+  const norm = ouNormalizePgaTourBenchmark(raw, mKey);
+  if (norm) return norm;
+  return ouNormalizePgaTourBenchmark(OU_PGA_TOUR_COURSE_BENCHMARK_FALLBACK[mKey], mKey);
+}
+
+/** This week's venue historical average for a market (counts or strokes; GIR/FW as rate). */
+function ouVenueHistoricalValueForMarket(market) {
+  const mKey = ouModelMarketKey(market) || "Total score";
+  const b = DATA?.meta?.projection_course_basis;
+  if (!b || typeof b !== "object") return NaN;
+  if (mKey === "Total score") return num(b.venue_avg_round_score, NaN);
+  if (mKey === "Birdies") return num(b.venue_avg_birdies, NaN);
+  if (mKey === "Pars") return num(b.venue_avg_pars, NaN);
+  if (mKey === "Bogeys") return num(b.venue_avg_bogeys, NaN);
+  if (mKey === "GIR") {
+    const g = num(b.venue_avg_gir, NaN);
+    if (!Number.isFinite(g)) return NaN;
+    return g <= 1.05 ? g : g / 18;
+  }
+  if (mKey === "Fairways hit") {
+    const fw = num(b.venue_avg_fairways, NaN);
+    if (!Number.isFinite(fw)) return NaN;
+    const opp = fairwayHolesModeledFromData();
+    return fw <= 1.05 ? fw : fw / opp;
+  }
+  return NaN;
 }
 
 /**
@@ -2853,10 +2921,57 @@ function ouMarketRatingZ(market, playerAvg) {
   return z;
 }
 
-function formatOuMarketRating(z) {
-  if (!Number.isFinite(z)) return "—";
-  const s = z >= 0 ? "+" : "";
-  return `${s}${z.toFixed(2)}`;
+/**
+ * Z-score: venue historical average vs distribution of venue averages across PGA courses.
+ */
+function ouCourseRatingZ(market, venueVal) {
+  const mKey = ouModelMarketKey(market) || "Total score";
+  const mu = num(venueVal, NaN);
+  if (!Number.isFinite(mu)) return NaN;
+  const b = ouPgaTourCourseBenchmarkForMarket(market);
+  if (!b) return NaN;
+  let x = mu;
+  let tourMu = b.mean;
+  let tourSd = b.sd;
+  if (b.unit === "rate") {
+    const opp = ouMarketRatingOpportunities(mKey);
+    if (Number.isFinite(opp) && opp > 0 && mu > 1.05) {
+      x = mu / opp;
+      tourMu = b.mean;
+      tourSd = b.sd;
+    }
+  }
+  if (!Number.isFinite(tourSd) || tourSd <= 1e-6) return NaN;
+  let z = (x - tourMu) / tourSd;
+  if (!b.higherBetter) z = -z;
+  return z;
+}
+
+/** Map z-score to 1–100 (50 ≈ average; higher = stronger on this dimension). */
+function ouZToRating100(z) {
+  if (!Number.isFinite(z)) return NaN;
+  const t = 1 / (1 + 0.3275911 * Math.abs(z));
+  const erf =
+    1 -
+    t *
+      (0.254829592 +
+        t * (-0.284496736 + t * (1.421413741 + t * (-1.453152027 + t * 1.061405429)))) *
+      Math.exp(-z * z);
+  const sign = z < 0 ? -1 : 1;
+  const p = 0.5 * (1 + sign * erf);
+  return Math.round(clamp(p * 100, 1, 100));
+}
+
+function formatOuRating100(score) {
+  if (!Number.isFinite(score)) return "—";
+  return String(Math.round(score));
+}
+
+function ouRating100CellClass(score) {
+  if (!Number.isFinite(score)) return "num";
+  if (score >= 55) return "num pos";
+  if (score <= 45) return "num neg";
+  return "num";
 }
 
 function ouMarketRatingFormatValue(market, value, unit) {
@@ -2877,16 +2992,31 @@ function ouMarketRatingTourAvgDisplay(market, bench) {
   return ouMarketRatingFormatValue(market, bench.mean, bench.unit);
 }
 
-function ouMarketRatingTitle(market, playerAvg, z) {
+function ouMarketRatingTitle(market, playerAvg, z, rating100) {
   const b = ouPgaTourBenchmarkForMarket(market);
   const yrs = ouPgaTourBenchmarkYearLabel();
   const label = ouPropsCanonicalMarket(market);
+  const scoreStr = Number.isFinite(rating100) ? ` (${rating100}/100)` : "";
   if (!b || !Number.isFinite(playerAvg) || !Number.isFinite(z)) {
-    return `Market rating: player avg vs PGA Tour avg (${yrs})`;
+    return `Market rating${scoreStr}: player avg vs PGA Tour avg (${yrs}). 50 ≈ tour average.`;
   }
   const playerStr = ouMarketRatingFormatValue(market, playerAvg, b.unit === "rate" ? "count" : b.unit);
   const tourStr = ouMarketRatingTourAvgDisplay(market, b);
-  return `Z-score vs PGA Tour ${yrs} (${label}: player avg ${playerStr} vs tour avg ${tourStr})`;
+  return `Market rating${scoreStr}: player vs PGA Tour ${yrs} (${label}: avg ${playerStr} vs tour ${tourStr}). 50 ≈ tour average; higher = more of this stat.`;
+}
+
+function ouCourseRatingTitle(market, venueVal, z, rating100) {
+  const b = ouPgaTourCourseBenchmarkForMarket(market);
+  const yrs = ouPgaTourBenchmarkYearLabel();
+  const label = ouPropsCanonicalMarket(market);
+  const course = String(DATA?.course_used || DATA?.meta?.course_used || "").trim() || "This course";
+  const scoreStr = Number.isFinite(rating100) ? ` (${rating100}/100)` : "";
+  if (!b || !Number.isFinite(venueVal) || !Number.isFinite(z)) {
+    return `Course rating${scoreStr}: ${course} vs other PGA venues (${yrs}). 50 ≈ typical course.`;
+  }
+  const venueStr = ouMarketRatingFormatValue(market, venueVal, b.unit === "rate" ? "count" : b.unit);
+  const crossStr = ouMarketRatingTourAvgDisplay(market, b);
+  return `Course rating${scoreStr}: ${course} vs other venues (${label}: venue avg ${venueStr} vs cross-course avg ${crossStr}). 50 ≈ typical course; higher = more ${label.toLowerCase()} than most courses.`;
 }
 
 /** Model O/U tab market order; displayed columns are dynamic from live DK props. */
@@ -4285,6 +4415,7 @@ function ouInvalidateProjectionPerfCaches() {
   ouProjectionSortCache = null;
   ouGolferSuggestLabelsSig = "";
   ouGolferSuggestLabels = [];
+  OU_COURSE_RATING_CACHE.clear();
 }
 
 /** Coalesce rapid O/U table rebuilds (filters, polls) into one frame. */
@@ -4862,6 +4993,7 @@ function ensureOuProjectionTableChrome() {
     ["pr-side", "Side", "sortable ou-proj-long-th num ou-proj-th-side"],
     ["pr-mu", "Proj", "sortable ou-proj-long-th num ou-proj-th-mu"],
     ["pr-mkt-rating", "Market rating", "sortable ou-proj-long-th num ou-proj-th-mkt-rating"],
+    ["pr-course-rating", "Course rating", "sortable ou-proj-long-th num ou-proj-th-course-rating"],
     ["pr-line", "Line", "sortable ou-proj-long-th num ou-proj-th-line"],
     ["", "Book", "ou-proj-long-th num ou-proj-th-book"],
     ["pr-odds", "Odds", "sortable ou-proj-long-th num ou-proj-th-odds"],
@@ -4903,7 +5035,7 @@ function initOuTableSortOnce() {
       if (key === "golfer" || key === "pr-golfer") ouTableSort.dir = 1;
       else if (key === "pr-market" || key === "pr-side") ouTableSort.dir = 1;
       else if (key === "pr-mu") ouTableSort.dir = -1;
-      else if (key === "pr-mkt-rating") ouTableSort.dir = -1;
+      else if (key === "pr-mkt-rating" || key === "pr-course-rating") ouTableSort.dir = -1;
       else if (key === "pr-line") ouTableSort.dir = 1;
       else if (key === "pr-odds" || key === "pr-pmod" || key === "pr-edge") ouTableSort.dir = -1;
       else ouTableSort.dir = -1;
@@ -5049,9 +5181,25 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
     if (seen.has(sig)) return;
     seen.add(sig);
     const histPlayer = histPlayerOpt || player;
-    const { playerAvg, marketRatingZ } = ouCachedMarketRating(col.market, histPlayer);
+    const { playerAvg, marketRatingZ, marketRating100 } = ouCachedMarketRating(col.market, histPlayer);
+    const { venueVal, courseRatingZ, courseRating100 } = ouCachedCourseRating(col.market);
     for (const side of ["over", "under"]) {
-      out.push(ouAttachProjectionRowMetrics({ player, col, colIdx, side, mu, pick, marketRatingZ, playerAvg }));
+      out.push(
+        ouAttachProjectionRowMetrics({
+          player,
+          col,
+          colIdx,
+          side,
+          mu,
+          pick,
+          marketRatingZ,
+          marketRating100,
+          playerAvg,
+          venueVal,
+          courseRatingZ,
+          courseRating100,
+        }),
+      );
     }
   };
 
@@ -5118,7 +5266,20 @@ function ouTableSortValueProjRow(row, sortKey) {
   if (sortKey === "pr-market") return colIdx;
   if (sortKey === "pr-side") return side === "over" ? 0 : 1;
   if (sortKey === "pr-mu") return mu;
-  if (sortKey === "pr-mkt-rating") return Number.isFinite(row.marketRatingZ) ? row.marketRatingZ : NaN;
+  if (sortKey === "pr-mkt-rating") {
+    return Number.isFinite(row.marketRating100)
+      ? row.marketRating100
+      : Number.isFinite(row.marketRatingZ)
+        ? row.marketRatingZ
+        : NaN;
+  }
+  if (sortKey === "pr-course-rating") {
+    return Number.isFinite(row.courseRating100)
+      ? row.courseRating100
+      : Number.isFinite(row.courseRatingZ)
+        ? row.courseRatingZ
+        : NaN;
+  }
   if (sortKey === "pr-line") return pick && Number.isFinite(pick.line) ? pick.line : NaN;
   if (sortKey === "pr-odds") {
     if (Number.isFinite(row.sortOdds)) return row.sortOdds;
@@ -5408,7 +5569,7 @@ function buildOuTable() {
     flatRows.sort(ouProjectionRowStatOrder);
   }
 
-  const projColCount = 10;
+  const projColCount = 11;
   const flatRowKeys = new Set(
     flatRows.map((rr) => ouProjMakeExpandKey(String(rr.player.player_name || ""), rr.col.label, rr.side)),
   );
@@ -5447,7 +5608,21 @@ function buildOuTable() {
   for (const r of flatRows) {
     const tr = document.createElement("tr");
     tr.className = "ou-proj-long-tr ou-proj-data-row";
-    const { player, col, side, mu, pick, marketRatingZ, playerAvg, pMod, edge } = r;
+    const {
+      player,
+      col,
+      side,
+      mu,
+      pick,
+      marketRatingZ,
+      marketRating100,
+      playerAvg,
+      courseRatingZ,
+      courseRating100,
+      venueVal,
+      pMod,
+      edge,
+    } = r;
     const rawName = String(player.player_name || "");
     const expandKey = ouProjMakeExpandKey(rawName, col.label, side);
     tr.dataset.expandKey = expandKey;
@@ -5492,16 +5667,21 @@ function buildOuTable() {
     tr.appendChild(muTd);
 
     const mktRatingTd = document.createElement("td");
-    mktRatingTd.className = "ou-cell ou-proj-long-td num ou-proj-td-mkt-rating";
-    const z = num(marketRatingZ, NaN);
+    const mktZ = num(marketRatingZ, NaN);
+    const mkt100 = num(marketRating100, NaN);
+    mktRatingTd.className = `ou-cell ou-proj-long-td ${ouRating100CellClass(mkt100)} ou-proj-td-mkt-rating`;
     mktRatingTd.textContent =
-      !Number.isFinite(z) && !ouMarketRatingHistoryReady() ? "…" : formatOuMarketRating(z);
-    mktRatingTd.title = ouMarketRatingTitle(col.market, num(playerAvg, NaN), z);
-    if (Number.isFinite(z)) {
-      if (z > 0.05) mktRatingTd.classList.add("pos");
-      else if (z < -0.05) mktRatingTd.classList.add("neg");
-    }
+      !Number.isFinite(mkt100) && !ouMarketRatingHistoryReady() ? "…" : formatOuRating100(mkt100);
+    mktRatingTd.title = ouMarketRatingTitle(col.market, num(playerAvg, NaN), mktZ, mkt100);
     tr.appendChild(mktRatingTd);
+
+    const courseRatingTd = document.createElement("td");
+    const crsZ = num(courseRatingZ, NaN);
+    const crs100 = num(courseRating100, NaN);
+    courseRatingTd.className = `ou-cell ou-proj-long-td ${ouRating100CellClass(crs100)} ou-proj-td-course-rating`;
+    courseRatingTd.textContent = formatOuRating100(crs100);
+    courseRatingTd.title = ouCourseRatingTitle(col.market, num(venueVal, NaN), crsZ, crs100);
+    tr.appendChild(courseRatingTd);
 
     const lineTd = document.createElement("td");
     lineTd.className = "ou-cell ou-proj-long-td num ou-proj-td-line";

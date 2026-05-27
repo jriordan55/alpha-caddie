@@ -5,6 +5,7 @@
 import { createReadStream, existsSync } from "fs";
 import { join } from "path";
 import { parse } from "csv-parse";
+import { normCourseNameKey } from "./course-name-key.mjs";
 
 function num(v) {
   const n = Number(v);
@@ -15,9 +16,9 @@ function pushSample(samples, v) {
   if (Number.isFinite(v)) samples.push(v);
 }
 
-function meanSd(samples) {
+function meanSd(samples, minN = 80) {
   const n = samples.length;
-  if (n < 80) return { mean: NaN, sd: NaN, n };
+  if (n < minN) return { mean: NaN, sd: NaN, n };
   let s = 0;
   for (const x of samples) s += x;
   const mean = s / n;
@@ -154,6 +155,169 @@ export async function loadPgaTourMarketBenchmarks(modelRoot, opts = {}) {
       n: { score: ms.n, birdies: mb.n, pars: mp.n, bogeys: mbg.n, gir: mg.n, fairways: mf.n },
     },
   };
+}
+
+const COURSE_BENCHMARK_MIN_ROUNDS = 80;
+const COURSE_BENCHMARK_MIN_VENUES = 12;
+
+function emptyCourseAgg() {
+  return { n: 0, sumScore: 0, sumBirdies: 0, sumPars: 0, sumBogeys: 0, sumGir: 0, sumFw: 0, sumFwOpp: 0 };
+}
+
+function finalizeCourseAgg(agg) {
+  const n = agg.n;
+  if (n < 1) return null;
+  const fwOpp = agg.sumFwOpp > 0 ? agg.sumFwOpp / n : NaN;
+  return {
+    score: agg.sumScore / n,
+    birdies: agg.sumBirdies / n,
+    pars: agg.sumPars / n,
+    bogeys: agg.sumBogeys / n,
+    girRate: agg.sumGir > 0 ? agg.sumGir / (18 * n) : NaN,
+    fwRate: Number.isFinite(fwOpp) && fwOpp > 0 ? agg.sumFw / agg.sumFwOpp : NaN,
+    n,
+  };
+}
+
+/**
+ * Mean / SD across PGA venues (one value per course) for Round projections "course rating".
+ * Same markets as tour player benchmarks; units match venue averages in projection_course_basis.
+ */
+export async function loadPgaTourCourseBenchmarks(modelRoot, opts = {}) {
+  const csvPath = join(modelRoot, "data", "historical_rounds_all.csv");
+  const cy = new Date().getFullYear();
+  let minYear = num(opts.minYear, NaN);
+  let maxYear = num(opts.maxYear, NaN);
+  if (!Number.isFinite(minYear) && !Number.isFinite(maxYear)) {
+    minYear = 2025;
+    maxYear = 2026;
+  }
+  if (!Number.isFinite(maxYear)) maxYear = cy;
+  if (!Number.isFinite(minYear)) minYear = maxYear;
+
+  const empty = {
+    "Total score": { mean: NaN, sd: NaN, higherBetter: false, unit: "strokes" },
+    Birdies: { mean: NaN, sd: NaN, higherBetter: true, unit: "count" },
+    Pars: { mean: NaN, sd: NaN, higherBetter: true, unit: "count" },
+    Bogeys: { mean: NaN, sd: NaN, higherBetter: false, unit: "count" },
+    GIR: { mean: NaN, sd: NaN, higherBetter: true, unit: "rate" },
+    "Fairways hit": { mean: NaN, sd: NaN, higherBetter: true, unit: "rate" },
+    meta: { skipped: true, csv_path: csvPath, min_year: minYear, max_year: maxYear },
+  };
+  if (!existsSync(csvPath)) return empty;
+
+  /** @type {Map<string, ReturnType<typeof emptyCourseAgg>>} */
+  const byCourse = new Map();
+
+  await new Promise((resolve, reject) => {
+    const parser = createReadStream(csvPath).pipe(
+      parse({
+        columns: true,
+        relax_quotes: true,
+        relax_column_count: true,
+        skip_records_with_error: true,
+      }),
+    );
+    parser.on("data", (row) => {
+      if (String(row.tour || "").toLowerCase() !== "pga") return;
+      const yr = parseInt(row.year, 10);
+      if (!yearInBenchmarkWindow(yr, minYear, maxYear)) return;
+      const ck = normCourseNameKey(row.course_name || row.Course_Name || "");
+      if (!ck) return;
+      const rs = num(row.round_score, NaN);
+      if (!Number.isFinite(rs) || rs < 55 || rs > 95) return;
+
+      let agg = byCourse.get(ck);
+      if (!agg) {
+        agg = emptyCourseAgg();
+        byCourse.set(ck, agg);
+      }
+      agg.n++;
+      agg.sumScore += rs;
+      const b = num(row.birdies, NaN);
+      const p = num(row.pars, NaN);
+      const bg = num(row.bogies, NaN);
+      if (Number.isFinite(b) && b >= 0 && b <= 18) agg.sumBirdies += b;
+      if (Number.isFinite(p) && p >= 0 && p <= 18) agg.sumPars += p;
+      if (Number.isFinite(bg) && bg >= 0 && bg <= 18) agg.sumBogeys += bg;
+      const g = girCount(row);
+      if (Number.isFinite(g)) agg.sumGir += g;
+      const fw = fairwayCount(row);
+      const fwOpp = fairwayOpportunitiesFromCoursePar(row.course_par);
+      if (Number.isFinite(fw) && fwOpp > 0) {
+        agg.sumFw += fw;
+        agg.sumFwOpp += fwOpp;
+      }
+    });
+    parser.on("error", reject);
+    parser.on("end", resolve);
+  });
+
+  const score = [];
+  const birdies = [];
+  const pars = [];
+  const bogeys = [];
+  const girRates = [];
+  const fwRates = [];
+
+  for (const agg of byCourse.values()) {
+    if (agg.n < COURSE_BENCHMARK_MIN_ROUNDS) continue;
+    const fin = finalizeCourseAgg(agg);
+    if (!fin) continue;
+    pushSample(score, fin.score);
+    pushSample(birdies, fin.birdies);
+    pushSample(pars, fin.pars);
+    pushSample(bogeys, fin.bogeys);
+    if (Number.isFinite(fin.girRate)) pushSample(girRates, fin.girRate);
+    if (Number.isFinite(fin.fwRate)) pushSample(fwRates, fin.fwRate);
+  }
+
+  const ms = meanSd(score, COURSE_BENCHMARK_MIN_VENUES);
+  const mb = meanSd(birdies, COURSE_BENCHMARK_MIN_VENUES);
+  const mp = meanSd(pars, COURSE_BENCHMARK_MIN_VENUES);
+  const mbg = meanSd(bogeys, COURSE_BENCHMARK_MIN_VENUES);
+  const mg = meanSd(girRates, COURSE_BENCHMARK_MIN_VENUES);
+  const mf = meanSd(fwRates, COURSE_BENCHMARK_MIN_VENUES);
+
+  return {
+    "Total score": { mean: ms.mean, sd: ms.sd, higherBetter: false, unit: "strokes" },
+    Birdies: { mean: mb.mean, sd: mb.sd, higherBetter: true, unit: "count" },
+    Pars: { mean: mp.mean, sd: mp.sd, higherBetter: true, unit: "count" },
+    Bogeys: { mean: mbg.mean, sd: mbg.sd, higherBetter: false, unit: "count" },
+    GIR: { mean: mg.mean, sd: mg.sd, higherBetter: true, unit: "rate" },
+    "Fairways hit": { mean: mf.mean, sd: mf.sd, higherBetter: true, unit: "rate" },
+    meta: {
+      skipped: false,
+      csv_path: csvPath,
+      min_year: minYear,
+      max_year: maxYear,
+      n_courses: {
+        score: ms.n,
+        birdies: mb.n,
+        pars: mp.n,
+        bogeys: mbg.n,
+        gir: mg.n,
+        fairways: mf.n,
+      },
+    },
+  };
+}
+
+/** Rounded copy for projections.json */
+export function serializePgaTourCourseBenchmarks(raw) {
+  const out = {};
+  for (const key of ["Total score", "Birdies", "Pars", "Bogeys", "GIR", "Fairways hit"]) {
+    const b = raw[key];
+    if (!b) continue;
+    out[key] = {
+      mean: Number.isFinite(b.mean) ? Math.round(b.mean * 1000) / 1000 : null,
+      sd: Number.isFinite(b.sd) ? Math.round(b.sd * 1000) / 1000 : null,
+      higherBetter: !!b.higherBetter,
+      unit: b.unit || null,
+    };
+  }
+  out.meta = raw.meta || {};
+  return out;
 }
 
 /** Rounded copy for projections.json */

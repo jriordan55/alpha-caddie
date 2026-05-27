@@ -53830,5 +53830,57 @@
     },
     "forecast_wave_summary": "Morning tees: 72.9°F · 2.5 mph · 90% · cloudy.\nAfternoon tees: 82.4°F · 2.7 mph · 62% · cloudy."
   },
-  "dk_round_props_refreshed_at": "2026-05-27T17:21:46Z"
+  "dk_round_props_refreshed_at": "2026-05-27T17:21:46Z",
+  "pga_tour_course_benchmarks": {
+    "Total score": {
+      "mean": 70.267,
+      "sd": 1.418,
+      "higherBetter": false,
+      "unit": "strokes"
+    },
+    "Birdies": {
+      "mean": 3.87,
+      "sd": 0.703,
+      "higherBetter": true,
+      "unit": "count"
+    },
+    "Pars": {
+      "mean": 11.151,
+      "sd": 0.378,
+      "higherBetter": true,
+      "unit": "count"
+    },
+    "Bogeys": {
+      "mean": 2.539,
+      "sd": 0.613,
+      "higherBetter": false,
+      "unit": "count"
+    },
+    "GIR": {
+      "mean": 0.653,
+      "sd": 0.069,
+      "higherBetter": true,
+      "unit": "rate"
+    },
+    "Fairways hit": {
+      "mean": 0.568,
+      "sd": 0.162,
+      "higherBetter": true,
+      "unit": "rate"
+    },
+    "meta": {
+      "skipped": false,
+      "csv_path": "C:\\Users\\student\\Documents\\golfModel\\data\\historical_rounds_all.csv",
+      "min_year": 2025,
+      "max_year": 2026,
+      "n_courses": {
+        "score": 57,
+        "birdies": 57,
+        "pars": 57,
+        "bogeys": 57,
+        "gir": 54,
+        "fairways": 57
+      }
+    }
+  }
 }

@@ -9,7 +9,9 @@ import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import {
+  loadPgaTourCourseBenchmarks,
   loadPgaTourMarketBenchmarks,
+  serializePgaTourCourseBenchmarks,
   serializePgaTourMarketBenchmarks,
 } from "./pga-tour-market-benchmarks.mjs";
 
@@ -41,8 +43,13 @@ async function main() {
     process.exit(0);
   }
 
-  const raw = await loadPgaTourMarketBenchmarks(modelRoot, { minYear, maxYear });
+  const benchOpts = { minYear, maxYear };
+  const [raw, rawCourse] = await Promise.all([
+    loadPgaTourMarketBenchmarks(modelRoot, benchOpts),
+    loadPgaTourCourseBenchmarks(modelRoot, benchOpts),
+  ]);
   proj.pga_tour_market_benchmarks = serializePgaTourMarketBenchmarks(raw);
+  proj.pga_tour_course_benchmarks = serializePgaTourCourseBenchmarks(rawCourse);
   writeFileSync(projPath, `${JSON.stringify(proj, null, 2)}\n`, "utf8");
 
   const meta = raw.meta || {};
@@ -52,6 +59,13 @@ async function main() {
   } else {
     console.log(
       `[refresh:market-benchmarks] ${meta.min_year}–${meta.max_year} score μ=${b?.mean} σ=${b?.sd} (n=${meta.n?.score ?? "?"})`,
+    );
+  }
+  const cm = rawCourse.meta || {};
+  const cb = proj.pga_tour_course_benchmarks?.Birdies;
+  if (!cm.skipped && cb?.mean != null) {
+    console.log(
+      `[refresh:market-benchmarks] course birdies μ=${cb.mean} σ=${cb.sd} (venues n=${cm.n_courses?.birdies ?? "?"})`,
     );
   }
   process.exit(0);

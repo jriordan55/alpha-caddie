@@ -1101,7 +1101,7 @@
         <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
       </header>
       <p class="ev-help-intro text-muted">
-        For the <strong>Round</strong> you pick (R1–R4), each row is one golfer, one <strong>DraftKings-scraped</strong> market (only stats returned by the live DK props run are listed), and either <strong>Over</strong> or <strong>Under</strong> on that line. Columns show the model projection in <strong>Proj</strong>, the book line, a <strong>Book</strong> mark (DraftKings logo), the price for that side, model probability at the line, and edge vs the book. The table loads sorted by <strong>Edge</strong> (highest first). <strong>Click a row</strong> to expand a detail strip: discrete outcome distribution (line vs over), projection snapshot, and model inputs. Tap the same row again to collapse. Markets follow the same weather and pricing adjustments as the rest of the app. Hover a row for mean and σ used on the model side of the line.
+        For the <strong>Round</strong> you pick (R1–R4), each row is one golfer, one <strong>DraftKings-scraped</strong> market (only stats returned by the live DK props run are listed), and either <strong>Over</strong> or <strong>Under</strong> on that line. Columns show the model projection in <strong>Proj</strong>, <strong>Market rating</strong> and <strong>Course rating</strong> (each on a <strong>1–100</strong> scale; 50 ≈ average), the book line, a <strong>Book</strong> mark (DraftKings logo), the price for that side, model probability at the line, and edge vs the book. The table loads sorted by <strong>Edge</strong> (highest first). <strong>Click a row</strong> to expand a detail strip: discrete outcome distribution (line vs over), projection snapshot, and model inputs. Tap the same row again to collapse. Markets follow the same weather and pricing adjustments as the rest of the app. Hover a row for mean and σ used on the model side of the line.
       </p>
       <section class="ev-help-section" aria-labelledby="tab-help-ou-sort-h">
         <h4 class="ev-devig-section-title" id="tab-help-ou-sort-h">Table</h4>
@@ -1110,6 +1110,15 @@
       <section class="ev-help-section" aria-labelledby="tab-help-ou-weather-h">
         <h4 class="ev-devig-section-title" id="tab-help-ou-weather-h">Weather</h4>
         <p class="text-muted ev-help-devig-lede">Dial in temp, wind, humidity, and <strong>Condition</strong> to match the forecast. <strong>Default</strong> condition resets the sliders to the baseline snapshot; then nudge again for a custom day. These controls update fair numbers together with <strong>Pricing</strong>.</p>
+      </section>
+      <section class="ev-help-section" aria-labelledby="tab-help-ou-ratings-h">
+        <h4 class="ev-devig-section-title" id="tab-help-ou-ratings-h">Market &amp; course ratings</h4>
+        <dl class="ev-help-dl">
+          <dt>Market rating (1–100)</dt>
+          <dd>How this golfer’s recent rounds on this stat compare to <strong>PGA Tour</strong> averages (same window as projections benchmarks). <strong>50</strong> ≈ tour average; higher = more birdies, GIR, etc. (or lower scores on round score).</dd>
+          <dt>Course rating (1–100)</dt>
+          <dd>How <strong>this week’s course</strong> compares to <strong>other PGA venues</strong> on the same stat (historical venue averages: GIR, birdies, pars, bogeys, fairways, round score). Same row’s market uses the active column (e.g. Birdies). <strong>50</strong> ≈ typical course; higher = this course tends to produce more of that stat than most courses.</dd>
+        </dl>
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-ou-pricing-h">
         <h4 class="ev-devig-section-title" id="tab-help-ou-pricing-h">Pricing</h4>
@@ -1366,6 +1375,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=198"></script>
+  <script src="app.js?v=199"></script>
 </body>
 </html>

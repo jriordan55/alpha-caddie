@@ -75,7 +75,9 @@ import {
 import { holeParsFromLiveHoleStatsPayload } from "./dg-live-hole-pars.mjs";
 import { normCourseNameKey, formatCourseLabelForDisplay } from "./course-name-key.mjs";
 import {
+  loadPgaTourCourseBenchmarks,
   loadPgaTourMarketBenchmarks,
+  serializePgaTourCourseBenchmarks,
   serializePgaTourMarketBenchmarks,
 } from "./pga-tour-market-benchmarks.mjs";
 import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
@@ -1790,10 +1792,9 @@ async function main() {
   const venueScoringPromise = loadVenueHistoricalScoring(histCsvPath, courseKeyHist, course_used);
   const pgaBenchMinYear = Math.round(num(process.env.GOLF_PGA_TOUR_BENCHMARK_MIN_YEAR, 2025)) || 2025;
   const pgaBenchMaxYear = Math.round(num(process.env.GOLF_PGA_TOUR_BENCHMARK_MAX_YEAR, 2026)) || 2026;
-  const pgaBenchPromise = loadPgaTourMarketBenchmarks(GOLF_MODEL_ROOT, {
-    minYear: pgaBenchMinYear,
-    maxYear: pgaBenchMaxYear,
-  });
+  const pgaBenchOpts = { minYear: pgaBenchMinYear, maxYear: pgaBenchMaxYear };
+  const pgaBenchPromise = loadPgaTourMarketBenchmarks(GOLF_MODEL_ROOT, pgaBenchOpts);
+  const pgaCourseBenchPromise = loadPgaTourCourseBenchmarks(GOLF_MODEL_ROOT, pgaBenchOpts);
 
   const pretStrokesByDg = new Map();
   for (const row of pretList) {
@@ -1845,12 +1846,14 @@ async function main() {
   const fieldMeanDrive =
     distSamples.length >= 8 ? distSamples.reduce((a, b) => a + b, 0) / distSamples.length : NaN;
 
-  const [histCalib, venueScoring, pgaTourBenchRaw] = await Promise.all([
+  const [histCalib, venueScoring, pgaTourBenchRaw, pgaTourCourseBenchRaw] = await Promise.all([
     histCalibPromise,
     venueScoringPromise,
     pgaBenchPromise,
+    pgaCourseBenchPromise,
   ]);
   const pga_tour_market_benchmarks = serializePgaTourMarketBenchmarks(pgaTourBenchRaw);
+  const pga_tour_course_benchmarks = serializePgaTourCourseBenchmarks(pgaTourCourseBenchRaw);
   if (!pgaTourBenchRaw?.meta?.skipped) {
     const b = pga_tour_market_benchmarks["Total score"];
     console.log(
@@ -2315,6 +2318,7 @@ async function main() {
         : null,
     },
     pga_tour_market_benchmarks,
+    pga_tour_course_benchmarks,
     historical_projection_calibration: {
       skipped: !!histCalib.skipped,
       csv_path: histCalib.csv_path || undefined,
