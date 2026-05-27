@@ -3008,15 +3008,22 @@ function ouMarketRatingFormatValue(market, value, unit) {
   return v.toFixed(1);
 }
 
-function ouMarketRatingTourAvgDisplay(market, bench) {
+/** Fairways/GIR as per-round counts in tooltips (not 0–1 rate). */
+function ouRatingAvgDisplay(market, value, bench) {
   const mKey = ouModelMarketKey(market) || "Total score";
-  if (!bench) return "—";
+  const v = num(value, NaN);
+  if (!Number.isFinite(v) || !bench) return "—";
   if (bench.unit === "rate") {
     const opp = ouMarketRatingOpportunities(mKey);
     if (!Number.isFinite(opp) || opp <= 0) return "—";
-    return (bench.mean * opp).toFixed(1);
+    const rate = v > 1.05 ? v / opp : v;
+    return (rate * opp).toFixed(1);
   }
-  return ouMarketRatingFormatValue(market, bench.mean, bench.unit);
+  return ouMarketRatingFormatValue(market, v, bench.unit);
+}
+
+function ouMarketRatingTourAvgDisplay(market, bench) {
+  return ouRatingAvgDisplay(market, bench?.mean, bench);
 }
 
 function ouMarketRatingTitle(market, playerAvg) {
@@ -3026,8 +3033,8 @@ function ouMarketRatingTitle(market, playerAvg) {
   if (!b || !Number.isFinite(playerAvg)) {
     return `Market rating: player avg vs PGA Tour avg (${yrs})`;
   }
-  const playerStr = ouMarketRatingFormatValue(market, playerAvg, b.unit === "rate" ? "count" : b.unit);
-  const tourStr = ouMarketRatingTourAvgDisplay(market, b);
+  const playerStr = ouRatingAvgDisplay(market, playerAvg, b);
+  const tourStr = ouRatingAvgDisplay(market, b.mean, b);
   return `Market rating (${label}: player avg ${playerStr} vs tour avg ${tourStr}, ${yrs})`;
 }
 
@@ -3041,8 +3048,8 @@ function ouCourseRatingTitle(market, venueVal) {
   if (!b || !Number.isFinite(venueVal)) {
     return `Course rating: venue avg vs all course averages (${yrs})`;
   }
-  const venueStr = ouMarketRatingFormatValue(market, venueVal, b.unit === "rate" ? "count" : b.unit);
-  const crossStr = ouMarketRatingTourAvgDisplay(market, b);
+  const venueStr = ouRatingAvgDisplay(market, venueVal, b);
+  const crossStr = ouRatingAvgDisplay(market, b.mean, b);
   return `Course rating (${label}: venue avg ${venueStr} vs all courses avg ${crossStr}${nSuffix}, ${yrs})`;
 }
 
