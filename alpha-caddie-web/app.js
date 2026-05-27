@@ -8457,15 +8457,44 @@ function courseFitArchetypeFitTotal(axisScores) {
   return (axisScores || []).reduce((a, b) => a + (Number.isFinite(b) ? b : 0), 0) * 2.4;
 }
 
-/** Field z-scores per radar axis (player skill) + combined course rating (venue fit) for the ratings table. */
-function courseFitArchetypeTableRows(rows, tour5, venue5) {
+/** Same course-fit adjustment as round_projections.R (sg × course_table coeffs). */
+function courseFitPlayerCourseFitRaw(row, ctRow) {
+  const m = mergedPlayerRowForDrivingFields(row);
+  if (!ctRow || typeof ctRow !== "object") return NaN;
+  let fit =
+    num(m.sg_putt, 0) * num(ctRow.putt_sg, 0) +
+    num(m.sg_arg, 0) * num(ctRow.arg_sg, 0) +
+    num(m.sg_app, 0) * num(ctRow.app_sg, 0) +
+    num(m.sg_ott, 0) * num(ctRow.ott_sg, 0);
+  const acc = playerDrivingAccuracyFrac(m);
+  if (Number.isFinite(acc) && Number.isFinite(num(ctRow.adj_driving_accuracy, NaN))) {
+    fit += 0.5 * (acc - num(ctRow.adj_driving_accuracy, 0));
+  }
+  const dist = playerDrivingDistanceYds(m);
+  if (Number.isFinite(dist) && Number.isFinite(num(ctRow.adj_driving_distance, NaN))) {
+    fit += 0.002 * (dist - num(ctRow.adj_driving_distance, 0));
+  }
+  return fit;
+}
+
+/** Field z-scores per radar axis (player skill) + combined course rating (R course-fit) for the ratings table. */
+function courseFitArchetypeTableRows(rows, tourCourseMean5, venue5, ctRow) {
   const nAx = COURSE_FIT_RADAR_SPOKE_LABELS.length;
   const raw = rows.map((r) => {
     const playerN = courseFitPlayerRadarVectorMerged(rows, r);
-    const axisScores = courseFitArchetypeAxisScores(tour5, venue5, playerN);
-    const archetypeRaw = axisScores.reduce((a, b) => a + b, 0);
+    const axisScores = courseFitArchetypeAxisScores(tourCourseMean5, venue5, playerN);
+    const fitRaw = courseFitPlayerCourseFitRaw(r, ctRow);
+    const archetypeRaw = Number.isFinite(fitRaw)
+      ? fitRaw
+      : axisScores.reduce((a, b) => a + b, 0);
     const skillRaw = playerN.map((v) => (Number.isFinite(v) ? v - 0.5 : NaN));
-    return { r, axisScores, skillRaw, archetypeRaw, archetypeFit: courseFitArchetypeFitTotal(axisScores) };
+    return {
+      r,
+      axisScores,
+      skillRaw,
+      archetypeRaw,
+      archetypeFit: Number.isFinite(fitRaw) ? fitRaw : courseFitArchetypeFitTotal(axisScores),
+    };
   });
   const skillStats = Array.from({ length: nAx }, (_, j) =>
     courseFitAxisStatsAcrossField(raw.map((x) => x.skillRaw[j])),
@@ -9135,16 +9164,68 @@ function courseTableScalarNormTo01(v, col) {
   return clamp((v - r.lo) / span, 0, 1);
 }
 
-function courseFitTour5FromCourseTable() {
-  const keys = courseFitRadarKeysFromTable();
-  const means = COURSE_TABLE_PAYLOAD?.means || {};
-  return keys.map((col) => courseTableScalarNormTo01(num(means[col], NaN), col));
+/** Iron-play / approach demand (GIR, narrow fairways, distance approach coeffs) — not raw arg subs. */
+function courseFitApproachDemandNorm(row) {
+  if (!row || typeof row !== "object") return 0.5;
+  const gir = courseTableScalarNormTo01(num(row.adj_gir, NaN), "adj_gir");
+  const narrow = 1 - courseTableScalarNormTo01(num(row.fw_width, NaN), "fw_width");
+  const app = courseTableScalarNormTo01(num(row.app_sg, NaN), "app_sg");
+  const g150 = courseTableScalarNormTo01(num(row.greater_150_sg, NaN), "greater_150_sg");
+  const l150 = courseTableScalarNormTo01(num(row.less_150_sg, NaN), "less_150_sg");
+  return clamp(0.48 * gir + 0.38 * narrow + 0.08 * app + 0.03 * g150 + 0.03 * l150, 0, 1);
 }
 
+/** Around-green demand from arg_sg only (fairway/rough/bunker splits inflate ARG on iron layouts). */
+function courseFitArgDemandNorm(row) {
+  if (!row || typeof row !== "object") return 0.5;
+  return courseTableScalarNormTo01(num(row.arg_sg, NaN), "arg_sg") * 0.75;
+}
+
+/** Six-axis venue profile for radar + fit (aligned with spoke labels). */
+function courseFitVenue5Profile(row) {
+  if (!row || typeof row !== "object") return null;
+  return [
+    courseTableScalarNormTo01(num(row.adj_driving_accuracy, NaN), "adj_driving_accuracy"),
+    courseTableScalarNormTo01(num(row.ott_sg, NaN), "ott_sg"),
+    courseFitApproachDemandNorm(row),
+    courseFitArgDemandNorm(row),
+    courseTableScalarNormTo01(num(row.putt_sg, NaN), "putt_sg"),
+    courseTableScalarNormTo01(num(row.adj_driving_distance, NaN), "adj_driving_distance"),
+  ];
+}
+
+/** Tour-average course profile (mean row in course_table) for stress vs typical PGA venue. */
+function courseFitTourCourseMean5() {
+  const means = COURSE_TABLE_PAYLOAD?.means || {};
+  if (!Object.keys(means).length) return COURSE_FIT_RADAR_SPOKE_LABELS.map(() => 0.5);
+  const pseudo = { ...means };
+  return courseFitVenue5Profile(pseudo) || COURSE_FIT_RADAR_SPOKE_LABELS.map(() => 0.5);
+}
+
+/** Current-field average on the same six axes as the radar (true "Field Avg" line). */
+function courseFitField5FromRows(rows) {
+  const pool = Array.isArray(rows) ? rows : [];
+  if (!pool.length) return COURSE_FIT_RADAR_SPOKE_LABELS.map(() => 0.5);
+  const sums = COURSE_FIT_RADAR_SPOKE_LABELS.map(() => 0);
+  let n = 0;
+  for (const r of pool) {
+    const p = courseFitPlayerRadarVectorMerged(pool, r);
+    if (!p.every(Number.isFinite)) continue;
+    for (let i = 0; i < sums.length; i++) sums[i] += p[i];
+    n++;
+  }
+  if (!n) return COURSE_FIT_RADAR_SPOKE_LABELS.map(() => 0.5);
+  return sums.map((s) => s / n);
+}
+
+/** @deprecated Use courseFitVenue5Profile + courseFitTourCourseMean5 */
+function courseFitTour5FromCourseTable() {
+  return courseFitTourCourseMean5();
+}
+
+/** @deprecated Use courseFitVenue5Profile */
 function courseFitVenue5FromCourseTableRow(row) {
-  const keys = courseFitRadarKeysFromTable();
-  if (!row) return courseFitTour5FromCourseTable();
-  return keys.map((col) => courseTableScalarNormTo01(num(row[col], NaN), col));
+  return courseFitVenue5Profile(row) || courseFitTourCourseMean5();
 }
 
 function courseFitMergedLoHiForCol(col, fieldSamples) {
@@ -9185,16 +9266,15 @@ function courseFitPlayerRadarVectorMerged(rows, prow) {
 
 function courseFitSimilarCoursesFromCourseTable(activeVk, venueRow) {
   const p = COURSE_TABLE_PAYLOAD;
-  const keys = courseFitRadarKeysFromTable();
   if (!p?.rows?.length || !venueRow) return [];
-  const ref = keys.map((k) => num(venueRow[k], NaN));
-  if (!ref.every(Number.isFinite)) return [];
+  const ref = courseFitVenue5Profile(venueRow);
+  if (!ref || !ref.every(Number.isFinite)) return [];
   const out = [];
   for (const row of p.rows) {
     const nk = row._normKey || normCourseNameKey(String(row.course || ""));
     if (!nk || nk === activeVk) continue;
-    const vec = keys.map((k) => num(row[k], NaN));
-    if (!vec.every(Number.isFinite)) continue;
+    const vec = courseFitVenue5Profile(row);
+    if (!vec || !vec.every(Number.isFinite)) continue;
     const d = Math.hypot(...vec.map((x, j) => x - ref[j]));
     out.push({ ck: nk, dist: d, sim: 1 / (1 + d) });
   }
@@ -9321,8 +9401,9 @@ function buildCourseFitTab() {
 
   const rows = courseFitPlayerPool();
   const ctRow = resolveCourseTableRowForNormKey(vk);
-  const tour5 = courseFitTour5FromCourseTable();
-  const venue5 = courseFitVenue5FromCourseTableRow(ctRow);
+  const tourCourseMean5 = courseFitTourCourseMean5();
+  const field5 = courseFitField5FromRows(rows);
+  const venue5 = courseFitVenue5Profile(ctRow) || tourCourseMean5;
   const similarRanked = courseFitSimilarCoursesFromCourseTable(vk, ctRow);
   const similarKeys = new Set(similarRanked.map((x) => x.ck));
   if (courseFitSimilarSelectedKey && !similarKeys.has(courseFitSimilarSelectedKey)) {
@@ -9332,7 +9413,7 @@ function buildCourseFitTab() {
     courseFitSimilarSelectedKey && COURSE_TABLE_PAYLOAD?.byNormKey?.[courseFitSimilarSelectedKey]
       ? COURSE_TABLE_PAYLOAD.byNormKey[courseFitSimilarSelectedKey]
       : null;
-  const similar5 = similarRow ? courseFitVenue5FromCourseTableRow(similarRow) : null;
+  const similar5 = similarRow ? courseFitVenue5Profile(similarRow) : null;
 
   const similarDisplayName = courseFitSimilarSelectedKey
     ? courseFitPrettyCourseKey(courseFitSimilarSelectedKey)
@@ -9388,7 +9469,7 @@ function buildCourseFitTab() {
     legEl.innerHTML = html;
   }
 
-  drawCourseFitRadar(canvas, tour5, venue5, player5, similar5);
+  drawCourseFitRadar(canvas, field5, venue5, player5, similar5);
 
   if (!courseFitRadarResizeBound && typeof window !== "undefined") {
     courseFitRadarResizeBound = true;
@@ -9429,7 +9510,7 @@ function buildCourseFitTab() {
   const search = String(document.getElementById("course-fit-search")?.value || "")
     .trim()
     .toLowerCase();
-  const archetypeRows = courseFitArchetypeTableRows(rows, tour5, venue5);
+  const archetypeRows = courseFitArchetypeTableRows(rows, tourCourseMean5, venue5, ctRow);
 
   tbody.innerHTML = "";
   if (theadHeading) {
@@ -9511,7 +9592,7 @@ function buildCourseFitTab() {
       const tdA = document.createElement("td");
       const archCell = formatCourseFitZCell(row.archetypeZ);
       tdA.className = archCell.cls;
-      tdA.title = `Composite course-fit score ${row.archetypeFit >= 0 ? "+" : ""}${row.archetypeFit.toFixed(2)} (rating scale, not strokes gained)`;
+      tdA.title = `Course-fit adjustment ${row.archetypeFit >= 0 ? "+" : ""}${row.archetypeFit.toFixed(2)} (sg × course_table, same as projections)`;
       tdA.textContent = archCell.text;
       tr.appendChild(tdA);
       for (const mk of marketKeys) {

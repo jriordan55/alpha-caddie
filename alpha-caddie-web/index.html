@@ -1337,11 +1337,11 @@
           <dt>Drv Acc, Off Tee, Approach, Arg, Putt, Distance</dt>
           <dd>
             One column per radar spoke. Each value is that player’s <strong>skill vs the field</strong> on that dimension (z-scored across everyone in the table).
-            <strong>0</strong> ≈ average; <strong>positive</strong> = stronger than the field on that spoke; <strong>negative</strong> = weaker. These are not strokes gained and are not weighted by this course’s emphasis — see <strong>Course rating</strong> for overall venue fit.
+            <strong>0</strong> ≈ average; <strong>positive</strong> = stronger than the field on that spoke; <strong>negative</strong> = weaker. These are not strokes gained. See <strong>Course rating</strong> for overall fit to this venue (same adjustment as round projections).
           </dd>
           <dt>Course rating</dt>
           <dd>
-            <strong>Overall</strong> course-fit rating: combines all six spoke ratings into one number (also z-scored vs the field). Higher = stronger match to this venue’s profile. The table loads sorted by this column (best fits first). Hover a cell for the underlying composite score (still a rating, not SG).
+            <strong>Overall</strong> fit from <code>course_table</code> (strokes gained × course coefficients, plus driving), z-scored vs the field. Higher = better expected fit. On the radar, the green line is this venue’s profile (iron play emphasizes GIR and narrow fairways on Approach); dashed grey is this week’s field average.
           </dd>
           <dt>Winner, Top 5, Top 10, Top 20</dt>
           <dd>Best available sportsbook outright prices for that player (separate from the rating columns).</dd>
@@ -1366,6 +1366,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=196"></script>
+  <script src="app.js?v=197"></script>
 </body>
 </html>
