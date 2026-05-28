@@ -3088,8 +3088,8 @@ function updateOuSyntheticOddsNoteVisibility() {
     el.hidden = false;
     el.textContent = `DraftKings lines only for R${rnd} — rows without DK odds are hidden.`;
   } else {
-    el.hidden = false;
-    el.textContent = `No DraftKings odds for R${rnd}. Run npm run update:dk-round-projections or push:live.`;
+    el.hidden = true;
+    el.textContent = "";
   }
 }
 
@@ -5650,7 +5650,7 @@ function buildOuTable() {
     const dkN = draftKingsRoundGolferCount();
     const hasDk = draftKingsRoundPropOddsAvailable();
     td.textContent = !hasDk
-      ? `No DraftKings odds for R${rnd}. Run npm run update:dk-round-projections or push:live.`
+      ? ""
       : dkN > 0
         ? `No DraftKings lines for this golfer, market, or filter. (${dkN} golfers have DK lines for R${rnd}.)`
         : "No DraftKings lines match the current filter.";
