@@ -138,7 +138,7 @@
                 <option value="sg_t2g">Tee to green</option>
               </select>
             </label>
-            <span id="ou-synthetic-odds-note" class="ou-synthetic-odds-note text-muted">Odds are synthetic until DraftKings odds open.</span>
+            <span id="ou-synthetic-odds-note" class="ou-synthetic-odds-note text-muted">DraftKings lines only — rows without DK odds are hidden.</span>
           </div>
         </div>
       </div>
@@ -1105,7 +1105,7 @@
       </p>
       <section class="ev-help-section" aria-labelledby="tab-help-ou-sort-h">
         <h4 class="ev-devig-section-title" id="tab-help-ou-sort-h">Table</h4>
-        <p class="text-muted ev-help-devig-lede">Tap a column header to sort. On load, rows are ordered by <strong>Edge</strong> (highest first). When two rows tie on the active sort column, order falls back to golfer, then market, then Over before Under. Use <strong>Golfer</strong> and <strong>Market</strong> to limit rows. Markets follow DraftKings-tagged props when present; otherwise merged CSV or model fallback lines in <code>projections.json</code>. Each golfer–market pair still shows Over and Under. Changing <strong>Round</strong> or either filter collapses any expanded row.</p>
+        <p class="text-muted ev-help-devig-lede">Tap a column header to sort. On load, rows are ordered by <strong>Edge</strong> (highest first). When two rows tie on the active sort column, order falls back to golfer, then market, then Over before Under. Use <strong>Golfer</strong> and <strong>Market</strong> to limit rows. Only <strong>DraftKings</strong> lines and odds for the selected round are shown; golfers without a DK line for that market are omitted. Each golfer–market pair with DK odds shows Over and Under. Changing <strong>Round</strong> or either filter collapses any expanded row.</p>
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-ou-weather-h">
         <h4 class="ev-devig-section-title" id="tab-help-ou-weather-h">Weather</h4>
@@ -1375,6 +1375,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=202"></script>
+  <script src="app.js?v=203"></script>
 </body>
 </html>
