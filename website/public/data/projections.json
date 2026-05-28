@@ -8,7 +8,7 @@
   "datagolf_field_current_round": 4,
   "display_round": 4,
   "display_round_label": "R4 — Sunday (auto, America/New_York)",
-  "updated_at": "2026-05-28T03:54:26Z",
+  "updated_at": "2026-05-28T08:05:00Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -39450,7 +39450,7 @@
       "player_name": "Bradley, Keegan",
       "line": 69.5,
       "over_odds": -102,
-      "under_odds": -132,
+      "under_odds": -140,
       "market": "Total Score",
       "round_num": 1,
       "dg_id": 13872,
@@ -39490,7 +39490,7 @@
       "player_name": "Matsuyama, Hideki",
       "line": 69.5,
       "over_odds": 106,
-      "under_odds": -144,
+      "under_odds": -150,
       "market": "Total Score",
       "round_num": 1,
       "dg_id": 13562,
@@ -65863,7 +65863,7 @@
       "round_num": 1
     }
   },
-  "book_odds_refreshed_at": "2026-05-28T03:54:26Z",
+  "book_odds_refreshed_at": "2026-05-28T08:05:00Z",
   "datagolf_live_current_round": 4,
   "meta": {
     "datagolf_field_date_start": "2026-05-28",
@@ -65893,5 +65893,5 @@
     "projection_counts_weather_baked": true,
     "projection_counts_weather_baked_at": "2026-05-28T00:31:55Z"
   },
-  "dk_round_props_refreshed_at": "2026-05-28T03:54:26Z"
+  "dk_round_props_refreshed_at": "2026-05-28T08:05:00Z"
 }
