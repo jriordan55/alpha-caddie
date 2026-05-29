@@ -2039,6 +2039,8 @@ async function main() {
       courseKeyHist,
       new Date().getFullYear(),
       course_par_18,
+      venueScoring?.venueAvgBirdies,
+      venueScoring?.venueAvgBogeys,
     );
     if (withinEventCountingMap.size) {
       console.log(
@@ -2197,20 +2199,21 @@ async function main() {
       if (r >= 2 && withinEventCountingMap.size) {
         const priorByStat = buildPriorByStatForPlayer(withinEventCountingMap, row.dg_id, r);
         if (priorByStat) {
+          const skillBeforeBlend = {
+            eagles: st.eagles,
+            birdies: st.birdies,
+            pars: st.pars,
+            bogeys: st.bogeys,
+            doubles: st.doubles,
+            gir: st.gir,
+            fairways: st.fairways,
+            putts: st.putts,
+          };
           const blended = blendTowardWithinEventActuals(
-            {
-              eagles: st.eagles,
-              birdies: st.birdies,
-              pars: st.pars,
-              bogeys: st.bogeys,
-              doubles: st.doubles,
-              gir: st.gir,
-              fairways: st.fairways,
-              putts: st.putts,
-            },
+            { ...skillBeforeBlend },
             priorByStat,
             r,
-            { playerRow: row },
+            { playerRow: row, skillCounts: skillBeforeBlend },
           );
           st.eagles = blended.eagles;
           st.birdies = blended.birdies;

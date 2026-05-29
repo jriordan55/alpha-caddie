@@ -660,10 +660,12 @@ const WITHIN_EVENT_FORM_BLEND_KEYS = ["birdies", "bogeys"];
 const WITHIN_EVENT_GIR_FW_BLEND_KEYS = ["gir", "fairways", "putts"];
 /** Most recent prior round gets ~1.4× weight vs the one before (book-style “last round matters most”). */
 const WITHIN_EVENT_COUNT_RECENCY_DECAY = 0.72;
-const WITHIN_EVENT_COUNT_BLEND_BASE = 0.5;
-const WITHIN_EVENT_COUNT_BLEND_PER_ROUND = 0.15;
-const WITHIN_EVENT_COUNT_BLEND_CAP = 0.82;
+const WITHIN_EVENT_COUNT_BLEND_BASE = 0.38;
+const WITHIN_EVENT_COUNT_BLEND_PER_ROUND = 0.14;
+const WITHIN_EVENT_COUNT_BLEND_CAP = 0.68;
 const WITHIN_EVENT_BOGEY_BLEND_SCALE = 1;
+const WITHIN_EVENT_SKILL_ANCHOR_BASE = 0.1;
+const WITHIN_EVENT_SKILL_ANCHOR_MU_SCALE = 0.04;
 const WITHIN_EVENT_ALIGN_STRENGTH = 0.96;
 const WITHIN_EVENT_PAR_SPREAD_STRENGTH = 0.55;
 const FIELD_DAY_COUNTING_LIFT_FRAC = 0.45;
@@ -726,19 +728,89 @@ export function residualParsFromHoleCounts(counts) {
   return Math.max(0.12, 18 - e - d - b - bg);
 }
 
+/** Trust skill/venue base over one-round actuals when tier and deviation disagree. */
+export function withinEventSkillTrustFactor(playerRow) {
+  const mu = num(playerRow?.mu_sg, 0);
+  return clamp(0.32 + 0.14 * Math.max(0, mu), 0.32, 0.78);
+}
+
+function adjustWithinEventBlendWeight(w, priorAvg, skillBase, playerRow, statKey) {
+  if (!Number.isFinite(priorAvg) || !Number.isFinite(skillBase)) return w;
+  const dev = priorAvg - skillBase;
+  const trust = withinEventSkillTrustFactor(playerRow);
+  const mu = num(playerRow?.mu_sg, 0);
+  if (mu >= 0.35 && dev < -0.75) {
+    w *= clamp(1 - trust * Math.min(1, (-dev - 0.5) / 2.5), 0.18, 1);
+  }
+  if (mu < 0.25 && dev > 0.75) {
+    w *= clamp(1 - (1 - trust) * Math.min(1, (dev - 0.5) / 2.5), 0.18, 1);
+  }
+  if (statKey === "bogeys" && mu >= 0.5 && dev < -0.5) {
+    w *= clamp(1 - trust * 0.45, 0.35, 1);
+  }
+  return w;
+}
+
+/** Live rows with pars≈18 but score≠par, or hole mix far from card, are not usable as-is. */
+export function liveCountingUntrustworthy(counts, coursePar18) {
+  const cp = num(coursePar18, NaN);
+  const rs = num(counts.round_score ?? counts.score, NaN);
+  if (!Number.isFinite(cp) || !Number.isFinite(rs)) return false;
+  const stp = rs - cp;
+  const bird = num(counts.birdies, NaN);
+  const par = num(counts.pars, NaN);
+  const bog = num(counts.bogeys ?? counts.bogies, NaN);
+  const e = num(counts.eagles ?? counts.eagles_or_better, 0);
+  const d = num(counts.doubles ?? counts.doubles_or_worse, 0);
+  if (Number.isFinite(par) && par >= 17.5 && Math.abs(stp) > 0.5) return true;
+  if (Number.isFinite(bird) && bird <= 0.01 && stp < -0.5) return true;
+  const hat = -(bird || 0) - 2 * e + (bog || 0) + 2 * d;
+  return Math.abs(hat - stp) > 1.25;
+}
+
+/** Score-only bird/bog split when live hole counts are missing or inconsistent. */
+export function inferHoleCountsFromScoreSplit(stp, venueBirdies = 2.88, venueBogeys = 2.93) {
+  const vBird = num(venueBirdies, 2.88);
+  const vBog = num(venueBogeys, 2.93);
+  let bird = 0;
+  let bog = 0;
+  if (stp <= 0) {
+    bird = Math.max(0, Math.min(7, vBird + -stp * 0.85));
+    bog = Math.max(0, stp + bird);
+  } else {
+    bog = Math.max(0, Math.min(8, vBog + stp * 0.72));
+    bird = Math.max(0, Math.min(6, vBird * 0.35 + Math.max(0, stp - bog) * 0.4));
+  }
+  bird = Math.round(bird * 100) / 100;
+  bog = Math.round(bog * 100) / 100;
+  return {
+    birdies: bird,
+    bogeys: bog,
+    eagles: 0,
+    doubles: 0,
+    pars: Math.max(0.12, Math.round((18 - bird - bog) * 100) / 100),
+  };
+}
+
 /**
  * Live DG stats often report bogeys=0 when missing. Infer from score + birdies when inconsistent.
  * stp = −bird − 2·eagle + bog + 2·double  →  bog = stp + bird + 2·eagle − 2·double
  */
-export function reconcileHoleCountsFromScore(counts, coursePar18) {
+export function reconcileHoleCountsFromScore(counts, coursePar18, venueBirdies, venueBogeys) {
   if (!counts || typeof counts !== "object") return counts;
   const cp = num(coursePar18, NaN);
   const rs = num(counts.round_score ?? counts.score, NaN);
   if (!Number.isFinite(cp) || !Number.isFinite(rs)) return counts;
   const stp = rs - cp;
+  const vBird = num(venueBirdies, 2.88);
+  const vBog = num(venueBogeys, 2.93);
+  if (liveCountingUntrustworthy(counts, cp)) {
+    const inf = inferHoleCountsFromScoreSplit(stp, vBird, vBog);
+    return { ...counts, ...inf, round_score: rs };
+  }
   const e = Math.max(0, num(counts.eagles ?? counts.eagles_or_better, 0));
   const d = Math.max(0, num(counts.doubles ?? counts.doubles_or_worse, 0));
-  const bird = num(counts.birdies, NaN);
+  let bird = num(counts.birdies, NaN);
   if (!Number.isFinite(bird)) return counts;
 
   let bog = num(counts.bogeys ?? counts.bogies, NaN);
@@ -774,7 +846,15 @@ export function fieldCountingMeansFromEventContext(ctx, minPlayers = 28) {
  * Per-player prior-round counting actuals this week from player_round_history.json.
  * @returns {Map<number, Map<number, { birdies?: number, bogeys?: number, gir?: number, round_score?: number }>>}
  */
-export function loadWithinEventCountingActualsFromHistoryJson(jsonPath, eventName, courseKeyOpt, yearOpt, coursePar18) {
+export function loadWithinEventCountingActualsFromHistoryJson(
+  jsonPath,
+  eventName,
+  courseKeyOpt,
+  yearOpt,
+  coursePar18,
+  venueBirdies,
+  venueBogeys,
+) {
   /** @type {Map<number, Map<number, object>>} */
   const out = new Map();
   if (!jsonPath || !existsSync(jsonPath) || !eventName) return out;
@@ -821,7 +901,12 @@ export function loadWithinEventCountingActualsFromHistoryJson(jsonPath, eventNam
         eagles: num(r.eagles_or_better, NaN),
         doubles: num(r.doubles_or_worse, NaN),
       };
-      rec = reconcileHoleCountsFromScore(rec, cp);
+      rec = reconcileHoleCountsFromScore(
+        rec,
+        cp,
+        num(venueBirdies, 2.88),
+        num(venueBogeys, 2.93),
+      );
       if (!Number.isFinite(rec.birdies) && !Number.isFinite(rec.bogeys) && !Number.isFinite(rec.gir)) continue;
       let per = out.get(dg);
       if (!per) {
@@ -869,16 +954,19 @@ export function blendTowardWithinEventActuals(skillCounts, priorByStat, targetRo
     if (Array.isArray(arr) && arr.length > nRounds) nRounds = arr.length;
   }
   const out = { ...(skillCounts || {}) };
+  const skill = opts?.skillCounts || {};
   if (!nRounds) return out;
-  const wBird = withinEventCountingBlendWeight(nRounds, opts?.playerRow);
-  const wBog = wBird * WITHIN_EVENT_BOGEY_BLEND_SCALE;
+  let wBird = withinEventCountingBlendWeight(nRounds, opts?.playerRow);
+  const wBogBase = wBird * WITHIN_EVENT_BOGEY_BLEND_SCALE;
   for (const k of WITHIN_EVENT_FORM_BLEND_KEYS) {
     const arr = priorByStat[k];
     if (!Array.isArray(arr) || !arr.length) continue;
     const avg = recencyWeightedMeanFromArr(arr);
     const base = num(out[k], NaN);
+    const skillBase = num(skill[k], base);
     if (!Number.isFinite(base) || !Number.isFinite(avg)) continue;
-    const w = k === "bogeys" ? wBog : wBird;
+    let w = k === "bogeys" ? wBogBase : wBird;
+    w = adjustWithinEventBlendWeight(w, avg, skillBase, opts?.playerRow, k);
     out[k] = (1 - w) * base + w * avg;
   }
   for (const k of WITHIN_EVENT_GIR_FW_BLEND_KEYS) {
@@ -887,8 +975,22 @@ export function blendTowardWithinEventActuals(skillCounts, priorByStat, targetRo
     const avg = recencyWeightedMeanFromArr(arr);
     const base = num(out[k], NaN);
     if (!Number.isFinite(base) || !Number.isFinite(avg)) continue;
-    const w = Math.min(0.55, wBird * 0.65);
+    const w = Math.min(0.48, wBird * 0.58);
     out[k] = (1 - w) * base + w * avg;
+  }
+  const mu = num(opts?.playerRow?.mu_sg, 0);
+  const anchorW = Math.min(
+    0.42,
+    WITHIN_EVENT_SKILL_ANCHOR_BASE + WITHIN_EVENT_SKILL_ANCHOR_MU_SCALE * Math.max(0, mu),
+  );
+  if (anchorW > 0) {
+    for (const k of ["birdies", "bogeys", "gir"]) {
+      const sk = num(skill[k], NaN);
+      const cur = num(out[k], NaN);
+      if (Number.isFinite(sk) && Number.isFinite(cur)) {
+        out[k] = (1 - anchorW) * cur + anchorW * sk;
+      }
+    }
   }
   const pars = residualParsFromHoleCounts(out);
   if (Number.isFinite(pars)) out.pars = pars;
