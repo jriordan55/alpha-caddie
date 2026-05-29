@@ -106,7 +106,7 @@ export async function loadEventRoundContextFromHistoricalCsv(csvPath, eventName,
         if (!ckRow || ckRow !== ckWant) return;
       }
       const yr = parseInt(row.year, 10);
-      if (Number.isFinite(yr) && (yr < cy - 1 || yr > cy + 1)) return;
+      if (Number.isFinite(yr) && yr !== cy) return;
 
       const rnd = Math.round(num(row.round_num, NaN));
       if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) return;
@@ -115,16 +115,47 @@ export async function loadEventRoundContextFromHistoricalCsv(csvPath, eventName,
       const rs = num(row.round_score, NaN);
       if (Number.isFinite(cp) && Number.isFinite(rs)) {
         const stp = rs - cp;
-        const b = ctx.byRound.get(rnd) || { n: 0, sumStp: 0 };
+        const b = ctx.byRound.get(rnd) || {
+          n: 0,
+          sumStp: 0,
+          sumBird: 0,
+          nBird: 0,
+          sumBog: 0,
+          nBog: 0,
+          sumGir: 0,
+          nGir: 0,
+        };
         b.n++;
         b.sumStp += stp;
+        const bird = num(row.birdies, NaN);
+        if (Number.isFinite(bird) && bird >= 0 && bird <= 18) {
+          b.sumBird += bird;
+          b.nBird++;
+        }
+        const bog = num(row.bogies, NaN);
+        if (Number.isFinite(bog) && bog >= 0 && bog <= 18) {
+          b.sumBog += bog;
+          b.nBog++;
+        }
+        const gir = girOrFwToCount(row.gir, 18);
+        if (Number.isFinite(gir)) {
+          b.sumGir += gir;
+          b.nGir++;
+        }
         ctx.byRound.set(rnd, b);
       }
 
       const dg = Math.round(num(row.dg_id, NaN));
       const sg = num(row.sg_total, NaN);
       if (Number.isFinite(dg) && Number.isFinite(sg)) {
-        ctx.playerRounds.push({ dg_id: dg, round: rnd, sg_total: sg });
+        const pr = { dg_id: dg, round: rnd, sg_total: sg };
+        const bird = num(row.birdies, NaN);
+        const bog = num(row.bogies, NaN);
+        const gir = girOrFwToCount(row.gir, 18);
+        if (Number.isFinite(bird)) pr.birdies = bird;
+        if (Number.isFinite(bog)) pr.bogeys = bog;
+        if (Number.isFinite(gir)) pr.gir = gir;
+        ctx.playerRounds.push(pr);
       }
     });
     parser.on("end", resolve);
@@ -683,6 +714,180 @@ export function fieldDayCountingLift(fieldAvg, venueAvg, frac = FIELD_DAY_COUNTI
   const v = num(venueAvg, NaN);
   if (!Number.isFinite(f) || !Number.isFinite(v)) return 0;
   return frac * (f - v);
+}
+
+/** Pars as residual hole count — no score-to-par forcing. */
+export function residualParsFromHoleCounts(counts) {
+  const e = Math.max(0, num(counts?.eagles, 0));
+  const d = Math.max(0, num(counts?.doubles, 0));
+  const b = num(counts?.birdies, NaN);
+  const bg = num(counts?.bogeys, NaN);
+  if (!Number.isFinite(b) || !Number.isFinite(bg)) return num(counts?.pars, NaN);
+  return Math.max(0.12, 18 - e - d - b - bg);
+}
+
+/**
+ * This-week field birdie/bogey/GIR means from event-scoped CSV context (not all-time venue R1/R2).
+ * @param {ReturnType<typeof loadEventRoundContextFromHistoricalCsv>} ctx
+ */
+export function fieldCountingMeansFromEventContext(ctx, minPlayers = 28) {
+  /** @type {Record<string, Record<number, number>>} */
+  const out = { birdies: {}, bogeys: {}, gir: {} };
+  if (!ctx?.byRound) return out;
+  for (let rnd = 1; rnd <= 3; rnd++) {
+    const b = ctx.byRound.get(rnd);
+    if (!b) continue;
+    if (b.nBird >= minPlayers) out.birdies[rnd] = Math.round((b.sumBird / b.nBird) * 100) / 100;
+    if (b.nBog >= minPlayers) out.bogeys[rnd] = Math.round((b.sumBog / b.nBog) * 100) / 100;
+    if (b.nGir >= minPlayers) out.gir[rnd] = Math.round((b.sumGir / b.nGir) * 100) / 100;
+  }
+  return out;
+}
+
+/**
+ * Per-player prior-round counting actuals this week from player_round_history.json.
+ * @returns {Map<number, Map<number, { birdies?: number, bogeys?: number, gir?: number, round_score?: number }>>}
+ */
+export function loadWithinEventCountingActualsFromHistoryJson(jsonPath, eventName, courseKeyOpt, yearOpt) {
+  /** @type {Map<number, Map<number, object>>} */
+  const out = new Map();
+  if (!jsonPath || !existsSync(jsonPath) || !eventName) return out;
+  const cy = Number.isFinite(num(yearOpt, NaN)) ? Math.round(num(yearOpt, NaN)) : new Date().getFullYear();
+  const ckWant = courseKeyOpt ? normCourseNameKey(courseKeyOpt) : "";
+  let j;
+  try {
+    j = JSON.parse(readFileSync(jsonPath, "utf8"));
+  } catch {
+    return out;
+  }
+  const byDg = j?.byDgId;
+  if (!byDg || typeof byDg !== "object") return out;
+
+  function rowPriority(row) {
+    let p = 0;
+    if (row._from_live_tournament_stats) p += 1_000_000;
+    if (row._from_live_in_play) p += 500_000;
+    return p + Math.round(num(row.sortKey, 0));
+  }
+
+  for (const bucket of Object.values(byDg)) {
+    if (!bucket || !Array.isArray(bucket.rounds)) continue;
+    const dg = Math.round(num(bucket.dg_id, NaN));
+    if (!Number.isFinite(dg)) continue;
+    for (const r of bucket.rounds) {
+      if (!r || typeof r !== "object") continue;
+      if (!eventsLikelySame(eventName, String(r.event_name || "").trim())) continue;
+      const yr = Math.round(num(r.year, NaN));
+      if (Number.isFinite(yr) && yr !== cy) continue;
+      if (ckWant) {
+        const ckRow = normCourseNameKey(r.course_name || r.course || "");
+        if (ckRow && ckRow !== ckWant) continue;
+      }
+      const rnd = Math.round(num(r.round_num ?? r.round, NaN));
+      if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
+      const rec = {};
+      const bird = num(r.birdies, NaN);
+      const bog = num(r.bogeys ?? r.bogies, NaN);
+      const gir = girOrFwToCount(r.gir, 18);
+      const rs = num(r.round_score ?? r.score, NaN);
+      if (Number.isFinite(bird)) rec.birdies = bird;
+      if (Number.isFinite(bog)) rec.bogeys = bog;
+      if (Number.isFinite(gir)) rec.gir = gir;
+      if (Number.isFinite(rs)) rec.round_score = rs;
+      if (!Object.keys(rec).length) continue;
+      let per = out.get(dg);
+      if (!per) {
+        per = new Map();
+        out.set(dg, per);
+      }
+      const pri = rowPriority(r);
+      const prev = per.get(rnd);
+      if (prev && num(prev._priority, -1) >= pri) continue;
+      rec._priority = pri;
+      per.set(rnd, rec);
+    }
+  }
+  return out;
+}
+
+/** Build `{ birdies: [r1,…], bogeys: […], … }` arrays for rounds before `targetRound`. */
+export function buildPriorByStatForPlayer(withinMap, dgId, targetRound) {
+  const per = withinMap?.get?.(Math.round(num(dgId, NaN)));
+  const tr = Math.round(num(targetRound, NaN));
+  if (!per || !Number.isFinite(tr) || tr < 2) return null;
+  /** @type {Record<string, number[]>} */
+  const out = { birdies: [], bogeys: [], gir: [], fairways: [], putts: [] };
+  for (let rn = 1; rn < tr; rn++) {
+    const rec = per.get(rn);
+    if (!rec) continue;
+    for (const k of Object.keys(out)) {
+      const v = num(rec[k], NaN);
+      if (Number.isFinite(v)) out[k].push(v);
+    }
+  }
+  const hasAny = Object.values(out).some((arr) => arr.length > 0);
+  return hasAny ? out : null;
+}
+
+/**
+ * Blend export hole counts toward this-week prior-round actuals — no softAlign / pars spreading.
+ */
+export function blendTowardWithinEventActuals(skillCounts, priorByStat, targetRound, opts = {}) {
+  const tr = Math.round(num(targetRound, NaN));
+  if (tr < 2 || !priorByStat || typeof priorByStat !== "object") return skillCounts || {};
+  let nRounds = 0;
+  for (const k of WITHIN_EVENT_FORM_BLEND_KEYS) {
+    const arr = priorByStat[k];
+    if (Array.isArray(arr) && arr.length > nRounds) nRounds = arr.length;
+  }
+  const out = { ...(skillCounts || {}) };
+  if (!nRounds) return out;
+  const wBird = withinEventCountingBlendWeight(nRounds, opts?.playerRow);
+  const wBog = wBird * WITHIN_EVENT_BOGEY_BLEND_SCALE;
+  for (const k of WITHIN_EVENT_FORM_BLEND_KEYS) {
+    const arr = priorByStat[k];
+    if (!Array.isArray(arr) || !arr.length) continue;
+    const avg = recencyWeightedMeanFromArr(arr);
+    const base = num(out[k], NaN);
+    if (!Number.isFinite(base) || !Number.isFinite(avg)) continue;
+    const w = k === "bogeys" ? wBog : wBird;
+    out[k] = (1 - w) * base + w * avg;
+  }
+  for (const k of WITHIN_EVENT_GIR_FW_BLEND_KEYS) {
+    const arr = priorByStat[k];
+    if (!Array.isArray(arr) || !arr.length) continue;
+    const avg = recencyWeightedMeanFromArr(arr);
+    const base = num(out[k], NaN);
+    if (!Number.isFinite(base) || !Number.isFinite(avg)) continue;
+    const w = Math.min(0.55, wBird * 0.65);
+    out[k] = (1 - w) * base + w * avg;
+  }
+  const pars = residualParsFromHoleCounts(out);
+  if (Number.isFinite(pars)) out.pars = pars;
+  return out;
+}
+
+/** Field-day lift on bird/bog/GIR without score-to-par hole-count forcing. */
+export function applyFieldDayCountingLiftNatural(st, targetRound, fieldMeans, venueScoring) {
+  if (!st || typeof st !== "object") return st;
+  const tr = Math.round(num(targetRound, NaN));
+  if (tr < 2 || !fieldMeans || !venueScoring) return st;
+  const rn = tr - 1;
+  const birdLift = fieldDayCountingLift(fieldMeans.birdies?.[rn], venueScoring.venueAvgBirdies);
+  const bogLift = fieldDayCountingLift(fieldMeans.bogeys?.[rn], venueScoring.venueAvgBogeys);
+  const girLift = fieldDayCountingLift(fieldMeans.gir?.[rn], venueScoring.venueAvgGir);
+  const fwLift = fieldDayCountingLift(fieldMeans.fairways?.[rn], venueScoring.venueAvgFairways);
+  if (Number.isFinite(birdLift) && birdLift !== 0) st.birdies = Math.max(0.15, num(st.birdies, 0) + birdLift);
+  if (Number.isFinite(bogLift) && bogLift !== 0) st.bogeys = Math.max(0.15, num(st.bogeys, 0) + bogLift);
+  if (Number.isFinite(girLift) && girLift !== 0 && Number.isFinite(st.gir)) {
+    st.gir = Math.max(6, Math.min(16, st.gir + girLift));
+  }
+  if (Number.isFinite(fwLift) && fwLift !== 0 && Number.isFinite(st.fairways)) {
+    st.fairways = Math.max(2, st.fairways + fwLift);
+  }
+  const pars = residualParsFromHoleCounts(st);
+  if (Number.isFinite(pars)) st.pars = pars;
+  return st;
 }
 
 /** Blend skill/venue hole counts toward prior-round actuals this week (R2+). */

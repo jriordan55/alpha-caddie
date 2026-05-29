@@ -64,12 +64,18 @@ import {
 import { fetchDataGolfOutrightsApi } from "./datagolf-outrights-api.mjs";
 import {
   applyVenueCourseFitToMu,
+  applyFieldDayCountingLiftNatural,
   blendedPriorRoundCourseExcess,
+  blendTowardWithinEventActuals,
   augmentEventContextWithInPlayRounds,
+  buildPriorByStatForPlayer,
   buildWithinEventFormMap,
   courseDifficultyStrokeShift,
+  fieldCountingMeansFromEventContext,
+  fieldCountingMeansFromWithinEventMap,
   loadEventRoundContextFromHistoricalCsv,
   loadVenueHistoricalScoring,
+  loadWithinEventCountingActualsFromHistoryJson,
   resolveProjectionCounts,
   resolveProjectionScoreToPar,
 } from "./course-round-adjustments.mjs";
@@ -2024,6 +2030,31 @@ async function main() {
           formCap,
         )
       : new Map();
+  let withinEventCountingMap = new Map();
+  const historyJsonPath = join(ROOT, "player_round_history.json");
+  if (event_name && existsSync(historyJsonPath)) {
+    withinEventCountingMap = loadWithinEventCountingActualsFromHistoryJson(
+      historyJsonPath,
+      event_name,
+      courseKeyHist,
+      new Date().getFullYear(),
+    );
+    if (withinEventCountingMap.size) {
+      console.log(
+        `[fetch-dg] Within-event counting actuals: ${withinEventCountingMap.size} player(s) from player_round_history.json`,
+      );
+    }
+  }
+  const fieldCountingFromEvent = histEventCtx ? fieldCountingMeansFromEventContext(histEventCtx) : null;
+  const fieldCountingFromHistory =
+    withinEventCountingMap.size > 0
+      ? fieldCountingMeansFromWithinEventMap(withinEventCountingMap)
+      : null;
+  const fieldCountingMeans = fieldCountingFromEvent?.birdies?.[1]
+    ? fieldCountingFromEvent
+    : fieldCountingFromHistory?.birdies?.[1]
+      ? fieldCountingFromHistory
+      : fieldCountingFromEvent || fieldCountingFromHistory;
   const priorCourseExcessByRound = {};
   const priorCourseStrokeShiftByRound = {};
   if (applyPriorRoundAdj) {
@@ -2162,6 +2193,37 @@ async function main() {
       st.gir = venueCounts.gir;
       st.fairways = venueCounts.fairways;
       st.putts = venueCounts.putts;
+      if (r >= 2 && withinEventCountingMap.size) {
+        const priorByStat = buildPriorByStatForPlayer(withinEventCountingMap, row.dg_id, r);
+        if (priorByStat) {
+          const blended = blendTowardWithinEventActuals(
+            {
+              eagles: st.eagles,
+              birdies: st.birdies,
+              pars: st.pars,
+              bogeys: st.bogeys,
+              doubles: st.doubles,
+              gir: st.gir,
+              fairways: st.fairways,
+              putts: st.putts,
+            },
+            priorByStat,
+            r,
+            { playerRow: row },
+          );
+          st.eagles = blended.eagles;
+          st.birdies = blended.birdies;
+          st.pars = blended.pars;
+          st.bogeys = blended.bogeys;
+          st.doubles = blended.doubles;
+          st.gir = blended.gir;
+          st.fairways = blended.fairways;
+          st.putts = blended.putts;
+        }
+      }
+      if (r >= 2 && fieldCountingMeans) {
+        applyFieldDayCountingLiftNatural(st, r, fieldCountingMeans, venueScoring);
+      }
       const pl = {
         dg_id: row.dg_id,
         player_name: row.player_name,
@@ -2304,6 +2366,7 @@ async function main() {
       within_event_form_cap: formCap,
       within_event_form_runtime_carry: formRuntimeK,
       within_event_form_runtime_cap: formRuntimeCap,
+      within_event_counting_from_actuals: withinEventCountingMap.size > 0,
     },
     projection_course_basis: {
       fairway_holes_modeled: fairwayHolesThisCourse,
@@ -2322,6 +2385,17 @@ async function main() {
           .filter(([, v]) => v?.n >= 25 && Number.isFinite(v.avgScore))
           .map(([rnd, v]) => [String(rnd), Math.round(v.avgScore * 100) / 100]),
       ),
+      event_week_field_avg_score_by_round: histEventCtx?.byRound
+        ? Object.fromEntries(
+            [...histEventCtx.byRound.entries()]
+              .filter(([, v]) => v?.n >= 25 && v.n > 0 && Number.isFinite(v.sumStp))
+              .map(([rnd, v]) => [
+                String(rnd),
+                Math.round((course_par_18 + v.sumStp / v.n) * 100) / 100,
+              ]),
+          )
+        : {},
+      field_counting_means_by_round: fieldCountingMeans || null,
       venue_avg_birdies: Number.isFinite(venueScoring.venueAvgBirdies)
         ? Math.round(venueScoring.venueAvgBirdies * 100) / 100
         : null,
