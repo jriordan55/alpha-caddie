@@ -576,6 +576,18 @@ function isAfterSunday8pmEt(now = new Date()) {
  * Player row for model / +EV: prefers live DG round, then export `display_round`, then preferred round, then any row.
  * Avoids stale placement probs when the leaderboard round picker lags the real tournament.
  */
+/** Strict `DATA.players` row for one tournament round (no live-round / display_round preference). */
+function projectionPlayerRowForExactRound(dgId, roundNum) {
+  const id = Math.round(num(dgId, NaN));
+  const rnd = Math.round(num(roundNum, NaN));
+  if (!Number.isFinite(id) || !Number.isFinite(rnd) || rnd < 1 || rnd > 4) return null;
+  return (
+    (DATA.players || []).find(
+      (p) => Math.round(num(p.dg_id, NaN)) === id && Math.round(num(p.round, NaN)) === rnd,
+    ) || null
+  );
+}
+
 function projectionPlayerRowForModel(dgId, preferredRound) {
   const id = Math.round(num(dgId, NaN));
   if (!Number.isFinite(id)) return null;
@@ -1687,6 +1699,12 @@ function mergeDatagolfInPlayPayload(j) {
   if (DATA.meta) delete DATA.meta.datagolf_live_event_mismatch;
   DATA.live_in_play_snapshot = j.data;
   drivingTouched = mergeLiveTournamentDrivingIntoPlayers(j);
+  if (DATA.meta && eventAligned) {
+    const actuals = resolveLiveRoundActualsForHistory(liveInPlayHistoryBundleWithActuals(j));
+    if (actuals && typeof actuals === "object" && Object.keys(actuals).length) {
+      DATA.meta.live_round_actuals_by_dg = actuals;
+    }
+  }
   if (j.field_updates && typeof j.field_updates === "object") {
     mergeDgFieldScoresFromBundleIntoData(j.data, j.field_updates);
   }
@@ -4121,12 +4139,236 @@ function tournamentPriorRoundSurplusSum(dgId, targetRound) {
         if (Number.isFinite(sgAct)) break;
       }
     }
-    const proj = projectionPlayerRowForModel(id, rn);
+    const proj = projectionPlayerRowForExactRound(id, rn);
     const baseMu = proj ? num(proj.mu_sg, NaN) : NaN;
     if (!Number.isFinite(sgAct) || !Number.isFinite(baseMu)) continue;
     sum += sgAct - baseMu;
   }
   return sum;
+}
+
+function resolvedLiveRoundActualsMap() {
+  const cached = DATA?.meta?.live_round_actuals_by_dg;
+  if (cached && typeof cached === "object" && Object.keys(cached).length) return cached;
+  if (!lastLiveInPlayBundleForHistory) return null;
+  return resolveLiveRoundActualsForHistory(liveInPlayHistoryBundleWithActuals(lastLiveInPlayBundleForHistory));
+}
+
+function tournamentCountingMarketField(market) {
+  const m = ouModelMarketKey(market) || market;
+  if (m === "Birdies") return "birdies";
+  if (m === "Bogeys") return "bogeys";
+  if (m === "Pars") return "pars";
+  if (m === "GIR") return "gir";
+  if (m === "Fairways hit") return "fairways";
+  if (m === "Putts") return "putts";
+  return null;
+}
+
+function withinEventCountingActualFromMeta(dgId, priorRound, field) {
+  const pack = DATA?.meta?.within_event_counting_actuals_by_dg;
+  if (!pack || typeof pack !== "object") return NaN;
+  const id = Math.round(num(dgId, NaN));
+  const rn = Math.round(num(priorRound, NaN));
+  if (!Number.isFinite(id) || !Number.isFinite(rn)) return NaN;
+  const per = pack[String(id)] ?? pack[id];
+  if (!per || typeof per !== "object") return NaN;
+  const act = per[String(rn)] ?? per[rn];
+  if (!act || typeof act !== "object") return NaN;
+  if (field === "birdies") return birdiesPlusEaglesFromRow(act);
+  const v = num(act[field], NaN);
+  if (!Number.isFinite(v)) return NaN;
+  if (field === "gir") return girFairwaysCountFromRawForOu(v, 18);
+  if (field === "fairways") return girFairwaysCountFromRawForOu(v, fairwayHolesModeledFromData());
+  return v;
+}
+
+function tournamentPriorRoundCountingActual(market, dgId, priorRound) {
+  const field = tournamentCountingMarketField(market);
+  if (!field) return NaN;
+  const id = Math.round(num(dgId, NaN));
+  const rn = Math.round(num(priorRound, NaN));
+  if (!Number.isFinite(id) || !Number.isFinite(rn)) return NaN;
+
+  let v = withinEventCountingActualFromMeta(id, rn, field);
+  if (Number.isFinite(v)) return v;
+
+  const actuals = resolvedLiveRoundActualsMap();
+  const per = actuals?.[String(id)] ?? actuals?.[id];
+  const act = per?.[String(rn)] ?? per?.[rn];
+  if (act && typeof act === "object") {
+    if (field === "birdies") {
+      v = birdiesPlusEaglesFromRow(scrubLivePlaceholderCountingOnRow(act));
+      if (Number.isFinite(v)) return v;
+    }
+    v = num(act[field], NaN);
+    if (Number.isFinite(v)) {
+      if (field === "gir") return girFairwaysCountFromRawForOu(v, 18);
+      if (field === "fairways") return girFairwaysCountFromRawForOu(v, fairwayHolesModeledFromData());
+      return v;
+    }
+  }
+
+  if (HISTORY?._ok) {
+    const statKey =
+      field === "birdies"
+        ? "birdies"
+        : field === "bogeys"
+          ? "bogeys"
+          : field === "pars"
+            ? "pars"
+            : field === "gir"
+              ? "gir"
+              : field === "fairways"
+                ? "fairways"
+                : "putts";
+    for (const h of historyRoundsChronoNewestFirst(id)) {
+      if (!historyRoundMatchesCurrentEvent(h)) continue;
+      if (Math.round(num(h.round ?? h.round_num, NaN)) !== rn) continue;
+      v = actualForRoundRow(statKey, scrubLivePlaceholderCountingOnRow(h));
+      if (Number.isFinite(v)) return v;
+    }
+  }
+
+  const pr = projectionPlayerRowForExactRound(id, rn);
+  if (!pr) return NaN;
+  const thru = Math.round(num(pr.dg_live_thru, NaN));
+  if (field === "birdies") {
+    if (thru >= 18 || Number.isFinite(num(pr.dg_live_birdies_so_far, NaN))) {
+      v = birdiesPlusEaglesFromRow(pr);
+      if (Number.isFinite(v)) return v;
+    }
+  } else if (thru >= 18) {
+    v = ouMeanCountingStat(market, pr);
+    if (Number.isFinite(v)) return v;
+  }
+  return NaN;
+}
+
+function tournamentEventRecencyWeightedMean(values) {
+  if (!values?.length) return NaN;
+  const decay = 0.72;
+  let sum = 0;
+  let wsum = 0;
+  for (let i = 0; i < values.length; i++) {
+    const v = num(values[i], NaN);
+    if (!Number.isFinite(v)) continue;
+    const age = values.length - 1 - i;
+    const w = decay ** age;
+    sum += v * w;
+    wsum += w;
+  }
+  return wsum > 0 ? sum / wsum : NaN;
+}
+
+/** Books trust recent form more for stars / contenders (less shrink to season prior). */
+function playerBookStyleCountingTrustBoost(row) {
+  if (!row || typeof row !== "object") return 0;
+  const win = num(row.win, NaN);
+  const t10 = num(row.top_10, NaN);
+  const t20 = num(row.top_20, NaN);
+  const mu = num(row.mu_sg, NaN);
+  let boost = 0;
+  if (Number.isFinite(win) && win >= 0.045) boost = Math.max(boost, 0.14);
+  else if (Number.isFinite(win) && win >= 0.018) boost = Math.max(boost, 0.1);
+  else if (Number.isFinite(t10) && t10 >= 0.18) boost = Math.max(boost, 0.08);
+  else if (Number.isFinite(t20) && t20 >= 0.32) boost = Math.max(boost, 0.05);
+  if (Number.isFinite(mu) && mu >= 0.85) boost = Math.max(boost, 0.1);
+  else if (Number.isFinite(mu) && mu >= 0.4) boost = Math.max(boost, 0.05);
+  return Math.min(0.16, boost);
+}
+
+function tournamentEventCountingBlendWeight(nPriorRounds, row) {
+  const n = Math.max(0, Math.round(num(nPriorRounds, NaN)));
+  if (!n) return 0;
+  let w = Math.min(0.88, 0.52 + 0.16 * n);
+  w += playerBookStyleCountingTrustBoost(row);
+  return Math.min(0.92, w);
+}
+
+function runtimeFieldMeanCountingThisEvent(statField, roundNum, minPlayers = 28) {
+  const pack = DATA?.meta?.within_event_counting_actuals_by_dg;
+  if (!pack || typeof pack !== "object") return NaN;
+  const rn = Math.round(num(roundNum, NaN));
+  if (!Number.isFinite(rn)) return NaN;
+  const vals = [];
+  for (const per of Object.values(pack)) {
+    if (!per || typeof per !== "object") continue;
+    const act = per[String(rn)] ?? per[rn];
+    if (!act || typeof act !== "object") continue;
+    let v = NaN;
+    if (statField === "birdies") v = birdiesPlusEaglesFromRow(act);
+    else v = num(act[statField], NaN);
+    if (Number.isFinite(v)) vals.push(v);
+  }
+  return vals.length >= minPlayers ? vals.reduce((a, b) => a + b, 0) / vals.length : NaN;
+}
+
+/** Field-wide scoring environment: lift birdies/bogeys/GIR when prior round(s) played easy/hard vs venue norm. */
+function tournamentFieldCountingDayMuAdjustment(market, row) {
+  const mKey = ouModelMarketKey(market) || market;
+  const statField = tournamentCountingMarketField(mKey);
+  if (!statField || statField === "putts" || statField === "pars") return 0;
+  const tr = Math.round(num(row?.round, NaN));
+  if (tr < 2) return 0;
+
+  const basis = DATA?.meta?.projection_course_basis;
+  const venueKey =
+    statField === "gir"
+      ? "venue_avg_gir"
+      : statField === "fairways"
+        ? "venue_avg_fairways"
+        : `venue_avg_${statField}`;
+  const venue = num(basis?.[venueKey], NaN);
+  const fieldByRd = basis?.[`field_avg_${statField}_by_round`];
+  const bakedFrac = courseProjectionDifficultyBakedInExport() ? 0.32 : 0.58;
+  let liftSum = 0;
+  let wsum = 0;
+  for (let rn = 1; rn < tr; rn++) {
+    const age = tr - 1 - rn;
+    const rw = 0.72 ** age;
+    let fieldAvg = NaN;
+    if (fieldByRd && typeof fieldByRd === "object") {
+      fieldAvg = num(fieldByRd[String(rn)] ?? fieldByRd[rn], NaN);
+    }
+    if (!Number.isFinite(fieldAvg)) fieldAvg = runtimeFieldMeanCountingThisEvent(statField, rn);
+    if (!Number.isFinite(fieldAvg) || !Number.isFinite(venue)) continue;
+    liftSum += rw * (fieldAvg - venue);
+    wsum += rw;
+  }
+  if (wsum > 0) return bakedFrac * (liftSum / wsum);
+
+  const ex = num(
+    DATA?.meta?.prior_round_course_excess_strokes?.[String(tr - 1)] ??
+      DATA?.meta?.prior_round_course_excess_strokes?.[tr - 1],
+    NaN,
+  );
+  if (!Number.isFinite(ex)) return 0;
+  return ouMuAdjustmentFromCourseDifficultyD(mKey, -ex) * (bakedFrac / 0.58);
+}
+
+/** R2+ birdies/bogeys/GIR/etc.: blend skill μ toward this week's completed-round actuals. */
+function tournamentEventCountingMuAdjustment(market, row) {
+  if (!row || typeof row !== "object") return 0;
+  const mKey = ouModelMarketKey(market) || market;
+  if (!tournamentCountingMarketField(mKey)) return 0;
+  const tr = Math.round(num(row.round, NaN));
+  if (tr < 2) return 0;
+  const id = Math.round(num(row.dg_id, NaN));
+  if (!Number.isFinite(id)) return 0;
+
+  const actuals = [];
+  for (let rn = 1; rn < tr; rn++) {
+    const v = tournamentPriorRoundCountingActual(mKey, id, rn);
+    if (Number.isFinite(v)) actuals.push(v);
+  }
+  if (!actuals.length) return 0;
+
+  const eventAvg = tournamentEventRecencyWeightedMean(actuals);
+  const base = ouMeanCountingStat(mKey, row);
+  if (!Number.isFinite(base) || !Number.isFinite(eventAvg)) return 0;
+  const w = tournamentEventCountingBlendWeight(actuals.length, row);
+  return w * (eventAvg - base);
 }
 
 /** Extra μ shift from how this player has scored vs pre-tournament μ in prior rounds this week (R2+). */
@@ -4401,6 +4643,8 @@ function ouProjectedMean(market, row) {
     statWeatherMuAdjustment(mKey, row) +
     combinedCourseDifficultyOUMuAdjustment(mKey, row) +
     tournamentEventFormOUMuAdjustment(mKey, row) +
+    tournamentEventCountingMuAdjustment(mKey, row) +
+    tournamentFieldCountingDayMuAdjustment(mKey, row) +
     liveRoundAdj +
     countLive.muDelta +
     pricingStatMuAdjustment(mKey, dgId)

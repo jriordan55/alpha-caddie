@@ -588,6 +588,124 @@ export function resolveProjectionCounts({
   return { eagles, birdies, pars, bogeys, doubles, gir, fairways, putts };
 }
 
+const WITHIN_EVENT_COUNT_BLEND_KEYS = ["birdies", "bogeys", "pars", "gir", "fairways", "putts"];
+/** Most recent prior round gets ~1.4× weight vs the one before (book-style “last round matters most”). */
+const WITHIN_EVENT_COUNT_RECENCY_DECAY = 0.72;
+const WITHIN_EVENT_COUNT_BLEND_BASE = 0.52;
+const WITHIN_EVENT_COUNT_BLEND_PER_ROUND = 0.16;
+const WITHIN_EVENT_COUNT_BLEND_CAP = 0.88;
+const FIELD_DAY_COUNTING_LIFT_FRAC = 0.58;
+
+function recencyWeightedMeanFromArr(arr, decay = WITHIN_EVENT_COUNT_RECENCY_DECAY) {
+  if (!Array.isArray(arr) || !arr.length) return NaN;
+  let sum = 0;
+  let wsum = 0;
+  for (let i = 0; i < arr.length; i++) {
+    const v = num(arr[i], NaN);
+    if (!Number.isFinite(v)) continue;
+    const age = arr.length - 1 - i;
+    const w = decay ** age;
+    sum += v * w;
+    wsum += w;
+  }
+  return wsum > 0 ? sum / wsum : NaN;
+}
+
+/** Stars / contenders: books move their next-round props faster (less shrink to season prior). */
+export function withinEventCountingStarTrustBoost(playerRow) {
+  if (!playerRow || typeof playerRow !== "object") return 0;
+  const win = num(playerRow.win, NaN);
+  const t10 = num(playerRow.top_10, NaN);
+  const t20 = num(playerRow.top_20, NaN);
+  const mu = num(playerRow.mu_sg, NaN);
+  let boost = 0;
+  if (Number.isFinite(win) && win >= 0.045) boost = Math.max(boost, 0.14);
+  else if (Number.isFinite(win) && win >= 0.018) boost = Math.max(boost, 0.1);
+  else if (Number.isFinite(t10) && t10 >= 0.18) boost = Math.max(boost, 0.08);
+  else if (Number.isFinite(t20) && t20 >= 0.32) boost = Math.max(boost, 0.05);
+  if (Number.isFinite(mu) && mu >= 0.85) boost = Math.max(boost, 0.1);
+  else if (Number.isFinite(mu) && mu >= 0.4) boost = Math.max(boost, 0.05);
+  return Math.min(0.16, boost);
+}
+
+export function withinEventCountingBlendWeight(nPriorRounds, playerRow) {
+  const n = Math.max(0, Math.round(num(nPriorRounds, NaN)));
+  if (!n) return 0;
+  let w = Math.min(WITHIN_EVENT_COUNT_BLEND_CAP, WITHIN_EVENT_COUNT_BLEND_BASE + WITHIN_EVENT_COUNT_BLEND_PER_ROUND * n);
+  w += withinEventCountingStarTrustBoost(playerRow);
+  return Math.min(0.92, w);
+}
+
+/** Field-wide lift when this week's completed round scored birdie-/bogey-heavy vs venue history. */
+export function fieldDayCountingLift(fieldAvg, venueAvg, frac = FIELD_DAY_COUNTING_LIFT_FRAC) {
+  const f = num(fieldAvg, NaN);
+  const v = num(venueAvg, NaN);
+  if (!Number.isFinite(f) || !Number.isFinite(v)) return 0;
+  return frac * (f - v);
+}
+
+/** Blend skill/venue hole counts toward prior-round actuals this week (R2+). */
+export function blendWithinEventProjectionCounts(skillCounts, priorByStat, targetRound, opts = {}) {
+  const tr = Math.round(num(targetRound, NaN));
+  if (tr < 2 || !priorByStat || typeof priorByStat !== "object") return skillCounts || {};
+  let nRounds = 0;
+  for (const k of WITHIN_EVENT_COUNT_BLEND_KEYS) {
+    const arr = priorByStat[k];
+    if (Array.isArray(arr) && arr.length > nRounds) nRounds = arr.length;
+  }
+  if (!nRounds) return skillCounts || {};
+  const w = withinEventCountingBlendWeight(nRounds, opts?.playerRow);
+  const out = { ...(skillCounts || {}) };
+  for (const k of WITHIN_EVENT_COUNT_BLEND_KEYS) {
+    const arr = priorByStat[k];
+    if (!Array.isArray(arr) || !arr.length) continue;
+    const avg = recencyWeightedMeanFromArr(arr);
+    const base = num(out[k], NaN);
+    if (!Number.isFinite(base) || !Number.isFinite(avg)) continue;
+    out[k] = (1 - w) * base + w * avg;
+  }
+  return out;
+}
+
+export function fieldCountingMeansFromWithinEventMap(byDgRound, minPlayers = 28) {
+  /** @type {Record<string, Record<number, number>>} */
+  const out = { birdies: {}, bogeys: {}, gir: {}, fairways: {} };
+  if (!byDgRound || typeof byDgRound !== "object") return out;
+  for (let rnd = 1; rnd <= 3; rnd++) {
+    for (const key of Object.keys(out)) {
+      const vals = [];
+      for (const per of byDgRound.values()) {
+        const rec = per?.get?.(rnd);
+        if (rec && Number.isFinite(num(rec[key], NaN))) vals.push(num(rec[key], NaN));
+      }
+      if (vals.length >= minPlayers) {
+        out[key][rnd] = Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 100) / 100;
+      }
+    }
+  }
+  return out;
+}
+
+export function applyFieldDayCountingLiftToCounts(st, targetRound, fieldMeans, venueScoring) {
+  if (!st || typeof st !== "object") return st;
+  const tr = Math.round(num(targetRound, NaN));
+  if (tr < 2 || !fieldMeans || !venueScoring) return st;
+  const rn = tr - 1;
+  const birdLift = fieldDayCountingLift(fieldMeans.birdies?.[rn], venueScoring.venueAvgBirdies);
+  const bogLift = fieldDayCountingLift(fieldMeans.bogeys?.[rn], venueScoring.venueAvgBogeys);
+  const girLift = fieldDayCountingLift(fieldMeans.gir?.[rn], venueScoring.venueAvgGir);
+  const fwLift = fieldDayCountingLift(fieldMeans.fairways?.[rn], venueScoring.venueAvgFairways);
+  if (Number.isFinite(birdLift) && birdLift !== 0) st.birdies = Math.max(0.15, num(st.birdies, 0) + birdLift);
+  if (Number.isFinite(bogLift) && bogLift !== 0) st.bogeys = Math.max(0.15, num(st.bogeys, 0) + bogLift);
+  if (Number.isFinite(girLift) && girLift !== 0 && Number.isFinite(st.gir)) {
+    st.gir = Math.max(6, Math.min(16, st.gir + girLift));
+  }
+  if (Number.isFinite(fwLift) && fwLift !== 0 && Number.isFinite(st.fairways)) {
+    st.fairways = Math.max(2, st.fairways + fwLift);
+  }
+  return st;
+}
+
 /** course_table.csv / course-table.json adj_score_to_par when CSV sample is thin. */
 export function lookupAdjScoreToParFromCourseTable(courseLabel) {
   const ck = normCourseNameKey(courseLabel);
