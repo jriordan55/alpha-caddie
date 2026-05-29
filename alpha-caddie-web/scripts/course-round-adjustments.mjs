@@ -178,6 +178,37 @@ export function courseDifficultyStrokeShift(excessStrokes) {
  * @param {EventRoundContext} ctx
  * @param {{ dg_id: number, mu_sg: number }[]} basePlayers
  */
+/**
+ * preds/in-play `R1`…`R4` gross when historical_rounds_all has not caught up yet this week.
+ * sg_total proxy = −(round_score − par); surplus vs pre-tournament base μ_SG matches buildWithinEventFormMap.
+ */
+export function augmentEventContextWithInPlayRounds(ctx, inPlayRows, coursePar18, basePlayers) {
+  if (!ctx || !Array.isArray(ctx.playerRounds) || !Array.isArray(inPlayRows)) return ctx;
+  const par = num(coursePar18, NaN);
+  if (!Number.isFinite(par)) return ctx;
+  const baseMu = new Map();
+  for (const p of basePlayers || []) {
+    const id = Math.round(num(p.dg_id, NaN));
+    if (Number.isFinite(id)) baseMu.set(id, num(p.mu_sg, 0));
+  }
+  const seen = new Set(ctx.playerRounds.map((pr) => `${Math.round(num(pr.dg_id, NaN))}|${Math.round(num(pr.round, NaN))}`));
+  for (const row of inPlayRows) {
+    if (!row || typeof row !== "object") continue;
+    const id = Math.round(num(row.dg_id ?? row.dgId, NaN));
+    if (!Number.isFinite(id) || !baseMu.has(id)) continue;
+    for (let rnd = 1; rnd <= 3; rnd++) {
+      const key = `${id}|${rnd}`;
+      if (seen.has(key)) continue;
+      const g = num(row[`R${rnd}`] ?? row[`r${rnd}`], NaN);
+      if (!Number.isFinite(g) || g <= 0) continue;
+      const sgProxy = -(g - par);
+      ctx.playerRounds.push({ dg_id: id, round: rnd, sg_total: sgProxy });
+      seen.add(key);
+    }
+  }
+  return ctx;
+}
+
 export function buildWithinEventFormMap(ctx, basePlayers, k = 0.02, cap = 0.3) {
   const map = new Map();
   if (!k || !ctx?.playerRounds?.length) return map;

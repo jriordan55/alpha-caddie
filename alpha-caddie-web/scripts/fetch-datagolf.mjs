@@ -65,6 +65,7 @@ import { fetchDataGolfOutrightsApi } from "./datagolf-outrights-api.mjs";
 import {
   applyVenueCourseFitToMu,
   blendedPriorRoundCourseExcess,
+  augmentEventContextWithInPlayRounds,
   buildWithinEventFormMap,
   courseDifficultyStrokeShift,
   loadEventRoundContextFromHistoricalCsv,
@@ -1985,8 +1986,10 @@ async function main() {
 
   const applyPriorRoundAdj =
     String(process.env.GOLF_COURSE_PRIOR_ROUND_DIFFICULTY ?? "1").trim() !== "0";
-  const formK = num(process.env.GOLF_WITHIN_EVENT_FORM_CARRY, 0.02);
-  const formCap = num(process.env.GOLF_WITHIN_EVENT_FORM_CAP, 0.3);
+  const formK = num(process.env.GOLF_WITHIN_EVENT_FORM_CARRY, 0.1);
+  const formCap = num(process.env.GOLF_WITHIN_EVENT_FORM_CAP, 0.75);
+  const formRuntimeK = num(process.env.GOLF_WITHIN_EVENT_FORM_RUNTIME_CARRY, 0.12);
+  const formRuntimeCap = num(process.env.GOLF_WITHIN_EVENT_FORM_RUNTIME_CAP, 0.85);
   let histEventCtx = null;
   if (applyPriorRoundAdj && event_name && histCalib.csv_path && existsSync(histCalib.csv_path)) {
     histEventCtx = await loadEventRoundContextFromHistoricalCsv(
@@ -1994,6 +1997,31 @@ async function main() {
       event_name,
       courseKeyHist,
     );
+  }
+  if (histEventCtx) {
+    const lipPaths = [
+      join(ROOT, "live-in-play.json"),
+      join(GOLF_MODEL_ROOT, "alpha-caddie-web", "live-in-play.json"),
+    ];
+    for (const lipPath of lipPaths) {
+      if (!existsSync(lipPath)) continue;
+      try {
+        const lip = JSON.parse(readFileSync(lipPath, "utf8"));
+        const rows = Array.isArray(lip?.data) ? lip.data : [];
+        if (rows.length) {
+          augmentEventContextWithInPlayRounds(
+            histEventCtx,
+            rows,
+            course_par_18,
+            base.map((r) => ({ dg_id: r.dg_id, mu_sg: r.mu_sg })),
+          );
+          console.log(`[fetch-dg] Within-event form: merged ${rows.length} in-play rows for current-week R1–R3`);
+          break;
+        }
+      } catch (e) {
+        console.warn("live-in-play.json within-event form:", e.message || e);
+      }
+    }
   }
   const withinFormMap =
     formK !== 0 && histEventCtx
@@ -2282,6 +2310,8 @@ async function main() {
       skip_runtime_course_overlay: applyPriorRoundAdj,
       within_event_form_carry: formK,
       within_event_form_cap: formCap,
+      within_event_form_runtime_carry: formRuntimeK,
+      within_event_form_runtime_cap: formRuntimeCap,
     },
     projection_course_basis: {
       fairway_holes_modeled: fairwayHolesThisCourse,

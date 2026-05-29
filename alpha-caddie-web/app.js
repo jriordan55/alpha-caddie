@@ -4071,6 +4071,77 @@ function combinedCourseDifficultyOUMuAdjustment(market, row) {
   );
 }
 
+function tournamentFormCarryK() {
+  const adj = DATA?.meta?.projection_round_adjustments || {};
+  const rt = num(adj.within_event_form_runtime_carry, NaN);
+  if (Number.isFinite(rt) && rt > 0) return rt;
+  const baked = num(adj.within_event_form_carry, NaN);
+  if (Number.isFinite(baked) && baked > 0) return Math.max(baked, 0.08);
+  return 0.12;
+}
+
+function tournamentFormCap() {
+  const adj = DATA?.meta?.projection_round_adjustments || {};
+  const rt = num(adj.within_event_form_runtime_cap, NaN);
+  if (Number.isFinite(rt) && rt > 0) return rt;
+  const baked = num(adj.within_event_form_cap, NaN);
+  if (Number.isFinite(baked) && baked > 0) return baked;
+  return 0.85;
+}
+
+function tournamentRoundSgProxyFromGross(gross, par18) {
+  const g = num(gross, NaN);
+  const p = num(par18, NaN);
+  if (!Number.isFinite(g) || g <= 0 || !Number.isFinite(p)) return NaN;
+  return -(g - p);
+}
+
+function tournamentPriorRoundSurplusSum(dgId, targetRound) {
+  const id = Math.round(num(dgId, NaN));
+  const tr = Math.round(num(targetRound, NaN));
+  if (!Number.isFinite(id) || tr < 2) return 0;
+  const par18 = num(DATA?.meta?.course_par_18, 72);
+  let sum = 0;
+  for (let rn = 1; rn < tr; rn++) {
+    let sgAct = NaN;
+    const snap = Array.isArray(DATA?.live_in_play_snapshot)
+      ? DATA.live_in_play_snapshot
+      : Array.isArray(DATA?.data)
+        ? DATA.data
+        : [];
+    const ip = snap.find((r) => Math.round(num(r?.dg_id ?? r?.dgId, NaN)) === id);
+    if (ip) sgAct = tournamentRoundSgProxyFromGross(num(ip[`R${rn}`] ?? ip[`r${rn}`], NaN), par18);
+    if (!Number.isFinite(sgAct) && HISTORY?._ok) {
+      for (const h of historyRoundsChronoNewestFirst(id)) {
+        if (!historyRoundMatchesCurrentEvent(h)) continue;
+        if (Math.round(num(h.round ?? h.round_num, NaN)) !== rn) continue;
+        const rs = num(h.round_score, NaN);
+        const cp = num(h.course_par, par18);
+        sgAct = tournamentRoundSgProxyFromGross(rs, cp);
+        if (Number.isFinite(sgAct)) break;
+      }
+    }
+    const proj = projectionPlayerRowForModel(id, rn);
+    const baseMu = proj ? num(proj.mu_sg, NaN) : NaN;
+    if (!Number.isFinite(sgAct) || !Number.isFinite(baseMu)) continue;
+    sum += sgAct - baseMu;
+  }
+  return sum;
+}
+
+/** Extra μ shift from how this player has scored vs pre-tournament μ in prior rounds this week (R2+). */
+function tournamentEventFormOUMuAdjustment(market, row) {
+  if (!row || typeof row !== "object") return 0;
+  const tr = Math.round(num(row.round, NaN));
+  if (tr < 2) return 0;
+  const id = Math.round(num(row.dg_id, NaN));
+  if (!Number.isFinite(id)) return 0;
+  const surplusSum = tournamentPriorRoundSurplusSum(id, tr);
+  if (!Number.isFinite(surplusSum) || surplusSum === 0) return 0;
+  const sh = clamp(tournamentFormCarryK() * surplusSum, -tournamentFormCap(), tournamentFormCap());
+  return ouMuAdjustmentFromCourseDifficultyD(market, -sh);
+}
+
 /** @deprecated Use combinedCourseDifficultyOUMuAdjustment with a projection row when possible. */
 function liveCourseOUMuAdjustment(market) {
   return ouMuAdjustmentFromCourseDifficultyD(market, liveCourseDifficultyDForMu());
@@ -4329,6 +4400,7 @@ function ouProjectedMean(market, row) {
     baseScalar +
     statWeatherMuAdjustment(mKey, row) +
     combinedCourseDifficultyOUMuAdjustment(mKey, row) +
+    tournamentEventFormOUMuAdjustment(mKey, row) +
     liveRoundAdj +
     countLive.muDelta +
     pricingStatMuAdjustment(mKey, dgId)
