@@ -3961,6 +3961,8 @@ function liveCourseDifficultyDForMu() {
       return clamp(exR * k, LIVE_COURSE_D_CLAMP_NEG, LIVE_COURSE_D_CLAMP_POS);
     }
   }
+  /* Avoid stacking course_table prior on top of fetch:dg venue + prior-round bake (was inflating all O/U markets). */
+  if (courseProjectionDifficultyBakedInExport()) return 0;
   const d0 = courseTableStaticDifficultyD();
   if (!Number.isFinite(d0) || d0 === 0) return 0;
   return clamp(d0 * 0.42, -0.85, 1.45);
@@ -4009,6 +4011,14 @@ function priorRoundCourseStrokeShiftBakedOnRow(row) {
   return Object.prototype.hasOwnProperty.call(row || {}, "prior_round_course_stroke_shift");
 }
 
+/** fetch:dg baked venue scoring + prior-round shifts into player rows (see projection_round_adjustments). */
+function courseProjectionDifficultyBakedInExport() {
+  const adj = DATA?.meta?.projection_round_adjustments;
+  if (adj?.course_prior_round_difficulty === true) return true;
+  if (adj?.skip_runtime_course_overlay === true) return true;
+  return Array.isArray(DATA?.players) && DATA.players.some((p) => priorRoundCourseStrokeShiftBakedOnRow(p));
+}
+
 /** Prior-round stroke shift for this projection row (0 when fetch:dg already baked into μ / totals). */
 function priorRoundCourseStrokeShiftForProjectionRow(row) {
   if (priorRoundCourseStrokeShiftBakedOnRow(row)) return 0;
@@ -4054,6 +4064,7 @@ function liveCourseOUMuAdjustmentForRound(market, targetRound) {
 function combinedCourseDifficultyOUMuAdjustment(market, row) {
   if (!row || typeof row !== "object") return 0;
   const tr = Math.round(num(row.round, NaN));
+  if (courseProjectionDifficultyBakedInExport() && !hasStartedLiveRoundData()) return 0;
   return (
     priorRoundCourseOUMuAdjustment(market, row) +
     (Number.isFinite(tr) ? liveCourseOUMuAdjustmentForRound(market, tr) : 0)

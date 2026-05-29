@@ -2278,6 +2278,8 @@ async function main() {
     prior_round_course_stroke_shift: priorCourseStrokeShiftByRound,
     projection_round_adjustments: {
       course_prior_round_difficulty: applyPriorRoundAdj,
+      /** app.js must not add course_table static overlay when this is true (see courseProjectionDifficultyBakedInExport). */
+      skip_runtime_course_overlay: applyPriorRoundAdj,
       within_event_form_carry: formK,
       within_event_form_cap: formCap,
     },
