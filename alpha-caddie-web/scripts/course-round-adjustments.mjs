@@ -380,7 +380,7 @@ function finalizeVenueAgg(raw) {
 }
 
 /** Nudge bird/bog toward target score-vs-par (pars residual). */
-function softAlignHoleCountsToStp(counts, targetStp, strength = 0.58) {
+export function softAlignHoleCountsToStp(counts, targetStp, strength = 0.58) {
   const e = Math.max(0, num(counts.eagles, 0));
   const d = Math.max(0, num(counts.doubles, 0));
   let b = num(counts.birdies, 0);
@@ -407,6 +407,52 @@ function softAlignHoleCountsToStp(counts, targetStp, strength = 0.58) {
     return { eagles: e * k, birdies: b * k, pars: p * k, bogeys: bg * k, doubles: d * k };
   }
   return { eagles: e, birdies: b, pars: Math.max(0.12, p), bogeys: bg, doubles: d };
+}
+
+/**
+ * Move mass from pars into matched bird+bog pairs (score-to-par neutral: −δ − δ + δ + δ = 0).
+ * Books show more bird/bog volatility vs “all pars” profiles at the same projected score.
+ */
+export function spreadParsIntoBirdBogPairs(counts, opts = {}) {
+  const e = Math.max(0, num(counts?.eagles, 0));
+  const d = Math.max(0, num(counts?.doubles, 0));
+  let b = num(counts?.birdies, 0);
+  let bg = num(counts?.bogeys, 0);
+  let p = num(counts?.pars, NaN);
+  if (!Number.isFinite(p)) p = 18 - e - d - b - bg;
+
+  const venueBird = num(opts?.venueBirdies, 3.2);
+  const venueBog = num(opts?.venueBogeys, 2.9);
+  const venuePar = num(opts?.venuePars, 11.5);
+  const strength = num(opts?.spreadStrength, 0.55);
+  const parFloor = num(opts?.parFloor, Math.max(9.8, venuePar * 0.88));
+
+  const parsExcess = Math.max(0, p - parFloor);
+  const pairRoom = parsExcess / 2;
+  let shift = Math.min(strength * pairRoom, pairRoom);
+  if (shift <= 1e-6) {
+    return { eagles: e, birdies: b, pars: Math.max(parFloor, p), bogeys: bg, doubles: d };
+  }
+  b += shift;
+  bg += shift;
+  p -= 2 * shift;
+  // Residual nudge toward venue bird/bog rates when pars still heavy
+  const parSlack = Math.max(0, p - parFloor);
+  const birdShort = Math.max(0, venueBird - b);
+  const bogShort = Math.max(0, venueBog - bg);
+  const extra = Math.min(parSlack / 2, birdShort, bogShort, 0.45);
+  if (extra > 1e-6) {
+    b += extra;
+    bg += extra;
+    p -= 2 * extra;
+  }
+  return {
+    eagles: e,
+    birdies: Math.max(0.15, b),
+    pars: Math.max(parFloor, p),
+    bogeys: Math.max(0.15, bg),
+    doubles: d,
+  };
 }
 
 function coalesceVenueCount(playerVal, fieldVal, skillVal) {
@@ -571,16 +617,6 @@ export function resolveProjectionCounts({
   doubles = Math.max(0.04, num(doubles, 0));
   if (!Number.isFinite(pars)) pars = Math.max(0.12, 18 - eagles - birdies - bogeys - doubles);
 
-  const t = num(targetStp, NaN);
-  if (Number.isFinite(t)) {
-    const aligned = softAlignHoleCountsToStp({ eagles, birdies, pars, bogeys, doubles }, t);
-    eagles = aligned.eagles;
-    birdies = aligned.birdies;
-    pars = aligned.pars;
-    bogeys = aligned.bogeys;
-    doubles = aligned.doubles;
-  }
-
   if (Number.isFinite(gir)) gir = Math.max(6, Math.min(16, gir));
   if (Number.isFinite(fairways)) fairways = Math.max(2, Math.min(nFairwayHoles + 0.5, fairways));
   if (Number.isFinite(putts)) putts = Math.max(22, Math.min(36, putts));
@@ -588,13 +624,18 @@ export function resolveProjectionCounts({
   return { eagles, birdies, pars, bogeys, doubles, gir, fairways, putts };
 }
 
-const WITHIN_EVENT_COUNT_BLEND_KEYS = ["birdies", "bogeys", "pars", "gir", "fairways", "putts"];
+/** Only bird/bog carry this-week form; pars are always residual to 18 holes + score-to-par. */
+const WITHIN_EVENT_FORM_BLEND_KEYS = ["birdies", "bogeys"];
+const WITHIN_EVENT_GIR_FW_BLEND_KEYS = ["gir", "fairways", "putts"];
 /** Most recent prior round gets ~1.4× weight vs the one before (book-style “last round matters most”). */
 const WITHIN_EVENT_COUNT_RECENCY_DECAY = 0.72;
-const WITHIN_EVENT_COUNT_BLEND_BASE = 0.52;
-const WITHIN_EVENT_COUNT_BLEND_PER_ROUND = 0.16;
-const WITHIN_EVENT_COUNT_BLEND_CAP = 0.88;
-const FIELD_DAY_COUNTING_LIFT_FRAC = 0.58;
+const WITHIN_EVENT_COUNT_BLEND_BASE = 0.5;
+const WITHIN_EVENT_COUNT_BLEND_PER_ROUND = 0.15;
+const WITHIN_EVENT_COUNT_BLEND_CAP = 0.82;
+const WITHIN_EVENT_BOGEY_BLEND_SCALE = 0.72;
+const WITHIN_EVENT_ALIGN_STRENGTH = 0.96;
+const WITHIN_EVENT_PAR_SPREAD_STRENGTH = 0.55;
+const FIELD_DAY_COUNTING_LIFT_FRAC = 0.45;
 
 function recencyWeightedMeanFromArr(arr, decay = WITHIN_EVENT_COUNT_RECENCY_DECAY) {
   if (!Array.isArray(arr) || !arr.length) return NaN;
@@ -649,20 +690,69 @@ export function blendWithinEventProjectionCounts(skillCounts, priorByStat, targe
   const tr = Math.round(num(targetRound, NaN));
   if (tr < 2 || !priorByStat || typeof priorByStat !== "object") return skillCounts || {};
   let nRounds = 0;
-  for (const k of WITHIN_EVENT_COUNT_BLEND_KEYS) {
+  for (const k of WITHIN_EVENT_FORM_BLEND_KEYS) {
     const arr = priorByStat[k];
     if (Array.isArray(arr) && arr.length > nRounds) nRounds = arr.length;
   }
-  if (!nRounds) return skillCounts || {};
-  const w = withinEventCountingBlendWeight(nRounds, opts?.playerRow);
   const out = { ...(skillCounts || {}) };
-  for (const k of WITHIN_EVENT_COUNT_BLEND_KEYS) {
+  if (!nRounds) return out;
+  const wBird = withinEventCountingBlendWeight(nRounds, opts?.playerRow);
+  const wBog = wBird * WITHIN_EVENT_BOGEY_BLEND_SCALE;
+  for (const k of WITHIN_EVENT_FORM_BLEND_KEYS) {
     const arr = priorByStat[k];
     if (!Array.isArray(arr) || !arr.length) continue;
     const avg = recencyWeightedMeanFromArr(arr);
     const base = num(out[k], NaN);
     if (!Number.isFinite(base) || !Number.isFinite(avg)) continue;
+    const w = k === "bogeys" ? wBog : wBird;
     out[k] = (1 - w) * base + w * avg;
+  }
+  for (const k of WITHIN_EVENT_GIR_FW_BLEND_KEYS) {
+    const arr = priorByStat[k];
+    if (!Array.isArray(arr) || !arr.length) continue;
+    const avg = recencyWeightedMeanFromArr(arr);
+    const base = num(out[k], NaN);
+    if (!Number.isFinite(base) || !Number.isFinite(avg)) continue;
+    const w = Math.min(0.55, wBird * 0.65);
+    out[k] = (1 - w) * base + w * avg;
+  }
+  const stp = num(opts?.targetStp, NaN);
+  if (Number.isFinite(stp)) {
+    const aligned = softAlignHoleCountsToStp(
+      {
+        eagles: out.eagles,
+        birdies: out.birdies,
+        pars: out.pars,
+        bogeys: out.bogeys,
+        doubles: out.doubles,
+      },
+      stp,
+      num(opts?.alignStrength, WITHIN_EVENT_ALIGN_STRENGTH),
+    );
+    out.eagles = aligned.eagles;
+    out.birdies = aligned.birdies;
+    out.pars = aligned.pars;
+    out.bogeys = aligned.bogeys;
+    out.doubles = aligned.doubles;
+    const spread = spreadParsIntoBirdBogPairs(out, {
+      venueBirdies: num(opts?.venueBirdies, NaN),
+      venueBogeys: num(opts?.venueBogeys, NaN),
+      venuePars: num(opts?.venuePars, NaN),
+      spreadStrength: num(opts?.spreadStrength, WITHIN_EVENT_PAR_SPREAD_STRENGTH),
+    });
+    out.eagles = spread.eagles;
+    out.birdies = spread.birdies;
+    out.pars = spread.pars;
+    out.bogeys = spread.bogeys;
+    out.doubles = spread.doubles;
+  } else {
+    const e = Math.max(0, num(out.eagles, 0));
+    const d = Math.max(0, num(out.doubles, 0));
+    const b = num(out.birdies, NaN);
+    const bg = num(out.bogeys, NaN);
+    if (Number.isFinite(b) && Number.isFinite(bg)) {
+      out.pars = Math.max(0.12, 18 - e - d - b - bg);
+    }
   }
   return out;
 }
@@ -686,7 +776,7 @@ export function fieldCountingMeansFromWithinEventMap(byDgRound, minPlayers = 28)
   return out;
 }
 
-export function applyFieldDayCountingLiftToCounts(st, targetRound, fieldMeans, venueScoring) {
+export function applyFieldDayCountingLiftToCounts(st, targetRound, fieldMeans, venueScoring, targetStpOpt) {
   if (!st || typeof st !== "object") return st;
   const tr = Math.round(num(targetRound, NaN));
   if (tr < 2 || !fieldMeans || !venueScoring) return st;
@@ -697,6 +787,32 @@ export function applyFieldDayCountingLiftToCounts(st, targetRound, fieldMeans, v
   const fwLift = fieldDayCountingLift(fieldMeans.fairways?.[rn], venueScoring.venueAvgFairways);
   if (Number.isFinite(birdLift) && birdLift !== 0) st.birdies = Math.max(0.15, num(st.birdies, 0) + birdLift);
   if (Number.isFinite(bogLift) && bogLift !== 0) st.bogeys = Math.max(0.15, num(st.bogeys, 0) + bogLift);
+  const stp = num(targetStpOpt, NaN);
+  if (Number.isFinite(stp)) {
+    const aligned = softAlignHoleCountsToStp(
+      {
+        eagles: st.eagles,
+        birdies: st.birdies,
+        pars: st.pars,
+        bogeys: st.bogeys,
+        doubles: st.doubles,
+      },
+      stp,
+      WITHIN_EVENT_ALIGN_STRENGTH,
+    );
+    st.birdies = aligned.birdies;
+    st.pars = aligned.pars;
+    st.bogeys = aligned.bogeys;
+    const spread = spreadParsIntoBirdBogPairs(st, {
+      venueBirdies: venueScoring?.venueAvgBirdies,
+      venueBogeys: venueScoring?.venueAvgBogeys,
+      venuePars: venueScoring?.venueAvgPars,
+      spreadStrength: WITHIN_EVENT_PAR_SPREAD_STRENGTH,
+    });
+    st.birdies = spread.birdies;
+    st.pars = spread.pars;
+    st.bogeys = spread.bogeys;
+  }
   if (Number.isFinite(girLift) && girLift !== 0 && Number.isFinite(st.gir)) {
     st.gir = Math.max(6, Math.min(16, st.gir + girLift));
   }

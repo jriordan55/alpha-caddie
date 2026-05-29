@@ -67,9 +67,6 @@ import {
   blendedPriorRoundCourseExcess,
   augmentEventContextWithInPlayRounds,
   buildWithinEventFormMap,
-  blendWithinEventProjectionCounts,
-  fieldCountingMeansFromWithinEventMap,
-  applyFieldDayCountingLiftToCounts,
   courseDifficultyStrokeShift,
   loadEventRoundContextFromHistoricalCsv,
   loadVenueHistoricalScoring,
@@ -99,77 +96,6 @@ const GOLF_MODEL_ROOT = resolveGolfModelDir(ROOT);
 
 /** When no course/event match, Hole Hangout uses this 18-hole par pattern (same as web app fallback). */
 const GENERIC_HOLE_PARS_FALLBACK = [4, 4, 3, 4, 4, 5, 4, 3, 4, 4, 4, 3, 4, 4, 5, 4, 3, 5];
-
-function loadWithinEventCountingActualsFromPlayerHistory(eventName) {
-  const path = join(ROOT, "player_round_history.json");
-  /** @type {Map<number, Map<number, Record<string, number>>>} */
-  const byDgRound = new Map();
-  /** @type {Record<string, Record<string, Record<string, number>>>} */
-  const exportPack = {};
-  if (!eventName || !existsSync(path)) return { byDgRound, exportPack };
-  try {
-    const hist = JSON.parse(readFileSync(path, "utf8"));
-    const byDgId = hist?.byDgId;
-    if (!byDgId || typeof byDgId !== "object") return { byDgRound, exportPack };
-    for (const [dgKey, bucket] of Object.entries(byDgId)) {
-      const rounds = Array.isArray(bucket?.rounds) ? bucket.rounds : [];
-      const id = Math.round(num(bucket?.dg_id ?? dgKey, NaN));
-      if (!Number.isFinite(id)) continue;
-      for (const row of rounds) {
-        if (!row || typeof row !== "object") continue;
-        const ev = String(row.event_name || "").trim();
-        if (!ev || !eventsLikelySame(ev, eventName)) continue;
-        const rnd = Math.round(num(row.round_num ?? row.round, NaN));
-        if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
-        const b = num(row.birdies, NaN);
-        const eg = num(row.eagles_or_better ?? row.eagles, NaN);
-        const bird = Number.isFinite(b) ? b + (Number.isFinite(eg) ? eg : 0) : NaN;
-        /** @type {Record<string, number>} */
-        const rec = {};
-        if (Number.isFinite(bird)) rec.birdies = Math.round(bird * 10) / 10;
-        const bg = num(row.bogeys ?? row.bogies, NaN);
-        if (Number.isFinite(bg)) rec.bogeys = Math.round(bg * 10) / 10;
-        const pa = num(row.pars, NaN);
-        if (Number.isFinite(pa)) rec.pars = Math.round(pa * 10) / 10;
-        const gir = num(row.gir, NaN);
-        if (Number.isFinite(gir)) rec.gir = Math.round(gir * 10) / 10;
-        const fw = num(row.fairways, NaN);
-        if (Number.isFinite(fw)) rec.fairways = Math.round(fw * 10) / 10;
-        const putts = num(row.putts, NaN);
-        if (Number.isFinite(putts)) rec.putts = Math.round(putts * 10) / 10;
-        if (!Object.keys(rec).length) continue;
-        if (!byDgRound.has(id)) byDgRound.set(id, new Map());
-        byDgRound.get(id).set(rnd, rec);
-        const dk = String(id);
-        if (!exportPack[dk]) exportPack[dk] = {};
-        exportPack[dk][String(rnd)] = rec;
-      }
-    }
-  } catch (e) {
-    console.warn("within-event counting from player_round_history:", e.message || e);
-  }
-  return { byDgRound, exportPack };
-}
-
-function priorEventCountingForPlayer(byDgRound, dgId, targetRound) {
-  const id = Math.round(num(dgId, NaN));
-  const tr = Math.round(num(targetRound, NaN));
-  const per = byDgRound.get(id);
-  if (!per || tr < 2) return null;
-  /** @type {Record<string, number[]>} */
-  const out = {};
-  for (let rn = 1; rn < tr; rn++) {
-    const rec = per.get(rn);
-    if (!rec) continue;
-    for (const [k, v] of Object.entries(rec)) {
-      const n = num(v, NaN);
-      if (!Number.isFinite(n)) continue;
-      if (!out[k]) out[k] = [];
-      out[k].push(n);
-    }
-  }
-  return Object.keys(out).length ? out : null;
-}
 
 function normHoleKey(s) {
   return String(s || "")
@@ -1207,9 +1133,7 @@ function parseRoundMuMult() {
 
 function derivedStatsFromMuSg(muRaw, nFairwayHoles, opts = {}) {
   const mu_sg = clampMuSg(muRaw);
-  const targetStp = -mu_sg;
   let im = imputeCountsWithHistory(mu_sg, opts.histCountFit);
-  im = softAlignHoleCountsToStp(im, targetStp);
   const stpVec = -mu_sg;
   const nGir = Number.isFinite(opts.nGirHoles) ? opts.nGirHoles : 18;
   const skR = opts.skRow;
@@ -1976,12 +1900,6 @@ async function main() {
     let pars = im.pars;
     let bogeys = im.bogeys;
     let doubles = im.doubles;
-    const alignedCounts = softAlignHoleCountsToStp({ eagles, birdies, pars, bogeys, doubles }, -mu_sg);
-    eagles = alignedCounts.eagles;
-    birdies = alignedCounts.birdies;
-    pars = alignedCounts.pars;
-    bogeys = alignedCounts.bogeys;
-    doubles = alignedCounts.doubles;
 
     const stpVec = -mu_sg;
     const gir = girExpectedFromSkill(mu_sg, skRow?.sg_app, 18, fieldMeanApp);
@@ -2106,14 +2024,6 @@ async function main() {
           formCap,
         )
       : new Map();
-  const { byDgRound: withinEventCountByDg, exportPack: withinEventCountingExport } =
-    loadWithinEventCountingActualsFromPlayerHistory(event_name);
-  if (withinEventCountByDg.size) {
-    console.log(
-      `[fetch-dg] Within-event counting actuals for ${withinEventCountByDg.size} player(s) from player_round_history.json`,
-    );
-  }
-  const fieldCountingThisWeek = fieldCountingMeansFromWithinEventMap(withinEventCountByDg);
   const priorCourseExcessByRound = {};
   const priorCourseStrokeShiftByRound = {};
   if (applyPriorRoundAdj) {
@@ -2252,35 +2162,6 @@ async function main() {
       st.gir = venueCounts.gir;
       st.fairways = venueCounts.fairways;
       st.putts = venueCounts.putts;
-      if (r >= 2) {
-        const priorCt = priorEventCountingForPlayer(withinEventCountByDg, row.dg_id, r);
-        if (priorCt) {
-          const blended = blendWithinEventProjectionCounts(
-            {
-              eagles: st.eagles,
-              birdies: st.birdies,
-              pars: st.pars,
-              bogeys: st.bogeys,
-              doubles: st.doubles,
-              gir: st.gir,
-              fairways: st.fairways,
-              putts: st.putts,
-            },
-            priorCt,
-            r,
-            { playerRow: row },
-          );
-          st.eagles = blended.eagles ?? st.eagles;
-          st.birdies = blended.birdies ?? st.birdies;
-          st.pars = blended.pars ?? st.pars;
-          st.bogeys = blended.bogeys ?? st.bogeys;
-          st.doubles = blended.doubles ?? st.doubles;
-          st.gir = blended.gir ?? st.gir;
-          st.fairways = blended.fairways ?? st.fairways;
-          st.putts = blended.putts ?? st.putts;
-          applyFieldDayCountingLiftToCounts(st, r, fieldCountingThisWeek, venueScoring);
-        }
-      }
       const pl = {
         dg_id: row.dg_id,
         player_name: row.player_name,
@@ -2415,9 +2296,6 @@ async function main() {
     hole_pars_source,
     prior_round_course_excess_strokes: priorCourseExcessByRound,
     prior_round_course_stroke_shift: priorCourseStrokeShiftByRound,
-    ...(Object.keys(withinEventCountingExport).length
-      ? { within_event_counting_actuals_by_dg: withinEventCountingExport }
-      : {}),
     projection_round_adjustments: {
       course_prior_round_difficulty: applyPriorRoundAdj,
       /** app.js must not add course_table static overlay when this is true (see courseProjectionDifficultyBakedInExport). */
@@ -2426,7 +2304,6 @@ async function main() {
       within_event_form_cap: formCap,
       within_event_form_runtime_carry: formRuntimeK,
       within_event_form_runtime_cap: formRuntimeCap,
-      within_event_counting_blend: true,
     },
     projection_course_basis: {
       fairway_holes_modeled: fairwayHolesThisCourse,
@@ -2444,18 +2321,6 @@ async function main() {
         [...(venueScoring.fieldByRound || new Map()).entries()]
           .filter(([, v]) => v?.n >= 25 && Number.isFinite(v.avgScore))
           .map(([rnd, v]) => [String(rnd), Math.round(v.avgScore * 100) / 100]),
-      ),
-      field_avg_birdies_by_round: Object.fromEntries(
-        Object.entries(fieldCountingThisWeek.birdies || {}).map(([rnd, v]) => [String(rnd), v]),
-      ),
-      field_avg_bogeys_by_round: Object.fromEntries(
-        Object.entries(fieldCountingThisWeek.bogeys || {}).map(([rnd, v]) => [String(rnd), v]),
-      ),
-      field_avg_gir_by_round: Object.fromEntries(
-        Object.entries(fieldCountingThisWeek.gir || {}).map(([rnd, v]) => [String(rnd), v]),
-      ),
-      field_avg_fairways_by_round: Object.fromEntries(
-        Object.entries(fieldCountingThisWeek.fairways || {}).map(([rnd, v]) => [String(rnd), v]),
       ),
       venue_avg_birdies: Number.isFinite(venueScoring.venueAvgBirdies)
         ? Math.round(venueScoring.venueAvgBirdies * 100) / 100
