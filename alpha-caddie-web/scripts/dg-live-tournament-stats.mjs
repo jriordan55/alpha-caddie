@@ -6,6 +6,8 @@
  * Completed seasons still come from historical-raw-data/rounds (CSV).
  */
 
+import { reconcileHoleCountsFromScore } from "./course-round-adjustments.mjs";
+
 export const DEFAULT_LIVE_TOURNAMENT_STATS =
   "sg_ott,distance,accuracy,sg_app,gir,prox_fw,sg_putt,scrambling";
 
@@ -202,6 +204,9 @@ export function parseLiveTournamentStatsCounting(statsRow, inPlayRow, roundPar, 
   };
 
   sanitizeLiveCountingFields(out);
+  if (Number.isFinite(roundPar) && Number.isFinite(out.round_score) && Number.isFinite(out.birdies)) {
+    Object.assign(out, reconcileHoleCountsFromScore(out, roundPar));
+  }
 
   const hasCounting =
     Number.isFinite(out.round_score) ||

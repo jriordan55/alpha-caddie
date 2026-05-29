@@ -2038,6 +2038,7 @@ async function main() {
       event_name,
       courseKeyHist,
       new Date().getFullYear(),
+      course_par_18,
     );
     if (withinEventCountingMap.size) {
       console.log(

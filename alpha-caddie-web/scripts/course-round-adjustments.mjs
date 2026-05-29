@@ -663,7 +663,7 @@ const WITHIN_EVENT_COUNT_RECENCY_DECAY = 0.72;
 const WITHIN_EVENT_COUNT_BLEND_BASE = 0.5;
 const WITHIN_EVENT_COUNT_BLEND_PER_ROUND = 0.15;
 const WITHIN_EVENT_COUNT_BLEND_CAP = 0.82;
-const WITHIN_EVENT_BOGEY_BLEND_SCALE = 0.72;
+const WITHIN_EVENT_BOGEY_BLEND_SCALE = 1;
 const WITHIN_EVENT_ALIGN_STRENGTH = 0.96;
 const WITHIN_EVENT_PAR_SPREAD_STRENGTH = 0.55;
 const FIELD_DAY_COUNTING_LIFT_FRAC = 0.45;
@@ -727,6 +727,32 @@ export function residualParsFromHoleCounts(counts) {
 }
 
 /**
+ * Live DG stats often report bogeys=0 when missing. Infer from score + birdies when inconsistent.
+ * stp = −bird − 2·eagle + bog + 2·double  →  bog = stp + bird + 2·eagle − 2·double
+ */
+export function reconcileHoleCountsFromScore(counts, coursePar18) {
+  if (!counts || typeof counts !== "object") return counts;
+  const cp = num(coursePar18, NaN);
+  const rs = num(counts.round_score ?? counts.score, NaN);
+  if (!Number.isFinite(cp) || !Number.isFinite(rs)) return counts;
+  const stp = rs - cp;
+  const e = Math.max(0, num(counts.eagles ?? counts.eagles_or_better, 0));
+  const d = Math.max(0, num(counts.doubles ?? counts.doubles_or_worse, 0));
+  const bird = num(counts.birdies, NaN);
+  if (!Number.isFinite(bird)) return counts;
+
+  let bog = num(counts.bogeys ?? counts.bogies, NaN);
+  const impliedBog = stp + bird + 2 * e - 2 * d;
+  const hatStp = -bird - 2 * e + (Number.isFinite(bog) ? bog : 0) + 2 * d;
+  const err = Math.abs(hatStp - stp);
+  if (!Number.isFinite(bog) || (bog <= 0.01 && impliedBog >= 0.45) || err > 0.85) {
+    bog = Math.max(0, Math.round(impliedBog * 100) / 100);
+  }
+  const pars = Math.max(0, Math.round((18 - bird - bog - e - d) * 100) / 100);
+  return { ...counts, birdies: bird, bogeys: bog, pars, eagles: e, doubles: d };
+}
+
+/**
  * This-week field birdie/bogey/GIR means from event-scoped CSV context (not all-time venue R1/R2).
  * @param {ReturnType<typeof loadEventRoundContextFromHistoricalCsv>} ctx
  */
@@ -748,7 +774,7 @@ export function fieldCountingMeansFromEventContext(ctx, minPlayers = 28) {
  * Per-player prior-round counting actuals this week from player_round_history.json.
  * @returns {Map<number, Map<number, { birdies?: number, bogeys?: number, gir?: number, round_score?: number }>>}
  */
-export function loadWithinEventCountingActualsFromHistoryJson(jsonPath, eventName, courseKeyOpt, yearOpt) {
+export function loadWithinEventCountingActualsFromHistoryJson(jsonPath, eventName, courseKeyOpt, yearOpt, coursePar18) {
   /** @type {Map<number, Map<number, object>>} */
   const out = new Map();
   if (!jsonPath || !existsSync(jsonPath) || !eventName) return out;
@@ -785,16 +811,18 @@ export function loadWithinEventCountingActualsFromHistoryJson(jsonPath, eventNam
       }
       const rnd = Math.round(num(r.round_num ?? r.round, NaN));
       if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
-      const rec = {};
-      const bird = num(r.birdies, NaN);
-      const bog = num(r.bogeys ?? r.bogies, NaN);
-      const gir = girOrFwToCount(r.gir, 18);
-      const rs = num(r.round_score ?? r.score, NaN);
-      if (Number.isFinite(bird)) rec.birdies = bird;
-      if (Number.isFinite(bog)) rec.bogeys = bog;
-      if (Number.isFinite(gir)) rec.gir = gir;
-      if (Number.isFinite(rs)) rec.round_score = rs;
-      if (!Object.keys(rec).length) continue;
+      const cpRow = num(r.course_par, NaN);
+      const cp = Number.isFinite(cpRow) ? cpRow : num(coursePar18, NaN);
+      let rec = {
+        birdies: num(r.birdies, NaN),
+        bogeys: num(r.bogeys ?? r.bogies, NaN),
+        gir: girOrFwToCount(r.gir, 18),
+        round_score: num(r.round_score ?? r.score, NaN),
+        eagles: num(r.eagles_or_better, NaN),
+        doubles: num(r.doubles_or_worse, NaN),
+      };
+      rec = reconcileHoleCountsFromScore(rec, cp);
+      if (!Number.isFinite(rec.birdies) && !Number.isFinite(rec.bogeys) && !Number.isFinite(rec.gir)) continue;
       let per = out.get(dg);
       if (!per) {
         per = new Map();

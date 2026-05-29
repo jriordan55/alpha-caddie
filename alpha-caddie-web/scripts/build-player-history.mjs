@@ -44,6 +44,7 @@ import {
   sanitizeLiveCountingFields,
   countingFromInPlayRow,
 } from "./dg-live-tournament-stats.mjs";
+import { reconcileHoleCountsFromScore } from "./course-round-adjustments.mjs";
 import { normCourseNameKey, courseShardFileName, formatCourseLabelForDisplay } from "./course-name-key.mjs";
 import {
   historyRoundChartUtcIsoDay,
@@ -680,8 +681,7 @@ function buildLiveHistoryRowsFromBundle() {
       const fwVal = Number.isFinite(num(act.fairways, NaN)) ? Math.round(num(act.fairways, NaN)) : null;
       const puttsVal = Number.isFinite(num(act.putts, NaN)) ? Math.round(num(act.putts, NaN)) : null;
 
-      out.push(
-        sanitizeLiveCountingFields({
+      let row = sanitizeLiveCountingFields({
         dg_id: dg,
         player_name: displayName,
         sortKey: parseUsDateSortKey(eventDate) * 10 + rnd,
@@ -714,8 +714,15 @@ function buildLiveHistoryRowsFromBundle() {
         current_score: Number.isFinite(currentScore) ? currentScore : null,
         today: Number.isFinite(today) ? today : null,
         _from_live_tournament_stats: true,
-        }),
-      );
+      });
+      const fixed = reconcileHoleCountsFromScore(row, roundPar);
+      if (Number.isFinite(fixed.birdies)) row.birdies = Math.round(fixed.birdies);
+      if (Number.isFinite(fixed.bogeys)) {
+        row.bogeys = Math.round(fixed.bogeys);
+        row.bogies = row.bogeys;
+      }
+      if (Number.isFinite(fixed.pars)) row.pars = Math.round(fixed.pars);
+      out.push(row);
     }
   }
 

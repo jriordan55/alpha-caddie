@@ -4295,10 +4295,10 @@ function sigmaOuDiscreteCounting(market, muAbs) {
     return clamp(Math.sqrt(m * 1.15), 2.35, 5.85);
   }
   if (market === "Birdies" || market === "Bogeys") {
-    return clamp(Math.sqrt(m * 1.08), 1.05, 3.15);
+    return clamp(Math.sqrt(m * 1.35), 1.45, 3.35);
   }
   if (market === "Pars") {
-    return clamp(Math.sqrt(m * 1.06), 1.15, 3.35);
+    return clamp(Math.sqrt(m * 1.2), 1.65, 3.65);
   }
   return Math.max(0.55, Math.sqrt(Math.max(m, 0.2)) * 0.9);
 }
@@ -4307,7 +4307,49 @@ const WITHIN_EVENT_COUNT_RECENCY_DECAY_RT = 0.72;
 const WITHIN_EVENT_COUNT_BLEND_BASE_RT = 0.5;
 const WITHIN_EVENT_COUNT_BLEND_PER_ROUND_RT = 0.15;
 const WITHIN_EVENT_COUNT_BLEND_CAP_RT = 0.82;
-const WITHIN_EVENT_BOGEY_BLEND_SCALE_RT = 0.72;
+const WITHIN_EVENT_BOGEY_BLEND_SCALE_RT = 1;
+
+/** Infer bogeys/pars from score when live feed reports bogeys=0 but card doesn't reconcile. */
+function reconcileHoleCountsFromScoreRuntime(counts, coursePar18) {
+  if (!counts || typeof counts !== "object") return counts;
+  const cp = num(coursePar18, NaN);
+  const rs = num(counts.round_score ?? counts.score, NaN);
+  if (!Number.isFinite(cp) || !Number.isFinite(rs)) return counts;
+  const stp = rs - cp;
+  const e = Math.max(0, num(counts.eagles ?? counts.eagles_or_better, 0));
+  const d = Math.max(0, num(counts.doubles ?? counts.doubles_or_worse, 0));
+  const bird = num(counts.birdies, NaN);
+  if (!Number.isFinite(bird)) return counts;
+  let bog = num(counts.bogeys ?? counts.bogies, NaN);
+  const impliedBog = stp + bird + 2 * e - 2 * d;
+  const hatStp = -bird - 2 * e + (Number.isFinite(bog) ? bog : 0) + 2 * d;
+  const err = Math.abs(hatStp - stp);
+  if (!Number.isFinite(bog) || (bog <= 0.01 && impliedBog >= 0.45) || err > 0.85) {
+    bog = Math.max(0, Math.round(impliedBog * 100) / 100);
+  }
+  const pars = Math.max(0, Math.round((18 - bird - bog - e - d) * 100) / 100);
+  return { ...counts, birdies: bird, bogeys: bog, pars, eagles: e, doubles: d };
+}
+
+/** Player historical σ for counting props (last 12 rounds with data). */
+function ouPlayerHistoricalCountingSigma(market, dgId) {
+  if (!HISTORY._ok) return NaN;
+  const statKey =
+    market === "Birdies" ? "birdies" : market === "Bogeys" ? "bogeys" : market === "Pars" ? "pars" : null;
+  if (!statKey) return NaN;
+  const rec = HISTORY.byDgId?.[String(Math.round(num(dgId, NaN)))];
+  if (!rec || !Array.isArray(rec.rounds)) return NaN;
+  const vals = rec.rounds
+    .slice()
+    .sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a))
+    .slice(0, 12)
+    .map((r) => actualForRoundRow(statKey, r))
+    .filter((v) => Number.isFinite(v));
+  if (vals.length < 4) return NaN;
+  const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
+  const vari = vals.reduce((s, v) => s + (v - mean) ** 2, 0) / (vals.length - 1);
+  return Math.sqrt(vari);
+}
 const FIELD_DAY_COUNTING_LIFT_FRAC_RT = 0.45;
 
 function recencyWeightedMeanFromArrRuntime(arr, decay = WITHIN_EVENT_COUNT_RECENCY_DECAY_RT) {
@@ -4387,12 +4429,21 @@ function tournamentWeekPriorByStatFromHistory(dgId, targetRound) {
     const rnd = Math.round(num(r.round_num ?? r.round, NaN));
     if (seenRnd.has(rnd)) continue;
     seenRnd.add(rnd);
-    const bird = num(r.birdies, NaN);
-    const bog = num(r.bogeys ?? r.bogies, NaN);
-    const gir = num(r.gir, NaN);
-    if (Number.isFinite(bird)) out.birdies.push(bird);
-    if (Number.isFinite(bog)) out.bogeys.push(bog);
-    if (Number.isFinite(gir)) out.gir.push(gir);
+    const cp = num(r.course_par, NaN) || num(DATA?.meta?.course_par_18, NaN);
+    const rec = reconcileHoleCountsFromScoreRuntime(
+      {
+        birdies: r.birdies,
+        bogeys: r.bogeys ?? r.bogies,
+        gir: r.gir,
+        round_score: r.round_score ?? r.score,
+        eagles_or_better: r.eagles_or_better,
+        doubles_or_worse: r.doubles_or_worse,
+      },
+      cp,
+    );
+    if (Number.isFinite(rec.birdies)) out.birdies.push(rec.birdies);
+    if (Number.isFinite(rec.bogeys)) out.bogeys.push(rec.bogeys);
+    if (Number.isFinite(rec.gir)) out.gir.push(num(r.gir, NaN));
   }
   return Object.values(out).some((a) => a.length) ? out : null;
 }
@@ -4489,7 +4540,17 @@ function sigmaForOu(market, row) {
   const muFallback = ouFallbackScalarForProjectedMean(mKey, row, rec);
   const muAbs = Number.isFinite(muFull) && muFull > 0 ? Math.abs(muFull) : Math.abs(num(muFallback, NaN));
   if (!Number.isFinite(muAbs) || muAbs <= 0) return 2.75 * weatherMult * liveShrink;
-  return sigmaOuDiscreteCounting(mKey, muAbs) * weatherMult * liveShrink;
+  let sig = sigmaOuDiscreteCounting(mKey, muAbs);
+  const bench = ouPgaTourBenchmarkForMarket(mKey);
+  if (bench && Number.isFinite(bench.sd) && bench.sd > 0) {
+    sig = Math.max(sig, bench.sd * 0.9);
+  }
+  const dgId = Math.round(num(row?.dg_id, NaN));
+  if (Number.isFinite(dgId) && (mKey === "Birdies" || mKey === "Bogeys" || mKey === "Pars")) {
+    const histSig = ouPlayerHistoricalCountingSigma(mKey, dgId);
+    if (Number.isFinite(histSig) && histSig > 0) sig = Math.max(sig, histSig * 0.85);
+  }
+  return sig * weatherMult * liveShrink;
 }
 
 /** Model-projected mean μ for one market / player / round (weather, live course, partial live round, pricing). */
