@@ -708,57 +708,26 @@ function fairwayHolesModeledFromData() {
 }
 
 /**
- * When the event advances (DataGolf live round or export display_round), align the shared Round
- * selector so O/U, +EV, and matchups read projection rows for the active round. Live current_round
- * can move the picker up or down to correct stale export display_round. Without live, only advance
- * forward from export (user can still pick an earlier round manually).
+ * Align the shared Round selector with the active betting round: calendar cap, live DG round,
+ * export meta, and DraftKings posted lines (so stale export R4 does not open when DK only has R1).
  */
 function syncLbRoundToTournamentModelRound() {
   const sel = document.getElementById("lb-round");
   if (!sel || isAfterSunday8pmEt()) return false;
-  if (eventTournamentWeekNotStarted()) {
-    const curPre = Math.round(num(sel.value, NaN));
-    if (!Number.isFinite(curPre) || curPre !== 1) {
-      sel.value = "1";
-      return true;
-    }
-    return false;
+  const target = preferredOuRoundForPicker();
+  const calCap = calendarTournamentRoundFromDateStart(tournamentDateStartIso());
+  const liveR = currentEventLiveRoundNum();
+  let desired = target;
+  if (Number.isFinite(liveR) && liveR > desired && (!Number.isFinite(calCap) || liveR <= calCap)) {
+    desired = liveR;
   }
-  const mismatch = String(DATA?.meta?.datagolf_live_event_mismatch || "").trim();
-  const liveR = mismatch
-    ? NaN
-    : Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
-  const drEff = effectiveUiModelRoundFromMeta();
-  const drExport = Math.round(num(DATA?.meta?.display_round, NaN));
-  /* Live file from a different tournament can leave the picker on R4 while projections are R1 — snap back. */
-  if (mismatch && Number.isFinite(drExport) && drExport >= 1 && drExport <= 4) {
-    const curSnap = Math.round(num(sel.value, NaN));
-    if (!Number.isFinite(curSnap) || curSnap !== drExport) {
-      sel.value = String(drExport);
-      return true;
-    }
-    return false;
-  }
-  const fromLive = Number.isFinite(liveR) && liveR >= 1 && liveR <= 4;
-  let target = 0;
-  if (fromLive) target = liveR;
-  else if (Number.isFinite(drEff) && drEff >= 1 && drEff <= 4) target = drEff;
-  if (target < 1) return false;
+  if (Number.isFinite(calCap)) desired = Math.min(desired, calCap);
   const cur = Math.round(num(sel.value, NaN));
-  if (!Number.isFinite(cur) || cur < 1 || cur > 4) {
-    sel.value = String(target);
-    return true;
-  }
-  if (fromLive) {
-    if (target !== cur) {
-      sel.value = String(target);
+  if (!Number.isFinite(cur) || cur < 1 || cur > 4 || cur !== desired) {
+    if (cur !== desired) {
+      sel.value = String(desired);
       return true;
     }
-    return false;
-  }
-  if (target > cur) {
-    sel.value = String(target);
-    return true;
   }
   return false;
 }
@@ -1831,6 +1800,19 @@ function liveHistDateStartIsFuture(dateStartIso) {
   return Number.isFinite(start) && start > today;
 }
 
+/** Tournament round implied by field week start (R1 = date_start); caps stale export R4 before Sunday. */
+function calendarTournamentRoundFromDateStart(dateStartIso, now = new Date()) {
+  if (!dateStartIso) return NaN;
+  if (liveHistDateStartIsFuture(dateStartIso)) return 1;
+  const m = String(dateStartIso).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return NaN;
+  const start = Date.UTC(+m[1], +m[2] - 1, +m[3]);
+  const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  if (today < start) return 1;
+  const dayIndex = Math.floor((today - start) / 86400000);
+  return Math.min(4, Math.max(1, dayIndex + 1));
+}
+
 function projectionRowForDgRound(dgId, rnd) {
   const id = Math.round(num(dgId, NaN));
   if (!Number.isFinite(id) || !DATA.players || !DATA.players.length) return null;
@@ -2575,11 +2557,9 @@ function applyPayload(raw) {
   ouInvalidateProjectionPerfCaches();
 }
 
-/** O/U + model default round from meta (see effectiveUiModelRoundFromMeta); **1** if unknown. */
+/** O/U + model default round (calendar, DK lines, live, export meta); **1** if unknown. */
 function ouDisplayRoundAuto() {
-  const eff = effectiveUiModelRoundFromMeta();
-  if (Number.isFinite(eff) && eff >= 1 && eff <= 4) return eff;
-  return 1;
+  return preferredOuRoundForPicker();
 }
 
 function getOuRound() {
@@ -2696,9 +2676,7 @@ function updateStatusBar() {
 function configureRoundPickerUi() {
   const sel = document.getElementById("lb-round");
   if (!sel) return;
-  if (syncLbRoundToTournamentModelRound()) return;
-  const dr = ouDisplayRoundAuto();
-  sel.value = String(dr);
+  syncLbRoundToTournamentModelRound();
 }
 
 const OU_STAT_MAP = {
@@ -4516,6 +4494,34 @@ function draftKingsRoundPropsOnly(allRounds = false) {
     ouDkRoundPropsCache = out;
   }
   return out;
+}
+
+function draftKingsPostedRounds() {
+  const out = new Set();
+  for (const r of draftKingsRoundPropsOnly(true)) {
+    const pr = Math.round(num(r.round_num, NaN));
+    if (pr >= 1 && pr <= 4) out.add(pr);
+  }
+  return [...out].sort((a, b) => a - b);
+}
+
+/** Default Round picker: cap stale export/live with calendar week; prefer latest DK round within cap. */
+function preferredOuRoundForPicker() {
+  if (eventTournamentWeekNotStarted()) return 1;
+  const cal = calendarTournamentRoundFromDateStart(tournamentDateStartIso());
+  const meta = effectiveUiModelRoundFromMeta();
+  const live = currentEventLiveRoundNum();
+  const dkRounds = draftKingsPostedRounds();
+  const capParts = [cal, meta, live].filter((x) => Number.isFinite(x) && x >= 1 && x <= 4);
+  const cap = capParts.length ? Math.min(...capParts) : Number.isFinite(cal) ? cal : 1;
+  if (dkRounds.length) {
+    const eligible = dkRounds.filter((r) => r <= cap);
+    if (eligible.length) return Math.max(...eligible);
+  }
+  if (Number.isFinite(live) && live >= 1 && live <= 4) return Math.min(live, cap);
+  if (Number.isFinite(meta) && meta >= 1 && meta <= 4) return Math.min(meta, cap);
+  if (Number.isFinite(cal) && cal >= 1 && cal <= 4) return cal;
+  return 1;
 }
 
 function parseDkAuditCsvRow(line) {
