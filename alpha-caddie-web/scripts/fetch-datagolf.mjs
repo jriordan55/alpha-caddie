@@ -1,9 +1,10 @@
 /**
  * Pull PGA field + skill + pre-tournament probs from DataGolf (same idea as
  * round_projections.R RAW_PROJECTIONS / GOLF_RAW_PROJECTIONS=1) and write projections.json.
- * Counting stats and GIR/fairways are **skill + historical** from `data/historical_rounds_all.csv` when sample is
- * large enough. Fairways: blend SG:OTT vs field, optional driving-field rate, and a **tour-wide FW vs strokes-to-par**
- * regression (driving_acc as fraction, count, or percent) so OTT and miscoded driving scalars cannot both pin FW low.
+ * GIR and fairways use **DataGolf traditional percentages** first: preds/live-tournament-stats `gir` / `accuracy`
+ * (0–1), preds/skill-ratings `driving_acc` (percentage points vs tour field), then rolling means from
+ * `historical_rounds_all.csv` (`gir`, `driving_acc`). SG:APP / SG:OTT curves are fallbacks only.
+ * Other counting stats blend skill + venue history from `data/historical_rounds_all.csv` when sample is large enough.
  * Scoring uses **course_par_18** from resolved hole pars (not a fixed 72). Total score and all counting
  * markets (birdies/pars/bogeys/GIR/fairways/putts) coalesce player + field history at this venue before skill fallbacks.
  * Optional **preds/pre-tournament** per-round stroke column (when present in the feed) nudges μ_sg toward that baseline.
@@ -95,14 +96,121 @@ import {
   dateStartIsFuture,
   maxRoundFromFieldAndLiveHole,
 } from "./dg-display-round-from-bundle.mjs";
+import {
+  fairwayHitsFromRate01,
+  fairwayRate01FromDg,
+  girHitsFromRate01,
+  girRate01FromDg,
+  traditionalRate01,
+} from "./dg-traditional-stats.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 /** Honors GOLF_MODEL_DIR env (Render / monorepo); otherwise resolve-golf-model-dir.mjs heuristics. */
 const GOLF_MODEL_ROOT = resolveGolfModelDir(ROOT);
 
-/** When no course/event match, Hole Hangout uses this 18-hole par pattern (same as web app fallback). */
+/** When no course/event match — par-71 layout (sum 71). Prefer course_holes.json or course_table.csv. */
 const GENERIC_HOLE_PARS_FALLBACK = [4, 4, 3, 4, 4, 5, 4, 3, 4, 4, 4, 3, 4, 4, 5, 4, 3, 5];
+
+/** Par-72 template (4×5, 4×3, 10×4) when course_table says 72 but no hole card is bundled. */
+const STANDARD_PAR_72_FALLBACK = [4, 5, 4, 3, 4, 4, 3, 5, 4, 4, 4, 3, 5, 4, 4, 3, 5, 4];
+
+function holeParsSum(pars) {
+  if (!Array.isArray(pars) || pars.length !== 18) return NaN;
+  return pars.reduce((s, p) => s + Math.round(num(p, 4)), 0);
+}
+
+let courseTableRowsCache = null;
+
+function loadCourseTableRows() {
+  if (courseTableRowsCache) return courseTableRowsCache;
+  const p = join(ROOT, "data", "course_table.csv");
+  if (!existsSync(p)) {
+    courseTableRowsCache = [];
+    return courseTableRowsCache;
+  }
+  try {
+    const lines = readFileSync(p, "utf8").split(/\r?\n/).filter(Boolean);
+    if (lines.length < 2) {
+      courseTableRowsCache = [];
+      return courseTableRowsCache;
+    }
+    const header = parseCsvLine(lines[0]).map((h) => h.replace(/^"|"$/g, "").toLowerCase());
+    const ci = header.indexOf("course");
+    const pi = header.indexOf("par");
+    if (ci < 0 || pi < 0) {
+      courseTableRowsCache = [];
+      return courseTableRowsCache;
+    }
+    courseTableRowsCache = [];
+    for (let i = 1; i < lines.length; i++) {
+      const row = parseCsvLine(lines[i]);
+      if (row.length <= Math.max(ci, pi)) continue;
+      const course = row[ci]?.replace(/^"|"$/g, "").trim() || "";
+      const par = Math.round(num(row[pi]?.replace(/^"|"$/g, ""), NaN));
+      if (!course || !Number.isFinite(par)) continue;
+      courseTableRowsCache.push({ course, par, key: normCourseNameKey(course) });
+    }
+  } catch {
+    courseTableRowsCache = [];
+  }
+  return courseTableRowsCache;
+}
+
+function findCourseTableRowForCourse(course_used) {
+  const ck = normCourseNameKey(course_used);
+  if (!ck) return null;
+  const rows = loadCourseTableRows();
+  let best = null;
+  let bestScore = -1;
+  for (const r of rows) {
+    if (!r.key) continue;
+    let score = 0;
+    if (r.key === ck) score = 10000;
+    else if (ck.includes(r.key) || r.key.includes(ck)) score = 1000 + r.key.length;
+    else continue;
+    if (score > bestScore) {
+      bestScore = score;
+      best = r;
+    }
+  }
+  return best;
+}
+
+function lookupExpectedParFromCourseTable(course_used) {
+  const row = findCourseTableRowForCourse(course_used);
+  return row && Number.isFinite(row.par) ? row.par : NaN;
+}
+
+function lookupHoleParsFromCourseTable(course_used) {
+  const row = findCourseTableRowForCourse(course_used);
+  if (!row || !Number.isFinite(row.par)) return null;
+  const maps = loadCourseHolesMaps();
+  const fromMap = lookupHoleParsFromMaps(maps, course_used, "");
+  if (fromMap && holeParsSum(fromMap.pars) === row.par) return fromMap;
+  if (row.par === 72) return { pars: [...STANDARD_PAR_72_FALLBACK], source: "course_table_par72" };
+  if (row.par === 71) return { pars: [...GENERIC_HOLE_PARS_FALLBACK], source: "course_table_par71" };
+  return null;
+}
+
+function reconcileHoleParsWithCourseTable(holeRes, course_used, event_name) {
+  const expectedPar = lookupExpectedParFromCourseTable(course_used);
+  const sum = holeParsSum(holeRes?.pars);
+  if (!Number.isFinite(expectedPar) || !Number.isFinite(sum) || sum === expectedPar) return holeRes;
+  const maps = loadCourseHolesMaps();
+  const alt =
+    lookupHoleParsFromMaps(maps, course_used, event_name) || lookupHoleParsFromCourseTable(course_used);
+  if (alt && holeParsSum(alt.pars) === expectedPar) {
+    console.warn(
+      `[fetch-dg] Hole pars sum ${sum} != course_table par ${expectedPar} (${holeRes.source}); using ${alt.source}`,
+    );
+    return alt;
+  }
+  console.warn(
+    `[fetch-dg] Hole pars sum ${sum} != course_table par ${expectedPar} (${holeRes.source}); no correction available`,
+  );
+  return holeRes;
+}
 
 function normHoleKey(s) {
   return String(s || "")
@@ -380,6 +488,9 @@ function resolveHoleParsForEvent({ fieldRaw, course_used, event_name, field_upda
     const hp = extractHoleParsFromCsv(csvPath, event_name);
     if (hp) return { pars: hp, source: "csv", detail: csvPath };
   }
+
+  const fromCourseTable = lookupHoleParsFromCourseTable(course_used);
+  if (fromCourseTable) return fromCourseTable;
 
   return { pars: [...GENERIC_HOLE_PARS_FALLBACK], source: "generic" };
 }
@@ -709,24 +820,9 @@ function imputeCountsWithHistory(muSg, countFit) {
   };
 }
 
-/**
- * Fairway hit rate 0–1 from skill row: (0,1] share, else count on this course’s n_fw, else percent 0–100.
- * `driving_accuracy` is tried before `driving_acc`.
- */
-function fairwayRate01FromDrivingSkill(skRow, nFw = N_FAIRWAY_HOLES) {
-  if (!skRow || typeof skRow !== "object") return NaN;
-  const denom = Number.isFinite(nFw) && nFw > 0 ? nFw : N_FAIRWAY_HOLES;
-  const cands = [num(skRow.driving_accuracy, NaN), num(skRow.driving_acc, NaN)].filter((x) => Number.isFinite(x));
-  for (const a of cands) {
-    if (a > 0 && a < 1) return a;
-  }
-  for (const a of cands) {
-    if (a >= 0 && a <= denom) return a / denom;
-  }
-  for (const a of cands) {
-    if (a > 1 && a <= 100) return a / 100;
-  }
-  return NaN;
+/** @deprecated Use fairwayRate01FromDg — skill-ratings `driving_acc` is pp vs field, not a 0–1 share. */
+function fairwayRate01FromDrivingSkill(skRow, nFw = N_FAIRWAY_HOLES, liveTrad = null) {
+  return fairwayRate01FromDg(skRow, liveTrad, nFw);
 }
 
 function isPlausibleDrivingDistanceYds(y) {
@@ -785,22 +881,14 @@ function projectedFairwaysFromSkillOnly(
   fieldMeanDrive,
   histCalib,
 ) {
+  const fromApi = fairwayHitsFromRate01(fairwayRate01FromDg(skRow, null, nFw), nFw);
+  if (Number.isFinite(fromApi)) return fromApi;
+
   const ottFw = fairwaysExpectedFromSkill(mu_sg, skRow?.sg_ott, nFw, fieldMeanOtt, drivingDistYds, fieldMeanDrive);
   const histFw = fairwaysFromHistoricalStp(mu_sg, nFw, histCalib, fieldMeanOtt, skRow);
-  const fw01 = fairwayRate01FromDrivingSkill(skRow, nFw);
-  const fromDrv = Number.isFinite(fw01) ? fw01 * nFw : NaN;
-
   let y = ottFw;
   if (Number.isFinite(histFw)) {
     y = Number.isFinite(y) ? 0.07 * y + 0.93 * histFw : histFw;
-  }
-  if (!Number.isFinite(y)) {
-    return Number.isFinite(fromDrv) ? fairwayHitsExpectation(fromDrv, nFw) : NaN;
-  }
-  if (Number.isFinite(fromDrv)) {
-    const diff = Math.abs(fromDrv - y);
-    if (diff > 1.65) return fairwayHitsExpectation(y, nFw);
-    return fairwayHitsExpectation(0.28 * fromDrv + 0.72 * y, nFw);
   }
   return fairwayHitsExpectation(y, nFw);
 }
@@ -829,6 +917,57 @@ function tryPreservePropsFromDisk(outPath, eventName, courseUsed) {
     console.warn("[fetch-dg] could not merge prior props:", e?.message || e);
   }
   return [];
+}
+
+/** Rolling mean GIR% / FW% per dg_id from DataGolf historical rounds CSV (`gir`, `driving_acc` columns). */
+async function loadRollingTraditionalPctByDg(csvPath, dgIdSet, maxRoundsPerPlayer = 36) {
+  const maxR = Math.max(8, Math.round(num(maxRoundsPerPlayer, 36)));
+  const minYear = new Date().getFullYear() - 2;
+  /** @type {Map<number, { gir: number[], fw: number[] }>} */
+  const buf = new Map();
+  if (!existsSync(csvPath) || !dgIdSet?.size) return new Map();
+
+  await new Promise((resolve, reject) => {
+    const parser = createReadStream(csvPath).pipe(
+      parse({
+        columns: true,
+        relax_quotes: true,
+        relax_column_count: true,
+        skip_records_with_error: true,
+      }),
+    );
+    parser.on("data", (row) => {
+      const tour = String(row.tour || "").toLowerCase();
+      if (tour !== "pga" && tour !== "liv") return;
+      const yr = parseInt(row.year, 10);
+      if (Number.isFinite(yr) && yr < minYear) return;
+      const id = Math.round(num(row.dg_id, NaN));
+      if (!Number.isFinite(id) || !dgIdSet.has(id)) return;
+      let slot = buf.get(id);
+      if (!slot) {
+        slot = { gir: [], fw: [] };
+        buf.set(id, slot);
+      }
+      const girR = traditionalRate01(row.gir, 18);
+      if (Number.isFinite(girR) && slot.gir.length < maxR) slot.gir.push(girR);
+      const fwR = traditionalRate01(row.driving_acc, N_FAIRWAY_HOLES);
+      if (Number.isFinite(fwR) && slot.fw.length < maxR) slot.fw.push(fwR);
+    });
+    parser.on("end", resolve);
+    parser.on("error", reject);
+  });
+
+  const mean = (arr) => (arr.length ? arr.reduce((s, x) => s + x, 0) / arr.length : NaN);
+  /** @type {Map<number, { girRate01: number, fwRate01: number }>} */
+  const out = new Map();
+  for (const [id, slot] of buf) {
+    const girRate01 = mean(slot.gir);
+    const fwRate01 = mean(slot.fw);
+    if (Number.isFinite(girRate01) || Number.isFinite(fwRate01)) {
+      out.set(id, { girRate01, fwRate01 });
+    }
+  }
+  return out;
 }
 
 /**
@@ -1144,20 +1283,28 @@ function derivedStatsFromMuSg(muRaw, nFairwayHoles, opts = {}) {
   const stpVec = -mu_sg;
   const nGir = Number.isFinite(opts.nGirHoles) ? opts.nGirHoles : 18;
   const skR = opts.skRow;
-  let gir = Math.max(6, Math.min(16, 11.5 - 0.25 * stpVec));
-  if (Number.isFinite(opts.sg_app) && Number.isFinite(opts.fieldMeanApp)) {
+  const liveTrad = opts.liveTrad ?? null;
+  let gir = girHitsFromRate01(
+    girRate01FromDg(skR, liveTrad, { muSg: mu_sg, fieldMeanApp: opts.fieldMeanApp }),
+    nGir,
+  );
+  if (!Number.isFinite(gir) && Number.isFinite(opts.sg_app) && Number.isFinite(opts.fieldMeanApp)) {
     gir = girExpectedFromSkill(mu_sg, opts.sg_app, nGir, opts.fieldMeanApp);
   }
+  if (!Number.isFinite(gir)) gir = Math.max(6, Math.min(16, 11.5 - 0.25 * stpVec));
   const distFw = isPlausibleDrivingDistanceYds(opts.driving_distance) ? opts.driving_distance : NaN;
-  const fairways = projectedFairwaysFromSkillOnly(
-    mu_sg,
-    skR,
-    nFairwayHoles,
-    opts.fieldMeanOtt,
-    distFw,
-    opts.fieldMeanDrive,
-    opts.histCountFit,
-  );
+  let fairways = fairwayHitsFromRate01(fairwayRate01FromDg(skR, liveTrad, nFairwayHoles), nFairwayHoles);
+  if (!Number.isFinite(fairways)) {
+    fairways = projectedFairwaysFromSkillOnly(
+      mu_sg,
+      skR,
+      nFairwayHoles,
+      opts.fieldMeanOtt,
+      distFw,
+      opts.fieldMeanDrive,
+      opts.histCountFit,
+    );
+  }
   const putts = Math.max(22, Math.min(35, 28.5 + 0.32 * stpVec - 0.1 * (gir - 11)));
   return {
     mu_sg,
@@ -1594,11 +1741,12 @@ async function main() {
     );
   }
 
-  /** event_avg driving distance (yards) + accuracy from preds/live-tournament-stats — matches DG Live Stats feed. */
-  let liveDrivingByDg = new Map();
+  /** event_avg traditional stats from preds/live-tournament-stats (GIR%, accuracy%, distance). */
+  let liveTraditionalByDg = new Map();
   try {
     const statsParam =
-      String(process.env.GOLF_PROJECTIONS_MERGE_LIVE_STATS || "distance,accuracy").trim() || "distance,accuracy";
+      String(process.env.GOLF_PROJECTIONS_MERGE_LIVE_STATS || "distance,accuracy,gir").trim() ||
+      "distance,accuracy,gir";
     const roundParam = String(process.env.GOLF_LIVE_TOURNAMENT_STATS_ROUND || "event_avg").trim() || "event_avg";
     const liveTsJson = await fetchDg(
       "/preds/live-tournament-stats",
@@ -1632,12 +1780,12 @@ async function main() {
         const pid = Math.round(num(row.dg_id ?? row.dgId, NaN));
         if (!Number.isFinite(pid)) continue;
         const dist = num(row.distance, NaN);
-        let acc = num(row.accuracy, NaN);
-        if (Number.isFinite(acc) && acc > 0 && acc <= 1) acc *= 100;
-        liveDrivingByDg.set(pid, { distance: dist, accuracy: acc });
+        const acc = num(row.accuracy, NaN);
+        const gir = num(row.gir, NaN);
+        liveTraditionalByDg.set(pid, { distance: dist, accuracy: acc, gir });
       }
       console.log(
-        `live-tournament-stats: merged driving for ${liveDrivingByDg.size} players (round=${roundParam}${titlesAlign ? "" : ", title mismatch but field overlap OK"})`,
+        `live-tournament-stats: merged traditional stats for ${liveTraditionalByDg.size} players (round=${roundParam}${titlesAlign ? "" : ", title mismatch but field overlap OK"})`,
       );
     } else if (lst.length && evLive && event_name && !titlesAlign && !overlapOk) {
       console.warn(`live-tournament-stats event "${evLive}" vs field "${event_name}" — skip driving merge`);
@@ -1766,13 +1914,14 @@ async function main() {
     }
   }
 
-  const holeRes = resolveHoleParsForEvent({
+  let holeRes = resolveHoleParsForEvent({
     fieldRaw,
     course_used,
     event_name,
     field_updates_course_used,
     liveHoleStats: liveHoleStatsForPars,
   });
+  holeRes = reconcileHoleParsWithCourseTable(holeRes, course_used, event_name);
   const hole_pars = holeRes.pars.map((x) => Math.round(num(x, 4)));
   const course_par_18 =
     hole_pars.length === 18 ? hole_pars.reduce((sum, p) => sum + Math.round(num(p, 4)), 0) : COURSE_PAR_18;
@@ -1817,6 +1966,22 @@ async function main() {
     console.log(
       `[fetch-dg] preds/pre-tournament: ${pretList.length} rows — placement-only baseline (no per-round stroke column); μ_sg uses skill ratings.`,
     );
+  }
+
+  const fieldDgIds = new Set(
+    fieldRows.map((fr) => Math.round(num(fr.dg_id, NaN))).filter((id) => Number.isFinite(id)),
+  );
+  const rollingTradByDg = await loadRollingTraditionalPctByDg(histCsvPath, fieldDgIds);
+  if (rollingTradByDg.size) {
+    console.log(
+      `[fetch-dg] Rolling DataGolf traditional GIR/FW rates: ${rollingTradByDg.size} players (historical_rounds_all.csv)`,
+    );
+    for (const [id, sk] of skillByDg) {
+      const roll = rollingTradByDg.get(id);
+      if (!roll) continue;
+      if (Number.isFinite(roll.girRate01)) sk.dg_gir_pct = roll.girRate01;
+      if (Number.isFinite(roll.fwRate01)) sk.dg_fairway_pct = roll.fwRate01;
+    }
   }
 
   const ottSamples = [];
@@ -1887,18 +2052,12 @@ async function main() {
       }
     }
 
-    const liveDv = liveDrivingByDg.get(id);
+    const liveTrad = liveTraditionalByDg.get(id) ?? null;
     let driving_distance =
       skRow && Number.isFinite(skRow.driving_distance) && isPlausibleDrivingDistanceYds(skRow.driving_distance)
         ? skRow.driving_distance
-        : liveDv && Number.isFinite(liveDv.distance) && isPlausibleDrivingDistanceYds(liveDv.distance)
-          ? liveDv.distance
-          : NaN;
-    let driving_accuracy =
-      skRow && Number.isFinite(skRow.driving_accuracy)
-        ? skRow.driving_accuracy
-        : liveDv && Number.isFinite(liveDv.accuracy)
-          ? liveDv.accuracy
+        : liveTrad && Number.isFinite(liveTrad.distance) && isPlausibleDrivingDistanceYds(liveTrad.distance)
+          ? liveTrad.distance
           : NaN;
 
     const im = imputeCountsWithHistory(mu_sg, histCalib);
@@ -1909,20 +2068,27 @@ async function main() {
     let doubles = im.doubles;
 
     const stpVec = -mu_sg;
-    const gir = girExpectedFromSkill(mu_sg, skRow?.sg_app, 18, fieldMeanApp);
+    const girRate01 = girRate01FromDg(skRow, liveTrad, { muSg: mu_sg, fieldMeanApp });
+    let gir = girHitsFromRate01(girRate01, 18);
+    if (!Number.isFinite(gir)) gir = girExpectedFromSkill(mu_sg, skRow?.sg_app, 18, fieldMeanApp);
 
     const distForFw = isPlausibleDrivingDistanceYds(driving_distance)
       ? driving_distance
       : impliedDrivingYardsFromSkillRow(skRow);
-    const fairways = projectedFairwaysFromSkillOnly(
-      mu_sg,
-      skRow,
-      fairwayHolesThisCourse,
-      fieldMeanOtt,
-      distForFw,
-      fieldMeanDrive,
-      histCalib,
-    );
+    const fwRate01 = fairwayRate01FromDg(skRow, liveTrad, fairwayHolesThisCourse);
+    let fairways = fairwayHitsFromRate01(fwRate01, fairwayHolesThisCourse);
+    if (!Number.isFinite(fairways)) {
+      fairways = projectedFairwaysFromSkillOnly(
+        mu_sg,
+        skRow,
+        fairwayHolesThisCourse,
+        fieldMeanOtt,
+        distForFw,
+        fieldMeanDrive,
+        histCalib,
+      );
+    }
+    const driving_accuracy = Number.isFinite(fwRate01) ? fwRate01 * 100 : NaN;
 
     const putts = Math.max(22, Math.min(35, 28.5 + 0.32 * stpVec - 0.1 * (gir - 11)));
 
@@ -1962,7 +2128,9 @@ async function main() {
       rowOut.driving_distance = dyInt;
       rowOut.avg_driving_distance = dyInt;
     }
-    if (Number.isFinite(driving_accuracy)) rowOut.driving_accuracy = driving_accuracy;
+    if (Number.isFinite(driving_accuracy)) rowOut.driving_accuracy = Math.round(driving_accuracy * 10) / 10;
+    if (Number.isFinite(fwRate01)) rowOut.dg_fairway_pct = Math.round(fwRate01 * 1000) / 1000;
+    if (Number.isFinite(girRate01)) rowOut.dg_gir_pct = Math.round(girRate01 * 1000) / 1000;
     base.push(rowOut);
   }
 
@@ -2096,6 +2264,7 @@ async function main() {
   const players = [];
   const scoreSourceCounts = {
     player_venue_hist: 0,
+    player_venue_skill_blend: 0,
     pret_tournament: 0,
     skill_around_venue_mean: 0,
     skill_around_round_venue_mean: 0,
@@ -2141,6 +2310,7 @@ async function main() {
           fieldMeanDrive,
           histCountFit: histCalib,
           skRow: skillByDg.get(row.dg_id),
+          liveTrad: liveTraditionalByDg.get(row.dg_id) ?? null,
         });
       } else {
         const skRowR = skillByDg.get(row.dg_id);
@@ -2156,6 +2326,7 @@ async function main() {
           fieldMeanDrive,
           histCountFit: histCalib,
           skRow: skRowR,
+          liveTrad: liveTraditionalByDg.get(row.dg_id) ?? null,
         });
       }
       const pretScore = pretStrokesByDg.get(row.dg_id);
@@ -2175,6 +2346,7 @@ async function main() {
       const venueCounts = resolveProjectionCounts({
         dg_id: row.dg_id,
         round: r,
+        muForRound,
         skillCounts: {
           eagles: st.eagles,
           birdies: st.birdies,
@@ -2275,14 +2447,20 @@ async function main() {
       if (Number.isFinite(row.driving_distance_rating)) {
         pl.driving_distance_rating = Math.round(row.driving_distance_rating * 100) / 100;
       }
-      if (Number.isFinite(row.driving_accuracy)) {
-        const da = row.driving_accuracy;
-        pl.driving_accuracy =
-          da > 0 && da <= 1 ? Math.round(da * 1000) / 10 : Math.round(da * 10) / 10;
+      if (Number.isFinite(row.dg_gir_pct)) pl.dg_gir_pct = row.dg_gir_pct;
+      if (Number.isFinite(row.dg_fairway_pct)) pl.dg_fairway_pct = row.dg_fairway_pct;
+      const fwPct = Number.isFinite(row.dg_fairway_pct)
+        ? row.dg_fairway_pct * 100
+        : Number.isFinite(row.driving_accuracy)
+          ? row.driving_accuracy
+          : NaN;
+      if (Number.isFinite(fwPct)) {
+        pl.driving_accuracy = Math.round(fwPct * 10) / 10;
       } else {
         const fw = st.fairways;
         if (Number.isFinite(fw) && fw > 1.02) {
           pl.driving_accuracy = Math.round(((fw / fairwayHolesThisCourse) * 100) * 10) / 10;
+          pl.dg_fairway_pct = Math.round((fw / fairwayHolesThisCourse) * 1000) / 1000;
         }
       }
       roundRows.push(pl);

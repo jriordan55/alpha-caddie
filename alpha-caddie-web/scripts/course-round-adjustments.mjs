@@ -304,6 +304,7 @@ export function buildWithinEventFormMap(ctx, basePlayers, k = 0.02, cap = 0.3) {
  *   venueAvgPutts: number,
  *   fieldByRound: Map<number, VenueScoreAgg>,
  *   playerByRound: Map<string, VenueScoreAgg>,
+ *   playerByVenue: Map<number, VenueScoreAgg>,
  *   courseFitByDg: Map<number, { avgSg: number, n: number }>,
  * }} VenueHistoricalScoring
  */
@@ -501,6 +502,7 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
     source: "none",
     fieldByRound: new Map(),
     playerByRound: new Map(),
+    playerByVenue: new Map(),
     courseFitByDg: new Map(),
   };
   const ckWant = courseKeyOpt ? normCourseNameKey(courseKeyOpt) : "";
@@ -522,6 +524,8 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
   const fieldRaw = new Map();
   /** @type {Map<string, ReturnType<typeof emptyVenueCountRaw>>} */
   const playerRaw = new Map();
+  /** @type {Map<number, ReturnType<typeof emptyVenueCountRaw>>} */
+  const playerAllRaw = new Map();
   /** @type {Map<number, { sumSg: number, n: number }>} */
   const fitRaw = new Map();
 
@@ -558,6 +562,8 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
         const pk = `${dg}|${rnd}`;
         const pr = playerRaw.get(pk) || emptyVenueCountRaw();
         playerRaw.set(pk, accumulateVenueCountRow(pr, row, nFairwayHoles));
+        const pa = playerAllRaw.get(dg) || emptyVenueCountRaw();
+        playerAllRaw.set(dg, accumulateVenueCountRow(pa, row, nFairwayHoles));
 
         const sg = num(row.sg_total, NaN);
         if (Number.isFinite(sg)) {
@@ -577,6 +583,9 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
 
   const playerByRound = new Map();
   for (const [pk, raw] of playerRaw) playerByRound.set(pk, finalizeVenueAgg(raw));
+
+  const playerByVenue = new Map();
+  for (const [dg, raw] of playerAllRaw) playerByVenue.set(dg, finalizeVenueAgg(raw));
 
   const courseFitByDg = new Map();
   for (const [dg, raw] of fitRaw) {
@@ -607,13 +616,121 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
     venueAvgPutts: venueAgg.avgPutts,
     fieldByRound,
     playerByRound,
+    playerByVenue,
     courseFitByDg,
   };
 }
 
+/** Venue-history weight in player/skill blends (books lean skill for elite players). */
+const VENUE_PLAYER_BLEND_MIN_ROUNDS = 3;
+const VENUE_PLAYER_BLEND_VENUE_MAX = 0.55;
+const VENUE_PLAYER_BLEND_VENUE_BASE = 0.2;
+const VENUE_PLAYER_BLEND_VENUE_PER_ROUND = 0.03;
+const VENUE_PLAYER_BLEND_VENUE_FLOOR = 0.18;
+const VENUE_PLAYER_BLEND_SKILL_PULL_BASE = 0.08;
+const VENUE_PLAYER_BLEND_SKILL_PULL_MU = 0.16;
+const VENUE_PLAYER_BLEND_SKILL_PULL_CAP = 0.38;
+const VENUE_FIELD_NO_PLAYER_WEIGHT = 0.32;
+const VENUE_COUNT_ALIGN_TO_STP = 0.48;
+
+const VENUE_ROUND_BUCKET_BLEND_MIN = 0.44;
+const VENUE_ROUND_BUCKET_BLEND_MAX = 0.74;
+const VENUE_ROUND_BUCKET_BLEND_PER_ROUND = 0.03;
+
+function blendVenueAggScalar(allVal, roundVal, wRound) {
+  const a = num(allVal, NaN);
+  const r = num(roundVal, NaN);
+  if (!Number.isFinite(a) && !Number.isFinite(r)) return NaN;
+  if (!Number.isFinite(a)) return r;
+  if (!Number.isFinite(r)) return a;
+  return wRound * r + (1 - wRound) * a;
+}
+
+/** Blend full-course venue history with this round's bucket (R1–R4 differ at same venue). */
+function mergePlayerVenueAgg(pv, pr, minPlayerRounds) {
+  const pvOk = pv && pv.n >= minPlayerRounds;
+  const prOk = pr && pr.n >= minPlayerRounds;
+  if (prOk && pvOk) {
+    const wRound = Math.min(
+      VENUE_ROUND_BUCKET_BLEND_MAX,
+      VENUE_ROUND_BUCKET_BLEND_MIN + VENUE_ROUND_BUCKET_BLEND_PER_ROUND * (pr.n - minPlayerRounds),
+    );
+    const blend = (key) => blendVenueAggScalar(pv[key], pr[key], wRound);
+    return {
+      n: pr.n,
+      avgScore: blend("avgScore"),
+      avgStp: blend("avgStp"),
+      avgBirdies: blend("avgBirdies"),
+      avgPars: blend("avgPars"),
+      avgBogeys: blend("avgBogeys"),
+      avgEagles: blend("avgEagles"),
+      avgDoubles: blend("avgDoubles"),
+      avgGir: blend("avgGir"),
+      avgFairways: blend("avgFairways"),
+      avgPutts: blend("avgPutts"),
+    };
+  }
+  if (prOk) return pr;
+  if (pvOk) return pv;
+  return null;
+}
+
+/** More venue rounds → more course history; higher μ_SG → more skill (star props). */
+export function venuePlayerHistBlendWeight(nRounds, muForRound) {
+  const n = Math.max(0, Math.round(num(nRounds, NaN)));
+  if (n < VENUE_PLAYER_BLEND_MIN_ROUNDS) return 0;
+  let wVenue = Math.min(
+    VENUE_PLAYER_BLEND_VENUE_MAX,
+    VENUE_PLAYER_BLEND_VENUE_BASE + VENUE_PLAYER_BLEND_VENUE_PER_ROUND * (n - VENUE_PLAYER_BLEND_MIN_ROUNDS),
+  );
+  const mu = num(muForRound, 0);
+  const skillPull = clamp(
+    VENUE_PLAYER_BLEND_SKILL_PULL_BASE + VENUE_PLAYER_BLEND_SKILL_PULL_MU * Math.max(0, mu),
+    VENUE_PLAYER_BLEND_SKILL_PULL_BASE,
+    VENUE_PLAYER_BLEND_SKILL_PULL_CAP,
+  );
+  wVenue = Math.max(VENUE_PLAYER_BLEND_VENUE_FLOOR, wVenue - skillPull);
+  return wVenue;
+}
+
+function blendVenueSkillScalar(skillVal, playerVal, fieldVal, wVenue) {
+  const sk = num(skillVal, NaN);
+  if (!Number.isFinite(sk)) return NaN;
+  if (Number.isFinite(playerVal)) return wVenue * playerVal + (1 - wVenue) * sk;
+  if (Number.isFinite(fieldVal)) {
+    return VENUE_FIELD_NO_PLAYER_WEIGHT * fieldVal + (1 - VENUE_FIELD_NO_PLAYER_WEIGHT) * sk;
+  }
+  return sk;
+}
+
+function skillScoreToPar({
+  muForRound,
+  course_par_18,
+  venueScoring,
+  round,
+  fieldMeanMu,
+  minFieldRounds,
+}) {
+  const cp = num(course_par_18, NaN);
+  const mu = num(muForRound, 0);
+  if (!Number.isFinite(cp)) return { stp: -mu, source: "skill_rating" };
+
+  const rnd = Math.round(num(round, NaN));
+  const fr = venueScoring?.fieldByRound?.get(rnd);
+  let venueStp = num(venueScoring?.venueAvgStp, NaN);
+  let source = "skill_around_venue_mean";
+  if (fr && fr.n >= minFieldRounds && Number.isFinite(fr.avgStp)) {
+    venueStp = fr.avgStp;
+    source = "skill_around_round_venue_mean";
+  }
+  const fm = num(fieldMeanMu, 0);
+  if (Number.isFinite(venueStp)) return { stp: venueStp - (mu - fm), source };
+  return { stp: -mu, source: "skill_rating" };
+}
+
 /**
- * Hole-count markets: player history at venue → field avg at venue (round) → skill-based projection.
- * Aligns eagles/birdies/bogeys/doubles/pars to `targetStp` when score came from skill path.
+ * Hole-count markets: blend skill projection with round-specific + full-course venue history,
+ * then field venue averages; lightly align bird/bog to blended score-to-par.
  */
 export function resolveProjectionCounts({
   dg_id,
@@ -621,32 +738,52 @@ export function resolveProjectionCounts({
   skillCounts,
   venueScoring,
   targetStp,
+  muForRound,
   nFairwayHoles = 14,
   minPlayerRounds = 3,
   minFieldRounds = 25,
 }) {
   const sk = skillCounts || {};
   const rnd = Math.round(num(round, NaN));
-  const pk = `${Math.round(num(dg_id, NaN))}|${rnd}`;
+  const dg = Math.round(num(dg_id, NaN));
+  const pk = `${dg}|${rnd}`;
   const pr = venueScoring?.playerByRound?.get(pk);
+  const pv = venueScoring?.playerByVenue?.get(dg);
   const fr = venueScoring?.fieldByRound?.get(rnd);
-  const prOk = pr && pr.n >= minPlayerRounds;
   const frOk = fr && fr.n >= minFieldRounds;
+  const prOk = pr && pr.n >= minPlayerRounds;
+  const playerAgg = mergePlayerVenueAgg(pv, pr, minPlayerRounds);
+  const histN = prOk ? pr.n : playerAgg?.n ?? 0;
+  const wVenue = venuePlayerHistBlendWeight(histN, muForRound);
 
-  let eagles = coalesceVenueCount(prOk ? pr.avgEagles : NaN, frOk ? fr.avgEagles : NaN, sk.eagles);
-  let birdies = coalesceVenueCount(prOk ? pr.avgBirdies : NaN, frOk ? fr.avgBirdies : NaN, sk.birdies);
-  let bogeys = coalesceVenueCount(prOk ? pr.avgBogeys : NaN, frOk ? fr.avgBogeys : NaN, sk.bogeys);
-  let doubles = coalesceVenueCount(prOk ? pr.avgDoubles : NaN, frOk ? fr.avgDoubles : NaN, sk.doubles);
-  let pars = coalesceVenueCount(prOk ? pr.avgPars : NaN, frOk ? fr.avgPars : NaN, sk.pars);
-  let gir = coalesceVenueCount(prOk ? pr.avgGir : NaN, frOk ? fr.avgGir : NaN, sk.gir);
-  let fairways = coalesceVenueCount(prOk ? pr.avgFairways : NaN, frOk ? fr.avgFairways : NaN, sk.fairways);
-  let putts = coalesceVenueCount(prOk ? pr.avgPutts : NaN, frOk ? fr.avgPutts : NaN, sk.putts);
+  let eagles = blendVenueSkillScalar(sk.eagles, playerAgg?.avgEagles, frOk ? fr.avgEagles : NaN, wVenue);
+  let birdies = blendVenueSkillScalar(sk.birdies, playerAgg?.avgBirdies, frOk ? fr.avgBirdies : NaN, wVenue);
+  let bogeys = blendVenueSkillScalar(sk.bogeys, playerAgg?.avgBogeys, frOk ? fr.avgBogeys : NaN, wVenue);
+  let doubles = blendVenueSkillScalar(sk.doubles, playerAgg?.avgDoubles, frOk ? fr.avgDoubles : NaN, wVenue);
+  let pars = blendVenueSkillScalar(sk.pars, playerAgg?.avgPars, frOk ? fr.avgPars : NaN, wVenue);
+  let gir = blendVenueSkillScalar(sk.gir, playerAgg?.avgGir, frOk ? fr.avgGir : NaN, wVenue);
+  let fairways = blendVenueSkillScalar(sk.fairways, playerAgg?.avgFairways, frOk ? fr.avgFairways : NaN, wVenue);
+  let putts = blendVenueSkillScalar(sk.putts, playerAgg?.avgPutts, frOk ? fr.avgPutts : NaN, wVenue);
 
   eagles = Math.max(0, num(eagles, 0));
   birdies = Math.max(0.15, num(birdies, 0));
   bogeys = Math.max(0.15, num(bogeys, 0));
   doubles = Math.max(0.04, num(doubles, 0));
   if (!Number.isFinite(pars)) pars = Math.max(0.12, 18 - eagles - birdies - bogeys - doubles);
+
+  const stp = num(targetStp, NaN);
+  if (Number.isFinite(stp)) {
+    const aligned = softAlignHoleCountsToStp(
+      { eagles, birdies, pars, bogeys, doubles },
+      stp,
+      VENUE_COUNT_ALIGN_TO_STP,
+    );
+    eagles = aligned.eagles;
+    birdies = aligned.birdies;
+    pars = aligned.pars;
+    bogeys = aligned.bogeys;
+    doubles = aligned.doubles;
+  }
 
   if (Number.isFinite(gir)) gir = Math.max(6, Math.min(16, gir));
   if (Number.isFinite(fairways)) fairways = Math.max(2, Math.min(nFairwayHoles + 0.5, fairways));
@@ -1194,8 +1331,7 @@ export function applyVenueCourseFitToMu(mu_sg, dg_id, venueScoring, fieldMeanSg)
 }
 
 /**
- * score_to_par: player’s own history at this course when enough rounds; otherwise spread skill
- * around the venue’s historical scoring average (per-round field mean when available).
+ * score_to_par: blend skill around venue mean with full-course player history (not hard anchor).
  */
 export function resolveProjectionScoreToPar({
   dg_id,
@@ -1211,30 +1347,34 @@ export function resolveProjectionScoreToPar({
   const cp = num(course_par_18, NaN);
   if (!Number.isFinite(cp)) return { stp: -num(muForRound, 0), source: "skill_rating" };
 
-  const pk = `${Math.round(num(dg_id, NaN))}|${Math.round(num(round, NaN))}`;
-  const pr = venueScoring?.playerByRound?.get(pk);
-  if (pr && pr.n >= minPlayerRounds && Number.isFinite(pr.avgScore)) {
-    return { stp: pr.avgScore - cp, source: "player_venue_hist" };
-  }
-
   const pret = num(pretRoundScore, NaN);
   if (Number.isFinite(pret)) {
     return { stp: pret - cp, source: "pret_tournament" };
   }
 
-  const rnd = Math.round(num(round, NaN));
-  const fr = venueScoring?.fieldByRound?.get(rnd);
-  let venueStp = num(venueScoring?.venueAvgStp, NaN);
-  let source = "skill_around_venue_mean";
-  if (fr && fr.n >= minFieldRounds && Number.isFinite(fr.avgStp)) {
-    venueStp = fr.avgStp;
-    source = "skill_around_round_venue_mean";
-  }
+  const skillRes = skillScoreToPar({
+    muForRound,
+    course_par_18,
+    venueScoring,
+    round,
+    fieldMeanMu,
+    minFieldRounds,
+  });
 
-  const mu = num(muForRound, 0);
-  const fm = num(fieldMeanMu, 0);
-  if (Number.isFinite(venueStp)) {
-    return { stp: venueStp - (mu - fm), source };
-  }
-  return { stp: -mu, source: "skill_rating" };
+  const dg = Math.round(num(dg_id, NaN));
+  const pk = `${dg}|${Math.round(num(round, NaN))}`;
+  const pr = venueScoring?.playerByRound?.get(pk);
+  const pv = venueScoring?.playerByVenue?.get(dg);
+  const playerAgg = mergePlayerVenueAgg(pv, pr, minPlayerRounds);
+  if (!playerAgg || !Number.isFinite(playerAgg.avgScore)) return skillRes;
+
+  const prOk = pr && pr.n >= minPlayerRounds;
+  const playerStp = playerAgg.avgScore - cp;
+  const wVenue = venuePlayerHistBlendWeight(prOk ? pr.n : playerAgg.n, muForRound);
+  if (wVenue <= 0) return skillRes;
+  const stp = wVenue * playerStp + (1 - wVenue) * skillRes.stp;
+  return {
+    stp,
+    source: wVenue >= 0.88 ? "player_venue_hist" : "player_venue_skill_blend",
+  };
 }

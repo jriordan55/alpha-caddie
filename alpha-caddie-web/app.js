@@ -3919,6 +3919,7 @@ function statWeatherMuAdjustment(market, row) {
   if (market === "Total score") return d;
   if (market === "Bogeys") return 0.45 * d;
   if (market === "Birdies") return -0.5 * d;
+  if (market === "Pars") return 0.05 * d;
   if (market === "Putts") return 0.35 * d;
   if (market === "GIR") return -0.22 * d;
   if (market === "Fairways hit") return -0.14 * d;
@@ -4702,13 +4703,15 @@ function ouProjectedMean(market, row) {
   const baseMean = ouMeanCountingStat(mKey, row);
   const baseScalar = Number.isFinite(baseMean) ? baseMean : ouFallbackScalarForProjectedMean(mKey, row, rec);
 
-  /* Birdies / pars / bogeys: export + this-week form + field day + skill/market/course-fit. */
+  /* Birdies / pars / bogeys: export + this-week form + field day + weather + course playing + skill. */
   if (mKey === "Birdies" || mKey === "Pars" || mKey === "Bogeys") {
     return (
       baseScalar +
       tournamentWeekCountingMuAdjustment(mKey, row) +
       fieldDayCountingMuAdjustment(mKey, row) +
       countingSkillRatingMuAdjustment(mKey, row) +
+      statWeatherMuAdjustment(mKey, row) +
+      combinedCourseDifficultyOUMuAdjustment(mKey, row) +
       countLive.muDelta +
       pricingStatMuAdjustment(mKey, dgId)
     );
