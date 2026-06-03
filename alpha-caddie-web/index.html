@@ -32,7 +32,6 @@
       <button type="button" class="tab" data-tab="live-prop" role="tab">Live Prop Predictor</button>
       <button type="button" class="tab" data-tab="matchup-analysis" role="tab">Matchup Analysis Tool</button>
       <button type="button" class="tab" data-tab="ev" role="tab">+EV Bets</button>
-      <button type="button" class="tab" data-tab="hangout" role="tab">Hole Hangout</button>
     </nav>
 
     <p id="data-status-primary" class="data-status-primary note" aria-live="polite"></p>
@@ -817,116 +816,6 @@
         </table>
       </div>
     </section>
-
-    <!-- Hole Hangout -->
-    <section id="panel-hangout" class="panel" role="tabpanel" hidden>
-      <div class="ev-panel-head">
-        <h2 class="ev-devig-sr-only">Hole Hangout</h2>
-        <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="hh" aria-label="Help: Hole Hangout tab">?</button>
-      </div>
-      <div class="hangout-controls-stack">
-      <div class="props-card hangout-controls-card">
-        <h3>Hole &amp; player</h3>
-        <div class="toolbar weather-toolbar weather-toolbar-compact" aria-label="Weather">
-          <span class="weather-toolbar-title">Weather</span>
-          <div id="hh-weather-wave-summary" class="weather-auto-note text-muted" role="status" aria-live="polite"></div>
-        </div>
-        <div class="toolbar weather-toolbar weather-toolbar-compact pricing-toolbar" aria-label="Pricing mode">
-          <span class="weather-toolbar-title">Pricing</span>
-          <label class="toolbar-label">Mode
-            <select id="hh-pricing-mode">
-              <option value="default" selected>Default</option>
-              <option value="recent">Recent form</option>
-              <option value="course">Course history</option>
-              <option value="skill">Skill focus</option>
-            </select>
-          </label>
-          <label class="toolbar-label pricing-skill-label" id="hh-pricing-skill-label" hidden>Skill
-            <select id="hh-pricing-skill" aria-label="Pricing skill focus">
-              <option value="default" selected>Default</option>
-              <option value="sg_total">Total SG</option>
-              <option value="sg_ott">Off the tee</option>
-              <option value="sg_app">Approach</option>
-              <option value="sg_arg">Around the green</option>
-              <option value="sg_putt">Putting</option>
-              <option value="sg_t2g">Tee to green</option>
-            </select>
-          </label>
-        </div>
-        <div class="props-grid hangout-grid">
-          <label>Hole
-            <select id="hh-hole" title="Par from venue scorecard (hole_pars)"></select>
-          </label>
-          <label>Player
-            <div class="golfer-combobox-wrap golfer-suggest-anchor">
-              <input
-                type="search"
-                id="hh-player-search"
-                class="golfer-combobox-input"
-                placeholder="Search player…"
-                autocomplete="off"
-                spellcheck="false"
-                aria-label="Player"
-              />
-              <div id="hh-player-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Player suggestions"></div>
-              <select id="hh-player" title="Field for the round selected on Round projections" hidden></select>
-            </div>
-          </label>
-          <div class="hangout-sim-actions">
-            <button type="button" class="btn-primary" id="hh-sim-run">Run simulation</button>
-          </div>
-        </div>
-      </div>
-      <div class="props-card hangout-live-card">
-        <h3>Live scenario</h3>
-        <div class="props-grid hangout-live-grid">
-          <label class="check hangout-live-check"><input type="checkbox" id="hh-use-live" /> Live inputs?</label>
-          <label>Shot #
-            <input type="number" id="hh-shot-num" min="1" max="18" value="2" />
-          </label>
-          <label>Yds to hole
-            <input type="number" id="hh-dist-yds" min="0" max="600" value="150" />
-          </label>
-          <label>Lie
-            <select id="hh-lie">
-              <option>Fairway</option>
-              <option>Rough</option>
-              <option>Sand</option>
-              <option>Green</option>
-            </select>
-          </label>
-          <label>Putt (ft)
-            <input type="number" id="hh-putt-ft" min="0" max="120" value="15" />
-          </label>
-        </div>
-      </div>
-      </div>
-      <div class="hangout-results-stack">
-      <div class="hole-sim-top-bar" id="hh-top-bar" hidden></div>
-      <div class="hangout-sim-columns" role="region" aria-label="Hole simulation results">
-        <div class="hole-sim-panel hangout-panel-outcomes" id="hh-panel-outcomes">
-          <div class="hangout-out-toolbar" id="hh-out-toolbar" hidden>
-            <h4>Hole result</h4>
-            <div class="ou-toggle hangout-ou-toggle" role="group" aria-label="Prob or price">
-              <button type="button" class="ou-toggle-btn active" id="hh-odds-mode-prob" aria-selected="true">Prob</button>
-              <button type="button" class="ou-toggle-btn" id="hh-odds-mode-price" aria-selected="false">Price</button>
-            </div>
-          </div>
-          <div id="hh-outcomes-rows"></div>
-        </div>
-        <div class="hole-sim-panel hangout-panel-hole" id="hh-panel-hole">
-          <div id="hh-hole-viz" class="hangout-hole-viz" hidden>
-            <h4 class="hangout-viz-eyebrow">Hole</h4>
-            <div class="hangout-canvas-wrap">
-              <canvas id="hh-hole-canvas" width="560" height="320" aria-label="Schematic hole and shot path"></canvas>
-            </div>
-          </div>
-          <div id="hh-hole-card-body"></div>
-        </div>
-        <div class="hole-sim-panel hangout-panel-sequence" id="hh-panel-sequence"></div>
-      </div>
-      </div>
-    </section>
   </main>
 
   <dialog id="ev-devig-dialog" class="ev-devig-dialog" aria-labelledby="ev-devig-title">
@@ -1021,7 +910,7 @@
       <section class="ev-help-section" aria-labelledby="ev-help-weather-h">
         <h4 class="ev-devig-section-title" id="ev-help-weather-h">Weather</h4>
         <p class="text-muted ev-help-devig-lede">
-          Use the same weather controls as Round projections and Hole Hangout. Set temp, wind, humidity, and <strong>Condition</strong> to match the expected day; that updates fair win chances on every row here. Choosing <strong>Default</strong> for condition resets the numbers to the baseline weather snapshot (then adjust sliders again if needed).
+          Use the same weather controls as Round projections. Set temp, wind, humidity, and <strong>Condition</strong> to match the expected day; that updates fair win chances on every row here. Choosing <strong>Default</strong> for condition resets the numbers to the baseline weather snapshot (then adjust sliders again if needed).
         </p>
       </section>
 
@@ -1295,34 +1184,7 @@
       </p>
       <section class="ev-help-section" aria-labelledby="tab-help-outrights-global-h">
         <h4 class="ev-devig-section-title" id="tab-help-outrights-global-h">Weather and pricing</h4>
-        <p class="text-muted ev-help-devig-lede">Weather lives on Round projections, +EV, or Hole Hangout but still moves fair chances here. Use the <strong>Pricing</strong> row to align with form, course, or skill the same way as on other tabs.</p>
-      </section>
-      <footer class="ev-help-actions">
-        <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
-      </footer>
-    </div>
-  </dialog>
-
-  <dialog id="tab-help-dialog-hh" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-hh">
-    <div class="ev-devig-dialog-inner ev-help-dialog-inner">
-      <header class="ev-devig-head">
-        <h3 class="ev-devig-title" id="tab-help-title-hh">Hole Hangout</h3>
-        <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
-      </header>
-      <p class="ev-help-intro text-muted">
-        The <strong>course</strong> under the tabs applies to every screen. Pick <strong>Hole</strong> and <strong>Player</strong> (field follows the round on Round projections). Results refresh when you change weather, pricing, hole, player, or live scenario; <strong>Run simulation</strong> forces an immediate refresh. The same settings reproduce the same sample shot path.
-      </p>
-      <section class="ev-help-section" aria-labelledby="tab-help-hh-live-h">
-        <h4 class="ev-devig-section-title" id="tab-help-hh-live-h">Live inputs</h4>
-        <p class="text-muted ev-help-devig-lede">Turn on <strong>Live inputs</strong> to set lie, yards to the hole, which shot it is, and putt length. Use it to mimic standing in a specific spot instead of a generic tee shot.</p>
-      </section>
-      <section class="ev-help-section" aria-labelledby="tab-help-hh-weather-h">
-        <h4 class="ev-devig-section-title" id="tab-help-hh-weather-h">Weather</h4>
-        <p class="text-muted ev-help-devig-lede">The <strong>Weather</strong> line shows the same morning / afternoon forecast summary as Round projections (venue hourly feed + tee waves).</p>
-      </section>
-      <section class="ev-help-section" aria-labelledby="tab-help-hh-pricing-h">
-        <h4 class="ev-devig-section-title" id="tab-help-hh-pricing-h">Pricing</h4>
-        <p class="text-muted ev-help-devig-lede">Pricing mode shifts how bullish the sim is on birdies versus mistakes, using the same Mode and Skill as everywhere else.</p>
+        <p class="text-muted ev-help-devig-lede">Weather lives on Round projections and +EV but still moves fair chances here. Use the <strong>Pricing</strong> row to align with form, course, or skill the same way as on other tabs.</p>
       </section>
       <footer class="ev-help-actions">
         <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
@@ -1396,6 +1258,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=216"></script>
+  <script src="app.js?v=217"></script>
 </body>
 </html>
