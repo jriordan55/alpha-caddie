@@ -691,7 +691,7 @@ function projectionRowWithPlacementMerged(dgId) {
   return out;
 }
 
-/** Round for outright / placement +EV: live DG → export display_round → O/U picker (not leaderboard-only R1). */
+/** Round for outright / placement +EV: live DG → export display_round → auto O/U round. */
 function getModelRoundForEv() {
   if (isAfterSunday8pmEt()) return 1;
   const m = DATA?.meta || {};
@@ -707,29 +707,32 @@ function fairwayHolesModeledFromData() {
   return 14;
 }
 
+/** Last auto round applied — used to detect live bumps and refresh dependent tabs. */
+let lastSyncedAutoOuRound = 0;
+
 /**
- * Align the shared Round selector with the active betting round: calendar cap, live DG round,
- * export meta, and DraftKings posted lines (so stale export R4 does not open when DK only has R1).
+ * Active O/U round: calendar cap, live DG round, export meta, and DraftKings posted lines
+ * (so stale export R4 does not open when DK only has R1).
  */
-function syncLbRoundToTournamentModelRound() {
-  const sel = document.getElementById("lb-round");
-  if (!sel || isAfterSunday8pmEt()) return false;
-  const target = preferredOuRoundForPicker();
-  const calCap = calendarTournamentRoundFromDateStart(tournamentDateStartIso());
-  const liveR = currentEventLiveRoundNum();
-  let desired = target;
-  if (Number.isFinite(liveR) && liveR > desired && (!Number.isFinite(calCap) || liveR <= calCap)) {
-    desired = liveR;
-  }
-  if (Number.isFinite(calCap)) desired = Math.min(desired, calCap);
-  const cur = Math.round(num(sel.value, NaN));
-  if (!Number.isFinite(cur) || cur < 1 || cur > 4 || cur !== desired) {
-    if (cur !== desired) {
-      sel.value = String(desired);
-      return true;
+function autoOuRound() {
+  let desired = preferredOuRoundForPicker();
+  if (!isAfterSunday8pmEt()) {
+    const calCap = calendarTournamentRoundFromDateStart(tournamentDateStartIso());
+    const liveR = currentEventLiveRoundNum();
+    if (Number.isFinite(liveR) && liveR > desired && (!Number.isFinite(calCap) || liveR <= calCap)) {
+      desired = liveR;
     }
+    if (Number.isFinite(calCap)) desired = Math.min(desired, calCap);
   }
-  return false;
+  return Math.max(1, Math.min(4, Math.round(desired)));
+}
+
+/** Returns true when the auto round changed since the last sync (triggers tab refresh). */
+function syncLbRoundToTournamentModelRound() {
+  const desired = autoOuRound();
+  const bumped = lastSyncedAutoOuRound !== 0 && lastSyncedAutoOuRound !== desired;
+  lastSyncedAutoOuRound = desired;
+  return bumped;
 }
 
 function clamp(x, lo, hi) {
@@ -2426,6 +2429,7 @@ async function fetchAndMergeDatagolfLiveInPlay(opts = {}) {
     const roundBumped = syncLbRoundToTournamentModelRound();
     if (token) lastDatagolfInPlayToken = token;
     if (merged || roundBumped || histMerged > 0) {
+      if (roundBumped) updateRoundLabels();
       refreshPricingAffectedViews();
       updateStatusBar();
     }
@@ -2556,6 +2560,7 @@ function applyPayload(raw) {
   COURSE_TABLE_PAYLOAD = null;
   const nextFieldFp = playerDgFingerprint(players);
   if (prevFieldFp !== nextFieldFp) lastDatagolfInPlayToken = "";
+  lastSyncedAutoOuRound = 0;
   hydrateBakedWeatherFromPlayerFields();
   normalizeStoredCourseUsedLabels();
   applyPreTournamentRoundMeta();
@@ -2565,18 +2570,14 @@ function applyPayload(raw) {
 
 /** O/U + model default round (calendar, DK lines, live, export meta); **1** if unknown. */
 function ouDisplayRoundAuto() {
-  return preferredOuRoundForPicker();
+  return autoOuRound();
 }
 
 function getOuRound() {
-  const sel = document.getElementById("lb-round");
-  const v = sel ? String(sel.value) : "1";
-  const n = num(v, NaN);
-  if (Number.isFinite(n) && n >= 1 && n <= 4) return Math.round(n);
-  return ouDisplayRoundAuto();
+  return autoOuRound();
 }
 
-/** Max of live DG round, export display_round, and O/U picker — drives post-cut list filtering. */
+/** Max of live DG round, export display_round, and auto O/U round — drives post-cut list filtering. */
 function tournamentMaxEffectiveRound() {
   const mm = String(DATA?.meta?.datagolf_live_event_mismatch || "").trim();
   const liveR = mm ? NaN : Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN));
@@ -2634,13 +2635,15 @@ function updateRoundLabels() {
   const dr = ouDisplayRoundAuto();
   const exportedR = Math.round(num(meta.display_round, NaN));
   if (ar) {
-    ar.hidden = true;
+    ar.hidden = false;
     const rawLabel = meta.display_round_label && String(meta.display_round_label).trim();
+    let label = "";
     if (rawLabel && Number.isFinite(exportedR) && exportedR === dr) {
-      ar.textContent = rawLabel.replace(/\s*\([^)]*America\/New_York[^)]*\)\s*/i, "").trim();
+      label = rawLabel.replace(/\s*\([^)]*America\/New_York[^)]*\)\s*/i, "").trim();
     } else {
-      ar.textContent = `R${dr}`;
+      label = `R${dr}`;
     }
+    ar.textContent = `Round · ${label}`;
   }
 }
 
@@ -2688,9 +2691,8 @@ function updateStatusBar() {
 }
 
 function configureRoundPickerUi() {
-  const sel = document.getElementById("lb-round");
-  if (!sel) return;
   syncLbRoundToTournamentModelRound();
+  updateRoundLabels();
 }
 
 const OU_STAT_MAP = {
@@ -4916,7 +4918,7 @@ function draftKingsPostedRounds() {
   return [...out].sort((a, b) => a - b);
 }
 
-/** Default Round picker: cap stale export/live with calendar week; prefer latest DK round within cap. */
+/** Default auto round: cap stale export/live with calendar week; prefer latest DK round within cap. */
 function preferredOuRoundForPicker() {
   if (eventTournamentWeekNotStarted()) return 1;
   const cal = calendarTournamentRoundFromDateStart(tournamentDateStartIso());
@@ -17757,25 +17759,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("course-fit-search")?.addEventListener("input", () => buildCourseFitTab());
   document.getElementById("course-fit-shots-search")?.addEventListener("input", () => buildCourseFitTab());
   document.getElementById("btn-refresh-outrights")?.addEventListener("click", () => loadProjections());
-  document.getElementById("lb-round")?.addEventListener("change", () => {
-    ouProjExpandedKey = "";
-    updateRoundLabels();
-    const t = activeAppTabId() || "ou";
-    if (t === "ou") scheduleBuildOuTable(true);
-    if (t === "ev") buildEvTable();
-    const pm = document.getElementById("panel-matchups");
-    if (pm && !pm.hidden) buildMatchupsTable();
-    const po = document.getElementById("panel-outrights");
-    if (po && !po.hidden) buildOutrightsTable();
-    if (activeAppTabId() === "matchup-analysis") buildMatchupAnalysisTool();
-    if (activeAppTabId() === "props") renderPropsTrendsNow();
-    syncLivePropBookLineAndOddsFromDk();
-    if (activeAppTabId() === "live-prop") renderLivePropPredictor();
-    if (activeAppTabId() === "course-fit") buildCourseFitTab();
-    void refreshForecastWeatherFromOpenMeteo().then((fwOk) => {
-      if (fwOk) refreshPricingAffectedViews();
-    });
-  });
   document.getElementById("analysis-market")?.addEventListener("change", () => {
     matchupAnalysisSelectedKey = "";
     buildMatchupAnalysisTool();

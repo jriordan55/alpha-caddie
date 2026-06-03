@@ -50,15 +50,7 @@
       <div class="ou-filter-card">
         <div class="ou-panel-head">
           <div class="toolbar ou-toolbar ou-toolbar-projections">
-            <span class="toolbar-label muted ou-auto-round-line" id="auto-round">—</span>
-            <label class="toolbar-label ou-round-label">Round
-              <select id="lb-round" title="Round">
-                <option value="1">R1</option>
-                <option value="2">R2</option>
-                <option value="3">R3</option>
-                <option value="4">R4</option>
-              </select>
-            </label>
+            <span class="toolbar-label muted ou-auto-round-line" id="auto-round" aria-live="polite">—</span>
             <label class="toolbar-label ou-filter-field ou-golfer-inline">Golfer
               <span class="golfer-suggest-anchor">
                 <input
@@ -717,7 +709,7 @@
         <h2 class="ev-devig-sr-only">Round Matchups</h2>
         <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="matchups" aria-label="Help: Round Matchups tab">?</button>
       </div>
-      <p class="text-muted">Prices are decimal odds from the loaded matchups board. The <strong>Model</strong> column follows the <strong>round</strong> you pick on Round projections so it stays aligned with the rest of the sheet.</p>
+      <p class="text-muted">Prices are decimal odds from the loaded matchups board. The <strong>Model</strong> column follows the active tournament round on Round projections so it stays aligned with the rest of the sheet.</p>
       <p class="text-muted" id="matchups-source-note" hidden></p>
       <div class="toolbar outrights-toolbar">
         <label class="toolbar-label">Market
@@ -1161,7 +1153,7 @@
       </p>
       <section class="ev-help-section" aria-labelledby="tab-help-matchups-model-h">
         <h4 class="ev-devig-section-title" id="tab-help-matchups-model-h">Market and round</h4>
-        <p class="text-muted ev-help-devig-lede">Use <strong>Market</strong> to switch tournament, single-round, or three-ball lists. Set <strong>Round</strong> on the Round projections tab first; this table follows that choice. Adjust <strong>Weather</strong> and <strong>Pricing</strong> on other tabs to update fair win chances here.</p>
+        <p class="text-muted ev-help-devig-lede">Use <strong>Market</strong> to switch tournament, single-round, or three-ball lists. The active round matches Round projections automatically. Adjust <strong>Weather</strong> and <strong>Pricing</strong> on other tabs to update fair win chances here.</p>
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-matchups-pricing-h">
         <h4 class="ev-devig-section-title" id="tab-help-matchups-pricing-h">Pricing</h4>
@@ -1258,6 +1250,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=217"></script>
+  <script src="app.js?v=218"></script>
 </body>
 </html>
