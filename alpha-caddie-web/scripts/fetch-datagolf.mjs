@@ -61,6 +61,7 @@ import {
   foldComparableTitle,
   titleTokenOverlapRatio,
 } from "./dg-events-align.mjs";
+import { eventNameToDraftKingsSlug } from "./draftkings-league-url.mjs";
 import { fetchDataGolfOutrightsApi } from "./datagolf-outrights-api.mjs";
 import {
   applyVenueCourseFitToMu,
@@ -2330,6 +2331,7 @@ async function main() {
   const payload = {
     event_name,
     course_used,
+    dk_league_slug: eventNameToDraftKingsSlug(event_name) || undefined,
     /** Betting tools + preds feeds must use this tour (may be `opp` while env says `pga`). */
     datagolf_feed_tour: tourForFeeds,
     /** Which upcoming event get-schedule used to choose amongst field-updates feeds (debug). */

@@ -23,6 +23,7 @@ import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { chromium } from "playwright";
 import { matchPlayerByGolferLabel } from "./golfer-name-match.mjs";
+import { inferDraftKingsLeagueUrlFromProjections } from "./draftkings-league-url.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -687,33 +688,6 @@ export async function fetchDraftKingsOuProps(opts = {}) {
   return { props, subcatsUsed };
 }
 
-/** Same rules as fetch-book-odds `inferDraftKingsLeagueUrlFromProjections` (DK_LEAGUE_URL → slug fields → event_name slug). */
-function inferLeagueUrlFromPayload(payload) {
-  const envUrl = String(process.env.DK_LEAGUE_URL || "").trim();
-  if (envUrl) return envUrl;
-  if (!payload || typeof payload !== "object") return "";
-  const slug = String(
-    payload.dk_league_slug || payload.draftkings_league_slug || payload.dk_event_slug || "",
-  ).trim();
-  if (slug) {
-    if (slug.toLowerCase() === "pga-championship") {
-      return "https://sportsbook.draftkings.com/leagues/golf/uspga-championship?category=round";
-    }
-    return `https://sportsbook.draftkings.com/leagues/golf/${slug}?category=round`;
-  }
-  const name = String(payload.event_name || "").trim();
-  if (!name) return "";
-  const s = name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-  if (!s) return "";
-  if (s === "pga-championship") {
-    return "https://sportsbook.draftkings.com/leagues/golf/uspga-championship?category=round";
-  }
-  return `https://sportsbook.draftkings.com/leagues/golf/${s}?category=round`;
-}
-
 async function main() {
   const proj = join(__dirname, "..", "projections.json");
   let players = [];
@@ -722,7 +696,7 @@ async function main() {
     try {
       const payload = JSON.parse(readFileSync(proj, "utf8"));
       players = payload.players || [];
-      const leagueUrl = inferLeagueUrlFromPayload(payload);
+      const leagueUrl = inferDraftKingsLeagueUrlFromProjections(payload);
       if (leagueUrl) opts = { leagueUrl };
     } catch {
       /* ignore */

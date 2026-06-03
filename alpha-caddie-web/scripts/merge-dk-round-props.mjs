@@ -5,38 +5,19 @@
 import { parse } from "csv-parse/sync";
 import { existsSync, readFileSync } from "fs";
 import { join, resolve } from "path";
+import {
+  eventNameToDraftKingsSlug,
+  inferDraftKingsLeagueSlugFromProjections,
+  inferDraftKingsLeagueUrlFromProjections,
+} from "./draftkings-league-url.mjs";
 import { fetchDraftKingsOuProps } from "./draftkings-ou-props.mjs";
 import { matchPlayerByGolferLabel } from "./golfer-name-match.mjs";
+
+export { eventNameToDraftKingsSlug, inferDraftKingsLeagueUrlFromProjections };
 
 export function num(x, fallback = NaN) {
   const n = Number(x);
   return Number.isFinite(n) ? n : fallback;
-}
-
-/** When `DK_LEAGUE_URL` is unset, point Playwright at the same DraftKings event as `projections.json`. */
-export function inferDraftKingsLeagueUrlFromProjections(payload) {
-  const envUrl = String(process.env.DK_LEAGUE_URL || "").trim();
-  if (envUrl) return envUrl;
-  const slug = String(
-    payload?.dk_league_slug || payload?.draftkings_league_slug || payload?.dk_event_slug || "",
-  ).trim();
-  if (slug) {
-    if (slug.toLowerCase() === "pga-championship") {
-      return "https://sportsbook.draftkings.com/leagues/golf/uspga-championship?category=round";
-    }
-    return `https://sportsbook.draftkings.com/leagues/golf/${slug}?category=round`;
-  }
-  const name = String(payload?.event_name || "").trim();
-  if (!name) return "";
-  const s = name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-  if (!s) return "";
-  if (s === "pga-championship") {
-    return "https://sportsbook.draftkings.com/leagues/golf/uspga-championship?category=round";
-  }
-  return `https://sportsbook.draftkings.com/leagues/golf/${s}?category=round`;
 }
 
 function displayGolferName(nameRaw) {
@@ -304,10 +285,14 @@ export async function refreshRoundProjectionProps(payload, golfModelRoot) {
   let dkProps = [];
   let dkError;
   let subcatsUsed;
+  let dkLeagueUrl = "";
+  let dkLeagueSlug = "";
+  let nDkFresh = 0;
 
   if (!skipDk) {
     try {
-      const dkLeagueUrl = inferDraftKingsLeagueUrlFromProjections(payload);
+      dkLeagueUrl = inferDraftKingsLeagueUrlFromProjections(payload);
+      dkLeagueSlug = inferDraftKingsLeagueSlugFromProjections(payload);
       console.log(
         "[dk-round-props] DK scrape:",
         dkLeagueUrl ? dkLeagueUrl : "default URL (set DK_LEAGUE_URL or dk_league_slug on projections.json)",
@@ -317,16 +302,27 @@ export async function refreshRoundProjectionProps(payload, golfModelRoot) {
         ...(dkLeagueUrl ? { leagueUrl: dkLeagueUrl } : {}),
       });
       dkProps = withPropSource(dk.props || [], "draftkings");
+      nDkFresh = dkProps.length;
       canonicalizeDkOuPropsAgainstProjections(dkProps, payload.players);
       dkError = dk.error;
       subcatsUsed = dk.subcatsUsed;
       if (!dkProps.length) {
-        console.warn(
-          "DraftKings O/U:",
-          dk.error && !String(dk.error).startsWith("skipped")
-            ? dk.error
-            : "0 props — check Playwright / DK_SITE_SEGMENT (npx playwright install chromium)",
+        const priorDk = (Array.isArray(payload.props) ? payload.props : []).filter(
+          (r) => String(r?.source || "").trim().toLowerCase() === "draftkings" && propRowHasPostableOdds(r),
         );
+        if (priorDk.length) {
+          dkProps = priorDk;
+          console.warn(
+            `[dk-round-props] DK scrape returned 0 rows for ${dkLeagueUrl || "(no url)"} — keeping ${priorDk.length} prior draftkings props`,
+          );
+        } else {
+          console.warn(
+            "DraftKings O/U:",
+            dk.error && !String(dk.error).startsWith("skipped")
+              ? dk.error
+              : `0 props for ${dkLeagueUrl || "league URL"} — check slug (dk_league_slug) or Playwright / DK_SITE_SEGMENT`,
+          );
+        }
       } else if (dk.error && !String(dk.error).startsWith("skipped")) {
         console.warn("DraftKings O/U:", dk.error);
       }
@@ -419,5 +415,15 @@ export async function refreshRoundProjectionProps(payload, golfModelRoot) {
     );
   }
 
-  return { props: merged, nCsv: csvProps.length, nDk: dkProps.length, dkError, subcatsUsed, coverage };
+  return {
+    props: merged,
+    nCsv: csvProps.length,
+    nDk: dkProps.filter((r) => String(r?.source || "").trim().toLowerCase() === "draftkings").length,
+    nDkFresh,
+    dkError,
+    subcatsUsed,
+    coverage,
+    dkLeagueUrl,
+    dkLeagueSlug,
+  };
 }

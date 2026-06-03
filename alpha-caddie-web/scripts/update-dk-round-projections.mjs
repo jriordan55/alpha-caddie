@@ -60,7 +60,7 @@ async function main() {
     process.env.GOLF_SKIP_PROPS_CSV = "1";
   }
 
-  const { props, nCsv, nDk, dkError } = await refreshRoundProjectionProps(payload, GOLF_MODEL_ROOT);
+  const { props, nCsv, nDk, dkError, dkLeagueSlug } = await refreshRoundProjectionProps(payload, GOLF_MODEL_ROOT);
 
   if (!props.length) {
     console.error(
@@ -77,6 +77,7 @@ async function main() {
     updated_at: now,
     book_odds_refreshed_at: now,
     dk_round_props_refreshed_at: now,
+    ...(dkLeagueSlug ? { dk_league_slug: dkLeagueSlug } : {}),
   };
 
   const outJson = JSON.stringify(next, null, 2);
