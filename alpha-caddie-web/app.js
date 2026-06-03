@@ -6064,20 +6064,7 @@ function buildOuTable() {
     tr.appendChild(td);
     tbody.appendChild(tr);
   } else if (!flatRows.length) {
-    const tr = document.createElement("tr");
-    const td = document.createElement("td");
-    td.colSpan = projColCount;
-    td.className = "ou-cell ou-proj-long-td ou-proj-empty-td";
-    const rnd = Math.round(getOuRound());
-    const dkN = draftKingsRoundGolferCount();
-    const hasDk = draftKingsRoundPropOddsAvailable();
-    td.textContent = !hasDk
-      ? ""
-      : dkN > 0
-        ? `No DraftKings lines for this golfer, market, or filter. (${dkN} golfers have DK lines for R${rnd}.)`
-        : "No DraftKings lines match the current filter.";
-    tr.appendChild(td);
-    tbody.appendChild(tr);
+    /* No DK lines for this filter — leave table blank (no placeholder row). */
   } else {
   const ouTbodyFrag = document.createDocumentFragment();
   for (const r of flatRows) {
