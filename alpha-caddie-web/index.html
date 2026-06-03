@@ -138,7 +138,7 @@
                 <option value="sg_t2g">Tee to green</option>
               </select>
             </label>
-            <span id="ou-synthetic-odds-note" class="ou-synthetic-odds-note text-muted" hidden></span>
+            <span id="ou-synthetic-odds-note" class="ou-synthetic-odds-note text-muted" hidden aria-hidden="true"></span>
           </div>
         </div>
       </div>
@@ -1100,31 +1100,40 @@
         <h3 class="ev-devig-title" id="tab-help-title-ou">Round projections</h3>
         <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
       </header>
-      <p class="ev-help-intro text-muted">
-        For the <strong>Round</strong> you pick (R1–R4), each row is one golfer, one <strong>DraftKings-scraped</strong> market (only stats returned by the live DK props run are listed), and either <strong>Over</strong> or <strong>Under</strong> on that line. Columns show the model projection in <strong>Proj</strong>, <strong>Market rating</strong> and <strong>Course rating</strong> (each on a <strong>1–100</strong> scale; 50 ≈ average), the book line, a <strong>Book</strong> mark (DraftKings logo), the price for that side, model probability at the line, and edge vs the book. The table loads sorted by <strong>Edge</strong> (highest first). <strong>Click a row</strong> to expand a detail strip: discrete outcome distribution (line vs over), projection snapshot, and model inputs. Tap the same row again to collapse. Markets follow the same weather and pricing adjustments as the rest of the app. Hover a row for mean and σ used on the model side of the line.
-      </p>
-      <section class="ev-help-section" aria-labelledby="tab-help-ou-sort-h">
-        <h4 class="ev-devig-section-title" id="tab-help-ou-sort-h">Table</h4>
-        <p class="text-muted ev-help-devig-lede">Tap a column header to sort. On load, rows are ordered by <strong>Edge</strong> (highest first). When two rows tie on the active sort column, order falls back to golfer, then market, then Over before Under. Use <strong>Golfer</strong> and <strong>Market</strong> to limit rows. Only <strong>DraftKings</strong> lines and odds for the selected round are shown; golfers without a DK line for that market are omitted. Each golfer–market pair with DK odds shows Over and Under. Changing <strong>Round</strong> or either filter collapses any expanded row.</p>
-      </section>
-      <section class="ev-help-section" aria-labelledby="tab-help-ou-weather-h">
-        <h4 class="ev-devig-section-title" id="tab-help-ou-weather-h">Weather</h4>
-        <p class="text-muted ev-help-devig-lede">Dial in temp, wind, humidity, and <strong>Condition</strong> to match the forecast. <strong>Default</strong> condition resets the sliders to the baseline snapshot; then nudge again for a custom day. These controls update fair numbers together with <strong>Pricing</strong>.</p>
-      </section>
-      <section class="ev-help-section" aria-labelledby="tab-help-ou-ratings-h">
-        <h4 class="ev-devig-section-title" id="tab-help-ou-ratings-h">Market &amp; course ratings</h4>
+      <section class="ev-help-section" aria-labelledby="tab-help-ou-cols-h">
+        <h4 class="ev-devig-section-title" id="tab-help-ou-cols-h">Columns</h4>
         <dl class="ev-help-dl">
-          <dt>Market rating (1–100)</dt>
-          <dd>How this golfer’s recent rounds on this stat compare to <strong>PGA Tour</strong> averages (same window as projections benchmarks). <strong>50</strong> ≈ tour average; higher = more birdies, GIR, etc. (or lower scores on round score).</dd>
-          <dt>Course rating (1–100)</dt>
-          <dd>How <strong>this week’s course</strong> compares to <strong>all PGA venues</strong> on the same stat (venue historical average vs the average across every course with enough rounds in the benchmark window). Hover for venue avg vs all-courses avg. <strong>50</strong> ≈ typical course on the 1–100 scale.</dd>
+          <dt>Golfer / Market / Side</dt>
+          <dd>Who, which stat, and Over or Under on the book line.</dd>
+          <dt>Proj</dt>
+          <dd>Model projection for that stat this round.</dd>
+          <dt>Market rating</dt>
+          <dd>1–100 vs PGA Tour on this stat (50 ≈ average).</dd>
+          <dt>Course rating</dt>
+          <dd>1–100 vs other PGA venues on this stat (50 ≈ average).</dd>
+          <dt>Line</dt>
+          <dd>DraftKings O/U line.</dd>
+          <dt>Book</dt>
+          <dd>DraftKings logo when the line is from DK.</dd>
+          <dt>Odds</dt>
+          <dd>American price for the side shown.</dd>
+          <dt>P(model)</dt>
+          <dd>Model probability of that side vs the line.</dd>
+          <dt>Edge</dt>
+          <dd>Model probability minus implied probability from the odds.</dd>
         </dl>
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-ou-pricing-h">
         <h4 class="ev-devig-section-title" id="tab-help-ou-pricing-h">Pricing</h4>
         <dl class="ev-help-dl">
-          <dt>How to use it</dt>
-          <dd><strong>Default</strong> mode locks <strong>Skill</strong> to Default as well (no pillar tilt). <strong>Recent form</strong> favors players trending up or down. <strong>Course history</strong> favors players with a strong record at this event. <strong>Skill focus</strong> lets you choose a spelled-out pillar (Total SG, Off the tee, Approach, Around the green, Putting, Tee to green). The same Mode and Skill row appears anywhere Pricing is shown.</dd>
+          <dt>Default</dt>
+          <dd>Baseline model — no form, course, or skill tilt.</dd>
+          <dt>Recent form</dt>
+          <dd>Favors players trending up or down lately.</dd>
+          <dt>Course history</dt>
+          <dd>Favors strong records at this course/event.</dd>
+          <dt>Skill focus</dt>
+          <dd>Tilt toward a strokes-gained pillar (Total SG, Off the tee, Approach, Around the green, Putting, Tee to green).</dd>
         </dl>
       </section>
       <footer class="ev-help-actions">
@@ -1139,18 +1148,30 @@
         <h3 class="ev-devig-title" id="tab-help-title-props">Historical Trends</h3>
         <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
       </header>
-      <p class="ev-help-intro text-muted">
-        Compare past rounds to the model line for one golfer and stat. The header shows who and which event. <strong>Filters</strong> hide rounds that do not match typed weather values (<strong>Temp °F</strong> uses optional min and max — leave either blank for no bound; wind mph and humidity % still map to bands — leave blank for all), the <strong>Course</strong> dropdown (when not All), or optional <strong>Current course only</strong> (this week’s venue from projections).
-      </p>
-      <section class="ev-help-section" aria-labelledby="tab-help-props-sidebar-h">
-        <h4 class="ev-devig-section-title" id="tab-help-props-sidebar-h">How to use the sidebar</h4>
+      <section class="ev-help-section" aria-labelledby="tab-help-props-cols-h">
+        <h4 class="ev-devig-section-title" id="tab-help-props-cols-h">Chart &amp; KPIs</h4>
         <dl class="ev-help-dl">
-          <dt>Golfer and market</dt>
-          <dd>Select who to study and which stat the bars represent.</dd>
-          <dt>Rounds and line</dt>
-          <dd>Under the chart, set how many recent rounds to include and which <strong>Line</strong> to use for over or under hit rates and the small EV readout.</dd>
-          <dt>Hit rates and top table</dt>
-          <dd>See over and under frequency in the window, then scroll the league table for the same line.</dd>
+          <dt>Bars</dt>
+          <dd>Actual result vs the line (green = under, red = over on score-like stats).</dd>
+          <dt>All-time / season / graph avg</dt>
+          <dd>Career mean, this season, and mean of rounds shown in the chart.</dd>
+          <dt>Course avg</dt>
+          <dd>Field average at this venue (season and all-time).</dd>
+          <dt>Over / under hit rate</dt>
+          <dd>How often the golfer beat the line in the selected window.</dd>
+        </dl>
+      </section>
+      <section class="ev-help-section" aria-labelledby="tab-help-props-filters-h">
+        <h4 class="ev-devig-section-title" id="tab-help-props-filters-h">Filters</h4>
+        <dl class="ev-help-dl">
+          <dt>Current course only</dt>
+          <dd>All past rounds at this week’s course (full venue history).</dd>
+          <dt>Course dropdown</dt>
+          <dd>Limit to one course by name.</dd>
+          <dt>Weather filters</dt>
+          <dd>Optional temp, wind, and humidity bands.</dd>
+          <dt>Rounds / line</dt>
+          <dd>How many recent rounds to chart and which O/U line to test.</dd>
         </dl>
       </section>
       <footer class="ev-help-actions">
@@ -1375,6 +1396,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=215"></script>
+  <script src="app.js?v=216"></script>
 </body>
 </html>

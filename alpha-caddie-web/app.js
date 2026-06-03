@@ -2653,10 +2653,18 @@ function formatDataSizeBytes(n) {
   return `${Math.round(x)} B`;
 }
 
+/** DataGolf often sends “the Memorial …”; display as “The Memorial …”. */
+function formatEventNameForDisplay(raw) {
+  const s = String(raw || "").trim();
+  if (!s) return "";
+  if (/^the\s+/i.test(s) && s.charAt(0) === "t") return `The${s.slice(3)}`;
+  return s;
+}
+
 /** Event first, then venue — status bar used to show only `course_used`, which reads like the wrong “tournament”. */
 function metaEventVenueLabel() {
   const m = DATA.meta || {};
-  const ev = m.event_name ? String(m.event_name).trim() : "";
+  const ev = m.event_name ? formatEventNameForDisplay(m.event_name) : "";
   const course = m.course_used ? formatCourseNameForDisplay(m.course_used) : "";
   if (ev && course) return enforceCourseDisplayAcronyms(`${ev} · ${course}`);
   return enforceCourseDisplayAcronyms(ev || course || "");
@@ -3067,14 +3075,8 @@ function draftKingsRoundPropOddsAvailable() {
 function updateOuSyntheticOddsNoteVisibility() {
   const el = document.getElementById("ou-synthetic-odds-note");
   if (!el) return;
-  const rnd = Math.round(getOuRound());
-  if (draftKingsRoundPropOddsAvailable()) {
-    el.hidden = false;
-    el.textContent = `DraftKings lines only for R${rnd} — rows without DK odds are hidden.`;
-  } else {
-    el.hidden = true;
-    el.textContent = "";
-  }
+  el.hidden = true;
+  el.textContent = "";
 }
 
 function ouPickIsDraftKings(pick) {
@@ -3443,9 +3445,7 @@ function weatherWaveForecastBannerInnerHtml(morningSnap, afternoonSnap, pinMeta)
 function formatWeatherSnapshotCompact(w) {
   if (!w || typeof w !== "object" || !Number.isFinite(w.tempF)) return "";
   if (!Number.isFinite(w.windMph) || !Number.isFinite(w.humidityPct)) return "";
-  const lab = weatherConditionDisplayLabel(w.condition);
-  const em = weatherConditionEmoji(w.condition);
-  return `${w.tempF.toFixed(1)}°F · ${w.windMph.toFixed(1)} mph · ${w.humidityPct.toFixed(0)}% · ${em} ${lab}`;
+  return `${w.tempF.toFixed(1)}°F · ${w.windMph.toFixed(1)} mph · ${w.humidityPct.toFixed(0)}%`;
 }
 
 /** Pick forecast day: current display_round tee majority, then field majority, then event start. */
@@ -13874,7 +13874,47 @@ function filteredHistoryRoundsMemoSig() {
     propsTrendTempContextKey(),
     selectedPropsWindRangeFilter() || "",
     selectedPropsHumidityRangeFilter() || "",
+    propsFieldVenueShardCache.ready ? propsFieldVenueShardCacheSig : "venue-shard-pending",
+    propsSingleCourseIndexSig || "course-index-pending",
   ].join("\x1f");
+}
+
+/** Rounds for one player from by-course history shard (full venue archive). */
+function playerRoundsFromCourseHistoryShards(dgId, courseKey) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id) || !courseKey) return [];
+  const bucket = propsGetSingleCourseBucketSync(courseKey);
+  const rows = [];
+  for (const e of bucket?.entries || []) {
+    if (Math.round(num(e.dgId, NaN)) !== id) continue;
+    if (e.row) rows.push(e.row);
+  }
+  return rows;
+}
+
+/** Merge partial player bucket with by-course shard when filtering by venue. */
+function playerHistoryRoundsAugmentedForCourseFilter(dgId) {
+  const base = historyRoundsForDg(dgId).filter((r) => !historyRoundIsPlaceholderAllMarketsZero(r));
+  if (!propsTrendCourseFilterActive()) return base;
+  const venueRaw = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
+  const courseKey =
+    propsEffectiveCourseKey() || (courseFilterOn() && venueRaw ? normCourseNameKey(venueRaw) : "");
+  const extra = playerRoundsFromCourseHistoryShards(dgId, courseKey);
+  if (!extra.length) return base;
+  return mergePropsVenueRoundRowsUnique(base, extra);
+}
+
+function ensurePropsCourseHistoryForTrendsChart(dgId) {
+  if (!propsTrendCourseFilterActive()) return;
+  ensurePropsFieldVenueHistoryLoaded();
+  const courseKey = propsEffectiveCourseKey() || propsEventVenueCourseKey();
+  if (courseKey) {
+    void ensurePropsCourseIndexForKeyAsync(courseKey).then(() => {
+      if (activeAppTabId() === "props") scheduleRenderPropsTrends(0);
+    });
+  }
+  const id = Math.round(num(dgId, NaN));
+  if (Number.isFinite(id) && !isFileProtocol()) void loadPlayerHistoryBucket(id);
 }
 
 function filteredHistoryRounds(dgId) {
@@ -13888,7 +13928,9 @@ function filteredHistoryRounds(dgId) {
   const memoHit = filteredHistoryRoundsMemoByDgId.get(id);
   if (memoHit) return memoHit;
 
-  let list = historyRoundsForDg(id);
+  let list = propsTrendCourseFilterActive()
+    ? playerHistoryRoundsAugmentedForCourseFilter(id)
+    : historyRoundsForDg(id);
   if (courseFilterOn()) {
     const vn = venueCourseName();
     const metaEvent = String(DATA.meta.event_name || "").trim();
@@ -14743,7 +14785,7 @@ function roundsMatchingCourseSelectionOnly(dgId) {
   const id = Math.round(num(dgId, NaN));
   if (!Number.isFinite(id)) return [];
   if (!propsTrendCourseFilterActive()) return [];
-  let list = propsTrendHistoryBaselineRounds(id);
+  let list = playerHistoryRoundsAugmentedForCourseFilter(id);
   if (courseFilterOn()) {
     const vn = venueCourseName();
     const metaEvent = String(DATA.meta?.event_name || "").trim();
@@ -16146,6 +16188,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
 function renderPropsTrends() {
   ensurePropsStatSelectValid();
   if (propsFieldVenueKpisEnabled()) ensurePropsFieldVenueHistoryLoaded();
+  ensurePropsCourseHistoryForTrendsChart(selectedDgId());
   void ensurePropsDgIdNameManifestLoaded().then((m) => {
     if (!m?.size || activeAppTabId() !== "props" || propsDgIdNameManifestUiRefreshDone) return;
     propsDgIdNameManifestUiRefreshDone = true;
