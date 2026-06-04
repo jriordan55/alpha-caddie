@@ -4896,15 +4896,58 @@ function draftKingsRoundPropsOnly(allRounds = false) {
   const propsLen = Array.isArray(DATA.props) ? DATA.props.length : 0;
   const sig = `${allRounds ? "all" : `r${wantR}`}|n${propsLen}|rev${projectionsDataRev}`;
   if (!allRounds && ouDkRoundPropsCacheSig === sig) return ouDkRoundPropsCache;
-  const out = (Array.isArray(DATA.props) ? DATA.props : []).filter((r) => {
-    if (String(r.source || "").trim().toLowerCase() !== "draftkings") return false;
-    const pr = Math.round(num(r.round_num, NaN));
-    if (!allRounds && Number.isFinite(pr) && pr >= 1 && pr <= 4 && pr !== wantR) return false;
-    const L = enforceHalfLine(num(r.line, NaN));
-    const o = num(r.over_odds, NaN);
-    const u = num(r.under_odds, NaN);
-    return Number.isFinite(L) && Number.isFinite(o) && Number.isFinite(u);
-  });
+
+  const filterForRound = (roundFilter) =>
+    (Array.isArray(DATA.props) ? DATA.props : []).filter((r) => {
+      if (String(r.source || "").trim().toLowerCase() !== "draftkings") return false;
+      const pr = Math.round(num(r.round_num, NaN));
+      if (
+        Number.isFinite(roundFilter) &&
+        Number.isFinite(pr) &&
+        pr >= 1 &&
+        pr <= 4 &&
+        pr !== roundFilter
+      ) {
+        return false;
+      }
+      const L = enforceHalfLine(num(r.line, NaN));
+      const o = num(r.over_odds, NaN);
+      const u = num(r.under_odds, NaN);
+      return Number.isFinite(L) && Number.isFinite(o) && Number.isFinite(u);
+    });
+
+  let out;
+  if (allRounds || !Number.isFinite(wantR) || wantR < 1) {
+    out = filterForRound(NaN);
+  } else {
+    const allDk = filterForRound(NaN);
+    const byMarket = new Map();
+    for (const r of allDk) {
+      const m = String(r.market || "").trim();
+      if (!m) continue;
+      if (!byMarket.has(m)) byMarket.set(m, []);
+      byMarket.get(m).push(r);
+    }
+    out = [];
+    for (const mktRows of byMarket.values()) {
+      const unnumbered = mktRows.filter((r) => !Number.isFinite(Math.round(num(r.round_num, NaN))));
+      const numbered = mktRows.filter((r) => Number.isFinite(Math.round(num(r.round_num, NaN))));
+      const rounds = [...new Set(numbered.map((r) => Math.round(num(r.round_num, NaN))))]
+        .filter((n) => n >= 1 && n <= 4)
+        .sort((a, b) => b - a);
+      let pickRound = rounds.includes(wantR) ? wantR : rounds.find((r) => r <= wantR);
+      if (!Number.isFinite(pickRound)) pickRound = rounds[0];
+      out.push(...unnumbered);
+      if (Number.isFinite(pickRound)) {
+        for (const r of numbered) {
+          if (Math.round(num(r.round_num, NaN)) === pickRound) out.push(r);
+        }
+      } else {
+        out.push(...numbered);
+      }
+    }
+  }
+
   if (!allRounds) {
     ouDkRoundPropsCacheSig = sig;
     ouDkRoundPropsCache = out;

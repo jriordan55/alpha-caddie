@@ -38,16 +38,20 @@ const STAT_BY_SEO = {
   pars: "Pars",
   "bogeys-or-worse": "Bogeys",
   "greens-in-regulation": "GIR",
+  "green-in-regulation": "GIR",
   "fairways-hit": "Fairways hit",
   "total-putts": "Putts",
   putts: "Putts",
 };
 
-/** Legacy fallback ids for older pages where nav state omits round stats. */
+/** Legacy fallback ids when nav state omits round stats (Memorial / most PGA events reuse these). */
 const FALLBACK_SUBCAT_BY_STAT = {
   Birdies: "17299",
   Pars: "17300",
   Bogeys: "17301",
+  GIR: "17302",
+  "Fairways hit": "17303",
+  Putts: "17304",
 };
 
 /**
@@ -56,8 +60,9 @@ const FALLBACK_SUBCAT_BY_STAT = {
  */
 const PROBE_SUBS_FIRST = {
   Putts: ["17304", "17399"],
-  GIR: [],
-  "Fairways hit": [],
+  GIR: ["17302", "10154"],
+  "Fairways hit": ["17303"],
+  Pars: ["17300"],
 };
 
 /** When nav omits Round Score tabs, try these Masters subcategory ids (merge + dedupe players). */
@@ -187,6 +192,54 @@ function isGoodPlayerRoundSampleName(stat, name) {
   if (/total\s+group|group\s+drives|to\s+hit\s+a\s+gir/i.test(s)) return false;
   if (/player\s+most\b/i.test(s)) return false;
   return !!parseMarketName(stat, s);
+}
+
+/** Click DK golf "Round N" tab so Nash API returns that round's O/U titles. */
+async function selectDraftKingsRoundTab(page, roundNum) {
+  const r = Math.round(Number(roundNum));
+  if (!Number.isFinite(r) || r < 1 || r > 4) return false;
+  try {
+    const clicked = await page.evaluate((round) => {
+      const re = new RegExp(`^(Round\\s+${round}|R${round})$`, "i");
+      const nodes = document.querySelectorAll('button,a,[role="tab"],[role="button"]');
+      for (const el of nodes) {
+        const t = String(el.textContent || "").replace(/\s+/g, " ").trim();
+        if (!t || t.length > 20) continue;
+        if (re.test(t)) {
+          el.click();
+          return true;
+        }
+      }
+      return false;
+    }, r);
+    if (clicked) {
+      await page.waitForTimeout(Math.min(8000, Math.max(1500, Number(process.env.DK_ROUND_TAB_WAIT_MS || 2800))));
+      console.log(`[draftkings-ou] selected Round ${r} tab on DK page`);
+      return true;
+    }
+  } catch (e) {
+    console.warn("[draftkings-ou] round tab:", e.message || e);
+  }
+  return false;
+}
+
+function preferPropsForTargetRound(props, targetRound) {
+  const tr = Math.round(Number(targetRound));
+  if (!Number.isFinite(tr) || tr < 1 || tr > 4) return props;
+  const exact = props.filter((p) => Math.round(Number(p.round_num)) === tr);
+  if (exact.length) return exact;
+  const rounds = [...new Set(props.map((p) => Math.round(Number(p.round_num))).filter((n) => n >= 1 && n <= 4))].sort(
+    (a, b) => b - a,
+  );
+  const pick = rounds.find((n) => n <= tr) ?? rounds[0];
+  if (!Number.isFinite(pick)) return props;
+  const fallback = props.filter((p) => Math.round(Number(p.round_num)) === pick);
+  if (fallback.length) {
+    console.warn(
+      `[draftkings-ou] no Round ${tr} lines — using Round ${pick} (${fallback.length} props); check DK round tab or display_round`,
+    );
+  }
+  return fallback.length ? fallback : props;
 }
 
 function buildProbeOrder(stat, preferredSub, allLeagueSubIds) {
@@ -390,8 +443,11 @@ export async function fetchDraftKingsOuProps(opts = {}) {
   const leagueUrl = opts.leagueUrl || DEFAULT_URL;
   const requestedLeagueId = String(opts.leagueId || LEAGUE_ID || "").trim();
   const siteSegment = opts.siteSegment || SITE;
+  const targetRound = Math.round(
+    Number(opts.targetRound ?? opts.displayRound ?? process.env.DK_TARGET_ROUND ?? NaN),
+  );
   console.log(
-    `[draftkings-ou] url=${leagueUrl} site=${siteSegment} players=${Array.isArray(players) ? players.length : 0}`,
+    `[draftkings-ou] url=${leagueUrl} site=${siteSegment} players=${Array.isArray(players) ? players.length : 0}${Number.isFinite(targetRound) ? ` targetRound=R${targetRound}` : ""}`,
   );
 
   let overrides = {};
@@ -429,6 +485,7 @@ export async function fetchDraftKingsOuProps(opts = {}) {
       Math.max(2000, Number(process.env.DK_PAGE_WAIT_MS || 8000)),
     );
     await page.waitForTimeout(extraMs);
+    if (Number.isFinite(targetRound)) await selectDraftKingsRoundTab(page, targetRound);
   } catch (e) {
     await browser.close();
     return { props: [], subcatsUsed: {}, error: `goto: ${e.message}` };
@@ -450,6 +507,7 @@ export async function fetchDraftKingsOuProps(opts = {}) {
       pars: "Pars",
       "bogeys-or-worse": "Bogeys",
       "greens-in-regulation": "GIR",
+      "green-in-regulation": "GIR",
       "fairways-hit": "Fairways hit",
       "total-putts": "Putts",
       putts: "Putts",
@@ -585,7 +643,8 @@ export async function fetchDraftKingsOuProps(opts = {}) {
   for (const st of ["Putts", "GIR", "Fairways hit", "Birdies", "Pars", "Bogeys"]) {
     if (overrides[st]) continue;
     const pref = statToSubs[st]?.[0] || "";
-    if (!pref && !(PROBE_SUBS_FIRST[st] || []).length && st !== "Fairways hit" && st !== "GIR") continue;
+    const hasProbe = (PROBE_SUBS_FIRST[st] || []).length > 0 || FALLBACK_SUBCAT_BY_STAT[st];
+    if (!pref && !hasProbe) continue;
     const picked = await findAllSubcategoriesForStat(
       api,
       leagueId,
@@ -670,7 +729,8 @@ export async function fetchDraftKingsOuProps(opts = {}) {
     const rk = Number.isFinite(Number(r.round_num)) ? `|R${r.round_num}` : "";
     dedup.set(`${r.player_name}|${r.market}|${r.line}${rk}`, r);
   }
-  const props = [...dedup.values()];
+  let props = [...dedup.values()];
+  props = preferPropsForTargetRound(props, Number.isFinite(targetRound) ? targetRound : NaN);
   if (!props.length && nAttempts > 0) {
     const hint =
       apiFail > 0

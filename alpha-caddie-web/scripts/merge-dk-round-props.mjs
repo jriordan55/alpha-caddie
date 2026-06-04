@@ -297,8 +297,11 @@ export async function refreshRoundProjectionProps(payload, golfModelRoot) {
         "[dk-round-props] DK scrape:",
         dkLeagueUrl ? dkLeagueUrl : "default URL (set DK_LEAGUE_URL or dk_league_slug on projections.json)",
       );
+      const modelRound =
+        Math.round(num(payload.display_round ?? payload.datagolf_field_current_round, NaN)) || 1;
       const dk = await fetchDraftKingsOuProps({
         players: payload.players,
+        targetRound: modelRound,
         ...(dkLeagueUrl ? { leagueUrl: dkLeagueUrl } : {}),
       });
       dkProps = withPropSource(dk.props || [], "draftkings");
