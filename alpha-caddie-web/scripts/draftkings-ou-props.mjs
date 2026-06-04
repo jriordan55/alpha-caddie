@@ -63,6 +63,8 @@ const PROBE_SUBS_FIRST = {
   GIR: ["17302", "10154"],
   "Fairways hit": ["17303"],
   Pars: ["17300"],
+  Birdies: ["17299"],
+  Bogeys: ["17301"],
 };
 
 /** When nav omits Round Score tabs, try these Masters subcategory ids (merge + dedupe players). */
@@ -261,6 +263,21 @@ function buildProbeOrder(stat, preferredSub, allLeagueSubIds) {
     if (out.length >= max) break;
   }
   return out;
+}
+
+/** Quick check that a subcategory returns parseable per-player round O/U rows for `stat`. */
+async function subcategoryYieldsStat(api, leagueId, siteSegment, stat, sub, players) {
+  const u = marketsUrl(leagueId, sub, siteSegment);
+  const res = await api.get(u, { timeout: 60000 });
+  if (!res.ok()) return 0;
+  try {
+    const body = await res.json();
+    const mk = Array.isArray(body?.markets) ? body.markets : [];
+    if (!mk.some((m) => isGoodPlayerRoundSampleName(stat, m.name))) return 0;
+    return propsFromMarketsBody(body, stat, players).length;
+  } catch {
+    return 0;
+  }
 }
 
 /** All subcategory ids that return per-player round O/U rows for `stat` (merge every hit, not just the largest). */
@@ -658,9 +675,28 @@ export async function fetchDraftKingsOuProps(opts = {}) {
     if (picked.length) {
       statToSubs[st] = picked;
       subcatsUsed[st] = picked.join(",");
-    } else if (statToSubs[st]?.length) {
-      delete statToSubs[st];
-      delete subcatsUsed[st];
+    } else {
+      const trySubs = [
+        ...new Set(
+          [FALLBACK_SUBCAT_BY_STAT[st], ...(statToSubs[st] || []), ...(PROBE_SUBS_FIRST[st] || [])]
+            .map((x) => String(x || "").trim())
+            .filter(Boolean),
+        ),
+      ];
+      const verified = [];
+      for (const sub of trySubs) {
+        const n = await subcategoryYieldsStat(api, leagueId, siteSegment, st, sub, players);
+        if (n > 0) verified.push(sub);
+        await new Promise((r) => setTimeout(r, 45));
+      }
+      if (verified.length) {
+        statToSubs[st] = verified;
+        subcatsUsed[st] = verified.join(",");
+        console.log(`[draftkings-ou] ${st}: using fallback sub(s) ${verified.join(",")}`);
+      } else {
+        delete statToSubs[st];
+        delete subcatsUsed[st];
+      }
     }
   }
 
