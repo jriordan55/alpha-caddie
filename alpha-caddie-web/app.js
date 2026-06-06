@@ -11280,6 +11280,9 @@ function historyRoundPlayMdY(row) {
 
 /** Calendar day shown on the trends chart, as UTC midnight ms. */
 function historyRoundChartDateUtcMs(row) {
+  const iso = String(row?.chart_session_iso || "").trim();
+  const isoM = iso.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (isoM) return Date.UTC(+isoM[1], +isoM[2] - 1, +isoM[3]);
   const mdy = historyRoundPlayMdY(row);
   const base = parseEventCompletedChronoBase(mdy);
   if (!base) return NaN;
@@ -13034,12 +13037,15 @@ function propsFilterDraftKingsOnlyOn() {
   return Boolean(document.getElementById("props-filter-draftkings-only")?.checked);
 }
 
-/** Field-by-course + DK: span R1–R4 calendar days from datagolf_field_date_start (not just today's session). */
+/** Field-by-course + DK: default From/To to R1–R4 only when both dates are blank (never overwrite user range). */
 function propsEnsureDkTournamentDateRange() {
   if (!propsCourseWindowModeOn() || !propsFilterDraftKingsOnlyOn()) return;
   const fromEl = document.getElementById("props-filter-date-from");
   const toEl = document.getElementById("props-filter-date-to");
   if (!fromEl || !toEl) return;
+  const fromRaw = String(fromEl.value || "").trim();
+  const toRaw = String(toEl.value || "").trim();
+  if (fromRaw || toRaw) return;
   const ds = String(DATA?.meta?.datagolf_field_date_start || "").match(/^(\d{4}-\d{2}-\d{2})/);
   if (!ds) return;
   const fromIso = propsIsoFromFieldDateStartAndRound(ds[0], 1);
@@ -13165,12 +13171,15 @@ function propsCourseWindowDateBoundsMs() {
 }
 
 /**
- * Field-by-course + DraftKings: one bar per golfer per current-tournament round with a DK line and chartable actual.
- * Chart dates use this week's field date_start + round_num (not prior-year venue rows).
+ * Field-by-course + DraftKings: one bar per golfer per tournament round with a DK line, chartable actual,
+ * and play date inside the From/To filter.
  */
 function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey) {
   const courseKey = propsEffectiveCourseKey();
   if (!courseKey) return [];
+
+  const bounds = propsCourseWindowDateBoundsMs();
+  const { fromMs, toMs } = bounds;
 
   const nameByDg = buildPropsGolferDisplayNameMap();
   const fieldPlayers = roundProjectionPlayersForOuRound();
@@ -13217,6 +13226,8 @@ function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey) {
         rnd,
       );
       if (playIso) row.chart_session_iso = playIso;
+
+      if (bounds.ok && !historyRoundInCourseDateWindow(row, fromMs, toMs)) continue;
 
       raw.push({
         row,
@@ -13344,7 +13355,7 @@ function collectCourseWindowRoundEntriesFixed(bucketOpt) {
   if (dkProj) propsEnsureDkTournamentDateRange();
   const fromRaw = String(document.getElementById("props-filter-date-from")?.value || "").trim();
   const toRaw = String(document.getElementById("props-filter-date-to")?.value || "").trim();
-  if (!dkProj && !fromRaw && !toRaw) return [];
+  if (!fromRaw && !toRaw) return [];
   const sig = [
     historyMutationEpoch,
     courseKey,
@@ -13362,7 +13373,6 @@ function collectCourseWindowRoundEntriesFixed(bucketOpt) {
   if (!bucket) return [];
   mergeMemoryCourseEntriesIntoBucket(bucket, courseKey);
   if (dkProj) {
-    propsEnsureDkTournamentDateRange();
     propsCourseWindowDateFallbackIso = "";
     const out = collectCourseWindowDraftKingsProjectionEntries(bucket || { entries: [] }, statKey);
     courseWindowRoundEntriesCacheSig = sig;
@@ -16040,7 +16050,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
       : "";
     const dkNote = propsFilterDraftKingsOnlyOn()
       ? draftKingsTournamentPropsAvailable()
-        ? " · DK lines · all completed rounds this week at venue"
+        ? " · DK lines · dates in range below"
         : " · no DraftKings props loaded"
       : "";
     const fallbackNote = propsCourseWindowDateFallbackIso
@@ -16191,6 +16201,9 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
           empty.textContent = "No DraftKings props loaded for this tournament — load props or turn off the DK filter.";
         } else if (!dkField) {
           empty.textContent = `No round-projection golfers with DraftKings ${propMarketLabelFromKey(statKey)} lines.`;
+        } else if (!nAll) {
+          empty.textContent =
+            "No DraftKings rounds at this course in the selected date range. Widen From/To or turn off the DK filter.";
         } else {
           empty.textContent = `No chartable ${propMarketLabelFromKey(statKey)} values at ${courseLabel} for ${dkField} DK golfers (try another market or relax weather filters).`;
         }
