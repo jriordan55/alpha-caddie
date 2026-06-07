@@ -9,7 +9,7 @@
   "datagolf_field_current_round": 3,
   "display_round": 3,
   "display_round_label": "R3 — Saturday (auto, America/New_York)",
-  "updated_at": "2026-06-07T11:51:17Z",
+  "updated_at": "2026-06-07T14:00:07Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -21566,220 +21566,30 @@
   ],
   "props": [
     {
-      "player_name": "Pendrith, Taylor",
-      "line": 1.5,
-      "over_odds": 108,
-      "under_odds": -162,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 17780,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Woodland, Gary",
-      "line": 2.5,
-      "over_odds": 2000,
-      "under_odds": -4500,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 12577,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Matsuyama, Hideki",
-      "line": 2.5,
-      "over_odds": 260,
-      "under_odds": -390,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 13562,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Spaun, J.J.",
-      "line": 6.5,
-      "over_odds": 184,
-      "under_odds": -280,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 17536,
-      "source": "draftkings"
-    },
-    {
       "player_name": "Poston, J.T.",
-      "line": 4.5,
-      "over_odds": 120,
-      "under_odds": -180,
+      "line": 6.5,
+      "over_odds": 196,
+      "under_odds": -295,
       "market": "Birdies",
       "round_num": 3,
       "dg_id": 21554,
       "source": "draftkings"
     },
     {
-      "player_name": "Theegala, Sahith",
-      "line": 4.5,
-      "over_odds": -300,
-      "under_odds": 200,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 23014,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Fitzpatrick, Alex",
-      "line": 2.5,
-      "over_odds": -160,
-      "under_odds": 106,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 25362,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Im, Sungjae",
-      "line": 4.5,
-      "over_odds": 110,
-      "under_odds": -166,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 17488,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Kitayama, Kurt",
-      "line": 3.5,
-      "over_odds": 190,
-      "under_odds": -285,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 21891,
-      "source": "draftkings"
-    },
-    {
       "player_name": "Gerard, Ryan",
-      "line": 5.5,
-      "over_odds": 115,
-      "under_odds": -172,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 29767,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "McNealy, Maverick",
-      "line": 3.5,
-      "over_odds": -102,
-      "under_odds": -148,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 18634,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Rai, Aaron",
       "line": 4.5,
-      "over_odds": -168,
-      "under_odds": 112,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 18554,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Noren, Alex",
-      "line": 4.5,
-      "over_odds": -270,
-      "under_odds": 180,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 10419,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Reitan, Kristoffer",
-      "line": 5.5,
       "over_odds": 178,
       "under_odds": -270,
       "market": "Birdies",
       "round_num": 3,
-      "dg_id": 21407,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Hall, Harry",
-      "line": 4.5,
-      "over_odds": 124,
-      "under_odds": -186,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 27194,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Rose, Justin",
-      "line": 6.5,
-      "over_odds": 375,
-      "under_odds": -575,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 6093,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Bridgeman, Jacob",
-      "line": 2.5,
-      "over_odds": 205,
-      "under_odds": -310,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 29433,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Schauffele, Xander",
-      "line": 4.5,
-      "over_odds": 134,
-      "under_odds": -200,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 19895,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Clark, Wyndham",
-      "line": 3.5,
-      "over_odds": -220,
-      "under_odds": 144,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 23604,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "McIlroy, Rory",
-      "line": 4.5,
-      "over_odds": 2000,
-      "under_odds": -4500,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 10091,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Lowry, Shane",
-      "line": 3.5,
-      "over_odds": 120,
-      "under_odds": -180,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 13900,
+      "dg_id": 29767,
       "source": "draftkings"
     },
     {
       "player_name": "Cantlay, Patrick",
-      "line": 4.5,
-      "over_odds": 105,
-      "under_odds": -158,
+      "line": 3.5,
+      "over_odds": 660,
+      "under_odds": -1100,
       "market": "Birdies",
       "round_num": 3,
       "dg_id": 15466,
@@ -21788,8 +21598,8 @@
     {
       "player_name": "Burns, Sam",
       "line": 4.5,
-      "over_odds": 104,
-      "under_odds": -156,
+      "over_odds": 205,
+      "under_odds": -320,
       "market": "Birdies",
       "round_num": 3,
       "dg_id": 19483,
@@ -21797,159 +21607,49 @@
     },
     {
       "player_name": "Fleetwood, Tommy",
-      "line": 4.5,
-      "over_odds": 132,
-      "under_odds": -198,
+      "line": 5.5,
+      "over_odds": 245,
+      "under_odds": -370,
       "market": "Birdies",
       "round_num": 3,
       "dg_id": 12294,
       "source": "draftkings"
     },
     {
-      "player_name": "Bradley, Keegan",
-      "line": 5.5,
-      "over_odds": 174,
-      "under_odds": -260,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 13872,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Scheffler, Scottie",
-      "line": 5.5,
-      "over_odds": -380,
-      "under_odds": 250,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 18417,
-      "source": "draftkings"
-    },
-    {
       "player_name": "Cole, Eric",
-      "line": 3.5,
-      "over_odds": -215,
-      "under_odds": 144,
+      "line": 4.5,
+      "over_odds": 820,
+      "under_odds": -1300,
       "market": "Birdies",
       "round_num": 3,
       "dg_id": 21756,
       "source": "draftkings"
     },
     {
-      "player_name": "Finau, Tony",
-      "line": 5.5,
-      "over_odds": 144,
-      "under_odds": -220,
-      "market": "Birdies",
-      "round_num": 3,
-      "dg_id": 11676,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Lowry, Shane",
-      "line": 11.5,
+      "player_name": "Cantlay, Patrick",
+      "line": 8.5,
       "over_odds": -220,
       "under_odds": 146,
       "market": "Pars",
       "round_num": 3,
-      "dg_id": 13900,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Rai, Aaron",
-      "line": 8.5,
-      "over_odds": -162,
-      "under_odds": 108,
-      "market": "Pars",
-      "round_num": 3,
-      "dg_id": 18554,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Matsuyama, Hideki",
-      "line": 10.5,
-      "over_odds": 144,
-      "under_odds": -220,
-      "market": "Pars",
-      "round_num": 3,
-      "dg_id": 13562,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Spaun, J.J.",
-      "line": 8.5,
-      "over_odds": -220,
-      "under_odds": 144,
-      "market": "Pars",
-      "round_num": 3,
-      "dg_id": 17536,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "McNealy, Maverick",
-      "line": 13.5,
-      "over_odds": -122,
-      "under_odds": -124,
-      "market": "Pars",
-      "round_num": 3,
-      "dg_id": 18634,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Noren, Alex",
-      "line": 11.5,
-      "over_odds": 136,
-      "under_odds": -205,
-      "market": "Pars",
-      "round_num": 3,
-      "dg_id": 10419,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Cantlay, Patrick",
-      "line": 8.5,
-      "over_odds": 136,
-      "under_odds": -205,
-      "market": "Pars",
-      "round_num": 3,
       "dg_id": 15466,
       "source": "draftkings"
     },
     {
-      "player_name": "Fitzpatrick, Alex",
-      "line": 11.5,
-      "over_odds": -136,
-      "under_odds": -110,
-      "market": "Pars",
-      "round_num": 3,
-      "dg_id": 25362,
-      "source": "draftkings"
-    },
-    {
       "player_name": "Poston, J.T.",
-      "line": 10.5,
-      "over_odds": 116,
-      "under_odds": -175,
+      "line": 8.5,
+      "over_odds": 122,
+      "under_odds": -182,
       "market": "Pars",
       "round_num": 3,
       "dg_id": 21554,
       "source": "draftkings"
     },
     {
-      "player_name": "Kitayama, Kurt",
-      "line": 12.5,
-      "over_odds": -210,
-      "under_odds": 138,
-      "market": "Pars",
-      "round_num": 3,
-      "dg_id": 21891,
-      "source": "draftkings"
-    },
-    {
       "player_name": "Cole, Eric",
       "line": 10.5,
-      "over_odds": -134,
-      "under_odds": -112,
+      "over_odds": -186,
+      "under_odds": 124,
       "market": "Pars",
       "round_num": 3,
       "dg_id": 21756,
@@ -21957,219 +21657,39 @@
     },
     {
       "player_name": "Gerard, Ryan",
-      "line": 8.5,
+      "line": 10.5,
+      "over_odds": 122,
+      "under_odds": -182,
+      "market": "Pars",
+      "round_num": 3,
+      "dg_id": 29767,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Burns, Sam",
+      "line": 11.5,
       "over_odds": 110,
-      "under_odds": -164,
-      "market": "Pars",
-      "round_num": 3,
-      "dg_id": 29767,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Rose, Justin",
-      "line": 8.5,
-      "over_odds": 115,
-      "under_odds": -172,
-      "market": "Pars",
-      "round_num": 3,
-      "dg_id": 6093,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Schauffele, Xander",
-      "line": 10.5,
-      "over_odds": 104,
-      "under_odds": -156,
-      "market": "Pars",
-      "round_num": 3,
-      "dg_id": 19895,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Reitan, Kristoffer",
-      "line": 8.5,
-      "over_odds": -180,
-      "under_odds": 120,
-      "market": "Pars",
-      "round_num": 3,
-      "dg_id": 21407,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Clark, Wyndham",
-      "line": 11.5,
-      "over_odds": -194,
-      "under_odds": 128,
-      "market": "Pars",
-      "round_num": 3,
-      "dg_id": 23604,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Burns, Sam",
-      "line": 11.5,
-      "over_odds": -134,
-      "under_odds": -112,
+      "under_odds": -166,
       "market": "Pars",
       "round_num": 3,
       "dg_id": 19483,
       "source": "draftkings"
     },
     {
-      "player_name": "McIlroy, Rory",
-      "line": 11.5,
-      "over_odds": 140,
-      "under_odds": -215,
-      "market": "Pars",
-      "round_num": 3,
-      "dg_id": 10091,
-      "source": "draftkings"
-    },
-    {
       "player_name": "Fleetwood, Tommy",
-      "line": 10.5,
-      "over_odds": -178,
-      "under_odds": 118,
-      "market": "Pars",
-      "round_num": 3,
-      "dg_id": 12294,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Scheffler, Scottie",
-      "line": 8.5,
-      "over_odds": -132,
-      "under_odds": -114,
-      "market": "Pars",
-      "round_num": 3,
-      "dg_id": 18417,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Bridgeman, Jacob",
-      "line": 11.5,
-      "over_odds": -210,
-      "under_odds": 140,
-      "market": "Pars",
-      "round_num": 3,
-      "dg_id": 29433,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Bradley, Keegan",
       "line": 9.5,
-      "over_odds": -108,
-      "under_odds": -140,
+      "over_odds": -360,
+      "under_odds": 235,
       "market": "Pars",
       "round_num": 3,
-      "dg_id": 13872,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Lowry, Shane",
-      "line": 2.5,
-      "over_odds": -148,
-      "under_odds": -102,
-      "market": "Bogeys",
-      "round_num": 3,
-      "dg_id": 13900,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Rai, Aaron",
-      "line": 4.5,
-      "over_odds": -105,
-      "under_odds": -144,
-      "market": "Bogeys",
-      "round_num": 3,
-      "dg_id": 18554,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "McNealy, Maverick",
-      "line": 1.5,
-      "over_odds": 198,
-      "under_odds": -300,
-      "market": "Bogeys",
-      "round_num": 3,
-      "dg_id": 18634,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Noren, Alex",
-      "line": 1.5,
-      "over_odds": -260,
-      "under_odds": 172,
-      "market": "Bogeys",
-      "round_num": 3,
-      "dg_id": 10419,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "McIlroy, Rory",
-      "line": 2.5,
-      "over_odds": -188,
-      "under_odds": 125,
-      "market": "Bogeys",
-      "round_num": 3,
-      "dg_id": 10091,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Schauffele, Xander",
-      "line": 3.5,
-      "over_odds": -116,
-      "under_odds": -130,
-      "market": "Bogeys",
-      "round_num": 3,
-      "dg_id": 19895,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Reitan, Kristoffer",
-      "line": 3.5,
-      "over_odds": -275,
-      "under_odds": 184,
-      "market": "Bogeys",
-      "round_num": 3,
-      "dg_id": 21407,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Bridgeman, Jacob",
-      "line": 3.5,
-      "over_odds": -270,
-      "under_odds": 178,
-      "market": "Bogeys",
-      "round_num": 3,
-      "dg_id": 29433,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Spaun, J.J.",
-      "line": 2.5,
-      "over_odds": -285,
-      "under_odds": 190,
-      "market": "Bogeys",
-      "round_num": 3,
-      "dg_id": 17536,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Bradley, Keegan",
-      "line": 3.5,
-      "over_odds": -108,
-      "under_odds": -140,
-      "market": "Bogeys",
-      "round_num": 3,
-      "dg_id": 13872,
+      "dg_id": 12294,
       "source": "draftkings"
     },
     {
       "player_name": "Fleetwood, Tommy",
       "line": 2.5,
-      "over_odds": -205,
-      "under_odds": 134,
+      "over_odds": -295,
+      "under_odds": 196,
       "market": "Bogeys",
       "round_num": 3,
       "dg_id": 12294,
@@ -22177,49 +21697,19 @@
     },
     {
       "player_name": "Burns, Sam",
-      "line": 1.5,
-      "over_odds": -235,
-      "under_odds": 156,
+      "line": 2.5,
+      "over_odds": 146,
+      "under_odds": -220,
       "market": "Bogeys",
       "round_num": 3,
       "dg_id": 19483,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Matsuyama, Hideki",
-      "line": 5.5,
-      "over_odds": -124,
-      "under_odds": -122,
-      "market": "Bogeys",
-      "round_num": 3,
-      "dg_id": 13562,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Clark, Wyndham",
-      "line": 2.5,
-      "over_odds": 152,
-      "under_odds": -230,
-      "market": "Bogeys",
-      "round_num": 3,
-      "dg_id": 23604,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Scheffler, Scottie",
-      "line": 3.5,
-      "over_odds": 104,
-      "under_odds": -156,
-      "market": "Bogeys",
-      "round_num": 3,
-      "dg_id": 18417,
       "source": "draftkings"
     },
     {
       "player_name": "Cantlay, Patrick",
-      "line": 5.5,
-      "over_odds": -132,
-      "under_odds": -114,
+      "line": 6.5,
+      "over_odds": 245,
+      "under_odds": -370,
       "market": "Bogeys",
       "round_num": 3,
       "dg_id": 15466,
@@ -22228,478 +21718,118 @@
     {
       "player_name": "Poston, J.T.",
       "line": 3.5,
-      "over_odds": -128,
-      "under_odds": -118,
-      "market": "Bogeys",
-      "round_num": 3,
-      "dg_id": 21554,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Kitayama, Kurt",
-      "line": 1.5,
-      "over_odds": -310,
-      "under_odds": 200,
-      "market": "Bogeys",
-      "round_num": 3,
-      "dg_id": 21891,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Gerard, Ryan",
-      "line": 4.5,
-      "over_odds": -115,
-      "under_odds": -130,
-      "market": "Bogeys",
-      "round_num": 3,
-      "dg_id": 29767,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Cole, Eric",
-      "line": 3.5,
-      "over_odds": -104,
-      "under_odds": -146,
-      "market": "Bogeys",
-      "round_num": 3,
-      "dg_id": 21756,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Rose, Justin",
-      "line": 3.5,
-      "over_odds": -102,
-      "under_odds": -148,
-      "market": "Bogeys",
-      "round_num": 3,
-      "dg_id": 6093,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Fitzpatrick, Alex",
-      "line": 3.5,
-      "over_odds": -136,
-      "under_odds": -110,
-      "market": "Bogeys",
-      "round_num": 3,
-      "dg_id": 25362,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Cantlay, Patrick",
-      "line": 10.5,
-      "over_odds": -132,
-      "under_odds": -104,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 15466,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Clark, Wyndham",
-      "line": 12.5,
-      "over_odds": 116,
-      "under_odds": -160,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 23604,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Scheffler, Scottie",
-      "line": 12.5,
-      "over_odds": 200,
-      "under_odds": -275,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 18417,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Poston, J.T.",
-      "line": 11.5,
-      "over_odds": 102,
-      "under_odds": -142,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 21554,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "McIlroy, Rory",
-      "line": 13.5,
-      "over_odds": -124,
-      "under_odds": -110,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 10091,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Matsuyama, Hideki",
-      "line": 8.5,
-      "over_odds": -265,
-      "under_odds": 192,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 13562,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Noren, Alex",
-      "line": 12.5,
-      "over_odds": 156,
-      "under_odds": -215,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 10419,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Fitzpatrick, Alex",
-      "line": 9.5,
-      "over_odds": -130,
-      "under_odds": -105,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 25362,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "McNealy, Maverick",
-      "line": 13.5,
-      "over_odds": -164,
-      "under_odds": 120,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 18634,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Rose, Justin",
-      "line": 12.5,
-      "over_odds": -106,
-      "under_odds": -130,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 6093,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Fleetwood, Tommy",
-      "line": 12.5,
-      "over_odds": 132,
-      "under_odds": -182,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 12294,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Gerard, Ryan",
-      "line": 11.5,
-      "over_odds": 102,
-      "under_odds": -142,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 29767,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Reitan, Kristoffer",
-      "line": 11.5,
-      "over_odds": 140,
-      "under_odds": -192,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 21407,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Bradley, Keegan",
-      "line": 9.5,
-      "over_odds": -172,
-      "under_odds": 126,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 13872,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Kitayama, Kurt",
-      "line": 10.5,
-      "over_odds": -205,
-      "under_odds": 148,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 21891,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Cole, Eric",
-      "line": 8.5,
-      "over_odds": -154,
-      "under_odds": 112,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 21756,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Schauffele, Xander",
-      "line": 12.5,
-      "over_odds": -132,
-      "under_odds": -104,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 19895,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Rai, Aaron",
-      "line": 10.5,
-      "over_odds": 134,
-      "under_odds": -184,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 18554,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Spaun, J.J.",
-      "line": 12.5,
-      "over_odds": -215,
-      "under_odds": 154,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 17536,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Bridgeman, Jacob",
-      "line": 10.5,
-      "over_odds": 140,
-      "under_odds": -192,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 29433,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Lowry, Shane",
-      "line": 11.5,
-      "over_odds": -130,
-      "under_odds": -105,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 13900,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Burns, Sam",
-      "line": 10.5,
-      "over_odds": -184,
-      "under_odds": 134,
-      "market": "GIR",
-      "round_num": 3,
-      "dg_id": 19483,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Lowry, Shane",
-      "line": 71.5,
-      "over_odds": -124,
-      "under_odds": -116,
-      "market": "Total Score",
-      "round_num": 3,
-      "dg_id": 13900,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Rai, Aaron",
-      "line": 71.5,
-      "over_odds": -172,
-      "under_odds": 118,
-      "market": "Total Score",
-      "round_num": 3,
-      "dg_id": 18554,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Matsuyama, Hideki",
-      "line": 75.5,
-      "over_odds": -4000,
-      "under_odds": 1900,
-      "market": "Total Score",
-      "round_num": 3,
-      "dg_id": 13562,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Spaun, J.J.",
-      "line": 69.5,
-      "over_odds": 144,
-      "under_odds": -205,
-      "market": "Total Score",
-      "round_num": 3,
-      "dg_id": 17536,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "McNealy, Maverick",
-      "line": 69.5,
-      "over_odds": -154,
-      "under_odds": 108,
-      "market": "Total Score",
-      "round_num": 3,
-      "dg_id": 18634,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Noren, Alex",
-      "line": 69.5,
-      "over_odds": 132,
-      "under_odds": -188,
-      "market": "Total Score",
-      "round_num": 3,
-      "dg_id": 10419,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Bridgeman, Jacob",
-      "line": 75.5,
-      "over_odds": -850,
-      "under_odds": 560,
-      "market": "Total Score",
-      "round_num": 3,
-      "dg_id": 29433,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Schauffele, Xander",
-      "line": 71.5,
-      "over_odds": -124,
-      "under_odds": -115,
-      "market": "Total Score",
-      "round_num": 3,
-      "dg_id": 19895,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Scheffler, Scottie",
-      "line": 68.5,
-      "over_odds": -126,
-      "under_odds": -114,
-      "market": "Total Score",
-      "round_num": 3,
-      "dg_id": 18417,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Cantlay, Patrick",
-      "line": 73.5,
-      "over_odds": -118,
-      "under_odds": -122,
-      "market": "Total Score",
-      "round_num": 3,
-      "dg_id": 15466,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Cole, Eric",
-      "line": 70.5,
-      "over_odds": -142,
-      "under_odds": 100,
-      "market": "Total Score",
-      "round_num": 3,
-      "dg_id": 21756,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Fitzpatrick, Alex",
-      "line": 73.5,
-      "over_odds": 115,
-      "under_odds": -178,
-      "market": "Total Score",
-      "round_num": 3,
-      "dg_id": 25362,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Gerard, Ryan",
-      "line": 71.5,
-      "over_odds": -124,
-      "under_odds": -114,
-      "market": "Total Score",
-      "round_num": 3,
-      "dg_id": 29767,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Rose, Justin",
-      "line": 69.5,
-      "over_odds": 118,
-      "under_odds": -174,
-      "market": "Total Score",
-      "round_num": 3,
-      "dg_id": 6093,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Bradley, Keegan",
-      "line": 69.5,
-      "over_odds": -118,
-      "under_odds": -122,
-      "market": "Total Score",
-      "round_num": 3,
-      "dg_id": 13872,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Kitayama, Kurt",
-      "line": 71.5,
       "over_odds": 138,
-      "under_odds": -198,
-      "market": "Total Score",
+      "under_odds": -210,
+      "market": "Bogeys",
       "round_num": 3,
-      "dg_id": 21891,
+      "dg_id": 21554,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Gerard, Ryan",
+      "line": 3.5,
+      "over_odds": 150,
+      "under_odds": -225,
+      "market": "Bogeys",
+      "round_num": 3,
+      "dg_id": 29767,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Cole, Eric",
+      "line": 3.5,
+      "over_odds": 180,
+      "under_odds": -275,
+      "market": "Bogeys",
+      "round_num": 3,
+      "dg_id": 21756,
       "source": "draftkings"
     },
     {
       "player_name": "Poston, J.T.",
+      "line": 9.5,
+      "over_odds": 146,
+      "under_odds": -210,
+      "market": "Fairways hit",
+      "round_num": 3,
+      "dg_id": 21554,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Fleetwood, Tommy",
+      "line": 11.5,
+      "over_odds": -144,
+      "under_odds": 100,
+      "market": "Fairways hit",
+      "round_num": 3,
+      "dg_id": 12294,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Gerard, Ryan",
+      "line": 11.5,
+      "over_odds": 168,
+      "under_odds": -245,
+      "market": "Fairways hit",
+      "round_num": 3,
+      "dg_id": 29767,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Burns, Sam",
+      "line": 6.5,
+      "over_odds": 106,
+      "under_odds": -154,
+      "market": "Fairways hit",
+      "round_num": 3,
+      "dg_id": 19483,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Cantlay, Patrick",
+      "line": 75.5,
+      "over_odds": -1000,
+      "under_odds": 680,
+      "market": "Total Score",
+      "round_num": 3,
+      "dg_id": 15466,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Cole, Eric",
+      "line": 70.5,
+      "over_odds": 186,
+      "under_odds": -265,
+      "market": "Total Score",
+      "round_num": 3,
+      "dg_id": 21756,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Gerard, Ryan",
       "line": 71.5,
-      "over_odds": -138,
-      "under_odds": -104,
+      "over_odds": 200,
+      "under_odds": -290,
+      "market": "Total Score",
+      "round_num": 3,
+      "dg_id": 29767,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Poston, J.T.",
+      "line": 69.5,
+      "over_odds": 184,
+      "under_odds": -265,
       "market": "Total Score",
       "round_num": 3,
       "dg_id": 21554,
       "source": "draftkings"
     },
     {
-      "player_name": "Clark, Wyndham",
-      "line": 70.5,
-      "over_odds": -108,
-      "under_odds": -134,
-      "market": "Total Score",
-      "round_num": 3,
-      "dg_id": 23604,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Reitan, Kristoffer",
-      "line": 70.5,
-      "over_odds": 128,
-      "under_odds": -182,
-      "market": "Total Score",
-      "round_num": 3,
-      "dg_id": 21407,
-      "source": "draftkings"
-    },
-    {
       "player_name": "Burns, Sam",
-      "line": 70.5,
-      "over_odds": 118,
-      "under_odds": -170,
+      "line": 71.5,
+      "over_odds": 196,
+      "under_odds": -320,
       "market": "Total Score",
       "round_num": 3,
       "dg_id": 19483,
@@ -22707,40 +21837,57 @@
     },
     {
       "player_name": "Fleetwood, Tommy",
-      "line": 70.5,
-      "over_odds": -172,
-      "under_odds": 104,
+      "line": 69.5,
+      "over_odds": -158,
+      "under_odds": 102,
       "market": "Total Score",
       "round_num": 3,
       "dg_id": 12294,
       "source": "draftkings"
     },
     {
-      "player_name": "McIlroy, Rory",
+      "player_name": "Scheffler, Scottie",
       "line": 70.5,
-      "over_odds": -184,
-      "under_odds": 128,
+      "over_odds": -110,
+      "under_odds": -110,
       "market": "Total Score",
-      "round_num": 3,
+      "dg_id": 18417,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Aberg, Ludvig",
+      "line": 71.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 23950,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Henley, Russell",
+      "line": 71.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 14578,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "McIlroy, Rory",
+      "line": 71.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
       "dg_id": 10091,
-      "source": "draftkings"
-    },
-    {
-      "player_name": "Aberg, Ludvig",
-      "line": 71.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "Total Score",
-      "dg_id": 23950,
       "source": "model_fallback"
     },
     {
-      "player_name": "Henley, Russell",
+      "player_name": "Schauffele, Xander",
       "line": 71.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
-      "dg_id": 14578,
+      "dg_id": 19895,
       "source": "model_fallback"
     },
     {
@@ -22753,12 +21900,30 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Spaun, J.J.",
+      "line": 71.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 17536,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Kim, Si Woo",
       "line": 71.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
       "dg_id": 14609,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Bradley, Keegan",
+      "line": 72.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 13872,
       "source": "model_fallback"
     },
     {
@@ -22786,6 +21951,15 @@
       "under_odds": -110,
       "market": "Total Score",
       "dg_id": 17646,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Matsuyama, Hideki",
+      "line": 72.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 13562,
       "source": "model_fallback"
     },
     {
@@ -22831,6 +22005,15 @@
       "under_odds": -110,
       "market": "Total Score",
       "dg_id": 26651,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "McNealy, Maverick",
+      "line": 72.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 18634,
       "source": "model_fallback"
     },
     {
@@ -22915,12 +22098,30 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Lowry, Shane",
+      "line": 72.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 13900,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Scott, Adam",
       "line": 72.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
       "dg_id": 6430,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Reitan, Kristoffer",
+      "line": 72.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 21407,
       "source": "model_fallback"
     },
     {
@@ -22996,12 +22197,30 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Bridgeman, Jacob",
+      "line": 72.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 29433,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Hall, Harry",
       "line": 72.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Total Score",
       "dg_id": 27194,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Fitzpatrick, Alex",
+      "line": 72.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 25362,
       "source": "model_fallback"
     },
     {
@@ -23020,6 +22239,15 @@
       "under_odds": -110,
       "market": "Total Score",
       "dg_id": 22833,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Clark, Wyndham",
+      "line": 72.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 23604,
       "source": "model_fallback"
     },
     {
@@ -23056,6 +22284,15 @@
       "under_odds": -110,
       "market": "Total Score",
       "dg_id": 17576,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Noren, Alex",
+      "line": 72.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 10419,
       "source": "model_fallback"
     },
     {
@@ -23104,6 +22341,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Rai, Aaron",
+      "line": 73.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 18554,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Kuchar, Matt",
       "line": 72.5,
       "over_odds": -110,
@@ -23137,6 +22383,24 @@
       "under_odds": -110,
       "market": "Total Score",
       "dg_id": 17780,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Kitayama, Kurt",
+      "line": 73.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 21891,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Rose, Justin",
+      "line": 73.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Total Score",
+      "dg_id": 6093,
       "source": "model_fallback"
     },
     {
@@ -23176,6 +22440,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Scheffler, Scottie",
+      "line": 4.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 18417,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Aberg, Ludvig",
       "line": 4.5,
       "over_odds": -110,
@@ -23194,6 +22467,24 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "McIlroy, Rory",
+      "line": 4.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 10091,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Schauffele, Xander",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 19895,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Griffin, Ben",
       "line": 4.5,
       "over_odds": -110,
@@ -23203,12 +22494,30 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Spaun, J.J.",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 17536,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Kim, Si Woo",
       "line": 4.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Birdies",
       "dg_id": 14609,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Bradley, Keegan",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 13872,
       "source": "model_fallback"
     },
     {
@@ -23239,6 +22548,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Matsuyama, Hideki",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 13562,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Meissner, Mac",
       "line": 3.5,
       "over_odds": -110,
@@ -23266,6 +22584,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Woodland, Gary",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 12577,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Young, Cameron",
       "line": 3.5,
       "over_odds": -110,
@@ -23275,12 +22602,30 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "McNealy, Maverick",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 18634,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Spieth, Jordan",
       "line": 3.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Birdies",
       "dg_id": 14636,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Theegala, Sahith",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 23014,
       "source": "model_fallback"
     },
     {
@@ -23347,12 +22692,30 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Lowry, Shane",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 13900,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Scott, Adam",
       "line": 3.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Birdies",
       "dg_id": 6430,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Reitan, Kristoffer",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 21407,
       "source": "model_fallback"
     },
     {
@@ -23419,6 +22782,42 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Finau, Tony",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 11676,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Bridgeman, Jacob",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 29433,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Hall, Harry",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 27194,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Fitzpatrick, Alex",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 25362,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Hubbard, Mark",
       "line": 3.5,
       "over_odds": -110,
@@ -23434,6 +22833,15 @@
       "under_odds": -110,
       "market": "Birdies",
       "dg_id": 22833,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Clark, Wyndham",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 23604,
       "source": "model_fallback"
     },
     {
@@ -23473,6 +22881,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Noren, Alex",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 10419,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Cauley, Bud",
       "line": 3.5,
       "over_odds": -110,
@@ -23491,6 +22908,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Im, Sungjae",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 17488,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Day, Jason",
       "line": 3.5,
       "over_odds": -110,
@@ -23506,6 +22932,15 @@
       "under_odds": -110,
       "market": "Birdies",
       "dg_id": 19870,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Rai, Aaron",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 18554,
       "source": "model_fallback"
     },
     {
@@ -23533,6 +22968,33 @@
       "under_odds": -110,
       "market": "Birdies",
       "dg_id": 16283,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Pendrith, Taylor",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 17780,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Kitayama, Kurt",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 21891,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Rose, Justin",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Birdies",
+      "dg_id": 6093,
       "source": "model_fallback"
     },
     {
@@ -23572,6 +23034,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Scheffler, Scottie",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 18417,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Aberg, Ludvig",
       "line": 11.5,
       "over_odds": -110,
@@ -23590,6 +23061,24 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "McIlroy, Rory",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 10091,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Schauffele, Xander",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 19895,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Griffin, Ben",
       "line": 11.5,
       "over_odds": -110,
@@ -23599,12 +23088,30 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Spaun, J.J.",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 17536,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Kim, Si Woo",
       "line": 11.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Pars",
       "dg_id": 14609,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Bradley, Keegan",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 13872,
       "source": "model_fallback"
     },
     {
@@ -23632,6 +23139,15 @@
       "under_odds": -110,
       "market": "Pars",
       "dg_id": 17646,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Matsuyama, Hideki",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 13562,
       "source": "model_fallback"
     },
     {
@@ -23677,6 +23193,15 @@
       "under_odds": -110,
       "market": "Pars",
       "dg_id": 26651,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "McNealy, Maverick",
+      "line": 10.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 18634,
       "source": "model_fallback"
     },
     {
@@ -23761,12 +23286,30 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Lowry, Shane",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 13900,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Scott, Adam",
       "line": 11.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Pars",
       "dg_id": 6430,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Reitan, Kristoffer",
+      "line": 10.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 21407,
       "source": "model_fallback"
     },
     {
@@ -23842,12 +23385,30 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Bridgeman, Jacob",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 29433,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Hall, Harry",
       "line": 10.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Pars",
       "dg_id": 27194,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Fitzpatrick, Alex",
+      "line": 10.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 25362,
       "source": "model_fallback"
     },
     {
@@ -23866,6 +23427,15 @@
       "under_odds": -110,
       "market": "Pars",
       "dg_id": 22833,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Clark, Wyndham",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 23604,
       "source": "model_fallback"
     },
     {
@@ -23902,6 +23472,15 @@
       "under_odds": -110,
       "market": "Pars",
       "dg_id": 17576,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Noren, Alex",
+      "line": 10.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 10419,
       "source": "model_fallback"
     },
     {
@@ -23950,6 +23529,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Rai, Aaron",
+      "line": 10.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 18554,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Kuchar, Matt",
       "line": 11.5,
       "over_odds": -110,
@@ -23983,6 +23571,24 @@
       "under_odds": -110,
       "market": "Pars",
       "dg_id": 17780,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Kitayama, Kurt",
+      "line": 10.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 21891,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Rose, Justin",
+      "line": 10.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Pars",
+      "dg_id": 6093,
       "source": "model_fallback"
     },
     {
@@ -24022,6 +23628,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Scheffler, Scottie",
+      "line": 1.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 18417,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Aberg, Ludvig",
       "line": 2.5,
       "over_odds": -110,
@@ -24040,6 +23655,24 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "McIlroy, Rory",
+      "line": 2.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 10091,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Schauffele, Xander",
+      "line": 2.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 19895,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Griffin, Ben",
       "line": 2.5,
       "over_odds": -110,
@@ -24049,12 +23682,30 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Spaun, J.J.",
+      "line": 2.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 17536,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Kim, Si Woo",
       "line": 2.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Bogeys",
       "dg_id": 14609,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Bradley, Keegan",
+      "line": 2.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 13872,
       "source": "model_fallback"
     },
     {
@@ -24082,6 +23733,15 @@
       "under_odds": -110,
       "market": "Bogeys",
       "dg_id": 17646,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Matsuyama, Hideki",
+      "line": 2.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 13562,
       "source": "model_fallback"
     },
     {
@@ -24127,6 +23787,15 @@
       "under_odds": -110,
       "market": "Bogeys",
       "dg_id": 26651,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "McNealy, Maverick",
+      "line": 2.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 18634,
       "source": "model_fallback"
     },
     {
@@ -24211,12 +23880,30 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Lowry, Shane",
+      "line": 2.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 13900,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Scott, Adam",
       "line": 2.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Bogeys",
       "dg_id": 6430,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Reitan, Kristoffer",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 21407,
       "source": "model_fallback"
     },
     {
@@ -24292,12 +23979,30 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Bridgeman, Jacob",
+      "line": 2.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 29433,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Hall, Harry",
       "line": 3.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Bogeys",
       "dg_id": 27194,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Fitzpatrick, Alex",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 25362,
       "source": "model_fallback"
     },
     {
@@ -24316,6 +24021,15 @@
       "under_odds": -110,
       "market": "Bogeys",
       "dg_id": 22833,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Clark, Wyndham",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 23604,
       "source": "model_fallback"
     },
     {
@@ -24352,6 +24066,15 @@
       "under_odds": -110,
       "market": "Bogeys",
       "dg_id": 17576,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Noren, Alex",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 10419,
       "source": "model_fallback"
     },
     {
@@ -24400,6 +24123,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Rai, Aaron",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 18554,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Kuchar, Matt",
       "line": 3.5,
       "over_odds": -110,
@@ -24433,6 +24165,24 @@
       "under_odds": -110,
       "market": "Bogeys",
       "dg_id": 17780,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Kitayama, Kurt",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 21891,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Rose, Justin",
+      "line": 3.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "Bogeys",
+      "dg_id": 6093,
       "source": "model_fallback"
     },
     {
@@ -24472,6 +24222,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Scheffler, Scottie",
+      "line": 9.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 18417,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Aberg, Ludvig",
       "line": 9.5,
       "over_odds": -110,
@@ -24490,12 +24249,39 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "McIlroy, Rory",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 10091,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Schauffele, Xander",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 19895,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Griffin, Ben",
       "line": 10.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "GIR",
       "dg_id": 24968,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Spaun, J.J.",
+      "line": 10.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 17536,
       "source": "model_fallback"
     },
     {
@@ -24508,12 +24294,30 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Bradley, Keegan",
+      "line": 10.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 13872,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "MacIntyre, Robert",
       "line": 9.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "GIR",
       "dg_id": 23323,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Cantlay, Patrick",
+      "line": 12.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 15466,
       "source": "model_fallback"
     },
     {
@@ -24535,12 +24339,39 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Matsuyama, Hideki",
+      "line": 10.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 13562,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Meissner, Mac",
       "line": 8.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "GIR",
       "dg_id": 28159,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Gerard, Ryan",
+      "line": 12.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 29767,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Fleetwood, Tommy",
+      "line": 8.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 12294,
       "source": "model_fallback"
     },
     {
@@ -24577,6 +24408,15 @@
       "under_odds": -110,
       "market": "GIR",
       "dg_id": 26651,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "McNealy, Maverick",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 18634,
       "source": "model_fallback"
     },
     {
@@ -24643,6 +24483,33 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Burns, Sam",
+      "line": 12.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 19483,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Cole, Eric",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 21756,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Poston, J.T.",
+      "line": 13.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 21554,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Stevens, Sam",
       "line": 10.5,
       "over_odds": -110,
@@ -24661,12 +24528,30 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Lowry, Shane",
+      "line": 10.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 13900,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Scott, Adam",
       "line": 9.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "GIR",
       "dg_id": 6430,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Reitan, Kristoffer",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 21407,
       "source": "model_fallback"
     },
     {
@@ -24742,12 +24627,30 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Bridgeman, Jacob",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 29433,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Hall, Harry",
       "line": 10.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "GIR",
       "dg_id": 27194,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Fitzpatrick, Alex",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 25362,
       "source": "model_fallback"
     },
     {
@@ -24766,6 +24669,15 @@
       "under_odds": -110,
       "market": "GIR",
       "dg_id": 22833,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Clark, Wyndham",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 23604,
       "source": "model_fallback"
     },
     {
@@ -24802,6 +24714,15 @@
       "under_odds": -110,
       "market": "GIR",
       "dg_id": 17576,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Noren, Alex",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 10419,
       "source": "model_fallback"
     },
     {
@@ -24850,6 +24771,15 @@
       "source": "model_fallback"
     },
     {
+      "player_name": "Rai, Aaron",
+      "line": 10.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 18554,
+      "source": "model_fallback"
+    },
+    {
       "player_name": "Kuchar, Matt",
       "line": 11.5,
       "over_odds": -110,
@@ -24883,6 +24813,24 @@
       "under_odds": -110,
       "market": "GIR",
       "dg_id": 17780,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Kitayama, Kurt",
+      "line": 8.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 21891,
+      "source": "model_fallback"
+    },
+    {
+      "player_name": "Rose, Justin",
+      "line": 11.5,
+      "over_odds": -110,
+      "under_odds": -110,
+      "market": "GIR",
+      "dg_id": 6093,
       "source": "model_fallback"
     },
     {
@@ -25057,24 +25005,6 @@
       "source": "model_fallback"
     },
     {
-      "player_name": "Gerard, Ryan",
-      "line": 8.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "Fairways hit",
-      "dg_id": 29767,
-      "source": "model_fallback"
-    },
-    {
-      "player_name": "Fleetwood, Tommy",
-      "line": 10.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "Fairways hit",
-      "dg_id": 12294,
-      "source": "model_fallback"
-    },
-    {
       "player_name": "Thomas, Justin",
       "line": 7.5,
       "over_odds": -110,
@@ -25183,30 +25113,12 @@
       "source": "model_fallback"
     },
     {
-      "player_name": "Burns, Sam",
-      "line": 9.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "Fairways hit",
-      "dg_id": 19483,
-      "source": "model_fallback"
-    },
-    {
       "player_name": "Cole, Eric",
       "line": 8.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Fairways hit",
       "dg_id": 21756,
-      "source": "model_fallback"
-    },
-    {
-      "player_name": "Poston, J.T.",
-      "line": 7.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "Fairways hit",
-      "dg_id": 21554,
       "source": "model_fallback"
     },
     {
@@ -32371,8 +32283,8 @@
       "match_list": "No 3_balls being offered right now."
     }
   },
-  "book_odds_refreshed_at": "2026-06-07T11:51:17Z",
-  "dk_round_props_refreshed_at": "2026-06-07T11:51:17Z",
+  "book_odds_refreshed_at": "2026-06-07T14:00:07Z",
+  "dk_round_props_refreshed_at": "2026-06-07T14:00:07Z",
   "datagolf_live_current_round": 3,
   "meta": {
     "datagolf_field_date_start": "2026-06-04",
