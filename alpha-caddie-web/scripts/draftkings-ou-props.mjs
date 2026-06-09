@@ -65,6 +65,7 @@ const PROBE_SUBS_FIRST = {
   Pars: ["17300"],
   Birdies: ["17299"],
   Bogeys: ["17301"],
+  "Total Score": ["11015", "11786", "18987"],
 };
 
 /** When nav omits Round Score tabs, try these Masters subcategory ids (merge + dedupe players). */
@@ -82,6 +83,39 @@ function marketsUrl(leagueId, subcatId, siteSegment) {
     `$filter=clientMetadata/subCategoryId eq '${sub}' AND tags/all(t: t ne 'SportcastBetBuilder')`,
   );
   return `https://sportsbook-nash.draftkings.com/sites/${seg}/api/sportscontent/controldata/league/leagueSubcategory/v1/markets?isBatchable=false&templateVars=${templateVars}&eventsQuery=${eventsQuery}&marketsQuery=${marketsQuery}&include=Events&entity=events`;
+}
+
+/** DK Nash often returns 403 on the first markets call until the session settles — retry with backoff. */
+async function getMarketsJson(api, page, url) {
+  const max = Math.max(1, Math.min(5, Number(process.env.DK_MARKETS_FETCH_RETRIES || 3)));
+  for (let attempt = 0; attempt < max; attempt++) {
+    try {
+      const res = await api.get(url, { timeout: 60000 });
+      if (res.ok()) {
+        const body = await res.json();
+        return Array.isArray(body?.markets) ? body : null;
+      }
+      if (res.status() === 403 && attempt < max - 1) {
+        await page.waitForTimeout(1200 + attempt * 900);
+        continue;
+      }
+      return null;
+    } catch {
+      if (attempt < max - 1) {
+        await page.waitForTimeout(1000);
+        continue;
+      }
+      return null;
+    }
+  }
+  return null;
+}
+
+async function fetchPropsForSub(api, page, leagueId, siteSegment, stat, sub, players) {
+  const body = await getMarketsJson(api, page, marketsUrl(leagueId, sub, siteSegment));
+  if (!body) return { props: [], body: null };
+  const props = propsFromMarketsBody(body, stat, players);
+  return { props, body };
 }
 
 function displayGolferName(name) {
@@ -158,6 +192,12 @@ const NAME_RE_TOTAL_SCORE = new RegExp(
   "i",
 );
 
+/** e.g. "Adam Scott - Round 1 Score" (some events omit "Round Score" prefix). */
+const NAME_RE_ROUND_N_SCORE = new RegExp(
+  `^(.+?)\\s+${OPTIONAL_TITLE_LINE}(?:-\\s*)?Round\\s+(\\d+)\\s+Score(?:\\s+O\\/U)?\\s*$`,
+  "i",
+);
+
 function roundFromMatch(m) {
   if (!m) return NaN;
   for (let i = 2; i < m.length; i++) {
@@ -171,10 +211,16 @@ function parseMarketName(stat, marketName) {
   const raw = normalizeMarketTitle(marketName);
   if (stat === "Total Score") {
     const m = raw.match(NAME_RE_TOTAL_SCORE);
-    if (!m) return null;
-    const rd = roundFromMatch(m);
-    if (!Number.isFinite(rd)) return null;
-    return { dkPlayer: m[1].replace(/\s+/g, " ").trim(), round: rd };
+    if (m) {
+      const rd = roundFromMatch(m);
+      if (Number.isFinite(rd)) return { dkPlayer: m[1].replace(/\s+/g, " ").trim(), round: rd };
+    }
+    const m2 = raw.match(NAME_RE_ROUND_N_SCORE);
+    if (m2) {
+      const rd = Number(m2[2]);
+      if (Number.isFinite(rd)) return { dkPlayer: m2[1].replace(/\s+/g, " ").trim(), round: rd };
+    }
+    return null;
   }
   const re = NAME_RE[stat];
   if (!re) return null;
@@ -266,23 +312,15 @@ function buildProbeOrder(stat, preferredSub, allLeagueSubIds) {
 }
 
 /** Quick check that a subcategory returns parseable per-player round O/U rows for `stat`. */
-async function subcategoryYieldsStat(api, leagueId, siteSegment, stat, sub, players) {
-  const u = marketsUrl(leagueId, sub, siteSegment);
-  const res = await api.get(u, { timeout: 60000 });
-  if (!res.ok()) return 0;
-  try {
-    const body = await res.json();
-    const mk = Array.isArray(body?.markets) ? body.markets : [];
-    if (!mk.some((m) => isGoodPlayerRoundSampleName(stat, m.name))) return 0;
-    return propsFromMarketsBody(body, stat, players).length;
-  } catch {
-    return 0;
-  }
+async function subcategoryYieldsStat(api, page, leagueId, siteSegment, stat, sub, players) {
+  const { props } = await fetchPropsForSub(api, page, leagueId, siteSegment, stat, sub, players);
+  return props.length;
 }
 
 /** All subcategory ids that return per-player round O/U rows for `stat` (merge every hit, not just the largest). */
 async function findAllSubcategoriesForStat(
   api,
+  page,
   leagueId,
   siteSegment,
   stat,
@@ -301,16 +339,9 @@ async function findAllSubcategoriesForStat(
   for (const sub of candidates) {
     if (!sub || seen.has(sub)) continue;
     seen.add(sub);
-    const u = marketsUrl(leagueId, sub, siteSegment);
-    const res = await api.get(u, { timeout: 60000 });
-    if (!res.ok()) continue;
-    let body;
-    try {
-      body = await res.json();
-    } catch {
-      continue;
-    }
-    const mk = Array.isArray(body?.markets) ? body.markets : [];
+    const body = await getMarketsJson(api, page, marketsUrl(leagueId, sub, siteSegment));
+    if (!body) continue;
+    const mk = body.markets || [];
     const sample = mk.slice(0, 20).map((m) => m.name);
     if (!sample.some((n) => isGoodPlayerRoundSampleName(stat, n))) continue;
     const nParsed = propsFromMarketsBody(body, stat, players).length;
@@ -657,6 +688,31 @@ export async function fetchDraftKingsOuProps(opts = {}) {
 
   const allLeagueSubIds = Array.isArray(nav.allSubIdsForLeague) ? nav.allSubIdsForLeague : [];
   const api = ctx.request;
+
+  if (!(overrides["Total Score"] ?? overrides.TotalScore)) {
+    const tryTs = [
+      ...new Set(
+        [
+          ...roundScoreSubs,
+          ...(PROBE_SUBS_FIRST["Total Score"] || []),
+          ...FALLBACK_ROUND_SCORE_SUBS,
+        ]
+          .map((x) => String(x || "").trim())
+          .filter(Boolean),
+      ),
+    ];
+    const verified = [];
+    for (const sub of tryTs) {
+      const n = await subcategoryYieldsStat(api, page, leagueId, siteSegment, "Total Score", sub, players);
+      if (n > 0) verified.push(sub);
+      await new Promise((r) => setTimeout(r, 45));
+    }
+    if (verified.length) {
+      roundScoreSubs = verified;
+      console.log(`[draftkings-ou] Total Score sub(s): ${verified.join(",")}`);
+    }
+  }
+
   for (const st of ["Putts", "GIR", "Fairways hit", "Birdies", "Pars", "Bogeys"]) {
     if (overrides[st]) continue;
     const pref = statToSubs[st]?.[0] || "";
@@ -664,6 +720,7 @@ export async function fetchDraftKingsOuProps(opts = {}) {
     if (!pref && !hasProbe) continue;
     const picked = await findAllSubcategoriesForStat(
       api,
+      page,
       leagueId,
       siteSegment,
       st,
@@ -685,7 +742,7 @@ export async function fetchDraftKingsOuProps(opts = {}) {
       ];
       const verified = [];
       for (const sub of trySubs) {
-        const n = await subcategoryYieldsStat(api, leagueId, siteSegment, st, sub, players);
+        const n = await subcategoryYieldsStat(api, page, leagueId, siteSegment, st, sub, players);
         if (n > 0) verified.push(sub);
         await new Promise((r) => setTimeout(r, 45));
       }
@@ -714,47 +771,62 @@ export async function fetchDraftKingsOuProps(opts = {}) {
   const all = [];
   let apiFail = 0;
   let apiBadShape = 0;
+
+  async function pullTotalScoreSubs(label) {
+    if (!roundScoreSubs.length) return 0;
+    if (Number.isFinite(targetRound)) await selectDraftKingsRoundTab(page, targetRound);
+    let n = 0;
+    for (let i = 0; i < roundScoreSubs.length; i++) {
+      const sub = roundScoreSubs[i];
+      const { props: chunk, body } = await fetchPropsForSub(
+        api,
+        page,
+        leagueId,
+        siteSegment,
+        "Total Score",
+        sub,
+        players,
+      );
+      if (!body) {
+        apiFail++;
+        console.warn(`[draftkings-ou] round-score markets failed stat=Total Score sub=${sub}${label ? ` (${label})` : ""}`);
+        continue;
+      }
+      all.push(...chunk);
+      n += chunk.length;
+      if (!chunk.length && body.markets?.length) logUnparsedSample("Total Score", body, "no-rows");
+      const prev = subcatsUsed["Total Score"];
+      subcatsUsed["Total Score"] = prev ? `${prev},${sub}` : sub;
+      if (i < roundScoreSubs.length - 1) await page.waitForTimeout(250);
+    }
+    if (n > 0) console.log(`[draftkings-ou] Total Score: ${n} rows from sub(s) ${subcatsUsed["Total Score"] || roundScoreSubs.join(",")}`);
+    return n;
+  }
+
   try {
+    await pullTotalScoreSubs("priority");
+
     const entries = Object.entries(statToSubs);
     for (let i = 0; i < entries.length; i++) {
       const [stat, subs] = entries[i];
       for (let j = 0; j < subs.length; j++) {
         const sub = subs[j];
-        const u = marketsUrl(leagueId, sub, siteSegment);
-        const res = await api.get(u, { timeout: 60000 });
-        if (!res.ok()) {
+        const { props: chunk, body } = await fetchPropsForSub(api, page, leagueId, siteSegment, stat, sub, players);
+        if (!body) {
           apiFail++;
-          console.warn(`[draftkings-ou] markets HTTP ${res.status()} stat=${stat} sub=${sub}`);
+          console.warn(`[draftkings-ou] markets failed stat=${stat} sub=${sub}`);
           continue;
         }
-        const body = await res.json();
-        if (!Array.isArray(body?.markets)) apiBadShape++;
-        const chunk = propsFromMarketsBody(body, stat, players);
         all.push(...chunk);
-        if (!chunk.length && Array.isArray(body?.markets) && body.markets.length)
-          logUnparsedSample(stat, body, "no-rows");
+        if (!chunk.length && body.markets?.length) logUnparsedSample(stat, body, "no-rows");
         if (j < subs.length - 1) await page.waitForTimeout(250);
       }
       if (i < entries.length - 1) await page.waitForTimeout(250);
     }
-    for (let i = 0; i < roundScoreSubs.length; i++) {
-      const sub = roundScoreSubs[i];
-      const u = marketsUrl(leagueId, sub, siteSegment);
-      const res = await api.get(u, { timeout: 60000 });
-      if (!res.ok()) {
-        apiFail++;
-        console.warn(`[draftkings-ou] round-score markets HTTP ${res.status()} sub=${sub}`);
-        continue;
-      }
-      const body = await res.json();
-      if (!Array.isArray(body?.markets)) apiBadShape++;
-      const chunkTs = propsFromMarketsBody(body, "Total Score", players);
-      all.push(...chunkTs);
-      if (!chunkTs.length && Array.isArray(body?.markets) && body.markets.length)
-        logUnparsedSample("Total Score", body, "no-rows");
-      const prev = subcatsUsed["Total Score"];
-      subcatsUsed["Total Score"] = prev ? `${prev},${sub}` : sub;
-      if (i < roundScoreSubs.length - 1) await page.waitForTimeout(250);
+
+    if (!all.some((r) => r.market === "Total Score")) {
+      await page.waitForTimeout(1500);
+      await pullTotalScoreSubs("retry");
     }
   } finally {
     await browser.close();
@@ -793,7 +865,10 @@ async function main() {
       const payload = JSON.parse(readFileSync(proj, "utf8"));
       players = payload.players || [];
       const leagueUrl = inferDraftKingsLeagueUrlFromProjections(payload);
+      const targetRound =
+        Math.round(Number(payload.display_round ?? payload.datagolf_field_current_round ?? NaN)) || undefined;
       if (leagueUrl) opts = { leagueUrl };
+      if (targetRound) opts.targetRound = targetRound;
     } catch {
       /* ignore */
     }
