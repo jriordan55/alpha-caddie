@@ -2651,3 +2651,208 @@ ev_backtest_all,2026-06-09T04:31:40Z,,(all events),,,(all),(all),Total score,,,,
 ev_backtest_all,2026-06-09T04:31:40Z,,(all events),,,(all),(all),Total score,,,,17.5,under,39,20,19,0,-2.85,-7.3
 ev_backtest_all,2026-06-09T04:31:40Z,,(all events),,,(all),(all),Total score,,,,20.0,over,25,2,23,0,-21.33,-85.3
 ev_backtest_all,2026-06-09T04:31:40Z,,(all events),,,(all),(all),Total score,,,,20.0,under,29,14,15,0,-3.53,-12.2
+model_vs_book,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,course,default,Birdies,0.423,0.286,14,,,,,,,,
+model_vs_book,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,course,default,Pars,0.000,0.000,4,,,,,,,,
+model_vs_book,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,default,default,Birdies,0.189,0.071,14,,,,,,,,
+model_vs_book,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,default,default,Pars,0.000,0.000,4,,,,,,,,
+model_vs_book,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,recent,default,Birdies,0.327,0.214,14,,,,,,,,
+model_vs_book,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,recent,default,Pars,0.250,0.125,4,,,,,,,,
+model_vs_book,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,skill,sg_total,Birdies,0.267,0.143,14,,,,,,,,
+model_vs_book,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,skill,sg_total,Pars,0.250,0.125,4,,,,,,,,
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,course,default,Bogeys,,,,0.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,course,default,Bogeys,,,,2.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,course,default,Bogeys,,,,5.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,course,default,Bogeys,,,,7.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,course,default,Fairways hit,,,,0.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,course,default,Fairways hit,,,,2.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,course,default,Fairways hit,,,,5.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,course,default,Fairways hit,,,,7.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,course,default,GIR,,,,0.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,course,default,GIR,,,,2.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,course,default,GIR,,,,5.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,course,default,Pars,,,,0.0,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,course,default,Pars,,,,2.5,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,course,default,Pars,,,,5.0,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,course,default,Total score,,,,0.0,over,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,course,default,Total score,,,,0.0,under,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,default,default,Birdies,,,,0.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,default,default,Bogeys,,,,0.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,default,default,Bogeys,,,,2.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,default,default,Fairways hit,,,,0.0,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,default,default,Fairways hit,,,,2.5,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,default,default,Fairways hit,,,,5.0,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,default,default,GIR,,,,0.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,default,default,GIR,,,,2.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,default,default,GIR,,,,5.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,default,default,Pars,,,,0.0,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,default,default,Pars,,,,2.5,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,default,default,Total score,,,,0.0,over,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,default,default,Total score,,,,0.0,under,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,recent,default,Birdies,,,,0.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,recent,default,Bogeys,,,,0.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,recent,default,Bogeys,,,,0.0,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,recent,default,Bogeys,,,,2.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,recent,default,Fairways hit,,,,0.0,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,recent,default,Fairways hit,,,,2.5,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,recent,default,Fairways hit,,,,5.0,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,recent,default,GIR,,,,0.0,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,recent,default,GIR,,,,2.5,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,recent,default,GIR,,,,5.0,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,recent,default,Pars,,,,0.0,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,recent,default,Pars,,,,2.5,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,recent,default,Total score,,,,0.0,over,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,recent,default,Total score,,,,0.0,under,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,skill,sg_total,Birdies,,,,0.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,skill,sg_total,Bogeys,,,,0.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,skill,sg_total,Bogeys,,,,0.0,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,skill,sg_total,Bogeys,,,,2.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,skill,sg_total,Fairways hit,,,,0.0,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,skill,sg_total,Fairways hit,,,,2.5,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,skill,sg_total,Fairways hit,,,,5.0,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,skill,sg_total,GIR,,,,0.0,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,skill,sg_total,GIR,,,,2.5,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,skill,sg_total,GIR,,,,5.0,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,skill,sg_total,Pars,,,,0.0,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,skill,sg_total,Pars,,,,2.5,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,skill,sg_total,Total score,,,,0.0,over,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,skill,sg_total,Total score,,,,0.0,under,1,0,1,0,-1.00,-100.0
+model_vs_book_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),Birdies,0.313,0.179,56,,,,,,,,
+model_vs_book_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),Pars,0.177,0.063,16,,,,,,,,
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),Birdies,,,,0.0,over,3,0,3,0,-3.00,-100.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),Bogeys,,,,0.0,over,4,0,4,0,-4.00,-100.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),Bogeys,,,,0.0,under,2,2,0,0,0.00,0.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),Bogeys,,,,2.5,over,4,0,4,0,-4.00,-100.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),Bogeys,,,,5.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),Bogeys,,,,7.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),Fairways hit,,,,0.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),Fairways hit,,,,0.0,under,3,3,0,0,0.00,0.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),Fairways hit,,,,2.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),Fairways hit,,,,2.5,under,3,3,0,0,0.00,0.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),Fairways hit,,,,5.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),Fairways hit,,,,5.0,under,3,3,0,0,0.00,0.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),Fairways hit,,,,7.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),GIR,,,,0.0,over,2,0,2,0,-2.00,-100.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),GIR,,,,0.0,under,2,2,0,0,0.00,0.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),GIR,,,,2.5,over,2,0,2,0,-2.00,-100.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),GIR,,,,2.5,under,2,2,0,0,0.00,0.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),GIR,,,,5.0,over,2,0,2,0,-2.00,-100.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),GIR,,,,5.0,under,2,2,0,0,0.00,0.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),Pars,,,,0.0,under,4,4,0,0,0.00,0.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),Pars,,,,2.5,under,4,4,0,0,0.00,0.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),Pars,,,,5.0,under,1,1,0,0,0.00,0.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),Total score,,,,0.0,over,4,4,0,0,0.00,0.0
+ev_backtest_by_market,2026-06-09T18:45:38Z,2026-06-09T18:45:14Z,RBC Canadian Open,TPC Toronto At Osprey Valley,1,(all),(all),Total score,,,,0.0,under,4,0,4,0,-4.00,-100.0
+model_vs_book_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Birdies,0.973,0.731,1421,,,,,,,,
+model_vs_book_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Bogeys,0.915,0.660,568,,,,,,,,
+model_vs_book_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Fairways hit,1.593,1.252,560,,,,,,,,
+model_vs_book_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),GIR,1.800,1.355,676,,,,,,,,
+model_vs_book_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Pars,1.144,0.784,675,,,,,,,,
+model_vs_book_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Total score,4.154,1.537,1033,,,,,,,,
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Birdies,,,,0.0,over,569,257,312,0,5.12,0.9
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Birdies,,,,0.0,under,510,249,261,0,-60.48,-11.9
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Birdies,,,,2.5,over,240,102,138,0,-34.97,-14.6
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Birdies,,,,2.5,under,201,93,108,0,-34.30,-17.1
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Bogeys,,,,0.0,over,409,126,260,23,-173.30,-42.4
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Bogeys,,,,0.0,under,538,296,213,29,-75.00,-13.9
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Bogeys,,,,2.5,over,188,45,130,13,-123.14,-65.5
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Bogeys,,,,2.5,under,326,183,122,21,-49.81,-15.3
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Bogeys,,,,5.0,over,105,21,79,5,-73.48,-70.0
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Bogeys,,,,5.0,under,217,113,95,9,-38.69,-17.8
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Fairways hit,,,,0.0,over,435,236,178,21,-64.74,-14.9
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Fairways hit,,,,0.0,under,583,285,284,14,-121.82,-20.9
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Fairways hit,,,,2.5,over,199,113,73,13,-29.26,-14.7
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Fairways hit,,,,2.5,under,369,194,168,7,-62.85,-17.0
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Fairways hit,,,,5.0,over,105,56,42,7,-21.08,-20.1
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Fairways hit,,,,5.0,under,244,141,103,0,-13.43,-5.5
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),GIR,,,,0.0,over,449,225,203,21,-119.37,-26.6
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),GIR,,,,0.0,under,543,260,264,19,-96.82,-17.8
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),GIR,,,,2.5,over,227,121,92,14,-62.89,-27.7
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),GIR,,,,2.5,under,347,166,166,15,-60.86,-17.5
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),GIR,,,,5.0,over,133,71,52,10,-35.73,-26.9
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),GIR,,,,5.0,under,230,115,108,7,-34.27,-14.9
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Pars,,,,0.0,over,476,216,221,39,-141.08,-29.6
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Pars,,,,0.0,under,474,199,234,41,-161.90,-34.2
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Pars,,,,2.5,over,196,88,86,22,-66.61,-34.0
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Pars,,,,2.5,under,190,84,92,14,-73.13,-38.5
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Total score,,,,0.0,over,512,239,273,0,-123.29,-24.1
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Total score,,,,0.0,under,500,257,243,0,-69.48,-13.9
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Total score,,,,2.5,over,177,70,107,0,-50.34,-28.4
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Total score,,,,2.5,under,162,87,75,0,0.86,0.5
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Total score,,,,5.0,over,101,32,69,0,-42.24,-41.8
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Total score,,,,5.0,under,92,53,39,0,4.53,4.9
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Pars,,,,5.0,over,31,19,11,1,-4.72,-15.2
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Pars,,,,5.0,under,55,21,34,0,-27.28,-49.6
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Total score,,,,7.5,over,75,23,52,0,-32.29,-43.1
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Total score,,,,7.5,under,78,42,36,0,-1.28,-1.6
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Birdies,,,,10.0,over,81,34,47,0,-14.47,-17.9
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Birdies,,,,10.0,under,66,36,30,0,-2.91,-4.4
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Birdies,,,,12.5,over,46,20,26,0,-5.14,-11.2
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Birdies,,,,12.5,under,50,28,22,0,-0.89,-1.8
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Birdies,,,,15.0,over,35,17,18,0,-0.03,-0.1
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Birdies,,,,15.0,under,42,23,19,0,-1.74,-4.1
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Birdies,,,,17.5,over,24,13,11,0,3.05,12.7
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Birdies,,,,17.5,under,36,21,15,0,0.67,1.9
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Birdies,,,,20.0,over,15,7,8,0,0.48,3.2
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Birdies,,,,20.0,under,32,19,13,0,1.03,3.2
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Birdies,,,,5.0,over,150,70,80,0,-16.41,-10.9
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Birdies,,,,5.0,under,137,55,82,0,-38.30,-28.0
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Birdies,,,,7.5,over,109,47,62,0,-18.22,-16.7
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Birdies,,,,7.5,under,94,44,50,0,-15.87,-16.9
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Bogeys,,,,10.0,over,36,6,30,0,-24.48,-68.0
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Bogeys,,,,10.0,under,82,43,39,0,-3.73,-4.5
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Bogeys,,,,12.5,over,20,4,16,0,-12.08,-60.4
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Bogeys,,,,12.5,under,53,29,24,0,-0.74,-1.4
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Bogeys,,,,15.0,over,11,3,8,0,-5.06,-46.0
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Bogeys,,,,15.0,under,30,19,11,0,4.05,13.5
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Bogeys,,,,17.5,over,7,3,4,0,-1.06,-15.1
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Bogeys,,,,17.5,under,19,11,8,0,0.92,4.8
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Bogeys,,,,20.0,over,3,0,3,0,-3.00,-100.0
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Bogeys,,,,20.0,under,14,8,6,0,-0.08,-0.6
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Bogeys,,,,7.5,over,58,9,48,1,-42.48,-73.2
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Bogeys,,,,7.5,under,131,70,60,1,-9.68,-7.4
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Fairways hit,,,,10.0,over,36,16,20,0,-6.66,-18.5
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Fairways hit,,,,10.0,under,134,94,40,0,37.51,28.0
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Fairways hit,,,,12.5,over,34,15,19,0,-6.65,-19.6
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Fairways hit,,,,12.5,under,125,89,36,0,36.25,29.0
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Fairways hit,,,,15.0,over,29,12,17,0,-6.48,-22.3
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Fairways hit,,,,15.0,under,116,80,36,0,28.09,24.2
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Fairways hit,,,,17.5,over,22,11,11,0,-1.38,-6.3
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Fairways hit,,,,17.5,under,102,72,30,0,27.07,26.5
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Fairways hit,,,,20.0,over,16,9,7,0,0.59,3.7
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Fairways hit,,,,20.0,under,80,58,22,0,22.88,28.6
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Fairways hit,,,,7.5,over,47,21,26,0,-12.66,-26.9
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Fairways hit,,,,7.5,under,148,104,44,0,39.81,26.9
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),GIR,,,,10.0,over,30,12,18,0,-6.81,-22.7
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),GIR,,,,10.0,under,141,82,59,0,10.11,7.2
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),GIR,,,,12.5,over,28,10,18,0,-8.25,-29.5
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),GIR,,,,12.5,under,134,78,56,0,10.09,7.5
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),GIR,,,,15.0,over,28,10,18,0,-8.25,-29.5
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),GIR,,,,15.0,under,116,71,45,0,14.51,12.5
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),GIR,,,,17.5,over,24,7,17,0,-10.70,-44.6
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),GIR,,,,17.5,under,103,65,38,0,17.66,17.1
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),GIR,,,,20.0,over,21,7,14,0,-7.70,-36.7
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),GIR,,,,20.0,under,96,64,32,0,22.94,23.9
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),GIR,,,,7.5,over,32,14,18,0,-5.32,-16.6
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),GIR,,,,7.5,under,152,84,68,0,3.03,2.0
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Pars,,,,10.0,over,7,7,0,0,5.41,77.3
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Pars,,,,10.0,under,24,4,20,0,-17.24,-71.8
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Pars,,,,12.5,over,4,4,0,0,2.80,70.0
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Pars,,,,12.5,under,16,4,12,0,-9.24,-57.7
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Pars,,,,15.0,over,4,4,0,0,2.80,70.0
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Pars,,,,15.0,under,16,4,12,0,-9.24,-57.7
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Pars,,,,17.5,over,4,4,0,0,2.80,70.0
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Pars,,,,17.5,under,12,4,8,0,-5.24,-43.7
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Pars,,,,20.0,over,4,4,0,0,2.80,70.0
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Pars,,,,20.0,under,12,4,8,0,-5.24,-43.7
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Pars,,,,7.5,over,8,8,0,0,6.28,78.5
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Pars,,,,7.5,under,28,8,20,0,-14.40,-51.4
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Total score,,,,10.0,over,62,15,47,0,-33.52,-54.1
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Total score,,,,10.0,under,75,40,35,0,-2.05,-2.7
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Total score,,,,12.5,over,52,8,44,0,-37.32,-71.8
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Total score,,,,12.5,under,67,36,31,0,-1.02,-1.5
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Total score,,,,15.0,over,43,8,35,0,-28.32,-65.9
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Total score,,,,15.0,under,49,26,23,0,-2.11,-4.3
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Total score,,,,17.5,over,36,6,30,0,-24.99,-69.4
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Total score,,,,17.5,under,39,20,19,0,-2.85,-7.3
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Total score,,,,20.0,over,25,2,23,0,-21.33,-85.3
+ev_backtest_all,2026-06-09T18:45:43Z,,(all events),,,(all),(all),Total score,,,,20.0,under,29,14,15,0,-3.53,-12.2

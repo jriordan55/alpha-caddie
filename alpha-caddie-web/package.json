@@ -36,6 +36,7 @@
     "sync:data-to-web": "node scripts/sync-historical-csv.mjs",
     "build:shots-web": "node scripts/build-player-shots-web.mjs",
     "build:results": "node scripts/build-results-backtest.mjs",
+    "backtest:odds-csv": "node scripts/backtest-odds-csv.mjs",
     "build:course-table": "node scripts/build-course-table-json.mjs",
     "build:history": "node scripts/build-player-history.mjs && node scripts/embed-player-history.mjs && node scripts/build-player-shots-web.mjs",
     "build:course-shards": "node scripts/build-course-history-shards.mjs",
