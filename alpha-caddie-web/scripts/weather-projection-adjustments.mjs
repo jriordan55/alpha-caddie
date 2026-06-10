@@ -204,17 +204,32 @@ export function applyWeatherBakedCountsToPlayer(p, meta) {
 /**
  * Restore pre-weather baselines, apply per-tee forecast, bake counts into projections.json.
  */
-export function applyWeatherBakedCountsToAllPlayers(proj) {
+export function applyWeatherBakedCountsToAllPlayers(proj, opts = {}) {
   const players = Array.isArray(proj?.players) ? proj.players : [];
   if (!proj.meta || typeof proj.meta !== "object") proj.meta = {};
   const meta = proj.meta;
+  const forecastRound = Math.round(num(opts.forecastRound, NaN));
   let n = 0;
   for (const p of players) {
     if (!p._pre_weather_counts) p._pre_weather_counts = snapshotPlayerCounts(p);
     else restorePlayerCountsFromSnapshot(p, p._pre_weather_counts);
+
+    const rnd = Math.round(num(p?.round, NaN));
+    if (Number.isFinite(forecastRound) && forecastRound >= 1 && Number.isFinite(rnd) && rnd !== forecastRound) {
+      delete p.dg_auto_weather;
+      p.weather_temp_f = null;
+      p.weather_wind_mph = null;
+      p.weather_humidity = null;
+      p.weather_condition = "";
+      p.weather_counts_baked = false;
+      continue;
+    }
     if (applyWeatherBakedCountsToPlayer(p, meta)) n++;
   }
   meta.projection_counts_weather_baked = n > 0;
+  if (Number.isFinite(forecastRound) && forecastRound >= 1) {
+    meta.projection_counts_weather_baked_round = forecastRound;
+  }
   if (n > 0) {
     meta.projection_counts_weather_baked_at = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
   }

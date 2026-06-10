@@ -12,6 +12,21 @@ function num(x, fallback = NaN) {
   return Number.isFinite(n) ? n : fallback;
 }
 
+/** Round whose tee-time forecast drives projections + website weather banner. */
+export function resolveForecastRound(proj) {
+  const meta = proj?.meta && typeof proj.meta === "object" ? proj.meta : {};
+  const dr = Math.round(
+    num(meta.display_round ?? meta.datagolf_live_current_round ?? meta.datagolf_field_current_round, NaN),
+  );
+  if (Number.isFinite(dr) && dr >= 1 && dr <= 4) return dr;
+  return 1;
+}
+
+function playerRowMatchesForecastRound(p, forecastRound) {
+  const rnd = Math.round(num(p?.round, NaN));
+  return !Number.isFinite(forecastRound) || !Number.isFinite(rnd) || rnd === forecastRound;
+}
+
 /** Normalized course_used → lat/lon (extend as venues change). */
 export const COURSE_COORDINATES_BY_NAME = {
   "aronimink golf club": { lat: 39.991, lon: -75.308 },
@@ -34,6 +49,10 @@ export const COURSE_COORDINATES_BY_NAME = {
   "colonial country club": { lat: 32.7248, lon: -97.434 },
   "muirfield village golf club": { lat: 40.1416, lon: -82.791 },
   "congressional country club": { lat: 39.0299, lon: -77.164 },
+  "tpc toronto at osprey valley": { lat: 43.874, lon: -79.982 },
+  "tpc toronto at osprey valley north course": { lat: 43.874, lon: -79.982 },
+  "hamilton golf and country club": { lat: 43.267, lon: -79.934 },
+  "glen abbey golf club": { lat: 43.452, lon: -79.691 },
 };
 
 export function courseCoordinatesForProjections(proj) {
@@ -358,8 +377,12 @@ export async function bakeOpenMeteoWeatherIntoProjections(proj, opts = {}) {
     return { status: meta.forecast_weather_status, playerCount: players.length, playersWithWeather: 0, teeMatches: 0 };
   }
 
+  const forecastRound = resolveForecastRound(proj);
+  meta.forecast_weather_display_round = forecastRound;
+
   const perTeeSamples = [];
   for (const p of players) {
+    if (!playerRowMatchesForecastRound(p, forecastRound)) continue;
     const tt = p?.dg_teetime_local;
     if (!tt) continue;
     const ix = hourlyIndexForDgTeetime(timesArr, tt);
@@ -371,6 +394,10 @@ export async function bakeOpenMeteoWeatherIntoProjections(proj, opts = {}) {
 
   let playersWithWeather = 0;
   for (const p of players) {
+    if (!playerRowMatchesForecastRound(p, forecastRound)) {
+      applyWeatherSnapshotToPlayer(p, null);
+      continue;
+    }
     const tt = p?.dg_teetime_local;
     let snap = null;
     if (tt) {
@@ -386,11 +413,12 @@ export async function bakeOpenMeteoWeatherIntoProjections(proj, opts = {}) {
   meta.forecast_weather_coords = { lat: coords.lat, lon: coords.lon, timezone: tz };
   delete meta.forecast_weather_error;
 
-  const { morning, afternoon } = computeMorningAfternoonForecastSnapshots(hourly, players, meta);
+  const forecastPlayers = players.filter((p) => playerRowMatchesForecastRound(p, forecastRound));
+  const { morning, afternoon } = computeMorningAfternoonForecastSnapshots(hourly, forecastPlayers, meta);
   meta.forecast_wave_slots = { morning, afternoon };
   meta.forecast_wave_summary = buildForecastWaveSummaryString(morning, afternoon);
 
-  const countsBaked = applyWeatherBakedCountsToAllPlayers(proj);
+  const countsBaked = applyWeatherBakedCountsToAllPlayers(proj, { forecastRound });
 
   return {
     status: meta.forecast_weather_status,

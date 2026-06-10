@@ -51,6 +51,12 @@ import {
   roundEventCompletedMdYFromEventEnd,
   parseEventCompletedChronoBase,
 } from "./history-round-dates.mjs";
+import { weatherFieldsForRound } from "./weather-parse.mjs";
+import {
+  DEFAULT_ROUND_WEATHER_JSON,
+  loadHistoricalRoundWeatherMap,
+  roundWeatherKey,
+} from "./historical-round-weather.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -1259,30 +1265,6 @@ function metricFields(row) {
   };
 }
 
-/** PGA CSV uses values like "71°F", "89%"; plain Number() is NaN — strip to a scalar like the web app filters. */
-function parseWeatherScalar(v) {
-  const s = String(v ?? "").trim();
-  if (!s) return NaN;
-  const direct = Number(s);
-  if (Number.isFinite(direct)) return direct;
-  const cleaned = s.replace(/[^0-9.-]+/g, "");
-  const n = parseFloat(cleaned);
-  return Number.isFinite(n) ? n : NaN;
-}
-
-function weatherFields(row) {
-  const tempF = parseWeatherScalar(row.pga_meta_weather_temp_f ?? row.weather_temp_f);
-  const windMph = parseWeatherScalar(row.pga_meta_weather_wind_mph ?? row.weather_wind_mph);
-  const humidity = parseWeatherScalar(row.pga_meta_weather_humidity ?? row.weather_humidity);
-  const condition = String(row.pga_meta_weather_condition ?? row.weather_condition ?? "").trim();
-  return {
-    weather_temp_f: Number.isFinite(tempF) ? tempF : null,
-    weather_wind_mph: Number.isFinite(windMph) ? windMph : null,
-    weather_humidity: Number.isFinite(humidity) ? humidity : null,
-    weather_condition: condition || "",
-  };
-}
-
 /** Strokes-gained columns for Skill focus pricing mode (from historical_rounds_all.csv). */
 function sgFields(row) {
   const f = (k) => {
@@ -1474,7 +1456,7 @@ function logCsvScanProgress(phase, rowsScanned, matchedRows, extra = "") {
   }
 }
 
-async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg) {
+async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg, roundWeatherByKey) {
   const byDgId = new Map();
   const byDgSk = shotsAgg?.byDgSk || new Map();
   const byPkSk = shotsAgg?.byPkSk || new Map();
@@ -1564,7 +1546,11 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg) {
       fin_text: String(row.fin_text || ""),
       _from_dg_historical_rounds: true,
       ...mf,
-      ...weatherFields(rowForWeather),
+      ...weatherFieldsForRound(
+        rowForWeather,
+        roundWeatherByKey,
+        roundWeatherKey(eid, yr, rnd),
+      ),
       ...sgFields(row),
     };
 
@@ -1678,8 +1664,21 @@ async function main() {
   }
 
   const pgaMetaOverlay = METADATA_OVERLAY_CSV ? await loadPgaMetaOverlayFromCsv(METADATA_OVERLAY_CSV) : new Map();
+  const roundWeatherPath = process.env.HISTORICAL_ROUND_WEATHER_JSON
+    ? path.resolve(String(process.env.HISTORICAL_ROUND_WEATHER_JSON))
+    : DEFAULT_ROUND_WEATHER_JSON;
+  const roundWeatherByKey = loadHistoricalRoundWeatherMap(roundWeatherPath);
+  if (roundWeatherByKey.size) {
+    console.log(
+      `[build-player-history] Per-round Open-Meteo weather: ${roundWeatherByKey.size} keys from ${path.basename(roundWeatherPath)}`,
+    );
+  } else {
+    console.log(
+      "[build-player-history] No per-round weather cache (run npm run backfill:round-weather); using PGA metadata only.",
+    );
+  }
   const shotsAgg = await loadShotsRoundAggMaps();
-  const { byDgId, allowedTriples } = await streamRounds(allowed, pgaMetaOverlay, shotsAgg);
+  const { byDgId, allowedTriples } = await streamRounds(allowed, pgaMetaOverlay, shotsAgg, roundWeatherByKey);
   let liveMergedRows = 0;
   const liveRows = buildLiveHistoryRowsFromBundle();
   if (liveRows?.length) {

@@ -5,7 +5,9 @@
  *   - preds/live-tournament-stats (per round 1–4) + preds/in-play + field-updates → live-in-play.json
  *   - pgatouR scorecards when R is installed
  *   - fetch:dg projections (skill + preds/pre-tournament when pre; live stats when in play)
- *   - bake-weather-into-projections → Open-Meteo per-tee weather baked into projections.json
+ *   - merge-live-round-meta-into-projections → display_round for upcoming round
+ *   - bake-weather-into-projections → Open-Meteo per-tee weather for display_round baked into projections.json
+ *   - backfill-historical-round-weather → per-round archive weather for Historical Trends
  *   - refresh-pga-tour-market-benchmarks → pga_tour_market_benchmarks on projections.json (2025–2026 PGA rounds, after post-live CSV merge)
  *   - export-round-projection-vs-actual → data/round_projection_vs_actual.csv (model vs actual per player×round)
  *   - build-player-history → player_round_history.json + per-player + by-course shards + embed
@@ -103,10 +105,13 @@ run("run-refresh-pgatour-event-rounds.mjs", "pgatouR scorecards for current even
 run("fetch-book-odds-into-projections.mjs", "Sportsbook + DK round props (fetch:book-odds)");
 run("fetch-datagolf-finish-tool-outrights.mjs", "Finish-tool outrights (fetch:finish-tool)");
 run("merge-live-hole-pars-into-projections.mjs", "Merge live hole pars into projections");
-run("merge-live-round-meta-into-projections.mjs", "Merge live round meta into projections");
+run(
+  "merge-live-round-meta-into-projections.mjs",
+  "Merge live round meta into projections (display_round for upcoming round)",
+);
 run(
   "bake-weather-into-projections.mjs",
-  "Open-Meteo tee-time weather → projections.json (bake:weather)",
+  "Open-Meteo tee-time weather → projections.json for display_round (bake:weather)",
 );
 
 if (String(process.env.GOLF_SKIP_PIN_SHEET || "").trim() !== "1") {
@@ -143,6 +148,13 @@ if (String(process.env.GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL || "").trim() !== "1
 if (Object.keys(fh).length) {
   console.log(
     "\n[refresh:live] Fast history build: skipping shots merge + 170MB hole_data.csv scan; ~last 10 seasons / 500 rounds per player. GOLF_REFRESH_LIVE_FAST_HISTORY=0 for full depth; GOLF_BUILD_HISTORY_SKIP_HOLES=0 to include holes.\n",
+  );
+}
+
+if (String(process.env.GOLF_SKIP_ROUND_WEATHER_BACKFILL || "").trim() !== "1") {
+  run(
+    "backfill-historical-round-weather.mjs",
+    "Per-round historical weather (Open-Meteo archive → historical_round_weather.json)",
   );
 }
 

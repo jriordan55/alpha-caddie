@@ -144,9 +144,10 @@ run("run-refresh-pgatour-event-rounds.mjs", "Current-event PGA rounds from pgato
 run("fetch-book-odds-into-projections.mjs", "Sportsbook + DK round props (fetch:book-odds)");
 run("fetch-datagolf-finish-tool-outrights.mjs", "Finish-tool outrights (fetch:finish-tool)");
 run("merge-live-hole-pars-into-projections.mjs", "Merge live hole pars into projections");
+run("merge-live-round-meta-into-projections.mjs", "Merge live round meta into projections (display_round)");
 run(
   "bake-weather-into-projections.mjs",
-  "Open-Meteo tee-time weather → projections.json (bake:weather)",
+  "Open-Meteo tee-time weather → projections.json for display_round (bake:weather)",
 );
 
 const skipHistory = String(process.env.GOLF_REFRESH_APP_SKIP_HISTORY || "").trim() === "1";

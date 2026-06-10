@@ -63,7 +63,17 @@ if (String(process.env.GOLF_UPDATE_ROUNDS_SKIP_BUILD || "").trim() === "1") {
 const buildHist = path.join(WEB_ROOT, "scripts", "build-player-history.mjs");
 const embedHist = path.join(WEB_ROOT, "scripts", "embed-player-history.mjs");
 const buildShots = path.join(WEB_ROOT, "scripts", "build-player-shots-web.mjs");
+const backfillWeather = path.join(WEB_ROOT, "scripts", "backfill-historical-round-weather.mjs");
 console.log("Rebuilding player_round_history.json + app.js embed …");
+if (String(process.env.GOLF_SKIP_ROUND_WEATHER_BACKFILL || "").trim() !== "1" && fs.existsSync(backfillWeather)) {
+  console.log("[update:rounds] Backfilling per-round historical weather …");
+  const bw = spawnSync(process.execPath, [backfillWeather], {
+    cwd: WEB_ROOT,
+    stdio: "inherit",
+    env: { ...process.env, GOLF_MODEL_DIR: REPO_ROOT },
+  });
+  if (bw.status !== 0) process.exit(bw.status ?? 1);
+}
 const h = spawnSync(process.execPath, [buildHist], {
   cwd: WEB_ROOT,
   stdio: "inherit",

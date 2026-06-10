@@ -1,0 +1,730 @@
+{
+  "stonehill": {
+    "lat": 39.99284,
+    "lon": -82.81816,
+    "timezone": "America/New_York",
+    "label": "Stonehill"
+  },
+  "pga national": {
+    "lat": 26.83312,
+    "lon": -80.1431,
+    "timezone": "America/New_York",
+    "label": "PGA National Heliport"
+  },
+  "the grove": {
+    "lat": 42.78028,
+    "lon": -89.29928,
+    "timezone": "America/Chicago",
+    "label": "Evansville"
+  },
+  "royal troon": {
+    "lat": 28.1005,
+    "lon": -82.6401,
+    "timezone": "America/New_York",
+    "label": "Royal Troon Village"
+  },
+  "centurion club": {
+    "lat": 51.50853,
+    "lon": -0.12574,
+    "timezone": "Europe/London",
+    "label": "London",
+    "geocode_query": "London",
+    "geocode_level": "city"
+  },
+  "pumpkin ridge golf club": {
+    "lat": 33.66336,
+    "lon": -116.31001,
+    "timezone": "America/Los_Angeles",
+    "label": "La Quinta",
+    "geocode_query": "La Quinta",
+    "geocode_level": "city"
+  },
+  "trump national golf club bedminster": {
+    "lat": 33.50921,
+    "lon": -111.89903,
+    "timezone": "America/Phoenix",
+    "label": "Scottsdale",
+    "geocode_query": "Scottsdale",
+    "geocode_level": "city"
+  },
+  "the international": {
+    "lat": 32.71571,
+    "lon": -117.16472,
+    "timezone": "America/Los_Angeles",
+    "label": "San Diego",
+    "geocode_query": "San Diego",
+    "geocode_level": "city"
+  },
+  "spyglass hill golf course": {
+    "lat": 36.56635,
+    "lon": -121.94662,
+    "timezone": "America/Los_Angeles",
+    "label": "Pebble Beach",
+    "geocode_query": "Pebble Beach",
+    "geocode_level": "city"
+  },
+  "royal greens golf club": {
+    "lat": 34.04806,
+    "lon": -118.52647,
+    "timezone": "America/Los_Angeles",
+    "label": "Pacific Palisades",
+    "geocode_query": "Pacific Palisades",
+    "geocode_level": "city"
+  },
+  "trump national doral": {
+    "lat": 25.77427,
+    "lon": -80.19366,
+    "timezone": "America/New_York",
+    "label": "Miami",
+    "geocode_query": "Miami",
+    "geocode_level": "city"
+  },
+  "bay hill club and lodge": {
+    "lat": 28.53834,
+    "lon": -81.37924,
+    "timezone": "America/New_York",
+    "label": "Orlando",
+    "geocode_query": "Orlando",
+    "geocode_level": "city"
+  },
+  "sedgefield country club": {
+    "lat": 36.07264,
+    "lon": -79.79198,
+    "timezone": "America/New_York",
+    "label": "Greensboro",
+    "geocode_query": "Greensboro",
+    "geocode_level": "city"
+  },
+  "plantation course at kapalua": {
+    "lat": 20.99972,
+    "lon": -156.65807,
+    "timezone": "Pacific/Honolulu",
+    "label": "Kapalua",
+    "geocode_query": "Kapalua",
+    "geocode_level": "city"
+  },
+  "the country club": {
+    "lat": 42.33176,
+    "lon": -71.12116,
+    "timezone": "America/New_York",
+    "label": "Brookline",
+    "geocode_query": "Brookline",
+    "geocode_level": "city"
+  },
+  "tpc southwind": {
+    "lat": 35.14953,
+    "lon": -90.04898,
+    "timezone": "America/Chicago",
+    "label": "Memphis",
+    "geocode_query": "Memphis",
+    "geocode_level": "city"
+  },
+  "tpc deere run": {
+    "lat": 41.51226,
+    "lon": -90.41513,
+    "timezone": "America/Chicago",
+    "label": "Silvis",
+    "geocode_query": "Silvis",
+    "geocode_level": "city"
+  },
+  "st george s g and country club": {
+    "lat": 43.70643,
+    "lon": -79.39864,
+    "timezone": "America/Toronto",
+    "label": "Toronto",
+    "geocode_query": "Toronto",
+    "geocode_level": "city"
+  },
+  "southern hills country club": {
+    "lat": 36.15398,
+    "lon": -95.99277,
+    "timezone": "America/Chicago",
+    "label": "Tulsa",
+    "geocode_query": "Tulsa",
+    "geocode_level": "city"
+  },
+  "tpc river highlands": {
+    "lat": 41.5951,
+    "lon": -72.64537,
+    "timezone": "America/New_York",
+    "label": "Cromwell",
+    "geocode_query": "Cromwell",
+    "geocode_level": "city"
+  },
+  "tpc san antonio": {
+    "lat": 29.42412,
+    "lon": -98.49363,
+    "timezone": "America/Chicago",
+    "label": "San Antonio",
+    "geocode_query": "San Antonio",
+    "geocode_level": "city"
+  },
+  "tpc summerlin": {
+    "lat": 36.17497,
+    "lon": -115.13722,
+    "timezone": "America/Los_Angeles",
+    "label": "Las Vegas",
+    "geocode_query": "Las Vegas",
+    "geocode_level": "city"
+  },
+  "the country club of jackson": {
+    "lat": 32.29876,
+    "lon": -90.18481,
+    "timezone": "America/Chicago",
+    "label": "Jackson",
+    "geocode_query": "Jackson",
+    "geocode_level": "city"
+  },
+  "st andrews links": {
+    "lat": 47.23927,
+    "lon": -122.35707,
+    "timezone": "America/Los_Angeles",
+    "label": "Fife",
+    "geocode_query": "Fife",
+    "geocode_level": "city"
+  },
+  "el camale n golf course at mayakoba": {
+    "lat": 20.50807,
+    "lon": -87.2287,
+    "timezone": "America/Cancun",
+    "label": "Riviera Maya",
+    "geocode_query": "Riviera Maya",
+    "geocode_level": "city"
+  },
+  "silverado resort and spa": {
+    "lat": 38.29714,
+    "lon": -122.28553,
+    "timezone": "America/Los_Angeles",
+    "label": "Napa",
+    "geocode_query": "Napa",
+    "geocode_level": "city"
+  },
+  "tahoe mt club": {
+    "lat": 39.32796,
+    "lon": -120.18325,
+    "timezone": "America/Los_Angeles",
+    "label": "Truckee",
+    "geocode_query": "Truckee",
+    "geocode_level": "city"
+  },
+  "innisbrook resort": {
+    "lat": 28.07807,
+    "lon": -82.76371,
+    "timezone": "America/New_York",
+    "label": "Palm Harbor",
+    "geocode_query": "Palm Harbor",
+    "geocode_level": "city"
+  },
+  "albany golf club": {
+    "lat": 42.65258,
+    "lon": -73.75623,
+    "timezone": "America/New_York",
+    "label": "Albany",
+    "geocode_query": "Albany",
+    "geocode_level": "city"
+  },
+  "tpc potomac at avenel farm": {
+    "lat": 39.01817,
+    "lon": -77.20859,
+    "timezone": "America/New_York",
+    "label": "Potomac",
+    "geocode_query": "Potomac",
+    "geocode_level": "city"
+  },
+  "grand reserve golf club": {
+    "lat": -32.035,
+    "lon": -52.09861,
+    "timezone": "America/Sao_Paulo",
+    "label": "Rio Grande",
+    "geocode_query": "Rio Grande",
+    "geocode_level": "city"
+  },
+  "keene trace golf club": {
+    "lat": 37.88063,
+    "lon": -84.573,
+    "timezone": "America/New_York",
+    "label": "Nicholasville",
+    "geocode_query": "Nicholasville",
+    "geocode_level": "city"
+  },
+  "corales golf club": {
+    "lat": 18.58182,
+    "lon": -68.40431,
+    "timezone": "America/Santo_Domingo",
+    "label": "Punta Cana",
+    "geocode_query": "Punta Cana",
+    "geocode_level": "city"
+  },
+  "tpc twin cities": {
+    "lat": 48.99372,
+    "lon": -122.74712,
+    "timezone": "America/Los_Angeles",
+    "label": "Blaine",
+    "geocode_query": "Blaine",
+    "geocode_level": "city"
+  },
+  "accordia golf narashino country club": {
+    "lat": 35.6,
+    "lon": 140.11667,
+    "timezone": "Asia/Tokyo",
+    "label": "Chiba",
+    "geocode_query": "Chiba",
+    "geocode_level": "city"
+  },
+  "port royal golf course": {
+    "lat": 50.90395,
+    "lon": -1.40428,
+    "timezone": "Europe/London",
+    "label": "Southampton",
+    "geocode_query": "Southampton",
+    "geocode_level": "city"
+  },
+  "vidanta vallarta": {
+    "lat": 20.10738,
+    "lon": -97.53158,
+    "timezone": "America/Mexico_City",
+    "label": "Reyes de Vallarta",
+    "geocode_query": "Vallarta",
+    "geocode_level": "city"
+  },
+  "the renaissance club": {
+    "lat": 43.3037,
+    "lon": -70.73339,
+    "timezone": "America/New_York",
+    "label": "North Berwick",
+    "geocode_query": "North Berwick",
+    "geocode_level": "city"
+  },
+  "la quinta country club": {
+    "lat": 33.66336,
+    "lon": -116.31001,
+    "timezone": "America/Los_Angeles",
+    "label": "La Quinta",
+    "geocode_query": "La Quinta",
+    "geocode_level": "city"
+  },
+  "tpc scottsdale": {
+    "lat": 33.50921,
+    "lon": -111.89903,
+    "timezone": "America/Phoenix",
+    "label": "Scottsdale",
+    "geocode_query": "Scottsdale",
+    "geocode_level": "city"
+  },
+  "waialae country club": {
+    "lat": 21.30694,
+    "lon": -157.85834,
+    "timezone": "Pacific/Honolulu",
+    "label": "Honolulu",
+    "geocode_query": "Honolulu",
+    "geocode_level": "city"
+  },
+  "the gallery golf club": {
+    "lat": 26.82339,
+    "lon": -80.13865,
+    "timezone": "America/New_York",
+    "label": "Palm Beach Gardens",
+    "geocode_query": "Palm Beach Gardens",
+    "geocode_level": "city"
+  },
+  "orange county national": {
+    "lat": 30.23969,
+    "lon": -81.38564,
+    "timezone": "America/New_York",
+    "label": "Ponte Vedra Beach",
+    "geocode_query": "Ponte Vedra Beach",
+    "geocode_level": "city"
+  },
+  "sentosa golf club": {
+    "lat": 36.07264,
+    "lon": -79.79198,
+    "timezone": "America/New_York",
+    "label": "Greensboro",
+    "geocode_query": "Greensboro",
+    "geocode_level": "city"
+  },
+  "real club valderrama": {
+    "lat": 20.99972,
+    "lon": -156.65807,
+    "timezone": "Pacific/Honolulu",
+    "label": "Kapalua",
+    "geocode_query": "Kapalua",
+    "geocode_level": "city"
+  },
+  "tpc louisiana": {
+    "lat": 33.4356,
+    "lon": -112.3496,
+    "timezone": "America/Phoenix",
+    "label": "Avondale",
+    "geocode_query": "Avondale",
+    "geocode_level": "city"
+  },
+  "rich harvest farms": {
+    "lat": 41.85003,
+    "lon": -87.65005,
+    "timezone": "America/Chicago",
+    "label": "Chicago",
+    "geocode_query": "Chicago",
+    "geocode_level": "city"
+  },
+  "royal greens golf and country club": {
+    "lat": 32.72541,
+    "lon": -97.32085,
+    "timezone": "America/Chicago",
+    "label": "Fort Worth",
+    "geocode_query": "Fort Worth",
+    "geocode_level": "city"
+  },
+  "the los angeles country club": {
+    "lat": 34.05223,
+    "lon": -118.24368,
+    "timezone": "America/Los_Angeles",
+    "label": "Los Angeles",
+    "geocode_query": "Los Angeles",
+    "geocode_level": "city"
+  },
+  "olympia fields country club": {
+    "lat": 41.51337,
+    "lon": -87.67421,
+    "timezone": "America/Chicago",
+    "label": "Olympia Fields",
+    "geocode_query": "Olympia Fields",
+    "geocode_level": "city"
+  },
+  "oakdale golf and country club": {
+    "lat": 43.70643,
+    "lon": -79.39864,
+    "timezone": "America/Toronto",
+    "label": "Toronto",
+    "geocode_query": "Toronto",
+    "geocode_level": "city"
+  },
+  "dye s valley course": {
+    "lat": 30.23969,
+    "lon": -81.38564,
+    "timezone": "America/New_York",
+    "label": "Ponte Vedra Beach",
+    "geocode_query": "Ponte Vedra Beach",
+    "geocode_level": "city"
+  },
+  "royal liverpool": {
+    "lat": 53.39046,
+    "lon": -3.18066,
+    "timezone": "Europe/London",
+    "label": "Hoylake",
+    "geocode_query": "Hoylake",
+    "geocode_level": "city"
+  },
+  "tahoe mountain club": {
+    "lat": 39.32796,
+    "lon": -120.18325,
+    "timezone": "America/Los_Angeles",
+    "label": "Truckee",
+    "geocode_query": "Truckee",
+    "geocode_level": "city"
+  },
+  "puntacana resort and club": {
+    "lat": 18.58182,
+    "lon": -68.40431,
+    "timezone": "America/Santo_Domingo",
+    "label": "Punta Cana",
+    "geocode_query": "Punta Cana",
+    "geocode_level": "city"
+  },
+  "silverado resort": {
+    "lat": 38.29714,
+    "lon": -122.28553,
+    "timezone": "America/Los_Angeles",
+    "label": "Napa",
+    "geocode_query": "Napa",
+    "geocode_level": "city"
+  },
+  "el cardonal at diamante": {
+    "lat": 20.50807,
+    "lon": -87.2287,
+    "timezone": "America/Cancun",
+    "label": "Riviera Maya",
+    "geocode_query": "Riviera Maya",
+    "geocode_level": "city"
+  },
+  "arnold palmer s bay hill club and lodge": {
+    "lat": 28.53834,
+    "lon": -81.37924,
+    "timezone": "America/New_York",
+    "label": "Orlando",
+    "geocode_query": "Orlando",
+    "geocode_level": "city"
+  },
+  "pga national resort": {
+    "lat": 26.82339,
+    "lon": -80.13865,
+    "timezone": "America/New_York",
+    "label": "Palm Beach Gardens",
+    "geocode_query": "Palm Beach Gardens",
+    "geocode_level": "city"
+  },
+  "memorial park golf course": {
+    "lat": 29.76328,
+    "lon": -95.36327,
+    "timezone": "America/Chicago",
+    "label": "Houston",
+    "geocode_query": "Houston",
+    "geocode_level": "city"
+  },
+  "las vegas country club": {
+    "lat": 36.17497,
+    "lon": -115.13722,
+    "timezone": "America/Los_Angeles",
+    "label": "Las Vegas",
+    "geocode_query": "Las Vegas",
+    "geocode_level": "city"
+  },
+  "hong kong golf club": {
+    "lat": 35.14953,
+    "lon": -90.04898,
+    "timezone": "America/Chicago",
+    "label": "Memphis",
+    "geocode_query": "Memphis",
+    "geocode_level": "city"
+  },
+  "the grange golf club": {
+    "lat": -34.92866,
+    "lon": 138.59863,
+    "timezone": "Australia/Adelaide",
+    "label": "Adelaide",
+    "geocode_query": "Adelaide",
+    "geocode_level": "city"
+  },
+  "golf club of houston": {
+    "lat": 29.76328,
+    "lon": -95.36327,
+    "timezone": "America/Chicago",
+    "label": "Houston",
+    "geocode_query": "Houston",
+    "geocode_level": "city"
+  },
+  "valhalla golf club": {
+    "lat": 38.25424,
+    "lon": -85.75941,
+    "timezone": "America/Kentucky/Louisville",
+    "label": "Louisville",
+    "geocode_query": "Louisville",
+    "geocode_level": "city"
+  },
+  "jcb golf and country club": {
+    "lat": 41.5951,
+    "lon": -72.64537,
+    "timezone": "America/New_York",
+    "label": "Cromwell",
+    "geocode_query": "Cromwell",
+    "geocode_level": "city"
+  },
+  "the old white golf course": {
+    "lat": 36.42755,
+    "lon": -86.80472,
+    "timezone": "America/Chicago",
+    "label": "Greenbrier",
+    "geocode_query": "Greenbrier",
+    "geocode_level": "city"
+  },
+  "bolingbrook golf club": {
+    "lat": 41.85003,
+    "lon": -87.65005,
+    "timezone": "America/Chicago",
+    "label": "Chicago",
+    "geocode_query": "Chicago",
+    "geocode_level": "city"
+  },
+  "maridoe golf club": {
+    "lat": 32.78306,
+    "lon": -96.80667,
+    "timezone": "America/Chicago",
+    "label": "Dallas",
+    "geocode_query": "Dallas",
+    "geocode_level": "city"
+  },
+  "the dunes golf and beach club": {
+    "lat": 33.68906,
+    "lon": -78.88669,
+    "timezone": "America/New_York",
+    "label": "Myrtle Beach",
+    "geocode_query": "Myrtle Beach",
+    "geocode_level": "city"
+  },
+  "black desert resort": {
+    "lat": 37.16859,
+    "lon": -113.67941,
+    "timezone": "America/Denver",
+    "label": "Ivins",
+    "geocode_query": "Ivins",
+    "geocode_level": "city"
+  },
+  "oakmont country club": {
+    "lat": 40.52173,
+    "lon": -79.84227,
+    "timezone": "America/New_York",
+    "label": "Oakmont",
+    "geocode_query": "Oakmont",
+    "geocode_level": "city"
+  },
+  "caves valley golf club": {
+    "lat": 39.41955,
+    "lon": -76.78025,
+    "timezone": "America/New_York",
+    "label": "Owings Mills",
+    "geocode_query": "Owings Mills",
+    "geocode_level": "city"
+  },
+  "quail hollow pga championship": {
+    "lat": 35.22709,
+    "lon": -80.84313,
+    "timezone": "America/New_York",
+    "label": "Charlotte",
+    "geocode_query": "Charlotte",
+    "geocode_level": "city"
+  },
+  "riyadh golf club": {
+    "lat": 24.68773,
+    "lon": 46.72185,
+    "timezone": "Asia/Riyadh",
+    "label": "Riyadh",
+    "geocode_query": "Riyadh",
+    "geocode_level": "city"
+  },
+  "chapultepec": {
+    "lat": 19.42847,
+    "lon": -99.12766,
+    "timezone": "America/Mexico_City",
+    "label": "Mexico City",
+    "geocode_query": "Mexico City",
+    "geocode_level": "city"
+  },
+  "jack nicklaus golf course": {
+    "lat": 6.82523,
+    "lon": -6.64787,
+    "timezone": "Africa/Abidjan",
+    "label": "Koréa",
+    "geocode_query": "Korea",
+    "geocode_level": "city"
+  },
+  "robert trent jones golf club": {
+    "lat": -28.10391,
+    "lon": 26.86593,
+    "timezone": "Africa/Johannesburg",
+    "label": "Virginia",
+    "geocode_query": "Virginia",
+    "geocode_level": "city"
+  },
+  "the club at chatham hills": {
+    "lat": 39.76838,
+    "lon": -86.15804,
+    "timezone": "America/Indiana/Indianapolis",
+    "label": "Indianapolis",
+    "geocode_query": "Indianapolis",
+    "geocode_level": "city"
+  },
+  "the cardinal at saint john s": {
+    "lat": 48.025,
+    "lon": -98.11705,
+    "timezone": "America/Chicago",
+    "label": "Michigan",
+    "geocode_query": "Michigan",
+    "geocode_level": "city"
+  },
+  "sawgrass country club": {
+    "lat": 30.23969,
+    "lon": -81.38564,
+    "timezone": "America/New_York",
+    "label": "Ponte Vedra Beach",
+    "geocode_query": "Ponte Vedra Beach",
+    "geocode_level": "city"
+  },
+  "royal portrush golf club": {
+    "lat": 55.19592,
+    "lon": -6.6493,
+    "timezone": "Europe/London",
+    "label": "Portrush",
+    "geocode_query": "Portrush",
+    "geocode_level": "city"
+  },
+  "the philadelphia cricket club": {
+    "lat": 40.10344,
+    "lon": -75.2124,
+    "timezone": "America/New_York",
+    "label": "Flourtown",
+    "geocode_query": "Flourtown",
+    "geocode_level": "city"
+  },
+  "hurstbourne country club": {
+    "lat": 38.25424,
+    "lon": -85.75941,
+    "timezone": "America/Kentucky/Louisville",
+    "label": "Louisville",
+    "geocode_query": "Louisville",
+    "geocode_level": "city"
+  },
+  "puntacana resort": {
+    "lat": 18.58182,
+    "lon": -68.40431,
+    "timezone": "America/Santo_Domingo",
+    "label": "Punta Cana",
+    "geocode_query": "Punta Cana",
+    "geocode_level": "city"
+  },
+  "yokohama country club": {
+    "lat": 35.43333,
+    "lon": 139.65,
+    "timezone": "Asia/Tokyo",
+    "label": "Yokohama",
+    "geocode_query": "Yokohama",
+    "geocode_level": "city"
+  },
+  "dunes golf and beach club": {
+    "lat": 33.68906,
+    "lon": -78.88669,
+    "timezone": "America/New_York",
+    "label": "Myrtle Beach",
+    "geocode_query": "Myrtle Beach",
+    "geocode_level": "city"
+  },
+  "pete dye": {
+    "lat": 33.66336,
+    "lon": -116.31001,
+    "timezone": "America/Los_Angeles",
+    "label": "La Quinta",
+    "geocode_query": "La Quinta",
+    "geocode_level": "city"
+  },
+  "pga national champion course": {
+    "lat": 26.82339,
+    "lon": -80.13865,
+    "timezone": "America/New_York",
+    "label": "Palm Beach Gardens",
+    "geocode_query": "Palm Beach Gardens",
+    "geocode_level": "city"
+  },
+  "the club at steyn city": {
+    "lat": -29,
+    "lon": 24,
+    "timezone": "Africa/Johannesburg",
+    "label": "South Africa",
+    "geocode_query": "South Africa",
+    "geocode_level": "city"
+  },
+  "trump national washington": {
+    "lat": -28.10391,
+    "lon": 26.86593,
+    "timezone": "Africa/Johannesburg",
+    "label": "Virginia",
+    "geocode_query": "Virginia",
+    "geocode_level": "city"
+  },
+  "asiad country club": {
+    "lat": 6.82523,
+    "lon": -6.64787,
+    "timezone": "Africa/Abidjan",
+    "label": "Koréa",
+    "geocode_query": "Korea",
+    "geocode_level": "city"
+  }
+}

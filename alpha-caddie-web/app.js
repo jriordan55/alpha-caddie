@@ -3587,11 +3587,17 @@ function projectionsWeatherUsableFromBaked() {
   if (!at) return false;
   const age = Date.now() - Date.parse(at);
   if (!Number.isFinite(age) || age < 0 || age > BAKED_FORECAST_WEATHER_MAX_AGE_MS) return false;
-  return DATA.players.some((p) => {
+  const bakedRound = Math.round(num(DATA.meta.forecast_weather_display_round, NaN));
+  const currentRound = effectiveUiModelRoundFromMeta();
+  if (Number.isFinite(bakedRound) && Number.isFinite(currentRound) && bakedRound !== currentRound) return false;
+  const forecastRound = Number.isFinite(currentRound) ? currentRound : bakedRound;
+  const field = DATA.players.filter((p) => {
+    if (Number.isFinite(forecastRound) && Math.round(num(p.round, NaN)) !== forecastRound) return false;
     if (Number.isFinite(num(p.weather_temp_f, NaN))) return true;
     const auto = p.dg_auto_weather;
     return auto && typeof auto === "object" && Number.isFinite(num(auto.tempF, NaN));
   });
+  return field.length > 0;
 }
 
 /** Sync baked weather_* columns ↔ dg_auto_weather after loading projections.json. */
@@ -3702,8 +3708,14 @@ async function refreshForecastWeatherFromOpenMeteo() {
     return false;
   }
 
+  const forecastRound = effectiveUiModelRoundFromMeta();
+  if (Number.isFinite(forecastRound) && forecastRound >= 1) {
+    DATA.meta.forecast_weather_display_round = forecastRound;
+  }
+
   const perTeeSamples = [];
   for (const p of DATA.players) {
+    if (Number.isFinite(forecastRound) && Math.round(num(p.round, NaN)) !== forecastRound) continue;
     const tt = p?.dg_teetime_local;
     if (!tt) continue;
     const ix = hourlyIndexForDgTeetime(timesArr, tt);
@@ -3714,6 +3726,14 @@ async function refreshForecastWeatherFromOpenMeteo() {
   const medianSnap = medianWeatherSnapshotFromSamples(perTeeSamples);
 
   for (const p of DATA.players) {
+    if (Number.isFinite(forecastRound) && Math.round(num(p.round, NaN)) !== forecastRound) {
+      delete p.dg_auto_weather;
+      p.weather_temp_f = null;
+      p.weather_wind_mph = null;
+      p.weather_humidity = null;
+      p.weather_condition = "";
+      continue;
+    }
     const tt = p?.dg_teetime_local;
     let snap = null;
     if (tt) {
