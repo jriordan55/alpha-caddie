@@ -9,7 +9,7 @@
   "datagolf_field_current_round": 1,
   "display_round": 1,
   "display_round_label": "R1 — next Thursday (auto, America/New_York)",
-  "updated_at": "2026-06-10T13:36:48Z",
+  "updated_at": "2026-06-10T17:24:27Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -25744,6 +25744,146 @@
       "source": "draftkings"
     },
     {
+      "player_name": "Morikawa, Collin",
+      "line": 14.5,
+      "over_odds": -118,
+      "under_odds": -116,
+      "market": "GIR",
+      "round_num": 1,
+      "dg_id": 22085,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Fleetwood, Tommy",
+      "line": 14.5,
+      "over_odds": -112,
+      "under_odds": -122,
+      "market": "GIR",
+      "round_num": 1,
+      "dg_id": 12294,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Reitan, Kristoffer",
+      "line": 14.5,
+      "over_odds": 132,
+      "under_odds": -180,
+      "market": "GIR",
+      "round_num": 1,
+      "dg_id": 21407,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "MacIntyre, Robert",
+      "line": 14.5,
+      "over_odds": 110,
+      "under_odds": -152,
+      "market": "GIR",
+      "round_num": 1,
+      "dg_id": 23323,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Bridgeman, Jacob",
+      "line": 14.5,
+      "over_odds": 128,
+      "under_odds": -175,
+      "market": "GIR",
+      "round_num": 1,
+      "dg_id": 29433,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Fitzpatrick, Alex",
+      "line": 13.5,
+      "over_odds": -154,
+      "under_odds": 112,
+      "market": "GIR",
+      "round_num": 1,
+      "dg_id": 25362,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Rose, Justin",
+      "line": 14.5,
+      "over_odds": 100,
+      "under_odds": -138,
+      "market": "GIR",
+      "round_num": 1,
+      "dg_id": 6093,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Koepka, Brooks",
+      "line": 14.5,
+      "over_odds": -108,
+      "under_odds": -126,
+      "market": "GIR",
+      "round_num": 1,
+      "dg_id": 16243,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Hojgaard, Nicolai",
+      "line": 14.5,
+      "over_odds": 100,
+      "under_odds": -138,
+      "market": "GIR",
+      "round_num": 1,
+      "dg_id": 23602,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Hovland, Viktor",
+      "line": 14.5,
+      "over_odds": 108,
+      "under_odds": -148,
+      "market": "GIR",
+      "round_num": 1,
+      "dg_id": 18841,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Clark, Wyndham",
+      "line": 14.5,
+      "over_odds": 128,
+      "under_odds": -176,
+      "market": "GIR",
+      "round_num": 1,
+      "dg_id": 23604,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Lowry, Shane",
+      "line": 14.5,
+      "over_odds": -110,
+      "under_odds": -125,
+      "market": "GIR",
+      "round_num": 1,
+      "dg_id": 13900,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Rai, Aaron",
+      "line": 14.5,
+      "over_odds": -136,
+      "under_odds": -102,
+      "market": "GIR",
+      "round_num": 1,
+      "dg_id": 18554,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Fitzpatrick, Matt",
+      "line": 14.5,
+      "over_odds": -120,
+      "under_odds": -114,
+      "market": "GIR",
+      "round_num": 1,
+      "dg_id": 17646,
+      "source": "draftkings"
+    },
+    {
       "player_name": "Koepka, Brooks",
       "line": 9.5,
       "over_odds": 116,
@@ -25881,6 +26021,26 @@
       "market": "Fairways hit",
       "round_num": 1,
       "dg_id": 23604,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "MacIntyre, Robert",
+      "line": 9.5,
+      "over_odds": -172,
+      "under_odds": 120,
+      "market": "Fairways hit",
+      "round_num": 1,
+      "dg_id": 23323,
+      "source": "draftkings"
+    },
+    {
+      "player_name": "Rai, Aaron",
+      "line": 11.5,
+      "over_odds": 134,
+      "under_odds": -194,
+      "market": "Fairways hit",
+      "round_num": 1,
+      "dg_id": 18554,
       "source": "draftkings"
     },
     {
@@ -30609,51 +30769,6 @@
       "source": "model_fallback"
     },
     {
-      "player_name": "Fleetwood, Tommy",
-      "line": 12.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "GIR",
-      "dg_id": 12294,
-      "source": "model_fallback"
-    },
-    {
-      "player_name": "Fitzpatrick, Matt",
-      "line": 13.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "GIR",
-      "dg_id": 17646,
-      "source": "model_fallback"
-    },
-    {
-      "player_name": "Morikawa, Collin",
-      "line": 12.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "GIR",
-      "dg_id": 22085,
-      "source": "model_fallback"
-    },
-    {
-      "player_name": "Lowry, Shane",
-      "line": 13.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "GIR",
-      "dg_id": 13900,
-      "source": "model_fallback"
-    },
-    {
-      "player_name": "MacIntyre, Robert",
-      "line": 12.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "GIR",
-      "dg_id": 23323,
-      "source": "model_fallback"
-    },
-    {
       "player_name": "Fox, Ryan",
       "line": 12.5,
       "over_odds": -110,
@@ -30663,48 +30778,12 @@
       "source": "model_fallback"
     },
     {
-      "player_name": "Reitan, Kristoffer",
-      "line": 12.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "GIR",
-      "dg_id": 21407,
-      "source": "model_fallback"
-    },
-    {
-      "player_name": "Hojgaard, Nicolai",
-      "line": 12.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "GIR",
-      "dg_id": 23602,
-      "source": "model_fallback"
-    },
-    {
-      "player_name": "Clark, Wyndham",
-      "line": 12.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "GIR",
-      "dg_id": 23604,
-      "source": "model_fallback"
-    },
-    {
       "player_name": "Taylor, Nick",
       "line": 12.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "GIR",
       "dg_id": 13126,
-      "source": "model_fallback"
-    },
-    {
-      "player_name": "Hovland, Viktor",
-      "line": 12.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "GIR",
-      "dg_id": 18841,
       "source": "model_fallback"
     },
     {
@@ -30744,48 +30823,12 @@
       "source": "model_fallback"
     },
     {
-      "player_name": "Fitzpatrick, Alex",
-      "line": 13.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "GIR",
-      "dg_id": 25362,
-      "source": "model_fallback"
-    },
-    {
-      "player_name": "Rose, Justin",
-      "line": 12.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "GIR",
-      "dg_id": 6093,
-      "source": "model_fallback"
-    },
-    {
-      "player_name": "Rai, Aaron",
-      "line": 13.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "GIR",
-      "dg_id": 18554,
-      "source": "model_fallback"
-    },
-    {
       "player_name": "Cauley, Bud",
       "line": 12.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "GIR",
       "dg_id": 14502,
-      "source": "model_fallback"
-    },
-    {
-      "player_name": "Bridgeman, Jacob",
-      "line": 12.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "GIR",
-      "dg_id": 29433,
       "source": "model_fallback"
     },
     {
@@ -30849,15 +30892,6 @@
       "under_odds": -110,
       "market": "GIR",
       "dg_id": 17576,
-      "source": "model_fallback"
-    },
-    {
-      "player_name": "Koepka, Brooks",
-      "line": 13.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "GIR",
-      "dg_id": 16243,
       "source": "model_fallback"
     },
     {
@@ -31923,15 +31957,6 @@
       "source": "model_fallback"
     },
     {
-      "player_name": "MacIntyre, Robert",
-      "line": 9.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "Fairways hit",
-      "dg_id": 23323,
-      "source": "model_fallback"
-    },
-    {
       "player_name": "Fox, Ryan",
       "line": 8.5,
       "over_odds": -110,
@@ -31974,15 +31999,6 @@
       "under_odds": -110,
       "market": "Fairways hit",
       "dg_id": 14704,
-      "source": "model_fallback"
-    },
-    {
-      "player_name": "Rai, Aaron",
-      "line": 10.5,
-      "over_odds": -110,
-      "under_odds": -110,
-      "market": "Fairways hit",
-      "dg_id": 18554,
       "source": "model_fallback"
     },
     {
@@ -53556,8 +53572,8 @@
       "round_num": 1
     }
   },
-  "book_odds_refreshed_at": "2026-06-10T13:36:48Z",
-  "dk_round_props_refreshed_at": "2026-06-10T13:36:48Z",
+  "book_odds_refreshed_at": "2026-06-10T17:24:27Z",
+  "dk_round_props_refreshed_at": "2026-06-10T17:24:27Z",
   "datagolf_live_current_round": 1,
   "meta": {
     "datagolf_field_date_start": "2026-06-11",
