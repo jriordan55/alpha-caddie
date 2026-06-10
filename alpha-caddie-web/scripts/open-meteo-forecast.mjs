@@ -6,6 +6,7 @@ import { eventsLikelySame, fieldWeekKey, fieldWeekKeysRoughMatch } from "./dg-ev
 import { normCourseNameKey } from "./course-name-key.mjs";
 import { summarizeHourlyWeatherSlice } from "./open-meteo-weather-classify.mjs";
 import { applyWeatherBakedCountsToAllPlayers } from "./weather-projection-adjustments.mjs";
+import { projectionExportMeta } from "./projection-export-meta.mjs";
 
 function num(x, fallback = NaN) {
   const n = Number(x);
@@ -14,7 +15,7 @@ function num(x, fallback = NaN) {
 
 /** Round whose tee-time forecast drives projections + website weather banner. */
 export function resolveForecastRound(proj) {
-  const meta = proj?.meta && typeof proj.meta === "object" ? proj.meta : {};
+  const meta = projectionExportMeta(proj);
   const dr = Math.round(
     num(meta.display_round ?? meta.datagolf_live_current_round ?? meta.datagolf_field_current_round, NaN),
   );
@@ -56,14 +57,14 @@ export const COURSE_COORDINATES_BY_NAME = {
 };
 
 export function courseCoordinatesForProjections(proj) {
-  const meta = proj?.meta && typeof proj.meta === "object" ? proj.meta : proj;
+  const meta = projectionExportMeta(proj);
   const raw = meta?.course_used ?? proj?.course_used ?? "";
   const key = normCourseNameKey(raw);
   return COURSE_COORDINATES_BY_NAME[key] || null;
 }
 
 export function forecastTimezoneFromProjections(proj) {
-  const meta = proj?.meta && typeof proj.meta === "object" ? proj.meta : proj;
+  const meta = projectionExportMeta(proj);
   const lab = String(meta?.display_round_label || "");
   const m = lab.match(/America\/[A-Za-z_/]+/);
   if (m) return m[0];
@@ -272,9 +273,9 @@ function applyWeatherSnapshotToPlayer(p, snap) {
 export function mergeFieldTeeTimesIntoProjections(proj, fieldUpdatesRaw) {
   const players = Array.isArray(proj?.players) ? proj.players : [];
   if (!fieldUpdatesRaw || typeof fieldUpdatesRaw !== "object" || !players.length) return 0;
-  if (!proj.meta || typeof proj.meta !== "object") proj.meta = {};
+  const meta = projectionExportMeta(proj);
   const ds = fieldUpdatesRaw.date_start != null ? String(fieldUpdatesRaw.date_start).trim() : "";
-  if (ds) proj.meta.datagolf_field_date_start = ds;
+  if (ds) meta.datagolf_field_date_start = ds;
   const flist =
     fieldUpdatesRaw.field ??
     fieldUpdatesRaw.field_updates ??
@@ -313,7 +314,7 @@ export function mergeFieldTeeTimesIntoProjections(proj, fieldUpdatesRaw) {
 
 export function fieldUpdatesAlignWithProjections(proj, fieldUpdatesRaw) {
   if (!fieldUpdatesRaw || typeof fieldUpdatesRaw !== "object") return false;
-  const meta = proj?.meta && typeof proj.meta === "object" ? proj.meta : {};
+  const meta = projectionExportMeta(proj);
   const modelEvent = String(meta.event_name || proj.event_name || "").trim();
   const fuEvent = String(fieldUpdatesRaw.event_name ?? fieldUpdatesRaw.eventName ?? "").trim();
   if (!modelEvent || !fuEvent) return true;
@@ -330,8 +331,7 @@ export function fieldUpdatesAlignWithProjections(proj, fieldUpdatesRaw) {
  */
 export async function bakeOpenMeteoWeatherIntoProjections(proj, opts = {}) {
   const players = Array.isArray(proj?.players) ? proj.players : [];
-  if (!proj.meta || typeof proj.meta !== "object") proj.meta = {};
-  const meta = proj.meta;
+  const meta = projectionExportMeta(proj);
 
   const fieldUpdates = opts.fieldUpdates ?? null;
   if (fieldUpdates && fieldUpdatesAlignWithProjections(proj, fieldUpdates)) {

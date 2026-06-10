@@ -12,6 +12,7 @@ import {
   bakeOpenMeteoWeatherIntoProjections,
   fieldUpdatesAlignWithProjections,
 } from "./open-meteo-forecast.mjs";
+import { flattenProjectionExportMeta, projectionExportMeta } from "./projection-export-meta.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -49,9 +50,11 @@ async function main() {
   }
 
   const result = await bakeOpenMeteoWeatherIntoProjections(proj, { fieldUpdates });
+  flattenProjectionExportMeta(proj);
   writeFileSync(projPath, `${JSON.stringify(proj, null, 2)}\n`, "utf8");
+  const meta = projectionExportMeta(proj);
   console.log(
-    `[bake-weather] status=${result.status} display_round=${proj.meta?.forecast_weather_display_round ?? "?"} players=${result.playersWithWeather}/${result.playerCount} tee_slices=${result.teeMatches} counts_baked=${result.countsWeatherBaked ?? 0}`,
+    `[bake-weather] status=${result.status} display_round=${meta.forecast_weather_display_round ?? "?"} players=${result.playersWithWeather}/${result.playerCount} tee_slices=${result.teeMatches} counts_baked=${result.countsWeatherBaked ?? 0}`,
   );
   /* Weather is best-effort — do not fail push:live on API/network issues. */
   process.exit(0);

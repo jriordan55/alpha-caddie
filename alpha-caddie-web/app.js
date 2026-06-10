@@ -2540,6 +2540,10 @@ function applyPayload(raw) {
   delete meta.props;
   delete meta.outrights;
   delete meta.matchups;
+  if (raw.meta && typeof raw.meta === "object") {
+    Object.assign(meta, raw.meta);
+    delete meta.meta;
+  }
 
   if (!outrightPayloadHasRows(outrights) && players.length) {
     outrights = buildDemoOutrightsFromPlayers(players);
@@ -3190,6 +3194,10 @@ const COURSE_COORDINATES_BY_NAME = {
   "colonial country club": { lat: 32.7248, lon: -97.434 },
   "muirfield village golf club": { lat: 40.1416, lon: -82.791 },
   "congressional country club": { lat: 39.0299, lon: -77.164 },
+  "tpc toronto at osprey valley": { lat: 43.874, lon: -79.982 },
+  "tpc toronto at osprey valley north course": { lat: 43.874, lon: -79.982 },
+  "hamilton golf and country club": { lat: 43.267, lon: -79.934 },
+  "glen abbey golf club": { lat: 43.452, lon: -79.691 },
 };
 
 function normCourseKeyForForecast(name) {
@@ -3208,7 +3216,11 @@ let OPEN_METEO_FORECAST_CACHE = /** @type {{ key: string; atMs: number; hourly: 
 const OPEN_METEO_TTL_MS = 30 * 60 * 1000;
 
 function courseCoordinatesFromMeta() {
-  const key = normCourseKeyForForecast(DATA?.meta?.course_used || DATA?.course_used || "");
+  const baked = DATA?.meta?.forecast_weather_coords;
+  if (baked && Number.isFinite(num(baked.lat, NaN)) && Number.isFinite(num(baked.lon, NaN))) {
+    return { lat: num(baked.lat), lon: num(baked.lon) };
+  }
+  const key = normCourseKeyForForecast(DATA?.meta?.course_used || "");
   return COURSE_COORDINATES_BY_NAME[key] || null;
 }
 
@@ -3637,6 +3649,8 @@ function syncForecastWaveBannerTexts() {
   const forecastLoaded =
     Boolean(DATA.meta?.forecast_weather_updated_at) &&
     !["open_meteo_fetch_failed", "empty_hourly", "no_course_coords", "no_players"].includes(status);
+  const summaryText =
+    typeof DATA.meta?.forecast_wave_summary === "string" ? DATA.meta.forecast_wave_summary.trim() : "";
   for (const id of ["ou-weather-wave-summary", "ev-weather-wave-summary"]) {
     const el = document.getElementById(id);
     if (!el) continue;
@@ -3644,18 +3658,16 @@ function syncForecastWaveBannerTexts() {
     if (html) {
       el.innerHTML = html;
       el.classList.add("weather-wave-banner");
+    } else if (summaryText) {
+      el.classList.remove("weather-wave-banner");
+      el.textContent = summaryText;
+    } else if (forecastLoaded) {
+      el.classList.remove("weather-wave-banner");
+      el.textContent = "";
+      el.hidden = true;
     } else {
       el.classList.remove("weather-wave-banner");
-      const raw = DATA.meta?.forecast_wave_summary;
-      const text = typeof raw === "string" ? raw.trim() : "";
-      if (text) {
-        el.textContent = text;
-      } else if (forecastLoaded) {
-        el.textContent = "";
-        el.hidden = true;
-      } else {
-        el.textContent = fallback;
-      }
+      el.textContent = fallback;
     }
   }
 }

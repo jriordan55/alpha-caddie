@@ -2,6 +2,8 @@
  * Weather → projection count adjustments (shared by bake:weather and round-projection-mu).
  * Negative difficulty delta = softer / easier scoring (more birdies, lower totals).
  */
+import { projectionExportMeta } from "./projection-export-meta.mjs";
+
 export function num(v, fallback = NaN) {
   const n = Number(v);
   return Number.isFinite(n) ? n : NaN;
@@ -206,8 +208,7 @@ export function applyWeatherBakedCountsToPlayer(p, meta) {
  */
 export function applyWeatherBakedCountsToAllPlayers(proj, opts = {}) {
   const players = Array.isArray(proj?.players) ? proj.players : [];
-  if (!proj.meta || typeof proj.meta !== "object") proj.meta = {};
-  const meta = proj.meta;
+  const meta = projectionExportMeta(proj);
   const forecastRound = Math.round(num(opts.forecastRound, NaN));
   let n = 0;
   for (const p of players) {
