@@ -26,17 +26,23 @@ export function holePinDifficulty(h) {
   const front = num(h.pin_from_front_yds, NaN);
   const side = num(h.pin_from_side_yds, NaN);
   if (!Number.isFinite(depth) || depth < 18) {
-    return { hole: h.hole, score: 0, back: 0, tuck: 0, note: h.note || "missing depth" };
+    return { hole: h.hole, score: 0, frontTuck: 0, sideTuck: 0, note: h.note || "missing depth" };
   }
-  const back = clamp(front / depth, 0, 1);
-  const tuck = Number.isFinite(side) ? clamp(1 - side / 9, 0, 1) : 0;
-  const hazard = h.near_hazard ? 0.12 : 0;
-  const score = clamp(0.52 * back + 0.38 * tuck + hazard, 0, 1.25);
+  /** Low pin_from_front = tucked front pin (hard); was inverted when using front/depth as "back". */
+  const frontFrac = Number.isFinite(front) ? clamp(front / depth, 0, 1) : 0.5;
+  let frontTuck = clamp(1 - frontFrac / 0.52, 0, 1);
+  if (Number.isFinite(front) && front <= 10) {
+    frontTuck = Math.max(frontTuck, clamp(0.52 + (10 - front) * 0.04, 0, 1));
+  }
+  const backPin = clamp((frontFrac - 0.78) / 0.22, 0, 1);
+  const sideTuck = Number.isFinite(side) ? clamp(1 - side / 8, 0, 1) : 0;
+  const hazard = h.near_hazard ? 0.18 : 0;
+  const score = clamp(0.5 * frontTuck + 0.32 * sideTuck + 0.1 * backPin + hazard, 0, 1.4);
   return {
     hole: Math.round(num(h.hole, 0)),
     score,
-    back,
-    tuck,
+    frontTuck,
+    sideTuck,
     note: h.note || "",
   };
 }
@@ -60,25 +66,25 @@ export function roundAdjustmentsFromPinSheet(holes) {
   }
   const scores = perHole.map((h) => h.score).sort((a, b) => b - a);
   const meanAll = n ? sum / n : 0;
-  const topK = Math.min(6, scores.length);
+  const topK = Math.min(5, scores.length);
   const meanHardest = topK ? scores.slice(0, topK).reduce((a, b) => a + b, 0) / topK : meanAll;
-  const avg = 0.45 * meanAll + 0.55 * meanHardest;
-  const neutral = 0.4;
+  const avg = 0.35 * meanAll + 0.65 * meanHardest;
+  const neutral = 0.28;
   const excess = avg - neutral;
 
-  const totalScoreDelta = clamp(excess * 1.25, -0.4, 0.95);
-  const birdiesDelta = clamp(-excess * 1.1, -1.0, 0.45);
-  const bogeysDelta = clamp(excess * 0.95, -0.45, 1.0);
-  const parsDelta = clamp(-excess * 0.15, -0.5, 0.35);
-  const girDelta = clamp(-excess * 0.35, -1.2, 0.5);
-  const fairwaysDelta = clamp(-excess * 0.12, -0.5, 0.25);
+  const totalScoreDelta = clamp(excess * 3.0, -0.75, 1.85);
+  const birdiesDelta = clamp(-excess * 2.4, -1.8, 0.85);
+  const bogeysDelta = clamp(excess * 2.1, -0.85, 1.8);
+  const parsDelta = clamp(-excess * 0.35, -0.75, 0.55);
+  const girDelta = clamp(-excess * 0.95, -2.5, 1.0);
+  const fairwaysDelta = clamp(-excess * 0.35, -0.85, 0.45);
 
   const hard = perHole
-    .filter((h) => h.score >= 0.52)
+    .filter((h) => h.score >= 0.42)
     .map((h) => h.hole)
     .sort((a, b) => a - b);
   const easy = perHole
-    .filter((h) => h.score <= 0.28)
+    .filter((h) => h.score <= 0.2)
     .map((h) => h.hole)
     .sort((a, b) => a - b);
 
@@ -98,13 +104,18 @@ export function roundAdjustmentsFromPinSheet(holes) {
   };
 }
 
-function buildPinSummary(avg, excess, totalDelta, hard, easy, neutral = 0.4) {
-  const dir = excess > 0.08 ? "harder" : excess < -0.08 ? "easier" : "neutral";
+function buildPinSummary(avg, excess, totalDelta, hard, easy, neutral = 0.28) {
+  const dir =
+    excess > 0.04 ? "Harder than typical" : excess < -0.04 ? "Easier than typical" : "Near-average";
+  const sign = totalDelta >= 0 ? "+" : "";
   const parts = [
-    `Pin setup ${dir} (${avg.toFixed(2)} avg vs ${neutral} neutral)`,
-    `total ${totalDelta >= 0 ? "+" : ""}${totalDelta.toFixed(2)} strokes`,
+    dir,
+    `${sign}${totalDelta.toFixed(2)} on projected total`,
   ];
-  if (hard.length) parts.push(`tough holes ${hard.join(",")}`);
-  if (easy.length) parts.push(`easier holes ${easy.join(",")}`);
-  return parts.join("; ");
+  if (hard.length) parts.push(`Tough: ${hard.join(", ")}`);
+  const easyShow = easy.length > 6 ? easy.slice(0, 4) : easy;
+  if (easyShow.length) {
+    parts.push(`Easier: ${easyShow.join(", ")}${easy.length > easyShow.length ? "…" : ""}`);
+  }
+  return parts.join(" · ");
 }

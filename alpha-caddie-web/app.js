@@ -2823,19 +2823,47 @@ function ouPlayerHistoricalAvgForMarket(market, player) {
   return vals.reduce((a, b) => a + b, 0) / vals.length;
 }
 
+/** Fallback when history lacks counting stats (DG rounds CSV often has null GIR). Uses model / skill ratings. */
+function ouPlayerModelAvgForMarket(market, player) {
+  if (!player || typeof player !== "object") return NaN;
+  const mKey = ouModelMarketKey(market) || "Total score";
+  if (mKey === "Total score") return num(player.total_score, NaN);
+  if (mKey === "Birdies") return birdiesPlusEaglesFromRow(player);
+  if (mKey === "Pars") return num(player.pars, NaN);
+  if (mKey === "Bogeys") return num(player.bogeys ?? player.bogies, NaN);
+  if (mKey === "GIR") {
+    const rate = num(player.dg_gir_pct, NaN);
+    if (Number.isFinite(rate) && rate > 0 && rate <= 1.05) return rate * 18;
+    return num(player.gir, NaN);
+  }
+  if (mKey === "Fairways hit") {
+    const rate = num(player.dg_fairway_pct, NaN);
+    const opp = fairwayHolesModeledFromData();
+    if (Number.isFinite(rate) && rate > 0 && rate <= 1.05 && Number.isFinite(opp)) return rate * opp;
+    return num(player.fairways, NaN);
+  }
+  return NaN;
+}
+
 function ouCachedMarketRating(market, player) {
   const id = Math.round(num(player?.dg_id, NaN));
   const mKey = ouModelMarketKey(market) || "Total score";
   const cacheKey = `${historyMutationEpoch}|${id}|${mKey}`;
   if (OU_MARKET_RATING_CACHE.has(cacheKey)) return OU_MARKET_RATING_CACHE.get(cacheKey);
-  const playerAvg = ouPlayerHistoricalAvgForMarket(market, player);
+  let playerAvg = ouPlayerHistoricalAvgForMarket(market, player);
+  let ratingSource = "history";
+  if (!Number.isFinite(playerAvg)) {
+    playerAvg = ouPlayerModelAvgForMarket(market, player);
+    ratingSource = "model";
+  }
   const marketRatingZ = ouMarketRatingZ(market, playerAvg);
   const hit = {
     playerAvg,
     marketRatingZ,
     marketRating100: ouZToRating100(marketRatingZ),
+    ratingSource,
   };
-  if (ouMarketRatingHistoryReady()) OU_MARKET_RATING_CACHE.set(cacheKey, hit);
+  if (ouMarketRatingHistoryReady() || ratingSource === "model") OU_MARKET_RATING_CACHE.set(cacheKey, hit);
   return hit;
 }
 
@@ -3024,16 +3052,20 @@ function ouMarketRatingTourAvgDisplay(market, bench) {
   return ouRatingAvgDisplay(market, bench?.mean, bench);
 }
 
-function ouMarketRatingTitle(market, playerAvg) {
+function ouMarketRatingTitle(market, playerAvg, ratingSource = "history") {
   const b = ouPgaTourBenchmarkForMarket(market);
   const yrs = ouPgaTourBenchmarkYearLabel();
   const label = ouPropsCanonicalMarket(market);
+  const src =
+    ratingSource === "model"
+      ? "model projection / skill rating (history GIR sparse)"
+      : "player historical avg";
   if (!b || !Number.isFinite(playerAvg)) {
-    return `Market rating: player avg vs PGA Tour avg (${yrs})`;
+    return `Market rating: ${src} vs PGA Tour avg (${yrs})`;
   }
   const playerStr = ouRatingAvgDisplay(market, playerAvg, b);
   const tourStr = ouRatingAvgDisplay(market, b.mean, b);
-  return `Market rating (${label}: player avg ${playerStr} vs tour avg ${tourStr}, ${yrs})`;
+  return `Market rating (${label}: ${src} ${playerStr} vs tour avg ${tourStr}, ${yrs})`;
 }
 
 function ouCourseRatingTitle(market, venueVal) {
@@ -3421,6 +3453,25 @@ function escapeHtmlText(s) {
     .replace(/"/g, "&quot;");
 }
 
+function formatPinSheetBannerCopy(pinMeta) {
+  if (!pinMeta || typeof pinMeta !== "object") return "";
+  const summary = String(pinMeta.summary || "").trim();
+  if (summary) return summary;
+  const delta = num(pinMeta.total_score_delta, NaN);
+  const hard = Array.isArray(pinMeta.hard_holes) ? pinMeta.hard_holes : [];
+  const easy = Array.isArray(pinMeta.easy_holes) ? pinMeta.easy_holes : [];
+  const parts = [];
+  if (Number.isFinite(delta)) {
+    const sign = delta >= 0 ? "+" : "";
+    parts.push(`${sign}${delta.toFixed(2)} stroke impact on projected total`);
+  }
+  if (hard.length) parts.push(`Tough: ${hard.join(", ")}`);
+  if (easy.length) parts.push(`Easier: ${easy.join(", ")}`);
+  const note = String(pinMeta.analyst_note || "").trim();
+  if (note && parts.length < 2) parts.push(note);
+  return parts.join(" · ");
+}
+
 /** Stacked morning / afternoon / pin-sheet rows for WEATHER toolbars. */
 function weatherWaveForecastBannerInnerHtml(morningSnap, afternoonSnap, pinMeta) {
   const bits = [];
@@ -3443,7 +3494,7 @@ function weatherWaveForecastBannerInnerHtml(morningSnap, afternoonSnap, pinMeta)
     }
   }
   if (pinMeta && typeof pinMeta === "object") {
-    const pinSummary = String(pinMeta.summary || "").trim();
+    const pinSummary = formatPinSheetBannerCopy(pinMeta);
     if (pinSummary) {
       const rnd = Math.round(num(pinMeta.round, NaN));
       bits.push(
@@ -5742,7 +5793,7 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
     if (seen.has(sig)) return;
     seen.add(sig);
     const histPlayer = histPlayerOpt || player;
-    const { playerAvg, marketRatingZ, marketRating100 } = ouCachedMarketRating(col.market, histPlayer);
+    const { playerAvg, marketRatingZ, marketRating100, ratingSource } = ouCachedMarketRating(col.market, histPlayer);
     const { venueVal, courseRatingZ, courseRating100 } = ouCachedCourseRating(col.market);
     for (const side of ["over", "under"]) {
       out.push(
@@ -5755,6 +5806,7 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
           pick,
           marketRatingZ,
           marketRating100,
+          ratingSource,
           playerAvg,
           venueVal,
           courseRatingZ,
@@ -6153,6 +6205,7 @@ function buildOuTable() {
       pick,
       marketRatingZ,
       marketRating100,
+      ratingSource,
       playerAvg,
       courseRatingZ,
       courseRating100,
@@ -6209,7 +6262,7 @@ function buildOuTable() {
     mktRatingTd.className = `ou-cell ou-proj-long-td ${ouRating100CellClass(mkt100)} ou-proj-td-mkt-rating`;
     mktRatingTd.textContent =
       !Number.isFinite(mkt100) && !ouMarketRatingHistoryReady() ? "…" : formatOuRating100(mkt100);
-    mktRatingTd.title = ouMarketRatingTitle(col.market, num(playerAvg, NaN));
+    mktRatingTd.title = ouMarketRatingTitle(col.market, num(playerAvg, NaN), r.ratingSource);
     tr.appendChild(mktRatingTd);
 
     const courseRatingTd = document.createElement("td");
