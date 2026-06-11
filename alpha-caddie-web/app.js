@@ -2845,17 +2845,29 @@ function ouPlayerModelAvgForMarket(market, player) {
   return NaN;
 }
 
+function ouPlayerAvgForMarketRating(market, player) {
+  const mKey = ouModelMarketKey(market) || "Total score";
+  /** DG historical rounds CSV rarely has GIR — skill rates are more reliable than null history. */
+  if (mKey === "GIR" || mKey === "Fairways hit") {
+    const fromModel = ouPlayerModelAvgForMarket(market, player);
+    if (Number.isFinite(fromModel)) return { playerAvg: fromModel, ratingSource: "model" };
+  }
+  const fromHist = ouPlayerHistoricalAvgForMarket(market, player);
+  if (Number.isFinite(fromHist)) return { playerAvg: fromHist, ratingSource: "history" };
+  const fromModel = ouPlayerModelAvgForMarket(market, player);
+  if (Number.isFinite(fromModel)) return { playerAvg: fromModel, ratingSource: "model" };
+  return { playerAvg: NaN, ratingSource: "none" };
+}
+
 function ouCachedMarketRating(market, player) {
   const id = Math.round(num(player?.dg_id, NaN));
   const mKey = ouModelMarketKey(market) || "Total score";
   const cacheKey = `${historyMutationEpoch}|${id}|${mKey}`;
-  if (OU_MARKET_RATING_CACHE.has(cacheKey)) return OU_MARKET_RATING_CACHE.get(cacheKey);
-  let playerAvg = ouPlayerHistoricalAvgForMarket(market, player);
-  let ratingSource = "history";
-  if (!Number.isFinite(playerAvg)) {
-    playerAvg = ouPlayerModelAvgForMarket(market, player);
-    ratingSource = "model";
+  if (OU_MARKET_RATING_CACHE.has(cacheKey)) {
+    const cached = OU_MARKET_RATING_CACHE.get(cacheKey);
+    if (Number.isFinite(cached?.marketRating100)) return cached;
   }
+  const { playerAvg, ratingSource } = ouPlayerAvgForMarketRating(market, player);
   const marketRatingZ = ouMarketRatingZ(market, playerAvg);
   const hit = {
     playerAvg,
@@ -2863,7 +2875,7 @@ function ouCachedMarketRating(market, player) {
     marketRating100: ouZToRating100(marketRatingZ),
     ratingSource,
   };
-  if (ouMarketRatingHistoryReady() || ratingSource === "model") OU_MARKET_RATING_CACHE.set(cacheKey, hit);
+  if (Number.isFinite(hit.marketRating100)) OU_MARKET_RATING_CACHE.set(cacheKey, hit);
   return hit;
 }
 
@@ -4954,6 +4966,8 @@ function ouInvalidateProjectionPerfCaches() {
   ouGolferSuggestLabelsSig = "";
   ouGolferSuggestLabels = [];
   OU_COURSE_RATING_CACHE.clear();
+  OU_MARKET_RATING_CACHE.clear();
+  OU_MARKET_RATING_ROUNDS_CACHE.clear();
 }
 
 /** Coalesce rapid O/U table rebuilds (filters, polls) into one frame. */

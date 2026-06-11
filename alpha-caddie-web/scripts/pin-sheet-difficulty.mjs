@@ -113,9 +113,5 @@ function buildPinSummary(avg, excess, totalDelta, hard, easy, neutral = 0.28) {
     `${sign}${totalDelta.toFixed(2)} on projected total`,
   ];
   if (hard.length) parts.push(`Tough: ${hard.join(", ")}`);
-  const easyShow = easy.length > 6 ? easy.slice(0, 4) : easy;
-  if (easyShow.length) {
-    parts.push(`Easier: ${easyShow.join(", ")}${easy.length > easyShow.length ? "…" : ""}`);
-  }
   return parts.join(" · ");
 }
