@@ -57,6 +57,15 @@ import {
   loadHistoricalRoundWeatherMap,
   roundWeatherKey,
 } from "./historical-round-weather.mjs";
+import {
+  attachPinToHoleRows,
+  courseKeyFromName,
+  loadAllPinLocationSheetsMap,
+  loadPinLocationSheet,
+  pinLocationKey,
+  playDateIsoFromMdY,
+} from "./pin-locations-db.mjs";
+import { roundAdjustmentsFromPinSheet } from "./pin-sheet-difficulty.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -1456,7 +1465,7 @@ function logCsvScanProgress(phase, rowsScanned, matchedRows, extra = "") {
   }
 }
 
-async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg, roundWeatherByKey) {
+async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg, roundWeatherByKey, pinCtx) {
   const byDgId = new Map();
   const byDgSk = shotsAgg?.byDgSk || new Map();
   const byPkSk = shotsAgg?.byPkSk || new Map();
@@ -1535,6 +1544,22 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg, roundWeather
       if (shotOv.fairways != null) mf.fairways = shotOv.fairways;
     }
     stripGirFairwaysPuttsIfGarbage(mf);
+    const playIso = playDateIsoFromMdY(eventDate);
+    let pinLocationKeyVal = "";
+    let pinSheetForRound = null;
+    if (pinCtx?.enabled && courseRaw && playIso) {
+      const pinSheet = loadPinLocationSheet(courseRaw, playIso, rnd, pinCtx.rootDir);
+      if (pinSheet?.holes?.length) {
+        pinSheetForRound = pinSheet;
+        pinLocationKeyVal = pinLocationKey(courseKeyFromName(courseRaw), playIso, rnd);
+        if (pinCtx.pinKeyByEventRound && evtNormHist && Number.isFinite(yrHist)) {
+          pinCtx.pinKeyByEventRound.set(`${evtNormHist}|${yrHist}|${rnHist}`, pinLocationKeyVal);
+        }
+        if (pinCtx.pinKeyByEventIdRound && Number.isFinite(eid)) {
+          pinCtx.pinKeyByEventIdRound.set(`${eid}|${rnHist}`, pinLocationKeyVal);
+        }
+      }
+    }
     const rec = {
       sortKey,
       event_completed: eventDate || String(row.event_completed || ""),
@@ -1545,6 +1570,19 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg, roundWeather
       round_num: parseInt(row.round_num, 10) || 1,
       fin_text: String(row.fin_text || ""),
       _from_dg_historical_rounds: true,
+      ...(playIso ? { play_date: playIso } : {}),
+      ...(pinLocationKeyVal ? { pin_location_key: pinLocationKeyVal } : {}),
+      ...(pinSheetForRound
+        ? (() => {
+            const pinAdj = roundAdjustmentsFromPinSheet(pinSheetForRound.holes);
+            return {
+              grid_yards_per_square: pinSheetForRound.grid_yards_per_square ?? 5,
+              pin_avg_difficulty: Math.round(pinAdj.avgDifficulty * 1000) / 1000,
+              pin_hard_holes: pinAdj.hardHoles,
+              pin_easy_holes: pinAdj.easyHoles,
+            };
+          })()
+        : {}),
       ...mf,
       ...weatherFieldsForRound(
         rowForWeather,
@@ -1585,7 +1623,7 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg, roundWeather
   return { byDgId, allowedTriples };
 }
 
-async function streamHoles(allowedTriples) {
+async function streamHoles(allowedTriples, pinCtx) {
   const holesByPlayerKey = {};
   if (!allowedTriples || allowedTriples.size === 0 || !HOLES_CSV || !fs.existsSync(HOLES_CSV)) {
     if (HOLES_CSV === null || HOLES_CSV === "") {
@@ -1623,12 +1661,23 @@ async function streamHoles(allowedTriples) {
     const uid = `${row.tournament_name || ""}\tR${rn}`;
     holesByPlayerKey[pk] ??= {};
     holesByPlayerKey[pk][uid] ??= [];
-    holesByPlayerKey[pk][uid].push({
+    const holeRow = {
       hole: parseInt(row.hole, 10),
       par: parseInt(row.par, 10),
       score: parseInt(row.score, 10),
       score_type: String(row.score_type || ""),
-    });
+    };
+    if (pinCtx?.enabled && pinCtx.pinKeyByEventIdRound && pinCtx.pinLocationsByKey) {
+      const tid = String(row.tournament_id || "").trim();
+      const pinKey = tid ? pinCtx.pinKeyByEventIdRound.get(`${tid}|${rn}`) : null;
+      const pinSheet = pinKey ? pinCtx.pinLocationsByKey[pinKey] : null;
+      if (pinSheet) {
+        const enriched = attachPinToHoleRows([holeRow], pinSheet);
+        holesByPlayerKey[pk][uid].push(enriched[0]);
+        continue;
+      }
+    }
+    holesByPlayerKey[pk][uid].push(holeRow);
   }
 
   for (const pk of Object.keys(holesByPlayerKey)) {
@@ -1677,8 +1726,21 @@ async function main() {
       "[build-player-history] No per-round weather cache (run npm run backfill:round-weather); using PGA metadata only.",
     );
   }
+  const pinLocationsByKey = loadAllPinLocationSheetsMap();
+  const pinKeyByEventRound = new Map();
+  const pinKeyByEventIdRound = new Map();
+  const pinCtx = {
+    enabled: Object.keys(pinLocationsByKey).length > 0,
+    rootDir: undefined,
+    pinLocationsByKey,
+    pinKeyByEventRound,
+    pinKeyByEventIdRound,
+  };
+  if (pinCtx.enabled) {
+    console.log(`[build-player-history] Pin locations DB: ${Object.keys(pinLocationsByKey).length} course×date×round sheet(s)`);
+  }
   const shotsAgg = await loadShotsRoundAggMaps();
-  const { byDgId, allowedTriples } = await streamRounds(allowed, pgaMetaOverlay, shotsAgg, roundWeatherByKey);
+  const { byDgId, allowedTriples } = await streamRounds(allowed, pgaMetaOverlay, shotsAgg, roundWeatherByKey, pinCtx);
   let liveMergedRows = 0;
   const liveRows = buildLiveHistoryRowsFromBundle();
   if (liveRows?.length) {
@@ -1750,7 +1812,7 @@ async function main() {
     );
   }
 
-  const holesByPlayerKey = await streamHoles(allowedTriples);
+  const holesByPlayerKey = await streamHoles(allowedTriples, pinCtx);
   const holePlayerCount = Object.keys(holesByPlayerKey).length;
   console.log("Players with hole rows matched:", holePlayerCount);
 
@@ -1793,7 +1855,9 @@ async function main() {
       pgatour_event_rounds_json: fs.existsSync(PGATOUR_EVENT_ROUNDS_JSON)
         ? path.basename(PGATOUR_EVENT_ROUNDS_JSON)
         : null,
+      pin_locations_count: Object.keys(pinLocationsByKey).length,
     },
+    pinLocationsByKey,
     byDgId: Object.fromEntries(
       [...byDgId.entries()].map(([k, v]) => [
         String(k),

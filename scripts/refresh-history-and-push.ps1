@@ -276,6 +276,8 @@ $artifacts = @(
   "alpha-caddie-web/data/course_table.csv",
   "alpha-caddie-web/data/dk_round_projection_audit.csv",
   "alpha-caddie-web/data/pin_sheets/pin_sheet_active.json",
+  "alpha-caddie-web/data/pin_locations/index.json",
+  "alpha-caddie-web/data/pin_locations/sheets",
   "alpha-caddie-web/data/round_projection_vs_actual.csv",
   "alpha-caddie-web/data/round_projection_vs_actual_summary.csv",
   "alpha-caddie-web/data/round_projection_vs_actual.xlsx",

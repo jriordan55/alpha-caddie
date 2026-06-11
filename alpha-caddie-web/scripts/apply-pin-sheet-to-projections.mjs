@@ -2,19 +2,25 @@
 /**
  * Apply pin-sheet setup adjustments to projections.json for the active display round.
  *
- * Data (first match wins):
- *   data/pin_sheets/pin_sheet_active.json  — set round + holes after a screenshot
- *   data/pin_sheets/{event-slug}-r{N}.json
- *   data/pin_sheets/pin_sheet.png + OPENAI_API_KEY — optional vision parse (GOLF_PIN_SHEET_VISION=1)
+ * Projections adjust ONLY when pin_sheet_active.json has apply_to_projections: true (user-sent
+ * tee sheet). On apply, the sheet is also saved to data/pin_locations/ for Historical Trends.
  *
  *   npm run apply:pin-sheet
- *   push:live runs this after bake:weather (GOLF_SKIP_PIN_SHEET=1 to skip).
+ *   push:live runs this after bake:weather (no-op unless manual sheet is armed).
+ *   GOLF_SKIP_PIN_SHEET=1 to skip entirely.
  */
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { eventsLikelySame } from "./dg-events-align.mjs";
-import { eventSlug, num, roundAdjustmentsFromPinSheet } from "./pin-sheet-difficulty.mjs";
+import { num, roundAdjustmentsFromPinSheet } from "./pin-sheet-difficulty.mjs";
+import {
+  courseKeyFromName,
+  defaultPinLocationsRoot,
+  playDateIsoForRound,
+  savePinLocationSheet,
+} from "./pin-locations-db.mjs";
+import { flattenProjectionExportMeta, projectionExportMeta } from "./projection-export-meta.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -27,38 +33,62 @@ function loadJson(path) {
   return JSON.parse(readFileSync(path, "utf8"));
 }
 
-function resolvePinSheetPath(payload) {
-  const event = String(payload.event_name || "").trim();
-  const rnd = Math.round(num(payload.display_round, 1)) || 1;
-  const slug = eventSlug(event);
-  if (slug) {
-    const named = join(PIN_DIR, `${slug}-r${rnd}.json`);
-    if (existsSync(named)) return named;
+function manualPinSheetArmed(j) {
+  if (j?.apply_to_projections === true) return true;
+  if (String(j?.apply_to_projections || "").trim().toLowerCase() === "true") return true;
+  return false;
+}
+
+/** Only pin_sheet_active.json when explicitly armed for this week/round (user-sent tee sheet). */
+function resolveManualPinSheet(payload) {
+  const meta = projectionExportMeta(payload);
+  const event = String(meta.event_name || payload.event_name || "").trim();
+  const rnd = Math.round(num(meta.display_round ?? payload.display_round, 1)) || 1;
+
+  if (!existsSync(ACTIVE_JSON)) return null;
+
+  let j;
+  try {
+    j = loadJson(ACTIVE_JSON);
+  } catch {
+    return null;
   }
-  if (existsSync(ACTIVE_JSON)) {
-    const j = loadJson(ACTIVE_JSON);
-    const sheetRound = Math.round(num(j.round, NaN));
-    const sheetEvent = String(j.event_name || "").trim();
-    if (!sheetEvent || !event || eventsLikelySame(sheetEvent, event)) {
-      if (!Number.isFinite(sheetRound) || sheetRound === rnd) return ACTIVE_JSON;
-    }
-  }
-  return null;
+
+  if (!manualPinSheetArmed(j)) return null;
+
+  const sheetRound = Math.round(num(j.round ?? j.round_num, NaN));
+  const sheetEvent = String(j.event_name || j.event_name_ref || "").trim();
+  if (!Number.isFinite(sheetRound) || sheetRound !== rnd) return null;
+  if (!sheetEvent || !event || !eventsLikelySame(sheetEvent, event)) return null;
+  if (!Array.isArray(j.holes) || j.holes.length < 9) return null;
+
+  return { kind: "file", path: ACTIVE_JSON, sheet: j };
 }
 
 async function maybeParseImageToActiveJson() {
-  if (String(process.env.GOLF_PIN_SHEET_VISION || "").trim() !== "1") return false;
   if (!existsSync(ACTIVE_IMG)) return false;
   const key = String(process.env.OPENAI_API_KEY || "").trim();
   if (!key) {
-    console.warn("[pin-sheet] GOLF_PIN_SHEET_VISION=1 but OPENAI_API_KEY unset — use pin_sheet_active.json");
+    if (String(process.env.GOLF_PIN_SHEET_VISION || "").trim() === "1") {
+      console.warn("[pin-sheet] OPENAI_API_KEY unset — save pin_sheet_active.json manually");
+    }
     return false;
   }
-  if (existsSync(ACTIVE_JSON)) {
-    const imgM = statSync(ACTIVE_IMG).mtimeMs;
+
+  const visionForced = String(process.env.GOLF_PIN_SHEET_VISION || "").trim() === "1";
+  const imgM = statSync(ACTIVE_IMG).mtimeMs;
+  let needsParse = visionForced;
+  if (!needsParse) {
+    if (!existsSync(ACTIVE_JSON)) needsParse = true;
+    else {
+      const jsonM = statSync(ACTIVE_JSON).mtimeMs;
+      needsParse = imgM > jsonM;
+    }
+  } else if (existsSync(ACTIVE_JSON)) {
     const jsonM = statSync(ACTIVE_JSON).mtimeMs;
     if (jsonM >= imgM) return false;
   }
+  if (!needsParse) return false;
   const b64 = readFileSync(ACTIVE_IMG).toString("base64");
   const mime = ACTIVE_IMG.toLowerCase().endsWith(".jpg") || ACTIVE_IMG.toLowerCase().endsWith(".jpeg")
     ? "image/jpeg"
@@ -100,10 +130,51 @@ Use integers for hole numbers and yardages. near_hazard true if pin is beside wa
     return false;
   }
   const parsed = JSON.parse(m[0]);
+  parsed.apply_to_projections = true;
   mkdirSync(PIN_DIR, { recursive: true });
   writeFileSync(ACTIVE_JSON, JSON.stringify(parsed, null, 2), "utf8");
   console.log(`[pin-sheet] Vision parsed ${parsed.holes?.length || 0} hole(s) -> ${ACTIVE_JSON}`);
   return true;
+}
+
+/** Persist armed tee sheet to data/pin_locations/ (course + play_date + round). */
+export function saveArmedPinSheetToPinLocationsDb(sheet, meta) {
+  const rnd = Math.round(num(sheet.round ?? sheet.round_num ?? meta.display_round, NaN));
+  if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) return null;
+
+  const courseName = String(sheet.course_name || meta.course_used || "").trim();
+  const playDate = String(sheet.play_date || "").trim() || playDateIsoForRound(meta, rnd);
+  if (!courseName || !/^\d{4}-\d{2}-\d{2}$/.test(playDate)) {
+    console.warn("[pin-sheet] skip pin_locations DB — need course_name and play_date (from sheet or projections)");
+    return null;
+  }
+
+  const rootDir = defaultPinLocationsRoot();
+  const imagesDir = join(rootDir, "images");
+  mkdirSync(imagesDir, { recursive: true });
+
+  let sourceImage = String(sheet.source_image || "").trim();
+  if (existsSync(ACTIVE_IMG)) {
+    const destName = `pin_sheet_${playDate}_r${rnd}.png`;
+    const dest = join(imagesDir, destName);
+    copyFileSync(ACTIVE_IMG, dest);
+    sourceImage = destName;
+  }
+
+  const { key } = savePinLocationSheet(
+    {
+      course_name: courseName,
+      play_date: playDate,
+      round_num: rnd,
+      event_name_ref: String(sheet.event_name || sheet.event_name_ref || meta.event_name || "").trim(),
+      source_image: sourceImage,
+      source: "pin_sheet_active",
+      holes: sheet.holes,
+    },
+    rootDir,
+  );
+  console.log(`[pin-sheet] Saved to pin_locations DB: ${key}`);
+  return key;
 }
 
 function restorePinBases(p, metaPin) {
@@ -132,8 +203,8 @@ function applyDelta(field, delta) {
 }
 
 export function applyPinSheetToProjections(payload, sheet, pinPath = "") {
-  if (!payload?.meta) payload.meta = {};
-  const rnd = Math.round(num(sheet.round ?? payload.display_round, NaN));
+  const meta = projectionExportMeta(payload);
+  const rnd = Math.round(num(sheet.round ?? sheet.round_num ?? meta.display_round, NaN));
   if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) {
     throw new Error("pin sheet: invalid round");
   }
@@ -146,7 +217,7 @@ export function applyPinSheetToProjections(payload, sheet, pinPath = "") {
   const stamp = pinPath && existsSync(pinPath) ? `${pinPath}:${statSync(pinPath).mtimeMs}` : "inline";
 
   const players = Array.isArray(payload.players) ? payload.players : [];
-  const prev = payload.meta.pin_sheet;
+  const prev = meta.pin_sheet;
 
   for (const p of players) {
     if (Math.round(num(p.round)) !== rnd) continue;
@@ -161,9 +232,13 @@ export function applyPinSheetToProjections(payload, sheet, pinPath = "") {
     p._pin_adjusted = true;
   }
 
-  payload.meta.pin_sheet = {
+  meta.pin_sheet = {
     round: rnd,
-    event_name: String(sheet.event_name || payload.event_name || "").trim(),
+    event_name: String(sheet.event_name || meta.event_name || "").trim(),
+    course_name: String(sheet.course_name || meta.course_used || "").trim(),
+    course_key: String(sheet.course_key || "").trim(),
+    play_date: String(sheet.play_date || "").trim(),
+    grid_yards_per_square: sheet.grid_yards_per_square ?? 5,
     source_file: pinPath ? pinPath.replace(/\\/g, "/") : "inline",
     source_stamp: stamp,
     applied_at: new Date().toISOString().replace(/\.\d{3}Z$/, "Z"),
@@ -194,19 +269,39 @@ async function main() {
   await maybeParseImageToActiveJson();
 
   const payload = loadJson(PROJ_PATH);
-  const pinPath = resolvePinSheetPath(payload);
-  if (!pinPath) {
+  const resolved = resolveManualPinSheet(payload);
+  if (!resolved) {
     console.log(
-      "[pin-sheet] No pin sheet for this event/round (add data/pin_sheets/pin_sheet_active.json or {event}-r{N}.json)",
+      "[pin-sheet] No armed tee sheet for display_round — projections unchanged (send pin sheet + apply_to_projections: true in pin_sheet_active.json)",
     );
     return;
   }
 
-  const sheet = loadJson(pinPath);
-  const { adjustedPlayers, adj } = applyPinSheetToProjections(payload, sheet, pinPath);
-  writeFileSync(PROJ_PATH, JSON.stringify(payload), "utf8");
+  const sheet = resolved.sheet ?? loadJson(resolved.path);
+  const pinPath = resolved.path;
+  const meta = projectionExportMeta(payload);
+  const enrichedSheet = {
+    ...sheet,
+    course_name: String(sheet.course_name || meta.course_used || "").trim(),
+    play_date: String(sheet.play_date || "").trim() || playDateIsoForRound(meta, sheet.round ?? sheet.round_num),
+  };
+
+  const dbKey = saveArmedPinSheetToPinLocationsDb(enrichedSheet, meta);
+  if (dbKey) {
+    enrichedSheet.course_key = courseKeyFromName(enrichedSheet.course_name);
+    enrichedSheet.play_date = enrichedSheet.play_date || dbKey.split("|")[1];
+  }
+
+  const { adjustedPlayers, adj } = applyPinSheetToProjections(payload, enrichedSheet, pinPath);
+  const metaAfter = projectionExportMeta(payload);
+  if (dbKey && metaAfter.pin_sheet) {
+    metaAfter.pin_sheet.pin_location_key = dbKey;
+    metaAfter.pin_sheet.saved_to_pin_locations = true;
+  }
+  flattenProjectionExportMeta(payload);
+  writeFileSync(PROJ_PATH, JSON.stringify(payload, null, 2), "utf8");
   console.log(
-    `[pin-sheet] Applied to ${adjustedPlayers} player row(s) for R${sheet.round ?? payload.display_round}: ${adj.summary}`,
+    `[pin-sheet] Applied to ${adjustedPlayers} player row(s) for R${sheet.round ?? sheet.round_num ?? payload.display_round}: ${adj.summary}`,
   );
 }
 
