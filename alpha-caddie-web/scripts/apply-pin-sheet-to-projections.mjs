@@ -20,6 +20,7 @@ import {
   playDateIsoForRound,
   savePinLocationSheet,
 } from "./pin-locations-db.mjs";
+import { effectiveDisplayRoundForPinSheet } from "./dg-display-round-from-bundle.mjs";
 import { flattenProjectionExportMeta, projectionExportMeta } from "./projection-export-meta.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -43,7 +44,6 @@ function manualPinSheetArmed(j) {
 function resolveManualPinSheet(payload) {
   const meta = projectionExportMeta(payload);
   const event = String(meta.event_name || payload.event_name || "").trim();
-  const rnd = Math.round(num(meta.display_round ?? payload.display_round, 1)) || 1;
 
   if (!existsSync(ACTIVE_JSON)) return null;
 
@@ -57,8 +57,9 @@ function resolveManualPinSheet(payload) {
   if (!manualPinSheetArmed(j)) return null;
 
   const sheetRound = Math.round(num(j.round ?? j.round_num, NaN));
+  const matchRound = effectiveDisplayRoundForPinSheet(payload, sheetRound);
   const sheetEvent = String(j.event_name || j.event_name_ref || "").trim();
-  if (!Number.isFinite(sheetRound) || sheetRound !== rnd) return null;
+  if (!Number.isFinite(sheetRound) || sheetRound !== matchRound) return null;
   if (!sheetEvent || !event || !eventsLikelySame(sheetEvent, event)) return null;
   if (!Array.isArray(j.holes) || j.holes.length < 9) return null;
 
@@ -271,8 +272,18 @@ async function main() {
   const payload = loadJson(PROJ_PATH);
   const resolved = resolveManualPinSheet(payload);
   if (!resolved) {
+    const dr = Math.round(num(payload.display_round, NaN)) || "?";
+    let sr = "?";
+    if (existsSync(ACTIVE_JSON)) {
+      try {
+        const hint = Math.round(num(loadJson(ACTIVE_JSON)?.round, NaN));
+        if (Number.isFinite(hint)) sr = hint;
+      } catch {
+        /* ignore */
+      }
+    }
     console.log(
-      "[pin-sheet] No armed tee sheet for display_round — projections unchanged (send pin sheet + apply_to_projections: true in pin_sheet_active.json)",
+      `[pin-sheet] No armed tee sheet for current round (projections R${dr}, sheet R${sr}) — unchanged. Pre-tournament: date_start must be in the future; live week: sheet round must match display_round.`,
     );
     return;
   }

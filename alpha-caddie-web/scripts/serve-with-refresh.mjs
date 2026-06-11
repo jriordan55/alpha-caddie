@@ -252,6 +252,30 @@ function loadApiKey() {
   return "";
 }
 
+/** After fetch:dg / book odds: display_round meta, weather, armed pin sheet (no-op if not armed). */
+function runRenderProjectionPostProcess(env = {}) {
+  const bootEnv = { ...process.env, GOLF_MODEL_DIR: REPO_ROOT, ...env };
+  const steps = [
+    ["merge-live-round-meta", "merge-live-round-meta-into-projections.mjs"],
+    ["bake-weather", "bake-weather-into-projections.mjs"],
+  ];
+  if (String(process.env.GOLF_SKIP_PIN_SHEET || "").trim() !== "1") {
+    steps.push(["apply-pin-sheet", "apply-pin-sheet-to-projections.mjs"]);
+    steps.push(["sync-pin-locations", "sync-pin-locations.mjs"]);
+  }
+  for (const [label, scriptFile] of steps) {
+    const scriptPath = path.join(WEB_ROOT, "scripts", scriptFile);
+    if (!fs.existsSync(scriptPath)) continue;
+    console.log(`[alpha-caddie-web] Render boot: ${label} …`);
+    const r = spawnSync(process.execPath, [scriptPath], {
+      cwd: WEB_ROOT,
+      stdio: "inherit",
+      env: bootEnv,
+    });
+    if (r.status !== 0) console.warn(`[alpha-caddie-web] Render boot: ${label} exited`, r.status);
+  }
+}
+
 function refreshBeforeServe() {
   if (process.env.ALPHA_CADDIE_START_FETCH_DG === "1") {
     console.log("[alpha-caddie-web] ALPHA_CADDIE_START_FETCH_DG=1 → npm run fetch:dg (projections + rounds + history) …");
@@ -407,6 +431,7 @@ function refreshBeforeServe() {
     if (process.env.GOLF_SKIP_BOOK_ODDS_ON_START !== "1") {
       runRenderBootStep("fetch:book-odds", "fetch-book-odds-into-projections.mjs");
     }
+    runRenderProjectionPostProcess(dgBootEnv);
   }
 
   const bookOdds = path.join(WEB_ROOT, "scripts", "fetch-book-odds-into-projections.mjs");
@@ -444,15 +469,25 @@ function refreshBeforeServe() {
   }
 }
 
+const isRenderHost = String(process.env.RENDER || "").toLowerCase() === "true";
+const deferHeavyBoot =
+  isRenderHost && String(process.env.GOLF_RENDER_DEFER_HEAVY_BOOT || "1").trim() !== "0";
+
+function runHeavyBootArtifacts() {
+  repairRenderHistoricalTrendsIfNeeded();
+  ensureAlphaCaddieStaticArtifacts(WEB_ROOT, REPO_ROOT);
+  logRenderBootstrapDiag();
+}
+
 if (process.env.GOLF_SKIP_REFRESH_ON_START === "1") {
   console.log("[alpha-caddie-web] GOLF_SKIP_REFRESH_ON_START=1 — serving without refresh.");
 } else {
   refreshBeforeServe();
 }
 
-repairRenderHistoricalTrendsIfNeeded();
-
-ensureAlphaCaddieStaticArtifacts(WEB_ROOT, REPO_ROOT);
+if (!deferHeavyBoot) {
+  runHeavyBootArtifacts();
+}
 
 function logRenderBootstrapDiag() {
   if (String(process.env.RENDER || "").toLowerCase() !== "true") return;
@@ -486,8 +521,6 @@ function logRenderBootstrapDiag() {
   });
 }
 
-logRenderBootstrapDiag();
-
 const port = String(process.env.PORT || "5173");
 process.env.PORT = port;
 const staticServer = path.join(WEB_ROOT, "scripts", "serve-static-no-json-cache.mjs");
@@ -498,6 +531,19 @@ const child = spawn(process.execPath, [staticServer], {
   stdio: "inherit",
   env: process.env,
 });
+
+if (deferHeavyBoot) {
+  console.log(
+    "[alpha-caddie-web] Render: HTTP server listening — history repair/build running in background (GOLF_RENDER_DEFER_HEAVY_BOOT=1).",
+  );
+  setImmediate(() => {
+    try {
+      runHeavyBootArtifacts();
+    } catch (e) {
+      console.warn("[alpha-caddie-web] Deferred heavy boot failed:", e?.message || e);
+    }
+  });
+}
 
 function spawnScript(scriptPath, taskLabel, opts = {}) {
   if (!fs.existsSync(scriptPath)) return null;
@@ -821,6 +867,9 @@ function startFetchDgDiskPoller() {
     bg.on("exit", (code) => {
       busy = false;
       if (code !== 0 && code != null) console.warn("[alpha-caddie-web] fetch:dg exited", code);
+      else if (String(process.env.GOLF_SKIP_PIN_SHEET || "").trim() !== "1") {
+        runRenderProjectionPostProcess({ DATAGOLF_API_KEY: key });
+      }
     });
   };
   setInterval(tick, ms);

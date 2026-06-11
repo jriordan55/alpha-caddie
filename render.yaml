@@ -52,6 +52,12 @@ services:
       # Keep deploys fast: use the committed full history JSON on Render boot; local push scripts still rebuild history.
       - key: GOLF_SKIP_HISTORY_ON_FETCH_DG
         value: "1"
+      # Bind HTTP port before full-history repair (avoids Render port-scan timeout).
+      - key: GOLF_RENDER_DEFER_HEAVY_BOOT
+        value: "1"
+      # Rely on committed player_round_history.json; repair in background if empty.
+      - key: GOLF_SKIP_RENDER_HISTORY_REPAIR
+        value: "1"
       # Full fetch:dg (field / course / model rows). Interval clamped to at least 5 minutes server-side.
       # Required with unified pipeline so live weeks still refresh full projections periodically.
       - key: GOLF_FETCH_DG_SERVER_POLL_MS

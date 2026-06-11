@@ -94,6 +94,7 @@ import { applyHistoricalRoundsMergeDefaults } from "./historical-rounds-merge-en
 import { resolveGolfModelDir } from "./resolve-golf-model-dir.mjs";
 import {
   dateStartIsFuture,
+  isTournamentStartDay,
   maxRoundFromFieldAndLiveHole,
 } from "./dg-display-round-from-bundle.mjs";
 import {
@@ -1514,6 +1515,11 @@ function dgCurrentRoundFromFieldOrLiveHole(fieldRaw, liveHoleStats) {
 function exportDisplayRoundFromDgField(fieldRaw, liveHoleStats) {
   const ds = String(fieldRaw?.date_start ?? fieldRaw?.dateStart ?? "").trim();
   if (dateStartIsFuture(ds)) return 1;
+  if (isTournamentStartDay(ds)) {
+    const fieldR = Math.round(num(fieldRaw?.current_round ?? fieldRaw?.CurrentRound, NaN));
+    if (Number.isFinite(fieldR) && fieldR >= 1 && fieldR <= 4) return fieldR;
+    return 1;
+  }
   const api = dgCurrentRoundFromFieldOrLiveHole(fieldRaw, liveHoleStats);
   if (Number.isFinite(api) && api >= 1 && api <= 4) return Math.round(api);
   return 1;

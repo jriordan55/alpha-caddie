@@ -127,7 +127,9 @@ export function ensurePlayerRoundHistoryJson(webRoot, repoRoot, stubsOk) {
   const projPath = path.join(webRoot, "projections.json");
   const csvPath = resolveHistoricalRoundsCsv(webRoot, repoRoot);
 
-  if (fs.existsSync(projPath) && csvPath) {
+  const skipSyncBuild = String(process.env.GOLF_SKIP_BUILD_HISTORY_ON_START || "").trim() === "1";
+
+  if (fs.existsSync(projPath) && csvPath && !skipSyncBuild) {
     const buildHist = path.join(webRoot, "scripts", "build-player-history.mjs");
     if (fs.existsSync(buildHist)) {
       console.log("[alpha-caddie-web] Building player_round_history.json (was missing or empty) …");
@@ -139,6 +141,10 @@ export function ensurePlayerRoundHistoryJson(webRoot, repoRoot, stubsOk) {
       if (r.status === 0 && !renderHistoricalTrendsPayloadBroken(webRoot)) return;
       if (r.status !== 0) console.warn("[alpha-caddie-web] build-player-history exited", r.status);
     }
+  } else if (skipSyncBuild && onRenderHost()) {
+    console.log(
+      "[alpha-caddie-web] GOLF_SKIP_BUILD_HISTORY_ON_START=1 — deferring history build (shell JSON until background repair).",
+    );
   }
 
   if (!stubsOk) {

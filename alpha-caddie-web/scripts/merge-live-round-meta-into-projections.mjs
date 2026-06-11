@@ -28,7 +28,12 @@ import {
 } from "./course-round-adjustments.mjs";
 import { eventsLikelySame, fieldWeekKey, fieldWeekKeysRoughMatch } from "./dg-events-align.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
-import { exportDisplayRoundFromLiveBundle, num } from "./dg-display-round-from-bundle.mjs";
+import {
+  dateStartIsFuture,
+  exportDisplayRoundFromLiveBundle,
+  num,
+  projectionDateStartIso,
+} from "./dg-display-round-from-bundle.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -91,6 +96,13 @@ async function main() {
   const fuEvent = String(fieldRaw?.event_name || fieldRaw?.eventName || "").trim();
   const liveInfoEv = String(live?.info?.event_name || live?.event_name || "").trim();
   const liveEv = fuEvent || liveInfoEv;
+  const hasLiveRows = Array.isArray(live?.data) && live.data.length > 0;
+  if (hasLiveRows && !liveEv) {
+    console.warn(
+      "merge-live-round-meta: live-in-play has player rows but no event_name — skip (stale bundle would poison display_round)",
+    );
+    process.exit(0);
+  }
   if (projEvent && liveEv && !eventsLikelySame(projEvent, liveEv)) {
     console.warn(`merge-live-round-meta: event mismatch projections="${projEvent}" vs live="${liveEv}" — skip`);
     process.exit(0);
@@ -111,7 +123,13 @@ async function main() {
     process.exit(0);
   }
 
-  const dr = exportDisplayRoundFromLiveBundle(live, fieldRaw, lhEffective);
+  const projDateStart = projectionDateStartIso(proj) || String(fieldRaw?.date_start || fieldRaw?.dateStart || "").trim();
+  const dr = dateStartIsFuture(projDateStart)
+    ? 1
+    : exportDisplayRoundFromLiveBundle(live, fieldRaw, lhEffective, {
+        projDateStart,
+        trustEvent: projEvent || liveEv,
+      });
   const tz = process.env.GOLF_OU_TZ || "America/New_York";
 
   const prevDr = Math.round(num(proj.display_round, NaN));
