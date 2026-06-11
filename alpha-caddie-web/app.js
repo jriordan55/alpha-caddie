@@ -3070,7 +3070,7 @@ function ouMarketRatingTitle(market, playerAvg, ratingSource = "history") {
   const label = ouPropsCanonicalMarket(market);
   const src =
     ratingSource === "model"
-      ? "model projection / skill rating (history GIR sparse)"
+      ? "model projection / skill rating"
       : "player historical avg";
   if (!b || !Number.isFinite(playerAvg)) {
     return `Market rating: ${src} vs PGA Tour avg (${yrs})`;

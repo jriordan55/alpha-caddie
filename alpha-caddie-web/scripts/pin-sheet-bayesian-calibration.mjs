@@ -219,19 +219,11 @@ function findSimilarRoundSamples(sheetCatalog, target, roundCtx, excludeKey) {
   return out;
 }
 
-function buildPinSummaryBayesian(adj, cal) {
+function buildPinSummaryBayesian(adj) {
   const sign = adj.totalScoreDelta >= 0 ? "+" : "";
-  const sameCourse = cal.same_course_hole_obs || 0;
-  const similarRounds = cal.similar_round_obs || 0;
-  const src =
-    sameCourse > 0
-      ? `Bayesian · ${sameCourse} same-course hole match(es)${similarRounds ? `, ${similarRounds} similar round(s)` : ""}`
-      : cal.total_hole_obs > 0
-        ? `Bayesian · ${cal.total_hole_obs} cross-course similar pin hole(s)`
-        : "Rule-based pin geometry";
   const dir =
     adj.excess > 0.04 ? "Harder than typical" : adj.excess < -0.04 ? "Easier than typical" : "Near-average";
-  return `${dir} · ${sign}${adj.totalScoreDelta.toFixed(2)} on projected total · ${src}`;
+  return `${dir} · ${sign}${adj.totalScoreDelta.toFixed(2)} on projected total`;
 }
 
 /**
@@ -364,7 +356,7 @@ export async function roundAdjustmentsFromPinSheetBayesian(sheet, cached = {}) {
     })),
   };
 
-  adj.summary = buildPinSummaryBayesian(adj, calibration);
+  adj.summary = buildPinSummaryBayesian(adj);
   adj.calibration = calibration;
   adj.rule_adjustments = {
     total_score_delta: rule.totalScoreDelta,
