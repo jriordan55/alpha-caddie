@@ -1452,8 +1452,8 @@ body {
   background: var(--golf-surface-mid);
 }
 /* Leaderboard-style first column: do not apply to round O/U long rows (.ou-proj-td-golfer) or colspan detail cells — WebKit can mis-layout sticky + wide tables when max-width:0 hits the wrong td. */
-#table-ou thead th:first-child:not(.ou-proj-th-golfer),
-#table-ou tbody td:first-child:not(.ou-proj-td-golfer):not(.ou-proj-detail-td) {
+#table-ou thead th:first-child:not(.ou-proj-th-golfer):not(.ou-proj-th-tee),
+#table-ou tbody td:first-child:not(.ou-proj-td-golfer):not(.ou-proj-td-tee):not(.ou-proj-detail-td) {
   width: 26%;
   min-width: 210px;
   max-width: 0;
@@ -1462,7 +1462,7 @@ body {
   white-space: nowrap;
   text-align: left;
 }
-#table-ou tbody td:first-child:not(.ou-proj-td-golfer):not(.ou-proj-detail-td) {
+#table-ou tbody td:first-child:not(.ou-proj-td-golfer):not(.ou-proj-td-tee):not(.ou-proj-detail-td) {
   font-size: 0.96rem;
   font-weight: 700;
   letter-spacing: 0.01em;
@@ -1498,12 +1498,38 @@ body {
   position: static;
 }
 
-/* Freeze golfer column while scrolling wide round projections */
+/* Freeze tee time + golfer columns while scrolling wide round projections */
+#table-ou.table-ou-projections {
+  --ou-proj-tee-col-w: 76px;
+}
+
+#table-ou.table-ou-projections thead th.ou-proj-th-tee,
+#table-ou.table-ou-projections tbody td.ou-proj-td-tee {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  width: var(--ou-proj-tee-col-w);
+  min-width: var(--ou-proj-tee-col-w);
+  max-width: var(--ou-proj-tee-col-w);
+  box-sizing: border-box;
+  box-shadow: 6px 0 18px -8px rgba(0, 0, 0, 0.75);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+#table-ou.table-ou-projections thead th.ou-proj-th-tee {
+  z-index: 4;
+  background: var(--golf-surface-head) !important;
+}
+
 #table-ou.table-ou-projections thead th.ou-proj-th-golfer,
 #table-ou.table-ou-projections tbody td.ou-proj-td-golfer {
   position: -webkit-sticky;
   position: sticky;
-  left: 0;
+  left: var(--ou-proj-tee-col-w);
   z-index: 2;
   box-shadow: 6px 0 18px -8px rgba(0, 0, 0, 0.75);
   /* iOS Safari: promote sticky layer so scrolling numeric columns do not paint/clip incorrectly */
@@ -1541,21 +1567,25 @@ body {
   box-sizing: border-box;
 }
 
+#table-ou.table-ou-projections tbody tr:nth-child(odd) td.ou-proj-td-tee,
 #table-ou.table-ou-projections tbody tr:nth-child(odd) td.ou-proj-td-golfer,
 #table-ou.table-ou-projections tbody tr:nth-child(odd) td.ou-proj-td-market,
 #table-ou.table-ou-projections tbody tr:nth-child(odd) td.ou-proj-td-side {
   background-color: var(--golf-surface-mid);
 }
+#table-ou.table-ou-projections tbody tr:nth-child(even) td.ou-proj-td-tee,
 #table-ou.table-ou-projections tbody tr:nth-child(even) td.ou-proj-td-golfer,
 #table-ou.table-ou-projections tbody tr:nth-child(even) td.ou-proj-td-market,
 #table-ou.table-ou-projections tbody tr:nth-child(even) td.ou-proj-td-side {
   background-color: var(--golf-surface-alt);
 }
+#table-ou.table-ou-projections tbody tr:hover td.ou-proj-td-tee,
 #table-ou.table-ou-projections tbody tr:hover td.ou-proj-td-golfer,
 #table-ou.table-ou-projections tbody tr:hover td.ou-proj-td-market,
 #table-ou.table-ou-projections tbody tr:hover td.ou-proj-td-side {
   background-color: var(--golf-surface-hover) !important;
 }
+#table-ou.table-ou-projections tr.ou-proj-data-row.ou-proj-row-expanded td.ou-proj-td-tee,
 #table-ou.table-ou-projections tr.ou-proj-data-row.ou-proj-row-expanded td.ou-proj-td-golfer,
 #table-ou.table-ou-projections tr.ou-proj-data-row.ou-proj-row-expanded td.ou-proj-td-market,
 #table-ou.table-ou-projections tr.ou-proj-data-row.ou-proj-row-expanded td.ou-proj-td-side {

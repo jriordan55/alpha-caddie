@@ -3299,6 +3299,23 @@ function parseDgTeetimeParts(teetimeStr) {
   return { ymd: m[1], hh: parseInt(m[2], 10), mm: parseInt(m[3], 10) };
 }
 
+/** DataGolf field_updates tee times are Eastern (event local) — display as e.g. 7:30 AM. */
+function formatDgTeetimeEasternDisplay(teetimeStr) {
+  const p = parseDgTeetimeParts(teetimeStr);
+  if (!p) return "—";
+  let h = p.hh;
+  const ampm = h >= 12 ? "PM" : "AM";
+  h = h % 12;
+  if (h === 0) h = 12;
+  return `${h}:${String(p.mm).padStart(2, "0")} ${ampm}`;
+}
+
+function dgTeetimeSortMinutes(teetimeStr) {
+  const p = parseDgTeetimeParts(teetimeStr);
+  if (!p) return Number.POSITIVE_INFINITY;
+  return p.hh * 60 + p.mm;
+}
+
 function teeHourFloorIsoFromDg(teetimeStr) {
   const p = parseDgTeetimeParts(teetimeStr);
   if (!p) return "";
@@ -5611,6 +5628,7 @@ function ensureOuProjectionTableChrome() {
   if (!table || !thead) return;
   const sortInd = `<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span>`;
   const projHeadSpecs = [
+    ["pr-tee-time", "Tee time", "sortable ou-proj-long-th num ou-proj-th-tee"],
     ["pr-golfer", "Golfer", "sortable ou-proj-long-th ou-proj-th-golfer"],
     ["pr-market", "Market", "sortable ou-proj-long-th ou-proj-th-market"],
     ["pr-side", "Side", "sortable ou-proj-long-th num ou-proj-th-side"],
@@ -5656,6 +5674,7 @@ function initOuTableSortOnce() {
     else {
       ouTableSort.key = key;
       if (key === "golfer" || key === "pr-golfer") ouTableSort.dir = 1;
+      else if (key === "pr-tee-time") ouTableSort.dir = 1;
       else if (key === "pr-market" || key === "pr-side") ouTableSort.dir = 1;
       else if (key === "pr-mu") ouTableSort.dir = -1;
       else if (key === "pr-mkt-rating" || key === "pr-course-rating") ouTableSort.dir = -1;
@@ -5873,6 +5892,7 @@ function ouProjectionRowStatOrder(a, b) {
 
 function ouTableSortValueProjRow(row, sortKey) {
   const { player, col, colIdx, side, mu, pick } = row;
+  if (sortKey === "pr-tee-time") return dgTeetimeSortMinutes(player.dg_teetime_local);
   if (sortKey === "pr-golfer" || sortKey === "golfer") {
     return displayGolferName(player.player_name || "").toLowerCase();
   }
@@ -6182,7 +6202,7 @@ function buildOuTable() {
     flatRows.sort(ouProjectionRowStatOrder);
   }
 
-  const projColCount = 11;
+  const projColCount = 12;
   const flatRowKeys = new Set(
     flatRows.map((rr) => ouProjMakeExpandKey(String(rr.player.player_name || ""), rr.col.label, rr.side)),
   );
@@ -6231,6 +6251,13 @@ function buildOuTable() {
     const expandKey = ouProjMakeExpandKey(rawName, col.label, side);
     tr.dataset.expandKey = expandKey;
     if (ouProjExpandedKey === expandKey) tr.classList.add("ou-proj-row-expanded");
+    const teeTd = document.createElement("td");
+    teeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-tee";
+    const teeRaw = String(player.dg_teetime_local || "").trim();
+    teeTd.textContent = formatDgTeetimeEasternDisplay(teeRaw);
+    teeTd.title = teeRaw ? `Tee time (ET): ${teeRaw.replace("T", " ")}` : "Tee time not posted yet";
+    tr.appendChild(teeTd);
+
     const nameTd = document.createElement("td");
     nameTd.className = "ou-cell ou-proj-long-td ou-proj-td-golfer";
     const countryRaw = String(player.country || "").trim();

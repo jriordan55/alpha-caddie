@@ -45,7 +45,9 @@ if (String(process.env.GOLF_REFRESH_PROJECTIONS_SKIP_DG || "").trim() !== "1") {
   console.log("\n[refresh:projections] GOLF_REFRESH_PROJECTIONS_SKIP_DG=1 — reusing projections.json on disk.\n");
 }
 
+run("fetch-live-in-play.mjs", "field-updates tee times + live bundle (fetch:in-play)");
 run("merge-live-round-meta-into-projections.mjs", "display_round from field_updates (merge-live-round-meta)");
+run("merge-field-teetimes-into-projections.mjs", "field-updates tee times → dg_teetime_local");
 run("bake-weather-into-projections.mjs", "Tee-time weather for display_round (bake:weather)");
 
 if (String(process.env.GOLF_SKIP_PIN_SHEET || "").trim() !== "1") {

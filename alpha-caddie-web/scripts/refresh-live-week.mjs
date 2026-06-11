@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Live-week refresh for `npm run push:live` — updates projections, live-in-play, book odds,
- * DK props, weather bake, pin sheet, vs-actual CSV, and fast current-event history patches.
+ * DK props, field-updates tee times, weather bake, pin sheet, vs-actual CSV, and fast history patches.
  *
  *   npm run refresh:live
  *
@@ -134,6 +134,10 @@ run("merge-live-hole-pars-into-projections.mjs", "Merge live hole pars into proj
 run(
   "merge-live-round-meta-into-projections.mjs",
   "Merge live round meta into projections (display_round for upcoming round)",
+);
+run(
+  "merge-field-teetimes-into-projections.mjs",
+  "field-updates tee times (ET) → projections.json dg_teetime_local",
 );
 run(
   "bake-weather-into-projections.mjs",

@@ -82,9 +82,9 @@ function Run-Npm([string] $Label, [Parameter(ValueFromRemainingArguments = $true
 #   strokes (blend vs historical CSV); projections keep the full tournament field for Historical Trends. Before update:rounds.
 # Mirrors below copy projections + live + approach_skill *.json into website/public/data/ so both apps ship the same JSON.
 #
-# Round-projections / +EV weather: refresh:live runs bake:weather after merge:live-round-meta (Open-Meteo per-tee
-# slices + forecast_wave_* baked into projections.json; browser re-fetches only when bake is stale). Tee times from
-# live-in-play field_updates. merge:live-hole-pars runs late so course par / hole table stays aligned after DK refresh.
+# Round-projections / +EV weather: refresh:live runs merge:field-teetimes then bake:weather after merge:live-round-meta
+# (field_updates → dg_teetime_local for Tee time column; Open-Meteo per-tee slices + forecast_wave_* baked into
+# projections.json). merge:live-hole-pars runs late so course par / hole table stays aligned after DK refresh.
 # Market rating: fetch:dg writes pga_tour_market_benchmarks; refresh:live re-runs refresh:market-benchmarks after the
 # post-live historical CSV merge so 2025–2026 μ/σ stay current in published projections.json.
 
