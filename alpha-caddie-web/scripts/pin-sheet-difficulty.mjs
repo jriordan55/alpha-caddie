@@ -113,6 +113,5 @@ function buildPinSummary(avg, excess, totalDelta, hard, easy, neutral = 0.28) {
     `${sign}${totalDelta.toFixed(2)} on projected total`,
   ];
   if (hard.length) parts.push(`Tough: ${hard.join(", ")}`);
-  if (easy.length) parts.push(`Easier: ${easy.join(", ")}`);
   return parts.join(" · ");
 }
