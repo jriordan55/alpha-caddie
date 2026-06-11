@@ -16,6 +16,7 @@ function Git-AddQuiet([string[]] $Paths) {
     $ErrorActionPreference = $prev
   }
 }
+
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $webRoot = Join-Path $repoRoot "alpha-caddie-web"
 
@@ -30,6 +31,8 @@ if (-not $SkipRefresh) {
 }
 
 $artifacts = @(
+  "alpha-caddie-web/app.js",
+  "alpha-caddie-web/index.html",
   "alpha-caddie-web/projections.json",
   "alpha-caddie-web/data/pin_sheets/pin_sheet_active.json",
   "website/public/data/projections.json"
@@ -43,9 +46,12 @@ foreach ($rel in $artifacts) {
 }
 
 Git-AddQuiet @(
+  "alpha-caddie-web/scripts/verify-web-deploy-invariants.mjs",
+  "alpha-caddie-web/scripts/market-rating-player.mjs",
   "alpha-caddie-web/scripts/refresh-projections-only.mjs",
   "alpha-caddie-web/package.json",
   "scripts/push-projections-only.ps1",
+  "scripts/ensure-web-deploy-ready.ps1",
   "package.json"
 )
 
@@ -62,6 +68,8 @@ if ($LASTEXITCODE -eq 0) {
 if ([string]::IsNullOrWhiteSpace($CommitMessage)) {
   $CommitMessage = "chore(data): projections + pin sheet $(Get-Date -Format 'yyyy-MM-dd HH:mm')"
 }
+
+& "$PSScriptRoot/ensure-web-deploy-ready.ps1" -RepoRoot $repoRoot -WebRoot $webRoot
 
 git -C $repoRoot commit -m $CommitMessage
 if ($LASTEXITCODE -ne 0) { throw "git commit failed" }

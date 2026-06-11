@@ -344,6 +344,8 @@ if ([string]::IsNullOrWhiteSpace($CommitMessage)) {
   }
 }
 
+& "$PSScriptRoot/ensure-web-deploy-ready.ps1" -RepoRoot $repoRoot -WebRoot $webRoot
+
 git -C $repoRoot commit -m $CommitMessage
 if ($LASTEXITCODE -ne 0) {
   throw "git commit failed with exit code $LASTEXITCODE"
