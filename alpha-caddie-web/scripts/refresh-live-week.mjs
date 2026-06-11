@@ -145,9 +145,10 @@ run(
 );
 
 if (!envTruthy("GOLF_SKIP_PIN_SHEET", false)) {
+  run("pin-hole-scoring-index.mjs", "Pin hole scoring index for Bayesian calibration (hole_data + pin_locations)");
   run(
     "apply-pin-sheet-to-projections.mjs",
-    "Pin sheet → projections + pin_locations DB when pin_sheet_active.json is armed",
+    "Pin sheet → projections (Bayesian calibrated) + pin_locations DB when armed",
   );
   run("sync-pin-locations.mjs", "Mirror pin_locations DB → alpha-caddie-web/data (after tee sheet save)");
 }

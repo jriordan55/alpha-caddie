@@ -8,12 +8,14 @@
  *   npm run apply:pin-sheet
  *   push:live runs this after bake:weather (no-op unless manual sheet is armed).
  *   GOLF_SKIP_PIN_SHEET=1 to skip entirely.
+ *   GOLF_PIN_SHEET_RULE_ONLY=1 — geometry-only (skip Bayesian hole-history calibration).
  */
 import { copyFileSync, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { eventsLikelySame } from "./dg-events-align.mjs";
-import { num, roundAdjustmentsFromPinSheet } from "./pin-sheet-difficulty.mjs";
+import { num } from "./pin-sheet-difficulty.mjs";
+import { roundAdjustmentsFromPinSheetBayesian } from "./pin-sheet-bayesian-calibration.mjs";
 import {
   courseKeyFromName,
   defaultPinLocationsRoot,
@@ -203,7 +205,7 @@ function applyDelta(field, delta) {
   return Math.round((v + delta) * 100) / 100;
 }
 
-export function applyPinSheetToProjections(payload, sheet, pinPath = "") {
+export async function applyPinSheetToProjections(payload, sheet, pinPath = "") {
   const meta = projectionExportMeta(payload);
   const rnd = Math.round(num(sheet.round ?? sheet.round_num ?? meta.display_round, NaN));
   if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) {
@@ -214,7 +216,13 @@ export function applyPinSheetToProjections(payload, sheet, pinPath = "") {
     throw new Error("pin sheet: need at least 9 holes");
   }
 
-  const adj = roundAdjustmentsFromPinSheet(holes);
+  const adj = await roundAdjustmentsFromPinSheetBayesian({
+    ...sheet,
+    holes,
+    course_key: sheet.course_key || courseKeyFromName(sheet.course_name || meta.course_used),
+    play_date: sheet.play_date,
+    round: rnd,
+  });
   const stamp = pinPath && existsSync(pinPath) ? `${pinPath}:${statSync(pinPath).mtimeMs}` : "inline";
 
   const players = Array.isArray(payload.players) ? payload.players : [];
@@ -256,6 +264,8 @@ export function applyPinSheetToProjections(payload, sheet, pinPath = "") {
     hard_holes: adj.hardHoles,
     easy_holes: adj.easyHoles,
     holes: adj.perHole,
+    calibration: adj.calibration || null,
+    rule_total_score_delta: adj.rule_adjustments?.total_score_delta ?? null,
   };
 
   return { adjustedPlayers: players.filter((p) => Math.round(num(p.round)) === rnd).length, adj };
@@ -303,7 +313,7 @@ async function main() {
     enrichedSheet.play_date = enrichedSheet.play_date || dbKey.split("|")[1];
   }
 
-  const { adjustedPlayers, adj } = applyPinSheetToProjections(payload, enrichedSheet, pinPath);
+  const { adjustedPlayers, adj } = await applyPinSheetToProjections(payload, enrichedSheet, pinPath);
   const metaAfter = projectionExportMeta(payload);
   if (dbKey && metaAfter.pin_sheet) {
     metaAfter.pin_sheet.pin_location_key = dbKey;

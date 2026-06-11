@@ -10,6 +10,7 @@
     "merge:field-teetimes-into-projections": "node scripts/merge-field-teetimes-into-projections.mjs",
     "bake:weather": "node scripts/bake-weather-into-projections.mjs",
     "apply:pin-sheet": "node scripts/apply-pin-sheet-to-projections.mjs",
+    "build:pin-hole-index": "node scripts/pin-hole-scoring-index.mjs",
     "import:pin-locations": "node scripts/import-pin-locations-zip.mjs",
     "import:pin-locations:batch": "node scripts/import-pin-locations-batch.mjs",
     "sync:pin-locations": "node scripts/sync-pin-locations.mjs",

@@ -51,7 +51,8 @@ run("merge-field-teetimes-into-projections.mjs", "field-updates tee times → dg
 run("bake-weather-into-projections.mjs", "Tee-time weather for display_round (bake:weather)");
 
 if (String(process.env.GOLF_SKIP_PIN_SHEET || "").trim() !== "1") {
-  run("apply-pin-sheet-to-projections.mjs", "Armed pin sheet → projections (apply:pin-sheet)");
+  run("pin-hole-scoring-index.mjs", "Pin hole scoring index (Bayesian calibration)");
+  run("apply-pin-sheet-to-projections.mjs", "Armed pin sheet → projections (Bayesian apply:pin-sheet)");
 }
 
 const destDir = path.join(REPO_ROOT, "website", "public", "data");

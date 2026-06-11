@@ -71,7 +71,18 @@ export function roundAdjustmentsFromPinSheet(holes) {
   const avg = 0.35 * meanAll + 0.65 * meanHardest;
   const neutral = 0.28;
   const excess = avg - neutral;
+  return roundAdjustmentsFromExcess(excess, { perHole, avgDifficulty: avg, neutral });
+}
 
+/** Rule prior: pin score → expected strokes vs par on one hole (field-neutral ~+0.04/hole). */
+export function holePriorVsParFromPinScore(pinScore, neutralPinScore = 0.28) {
+  const s = Number(pinScore);
+  if (!Number.isFinite(s)) return 0.04;
+  return 0.04 + (s - neutralPinScore) * 0.45;
+}
+
+/** Round-level O/U deltas from pin-excess scalar (rule model or Bayesian-calibrated excess). */
+export function roundAdjustmentsFromExcess(excess, ctx = {}) {
   const totalScoreDelta = clamp(excess * 3.0, -0.75, 1.85);
   const birdiesDelta = clamp(-excess * 2.4, -1.8, 0.85);
   const bogeysDelta = clamp(excess * 2.1, -0.85, 1.8);
@@ -79,14 +90,21 @@ export function roundAdjustmentsFromPinSheet(holes) {
   const girDelta = clamp(-excess * 0.95, -2.5, 1.0);
   const fairwaysDelta = clamp(-excess * 0.35, -0.85, 0.45);
 
-  const hard = perHole
-    .filter((h) => h.score >= 0.42)
-    .map((h) => h.hole)
-    .sort((a, b) => a - b);
-  const easy = perHole
-    .filter((h) => h.score <= 0.2)
-    .map((h) => h.hole)
-    .sort((a, b) => a - b);
+  const perHole = ctx.perHole || [];
+  const hard =
+    ctx.hardHoles ||
+    perHole
+      .filter((h) => h.score >= 0.42)
+      .map((h) => h.hole)
+      .sort((a, b) => a - b);
+  const easy =
+    ctx.easyHoles ||
+    perHole
+      .filter((h) => h.score <= 0.2)
+      .map((h) => h.hole)
+      .sort((a, b) => a - b);
+  const avg = Number.isFinite(ctx.avgDifficulty) ? ctx.avgDifficulty : excess + (ctx.neutral ?? 0.28);
+  const neutral = ctx.neutral ?? 0.28;
 
   return {
     avgDifficulty: avg,
