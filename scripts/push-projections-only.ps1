@@ -5,6 +5,17 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+
+function Git-AddQuiet([string[]] $Paths) {
+  $prev = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    & git -C $repoRoot add -f -- @Paths 2>$null
+    if ($LASTEXITCODE -ne 0) { throw "git add failed ($LASTEXITCODE)" }
+  } finally {
+    $ErrorActionPreference = $prev
+  }
+}
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $webRoot = Join-Path $repoRoot "alpha-caddie-web"
 
@@ -27,11 +38,16 @@ $artifacts = @(
 foreach ($rel in $artifacts) {
   $abs = Join-Path $repoRoot $rel
   if (Test-Path $abs) {
-    git -C $repoRoot add -f -- "$rel" 2>&1 | Out-Null
+    Git-AddQuiet @("$rel")
   }
 }
 
-git -C $repoRoot add -f -- "alpha-caddie-web/scripts/refresh-projections-only.mjs" "alpha-caddie-web/package.json" "scripts/push-projections-only.ps1" "package.json" 2>&1 | Out-Null
+Git-AddQuiet @(
+  "alpha-caddie-web/scripts/refresh-projections-only.mjs",
+  "alpha-caddie-web/package.json",
+  "scripts/push-projections-only.ps1",
+  "package.json"
+)
 
 git -C $repoRoot diff --cached --quiet
 if ($LASTEXITCODE -eq 0) {
