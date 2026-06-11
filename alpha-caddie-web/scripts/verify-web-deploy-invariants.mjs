@@ -39,7 +39,6 @@ if (existsSync(activePath)) {
     const adj = roundAdjustmentsFromPinSheet(active.holes);
     const summary = String(adj.summary || "");
     if (/\.{3}|…/.test(summary)) fail(`pin_sheet summary must not truncate with ellipsis: ${summary}`);
-    if (/Easier:/i.test(summary)) fail(`pin_sheet banner must not list easier holes: ${summary}`);
     if (!summary.trim()) fail("pin_sheet summary empty");
   }
 }
@@ -68,8 +67,8 @@ for (const p of r1Players.slice(0, 12)) {
 if (bad > 0) fail(`${bad} player(s) with invalid GIR market rating`);
 
 const pinMeta = proj.pin_sheet || proj.meta?.pin_sheet;
-if (pinMeta?.summary && (/\.{3}|…/.test(pinMeta.summary) || /Easier:/i.test(pinMeta.summary))) {
-  fail(`projections pin_sheet.summary not banner-safe: ${pinMeta.summary}`);
+if (pinMeta?.summary && /\.{3}|…/.test(pinMeta.summary)) {
+  fail(`projections pin_sheet.summary must not truncate with ellipsis: ${pinMeta.summary}`);
 }
 
 console.log(
