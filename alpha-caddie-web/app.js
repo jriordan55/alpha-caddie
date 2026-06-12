@@ -1927,6 +1927,23 @@ function historyLiveCountingTrusted(row) {
   if (!row || typeof row !== "object") return false;
   if (row._from_pgatour || row._from_dg_historical_rounds) return true;
   if (!row._from_live_tournament_stats && !row._from_live_in_play) return true;
+  const cp = num(row.course_par, NaN) || num(DATA?.meta?.course_par_18, NaN);
+  if (
+    Number.isFinite(cp) &&
+    liveCountingUntrustworthyRuntime(
+      {
+        birdies: row.birdies,
+        pars: row.pars,
+        bogeys: row.bogeys ?? row.bogies,
+        round_score: row.round_score ?? row.score,
+        eagles_or_better: row.eagles_or_better,
+        doubles_or_worse: row.doubles_or_worse,
+      },
+      cp,
+    )
+  ) {
+    return false;
+  }
   const b = num(row.birdies, NaN);
   const p = num(row.pars, NaN);
   const bg = num(row.bogies ?? row.bogeys, NaN);
@@ -2226,6 +2243,21 @@ function mergeLiveInPlayIntoRoundHistory(j) {
         if (Number.isFinite(ip.pars)) pars = ip.pars;
         if (Number.isFinite(ip.bogeys)) bogeys = ip.bogeys;
       }
+
+      const cp = num(DATA?.meta?.course_par_18, NaN);
+      const reconciled = reconcileHoleCountsFromScoreRuntime(
+        {
+          birdies,
+          pars,
+          bogeys,
+          round_score: actScore,
+          gir: Number.isFinite(num(act.gir, NaN)) ? num(act.gir, NaN) : null,
+        },
+        cp,
+      );
+      birdies = reconciled.birdies ?? birdies;
+      pars = reconciled.pars ?? pars;
+      bogeys = reconciled.bogeys ?? bogeys;
 
       const eventYear = parseInt(String(eventDate).split("/")[2] || "", 10);
       const chronoBase = parseEventCompletedChronoBase(eventDate);
@@ -4416,7 +4448,7 @@ function sigmaOuDiscreteCounting(market, muAbs) {
   return Math.max(0.55, Math.sqrt(Math.max(m, 0.2)) * 0.9);
 }
 
-const WITHIN_EVENT_PRIOR_FIELD_SHARE_RT = 0.72;
+const WITHIN_EVENT_PRIOR_FIELD_SHARE_RT = 0.85;
 const WITHIN_EVENT_COUNT_BLEND_BASE_RT = 0.28;
 const WITHIN_EVENT_COUNT_BLEND_PER_ROUND_RT = 0.08;
 const WITHIN_EVENT_COUNT_BLEND_CAP_RT = 0.52;
@@ -4562,13 +4594,13 @@ function withinEventCountingStarTrustBoostRuntime(row) {
   const t20 = num(row.top_20, NaN);
   const mu = num(row.mu_sg, NaN);
   let boost = 0;
-  if (Number.isFinite(win) && win >= 0.045) boost = Math.max(boost, 0.14);
-  else if (Number.isFinite(win) && win >= 0.018) boost = Math.max(boost, 0.1);
-  else if (Number.isFinite(t10) && t10 >= 0.18) boost = Math.max(boost, 0.08);
-  else if (Number.isFinite(t20) && t20 >= 0.32) boost = Math.max(boost, 0.05);
-  if (Number.isFinite(mu) && mu >= 0.85) boost = Math.max(boost, 0.1);
-  else if (Number.isFinite(mu) && mu >= 0.4) boost = Math.max(boost, 0.05);
-  return Math.min(0.16, boost);
+  if (Number.isFinite(win) && win >= 0.045) boost = Math.max(boost, 0.05);
+  else if (Number.isFinite(win) && win >= 0.018) boost = Math.max(boost, 0.04);
+  else if (Number.isFinite(t10) && t10 >= 0.18) boost = Math.max(boost, 0.03);
+  else if (Number.isFinite(t20) && t20 >= 0.32) boost = Math.max(boost, 0.02);
+  if (Number.isFinite(mu) && mu >= 0.85) boost = Math.max(boost, 0.04);
+  else if (Number.isFinite(mu) && mu >= 0.4) boost = Math.max(boost, 0.02);
+  return Math.min(0.06, boost);
 }
 
 function withinEventCountingBlendWeightRuntime(nPriorRounds, row) {
@@ -14576,10 +14608,26 @@ function actualForRoundRow(statKey, row) {
   if (statKey === "total" || statKey === "birdies" || statKey === "pars" || statKey === "bogeys") {
     if (!historyRowFromDgHistoricalRoundsApi(row)) return NaN;
     if (statKey === "total") return historyScalarOrNaN(row.round_score);
-    if (!historyLiveCountingTrusted(row)) return NaN;
-    if (statKey === "birdies") return birdiesPlusEaglesFromRow(row);
-    if (statKey === "pars") return historyScalarOrNaN(row.pars);
-    return historyScalarOrNaN(row.bogies ?? row.bogeys);
+    const cp = num(row.course_par, NaN) || num(DATA?.meta?.course_par_18, NaN);
+    const rec = reconcileHoleCountsFromScoreRuntime(
+      {
+        birdies: row.birdies,
+        pars: row.pars,
+        bogeys: row.bogeys ?? row.bogies,
+        round_score: row.round_score ?? row.score,
+        eagles_or_better: row.eagles_or_better,
+        doubles_or_worse: row.doubles_or_worse,
+      },
+      cp,
+    );
+    if (!historyLiveCountingTrusted(row) && !Number.isFinite(rec.birdies) && !Number.isFinite(rec.bogeys)) return NaN;
+    if (statKey === "birdies") {
+      const b = num(rec.birdies, NaN);
+      if (Number.isFinite(b)) return b + Math.max(0, num(rec.eagles ?? row.eagles_or_better, 0));
+      return birdiesPlusEaglesFromRow(row);
+    }
+    if (statKey === "pars") return historyScalarOrNaN(rec.pars ?? row.pars);
+    return historyScalarOrNaN(rec.bogeys ?? row.bogeys ?? row.bogies);
   }
   if (statKey === "gir") {
     const scrubbed = scrubLivePlaceholderCountingOnRow(row);

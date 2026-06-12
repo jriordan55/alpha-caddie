@@ -71,6 +71,7 @@ import {
   blendTowardWithinEventActuals,
   augmentEventContextWithInPlayRounds,
   buildPriorByStatForPlayer,
+  buildWithinEventCountingMapFromLiveActuals,
   buildWithinEventFormMap,
   courseDifficultyStrokeShift,
   fieldCountingMeansFromEventContext,
@@ -89,6 +90,7 @@ import {
   serializePgaTourCourseBenchmarks,
   serializePgaTourMarketBenchmarks,
 } from "./pga-tour-market-benchmarks.mjs";
+import { resolveLiveRoundActualsByDg } from "./dg-live-tournament-stats.mjs";
 import { mirrorModelDataToWeb } from "./mirror-model-data-to-web.mjs";
 import { applyHistoricalRoundsMergeDefaults } from "./historical-rounds-merge-env.mjs";
 import { resolveGolfModelDir } from "./resolve-golf-model-dir.mjs";
@@ -2159,10 +2161,10 @@ async function main() {
 
   const applyPriorRoundAdj =
     String(process.env.GOLF_COURSE_PRIOR_ROUND_DIFFICULTY ?? "1").trim() !== "0";
-  const formK = num(process.env.GOLF_WITHIN_EVENT_FORM_CARRY, 0.1);
-  const formCap = num(process.env.GOLF_WITHIN_EVENT_FORM_CAP, 0.75);
-  const formRuntimeK = num(process.env.GOLF_WITHIN_EVENT_FORM_RUNTIME_CARRY, 0.12);
-  const formRuntimeCap = num(process.env.GOLF_WITHIN_EVENT_FORM_RUNTIME_CAP, 0.85);
+  const formK = num(process.env.GOLF_WITHIN_EVENT_FORM_CARRY, 0.05);
+  const formCap = num(process.env.GOLF_WITHIN_EVENT_FORM_CAP, 0.35);
+  const formRuntimeK = num(process.env.GOLF_WITHIN_EVENT_FORM_RUNTIME_CARRY, 0.06);
+  const formRuntimeCap = num(process.env.GOLF_WITHIN_EVENT_FORM_RUNTIME_CAP, 0.45);
   let histEventCtx = null;
   if (applyPriorRoundAdj && event_name && histCalib.csv_path && existsSync(histCalib.csv_path)) {
     histEventCtx = await loadEventRoundContextFromHistoricalCsv(
@@ -2221,6 +2223,30 @@ async function main() {
       console.log(
         `[fetch-dg] Within-event counting actuals: ${withinEventCountingMap.size} player(s) from player_round_history.json`,
       );
+    }
+  }
+  const lipPath = join(ROOT, "live-in-play.json");
+  if (event_name && existsSync(lipPath)) {
+    try {
+      const lip = JSON.parse(readFileSync(lipPath, "utf8"));
+      const actualsByDg = resolveLiveRoundActualsByDg(lip, {
+        roundPar: course_par_18,
+        fairwayHoles: fairwayHolesThisCourse,
+      });
+      const liveCountingMap = buildWithinEventCountingMapFromLiveActuals(
+        actualsByDg,
+        course_par_18,
+        venueScoring?.venueAvgBirdies,
+        venueScoring?.venueAvgBogeys,
+      );
+      if (liveCountingMap.size > withinEventCountingMap.size) {
+        withinEventCountingMap = liveCountingMap;
+        console.log(
+          `[fetch-dg] Within-event counting actuals: ${withinEventCountingMap.size} player(s) from live-in-play.json`,
+        );
+      }
+    } catch (e) {
+      console.warn("[fetch-dg] live-in-play counting actuals:", e.message || e);
     }
   }
   const fieldCountingFromEvent = histEventCtx ? fieldCountingMeansFromEventContext(histEventCtx) : null;

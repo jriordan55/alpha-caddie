@@ -240,7 +240,13 @@ export function augmentEventContextWithInPlayRounds(ctx, inPlayRows, coursePar18
   return ctx;
 }
 
-export function buildWithinEventFormMap(ctx, basePlayers, k = 0.02, cap = 0.3) {
+export function buildWithinEventFormMap(
+  ctx,
+  basePlayers,
+  k = 0.02,
+  cap = 0.3,
+  fieldShare = WITHIN_EVENT_FORM_FIELD_SHARE,
+) {
   const map = new Map();
   if (!k || !ctx?.playerRounds?.length) return map;
 
@@ -251,6 +257,8 @@ export function buildWithinEventFormMap(ctx, basePlayers, k = 0.02, cap = 0.3) {
   }
 
   const byDgRound = new Map();
+  /** @type {Map<number, { sum: number, n: number }>} */
+  const fieldSurplusByRound = new Map();
   for (const pr of ctx.playerRounds) {
     const id = Math.round(num(pr.dg_id));
     const rnd = Math.round(num(pr.round));
@@ -260,14 +268,34 @@ export function buildWithinEventFormMap(ctx, basePlayers, k = 0.02, cap = 0.3) {
     const surplus = num(pr.sg_total, NaN) - base;
     if (!Number.isFinite(surplus)) continue;
     byDgRound.set(`${id}|${rnd}`, surplus);
+    const bucket = fieldSurplusByRound.get(rnd) || { sum: 0, n: 0 };
+    bucket.sum += surplus;
+    bucket.n += 1;
+    fieldSurplusByRound.set(rnd, bucket);
   }
 
-  for (const [id, base] of baseMu) {
+  const fieldMeanSurplusByRound = new Map();
+  for (const [rnd, b] of fieldSurplusByRound) {
+    if (b.n >= 12) fieldMeanSurplusByRound.set(rnd, b.sum / b.n);
+  }
+
+  const fs = Number.isFinite(num(fieldShare, NaN)) ? num(fieldShare, NaN) : WITHIN_EVENT_FORM_FIELD_SHARE;
+
+  for (const [id] of baseMu) {
     for (let tr = 2; tr <= 4; tr++) {
       let sh = 0;
       for (let rn = 1; rn < tr; rn++) {
-        const s = byDgRound.get(`${id}|${rn}`);
-        if (Number.isFinite(s)) sh += k * s;
+        const playerSur = byDgRound.get(`${id}|${rn}`);
+        const fieldSur = fieldMeanSurplusByRound.get(rn);
+        let target = playerSur;
+        if (Number.isFinite(fieldSur) && Number.isFinite(playerSur)) {
+          target = fs * fieldSur + (1 - fs) * playerSur;
+        } else if (Number.isFinite(fieldSur)) {
+          target = fieldSur;
+        } else if (!Number.isFinite(playerSur)) {
+          continue;
+        }
+        sh += k * target;
       }
       if (!Number.isFinite(sh)) sh = 0;
       sh = clamp(sh, -cap, cap);
@@ -275,6 +303,53 @@ export function buildWithinEventFormMap(ctx, basePlayers, k = 0.02, cap = 0.3) {
     }
   }
   return map;
+}
+
+/**
+ * This-week counting actuals from preds/in-play `live_round_actuals_by_dg` (when history JSON lags).
+ * @param {Record<string, Record<string, object>>} actualsByDg
+ * @returns {Map<number, Map<number, object>>}
+ */
+export function buildWithinEventCountingMapFromLiveActuals(
+  actualsByDg,
+  coursePar18,
+  venueBirdies,
+  venueBogeys,
+) {
+  /** @type {Map<number, Map<number, object>>} */
+  const out = new Map();
+  if (!actualsByDg || typeof actualsByDg !== "object") return out;
+  const cp = num(coursePar18, NaN);
+  for (const [dgKey, perRound] of Object.entries(actualsByDg)) {
+    const dg = Math.round(num(dgKey, NaN));
+    if (!Number.isFinite(dg) || !perRound || typeof perRound !== "object") continue;
+    for (const [rndKey, act] of Object.entries(perRound)) {
+      if (!act || typeof act !== "object") continue;
+      const rnd = Math.round(num(rndKey, NaN));
+      if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
+      const rs = num(act.round_score, NaN);
+      if (!Number.isFinite(rs) || rs <= 0) continue;
+      let rec = {
+        birdies: num(act.birdies, NaN),
+        bogeys: num(act.bogeys ?? act.bogies, NaN),
+        gir: girOrFwToCount(act.gir, 18),
+        round_score: rs,
+        eagles: num(act.eagles, NaN),
+        doubles: num(act.doubles, NaN),
+      };
+      if (Number.isFinite(cp)) {
+        rec = reconcileHoleCountsFromScore(rec, cp, num(venueBirdies, 2.88), num(venueBogeys, 2.93));
+      }
+      if (!Number.isFinite(rec.birdies) && !Number.isFinite(rec.bogeys) && !Number.isFinite(rec.gir)) continue;
+      let per = out.get(dg);
+      if (!per) {
+        per = new Map();
+        out.set(dg, per);
+      }
+      per.set(rnd, rec);
+    }
+  }
+  return out;
 }
 
 /**
@@ -796,7 +871,9 @@ export function resolveProjectionCounts({
 const WITHIN_EVENT_FORM_BLEND_KEYS = ["birdies", "bogeys"];
 const WITHIN_EVENT_GIR_FW_BLEND_KEYS = ["gir", "fairways", "putts"];
 /** Prior-round form targets: mostly field average, small player-specific residual. */
-const WITHIN_EVENT_PRIOR_FIELD_SHARE = 0.72;
+const WITHIN_EVENT_PRIOR_FIELD_SHARE = 0.85;
+/** μ_SG within-event carry: blend field surplus vs player surplus (not pin / not individual-only). */
+const WITHIN_EVENT_FORM_FIELD_SHARE = 0.85;
 const WITHIN_EVENT_COUNT_BLEND_BASE = 0.28;
 const WITHIN_EVENT_COUNT_BLEND_PER_ROUND = 0.08;
 const WITHIN_EVENT_COUNT_BLEND_CAP = 0.52;
@@ -859,13 +936,13 @@ export function withinEventCountingStarTrustBoost(playerRow) {
   const t20 = num(playerRow.top_20, NaN);
   const mu = num(playerRow.mu_sg, NaN);
   let boost = 0;
-  if (Number.isFinite(win) && win >= 0.045) boost = Math.max(boost, 0.14);
-  else if (Number.isFinite(win) && win >= 0.018) boost = Math.max(boost, 0.1);
-  else if (Number.isFinite(t10) && t10 >= 0.18) boost = Math.max(boost, 0.08);
-  else if (Number.isFinite(t20) && t20 >= 0.32) boost = Math.max(boost, 0.05);
-  if (Number.isFinite(mu) && mu >= 0.85) boost = Math.max(boost, 0.1);
-  else if (Number.isFinite(mu) && mu >= 0.4) boost = Math.max(boost, 0.05);
-  return Math.min(0.16, boost);
+  if (Number.isFinite(win) && win >= 0.045) boost = Math.max(boost, 0.05);
+  else if (Number.isFinite(win) && win >= 0.018) boost = Math.max(boost, 0.04);
+  else if (Number.isFinite(t10) && t10 >= 0.18) boost = Math.max(boost, 0.03);
+  else if (Number.isFinite(t20) && t20 >= 0.32) boost = Math.max(boost, 0.02);
+  if (Number.isFinite(mu) && mu >= 0.85) boost = Math.max(boost, 0.04);
+  else if (Number.isFinite(mu) && mu >= 0.4) boost = Math.max(boost, 0.02);
+  return Math.min(0.06, boost);
 }
 
 export function withinEventCountingBlendWeight(nPriorRounds, playerRow) {
