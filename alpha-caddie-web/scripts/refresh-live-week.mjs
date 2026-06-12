@@ -105,6 +105,12 @@ if (!skipCsvMerge) {
 }
 
 if (!skipDg) {
+  if (existsSync(path.join(WEB_ROOT, "projections.json"))) {
+    run(
+      "fetch-live-in-play.mjs",
+      "Pre-fetch live bundle (R1 actuals for within-event form before fetch:dg)",
+    );
+  }
   run("fetch-datagolf.mjs", "Field + projections (μ_SG, preds/pre-tournament or live driving stats)", {
     GOLF_SKIP_HISTORY_ON_FETCH_DG: "1",
   });
@@ -138,6 +144,10 @@ run(
 run(
   "merge-field-teetimes-into-projections.mjs",
   "field-updates tee times (ET) → projections.json dg_teetime_local",
+);
+run(
+  "within-event-projection-apply.mjs",
+  "Re-apply field-average prior-round form from fresh live-in-play (after fetch:in-play)",
 );
 run(
   "bake-weather-into-projections.mjs",
