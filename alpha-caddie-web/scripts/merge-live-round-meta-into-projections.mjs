@@ -34,6 +34,7 @@ import {
   num,
   projectionDateStartIso,
 } from "./dg-display-round-from-bundle.mjs";
+import { resolveLiveRoundActualsByDg } from "./dg-live-tournament-stats.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -42,6 +43,17 @@ function displayRoundLabel(r, tz) {
   const lab =
     r === 1 ? "R1 — next Thursday" : r === 2 ? "R2 — Friday" : r === 3 ? "R3 — Saturday" : r === 4 ? "R4 — Sunday" : `R${r}`;
   return `${lab} (auto, ${tz})`;
+}
+
+function attachLiveRoundActualsToProjections(proj, live) {
+  const fwHoles = Math.round(num(proj?.projection_course_basis?.fairway_holes_modeled, 14)) || 14;
+  const actuals = resolveLiveRoundActualsByDg(live, {
+    roundPar: num(proj.course_par_18, NaN) || 72,
+    fairwayHoles: fwHoles,
+  });
+  if (actuals && typeof actuals === "object" && Object.keys(actuals).length) {
+    proj.live_round_actuals_by_dg = actuals;
+  }
 }
 
 function readPriorStrokeShiftsFromMeta(payload) {
@@ -131,6 +143,7 @@ async function main() {
         trustEvent: projEvent || liveEv,
       });
   const tz = process.env.GOLF_OU_TZ || "America/New_York";
+  attachLiveRoundActualsToProjections(proj, live);
 
   const prevDr = Math.round(num(proj.display_round, NaN));
   proj.display_round = dr;

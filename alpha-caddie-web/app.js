@@ -2161,6 +2161,73 @@ function resolveLiveRoundActualsForHistory(j) {
   );
 }
 
+/** preds/in-play or baked projections meta — for GIR/FW/putts on pgatour rows missing counting stats. */
+function liveRoundActualsMapFromApp() {
+  const meta = DATA?.meta?.live_round_actuals_by_dg;
+  if (meta && typeof meta === "object" && Object.keys(meta).length) return meta;
+  if (lastLiveInPlayBundleForHistory) {
+    return resolveLiveRoundActualsForHistory(liveInPlayHistoryBundleWithActuals(lastLiveInPlayBundleForHistory));
+  }
+  return null;
+}
+
+function liveRoundActualStatForDgRound(dgId, roundNum, statKey) {
+  const actuals = liveRoundActualsMapFromApp();
+  if (!actuals) return NaN;
+  const dg = Math.round(num(dgId, NaN));
+  const rnd = Math.round(num(roundNum, NaN));
+  if (!Number.isFinite(dg) || !Number.isFinite(rnd)) return NaN;
+  const act = actuals[String(dg)]?.[String(rnd)];
+  if (!act || typeof act !== "object") return NaN;
+  if (statKey === "gir") return historyGirOrFairwaysCount(act.gir, 18);
+  if (statKey === "fairways") return historyGirOrFairwaysCount(act.fairways, fairwayHolesModeledFromData());
+  if (statKey === "putts") return historyScalarOrNaN(act.putts);
+  return NaN;
+}
+
+function historyRowMissingChartableGirFairwaysPutts(row, statKey) {
+  if (!row || typeof row !== "object") return true;
+  if (statKey === "gir") {
+    const v = historyGirOrFairwaysCount(scrubLivePlaceholderCountingOnRow(row).gir, 18);
+    return !Number.isFinite(v) || v === 0 || v === 1;
+  }
+  if (statKey === "fairways") {
+    const v = historyGirOrFairwaysCount(row.fairways, fairwayHolesModeledFromData());
+    return !Number.isFinite(v) || v === 0 || v === 1;
+  }
+  if (statKey === "putts") {
+    const v = historyScalarOrNaN(row.putts);
+    return !Number.isFinite(v) || v === 0 || v === 1;
+  }
+  return false;
+}
+
+/** Fill null GIR/FW/putts on current-week pgatour rows from live tournament stats actuals. */
+function enrichHistoryRowFromLiveActuals(row) {
+  if (!row || typeof row !== "object") return row;
+  const dg = Math.round(num(row.dg_id, NaN));
+  const rnd = Math.round(num(row.round_num ?? row.round, NaN));
+  if (!Number.isFinite(dg) || !Number.isFinite(rnd)) return row;
+  const actuals = liveRoundActualsMapFromApp();
+  if (!actuals) return row;
+  const act = actuals[String(dg)]?.[String(rnd)];
+  if (!act || typeof act !== "object") return row;
+  const out = { ...row };
+  if (historyRowMissingChartableGirFairwaysPutts(out, "gir")) {
+    const g = historyGirOrFairwaysCount(act.gir, 18);
+    if (Number.isFinite(g) && g > 1) out.gir = g;
+  }
+  if (historyRowMissingChartableGirFairwaysPutts(out, "fairways")) {
+    const fw = historyGirOrFairwaysCount(act.fairways, fairwayHolesModeledFromData());
+    if (Number.isFinite(fw) && fw > 1) out.fairways = fw;
+  }
+  if (historyRowMissingChartableGirFairwaysPutts(out, "putts")) {
+    const p = historyScalarOrNaN(act.putts);
+    if (Number.isFinite(p) && p > 1) out.putts = p;
+  }
+  return out;
+}
+
 /**
  * During live weeks (Thu–Sun): merge preds/live-tournament-stats round actuals into HISTORY for Historical Trends.
  * `fetch:in-play` builds `live_round_actuals_by_dg` from per-round Live Tournament Stats API pulls.
@@ -12955,7 +13022,7 @@ function mergeMemoryCourseEntriesIntoBucket(bucket, courseKey) {
     for (const r of rec.rounds) {
       if (!historyRoundCountsAsActual(r)) continue;
       if (normCourseNameKey(r.course_name) !== courseKey) continue;
-      const entry = { row: r, dgId, playerName };
+      const entry = { row: enrichHistoryRowFromLiveActuals(r), dgId, playerName };
       const key = propsCourseWindowEntryDedupeKey(entry);
       if (seen.has(key)) continue;
       seen.add(key);
@@ -14630,17 +14697,32 @@ function actualForRoundRow(statKey, row) {
     return historyScalarOrNaN(rec.bogeys ?? row.bogeys ?? row.bogies);
   }
   if (statKey === "gir") {
-    const scrubbed = scrubLivePlaceholderCountingOnRow(row);
-    const v = historyGirOrFairwaysCount(scrubbed.gir, 18);
+    const enriched = enrichHistoryRowFromLiveActuals(row);
+    const scrubbed = scrubLivePlaceholderCountingOnRow(enriched);
+    let v = historyGirOrFairwaysCount(scrubbed.gir, 18);
+    if (!Number.isFinite(v) || v === 0 || v === 1) {
+      const liveV = liveRoundActualStatForDgRound(row.dg_id, row.round_num ?? row.round, "gir");
+      if (Number.isFinite(liveV) && liveV > 1) v = liveV;
+    }
     if (v === 0 || v === 1) return NaN;
     return v;
   }
   if (statKey === "fairways") {
-    const v = historyGirOrFairwaysCount(row.fairways, fairwayHolesModeledFromData());
+    const enriched = enrichHistoryRowFromLiveActuals(row);
+    let v = historyGirOrFairwaysCount(enriched.fairways, fairwayHolesModeledFromData());
+    if (!Number.isFinite(v) || v === 0 || v === 1) {
+      const liveV = liveRoundActualStatForDgRound(row.dg_id, row.round_num ?? row.round, "fairways");
+      if (Number.isFinite(liveV) && liveV > 1) v = liveV;
+    }
     return v === 0 || v === 1 ? NaN : v;
   }
   if (statKey === "putts") {
-    const v = historyScalarOrNaN(row.putts);
+    const enriched = enrichHistoryRowFromLiveActuals(row);
+    let v = historyScalarOrNaN(enriched.putts);
+    if (!Number.isFinite(v) || v === 0 || v === 1) {
+      const liveV = liveRoundActualStatForDgRound(row.dg_id, row.round_num ?? row.round, "putts");
+      if (Number.isFinite(liveV) && liveV > 1) v = liveV;
+    }
     return v === 0 || v === 1 ? NaN : v;
   }
   return NaN;
