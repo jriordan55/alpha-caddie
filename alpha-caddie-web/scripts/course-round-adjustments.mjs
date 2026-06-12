@@ -275,12 +275,26 @@ export function buildEventContextFromLiveBundle(live, coursePar18, basePlayers, 
   return ctx;
 }
 
+/** dg_ids with at least one DraftKings round O/U row in projections.props. */
+export function draftKingsDgIdsFromProjections(proj) {
+  const props = Array.isArray(proj?.props) ? proj.props : [];
+  /** @type {Set<number>} */
+  const dgIds = new Set();
+  for (const r of props) {
+    if (String(r?.source || "").trim().toLowerCase() !== "draftkings") continue;
+    const dg = Math.round(num(r.dg_id, NaN));
+    if (Number.isFinite(dg) && dg > 0) dgIds.add(dg);
+  }
+  return dgIds;
+}
+
 export function buildWithinEventFormMap(
   ctx,
   basePlayers,
   k = 0.02,
   cap = 0.3,
   fieldShare = WITHIN_EVENT_FORM_FIELD_SHARE,
+  dgFilterForField = null,
 ) {
   const map = new Map();
   if (!k || !ctx?.playerRounds?.length) return map;
@@ -303,15 +317,17 @@ export function buildWithinEventFormMap(
     const surplus = num(pr.sg_total, NaN) - base;
     if (!Number.isFinite(surplus)) continue;
     byDgRound.set(`${id}|${rnd}`, surplus);
+    if (dgFilterForField && !dgFilterForField.has(id)) continue;
     const bucket = fieldSurplusByRound.get(rnd) || { sum: 0, n: 0 };
     bucket.sum += surplus;
     bucket.n += 1;
     fieldSurplusByRound.set(rnd, bucket);
   }
 
+  const minFieldN = dgFilterForField ? 8 : 12;
   const fieldMeanSurplusByRound = new Map();
   for (const [rnd, b] of fieldSurplusByRound) {
-    if (b.n >= 12) fieldMeanSurplusByRound.set(rnd, b.sum / b.n);
+    if (b.n >= minFieldN) fieldMeanSurplusByRound.set(rnd, b.sum / b.n);
   }
 
   const fs = Number.isFinite(num(fieldShare, NaN)) ? num(fieldShare, NaN) : WITHIN_EVENT_FORM_FIELD_SHARE;
@@ -909,15 +925,15 @@ const WITHIN_EVENT_GIR_FW_BLEND_KEYS = ["gir", "fairways", "putts"];
 const WITHIN_EVENT_PRIOR_FIELD_SHARE = 0.85;
 /** μ_SG within-event carry: blend field surplus vs player surplus (not pin / not individual-only). */
 const WITHIN_EVENT_FORM_FIELD_SHARE = 0.85;
-const WITHIN_EVENT_COUNT_BLEND_BASE = 0.28;
-const WITHIN_EVENT_COUNT_BLEND_PER_ROUND = 0.08;
-const WITHIN_EVENT_COUNT_BLEND_CAP = 0.52;
+const WITHIN_EVENT_COUNT_BLEND_BASE = 0.12;
+const WITHIN_EVENT_COUNT_BLEND_PER_ROUND = 0.04;
+const WITHIN_EVENT_COUNT_BLEND_CAP = 0.28;
 const WITHIN_EVENT_BOGEY_BLEND_SCALE = 1;
-const WITHIN_EVENT_SKILL_ANCHOR_BASE = 0.1;
-const WITHIN_EVENT_SKILL_ANCHOR_MU_SCALE = 0.04;
+const WITHIN_EVENT_SKILL_ANCHOR_BASE = 0.22;
+const WITHIN_EVENT_SKILL_ANCHOR_MU_SCALE = 0.06;
 const WITHIN_EVENT_ALIGN_STRENGTH = 0.96;
 const WITHIN_EVENT_PAR_SPREAD_STRENGTH = 0.55;
-const FIELD_DAY_COUNTING_LIFT_FRAC = 0.38;
+const FIELD_DAY_COUNTING_LIFT_FRAC = 0.12;
 
 /** Equal-weight mean of prior-round values (no recency tilt toward the latest round). */
 export function plainMeanFromArr(arr) {
@@ -1372,14 +1388,22 @@ export function blendWithinEventProjectionCounts(skillCounts, priorByStat, targe
   return out;
 }
 
-export function fieldCountingMeansFromWithinEventMap(byDgRound, minPlayers = 28) {
+export function fieldCountingMeansFromWithinEventMap(byDgRound, minPlayersOrOpts = 28) {
+  const opts =
+    typeof minPlayersOrOpts === "object" && minPlayersOrOpts !== null && !Array.isArray(minPlayersOrOpts)
+      ? minPlayersOrOpts
+      : { minPlayers: minPlayersOrOpts };
+  const minPlayers = Math.max(1, Math.round(num(opts.minPlayers, 28)) || 28);
+  const dgFilter = opts.dgFilter instanceof Set ? opts.dgFilter : null;
   /** @type {Record<string, Record<number, number>>} */
   const out = { birdies: {}, bogeys: {}, gir: {}, fairways: {} };
   if (!byDgRound || typeof byDgRound !== "object") return out;
   for (let rnd = 1; rnd <= 3; rnd++) {
     for (const key of Object.keys(out)) {
       const vals = [];
-      for (const per of byDgRound.values()) {
+      for (const [dgKey, per] of byDgRound.entries()) {
+        const dg = Math.round(num(dgKey, NaN));
+        if (dgFilter && (!Number.isFinite(dg) || !dgFilter.has(dg))) continue;
         const rec = per?.get?.(rnd);
         if (rec && Number.isFinite(num(rec[key], NaN))) vals.push(num(rec[key], NaN));
       }

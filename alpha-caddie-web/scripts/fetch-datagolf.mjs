@@ -74,6 +74,7 @@ import {
   buildWithinEventCountingMapFromLiveActuals,
   buildWithinEventFormMap,
   courseDifficultyStrokeShift,
+  draftKingsDgIdsFromProjections,
   fieldCountingMeansFromEventContext,
   fieldCountingMeansFromWithinEventMap,
   loadEventRoundContextFromHistoricalCsv,
@@ -2161,8 +2162,8 @@ async function main() {
 
   const applyPriorRoundAdj =
     String(process.env.GOLF_COURSE_PRIOR_ROUND_DIFFICULTY ?? "1").trim() !== "0";
-  const formK = num(process.env.GOLF_WITHIN_EVENT_FORM_CARRY, 0.05);
-  const formCap = num(process.env.GOLF_WITHIN_EVENT_FORM_CAP, 0.35);
+  const formK = num(process.env.GOLF_WITHIN_EVENT_FORM_CARRY, 0.025);
+  const formCap = num(process.env.GOLF_WITHIN_EVENT_FORM_CAP, 0.15);
   const formRuntimeK = num(process.env.GOLF_WITHIN_EVENT_FORM_RUNTIME_CARRY, 0.06);
   const formRuntimeCap = num(process.env.GOLF_WITHIN_EVENT_FORM_RUNTIME_CAP, 0.45);
   let histEventCtx = null;
@@ -2198,6 +2199,15 @@ async function main() {
       }
     }
   }
+  const projectionsOutPathEarly = join(ROOT, "projections.json");
+  const dkPropsEarly = tryPreservePropsFromDisk(projectionsOutPathEarly, event_name, course_used);
+  const dkFieldEarly = draftKingsDgIdsFromProjections({ props: dkPropsEarly });
+  const useDkFieldEarly = dkFieldEarly.size >= 8;
+  const dkFieldFilterEarly = useDkFieldEarly ? dkFieldEarly : null;
+  const fieldMeanOptsEarly = useDkFieldEarly ? { minPlayers: 8, dgFilter: dkFieldEarly } : { minPlayers: 28 };
+  if (useDkFieldEarly) {
+    console.log(`[fetch-dg] Within-event field scope: DraftKings (${dkFieldEarly.size} golfers)`);
+  }
   const withinFormMap =
     formK !== 0 && histEventCtx
       ? buildWithinEventFormMap(
@@ -2205,6 +2215,8 @@ async function main() {
           base.map((r) => ({ dg_id: r.dg_id, mu_sg: r.mu_sg })),
           formK,
           formCap,
+          undefined,
+          dkFieldFilterEarly,
         )
       : new Map();
   let withinEventCountingMap = new Map();
@@ -2252,7 +2264,7 @@ async function main() {
   const fieldCountingFromEvent = histEventCtx ? fieldCountingMeansFromEventContext(histEventCtx) : null;
   const fieldCountingFromHistory =
     withinEventCountingMap.size > 0
-      ? fieldCountingMeansFromWithinEventMap(withinEventCountingMap)
+      ? fieldCountingMeansFromWithinEventMap(withinEventCountingMap, fieldMeanOptsEarly)
       : null;
   const fieldCountingMeans = fieldCountingFromEvent?.birdies?.[1]
     ? fieldCountingFromEvent
@@ -2302,8 +2314,9 @@ async function main() {
     skill_around_round_venue_mean: 0,
     skill_rating: 0,
   };
+  const withinEventLiveWeek = dr >= 2 || withinEventCountingMap.size > 0;
   for (let r = 1; r <= 4; r++) {
-    const mult = num(roundMuMult[r - 1], 1);
+    const mult = withinEventLiveWeek && r >= 2 ? 1 : num(roundMuMult[r - 1], 1);
     const strokeShiftPrior = applyPriorRoundAdj ? num(priorCourseStrokeShiftByRound[r], 0) : 0;
     /** @type {typeof players} */
     const roundRows = [];
