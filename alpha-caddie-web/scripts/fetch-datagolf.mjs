@@ -2392,7 +2392,7 @@ async function main() {
             { ...skillBeforeBlend },
             priorByStat,
             r,
-            { playerRow: row, skillCounts: skillBeforeBlend },
+            { playerRow: row, skillCounts: skillBeforeBlend, fieldMeans: fieldCountingMeans },
           );
           st.eagles = blended.eagles;
           st.birdies = blended.birdies;

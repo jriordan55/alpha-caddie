@@ -795,19 +795,48 @@ export function resolveProjectionCounts({
 /** Only bird/bog carry this-week form; pars are always residual to 18 holes + score-to-par. */
 const WITHIN_EVENT_FORM_BLEND_KEYS = ["birdies", "bogeys"];
 const WITHIN_EVENT_GIR_FW_BLEND_KEYS = ["gir", "fairways", "putts"];
-/** Most recent prior round gets ~1.4× weight vs the one before (book-style “last round matters most”). */
-const WITHIN_EVENT_COUNT_RECENCY_DECAY = 0.72;
-const WITHIN_EVENT_COUNT_BLEND_BASE = 0.38;
-const WITHIN_EVENT_COUNT_BLEND_PER_ROUND = 0.14;
-const WITHIN_EVENT_COUNT_BLEND_CAP = 0.68;
+/** Prior-round form targets: mostly field average, small player-specific residual. */
+const WITHIN_EVENT_PRIOR_FIELD_SHARE = 0.72;
+const WITHIN_EVENT_COUNT_BLEND_BASE = 0.28;
+const WITHIN_EVENT_COUNT_BLEND_PER_ROUND = 0.08;
+const WITHIN_EVENT_COUNT_BLEND_CAP = 0.52;
 const WITHIN_EVENT_BOGEY_BLEND_SCALE = 1;
 const WITHIN_EVENT_SKILL_ANCHOR_BASE = 0.1;
 const WITHIN_EVENT_SKILL_ANCHOR_MU_SCALE = 0.04;
 const WITHIN_EVENT_ALIGN_STRENGTH = 0.96;
 const WITHIN_EVENT_PAR_SPREAD_STRENGTH = 0.55;
-const FIELD_DAY_COUNTING_LIFT_FRAC = 0.45;
+const FIELD_DAY_COUNTING_LIFT_FRAC = 0.38;
 
-function recencyWeightedMeanFromArr(arr, decay = WITHIN_EVENT_COUNT_RECENCY_DECAY) {
+/** Equal-weight mean of prior-round values (no recency tilt toward the latest round). */
+export function plainMeanFromArr(arr) {
+  if (!Array.isArray(arr) || !arr.length) return NaN;
+  const vals = arr.map((v) => num(v, NaN)).filter(Number.isFinite);
+  if (!vals.length) return NaN;
+  return vals.reduce((a, b) => a + b, 0) / vals.length;
+}
+
+/**
+ * Target for blending: field-average counting this week + player's prior-round mean.
+ * @param {string} statKey — birdies | bogeys | gir | fairways | putts
+ * @param {number[]} priorArr — player's prior rounds this event
+ * @param {Record<string, Record<number, number>> | null} fieldMeans — field_counting_means_by_round
+ */
+export function priorRoundCountingTarget(statKey, priorArr, fieldMeans, targetRound, fieldShare = WITHIN_EVENT_PRIOR_FIELD_SHARE) {
+  const playerMean = plainMeanFromArr(priorArr);
+  const tr = Math.round(num(targetRound, NaN));
+  if (!fieldMeans || !Number.isFinite(tr) || tr < 2) return playerMean;
+  const rn = tr - 1;
+  const bucket = fieldMeans[statKey];
+  const fieldAvg = num(bucket?.[rn] ?? bucket?.[String(rn)], NaN);
+  if (!Number.isFinite(fieldAvg)) return playerMean;
+  if (!Number.isFinite(playerMean)) return fieldAvg;
+  const fs = clamp(num(fieldShare, NaN), 0, 1);
+  const share = Number.isFinite(fs) ? fs : WITHIN_EVENT_PRIOR_FIELD_SHARE;
+  return share * fieldAvg + (1 - share) * playerMean;
+}
+
+/** @deprecated Use plainMeanFromArr / priorRoundCountingTarget — kept for callers that still import it. */
+export function recencyWeightedMeanFromArr(arr, decay = 1) {
   if (!Array.isArray(arr) || !arr.length) return NaN;
   let sum = 0;
   let wsum = 0;
@@ -1092,13 +1121,14 @@ export function blendTowardWithinEventActuals(skillCounts, priorByStat, targetRo
   }
   const out = { ...(skillCounts || {}) };
   const skill = opts?.skillCounts || {};
+  const fieldMeans = opts?.fieldMeans || null;
   if (!nRounds) return out;
   let wBird = withinEventCountingBlendWeight(nRounds, opts?.playerRow);
   const wBogBase = wBird * WITHIN_EVENT_BOGEY_BLEND_SCALE;
   for (const k of WITHIN_EVENT_FORM_BLEND_KEYS) {
     const arr = priorByStat[k];
     if (!Array.isArray(arr) || !arr.length) continue;
-    const avg = recencyWeightedMeanFromArr(arr);
+    const avg = priorRoundCountingTarget(k, arr, fieldMeans, tr);
     const base = num(out[k], NaN);
     const skillBase = num(skill[k], base);
     if (!Number.isFinite(base) || !Number.isFinite(avg)) continue;
@@ -1109,7 +1139,7 @@ export function blendTowardWithinEventActuals(skillCounts, priorByStat, targetRo
   for (const k of WITHIN_EVENT_GIR_FW_BLEND_KEYS) {
     const arr = priorByStat[k];
     if (!Array.isArray(arr) || !arr.length) continue;
-    const avg = recencyWeightedMeanFromArr(arr);
+    const avg = priorRoundCountingTarget(k, arr, fieldMeans, tr);
     const base = num(out[k], NaN);
     if (!Number.isFinite(base) || !Number.isFinite(avg)) continue;
     const w = Math.min(0.48, wBird * 0.58);
@@ -1168,12 +1198,13 @@ export function blendWithinEventProjectionCounts(skillCounts, priorByStat, targe
   }
   const out = { ...(skillCounts || {}) };
   if (!nRounds) return out;
+  const fieldMeans = opts?.fieldMeans || null;
   const wBird = withinEventCountingBlendWeight(nRounds, opts?.playerRow);
   const wBog = wBird * WITHIN_EVENT_BOGEY_BLEND_SCALE;
   for (const k of WITHIN_EVENT_FORM_BLEND_KEYS) {
     const arr = priorByStat[k];
     if (!Array.isArray(arr) || !arr.length) continue;
-    const avg = recencyWeightedMeanFromArr(arr);
+    const avg = priorRoundCountingTarget(k, arr, fieldMeans, tr);
     const base = num(out[k], NaN);
     if (!Number.isFinite(base) || !Number.isFinite(avg)) continue;
     const w = k === "bogeys" ? wBog : wBird;
@@ -1182,7 +1213,7 @@ export function blendWithinEventProjectionCounts(skillCounts, priorByStat, targe
   for (const k of WITHIN_EVENT_GIR_FW_BLEND_KEYS) {
     const arr = priorByStat[k];
     if (!Array.isArray(arr) || !arr.length) continue;
-    const avg = recencyWeightedMeanFromArr(arr);
+    const avg = priorRoundCountingTarget(k, arr, fieldMeans, tr);
     const base = num(out[k], NaN);
     if (!Number.isFinite(base) || !Number.isFinite(avg)) continue;
     const w = Math.min(0.55, wBird * 0.65);

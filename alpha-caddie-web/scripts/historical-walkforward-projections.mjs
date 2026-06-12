@@ -603,6 +603,7 @@ export async function buildFullModelMuMapForEvent({
         const blended = blendTowardWithinEventActuals({ ...skillBeforeBlend }, priorByStat, targetRound, {
           playerRow: row,
           skillCounts: skillBeforeBlend,
+          fieldMeans: fieldCountingMeans,
         });
         Object.assign(st, blended);
       }

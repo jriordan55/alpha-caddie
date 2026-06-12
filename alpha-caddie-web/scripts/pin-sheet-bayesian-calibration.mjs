@@ -1,13 +1,13 @@
 /**
- * Bayesian pin calibration: blend rule-based pin geometry with historical hole scoring
- * at similar setups. Same-course + same-hole matches weigh highest.
+ * Bayesian pin calibration: blend rule-based pin geometry with **field-average**
+ * scoring at similar pin setups (not individual past rounds in isolation).
+ * Same-course pools weigh highest; each pool is one weighted field mean.
  */
 import { createReadStream, existsSync, readFileSync } from "fs";
 import path from "path";
 import readline from "readline";
 import { fileURLToPath } from "url";
 import { normCourseNameKey } from "./course-name-key.mjs";
-import { eventsLikelySame } from "./dg-events-align.mjs";
 import { loadPinHoleScoringIndex } from "./pin-hole-scoring-index.mjs";
 import {
   holePinDifficulty,
@@ -21,8 +21,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const MODEL_ROOT = path.resolve(__dirname, "..", "..");
 const ROUNDS_CSV = path.join(MODEL_ROOT, "data", "historical_rounds_all.csv");
 
-const TIER_WEIGHT = { 1: 8, 2: 4, 3: 1.25 };
-const MAX_OBS_PER_HOLE = 24;
+/** Tier weights apply to field-average pools, not per-round draws. */
+const TIER_WEIGHT = { 1: 1.4, 2: 1.0, 3: 0.55 };
 
 function envNum(name, fallback) {
   const v = Number(process.env[name]);
@@ -78,14 +78,48 @@ function holeTier(obs, target, courseKey) {
   return 0;
 }
 
-function bayesianMean(priorMean, priorK, samples) {
+/** Pool raw event-round rows into tier field averages (player-weighted vs par). */
+function aggregateFieldPools(rawRows, tierWeightMap = TIER_WEIGHT) {
+  const pools = new Map();
+  for (const row of rawRows) {
+    const tier = row.tier;
+    if (!tier) continue;
+    const key = `${tier}|${row.course_key || ""}`;
+    if (!pools.has(key)) {
+      pools.set(key, { tier, course_key: row.course_key, sumWx: 0, sumW: 0, roundCount: 0 });
+    }
+    const p = pools.get(key);
+    const w = Math.max(1, Math.round(num(row.n, NaN)) || 1);
+    p.sumWx += row.vs_par * w;
+    p.sumW += w;
+    p.roundCount++;
+  }
+  const out = [];
+  for (const p of pools.values()) {
+    if (p.sumW <= 0) continue;
+    const tw = tierWeightMap[p.tier] ?? 1;
+    out.push({
+      tier: p.tier,
+      course_key: p.course_key,
+      vs_par: p.sumWx / p.sumW,
+      field_n: p.sumW,
+      round_count: p.roundCount,
+      weight: tw * (1 + Math.log1p(Math.min(p.roundCount, 16)) * 0.12),
+    });
+  }
+  out.sort((a, b) => a.tier - b.tier);
+  return out;
+}
+
+/** One posterior from prior + field-average pools (pools are already blended field means). */
+function bayesianMeanFromFieldPools(priorMean, priorK, pools) {
   let w = priorK;
   let wx = priorK * priorMean;
-  for (const s of samples) {
-    const sw = s.weight * Math.min(Math.sqrt(Math.max(s.n, 1)), 18);
+  for (const p of pools) {
+    const sw = p.weight;
     if (sw <= 0) continue;
     w += sw;
-    wx += sw * s.vs_par;
+    wx += sw * p.vs_par;
   }
   if (w <= 0) return priorMean;
   return wx / w;
@@ -93,43 +127,42 @@ function bayesianMean(priorMean, priorK, samples) {
 
 function calibrateHole(target, observations, courseKey, excludeKey) {
   const prior = holePriorVsParFromPinScore(target.pinScore);
-  const priorK = envNum("GOLF_PIN_BAYESIAN_PRIOR_K", 10);
-  const courseK = envNum("GOLF_PIN_BAYESIAN_COURSE_K", 4);
+  const priorK = envNum("GOLF_PIN_BAYESIAN_PRIOR_K", 16);
+  const courseK = envNum("GOLF_PIN_BAYESIAN_COURSE_K", 10);
 
-  const rawSamples = [];
+  const rawRows = [];
   let bestTier = 0;
   for (const obs of observations) {
     if (excludeKey && `${obs.course_key}|${obs.play_date}|${obs.round}` === excludeKey) continue;
     const tier = holeTier(obs, target, courseKey);
     if (!tier) continue;
     bestTier = Math.max(bestTier, tier);
-    rawSamples.push({
+    rawRows.push({
       vs_par: obs.vs_par,
       n: obs.n,
-      weight: TIER_WEIGHT[tier],
       tier,
       course_key: obs.course_key,
-      play_date: obs.play_date,
-      hole: obs.hole,
     });
   }
 
-  rawSamples.sort((a, b) => a.tier - b.tier || b.n - a.n);
-  const samples = rawSamples.slice(0, MAX_OBS_PER_HOLE);
-
-  const hasCourse = samples.some((s) => s.tier <= 2 && s.course_key === courseKey);
+  const pools = aggregateFieldPools(rawRows);
+  const hasCourse = pools.some((p) => p.tier <= 2 && p.course_key === courseKey);
   const k = hasCourse ? courseK : priorK;
-  const posterior = bayesianMean(prior, k, samples);
+  const posterior = bayesianMeanFromFieldPools(prior, k, pools);
+
+  const roundCount = pools.reduce((a, p) => a + p.round_count, 0);
+  const fieldN = pools.reduce((a, p) => a + p.field_n, 0);
 
   return {
     hole: target.hole,
     pinScore: target.pinScore,
     priorVsPar: prior,
     posteriorVsPar: posterior,
-    nObs: samples.length,
-    nPlayers: samples.reduce((a, s) => a + s.n, 0),
+    nObs: roundCount,
+    nPlayers: fieldN,
+    poolCount: pools.length,
     bestTier,
-    sameCourseObs: samples.filter((s) => s.tier <= 2 && s.course_key === courseKey).length,
+    sameCourseObs: pools.filter((p) => p.tier <= 2 && p.course_key === courseKey).reduce((a, p) => a + p.round_count, 0),
   };
 }
 
@@ -189,6 +222,23 @@ function roundPinProfile(holes) {
   };
 }
 
+function aggregateSimilarRoundFieldAvg(roundSamples) {
+  if (!roundSamples.length) return null;
+  let sumWx = 0;
+  let sumW = 0;
+  for (const s of roundSamples) {
+    const w = (TIER_WEIGHT[s.tier] ?? 1) * Math.min(Math.max(s.n, 1), 150);
+    sumWx += s.vs_baseline * w;
+    sumW += w;
+  }
+  if (sumW <= 0) return null;
+  return {
+    vs_baseline: sumWx / sumW,
+    field_n: sumW,
+    round_count: roundSamples.length,
+  };
+}
+
 function findSimilarRoundSamples(sheetCatalog, target, roundCtx, excludeKey) {
   const out = [];
   const baseline = roundCtx.courseBaselines.get(target.courseKey);
@@ -210,7 +260,6 @@ function findSimilarRoundSamples(sheetCatalog, target, roundCtx, excludeKey) {
     out.push({
       vs_baseline: vsBaseline,
       n: er.n,
-      weight: TIER_WEIGHT[tier],
       tier,
       play_date: s.playDate,
       course_key: s.courseKey,
@@ -293,28 +342,33 @@ export async function roundAdjustmentsFromPinSheetBayesian(sheet, cached = {}) {
     roundCtx,
     excludeKey,
   );
-  const roundPriorK = envNum("GOLF_PIN_BAYESIAN_ROUND_PRIOR_K", 12);
-  const roundCourseK = envNum("GOLF_PIN_BAYESIAN_ROUND_COURSE_K", 5);
+  const roundField = aggregateSimilarRoundFieldAvg(roundSamples);
+  const roundPriorK = envNum("GOLF_PIN_BAYESIAN_ROUND_PRIOR_K", 20);
+  const roundCourseK = envNum("GOLF_PIN_BAYESIAN_ROUND_COURSE_K", 14);
   const hasCourseRound = roundSamples.some((s) => s.tier <= 2);
   const roundK = hasCourseRound ? roundCourseK : roundPriorK;
   const baseline = roundCtx.courseBaselines.get(courseKey);
   const ruleRoundVsBaseline = Number.isFinite(baseline) ? rule.totalScoreDelta * 0.85 : rule.totalScoreDelta;
-  const empiricalRoundDelta = bayesianMean(
-    ruleRoundVsBaseline,
-    roundK,
-    roundSamples.map((s) => ({ vs_par: s.vs_baseline, n: s.n, weight: s.weight })),
-  );
+  const roundPools = roundField
+    ? [
+        {
+          vs_par: roundField.vs_baseline,
+          weight: 1 + Math.log1p(Math.min(roundField.round_count, 20)) * 0.2,
+        },
+      ]
+    : [];
+  const empiricalRoundDelta = bayesianMeanFromFieldPools(ruleRoundVsBaseline, roundK, roundPools);
 
   const hasCourseHole = holeCal.some((h) => h.sameCourseObs > 0 && h.bestTier <= 2);
 
-  let holeWeight = hasCourseHole ? envNum("GOLF_PIN_BAYESIAN_HOLE_BLEND", 0.5) : 0;
-  let roundWeight = hasCourseRound ? envNum("GOLF_PIN_BAYESIAN_ROUND_BLEND", 0.35) : 0;
-  if (!hasCourseHole && holeCal.some((h) => h.nObs > 0 && h.bestTier === 3)) {
-    holeWeight = envNum("GOLF_PIN_BAYESIAN_CROSS_COURSE_HOLE_BLEND", 0.25);
+  let holeWeight = hasCourseHole ? envNum("GOLF_PIN_BAYESIAN_HOLE_BLEND", 0.2) : 0;
+  let roundWeight = roundField ? envNum("GOLF_PIN_BAYESIAN_ROUND_BLEND", 0.5) : 0;
+  if (!hasCourseHole && holeCal.some((h) => h.poolCount > 0 && h.bestTier === 3)) {
+    holeWeight = envNum("GOLF_PIN_BAYESIAN_CROSS_COURSE_HOLE_BLEND", 0.12);
   }
   const ruleWeight = Math.max(0, 1 - holeWeight - roundWeight);
 
-  const cappedHoleShift = Math.max(-0.65, Math.min(0.65, holeStrokeShift));
+  const cappedHoleShift = Math.max(-0.45, Math.min(0.45, holeStrokeShift));
   const cappedRoundDelta = Math.max(-0.55, Math.min(0.85, empiricalRoundDelta));
 
   const totalScoreDelta =
@@ -335,23 +389,30 @@ export async function roundAdjustmentsFromPinSheetBayesian(sheet, cached = {}) {
   const totalObs = holeCal.reduce((a, h) => a + h.nObs, 0);
 
   const calibration = {
-    mode: "bayesian",
+    mode: "bayesian_field_avg",
     hole_stroke_shift: Math.round(cappedHoleShift * 1000) / 1000,
     hole_stroke_shift_raw: Math.round(holeStrokeShift * 1000) / 1000,
     rule_total_score_delta: rule.totalScoreDelta,
     empirical_round_delta: Math.round(cappedRoundDelta * 1000) / 1000,
     empirical_round_delta_raw: Math.round(empiricalRoundDelta * 1000) / 1000,
+    field_round_avg_vs_baseline: roundField
+      ? Math.round(roundField.vs_baseline * 1000) / 1000
+      : null,
+    field_round_sample_rounds: roundField?.round_count ?? 0,
+    field_round_sample_players: roundField ? Math.round(roundField.field_n) : 0,
     blend: { rule: ruleWeight, hole: holeWeight, round: roundWeight },
-    same_course_hole_obs: sameCourseHoleObs,
-    similar_round_obs: roundSamples.length,
-    total_hole_obs: totalObs,
+    same_course_hole_rounds: sameCourseHoleObs,
+    similar_round_count: roundSamples.length,
+    total_hole_match_rounds: totalObs,
     course_baseline_score: Number.isFinite(baseline) ? Math.round(baseline * 100) / 100 : null,
     holes: holeCal.map((h) => ({
       hole: h.hole,
       prior_vs_par: Math.round(h.priorVsPar * 1000) / 1000,
       posterior_vs_par: Math.round(h.posteriorVsPar * 1000) / 1000,
       n_obs: h.nObs,
-      same_course_obs: h.sameCourseObs,
+      same_course_rounds: h.sameCourseObs,
+      field_players: h.nPlayers,
+      pool_count: h.poolCount,
       best_tier: h.bestTier,
     })),
   };

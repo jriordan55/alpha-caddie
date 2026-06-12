@@ -4416,10 +4416,10 @@ function sigmaOuDiscreteCounting(market, muAbs) {
   return Math.max(0.55, Math.sqrt(Math.max(m, 0.2)) * 0.9);
 }
 
-const WITHIN_EVENT_COUNT_RECENCY_DECAY_RT = 0.72;
-const WITHIN_EVENT_COUNT_BLEND_BASE_RT = 0.38;
-const WITHIN_EVENT_COUNT_BLEND_PER_ROUND_RT = 0.14;
-const WITHIN_EVENT_COUNT_BLEND_CAP_RT = 0.68;
+const WITHIN_EVENT_PRIOR_FIELD_SHARE_RT = 0.72;
+const WITHIN_EVENT_COUNT_BLEND_BASE_RT = 0.28;
+const WITHIN_EVENT_COUNT_BLEND_PER_ROUND_RT = 0.08;
+const WITHIN_EVENT_COUNT_BLEND_CAP_RT = 0.52;
 const WITHIN_EVENT_BOGEY_BLEND_SCALE_RT = 1;
 const WITHIN_EVENT_SKILL_ANCHOR_BASE_RT = 0.14;
 const WITHIN_EVENT_SKILL_ANCHOR_MU_SCALE_RT = 0.05;
@@ -4529,21 +4529,30 @@ function ouPlayerHistoricalCountingSigma(market, dgId) {
   const vari = vals.reduce((s, v) => s + (v - mean) ** 2, 0) / (vals.length - 1);
   return Math.sqrt(vari);
 }
-const FIELD_DAY_COUNTING_LIFT_FRAC_RT = 0.45;
+const FIELD_DAY_COUNTING_LIFT_FRAC_RT = 0.38;
 
-function recencyWeightedMeanFromArrRuntime(arr, decay = WITHIN_EVENT_COUNT_RECENCY_DECAY_RT) {
+function plainMeanFromArrRuntime(arr) {
   if (!Array.isArray(arr) || !arr.length) return NaN;
-  let sum = 0;
-  let wsum = 0;
-  for (let i = 0; i < arr.length; i++) {
-    const v = num(arr[i], NaN);
-    if (!Number.isFinite(v)) continue;
-    const age = arr.length - 1 - i;
-    const w = decay ** age;
-    sum += v * w;
-    wsum += w;
-  }
-  return wsum > 0 ? sum / wsum : NaN;
+  const vals = arr.map((v) => num(v, NaN)).filter(Number.isFinite);
+  if (!vals.length) return NaN;
+  return vals.reduce((a, b) => a + b, 0) / vals.length;
+}
+
+function fieldCountingMeansFromMeta() {
+  return DATA?.meta?.projection_course_basis?.field_counting_means_by_round || null;
+}
+
+function priorRoundCountingTargetRuntime(statKey, priorArr, targetRound) {
+  const playerMean = plainMeanFromArrRuntime(priorArr);
+  const fieldMeans = fieldCountingMeansFromMeta();
+  const tr = Math.round(num(targetRound, NaN));
+  if (!fieldMeans || !Number.isFinite(tr) || tr < 2) return playerMean;
+  const rn = tr - 1;
+  const bucket = fieldMeans[statKey];
+  const fieldAvg = num(bucket?.[rn] ?? bucket?.[String(rn)], NaN);
+  if (!Number.isFinite(fieldAvg)) return playerMean;
+  if (!Number.isFinite(playerMean)) return fieldAvg;
+  return WITHIN_EVENT_PRIOR_FIELD_SHARE_RT * fieldAvg + (1 - WITHIN_EVENT_PRIOR_FIELD_SHARE_RT) * playerMean;
 }
 
 function withinEventCountingStarTrustBoostRuntime(row) {
@@ -4658,7 +4667,7 @@ function tournamentWeekCountingMuAdjustment(mKey, row) {
   }
   const arr = priorByStat[spec.key];
   if (!Array.isArray(arr) || !arr.length) return 0;
-  const avg = recencyWeightedMeanFromArrRuntime(arr);
+  const avg = priorRoundCountingTargetRuntime(spec.key, arr, tr);
   const base = ouMeanCountingStat(mKey, row);
   if (!Number.isFinite(avg) || !Number.isFinite(base)) return 0;
   let w = spec.w;
