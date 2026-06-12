@@ -249,7 +249,7 @@ export async function loadPinHoleScoringIndex(opts = {}) {
 
 const isMain = process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
 if (isMain) {
-  buildPinHoleScoringIndex({ force: true }).catch((e) => {
+  loadPinHoleScoringIndex().catch((e) => {
     console.error(e.message || e);
     process.exit(1);
   });

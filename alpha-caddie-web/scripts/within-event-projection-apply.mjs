@@ -11,10 +11,10 @@ import {
   applyFieldDayCountingLiftNatural,
   augmentEventContextWithInPlayRounds,
   blendTowardWithinEventActuals,
+  buildEventContextFromLiveBundle,
   buildPriorByStatForPlayer,
   buildWithinEventCountingMapFromLiveActuals,
   buildWithinEventFormMap,
-  fieldCountingMeansFromEventContext,
   fieldCountingMeansFromWithinEventMap,
   loadEventRoundContextFromHistoricalCsv,
   loadWithinEventCountingActualsFromHistoryJson,
@@ -118,15 +118,23 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
   const courseKey = normCourseNameKey(String(proj.course_used || "").trim());
   const venueScoring = venueScoringStubFromMeta(basis, coursePar18);
 
+  const liveOnly =
+    String(process.env.GOLF_WITHIN_EVENT_LIVE_ONLY ?? "1").trim() !== "0";
   const GOLF_MODEL_ROOT = process.env.GOLF_MODEL_DIR?.trim()
     ? resolve(process.env.GOLF_MODEL_DIR.trim())
     : resolve(WEB_ROOT, "..");
   const roundsCsv = join(GOLF_MODEL_ROOT, "data", "historical_rounds_all.csv");
   const historyJsonPath = join(WEB_ROOT, "player_round_history.json");
 
-  let withinEventCountingMap = new Map();
-  if (eventName && existsSync(historyJsonPath)) {
-    withinEventCountingMap = loadWithinEventCountingActualsFromHistoryJson(
+  const actualsByDg = resolveLiveRoundActualsByDg(live, { roundPar: coursePar18, fairwayHoles });
+  let withinEventCountingMap = buildWithinEventCountingMapFromLiveActuals(
+    actualsByDg,
+    coursePar18,
+    basis.venue_avg_birdies,
+    basis.venue_avg_bogeys,
+  );
+  if (!liveOnly && eventName && existsSync(historyJsonPath)) {
+    const fromHistory = loadWithinEventCountingActualsFromHistoryJson(
       historyJsonPath,
       eventName,
       courseKey,
@@ -135,17 +143,7 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
       basis.venue_avg_birdies,
       basis.venue_avg_bogeys,
     );
-  }
-
-  const actualsByDg = resolveLiveRoundActualsByDg(live, { roundPar: coursePar18, fairwayHoles });
-  const liveCountingMap = buildWithinEventCountingMapFromLiveActuals(
-    actualsByDg,
-    coursePar18,
-    basis.venue_avg_birdies,
-    basis.venue_avg_bogeys,
-  );
-  if (liveCountingMap.size > withinEventCountingMap.size) {
-    withinEventCountingMap = liveCountingMap;
+    if (fromHistory.size > withinEventCountingMap.size) withinEventCountingMap = fromHistory;
   }
 
   if (!withinEventCountingMap.size) {
@@ -153,40 +151,31 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
   }
 
   const oldFieldMeans = basis.field_counting_means_by_round || null;
-  const fieldCountingFromEvent = null;
+  const basePlayers = [
+    ...new Map(
+      proj.players
+        .filter((p) => Math.round(num(p?.round, NaN)) === 1)
+        .map((p) => [Math.round(num(p.dg_id, NaN)), { dg_id: Math.round(num(p.dg_id, NaN)), mu_sg: num(p.mu_sg, 0) }]),
+    ).values(),
+  ];
+
   let histEventCtx = null;
-  if (eventName && existsSync(roundsCsv)) {
+  if (liveOnly) {
+    histEventCtx = buildEventContextFromLiveBundle(live, coursePar18, basePlayers, actualsByDg);
+  } else if (eventName && existsSync(roundsCsv)) {
     histEventCtx = await loadEventRoundContextFromHistoricalCsv(roundsCsv, eventName, courseKey);
-  }
-  if (histEventCtx && Array.isArray(live?.data) && live.data.length) {
-    const basePlayers = [];
-    const seen = new Set();
-    for (const pl of proj.players) {
-      const id = Math.round(num(pl?.dg_id, NaN));
-      const r = Math.round(num(pl?.round, NaN));
-      if (!Number.isFinite(id) || r !== 1 || seen.has(id)) continue;
-      seen.add(id);
-      basePlayers.push({ dg_id: id, mu_sg: num(pl.mu_sg, 0) });
+    if (histEventCtx && Array.isArray(live?.data) && live.data.length) {
+      augmentEventContextWithInPlayRounds(histEventCtx, live.data, coursePar18, basePlayers);
     }
-    augmentEventContextWithInPlayRounds(histEventCtx, live.data, coursePar18, basePlayers);
+  } else {
+    histEventCtx = buildEventContextFromLiveBundle(live, coursePar18, basePlayers, actualsByDg);
   }
 
-  const fieldFromEvent = histEventCtx ? fieldCountingMeansFromEventContext(histEventCtx) : null;
-  const fieldFromMap = fieldCountingMeansFromWithinEventMap(withinEventCountingMap);
-  const fieldCountingMeans = fieldFromEvent?.birdies?.[1]
-    ? fieldFromEvent
-    : fieldFromMap?.birdies?.[1]
-      ? fieldFromMap
-      : fieldFromEvent || fieldFromMap;
+  const fieldCountingMeans = fieldCountingMeansFromWithinEventMap(withinEventCountingMap);
 
   const withinFormMap =
-    formK !== 0 && histEventCtx
-      ? buildWithinEventFormMap(
-          histEventCtx,
-          [...new Map(proj.players.filter((p) => Math.round(num(p?.round, NaN)) === 1).map((p) => [p.dg_id, { dg_id: p.dg_id, mu_sg: num(p.mu_sg, 0) }])).values()],
-          formK,
-          formCap,
-        )
+    formK !== 0 && histEventCtx?.playerRounds?.length
+      ? buildWithinEventFormMap(histEventCtx, basePlayers, formK, formCap)
       : new Map();
 
   const countKeys = ["birdies", "bogeys", "gir", "fairways", "putts", "eagles", "doubles", "pars"];

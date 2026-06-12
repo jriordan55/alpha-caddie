@@ -16,6 +16,7 @@ import { fileURLToPath } from "url";
 import { eventsLikelySame } from "./dg-events-align.mjs";
 import { num } from "./pin-sheet-difficulty.mjs";
 import { roundAdjustmentsFromPinSheetBayesian } from "./pin-sheet-bayesian-calibration.mjs";
+import { loadPinHoleScoringIndex } from "./pin-hole-scoring-index.mjs";
 import {
   courseKeyFromName,
   defaultPinLocationsRoot,
@@ -205,7 +206,7 @@ function applyDelta(field, delta) {
   return Math.round((v + delta) * 100) / 100;
 }
 
-export async function applyPinSheetToProjections(payload, sheet, pinPath = "") {
+export async function applyPinSheetToProjections(payload, sheet, pinPath = "", pinIndexCached = null) {
   const meta = projectionExportMeta(payload);
   const rnd = Math.round(num(sheet.round ?? sheet.round_num ?? meta.display_round, NaN));
   if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) {
@@ -216,13 +217,16 @@ export async function applyPinSheetToProjections(payload, sheet, pinPath = "") {
     throw new Error("pin sheet: need at least 9 holes");
   }
 
-  const adj = await roundAdjustmentsFromPinSheetBayesian({
-    ...sheet,
-    holes,
-    course_key: sheet.course_key || courseKeyFromName(sheet.course_name || meta.course_used),
-    play_date: sheet.play_date,
-    round: rnd,
-  });
+  const adj = await roundAdjustmentsFromPinSheetBayesian(
+    {
+      ...sheet,
+      holes,
+      course_key: sheet.course_key || courseKeyFromName(sheet.course_name || meta.course_used),
+      play_date: sheet.play_date,
+      round: rnd,
+    },
+    pinIndexCached ? { index: pinIndexCached } : {},
+  );
   const stamp = pinPath && existsSync(pinPath) ? `${pinPath}:${statSync(pinPath).mtimeMs}` : "inline";
 
   const players = Array.isArray(payload.players) ? payload.players : [];
@@ -307,13 +311,19 @@ async function main() {
     play_date: String(sheet.play_date || "").trim() || playDateIsoForRound(meta, sheet.round ?? sheet.round_num),
   };
 
+  const pinIndexCached = await loadPinHoleScoringIndex();
   const dbKey = saveArmedPinSheetToPinLocationsDb(enrichedSheet, meta);
   if (dbKey) {
     enrichedSheet.course_key = courseKeyFromName(enrichedSheet.course_name);
     enrichedSheet.play_date = enrichedSheet.play_date || dbKey.split("|")[1];
   }
 
-  const { adjustedPlayers, adj } = await applyPinSheetToProjections(payload, enrichedSheet, pinPath);
+  const { adjustedPlayers, adj } = await applyPinSheetToProjections(
+    payload,
+    enrichedSheet,
+    pinPath,
+    pinIndexCached,
+  );
   const metaAfter = projectionExportMeta(payload);
   if (dbKey && metaAfter.pin_sheet) {
     metaAfter.pin_sheet.pin_location_key = dbKey;

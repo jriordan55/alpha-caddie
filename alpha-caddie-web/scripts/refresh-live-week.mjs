@@ -105,16 +105,9 @@ if (!skipCsvMerge) {
 }
 
 if (!skipDg) {
-  if (existsSync(path.join(WEB_ROOT, "projections.json"))) {
-    run(
-      "fetch-live-in-play.mjs",
-      "Pre-fetch live bundle (R1 actuals for within-event form before fetch:dg)",
-    );
-  }
   run("fetch-datagolf.mjs", "Field + projections (μ_SG, preds/pre-tournament or live driving stats)", {
     GOLF_SKIP_HISTORY_ON_FETCH_DG: "1",
   });
-  run("build-course-table-json.mjs", "Course table JSON (build:course-table)");
 } else {
   console.log("\n[refresh:live] GOLF_REFRESH_LIVE_SKIP_DG=1 — skipping fetch:dg + build:course-table.\n");
   if (!existsSync(path.join(WEB_ROOT, "projections.json"))) {
@@ -148,6 +141,7 @@ run(
 run(
   "within-event-projection-apply.mjs",
   "Re-apply field-average prior-round form from fresh live-in-play (after fetch:in-play)",
+  { GOLF_WITHIN_EVENT_LIVE_ONLY: "1" },
 );
 run(
   "bake-weather-into-projections.mjs",
@@ -155,7 +149,10 @@ run(
 );
 
 if (!envTruthy("GOLF_SKIP_PIN_SHEET", false)) {
-  run("pin-hole-scoring-index.mjs", "Pin hole scoring index for Bayesian calibration (hole_data + pin_locations)");
+  run(
+    "pin-hole-scoring-index.mjs",
+    "Pin hole scoring index (cached unless pin_locations / hole_data changed)",
+  );
   run(
     "apply-pin-sheet-to-projections.mjs",
     "Pin sheet → projections (Bayesian calibrated) + pin_locations DB when armed",

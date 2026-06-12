@@ -240,6 +240,41 @@ export function augmentEventContextWithInPlayRounds(ctx, inPlayRows, coursePar18
   return ctx;
 }
 
+/** Fast live-week context: in-play R* gross + live_round_actuals (no historical CSV scan). */
+export function buildEventContextFromLiveBundle(live, coursePar18, basePlayers, actualsByDg = null) {
+  const ctx = { playerRounds: [], byRound: new Map() };
+  const par = num(coursePar18, NaN);
+  if (!Number.isFinite(par)) return ctx;
+  augmentEventContextWithInPlayRounds(ctx, live?.data || [], par, basePlayers);
+  const baseMu = new Map();
+  for (const p of basePlayers || []) {
+    const id = Math.round(num(p.dg_id, NaN));
+    if (Number.isFinite(id)) baseMu.set(id, num(p.mu_sg, 0));
+  }
+  const seen = new Set(
+    ctx.playerRounds.map((pr) => `${Math.round(num(pr.dg_id, NaN))}|${Math.round(num(pr.round, NaN))}`),
+  );
+  const actuals = actualsByDg && typeof actualsByDg === "object" ? actualsByDg : {};
+  for (const [dgKey, perRound] of Object.entries(actuals)) {
+    const id = Math.round(num(dgKey, NaN));
+    if (!Number.isFinite(id) || !baseMu.has(id)) continue;
+    if (!perRound || typeof perRound !== "object") continue;
+    for (const [rndKey, act] of Object.entries(perRound)) {
+      const rnd = Math.round(num(rndKey, NaN));
+      if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
+      const key = `${id}|${rnd}`;
+      if (seen.has(key)) continue;
+      let sg = num(act?.sg_total, NaN);
+      const rs = num(act?.round_score, NaN);
+      if (!Number.isFinite(sg) && Number.isFinite(rs) && rs > 0) sg = -(rs - par);
+      if (!Number.isFinite(sg)) continue;
+      ctx.playerRounds.push({ dg_id: id, round: rnd, sg_total: sg });
+      seen.add(key);
+    }
+  }
+  return ctx;
+}
+
 export function buildWithinEventFormMap(
   ctx,
   basePlayers,
