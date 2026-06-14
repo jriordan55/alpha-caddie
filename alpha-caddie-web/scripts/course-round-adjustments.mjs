@@ -568,6 +568,99 @@ export function softAlignHoleCountsToStp(counts, targetStp, strength = 0.58) {
 }
 
 /**
+ * Tie bird/bog/pars/GIR/FW to projected total score (score_to_par anchor).
+ * Used after within-event blend, pin sheet, and weather so O/U markets stay correlated.
+ */
+export function reconcileProjectionRowCountsToScore(row, opts = {}) {
+  if (!row || typeof row !== "object") return row;
+  const par18 = Math.round(num(opts.coursePar18 ?? row.course_par, NaN)) || 72;
+  const stpRaw = num(row.score_to_par, NaN);
+  const stp = Number.isFinite(stpRaw)
+    ? stpRaw
+    : Number.isFinite(num(row.total_score, NaN))
+      ? num(row.total_score, NaN) - par18
+      : Number.isFinite(num(row.mu_sg, NaN))
+        ? -num(row.mu_sg, NaN)
+        : NaN;
+  if (!Number.isFinite(stp)) return row;
+
+  const e = Math.max(0, num(row.eagles, 0));
+  const d = Math.max(0, num(row.doubles, 0));
+  let b = num(row.birdies, NaN);
+  let bg = num(row.bogeys, NaN);
+  let p = num(row.pars, NaN);
+  if (!Number.isFinite(b) || !Number.isFinite(bg)) {
+    const vBird = num(opts.venueAvgBirdies, 4.2);
+    const vBog = num(opts.venueAvgBogeys, 2.1);
+    const split = inferHoleCountsFromScoreSplit(stp, vBird, vBog);
+    b = split.birdies;
+    bg = split.bogeys;
+    p = split.pars;
+  } else {
+    const aligned = softAlignHoleCountsToStp(
+      { eagles: e, birdies: b, pars: p, bogeys: bg, doubles: d },
+      stp,
+      num(opts.alignStrength, 0.9),
+    );
+    b = aligned.birdies;
+    bg = aligned.bogeys;
+    p = aligned.pars;
+  }
+
+  const venueGir = num(opts.venueAvgGir, 12);
+  const venueFw = num(opts.venueAvgFairways, 9);
+  const nFw = Math.round(num(opts.nFairwayHoles, 14)) || 14;
+  const girFromScore = clamp(venueGir - stp * 0.82, 7.5, 16.2);
+  const fwFromScore = clamp(venueFw - stp * 0.48, 4, nFw + 0.2);
+  const girBlend = num(opts.girBlend, 0.62);
+  const fwBlend = num(opts.fairwaysBlend, 0.58);
+  let gir = num(row.gir, NaN);
+  let fairways = num(row.fairways, NaN);
+  if (Number.isFinite(gir)) gir = (1 - girBlend) * gir + girBlend * girFromScore;
+  else gir = girFromScore;
+  if (Number.isFinite(fairways)) fairways = (1 - fwBlend) * fairways + fwBlend * fwFromScore;
+  else fairways = fwFromScore;
+
+  row.eagles = Math.round(e * 1000) / 1000;
+  row.birdies = Math.round(b * 100) / 100;
+  row.pars = Math.round(p * 100) / 100;
+  row.bogeys = Math.round(bg * 100) / 100;
+  row.doubles = Math.round(d * 1000) / 1000;
+  row.gir = Math.round(gir * 100) / 100;
+  row.fairways = Math.round(fairways * 100) / 100;
+  if (Number.isFinite(num(row.putts, NaN))) {
+    row.putts = Math.round(clamp(num(row.putts, NaN), 24, 34) * 100) / 100;
+  }
+  return row;
+}
+
+/** Reconcile every projection row to its total_score / μ anchor. */
+export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
+  const meta = payload?.meta && typeof payload.meta === "object" ? payload.meta : payload;
+  const basis = meta?.projection_course_basis && typeof meta.projection_course_basis === "object" ? meta.projection_course_basis : {};
+  const coursePar18 = Math.round(num(payload?.course_par_18 ?? meta?.course_par_18, NaN)) || 72;
+  const recOpts = {
+    coursePar18,
+    venueAvgBirdies: num(basis.venue_avg_birdies, 4.2),
+    venueAvgBogeys: num(basis.venue_avg_bogeys, 2.1),
+    venueAvgGir: num(basis.venue_avg_gir, 12),
+    venueAvgFairways: num(basis.venue_avg_fairways, 9),
+    nFairwayHoles: Math.round(num(basis.fairway_holes_modeled, 14)) || 14,
+    ...opts,
+  };
+  let n = 0;
+  for (const pl of payload?.players || []) {
+    if (!pl || typeof pl !== "object") continue;
+    reconcileProjectionRowCountsToScore(pl, recOpts);
+    n++;
+  }
+  if (meta?.projection_round_adjustments && typeof meta.projection_round_adjustments === "object") {
+    meta.projection_round_adjustments.projection_counts_coherent = true;
+  }
+  return n;
+}
+
+/**
  * Move mass from pars into matched bird+bog pairs (score-to-par neutral: −δ − δ + δ + δ = 0).
  * Books show more bird/bog volatility vs “all pars” profiles at the same projected score.
  */

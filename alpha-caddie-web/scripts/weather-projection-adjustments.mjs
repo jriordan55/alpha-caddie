@@ -3,6 +3,7 @@
  * Negative difficulty delta = softer / easier scoring (more birdies, lower totals).
  */
 import { projectionExportMeta } from "./projection-export-meta.mjs";
+import { reconcileProjectionRowCountsToScore } from "./course-round-adjustments.mjs";
 
 export function num(v, fallback = NaN) {
   const n = Number(v);
@@ -200,6 +201,16 @@ export function applyWeatherBakedCountsToPlayer(p, meta) {
 
   p._weather_bake_snapshot = { ...w };
   p.weather_counts_baked = true;
+  const basis = meta?.projection_course_basis && typeof meta.projection_course_basis === "object" ? meta.projection_course_basis : {};
+  reconcileProjectionRowCountsToScore(p, {
+    coursePar18: par18,
+    venueAvgBirdies: num(basis.venue_avg_birdies, 4.2),
+    venueAvgBogeys: num(basis.venue_avg_bogeys, 2.1),
+    venueAvgGir: num(basis.venue_avg_gir, 12),
+    venueAvgFairways: num(basis.venue_avg_fairways, 9),
+    nFairwayHoles: Math.round(num(basis.fairway_holes_modeled, 14)) || 14,
+    alignStrength: 0.85,
+  });
   return true;
 }
 

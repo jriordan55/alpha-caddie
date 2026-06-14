@@ -17,6 +17,7 @@ import { eventsLikelySame } from "./dg-events-align.mjs";
 import { num } from "./pin-sheet-difficulty.mjs";
 import { roundAdjustmentsFromPinSheetBayesian } from "./pin-sheet-bayesian-calibration.mjs";
 import { loadPinHoleScoringIndex } from "./pin-hole-scoring-index.mjs";
+import { reconcileProjectionRowCountsToScore } from "./course-round-adjustments.mjs";
 import {
   courseKeyFromName,
   defaultPinLocationsRoot,
@@ -243,6 +244,16 @@ export async function applyPinSheetToProjections(payload, sheet, pinPath = "", p
     p.gir = applyDelta(p.gir, adj.girDelta);
     p.fairways = applyDelta(p.fairways, adj.fairwaysDelta);
     p._pin_adjusted = true;
+    const basis = meta.projection_course_basis && typeof meta.projection_course_basis === "object" ? meta.projection_course_basis : {};
+    reconcileProjectionRowCountsToScore(p, {
+      coursePar18: Math.round(num(payload.course_par_18 ?? meta.course_par_18, NaN)) || 72,
+      venueAvgBirdies: num(basis.venue_avg_birdies, 4.2),
+      venueAvgBogeys: num(basis.venue_avg_bogeys, 2.1),
+      venueAvgGir: num(basis.venue_avg_gir, 12),
+      venueAvgFairways: num(basis.venue_avg_fairways, 9),
+      nFairwayHoles: Math.round(num(basis.fairway_holes_modeled, 14)) || 14,
+      alignStrength: 0.88,
+    });
   }
 
   meta.pin_sheet = {

@@ -22,6 +22,7 @@ import {
   fieldCountingMeansFromWithinEventMap,
   loadEventRoundContextFromHistoricalCsv,
   loadWithinEventCountingActualsFromHistoryJson,
+  reconcileProjectionRowCountsToScore,
 } from "./course-round-adjustments.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -113,6 +114,14 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
   const eventName = String(proj.event_name || "").trim();
   const courseKey = normCourseNameKey(String(proj.course_used || "").trim());
   const venueScoring = venueScoringStubFromMeta(basis, coursePar18);
+  const reconcileOpts = {
+    coursePar18,
+    venueAvgBirdies: num(basis.venue_avg_birdies, 4.2),
+    venueAvgBogeys: num(basis.venue_avg_bogeys, 2.1),
+    venueAvgGir: num(basis.venue_avg_gir, 12),
+    venueAvgFairways: num(basis.venue_avg_fairways, 9),
+    nFairwayHoles: fairwayHoles,
+  };
   const r1ByDg = buildR1AnchorMap(proj.players);
 
   const liveOnly =
@@ -231,7 +240,14 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
     if (Number.isFinite(num(blended.gir, NaN))) pl.gir = Math.round(blended.gir * 100) / 100;
     if (Number.isFinite(num(blended.fairways, NaN))) pl.fairways = Math.round(blended.fairways * 100) / 100;
     if (Number.isFinite(num(blended.putts, NaN))) pl.putts = Math.round(blended.putts * 100) / 100;
+    reconcileProjectionRowCountsToScore(pl, reconcileOpts);
     playersTouched++;
+  }
+
+  for (const pl of proj.players) {
+    if (!pl || typeof pl !== "object") continue;
+    if (Math.round(num(pl.round, NaN)) !== 1) continue;
+    reconcileProjectionRowCountsToScore(pl, reconcileOpts);
   }
 
   if (!meta.projection_course_basis) meta.projection_course_basis = {};
@@ -241,6 +257,7 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
   meta.projection_round_adjustments.within_event_r1_anchor = true;
   meta.projection_round_adjustments.within_event_field_scope = useDkField ? "draftkings" : "full";
   if (useDkField) meta.projection_round_adjustments.within_event_dk_field_size = dkField.size;
+  meta.projection_round_adjustments.projection_counts_coherent = true;
   meta.projection_round_adjustments.within_event_form_carry = formK;
   meta.projection_round_adjustments.within_event_form_cap = formCap;
   proj.meta = meta;
