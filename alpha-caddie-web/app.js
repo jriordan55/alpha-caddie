@@ -15844,15 +15844,7 @@ function propsChartSparseTickLabels(perBarLabels, innerWidthPx) {
  * @returns {{ cx: number, lab: string }[]}
  */
 function propsChartXAxisValueSortSessionPlacements(perBarLabels, xCenter, padL, innerW) {
-  if (!perBarLabels.length || !xCenter?.length) return [];
-  const groups = new Map();
-  for (let i = 0; i < perBarLabels.length; i++) {
-    const lab = String(perBarLabels[i] || "").trim();
-    if (!lab) continue;
-    if (!groups.has(lab)) groups.set(lab, []);
-    groups.get(lab).push(i);
-  }
-  if (!groups.size) return [];
+  if (!perBarLabels.length) return [];
 
   function mdSortKey(lab) {
     const p = String(lab || "").split("/");
@@ -15864,49 +15856,28 @@ function propsChartXAxisValueSortSessionPlacements(perBarLabels, xCenter, padL, 
     return 0;
   }
 
-  /** @type {{ cx: number, lab: string, sortKey: number }[]} */
-  const placements = [];
-  for (const [lab, indices] of groups) {
-    indices.sort((a, b) => a - b);
-    const nIdx = indices.length;
-    const iLo = indices[0];
-    const iHi = indices[nIdx - 1];
-    const cx =
-      Number.isFinite(xCenter[iLo]) && Number.isFinite(xCenter[iHi])
-        ? (xCenter[iLo] + xCenter[iHi]) / 2
-        : xCenter[indices[Math.floor(nIdx / 2)]];
-    if (!Number.isFinite(cx)) continue;
-    placements.push({ cx, lab, sortKey: mdSortKey(lab) });
+  const groups = new Map();
+  for (let i = 0; i < perBarLabels.length; i++) {
+    const lab = String(perBarLabels[i] || "").trim();
+    if (!lab) continue;
+    if (!groups.has(lab)) groups.set(lab, { lab, sortKey: mdSortKey(lab) });
   }
+  if (!groups.size) return [];
 
-  const xs = placements.map((p) => p.cx);
-  const clusterSpan = xs.length ? Math.max(...xs) - Math.min(...xs) : 0;
-  const plotL = Number.isFinite(padL) ? padL : xCenter[0] - (xCenter[1] - xCenter[0]) * 0.5;
+  const plotL = Number.isFinite(padL) ? padL : 0;
   const plotW =
     Number.isFinite(innerW) && innerW > 0
       ? innerW
-      : xCenter.length > 1
+      : xCenter?.length > 1
         ? xCenter[xCenter.length - 1] - xCenter[0]
         : 0;
+  if (plotW <= 0) return [];
 
-  if (placements.length >= 2 && plotW > 0 && clusterSpan < plotW * 0.38) {
-    const sorted = [...placements].sort((a, b) => a.sortKey - b.sortKey);
-    for (let j = 0; j < sorted.length; j++) {
-      sorted[j].cx = plotL + ((j + 0.5) / sorted.length) * plotW;
-    }
-    return sorted.map(({ cx, lab }) => ({ cx, lab }));
-  }
-
-  placements.sort((a, b) => a.cx - b.cx);
-  const minPx = 44;
-  for (let i = 1; i < placements.length; i++) {
-    const gap = placements[i].cx - placements[i - 1].cx;
-    if (gap >= minPx) continue;
-    const need = (minPx - gap) / 2;
-    placements[i - 1].cx -= need;
-    placements[i].cx += need;
-  }
-  return placements.map(({ cx, lab }) => ({ cx, lab }));
+  const sessions = [...groups.values()].sort((a, b) => a.sortKey - b.sortKey || a.lab.localeCompare(b.lab));
+  return sessions.map((s, j) => ({
+    lab: s.lab,
+    cx: plotL + ((j + 0.5) / sessions.length) * plotW,
+  }));
 }
 
 /** @deprecated use propsChartXAxisValueSortSessionPlacements */
@@ -16156,6 +16127,36 @@ function refreshPropsChartHoverAfterDraw() {
   updatePropsTrendChartHover(canvas, propsChartLastPointer);
 }
 
+/** Gross round score band for chart (excludes score-to-par and corrupt rows). */
+function propsChartGrossScoreBounds() {
+  const par = Math.round(num(DATA?.meta?.course_par_18, NaN)) || 70;
+  return { par, lo: par - 14, hi: par + 22 };
+}
+
+function propsChartNormalizeActual(statKey, s) {
+  const v = num(s?.actual, NaN);
+  if (!Number.isFinite(v)) return NaN;
+  if (statKey !== "total") return v;
+  const par =
+    Math.round(num(s?._hist?.course_par, NaN)) ||
+    Math.round(num(DATA?.meta?.course_par_18, NaN)) ||
+    70;
+  if (v >= par - 14 && v <= par + 24) return v;
+  if (v > -14 && v < 22) return par + v;
+  if (v >= 50 && v <= 99) return v;
+  return NaN;
+}
+
+function propsChartPlotSeries(series, statKey) {
+  const out = [];
+  for (const s of series || []) {
+    const actual = propsChartNormalizeActual(statKey, s);
+    if (!Number.isFinite(actual)) continue;
+    out.push({ ...s, actual });
+  }
+  return out;
+}
+
 /** Y-axis ticks: integers for round score / counting stats so grid lines match numeric labels. */
 function propsChartYTickValues(minV, maxV, statKey) {
   const intLike =
@@ -16178,7 +16179,7 @@ function propsChartYTickValues(minV, maxV, statKey) {
   const span = hi - lo;
   let step;
   if (statKey === "total") {
-    step = span <= 6 ? 1 : span <= 10 ? 2 : span <= 16 ? 3 : 4;
+    step = span <= 5 ? 1 : span <= 11 ? 2 : span <= 18 ? 3 : 4;
   } else {
     step = Math.max(1, Math.round(span / 5));
     if (step === 3 && span >= 18) step = 4;
@@ -16186,35 +16187,50 @@ function propsChartYTickValues(minV, maxV, statKey) {
   const ticks = [];
   for (let t = Math.ceil(lo / step) * step; t <= hi; t += step) ticks.push(t);
   if (!ticks.length) return [lo, hi];
-  if (ticks[0] > lo) ticks.unshift(lo);
-  if (ticks[ticks.length - 1] < hi) ticks.push(hi);
+  if (statKey !== "total") {
+    if (ticks[0] > lo) ticks.unshift(lo);
+    if (ticks[ticks.length - 1] < hi) ticks.push(hi);
+  } else if (ticks[0] > minV + 0.01) ticks.unshift(Math.round(minV));
+  if (ticks[ticks.length - 1] < maxV - 0.01) ticks.push(Math.round(maxV));
   return [...new Set(ticks)].sort((a, b) => a - b);
 }
 
 /** Y-domain for props trend chart — tight to data min/max so bars use the plot height. */
 function propsChartYDomain(vals, lineY, statKey) {
-  const dataMin = Math.min(...vals);
-  const dataMax = Math.max(...vals);
+  let domainVals = vals.filter(Number.isFinite);
+  if (!domainVals.length) return { minV: 0, maxV: 1 };
+  if (statKey === "total") {
+    const { lo, hi } = propsChartGrossScoreBounds();
+    const gross = domainVals.filter((v) => v >= lo && v <= hi);
+    if (gross.length >= Math.min(8, Math.ceil(domainVals.length * 0.35))) domainVals = gross;
+  }
+  const dataMin = Math.min(...domainVals);
+  const dataMax = Math.max(...domainVals);
   let minV = dataMin;
   let maxV = dataMax;
   if (Number.isFinite(lineY)) {
-    minV = Math.min(minV, lineY);
-    maxV = Math.max(maxV, lineY);
+    if (statKey === "total") {
+      const { lo, hi } = propsChartGrossScoreBounds();
+      if (lineY >= lo && lineY <= hi) {
+        minV = Math.min(minV, lineY);
+        maxV = Math.max(maxV, lineY);
+      }
+    } else {
+      minV = Math.min(minV, lineY);
+      maxV = Math.max(maxV, lineY);
+    }
   }
   const baseRange = Math.max(0.01, maxV - minV);
   if (statKey === "total") {
-    const yPad = Math.min(1.25, Math.max(0.5, baseRange * 0.035));
+    const yPad = Math.min(1, Math.max(0.35, baseRange * 0.025));
     minV = Math.floor(minV - yPad);
     maxV = Math.ceil(maxV + yPad);
-    const minSpan = 4;
-    if (maxV - minV < minSpan) {
+    const { lo } = propsChartGrossScoreBounds();
+    minV = Math.max(lo, minV);
+    if (maxV - minV < 3) {
       const mid = (dataMin + dataMax) / 2;
-      minV = Math.floor(mid - minSpan / 2);
-      maxV = Math.ceil(mid + minSpan / 2);
-      if (Number.isFinite(lineY)) {
-        minV = Math.min(minV, Math.floor(lineY - 1));
-        maxV = Math.max(maxV, Math.ceil(lineY + 1));
-      }
+      minV = Math.floor(mid - 1.5);
+      maxV = Math.ceil(mid + 1.5);
     }
   } else {
     const minSpan = 6;
@@ -16261,7 +16277,7 @@ function syncPropsTrendCanvasCssBox(canvas, cssW, cssH) {
 /** `series` items: `{ actual, date?, _hist? }` — `_hist` is raw round row (course_name, …). */
 function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
   const xAxisMode = opts.xAxisMode === "valueSort" ? "valueSort" : "chrono";
-  const plot = (series || []).filter((s) => Number.isFinite(num(s.actual, NaN)));
+  const plot = propsChartPlotSeries(series, statKey);
   propsChartHitRegions = [];
   propsChartHoverLayout = { padL: 0, slotW: 0, n: 0 };
   const canvas = document.getElementById("props-trend-canvas");
@@ -16293,10 +16309,12 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
 
   const n = plot.length;
   const visibleW = wrap && wrap.clientWidth > 80 ? wrap.clientWidth - 28 : 400;
-  const pad = { l: 42, r: 14, t: 12, b: n > 12 ? 54 : 46 };
+  const pad = { l: 44, r: 14, t: 14, b: n > 12 ? 56 : 48 };
   const innerW = Math.max(80, visibleW - pad.l - pad.r);
   const cssW = Math.round(visibleW);
-  const cssH = Math.round(clamp(visibleW * 0.5, 260, Math.min(480, vhCap)));
+  const cssH = Math.round(
+    clamp(visibleW * (n > 200 ? 0.58 : 0.5), n > 200 ? 320 : 260, Math.min(n > 200 ? 520 : 480, vhCap)),
+  );
   syncPropsTrendCanvasCssBox(canvas, cssW, cssH);
   canvas.width = Math.round(cssW * dpr);
   canvas.height = Math.round(cssH * dpr);
@@ -16433,6 +16451,16 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
   ctx.fillStyle = "#9ca0ac";
   if (xAxisMode === "valueSort") {
     const sessionPlacements = propsChartXAxisValueSortSessionPlacements(xAxisPerBar, xCenter, pad.l, innerW);
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
+    ctx.lineWidth = 1;
+    for (let i = 1; i < sessionPlacements.length; i++) {
+      const x = sessionPlacements[i].cx - (sessionPlacements[i].cx - sessionPlacements[i - 1].cx) / 2;
+      ctx.beginPath();
+      ctx.moveTo(x, pad.t);
+      ctx.lineTo(x, h - pad.b);
+      ctx.stroke();
+    }
+    ctx.fillStyle = "#9ca0ac";
     for (const p of sessionPlacements) {
       if (!p.lab) continue;
       ctx.fillText(p.lab, p.cx, h - 10);
