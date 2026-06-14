@@ -4627,7 +4627,7 @@ function coherentCountingMeansAtTotal(row, projectedTotal) {
   let bg = num(row.bogeys, NaN);
   let p = num(row.pars, NaN);
   if (Number.isFinite(b) && Number.isFinite(bg)) {
-    const aligned = softAlignHoleCountsToStpRuntime({ eagles: e, birdies: b, pars: p, bogeys: bg, doubles: d }, stp, 0.9);
+    const aligned = softAlignHoleCountsToStpRuntime({ eagles: e, birdies: b, pars: p, bogeys: bg, doubles: d }, stp, 0.52);
     b = aligned.birdies;
     bg = aligned.bogeys;
     p = aligned.pars;
@@ -4641,8 +4641,8 @@ function coherentCountingMeansAtTotal(row, projectedTotal) {
   const fwFromScore = clamp(vFw - stp * 0.48, 4, Number.isFinite(nFw) ? nFw + 0.2 : 13);
   const girRaw = num(row.gir, NaN);
   const fwRaw = num(row.fairways, NaN);
-  const gir = Number.isFinite(girRaw) ? 0.38 * girRaw + 0.62 * girFromScore : girFromScore;
-  const fw = Number.isFinite(fwRaw) ? 0.42 * fwRaw + 0.58 * fwFromScore : fwFromScore;
+  const gir = Number.isFinite(girRaw) ? 0.52 * girRaw + 0.48 * girFromScore : girFromScore;
+  const fw = Number.isFinite(fwRaw) ? 0.55 * fwRaw + 0.45 * fwFromScore : fwFromScore;
   return {
     Birdies: b,
     Bogeys: bg,
@@ -15839,35 +15839,96 @@ function propsChartSparseTickLabels(perBarLabels, innerWidthPx) {
 }
 
 /**
- * Value-sorted field charts: place each session date at the median bar index for that date
- * (bars are ordered by score, not time — evenly spaced date ticks are misleading).
+ * Value-sorted field charts: label each session at the horizontal span of that date's bars
+ * (score-sorted x — use cluster IQR center so labels spread across the chart width).
+ * @returns {{ cx: number, lab: string }[]}
  */
-function propsChartXAxisValueSortSessionLabels(perBarLabels, innerW) {
-  const n = perBarLabels.length;
-  const map = new Map();
-  if (!n) return map;
+function propsChartXAxisValueSortSessionPlacements(perBarLabels, xCenter, padL, innerW) {
+  if (!perBarLabels.length || !xCenter?.length) return [];
   const groups = new Map();
-  for (let i = 0; i < n; i++) {
+  for (let i = 0; i < perBarLabels.length; i++) {
     const lab = String(perBarLabels[i] || "").trim();
     if (!lab) continue;
     if (!groups.has(lab)) groups.set(lab, []);
     groups.get(lab).push(i);
   }
-  if (!groups.size) return map;
-  const minPx = 54;
-  const minIdxGap = Math.max(4, Math.floor((n * minPx) / Math.max(80, innerW)));
-  const candidates = [];
+  if (!groups.size) return [];
+
+  function mdSortKey(lab) {
+    const p = String(lab || "").split("/");
+    if (p.length >= 2) {
+      const mo = parseInt(p[0], 10);
+      const dy = parseInt(String(p[1]).replace(/[^0-9].*$/, ""), 10);
+      if (Number.isFinite(mo) && Number.isFinite(dy)) return mo * 32 + dy;
+    }
+    return 0;
+  }
+
+  /** @type {{ cx: number, lab: string, sortKey: number }[]} */
+  const placements = [];
   for (const [lab, indices] of groups) {
-    candidates.push({ lab, mid: indices[Math.floor(indices.length / 2)], n: indices.length });
+    indices.sort((a, b) => a - b);
+    const nIdx = indices.length;
+    const iLo = indices[0];
+    const iHi = indices[nIdx - 1];
+    const cx =
+      Number.isFinite(xCenter[iLo]) && Number.isFinite(xCenter[iHi])
+        ? (xCenter[iLo] + xCenter[iHi]) / 2
+        : xCenter[indices[Math.floor(nIdx / 2)]];
+    if (!Number.isFinite(cx)) continue;
+    placements.push({ cx, lab, sortKey: mdSortKey(lab) });
   }
-  candidates.sort((a, b) => a.mid - b.mid);
-  let lastIdx = -Infinity;
-  for (const c of candidates) {
-    if (map.size && c.mid - lastIdx < minIdxGap) continue;
-    map.set(c.mid, c.lab);
-    lastIdx = c.mid;
+
+  const xs = placements.map((p) => p.cx);
+  const clusterSpan = xs.length ? Math.max(...xs) - Math.min(...xs) : 0;
+  const plotL = Number.isFinite(padL) ? padL : xCenter[0] - (xCenter[1] - xCenter[0]) * 0.5;
+  const plotW =
+    Number.isFinite(innerW) && innerW > 0
+      ? innerW
+      : xCenter.length > 1
+        ? xCenter[xCenter.length - 1] - xCenter[0]
+        : 0;
+
+  if (placements.length >= 2 && plotW > 0 && clusterSpan < plotW * 0.38) {
+    const sorted = [...placements].sort((a, b) => a.sortKey - b.sortKey);
+    for (let j = 0; j < sorted.length; j++) {
+      sorted[j].cx = plotL + ((j + 0.5) / sorted.length) * plotW;
+    }
+    return sorted.map(({ cx, lab }) => ({ cx, lab }));
   }
-  if (!map.size) map.set(candidates[0].mid, candidates[0].lab);
+
+  placements.sort((a, b) => a.cx - b.cx);
+  const minPx = 44;
+  for (let i = 1; i < placements.length; i++) {
+    const gap = placements[i].cx - placements[i - 1].cx;
+    if (gap >= minPx) continue;
+    const need = (minPx - gap) / 2;
+    placements[i - 1].cx -= need;
+    placements[i].cx += need;
+  }
+  return placements.map(({ cx, lab }) => ({ cx, lab }));
+}
+
+/** @deprecated use propsChartXAxisValueSortSessionPlacements */
+function propsChartXAxisValueSortSessionLabels(perBarLabels, innerW) {
+  const n = perBarLabels.length;
+  const map = new Map();
+  if (!n) return map;
+  const slotEq = Math.max(1, innerW / n);
+  const padL = 42;
+  const xCenter = Array.from({ length: n }, (_, i) => padL + (i + 0.5) * slotEq);
+  for (const p of propsChartXAxisValueSortSessionPlacements(perBarLabels, xCenter)) {
+    let best = 0;
+    let bestD = Infinity;
+    for (let i = 0; i < n; i++) {
+      const d = Math.abs(xCenter[i] - p.cx);
+      if (d < bestD) {
+        bestD = d;
+        best = i;
+      }
+    }
+    map.set(best, p.lab);
+  }
   return map;
 }
 
@@ -16117,7 +16178,7 @@ function propsChartYTickValues(minV, maxV, statKey) {
   const span = hi - lo;
   let step;
   if (statKey === "total") {
-    step = span <= 8 ? 1 : span <= 14 ? 2 : span <= 22 ? 3 : 4;
+    step = span <= 6 ? 1 : span <= 10 ? 2 : span <= 16 ? 3 : 4;
   } else {
     step = Math.max(1, Math.round(span / 5));
     if (step === 3 && span >= 18) step = 4;
@@ -16130,31 +16191,34 @@ function propsChartYTickValues(minV, maxV, statKey) {
   return [...new Set(ticks)].sort((a, b) => a - b);
 }
 
-/** Y-domain for props trend chart — tighter for round score where strokes matter. */
+/** Y-domain for props trend chart — tight to data min/max so bars use the plot height. */
 function propsChartYDomain(vals, lineY, statKey) {
-  let minV = Math.min(...vals);
-  let maxV = Math.max(...vals);
+  const dataMin = Math.min(...vals);
+  const dataMax = Math.max(...vals);
+  let minV = dataMin;
+  let maxV = dataMax;
   if (Number.isFinite(lineY)) {
     minV = Math.min(minV, lineY);
     maxV = Math.max(maxV, lineY);
   }
-  const baseRange = Math.max(0, maxV - minV);
+  const baseRange = Math.max(0.01, maxV - minV);
   if (statKey === "total") {
-    const yPad = Math.max(1, Math.min(2, baseRange * 0.08));
-    minV -= yPad;
-    maxV += yPad;
-    minV = Math.floor(minV);
-    maxV = Math.ceil(maxV);
-    const minSpan = 6;
+    const yPad = Math.min(1.25, Math.max(0.5, baseRange * 0.035));
+    minV = Math.floor(minV - yPad);
+    maxV = Math.ceil(maxV + yPad);
+    const minSpan = 4;
     if (maxV - minV < minSpan) {
-      const mid = (minV + maxV) / 2;
+      const mid = (dataMin + dataMax) / 2;
       minV = Math.floor(mid - minSpan / 2);
       maxV = Math.ceil(mid + minSpan / 2);
+      if (Number.isFinite(lineY)) {
+        minV = Math.min(minV, Math.floor(lineY - 1));
+        maxV = Math.max(maxV, Math.ceil(lineY + 1));
+      }
     }
   } else {
-    const minSpan = 8;
-    const padAbs = 1;
-    const yPad = Math.max(padAbs, baseRange * 0.35);
+    const minSpan = 6;
+    const yPad = Math.max(0.75, Math.min(2, baseRange * 0.12));
     minV -= yPad;
     maxV += yPad;
     if (maxV - minV < minSpan) {
@@ -16163,6 +16227,8 @@ function propsChartYDomain(vals, lineY, statKey) {
       maxV = mid + minSpan / 2;
     }
     minV = Math.max(0, minV);
+    minV = Math.floor(minV);
+    maxV = Math.ceil(maxV);
   }
   if (minV === maxV) {
     minV -= 1;
@@ -16361,15 +16427,23 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
     ctx.fillText(propsChartTickLabel(statKey, tv), 5, y);
   }
   ctx.textBaseline = "alphabetic";
-  const tickMap = propsChartXAxisDateLabels(xAxisPerBar, innerW, { xAxisMode });
   const xLabFont = n > 36 ? 10 : 12;
   ctx.font = `${xLabFont}px DM Sans, sans-serif`;
   ctx.textAlign = "center";
   ctx.fillStyle = "#9ca0ac";
-  for (const [i, lab] of tickMap.entries()) {
-    if (!lab) continue;
-    const cx = xCenter[i] != null ? xCenter[i] : pad.l + innerW / 2;
-    ctx.fillText(lab, cx, h - 10);
+  if (xAxisMode === "valueSort") {
+    const sessionPlacements = propsChartXAxisValueSortSessionPlacements(xAxisPerBar, xCenter, pad.l, innerW);
+    for (const p of sessionPlacements) {
+      if (!p.lab) continue;
+      ctx.fillText(p.lab, p.cx, h - 10);
+    }
+  } else {
+    const tickMap = propsChartXAxisDateLabels(xAxisPerBar, innerW, { xAxisMode });
+    for (const [i, lab] of tickMap.entries()) {
+      if (!lab) continue;
+      const cx = xCenter[i] != null ? xCenter[i] : pad.l + innerW / 2;
+      ctx.fillText(lab, cx, h - 10);
+    }
   }
   ctx.textAlign = "left";
   propsChartCache = { series: plot, lineY, statKey };

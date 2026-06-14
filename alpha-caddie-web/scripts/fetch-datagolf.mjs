@@ -80,8 +80,11 @@ import {
   loadEventRoundContextFromHistoricalCsv,
   loadVenueHistoricalScoring,
   loadWithinEventCountingActualsFromHistoryJson,
+  mergeFieldCountingMeansPreferWithin,
+  reconcileAllProjectionPlayerRows,
   resolveProjectionCounts,
   resolveProjectionScoreToPar,
+  updateProjectionBasisFromEventWeek,
 } from "./course-round-adjustments.mjs";
 import { holeParsFromLiveHoleStatsPayload } from "./dg-live-hole-pars.mjs";
 import { normCourseNameKey, formatCourseLabelForDisplay } from "./course-name-key.mjs";
@@ -2266,11 +2269,25 @@ async function main() {
     withinEventCountingMap.size > 0
       ? fieldCountingMeansFromWithinEventMap(withinEventCountingMap, fieldMeanOptsEarly)
       : null;
-  const fieldCountingMeans = fieldCountingFromEvent?.birdies?.[1]
-    ? fieldCountingFromEvent
-    : fieldCountingFromHistory?.birdies?.[1]
-      ? fieldCountingFromHistory
-      : fieldCountingFromEvent || fieldCountingFromHistory;
+  const fieldCountingMeans = mergeFieldCountingMeansPreferWithin(
+    fieldCountingFromHistory,
+    fieldCountingFromEvent,
+  );
+  if (fieldCountingMeans) {
+    const basisStub = {
+      venue_avg_birdies: venueScoring.venueAvgBirdies,
+      venue_avg_bogeys: venueScoring.venueAvgBogeys,
+      venue_avg_gir: venueScoring.venueAvgGir,
+      venue_avg_fairways: venueScoring.venueAvgFairways,
+      venue_avg_pars: venueScoring.venueAvgPars,
+    };
+    updateProjectionBasisFromEventWeek(basisStub, fieldCountingMeans);
+    if (Number.isFinite(basisStub.venue_avg_birdies)) venueScoring.venueAvgBirdies = basisStub.venue_avg_birdies;
+    if (Number.isFinite(basisStub.venue_avg_bogeys)) venueScoring.venueAvgBogeys = basisStub.venue_avg_bogeys;
+    if (Number.isFinite(basisStub.venue_avg_gir)) venueScoring.venueAvgGir = basisStub.venue_avg_gir;
+    if (Number.isFinite(basisStub.venue_avg_fairways)) venueScoring.venueAvgFairways = basisStub.venue_avg_fairways;
+    if (Number.isFinite(basisStub.venue_avg_pars)) venueScoring.venueAvgPars = basisStub.venue_avg_pars;
+  }
   const priorCourseExcessByRound = {};
   const priorCourseStrokeShiftByRound = {};
   if (applyPriorRoundAdj) {
@@ -2671,6 +2688,18 @@ async function main() {
     outrights,
     matchups,
   };
+
+  const dkFieldCal = draftKingsDgIdsFromProjections({ props: preservedProps });
+  const calResult = reconcileAllProjectionPlayerRows(payload, {
+    dgFilter: dkFieldCal.size >= 8 ? dkFieldCal : null,
+    minField: 8,
+  });
+  if (calResult?.calibrated?.rounds) {
+    const pb = calResult.calibrated.pooled?.birdies;
+    console.log(
+      `[fetch-dg] Field market calibration: ${calResult.calibrated.rounds} round(s)${Number.isFinite(pb) ? `, pooled birdies≈${pb.toFixed(2)}` : ""}`,
+    );
+  }
 
   writeFileSync(projectionsOutPath, JSON.stringify(payload, null, 2), "utf8");
   if (!preservedProps.length) {

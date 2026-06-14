@@ -17,7 +17,11 @@ import { eventsLikelySame } from "./dg-events-align.mjs";
 import { num } from "./pin-sheet-difficulty.mjs";
 import { roundAdjustmentsFromPinSheetBayesian } from "./pin-sheet-bayesian-calibration.mjs";
 import { loadPinHoleScoringIndex } from "./pin-hole-scoring-index.mjs";
-import { reconcileProjectionRowCountsToScore } from "./course-round-adjustments.mjs";
+import {
+  draftKingsDgIdsFromProjections,
+  reconcileAllProjectionPlayerRows,
+  reconcileProjectionRowCountsToScore,
+} from "./course-round-adjustments.mjs";
 import {
   courseKeyFromName,
   defaultPinLocationsRoot,
@@ -252,9 +256,16 @@ export async function applyPinSheetToProjections(payload, sheet, pinPath = "", p
       venueAvgGir: num(basis.venue_avg_gir, 12),
       venueAvgFairways: num(basis.venue_avg_fairways, 9),
       nFairwayHoles: Math.round(num(basis.fairway_holes_modeled, 14)) || 14,
-      alignStrength: 0.88,
+      alignStrength: 0.52,
+      spreadStrength: 0.58,
     });
   }
+
+  const dkField = draftKingsDgIdsFromProjections(payload);
+  reconcileAllProjectionPlayerRows(payload, {
+    dgFilter: dkField.size >= 8 ? dkField : null,
+    minField: 8,
+  });
 
   meta.pin_sheet = {
     round: rnd,

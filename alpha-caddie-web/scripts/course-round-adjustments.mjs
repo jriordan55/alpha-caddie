@@ -600,11 +600,23 @@ export function reconcileProjectionRowCountsToScore(row, opts = {}) {
     const aligned = softAlignHoleCountsToStp(
       { eagles: e, birdies: b, pars: p, bogeys: bg, doubles: d },
       stp,
-      num(opts.alignStrength, 0.9),
+      num(opts.alignStrength, 0.52),
     );
     b = aligned.birdies;
     bg = aligned.bogeys;
     p = aligned.pars;
+    const spread = spreadParsIntoBirdBogPairs(
+      { eagles: e, birdies: b, pars: p, bogeys: bg, doubles: d },
+      {
+        venueBirdies: num(opts.venueAvgBirdies, 4.2),
+        venueBogeys: num(opts.venueAvgBogeys, 2.1),
+        venuePars: num(opts.venueAvgPars, 11.2),
+        spreadStrength: num(opts.spreadStrength, 0.58),
+      },
+    );
+    b = spread.birdies;
+    bg = spread.bogeys;
+    p = spread.pars;
   }
 
   const venueGir = num(opts.venueAvgGir, 12);
@@ -612,8 +624,8 @@ export function reconcileProjectionRowCountsToScore(row, opts = {}) {
   const nFw = Math.round(num(opts.nFairwayHoles, 14)) || 14;
   const girFromScore = clamp(venueGir - stp * 0.82, 7.5, 16.2);
   const fwFromScore = clamp(venueFw - stp * 0.48, 4, nFw + 0.2);
-  const girBlend = num(opts.girBlend, 0.62);
-  const fwBlend = num(opts.fairwaysBlend, 0.58);
+  const girBlend = num(opts.girBlend, 0.48);
+  const fwBlend = num(opts.fairwaysBlend, 0.45);
   let gir = num(row.gir, NaN);
   let fairways = num(row.fairways, NaN);
   if (Number.isFinite(gir)) gir = (1 - girBlend) * gir + girBlend * girFromScore;
@@ -645,7 +657,12 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
     venueAvgBogeys: num(basis.venue_avg_bogeys, 2.1),
     venueAvgGir: num(basis.venue_avg_gir, 12),
     venueAvgFairways: num(basis.venue_avg_fairways, 9),
+    venueAvgPars: num(basis.venue_avg_pars, 11.2),
     nFairwayHoles: Math.round(num(basis.fairway_holes_modeled, 14)) || 14,
+    alignStrength: 0.52,
+    spreadStrength: 0.58,
+    girBlend: 0.48,
+    fairwaysBlend: 0.45,
     ...opts,
   };
   let n = 0;
@@ -657,7 +674,12 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
   if (meta?.projection_round_adjustments && typeof meta.projection_round_adjustments === "object") {
     meta.projection_round_adjustments.projection_counts_coherent = true;
   }
-  return n;
+  const cal = calibrateProjectionFieldMarkets(payload, {
+    dgFilter: opts.dgFilter,
+    minField: opts.minField,
+    skipCalibrate: opts.skipFieldCalibrate,
+  });
+  return { reconciled: n, calibrated: cal };
 }
 
 /**
@@ -1026,7 +1048,254 @@ const WITHIN_EVENT_SKILL_ANCHOR_BASE = 0.22;
 const WITHIN_EVENT_SKILL_ANCHOR_MU_SCALE = 0.06;
 const WITHIN_EVENT_ALIGN_STRENGTH = 0.96;
 const WITHIN_EVENT_PAR_SPREAD_STRENGTH = 0.55;
-const FIELD_DAY_COUNTING_LIFT_FRAC = 0.12;
+const FIELD_DAY_COUNTING_LIFT_FRAC = 0.48;
+
+/** Clamp implausible field-day means (CSV quirks, birds-or-better columns, etc.). */
+export function sanitizeFieldCountingMeans(fieldMeans) {
+  if (!fieldMeans || typeof fieldMeans !== "object") return null;
+  /** @type {Record<string, Record<number, number>>} */
+  const out = { birdies: {}, bogeys: {}, gir: {}, fairways: {} };
+  for (const stat of Object.keys(out)) {
+    const bucket = fieldMeans[stat];
+    if (!bucket || typeof bucket !== "object") continue;
+    for (const [rndKey, raw] of Object.entries(bucket)) {
+      const rnd = Math.round(num(rndKey, NaN));
+      let v = num(raw, NaN);
+      if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4 || !Number.isFinite(v)) continue;
+      if (stat === "birdies") v = clamp(v, 2.2, 4.85);
+      else if (stat === "bogeys") v = clamp(v, 1.35, 5.2);
+      else if (stat === "gir") v = clamp(v, 8, 15.5);
+      else if (stat === "fairways") v = clamp(v, 4, 13);
+      out[stat][rnd] = Math.round(v * 100) / 100;
+    }
+  }
+  return out;
+}
+
+/** Prefer live within-event field means over event-scoped CSV when both exist. */
+export function mergeFieldCountingMeansPreferWithin(withinMeans, eventMeans) {
+  const within = sanitizeFieldCountingMeans(withinMeans);
+  const event = sanitizeFieldCountingMeans(eventMeans);
+  if (!within && !event) return null;
+  /** @type {Record<string, Record<number, number>>} */
+  const out = { birdies: {}, bogeys: {}, gir: {}, fairways: {} };
+  for (const stat of Object.keys(out)) {
+    for (let rnd = 1; rnd <= 3; rnd++) {
+      const w = num(within?.[stat]?.[rnd], NaN);
+      const e = num(event?.[stat]?.[rnd], NaN);
+      const pick = Number.isFinite(w) ? w : e;
+      if (Number.isFinite(pick)) out[stat][rnd] = pick;
+    }
+  }
+  return out;
+}
+
+function pooledFieldCountingMean(fieldMeans, statKey) {
+  const bucket = fieldMeans?.[statKey];
+  if (!bucket || typeof bucket !== "object") return NaN;
+  const vals = Object.values(bucket).map((v) => num(v, NaN)).filter(Number.isFinite);
+  if (!vals.length) return NaN;
+  return vals.reduce((a, b) => a + b, 0) / vals.length;
+}
+
+function plausibleEventWeekMean(pooled, venue, statKey) {
+  if (!Number.isFinite(pooled)) return NaN;
+  if (!Number.isFinite(venue)) return pooled;
+  const d = pooled - venue;
+  if (statKey === "birdies") {
+    if (d > 0.65 || d < -0.55) return Math.round((venue + (d > 0 ? 0.21 : -0.12)) * 100) / 100;
+  } else if (statKey === "bogeys") {
+    if (Math.abs(d) > 0.55) return Math.round((venue + Math.sign(d) * Math.min(0.18, Math.abs(d) * 0.35)) * 100) / 100;
+  } else if (statKey === "gir" || statKey === "fairways") {
+    if (Math.abs(d) > 1.1) return Math.round((venue + d * 0.35) * 100) / 100;
+  }
+  return Math.round(pooled * 100) / 100;
+}
+
+function guardedPooledFieldMean(fieldMeans, statKey, basis, basisKey, fallback) {
+  const pooled = pooledFieldCountingMean(fieldMeans, statKey);
+  const venue = num(basis?.[basisKey], fallback);
+  if (!Number.isFinite(pooled)) return venue;
+  const pl = plausibleEventWeekMean(pooled, venue, statKey);
+  return Number.isFinite(pl) ? pl : venue;
+}
+
+function fieldCountingTargetForRound(fieldMeans, statKey, round, pooledFallback) {
+  const bucket = fieldMeans?.[statKey];
+  if (bucket && typeof bucket === "object") {
+    const prior = [];
+    const tr = Math.round(num(round, NaN));
+    if (Number.isFinite(tr) && tr >= 2) {
+      for (let rn = 1; rn < tr; rn++) {
+        const v = num(bucket[rn] ?? bucket[String(rn)], NaN);
+        if (Number.isFinite(v)) prior.push(v);
+      }
+    }
+    if (prior.length) {
+      const raw = prior.reduce((a, b) => a + b, 0) / prior.length;
+      const adj = plausibleEventWeekMean(raw, pooledFallback, statKey);
+      return Number.isFinite(adj) ? adj : raw;
+    }
+  }
+  return num(pooledFallback, NaN);
+}
+
+function meanFinite(vals) {
+  const v = vals.filter(Number.isFinite);
+  if (!v.length) return NaN;
+  return v.reduce((a, b) => a + b, 0) / v.length;
+}
+
+/** Blend historical venue anchors toward this-week field counting (books/DK field pace). */
+export function updateProjectionBasisFromEventWeek(basis, fieldMeans, opts = {}) {
+  if (!basis || typeof basis !== "object") return basis;
+  const eventShare = clamp(num(opts.eventShare, NaN), 0.35, 0.85) || 0.65;
+  const histShare = 1 - eventShare;
+  const blendKey = (histKey, eventVal, fallback) => {
+    const hist = num(basis[histKey], NaN);
+    let ev = num(eventVal, NaN);
+    const stat =
+      histKey === "venue_avg_birdies"
+        ? "birdies"
+        : histKey === "venue_avg_bogeys"
+          ? "bogeys"
+          : histKey === "venue_avg_gir"
+            ? "gir"
+            : histKey === "venue_avg_fairways"
+              ? "fairways"
+              : "";
+    if (stat && Number.isFinite(ev)) ev = plausibleEventWeekMean(ev, hist, stat);
+    if (!Number.isFinite(ev)) return;
+    const next = Number.isFinite(hist) ? histShare * hist + eventShare * ev : ev;
+    basis[histKey] = Math.round(next * 100) / 100;
+  };
+  const pooledBird = plausibleEventWeekMean(
+    pooledFieldCountingMean(fieldMeans, "birdies"),
+    num(basis.venue_avg_birdies, NaN),
+    "birdies",
+  );
+  const pooledBog = plausibleEventWeekMean(
+    pooledFieldCountingMean(fieldMeans, "bogeys"),
+    num(basis.venue_avg_bogeys, NaN),
+    "bogeys",
+  );
+  const pooledGir = plausibleEventWeekMean(
+    pooledFieldCountingMean(fieldMeans, "gir"),
+    num(basis.venue_avg_gir, NaN),
+    "gir",
+  );
+  const pooledFw = plausibleEventWeekMean(
+    pooledFieldCountingMean(fieldMeans, "fairways"),
+    num(basis.venue_avg_fairways, NaN),
+    "fairways",
+  );
+  blendKey("venue_avg_birdies", pooledBird, 4.2);
+  blendKey("venue_avg_bogeys", pooledBog, 2.5);
+  blendKey("venue_avg_gir", pooledGir, 12);
+  blendKey("venue_avg_fairways", pooledFw, 9);
+  if (Number.isFinite(basis.venue_avg_birdies) && Number.isFinite(basis.venue_avg_bogeys)) {
+    const p = 18 - num(basis.venue_avg_birdies, 0) - num(basis.venue_avg_bogeys, 0);
+    if (p > 8 && p < 14) basis.venue_avg_pars = Math.round(p * 100) / 100;
+  }
+  if (fieldMeans) basis.field_counting_means_by_round = fieldMeans;
+  return basis;
+}
+
+/**
+ * Shift projection field means toward this-week targets (DK field when ≥ minField).
+ * Bird/bog/pars shifts are score-to-par neutral; GIR/FW/putts are additive on the field.
+ */
+export function calibrateProjectionFieldMarkets(payload, opts = {}) {
+  if (opts.skipCalibrate) return { rounds: 0, shifts: {} };
+  const players = Array.isArray(payload?.players) ? payload.players : [];
+  if (!players.length) return { rounds: 0, shifts: {} };
+
+  const basisRoot =
+    payload?.projection_course_basis && typeof payload.projection_course_basis === "object"
+      ? payload.projection_course_basis
+      : payload?.meta?.projection_course_basis;
+  if (!basisRoot || typeof basisRoot !== "object") return { rounds: 0, shifts: {} };
+
+  const dgFilter = opts.dgFilter instanceof Set ? opts.dgFilter : null;
+  const minField = Math.max(8, Math.round(num(opts.minField, 12)) || 12);
+  const fieldMeans = sanitizeFieldCountingMeans(basisRoot.field_counting_means_by_round);
+  const basisForTargets = { ...basisRoot };
+  const pooled = {
+    birdies: guardedPooledFieldMean(fieldMeans, "birdies", basisForTargets, "venue_avg_birdies", 4.2),
+    bogeys: guardedPooledFieldMean(fieldMeans, "bogeys", basisForTargets, "venue_avg_bogeys", 2.5),
+    gir: guardedPooledFieldMean(fieldMeans, "gir", basisForTargets, "venue_avg_gir", 12),
+    fairways: guardedPooledFieldMean(fieldMeans, "fairways", basisForTargets, "venue_avg_fairways", 9),
+    putts: num(basisRoot.venue_avg_putts, NaN),
+  };
+  updateProjectionBasisFromEventWeek(basisRoot, fieldMeans, opts);
+
+  /** @type {Record<string, Record<number, number>>} */
+  const shifts = { birdies: {}, bogeys: {}, gir: {}, fairways: {}, putts: {} };
+  let rounds = 0;
+
+  for (let rnd = 1; rnd <= 4; rnd++) {
+    let rows = players.filter((pl) => Math.round(num(pl.round, NaN)) === rnd);
+    if (dgFilter?.size >= minField) {
+      rows = rows.filter((pl) => dgFilter.has(Math.round(num(pl.dg_id, NaN))));
+    }
+    if (rows.length < minField) continue;
+    rounds++;
+
+    const applyScoreNeutral = (stat, target) => {
+      if (!Number.isFinite(target)) return;
+      const cur = meanFinite(rows.map((pl) => num(pl[stat], NaN)));
+      if (!Number.isFinite(cur)) return;
+      const delta = Math.round((target - cur) * 1000) / 1000;
+      if (Math.abs(delta) < 0.035) return;
+      shifts[stat][rnd] = delta;
+      for (const pl of rows) {
+        const v = num(pl[stat], NaN);
+        if (!Number.isFinite(v)) continue;
+        pl[stat] = Math.round(Math.max(0.15, v + delta) * 100) / 100;
+        if (stat === "birdies" || stat === "bogeys") {
+          const pars = num(pl.pars, NaN);
+          if (Number.isFinite(pars)) pl.pars = Math.round(Math.max(0.12, pars - delta) * 100) / 100;
+        }
+      }
+    };
+
+    const applyAdditive = (stat, target, lo, hi) => {
+      if (!Number.isFinite(target)) return;
+      const cur = meanFinite(rows.map((pl) => num(pl[stat], NaN)));
+      if (!Number.isFinite(cur)) return;
+      const delta = Math.round((target - cur) * 1000) / 1000;
+      if (Math.abs(delta) < 0.035) return;
+      shifts[stat][rnd] = delta;
+      for (const pl of rows) {
+        const v = num(pl[stat], NaN);
+        if (!Number.isFinite(v)) continue;
+        pl[stat] = Math.round(clamp(v + delta, lo, hi) * 100) / 100;
+      }
+    };
+
+    applyScoreNeutral("birdies", pooled.birdies);
+    applyScoreNeutral("bogeys", pooled.bogeys);
+    applyAdditive("gir", pooled.gir, 6, 16.2);
+    applyAdditive(
+      "fairways",
+      pooled.fairways,
+      2,
+      num(basisRoot.fairway_holes_modeled, 14) + 0.5,
+    );
+    if (Number.isFinite(pooled.putts) && pooled.putts >= 24) {
+      applyAdditive("putts", pooled.putts, 24, 34);
+    }
+  }
+
+  if (payload.meta && typeof payload.meta === "object") {
+    payload.meta.projection_course_basis = basisRoot;
+    if (!payload.meta.projection_round_adjustments) payload.meta.projection_round_adjustments = {};
+    payload.meta.projection_round_adjustments.field_markets_calibrated = true;
+    payload.meta.projection_round_adjustments.field_calibration_shifts = shifts;
+  }
+  payload.projection_course_basis = basisRoot;
+  return { rounds, shifts, pooled };
+}
 
 /** Equal-weight mean of prior-round values (no recency tilt toward the latest round). */
 export function plainMeanFromArr(arr) {
