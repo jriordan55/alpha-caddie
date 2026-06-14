@@ -9,7 +9,7 @@
   "datagolf_field_current_round": 4,
   "display_round": 4,
   "display_round_label": "R4 — Sunday (auto, America/New_York)",
-  "updated_at": "2026-06-14T09:40:41Z",
+  "updated_at": "2026-06-14T12:00:30Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -39568,8 +39568,8 @@
     {
       "player_name": "Burns, Sam",
       "line": 4.5,
-      "over_odds": -148,
-      "under_odds": 105,
+      "over_odds": -160,
+      "under_odds": 114,
       "market": "Birdies",
       "round_num": 4,
       "dg_id": 19483,
@@ -39888,8 +39888,8 @@
     {
       "player_name": "Burns, Sam",
       "line": 11.5,
-      "over_odds": 112,
-      "under_odds": -158,
+      "over_odds": 120,
+      "under_odds": -170,
       "market": "Pars",
       "round_num": 4,
       "dg_id": 19483,
@@ -40138,8 +40138,8 @@
     {
       "player_name": "Burns, Sam",
       "line": 67.5,
-      "over_odds": -110,
-      "under_odds": -122,
+      "over_odds": -104,
+      "under_odds": -130,
       "market": "Total Score",
       "round_num": 4,
       "dg_id": 19483,
@@ -55492,8 +55492,8 @@
       "round_num": 4
     }
   },
-  "book_odds_refreshed_at": "2026-06-14T09:40:41Z",
-  "dk_round_props_refreshed_at": "2026-06-14T09:40:41Z",
+  "book_odds_refreshed_at": "2026-06-14T12:00:30Z",
+  "dk_round_props_refreshed_at": "2026-06-14T12:00:30Z",
   "live_round_actuals_by_dg": {
     "5513": {
       "1": {
