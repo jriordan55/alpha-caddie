@@ -649,7 +649,14 @@ export function reconcileProjectionRowCountsToScore(row, opts = {}) {
 /** Reconcile every projection row to its total_score / μ anchor. */
 export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
   const meta = payload?.meta && typeof payload.meta === "object" ? payload.meta : payload;
-  const basis = meta?.projection_course_basis && typeof meta.projection_course_basis === "object" ? meta.projection_course_basis : {};
+  if (!meta.projection_course_basis || typeof meta.projection_course_basis !== "object") {
+    meta.projection_course_basis = payload?.projection_course_basis || {};
+  }
+  ensureProjectionCourseBasisComplete(meta.projection_course_basis, payload);
+  if (payload?.projection_course_basis !== meta.projection_course_basis) {
+    payload.projection_course_basis = meta.projection_course_basis;
+  }
+  const basis = meta.projection_course_basis;
   const coursePar18 = Math.round(num(payload?.course_par_18 ?? meta?.course_par_18, NaN)) || 72;
   const recOpts = {
     coursePar18,
@@ -1146,6 +1153,76 @@ function meanFinite(vals) {
   return v.reduce((a, b) => a + b, 0) / v.length;
 }
 
+/**
+ * Guarantee venue averages needed for O/U course ratings (Round score, GIR, FW, …).
+ * Never strips existing keys — only backfills missing venue_avg_round_score / score_to_par / FW.
+ */
+export function ensureProjectionCourseBasisComplete(basis, payload = {}) {
+  const out = basis && typeof basis === "object" ? basis : {};
+  const coursePar18 = Math.round(num(payload.course_par_18, NaN)) || 72;
+  const lo = coursePar18 - 14;
+  const hi = coursePar18 + 22;
+  out.fairway_holes_modeled = Math.round(num(out.fairway_holes_modeled, 14)) || 14;
+
+  const roundMaps = [out.field_avg_score_by_round, out.event_week_field_avg_score_by_round];
+  const roundScores = [];
+  for (const m of roundMaps) {
+    if (!m || typeof m !== "object") continue;
+    for (const v of Object.values(m)) {
+      const x = num(v, NaN);
+      if (Number.isFinite(x) && x >= lo && x <= hi) roundScores.push(x);
+    }
+  }
+
+  if (!Number.isFinite(num(out.venue_avg_round_score, NaN))) {
+    const stp = num(out.venue_avg_score_to_par, NaN);
+    if (Number.isFinite(stp)) out.venue_avg_round_score = Math.round((coursePar18 + stp) * 100) / 100;
+  }
+  if (!Number.isFinite(num(out.venue_avg_round_score, NaN)) && roundScores.length) {
+    out.venue_avg_round_score =
+      Math.round((roundScores.reduce((a, b) => a + b, 0) / roundScores.length) * 100) / 100;
+  }
+  if (!Number.isFinite(num(out.venue_avg_round_score, NaN)) && Array.isArray(payload.players)) {
+    const fromRows = [];
+    for (const pl of payload.players) {
+      const ts = num(pl.total_score, NaN);
+      if (Number.isFinite(ts) && ts >= lo && ts <= hi) fromRows.push(ts);
+    }
+    if (fromRows.length >= 8) {
+      out.venue_avg_round_score =
+        Math.round((fromRows.reduce((a, b) => a + b, 0) / fromRows.length) * 100) / 100;
+    }
+  }
+  if (
+    !Number.isFinite(num(out.venue_avg_round_score, NaN)) &&
+    Number.isFinite(num(out.venue_avg_birdies, NaN)) &&
+    Number.isFinite(num(out.venue_avg_bogeys, NaN))
+  ) {
+    const stpEst = num(out.venue_avg_bogeys, 0) - num(out.venue_avg_birdies, 0);
+    out.venue_avg_round_score = Math.round((coursePar18 + stpEst) * 100) / 100;
+  }
+
+  if (!Number.isFinite(num(out.venue_avg_score_to_par, NaN)) && Number.isFinite(num(out.venue_avg_round_score, NaN))) {
+    out.venue_avg_score_to_par = Math.round((out.venue_avg_round_score - coursePar18) * 1000) / 1000;
+  }
+
+  if (!Number.isFinite(num(out.venue_avg_fairways, NaN)) && Number.isFinite(num(out.venue_avg_gir, NaN))) {
+    const nFw = out.fairway_holes_modeled;
+    out.venue_avg_fairways = Math.round(num(out.venue_avg_gir, 0) * (nFw / 18) * 0.92 * 100) / 100;
+  }
+
+  if (
+    !Number.isFinite(num(out.venue_avg_pars, NaN)) &&
+    Number.isFinite(num(out.venue_avg_birdies, NaN)) &&
+    Number.isFinite(num(out.venue_avg_bogeys, NaN))
+  ) {
+    const p = 18 - num(out.venue_avg_birdies, 0) - num(out.venue_avg_bogeys, 0);
+    if (p > 8 && p < 14) out.venue_avg_pars = Math.round(p * 100) / 100;
+  }
+
+  return out;
+}
+
 /** Blend historical venue anchors toward this-week field counting (books/DK field pace). */
 export function updateProjectionBasisFromEventWeek(basis, fieldMeans, opts = {}) {
   if (!basis || typeof basis !== "object") return basis;
@@ -1198,7 +1275,7 @@ export function updateProjectionBasisFromEventWeek(basis, fieldMeans, opts = {})
     if (p > 8 && p < 14) basis.venue_avg_pars = Math.round(p * 100) / 100;
   }
   if (fieldMeans) basis.field_counting_means_by_round = fieldMeans;
-  return basis;
+  return ensureProjectionCourseBasisComplete(basis, opts?.payload || {});
 }
 
 /**
@@ -1227,7 +1304,7 @@ export function calibrateProjectionFieldMarkets(payload, opts = {}) {
     fairways: guardedPooledFieldMean(fieldMeans, "fairways", basisForTargets, "venue_avg_fairways", 9),
     putts: num(basisRoot.venue_avg_putts, NaN),
   };
-  updateProjectionBasisFromEventWeek(basisRoot, fieldMeans, opts);
+  updateProjectionBasisFromEventWeek(basisRoot, fieldMeans, { ...opts, payload });
 
   /** @type {Record<string, Record<number, number>>} */
   const shifts = { birdies: {}, bogeys: {}, gir: {}, fairways: {}, putts: {} };

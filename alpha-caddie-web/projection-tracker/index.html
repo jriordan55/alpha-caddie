@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Projection tracker · AlphaCaddie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="tracker.css?v=3" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <div>
+        <h1 class="brand-title">Projection tracker</h1>
+        <p class="brand-sub">Model vs book lines &amp; flat-unit EV backtest</p>
+      </div>
+      <div class="header-meta" id="header-meta">Loading…</div>
+    </div>
+  </header>
+
+  <main class="main">
+    <p id="error-banner" class="error-banner" hidden></p>
+
+    <div class="toolbar-card">
+      <label>Tournament
+        <select id="filter-tournament"></select>
+      </label>
+      <label>Market
+        <select id="filter-market">
+          <option value="">All markets</option>
+        </select>
+      </label>
+      <label>Min EV %
+        <select id="filter-min-ev">
+          <option value="0">0%</option>
+          <option value="2.5">2.5%</option>
+          <option value="5" selected>5%</option>
+          <option value="7.5">7.5%</option>
+          <option value="10">10%</option>
+          <option value="12.5">12.5%</option>
+          <option value="15">15%</option>
+        </select>
+      </label>
+      <label>Bet side
+        <select id="filter-side">
+          <option value="">Both</option>
+          <option value="over">Over</option>
+          <option value="under">Under</option>
+        </select>
+      </label>
+      <button type="button" class="btn" id="btn-reload" title="Reload CSV from disk">Reload data</button>
+    </div>
+
+    <nav class="tabs" role="tablist">
+      <button type="button" class="tab active" data-tab="overview" role="tab">Overview</button>
+      <button type="button" class="tab" data-tab="accuracy" role="tab">Line accuracy</button>
+      <button type="button" class="tab" data-tab="ev" role="tab">EV backtest</button>
+      <button type="button" class="tab" data-tab="events" role="tab">All tournaments</button>
+      <button type="button" class="tab" data-tab="insights" role="tab">Insights</button>
+    </nav>
+
+    <section id="panel-overview" class="panel active" role="tabpanel">
+      <div class="kpi-grid" id="overview-kpis"></div>
+      <div class="chart-card">
+        <h2 class="section-title">RMSE vs book line (lower is better)</h2>
+        <div class="bar-chart" id="overview-rmse-chart"></div>
+      </div>
+      <div class="chart-card">
+        <h2 class="section-title">EV ROI by market (min edge filter applied)</h2>
+        <div class="bar-chart" id="overview-roi-chart"></div>
+      </div>
+    </section>
+
+    <section id="panel-accuracy" class="panel" role="tabpanel">
+      <p class="note">How far projected lines sit from the sportsbook line before the round.</p>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table class="data-table" id="accuracy-table">
+            <thead>
+              <tr>
+                <th id="accuracy-col-event" hidden>Tournament</th>
+                <th>Market</th>
+                <th class="num">RMSE</th>
+                <th class="num">MAE</th>
+                <th class="num">Line pairs</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-ev" class="panel" role="tabpanel">
+      <p class="note">Flat 1u bets on every side that clears the edge threshold. Lower min EV % if a tournament looks empty.</p>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table class="data-table" id="ev-table">
+            <thead>
+              <tr>
+                <th id="ev-col-event" hidden>Tournament</th>
+                <th>Market</th>
+                <th class="num">EV %</th>
+                <th>Side</th>
+                <th class="num">Bets</th>
+                <th class="num">W–L–P</th>
+                <th class="num">Units</th>
+                <th class="num">ROI</th>
+                <th class="num">Win %</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h2 class="section-title">ROI heatmap (market × threshold, best side per cell)</h2>
+        <div class="table-wrap">
+          <table class="data-table" id="ev-heatmap"></table>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-events" class="panel" role="tabpanel">
+      <p class="note">Click a tournament to drill into its full results.</p>
+      <div class="event-grid" id="event-grid"></div>
+    </section>
+
+    <section id="panel-insights" class="panel" role="tabpanel">
+      <p class="note">Auto-generated takeaways from the current filters.</p>
+      <ul class="insight-list" id="insight-list"></ul>
+    </section>
+  </main>
+
+  <script src="tracker.js?v=4"></script>
+</body>
+</html>

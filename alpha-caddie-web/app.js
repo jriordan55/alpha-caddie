@@ -2643,6 +2643,13 @@ function applyPayload(raw) {
     Object.assign(meta, raw.meta);
     delete meta.meta;
   }
+  if (!meta.projection_course_basis || typeof meta.projection_course_basis !== "object") {
+    meta.projection_course_basis = {};
+  }
+  meta.projection_course_basis = ensureProjectionCourseBasisComplete(meta.projection_course_basis, {
+    ...meta,
+    players,
+  });
 
   if (!outrightPayloadHasRows(outrights) && players.length) {
     outrights = buildDemoOutrightsFromPlayers(players);
@@ -2658,6 +2665,12 @@ function applyPayload(raw) {
     outrights,
     matchups,
   };
+  if (DATA.meta?.projection_course_basis) {
+    DATA.meta.projection_course_basis = ensureProjectionCourseBasisComplete(DATA.meta.projection_course_basis, {
+      ...DATA.meta,
+      players,
+    });
+  }
   approachSkillYtdCache = null;
   approachSkillYtdLoadPromise = null;
   COURSE_TABLE_PAYLOAD = null;
@@ -3038,11 +3051,84 @@ function ouPgaTourCourseBenchmarkForMarket(market) {
 }
 
 /** This week's venue historical average for a market (counts or strokes; GIR/FW as rate). */
+function ensureProjectionCourseBasisComplete(basis, payload = {}) {
+  const out = basis && typeof basis === "object" ? basis : {};
+  const meta = payload && typeof payload === "object" ? payload : {};
+  const coursePar18 = Math.round(num(meta.course_par_18, NaN)) || 72;
+  const lo = coursePar18 - 14;
+  const hi = coursePar18 + 22;
+  out.fairway_holes_modeled = Math.round(num(out.fairway_holes_modeled, 14)) || 14;
+
+  const roundScores = [];
+  for (const m of [out.field_avg_score_by_round, out.event_week_field_avg_score_by_round]) {
+    if (!m || typeof m !== "object") continue;
+    for (const v of Object.values(m)) {
+      const x = num(v, NaN);
+      if (Number.isFinite(x) && x >= lo && x <= hi) roundScores.push(x);
+    }
+  }
+
+  if (!Number.isFinite(num(out.venue_avg_round_score, NaN))) {
+    const stp = num(out.venue_avg_score_to_par, NaN);
+    if (Number.isFinite(stp)) out.venue_avg_round_score = Math.round((coursePar18 + stp) * 100) / 100;
+  }
+  if (!Number.isFinite(num(out.venue_avg_round_score, NaN)) && roundScores.length) {
+    out.venue_avg_round_score =
+      Math.round((roundScores.reduce((a, b) => a + b, 0) / roundScores.length) * 100) / 100;
+  }
+  if (!Number.isFinite(num(out.venue_avg_round_score, NaN)) && Array.isArray(payload.players)) {
+    const fromRows = [];
+    for (const pl of payload.players) {
+      const ts = num(pl.total_score, NaN);
+      if (Number.isFinite(ts) && ts >= lo && ts <= hi) fromRows.push(ts);
+    }
+    if (fromRows.length >= 8) {
+      out.venue_avg_round_score =
+        Math.round((fromRows.reduce((a, b) => a + b, 0) / fromRows.length) * 100) / 100;
+    }
+  }
+  if (
+    !Number.isFinite(num(out.venue_avg_round_score, NaN)) &&
+    Number.isFinite(num(out.venue_avg_birdies, NaN)) &&
+    Number.isFinite(num(out.venue_avg_bogeys, NaN))
+  ) {
+    const stpEst = num(out.venue_avg_bogeys, 0) - num(out.venue_avg_birdies, 0);
+    out.venue_avg_round_score = Math.round((coursePar18 + stpEst) * 100) / 100;
+  }
+  if (!Number.isFinite(num(out.venue_avg_score_to_par, NaN)) && Number.isFinite(num(out.venue_avg_round_score, NaN))) {
+    out.venue_avg_score_to_par = Math.round((out.venue_avg_round_score - coursePar18) * 1000) / 1000;
+  }
+  if (!Number.isFinite(num(out.venue_avg_fairways, NaN)) && Number.isFinite(num(out.venue_avg_gir, NaN))) {
+    const nFw = out.fairway_holes_modeled;
+    out.venue_avg_fairways = Math.round(num(out.venue_avg_gir, 0) * (nFw / 18) * 0.92 * 100) / 100;
+  }
+  if (
+    !Number.isFinite(num(out.venue_avg_pars, NaN)) &&
+    Number.isFinite(num(out.venue_avg_birdies, NaN)) &&
+    Number.isFinite(num(out.venue_avg_bogeys, NaN))
+  ) {
+    const p = 18 - num(out.venue_avg_birdies, 0) - num(out.venue_avg_bogeys, 0);
+    if (p > 8 && p < 14) out.venue_avg_pars = Math.round(p * 100) / 100;
+  }
+  return out;
+}
+
 function ouVenueHistoricalValueForMarket(market) {
   const mKey = ouModelMarketKey(market) || "Total score";
-  const b = DATA?.meta?.projection_course_basis;
-  if (!b || typeof b !== "object") return NaN;
-  if (mKey === "Total score") return num(b.venue_avg_round_score, NaN);
+  const b = ensureProjectionCourseBasisComplete(DATA?.meta?.projection_course_basis || {}, {
+    ...(DATA?.meta || {}),
+    players: DATA?.players || [],
+  });
+  if (DATA?.meta) DATA.meta.projection_course_basis = b;
+  if (mKey === "Total score") {
+    let v = num(b.venue_avg_round_score, NaN);
+    if (!Number.isFinite(v)) {
+      const par = Math.round(num(DATA?.meta?.course_par_18, NaN)) || 72;
+      const stp = num(b.venue_avg_score_to_par, NaN);
+      if (Number.isFinite(stp)) v = par + stp;
+    }
+    return v;
+  }
   if (mKey === "Birdies") return num(b.venue_avg_birdies, NaN);
   if (mKey === "Pars") return num(b.venue_avg_pars, NaN);
   if (mKey === "Bogeys") return num(b.venue_avg_bogeys, NaN);
@@ -3266,7 +3352,7 @@ function ouModelMarketKey(market) {
   const raw = String(market || "").trim();
   if (OU_STAT_MAP[raw]) return raw;
   const sl = raw.toLowerCase().replace(/\s+/g, " ");
-  if (sl === "total score") return "Total score";
+  if (sl === "total score" || sl === "round score") return "Total score";
   if (sl === "birdies") return "Birdies";
   if (sl === "pars") return "Pars";
   if (sl === "bogeys" || sl.includes("bogey")) return "Bogeys";

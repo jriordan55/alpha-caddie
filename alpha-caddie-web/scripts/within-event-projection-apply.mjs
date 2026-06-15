@@ -19,6 +19,7 @@ import {
   buildWithinEventCountingMapFromLiveActuals,
   buildWithinEventFormMap,
   draftKingsDgIdsFromProjections,
+  ensureProjectionCourseBasisComplete,
   fieldCountingMeansFromWithinEventMap,
   loadEventRoundContextFromHistoricalCsv,
   loadWithinEventCountingActualsFromHistoryJson,
@@ -239,7 +240,8 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
 
   if (!meta.projection_course_basis) meta.projection_course_basis = {};
   meta.projection_course_basis.field_counting_means_by_round = fieldCountingMeans || null;
-  updateProjectionBasisFromEventWeek(meta.projection_course_basis, fieldCountingMeans);
+  updateProjectionBasisFromEventWeek(meta.projection_course_basis, fieldCountingMeans, { payload: proj });
+  ensureProjectionCourseBasisComplete(meta.projection_course_basis, proj);
   proj.projection_course_basis = meta.projection_course_basis;
   if (!meta.projection_round_adjustments) meta.projection_round_adjustments = {};
   meta.projection_round_adjustments.within_event_counting_from_actuals = true;

@@ -1029,18 +1029,13 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
   }
   let finalPath = outPath;
   let finalSummaryPath = summaryPath;
-  try {
-    finalPath = ensureRoundProjectionArtifactsPublished(outPath, summaryPath, xlsxPath);
-    finalSummaryPath = summaryPath;
-  } catch (e) {
-    const alt = `${outPath}.new`;
-    if (existsSync(alt)) {
-      console.warn(String(e?.message || e));
-      finalPath = alt;
-      if (existsSync(`${summaryPath}.new`)) finalSummaryPath = `${summaryPath}.new`;
-    } else {
-      throw e;
-    }
+  const pub = ensureRoundProjectionArtifactsPublished(outPath, summaryPath, xlsxPath);
+  finalPath = pub.detail.path;
+  finalSummaryPath = pub.summary.path;
+  if (pub.lockedCount > 0) {
+    console.warn(
+      `[round-projection-vs-actual] ${pub.lockedCount} file(s) still locked — close Excel/editor, then: npm run promote:round-projection-vs-actual`,
+    );
   }
   const rowCount = lines.length - 1 + priorLines.length;
   const summaryRowCount = Math.max(0, summaryContent.split("\n").filter(Boolean).length - 1);
@@ -1089,33 +1084,37 @@ function persistCsv(outPath, content) {
   }
 }
 
-/** Promote `.new` → main CSV / summary / xlsx after a locked write; required before push:live can succeed. */
+/** Promote `.new` → main artifact when Excel had the target locked. Never throws on EBUSY. */
+export function ensureRoundProjectionCsvPublished(outPath = DEFAULT_OUT) {
+  const alt = `${outPath}.new`;
+  if (!existsSync(alt)) {
+    return { path: outPath, promoted: false, locked: false };
+  }
+  try {
+    copyFileSync(alt, outPath);
+    unlinkSync(alt);
+    console.log(`[round-projection-vs-actual] Promoted ${alt} -> ${outPath}`);
+    return { path: outPath, promoted: true, locked: false };
+  } catch (e) {
+    if (e?.code !== "EBUSY" && e?.code !== "EPERM" && e?.code !== "EACCES") throw e;
+    console.warn(
+      `[round-projection-vs-actual] ${outPath} is locked (close Excel/editor). Fresh export remains at ${alt}.`,
+    );
+    return { path: alt, promoted: false, locked: true };
+  }
+}
+
+/** Promote detail + summary + xlsx `.new` files when possible. */
 export function ensureRoundProjectionArtifactsPublished(
   outPath = DEFAULT_OUT,
   summaryPath = DEFAULT_SUMMARY_OUT,
   xlsxPath = DEFAULT_XLSX_OUT,
 ) {
-  ensureRoundProjectionCsvPublished(outPath);
-  ensureRoundProjectionCsvPublished(summaryPath);
-  ensureRoundProjectionCsvPublished(xlsxPath);
-  return outPath;
-}
-
-/** Promote `.new` → main CSV after a locked write; required before push:live can succeed. */
-export function ensureRoundProjectionCsvPublished(outPath = DEFAULT_OUT) {
-  const alt = `${outPath}.new`;
-  if (!existsSync(alt)) return outPath;
-  try {
-    copyFileSync(alt, outPath);
-    unlinkSync(alt);
-    console.log(`[round-projection-vs-actual] Promoted ${alt} -> ${outPath}`);
-    return outPath;
-  } catch (e) {
-    throw new Error(
-      `[round-projection-vs-actual] ${outPath} is still locked (close Excel/editor). Fresh export remains at ${alt}.`,
-      { cause: e },
-    );
-  }
+  const detail = ensureRoundProjectionCsvPublished(outPath);
+  const summary = ensureRoundProjectionCsvPublished(summaryPath);
+  const xlsx = ensureRoundProjectionCsvPublished(xlsxPath);
+  const lockedCount = [detail, summary, xlsx].filter((r) => r.locked).length;
+  return { detail, summary, xlsx, lockedCount };
 }
 
 async function main() {

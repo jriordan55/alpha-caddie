@@ -75,6 +75,7 @@ import {
   buildWithinEventFormMap,
   courseDifficultyStrokeShift,
   draftKingsDgIdsFromProjections,
+  ensureProjectionCourseBasisComplete,
   fieldCountingMeansFromEventContext,
   fieldCountingMeansFromWithinEventMap,
   loadEventRoundContextFromHistoricalCsv,
@@ -2690,6 +2691,10 @@ async function main() {
   };
 
   const dkFieldCal = draftKingsDgIdsFromProjections({ props: preservedProps });
+  payload.projection_course_basis = ensureProjectionCourseBasisComplete(
+    payload.projection_course_basis || {},
+    payload,
+  );
   const calResult = reconcileAllProjectionPlayerRows(payload, {
     dgFilter: dkFieldCal.size >= 8 ? dkFieldCal : null,
     minField: 8,

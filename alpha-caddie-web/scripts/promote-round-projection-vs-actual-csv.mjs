@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * After export-round-projection-vs-actual-csv.mjs, copy round_projection_vs_actual.csv.new
- * over the main CSV when Excel left the target locked. Exits 1 if promotion fails.
+ * Promote round_projection_vs_actual*.new → main files after Excel locked them during export.
+ *   npm run promote:round-projection-vs-actual
  */
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
@@ -12,9 +12,11 @@ const CSV = join(WEB_ROOT, "data", "round_projection_vs_actual.csv");
 const SUMMARY = join(WEB_ROOT, "data", "round_projection_vs_actual_summary.csv");
 const XLSX = join(WEB_ROOT, "data", "round_projection_vs_actual.xlsx");
 
-try {
-  ensureRoundProjectionArtifactsPublished(CSV, SUMMARY, XLSX);
-} catch (e) {
-  console.warn(String(e?.message || e));
-  process.exit(0);
+const pub = ensureRoundProjectionArtifactsPublished(CSV, SUMMARY, XLSX);
+if (pub.lockedCount > 0) {
+  console.warn(
+    `[promote] ${pub.lockedCount} file(s) still locked — close Excel/editor and run again.`,
+  );
+  process.exit(1);
 }
+console.log("[promote] All round projection vs actual artifacts published.");

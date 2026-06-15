@@ -8,6 +8,7 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { marketRating100ForPlayer } from "./market-rating-player.mjs";
 import { roundAdjustmentsFromPinSheet } from "./pin-sheet-difficulty.mjs";
+import { ensureProjectionCourseBasisComplete } from "./course-round-adjustments.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB = join(__dirname, "..");
@@ -47,6 +48,24 @@ const proj = loadJson("projections.json");
 const bench = proj.pga_tour_market_benchmarks || proj.meta?.pga_tour_market_benchmarks;
 if (!bench?.GIR?.mean) fail("projections.json missing pga_tour_market_benchmarks.GIR");
 
+const courseBench = proj.pga_tour_course_benchmarks || proj.meta?.pga_tour_course_benchmarks;
+if (!courseBench?.["Total score"]?.mean) {
+  fail("projections.json missing pga_tour_course_benchmarks['Total score']");
+}
+
+if (!proj.projection_course_basis || typeof proj.projection_course_basis !== "object") {
+  fail("projections.json missing projection_course_basis");
+}
+ensureProjectionCourseBasisComplete(proj.projection_course_basis, proj);
+const venueRoundScore = Number(proj.projection_course_basis.venue_avg_round_score);
+if (!Number.isFinite(venueRoundScore)) {
+  fail("projection_course_basis.venue_avg_round_score missing — run node scripts/repair-projection-course-basis.mjs");
+}
+const par18 = Math.round(Number(proj.course_par_18)) || 72;
+if (venueRoundScore < par18 - 14 || venueRoundScore > par18 + 22) {
+  fail(`venue_avg_round_score ${venueRoundScore} out of range for par ${par18}`);
+}
+
 const players = Array.isArray(proj.players) ? proj.players : [];
 const dr = Math.round(Number(proj.display_round ?? proj.meta?.display_round ?? 1));
 const r1Players = players.filter(
@@ -72,5 +91,5 @@ if (pinMeta?.summary && /\.{3}|…/.test(pinMeta.summary)) {
 }
 
 console.log(
-  `[verify:web-deploy] OK — pin copy clean, GIR market rating for ${Math.min(12, r1Players.length)} sample players, app.js cache bust present`,
+  `[verify:web-deploy] OK — pin copy clean, GIR market rating for ${Math.min(12, r1Players.length)} sample players, course round score ${venueRoundScore}, app.js cache bust present`,
 );
