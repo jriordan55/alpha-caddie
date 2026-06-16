@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>AlphaCaddie</title>
+  <title>Golf Betting Analytics</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -13,24 +13,36 @@
     onload="this.media='all'"
   />
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" /></noscript>
-  <link rel="stylesheet" href="styles.css?v=9" />
+  <link rel="stylesheet" href="styles.css?v=10" />
 </head>
 <body>
   <header class="app-nav">
     <div class="nav-inner">
-      <div class="nav-brand">
-        <span class="nav-logo" aria-hidden="true"></span>
+      <button type="button" class="nav-brand nav-brand-btn" id="nav-home-btn" aria-label="Home">
+        <span class="nav-logo" aria-hidden="true">
+          <svg class="nav-logo-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.5 28h5l-2.5-9.5-2.5 9.5Z" fill="#b8956a"/>
+            <path d="M14 18.5c0-1.1 2.7-2 6-2s6 .9 6 2" stroke="#d4b896" stroke-width="1.2" stroke-linecap="round"/>
+            <circle cx="20" cy="11.5" r="7.25" fill="#f8fafc"/>
+            <circle cx="17.2" cy="9.8" r="0.65" fill="#cbd5e1"/>
+            <circle cx="22.5" cy="10.2" r="0.55" fill="#cbd5e1"/>
+            <circle cx="20" cy="13.8" r="0.6" fill="#cbd5e1"/>
+            <circle cx="18" cy="12.2" r="0.45" fill="#e2e8f0"/>
+            <circle cx="22" cy="12.8" r="0.45" fill="#e2e8f0"/>
+            <path d="M13 11.5c2-3.5 10-3.5 14 0" stroke="rgba(255,255,255,0.35)" stroke-width="0.8"/>
+          </svg>
+        </span>
         <div class="nav-brand-text">
-          <span class="nav-title">AlphaCaddie</span>
-          <span class="nav-subtitle">Professional golf betting analytics</span>
+          <span class="nav-title">Golf Betting Analytics</span>
+          <span class="nav-subtitle">Model-driven projections &amp; edge tools</span>
         </div>
-      </div>
+      </button>
     </div>
   </header>
 
-  <main class="content-wrapper">
-    <nav class="tabs" role="tablist" aria-label="Main">
-      <button type="button" class="tab active" data-tab="ou" role="tab" aria-selected="true">Round projections</button>
+  <main class="content-wrapper content-wrapper--home" id="content-wrapper">
+    <nav class="tabs tabs--tool-nav" role="tablist" aria-label="Tools" hidden>
+      <button type="button" class="tab" data-tab="ou" role="tab" aria-selected="false">Round projections</button>
       <button type="button" class="tab" data-tab="props" role="tab">Historical Trends</button>
       <button type="button" class="tab" data-tab="course-fit" role="tab">Course fit</button>
       <button type="button" class="tab" data-tab="live-prop" role="tab">Live Prop Predictor</button>
@@ -38,15 +50,57 @@
       <button type="button" class="tab" data-tab="ev" role="tab">+EV Bets</button>
     </nav>
 
-    <p id="data-status-primary" class="data-status-primary note" aria-live="polite"></p>
+    <p id="data-status-primary" class="data-status-primary note tools-only" aria-live="polite" hidden></p>
     <p id="file-protocol-banner" class="note text-warn file-protocol-banner" hidden>
       <strong>Opened as a local file (<code>file://</code>).</strong> Browsers block loading <code>projections.json</code> from disk, so the app uses <strong>bundled demo data</strong> only.
       To use live DataGolf output: in this folder run <code>npm run fetch:dg</code> then <code>npm start</code> and open <code>http://localhost:5173</code> (not the file path).
     </p>
     <p id="boot-error" class="note text-warn" hidden style="font-weight:600;"></p>
 
+    <!-- Home landing -->
+    <section id="panel-home" class="panel panel-home active" role="region" aria-label="Home">
+      <div class="home-hero">
+        <p class="home-eyebrow">This week</p>
+        <h1 class="home-title" id="home-event-line">Loading tournament…</h1>
+        <p class="home-lede" id="home-event-meta">Round projections, historical trends, course fit, and +EV tools for the current field.</p>
+        <p class="home-field-note" id="home-field-note" hidden></p>
+      </div>
+      <div class="home-grid" role="list">
+        <button type="button" class="home-card" data-go-tab="ou" role="listitem">
+          <span class="home-card-icon" aria-hidden="true">RP</span>
+          <span class="home-card-title">Round projections</span>
+          <span class="home-card-desc">Model lines vs books — scores, birdies, GIR, and fairways with edge.</span>
+        </button>
+        <button type="button" class="home-card" data-go-tab="props" role="listitem">
+          <span class="home-card-icon" aria-hidden="true">HT</span>
+          <span class="home-card-title">Historical Trends</span>
+          <span class="home-card-desc">Player and field history at this course — back to 2004.</span>
+        </button>
+        <button type="button" class="home-card" data-go-tab="course-fit" role="listitem">
+          <span class="home-card-icon" aria-hidden="true">CF</span>
+          <span class="home-card-title">Course fit</span>
+          <span class="home-card-desc">Skill profile vs venue — radar, similar courses, shot bins.</span>
+        </button>
+        <button type="button" class="home-card" data-go-tab="live-prop" role="listitem">
+          <span class="home-card-icon" aria-hidden="true">LP</span>
+          <span class="home-card-title">Live Prop Predictor</span>
+          <span class="home-card-desc">In-round prop pricing from live stats and remaining holes.</span>
+        </button>
+        <button type="button" class="home-card" data-go-tab="matchup-analysis" role="listitem">
+          <span class="home-card-icon" aria-hidden="true">MA</span>
+          <span class="home-card-title">Matchup Analysis</span>
+          <span class="home-card-desc">Head-to-head and 3-ball model prices vs sportsbook lines.</span>
+        </button>
+        <button type="button" class="home-card" data-go-tab="ev" role="listitem">
+          <span class="home-card-icon" aria-hidden="true">EV</span>
+          <span class="home-card-title">+EV Bets</span>
+          <span class="home-card-desc">Positive expected value outrights and props across books.</span>
+        </button>
+      </div>
+    </section>
+
     <!-- Round projections (tab id ou) -->
-    <section id="panel-ou" class="panel active" role="tabpanel" data-ou-view="projections">
+    <section id="panel-ou" class="panel" role="tabpanel" data-ou-view="projections" hidden>
       <div class="ev-panel-head">
         <h2 class="ev-devig-sr-only">Round projections</h2>
         <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="ou" aria-label="Help: Round projections tab">?</button>
@@ -1254,6 +1308,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=233"></script>
+  <script src="app.js?v=234"></script>
 </body>
 </html>

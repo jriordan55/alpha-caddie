@@ -93,25 +93,43 @@ body {
   gap: 14px;
   min-width: 0;
 }
+.nav-brand-btn {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  border-radius: var(--golf-radius-md);
+  transition: opacity 0.15s ease;
+}
+.nav-brand-btn:hover {
+  opacity: 0.92;
+}
+.nav-brand-btn:focus-visible {
+  outline: 2px solid var(--golf-focus-ring);
+  outline-offset: 4px;
+}
 .nav-logo {
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: linear-gradient(145deg, var(--golf-green-bright), var(--golf-green-soft));
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(16, 185, 129, 0.22), rgba(9, 11, 16, 0.9));
   box-shadow:
-    0 2px 8px rgba(16, 185, 129, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 2px 8px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
 }
-.nav-logo::after {
-  content: "";
-  position: absolute;
-  inset: 9px 11px 9px 9px;
-  border: 2px solid rgba(255, 255, 255, 0.92);
-  border-radius: 2px 2px 2px 0;
-  transform: rotate(-8deg);
-  box-shadow: -3px 3px 0 rgba(0, 0, 0, 0.15);
+.nav-logo-svg {
+  width: 34px;
+  height: 34px;
+  display: block;
 }
 .nav-brand-text {
   display: flex;
@@ -122,7 +140,7 @@ body {
 .nav-title {
   display: block;
   font-weight: 700;
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   color: var(--golf-text);
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -4743,6 +4761,9 @@ dialog,
   .nav-subtitle {
     display: none;
   }
+  .nav-title {
+    font-size: 0.9375rem;
+  }
   .tabs {
     gap: 2px;
     padding: 4px;
@@ -4753,4 +4774,131 @@ dialog,
     padding: 10px 8px;
     font-size: 0.75rem;
   }
+  .home-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === Home landing === */
+.content-wrapper--home .tabs--tool-nav,
+.content-wrapper--home .tools-only {
+  display: none !important;
+}
+
+.content-wrapper:not(.content-wrapper--home) .tabs--tool-nav {
+  display: flex;
+}
+
+.panel-home {
+  padding-top: 8px;
+}
+
+.home-hero {
+  margin-bottom: 28px;
+  padding: 28px 28px 24px;
+  background: var(--golf-elevated);
+  border: 1px solid var(--golf-card-border);
+  border-radius: var(--golf-radius-xl);
+  box-shadow: var(--golf-shadow-md);
+  border-left: 4px solid var(--golf-green);
+}
+
+.home-eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--golf-green-bright);
+}
+
+.home-title {
+  margin: 0 0 10px;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--golf-text);
+}
+
+.home-lede {
+  margin: 0;
+  max-width: 52ch;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--golf-text-muted);
+}
+
+.home-field-note {
+  margin: 12px 0 0;
+  font-size: 0.8125rem;
+  color: var(--golf-text-subtle);
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.home-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 20px 20px 18px;
+  text-align: left;
+  border: 1px solid var(--golf-border);
+  border-radius: var(--golf-radius-lg);
+  background: var(--golf-surface-mid);
+  color: var(--golf-text);
+  cursor: pointer;
+  font-family: inherit;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    transform 0.12s ease,
+    box-shadow 0.15s ease;
+  box-shadow: var(--golf-shadow-sm);
+}
+
+.home-card:hover {
+  border-color: var(--golf-focus-border);
+  background: var(--golf-surface-alt);
+  box-shadow: var(--golf-shadow-md);
+  transform: translateY(-2px);
+}
+
+.home-card:focus-visible {
+  outline: none;
+  border-color: var(--golf-focus-border);
+  box-shadow: 0 0 0 3px var(--golf-focus-surface), var(--golf-shadow-md);
+}
+
+.home-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 10px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--golf-green-bright);
+  background: var(--golf-focus-surface);
+  border: 1px solid var(--golf-focus-border);
+}
+
+.home-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--golf-text);
+}
+
+.home-card-desc {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--golf-text-muted);
 }

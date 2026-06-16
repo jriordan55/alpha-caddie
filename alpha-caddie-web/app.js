@@ -2804,6 +2804,7 @@ function updateStatusBar() {
   const line = metaEventVenueLabel() || "—";
   el.textContent = line;
   el.title = ev && course ? `${ev}\n${course}` : line;
+  if (isHomeViewActive()) updateHomePage();
 }
 
 function configureRoundPickerUi() {
@@ -4092,6 +4093,10 @@ function updatePricingSkillLabelsVisibility() {
 
 function refreshPricingAffectedViews() {
   const tab = activeAppTabId();
+  if (!tab) {
+    updateHomePage();
+    return;
+  }
   if (tab === "ou") return void scheduleBuildOuTable(true);
   if (tab === "ev") return void buildEvTable();
   if (tab === "matchups") return void buildMatchupsTable();
@@ -4104,8 +4109,6 @@ function refreshPricingAffectedViews() {
   }
   if (tab === "live-prop") return void renderLivePropPredictor();
   if (tab === "course-fit") return void buildCourseFitTab();
-  /* Unknown / very early tab state — refresh round projections only (avoid rebuilding every hidden panel). */
-  scheduleBuildOuTable(true);
 }
 
 function weatherScalarFromInput(raw, cur, lo, hi) {
@@ -17164,6 +17167,12 @@ async function refreshAll() {
   fillPropGolferSelect();
   fillLivePropGolferSelect();
 
+  if (isHomeViewActive()) {
+    updateHomePage();
+    updateStatusBar();
+    return;
+  }
+
   const tab = activeAppTabId() || "ou";
   if (tab === "ou") {
     buildOuTable();
@@ -17275,7 +17284,127 @@ async function loadProjections(opts = {}) {
   }
 }
 
+function isHomeViewActive() {
+  const home = document.getElementById("panel-home");
+  return Boolean(home && home.classList.contains("active") && !home.hidden);
+}
+
+function updateHomePage() {
+  const lineEl = document.getElementById("home-event-line");
+  const metaEl = document.getElementById("home-event-meta");
+  const fieldEl = document.getElementById("home-field-note");
+  if (!lineEl) return;
+  const m = DATA?.meta || {};
+  const ev = m.event_name ? String(m.event_name).trim() : "";
+  const course = m.course_used ? formatCourseNameForDisplay(m.course_used) : "";
+  const venue = metaEventVenueLabel();
+  lineEl.textContent = venue && venue !== "—" ? venue : ev || "Golf Betting Analytics";
+  if (metaEl) {
+    metaEl.textContent = ev && course
+      ? `${ev} at ${course} — choose a tool below to explore projections, history, and edge.`
+      : "Choose a tool below to explore model projections, historical trends, course fit, and +EV opportunities.";
+  }
+  if (fieldEl) {
+    const n = Array.isArray(DATA?.players) ? DATA.players.length : 0;
+    if (n > 0) {
+      fieldEl.hidden = false;
+      fieldEl.textContent = `${n} players in the current field`;
+    } else {
+      fieldEl.hidden = true;
+      fieldEl.textContent = "";
+    }
+  }
+}
+
+function setToolsChromeVisible(visible) {
+  const tabs = document.querySelector(".tabs--tool-nav");
+  const status = document.getElementById("data-status-primary");
+  if (tabs) tabs.hidden = !visible;
+  if (status) status.hidden = !visible;
+  document.getElementById("content-wrapper")?.classList.toggle("content-wrapper--home", !visible);
+}
+
+function showHomeView() {
+  document.querySelectorAll(".tabs .tab").forEach((b) => {
+    b.classList.remove("active");
+    b.setAttribute("aria-selected", "false");
+  });
+  document.querySelectorAll(".panel").forEach((p) => {
+    const isHome = p.id === "panel-home";
+    p.classList.toggle("active", isHome);
+    p.hidden = !isHome;
+  });
+  setToolsChromeVisible(false);
+  updateHomePage();
+}
+
+function showAppTab(tab) {
+  if (!tab) {
+    showHomeView();
+    return;
+  }
+  setToolsChromeVisible(true);
+  const btn = document.querySelector(`.tabs .tab[data-tab="${tab}"]`);
+  document.querySelectorAll(".tabs .tab").forEach((b) => {
+    const on = b === btn;
+    b.classList.toggle("active", on);
+    b.setAttribute("aria-selected", on ? "true" : "false");
+  });
+  document.querySelectorAll(".panel").forEach((p) => {
+    const on = p.id === `panel-${tab}`;
+    p.classList.toggle("active", on);
+    p.hidden = !on;
+  });
+  if (tab === "ou")
+    requestAnimationFrame(() => {
+      void ensurePlayerHistoryLoadedForTab("ou");
+      scheduleBuildOuTable(true);
+      syncOuChartCard();
+      const ouProjCanvas = document.querySelector("#table-ou tbody .ou-proj-detail-canvas");
+      if (ouProjCanvas && ouProjExpandedDetail) {
+        drawOuProjDetailDistribution(
+          ouProjCanvas,
+          ouProjExpandedDetail.market,
+          ouProjExpandedDetail.player,
+          ouProjExpandedDetail.line,
+        );
+      }
+    });
+  if (tab === "props") {
+    requestAnimationFrame(() => {
+      void ensurePlayerHistoryLoadedForTab("props");
+    });
+  }
+  if (tab === "matchup-analysis") {
+    requestAnimationFrame(() => buildMatchupAnalysisTool());
+  }
+  if (tab === "live-prop") {
+    requestAnimationFrame(() => renderLivePropPredictor());
+  }
+  if (tab === "course-fit") {
+    requestAnimationFrame(() => {
+      void ensurePlayerHistoryLoadedForTab("course-fit");
+      buildCourseFitTab();
+    });
+  }
+  if (tab === "ev") {
+    requestAnimationFrame(() => {
+      syncEvTabOddsAfterShow();
+      if (!isFileProtocol()) {
+        void loadProjections({ silent: true, reloadSidecar: false });
+      }
+    });
+  }
+  if (tab === "results") {
+    requestAnimationFrame(() => {
+      loadResultsPayload();
+      renderResultsTab();
+    });
+  }
+}
+
 function activeAppTabId() {
+  if (isHomeViewActive()) return "";
   const active = document.querySelector(".tabs .tab.active");
   return active ? String(active.getAttribute("data-tab") || "") : "";
 }
@@ -18328,63 +18457,16 @@ function renderResultsTab() {
 function initTabs() {
   document.querySelectorAll(".tabs .tab").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const tab = btn.getAttribute("data-tab");
-      document.querySelectorAll(".tabs .tab").forEach((b) => {
-        b.classList.toggle("active", b === btn);
-        b.setAttribute("aria-selected", b === btn ? "true" : "false");
-      });
-      document.querySelectorAll(".panel").forEach((p) => {
-        p.classList.toggle("active", p.id === `panel-${tab}`);
-        p.hidden = p.id !== `panel-${tab}`;
-      });
-      if (tab === "ou")
-        requestAnimationFrame(() => {
-          void ensurePlayerHistoryLoadedForTab("ou");
-          scheduleBuildOuTable(true);
-          syncOuChartCard();
-          const ouProjCanvas = document.querySelector("#table-ou tbody .ou-proj-detail-canvas");
-          if (ouProjCanvas && ouProjExpandedDetail) {
-            drawOuProjDetailDistribution(
-              ouProjCanvas,
-              ouProjExpandedDetail.market,
-              ouProjExpandedDetail.player,
-              ouProjExpandedDetail.line,
-            );
-          }
-        });
-      if (tab === "props") {
-        requestAnimationFrame(() => {
-          void ensurePlayerHistoryLoadedForTab("props");
-        });
-      }
-      if (tab === "matchup-analysis") {
-        requestAnimationFrame(() => buildMatchupAnalysisTool());
-      }
-      if (tab === "live-prop") {
-        requestAnimationFrame(() => renderLivePropPredictor());
-      }
-      if (tab === "course-fit") {
-        requestAnimationFrame(() => {
-          void ensurePlayerHistoryLoadedForTab("course-fit");
-          buildCourseFitTab();
-        });
-      }
-      if (tab === "ev") {
-        requestAnimationFrame(() => {
-          syncEvTabOddsAfterShow();
-          if (!isFileProtocol()) {
-            void loadProjections({ silent: true, reloadSidecar: false });
-          }
-        });
-      }
-      if (tab === "results") {
-        requestAnimationFrame(() => {
-          loadResultsPayload();
-          renderResultsTab();
-        });
-      }
+      showAppTab(btn.getAttribute("data-tab"));
     });
   });
+  document.querySelectorAll(".home-card[data-go-tab]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      showAppTab(btn.getAttribute("data-go-tab"));
+    });
+  });
+  document.getElementById("nav-home-btn")?.addEventListener("click", () => showHomeView());
+  showHomeView();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
