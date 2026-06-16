@@ -13,12 +13,13 @@
  * meta.live_course_round_excess_strokes for O/U and props mu (even when pricing mode is default).
  * preds/in-play `thru` / `today` merge onto players for display / outrights; **round-level model odds**
  * (Model O/U, round matchups, 3-balls) ignore those hooks unless `meta.in_play_affects_round_odds` is true.
- * **+EV outright rows:** When live tournament context exists (`meta.datagolf_live_*`), model probs default to
- * **leaderboard `current_score`** (softmax win; Monte Carlo noisy ranks for top 5/10/20), not DG preds/outrights fair.
- * Opt out: `meta.outright_ev_live_leaderboard_model: false`. Optional `outright_ev_live_leaderboard_sigma` (stroke RMSE, default 2.25),
- * `outright_ev_live_leaderboard_mc_sims` (default 420, min 100, max 2500).
- * Tournament matchups can still use live win-share blend when that flag is on.
- * projections.json: player win/top_* are implied probs (0–1) from preds/pre-tournament (default API decimal odds).
+ * **+EV outright rows:** Model prices use **Alpha Caddie composite ratings** (μ_SG + round_sd per
+ * round, weather / course / within-event form) and a **shifted log-normal tournament Monte Carlo**
+ * (same family as round_projections.R). Live: lock `current_score` and simulate remaining rounds.
+ * DataGolf
+ * `dg_model` / preds placement (`win`, `top_5`, …) are **not** used unless
+ * `meta.outright_use_dg_placement_probs` is true. Optional live-board-only path:
+ * `meta.outright_ev_live_leaderboard_model: true`.
  * Outrights book columns: implied % (0–100) from DataGolf `betting-tools/outrights` (same markets as
  * https://datagolf.com/betting-tool-finish; fetch scripts default odds_format=percent to match IMPLIED %). Over HTTP
  * the app can refetch live-in-play.json on an interval when meta.poll_datagolf_live_predictions is true
@@ -1780,7 +1781,7 @@ function mergeDatagolfInPlayPayload(j) {
       inPlayAffectsRoundOdds() &&
       !Object.prototype.hasOwnProperty.call(DATA.meta, "live_matchup_model_blend")
     ) {
-      DATA.meta.live_matchup_model_blend = 0.35;
+      DATA.meta.live_matchup_model_blend = 0;
     }
   }
   return touched > 0 || metaTouched || drivingTouched || countingTouched;
@@ -8514,7 +8515,7 @@ function threeBallModelProbs(mu1, mu2, mu3) {
 function liveMatchupModelBlendAlpha(marketKind) {
   if (!inPlayAffectsRoundOdds()) return 0;
   if (marketKind === "round_matchups" || marketKind === "3_balls") return 0;
-  const a = num(DATA.meta?.live_matchup_model_blend, NaN);
+  const a = num(DATA.meta?.live_matchup_model_blend, 0);
   if (!Number.isFinite(a) || a <= 0) return 0;
   return clamp(a, 0, 0.85);
 }
@@ -11129,10 +11130,10 @@ function outrightFieldScoreSoftmaxWinMap() {
   return out;
 }
 
-/** +EV only: use score-driven probs when live bundle present; set `meta.outright_ev_live_leaderboard_model` false to use DG placement for +EV. */
+/** +EV only: optional score-driven probs when `meta.outright_ev_live_leaderboard_model` is true. */
 function outrightEvLiveLeaderboardModelEnabled() {
   if (!outrightLiveTournamentContext()) return false;
-  return DATA?.meta?.outright_ev_live_leaderboard_model !== false;
+  return DATA?.meta?.outright_ev_live_leaderboard_model === true;
 }
 
 let outrightEvLbProbCache = {
@@ -11251,6 +11252,347 @@ function ensureOutrightEvLiveLeaderboardProbCache() {
   }
 }
 
+/** Alpha Caddie outright probs from composite ratings + tournament MC (not DG placement / dg_model). */
+const TOURNAMENT_MC_MU_MULT = [1.0, 0.99, 0.97, 0.95];
+const TOURNAMENT_MC_SD_MULT = [1.0, 1.01, 1.03, 1.05];
+const TOURNAMENT_MC_FORM_SD = 0.25;
+
+let outrightAlphaModelProbCache = {
+  sig: "",
+  win: new Map(),
+  top5: new Map(),
+  top10: new Map(),
+  top20: new Map(),
+  make_cut: new Map(),
+  frl: new Map(),
+};
+
+function tournamentMcLognSdlog() {
+  const raw = num(DATA?.meta?.outright_model_mc_logn_sdlog, 0.45);
+  return clamp(Number.isFinite(raw) ? raw : 0.45, 0.05, 1.5);
+}
+
+function drawShiftedLognormal(meanX, sdX, sdlogOpt) {
+  const sdlog = sdlogOpt != null ? sdlogOpt : tournamentMcLognSdlog();
+  let mx = num(meanX, 0);
+  const sx = num(sdX, NaN);
+  if (!Number.isFinite(sx) || sx <= 0) return mx;
+  if (!Number.isFinite(sdlog) || sdlog <= 0) return mx + randStdNormal() * sx;
+  const cv = Math.sqrt(Math.exp(sdlog * sdlog) - 1);
+  if (!Number.isFinite(cv) || cv <= 0) return mx + randStdNormal() * sx;
+  const meanY = sx / cv;
+  if (!Number.isFinite(meanY) || meanY <= 0) return mx + randStdNormal() * sx;
+  const ml = Math.log(meanY) - 0.5 * sdlog * sdlog;
+  const eps = Math.exp(ml + sdlog * randStdNormal()) - meanY;
+  return mx + eps;
+}
+
+function tournamentScoringBasisFromData() {
+  const par = coursePar18FromData();
+  const basis = DATA?.meta?.projection_course_basis || {};
+  const baseline = num(basis.venue_avg_round_score, NaN);
+  const avgStp = num(basis.venue_avg_score_to_par, NaN);
+  return {
+    par,
+    baseline: Number.isFinite(baseline) ? baseline : par + 3.2,
+    avgStp: Number.isFinite(avgStp) ? avgStp : 3.2,
+  };
+}
+
+/** Per-round composite rating for tournament MC (μ_SG + round_sd, all projection layers). */
+function tournamentMcRatingFromRow(row, dgId) {
+  const base = weatherAdjustedMuSg(row);
+  if (!Number.isFinite(base)) return null;
+  let muSg = base + pricingModeMuSgBonus(dgId) + priorRoundCourseMuSgDelta(row);
+  if (outrightLiveTournamentContext() && liveRowMatchesDgLiveRound(row)) {
+    muSg += liveCurrentRoundMuSgDelta(row);
+  }
+  const roundSd = clamp(num(row?.round_sd, 2.75), 2.0, 3.5);
+  return { muSg: clamp(muSg, -4, 4), roundSd };
+}
+
+function tournamentMcLiveRoundPartialStp(row) {
+  const thru = Math.round(num(row?.dg_live_thru, NaN));
+  const today = num(row?.dg_live_today, NaN);
+  if (!Number.isFinite(thru) || thru < 1 || thru >= 18) return 0;
+  if (!Number.isFinite(today)) return 0;
+  return today;
+}
+
+function simPlayerTournamentStpForMc(entry, formShock, ctx) {
+  const { baseline, avgStp, par, liveR, hasLive, lognSdlog } = ctx;
+  const { id, currentScore, ratings } = entry;
+
+  if (!hasLive || !Number.isFinite(currentScore)) {
+    let totalStp = 0;
+    let r1Stp = NaN;
+    for (let r = 1; r <= 4; r++) {
+      const rt = ratings[r - 1];
+      if (!rt) return null;
+      const sg = drawShiftedLognormal(
+        rt.muSg * TOURNAMENT_MC_MU_MULT[r - 1] + formShock,
+        rt.roundSd * TOURNAMENT_MC_SD_MULT[r - 1],
+        lognSdlog,
+      );
+      const roundStp = avgStp - sg;
+      if (r === 1) r1Stp = roundStp;
+      totalStp += roundStp;
+    }
+    return { totalStp, r1Stp };
+  }
+
+  let totalStp = currentScore;
+  let r1Stp = NaN;
+  const startR = Math.max(1, Math.min(4, liveR));
+
+  for (let r = startR; r <= 4; r++) {
+    const rt = ratings[r - 1];
+    if (!rt) return null;
+    const sg = drawShiftedLognormal(
+      rt.muSg * TOURNAMENT_MC_MU_MULT[r - 1] + formShock,
+      rt.roundSd * TOURNAMENT_MC_SD_MULT[r - 1],
+      lognSdlog,
+    );
+    const roundStp = avgStp - sg;
+    if (r === 1 && startR === 1) r1Stp = roundStp;
+
+    if (r === startR) {
+      const liveRow = projectionPlayerRowForModel(id, r);
+      const partial = liveRow ? tournamentMcLiveRoundPartialStp(liveRow) : 0;
+      totalStp += roundStp - partial;
+    } else {
+      totalStp += roundStp;
+      if (r === 1) r1Stp = roundStp;
+    }
+  }
+  return { totalStp, r1Stp };
+}
+
+function outrightAlphaModelCacheSig() {
+  const scoring = tournamentScoringBasisFromData();
+  const liveR = Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN)) || 1;
+  const parts = [
+    `rev${projectionsDataRev}`,
+    `par${scoring.par}`,
+    `b${scoring.baseline.toFixed(2)}`,
+    `lr${liveR}`,
+    `lu${DATA?.meta?.datagolf_live_last_update || ""}`,
+    `pm${PRICING_STATE.mode}`,
+    `ps${PRICING_STATE.skill}`,
+    `ep${historyMutationEpoch}`,
+    `ls${tournamentMcLognSdlog().toFixed(3)}`,
+  ];
+  const seen = new Set();
+  for (const p of DATA.players || []) {
+    const id = Math.round(num(p.dg_id, NaN));
+    if (!Number.isFinite(id) || seen.has(id)) continue;
+    if (!samePlayerRound(p, 1)) continue;
+    seen.add(id);
+    let cs = "n";
+    for (const pr of DATA.players || []) {
+      if (Math.round(num(pr.dg_id, NaN)) !== id) continue;
+      const s = num(pr.current_score, NaN);
+      if (Number.isFinite(s)) {
+        cs = s.toFixed(2);
+        break;
+      }
+    }
+    const mus = [];
+    for (let rnd = 1; rnd <= 4; rnd++) {
+      const row = projectionPlayerRowForModel(id, rnd);
+      const rt = row ? tournamentMcRatingFromRow(row, id) : null;
+      mus.push(rt ? `${rt.muSg.toFixed(3)},${rt.roundSd.toFixed(2)}` : "x");
+    }
+    parts.push(`${id}:${cs}:${mus.join(";")}`);
+  }
+  return parts.join("|");
+}
+
+/** Monte Carlo tournament outcomes from composite μ_SG ratings (shifted log-normal rounds). */
+function ensureOutrightAlphaModelProbCache() {
+  const sig = outrightAlphaModelCacheSig();
+  if (outrightAlphaModelProbCache.sig === sig && outrightAlphaModelProbCache.win.size >= 5) return;
+
+  const scoring = tournamentScoringBasisFromData();
+  const nSimsRaw = Math.round(num(DATA?.meta?.outright_model_mc_sims, NaN));
+  const nSims = Number.isFinite(nSimsRaw) && nSimsRaw >= 100 ? Math.min(2500, nSimsRaw) : 420;
+  const liveR = Math.max(1, Math.min(4, Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN)) || 1));
+  const hasLive = outrightLiveTournamentContext();
+  const lognSdlog = tournamentMcLognSdlog();
+
+  const field = [];
+  const seen = new Set();
+  for (const p of DATA.players || []) {
+    const id = Math.round(num(p.dg_id, NaN));
+    if (!Number.isFinite(id) || seen.has(id)) continue;
+    if (!samePlayerRound(p, 1)) continue;
+    seen.add(id);
+
+    const ratings = [];
+    let ok = true;
+    for (let rnd = 1; rnd <= 4; rnd++) {
+      const row = projectionPlayerRowForModel(id, rnd);
+      const rt = row ? tournamentMcRatingFromRow(row, id) : null;
+      if (!rt) {
+        ok = false;
+        break;
+      }
+      ratings.push(rt);
+    }
+    if (!ok) continue;
+
+    let currentScore = NaN;
+    for (const pr of DATA.players || []) {
+      if (Math.round(num(pr.dg_id, NaN)) !== id) continue;
+      const s = num(pr.current_score, NaN);
+      if (Number.isFinite(s)) {
+        currentScore = s;
+        break;
+      }
+    }
+    field.push({ id, ratings, currentScore });
+  }
+
+  if (field.length < 5) {
+    outrightAlphaModelProbCache = {
+      sig: "",
+      win: new Map(),
+      top5: new Map(),
+      top10: new Map(),
+      top20: new Map(),
+      make_cut: new Map(),
+      frl: new Map(),
+    };
+    return;
+  }
+
+  const cutLine = Math.min(65, Math.max(10, Math.floor(field.length * 0.42)));
+  const mkCounts = () => {
+    const m = new Map();
+    for (const f of field) m.set(f.id, 0);
+    return m;
+  };
+  const winC = mkCounts();
+  const c5 = mkCounts();
+  const c10 = mkCounts();
+  const c20 = mkCounts();
+  const cCut = mkCounts();
+  const cFrl = mkCounts();
+
+  const ctx = { ...scoring, liveR, hasLive, lognSdlog };
+
+  for (let rep = 0; rep < nSims; rep++) {
+    const formShocks = field.map(() => drawShiftedLognormal(0, TOURNAMENT_MC_FORM_SD, lognSdlog));
+    const perf = [];
+    for (let i = 0; i < field.length; i++) {
+      const sim = simPlayerTournamentStpForMc(field[i], formShocks[i], ctx);
+      if (!sim) continue;
+      perf.push({ id: field[i].id, totalStp: sim.totalStp, r1Stp: sim.r1Stp });
+    }
+    if (perf.length < 5) continue;
+
+    perf.sort((a, b) => {
+      const d = a.totalStp - b.totalStp;
+      if (d !== 0) return d;
+      return Math.random() - 0.5;
+    });
+    winC.set(perf[0].id, winC.get(perf[0].id) + 1);
+    const n = perf.length;
+    for (let i = 0; i < Math.min(5, n); i++) c5.set(perf[i].id, c5.get(perf[i].id) + 1);
+    for (let i = 0; i < Math.min(10, n); i++) c10.set(perf[i].id, c10.get(perf[i].id) + 1);
+    for (let i = 0; i < Math.min(20, n); i++) c20.set(perf[i].id, c20.get(perf[i].id) + 1);
+    for (let i = 0; i < Math.min(cutLine, n); i++) cCut.set(perf[i].id, cCut.get(perf[i].id) + 1);
+    perf.sort((a, b) => {
+      const d = a.r1Stp - b.r1Stp;
+      if (d !== 0) return d;
+      return Math.random() - 0.5;
+    });
+    cFrl.set(perf[0].id, cFrl.get(perf[0].id) + 1);
+  }
+
+  const clampProb = (p) => clamp(p, 0.001, 0.95);
+  const next = {
+    sig,
+    win: new Map(),
+    top5: new Map(),
+    top10: new Map(),
+    top20: new Map(),
+    make_cut: new Map(),
+    frl: new Map(),
+  };
+  for (const f of field) {
+    const id = f.id;
+    next.win.set(id, clampProb(winC.get(id) / nSims));
+    next.top5.set(id, clampProb(c5.get(id) / nSims));
+    next.top10.set(id, clampProb(c10.get(id) / nSims));
+    next.top20.set(id, clampProb(c20.get(id) / nSims));
+    next.make_cut.set(id, clampProb(cCut.get(id) / nSims));
+    next.frl.set(id, clampProb(cFrl.get(id) / nSims));
+  }
+  outrightAlphaModelProbCache = next;
+}
+
+function modelProbOutrightAlphaModelLookup(outrightRow, marketKey) {
+  const id = Math.round(num(outrightRow?.dg_id, NaN));
+  if (!Number.isFinite(id)) return NaN;
+  ensureOutrightAlphaModelProbCache();
+  if (!outrightAlphaModelProbCache.sig || outrightAlphaModelProbCache.win.size < 5) return NaN;
+  const mk = String(marketKey || "");
+  let m = null;
+  if (mk === "win") m = outrightAlphaModelProbCache.win;
+  else if (mk === "top_5") m = outrightAlphaModelProbCache.top5;
+  else if (mk === "top_10") m = outrightAlphaModelProbCache.top10;
+  else if (mk === "top_20") m = outrightAlphaModelProbCache.top20;
+  else if (mk === "make_cut") m = outrightAlphaModelProbCache.make_cut;
+  else if (mk === "frl") m = outrightAlphaModelProbCache.frl;
+  else if (mk === "mc") {
+    const pCut = outrightAlphaModelProbCache.make_cut.get(id);
+    if (!Number.isFinite(pCut)) return NaN;
+    return clamp(1 - pCut, 1e-6, 1 - 1e-6);
+  } else return NaN;
+  const p = m.get(id);
+  if (!Number.isFinite(p) || p <= 0 || p >= 1) return NaN;
+  return clamp(p, 1e-6, 1 - 1e-6);
+}
+
+function outrightUseDgPlacementProbs() {
+  return DATA?.meta?.outright_use_dg_placement_probs === true;
+}
+
+/** Legacy DataGolf preds/pre-tournament placement on projection rows (opt-in only). */
+function modelProbOutrightFromDgPlacement(rowPlayer, marketKey) {
+  const col =
+    marketKey === "win"
+      ? "win"
+      : marketKey === "top_5"
+        ? "top_5"
+        : marketKey === "top_10"
+          ? "top_10"
+          : marketKey === "top_20"
+            ? "top_20"
+            : marketKey === "make_cut" || marketKey === "mc"
+              ? "make_cut"
+              : "win";
+  const rawVal = rowPlayer ? rowPlayer[col] : undefined;
+  if (rawVal == null || rawVal === "") return NaN;
+  let baseP = datagolfModelProb01(rawVal);
+  if (!Number.isFinite(baseP) || baseP <= 0) return NaN;
+  if (marketKey === "mc") return clamp(1 - baseP, 1e-6, 1 - 1e-6);
+  return clamp(baseP, 1e-6, 1 - 1e-6);
+}
+
+function finalizeOutrightModelProb(rowPlayer, marketKey, baseP) {
+  if (!Number.isFinite(baseP) || baseP <= 0 || baseP >= 1) return NaN;
+  if (marketKey === "mc") {
+    let pCut = outrightProbWithLiveScoreNudge(rowPlayer, "make_cut", baseP);
+    pCut = outrightProbWithPricingModeNudge(rowPlayer, "make_cut", pCut);
+    return clamp(1 - pCut, 1e-6, 1 - 1e-6);
+  }
+  let p = outrightProbWithLiveScoreNudge(rowPlayer, marketKey, baseP);
+  p = outrightProbWithPricingModeNudge(rowPlayer, marketKey, p);
+  return clamp(p, 1e-6, 1 - 1e-6);
+}
+
 /** Lookup +EV live leaderboard model prob for one outright row + market (win | top_5 | top_10 | top_20). */
 function modelProbOutrightLiveLeaderboardEvLookup(outrightRow, marketKey) {
   const id = Math.round(num(outrightRow?.dg_id, NaN));
@@ -11329,46 +11671,20 @@ function outrightProbWithPricingModeNudge(rowPlayer, marketKey, baseP) {
 }
 
 function modelProbOutrightMarket(rowPlayer, marketKey) {
-  const col =
-    marketKey === "win"
-      ? "win"
-      : marketKey === "top_5"
-        ? "top_5"
-        : marketKey === "top_10"
-          ? "top_10"
-          : marketKey === "top_20"
-            ? "top_20"
-            : marketKey === "make_cut" || marketKey === "mc"
-              ? "make_cut"
-              : "win";
-  const rawVal = rowPlayer ? rowPlayer[col] : undefined;
-  /* Number(null)===0: null/blank placement fields must be treated as missing, not near-zero event odds. */
-  if (rawVal == null || rawVal === "") return NaN;
-  let baseP = datagolfModelProb01(rawVal);
-  if (!Number.isFinite(baseP) || baseP <= 0) return NaN;
-  if (marketKey === "win" && outrightLiveTournamentContext()) {
-    const id = Math.round(num(rowPlayer?.dg_id, NaN));
-    const sm = outrightFieldScoreSoftmaxWinMap();
-    const pScore = sm.get(id);
-    if (Number.isFinite(pScore) && sm.size >= 5) {
-      const metaBlend = num(DATA?.meta?.outright_win_score_blend, NaN);
-      const blend = Number.isFinite(metaBlend) ? clamp(metaBlend, 0, 1) : 0;
-      if (blend > 0) baseP = clamp(blend * pScore + (1 - blend) * baseP, 1e-6, 1 - 1e-6);
-    }
+  const id = Math.round(num(rowPlayer?.dg_id, NaN));
+  const pAlpha = Number.isFinite(id) ? modelProbOutrightAlphaModelLookup({ dg_id: id }, marketKey) : NaN;
+  if (Number.isFinite(pAlpha) && pAlpha > 0) {
+    return finalizeOutrightModelProb(rowPlayer, marketKey, pAlpha);
   }
-  if (marketKey === "mc") {
-    let pCut = outrightProbWithLiveScoreNudge(rowPlayer, "make_cut", baseP);
-    pCut = outrightProbWithPricingModeNudge(rowPlayer, "make_cut", pCut);
-    return clamp(1 - pCut, 1e-6, 1 - 1e-6);
-  }
-  baseP = outrightProbWithLiveScoreNudge(rowPlayer, marketKey, baseP);
-  baseP = outrightProbWithPricingModeNudge(rowPlayer, marketKey, baseP);
-  return clamp(baseP, 1e-6, 1 - 1e-6);
+  if (!outrightUseDgPlacementProbs()) return NaN;
+  const pDg = modelProbOutrightFromDgPlacement(rowPlayer, marketKey);
+  if (!Number.isFinite(pDg) || pDg <= 0) return NaN;
+  return finalizeOutrightModelProb(rowPlayer, marketKey, pDg);
 }
 
 /**
- * Outrights "Model" fair price: scraped DataGolf finish-tool model, then projection rows, then book mean.
- * When `opts.evLiveLeaderboard` (+EV during live events only), tries leaderboard `current_score` model first — see file header.
+ * Outrights "Model" fair price: Alpha Caddie projection MC first; DataGolf placement only when
+ * `meta.outright_use_dg_placement_probs` is true. Optional `opts.evLiveLeaderboard` for score-only board.
  */
 function modelProbOutrightFromRowOrProjections(outrightRow, marketKey, opts) {
   const id = Math.round(num(outrightRow?.dg_id, NaN));
@@ -11380,42 +11696,33 @@ function modelProbOutrightFromRowOrProjections(outrightRow, marketKey, opts) {
       if (!prowLb && outrightRow?.player_name) {
         prowLb = projectionPlayerRowForModelByIdOrName(NaN, outrightRow.player_name, getModelRoundForEv());
       }
-      return outrightProbWithPricingModeNudge(prowLb || {}, marketKey, pLb);
+      return finalizeOutrightModelProb(prowLb || {}, marketKey, pLb);
     }
   }
-  const scrapedModelPct = num(outrightRow?.dg_model, NaN);
-  if (Number.isFinite(scrapedModelPct) && scrapedModelPct > 0 && scrapedModelPct < 100) {
-    let prowSc = Number.isFinite(id) ? projectionRowWithPlacementMerged(id) : null;
-    if (!prowSc && outrightRow?.player_name) {
-      prowSc = projectionPlayerRowForModelByIdOrName(NaN, outrightRow.player_name, getModelRoundForEv());
-    }
-    const p0 = clamp(scrapedModelPct / 100, 1e-6, 1 - 1e-6);
-    return outrightProbWithPricingModeNudge(prowSc || {}, marketKey, p0);
-  }
+
   let prow = Number.isFinite(id) ? projectionRowWithPlacementMerged(id) : null;
   if (!prow && outrightRow?.player_name) {
     prow = projectionPlayerRowForModelByIdOrName(NaN, outrightRow.player_name, getModelRoundForEv());
   }
-  const fromPret = modelProbOutrightMarket(prow || {}, marketKey);
-  if (Number.isFinite(fromPret) && fromPret > 0) return fromPret;
 
-  // Last-resort: when projections placement fields are null,
-  // use market consensus from posted books so model price does not go blank.
-  let s = 0;
-  let nBooks = 0;
-  for (const [k, v] of Object.entries(outrightRow || {})) {
-    const kk = String(k || "").toLowerCase();
-    if (!kk || kk === "datagolf" || kk === "dg_model" || kk === "dg_id" || kk === "id" || kk === "player_name" || kk === "name") continue;
-    const pct = impliedPctFromBookField(v);
-    if (!Number.isFinite(pct) || pct <= 0 || pct >= 100) continue;
-    s += pct / 100;
-    nBooks += 1;
+  const pAlpha = modelProbOutrightAlphaModelLookup(outrightRow, marketKey);
+  if (Number.isFinite(pAlpha) && pAlpha > 0) {
+    return finalizeOutrightModelProb(prow || {}, marketKey, pAlpha);
   }
-  if (nBooks > 0) {
-    let p = s / nBooks;
-    if (marketKey === "mc") p = 1 - p;
-    if (Number.isFinite(p) && p > 0 && p < 1) return clamp(p, 1e-6, 1 - 1e-6);
+
+  if (!outrightUseDgPlacementProbs()) return NaN;
+
+  const scrapedModelPct = num(outrightRow?.dg_model, NaN);
+  if (Number.isFinite(scrapedModelPct) && scrapedModelPct > 0 && scrapedModelPct < 100) {
+    const p0 = clamp(scrapedModelPct / 100, 1e-6, 1 - 1e-6);
+    return finalizeOutrightModelProb(prow || {}, marketKey, p0);
   }
+
+  const fromDg = modelProbOutrightFromDgPlacement(prow || {}, marketKey);
+  if (Number.isFinite(fromDg) && fromDg > 0) {
+    return finalizeOutrightModelProb(prow || {}, marketKey, fromDg);
+  }
+
   return NaN;
 }
 

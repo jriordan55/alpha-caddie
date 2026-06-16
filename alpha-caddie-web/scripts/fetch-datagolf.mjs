@@ -2628,6 +2628,8 @@ async function main() {
     outrights_model_blend_weight: 1,
     outright_win_score_blend: 0,
     outright_live_score_placement_nudge: false,
+    outright_ev_live_leaderboard_model: false,
+    outright_use_dg_placement_probs: false,
     course_par_18,
     hole_pars,
     hole_pars_source,
