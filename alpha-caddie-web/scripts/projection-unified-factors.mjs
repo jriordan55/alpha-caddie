@@ -14,12 +14,10 @@ import {
   lookupAdjScoreToParFromCourseTable,
   reconcileAllProjectionPlayerRows,
   reconcileProjectionRowCountsToScore,
-  calibrateProjectionScoresToHistoricalVenue,
-  loadVenueHistoricalScoring,
-  draftKingsDgIdsFromProjections,
 } from "./course-round-adjustments.mjs";
 import { projectionExportMeta } from "./projection-export-meta.mjs";
 import {
+  applyWeatherBakedCountsToAllPlayers,
   effectiveWeatherForRow,
   statWeatherMuAdjustment,
   weatherDifficultyDeltaFromSnapshot,
@@ -433,6 +431,27 @@ function buildPlayerRoundIndex(players) {
   return byDgRound;
 }
 
+function restorePreWeatherBaselines(players) {
+  let n = 0;
+  for (const p of players || []) {
+    const snap = p?._pre_weather_counts;
+    if (snap && typeof snap === "object") {
+      for (const k of Object.keys(snap)) {
+        if (snap[k] !== undefined) p[k] = snap[k];
+      }
+      delete p._pre_weather_counts;
+      n++;
+    }
+    p.weather_counts_baked = false;
+    delete p.dg_auto_weather;
+    p.weather_temp_f = null;
+    p.weather_wind_mph = null;
+    p.weather_humidity = null;
+    p.weather_condition = "";
+  }
+  return n;
+}
+
 /**
  * Apply all unified projection factors to payload.players, then reconcile correlated markets.
  * @returns {{ adjusted: number, meta: object }}
@@ -445,6 +464,11 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
   if (!players.length) return { adjusted: 0, meta: { skipped: true, reason: "no_players" } };
 
   const meta = projectionExportMeta(payload);
+  const hadWeatherBaked = !!meta?.projection_counts_weather_baked || players.some((p) => p?.weather_counts_baked);
+  const restored = restorePreWeatherBaselines(players);
+  if (restored > 0) {
+    meta.projection_counts_weather_baked = false;
+  }
   const courseLabel = String(meta.course_used ?? payload.course_used ?? "").trim();
   const courseKey = normCourseNameKey(courseLabel);
   const coursePar18 = Math.round(num(payload.course_par_18 ?? meta.course_par_18, NaN)) || 72;
@@ -557,7 +581,7 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
 
     if (!row.weather_counts_baked) {
       const hadWeather = effectiveWeatherForRow(row);
-      if (Number.isFinite(weatherDifficultyDeltaFromSnapshot(hadWeather))) {
+      if (Number.isFinite(weatherDifficultyDeltaFromSnapshot(hadWeather)) && !hadWeatherBaked) {
         applyStatShiftsFromWeather(row);
         factorCounts.weather_round++;
       }
@@ -571,17 +595,11 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
     ? null
     : reconcileAllProjectionPlayerRows(payload, opts.reconcileOpts || {});
 
-  let histCalib = { rounds: 0, shifts: {} };
-  if (courseKey && csvPath) {
-    const venueScoring = await loadVenueHistoricalScoring(csvPath, courseKey, courseLabel);
-    const dkField = draftKingsDgIdsFromProjections(payload);
-    histCalib = calibrateProjectionScoresToHistoricalVenue(payload, venueScoring, {
-      dgFilter: dkField.size >= 8 ? dkField : null,
-      minField: 8,
-    });
-    if (histCalib.rounds > 0 && !opts.skipReconcile) {
-      reconcileAllProjectionPlayerRows(payload, opts.reconcileOpts || {});
-    }
+  if (hadWeatherBaked || meta?.forecast_wave_slots || meta?.forecast_weather_morning) {
+    const forecastRound =
+      Math.round(num(meta?.projection_counts_weather_baked_round ?? payload.display_round, NaN)) || 1;
+    const nWx = applyWeatherBakedCountsToAllPlayers(payload, { forecastRound });
+    if (nWx > 0) factorCounts.weather_round += nWx;
   }
 
   const summary = {
@@ -594,7 +612,6 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
     player_residuals_loaded: residualMap.size,
     rows_adjusted: adjusted,
     reconciled: rec?.reconciled ?? 0,
-    historical_venue_calibration: histCalib,
   };
   meta.projection_unified_factors = summary;
   meta.projection_round_adjustments = {
@@ -607,11 +624,5 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
   console.log(
     `[unified-factors] adjusted ${adjusted}/${players.length} rows | course_fit=${factorCounts.course_table_fit} tee_wave=${factorCounts.tee_wave} bounce_back=${factorCounts.bounce_back} sunday=${factorCounts.sunday_pressure} weather=${factorCounts.weather_round} residual=${factorCounts.player_residual}`,
   );
-  if (histCalib.rounds > 0) {
-    const parts = Object.entries(histCalib.shifts || {}).map(([r, s]) => `R${r}:${s >= 0 ? "+" : ""}${s}`);
-    console.log(
-      `[unified-factors] Historical venue score calibration: ${parts.join(", ")} (venue μ=${Number.isFinite(histCalib.venueAvgStp) ? histCalib.venueAvgStp.toFixed(2) : "?"} vs par)`,
-    );
-  }
   return { adjusted, meta: summary, reconciled: rec };
 }

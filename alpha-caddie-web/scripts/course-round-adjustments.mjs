@@ -771,10 +771,10 @@ export function historicalVenueStpTargetForRound(venueScoring, round) {
   const minField = Math.round(envNum("GOLF_VENUE_ROUND_STP_MIN_N", 25));
   if (!Number.isFinite(roundStp) || nRound < minField) return overall;
 
-  const maxDev = envNum("GOLF_VENUE_ROUND_STP_MAX_DEV", 1.15);
+  const maxDev = envNum("GOLF_VENUE_ROUND_STP_MAX_DEV", 0.95);
   const cappedRound = overall + clamp(roundStp - overall, -maxDev, maxDev);
-  const shrinkK = envNum("GOLF_VENUE_ROUND_STP_SHRINK_K", 72);
-  const wRound = clamp(nRound / (nRound + shrinkK), 0.42, 0.8);
+  const shrinkK = envNum("GOLF_VENUE_ROUND_STP_SHRINK_K", 96);
+  const wRound = clamp(nRound / (nRound + shrinkK), 0.38, 0.72);
   return wRound * cappedRound + (1 - wRound) * overall;
 }
 
@@ -798,7 +798,7 @@ export function shiftProjectionRowScore(row, strokeShift, coursePar18) {
  * After weather / unified factors, nudge field-average score-to-par toward shrunk historical venue targets.
  */
 export function calibrateProjectionScoresToHistoricalVenue(payload, venueScoring, opts = {}) {
-  if (String(process.env.GOLF_HIST_VENUE_SCORE_CALIB ?? "1").trim() === "0") {
+  if (String(process.env.GOLF_HIST_VENUE_SCORE_CALIB ?? "0").trim() === "0") {
     return { rounds: 0, shifts: {} };
   }
   const players = Array.isArray(payload?.players) ? payload.players : [];
@@ -808,9 +808,10 @@ export function calibrateProjectionScoresToHistoricalVenue(payload, venueScoring
 
   const coursePar18 = Math.round(num(payload.course_par_18, NaN)) || 72;
   const dgFilter = opts.dgFilter instanceof Set ? opts.dgFilter : null;
+  const useDkFieldFilter = opts.useDkFieldFilter === true;
   const minField = Math.max(8, Math.round(num(opts.minField, 12)) || 12);
-  const maxShift = envNum("GOLF_HIST_VENUE_CALIB_MAX_SHIFT", 1.85);
-  const minShift = envNum("GOLF_HIST_VENUE_CALIB_MIN_SHIFT", 0.05);
+  const maxShift = envNum("GOLF_HIST_VENUE_CALIB_MAX_SHIFT", 2.1);
+  const minShift = envNum("GOLF_HIST_VENUE_CALIB_MIN_SHIFT", 0.04);
 
   /** @type {Record<number, number>} */
   const shifts = {};
@@ -818,7 +819,7 @@ export function calibrateProjectionScoresToHistoricalVenue(payload, venueScoring
 
   for (let rnd = 1; rnd <= 4; rnd++) {
     let rows = players.filter((pl) => Math.round(num(pl.round, NaN)) === rnd);
-    if (dgFilter?.size >= minField) {
+    if (useDkFieldFilter && dgFilter?.size >= minField) {
       rows = rows.filter((pl) => dgFilter.has(Math.round(num(pl.dg_id, NaN))));
     }
     if (rows.length < minField) continue;
@@ -826,13 +827,7 @@ export function calibrateProjectionScoresToHistoricalVenue(payload, venueScoring
     const targetStp = historicalVenueStpTargetForRound(venueScoring, rnd);
     if (!Number.isFinite(targetStp)) continue;
 
-    const curStp = meanFinite(
-      rows.map((pl) => {
-        const pre = pl?._pre_weather_counts?.score_to_par;
-        if (pl?.weather_counts_baked && Number.isFinite(num(pre, NaN))) return num(pre, NaN);
-        return num(pl.score_to_par, NaN);
-      }),
-    );
+    const curStp = meanFinite(rows.map((pl) => num(pl.score_to_par, NaN)));
     if (!Number.isFinite(curStp)) continue;
 
     const shift = clamp(targetStp - curStp, -maxShift, maxShift);
@@ -842,7 +837,9 @@ export function calibrateProjectionScoresToHistoricalVenue(payload, venueScoring
     rounds++;
     for (const pl of players) {
       if (Math.round(num(pl.round, NaN)) !== rnd) continue;
-      if (dgFilter?.size >= minField && !dgFilter.has(Math.round(num(pl.dg_id, NaN)))) continue;
+      if (useDkFieldFilter && dgFilter?.size >= minField && !dgFilter.has(Math.round(num(pl.dg_id, NaN)))) {
+        continue;
+      }
       shiftProjectionRowScore(pl, shift, coursePar18);
     }
   }
@@ -1015,10 +1012,10 @@ const VENUE_PLAYER_BLEND_MIN_ROUNDS = 3;
 const VENUE_PLAYER_BLEND_VENUE_MAX = 0.55;
 const VENUE_PLAYER_BLEND_VENUE_BASE = 0.2;
 const VENUE_PLAYER_BLEND_VENUE_PER_ROUND = 0.03;
-const VENUE_PLAYER_BLEND_VENUE_FLOOR = 0.18;
-const VENUE_PLAYER_BLEND_SKILL_PULL_BASE = 0.08;
-const VENUE_PLAYER_BLEND_SKILL_PULL_MU = 0.16;
-const VENUE_PLAYER_BLEND_SKILL_PULL_CAP = 0.38;
+const VENUE_PLAYER_BLEND_VENUE_FLOOR = 0.05;
+const VENUE_PLAYER_BLEND_SKILL_PULL_BASE = 0.1;
+const VENUE_PLAYER_BLEND_SKILL_PULL_MU = 0.26;
+const VENUE_PLAYER_BLEND_SKILL_PULL_CAP = 0.52;
 const VENUE_FIELD_NO_PLAYER_WEIGHT = 0.32;
 const VENUE_COUNT_ALIGN_TO_STP = 0.48;
 
@@ -1080,6 +1077,17 @@ export function venuePlayerHistBlendWeight(nRounds, muForRound) {
   );
   wVenue = Math.max(VENUE_PLAYER_BLEND_VENUE_FLOOR, wVenue - skillPull);
   return wVenue;
+}
+
+/** When skill beats venue history, lean harder on skill — especially for above-average μ_SG. */
+function reduceVenueWeightWhenSkillBetter(wVenue, muForRound, skillVal, histVal, higherIsBetter) {
+  if (wVenue <= 0 || !Number.isFinite(skillVal) || !Number.isFinite(histVal)) return wVenue;
+  const mu = num(muForRound, 0);
+  if (mu < 0.12) return wVenue;
+  const margin = higherIsBetter ? skillVal - histVal : histVal - skillVal;
+  if (margin < 0.05) return wVenue;
+  const pull = clamp(0.28 + 0.3 * Math.max(0, mu) + 0.18 * margin, 0.22, 0.92);
+  return wVenue * (1 - pull);
 }
 
 function blendVenueSkillScalar(skillVal, playerVal, fieldVal, wVenue) {
@@ -1147,16 +1155,60 @@ export function resolveProjectionCounts({
   const prOk = pr && pr.n >= minPlayerRounds;
   const playerAgg = mergePlayerVenueAgg(pv, pr, minPlayerRounds);
   const histN = prOk ? pr.n : playerAgg?.n ?? 0;
-  const wVenue = venuePlayerHistBlendWeight(histN, muForRound);
+  let wVenue = venuePlayerHistBlendWeight(histN, muForRound);
+  const wEagles = reduceVenueWeightWhenSkillBetter(
+    wVenue,
+    muForRound,
+    sk.eagles,
+    playerAgg?.avgEagles,
+    true,
+  );
+  const wBirdies = reduceVenueWeightWhenSkillBetter(
+    wVenue,
+    muForRound,
+    sk.birdies,
+    playerAgg?.avgBirdies,
+    true,
+  );
+  const wBogeys = reduceVenueWeightWhenSkillBetter(
+    wVenue,
+    muForRound,
+    sk.bogeys,
+    playerAgg?.avgBogeys,
+    false,
+  );
+  const wDoubles = reduceVenueWeightWhenSkillBetter(
+    wVenue,
+    muForRound,
+    sk.doubles,
+    playerAgg?.avgDoubles,
+    false,
+  );
+  const wPars = wVenue;
+  const wGir = reduceVenueWeightWhenSkillBetter(wVenue, muForRound, sk.gir, playerAgg?.avgGir, true);
+  const wFairways = reduceVenueWeightWhenSkillBetter(
+    wVenue,
+    muForRound,
+    sk.fairways,
+    playerAgg?.avgFairways,
+    true,
+  );
+  const wPutts = reduceVenueWeightWhenSkillBetter(
+    wVenue,
+    muForRound,
+    sk.putts,
+    playerAgg?.avgPutts,
+    false,
+  );
 
-  let eagles = blendVenueSkillScalar(sk.eagles, playerAgg?.avgEagles, frOk ? fr.avgEagles : NaN, wVenue);
-  let birdies = blendVenueSkillScalar(sk.birdies, playerAgg?.avgBirdies, frOk ? fr.avgBirdies : NaN, wVenue);
-  let bogeys = blendVenueSkillScalar(sk.bogeys, playerAgg?.avgBogeys, frOk ? fr.avgBogeys : NaN, wVenue);
-  let doubles = blendVenueSkillScalar(sk.doubles, playerAgg?.avgDoubles, frOk ? fr.avgDoubles : NaN, wVenue);
-  let pars = blendVenueSkillScalar(sk.pars, playerAgg?.avgPars, frOk ? fr.avgPars : NaN, wVenue);
-  let gir = blendVenueSkillScalar(sk.gir, playerAgg?.avgGir, frOk ? fr.avgGir : NaN, wVenue);
-  let fairways = blendVenueSkillScalar(sk.fairways, playerAgg?.avgFairways, frOk ? fr.avgFairways : NaN, wVenue);
-  let putts = blendVenueSkillScalar(sk.putts, playerAgg?.avgPutts, frOk ? fr.avgPutts : NaN, wVenue);
+  let eagles = blendVenueSkillScalar(sk.eagles, playerAgg?.avgEagles, frOk ? fr.avgEagles : NaN, wEagles);
+  let birdies = blendVenueSkillScalar(sk.birdies, playerAgg?.avgBirdies, frOk ? fr.avgBirdies : NaN, wBirdies);
+  let bogeys = blendVenueSkillScalar(sk.bogeys, playerAgg?.avgBogeys, frOk ? fr.avgBogeys : NaN, wBogeys);
+  let doubles = blendVenueSkillScalar(sk.doubles, playerAgg?.avgDoubles, frOk ? fr.avgDoubles : NaN, wDoubles);
+  let pars = blendVenueSkillScalar(sk.pars, playerAgg?.avgPars, frOk ? fr.avgPars : NaN, wPars);
+  let gir = blendVenueSkillScalar(sk.gir, playerAgg?.avgGir, frOk ? fr.avgGir : NaN, wGir);
+  let fairways = blendVenueSkillScalar(sk.fairways, playerAgg?.avgFairways, frOk ? fr.avgFairways : NaN, wFairways);
+  let putts = blendVenueSkillScalar(sk.putts, playerAgg?.avgPutts, frOk ? fr.avgPutts : NaN, wPutts);
 
   eagles = Math.max(0, num(eagles, 0));
   birdies = Math.max(0.15, num(birdies, 0));
@@ -2129,7 +2181,10 @@ export function resolveProjectionScoreToPar({
 
   const prOk = pr && pr.n >= minPlayerRounds;
   const playerStp = playerAgg.avgScore - cp;
-  const wVenue = venuePlayerHistBlendWeight(prOk ? pr.n : playerAgg.n, muForRound);
+  let wVenue = venuePlayerHistBlendWeight(prOk ? pr.n : playerAgg.n, muForRound);
+  if (playerStp > skillRes.stp + 0.04) {
+    wVenue = reduceVenueWeightWhenSkillBetter(wVenue, muForRound, skillRes.stp, playerStp, false);
+  }
   if (wVenue <= 0) return skillRes;
   const stp = wVenue * playerStp + (1 - wVenue) * skillRes.stp;
   return {

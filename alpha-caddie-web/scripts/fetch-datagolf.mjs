@@ -87,7 +87,6 @@ import {
   resolveProjectionScoreToPar,
   updateProjectionBasisFromEventWeek,
 } from "./course-round-adjustments.mjs";
-import { applyUnifiedProjectionFactors } from "./projection-unified-factors.mjs";
 import { holeParsFromLiveHoleStatsPayload } from "./dg-live-hole-pars.mjs";
 import { normCourseNameKey, formatCourseLabelForDisplay } from "./course-name-key.mjs";
 import {
@@ -2337,6 +2336,18 @@ async function main() {
   for (let r = 1; r <= 4; r++) {
     const mult = withinEventLiveWeek && r >= 2 ? 1 : num(roundMuMult[r - 1], 1);
     const strokeShiftPrior = applyPriorRoundAdj ? num(priorCourseStrokeShiftByRound[r], 0) : 0;
+    const fieldMeanMuRound = (() => {
+      const samples = [];
+      for (const row of base) {
+        const formShift = formK !== 0 ? num(withinFormMap.get(`${row.dg_id}|${r}`), 0) : 0;
+        let mu = r === 1 ? row.mu_sg : row.mu_sg * mult;
+        if (applyPriorRoundAdj) mu = mu - strokeShiftPrior + formShift;
+        samples.push(clampMuSg(mu));
+      }
+      return samples.length
+        ? samples.reduce((s, v) => s + v, 0) / samples.length
+        : fieldMeanMuAdj;
+    })();
     /** @type {typeof players} */
     const roundRows = [];
     for (const row of base) {
@@ -2401,7 +2412,7 @@ async function main() {
         course_par_18,
         venueScoring,
         pretRoundScore: pretScore,
-        fieldMeanMu: fieldMeanMuAdj,
+        fieldMeanMu: fieldMeanMuRound,
       });
       if (scoreRes.source in scoreSourceCounts) scoreSourceCounts[scoreRes.source]++;
       const stp = scoreRes.stp;
@@ -2696,20 +2707,6 @@ async function main() {
     payload.projection_course_basis || {},
     payload,
   );
-  let liveBundleForUnified = null;
-  const liveInPlayPath = join(dirname(fileURLToPath(import.meta.url)), "..", "live-in-play.json");
-  if (existsSync(liveInPlayPath)) {
-    try {
-      liveBundleForUnified = JSON.parse(readFileSync(liveInPlayPath, "utf8"));
-    } catch {
-      /* optional */
-    }
-  }
-  await applyUnifiedProjectionFactors(payload, {
-    csvPath: histCsvPath,
-    liveBundle: liveBundleForUnified,
-    skipReconcile: true,
-  });
   const calResult = reconcileAllProjectionPlayerRows(payload, {
     dgFilter: dkFieldCal.size >= 8 ? dkFieldCal : null,
     minField: 8,
