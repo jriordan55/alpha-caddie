@@ -100,6 +100,16 @@ for (const mkt of DK_CORE_MARKETS) {
   }
 }
 
+const outrightBake = proj.outright_sim_probs;
+const outrightByDg = outrightBake?.by_dg;
+const outrightN =
+  outrightByDg && typeof outrightByDg === "object" ? Object.keys(outrightByDg).length : 0;
+if (outrightN < 20) {
+  fail(
+    `outright_sim_probs missing or too small (${outrightN} players) — run npm run bake:outright-sim before publish`,
+  );
+}
+
 console.log(
-  `[validate:projections] OK — par ${coursePar} (${parSource}), R${displayRound}: ${roundRows.length} golfers; DK lines: ${DK_CORE_MARKETS.map((m) => `${m}=${props.filter((r) => r.source === "draftkings" && r.market === m).length}`).join(", ")}`,
+  `[validate:projections] OK — par ${coursePar} (${parSource}), R${displayRound}: ${roundRows.length} golfers; outright MC baked: ${outrightN} players; DK lines: ${DK_CORE_MARKETS.map((m) => `${m}=${props.filter((r) => r.source === "draftkings" && r.market === m).length}`).join(", ")}`,
 );

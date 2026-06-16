@@ -168,6 +168,11 @@ run(
   "Unified projection factors (last step before publish)",
 );
 
+run(
+  "bake-outright-sim-probs.mjs",
+  "Tournament MC outright probs → projections.json (precomputed for +EV)",
+);
+
 run("validate-projections-for-publish.mjs", "Validate par, birdies/pars, and O/U prop coverage before publish");
 
 if (!skipPostCsvMerge) {

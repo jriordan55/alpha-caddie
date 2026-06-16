@@ -13,10 +13,9 @@
  * meta.live_course_round_excess_strokes for O/U and props mu (even when pricing mode is default).
  * preds/in-play `thru` / `today` merge onto players for display / outrights; **round-level model odds**
  * (Model O/U, round matchups, 3-balls) ignore those hooks unless `meta.in_play_affects_round_odds` is true.
- * **+EV outright rows:** Model prices use **Alpha Caddie composite ratings** (μ_SG + round_sd per
- * round, weather / course / within-event form) and a **shifted log-normal tournament Monte Carlo**
- * (same family as round_projections.R). Live: lock `current_score` and simulate remaining rounds.
- * DataGolf
+ * **+EV outright rows:** Model prices use **pre-baked tournament MC** in `outright_sim_probs`
+ * (computed at fetch:dg / bake:outright-sim). Browser loads the cache on projections apply — no runtime MC
+ * unless `meta.outright_model_mc_in_browser` is true. DataGolf
  * `dg_model` / preds placement (`win`, `top_5`, …) are **not** used unless
  * `meta.outright_use_dg_placement_probs` is true. Optional live-board-only path:
  * `meta.outright_ev_live_leaderboard_model: true`.
@@ -2689,6 +2688,7 @@ function applyPayload(raw) {
   applyPreTournamentRoundMeta();
   projectionsDataRev++;
   ouInvalidateProjectionPerfCaches();
+  hydrateOutrightAlphaModelProbCacheFromPayload();
 }
 
 /** O/U + model default round (calendar, DK lines, live, export meta); **1** if unknown. */
@@ -8012,7 +8012,6 @@ function closeEvHelpDialog() {
 }
 
 function collectUnifiedEvRows() {
-  ensureOutrightAlphaModelProbCache();
   const rows = [];
   const devigPrefs = loadEvDevigPrefs();
   const r = getModelRoundForEv();
@@ -11369,90 +11368,39 @@ function simPlayerTournamentStpForMc(entry, formShock, ctx) {
   return { totalStp, r1Stp };
 }
 
-/** Cheap cache key (no per-player model rating) — must stay in sync with rebuild triggers. */
-function outrightAlphaModelInvalidateKeyNow() {
-  const scoring = tournamentScoringBasisFromData();
-  const liveR = Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN)) || 1;
-  const scoreByDg = new Map();
-  const liveBits = [];
-  const ratingBits = [];
-  const seen = new Set();
-  for (const p of DATA.players || []) {
-    const id = Math.round(num(p.dg_id, NaN));
-    if (!Number.isFinite(id)) continue;
-    const cs = num(p.current_score, NaN);
-    if (Number.isFinite(cs) && !scoreByDg.has(id)) scoreByDg.set(id, cs);
-    const rnd = Math.round(num(p.round, NaN));
-    if (rnd === liveR) {
-      const thru = Math.round(num(p.dg_live_thru, NaN));
-      const today = num(p.dg_live_today, NaN);
-      if (Number.isFinite(thru) || Number.isFinite(today)) {
-        liveBits.push(
-          `${id}:${thru}:${Number.isFinite(today) ? today.toFixed(1) : "n"}`,
-        );
-      }
-    }
-    if (!seen.has(id) && samePlayerRound(p, 1)) {
-      seen.add(id);
-      const chunks = [];
-      for (let r = 1; r <= 4; r++) {
-        const row = projectionPlayerRowForModel(id, r);
-        if (!row) chunks.push("x");
-        else {
-          chunks.push(
-            `${num(row.mu_sg, 0).toFixed(2)}|${num(row.implied_mu_sg, 0).toFixed(2)}|${num(row.round_sd, 0).toFixed(2)}|${num(row.within_event_form_shift, 0).toFixed(2)}`,
-          );
-        }
-      }
-      ratingBits.push(`${id}:${chunks.join(",")}`);
-    }
-  }
-  liveBits.sort();
-  ratingBits.sort();
-  const scoreBits = [...scoreByDg.entries()]
-    .sort((a, b) => a[0] - b[0])
-    .map(([id, s]) => `${id}:${s.toFixed(1)}`);
+/** Cheap key for pre-baked outright sim cache (no per-player rating scan). */
+function outrightAlphaModelBakeCacheKey() {
+  const bake = DATA?.meta?.outright_sim_probs;
   return [
     `rev${projectionsDataRev}`,
-    `par${scoring.par}`,
-    `b${scoring.baseline.toFixed(2)}`,
-    `lr${liveR}`,
+    `ba${bake?.baked_at || ""}`,
+    `lt${bake?.live_through || ""}`,
     `lu${DATA?.meta?.datagolf_live_last_update || ""}`,
-    `pm${PRICING_STATE.mode}`,
-    `ps${PRICING_STATE.skill}`,
-    `ep${historyMutationEpoch}`,
-    `ls${tournamentMcLognSdlog().toFixed(3)}`,
-    `sc${scoreBits.join(",")}`,
-    `lp${liveBits.join(",")}`,
-    `rf${ratingBits.join(";")}`,
   ].join("|");
 }
 
-function tournamentMcSimsForBrowser() {
-  const capRaw = Math.round(num(DATA?.meta?.outright_model_mc_sims_browser, 280));
-  const browserCap = Number.isFinite(capRaw) && capRaw >= 80 ? Math.min(400, capRaw) : 280;
-  const nSimsRaw = Math.round(num(DATA?.meta?.outright_model_mc_sims, NaN));
-  if (Number.isFinite(nSimsRaw) && nSimsRaw >= 100) {
-    return Math.min(browserCap, Math.min(2500, nSimsRaw));
-  }
-  return browserCap;
+function outrightAlphaModelBrowserMcAllowed() {
+  if (DATA?.meta?.outright_model_mc_in_browser === true) return true;
+  if (DATA?.meta?.outright_model_mc_in_browser === false) return false;
+  const bake = DATA?.meta?.outright_sim_probs?.by_dg;
+  return !(bake && typeof bake === "object" && Object.keys(bake).length >= 5);
 }
 
-function loadOutrightAlphaModelCacheFromMeta(ikey) {
+function loadOutrightAlphaModelCacheFromBaked(cacheKey) {
   const bake = DATA?.meta?.outright_sim_probs;
   const byDg = bake?.by_dg;
   if (!byDg || typeof byDg !== "object") return false;
+
   const liveLu = String(DATA?.meta?.datagolf_live_last_update || "");
   const bakeLive = String(bake.live_through || "");
-  if (outrightLiveTournamentContext()) {
-    if (!bakeLive || bakeLive !== liveLu) return false;
-  } else if (bakeLive) {
+  if (bakeLive) {
+    if (!liveLu || bakeLive !== liveLu) return false;
+  } else if (outrightLiveTournamentContext() && liveLu) {
     return false;
   }
-  if (bake.invalidate_key && bake.invalidate_key !== ikey) return false;
 
   const next = {
-    sig: ikey,
+    sig: cacheKey,
     win: new Map(),
     top5: new Map(),
     top10: new Map(),
@@ -11475,11 +11423,37 @@ function loadOutrightAlphaModelCacheFromMeta(ikey) {
   return true;
 }
 
+function hydrateOutrightAlphaModelProbCacheFromPayload() {
+  const key = outrightAlphaModelBakeCacheKey();
+  if (!loadOutrightAlphaModelCacheFromBaked(key)) {
+    outrightAlphaModelProbCache = {
+      sig: "",
+      win: new Map(),
+      top5: new Map(),
+      top10: new Map(),
+      top20: new Map(),
+      make_cut: new Map(),
+      frl: new Map(),
+    };
+  }
+}
+
+function tournamentMcSimsForBrowser() {
+  const capRaw = Math.round(num(DATA?.meta?.outright_model_mc_sims_browser, 280));
+  const browserCap = Number.isFinite(capRaw) && capRaw >= 80 ? Math.min(400, capRaw) : 280;
+  const nSimsRaw = Math.round(num(DATA?.meta?.outright_model_mc_sims, NaN));
+  if (Number.isFinite(nSimsRaw) && nSimsRaw >= 100) {
+    return Math.min(browserCap, Math.min(2500, nSimsRaw));
+  }
+  return browserCap;
+}
+
 /** Monte Carlo tournament outcomes from composite μ_SG ratings (shifted log-normal rounds). */
 function ensureOutrightAlphaModelProbCache() {
-  const ikey = outrightAlphaModelInvalidateKeyNow();
-  if (outrightAlphaModelProbCache.sig === ikey && outrightAlphaModelProbCache.win.size >= 5) return;
-  if (loadOutrightAlphaModelCacheFromMeta(ikey)) return;
+  const cacheKey = outrightAlphaModelBakeCacheKey();
+  if (outrightAlphaModelProbCache.sig === cacheKey && outrightAlphaModelProbCache.win.size >= 5) return;
+  if (loadOutrightAlphaModelCacheFromBaked(cacheKey)) return;
+  if (!outrightAlphaModelBrowserMcAllowed()) return;
 
   const scoring = tournamentScoringBasisFromData();
   const nSims = tournamentMcSimsForBrowser();
@@ -11578,7 +11552,7 @@ function ensureOutrightAlphaModelProbCache() {
 
   const clampProb = (p) => clamp(p, 0.001, 0.95);
   const next = {
-    sig: ikey,
+    sig: cacheKey,
     win: new Map(),
     top5: new Map(),
     top10: new Map(),
@@ -11795,7 +11769,6 @@ function modelProbOutrightFromRowOrProjections(outrightRow, marketKey, opts) {
 let outrightSort = { key: "player", dir: 1 };
 
 function buildOutrightsTableBodyOnly() {
-  ensureOutrightAlphaModelProbCache();
   const table = document.getElementById("table-outrights");
   if (!table) return;
   const msel = document.getElementById("outright-market");

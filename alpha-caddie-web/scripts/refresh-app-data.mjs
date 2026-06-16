@@ -153,6 +153,10 @@ run(
   "apply-unified-projection-factors.mjs",
   "Unified projection factors (course fit, tee wave, bounce-back, Sunday pressure, correlated markets)",
 );
+run(
+  "bake-outright-sim-probs.mjs",
+  "Tournament MC outright probs → projections.json (precomputed for +EV)",
+);
 
 const skipHistory = String(process.env.GOLF_REFRESH_APP_SKIP_HISTORY || "").trim() === "1";
 if (skipHistory) {
