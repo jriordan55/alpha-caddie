@@ -236,6 +236,32 @@
               <select id="prop-golfer" hidden></select>
             </div>
           </label>
+          <label class="props-sidebar-label props-trends-top-market">Market
+            <select id="prop-stat">
+              <optgroup label="Scoring">
+                <option value="total">Round score</option>
+                <option value="birdies">Birdies</option>
+                <option value="pars">Pars</option>
+                <option value="bogeys">Bogeys</option>
+              </optgroup>
+              <optgroup label="Strokes gained">
+                <option value="sg_total">SG: Total</option>
+                <option value="sg_t2g">SG: Tee to green</option>
+                <option value="sg_ott">SG: Off the tee</option>
+                <option value="sg_app">SG: Approach</option>
+                <option value="sg_arg">SG: Around the green</option>
+                <option value="sg_putt">SG: Putting</option>
+              </optgroup>
+              <optgroup label="Percentages">
+                <option value="gir_pct">GIR %</option>
+                <option value="fairways_pct">Fairways %</option>
+              </optgroup>
+              <optgroup label="Counts">
+                <option value="gir">GIR (count)</option>
+                <option value="fairways">Fairways hit (count)</option>
+              </optgroup>
+            </select>
+          </label>
           <div class="props-stepper-block props-trends-top-rounds">
             <span class="props-sidebar-label">Rounds</span>
             <div class="props-stepper">
@@ -255,7 +281,6 @@
           </div>
           <div id="props-trends-book-lines" class="props-trends-book-lines" aria-label="Book lines"></div>
           <div id="props-trends-kpis" class="props-trends-kpis" aria-label="Summary averages"></div>
-          <p class="props-trends-sub" id="props-trends-sub"></p>
         </div>
         <button type="button" class="ev-help-btn tab-help-btn props-tab-help-btn" data-tab-help="props" aria-label="Help: Historical Trends tab">?</button>
       </div>
@@ -405,15 +430,15 @@
             <div class="props-filter-course-window-group">
               <label class="props-sidebar-label props-filter-row" for="props-filter-course-window">
                 <input type="checkbox" id="props-filter-course-window" />
-                <span>Field by course &amp; date</span>
+                <span>This week&apos;s field</span>
               </label>
               <div id="props-course-session-extra" class="props-course-session-extra" hidden>
                 <div class="props-filter-date-range-inputs">
                   <label class="toolbar-label">From
-                    <input type="date" id="props-filter-date-from" class="props-date-filter-input" title="Start date (inclusive)" />
+                    <input type="date" id="props-filter-date-from" class="props-date-filter-input" title="Optional start date (inclusive)" />
                   </label>
                   <label class="toolbar-label">To
-                    <input type="date" id="props-filter-date-to" class="props-date-filter-input" title="End date (inclusive)" />
+                    <input type="date" id="props-filter-date-to" class="props-date-filter-input" title="Optional end date (inclusive)" />
                   </label>
                 </div>
                 <label class="props-sidebar-label props-filter-row" for="props-filter-draftkings-only">
@@ -423,32 +448,6 @@
               </div>
             </div>
           </div>
-          <label class="props-sidebar-label">Market
-            <select id="prop-stat">
-              <optgroup label="Scoring">
-                <option value="total">Round score</option>
-                <option value="birdies">Birdies</option>
-                <option value="pars">Pars</option>
-                <option value="bogeys">Bogeys</option>
-              </optgroup>
-              <optgroup label="Strokes gained">
-                <option value="sg_total">SG: Total</option>
-                <option value="sg_t2g">SG: Tee to green</option>
-                <option value="sg_ott">SG: Off the tee</option>
-                <option value="sg_app">SG: Approach</option>
-                <option value="sg_arg">SG: Around the green</option>
-                <option value="sg_putt">SG: Putting</option>
-              </optgroup>
-              <optgroup label="Percentages">
-                <option value="gir_pct">GIR %</option>
-                <option value="fairways_pct">Fairways %</option>
-              </optgroup>
-              <optgroup label="Counts">
-                <option value="gir">GIR (count)</option>
-                <option value="fairways">Fairways hit (count)</option>
-              </optgroup>
-            </select>
-          </label>
           <label class="props-sidebar-label props-current-course-option" for="props-filter-current-course">
             <span class="props-filter-row">
               <input type="checkbox" id="props-filter-current-course" />
@@ -1195,8 +1194,10 @@
       <section class="ev-help-section" aria-labelledby="tab-help-props-filters-h">
         <h4 class="ev-devig-section-title" id="tab-help-props-filters-h">Filters</h4>
         <dl class="ev-help-dl">
+          <dt>This week&apos;s field</dt>
+          <dd>Chart every golfer in this week&apos;s projection field. Use Course (All courses or one venue), Year, and optional From/To dates to narrow the window.</dd>
           <dt>Current course only</dt>
-          <dd>All past rounds at this week’s course (full venue history).</dd>
+          <dd>Single-golfer mode: all past rounds at this week&apos;s course.</dd>
           <dt>Course dropdown</dt>
           <dd>Limit to one course by name.</dd>
           <dt>Weather filters</dt>
@@ -1402,6 +1403,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=247"></script>
+  <script src="app.js?v=248"></script>
 </body>
 </html>

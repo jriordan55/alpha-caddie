@@ -2718,6 +2718,15 @@ th.matchup-analysis-best-pick {
   min-width: min(100%, 220px);
   margin: 0;
 }
+.props-trends-top-market {
+  flex: 1 1 200px;
+  min-width: min(100%, 180px);
+  margin: 0;
+}
+.props-trends-top-market select {
+  width: 100%;
+  max-width: 100%;
+}
 .props-trends-top-rounds {
   flex: 0 1 200px;
   min-width: min(100%, 180px);
