@@ -14,6 +14,9 @@ import {
   lookupAdjScoreToParFromCourseTable,
   reconcileAllProjectionPlayerRows,
   reconcileProjectionRowCountsToScore,
+  calibrateProjectionScoresToHistoricalVenue,
+  loadVenueHistoricalScoring,
+  draftKingsDgIdsFromProjections,
 } from "./course-round-adjustments.mjs";
 import { projectionExportMeta } from "./projection-export-meta.mjs";
 import {
@@ -568,6 +571,19 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
     ? null
     : reconcileAllProjectionPlayerRows(payload, opts.reconcileOpts || {});
 
+  let histCalib = { rounds: 0, shifts: {} };
+  if (courseKey && csvPath) {
+    const venueScoring = await loadVenueHistoricalScoring(csvPath, courseKey, courseLabel);
+    const dkField = draftKingsDgIdsFromProjections(payload);
+    histCalib = calibrateProjectionScoresToHistoricalVenue(payload, venueScoring, {
+      dgFilter: dkField.size >= 8 ? dkField : null,
+      minField: 8,
+    });
+    if (histCalib.rounds > 0 && !opts.skipReconcile) {
+      reconcileAllProjectionPlayerRows(payload, opts.reconcileOpts || {});
+    }
+  }
+
   const summary = {
     applied_at: new Date().toISOString(),
     weights: { ...UNIFIED_FACTOR_WEIGHTS },
@@ -578,6 +594,7 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
     player_residuals_loaded: residualMap.size,
     rows_adjusted: adjusted,
     reconciled: rec?.reconciled ?? 0,
+    historical_venue_calibration: histCalib,
   };
   meta.projection_unified_factors = summary;
   meta.projection_round_adjustments = {
@@ -590,5 +607,11 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
   console.log(
     `[unified-factors] adjusted ${adjusted}/${players.length} rows | course_fit=${factorCounts.course_table_fit} tee_wave=${factorCounts.tee_wave} bounce_back=${factorCounts.bounce_back} sunday=${factorCounts.sunday_pressure} weather=${factorCounts.weather_round} residual=${factorCounts.player_residual}`,
   );
+  if (histCalib.rounds > 0) {
+    const parts = Object.entries(histCalib.shifts || {}).map(([r, s]) => `R${r}:${s >= 0 ? "+" : ""}${s}`);
+    console.log(
+      `[unified-factors] Historical venue score calibration: ${parts.join(", ")} (venue μ=${Number.isFinite(histCalib.venueAvgStp) ? histCalib.venueAvgStp.toFixed(2) : "?"} vs par)`,
+    );
+  }
   return { adjusted, meta: summary, reconciled: rec };
 }

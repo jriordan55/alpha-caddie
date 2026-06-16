@@ -741,6 +741,146 @@ function coalesceVenueCount(playerVal, fieldVal, skillVal) {
   return skillVal;
 }
 
+function envNum(name, fallback) {
+  const raw = process.env[name];
+  if (raw === undefined || String(raw).trim() === "") return fallback;
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+/** Venue CSV year window — include prior US Opens / setups (not only the latest ~8 seasons). */
+function venueHistoryMinYear(calendarYear) {
+  const cy = Math.round(num(calendarYear, new Date().getFullYear()));
+  const lookback = Math.round(envNum("GOLF_VENUE_HIST_LOOKBACK_YEARS", 22));
+  return Math.max(2000, cy - lookback);
+}
+
+/**
+ * Round-bucket venue mean shrunk toward full-course historical average.
+ * Dampens noisy R1/R4 spikes (e.g. 2018 Shinnecock R1 +6.5 vs venue +4.4 all-years).
+ */
+export function historicalVenueStpTargetForRound(venueScoring, round) {
+  const overall = num(venueScoring?.venueAvgStp, NaN);
+  const rnd = Math.round(num(round, NaN));
+  if (!Number.isFinite(overall) || !Number.isFinite(rnd) || rnd < 1 || rnd > 4) {
+    return overall;
+  }
+  const fr = venueScoring?.fieldByRound?.get(rnd);
+  const roundStp = num(fr?.avgStp, NaN);
+  const nRound = Math.round(num(fr?.n, 0));
+  const minField = Math.round(envNum("GOLF_VENUE_ROUND_STP_MIN_N", 25));
+  if (!Number.isFinite(roundStp) || nRound < minField) return overall;
+
+  const maxDev = envNum("GOLF_VENUE_ROUND_STP_MAX_DEV", 1.15);
+  const cappedRound = overall + clamp(roundStp - overall, -maxDev, maxDev);
+  const shrinkK = envNum("GOLF_VENUE_ROUND_STP_SHRINK_K", 72);
+  const wRound = clamp(nRound / (nRound + shrinkK), 0.42, 0.8);
+  return wRound * cappedRound + (1 - wRound) * overall;
+}
+
+/** Shift total_score / score_to_par without changing μ_SG (venue calibration, not skill revision). */
+export function shiftProjectionRowScore(row, strokeShift, coursePar18) {
+  if (!row || typeof row !== "object") return;
+  if (!Number.isFinite(strokeShift) || Math.abs(strokeShift) < 1e-6) return;
+  const par18 = Math.round(num(coursePar18, NaN)) || 72;
+  const stp = num(row.score_to_par, NaN);
+  const ts = num(row.total_score, NaN);
+  if (Number.isFinite(stp)) {
+    row.score_to_par = Math.round((stp + strokeShift) * 100) / 100;
+    row.total_score = Math.round((par18 + row.score_to_par) * 100) / 100;
+  } else if (Number.isFinite(ts)) {
+    row.total_score = Math.round((ts + strokeShift) * 100) / 100;
+    row.score_to_par = Math.round((row.total_score - par18) * 100) / 100;
+  }
+}
+
+/**
+ * After weather / unified factors, nudge field-average score-to-par toward shrunk historical venue targets.
+ */
+export function calibrateProjectionScoresToHistoricalVenue(payload, venueScoring, opts = {}) {
+  if (String(process.env.GOLF_HIST_VENUE_SCORE_CALIB ?? "1").trim() === "0") {
+    return { rounds: 0, shifts: {} };
+  }
+  const players = Array.isArray(payload?.players) ? payload.players : [];
+  if (!players.length || !venueScoring || !Number.isFinite(num(venueScoring.venueAvgStp, NaN))) {
+    return { rounds: 0, shifts: {} };
+  }
+
+  const coursePar18 = Math.round(num(payload.course_par_18, NaN)) || 72;
+  const dgFilter = opts.dgFilter instanceof Set ? opts.dgFilter : null;
+  const minField = Math.max(8, Math.round(num(opts.minField, 12)) || 12);
+  const maxShift = envNum("GOLF_HIST_VENUE_CALIB_MAX_SHIFT", 1.85);
+  const minShift = envNum("GOLF_HIST_VENUE_CALIB_MIN_SHIFT", 0.05);
+
+  /** @type {Record<number, number>} */
+  const shifts = {};
+  let rounds = 0;
+
+  for (let rnd = 1; rnd <= 4; rnd++) {
+    let rows = players.filter((pl) => Math.round(num(pl.round, NaN)) === rnd);
+    if (dgFilter?.size >= minField) {
+      rows = rows.filter((pl) => dgFilter.has(Math.round(num(pl.dg_id, NaN))));
+    }
+    if (rows.length < minField) continue;
+
+    const targetStp = historicalVenueStpTargetForRound(venueScoring, rnd);
+    if (!Number.isFinite(targetStp)) continue;
+
+    const curStp = meanFinite(
+      rows.map((pl) => {
+        const pre = pl?._pre_weather_counts?.score_to_par;
+        if (pl?.weather_counts_baked && Number.isFinite(num(pre, NaN))) return num(pre, NaN);
+        return num(pl.score_to_par, NaN);
+      }),
+    );
+    if (!Number.isFinite(curStp)) continue;
+
+    const shift = clamp(targetStp - curStp, -maxShift, maxShift);
+    if (Math.abs(shift) < minShift) continue;
+
+    shifts[rnd] = Math.round(shift * 1000) / 1000;
+    rounds++;
+    for (const pl of players) {
+      if (Math.round(num(pl.round, NaN)) !== rnd) continue;
+      if (dgFilter?.size >= minField && !dgFilter.has(Math.round(num(pl.dg_id, NaN)))) continue;
+      shiftProjectionRowScore(pl, shift, coursePar18);
+    }
+  }
+
+  const basis =
+    payload?.projection_course_basis && typeof payload.projection_course_basis === "object"
+      ? payload.projection_course_basis
+      : payload?.meta?.projection_course_basis;
+  if (basis && typeof basis === "object") {
+    const overall = num(venueScoring.venueAvgStp, NaN);
+    if (Number.isFinite(overall)) {
+      basis.venue_avg_score_to_par = Math.round(overall * 1000) / 1000;
+      basis.venue_avg_round_score = Math.round((coursePar18 + overall) * 100) / 100;
+      basis.venue_historical_rounds = num(venueScoring.nVenueRounds, basis.venue_historical_rounds);
+      basis.venue_scoring_source = venueScoring.source || basis.venue_scoring_source;
+    }
+    const byRound = {};
+    for (let rnd = 1; rnd <= 4; rnd++) {
+      const t = historicalVenueStpTargetForRound(venueScoring, rnd);
+      if (Number.isFinite(t)) byRound[String(rnd)] = Math.round((coursePar18 + t) * 100) / 100;
+    }
+    if (Object.keys(byRound).length) basis.historical_venue_avg_score_by_round = byRound;
+    if (rounds > 0) basis.historical_venue_score_calibration_shifts = shifts;
+    payload.projection_course_basis = basis;
+    if (payload.meta && typeof payload.meta === "object") {
+      payload.meta.projection_course_basis = basis;
+    }
+  }
+
+  if (payload?.projection_round_adjustments && typeof payload.projection_round_adjustments === "object") {
+    payload.projection_round_adjustments.historical_venue_score_calibrated = rounds > 0;
+  } else if (payload?.meta?.projection_round_adjustments) {
+    payload.meta.projection_round_adjustments.historical_venue_score_calibrated = rounds > 0;
+  }
+
+  return { rounds, shifts, venueAvgStp: venueScoring.venueAvgStp };
+}
+
 /** Stream all historical rounds at this venue (any event) — mirrors round_projections.R RAW hist path. */
 export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLabelOpt) {
   const empty = {
@@ -790,7 +930,8 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
       const ckRow = normCourseNameKey(row.course_name || row.Course_Name || "");
       if (!ckRow || ckRow !== ckWant) return;
       const yr = parseInt(row.year, 10);
-      if (Number.isFinite(yr) && (yr < cy - 8 || yr > cy + 1)) return;
+      const minYr = venueHistoryMinYear(cy);
+      if (Number.isFinite(yr) && (yr < minYr || yr > cy + 1)) return;
 
       const cp = num(row.course_par, NaN);
       const rs = num(row.round_score, NaN);
@@ -967,9 +1108,13 @@ function skillScoreToPar({
   const fr = venueScoring?.fieldByRound?.get(rnd);
   let venueStp = num(venueScoring?.venueAvgStp, NaN);
   let source = "skill_around_venue_mean";
-  if (fr && fr.n >= minFieldRounds && Number.isFinite(fr.avgStp)) {
-    venueStp = fr.avgStp;
-    source = "skill_around_round_venue_mean";
+  const shrunk = historicalVenueStpTargetForRound(venueScoring, rnd);
+  if (Number.isFinite(shrunk)) {
+    venueStp = shrunk;
+    source =
+      fr && fr.n >= minFieldRounds && Number.isFinite(fr.avgStp)
+        ? "skill_around_shrunk_round_venue_mean"
+        : "skill_around_venue_mean";
   }
   const fm = num(fieldMeanMu, 0);
   if (Number.isFinite(venueStp)) return { stp: venueStp - (mu - fm), source };
@@ -1178,11 +1323,15 @@ export function ensureProjectionCourseBasisComplete(basis, payload = {}) {
     const stp = num(out.venue_avg_score_to_par, NaN);
     if (Number.isFinite(stp)) out.venue_avg_round_score = Math.round((coursePar18 + stp) * 100) / 100;
   }
-  if (!Number.isFinite(num(out.venue_avg_round_score, NaN)) && roundScores.length) {
+  const lockHistoricalVenue =
+    num(out.venue_historical_rounds, 0) >= 40 &&
+    String(out.venue_scoring_source || "") === "historical_csv" &&
+    Number.isFinite(num(out.venue_avg_score_to_par, NaN));
+  if (!Number.isFinite(num(out.venue_avg_round_score, NaN)) && roundScores.length && !lockHistoricalVenue) {
     out.venue_avg_round_score =
       Math.round((roundScores.reduce((a, b) => a + b, 0) / roundScores.length) * 100) / 100;
   }
-  if (!Number.isFinite(num(out.venue_avg_round_score, NaN)) && Array.isArray(payload.players)) {
+  if (!lockHistoricalVenue && !Number.isFinite(num(out.venue_avg_round_score, NaN)) && Array.isArray(payload.players)) {
     const fromRows = [];
     for (const pl of payload.players) {
       const ts = num(pl.total_score, NaN);
@@ -1202,7 +1351,11 @@ export function ensureProjectionCourseBasisComplete(basis, payload = {}) {
     out.venue_avg_round_score = Math.round((coursePar18 + stpEst) * 100) / 100;
   }
 
-  if (!Number.isFinite(num(out.venue_avg_score_to_par, NaN)) && Number.isFinite(num(out.venue_avg_round_score, NaN))) {
+  if (
+    !lockHistoricalVenue &&
+    !Number.isFinite(num(out.venue_avg_score_to_par, NaN)) &&
+    Number.isFinite(num(out.venue_avg_round_score, NaN))
+  ) {
     out.venue_avg_score_to_par = Math.round((out.venue_avg_round_score - coursePar18) * 1000) / 1000;
   }
 

@@ -76,6 +76,10 @@ export function weatherDifficultyDeltaFromSnapshot(w) {
   const softTurf =
     cond === "rain" || (wind < 9 && cond !== "windy" && cond !== "storm");
   if (softTurf) d -= 0.12;
+  // Rain + wind: archive rounds score softer (less roll, receptive greens) — dampen wind hardness.
+  if (cond === "rain" && wind >= 18) {
+    d -= 0.08 * Math.min(1, (wind - 18) / 22);
+  }
   return clamp(d, -0.65, 0.85);
 }
 
