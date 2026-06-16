@@ -1150,6 +1150,38 @@ body {
   margin-top: 4px;
   overflow-x: auto;
 }
+.course-fit-table {
+  --course-fit-golfer-col-w: 190px;
+}
+.course-fit-table thead th.course-fit-col-golfer,
+.course-fit-table tbody td.course-fit-col-golfer {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  width: var(--course-fit-golfer-col-w);
+  min-width: var(--course-fit-golfer-col-w);
+  max-width: var(--course-fit-golfer-col-w);
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-shadow: 6px 0 18px -8px rgba(0, 0, 0, 0.75);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+.course-fit-table thead th.course-fit-col-golfer {
+  z-index: 4;
+  background: var(--golf-surface-head) !important;
+}
+.course-fit-table tbody tr:nth-child(odd) td.course-fit-col-golfer {
+  background-color: var(--golf-surface-mid);
+}
+.course-fit-table tbody tr:nth-child(even) td.course-fit-col-golfer {
+  background-color: var(--golf-surface-alt);
+}
+.course-fit-table tbody tr:hover td.course-fit-col-golfer {
+  background-color: var(--golf-surface-hover) !important;
+}
 .course-fit-table thead th.num {
   font-size: 0.72rem;
   white-space: nowrap;
@@ -1751,6 +1783,46 @@ body {
 #table-ou.table-ou-projections .ou-proj-td-mu {
   min-width: 3rem;
   font-weight: 800;
+}
+
+/* +EV table: freeze golfer column while horizontal scroll */
+#table-ev {
+  --ev-model-ev-col-w: 92px;
+}
+#table-ev thead th:nth-child(1),
+#table-ev tbody td:nth-child(1) {
+  width: var(--ev-model-ev-col-w);
+  min-width: var(--ev-model-ev-col-w);
+  max-width: var(--ev-model-ev-col-w);
+}
+#table-ev thead th.ev-col-golfer,
+#table-ev tbody td.ev-col-golfer {
+  position: sticky;
+  left: var(--ev-model-ev-col-w);
+  z-index: 2;
+  min-width: 170px;
+  max-width: 170px;
+  width: 170px;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-shadow: 6px 0 18px -8px rgba(0, 0, 0, 0.75);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+#table-ev thead th.ev-col-golfer {
+  z-index: 4;
+  background: var(--golf-surface-head) !important;
+}
+#table-ev tbody tr:nth-child(odd) td.ev-col-golfer {
+  background-color: var(--golf-surface-mid);
+}
+#table-ev tbody tr:nth-child(even) td.ev-col-golfer {
+  background-color: var(--golf-surface-alt);
+}
+#table-ev tbody tr:hover td.ev-col-golfer {
+  background-color: var(--golf-surface-hover) !important;
 }
 #table-ou.table-ou-projections .ou-proj-th-mkt-rating,
 #table-ou.table-ou-projections .ou-proj-td-mkt-rating {

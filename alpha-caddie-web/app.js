@@ -8154,9 +8154,9 @@ function initEvTableSortOnce() {
   if (!table) return;
   const keyOrder = [
     "model_ev",
+    "golfer",
     "kelly",
     "best_book",
-    "golfer",
     "model",
     "consensus",
     "implied",
@@ -8342,6 +8342,7 @@ function buildEvTable() {
     const modelEvTd = mkTd(Number.isFinite(mEv) ? `${(mEv * 100).toFixed(1)}%` : "", "num");
     if (Number.isFinite(mEv)) modelEvTd.classList.add(mEv >= 0 ? "ev-pos" : "ev-neg");
     tr.appendChild(modelEvTd);
+    tr.appendChild(mkTd(evCell(r.golfer), "ev-col-golfer"));
     tr.appendChild(mkTd(evCell(kellyStr), "num"));
     const bb = document.createElement("td");
     bb.className = "num best-book-td";
@@ -8353,7 +8354,6 @@ function buildEvTable() {
       bb.innerHTML = `${bookBadgeHtml(r.bestBook)} <span class="best-book-odds">${evDash(oddsDisp)}</span>`;
     }
     tr.appendChild(bb);
-    tr.appendChild(mkTd(evCell(r.golfer), ""));
     const modelTd = document.createElement("td");
     modelTd.className = "num";
     modelTd.textContent = evCell(modelAmericanFromProb(r.modelPct));
@@ -9648,7 +9648,7 @@ function ensureCourseFitTableHead() {
     )}${sortInd}</th>`;
   };
   let hdr =
-    `<tr>${mkTh("", "golfer", "Golfer", "All players in the current tournament field")}`;
+    `<tr>${mkTh("course-fit-col-golfer", "golfer", "Golfer", "All players in the current tournament field")}`;
   for (let i = 0; i < COURSE_FIT_RADAR_SPOKE_LABELS.length; i++) {
     const full = COURSE_FIT_RADAR_SPOKE_LABELS[i];
     const short = COURSE_FIT_TABLE_AXIS_SHORT[i] || full;
@@ -10703,6 +10703,7 @@ function buildCourseFitTab() {
     for (const row of displayRows) {
       const tr = document.createElement("tr");
       const tdN = document.createElement("td");
+      tdN.className = "course-fit-col-golfer";
       tdN.textContent = row.nm;
       tr.appendChild(tdN);
       for (let j = 0; j < COURSE_FIT_RADAR_SPOKE_LABELS.length; j++) {
