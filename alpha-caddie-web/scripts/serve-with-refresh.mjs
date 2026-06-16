@@ -41,7 +41,7 @@
  *   ALPHA_CADDIE_START_FETCH_DG=1 — run full fetch:dg instead of rounds+history only
  *   Stale week vs DataGolf: fetch-book-odds compares `datagolf_field_week_key` + titles/courses vs `/field-updates`;
  *     opt out of inline rebuild: GOLF_SKIP_INLINE_FETCH_DG_ON_EVENT_MISMATCH=1.
- *   Render: GOLF_RENDER_SYNC_FETCH_DG_ON_BOOT=1 (default in render.yaml) runs perfect-parity boot chain.
+ *   Render: GOLF_RENDER_SYNC_FETCH_DG_ON_BOOT=1 (default in render.yaml) runs perfect-parity boot chain after HTTP binds when GOLF_RENDER_DEFER_HEAVY_BOOT=1.
  *   GOLF_MODEL_DIR: optional override for repo root (see resolve-golf-model-dir.mjs).
  *   PORT — serve port (default 5173)
  *
@@ -67,6 +67,9 @@ import { resolveGolfModelDir } from "./resolve-golf-model-dir.mjs";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
 const REPO_ROOT = resolveGolfModelDir(WEB_ROOT);
+const isRenderHost = String(process.env.RENDER || "").toLowerCase() === "true";
+const deferHeavyBoot =
+  isRenderHost && String(process.env.GOLF_RENDER_DEFER_HEAVY_BOOT || "1").trim() !== "0";
 
 /** Full `fetch:dg` / projections rebuild — never more often than once per 5 minutes. */
 const MIN_FETCH_DG_POLL_MS = 300_000;
@@ -276,7 +279,7 @@ function runRenderProjectionPostProcess(env = {}) {
   }
 }
 
-function refreshBeforeServe() {
+function refreshBeforeServe(opts = {}) {
   if (process.env.ALPHA_CADDIE_START_FETCH_DG === "1") {
     console.log("[alpha-caddie-web] ALPHA_CADDIE_START_FETCH_DG=1 → npm run fetch:dg (projections + rounds + history) …");
     const r = spawnSync(process.execPath, [path.join(WEB_ROOT, "scripts", "fetch-datagolf.mjs")], {
@@ -386,7 +389,6 @@ function refreshBeforeServe() {
    */
   const fetchDgScriptPath = path.join(WEB_ROOT, "scripts", "fetch-datagolf.mjs");
   const skipRefreshStart = process.env.GOLF_SKIP_REFRESH_ON_START === "1";
-  const isRenderHost = String(process.env.RENDER || "").toLowerCase() === "true";
   const forcePerfectBoot = String(process.env.GOLF_FORCE_PERFECT_BOOT_CHAIN || "").trim() === "1";
   const renderSyncDgOn = String(process.env.GOLF_RENDER_SYNC_FETCH_DG_ON_BOOT || "1").trim() !== "0";
   const renderPerfectBoot =
@@ -469,23 +471,31 @@ function refreshBeforeServe() {
   }
 }
 
-const isRenderHost = String(process.env.RENDER || "").toLowerCase() === "true";
-const deferHeavyBoot =
-  isRenderHost && String(process.env.GOLF_RENDER_DEFER_HEAVY_BOOT || "1").trim() !== "0";
-
 function runHeavyBootArtifacts() {
   repairRenderHistoricalTrendsIfNeeded();
   ensureAlphaCaddieStaticArtifacts(WEB_ROOT, REPO_ROOT);
   logRenderBootstrapDiag();
 }
 
-if (process.env.GOLF_SKIP_REFRESH_ON_START === "1") {
+function runDeferredRenderBoot() {
+  try {
+    if (process.env.GOLF_SKIP_REFRESH_ON_START !== "1") {
+      refreshBeforeServe({ deferredPass: true });
+    }
+    runHeavyBootArtifacts();
+  } catch (e) {
+    console.warn("[alpha-caddie-web] Deferred Render boot failed:", e?.message || e);
+  }
+}
+
+if (deferHeavyBoot) {
+  console.log(
+    "[alpha-caddie-web] Render: binding HTTP port before API refresh (GOLF_RENDER_DEFER_HEAVY_BOOT=1).",
+  );
+} else if (process.env.GOLF_SKIP_REFRESH_ON_START === "1") {
   console.log("[alpha-caddie-web] GOLF_SKIP_REFRESH_ON_START=1 — serving without refresh.");
 } else {
   refreshBeforeServe();
-}
-
-if (!deferHeavyBoot) {
   runHeavyBootArtifacts();
 }
 
@@ -533,16 +543,7 @@ const child = spawn(process.execPath, [staticServer], {
 });
 
 if (deferHeavyBoot) {
-  console.log(
-    "[alpha-caddie-web] Render: HTTP server listening — history repair/build running in background (GOLF_RENDER_DEFER_HEAVY_BOOT=1).",
-  );
-  setImmediate(() => {
-    try {
-      runHeavyBootArtifacts();
-    } catch (e) {
-      console.warn("[alpha-caddie-web] Deferred heavy boot failed:", e?.message || e);
-    }
-  });
+  setImmediate(() => runDeferredRenderBoot());
 }
 
 function spawnScript(scriptPath, taskLabel, opts = {}) {

@@ -13,7 +13,8 @@
 #
 # Dual PGA weeks: fetch:dg compares field-updates + get-schedule anchor + timestamps (override tours: GOLF_FIELD_UPDATES_TOUR_CANDIDATES).
 #
-# Boot mirrors `npm run perfect`: fetch:dg → in-play → DK O/U probe → book odds (set GOLF_RENDER_SYNC_FETCH_DG_ON_BOOT=0 only if deploy times out).
+# Boot mirrors `npm run perfect` after HTTP binds: fetch:dg → in-play → DK O/U probe → book odds (GOLF_RENDER_DEFER_HEAVY_BOOT=1).
+# Set GOLF_RENDER_SYNC_FETCH_DG_ON_BOOT=0 to skip that chain entirely and serve committed git projections only.
 # Skip standalone DK probe: PERFECT_SKIP_FETCH_DK_OU=1 or GOLF_RENDER_SKIP_DK_OU_PROBE=1.
 # Historical Trends: GOLF_HISTORICAL_ROUNDS_FULL_HISTORY=1 merges PGA from 2004→current (+ LIV) — slow first boot; use RECENT_FETCH caps instead if deploy times out (unset FULL_HISTORY and set GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS).
 # Week rollover: fetch-book-odds also compares datagolf_field_week_key vs /field-updates (skip inline: GOLF_SKIP_INLINE_FETCH_DG_ON_EVENT_MISMATCH=1).
@@ -52,7 +53,7 @@ services:
       # Keep deploys fast: use the committed full history JSON on Render boot; local push scripts still rebuild history.
       - key: GOLF_SKIP_HISTORY_ON_FETCH_DG
         value: "1"
-      # Bind HTTP port before full-history repair (avoids Render port-scan timeout).
+      # Bind HTTP port before perfect-parity API refresh + history repair (avoids Render port-scan timeout).
       - key: GOLF_RENDER_DEFER_HEAVY_BOOT
         value: "1"
       # Rely on committed player_round_history.json; repair in background if empty.

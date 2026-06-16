@@ -13,7 +13,7 @@
     onload="this.media='all'"
   />
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" /></noscript>
-  <link rel="stylesheet" href="styles.css?v=11" />
+  <link rel="stylesheet" href="styles.css?v=12" />
 </head>
 <body>
   <header class="app-nav">
@@ -219,6 +219,38 @@
     <!-- Historical trends (round history chart) -->
     <section id="panel-props" class="panel props-viewport" role="tabpanel" hidden>
       <div class="props-viewport-inner props-shell">
+      <div class="props-trends-top-bar" aria-label="Player and chart window">
+        <div class="props-trends-top-row">
+          <label class="props-sidebar-label props-trends-top-golfer">Golfer
+            <div class="golfer-combobox-wrap golfer-suggest-anchor">
+              <input
+                type="search"
+                id="prop-golfer-search"
+                class="golfer-combobox-input"
+                placeholder="Search golfer…"
+                autocomplete="off"
+                spellcheck="false"
+                aria-label="Golfer"
+              />
+              <div id="prop-golfer-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Golfer suggestions"></div>
+              <select id="prop-golfer" hidden></select>
+            </div>
+          </label>
+          <div class="props-stepper-block props-trends-top-rounds">
+            <span class="props-sidebar-label">Rounds</span>
+            <div class="props-stepper">
+              <button type="button" class="props-step-btn" id="props-win-minus" aria-label="Fewer rounds">−</button>
+              <input type="number" id="props-window-n" min="1" max="2000" step="1" value="50" />
+              <button type="button" class="props-step-btn" id="props-win-plus" aria-label="More rounds">+</button>
+            </div>
+          </div>
+        </div>
+        <label class="props-sidebar-label props-trends-year-filter">Year
+          <select id="props-filter-year" title="Limit chart to one calendar year">
+            <option value="">All years</option>
+          </select>
+        </label>
+      </div>
       <div class="props-trends-header" id="props-trends-header">
         <h2 class="ev-devig-sr-only">Historical Trends</h2>
         <img id="props-flag" class="props-country-flag" width="72" height="54" alt="" decoding="async" />
@@ -238,15 +270,7 @@
           <div id="props-chart-tooltip" class="props-chart-tooltip" hidden></div>
           <p class="props-chart-line-legend" id="props-chart-line-legend" hidden><span class="props-chart-line-legend-chip" aria-hidden="true"></span> Line</p>
           <p class="text-muted props-chart-empty" id="props-chart-empty" hidden>No history file.</p>
-          <div class="props-chart-steppers" aria-label="Chart window and comparison line">
-            <div class="props-stepper-block">
-              <span class="props-sidebar-label">Rounds</span>
-              <div class="props-stepper">
-                <button type="button" class="props-step-btn" id="props-win-minus" aria-label="Fewer rounds">−</button>
-                <input type="number" id="props-window-n" min="1" max="2000" step="1" value="50" />
-                <button type="button" class="props-step-btn" id="props-win-plus" aria-label="More rounds">+</button>
-              </div>
-            </div>
+          <div class="props-chart-steppers" aria-label="Comparison line">
             <div class="props-stepper-block">
               <span class="props-sidebar-label">Line</span>
               <div class="props-stepper">
@@ -399,21 +423,6 @@
               </div>
             </div>
           </div>
-          <label class="props-sidebar-label">Golfer
-            <div class="golfer-combobox-wrap golfer-suggest-anchor">
-              <input
-                type="search"
-                id="prop-golfer-search"
-                class="golfer-combobox-input"
-                placeholder="Search golfer…"
-                autocomplete="off"
-                spellcheck="false"
-                aria-label="Golfer"
-              />
-              <div id="prop-golfer-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Golfer suggestions"></div>
-              <select id="prop-golfer" hidden></select>
-            </div>
-          </label>
           <label class="props-sidebar-label">Market
             <select id="prop-stat">
               <option value="total">Round score</option>
@@ -1375,6 +1384,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=237"></script>
+  <script src="app.js?v=238"></script>
 </body>
 </html>

@@ -2627,6 +2627,39 @@ th.matchup-analysis-best-pick {
   max-width: 100%;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
 }
+.props-shell .props-trends-top-bar {
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid var(--golf-border);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.props-trends-top-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px 18px;
+}
+.props-trends-top-golfer {
+  flex: 1 1 220px;
+  min-width: min(100%, 220px);
+  margin: 0;
+}
+.props-trends-top-rounds {
+  flex: 0 1 200px;
+  min-width: min(100%, 180px);
+  margin: 0;
+}
+.props-trends-year-filter {
+  flex: 0 1 160px;
+  min-width: min(100%, 140px);
+  margin: 0;
+}
+.props-trends-year-filter select {
+  width: 100%;
+}
+
 .props-shell .props-trends-header {
   border: none;
   border-radius: 0;

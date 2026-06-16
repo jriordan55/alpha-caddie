@@ -13263,6 +13263,23 @@ function filterHistoryRoundsByRoundNum(list) {
   });
 }
 
+function selectedPropsYearFilter() {
+  const raw = String(document.getElementById("props-filter-year")?.value || "").trim();
+  if (!raw) return NaN;
+  const y = Math.round(num(raw, NaN));
+  return y >= 1990 && y <= 2100 ? y : NaN;
+}
+
+function propsYearFilterActive() {
+  return Number.isFinite(selectedPropsYearFilter());
+}
+
+function filterHistoryRoundsByYear(list) {
+  const y = selectedPropsYearFilter();
+  if (!Number.isFinite(y)) return list;
+  return list.filter((r) => historyRoundSeasonYear(r) === y);
+}
+
 function selectedPropsTailMode() {
   const v = String(document.getElementById("props-filter-tail-mode")?.value || "recent").trim().toLowerCase();
   return v === "best" || v === "worst" ? v : "recent";
@@ -13276,6 +13293,7 @@ function propsSidebarFiltersContextKey() {
     selectedPropsWeatherConditionKeys().join(","),
     selectedPropsTeeWaveFilter() || "all",
     selectedPropsRoundNumsFilter().join(","),
+    Number.isFinite(selectedPropsYearFilter()) ? String(selectedPropsYearFilter()) : "all",
     selectedPropsTailMode(),
   ].join("|");
 }
@@ -13287,6 +13305,7 @@ function applyPropsSidebarFiltersToRounds(list) {
   out = filterHistoryRoundsByWeatherConditions(out);
   out = filterHistoryRoundsByTeeWave(out);
   out = filterHistoryRoundsByRoundNum(out);
+  out = filterHistoryRoundsByYear(out);
   return out;
 }
 
@@ -14206,6 +14225,7 @@ function refreshPropsCourseFilterOptionsAllPlayers() {
     const prevK = prev ? normCourseNameKey(prev) : "";
     if (prevK && [...courseSel.options].some((o) => o.value === prevK)) courseSel.value = prevK;
   }
+  refreshPropsYearFilterOptions(selectedDgId());
 }
 
 function defaultLineForCourseWindow(statKey, entries) {
@@ -14360,9 +14380,44 @@ function propsConditionLabel(key) {
     .join(" ");
 }
 
+function refreshPropsYearFilterOptions(dgId) {
+  const yearSel = document.getElementById("props-filter-year");
+  if (!yearSel) return;
+  const prev = String(yearSel.value || "").trim();
+  const years = new Set();
+  if (propsCourseWindowModeOn()) {
+    const courseKey = propsEffectiveCourseKey();
+    const bucket = courseKey ? propsGetSingleCourseBucketSync(courseKey) : null;
+    for (const e of bucket?.entries || []) {
+      const y = historyRoundSeasonYear(e.row);
+      if (Number.isFinite(y)) years.add(y);
+    }
+  } else {
+    const id = Math.round(num(dgId, NaN));
+    if (Number.isFinite(id)) {
+      for (const r of historyRoundsForDg(id)) {
+        if (historyRoundIsPlaceholderAllMarketsZero(r)) continue;
+        const y = historyRoundSeasonYear(r);
+        if (Number.isFinite(y)) years.add(y);
+      }
+    }
+  }
+  yearSel.innerHTML = '<option value="">All years</option>';
+  [...years]
+    .sort((a, b) => b - a)
+    .forEach((y) => {
+      const op = document.createElement("option");
+      op.value = String(y);
+      op.textContent = String(y);
+      yearSel.appendChild(op);
+    });
+  if (prev && [...yearSel.options].some((o) => o.value === prev)) yearSel.value = prev;
+}
+
 function refreshPropsFilterOptionsForGolfer(dgId) {
   if (propsCourseWindowModeOn()) {
     refreshPropsCourseFilterOptionsAllPlayers();
+    refreshPropsYearFilterOptions(dgId);
     return;
   }
   const courseSel = document.getElementById("props-filter-course");
@@ -14396,6 +14451,7 @@ function refreshPropsFilterOptionsForGolfer(dgId) {
     const prevK = prev ? normCourseNameKey(prev) : "";
     if (prevK && [...courseSel.options].some((o) => o.value === prevK)) courseSel.value = prevK;
   }
+  refreshPropsYearFilterOptions(dgId);
 }
 
 /** Birdies / pars / GIR / fairways: higher is better. Round score / bogeys / putts: higher is worse. */
@@ -15059,6 +15115,7 @@ function propsTopHitMinRoundsForFilter() {
   if (propsWeatherConditionFilterActive()) return 1;
   if (selectedPropsTeeWaveFilter()) return 1;
   if (propsRoundNumFilterActive()) return 1;
+  if (propsYearFilterActive()) return 1;
   return PROPS_TOP_HIT_MIN_ROUNDS;
 }
 
@@ -19069,6 +19126,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "props-filter-round-3",
     "props-filter-round-4",
     "props-filter-tail-mode",
+    "props-filter-year",
     "props-filter-course",
     "props-filter-course-window",
     "props-filter-draftkings-only",
