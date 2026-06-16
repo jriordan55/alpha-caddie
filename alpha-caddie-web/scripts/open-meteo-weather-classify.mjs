@@ -44,6 +44,7 @@ export function summarizeHourlyWeatherSlice(hourly, startIdx, spanHours) {
   const times = hourly?.time;
   const T = hourly?.temperature_2m;
   const W = hourly?.windspeed_10m;
+  const G = hourly?.windgusts_10m;
   const H = hourly?.relativehumidity_2m;
   const P = hourly?.precipitation_probability;
   const R = hourly?.precipitation;
@@ -53,21 +54,21 @@ export function summarizeHourlyWeatherSlice(hourly, startIdx, spanHours) {
   const end = Math.min(times.length, startIdx + spanHours);
   let nt = 0;
   let sT = 0;
-  let sW = 0;
   let sH = 0;
   let worstCode = NaN;
   let worstRank = -1;
   let maxPP = 0;
   let maxMm = 0;
-  let maxWind = 0;
+  let peakWind = 0;
 
   for (let i = startIdx; i < end; i++) {
     const ti = num(T?.[i], NaN);
     if (!Number.isFinite(ti)) continue;
     sT += ti;
     const wi = num(W?.[i], 0);
-    sW += wi;
-    if (wi > maxWind) maxWind = wi;
+    const gi = num(G?.[i], 0);
+    if (wi > peakWind) peakWind = wi;
+    if (gi > peakWind) peakWind = gi;
     sH += num(H?.[i], 0);
     const cc = num(C?.[i], NaN);
     if (Number.isFinite(cc)) {
@@ -85,10 +86,11 @@ export function summarizeHourlyWeatherSlice(hourly, startIdx, spanHours) {
   }
 
   if (!nt) return null;
-  const cond = openMeteoConditionFromHourSlice(worstCode, maxPP, maxMm, maxWind);
+  const cond = openMeteoConditionFromHourSlice(worstCode, maxPP, maxMm, peakWind);
   return {
     tempF: sT / nt,
-    windMph: sW / nt,
+    /** Peak sustained or gust wind during the tee-time window (mph). */
+    windMph: peakWind,
     humidityPct: sH / nt,
     condition: cond,
   };

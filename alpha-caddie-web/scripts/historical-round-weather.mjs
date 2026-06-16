@@ -231,7 +231,7 @@ export function openMeteoArchiveUrl(lat, lon, startDate, endDate, timezone) {
   u.searchParams.set("end_date", endDate);
   u.searchParams.set(
     "hourly",
-    "temperature_2m,relativehumidity_2m,precipitation_probability,precipitation,windspeed_10m,weathercode",
+    "temperature_2m,relativehumidity_2m,precipitation_probability,precipitation,windspeed_10m,windgusts_10m,weathercode",
   );
   u.searchParams.set("windspeed_unit", "mph");
   u.searchParams.set("temperature_unit", "fahrenheit");
@@ -249,7 +249,8 @@ function medianFinite(vals) {
 function medianWeatherFromSnapshots(samples) {
   if (!samples.length) return null;
   const mt = medianFinite(samples.map((s) => s.tempF));
-  const mw = medianFinite(samples.map((s) => s.windMph));
+  const windVals = samples.map((s) => s.windMph).filter(Number.isFinite);
+  const mw = windVals.length ? Math.max(...windVals) : NaN;
   const mh = medianFinite(samples.map((s) => s.humidityPct));
   if (!Number.isFinite(mt)) return null;
   const rank = { storm: 5, rain: 4, windy: 3, cloudy: 2, clear: 1, default: 0 };

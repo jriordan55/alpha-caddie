@@ -55,7 +55,8 @@ async function collectRoundGroups(csvPath) {
     const tour = String(row.tour || "").toLowerCase();
     if (tour !== "pga" && tour !== "liv") continue;
     const yr = parseInt(row.year, 10);
-    if (!Number.isFinite(yr) || yr < 2022) continue;
+    const minYear = Math.round(num(process.env.GOLF_HISTORY_MIN_YEAR)) || 2004;
+    if (!Number.isFinite(yr) || yr < minYear) continue;
     const eid = Math.round(num(row.event_id));
     const rnd = parseInt(row.round_num, 10) || 1;
     if (!Number.isFinite(eid)) continue;
@@ -225,19 +226,38 @@ async function main() {
     }
   }
 
+  let mergedPrior = 0;
+  if (fs.existsSync(outPath)) {
+    try {
+      const prior = JSON.parse(fs.readFileSync(outPath, "utf8"));
+      const prev = prior?.byKey && typeof prior.byKey === "object" ? prior.byKey : {};
+      for (const [k, v] of Object.entries(prev)) {
+        if (!roundWeather[k] && v && typeof v === "object") {
+          roundWeather[k] = v;
+          mergedPrior++;
+        }
+      }
+    } catch {
+      /* fresh write */
+    }
+  }
+
   const payload = {
     generated_at: new Date().toISOString(),
     source_csv: path.basename(csvPath),
     open_meteo: "archive-api.open-meteo.com/v1/archive",
+    wind_metric: "peak_mph_sustained_or_gust_in_tee_window",
+    min_year: Math.round(num(process.env.GOLF_HISTORY_MIN_YEAR)) || 2004,
     event_count: fetchedEvents,
-    round_count: roundsWithWeather,
+    round_count: Object.keys(roundWeather).length,
     geocode_miss_events: geocodeMiss,
+    merged_prior_rounds: mergedPrior,
     byKey: roundWeather,
   };
 
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
   fs.writeFileSync(outPath, JSON.stringify(payload, null, 2));
-  console.log(`[backfill:round-weather] Wrote ${roundsWithWeather} rounds → ${outPath}`);
+  console.log(`[backfill:round-weather] Wrote ${Object.keys(roundWeather).length} rounds → ${outPath}`);
 }
 
 main().catch((e) => {

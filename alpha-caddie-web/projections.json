@@ -9,7 +9,7 @@
   "datagolf_field_current_round": 1,
   "display_round": 1,
   "display_round_label": "R1 — next Thursday (auto, America/New_York)",
-  "updated_at": "2026-06-16T02:45:09Z",
+  "updated_at": "2026-06-16T03:39:38Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -61910,7 +61910,7 @@
   "matchups": {
     "tournament_matchups": {
       "event_name": "U.S. Open",
-      "last_updated": "2026-06-16 00:49:00 UTC",
+      "last_updated": "2026-06-16 03:31:00 UTC",
       "market": "tournament_matchups",
       "match_list": [
         {
@@ -62279,8 +62279,8 @@
               "p2": 2.01
             },
             "betonline": {
-              "p1": 1.90909,
-              "p2": 1.90909
+              "p1": 1.8,
+              "p2": 2.05
             },
             "datagolf": {
               "p1": 1.883422319761538,
@@ -62397,8 +62397,8 @@
               "p2": 1.95
             },
             "betonline": {
-              "p1": 1.7874,
-              "p2": 2.06
+              "p1": 1.8,
+              "p2": 2.05
             },
             "datagolf": {
               "p1": 1.9342047783863705,
@@ -62460,8 +62460,8 @@
         {
           "odds": {
             "betcris": {
-              "p1": 1.83333,
-              "p2": 1.90909
+              "p1": 1.81967,
+              "p2": 1.92593
             },
             "betonline": {
               "p1": 1.90909,
@@ -62481,8 +62481,8 @@
         {
           "odds": {
             "betcris": {
-              "p1": 1.87719,
-              "p2": 1.86207
+              "p1": 1.89286,
+              "p2": 1.84746
             },
             "betonline": {
               "p1": 2.06,
@@ -62527,8 +62527,8 @@
               "p2": 2.24
             },
             "betonline": {
-              "p1": 1.72464,
-              "p2": 2.15
+              "p1": 1.70423,
+              "p2": 2.18
             },
             "datagolf": {
               "p1": 1.7867126351099516,
@@ -62586,12 +62586,12 @@
         {
           "odds": {
             "betcris": {
-              "p1": 1.92593,
-              "p2": 1.81967
+              "p1": 1.9434,
+              "p2": 1.80645
             },
             "betonline": {
-              "p1": 2.05,
-              "p2": 1.8
+              "p1": 2.1,
+              "p2": 1.75758
             },
             "datagolf": {
               "p1": 2.0047750165557146,
@@ -62611,8 +62611,8 @@
               "p2": 2.14
             },
             "betonline": {
-              "p1": 1.8,
-              "p2": 2.05
+              "p1": 1.7874,
+              "p2": 2.06
             },
             "datagolf": {
               "p1": 1.7846573812699693,
@@ -62632,8 +62632,8 @@
               "p2": 1.65789
             },
             "betonline": {
-              "p1": 2.12,
-              "p2": 1.74627
+              "p1": 2.25,
+              "p2": 1.66667
             },
             "datagolf": {
               "p1": 2.283138749900723,
@@ -62725,8 +62725,8 @@
         {
           "odds": {
             "betonline": {
-              "p1": 1.83333,
-              "p2": 2
+              "p1": 1.74074,
+              "p2": 2.13
             },
             "datagolf": {
               "p1": 1.8182882085020242,
@@ -62746,8 +62746,8 @@
               "p2": 1.77519
             },
             "betonline": {
-              "p1": 2.05,
-              "p2": 1.8
+              "p1": 2.07,
+              "p2": 1.78125
             },
             "datagolf": {
               "p1": 2.2245348837209304,
@@ -62805,12 +62805,12 @@
         {
           "odds": {
             "betcris": {
-              "p1": 2.09,
-              "p2": 1.71942
+              "p1": 2.06,
+              "p2": 1.73529
             },
             "betonline": {
-              "p1": 1.86957,
-              "p2": 1.95238
+              "p1": 1.98039,
+              "p2": 1.84746
             },
             "datagolf": {
               "p1": 1.9743501699687533,
@@ -62868,12 +62868,12 @@
         {
           "odds": {
             "betcris": {
-              "p1": 1.6993,
-              "p2": 2.13
+              "p1": 1.66667,
+              "p2": 2.2
             },
             "betonline": {
-              "p1": 1.62893,
-              "p2": 2.32
+              "p1": 1.60606,
+              "p2": 2.37
             },
             "datagolf": {
               "p1": 1.6093592189428796,
@@ -62893,8 +62893,8 @@
               "p2": 1.63694
             },
             "betonline": {
-              "p1": 2.12,
-              "p2": 1.74627
+              "p1": 2.23,
+              "p2": 1.67568
             },
             "datagolf": {
               "p1": 2.3380253040966603,
@@ -62977,8 +62977,8 @@
               "p2": 1.84034
             },
             "betonline": {
-              "p1": 1.95238,
-              "p2": 1.86957
+              "p1": 2,
+              "p2": 1.83333
             },
             "datagolf": {
               "p1": 2.119303692205344,
@@ -62994,12 +62994,12 @@
         {
           "odds": {
             "betcris": {
-              "p1": 1.96154,
-              "p2": 1.79365
+              "p1": 2,
+              "p2": 1.76923
             },
             "betonline": {
-              "p1": 2.12,
-              "p2": 1.74627
+              "p1": 2.17,
+              "p2": 1.71429
             },
             "datagolf": {
               "p1": 2.31382657376455,
@@ -63019,8 +63019,8 @@
               "p2": 1.70922
             },
             "betonline": {
-              "p1": 1.95238,
-              "p2": 1.86957
+              "p1": 2.07,
+              "p2": 1.78125
             },
             "datagolf": {
               "p1": 2.080989876265467,
@@ -63040,8 +63040,8 @@
               "p2": 1.76336
             },
             "betonline": {
-              "p1": 1.90909,
-              "p2": 1.90909
+              "p1": 2,
+              "p2": 1.83333
             },
             "datagolf": {
               "p1": 2.0312909277547697,
@@ -63057,12 +63057,12 @@
         {
           "odds": {
             "betcris": {
-              "p1": 2.12,
-              "p2": 1.70423
+              "p1": 2.09,
+              "p2": 1.71942
             },
             "betonline": {
-              "p1": 2,
-              "p2": 1.83333
+              "p1": 2.09,
+              "p2": 1.76923
             },
             "datagolf": {
               "p1": 2.075450531953391,
@@ -63078,12 +63078,12 @@
         {
           "odds": {
             "betcris": {
-              "p1": 1.83333,
-              "p2": 1.90909
+              "p1": 1.86957,
+              "p2": 1.86957
             },
             "betonline": {
-              "p1": 2,
-              "p2": 1.83333
+              "p1": 2.05,
+              "p2": 1.8
             },
             "datagolf": {
               "p1": 2.1774830914203207,
@@ -63179,12 +63179,12 @@
         {
           "odds": {
             "betcris": {
-              "p1": 1.75188,
-              "p2": 2.03
+              "p1": 1.76336,
+              "p2": 2.01
             },
             "betonline": {
-              "p1": 1.90909,
-              "p2": 1.90909
+              "p1": 1.95238,
+              "p2": 1.86957
             },
             "datagolf": {
               "p1": 1.9339475645281485,
@@ -63221,8 +63221,8 @@
         {
           "odds": {
             "betonline": {
-              "p1": 2,
-              "p2": 1.83333
+              "p1": 2.07,
+              "p2": 1.78125
             },
             "datagolf": {
               "p1": 2.198985083807474,
@@ -63280,8 +63280,8 @@
         {
           "odds": {
             "betcris": {
-              "p1": 2.12,
-              "p2": 1.6993
+              "p1": 2.09,
+              "p2": 1.71942
             },
             "betonline": {
               "p1": 2.25,
@@ -63305,8 +63305,8 @@
               "p2": 1.77519
             },
             "betonline": {
-              "p1": 1.90909,
-              "p2": 1.90909
+              "p1": 2,
+              "p2": 1.83333
             },
             "datagolf": {
               "p1": 1.9860317681482513,
@@ -63389,8 +63389,8 @@
               "p2": 1.64935
             },
             "betonline": {
-              "p1": 2.15,
-              "p2": 1.72464
+              "p1": 2.21,
+              "p2": 1.68966
             },
             "datagolf": {
               "p1": 2.3981197800814207,
@@ -63452,8 +63452,8 @@
               "p2": 1.9434
             },
             "betonline": {
-              "p1": 1.90909,
-              "p2": 1.90909
+              "p1": 1.89286,
+              "p2": 1.92593
             },
             "datagolf": {
               "p1": 1.9702277920099702,
@@ -63503,8 +63503,8 @@
         {
           "odds": {
             "caesars": {
-              "p1": 1.8,
-              "p2": 1.95238
+              "p1": 1.68966,
+              "p2": 1.90909
             },
             "datagolf": {
               "p1": 1.8276793946523384,
@@ -63712,18 +63712,18 @@
     },
     "round_matchups": {
       "event_name": "U.S. Open",
-      "last_updated": "2026-06-16 00:49:00 UTC",
+      "last_updated": "2026-06-16 03:31:00 UTC",
       "market": "round_matchups",
       "match_list": "No round_matchups being offered right now."
     },
     "3_balls": {
       "event_name": "U.S. Open",
-      "last_updated": "2026-06-16 00:49:00 UTC",
+      "last_updated": "2026-06-16 03:31:00 UTC",
       "market": "3_balls",
       "match_list": "No 3_balls being offered right now."
     }
   },
-  "book_odds_refreshed_at": "2026-06-16T02:45:09Z",
+  "book_odds_refreshed_at": "2026-06-16T03:39:38Z",
   "live_round_actuals_by_dg": {
     "5513": {
       "1": {
@@ -74023,11 +74023,11 @@
     }
   },
   "datagolf_live_current_round": 1,
-  "dg_teetimes_merged_at": "2026-06-16T02:45:19Z",
+  "dg_teetimes_merged_at": "2026-06-16T03:39:54Z",
   "forecast_weather_tee_times_merged": 0,
   "forecast_weather_display_round": 1,
   "forecast_weather_status": "no_tee_match",
-  "forecast_weather_updated_at": "2026-06-16T02:45:20Z",
+  "forecast_weather_updated_at": "2026-06-16T03:39:56Z",
   "forecast_weather_coords": {
     "lat": 40.8847,
     "lon": -72.4651,
@@ -74036,19 +74036,19 @@
   "forecast_wave_slots": {
     "morning": {
       "tempF": 70.24000000000001,
-      "windMph": 17.720000000000002,
+      "windMph": 37.4,
       "humidityPct": 89.6,
       "condition": "windy"
     },
     "afternoon": {
       "tempF": 78.06,
-      "windMph": 19.82,
+      "windMph": 32.9,
       "humidityPct": 66,
       "condition": "windy"
     }
   },
-  "forecast_wave_summary": "Morning tees: 70.2°F · 17.7 mph · 90% · windy.\nAfternoon tees: 78.1°F · 19.8 mph · 66% · windy.",
+  "forecast_wave_summary": "Morning tees: 70.2°F · 37.4 mph · 90% · windy.\nAfternoon tees: 78.1°F · 32.9 mph · 66% · windy.",
   "projection_counts_weather_baked": true,
   "projection_counts_weather_baked_round": 1,
-  "projection_counts_weather_baked_at": "2026-06-16T02:45:20Z"
+  "projection_counts_weather_baked_at": "2026-06-16T03:39:56Z"
 }

@@ -13030,11 +13030,69 @@ function propsHumidityFilterActive() {
   return Number.isFinite(minH) || Number.isFinite(maxH);
 }
 
+function historyRoundWindMph(row) {
+  return parseWeatherNumber(row?.pga_meta_weather_wind_mph ?? row?.weather_wind_mph);
+}
+
 function historyRoundWindMphInBand(windMph, minW, maxW) {
   if (!Number.isFinite(windMph)) return false;
   if (Number.isFinite(minW) && windMph < minW) return false;
   if (Number.isFinite(maxW) && windMph > maxW) return false;
   return true;
+}
+
+function propsPlayerWeatherCoverageStats(dgId) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return { total: 0, withWind: 0, maxWind: NaN, matchMin: 0 };
+  const rounds = historyRoundsForDg(id).filter((r) => !historyRoundIsPlaceholderAllMarketsZero(r));
+  const { minW, maxW } = propsWindBoundsFromDom();
+  let withWind = 0;
+  let maxWind = NaN;
+  let matchMin = 0;
+  for (const r of rounds) {
+    const w = historyRoundWindMph(r);
+    if (!Number.isFinite(w)) continue;
+    withWind++;
+    if (!Number.isFinite(maxWind) || w > maxWind) maxWind = w;
+    if (historyRoundWindMphInBand(w, minW, maxW)) matchMin++;
+  }
+  return { total: rounds.length, withWind, maxWind, matchMin };
+}
+
+function propsWeatherFilterEmptyMessage(dgId) {
+  const parts = [];
+  if (propsWindFilterActive()) {
+    const { minW, maxW } = propsWindBoundsFromDom();
+    const cov = propsPlayerWeatherCoverageStats(dgId);
+    const band =
+      Number.isFinite(minW) && Number.isFinite(maxW)
+        ? `${minW}–${maxW} mph`
+        : Number.isFinite(minW)
+          ? `≥ ${minW} mph`
+          : Number.isFinite(maxW)
+            ? `≤ ${maxW} mph`
+            : "";
+    if (cov.withWind === 0) {
+      parts.push(
+        `No wind data on file for this player yet (${cov.total} rounds). Weather is filled from Open-Meteo at tee time when history is rebuilt.`,
+      );
+    } else if (cov.matchMin === 0) {
+      const maxTxt = Number.isFinite(cov.maxWind) ? `${cov.maxWind.toFixed(1)} mph peak` : "—";
+      parts.push(
+        `No rounds in ${band} wind (${cov.withWind}/${cov.total} rounds have weather; peak recorded ${maxTxt}). Wind uses the highest sustained or gust speed during the tee-time window.`,
+      );
+    }
+  }
+  if (propsHumidityFilterActive() && !parts.length) {
+    parts.push("No rounds match the humidity filter. Most older rounds lack per-round humidity.");
+  }
+  if (propsTempFilterActive() && !parts.length) {
+    parts.push("No rounds match the temperature filter for this player.");
+  }
+  if (propsWeatherConditionFilterActive() && !parts.length) {
+    parts.push("No rounds match the selected weather conditions.");
+  }
+  return parts.join(" ");
 }
 
 function historyRoundHumidityInBand(humidity, minH, maxH) {
@@ -17258,6 +17316,17 @@ function renderPropsTrends() {
     _hist: s._hist,
     roundNum: Math.round(num(s._hist?.round_num, NaN)),
   }));
+  if (!seriesChart.length && empty) {
+    empty.hidden = false;
+    const weatherHint = propsWeatherFilterEmptyMessage(dg);
+    empty.textContent =
+      weatherHint ||
+      (newestFirst.length
+        ? "No chartable values for this market in the filtered rounds."
+        : "No rounds match the current filters.");
+  } else if (empty) {
+    empty.hidden = true;
+  }
   drawPropsTrendCanvas(seriesChart, line, statKey);
   const stNow = propsFullHitStatsForDg(dg, statKey, line, winN);
   paintPropsTrendsInsightHeader(playerRow, statKey, line, stNow, seriesChart, dg);

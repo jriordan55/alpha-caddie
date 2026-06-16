@@ -726,5 +726,61 @@
     "label": "Koréa",
     "geocode_query": "Korea",
     "geocode_level": "city"
+  },
+  "torrey pines": {
+    "lat": 32.93263,
+    "lon": -117.2429,
+    "timezone": "America/Los_Angeles",
+    "label": "Torrey Pines",
+    "geocode_query": "Torrey Pines"
+  },
+  "mount juliet": {
+    "lat": 36.20005,
+    "lon": -86.51861,
+    "timezone": "America/Chicago",
+    "label": "Mount Juliet",
+    "geocode_query": "Mount Juliet"
+  },
+  "pinehurst resort": {
+    "lat": 44.30366,
+    "lon": -75.96412,
+    "timezone": "America/New_York",
+    "label": "Pinehurst Resort",
+    "geocode_query": "Pinehurst Resort"
+  },
+  "bethpage state park": {
+    "lat": 40.74621,
+    "lon": -73.45735,
+    "timezone": "America/New_York",
+    "label": "Bethpage State Park",
+    "geocode_query": "Bethpage State Park"
+  },
+  "turnberry": {
+    "lat": 55.31332,
+    "lon": -4.82815,
+    "timezone": "Europe/London",
+    "label": "Turnberry",
+    "geocode_query": "Turnberry"
+  },
+  "muirfield": {
+    "lat": 40.1719,
+    "lon": -75.2912,
+    "timezone": "America/New_York",
+    "label": "Muirfield",
+    "geocode_query": "Muirfield"
+  },
+  "erin hills": {
+    "lat": 43.24333,
+    "lon": -88.3984,
+    "timezone": "America/Chicago",
+    "label": "Erin Hills Golf Course",
+    "geocode_query": "Erin Hills"
+  },
+  "nine bridges": {
+    "lat": 39.03456,
+    "lon": -75.8741,
+    "timezone": "America/New_York",
+    "label": "Bridgetown",
+    "geocode_query": "Nine Bridges"
   }
 }
