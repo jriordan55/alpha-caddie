@@ -6490,7 +6490,9 @@ function buildOuTable() {
     if (prevQ && !allRows.some((p) => golferNameMatchesQuery(String(p.player_name || ""), prevQ))) pf.value = "";
   }
   const q = pf && pf instanceof HTMLInputElement ? String(pf.value || "").trim().toLowerCase() : "";
-  const playersFiltered = !q ? allRows : allRows.filter((p) => golferNameMatchesQuery(String(p.player_name || ""), q));
+  let playersFiltered = !q ? allRows : allRows.filter((p) => golferNameMatchesQuery(String(p.player_name || ""), q));
+  const teeWave = selectedOuTeeWaveFilter();
+  if (teeWave) playersFiltered = playersFiltered.filter((p) => playerMatchesTeeWaveFilter(p, teeWave));
 
   if (!ouMarketRatingHistoryReady() && !ouHistoryLoadKickoff) {
     ouHistoryLoadKickoff = true;
@@ -12988,6 +12990,264 @@ function filterHistoryRoundsByTempRange(list) {
   );
 }
 
+function propsWindBoundsFromDom() {
+  const rsMin = String(document.getElementById("props-filter-wind-min")?.value ?? "").trim();
+  const rsMax = String(document.getElementById("props-filter-wind-max")?.value ?? "").trim();
+  let minW = rsMin ? parseWeatherNumber(rsMin) : NaN;
+  let maxW = rsMax ? parseWeatherNumber(rsMax) : NaN;
+  if (!Number.isFinite(minW)) minW = NaN;
+  if (!Number.isFinite(maxW)) maxW = NaN;
+  if (Number.isFinite(minW) && Number.isFinite(maxW) && minW > maxW) {
+    const t = minW;
+    minW = maxW;
+    maxW = t;
+  }
+  return { minW, maxW };
+}
+
+function propsHumidityBoundsFromDom() {
+  const rsMin = String(document.getElementById("props-filter-humidity-min")?.value ?? "").trim();
+  const rsMax = String(document.getElementById("props-filter-humidity-max")?.value ?? "").trim();
+  let minH = rsMin ? parseWeatherNumber(rsMin) : NaN;
+  let maxH = rsMax ? parseWeatherNumber(rsMax) : NaN;
+  if (!Number.isFinite(minH)) minH = NaN;
+  if (!Number.isFinite(maxH)) maxH = NaN;
+  if (Number.isFinite(minH) && Number.isFinite(maxH) && minH > maxH) {
+    const t = minH;
+    minH = maxH;
+    maxH = t;
+  }
+  return { minH, maxH };
+}
+
+function propsWindFilterActive() {
+  const { minW, maxW } = propsWindBoundsFromDom();
+  return Number.isFinite(minW) || Number.isFinite(maxW);
+}
+
+function propsHumidityFilterActive() {
+  const { minH, maxH } = propsHumidityBoundsFromDom();
+  return Number.isFinite(minH) || Number.isFinite(maxH);
+}
+
+function historyRoundWindMphInBand(windMph, minW, maxW) {
+  if (!Number.isFinite(windMph)) return false;
+  if (Number.isFinite(minW) && windMph < minW) return false;
+  if (Number.isFinite(maxW) && windMph > maxW) return false;
+  return true;
+}
+
+function historyRoundHumidityInBand(humidity, minH, maxH) {
+  if (!Number.isFinite(humidity)) return false;
+  if (Number.isFinite(minH) && humidity < minH) return false;
+  if (Number.isFinite(maxH) && humidity > maxH) return false;
+  return true;
+}
+
+function filterHistoryRoundsByWindRange(list) {
+  const { minW, maxW } = propsWindBoundsFromDom();
+  if (!Number.isFinite(minW) && !Number.isFinite(maxW)) return list;
+  return list.filter((r) =>
+    historyRoundWindMphInBand(
+      parseWeatherNumber(r?.pga_meta_weather_wind_mph ?? r?.weather_wind_mph),
+      minW,
+      maxW,
+    ),
+  );
+}
+
+function filterHistoryRoundsByHumidityRange(list) {
+  const { minH, maxH } = propsHumidityBoundsFromDom();
+  if (!Number.isFinite(minH) && !Number.isFinite(maxH)) return list;
+  return list.filter((r) =>
+    historyRoundHumidityInBand(
+      parseWeatherNumber(r?.pga_meta_weather_humidity ?? r?.weather_humidity),
+      minH,
+      maxH,
+    ),
+  );
+}
+
+function propsTrendWindContextKey() {
+  const { minW, maxW } = propsWindBoundsFromDom();
+  if (!Number.isFinite(minW) && !Number.isFinite(maxW)) return "all";
+  const a = Number.isFinite(minW) ? String(minW) : "";
+  const b = Number.isFinite(maxW) ? String(maxW) : "";
+  return `${a}:${b}`;
+}
+
+function propsTrendHumidityContextKey() {
+  const { minH, maxH } = propsHumidityBoundsFromDom();
+  if (!Number.isFinite(minH) && !Number.isFinite(maxH)) return "all";
+  const a = Number.isFinite(minH) ? String(minH) : "";
+  const b = Number.isFinite(maxH) ? String(maxH) : "";
+  return `${a}:${b}`;
+}
+
+/** @deprecated bucket helper — min/max inputs replace single-value bands */
+function selectedPropsWindRangeFilter() {
+  return "";
+}
+
+/** @deprecated bucket helper — min/max inputs replace single-value bands */
+function selectedPropsHumidityRangeFilter() {
+  return "";
+}
+
+function selectedPropsWeatherConditionKeys() {
+  const keys = [];
+  if (document.getElementById("props-filter-cond-clear")?.checked) keys.push("clear");
+  if (document.getElementById("props-filter-cond-cloudy")?.checked) keys.push("cloudy");
+  if (document.getElementById("props-filter-cond-rainy")?.checked) keys.push("rain", "storm");
+  if (document.getElementById("props-filter-cond-windy")?.checked) keys.push("windy");
+  return keys;
+}
+
+function propsWeatherConditionFilterActive() {
+  const clear = Boolean(document.getElementById("props-filter-cond-clear")?.checked);
+  const cloudy = Boolean(document.getElementById("props-filter-cond-cloudy")?.checked);
+  const rainy = Boolean(document.getElementById("props-filter-cond-rainy")?.checked);
+  const windy = Boolean(document.getElementById("props-filter-cond-windy")?.checked);
+  return !(clear && cloudy && rainy && windy);
+}
+
+function historyRoundMatchesWeatherConditions(row, allowedKeys) {
+  if (!allowedKeys?.length) return true;
+  const key = propsConditionKeyFromRow(row);
+  if (!key) return false;
+  if (allowedKeys.includes(key)) return true;
+  if (key === "storm" && allowedKeys.includes("rainy")) return true;
+  return false;
+}
+
+function filterHistoryRoundsByWeatherConditions(list) {
+  if (!propsWeatherConditionFilterActive()) return list;
+  const allowed = selectedPropsWeatherConditionKeys();
+  if (!allowed.length) return [];
+  return list.filter((r) => historyRoundMatchesWeatherConditions(r, allowed));
+}
+
+function parseHistoryRowTeetimeMinutes(row) {
+  const raw = String(row?.teetime ?? row?.pga_meta_teetime ?? row?.dg_teetime_local ?? "").trim();
+  if (!raw) return NaN;
+  const iso = parseDgTeetimeParts(raw);
+  if (iso) return iso.hh * 60 + iso.mm;
+  const m = raw.match(/^(\d{1,2}):(\d{2})\s*(am|pm)?/i);
+  if (m) {
+    let h = parseInt(m[1], 10);
+    const mm = parseInt(m[2], 10);
+    const ap = String(m[3] || "").toLowerCase();
+    if (ap === "pm" && h < 12) h += 12;
+    if (ap === "am" && h === 12) h = 0;
+    if (!ap && h >= 1 && h <= 7) h += 12;
+    return h * 60 + mm;
+  }
+  return NaN;
+}
+
+function historyRoundTeeWave(row) {
+  const w = String(row?.dg_tee_wave ?? "").trim().toLowerCase();
+  if (w.includes("morning") || w === "am" || w === "a") return "morning";
+  if (w.includes("afternoon") || w === "pm" || w === "p") return "afternoon";
+  const min = parseHistoryRowTeetimeMinutes(row);
+  if (!Number.isFinite(min)) return "";
+  return min < 13 * 60 ? "morning" : "afternoon";
+}
+
+function selectedPropsTeeWaveFilter() {
+  return String(document.getElementById("props-filter-tee-wave")?.value || "").trim().toLowerCase();
+}
+
+function selectedOuTeeWaveFilter() {
+  return String(document.getElementById("ou-tee-wave-filter")?.value || "").trim().toLowerCase();
+}
+
+function playerMatchesTeeWaveFilter(player, waveFilter) {
+  if (!waveFilter) return true;
+  const w = String(player?.dg_tee_wave ?? "").trim().toLowerCase();
+  if (w) {
+    if (waveFilter === "morning") return w.includes("morning") || w === "am" || w === "a";
+    if (waveFilter === "afternoon") return w.includes("afternoon") || w === "pm" || w === "p";
+  }
+  const min = parseHistoryRowTeetimeMinutes(player);
+  if (!Number.isFinite(min)) return false;
+  if (waveFilter === "morning") return min < 13 * 60;
+  if (waveFilter === "afternoon") return min >= 13 * 60;
+  return true;
+}
+
+function filterHistoryRoundsByTeeWave(list) {
+  const wave = selectedPropsTeeWaveFilter();
+  if (!wave) return list;
+  return list.filter((r) => historyRoundTeeWave(r) === wave);
+}
+
+function selectedPropsRoundNumsFilter() {
+  const out = [];
+  for (let rn = 1; rn <= 4; rn++) {
+    if (document.getElementById(`props-filter-round-${rn}`)?.checked) out.push(rn);
+  }
+  return out;
+}
+
+function propsRoundNumFilterActive() {
+  const sel = selectedPropsRoundNumsFilter();
+  return sel.length > 0 && sel.length < 4;
+}
+
+function filterHistoryRoundsByRoundNum(list) {
+  const sel = selectedPropsRoundNumsFilter();
+  if (!sel.length || sel.length >= 4) return list;
+  const set = new Set(sel);
+  return list.filter((r) => {
+    const rn = Math.round(num(r?.round_num, NaN));
+    return set.has(rn);
+  });
+}
+
+function selectedPropsTailMode() {
+  const v = String(document.getElementById("props-filter-tail-mode")?.value || "recent").trim().toLowerCase();
+  return v === "best" || v === "worst" ? v : "recent";
+}
+
+function propsSidebarFiltersContextKey() {
+  return [
+    propsTrendTempContextKey(),
+    propsTrendWindContextKey(),
+    propsTrendHumidityContextKey(),
+    selectedPropsWeatherConditionKeys().join(","),
+    selectedPropsTeeWaveFilter() || "all",
+    selectedPropsRoundNumsFilter().join(","),
+    selectedPropsTailMode(),
+  ].join("|");
+}
+
+function applyPropsSidebarFiltersToRounds(list) {
+  let out = filterHistoryRoundsByTempRange(list);
+  out = filterHistoryRoundsByWindRange(out);
+  out = filterHistoryRoundsByHumidityRange(out);
+  out = filterHistoryRoundsByWeatherConditions(out);
+  out = filterHistoryRoundsByTeeWave(out);
+  out = filterHistoryRoundsByRoundNum(out);
+  return out;
+}
+
+function isoCalendarDayBefore(isoRaw) {
+  const m = String(isoRaw || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return "";
+  const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
+  d.setUTCDate(d.getUTCDate() - 1);
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+}
+
+/** Earliest chart day at venue → default From is the calendar day before first round. */
+function propsCourseWindowDefaultFromIso(courseKey) {
+  const days = distinctCompletedRoundDatesAtCourse(courseKey);
+  if (!days.length) return "";
+  const sorted = [...days].sort((a, b) => a.localeCompare(b));
+  return isoCalendarDayBefore(sorted[0]);
+}
+
 function propsTrendTempContextKey() {
   const { minF, maxF } = propsTempBoundsFromDom();
   if (!Number.isFinite(minF) && !Number.isFinite(maxF)) return "all";
@@ -12996,19 +13256,6 @@ function propsTrendTempContextKey() {
   return `${a}:${b}`;
 }
 
-function selectedPropsWindRangeFilter() {
-  const raw = String(document.getElementById("props-filter-wind-range")?.value ?? "").trim();
-  if (!raw) return "";
-  const w = parseWeatherNumber(raw);
-  return propsWeatherBucketFromWindMph(w);
-}
-
-function selectedPropsHumidityRangeFilter() {
-  const raw = String(document.getElementById("props-filter-humidity-range")?.value ?? "").trim();
-  if (!raw) return "";
-  const h = parseWeatherNumber(raw);
-  return propsWeatherBucketFromHumidityPct(h);
-}
 
 function selectedPropsCourseFilter() {
   const raw = String(document.getElementById("props-filter-course")?.value || "").trim();
@@ -13131,11 +13378,9 @@ function ensurePropsCourseWindowDateDefaultsFromMeta() {
   const toEl = document.getElementById("props-filter-date-to");
   if (!fromEl || !toEl) return;
   if (String(fromEl.value || "").trim() || String(toEl.value || "").trim()) return;
-  const iso = propsDefaultSessionIsoFromMeta();
-  if (iso) {
-    fromEl.value = iso;
-    toEl.value = iso;
-  }
+  const courseKey = propsEffectiveCourseKey();
+  const fromIso = courseKey ? propsCourseWindowDefaultFromIso(courseKey) : propsDefaultSessionIsoFromMeta();
+  if (fromIso) fromEl.value = fromIso;
 }
 
 async function loadPropsCoursesManifest() {
@@ -13423,14 +13668,11 @@ function ensurePropsCourseWindowDateDefaults() {
   const toEl = document.getElementById("props-filter-date-to");
   if (!fromEl || !toEl || !courseKey || !HISTORY?._ok) return;
 
-  const applyDefaultIso = (isoFallback) => {
-    if (isoFallback) {
-      fromEl.value = isoFallback;
-      toEl.value = isoFallback;
-    } else {
-      fromEl.value = "";
-      toEl.value = "";
-    }
+  const applyDefaultRange = () => {
+    const fromIso = propsCourseWindowDefaultFromIso(courseKey);
+    if (fromIso) fromEl.value = fromIso;
+    else fromEl.value = "";
+    toEl.value = "";
   };
 
   let days = distinctCompletedRoundDatesAtCourse(courseKey);
@@ -13445,17 +13687,12 @@ function ensurePropsCourseWindowDateDefaults() {
   const fromRaw = String(fromEl.value || "").trim();
   const toRaw = String(toEl.value || "").trim();
 
-  const pickPreferred = () =>
-    propsEventPreferredSessionDateIso(days) || (days.length ? days[0] : "");
-
   if (!bumpedCourse) {
-    if (!fromRaw && !toRaw) applyDefaultIso(pickPreferred());
+    if (!fromRaw && !toRaw) applyDefaultRange();
     return;
   }
 
-  const prevIso = fromRaw && toRaw && fromRaw === toRaw ? fromRaw : "";
-  if (prevIso && days.includes(prevIso)) applyDefaultIso(prevIso);
-  else applyDefaultIso(pickPreferred());
+  applyDefaultRange();
 }
 
 function propsCourseWindowModeOn() {
@@ -13765,24 +14002,7 @@ function chartActualForCourseWindowEntry(statKey, entry) {
 }
 
 function applyPropsSidebarWeatherFiltersToRounds(list) {
-  let out = filterHistoryRoundsByTempRange(list);
-  const windBucket = selectedPropsWindRangeFilter();
-  if (windBucket) {
-    out = out.filter((r) =>
-      weatherRangeMatch("wind", windBucket, parseWeatherNumber(r?.pga_meta_weather_wind_mph ?? r?.weather_wind_mph)),
-    );
-  }
-  const humidityBucket = selectedPropsHumidityRangeFilter();
-  if (humidityBucket) {
-    out = out.filter((r) =>
-      weatherRangeMatch(
-        "humidity",
-        humidityBucket,
-        parseWeatherNumber(r?.pga_meta_weather_humidity ?? r?.weather_humidity),
-      ),
-    );
-  }
-  return out;
+  return applyPropsSidebarFiltersToRounds(list);
 }
 
 /** All player-round rows at one course inside the inclusive date window (Historical Trends field view). */
@@ -13801,9 +14021,7 @@ function collectCourseWindowRoundEntriesFixed(bucketOpt) {
     fromRaw,
     toRaw,
     dkProj ? `dkproj|${statKey}|${playerDgFingerprint(DATA.players)}|${dkAuditPropsCacheSig}|${dkAuditPropsLineKeys?.size ?? 0}|${draftKingsRoundPropsOnly(true).length}` : "",
-    propsTrendTempContextKey(),
-    selectedPropsWindRangeFilter() || "",
-    selectedPropsHumidityRangeFilter() || "",
+    propsSidebarFiltersContextKey(),
   ].join("|");
   if (sig === courseWindowRoundEntriesCacheSig && courseWindowRoundEntriesCache) {
     return courseWindowRoundEntriesCache;
@@ -14352,9 +14570,7 @@ function filteredHistoryRoundsMemoSig() {
     venueCourseName(),
     String(DATA?.meta?.event_name || ""),
     propsCourseWindowModeActive() ? propsEffectiveCourseKey() || "" : "",
-    propsTrendTempContextKey(),
-    selectedPropsWindRangeFilter() || "",
-    selectedPropsHumidityRangeFilter() || "",
+    propsSidebarFiltersContextKey(),
     propsFieldVenueShardCache.ready ? propsFieldVenueShardCacheSig : "venue-shard-pending",
     propsSingleCourseIndexSig || "course-index-pending",
   ].join("\x1f");
@@ -14423,17 +14639,7 @@ function filteredHistoryRounds(dgId) {
   if (courseFilter) {
     list = list.filter((r) => normCourseNameKey(r.course_name) === normCourseNameKey(courseFilter));
   }
-  list = filterHistoryRoundsByTempRange(list);
-  const windBucket = selectedPropsWindRangeFilter();
-  if (windBucket) {
-    list = list.filter((r) => weatherRangeMatch("wind", windBucket, parseWeatherNumber(r?.pga_meta_weather_wind_mph ?? r?.weather_wind_mph)));
-  }
-  const humidityBucket = selectedPropsHumidityRangeFilter();
-  if (humidityBucket) {
-    list = list.filter((r) =>
-      weatherRangeMatch("humidity", humidityBucket, parseWeatherNumber(r?.pga_meta_weather_humidity ?? r?.weather_humidity))
-    );
-  }
+  list = applyPropsSidebarFiltersToRounds(list);
   list = list.filter((r) => !historyRoundIsPlaceholderAllMarketsZero(r));
   /* Current-course filter can yield zero rows (rookies, first-time venue) — fall back only when venue is unknown. */
   if (courseFilterOn() && !list.length) {
@@ -14443,15 +14649,7 @@ function filteredHistoryRounds(dgId) {
       if (courseFilter) {
         list = list.filter((r) => normCourseNameKey(r.course_name) === normCourseNameKey(courseFilter));
       }
-      list = filterHistoryRoundsByTempRange(list);
-      if (windBucket) {
-        list = list.filter((r) => weatherRangeMatch("wind", windBucket, parseWeatherNumber(r?.pga_meta_weather_wind_mph ?? r?.weather_wind_mph)));
-      }
-      if (humidityBucket) {
-        list = list.filter((r) =>
-          weatherRangeMatch("humidity", humidityBucket, parseWeatherNumber(r?.pga_meta_weather_humidity ?? r?.weather_humidity))
-        );
-      }
+      list = applyPropsSidebarFiltersToRounds(list);
       list.sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
       list = list.slice(0, 60);
     }
@@ -14469,7 +14667,19 @@ function propsFilteredRoundsNewestFirst(dgId, winN) {
     PROPS_HISTORY_ROUND_MIN,
     PROPS_HISTORY_ROUND_MAX
   );
-  return list.slice(0, wn);
+  const mode = selectedPropsTailMode();
+  if (mode === "recent") return list.slice(0, wn);
+  const statKey = statKeyFromPropSelect();
+  const lowerBetter = propsStatLowerIsBetter(statKey);
+  const scored = [];
+  for (const r of list) {
+    const a = actualForRoundRow(statKey, r);
+    if (Number.isFinite(a)) scored.push({ r, a });
+  }
+  if (mode === "best") scored.sort((a, b) => (lowerBetter ? a.a - b.a : b.a - a.a));
+  else scored.sort((a, b) => (lowerBetter ? b.a - a.a : a.a - b.a));
+  const picked = scored.slice(0, wn).map((x) => x.r);
+  return picked.sort((a, b) => historyRoundChronoKey(a) - historyRoundChronoKey(b));
 }
 
 function historyRoundsChronoNewestFirst(dgId) {
@@ -14760,8 +14970,7 @@ function propsTrendLineContextKeyFromDom() {
   );
   const winNKey = String(winN);
   const temp = propsTrendTempContextKey();
-  const wind = selectedPropsWindRangeFilter() || "all";
-  const hum = selectedPropsHumidityRangeFilter() || "all";
+  const side = propsSidebarFiltersContextKey();
   const course = propsCourseWindowModeActive() ? propsEffectiveCourseKey() || "all" : "all";
   const pm = PRICING_STATE.mode || "default";
   const ps = PRICING_STATE.skill === "default" ? "default" : pricingSkillHistoryKey();
@@ -14770,7 +14979,7 @@ function propsTrendLineContextKeyFromDom() {
   const winDates = cw
     ? `${String(document.getElementById("props-filter-date-from")?.value || "")}|${String(document.getElementById("props-filter-date-to")?.value || "")}`
     : "";
-  return `${dg}|${sk}|${courseFilterOn() ? 1 : 0}|${winNKey}|${temp}|${wind}|${hum}|${course}|${pm}|${ps}|${cw}|${winDates}|${dk}`;
+  return `${dg}|${sk}|${courseFilterOn() ? 1 : 0}|${winNKey}|${temp}|${side}|${course}|${pm}|${ps}|${cw}|${winDates}|${dk}`;
 }
 
 /** After user changes line or steppers so projection logic does not overwrite the input. */
@@ -14787,8 +14996,11 @@ function propsTopHitMinRoundsForFilter() {
   if (propsCourseWindowModeActive()) return 1;
   if (courseFilterOn()) return 1;
   if (propsTempFilterActive()) return 1;
-  if (selectedPropsWindRangeFilter()) return 1;
-  if (selectedPropsHumidityRangeFilter()) return 1;
+  if (propsWindFilterActive()) return 1;
+  if (propsHumidityFilterActive()) return 1;
+  if (propsWeatherConditionFilterActive()) return 1;
+  if (selectedPropsTeeWaveFilter()) return 1;
+  if (propsRoundNumFilterActive()) return 1;
   return PROPS_TOP_HIT_MIN_ROUNDS;
 }
 
@@ -15910,8 +16122,8 @@ function propsChartSparseTickLabels(perBarLabels, innerWidthPx) {
   const n = perBarLabels.length;
   const map = new Map();
   if (!n) return map;
-  const minPx = 62;
-  const maxTicks = Math.max(4, Math.min(10, Math.floor(innerWidthPx / minPx)));
+  const minPx = 76;
+  const maxTicks = Math.max(4, Math.min(12, Math.floor(innerWidthPx / minPx)));
   let indices;
   if (n <= maxTicks) {
     indices = Array.from({ length: n }, (_, i) => i);
@@ -16011,22 +16223,9 @@ function propsChartXAxisDateLabels(perBarLabels, innerW, opts = {}) {
   if (opts.xAxisMode === "valueSort") {
     return propsChartXAxisValueSortSessionLabels(perBarLabels, innerW);
   }
-  if (n <= 15) {
+  if (n <= 8) {
     for (let i = 0; i < n; i++) {
       map.set(i, String(perBarLabels[i] || "").trim());
-    }
-    return map;
-  }
-  const minPx = 54;
-  const labelEveryBar = n * minPx <= innerW;
-  if (labelEveryBar) {
-    const seen = new Map();
-    for (let i = 0; i < n; i++) {
-      let lab = String(perBarLabels[i] || "").trim();
-      const prev = seen.get(lab) || 0;
-      seen.set(lab, prev + 1);
-      if (prev > 0) lab = "";
-      map.set(i, lab);
     }
     return map;
   }
@@ -16296,7 +16495,7 @@ function propsChartYTickValues(minV, maxV, statKey) {
 }
 
 /** Y-domain for props trend chart — tight to data min/max so bars use the plot height. */
-function propsChartYDomain(vals, lineY, statKey) {
+function propsChartYDomain(vals, lineY, statKey, avgY) {
   let domainVals = vals.filter(Number.isFinite);
   if (!domainVals.length) return { minV: 0, maxV: 1 };
   if (statKey === "total") {
@@ -16308,6 +16507,10 @@ function propsChartYDomain(vals, lineY, statKey) {
   const dataMax = Math.max(...domainVals);
   let minV = dataMin;
   let maxV = dataMax;
+  if (Number.isFinite(avgY)) {
+    minV = Math.min(minV, avgY);
+    maxV = Math.max(maxV, avgY);
+  }
   if (Number.isFinite(lineY)) {
     if (statKey === "total") {
       const { lo, hi } = propsChartGrossScoreBounds();
@@ -16406,10 +16609,12 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
     return;
   }
   const vals = plot.map((s) => s.actual);
+  const graphMean = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : NaN;
 
   const n = plot.length;
   const visibleW = wrap && wrap.clientWidth > 80 ? wrap.clientWidth - 28 : 400;
-  const pad = { l: 44, r: 14, t: 14, b: n > 12 ? 56 : 48 };
+  const denseXLabels = n > 20;
+  const pad = { l: 44, r: 14, t: 14, b: denseXLabels ? 64 : n > 12 ? 56 : 48 };
   const innerW = Math.max(80, visibleW - pad.l - pad.r);
   const cssW = Math.round(visibleW);
   const cssH = Math.round(
@@ -16427,7 +16632,7 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
   ctx.fillStyle = "#0a0c0f";
   ctx.fillRect(0, 0, w, h);
 
-  const yDom = propsChartYDomain(vals, lineY, statKey);
+  const yDom = propsChartYDomain(vals, lineY, statKey, graphMean);
   let minV = yDom.minV;
   let maxV = yDom.maxV;
   const innerH = h - pad.t - pad.b;
@@ -16489,14 +16694,15 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
       statKey,
     });
     let fill = "#00c46b";
-    if (Number.isFinite(lineY)) {
+    const cmpLine = Number.isFinite(lineY) ? lineY : graphMean;
+    if (Number.isFinite(cmpLine)) {
       if (lowerIsBetter) {
-        if (v < lineY) fill = "#00c46b";
-        else if (v > lineY) fill = "#ff4d4f";
+        if (v < cmpLine) fill = "#00c46b";
+        else if (v > cmpLine) fill = "#ff4d4f";
         else fill = "#8b8f9c";
       } else {
-        if (v > lineY) fill = "#00c46b";
-        else if (v < lineY) fill = "#ff4d4f";
+        if (v > cmpLine) fill = "#00c46b";
+        else if (v < cmpLine) fill = "#ff4d4f";
         else fill = "#8b8f9c";
       }
     }
@@ -16506,24 +16712,30 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
     ctx.lineWidth = 1;
     ctx.strokeRect(Math.round(x0) + 0.5, yTop + 0.5, Math.round(bw) - 1, hBar - 1);
   }
-  /* Draw reference line + pill on top of bars so the label is not occluded. */
-  if (Number.isFinite(lineY)) {
-    const yL = yScale(lineY);
+  /* Draw reference line + pill on top of bars (spans bar region; defaults to graph avg). */
+  const refLineY = Number.isFinite(lineY) ? lineY : graphMean;
+  if (Number.isFinite(refLineY) && n > 0) {
+    const yL = yScale(refLineY);
+    const lineX0 = xCenter[0] != null ? Math.max(pad.l, xCenter[0] - barW[0] / 2) : pad.l;
+    const lineX1 =
+      xCenter[n - 1] != null
+        ? Math.min(w - pad.r, xCenter[n - 1] + barW[n - 1] / 2)
+        : w - pad.r;
     ctx.strokeStyle = "#f5a623";
     ctx.lineWidth = 2;
     ctx.setLineDash([]);
     ctx.beginPath();
-    ctx.moveTo(pad.l, yL);
-    ctx.lineTo(w - pad.r, yL);
+    ctx.moveTo(lineX0, yL);
+    ctx.lineTo(lineX1, yL);
     ctx.stroke();
-    const lineLbl = formatPropLineChartLabel(statKey, lineY);
+    const lineLbl = formatPropLineChartLabel(statKey, refLineY);
     ctx.font = "bold 10px DM Sans, sans-serif";
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
     const padX = 6;
     const tw = ctx.measureText(lineLbl).width + padX * 2;
     const bh = 16;
-    const bx = pad.l + 4;
+    const bx = Math.max(pad.l + 4, lineX0 + 4);
     const by = yL - bh / 2;
     ctx.fillStyle = "#f5a623";
     ctx.beginPath();
@@ -16567,10 +16779,21 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
     }
   } else {
     const tickMap = propsChartXAxisDateLabels(xAxisPerBar, innerW, { xAxisMode });
+    const yLab = denseXLabels ? h - 24 : h - 10;
     for (const [i, lab] of tickMap.entries()) {
       if (!lab) continue;
       const cx = xCenter[i] != null ? xCenter[i] : pad.l + innerW / 2;
-      ctx.fillText(lab, cx, h - 10);
+      if (denseXLabels) {
+        ctx.save();
+        ctx.translate(cx, yLab);
+        ctx.rotate(-Math.PI / 6);
+        ctx.textAlign = "right";
+        ctx.fillText(lab, 0, 0);
+        ctx.restore();
+        ctx.textAlign = "center";
+      } else {
+        ctx.fillText(lab, cx, yLab);
+      }
     }
   }
   ctx.textAlign = "left";
@@ -16865,6 +17088,31 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   });
 }
 
+function propsAutoTrendLineForContext(dg, statKey, playerRow) {
+  const poolMean = propsTrendMeanActual(statKey, filteredHistoryRounds(dg));
+  if (Number.isFinite(poolMean)) {
+    return clampPropLineForMarket(statKey, snapPropLineToDotFive(poolMean));
+  }
+  const rproj = projectionRowForPlayerRound(playerRow?.player_name, getOuRound());
+  const fallbackRaw =
+    statKey === "total"
+      ? num(rproj?.total_score, defaultPropLineForStat(statKey))
+      : statKey === "birdies"
+        ? birdiesPlusEaglesFromRow(rproj)
+        : statKey === "gir" || statKey === "fairways"
+          ? (() => {
+              const c =
+                statKey === "gir"
+                  ? girFairwaysCountFromRawForOu(num(rproj?.gir, NaN), 18)
+                  : girFairwaysCountFromRawForOu(num(rproj?.fairways, NaN), fairwayHolesModeledFromData());
+              return Number.isFinite(c) ? c : defaultPropLineForStat(statKey);
+            })()
+          : num(rproj?.[statKey === "fairways" ? "fairways" : statKey], defaultPropLineForStat(statKey));
+  let line = clampPropLineForMarket(statKey, snapPropLineToDotFive(fallbackRaw));
+  if (!Number.isFinite(line)) line = clampPropLineForMarket(statKey, defaultPropLineForStat(statKey));
+  return line;
+}
+
 function renderPropsTrends() {
   ensurePropsStatSelectValid();
   if (propsFieldVenueKpisEnabled()) ensurePropsFieldVenueHistoryLoaded();
@@ -16941,21 +17189,7 @@ function renderPropsTrends() {
       lineEarly = propsTrendLastGoodLine;
     }
     if (!lineEditingEarly && (!Number.isFinite(lineEarly) || propsTrendsLineContextKey !== ctxKeyEarly)) {
-      const rproj = projectionRowForPlayerRound(playerRow?.player_name, getOuRound());
-      const fallbackRaw =
-        statKey === "total"
-          ? num(rproj?.total_score, defaultPropLineForStat(statKey))
-          : statKey === "gir" || statKey === "fairways"
-            ? (() => {
-                const c =
-                  statKey === "gir"
-                    ? girFairwaysCountFromRawForOu(num(rproj?.gir, NaN), 18)
-                    : girFairwaysCountFromRawForOu(num(rproj?.fairways, NaN), fairwayHolesModeledFromData());
-                return Number.isFinite(c) ? c : defaultPropLineForStat(statKey);
-              })()
-            : num(rproj?.[statKey === "fairways" ? "fairways" : statKey], defaultPropLineForStat(statKey));
-      lineEarly = clampPropLineForMarket(statKey, snapPropLineToDotFive(fallbackRaw));
-      if (!Number.isFinite(lineEarly)) lineEarly = clampPropLineForMarket(statKey, defaultPropLineForStat(statKey));
+      lineEarly = propsAutoTrendLineForContext(dg, statKey, playerRow);
       if (lineInpEarly) lineInpEarly.value = formatPropLineValueForInput(lineEarly);
       propsTrendsLineContextKey = ctxKeyEarly;
     } else if (!lineEditingEarly && lineInpEarly) {
@@ -16995,23 +17229,7 @@ function renderPropsTrends() {
     line = propsTrendLastGoodLine;
   }
   if (!lineEditing && (!Number.isFinite(line) || propsTrendsLineContextKey !== ctxKey)) {
-    const rproj = projectionRowForPlayerRound(playerRow?.player_name, getOuRound());
-    const fallbackRaw =
-      statKey === "total"
-        ? num(rproj?.total_score, defaultPropLineForStat(statKey))
-        : statKey === "birdies"
-          ? birdiesPlusEaglesFromRow(rproj)
-          : statKey === "gir" || statKey === "fairways"
-            ? (() => {
-                const c =
-                  statKey === "gir"
-                    ? girFairwaysCountFromRawForOu(num(rproj?.gir, NaN), 18)
-                    : girFairwaysCountFromRawForOu(num(rproj?.fairways, NaN), fairwayHolesModeledFromData());
-                return Number.isFinite(c) ? c : defaultPropLineForStat(statKey);
-              })()
-            : num(rproj?.[statKey === "fairways" ? "fairways" : statKey], defaultPropLineForStat(statKey));
-    line = clampPropLineForMarket(statKey, snapPropLineToDotFive(fallbackRaw));
-    if (!Number.isFinite(line)) line = clampPropLineForMarket(statKey, defaultPropLineForStat(statKey));
+    line = propsAutoTrendLineForContext(dg, statKey, playerRow);
     if (lineInp) lineInp.value = formatPropLineValueForInput(line);
     propsTrendsLineContextKey = ctxKey;
   } else if (!lineEditing && lineInp) {
@@ -18540,6 +18758,19 @@ document.addEventListener("DOMContentLoaded", () => {
     ouTableSort = { key: "pr-edge", dir: -1 };
     scheduleBuildOuTable(true);
   });
+  document.getElementById("props-filter-tee-wave")?.addEventListener("change", (e) => {
+    const ouEl = document.getElementById("ou-tee-wave-filter");
+    const v = String(/** @type {HTMLSelectElement} */ (e.target)?.value || "");
+    if (ouEl && ouEl.value !== v) ouEl.value = v;
+    scheduleBuildOuTable(true);
+  });
+  document.getElementById("ou-tee-wave-filter")?.addEventListener("change", (e) => {
+    const propsEl = document.getElementById("props-filter-tee-wave");
+    const v = String(/** @type {HTMLSelectElement} */ (e.target)?.value || "");
+    if (propsEl && propsEl.value !== v) propsEl.value = v;
+    ouProjExpandedKey = "";
+    scheduleBuildOuTable(true);
+  });
   document.getElementById("ou-line-filter")?.addEventListener("change", () => {
     commitOuLineFilterValue();
   });
@@ -18755,8 +18986,20 @@ document.addEventListener("DOMContentLoaded", () => {
     "props-filter-current-course",
     "props-filter-temp-min",
     "props-filter-temp-max",
-    "props-filter-wind-range",
-    "props-filter-humidity-range",
+    "props-filter-wind-min",
+    "props-filter-wind-max",
+    "props-filter-humidity-min",
+    "props-filter-humidity-max",
+    "props-filter-cond-clear",
+    "props-filter-cond-cloudy",
+    "props-filter-cond-rainy",
+    "props-filter-cond-windy",
+    "props-filter-tee-wave",
+    "props-filter-round-1",
+    "props-filter-round-2",
+    "props-filter-round-3",
+    "props-filter-round-4",
+    "props-filter-tail-mode",
     "props-filter-course",
     "props-filter-course-window",
     "props-filter-draftkings-only",
@@ -18772,8 +19015,10 @@ document.addEventListener("DOMContentLoaded", () => {
       id === "props-filter-current-course" ||
       id === "props-filter-temp-min" ||
       id === "props-filter-temp-max" ||
-      id === "props-filter-wind-range" ||
-      id === "props-filter-humidity-range" ||
+      id === "props-filter-wind-min" ||
+      id === "props-filter-wind-max" ||
+      id === "props-filter-humidity-min" ||
+      id === "props-filter-humidity-max" ||
       id === "props-filter-date-from" ||
       id === "props-filter-date-to"
     ) {

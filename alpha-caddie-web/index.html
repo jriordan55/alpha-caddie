@@ -13,7 +13,7 @@
     onload="this.media='all'"
   />
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" /></noscript>
-  <link rel="stylesheet" href="styles.css?v=10" />
+  <link rel="stylesheet" href="styles.css?v=11" />
 </head>
 <body>
   <header class="app-nav">
@@ -121,6 +121,13 @@
                 />
                 <div id="ou-player-filter-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Golfer suggestions"></div>
               </span>
+            </label>
+            <label class="toolbar-label ou-filter-field">Tee wave
+              <select id="ou-tee-wave-filter" title="Filter to morning or afternoon tee times">
+                <option value="">All waves</option>
+                <option value="morning">Morning</option>
+                <option value="afternoon">Afternoon</option>
+              </select>
             </label>
             <label class="toolbar-label ou-filter-field">Market
               <select id="ou-proj-market-filter" title="Filter table to one stat market">
@@ -280,27 +287,91 @@
                 </label>
               </div>
             </div>
-            <label class="toolbar-label">Wind mph
-              <input
-                id="props-filter-wind-range"
-                class="props-weather-filter-input"
-                type="text"
-                inputmode="decimal"
-                autocomplete="off"
-                placeholder="Any"
-                title="Leave blank for all rounds. Enter wind speed to filter to that wind band."
-              />
+            <div class="props-filter-temp-range-group">
+              <span class="props-filter-temp-range-title">Wind mph</span>
+              <div class="props-filter-temp-range-inputs">
+                <label class="toolbar-label">Min
+                  <input
+                    id="props-filter-wind-min"
+                    class="props-weather-filter-input"
+                    type="text"
+                    inputmode="decimal"
+                    autocomplete="off"
+                    placeholder="Any"
+                    title="Minimum wind mph (blank = no lower bound)"
+                  />
+                </label>
+                <label class="toolbar-label">Max
+                  <input
+                    id="props-filter-wind-max"
+                    class="props-weather-filter-input"
+                    type="text"
+                    inputmode="decimal"
+                    autocomplete="off"
+                    placeholder="Any"
+                    title="Maximum wind mph (blank = no upper bound)"
+                  />
+                </label>
+              </div>
+            </div>
+            <div class="props-filter-temp-range-group">
+              <span class="props-filter-temp-range-title">Humidity %</span>
+              <div class="props-filter-temp-range-inputs">
+                <label class="toolbar-label">Min
+                  <input
+                    id="props-filter-humidity-min"
+                    class="props-weather-filter-input"
+                    type="text"
+                    inputmode="decimal"
+                    autocomplete="off"
+                    placeholder="Any"
+                    title="Minimum humidity % (blank = no lower bound)"
+                  />
+                </label>
+                <label class="toolbar-label">Max
+                  <input
+                    id="props-filter-humidity-max"
+                    class="props-weather-filter-input"
+                    type="text"
+                    inputmode="decimal"
+                    autocomplete="off"
+                    placeholder="Any"
+                    title="Maximum humidity % (blank = no upper bound)"
+                  />
+                </label>
+              </div>
+            </div>
+            <fieldset class="props-filter-check-group" aria-label="Weather conditions">
+              <legend class="props-filter-temp-range-title">Conditions</legend>
+              <div class="props-filter-check-row">
+                <label class="props-filter-row"><input type="checkbox" id="props-filter-cond-clear" checked /> Clear</label>
+                <label class="props-filter-row"><input type="checkbox" id="props-filter-cond-cloudy" checked /> Cloudy</label>
+                <label class="props-filter-row"><input type="checkbox" id="props-filter-cond-rainy" checked /> Rainy</label>
+                <label class="props-filter-row"><input type="checkbox" id="props-filter-cond-windy" checked /> Windy</label>
+              </div>
+            </fieldset>
+            <label class="toolbar-label">Tee wave
+              <select id="props-filter-tee-wave" title="Morning vs afternoon tee times">
+                <option value="">All waves</option>
+                <option value="morning">Morning</option>
+                <option value="afternoon">Afternoon</option>
+              </select>
             </label>
-            <label class="toolbar-label">Humidity %
-              <input
-                id="props-filter-humidity-range"
-                class="props-weather-filter-input"
-                type="text"
-                inputmode="decimal"
-                autocomplete="off"
-                placeholder="Any"
-                title="Leave blank for all rounds. Enter relative humidity % to filter to that band."
-              />
+            <fieldset class="props-filter-check-group" aria-label="Round number">
+              <legend class="props-filter-temp-range-title">Round</legend>
+              <div class="props-filter-check-row">
+                <label class="props-filter-row"><input type="checkbox" id="props-filter-round-1" checked /> R1</label>
+                <label class="props-filter-row"><input type="checkbox" id="props-filter-round-2" checked /> R2</label>
+                <label class="props-filter-row"><input type="checkbox" id="props-filter-round-3" checked /> R3</label>
+                <label class="props-filter-row"><input type="checkbox" id="props-filter-round-4" checked /> R4</label>
+              </div>
+            </fieldset>
+            <label class="toolbar-label">Sample
+              <select id="props-filter-tail-mode" title="Recent rounds, or best/worst performances in the filtered set">
+                <option value="recent">Most recent</option>
+                <option value="best">Best</option>
+                <option value="worst">Worst</option>
+              </select>
             </label>
             <label class="toolbar-label">Course
               <select id="props-filter-course">
@@ -313,9 +384,6 @@
                 <span>Field by course &amp; date</span>
               </label>
               <div id="props-course-session-extra" class="props-course-session-extra" hidden>
-                <p class="text-muted props-course-window-hint">
-                  Uses this week’s course from projections (not the Course “All” filter). Chart and KPIs include every player in history with a round at that venue between the dates below (hover a bar for the golfer). Leave one date blank for an open-ended range.
-                </p>
                 <div class="props-filter-date-range-inputs">
                   <label class="toolbar-label">From
                     <input type="date" id="props-filter-date-from" class="props-date-filter-input" title="Start date (inclusive)" />
@@ -326,7 +394,7 @@
                 </div>
                 <label class="props-sidebar-label props-filter-row" for="props-filter-draftkings-only">
                   <input type="checkbox" id="props-filter-draftkings-only" />
-                  <span>DraftKings lines only (round projections field)</span>
+                  <span>DraftKings Available Players</span>
                 </label>
               </div>
             </div>
@@ -1307,6 +1375,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=235"></script>
+  <script src="app.js?v=236"></script>
 </body>
 </html>

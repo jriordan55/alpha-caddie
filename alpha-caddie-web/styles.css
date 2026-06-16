@@ -2925,6 +2925,26 @@ th.matchup-analysis-best-pick {
   align-items: end;
 }
 
+.props-filter-check-group {
+  flex: 1 1 100%;
+  min-width: 0;
+  margin: 0 0 4px;
+  padding: 0;
+  border: 0;
+}
+.props-filter-check-group .props-filter-temp-range-title {
+  margin-bottom: 4px;
+}
+.props-filter-check-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+.props-filter-check-row .props-filter-row {
+  font-size: 0.78rem;
+  gap: 6px;
+}
+
 .props-filter-course-window-group {
   flex: 1 1 100%;
   min-width: 0;

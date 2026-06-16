@@ -1650,6 +1650,7 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg, roundWeather
       round_num: parseInt(row.round_num, 10) || 1,
       fin_text: String(row.fin_text || ""),
       _from_dg_historical_rounds: true,
+      ...(String(row.teetime || "").trim() ? { teetime: String(row.teetime).trim() } : {}),
       ...(playIso ? { play_date: playIso } : {}),
       ...(pinLocationKeyVal ? { pin_location_key: pinLocationKeyVal } : {}),
       ...(pinSheetForRound
