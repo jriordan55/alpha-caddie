@@ -3428,6 +3428,7 @@ const COURSE_COORDINATES_BY_NAME = {
   "tpc toronto at osprey valley north course": { lat: 43.874, lon: -79.982 },
   "hamilton golf and country club": { lat: 43.267, lon: -79.934 },
   "glen abbey golf club": { lat: 43.452, lon: -79.691 },
+  "shinnecock hills golf club": { lat: 40.8847, lon: -72.4651 },
 };
 
 function normCourseKeyForForecast(name) {
@@ -3902,6 +3903,26 @@ function hydrateBakedWeatherFromPlayerFields() {
       p.weather_condition = String(auto.condition || "default").toLowerCase();
     }
   }
+}
+
+async function ensureForecastWeatherLoaded() {
+  hydrateBakedWeatherFromPlayerFields();
+  const status = String(DATA.meta?.forecast_weather_status || "");
+  const slots = DATA.meta?.forecast_wave_slots;
+  const hasWave =
+    Boolean(slots && typeof slots === "object" && (slots.morning || slots.afternoon)) ||
+    Boolean(String(DATA.meta?.forecast_wave_summary || "").trim());
+  const needsFetch =
+    !projectionsWeatherUsableFromBaked() ||
+    !hasWave ||
+    ["no_course_coords", "open_meteo_fetch_failed", "empty_hourly", "no_players"].includes(status);
+  if (needsFetch) {
+    await refreshForecastWeatherFromOpenMeteo();
+  } else {
+    finalizeForecastWaveSummary(null);
+    PRICING_MU_BONUS_CACHE.clear();
+  }
+  syncForecastWaveBannerTexts();
 }
 
 function syncForecastWaveBannerTexts() {
@@ -6090,55 +6111,49 @@ function ouAttachProjectionRowMetrics(row) {
   return row;
 }
 
-/** One display row: golfer × market × Over|Under (DraftKings odds only). */
+/** One display row per golfer × market × Over|Under; DK line/odds when posted, model proj always. */
 function ouProjectionFlatRowsForPlayers(players, cols) {
   const out = [];
-  const seen = new Set();
   const fieldIndex = buildOuProjectionFieldIndex(players);
   const resolvePlayer = ouBuildFastFieldPlayerResolver(fieldIndex);
-  const dkProps = draftKingsRoundPropsOnly();
-  const canonToCol = new Map();
-  for (let i = 0; i < cols.length; i++) {
-    canonToCol.set(ouPropsCanonicalMarket(cols[i].market), { col: cols[i], colIdx: i });
-  }
-  const allowedDg = new Set();
-  const allowedNm = new Set();
-  for (const p of players) {
-    const id = Math.round(num(p.dg_id, NaN));
-    if (Number.isFinite(id) && id > 0) allowedDg.add(id);
-    allowedNm.add(ouPropPlayerKeyLoose(displayGolferName(p.player_name || "")));
-  }
-  const playerAllowed = (player) => {
-    const id = Math.round(num(player?.dg_id, NaN));
-    if (Number.isFinite(id) && id > 0 && allowedDg.has(id)) return true;
-    return allowedNm.has(ouPropPlayerKeyLoose(displayGolferName(player?.player_name || "")));
-  };
-  const pushSides = (player, col, colIdx, mu, pick, histPlayerOpt) => {
-    if (!playerAllowed(player)) return;
-    if (!ouPickIsDraftKings(pick)) return;
-    const line = enforceHalfLine(num(pick?.line, NaN));
-    if (!Number.isFinite(line)) return;
-    const o = num(pick.over, NaN);
-    const u = num(pick.under, NaN);
-    if (!Number.isFinite(o) || !Number.isFinite(u)) return;
+  const dkPickMap = new Map();
+  for (const r of draftKingsRoundPropsOnly()) {
+    const canon = String(r.market || "").trim();
+    const fieldPlayer = resolvePlayer(r);
+    const player = ouProjectionPlayerFromDkProp(r, fieldPlayer);
+    if (!player) continue;
+    const line = enforceHalfLine(num(r.line, NaN));
+    const o = num(r.over_odds, NaN);
+    const u = num(r.under_odds, NaN);
+    if (!Number.isFinite(line) || !Number.isFinite(o) || !Number.isFinite(u)) continue;
+    const pick = { line, over: o, under: u, source: "draftkings" };
     const id = Math.round(num(player.dg_id, NaN));
     const nameKey = ouPropPlayerKeyLoose(displayGolferName(player.player_name || ""));
-    const sig =
-      Number.isFinite(id) && id > 0 ? `${id}|${col.label}|${line}` : `nm:${nameKey}|${col.label}|${line}`;
-    if (seen.has(sig)) return;
-    seen.add(sig);
-    const histPlayer = histPlayerOpt || player;
-    const { playerAvg, marketRatingZ, marketRating100, ratingSource } = ouCachedMarketRating(col.market, histPlayer);
-    const { venueVal, courseRatingZ, courseRating100 } = ouCachedCourseRating(col.market);
-    for (const side of ["over", "under"]) {
-      out.push(
-        ouAttachProjectionRowMetrics({
+    if (Number.isFinite(id) && id > 0) dkPickMap.set(`${id}|${canon}`, pick);
+    dkPickMap.set(`nm:${nameKey}|${canon}`, pick);
+  }
+
+  for (const player of players) {
+    const id = Math.round(num(player.dg_id, NaN));
+    const nameKey = ouPropPlayerKeyLoose(displayGolferName(player.player_name || ""));
+    for (let colIdx = 0; colIdx < cols.length; colIdx++) {
+      const col = cols[colIdx];
+      const canon = ouPropsCanonicalMarket(col.market);
+      const dkPick =
+        (Number.isFinite(id) && id > 0 ? dkPickMap.get(`${id}|${canon}`) : null) ||
+        dkPickMap.get(`nm:${nameKey}|${canon}`) ||
+        null;
+      const mu = ouProjectedMean(col.market, player);
+      const { playerAvg, marketRatingZ, marketRating100, ratingSource } = ouCachedMarketRating(col.market, player);
+      const { venueVal, courseRatingZ, courseRating100 } = ouCachedCourseRating(col.market);
+      for (const side of ["over", "under"]) {
+        const row = {
           player,
           col,
           colIdx,
           side,
           mu,
-          pick,
+          pick: dkPick,
           marketRatingZ,
           marketRating100,
           ratingSource,
@@ -6146,29 +6161,17 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
           venueVal,
           courseRatingZ,
           courseRating100,
-        }),
-      );
+        };
+        if (dkPick) out.push(ouAttachProjectionRowMetrics(row));
+        else {
+          row.pMod = NaN;
+          row.edge = NaN;
+          row.sortOdds = NaN;
+          out.push(row);
+        }
+      }
     }
-  };
-
-  for (const r of dkProps) {
-    const canon = String(r.market || "").trim();
-    const hit = canonToCol.get(canon);
-    if (!hit) continue;
-    const { col, colIdx } = hit;
-    const fieldPlayer = resolvePlayer(r);
-    const player = ouProjectionPlayerFromDkProp(r, fieldPlayer);
-    if (!player) continue;
-    const mu = fieldPlayer ? ouProjectedMean(col.market, fieldPlayer) : NaN;
-    const pick = {
-      line: enforceHalfLine(num(r.line, NaN)),
-      over: num(r.over_odds, NaN),
-      under: num(r.under_odds, NaN),
-      source: "draftkings",
-    };
-    pushSides(player, col, colIdx, mu, pick, fieldPlayer);
   }
-
   return out;
 }
 
@@ -6527,7 +6530,13 @@ function buildOuTable() {
     tr.appendChild(td);
     tbody.appendChild(tr);
   } else if (!flatRows.length) {
-    /* No DK lines for this filter — leave table blank (no placeholder row). */
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = projColCount;
+    td.className = "ou-cell ou-proj-long-td ou-proj-empty-td";
+    td.textContent = "No golfers match this filter for the selected round.";
+    tr.appendChild(td);
+    tbody.appendChild(tr);
   } else {
   const ouTbodyFrag = document.createDocumentFragment();
   for (const r of flatRows) {
@@ -6618,47 +6627,49 @@ function buildOuTable() {
 
     const lineTd = document.createElement("td");
     lineTd.className = "ou-cell ou-proj-long-td num ou-proj-td-line";
-    lineTd.textContent = pick && Number.isFinite(pick.line) ? String(pick.line) : "—";
+    lineTd.textContent = pick && ouPickIsDraftKings(pick) && Number.isFinite(pick.line) ? String(pick.line) : "";
     tr.appendChild(lineTd);
 
     const bookTd = document.createElement("td");
     bookTd.className = "ou-cell ou-proj-long-td num ou-proj-td-book";
-    const bookWrap = document.createElement("span");
-    bookWrap.className = "ou-proj-book-logo-wrap";
-    const bookImg = document.createElement("img");
-    bookImg.className = "ou-proj-book-logo-img";
-    bookImg.alt = "DraftKings";
-    bookImg.loading = "lazy";
-    const bookFb = document.createElement("span");
-    bookFb.className = "ou-proj-book-logo-fallback";
-    bookFb.textContent = "DK";
-    bookFb.style.display = "none";
-    bookWrap.appendChild(bookImg);
-    bookWrap.appendChild(bookFb);
-    bookTd.appendChild(bookWrap);
-    attachBookLogoWithFallback(bookImg, bookFb, SPORTSBOOK_META.draftkings.domain);
+    if (pick && ouPickIsDraftKings(pick)) {
+      const bookWrap = document.createElement("span");
+      bookWrap.className = "ou-proj-book-logo-wrap";
+      const bookImg = document.createElement("img");
+      bookImg.className = "ou-proj-book-logo-img";
+      bookImg.alt = "DraftKings";
+      bookImg.loading = "lazy";
+      const bookFb = document.createElement("span");
+      bookFb.className = "ou-proj-book-logo-fallback";
+      bookFb.textContent = "DK";
+      bookFb.style.display = "none";
+      bookWrap.appendChild(bookImg);
+      bookWrap.appendChild(bookFb);
+      bookTd.appendChild(bookWrap);
+      attachBookLogoWithFallback(bookImg, bookFb, SPORTSBOOK_META.draftkings.domain);
+    }
     tr.appendChild(bookTd);
 
     const oddsTd = document.createElement("td");
     oddsTd.className = "ou-cell ou-proj-long-td num ou-proj-td-odds";
-    if (pick) {
+    if (pick && ouPickIsDraftKings(pick)) {
       const am = side === "over" ? pick.over : pick.under;
       oddsTd.textContent = Number.isFinite(am) ? formatAmerican(am) : "—";
-    } else oddsTd.textContent = "—";
+    } else oddsTd.textContent = "";
     tr.appendChild(oddsTd);
 
     const pTd = document.createElement("td");
     pTd.className = "ou-cell ou-proj-long-td num ou-proj-td-pmod";
     const edgeTd = document.createElement("td");
     edgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-edge";
-    if (pick) {
+    if (pick && ouPickIsDraftKings(pick)) {
       pTd.textContent = Number.isFinite(pMod) ? `${(pMod * 100).toFixed(1)}%` : "—";
       edgeTd.textContent = formatEdgePct(edge);
       if (edge > 0) edgeTd.classList.add("pos");
       else if (edge < 0) edgeTd.classList.add("neg");
     } else {
-      pTd.textContent = "—";
-      edgeTd.textContent = "—";
+      pTd.textContent = "";
+      edgeTd.textContent = "";
     }
     tr.appendChild(pTd);
     tr.appendChild(edgeTd);
@@ -17225,12 +17236,7 @@ async function loadProjections(opts = {}) {
     if (!isFileProtocol() && !HISTORY._ok && !playerHistoryLoadPromise) {
       void loadPlayerHistory();
     }
-    if (!projectionsWeatherUsableFromBaked()) {
-      await refreshForecastWeatherFromOpenMeteo();
-    } else {
-      finalizeForecastWaveSummary(null);
-      PRICING_MU_BONUS_CACHE.clear();
-    }
+    await ensureForecastWeatherLoaded();
     await refreshAll();
     updateStatusBar();
     stopDatagolfLivePolling();
@@ -17292,27 +17298,16 @@ function isHomeViewActive() {
 function updateHomePage() {
   const lineEl = document.getElementById("home-event-line");
   const metaEl = document.getElementById("home-event-meta");
-  const fieldEl = document.getElementById("home-field-note");
   if (!lineEl) return;
   const m = DATA?.meta || {};
   const ev = m.event_name ? String(m.event_name).trim() : "";
   const course = m.course_used ? formatCourseNameForDisplay(m.course_used) : "";
   const venue = metaEventVenueLabel();
-  lineEl.textContent = venue && venue !== "—" ? venue : ev || "Golf Betting Analytics";
+  lineEl.textContent = venue && venue !== "—" ? venue : ev || "AlphaCaddie";
   if (metaEl) {
     metaEl.textContent = ev && course
       ? `${ev} at ${course} — choose a tool below to explore projections, history, and edge.`
       : "Choose a tool below to explore model projections, historical trends, course fit, and +EV opportunities.";
-  }
-  if (fieldEl) {
-    const n = Array.isArray(DATA?.players) ? DATA.players.length : 0;
-    if (n > 0) {
-      fieldEl.hidden = false;
-      fieldEl.textContent = `${n} players in the current field`;
-    } else {
-      fieldEl.hidden = true;
-      fieldEl.textContent = "";
-    }
   }
 }
 

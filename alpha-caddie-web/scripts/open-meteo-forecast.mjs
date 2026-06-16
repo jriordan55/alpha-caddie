@@ -54,6 +54,7 @@ export const COURSE_COORDINATES_BY_NAME = {
   "tpc toronto at osprey valley north course": { lat: 43.874, lon: -79.982 },
   "hamilton golf and country club": { lat: 43.267, lon: -79.934 },
   "glen abbey golf club": { lat: 43.452, lon: -79.691 },
+  "shinnecock hills golf club": { lat: 40.8847, lon: -72.4651 },
 };
 
 export function courseCoordinatesForProjections(proj) {
