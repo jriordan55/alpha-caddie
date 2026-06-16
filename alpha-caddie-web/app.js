@@ -3325,15 +3325,49 @@ function ouPickIsDraftKings(pick) {
   return String(pick?.source || "").trim().toLowerCase() === "draftkings";
 }
 
+/** Canonical course par from export meta (root course_par_18 or summed hole_pars). */
+function coursePar18FromData() {
+  const m = DATA?.meta;
+  const cp = num(m?.course_par_18, NaN);
+  if (Number.isFinite(cp) && cp >= 68 && cp <= 73) return Math.round(cp);
+  const hp = m?.hole_pars;
+  if (Array.isArray(hp) && hp.length === 18) {
+    const s = hp.reduce((sum, p) => sum + Math.round(num(p, 4)), 0);
+    if (Number.isFinite(s) && s >= 68 && s <= 73) return s;
+  }
+  return 72;
+}
+
 /**
  * Columns for the Round projections grid + Market filter.
- * With a loaded field, always list every standard market so Birdies/GIR/etc. stay visible even when DraftKings
- * only posts lines for a subset (parse probes vary by event). Book columns still fill only when props exist.
- * Without players, infer columns from props only (demo / props-only payloads).
+ * Core counting markets always listed; GIR / Fairways only when DraftKings has posted lines this round.
  */
+function draftKingsHasMarketForRound(market, round) {
+  const canon = ouPropsCanonicalMarket(market);
+  if (!canon) return false;
+  const wantR = Math.round(num(round, NaN));
+  for (const r of draftKingsRoundPropsOnly(true)) {
+    if (ouPropsCanonicalMarket(r.market) !== canon) continue;
+    const pr = Math.round(num(r.round_num, NaN));
+    if (Number.isFinite(wantR) && wantR >= 1 && wantR <= 4) {
+      if (Number.isFinite(pr) && pr >= 1 && pr <= 4 && pr !== wantR) continue;
+    }
+    return true;
+  }
+  return false;
+}
+
 function ouProjectionColumnsActive() {
   const players = Array.isArray(DATA.players) ? DATA.players : [];
-  if (players.length) return [...OU_PROJECTION_MARKETS];
+  if (players.length) {
+    const round = getOuRound();
+    return OU_PROJECTION_MARKETS.filter((col) => {
+      if (col.market === "GIR" || col.market === "Fairways hit") {
+        return draftKingsHasMarketForRound(col.market, round);
+      }
+      return true;
+    });
+  }
 
   const props = Array.isArray(DATA.props) ? DATA.props : [];
   const dk = props.filter((r) => String(r.source || "").trim().toLowerCase() === "draftkings");
@@ -4729,7 +4763,7 @@ function projectionCountsCoherentFromExport() {
 
 /** Bird/bog/GIR/FW tied to projected total (matches export reconcile). */
 function coherentCountingMeansAtTotal(row, projectedTotal) {
-  const par18 = num(DATA?.meta?.course_par_18, 70);
+  const par18 = coursePar18FromData();
   const stp = projectedTotal - par18;
   const basis = DATA?.meta?.projection_course_basis || {};
   const vBird = num(basis.venue_avg_birdies, 4.2);
@@ -6117,14 +6151,15 @@ function ouAttachProjectionRowMetrics(row) {
   return row;
 }
 
-/** One display row per golfer × market × Over|Under; DK line/odds when posted, model proj always. */
+/** One display row per golfer × market × Over|Under — only when DraftKings posted a line. */
 function ouProjectionFlatRowsForPlayers(players, cols) {
   const out = [];
   const fieldIndex = buildOuProjectionFieldIndex(players);
   const resolvePlayer = ouBuildFastFieldPlayerResolver(fieldIndex);
   const dkPickMap = new Map();
   for (const r of draftKingsRoundPropsOnly()) {
-    const canon = String(r.market || "").trim();
+    const canon = ouPropsCanonicalMarket(r.market);
+    if (!canon) continue;
     const fieldPlayer = resolvePlayer(r);
     const player = ouProjectionPlayerFromDkProp(r, fieldPlayer);
     if (!player) continue;
@@ -6149,6 +6184,7 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
         (Number.isFinite(id) && id > 0 ? dkPickMap.get(`${id}|${canon}`) : null) ||
         dkPickMap.get(`nm:${nameKey}|${canon}`) ||
         null;
+      if (!dkPick || !ouPickIsDraftKings(dkPick)) continue;
       const mu = ouProjectedMean(col.market, player);
       const { playerAvg, marketRatingZ, marketRating100, ratingSource } = ouCachedMarketRating(col.market, player);
       const { venueVal, courseRatingZ, courseRating100 } = ouCachedCourseRating(col.market);
@@ -6168,13 +6204,7 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
           courseRatingZ,
           courseRating100,
         };
-        if (dkPick) out.push(ouAttachProjectionRowMetrics(row));
-        else {
-          row.pMod = NaN;
-          row.edge = NaN;
-          row.sortOdds = NaN;
-          out.push(row);
-        }
+        out.push(ouAttachProjectionRowMetrics(row));
       }
     }
   }
@@ -13210,13 +13240,17 @@ function parseHistoryRowTeetimeMinutes(row) {
   return NaN;
 }
 
-function historyRoundTeeWave(row) {
+function normalizedTeeWave(row) {
   const w = String(row?.dg_tee_wave ?? "").trim().toLowerCase();
-  if (w.includes("morning") || w === "am" || w === "a") return "morning";
-  if (w.includes("afternoon") || w === "pm" || w === "p") return "afternoon";
+  if (w.includes("morning") || w === "am" || w === "a" || w === "early" || w.includes("early")) return "morning";
+  if (w.includes("afternoon") || w === "pm" || w === "p" || w === "late" || w.includes("late")) return "afternoon";
   const min = parseHistoryRowTeetimeMinutes(row);
   if (!Number.isFinite(min)) return "";
   return min < 13 * 60 ? "morning" : "afternoon";
+}
+
+function historyRoundTeeWave(row) {
+  return normalizedTeeWave(row);
 }
 
 function selectedPropsTeeWaveFilter() {
@@ -13229,16 +13263,9 @@ function selectedOuTeeWaveFilter() {
 
 function playerMatchesTeeWaveFilter(player, waveFilter) {
   if (!waveFilter) return true;
-  const w = String(player?.dg_tee_wave ?? "").trim().toLowerCase();
-  if (w) {
-    if (waveFilter === "morning") return w.includes("morning") || w === "am" || w === "a";
-    if (waveFilter === "afternoon") return w.includes("afternoon") || w === "pm" || w === "p";
-  }
-  const min = parseHistoryRowTeetimeMinutes(player);
-  if (!Number.isFinite(min)) return false;
-  if (waveFilter === "morning") return min < 13 * 60;
-  if (waveFilter === "afternoon") return min >= 13 * 60;
-  return true;
+  const norm = normalizedTeeWave(player);
+  if (!norm) return false;
+  return norm === waveFilter;
 }
 
 function filterHistoryRoundsByTeeWave(list) {

@@ -8,6 +8,7 @@ import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { holeParsFromLiveHoleStatsPayload } from "./dg-live-hole-pars.mjs";
+import { recalcProjectionScoresForCoursePar, reconcileAllProjectionPlayerRows } from "./course-round-adjustments.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -51,14 +52,21 @@ if (!pars || pars.length !== 18) {
 const prev = JSON.stringify(proj.hole_pars);
 const next = JSON.stringify(pars);
 const src = String(proj.hole_pars_source || "").toLowerCase();
-if (prev === next && src === "live_hole_stats") {
+const oldPar = Math.round(Number(proj.course_par_18) || 0) || NaN;
+const newPar = pars.reduce((sum, p) => sum + Math.round(Number(p) || 4), 0);
+if (prev === next && src === "live_hole_stats" && oldPar === newPar) {
   console.log("merge-live-hole-pars: projections already match live_hole_stats");
   process.exit(0);
 }
 
 proj.hole_pars = pars;
-proj.course_par_18 = pars.reduce((sum, p) => sum + Math.round(Number(p) || 4), 0);
+proj.course_par_18 = newPar;
 proj.hole_pars_source = "live_hole_stats";
+if (Number.isFinite(oldPar) && oldPar !== newPar) {
+  const { rows } = recalcProjectionScoresForCoursePar(proj, newPar, oldPar);
+  reconcileAllProjectionPlayerRows(proj);
+  console.log(`merge-live-hole-pars: course_par ${oldPar} → ${newPar}, recalculated ${rows} row(s)`);
+}
 writeFileSync(projPath, JSON.stringify(proj, null, 2), "utf8");
 console.log(
   prev === next

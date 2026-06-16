@@ -132,6 +132,7 @@ if (!skipPgatour) {
 run("fetch-book-odds-into-projections.mjs", "Sportsbook + DK round props (fetch:book-odds)");
 run("fetch-datagolf-finish-tool-outrights.mjs", "Finish-tool outrights (fetch:finish-tool)");
 run("merge-live-hole-pars-into-projections.mjs", "Merge live hole pars into projections");
+run("sync-bundled-hole-pars-into-projections.mjs", "Bundled course_holes.json → projections when live pars missing/wrong");
 run(
   "merge-live-round-meta-into-projections.mjs",
   "Merge live round meta into projections (display_round for upcoming round)",
@@ -164,8 +165,10 @@ if (!envTruthy("GOLF_SKIP_PIN_SHEET", false)) {
 
 run(
   "apply-unified-projection-factors.mjs",
-  "Unified projection factors + historical venue score calibration (last step before publish)",
+  "Unified projection factors (last step before publish)",
 );
+
+run("validate-projections-for-publish.mjs", "Validate par, birdies/pars, and O/U prop coverage before publish");
 
 if (!skipPostCsvMerge) {
   run(

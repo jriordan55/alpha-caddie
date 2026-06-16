@@ -67,8 +67,16 @@ const PROBE_SUBS_FIRST = {
   Bogeys: ["17301"],
 };
 
-/** When nav omits Round Score tabs, try common PGA + Masters subcategory ids. */
+/** When nav omits Round Score tabs, try common PGA + US Open subcategory ids. */
 const FALLBACK_ROUND_SCORE_SUBS = ["11015", "11786", "18987"];
+
+/** U.S. Open @ Shinnecock (league 42731) — field round O/U subcategory ids (2026). */
+const US_OPEN_LEAGUE_SUBCATS = {
+  Birdies: ["19010", "17299"],
+  Pars: ["19011", "17300"],
+  Bogeys: ["19012", "17301"],
+  "Total Score": ["11015", "11786", "18987"],
+};
 
 const PROBE_SUBS_ROUND_SCORE = ["11015", "11786", "18987"];
 
@@ -696,6 +704,14 @@ export async function fetchDraftKingsOuProps(opts = {}) {
     addStatSubs(stat, fromEnv || navList.length ? navList : fromNav ? [fromNav] : []);
     if (!statToSubs[stat]?.length && FALLBACK_SUBCAT_BY_STAT[stat]) {
       addStatSubs(stat, FALLBACK_SUBCAT_BY_STAT[stat]);
+    }
+  }
+
+  const isUsOpenLeague =
+    leagueId === "42731" || /\/us-open(?:\?|$)/i.test(String(leagueUrl || ""));
+  if (isUsOpenLeague) {
+    for (const [stat, subs] of Object.entries(US_OPEN_LEAGUE_SUBCATS)) {
+      addStatSubs(stat, subs);
     }
   }
 

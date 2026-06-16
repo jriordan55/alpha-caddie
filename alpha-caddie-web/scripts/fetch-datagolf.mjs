@@ -123,6 +123,9 @@ const GENERIC_HOLE_PARS_FALLBACK = [4, 4, 3, 4, 4, 5, 4, 3, 4, 4, 4, 3, 4, 4, 5,
 /** Par-72 template (4×5, 4×3, 10×4) when course_table says 72 but no hole card is bundled. */
 const STANDARD_PAR_72_FALLBACK = [4, 5, 4, 3, 4, 4, 3, 5, 4, 4, 4, 3, 5, 4, 4, 3, 5, 4];
 
+/** Shinnecock Hills (U.S. Open) — par 70. */
+const SHINNECOCK_PAR_70_FALLBACK = [4, 4, 4, 3, 5, 4, 4, 3, 4, 4, 4, 3, 4, 5, 4, 3, 4, 4];
+
 function holeParsSum(pars) {
   if (!Array.isArray(pars) || pars.length !== 18) return NaN;
   return pars.reduce((s, p) => s + Math.round(num(p, 4)), 0);
@@ -198,6 +201,16 @@ function lookupHoleParsFromCourseTable(course_used) {
   if (fromMap && holeParsSum(fromMap.pars) === row.par) return fromMap;
   if (row.par === 72) return { pars: [...STANDARD_PAR_72_FALLBACK], source: "course_table_par72" };
   if (row.par === 71) return { pars: [...GENERIC_HOLE_PARS_FALLBACK], source: "course_table_par71" };
+  if (row.par === 70) return { pars: [...SHINNECOCK_PAR_70_FALLBACK], source: "course_table_par70" };
+  return null;
+}
+
+function lookupKnownVenueHolePars(course_used, event_name) {
+  const ck = normCourseNameKey(course_used);
+  const ek = normCourseNameKey(event_name);
+  if (ck.includes("shinnecock") || (ek.includes("u s open") && ck.includes("shinnecock"))) {
+    return { pars: [...SHINNECOCK_PAR_70_FALLBACK], source: "known_venue_shinnecock" };
+  }
   return null;
 }
 
@@ -499,6 +512,9 @@ function resolveHoleParsForEvent({ fieldRaw, course_used, event_name, field_upda
 
   const fromCourseTable = lookupHoleParsFromCourseTable(course_used);
   if (fromCourseTable) return fromCourseTable;
+
+  const knownVenue = lookupKnownVenueHolePars(course_used, event_name);
+  if (knownVenue) return knownVenue;
 
   return { pars: [...GENERIC_HOLE_PARS_FALLBACK], source: "generic" };
 }

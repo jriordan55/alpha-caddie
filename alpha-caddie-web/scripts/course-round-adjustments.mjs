@@ -794,6 +794,40 @@ export function shiftProjectionRowScore(row, strokeShift, coursePar18) {
   }
 }
 
+/** Re-anchor gross totals when course_par_18 changes (score_to_par unchanged). */
+export function recalcProjectionScoresForCoursePar(payload, newPar18, oldPar18Opt) {
+  const players = Array.isArray(payload?.players) ? payload.players : [];
+  const newPar = Math.round(num(newPar18, NaN));
+  if (!players.length || !Number.isFinite(newPar) || newPar < 68 || newPar > 73) {
+    return { rows: 0, newPar };
+  }
+  const oldPar = Math.round(num(oldPar18Opt ?? payload?.course_par_18, NaN));
+  let rows = 0;
+  for (const pl of players) {
+    if (!pl || typeof pl !== "object") continue;
+    const stp = num(pl.score_to_par, NaN);
+    const ts = num(pl.total_score, NaN);
+    if (Number.isFinite(stp)) {
+      pl.total_score = Math.round((newPar + stp) * 100) / 100;
+      rows++;
+    } else if (Number.isFinite(ts) && Number.isFinite(oldPar)) {
+      pl.score_to_par = Math.round((ts - newPar) * 100) / 100;
+      pl.total_score = Math.round((newPar + pl.score_to_par) * 100) / 100;
+      rows++;
+    }
+  }
+  payload.course_par_18 = newPar;
+  if (payload.meta && typeof payload.meta === "object") payload.meta.course_par_18 = newPar;
+  if (Number.isFinite(oldPar) && oldPar !== newPar) {
+    const basis = payload.projection_course_basis || payload.meta?.projection_course_basis;
+    if (basis && typeof basis === "object" && Number.isFinite(num(basis.venue_avg_score_to_par, NaN))) {
+      const vstp = num(basis.venue_avg_score_to_par, NaN);
+      basis.venue_avg_round_score = Math.round((newPar + vstp) * 100) / 100;
+    }
+  }
+  return { rows, newPar, oldPar: Number.isFinite(oldPar) ? oldPar : null };
+}
+
 /**
  * After weather / unified factors, nudge field-average score-to-par toward shrunk historical venue targets.
  */

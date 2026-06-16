@@ -7119,139 +7119,6 @@ ev_backtest_all,2026-06-16T16:28:23Z,,(all events),,,(all),(all),Total score,,,,
 ev_backtest_all,2026-06-16T16:28:23Z,,(all events),,,(all),(all),Total score,,,,17.5,under,56,28,28,0,-5.00,-8.9
 ev_backtest_all,2026-06-16T16:28:23Z,,(all events),,,(all),(all),Total score,,,,20.0,over,35,6,29,0,-23.95,-68.4
 ev_backtest_all,2026-06-16T16:28:23Z,,(all events),,,(all),(all),Total score,,,,20.0,under,46,22,24,0,-5.68,-12.3
-model_vs_book,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Birdies,3.000,3.000,1,,,,,,,,
-model_vs_book,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Bogeys,2.426,2.308,26,,,,,,,,
-model_vs_book,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Total score,1.760,1.533,44,,,,,,,,
-model_vs_book,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Birdies,3.000,3.000,1,,,,,,,,
-model_vs_book,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Bogeys,2.754,2.712,26,,,,,,,,
-model_vs_book,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Total score,2.335,2.279,44,,,,,,,,
-model_vs_book,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Birdies,3.000,3.000,1,,,,,,,,
-model_vs_book,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Bogeys,2.793,2.750,26,,,,,,,,
-model_vs_book,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Total score,2.414,2.342,44,,,,,,,,
-model_vs_book,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Birdies,3.000,3.000,1,,,,,,,,
-model_vs_book,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Bogeys,2.849,2.808,26,,,,,,,,
-model_vs_book,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Total score,2.291,2.221,44,,,,,,,,
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Birdies,,,,0.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Birdies,,,,10.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Birdies,,,,12.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Birdies,,,,15.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Birdies,,,,17.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Birdies,,,,2.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Birdies,,,,20.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Birdies,,,,5.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Birdies,,,,7.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Bogeys,,,,0.0,under,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Bogeys,,,,2.5,under,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Fairways hit,,,,0.0,under,1,0,0,1,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Fairways hit,,,,2.5,under,1,0,0,1,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Fairways hit,,,,5.0,under,1,0,0,1,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,GIR,,,,0.0,under,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,GIR,,,,2.5,under,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,GIR,,,,5.0,under,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Pars,,,,0.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Pars,,,,0.0,under,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Pars,,,,2.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Total score,,,,0.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Total score,,,,0.0,under,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Birdies,,,,0.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Birdies,,,,10.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Birdies,,,,12.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Birdies,,,,15.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Birdies,,,,17.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Birdies,,,,2.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Birdies,,,,20.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Birdies,,,,5.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Birdies,,,,7.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Bogeys,,,,0.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Bogeys,,,,0.0,under,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Bogeys,,,,2.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Fairways hit,,,,0.0,under,1,0,0,1,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Fairways hit,,,,2.5,under,1,0,0,1,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Fairways hit,,,,5.0,under,1,0,0,1,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,GIR,,,,0.0,over,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,GIR,,,,2.5,over,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,GIR,,,,5.0,over,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Pars,,,,0.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Pars,,,,0.0,under,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Pars,,,,2.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Total score,,,,0.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Total score,,,,0.0,under,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Birdies,,,,0.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Birdies,,,,10.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Birdies,,,,12.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Birdies,,,,15.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Birdies,,,,17.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Birdies,,,,2.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Birdies,,,,20.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Birdies,,,,5.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Birdies,,,,7.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Bogeys,,,,0.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Bogeys,,,,0.0,under,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Bogeys,,,,2.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Fairways hit,,,,0.0,under,1,0,0,1,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Fairways hit,,,,2.5,under,1,0,0,1,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Fairways hit,,,,5.0,under,1,0,0,1,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,GIR,,,,0.0,over,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,GIR,,,,2.5,over,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,GIR,,,,5.0,over,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Pars,,,,0.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Pars,,,,0.0,under,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Pars,,,,2.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Total score,,,,0.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Total score,,,,0.0,under,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Birdies,,,,0.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Birdies,,,,10.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Birdies,,,,12.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Birdies,,,,15.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Birdies,,,,17.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Birdies,,,,2.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Birdies,,,,20.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Birdies,,,,5.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Birdies,,,,7.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Bogeys,,,,0.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Bogeys,,,,0.0,under,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Bogeys,,,,2.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Fairways hit,,,,0.0,under,1,0,0,1,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Fairways hit,,,,2.5,under,1,0,0,1,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Fairways hit,,,,5.0,under,1,0,0,1,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,GIR,,,,0.0,over,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,GIR,,,,2.5,over,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,GIR,,,,5.0,over,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Pars,,,,0.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Pars,,,,0.0,under,1,1,0,0,0.00,0.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Pars,,,,2.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Total score,,,,0.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Total score,,,,0.0,under,1,1,0,0,0.00,0.0
-model_vs_book_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Birdies,3.000,3.000,4,,,,,,,,
-model_vs_book_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Bogeys,2.710,2.644,104,,,,,,,,
-model_vs_book_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Total score,2.215,2.094,176,,,,,,,,
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Birdies,,,,0.0,over,4,0,4,0,-4.00,-100.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Birdies,,,,10.0,over,4,0,4,0,-4.00,-100.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Birdies,,,,12.5,over,4,0,4,0,-4.00,-100.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Birdies,,,,15.0,over,4,0,4,0,-4.00,-100.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Birdies,,,,17.5,over,4,0,4,0,-4.00,-100.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Birdies,,,,2.5,over,4,0,4,0,-4.00,-100.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Birdies,,,,20.0,over,4,0,4,0,-4.00,-100.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Birdies,,,,5.0,over,4,0,4,0,-4.00,-100.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Birdies,,,,7.5,over,4,0,4,0,-4.00,-100.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Bogeys,,,,0.0,over,3,0,3,0,-3.00,-100.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Bogeys,,,,0.0,under,4,4,0,0,0.00,0.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Bogeys,,,,2.5,over,3,0,3,0,-3.00,-100.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Bogeys,,,,2.5,under,1,1,0,0,0.00,0.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Fairways hit,,,,0.0,under,4,0,0,4,0.00,0.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Fairways hit,,,,2.5,under,4,0,0,4,0.00,0.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Fairways hit,,,,5.0,under,4,0,0,4,0.00,0.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),GIR,,,,0.0,over,3,3,0,0,0.00,0.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),GIR,,,,0.0,under,1,0,1,0,-1.00,-100.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),GIR,,,,2.5,over,3,3,0,0,0.00,0.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),GIR,,,,2.5,under,1,0,1,0,-1.00,-100.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),GIR,,,,5.0,over,3,3,0,0,0.00,0.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),GIR,,,,5.0,under,1,0,1,0,-1.00,-100.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Pars,,,,0.0,over,4,0,4,0,-4.00,-100.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Pars,,,,0.0,under,4,4,0,0,0.00,0.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Pars,,,,2.5,over,4,0,4,0,-4.00,-100.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Total score,,,,0.0,over,4,0,4,0,-4.00,-100.0
-ev_backtest_by_market,2026-06-16T17:12:05Z,2026-06-16T17:11:11Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Total score,,,,0.0,under,4,4,0,0,0.00,0.0
 model_vs_book_all,2026-06-16T17:12:22Z,,(all events),,,(all),(all),Birdies,0.989,0.779,1865,,,,,,,,
 model_vs_book_all,2026-06-16T17:12:22Z,,(all events),,,(all),(all),Bogeys,1.214,0.851,928,,,,,,,,
 model_vs_book_all,2026-06-16T17:12:22Z,,(all events),,,(all),(all),Fairways hit,1.463,1.113,788,,,,,,,,
@@ -7366,3 +7233,372 @@ ev_backtest_all,2026-06-16T17:12:22Z,,(all events),,,(all),(all),Total score,,,,
 ev_backtest_all,2026-06-16T17:12:22Z,,(all events),,,(all),(all),Total score,,,,17.5,under,56,28,28,0,-5.00,-8.9
 ev_backtest_all,2026-06-16T17:12:22Z,,(all events),,,(all),(all),Total score,,,,20.0,over,35,6,29,0,-23.95,-68.4
 ev_backtest_all,2026-06-16T17:12:22Z,,(all events),,,(all),(all),Total score,,,,20.0,under,46,22,24,0,-5.68,-12.3
+model_vs_book,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Birdies,1.842,1.784,67,,,,,,,,
+model_vs_book,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Bogeys,2.777,2.731,39,,,,,,,,
+model_vs_book,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Pars,0.858,0.684,38,,,,,,,,
+model_vs_book,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Total score,0.982,0.882,67,,,,,,,,
+model_vs_book,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Birdies,1.842,1.784,67,,,,,,,,
+model_vs_book,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Bogeys,2.805,2.756,39,,,,,,,,
+model_vs_book,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Pars,0.858,0.684,38,,,,,,,,
+model_vs_book,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Total score,0.962,0.862,67,,,,,,,,
+model_vs_book,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Birdies,1.842,1.784,67,,,,,,,,
+model_vs_book,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Bogeys,2.777,2.731,39,,,,,,,,
+model_vs_book,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Pars,0.858,0.684,38,,,,,,,,
+model_vs_book,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Total score,0.982,0.882,67,,,,,,,,
+model_vs_book,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Birdies,1.842,1.784,67,,,,,,,,
+model_vs_book,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Bogeys,2.819,2.769,39,,,,,,,,
+model_vs_book,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Pars,0.858,0.684,38,,,,,,,,
+model_vs_book,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Total score,0.926,0.827,67,,,,,,,,
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Birdies,,,,0.0,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Birdies,,,,10.0,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Birdies,,,,12.5,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Birdies,,,,15.0,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Birdies,,,,17.5,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Birdies,,,,2.5,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Birdies,,,,20.0,over,21,0,21,0,-21.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Birdies,,,,5.0,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Birdies,,,,7.5,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Bogeys,,,,0.0,over,8,0,8,0,-8.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Bogeys,,,,0.0,under,20,20,0,0,9.49,47.5
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Bogeys,,,,10.0,under,13,13,0,0,9.49,73.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Bogeys,,,,12.5,under,13,13,0,0,9.49,73.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Bogeys,,,,15.0,under,13,13,0,0,9.49,73.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Bogeys,,,,17.5,under,13,13,0,0,9.49,73.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Bogeys,,,,2.5,over,7,0,7,0,-7.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Bogeys,,,,2.5,under,16,16,0,0,9.49,59.3
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Bogeys,,,,20.0,under,13,13,0,0,9.49,73.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Bogeys,,,,5.0,over,3,0,3,0,-3.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Bogeys,,,,5.0,under,15,15,0,0,9.49,63.3
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Bogeys,,,,7.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Bogeys,,,,7.5,under,14,14,0,0,9.49,67.8
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Fairways hit,,,,0.0,over,18,8,7,3,-7.00,-38.9
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Fairways hit,,,,0.0,under,14,4,7,3,-7.00,-50.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Fairways hit,,,,2.5,over,16,7,6,3,-6.00,-37.5
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Fairways hit,,,,2.5,under,7,2,4,1,-4.00,-57.1
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Fairways hit,,,,5.0,over,7,3,3,1,-3.00,-42.9
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Fairways hit,,,,5.0,under,5,1,3,1,-3.00,-60.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Fairways hit,,,,7.5,over,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,GIR,,,,0.0,over,17,11,5,1,-5.00,-29.4
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,GIR,,,,0.0,under,13,7,5,1,-5.00,-38.5
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,GIR,,,,2.5,over,13,9,3,1,-3.00,-23.1
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,GIR,,,,2.5,under,10,6,3,1,-3.00,-30.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,GIR,,,,5.0,over,9,6,2,1,-2.00,-22.2
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,GIR,,,,5.0,under,6,4,1,1,-1.00,-16.7
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Pars,,,,0.0,over,9,0,9,0,-9.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Pars,,,,0.0,under,11,11,0,0,0.00,0.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Pars,,,,10.0,over,2,0,2,0,-2.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Pars,,,,2.5,over,7,0,7,0,-7.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Pars,,,,2.5,under,11,11,0,0,0.00,0.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Pars,,,,5.0,over,4,0,4,0,-4.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Pars,,,,5.0,under,11,11,0,0,0.00,0.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Pars,,,,7.5,over,3,0,3,0,-3.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Total score,,,,0.0,over,21,0,21,0,-21.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Total score,,,,2.5,over,17,0,17,0,-17.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Total score,,,,5.0,over,11,0,11,0,-11.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,course,default,Total score,,,,7.5,over,5,0,5,0,-5.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Birdies,,,,0.0,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Birdies,,,,10.0,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Birdies,,,,12.5,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Birdies,,,,15.0,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Birdies,,,,17.5,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Birdies,,,,2.5,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Birdies,,,,20.0,over,21,0,21,0,-21.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Birdies,,,,5.0,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Birdies,,,,7.5,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Bogeys,,,,0.0,over,8,0,8,0,-8.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Bogeys,,,,0.0,under,20,20,0,0,9.49,47.5
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Bogeys,,,,10.0,under,13,13,0,0,9.49,73.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Bogeys,,,,12.5,under,13,13,0,0,9.49,73.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Bogeys,,,,15.0,under,13,13,0,0,9.49,73.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Bogeys,,,,17.5,under,13,13,0,0,9.49,73.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Bogeys,,,,2.5,over,7,0,7,0,-7.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Bogeys,,,,2.5,under,16,16,0,0,9.49,59.3
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Bogeys,,,,20.0,under,13,13,0,0,9.49,73.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Bogeys,,,,5.0,over,3,0,3,0,-3.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Bogeys,,,,5.0,under,15,15,0,0,9.49,63.3
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Bogeys,,,,7.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Bogeys,,,,7.5,under,14,14,0,0,9.49,67.8
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Fairways hit,,,,0.0,over,18,8,7,3,-7.00,-38.9
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Fairways hit,,,,0.0,under,14,4,7,3,-7.00,-50.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Fairways hit,,,,2.5,over,16,7,6,3,-6.00,-37.5
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Fairways hit,,,,2.5,under,7,2,4,1,-4.00,-57.1
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Fairways hit,,,,5.0,over,7,3,3,1,-3.00,-42.9
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Fairways hit,,,,5.0,under,5,1,3,1,-3.00,-60.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Fairways hit,,,,7.5,over,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,GIR,,,,0.0,over,17,11,5,1,-5.00,-29.4
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,GIR,,,,0.0,under,13,7,5,1,-5.00,-38.5
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,GIR,,,,2.5,over,13,9,3,1,-3.00,-23.1
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,GIR,,,,2.5,under,9,5,3,1,-3.00,-33.3
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,GIR,,,,5.0,over,9,6,2,1,-2.00,-22.2
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,GIR,,,,5.0,under,6,4,1,1,-1.00,-16.7
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Pars,,,,0.0,over,9,0,9,0,-9.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Pars,,,,0.0,under,11,11,0,0,0.00,0.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Pars,,,,10.0,over,2,0,2,0,-2.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Pars,,,,2.5,over,7,0,7,0,-7.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Pars,,,,2.5,under,11,11,0,0,0.00,0.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Pars,,,,5.0,over,4,0,4,0,-4.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Pars,,,,5.0,under,11,11,0,0,0.00,0.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Pars,,,,7.5,over,3,0,3,0,-3.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Total score,,,,0.0,over,21,0,21,0,-21.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Total score,,,,2.5,over,16,0,16,0,-16.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Total score,,,,5.0,over,11,0,11,0,-11.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,default,default,Total score,,,,7.5,over,5,0,5,0,-5.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Birdies,,,,0.0,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Birdies,,,,10.0,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Birdies,,,,12.5,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Birdies,,,,15.0,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Birdies,,,,17.5,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Birdies,,,,2.5,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Birdies,,,,20.0,over,21,0,21,0,-21.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Birdies,,,,5.0,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Birdies,,,,7.5,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Bogeys,,,,0.0,over,8,0,8,0,-8.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Bogeys,,,,0.0,under,20,20,0,0,9.49,47.5
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Bogeys,,,,10.0,under,13,13,0,0,9.49,73.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Bogeys,,,,12.5,under,13,13,0,0,9.49,73.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Bogeys,,,,15.0,under,13,13,0,0,9.49,73.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Bogeys,,,,17.5,under,13,13,0,0,9.49,73.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Bogeys,,,,2.5,over,7,0,7,0,-7.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Bogeys,,,,2.5,under,16,16,0,0,9.49,59.3
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Bogeys,,,,20.0,under,13,13,0,0,9.49,73.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Bogeys,,,,5.0,over,3,0,3,0,-3.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Bogeys,,,,5.0,under,15,15,0,0,9.49,63.3
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Bogeys,,,,7.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Bogeys,,,,7.5,under,14,14,0,0,9.49,67.8
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Fairways hit,,,,0.0,over,18,8,7,3,-7.00,-38.9
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Fairways hit,,,,0.0,under,14,4,7,3,-7.00,-50.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Fairways hit,,,,2.5,over,16,7,6,3,-6.00,-37.5
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Fairways hit,,,,2.5,under,7,2,4,1,-4.00,-57.1
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Fairways hit,,,,5.0,over,7,3,3,1,-3.00,-42.9
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Fairways hit,,,,5.0,under,5,1,3,1,-3.00,-60.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Fairways hit,,,,7.5,over,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,GIR,,,,0.0,over,17,11,5,1,-5.00,-29.4
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,GIR,,,,0.0,under,13,7,5,1,-5.00,-38.5
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,GIR,,,,2.5,over,13,9,3,1,-3.00,-23.1
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,GIR,,,,2.5,under,10,6,3,1,-3.00,-30.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,GIR,,,,5.0,over,9,6,2,1,-2.00,-22.2
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,GIR,,,,5.0,under,6,4,1,1,-1.00,-16.7
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Pars,,,,0.0,over,9,0,9,0,-9.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Pars,,,,0.0,under,11,11,0,0,0.00,0.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Pars,,,,10.0,over,2,0,2,0,-2.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Pars,,,,2.5,over,7,0,7,0,-7.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Pars,,,,2.5,under,11,11,0,0,0.00,0.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Pars,,,,5.0,over,4,0,4,0,-4.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Pars,,,,5.0,under,11,11,0,0,0.00,0.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Pars,,,,7.5,over,3,0,3,0,-3.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Total score,,,,0.0,over,21,0,21,0,-21.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Total score,,,,2.5,over,17,0,17,0,-17.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Total score,,,,5.0,over,11,0,11,0,-11.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,recent,default,Total score,,,,7.5,over,5,0,5,0,-5.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Birdies,,,,0.0,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Birdies,,,,10.0,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Birdies,,,,12.5,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Birdies,,,,15.0,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Birdies,,,,17.5,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Birdies,,,,2.5,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Birdies,,,,20.0,over,22,0,22,0,-22.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Birdies,,,,5.0,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Birdies,,,,7.5,over,23,0,23,0,-23.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Bogeys,,,,0.0,over,8,0,8,0,-8.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Bogeys,,,,0.0,under,19,19,0,0,9.49,50.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Bogeys,,,,10.0,under,13,13,0,0,9.49,73.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Bogeys,,,,12.5,under,13,13,0,0,9.49,73.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Bogeys,,,,15.0,under,13,13,0,0,9.49,73.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Bogeys,,,,17.5,under,13,13,0,0,9.49,73.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Bogeys,,,,2.5,over,7,0,7,0,-7.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Bogeys,,,,2.5,under,16,16,0,0,9.49,59.3
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Bogeys,,,,20.0,under,13,13,0,0,9.49,73.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Bogeys,,,,5.0,over,3,0,3,0,-3.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Bogeys,,,,5.0,under,15,15,0,0,9.49,63.3
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Bogeys,,,,7.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Bogeys,,,,7.5,under,14,14,0,0,9.49,67.8
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Fairways hit,,,,0.0,over,18,8,7,3,-7.00,-38.9
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Fairways hit,,,,0.0,under,14,4,7,3,-7.00,-50.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Fairways hit,,,,2.5,over,16,7,6,3,-6.00,-37.5
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Fairways hit,,,,2.5,under,7,2,4,1,-4.00,-57.1
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Fairways hit,,,,5.0,over,9,4,4,1,-4.00,-44.4
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Fairways hit,,,,5.0,under,5,1,3,1,-3.00,-60.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Fairways hit,,,,7.5,over,1,1,0,0,0.00,0.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,GIR,,,,0.0,over,16,10,5,1,-5.00,-31.2
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,GIR,,,,0.0,under,14,7,6,1,-6.00,-42.9
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,GIR,,,,2.5,over,14,9,4,1,-4.00,-28.6
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,GIR,,,,2.5,under,9,5,3,1,-3.00,-33.3
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,GIR,,,,5.0,over,8,5,2,1,-2.00,-25.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,GIR,,,,5.0,under,7,4,2,1,-2.00,-28.6
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Pars,,,,0.0,over,9,0,9,0,-9.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Pars,,,,0.0,under,11,11,0,0,0.00,0.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Pars,,,,10.0,over,2,0,2,0,-2.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Pars,,,,2.5,over,7,0,7,0,-7.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Pars,,,,2.5,under,11,11,0,0,0.00,0.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Pars,,,,5.0,over,4,0,4,0,-4.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Pars,,,,5.0,under,11,11,0,0,0.00,0.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Pars,,,,7.5,over,3,0,3,0,-3.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Total score,,,,0.0,over,22,0,22,0,-22.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Total score,,,,2.5,over,15,0,15,0,-15.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Total score,,,,5.0,over,11,0,11,0,-11.00,-100.0
+ev_backtest,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,skill,sg_total,Total score,,,,7.5,over,4,0,4,0,-4.00,-100.0
+model_vs_book_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Birdies,1.842,1.784,268,,,,,,,,
+model_vs_book_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Bogeys,2.795,2.747,156,,,,,,,,
+model_vs_book_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Pars,0.858,0.684,152,,,,,,,,
+model_vs_book_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Total score,0.963,0.863,268,,,,,,,,
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Birdies,,,,0.0,over,92,0,92,0,-92.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Birdies,,,,10.0,over,92,0,92,0,-92.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Birdies,,,,12.5,over,92,0,92,0,-92.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Birdies,,,,15.0,over,92,0,92,0,-92.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Birdies,,,,17.5,over,92,0,92,0,-92.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Birdies,,,,2.5,over,92,0,92,0,-92.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Birdies,,,,20.0,over,85,0,85,0,-85.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Birdies,,,,5.0,over,92,0,92,0,-92.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Birdies,,,,7.5,over,92,0,92,0,-92.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Bogeys,,,,0.0,over,32,0,32,0,-32.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Bogeys,,,,0.0,under,79,79,0,0,37.97,48.1
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Bogeys,,,,10.0,under,52,52,0,0,37.97,73.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Bogeys,,,,12.5,under,52,52,0,0,37.97,73.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Bogeys,,,,15.0,under,52,52,0,0,37.97,73.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Bogeys,,,,17.5,under,52,52,0,0,37.97,73.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Bogeys,,,,2.5,over,28,0,28,0,-28.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Bogeys,,,,2.5,under,64,64,0,0,37.97,59.3
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Bogeys,,,,20.0,under,52,52,0,0,37.97,73.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Bogeys,,,,5.0,over,12,0,12,0,-12.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Bogeys,,,,5.0,under,60,60,0,0,37.97,63.3
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Bogeys,,,,7.5,over,4,0,4,0,-4.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Bogeys,,,,7.5,under,56,56,0,0,37.97,67.8
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Fairways hit,,,,0.0,over,72,32,28,12,-28.00,-38.9
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Fairways hit,,,,0.0,under,56,16,28,12,-28.00,-50.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Fairways hit,,,,2.5,over,64,28,24,12,-24.00,-37.5
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Fairways hit,,,,2.5,under,28,8,16,4,-16.00,-57.1
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Fairways hit,,,,5.0,over,30,13,13,4,-13.00,-43.3
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Fairways hit,,,,5.0,under,20,4,12,4,-12.00,-60.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Fairways hit,,,,7.5,over,4,4,0,0,0.00,0.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),GIR,,,,0.0,over,67,43,20,4,-20.00,-29.9
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),GIR,,,,0.0,under,53,28,21,4,-21.00,-39.6
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),GIR,,,,2.5,over,53,36,13,4,-13.00,-24.5
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),GIR,,,,2.5,under,38,22,12,4,-12.00,-31.6
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),GIR,,,,5.0,over,35,23,8,4,-8.00,-22.9
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),GIR,,,,5.0,under,25,16,5,4,-5.00,-20.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Pars,,,,0.0,over,36,0,36,0,-36.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Pars,,,,0.0,under,44,44,0,0,0.00,0.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Pars,,,,10.0,over,8,0,8,0,-8.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Pars,,,,2.5,over,28,0,28,0,-28.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Pars,,,,2.5,under,44,44,0,0,0.00,0.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Pars,,,,5.0,over,16,0,16,0,-16.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Pars,,,,5.0,under,44,44,0,0,0.00,0.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Pars,,,,7.5,over,12,0,12,0,-12.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Total score,,,,0.0,over,85,0,85,0,-85.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Total score,,,,2.5,over,65,0,65,0,-65.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Total score,,,,5.0,over,44,0,44,0,-44.00,-100.0
+ev_backtest_by_market,2026-06-16T18:28:47Z,2026-06-16T18:28:03Z,U.S. Open,Shinnecock Hills Golf Club,1,(all),(all),Total score,,,,7.5,over,19,0,19,0,-19.00,-100.0
+model_vs_book_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Birdies,1.125,0.902,2129,,,,,,,,
+model_vs_book_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Bogeys,1.364,0.963,980,,,,,,,,
+model_vs_book_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Fairways hit,1.463,1.113,788,,,,,,,,
+model_vs_book_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),GIR,1.637,1.209,904,,,,,,,,
+model_vs_book_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Pars,1.107,0.839,1067,,,,,,,,
+model_vs_book_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Total score,3.219,1.239,1797,,,,,,,,
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Birdies,,,,0.0,over,1002,404,598,0,-143.92,-14.4
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Birdies,,,,0.0,under,513,251,262,0,-60.06,-11.7
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Birdies,,,,2.5,over,666,248,418,0,-178.97,-26.9
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Birdies,,,,2.5,under,203,95,108,0,-32.88,-16.2
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Bogeys,,,,0.0,over,637,207,399,31,-274.55,-43.1
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Bogeys,,,,0.0,under,834,508,289,37,-75.94,-9.1
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Bogeys,,,,2.5,over,365,116,231,18,-192.49,-52.7
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Bogeys,,,,2.5,under,556,355,174,27,-30.91,-5.6
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Bogeys,,,,5.0,over,222,70,144,8,-111.05,-50.0
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Bogeys,,,,5.0,under,380,236,133,11,-19.90,-5.2
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Fairways hit,,,,0.0,over,668,314,301,53,-171.37,-25.7
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Fairways hit,,,,0.0,under,816,408,373,35,-176.55,-21.6
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Fairways hit,,,,2.5,over,368,169,161,38,-105.70,-28.7
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Fairways hit,,,,2.5,under,542,288,235,19,-100.68,-18.6
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Fairways hit,,,,5.0,over,209,90,96,23,-63.52,-30.4
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Fairways hit,,,,5.0,under,359,204,150,5,-34.54,-9.6
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),GIR,,,,0.0,over,682,323,331,28,-229.91,-33.7
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),GIR,,,,0.0,under,742,402,316,24,-111.35,-15.0
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),GIR,,,,2.5,over,407,198,188,21,-148.03,-36.4
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),GIR,,,,2.5,under,491,275,197,19,-60.56,-12.3
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),GIR,,,,5.0,over,253,117,120,16,-97.55,-38.6
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),GIR,,,,5.0,under,341,201,129,11,-24.70,-7.2
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Pars,,,,0.0,over,650,289,309,52,-229.08,-35.2
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Pars,,,,0.0,under,819,407,357,55,-192.62,-23.5
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Pars,,,,2.5,over,268,115,129,24,-109.61,-40.9
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Pars,,,,2.5,under,494,266,202,26,-106.99,-21.7
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Total score,,,,0.0,over,725,286,439,0,-246.15,-34.0
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Total score,,,,0.0,under,640,333,307,0,-72.19,-11.3
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Total score,,,,2.5,over,330,101,229,0,-147.59,-44.7
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Total score,,,,2.5,under,289,157,132,0,0.63,0.2
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Total score,,,,5.0,over,214,53,161,0,-118.08,-55.2
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Total score,,,,5.0,under,198,112,86,0,6.16,3.1
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Pars,,,,5.0,over,74,38,35,1,-28.72,-38.8
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Pars,,,,5.0,under,242,155,87,0,-12.84,-5.3
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Total score,,,,7.5,over,136,35,101,0,-72.21,-53.1
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Total score,,,,7.5,under,158,87,71,0,0.96,0.6
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Birdies,,,,10.0,over,429,157,272,0,-123.33,-28.7
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Birdies,,,,10.0,under,67,37,30,0,-2.19,-3.3
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Birdies,,,,12.5,over,318,103,215,0,-111.16,-35.0
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Birdies,,,,12.5,under,50,28,22,0,-0.89,-1.8
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Birdies,,,,15.0,over,255,77,178,0,-97.22,-38.1
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Birdies,,,,15.0,under,42,23,19,0,-1.74,-4.1
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Birdies,,,,17.5,over,184,48,136,0,-85.00,-46.2
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Birdies,,,,17.5,under,36,21,15,0,0.67,1.9
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Birdies,,,,20.0,over,132,24,108,0,-81.79,-62.0
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Birdies,,,,20.0,under,32,19,13,0,1.03,3.2
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Birdies,,,,5.0,over,566,215,351,0,-152.19,-26.9
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Birdies,,,,5.0,under,139,57,82,0,-36.88,-26.5
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Birdies,,,,7.5,over,504,184,320,0,-147.47,-29.3
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Birdies,,,,7.5,under,95,45,50,0,-15.15,-15.9
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Bogeys,,,,10.0,over,79,26,53,0,-26.44,-33.5
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Bogeys,,,,10.0,under,167,109,58,0,23.50,14.1
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Bogeys,,,,12.5,over,56,20,36,0,-15.78,-28.2
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Bogeys,,,,12.5,under,123,92,31,0,36.67,29.8
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Bogeys,,,,15.0,over,31,6,25,0,-19.13,-61.7
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Bogeys,,,,15.0,under,91,78,13,0,44.33,48.7
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Bogeys,,,,17.5,over,20,4,16,0,-11.72,-58.6
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Bogeys,,,,17.5,under,78,68,10,0,40.26,51.6
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Bogeys,,,,20.0,over,8,1,7,0,-5.66,-70.7
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Bogeys,,,,20.0,under,71,64,7,0,39.74,56.0
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Bogeys,,,,7.5,over,119,39,79,1,-48.03,-40.4
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Bogeys,,,,7.5,under,244,158,84,2,19.77,8.1
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Fairways hit,,,,10.0,over,75,28,47,0,-25.16,-33.5
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Fairways hit,,,,10.0,under,172,119,53,0,46.96,27.3
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Fairways hit,,,,12.5,over,66,24,42,0,-22.89,-34.7
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Fairways hit,,,,12.5,under,152,106,46,0,42.45,27.9
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Fairways hit,,,,15.0,over,57,20,37,0,-20.54,-36.0
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Fairways hit,,,,15.0,under,125,88,37,0,34.49,27.6
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Fairways hit,,,,17.5,over,41,16,25,0,-11.90,-29.0
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Fairways hit,,,,17.5,under,111,80,31,0,33.47,30.2
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Fairways hit,,,,20.0,over,35,14,21,0,-9.93,-28.4
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Fairways hit,,,,20.0,under,89,66,23,0,29.28,32.9
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Fairways hit,,,,7.5,over,100,38,58,4,-36.16,-36.2
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Fairways hit,,,,7.5,under,202,139,63,0,44.94,22.2
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),GIR,,,,10.0,over,56,14,42,0,-29.14,-52.0
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),GIR,,,,10.0,under,169,110,59,0,30.49,18.0
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),GIR,,,,12.5,over,51,12,39,0,-27.58,-54.1
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),GIR,,,,12.5,under,158,102,56,0,27.88,17.6
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),GIR,,,,15.0,over,48,12,36,0,-24.58,-51.2
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),GIR,,,,15.0,under,130,85,45,0,25.38,19.5
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),GIR,,,,17.5,over,43,9,34,0,-26.03,-60.5
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),GIR,,,,17.5,under,109,71,38,0,22.61,20.7
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),GIR,,,,20.0,over,39,9,30,0,-22.03,-56.5
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),GIR,,,,20.0,under,99,67,32,0,25.31,25.6
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),GIR,,,,7.5,over,64,18,46,0,-31.65,-49.5
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),GIR,,,,7.5,under,192,122,70,0,28.02,14.6
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Pars,,,,10.0,over,15,7,8,0,-2.59,-17.3
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Pars,,,,10.0,under,87,55,32,0,16.95,19.5
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Pars,,,,12.5,over,4,4,0,0,2.80,70.0
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Pars,,,,12.5,under,68,44,24,0,15.88,23.4
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Pars,,,,15.0,over,4,4,0,0,2.80,70.0
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Pars,,,,15.0,under,54,33,21,0,10.11,18.7
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Pars,,,,17.5,over,4,4,0,0,2.80,70.0
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Pars,,,,17.5,under,36,24,12,0,11.24,31.2
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Pars,,,,20.0,over,4,4,0,0,2.80,70.0
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Pars,,,,20.0,under,28,17,11,0,5.52,19.7
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Pars,,,,7.5,over,20,8,12,0,-5.72,-28.6
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Pars,,,,7.5,under,123,80,43,0,25.16,20.5
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Total score,,,,10.0,over,88,23,65,0,-45.33,-51.5
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Total score,,,,10.0,under,130,73,57,0,4.29,3.3
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Total score,,,,12.5,over,71,14,57,0,-45.52,-64.1
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Total score,,,,12.5,under,109,63,46,0,6.54,6.0
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Total score,,,,15.0,over,57,13,44,0,-33.22,-58.3
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Total score,,,,15.0,under,76,42,34,0,0.32,0.4
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Total score,,,,17.5,over,46,10,36,0,-27.61,-60.0
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Total score,,,,17.5,under,56,28,28,0,-5.00,-8.9
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Total score,,,,20.0,over,35,6,29,0,-23.95,-68.4
+ev_backtest_all,2026-06-16T18:28:55Z,,(all events),,,(all),(all),Total score,,,,20.0,under,46,22,24,0,-5.68,-12.3

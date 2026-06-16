@@ -1,0 +1,105 @@
+#!/usr/bin/env node
+/**
+ * Gate publish (push:live) — projections must have correct par, counting stats, and DK O/U for core markets.
+ */
+import { existsSync, readFileSync } from "fs";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
+import { normCourseNameKey } from "./course-name-key.mjs";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const WEB_ROOT = join(__dirname, "..");
+const projPath = join(WEB_ROOT, "projections.json");
+
+const DK_CORE_MARKETS = ["Total Score", "Birdies", "Pars", "Bogeys"];
+const DK_MIN_LINES_PER_MARKET = 20;
+
+function num(x, fallback = NaN) {
+  const n = Number(x);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function fail(msg) {
+  console.error(`[validate:projections] FAIL: ${msg}`);
+  process.exit(1);
+}
+
+if (!existsSync(projPath)) {
+  fail("missing projections.json");
+}
+
+let proj;
+try {
+  proj = JSON.parse(readFileSync(projPath, "utf8"));
+} catch (e) {
+  fail(`could not parse projections.json — ${e.message || e}`);
+}
+
+const players = Array.isArray(proj.players) ? proj.players : [];
+if (!players.length) fail("projections.players is empty");
+
+const holePars = proj.hole_pars;
+const parFromHoles =
+  Array.isArray(holePars) && holePars.length === 18
+    ? holePars.reduce((s, p) => s + Math.round(num(p, 4)), 0)
+    : NaN;
+const coursePar = Math.round(num(proj.course_par_18, parFromHoles));
+const parSource = String(proj.hole_pars_source || "").trim().toLowerCase();
+const courseKey = normCourseNameKey(String(proj.course_used || "").trim());
+
+if (!Number.isFinite(coursePar) || coursePar < 68 || coursePar > 73) {
+  fail(`invalid course_par_18=${proj.course_par_18}`);
+}
+
+if (parSource === "generic") {
+  fail(
+    `hole_pars_source is generic (par ${coursePar}) — add course_holes.json / live_hole_stats before publish`,
+  );
+}
+
+if (Number.isFinite(parFromHoles) && parFromHoles !== coursePar) {
+  fail(`hole_pars sum ${parFromHoles} != course_par_18 ${coursePar}`);
+}
+
+if (courseKey.includes("shinnecock") && coursePar !== 70) {
+  fail(`Shinnecock Hills must be par 70 (got ${coursePar}, source=${parSource || "?"})`);
+}
+
+const displayRound = Math.round(num(proj.display_round ?? proj.datagolf_field_current_round, NaN)) || 1;
+const roundRows = players.filter((p) => Math.round(num(p.round, NaN)) === displayRound);
+if (!roundRows.length) fail(`no player rows for display round R${displayRound}`);
+
+const missingCounts = roundRows.filter(
+  (p) => !Number.isFinite(num(p.birdies, NaN)) || !Number.isFinite(num(p.pars, NaN)),
+);
+if (missingCounts.length) {
+  fail(
+    `${missingCounts.length}/${roundRows.length} R${displayRound} rows missing birdies or pars (e.g. ${missingCounts[0]?.player_name || "?"})`,
+  );
+}
+
+const props = Array.isArray(proj.props) ? proj.props : [];
+for (const mkt of DK_CORE_MARKETS) {
+  const dkLines = props.filter(
+    (r) =>
+      String(r.source || "").trim().toLowerCase() === "draftkings" &&
+      String(r.market || "").trim() === mkt,
+  );
+  const fake = props.filter(
+    (r) =>
+      String(r.source || "").trim().toLowerCase() !== "draftkings" &&
+      String(r.market || "").trim() === mkt,
+  );
+  if (fake.length) {
+    fail(`${fake.length} non-DK ${mkt} props in projections.json — run fetch:book-odds (DK only for this market)`);
+  }
+  if (dkLines.length < DK_MIN_LINES_PER_MARKET) {
+    fail(
+      `DraftKings ${mkt}: only ${dkLines.length} lines (need ≥${DK_MIN_LINES_PER_MARKET}) — check us-open slug / Playwright scrape`,
+    );
+  }
+}
+
+console.log(
+  `[validate:projections] OK — par ${coursePar} (${parSource}), R${displayRound}: ${roundRows.length} golfers; DK lines: ${DK_CORE_MARKETS.map((m) => `${m}=${props.filter((r) => r.source === "draftkings" && r.market === m).length}`).join(", ")}`,
+);

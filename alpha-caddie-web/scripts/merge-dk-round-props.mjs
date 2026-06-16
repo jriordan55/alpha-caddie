@@ -72,6 +72,18 @@ const ALL_OU_COUNTING_MARKETS = [
   "Putts",
 ];
 
+/** Round projections tab: DraftKings only — never store model/CSV lines for these. */
+const DK_POSTED_ONLY_MARKETS = new Set([
+  "Total Score",
+  "Birdies",
+  "Pars",
+  "Bogeys",
+  "GIR",
+  "Fairways hit",
+]);
+
+const MODEL_FALLBACK_MARKETS = ALL_OU_COUNTING_MARKETS.filter((m) => !DK_POSTED_ONLY_MARKETS.has(m));
+
 const OU_MARKET_PLAYER_FIELD = {
   "Total Score": "total_score",
   Birdies: "birdies",
@@ -369,7 +381,7 @@ export async function refreshRoundProjectionProps(payload, golfModelRoot) {
   const modelRound = Math.round(num(payload.display_round ?? payload.datagolf_field_current_round, NaN)) || 1;
 
   if (!skipModelFallback) {
-    for (const mkt of ALL_OU_COUNTING_MARKETS) {
+    for (const mkt of MODEL_FALLBACK_MARKETS) {
       const fresh = withPropSource(modelFallbackOuForMarket(payload.players, mkt, modelRound), "model_fallback");
       for (const r of fresh) {
         if (dkPlayerMarketPresence.has(propPlayerMarketPresenceKey(r, mkt))) continue;
@@ -387,7 +399,7 @@ export async function refreshRoundProjectionProps(payload, golfModelRoot) {
       presence.add(propPlayerMarketPresenceKey(r, String(r.market || "").trim()));
     }
     let gapFill = 0;
-    for (const mkt of ALL_OU_COUNTING_MARKETS) {
+    for (const mkt of MODEL_FALLBACK_MARKETS) {
       for (const r of withPropSource(modelFallbackOuForMarket(payload.players, mkt, modelRound), "model_fallback")) {
         const pk = propPlayerMarketPresenceKey(r, mkt);
         if (presence.has(pk)) continue;
@@ -417,6 +429,12 @@ export async function refreshRoundProjectionProps(payload, golfModelRoot) {
       `[dk-round-props] coverage OK — ${nActive} players × ${ALL_OU_COUNTING_MARKETS.length} markets; DK posted for ${nDkPm} player×market pairs`,
     );
   }
+
+  merged = merged.filter((r) => {
+    const m = String(r.market || "").trim();
+    if (!DK_POSTED_ONLY_MARKETS.has(m)) return true;
+    return String(r.source || "").trim().toLowerCase() === "draftkings";
+  });
 
   return {
     props: merged,

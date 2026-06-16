@@ -220,9 +220,13 @@ if ($LiveWeekOnly) {
   Run-Npm "Running fetch:book-odds (matchups, outrights, DK round O/U props) ..." run fetch:book-odds
   Run-Npm 'Running fetch:finish-tool — outrights, same Scratch feed as DG Finish Position; runs after book-odds ...' run fetch:finish-tool
   Run-Npm "Merging live_hole_stats into projections (after book odds; preserves pars if book-odds ran inline fetch:dg) ..." run merge:live-hole-pars-into-projections
+  Run-Npm "Bundled course_holes.json → projections when live pars missing/wrong ..." run sync:bundled-hole-pars
   Run-Npm "Merging tournament round + prior-round course difficulty from live-in-play → projections …" run merge:live-round-meta-into-projections
+  Run-Npm "field-updates tee times (ET) → projections.json dg_teetime_local ..." run merge:field-teetimes-into-projections
+  Run-Npm "Re-apply within-event prior-round form from fresh live-in-play ..." run merge:within-event-form
   Run-Npm "Open-Meteo weather for upcoming display_round → projections.json (bake:weather) ..." run bake:weather
-  Run-Npm "Unified projection factors + historical venue score calibration ..." run apply:unified-factors
+  Run-Npm "Unified projection factors (last step before publish) ..." run apply:unified-factors
+  Run-Npm "Validate par, birdies/pars, and DK O/U prop coverage before publish ..." run validate:projections
   Run-Npm "Running update:rounds (historical CSV + Historical Trends: player_round_history / embed / shards / shots web) ..." run update:rounds
   Run-Npm "Patching current-event rounds (pgatouR + live GIR/FW into history shards) ..." run patch:current-event-history
   Run-Npm "Writing round_projection_vs_actual.csv (model projections vs actual round results) ..." run export:round-projection-vs-actual
