@@ -1,6 +1,6 @@
 /**
- * Pure market-rating helpers (mirrors alpha-caddie-web/app.js O/U market rating).
- * Used by verify-web-deploy-invariants.mjs — keep in sync with ouPlayerModelAvgForMarket + ouMarketRatingZ.
+ * Market-rating helpers (mirrors alpha-caddie-web/app.js).
+ * UI column uses field-relative z → 1–100; tour benchmarks remain for internal μ nudges.
  */
 
 export function num(v, fallback = NaN) {
@@ -25,6 +25,10 @@ function marketOpportunities(mKey) {
   if (mKey === "GIR") return 18;
   if (mKey === "Fairways hit") return 14;
   return null;
+}
+
+export function marketHigherBetter(mKey) {
+  return mKey !== "Total score" && mKey !== "Bogeys";
 }
 
 /** Model / skill fallback when historical rounds lack counting stats (GIR often null in DG CSV). */
@@ -69,6 +73,38 @@ export function marketRatingZ(market, playerAvg, benchmarks = BENCHMARK_FALLBACK
   return z;
 }
 
+export function buildFieldMarketStats(players, markets) {
+  const out = new Map();
+  const list = Array.isArray(players) ? players : [];
+  for (const market of markets) {
+    const mKey = String(market || "Total score").trim();
+    const vals = [];
+    for (const p of list) {
+      const v = playerModelAvgForMarket(mKey, p);
+      if (Number.isFinite(v)) vals.push(v);
+    }
+    if (vals.length < 2) continue;
+    const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
+    const variance = vals.reduce((a, v) => a + (v - mean) ** 2, 0) / (vals.length - 1);
+    const sd = Math.sqrt(Math.max(variance, 0));
+    out.set(mKey, { mean, sd: Math.max(sd, 1e-6), n: vals.length });
+  }
+  return out;
+}
+
+export function fieldMarketRatingZ(market, playerAvg, fieldStats) {
+  const mKey = String(market || "Total score").trim();
+  const mu = num(playerAvg, NaN);
+  const fs = fieldStats?.get?.(mKey);
+  if (!fs || !Number.isFinite(mu)) return NaN;
+  const fieldMean = num(fs.mean, NaN);
+  const fieldSd = num(fs.sd, NaN);
+  if (!Number.isFinite(fieldMean) || !Number.isFinite(fieldSd) || fieldSd <= 1e-6) return NaN;
+  let z = (mu - fieldMean) / fieldSd;
+  if (!marketHigherBetter(mKey)) z = -z;
+  return z;
+}
+
 export function zToRating100(z) {
   if (!Number.isFinite(z)) return NaN;
   const t = 1 / (1 + 0.3275911 * Math.abs(z));
@@ -83,13 +119,15 @@ export function zToRating100(z) {
   return Math.round(clamp(p * 100, 1, 100));
 }
 
+export function fieldMarketRating100ForPlayer(market, player, fieldStats) {
+  const mKey = String(market || "GIR").trim();
+  const avg = playerModelAvgForMarket(mKey, player);
+  return zToRating100(fieldMarketRatingZ(mKey, avg, fieldStats));
+}
+
+/** Tour-relative (internal μ nudges). */
 export function marketRating100ForPlayer(market, player, benchmarks, fairwayOpp = 14) {
   const mKey = String(market || "GIR").trim();
-  let avg = NaN;
-  if (mKey === "GIR" || mKey === "Fairways hit") {
-    avg = playerModelAvgForMarket(mKey, player, fairwayOpp);
-  } else {
-    avg = playerModelAvgForMarket(mKey, player, fairwayOpp);
-  }
+  const avg = playerModelAvgForMarket(mKey, player, fairwayOpp);
   return zToRating100(marketRatingZ(mKey, avg, benchmarks));
 }

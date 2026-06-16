@@ -6,7 +6,7 @@
 import { existsSync, readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
-import { marketRating100ForPlayer } from "./market-rating-player.mjs";
+import { buildFieldMarketStats, fieldMarketRating100ForPlayer } from "./market-rating-player.mjs";
 import { roundAdjustmentsFromPinSheet } from "./pin-sheet-difficulty.mjs";
 import { ensureProjectionCourseBasisComplete } from "./course-round-adjustments.mjs";
 
@@ -75,15 +75,49 @@ if (r1Players.length < 20) {
   fail(`expected ≥20 display_round R${dr} players with dg_gir_pct, got ${r1Players.length}`);
 }
 
+const fieldStats = buildFieldMarketStats(r1Players, ["Total score", "GIR"]);
+const scoreFs = fieldStats.get("Total score");
+if (!scoreFs || scoreFs.n < 20) fail("could not build field Total score stats for market rating");
+
+let bestScore = Infinity;
+let worstScore = -Infinity;
+let bestPlayer = null;
+let worstPlayer = null;
+for (const p of r1Players) {
+  const ts = Number(p.total_score);
+  if (!Number.isFinite(ts)) continue;
+  if (ts < bestScore) {
+    bestScore = ts;
+    bestPlayer = p;
+  }
+  if (ts > worstScore) {
+    worstScore = ts;
+    worstPlayer = p;
+  }
+}
+if (bestPlayer && worstPlayer) {
+  const bestR = fieldMarketRating100ForPlayer("Total score", bestPlayer, fieldStats);
+  const worstR = fieldMarketRating100ForPlayer("Total score", worstPlayer, fieldStats);
+  if (!Number.isFinite(bestR) || bestR < 55) {
+    fail(`lowest projected score (${bestPlayer.player_name}, ${bestScore}) should rate ≥55, got ${bestR}`);
+  }
+  if (!Number.isFinite(worstR) || worstR > 45) {
+    fail(`highest projected score (${worstPlayer.player_name}, ${worstScore}) should rate ≤45, got ${worstR}`);
+  }
+  if (bestR <= worstR) {
+    fail(`field market rating order wrong: best ${bestR} vs worst ${worstR}`);
+  }
+}
+
 let bad = 0;
 for (const p of r1Players.slice(0, 12)) {
-  const score = marketRating100ForPlayer("GIR", p, bench);
+  const score = fieldMarketRating100ForPlayer("GIR", p, fieldStats);
   if (!Number.isFinite(score) || score < 1 || score > 100) {
-    console.error(`  invalid GIR market rating for ${p.player_name}: ${score}`);
+    console.error(`  invalid GIR field market rating for ${p.player_name}: ${score}`);
     bad++;
   }
 }
-if (bad > 0) fail(`${bad} player(s) with invalid GIR market rating`);
+if (bad > 0) fail(`${bad} player(s) with invalid GIR field market rating`);
 
 const pinMeta = proj.pin_sheet || proj.meta?.pin_sheet;
 if (pinMeta?.summary && /\.{3}|…/.test(pinMeta.summary)) {
@@ -91,5 +125,5 @@ if (pinMeta?.summary && /\.{3}|…/.test(pinMeta.summary)) {
 }
 
 console.log(
-  `[verify:web-deploy] OK — pin copy clean, GIR market rating for ${Math.min(12, r1Players.length)} sample players, course round score ${venueRoundScore}, app.js cache bust present`,
+  `[verify:web-deploy] OK — pin copy clean, field GIR market rating for ${Math.min(12, r1Players.length)} sample players, Total score spread best/worst validated, course round score ${venueRoundScore}, app.js cache bust present`,
 );
