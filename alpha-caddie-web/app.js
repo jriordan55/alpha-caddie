@@ -4711,6 +4711,14 @@ function ouMarketKeyFromStatKey(statKey) {
   if (statKey === "gir") return "GIR";
   if (statKey === "fairways") return "Fairways hit";
   if (statKey === "putts") return "Putts";
+  if (statKey === "sg_total") return "SG: Total";
+  if (statKey === "sg_ott") return "SG: Off the tee";
+  if (statKey === "sg_app") return "SG: Approach";
+  if (statKey === "sg_arg") return "SG: Around the green";
+  if (statKey === "sg_putt") return "SG: Putting";
+  if (statKey === "sg_t2g") return "SG: Tee to green";
+  if (statKey === "gir_pct") return "GIR %";
+  if (statKey === "fairways_pct") return "Fairways %";
   return "Total score";
 }
 
@@ -14927,7 +14935,7 @@ function defaultLineForCourseWindow(statKey, entries) {
   const vals = entries.map((e) => chartActualForCourseWindowEntry(statKey, e)).filter((x) => Number.isFinite(x));
   if (vals.length) {
     const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
-    return clampPropLineForMarket(statKey, snapPropLineToDotFive(mean));
+    return clampPropLineForMarket(statKey, snapPropLineForMarket(statKey, mean));
   }
   return clampPropLineForMarket(statKey, defaultPropLineForStat(statKey));
 }
@@ -15149,9 +15157,31 @@ function refreshPropsFilterOptionsForGolfer(dgId) {
   refreshPropsYearFilterOptions(dgId);
 }
 
-/** Birdies / pars / GIR / fairways: higher is better. Round score / bogeys / putts: higher is worse. */
+const PROPS_SG_STAT_KEYS = Object.freeze(["sg_total", "sg_ott", "sg_app", "sg_arg", "sg_putt", "sg_t2g"]);
+const PROPS_PCT_STAT_KEYS = Object.freeze(["gir_pct", "fairways_pct"]);
+
+function propsStatIsSg(statKey) {
+  return PROPS_SG_STAT_KEYS.includes(statKey);
+}
+
+function propsStatIsPct(statKey) {
+  return PROPS_PCT_STAT_KEYS.includes(statKey);
+}
+
+function propsStatUsesTenthLineStep(statKey) {
+  return propsStatIsSg(statKey) || propsStatIsPct(statKey);
+}
+
+/** Birdies / pars / GIR / fairways / SG / %: higher is better. Round score / bogeys / putts: higher is worse. */
 function propsMarketHigherIsBetter(statKey) {
-  return statKey === "birdies" || statKey === "pars" || statKey === "gir" || statKey === "fairways";
+  return (
+    statKey === "birdies" ||
+    statKey === "pars" ||
+    statKey === "gir" ||
+    statKey === "fairways" ||
+    propsStatIsSg(statKey) ||
+    propsStatIsPct(statKey)
+  );
 }
 
 /** Round score / bogeys / putts: lower actual is better for O/U coloring (over line = red). */
@@ -15184,15 +15214,17 @@ function sortPropsFieldByCourseSeriesChart(statKey, series) {
  */
 function historyRoundIsPlaceholderAllMarketsZero(row) {
   if (!row || typeof row !== "object") return true;
+  const t = num(row.round_score, NaN);
+  const hasRealTotal = Number.isFinite(t) && t > 0;
+  if (hasRealTotal && Number.isFinite(num(row.sg_total, NaN))) return false;
   const b = num(row.birdies, 0);
   const p = num(row.pars, 0);
   const bg = num(row.bogies ?? row.bogeys, 0);
   const g = num(row.gir, 0);
   const f = num(row.fairways, 0);
   const pt = num(row.putts, 0);
-  const t = num(row.round_score, NaN);
   const countsAllZero = b === 0 && p === 0 && bg === 0 && g === 0 && f === 0 && pt === 0;
-  const noRealTotal = !Number.isFinite(t) || t <= 0;
+  const noRealTotal = !hasRealTotal;
   return countsAllZero && noRealTotal;
 }
 
@@ -15952,6 +15984,32 @@ function actualForRoundRow(statKey, row) {
     }
     return v === 0 || v === 1 ? NaN : v;
   }
+  if (propsStatIsSg(statKey)) {
+    return historyScalarOrNaN(row[statKey]);
+  }
+  if (statKey === "gir_pct") {
+    const enriched = enrichHistoryRowFromLiveActuals(row);
+    const scrubbed = scrubLivePlaceholderCountingOnRow(enriched);
+    let count = historyGirOrFairwaysCount(scrubbed.gir, 18);
+    if (!Number.isFinite(count) || count === 0 || count === 1) {
+      const liveV = liveRoundActualStatForDgRound(row.dg_id, row.round_num ?? row.round, "gir");
+      if (Number.isFinite(liveV) && liveV > 1) count = liveV;
+    }
+    if (!Number.isFinite(count) || count === 0 || count === 1) return NaN;
+    return (count / 18) * 100;
+  }
+  if (statKey === "fairways_pct") {
+    const nFw = fairwayHolesModeledFromData();
+    if (!Number.isFinite(nFw) || nFw <= 0) return NaN;
+    const enriched = enrichHistoryRowFromLiveActuals(row);
+    let count = historyGirOrFairwaysCount(enriched.fairways, nFw);
+    if (!Number.isFinite(count) || count === 0 || count === 1) {
+      const liveV = liveRoundActualStatForDgRound(row.dg_id, row.round_num ?? row.round, "fairways");
+      if (Number.isFinite(liveV) && liveV > 1) count = liveV;
+    }
+    if (!Number.isFinite(count) || count === 0 || count === 1) return NaN;
+    return (count / nFw) * 100;
+  }
   return NaN;
 }
 
@@ -15962,21 +16020,42 @@ function snapPropLineToDotFive(x) {
   return Math.round(v - 0.5) + 0.5;
 }
 
-function formatPropLineValueForInput(line) {
-  const s = snapPropLineToDotFive(line);
+function snapPropLineForMarket(statKey, line) {
+  const v = num(line, NaN);
+  if (!Number.isFinite(v)) return NaN;
+  if (propsStatUsesTenthLineStep(statKey)) return Math.round(v * 10) / 10;
+  return snapPropLineToDotFive(v);
+}
+
+function formatPropLineValueForInput(line, statKeyOpt) {
+  const sk = statKeyOpt || statKeyFromPropSelect();
+  const s = snapPropLineForMarket(sk, line);
   if (!Number.isFinite(s)) return "";
+  return s.toFixed(1);
+}
+
+function formatPropsTrendLineLabel(statKey, line) {
+  const s = snapPropLineForMarket(statKey, line);
+  if (!Number.isFinite(s)) return "—";
+  if (propsStatIsPct(statKey)) return `${s.toFixed(1)}%`;
+  if (propsStatIsSg(statKey)) return s >= 0 ? `+${s.toFixed(1)}` : s.toFixed(1);
   return s.toFixed(1);
 }
 
 function formatPropLineChartLabel(statKey, line) {
   const s = clampPropLineForMarket(statKey, line);
   if (!Number.isFinite(s)) return "";
+  if (propsStatIsPct(statKey)) return `${s.toFixed(1)}%`;
+  if (propsStatIsSg(statKey)) return s >= 0 ? `+${s.toFixed(1)}` : s.toFixed(1);
   return s.toFixed(1);
 }
 
 function clampPropLineForMarket(statKey, line) {
-  const s = snapPropLineToDotFive(line);
+  const s = snapPropLineForMarket(statKey, line);
   if (!Number.isFinite(s)) return NaN;
+  if (propsStatIsSg(statKey)) return clamp(s, -6, 6);
+  if (statKey === "gir_pct") return clamp(s, 15, 95);
+  if (statKey === "fairways_pct") return clamp(s, 15, 95);
   if (statKey === "total") return clamp(s, 50.5, 99.5);
   if (statKey === "gir") return clamp(s, 4.5, 16.5);
   if (statKey === "fairways") {
@@ -16014,6 +16093,20 @@ function defaultPropLineForStat(statKey) {
       return enforceHalfLine(num(b.venue_avg_putts, NaN));
     }
   }
+  if (propsStatIsSg(statKey)) return 0;
+  if (statKey === "gir_pct") {
+    const avgGir = num(b?.venue_avg_gir, NaN);
+    if (Number.isFinite(avgGir)) return snapPropLineForMarket(statKey, (avgGir / 18) * 100);
+    return 65;
+  }
+  if (statKey === "fairways_pct") {
+    const avgFw = num(b?.venue_avg_fairways, NaN);
+    const nFw = fairwayHolesModeledFromData();
+    if (Number.isFinite(avgFw) && Number.isFinite(nFw) && nFw > 0) {
+      return snapPropLineForMarket(statKey, (avgFw / nFw) * 100);
+    }
+    return 58;
+  }
   if (statKey === "total") return 70.5;
   if (statKey === "gir") return 11.5;
   if (statKey === "fairways") return 8.5;
@@ -16030,6 +16123,14 @@ function propMarketLabelFromKey(statKey) {
   if (statKey === "gir") return "GIR";
   if (statKey === "fairways") return "Fairways hit";
   if (statKey === "putts") return "Putts";
+  if (statKey === "sg_total") return "SG: Total";
+  if (statKey === "sg_ott") return "SG: Off the tee";
+  if (statKey === "sg_app") return "SG: Approach";
+  if (statKey === "sg_arg") return "SG: Around the green";
+  if (statKey === "sg_putt") return "SG: Putting";
+  if (statKey === "sg_t2g") return "SG: Tee to green";
+  if (statKey === "gir_pct") return "GIR %";
+  if (statKey === "fairways_pct") return "Fairways %";
   return String(statKey || "");
 }
 
@@ -16184,7 +16285,7 @@ function paintPropsTopHitsHeadUi(statKey, line) {
   if (mk) mk.textContent = propMarketLabelFromKey(statKey);
   const ln = document.getElementById("props-top-hits-line-text");
   if (ln) {
-    ln.textContent = Number.isFinite(line) ? `Line ${formatPropLineValueForInput(line)}` : "Line —";
+    ln.textContent = Number.isFinite(line) ? `Line ${formatPropsTrendLineLabel(statKey, line)}` : "Line —";
   }
   const toggle = document.getElementById("props-top-hits-emoji-toggle");
   if (toggle) {
@@ -16451,7 +16552,8 @@ function roundsMatchingCurrentCourseOnlyFieldAllTime() {
 
 function formatPropsTrendKpiValue(statKey, v) {
   if (!Number.isFinite(v)) return "—";
-  void statKey;
+  if (propsStatIsPct(statKey)) return `${v.toFixed(1)}%`;
+  if (propsStatIsSg(statKey)) return v >= 0 ? `+${v.toFixed(2)}` : v.toFixed(2);
   if (Math.abs(v - Math.round(v)) < 1e-9) return String(Math.round(v));
   return v.toFixed(1);
 }
@@ -16566,7 +16668,7 @@ function paintPropsTrendBookRows(playerRow, statKey, lineHint, hitSt) {
 
   if (!fd && !dk && Number.isFinite(lineHint)) {
     const lowerBetter = propsStatLowerIsBetter(statKey);
-    const lineTxt = formatPropLineValueForInput(lineHint);
+    const lineTxt = formatPropsTrendLineLabel(statKey, lineHint);
     const market = propMarketLabelFromKey(statKey);
     const underPct =
       hitSt && hitSt.valid > 0 && Number.isFinite(hitSt.underRate) ? Math.round(hitSt.underRate * 100) : NaN;
@@ -17153,7 +17255,20 @@ function ensurePropsChartTooltipNodes(tip) {
 
 function propsChartFormatValue(statKey, v) {
   if (!Number.isFinite(v)) return "—";
-  return String(Math.round(v));
+  if (propsStatIsPct(statKey)) return `${v.toFixed(1)}%`;
+  if (propsStatIsSg(statKey)) return v >= 0 ? `+${v.toFixed(2)}` : v.toFixed(2);
+  if (
+    statKey === "total" ||
+    statKey === "birdies" ||
+    statKey === "pars" ||
+    statKey === "bogeys" ||
+    statKey === "gir" ||
+    statKey === "fairways" ||
+    statKey === "putts"
+  ) {
+    return String(Math.round(v));
+  }
+  return v.toFixed(1);
 }
 
 /**
@@ -17349,6 +17464,18 @@ function propsChartYDomain(vals, lineY, statKey, avgY) {
       minV = Math.floor(mid - 1.5);
       maxV = Math.ceil(mid + 1.5);
     }
+  } else if (propsStatIsSg(statKey) || propsStatIsPct(statKey)) {
+    const minSpan = propsStatIsPct(statKey) ? 20 : 3;
+    const yPad = Math.max(0.35, Math.min(1.5, baseRange * 0.12));
+    minV -= yPad;
+    maxV += yPad;
+    if (maxV - minV < minSpan) {
+      const mid = (minV + maxV) / 2;
+      minV = mid - minSpan / 2;
+      maxV = mid + minSpan / 2;
+    }
+    if (propsStatIsPct(statKey)) minV = Math.max(0, minV);
+    if (propsStatIsSg(statKey) && minV > 0 && dataMin >= 0) minV = Math.max(0, minV);
   } else {
     const minSpan = 6;
     const yPad = Math.max(0.75, Math.min(2, baseRange * 0.12));
@@ -17379,6 +17506,11 @@ function propsChartTickLabel(statKey, v) {
     statKey === "gir" ||
     statKey === "fairways" ||
     statKey === "putts";
+  if (propsStatIsPct(statKey)) return `${Math.round(v)}%`;
+  if (propsStatIsSg(statKey)) {
+    const s = Math.abs(v - Math.round(v)) < 0.05 ? String(Math.round(v)) : v.toFixed(1);
+    return v > 0 ? `+${s}` : s;
+  }
   if (intLike) return String(Math.round(v));
   return Math.abs(v - Math.round(v)) < 0.05 ? String(Math.round(v)) : String(Number(v.toFixed(1)));
 }
@@ -17802,7 +17934,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   const entriesRaw = collectCourseWindowRoundEntriesFixed(courseBucket);
   const entriesAll = applyPropsWindowTailToCourseEntries(entriesRaw, statKey, winN);
   propsCourseWindowLastEntries = entriesAll;
-  let line = clampPropLineForMarket(statKey, snapPropLineToDotFive(lineInp?.value));
+  let line = clampPropLineForMarket(statKey, snapPropLineForMarket(statKey, lineInp?.value));
   if (lineEditing && !Number.isFinite(line) && Number.isFinite(propsTrendLastGoodLine)) {
     line = propsTrendLastGoodLine;
   }
@@ -17906,7 +18038,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
 function propsAutoTrendLineForContext(dg, statKey, playerRow) {
   const poolMean = propsTrendMeanActual(statKey, filteredHistoryRounds(dg));
   if (Number.isFinite(poolMean)) {
-    return clampPropLineForMarket(statKey, snapPropLineToDotFive(poolMean));
+    return clampPropLineForMarket(statKey, snapPropLineForMarket(statKey, poolMean));
   }
   const rproj = projectionRowForPlayerRound(playerRow?.player_name, getOuRound());
   const fallbackRaw =
@@ -17923,7 +18055,7 @@ function propsAutoTrendLineForContext(dg, statKey, playerRow) {
               return Number.isFinite(c) ? c : defaultPropLineForStat(statKey);
             })()
           : num(rproj?.[statKey === "fairways" ? "fairways" : statKey], defaultPropLineForStat(statKey));
-  let line = clampPropLineForMarket(statKey, snapPropLineToDotFive(fallbackRaw));
+  let line = clampPropLineForMarket(statKey, snapPropLineForMarket(statKey, fallbackRaw));
   if (!Number.isFinite(line)) line = clampPropLineForMarket(statKey, defaultPropLineForStat(statKey));
   return line;
 }
@@ -18001,7 +18133,7 @@ function renderPropsTrends() {
     const lineInpEarly = document.getElementById("prop-line");
     const ctxKeyEarly = propsTrendLineContextKeyFromDom();
     const lineEditingEarly = Boolean(lineInpEarly && document.activeElement === lineInpEarly);
-    let lineEarly = clampPropLineForMarket(statKey, snapPropLineToDotFive(lineInpEarly?.value));
+    let lineEarly = clampPropLineForMarket(statKey, snapPropLineForMarket(statKey, lineInpEarly?.value));
     if (lineEditingEarly && !Number.isFinite(lineEarly) && Number.isFinite(propsTrendLastGoodLine)) {
       lineEarly = propsTrendLastGoodLine;
     }
@@ -18041,7 +18173,7 @@ function renderPropsTrends() {
   const lineInp = document.getElementById("prop-line");
   const ctxKey = propsTrendLineContextKeyFromDom();
   const lineEditing = Boolean(lineInp && document.activeElement === lineInp);
-  let line = clampPropLineForMarket(statKey, snapPropLineToDotFive(lineInp?.value));
+  let line = clampPropLineForMarket(statKey, snapPropLineForMarket(statKey, lineInp?.value));
   if (lineEditing && !Number.isFinite(line) && Number.isFinite(propsTrendLastGoodLine)) {
     line = propsTrendLastGoodLine;
   }
@@ -19894,7 +20026,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function syncPropLineInputFromValue(el) {
     if (!el) return;
     const sk = statKeyFromPropSelect();
-    const v = clampPropLineForMarket(sk, snapPropLineToDotFive(el.value));
+    const v = clampPropLineForMarket(sk, snapPropLineForMarket(sk, el.value));
     if (Number.isFinite(v)) el.value = formatPropLineValueForInput(v);
   }
   document.getElementById("prop-line")?.addEventListener("change", (e) => {
@@ -19925,7 +20057,21 @@ document.addEventListener("DOMContentLoaded", () => {
   function syncPropsLineStep() {
     const lineEl = document.getElementById("prop-line");
     if (!lineEl) return;
-    lineEl.step = "0.5";
+    const sk = statKeyFromPropSelect();
+    if (propsStatUsesTenthLineStep(sk)) {
+      lineEl.step = "0.1";
+      if (propsStatIsSg(sk)) {
+        lineEl.min = "-6";
+        lineEl.max = "6";
+      } else {
+        lineEl.min = "0";
+        lineEl.max = "100";
+      }
+    } else {
+      lineEl.step = "0.5";
+      lineEl.min = "0";
+      lineEl.removeAttribute("max");
+    }
   }
   function bumpPropsWindowN(delta) {
     const el = document.getElementById("props-window-n");
@@ -19972,9 +20118,10 @@ document.addEventListener("DOMContentLoaded", () => {
       syncPropsLineStep();
       const lineInp = document.getElementById("prop-line");
       const sk = statKeyFromPropSelect();
-      const cur = clampPropLineForMarket(sk, snapPropLineToDotFive(lineInp?.value));
+      const cur = clampPropLineForMarket(sk, snapPropLineForMarket(sk, lineInp?.value));
       const base = Number.isFinite(cur) ? cur : defaultPropLineForStat(sk);
-      const v = clampPropLineForMarket(sk, btn.id === "props-line-minus" ? base - 1 : base + 1);
+      const step = propsStatUsesTenthLineStep(sk) ? 0.1 : statKey === "total" ? 1 : 1;
+      const v = clampPropLineForMarket(sk, btn.id === "props-line-minus" ? base - step : base + step);
       if (lineInp) lineInp.value = formatPropLineValueForInput(v);
       lockPropsTrendLineContextToCurrentFilter();
       renderPropsTrendsNow();

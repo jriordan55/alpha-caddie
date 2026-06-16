@@ -425,12 +425,28 @@
           </div>
           <label class="props-sidebar-label">Market
             <select id="prop-stat">
-              <option value="total">Round score</option>
-              <option value="birdies">Birdies</option>
-              <option value="pars">Pars</option>
-              <option value="bogeys">Bogeys</option>
-              <option value="gir">GIR</option>
-              <option value="fairways">Fairways hit</option>
+              <optgroup label="Scoring">
+                <option value="total">Round score</option>
+                <option value="birdies">Birdies</option>
+                <option value="pars">Pars</option>
+                <option value="bogeys">Bogeys</option>
+              </optgroup>
+              <optgroup label="Strokes gained">
+                <option value="sg_total">SG: Total</option>
+                <option value="sg_t2g">SG: Tee to green</option>
+                <option value="sg_ott">SG: Off the tee</option>
+                <option value="sg_app">SG: Approach</option>
+                <option value="sg_arg">SG: Around the green</option>
+                <option value="sg_putt">SG: Putting</option>
+              </optgroup>
+              <optgroup label="Percentages">
+                <option value="gir_pct">GIR %</option>
+                <option value="fairways_pct">Fairways %</option>
+              </optgroup>
+              <optgroup label="Counts">
+                <option value="gir">GIR (count)</option>
+                <option value="fairways">Fairways hit (count)</option>
+              </optgroup>
             </select>
           </label>
           <label class="props-sidebar-label props-current-course-option" for="props-filter-current-course">
@@ -1185,6 +1201,8 @@
           <dd>Limit to one course by name.</dd>
           <dt>Weather filters</dt>
           <dd>Optional temp, wind, and humidity bands.</dd>
+          <dt>Market</dt>
+          <dd>Round score, counting stats, strokes gained (total, tee-to-green, OTT, approach, ARG, putting), GIR %, fairways %, or raw GIR/fairway counts. SG and % markets use 0.1 line steps; no sportsbook lines are posted for SG.</dd>
           <dt>Rounds / line</dt>
           <dd>How many recent rounds to chart and which O/U line to test.</dd>
         </dl>
@@ -1384,6 +1402,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=246"></script>
+  <script src="app.js?v=247"></script>
 </body>
 </html>
