@@ -1020,6 +1020,7 @@ function loadLiveRoundSnapshotByDg() {
           current_score: rnd === pr && Number.isFinite(currentScore) ? currentScore : null,
           today: rnd === pr && Number.isFinite(today) ? today : null,
           _from_live_in_play: true,
+          ...teetimeFieldsFromFieldUpdates(fu, dg, rnd),
         });
       }
     } else {
@@ -1062,11 +1063,40 @@ function loadLiveRoundSnapshotByDg() {
         current_score: Number.isFinite(currentScore) ? currentScore : null,
         today: Number.isFinite(today) ? today : null,
         _from_live_in_play: true,
+        ...teetimeFieldsFromFieldUpdates(fu, dg, roundNum),
       });
     }
   }
 
   return out.length ? out : null;
+}
+
+function teetimeFieldsFromFieldUpdates(fu, dgId, roundNum) {
+  const flist = fu?.field ?? fu?.field_updates ?? fu?.players ?? fu?.data;
+  if (!Array.isArray(flist)) return {};
+  const id = Math.round(num(dgId, NaN));
+  const rn = Math.round(num(roundNum, NaN));
+  if (!Number.isFinite(id) || !Number.isFinite(rn)) return {};
+  const fp = flist.find((p) => Math.round(num(p?.dg_id ?? p?.dgId, NaN)) === id);
+  const slots = Array.isArray(fp?.teetimes) ? fp.teetimes : [];
+  const slot = slots.find((t) => Math.round(num(t?.round_num ?? t?.round, NaN)) === rn);
+  const tee = String(slot?.teetime ?? "").trim();
+  if (!tee) return {};
+  const out = { teetime: tee };
+  const wave = String(slot?.wave ?? "").trim();
+  if (wave) out.dg_tee_wave = wave;
+  return out;
+}
+
+function preserveHistoryTeetime(existing, out) {
+  if (!existing || !out) return out;
+  if (!String(out.teetime ?? "").trim() && String(existing.teetime ?? "").trim()) {
+    out.teetime = String(existing.teetime).trim();
+  }
+  if (!String(out.dg_tee_wave ?? "").trim() && String(existing.dg_tee_wave ?? "").trim()) {
+    out.dg_tee_wave = String(existing.dg_tee_wave).trim();
+  }
+  return out;
 }
 
 const LIVE_HISTORY_COUNTING_KEYS = ["birdies", "pars", "bogies", "bogeys", "gir", "fairways", "putts"];
@@ -1091,7 +1121,7 @@ function historyRowHasStoredCountingStat(row, key) {
 
 /** Live preds rows carry gross score only — never overwrite CSV GIR/FW/putts with projection formulas. */
 function mergeLiveInPlayOntoHistoryRound(existing, liveRec) {
-  const out = { ...existing, ...liveRec };
+  const out = preserveHistoryTeetime(existing, { ...existing, ...liveRec });
   if (!liveRec?._from_live_in_play) return out;
   for (const k of LIVE_HISTORY_COUNTING_KEYS) {
     if (historyRowHasStoredCountingStat(existing, k)) out[k] = existing[k];
@@ -1175,12 +1205,12 @@ function enrichCurrentEventRowsWithLiveAndShots(rows, liveRows, shotsAgg) {
 /** preds/live-tournament-stats during the live week — prefer CSV counting columns when already present. */
 function mergeLiveTournamentStatsOntoHistoryRound(existing, liveRec) {
   if (liveRec?._from_pgatour) {
-    const out = {
+    const out = preserveHistoryTeetime(existing, {
       ...existing,
       ...liveRec,
       _from_pgatour: true,
       _from_live_tournament_stats: true,
-    };
+    });
     for (const k of [...LIVE_HISTORY_COUNTING_KEYS, ...LIVE_HISTORY_SG_KEYS]) {
       if (Number.isFinite(num(liveRec[k], NaN))) out[k] = liveRec[k];
       else if (Number.isFinite(num(existing[k], NaN))) out[k] = existing[k];
@@ -1189,7 +1219,7 @@ function mergeLiveTournamentStatsOntoHistoryRound(existing, liveRec) {
   }
   const cleaned = sanitizeLiveCountingFields({ ...liveRec });
   const prev = sanitizeLivePlaceholderCountingOnRow(existing);
-  const out = { ...existing, ...cleaned };
+  const out = preserveHistoryTeetime(prev, { ...existing, ...cleaned });
   for (const k of LIVE_HISTORY_COUNTING_KEYS) {
     if (historyRowHasStoredCountingStat(prev, k) && historyLiveCountingTrusted(prev)) out[k] = prev[k];
     else if (Number.isFinite(num(cleaned[k], NaN))) out[k] = cleaned[k];

@@ -38,6 +38,8 @@
     "fetch:dk-ou": "node scripts/draftkings-ou-props.mjs",
     "refresh:pgatour-event": "node scripts/run-refresh-pgatour-event-rounds.mjs",
     "patch:current-event-history": "node scripts/patch-current-event-history-shards.mjs",
+    "patch:history-teetimes": "node scripts/patch-history-teetimes-from-csv.mjs",
+    "backfill:history-teetimes": "node scripts/backfill-historical-teetimes.mjs",
     "merge:recent-rounds": "node scripts/merge-recent-historical-rounds.mjs",
     "rebuild:current-event-history": "node scripts/rebuild-current-event-history-shards.mjs",
     "update:rounds": "node scripts/run-update-historical-rounds.mjs",

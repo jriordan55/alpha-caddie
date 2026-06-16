@@ -442,6 +442,8 @@ let propsChartTipNodes = null;
 let propsCourseWindowDateFallbackIso = "";
 /** Debounced Historical Trends refresh (full-field scans are heavy with full history loaded). */
 let propsTrendsRenderDebounceT = 0;
+/** User manually edited Rounds stepper — skip auto-default until filters reset. */
+let propsWindowNUserOverride = false;
 /** Cached field-wide rounds at current venue (`historyMutationEpoch` + venue invalidates). */
 let propsFieldVenueRoundsCacheSig = "";
 /** @type {{ season: object[], all: object[] }} */
@@ -13271,7 +13273,90 @@ function selectedPropsYearFilter() {
 }
 
 function propsYearFilterActive() {
+  if (propsFilterDraftKingsOnlyOn() && propsCourseWindowModeOn()) return false;
   return Number.isFinite(selectedPropsYearFilter());
+}
+
+function applyPropsWindowTailToRows(rows, statKey, winN, opts = {}) {
+  const wn = clamp(
+    Math.round(num(winN, PROPS_HISTORY_ROUND_DEFAULT)),
+    PROPS_HISTORY_ROUND_MIN,
+    PROPS_HISTORY_ROUND_MAX,
+  );
+  const list = Array.isArray(rows) ? rows : [];
+  const mode = selectedPropsTailMode();
+  if (mode === "recent") {
+    const sorted = [...list].sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
+    return sorted.slice(0, wn).sort((a, b) => historyRoundChronoKey(a) - historyRoundChronoKey(b));
+  }
+  const lowerBetter = propsStatLowerIsBetter(statKey);
+  const scored = [];
+  for (const r of list) {
+    const a = opts.courseWindow
+      ? chartActualForCourseWindowEntry(statKey, { row: r })
+      : actualForRoundRow(statKey, r);
+    if (Number.isFinite(a)) scored.push({ r, a });
+  }
+  if (mode === "best") scored.sort((a, b) => (lowerBetter ? a.a - b.a : b.a - a.a));
+  else scored.sort((a, b) => (lowerBetter ? b.a - a.a : a.a - b.a));
+  return scored
+    .slice(0, wn)
+    .map((x) => x.r)
+    .sort((a, b) => historyRoundChronoKey(a) - historyRoundChronoKey(b));
+}
+
+function applyPropsWindowTailToCourseEntries(entries, statKey, winN) {
+  const byDg = new Map();
+  for (const e of entries || []) {
+    const id = Math.round(num(e?.dgId, NaN));
+    if (!Number.isFinite(id)) continue;
+    if (!byDg.has(id)) byDg.set(id, []);
+    byDg.get(id).push(e);
+  }
+  const out = [];
+  for (const list of byDg.values()) {
+    const rows = list.map((e) => e.row);
+    const picked = new Set(applyPropsWindowTailToRows(rows, statKey, winN, { courseWindow: true }));
+    for (const e of list) {
+      if (picked.has(e.row)) out.push(e);
+    }
+  }
+  out.sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
+  return out;
+}
+
+function propsSuggestedWindowN() {
+  if (propsCourseWindowModeActive()) {
+    const raw = collectCourseWindowRoundEntriesFixed();
+    if (!raw.length) {
+      const cap = currentTournamentProgressRoundCap();
+      if (Number.isFinite(cap) && cap >= 1) return Math.round(cap);
+      const sel = selectedPropsRoundNumsFilter();
+      if (sel.length && sel.length < 4) return sel.length;
+      return PROPS_HISTORY_ROUND_DEFAULT;
+    }
+    const byDg = new Map();
+    for (const e of raw) {
+      const id = Math.round(num(e?.dgId, NaN));
+      if (!Number.isFinite(id)) continue;
+      byDg.set(id, (byDg.get(id) || 0) + 1);
+    }
+    const counts = [...byDg.values()];
+    if (!counts.length) return PROPS_HISTORY_ROUND_DEFAULT;
+    return Math.max(1, Math.min(Math.max(...counts), PROPS_HISTORY_ROUND_MAX));
+  }
+  const dg = selectedDgId();
+  if (!Number.isFinite(dg)) return PROPS_HISTORY_ROUND_DEFAULT;
+  const n = filteredHistoryRounds(dg).length;
+  return n > 0 ? Math.min(n, PROPS_HISTORY_ROUND_DEFAULT) : PROPS_HISTORY_ROUND_DEFAULT;
+}
+
+function syncPropsWindowNDefault(force = false) {
+  if (propsWindowNUserOverride && !force) return;
+  const el = document.getElementById("props-window-n");
+  if (!el) return;
+  const suggested = propsSuggestedWindowN();
+  el.value = String(suggested);
 }
 
 function filterHistoryRoundsByYear(list) {
@@ -13785,7 +13870,7 @@ function propsCourseWindowModeActive() {
   return Boolean(fromRaw || toRaw);
 }
 
-/** Field-by-course chart: only players with a DraftKings O/U line for the selected stat. */
+/** Field-by-course: limit to round projections tab field (DraftKings Available Players). */
 function propsFilterDraftKingsOnlyOn() {
   return Boolean(document.getElementById("props-filter-draftkings-only")?.checked);
 }
@@ -13838,13 +13923,13 @@ function filterCourseWindowEntriesForDraftKings(entries, statKey) {
   return (entries || []).filter((e) => propsTrendPlayerHasDraftKingsLine(e.dgId, e.playerName, statKey));
 }
 
-/** Round projections / O/U grid field for the toolbar round (same pool as the O/U table). */
+/** Round projections tab field (same sort as Model O/U projection grid). */
 function roundProjectionPlayersForOuRound() {
   const r = Math.round(getOuRound());
-  let rows = ouSortedPlayerRows("Total score", r);
+  let rows = ouSortedPlayerRowsProjection(r);
   if (!rows.length) {
     const alt = Math.round(effectiveUiModelRoundFromMeta());
-    if (Number.isFinite(alt) && alt !== r) rows = ouSortedPlayerRows("Total score", alt);
+    if (Number.isFinite(alt) && alt !== r) rows = ouSortedPlayerRowsProjection(alt);
   }
   return rows;
 }
@@ -13941,7 +14026,6 @@ function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey) {
   );
   const byDg = propsTrendIndexCourseEntriesByDg(bucket, courseKey, fieldDgIds);
   const cap = currentTournamentProgressRoundCap();
-  const eventYear = currentEventSeasonYearFromMeta();
 
   const raw = [];
   const seen = new Set();
@@ -13950,11 +14034,13 @@ function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey) {
     if (!Number.isFinite(dgId)) continue;
     const playerName = resolveGolferDisplayNameForDg(dgId, p.player_name, nameByDg);
     const histAll = (byDg.get(dgId) || []).filter((e) => {
-      if (!historyRoundMatchesCurrentEvent(e.row)) return false;
-      if (Number.isFinite(eventYear) && historyRoundSeasonYear(e.row) !== eventYear) return false;
       if (!historyRoundCountsAsActual(e.row)) return false;
       const rnd = Math.round(num(e.row?.round_num, NaN));
       if (Number.isFinite(cap) && Number.isFinite(rnd) && rnd > cap) return false;
+      if (propsRoundNumFilterActive()) {
+        const sel = new Set(selectedPropsRoundNumsFilter());
+        if (!sel.has(rnd)) return false;
+      }
       return true;
     });
     histAll.sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
@@ -13962,8 +14048,7 @@ function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey) {
     for (const pick of histAll) {
       const rnd = Math.round(num(pick.row?.round_num, NaN));
       if (!Number.isFinite(rnd)) continue;
-      if (!propsTrendPlayerHasDraftKingsLineForRound(dgId, playerName, statKey, rnd)) continue;
-      const dedupe = `${dgId}|${rnd}`;
+      const dedupe = `${dgId}|${rnd}|${historyRoundChronoKey(pick.row)}`;
       if (seen.has(dedupe)) continue;
       seen.add(dedupe);
 
@@ -13978,7 +14063,7 @@ function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey) {
         String(DATA?.meta?.datagolf_field_date_start || "").match(/^(\d{4}-\d{2}-\d{2})/)?.[0] || "",
         rnd,
       );
-      if (playIso) row.chart_session_iso = playIso;
+      if (playIso && historyRoundMatchesCurrentEvent(row)) row.chart_session_iso = playIso;
 
       if (bounds.ok && !historyRoundInCourseDateWindow(row, fromMs, toMs)) continue;
 
@@ -14131,14 +14216,17 @@ function collectCourseWindowRoundEntriesFixed(bucketOpt) {
   return out;
 }
 
-function propsCourseWindowEntriesForChart(winN) {
+function propsCourseWindowEntriesForChart(winN, statKeyOpt) {
+  const statKey = statKeyOpt || statKeyFromPropSelect();
   const list = collectCourseWindowRoundEntriesFixed();
-  if (propsCourseWindowModeActive()) return list;
   const wn = clamp(
     Math.round(num(winN, PROPS_HISTORY_ROUND_DEFAULT)),
     PROPS_HISTORY_ROUND_MIN,
     PROPS_HISTORY_ROUND_MAX,
   );
+  if (propsCourseWindowModeActive()) {
+    return applyPropsWindowTailToCourseEntries(list, statKey, wn);
+  }
   if (list.length > wn) return list.slice(-wn);
   return list;
 }
@@ -14177,8 +14265,8 @@ function propsFullHitStatsFromRoundList(statKey, line, rounds, opts = {}) {
 }
 
 function propsCourseWindowFieldHitStats(statKey, line, winN) {
-  const rounds = propsCourseWindowEntriesForChart(winN).map((e) => e.row);
-  return propsFullHitStatsFromRoundList(statKey, line, rounds);
+  const rounds = propsCourseWindowEntriesForChart(winN, statKey).map((e) => e.row);
+  return propsFullHitStatsFromRoundList(statKey, line, rounds, { courseWindow: true });
 }
 
 function refreshPropsCourseFilterOptionsAllPlayers() {
@@ -16074,7 +16162,11 @@ function renderPropsHitRateAndTopTable(statKey, line, winN, courseWindowEntriesO
   let courseWindowRoundsByDg = /** @type {Map<number, object[]> | null} */ (null);
   if (propsCourseWindowModeActive()) {
     courseWindowRoundsByDg = new Map();
-    const list = courseWindowEntriesOpt || collectCourseWindowRoundEntriesFixed();
+    const list = applyPropsWindowTailToCourseEntries(
+      courseWindowEntriesOpt || collectCourseWindowRoundEntriesFixed(),
+      statKey,
+      wn,
+    );
     for (const e of list) {
       const id = e.dgId;
       if (!courseWindowRoundsByDg.has(id)) courseWindowRoundsByDg.set(id, []);
@@ -16964,6 +17056,7 @@ function renderPropsTrendsCourseWindow() {
   refreshPropsCourseFilterOptionsAllPlayers();
   ensurePropsCourseWindowDateDefaultsFromMeta();
   propsEnsureDkTournamentDateRange();
+  syncPropsWindowNDefault();
   void loadPropsCoursesManifest();
 
   const courseKey = propsEffectiveCourseKey();
@@ -17022,9 +17115,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
       ? " · course data file missing on server (rebuild history)"
       : "";
     const dkNote = propsFilterDraftKingsOnlyOn()
-      ? draftKingsTournamentPropsAvailable()
-        ? " · DK lines · dates in range below"
-        : " · no DraftKings props loaded"
+      ? " · round projections field"
       : "";
     const fallbackNote = propsCourseWindowDateFallbackIso
       ? ` · showing ${formatPropsCourseSessionDateLabel(propsCourseWindowDateFallbackIso)} (nearest session)`
@@ -17036,6 +17127,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
         : `${mkt} · projections missing course_used — cannot scope field view`;
   }
   const nWinEl = document.getElementById("props-window-n");
+  syncPropsWindowNDefault();
   const winN = clamp(
     Math.round(num(nWinEl?.value, PROPS_HISTORY_ROUND_DEFAULT)),
     PROPS_HISTORY_ROUND_MIN,
@@ -17100,7 +17192,8 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   const ctxKey = propsTrendLineContextKeyFromDom();
   const lineEditing = Boolean(lineInp && document.activeElement === lineInp);
   const dkOnly = propsFilterDraftKingsOnlyOn();
-  const entriesAll = collectCourseWindowRoundEntriesFixed(courseBucket);
+  const entriesRaw = collectCourseWindowRoundEntriesFixed(courseBucket);
+  const entriesAll = applyPropsWindowTailToCourseEntries(entriesRaw, statKey, winN);
   propsCourseWindowLastEntries = entriesAll;
   let line = clampPropLineForMarket(statKey, snapPropLineToDotFive(lineInp?.value));
   if (lineEditing && !Number.isFinite(line) && Number.isFinite(propsTrendLastGoodLine)) {
@@ -17241,6 +17334,7 @@ function renderPropsTrends() {
     renderPropsTrendsCourseWindow();
     return;
   }
+  syncPropsWindowNDefault();
   syncPropsCourseWindowUiState();
   const dg = selectedDgId();
   const empty = document.getElementById("props-chart-empty");
@@ -19137,7 +19231,14 @@ document.addEventListener("DOMContentLoaded", () => {
   propsIds.forEach((id) => {
     const el = document.getElementById(id);
     if (!el) return;
-    el.addEventListener("change", () => scheduleRenderPropsTrends());
+    el.addEventListener("change", () => {
+      if (id === "props-window-n") propsWindowNUserOverride = true;
+      else {
+        propsWindowNUserOverride = false;
+        syncPropsWindowNDefault(true);
+      }
+      scheduleRenderPropsTrends();
+    });
     if (
       id === "props-filter-current-course" ||
       id === "props-filter-temp-min" ||
@@ -19149,7 +19250,16 @@ document.addEventListener("DOMContentLoaded", () => {
       id === "props-filter-date-from" ||
       id === "props-filter-date-to"
     ) {
-      el.addEventListener("input", () => scheduleRenderPropsTrends());
+      el.addEventListener("input", () => {
+        propsWindowNUserOverride = false;
+        syncPropsWindowNDefault(true);
+        scheduleRenderPropsTrends();
+      });
+    }
+    if (id === "props-window-n") {
+      el.addEventListener("input", () => {
+        propsWindowNUserOverride = true;
+      });
     }
   });
   document.getElementById("props-filter-course-window")?.addEventListener("change", () => {
@@ -19158,7 +19268,13 @@ document.addEventListener("DOMContentLoaded", () => {
     renderPropsTrendsNow();
   });
   document.getElementById("props-filter-draftkings-only")?.addEventListener("change", () => {
-    if (propsCourseWindowModeOn() && propsFilterDraftKingsOnlyOn()) propsEnsureDkTournamentDateRange();
+    if (propsCourseWindowModeOn() && propsFilterDraftKingsOnlyOn()) {
+      const yearSel = document.getElementById("props-filter-year");
+      if (yearSel) yearSel.value = "";
+      propsEnsureDkTournamentDateRange();
+    }
+    propsWindowNUserOverride = false;
+    syncPropsWindowNDefault(true);
     courseWindowRoundEntriesCache = null;
     courseWindowRoundEntriesCacheSig = "";
     renderPropsTrendsNow();
@@ -19206,6 +19322,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function bumpPropsWindowN(delta) {
     const el = document.getElementById("props-window-n");
     if (!el) return;
+    propsWindowNUserOverride = true;
     let v = Math.round(num(el.value, PROPS_HISTORY_ROUND_DEFAULT));
     if (!Number.isFinite(v)) v = PROPS_HISTORY_ROUND_DEFAULT;
     v = clamp(v + delta, PROPS_HISTORY_ROUND_MIN, PROPS_HISTORY_ROUND_MAX);

@@ -2651,14 +2651,6 @@ th.matchup-analysis-best-pick {
   min-width: min(100%, 180px);
   margin: 0;
 }
-.props-trends-year-filter {
-  flex: 0 1 160px;
-  min-width: min(100%, 140px);
-  margin: 0;
-}
-.props-trends-year-filter select {
-  width: 100%;
-}
 
 .props-shell .props-trends-header {
   border: none;

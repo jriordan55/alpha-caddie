@@ -243,6 +243,15 @@ function roundPuttsFromPayload(r) {
   return "";
 }
 
+function roundTeetimeFromPayload(r) {
+  if (!r || typeof r !== "object") return "";
+  for (const k of ["teetime", "tee_time", "TeeTime", "teeTime"]) {
+    const v = String(r[k] ?? "").trim();
+    if (v) return v;
+  }
+  return "";
+}
+
 function roundToRow(r, roundNum, evInfo, dgId, playerName, finText) {
   const scoreVal = r.score ?? r.round_score ?? r.Score;
   if (scoreVal == null || scoreVal === "") return null;
@@ -267,7 +276,7 @@ function roundToRow(r, roundNum, evInfo, dgId, playerName, finText) {
     course_num: r.course_num ?? "",
     course_par: r.course_par ?? "",
     start_hole: r.start_hole ?? "",
-    teetime: String(r.teetime ?? ""),
+    teetime: roundTeetimeFromPayload(r),
     round_score: Math.round(Number(scoreVal)),
     sg_putt: r.sg_putt ?? "",
     sg_arg: r.sg_arg ?? "",
@@ -462,6 +471,16 @@ function rowKey(r) {
   ].join("|");
 }
 
+function mergeRowPreserveSparse(existing, fresh) {
+  const out = { ...existing, ...fresh };
+  for (const k of ["teetime", "start_hole", "course_num", "putts"]) {
+    const ev = String(existing[k] ?? "").trim();
+    const fv = String(fresh[k] ?? "").trim();
+    if (ev && !fv) out[k] = existing[k];
+  }
+  return out;
+}
+
 /**
  * Lossless merge for one tour/year slice:
  * - start from existing rows
@@ -471,7 +490,11 @@ function rowKey(r) {
 function mergeSlicePreserveExisting(existingSlice, freshSlice) {
   const byKey = new Map();
   for (const r of existingSlice) byKey.set(rowKey(r), r);
-  for (const r of freshSlice) byKey.set(rowKey(r), r);
+  for (const r of freshSlice) {
+    const k = rowKey(r);
+    const prev = byKey.get(k);
+    byKey.set(k, prev ? mergeRowPreserveSparse(prev, r) : r);
+  }
   return [...byKey.values()];
 }
 

@@ -13,7 +13,7 @@
     onload="this.media='all'"
   />
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" /></noscript>
-  <link rel="stylesheet" href="styles.css?v=12" />
+  <link rel="stylesheet" href="styles.css?v=13" />
 </head>
 <body>
   <header class="app-nav">
@@ -245,11 +245,6 @@
             </div>
           </div>
         </div>
-        <label class="props-sidebar-label props-trends-year-filter">Year
-          <select id="props-filter-year" title="Limit chart to one calendar year">
-            <option value="">All years</option>
-          </select>
-        </label>
       </div>
       <div class="props-trends-header" id="props-trends-header">
         <h2 class="ev-devig-sr-only">Historical Trends</h2>
@@ -395,6 +390,11 @@
                 <option value="recent">Most recent</option>
                 <option value="best">Best</option>
                 <option value="worst">Worst</option>
+              </select>
+            </label>
+            <label class="toolbar-label">Year
+              <select id="props-filter-year" title="Limit to one calendar year">
+                <option value="">All years</option>
               </select>
             </label>
             <label class="toolbar-label">Course
@@ -1384,6 +1384,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=238"></script>
+  <script src="app.js?v=239"></script>
 </body>
 </html>
