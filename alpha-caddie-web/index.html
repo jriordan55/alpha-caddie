@@ -8,18 +8,22 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap"
     media="print"
     onload="this.media='all'"
   />
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" /></noscript>
-  <link rel="stylesheet" href="styles.css?v=8" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" /></noscript>
+  <link rel="stylesheet" href="styles.css?v=9" />
 </head>
 <body>
   <header class="app-nav">
     <div class="nav-inner">
       <div class="nav-brand">
-        <span class="nav-title">AlphaCaddie</span>
+        <span class="nav-logo" aria-hidden="true"></span>
+        <div class="nav-brand-text">
+          <span class="nav-title">AlphaCaddie</span>
+          <span class="nav-subtitle">Professional golf betting analytics</span>
+        </div>
       </div>
     </div>
   </header>
@@ -35,7 +39,7 @@
     </nav>
 
     <p id="data-status-primary" class="data-status-primary note" aria-live="polite"></p>
-    <p id="file-protocol-banner" class="note text-warn" hidden style="background:#2a1f18;border:1px solid #a65;border-radius:8px;padding:12px 14px;">
+    <p id="file-protocol-banner" class="note text-warn file-protocol-banner" hidden>
       <strong>Opened as a local file (<code>file://</code>).</strong> Browsers block loading <code>projections.json</code> from disk, so the app uses <strong>bundled demo data</strong> only.
       To use live DataGolf output: in this folder run <code>npm run fetch:dg</code> then <code>npm start</code> and open <code>http://localhost:5173</code> (not the file path).
     </p>

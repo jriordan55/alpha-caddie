@@ -1,23 +1,24 @@
 :root {
   color-scheme: dark;
-  --bg: #050608;
-  --surface: #111216;
-  --surface-alt: #161820;
-  --border: #2b2e36;
-  --text: #f5f7fb;
-  --muted: #8b8f9c;
-  --green: #00c46b;
-  --red: #ff4d4f;
-  --amber: #f5a623;
-  --focus: rgba(0, 196, 107, 0.45);
+  --bg: #090b10;
+  --surface: #131720;
+  --surface-alt: #1a2030;
+  --border: rgba(255, 255, 255, 0.08);
+  --text: #f1f5f9;
+  --muted: #94a3b8;
+  --green: #10b981;
+  --red: #f87171;
+  --amber: #fbbf24;
+  --focus: rgba(16, 185, 129, 0.45);
 }
 
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
-  font-family: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg);
+  font-family: "Inter", "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg);
+  background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.08), transparent);
   color: var(--text);
   min-height: 100vh;
 }
@@ -27,7 +28,8 @@ a { color: var(--green); }
 .app-header {
   padding: 16px 24px;
   border-bottom: 1px solid var(--border);
-  background: linear-gradient(180deg, #0d0e12 0%, var(--bg) 100%);
+  background: rgba(9, 11, 16, 0.82);
+  backdrop-filter: blur(16px);
 }
 
 .header-inner {

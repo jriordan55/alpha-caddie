@@ -9,7 +9,7 @@
   "datagolf_field_current_round": 1,
   "display_round": 1,
   "display_round_label": "R1 — next Thursday (auto, America/New_York)",
-  "updated_at": "2026-06-16T00:11:18Z",
+  "updated_at": "2026-06-16T01:07:31Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -50729,14 +50729,14 @@
   "matchups": {
     "tournament_matchups": {
       "event_name": "U.S. Open",
-      "last_updated": "2026-06-15 21:31:00 UTC",
+      "last_updated": "2026-06-16 00:49:00 UTC",
       "market": "tournament_matchups",
       "match_list": [
         {
           "odds": {
             "bet365": {
-              "p1": 2.15,
-              "p2": 1.72464,
+              "p1": 2.2,
+              "p2": 1.6993,
               "tie": 17
             },
             "datagolf": {
@@ -50754,8 +50754,8 @@
         {
           "odds": {
             "bet365": {
-              "p1": 1.90909,
-              "p2": 1.90909,
+              "p1": 2,
+              "p2": 1.83333,
               "tie": 17
             },
             "datagolf": {
@@ -50792,8 +50792,8 @@
         {
           "odds": {
             "bet365": {
-              "p1": 2.05,
-              "p2": 1.8,
+              "p1": 2,
+              "p2": 1.83333,
               "tie": 17
             },
             "datagolf": {
@@ -50902,8 +50902,8 @@
         {
           "odds": {
             "bet365": {
-              "p1": 1.83333,
-              "p2": 2,
+              "p1": 1.8,
+              "p2": 2.05,
               "tie": 17
             },
             "datagolf": {
@@ -50940,8 +50940,8 @@
         {
           "odds": {
             "bet365": {
-              "p1": 1.6993,
-              "p2": 2.2,
+              "p1": 1.66667,
+              "p2": 2.25,
               "tie": 17
             },
             "datagolf": {
@@ -51013,6 +51013,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 2.6,
+              "p2": 1.49261
+            },
             "betonline": {
               "p1": 2.55,
               "p2": 1.53191
@@ -51089,6 +51093,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.76336,
+              "p2": 2.01
+            },
             "betonline": {
               "p1": 1.90909,
               "p2": 1.90909
@@ -51178,6 +51186,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.48077,
+              "p2": 2.63
+            },
             "betonline": {
               "p1": 1.46948,
               "p2": 2.75
@@ -51195,6 +51207,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.88496,
+              "p2": 1.8547
+            },
             "betmgm": {
               "p1": 1.85,
               "p2": 1.95
@@ -51216,6 +51232,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.80645,
+              "p2": 1.9434
+            },
             "betmgm": {
               "p1": 1.95,
               "p2": 1.85
@@ -51237,6 +51257,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.87719,
+              "p2": 1.86207
+            },
             "betonline": {
               "p1": 1.95238,
               "p2": 1.86957
@@ -51254,6 +51278,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.83333,
+              "p2": 1.90909
+            },
             "betonline": {
               "p1": 1.90909,
               "p2": 1.90909
@@ -51271,6 +51299,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.87719,
+              "p2": 1.86207
+            },
             "betonline": {
               "p1": 2.06,
               "p2": 1.7874
@@ -51288,6 +51320,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.91743,
+              "p2": 1.82645
+            },
             "betonline": {
               "p1": 2.06,
               "p2": 1.7874
@@ -51305,6 +51341,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.64516,
+              "p2": 2.24
+            },
             "betonline": {
               "p1": 1.72464,
               "p2": 2.15
@@ -51322,6 +51362,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.67568,
+              "p2": 2.18
+            },
             "betonline": {
               "p1": 1.72464,
               "p2": 2.15
@@ -51339,6 +51383,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.84034,
+              "p2": 1.9009
+            },
             "betonline": {
               "p1": 1.90909,
               "p2": 1.90909
@@ -51356,6 +51404,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.92593,
+              "p2": 1.81967
+            },
             "betonline": {
               "p1": 2.05,
               "p2": 1.8
@@ -51373,6 +51425,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.69444,
+              "p2": 2.14
+            },
             "betonline": {
               "p1": 1.8,
               "p2": 2.05
@@ -51390,6 +51446,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 2.21,
+              "p2": 1.65789
+            },
             "betonline": {
               "p1": 2.12,
               "p2": 1.74627
@@ -51407,6 +51467,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.95238,
+              "p2": 1.8
+            },
             "betonline": {
               "p1": 2,
               "p2": 1.83333
@@ -51458,6 +51522,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.74074,
+              "p2": 2.05
+            },
             "betonline": {
               "p1": 1.83333,
               "p2": 2
@@ -51492,6 +51560,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.9901,
+              "p2": 1.77519
+            },
             "betonline": {
               "p1": 2.05,
               "p2": 1.8
@@ -51509,6 +51581,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.84746,
+              "p2": 1.89286
+            },
             "betonline": {
               "p1": 1.90909,
               "p2": 1.90909
@@ -51526,6 +51602,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.92593,
+              "p2": 1.81967
+            },
             "betonline": {
               "p1": 2,
               "p2": 1.83333
@@ -51543,6 +51623,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 2.09,
+              "p2": 1.71942
+            },
             "betonline": {
               "p1": 1.86957,
               "p2": 1.95238
@@ -51560,6 +51644,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 2.01,
+              "p2": 1.76336
+            },
             "betonline": {
               "p1": 1.95238,
               "p2": 1.86957
@@ -51577,6 +51665,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.86207,
+              "p2": 1.87719
+            },
             "betonline": {
               "p1": 1.86957,
               "p2": 1.95238
@@ -51594,6 +51686,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.6993,
+              "p2": 2.13
+            },
             "betonline": {
               "p1": 1.62893,
               "p2": 2.32
@@ -51611,6 +51707,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 2.25,
+              "p2": 1.63694
+            },
             "betonline": {
               "p1": 2.12,
               "p2": 1.74627
@@ -51628,6 +51728,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.9434,
+              "p2": 1.80645
+            },
             "betonline": {
               "p1": 2.05,
               "p2": 1.8
@@ -51645,6 +51749,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.79365,
+              "p2": 1.96154
+            },
             "betonline": {
               "p1": 1.83333,
               "p2": 2
@@ -51662,6 +51770,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.69444,
+              "p2": 2.14
+            },
             "betonline": {
               "p1": 1.77519,
               "p2": 2.08
@@ -51679,6 +51791,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.9009,
+              "p2": 1.84034
+            },
             "betonline": {
               "p1": 1.95238,
               "p2": 1.86957
@@ -51696,6 +51812,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.96154,
+              "p2": 1.79365
+            },
             "betonline": {
               "p1": 2.12,
               "p2": 1.74627
@@ -51713,6 +51833,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 2.11,
+              "p2": 1.70922
+            },
             "betonline": {
               "p1": 1.95238,
               "p2": 1.86957
@@ -51730,6 +51854,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 2.01,
+              "p2": 1.76336
+            },
             "betonline": {
               "p1": 1.90909,
               "p2": 1.90909
@@ -51747,6 +51875,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 2.12,
+              "p2": 1.70423
+            },
             "betonline": {
               "p1": 2,
               "p2": 1.83333
@@ -51764,6 +51896,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.83333,
+              "p2": 1.90909
+            },
             "betonline": {
               "p1": 2,
               "p2": 1.83333
@@ -51781,6 +51917,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.80645,
+              "p2": 1.9434
+            },
             "betonline": {
               "p1": 1.86957,
               "p2": 1.95238
@@ -51798,6 +51938,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.92593,
+              "p2": 1.81967
+            },
             "betonline": {
               "p1": 1.90909,
               "p2": 1.90909
@@ -51832,6 +51976,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.81967,
+              "p2": 1.92593
+            },
             "betonline": {
               "p1": 1.86957,
               "p2": 1.95238
@@ -51849,6 +51997,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.75188,
+              "p2": 2.03
+            },
             "betonline": {
               "p1": 1.90909,
               "p2": 1.90909
@@ -51866,6 +52018,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.81967,
+              "p2": 1.92593
+            },
             "betonline": {
               "p1": 1.90909,
               "p2": 1.90909
@@ -51900,6 +52056,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.83333,
+              "p2": 1.90909
+            },
             "betonline": {
               "p1": 2,
               "p2": 1.83333
@@ -51917,6 +52077,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.88496,
+              "p2": 1.8547
+            },
             "betonline": {
               "p1": 1.90909,
               "p2": 1.90909
@@ -51934,6 +52098,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 2.12,
+              "p2": 1.6993
+            },
             "betonline": {
               "p1": 2.25,
               "p2": 1.66667
@@ -51951,6 +52119,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.9901,
+              "p2": 1.77519
+            },
             "betonline": {
               "p1": 1.90909,
               "p2": 1.90909
@@ -51968,6 +52140,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.95238,
+              "p2": 1.8
+            },
             "betonline": {
               "p1": 1.95238,
               "p2": 1.86957
@@ -51985,6 +52161,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.84034,
+              "p2": 1.9009
+            },
             "betonline": {
               "p1": 1.86957,
               "p2": 1.95238
@@ -52002,6 +52182,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.76336,
+              "p2": 2.01
+            },
             "betonline": {
               "p1": 1.86957,
               "p2": 1.95238
@@ -52019,6 +52203,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 2.23,
+              "p2": 1.64935
+            },
             "betonline": {
               "p1": 2.15,
               "p2": 1.72464
@@ -52036,6 +52224,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.7874,
+              "p2": 1.97087
+            },
             "betonline": {
               "p1": 1.90909,
               "p2": 1.90909
@@ -52053,6 +52245,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 2.1,
+              "p2": 1.71429
+            },
             "betonline": {
               "p1": 2.08,
               "p2": 1.77519
@@ -52070,6 +52266,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.80645,
+              "p2": 1.9434
+            },
             "betonline": {
               "p1": 1.90909,
               "p2": 1.90909
@@ -52122,23 +52322,6 @@
         {
           "odds": {
             "caesars": {
-              "p1": 1.90909,
-              "p2": 1.83333
-            },
-            "datagolf": {
-              "p1": 1.907656089392884,
-              "p2": 2.1017388763059843
-            }
-          },
-          "p1_dg_id": 14139,
-          "p1_player_name": "Thomas, Justin",
-          "p2_dg_id": 23604,
-          "p2_player_name": "Clark, Wyndham",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "caesars": {
               "p1": 1.8,
               "p2": 1.95238
             },
@@ -52177,40 +52360,6 @@
         {
           "odds": {
             "caesars": {
-              "p1": 1.74074,
-              "p2": 2.05
-            },
-            "datagolf": {
-              "p1": 1.9035044177504221,
-              "p2": 2.1068014503900674
-            }
-          },
-          "p1_dg_id": 14578,
-          "p1_player_name": "Henley, Russell",
-          "p2_dg_id": 19483,
-          "p2_player_name": "Burns, Sam",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "caesars": {
-              "p1": 1.86957,
-              "p2": 1.86957
-            },
-            "datagolf": {
-              "p1": 2.0084206848357793,
-              "p2": 1.9916496309899174
-            }
-          },
-          "p1_dg_id": 17646,
-          "p1_player_name": "Fitzpatrick, Matt",
-          "p2_dg_id": 19195,
-          "p2_player_name": "Rahm, Jon",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "caesars": {
               "p1": 1.95238,
               "p2": 1.8
             },
@@ -52223,23 +52372,6 @@
           "p1_player_name": "Hatton, Tyrrell",
           "p2_dg_id": 22085,
           "p2_player_name": "Morikawa, Collin",
-          "ties": "void"
-        },
-        {
-          "odds": {
-            "caesars": {
-              "p1": 2.27,
-              "p2": 1.60606
-            },
-            "datagolf": {
-              "p1": 2.5935219389134163,
-              "p2": 1.6275407796907244
-            }
-          },
-          "p1_dg_id": 6093,
-          "p1_player_name": "Rose, Justin",
-          "p2_dg_id": 14609,
-          "p2_player_name": "Kim, Si Woo",
           "ties": "void"
         },
         {
@@ -52274,6 +52406,74 @@
           "p1_player_name": "Reed, Patrick",
           "p2_dg_id": 17536,
           "p2_player_name": "Spaun, J.J.",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "caesars": {
+              "p1": 1.90909,
+              "p2": 1.83333
+            },
+            "datagolf": {
+              "p1": 1.907656089392884,
+              "p2": 2.1017388763059843
+            }
+          },
+          "p1_dg_id": 14139,
+          "p1_player_name": "Thomas, Justin",
+          "p2_dg_id": 23604,
+          "p2_player_name": "Clark, Wyndham",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "caesars": {
+              "p1": 1.74074,
+              "p2": 2.05
+            },
+            "datagolf": {
+              "p1": 1.9035044177504221,
+              "p2": 2.1068014503900674
+            }
+          },
+          "p1_dg_id": 14578,
+          "p1_player_name": "Henley, Russell",
+          "p2_dg_id": 19483,
+          "p2_player_name": "Burns, Sam",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "caesars": {
+              "p1": 1.95238,
+              "p2": 1.8
+            },
+            "datagolf": {
+              "p1": 2.0084206848357793,
+              "p2": 1.9916496309899174
+            }
+          },
+          "p1_dg_id": 17646,
+          "p1_player_name": "Fitzpatrick, Matt",
+          "p2_dg_id": 19195,
+          "p2_player_name": "Rahm, Jon",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "caesars": {
+              "p1": 2.27,
+              "p2": 1.60606
+            },
+            "datagolf": {
+              "p1": 2.5935219389134163,
+              "p2": 1.6275407796907244
+            }
+          },
+          "p1_dg_id": 6093,
+          "p1_player_name": "Rose, Justin",
+          "p2_dg_id": 14609,
+          "p2_player_name": "Kim, Si Woo",
           "ties": "void"
         },
         {
@@ -52331,18 +52531,18 @@
     },
     "round_matchups": {
       "event_name": "U.S. Open",
-      "last_updated": "2026-06-15 21:31:00 UTC",
+      "last_updated": "2026-06-16 00:49:00 UTC",
       "market": "round_matchups",
       "match_list": "No round_matchups being offered right now."
     },
     "3_balls": {
       "event_name": "U.S. Open",
-      "last_updated": "2026-06-15 21:31:00 UTC",
+      "last_updated": "2026-06-16 00:49:00 UTC",
       "market": "3_balls",
       "match_list": "No 3_balls being offered right now."
     }
   },
-  "book_odds_refreshed_at": "2026-06-16T00:11:18Z",
+  "book_odds_refreshed_at": "2026-06-16T01:07:31Z",
   "live_round_actuals_by_dg": {
     "5513": {
       "1": {
@@ -62642,7 +62842,7 @@
     }
   },
   "datagolf_live_current_round": 1,
-  "dg_teetimes_merged_at": "2026-06-16T00:11:25Z",
+  "dg_teetimes_merged_at": "2026-06-16T01:07:39Z",
   "forecast_weather_tee_times_merged": 0,
   "forecast_weather_status": "no_course_coords",
   "forecast_wave_slots": {
