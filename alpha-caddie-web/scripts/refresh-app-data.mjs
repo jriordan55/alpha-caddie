@@ -149,6 +149,10 @@ run(
   "bake-weather-into-projections.mjs",
   "Open-Meteo tee-time weather → projections.json for display_round (bake:weather)",
 );
+run(
+  "apply-unified-projection-factors.mjs",
+  "Unified projection factors (course fit, tee wave, bounce-back, Sunday pressure, correlated markets)",
+);
 
 const skipHistory = String(process.env.GOLF_REFRESH_APP_SKIP_HISTORY || "").trim() === "1";
 if (skipHistory) {

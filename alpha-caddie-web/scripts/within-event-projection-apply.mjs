@@ -27,6 +27,7 @@ import {
   reconcileAllProjectionPlayerRows,
   updateProjectionBasisFromEventWeek,
 } from "./course-round-adjustments.mjs";
+import { applyUnifiedProjectionFactors } from "./projection-unified-factors.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -287,6 +288,13 @@ async function main() {
     console.log("[within-event-form] no R2+ rows updated (no within-event counting actuals yet)");
     process.exit(0);
   }
+
+  await applyUnifiedProjectionFactors(proj, { liveBundle: live, skipReconcile: true });
+  const dkField = draftKingsDgIdsFromProjections(proj);
+  reconcileAllProjectionPlayerRows(proj, {
+    dgFilter: dkField.size >= 8 ? dkField : null,
+    minField: 8,
+  });
 
   writeFileSync(projPath, JSON.stringify(proj, null, 2), "utf8");
   const fm = fieldMeans?.bogeys?.[1];

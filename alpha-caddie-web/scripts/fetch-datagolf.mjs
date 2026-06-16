@@ -87,6 +87,7 @@ import {
   resolveProjectionScoreToPar,
   updateProjectionBasisFromEventWeek,
 } from "./course-round-adjustments.mjs";
+import { applyUnifiedProjectionFactors } from "./projection-unified-factors.mjs";
 import { holeParsFromLiveHoleStatsPayload } from "./dg-live-hole-pars.mjs";
 import { normCourseNameKey, formatCourseLabelForDisplay } from "./course-name-key.mjs";
 import {
@@ -2695,6 +2696,20 @@ async function main() {
     payload.projection_course_basis || {},
     payload,
   );
+  let liveBundleForUnified = null;
+  const liveInPlayPath = join(dirname(fileURLToPath(import.meta.url)), "..", "live-in-play.json");
+  if (existsSync(liveInPlayPath)) {
+    try {
+      liveBundleForUnified = JSON.parse(readFileSync(liveInPlayPath, "utf8"));
+    } catch {
+      /* optional */
+    }
+  }
+  await applyUnifiedProjectionFactors(payload, {
+    csvPath: histCsvPath,
+    liveBundle: liveBundleForUnified,
+    skipReconcile: true,
+  });
   const calResult = reconcileAllProjectionPlayerRows(payload, {
     dgFilter: dkFieldCal.size >= 8 ? dkFieldCal : null,
     minField: 8,
