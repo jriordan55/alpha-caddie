@@ -9,7 +9,7 @@
   "datagolf_field_current_round": 1,
   "display_round": 1,
   "display_round_label": "R1 — next Thursday (auto, America/New_York)",
-  "updated_at": "2026-06-16T04:43:56Z",
+  "updated_at": "2026-06-16T05:08:04Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -63723,7 +63723,7 @@
       "match_list": "No 3_balls being offered right now."
     }
   },
-  "book_odds_refreshed_at": "2026-06-16T04:43:56Z",
+  "book_odds_refreshed_at": "2026-06-16T05:08:04Z",
   "live_round_actuals_by_dg": {
     "5513": {
       "1": {
@@ -74023,11 +74023,11 @@
     }
   },
   "datagolf_live_current_round": 1,
-  "dg_teetimes_merged_at": "2026-06-16T04:44:08Z",
+  "dg_teetimes_merged_at": "2026-06-16T05:08:16Z",
   "forecast_weather_tee_times_merged": 0,
   "forecast_weather_display_round": 1,
   "forecast_weather_status": "no_tee_match",
-  "forecast_weather_updated_at": "2026-06-16T04:44:10Z",
+  "forecast_weather_updated_at": "2026-06-16T05:08:17Z",
   "forecast_weather_coords": {
     "lat": 40.8847,
     "lon": -72.4651,
@@ -74050,5 +74050,5 @@
   "forecast_wave_summary": "Morning tees: 70.2°F · 37.4 mph · 90% · windy.\nAfternoon tees: 78.1°F · 32.9 mph · 66% · windy.",
   "projection_counts_weather_baked": true,
   "projection_counts_weather_baked_round": 1,
-  "projection_counts_weather_baked_at": "2026-06-16T04:44:10Z"
+  "projection_counts_weather_baked_at": "2026-06-16T05:08:17Z"
 }

@@ -444,6 +444,10 @@ let propsCourseWindowDateFallbackIso = "";
 let propsTrendsRenderDebounceT = 0;
 /** User manually edited Rounds stepper — skip auto-default until filters reset. */
 let propsWindowNUserOverride = false;
+/** Open-Meteo archive weather keyed event_id|year|round_num (lazy-loaded for Historical Trends filters). */
+let propsRoundWeatherByKey = null;
+let propsRoundWeatherLoadPromise = null;
+let propsRoundWeatherLoadedOnce = false;
 /** Cached field-wide rounds at current venue (`historyMutationEpoch` + venue invalidates). */
 let propsFieldVenueRoundsCacheSig = "";
 /** @type {{ season: object[], all: object[] }} */
@@ -13380,11 +13384,13 @@ function propsSidebarFiltersContextKey() {
     selectedPropsRoundNumsFilter().join(","),
     Number.isFinite(selectedPropsYearFilter()) ? String(selectedPropsYearFilter()) : "all",
     selectedPropsTailMode(),
+    propsRoundWeatherByKey?.size ?? 0,
   ].join("|");
 }
 
-function applyPropsSidebarFiltersToRounds(list) {
-  let out = filterHistoryRoundsByTempRange(list);
+function applyPropsSidebarFiltersToRounds(list, dgIdOpt) {
+  let out = enrichHistoryRoundsForTrendsFilters(list, dgIdOpt);
+  out = filterHistoryRoundsByTempRange(out);
   out = filterHistoryRoundsByWindRange(out);
   out = filterHistoryRoundsByHumidityRange(out);
   out = filterHistoryRoundsByWeatherConditions(out);
@@ -13392,6 +13398,127 @@ function applyPropsSidebarFiltersToRounds(list) {
   out = filterHistoryRoundsByRoundNum(out);
   out = filterHistoryRoundsByYear(out);
   return out;
+}
+
+function historyRoundWeatherLookupKey(row) {
+  const eid = Math.round(num(row?.event_id, NaN));
+  const yr = historyRoundSeasonYear(row);
+  const rnd = Math.round(num(row?.round_num, NaN));
+  if (!Number.isFinite(eid) || !Number.isFinite(yr) || !Number.isFinite(rnd)) return "";
+  return `${eid}|${yr}|${rnd}`;
+}
+
+function fieldUpdatesTeetimeForDgRound(dgId, roundNum) {
+  const fu = lastLiveInPlayBundleForHistory?.field_updates;
+  if (!fu || typeof fu !== "object") return null;
+  const flist = fu.field ?? fu.field_updates ?? fu.players ?? fu.data;
+  if (!Array.isArray(flist)) return null;
+  const id = Math.round(num(dgId, NaN));
+  const rnd = Math.round(num(roundNum, NaN));
+  if (!Number.isFinite(id) || !Number.isFinite(rnd)) return null;
+  const fp = flist.find((p) => Math.round(num(p?.dg_id ?? p?.dgId, NaN)) === id);
+  const slots = Array.isArray(fp?.teetimes) ? fp.teetimes : [];
+  const slot = slots.find((t) => Math.round(num(t?.round_num ?? t?.round, NaN)) === rnd);
+  if (!slot?.teetime || !String(slot.teetime).trim()) return null;
+  return {
+    teetime: String(slot.teetime).trim(),
+    wave: String(slot.wave || "").trim(),
+  };
+}
+
+function enrichHistoryRowForTrendsFilters(row, dgIdOpt) {
+  if (!row || typeof row !== "object") return row;
+  const out = { ...row };
+  const dg = Math.round(num(dgIdOpt ?? row?.dg_id, NaN));
+  const rnd = Math.round(num(out.round_num, NaN));
+
+  if (!Number.isFinite(parseWeatherNumber(out.weather_temp_f))) {
+    const wKey = historyRoundWeatherLookupKey(out);
+    const snap = propsRoundWeatherByKey?.get?.(wKey);
+    if (snap) {
+      if (Number.isFinite(num(snap.tempF, NaN))) out.weather_temp_f = snap.tempF;
+      if (Number.isFinite(num(snap.windMph, NaN))) out.weather_wind_mph = snap.windMph;
+      if (Number.isFinite(num(snap.humidityPct, NaN))) out.weather_humidity = snap.humidityPct;
+      if (snap.condition) out.weather_condition = String(snap.condition).toLowerCase();
+      out.weather_source = "open_meteo_archive";
+    }
+  }
+
+  if (!Number.isFinite(parseWeatherNumber(out.weather_temp_f)) && Number.isFinite(dg) && Number.isFinite(rnd)) {
+    const p =
+      projectionPlayerRowForModel(dg, rnd) ||
+      DATA.players?.find((pl) => Math.round(num(pl.dg_id, NaN)) === dg && samePlayerRound(pl, rnd));
+    if (p) {
+      if (Number.isFinite(num(p.weather_temp_f, NaN))) out.weather_temp_f = p.weather_temp_f;
+      if (Number.isFinite(num(p.weather_wind_mph, NaN))) out.weather_wind_mph = p.weather_wind_mph;
+      if (Number.isFinite(num(p.weather_humidity, NaN))) out.weather_humidity = p.weather_humidity;
+      if (p.weather_condition) out.weather_condition = String(p.weather_condition).toLowerCase();
+    }
+  }
+
+  if (!String(out.teetime ?? "").trim()) {
+    const tt = fieldUpdatesTeetimeForDgRound(dg, rnd);
+    if (tt?.teetime) {
+      out.teetime = tt.teetime;
+      if (tt.wave) out.dg_tee_wave = tt.wave;
+    }
+  }
+  if (!String(out.teetime ?? "").trim() && Number.isFinite(dg) && Number.isFinite(rnd)) {
+    const p =
+      projectionPlayerRowForModel(dg, rnd) ||
+      DATA.players?.find((pl) => Math.round(num(pl.dg_id, NaN)) === dg && samePlayerRound(pl, rnd));
+    if (p?.dg_teetime_local) {
+      out.teetime = String(p.dg_teetime_local).trim();
+      if (p.dg_tee_wave) out.dg_tee_wave = String(p.dg_tee_wave).trim();
+    }
+  }
+  return out;
+}
+
+function enrichHistoryRoundsForTrendsFilters(list, dgIdOpt) {
+  if (!Array.isArray(list) || !list.length) return list || [];
+  return list.map((r) => enrichHistoryRowForTrendsFilters(r, dgIdOpt ?? r?.dg_id));
+}
+
+function enrichCourseWindowEntry(entry) {
+  if (!entry?.row) return entry;
+  return { ...entry, row: enrichHistoryRowForTrendsFilters(entry.row, entry.dgId) };
+}
+
+async function ensurePropsRoundWeatherLoaded() {
+  if (propsRoundWeatherByKey) return propsRoundWeatherByKey;
+  if (propsRoundWeatherLoadPromise) return propsRoundWeatherLoadPromise;
+  propsRoundWeatherLoadPromise = (async () => {
+    if (isFileProtocol()) {
+      propsRoundWeatherByKey = new Map();
+      return propsRoundWeatherByKey;
+    }
+    try {
+      const res = await fetch(cacheBustFetchUrl("data/historical_round_weather.json"), { cache: "no-store" });
+      if (res.ok) {
+        const j = await res.json();
+        const map = new Map();
+        for (const [k, v] of Object.entries(j?.byKey || {})) map.set(k, v);
+        propsRoundWeatherByKey = map;
+        return map;
+      }
+    } catch (_) {
+      /* optional bundle */
+    }
+    propsRoundWeatherByKey = new Map();
+    return propsRoundWeatherByKey;
+  })();
+  return propsRoundWeatherLoadPromise;
+}
+
+function ensurePropsRoundWeatherLoadedForTrends() {
+  void ensurePropsRoundWeatherLoaded().then((map) => {
+    if (!map?.size || propsRoundWeatherLoadedOnce) return;
+    propsRoundWeatherLoadedOnce = true;
+    courseWindowRoundEntriesCache = null;
+    courseWindowRoundEntriesCacheSig = "";
+    if (activeAppTabId() === "props") scheduleRenderPropsTrends(0);
+  });
 }
 
 function isoCalendarDayBefore(isoRaw) {
@@ -13634,7 +13761,11 @@ function mergeMemoryCourseEntriesIntoBucket(bucket, courseKey) {
     for (const r of rec.rounds) {
       if (!historyRoundCountsAsActual(r)) continue;
       if (normCourseNameKey(r.course_name) !== courseKey) continue;
-      const entry = { row: enrichHistoryRowFromLiveActuals(r), dgId, playerName };
+  const entry = {
+    row: enrichHistoryRowForTrendsFilters(enrichHistoryRowFromLiveActuals(r), dgId),
+    dgId,
+    playerName,
+  };
       const key = propsCourseWindowEntryDedupeKey(entry);
       if (seen.has(key)) continue;
       seen.add(key);
@@ -14055,7 +14186,7 @@ function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey) {
       const chartActual = chartActualForDraftKingsCourseWindow(statKey, pick, p);
       if (!Number.isFinite(chartActual)) continue;
 
-      let row = { ...pick.row };
+      let row = enrichHistoryRowForTrendsFilters({ ...pick.row }, dgId);
       if (!Number.isFinite(actualForRoundRow(statKey, row))) {
         row = applyChartActualToHistoryRow(statKey, row, chartActual);
       }
@@ -14076,10 +14207,7 @@ function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey) {
     }
   }
 
-  const histRows = raw.map((e) => e.row);
-  const rowsOnly = applyPropsSidebarWeatherFiltersToRounds(histRows);
-  const rowSet = new Set(rowsOnly);
-  return raw.filter((e) => rowSet.has(e.row));
+  return filterCourseWindowEntriesBySidebarFilters(raw);
 }
 
 function propsCourseWindowDateInputToUtcMs(raw, endOfDay) {
@@ -14141,16 +14269,34 @@ function propsPickNearestCourseSessionDay(bucket, fromRaw, toRaw) {
   return best || "";
 }
 
+function historyRoundFilterKey(row) {
+  const dg = Math.round(num(row?.dg_id ?? row?.dgId, NaN));
+  const eid = Math.round(num(row?.event_id, NaN));
+  const yr = historyRoundSeasonYear(row);
+  const rnd = Math.round(num(row?.round_num, NaN));
+  if (Number.isFinite(dg) && Number.isFinite(eid) && Number.isFinite(yr) && Number.isFinite(rnd)) {
+    return `${dg}|${eid}|${yr}|${rnd}`;
+  }
+  return `${dg}|${historyRoundChronoKey(row)}`;
+}
+
+function filterCourseWindowEntriesBySidebarFilters(entries) {
+  if (!entries?.length) return entries || [];
+  const rows = entries.map((e) => enrichHistoryRowForTrendsFilters(e.row, e.dgId));
+  const filtered = applyPropsSidebarFiltersToRounds(rows, undefined);
+  const keep = new Set(filtered.map(historyRoundFilterKey));
+  return entries.filter((e, i) => keep.has(historyRoundFilterKey(rows[i])));
+}
+
 function filterCourseWindowEntriesByDateMs(bucket, fromMs, toMs) {
   const raw = [];
   for (const e of bucket.entries || []) {
-    if (!historyRoundInCourseDateWindow(e.row, fromMs, toMs)) continue;
-    raw.push(e);
+    const enriched = enrichCourseWindowEntry(e);
+    if (!historyRoundInCourseDateWindow(enriched.row, fromMs, toMs)) continue;
+    raw.push(enriched);
   }
   raw.sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
-  const rowsOnly = applyPropsSidebarWeatherFiltersToRounds(raw.map((e) => e.row));
-  const rowSet = new Set(rowsOnly);
-  return raw.filter((e) => rowSet.has(e.row));
+  return filterCourseWindowEntriesBySidebarFilters(raw);
 }
 
 /** Chart + window KPI actual (field venue rules for totals; DK entries may carry chartActual). */
@@ -14841,7 +14987,7 @@ function filteredHistoryRounds(dgId) {
   if (courseFilter) {
     list = list.filter((r) => normCourseNameKey(r.course_name) === normCourseNameKey(courseFilter));
   }
-  list = applyPropsSidebarFiltersToRounds(list);
+  list = applyPropsSidebarFiltersToRounds(list, id);
   list = list.filter((r) => !historyRoundIsPlaceholderAllMarketsZero(r));
   /* Current-course filter can yield zero rows (rookies, first-time venue) — fall back only when venue is unknown. */
   if (courseFilterOn() && !list.length) {
@@ -14851,7 +14997,7 @@ function filteredHistoryRounds(dgId) {
       if (courseFilter) {
         list = list.filter((r) => normCourseNameKey(r.course_name) === normCourseNameKey(courseFilter));
       }
-      list = applyPropsSidebarFiltersToRounds(list);
+      list = applyPropsSidebarFiltersToRounds(list, id);
       list.sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
       list = list.slice(0, 60);
     }
@@ -17323,6 +17469,7 @@ function propsAutoTrendLineForContext(dg, statKey, playerRow) {
 
 function renderPropsTrends() {
   ensurePropsStatSelectValid();
+  ensurePropsRoundWeatherLoadedForTrends();
   if (propsFieldVenueKpisEnabled()) ensurePropsFieldVenueHistoryLoaded();
   ensurePropsCourseHistoryForTrendsChart(selectedDgId());
   void ensurePropsDgIdNameManifestLoaded().then((m) => {
