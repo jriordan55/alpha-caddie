@@ -8012,6 +8012,7 @@ function closeEvHelpDialog() {
 }
 
 function collectUnifiedEvRows() {
+  ensureOutrightAlphaModelProbCache();
   const rows = [];
   const devigPrefs = loadEvDevigPrefs();
   const r = getModelRoundForEv();
@@ -11368,10 +11369,50 @@ function simPlayerTournamentStpForMc(entry, formShock, ctx) {
   return { totalStp, r1Stp };
 }
 
-function outrightAlphaModelCacheSig() {
+/** Cheap cache key (no per-player model rating) — must stay in sync with rebuild triggers. */
+function outrightAlphaModelInvalidateKeyNow() {
   const scoring = tournamentScoringBasisFromData();
   const liveR = Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN)) || 1;
-  const parts = [
+  const scoreByDg = new Map();
+  const liveBits = [];
+  const ratingBits = [];
+  const seen = new Set();
+  for (const p of DATA.players || []) {
+    const id = Math.round(num(p.dg_id, NaN));
+    if (!Number.isFinite(id)) continue;
+    const cs = num(p.current_score, NaN);
+    if (Number.isFinite(cs) && !scoreByDg.has(id)) scoreByDg.set(id, cs);
+    const rnd = Math.round(num(p.round, NaN));
+    if (rnd === liveR) {
+      const thru = Math.round(num(p.dg_live_thru, NaN));
+      const today = num(p.dg_live_today, NaN);
+      if (Number.isFinite(thru) || Number.isFinite(today)) {
+        liveBits.push(
+          `${id}:${thru}:${Number.isFinite(today) ? today.toFixed(1) : "n"}`,
+        );
+      }
+    }
+    if (!seen.has(id) && samePlayerRound(p, 1)) {
+      seen.add(id);
+      const chunks = [];
+      for (let r = 1; r <= 4; r++) {
+        const row = projectionPlayerRowForModel(id, r);
+        if (!row) chunks.push("x");
+        else {
+          chunks.push(
+            `${num(row.mu_sg, 0).toFixed(2)}|${num(row.implied_mu_sg, 0).toFixed(2)}|${num(row.round_sd, 0).toFixed(2)}|${num(row.within_event_form_shift, 0).toFixed(2)}`,
+          );
+        }
+      }
+      ratingBits.push(`${id}:${chunks.join(",")}`);
+    }
+  }
+  liveBits.sort();
+  ratingBits.sort();
+  const scoreBits = [...scoreByDg.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .map(([id, s]) => `${id}:${s.toFixed(1)}`);
+  return [
     `rev${projectionsDataRev}`,
     `par${scoring.par}`,
     `b${scoring.baseline.toFixed(2)}`,
@@ -11381,44 +11422,77 @@ function outrightAlphaModelCacheSig() {
     `ps${PRICING_STATE.skill}`,
     `ep${historyMutationEpoch}`,
     `ls${tournamentMcLognSdlog().toFixed(3)}`,
-  ];
-  const seen = new Set();
-  for (const p of DATA.players || []) {
-    const id = Math.round(num(p.dg_id, NaN));
-    if (!Number.isFinite(id) || seen.has(id)) continue;
-    if (!samePlayerRound(p, 1)) continue;
-    seen.add(id);
-    let cs = "n";
-    for (const pr of DATA.players || []) {
-      if (Math.round(num(pr.dg_id, NaN)) !== id) continue;
-      const s = num(pr.current_score, NaN);
-      if (Number.isFinite(s)) {
-        cs = s.toFixed(2);
-        break;
-      }
-    }
-    const mus = [];
-    for (let rnd = 1; rnd <= 4; rnd++) {
-      const row = projectionPlayerRowForModel(id, rnd);
-      const rt = row ? tournamentMcRatingFromRow(row, id) : null;
-      mus.push(rt ? `${rt.muSg.toFixed(3)},${rt.roundSd.toFixed(2)}` : "x");
-    }
-    parts.push(`${id}:${cs}:${mus.join(";")}`);
+    `sc${scoreBits.join(",")}`,
+    `lp${liveBits.join(",")}`,
+    `rf${ratingBits.join(";")}`,
+  ].join("|");
+}
+
+function tournamentMcSimsForBrowser() {
+  const capRaw = Math.round(num(DATA?.meta?.outright_model_mc_sims_browser, 280));
+  const browserCap = Number.isFinite(capRaw) && capRaw >= 80 ? Math.min(400, capRaw) : 280;
+  const nSimsRaw = Math.round(num(DATA?.meta?.outright_model_mc_sims, NaN));
+  if (Number.isFinite(nSimsRaw) && nSimsRaw >= 100) {
+    return Math.min(browserCap, Math.min(2500, nSimsRaw));
   }
-  return parts.join("|");
+  return browserCap;
+}
+
+function loadOutrightAlphaModelCacheFromMeta(ikey) {
+  const bake = DATA?.meta?.outright_sim_probs;
+  const byDg = bake?.by_dg;
+  if (!byDg || typeof byDg !== "object") return false;
+  const liveLu = String(DATA?.meta?.datagolf_live_last_update || "");
+  const bakeLive = String(bake.live_through || "");
+  if (outrightLiveTournamentContext()) {
+    if (!bakeLive || bakeLive !== liveLu) return false;
+  } else if (bakeLive) {
+    return false;
+  }
+  if (bake.invalidate_key && bake.invalidate_key !== ikey) return false;
+
+  const next = {
+    sig: ikey,
+    win: new Map(),
+    top5: new Map(),
+    top10: new Map(),
+    top20: new Map(),
+    make_cut: new Map(),
+    frl: new Map(),
+  };
+  for (const [idStr, probs] of Object.entries(byDg)) {
+    const id = Math.round(num(idStr, NaN));
+    if (!Number.isFinite(id) || !probs || typeof probs !== "object") continue;
+    if (Number.isFinite(num(probs.win, NaN))) next.win.set(id, num(probs.win));
+    if (Number.isFinite(num(probs.top_5, NaN))) next.top5.set(id, num(probs.top_5));
+    if (Number.isFinite(num(probs.top_10, NaN))) next.top10.set(id, num(probs.top_10));
+    if (Number.isFinite(num(probs.top_20, NaN))) next.top20.set(id, num(probs.top_20));
+    if (Number.isFinite(num(probs.make_cut, NaN))) next.make_cut.set(id, num(probs.make_cut));
+    if (Number.isFinite(num(probs.frl, NaN))) next.frl.set(id, num(probs.frl));
+  }
+  if (next.win.size < 5) return false;
+  outrightAlphaModelProbCache = next;
+  return true;
 }
 
 /** Monte Carlo tournament outcomes from composite μ_SG ratings (shifted log-normal rounds). */
 function ensureOutrightAlphaModelProbCache() {
-  const sig = outrightAlphaModelCacheSig();
-  if (outrightAlphaModelProbCache.sig === sig && outrightAlphaModelProbCache.win.size >= 5) return;
+  const ikey = outrightAlphaModelInvalidateKeyNow();
+  if (outrightAlphaModelProbCache.sig === ikey && outrightAlphaModelProbCache.win.size >= 5) return;
+  if (loadOutrightAlphaModelCacheFromMeta(ikey)) return;
 
   const scoring = tournamentScoringBasisFromData();
-  const nSimsRaw = Math.round(num(DATA?.meta?.outright_model_mc_sims, NaN));
-  const nSims = Number.isFinite(nSimsRaw) && nSimsRaw >= 100 ? Math.min(2500, nSimsRaw) : 420;
+  const nSims = tournamentMcSimsForBrowser();
   const liveR = Math.max(1, Math.min(4, Math.round(num(DATA?.meta?.datagolf_live_current_round, NaN)) || 1));
   const hasLive = outrightLiveTournamentContext();
   const lognSdlog = tournamentMcLognSdlog();
+
+  const scoreByDg = new Map();
+  for (const pr of DATA.players || []) {
+    const dg = Math.round(num(pr.dg_id, NaN));
+    const s = num(pr.current_score, NaN);
+    if (Number.isFinite(dg) && Number.isFinite(s) && !scoreByDg.has(dg)) scoreByDg.set(dg, s);
+  }
 
   const field = [];
   const seen = new Set();
@@ -11441,15 +11515,7 @@ function ensureOutrightAlphaModelProbCache() {
     }
     if (!ok) continue;
 
-    let currentScore = NaN;
-    for (const pr of DATA.players || []) {
-      if (Math.round(num(pr.dg_id, NaN)) !== id) continue;
-      const s = num(pr.current_score, NaN);
-      if (Number.isFinite(s)) {
-        currentScore = s;
-        break;
-      }
-    }
+    const currentScore = scoreByDg.get(id) ?? NaN;
     field.push({ id, ratings, currentScore });
   }
 
@@ -11512,7 +11578,7 @@ function ensureOutrightAlphaModelProbCache() {
 
   const clampProb = (p) => clamp(p, 0.001, 0.95);
   const next = {
-    sig,
+    sig: ikey,
     win: new Map(),
     top5: new Map(),
     top10: new Map(),
@@ -11729,6 +11795,7 @@ function modelProbOutrightFromRowOrProjections(outrightRow, marketKey, opts) {
 let outrightSort = { key: "player", dir: 1 };
 
 function buildOutrightsTableBodyOnly() {
+  ensureOutrightAlphaModelProbCache();
   const table = document.getElementById("table-outrights");
   if (!table) return;
   const msel = document.getElementById("outright-market");

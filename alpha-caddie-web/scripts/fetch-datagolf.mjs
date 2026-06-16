@@ -64,6 +64,7 @@ import {
 } from "./dg-events-align.mjs";
 import { eventNameToDraftKingsSlug } from "./draftkings-league-url.mjs";
 import { fetchDataGolfOutrightsApi } from "./datagolf-outrights-api.mjs";
+import { runTournamentMcFromProjections } from "./tournament-mc-outrights.mjs";
 import {
   applyVenueCourseFitToMu,
   applyFieldDayCountingLiftNatural,
@@ -1554,6 +1555,34 @@ function displayRoundLabel(r, tz) {
   return `${lab} (auto, ${tz})`;
 }
 
+function bakeOutrightSimProbsForPayload(payload) {
+  try {
+    const mc = runTournamentMcFromProjections(payload, { nSims: 500, seed: 42 });
+    if (!mc?.maps || !mc.field?.length) return null;
+    const by_dg = {};
+    for (const f of mc.field) {
+      const id = String(f.id);
+      by_dg[id] = {
+        win: mc.maps.win.get(f.id),
+        top_5: mc.maps.top_5.get(f.id),
+        top_10: mc.maps.top_10.get(f.id),
+        top_20: mc.maps.top_20.get(f.id),
+        make_cut: mc.maps.make_cut.get(f.id),
+        frl: mc.maps.frl.get(f.id),
+      };
+    }
+    return {
+      n_sims: mc.nSims,
+      baked_at: new Date().toISOString(),
+      live_through: "",
+      by_dg,
+    };
+  } catch (e) {
+    console.warn("[fetch-dg] outright_sim_probs bake skipped:", e.message || e);
+    return null;
+  }
+}
+
 async function main() {
   const buildShotsWebOnFetch = process.env.GOLF_BUILD_SHOTS_WEB_ON_FETCH === "1";
 
@@ -2630,6 +2659,7 @@ async function main() {
     outright_live_score_placement_nudge: false,
     outright_ev_live_leaderboard_model: false,
     outright_use_dg_placement_probs: false,
+    outright_model_mc_sims_browser: 280,
     course_par_18,
     hole_pars,
     hole_pars_source,
@@ -2733,6 +2763,14 @@ async function main() {
     const pb = calResult.calibrated.pooled?.birdies;
     console.log(
       `[fetch-dg] Field market calibration: ${calResult.calibrated.rounds} round(s)${Number.isFinite(pb) ? `, pooled birdies≈${pb.toFixed(2)}` : ""}`,
+    );
+  }
+
+  const outrightBake = bakeOutrightSimProbsForPayload(payload);
+  if (outrightBake) {
+    payload.meta.outright_sim_probs = outrightBake;
+    console.log(
+      `[fetch-dg] Baked outright sim probs for ${Object.keys(outrightBake.by_dg).length} players (${outrightBake.n_sims} sims).`,
     );
   }
 
