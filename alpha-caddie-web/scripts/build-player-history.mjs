@@ -227,50 +227,128 @@ function chartUtcIsoDayFromHistoryRow(r) {
   return historyRoundChartUtcIsoDay(r);
 }
 
+/** Dedupe key for course-shard entries (player × event × round). */
+function courseShardEntryKey(entry) {
+  const rr = entry?.row && typeof entry.row === "object" ? entry.row : entry;
+  const dg = Math.round(Number(entry?.dg_id ?? rr?.dg_id));
+  const sk = Math.round(Number(rr?.sortKey));
+  if (Number.isFinite(sk) && sk > 0) return `${dg}|${sk}`;
+  const yr = parseInt(String(rr?.year || ""), 10);
+  const rn = Math.round(Number(rr?.round_num));
+  const ev = String(rr?.event_name || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+  return `${dg}|${yr}|${rn}|${ev}`;
+}
+
+function mergeCourseShardEntries(existing, incoming) {
+  const out = [];
+  const seen = new Set();
+  for (const e of [...(existing || []), ...(incoming || [])]) {
+    const k = courseShardEntryKey(e);
+    if (seen.has(k)) continue;
+    seen.add(k);
+    out.push(e);
+  }
+  return out;
+}
+
 /** Pre-aggregated rounds at each venue for fast Historical Trends “field by course & date”. */
-function writeCourseHistoryShards(out) {
+function writeCourseHistoryShards(out, courseAggByCourse = null) {
   fs.mkdirSync(COURSE_SHARD_DIR, { recursive: true });
   const byCourse = new Map();
+
+  const ingest = (courseKey, dg, playerName, row) => {
+    if (!courseKey) return;
+    const rs = Number(row?.round_score);
+    if (!Number.isFinite(rs) || rs <= 0) return;
+    if (eventCompletedIsFutureMdY(row.event_completed) || historyRoundChartDateIsFuture(row)) return;
+    let b = byCourse.get(courseKey);
+    if (!b) {
+      b = { dateSet: new Set(), entries: [] };
+      byCourse.set(courseKey, b);
+    }
+    b.entries.push({ dg_id: dg, player_name: playerName, row });
+    const iso = chartUtcIsoDayFromHistoryRow(row);
+    if (iso) b.dateSet.add(iso);
+  };
+
+  if (courseAggByCourse && courseAggByCourse.size) {
+    for (const [courseKey, b] of courseAggByCourse) {
+      for (const e of b.entries || []) {
+        ingest(courseKey, e.dg_id, e.player_name, e.row);
+      }
+      for (const iso of b.dateSet || []) {
+        if (!byCourse.has(courseKey)) byCourse.set(courseKey, { dateSet: new Set(), entries: [] });
+        byCourse.get(courseKey).dateSet.add(iso);
+      }
+    }
+  }
+
   for (const [dgId, bucket] of Object.entries(out.byDgId || {})) {
     const dg = Math.round(Number(dgId));
     if (!Number.isFinite(dg) || !bucket?.rounds) continue;
     const playerName = String(bucket.player_name || "").trim();
     for (const r of bucket.rounds) {
-      if (eventCompletedIsFutureMdY(r.event_completed) || historyRoundChartDateIsFuture(r)) continue;
-      const rs = Number(r.round_score);
-      if (!Number.isFinite(rs) || rs <= 0) continue;
-      const ck = normCourseNameKey(r.course_name);
-      if (!ck) continue;
-      let b = byCourse.get(ck);
-      if (!b) {
-        b = { dateSet: new Set(), entries: [] };
-        byCourse.set(ck, b);
-      }
-      b.entries.push({ dg_id: dg, player_name: playerName, row: r });
-      const iso = chartUtcIsoDayFromHistoryRow(r);
-      if (iso) b.dateSet.add(iso);
+      ingest(normCourseNameKey(r.course_name), dg, playerName, r);
     }
   }
+
   const keep = new Set();
   const courses = [];
+  let shardN = 0;
   for (const [courseKey, b] of byCourse) {
+    shardN++;
+    if (shardN % 25 === 0) console.log(`[build-player-history] Course shards: ${shardN}/${byCourse.size}…`);
     const file = courseShardFileName(courseKey);
     keep.add(file);
-    const days = [...b.dateSet].sort((a, c) => c.localeCompare(a));
-    writeJsonAtomic(path.join(COURSE_SHARD_DIR, file), {
-      course_key: courseKey,
-      days,
-      entries: b.entries,
-    });
-    courses.push({ course_key: courseKey, file, days: days.length, entries: b.entries.length });
+    const outPath = path.join(COURSE_SHARD_DIR, file);
+    let mergedEntries = b.entries;
+    if (fs.existsSync(outPath)) {
+      try {
+        const prev = JSON.parse(fs.readFileSync(outPath, "utf8"));
+        mergedEntries = mergeCourseShardEntries(prev?.entries, b.entries);
+      } catch {
+        /* use new only */
+      }
+    }
+    const daysSet = new Set(b.dateSet);
+    for (const e of mergedEntries) {
+      const iso = chartUtcIsoDayFromHistoryRow(e.row || e);
+      if (iso) daysSet.add(iso);
+    }
+    const days = [...daysSet].sort((a, c) => c.localeCompare(a));
+    writeJsonAtomic(outPath, { course_key: courseKey, days, entries: mergedEntries });
+    courses.push({ course_key: courseKey, file, days: days.length, entries: mergedEntries.length });
   }
+
   for (const entry of fs.readdirSync(COURSE_SHARD_DIR, { withFileTypes: true })) {
     if (entry.isFile() && entry.name.endsWith(".json") && !keep.has(entry.name)) {
-      fs.unlinkSync(path.join(COURSE_SHARD_DIR, entry.name));
+      const p = path.join(COURSE_SHARD_DIR, entry.name);
+      try {
+        const prev = JSON.parse(fs.readFileSync(p, "utf8"));
+        if (Array.isArray(prev?.entries) && prev.entries.length > 0) {
+          courses.push({
+            course_key: prev.course_key || entry.name.replace(/\.json$/, ""),
+            file: entry.name,
+            days: (prev.days || []).length,
+            entries: prev.entries.length,
+            preserved: true,
+          });
+          continue;
+        }
+      } catch {
+        /* drop broken */
+      }
+      fs.unlinkSync(p);
     }
   }
   courses.sort((a, b) => a.course_key.localeCompare(b.course_key));
-  writeJsonAtomic(COURSES_MANIFEST_JSON, { meta: { updated_at: out.meta?.updated_at || new Date().toISOString() }, courses });
+  writeJsonAtomic(COURSES_MANIFEST_JSON, {
+    meta: { updated_at: out.meta?.updated_at || new Date().toISOString() },
+    courses,
+  });
   console.log("Wrote course history shards:", courses.length, "->", path.relative(WEB_ROOT, COURSE_SHARD_DIR));
 }
 
@@ -1467,6 +1545,8 @@ function logCsvScanProgress(phase, rowsScanned, matchedRows, extra = "") {
 
 async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg, roundWeatherByKey, pinCtx) {
   const byDgId = new Map();
+  /** All PGA/LIV rounds at each venue (field-by-course needs full tour, not just this week's field). */
+  const courseAggByCourse = new Map();
   const byDgSk = shotsAgg?.byDgSk || new Map();
   const byPkSk = shotsAgg?.byPkSk || new Map();
   const byDgEvtYrRnd = shotsAgg?.byDgEvtYrRnd || new Map();
@@ -1474,11 +1554,11 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg, roundWeather
 
   if (!fs.existsSync(ROUNDS_CSV)) {
     console.error("Missing rounds CSV:", ROUNDS_CSV);
-    return { byDgId, allowedTriples: new Set() };
+    return { byDgId, allowedTriples: new Set(), courseAggByCourse: new Map() };
   }
 
   console.log(
-    `[build-player-history] Scanning rounds CSV (${path.basename(ROUNDS_CSV)}; ${allowedDgIds.size} allowed dg_ids, min_year ${MIN_YEAR}) — usually 1–4 min…`,
+    `[build-player-history] Scanning rounds CSV (${path.basename(ROUNDS_CSV)}; ${allowedDgIds.size} field dg_ids + all-tour course shards, min_year ${MIN_YEAR}) — usually 1–4 min…`,
   );
   let rowsScanned = 0;
   let matchedRows = 0;
@@ -1501,7 +1581,7 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg, roundWeather
     const yr = parseInt(row.year, 10);
     if (Number.isFinite(yr) && yr < MIN_YEAR) continue;
     const dg = Math.round(num(row.dg_id));
-    if (!Number.isFinite(dg) || !allowedDgIds.has(dg)) continue;
+    if (!Number.isFinite(dg)) continue;
     const rs = num(row.round_score);
     if (!Number.isFinite(rs)) continue;
     if (eventCompletedIsFutureMdY(row.event_completed) || historyRoundChartDateIsFuture(row)) continue;
@@ -1592,6 +1672,24 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg, roundWeather
       ...sgFields(row),
     };
 
+    const ck = normCourseNameKey(rec.course_name);
+    if (ck && rs > 0) {
+      let cb = courseAggByCourse.get(ck);
+      if (!cb) {
+        cb = { dateSet: new Set(), entries: [] };
+        courseAggByCourse.set(ck, cb);
+      }
+      cb.entries.push({
+        dg_id: dg,
+        player_name: String(row.player_name || "").trim(),
+        row: rec,
+      });
+      const iso = chartUtcIsoDayFromHistoryRow(rec);
+      if (iso) cb.dateSet.add(iso);
+    }
+
+    if (!allowedDgIds.has(dg)) continue;
+
     if (!byDgId.has(dg)) byDgId.set(dg, { dg_id: dg, player_name: String(row.player_name || ""), rounds: [] });
     const bucket = byDgId.get(dg);
     if (!bucket.player_name) bucket.player_name = String(row.player_name || "");
@@ -1620,7 +1718,7 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg, roundWeather
     }
   }
 
-  return { byDgId, allowedTriples };
+  return { byDgId, allowedTriples, courseAggByCourse };
 }
 
 async function streamHoles(allowedTriples, pinCtx) {
@@ -1740,7 +1838,7 @@ async function main() {
     console.log(`[build-player-history] Pin locations DB: ${Object.keys(pinLocationsByKey).length} course×date×round sheet(s)`);
   }
   const shotsAgg = await loadShotsRoundAggMaps();
-  const { byDgId, allowedTriples } = await streamRounds(allowed, pgaMetaOverlay, shotsAgg, roundWeatherByKey, pinCtx);
+  const { byDgId, allowedTriples, courseAggByCourse } = await streamRounds(allowed, pgaMetaOverlay, shotsAgg, roundWeatherByKey, pinCtx);
   let liveMergedRows = 0;
   const liveRows = buildLiveHistoryRowsFromBundle();
   if (liveRows?.length) {
@@ -1907,7 +2005,11 @@ async function main() {
   const st = fs.statSync(OUT_JSON);
   console.log("Wrote", OUT_JSON, `(${fmtBytes(st.size)})`);
   writePlayerHistoryShards(out);
-  writeCourseHistoryShards(out);
+  if (String(process.env.GOLF_SKIP_COURSE_SHARD_WRITE || "").trim() !== "1") {
+    writeCourseHistoryShards(out, courseAggByCourse);
+  } else {
+    console.log("[build-player-history] GOLF_SKIP_COURSE_SHARD_WRITE=1 — run npm run build:course-shards for by-course JSON.");
+  }
 }
 
 main().catch((e) => {

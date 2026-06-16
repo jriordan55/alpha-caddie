@@ -85,11 +85,12 @@ const skipWeatherBackfill =
   fullRebuild ? false : envTruthy("GOLF_SKIP_ROUND_WEATHER_BACKFILL", true);
 const skipDg = envTruthy("GOLF_REFRESH_LIVE_SKIP_DG", false);
 const skipPgatour = envTruthy("GOLF_REFRESH_LIVE_SKIP_PGATOUR", false);
-const recentYears = String(process.env.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "2").trim();
-const fh = fastHistoryBuildEnv({ defaultLiveFast: true });
+let recentYears = String(process.env.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "2").trim();
+const fh = fullRebuild ? {} : fastHistoryBuildEnv({ defaultLiveFast: true });
 
 if (fullRebuild) {
   console.log("\n[refresh:live] GOLF_REFRESH_LIVE_FULL_REBUILD=1 — including CSV merge + history + weather backfill.\n");
+  recentYears = String(process.env.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "25").trim();
 } else {
   console.log(
     "\n[refresh:live] Live-week update only (no CSV/history/weather rebuild). Set GOLF_REFRESH_LIVE_FULL_REBUILD=1 for full rebuild.\n",
@@ -99,6 +100,7 @@ if (fullRebuild) {
 if (!skipCsvMerge) {
   run("merge-recent-historical-rounds.mjs", `DataGolf historical-raw-data/rounds → CSV (${recentYears}yr, pre-fetch)`, {
     GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS: recentYears,
+    ...(fullRebuild ? { GOLF_HISTORICAL_ROUNDS_FETCH_ALL_YEARS: "1" } : {}),
   });
 } else {
   console.log("[refresh:live] Skipping pre-fetch CSV merge (using committed historical_rounds_all.csv).\n");
@@ -204,7 +206,16 @@ if (skipHistoryRebuild) {
   run(
     "build-player-history.mjs",
     "Historical Trends: CSV + live-tournament-stats + pgatouR → player_round_history + shards",
-    fh,
+    {
+      ...fh,
+      ...(fullRebuild
+        ? {
+            GOLF_HISTORY_MIN_YEAR: "2004",
+            GOLF_HISTORY_MAX_ROUNDS_PER_PLAYER: "2000",
+            GOLF_REFRESH_LIVE_FAST_HISTORY: "0",
+          }
+        : {}),
+    },
   );
   run("embed-player-history.mjs", "Embed history for static deploy (embed:history)");
 }

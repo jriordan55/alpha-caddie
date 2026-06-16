@@ -169,8 +169,24 @@ if (courseKey) {
 
   courseShard.course_key = courseKey;
   courseShard.days = [...daysSet].sort((a, b) => b.localeCompare(a));
-  fs.mkdirSync(path.dirname(byCoursePath), { recursive: true });
-  fs.writeFileSync(byCoursePath, JSON.stringify(courseShard));
+  let skipCourseWrite = false;
+  if (courseEntriesPatched === 0 && courseShard.entries.length === 0 && fs.existsSync(byCoursePath)) {
+    try {
+      const prev = JSON.parse(fs.readFileSync(byCoursePath, "utf8"));
+      if (Array.isArray(prev?.entries) && prev.entries.length > 0) {
+        skipCourseWrite = true;
+        console.log(
+          `[patch-current-event] Keeping prior by-course ${courseShardFileName(courseKey)} (${prev.entries.length} entries; no pgatour rows yet).`,
+        );
+      }
+    } catch {
+      /* write empty */
+    }
+  }
+  if (!skipCourseWrite) {
+    fs.mkdirSync(path.dirname(byCoursePath), { recursive: true });
+    fs.writeFileSync(byCoursePath, JSON.stringify(courseShard));
+  }
 }
 
 console.log(
