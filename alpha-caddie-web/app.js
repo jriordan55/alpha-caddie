@@ -384,6 +384,8 @@ function bumpHistoryMutationEpoch() {
   propsCourseWindowLastEntries = null;
   courseWindowRoundEntriesCacheSig = "";
   courseWindowRoundEntriesCache = null;
+  courseWindowRoundEntriesRawCacheSig = "";
+  courseWindowRoundEntriesRawCache = null;
   dkAuditPropsLineKeys = null;
   dkAuditPropsCacheSig = "";
   dkAuditPropsLoadPromise = null;
@@ -411,6 +413,13 @@ const fieldSeasonHistoryLoadPromises = new Map();
 let courseWindowRoundEntriesCacheSig = "";
 /** @type {Array<{ row: object, dgId: number, playerName: string }> | null} */
 let courseWindowRoundEntriesCache = null;
+/** Pre–sidebar-filter field rounds (weather/round/year toggles reuse this). */
+let courseWindowRoundEntriesRawCacheSig = "";
+/** @type {Array<{ row: object, dgId: number, playerName: string, chartActual?: number }> | null} */
+let courseWindowRoundEntriesRawCache = null;
+/** Structural field-view context (course, dates, DK, stat) — filter-only changes skip heavy setup. */
+let propsCourseWindowStructureKey = "";
+let propsFieldHistoryBatchRenderT = 0;
 /** @type {Set<string> | null} keys `${dgId}|${round}|${market}` from dk_round_projection_audit.csv */
 let dkAuditPropsLineKeys = null;
 let dkAuditPropsCacheSig = "";
@@ -5642,8 +5651,7 @@ function ensureDkAuditPropsIndexLoaded() {
     }
     dkAuditPropsLineKeys = keys;
     dkAuditPropsCacheSig = sig;
-    courseWindowRoundEntriesCache = null;
-    courseWindowRoundEntriesCacheSig = "";
+    invalidateCourseWindowRoundEntriesCache();
     return keys;
   })().finally(() => {
     dkAuditPropsLoadPromise = null;
@@ -13869,11 +13877,18 @@ function propsWindowNMax() {
   return PROPS_HISTORY_ROUND_MAX;
 }
 
+function propsFieldSortControlVisible() {
+  if (propsAverageModeOn()) return true;
+  if (propsCourseWindowModeOn()) return true;
+  const tail = selectedPropsTailMode();
+  return tail === "best" || tail === "worst";
+}
+
 function syncPropsAverageUiState() {
   const fieldOn = propsCourseWindowModeOn();
   const avgOn = propsAverageModeOn();
   const sortWrap = document.getElementById("props-filter-avg-sort-wrap");
-  if (sortWrap) sortWrap.hidden = !(fieldOn && avgOn);
+  if (sortWrap) sortWrap.hidden = !propsFieldSortControlVisible();
   const topRoundsLabel = document.querySelector(".props-trends-top-rounds .props-sidebar-label");
   if (topRoundsLabel) topRoundsLabel.textContent = fieldOn && avgOn ? "Rounds / Players" : "Rounds";
   const winEl = document.getElementById("props-window-n");
@@ -14058,8 +14073,7 @@ function ensurePropsRoundWeatherLoadedForTrends() {
   void ensurePropsRoundWeatherLoaded().then((map) => {
     if (!map?.size || propsRoundWeatherLoadedOnce) return;
     propsRoundWeatherLoadedOnce = true;
-    courseWindowRoundEntriesCache = null;
-    courseWindowRoundEntriesCacheSig = "";
+    invalidateCourseWindowRoundEntriesCache();
     if (activeAppTabId() === "props") scheduleRenderPropsTrends(0);
   });
 }
@@ -14865,7 +14879,7 @@ function propsCourseWindowDateBoundsMs() {
  * Field-by-course + DraftKings: one bar per golfer per tournament round with a DK line, chartable actual,
  * and play date inside the From/To filter.
  */
-function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey) {
+function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey, opts = {}) {
   const courseKey = propsEffectiveCourseKey();
   const fromRaw = String(document.getElementById("props-filter-date-from")?.value || "").trim();
   const toRaw = String(document.getElementById("props-filter-date-to")?.value || "").trim();
@@ -14886,6 +14900,7 @@ function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey) {
     const dgId = Math.round(num(p.dg_id, NaN));
     if (!Number.isFinite(dgId)) continue;
     const playerName = resolveGolferDisplayNameForDg(dgId, p.player_name, nameByDg);
+    if (!propsTrendPlayerHasDraftKingsLine(dgId, playerName, statKey)) continue;
     const histAll = (byDg.get(dgId) || []).filter((e) => {
       if (!historyRoundCountsAsActual(e.row)) return false;
       const rnd = Math.round(num(e.row?.round_num, NaN));
@@ -14929,7 +14944,7 @@ function collectCourseWindowDraftKingsProjectionEntries(bucket, statKey) {
     }
   }
 
-  return filterCourseWindowEntriesBySidebarFilters(raw);
+  return opts.applySidebarFilters === false ? raw : filterCourseWindowEntriesBySidebarFilters(raw);
 }
 
 function propsCourseWindowDateInputToUtcMs(raw, endOfDay) {
@@ -15036,13 +15051,16 @@ function applyPropsSidebarWeatherFiltersToRounds(list) {
 }
 
 /** All field-player rounds (optional course + date filters) from per-player history. */
-function collectFieldRoundEntriesFromPlayerHistory() {
+function collectFieldRoundEntriesFromPlayerHistory(opts = {}) {
   if (!HISTORY?.byDgId) return [];
   const courseKey = propsEffectiveCourseKey();
   const fromRaw = String(document.getElementById("props-filter-date-from")?.value || "").trim();
   const toRaw = String(document.getElementById("props-filter-date-to")?.value || "").trim();
   const hasDateFilter = Boolean(fromRaw || toRaw);
-  const bounds = hasDateFilter ? propsCourseWindowDateBoundsMs() : { ok: false, fromMs: NaN, toMs: NaN };
+  const dkOnly = propsFilterDraftKingsOnlyOn();
+  const skipDateFilter = Boolean(opts.skipDateFilter) || dkOnly;
+  const applyDateBounds = hasDateFilter && !skipDateFilter && Boolean(courseKey);
+  const bounds = applyDateBounds ? propsCourseWindowDateBoundsMs() : { ok: false, fromMs: NaN, toMs: NaN };
   const nameByDg = buildPropsGolferDisplayNameMap();
   const fieldIds = propsFieldPlayerDgIds();
   const seasonYear = propsFieldEffectiveSeasonYear();
@@ -15060,58 +15078,127 @@ function collectFieldRoundEntriesFromPlayerHistory() {
     }
   }
   raw.sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
-  return filterCourseWindowEntriesBySidebarFilters(raw);
+  return opts.applySidebarFilters === false ? raw : filterCourseWindowEntriesBySidebarFilters(raw);
 }
 
-/** All player-round rows for field view (one course, all courses, optional date window). */
-function collectCourseWindowRoundEntriesFixed(bucketOpt) {
+/** DK field: tournament-week rows when live, plus full history for round-projection DK golfers. */
+function collectDkFieldPlayerRoundEntries(statKey, bucketOpt, opts = {}) {
   const courseKey = propsEffectiveCourseKey();
-  if (!HISTORY?.byDgId) return [];
+  const merged = [];
+  const seen = new Set();
+  const add = (list) => {
+    for (const e of list || []) {
+      const key = `${e.dgId}|${Math.round(num(e.row?.round_num, NaN))}|${historyRoundChronoKey(e.row)}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      merged.push(e);
+    }
+  };
+  const dkOpts = opts.applySidebarFilters === false ? { applySidebarFilters: false } : {};
+  if (courseKey) {
+    const bucket = bucketOpt || propsGetSingleCourseBucketSync(courseKey);
+    if (bucket) {
+      mergeMemoryCourseEntriesIntoBucket(bucket, courseKey);
+      add(collectCourseWindowDraftKingsProjectionEntries(bucket, statKey, dkOpts));
+    }
+  } else {
+    add(collectCourseWindowDraftKingsProjectionEntries(null, statKey, dkOpts));
+  }
+  let hist = collectFieldRoundEntriesFromPlayerHistory({ skipDateFilter: true, applySidebarFilters: false });
+  hist = filterCourseWindowEntriesForDraftKings(hist, statKey);
+  add(hist);
+  merged.sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
+  return opts.applySidebarFilters === false ? merged : filterCourseWindowEntriesBySidebarFilters(merged);
+}
+
+function propsCourseWindowRawEntriesCacheSig(bucketOpt) {
+  const courseKey = propsEffectiveCourseKey();
   const statKey = statKeyFromPropSelect();
   const dkProj = propsFilterDraftKingsOnlyOn();
   const fromRaw = String(document.getElementById("props-filter-date-from")?.value || "").trim();
   const toRaw = String(document.getElementById("props-filter-date-to")?.value || "").trim();
-  const sig = [
+  return [
     historyMutationEpoch,
     courseKey || "all",
     fromRaw,
     toRaw,
+    Number.isFinite(propsFieldEffectiveSeasonYear()) ? String(propsFieldEffectiveSeasonYear()) : "all",
     dkProj ? `dkproj|${statKey}|${playerDgFingerprint(DATA.players)}|${dkAuditPropsCacheSig}|${dkAuditPropsLineKeys?.size ?? 0}|${draftKingsRoundPropsOnly(true).length}` : "",
-    propsSidebarFiltersContextKey(),
+    bucketOpt ? "bucket" : "",
   ].join("|");
-  if (sig === courseWindowRoundEntriesCacheSig && courseWindowRoundEntriesCache) {
-    return courseWindowRoundEntriesCache;
+}
+
+/** Heavy scan: field rounds before sidebar weather/round/year filters. */
+function collectCourseWindowRoundEntriesRaw(bucketOpt) {
+  const courseKey = propsEffectiveCourseKey();
+  if (!HISTORY?.byDgId) return [];
+  const statKey = statKeyFromPropSelect();
+  const dkProj = propsFilterDraftKingsOnlyOn();
+  if (dkProj) propsEnsureDkTournamentDateRange();
+  const sig = propsCourseWindowRawEntriesCacheSig(bucketOpt);
+  if (sig === courseWindowRoundEntriesRawCacheSig && courseWindowRoundEntriesRawCache) {
+    return courseWindowRoundEntriesRawCache;
   }
 
+  const fromRaw = String(document.getElementById("props-filter-date-from")?.value || "").trim();
+  const toRaw = String(document.getElementById("props-filter-date-to")?.value || "").trim();
+  const rawOpts = { applySidebarFilters: false };
   let out;
-  if (!courseKey) {
+  if (dkProj) {
     propsCourseWindowDateFallbackIso = "";
-    out = collectFieldRoundEntriesFromPlayerHistory();
+    out = collectDkFieldPlayerRoundEntries(statKey, bucketOpt, rawOpts);
+  } else if (!courseKey) {
+    propsCourseWindowDateFallbackIso = "";
+    out = collectFieldRoundEntriesFromPlayerHistory(rawOpts);
   } else {
     const bucket = bucketOpt || propsGetSingleCourseBucketSync(courseKey);
     if (!bucket) return [];
     mergeMemoryCourseEntriesIntoBucket(bucket, courseKey);
     propsCourseWindowDateFallbackIso = "";
     if (!fromRaw && !toRaw) {
-      out = filterCourseWindowEntriesBySidebarFilters(
-        (bucket.entries || []).map((e) => enrichCourseWindowEntry(e)).sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row)),
-      );
+      out = (bucket.entries || [])
+        .map((e) => enrichCourseWindowEntry(e))
+        .sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
     } else {
       const bounds = propsCourseWindowDateBoundsMs();
       let { fromMs, toMs } = bounds;
-      out = filterCourseWindowEntriesByDateMs(bucket, fromMs, toMs);
+      out = [];
+      for (const e of bucket.entries || []) {
+        const enriched = enrichCourseWindowEntry(e);
+        if (!historyRoundInCourseDateWindow(enriched.row, fromMs, toMs)) continue;
+        out.push(enriched);
+      }
+      out.sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
       if (!out.length && bucket.entries?.length && fromRaw && toRaw && fromRaw === toRaw) {
         const near = propsPickNearestCourseSessionDay(bucket, fromRaw, toRaw);
         if (near) {
           propsCourseWindowDateFallbackIso = near;
           fromMs = propsCourseWindowDateInputToUtcMs(near, false);
           toMs = propsCourseWindowDateInputToUtcMs(near, true);
-          out = filterCourseWindowEntriesByDateMs(bucket, fromMs, toMs);
+          out = [];
+          for (const e of bucket.entries || []) {
+            const enriched = enrichCourseWindowEntry(e);
+            if (!historyRoundInCourseDateWindow(enriched.row, fromMs, toMs)) continue;
+            out.push(enriched);
+          }
+          out.sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
         }
       }
     }
   }
-  if (dkProj) out = filterCourseWindowEntriesForDraftKings(out, statKey);
+  courseWindowRoundEntriesRawCacheSig = sig;
+  courseWindowRoundEntriesRawCache = out;
+  return out;
+}
+
+/** All player-round rows for field view (one course, all courses, optional date window). */
+function collectCourseWindowRoundEntriesFixed(bucketOpt) {
+  const sidebarSig = propsSidebarFiltersContextKey();
+  const sig = `${propsCourseWindowRawEntriesCacheSig(bucketOpt)}|sf|${sidebarSig}`;
+  if (sig === courseWindowRoundEntriesCacheSig && courseWindowRoundEntriesCache) {
+    return courseWindowRoundEntriesCache;
+  }
+  const out = filterCourseWindowEntriesBySidebarFilters(collectCourseWindowRoundEntriesRaw(bucketOpt));
   courseWindowRoundEntriesCacheSig = sig;
   courseWindowRoundEntriesCache = out;
   return out;
@@ -15495,19 +15582,16 @@ function propsStatLowerIsBetter(statKey) {
   return !propsMarketHigherIsBetter(statKey);
 }
 
-/**
- * Field-by-course & date: order bars left-to-right — worst/highest first for score-like markets,
- * best/lowest first for counting markets where more is better (birdies, pars, fairways, GIR).
- */
+/** Order chart bars left-to-right by stat value (Sort: low→high or high→low). */
 function sortPropsFieldByCourseSeriesChart(statKey, series) {
   if (!series || series.length < 2) return;
-  const hi = propsMarketHigherIsBetter(statKey);
+  const sortAsc = selectedPropsFieldAverageSort() === "asc";
   series.sort((a, b) => {
     const va = num(a.actual, NaN);
     const vb = num(b.actual, NaN);
     const fa = Number.isFinite(va);
     const fb = Number.isFinite(vb);
-    if (fa && fb && va !== vb) return hi ? va - vb : vb - va;
+    if (fa && fb && va !== vb) return sortAsc ? va - vb : vb - va;
     if (fa !== fb) return fa ? -1 : 1;
     const pa = String(a.playerName || "").localeCompare(String(b.playerName || ""));
     if (pa !== 0) return pa;
@@ -17280,8 +17364,14 @@ function renderPropsHitRateAndTopTable(statKey, line, winN, courseWindowEntriesO
     PROPS_HISTORY_ROUND_MAX
   );
   const dg = selectedDgId();
+  const windowEntriesList =
+    propsCourseWindowModeActive() && courseWindowEntriesOpt
+      ? propsCourseWindowEntriesAfterWindow(courseWindowEntriesOpt, statKey, wn)
+      : null;
   const st = propsCourseWindowModeActive()
-    ? propsCourseWindowFieldHitStats(statKey, line, wn)
+    ? windowEntriesList
+      ? propsFullHitStatsFromRoundList(statKey, line, windowEntriesList.map((e) => e.row), { courseWindow: true })
+      : propsCourseWindowFieldHitStats(statKey, line, wn)
     : propsFullHitStatsForDg(dg, statKey, line, wn);
   if (block) {
     block.hidden = false;
@@ -17325,11 +17415,13 @@ function renderPropsHitRateAndTopTable(statKey, line, winN, courseWindowEntriesO
   let courseWindowRoundsByDg = /** @type {Map<number, object[]> | null} */ (null);
   if (propsCourseWindowModeActive()) {
     courseWindowRoundsByDg = new Map();
-    const list = propsCourseWindowEntriesAfterWindow(
-      courseWindowEntriesOpt || collectCourseWindowRoundEntriesFixed(),
-      statKey,
-      wn,
-    );
+    const list =
+      windowEntriesList ||
+      propsCourseWindowEntriesAfterWindow(
+        courseWindowEntriesOpt || collectCourseWindowRoundEntriesFixed(),
+        statKey,
+        wn,
+      );
     for (const e of list) {
       const id = e.dgId;
       if (!courseWindowRoundsByDg.has(id)) courseWindowRoundsByDg.set(id, []);
@@ -17814,11 +17906,12 @@ function showPropsChartTooltip(canvas, ev, hit) {
     nodes.golfer.parentElement.hidden = !hit.playerName;
     nodes.value.textContent = propsChartFormatValue(hit.statKey, hit.actual);
     if (nodes.course) {
-      if (courseKey) {
+      const hideCourse = Boolean(hit._aggregate) || propsAverageModeOn();
+      if (hideCourse) {
+        nodes.course.parentElement.hidden = true;
+      } else {
         nodes.course.textContent = hit.courseLabel || propsCourseDisplay(hit);
         nodes.course.parentElement.hidden = false;
-      } else {
-        nodes.course.parentElement.hidden = true;
       }
     }
   }
@@ -18159,7 +18252,7 @@ function drawPropsTrendCanvasGolferHorizontal(series, lineY, statKey, opts = {})
       playerName: String(plot[i].playerName || "").trim(),
       dgId: plot[i].dgId,
       roundNum: Number.isFinite(rnd) && rnd >= 1 && rnd <= 4 ? rnd : NaN,
-      courseLabel: courseKey && hist ? propsCourseNameFromRow(hist) : "",
+      courseLabel: hist ? propsCourseNameFromRow(hist) : "",
       actual: v,
       statKey,
     });
@@ -18489,7 +18582,7 @@ function renderPropsTrendsNow() {
 }
 
 /** Debounce Historical Trends rebuilds so typing line/filters does not rescan the full field every keystroke. */
-function scheduleRenderPropsTrends(ms = 200) {
+function scheduleRenderPropsTrends(ms = 280) {
   window.clearTimeout(propsTrendsRenderDebounceT);
   propsTrendsRenderDebounceT = window.setTimeout(() => {
     propsTrendsRenderDebounceT = 0;
@@ -18506,9 +18599,46 @@ function paintPropsCourseWindowBuilding(message) {
   drawPropsTrendCanvas([], NaN, statKeyFromPropSelect());
 }
 
+function propsCourseWindowStructureContextKey() {
+  const fromRaw = String(document.getElementById("props-filter-date-from")?.value || "").trim();
+  const toRaw = String(document.getElementById("props-filter-date-to")?.value || "").trim();
+  return [
+    propsCourseWindowModeOn() ? 1 : 0,
+    propsEffectiveCourseKey() || "all",
+    fromRaw,
+    toRaw,
+    propsFilterDraftKingsOnlyOn() ? 1 : 0,
+    statKeyFromPropSelect(),
+    Number.isFinite(propsFieldEffectiveSeasonYear()) ? String(propsFieldEffectiveSeasonYear()) : "all",
+  ].join("|");
+}
+
+function invalidateCourseWindowRoundEntriesCache() {
+  courseWindowRoundEntriesCache = null;
+  courseWindowRoundEntriesCacheSig = "";
+  courseWindowRoundEntriesRawCache = null;
+  courseWindowRoundEntriesRawCacheSig = "";
+}
+
+/** Filter-only pass: reuse loaded history and course index (no dropdown rebuild / history restart). */
+function renderPropsTrendsCourseWindowQuick() {
+  const gen = propsCourseWindowRenderGen;
+  const courseKey = propsEffectiveCourseKey();
+  const bucket = courseKey ? propsGetSingleCourseBucketSync(courseKey) : null;
+  if (propsFilterDraftKingsOnlyOn()) {
+    void ensureDkAuditPropsIndexLoaded().then(() => {
+      if (gen !== propsCourseWindowRenderGen || activeAppTabId() !== "props") return;
+      renderPropsTrendsCourseWindowBody(gen, bucket);
+    });
+    return;
+  }
+  renderPropsTrendsCourseWindowBody(gen, bucket);
+}
+
 function renderPropsTrendsCourseWindow() {
   ensurePropsStatSelectValid();
   const gen = ++propsCourseWindowRenderGen;
+  propsCourseWindowStructureKey = propsCourseWindowStructureContextKey();
   propsCourseWindowLastEntries = null;
   syncPropsCourseWindowUiState();
   refreshPropsCourseFilterOptionsAllPlayers();
@@ -18549,15 +18679,17 @@ function renderPropsTrendsCourseWindow() {
         onBatch: () => {
           if (loadGen !== propsFieldHistoryLoadGen || gen !== propsCourseWindowRenderGen) return;
           if (activeAppTabId() !== "props") return;
-          courseWindowRoundEntriesCache = null;
-          courseWindowRoundEntriesCacheSig = "";
-          scheduleRenderPropsTrends(60);
+          invalidateCourseWindowRoundEntriesCache();
+          window.clearTimeout(propsFieldHistoryBatchRenderT);
+          propsFieldHistoryBatchRenderT = window.setTimeout(() => {
+            propsFieldHistoryBatchRenderT = 0;
+            scheduleRenderPropsTrends(80);
+          }, 220);
         },
       }).then(() => {
         if (loadGen !== propsFieldHistoryLoadGen || gen !== propsCourseWindowRenderGen) return;
         if (activeAppTabId() !== "props") return;
-        courseWindowRoundEntriesCache = null;
-        courseWindowRoundEntriesCacheSig = "";
+        invalidateCourseWindowRoundEntriesCache();
         paintBody(null);
       });
       if (readyCount > 0) {
@@ -18645,8 +18777,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
         propsSingleCourseIndexCache = null;
         const ck = propsEffectiveCourseKey();
         if (ck) propsCourseRoundIndex.delete(ck);
-        courseWindowRoundEntriesCache = null;
-        courseWindowRoundEntriesCacheSig = "";
+        invalidateCourseWindowRoundEntriesCache();
         scheduleRenderPropsTrends(0);
       }
     });
@@ -18684,15 +18815,32 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
 
   const nameByDgChart = buildPropsGolferDisplayNameMap();
   let seriesChart = [];
-  let chartXAxisMode = "valueSort";
+  let chartXAxisMode = "chrono";
+  const tailMode = selectedPropsTailMode();
 
   if (useGolferAggregate) {
     seriesChart = buildFieldGolferAggregateSeries(entriesAll, statKey);
     seriesChart = capFieldGolferSeriesForDisplay(statKey, seriesChart, winN);
     chartXAxisMode = "golferHorizontal";
   } else {
+    const playerRowByDg = new Map(
+      roundProjectionPlayersForOuRound()
+        .map((p) => [Math.round(num(p.dg_id, NaN)), p])
+        .filter(([id]) => Number.isFinite(id)),
+    );
     for (const e of chartEntries) {
-      const actual = chartActualForCourseWindowEntry(statKey, e);
+      const actual =
+        dkOnly && Number.isFinite(e.chartActual)
+          ? e.chartActual
+          : dkOnly
+            ? chartActualForDraftKingsCourseWindow(
+                statKey,
+                e,
+                playerRowByDg.get(e.dgId) ||
+                  projectionPlayerRowForModel(e.dgId, getOuRound()) ||
+                  DATA.players?.find((p) => Math.round(num(p.dg_id, NaN)) === e.dgId),
+              )
+            : chartActualForCourseWindowEntry(statKey, e);
       if (!Number.isFinite(actual)) continue;
       const playerName = resolveGolferDisplayNameForDg(e.dgId, e.playerName, nameByDgChart);
       if (!playerName) continue;
@@ -18710,7 +18858,10 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
         _projection: Boolean(e.row?._from_projection_chart),
       });
     }
-    sortPropsFieldByCourseSeriesChart(statKey, seriesChart);
+    if (tailMode === "best" || tailMode === "worst") {
+      sortPropsFieldByCourseSeriesChart(statKey, seriesChart);
+      chartXAxisMode = "valueSort";
+    }
   }
 
   if (!seriesChart.length) {
@@ -18765,10 +18916,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   paintPropsTrendKpiRowCourseWindow(statKey, hitSt, seriesChart, entriesAll);
   const chartLeg = document.getElementById("props-chart-line-legend");
   if (chartLeg) chartLeg.hidden = chartXAxisMode === "golferHorizontal" || !Number.isFinite(line);
-  window.requestAnimationFrame(() => {
-    if (gen !== propsCourseWindowRenderGen) return;
-    renderPropsHitRateAndTopTable(statKey, line, winN, propsCourseWindowLastEntries);
-  });
+  renderPropsHitRateAndTopTable(statKey, line, winN, entriesAll);
 }
 
 function propsAutoTrendLineForContext(dg, statKey, playerRow) {
@@ -18808,7 +18956,12 @@ function renderPropsTrends() {
     scheduleRenderPropsTrends(0);
   });
   if (propsCourseWindowModeOn()) {
-    renderPropsTrendsCourseWindow();
+    const structKey = propsCourseWindowStructureContextKey();
+    if (structKey !== propsCourseWindowStructureKey) {
+      renderPropsTrendsCourseWindow();
+    } else {
+      renderPropsTrendsCourseWindowQuick();
+    }
     return;
   }
   syncPropsWindowNDefault();
@@ -18968,7 +19121,13 @@ function renderPropsTrends() {
   } else if (empty) {
     empty.hidden = true;
   }
-  drawPropsTrendCanvas(seriesChart, line, statKey);
+  const tailMode = selectedPropsTailMode();
+  let chartXAxisMode = "chrono";
+  if (!propsAverageModeOn() && (tailMode === "best" || tailMode === "worst")) {
+    sortPropsFieldByCourseSeriesChart(statKey, seriesChart);
+    chartXAxisMode = "valueSort";
+  }
+  drawPropsTrendCanvas(seriesChart, line, statKey, { xAxisMode: chartXAxisMode });
   const stNow = propsFullHitStatsForDg(dg, statKey, line, winN);
   paintPropsTrendsInsightHeader(playerRow, statKey, line, stNow, seriesChart, dg);
   const chartLeg = document.getElementById("props-chart-line-legend");
@@ -20736,7 +20895,7 @@ document.addEventListener("DOMContentLoaded", () => {
           propsWindowNUserOverride = false;
         }
         syncPropsAverageUiState();
-      } else if (id === "props-filter-avg-sort" || id === "props-filter-course-window") {
+      } else if (id === "props-filter-avg-sort" || id === "props-filter-course-window" || id === "props-filter-tail-mode") {
         syncPropsAverageUiState();
       }
       scheduleRenderPropsTrends();
@@ -20786,19 +20945,22 @@ document.addEventListener("DOMContentLoaded", () => {
       propsWindowNUserOverride = false;
       syncPropsWindowNDefault(true);
     }
-    courseWindowRoundEntriesCache = null;
-    courseWindowRoundEntriesCacheSig = "";
+    invalidateCourseWindowRoundEntriesCache();
     renderPropsTrendsNow();
   });
   document.getElementById("props-filter-draftkings-only")?.addEventListener("change", () => {
     if (propsCourseWindowModeOn() && propsFilterDraftKingsOnlyOn()) {
       const yearSel = document.getElementById("props-filter-year");
       if (yearSel) yearSel.value = "";
+    } else if (propsCourseWindowModeOn()) {
+      const fromEl = document.getElementById("props-filter-date-from");
+      const toEl = document.getElementById("props-filter-date-to");
+      if (fromEl) fromEl.value = "";
+      if (toEl) toEl.value = "";
     }
     propsWindowNUserOverride = false;
     syncPropsWindowNDefault(true);
-    courseWindowRoundEntriesCache = null;
-    courseWindowRoundEntriesCacheSig = "";
+    invalidateCourseWindowRoundEntriesCache();
     renderPropsTrendsNow();
   });
   document.getElementById("props-top-hits-emoji-toggle")?.addEventListener("click", () => {
