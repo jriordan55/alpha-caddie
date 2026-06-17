@@ -14167,8 +14167,22 @@ function restrictCourseWindowEntriesToField(entries, statKey) {
   const fieldIds = new Set(
     [...propsFieldPlayerDgIds()].map((id) => Math.round(num(id, NaN))).filter((x) => Number.isFinite(x)),
   );
-  if (!fieldIds.size) return entries || [];
+  if (!fieldIds.size) return propsCourseWindowModeOn() ? [] : entries || [];
   return (entries || []).filter((e) => fieldIds.has(courseWindowEntryDgId(e)));
+}
+
+/** Field-by-course: course shard loaded, or every projection-field player has history. */
+function propsFieldCourseDataReady(courseKey, bucketOpt) {
+  if (!propsCourseWindowModeOn()) return true;
+  const ids = [...propsFieldPlayerDgIds()];
+  if (!ids.length) return false;
+  if (courseKey) {
+    const bucket = bucketOpt ?? propsGetSingleCourseBucketSync(courseKey);
+    if (bucket?.entries?.length) return true;
+    if (propsCourseShardLoadInFlight(courseKey)) return false;
+    return ids.every((id) => historyBucketLoaded(id));
+  }
+  return ids.every((id) => historyBucketLoaded(id));
 }
 
 /** Load per-player history shards for field view (season-sliced when possible). */
@@ -15219,9 +15233,14 @@ function collectCourseWindowRoundEntriesRaw(bucketOpt) {
     if (bucket?.entries?.length) {
       mergeMemoryCourseEntriesIntoBucket(bucket, courseKey);
       out = collectCourseWindowEntriesFromBucket(bucket, courseKey);
+    } else if (propsCourseWindowModeOn() && !propsFieldCourseDataReady(courseKey, bucket)) {
+      out = [];
     }
   }
-  if (!out.length) {
+  if (
+    !out.length &&
+    (!propsCourseWindowModeOn() || propsFieldCourseDataReady(courseKey, bucketOpt))
+  ) {
     out = collectFieldRoundEntriesFromPlayerHistory(rawOpts);
   }
   out = restrictCourseWindowEntriesToField(out, statKey);
@@ -18668,7 +18687,8 @@ function renderPropsTrendsCourseWindowQuick() {
   const gen = propsCourseWindowRenderGen;
   const courseKey = propsEffectiveCourseKey();
   const bucket = courseKey ? propsGetSingleCourseBucketSync(courseKey) : null;
-  if (courseKey && !bucket?.entries?.length && !propsCourseShardLoadInFlight(courseKey)) {
+  if (!propsFieldCourseDataReady(courseKey, bucket)) {
+    if (propsCourseShardLoadInFlight(courseKey)) return;
     renderPropsTrendsCourseWindow();
     return;
   }
@@ -18711,20 +18731,27 @@ function renderPropsTrendsCourseWindow() {
   const bucketNow = courseKey ? propsGetSingleCourseBucketSync(courseKey) : null;
   const needFieldHistory = fieldIds.some((id) => !historyBucketLoaded(id));
   const needCourseShard = Boolean(courseKey) && !bucketNow?.entries?.length;
+  const dataReady = propsFieldCourseDataReady(courseKey, bucketNow);
 
-  paintBody(bucketNow);
+  if (dataReady) {
+    paintBody(bucketNow);
+    if (!needFieldHistory && !needCourseShard) return;
+  } else if (activeAppTabId() === "props") {
+    paintPropsCourseWindowBuilding(
+      needCourseShard
+        ? "Loading all players at this course…"
+        : "Loading this week's field history…",
+    );
+  }
 
   if ((!needFieldHistory && !needCourseShard) || activeAppTabId() !== "props") return;
 
   if (needCourseShard) {
-    paintPropsCourseWindowBuilding("Loading all players at this course…");
     void ensurePropsCourseIndexForKeyAsync(courseKey).then((loadedBucket) => {
       if (gen !== propsCourseWindowRenderGen || activeAppTabId() !== "props") return;
       invalidateCourseWindowRoundEntriesCache();
       paintBody(loadedBucket);
     });
-  } else if (needFieldHistory) {
-    paintPropsCourseWindowBuilding("Loading field player history…");
   }
 
   if (needFieldHistory) {
@@ -18805,6 +18832,17 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
     renderPropsHitRateAndTopTable(statKey, NaN, winN);
     return;
   }
+
+  if (!propsFieldCourseDataReady(courseKey, courseBucket)) {
+    paintPropsCourseWindowBuilding(
+      courseKey ? "Loading all players at this course…" : "Loading this week's field history…",
+    );
+    return;
+  }
+
+  const bookWrapEarly = document.getElementById("props-trends-book-lines");
+  if (bookWrapEarly) bookWrapEarly.replaceChildren();
+
   if (!isFileProtocol() && !propsCourseWindowLiveMergeAttempted) {
     propsCourseWindowLiveMergeAttempted = true;
     void ensureLiveTournamentHistoryMerged({ useCache: true }).then((n) => {
@@ -18985,13 +19023,14 @@ function renderPropsTrends() {
   ensurePropsRoundWeatherLoadedForTrends();
   syncPropsCourseWindowUiState();
   if (propsFieldVenueKpisEnabled()) ensurePropsFieldVenueHistoryLoaded();
-  ensurePropsCourseHistoryForTrendsChart(selectedDgId());
   void ensurePropsDgIdNameManifestLoaded().then((m) => {
     if (!m?.size || activeAppTabId() !== "props" || propsDgIdNameManifestUiRefreshDone) return;
     propsDgIdNameManifestUiRefreshDone = true;
     scheduleRenderPropsTrends(0);
   });
   if (propsCourseWindowModeOn()) {
+    const courseKey = propsEffectiveCourseKey();
+    if (courseKey) void ensurePropsCourseIndexForKeyAsync(courseKey);
     const structKey = propsCourseWindowStructureContextKey();
     if (structKey !== propsCourseWindowStructureKey) {
       renderPropsTrendsCourseWindow();
@@ -19000,6 +19039,7 @@ function renderPropsTrends() {
     }
     return;
   }
+  ensurePropsCourseHistoryForTrendsChart(selectedDgId());
   syncPropsWindowNDefault();
   syncPropsCourseWindowUiState();
   const dg = selectedDgId();
