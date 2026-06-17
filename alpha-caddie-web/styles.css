@@ -2762,14 +2762,7 @@ th.matchup-analysis-best-pick {
   padding: 16px 18px 22px;
 }
 .props-trends-top-rounds-field .props-step-btn {
-  display: none;
-}
-.props-trends-top-rounds-field input#props-window-n {
-  pointer-events: none;
-  cursor: default;
-  opacity: 0.92;
-  min-width: 4.5rem;
-  text-align: center;
+  display: flex;
 }
 
 .props-shell .props-trends-chart-wrap {

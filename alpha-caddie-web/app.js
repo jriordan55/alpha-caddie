@@ -13807,7 +13807,10 @@ function applyPropsWindowTailToRows(rows, statKey, winN, opts = {}) {
   );
   const list = Array.isArray(rows) ? rows : [];
   const mode = selectedPropsTailMode();
-  if (mode === "average") return [...list];
+  if (mode === "average") {
+    const sorted = [...list].sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
+    return sorted.slice(0, wn).sort((a, b) => historyRoundChronoKey(a) - historyRoundChronoKey(b));
+  }
   if (mode === "recent") {
     const sorted = [...list].sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
     return sorted.slice(0, wn).sort((a, b) => historyRoundChronoKey(a) - historyRoundChronoKey(b));
@@ -13848,24 +13851,16 @@ function applyPropsWindowTailToCourseEntries(entries, statKey, winN) {
   return out;
 }
 
-/** Field view uses all filtered rounds; single-golfer course window keeps per-player tail. */
+/** Field view: per-golfer round window (same tail logic as single-player course mode). */
 function propsCourseWindowEntriesAfterWindow(entries, statKey, winN) {
-  if (propsCourseWindowModeActive()) return Array.isArray(entries) ? entries : [];
   return applyPropsWindowTailToCourseEntries(entries, statKey, winN);
-}
-
-function syncPropsFieldRoundCountDisplay(count) {
-  if (!propsCourseWindowModeOn()) return;
-  const el = document.getElementById("props-window-n");
-  if (!el) return;
-  const n = Math.max(0, Math.round(num(count, 0)));
-  el.value = String(n);
 }
 
 function propsSuggestedWindowN() {
   if (propsCourseWindowModeActive()) {
-    const raw = collectCourseWindowRoundEntriesFixed();
-    if (raw.length) return raw.length;
+    if (propsFieldDkShouldAggregateByGolfer(collectCourseWindowRoundEntriesFixed())) {
+      return PROPS_FIELD_DK_GOLFER_CHART_MAX;
+    }
     const cap = currentTournamentProgressRoundCap();
     if (Number.isFinite(cap) && cap >= 1) return Math.round(cap);
     const sel = selectedPropsRoundNumsFilter();
@@ -13879,10 +13874,6 @@ function propsSuggestedWindowN() {
 }
 
 function syncPropsWindowNDefault(force = false) {
-  if (propsCourseWindowModeOn()) {
-    syncPropsFieldRoundCountDisplay(collectCourseWindowRoundEntriesFixed().length);
-    return;
-  }
   if (propsWindowNUserOverride && !force) return;
   const el = document.getElementById("props-window-n");
   if (!el) return;
@@ -15587,15 +15578,17 @@ function sortGolferHorizontalSeries(statKey, series) {
   });
 }
 
-function capFieldGolferSeriesForDisplay(statKey, series) {
+function capFieldGolferSeriesForDisplay(statKey, series, winN) {
   if (!series?.length) return series || [];
   sortGolferHorizontalSeries(statKey, series);
   const tail = selectedPropsTailMode();
-  if (
-    (tail === "best" || tail === "average") &&
-    series.length > PROPS_FIELD_DK_GOLFER_CHART_MAX
-  ) {
-    return series.slice(0, PROPS_FIELD_DK_GOLFER_CHART_MAX);
+  const cap = clamp(
+    Math.round(num(winN, PROPS_FIELD_DK_GOLFER_CHART_MAX)),
+    1,
+    PROPS_HISTORY_ROUND_MAX,
+  );
+  if ((tail === "best" || tail === "average") && series.length > cap) {
+    return series.slice(0, cap);
   }
   return series;
 }
@@ -18573,13 +18566,12 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
     }
   }
   const nWinEl = document.getElementById("props-window-n");
-  syncPropsWindowNDefault();
   const winN = clamp(
     Math.round(num(nWinEl?.value, PROPS_HISTORY_ROUND_DEFAULT)),
     PROPS_HISTORY_ROUND_MIN,
     PROPS_HISTORY_ROUND_MAX,
   );
-  if (nWinEl) nWinEl.value = String(winN);
+  if (nWinEl && document.activeElement !== nWinEl) nWinEl.value = String(winN);
 
   if (!propsCourseWindowModeOn()) {
     if (empty) {
@@ -18624,7 +18616,6 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   const lineEditing = Boolean(lineInp && document.activeElement === lineInp);
   const dkOnly = propsFilterDraftKingsOnlyOn();
   const entriesRaw = collectCourseWindowRoundEntriesFixed(courseBucket);
-  syncPropsFieldRoundCountDisplay(entriesRaw.length);
   const entriesAll = propsCourseWindowEntriesAfterWindow(entriesRaw, statKey, winN);
   propsCourseWindowLastEntries = entriesAll;
   let line = clampPropLineForMarket(statKey, snapPropLineForMarket(statKey, lineInp?.value));
@@ -18651,7 +18642,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
 
   if (propsFieldDkShouldAggregateByGolfer(entriesAll)) {
     seriesChart = buildFieldGolferAggregateSeries(entriesAll, statKey);
-    seriesChart = capFieldGolferSeriesForDisplay(statKey, seriesChart);
+    seriesChart = capFieldGolferSeriesForDisplay(statKey, seriesChart, winN);
     if (propsFieldDkGolferHorizontalChartActive(seriesChart.length)) {
       chartXAxisMode = "golferHorizontal";
     } else {
@@ -20828,14 +20819,12 @@ document.addEventListener("DOMContentLoaded", () => {
       ev.preventDefault();
       hidePropsChartTooltip();
       if (btn.id === "props-win-minus") {
-        if (propsCourseWindowModeOn()) return;
         bumpPropsWindowN(-1);
         lockPropsTrendLineContextToCurrentFilter();
         renderPropsTrends();
         return;
       }
       if (btn.id === "props-win-plus") {
-        if (propsCourseWindowModeOn()) return;
         bumpPropsWindowN(1);
         lockPropsTrendLineContextToCurrentFilter();
         renderPropsTrends();
