@@ -20933,8 +20933,6 @@ document.addEventListener("DOMContentLoaded", () => {
     "props-filter-course",
     "props-filter-course-window",
     "props-filter-draftkings-only",
-    "props-filter-date-from",
-    "props-filter-date-to",
     "props-window-n",
   ];
   propsIds.forEach((id) => {
@@ -20987,17 +20985,11 @@ document.addEventListener("DOMContentLoaded", () => {
       id === "props-filter-wind-min" ||
       id === "props-filter-wind-max" ||
       id === "props-filter-humidity-min" ||
-      id === "props-filter-humidity-max" ||
-      id === "props-filter-date-from" ||
-      id === "props-filter-date-to"
+      id === "props-filter-humidity-max"
     ) {
       el.addEventListener("input", () => {
         propsWindowNUserOverride = false;
         syncPropsWindowNDefault(true);
-        if (id === "props-filter-date-from" || id === "props-filter-date-to") {
-          propsCourseWindowStructureKey = "";
-          invalidateCourseWindowRoundEntriesCache();
-        }
         scheduleRenderPropsTrends();
       });
     }
@@ -21018,10 +21010,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const yearSel = document.getElementById("props-filter-year");
       if (yearSel) yearSel.value = "";
     } else {
-      const fromEl = document.getElementById("props-filter-date-from");
-      const toEl = document.getElementById("props-filter-date-to");
-      if (fromEl) fromEl.value = "";
-      if (toEl) toEl.value = "";
       propsAllPlayersCourseOptsCacheKey = "";
       propsAllPlayersCourseOptsEntries = null;
       ensurePropsFieldYearDefault(true);
@@ -21036,13 +21024,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const yearSel = document.getElementById("props-filter-year");
       if (yearSel) yearSel.value = "";
     } else if (propsCourseWindowModeOn()) {
-      const fromEl = document.getElementById("props-filter-date-from");
-      const toEl = document.getElementById("props-filter-date-to");
-      if (fromEl) fromEl.value = "";
-      if (toEl) toEl.value = "";
+      propsWindowNUserOverride = false;
+      syncPropsWindowNDefault(true);
     }
-    propsWindowNUserOverride = false;
-    syncPropsWindowNDefault(true);
     invalidateCourseWindowRoundEntriesCache();
     renderPropsTrendsNow();
   });
