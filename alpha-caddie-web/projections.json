@@ -9,7 +9,7 @@
   "datagolf_field_current_round": 1,
   "display_round": 1,
   "display_round_label": "R1 — next Thursday (auto, America/New_York)",
-  "updated_at": "2026-06-17T00:45:18Z",
+  "updated_at": "2026-06-17T01:13:19Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -52087,8 +52087,8 @@
   },
   "outright_sim_probs": {
     "n_sims": 500,
-    "baked_at": "2026-06-17T00:47:09.795Z",
-    "ratings_updated_at": "2026-06-17T00:45:18Z",
+    "baked_at": "2026-06-17T01:16:08.073Z",
+    "ratings_updated_at": "2026-06-17T01:13:19Z",
     "live_through": "",
     "by_dg": {
       "5716": {
@@ -53341,6 +53341,6 @@
       }
     }
   },
-  "book_odds_refreshed_at": "2026-06-17T00:45:18Z",
-  "dk_round_props_refreshed_at": "2026-06-17T00:45:18Z"
+  "book_odds_refreshed_at": "2026-06-17T01:13:19Z",
+  "dk_round_props_refreshed_at": "2026-06-17T01:13:19Z"
 }

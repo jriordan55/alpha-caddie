@@ -17336,7 +17336,7 @@ function propsChartSparseTickLabels(perBarLabels, innerWidthPx) {
   const n = perBarLabels.length;
   const map = new Map();
   if (!n) return map;
-  const minPx = 76;
+  const minPx = n > 240 ? 96 : n > 120 ? 84 : 76;
   const maxTicks = Math.max(4, Math.min(12, Math.floor(innerWidthPx / minPx)));
   let indices;
   if (n <= maxTicks) {
@@ -17400,10 +17400,32 @@ function propsChartXAxisValueSortSessionPlacements(perBarLabels, xCenter, padL, 
   if (plotW <= 0) return [];
 
   const sessions = [...groups.values()].sort((a, b) => a.sortKey - b.sortKey || a.lab.localeCompare(b.lab));
-  return sessions.map((s, j) => ({
-    lab: s.lab,
-    cx: plotL + ((j + 0.5) / sessions.length) * plotW,
-  }));
+  const minPx = 76;
+  const maxTicks = Math.max(4, Math.min(12, Math.floor(plotW / minPx)));
+  let tickIndices;
+  if (sessions.length <= maxTicks) {
+    tickIndices = sessions.map((_, i) => i);
+  } else if (sessions.length === 1) {
+    tickIndices = [0];
+  } else {
+    tickIndices = [];
+    for (let j = 0; j < maxTicks; j++) {
+      tickIndices.push(Math.round((j / (maxTicks - 1)) * (sessions.length - 1)));
+    }
+    tickIndices = [...new Set(tickIndices)].sort((a, b) => a - b);
+  }
+  const shown = new Set();
+  const out = [];
+  for (const idx of tickIndices) {
+    const s = sessions[idx];
+    if (!s?.lab || shown.has(s.lab)) continue;
+    shown.add(s.lab);
+    out.push({
+      lab: s.lab,
+      cx: plotL + ((idx + 0.5) / sessions.length) * plotW,
+    });
+  }
+  return out;
 }
 
 /** @deprecated use propsChartXAxisValueSortSessionPlacements */
@@ -18007,19 +18029,32 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
   ctx.fillStyle = "#9ca0ac";
   if (xAxisMode === "valueSort") {
     const sessionPlacements = propsChartXAxisValueSortSessionPlacements(xAxisPerBar, xCenter, pad.l, innerW);
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
-    ctx.lineWidth = 1;
-    for (let i = 1; i < sessionPlacements.length; i++) {
-      const x = sessionPlacements[i].cx - (sessionPlacements[i].cx - sessionPlacements[i - 1].cx) / 2;
-      ctx.beginPath();
-      ctx.moveTo(x, pad.t);
-      ctx.lineTo(x, h - pad.b);
-      ctx.stroke();
+    if (sessionPlacements.length > 1 && sessionPlacements.length <= 14) {
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
+      ctx.lineWidth = 1;
+      for (let i = 1; i < sessionPlacements.length; i++) {
+        const x = sessionPlacements[i].cx - (sessionPlacements[i].cx - sessionPlacements[i - 1].cx) / 2;
+        ctx.beginPath();
+        ctx.moveTo(x, pad.t);
+        ctx.lineTo(x, h - pad.b);
+        ctx.stroke();
+      }
     }
     ctx.fillStyle = "#9ca0ac";
+    const yLab = sessionPlacements.length > 8 ? h - 24 : h - 10;
     for (const p of sessionPlacements) {
       if (!p.lab) continue;
-      ctx.fillText(p.lab, p.cx, h - 10);
+      if (sessionPlacements.length > 8) {
+        ctx.save();
+        ctx.translate(p.cx, yLab);
+        ctx.rotate(-Math.PI / 6);
+        ctx.textAlign = "right";
+        ctx.fillText(p.lab, 0, 0);
+        ctx.restore();
+        ctx.textAlign = "center";
+      } else {
+        ctx.fillText(p.lab, p.cx, yLab);
+      }
     }
   } else {
     const tickMap = propsChartXAxisDateLabels(xAxisPerBar, innerW, { xAxisMode });
