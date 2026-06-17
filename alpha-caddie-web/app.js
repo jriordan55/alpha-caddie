@@ -14040,7 +14040,16 @@ function enrichHistoryRoundsForTrendsFilters(list, dgIdOpt) {
 
 function enrichCourseWindowEntry(entry) {
   if (!entry?.row) return entry;
-  return { ...entry, row: enrichHistoryRowForTrendsFilters(entry.row, entry.dgId) };
+  const dgId = courseWindowEntryDgId(entry);
+  const playerName =
+    String(entry.playerName || entry.player_name || "").trim() ||
+    resolveGolferDisplayNameForDg(dgId, entry.player_name);
+  return {
+    ...entry,
+    dgId: Number.isFinite(dgId) ? dgId : entry.dgId,
+    playerName,
+    row: enrichHistoryRowForTrendsFilters(entry.row, dgId),
+  };
 }
 
 async function ensurePropsRoundWeatherLoaded() {
@@ -14149,13 +14158,17 @@ function propsFieldPlayerDgIds() {
   return ids;
 }
 
+function courseWindowEntryDgId(entry) {
+  return Math.round(num(entry?.dgId ?? entry?.dg_id, NaN));
+}
+
 /** Keep only this week's field (and DK subset when that filter is on). */
 function restrictCourseWindowEntriesToField(entries, statKey) {
   const fieldIds = new Set(
     [...propsFieldPlayerDgIds()].map((id) => Math.round(num(id, NaN))).filter((x) => Number.isFinite(x)),
   );
   if (!fieldIds.size) return entries || [];
-  return (entries || []).filter((e) => fieldIds.has(Math.round(num(e.dgId, NaN))));
+  return (entries || []).filter((e) => fieldIds.has(courseWindowEntryDgId(e)));
 }
 
 /** Load per-player history shards for field view (season-sliced when possible). */
@@ -18621,7 +18634,12 @@ function paintPropsCourseWindowBuilding(message) {
     empty.hidden = false;
     empty.textContent = message;
   }
-  drawPropsTrendCanvas([], NaN, statKeyFromPropSelect());
+}
+
+function propsCourseShardLoadInFlight(courseKey) {
+  return Boolean(
+    courseKey && propsSingleCourseIndexPromise && propsSingleCourseIndexCourseKey === courseKey,
+  );
 }
 
 function propsCourseWindowStructureContextKey() {
@@ -18650,7 +18668,7 @@ function renderPropsTrendsCourseWindowQuick() {
   const gen = propsCourseWindowRenderGen;
   const courseKey = propsEffectiveCourseKey();
   const bucket = courseKey ? propsGetSingleCourseBucketSync(courseKey) : null;
-  if (courseKey && !bucket?.entries?.length) {
+  if (courseKey && !bucket?.entries?.length && !propsCourseShardLoadInFlight(courseKey)) {
     renderPropsTrendsCourseWindow();
     return;
   }
@@ -18659,6 +18677,7 @@ function renderPropsTrendsCourseWindowQuick() {
       if (gen !== propsCourseWindowRenderGen || activeAppTabId() !== "props") return;
       renderPropsTrendsCourseWindowBody(gen, bucket);
     });
+    renderPropsTrendsCourseWindowBody(gen, bucket);
     return;
   }
   renderPropsTrendsCourseWindowBody(gen, bucket);
@@ -18680,59 +18699,56 @@ function renderPropsTrendsCourseWindow() {
   const courseKey = propsEffectiveCourseKey();
   const paintBody = (bucket) => {
     if (propsFilterDraftKingsOnlyOn()) {
-      paintPropsCourseWindowBuilding("Loading DraftKings tournament lines…");
       void ensureDkAuditPropsIndexLoaded().then(() => {
         if (gen !== propsCourseWindowRenderGen || activeAppTabId() !== "props") return;
         renderPropsTrendsCourseWindowBody(gen, bucket);
       });
-      return;
     }
     renderPropsTrendsCourseWindowBody(gen, bucket);
   };
 
   const fieldIds = [...propsFieldPlayerDgIds()];
+  const bucketNow = courseKey ? propsGetSingleCourseBucketSync(courseKey) : null;
   const needFieldHistory = fieldIds.some((id) => !historyBucketLoaded(id));
-  const needCourseShard = Boolean(courseKey) && !propsGetSingleCourseBucketSync(courseKey)?.entries?.length;
+  const needCourseShard = Boolean(courseKey) && !bucketNow?.entries?.length;
 
-  if ((needFieldHistory || needCourseShard) && activeAppTabId() === "props") {
-    if (needCourseShard) {
-      paintPropsCourseWindowBuilding("Loading all players at this course…");
-      void ensurePropsCourseIndexForKeyAsync(courseKey).then((bucket) => {
-        if (gen !== propsCourseWindowRenderGen || activeAppTabId() !== "props") return;
-        invalidateCourseWindowRoundEntriesCache();
-        paintBody(bucket);
-      });
-    }
-    if (needFieldHistory) {
-      const loadGen = ++propsFieldHistoryLoadGen;
-      if (!needCourseShard) {
-        paintPropsCourseWindowBuilding("Loading field player history…");
-        paintBody(propsGetSingleCourseBucketSync(courseKey));
-      }
-      void ensurePropsFieldPlayerHistoryLoaded({
-        gen: loadGen,
-        seasonYear: NaN,
-        onBatch: () => {
-          if (loadGen !== propsFieldHistoryLoadGen || gen !== propsCourseWindowRenderGen) return;
-          if (activeAppTabId() !== "props") return;
-          invalidateCourseWindowRoundEntriesCache();
-          window.clearTimeout(propsFieldHistoryBatchRenderT);
-          propsFieldHistoryBatchRenderT = window.setTimeout(() => {
-            propsFieldHistoryBatchRenderT = 0;
-            scheduleRenderPropsTrends(80);
-          }, 220);
-        },
-      }).then(() => {
+  paintBody(bucketNow);
+
+  if ((!needFieldHistory && !needCourseShard) || activeAppTabId() !== "props") return;
+
+  if (needCourseShard) {
+    paintPropsCourseWindowBuilding("Loading all players at this course…");
+    void ensurePropsCourseIndexForKeyAsync(courseKey).then((loadedBucket) => {
+      if (gen !== propsCourseWindowRenderGen || activeAppTabId() !== "props") return;
+      invalidateCourseWindowRoundEntriesCache();
+      paintBody(loadedBucket);
+    });
+  } else if (needFieldHistory) {
+    paintPropsCourseWindowBuilding("Loading field player history…");
+  }
+
+  if (needFieldHistory) {
+    const loadGen = ++propsFieldHistoryLoadGen;
+    void ensurePropsFieldPlayerHistoryLoaded({
+      gen: loadGen,
+      seasonYear: NaN,
+      onBatch: () => {
         if (loadGen !== propsFieldHistoryLoadGen || gen !== propsCourseWindowRenderGen) return;
         if (activeAppTabId() !== "props") return;
         invalidateCourseWindowRoundEntriesCache();
-        if (!needCourseShard) paintBody(propsGetSingleCourseBucketSync(courseKey));
-      });
-    }
-    return;
+        window.clearTimeout(propsFieldHistoryBatchRenderT);
+        propsFieldHistoryBatchRenderT = window.setTimeout(() => {
+          propsFieldHistoryBatchRenderT = 0;
+          scheduleRenderPropsTrends(80);
+        }, 220);
+      },
+    }).then(() => {
+      if (loadGen !== propsFieldHistoryLoadGen || gen !== propsCourseWindowRenderGen) return;
+      if (activeAppTabId() !== "props") return;
+      invalidateCourseWindowRoundEntriesCache();
+      paintBody(propsGetSingleCourseBucketSync(courseKey));
+    });
   }
-
-  paintBody(propsGetSingleCourseBucketSync(courseKey));
 }
 
 function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
