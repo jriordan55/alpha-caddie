@@ -15547,9 +15547,11 @@ function courseWindowEntryChartActual(statKey, e, dkOnly) {
   return chartActualForCourseWindowEntry(statKey, e);
 }
 
-/** One chart point per golfer (mean across filtered rounds). */
+/** One chart point per golfer (mean / best / worst / most-recent round in the filtered set). */
 function buildFieldGolferAggregateSeries(entries, statKey) {
   const dkOnly = propsFilterDraftKingsOnlyOn();
+  const avgOn = propsAverageModeOn();
+  const tail = selectedPropsTailMode();
   const byDg = new Map();
   for (const e of entries || []) {
     const id = Math.round(num(e?.dgId, NaN));
@@ -15561,11 +15563,22 @@ function buildFieldGolferAggregateSeries(entries, statKey) {
   }
   const nameByDg = buildPropsGolferDisplayNameMap();
   const series = [];
+  const lowerBetter = propsStatLowerIsBetter(statKey);
   for (const [, g] of byDg) {
     const dgId = g.dgId;
-    const picks = [...g.picks];
-    const nums = picks.map((p) => p.actual).filter((x) => Number.isFinite(x));
-    const actual = nums.length ? nums.reduce((a, b) => a + b, 0) / nums.length : NaN;
+    let picks = [...g.picks];
+    let actual = NaN;
+    if (avgOn) {
+      const nums = picks.map((p) => p.actual).filter((x) => Number.isFinite(x));
+      actual = nums.length ? nums.reduce((a, b) => a + b, 0) / nums.length : NaN;
+    } else if (tail === "recent") {
+      picks.sort((a, b) => historyRoundChronoKey(b.entry.row) - historyRoundChronoKey(a.entry.row));
+      actual = picks[0]?.actual;
+    } else {
+      picks.sort((a, b) => (lowerBetter ? a.actual - b.actual : b.actual - a.actual));
+      if (tail === "worst") picks.reverse();
+      actual = picks[0]?.actual;
+    }
     if (!Number.isFinite(actual)) continue;
     const pick = picks[0]?.entry;
     const playerName = resolveGolferDisplayNameForDg(dgId, g.playerName, nameByDg);
@@ -15577,10 +15590,21 @@ function buildFieldGolferAggregateSeries(entries, statKey) {
       date: pick?.row ? propsTrendChartDateFromRow(pick.row) : "",
       _hist: pick?.row,
       _aggregate: true,
-      _golferAvgRounds: nums.length,
+      _golferAvgRounds: avgOn ? picks.map((p) => p.actual).filter((x) => Number.isFinite(x)).length : 1,
     });
   }
   return series;
+}
+
+function fieldGolferHorizontalCap(winN) {
+  return clamp(
+    Math.min(
+      PROPS_FIELD_GOLFER_HORIZONTAL_MAX,
+      Math.round(num(winN, PROPS_FIELD_GOLFER_HORIZONTAL_MAX)),
+    ),
+    1,
+    PROPS_FIELD_GOLFER_HORIZONTAL_MAX,
+  );
 }
 
 function fieldGolferDisplayCap(winN) {
@@ -15591,8 +15615,25 @@ function fieldGolferDisplayCap(winN) {
   );
 }
 
+/** Y order for horizontal field chart: worst = worst→best; best/recent = best→worst. */
+function sortGolferHorizontalSeries(statKey, series, tailOpt) {
+  if (!series?.length) return;
+  const tail = tailOpt || selectedPropsTailMode();
+  const hi = propsMarketHigherIsBetter(statKey);
+  const worstFirst = tail === "worst";
+  series.sort((a, b) => {
+    const va = num(a.actual, NaN);
+    const vb = num(b.actual, NaN);
+    if (Number.isFinite(va) && Number.isFinite(vb) && va !== vb) {
+      if (worstFirst) return hi ? va - vb : vb - va;
+      return hi ? vb - va : va - vb;
+    }
+    return String(a.playerName || "").localeCompare(String(b.playerName || ""));
+  });
+}
+
 /** Y order for field average chart (low→high or high→low). */
-function sortGolferHorizontalSeries(statKey, series) {
+function sortFieldAverageSeries(statKey, series) {
   if (!series?.length) return;
   const sortAsc = selectedPropsFieldAverageSort() === "asc";
   series.sort((a, b) => {
@@ -15607,10 +15648,36 @@ function sortGolferHorizontalSeries(statKey, series) {
 
 function capFieldGolferSeriesForDisplay(statKey, series, winN) {
   if (!series?.length) return series || [];
-  sortGolferHorizontalSeries(statKey, series);
-  const cap = fieldGolferDisplayCap(winN);
-  if (series.length > cap) return series.slice(0, cap);
+  if (propsAverageModeOn()) {
+    sortFieldAverageSeries(statKey, series);
+    const cap = fieldGolferDisplayCap(winN);
+    if (series.length > cap) return series.slice(0, cap);
+  } else {
+    sortGolferHorizontalSeries(statKey, series);
+    const cap = fieldGolferHorizontalCap(winN);
+    if (series.length > cap) return series.slice(0, cap);
+  }
   return series;
+}
+
+/** Field view: one bar per golfer (not thousands of round bars). Average mode always qualifies. */
+function propsFieldUseGolferAggregateChart(entriesAll, winN) {
+  if (!propsCourseWindowModeOn()) return false;
+  if (propsAverageModeOn()) return true;
+  const wn = clamp(
+    Math.round(num(winN, PROPS_HISTORY_ROUND_DEFAULT)),
+    PROPS_HISTORY_ROUND_MIN,
+    PROPS_HISTORY_ROUND_MAX,
+  );
+  const tail = selectedPropsTailMode();
+  if (tail === "best" || tail === "worst") return true;
+  if (wn <= PROPS_FIELD_GOLFER_HORIZONTAL_MAX) return true;
+  const ids = new Set();
+  for (const e of entriesAll || []) {
+    const id = Math.round(num(e?.dgId, NaN));
+    if (Number.isFinite(id)) ids.add(id);
+  }
+  return ids.size > 0 && ids.size <= wn;
 }
 
 function propsChartGolferLabelShort(name) {
@@ -18636,8 +18703,10 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   }
   if (Number.isFinite(line)) propsTrendLastGoodLine = line;
 
+  const avgOn = propsFieldAverageChartActive();
+  const useGolferAggregate = propsFieldUseGolferAggregateChart(entriesAll, winN);
   let chartEntries = entriesAll;
-  if (!propsFieldAverageChartActive()) {
+  if (!useGolferAggregate) {
     if (chartEntries.length > PROPS_COURSE_WINDOW_MAX_CHART_BARS) {
       chartEntries = sampleCourseWindowChartEntriesEvenly(chartEntries, PROPS_COURSE_WINDOW_MAX_CHART_BARS);
     }
@@ -18647,11 +18716,15 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   let seriesChart = [];
   let chartXAxisMode = "valueSort";
 
-  if (propsFieldAverageChartActive()) {
+  if (useGolferAggregate) {
     seriesChart = buildFieldGolferAggregateSeries(entriesAll, statKey);
     seriesChart = capFieldGolferSeriesForDisplay(statKey, seriesChart, winN);
-    chartXAxisMode =
-      seriesChart.length <= PROPS_FIELD_GOLFER_HORIZONTAL_MAX ? "golferNames" : "golferDense";
+    if (avgOn) {
+      chartXAxisMode =
+        winN <= PROPS_FIELD_GOLFER_HORIZONTAL_MAX ? "golferNames" : "golferDense";
+    } else {
+      chartXAxisMode = "golferHorizontal";
+    }
   } else {
     for (const e of chartEntries) {
       const actual =
@@ -18721,7 +18794,12 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
     }
   }
 
-  drawPropsTrendCanvas(seriesChart, line, statKey, { xAxisMode: chartXAxisMode });
+  drawPropsTrendCanvas(
+    seriesChart,
+    chartXAxisMode === "golferHorizontal" ? NaN : line,
+    statKey,
+    { xAxisMode: chartXAxisMode },
+  );
   const hitSt = propsFullHitStatsFromRoundList(statKey, line, entriesAll.map((e) => e.row), {
     courseWindow: true,
   });
@@ -18729,7 +18807,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   if (bookWrap) bookWrap.replaceChildren();
   paintPropsTrendKpiRowCourseWindow(statKey, hitSt, seriesChart, entriesAll);
   const chartLeg = document.getElementById("props-chart-line-legend");
-  if (chartLeg) chartLeg.hidden = !Number.isFinite(line);
+  if (chartLeg) chartLeg.hidden = chartXAxisMode === "golferHorizontal" || !Number.isFinite(line);
   window.requestAnimationFrame(() => {
     if (gen !== propsCourseWindowRenderGen) return;
     renderPropsHitRateAndTopTable(statKey, line, winN, propsCourseWindowLastEntries);
@@ -20694,7 +20772,14 @@ document.addEventListener("DOMContentLoaded", () => {
         propsWindowNUserOverride = false;
         syncPropsWindowNDefault(true);
       }
-      if (id === "props-filter-average" || id === "props-filter-avg-sort" || id === "props-filter-course-window") {
+      if (id === "props-filter-average") {
+        if (propsAverageModeOn()) {
+          const winEl = document.getElementById("props-window-n");
+          if (winEl) winEl.value = String(PROPS_FIELD_GOLFER_HORIZONTAL_MAX);
+          propsWindowNUserOverride = false;
+        }
+        syncPropsAverageUiState();
+      } else if (id === "props-filter-avg-sort" || id === "props-filter-course-window") {
         syncPropsAverageUiState();
       }
       scheduleRenderPropsTrends();
