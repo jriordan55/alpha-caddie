@@ -53,6 +53,7 @@ export function summarizeHourlyWeatherSlice(hourly, startIdx, spanHours) {
   const end = Math.min(times.length, startIdx + spanHours);
   let nt = 0;
   let sT = 0;
+  let sW = 0;
   let sH = 0;
   let worstCode = NaN;
   let worstRank = -1;
@@ -65,6 +66,7 @@ export function summarizeHourlyWeatherSlice(hourly, startIdx, spanHours) {
     if (!Number.isFinite(ti)) continue;
     sT += ti;
     const wi = num(W?.[i], 0);
+    sW += wi;
     if (wi > peakWind) peakWind = wi;
     sH += num(H?.[i], 0);
     const cc = num(C?.[i], NaN);
@@ -86,8 +88,8 @@ export function summarizeHourlyWeatherSlice(hourly, startIdx, spanHours) {
   const cond = openMeteoConditionFromHourSlice(worstCode, maxPP, maxMm, peakWind);
   return {
     tempF: sT / nt,
-    /** Peak sustained 10m wind during the tee-time window (mph). */
-    windMph: peakWind,
+    /** Mean sustained 10 m wind during the tee-time window (mph) — not gusts or window peak. */
+    windMph: sW / nt,
     humidityPct: sH / nt,
     condition: cond,
   };

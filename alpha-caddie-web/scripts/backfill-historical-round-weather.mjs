@@ -246,7 +246,7 @@ async function main() {
     generated_at: new Date().toISOString(),
     source_csv: path.basename(csvPath),
     open_meteo: "archive-api.open-meteo.com/v1/archive",
-    wind_metric: "peak_mph_sustained_or_gust_in_tee_window",
+    wind_metric: "mean_mph_sustained_10m_in_tee_window",
     min_year: Math.round(num(process.env.GOLF_HISTORY_MIN_YEAR)) || 2004,
     event_count: fetchedEvents,
     round_count: Object.keys(roundWeather).length,
