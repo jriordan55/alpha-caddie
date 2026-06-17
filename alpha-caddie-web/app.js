@@ -405,6 +405,8 @@ const distinctCourseSessionDatesCache = new Map();
 let propsCourseWindowDateDefaultsCourseTracked = "";
 /** Whether field mode has applied the default season year filter. */
 let propsFieldYearDefaultApplied = false;
+/** User picked a course in field mode (do not reset to this week's venue on filter changes). */
+let propsFieldCourseUserPicked = false;
 /** Invalidate in-flight field history batch loads. */
 let propsFieldHistoryLoadGen = 0;
 /** In-flight field-season bundle loads (year → promise). */
@@ -14210,7 +14212,7 @@ async function ensurePropsFieldPlayerHistoryLoaded(opts = {}) {
   return loaded;
 }
 
-function ensurePropsCourseSelectedForWindow() {
+function ensurePropsCourseSelectedForWindow(opts = {}) {
   if (!propsCourseWindowModeOn()) return false;
   const courseSel = document.getElementById("props-filter-course");
   if (!courseSel) return false;
@@ -14222,6 +14224,9 @@ function ensurePropsCourseSelectedForWindow() {
     op.textContent = courseFitPrettyCourseKey(prefer);
     courseSel.appendChild(op);
   }
+  const cur = selectedPropsCourseFilter();
+  const force = Boolean(opts.force);
+  if (!force && (propsFieldCourseUserPicked || cur)) return false;
   if (courseSel.value !== prefer) {
     courseSel.value = prefer;
     return true;
@@ -15315,11 +15320,16 @@ function refreshPropsCourseFilterOptionsAllPlayers() {
   const windowOn = propsCourseWindowModeOn();
   const metaVenue = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
   const mkVenue = metaVenue ? normCourseNameKey(metaVenue) : "";
-  const optsCacheKey = `${historyMutationEpoch}|${windowOn ? 1 : 0}|${mkVenue}|${propsFilterDraftKingsOnlyOn() ? 1 : 0}`;
+  const manifestN = propsCoursesManifestCache?.courses?.length ?? 0;
+  const optsCacheKey = `${historyMutationEpoch}|${windowOn ? 1 : 0}|${mkVenue}|${manifestN}|${propsFilterDraftKingsOnlyOn() ? 1 : 0}`;
   let sortedEntries = propsAllPlayersCourseOptsEntries;
   if (propsAllPlayersCourseOptsCacheKey !== optsCacheKey || !sortedEntries) {
     const byKey = new Map();
     if (windowOn) {
+      for (const c of propsCoursesManifestCache?.courses || []) {
+        const k = normCourseNameKey(c.course_key);
+        if (k) byKey.set(k, courseFitPrettyCourseKey(k));
+      }
       for (const id of propsFieldPlayerDgIds()) {
         const rec = HISTORY.byDgId?.[String(id)];
         if (!rec?.rounds) continue;
@@ -15331,14 +15341,27 @@ function refreshPropsCourseFilterOptionsAllPlayers() {
         }
       }
       if (mkVenue && !byKey.has(mkVenue)) byKey.set(mkVenue, courseFitPrettyCourseKey(mkVenue));
+      sortedEntries = [...byKey.entries()].sort((a, b) => {
+        if (mkVenue && a[0] === mkVenue) return -1;
+        if (mkVenue && b[0] === mkVenue) return 1;
+        return a[0].localeCompare(b[0]);
+      });
+      if (!propsCoursesManifestCache && !isFileProtocol()) {
+        void loadPropsCoursesManifest().then((manifest) => {
+          if (!manifest?.courses?.length || !propsCourseWindowModeOn()) return;
+          propsAllPlayersCourseOptsCacheKey = "";
+          refreshPropsCourseFilterOptionsAllPlayers();
+          scheduleRenderPropsTrends(0);
+        });
+      }
     } else {
       rebuildPropsCourseRoundIndex();
       for (const k of propsCourseRoundIndex.keys()) {
         byKey.set(k, courseFitPrettyCourseKey(k));
       }
       if (metaVenue && mkVenue && !byKey.has(mkVenue)) byKey.set(mkVenue, courseFitPrettyCourseKey(mkVenue));
+      sortedEntries = [...byKey.entries()].sort((a, b) => a[0].localeCompare(b[0]));
     }
-    sortedEntries = [...byKey.entries()].sort((a, b) => a[0].localeCompare(b[0]));
     propsAllPlayersCourseOptsCacheKey = optsCacheKey;
     propsAllPlayersCourseOptsEntries = sortedEntries;
   }
@@ -15354,7 +15377,7 @@ function refreshPropsCourseFilterOptionsAllPlayers() {
   }
   const prevK = prev ? normCourseNameKey(prev) : "";
   if (prevK && [...courseSel.options].some((o) => o.value === prevK)) courseSel.value = prevK;
-  else if (windowOn) ensurePropsCourseSelectedForWindow();
+  else if (windowOn && !propsFieldCourseUserPicked) ensurePropsCourseSelectedForWindow();
   refreshPropsYearFilterOptions(selectedDgId());
 }
 
@@ -18822,7 +18845,6 @@ function invalidateCourseWindowRoundEntriesCache() {
 /** Filter-only pass: reuse loaded history and course index (no dropdown rebuild / history restart). */
 function renderPropsTrendsCourseWindowQuick() {
   const gen = propsCourseWindowRenderGen;
-  ensurePropsCourseSelectedForWindow();
   const courseKey = propsEffectiveCourseKey();
   const bucket = courseKey ? propsGetSingleCourseBucketSync(courseKey) : null;
   if (propsFilterDraftKingsOnlyOn()) {
@@ -21119,6 +21141,9 @@ document.addEventListener("DOMContentLoaded", () => {
       } else if (id === "props-filter-avg-sort" || id === "props-filter-course-window" || id === "props-filter-tail-mode") {
         syncPropsAverageUiState();
       } else if (id === "props-filter-course" || id === "props-filter-year") {
+        if (id === "props-filter-course" && propsCourseWindowModeOn()) {
+          propsFieldCourseUserPicked = true;
+        }
         propsCourseWindowStructureKey = "";
         invalidateCourseWindowRoundEntriesCache();
       }
@@ -21156,6 +21181,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const yearSel = document.getElementById("props-filter-year");
       if (yearSel) yearSel.value = "";
     } else {
+      propsFieldCourseUserPicked = false;
       propsAllPlayersCourseOptsCacheKey = "";
       propsAllPlayersCourseOptsEntries = null;
       propsSingleCourseIndexSig = "";
