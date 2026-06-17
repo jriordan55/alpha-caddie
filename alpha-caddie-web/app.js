@@ -401,6 +401,8 @@ let propsAllPlayersCourseOptsEntries = null;
 const distinctCourseSessionDatesCache = new Map();
 /** Last course key applied by `ensurePropsCourseWindowDateDefaults` (dropdown-equivalent resets on change). */
 let propsCourseWindowDateDefaultsCourseTracked = "";
+/** Whether field mode has applied the default season year filter. */
+let propsFieldYearDefaultApplied = false;
 /** Last collectCourseWindowRoundEntriesFixed signature within one UI tick (heavy scan). */
 let courseWindowRoundEntriesCacheSig = "";
 /** @type {Array<{ row: object, dgId: number, playerName: string }> | null} */
@@ -14118,6 +14120,32 @@ function currentEventSeasonYearFromMeta() {
   return Number.isFinite(y) ? y : NaN;
 }
 
+/** Default season year for This week's field (current event year, else display season). */
+function propsFieldDefaultSeasonYear() {
+  const y = currentEventSeasonYearFromMeta();
+  return Number.isFinite(y) ? y : PROPS_TREND_DISPLAY_SEASON_YEAR;
+}
+
+function ensurePropsFieldYearDefault(force = false) {
+  if (!propsCourseWindowModeOn()) {
+    propsFieldYearDefaultApplied = false;
+    return;
+  }
+  const yearSel = document.getElementById("props-filter-year");
+  if (!yearSel) return;
+  const defY = propsFieldDefaultSeasonYear();
+  if (![...yearSel.options].some((o) => o.value === String(defY))) {
+    const op = document.createElement("option");
+    op.value = String(defY);
+    op.textContent = String(defY);
+    yearSel.appendChild(op);
+  }
+  if (force || !propsFieldYearDefaultApplied) {
+    yearSel.value = String(defY);
+    propsFieldYearDefaultApplied = true;
+  }
+}
+
 /** Chart play date M/D/YYYY from tournament week start + round_num (DK field-by-course). */
 function propsTrendChartDateFromFieldRound(row) {
   const ds = String(DATA?.meta?.datagolf_field_date_start || "").match(/^(\d{4}-\d{2}-\d{2})/);
@@ -15178,6 +15206,7 @@ function refreshPropsYearFilterOptions(dgId) {
   const prev = String(yearSel.value || "").trim();
   const years = new Set();
   if (propsCourseWindowModeOn()) {
+    years.add(propsFieldDefaultSeasonYear());
     const courseKey = propsEffectiveCourseKey();
     if (courseKey) {
       const bucket = courseKey ? propsGetSingleCourseBucketSync(courseKey) : null;
@@ -15214,6 +15243,10 @@ function refreshPropsYearFilterOptions(dgId) {
       yearSel.appendChild(op);
     });
   if (prev && [...yearSel.options].some((o) => o.value === prev)) yearSel.value = prev;
+  else if (propsCourseWindowModeOn() && propsFieldYearDefaultApplied) {
+    const defY = propsFieldDefaultSeasonYear();
+    if ([...yearSel.options].some((o) => o.value === String(defY))) yearSel.value = String(defY);
+  }
 }
 
 function refreshPropsFilterOptionsForGolfer(dgId) {
@@ -17895,6 +17928,7 @@ function renderPropsTrendsCourseWindow() {
   syncPropsCourseWindowUiState();
   refreshPropsCourseFilterOptionsAllPlayers();
   propsSanitizeFieldDateFilters();
+  ensurePropsFieldYearDefault();
   ensurePropsCourseWindowDateDefaultsFromMeta();
   propsEnsureDkTournamentDateRange();
   syncPropsWindowNDefault();
@@ -20091,6 +20125,9 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("props-filter-course-window")?.addEventListener("change", () => {
     if (!propsCourseWindowModeOn()) {
       propsCourseWindowDateDefaultsCourseTracked = "";
+      propsFieldYearDefaultApplied = false;
+      const yearSel = document.getElementById("props-filter-year");
+      if (yearSel) yearSel.value = "";
     } else {
       const courseSel = document.getElementById("props-filter-course");
       if (courseSel) courseSel.value = "";
@@ -20101,6 +20138,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (propsFilterDraftKingsOnlyOn()) propsEnsureDkTournamentDateRange();
       propsAllPlayersCourseOptsCacheKey = "";
       propsAllPlayersCourseOptsEntries = null;
+      ensurePropsFieldYearDefault(true);
+      propsWindowNUserOverride = false;
+      syncPropsWindowNDefault(true);
     }
     courseWindowRoundEntriesCache = null;
     courseWindowRoundEntriesCacheSig = "";
