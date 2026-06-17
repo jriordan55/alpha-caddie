@@ -2726,6 +2726,24 @@ th.matchup-analysis-best-pick {
 .props-trends-top-market select {
   width: 100%;
   max-width: 100%;
+  margin-top: 6px;
+  background: var(--golf-elevated-soft);
+  color: var(--golf-text);
+  border: 1px solid var(--golf-border);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+.props-trends-top-market select:hover,
+.props-trends-top-market select:focus {
+  border-color: #3d424d;
+  outline: none;
+}
+.props-trends-top-market select:focus {
+  border-color: rgba(0, 196, 107, 0.45);
+  box-shadow: 0 0 0 2px rgba(0, 196, 107, 0.12);
 }
 .props-trends-top-rounds {
   flex: 0 1 200px;
@@ -2964,6 +2982,58 @@ th.matchup-analysis-best-pick {
   min-width: 0;
   flex: 0 0 auto;
 }
+.props-trends-main-row {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+}
+@media (min-width: 1025px) {
+  .props-trends-main-row {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .props-trends-main-row .props-trends-chart-wrap {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .props-trends-main-row .props-trends-sidebar {
+    flex: 0 0 min(300px, 30%);
+    max-width: 320px;
+    border-top: none;
+    border-left: 1px solid var(--golf-border);
+    padding: 0 0 0 14px;
+    margin: 0;
+  }
+}
+#panel-props .props-trends-sidebar .toolbar.weather-toolbar.weather-toolbar-compact {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  margin: 0;
+  padding: 12px 14px;
+  background: linear-gradient(180deg, var(--golf-elevated) 0%, var(--golf-bg) 100%);
+  border: 1px solid var(--golf-border);
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+#panel-props .props-trends-sidebar .weather-toolbar-title {
+  color: var(--golf-text-muted);
+  margin: 0 0 2px;
+  flex: 0 0 100%;
+}
+#panel-props .props-trends-sidebar .toolbar-label {
+  flex: 1 1 100%;
+  min-width: 0;
+}
+#panel-props .props-trends-sidebar .toolbar-label select {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+}
 .props-trends-body .props-trends-chart-wrap {
   min-width: 0;
   width: 100%;
@@ -3191,6 +3261,11 @@ th.matchup-analysis-best-pick {
   border-top: 1px solid var(--golf-border);
   position: relative;
   background: transparent;
+}
+@media (min-width: 1025px) {
+  .props-trends-main-row .props-trends-sidebar {
+    border-top: none;
+  }
 }
 
 @media (min-width: 1025px) {

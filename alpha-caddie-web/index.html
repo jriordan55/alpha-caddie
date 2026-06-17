@@ -236,7 +236,7 @@
               <select id="prop-golfer" hidden></select>
             </div>
           </label>
-          <label class="props-sidebar-label props-trends-top-market">Market
+          <label class="props-sidebar-label props-trends-top-market">Stat
             <select id="prop-stat">
               <optgroup label="Scoring">
                 <option value="total">Round score</option>
@@ -285,6 +285,7 @@
         <button type="button" class="ev-help-btn tab-help-btn props-tab-help-btn" data-tab-help="props" aria-label="Help: Historical Trends tab">?</button>
       </div>
       <div class="props-trends-body">
+        <div class="props-trends-main-row">
         <div class="props-trends-chart-wrap">
           <canvas id="props-trend-canvas" width="800" height="220" aria-label="Historical round bar chart"></canvas>
           <div id="props-chart-tooltip" class="props-chart-tooltip" hidden></div>
@@ -455,6 +456,7 @@
             </span>
           </label>
         </aside>
+        </div>
         <div class="props-top-hits-section">
         <div class="props-top-hits-head-row" aria-live="polite">
           <button type="button" class="props-top-hits-emoji-toggle" id="props-top-hits-emoji-toggle">
@@ -1202,8 +1204,8 @@
           <dd>Limit to one course by name.</dd>
           <dt>Weather filters</dt>
           <dd>Optional temp, wind, and humidity bands.</dd>
-          <dt>Market</dt>
-          <dd>Round score, counting stats, strokes gained (total, tee-to-green, OTT, approach, ARG, putting), GIR %, fairways %, or raw GIR/fairway counts. SG and % markets use 0.1 line steps; no sportsbook lines are posted for SG.</dd>
+          <dt>Stat</dt>
+          <dd>Round score, counting stats, strokes gained (total, tee-to-green, OTT, approach, ARG, putting), GIR %, fairways %, or raw GIR/fairway counts. SG and % stats use 0.1 line steps; no sportsbook lines are posted for SG.</dd>
           <dt>Rounds / line</dt>
           <dd>How many recent rounds to chart and which O/U line to test.</dd>
         </dl>
@@ -1403,6 +1405,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=248"></script>
+  <script src="app.js?v=249"></script>
 </body>
 </html>
