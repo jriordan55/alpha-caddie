@@ -14115,10 +14115,20 @@ function propsEventVenueCourseKey() {
   return metaVenue ? normCourseNameKey(metaVenue) : "";
 }
 
-/** In field mode, honor the Course dropdown (empty = all courses). */
+/** In field mode, honor Course dropdown; empty = all courses. Single-player: optional current-course checkbox. */
 function propsEffectiveCourseKey() {
-  if (!propsCourseWindowModeOn()) return selectedPropsCourseFilter();
-  return selectedPropsCourseFilter();
+  const sel = selectedPropsCourseFilter();
+  if (propsCourseWindowModeOn()) return sel;
+  if (courseFilterOn()) return propsEventVenueCourseKey();
+  return sel;
+}
+
+/** Label for chart tooltip / hit regions (row course_name, else active venue filter). */
+function propsChartHitCourseLabel(hist) {
+  const fromRow = hist ? propsCourseNameFromRow(hist) : "";
+  if (fromRow) return fromRow;
+  const ck = propsEffectiveCourseKey() || propsEventVenueCourseKey();
+  return ck ? courseFitPrettyCourseKey(ck) : "";
 }
 
 /** DataGolf ids for this week's projection field. */
@@ -15303,6 +15313,7 @@ function refreshPropsCourseFilterOptionsAllPlayers() {
   }
   const prevK = prev ? normCourseNameKey(prev) : "";
   if (prevK && [...courseSel.options].some((o) => o.value === prevK)) courseSel.value = prevK;
+  else if (windowOn) ensurePropsCourseSelectedForWindow();
   refreshPropsYearFilterOptions(selectedDgId());
 }
 
@@ -17906,11 +17917,12 @@ function showPropsChartTooltip(canvas, ev, hit) {
     nodes.golfer.parentElement.hidden = !hit.playerName;
     nodes.value.textContent = propsChartFormatValue(hit.statKey, hit.actual);
     if (nodes.course) {
-      const hideCourse = Boolean(hit._aggregate) || propsAverageModeOn();
-      if (hideCourse) {
+      const hideCourse = propsAverageModeOn() && Boolean(hit._aggregate) && avgN > 1;
+      const courseText = propsChartHitCourseLabel(hit._hist) || hit.courseLabel || propsCourseDisplay(hit);
+      if (hideCourse || !courseText) {
         nodes.course.parentElement.hidden = true;
       } else {
-        nodes.course.textContent = hit.courseLabel || propsCourseDisplay(hit);
+        nodes.course.textContent = courseText;
         nodes.course.parentElement.hidden = false;
       }
     }
@@ -18252,7 +18264,7 @@ function drawPropsTrendCanvasGolferHorizontal(series, lineY, statKey, opts = {})
       playerName: String(plot[i].playerName || "").trim(),
       dgId: plot[i].dgId,
       roundNum: Number.isFinite(rnd) && rnd >= 1 && rnd <= 4 ? rnd : NaN,
-      courseLabel: hist ? propsCourseNameFromRow(hist) : "",
+      courseLabel: propsChartHitCourseLabel(hist),
       actual: v,
       statKey,
     });
@@ -18395,7 +18407,6 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
     const hBar = Math.max(1, yBase - yTop);
     const slotLeft = pad.l + i * slotW;
     const hist = plot[i]._hist;
-    const venueLbl = propsEffectiveCourseKey() ? courseFitPrettyCourseKey(propsEffectiveCourseKey()) : "";
     const rnd =
       Number.isFinite(plot[i].roundNum) && plot[i].roundNum >= 1
         ? plot[i].roundNum
@@ -18412,7 +18423,7 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
       playerName: String(plot[i].playerName || "").trim(),
       dgId: plot[i].dgId,
       roundNum: Number.isFinite(rnd) && rnd >= 1 && rnd <= 4 ? rnd : NaN,
-      courseLabel: hist ? propsCourseNameFromRow(hist) : venueLbl,
+      courseLabel: propsChartHitCourseLabel(hist),
       actual: v,
       statKey,
     });
@@ -18642,6 +18653,7 @@ function renderPropsTrendsCourseWindow() {
   propsCourseWindowLastEntries = null;
   syncPropsCourseWindowUiState();
   refreshPropsCourseFilterOptionsAllPlayers();
+  ensurePropsCourseSelectedForWindow();
   propsSanitizeFieldDateFilters();
   ensurePropsFieldYearDefault();
   ensurePropsCourseWindowDateDefaultsFromMeta();
@@ -20897,6 +20909,9 @@ document.addEventListener("DOMContentLoaded", () => {
         syncPropsAverageUiState();
       } else if (id === "props-filter-avg-sort" || id === "props-filter-course-window" || id === "props-filter-tail-mode") {
         syncPropsAverageUiState();
+      } else if (id === "props-filter-course") {
+        propsCourseWindowStructureKey = "";
+        invalidateCourseWindowRoundEntriesCache();
       }
       scheduleRenderPropsTrends();
     });
@@ -20927,14 +20942,13 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("props-filter-course-window")?.addEventListener("change", () => {
     propsFieldHistoryLoadGen++;
     fieldSeasonHistoryLoadPromises.clear();
+    propsCourseWindowStructureKey = "";
     if (!propsCourseWindowModeOn()) {
       propsCourseWindowDateDefaultsCourseTracked = "";
       propsFieldYearDefaultApplied = false;
       const yearSel = document.getElementById("props-filter-year");
       if (yearSel) yearSel.value = "";
     } else {
-      const courseSel = document.getElementById("props-filter-course");
-      if (courseSel) courseSel.value = "";
       const fromEl = document.getElementById("props-filter-date-from");
       const toEl = document.getElementById("props-filter-date-to");
       if (fromEl) fromEl.value = "";
