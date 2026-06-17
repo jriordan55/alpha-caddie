@@ -403,6 +403,10 @@ const distinctCourseSessionDatesCache = new Map();
 let propsCourseWindowDateDefaultsCourseTracked = "";
 /** Whether field mode has applied the default season year filter. */
 let propsFieldYearDefaultApplied = false;
+/** Invalidate in-flight field history batch loads. */
+let propsFieldHistoryLoadGen = 0;
+/** In-flight field-season bundle loads (year → promise). */
+const fieldSeasonHistoryLoadPromises = new Map();
 /** Last collectCourseWindowRoundEntriesFixed signature within one UI tick (heavy scan). */
 let courseWindowRoundEntriesCacheSig = "";
 /** @type {Array<{ row: object, dgId: number, playerName: string }> | null} */
@@ -12360,10 +12364,15 @@ function historyBucketLoading(dgId) {
   return Number.isFinite(id) && playerHistoryBucketLoadPromises.has(id);
 }
 
-async function loadPlayerHistoryBucket(dgId) {
+async function loadPlayerHistoryBucket(dgId, opts = {}) {
   const id = Math.round(num(dgId, NaN));
   if (!Number.isFinite(id)) return false;
-  if (historyBucketLoaded(id)) return true;
+  const seasonYear = Number.isFinite(num(opts.seasonYear, NaN)) ? Math.round(num(opts.seasonYear, NaN)) : NaN;
+  const existing = HISTORY.byDgId?.[String(id)];
+  if (existing) {
+    if (!Number.isFinite(seasonYear) && historyBucketLoaded(id)) return true;
+    if (Number.isFinite(seasonYear) && historyBucketReadyForFieldSeason(id, seasonYear)) return true;
+  }
   if (isFileProtocol()) {
     await loadPlayerHistory();
     return historyBucketLoaded(id);
@@ -12373,18 +12382,54 @@ async function loadPlayerHistoryBucket(dgId) {
     const url = cacheBustFetchUrl(`player-history/by-dg/${id}.json`);
     const fetchOpts = { cache: "no-store" };
     if (typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function") {
-      fetchOpts.signal = AbortSignal.timeout(20000);
+      fetchOpts.signal = AbortSignal.timeout(12000);
     }
     try {
       const res = await fetch(url, fetchOpts);
       if (res.ok) {
-        const ok = mergePlayerHistoryPartialPayload(await res.json());
-        if (ok && historyBucketLoaded(id)) return true;
+        const raw = await res.json();
+        if (Number.isFinite(seasonYear)) {
+          const dgKey = String(id);
+          let rounds = Array.isArray(raw?.rounds) ? raw.rounds : raw?.byDgId?.[dgKey]?.rounds;
+          if (!Array.isArray(rounds)) rounds = [];
+          rounds = rounds.filter((r) => historyRoundSeasonYear(r) === seasonYear);
+          const playerName = String(
+            raw?.player_name || raw?.byDgId?.[dgKey]?.player_name || "",
+          ).trim();
+          const sliced = {
+            meta: raw?.meta && typeof raw.meta === "object" ? raw.meta : {},
+            byDgId: {
+              [dgKey]: {
+                dg_id: id,
+                player_name: playerName,
+                rounds,
+                _propsSeasonSlice: seasonYear,
+                _propsSeasonEmpty: rounds.length === 0,
+              },
+            },
+            holesByPlayerKey: {},
+          };
+          const ok = mergePlayerHistoryPartialPayload(sliced);
+          if (ok) return true;
+        } else {
+          const ok = mergePlayerHistoryPartialPayload(raw);
+          if (ok && historyBucketLoaded(id)) return true;
+        }
       }
     } catch (_) {
       /* shard missing, timeout, or parse error */
     }
-    if (await extractHistoryBucketFromEmbedded(id)) return true;
+    if (await extractHistoryBucketFromEmbedded(id)) {
+      if (Number.isFinite(seasonYear)) {
+        const bucket = HISTORY.byDgId?.[String(id)];
+        if (bucket?.rounds) {
+          bucket.rounds = bucket.rounds.filter((r) => historyRoundSeasonYear(r) === seasonYear);
+          bucket._propsSeasonSlice = seasonYear;
+          bucket._propsSeasonEmpty = bucket.rounds.length === 0;
+        }
+      }
+      return historyBucketLoaded(id);
+    }
     return false;
   })();
   playerHistoryBucketLoadPromises.set(id, p);
@@ -14045,21 +14090,40 @@ function propsFieldPlayerDgIds() {
   return ids;
 }
 
-/** Load per-player history shards for field view (all courses). */
-async function ensurePropsFieldPlayerHistoryLoaded() {
+/** Load per-player history shards for field view (season-sliced when possible). */
+async function ensurePropsFieldPlayerHistoryLoaded(opts = {}) {
+  const gen = opts.gen ?? propsFieldHistoryLoadGen;
+  const seasonYear = Number.isFinite(num(opts.seasonYear, NaN))
+    ? Math.round(num(opts.seasonYear, NaN))
+    : propsFieldEffectiveSeasonYear();
   const ids = [...propsFieldPlayerDgIds()];
   if (!ids.length) return 0;
-  const missing = ids.filter((id) => !historyBucketLoaded(id));
+  const missing = ids.filter((id) => !historyBucketReadyForFieldSeason(id, seasonYear));
   if (!missing.length) return 0;
-  if (missing.length > 24 && !HISTORY._ok && !playerHistoryLoadPromise) {
-    void loadPlayerHistory();
-    return missing.length;
+
+  if (Number.isFinite(seasonYear)) {
+    const bundled = await loadFieldSeasonHistoryBundle(seasonYear, { gen });
+    if (gen !== propsFieldHistoryLoadGen) return 0;
+    if (bundled) {
+      opts.onBatch?.(ids.length, ids.length);
+      return ids.length;
+    }
   }
-  const batch = 10;
-  for (let i = 0; i < missing.length; i += batch) {
-    await Promise.all(missing.slice(i, i + batch).map((id) => loadPlayerHistoryBucket(id)));
+
+  const stillMissing = ids.filter((id) => !historyBucketReadyForFieldSeason(id, seasonYear));
+  if (!stillMissing.length) return ids.length - missing.length;
+
+  const batch = 28;
+  let loaded = ids.length - stillMissing.length;
+  for (let i = 0; i < stillMissing.length; i += batch) {
+    if (gen !== propsFieldHistoryLoadGen) return loaded;
+    await Promise.all(
+      stillMissing.slice(i, i + batch).map((id) => loadPlayerHistoryBucket(id, { seasonYear })),
+    );
+    loaded += Math.min(batch, stillMissing.length - i);
+    opts.onBatch?.(loaded, ids.length);
   }
-  return missing.length;
+  return loaded;
 }
 
 function ensurePropsCourseSelectedForWindow() {
@@ -14124,6 +14188,104 @@ function currentEventSeasonYearFromMeta() {
 function propsFieldDefaultSeasonYear() {
   const y = currentEventSeasonYearFromMeta();
   return Number.isFinite(y) ? y : PROPS_TREND_DISPLAY_SEASON_YEAR;
+}
+
+/** Active season year in field view (Year filter, else default season). */
+function propsFieldEffectiveSeasonYear() {
+  const sel = selectedPropsYearFilter();
+  if (Number.isFinite(sel)) return sel;
+  if (propsCourseWindowModeOn()) return propsFieldDefaultSeasonYear();
+  return NaN;
+}
+
+function historyBucketReadyForFieldSeason(dgId, seasonYear) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return false;
+  const bucket = HISTORY.byDgId?.[String(id)];
+  if (!bucket || !Array.isArray(bucket.rounds)) return false;
+  if (bucket._propsSeasonEmpty === true && bucket._propsSeasonSlice === seasonYear) return true;
+  if (!bucket.rounds.length) return false;
+  if (!Number.isFinite(seasonYear)) return true;
+  if (bucket._propsSeasonSlice === seasonYear) return true;
+  if (!Number.isFinite(bucket._propsSeasonSlice)) {
+    return bucket.rounds.some((r) => historyRoundSeasonYear(r) === seasonYear);
+  }
+  return false;
+}
+
+/** Mark field players with no season rows so we do not re-fetch their career shards. */
+function stampEmptyFieldSeasonBuckets(seasonYear, dgIds) {
+  if (!Number.isFinite(seasonYear) || !dgIds?.length) return;
+  const patch = {};
+  for (const dgId of dgIds) {
+    const id = Math.round(num(dgId, NaN));
+    if (!Number.isFinite(id)) continue;
+    if (historyBucketReadyForFieldSeason(id, seasonYear)) continue;
+    const key = String(id);
+    patch[key] = {
+      dg_id: id,
+      player_name: String(HISTORY.byDgId?.[key]?.player_name || "").trim(),
+      rounds: [],
+      _propsSeasonSlice: seasonYear,
+      _propsSeasonEmpty: true,
+    };
+  }
+  if (Object.keys(patch).length) mergePlayerHistoryPartialPayload({ byDgId: patch, holesByPlayerKey: {} });
+}
+
+/** Single prebuilt bundle: all field players' rounds for one season (~one HTTP request). */
+async function loadFieldSeasonHistoryBundle(seasonYear, opts = {}) {
+  const y = Math.round(num(seasonYear, NaN));
+  if (!Number.isFinite(y)) return false;
+  const gen = opts.gen ?? propsFieldHistoryLoadGen;
+  const fieldIds = [...propsFieldPlayerDgIds()];
+  if (!fieldIds.length) return true;
+  if (fieldIds.every((id) => historyBucketReadyForFieldSeason(id, y))) return true;
+  if (isFileProtocol()) return false;
+
+  if (fieldSeasonHistoryLoadPromises.has(y)) return fieldSeasonHistoryLoadPromises.get(y);
+
+  const p = (async () => {
+    const url = cacheBustFetchUrl(`player-history/field-${y}.json`);
+    const fetchOpts = { cache: "no-store" };
+    if (typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function") {
+      fetchOpts.signal = AbortSignal.timeout(30000);
+    }
+    try {
+      const res = await fetch(url, fetchOpts);
+      if (gen !== propsFieldHistoryLoadGen) return false;
+      if (res.ok) {
+        const raw = await res.json();
+        if (gen !== propsFieldHistoryLoadGen) return false;
+        const byDgId = raw?.byDgId && typeof raw.byDgId === "object" ? raw.byDgId : {};
+        for (const bucket of Object.values(byDgId)) {
+          if (!bucket || typeof bucket !== "object") continue;
+          bucket._propsSeasonSlice = y;
+          bucket._propsSeasonEmpty = !Array.isArray(bucket.rounds) || bucket.rounds.length === 0;
+        }
+        const ok = mergePlayerHistoryPartialPayload({
+          meta: raw?.meta || {},
+          byDgId,
+          holesByPlayerKey: raw?.holesByPlayerKey || {},
+        });
+        if (gen !== propsFieldHistoryLoadGen) return false;
+        if (ok) {
+          stampEmptyFieldSeasonBuckets(y, fieldIds);
+          return fieldIds.every((id) => historyBucketReadyForFieldSeason(id, y));
+        }
+      }
+    } catch (_) {
+      /* bundle missing or timeout — fall back to per-player shards */
+    }
+    return false;
+  })();
+
+  fieldSeasonHistoryLoadPromises.set(y, p);
+  try {
+    return await p;
+  } finally {
+    fieldSeasonHistoryLoadPromises.delete(y);
+  }
 }
 
 function ensurePropsFieldYearDefault(force = false) {
@@ -14860,6 +15022,7 @@ function collectFieldRoundEntriesFromPlayerHistory() {
   const bounds = hasDateFilter ? propsCourseWindowDateBoundsMs() : { ok: false, fromMs: NaN, toMs: NaN };
   const nameByDg = buildPropsGolferDisplayNameMap();
   const fieldIds = propsFieldPlayerDgIds();
+  const seasonYear = propsFieldEffectiveSeasonYear();
   const raw = [];
   for (const id of fieldIds) {
     const rec = HISTORY.byDgId[String(id)];
@@ -14867,6 +15030,7 @@ function collectFieldRoundEntriesFromPlayerHistory() {
     const playerName = resolveGolferDisplayNameForDg(id, rec.player_name, nameByDg);
     for (const r of rec.rounds) {
       if (!historyRoundCountsAsActual(r)) continue;
+      if (Number.isFinite(seasonYear) && historyRoundSeasonYear(r) !== seasonYear) continue;
       if (courseKey && normCourseNameKey(r.course_name) !== courseKey) continue;
       if (bounds.ok && !historyRoundInCourseDateWindow(r, bounds.fromMs, bounds.toMs)) continue;
       raw.push(enrichCourseWindowEntry({ row: r, dgId: id, playerName }));
@@ -15216,7 +15380,9 @@ function refreshPropsYearFilterOptions(dgId) {
       }
     }
     for (const id of propsFieldPlayerDgIds()) {
-      for (const r of historyRoundsForDg(id)) {
+      const rec = HISTORY.byDgId?.[String(id)];
+      if (!rec?.rounds) continue;
+      for (const r of rec.rounds) {
         if (historyRoundIsPlaceholderAllMarketsZero(r)) continue;
         if (courseKey && normCourseNameKey(r.course_name) !== courseKey) continue;
         const y = historyRoundSeasonYear(r);
@@ -17948,15 +18114,36 @@ function renderPropsTrendsCourseWindow() {
   };
 
   if (!courseKey) {
-    const missing = [...propsFieldPlayerDgIds()].some((id) => !historyBucketLoaded(id));
-    if (missing && activeAppTabId() === "props") {
-      paintPropsCourseWindowBuilding("Loading field player history…");
-      void ensurePropsFieldPlayerHistoryLoaded().then(() => {
-        if (gen !== propsCourseWindowRenderGen || activeAppTabId() !== "props") return;
+    const fieldIds = [...propsFieldPlayerDgIds()];
+    const seasonYear = propsFieldEffectiveSeasonYear();
+    const readyCount = fieldIds.filter((id) => historyBucketReadyForFieldSeason(id, seasonYear)).length;
+    const allReady = !fieldIds.length || readyCount >= fieldIds.length;
+
+    if (!allReady && activeAppTabId() === "props") {
+      const loadGen = ++propsFieldHistoryLoadGen;
+      if (readyCount === 0) {
+        paintPropsCourseWindowBuilding(`Loading ${seasonYear} field history…`);
+      }
+      void ensurePropsFieldPlayerHistoryLoaded({
+        gen: loadGen,
+        seasonYear,
+        onBatch: () => {
+          if (loadGen !== propsFieldHistoryLoadGen || gen !== propsCourseWindowRenderGen) return;
+          if (activeAppTabId() !== "props") return;
+          courseWindowRoundEntriesCache = null;
+          courseWindowRoundEntriesCacheSig = "";
+          scheduleRenderPropsTrends(60);
+        },
+      }).then(() => {
+        if (loadGen !== propsFieldHistoryLoadGen || gen !== propsCourseWindowRenderGen) return;
+        if (activeAppTabId() !== "props") return;
         courseWindowRoundEntriesCache = null;
         courseWindowRoundEntriesCacheSig = "";
         paintBody(null);
       });
+      if (readyCount > 0) {
+        paintBody(null);
+      }
       return;
     }
     paintBody(null);
@@ -20123,6 +20310,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
   document.getElementById("props-filter-course-window")?.addEventListener("change", () => {
+    propsFieldHistoryLoadGen++;
+    fieldSeasonHistoryLoadPromises.clear();
     if (!propsCourseWindowModeOn()) {
       propsCourseWindowDateDefaultsCourseTracked = "";
       propsFieldYearDefaultApplied = false;

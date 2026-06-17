@@ -192,6 +192,7 @@ const PGATOUR_EVENT_ROUNDS_JSON = path.join(WEB_ROOT, "data", "pgatour_event_rou
 const OUT_JSON = path.join(WEB_ROOT, "player_round_history.json");
 const SHARD_DIR = path.join(WEB_ROOT, "player-history", "by-dg");
 const SHARD_MANIFEST_JSON = path.join(WEB_ROOT, "player-history", "manifest.json");
+const FIELD_SEASON_DIR = path.join(WEB_ROOT, "player-history");
 const COURSE_SHARD_DIR = path.join(WEB_ROOT, "player-history", "by-course");
 const COURSES_MANIFEST_JSON = path.join(WEB_ROOT, "player-history", "courses-manifest.json");
 
@@ -381,6 +382,67 @@ function writePlayerHistoryShards(out) {
   players.sort((a, b) => String(a.player_name).localeCompare(String(b.player_name)));
   writeJsonAtomic(SHARD_MANIFEST_JSON, { meta: out.meta, players });
   console.log("Wrote player history shards:", players.length, "->", path.relative(WEB_ROOT, SHARD_DIR));
+}
+
+/** Calendar year for this week's field (from projections meta). */
+function resolveFieldSeasonYearFromProjections() {
+  if (!fs.existsSync(PROJECTIONS_JSON)) return new Date().getFullYear();
+  try {
+    const proj = JSON.parse(fs.readFileSync(PROJECTIONS_JSON, "utf8"));
+    const meta = proj?.meta && typeof proj.meta === "object" ? proj.meta : {};
+    const ds = String(meta.datagolf_field_date_start || "").match(/^(\d{4})-/);
+    if (ds) {
+      const y = parseInt(ds[1], 10);
+      if (Number.isFinite(y) && y >= 1990 && y <= 2100) return y;
+    }
+  } catch {
+    /* ignore */
+  }
+  return new Date().getFullYear();
+}
+
+/**
+ * One JSON bundle with season-only rounds for the projection field — fast "This week's field" load.
+ * Written as player-history/field-{year}.json (~3–5 MB vs ~150 per-player career shards).
+ */
+function writeFieldSeasonBundle(out, allowedDgIds) {
+  const seasonYear = resolveFieldSeasonYearFromProjections();
+  const byDgId = {};
+  let roundCount = 0;
+  for (const [dgId, bucket] of Object.entries(out.byDgId || {})) {
+    const id = Math.round(Number(dgId));
+    if (!Number.isFinite(id) || !allowedDgIds.has(id)) continue;
+    const rounds = (Array.isArray(bucket?.rounds) ? bucket.rounds : []).filter(
+      (r) => parseInt(String(r?.year || ""), 10) === seasonYear,
+    );
+    roundCount += rounds.length;
+    byDgId[String(id)] = {
+      dg_id: id,
+      player_name: String(bucket?.player_name || "").trim(),
+      rounds,
+      _propsSeasonSlice: seasonYear,
+      _propsSeasonEmpty: rounds.length === 0,
+    };
+  }
+  const file = `field-${seasonYear}.json`;
+  const outPath = path.join(FIELD_SEASON_DIR, file);
+  writeJsonAtomic(outPath, {
+    meta: {
+      season_year: seasonYear,
+      players: Object.keys(byDgId).length,
+      rounds: roundCount,
+      updated_at: out.meta?.updated_at || new Date().toISOString(),
+    },
+    byDgId,
+    holesByPlayerKey: {},
+  });
+  console.log(
+    "Wrote field season bundle:",
+    file,
+    `(${Object.keys(byDgId).length} players, ${roundCount} rounds) ->`,
+    path.relative(WEB_ROOT, outPath),
+  );
+  return { seasonYear, file, players: Object.keys(byDgId).length, rounds: roundCount };
 }
 
 /** Windows only: free bytes on the drive hosting `filePath`, or null if unknown. */
@@ -2036,6 +2098,16 @@ async function main() {
   const st = fs.statSync(OUT_JSON);
   console.log("Wrote", OUT_JSON, `(${fmtBytes(st.size)})`);
   writePlayerHistoryShards(out);
+  const fieldBundle = writeFieldSeasonBundle(out, allowed);
+  try {
+    const manifest = fs.existsSync(SHARD_MANIFEST_JSON)
+      ? JSON.parse(fs.readFileSync(SHARD_MANIFEST_JSON, "utf8"))
+      : { meta: out.meta, players: [] };
+    manifest.field_season_bundle = fieldBundle;
+    writeJsonAtomic(SHARD_MANIFEST_JSON, manifest);
+  } catch (_) {
+    /* manifest optional */
+  }
   if (String(process.env.GOLF_SKIP_COURSE_SHARD_WRITE || "").trim() !== "1") {
     writeCourseHistoryShards(out, courseAggByCourse);
   } else {
