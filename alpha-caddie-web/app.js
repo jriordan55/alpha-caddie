@@ -13807,10 +13807,6 @@ function applyPropsWindowTailToRows(rows, statKey, winN, opts = {}) {
   );
   const list = Array.isArray(rows) ? rows : [];
   const mode = selectedPropsTailMode();
-  if (mode === "average") {
-    const sorted = [...list].sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
-    return sorted.slice(0, wn).sort((a, b) => historyRoundChronoKey(a) - historyRoundChronoKey(b));
-  }
   if (mode === "recent") {
     const sorted = [...list].sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
     return sorted.slice(0, wn).sort((a, b) => historyRoundChronoKey(a) - historyRoundChronoKey(b));
@@ -13856,10 +13852,43 @@ function propsCourseWindowEntriesAfterWindow(entries, statKey, winN) {
   return applyPropsWindowTailToCourseEntries(entries, statKey, winN);
 }
 
+function propsAverageModeOn() {
+  return Boolean(document.getElementById("props-filter-average")?.checked);
+}
+
+function propsFieldAverageChartActive() {
+  return propsCourseWindowModeOn() && propsAverageModeOn();
+}
+
+function selectedPropsFieldAverageSort() {
+  const v = String(document.getElementById("props-filter-avg-sort")?.value || "desc").trim().toLowerCase();
+  return v === "asc" ? "asc" : "desc";
+}
+
+function propsWindowNMax() {
+  return PROPS_HISTORY_ROUND_MAX;
+}
+
+function syncPropsAverageUiState() {
+  const fieldOn = propsCourseWindowModeOn();
+  const avgOn = propsAverageModeOn();
+  const sortWrap = document.getElementById("props-filter-avg-sort-wrap");
+  if (sortWrap) sortWrap.hidden = !(fieldOn && avgOn);
+  const topRoundsLabel = document.querySelector(".props-trends-top-rounds .props-sidebar-label");
+  if (topRoundsLabel) topRoundsLabel.textContent = fieldOn && avgOn ? "Rounds / Players" : "Rounds";
+  const winEl = document.getElementById("props-window-n");
+  if (winEl) {
+    winEl.max = String(propsWindowNMax());
+    const v = clamp(Math.round(num(winEl.value, PROPS_HISTORY_ROUND_DEFAULT)), PROPS_HISTORY_ROUND_MIN, propsWindowNMax());
+    if (String(v) !== winEl.value) winEl.value = String(v);
+  }
+}
+
 function propsSuggestedWindowN() {
   if (propsCourseWindowModeActive()) {
+    if (propsAverageModeOn()) return PROPS_FIELD_GOLFER_HORIZONTAL_MAX;
     const tail = selectedPropsTailMode();
-    if (tail === "average" || tail === "best" || tail === "worst") {
+    if (tail === "best" || tail === "worst") {
       return PROPS_FIELD_GOLFER_HORIZONTAL_MAX;
     }
     const cap = currentTournamentProgressRoundCap();
@@ -13890,7 +13919,7 @@ function filterHistoryRoundsByYear(list) {
 
 function selectedPropsTailMode() {
   const v = String(document.getElementById("props-filter-tail-mode")?.value || "recent").trim().toLowerCase();
-  return v === "best" || v === "worst" || v === "average" ? v : "recent";
+  return v === "best" || v === "worst" ? v : "recent";
 }
 
 function propsSidebarFiltersContextKey() {
@@ -15518,10 +15547,9 @@ function courseWindowEntryChartActual(statKey, e, dkOnly) {
   return chartActualForCourseWindowEntry(statKey, e);
 }
 
-/** One chart point per golfer (mean / best / worst / most-recent round in the filtered set). */
+/** One chart point per golfer (mean across filtered rounds). */
 function buildFieldGolferAggregateSeries(entries, statKey) {
   const dkOnly = propsFilterDraftKingsOnlyOn();
-  const tail = selectedPropsTailMode();
   const byDg = new Map();
   for (const e of entries || []) {
     const id = Math.round(num(e?.dgId, NaN));
@@ -15533,23 +15561,11 @@ function buildFieldGolferAggregateSeries(entries, statKey) {
   }
   const nameByDg = buildPropsGolferDisplayNameMap();
   const series = [];
-  const lowerBetter = propsStatLowerIsBetter(statKey);
-  const hi = propsMarketHigherIsBetter(statKey);
   for (const [, g] of byDg) {
     const dgId = g.dgId;
-    let picks = [...g.picks];
-    let actual = NaN;
-    if (tail === "average") {
-      const nums = picks.map((p) => p.actual).filter((x) => Number.isFinite(x));
-      actual = nums.length ? nums.reduce((a, b) => a + b, 0) / nums.length : NaN;
-    } else if (tail === "recent") {
-      picks.sort((a, b) => historyRoundChronoKey(b.entry.row) - historyRoundChronoKey(a.entry.row));
-      actual = picks[0]?.actual;
-    } else {
-      picks.sort((a, b) => (lowerBetter ? a.actual - b.actual : b.actual - a.actual));
-      if (tail === "worst") picks.reverse();
-      actual = picks[0]?.actual;
-    }
+    const picks = [...g.picks];
+    const nums = picks.map((p) => p.actual).filter((x) => Number.isFinite(x));
+    const actual = nums.length ? nums.reduce((a, b) => a + b, 0) / nums.length : NaN;
     if (!Number.isFinite(actual)) continue;
     const pick = picks[0]?.entry;
     const playerName = resolveGolferDisplayNameForDg(dgId, g.playerName, nameByDg);
@@ -15561,35 +15577,29 @@ function buildFieldGolferAggregateSeries(entries, statKey) {
       date: pick?.row ? propsTrendChartDateFromRow(pick.row) : "",
       _hist: pick?.row,
       _aggregate: true,
-      _golferAvgRounds: tail === "average" ? picks.length : 1,
+      _golferAvgRounds: nums.length,
     });
   }
   return series;
 }
 
-function fieldGolferHorizontalCap(winN) {
+function fieldGolferDisplayCap(winN) {
   return clamp(
-    Math.min(
-      PROPS_FIELD_GOLFER_HORIZONTAL_MAX,
-      Math.round(num(winN, PROPS_FIELD_GOLFER_HORIZONTAL_MAX)),
-    ),
+    Math.round(num(winN, PROPS_FIELD_GOLFER_HORIZONTAL_MAX)),
     1,
-    PROPS_FIELD_GOLFER_HORIZONTAL_MAX,
+    PROPS_HISTORY_ROUND_MAX,
   );
 }
 
-/** Y order for horizontal field chart: average/worst = worst→best; best/recent = best→worst. */
-function sortGolferHorizontalSeries(statKey, series, tailOpt) {
+/** Y order for field average chart (low→high or high→low). */
+function sortGolferHorizontalSeries(statKey, series) {
   if (!series?.length) return;
-  const tail = tailOpt || selectedPropsTailMode();
-  const hi = propsMarketHigherIsBetter(statKey);
-  const worstFirst = tail === "average" || tail === "worst";
+  const sortAsc = selectedPropsFieldAverageSort() === "asc";
   series.sort((a, b) => {
     const va = num(a.actual, NaN);
     const vb = num(b.actual, NaN);
     if (Number.isFinite(va) && Number.isFinite(vb) && va !== vb) {
-      if (worstFirst) return hi ? va - vb : vb - va;
-      return hi ? vb - va : va - vb;
+      return sortAsc ? va - vb : vb - va;
     }
     return String(a.playerName || "").localeCompare(String(b.playerName || ""));
   });
@@ -15597,36 +15607,10 @@ function sortGolferHorizontalSeries(statKey, series, tailOpt) {
 
 function capFieldGolferSeriesForDisplay(statKey, series, winN) {
   if (!series?.length) return series || [];
-  const tail = selectedPropsTailMode();
-  sortGolferHorizontalSeries(statKey, series, tail);
-  const cap = fieldGolferHorizontalCap(winN);
+  sortGolferHorizontalSeries(statKey, series);
+  const cap = fieldGolferDisplayCap(winN);
   if (series.length > cap) return series.slice(0, cap);
   return series;
-}
-
-/** Field view: one bar per golfer (not thousands of round bars). */
-function propsFieldUseGolferAggregateChart(entriesAll, winN) {
-  if (!propsCourseWindowModeOn()) return false;
-  const wn = clamp(
-    Math.round(num(winN, PROPS_HISTORY_ROUND_DEFAULT)),
-    PROPS_HISTORY_ROUND_MIN,
-    PROPS_HISTORY_ROUND_MAX,
-  );
-  const tail = selectedPropsTailMode();
-  if (tail === "average" || tail === "best" || tail === "worst") return true;
-  if (wn <= PROPS_FIELD_GOLFER_HORIZONTAL_MAX) return true;
-  const ids = new Set();
-  for (const e of entriesAll || []) {
-    const id = Math.round(num(e?.dgId, NaN));
-    if (Number.isFinite(id)) ids.add(id);
-  }
-  return ids.size > 0 && ids.size <= wn;
-}
-
-function propsFieldGolferHorizontalChartActive(golferCount, winN) {
-  if (!propsCourseWindowModeOn()) return false;
-  const cap = fieldGolferHorizontalCap(winN);
-  return Number.isFinite(golferCount) && golferCount > 0 && golferCount <= cap;
 }
 
 function propsChartGolferLabelShort(name) {
@@ -18174,7 +18158,7 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
     drawPropsTrendCanvasGolferHorizontal(series, lineY, statKey);
     return;
   }
-  const xAxisMode = opts.xAxisMode === "valueSort" ? "valueSort" : "chrono";
+  const xAxisMode = opts.xAxisMode === "valueSort" ? "valueSort" : opts.xAxisMode === "golferNames" || opts.xAxisMode === "golferDense" ? opts.xAxisMode : "chrono";
   const plot = propsChartPlotSeries(series, statKey);
   propsChartHitRegions = [];
   propsChartHoverLayout = { padL: 0, slotW: 0, n: 0 };
@@ -18208,8 +18192,15 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
 
   const n = plot.length;
   const visibleW = wrap && wrap.clientWidth > 80 ? wrap.clientWidth - 28 : 400;
-  const denseXLabels = n > 20;
-  const pad = { l: 44, r: 14, t: 14, b: denseXLabels ? 64 : n > 12 ? 56 : 48 };
+  const golferNameLabels = xAxisMode === "golferNames";
+  const golferDenseLabels = xAxisMode === "golferDense";
+  const denseXLabels = golferNameLabels ? n > 10 : n > 20;
+  const pad = {
+    l: 44,
+    r: 14,
+    t: 14,
+    b: golferNameLabels ? (n > 10 ? 72 : 56) : denseXLabels ? 64 : n > 12 ? 56 : 48,
+  };
   const innerW = Math.max(80, visibleW - pad.l - pad.r);
   const cssW = Math.round(visibleW);
   const cssH = Math.round(
@@ -18257,7 +18248,11 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
   ctx.stroke();
   const slotW = innerW / n;
   propsChartHoverLayout = { padL: pad.l, slotW, n };
-  const xAxisPerBar = buildPropsTrendXAxisLabels(plot);
+  const xAxisPerBar = golferNameLabels
+    ? plot.map((s) => propsChartGolferLabelShort(s.playerName))
+    : golferDenseLabels
+      ? plot.map(() => "")
+      : buildPropsTrendXAxisLabels(plot);
   const { xCenter, barW } = propsChartBarLayout(plot, pad.l, innerW);
   const lowerIsBetter = propsStatLowerIsBetter(statKey);
   for (let i = 0; i < n; i++) {
@@ -18280,6 +18275,8 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
       w: Math.max(1, slotW),
       h: yBase - pad.t,
       _hist: hist,
+      _aggregate: Boolean(plot[i]._aggregate),
+      _golferAvgRounds: plot[i]._golferAvgRounds,
       date: String(plot[i].date || "").trim() || "—",
       playerName: String(plot[i].playerName || "").trim(),
       dgId: plot[i].dgId,
@@ -18356,7 +18353,25 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
   ctx.font = `${xLabFont}px DM Sans, sans-serif`;
   ctx.textAlign = "center";
   ctx.fillStyle = "#9ca0ac";
-  if (xAxisMode === "valueSort") {
+  if (golferNameLabels) {
+    const yLab = n > 10 ? h - 24 : h - 10;
+    for (let i = 0; i < n; i++) {
+      const lab = String(xAxisPerBar[i] || "").trim();
+      if (!lab) continue;
+      const cx = xCenter[i] != null ? xCenter[i] : pad.l + innerW / 2;
+      if (n > 10) {
+        ctx.save();
+        ctx.translate(cx, yLab);
+        ctx.rotate(-Math.PI / 6);
+        ctx.textAlign = "right";
+        ctx.fillText(lab, 0, 0);
+        ctx.restore();
+        ctx.textAlign = "center";
+      } else {
+        ctx.fillText(lab, cx, yLab);
+      }
+    }
+  } else if (xAxisMode === "valueSort") {
     const sessionPlacements = propsChartXAxisValueSortSessionPlacements(xAxisPerBar, xCenter, pad.l, innerW);
     if (sessionPlacements.length > 1 && sessionPlacements.length <= 14) {
       ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
@@ -18385,7 +18400,7 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
         ctx.fillText(p.lab, p.cx, yLab);
       }
     }
-  } else {
+  } else if (!golferDenseLabels) {
     const tickMap = propsChartXAxisDateLabels(xAxisPerBar, innerW, { xAxisMode });
     const yLab = denseXLabels ? h - 24 : h - 10;
     for (const [i, lab] of tickMap.entries()) {
@@ -18426,6 +18441,7 @@ function syncPropsCourseWindowUiState() {
   if (topRounds) topRounds.classList.toggle("props-trends-top-rounds-field", modeOn);
   if (!modeOn) propsCourseWindowLiveMergeAttempted = false;
   if (modeOn && propsFilterDraftKingsOnlyOn()) propsEnsureDkTournamentDateRange();
+  syncPropsAverageUiState();
 }
 
 /** Run Historical Trends immediately (cancels any pending debounced pass). */
@@ -18621,7 +18637,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   if (Number.isFinite(line)) propsTrendLastGoodLine = line;
 
   let chartEntries = entriesAll;
-  if (!propsFieldUseGolferAggregateChart(entriesAll, winN)) {
+  if (!propsFieldAverageChartActive()) {
     if (chartEntries.length > PROPS_COURSE_WINDOW_MAX_CHART_BARS) {
       chartEntries = sampleCourseWindowChartEntriesEvenly(chartEntries, PROPS_COURSE_WINDOW_MAX_CHART_BARS);
     }
@@ -18631,10 +18647,11 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   let seriesChart = [];
   let chartXAxisMode = "valueSort";
 
-  if (propsFieldUseGolferAggregateChart(entriesAll, winN)) {
+  if (propsFieldAverageChartActive()) {
     seriesChart = buildFieldGolferAggregateSeries(entriesAll, statKey);
     seriesChart = capFieldGolferSeriesForDisplay(statKey, seriesChart, winN);
-    chartXAxisMode = "golferHorizontal";
+    chartXAxisMode =
+      seriesChart.length <= PROPS_FIELD_GOLFER_HORIZONTAL_MAX ? "golferNames" : "golferDense";
   } else {
     for (const e of chartEntries) {
       const actual =
@@ -18704,12 +18721,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
     }
   }
 
-  drawPropsTrendCanvas(
-    seriesChart,
-    chartXAxisMode === "golferHorizontal" ? NaN : line,
-    statKey,
-    { xAxisMode: chartXAxisMode },
-  );
+  drawPropsTrendCanvas(seriesChart, line, statKey, { xAxisMode: chartXAxisMode });
   const hitSt = propsFullHitStatsFromRoundList(statKey, line, entriesAll.map((e) => e.row), {
     courseWindow: true,
   });
@@ -18717,7 +18729,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   if (bookWrap) bookWrap.replaceChildren();
   paintPropsTrendKpiRowCourseWindow(statKey, hitSt, seriesChart, entriesAll);
   const chartLeg = document.getElementById("props-chart-line-legend");
-  if (chartLeg) chartLeg.hidden = chartXAxisMode === "golferHorizontal" || !Number.isFinite(line);
+  if (chartLeg) chartLeg.hidden = !Number.isFinite(line);
   window.requestAnimationFrame(() => {
     if (gen !== propsCourseWindowRenderGen) return;
     renderPropsHitRateAndTopTable(statKey, line, winN, propsCourseWindowLastEntries);
@@ -20663,6 +20675,8 @@ document.addEventListener("DOMContentLoaded", () => {
     "props-filter-round-3",
     "props-filter-round-4",
     "props-filter-tail-mode",
+    "props-filter-average",
+    "props-filter-avg-sort",
     "props-filter-year",
     "props-filter-course",
     "props-filter-course-window",
@@ -20679,6 +20693,9 @@ document.addEventListener("DOMContentLoaded", () => {
       else {
         propsWindowNUserOverride = false;
         syncPropsWindowNDefault(true);
+      }
+      if (id === "props-filter-average" || id === "props-filter-avg-sort" || id === "props-filter-course-window") {
+        syncPropsAverageUiState();
       }
       scheduleRenderPropsTrends();
     });
@@ -20804,7 +20821,7 @@ document.addEventListener("DOMContentLoaded", () => {
     propsWindowNUserOverride = true;
     let v = Math.round(num(el.value, PROPS_HISTORY_ROUND_DEFAULT));
     if (!Number.isFinite(v)) v = PROPS_HISTORY_ROUND_DEFAULT;
-    v = clamp(v + delta, PROPS_HISTORY_ROUND_MIN, PROPS_HISTORY_ROUND_MAX);
+    v = clamp(v + delta, PROPS_HISTORY_ROUND_MIN, propsWindowNMax());
     el.value = String(v);
   }
   /** Capture phase + high z-index on sidebar: chart/canvas stacking was winning hit-testing over the steppers. */
