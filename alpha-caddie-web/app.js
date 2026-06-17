@@ -496,6 +496,8 @@ let propsCourseWindowLastEntries = null;
 /** Field-by-course chart: no winN cap — canvas scrolls/fits all bars in the date window (perf guard only). */
 /** Field horizontal chart (golfer on Y): max golfers / rounds window. */
 const PROPS_FIELD_GOLFER_HORIZONTAL_MAX = 25;
+/** Field-by-course chronological chart: sample down when bars exceed this (perf guard). */
+const PROPS_COURSE_WINDOW_MAX_CHART_BARS = 96;
 const PROPS_COURSE_INDEX_PLAYER_CHUNK = 8;
 
 function num(v, d) {
