@@ -485,8 +485,8 @@ let propsSingleCourseIndexCourseKey = "";
 /** Last field-by-course entries used for chart + table (one collect per render). */
 let propsCourseWindowLastEntries = null;
 /** Field-by-course chart: no winN cap — canvas scrolls/fits all bars in the date window (perf guard only). */
-/** Field + DK: horizontal golfer chart when fewer than this many golfers (after aggregation). */
-const PROPS_FIELD_DK_GOLFER_CHART_MAX = 10;
+/** Field horizontal chart (golfer on Y): max golfers / rounds window. */
+const PROPS_FIELD_GOLFER_HORIZONTAL_MAX = 25;
 const PROPS_COURSE_INDEX_PLAYER_CHUNK = 8;
 
 function num(v, d) {
@@ -13860,7 +13860,7 @@ function propsSuggestedWindowN() {
   if (propsCourseWindowModeActive()) {
     const tail = selectedPropsTailMode();
     if (tail === "average" || tail === "best" || tail === "worst") {
-      return PROPS_FIELD_DK_GOLFER_CHART_MAX;
+      return PROPS_FIELD_GOLFER_HORIZONTAL_MAX;
     }
     const cap = currentTournamentProgressRoundCap();
     if (Number.isFinite(cap) && cap >= 1) return Math.round(cap);
@@ -15567,25 +15567,39 @@ function buildFieldGolferAggregateSeries(entries, statKey) {
   return series;
 }
 
-function sortGolferHorizontalSeries(statKey, series) {
+function fieldGolferHorizontalCap(winN) {
+  return clamp(
+    Math.min(
+      PROPS_FIELD_GOLFER_HORIZONTAL_MAX,
+      Math.round(num(winN, PROPS_FIELD_GOLFER_HORIZONTAL_MAX)),
+    ),
+    1,
+    PROPS_FIELD_GOLFER_HORIZONTAL_MAX,
+  );
+}
+
+/** Y order for horizontal field chart: average/worst = worst→best; best/recent = best→worst. */
+function sortGolferHorizontalSeries(statKey, series, tailOpt) {
   if (!series?.length) return;
+  const tail = tailOpt || selectedPropsTailMode();
   const hi = propsMarketHigherIsBetter(statKey);
+  const worstFirst = tail === "average" || tail === "worst";
   series.sort((a, b) => {
     const va = num(a.actual, NaN);
     const vb = num(b.actual, NaN);
-    if (Number.isFinite(va) && Number.isFinite(vb) && va !== vb) return hi ? vb - va : va - vb;
+    if (Number.isFinite(va) && Number.isFinite(vb) && va !== vb) {
+      if (worstFirst) return hi ? va - vb : vb - va;
+      return hi ? vb - va : va - vb;
+    }
     return String(a.playerName || "").localeCompare(String(b.playerName || ""));
   });
 }
 
 function capFieldGolferSeriesForDisplay(statKey, series, winN) {
   if (!series?.length) return series || [];
-  sortGolferHorizontalSeries(statKey, series);
-  const cap = clamp(
-    Math.round(num(winN, PROPS_FIELD_DK_GOLFER_CHART_MAX)),
-    1,
-    PROPS_HISTORY_ROUND_MAX,
-  );
+  const tail = selectedPropsTailMode();
+  sortGolferHorizontalSeries(statKey, series, tail);
+  const cap = fieldGolferHorizontalCap(winN);
   if (series.length > cap) return series.slice(0, cap);
   return series;
 }
@@ -15600,7 +15614,7 @@ function propsFieldUseGolferAggregateChart(entriesAll, winN) {
   );
   const tail = selectedPropsTailMode();
   if (tail === "average" || tail === "best" || tail === "worst") return true;
-  if (wn <= PROPS_FIELD_DK_GOLFER_CHART_MAX) return true;
+  if (wn <= PROPS_FIELD_GOLFER_HORIZONTAL_MAX) return true;
   const ids = new Set();
   for (const e of entriesAll || []) {
     const id = Math.round(num(e?.dgId, NaN));
@@ -15611,12 +15625,8 @@ function propsFieldUseGolferAggregateChart(entriesAll, winN) {
 
 function propsFieldGolferHorizontalChartActive(golferCount, winN) {
   if (!propsCourseWindowModeOn()) return false;
-  const wn = clamp(
-    Math.round(num(winN, PROPS_FIELD_DK_GOLFER_CHART_MAX)),
-    1,
-    PROPS_HISTORY_ROUND_MAX,
-  );
-  return Number.isFinite(golferCount) && golferCount > 0 && golferCount <= wn;
+  const cap = fieldGolferHorizontalCap(winN);
+  return Number.isFinite(golferCount) && golferCount > 0 && golferCount <= cap;
 }
 
 function propsChartGolferLabelShort(name) {
@@ -17766,7 +17776,12 @@ function showPropsChartTooltip(canvas, ev, hit) {
   const contentChanged = tipKey !== propsChartTipLastKey;
   if (contentChanged) {
     propsChartTipLastKey = tipKey;
-    nodes.date.textContent = hit.date || "—";
+    const courseKey = propsEffectiveCourseKey();
+    if (nodes.date) {
+      const hideDate = hit._aggregate && !courseKey;
+      nodes.date.textContent = hit.date || "—";
+      nodes.date.parentElement.hidden = hideDate;
+    }
     const avgN = Math.round(num(hit._golferAvgRounds, NaN));
     const rnd = Math.round(num(hit.roundNum, NaN));
     if (nodes.round) {
@@ -17781,7 +17796,14 @@ function showPropsChartTooltip(canvas, ev, hit) {
     nodes.golfer.textContent = hit.playerName || "—";
     nodes.golfer.parentElement.hidden = !hit.playerName;
     nodes.value.textContent = propsChartFormatValue(hit.statKey, hit.actual);
-    nodes.course.textContent = hit.courseLabel || propsCourseDisplay(hit);
+    if (nodes.course) {
+      if (courseKey) {
+        nodes.course.textContent = hit.courseLabel || propsCourseDisplay(hit);
+        nodes.course.parentElement.hidden = false;
+      } else {
+        nodes.course.parentElement.hidden = true;
+      }
+    }
   }
   tip.hidden = false;
   const pad = 12;
@@ -18048,7 +18070,7 @@ function drawPropsTrendCanvasGolferHorizontal(series, lineY, statKey) {
   ctx.fillStyle = "#0a0c0f";
   ctx.fillRect(0, 0, w, h);
 
-  const yDom = propsChartYDomain(vals, lineY, statKey, graphMean);
+  const yDom = propsChartYDomain(vals, NaN, statKey, graphMean);
   let minV = yDom.minV;
   let maxV = yDom.maxV;
   const innerH = h - pad.t - pad.b;
@@ -18089,8 +18111,8 @@ function drawPropsTrendCanvasGolferHorizontal(series, lineY, statKey) {
   ctx.lineTo(w - pad.r, h - pad.b);
   ctx.stroke();
 
-  const lowerIsBetter = propsStatLowerIsBetter(statKey);
   const barFrac = 0.62;
+  const courseKey = propsEffectiveCourseKey();
   for (let i = 0; i < n; i++) {
     const v = plot[i].actual;
     const ySlotTop = pad.t + i * slotH;
@@ -18101,7 +18123,6 @@ function drawPropsTrendCanvasGolferHorizontal(series, lineY, statKey) {
     const x0 = Math.min(xBase, xEnd);
     const barW = Math.max(2, Math.abs(xEnd - xBase));
     const hist = plot[i]._hist;
-    const venueLbl = propsEffectiveCourseKey() ? courseFitPrettyCourseKey(propsEffectiveCourseKey()) : "";
     const rnd =
       Number.isFinite(plot[i].roundNum) && plot[i].roundNum >= 1
         ? plot[i].roundNum
@@ -18118,24 +18139,11 @@ function drawPropsTrendCanvasGolferHorizontal(series, lineY, statKey) {
       playerName: String(plot[i].playerName || "").trim(),
       dgId: plot[i].dgId,
       roundNum: Number.isFinite(rnd) && rnd >= 1 && rnd <= 4 ? rnd : NaN,
-      courseLabel: hist ? propsCourseNameFromRow(hist) : venueLbl,
+      courseLabel: courseKey && hist ? propsCourseNameFromRow(hist) : "",
       actual: v,
       statKey,
     });
-    let fill = "#00c46b";
-    const cmpLine = Number.isFinite(lineY) ? lineY : graphMean;
-    if (Number.isFinite(cmpLine)) {
-      if (lowerIsBetter) {
-        if (v < cmpLine) fill = "#00c46b";
-        else if (v > cmpLine) fill = "#ff4d4f";
-        else fill = "#8b8f9c";
-      } else {
-        if (v > cmpLine) fill = "#00c46b";
-        else if (v < cmpLine) fill = "#ff4d4f";
-        else fill = "#8b8f9c";
-      }
-    }
-    ctx.fillStyle = fill;
+    ctx.fillStyle = "#00c46b";
     ctx.fillRect(Math.round(x0), Math.round(y0), Math.round(barW), Math.round(bh));
     ctx.strokeStyle = "rgba(0,0,0,0.35)";
     ctx.lineWidth = 1;
@@ -18145,34 +18153,6 @@ function drawPropsTrendCanvasGolferHorizontal(series, lineY, statKey) {
     ctx.textAlign = "right";
     ctx.textBaseline = "middle";
     ctx.fillText(propsChartGolferLabelShort(plot[i].playerName), pad.l - 8, yc);
-  }
-
-  const refLineY = Number.isFinite(lineY) ? lineY : graphMean;
-  if (Number.isFinite(refLineY) && n > 0) {
-    const xL = xScale(refLineY);
-    ctx.strokeStyle = "#f5a623";
-    ctx.lineWidth = 2;
-    ctx.setLineDash([]);
-    ctx.beginPath();
-    ctx.moveTo(xL, pad.t);
-    ctx.lineTo(xL, h - pad.b);
-    ctx.stroke();
-    const lineLbl = formatPropLineChartLabel(statKey, refLineY);
-    ctx.font = "bold 10px DM Sans, sans-serif";
-    ctx.textAlign = "left";
-    ctx.textBaseline = "middle";
-    const padX = 6;
-    const tw = ctx.measureText(lineLbl).width + padX * 2;
-    const bh = 16;
-    const bx = Math.min(w - pad.r - tw - 4, Math.max(pad.l + 4, xL + 6));
-    const by = pad.t + 4;
-    ctx.fillStyle = "#f5a623";
-    ctx.beginPath();
-    if (typeof ctx.roundRect === "function") ctx.roundRect(bx, by, tw, bh, 4);
-    else ctx.rect(bx, by, tw, bh);
-    ctx.fill();
-    ctx.fillStyle = "#0a0c0f";
-    ctx.fillText(lineLbl, bx + padX, by + bh / 2);
   }
 
   ctx.fillStyle = "#8b8f9c";
@@ -18654,11 +18634,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   if (propsFieldUseGolferAggregateChart(entriesAll, winN)) {
     seriesChart = buildFieldGolferAggregateSeries(entriesAll, statKey);
     seriesChart = capFieldGolferSeriesForDisplay(statKey, seriesChart, winN);
-    if (propsFieldGolferHorizontalChartActive(seriesChart.length, winN)) {
-      chartXAxisMode = "golferHorizontal";
-    } else {
-      sortPropsFieldByCourseSeriesChart(statKey, seriesChart);
-    }
+    chartXAxisMode = "golferHorizontal";
   } else {
     for (const e of chartEntries) {
       const actual =
@@ -18728,7 +18704,12 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
     }
   }
 
-  drawPropsTrendCanvas(seriesChart, line, statKey, { xAxisMode: chartXAxisMode });
+  drawPropsTrendCanvas(
+    seriesChart,
+    chartXAxisMode === "golferHorizontal" ? NaN : line,
+    statKey,
+    { xAxisMode: chartXAxisMode },
+  );
   const hitSt = propsFullHitStatsFromRoundList(statKey, line, entriesAll.map((e) => e.row), {
     courseWindow: true,
   });
@@ -18736,7 +18717,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   if (bookWrap) bookWrap.replaceChildren();
   paintPropsTrendKpiRowCourseWindow(statKey, hitSt, seriesChart, entriesAll);
   const chartLeg = document.getElementById("props-chart-line-legend");
-  if (chartLeg) chartLeg.hidden = !Number.isFinite(line);
+  if (chartLeg) chartLeg.hidden = chartXAxisMode === "golferHorizontal" || !Number.isFinite(line);
   window.requestAnimationFrame(() => {
     if (gen !== propsCourseWindowRenderGen) return;
     renderPropsHitRateAndTopTable(statKey, line, winN, propsCourseWindowLastEntries);
