@@ -14115,7 +14115,7 @@ function propsEventVenueCourseKey() {
   return metaVenue ? normCourseNameKey(metaVenue) : "";
 }
 
-/** In field mode, honor Course dropdown; empty = all courses. Single-player: optional current-course checkbox. */
+/** In field mode: Course dropdown (empty = all courses). Single-player: current-course checkbox. */
 function propsEffectiveCourseKey() {
   const sel = selectedPropsCourseFilter();
   if (propsCourseWindowModeOn()) return sel;
@@ -14131,14 +14131,31 @@ function propsChartHitCourseLabel(hist) {
   return ck ? courseFitPrettyCourseKey(ck) : "";
 }
 
-/** DataGolf ids for this week's projection field. */
+/** This week's projection field (optionally DraftKings-available only). */
 function propsFieldPlayerDgIds() {
   const ids = new Set();
+  const dkOnly = propsFilterDraftKingsOnlyOn() && propsCourseWindowModeOn();
+  const statKey = dkOnly ? statKeyFromPropSelect() : "";
+  const nameByDg = dkOnly ? buildPropsGolferDisplayNameMap() : null;
   for (const p of roundProjectionPlayersForOuRound()) {
     const id = Math.round(num(p.dg_id, NaN));
-    if (Number.isFinite(id)) ids.add(id);
+    if (!Number.isFinite(id)) continue;
+    if (dkOnly) {
+      const name = resolveGolferDisplayNameForDg(id, p.player_name, nameByDg);
+      if (!propsTrendPlayerHasDraftKingsLine(id, name, statKey)) continue;
+    }
+    ids.add(id);
   }
   return ids;
+}
+
+/** Keep only this week's field (and DK subset when that filter is on). */
+function restrictCourseWindowEntriesToField(entries, statKey) {
+  const fieldIds = new Set(
+    [...propsFieldPlayerDgIds()].map((id) => Math.round(num(id, NaN))).filter((x) => Number.isFinite(x)),
+  );
+  if (!fieldIds.size) return entries || [];
+  return (entries || []).filter((e) => fieldIds.has(Math.round(num(e.dgId, NaN))));
 }
 
 /** Load per-player history shards for field view (season-sliced when possible). */
@@ -14149,7 +14166,9 @@ async function ensurePropsFieldPlayerHistoryLoaded(opts = {}) {
     : propsFieldEffectiveSeasonYear();
   const ids = [...propsFieldPlayerDgIds()];
   if (!ids.length) return 0;
-  const missing = ids.filter((id) => !historyBucketReadyForFieldSeason(id, seasonYear));
+  const bucketReady = (id) =>
+    Number.isFinite(seasonYear) ? historyBucketReadyForFieldSeason(id, seasonYear) : historyBucketLoaded(id);
+  const missing = ids.filter((id) => !bucketReady(id));
   if (!missing.length) return 0;
 
   if (Number.isFinite(seasonYear)) {
@@ -14161,16 +14180,15 @@ async function ensurePropsFieldPlayerHistoryLoaded(opts = {}) {
     }
   }
 
-  const stillMissing = ids.filter((id) => !historyBucketReadyForFieldSeason(id, seasonYear));
+  const stillMissing = ids.filter((id) => !bucketReady(id));
   if (!stillMissing.length) return ids.length - missing.length;
 
+  const loadOpts = Number.isFinite(seasonYear) ? { seasonYear } : {};
   const batch = 28;
   let loaded = ids.length - stillMissing.length;
   for (let i = 0; i < stillMissing.length; i += batch) {
     if (gen !== propsFieldHistoryLoadGen) return loaded;
-    await Promise.all(
-      stillMissing.slice(i, i + batch).map((id) => loadPlayerHistoryBucket(id, { seasonYear })),
-    );
+    await Promise.all(stillMissing.slice(i, i + batch).map((id) => loadPlayerHistoryBucket(id, loadOpts)));
     loaded += Math.min(batch, stillMissing.length - i);
     opts.onBatch?.(loaded, ids.length);
   }
@@ -14183,12 +14201,15 @@ function ensurePropsCourseSelectedForWindow() {
   if (!courseSel) return false;
   const prefer = propsEventVenueCourseKey();
   if (!prefer) return false;
-  if ([...courseSel.options].some((o) => o.value === prefer)) {
-    if (courseSel.value !== prefer) {
-      courseSel.value = prefer;
-      return true;
-    }
-    return false;
+  if (![...courseSel.options].some((o) => o.value === prefer)) {
+    const op = document.createElement("option");
+    op.value = prefer;
+    op.textContent = courseFitPrettyCourseKey(prefer);
+    courseSel.appendChild(op);
+  }
+  if (courseSel.value !== prefer) {
+    courseSel.value = prefer;
+    return true;
   }
   return false;
 }
@@ -14241,12 +14262,9 @@ function propsFieldDefaultSeasonYear() {
   return Number.isFinite(y) ? y : PROPS_TREND_DISPLAY_SEASON_YEAR;
 }
 
-/** Active season year in field view (Year filter, else default season). */
+/** Active season year in field view — only when Year filter is set (default: all years). */
 function propsFieldEffectiveSeasonYear() {
-  const sel = selectedPropsYearFilter();
-  if (Number.isFinite(sel)) return sel;
-  if (propsCourseWindowModeOn()) return propsFieldDefaultSeasonYear();
-  return NaN;
+  return selectedPropsYearFilter();
 }
 
 function historyBucketReadyForFieldSeason(dgId, seasonYear) {
@@ -14346,15 +14364,8 @@ function ensurePropsFieldYearDefault(force = false) {
   }
   const yearSel = document.getElementById("props-filter-year");
   if (!yearSel) return;
-  const defY = propsFieldDefaultSeasonYear();
-  if (![...yearSel.options].some((o) => o.value === String(defY))) {
-    const op = document.createElement("option");
-    op.value = String(defY);
-    op.textContent = String(defY);
-    yearSel.appendChild(op);
-  }
   if (force || !propsFieldYearDefaultApplied) {
-    yearSel.value = String(defY);
+    yearSel.value = "";
     propsFieldYearDefaultApplied = true;
   }
 }
@@ -15067,13 +15078,12 @@ function collectFieldRoundEntriesFromPlayerHistory(opts = {}) {
   const fromRaw = String(document.getElementById("props-filter-date-from")?.value || "").trim();
   const toRaw = String(document.getElementById("props-filter-date-to")?.value || "").trim();
   const hasDateFilter = Boolean(fromRaw || toRaw);
-  const dkOnly = propsFilterDraftKingsOnlyOn();
-  const skipDateFilter = Boolean(opts.skipDateFilter) || dkOnly;
+  const skipDateFilter = Boolean(opts.skipDateFilter);
   const applyDateBounds = hasDateFilter && !skipDateFilter && Boolean(courseKey);
   const bounds = applyDateBounds ? propsCourseWindowDateBoundsMs() : { ok: false, fromMs: NaN, toMs: NaN };
   const nameByDg = buildPropsGolferDisplayNameMap();
   const fieldIds = propsFieldPlayerDgIds();
-  const seasonYear = propsFieldEffectiveSeasonYear();
+  const seasonYear = selectedPropsYearFilter();
   const raw = [];
   for (const id of fieldIds) {
     const rec = HISTORY.byDgId[String(id)];
@@ -15127,51 +15137,44 @@ function propsCourseWindowRawEntriesCacheSig(bucketOpt) {
   const dkProj = propsFilterDraftKingsOnlyOn();
   const fromRaw = String(document.getElementById("props-filter-date-from")?.value || "").trim();
   const toRaw = String(document.getElementById("props-filter-date-to")?.value || "").trim();
+  const fieldFp = propsCourseWindowModeOn()
+    ? `field|${playerDgFingerprint(roundProjectionPlayersForOuRound())}`
+    : "";
   return [
     historyMutationEpoch,
     courseKey || "all",
     fromRaw,
     toRaw,
     Number.isFinite(propsFieldEffectiveSeasonYear()) ? String(propsFieldEffectiveSeasonYear()) : "all",
-    dkProj ? `dkproj|${statKey}|${playerDgFingerprint(DATA.players)}|${dkAuditPropsCacheSig}|${dkAuditPropsLineKeys?.size ?? 0}|${draftKingsRoundPropsOnly(true).length}` : "",
+    fieldFp,
+    dkProj ? `dkproj|${statKey}|${dkAuditPropsCacheSig}|${dkAuditPropsLineKeys?.size ?? 0}|${draftKingsRoundPropsOnly(true).length}` : "",
     bucketOpt ? "bucket" : "",
   ].join("|");
 }
 
-/** Heavy scan: field rounds before sidebar weather/round/year filters. */
-function collectCourseWindowRoundEntriesRaw(bucketOpt) {
-  const courseKey = propsEffectiveCourseKey();
-  if (!HISTORY?.byDgId) return [];
-  const statKey = statKeyFromPropSelect();
-  const dkProj = propsFilterDraftKingsOnlyOn();
-  if (dkProj) propsEnsureDkTournamentDateRange();
-  const sig = propsCourseWindowRawEntriesCacheSig(bucketOpt);
-  if (sig === courseWindowRoundEntriesRawCacheSig && courseWindowRoundEntriesRawCache) {
-    return courseWindowRoundEntriesRawCache;
-  }
-
+function collectCourseWindowEntriesFromBucket(bucket, courseKey) {
   const fromRaw = String(document.getElementById("props-filter-date-from")?.value || "").trim();
   const toRaw = String(document.getElementById("props-filter-date-to")?.value || "").trim();
-  const rawOpts = { applySidebarFilters: false };
-  let out;
-  if (dkProj) {
-    propsCourseWindowDateFallbackIso = "";
-    out = collectDkFieldPlayerRoundEntries(statKey, bucketOpt, rawOpts);
-  } else if (!courseKey) {
-    propsCourseWindowDateFallbackIso = "";
-    out = collectFieldRoundEntriesFromPlayerHistory(rawOpts);
-  } else {
-    const bucket = bucketOpt || propsGetSingleCourseBucketSync(courseKey);
-    if (!bucket) return [];
-    mergeMemoryCourseEntriesIntoBucket(bucket, courseKey);
-    propsCourseWindowDateFallbackIso = "";
-    if (!fromRaw && !toRaw) {
-      out = (bucket.entries || [])
-        .map((e) => enrichCourseWindowEntry(e))
-        .sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
-    } else {
-      const bounds = propsCourseWindowDateBoundsMs();
-      let { fromMs, toMs } = bounds;
+  if (!fromRaw && !toRaw) {
+    return (bucket.entries || [])
+      .map((e) => enrichCourseWindowEntry(e))
+      .sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
+  }
+  const bounds = propsCourseWindowDateBoundsMs();
+  let { fromMs, toMs } = bounds;
+  let out = [];
+  for (const e of bucket.entries || []) {
+    const enriched = enrichCourseWindowEntry(e);
+    if (!historyRoundInCourseDateWindow(enriched.row, fromMs, toMs)) continue;
+    out.push(enriched);
+  }
+  out.sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
+  if (!out.length && bucket.entries?.length && fromRaw && toRaw && fromRaw === toRaw) {
+    const near = propsPickNearestCourseSessionDay(bucket, fromRaw, toRaw);
+    if (near) {
+      propsCourseWindowDateFallbackIso = near;
+      fromMs = propsCourseWindowDateInputToUtcMs(near, false);
+      toMs = propsCourseWindowDateInputToUtcMs(near, true);
       out = [];
       for (const e of bucket.entries || []) {
         const enriched = enrichCourseWindowEntry(e);
@@ -15179,23 +15182,37 @@ function collectCourseWindowRoundEntriesRaw(bucketOpt) {
         out.push(enriched);
       }
       out.sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
-      if (!out.length && bucket.entries?.length && fromRaw && toRaw && fromRaw === toRaw) {
-        const near = propsPickNearestCourseSessionDay(bucket, fromRaw, toRaw);
-        if (near) {
-          propsCourseWindowDateFallbackIso = near;
-          fromMs = propsCourseWindowDateInputToUtcMs(near, false);
-          toMs = propsCourseWindowDateInputToUtcMs(near, true);
-          out = [];
-          for (const e of bucket.entries || []) {
-            const enriched = enrichCourseWindowEntry(e);
-            if (!historyRoundInCourseDateWindow(enriched.row, fromMs, toMs)) continue;
-            out.push(enriched);
-          }
-          out.sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
-        }
-      }
     }
   }
+  return out;
+}
+
+/** Heavy scan: field rounds at course (all-time default) before sidebar filters. */
+function collectCourseWindowRoundEntriesRaw(bucketOpt) {
+  const courseKey = propsEffectiveCourseKey();
+  if (!HISTORY?.byDgId) return [];
+  const statKey = statKeyFromPropSelect();
+  const sig = propsCourseWindowRawEntriesCacheSig(bucketOpt);
+  if (sig === courseWindowRoundEntriesRawCacheSig && courseWindowRoundEntriesRawCache) {
+    return courseWindowRoundEntriesRawCache;
+  }
+
+  propsCourseWindowDateFallbackIso = "";
+  const rawOpts = { applySidebarFilters: false };
+  let out = [];
+
+  if (courseKey) {
+    const bucket = bucketOpt || propsGetSingleCourseBucketSync(courseKey);
+    if (bucket?.entries?.length) {
+      mergeMemoryCourseEntriesIntoBucket(bucket, courseKey);
+      out = collectCourseWindowEntriesFromBucket(bucket, courseKey);
+    }
+  }
+  if (!out.length) {
+    out = collectFieldRoundEntriesFromPlayerHistory(rawOpts);
+  }
+  out = restrictCourseWindowEntriesToField(out, statKey);
+
   courseWindowRoundEntriesRawCacheSig = sig;
   courseWindowRoundEntriesRawCache = out;
   return out;
@@ -15515,10 +15532,7 @@ function refreshPropsYearFilterOptions(dgId) {
       yearSel.appendChild(op);
     });
   if (prev && [...yearSel.options].some((o) => o.value === prev)) yearSel.value = prev;
-  else if (propsCourseWindowModeOn() && propsFieldYearDefaultApplied) {
-    const defY = propsFieldDefaultSeasonYear();
-    if ([...yearSel.options].some((o) => o.value === String(defY))) yearSel.value = String(defY);
-  }
+  else if (propsCourseWindowModeOn() && propsFieldYearDefaultApplied) yearSel.value = "";
 }
 
 function refreshPropsFilterOptionsForGolfer(dgId) {
@@ -18636,6 +18650,10 @@ function renderPropsTrendsCourseWindowQuick() {
   const gen = propsCourseWindowRenderGen;
   const courseKey = propsEffectiveCourseKey();
   const bucket = courseKey ? propsGetSingleCourseBucketSync(courseKey) : null;
+  if (courseKey && !bucket?.entries?.length) {
+    renderPropsTrendsCourseWindow();
+    return;
+  }
   if (propsFilterDraftKingsOnlyOn()) {
     void ensureDkAuditPropsIndexLoaded().then(() => {
       if (gen !== propsCourseWindowRenderGen || activeAppTabId() !== "props") return;
@@ -18649,17 +18667,15 @@ function renderPropsTrendsCourseWindowQuick() {
 function renderPropsTrendsCourseWindow() {
   ensurePropsStatSelectValid();
   const gen = ++propsCourseWindowRenderGen;
-  propsCourseWindowStructureKey = propsCourseWindowStructureContextKey();
   propsCourseWindowLastEntries = null;
   syncPropsCourseWindowUiState();
   refreshPropsCourseFilterOptionsAllPlayers();
-  ensurePropsCourseSelectedForWindow();
+  if (ensurePropsCourseSelectedForWindow()) invalidateCourseWindowRoundEntriesCache();
   propsSanitizeFieldDateFilters();
   ensurePropsFieldYearDefault();
-  ensurePropsCourseWindowDateDefaultsFromMeta();
-  propsEnsureDkTournamentDateRange();
   syncPropsWindowNDefault();
   void loadPropsCoursesManifest();
+  propsCourseWindowStructureKey = propsCourseWindowStructureContextKey();
 
   const courseKey = propsEffectiveCourseKey();
   const paintBody = (bucket) => {
@@ -18674,20 +18690,28 @@ function renderPropsTrendsCourseWindow() {
     renderPropsTrendsCourseWindowBody(gen, bucket);
   };
 
-  if (!courseKey) {
-    const fieldIds = [...propsFieldPlayerDgIds()];
-    const seasonYear = propsFieldEffectiveSeasonYear();
-    const readyCount = fieldIds.filter((id) => historyBucketReadyForFieldSeason(id, seasonYear)).length;
-    const allReady = !fieldIds.length || readyCount >= fieldIds.length;
+  const fieldIds = [...propsFieldPlayerDgIds()];
+  const needFieldHistory = fieldIds.some((id) => !historyBucketLoaded(id));
+  const needCourseShard = Boolean(courseKey) && !propsGetSingleCourseBucketSync(courseKey)?.entries?.length;
 
-    if (!allReady && activeAppTabId() === "props") {
+  if ((needFieldHistory || needCourseShard) && activeAppTabId() === "props") {
+    if (needCourseShard) {
+      paintPropsCourseWindowBuilding("Loading all players at this course…");
+      void ensurePropsCourseIndexForKeyAsync(courseKey).then((bucket) => {
+        if (gen !== propsCourseWindowRenderGen || activeAppTabId() !== "props") return;
+        invalidateCourseWindowRoundEntriesCache();
+        paintBody(bucket);
+      });
+    }
+    if (needFieldHistory) {
       const loadGen = ++propsFieldHistoryLoadGen;
-      if (readyCount === 0) {
-        paintPropsCourseWindowBuilding(`Loading ${seasonYear} field history…`);
+      if (!needCourseShard) {
+        paintPropsCourseWindowBuilding("Loading field player history…");
+        paintBody(propsGetSingleCourseBucketSync(courseKey));
       }
       void ensurePropsFieldPlayerHistoryLoaded({
         gen: loadGen,
-        seasonYear,
+        seasonYear: NaN,
         onBatch: () => {
           if (loadGen !== propsFieldHistoryLoadGen || gen !== propsCourseWindowRenderGen) return;
           if (activeAppTabId() !== "props") return;
@@ -18702,29 +18726,13 @@ function renderPropsTrendsCourseWindow() {
         if (loadGen !== propsFieldHistoryLoadGen || gen !== propsCourseWindowRenderGen) return;
         if (activeAppTabId() !== "props") return;
         invalidateCourseWindowRoundEntriesCache();
-        paintBody(null);
+        if (!needCourseShard) paintBody(propsGetSingleCourseBucketSync(courseKey));
       });
-      if (readyCount > 0) {
-        paintBody(null);
-      }
-      return;
     }
-    paintBody(null);
     return;
   }
 
-  const cached = propsGetSingleCourseBucketSync(courseKey);
-  if (cached) {
-    paintBody(cached);
-    return;
-  }
-
-  paintPropsCourseWindowBuilding("Loading all players at this course…");
-  void ensurePropsCourseIndexForKeyAsync(courseKey).then((bucket) => {
-    if (gen !== propsCourseWindowRenderGen || activeAppTabId() !== "props") return;
-    ensurePropsCourseWindowDateDefaults();
-    paintBody(bucket);
-  });
+  paintBody(propsGetSingleCourseBucketSync(courseKey));
 }
 
 function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
@@ -18899,7 +18907,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
           empty.textContent =
             "No DraftKings rounds at this course in the selected date range. Widen From/To or turn off the DK filter.";
         } else {
-          empty.textContent = `No chartable ${propMarketLabelFromKey(statKey)} values at ${courseLabel} for ${dkField} DK golfers (try another market or relax weather filters).`;
+          empty.textContent = `No chartable ${propMarketLabelFromKey(statKey)} values at ${courseFitPrettyCourseKey(courseKey) || "this course"} for ${dkField} DK golfers (try another market or relax weather filters).`;
         }
       } else {
         empty.textContent = nAll
@@ -20900,6 +20908,25 @@ document.addEventListener("DOMContentLoaded", () => {
         propsWindowNUserOverride = false;
         syncPropsWindowNDefault(true);
       }
+      if (
+        id === "props-filter-temp-min" ||
+        id === "props-filter-temp-max" ||
+        id === "props-filter-wind-min" ||
+        id === "props-filter-wind-max" ||
+        id === "props-filter-humidity-min" ||
+        id === "props-filter-humidity-max" ||
+        id === "props-filter-cond-clear" ||
+        id === "props-filter-cond-cloudy" ||
+        id === "props-filter-cond-rainy" ||
+        id === "props-filter-cond-windy" ||
+        id === "props-filter-tee-wave" ||
+        id === "props-filter-round-1" ||
+        id === "props-filter-round-2" ||
+        id === "props-filter-round-3" ||
+        id === "props-filter-round-4"
+      ) {
+        invalidateCourseWindowRoundEntriesCache();
+      }
       if (id === "props-filter-average") {
         if (propsAverageModeOn()) {
           const winEl = document.getElementById("props-window-n");
@@ -20909,7 +20936,7 @@ document.addEventListener("DOMContentLoaded", () => {
         syncPropsAverageUiState();
       } else if (id === "props-filter-avg-sort" || id === "props-filter-course-window" || id === "props-filter-tail-mode") {
         syncPropsAverageUiState();
-      } else if (id === "props-filter-course") {
+      } else if (id === "props-filter-course" || id === "props-filter-year") {
         propsCourseWindowStructureKey = "";
         invalidateCourseWindowRoundEntriesCache();
       }
@@ -20929,6 +20956,10 @@ document.addEventListener("DOMContentLoaded", () => {
       el.addEventListener("input", () => {
         propsWindowNUserOverride = false;
         syncPropsWindowNDefault(true);
+        if (id === "props-filter-date-from" || id === "props-filter-date-to") {
+          propsCourseWindowStructureKey = "";
+          invalidateCourseWindowRoundEntriesCache();
+        }
         scheduleRenderPropsTrends();
       });
     }
