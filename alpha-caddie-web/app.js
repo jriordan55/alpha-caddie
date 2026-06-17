@@ -14256,6 +14256,9 @@ function propsGetSingleCourseBucketSync(courseKey) {
   if (!courseKey) return null;
   const sig = `${historyMutationEpoch}|${courseKey}`;
   if (propsSingleCourseIndexSig === sig && propsSingleCourseIndexCache) return propsSingleCourseIndexCache;
+  // Field mode must use the full by-course shard — not the partial index built from whichever
+  // player histories happen to be in memory (often only the golfer selected in the search box).
+  if (propsCourseWindowModeOn()) return null;
   const fromMap = propsCourseRoundIndex.get(courseKey);
   if (fromMap) return fromMap;
   return null;
@@ -18688,11 +18691,11 @@ function renderPropsTrendsCourseWindowQuick() {
 function renderPropsTrendsCourseWindow() {
   ensurePropsStatSelectValid();
   const gen = ++propsCourseWindowRenderGen;
-  propsCourseWindowStructureKey = propsCourseWindowStructureContextKey();
   propsCourseWindowLastEntries = null;
   syncPropsCourseWindowUiState();
   refreshPropsCourseFilterOptionsAllPlayers();
   if (ensurePropsCourseSelectedForWindow()) invalidateCourseWindowRoundEntriesCache();
+  propsCourseWindowStructureKey = propsCourseWindowStructureContextKey();
   propsSanitizeFieldDateFilters();
   ensurePropsFieldYearDefault();
   syncPropsWindowNDefault();
@@ -21012,6 +21015,10 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       propsAllPlayersCourseOptsCacheKey = "";
       propsAllPlayersCourseOptsEntries = null;
+      propsSingleCourseIndexSig = "";
+      propsSingleCourseIndexCache = null;
+      const venueCk = propsEventVenueCourseKey();
+      if (venueCk) propsCourseRoundIndex.delete(venueCk);
       ensurePropsFieldYearDefault(true);
       propsWindowNUserOverride = false;
       syncPropsWindowNDefault(true);
