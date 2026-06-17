@@ -14255,7 +14255,10 @@ function propsStoreSingleCourseBucket(courseKey, bucket) {
 function propsGetSingleCourseBucketSync(courseKey) {
   if (!courseKey) return null;
   const sig = `${historyMutationEpoch}|${courseKey}`;
-  if (propsSingleCourseIndexSig === sig && propsSingleCourseIndexCache) return propsSingleCourseIndexCache;
+  if (propsSingleCourseIndexSig === sig && propsSingleCourseIndexCache) {
+    if (propsCourseWindowModeOn() && !propsSingleCourseIndexCache._fromCourseShard) return null;
+    return propsSingleCourseIndexCache;
+  }
   // Field mode must use the full by-course shard — not the partial index built from whichever
   // player histories happen to be in memory (often only the golfer selected in the search box).
   if (propsCourseWindowModeOn()) return null;
@@ -14616,10 +14619,11 @@ async function ensurePropsCourseIndexForKeyAsync(courseKey) {
     const shard = await fetchPropsCourseHistoryShard(courseKey);
     if (shard?.entries?.length) {
       mergeMemoryCourseEntriesIntoBucket(shard, courseKey);
+      shard._fromCourseShard = true;
       propsStoreSingleCourseBucket(courseKey, shard);
       return shard;
     }
-    if (propsHistorySmallEnoughForMemoryCourseIndex()) {
+    if (!propsCourseWindowModeOn() && propsHistorySmallEnoughForMemoryCourseIndex()) {
       const built = await buildPropsSingleCourseIndexFromMemory(courseKey);
       propsStoreSingleCourseBucket(courseKey, built);
       return built;
@@ -18676,6 +18680,7 @@ function invalidateCourseWindowRoundEntriesCache() {
 /** Filter-only pass: reuse loaded history and course index (no dropdown rebuild / history restart). */
 function renderPropsTrendsCourseWindowQuick() {
   const gen = propsCourseWindowRenderGen;
+  ensurePropsCourseSelectedForWindow();
   const courseKey = propsEffectiveCourseKey();
   const bucket = courseKey ? propsGetSingleCourseBucketSync(courseKey) : null;
   if (propsFilterDraftKingsOnlyOn()) {
@@ -18750,9 +18755,6 @@ function renderPropsTrendsCourseWindow() {
         invalidateCourseWindowRoundEntriesCache();
         paintBody(null);
       });
-      if (readyCount > 0) {
-        paintBody(null);
-      }
       return;
     }
     paintBody(null);
@@ -18776,6 +18778,8 @@ function renderPropsTrendsCourseWindow() {
 function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   if (gen !== propsCourseWindowRenderGen) return;
   syncPropsCourseWindowUiState();
+  const bookWrapClear = document.getElementById("props-trends-book-lines");
+  if (bookWrapClear) bookWrapClear.replaceChildren();
   const empty = document.getElementById("props-chart-empty");
   const titleEl = document.getElementById("props-trends-title");
   const flagEl = document.getElementById("props-flag");
@@ -21018,7 +21022,10 @@ document.addEventListener("DOMContentLoaded", () => {
       propsSingleCourseIndexSig = "";
       propsSingleCourseIndexCache = null;
       const venueCk = propsEventVenueCourseKey();
-      if (venueCk) propsCourseRoundIndex.delete(venueCk);
+      if (venueCk) {
+        propsCourseRoundIndex.delete(venueCk);
+        void ensurePropsCourseIndexForKeyAsync(venueCk);
+      }
       ensurePropsFieldYearDefault(true);
       propsWindowNUserOverride = false;
       syncPropsWindowNDefault(true);
