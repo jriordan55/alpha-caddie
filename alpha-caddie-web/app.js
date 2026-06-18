@@ -453,7 +453,7 @@ let propsChartLastPointer = null;
 let propsChartHoverWrapEl = null;
 /** @type {DOMRect | null} */
 let propsChartHoverWrapRect = null;
-/** @type {{ date: HTMLElement, golfer: HTMLElement, value: HTMLElement, course: HTMLElement } | null} */
+/** @type {{ date: HTMLElement, round: HTMLElement, golfer: HTMLElement, stat: HTMLElement, year: HTMLElement, value: HTMLElement, course: HTMLElement } | null} */
 let propsChartTipNodes = null;
 /** When the requested session day has no rounds, we chart the nearest day in course history. */
 let propsCourseWindowDateFallbackIso = "";
@@ -975,6 +975,9 @@ let lastProjectionsLoadedAtMs = 0;
 let datagolfLivePollTimerId = 0;
 /** Fingerprint of last merged preds/in-play (info.last_update); skip merge until DataGolf publishes a new one. */
 let lastDatagolfInPlayToken = "";
+/** Fingerprint of field_updates tee times (refreshes even when live placement overlay is off). */
+let lastFieldTeeTimesToken = "";
+let fieldTeeTimesPollTimerId = 0;
 /** Every N polls, merge anyway so make_cut / current_pos refresh if the file changes without last_update bumping. */
 let datagolfLivePeriodicForceTick = 0;
 /** Last preds/in-play bundle for Historical Trends (independent of live odds polling). */
@@ -1135,6 +1138,29 @@ function dgInPlayLiveScorebookHash(j) {
   return `${j.data.length}:${hashDjb2(chunks.join("|"))}`;
 }
 
+/** Stable token from field_updates tee times so tee-time-only polls detect new postings. */
+function dgFieldUpdatesTeeTimesToken(j) {
+  const fu = j?.field_updates;
+  if (!fu || typeof fu !== "object") return "";
+  const fuEvent = String(fu.event_name ?? fu.eventName ?? "").trim();
+  const ds = String(fu.date_start ?? "").trim();
+  const cr = Math.round(num(fu.current_round, NaN));
+  const flist = fu.field ?? fu.field_updates ?? fu.players ?? fu.data;
+  if (!Array.isArray(flist)) return `${fuEvent}|${ds}|${cr}`;
+  const parts = [];
+  for (const fp of flist) {
+    const id = Math.round(num(fp?.dg_id ?? fp?.dgId, NaN));
+    if (!Number.isFinite(id)) continue;
+    const tt = Array.isArray(fp.teetimes) ? fp.teetimes : [];
+    for (const slot of tt) {
+      parts.push(
+        `${id}:${Math.round(num(slot?.round_num ?? slot?.round, NaN))}:${String(slot?.teetime ?? "").trim()}:${String(slot?.wave ?? "").trim()}`,
+      );
+    }
+  }
+  return `${fuEvent}|${ds}|${cr}|${hashDjb2(parts.join(";"))}`;
+}
+
 /** Stable token from live bundle JSON so we only re-merge after DataGolf updates any included feed. */
 function dgInPlayUpdateToken(j) {
   if (!j || typeof j !== "object") return "";
@@ -1147,7 +1173,8 @@ function dgInPlayUpdateToken(j) {
   const hLu =
     j.live_hole_stats && j.live_hole_stats.last_update != null ? String(j.live_hole_stats.last_update).trim() : "";
   const scH = dgInPlayLiveScorebookHash(j);
-  if (lu || tLu || hLu) return `lu:${lu}|ts:${tLu}|hs:${hLu}|sc:${scH}`;
+  const tt = dgFieldUpdatesTeeTimesToken(j);
+  if (lu || tLu || hLu) return `lu:${lu}|ts:${tLu}|hs:${hLu}|sc:${scH}|tt:${tt}`;
   const n = Array.isArray(j.data) ? j.data.length : 0;
   const parts = [];
   for (let i = 0; i < Math.min(8, n); i++) {
@@ -1156,7 +1183,36 @@ function dgInPlayUpdateToken(j) {
     const w = num(dgInPlayField(r, ["win", "win_prob"]), NaN);
     parts.push(`${dgInPlayField(r, ["dg_id", "dgId"]) ?? ""}:${Number.isFinite(w) ? w.toFixed(5) : ""}`);
   }
-  return `fb:${n}:${parts.join("|")}|sc:${scH}`;
+  return `fb:${n}:${parts.join("|")}|sc:${scH}|tt:${tt}`;
+}
+
+function fieldUpdatesAlignsWithProjections(j) {
+  if (!j || typeof j !== "object") return false;
+  const fu = j.field_updates;
+  if (!fu || typeof fu !== "object") return false;
+  const modelEvent = String(DATA?.meta?.event_name || "").trim();
+  const inPlayEvent = String(j.info?.event_name || j.event_name || "").trim();
+  const eventAligned =
+    !inPlayEvent ||
+    !modelEvent ||
+    eventNameMatchesCurrentSchedule(inPlayEvent, modelEvent) ||
+    eventNameMatchesCurrentSchedule(modelEvent, inPlayEvent);
+  if (eventAligned) return true;
+  const fuEvent = String(fu.event_name ?? fu.eventName ?? "").trim();
+  return (
+    !fuEvent ||
+    !modelEvent ||
+    eventNameMatchesCurrentSchedule(fuEvent, modelEvent) ||
+    eventNameMatchesCurrentSchedule(modelEvent, fuEvent)
+  );
+}
+
+/** Merge field_updates tee times when the bundle matches this week's projections event. */
+function mergeFieldTeeTimesFromBundle(j) {
+  if (!j || !DATA.players?.length) return 0;
+  const fu = j.field_updates && typeof j.field_updates === "object" ? j.field_updates : null;
+  if (!fu || !fieldUpdatesAlignsWithProjections(j)) return 0;
+  return mergeDgFieldTeeTimesIntoPlayers(fu);
 }
 
 function playerDgFingerprint(players) {
@@ -1663,11 +1719,12 @@ function mergeDatagolfInPlayPayload(j) {
   if (!j || typeof j !== "object" || !DATA.players || !DATA.players.length) return false;
   const metaTouched = mergeDatagolfLiveCourseMeta(j);
   let drivingTouched = false;
-  if (!Array.isArray(j.data)) return metaTouched;
-  const info = j.info && typeof j.info === "object" ? j.info : {};
-  if (j.field_updates && typeof j.field_updates === "object") {
-    mergeDgFieldTeeTimesIntoPlayers(j.field_updates);
+  if (!Array.isArray(j.data)) {
+    mergeFieldTeeTimesFromBundle(j);
+    return metaTouched;
   }
+  const info = j.info && typeof j.info === "object" ? j.info : {};
+  mergeFieldTeeTimesFromBundle(j);
   const currentRound = dgLiveBundleConsensusCurrentRound(j);
   const lastUpdate = info.last_update != null ? String(info.last_update) : "";
   const inPlayEvent = String(
@@ -1686,19 +1743,7 @@ function mergeDatagolfInPlayPayload(j) {
   // A cross-event merge can produce near-certain model prices against unrelated outright books.
   if (!eventAligned) {
     delete DATA.live_in_play_snapshot;
-    /* preds/in-play `info.event_name` can lag a week while field-updates already match this event.
-       Still merge tee times + date_start from field_updates so Open-Meteo / per-tee weather works. */
-    const fu = j.field_updates && typeof j.field_updates === "object" ? j.field_updates : null;
-    const fuEvent = String(fu?.event_name ?? fu?.eventName ?? "").trim();
-    const fuAligns =
-      fu &&
-      (!fuEvent ||
-        !modelEvent ||
-        eventNameMatchesCurrentSchedule(fuEvent, modelEvent) ||
-        eventNameMatchesCurrentSchedule(modelEvent, fuEvent));
-    if (fuAligns) {
-      mergeDgFieldTeeTimesIntoPlayers(fu);
-    } else {
+    if (!fieldUpdatesAlignsWithProjections(j)) {
       for (const p of DATA.players || []) {
         delete p.dg_teetime_local;
         delete p.dg_tee_wave;
@@ -2521,6 +2566,70 @@ function mergeLiveTournamentCountingIntoProjections(j) {
   return touched > 0;
 }
 
+/** Fetch live-in-play.json and merge field_updates tee times (works when placement overlay polling is off). */
+async function fetchAndMergeFieldTeeTimes(opts = {}) {
+  if (isFileProtocol()) return 0;
+  if (!DATA.players?.length) return 0;
+  const force = Boolean(opts.force);
+  const url = cacheBustFetchUrl(liveInPlayJsonUrl());
+  try {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) return 0;
+    const j = await res.json();
+    const histBundle = liveInPlayHistoryBundleWithActuals(j);
+    lastLiveInPlayBundleForHistory = histBundle;
+    const token = dgFieldUpdatesTeeTimesToken(j);
+    if (!force && token && token === lastFieldTeeTimesToken) return 0;
+    const n = mergeFieldTeeTimesFromBundle(j);
+    if (token) lastFieldTeeTimesToken = token;
+    if (n > 0) {
+      void refreshForecastWeatherFromOpenMeteo().then((fwOk) => {
+        if (fwOk) {
+          refreshPricingAffectedViews();
+          updateStatusBar();
+        }
+      });
+      refreshPricingAffectedViews();
+      updateStatusBar();
+    }
+    return n;
+  } catch (_) {
+    return 0;
+  }
+}
+
+function fieldTeeTimesPollIntervalMs() {
+  if (datagolfLiveOverlayEnabled() && datagolfLivePollIntervalMs() > 0) return 0;
+  try {
+    const q = new URLSearchParams(window.location.search).get("teeTimesPoll");
+    if (q != null && String(q).trim() !== "") {
+      const sec = Number(q);
+      if (!Number.isFinite(sec) || sec <= 0) return 0;
+      return Math.min(600, Math.max(30, sec)) * 1000;
+    }
+  } catch (_) {}
+  const sec = num(DATA?.meta?.field_teetimes_poll_interval_sec, 90);
+  if (!Number.isFinite(sec) || sec <= 0) return 0;
+  return Math.min(600, Math.max(30, sec)) * 1000;
+}
+
+function stopFieldTeeTimesPolling() {
+  if (fieldTeeTimesPollTimerId) {
+    window.clearInterval(fieldTeeTimesPollTimerId);
+    fieldTeeTimesPollTimerId = 0;
+  }
+}
+
+function startFieldTeeTimesPolling() {
+  stopFieldTeeTimesPolling();
+  if (isFileProtocol()) return;
+  const ms = fieldTeeTimesPollIntervalMs();
+  if (!ms) return;
+  fieldTeeTimesPollTimerId = window.setInterval(() => {
+    void fetchAndMergeFieldTeeTimes();
+  }, ms);
+}
+
 async function fetchAndMergeDatagolfLiveInPlay(opts = {}) {
   let force = Boolean(opts.force);
   if (!force) {
@@ -2553,6 +2662,8 @@ async function fetchAndMergeDatagolfLiveInPlay(opts = {}) {
     const histMerged = HISTORY._ok ? mergeLiveInPlayIntoRoundHistory(histBundle) : 0;
     const roundBumped = syncLbRoundToTournamentModelRound();
     if (token) lastDatagolfInPlayToken = token;
+    const ttToken = dgFieldUpdatesTeeTimesToken(j);
+    if (ttToken) lastFieldTeeTimesToken = ttToken;
     if (merged || roundBumped || histMerged > 0) {
       if (roundBumped) updateRoundLabels();
       refreshPricingAffectedViews();
@@ -2701,7 +2812,10 @@ function applyPayload(raw) {
   approachSkillYtdLoadPromise = null;
   COURSE_TABLE_PAYLOAD = null;
   const nextFieldFp = playerDgFingerprint(players);
-  if (prevFieldFp !== nextFieldFp) lastDatagolfInPlayToken = "";
+  if (prevFieldFp !== nextFieldFp) {
+    lastDatagolfInPlayToken = "";
+    lastFieldTeeTimesToken = "";
+  }
   lastSyncedAutoOuRound = 0;
   hydrateBakedWeatherFromPlayerFields();
   normalizeStoredCourseUsedLabels();
@@ -6343,7 +6457,7 @@ function ouProjectionRowStatOrder(a, b) {
 
 function ouTableSortValueProjRow(row, sortKey) {
   const { player, col, colIdx, side, mu, pick } = row;
-  if (sortKey === "pr-tee-time") return dgTeetimeSortMinutes(player.dg_teetime_local);
+  if (sortKey === "pr-tee-time") return dgTeetimeSortMinutes(playerDgTeetimeForRound(player));
   if (sortKey === "pr-golfer" || sortKey === "golfer") {
     return displayGolferName(player.player_name || "").toLowerCase();
   }
@@ -6712,7 +6826,7 @@ function buildOuTable() {
     if (ouProjExpandedKey === expandKey) tr.classList.add("ou-proj-row-expanded");
     const teeTd = document.createElement("td");
     teeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-tee";
-    const teeRaw = String(player.dg_teetime_local || "").trim();
+    const teeRaw = playerDgTeetimeForRound(player);
     teeTd.textContent = formatDgTeetimeEasternDisplay(teeRaw);
     teeTd.title = teeRaw ? `Tee time (ET): ${teeRaw.replace("T", " ")}` : "Tee time not posted yet";
     tr.appendChild(teeTd);
@@ -13974,6 +14088,15 @@ function historyRoundWeatherLookupKey(row) {
   return `${eid}|${yr}|${rnd}`;
 }
 
+function playerDgTeetimeForRound(player) {
+  const raw = String(player?.dg_teetime_local || "").trim();
+  if (raw) return raw;
+  const dg = Math.round(num(player?.dg_id, NaN));
+  const rnd = Math.round(num(player?.round, NaN));
+  const tt = fieldUpdatesTeetimeForDgRound(dg, rnd);
+  return tt?.teetime ? String(tt.teetime).trim() : "";
+}
+
 function fieldUpdatesTeetimeForDgRound(dgId, roundNum) {
   const fu = lastLiveInPlayBundleForHistory?.field_updates;
   if (!fu || typeof fu !== "object") return null;
@@ -15390,6 +15513,37 @@ function defaultLineForCourseWindow(statKey, entries) {
   return clampPropLineForMarket(statKey, defaultPropLineForStat(statKey));
 }
 
+/** KPI scope for field charts: match visible bars (capped player count), not the full filtered pool. */
+function propsCourseWindowChartKpiScope(graphSeries, entriesAll) {
+  const series = graphSeries || [];
+  if (!series.length) {
+    return { players: 0, rounds: 0, roundRows: [], fieldEntries: [] };
+  }
+  const dgIds = new Set();
+  for (const s of series) {
+    const id = Math.round(num(s.dgId, NaN));
+    if (Number.isFinite(id)) dgIds.add(id);
+  }
+  const fieldEntries = (entriesAll || []).filter((e) => dgIds.has(e.dgId));
+  const aggregateSeries = series.every((s) => s._aggregate);
+  let rounds = 0;
+  if (aggregateSeries) {
+    for (const s of series) {
+      const n = Math.round(num(s._golferAvgRounds, NaN));
+      rounds += Number.isFinite(n) && n > 0 ? n : 1;
+    }
+  } else {
+    rounds = series.length;
+  }
+  let roundRows;
+  if (aggregateSeries && propsAverageModeOn()) {
+    roundRows = fieldEntries.map((e) => e.row);
+  } else {
+    roundRows = series.map((s) => s._hist).filter(Boolean);
+  }
+  return { players: dgIds.size, rounds, roundRows, fieldEntries };
+}
+
 function paintPropsTrendKpiRowCourseWindow(statKey, hitSt, graphSeries, entries) {
   const el = document.getElementById("props-trends-kpis");
   if (!el) return;
@@ -15403,15 +15557,14 @@ function paintPropsTrendKpiRowCourseWindow(statKey, hitSt, graphSeries, entries)
     return;
   }
   el.replaceChildren();
-  const rounds = entries.map((e) => e.row);
-  const playerIds = new Set(
-    entries
-      .filter((e) => e && Number.isFinite(num(e.dgId, NaN)) && String(e.playerName || "").trim())
-      .map((e) => e.dgId),
-  );
+  const scope = propsCourseWindowChartKpiScope(graphSeries, entries);
+  const rounds = scope.roundRows;
+  const playerCount = scope.players;
   const vals = (graphSeries || []).map((s) => s.actual).filter((x) => Number.isFinite(x));
   const graphMean = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : NaN;
-  const fieldVals = entries.map((e) => chartActualForCourseWindowEntry(statKey, e)).filter((x) => Number.isFinite(x));
+  const fieldVals = scope.fieldEntries
+    .map((e) => chartActualForCourseWindowEntry(statKey, e))
+    .filter((x) => Number.isFinite(x));
   const fieldMean = fieldVals.length
     ? fieldVals.reduce((a, b) => a + b, 0) / fieldVals.length
     : propsTrendMeanFieldVenueActual(statKey, rounds);
@@ -15445,8 +15598,8 @@ function paintPropsTrendKpiRowCourseWindow(statKey, hitSt, graphSeries, entries)
     "All-time course avg",
     propsTrendFieldVenueKpiValue(statKey, atVenueAll, { allowMetaFallback: false }),
   );
-  addKpi("Rounds", rounds.length, "", true);
-  addKpi("Players", playerIds.size, "", true);
+  addKpi("Rounds", scope.rounds, "", true);
+  addKpi("Players", playerCount, "", true);
 
   if (hitSt && hitSt.valid > 0) {
     const lowerBetter = propsStatLowerIsBetter(statKey);
@@ -15719,15 +15872,17 @@ function buildFieldGolferAggregateSeries(entries, statKey) {
     if (!Number.isFinite(actual)) continue;
     const pick = picks[0]?.entry;
     const playerName = resolveGolferDisplayNameForDg(dgId, g.playerName, nameByDg);
+    const aggRows = picks.map((p) => p.entry?.row).filter(Boolean);
     series.push({
       actual,
       playerName,
       dgId,
       roundNum: Math.round(num(pick?.row?.round_num, NaN)),
-      date: pick?.row ? propsTrendChartDateFromRow(pick.row) : "",
+      date: "",
       _hist: pick?.row,
       _aggregate: true,
       _golferAvgRounds: avgOn ? picks.map((p) => p.actual).filter((x) => Number.isFinite(x)).length : 1,
+      _yearLabel: propsChartYearLabelFromRows(aggRows),
     });
   }
   return series;
@@ -17889,8 +18044,45 @@ function hidePropsChartTooltip() {
   if (tip) tip.hidden = true;
 }
 
+function propsTrendStatDisplayLabel(statKey) {
+  const sel = document.getElementById("prop-stat");
+  const opt = sel?.selectedOptions?.[0];
+  const fromDom = String(opt?.textContent || "").trim();
+  if (fromDom) return fromDom;
+  return ouMarketKeyFromStatKey(statKey);
+}
+
+/** Year or span of years for chart tooltips (respects year filter when set). */
+function propsChartYearLabelFromRows(rows) {
+  const fy = selectedPropsYearFilter();
+  if (Number.isFinite(fy)) return String(fy);
+  const years = [];
+  for (const r of rows || []) {
+    const y = historyRoundSeasonYear(r);
+    if (Number.isFinite(y)) years.push(y);
+  }
+  if (!years.length) return "All years";
+  const min = Math.min(...years);
+  const max = Math.max(...years);
+  return min === max ? String(min) : `${min}–${max}`;
+}
+
+function propsChartHitYearLabel(hit) {
+  const stored = String(hit?._yearLabel || "").trim();
+  if (stored) return stored;
+  const fy = selectedPropsYearFilter();
+  if (Number.isFinite(fy)) return String(fy);
+  const y = historyRoundSeasonYear(hit?._hist);
+  return Number.isFinite(y) ? String(y) : "—";
+}
+
+function propsTipSetRowLabel(rowEl, label) {
+  const strong = rowEl?.querySelector?.("strong");
+  if (strong) strong.textContent = label;
+}
+
 function ensurePropsChartTooltipNodes(tip) {
-  if (propsChartTipNodes?.round) return propsChartTipNodes;
+  if (propsChartTipNodes?.stat) return propsChartTipNodes;
   propsChartTipNodes = null;
   tip.replaceChildren();
   const mk = (label) => {
@@ -17903,20 +18095,41 @@ function ensurePropsChartTooltipNodes(tip) {
     div.appendChild(lb);
     div.appendChild(val);
     tip.appendChild(div);
-    return val;
+    return { row: div, val };
   };
+  const date = mk("Date");
+  const round = mk("Round");
+  const golfer = mk("Golfer");
+  const stat = mk("Stat");
+  const year = mk("Year");
+  const value = mk("Value");
+  const course = mk("Course");
   propsChartTipNodes = {
-    date: mk("Date"),
-    round: mk("Round"),
-    golfer: mk("Golfer"),
-    value: mk("Value"),
-    course: mk("Course"),
+    date: date.val,
+    round: round.val,
+    golfer: golfer.val,
+    stat: stat.val,
+    year: year.val,
+    value: value.val,
+    course: course.val,
+    dateRow: date.row,
+    roundRow: round.row,
+    golferRow: golfer.row,
+    statRow: stat.row,
+    yearRow: year.row,
+    valueRow: value.row,
+    courseRow: course.row,
   };
   return propsChartTipNodes;
 }
 
-function propsChartFormatValue(statKey, v) {
+function propsChartFormatValue(statKey, v, opts = {}) {
   if (!Number.isFinite(v)) return "—";
+  if (opts.aggregateAvg) {
+    if (propsStatIsPct(statKey)) return `${v.toFixed(1)}%`;
+    if (propsStatIsSg(statKey)) return v >= 0 ? `+${v.toFixed(2)}` : v.toFixed(2);
+    return v.toFixed(1);
+  }
   if (propsStatIsPct(statKey)) return `${v.toFixed(1)}%`;
   if (propsStatIsSg(statKey)) return v >= 0 ? `+${v.toFixed(2)}` : v.toFixed(2);
   if (
@@ -17952,39 +18165,50 @@ function showPropsChartTooltip(canvas, ev, hit) {
   const wrap = canvas.closest(".props-trends-chart-wrap");
   const tip = document.getElementById("props-chart-tooltip");
   if (!wrap || !tip) return;
-  const tipKey = `${Math.round(num(hit.dgId, -1))}|${hit.statKey}|${hit.actual}|R${hit.roundNum ?? ""}`;
+  const avgN = Math.round(num(hit._golferAvgRounds, NaN));
+  const aggregateAvg = Boolean(hit._aggregate) && avgN > 1;
+  const tipKey = `${Math.round(num(hit.dgId, -1))}|${hit.statKey}|${hit.actual}|${aggregateAvg ? "avg" : `R${hit.roundNum ?? ""}`}|${hit._yearLabel || ""}`;
   const nodes = ensurePropsChartTooltipNodes(tip);
   const contentChanged = tipKey !== propsChartTipLastKey;
   if (contentChanged) {
     propsChartTipLastKey = tipKey;
     const courseKey = propsEffectiveCourseKey();
-    if (nodes.date) {
-      const hideDate = hit._aggregate && !courseKey;
-      nodes.date.textContent = hit.date || "—";
-      nodes.date.parentElement.hidden = hideDate;
-    }
-    const avgN = Math.round(num(hit._golferAvgRounds, NaN));
     const rnd = Math.round(num(hit.roundNum, NaN));
-    if (nodes.round) {
-      if (hit._aggregate && avgN > 1) {
-        nodes.round.textContent = `Avg · ${avgN} rnd`;
-        nodes.round.parentElement.hidden = false;
-      } else {
-        nodes.round.textContent = Number.isFinite(rnd) && rnd >= 1 && rnd <= 4 ? `R${rnd}` : "—";
-        nodes.round.parentElement.hidden = !(Number.isFinite(rnd) && rnd >= 1 && rnd <= 4);
-      }
+    const statLabel = propsTrendStatDisplayLabel(hit.statKey);
+    const yearLabel = propsChartHitYearLabel(hit);
+
+    if (nodes.dateRow) {
+      nodes.date.textContent = hit.date || "—";
+      nodes.dateRow.hidden = aggregateAvg || !(String(hit.date || "").trim());
     }
-    nodes.golfer.textContent = hit.playerName || "—";
-    nodes.golfer.parentElement.hidden = !hit.playerName;
-    nodes.value.textContent = propsChartFormatValue(hit.statKey, hit.actual);
-    if (nodes.course) {
-      const hideCourse = propsAverageModeOn() && Boolean(hit._aggregate) && avgN > 1;
+    if (nodes.roundRow) {
+      nodes.round.textContent = Number.isFinite(rnd) && rnd >= 1 && rnd <= 4 ? `R${rnd}` : "—";
+      nodes.roundRow.hidden = aggregateAvg || !(Number.isFinite(rnd) && rnd >= 1 && rnd <= 4);
+    }
+    if (nodes.golferRow) {
+      nodes.golfer.textContent = hit.playerName || "—";
+      nodes.golferRow.hidden = !hit.playerName;
+    }
+    if (nodes.statRow) {
+      nodes.stat.textContent = statLabel;
+      nodes.statRow.hidden = false;
+    }
+    if (nodes.yearRow) {
+      nodes.year.textContent = yearLabel;
+      nodes.yearRow.hidden = false;
+    }
+    if (nodes.valueRow) {
+      propsTipSetRowLabel(nodes.valueRow, aggregateAvg ? "Average" : "Value");
+      nodes.value.textContent = propsChartFormatValue(hit.statKey, hit.actual, { aggregateAvg });
+    }
+    if (nodes.courseRow) {
+      const hideCourse = aggregateAvg || (hit._aggregate && !courseKey);
       const courseText = propsChartHitCourseLabel(hit._hist) || hit.courseLabel || propsCourseDisplay(hit);
       if (hideCourse || !courseText) {
-        nodes.course.parentElement.hidden = true;
+        nodes.courseRow.hidden = true;
       } else {
         nodes.course.textContent = courseText;
-        nodes.course.parentElement.hidden = false;
+        nodes.courseRow.hidden = false;
       }
     }
   }
@@ -18321,6 +18545,7 @@ function drawPropsTrendCanvasGolferHorizontal(series, lineY, statKey, opts = {})
       _hist: hist,
       _aggregate: Boolean(plot[i]._aggregate),
       _golferAvgRounds: plot[i]._golferAvgRounds,
+      _yearLabel: plot[i]._yearLabel,
       date: String(plot[i].date || "").trim() || "—",
       playerName: String(plot[i].playerName || "").trim(),
       dgId: plot[i].dgId,
@@ -18480,6 +18705,7 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
       _hist: hist,
       _aggregate: Boolean(plot[i]._aggregate),
       _golferAvgRounds: plot[i]._golferAvgRounds,
+      _yearLabel: plot[i]._yearLabel,
       date: String(plot[i].date || "").trim() || "—",
       playerName: String(plot[i].playerName || "").trim(),
       dgId: plot[i].dgId,
@@ -18991,7 +19217,8 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
       showGolferLabels: avgOn && winN <= PROPS_FIELD_GOLFER_HORIZONTAL_MAX,
     },
   );
-  const hitSt = propsFullHitStatsFromRoundList(statKey, line, entriesAll.map((e) => e.row), {
+  const chartKpiScope = propsCourseWindowChartKpiScope(seriesChart, entriesAll);
+  const hitSt = propsFullHitStatsFromRoundList(statKey, line, chartKpiScope.roundRows, {
     courseWindow: true,
   });
   const bookWrap = document.getElementById("props-trends-book-lines");
@@ -19182,14 +19409,16 @@ function renderPropsTrends() {
     const nums = seriesChart.map((s) => s.actual).filter((x) => Number.isFinite(x));
     const avg = nums.length ? nums.reduce((a, b) => a + b, 0) / nums.length : NaN;
     const last = seriesChart[seriesChart.length - 1];
+    const aggRows = seriesChartRaw.map((s) => s._hist).filter(Boolean);
     seriesChart = [
       {
         actual: avg,
-        date: nums.length ? `Avg · ${nums.length} rnd` : "",
+        date: "",
         _hist: last?._hist,
         roundNum: NaN,
         _aggregate: true,
         _golferAvgRounds: nums.length,
+        _yearLabel: propsChartYearLabelFromRows(aggRows),
       },
     ];
   }
@@ -19332,6 +19561,7 @@ function prefetchPostProjectionsSidecarsAfterPaint() {
   const jobs = [];
   if (!isFileProtocol()) {
     jobs.push(ensureLiveTournamentHistoryMerged({ useCache: false }));
+    jobs.push(fetchAndMergeFieldTeeTimes({ force: true }));
     if (datagolfLiveOverlayEnabled()) jobs.push(fetchAndMergeDatagolfLiveInPlay({ force: true }));
   }
   jobs.push(loadCourseTableJson());
@@ -19406,13 +19636,16 @@ async function loadProjections(opts = {}) {
     if (!isFileProtocol() && !HISTORY._ok && !playerHistoryLoadPromise) {
       void loadPlayerHistory();
     }
+    await fetchAndMergeFieldTeeTimes({ force: true });
     await ensureForecastWeatherLoaded();
     await refreshAll();
     updateStatusBar();
     stopDatagolfLivePolling();
+    stopFieldTeeTimesPolling();
     if (datagolfLiveOverlayEnabled() && !isFileProtocol()) {
       startDatagolfLivePolling();
     }
+    if (!isFileProtocol()) startFieldTeeTimesPolling();
     requestAnimationFrame(() => {
       void prefetchPostProjectionsSidecarsAfterPaint();
     });
@@ -21246,6 +21479,7 @@ document.addEventListener("DOMContentLoaded", () => {
       void loadProjections({ silent: true, reloadSidecar: false });
       return;
     }
+    if (!isFileProtocol()) void fetchAndMergeFieldTeeTimes({ force: true });
     if (datagolfLiveOverlayEnabled() && !isFileProtocol()) void fetchAndMergeDatagolfLiveInPlay({ force: true });
   });
 
