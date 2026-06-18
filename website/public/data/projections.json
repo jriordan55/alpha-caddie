@@ -9,7 +9,7 @@
   "datagolf_field_current_round": 1,
   "display_round": 1,
   "display_round_label": "R1 — next Thursday (auto, America/New_York)",
-  "updated_at": "2026-06-18T05:28:18Z",
+  "updated_at": "2026-06-18T10:26:28Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -43751,8 +43751,8 @@
     {
       "player_name": "DeChambeau, Bryson",
       "line": 73.5,
-      "over_odds": -128,
-      "under_odds": -114,
+      "over_odds": -136,
+      "under_odds": -104,
       "market": "Total Score",
       "round_num": 1,
       "dg_id": 19841,
@@ -43811,8 +43811,8 @@
     {
       "player_name": "Rahm, Jon",
       "line": 72.5,
-      "over_odds": -120,
-      "under_odds": -112,
+      "over_odds": -138,
+      "under_odds": 100,
       "market": "Total Score",
       "round_num": 1,
       "dg_id": 19195,
@@ -44346,7 +44346,7 @@
     },
     {
       "player_name": "Fleetwood, Tommy",
-      "line": 27.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -44364,7 +44364,7 @@
     },
     {
       "player_name": "Aberg, Ludvig",
-      "line": 27.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -44373,7 +44373,7 @@
     },
     {
       "player_name": "Young, Cameron",
-      "line": 27.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -44382,7 +44382,7 @@
     },
     {
       "player_name": "Kim, Si Woo",
-      "line": 27.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -44391,7 +44391,7 @@
     },
     {
       "player_name": "Henley, Russell",
-      "line": 27.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -44400,7 +44400,7 @@
     },
     {
       "player_name": "Cantlay, Patrick",
-      "line": 27.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -44418,7 +44418,7 @@
     },
     {
       "player_name": "Burns, Sam",
-      "line": 27.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -44436,7 +44436,7 @@
     },
     {
       "player_name": "Spaun, J.J.",
-      "line": 27.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -44445,7 +44445,7 @@
     },
     {
       "player_name": "Gotterup, Chris",
-      "line": 27.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -44454,7 +44454,7 @@
     },
     {
       "player_name": "Morikawa, Collin",
-      "line": 27.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -44463,7 +44463,7 @@
     },
     {
       "player_name": "DeChambeau, Bryson",
-      "line": 27.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -44562,7 +44562,7 @@
     },
     {
       "player_name": "Niemann, Joaquin",
-      "line": 27.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -45237,7 +45237,7 @@
     },
     {
       "player_name": "Holtz, Brandon",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -45372,7 +45372,7 @@
     },
     {
       "player_name": "Pulcini, Mateo",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -45642,7 +45642,7 @@
     },
     {
       "player_name": "Harrington, Padraig",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -45678,7 +45678,7 @@
     },
     {
       "player_name": "Hidalgo Portillo, Angel",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -45705,7 +45705,7 @@
     },
     {
       "player_name": "Wu, Brandon",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -72767,8 +72767,8 @@
       }
     }
   },
-  "book_odds_refreshed_at": "2026-06-18T05:28:18Z",
-  "dk_round_props_refreshed_at": "2026-06-18T05:27:13Z",
+  "book_odds_refreshed_at": "2026-06-18T10:26:28Z",
+  "dk_round_props_refreshed_at": "2026-06-18T10:26:28Z",
   "live_round_actuals_by_dg": {
     "5513": {
       "1": {
