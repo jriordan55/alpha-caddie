@@ -65,6 +65,8 @@ const PROPS_HISTORY_ROUND_MAX = 2000;
 const PROPS_HISTORY_ROUND_DEFAULT = 50;
 /** Min qualifying rounds with stat data to appear in Historical Trends top-10 table (all courses). */
 const PROPS_TOP_HIT_MIN_ROUNDS = 20;
+/** Min chartable rounds per golfer in field average mode (any filter combo). */
+const PROPS_FIELD_AVERAGE_MIN_ROUNDS = 8;
 
 const OU_LINE_RANGES = {
   "Total score": [67.5, 68.5, 69.5, 70.5, 71.5, 72.5, 73.5],
@@ -15864,7 +15866,8 @@ function buildFieldGolferAggregateSeries(entries, statKey) {
     let actual = NaN;
     if (avgOn) {
       const nums = picks.map((p) => p.actual).filter((x) => Number.isFinite(x));
-      actual = nums.length ? nums.reduce((a, b) => a + b, 0) / nums.length : NaN;
+      if (nums.length < PROPS_FIELD_AVERAGE_MIN_ROUNDS) continue;
+      actual = nums.reduce((a, b) => a + b, 0) / nums.length;
     } else if (tail === "recent") {
       picks.sort((a, b) => historyRoundChronoKey(b.entry.row) - historyRoundChronoKey(a.entry.row));
       actual = picks[0]?.actual;
@@ -19237,6 +19240,8 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
         } else {
           empty.textContent = `No chartable ${propMarketLabelFromKey(statKey)} values at ${courseFitPrettyCourseKey(courseKey) || "this course"} for ${dkField} DK golfers (try another market or relax weather filters).`;
         }
+      } else if (avgOn && useGolferAggregate && nAll > 0) {
+        empty.textContent = `No golfers with at least ${PROPS_FIELD_AVERAGE_MIN_ROUNDS} chartable rounds for this filter (relax filters or turn off Average).`;
       } else {
         empty.textContent = nAll
           ? "No chartable stat values for these rounds (try another stat)."
