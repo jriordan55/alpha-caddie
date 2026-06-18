@@ -129,6 +129,14 @@ function snapshotPlayerCounts(p) {
   };
 }
 
+/** After reconcile/calibrate, refresh weather baselines so re-bake does not restore stale counts. */
+export function syncPreWeatherCountSnapshots(players) {
+  for (const p of players || []) {
+    if (!p || typeof p !== "object") continue;
+    p._pre_weather_counts = snapshotPlayerCounts(p);
+  }
+}
+
 function restorePlayerCountsFromSnapshot(p, snap) {
   if (!snap || typeof snap !== "object") return;
   for (const k of Object.keys(snap)) {
@@ -206,15 +214,20 @@ export function applyWeatherBakedCountsToPlayer(p, meta) {
   p._weather_bake_snapshot = { ...w };
   p.weather_counts_baked = true;
   const basis = meta?.projection_course_basis && typeof meta.projection_course_basis === "object" ? meta.projection_course_basis : {};
+  const histCalib = meta?.historical_projection_calibration;
   reconcileProjectionRowCountsToScore(p, {
     coursePar18: par18,
     venueAvgBirdies: num(basis.venue_avg_birdies, 4.2),
     venueAvgBogeys: num(basis.venue_avg_bogeys, 2.1),
     venueAvgGir: num(basis.venue_avg_gir, 12),
     venueAvgFairways: num(basis.venue_avg_fairways, 9),
+    venueAvgPars: num(basis.venue_avg_pars, 11.2),
     nFairwayHoles: Math.round(num(basis.fairway_holes_modeled, 14)) || 14,
-    alignStrength: 0.52,
-    spreadStrength: 0.58,
+    fwStpLine: histCalib?.fw_stp_line,
+    alignStrength: 0.28,
+    spreadStrength: 0.75,
+    girBlend: 0.22,
+    fairwaysBlend: 0.2,
   });
   return true;
 }
@@ -226,10 +239,14 @@ export function applyWeatherBakedCountsToAllPlayers(proj, opts = {}) {
   const players = Array.isArray(proj?.players) ? proj.players : [];
   const meta = projectionExportMeta(proj);
   const forecastRound = Math.round(num(opts.forecastRound, NaN));
+  const preserveBaselines = opts.preserveBaselines === true;
   let n = 0;
   for (const p of players) {
-    if (!p._pre_weather_counts) p._pre_weather_counts = snapshotPlayerCounts(p);
-    else restorePlayerCountsFromSnapshot(p, p._pre_weather_counts);
+    if (preserveBaselines && p._pre_weather_counts) {
+      restorePlayerCountsFromSnapshot(p, p._pre_weather_counts);
+    } else {
+      p._pre_weather_counts = snapshotPlayerCounts(p);
+    }
 
     const rnd = Math.round(num(p?.round, NaN));
     if (Number.isFinite(forecastRound) && forecastRound >= 1 && Number.isFinite(rnd) && rnd !== forecastRound) {
@@ -250,11 +267,13 @@ export function applyWeatherBakedCountsToAllPlayers(proj, opts = {}) {
   if (n > 0) {
     meta.projection_counts_weather_baked_at = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
   }
-  const dkField = draftKingsDgIdsFromProjections(proj);
-  reconcileAllProjectionPlayerRows(proj, {
-    dgFilter: dkField.size >= 8 ? dkField : null,
-    minField: 8,
-    skipFieldCalibrate: n <= 0,
-  });
+  if (!opts.skipReconcile) {
+    reconcileAllProjectionPlayerRows(proj, {
+      minField: opts.minField ?? 8,
+      dkFieldOnly: opts.dkFieldOnly === true,
+      dgFilter: opts.dkFieldOnly ? opts.dgFilter ?? draftKingsDgIdsFromProjections(proj) : null,
+      skipFieldCalibrate: opts.skipFieldCalibrate === true || n <= 0,
+    });
+  }
   return n;
 }

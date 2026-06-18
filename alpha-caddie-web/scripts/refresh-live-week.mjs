@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Live-week refresh for `npm run push:live` — updates projections, live-in-play, book odds,
- * DK props, field-updates tee times, weather bake, pin sheet, vs-actual CSV, and fast history patches.
+ * DK props, field-updates tee times, venue score calibration, weather bake, fairway widen,
+ * unified factors, pin sheet, vs-actual CSV, and fast history patches.
  *
  *   npm run refresh:live
  *
@@ -147,8 +148,22 @@ run(
   { GOLF_WITHIN_EVENT_LIVE_ONLY: "1" },
 );
 run(
+  "repair-projection-course-basis.mjs",
+  "Venue total-score calibration on full field (repair:projection-course-basis)",
+);
+run(
   "bake-weather-into-projections.mjs",
   "Open-Meteo tee-time weather → projections.json for display_round (bake:weather)",
+);
+
+run(
+  "apply-unified-projection-factors.mjs",
+  "Unified projection factors (course fit, tee wave, residuals)",
+);
+
+run(
+  "apply-fairway-setup-bump.mjs",
+  "Widened fairways: +1 fairway hit per player on display round",
 );
 
 if (!envTruthy("GOLF_SKIP_PIN_SHEET", false)) {
@@ -162,11 +177,6 @@ if (!envTruthy("GOLF_SKIP_PIN_SHEET", false)) {
   );
   run("sync-pin-locations.mjs", "Mirror pin_locations DB → alpha-caddie-web/data (after tee sheet save)");
 }
-
-run(
-  "apply-unified-projection-factors.mjs",
-  "Unified projection factors (last step before publish)",
-);
 
 run(
   "bake-outright-sim-probs.mjs",

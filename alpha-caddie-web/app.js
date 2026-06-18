@@ -2826,6 +2826,8 @@ function applyPayload(raw) {
   }
   lastSyncedAutoOuRound = 0;
   hydrateBakedWeatherFromPlayerFields();
+  seedWeatherStateFromForecastMeta();
+  syncForecastWaveBannerTexts();
   normalizeStoredCourseUsedLabels();
   applyPreTournamentRoundMeta();
   projectionsDataRev++;
@@ -4006,7 +4008,27 @@ function weatherWaveForecastBannerInnerHtml(morningSnap, afternoonSnap, pinMeta)
 function formatWeatherSnapshotCompact(w) {
   if (!w || typeof w !== "object" || !Number.isFinite(w.tempF)) return "";
   if (!Number.isFinite(w.windMph) || !Number.isFinite(w.humidityPct)) return "";
-  return `${w.tempF.toFixed(1)}°F · ${w.windMph.toFixed(1)} mph · ${w.humidityPct.toFixed(0)}% humidity`;
+  const cond = String(w.condition || "default").toLowerCase();
+  const condTxt =
+    cond && cond !== "default" && cond !== "clear" ? ` · ${cond}` : "";
+  return `${w.tempF.toFixed(1)}°F · ${w.windMph.toFixed(1)} mph · ${w.humidityPct.toFixed(0)}% humidity${condTxt}`;
+}
+
+function seedWeatherStateFromForecastMeta() {
+  const slots = DATA?.meta?.forecast_wave_slots;
+  const snap =
+    slots && typeof slots === "object"
+      ? slots.morning && Number.isFinite(num(slots.morning.tempF, NaN))
+        ? slots.morning
+        : slots.afternoon
+      : null;
+  if (!snap || !Number.isFinite(num(snap.tempF, NaN))) return;
+  WEATHER_STATE = {
+    tempF: num(snap.tempF, WEATHER_DEFAULTS.tempF),
+    windMph: num(snap.windMph, WEATHER_DEFAULTS.windMph),
+    humidityPct: num(snap.humidityPct, WEATHER_DEFAULTS.humidityPct),
+    condition: String(snap.condition || WEATHER_DEFAULTS.condition).toLowerCase(),
+  };
 }
 
 /** Pick forecast day: current display_round tee majority, then field majority, then event start. */
@@ -4075,13 +4097,37 @@ function hourlyIndexNearLocalHour(hourly, dateYmd, hour) {
 }
 
 /**
- * Banner summary: fixed local morning (~8:00) vs afternoon (~15:00) on a day present in the hourly API —
- * avoids collapsing both waves to one slot when tee strings disagree with the timeline or index clamping.
+ * Banner summary: median per-tee forecast in each wave (early/morning vs late/afternoon).
+ * Falls back to fixed ~8:00 / ~15:00 only when tee times are missing.
  */
 function computeMorningAfternoonForecastSnapshots(hourly) {
   if (!hourly) return { morning: null, afternoon: null };
   const timesArr = hourly.time;
   if (!Array.isArray(timesArr) || !timesArr.length) return { morning: null, afternoon: null };
+
+  const forecastRound = effectiveUiModelRoundFromMeta();
+  const morningSamples = [];
+  const afternoonSamples = [];
+
+  for (const pl of DATA.players || []) {
+    if (Number.isFinite(forecastRound) && Math.round(num(pl?.round, NaN)) !== forecastRound) continue;
+    const tt = pl?.dg_teetime_local;
+    if (!tt) continue;
+    const ix = hourlyIndexForDgTeetime(timesArr, tt);
+    if (ix < 0) continue;
+    const snap = hourlySliceWeatherSnapshot(hourly, ix, 5);
+    if (!snap) continue;
+    const wave = normalizedTeeWave(pl);
+    if (wave === "afternoon") afternoonSamples.push(snap);
+    else if (wave === "morning") morningSamples.push(snap);
+  }
+
+  if (morningSamples.length || afternoonSamples.length) {
+    return {
+      morning: medianWeatherSnapshotFromSamples(morningSamples),
+      afternoon: medianWeatherSnapshotFromSamples(afternoonSamples),
+    };
+  }
 
   const dateYmd = forecastAnchorDateYmd(hourly);
   if (!dateYmd) return { morning: null, afternoon: null };
@@ -4145,7 +4191,8 @@ function projectionsWeatherUsableFromBaked() {
   const at = DATA.meta.forecast_weather_updated_at;
   if (!at) return false;
   const age = Date.now() - Date.parse(at);
-  if (!Number.isFinite(age) || age < 0 || age > BAKED_FORECAST_WEATHER_MAX_AGE_MS) return false;
+  if (!Number.isFinite(age) || age > BAKED_FORECAST_WEATHER_MAX_AGE_MS) return false;
+  if (age < -30 * 60 * 1000) return false;
   const bakedRound = Math.round(num(DATA.meta.forecast_weather_display_round, NaN));
   const currentRound = effectiveUiModelRoundFromMeta();
   if (Number.isFinite(bakedRound) && Number.isFinite(currentRound) && bakedRound !== currentRound) return false;
@@ -4469,6 +4516,19 @@ function projectionCountsWeatherBaked(row) {
   return Boolean(DATA?.meta?.projection_counts_weather_baked && row?.weather_counts_baked);
 }
 
+/** Weather difficulty delta: full snapshot, or incremental vs export bake when counts are baked in. */
+function weatherDifficultyDeltaForProjectionRow(row) {
+  const cur = effectiveWeatherForProjectionRow(row);
+  const snap = row?._weather_bake_snapshot;
+  if (projectionCountsWeatherBaked(row) && snap && typeof snap === "object") {
+    const dCur = weatherDifficultyDeltaFromSnapshot(cur);
+    const dSnap = weatherDifficultyDeltaFromSnapshot(snap);
+    if (Number.isFinite(dCur) && Number.isFinite(dSnap)) return dCur - dSnap;
+    return 0;
+  }
+  return weatherDifficultyDeltaFromSnapshot(cur);
+}
+
 function weatherDifficultyDelta() {
   return weatherDifficultyDeltaFromSnapshot(WEATHER_STATE);
 }
@@ -4514,8 +4574,7 @@ function formatEffectiveWeatherLine(row) {
 }
 
 function statWeatherMuAdjustment(market, row) {
-  if (projectionCountsWeatherBaked(row)) return 0;
-  const d = weatherDifficultyDeltaFromSnapshot(effectiveWeatherForProjectionRow(row));
+  const d = weatherDifficultyDeltaForProjectionRow(row);
   if (!Number.isFinite(d)) return 0;
   if (market === "Total score") return d;
   if (market === "Bogeys") return 0.45 * d;
@@ -4525,6 +4584,46 @@ function statWeatherMuAdjustment(market, row) {
   if (market === "GIR") return -0.22 * d;
   if (market === "Fairways hit") return -0.14 * d;
   return 0;
+}
+
+function pinSheetAppliesToProjectionRow(row) {
+  const ps = DATA?.meta?.pin_sheet;
+  if (!ps || typeof ps !== "object") return false;
+  const rnd = Math.round(num(row?.round, NaN));
+  const psRnd = Math.round(num(ps.round, NaN));
+  if (!Number.isFinite(rnd) || !Number.isFinite(psRnd) || rnd !== psRnd) return false;
+  return true;
+}
+
+/** Pin-sheet setup deltas for O/U μ when not already baked into export row values. */
+function pinSheetMuAdjustment(market, row) {
+  if (!pinSheetAppliesToProjectionRow(row)) return 0;
+  if (row?._pin_adjusted) return 0;
+  const ps = DATA.meta.pin_sheet;
+  const mKey = ouModelMarketKey(market) || "Total score";
+  if (mKey === "Total score") return num(ps.total_score_delta, 0);
+  if (mKey === "Birdies") return num(ps.birdies_delta, 0);
+  if (mKey === "Pars") return num(ps.pars_delta, 0);
+  if (mKey === "Bogeys") return num(ps.bogeys_delta, 0);
+  if (mKey === "GIR") return num(ps.gir_delta, 0);
+  if (mKey === "Fairways hit") return num(ps.fairways_delta, 0);
+  if (mKey === "Putts") return num(ps.putts_delta, num(ps.total_score_delta, 0) * 0.35);
+  return 0;
+}
+
+/** +1 fairway widen bump baked in export; runtime only when not yet in row.fairways. */
+function fairwaySetupBumpMuAdjustment(row) {
+  const bump = num(DATA?.meta?.fairway_setup_widen_bump, 0);
+  if (!bump) return 0;
+  const rnd = Math.round(num(row?.round, NaN));
+  const bumpRnd = Math.round(num(DATA?.meta?.fairway_setup_widen_round, NaN));
+  const displayRnd = Math.round(
+    num(DATA?.meta?.projection_counts_weather_baked_round ?? DATA?.meta?.display_round, NaN),
+  );
+  const matchRnd = Number.isFinite(bumpRnd) ? bumpRnd : displayRnd;
+  if (!Number.isFinite(rnd) || !Number.isFinite(matchRnd) || rnd !== matchRnd) return 0;
+  if (row?._fairway_bump_applied) return 0;
+  return bump;
 }
 
 /**
@@ -4968,8 +5067,8 @@ function inferHoleCountsFromScoreSplitRuntime(stp, venueBirdies, venueBogeys) {
     bird = Math.max(0, Math.min(7, vBird + -stp * 0.85));
     bog = Math.max(0, stp + bird);
   } else {
-    bog = Math.max(0, Math.min(8, vBog + stp * 0.72));
-    bird = Math.max(0, Math.min(6, vBird * 0.35 + Math.max(0, stp - bog) * 0.4));
+    bird = Math.max(0.15, Math.min(7, vBird - stp * 0.42));
+    bog = Math.max(0.15, Math.min(8, stp + bird));
   }
   bird = Math.round(bird * 100) / 100;
   bog = Math.round(bog * 100) / 100;
@@ -5009,7 +5108,57 @@ function projectionCountsCoherentFromExport() {
   return Boolean(adj?.projection_counts_coherent || adj?.within_event_counting_from_actuals);
 }
 
-/** Bird/bog/GIR/FW tied to projected total (matches export reconcile). */
+function spreadParsIntoBirdBogPairsRuntime(counts, opts = {}) {
+  const e = Math.max(0, num(counts?.eagles, 0));
+  const d = Math.max(0, num(counts?.doubles, 0));
+  let b = num(counts?.birdies, 0);
+  let bg = num(counts?.bogeys, 0);
+  let p = num(counts?.pars, NaN);
+  if (!Number.isFinite(p)) p = 18 - e - d - b - bg;
+
+  const venueBird = num(opts?.venueBirdies, 3.2);
+  const venueBog = num(opts?.venueBogeys, 2.9);
+  const venuePar = num(opts?.venuePars, 11.5);
+  const strength = num(opts?.spreadStrength, 0.75);
+  const parFloor = num(opts?.parFloor, Math.max(9.2, venuePar * 0.72));
+
+  const parsExcess = Math.max(0, p - parFloor);
+  const pairRoom = parsExcess / 2;
+  let shift = Math.min(strength * pairRoom, pairRoom);
+  if (shift <= 1e-6) {
+    return { eagles: e, birdies: b, pars: Math.max(parFloor, p), bogeys: bg, doubles: d };
+  }
+  b += shift;
+  bg += shift;
+  p -= 2 * shift;
+  const parSlack = Math.max(0, p - parFloor);
+  const birdShort = Math.max(0, venueBird - b);
+  const bogShort = Math.max(0, venueBog - bg);
+  const extra = Math.min(parSlack / 2, birdShort, bogShort, 0.9);
+  if (extra > 1e-6) {
+    b += extra;
+    bg += extra;
+    p -= 2 * extra;
+  }
+  return {
+    eagles: e,
+    birdies: Math.max(0.15, b),
+    pars: Math.max(parFloor, p),
+    bogeys: Math.max(0.15, bg),
+    doubles: d,
+  };
+}
+
+function fairwaysFromScoreAnchorRuntime(stp, muSg, venueFw, nFw) {
+  const ln = DATA?.meta?.historical_projection_calibration?.fw_stp_line;
+  if (ln && Number.isFinite(ln.a) && Number.isFinite(ln.b)) {
+    const x = Number.isFinite(muSg) ? Math.max(-10, Math.min(10, -muSg)) : -num(stp, 0);
+    return clamp(ln.a + ln.b * x, 4, nFw + 0.2);
+  }
+  return clamp(venueFw - num(stp, 0) * 0.28, 4, nFw + 0.2);
+}
+
+/** Bird/bog/GIR/FW tied to weather-adjusted projected total (matches export reconcile, light touch). */
 function coherentCountingMeansAtTotal(row, projectedTotal) {
   const par18 = coursePar18FromData();
   const stp = projectedTotal - par18;
@@ -5018,6 +5167,7 @@ function coherentCountingMeansAtTotal(row, projectedTotal) {
   const vBog = num(basis.venue_avg_bogeys, 2.1);
   const vGir = num(basis.venue_avg_gir, 12);
   const vFw = num(basis.venue_avg_fairways, 9);
+  const vPar = num(basis.venue_avg_pars, 11.2);
   const nFw = fairwayHolesModeledFromData();
   const e = Math.max(0, num(row.eagles, 0));
   const d = Math.max(0, num(row.doubles, 0));
@@ -5025,22 +5175,38 @@ function coherentCountingMeansAtTotal(row, projectedTotal) {
   let bg = num(row.bogeys, NaN);
   let p = num(row.pars, NaN);
   if (Number.isFinite(b) && Number.isFinite(bg)) {
-    const aligned = softAlignHoleCountsToStpRuntime({ eagles: e, birdies: b, pars: p, bogeys: bg, doubles: d }, stp, 0.52);
+    const aligned = softAlignHoleCountsToStpRuntime(
+      { eagles: e, birdies: b, pars: p, bogeys: bg, doubles: d },
+      stp,
+      0.2,
+    );
     b = aligned.birdies;
     bg = aligned.bogeys;
     p = aligned.pars;
+    const spread = spreadParsIntoBirdBogPairsRuntime(
+      { eagles: e, birdies: b, pars: p, bogeys: bg, doubles: d },
+      {
+        venueBirdies: vBird,
+        venueBogeys: vBog,
+        venuePars: vPar,
+        spreadStrength: 0.75,
+      },
+    );
+    b = spread.birdies;
+    bg = spread.bogeys;
+    p = spread.pars;
   } else {
     const split = inferHoleCountsFromScoreSplitRuntime(stp, vBird, vBog);
     b = split.birdies;
     bg = split.bogeys;
     p = split.pars;
   }
-  const girFromScore = clamp(vGir - stp * 0.82, 7.5, 16.2);
-  const fwFromScore = clamp(vFw - stp * 0.48, 4, Number.isFinite(nFw) ? nFw + 0.2 : 13);
+  const girFromScore = clamp(vGir - stp * 0.55, 7.5, 16.2);
+  const fwFromScore = fairwaysFromScoreAnchorRuntime(stp, num(row.mu_sg, NaN), vFw, nFw);
   const girRaw = num(row.gir, NaN);
   const fwRaw = num(row.fairways, NaN);
-  const gir = Number.isFinite(girRaw) ? 0.52 * girRaw + 0.48 * girFromScore : girFromScore;
-  const fw = Number.isFinite(fwRaw) ? 0.55 * fwRaw + 0.45 * fwFromScore : fwFromScore;
+  const gir = Number.isFinite(girRaw) ? 0.78 * girRaw + 0.22 * girFromScore : girFromScore;
+  const fw = Number.isFinite(fwRaw) ? 0.8 * fwRaw + 0.2 * fwFromScore : fwFromScore;
   return {
     Birdies: b,
     Bogeys: bg,
@@ -5058,6 +5224,7 @@ function ouProjectedTotalScoreMean(row) {
   return (
     baseScalar +
     statWeatherMuAdjustment("Total score", row) +
+    pinSheetMuAdjustment("Total score", row) +
     combinedCourseDifficultyOUMuAdjustment("Total score", row) +
     eventWeekFieldScoringMuAdjustment(row) +
     liveRoundAdj +
@@ -5409,6 +5576,8 @@ function ouProjectedMean(market, row) {
 
   if (
     projectionCountsCoherentFromExport() &&
+    !row?._pin_adjusted &&
+    !pinSheetAppliesToProjectionRow(row) &&
     (mKey === "Birdies" || mKey === "Pars" || mKey === "Bogeys" || mKey === "GIR" || mKey === "Fairways hit")
   ) {
     const totalMu = ouProjectedTotalScoreMean(row);
@@ -5416,7 +5585,14 @@ function ouProjectedMean(market, row) {
       const coherent = coherentCountingMeansAtTotal(row, totalMu);
       const v = coherent[mKey];
       if (Number.isFinite(v)) {
-        return v + countLive.muDelta + pricingStatMuAdjustment(mKey, dgId);
+        const fwBump = mKey === "Fairways hit" ? fairwaySetupBumpMuAdjustment(row) : 0;
+        return (
+          v +
+          pinSheetMuAdjustment(mKey, row) +
+          fwBump +
+          countLive.muDelta +
+          pricingStatMuAdjustment(mKey, dgId)
+        );
       }
     }
   }
@@ -5433,18 +5609,22 @@ function ouProjectedMean(market, row) {
       fieldDayCountingMuAdjustment(mKey, row) +
       countingSkillRatingMuAdjustment(mKey, row) +
       statWeatherMuAdjustment(mKey, row) +
+      pinSheetMuAdjustment(mKey, row) +
       combinedCourseDifficultyOUMuAdjustment(mKey, row) +
       countLive.muDelta +
       pricingStatMuAdjustment(mKey, dgId)
     );
   }
   if (mKey === "GIR" || mKey === "Fairways hit") {
+    const fwBump = mKey === "Fairways hit" ? fairwaySetupBumpMuAdjustment(row) : 0;
     return (
       baseScalar +
       tournamentWeekCountingMuAdjustment(mKey, row) +
       fieldDayCountingMuAdjustment(mKey, row) +
       countingSkillRatingMuAdjustment(mKey, row) +
       statWeatherMuAdjustment(mKey, row) +
+      pinSheetMuAdjustment(mKey, row) +
+      fwBump +
       combinedCourseDifficultyOUMuAdjustment(mKey, row) +
       countLive.muDelta +
       pricingStatMuAdjustment(mKey, dgId)
@@ -5454,6 +5634,7 @@ function ouProjectedMean(market, row) {
   return (
     baseScalar +
     statWeatherMuAdjustment(mKey, row) +
+    pinSheetMuAdjustment(mKey, row) +
     combinedCourseDifficultyOUMuAdjustment(mKey, row) +
     eventWeekFieldScoringMuAdjustment(row) +
     liveRoundAdj +

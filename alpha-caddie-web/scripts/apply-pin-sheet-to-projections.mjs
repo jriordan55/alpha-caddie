@@ -194,6 +194,7 @@ function restorePinBases(p, metaPin) {
   if (Number.isFinite(num(p._pin_base_bogeys))) p.bogeys = p._pin_base_bogeys;
   if (Number.isFinite(num(p._pin_base_gir))) p.gir = p._pin_base_gir;
   if (Number.isFinite(num(p._pin_base_fairways))) p.fairways = p._pin_base_fairways;
+  if (Number.isFinite(num(p._pin_base_putts))) p.putts = p._pin_base_putts;
 }
 
 function snapshotPinBases(p) {
@@ -203,6 +204,7 @@ function snapshotPinBases(p) {
   p._pin_base_bogeys = num(p.bogeys, NaN);
   p._pin_base_gir = num(p.gir, NaN);
   p._pin_base_fairways = num(p.fairways, NaN);
+  p._pin_base_putts = num(p.putts, NaN);
 }
 
 function applyDelta(field, delta) {
@@ -247,6 +249,7 @@ export async function applyPinSheetToProjections(payload, sheet, pinPath = "", p
     p.bogeys = applyDelta(p.bogeys, adj.bogeysDelta);
     p.gir = applyDelta(p.gir, adj.girDelta);
     p.fairways = applyDelta(p.fairways, adj.fairwaysDelta);
+    p.putts = applyDelta(p.putts, adj.totalScoreDelta * 0.35);
     p._pin_adjusted = true;
     const basis = meta.projection_course_basis && typeof meta.projection_course_basis === "object" ? meta.projection_course_basis : {};
     reconcileProjectionRowCountsToScore(p, {
@@ -256,15 +259,15 @@ export async function applyPinSheetToProjections(payload, sheet, pinPath = "", p
       venueAvgGir: num(basis.venue_avg_gir, 12),
       venueAvgFairways: num(basis.venue_avg_fairways, 9),
       nFairwayHoles: Math.round(num(basis.fairway_holes_modeled, 14)) || 14,
-      alignStrength: 0.52,
-      spreadStrength: 0.58,
+      alignStrength: 0.28,
+      spreadStrength: 0.75,
     });
   }
 
   const dkField = draftKingsDgIdsFromProjections(payload);
   reconcileAllProjectionPlayerRows(payload, {
-    dgFilter: dkField.size >= 8 ? dkField : null,
     minField: 8,
+    skipFieldCalibrate: true,
   });
 
   meta.pin_sheet = {
@@ -287,6 +290,7 @@ export async function applyPinSheetToProjections(payload, sheet, pinPath = "", p
     pars_delta: adj.parsDelta,
     gir_delta: adj.girDelta,
     fairways_delta: adj.fairwaysDelta,
+    putts_delta: Math.round(adj.totalScoreDelta * 0.35 * 100) / 100,
     hard_holes: adj.hardHoles,
     easy_holes: adj.easyHoles,
     holes: adj.perHole,

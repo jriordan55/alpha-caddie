@@ -49,7 +49,10 @@ async function main() {
     console.warn("[bake-weather] no live-in-play.json — median/venue-only weather (no tee slices)");
   }
 
-  const result = await bakeOpenMeteoWeatherIntoProjections(proj, { fieldUpdates });
+  const result = await bakeOpenMeteoWeatherIntoProjections(proj, {
+    fieldUpdates,
+    skipFieldCalibrate: true,
+  });
   flattenProjectionExportMeta(proj);
   writeFileSync(projPath, `${JSON.stringify(proj, null, 2)}\n`, "utf8");
   const meta = projectionExportMeta(proj);

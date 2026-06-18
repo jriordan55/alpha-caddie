@@ -254,7 +254,6 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
   proj.meta = meta;
 
   reconcileAllProjectionPlayerRows(proj, {
-    dgFilter: useDkField ? dkField : null,
     minField: dkMinPlayers,
   });
 

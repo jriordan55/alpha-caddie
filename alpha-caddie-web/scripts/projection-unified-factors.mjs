@@ -22,6 +22,7 @@ import {
   statWeatherMuAdjustment,
   weatherDifficultyDeltaFromSnapshot,
 } from "./weather-projection-adjustments.mjs";
+import { teeWaveFromTeetimeAndLabel } from "./open-meteo-forecast.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -60,27 +61,8 @@ export const UNIFIED_FACTOR_WEIGHTS = Object.freeze({
   weatherAllRounds: envOn("GOLF_UNIFIED_WEATHER_ALL_ROUNDS", true),
 });
 
-function parseTeetimeMinutes(raw) {
-  const s = String(raw ?? "").trim();
-  if (!s) return NaN;
-  const m = s.match(/^(\d{1,2}):(\d{2})\s*(am|pm)?/i);
-  if (!m) return NaN;
-  let h = parseInt(m[1], 10);
-  const mm = parseInt(m[2], 10);
-  const ap = String(m[3] || "").toLowerCase();
-  if (ap === "pm" && h < 12) h += 12;
-  if (ap === "am" && h === 12) h = 0;
-  if (!ap && h >= 1 && h <= 7) h += 12;
-  return h * 60 + mm;
-}
-
 export function teeWaveFromRow(row) {
-  const w = String(row?.dg_tee_wave ?? "").trim().toLowerCase();
-  if (w.includes("morning") || w === "am" || w === "a") return "morning";
-  if (w.includes("afternoon") || w === "pm" || w === "p") return "afternoon";
-  const min = parseTeetimeMinutes(row?.dg_teetime_local ?? row?.teetime);
-  if (!Number.isFinite(min)) return "";
-  return min < 13 * 60 ? "morning" : "afternoon";
+  return teeWaveFromTeetimeAndLabel(row?.dg_teetime_local ?? row?.teetime, row?.dg_tee_wave);
 }
 
 export function loadCourseTablePayload() {
@@ -182,8 +164,7 @@ export async function loadTeeWaveScoringBias(csvPath, courseKey) {
       const rs = num(row.round_score, NaN);
       if (!Number.isFinite(cp) || !Number.isFinite(rs)) return;
       const stp = rs - cp;
-      const min = parseTeetimeMinutes(tee);
-      const wave = Number.isFinite(min) ? (min < 13 * 60 ? "morning" : "afternoon") : "";
+      const wave = teeWaveFromTeetimeAndLabel(tee, "");
       if (!wave) return;
       bias[wave].n++;
       bias[wave].sum += stp;
@@ -591,16 +572,23 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
     if (residualMap.has(`${dg}|Total score`)) factorCounts.player_residual++;
   }
 
+  const willWeatherBake =
+    hadWeatherBaked || meta?.forecast_wave_slots || meta?.forecast_weather_morning;
+
+  if (willWeatherBake) {
+    const forecastRound =
+      Math.round(num(meta?.projection_counts_weather_baked_round ?? payload.display_round, NaN)) || 1;
+    const nWx = applyWeatherBakedCountsToAllPlayers(payload, {
+      forecastRound,
+      skipReconcile: true,
+      preserveBaselines: false,
+    });
+    if (nWx > 0) factorCounts.weather_round += nWx;
+  }
+
   const rec = opts.skipReconcile
     ? null
     : reconcileAllProjectionPlayerRows(payload, opts.reconcileOpts || {});
-
-  if (hadWeatherBaked || meta?.forecast_wave_slots || meta?.forecast_weather_morning) {
-    const forecastRound =
-      Math.round(num(meta?.projection_counts_weather_baked_round ?? payload.display_round, NaN)) || 1;
-    const nWx = applyWeatherBakedCountsToAllPlayers(payload, { forecastRound });
-    if (nWx > 0) factorCounts.weather_round += nWx;
-  }
 
   const summary = {
     applied_at: new Date().toISOString(),

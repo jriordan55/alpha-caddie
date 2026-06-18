@@ -102,6 +102,20 @@ function teeHourFloorIsoFromDg(teetimeStr) {
   return `${p.ymd}T${hh}:00`;
 }
 
+/** Morning vs afternoon wave from DG label or local tee hour (&lt; 13:00 = morning). */
+export function teeWaveFromTeetimeAndLabel(teetimeStr, waveLabel = "") {
+  const w = String(waveLabel ?? "").trim().toLowerCase();
+  if (w.includes("morning") || w === "am" || w === "a" || w === "early" || w.includes("early")) {
+    return "morning";
+  }
+  if (w.includes("afternoon") || w === "pm" || w === "p" || w === "late" || w.includes("late")) {
+    return "afternoon";
+  }
+  const p = parseDgTeetimeParts(teetimeStr);
+  if (p && Number.isFinite(p.hh)) return p.hh < 13 ? "morning" : "afternoon";
+  return "";
+}
+
 export function hourlyIndexForDgTeetime(timesArr, teetimeStr) {
   const floorIso = teeHourFloorIsoFromDg(teetimeStr);
   const p = parseDgTeetimeParts(teetimeStr);
@@ -216,6 +230,30 @@ export function computeMorningAfternoonForecastSnapshots(hourly, players, meta) 
   if (!hourly) return { morning: null, afternoon: null };
   const timesArr = hourly.time;
   if (!Array.isArray(timesArr) || !timesArr.length) return { morning: null, afternoon: null };
+
+  const forecastRound = Math.round(num(meta?.display_round ?? meta?.datagolf_live_current_round, NaN));
+  const morningSamples = [];
+  const afternoonSamples = [];
+
+  for (const pl of players || []) {
+    if (Number.isFinite(forecastRound) && Math.round(num(pl?.round, NaN)) !== forecastRound) continue;
+    const tt = pl?.dg_teetime_local;
+    if (!tt) continue;
+    const ix = hourlyIndexForDgTeetime(timesArr, tt);
+    if (ix < 0) continue;
+    const snap = hourlySliceWeatherSnapshot(hourly, ix, 5);
+    if (!snap) continue;
+    const wave = teeWaveFromTeetimeAndLabel(tt, pl?.dg_tee_wave);
+    if (wave === "afternoon") afternoonSamples.push(snap);
+    else morningSamples.push(snap);
+  }
+
+  if (morningSamples.length || afternoonSamples.length) {
+    return {
+      morning: medianWeatherSnapshotFromSamples(morningSamples),
+      afternoon: medianWeatherSnapshotFromSamples(afternoonSamples),
+    };
+  }
 
   const dateYmd = forecastAnchorDateYmd(hourly, players, meta);
   if (!dateYmd) return { morning: null, afternoon: null };
@@ -419,7 +457,10 @@ export async function bakeOpenMeteoWeatherIntoProjections(proj, opts = {}) {
   meta.forecast_wave_slots = { morning, afternoon };
   meta.forecast_wave_summary = buildForecastWaveSummaryString(morning, afternoon);
 
-  const countsBaked = applyWeatherBakedCountsToAllPlayers(proj, { forecastRound });
+  const countsBaked = applyWeatherBakedCountsToAllPlayers(proj, {
+    forecastRound,
+    skipFieldCalibrate: opts.skipFieldCalibrate === true,
+  });
 
   return {
     status: meta.forecast_weather_status,

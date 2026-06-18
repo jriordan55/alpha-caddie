@@ -2729,7 +2729,6 @@ async function main() {
     payload,
   );
   const calResult = reconcileAllProjectionPlayerRows(payload, {
-    dgFilter: dkFieldCal.size >= 8 ? dkFieldCal : null,
     minField: 8,
   });
   if (calResult?.calibrated?.rounds) {

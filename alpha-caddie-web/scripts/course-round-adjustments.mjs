@@ -567,6 +567,16 @@ export function softAlignHoleCountsToStp(counts, targetStp, strength = 0.58) {
   return { eagles: e, birdies: b, pars: Math.max(0.12, p), bogeys: bg, doubles: d };
 }
 
+/** Fairways expectation from historical FW~skill line when available. */
+function fairwaysFromScoreAnchor(stp, muSg, venueFw, nFw, fwStpLine) {
+  const ln = fwStpLine;
+  if (ln && Number.isFinite(ln.a) && Number.isFinite(ln.b)) {
+    const x = Number.isFinite(muSg) ? Math.max(-10, Math.min(10, -muSg)) : -num(stp, 0);
+    return clamp(ln.a + ln.b * x, 4, nFw + 0.2);
+  }
+  return clamp(venueFw - num(stp, 0) * 0.28, 4, nFw + 0.2);
+}
+
 /**
  * Tie bird/bog/pars/GIR/FW to projected total score (score_to_par anchor).
  * Used after within-event blend, pin sheet, and weather so O/U markets stay correlated.
@@ -600,7 +610,7 @@ export function reconcileProjectionRowCountsToScore(row, opts = {}) {
     const aligned = softAlignHoleCountsToStp(
       { eagles: e, birdies: b, pars: p, bogeys: bg, doubles: d },
       stp,
-      num(opts.alignStrength, 0.52),
+      num(opts.alignStrength, 0.28),
     );
     b = aligned.birdies;
     bg = aligned.bogeys;
@@ -611,7 +621,7 @@ export function reconcileProjectionRowCountsToScore(row, opts = {}) {
         venueBirdies: num(opts.venueAvgBirdies, 4.2),
         venueBogeys: num(opts.venueAvgBogeys, 2.1),
         venuePars: num(opts.venueAvgPars, 11.2),
-        spreadStrength: num(opts.spreadStrength, 0.58),
+        spreadStrength: num(opts.spreadStrength, 0.75),
       },
     );
     b = spread.birdies;
@@ -622,10 +632,10 @@ export function reconcileProjectionRowCountsToScore(row, opts = {}) {
   const venueGir = num(opts.venueAvgGir, 12);
   const venueFw = num(opts.venueAvgFairways, 9);
   const nFw = Math.round(num(opts.nFairwayHoles, 14)) || 14;
-  const girFromScore = clamp(venueGir - stp * 0.82, 7.5, 16.2);
-  const fwFromScore = clamp(venueFw - stp * 0.48, 4, nFw + 0.2);
-  const girBlend = num(opts.girBlend, 0.48);
-  const fwBlend = num(opts.fairwaysBlend, 0.45);
+  const girFromScore = clamp(venueGir - stp * 0.55, 7.5, 16.2);
+  const fwFromScore = fairwaysFromScoreAnchor(stp, num(row.mu_sg, NaN), venueFw, nFw, opts.fwStpLine);
+  const girBlend = num(opts.girBlend, 0.22);
+  const fwBlend = num(opts.fairwaysBlend, 0.2);
   let gir = num(row.gir, NaN);
   let fairways = num(row.fairways, NaN);
   if (Number.isFinite(gir)) gir = (1 - girBlend) * gir + girBlend * girFromScore;
@@ -658,6 +668,7 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
   }
   const basis = meta.projection_course_basis;
   const coursePar18 = Math.round(num(payload?.course_par_18 ?? meta?.course_par_18, NaN)) || 72;
+  const histCalib = payload?.historical_projection_calibration;
   const recOpts = {
     coursePar18,
     venueAvgBirdies: num(basis.venue_avg_birdies, 4.2),
@@ -666,10 +677,11 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
     venueAvgFairways: num(basis.venue_avg_fairways, 9),
     venueAvgPars: num(basis.venue_avg_pars, 11.2),
     nFairwayHoles: Math.round(num(basis.fairway_holes_modeled, 14)) || 14,
-    alignStrength: 0.52,
-    spreadStrength: 0.58,
-    girBlend: 0.48,
-    fairwaysBlend: 0.45,
+    fwStpLine: histCalib?.fw_stp_line,
+    alignStrength: 0.28,
+    spreadStrength: 0.75,
+    girBlend: 0.22,
+    fairwaysBlend: 0.2,
     ...opts,
   };
   let n = 0;
@@ -684,9 +696,32 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
   const cal = calibrateProjectionFieldMarkets(payload, {
     dgFilter: opts.dgFilter,
     minField: opts.minField,
+    dkFieldOnly: opts.dkFieldOnly === true,
     skipCalibrate: opts.skipFieldCalibrate,
   });
+  syncPreWeatherCountSnapshots(payload?.players);
   return { reconciled: n, calibrated: cal };
+}
+
+function syncPreWeatherCountSnapshots(players) {
+  for (const p of players || []) {
+    if (!p || typeof p !== "object") continue;
+    p._pre_weather_counts = {
+      total_score: p.total_score,
+      score_to_par: p.score_to_par,
+      birdies: p.birdies,
+      pars: p.pars,
+      bogeys: p.bogeys,
+      eagles: p.eagles,
+      doubles: p.doubles,
+      gir: p.gir,
+      fairways: p.fairways,
+      putts: p.putts,
+      mu_sg: p.mu_sg,
+      implied_mu_sg: p.implied_mu_sg,
+      round_sd: p.round_sd,
+    };
+  }
 }
 
 /**
@@ -704,8 +739,8 @@ export function spreadParsIntoBirdBogPairs(counts, opts = {}) {
   const venueBird = num(opts?.venueBirdies, 3.2);
   const venueBog = num(opts?.venueBogeys, 2.9);
   const venuePar = num(opts?.venuePars, 11.5);
-  const strength = num(opts?.spreadStrength, 0.55);
-  const parFloor = num(opts?.parFloor, Math.max(9.8, venuePar * 0.88));
+  const strength = num(opts?.spreadStrength, 0.75);
+  const parFloor = num(opts?.parFloor, Math.max(9.2, venuePar * 0.72));
 
   const parsExcess = Math.max(0, p - parFloor);
   const pairRoom = parsExcess / 2;
@@ -720,7 +755,7 @@ export function spreadParsIntoBirdBogPairs(counts, opts = {}) {
   const parSlack = Math.max(0, p - parFloor);
   const birdShort = Math.max(0, venueBird - b);
   const bogShort = Math.max(0, venueBog - bg);
-  const extra = Math.min(parSlack / 2, birdShort, bogShort, 0.45);
+  const extra = Math.min(parSlack / 2, birdShort, bogShort, 0.9);
   if (extra > 1e-6) {
     b += extra;
     bg += extra;
@@ -1384,6 +1419,55 @@ function meanFinite(vals) {
   return v.reduce((a, b) => a + b, 0) / v.length;
 }
 
+/** Field calibration that trims above-target / lifts below-target instead of uniform shifts. */
+function applyDistributedFieldCalibration(rows, stat, target, shifts, rnd, opts = {}) {
+  if (!Number.isFinite(target) || !rows.length) return;
+  const cur = meanFinite(rows.map((pl) => num(pl[stat], NaN)));
+  if (!Number.isFinite(cur)) return;
+  const gap = target - cur;
+  if (Math.abs(gap) < 0.035) return;
+  shifts[stat][rnd] = Math.round(gap * 1000) / 1000;
+  const lo = num(opts.lo, 0.15);
+  const hi = num(opts.hi, 99);
+  const scoreNeutral = opts.scoreNeutral === true;
+
+  if (gap < 0) {
+    const surplus = rows.reduce((s, pl) => {
+      const v = num(pl[stat], NaN);
+      return Number.isFinite(v) && v > target ? s + (v - target) : s;
+    }, 0);
+    const need = -gap * rows.length;
+    const scale = surplus > 0.01 ? Math.min(0.55, need / surplus) : 0;
+    for (const pl of rows) {
+      const v = num(pl[stat], NaN);
+      if (!Number.isFinite(v) || v <= target) continue;
+      const trimmed = (v - target) * scale;
+      pl[stat] = Math.round(clamp(v - trimmed, lo, hi) * 100) / 100;
+      if (scoreNeutral) {
+        const pars = num(pl.pars, NaN);
+        if (Number.isFinite(pars)) pl.pars = Math.round((pars + trimmed) * 100) / 100;
+      }
+    }
+  } else {
+    const deficit = rows.reduce((s, pl) => {
+      const v = num(pl[stat], NaN);
+      return Number.isFinite(v) && v < target ? s + (target - v) : s;
+    }, 0);
+    const need = gap * rows.length;
+    const scale = deficit > 0.01 ? Math.min(0.55, need / deficit) : 0;
+    for (const pl of rows) {
+      const v = num(pl[stat], NaN);
+      if (!Number.isFinite(v) || v >= target) continue;
+      const add = (target - v) * scale;
+      pl[stat] = Math.round(clamp(v + add, lo, hi) * 100) / 100;
+      if (scoreNeutral) {
+        const pars = num(pl.pars, NaN);
+        if (Number.isFinite(pars)) pl.pars = Math.round(Math.max(0.12, pars - add) * 100) / 100;
+      }
+    }
+  }
+}
+
 /**
  * Guarantee venue averages needed for O/U course ratings (Round score, GIR, FW, …).
  * Never strips existing keys — only backfills missing venue_avg_round_score / score_to_par / FW.
@@ -1517,9 +1601,54 @@ export function updateProjectionBasisFromEventWeek(basis, fieldMeans, opts = {})
   return ensureProjectionCourseBasisComplete(basis, opts?.payload || {});
 }
 
+/** Uniform per-round shift so field mean total_score matches venue_avg_round_score (full field). */
+export function calibrateProjectionTotalScoreToVenue(payload, opts = {}) {
+  const players = Array.isArray(payload?.players) ? payload.players : [];
+  if (!players.length) return { rounds: 0, shifts: {}, target: NaN };
+
+  const basisRoot =
+    payload?.projection_course_basis && typeof payload.projection_course_basis === "object"
+      ? payload.projection_course_basis
+      : payload?.meta?.projection_course_basis;
+  ensureProjectionCourseBasisComplete(basisRoot || {}, payload);
+  const target = num(basisRoot?.venue_avg_round_score, NaN);
+  const coursePar18 = Math.round(num(payload?.course_par_18 ?? payload?.meta?.course_par_18, NaN)) || 72;
+  if (!Number.isFinite(target)) return { rounds: 0, shifts: {}, target: NaN };
+
+  const dgFilter = opts.dkFieldOnly && opts.dgFilter instanceof Set ? opts.dgFilter : null;
+  const minField = Math.max(8, Math.round(num(opts.minField, 12)) || 12);
+  /** @type {Record<number, number>} */
+  const shifts = {};
+  let rounds = 0;
+
+  for (let rnd = 1; rnd <= 4; rnd++) {
+    let rows = players.filter((pl) => Math.round(num(pl.round, NaN)) === rnd);
+    if (dgFilter?.size >= minField) {
+      rows = rows.filter((pl) => dgFilter.has(Math.round(num(pl.dg_id, NaN))));
+    }
+    if (rows.length < minField) continue;
+
+    const cur = meanFinite(rows.map((pl) => num(pl.total_score, NaN)));
+    if (!Number.isFinite(cur)) continue;
+    const delta = Math.round((target - cur) * 1000) / 1000;
+    if (Math.abs(delta) < 0.02) continue;
+
+    shifts[rnd] = delta;
+    rounds++;
+    for (const pl of rows) shiftProjectionRowScore(pl, delta, coursePar18);
+  }
+
+  const adjHost = payload?.meta && typeof payload.meta === "object" ? payload.meta : payload;
+  if (!adjHost.projection_round_adjustments) adjHost.projection_round_adjustments = {};
+  adjHost.projection_round_adjustments.total_score_venue_calibrated = rounds > 0;
+  adjHost.projection_round_adjustments.total_score_venue_calibration_shifts = shifts;
+
+  return { rounds, shifts, target };
+}
+
 /**
- * Shift projection field means toward this-week targets (DK field when ≥ minField).
- * Bird/bog/pars shifts are score-to-par neutral; GIR/FW/putts are additive on the field.
+ * Shift projection field means toward venue / event-week targets.
+ * Default: full tournament field per round. Set dkFieldOnly to calibrate DraftKings slate only.
  */
 export function calibrateProjectionFieldMarkets(payload, opts = {}) {
   if (opts.skipCalibrate) return { rounds: 0, shifts: {} };
@@ -1532,7 +1661,7 @@ export function calibrateProjectionFieldMarkets(payload, opts = {}) {
       : payload?.meta?.projection_course_basis;
   if (!basisRoot || typeof basisRoot !== "object") return { rounds: 0, shifts: {} };
 
-  const dgFilter = opts.dgFilter instanceof Set ? opts.dgFilter : null;
+  const dgFilter = opts.dkFieldOnly && opts.dgFilter instanceof Set ? opts.dgFilter : null;
   const minField = Math.max(8, Math.round(num(opts.minField, 12)) || 12);
   const fieldMeans = sanitizeFieldCountingMeans(basisRoot.field_counting_means_by_round);
   const basisForTargets = { ...basisRoot };
@@ -1561,17 +1690,23 @@ export function calibrateProjectionFieldMarkets(payload, opts = {}) {
       if (!Number.isFinite(target)) return;
       const cur = meanFinite(rows.map((pl) => num(pl[stat], NaN)));
       if (!Number.isFinite(cur)) return;
-      const delta = Math.round((target - cur) * 1000) / 1000;
-      if (Math.abs(delta) < 0.035) return;
-      shifts[stat][rnd] = delta;
+      const gap = target - cur;
+      if (Math.abs(gap) < 0.035) return;
+      if (gap < 0) {
+        applyDistributedFieldCalibration(rows, stat, target, shifts, rnd, {
+          lo: 0.15,
+          hi: 12,
+          scoreNeutral: true,
+        });
+        return;
+      }
+      shifts[stat][rnd] = Math.round(gap * 1000) / 1000;
       for (const pl of rows) {
         const v = num(pl[stat], NaN);
         if (!Number.isFinite(v)) continue;
-        pl[stat] = Math.round(Math.max(0.15, v + delta) * 100) / 100;
-        if (stat === "birdies" || stat === "bogeys") {
-          const pars = num(pl.pars, NaN);
-          if (Number.isFinite(pars)) pl.pars = Math.round(Math.max(0.12, pars - delta) * 100) / 100;
-        }
+        pl[stat] = Math.round((v + gap) * 100) / 100;
+        const pars = num(pl.pars, NaN);
+        if (Number.isFinite(pars)) pl.pars = Math.round(Math.max(0.12, pars - gap) * 100) / 100;
       }
     };
 
@@ -1579,37 +1714,50 @@ export function calibrateProjectionFieldMarkets(payload, opts = {}) {
       if (!Number.isFinite(target)) return;
       const cur = meanFinite(rows.map((pl) => num(pl[stat], NaN)));
       if (!Number.isFinite(cur)) return;
-      const delta = Math.round((target - cur) * 1000) / 1000;
-      if (Math.abs(delta) < 0.035) return;
-      shifts[stat][rnd] = delta;
+      const gap = target - cur;
+      if (Math.abs(gap) < 0.035) return;
+      if (gap < 0) {
+        applyDistributedFieldCalibration(rows, stat, target, shifts, rnd, { lo, hi });
+        return;
+      }
+      shifts[stat][rnd] = Math.round(gap * 1000) / 1000;
       for (const pl of rows) {
         const v = num(pl[stat], NaN);
         if (!Number.isFinite(v)) continue;
-        pl[stat] = Math.round(clamp(v + delta, lo, hi) * 100) / 100;
+        pl[stat] = Math.round(clamp(v + gap, lo, hi) * 100) / 100;
       }
     };
 
-    applyScoreNeutral("birdies", pooled.birdies);
-    applyScoreNeutral("bogeys", pooled.bogeys);
-    applyAdditive("gir", pooled.gir, 6, 16.2);
+    applyScoreNeutral("birdies", fieldCountingTargetForRound(fieldMeans, "birdies", rnd, pooled.birdies));
+    applyScoreNeutral("bogeys", fieldCountingTargetForRound(fieldMeans, "bogeys", rnd, pooled.bogeys));
+    applyAdditive("gir", fieldCountingTargetForRound(fieldMeans, "gir", rnd, pooled.gir), 6, 16.2);
     applyAdditive(
       "fairways",
-      pooled.fairways,
+      fieldCountingTargetForRound(fieldMeans, "fairways", rnd, pooled.fairways),
       2,
       num(basisRoot.fairway_holes_modeled, 14) + 0.5,
     );
     if (Number.isFinite(pooled.putts) && pooled.putts >= 24) {
-      applyAdditive("putts", pooled.putts, 24, 34);
+      const cur = meanFinite(rows.map((pl) => num(pl.putts, NaN)));
+      if (Number.isFinite(cur)) {
+        const delta = Math.round((pooled.putts - cur) * 1000) / 1000;
+        if (Math.abs(delta) >= 0.035) {
+          shifts.putts[rnd] = delta;
+          for (const pl of rows) {
+            const v = num(pl.putts, NaN);
+            if (!Number.isFinite(v)) continue;
+            pl.putts = Math.round(clamp(v + delta, 24, 34) * 100) / 100;
+          }
+        }
+      }
     }
   }
 
-  if (payload.meta && typeof payload.meta === "object") {
-    payload.meta.projection_course_basis = basisRoot;
-    if (!payload.meta.projection_round_adjustments) payload.meta.projection_round_adjustments = {};
-    payload.meta.projection_round_adjustments.field_markets_calibrated = true;
-    payload.meta.projection_round_adjustments.field_calibration_shifts = shifts;
-  }
   payload.projection_course_basis = basisRoot;
+  const adjHost = payload?.meta && typeof payload.meta === "object" ? payload.meta : payload;
+  if (!adjHost.projection_round_adjustments) adjHost.projection_round_adjustments = {};
+  adjHost.projection_round_adjustments.field_markets_calibrated = true;
+  adjHost.projection_round_adjustments.field_calibration_shifts = shifts;
   return { rounds, shifts, pooled };
 }
 
@@ -1750,8 +1898,8 @@ export function inferHoleCountsFromScoreSplit(stp, venueBirdies = 2.88, venueBog
     bird = Math.max(0, Math.min(7, vBird + -stp * 0.85));
     bog = Math.max(0, stp + bird);
   } else {
-    bog = Math.max(0, Math.min(8, vBog + stp * 0.72));
-    bird = Math.max(0, Math.min(6, vBird * 0.35 + Math.max(0, stp - bog) * 0.4));
+    bird = Math.max(0.15, Math.min(7, vBird - stp * 0.42));
+    bog = Math.max(0.15, Math.min(8, stp + bird));
   }
   bird = Math.round(bird * 100) / 100;
   bog = Math.round(bog * 100) / 100;
