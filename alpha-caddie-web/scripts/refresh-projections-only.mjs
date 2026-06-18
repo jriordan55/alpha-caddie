@@ -58,7 +58,6 @@ run(
 );
 run("bake-weather-into-projections.mjs", "Tee-time weather for display_round (bake:weather)");
 run("apply-unified-projection-factors.mjs", "Unified projection factors");
-run("apply-fairway-setup-bump.mjs", "Widened fairways: +1 fairway per player");
 
 if (String(process.env.GOLF_SKIP_PIN_SHEET || "").trim() !== "1") {
   run("pin-hole-scoring-index.mjs", "Pin hole scoring index (Bayesian calibration)");

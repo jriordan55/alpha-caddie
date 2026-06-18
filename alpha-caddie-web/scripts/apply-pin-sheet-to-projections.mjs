@@ -243,24 +243,26 @@ export async function applyPinSheetToProjections(payload, sheet, pinPath = "", p
     if (Math.round(num(p.round)) !== rnd) continue;
     if (prev?.source_stamp && prev.round === rnd) restorePinBases(p, prev);
     snapshotPinBases(p);
+    const par18 = Math.round(num(payload.course_par_18 ?? meta.course_par_18, NaN)) || 72;
     p.total_score = applyDelta(p.total_score, adj.totalScoreDelta);
-    p.birdies = applyDelta(p.birdies, adj.birdiesDelta);
-    p.pars = applyDelta(p.pars, adj.parsDelta);
-    p.bogeys = applyDelta(p.bogeys, adj.bogeysDelta);
+    if (Number.isFinite(num(p.total_score, NaN))) {
+      p.score_to_par = Math.round((p.total_score - par18) * 100) / 100;
+    }
     p.gir = applyDelta(p.gir, adj.girDelta);
     p.fairways = applyDelta(p.fairways, adj.fairwaysDelta);
     p.putts = applyDelta(p.putts, adj.totalScoreDelta * 0.35);
     p._pin_adjusted = true;
     const basis = meta.projection_course_basis && typeof meta.projection_course_basis === "object" ? meta.projection_course_basis : {};
     reconcileProjectionRowCountsToScore(p, {
-      coursePar18: Math.round(num(payload.course_par_18 ?? meta.course_par_18, NaN)) || 72,
+      coursePar18: par18,
       venueAvgBirdies: num(basis.venue_avg_birdies, 4.2),
       venueAvgBogeys: num(basis.venue_avg_bogeys, 2.1),
       venueAvgGir: num(basis.venue_avg_gir, 12),
       venueAvgFairways: num(basis.venue_avg_fairways, 9),
       nFairwayHoles: Math.round(num(basis.fairway_holes_modeled, 14)) || 14,
-      alignStrength: 0.28,
-      spreadStrength: 0.75,
+      scoreDeriveCounts: true,
+      girBlend: 0.22,
+      fairwaysBlend: 0.2,
     });
   }
 

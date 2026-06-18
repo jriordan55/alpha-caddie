@@ -15,7 +15,6 @@
     "apply:unified-factors": "node scripts/apply-unified-projection-factors.mjs",
     "bake:outright-sim": "node scripts/bake-outright-sim-probs.mjs",
     "apply:pin-sheet": "node scripts/apply-pin-sheet-to-projections.mjs",
-    "apply:fairway-setup-bump": "node scripts/apply-fairway-setup-bump.mjs",
     "build:pin-hole-index": "node scripts/pin-hole-scoring-index.mjs",
     "import:pin-locations": "node scripts/import-pin-locations-zip.mjs",
     "import:pin-locations:batch": "node scripts/import-pin-locations-batch.mjs",

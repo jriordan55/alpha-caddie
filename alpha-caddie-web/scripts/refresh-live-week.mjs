@@ -161,11 +161,6 @@ run(
   "Unified projection factors (course fit, tee wave, residuals)",
 );
 
-run(
-  "apply-fairway-setup-bump.mjs",
-  "Widened fairways: +1 fairway hit per player on display round",
-);
-
 if (!envTruthy("GOLF_SKIP_PIN_SHEET", false)) {
   run(
     "pin-hole-scoring-index.mjs",

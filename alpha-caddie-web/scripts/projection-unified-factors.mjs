@@ -588,7 +588,10 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
 
   const rec = opts.skipReconcile
     ? null
-    : reconcileAllProjectionPlayerRows(payload, opts.reconcileOpts || {});
+    : reconcileAllProjectionPlayerRows(payload, {
+        ...(opts.reconcileOpts || {}),
+        skipFieldCalibrate: true,
+      });
 
   const summary = {
     applied_at: new Date().toISOString(),

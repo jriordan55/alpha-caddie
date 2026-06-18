@@ -184,9 +184,23 @@ export function applyWeatherBakedCountsToPlayer(p, meta) {
     p.score_to_par = Math.round((p.total_score - par18) * 100) / 100;
   }
 
+  const basis = meta?.projection_course_basis && typeof meta.projection_course_basis === "object" ? meta.projection_course_basis : {};
+  const histCalib = meta?.historical_projection_calibration;
+  reconcileProjectionRowCountsToScore(p, {
+    coursePar18: par18,
+    venueAvgBirdies: num(basis.venue_avg_birdies, 4.2),
+    venueAvgBogeys: num(basis.venue_avg_bogeys, 2.1),
+    venueAvgGir: num(basis.venue_avg_gir, 12),
+    venueAvgFairways: num(basis.venue_avg_fairways, 9),
+    venueAvgPars: num(basis.venue_avg_pars, 11.2),
+    nFairwayHoles: Math.round(num(basis.fairway_holes_modeled, 14)) || 14,
+    fwStpLine: histCalib?.fw_stp_line,
+    scoreDeriveCounts: true,
+    girBlend: 0.22,
+    fairwaysBlend: 0.2,
+  });
+
   for (const [market, field] of [
-    ["Birdies", "birdies"],
-    ["Bogeys", "bogeys"],
     ["GIR", "gir"],
     ["Fairways hit", "fairways"],
     ["Putts", "putts"],
@@ -195,8 +209,6 @@ export function applyWeatherBakedCountsToPlayer(p, meta) {
     if (!Number.isFinite(v)) continue;
     p[field] = roundCountStat(market, v + statWeatherMuAdjustment(market, p));
   }
-
-  renormalizePars(p);
 
   const baseMu = num(p.mu_sg ?? p.implied_mu_sg, NaN);
   if (Number.isFinite(baseMu)) {
@@ -213,22 +225,6 @@ export function applyWeatherBakedCountsToPlayer(p, meta) {
 
   p._weather_bake_snapshot = { ...w };
   p.weather_counts_baked = true;
-  const basis = meta?.projection_course_basis && typeof meta.projection_course_basis === "object" ? meta.projection_course_basis : {};
-  const histCalib = meta?.historical_projection_calibration;
-  reconcileProjectionRowCountsToScore(p, {
-    coursePar18: par18,
-    venueAvgBirdies: num(basis.venue_avg_birdies, 4.2),
-    venueAvgBogeys: num(basis.venue_avg_bogeys, 2.1),
-    venueAvgGir: num(basis.venue_avg_gir, 12),
-    venueAvgFairways: num(basis.venue_avg_fairways, 9),
-    venueAvgPars: num(basis.venue_avg_pars, 11.2),
-    nFairwayHoles: Math.round(num(basis.fairway_holes_modeled, 14)) || 14,
-    fwStpLine: histCalib?.fw_stp_line,
-    alignStrength: 0.28,
-    spreadStrength: 0.75,
-    girBlend: 0.22,
-    fairwaysBlend: 0.2,
-  });
   return true;
 }
 
