@@ -17627,47 +17627,16 @@ function propsChartAxisLabel(completed) {
 /**
  * One string per bar for the x-axis (M/D; adds 'YY when the same calendar label spans multiple years).
  */
-function propsChartPointUtcMs(s) {
-  if (!s) return NaN;
-  const ms = historyRoundChartDateUtcMs(s._hist);
-  if (Number.isFinite(ms)) return ms;
-  const d = String(s.date || "").trim();
-  const iso = d.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (iso) return Date.UTC(+iso[1], +iso[2] - 1, +iso[3]);
-  const mdy = d.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if (mdy) return Date.UTC(+mdy[3], +mdy[1] - 1, +mdy[2]);
-  return NaN;
-}
-
-function propsChartSeriesSpansMultipleYears(series) {
-  const years = new Set();
-  for (const s of series || []) {
-    const ms = propsChartPointUtcMs(s);
-    if (Number.isFinite(ms)) years.add(new Date(ms).getUTCFullYear());
-    else {
-      const y = num(s?._hist?.year, NaN);
-      if (Number.isFinite(y) && y >= 1990) years.add(Math.round(y));
-    }
-  }
-  return years.size > 1;
-}
-
 function buildPropsTrendXAxisLabels(series) {
   if (!series.length) return [];
-  const multiYear = propsChartSeriesSpansMultipleYears(series);
   const bases = series.map((s) => propsChartAxisLabel(s.date || ""));
   const countByBase = new Map();
   for (const b of bases) countByBase.set(b, (countByBase.get(b) || 0) + 1);
   return series.map((s, i) => {
     const b = bases[i];
-    const ms = propsChartPointUtcMs(s);
-    const yr = Number.isFinite(ms)
-      ? new Date(ms).getUTCFullYear()
-      : Math.round(num(s._hist?.year, NaN));
-    if (multiYear && Number.isFinite(yr) && yr >= 1990) {
-      return `${b} '${String(yr).slice(-2)}`;
-    }
     if ((countByBase.get(b) || 0) <= 1) return b;
+    const r = s._hist;
+    const yr = num(r?.year, NaN);
     const sameBaseIdx = [];
     for (let j = 0; j < bases.length; j++) if (bases[j] === b) sameBaseIdx.push(j);
     const years = new Set(
@@ -17827,7 +17796,7 @@ function propsChartBarLayout(series, padL, innerW) {
   const n = series.length;
   const xCenter = new Array(n);
   const barW = new Array(n);
-  if (n === 0) return { xCenter, barW, chronoMs: [], proportional: false };
+  if (n === 0) return { xCenter, barW };
   const slotEq = innerW / n;
   const bwFrac = n > 48 ? 0.44 : n > 24 ? 0.56 : 0.72;
   const minBarPx = n > 48 ? 4 : n > 24 ? 6 : 10;
@@ -17840,84 +17809,7 @@ function propsChartBarLayout(series, padL, innerW) {
       barW[i] = Math.max(1, Math.min(maxW, Math.max(minBarPx, slotEq * bwFrac)));
     }
   }
-  return { xCenter, barW, chronoMs: series.map(propsChartPointUtcMs), proportional: false };
-}
-
-/** Calendar-proportional x positions when rounds span multiple dates (field course history). */
-function propsChartBarLayoutChrono(series, padL, innerW) {
-  const n = series.length;
-  const chronoMs = series.map(propsChartPointUtcMs);
-  const valid = chronoMs.filter((ms) => Number.isFinite(ms));
-  if (valid.length < 2) return propsChartBarLayout(series, padL, innerW);
-  const minMs = Math.min(...valid);
-  const maxMs = Math.max(...valid);
-  if (maxMs <= minMs) return propsChartBarLayout(series, padL, innerW);
-  const xCenter = new Array(n);
-  const barW = new Array(n);
-  const slotEq = innerW / n;
-  const bwFrac = n > 48 ? 0.44 : n > 24 ? 0.56 : 0.72;
-  const minBarPx = n > 48 ? 4 : n > 24 ? 6 : 10;
-  const maxW = Math.max(1, slotEq - 1);
-  const defaultBw = Math.max(1, Math.min(maxW, Math.max(minBarPx, slotEq * bwFrac)));
-  for (let i = 0; i < n; i++) {
-    const ms = chronoMs[i];
-    const t = Number.isFinite(ms) ? (ms - minMs) / (maxMs - minMs) : i / Math.max(1, n - 1);
-    xCenter[i] = padL + t * innerW;
-    barW[i] = n === 1 ? Math.max(18, Math.min(innerW * 0.22, 72)) : defaultBw;
-  }
-  return { xCenter, barW, chronoMs, proportional: true, minMs, maxMs };
-}
-
-function propsChartBarLayoutForMode(series, padL, innerW, xAxisMode) {
-  if (xAxisMode === "valueSort" || xAxisMode === "golferNames" || xAxisMode === "golferDense") {
-    return propsChartBarLayout(series, padL, innerW);
-  }
-  return propsChartBarLayoutChrono(series, padL, innerW);
-}
-
-function propsChartBarSlotBounds(xCenter, i, padL, innerW) {
-  const n = xCenter.length;
-  const xc = xCenter[i];
-  const left = i === 0 ? padL : (xCenter[i - 1] + xc) / 2;
-  const right = i === n - 1 ? padL + innerW : (xc + xCenter[i + 1]) / 2;
-  return { x0: left, w: Math.max(1, right - left) };
-}
-
-/** Time-ordered x-axis ticks aligned to bar positions (chrono charts). */
-function propsChartChronoTickPlacements(perBarLabels, xCenter, chronoMs, innerW) {
-  const groups = new Map();
-  for (let i = 0; i < perBarLabels.length; i++) {
-    const lab = String(perBarLabels[i] || "").trim();
-    const ms = chronoMs[i];
-    if (!lab || !Number.isFinite(ms)) continue;
-    const day = Math.floor(ms / 86400000);
-    const key = `${day}|${lab}`;
-    if (!groups.has(key)) groups.set(key, { lab, ms, cx: xCenter[i], n: 1 });
-    else {
-      const g = groups.get(key);
-      g.cx = (g.cx * g.n + xCenter[i]) / (g.n + 1);
-      g.n++;
-    }
-  }
-  let sessions = [...groups.values()].sort((a, b) => a.ms - b.ms || a.lab.localeCompare(b.lab));
-  if (!sessions.length) return [];
-  const minPx = 76;
-  const maxTicks = Math.max(4, Math.min(12, Math.floor(innerW / minPx)));
-  if (sessions.length > maxTicks) {
-    const picked = [];
-    for (let j = 0; j < maxTicks; j++) {
-      picked.push(sessions[Math.round((j / (maxTicks - 1)) * (sessions.length - 1))]);
-    }
-    sessions = picked;
-  }
-  const shown = new Set();
-  const out = [];
-  for (const s of sessions) {
-    if (!s.lab || shown.has(s.lab)) continue;
-    shown.add(s.lab);
-    out.push({ lab: s.lab, cx: s.cx });
-  }
-  return out;
+  return { xCenter, barW };
 }
 
 /** `course_name` from historical_rounds_all → JSON (only field used for “Course” in UI). */
@@ -17940,24 +17832,11 @@ function pointInPropsChartHitRegion(canvasX, canvasY) {
   return propsChartHitRegions.some((r) => canvasX >= r.x0 && canvasX < r.x0 + r.w && canvasY >= r.y0 && canvasY < r.y0 + r.h);
 }
 
-/** Column index from x (center-weighted; equal-width slots or proportional chrono centers). */
+/** Column index from x (center-weighted; equal-width slots). */
 function propsChartHitIndexAtX(canvasX) {
   const L = propsChartHoverLayout;
   if (L.mode === "golferHorizontal") return -1;
-  if (!L.n || L.n !== propsChartHitRegions.length) return -1;
-  if (Array.isArray(L.xCenter) && L.xCenter.length === L.n) {
-    let best = -1;
-    let bestD = Infinity;
-    for (let i = 0; i < L.n; i++) {
-      const d = Math.abs(canvasX - L.xCenter[i]);
-      if (d < bestD) {
-        bestD = d;
-        best = i;
-      }
-    }
-    return best;
-  }
-  if (!L.slotW) return -1;
+  if (!L.n || !L.slotW || L.n !== propsChartHitRegions.length) return -1;
   if (canvasX < L.padL || canvasX > L.padL + L.n * L.slotW) return -1;
   return Math.min(L.n - 1, Math.max(0, Math.round((canvasX - L.padL - L.slotW * 0.5) / L.slotW)));
 }
@@ -18572,14 +18451,13 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
   ctx.lineTo(w - pad.r, h - pad.b);
   ctx.stroke();
   const slotW = innerW / n;
+  propsChartHoverLayout = { padL: pad.l, slotW, n };
   const xAxisPerBar = golferNameLabels
     ? plot.map((s) => propsChartGolferLabelShort(s.playerName))
     : golferDenseLabels
       ? plot.map(() => "")
       : buildPropsTrendXAxisLabels(plot);
-  const layout = propsChartBarLayoutForMode(plot, pad.l, innerW, xAxisMode);
-  const { xCenter, barW, chronoMs = [], proportional = false } = layout;
-  propsChartHoverLayout = { padL: pad.l, slotW, n, xCenter, proportional };
+  const { xCenter, barW } = propsChartBarLayout(plot, pad.l, innerW);
   const lowerIsBetter = propsStatLowerIsBetter(statKey);
   for (let i = 0; i < n; i++) {
     const v = plot[i].actual;
@@ -18588,18 +18466,16 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
     const x0 = Math.max(pad.l, Math.min(xc - bw / 2, pad.l + innerW - bw));
     const yTop = yScale(v);
     const hBar = Math.max(1, yBase - yTop);
-    const slot = proportional
-      ? propsChartBarSlotBounds(xCenter, i, pad.l, innerW)
-      : { x0: pad.l + i * slotW, w: Math.max(1, slotW) };
+    const slotLeft = pad.l + i * slotW;
     const hist = plot[i]._hist;
     const rnd =
       Number.isFinite(plot[i].roundNum) && plot[i].roundNum >= 1
         ? plot[i].roundNum
         : Math.round(num(hist?.round_num, NaN));
     propsChartHitRegions.push({
-      x0: slot.x0,
+      x0: slotLeft,
       y0: pad.t,
-      w: slot.w,
+      w: Math.max(1, slotW),
       h: yBase - pad.t,
       _hist: hist,
       _aggregate: Boolean(plot[i]._aggregate),
@@ -18728,40 +18604,21 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
       }
     }
   } else if (!golferDenseLabels) {
+    const tickMap = propsChartXAxisDateLabels(xAxisPerBar, innerW, { xAxisMode });
     const yLab = denseXLabels ? h - 24 : h - 10;
-    if (proportional && xAxisMode === "chrono") {
-      const ticks = propsChartChronoTickPlacements(xAxisPerBar, xCenter, chronoMs, innerW);
-      ctx.fillStyle = "#9ca0ac";
-      for (const p of ticks) {
-        if (!p.lab) continue;
-        if (denseXLabels) {
-          ctx.save();
-          ctx.translate(p.cx, yLab);
-          ctx.rotate(-Math.PI / 6);
-          ctx.textAlign = "right";
-          ctx.fillText(p.lab, 0, 0);
-          ctx.restore();
-          ctx.textAlign = "center";
-        } else {
-          ctx.fillText(p.lab, p.cx, yLab);
-        }
-      }
-    } else {
-      const tickMap = propsChartXAxisDateLabels(xAxisPerBar, innerW, { xAxisMode });
-      for (const [i, lab] of tickMap.entries()) {
-        if (!lab) continue;
-        const cx = xCenter[i] != null ? xCenter[i] : pad.l + innerW / 2;
-        if (denseXLabels) {
-          ctx.save();
-          ctx.translate(cx, yLab);
-          ctx.rotate(-Math.PI / 6);
-          ctx.textAlign = "right";
-          ctx.fillText(lab, 0, 0);
-          ctx.restore();
-          ctx.textAlign = "center";
-        } else {
-          ctx.fillText(lab, cx, yLab);
-        }
+    for (const [i, lab] of tickMap.entries()) {
+      if (!lab) continue;
+      const cx = xCenter[i] != null ? xCenter[i] : pad.l + innerW / 2;
+      if (denseXLabels) {
+        ctx.save();
+        ctx.translate(cx, yLab);
+        ctx.rotate(-Math.PI / 6);
+        ctx.textAlign = "right";
+        ctx.fillText(lab, 0, 0);
+        ctx.restore();
+        ctx.textAlign = "center";
+      } else {
+        ctx.fillText(lab, cx, yLab);
       }
     }
   }
