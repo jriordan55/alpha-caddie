@@ -231,7 +231,7 @@ export function openMeteoArchiveUrl(lat, lon, startDate, endDate, timezone) {
   u.searchParams.set("end_date", endDate);
   u.searchParams.set(
     "hourly",
-    "temperature_2m,relativehumidity_2m,precipitation_probability,precipitation,windspeed_10m,weathercode",
+    "temperature_2m,relativehumidity_2m,precipitation_probability,precipitation,windspeed_10m,windgusts_10m,weathercode",
   );
   u.searchParams.set("windspeed_unit", "mph");
   u.searchParams.set("temperature_unit", "fahrenheit");

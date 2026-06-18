@@ -22,6 +22,19 @@ export function weatherCodeSeverity(c) {
   return 0;
 }
 
+/** Documented wind metric for projections + historical archive backfill. */
+export const OPEN_METEO_WIND_METRIC = "median_mph_between_mean_sustained_and_max_gust_in_tee_window";
+
+/** Median of mean sustained wind and peak gust in a tee-time window (two-value median). */
+export function windMphFromMeanSustainedAndMaxGust(meanSustainedMph, maxGustMph) {
+  const s = num(meanSustainedMph, NaN);
+  const g = num(maxGustMph, NaN);
+  if (!Number.isFinite(s) && !Number.isFinite(g)) return NaN;
+  if (!Number.isFinite(s)) return g;
+  if (!Number.isFinite(g)) return s;
+  return (s + g) / 2;
+}
+
 export function openMeteoConditionFromHourSlice(codeWorst, maxPrecipProb, maxPrecipMm = 0, maxWindMph = 0) {
   const p = num(maxPrecipProb, 0);
   const mm = num(maxPrecipMm, 0);
@@ -44,6 +57,7 @@ export function summarizeHourlyWeatherSlice(hourly, startIdx, spanHours) {
   const times = hourly?.time;
   const T = hourly?.temperature_2m;
   const W = hourly?.windspeed_10m;
+  const G = hourly?.windgusts_10m;
   const H = hourly?.relativehumidity_2m;
   const P = hourly?.precipitation_probability;
   const R = hourly?.precipitation;
@@ -60,14 +74,19 @@ export function summarizeHourlyWeatherSlice(hourly, startIdx, spanHours) {
   let maxPP = 0;
   let maxMm = 0;
   let peakWind = 0;
+  let peakGust = 0;
 
   for (let i = startIdx; i < end; i++) {
     const ti = num(T?.[i], NaN);
     if (!Number.isFinite(ti)) continue;
     sT += ti;
-    const wi = num(W?.[i], 0);
-    sW += wi;
-    if (wi > peakWind) peakWind = wi;
+    const wi = num(W?.[i], NaN);
+    if (Number.isFinite(wi)) {
+      sW += wi;
+      if (wi > peakWind) peakWind = wi;
+    }
+    const gi = num(G?.[i], NaN);
+    if (Number.isFinite(gi) && gi > peakGust) peakGust = gi;
     sH += num(H?.[i], 0);
     const cc = num(C?.[i], NaN);
     if (Number.isFinite(cc)) {
@@ -85,11 +104,15 @@ export function summarizeHourlyWeatherSlice(hourly, startIdx, spanHours) {
   }
 
   if (!nt) return null;
-  const cond = openMeteoConditionFromHourSlice(worstCode, maxPP, maxMm, peakWind);
+  const meanSustained = Number.isFinite(sW) && nt > 0 ? sW / nt : NaN;
+  const maxGust = peakGust > 0 ? peakGust : peakWind;
+  const windMph = windMphFromMeanSustainedAndMaxGust(meanSustained, maxGust);
+  const peakForCond = Math.max(peakWind, peakGust);
+  const cond = openMeteoConditionFromHourSlice(worstCode, maxPP, maxMm, peakForCond);
   return {
     tempF: sT / nt,
-    /** Mean sustained 10 m wind during the tee-time window (mph) — not gusts or window peak. */
-    windMph: sW / nt,
+    /** Median of mean sustained 10 m wind and max gust in the tee-time window (mph). */
+    windMph,
     humidityPct: sH / nt,
     condition: cond,
   };
