@@ -74,6 +74,26 @@ function resolveManualPinSheet(payload) {
   return { kind: "file", path: ACTIVE_JSON, sheet: j };
 }
 
+/** Armed tee sheet for this event (any round) — for pin_locations DB before display_round catches up. */
+function loadArmedPinSheetForEvent(payload) {
+  const meta = projectionExportMeta(payload);
+  const event = String(meta.event_name || payload.event_name || "").trim();
+  if (!existsSync(ACTIVE_JSON)) return null;
+  let j;
+  try {
+    j = loadJson(ACTIVE_JSON);
+  } catch {
+    return null;
+  }
+  if (!manualPinSheetArmed(j)) return null;
+  const sheetRound = Math.round(num(j.round ?? j.round_num, NaN));
+  const sheetEvent = String(j.event_name || j.event_name_ref || "").trim();
+  if (!Number.isFinite(sheetRound) || sheetRound < 1 || sheetRound > 4) return null;
+  if (!sheetEvent || !event || !eventsLikelySame(sheetEvent, event)) return null;
+  if (!Array.isArray(j.holes) || j.holes.length < 9) return null;
+  return { kind: "file", path: ACTIVE_JSON, sheet: j, sheetRound };
+}
+
 async function maybeParseImageToActiveJson() {
   if (!existsSync(ACTIVE_IMG)) return false;
   const key = String(process.env.OPENAI_API_KEY || "").trim();
@@ -313,7 +333,8 @@ async function main() {
 
   const payload = loadJson(PROJ_PATH);
   const resolved = resolveManualPinSheet(payload);
-  if (!resolved) {
+  const armed = resolved || loadArmedPinSheetForEvent(payload);
+  if (!armed) {
     const dr = Math.round(num(payload.display_round, NaN)) || "?";
     let sr = "?";
     if (existsSync(ACTIVE_JSON)) {
@@ -330,8 +351,8 @@ async function main() {
     return;
   }
 
-  const sheet = resolved.sheet ?? loadJson(resolved.path);
-  const pinPath = resolved.path;
+  const sheet = armed.sheet ?? loadJson(armed.path);
+  const pinPath = armed.path;
   const meta = projectionExportMeta(payload);
   const enrichedSheet = {
     ...sheet,
@@ -344,6 +365,15 @@ async function main() {
   if (dbKey) {
     enrichedSheet.course_key = courseKeyFromName(enrichedSheet.course_name);
     enrichedSheet.play_date = enrichedSheet.play_date || dbKey.split("|")[1];
+  }
+
+  if (!resolved) {
+    const sr = Math.round(num(sheet.round ?? sheet.round_num, NaN));
+    const dr = Math.round(num(payload.display_round ?? meta.display_round, NaN)) || "?";
+    console.log(
+      `[pin-sheet] Saved R${sr} tee sheet to pin_locations (projections still R${dr} — apply on push:live when display_round=${sr}).`,
+    );
+    return;
   }
 
   const { adjustedPlayers, adj } = await applyPinSheetToProjections(
