@@ -178,6 +178,11 @@ run(
   "Tournament MC outright probs → projections.json (precomputed for +EV)",
 );
 
+run(
+  "reconcile-projection-counts.mjs",
+  "Final bird/bog/par reconcile from total_score (after pin + weather + unified)",
+);
+
 run("validate-projections-for-publish.mjs", "Validate par, birdies/pars, and O/U prop coverage before publish");
 
 if (!skipPostCsvMerge) {

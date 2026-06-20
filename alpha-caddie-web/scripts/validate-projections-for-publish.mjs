@@ -78,6 +78,29 @@ if (missingCounts.length) {
   );
 }
 
+const avg = (key) => {
+  const vals = roundRows.map((p) => num(p[key], NaN)).filter((v) => Number.isFinite(v));
+  return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : NaN;
+};
+const avgPars = avg("pars");
+const avgBogeys = avg("bogeys");
+const avgBirdies = avg("birdies");
+if (Number.isFinite(avgPars) && avgPars > 12.2) {
+  fail(
+    `R${displayRound} field avg pars ${avgPars.toFixed(2)} too high (par-heavy profile) — run reconcile-projection-counts or check inferHoleCountsFromScoreSplit`,
+  );
+}
+if (Number.isFinite(avgBogeys) && avgBogeys < 3.2) {
+  fail(
+    `R${displayRound} field avg bogeys ${avgBogeys.toFixed(2)} too low — counting markets miscalibrated`,
+  );
+}
+if (Number.isFinite(avgBirdies) && Number.isFinite(avgBogeys) && avgBirdies + avgBogeys + avgPars < 16.5) {
+  fail(
+    `R${displayRound} bird+pars+bog ${(avgBirdies + avgBogeys + avgPars).toFixed(2)} < 16.5 — hole counts do not sum to ~18`,
+  );
+}
+
 const props = Array.isArray(proj.props) ? proj.props : [];
 for (const mkt of DK_CORE_MARKETS) {
   const dkLines = props.filter(
@@ -111,5 +134,5 @@ if (outrightN < 20) {
 }
 
 console.log(
-  `[validate:projections] OK — par ${coursePar} (${parSource}), R${displayRound}: ${roundRows.length} golfers; outright MC baked: ${outrightN} players; DK lines: ${DK_CORE_MARKETS.map((m) => `${m}=${props.filter((r) => r.source === "draftkings" && r.market === m).length}`).join(", ")}`,
+  `[validate:projections] OK — par ${coursePar} (${parSource}), R${displayRound}: ${roundRows.length} golfers; avg bird/pars/bog ${avgBirdies.toFixed(2)}/${avgPars.toFixed(2)}/${avgBogeys.toFixed(2)}; outright MC baked: ${outrightN} players; DK lines: ${DK_CORE_MARKETS.map((m) => `${m}=${props.filter((r) => r.source === "draftkings" && r.market === m).length}`).join(", ")}`,
 );

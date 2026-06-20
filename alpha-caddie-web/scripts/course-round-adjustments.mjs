@@ -598,11 +598,17 @@ export function reconcileProjectionRowCountsToScore(row, opts = {}) {
   const d = Math.max(0, num(row.doubles, 0));
   const vBird = num(opts.venueAvgBirdies, 4.2);
   const vBog = num(opts.venueAvgBogeys, 2.1);
+  const tr = Math.round(num(row.round, NaN));
+  const fm = opts.fieldCountingMeans;
+  const eventBird = num(fm?.birdies?.[String(tr)] ?? fm?.birdies?.[tr], NaN);
+  const eventBog = num(fm?.bogeys?.[String(tr)] ?? fm?.bogeys?.[tr], NaN);
+  const anchorBird = Number.isFinite(eventBird) ? 0.35 * eventBird + 0.65 * vBird : vBird;
+  const anchorBog = Number.isFinite(eventBog) ? 0.35 * eventBog + 0.65 * vBog : vBog;
   let b;
   let bg;
   let p;
   if (opts.scoreDeriveCounts !== false) {
-    const split = inferHoleCountsFromScoreSplit(stp, vBird, vBog);
+    const split = inferHoleCountsFromScoreSplit(stp, anchorBird, anchorBog);
     b = split.birdies;
     bg = split.bogeys;
     p = split.pars;
@@ -611,7 +617,7 @@ export function reconcileProjectionRowCountsToScore(row, opts = {}) {
     bg = num(row.bogeys, NaN);
     p = num(row.pars, NaN);
     if (!Number.isFinite(b) || !Number.isFinite(bg)) {
-      const split = inferHoleCountsFromScoreSplit(stp, vBird, vBog);
+      const split = inferHoleCountsFromScoreSplit(stp, anchorBird, anchorBog);
       b = split.birdies;
       bg = split.bogeys;
       p = split.pars;
@@ -687,6 +693,7 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
     venueAvgGir: num(basis.venue_avg_gir, 12),
     venueAvgFairways: num(basis.venue_avg_fairways, 9),
     venueAvgPars: num(basis.venue_avg_pars, 11.2),
+    fieldCountingMeans: basis.field_counting_means_by_round || null,
     nFairwayHoles: Math.round(num(basis.fairway_holes_modeled, 14)) || 14,
     fwStpLine: histCalib?.fw_stp_line,
     alignStrength: 0.28,
@@ -2051,23 +2058,43 @@ export function liveCountingUntrustworthy(counts, coursePar18) {
 export function inferHoleCountsFromScoreSplit(stp, venueBirdies = 2.88, venueBogeys = 2.93) {
   const vBird = num(venueBirdies, 2.88);
   const vBog = num(venueBogeys, 2.93);
-  let bird = 0;
-  let bog = 0;
-  if (stp <= 0) {
-    bird = Math.max(0, Math.min(7, vBird + -stp * 0.85));
-    bog = Math.max(0, stp + bird);
-  } else {
-    bird = Math.max(0.15, Math.min(7, vBird - stp * 0.42));
-    bog = Math.max(0.15, Math.min(8, stp + bird));
+  const vPar = Math.max(9.2, 18 - vBird - vBog);
+  const t = num(stp, 0);
+
+  // stp ≈ bog − bird: score pressure moves bog up and bird down (not into pars).
+  let bird = vBird - t * 0.44;
+  let bog = vBog + t * 0.56;
+  const bogFloor = Math.max(0.15, vBog * 0.62);
+  bird = clamp(bird, 0.15, 7);
+  bog = clamp(bog, bogFloor, 8.5);
+
+  let pars = Math.max(0.12, 18 - bird - bog);
+  const parFloor = Math.max(9.8, vPar * 0.78);
+  if (pars > parFloor + 0.08) {
+    const spread = spreadParsIntoBirdBogPairs(
+      { eagles: 0, birdies: bird, pars, bogeys: bog, doubles: 0 },
+      {
+        venueBirdies: vBird,
+        venueBogeys: vBog,
+        venuePars: vPar,
+        spreadStrength: 0.88,
+        parFloor,
+      },
+    );
+    bird = spread.birdies;
+    bog = spread.bogeys;
+    pars = spread.pars;
   }
+
   bird = Math.round(bird * 100) / 100;
   bog = Math.round(bog * 100) / 100;
+  pars = Math.round(pars * 100) / 100;
   return {
     birdies: bird,
     bogeys: bog,
     eagles: 0,
     doubles: 0,
-    pars: Math.max(0.12, Math.round((18 - bird - bog) * 100) / 100),
+    pars,
   };
 }
 

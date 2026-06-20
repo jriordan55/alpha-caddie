@@ -64,6 +64,11 @@ if (String(process.env.GOLF_SKIP_PIN_SHEET || "").trim() !== "1") {
   run("apply-pin-sheet-to-projections.mjs", "Armed pin sheet → projections (Bayesian apply:pin-sheet)");
 }
 
+run(
+  "reconcile-projection-counts.mjs",
+  "Final bird/bog/par reconcile from total_score (after pin + weather + unified)",
+);
+
 const destDir = path.join(REPO_ROOT, "website", "public", "data");
 mkdirSync(destDir, { recursive: true });
 copyFileSync(path.join(WEB_ROOT, "projections.json"), path.join(destDir, "projections.json"));

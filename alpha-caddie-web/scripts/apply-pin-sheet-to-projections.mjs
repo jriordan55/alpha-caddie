@@ -280,6 +280,7 @@ export async function applyPinSheetToProjections(payload, sheet, pinPath = "", p
       venueAvgGir: num(basis.venue_avg_gir, 12),
       venueAvgFairways: num(basis.venue_avg_fairways, 9),
       nFairwayHoles: Math.round(num(basis.fairway_holes_modeled, 14)) || 14,
+      fieldCountingMeans: basis.field_counting_means_by_round || null,
       scoreDeriveCounts: true,
       girBlend: 0.22,
       fairwaysBlend: 0.2,
