@@ -1022,10 +1022,15 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
   const summaryContent = buildCumulativeSummaryWithBackfill(summaryPath, eventName, summarySamples, summaryMeta, priorSummaryRows);
   persistCsv(summaryPath, summaryContent);
   let xlsxWritten = false;
-  try {
-    xlsxWritten = await writeRoundProjectionVsActualWorkbook(outPath, summaryContent, xlsxPath);
-  } catch (e) {
-    console.warn(`[round-projection-vs-actual] xlsx write failed: ${e?.message || e}`);
+  const skipXlsx = String(process.env.GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL_XLSX || "").trim() === "1";
+  if (skipXlsx) {
+    console.log("[round-projection-vs-actual] Skipping xlsx (GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL_XLSX=1).");
+  } else {
+    try {
+      xlsxWritten = await writeRoundProjectionVsActualWorkbook(outPath, summaryContent, xlsxPath);
+    } catch (e) {
+      console.warn(`[round-projection-vs-actual] xlsx write failed: ${e?.message || e}`);
+    }
   }
   let finalPath = outPath;
   let finalSummaryPath = summaryPath;

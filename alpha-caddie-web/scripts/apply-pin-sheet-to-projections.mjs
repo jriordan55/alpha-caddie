@@ -361,12 +361,12 @@ async function main() {
     play_date: String(sheet.play_date || "").trim() || playDateIsoForRound(meta, sheet.round ?? sheet.round_num),
   };
 
-  const pinIndexCached = await loadPinHoleScoringIndex();
   const dbKey = saveArmedPinSheetToPinLocationsDb(enrichedSheet, meta);
   if (dbKey) {
     enrichedSheet.course_key = courseKeyFromName(enrichedSheet.course_name);
     enrichedSheet.play_date = enrichedSheet.play_date || dbKey.split("|")[1];
   }
+  const pinIndexCached = await loadPinHoleScoringIndex();
 
   if (!resolved) {
     const sr = Math.round(num(sheet.round ?? sheet.round_num, NaN));

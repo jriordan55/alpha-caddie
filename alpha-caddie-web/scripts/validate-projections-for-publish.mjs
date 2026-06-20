@@ -133,6 +133,16 @@ if (outrightN < 20) {
   );
 }
 
+const avgTotal = avg("total_score");
+const basis = proj.projection_course_basis || proj.meta?.projection_course_basis || {};
+const ewMean = num(basis.event_week_field_avg_score, NaN);
+const minTotal = Number.isFinite(ewMean) ? ewMean - 1.0 : coursePar + 1.5;
+if (Number.isFinite(avgTotal) && avgTotal < minTotal) {
+  fail(
+    `R${displayRound} field avg total ${avgTotal.toFixed(2)} too low (min ${minTotal.toFixed(2)}) — upcoming-round venue calibration missing or stale`,
+  );
+}
+
 console.log(
-  `[validate:projections] OK — par ${coursePar} (${parSource}), R${displayRound}: ${roundRows.length} golfers; avg bird/pars/bog ${avgBirdies.toFixed(2)}/${avgPars.toFixed(2)}/${avgBogeys.toFixed(2)}; outright MC baked: ${outrightN} players; DK lines: ${DK_CORE_MARKETS.map((m) => `${m}=${props.filter((r) => r.source === "draftkings" && r.market === m).length}`).join(", ")}`,
+  `[validate:projections] OK — par ${coursePar} (${parSource}), R${displayRound}: ${roundRows.length} golfers; avg total ${Number.isFinite(avgTotal) ? avgTotal.toFixed(2) : "?"}; avg bird/pars/bog ${avgBirdies.toFixed(2)}/${avgPars.toFixed(2)}/${avgBogeys.toFixed(2)}; outright MC baked: ${outrightN} players; DK lines: ${DK_CORE_MARKETS.map((m) => `${m}=${props.filter((r) => r.source === "draftkings" && r.market === m).length}`).join(", ")}`,
 );

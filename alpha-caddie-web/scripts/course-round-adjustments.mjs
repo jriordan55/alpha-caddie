@@ -1781,13 +1781,47 @@ export function populateEventWeekFieldScoreAvgs(basis, live, coursePar18) {
   return basis;
 }
 
+function historicalVenueScoreByRound(basis, rnd) {
+  const key = String(rnd);
+  return num(
+    basis?.historical_venue_avg_score_by_round?.[key] ?? basis?.field_avg_score_by_round?.[key],
+    NaN,
+  );
+}
+
 function venueCalibrationTargetForRound(basis, rnd, coursePar18) {
   const ewMap = basis?.event_week_field_avg_score_by_round;
-  const hasEventWeek = ewMap && typeof ewMap === "object" && Object.keys(ewMap).length > 0;
   const ew = num(ewMap?.[String(rnd)], NaN);
   if (Number.isFinite(ew)) return ew;
-  if (hasEventWeek) return NaN;
-  const histRnd = num(basis?.field_avg_score_by_round?.[String(rnd)], NaN);
+
+  const histRnd = historicalVenueScoreByRound(basis, rnd);
+
+  if (ewMap && typeof ewMap === "object" && Object.keys(ewMap).length > 0) {
+    /** @type {{ rnd: number; avg: number }[]} */
+    const completed = [];
+    for (const [k, v] of Object.entries(ewMap)) {
+      const r = Math.round(num(k, NaN));
+      const avg = num(v, NaN);
+      if (Number.isFinite(r) && Number.isFinite(avg)) completed.push({ rnd: r, avg });
+    }
+    if (completed.length) {
+      const ewMean =
+        Math.round((completed.reduce((s, x) => s + x.avg, 0) / completed.length) * 100) / 100;
+      if (Number.isFinite(histRnd)) {
+        const histForCompleted = completed
+          .map((c) => historicalVenueScoreByRound(basis, c.rnd))
+          .filter(Number.isFinite);
+        const histMean = histForCompleted.length
+          ? histForCompleted.reduce((a, b) => a + b, 0) / histForCompleted.length
+          : num(basis?.venue_avg_round_score, NaN);
+        if (Number.isFinite(histMean)) {
+          return Math.round((ewMean + (histRnd - histMean)) * 100) / 100;
+        }
+      }
+      return ewMean;
+    }
+  }
+
   if (Number.isFinite(histRnd)) return histRnd;
   return num(basis?.venue_avg_round_score, NaN);
 }

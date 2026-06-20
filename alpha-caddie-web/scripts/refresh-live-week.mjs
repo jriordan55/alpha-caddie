@@ -13,6 +13,7 @@
  *   GOLF_REFRESH_LIVE_FULL_REBUILD=1
  *
  * Other env: DATAGOLF_API_KEY, GOLF_SKIP_PIN_SHEET=1, GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL=1,
+ *   GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL_XLSX=1 (default on live refresh), GOLF_REFRESH_LIVE_SKIP_FINISH_TOOL=1 (default),
  *   GOLF_REFRESH_LIVE_SKIP_DG=1, GOLF_REFRESH_LIVE_SKIP_PGATOUR=1
  */
 import { spawnSync } from "child_process";
@@ -41,15 +42,18 @@ function buildBaseEnv() {
 function run(rel, label, extraEnv = {}) {
   const script = path.join(WEB_ROOT, "scripts", rel);
   console.log(`\n[refresh:live] ${label}…\n`);
+  const t0 = Date.now();
   const r = spawnSync(process.execPath, [script], {
     cwd: WEB_ROOT,
     stdio: "inherit",
     env: { ...buildBaseEnv(), ...extraEnv },
   });
+  const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
   if (r.status !== 0) {
-    console.error(`[refresh:live] ${label} failed (exit ${r.status ?? "?"})`);
+    console.error(`[refresh:live] ${label} failed (exit ${r.status ?? "?"}) after ${elapsed}s`);
     process.exit(r.status ?? 1);
   }
+  console.log(`[refresh:live] ${label} — ${elapsed}s`);
 }
 
 function mirrorWebsitePublicData() {
@@ -86,6 +90,12 @@ const skipWeatherBackfill =
   fullRebuild ? false : envTruthy("GOLF_SKIP_ROUND_WEATHER_BACKFILL", true);
 const skipDg = envTruthy("GOLF_REFRESH_LIVE_SKIP_DG", false);
 const skipPgatour = envTruthy("GOLF_REFRESH_LIVE_SKIP_PGATOUR", false);
+const skipFinishTool = envTruthy("GOLF_REFRESH_LIVE_SKIP_FINISH_TOOL", true);
+const liveFastEnv = {
+  GOLF_SKIP_OUTRIGHT_BAKE_ON_FETCH_DG: "1",
+  GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL_XLSX: "1",
+  GOLF_SKIP_SPORTSBOOK_OUTRIGHT_SCRAPE: "1",
+};
 let recentYears = String(process.env.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "2").trim();
 const fh = fullRebuild ? {} : fastHistoryBuildEnv({ defaultLiveFast: true });
 
@@ -110,6 +120,7 @@ if (!skipCsvMerge) {
 if (!skipDg) {
   run("fetch-datagolf.mjs", "Field + projections (μ_SG, preds/pre-tournament or live driving stats)", {
     GOLF_SKIP_HISTORY_ON_FETCH_DG: "1",
+    ...liveFastEnv,
   });
 } else {
   console.log("\n[refresh:live] GOLF_REFRESH_LIVE_SKIP_DG=1 — skipping fetch:dg + build:course-table.\n");
@@ -130,8 +141,12 @@ if (!skipPgatour) {
   console.log("[refresh:live] Skipping pgatouR refresh.\n");
 }
 
-run("fetch-book-odds-into-projections.mjs", "Sportsbook + DK round props (fetch:book-odds)");
-run("fetch-datagolf-finish-tool-outrights.mjs", "Finish-tool outrights (fetch:finish-tool)");
+run("fetch-book-odds-into-projections.mjs", "Sportsbook + DK round props (fetch:book-odds)", liveFastEnv);
+if (skipFinishTool) {
+  console.log("[refresh:live] Skipping fetch:finish-tool (outrights already from fetch:dg + book-odds). Set GOLF_REFRESH_LIVE_SKIP_FINISH_TOOL=0 to re-run.\n");
+} else {
+  run("fetch-datagolf-finish-tool-outrights.mjs", "Finish-tool outrights (fetch:finish-tool)");
+}
 run("merge-live-hole-pars-into-projections.mjs", "Merge live hole pars into projections");
 run("sync-bundled-hole-pars-into-projections.mjs", "Bundled course_holes.json → projections when live pars missing/wrong");
 run(
@@ -148,10 +163,6 @@ run(
   { GOLF_WITHIN_EVENT_LIVE_ONLY: "1" },
 );
 run(
-  "repair-projection-course-basis.mjs",
-  "Venue total-score calibration on full field (repair:projection-course-basis)",
-);
-run(
   "bake-weather-into-projections.mjs",
   "Open-Meteo tee-time weather → projections.json for display_round (bake:weather)",
 );
@@ -163,15 +174,16 @@ run(
 
 if (!envTruthy("GOLF_SKIP_PIN_SHEET", false)) {
   run(
-    "pin-hole-scoring-index.mjs",
-    "Pin hole scoring index (cached unless pin_locations / hole_data changed)",
-  );
-  run(
     "apply-pin-sheet-to-projections.mjs",
     "Pin sheet → projections (Bayesian calibrated) + pin_locations DB when armed",
   );
   run("sync-pin-locations.mjs", "Mirror pin_locations DB → alpha-caddie-web/data (after tee sheet save)");
 }
+
+run(
+  "repair-projection-course-basis.mjs",
+  "Venue total-score calibration on full field (after weather/pin; includes upcoming rounds)",
+);
 
 run(
   "bake-outright-sim-probs.mjs",
@@ -191,17 +203,21 @@ if (!skipPostCsvMerge) {
     `DataGolf historical-raw-data/rounds → CSV (${recentYears}yr, post-live — completed rounds archive)`,
     { GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS: recentYears },
   );
+  run(
+    "refresh-pga-tour-market-benchmarks.mjs",
+    "PGA Tour 2025–2026 market benchmarks → projections.json (Market rating)",
+  );
+} else {
+  console.log(
+    "[refresh:live] Skipping post-live CSV merge + market-benchmarks (fetch:dg already wrote benchmarks).\n",
+  );
 }
-
-run(
-  "refresh-pga-tour-market-benchmarks.mjs",
-  "PGA Tour 2025–2026 market benchmarks → projections.json (Market rating)",
-);
 
 if (!envTruthy("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL", false)) {
   run(
     "export-round-projection-vs-actual-csv.mjs",
     "Round projection vs actual CSV (round_projection_vs_actual.csv)",
+    liveFastEnv,
   );
   run(
     "promote-round-projection-vs-actual-csv.mjs",

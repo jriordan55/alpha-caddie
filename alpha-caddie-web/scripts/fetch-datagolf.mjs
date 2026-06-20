@@ -2770,13 +2770,18 @@ async function main() {
     );
   }
 
-  const outrightBake = applyOutrightSimProbsBake(payload);
-  if (outrightBake) {
-    console.log(
-      `[fetch-dg] Baked outright sim probs for ${Object.keys(outrightBake.by_dg).length} players (${outrightBake.n_sims} sims).`,
-    );
+  const skipOutrightBake = String(process.env.GOLF_SKIP_OUTRIGHT_BAKE_ON_FETCH_DG || "").trim() === "1";
+  if (skipOutrightBake) {
+    console.log("[fetch-dg] Skipping outright_sim_probs bake (GOLF_SKIP_OUTRIGHT_BAKE_ON_FETCH_DG=1; refresh:live bakes after weather/pin).");
   } else {
-    console.warn("[fetch-dg] outright_sim_probs bake skipped (empty MC field).");
+    const outrightBake = applyOutrightSimProbsBake(payload);
+    if (outrightBake) {
+      console.log(
+        `[fetch-dg] Baked outright sim probs for ${Object.keys(outrightBake.by_dg).length} players (${outrightBake.n_sims} sims).`,
+      );
+    } else {
+      console.warn("[fetch-dg] outright_sim_probs bake skipped (empty MC field).");
+    }
   }
 
   writeFileSync(projectionsOutPath, JSON.stringify(payload, null, 2), "utf8");
