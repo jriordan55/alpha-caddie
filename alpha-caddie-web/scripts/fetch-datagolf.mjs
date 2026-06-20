@@ -80,13 +80,17 @@ import {
   fieldCountingMeansFromEventContext,
   fieldCountingMeansFromWithinEventMap,
   loadEventRoundContextFromHistoricalCsv,
+  loadRecentVenueRoundRowsForProjections,
   loadVenueHistoricalScoring,
   loadWithinEventCountingActualsFromHistoryJson,
   mergeFieldCountingMeansPreferWithin,
+  priorRoundCountingTarget,
   reconcileAllProjectionPlayerRows,
   resolveProjectionCounts,
   resolveProjectionScoreToPar,
+  syncVenueScoringToProjectionBasis,
   updateProjectionBasisFromEventWeek,
+  withinEventCountingBlendWeight,
 } from "./course-round-adjustments.mjs";
 import { holeParsFromLiveHoleStatsPayload } from "./dg-live-hole-pars.mjs";
 import { normCourseNameKey, formatCourseLabelForDisplay } from "./course-name-key.mjs";
@@ -1974,7 +1978,35 @@ async function main() {
   }
   const histCsvPath = join(GOLF_MODEL_ROOT, "data", "historical_rounds_all.csv");
   const histCalibPromise = loadHistoricalCsvCalibration(GOLF_MODEL_ROOT, courseKeyHist);
-  const venueScoringPromise = loadVenueHistoricalScoring(histCsvPath, courseKeyHist, course_used);
+  let venueLiveActuals = {};
+  for (const lipPath of [join(ROOT, "live-in-play.json"), join(GOLF_MODEL_ROOT, "alpha-caddie-web", "live-in-play.json")]) {
+    if (!existsSync(lipPath)) continue;
+    try {
+      const lip = JSON.parse(readFileSync(lipPath, "utf8"));
+      venueLiveActuals = resolveLiveRoundActualsByDg(lip, {
+        roundPar: course_par_18,
+        fairwayHoles: fairwayHolesThisCourse,
+      });
+      break;
+    } catch {
+      /* stale or missing live bundle */
+    }
+  }
+  const recentVenueRows = courseKeyHist
+    ? loadRecentVenueRoundRowsForProjections(ROOT, {
+        courseKey: courseKeyHist,
+        coursePar18: course_par_18,
+        fairwayHoles: fairwayHolesThisCourse,
+        actualsByDg: venueLiveActuals,
+        eventName: event_name,
+      })
+    : [];
+  if (recentVenueRows.length) {
+    console.log(`[fetch-dg] Venue history: merging ${recentVenueRows.length} recent round row(s) at course`);
+  }
+  const venueScoringPromise = loadVenueHistoricalScoring(histCsvPath, courseKeyHist, course_used, {
+    extraRows: recentVenueRows,
+  });
   const pgaBenchMinYear = Math.round(num(process.env.GOLF_PGA_TOUR_BENCHMARK_MIN_YEAR, 2025)) || 2025;
   const pgaBenchMaxYear = Math.round(num(process.env.GOLF_PGA_TOUR_BENCHMARK_MAX_YEAR, 2026)) || 2026;
   const pgaBenchOpts = { minYear: pgaBenchMinYear, maxYear: pgaBenchMaxYear };

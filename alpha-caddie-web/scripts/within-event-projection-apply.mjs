@@ -1,9 +1,6 @@
 /**
  * Re-apply within-event prior-round form (field-average blend) on projections.json
  * after fetch:in-play — fetch:dg runs earlier in push:live and would otherwise bake stale R1 actuals.
- *
- * R2+ rows anchor to the same player's R1 projection (pre-tournament baseline) with a small
- * nudge from yesterday's field-weighted counting actuals — not a full rebuild from μ formulas.
  */
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
@@ -22,10 +19,15 @@ import {
   ensureProjectionCourseBasisComplete,
   fieldCountingMeansFromWithinEventMap,
   loadEventRoundContextFromHistoricalCsv,
+  loadRecentVenueRoundRowsForProjections,
+  loadVenueHistoricalScoring,
   loadWithinEventCountingActualsFromHistoryJson,
-  mergeFieldCountingMeansPreferWithin,
+  populateEventWeekFieldScoreAvgs,
+  priorRoundCountingTarget,
   reconcileAllProjectionPlayerRows,
+  syncVenueScoringToProjectionBasis,
   updateProjectionBasisFromEventWeek,
+  withinEventCountingBlendWeight,
 } from "./course-round-adjustments.mjs";
 import { applyUnifiedProjectionFactors } from "./projection-unified-factors.mjs";
 
@@ -46,31 +48,37 @@ function roundCounts(row, keys) {
   return out;
 }
 
-/** R1 export row: prefer pre-weather snapshot when present (true pre-tournament baseline). */
-function r1ProjectionAnchorRow(anchor) {
-  if (!anchor || typeof anchor !== "object") return anchor;
-  const pre = anchor._pre_weather_counts;
-  if (!pre || typeof pre !== "object") return anchor;
-  const out = { ...anchor };
-  for (const k of ["birdies", "bogeys", "pars", "gir", "fairways", "putts", "eagles", "doubles", "mu_sg", "implied_mu_sg"]) {
+/** Prefer counts before weather bake so unblend is not thrown off by a prior push. */
+function countingRowForUnblend(pl) {
+  const pre = pl._pre_weather_counts;
+  if (!pre || typeof pre !== "object") return pl;
+  const out = { ...pl };
+  for (const k of ["birdies", "bogeys", "pars", "gir", "fairways", "putts", "eagles", "doubles"]) {
     if (Number.isFinite(num(pre[k], NaN))) out[k] = pre[k];
   }
   return out;
 }
 
-function priorStrokeShiftForRound(proj, round) {
-  const pack = proj?.prior_round_course_stroke_shift ?? proj?.meta?.prior_round_course_stroke_shift ?? {};
-  return num(pack[round] ?? pack[String(round)], 0);
-}
-
-function buildR1AnchorMap(players) {
-  /** @type {Map<number, object>} */
-  const out = new Map();
-  for (const pl of players || []) {
-    if (!pl || typeof pl !== "object") continue;
-    if (Math.round(num(pl.round, NaN)) !== 1) continue;
-    const dg = Math.round(num(pl.dg_id, NaN));
-    if (Number.isFinite(dg)) out.set(dg, pl);
+/** Undo prior within-event counting blend so we can re-apply with fresh field means / R1 actuals. */
+function unblendWithinEventCounts(current, priorByStat, fieldMeans, targetRound, playerRow, statKeys) {
+  const tr = Math.round(num(targetRound, NaN));
+  const wBird = withinEventCountingBlendWeight(
+    Math.max(priorByStat.birdies?.length || 0, priorByStat.bogeys?.length || 0),
+    playerRow,
+  );
+  const wBog = wBird;
+  const out = { ...current };
+  for (const k of statKeys) {
+    const cur = num(current[k], NaN);
+    if (!Number.isFinite(cur)) continue;
+    const arr = priorByStat[k];
+    if (!Array.isArray(arr) || !arr.length) continue;
+    const oldT = priorRoundCountingTarget(k, arr, fieldMeans, tr);
+    if (!Number.isFinite(oldT)) continue;
+    let w = k === "bogeys" ? wBog : wBird;
+    if (k === "gir" || k === "fairways" || k === "putts") w = Math.min(0.55, wBird * 0.65);
+    if (w <= 0 || w >= 1) continue;
+    out[k] = (cur - w * oldT) / (1 - w);
   }
   return out;
 }
@@ -117,8 +125,6 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
   const fairwayHoles = Math.round(num(basis.fairway_holes_modeled, 14)) || 14;
   const eventName = String(proj.event_name || "").trim();
   const courseKey = normCourseNameKey(String(proj.course_used || "").trim());
-  const venueScoring = venueScoringStubFromMeta(basis, coursePar18);
-  const r1ByDg = buildR1AnchorMap(proj.players);
 
   const liveOnly =
     String(process.env.GOLF_WITHIN_EVENT_LIVE_ONLY ?? "1").trim() !== "0";
@@ -129,11 +135,38 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
   const historyJsonPath = join(WEB_ROOT, "player_round_history.json");
 
   const actualsByDg = resolveLiveRoundActualsByDg(live, { roundPar: coursePar18, fairwayHoles });
+  const recentVenueRows = loadRecentVenueRoundRowsForProjections(WEB_ROOT, {
+    courseKey,
+    coursePar18,
+    fairwayHoles,
+    actualsByDg,
+    eventName,
+  });
+  let venueScoring = await loadVenueHistoricalScoring(roundsCsv, courseKey, proj.course_used, {
+    extraRows: recentVenueRows,
+  });
+  if (!venueScoring?.nVenueRounds) {
+    venueScoring = { ...venueScoringStubFromMeta(basis, coursePar18), ...(venueScoring || {}) };
+  }
+  if (!meta.projection_course_basis) meta.projection_course_basis = {};
+  syncVenueScoringToProjectionBasis(meta.projection_course_basis, venueScoring, coursePar18);
+  populateEventWeekFieldScoreAvgs(meta.projection_course_basis, live, coursePar18);
+  if (venueScoring?.fieldByRound instanceof Map) {
+    const fieldAvg = {};
+    for (const [rnd, agg] of venueScoring.fieldByRound) {
+      if (agg?.n >= 25 && Number.isFinite(agg.avgScore)) {
+        fieldAvg[String(rnd)] = Math.round(agg.avgScore * 100) / 100;
+      }
+    }
+    if (Object.keys(fieldAvg).length) meta.projection_course_basis.field_avg_score_by_round = fieldAvg;
+  }
+  proj.projection_course_basis = meta.projection_course_basis;
+
   let withinEventCountingMap = buildWithinEventCountingMapFromLiveActuals(
     actualsByDg,
     coursePar18,
-    basis.venue_avg_birdies,
-    basis.venue_avg_bogeys,
+    meta.projection_course_basis.venue_avg_birdies,
+    meta.projection_course_basis.venue_avg_bogeys,
   );
   if (!liveOnly && eventName && existsSync(historyJsonPath)) {
     const fromHistory = loadWithinEventCountingActualsFromHistoryJson(
@@ -142,8 +175,8 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
       courseKey,
       new Date().getFullYear(),
       coursePar18,
-      basis.venue_avg_birdies,
-      basis.venue_avg_bogeys,
+      meta.projection_course_basis.venue_avg_birdies,
+      meta.projection_course_basis.venue_avg_bogeys,
     );
     if (fromHistory.size > withinEventCountingMap.size) withinEventCountingMap = fromHistory;
   }
@@ -158,6 +191,7 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
   const dkFieldFilter = useDkField ? dkField : null;
   const fieldMeanOpts = useDkField ? { minPlayers: dkMinPlayers, dgFilter: dkField } : { minPlayers: 28 };
 
+  const oldFieldMeans = meta.projection_course_basis.field_counting_means_by_round || null;
   const basePlayers = [
     ...new Map(
       proj.players
@@ -194,33 +228,40 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
     if (!Number.isFinite(r) || r < 2) continue;
 
     const dg = Math.round(num(pl.dg_id, NaN));
-    const r1Raw = r1ByDg.get(dg);
-    if (!r1Raw) continue;
-
     const priorByStat = buildPriorByStatForPlayer(withinEventCountingMap, pl.dg_id, r);
     if (!priorByStat) continue;
 
-    const r1 = r1ProjectionAnchorRow(r1Raw);
-    const strokeShift = priorStrokeShiftForRound(proj, r);
-    const formShift = num(withinFormMap.get(`${dg}|${r}`), 0);
-    const mu1 = num(r1.mu_sg, NaN);
-    if (Number.isFinite(mu1)) {
-      const muNext = Math.round((mu1 - strokeShift + formShift) * 1000) / 1000;
-      pl.mu_sg = muNext;
-      if ("implied_mu_sg" in pl) {
-        pl.implied_mu_sg = Math.round((num(r1.implied_mu_sg, mu1) - strokeShift + formShift) * 1000) / 1000;
+    const oldForm = num(pl.within_event_form_shift, 0);
+    const newForm = num(withinFormMap.get(`${dg}|${r}`), 0);
+    const formDelta = newForm - oldForm;
+    if (Math.abs(formDelta) > 1e-9) {
+      const mu0 = num(pl.mu_sg, NaN);
+      if (Number.isFinite(mu0)) {
+        const mu1 = Math.round((mu0 + formDelta) * 1000) / 1000;
+        pl.mu_sg = mu1;
+        if ("implied_mu_sg" in pl && Number.isFinite(num(pl.implied_mu_sg, NaN))) {
+          pl.implied_mu_sg = Math.round((num(pl.implied_mu_sg, 0) + formDelta) * 1000) / 1000;
+        }
+        const stp = -mu1;
+        pl.score_to_par = Math.round(stp * 100) / 100;
+        pl.total_score = Math.round((coursePar18 + stp) * 100) / 100;
+        pl.within_event_form_shift = Math.round(newForm * 1000) / 1000;
       }
-      const stp = -muNext;
-      pl.score_to_par = Math.round(stp * 100) / 100;
-      pl.total_score = Math.round((coursePar18 + stp) * 100) / 100;
-      pl.within_event_form_shift = Math.round(formShift * 1000) / 1000;
-      if (strokeShift !== 0) pl.prior_round_course_stroke_shift = Math.round(strokeShift * 1000) / 1000;
     }
 
-    const skillBase = roundCounts(r1, countKeys);
-    const blended = blendTowardWithinEventActuals({ ...skillBase }, priorByStat, r, {
-      playerRow: r1,
-      skillCounts: skillBase,
+    const current = roundCounts(countingRowForUnblend(pl), countKeys);
+    const skillBeforeBlend = unblendWithinEventCounts(
+      current,
+      priorByStat,
+      oldFieldMeans,
+      r,
+      pl,
+      ["birdies", "bogeys", "gir", "fairways", "putts"],
+    );
+
+    const blended = blendTowardWithinEventActuals(skillBeforeBlend, priorByStat, r, {
+      playerRow: pl,
+      skillCounts: skillBeforeBlend,
       fieldMeans: fieldCountingMeans,
     });
 
@@ -228,29 +269,28 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
       applyFieldDayCountingLiftNatural(blended, r, fieldCountingMeans, venueScoring);
     }
 
-    pl.eagles = Math.round(num(blended.eagles, r1.eagles) * 1000) / 1000;
-    pl.birdies = Math.round(num(blended.birdies, r1.birdies) * 100) / 100;
-    pl.pars = Math.round(num(blended.pars, r1.pars) * 100) / 100;
-    pl.bogeys = Math.round(num(blended.bogeys, r1.bogeys) * 100) / 100;
-    pl.doubles = Math.round(num(blended.doubles, r1.doubles) * 1000) / 1000;
+    pl.eagles = Math.round(num(blended.eagles, pl.eagles) * 1000) / 1000;
+    pl.birdies = Math.round(num(blended.birdies, pl.birdies) * 100) / 100;
+    pl.pars = Math.round(num(blended.pars, pl.pars) * 100) / 100;
+    pl.bogeys = Math.round(num(blended.bogeys, pl.bogeys) * 100) / 100;
+    pl.doubles = Math.round(num(blended.doubles, pl.doubles) * 1000) / 1000;
     if (Number.isFinite(num(blended.gir, NaN))) pl.gir = Math.round(blended.gir * 100) / 100;
     if (Number.isFinite(num(blended.fairways, NaN))) pl.fairways = Math.round(blended.fairways * 100) / 100;
     if (Number.isFinite(num(blended.putts, NaN))) pl.putts = Math.round(blended.putts * 100) / 100;
     playersTouched++;
   }
 
-  if (!meta.projection_course_basis) meta.projection_course_basis = {};
   meta.projection_course_basis.field_counting_means_by_round = fieldCountingMeans || null;
   updateProjectionBasisFromEventWeek(meta.projection_course_basis, fieldCountingMeans, { payload: proj });
   ensureProjectionCourseBasisComplete(meta.projection_course_basis, proj);
   proj.projection_course_basis = meta.projection_course_basis;
   if (!meta.projection_round_adjustments) meta.projection_round_adjustments = {};
   meta.projection_round_adjustments.within_event_counting_from_actuals = true;
-  meta.projection_round_adjustments.within_event_r1_anchor = true;
   meta.projection_round_adjustments.within_event_field_scope = useDkField ? "draftkings" : "full";
   if (useDkField) meta.projection_round_adjustments.within_event_dk_field_size = dkField.size;
   meta.projection_round_adjustments.within_event_form_carry = formK;
   meta.projection_round_adjustments.within_event_form_cap = formCap;
+  delete meta.projection_round_adjustments.within_event_r1_anchor;
   proj.meta = meta;
 
   reconcileAllProjectionPlayerRows(proj, {
@@ -299,7 +339,7 @@ async function main() {
   const fm = fieldMeans?.bogeys?.[1];
   const scope = proj.meta?.projection_round_adjustments?.within_event_field_scope || "full";
   console.log(
-    `[within-event-form] R1-anchored prior-round form on ${playersTouched} row(s)` +
+    `[within-event-form] Re-applied field-average prior-round form on ${playersTouched} row(s)` +
       (scope === "draftkings" ? " (DraftKings field)" : "") +
       (Number.isFinite(fm) ? ` | field R1 bogeys≈${fm}` : "") +
       ` → ${projPath}`,
