@@ -90,6 +90,16 @@ if (Number.isFinite(avgPars) && avgPars > 12.2) {
     `R${displayRound} field avg pars ${avgPars.toFixed(2)} too high (par-heavy profile) — run reconcile-projection-counts or check inferHoleCountsFromScoreSplit`,
   );
 }
+if (Number.isFinite(avgBirdies) && avgBirdies < 1.75) {
+  fail(
+    `R${displayRound} field avg birdies ${avgBirdies.toFixed(2)} too low — event-week counting profile missing or stale`,
+  );
+}
+if (Number.isFinite(avgBogeys) && avgBogeys > 5.15) {
+  fail(
+    `R${displayRound} field avg bogeys ${avgBogeys.toFixed(2)} too high — event-week counting profile missing or stale`,
+  );
+}
 if (Number.isFinite(avgBogeys) && avgBogeys < 3.2) {
   fail(
     `R${displayRound} field avg bogeys ${avgBogeys.toFixed(2)} too low — counting markets miscalibrated`,
@@ -135,11 +145,21 @@ if (outrightN < 20) {
 
 const avgTotal = avg("total_score");
 const basis = proj.projection_course_basis || proj.meta?.projection_course_basis || {};
-const ewMean = num(basis.event_week_field_avg_score, NaN);
-const minTotal = Number.isFinite(ewMean) ? ewMean - 1.0 : coursePar + 1.5;
+const ewMap = basis.event_week_field_avg_score_by_round || {};
+const ewVals = Object.values(ewMap).map((v) => num(v, NaN)).filter(Number.isFinite);
+const ewMean = ewVals.length ? ewVals.reduce((a, b) => a + b, 0) / ewVals.length : NaN;
+const drEw = num(ewMap[String(displayRound)], NaN);
+const scoreTarget = Number.isFinite(drEw) ? drEw : ewMean;
+const minTotal = Number.isFinite(scoreTarget) ? scoreTarget - 1.0 : coursePar + 1.5;
+const maxTotal = Number.isFinite(scoreTarget) ? scoreTarget + 0.55 : coursePar + 5.5;
 if (Number.isFinite(avgTotal) && avgTotal < minTotal) {
   fail(
     `R${displayRound} field avg total ${avgTotal.toFixed(2)} too low (min ${minTotal.toFixed(2)}) — upcoming-round venue calibration missing or stale`,
+  );
+}
+if (Number.isFinite(avgTotal) && avgTotal > maxTotal) {
+  fail(
+    `R${displayRound} field avg total ${avgTotal.toFixed(2)} too high (max ${maxTotal.toFixed(2)}) — venue target overshot historical bump`,
   );
 }
 

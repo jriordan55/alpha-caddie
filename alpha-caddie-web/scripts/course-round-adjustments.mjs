@@ -600,14 +600,29 @@ export function reconcileProjectionRowCountsToScore(row, opts = {}) {
   const vBog = num(opts.venueAvgBogeys, 2.1);
   const tr = Math.round(num(row.round, NaN));
   const fm = opts.fieldCountingMeans;
-  const eventBird = num(fm?.birdies?.[String(tr)] ?? fm?.birdies?.[tr], NaN);
-  const eventBog = num(fm?.bogeys?.[String(tr)] ?? fm?.bogeys?.[tr], NaN);
-  const anchorBird = Number.isFinite(eventBird) ? 0.35 * eventBird + 0.65 * vBird : vBird;
-  const anchorBog = Number.isFinite(eventBog) ? 0.35 * eventBog + 0.65 * vBog : vBog;
+  const ewScores = opts.eventWeekFieldScoreByRound;
+  const { bird: eventBird, bog: eventBog, fieldScore: eventFieldScore } = eventWeekCountingAnchorsForRound(
+    tr,
+    fm,
+    ewScores,
+  );
+  const eventFieldStp = Number.isFinite(eventFieldScore) ? eventFieldScore - par18 : NaN;
+  const anchorBird = Number.isFinite(eventBird) ? 0.85 * eventBird + 0.15 * vBird : vBird;
+  const anchorBog = Number.isFinite(eventBog) ? 0.85 * eventBog + 0.15 * vBog : vBog;
   let b;
   let bg;
   let p;
-  if (opts.scoreDeriveCounts !== false) {
+  if (
+    Number.isFinite(eventBird) &&
+    Number.isFinite(eventBog) &&
+    Number.isFinite(eventFieldStp) &&
+    opts.scoreDeriveCounts !== false
+  ) {
+    const derived = deriveHoleCountsFromEventWeekProfile(stp, eventFieldStp, eventBird, eventBog);
+    b = derived.birdies;
+    bg = derived.bogeys;
+    p = derived.pars;
+  } else if (opts.scoreDeriveCounts !== false) {
     const split = inferHoleCountsFromScoreSplit(stp, anchorBird, anchorBog);
     b = split.birdies;
     bg = split.bogeys;
@@ -694,6 +709,7 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
     venueAvgFairways: num(basis.venue_avg_fairways, 9),
     venueAvgPars: num(basis.venue_avg_pars, 11.2),
     fieldCountingMeans: basis.field_counting_means_by_round || null,
+    eventWeekFieldScoreByRound: basis.event_week_field_avg_score_by_round || null,
     nFairwayHoles: Math.round(num(basis.fairway_holes_modeled, 14)) || 14,
     fwStpLine: histCalib?.fw_stp_line,
     alignStrength: 0.28,
@@ -1807,17 +1823,7 @@ function venueCalibrationTargetForRound(basis, rnd, coursePar18) {
     if (completed.length) {
       const ewMean =
         Math.round((completed.reduce((s, x) => s + x.avg, 0) / completed.length) * 100) / 100;
-      if (Number.isFinite(histRnd)) {
-        const histForCompleted = completed
-          .map((c) => historicalVenueScoreByRound(basis, c.rnd))
-          .filter(Number.isFinite);
-        const histMean = histForCompleted.length
-          ? histForCompleted.reduce((a, b) => a + b, 0) / histForCompleted.length
-          : num(basis?.venue_avg_round_score, NaN);
-        if (Number.isFinite(histMean)) {
-          return Math.round((ewMean + (histRnd - histMean)) * 100) / 100;
-        }
-      }
+      // Upcoming round: anchor to how this event is scoring (not historical venue R3/R4 +3 shifts).
       return ewMean;
     }
   }
@@ -1862,6 +1868,10 @@ export function calibrateProjectionTotalScoreToVenue(payload, opts = {}) {
     shifts[rnd] = delta;
     rounds++;
     for (const pl of rows) shiftProjectionRowScore(pl, delta, coursePar18);
+  }
+
+  if (rounds > 0) {
+    reconcileAllProjectionPlayerRows(payload, { skipFieldCalibrate: true, minField: opts.minField });
   }
 
   const adjHost = payload?.meta && typeof payload.meta === "object" ? payload.meta : payload;
@@ -2086,6 +2096,44 @@ export function liveCountingUntrustworthy(counts, coursePar18) {
   if (Number.isFinite(bird) && bird <= 0.01 && stp < -0.5) return true;
   const hat = -(bird || 0) - 2 * e + (bog || 0) + 2 * d;
   return Math.abs(hat - stp) > 1.25;
+}
+
+/** Resolve event-week bird/bog anchors (+ field gross) for a round; fall back to latest completed round. */
+function eventWeekCountingAnchorsForRound(tr, fm, ewScoresByRound) {
+  const key = String(tr);
+  let bird = num(fm?.birdies?.[key] ?? fm?.birdies?.[tr], NaN);
+  let bog = num(fm?.bogeys?.[key] ?? fm?.bogeys?.[tr], NaN);
+  let fieldScore = num(ewScoresByRound?.[key] ?? ewScoresByRound?.[tr], NaN);
+  if (Number.isFinite(bird) && Number.isFinite(bog)) {
+    return { bird, bog, fieldScore };
+  }
+  for (let r = tr - 1; r >= 1; r--) {
+    const rk = String(r);
+    bird = num(fm?.birdies?.[rk] ?? fm?.birdies?.[r], NaN);
+    bog = num(fm?.bogeys?.[rk] ?? fm?.bogeys?.[r], NaN);
+    fieldScore = num(ewScoresByRound?.[rk] ?? ewScoresByRound?.[r], NaN);
+    if (Number.isFinite(bird) && Number.isFinite(bog)) {
+      return { bird, bog, fieldScore };
+    }
+  }
+  return { bird: NaN, bog: NaN, fieldScore: NaN };
+}
+
+/** Bird/bog split from event-week field profile; extra score vs field shifts bird↓ bog↑. */
+export function deriveHoleCountsFromEventWeekProfile(stp, fieldStp, eventBird, eventBog) {
+  const d = num(stp, 0) - num(fieldStp, 0);
+  let bird = num(eventBird, 2.2) - d * 0.42;
+  let bog = num(eventBog, 3.4) + d * 0.48;
+  bird = clamp(bird, 0.15, 7);
+  bog = clamp(bog, 0.15, 8.5);
+  let pars = Math.max(0.12, 18 - bird - bog);
+  return {
+    birdies: Math.round(bird * 100) / 100,
+    bogeys: Math.round(bog * 100) / 100,
+    pars: Math.round(pars * 100) / 100,
+    eagles: 0,
+    doubles: 0,
+  };
 }
 
 /** Score-only bird/bog split when live hole counts are missing or inconsistent. */
