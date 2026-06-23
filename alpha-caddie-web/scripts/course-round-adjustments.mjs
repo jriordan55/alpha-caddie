@@ -734,8 +734,42 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
     dkFieldOnly: opts.dkFieldOnly === true,
     skipCalibrate: opts.skipFieldCalibrate,
   });
+  let venueScoreCal = { rounds: 0, shifts: {} };
+  if (opts.skipVenueScoreCalibrate !== true) {
+    venueScoreCal = calibrateProjectionTotalScoreToVenue(payload, {
+      dgFilter: opts.dgFilter,
+      minField: opts.minField,
+      dkFieldOnly: opts.dkFieldOnly === true,
+      venueScoring: opts.venueScoring || null,
+      minPlayerRounds: opts.minPlayerRounds,
+    });
+    if (venueScoreCal.rounds > 0) {
+      reconcileAllProjectionPlayerRows(payload, {
+        ...opts,
+        skipFieldCalibrate: true,
+        skipVenueScoreCalibrate: true,
+        skipHistVenueScoreCalibrate: true,
+      });
+    }
+  }
+  let histVenueCal = { rounds: 0, shifts: {} };
+  if (opts.skipHistVenueScoreCalibrate !== true && opts.venueScoring) {
+    histVenueCal = calibrateProjectionScoresToHistoricalVenue(payload, opts.venueScoring, {
+      dgFilter: opts.dgFilter,
+      minField: opts.minField,
+      useDkFieldFilter: opts.dkFieldOnly === true,
+    });
+    if (histVenueCal.rounds > 0) {
+      reconcileAllProjectionPlayerRows(payload, {
+        ...opts,
+        skipFieldCalibrate: true,
+        skipVenueScoreCalibrate: true,
+        skipHistVenueScoreCalibrate: true,
+      });
+    }
+  }
   syncPreWeatherCountSnapshots(payload?.players);
-  return { reconciled: n, calibrated: cal };
+  return { reconciled: n, calibrated: cal, venueScoreCalibrated: venueScoreCal, histVenueCalibrated: histVenueCal };
 }
 
 function syncPreWeatherCountSnapshots(players) {
@@ -902,7 +936,7 @@ export function recalcProjectionScoresForCoursePar(payload, newPar18, oldPar18Op
  * After weather / unified factors, nudge field-average score-to-par toward shrunk historical venue targets.
  */
 export function calibrateProjectionScoresToHistoricalVenue(payload, venueScoring, opts = {}) {
-  if (String(process.env.GOLF_HIST_VENUE_SCORE_CALIB ?? "0").trim() === "0") {
+  if (String(process.env.GOLF_HIST_VENUE_SCORE_CALIB ?? "1").trim() === "0") {
     return { rounds: 0, shifts: {} };
   }
   const players = Array.isArray(payload?.players) ? payload.players : [];
@@ -1245,13 +1279,13 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
 
 /** Venue-history weight in player/skill blends (books lean skill for elite players). */
 const VENUE_PLAYER_BLEND_MIN_ROUNDS = 3;
-const VENUE_PLAYER_BLEND_VENUE_MAX = 0.55;
-const VENUE_PLAYER_BLEND_VENUE_BASE = 0.2;
-const VENUE_PLAYER_BLEND_VENUE_PER_ROUND = 0.03;
-const VENUE_PLAYER_BLEND_VENUE_FLOOR = 0.05;
-const VENUE_PLAYER_BLEND_SKILL_PULL_BASE = 0.1;
-const VENUE_PLAYER_BLEND_SKILL_PULL_MU = 0.26;
-const VENUE_PLAYER_BLEND_SKILL_PULL_CAP = 0.52;
+const VENUE_PLAYER_BLEND_VENUE_MAX = 0.62;
+const VENUE_PLAYER_BLEND_VENUE_BASE = 0.24;
+const VENUE_PLAYER_BLEND_VENUE_PER_ROUND = 0.035;
+const VENUE_PLAYER_BLEND_VENUE_FLOOR = 0.08;
+const VENUE_PLAYER_BLEND_SKILL_PULL_BASE = 0.08;
+const VENUE_PLAYER_BLEND_SKILL_PULL_MU = 0.22;
+const VENUE_PLAYER_BLEND_SKILL_PULL_CAP = 0.45;
 const VENUE_FIELD_NO_PLAYER_WEIGHT = 0.32;
 const VENUE_COUNT_ALIGN_TO_STP = 0.48;
 
@@ -2625,9 +2659,15 @@ export function applyVenueCourseFitToMu(mu_sg, dg_id, venueScoring, fieldMeanSg)
   const m = num(fieldMeanSg, NaN);
   if (!cf || cf.n < 5 || !Number.isFinite(m)) return mu_sg;
   const raw = cf.avgSg - m;
-  const shrink = cf.n / (cf.n + 12);
-  const w = cf.n >= 15 ? 0.35 : cf.n >= 5 ? 0.25 : 0;
+  const shrink = cf.n / (cf.n + 10);
+  const w = cf.n >= 15 ? 0.42 : cf.n >= 8 ? 0.32 : cf.n >= 5 ? 0.22 : 0;
   return clamp(mu_sg + w * shrink * raw, -4, 4);
+}
+
+/** μ used when re-resolving score_to_par from venue history + skill (row may include round/form shifts). */
+export function projectionMuForScoreResolution(row) {
+  if (!row || typeof row !== "object") return NaN;
+  return num(row.implied_mu_sg ?? row.mu_sg, NaN);
 }
 
 /** Player venue target: full-course history + optional R1–R4 bucket blend. */
@@ -2682,17 +2722,18 @@ export function resolveProjectionScoreToPar({
   if (hasPlayerHist) {
     const playerStp = playerAgg.avgScore - cp;
     const nEff = Math.max(playerAgg.n || 0, pr?.n || 0, pv?.n || 0);
-    if (nEff >= 6) {
-      return {
-        stp: Math.round(playerStp * 1000) / 1000,
-        source: pr && pr.n >= 2 ? "player_venue_round_hist" : "player_venue_hist",
-      };
-    }
-    const wPlayer = Math.min(0.92, 0.72 + 0.05 * Math.max(0, nEff - minPlayerRounds));
+    const wPlayer = Math.min(0.84, 0.48 + 0.05 * Math.max(0, nEff - minPlayerRounds));
     const stp = wPlayer * playerStp + (1 - wPlayer) * skillRes.stp;
     return {
       stp: Math.round(stp * 1000) / 1000,
-      source: pr && pr.n >= 2 ? "player_venue_round_hist" : "player_venue_skill_blend",
+      source:
+        wPlayer >= 0.72
+          ? pr && pr.n >= 2
+            ? "player_venue_round_hist"
+            : "player_venue_hist"
+          : pr && pr.n >= 2
+            ? "player_venue_round_skill_blend"
+            : "player_venue_skill_blend",
     };
   }
 
@@ -2744,7 +2785,7 @@ export async function reapplyProjectionTotalScoresFromVenueHistory(payload, opts
     const scoreRes = resolveProjectionScoreToPar({
       dg_id: dg,
       round: rnd,
-      muForRound: num(pl.mu_sg, NaN),
+      muForRound: projectionMuForScoreResolution(pl),
       course_par_18: coursePar18,
       venueScoring,
       pretRoundScore: pretByDg.get(dg),
@@ -2759,6 +2800,8 @@ export async function reapplyProjectionTotalScoresFromVenueHistory(payload, opts
   reconcileAllProjectionPlayerRows(payload, {
     skipFieldCalibrate: opts.skipFieldCalibrate === true,
     minField: opts.minField,
+    venueScoring,
+    skipVenueScoreCalibrate: true,
   });
   return { touched, venueScoring };
 }

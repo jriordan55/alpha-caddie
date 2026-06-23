@@ -11,10 +11,12 @@ import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import {
+  calibrateProjectionScoresToHistoricalVenue,
   calibrateProjectionTotalScoreToVenue,
   ensureProjectionCourseBasisComplete,
   populateEventWeekFieldScoreAvgs,
   reapplyProjectionTotalScoresFromVenueHistory,
+  reconcileAllProjectionPlayerRows,
   sanitizeEventWeekProjectionBasis,
 } from "./course-round-adjustments.mjs";
 
@@ -65,6 +67,13 @@ const cal = calibrateProjectionTotalScoreToVenue(proj, {
   minField: 8,
   venueScoring,
 });
+const histCal = calibrateProjectionScoresToHistoricalVenue(proj, venueScoring, { minField: 8 });
+reconcileAllProjectionPlayerRows(proj, {
+  minField: 8,
+  venueScoring,
+  skipVenueScoreCalibrate: true,
+  skipHistVenueScoreCalibrate: true,
+});
 const after = proj.projection_course_basis.venue_avg_round_score;
 
 if (!Number.isFinite(Number(after))) {
@@ -75,10 +84,13 @@ if (!Number.isFinite(Number(after))) {
 proj.updated_at = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
 writeFileSync(path, `${JSON.stringify(proj, null, 2)}\n`);
 console.log(
-  `[repair-projection-course-basis] OK venue_avg_round_score ${before ?? "—"} (target); calibrated ${cal.rounds} round(s) for non-venue-history players`,
+  `[repair-projection-course-basis] OK venue_avg_round_score ${before ?? "—"} (target); calibrated ${cal.rounds} round(s) for non-venue-history players; field venue anchor ${histCal.rounds} round(s)`,
 );
-if (cal.rounds) {
-  for (const [rnd, shift] of Object.entries(cal.shifts)) {
+if (cal.rounds || histCal.rounds) {
+  for (const [rnd, shift] of Object.entries(histCal.shifts || {})) {
+    console.log(`  R${rnd}: field venue anchor shift ${shift >= 0 ? "+" : ""}${shift} (all players)`);
+  }
+  for (const [rnd, shift] of Object.entries(cal.shifts || {})) {
     console.log(`  R${rnd}: total_score shift ${shift >= 0 ? "+" : ""}${shift} (no-history cohort only)`);
   }
 }

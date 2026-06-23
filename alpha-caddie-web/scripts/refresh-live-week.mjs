@@ -170,6 +170,11 @@ run(
 );
 
 run(
+  "repair-projection-course-basis.mjs",
+  "Venue player/course history + total-score calibration (before course-fit overlay)",
+);
+
+run(
   "apply-unified-projection-factors.mjs",
   "Unified projection factors (course fit, tee wave, residuals)",
 );
@@ -181,11 +186,6 @@ if (!envTruthy("GOLF_SKIP_PIN_SHEET", false)) {
   );
   run("sync-pin-locations.mjs", "Mirror pin_locations DB → alpha-caddie-web/data (after tee sheet save)");
 }
-
-run(
-  "repair-projection-course-basis.mjs",
-  "Venue player/course history + total-score calibration (after weather/pin)",
-);
 
 if (!envTruthy("GOLF_SKIP_DK_ROUND_AUDIT_CSV", false)) {
   run(

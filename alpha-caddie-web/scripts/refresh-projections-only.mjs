@@ -53,16 +53,15 @@ run(
   "Re-apply field-average prior-round form from live-in-play",
 );
 run("bake-weather-into-projections.mjs", "Tee-time weather for display_round (bake:weather)");
+run(
+  "repair-projection-course-basis.mjs",
+  "Venue player/course history + total-score calibration (before course-fit overlay)",
+);
 run("apply-unified-projection-factors.mjs", "Unified projection factors");
 
 if (String(process.env.GOLF_SKIP_PIN_SHEET || "").trim() !== "1") {
   run("apply-pin-sheet-to-projections.mjs", "Armed pin sheet → projections (Bayesian apply:pin-sheet)");
 }
-
-run(
-  "repair-projection-course-basis.mjs",
-  "Venue total-score calibration (after weather/pin; includes upcoming rounds)",
-);
 
 run(
   "reconcile-projection-counts.mjs",

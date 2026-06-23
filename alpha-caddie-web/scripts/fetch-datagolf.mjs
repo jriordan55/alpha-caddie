@@ -2408,51 +2408,20 @@ async function main() {
       muForRound = clampMuSg(muForRound);
 
       let st;
-      if (r === 1 && strokeShiftPrior === 0 && formShift === 0) {
-        st = {
-          mu_sg: row.mu_sg,
-          implied_mu_sg: row.implied_mu_sg,
-          eagles: row.eagles,
-          birdies: row.birdies,
-          pars: row.pars,
-          bogeys: row.bogeys,
-          doubles: row.doubles,
-          gir: row.gir,
-          fairways: row.fairways,
-          putts: row.putts,
-        };
-      } else if (r === 1) {
-        st = derivedStatsFromMuSg(muForRound, fairwayHolesThisCourse, {
-          sg_ott: row.sg_ott,
-          fieldMeanOtt,
-          sg_app: row.sg_app,
-          fieldMeanApp,
-          nGirHoles: 18,
-          driving_distance: isPlausibleDrivingDistanceYds(row.driving_distance)
-            ? row.driving_distance
-            : NaN,
-          fieldMeanDrive,
-          histCountFit: histCalib,
-          skRow: skillByDg.get(row.dg_id),
-          liveTrad: liveTraditionalByDg.get(row.dg_id) ?? null,
-        });
-      } else {
-        const skRowR = skillByDg.get(row.dg_id);
-        const distR =
-          isPlausibleDrivingDistanceYds(row.driving_distance) ? row.driving_distance : NaN;
-        st = derivedStatsFromMuSg(muForRound, fairwayHolesThisCourse, {
-          sg_ott: row.sg_ott,
-          fieldMeanOtt,
-          sg_app: row.sg_app,
-          fieldMeanApp,
-          nGirHoles: 18,
-          driving_distance: distR,
-          fieldMeanDrive,
-          histCountFit: histCalib,
-          skRow: skRowR,
-          liveTrad: liveTraditionalByDg.get(row.dg_id) ?? null,
-        });
-      }
+      const skRowR = skillByDg.get(row.dg_id);
+      const distR = isPlausibleDrivingDistanceYds(row.driving_distance) ? row.driving_distance : NaN;
+      st = derivedStatsFromMuSg(muForRound, fairwayHolesThisCourse, {
+        sg_ott: row.sg_ott,
+        fieldMeanOtt,
+        sg_app: row.sg_app,
+        fieldMeanApp,
+        nGirHoles: 18,
+        driving_distance: distR,
+        fieldMeanDrive,
+        histCountFit: histCalib,
+        skRow: skRowR,
+        liveTrad: liveTraditionalByDg.get(row.dg_id) ?? null,
+      });
       const pretScore = pretStrokesByDg.get(row.dg_id);
       const scoreRes = resolveProjectionScoreToPar({
         dg_id: row.dg_id,
@@ -2764,7 +2733,18 @@ async function main() {
   );
   const calResult = reconcileAllProjectionPlayerRows(payload, {
     minField: 8,
+    venueScoring,
   });
+  if (calResult?.venueScoreCalibrated?.rounds) {
+    console.log(
+      `[fetch-dg] Venue total-score calibration: ${calResult.venueScoreCalibrated.rounds} round(s) for players without course history`,
+    );
+  }
+  if (calResult?.histVenueCalibrated?.rounds) {
+    console.log(
+      `[fetch-dg] Field venue anchor: ${calResult.histVenueCalibrated.rounds} round(s) toward historical scoring`,
+    );
+  }
   if (calResult?.calibrated?.rounds) {
     const pb = calResult.calibrated.pooled?.birdies;
     console.log(

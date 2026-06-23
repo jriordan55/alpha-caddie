@@ -150,6 +150,10 @@ run(
   "Open-Meteo tee-time weather → projections.json for display_round (bake:weather)",
 );
 run(
+  "repair-projection-course-basis.mjs",
+  "Venue player/course history + total-score calibration (before course-fit overlay)",
+);
+run(
   "apply-unified-projection-factors.mjs",
   "Unified projection factors (course fit, tee wave, bounce-back, Sunday pressure, correlated markets)",
 );
