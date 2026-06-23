@@ -35,6 +35,7 @@
     "refresh:projections": "node scripts/refresh-projections-only.mjs",
     "verify:web-deploy": "node scripts/verify-web-deploy-invariants.mjs",
     "repair:projection-course-basis": "node scripts/repair-projection-course-basis.mjs",
+    "reconcile:projection-counts": "node scripts/reconcile-projection-counts.mjs",
     "refresh:app:live": "node scripts/refresh-live-week.mjs",
     "refresh:app:fasthist": "node scripts/refresh-app-data.mjs --fast-history",
     "refresh:live-dk-round": "node scripts/refresh-live-dk-round.mjs",

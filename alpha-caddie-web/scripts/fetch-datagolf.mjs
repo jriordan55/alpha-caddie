@@ -2543,6 +2543,8 @@ async function main() {
           : {}),
         score_to_par: Math.round(stp * 100) / 100,
         total_score: Math.round(ts * 100) / 100,
+        score_to_par: Math.round(stp * 100) / 100,
+        score_source: scoreRes.source,
         round_sd: RAW_ROUND_SD,
         gir: Math.round(st.gir * 100) / 100,
         fairways: Math.round(st.fairways * 100) / 100,

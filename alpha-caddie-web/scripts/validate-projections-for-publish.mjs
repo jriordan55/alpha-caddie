@@ -13,6 +13,33 @@ const projPath = join(WEB_ROOT, "projections.json");
 
 const DK_CORE_MARKETS = ["Total Score", "Birdies", "Pars", "Bogeys"];
 const DK_MIN_LINES_PER_MARKET = 20;
+/** Match course-round-adjustments event-week vs historical venue guard. */
+const EVENT_WEEK_VENUE_MAX_GAP_STROKES = 2.25;
+
+function historicalVenueScoreForRound(basis, rnd) {
+  const key = String(rnd);
+  return num(
+    basis?.historical_venue_avg_score_by_round?.[key] ??
+      basis?.field_avg_score_by_round?.[key] ??
+      basis?.venue_avg_round_score,
+    NaN,
+  );
+}
+
+/** In-week live scoring anchor when trustworthy; else historical venue round average. */
+function totalScoreTargetForValidation(basis, displayRound, coursePar) {
+  const hist = historicalVenueScoreForRound(basis, displayRound);
+  const ew = num(basis?.event_week_field_avg_score_by_round?.[String(displayRound)], NaN);
+  if (Number.isFinite(ew)) {
+    if (!Number.isFinite(hist) || Math.abs(ew - hist) <= EVENT_WEEK_VENUE_MAX_GAP_STROKES) {
+      return { target: ew, eventWeekTrusted: true };
+    }
+  }
+  if (Number.isFinite(hist)) return { target: hist, eventWeekTrusted: false };
+  const venue = num(basis?.venue_avg_round_score, NaN);
+  if (Number.isFinite(venue)) return { target: venue, eventWeekTrusted: false };
+  return { target: coursePar + 1.0, eventWeekTrusted: false };
+}
 
 function envTruthy(name, defaultVal = false) {
   const raw = process.env[name];
@@ -76,6 +103,10 @@ const displayRound = Math.round(num(proj.display_round ?? proj.datagolf_field_cu
 const roundRows = players.filter((p) => Math.round(num(p.round, NaN)) === displayRound);
 if (!roundRows.length) fail(`no player rows for display round R${displayRound}`);
 
+const basis = proj.projection_course_basis || proj.meta?.projection_course_basis || {};
+const venueBird = num(basis.venue_avg_birdies, 3.2);
+const venueBog = num(basis.venue_avg_bogeys, 2.9);
+
 const missingCounts = roundRows.filter(
   (p) => !Number.isFinite(num(p.birdies, NaN)) || !Number.isFinite(num(p.pars, NaN)),
 );
@@ -97,17 +128,17 @@ if (Number.isFinite(avgPars) && avgPars > 12.2) {
     `R${displayRound} field avg pars ${avgPars.toFixed(2)} too high (par-heavy profile) — run reconcile-projection-counts or check inferHoleCountsFromScoreSplit`,
   );
 }
-if (Number.isFinite(avgBirdies) && avgBirdies < 1.75) {
+if (Number.isFinite(avgBirdies) && avgBirdies < Math.max(1.5, venueBird * 0.45)) {
   fail(
     `R${displayRound} field avg birdies ${avgBirdies.toFixed(2)} too low — event-week counting profile missing or stale`,
   );
 }
-if (Number.isFinite(avgBogeys) && avgBogeys > 5.15) {
+if (Number.isFinite(avgBogeys) && avgBogeys > Math.max(5.15, venueBog + 2.0)) {
   fail(
     `R${displayRound} field avg bogeys ${avgBogeys.toFixed(2)} too high — event-week counting profile missing or stale`,
   );
 }
-if (Number.isFinite(avgBogeys) && avgBogeys < 3.2) {
+if (Number.isFinite(avgBogeys) && avgBogeys < Math.max(2.0, venueBog * 0.55)) {
   fail(
     `R${displayRound} field avg bogeys ${avgBogeys.toFixed(2)} too low — counting markets miscalibrated`,
   );
@@ -164,25 +195,25 @@ if (outrightN < 20) {
 }
 
 const avgTotal = avg("total_score");
-const basis = proj.projection_course_basis || proj.meta?.projection_course_basis || {};
-const ewMap = basis.event_week_field_avg_score_by_round || {};
-const ewVals = Object.values(ewMap).map((v) => num(v, NaN)).filter(Number.isFinite);
-const ewMean = ewVals.length ? ewVals.reduce((a, b) => a + b, 0) / ewVals.length : NaN;
-const drEw = num(ewMap[String(displayRound)], NaN);
-const scoreTarget = Number.isFinite(drEw) ? drEw : ewMean;
-const minTotal = Number.isFinite(scoreTarget) ? scoreTarget - 1.0 : coursePar + 1.5;
-const maxTotal = Number.isFinite(scoreTarget) ? scoreTarget + 0.55 : coursePar + 5.5;
+const { target: scoreTarget, eventWeekTrusted } = totalScoreTargetForValidation(
+  basis,
+  displayRound,
+  coursePar,
+);
+const minTotal = scoreTarget - (eventWeekTrusted ? 1.0 : 1.75);
+const maxTotal = scoreTarget + (eventWeekTrusted ? 0.55 : 2.75);
 if (Number.isFinite(avgTotal) && avgTotal < minTotal) {
   fail(
-    `R${displayRound} field avg total ${avgTotal.toFixed(2)} too low (min ${minTotal.toFixed(2)}) — upcoming-round venue calibration missing or stale`,
+    `R${displayRound} field avg total ${avgTotal.toFixed(2)} too low (min ${minTotal.toFixed(2)}, target ${scoreTarget.toFixed(2)}${eventWeekTrusted ? ", event-week" : ", venue hist"}) — check repair:projection-course-basis`,
   );
 }
 if (Number.isFinite(avgTotal) && avgTotal > maxTotal) {
   fail(
-    `R${displayRound} field avg total ${avgTotal.toFixed(2)} too high (max ${maxTotal.toFixed(2)}) — venue target overshot historical bump`,
+    `R${displayRound} field avg total ${avgTotal.toFixed(2)} too high (max ${maxTotal.toFixed(2)}, target ${scoreTarget.toFixed(2)}${eventWeekTrusted ? ", event-week" : ", venue hist"}) — venue target overshot`,
   );
 }
 
+const targetLabel = eventWeekTrusted ? "event-week" : "venue-hist";
 console.log(
-  `[validate:projections] OK — par ${coursePar} (${parSource}), R${displayRound}: ${roundRows.length} golfers; avg total ${Number.isFinite(avgTotal) ? avgTotal.toFixed(2) : "?"}; avg bird/pars/bog ${avgBirdies.toFixed(2)}/${avgPars.toFixed(2)}/${avgBogeys.toFixed(2)}; outright MC baked: ${outrightN} players; DK lines: ${DK_CORE_MARKETS.map((m) => `${m}=${props.filter((r) => r.source === "draftkings" && r.market === m).length}`).join(", ")}`,
+  `[validate:projections] OK — par ${coursePar} (${parSource}), R${displayRound}: ${roundRows.length} golfers; avg total ${Number.isFinite(avgTotal) ? avgTotal.toFixed(2) : "?"} (target ${scoreTarget.toFixed(2)} ${targetLabel}); avg bird/pars/bog ${avgBirdies.toFixed(2)}/${avgPars.toFixed(2)}/${avgBogeys.toFixed(2)}; outright MC baked: ${outrightN} players; DK lines: ${DK_CORE_MARKETS.map((m) => `${m}=${props.filter((r) => r.source === "draftkings" && r.market === m).length}`).join(", ")}`,
 );

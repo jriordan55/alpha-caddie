@@ -618,7 +618,10 @@ export async function buildFullModelMuMapForEvent({
       round: targetRound,
       mu_sg: Math.round(st.mu_sg * 1000) / 1000,
       total_score: Math.round(ts * 100) / 100,
+      score_to_par: Math.round(stp * 100) / 100,
+      score_source: scoreRes.source,
       round_sd: RAW_ROUND_SD,
+      eagles: Math.round(st.eagles * 1000) / 1000,
       birdies: Math.round(st.birdies * 100) / 100,
       pars: Math.round(st.pars * 100) / 100,
       bogeys: Math.round(st.bogeys * 100) / 100,
@@ -655,11 +658,18 @@ export async function buildFullModelMuMapForEvent({
 
   /** @type {Map<number, Map<string, number>>} dg -> market -> mu */
   const byDg = new Map();
+  const ALL_MARKETS = ["Total score", "Birdies", "Pars", "Bogeys", "GIR", "Fairways hit"];
   for (const pl of players) {
     const dg = Math.round(num(pl.dg_id, NaN));
     if (!Number.isFinite(dg)) continue;
     const mus = new Map();
-    for (const market of ["Birdies", "Total score"]) {
+    mus.set("Total score", pl.total_score);
+    mus.set("Birdies", num(pl.birdies, NaN) + num(pl.eagles, 0));
+    mus.set("Pars", pl.pars);
+    mus.set("Bogeys", pl.bogeys);
+    mus.set("GIR", pl.gir);
+    mus.set("Fairways hit", pl.fairways);
+    for (const market of ALL_MARKETS) {
       const mu = ouProjectedMeanForMode(market, pl, meta, "default", "default", ctx);
       if (Number.isFinite(mu)) mus.set(market, mu);
     }

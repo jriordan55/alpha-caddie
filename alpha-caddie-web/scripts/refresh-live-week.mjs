@@ -14,7 +14,8 @@
  *
  * Other env: DATAGOLF_API_KEY, GOLF_SKIP_PIN_SHEET=1, GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL=1,
  *   GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL_XLSX=1 (default on live refresh), GOLF_REFRESH_LIVE_SKIP_FINISH_TOOL=1 (default),
- *   GOLF_REFRESH_LIVE_SKIP_DG=1, GOLF_REFRESH_LIVE_SKIP_PGATOUR=1
+ *   GOLF_REFRESH_LIVE_SKIP_DG=1, GOLF_REFRESH_LIVE_SKIP_PGATOUR=1,
+ *   GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI=1, GOLF_SKIP_DK_ROUND_AUDIT_CSV=1
  */
 import { spawnSync } from "child_process";
 import { copyFileSync, existsSync, mkdirSync } from "fs";
@@ -95,6 +96,7 @@ const liveFastEnv = {
   GOLF_SKIP_OUTRIGHT_BAKE_ON_FETCH_DG: "1",
   GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL_XLSX: "1",
   GOLF_SKIP_SPORTSBOOK_OUTRIGHT_SCRAPE: "1",
+  GOLF_DEFER_DK_ROUND_AUDIT_UNTIL_REPAIR: "1",
 };
 let recentYears = String(process.env.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "2").trim();
 const fh = fullRebuild ? {} : fastHistoryBuildEnv({ defaultLiveFast: true });
@@ -182,8 +184,15 @@ if (!envTruthy("GOLF_SKIP_PIN_SHEET", false)) {
 
 run(
   "repair-projection-course-basis.mjs",
-  "Venue total-score calibration on full field (after weather/pin; includes upcoming rounds)",
+  "Venue player/course history + total-score calibration (after weather/pin)",
 );
+
+if (!envTruthy("GOLF_SKIP_DK_ROUND_AUDIT_CSV", false)) {
+  run(
+    "export-dk-round-model-audit-csv.mjs",
+    "DK round audit CSV with post-repair model lines (model_total_score, birdies, …)",
+  );
+}
 
 run(
   "bake-outright-sim-probs.mjs",
@@ -216,12 +225,22 @@ if (!skipPostCsvMerge) {
 if (!envTruthy("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL", false)) {
   run(
     "export-round-projection-vs-actual-csv.mjs",
-    "Round projection vs actual CSV (round_projection_vs_actual.csv)",
-    liveFastEnv,
+    "Round projection vs actual CSV (walkforward backtest + current week)",
+    {
+      ...liveFastEnv,
+      GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS: "1",
+    },
   );
   run(
     "promote-round-projection-vs-actual-csv.mjs",
     "Publish round_projection_vs_actual.csv (promote .new if Excel had file open)",
+  );
+}
+
+if (!envTruthy("GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI", false)) {
+  run(
+    "backtest-odds-model-roi.mjs",
+    "Odds.csv model ROI backtest (walkforward venue-history projections)",
   );
 }
 

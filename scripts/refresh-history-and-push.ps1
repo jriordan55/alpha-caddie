@@ -216,6 +216,7 @@ if ($LiveWeekOnly) {
   Run-Npm "Refreshing current-event PGA rounds from pgatouR ..." run refresh:pgatour-event
   Remove-Item Env:\GOLF_SKIP_DK_OU -ErrorAction SilentlyContinue
   Remove-Item Env:\PERFECT_SKIP_FETCH_DK_OU -ErrorAction SilentlyContinue
+  $env:GOLF_DEFER_DK_ROUND_AUDIT_UNTIL_REPAIR = "1"
   # fetch:book-odds pulls DK round props (Birdies/Total Score/GIR/etc.) via Playwright — no separate fetch:dk-ou (would duplicate Chromium).
   Run-Npm "Running fetch:book-odds (matchups, outrights, DK round O/U props) ..." run fetch:book-odds
   Run-Npm 'Running fetch:finish-tool — outrights, same Scratch feed as DG Finish Position; runs after book-odds ...' run fetch:finish-tool
@@ -226,10 +227,15 @@ if ($LiveWeekOnly) {
   Run-Npm "Re-apply within-event prior-round form from fresh live-in-play ..." run merge:within-event-form
   Run-Npm "Open-Meteo weather for upcoming display_round → projections.json (bake:weather) ..." run bake:weather
   Run-Npm "Unified projection factors (last step before publish) ..." run apply:unified-factors
+  Run-Npm "Venue player/course history repair + total-score calibration ..." run repair:projection-course-basis
+  Run-Npm "Reconcile bird/bog/par/GIR/FW to total_score ..." run reconcile:projection-counts
+  Run-Npm "DK round audit CSV with post-repair model lines ..." run export:dk-round-audit-csv
   Run-Npm "Validate par, birdies/pars, and DK O/U prop coverage before publish ..." run validate:projections
   Run-Npm "Running update:rounds (historical CSV + Historical Trends: player_round_history / embed / shards / shots web) ..." run update:rounds
   Run-Npm "Patching current-event rounds (pgatouR + live GIR/FW into history shards) ..." run patch:current-event-history
-  Run-Npm "Writing round_projection_vs_actual.csv (model projections vs actual round results) ..." run export:round-projection-vs-actual
+  $env:GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS = "1"
+  Run-Npm "Writing round_projection_vs_actual.csv (walkforward backtest + current week) ..." run export:round-projection-vs-actual
+  Run-Npm "Odds.csv model ROI backtest (walkforward venue-history projections) ..." run backtest:odds-model-roi
   Promote-RoundProjectionVsActualCsv $webRoot
 }
 
@@ -293,6 +299,8 @@ $artifacts = @(
   "alpha-caddie-web/data/round_projection_vs_actual.csv",
   "alpha-caddie-web/data/round_projection_vs_actual_summary.csv",
   "alpha-caddie-web/data/round_projection_vs_actual.xlsx",
+  "alpha-caddie-web/data/odds_model_roi_summary.csv",
+  "alpha-caddie-web/data/odds_model_roi_detail.csv",
   "alpha-caddie-web/data/pgatour_event_rounds.json",
   "alpha-caddie-web/data/historical_round_weather.json",
   "alpha-caddie-web/data/course_coordinates_cache.json",

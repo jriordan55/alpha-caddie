@@ -382,13 +382,18 @@ async function main() {
   }
 
   if (String(process.env.GOLF_SKIP_DK_OU || "").trim() !== "1") {
-    try {
-      const audit = appendDkRoundProjectionAuditCsv(next);
-      if (audit.appended > 0) {
-        console.log(`[fetch-book-odds] DK round audit CSV +${audit.appended} rows -> ${audit.path}`);
+    const deferAudit = String(process.env.GOLF_DEFER_DK_ROUND_AUDIT_UNTIL_REPAIR || "").trim() === "1";
+    if (deferAudit) {
+      console.log("[fetch-book-odds] Deferring DK round audit CSV until post-venue repair (refresh:live).");
+    } else {
+      try {
+        const audit = appendDkRoundProjectionAuditCsv(next);
+        if (audit.appended > 0) {
+          console.log(`[fetch-book-odds] DK round audit CSV +${audit.appended} rows -> ${audit.path}`);
+        }
+      } catch (e) {
+        console.warn("[fetch-book-odds] DK round audit CSV:", e.message || e);
       }
-    } catch (e) {
-      console.warn("[fetch-book-odds] DK round audit CSV:", e.message || e);
     }
   }
 }

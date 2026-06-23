@@ -74,6 +74,7 @@ import {
   signalCellsFromObject,
 } from "./projection-context-signals.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
+import { FullModelProjectionCache } from "./historical-walkforward-projections.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -215,13 +216,19 @@ async function loadPriorEventRows(csvPath, summaryPath, currentEventName, opts =
     }
   }
 
-  if (summaryHasPrior) return { priorLines, priorSummaryRows };
+  const forceRebuildBacktest =
+    String(process.env.GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS || "").trim() === "1";
+
+  if (summaryHasPrior && !forceRebuildBacktest) return { priorLines, priorSummaryRows };
 
   const auditPath = opts.auditPath || defaultDkAuditPath(WEB_ROOT);
   const histPath = opts.histPath || resolveHistCsv();
   if (!existsSync(auditPath)) return { priorLines, priorSummaryRows };
 
   const backfill = await backfillFromAudit(auditPath, histPath, currentEventName, opts.fairwayHoles || 14);
+  if (forceRebuildBacktest) {
+    priorLines.length = 0;
+  }
   if (priorLines.length === 0) priorLines.push(...backfill.lines);
   priorSummaryRows.push(...backfill.summaryRows);
   if (backfill.lines.length > 0) {
@@ -292,11 +299,14 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, fairwayH
 
   const allActuals = new Map();
   const histByKey = new Map();
+  /** @type {object[]} */
+  const histRows = [];
   if (existsSync(histPath)) {
     const histParser = createReadStream(histPath).pipe(
       parse({ columns: true, relax_quotes: true, relax_column_count: true, skip_records_with_error: true }),
     );
     for await (const row of histParser) {
+      histRows.push(row);
       const ev = String(row.event_name || "").trim();
       if (!ev || eventsLikelySame(currentEventName, ev)) continue;
       if (!auditByEvent.has(ev)) continue;
@@ -318,6 +328,15 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, fairwayH
     }
   }
 
+  const wfCache = histRows.length ? new FullModelProjectionCache(REPO_ROOT, histRows) : null;
+  /** @type {Map<string, number>} */
+  const eventYearByName = new Map();
+  for (const row of histRows) {
+    const ev = String(row.event_name || "").trim();
+    const yr = Math.round(num(row.year, NaN));
+    if (ev && Number.isFinite(yr) && !eventYearByName.has(ev)) eventYearByName.set(ev, yr);
+  }
+
   const resultLines = [];
   const samples = [];
 
@@ -335,6 +354,28 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, fairwayH
       pr.markets[snap.market] = snap;
     }
 
+    /** @type {Map<number, Map<number, Map<string, number>>>} */
+    const wfByRound = new Map();
+    if (wfCache) {
+      const year = eventYearByName.get(ev);
+      const fieldDgIds = [...new Set([...playerRounds.values()].map((p) => p.dg))];
+      let betTimeMs = Infinity;
+      for (const [, snap] of evMap) {
+        if (Number.isFinite(snap.capturedMs) && snap.capturedMs < betTimeMs) betTimeMs = snap.capturedMs;
+      }
+      for (let rnd = 1; rnd <= 4; rnd++) {
+        if (![...playerRounds.values()].some((p) => p.rnd === rnd)) continue;
+        const wfMap = await wfCache.ensureEvent({
+          event: ev,
+          year,
+          round: rnd,
+          bet_time_ms: Number.isFinite(betTimeMs) ? betTimeMs : undefined,
+          _field_dg_ids: fieldDgIds,
+        });
+        wfByRound.set(rnd, wfMap);
+      }
+    }
+
     for (const [, pr] of playerRounds) {
       const act = allActuals.get(`${ev}\x1f${pr.dg}|${pr.rnd}`) || {};
       const hasCompleted = Number.isFinite(act.total_score);
@@ -344,17 +385,29 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, fairwayH
       const rowCells = {};
       for (const spec of EXPORT_MARKETS) {
         const snap = pr.markets[spec.propsMarket];
-        const modelCol = MARKET_MODEL_COL[spec.propsMarket];
-        const modelVal = snap ? num(snap[modelCol?.replace("model_", "model") ? Object.keys(snap).find(k => k.startsWith("model") && MARKET_KEY[spec.propsMarket] && k.includes(MARKET_KEY[spec.propsMarket].substring(0,3))) : undefined], NaN) : NaN;
-        const modelLine = snap
-          ? (spec.propsMarket === "Total Score" ? snap.modelTotal : enforceHalfLine(
-              spec.key === "birdies" ? snap.modelBirdies :
-              spec.key === "pars" ? snap.modelPars :
-              spec.key === "bogeys" ? snap.modelBogeys :
-              spec.key === "gir" ? snap.modelGir :
-              spec.key === "fairways" ? snap.modelFairways : NaN
-            ))
+        const wfMu = wfByRound.get(pr.rnd)?.get(pr.dg)?.get(spec.market);
+        const auditModelLine = snap
+          ? (spec.propsMarket === "Total Score"
+              ? snap.modelTotal
+              : enforceHalfLine(
+                  spec.key === "birdies"
+                    ? snap.modelBirdies
+                    : spec.key === "pars"
+                      ? snap.modelPars
+                      : spec.key === "bogeys"
+                        ? snap.modelBogeys
+                        : spec.key === "gir"
+                          ? snap.modelGir
+                          : spec.key === "fairways"
+                            ? snap.modelFairways
+                            : NaN,
+                ))
           : NaN;
+        const modelLine = Number.isFinite(wfMu)
+          ? spec.propsMarket === "Total Score"
+            ? Math.round(wfMu * 10) / 10
+            : enforceHalfLine(wfMu)
+          : auditModelLine;
         const bookLine = snap ? enforceHalfLine(snap.dkLine) : NaN;
         const overOdds = snap?.overOdds;
         const underOdds = snap?.underOdds;

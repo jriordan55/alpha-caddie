@@ -26,6 +26,7 @@ import {
   populateEventWeekFieldScoreAvgs,
   priorRoundCountingTarget,
   reconcileAllProjectionPlayerRows,
+  sanitizeEventWeekProjectionBasis,
   syncVenueScoringToProjectionBasis,
   updateProjectionBasisFromEventWeek,
   withinEventCountingBlendWeight,
@@ -160,7 +161,10 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
   }
   if (!meta.projection_course_basis) meta.projection_course_basis = {};
   syncVenueScoringToProjectionBasis(meta.projection_course_basis, venueScoring, coursePar18);
-  populateEventWeekFieldScoreAvgs(meta.projection_course_basis, live, coursePar18);
+  populateEventWeekFieldScoreAvgs(meta.projection_course_basis, live, coursePar18, {
+    projectionsEvent: eventName,
+  });
+  sanitizeEventWeekProjectionBasis(meta.projection_course_basis);
   if (venueScoring?.fieldByRound instanceof Map) {
     const fieldAvg = {};
     for (const [rnd, agg] of venueScoring.fieldByRound) {
