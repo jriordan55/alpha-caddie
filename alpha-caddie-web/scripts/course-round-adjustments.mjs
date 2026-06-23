@@ -1116,6 +1116,16 @@ function venueHistoryRowKey(row) {
   return `${dg}|${yr || ""}|${evt}|${rnd}`;
 }
 
+/** Plausible PGA round gross at a venue (keep 58–64 birdie rounds; drop corrupt sub-58 only). */
+export function venueRoundScoreBounds(coursePar18) {
+  const cp = Math.round(num(coursePar18, NaN));
+  if (!Number.isFinite(cp)) return { minRs: 55, maxRs: 95 };
+  return {
+    minRs: Math.max(55, cp - 12),
+    maxRs: Math.min(95, cp + 15),
+  };
+}
+
 /** @returns {boolean} true when row was ingested */
 function ingestVenueHistoryRow(row, ctx, nFairwayHoles) {
   const key = venueHistoryRowKey(row);
@@ -1125,8 +1135,7 @@ function ingestVenueHistoryRow(row, ctx, nFairwayHoles) {
   const rs = num(row.round_score, NaN);
   if (!Number.isFinite(cp) || cp < 63 || cp > 76) return false;
   if (!Number.isFinite(rs)) return false;
-  const minRs = Math.max(55, cp - 5);
-  const maxRs = Math.min(95, cp + 15);
+  const { minRs, maxRs } = venueRoundScoreBounds(cp);
   if (rs < minRs || rs > maxRs) return false;
 
   const rnd = Math.round(num(row.round_num ?? row.round, NaN));
@@ -1187,8 +1196,7 @@ export function loadRecentVenueRoundRowsForProjections(webRoot, opts = {}) {
 
       const rs = num(r.round_score, NaN);
       if (!Number.isFinite(rs) || rs <= 0) continue;
-      const minRs = coursePar - 5;
-      const maxRs = coursePar + 15;
+      const { minRs, maxRs } = venueRoundScoreBounds(coursePar);
       if (rs < minRs || rs > maxRs) continue;
 
       const act = actualsByDg[String(dg)]?.[String(rnd)] || null;
@@ -1908,8 +1916,7 @@ export function populateEventWeekFieldScoreAvgs(basis, live, coursePar18, opts =
   const liveEv = String(live?.field_updates?.event_name || live?.info?.event_name || "").trim();
   if (projEvent && liveEv && !eventsLikelySame(projEvent, liveEv)) return basis;
   const par = Math.round(num(coursePar18, 72)) || 72;
-  const minRs = par - 5;
-  const maxRs = par + 15;
+  const { minRs, maxRs } = venueRoundScoreBounds(par);
   /** @type {Record<string, number>} */
   const byRound = {};
   for (let rnd = 1; rnd <= 4; rnd++) {
@@ -2833,7 +2840,9 @@ export function resolveProjectionScoreToPar({
     (flatVenue ? pv && pv.n >= minPlayerRounds : (pv && pv.n >= minPlayerRounds) || (pr && pr.n >= 2));
 
   if (hasPlayerHist) {
-    const playerStp = playerAgg.avgScore - cp;
+    const playerStp = Number.isFinite(playerAgg.avgStp)
+      ? playerAgg.avgStp
+      : playerAgg.avgScore - cp;
     const nEff = flatVenue
       ? pv?.n || 0
       : Math.max(playerAgg.n || 0, pr?.n || 0, pv?.n || 0);
@@ -2911,6 +2920,16 @@ export async function reapplyProjectionTotalScoresFromVenueHistory(payload, opts
     pl.total_score = Math.round((coursePar18 + scoreRes.stp) * 100) / 100;
     pl.score_source = scoreRes.source;
     touched++;
+  }
+
+  if (!payload.projection_course_basis || typeof payload.projection_course_basis !== "object") {
+    payload.projection_course_basis = {};
+  }
+  syncVenueScoringToProjectionBasis(payload.projection_course_basis, venueScoring, coursePar18);
+  if (payload.meta && typeof payload.meta === "object") {
+    if (!payload.meta.projection_course_basis) payload.meta.projection_course_basis = {};
+    syncVenueScoringToProjectionBasis(payload.meta.projection_course_basis, venueScoring, coursePar18);
+    payload.projection_course_basis = payload.meta.projection_course_basis;
   }
 
   reconcileAllProjectionPlayerRows(payload, {
