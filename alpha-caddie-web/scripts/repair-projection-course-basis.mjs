@@ -15,11 +15,15 @@ import {
   calibrateProjectionTotalScoreToVenue,
   draftKingsDgIdsFromProjections,
   ensureProjectionCourseBasisComplete,
+  flatVenuePlayerScoreAnchorEnabled,
   populateEventWeekFieldScoreAvgs,
   reapplyProjectionTotalScoresFromVenueHistory,
   reconcileAllProjectionPlayerRows,
   sanitizeEventWeekProjectionBasis,
 } from "./course-round-adjustments.mjs";
+import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
+
+Object.assign(process.env, flatVenueProjectionPipelineEnv());
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB = join(__dirname, "..");
@@ -59,6 +63,12 @@ if (existsSync(livePath)) {
 const before = proj.projection_course_basis.venue_avg_round_score;
 ensureProjectionCourseBasisComplete(proj.projection_course_basis, proj);
 
+if (flatVenuePlayerScoreAnchorEnabled()) {
+  console.log(
+    "[repair-projection-course-basis] flat venue player score: same all-time course avg R1–R4 (weather / pin / tee wave separate rounds)",
+  );
+}
+
 const { touched, venueScoring } = await reapplyProjectionTotalScoresFromVenueHistory(proj, {
   repoRoot: REPO_ROOT,
 });
@@ -68,7 +78,9 @@ const cal = calibrateProjectionTotalScoreToVenue(proj, {
   minField: 8,
   venueScoring,
 });
-const histCal = calibrateProjectionScoresToHistoricalVenue(proj, venueScoring, {
+const histCal = flatVenuePlayerScoreAnchorEnabled()
+  ? { rounds: 0, shifts: {} }
+  : calibrateProjectionScoresToHistoricalVenue(proj, venueScoring, {
   minField: 8,
   useDkFieldFilter: String(process.env.GOLF_VENUE_CALIB_DK_FIELD_ONLY ?? "0").trim() === "1",
   dgFilter:
@@ -89,6 +101,9 @@ if (!Number.isFinite(Number(after))) {
   process.exit(1);
 }
 
+if (!proj.meta || typeof proj.meta !== "object") proj.meta = {};
+if (!proj.meta.projection_round_adjustments) proj.meta.projection_round_adjustments = {};
+proj.meta.projection_round_adjustments.flat_venue_player_score = flatVenuePlayerScoreAnchorEnabled();
 proj.updated_at = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
 writeFileSync(path, `${JSON.stringify(proj, null, 2)}\n`);
 console.log(

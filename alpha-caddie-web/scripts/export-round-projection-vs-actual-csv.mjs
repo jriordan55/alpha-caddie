@@ -3,7 +3,7 @@
  * Write one CSV row per projections.json player×round×pricing_mode with model lines,
  * over/under results vs actuals, and best edge (matches Round projections / Historical Trends).
  *
- * Walk-forward backtest projections use the same venue anchor + field market reconcile as live
+ * Walk-forward backtest projections use the same flat venue player score + field market reconcile as live
  * (historical-walkforward-projections.mjs → reconcileAllProjectionPlayerRows).
  *
  *   npm run export:round-projection-vs-actual
@@ -78,6 +78,9 @@ import {
 } from "./projection-context-signals.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
 import { FullModelProjectionCache } from "./historical-walkforward-projections.mjs";
+import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
+
+Object.assign(process.env, flatVenueProjectionPipelineEnv());
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");

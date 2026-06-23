@@ -30,6 +30,7 @@ import {
   syncVenueScoringToProjectionBasis,
   updateProjectionBasisFromEventWeek,
   withinEventCountingBlendWeight,
+  flatVenuePlayerScoreAnchorEnabled,
 } from "./course-round-adjustments.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -120,7 +121,9 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
     meta.projection_round_adjustments && typeof meta.projection_round_adjustments === "object"
       ? meta.projection_round_adjustments
       : {};
-  const formK = num(adj.within_event_form_carry, num(process.env.GOLF_WITHIN_EVENT_FORM_CARRY, 0.025));
+  const formK = flatVenuePlayerScoreAnchorEnabled()
+    ? 0
+    : num(adj.within_event_form_carry, num(process.env.GOLF_WITHIN_EVENT_FORM_CARRY, 0.025));
   const formCap = num(adj.within_event_form_cap, num(process.env.GOLF_WITHIN_EVENT_FORM_CAP, 0.15));
   const coursePar18 = Math.round(num(proj.course_par_18, NaN)) || 72;
   const fairwayHoles = Math.round(num(basis.fairway_holes_modeled, 14)) || 14;
@@ -248,7 +251,7 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
     const oldForm = num(pl.within_event_form_shift, 0);
     const newForm = num(withinFormMap.get(`${dg}|${r}`), 0);
     const formDelta = newForm - oldForm;
-    if (Math.abs(formDelta) > 1e-9) {
+    if (!flatVenuePlayerScoreAnchorEnabled() && Math.abs(formDelta) > 1e-9) {
       const mu0 = num(pl.mu_sg, NaN);
       if (Number.isFinite(mu0)) {
         const mu1 = Math.round((mu0 + formDelta) * 1000) / 1000;
@@ -261,6 +264,8 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
         pl.total_score = Math.round((coursePar18 + stp) * 100) / 100;
         pl.within_event_form_shift = Math.round(newForm * 1000) / 1000;
       }
+    } else if (flatVenuePlayerScoreAnchorEnabled() && Math.abs(oldForm) > 1e-9) {
+      pl.within_event_form_shift = 0;
     }
 
     const current = roundCounts(countingRowForUnblend(pl), countKeys);
@@ -304,6 +309,7 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
   if (useDkField) meta.projection_round_adjustments.within_event_dk_field_size = dkField.size;
   meta.projection_round_adjustments.within_event_form_carry = formK;
   meta.projection_round_adjustments.within_event_form_cap = formCap;
+  meta.projection_round_adjustments.flat_venue_player_score = flatVenuePlayerScoreAnchorEnabled();
   delete meta.projection_round_adjustments.within_event_r1_anchor;
   proj.meta = meta;
 

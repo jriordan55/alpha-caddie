@@ -1,8 +1,11 @@
 /**
  * Walk-forward full round projections (same pipeline as fetch:dg / export-round-projection-vs-actual).
- * Builds projections.json-shaped player rows from historical_rounds_all only (no lookahead).
+ * Flat venue player score: same all-time course average every round; weather/pin/tee wave on live only.
  */
 import { join } from "path";
+import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
+
+Object.assign(process.env, flatVenueProjectionPipelineEnv());
 import { eventsLikelySame, foldComparableTitle } from "./dg-events-align.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
 import {
@@ -19,6 +22,7 @@ import {
   fieldCountingMeansFromEventContext,
   fieldCountingMeansFromWithinEventMap,
   ensureProjectionCourseBasisComplete,
+  flatVenuePlayerScoreAnchorEnabled,
   reconcileAllProjectionPlayerRows,
   resolveProjectionCounts,
   resolveProjectionScoreToPar,
@@ -484,7 +488,8 @@ export async function buildFullModelMuMapForEvent({
   const fieldMeanOtt = fieldSkillMedian(ottSamples);
   const fieldMeanApp = fieldSkillMedian(appSamples);
 
-  const formK = num(process.env.GOLF_WITHIN_EVENT_FORM_CARRY, 0.1);
+  const flatVenue = flatVenuePlayerScoreAnchorEnabled();
+  const formK = flatVenue ? 0 : num(process.env.GOLF_WITHIN_EVENT_FORM_CARRY, 0.1);
   const withinFormMap =
     formK !== 0 && histEventCtx.playerRounds.length
       ? buildWithinEventFormMap(
@@ -495,8 +500,11 @@ export async function buildFullModelMuMapForEvent({
         )
       : new Map();
 
-  const priorExcess = blendedPriorRoundCourseExcess(null, histEventCtx, targetRound, eventName, courseKey);
-  const strokeShiftPrior = Number.isFinite(priorExcess) ? courseDifficultyStrokeShift(priorExcess) : 0;
+  const priorExcess = flatVenue
+    ? NaN
+    : blendedPriorRoundCourseExcess(null, histEventCtx, targetRound, eventName, courseKey);
+  const strokeShiftPrior =
+    flatVenue || !Number.isFinite(priorExcess) ? 0 : courseDifficultyStrokeShift(priorExcess);
 
   const fieldCountingFromEvent = fieldCountingMeansFromEventContext(histEventCtx);
   const fieldCountingFromHistory =
@@ -508,7 +516,7 @@ export async function buildFullModelMuMapForEvent({
       : fieldCountingFromEvent || fieldCountingFromHistory;
 
   const roundMuMult = parseRoundMuMult();
-  const mult = num(roundMuMult[targetRound - 1], 1);
+  const mult = flatVenue ? 1 : num(roundMuMult[targetRound - 1], 1);
   const players = [];
 
   for (const row of base) {
@@ -639,6 +647,9 @@ export async function buildFullModelMuMapForEvent({
     course_par_18: coursePar18,
     projection_course_basis: { fairway_holes_modeled: fairwayHoles },
     projection_counts_weather_baked: false,
+    projection_round_adjustments: {
+      flat_venue_player_score: flatVenuePlayerScoreAnchorEnabled(),
+    },
   };
   syncVenueScoringToProjectionBasis(meta.projection_course_basis, venueScoring, coursePar18);
   if (fieldCountingMeans) {

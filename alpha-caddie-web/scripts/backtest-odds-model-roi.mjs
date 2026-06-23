@@ -26,6 +26,9 @@ import {
   attachFieldDgIdsToProps,
   FullModelProjectionCache,
 } from "./historical-walkforward-projections.mjs";
+import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
+
+Object.assign(process.env, flatVenueProjectionPipelineEnv());
 import {
   birdiesPlusEaglesFromRow,
   modelEdgePctAtLine,

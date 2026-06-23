@@ -10,6 +10,9 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { applyUnifiedProjectionFactors } from "./projection-unified-factors.mjs";
 import { flattenProjectionExportMeta } from "./projection-export-meta.mjs";
+import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
+
+Object.assign(process.env, flatVenueProjectionPipelineEnv());
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");

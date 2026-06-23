@@ -776,7 +776,11 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
     });
   }
   let histVenueCal = { rounds: 0, shifts: {} };
-  if (opts.skipHistVenueScoreCalibrate !== true && opts.venueScoring) {
+  if (
+    opts.skipHistVenueScoreCalibrate !== true &&
+    opts.venueScoring &&
+    !flatVenuePlayerScoreAnchorEnabled()
+  ) {
     histVenueCal = calibrateProjectionScoresToHistoricalVenue(payload, opts.venueScoring, {
       dgFilter: opts.dgFilter,
       minField: opts.minField,
@@ -908,6 +912,18 @@ function envNum(name, fallback) {
   return Number.isFinite(n) ? n : fallback;
 }
 
+function envOn(name, defaultOn = true) {
+  const raw = process.env[name];
+  if (raw === undefined || String(raw).trim() === "") return defaultOn;
+  const s = String(raw).trim().toLowerCase();
+  return s === "1" || s === "true" || s === "yes";
+}
+
+/** Same player all-time venue average every round; separate rounds via weather / pin / tee wave only. */
+export function flatVenuePlayerScoreAnchorEnabled() {
+  return envOn("GOLF_FLAT_VENUE_PLAYER_SCORE", true);
+}
+
 /** Venue CSV year window — include prior US Opens / setups (not only the latest ~8 seasons). */
 function venueHistoryMinYear(calendarYear) {
   const cy = Math.round(num(calendarYear, new Date().getFullYear()));
@@ -1008,6 +1024,9 @@ export function recalcProjectionScoresForCoursePar(payload, newPar18, oldPar18Op
  * After weather / unified factors, nudge field-average score-to-par toward shrunk historical venue targets.
  */
 export function calibrateProjectionScoresToHistoricalVenue(payload, venueScoring, opts = {}) {
+  if (flatVenuePlayerScoreAnchorEnabled()) {
+    return { rounds: 0, shifts: {} };
+  }
   if (String(process.env.GOLF_HIST_VENUE_SCORE_CALIB ?? "1").trim() === "0") {
     return { rounds: 0, shifts: {} };
   }
@@ -1458,13 +1477,15 @@ function skillScoreToPar({
   const fr = venueScoring?.fieldByRound?.get(rnd);
   let venueStp = num(venueScoring?.venueAvgStp, NaN);
   let source = "skill_around_venue_mean";
-  const shrunk = venueProjectionStpAnchor(venueScoring, rnd);
-  if (Number.isFinite(shrunk)) {
-    venueStp = shrunk;
-    source =
-      fr && fr.n >= minFieldRounds && Number.isFinite(fr.avgStp)
-        ? "skill_around_shrunk_round_venue_mean"
-        : "skill_around_venue_mean";
+  if (!flatVenuePlayerScoreAnchorEnabled()) {
+    const shrunk = venueProjectionStpAnchor(venueScoring, rnd);
+    if (Number.isFinite(shrunk)) {
+      venueStp = shrunk;
+      source =
+        fr && fr.n >= minFieldRounds && Number.isFinite(fr.avgStp)
+          ? "skill_around_shrunk_round_venue_mean"
+          : "skill_around_venue_mean";
+    }
   }
   const fm = num(fieldMeanMu, 0);
   if (Number.isFinite(venueStp)) return { stp: venueStp - (mu - fm), source };
@@ -1932,6 +1953,9 @@ function historicalVenueScoreByRound(basis, rnd) {
 }
 
 function venueCalibrationTargetForRound(basis, rnd, coursePar18) {
+  if (flatVenuePlayerScoreAnchorEnabled()) {
+    return num(basis?.venue_avg_round_score, NaN);
+  }
   const ewMap = basis?.event_week_field_avg_score_by_round;
   const ew = num(ewMap?.[String(rnd)], NaN);
   const histRnd = historicalVenueScoreByRound(basis, rnd);
@@ -1966,8 +1990,11 @@ function venueCalibrationTargetForRound(basis, rnd, coursePar18) {
 export function playerHasVenueCourseHistory(dg_id, round, venueScoring, minPlayerRounds = 3) {
   const dg = Math.round(num(dg_id, NaN));
   if (!Number.isFinite(dg) || !venueScoring) return false;
-  const rnd = Math.round(num(round, NaN));
   const pv = venueScoring.playerByVenue?.get(dg);
+  if (flatVenuePlayerScoreAnchorEnabled()) {
+    return !!(pv && pv.n >= minPlayerRounds);
+  }
+  const rnd = Math.round(num(round, NaN));
   const pr = venueScoring.playerByRound?.get(`${dg}|${rnd}`);
   if (pv && pv.n >= minPlayerRounds) return true;
   if (pr && pr.n >= 2 && Number.isFinite(pr.avgScore)) return true;
@@ -2751,8 +2778,12 @@ export function projectionMuForScoreResolution(row) {
   return num(row.implied_mu_sg ?? row.mu_sg, NaN);
 }
 
-/** Player venue target: full-course history + optional R1–R4 bucket blend. */
+/** Player venue target: full-course history; optional R1–R4 bucket blend when flat anchor is off. */
 function resolvePlayerVenueTargetAgg(pv, pr, minPlayerRounds) {
+  if (flatVenuePlayerScoreAnchorEnabled()) {
+    if (pv && pv.n >= minPlayerRounds && Number.isFinite(pv.avgScore)) return { ...pv };
+    return null;
+  }
   let agg = mergePlayerVenueAgg(pv, pr, minPlayerRounds);
   if (!agg && pr && pr.n >= 2 && Number.isFinite(pr.avgScore)) agg = { ...pr };
   if (!agg || !Number.isFinite(agg.avgScore)) return null;
@@ -2795,14 +2826,17 @@ export function resolveProjectionScoreToPar({
   const pr = venueScoring?.playerByRound?.get(pk);
   const pv = venueScoring?.playerByVenue?.get(dg);
   const playerAgg = resolvePlayerVenueTargetAgg(pv, pr, minPlayerRounds);
+  const flatVenue = flatVenuePlayerScoreAnchorEnabled();
   const hasPlayerHist =
     playerAgg &&
     Number.isFinite(playerAgg.avgScore) &&
-    ((pv && pv.n >= minPlayerRounds) || (pr && pr.n >= 2));
+    (flatVenue ? pv && pv.n >= minPlayerRounds : (pv && pv.n >= minPlayerRounds) || (pr && pr.n >= 2));
 
   if (hasPlayerHist) {
     const playerStp = playerAgg.avgScore - cp;
-    const nEff = Math.max(playerAgg.n || 0, pr?.n || 0, pv?.n || 0);
+    const nEff = flatVenue
+      ? pv?.n || 0
+      : Math.max(playerAgg.n || 0, pr?.n || 0, pv?.n || 0);
     let wPlayer = Math.min(0.92, 0.66 + 0.055 * Math.max(0, nEff - minPlayerRounds));
     if (nEff >= 8) wPlayer = Math.min(0.94, wPlayer + 0.04);
     const stp = wPlayer * playerStp + (1 - wPlayer) * skillRes.stp;
@@ -2810,12 +2844,12 @@ export function resolveProjectionScoreToPar({
       stp: Math.round(stp * 1000) / 1000,
       source:
         wPlayer >= 0.72
-          ? pr && pr.n >= 2
-            ? "player_venue_round_hist"
-            : "player_venue_hist"
-          : pr && pr.n >= 2
-            ? "player_venue_round_skill_blend"
-            : "player_venue_skill_blend",
+          ? flatVenue || !(pr && pr.n >= 2)
+            ? "player_venue_hist"
+            : "player_venue_round_hist"
+          : flatVenue || !(pr && pr.n >= 2)
+            ? "player_venue_skill_blend"
+            : "player_venue_round_skill_blend",
     };
   }
 

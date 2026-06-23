@@ -6,7 +6,10 @@
 import { readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
-import { reconcileAllProjectionPlayerRows } from "./course-round-adjustments.mjs";
+import { reconcileAllProjectionPlayerRows, flatVenuePlayerScoreAnchorEnabled } from "./course-round-adjustments.mjs";
+import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
+
+Object.assign(process.env, flatVenueProjectionPipelineEnv());
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB = join(__dirname, "..");
@@ -15,6 +18,7 @@ const projPath = join(WEB, "projections.json");
 const proj = JSON.parse(readFileSync(projPath, "utf8"));
 const { reconciled, calibrated } = reconcileAllProjectionPlayerRows(proj, {
   minField: 8,
+  skipHistVenueScoreCalibrate: flatVenuePlayerScoreAnchorEnabled(),
 });
 writeFileSync(projPath, `${JSON.stringify(proj, null, 2)}\n`);
 console.log(

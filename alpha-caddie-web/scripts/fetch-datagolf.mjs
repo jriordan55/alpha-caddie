@@ -79,6 +79,7 @@ import {
   ensureProjectionCourseBasisComplete,
   fieldCountingMeansFromEventContext,
   fieldCountingMeansFromWithinEventMap,
+  flatVenuePlayerScoreAnchorEnabled,
   loadEventRoundContextFromHistoricalCsv,
   loadRecentVenueRoundRowsForProjections,
   loadVenueHistoricalScoring,
@@ -2214,8 +2215,13 @@ async function main() {
   const roundMuMult = parseRoundMuMult();
 
   const applyPriorRoundAdj =
+    !flatVenuePlayerScoreAnchorEnabled() &&
     String(process.env.GOLF_COURSE_PRIOR_ROUND_DIFFICULTY ?? "1").trim() !== "0";
-  const formK = num(process.env.GOLF_WITHIN_EVENT_FORM_CARRY, 0.025);
+  const flatVenueScore = flatVenuePlayerScoreAnchorEnabled();
+  const formK = flatVenueScore ? 0 : num(process.env.GOLF_WITHIN_EVENT_FORM_CARRY, 0.025);
+  if (flatVenueScore) {
+    console.log("[fetch-dg] Flat venue player score: same all-time course average R1–R4; round separation from weather / pin / tee wave");
+  }
   const formCap = num(process.env.GOLF_WITHIN_EVENT_FORM_CAP, 0.15);
   const formRuntimeK = num(process.env.GOLF_WITHIN_EVENT_FORM_RUNTIME_CARRY, 0.06);
   const formRuntimeCap = num(process.env.GOLF_WITHIN_EVENT_FORM_RUNTIME_CAP, 0.45);
@@ -2383,7 +2389,11 @@ async function main() {
   };
   const withinEventLiveWeek = dr >= 2 || withinEventCountingMap.size > 0;
   for (let r = 1; r <= 4; r++) {
-    const mult = withinEventLiveWeek && r >= 2 ? 1 : num(roundMuMult[r - 1], 1);
+    const mult = flatVenueScore
+      ? 1
+      : withinEventLiveWeek && r >= 2
+        ? 1
+        : num(roundMuMult[r - 1], 1);
     const strokeShiftPrior = applyPriorRoundAdj ? num(priorCourseStrokeShiftByRound[r], 0) : 0;
     const fieldMeanMuRound = (() => {
       const samples = [];
@@ -2642,6 +2652,7 @@ async function main() {
     prior_round_course_excess_strokes: priorCourseExcessByRound,
     prior_round_course_stroke_shift: priorCourseStrokeShiftByRound,
     projection_round_adjustments: {
+      flat_venue_player_score: flatVenueScore,
       course_prior_round_difficulty: applyPriorRoundAdj,
       /** app.js must not add course_table static overlay when this is true (see courseProjectionDifficultyBakedInExport). */
       skip_runtime_course_overlay: applyPriorRoundAdj,

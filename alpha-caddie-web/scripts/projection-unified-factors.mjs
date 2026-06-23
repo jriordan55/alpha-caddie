@@ -14,6 +14,7 @@ import {
   lookupAdjScoreToParFromCourseTable,
   reconcileAllProjectionPlayerRows,
   reconcileProjectionRowCountsToScore,
+  flatVenuePlayerScoreAnchorEnabled,
 } from "./course-round-adjustments.mjs";
 import { projectionExportMeta } from "./projection-export-meta.mjs";
 import {
@@ -524,7 +525,7 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
       reasons.push(`tee_wave:${twShift.toFixed(3)}`);
     }
 
-    if (rnd >= 2) {
+    if (rnd >= 2 && !flatVenuePlayerScoreAnchorEnabled()) {
       const prior = byDgRound.get(`${dg}|${rnd - 1}`);
       const priorStpLive = priorRoundStpFromLive(liveBundle, dg, rnd - 1);
       const priorStp = Number.isFinite(priorStpLive) ? priorStpLive : num(prior?.score_to_par, NaN);
@@ -609,6 +610,7 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
     unified_factors_applied: true,
     projection_counts_coherent: true,
     skip_runtime_course_overlay: true,
+    flat_venue_player_score: flatVenuePlayerScoreAnchorEnabled(),
   };
 
   console.log(

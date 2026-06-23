@@ -11,6 +11,7 @@ import { spawnSync } from "child_process";
 import { copyFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -24,6 +25,7 @@ function run(rel, label, extraEnv = {}) {
     stdio: "inherit",
     env: {
       ...process.env,
+      ...flatVenueProjectionPipelineEnv(),
       GOLF_MODEL_DIR: process.env.GOLF_MODEL_DIR?.trim() || REPO_ROOT,
       ...extraEnv,
     },

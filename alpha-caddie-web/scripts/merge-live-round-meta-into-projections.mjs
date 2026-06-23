@@ -24,6 +24,7 @@ import { fileURLToPath } from "url";
 import {
   blendedPriorRoundCourseExcess,
   courseDifficultyStrokeShift,
+  flatVenuePlayerScoreAnchorEnabled,
   loadEventRoundContextFromHistoricalCsv,
 } from "./course-round-adjustments.mjs";
 import { eventsLikelySame, fieldWeekKey, fieldWeekKeysRoughMatch } from "./dg-events-align.mjs";
@@ -161,7 +162,9 @@ async function main() {
     return;
   }
 
-  const applyPriorRoundAdj = String(process.env.GOLF_COURSE_PRIOR_ROUND_DIFFICULTY ?? "1").trim() !== "0";
+  const applyPriorRoundAdj =
+    !flatVenuePlayerScoreAnchorEnabled() &&
+    String(process.env.GOLF_COURSE_PRIOR_ROUND_DIFFICULTY ?? "1").trim() !== "0";
   if (!applyPriorRoundAdj) {
     writeFileSync(projPath, JSON.stringify(proj, null, 2), "utf8");
     console.log(

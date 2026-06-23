@@ -98,6 +98,11 @@ if (-not (Test-Path (Join-Path $webRoot "package.json"))) {
 
 Set-Location $webRoot
 
+$env:GOLF_FLAT_VENUE_PLAYER_SCORE = "1"
+$env:GOLF_COURSE_PRIOR_ROUND_DIFFICULTY = "0"
+$env:GOLF_WITHIN_EVENT_FORM_CARRY = "0"
+$env:GOLF_UNIFIED_BOUNCE_BACK_K = "0"
+
 if ($LiveWeekOnly) {
   Remove-Item Env:\GOLF_HISTORICAL_ROUNDS_FULL_HISTORY -ErrorAction SilentlyContinue
   $env:GOLF_REFRESH_LIVE_SKIP_CSV_MERGE = "1"
