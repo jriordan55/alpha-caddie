@@ -556,6 +556,21 @@ async function main() {
     console.warn(
       `[fetch-live-in-play] preds/in-play info.event_name "${infoEv}" vs projections "${projEv}" — stale in-play event metadata detected`
     );
+    if (prevDiskBundle && pm) {
+      const prevEv = String(
+        prevDiskBundle?.field_updates?.event_name || prevDiskBundle?.info?.event_name || "",
+      ).trim();
+      if (prevEv && eventsLikelySame(prevEv, projEv)) {
+        console.warn(
+          `[fetch-live-in-play] keeping existing live-in-play.json for "${prevEv}" — skip write (DataGolf in-play still on "${infoEv}")`,
+        );
+        return;
+      }
+    }
+    console.warn(
+      `[fetch-live-in-play] skip write — would overwrite projections week with stale in-play from "${infoEv}"`,
+    );
+    return;
   }
   if (token && fs.existsSync(liveOutPath)) {
     try {

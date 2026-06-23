@@ -1,10 +1,40 @@
 /**
- * Projection tracker — round_projection_vs_actual_summary.csv
+ * Projection tracker — summary + bet-level detail CSV
  * npm run projection-tracker  →  http://localhost:5173/projection-tracker/
  */
+import {
+  americanToDecimal,
+  computeStakeDollars,
+  devigFairTwoWay,
+  formatAmerican,
+  impliedProbFromAmerican,
+  modelEdgePctAtLine,
+  modelEdgeVsFairAtLine,
+  num as nNum,
+  pickBetSide,
+  pnlForResult,
+} from "./ev-math.mjs";
+import { buildEdgeSignalInsights } from "./edge-signal-insights.mjs";
+
+const RISK_STORAGE_KEY = "alphaCaddie_projection_tracker_risk_v1";
+
 const CSV_CANDIDATES = [
   "../data/round_projection_vs_actual_summary.csv",
   "../data/round_projection_vs_actual_summary.csv.new",
+];
+
+const DETAIL_CANDIDATES = [
+  "../data/round_projection_vs_actual.csv",
+  "../data/round_projection_vs_actual.csv.new",
+];
+
+const MARKET_SPECS = [
+  { market: "Total score", modelCol: "round_score_line", bookCol: "round_score_book_line", overOdds: "round_score_over_odds", underOdds: "round_score_under_odds", overRes: "round_score_over", underRes: "round_score_under", actual: "actual_round_score", decimals: 2 },
+  { market: "Birdies", modelCol: "birdies_line", bookCol: "birdies_book_line", overOdds: "birdies_over_odds", underOdds: "birdies_under_odds", overRes: "birdies_over", underRes: "birdies_under", actual: "actual_birdies", decimals: 1 },
+  { market: "GIR", modelCol: "gir_line", bookCol: "gir_book_line", overOdds: "gir_over_odds", underOdds: "gir_under_odds", overRes: "gir_over", underRes: "gir_under", actual: "actual_gir", decimals: 0 },
+  { market: "Fairways hit", modelCol: "fairways_line", bookCol: "fairways_book_line", overOdds: "fairways_over_odds", underOdds: "fairways_under_odds", overRes: "fairways_over", underRes: "fairways_under", actual: "actual_fairways", decimals: 0 },
+  { market: "Pars", modelCol: "pars_line", bookCol: "pars_book_line", overOdds: "pars_over_odds", underOdds: "pars_under_odds", overRes: "pars_over", underRes: "pars_under", actual: "actual_pars", decimals: 1 },
+  { market: "Bogeys", modelCol: "bogeys_line", bookCol: "bogeys_book_line", overOdds: "bogeys_over_odds", underOdds: "bogeys_under_odds", overRes: "bogeys_over", underRes: "bogeys_under", actual: "actual_bogeys", decimals: 1 },
 ];
 
 const MARKET_ORDER = [
@@ -19,6 +49,9 @@ const MARKET_ORDER = [
 /** @type {Record<string, string>[]} */
 let ALL_ROWS = [];
 
+/** @type {Record<string, string>[]} */
+let DETAIL_ROWS = [];
+
 const state = {
   tab: "overview",
   /** "" = all tournaments combined; otherwise event name */
@@ -26,11 +59,352 @@ const state = {
   market: "",
   minEv: 5,
   side: "",
+  player: "",
+  show: "bets",
+  risk: loadRiskPrefs(),
 };
 
 function num(v) {
   const n = Number(v);
   return Number.isFinite(n) ? n : NaN;
+}
+
+function loadRiskPrefs() {
+  const defaults = {
+    bankroll: 10000,
+    method: "flat_compound",
+    unitPct: 1,
+    maxStakePct: 5,
+    roundCapPct: 15,
+  };
+  try {
+    const raw = localStorage.getItem(RISK_STORAGE_KEY);
+    if (!raw) return defaults;
+    const j = JSON.parse(raw);
+    return {
+      bankroll: Math.max(100, num(j.bankroll) || defaults.bankroll),
+      method: String(j.method || defaults.method),
+      unitPct: Math.min(5, Math.max(0.25, num(j.unitPct) || defaults.unitPct)),
+      maxStakePct: Math.min(25, Math.max(1, num(j.maxStakePct) || defaults.maxStakePct)),
+      roundCapPct: Math.min(50, Math.max(5, num(j.roundCapPct) || defaults.roundCapPct)),
+    };
+  } catch {
+    return defaults;
+  }
+}
+
+function saveRiskPrefs() {
+  try {
+    localStorage.setItem(RISK_STORAGE_KEY, JSON.stringify(state.risk));
+  } catch {
+    /* ignore */
+  }
+}
+
+function fmtUsd(v) {
+  if (!Number.isFinite(v)) return "—";
+  const sign = v < 0 ? "−" : "";
+  return `${sign}$${Math.abs(v).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+}
+
+function fmtUsdPrecise(v) {
+  if (!Number.isFinite(v)) return "—";
+  const sign = v < 0 ? "−" : "";
+  return `${sign}$${Math.abs(v).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+function riskKellyMult(method) {
+  if (method === "kelly_half") return 0.5;
+  return 0.25;
+}
+
+function qualifiedBetRowsForRisk() {
+  return explodeDetailToBets(DETAIL_ROWS)
+    .filter((r) => {
+      if (!r.qualified) return false;
+      if (state.tournament && r.event_name !== state.tournament) return false;
+      if (state.market && r.market !== state.market) return false;
+      if (state.side && r.pickSide !== state.side) return false;
+      if (state.player) {
+        const q = state.player.toLowerCase();
+        if (!String(r.player_name).toLowerCase().includes(q)) return false;
+      }
+      const res = String(r.betRes || "").toUpperCase();
+      return res === "W" || res === "L" || res === "P";
+    })
+    .sort((a, b) => {
+      const ta = String(a.exported_at || "").localeCompare(String(b.exported_at || ""));
+      if (ta) return ta;
+      const ev = String(a.event_name).localeCompare(String(b.event_name));
+      if (ev) return ev;
+      const rd = num(a.round) - num(b.round);
+      if (rd) return rd;
+      return String(a.player_name).localeCompare(String(b.player_name));
+    });
+}
+
+function simulateBankrollHistory(bets, risk) {
+  const B0 = risk.bankroll;
+  let bankroll = B0;
+  let peak = B0;
+  let maxDd = 0;
+  let totalStaked = 0;
+  /** @type {object[]} */
+  const ledger = [];
+  /** @type {object[]} */
+  const series = [{ i: 0, bankroll: B0 }];
+
+  const roundGroups = new Map();
+  for (const bet of bets) {
+    const key = `${bet.event_name}\x1f${bet.round}`;
+    if (!roundGroups.has(key)) roundGroups.set(key, []);
+    roundGroups.get(key).push(bet);
+  }
+
+  const roundKeys = [...roundGroups.keys()].sort((a, b) => {
+    const [ae, ar] = a.split("\x1f");
+    const [be, br] = b.split("\x1f");
+    const ea = roundGroups.get(a)[0]?.exported_at || "";
+    const eb = roundGroups.get(b)[0]?.exported_at || "";
+    const t = String(ea).localeCompare(String(eb));
+    if (t) return t;
+    const ev = ae.localeCompare(be);
+    if (ev) return ev;
+    return num(ar) - num(br);
+  });
+
+  const stakeOpts = () => ({
+    bankroll0: B0,
+    unitPct: risk.unitPct,
+    maxStakePct: risk.maxStakePct,
+    kellyMult: riskKellyMult(risk.method),
+  });
+
+  for (const rk of roundKeys) {
+    const group = roundGroups.get(rk) || [];
+    const brBeforeRound = bankroll;
+    const sized = [];
+    for (const bet of group) {
+      const dec = bet.betDec;
+      const modelP = bet.modelProb;
+      if (!Number.isFinite(dec) || dec <= 1 || !Number.isFinite(modelP)) continue;
+      const nominal = computeStakeDollars(brBeforeRound, modelP, dec, risk.method, stakeOpts());
+      if (nominal <= 0) continue;
+      sized.push({ bet, nominal });
+    }
+    if (!sized.length) continue;
+
+    const cap = brBeforeRound * (risk.roundCapPct / 100);
+    const nominalTotal = sized.reduce((s, x) => s + x.nominal, 0);
+    const scale = nominalTotal > cap && cap > 0 ? cap / nominalTotal : 1;
+
+    for (const { bet, nominal } of sized) {
+      const stake = nominal * scale;
+      if (stake <= 0) continue;
+      const dec = bet.betDec;
+      const res = String(bet.betRes).toUpperCase();
+      const brBefore = bankroll;
+      let pnl = 0;
+      if (res === "W") {
+        pnl = stake * (dec - 1);
+        bankroll += pnl;
+      } else if (res === "L") {
+        pnl = -stake;
+        bankroll -= stake;
+      }
+      totalStaked += stake;
+      peak = Math.max(peak, bankroll);
+      maxDd = Math.max(maxDd, peak - bankroll);
+      const entry = {
+        ...bet,
+        stake,
+        pnl,
+        bankrollAfter: bankroll,
+        bankrollBefore: brBefore,
+      };
+      ledger.push(entry);
+      series.push({ i: ledger.length, bankroll });
+    }
+  }
+
+  const ending = bankroll;
+  const pl = ending - B0;
+  const roi = B0 > 0 ? (pl / B0) * 100 : NaN;
+  const avgStake = ledger.length ? totalStaked / ledger.length : NaN;
+  const maxDdPct = peak > 0 ? (maxDd / peak) * 100 : NaN;
+
+  return { B0, ending, pl, roi, peak, maxDd, maxDdPct, ledger, series, bets: ledger.length, avgStake, totalStaked };
+}
+
+function stakeGuideByMarket(bets, bankroll, risk) {
+  /** @type {Map<string, { edges: number[], odds: number[], probs: number[] }>} */
+  const m = new Map();
+  for (const b of bets) {
+    if (!Number.isFinite(b.pickEdge) || !Number.isFinite(b.betOdds)) continue;
+    let acc = m.get(b.market);
+    if (!acc) acc = { edges: [], odds: [], probs: [] };
+    acc.edges.push(b.pickEdge);
+    acc.odds.push(b.betOdds);
+    if (Number.isFinite(b.modelProb)) acc.probs.push(b.modelProb);
+    m.set(b.market, acc);
+  }
+  const median = (arr) => {
+    if (!arr.length) return NaN;
+    const s = [...arr].sort((a, b) => a - b);
+    const mid = Math.floor(s.length / 2);
+    return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+  };
+  return sortMarkets(
+    [...m.entries()].map(([market, acc]) => {
+      const medEdge = median(acc.edges);
+      const medOdds = median(acc.odds);
+      const medProb = median(acc.probs);
+      const dec = americanToDecimal(medOdds);
+      const stake = computeStakeDollars(bankroll, medProb, dec, risk.method, {
+        bankroll0: bankroll,
+        unitPct: risk.unitPct,
+        maxStakePct: risk.maxStakePct,
+        kellyMult: riskKellyMult(risk.method),
+      });
+      return {
+        market,
+        medEdge,
+        medOdds,
+        stake,
+        pct: bankroll > 0 ? (stake / bankroll) * 100 : NaN,
+      };
+    }),
+  );
+}
+
+function renderBankrollChart(svgEl, series, B0) {
+  if (!svgEl || series.length < 2) {
+    if (svgEl) svgEl.innerHTML = '<text x="12" y="24" fill="#94a3b8" font-size="14">Not enough bets to chart.</text>';
+    return;
+  }
+  const w = 800;
+  const h = 220;
+  const pad = { t: 16, r: 12, b: 28, l: 56 };
+  const vals = series.map((p) => p.bankroll);
+  const minV = Math.min(B0, ...vals);
+  const maxV = Math.max(B0, ...vals);
+  const span = Math.max(maxV - minV, B0 * 0.02);
+  const y0 = minV - span * 0.05;
+  const y1 = maxV + span * 0.05;
+  const xScale = (i) => pad.l + (i / (series.length - 1)) * (w - pad.l - pad.r);
+  const yScale = (v) => pad.t + (1 - (v - y0) / (y1 - y0)) * (h - pad.t - pad.b);
+  const pts = series.map((p) => `${xScale(p.i).toFixed(1)},${yScale(p.bankroll).toFixed(1)}`).join(" ");
+  const startY = yScale(B0);
+  const endColor = series[series.length - 1].bankroll >= B0 ? "#10b981" : "#f87171";
+  svgEl.innerHTML = `
+    <line x1="${pad.l}" y1="${startY.toFixed(1)}" x2="${w - pad.r}" y2="${startY.toFixed(1)}" stroke="rgba(255,255,255,0.12)" stroke-dasharray="4 4"/>
+    <text x="${pad.l}" y="${h - 6}" fill="#64748b" font-size="11">Start</text>
+    <text x="${w - pad.r - 28}" y="${h - 6}" fill="#64748b" font-size="11" text-anchor="end">End</text>
+    <text x="8" y="${pad.t + 8}" fill="#64748b" font-size="10">${fmtUsd(y1)}</text>
+    <text x="8" y="${h - pad.b}" fill="#64748b" font-size="10">${fmtUsd(y0)}</text>
+    <polyline fill="none" stroke="${endColor}" stroke-width="2" points="${pts}"/>
+    <circle cx="${xScale(series[series.length - 1].i)}" cy="${yScale(series[series.length - 1].bankroll)}" r="4" fill="${endColor}"/>
+  `;
+}
+
+function renderRisk() {
+  const risk = state.risk;
+  const bankrollEl = document.getElementById("risk-bankroll");
+  const methodEl = document.getElementById("risk-method");
+  const unitEl = document.getElementById("risk-unit-pct");
+  const maxEl = document.getElementById("risk-max-stake");
+  const capEl = document.getElementById("risk-round-cap");
+  if (bankrollEl) bankrollEl.value = String(risk.bankroll);
+  if (methodEl) methodEl.value = risk.method;
+  if (unitEl) unitEl.value = String(risk.unitPct);
+  if (maxEl) maxEl.value = String(risk.maxStakePct);
+  if (capEl) capEl.value = String(risk.roundCapPct);
+
+  const bets = qualifiedBetRowsForRisk();
+  const sim = simulateBankrollHistory(bets, risk);
+  const oneUnit = risk.bankroll * (risk.unitPct / 100);
+  const methodLabel =
+    methodEl?.selectedOptions?.[0]?.textContent || risk.method;
+
+  document.getElementById("risk-kpis").innerHTML = `
+    <div class="kpi-card">
+      <div class="kpi-label">Starting bankroll</div>
+      <div class="kpi-value">${fmtUsd(sim.B0)}</div>
+      <div class="kpi-sub">1 unit = ${fmtUsdPrecise(oneUnit)} (${risk.unitPct}%)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Would have now</div>
+      <div class="kpi-value ${clsSigned(sim.pl)}">${fmtUsd(sim.ending)}</div>
+      <div class="kpi-sub">${sim.pl >= 0 ? "+" : ""}${fmtUsdPrecise(sim.pl)} · ${methodLabel}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Simulated ROI</div>
+      <div class="kpi-value ${clsSigned(sim.roi)}">${fmtPct(sim.roi)}</div>
+      <div class="kpi-sub">${sim.bets} bets · ≥${state.minEv}% EV</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Max drawdown</div>
+      <div class="kpi-value neg">${fmtUsd(sim.maxDd)}</div>
+      <div class="kpi-sub">${fmt(sim.maxDdPct, 1)}% from peak ${fmtUsd(sim.peak)}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Avg stake</div>
+      <div class="kpi-value">${fmtUsdPrecise(sim.avgStake)}</div>
+      <div class="kpi-sub">${fmtUsd(sim.totalStaked)} total risked</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Should risk (typical)</div>
+      <div class="kpi-value">${fmtUsdPrecise(oneUnit)}</div>
+      <div class="kpi-sub">1 unit at current bankroll · see market table</div>
+    </div>
+  `;
+
+  renderBankrollChart(document.getElementById("risk-chart"), sim.series, sim.B0);
+
+  const guide = stakeGuideByMarket(bets, risk.bankroll, risk);
+  document.querySelector("#risk-stake-table tbody").innerHTML = guide.length
+    ? guide
+        .map(
+          (g) => `<tr>
+        <td>${g.market}</td>
+        <td class="num ${clsSigned(g.medEdge)}">${fmtPct(g.medEdge)}</td>
+        <td class="num">${formatAmerican(g.medOdds)}</td>
+        <td class="num">${fmtUsdPrecise(g.stake)}</td>
+        <td class="num">${fmt(g.pct, 2)}%</td>
+      </tr>`,
+        )
+        .join("")
+    : `<tr><td colspan="5">No qualified bets for stake guide at current filters.</td></tr>`;
+
+  const recent = sim.ledger.slice(-25).reverse();
+  document.querySelector("#risk-recent-table tbody").innerHTML = recent.length
+    ? recent
+        .map(
+          (r) => `<tr>
+        <td class="player-cell">${r.event_name}</td>
+        <td class="num">${r.round}</td>
+        <td class="player-cell">${r.player_name}</td>
+        <td>${r.market}</td>
+        <td class="num">${fmtUsdPrecise(r.stake)}</td>
+        <td>${resultBadge(r.betRes)}</td>
+        <td class="num ${clsSigned(r.pnl)}">${r.pnl >= 0 ? "+" : ""}${fmtUsdPrecise(r.pnl)}</td>
+        <td class="num">${fmtUsd(r.bankrollAfter)}</td>
+      </tr>`,
+        )
+        .join("")
+    : `<tr><td colspan="8">No simulated bets — adjust filters or min EV %.</td></tr>`;
+}
+
+function syncRiskFromForm() {
+  state.risk = {
+    bankroll: Math.max(100, num(document.getElementById("risk-bankroll")?.value) || 10000),
+    method: String(document.getElementById("risk-method")?.value || "flat_compound"),
+    unitPct: Math.min(5, Math.max(0.25, num(document.getElementById("risk-unit-pct")?.value) || 1)),
+    maxStakePct: Math.min(25, Math.max(1, num(document.getElementById("risk-max-stake")?.value) || 5)),
+    roundCapPct: Math.min(50, Math.max(5, num(document.getElementById("risk-round-cap")?.value) || 15)),
+  };
+  saveRiskPrefs();
+  renderRisk();
 }
 
 function fmt(v, d = 2) {
@@ -149,6 +523,258 @@ function lineRows() {
   return sortMarkets(
     activeRows().filter((r) => r.section === "model_vs_book" && num(r.n_line_pairs) > 0),
   );
+}
+
+function parseLine(v) {
+  const s = String(v ?? "").trim();
+  if (!s) return NaN;
+  return nNum(s, NaN);
+}
+
+function resultBadge(res) {
+  const r = String(res || "").trim().toUpperCase();
+  if (!r) return '<span class="res res-na">—</span>';
+  const cls = r === "W" ? "res-win" : r === "L" ? "res-loss" : "res-push";
+  return `<span class="res ${cls}">${r}</span>`;
+}
+
+function explodeDetailToBets(rows) {
+  /** @type {object[]} */
+  const out = [];
+  for (const row of rows) {
+    if (row.pricing_mode !== "default" || row.pricing_skill !== "default") continue;
+    if (row.book_odds_source !== "pre_round_audit") continue;
+    for (const spec of MARKET_SPECS) {
+      const bookLine = parseLine(row[spec.bookCol]);
+      if (!Number.isFinite(bookLine)) continue;
+      const modelLine = parseLine(row[spec.modelCol]);
+      const overOdds = nNum(row[spec.overOdds], NaN);
+      const underOdds = nNum(row[spec.underOdds], NaN);
+      const actual = parseLine(row[spec.actual]);
+      const mu = Number.isFinite(modelLine) ? modelLine : NaN;
+      const { edgeOver, edgeUnder } = modelEdgePctAtLine(spec.market, mu, bookLine, overOdds, underOdds);
+      const fair = modelEdgeVsFairAtLine(spec.market, mu, bookLine, overOdds, underOdds);
+      const pModelOver = fair.pOver;
+      const pModelUnder = fair.pUnder;
+      const pick = pickBetSide(edgeOver, edgeUnder, state.minEv);
+      const bestSide =
+        Number.isFinite(edgeOver) && Number.isFinite(edgeUnder)
+          ? edgeOver >= edgeUnder
+            ? { side: "over", edge: edgeOver }
+            : { side: "under", edge: edgeUnder }
+          : null;
+      const activePick = pick || (state.show === "all" ? bestSide : null);
+      const side = activePick?.side || null;
+      const betRes = side === "over" ? row[spec.overRes] : side === "under" ? row[spec.underRes] : "";
+      const betOdds = side === "over" ? overOdds : side === "under" ? underOdds : NaN;
+      const fairProb = side === "over" ? fair.fairOver : side === "under" ? fair.fairUnder : NaN;
+      const postedProb =
+        side === "over"
+          ? impliedProbFromAmerican(overOdds)
+          : side === "under"
+            ? impliedProbFromAmerican(underOdds)
+            : NaN;
+      const modelProb = side === "over" ? pModelOver : side === "under" ? pModelUnder : NaN;
+      const edgeFairPick =
+        side === "over" ? fair.edgeFairOver : side === "under" ? fair.edgeFairUnder : NaN;
+      const qualified = Boolean(pick);
+      out.push({
+        event_name: row.event_name,
+        round: row.round,
+        dg_id: row.dg_id,
+        player_name: row.player_name,
+        market: spec.market,
+        modelLine,
+        bookLine,
+        diff: Number.isFinite(modelLine) ? modelLine - bookLine : NaN,
+        overOdds,
+        underOdds,
+        overRes: row[spec.overRes],
+        underRes: row[spec.underRes],
+        actual,
+        edgeOver,
+        edgeUnder,
+        edgeFairOver: fair.edgeFairOver,
+        edgeFairUnder: fair.edgeFairUnder,
+        fairOver: fair.fairOver,
+        fairUnder: fair.fairUnder,
+        pModelOver,
+        pModelUnder,
+        pickSide: side,
+        pickEdge: activePick?.edge ?? NaN,
+        edgeFairPick,
+        modelProb,
+        fairProb,
+        postedProb,
+        beatsFairPreBet:
+          qualified && Number.isFinite(modelProb) && Number.isFinite(fairProb) ? modelProb > fairProb : null,
+        qualified,
+        betRes,
+        betOdds,
+        betDec: americanToDecimal(betOdds),
+        exported_at: row.exported_at,
+        pnl: qualified && side ? pnlForResult(String(betRes).trim().toUpperCase(), betOdds) : NaN,
+        decimals: spec.decimals,
+      });
+    }
+  }
+  return out;
+}
+
+function activeBetRows() {
+  let rows = explodeDetailToBets(DETAIL_ROWS);
+  if (state.tournament) rows = rows.filter((r) => r.event_name === state.tournament);
+  if (state.market) rows = rows.filter((r) => r.market === state.market);
+  if (state.side) rows = rows.filter((r) => r.pickSide === state.side);
+  if (state.player) {
+    const q = state.player.toLowerCase();
+    rows = rows.filter((r) => String(r.player_name).toLowerCase().includes(q));
+  }
+  if (state.show === "bets") rows = rows.filter((r) => r.qualified);
+  return rows.sort((a, b) => {
+    const ev = String(a.event_name).localeCompare(String(b.event_name));
+    if (ev) return ev;
+    const rd = num(a.round) - num(b.round);
+    if (rd) return rd;
+    const pl = String(a.player_name).localeCompare(String(b.player_name));
+    if (pl) return pl;
+    return marketSortKey(a.market) - marketSortKey(b.market);
+  });
+}
+
+function aggregateBeatFairStats(rows) {
+  const qualified = rows.filter((r) => r.qualified);
+  const graded = qualified.filter((r) => {
+    const res = String(r.betRes).toUpperCase();
+    return res === "W" || res === "L";
+  });
+  const wins = graded.filter((r) => String(r.betRes).toUpperCase() === "W").length;
+  const hitRate = graded.length ? (wins / graded.length) * 100 : NaN;
+  const fairN = graded.filter((r) => Number.isFinite(r.fairProb)).length;
+  const postedN = graded.filter((r) => Number.isFinite(r.postedProb)).length;
+  const avgFair =
+    fairN > 0
+      ? (graded.reduce((s, r) => s + (Number.isFinite(r.fairProb) ? r.fairProb : 0), 0) / fairN) * 100
+      : NaN;
+  const avgPosted =
+    postedN > 0
+      ? (graded.reduce((s, r) => s + (Number.isFinite(r.postedProb) ? r.postedProb : 0), 0) / postedN) * 100
+      : NaN;
+  const preBetEligible = qualified.filter((r) => r.beatsFairPreBet !== null);
+  const preBetBeats = preBetEligible.filter((r) => r.beatsFairPreBet).length;
+  const withModel = rows.filter(
+    (r) => Number.isFinite(r.pModelOver) && Number.isFinite(r.fairOver) && Number.isFinite(r.fairUnder),
+  );
+  const modelBeatsFairLine = withModel.filter((r) => {
+    const bestFair = Math.max(r.edgeFairOver, r.edgeFairUnder);
+    return Number.isFinite(bestFair) && bestFair > 0;
+  }).length;
+  return {
+    hitRate,
+    avgFair,
+    avgPosted,
+    beatFair: Number.isFinite(hitRate) && Number.isFinite(avgFair) ? hitRate - avgFair : NaN,
+    beatPosted: Number.isFinite(hitRate) && Number.isFinite(avgPosted) ? hitRate - avgPosted : NaN,
+    preBetPct: preBetEligible.length ? (preBetBeats / preBetEligible.length) * 100 : NaN,
+    preBetBeats,
+    preBetEligible: preBetEligible.length,
+    modelBeatsFairPct: withModel.length ? (modelBeatsFairLine / withModel.length) * 100 : NaN,
+    modelBeatsFairLine,
+    withModel: withModel.length,
+    graded: graded.length,
+  };
+}
+
+function renderBets() {
+  const showEvent = !state.tournament;
+  document.getElementById("bets-col-event").hidden = !showEvent;
+  const rows = activeBetRows();
+  const qualified = rows.filter((r) => r.qualified);
+  const bets = qualified.length;
+  const units = qualified.reduce((s, r) => s + (Number.isFinite(r.pnl) ? r.pnl : 0), 0);
+  const wins = qualified.filter((r) => String(r.betRes).toUpperCase() === "W").length;
+  const losses = qualified.filter((r) => String(r.betRes).toUpperCase() === "L").length;
+  const pushes = qualified.filter((r) => String(r.betRes).toUpperCase() === "P").length;
+  const roi = bets > 0 ? (units / bets) * 100 : NaN;
+  const fairStats = aggregateBeatFairStats(rows);
+
+  document.getElementById("bets-kpis").innerHTML = `
+    <div class="kpi-card">
+      <div class="kpi-label">Rows shown</div>
+      <div class="kpi-value">${rows.length}</div>
+      <div class="kpi-sub">${state.show === "bets" ? `≥${state.minEv}% edge` : "all graded lines"}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Qualified bets</div>
+      <div class="kpi-value">${bets}</div>
+      <div class="kpi-sub">${wins}W · ${losses}L · ${pushes}P</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Units</div>
+      <div class="kpi-value ${clsSigned(units)}">${units >= 0 ? "+" : ""}${fmt(units, 2)}u</div>
+      <div class="kpi-sub">flat 1u · pre-round DK</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">ROI</div>
+      <div class="kpi-value ${clsSigned(roi)}">${fmtPct(roi)}</div>
+      <div class="kpi-sub">qualified bets only</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Beat fair price</div>
+      <div class="kpi-value ${clsSigned(fairStats.beatFair)}">${fmtPct(fairStats.beatFair)}</div>
+      <div class="kpi-sub">${fmt(fairStats.hitRate, 1)}% hit vs ${fmt(fairStats.avgFair, 1)}% fair (${fairStats.graded} graded)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">DK margin</div>
+      <div class="kpi-value">${fmt(Number.isFinite(fairStats.avgPosted) && Number.isFinite(fairStats.avgFair) ? fairStats.avgPosted - fairStats.avgFair : NaN, 1)}%</div>
+      <div class="kpi-sub">posted − fair implied on picks</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Model &gt; fair (pre-bet)</div>
+      <div class="kpi-value">${fmt(fairStats.preBetPct, 1)}%</div>
+      <div class="kpi-sub">${fairStats.preBetBeats}/${fairStats.preBetEligible} qualified picks</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Lines model beats fair</div>
+      <div class="kpi-value">${fmt(fairStats.modelBeatsFairPct, 1)}%</div>
+      <div class="kpi-sub">${fairStats.modelBeatsFairLine}/${fairStats.withModel} with model + DK odds</div>
+    </div>
+  `;
+
+  const fmtLine = (v, d) => (Number.isFinite(v) ? fmt(v, d) : "—");
+  document.querySelector("#bets-table tbody").innerHTML = rows.length
+    ? rows
+        .map((r) => {
+          const pickCls = r.qualified ? "pick-qualified" : "pick-muted";
+          const pickLabel = r.pickSide
+            ? `<span class="${pickCls}">${r.pickSide}</span>`
+            : "—";
+          const betCell = r.qualified ? resultBadge(r.betRes) : "—";
+          const pnlCell = r.qualified && Number.isFinite(r.pnl)
+            ? `<span class="${clsSigned(r.pnl)}">${r.pnl >= 0 ? "+" : ""}${fmt(r.pnl, 2)}</span>`
+            : "—";
+          return `<tr>
+        ${showEvent ? `<td>${r.event_name}</td>` : ""}
+        <td class="num">${r.round}</td>
+        <td class="player-cell">${r.player_name}</td>
+        <td>${r.market}</td>
+        <td class="num line-model">${fmtLine(r.modelLine, r.decimals)}</td>
+        <td class="num line-book">${fmtLine(r.bookLine, r.decimals)}</td>
+        <td class="num ${clsSigned(-r.diff)}">${Number.isFinite(r.diff) ? (r.diff > 0 ? "+" : "") + fmt(r.diff, r.decimals) : "—"}</td>
+        <td class="num">${formatAmerican(r.overOdds) || "—"}</td>
+        <td>${resultBadge(r.overRes)}</td>
+        <td class="num">${formatAmerican(r.underOdds) || "—"}</td>
+        <td>${resultBadge(r.underRes)}</td>
+        <td>${pickLabel}</td>
+        <td class="num ${clsSigned(r.pickEdge)}">${Number.isFinite(r.pickEdge) ? fmtPct(r.pickEdge) : "—"}</td>
+        <td class="num ${clsSigned(r.edgeFairPick)}" title="Model edge vs devigged fair price (no margin)">${Number.isFinite(r.edgeFairPick) ? fmtPct(r.edgeFairPick) : "—"}</td>
+        <td class="num">${fmtLine(r.actual, r.decimals)}</td>
+        <td>${betCell}</td>
+        <td class="num">${pnlCell}</td>
+      </tr>`;
+        })
+        .join("")
+    : `<tr><td colspan="${showEvent ? 17 : 16}">No bet rows — lower min EV %, switch to “All graded lines”, or pick another tournament.</td></tr>`;
 }
 
 function evRows() {
@@ -485,6 +1111,22 @@ function buildInsights() {
     const t = profitable[0];
     insights.push({ tone: "", text: `Best pocket: ${t.market} ${t.side} — ${fmtPct(t.roi)} ROI on ${t.bets} bets (+${fmt(t.units, 1)}u).` });
   }
+
+  const fairStats = aggregateBeatFairStats(explodeDetailToBets(DETAIL_ROWS).filter((r) => {
+    if (state.tournament && r.event_name !== state.tournament) return false;
+    if (state.market && r.market !== state.market) return false;
+    if (!r.qualified) return false;
+    return true;
+  }).filter((r) => {
+    const th = num(r.pickEdge);
+    return Number.isFinite(th) && th >= state.minEv;
+  }));
+  if (Number.isFinite(fairStats.beatFair) && fairStats.graded >= 10) {
+    insights.push({
+      tone: fairStats.beatFair >= 2 ? "" : fairStats.beatFair >= 0 ? "warn" : "bad",
+      text: `Beat fair price (devigged, no margin): ${fmtPct(fairStats.beatFair)} — ${fmt(fairStats.hitRate, 1)}% hit vs ${fmt(fairStats.avgFair, 1)}% fair implied on ${fairStats.graded} graded picks (posted ${fmt(fairStats.avgPosted, 1)}%).`,
+    });
+  }
   if (losing[0]) {
     const t = losing[0];
     insights.push({ tone: "bad", text: `Weakest pocket: ${t.market} ${t.side} — ${fmtPct(t.roi)} on ${t.bets} bets.` });
@@ -495,6 +1137,16 @@ function buildInsights() {
       tone: "",
       text: `Viewing all ${allTournamentNames().length} tournaments combined (each event uses its latest export). Pick one from the Tournament dropdown for a single-event drill-down.`,
     });
+  }
+
+  const signalPool = explodeDetailToBets(DETAIL_ROWS).filter((r) => {
+    if (state.tournament && r.event_name !== state.tournament) return false;
+    if (state.market && r.market !== state.market) return false;
+    if (state.side && r.pickSide !== state.side) return false;
+    return r.qualified;
+  });
+  for (const si of buildEdgeSignalInsights(signalPool, DETAIL_ROWS)) {
+    insights.push(si);
   }
 
   if (!insights.length) {
@@ -553,6 +1205,8 @@ function renderAll() {
   renderOverview();
   renderAccuracy();
   renderEv();
+  renderBets();
+  renderRisk();
   renderEvents();
   buildInsights();
 }
@@ -565,6 +1219,32 @@ function setTab(name) {
   document.querySelectorAll(".panel").forEach((p) => {
     p.classList.toggle("active", p.id === `panel-${name}`);
   });
+  if (location.hash !== `#${name}`) {
+    history.replaceState(null, "", `#${name}`);
+  }
+}
+
+async function loadDetailCsvText() {
+  /** @type {{ url: string, text: string, rows: number }[]} */
+  const loaded = [];
+  for (const url of DETAIL_CANDIDATES) {
+    try {
+      const res = await fetch(`${url}?t=${Date.now()}`, { cache: "no-store" });
+      if (!res.ok) continue;
+      const text = await res.text();
+      const rows = text.split(/\r?\n/).filter(Boolean).length - 1;
+      if (rows > 0) loaded.push({ url, text, rows });
+    } catch {
+      /* try next */
+    }
+  }
+  if (!loaded.length) return "";
+  loaded.sort((a, b) => b.rows - a.rows);
+  const pick = loaded[0];
+  if (pick.url.endsWith(".new")) {
+    console.warn("[projection-tracker] Using .new detail CSV (main file locked in Excel?)");
+  }
+  return pick.text;
 }
 
 async function loadSummaryCsvText() {
@@ -596,8 +1276,10 @@ async function loadData() {
   const errEl = document.getElementById("error-banner");
   errEl.hidden = true;
   try {
-    ALL_ROWS = parseCsv(await loadSummaryCsvText());
-    if (!ALL_ROWS.length) throw new Error("CSV is empty");
+    const [summaryText, detailText] = await Promise.all([loadSummaryCsvText(), loadDetailCsvText()]);
+    ALL_ROWS = parseCsv(summaryText);
+    if (!ALL_ROWS.length) throw new Error("Summary CSV is empty");
+    DETAIL_ROWS = detailText ? parseCsv(detailText) : [];
     populateTournamentSelect();
     populateMarketFilter();
     renderAll();
@@ -630,8 +1312,37 @@ function bindUi() {
     state.side = e.target.value;
     renderAll();
   });
+  document.getElementById("filter-player").addEventListener("input", (e) => {
+    state.player = e.target.value.trim();
+    renderBets();
+    renderRisk();
+  });
+  document.getElementById("filter-show").addEventListener("change", (e) => {
+    state.show = e.target.value;
+    renderBets();
+  });
+  for (const id of ["risk-bankroll", "risk-method", "risk-unit-pct", "risk-max-stake", "risk-round-cap"]) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    el.addEventListener("input", syncRiskFromForm);
+    el.addEventListener("change", syncRiskFromForm);
+  }
   document.getElementById("btn-reload").addEventListener("click", loadData);
 }
 
 bindUi();
+const initialTab = String(location.hash || "").replace(/^#/, "");
+if (["overview", "accuracy", "ev", "bets", "risk", "events", "insights", "guide"].includes(initialTab)) {
+  setTab(initialTab);
+}
+
+document.querySelectorAll("#panel-guide a[href^='#']").forEach((a) => {
+  a.addEventListener("click", (e) => {
+    const tab = a.getAttribute("href")?.replace(/^#/, "");
+    if (tab && tab !== "guide") {
+      e.preventDefault();
+      setTab(tab);
+    }
+  });
+});
 loadData();

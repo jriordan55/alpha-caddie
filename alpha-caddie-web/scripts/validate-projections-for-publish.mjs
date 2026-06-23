@@ -14,6 +14,13 @@ const projPath = join(WEB_ROOT, "projections.json");
 const DK_CORE_MARKETS = ["Total Score", "Birdies", "Pars", "Bogeys"];
 const DK_MIN_LINES_PER_MARKET = 20;
 
+function envTruthy(name, defaultVal = false) {
+  const raw = process.env[name];
+  if (raw === undefined || String(raw).trim() === "") return defaultVal;
+  const s = String(raw).trim().toLowerCase();
+  return s === "1" || s === "true" || s === "yes";
+}
+
 function num(x, fallback = NaN) {
   const n = Number(x);
   return Number.isFinite(n) ? n : fallback;
@@ -112,24 +119,37 @@ if (Number.isFinite(avgBirdies) && Number.isFinite(avgBogeys) && avgBirdies + av
 }
 
 const props = Array.isArray(proj.props) ? proj.props : [];
-for (const mkt of DK_CORE_MARKETS) {
-  const dkLines = props.filter(
-    (r) =>
-      String(r.source || "").trim().toLowerCase() === "draftkings" &&
-      String(r.market || "").trim() === mkt,
+const dkSlug = String(proj.dk_league_slug || "").trim();
+const skipDkGate = envTruthy("GOLF_SKIP_DK_OU_VALIDATE", false);
+const anyDkProps = props.some((r) => String(r.source || "").trim().toLowerCase() === "draftkings");
+
+if (skipDkGate || !anyDkProps) {
+  const reason = skipDkGate
+    ? "GOLF_SKIP_DK_OU_VALIDATE=1"
+    : "DraftKings has not posted round O/U yet (pre-tournament)";
+  console.warn(
+    `[validate:projections] WARN: skipping DK O/U coverage gate (${reason}). Re-run fetch:book-odds after DK posts lines.`,
   );
-  const fake = props.filter(
-    (r) =>
-      String(r.source || "").trim().toLowerCase() !== "draftkings" &&
-      String(r.market || "").trim() === mkt,
-  );
-  if (fake.length) {
-    fail(`${fake.length} non-DK ${mkt} props in projections.json — run fetch:book-odds (DK only for this market)`);
-  }
-  if (dkLines.length < DK_MIN_LINES_PER_MARKET) {
-    fail(
-      `DraftKings ${mkt}: only ${dkLines.length} lines (need ≥${DK_MIN_LINES_PER_MARKET}) — check us-open slug / Playwright scrape`,
+} else {
+  for (const mkt of DK_CORE_MARKETS) {
+    const dkLines = props.filter(
+      (r) =>
+        String(r.source || "").trim().toLowerCase() === "draftkings" &&
+        String(r.market || "").trim() === mkt,
     );
+    const fake = props.filter(
+      (r) =>
+        String(r.source || "").trim().toLowerCase() !== "draftkings" &&
+        String(r.market || "").trim() === mkt,
+    );
+    if (fake.length) {
+      fail(`${fake.length} non-DK ${mkt} props in projections.json — run fetch:book-odds (DK only for this market)`);
+    }
+    if (dkLines.length < DK_MIN_LINES_PER_MARKET) {
+      fail(
+        `DraftKings ${mkt}: only ${dkLines.length} lines (need ≥${DK_MIN_LINES_PER_MARKET}) — check DK league slug${dkSlug ? ` (${dkSlug})` : ""} / Playwright scrape`,
+      );
+    }
   }
 }
 

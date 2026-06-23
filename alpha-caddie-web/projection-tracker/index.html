@@ -7,14 +7,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="tracker.css?v=3" />
+  <link rel="stylesheet" href="tracker.css?v=6" />
 </head>
 <body>
   <header class="app-header">
     <div class="header-inner">
       <div>
         <h1 class="brand-title">Projection tracker</h1>
-        <p class="brand-sub">Model vs book lines &amp; flat-unit EV backtest</p>
+        <p class="brand-sub">Model vs DraftKings lines · odds · W/L bet log</p>
       </div>
       <div class="header-meta" id="header-meta">Loading…</div>
     </div>
@@ -50,6 +50,15 @@
           <option value="under">Under</option>
         </select>
       </label>
+      <label>Player
+        <input type="search" id="filter-player" placeholder="Search name…" autocomplete="off" />
+      </label>
+      <label>Show
+        <select id="filter-show">
+          <option value="bets" selected>Qualified bets only</option>
+          <option value="all">All graded lines</option>
+        </select>
+      </label>
       <button type="button" class="btn" id="btn-reload" title="Reload CSV from disk">Reload data</button>
     </div>
 
@@ -57,8 +66,11 @@
       <button type="button" class="tab active" data-tab="overview" role="tab">Overview</button>
       <button type="button" class="tab" data-tab="accuracy" role="tab">Line accuracy</button>
       <button type="button" class="tab" data-tab="ev" role="tab">EV backtest</button>
+      <button type="button" class="tab" data-tab="bets" role="tab">Bet log</button>
+      <button type="button" class="tab" data-tab="risk" role="tab">Risk</button>
       <button type="button" class="tab" data-tab="events" role="tab">All tournaments</button>
       <button type="button" class="tab" data-tab="insights" role="tab">Insights</button>
+      <button type="button" class="tab" data-tab="guide" role="tab">Guide</button>
     </nav>
 
     <section id="panel-overview" class="panel active" role="tabpanel">
@@ -89,6 +101,113 @@
             </thead>
             <tbody></tbody>
           </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-bets" class="panel" role="tabpanel">
+      <p class="note">Each row is one player × round × market. <strong>Model</strong> = projection at export; <strong>DK</strong> = pre-round DraftKings line. <strong>EV%</strong> = edge vs posted odds; <strong>Fair EV%</strong> = edge vs devigged true price (margin removed). <strong>Beat fair price</strong> = hit rate minus average fair implied on your picks.</p>
+      <div class="kpi-grid" id="bets-kpis"></div>
+      <div class="table-card">
+        <div class="table-wrap table-wrap-tall">
+          <table class="data-table" id="bets-table">
+            <thead>
+              <tr>
+                <th id="bets-col-event" hidden>Tournament</th>
+                <th class="num">Rnd</th>
+                <th>Player</th>
+                <th>Market</th>
+                <th class="num">Model</th>
+                <th class="num">DK</th>
+                <th class="num">Δ</th>
+                <th class="num">Over</th>
+                <th>Over</th>
+                <th class="num">Under</th>
+                <th>Under</th>
+                <th>Pick</th>
+                <th class="num">EV%</th>
+                <th class="num" title="Edge vs devigged fair price">Fair EV%</th>
+                <th class="num">Actual</th>
+                <th>Bet</th>
+                <th class="num">P/L</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-risk" class="panel" role="tabpanel">
+      <p class="note">Simulate historical P/L in dollars from your backtest bets, and see recommended stakes at your bankroll. Uses the same tournament / market / min EV filters as the toolbar.</p>
+      <div class="risk-controls card-surface">
+        <label>Starting bankroll ($)
+          <input type="number" id="risk-bankroll" min="100" step="100" value="10000" />
+        </label>
+        <label>Sizing method
+          <select id="risk-method">
+            <option value="flat_fixed">Flat 1 unit (fixed $ at start)</option>
+            <option value="flat_compound" selected>Flat 1% (compound)</option>
+            <option value="kelly_unit_cap">Quarter Kelly + 1% cap (+EV app)</option>
+            <option value="kelly_q">Quarter Kelly (max 5%)</option>
+            <option value="kelly_half">Half Kelly (max 5%)</option>
+          </select>
+        </label>
+        <label>Unit size (% of bankroll)
+          <input type="number" id="risk-unit-pct" min="0.25" max="5" step="0.25" value="1" title="1 unit = this % of bankroll" />
+        </label>
+        <label>Max stake (% of bankroll)
+          <input type="number" id="risk-max-stake" min="1" max="25" step="0.5" value="5" title="Kelly methods only" />
+        </label>
+        <label>Round exposure cap (%)
+          <input type="number" id="risk-round-cap" min="5" max="50" step="1" value="15" title="Max total staked per event round" />
+        </label>
+      </div>
+      <div class="kpi-grid" id="risk-kpis"></div>
+      <div class="chart-card">
+        <h2 class="section-title">Bankroll curve (simulated)</h2>
+        <div class="bankroll-chart-wrap">
+          <svg id="risk-chart" class="bankroll-chart" viewBox="0 0 800 220" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
+      <div class="risk-two-col">
+        <div class="table-card">
+          <h2 class="section-title">Suggested stake by market</h2>
+          <p class="note risk-note">At your entered bankroll, using median edge &amp; odds from filtered qualified bets.</p>
+          <div class="table-wrap">
+            <table class="data-table" id="risk-stake-table">
+              <thead>
+                <tr>
+                  <th>Market</th>
+                  <th class="num">Median EV%</th>
+                  <th class="num">Typical odds</th>
+                  <th class="num">Stake</th>
+                  <th class="num">% bankroll</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="table-card">
+          <h2 class="section-title">Recent simulated bets</h2>
+          <div class="table-wrap table-wrap-tall">
+            <table class="data-table" id="risk-recent-table">
+              <thead>
+                <tr>
+                  <th>Event</th>
+                  <th class="num">Rnd</th>
+                  <th>Player</th>
+                  <th>Market</th>
+                  <th class="num">Stake</th>
+                  <th>Bet</th>
+                  <th class="num">P/L</th>
+                  <th class="num">Bankroll</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </section>
@@ -132,8 +251,112 @@
       <p class="note">Auto-generated takeaways from the current filters.</p>
       <ul class="insight-list" id="insight-list"></ul>
     </section>
+
+    <section id="panel-guide" class="panel" role="tabpanel">
+      <p class="note guide-lede">What each tab means. Share this page: <a id="guide-share-link" href="#guide">#guide</a></p>
+
+      <article class="guide-block">
+        <h2 class="guide-heading">What this tool does</h2>
+        <p>Backtests your <strong>round projections</strong> against <strong>pre-round DraftKings lines</strong> for completed tournaments. Data: <code>round_projection_vs_actual_summary.csv</code> (aggregates) and <code>round_projection_vs_actual.csv</code> (every player × round × market). Regenerate with <code>npm run export:round-projection-vs-actual</code>.</p>
+      </article>
+
+      <article class="guide-block">
+        <h2 class="guide-heading">Toolbar filters</h2>
+        <dl class="guide-dl">
+          <dt>Tournament</dt>
+          <dd>One event, or all combined (each event uses its latest export).</dd>
+          <dt>Market</dt>
+          <dd>Total score, Birdies, GIR, Fairways, Pars, Bogeys, or all.</dd>
+          <dt>Min EV %</dt>
+          <dd>Only bets where model edge vs <em>posted</em> DK odds is at least this (default 5%).</dd>
+          <dt>Bet side</dt>
+          <dd>Over only, under only, or both.</dd>
+          <dt>Player</dt>
+          <dd>Name search (Bet log &amp; Risk).</dd>
+          <dt>Show</dt>
+          <dd><strong>Bet log only:</strong> qualified bets vs all graded lines (every DK line with a result).</dd>
+        </dl>
+      </article>
+
+      <article class="guide-block">
+        <h2 class="guide-heading"><a href="#overview">Overview</a></h2>
+        <p>High-level dashboard: calibration + betting edge at a glance.</p>
+        <ul class="guide-ul">
+          <li><strong>Total score RMSE / MAE</strong> — How far projected round scores sit from DK lines (lower = closer).</li>
+          <li><strong>EV units / ROI</strong> — Flat 1-unit P/L on every side clearing min EV %.</li>
+          <li><strong>Best edge pocket</strong> — Market + side with best ROI at your filter.</li>
+          <li>Charts: RMSE by market; EV ROI by market.</li>
+        </ul>
+      </article>
+
+      <article class="guide-block">
+        <h2 class="guide-heading"><a href="#accuracy">Line accuracy</a></h2>
+        <p>Model line vs DK line <em>before the round</em> — not win rate.</p>
+        <ul class="guide-ul">
+          <li><strong>RMSE</strong> — Root mean square error (model − DK). Lower is better.</li>
+          <li><strong>MAE</strong> — Mean absolute error.</li>
+          <li><strong>Line pairs</strong> — Count of player-round-markets with both lines.</li>
+        </ul>
+      </article>
+
+      <article class="guide-block">
+        <h2 class="guide-heading"><a href="#ev">EV backtest</a></h2>
+        <p>Aggregated betting if you bet every qualifying side at <strong>flat 1 unit</strong> on pre-round DK odds.</p>
+        <ul class="guide-ul">
+          <li>Table: market × EV threshold × side → bets, W–L–P, units, ROI, win %.</li>
+          <li><strong>Heatmap</strong> — Best ROI per market/threshold cell (green = +, red = −).</li>
+        </ul>
+      </article>
+
+      <article class="guide-block">
+        <h2 class="guide-heading"><a href="#bets">Bet log</a></h2>
+        <p>One row = player × round × market (pre-round DK audit).</p>
+        <dl class="guide-dl guide-dl-compact">
+          <dt>Model / DK / Δ</dt>
+          <dd>Your projection, book line, and difference.</dd>
+          <dt>Over / Under</dt>
+          <dd>American odds and W/L vs actual for each side.</dd>
+          <dt>Pick / EV% / Fair EV%</dt>
+          <dd>Bet side (≥ min EV), edge vs posted odds, edge vs devigged true price (no margin).</dd>
+          <dt>Bet / P/L</dt>
+          <dd>Result and flat 1u profit on your pick.</dd>
+        </dl>
+        <p>KPIs: beat fair price (hit rate − fair implied), DK margin, model vs fair.</p>
+      </article>
+
+      <article class="guide-block">
+        <h2 class="guide-heading"><a href="#risk">Risk</a></h2>
+        <p>Dollar simulation and stake sizing from your bankroll.</p>
+        <ul class="guide-ul">
+          <li><strong>Flat 1 unit (fixed)</strong> — Same $ every bet (1% of starting bankroll).</li>
+          <li><strong>Flat 1% (compound)</strong> — 1% of current bankroll each bet.</li>
+          <li><strong>Quarter / Half Kelly</strong> — Kelly sizing with caps; +1% cap matches main +EV app.</li>
+          <li><strong>Round exposure cap</strong> — Max total staked per event-round.</li>
+          <li>Outputs: ending bankroll, drawdown, bankroll curve, suggested stake by market, recent bets in $.</li>
+        </ul>
+      </article>
+
+      <article class="guide-block">
+        <h2 class="guide-heading"><a href="#events">All tournaments</a></h2>
+        <p>Card per event: score RMSE/MAE, EV units &amp; ROI at 5%+ edge. Click a card to filter that tournament.</p>
+      </article>
+
+      <article class="guide-block">
+        <h2 class="guide-heading"><a href="#insights">Insights</a></h2>
+        <p>Auto bullets from current filters: calibration notes, best/worst pockets, beat-fair summary.</p>
+      </article>
+
+      <article class="guide-block guide-foot">
+        <h2 class="guide-heading">Assumptions</h2>
+        <ul class="guide-ul">
+          <li>Pre-round DK lines/odds only (<code>pre_round_audit</code>).</li>
+          <li>Default pricing mode/skill unless noted.</li>
+          <li>Flat 1u in Overview, EV backtest, Bet log; Risk tab uses your bankroll rules.</li>
+        </ul>
+      </article>
+    </section>
   </main>
 
-  <script src="tracker.js?v=4"></script>
+  <script type="module" src="tracker.js?v=10"></script>
 </body>
 </html>

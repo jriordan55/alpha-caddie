@@ -64,6 +64,16 @@ import {
   buildRoundProjectionVsActualSummary,
   writeRoundProjectionVsActualWorkbook,
 } from "./round-projection-vs-actual-summary.mjs";
+import {
+  EXPORT_SIGNAL_COLS,
+  alignDetailCsvContent,
+  extractSignalsFromHistRow,
+  extractSignalsFromPlayerRow,
+  loadCourseTableByKey,
+  pinSheetActiveFor,
+  signalCellsFromObject,
+} from "./projection-context-signals.mjs";
+import { normCourseNameKey } from "./course-name-key.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -74,19 +84,20 @@ const DEFAULT_OUT = join(WEB_ROOT, "data", "round_projection_vs_actual.csv");
 const DEFAULT_SUMMARY_OUT = join(WEB_ROOT, "data", "round_projection_vs_actual_summary.csv");
 const DEFAULT_XLSX_OUT = join(WEB_ROOT, "data", "round_projection_vs_actual.xlsx");
 
+const DETAIL_MID_COLS = [
+  ...EXPORT_ACTUAL_COLS,
+  "book_odds_source",
+  ...EXPORT_MODEL_LINE_COLS,
+  ...EXPORT_BOOK_LINE_COLS,
+  ...EXPORT_OVER_ODDS_COLS,
+  ...EXPORT_UNDER_ODDS_COLS,
+  ...EXPORT_OVER_RESULT_COLS,
+  ...EXPORT_UNDER_RESULT_COLS,
+];
 const HEADER =
   "exported_at,projections_updated_at,event_name,course_used,display_round,round,pricing_mode,pricing_skill,dg_id,player_name," +
-  [
-    ...EXPORT_ACTUAL_COLS,
-    "book_odds_source",
-    ...EXPORT_MODEL_LINE_COLS,
-    ...EXPORT_BOOK_LINE_COLS,
-    ...EXPORT_OVER_ODDS_COLS,
-    ...EXPORT_UNDER_ODDS_COLS,
-    ...EXPORT_OVER_RESULT_COLS,
-    ...EXPORT_UNDER_RESULT_COLS,
-    "edge",
-  ].join(",") + "\n";
+  [...DETAIL_MID_COLS, ...EXPORT_SIGNAL_COLS, "edge"].join(",") +
+  "\n";
 
 function formatAmericanOdds(am) {
   const v = Math.round(num(am, NaN));
@@ -168,7 +179,8 @@ async function loadPriorEventRows(csvPath, summaryPath, currentEventName, opts =
   const priorSummaryRows = [];
   if (existsSync(csvPath)) {
     const raw = readFileSync(csvPath, "utf8");
-    const rows = raw.split(/\r?\n/).filter(Boolean);
+    const aligned = alignDetailCsvContent(raw, HEADER);
+    const rows = aligned.split(/\r?\n/).filter(Boolean);
     if (rows.length >= 2) {
       const cols = rows[0].split(",");
       const iEvent = cols.indexOf("event_name");
@@ -279,6 +291,7 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, fairwayH
   }
 
   const allActuals = new Map();
+  const histByKey = new Map();
   if (existsSync(histPath)) {
     const histParser = createReadStream(histPath).pipe(
       parse({ columns: true, relax_quotes: true, relax_column_count: true, skip_records_with_error: true }),
@@ -293,6 +306,7 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, fairwayH
       const score = num(row.round_score);
       if (!Number.isFinite(score)) continue;
       const key = `${ev}\x1f${dg}|${rnd}`;
+      histByKey.set(key, row);
       allActuals.set(key, {
         total_score: Math.round(score * 10) / 10,
         birdies: birdiesPlusEaglesFromRow(row),
@@ -384,6 +398,34 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, fairwayH
 
       if (!hasBookOdds && !hasCompleted) continue;
 
+      const histRow = histByKey.get(`${ev}\x1f${pr.dg}|${pr.rnd}`);
+      let sigObj = histRow
+        ? extractSignalsFromHistRow(histRow, WEB_ROOT, {
+            courseUsed: pr.course,
+            eventName: ev,
+            projUpdatedAt: pr.projAt,
+            fairwayHoles,
+          })
+        : {};
+      if (!histRow) {
+        const mGir = pr.markets.GIR;
+        const mFw = pr.markets["Fairways hit"];
+        const modelGir = mGir ? num(mGir.modelGir, NaN) : NaN;
+        const modelFw = mFw ? num(mFw.modelFairways, NaN) : NaN;
+        sigObj = {
+          ...sigObj,
+          gir_minus_fw: Number.isFinite(modelGir) && Number.isFinite(modelFw) ? modelGir - modelFw : NaN,
+          course_fw_width: num(loadCourseTableByKey(WEB_ROOT).get(normCourseNameKey(pr.course))?.fw_width, NaN),
+          pin_sheet_active: pinSheetActiveFor(WEB_ROOT, {
+            courseUsed: pr.course,
+            eventName: ev,
+            round: pr.rnd,
+            projUpdatedAt: pr.projAt,
+          }),
+        };
+      }
+      const sigCells = signalCellsFromObject(sigObj);
+
       const rowOrder = [
         exported,
         pr.projAt,
@@ -403,6 +445,7 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, fairwayH
         ...EXPORT_UNDER_ODDS_COLS.map((c) => rowCells[c] || ""),
         ...EXPORT_OVER_RESULT_COLS.map((c) => rowCells[c] || ""),
         ...EXPORT_UNDER_RESULT_COLS.map((c) => rowCells[c] || ""),
+        ...EXPORT_SIGNAL_COLS.map((c) => sigCells[c] || ""),
         "",
       ];
       resultLines.push(rowOrder.map(csvCell).join(",") + "\n");
@@ -885,6 +928,8 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
     const act = actuals.get(`${dg}|${rnd}`) || {};
     if (Number.isFinite(act.total_score)) withActual++;
 
+    const playerSignals = signalCellsFromObject(extractSignalsFromPlayerRow(p, payload, WEB_ROOT));
+
     for (const pm of EXPORT_PRICING_MODES) {
       const rowCells = Object.fromEntries(
         [
@@ -996,6 +1041,7 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
         ...EXPORT_UNDER_ODDS_COLS.map((c) => rowCells[c]),
         ...EXPORT_OVER_RESULT_COLS.map((c) => rowCells[c]),
         ...EXPORT_UNDER_RESULT_COLS.map((c) => rowCells[c]),
+        ...EXPORT_SIGNAL_COLS.map((c) => playerSignals[c] || ""),
         rowCells.edge,
       ];
 

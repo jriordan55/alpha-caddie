@@ -6,6 +6,7 @@ import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { resolveLiveRoundActualsByDg } from "./dg-live-tournament-stats.mjs";
+import { eventsLikelySame } from "./dg-events-align.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
 import {
   applyFieldDayCountingLiftNatural,
@@ -124,6 +125,16 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
   const fairwayHoles = Math.round(num(basis.fairway_holes_modeled, 14)) || 14;
   const eventName = String(proj.event_name || "").trim();
   const courseKey = normCourseNameKey(String(proj.course_used || "").trim());
+
+  const liveEv = String(
+    live?.field_updates?.event_name || live?.info?.event_name || "",
+  ).trim();
+  if (eventName && liveEv && !eventsLikelySame(eventName, liveEv)) {
+    console.warn(
+      `[within-event-form] skip — live-in-play event "${liveEv}" ≠ projections "${eventName}"`,
+    );
+    return { playersTouched: 0, fieldMeans: null };
+  }
 
   const liveOnly =
     String(process.env.GOLF_WITHIN_EVENT_LIVE_ONLY ?? "1").trim() !== "0";

@@ -1,0 +1,1244 @@
+{
+  "generated_at": "2026-06-22T23:24:57.657Z",
+  "min_ev_pct": 5,
+  "wind_data": "player_round_history empty — wind segments skipped unless history CSV/JSON populated",
+  "focusMarket": "Fairways hit",
+  "marketSummary": [
+    {
+      "market": "Birdies",
+      "bets": 417,
+      "roiPct": 22.1,
+      "hitPct": 52.8,
+      "units": 92.34
+    },
+    {
+      "market": "GIR",
+      "bets": 229,
+      "roiPct": 17.6,
+      "hitPct": 62,
+      "units": 40.35
+    },
+    {
+      "market": "Fairways hit",
+      "bets": 258,
+      "roiPct": 17,
+      "hitPct": 61.2,
+      "units": 43.87
+    },
+    {
+      "market": "Total score",
+      "bets": 403,
+      "roiPct": 13.7,
+      "hitPct": 60.5,
+      "units": 55.2
+    },
+    {
+      "market": "Pars",
+      "bets": 196,
+      "roiPct": 10.1,
+      "hitPct": 58.2,
+      "units": 19.84
+    },
+    {
+      "market": "Bogeys",
+      "bets": 245,
+      "roiPct": 0.7,
+      "hitPct": 49.4,
+      "units": 1.71
+    }
+  ],
+  "markets": {
+    "Total score": {
+      "market": "Total score",
+      "bets": 403,
+      "wins": 244,
+      "losses": 159,
+      "units": 55.2,
+      "roiPct": 13.7,
+      "hitPct": 60.5,
+      "correlationsWithWin": {
+        "modelBookDelta": -0.12,
+        "edge": 0.079
+      },
+      "bySide": [
+        {
+          "key": "under",
+          "bets": 273,
+          "wins": 175,
+          "losses": 98,
+          "units": 56.67503142610656,
+          "edgeSum": 5178.895342167469,
+          "deltaSum": -471.4,
+          "hitPct": 64.1025641025641,
+          "roiPct": 20.760084771467604,
+          "avgEdge": 18.970312608672046,
+          "avgModelBookDelta": -1.7267399267399266
+        },
+        {
+          "key": "over",
+          "bets": 130,
+          "wins": 69,
+          "losses": 61,
+          "units": -1.478939321673371,
+          "edgeSum": 2275.1882371848455,
+          "deltaSum": 222.20000000000007,
+          "hitPct": 53.07692307692308,
+          "roiPct": -1.1376456320564392,
+          "avgEdge": 17.501447978344967,
+          "avgModelBookDelta": 1.7092307692307698
+        }
+      ],
+      "byEdgeBucket": [
+        {
+          "key": "20%+",
+          "bets": 144,
+          "wins": 91,
+          "losses": 53,
+          "units": 33.01529609005939,
+          "edgeSum": 4041.9053123056647,
+          "deltaSum": -138.49999999999994,
+          "hitPct": 63.19444444444444,
+          "roiPct": 22.927288951430132,
+          "avgEdge": 28.06878689101156,
+          "avgModelBookDelta": -0.9618055555555551
+        },
+        {
+          "key": "12.5–20%",
+          "bets": 143,
+          "wins": 89,
+          "losses": 54,
+          "units": 20.943810755850002,
+          "edgeSum": 2378.334640061783,
+          "deltaSum": -90.49999999999993,
+          "hitPct": 62.23776223776224,
+          "roiPct": 14.646021507587415,
+          "avgEdge": 16.631710769662817,
+          "avgModelBookDelta": -0.6328671328671324
+        },
+        {
+          "key": "7.5–12.5%",
+          "bets": 78,
+          "wins": 45,
+          "losses": 33,
+          "units": 3.8770730509561915,
+          "edgeSum": 798.0730701209114,
+          "deltaSum": -13.000000000000014,
+          "hitPct": 57.692307692307686,
+          "roiPct": 4.9706064755848605,
+          "avgEdge": 10.231706027191173,
+          "avgModelBookDelta": -0.16666666666666685
+        },
+        {
+          "key": "5–7.5%",
+          "bets": 38,
+          "wins": 19,
+          "losses": 19,
+          "units": -2.6400877924323765,
+          "edgeSum": 235.77055686395593,
+          "deltaSum": -7.200000000000003,
+          "hitPct": 50,
+          "roiPct": -6.947599453769411,
+          "avgEdge": 6.204488338525156,
+          "avgModelBookDelta": -0.18947368421052638
+        }
+      ],
+      "byModelVsBook": [
+        {
+          "key": "Model ≥0.35 below DK",
+          "bets": 263,
+          "wins": 170,
+          "losses": 93,
+          "units": 55.65503142610656,
+          "edgeSum": 5086.966775550901,
+          "deltaSum": -469.5,
+          "hitPct": 64.63878326996198,
+          "roiPct": 21.161608907264853,
+          "avgEdge": 19.342078994490116,
+          "avgModelBookDelta": -1.785171102661597
+        },
+        {
+          "key": "Model near DK (±0.35)",
+          "bets": 15,
+          "wins": 7,
+          "losses": 8,
+          "units": 0.30000000000000027,
+          "edgeSum": 132.9536959650411,
+          "deltaSum": -1.6000000000000085,
+          "hitPct": 46.666666666666664,
+          "roiPct": 2.0000000000000018,
+          "avgEdge": 8.86357973100274,
+          "avgModelBookDelta": -0.10666666666666723
+        },
+        {
+          "key": "Model ≥0.35 above DK",
+          "bets": 125,
+          "wins": 67,
+          "losses": 58,
+          "units": -0.7589393216733722,
+          "edgeSum": 2234.1631078363725,
+          "deltaSum": 221.90000000000006,
+          "hitPct": 53.6,
+          "roiPct": -0.6071514573386978,
+          "avgEdge": 17.87330486269098,
+          "avgModelBookDelta": 1.7752000000000006
+        }
+      ],
+      "byWind": [],
+      "byRound": [
+        {
+          "key": "Round 1",
+          "bets": 133,
+          "wins": 90,
+          "losses": 43,
+          "units": 34.64406313006373,
+          "edgeSum": 2290.404730500896,
+          "deltaSum": -100.30000000000001,
+          "hitPct": 67.66917293233082,
+          "roiPct": 26.048167766965207,
+          "avgEdge": 17.221088199254858,
+          "avgModelBookDelta": -0.7541353383458648
+        },
+        {
+          "key": "Round 2",
+          "bets": 143,
+          "wins": 94,
+          "losses": 49,
+          "units": 34.72743490496043,
+          "edgeSum": 2903.012415059162,
+          "deltaSum": -137.60000000000002,
+          "hitPct": 65.73426573426573,
+          "roiPct": 24.284919513958343,
+          "avgEdge": 20.300786119294838,
+          "avgModelBookDelta": -0.9622377622377624
+        },
+        {
+          "key": "Round 3",
+          "bets": 54,
+          "wins": 29,
+          "losses": 25,
+          "units": 0.3396360678661341,
+          "edgeSum": 751.4993257415783,
+          "deltaSum": -26.499999999999986,
+          "hitPct": 53.70370370370371,
+          "roiPct": 0.6289556812335817,
+          "avgEdge": 13.916654180399599,
+          "avgModelBookDelta": -0.4907407407407405
+        },
+        {
+          "key": "Round 4",
+          "bets": 73,
+          "wins": 31,
+          "losses": 42,
+          "units": -14.515041998457054,
+          "edgeSum": 1509.1671080506767,
+          "deltaSum": 15.200000000000088,
+          "hitPct": 42.465753424657535,
+          "roiPct": -19.883619175968565,
+          "avgEdge": 20.673522028091462,
+          "avgModelBookDelta": 0.20821917808219298
+        }
+      ],
+      "profitablePlaybook": []
+    },
+    "Birdies": {
+      "market": "Birdies",
+      "bets": 417,
+      "wins": 220,
+      "losses": 197,
+      "units": 92.34,
+      "roiPct": 22.1,
+      "hitPct": 52.8,
+      "correlationsWithWin": {
+        "edge": 0.133,
+        "modelBookDelta": -0.062,
+        "modelGir": -0.055,
+        "modelScore": 0.052,
+        "modelFairways": 0.019
+      },
+      "bySide": [
+        {
+          "key": "over",
+          "bets": 240,
+          "wins": 118,
+          "losses": 122,
+          "units": 79.2654568583298,
+          "edgeSum": 3952.9484726580836,
+          "deltaSum": 230,
+          "hitPct": 49.166666666666664,
+          "roiPct": 33.02727369097075,
+          "avgEdge": 16.470618636075347,
+          "avgModelBookDelta": 0.9583333333333334
+        },
+        {
+          "key": "under",
+          "bets": 177,
+          "wins": 102,
+          "losses": 75,
+          "units": 13.071981745343487,
+          "edgeSum": 2852.332873067478,
+          "deltaSum": -180.5,
+          "hitPct": 57.6271186440678,
+          "roiPct": 7.385300421098015,
+          "avgEdge": 16.114874989081798,
+          "avgModelBookDelta": -1.0197740112994351
+        }
+      ],
+      "byEdgeBucket": [
+        {
+          "key": "20%+",
+          "bets": 104,
+          "wins": 65,
+          "losses": 39,
+          "units": 113.80859181758079,
+          "edgeSum": 3278.0602434158804,
+          "deltaSum": -12,
+          "hitPct": 62.5,
+          "roiPct": 109.43133828613539,
+          "avgEdge": 31.519810032845005,
+          "avgModelBookDelta": -0.11538461538461539
+        },
+        {
+          "key": "12.5–20%",
+          "bets": 117,
+          "wins": 59,
+          "losses": 58,
+          "units": -2.2601972529544536,
+          "edgeSum": 1853.4860335680407,
+          "deltaSum": 35,
+          "hitPct": 50.427350427350426,
+          "roiPct": -1.9317925238926954,
+          "avgEdge": 15.841760970667014,
+          "avgModelBookDelta": 0.29914529914529914
+        },
+        {
+          "key": "7.5–12.5%",
+          "bets": 130,
+          "wins": 67,
+          "losses": 63,
+          "units": -6.389388861382707,
+          "edgeSum": 1263.5190273680716,
+          "deltaSum": 27,
+          "hitPct": 51.53846153846153,
+          "roiPct": -4.9149145087559285,
+          "avgEdge": 9.71937713360055,
+          "avgModelBookDelta": 0.2076923076923077
+        },
+        {
+          "key": "5–7.5%",
+          "bets": 66,
+          "wins": 29,
+          "losses": 37,
+          "units": -12.821567099570357,
+          "edgeSum": 410.21604137357156,
+          "deltaSum": -0.5,
+          "hitPct": 43.93939393939394,
+          "roiPct": -19.426616817530846,
+          "avgEdge": 6.2153945662662355,
+          "avgModelBookDelta": -0.007575757575757576
+        }
+      ],
+      "byModelVsBook": [
+        {
+          "key": "Model ≥0.35 above DK",
+          "bets": 219,
+          "wins": 111,
+          "losses": 108,
+          "units": 81.5054568583298,
+          "edgeSum": 3708.5642870109336,
+          "deltaSum": 232.5,
+          "hitPct": 50.68493150684932,
+          "roiPct": 37.21710358827844,
+          "avgEdge": 16.93408350233303,
+          "avgModelBookDelta": 1.0616438356164384
+        },
+        {
+          "key": "Model ≥0.35 below DK",
+          "bets": 168,
+          "wins": 101,
+          "losses": 67,
+          "units": 21.85198174534348,
+          "edgeSum": 2805.287920022343,
+          "deltaSum": -183,
+          "hitPct": 60.11904761904761,
+          "roiPct": 13.00713199127588,
+          "avgEdge": 16.698142381085376,
+          "avgModelBookDelta": -1.0892857142857142
+        },
+        {
+          "key": "Model near DK (±0.35)",
+          "bets": 30,
+          "wins": 8,
+          "losses": 22,
+          "units": -11.02,
+          "edgeSum": 291.42913869228494,
+          "deltaSum": 0,
+          "hitPct": 26.666666666666668,
+          "roiPct": -36.733333333333334,
+          "avgEdge": 9.714304623076165,
+          "avgModelBookDelta": 0
+        }
+      ],
+      "byWind": [],
+      "byRound": [
+        {
+          "key": "Round 3",
+          "bets": 69,
+          "wins": 43,
+          "losses": 26,
+          "units": 65.57080238215597,
+          "edgeSum": 1281.5722087485647,
+          "deltaSum": -53.5,
+          "hitPct": 62.31884057971014,
+          "roiPct": 95.0301483799362,
+          "avgEdge": 18.573510271718327,
+          "avgModelBookDelta": -0.7753623188405797
+        },
+        {
+          "key": "Round 2",
+          "bets": 159,
+          "wins": 79,
+          "losses": 80,
+          "units": 28.425138387971504,
+          "edgeSum": 2954.2469692589116,
+          "deltaSum": 98.5,
+          "hitPct": 49.685534591194966,
+          "roiPct": 17.877445527026104,
+          "avgEdge": 18.580169617980577,
+          "avgModelBookDelta": 0.6194968553459119
+        },
+        {
+          "key": "Round 4",
+          "bets": 78,
+          "wins": 41,
+          "losses": 37,
+          "units": 0.06331463437610996,
+          "edgeSum": 1137.4617335704756,
+          "deltaSum": -15,
+          "hitPct": 52.56410256410257,
+          "roiPct": 0.08117260817449995,
+          "avgEdge": 14.582842738083022,
+          "avgModelBookDelta": -0.19230769230769232
+        },
+        {
+          "key": "Round 1",
+          "bets": 111,
+          "wins": 57,
+          "losses": 54,
+          "units": -1.7218168008303563,
+          "edgeSum": 1432.0004341476106,
+          "deltaSum": 19.5,
+          "hitPct": 51.35135135135135,
+          "roiPct": -1.551186307054375,
+          "avgEdge": 12.900904812140636,
+          "avgModelBookDelta": 0.17567567567567569
+        }
+      ],
+      "profitablePlaybook": [
+        "When model is ≥0.5 above DK line, ROI ≈ 37.2% (219 bets)."
+      ]
+    },
+    "GIR": {
+      "market": "GIR",
+      "bets": 229,
+      "wins": 142,
+      "losses": 87,
+      "units": 40.35,
+      "roiPct": 17.6,
+      "hitPct": 62,
+      "correlationsWithWin": {
+        "modelScore": 0.161,
+        "edge": 0.102,
+        "modelBookDelta": -0.097,
+        "modelFairways": 0.039,
+        "modelGir": -0.032
+      },
+      "bySide": [
+        {
+          "key": "under",
+          "bets": 122,
+          "wins": 80,
+          "losses": 42,
+          "units": 31.62750884563098,
+          "edgeSum": 2533.6985774496798,
+          "deltaSum": -186.5,
+          "hitPct": 65.57377049180327,
+          "roiPct": 25.92418757838605,
+          "avgEdge": 20.768021126636718,
+          "avgModelBookDelta": -1.528688524590164
+        },
+        {
+          "key": "over",
+          "bets": 107,
+          "wins": 62,
+          "losses": 45,
+          "units": 8.71916125855058,
+          "edgeSum": 1794.175061334216,
+          "deltaSum": 131.5,
+          "hitPct": 57.943925233644855,
+          "roiPct": 8.148748839766897,
+          "avgEdge": 16.76799122742258,
+          "avgModelBookDelta": 1.2289719626168225
+        }
+      ],
+      "byEdgeBucket": [
+        {
+          "key": "20%+",
+          "bets": 85,
+          "wins": 57,
+          "losses": 28,
+          "units": 30.44014605347214,
+          "edgeSum": 2720.965808601794,
+          "deltaSum": -64.5,
+          "hitPct": 67.05882352941175,
+          "roiPct": 35.811936533496635,
+          "avgEdge": 32.011362454138755,
+          "avgModelBookDelta": -0.7588235294117647
+        },
+        {
+          "key": "12.5–20%",
+          "bets": 51,
+          "wins": 32,
+          "losses": 19,
+          "units": 7.098678234626403,
+          "edgeSum": 796.4090562531742,
+          "deltaSum": -15,
+          "hitPct": 62.745098039215684,
+          "roiPct": 13.918976930640007,
+          "avgEdge": 15.615863848101455,
+          "avgModelBookDelta": -0.29411764705882354
+        },
+        {
+          "key": "7.5–12.5%",
+          "bets": 66,
+          "wins": 38,
+          "losses": 28,
+          "units": 2.4322839898486404,
+          "edgeSum": 640.9259660492622,
+          "deltaSum": 17,
+          "hitPct": 57.57575757575758,
+          "roiPct": 3.68527877249794,
+          "avgEdge": 9.710999485594883,
+          "avgModelBookDelta": 0.25757575757575757
+        },
+        {
+          "key": "5–7.5%",
+          "bets": 27,
+          "wins": 15,
+          "losses": 12,
+          "units": 0.37556182623436407,
+          "edgeSum": 169.5728078796658,
+          "deltaSum": 7.5,
+          "hitPct": 55.55555555555556,
+          "roiPct": 1.3909697267939412,
+          "avgEdge": 6.280474365913547,
+          "avgModelBookDelta": 0.2777777777777778
+        }
+      ],
+      "byModelVsBook": [
+        {
+          "key": "Model ≥0.35 below DK",
+          "bets": 118,
+          "wins": 78,
+          "losses": 40,
+          "units": 31.127508845630974,
+          "edgeSum": 2480.304966788574,
+          "deltaSum": -186.5,
+          "hitPct": 66.10169491525424,
+          "roiPct": 26.37924478443303,
+          "avgEdge": 21.01953361685232,
+          "avgModelBookDelta": -1.5805084745762712
+        },
+        {
+          "key": "Model near DK (±0.35)",
+          "bets": 4,
+          "wins": 2,
+          "losses": 2,
+          "units": 0.5,
+          "edgeSum": 53.39361066110576,
+          "deltaSum": 0,
+          "hitPct": 50,
+          "roiPct": 12.5,
+          "avgEdge": 13.34840266527644,
+          "avgModelBookDelta": 0
+        },
+        {
+          "key": "Model ≥0.35 above DK",
+          "bets": 107,
+          "wins": 62,
+          "losses": 45,
+          "units": 8.71916125855058,
+          "edgeSum": 1794.175061334216,
+          "deltaSum": 131.5,
+          "hitPct": 57.943925233644855,
+          "roiPct": 8.148748839766897,
+          "avgEdge": 16.76799122742258,
+          "avgModelBookDelta": 1.2289719626168225
+        }
+      ],
+      "byWind": [],
+      "byRound": [
+        {
+          "key": "Round 4",
+          "bets": 40,
+          "wins": 27,
+          "losses": 13,
+          "units": 11.867755609324032,
+          "edgeSum": 838.8296377644549,
+          "deltaSum": -25.5,
+          "hitPct": 67.5,
+          "roiPct": 29.669389023310078,
+          "avgEdge": 20.970740944111373,
+          "avgModelBookDelta": -0.6375
+        },
+        {
+          "key": "Round 3",
+          "bets": 34,
+          "wins": 22,
+          "losses": 12,
+          "units": 8.485761593767316,
+          "edgeSum": 680.9601154689374,
+          "deltaSum": -9,
+          "hitPct": 64.70588235294117,
+          "roiPct": 24.958122334609754,
+          "avgEdge": 20.028238690262864,
+          "avgModelBookDelta": -0.2647058823529412
+        },
+        {
+          "key": "Round 1",
+          "bets": 63,
+          "wins": 41,
+          "losses": 22,
+          "units": 11.22304812545871,
+          "edgeSum": 1194.734089638667,
+          "deltaSum": -77.5,
+          "hitPct": 65.07936507936508,
+          "roiPct": 17.814362103902713,
+          "avgEdge": 18.96403316886773,
+          "avgModelBookDelta": -1.2301587301587302
+        },
+        {
+          "key": "Round 2",
+          "bets": 92,
+          "wins": 52,
+          "losses": 40,
+          "units": 8.770104775631484,
+          "edgeSum": 1613.3497959118367,
+          "deltaSum": 57,
+          "hitPct": 56.52173913043478,
+          "roiPct": 9.532722582208136,
+          "avgEdge": 17.53641082512866,
+          "avgModelBookDelta": 0.6195652173913043
+        }
+      ],
+      "profitablePlaybook": [
+        "When model is ≥0.5 above DK line, ROI ≈ 8.1% (107 bets).",
+        "Skill signal: model uses driving accuracy / GIR skill blended with course history; largest edge when model fairways ≠ DK (see modelBookDelta correlation)."
+      ]
+    },
+    "Fairways hit": {
+      "market": "Fairways hit",
+      "bets": 258,
+      "wins": 158,
+      "losses": 100,
+      "units": 43.87,
+      "roiPct": 17,
+      "hitPct": 61.2,
+      "correlationsWithWin": {
+        "edge": 0.1,
+        "modelFairways": 0.087,
+        "modelScore": 0.077,
+        "modelGir": 0.041,
+        "modelBookDelta": -0.024
+      },
+      "bySide": [
+        {
+          "key": "over",
+          "bets": 147,
+          "wins": 90,
+          "losses": 57,
+          "units": 26.7671804748986,
+          "edgeSum": 3017.163619842996,
+          "deltaSum": 192,
+          "hitPct": 61.224489795918366,
+          "roiPct": 18.20896630945483,
+          "avgEdge": 20.52492258396596,
+          "avgModelBookDelta": 1.3061224489795917
+        },
+        {
+          "key": "under",
+          "bets": 111,
+          "wins": 68,
+          "losses": 43,
+          "units": 17.100328632240128,
+          "edgeSum": 2232.0987800144894,
+          "deltaSum": -141,
+          "hitPct": 61.261261261261254,
+          "roiPct": 15.405701470486601,
+          "avgEdge": 20.108998018148554,
+          "avgModelBookDelta": -1.2702702702702702
+        }
+      ],
+      "byEdgeBucket": [
+        {
+          "key": "20%+",
+          "bets": 109,
+          "wins": 70,
+          "losses": 39,
+          "units": 34.07370449137727,
+          "edgeSum": 3422.459807413721,
+          "deltaSum": 19,
+          "hitPct": 64.22018348623854,
+          "roiPct": 31.260279349887405,
+          "avgEdge": 31.39871382948368,
+          "avgModelBookDelta": 0.1743119266055046
+        },
+        {
+          "key": "12.5–20%",
+          "bets": 71,
+          "wins": 47,
+          "losses": 24,
+          "units": 15.241053788395355,
+          "edgeSum": 1150.152779969728,
+          "deltaSum": 27.5,
+          "hitPct": 66.19718309859155,
+          "roiPct": 21.46627294140191,
+          "avgEdge": 16.1993349291511,
+          "avgModelBookDelta": 0.3873239436619718
+        },
+        {
+          "key": "5–7.5%",
+          "bets": 23,
+          "wins": 12,
+          "losses": 11,
+          "units": -0.8699537119086669,
+          "edgeSum": 142.84315862228704,
+          "deltaSum": -6.5,
+          "hitPct": 52.17391304347826,
+          "roiPct": -3.7824074430811603,
+          "avgEdge": 6.210572114012479,
+          "avgModelBookDelta": -0.2826086956521739
+        },
+        {
+          "key": "7.5–12.5%",
+          "bets": 55,
+          "wins": 29,
+          "losses": 26,
+          "units": -4.577295460725248,
+          "edgeSum": 533.8066538517471,
+          "deltaSum": 11,
+          "hitPct": 52.72727272727272,
+          "roiPct": -8.322355383136813,
+          "avgEdge": 9.70557552457722,
+          "avgModelBookDelta": 0.2
+        }
+      ],
+      "byModelVsBook": [
+        {
+          "key": "Model ≥0.35 above DK",
+          "bets": 142,
+          "wins": 89,
+          "losses": 53,
+          "units": 30.127180474898605,
+          "edgeSum": 2979.053806566257,
+          "deltaSum": 193.5,
+          "hitPct": 62.676056338028175,
+          "roiPct": 21.21632427809761,
+          "avgEdge": 20.979252158917305,
+          "avgModelBookDelta": 1.3626760563380282
+        },
+        {
+          "key": "Model ≥0.35 below DK",
+          "bets": 107,
+          "wins": 65,
+          "losses": 42,
+          "units": 13.38032863224013,
+          "edgeSum": 2203.7987245865097,
+          "deltaSum": -142.5,
+          "hitPct": 60.747663551401864,
+          "roiPct": 12.50498003013096,
+          "avgEdge": 20.596249762490746,
+          "avgModelBookDelta": -1.3317757009345794
+        },
+        {
+          "key": "Model near DK (±0.35)",
+          "bets": 9,
+          "wins": 4,
+          "losses": 5,
+          "units": 0.3599999999999999,
+          "edgeSum": 66.40986870471907,
+          "deltaSum": 0,
+          "hitPct": 44.44444444444444,
+          "roiPct": 3.9999999999999987,
+          "avgEdge": 7.378874300524341,
+          "avgModelBookDelta": 0
+        }
+      ],
+      "byWind": [],
+      "byRound": [
+        {
+          "key": "Round 3",
+          "bets": 48,
+          "wins": 31,
+          "losses": 17,
+          "units": 19.0612649290203,
+          "edgeSum": 922.235549672413,
+          "deltaSum": 15.5,
+          "hitPct": 64.58333333333334,
+          "roiPct": 39.710968602125625,
+          "avgEdge": 19.21324061817527,
+          "avgModelBookDelta": 0.3229166666666667
+        },
+        {
+          "key": "Round 1",
+          "bets": 80,
+          "wins": 52,
+          "losses": 28,
+          "units": 12.569861520928292,
+          "edgeSum": 1624.8360060758773,
+          "deltaSum": -20,
+          "hitPct": 65,
+          "roiPct": 15.712326901160365,
+          "avgEdge": 20.310450075948467,
+          "avgModelBookDelta": -0.25
+        },
+        {
+          "key": "Round 4",
+          "bets": 34,
+          "wins": 20,
+          "losses": 14,
+          "units": 5.282886344660168,
+          "edgeSum": 916.6542367088533,
+          "deltaSum": 10.5,
+          "hitPct": 58.82352941176471,
+          "roiPct": 15.537901013706378,
+          "avgEdge": 26.96041872673098,
+          "avgModelBookDelta": 0.3088235294117647
+        },
+        {
+          "key": "Round 2",
+          "bets": 96,
+          "wins": 55,
+          "losses": 41,
+          "units": 6.953496312529952,
+          "edgeSum": 1785.536607400339,
+          "deltaSum": 45,
+          "hitPct": 57.291666666666664,
+          "roiPct": 7.243225325552033,
+          "avgEdge": 18.5993396604202,
+          "avgModelBookDelta": 0.46875
+        }
+      ],
+      "profitablePlaybook": [
+        "When model is ≥0.5 above DK line, ROI ≈ 21.2% (142 bets).",
+        "Skill signal: model uses driving accuracy / GIR skill blended with course history; largest edge when model fairways ≠ DK (see modelBookDelta correlation)."
+      ]
+    },
+    "Pars": {
+      "market": "Pars",
+      "bets": 196,
+      "wins": 114,
+      "losses": 82,
+      "units": 19.84,
+      "roiPct": 10.1,
+      "hitPct": 58.2,
+      "correlationsWithWin": {
+        "modelScore": -0.203,
+        "edge": 0.189,
+        "modelFairways": -0.139,
+        "modelBookDelta": 0.119,
+        "modelGir": -0.005
+      },
+      "bySide": [
+        {
+          "key": "over",
+          "bets": 30,
+          "wins": 24,
+          "losses": 6,
+          "units": 15.365020528665909,
+          "edgeSum": 504.65375756263626,
+          "deltaSum": 62.5,
+          "hitPct": 80,
+          "roiPct": 51.216735095553034,
+          "avgEdge": 16.821791918754542,
+          "avgModelBookDelta": 2.0833333333333335
+        },
+        {
+          "key": "under",
+          "bets": 166,
+          "wins": 90,
+          "losses": 76,
+          "units": 4.4792804299857405,
+          "edgeSum": 2166.65345324948,
+          "deltaSum": -229.5,
+          "hitPct": 54.21686746987952,
+          "roiPct": 2.698361704810687,
+          "avgEdge": 13.052129236442651,
+          "avgModelBookDelta": -1.3825301204819278
+        }
+      ],
+      "byEdgeBucket": [
+        {
+          "key": "20%+",
+          "bets": 24,
+          "wins": 20,
+          "losses": 4,
+          "units": 21.440287527468115,
+          "edgeSum": 730.1880936511636,
+          "deltaSum": -10,
+          "hitPct": 83.33333333333334,
+          "roiPct": 89.33453136445047,
+          "avgEdge": 30.424503902131818,
+          "avgModelBookDelta": -0.4166666666666667
+        },
+        {
+          "key": "5–7.5%",
+          "bets": 28,
+          "wins": 18,
+          "losses": 10,
+          "units": 4.671988151355867,
+          "edgeSum": 185.32550837576665,
+          "deltaSum": -22,
+          "hitPct": 64.28571428571429,
+          "roiPct": 16.685671969128098,
+          "avgEdge": 6.618768156277381,
+          "avgModelBookDelta": -0.7857142857142857
+        },
+        {
+          "key": "12.5–20%",
+          "bets": 62,
+          "wins": 34,
+          "losses": 28,
+          "units": -0.3147744429563528,
+          "edgeSum": 924.7571604240711,
+          "deltaSum": -61,
+          "hitPct": 54.83870967741935,
+          "roiPct": -0.5077007144457304,
+          "avgEdge": 14.915438071355986,
+          "avgModelBookDelta": -0.9838709677419355
+        },
+        {
+          "key": "7.5–12.5%",
+          "bets": 82,
+          "wins": 42,
+          "losses": 40,
+          "units": -5.953200277215984,
+          "edgeSum": 831.0364483611166,
+          "deltaSum": -74,
+          "hitPct": 51.21951219512195,
+          "roiPct": -7.260000338068274,
+          "avgEdge": 10.134590833672155,
+          "avgModelBookDelta": -0.9024390243902439
+        }
+      ],
+      "byModelVsBook": [
+        {
+          "key": "Model near DK (±0.35)",
+          "bets": 1,
+          "wins": 1,
+          "losses": 0,
+          "units": 1.54,
+          "edgeSum": 10.629924281622511,
+          "deltaSum": 0,
+          "hitPct": 100,
+          "roiPct": 154,
+          "avgEdge": 10.629924281622511,
+          "avgModelBookDelta": 0
+        },
+        {
+          "key": "Model ≥0.35 above DK",
+          "bets": 28,
+          "wins": 23,
+          "losses": 5,
+          "units": 14.78502052866591,
+          "edgeSum": 488.06499985507133,
+          "deltaSum": 63.5,
+          "hitPct": 82.14285714285714,
+          "roiPct": 52.80364474523539,
+          "avgEdge": 17.430892851966835,
+          "avgModelBookDelta": 2.267857142857143
+        },
+        {
+          "key": "Model ≥0.35 below DK",
+          "bets": 167,
+          "wins": 90,
+          "losses": 77,
+          "units": 3.5192804299857414,
+          "edgeSum": 2172.6122866754226,
+          "deltaSum": -230.5,
+          "hitPct": 53.89221556886228,
+          "roiPct": 2.1073535508896657,
+          "avgEdge": 13.009654411230075,
+          "avgModelBookDelta": -1.3802395209580838
+        }
+      ],
+      "byWind": [],
+      "byRound": [
+        {
+          "key": "Round 4",
+          "bets": 17,
+          "wins": 13,
+          "losses": 4,
+          "units": 9.246899204919355,
+          "edgeSum": 239.85685417774565,
+          "deltaSum": -7,
+          "hitPct": 76.47058823529412,
+          "roiPct": 54.393524734819735,
+          "avgEdge": 14.109226716337979,
+          "avgModelBookDelta": -0.4117647058823529
+        },
+        {
+          "key": "Round 1",
+          "bets": 49,
+          "wins": 30,
+          "losses": 19,
+          "units": 4.832892214225329,
+          "edgeSum": 610.5836352010019,
+          "deltaSum": -53,
+          "hitPct": 61.224489795918366,
+          "roiPct": 9.863045335153734,
+          "avgEdge": 12.460890514306161,
+          "avgModelBookDelta": -1.0816326530612246
+        },
+        {
+          "key": "Round 3",
+          "bets": 42,
+          "wins": 24,
+          "losses": 18,
+          "units": 3.0397548685476803,
+          "edgeSum": 568.5044270148933,
+          "deltaSum": -4,
+          "hitPct": 57.14285714285714,
+          "roiPct": 7.237511591780191,
+          "avgEdge": 13.535819690830792,
+          "avgModelBookDelta": -0.09523809523809523
+        },
+        {
+          "key": "Round 2",
+          "bets": 88,
+          "wins": 47,
+          "losses": 41,
+          "units": 2.7247546709592783,
+          "edgeSum": 1252.3622944184767,
+          "deltaSum": -103,
+          "hitPct": 53.40909090909091,
+          "roiPct": 3.096312126090089,
+          "avgEdge": 14.231389709300872,
+          "avgModelBookDelta": -1.1704545454545454
+        }
+      ],
+      "profitablePlaybook": [
+        "When model is ≥0.5 above DK line, ROI ≈ 52.8% (28 bets)."
+      ]
+    },
+    "Bogeys": {
+      "market": "Bogeys",
+      "bets": 245,
+      "wins": 121,
+      "losses": 124,
+      "units": 1.71,
+      "roiPct": 0.7,
+      "hitPct": 49.4,
+      "correlationsWithWin": {
+        "modelBookDelta": -0.294,
+        "modelScore": -0.278,
+        "edge": 0.242,
+        "modelFairways": -0.155,
+        "modelGir": -0.013
+      },
+      "bySide": [
+        {
+          "key": "under",
+          "bets": 97,
+          "wins": 64,
+          "losses": 33,
+          "units": 17.98235806066974,
+          "edgeSum": 1761.9084499598969,
+          "deltaSum": -114,
+          "hitPct": 65.97938144329896,
+          "roiPct": 18.538513464607977,
+          "avgEdge": 18.164004638761824,
+          "avgModelBookDelta": -1.175257731958763
+        },
+        {
+          "key": "over",
+          "bets": 148,
+          "wins": 57,
+          "losses": 91,
+          "units": -16.273467588293993,
+          "edgeSum": 2248.5984611911954,
+          "deltaSum": 142,
+          "hitPct": 38.513513513513516,
+          "roiPct": -10.995586208306753,
+          "avgEdge": 15.193232845886456,
+          "avgModelBookDelta": 0.9594594594594594
+        }
+      ],
+      "byEdgeBucket": [
+        {
+          "key": "20%+",
+          "bets": 66,
+          "wins": 44,
+          "losses": 22,
+          "units": 39.27678295791236,
+          "edgeSum": 1986.3653375603878,
+          "deltaSum": -26.5,
+          "hitPct": 66.66666666666666,
+          "roiPct": 59.510277208958115,
+          "avgEdge": 30.096444508490723,
+          "avgModelBookDelta": -0.4015151515151515
+        },
+        {
+          "key": "7.5–12.5%",
+          "bets": 62,
+          "wins": 29,
+          "losses": 33,
+          "units": -10.950729955934479,
+          "edgeSum": 613.1508088914887,
+          "deltaSum": 15.5,
+          "hitPct": 46.774193548387096,
+          "roiPct": -17.662467670862064,
+          "avgEdge": 9.889529175669173,
+          "avgModelBookDelta": 0.25
+        },
+        {
+          "key": "5–7.5%",
+          "bets": 46,
+          "wins": 19,
+          "losses": 27,
+          "units": -9.248527551690048,
+          "edgeSum": 293.7531806835918,
+          "deltaSum": 9.5,
+          "hitPct": 41.30434782608695,
+          "roiPct": -20.10549467758706,
+          "avgEdge": 6.385938710512865,
+          "avgModelBookDelta": 0.20652173913043478
+        },
+        {
+          "key": "12.5–20%",
+          "bets": 71,
+          "wins": 29,
+          "losses": 42,
+          "units": -17.36863497791209,
+          "edgeSum": 1117.2375840156267,
+          "deltaSum": 29.5,
+          "hitPct": 40.845070422535215,
+          "roiPct": -24.46286616607337,
+          "avgEdge": 15.735740619938404,
+          "avgModelBookDelta": 0.4154929577464789
+        }
+      ],
+      "byModelVsBook": [
+        {
+          "key": "Model near DK (±0.35)",
+          "bets": 23,
+          "wins": 12,
+          "losses": 11,
+          "units": 5.6899999999999995,
+          "edgeSum": 176.4162376725384,
+          "deltaSum": 0,
+          "hitPct": 52.17391304347826,
+          "roiPct": 24.739130434782606,
+          "avgEdge": 7.670271203153843,
+          "avgModelBookDelta": 0
+        },
+        {
+          "key": "Model ≥0.35 below DK",
+          "bets": 84,
+          "wins": 58,
+          "losses": 26,
+          "units": 16.882358060669738,
+          "edgeSum": 1671.8063624090942,
+          "deltaSum": -114,
+          "hitPct": 69.04761904761905,
+          "roiPct": 20.098045310321115,
+          "avgEdge": 19.90245669534636,
+          "avgModelBookDelta": -1.3571428571428572
+        },
+        {
+          "key": "Model ≥0.35 above DK",
+          "bets": 138,
+          "wins": 51,
+          "losses": 87,
+          "units": -20.863467588294,
+          "edgeSum": 2162.2843110694603,
+          "deltaSum": 142,
+          "hitPct": 36.95652173913043,
+          "roiPct": -15.118454774126086,
+          "avgEdge": 15.668726891807683,
+          "avgModelBookDelta": 1.0289855072463767
+        }
+      ],
+      "byWind": [],
+      "byRound": [
+        {
+          "key": "Round 3",
+          "bets": 52,
+          "wins": 32,
+          "losses": 20,
+          "units": 10.800231135391705,
+          "edgeSum": 1040.3444372734093,
+          "deltaSum": 22,
+          "hitPct": 61.53846153846154,
+          "roiPct": 20.769675260368665,
+          "avgEdge": 20.00662379371941,
+          "avgModelBookDelta": 0.4230769230769231
+        },
+        {
+          "key": "Round 4",
+          "bets": 21,
+          "wins": 11,
+          "losses": 10,
+          "units": 1.5196868849307883,
+          "edgeSum": 468.11293085008293,
+          "deltaSum": 1,
+          "hitPct": 52.38095238095239,
+          "roiPct": 7.236604213956135,
+          "avgEdge": 22.291091945242044,
+          "avgModelBookDelta": 0.047619047619047616
+        },
+        {
+          "key": "Round 2",
+          "bets": 90,
+          "wins": 44,
+          "losses": 46,
+          "units": 6.199989759373889,
+          "edgeSum": 1409.2367468346383,
+          "deltaSum": 3,
+          "hitPct": 48.888888888888886,
+          "roiPct": 6.8888775104154325,
+          "avgEdge": 15.658186075940426,
+          "avgModelBookDelta": 0.03333333333333333
+        },
+        {
+          "key": "Round 1",
+          "bets": 82,
+          "wins": 34,
+          "losses": 48,
+          "units": -16.811017307320643,
+          "edgeSum": 1092.812796192964,
+          "deltaSum": 2,
+          "hitPct": 41.46341463414634,
+          "roiPct": -20.50124061868371,
+          "avgEdge": 13.32698531942639,
+          "avgModelBookDelta": 0.024390243902439025
+        }
+      ],
+      "profitablePlaybook": []
+    }
+  },
+  "modelFactorReference": {
+    "fairways_hit": {
+      "weather": "statWeatherMuAdjustment: −0.14 × weather difficulty delta (wind/rain → fewer fairways in model)",
+      "skill": "dg_fairway_pct / driving_accuracy + historical FW~SG:OTT calibration",
+      "course": "venue_avg_fairways, course-table fit, similar-course blend",
+      "correlated": "Reconciled with GIR, score, bird/bog counts after unified factors"
+    },
+    "gir": {
+      "weather": "−0.22 × weather difficulty delta",
+      "skill": "dg_gir_pct + GIR~SG:APP historical calibration"
+    },
+    "total_score": {
+      "weather": "+1.0 × weather difficulty (full stroke effect)"
+    }
+  }
+}

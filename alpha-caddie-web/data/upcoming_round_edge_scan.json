@@ -1,0 +1,625 @@
+{
+  "generated_at": "2026-06-23T00:06:38.990Z",
+  "event": "Travelers Championship",
+  "course": "TPC River Highlands",
+  "round": 1,
+  "year": 2026,
+  "min_ev_pct": 5,
+  "odds_csv": "C:\\Users\\student\\Documents\\golfModel\\data\\odds.csv",
+  "book_lines_matched": 0,
+  "qualified_bets": 0,
+  "unmatched_odds_players": [],
+  "field_median_proxy": {
+    "score": 73.3095423,
+    "bird": 2.348625
+  },
+  "bets": [],
+  "proxy_bets_when_no_lines": [
+    {
+      "player": "Scottie Scheffler",
+      "market": "Total score",
+      "side": "under",
+      "line": 73.31,
+      "model": 71.24,
+      "delta": -2.07,
+      "edge_pct": 25,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Brian Campbell",
+      "market": "Total score",
+      "side": "over",
+      "line": 73.31,
+      "model": 75.27,
+      "delta": 1.96,
+      "edge_pct": 23.8,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Jhonattan Vegas",
+      "market": "Total score",
+      "side": "over",
+      "line": 73.31,
+      "model": 74.71,
+      "delta": 1.4,
+      "edge_pct": 17.1,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Tom Hoge",
+      "market": "Total score",
+      "side": "over",
+      "line": 73.31,
+      "model": 74.7,
+      "delta": 1.39,
+      "edge_pct": 16.9,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Lucas Glover",
+      "market": "Total score",
+      "side": "over",
+      "line": 73.31,
+      "model": 74.6,
+      "delta": 1.3,
+      "edge_pct": 15.7,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Mark Hubbard",
+      "market": "Total score",
+      "side": "over",
+      "line": 73.31,
+      "model": 74.5,
+      "delta": 1.19,
+      "edge_pct": 14.4,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Brandt Snedeker",
+      "market": "Total score",
+      "side": "over",
+      "line": 73.31,
+      "model": 74.44,
+      "delta": 1.13,
+      "edge_pct": 13.6,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Ben James",
+      "market": "Total score",
+      "side": "over",
+      "line": 73.31,
+      "model": 74.39,
+      "delta": 1.08,
+      "edge_pct": 12.9,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Tommy Fleetwood",
+      "market": "Total score",
+      "side": "under",
+      "line": 73.31,
+      "model": 72.26,
+      "delta": -1.05,
+      "edge_pct": 12.5,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Xander Schauffele",
+      "market": "Total score",
+      "side": "under",
+      "line": 73.31,
+      "model": 72.28,
+      "delta": -1.03,
+      "edge_pct": 12.3,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Ludvig Aberg",
+      "market": "Total score",
+      "side": "under",
+      "line": 73.31,
+      "model": 72.31,
+      "delta": -1,
+      "edge_pct": 11.9,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Scottie Scheffler",
+      "market": "Birdies",
+      "side": "over",
+      "line": 2.35,
+      "model": 3.26,
+      "delta": 0.91,
+      "edge_pct": 10.6,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Brian Campbell",
+      "market": "Birdies",
+      "side": "under",
+      "line": 2.35,
+      "model": 1.48,
+      "delta": -0.87,
+      "edge_pct": 10.1,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Nico Echavarria",
+      "market": "Total score",
+      "side": "over",
+      "line": 73.31,
+      "model": 74.14,
+      "delta": 0.83,
+      "edge_pct": 9.4,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Patrick Cantlay",
+      "market": "Total score",
+      "side": "under",
+      "line": 73.31,
+      "model": 72.57,
+      "delta": -0.73,
+      "edge_pct": 8.2,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Jackson Suber",
+      "market": "Total score",
+      "side": "over",
+      "line": 73.31,
+      "model": 74.03,
+      "delta": 0.72,
+      "edge_pct": 8,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Matt Fitzpatrick",
+      "market": "Total score",
+      "side": "under",
+      "line": 73.31,
+      "model": 72.6,
+      "delta": -0.71,
+      "edge_pct": 7.7,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Cameron Young",
+      "market": "Total score",
+      "side": "under",
+      "line": 73.31,
+      "model": 72.62,
+      "delta": -0.69,
+      "edge_pct": 7.6,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Denny McCarthy",
+      "market": "Total score",
+      "side": "over",
+      "line": 73.31,
+      "model": 74,
+      "delta": 0.69,
+      "edge_pct": 7.5,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Sam Burns",
+      "market": "Total score",
+      "side": "under",
+      "line": 73.31,
+      "model": 72.64,
+      "delta": -0.67,
+      "edge_pct": 7.3,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Justin Thomas",
+      "market": "Total score",
+      "side": "under",
+      "line": 73.31,
+      "model": 72.68,
+      "delta": -0.62,
+      "edge_pct": 6.6,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Si Woo Kim",
+      "market": "Total score",
+      "side": "under",
+      "line": 73.31,
+      "model": 72.69,
+      "delta": -0.62,
+      "edge_pct": 6.6,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Tom Hoge",
+      "market": "Birdies",
+      "side": "under",
+      "line": 2.35,
+      "model": 1.72,
+      "delta": -0.63,
+      "edge_pct": 6.6,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Jason Day",
+      "market": "Total score",
+      "side": "over",
+      "line": 73.31,
+      "model": 73.92,
+      "delta": 0.61,
+      "edge_pct": 6.4,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Jhonattan Vegas",
+      "market": "Birdies",
+      "side": "under",
+      "line": 2.35,
+      "model": 1.74,
+      "delta": -0.6,
+      "edge_pct": 6.3,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Lucas Glover",
+      "market": "Birdies",
+      "side": "under",
+      "line": 2.35,
+      "model": 1.76,
+      "delta": -0.59,
+      "edge_pct": 6.1,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Rickie Fowler",
+      "market": "Total score",
+      "side": "over",
+      "line": 73.31,
+      "model": 73.87,
+      "delta": 0.56,
+      "edge_pct": 5.6,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Wyndham Clark",
+      "market": "Total score",
+      "side": "under",
+      "line": 73.31,
+      "model": 72.76,
+      "delta": -0.55,
+      "edge_pct": 5.5,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Mark Hubbard",
+      "market": "Birdies",
+      "side": "under",
+      "line": 2.35,
+      "model": 1.8,
+      "delta": -0.55,
+      "edge_pct": 5.5,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    },
+    {
+      "player": "Daniel Berger",
+      "market": "Total score",
+      "side": "over",
+      "line": 73.31,
+      "model": 73.85,
+      "delta": 0.54,
+      "edge_pct": 5.3,
+      "odds": -110,
+      "note": "proxy vs field-median @ -110 (no book lines in odds.csv)"
+    }
+  ],
+  "model_leaders": {
+    "lowest_scores": [
+      {
+        "dg_id": 18417,
+        "player_name": "Scottie Scheffler",
+        "score_mu": 71.23915,
+        "bird_mu": 3.2605,
+        "sg_total": 2.804,
+        "sg_ott": 0.819,
+        "sg_app": 1.082
+      },
+      {
+        "dg_id": 12294,
+        "player_name": "Tommy Fleetwood",
+        "score_mu": 72.2596485,
+        "bird_mu": 2.8272150000000003,
+        "sg_total": 1.855,
+        "sg_ott": 0.598,
+        "sg_app": 0.599
+      },
+      {
+        "dg_id": 19895,
+        "player_name": "Xander Schauffele",
+        "score_mu": 72.2760764,
+        "bird_mu": 2.804916,
+        "sg_total": 1.936,
+        "sg_ott": 0.746,
+        "sg_app": 0.769
+      },
+      {
+        "dg_id": 23950,
+        "player_name": "Ludvig Aberg",
+        "score_mu": 72.3066056,
+        "bird_mu": 2.802664,
+        "sg_total": 1.924,
+        "sg_ott": 0.71,
+        "sg_app": 0.742
+      },
+      {
+        "dg_id": 15466,
+        "player_name": "Patrick Cantlay",
+        "score_mu": 72.5749512,
+        "bird_mu": 2.666928,
+        "sg_total": 1.508,
+        "sg_ott": 0.437,
+        "sg_app": 0.731
+      },
+      {
+        "dg_id": 17646,
+        "player_name": "Matt Fitzpatrick",
+        "score_mu": 72.6044113,
+        "bird_mu": 2.656947,
+        "sg_total": 1.747,
+        "sg_ott": 0.198,
+        "sg_app": 0.825
+      },
+      {
+        "dg_id": 26651,
+        "player_name": "Cameron Young",
+        "score_mu": 72.61542560000001,
+        "bird_mu": 2.6554640000000003,
+        "sg_total": 1.724,
+        "sg_ott": 0.596,
+        "sg_app": 0.662
+      },
+      {
+        "dg_id": 19483,
+        "player_name": "Sam Burns",
+        "score_mu": 72.6387772,
+        "bird_mu": 2.642868,
+        "sg_total": 1.648,
+        "sg_ott": 0.326,
+        "sg_app": 0.529
+      },
+      {
+        "dg_id": 14139,
+        "player_name": "Justin Thomas",
+        "score_mu": 72.6849953,
+        "bird_mu": 2.616907,
+        "sg_total": 1.507,
+        "sg_ott": 0.264,
+        "sg_app": 0.518
+      },
+      {
+        "dg_id": 14609,
+        "player_name": "Si Woo Kim",
+        "score_mu": 72.6881157,
+        "bird_mu": 2.623183,
+        "sg_total": 1.663,
+        "sg_ott": 0.575,
+        "sg_app": 0.742
+      },
+      {
+        "dg_id": 23604,
+        "player_name": "Wyndham Clark",
+        "score_mu": 72.7613016,
+        "bird_mu": 2.5909039999999997,
+        "sg_total": 1.364,
+        "sg_ott": 0.097,
+        "sg_app": 0.476
+      },
+      {
+        "dg_id": 16841,
+        "player_name": "Min Woo Lee",
+        "score_mu": 72.8095376,
+        "bird_mu": 2.5637440000000002,
+        "sg_total": 1.404,
+        "sg_ott": 0.611,
+        "sg_app": 0.359
+      },
+      {
+        "dg_id": 27774,
+        "player_name": "Chris Gotterup",
+        "score_mu": 72.89019909999999,
+        "bird_mu": 2.5314289999999997,
+        "sg_total": 1.389,
+        "sg_ott": 0.544,
+        "sg_app": 0.458
+      },
+      {
+        "dg_id": 22085,
+        "player_name": "Collin Morikawa",
+        "score_mu": 72.9194053,
+        "bird_mu": 2.522807,
+        "sg_total": 1.407,
+        "sg_ott": 0.447,
+        "sg_app": 0.697
+      },
+      {
+        "dg_id": 18841,
+        "player_name": "Viktor Hovland",
+        "score_mu": 72.9269023,
+        "bird_mu": 2.5152370000000004,
+        "sg_total": 1.237,
+        "sg_ott": 0.243,
+        "sg_app": 0.721
+      }
+    ],
+    "highest_birdies": [
+      {
+        "dg_id": 18417,
+        "player_name": "Scottie Scheffler",
+        "score_mu": 71.23915,
+        "bird_mu": 3.2605,
+        "sg_total": 2.804,
+        "sg_ott": 0.819,
+        "sg_app": 1.082
+      },
+      {
+        "dg_id": 12294,
+        "player_name": "Tommy Fleetwood",
+        "score_mu": 72.2596485,
+        "bird_mu": 2.8272150000000003,
+        "sg_total": 1.855,
+        "sg_ott": 0.598,
+        "sg_app": 0.599
+      },
+      {
+        "dg_id": 19895,
+        "player_name": "Xander Schauffele",
+        "score_mu": 72.2760764,
+        "bird_mu": 2.804916,
+        "sg_total": 1.936,
+        "sg_ott": 0.746,
+        "sg_app": 0.769
+      },
+      {
+        "dg_id": 23950,
+        "player_name": "Ludvig Aberg",
+        "score_mu": 72.3066056,
+        "bird_mu": 2.802664,
+        "sg_total": 1.924,
+        "sg_ott": 0.71,
+        "sg_app": 0.742
+      },
+      {
+        "dg_id": 15466,
+        "player_name": "Patrick Cantlay",
+        "score_mu": 72.5749512,
+        "bird_mu": 2.666928,
+        "sg_total": 1.508,
+        "sg_ott": 0.437,
+        "sg_app": 0.731
+      },
+      {
+        "dg_id": 17646,
+        "player_name": "Matt Fitzpatrick",
+        "score_mu": 72.6044113,
+        "bird_mu": 2.656947,
+        "sg_total": 1.747,
+        "sg_ott": 0.198,
+        "sg_app": 0.825
+      },
+      {
+        "dg_id": 26651,
+        "player_name": "Cameron Young",
+        "score_mu": 72.61542560000001,
+        "bird_mu": 2.6554640000000003,
+        "sg_total": 1.724,
+        "sg_ott": 0.596,
+        "sg_app": 0.662
+      },
+      {
+        "dg_id": 19483,
+        "player_name": "Sam Burns",
+        "score_mu": 72.6387772,
+        "bird_mu": 2.642868,
+        "sg_total": 1.648,
+        "sg_ott": 0.326,
+        "sg_app": 0.529
+      },
+      {
+        "dg_id": 14609,
+        "player_name": "Si Woo Kim",
+        "score_mu": 72.6881157,
+        "bird_mu": 2.623183,
+        "sg_total": 1.663,
+        "sg_ott": 0.575,
+        "sg_app": 0.742
+      },
+      {
+        "dg_id": 14139,
+        "player_name": "Justin Thomas",
+        "score_mu": 72.6849953,
+        "bird_mu": 2.616907,
+        "sg_total": 1.507,
+        "sg_ott": 0.264,
+        "sg_app": 0.518
+      },
+      {
+        "dg_id": 23604,
+        "player_name": "Wyndham Clark",
+        "score_mu": 72.7613016,
+        "bird_mu": 2.5909039999999997,
+        "sg_total": 1.364,
+        "sg_ott": 0.097,
+        "sg_app": 0.476
+      },
+      {
+        "dg_id": 16841,
+        "player_name": "Min Woo Lee",
+        "score_mu": 72.8095376,
+        "bird_mu": 2.5637440000000002,
+        "sg_total": 1.404,
+        "sg_ott": 0.611,
+        "sg_app": 0.359
+      },
+      {
+        "dg_id": 27774,
+        "player_name": "Chris Gotterup",
+        "score_mu": 72.89019909999999,
+        "bird_mu": 2.5314289999999997,
+        "sg_total": 1.389,
+        "sg_ott": 0.544,
+        "sg_app": 0.458
+      },
+      {
+        "dg_id": 22085,
+        "player_name": "Collin Morikawa",
+        "score_mu": 72.9194053,
+        "bird_mu": 2.522807,
+        "sg_total": 1.407,
+        "sg_ott": 0.447,
+        "sg_app": 0.697
+      },
+      {
+        "dg_id": 18841,
+        "player_name": "Viktor Hovland",
+        "score_mu": 72.9269023,
+        "bird_mu": 2.5152370000000004,
+        "sg_total": 1.237,
+        "sg_ott": 0.243,
+        "sg_app": 0.721
+      }
+    ]
+  }
+}

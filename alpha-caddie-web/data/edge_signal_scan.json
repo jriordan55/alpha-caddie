@@ -1,0 +1,3793 @@
+{
+  "generated_at": "2026-06-22T23:45:10.096Z",
+  "weatherNote": "5805 detail rows with weather_wind_mph in CSV export",
+  "courseTableMatches": 1138,
+  "courseTableTotal": 1552,
+  "actionable": [
+    {
+      "market": "Birdies",
+      "signal": "fairway width: Wide FW (≥34 yd)",
+      "roi": 66.8,
+      "n": 169,
+      "action": "lean in"
+    },
+    {
+      "market": "Birdies",
+      "signal": "driving difficulty: Easy driving course (adj acc ≥62%)",
+      "roi": 66.8,
+      "n": 169,
+      "action": "lean in"
+    },
+    {
+      "market": "Birdies",
+      "signal": "scoring difficulty: Easy vs par (adj <+0.5)",
+      "roi": 66.8,
+      "n": 169,
+      "action": "lean in"
+    },
+    {
+      "market": "Birdies",
+      "signal": "edge tier: Edge ≥15%",
+      "roi": 65.4,
+      "n": 178,
+      "action": "lean in"
+    },
+    {
+      "market": "Bogeys",
+      "signal": "fairway width: Wide FW (≥34 yd)",
+      "roi": 58.3,
+      "n": 74,
+      "action": "lean in"
+    },
+    {
+      "market": "Bogeys",
+      "signal": "driving difficulty: Easy driving course (adj acc ≥62%)",
+      "roi": 58.3,
+      "n": 74,
+      "action": "lean in"
+    },
+    {
+      "market": "Total score",
+      "signal": "fairway width: Narrow FW (<30 yd avg)",
+      "roi": -58,
+      "n": 17,
+      "action": "fade / skip"
+    },
+    {
+      "market": "Total score",
+      "signal": "driving difficulty: Average driving course",
+      "roi": -58,
+      "n": 17,
+      "action": "fade / skip"
+    },
+    {
+      "market": "Total score",
+      "signal": "scoring difficulty: Neutral scoring course",
+      "roi": -58,
+      "n": 17,
+      "action": "fade / skip"
+    },
+    {
+      "market": "Fairways hit",
+      "signal": "fairway width: Medium FW (30–34 yd)",
+      "roi": 52.6,
+      "n": 20,
+      "action": "lean in"
+    },
+    {
+      "market": "GIR",
+      "signal": "fairway width: Medium FW (30–34 yd)",
+      "roi": 50.8,
+      "n": 21,
+      "action": "lean in"
+    },
+    {
+      "market": "Bogeys",
+      "signal": "edge tier: Edge 10–15%",
+      "roi": -50.3,
+      "n": 31,
+      "action": "fade / skip"
+    },
+    {
+      "market": "GIR",
+      "signal": "GIR/FW skill gap: FW edge >> GIR edge",
+      "roi": 47.2,
+      "n": 40,
+      "action": "lean in"
+    },
+    {
+      "market": "Bogeys",
+      "signal": "scoring difficulty: Easy vs par (adj <+0.5)",
+      "roi": 46.6,
+      "n": 85,
+      "action": "lean in"
+    },
+    {
+      "market": "Fairways hit",
+      "signal": "GIR/FW skill gap: GIR edge >> FW edge (+1.5+)",
+      "roi": 43.8,
+      "n": 30,
+      "action": "lean in"
+    },
+    {
+      "market": "all",
+      "signal": "GIR/FW skill gap: GIR edge >> FW edge (+1.5+)",
+      "roi": 43.1,
+      "n": 61,
+      "action": "lean in"
+    },
+    {
+      "market": "all",
+      "signal": "fairway width: Wide FW (≥34 yd)",
+      "roi": 41.1,
+      "n": 573,
+      "action": "lean in"
+    },
+    {
+      "market": "all",
+      "signal": "driving difficulty: Easy driving course (adj acc ≥62%)",
+      "roi": 41.1,
+      "n": 573,
+      "action": "lean in"
+    },
+    {
+      "market": "all",
+      "signal": "scoring difficulty: Easy vs par (adj <+0.5)",
+      "roi": 40.5,
+      "n": 625,
+      "action": "lean in"
+    },
+    {
+      "market": "all",
+      "signal": "fairway width: Narrow FW (<30 yd avg)",
+      "roi": -38.7,
+      "n": 78,
+      "action": "fade / skip"
+    },
+    {
+      "market": "all",
+      "signal": "scoring difficulty: Neutral scoring course",
+      "roi": -38.7,
+      "n": 78,
+      "action": "fade / skip"
+    },
+    {
+      "market": "Bogeys",
+      "signal": "edge tier: Edge ≥15%",
+      "roi": 35.4,
+      "n": 106,
+      "action": "lean in"
+    },
+    {
+      "market": "all",
+      "signal": "edge tier: Edge ≥15%",
+      "roi": 35,
+      "n": 812,
+      "action": "lean in"
+    },
+    {
+      "market": "GIR",
+      "signal": "scoring difficulty: Easy vs par (adj <+0.5)",
+      "roi": 34.6,
+      "n": 112,
+      "action": "lean in"
+    },
+    {
+      "market": "Fairways hit",
+      "signal": "edge tier: Edge 10–15%",
+      "roi": 33.2,
+      "n": 22,
+      "action": "lean in"
+    },
+    {
+      "market": "Fairways hit",
+      "signal": "scoring difficulty: Easy vs par (adj <+0.5)",
+      "roi": 32.2,
+      "n": 121,
+      "action": "lean in"
+    },
+    {
+      "market": "GIR",
+      "signal": "edge tier: Edge ≥15%",
+      "roi": 31.1,
+      "n": 116,
+      "action": "lean in"
+    },
+    {
+      "market": "GIR",
+      "signal": "driving difficulty: Easy driving course (adj acc ≥62%)",
+      "roi": 30.9,
+      "n": 91,
+      "action": "lean in"
+    },
+    {
+      "market": "Bogeys",
+      "signal": "driving difficulty: Average driving course",
+      "roi": -30,
+      "n": 21,
+      "action": "fade / skip"
+    },
+    {
+      "market": "Fairways hit",
+      "signal": "driving difficulty: Easy driving course (adj acc ≥62%)",
+      "roi": 28.2,
+      "n": 101,
+      "action": "lean in"
+    },
+    {
+      "market": "Birdies",
+      "signal": "fairway width: Narrow FW (<30 yd avg)",
+      "roi": -22.7,
+      "n": 24,
+      "action": "fade / skip"
+    },
+    {
+      "market": "Birdies",
+      "signal": "driving difficulty: Average driving course",
+      "roi": -22.7,
+      "n": 24,
+      "action": "fade / skip"
+    },
+    {
+      "market": "Birdies",
+      "signal": "scoring difficulty: Neutral scoring course",
+      "roi": -22.7,
+      "n": 24,
+      "action": "fade / skip"
+    },
+    {
+      "market": "Total score",
+      "signal": "edge tier: Edge ≥15%",
+      "roi": 20.4,
+      "n": 254,
+      "action": "lean in"
+    },
+    {
+      "market": "Total score",
+      "signal": "fairway width: Wide FW (≥34 yd)",
+      "roi": 16.4,
+      "n": 138,
+      "action": "lean in"
+    },
+    {
+      "market": "Total score",
+      "signal": "driving difficulty: Easy driving course (adj acc ≥62%)",
+      "roi": 16.4,
+      "n": 138,
+      "action": "lean in"
+    },
+    {
+      "market": "Total score",
+      "signal": "scoring difficulty: Easy vs par (adj <+0.5)",
+      "roi": 16.4,
+      "n": 138,
+      "action": "lean in"
+    },
+    {
+      "market": "Birdies",
+      "signal": "edge tier: Edge 10–15%",
+      "roi": -11.4,
+      "n": 43,
+      "action": "fade / skip"
+    },
+    {
+      "market": "all",
+      "signal": "driving difficulty: Average driving course",
+      "roi": -9.6,
+      "n": 130,
+      "action": "fade / skip"
+    },
+    {
+      "market": "Fairways hit",
+      "signal": "fairway width: Narrow FW (<30 yd avg)",
+      "roi": -6.8,
+      "n": 16,
+      "action": "fade / skip"
+    },
+    {
+      "market": "Fairways hit",
+      "signal": "scoring difficulty: Neutral scoring course",
+      "roi": -6.8,
+      "n": 16,
+      "action": "fade / skip"
+    },
+    {
+      "market": "all",
+      "signal": "edge tier: Edge 10–15%",
+      "roi": -6.4,
+      "n": 149,
+      "action": "fade / skip"
+    }
+  ],
+  "minEv5": {
+    "Fairways hit": {
+      "market": "Fairways hit",
+      "n": 258,
+      "overallRoi": 17,
+      "byWind": [],
+      "byRain": [],
+      "byTeeWave": [],
+      "byPinSheet": [],
+      "bySgOtt": [],
+      "byRound": [
+        {
+          "label": "R3",
+          "n": 48,
+          "units": 19.06,
+          "wins": 31,
+          "losses": 17,
+          "hit": 64.58333333333334,
+          "roi": 39.7
+        },
+        {
+          "label": "R1",
+          "n": 80,
+          "units": 12.57,
+          "wins": 52,
+          "losses": 28,
+          "hit": 65,
+          "roi": 15.7
+        },
+        {
+          "label": "R4",
+          "n": 34,
+          "units": 5.28,
+          "wins": 20,
+          "losses": 14,
+          "hit": 58.82352941176471,
+          "roi": 15.5
+        },
+        {
+          "label": "R2",
+          "n": 96,
+          "units": 6.95,
+          "wins": 55,
+          "losses": 41,
+          "hit": 57.291666666666664,
+          "roi": 7.2
+        }
+      ],
+      "byCourseFwWidth": [
+        {
+          "label": "Medium FW (30–34 yd)",
+          "n": 27,
+          "units": 13.57,
+          "wins": 23,
+          "losses": 4,
+          "hit": 85.18518518518519,
+          "roi": 50.2
+        },
+        {
+          "label": "Wide FW (≥34 yd)",
+          "n": 140,
+          "units": 22.79,
+          "wins": 80,
+          "losses": 60,
+          "hit": 57.14285714285714,
+          "roi": 16.3
+        },
+        {
+          "label": "Narrow FW (<30 yd avg)",
+          "n": 20,
+          "units": -3.1,
+          "wins": 9,
+          "losses": 11,
+          "hit": 45,
+          "roi": -15.5
+        }
+      ],
+      "byCourseDrivingDifficulty": [
+        {
+          "label": "Average driving course",
+          "n": 47,
+          "units": 10.46,
+          "wins": 32,
+          "losses": 15,
+          "hit": 68.08510638297872,
+          "roi": 22.3
+        },
+        {
+          "label": "Easy driving course (adj acc ≥62%)",
+          "n": 140,
+          "units": 22.79,
+          "wins": 80,
+          "losses": 60,
+          "hit": 57.14285714285714,
+          "roi": 16.3
+        }
+      ],
+      "byCourseScoring": [
+        {
+          "label": "Easy vs par (adj <+0.5)",
+          "n": 167,
+          "units": 36.35,
+          "wins": 103,
+          "losses": 64,
+          "hit": 61.67664670658682,
+          "roi": 21.8
+        },
+        {
+          "label": "Neutral scoring course",
+          "n": 20,
+          "units": -3.1,
+          "wins": 9,
+          "losses": 11,
+          "hit": 45,
+          "roi": -15.5
+        }
+      ],
+      "byGirFwSkillGap": [
+        {
+          "label": "GIR/FW edges aligned",
+          "n": 119,
+          "units": 24.71,
+          "wins": 74,
+          "losses": 45,
+          "hit": 62.18487394957983,
+          "roi": 20.8
+        },
+        {
+          "label": "GIR edge >> FW edge (+1.5+)",
+          "n": 46,
+          "units": 9.59,
+          "wins": 30,
+          "losses": 16,
+          "hit": 65.21739130434783,
+          "roi": 20.8
+        },
+        {
+          "label": "FW edge >> GIR edge",
+          "n": 61,
+          "units": 5.5,
+          "wins": 33,
+          "losses": 28,
+          "hit": 54.09836065573771,
+          "roi": 9
+        }
+      ],
+      "byGirMinusFw": [
+        {
+          "label": "High GIR−FW (approach > driving)",
+          "n": 100,
+          "units": 20.45,
+          "wins": 61,
+          "losses": 39,
+          "hit": 61,
+          "roi": 20.4
+        },
+        {
+          "label": "Balanced GIR−FW",
+          "n": 62,
+          "units": 10.06,
+          "wins": 40,
+          "losses": 22,
+          "hit": 64.51612903225806,
+          "roi": 16.2
+        },
+        {
+          "label": "Low GIR−FW (driving profile)",
+          "n": 64,
+          "units": 9.29,
+          "wins": 36,
+          "losses": 28,
+          "hit": 56.25,
+          "roi": 14.5
+        }
+      ],
+      "byEdgeTier": [
+        {
+          "label": "Edge ≥15%",
+          "n": 158,
+          "units": 42,
+          "wins": 100,
+          "losses": 58,
+          "hit": 63.29113924050633,
+          "roi": 26.6
+        },
+        {
+          "label": "Edge 10–15%",
+          "n": 47,
+          "units": 1.52,
+          "wins": 28,
+          "losses": 19,
+          "hit": 59.57446808510638,
+          "roi": 3.2
+        },
+        {
+          "label": "Edge 5–10%",
+          "n": 53,
+          "units": 0.34,
+          "wins": 30,
+          "losses": 23,
+          "hit": 56.60377358490566,
+          "roi": 0.7
+        }
+      ],
+      "bySide": [
+        {
+          "label": "Fairways hit over",
+          "n": 147,
+          "units": 26.77,
+          "wins": 90,
+          "losses": 57,
+          "hit": 61.224489795918366,
+          "roi": 18.2
+        },
+        {
+          "label": "Fairways hit under",
+          "n": 111,
+          "units": 17.1,
+          "wins": 68,
+          "losses": 43,
+          "hit": 61.261261261261254,
+          "roi": 15.4
+        }
+      ],
+      "topCourses": [
+        {
+          "label": "Muirfield Village Golf Club",
+          "n": 27,
+          "units": 13.57,
+          "wins": 23,
+          "losses": 4,
+          "hit": 85.18518518518519,
+          "roi": 50.2
+        },
+        {
+          "label": "Aronimink Golf Club",
+          "n": 74,
+          "units": 18.93,
+          "wins": 43,
+          "losses": 31,
+          "hit": 58.108108108108105,
+          "roi": 25.6
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 44,
+          "units": 9.25,
+          "wins": 28,
+          "losses": 16,
+          "hit": 63.63636363636363,
+          "roi": 21
+        },
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 71,
+          "units": 10.62,
+          "wins": 46,
+          "losses": 25,
+          "hit": 64.7887323943662,
+          "roi": 15
+        },
+        {
+          "label": "Colonial Country Club",
+          "n": 20,
+          "units": -3.1,
+          "wins": 9,
+          "losses": 11,
+          "hit": 45,
+          "roi": -15.5
+        },
+        {
+          "label": "TPC Toronto At Osprey Valley",
+          "n": 22,
+          "units": -5.39,
+          "wins": 9,
+          "losses": 13,
+          "hit": 40.909090909090914,
+          "roi": -24.5
+        }
+      ],
+      "worstCourses": [
+        {
+          "label": "TPC Toronto At Osprey Valley",
+          "n": 22,
+          "units": -5.39,
+          "wins": 9,
+          "losses": 13,
+          "hit": 40.909090909090914,
+          "roi": -24.5
+        },
+        {
+          "label": "Colonial Country Club",
+          "n": 20,
+          "units": -3.1,
+          "wins": 9,
+          "losses": 11,
+          "hit": 45,
+          "roi": -15.5
+        },
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 71,
+          "units": 10.62,
+          "wins": 46,
+          "losses": 25,
+          "hit": 64.7887323943662,
+          "roi": 15
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 44,
+          "units": 9.25,
+          "wins": 28,
+          "losses": 16,
+          "hit": 63.63636363636363,
+          "roi": 21
+        },
+        {
+          "label": "Aronimink Golf Club",
+          "n": 74,
+          "units": 18.93,
+          "wins": 43,
+          "losses": 31,
+          "hit": 58.108108108108105,
+          "roi": 25.6
+        },
+        {
+          "label": "Muirfield Village Golf Club",
+          "n": 27,
+          "units": 13.57,
+          "wins": 23,
+          "losses": 4,
+          "hit": 85.18518518518519,
+          "roi": 50.2
+        }
+      ]
+    },
+    "GIR": {
+      "market": "GIR",
+      "n": 229,
+      "overallRoi": 17.6,
+      "byWind": [],
+      "byRain": [],
+      "byTeeWave": [],
+      "byPinSheet": [],
+      "bySgOtt": [],
+      "byRound": [
+        {
+          "label": "R4",
+          "n": 40,
+          "units": 11.87,
+          "wins": 27,
+          "losses": 13,
+          "hit": 67.5,
+          "roi": 29.7
+        },
+        {
+          "label": "R3",
+          "n": 34,
+          "units": 8.49,
+          "wins": 22,
+          "losses": 12,
+          "hit": 64.70588235294117,
+          "roi": 25
+        },
+        {
+          "label": "R1",
+          "n": 63,
+          "units": 11.22,
+          "wins": 41,
+          "losses": 22,
+          "hit": 65.07936507936508,
+          "roi": 17.8
+        },
+        {
+          "label": "R2",
+          "n": 92,
+          "units": 8.77,
+          "wins": 52,
+          "losses": 40,
+          "hit": 56.52173913043478,
+          "roi": 9.5
+        }
+      ],
+      "byCourseFwWidth": [
+        {
+          "label": "Medium FW (30–34 yd)",
+          "n": 26,
+          "units": 12.96,
+          "wins": 21,
+          "losses": 5,
+          "hit": 80.76923076923077,
+          "roi": 49.8
+        },
+        {
+          "label": "Wide FW (≥34 yd)",
+          "n": 141,
+          "units": 28.69,
+          "wins": 88,
+          "losses": 53,
+          "hit": 62.4113475177305,
+          "roi": 20.4
+        },
+        {
+          "label": "Narrow FW (<30 yd avg)",
+          "n": 23,
+          "units": -15.37,
+          "wins": 4,
+          "losses": 19,
+          "hit": 17.391304347826086,
+          "roi": -66.8
+        }
+      ],
+      "byCourseDrivingDifficulty": [
+        {
+          "label": "Easy driving course (adj acc ≥62%)",
+          "n": 141,
+          "units": 28.69,
+          "wins": 88,
+          "losses": 53,
+          "hit": 62.4113475177305,
+          "roi": 20.4
+        },
+        {
+          "label": "Average driving course",
+          "n": 49,
+          "units": -2.42,
+          "wins": 25,
+          "losses": 24,
+          "hit": 51.02040816326531,
+          "roi": -4.9
+        }
+      ],
+      "byCourseScoring": [
+        {
+          "label": "Easy vs par (adj <+0.5)",
+          "n": 167,
+          "units": 41.65,
+          "wins": 109,
+          "losses": 58,
+          "hit": 65.26946107784431,
+          "roi": 24.9
+        },
+        {
+          "label": "Neutral scoring course",
+          "n": 23,
+          "units": -15.37,
+          "wins": 4,
+          "losses": 19,
+          "hit": 17.391304347826086,
+          "roi": -66.8
+        }
+      ],
+      "byGirFwSkillGap": [
+        {
+          "label": "FW edge >> GIR edge",
+          "n": 49,
+          "units": 22.79,
+          "wins": 37,
+          "losses": 12,
+          "hit": 75.51020408163265,
+          "roi": 46.5
+        },
+        {
+          "label": "GIR edge >> FW edge (+1.5+)",
+          "n": 54,
+          "units": 15.62,
+          "wins": 38,
+          "losses": 16,
+          "hit": 70.37037037037037,
+          "roi": 28.9
+        },
+        {
+          "label": "GIR/FW edges aligned",
+          "n": 126,
+          "units": 1.93,
+          "wins": 67,
+          "losses": 59,
+          "hit": 53.17460317460318,
+          "roi": 1.5
+        }
+      ],
+      "byGirMinusFw": [],
+      "byEdgeTier": [
+        {
+          "label": "Edge ≥15%",
+          "n": 116,
+          "units": 36.08,
+          "wins": 77,
+          "losses": 39,
+          "hit": 66.37931034482759,
+          "roi": 31.1
+        },
+        {
+          "label": "Edge 10–15%",
+          "n": 48,
+          "units": 7.76,
+          "wins": 31,
+          "losses": 17,
+          "hit": 64.58333333333334,
+          "roi": 16.2
+        },
+        {
+          "label": "Edge 5–10%",
+          "n": 65,
+          "units": -3.49,
+          "wins": 34,
+          "losses": 31,
+          "hit": 52.307692307692314,
+          "roi": -5.4
+        }
+      ],
+      "bySide": [
+        {
+          "label": "GIR under",
+          "n": 122,
+          "units": 31.63,
+          "wins": 80,
+          "losses": 42,
+          "hit": 65.57377049180327,
+          "roi": 25.9
+        },
+        {
+          "label": "GIR over",
+          "n": 107,
+          "units": 8.72,
+          "wins": 62,
+          "losses": 45,
+          "hit": 57.943925233644855,
+          "roi": 8.1
+        }
+      ],
+      "topCourses": [
+        {
+          "label": "Muirfield Village Golf Club",
+          "n": 26,
+          "units": 12.96,
+          "wins": 21,
+          "losses": 5,
+          "hit": 80.76923076923077,
+          "roi": 49.8
+        },
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 39,
+          "units": 14.07,
+          "wins": 29,
+          "losses": 10,
+          "hit": 74.35897435897436,
+          "roi": 36.1
+        },
+        {
+          "label": "Aronimink Golf Club",
+          "n": 79,
+          "units": 22.91,
+          "wins": 51,
+          "losses": 28,
+          "hit": 64.55696202531645,
+          "roi": 29
+        },
+        {
+          "label": "TPC Toronto At Osprey Valley",
+          "n": 21,
+          "units": 2.37,
+          "wins": 13,
+          "losses": 8,
+          "hit": 61.904761904761905,
+          "roi": 11.3
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 41,
+          "units": 3.42,
+          "wins": 24,
+          "losses": 17,
+          "hit": 58.536585365853654,
+          "roi": 8.3
+        },
+        {
+          "label": "Colonial Country Club",
+          "n": 23,
+          "units": -15.37,
+          "wins": 4,
+          "losses": 19,
+          "hit": 17.391304347826086,
+          "roi": -66.8
+        }
+      ],
+      "worstCourses": [
+        {
+          "label": "Colonial Country Club",
+          "n": 23,
+          "units": -15.37,
+          "wins": 4,
+          "losses": 19,
+          "hit": 17.391304347826086,
+          "roi": -66.8
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 41,
+          "units": 3.42,
+          "wins": 24,
+          "losses": 17,
+          "hit": 58.536585365853654,
+          "roi": 8.3
+        },
+        {
+          "label": "TPC Toronto At Osprey Valley",
+          "n": 21,
+          "units": 2.37,
+          "wins": 13,
+          "losses": 8,
+          "hit": 61.904761904761905,
+          "roi": 11.3
+        },
+        {
+          "label": "Aronimink Golf Club",
+          "n": 79,
+          "units": 22.91,
+          "wins": 51,
+          "losses": 28,
+          "hit": 64.55696202531645,
+          "roi": 29
+        },
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 39,
+          "units": 14.07,
+          "wins": 29,
+          "losses": 10,
+          "hit": 74.35897435897436,
+          "roi": 36.1
+        },
+        {
+          "label": "Muirfield Village Golf Club",
+          "n": 26,
+          "units": 12.96,
+          "wins": 21,
+          "losses": 5,
+          "hit": 80.76923076923077,
+          "roi": 49.8
+        }
+      ]
+    },
+    "Birdies": {
+      "market": "Birdies",
+      "n": 417,
+      "overallRoi": 22.1,
+      "byWind": [],
+      "byRain": [],
+      "byTeeWave": [],
+      "byPinSheet": [],
+      "bySgOtt": [],
+      "byRound": [
+        {
+          "label": "R3",
+          "n": 69,
+          "units": 65.57,
+          "wins": 43,
+          "losses": 26,
+          "hit": 62.31884057971014,
+          "roi": 95
+        },
+        {
+          "label": "R2",
+          "n": 159,
+          "units": 28.43,
+          "wins": 79,
+          "losses": 80,
+          "hit": 49.685534591194966,
+          "roi": 17.9
+        },
+        {
+          "label": "R4",
+          "n": 78,
+          "units": 0.06,
+          "wins": 41,
+          "losses": 37,
+          "hit": 52.56410256410257,
+          "roi": 0.1
+        },
+        {
+          "label": "R1",
+          "n": 111,
+          "units": -1.72,
+          "wins": 57,
+          "losses": 54,
+          "hit": 51.35135135135135,
+          "roi": -1.6
+        }
+      ],
+      "byCourseFwWidth": [
+        {
+          "label": "Wide FW (≥34 yd)",
+          "n": 279,
+          "units": 104.77,
+          "wins": 152,
+          "losses": 127,
+          "hit": 54.48028673835126,
+          "roi": 37.6
+        },
+        {
+          "label": "Medium FW (30–34 yd)",
+          "n": 16,
+          "units": -0.12,
+          "wins": 8,
+          "losses": 8,
+          "hit": 50,
+          "roi": -0.8
+        },
+        {
+          "label": "Narrow FW (<30 yd avg)",
+          "n": 52,
+          "units": -16.03,
+          "wins": 20,
+          "losses": 32,
+          "hit": 38.46153846153847,
+          "roi": -30.8
+        }
+      ],
+      "byCourseDrivingDifficulty": [
+        {
+          "label": "Easy driving course (adj acc ≥62%)",
+          "n": 279,
+          "units": 104.77,
+          "wins": 152,
+          "losses": 127,
+          "hit": 54.48028673835126,
+          "roi": 37.6
+        },
+        {
+          "label": "Average driving course",
+          "n": 68,
+          "units": -16.16,
+          "wins": 28,
+          "losses": 40,
+          "hit": 41.17647058823529,
+          "roi": -23.8
+        }
+      ],
+      "byCourseScoring": [
+        {
+          "label": "Easy vs par (adj <+0.5)",
+          "n": 295,
+          "units": 104.64,
+          "wins": 160,
+          "losses": 135,
+          "hit": 54.23728813559322,
+          "roi": 35.5
+        },
+        {
+          "label": "Neutral scoring course",
+          "n": 52,
+          "units": -16.03,
+          "wins": 20,
+          "losses": 32,
+          "hit": 38.46153846153847,
+          "roi": -30.8
+        }
+      ],
+      "byGirFwSkillGap": [],
+      "byGirMinusFw": [],
+      "byEdgeTier": [
+        {
+          "label": "Edge ≥15%",
+          "n": 178,
+          "units": 116.46,
+          "wins": 103,
+          "losses": 75,
+          "hit": 57.865168539325836,
+          "roi": 65.4
+        },
+        {
+          "label": "Edge 10–15%",
+          "n": 98,
+          "units": -7.93,
+          "wins": 49,
+          "losses": 49,
+          "hit": 50,
+          "roi": -8.1
+        },
+        {
+          "label": "Edge 5–10%",
+          "n": 141,
+          "units": -16.2,
+          "wins": 68,
+          "losses": 73,
+          "hit": 48.226950354609926,
+          "roi": -11.5
+        }
+      ],
+      "bySide": [
+        {
+          "label": "Birdies over",
+          "n": 240,
+          "units": 79.27,
+          "wins": 118,
+          "losses": 122,
+          "hit": 49.166666666666664,
+          "roi": 33
+        },
+        {
+          "label": "Birdies under",
+          "n": 177,
+          "units": 13.07,
+          "wins": 102,
+          "losses": 75,
+          "hit": 57.6271186440678,
+          "roi": 7.4
+        }
+      ],
+      "topCourses": [
+        {
+          "label": "Aronimink Golf Club",
+          "n": 110,
+          "units": 112,
+          "wins": 68,
+          "losses": 42,
+          "hit": 61.81818181818181,
+          "roi": 101.8
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 87,
+          "units": 5.07,
+          "wins": 48,
+          "losses": 39,
+          "hit": 55.172413793103445,
+          "roi": 5.8
+        },
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 70,
+          "units": 3.73,
+          "wins": 40,
+          "losses": 30,
+          "hit": 57.14285714285714,
+          "roi": 5.3
+        },
+        {
+          "label": "Muirfield Village Golf Club",
+          "n": 16,
+          "units": -0.12,
+          "wins": 8,
+          "losses": 8,
+          "hit": 50,
+          "roi": -0.8
+        },
+        {
+          "label": "TPC Toronto At Osprey Valley",
+          "n": 82,
+          "units": -12.3,
+          "wins": 36,
+          "losses": 46,
+          "hit": 43.90243902439025,
+          "roi": -15
+        },
+        {
+          "label": "Colonial Country Club",
+          "n": 52,
+          "units": -16.03,
+          "wins": 20,
+          "losses": 32,
+          "hit": 38.46153846153847,
+          "roi": -30.8
+        }
+      ],
+      "worstCourses": [
+        {
+          "label": "Colonial Country Club",
+          "n": 52,
+          "units": -16.03,
+          "wins": 20,
+          "losses": 32,
+          "hit": 38.46153846153847,
+          "roi": -30.8
+        },
+        {
+          "label": "TPC Toronto At Osprey Valley",
+          "n": 82,
+          "units": -12.3,
+          "wins": 36,
+          "losses": 46,
+          "hit": 43.90243902439025,
+          "roi": -15
+        },
+        {
+          "label": "Muirfield Village Golf Club",
+          "n": 16,
+          "units": -0.12,
+          "wins": 8,
+          "losses": 8,
+          "hit": 50,
+          "roi": -0.8
+        },
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 70,
+          "units": 3.73,
+          "wins": 40,
+          "losses": 30,
+          "hit": 57.14285714285714,
+          "roi": 5.3
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 87,
+          "units": 5.07,
+          "wins": 48,
+          "losses": 39,
+          "hit": 55.172413793103445,
+          "roi": 5.8
+        },
+        {
+          "label": "Aronimink Golf Club",
+          "n": 110,
+          "units": 112,
+          "wins": 68,
+          "losses": 42,
+          "hit": 61.81818181818181,
+          "roi": 101.8
+        }
+      ]
+    },
+    "Total score": {
+      "market": "Total score",
+      "n": 403,
+      "overallRoi": 13.7,
+      "byWind": [],
+      "byRain": [],
+      "byTeeWave": [],
+      "byPinSheet": [],
+      "bySgOtt": [],
+      "byRound": [
+        {
+          "label": "R1",
+          "n": 133,
+          "units": 34.64,
+          "wins": 90,
+          "losses": 43,
+          "hit": 67.66917293233082,
+          "roi": 26
+        },
+        {
+          "label": "R2",
+          "n": 143,
+          "units": 34.73,
+          "wins": 94,
+          "losses": 49,
+          "hit": 65.73426573426573,
+          "roi": 24.3
+        },
+        {
+          "label": "R3",
+          "n": 54,
+          "units": 0.34,
+          "wins": 29,
+          "losses": 25,
+          "hit": 53.70370370370371,
+          "roi": 0.6
+        },
+        {
+          "label": "R4",
+          "n": 73,
+          "units": -14.52,
+          "wins": 31,
+          "losses": 42,
+          "hit": 42.465753424657535,
+          "roi": -19.9
+        }
+      ],
+      "byCourseFwWidth": [
+        {
+          "label": "Wide FW (≥34 yd)",
+          "n": 227,
+          "units": 20.29,
+          "wins": 131,
+          "losses": 96,
+          "hit": 57.70925110132159,
+          "roi": 8.9
+        },
+        {
+          "label": "Narrow FW (<30 yd avg)",
+          "n": 23,
+          "units": -10.27,
+          "wins": 7,
+          "losses": 16,
+          "hit": 30.434782608695656,
+          "roi": -44.7
+        }
+      ],
+      "byCourseDrivingDifficulty": [
+        {
+          "label": "Easy driving course (adj acc ≥62%)",
+          "n": 227,
+          "units": 20.29,
+          "wins": 131,
+          "losses": 96,
+          "hit": 57.70925110132159,
+          "roi": 8.9
+        },
+        {
+          "label": "Average driving course",
+          "n": 29,
+          "units": -8.7,
+          "wins": 11,
+          "losses": 18,
+          "hit": 37.93103448275862,
+          "roi": -30
+        }
+      ],
+      "byCourseScoring": [
+        {
+          "label": "Easy vs par (adj <+0.5)",
+          "n": 233,
+          "units": 21.86,
+          "wins": 135,
+          "losses": 98,
+          "hit": 57.93991416309014,
+          "roi": 9.4
+        },
+        {
+          "label": "Neutral scoring course",
+          "n": 23,
+          "units": -10.27,
+          "wins": 7,
+          "losses": 16,
+          "hit": 30.434782608695656,
+          "roi": -44.7
+        }
+      ],
+      "byGirFwSkillGap": [],
+      "byGirMinusFw": [],
+      "byEdgeTier": [
+        {
+          "label": "Edge ≥15%",
+          "n": 254,
+          "units": 51.78,
+          "wins": 161,
+          "losses": 93,
+          "hit": 63.38582677165354,
+          "roi": 20.4
+        },
+        {
+          "label": "Edge 10–15%",
+          "n": 81,
+          "units": 5.85,
+          "wins": 47,
+          "losses": 34,
+          "hit": 58.0246913580247,
+          "roi": 7.2
+        },
+        {
+          "label": "Edge 5–10%",
+          "n": 68,
+          "units": -2.44,
+          "wins": 36,
+          "losses": 32,
+          "hit": 52.94117647058824,
+          "roi": -3.6
+        }
+      ],
+      "bySide": [
+        {
+          "label": "Total score under",
+          "n": 273,
+          "units": 56.68,
+          "wins": 175,
+          "losses": 98,
+          "hit": 64.1025641025641,
+          "roi": 20.8
+        },
+        {
+          "label": "Total score over",
+          "n": 130,
+          "units": -1.48,
+          "wins": 69,
+          "losses": 61,
+          "hit": 53.07692307692308,
+          "roi": -1.1
+        }
+      ],
+      "topCourses": [
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 147,
+          "units": 43.61,
+          "wins": 102,
+          "losses": 45,
+          "hit": 69.38775510204081,
+          "roi": 29.7
+        },
+        {
+          "label": "Aronimink Golf Club",
+          "n": 77,
+          "units": 19.12,
+          "wins": 50,
+          "losses": 27,
+          "hit": 64.93506493506493,
+          "roi": 24.8
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 113,
+          "units": 7.37,
+          "wins": 64,
+          "losses": 49,
+          "hit": 56.63716814159292,
+          "roi": 6.5
+        },
+        {
+          "label": "TPC Toronto At Osprey Valley",
+          "n": 37,
+          "units": -6.2,
+          "wins": 17,
+          "losses": 20,
+          "hit": 45.94594594594595,
+          "roi": -16.8
+        },
+        {
+          "label": "Colonial Country Club",
+          "n": 23,
+          "units": -10.27,
+          "wins": 7,
+          "losses": 16,
+          "hit": 30.434782608695656,
+          "roi": -44.7
+        }
+      ],
+      "worstCourses": [
+        {
+          "label": "Colonial Country Club",
+          "n": 23,
+          "units": -10.27,
+          "wins": 7,
+          "losses": 16,
+          "hit": 30.434782608695656,
+          "roi": -44.7
+        },
+        {
+          "label": "TPC Toronto At Osprey Valley",
+          "n": 37,
+          "units": -6.2,
+          "wins": 17,
+          "losses": 20,
+          "hit": 45.94594594594595,
+          "roi": -16.8
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 113,
+          "units": 7.37,
+          "wins": 64,
+          "losses": 49,
+          "hit": 56.63716814159292,
+          "roi": 6.5
+        },
+        {
+          "label": "Aronimink Golf Club",
+          "n": 77,
+          "units": 19.12,
+          "wins": 50,
+          "losses": 27,
+          "hit": 64.93506493506493,
+          "roi": 24.8
+        },
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 147,
+          "units": 43.61,
+          "wins": 102,
+          "losses": 45,
+          "hit": 69.38775510204081,
+          "roi": 29.7
+        }
+      ]
+    },
+    "Bogeys": {
+      "market": "Bogeys",
+      "n": 245,
+      "overallRoi": 0.7,
+      "byWind": [],
+      "byRain": [],
+      "byTeeWave": [],
+      "byPinSheet": [],
+      "bySgOtt": [],
+      "byRound": [
+        {
+          "label": "R3",
+          "n": 52,
+          "units": 10.8,
+          "wins": 32,
+          "losses": 20,
+          "hit": 61.53846153846154,
+          "roi": 20.8
+        },
+        {
+          "label": "R4",
+          "n": 21,
+          "units": 1.52,
+          "wins": 11,
+          "losses": 10,
+          "hit": 52.38095238095239,
+          "roi": 7.2
+        },
+        {
+          "label": "R2",
+          "n": 90,
+          "units": 6.2,
+          "wins": 44,
+          "losses": 46,
+          "hit": 48.888888888888886,
+          "roi": 6.9
+        },
+        {
+          "label": "R1",
+          "n": 82,
+          "units": -16.81,
+          "wins": 34,
+          "losses": 48,
+          "hit": 41.46341463414634,
+          "roi": -20.5
+        }
+      ],
+      "byCourseFwWidth": [
+        {
+          "label": "Wide FW (≥34 yd)",
+          "n": 115,
+          "units": 57.73,
+          "wins": 80,
+          "losses": 35,
+          "hit": 69.56521739130434,
+          "roi": 50.2
+        },
+        {
+          "label": "Medium FW (30–34 yd)",
+          "n": 28,
+          "units": -2.49,
+          "wins": 14,
+          "losses": 14,
+          "hit": 50,
+          "roi": -8.9
+        },
+        {
+          "label": "Narrow FW (<30 yd avg)",
+          "n": 15,
+          "units": -7.77,
+          "wins": 4,
+          "losses": 11,
+          "hit": 26.666666666666668,
+          "roi": -51.8
+        }
+      ],
+      "byCourseDrivingDifficulty": [
+        {
+          "label": "Easy driving course (adj acc ≥62%)",
+          "n": 115,
+          "units": 57.73,
+          "wins": 80,
+          "losses": 35,
+          "hit": 69.56521739130434,
+          "roi": 50.2
+        },
+        {
+          "label": "Average driving course",
+          "n": 43,
+          "units": -10.26,
+          "wins": 18,
+          "losses": 25,
+          "hit": 41.86046511627907,
+          "roi": -23.9
+        }
+      ],
+      "byCourseScoring": [
+        {
+          "label": "Easy vs par (adj <+0.5)",
+          "n": 143,
+          "units": 55.24,
+          "wins": 94,
+          "losses": 49,
+          "hit": 65.73426573426573,
+          "roi": 38.6
+        },
+        {
+          "label": "Neutral scoring course",
+          "n": 15,
+          "units": -7.77,
+          "wins": 4,
+          "losses": 11,
+          "hit": 26.666666666666668,
+          "roi": -51.8
+        }
+      ],
+      "byGirFwSkillGap": [],
+      "byGirMinusFw": [],
+      "byEdgeTier": [
+        {
+          "label": "Edge ≥15%",
+          "n": 106,
+          "units": 37.5,
+          "wins": 65,
+          "losses": 41,
+          "hit": 61.32075471698113,
+          "roi": 35.4
+        },
+        {
+          "label": "Edge 10–15%",
+          "n": 59,
+          "units": -13.53,
+          "wins": 25,
+          "losses": 34,
+          "hit": 42.3728813559322,
+          "roi": -22.9
+        },
+        {
+          "label": "Edge 5–10%",
+          "n": 80,
+          "units": -22.27,
+          "wins": 31,
+          "losses": 49,
+          "hit": 38.75,
+          "roi": -27.8
+        }
+      ],
+      "bySide": [
+        {
+          "label": "Bogeys under",
+          "n": 97,
+          "units": 17.98,
+          "wins": 64,
+          "losses": 33,
+          "hit": 65.97938144329896,
+          "roi": 18.5
+        },
+        {
+          "label": "Bogeys over",
+          "n": 148,
+          "units": -16.27,
+          "wins": 57,
+          "losses": 91,
+          "hit": 38.513513513513516,
+          "roi": -11
+        }
+      ],
+      "topCourses": [
+        {
+          "label": "Aronimink Golf Club",
+          "n": 39,
+          "units": 28.46,
+          "wins": 32,
+          "losses": 7,
+          "hit": 82.05128205128204,
+          "roi": 73
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 41,
+          "units": 29.59,
+          "wins": 29,
+          "losses": 12,
+          "hit": 70.73170731707317,
+          "roi": 72.2
+        },
+        {
+          "label": "TPC Toronto At Osprey Valley",
+          "n": 35,
+          "units": -0.32,
+          "wins": 19,
+          "losses": 16,
+          "hit": 54.285714285714285,
+          "roi": -0.9
+        },
+        {
+          "label": "Muirfield Village Golf Club",
+          "n": 28,
+          "units": -2.49,
+          "wins": 14,
+          "losses": 14,
+          "hit": 50,
+          "roi": -8.9
+        },
+        {
+          "label": "Colonial Country Club",
+          "n": 15,
+          "units": -7.77,
+          "wins": 4,
+          "losses": 11,
+          "hit": 26.666666666666668,
+          "roi": -51.8
+        },
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 87,
+          "units": -45.76,
+          "wins": 23,
+          "losses": 64,
+          "hit": 26.436781609195403,
+          "roi": -52.6
+        }
+      ],
+      "worstCourses": [
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 87,
+          "units": -45.76,
+          "wins": 23,
+          "losses": 64,
+          "hit": 26.436781609195403,
+          "roi": -52.6
+        },
+        {
+          "label": "Colonial Country Club",
+          "n": 15,
+          "units": -7.77,
+          "wins": 4,
+          "losses": 11,
+          "hit": 26.666666666666668,
+          "roi": -51.8
+        },
+        {
+          "label": "Muirfield Village Golf Club",
+          "n": 28,
+          "units": -2.49,
+          "wins": 14,
+          "losses": 14,
+          "hit": 50,
+          "roi": -8.9
+        },
+        {
+          "label": "TPC Toronto At Osprey Valley",
+          "n": 35,
+          "units": -0.32,
+          "wins": 19,
+          "losses": 16,
+          "hit": 54.285714285714285,
+          "roi": -0.9
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 41,
+          "units": 29.59,
+          "wins": 29,
+          "losses": 12,
+          "hit": 70.73170731707317,
+          "roi": 72.2
+        },
+        {
+          "label": "Aronimink Golf Club",
+          "n": 39,
+          "units": 28.46,
+          "wins": 32,
+          "losses": 7,
+          "hit": 82.05128205128204,
+          "roi": 73
+        }
+      ]
+    },
+    "all": {
+      "market": "all",
+      "n": 1552,
+      "overallRoi": 15,
+      "byWind": [],
+      "byRain": [],
+      "byTeeWave": [],
+      "byPinSheet": [],
+      "bySgOtt": [],
+      "byRound": [
+        {
+          "label": "R3",
+          "n": 257,
+          "units": 104.26,
+          "wins": 157,
+          "losses": 100,
+          "hit": 61.08949416342413,
+          "roi": 40.6
+        },
+        {
+          "label": "R2",
+          "n": 580,
+          "units": 85.08,
+          "wins": 324,
+          "losses": 256,
+          "hit": 55.86206896551724,
+          "roi": 14.7
+        },
+        {
+          "label": "R1",
+          "n": 469,
+          "units": 39.9,
+          "wins": 274,
+          "losses": 195,
+          "hit": 58.42217484008528,
+          "roi": 8.5
+        },
+        {
+          "label": "R4",
+          "n": 246,
+          "units": 4.22,
+          "wins": 130,
+          "losses": 116,
+          "hit": 52.84552845528455,
+          "roi": 1.7
+        }
+      ],
+      "byCourseFwWidth": [
+        {
+          "label": "Wide FW (≥34 yd)",
+          "n": 902,
+          "units": 234.26,
+          "wins": 531,
+          "losses": 371,
+          "hit": 58.86917960088692,
+          "roi": 26
+        },
+        {
+          "label": "Medium FW (30–34 yd)",
+          "n": 103,
+          "units": 25.48,
+          "wins": 70,
+          "losses": 33,
+          "hit": 67.96116504854369,
+          "roi": 24.7
+        },
+        {
+          "label": "Narrow FW (<30 yd avg)",
+          "n": 133,
+          "units": -52.55,
+          "wins": 44,
+          "losses": 89,
+          "hit": 33.08270676691729,
+          "roi": -39.5
+        }
+      ],
+      "byCourseDrivingDifficulty": [
+        {
+          "label": "Easy driving course (adj acc ≥62%)",
+          "n": 902,
+          "units": 234.26,
+          "wins": 531,
+          "losses": 371,
+          "hit": 58.86917960088692,
+          "roi": 26
+        },
+        {
+          "label": "Average driving course",
+          "n": 236,
+          "units": -27.07,
+          "wins": 114,
+          "losses": 122,
+          "hit": 48.30508474576271,
+          "roi": -11.5
+        }
+      ],
+      "byCourseScoring": [
+        {
+          "label": "Easy vs par (adj <+0.5)",
+          "n": 1005,
+          "units": 259.74,
+          "wins": 601,
+          "losses": 404,
+          "hit": 59.800995024875625,
+          "roi": 25.8
+        },
+        {
+          "label": "Neutral scoring course",
+          "n": 133,
+          "units": -52.55,
+          "wins": 44,
+          "losses": 89,
+          "hit": 33.08270676691729,
+          "roi": -39.5
+        }
+      ],
+      "byGirFwSkillGap": [
+        {
+          "label": "FW edge >> GIR edge",
+          "n": 110,
+          "units": 28.29,
+          "wins": 70,
+          "losses": 40,
+          "hit": 63.63636363636363,
+          "roi": 25.7
+        },
+        {
+          "label": "GIR edge >> FW edge (+1.5+)",
+          "n": 100,
+          "units": 25.21,
+          "wins": 68,
+          "losses": 32,
+          "hit": 68,
+          "roi": 25.2
+        },
+        {
+          "label": "GIR/FW edges aligned",
+          "n": 245,
+          "units": 26.65,
+          "wins": 141,
+          "losses": 104,
+          "hit": 57.55102040816327,
+          "roi": 10.9
+        }
+      ],
+      "byGirMinusFw": [
+        {
+          "label": "High GIR−FW (approach > driving)",
+          "n": 100,
+          "units": 20.45,
+          "wins": 61,
+          "losses": 39,
+          "hit": 61,
+          "roi": 20.4
+        },
+        {
+          "label": "Balanced GIR−FW",
+          "n": 62,
+          "units": 10.06,
+          "wins": 40,
+          "losses": 22,
+          "hit": 64.51612903225806,
+          "roi": 16.2
+        },
+        {
+          "label": "Low GIR−FW (driving profile)",
+          "n": 64,
+          "units": 9.29,
+          "wins": 36,
+          "losses": 28,
+          "hit": 56.25,
+          "roi": 14.5
+        }
+      ],
+      "byEdgeTier": [
+        {
+          "label": "Edge ≥15%",
+          "n": 812,
+          "units": 283.83,
+          "wins": 506,
+          "losses": 306,
+          "hit": 62.315270935960584,
+          "roi": 35
+        },
+        {
+          "label": "Edge 10–15%",
+          "n": 333,
+          "units": -6.31,
+          "wins": 180,
+          "losses": 153,
+          "hit": 54.054054054054056,
+          "roi": -1.9
+        },
+        {
+          "label": "Edge 5–10%",
+          "n": 407,
+          "units": -44.06,
+          "wins": 199,
+          "losses": 208,
+          "hit": 48.894348894348894,
+          "roi": -10.8
+        }
+      ],
+      "bySide": [
+        {
+          "label": "Birdies over",
+          "n": 240,
+          "units": 79.27,
+          "wins": 118,
+          "losses": 122,
+          "hit": 49.166666666666664,
+          "roi": 33
+        },
+        {
+          "label": "GIR under",
+          "n": 122,
+          "units": 31.63,
+          "wins": 80,
+          "losses": 42,
+          "hit": 65.57377049180327,
+          "roi": 25.9
+        },
+        {
+          "label": "Total score under",
+          "n": 273,
+          "units": 56.68,
+          "wins": 175,
+          "losses": 98,
+          "hit": 64.1025641025641,
+          "roi": 20.8
+        },
+        {
+          "label": "Bogeys under",
+          "n": 97,
+          "units": 17.98,
+          "wins": 64,
+          "losses": 33,
+          "hit": 65.97938144329896,
+          "roi": 18.5
+        },
+        {
+          "label": "Fairways hit over",
+          "n": 147,
+          "units": 26.77,
+          "wins": 90,
+          "losses": 57,
+          "hit": 61.224489795918366,
+          "roi": 18.2
+        },
+        {
+          "label": "Fairways hit under",
+          "n": 111,
+          "units": 17.1,
+          "wins": 68,
+          "losses": 43,
+          "hit": 61.261261261261254,
+          "roi": 15.4
+        },
+        {
+          "label": "GIR over",
+          "n": 107,
+          "units": 8.72,
+          "wins": 62,
+          "losses": 45,
+          "hit": 57.943925233644855,
+          "roi": 8.1
+        },
+        {
+          "label": "Birdies under",
+          "n": 177,
+          "units": 13.07,
+          "wins": 102,
+          "losses": 75,
+          "hit": 57.6271186440678,
+          "roi": 7.4
+        },
+        {
+          "label": "Total score over",
+          "n": 130,
+          "units": -1.48,
+          "wins": 69,
+          "losses": 61,
+          "hit": 53.07692307692308,
+          "roi": -1.1
+        },
+        {
+          "label": "Bogeys over",
+          "n": 148,
+          "units": -16.27,
+          "wins": 57,
+          "losses": 91,
+          "hit": 38.513513513513516,
+          "roi": -11
+        }
+      ],
+      "topCourses": [
+        {
+          "label": "Aronimink Golf Club",
+          "n": 379,
+          "units": 201.41,
+          "wins": 244,
+          "losses": 135,
+          "hit": 64.37994722955145,
+          "roi": 53.1
+        },
+        {
+          "label": "Muirfield Village Golf Club",
+          "n": 103,
+          "units": 25.48,
+          "wins": 70,
+          "losses": 33,
+          "hit": 67.96116504854369,
+          "roi": 24.7
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 326,
+          "units": 54.7,
+          "wins": 193,
+          "losses": 133,
+          "hit": 59.20245398773007,
+          "roi": 16.8
+        },
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 414,
+          "units": 26.27,
+          "wins": 240,
+          "losses": 174,
+          "hit": 57.971014492753625,
+          "roi": 6.3
+        },
+        {
+          "label": "TPC Toronto At Osprey Valley",
+          "n": 197,
+          "units": -21.85,
+          "wins": 94,
+          "losses": 103,
+          "hit": 47.71573604060914,
+          "roi": -11.1
+        },
+        {
+          "label": "Colonial Country Club",
+          "n": 133,
+          "units": -52.55,
+          "wins": 44,
+          "losses": 89,
+          "hit": 33.08270676691729,
+          "roi": -39.5
+        }
+      ],
+      "worstCourses": [
+        {
+          "label": "Colonial Country Club",
+          "n": 133,
+          "units": -52.55,
+          "wins": 44,
+          "losses": 89,
+          "hit": 33.08270676691729,
+          "roi": -39.5
+        },
+        {
+          "label": "TPC Toronto At Osprey Valley",
+          "n": 197,
+          "units": -21.85,
+          "wins": 94,
+          "losses": 103,
+          "hit": 47.71573604060914,
+          "roi": -11.1
+        },
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 414,
+          "units": 26.27,
+          "wins": 240,
+          "losses": 174,
+          "hit": 57.971014492753625,
+          "roi": 6.3
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 326,
+          "units": 54.7,
+          "wins": 193,
+          "losses": 133,
+          "hit": 59.20245398773007,
+          "roi": 16.8
+        },
+        {
+          "label": "Muirfield Village Golf Club",
+          "n": 103,
+          "units": 25.48,
+          "wins": 70,
+          "losses": 33,
+          "hit": 67.96116504854369,
+          "roi": 24.7
+        },
+        {
+          "label": "Aronimink Golf Club",
+          "n": 379,
+          "units": 201.41,
+          "wins": 244,
+          "losses": 135,
+          "hit": 64.37994722955145,
+          "roi": 53.1
+        }
+      ]
+    }
+  },
+  "minEv12_5": {
+    "Fairways hit": {
+      "market": "Fairways hit",
+      "n": 180,
+      "overallRoi": 27.4,
+      "byWind": [],
+      "byRain": [],
+      "byTeeWave": [],
+      "byPinSheet": [],
+      "bySgOtt": [],
+      "byRound": [
+        {
+          "label": "R3",
+          "n": 27,
+          "units": 17.3,
+          "wins": 18,
+          "losses": 9,
+          "hit": 66.66666666666666,
+          "roi": 64.1
+        },
+        {
+          "label": "R4",
+          "n": 26,
+          "units": 9.8,
+          "wins": 18,
+          "losses": 8,
+          "hit": 69.23076923076923,
+          "roi": 37.7
+        },
+        {
+          "label": "R1",
+          "n": 58,
+          "units": 12.51,
+          "wins": 39,
+          "losses": 19,
+          "hit": 67.24137931034483,
+          "roi": 21.6
+        },
+        {
+          "label": "R2",
+          "n": 69,
+          "units": 9.71,
+          "wins": 42,
+          "losses": 27,
+          "hit": 60.86956521739131,
+          "roi": 14.1
+        }
+      ],
+      "byCourseFwWidth": [
+        {
+          "label": "Medium FW (30–34 yd)",
+          "n": 20,
+          "units": 10.53,
+          "wins": 17,
+          "losses": 3,
+          "hit": 85,
+          "roi": 52.6
+        },
+        {
+          "label": "Wide FW (≥34 yd)",
+          "n": 101,
+          "units": 28.5,
+          "wins": 62,
+          "losses": 39,
+          "hit": 61.386138613861384,
+          "roi": 28.2
+        },
+        {
+          "label": "Narrow FW (<30 yd avg)",
+          "n": 16,
+          "units": -1.08,
+          "wins": 8,
+          "losses": 8,
+          "hit": 50,
+          "roi": -6.8
+        }
+      ],
+      "byCourseDrivingDifficulty": [
+        {
+          "label": "Easy driving course (adj acc ≥62%)",
+          "n": 101,
+          "units": 28.5,
+          "wins": 62,
+          "losses": 39,
+          "hit": 61.386138613861384,
+          "roi": 28.2
+        },
+        {
+          "label": "Average driving course",
+          "n": 36,
+          "units": 9.44,
+          "wins": 25,
+          "losses": 11,
+          "hit": 69.44444444444444,
+          "roi": 26.2
+        }
+      ],
+      "byCourseScoring": [
+        {
+          "label": "Easy vs par (adj <+0.5)",
+          "n": 121,
+          "units": 39.02,
+          "wins": 79,
+          "losses": 42,
+          "hit": 65.28925619834712,
+          "roi": 32.2
+        },
+        {
+          "label": "Neutral scoring course",
+          "n": 16,
+          "units": -1.08,
+          "wins": 8,
+          "losses": 8,
+          "hit": 50,
+          "roi": -6.8
+        }
+      ],
+      "byGirFwSkillGap": [
+        {
+          "label": "GIR edge >> FW edge (+1.5+)",
+          "n": 30,
+          "units": 13.13,
+          "wins": 23,
+          "losses": 7,
+          "hit": 76.66666666666667,
+          "roi": 43.8
+        },
+        {
+          "label": "GIR/FW edges aligned",
+          "n": 85,
+          "units": 25.79,
+          "wins": 56,
+          "losses": 29,
+          "hit": 65.88235294117646,
+          "roi": 30.3
+        },
+        {
+          "label": "FW edge >> GIR edge",
+          "n": 42,
+          "units": 7.61,
+          "wins": 23,
+          "losses": 19,
+          "hit": 54.761904761904766,
+          "roi": 18.1
+        }
+      ],
+      "byGirMinusFw": [
+        {
+          "label": "Low GIR−FW (driving profile)",
+          "n": 41,
+          "units": 13,
+          "wins": 25,
+          "losses": 16,
+          "hit": 60.97560975609756,
+          "roi": 31.7
+        },
+        {
+          "label": "High GIR−FW (approach > driving)",
+          "n": 70,
+          "units": 20.49,
+          "wins": 45,
+          "losses": 25,
+          "hit": 64.28571428571429,
+          "roi": 29.3
+        },
+        {
+          "label": "Balanced GIR−FW",
+          "n": 46,
+          "units": 13.04,
+          "wins": 32,
+          "losses": 14,
+          "hit": 69.56521739130434,
+          "roi": 28.3
+        }
+      ],
+      "byEdgeTier": [
+        {
+          "label": "Edge 10–15%",
+          "n": 22,
+          "units": 7.31,
+          "wins": 17,
+          "losses": 5,
+          "hit": 77.27272727272727,
+          "roi": 33.2
+        },
+        {
+          "label": "Edge ≥15%",
+          "n": 158,
+          "units": 42,
+          "wins": 100,
+          "losses": 58,
+          "hit": 63.29113924050633,
+          "roi": 26.6
+        }
+      ],
+      "bySide": [
+        {
+          "label": "Fairways hit over",
+          "n": 106,
+          "units": 29.66,
+          "wins": 68,
+          "losses": 38,
+          "hit": 64.15094339622641,
+          "roi": 28
+        },
+        {
+          "label": "Fairways hit under",
+          "n": 74,
+          "units": 19.65,
+          "wins": 49,
+          "losses": 25,
+          "hit": 66.21621621621621,
+          "roi": 26.6
+        }
+      ],
+      "topCourses": [
+        {
+          "label": "Muirfield Village Golf Club",
+          "n": 20,
+          "units": 10.53,
+          "wins": 17,
+          "losses": 3,
+          "hit": 85,
+          "roi": 52.6
+        },
+        {
+          "label": "Aronimink Golf Club",
+          "n": 58,
+          "units": 22.61,
+          "wins": 37,
+          "losses": 21,
+          "hit": 63.793103448275865,
+          "roi": 39
+        },
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 43,
+          "units": 11.38,
+          "wins": 30,
+          "losses": 13,
+          "hit": 69.76744186046511,
+          "roi": 26.5
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 34,
+          "units": 6.63,
+          "wins": 21,
+          "losses": 13,
+          "hit": 61.76470588235294,
+          "roi": 19.5
+        },
+        {
+          "label": "Colonial Country Club",
+          "n": 16,
+          "units": -1.08,
+          "wins": 8,
+          "losses": 8,
+          "hit": 50,
+          "roi": -6.8
+        }
+      ],
+      "worstCourses": [
+        {
+          "label": "Colonial Country Club",
+          "n": 16,
+          "units": -1.08,
+          "wins": 8,
+          "losses": 8,
+          "hit": 50,
+          "roi": -6.8
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 34,
+          "units": 6.63,
+          "wins": 21,
+          "losses": 13,
+          "hit": 61.76470588235294,
+          "roi": 19.5
+        },
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 43,
+          "units": 11.38,
+          "wins": 30,
+          "losses": 13,
+          "hit": 69.76744186046511,
+          "roi": 26.5
+        },
+        {
+          "label": "Aronimink Golf Club",
+          "n": 58,
+          "units": 22.61,
+          "wins": 37,
+          "losses": 21,
+          "hit": 63.793103448275865,
+          "roi": 39
+        },
+        {
+          "label": "Muirfield Village Golf Club",
+          "n": 20,
+          "units": 10.53,
+          "wins": 17,
+          "losses": 3,
+          "hit": 85,
+          "roi": 52.6
+        }
+      ]
+    },
+    "GIR": {
+      "market": "GIR",
+      "n": 136,
+      "overallRoi": 27.6,
+      "byWind": [],
+      "byRain": [],
+      "byTeeWave": [],
+      "byPinSheet": [],
+      "bySgOtt": [],
+      "byRound": [
+        {
+          "label": "R4",
+          "n": 28,
+          "units": 10.01,
+          "wins": 20,
+          "losses": 8,
+          "hit": 71.42857142857143,
+          "roi": 35.7
+        },
+        {
+          "label": "R1",
+          "n": 40,
+          "units": 13.45,
+          "wins": 29,
+          "losses": 11,
+          "hit": 72.5,
+          "roi": 33.6
+        },
+        {
+          "label": "R2",
+          "n": 45,
+          "units": 11.67,
+          "wins": 27,
+          "losses": 18,
+          "hit": 60,
+          "roi": 25.9
+        },
+        {
+          "label": "R3",
+          "n": 23,
+          "units": 2.42,
+          "wins": 13,
+          "losses": 10,
+          "hit": 56.52173913043478,
+          "roi": 10.5
+        }
+      ],
+      "byCourseFwWidth": [
+        {
+          "label": "Medium FW (30–34 yd)",
+          "n": 21,
+          "units": 10.66,
+          "wins": 17,
+          "losses": 4,
+          "hit": 80.95238095238095,
+          "roi": 50.8
+        },
+        {
+          "label": "Wide FW (≥34 yd)",
+          "n": 91,
+          "units": 28.08,
+          "wins": 60,
+          "losses": 31,
+          "hit": 65.93406593406593,
+          "roi": 30.9
+        }
+      ],
+      "byCourseDrivingDifficulty": [
+        {
+          "label": "Easy driving course (adj acc ≥62%)",
+          "n": 91,
+          "units": 28.08,
+          "wins": 60,
+          "losses": 31,
+          "hit": 65.93406593406593,
+          "roi": 30.9
+        },
+        {
+          "label": "Average driving course",
+          "n": 32,
+          "units": -0.34,
+          "wins": 17,
+          "losses": 15,
+          "hit": 53.125,
+          "roi": -1.1
+        }
+      ],
+      "byCourseScoring": [
+        {
+          "label": "Easy vs par (adj <+0.5)",
+          "n": 112,
+          "units": 38.74,
+          "wins": 77,
+          "losses": 35,
+          "hit": 68.75,
+          "roi": 34.6
+        }
+      ],
+      "byGirFwSkillGap": [
+        {
+          "label": "FW edge >> GIR edge",
+          "n": 40,
+          "units": 18.87,
+          "wins": 30,
+          "losses": 10,
+          "hit": 75,
+          "roi": 47.2
+        },
+        {
+          "label": "GIR edge >> FW edge (+1.5+)",
+          "n": 31,
+          "units": 13.15,
+          "wins": 23,
+          "losses": 8,
+          "hit": 74.19354838709677,
+          "roi": 42.4
+        },
+        {
+          "label": "GIR/FW edges aligned",
+          "n": 65,
+          "units": 5.52,
+          "wins": 36,
+          "losses": 29,
+          "hit": 55.38461538461539,
+          "roi": 8.5
+        }
+      ],
+      "byGirMinusFw": [],
+      "byEdgeTier": [
+        {
+          "label": "Edge ≥15%",
+          "n": 116,
+          "units": 36.08,
+          "wins": 77,
+          "losses": 39,
+          "hit": 66.37931034482759,
+          "roi": 31.1
+        },
+        {
+          "label": "Edge 10–15%",
+          "n": 20,
+          "units": 1.46,
+          "wins": 12,
+          "losses": 8,
+          "hit": 60,
+          "roi": 7.3
+        }
+      ],
+      "bySide": [
+        {
+          "label": "GIR under",
+          "n": 83,
+          "units": 25.75,
+          "wins": 56,
+          "losses": 27,
+          "hit": 67.46987951807229,
+          "roi": 31
+        },
+        {
+          "label": "GIR over",
+          "n": 53,
+          "units": 11.79,
+          "wins": 33,
+          "losses": 20,
+          "hit": 62.264150943396224,
+          "roi": 22.2
+        }
+      ],
+      "topCourses": [
+        {
+          "label": "Muirfield Village Golf Club",
+          "n": 21,
+          "units": 10.66,
+          "wins": 17,
+          "losses": 4,
+          "hit": 80.95238095238095,
+          "roi": 50.8
+        },
+        {
+          "label": "Aronimink Golf Club",
+          "n": 61,
+          "units": 18.8,
+          "wins": 39,
+          "losses": 22,
+          "hit": 63.934426229508205,
+          "roi": 30.8
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 23,
+          "units": 5.71,
+          "wins": 15,
+          "losses": 8,
+          "hit": 65.21739130434783,
+          "roi": 24.8
+        }
+      ],
+      "worstCourses": [
+        {
+          "label": "TPC Craig Ranch",
+          "n": 23,
+          "units": 5.71,
+          "wins": 15,
+          "losses": 8,
+          "hit": 65.21739130434783,
+          "roi": 24.8
+        },
+        {
+          "label": "Aronimink Golf Club",
+          "n": 61,
+          "units": 18.8,
+          "wins": 39,
+          "losses": 22,
+          "hit": 63.934426229508205,
+          "roi": 30.8
+        },
+        {
+          "label": "Muirfield Village Golf Club",
+          "n": 21,
+          "units": 10.66,
+          "wins": 17,
+          "losses": 4,
+          "hit": 80.95238095238095,
+          "roi": 50.8
+        }
+      ]
+    },
+    "Birdies": {
+      "market": "Birdies",
+      "n": 221,
+      "overallRoi": 50.5,
+      "byWind": [],
+      "byRain": [],
+      "byTeeWave": [],
+      "byPinSheet": [],
+      "bySgOtt": [],
+      "byRound": [
+        {
+          "label": "R3",
+          "n": 46,
+          "units": 59.41,
+          "wins": 27,
+          "losses": 19,
+          "hit": 58.69565217391305,
+          "roi": 129.1
+        },
+        {
+          "label": "R2",
+          "n": 92,
+          "units": 45.44,
+          "wins": 51,
+          "losses": 41,
+          "hit": 55.434782608695656,
+          "roi": 49.4
+        },
+        {
+          "label": "R4",
+          "n": 41,
+          "units": 5.6,
+          "wins": 24,
+          "losses": 17,
+          "hit": 58.536585365853654,
+          "roi": 13.7
+        },
+        {
+          "label": "R1",
+          "n": 42,
+          "units": 1.09,
+          "wins": 22,
+          "losses": 20,
+          "hit": 52.38095238095239,
+          "roi": 2.6
+        }
+      ],
+      "byCourseFwWidth": [
+        {
+          "label": "Wide FW (≥34 yd)",
+          "n": 169,
+          "units": 112.89,
+          "wins": 97,
+          "losses": 72,
+          "hit": 57.396449704142015,
+          "roi": 66.8
+        },
+        {
+          "label": "Narrow FW (<30 yd avg)",
+          "n": 24,
+          "units": -5.46,
+          "wins": 10,
+          "losses": 14,
+          "hit": 41.66666666666667,
+          "roi": -22.7
+        }
+      ],
+      "byCourseDrivingDifficulty": [
+        {
+          "label": "Easy driving course (adj acc ≥62%)",
+          "n": 169,
+          "units": 112.89,
+          "wins": 97,
+          "losses": 72,
+          "hit": 57.396449704142015,
+          "roi": 66.8
+        },
+        {
+          "label": "Average driving course",
+          "n": 24,
+          "units": -5.46,
+          "wins": 10,
+          "losses": 14,
+          "hit": 41.66666666666667,
+          "roi": -22.7
+        }
+      ],
+      "byCourseScoring": [
+        {
+          "label": "Easy vs par (adj <+0.5)",
+          "n": 169,
+          "units": 112.89,
+          "wins": 97,
+          "losses": 72,
+          "hit": 57.396449704142015,
+          "roi": 66.8
+        },
+        {
+          "label": "Neutral scoring course",
+          "n": 24,
+          "units": -5.46,
+          "wins": 10,
+          "losses": 14,
+          "hit": 41.66666666666667,
+          "roi": -22.7
+        }
+      ],
+      "byGirFwSkillGap": [],
+      "byGirMinusFw": [],
+      "byEdgeTier": [
+        {
+          "label": "Edge ≥15%",
+          "n": 178,
+          "units": 116.46,
+          "wins": 103,
+          "losses": 75,
+          "hit": 57.865168539325836,
+          "roi": 65.4
+        },
+        {
+          "label": "Edge 10–15%",
+          "n": 43,
+          "units": -4.91,
+          "wins": 21,
+          "losses": 22,
+          "hit": 48.837209302325576,
+          "roi": -11.4
+        }
+      ],
+      "bySide": [
+        {
+          "label": "Birdies over",
+          "n": 123,
+          "units": 97.3,
+          "wins": 65,
+          "losses": 58,
+          "hit": 52.84552845528455,
+          "roi": 79.1
+        },
+        {
+          "label": "Birdies under",
+          "n": 98,
+          "units": 14.25,
+          "wins": 59,
+          "losses": 39,
+          "hit": 60.204081632653065,
+          "roi": 14.5
+        }
+      ],
+      "topCourses": [
+        {
+          "label": "Aronimink Golf Club",
+          "n": 68,
+          "units": 107.91,
+          "wins": 43,
+          "losses": 25,
+          "hit": 63.23529411764706,
+          "roi": 158.7
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 57,
+          "units": 8.94,
+          "wins": 34,
+          "losses": 23,
+          "hit": 59.64912280701754,
+          "roi": 15.7
+        },
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 28,
+          "units": 4.12,
+          "wins": 17,
+          "losses": 11,
+          "hit": 60.71428571428571,
+          "roi": 14.7
+        },
+        {
+          "label": "TPC Toronto At Osprey Valley",
+          "n": 44,
+          "units": -3.96,
+          "wins": 20,
+          "losses": 24,
+          "hit": 45.45454545454545,
+          "roi": -9
+        },
+        {
+          "label": "Colonial Country Club",
+          "n": 24,
+          "units": -5.46,
+          "wins": 10,
+          "losses": 14,
+          "hit": 41.66666666666667,
+          "roi": -22.7
+        }
+      ],
+      "worstCourses": [
+        {
+          "label": "Colonial Country Club",
+          "n": 24,
+          "units": -5.46,
+          "wins": 10,
+          "losses": 14,
+          "hit": 41.66666666666667,
+          "roi": -22.7
+        },
+        {
+          "label": "TPC Toronto At Osprey Valley",
+          "n": 44,
+          "units": -3.96,
+          "wins": 20,
+          "losses": 24,
+          "hit": 45.45454545454545,
+          "roi": -9
+        },
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 28,
+          "units": 4.12,
+          "wins": 17,
+          "losses": 11,
+          "hit": 60.71428571428571,
+          "roi": 14.7
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 57,
+          "units": 8.94,
+          "wins": 34,
+          "losses": 23,
+          "hit": 59.64912280701754,
+          "roi": 15.7
+        },
+        {
+          "label": "Aronimink Golf Club",
+          "n": 68,
+          "units": 107.91,
+          "wins": 43,
+          "losses": 25,
+          "hit": 63.23529411764706,
+          "roi": 158.7
+        }
+      ]
+    },
+    "Total score": {
+      "market": "Total score",
+      "n": 287,
+      "overallRoi": 18.8,
+      "byWind": [],
+      "byRain": [],
+      "byTeeWave": [],
+      "byPinSheet": [],
+      "bySgOtt": [],
+      "byRound": [
+        {
+          "label": "R1",
+          "n": 90,
+          "units": 29.48,
+          "wins": 64,
+          "losses": 26,
+          "hit": 71.11111111111111,
+          "roi": 32.8
+        },
+        {
+          "label": "R2",
+          "n": 122,
+          "units": 32.88,
+          "wins": 81,
+          "losses": 41,
+          "hit": 66.39344262295081,
+          "roi": 27
+        },
+        {
+          "label": "R3",
+          "n": 17,
+          "units": -1.34,
+          "wins": 8,
+          "losses": 9,
+          "hit": 47.05882352941176,
+          "roi": -7.9
+        },
+        {
+          "label": "R4",
+          "n": 58,
+          "units": -7.07,
+          "wins": 27,
+          "losses": 31,
+          "hit": 46.55172413793103,
+          "roi": -12.2
+        }
+      ],
+      "byCourseFwWidth": [
+        {
+          "label": "Wide FW (≥34 yd)",
+          "n": 138,
+          "units": 22.62,
+          "wins": 83,
+          "losses": 55,
+          "hit": 60.14492753623188,
+          "roi": 16.4
+        },
+        {
+          "label": "Narrow FW (<30 yd avg)",
+          "n": 17,
+          "units": -9.86,
+          "wins": 4,
+          "losses": 13,
+          "hit": 23.52941176470588,
+          "roi": -58
+        }
+      ],
+      "byCourseDrivingDifficulty": [
+        {
+          "label": "Easy driving course (adj acc ≥62%)",
+          "n": 138,
+          "units": 22.62,
+          "wins": 83,
+          "losses": 55,
+          "hit": 60.14492753623188,
+          "roi": 16.4
+        },
+        {
+          "label": "Average driving course",
+          "n": 17,
+          "units": -9.86,
+          "wins": 4,
+          "losses": 13,
+          "hit": 23.52941176470588,
+          "roi": -58
+        }
+      ],
+      "byCourseScoring": [
+        {
+          "label": "Easy vs par (adj <+0.5)",
+          "n": 138,
+          "units": 22.62,
+          "wins": 83,
+          "losses": 55,
+          "hit": 60.14492753623188,
+          "roi": 16.4
+        },
+        {
+          "label": "Neutral scoring course",
+          "n": 17,
+          "units": -9.86,
+          "wins": 4,
+          "losses": 13,
+          "hit": 23.52941176470588,
+          "roi": -58
+        }
+      ],
+      "byGirFwSkillGap": [],
+      "byGirMinusFw": [],
+      "byEdgeTier": [
+        {
+          "label": "Edge ≥15%",
+          "n": 254,
+          "units": 51.78,
+          "wins": 161,
+          "losses": 93,
+          "hit": 63.38582677165354,
+          "roi": 20.4
+        },
+        {
+          "label": "Edge 10–15%",
+          "n": 33,
+          "units": 2.18,
+          "wins": 19,
+          "losses": 14,
+          "hit": 57.57575757575758,
+          "roi": 6.6
+        }
+      ],
+      "bySide": [
+        {
+          "label": "Total score under",
+          "n": 203,
+          "units": 52.49,
+          "wins": 135,
+          "losses": 68,
+          "hit": 66.50246305418719,
+          "roi": 25.9
+        },
+        {
+          "label": "Total score over",
+          "n": 84,
+          "units": 1.47,
+          "wins": 45,
+          "losses": 39,
+          "hit": 53.57142857142857,
+          "roi": 1.7
+        }
+      ],
+      "topCourses": [
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 132,
+          "units": 41.2,
+          "wins": 93,
+          "losses": 39,
+          "hit": 70.45454545454545,
+          "roi": 31.2
+        },
+        {
+          "label": "Aronimink Golf Club",
+          "n": 59,
+          "units": 16.05,
+          "wins": 38,
+          "losses": 21,
+          "hit": 64.40677966101694,
+          "roi": 27.2
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 74,
+          "units": 5.89,
+          "wins": 42,
+          "losses": 32,
+          "hit": 56.75675675675676,
+          "roi": 8
+        },
+        {
+          "label": "Colonial Country Club",
+          "n": 17,
+          "units": -9.86,
+          "wins": 4,
+          "losses": 13,
+          "hit": 23.52941176470588,
+          "roi": -58
+        }
+      ],
+      "worstCourses": [
+        {
+          "label": "Colonial Country Club",
+          "n": 17,
+          "units": -9.86,
+          "wins": 4,
+          "losses": 13,
+          "hit": 23.52941176470588,
+          "roi": -58
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 74,
+          "units": 5.89,
+          "wins": 42,
+          "losses": 32,
+          "hit": 56.75675675675676,
+          "roi": 8
+        },
+        {
+          "label": "Aronimink Golf Club",
+          "n": 59,
+          "units": 16.05,
+          "wins": 38,
+          "losses": 21,
+          "hit": 64.40677966101694,
+          "roi": 27.2
+        },
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 132,
+          "units": 41.2,
+          "wins": 93,
+          "losses": 39,
+          "hit": 70.45454545454545,
+          "roi": 31.2
+        }
+      ]
+    },
+    "Bogeys": {
+      "market": "Bogeys",
+      "n": 137,
+      "overallRoi": 16,
+      "byWind": [],
+      "byRain": [],
+      "byTeeWave": [],
+      "byPinSheet": [],
+      "bySgOtt": [],
+      "byRound": [
+        {
+          "label": "R2",
+          "n": 44,
+          "units": 20.68,
+          "wins": 26,
+          "losses": 18,
+          "hit": 59.09090909090909,
+          "roi": 47
+        },
+        {
+          "label": "R3",
+          "n": 41,
+          "units": 4.89,
+          "wins": 24,
+          "losses": 17,
+          "hit": 58.536585365853654,
+          "roi": 11.9
+        },
+        {
+          "label": "R4",
+          "n": 17,
+          "units": 0.31,
+          "wins": 8,
+          "losses": 9,
+          "hit": 47.05882352941176,
+          "roi": 1.8
+        },
+        {
+          "label": "R1",
+          "n": 35,
+          "units": -3.97,
+          "wins": 15,
+          "losses": 20,
+          "hit": 42.857142857142854,
+          "roi": -11.4
+        }
+      ],
+      "byCourseFwWidth": [
+        {
+          "label": "Wide FW (≥34 yd)",
+          "n": 74,
+          "units": 43.17,
+          "wins": 50,
+          "losses": 24,
+          "hit": 67.56756756756756,
+          "roi": 58.3
+        }
+      ],
+      "byCourseDrivingDifficulty": [
+        {
+          "label": "Easy driving course (adj acc ≥62%)",
+          "n": 74,
+          "units": 43.17,
+          "wins": 50,
+          "losses": 24,
+          "hit": 67.56756756756756,
+          "roi": 58.3
+        },
+        {
+          "label": "Average driving course",
+          "n": 21,
+          "units": -6.3,
+          "wins": 8,
+          "losses": 13,
+          "hit": 38.095238095238095,
+          "roi": -30
+        }
+      ],
+      "byCourseScoring": [
+        {
+          "label": "Easy vs par (adj <+0.5)",
+          "n": 85,
+          "units": 39.64,
+          "wins": 54,
+          "losses": 31,
+          "hit": 63.52941176470588,
+          "roi": 46.6
+        }
+      ],
+      "byGirFwSkillGap": [],
+      "byGirMinusFw": [],
+      "byEdgeTier": [
+        {
+          "label": "Edge ≥15%",
+          "n": 106,
+          "units": 37.5,
+          "wins": 65,
+          "losses": 41,
+          "hit": 61.32075471698113,
+          "roi": 35.4
+        },
+        {
+          "label": "Edge 10–15%",
+          "n": 31,
+          "units": -15.59,
+          "wins": 8,
+          "losses": 23,
+          "hit": 25.806451612903224,
+          "roi": -50.3
+        }
+      ],
+      "bySide": [
+        {
+          "label": "Bogeys under",
+          "n": 58,
+          "units": 10.69,
+          "wins": 38,
+          "losses": 20,
+          "hit": 65.51724137931035,
+          "roi": 18.4
+        },
+        {
+          "label": "Bogeys over",
+          "n": 79,
+          "units": 11.22,
+          "wins": 35,
+          "losses": 44,
+          "hit": 44.303797468354425,
+          "roi": 14.2
+        }
+      ],
+      "topCourses": [
+        {
+          "label": "Aronimink Golf Club",
+          "n": 27,
+          "units": 26.68,
+          "wins": 24,
+          "losses": 3,
+          "hit": 88.88888888888889,
+          "roi": 98.8
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 30,
+          "units": 22.91,
+          "wins": 20,
+          "losses": 10,
+          "hit": 66.66666666666666,
+          "roi": 76.4
+        },
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 42,
+          "units": -14.96,
+          "wins": 15,
+          "losses": 27,
+          "hit": 35.714285714285715,
+          "roi": -35.6
+        },
+        {
+          "label": "TPC Toronto At Osprey Valley",
+          "n": 17,
+          "units": -6.43,
+          "wins": 6,
+          "losses": 11,
+          "hit": 35.294117647058826,
+          "roi": -37.8
+        }
+      ],
+      "worstCourses": [
+        {
+          "label": "TPC Toronto At Osprey Valley",
+          "n": 17,
+          "units": -6.43,
+          "wins": 6,
+          "losses": 11,
+          "hit": 35.294117647058826,
+          "roi": -37.8
+        },
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 42,
+          "units": -14.96,
+          "wins": 15,
+          "losses": 27,
+          "hit": 35.714285714285715,
+          "roi": -35.6
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 30,
+          "units": 22.91,
+          "wins": 20,
+          "losses": 10,
+          "hit": 66.66666666666666,
+          "roi": 76.4
+        },
+        {
+          "label": "Aronimink Golf Club",
+          "n": 27,
+          "units": 26.68,
+          "wins": 24,
+          "losses": 3,
+          "hit": 88.88888888888889,
+          "roi": 98.8
+        }
+      ]
+    },
+    "all": {
+      "market": "all",
+      "n": 961,
+      "overallRoi": 28.5,
+      "byWind": [],
+      "byRain": [],
+      "byTeeWave": [],
+      "byPinSheet": [],
+      "bySgOtt": [],
+      "byRound": [
+        {
+          "label": "R3",
+          "n": 154,
+          "units": 82.68,
+          "wins": 90,
+          "losses": 64,
+          "hit": 58.44155844155844,
+          "roi": 53.7
+        },
+        {
+          "label": "R2",
+          "n": 372,
+          "units": 120.39,
+          "wins": 227,
+          "losses": 145,
+          "hit": 61.02150537634409,
+          "roi": 32.4
+        },
+        {
+          "label": "R1",
+          "n": 265,
+          "units": 52.55,
+          "wins": 169,
+          "losses": 96,
+          "hit": 63.77358490566037,
+          "roi": 19.8
+        },
+        {
+          "label": "R4",
+          "n": 170,
+          "units": 18.65,
+          "wins": 97,
+          "losses": 73,
+          "hit": 57.05882352941176,
+          "roi": 11
+        }
+      ],
+      "byCourseFwWidth": [
+        {
+          "label": "Wide FW (≥34 yd)",
+          "n": 573,
+          "units": 235.25,
+          "wins": 352,
+          "losses": 221,
+          "hit": 61.43106457242583,
+          "roi": 41.1
+        },
+        {
+          "label": "Medium FW (30–34 yd)",
+          "n": 52,
+          "units": 17.66,
+          "wins": 38,
+          "losses": 14,
+          "hit": 73.07692307692307,
+          "roi": 34
+        },
+        {
+          "label": "Narrow FW (<30 yd avg)",
+          "n": 78,
+          "units": -30.17,
+          "wins": 26,
+          "losses": 52,
+          "hit": 33.33333333333333,
+          "roi": -38.7
+        }
+      ],
+      "byCourseDrivingDifficulty": [
+        {
+          "label": "Easy driving course (adj acc ≥62%)",
+          "n": 573,
+          "units": 235.25,
+          "wins": 352,
+          "losses": 221,
+          "hit": 61.43106457242583,
+          "roi": 41.1
+        },
+        {
+          "label": "Average driving course",
+          "n": 130,
+          "units": -12.51,
+          "wins": 64,
+          "losses": 66,
+          "hit": 49.23076923076923,
+          "roi": -9.6
+        }
+      ],
+      "byCourseScoring": [
+        {
+          "label": "Easy vs par (adj <+0.5)",
+          "n": 625,
+          "units": 252.91,
+          "wins": 390,
+          "losses": 235,
+          "hit": 62.4,
+          "roi": 40.5
+        },
+        {
+          "label": "Neutral scoring course",
+          "n": 78,
+          "units": -30.17,
+          "wins": 26,
+          "losses": 52,
+          "hit": 33.33333333333333,
+          "roi": -38.7
+        }
+      ],
+      "byGirFwSkillGap": [
+        {
+          "label": "GIR edge >> FW edge (+1.5+)",
+          "n": 61,
+          "units": 26.28,
+          "wins": 46,
+          "losses": 15,
+          "hit": 75.40983606557377,
+          "roi": 43.1
+        },
+        {
+          "label": "FW edge >> GIR edge",
+          "n": 82,
+          "units": 26.47,
+          "wins": 53,
+          "losses": 29,
+          "hit": 64.63414634146342,
+          "roi": 32.3
+        },
+        {
+          "label": "GIR/FW edges aligned",
+          "n": 150,
+          "units": 31.31,
+          "wins": 92,
+          "losses": 58,
+          "hit": 61.33333333333333,
+          "roi": 20.9
+        }
+      ],
+      "byGirMinusFw": [
+        {
+          "label": "Low GIR−FW (driving profile)",
+          "n": 41,
+          "units": 13,
+          "wins": 25,
+          "losses": 16,
+          "hit": 60.97560975609756,
+          "roi": 31.7
+        },
+        {
+          "label": "High GIR−FW (approach > driving)",
+          "n": 70,
+          "units": 20.49,
+          "wins": 45,
+          "losses": 25,
+          "hit": 64.28571428571429,
+          "roi": 29.3
+        },
+        {
+          "label": "Balanced GIR−FW",
+          "n": 46,
+          "units": 13.04,
+          "wins": 32,
+          "losses": 14,
+          "hit": 69.56521739130434,
+          "roi": 28.3
+        }
+      ],
+      "byEdgeTier": [
+        {
+          "label": "Edge ≥15%",
+          "n": 812,
+          "units": 283.83,
+          "wins": 506,
+          "losses": 306,
+          "hit": 62.315270935960584,
+          "roi": 35
+        },
+        {
+          "label": "Edge 10–15%",
+          "n": 149,
+          "units": -9.56,
+          "wins": 77,
+          "losses": 72,
+          "hit": 51.67785234899329,
+          "roi": -6.4
+        }
+      ],
+      "bySide": [
+        {
+          "label": "Birdies over",
+          "n": 123,
+          "units": 97.3,
+          "wins": 65,
+          "losses": 58,
+          "hit": 52.84552845528455,
+          "roi": 79.1
+        },
+        {
+          "label": "GIR under",
+          "n": 83,
+          "units": 25.75,
+          "wins": 56,
+          "losses": 27,
+          "hit": 67.46987951807229,
+          "roi": 31
+        },
+        {
+          "label": "Fairways hit over",
+          "n": 106,
+          "units": 29.66,
+          "wins": 68,
+          "losses": 38,
+          "hit": 64.15094339622641,
+          "roi": 28
+        },
+        {
+          "label": "Fairways hit under",
+          "n": 74,
+          "units": 19.65,
+          "wins": 49,
+          "losses": 25,
+          "hit": 66.21621621621621,
+          "roi": 26.6
+        },
+        {
+          "label": "Total score under",
+          "n": 203,
+          "units": 52.49,
+          "wins": 135,
+          "losses": 68,
+          "hit": 66.50246305418719,
+          "roi": 25.9
+        },
+        {
+          "label": "GIR over",
+          "n": 53,
+          "units": 11.79,
+          "wins": 33,
+          "losses": 20,
+          "hit": 62.264150943396224,
+          "roi": 22.2
+        },
+        {
+          "label": "Bogeys under",
+          "n": 58,
+          "units": 10.69,
+          "wins": 38,
+          "losses": 20,
+          "hit": 65.51724137931035,
+          "roi": 18.4
+        },
+        {
+          "label": "Birdies under",
+          "n": 98,
+          "units": 14.25,
+          "wins": 59,
+          "losses": 39,
+          "hit": 60.204081632653065,
+          "roi": 14.5
+        },
+        {
+          "label": "Bogeys over",
+          "n": 79,
+          "units": 11.22,
+          "wins": 35,
+          "losses": 44,
+          "hit": 44.303797468354425,
+          "roi": 14.2
+        },
+        {
+          "label": "Total score over",
+          "n": 84,
+          "units": 1.47,
+          "wins": 45,
+          "losses": 39,
+          "hit": 53.57142857142857,
+          "roi": 1.7
+        }
+      ],
+      "topCourses": [
+        {
+          "label": "Aronimink Golf Club",
+          "n": 273,
+          "units": 192.04,
+          "wins": 181,
+          "losses": 92,
+          "hit": 66.30036630036629,
+          "roi": 70.3
+        },
+        {
+          "label": "Muirfield Village Golf Club",
+          "n": 52,
+          "units": 17.66,
+          "wins": 38,
+          "losses": 14,
+          "hit": 73.07692307692307,
+          "roi": 34
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 218,
+          "units": 50.08,
+          "wins": 132,
+          "losses": 86,
+          "hit": 60.550458715596335,
+          "roi": 23
+        },
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 258,
+          "units": 51.53,
+          "wins": 167,
+          "losses": 91,
+          "hit": 64.72868217054264,
+          "roi": 20
+        },
+        {
+          "label": "TPC Toronto At Osprey Valley",
+          "n": 82,
+          "units": -6.87,
+          "wins": 39,
+          "losses": 43,
+          "hit": 47.5609756097561,
+          "roi": -8.4
+        },
+        {
+          "label": "Colonial Country Club",
+          "n": 78,
+          "units": -30.17,
+          "wins": 26,
+          "losses": 52,
+          "hit": 33.33333333333333,
+          "roi": -38.7
+        }
+      ],
+      "worstCourses": [
+        {
+          "label": "Colonial Country Club",
+          "n": 78,
+          "units": -30.17,
+          "wins": 26,
+          "losses": 52,
+          "hit": 33.33333333333333,
+          "roi": -38.7
+        },
+        {
+          "label": "TPC Toronto At Osprey Valley",
+          "n": 82,
+          "units": -6.87,
+          "wins": 39,
+          "losses": 43,
+          "hit": 47.5609756097561,
+          "roi": -8.4
+        },
+        {
+          "label": "Shinnecock Hills Golf Club",
+          "n": 258,
+          "units": 51.53,
+          "wins": 167,
+          "losses": 91,
+          "hit": 64.72868217054264,
+          "roi": 20
+        },
+        {
+          "label": "TPC Craig Ranch",
+          "n": 218,
+          "units": 50.08,
+          "wins": 132,
+          "losses": 86,
+          "hit": 60.550458715596335,
+          "roi": 23
+        },
+        {
+          "label": "Muirfield Village Golf Club",
+          "n": 52,
+          "units": 17.66,
+          "wins": 38,
+          "losses": 14,
+          "hit": 73.07692307692307,
+          "roi": 34
+        },
+        {
+          "label": "Aronimink Golf Club",
+          "n": 273,
+          "units": 192.04,
+          "wins": 181,
+          "losses": 92,
+          "hit": 66.30036630036629,
+          "roi": 70.3
+        }
+      ]
+    }
+  },
+  "hypotheses": [
+    "Narrow fairway courses (low fw_width): model uses course-table adj_driving_accuracy — DK may not move FW lines enough vs course setup.",
+    "Wind 12–18 mph: model applies −0.14× difficulty to FW, −0.22× to GIR — if DK is flat, windy overs on accurate drivers can be wrong side; test under FW in wind.",
+    "Rain/soft: model gives negative difficulty (easier scoring, more birdies) — birdie overs may outperform in rain if books slow to adjust.",
+    "GIR edge >> FW edge (girFwSkillGap): approach-strong player at FW market — book may anchor FW to name; your model splits OTT vs APP.",
+    "Hard vs par courses: total score unders and bogey overs historically track; birdie overs harder.",
+    "R4 vs R1: within-event form + Sunday pressure in model — R2–R4 may differ from R1 calibration.",
+    "Edge tier: FW/GIR need 12.5%+ EV; birdies profitable at lower edge."
+  ]
+}
