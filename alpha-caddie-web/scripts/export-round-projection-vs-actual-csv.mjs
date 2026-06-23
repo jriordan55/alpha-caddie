@@ -3,6 +3,9 @@
  * Write one CSV row per projections.json player×round×pricing_mode with model lines,
  * over/under results vs actuals, and best edge (matches Round projections / Historical Trends).
  *
+ * Walk-forward backtest projections use the same venue anchor + field market reconcile as live
+ * (historical-walkforward-projections.mjs → reconcileAllProjectionPlayerRows).
+ *
  *   npm run export:round-projection-vs-actual
  *
  * Actuals (same priority as build-player-history): pgatour_event_rounds.json for the current event,

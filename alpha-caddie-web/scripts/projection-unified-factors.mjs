@@ -590,7 +590,6 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
     ? null
     : reconcileAllProjectionPlayerRows(payload, {
         ...(opts.reconcileOpts || {}),
-        skipFieldCalibrate: true,
       });
 
   const summary = {

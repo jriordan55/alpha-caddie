@@ -13,10 +13,16 @@ import {
   buildWithinEventFormMap,
   blendedPriorRoundCourseExcess,
   courseDifficultyStrokeShift,
+  emptyVenueCountRaw,
+  accumulateVenueCountRow,
+  finalizeVenueAgg,
   fieldCountingMeansFromEventContext,
   fieldCountingMeansFromWithinEventMap,
+  ensureProjectionCourseBasisComplete,
+  reconcileAllProjectionPlayerRows,
   resolveProjectionCounts,
   resolveProjectionScoreToPar,
+  syncVenueScoringToProjectionBasis,
 } from "./course-round-adjustments.mjs";
 import { traditionalRate01 } from "./dg-traditional-stats.mjs";
 import {
@@ -253,6 +259,7 @@ function buildEventContextFromHist(histRows, eventName, eventYear, courseKey, ta
 }
 
 async function loadVenueScoringBeforeCutoff(histRows, courseKey, courseLabel, cutoffMs, eventName, eventYear, targetRound) {
+  const nFairwayHoles = N_FAIRWAY_HOLES;
   if (!courseKey) {
     return {
       venueAvgStp: NaN,
@@ -265,30 +272,22 @@ async function loadVenueScoringBeforeCutoff(histRows, courseKey, courseLabel, cu
     };
   }
 
-  let venueTotals = { n: 0, sumStp: 0, sumScore: 0, sumBird: 0, nBird: 0, sumBog: 0, nBog: 0 };
+  let venueTotals = emptyVenueCountRaw();
   const fieldRaw = new Map();
   const playerRaw = new Map();
   const playerAllRaw = new Map();
   const fitRaw = new Map();
 
-  function accAgg(agg, row) {
-    const cp = num(row.course_par, NaN);
-    const rs = num(row.round_score, NaN);
-    if (!Number.isFinite(cp) || !Number.isFinite(rs)) return agg;
-    agg.n++;
-    agg.sumScore += rs;
-    agg.sumStp += rs - cp;
-    const bird = birdiesPlusEaglesFromRow(row);
-    if (Number.isFinite(bird)) {
-      agg.sumBird += bird;
-      agg.nBird++;
-    }
-    const bog = num(row.bogeys ?? row.bogies, NaN);
-    if (Number.isFinite(bog)) {
-      agg.sumBog += bog;
-      agg.nBog++;
-    }
-    return agg;
+  function histRowToVenueRow(row) {
+    return {
+      course_par: num(row.course_par, NaN),
+      round_score: num(row.round_score, NaN),
+      birdies: num(row.birdies, NaN),
+      pars: num(row.pars, NaN),
+      bogies: num(row.bogeys ?? row.bogies, NaN),
+      gir: num(row.gir, NaN),
+      driving_acc: num(row.driving_acc, NaN),
+    };
   }
 
   for (const row of histRows) {
@@ -308,14 +307,15 @@ async function loadVenueScoringBeforeCutoff(histRows, courseKey, courseLabel, cu
     const rnd = Math.round(num(row.round_num, NaN));
     if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
 
-    venueTotals = accAgg(venueTotals, row);
-    fieldRaw.set(rnd, accAgg(fieldRaw.get(rnd) || { n: 0, sumStp: 0, sumScore: 0, sumBird: 0, nBird: 0, sumBog: 0, nBog: 0 }, row));
+    const vr = histRowToVenueRow(row);
+    venueTotals = accumulateVenueCountRow(venueTotals, vr, nFairwayHoles);
+    fieldRaw.set(rnd, accumulateVenueCountRow(fieldRaw.get(rnd) || emptyVenueCountRaw(), vr, nFairwayHoles));
 
     const dg = Math.round(num(row.dg_id, NaN));
     if (Number.isFinite(dg)) {
       const pk = `${dg}|${rnd}`;
-      playerRaw.set(pk, accAgg(playerRaw.get(pk) || { n: 0, sumStp: 0, sumScore: 0, sumBird: 0, nBird: 0, sumBog: 0, nBog: 0 }, row));
-      playerAllRaw.set(dg, accAgg(playerAllRaw.get(dg) || { n: 0, sumStp: 0, sumScore: 0, sumBird: 0, nBird: 0, sumBog: 0, nBog: 0 }, row));
+      playerRaw.set(pk, accumulateVenueCountRow(playerRaw.get(pk) || emptyVenueCountRaw(), vr, nFairwayHoles));
+      playerAllRaw.set(dg, accumulateVenueCountRow(playerAllRaw.get(dg) || emptyVenueCountRaw(), vr, nFairwayHoles));
       const sg = num(row.sg_total, NaN);
       if (Number.isFinite(sg)) {
         const cf = fitRaw.get(dg) || { sumSg: 0, n: 0 };
@@ -326,21 +326,13 @@ async function loadVenueScoringBeforeCutoff(histRows, courseKey, courseLabel, cu
     }
   }
 
-  const finalize = (raw) => ({
-    n: raw.n,
-    avgStp: raw.n ? raw.sumStp / raw.n : NaN,
-    avgScore: raw.n ? raw.sumScore / raw.n : NaN,
-    avgBirdies: raw.nBird ? raw.sumBird / raw.nBird : NaN,
-    avgBogeys: raw.nBog ? raw.sumBog / raw.nBog : NaN,
-  });
-
-  const venueAgg = finalize(venueTotals);
+  const venueAgg = finalizeVenueAgg(venueTotals);
   const fieldByRound = new Map();
-  for (const [rnd, raw] of fieldRaw) fieldByRound.set(rnd, finalize(raw));
+  for (const [rnd, raw] of fieldRaw) fieldByRound.set(rnd, finalizeVenueAgg(raw));
   const playerByRound = new Map();
-  for (const [pk, raw] of playerRaw) playerByRound.set(pk, finalize(raw));
+  for (const [pk, raw] of playerRaw) playerByRound.set(pk, finalizeVenueAgg(raw));
   const playerByVenue = new Map();
-  for (const [dg, raw] of playerAllRaw) playerByVenue.set(dg, finalize(raw));
+  for (const [dg, raw] of playerAllRaw) playerByVenue.set(dg, finalizeVenueAgg(raw));
   const courseFitByDg = new Map();
   for (const [dg, raw] of fitRaw) courseFitByDg.set(dg, { avgSg: raw.sumSg / raw.n, n: raw.n });
 
@@ -350,7 +342,11 @@ async function loadVenueScoringBeforeCutoff(histRows, courseKey, courseLabel, cu
     nVenueRounds: venueAgg.n,
     source: venueAgg.n >= 20 ? "historical_csv_walkforward" : "none",
     venueAvgBirdies: venueAgg.avgBirdies,
+    venueAvgPars: venueAgg.avgPars,
     venueAvgBogeys: venueAgg.avgBogeys,
+    venueAvgGir: venueAgg.avgGir,
+    venueAvgFairways: venueAgg.avgFairways,
+    venueAvgPutts: venueAgg.avgPutts,
     fieldByRound,
     playerByRound,
     playerByVenue,
@@ -644,13 +640,41 @@ export async function buildFullModelMuMapForEvent({
     projection_course_basis: { fairway_holes_modeled: fairwayHoles },
     projection_counts_weather_baked: false,
   };
+  syncVenueScoringToProjectionBasis(meta.projection_course_basis, venueScoring, coursePar18);
+  if (fieldCountingMeans) {
+    meta.projection_course_basis.field_counting_means_by_round = fieldCountingMeans;
+  }
+  if (histEventCtx?.byRound?.size) {
+    /** @type {Record<string, number>} */
+    const ewScores = {};
+    for (const [rnd, agg] of histEventCtx.byRound) {
+      if (agg.n >= 8 && Number.isFinite(agg.sumStp) && agg.n > 0) {
+        ewScores[String(rnd)] = Math.round((coursePar18 + agg.sumStp / agg.n) * 100) / 100;
+      }
+    }
+    if (Object.keys(ewScores).length) {
+      meta.projection_course_basis.event_week_field_avg_score_by_round = ewScores;
+    }
+  }
 
   const payload = {
     meta,
     course_used: courseName,
+    course_par_18: coursePar18,
     players,
     _webRoot: join(repoRoot, "alpha-caddie-web"),
   };
+  payload.projection_course_basis = ensureProjectionCourseBasisComplete(
+    meta.projection_course_basis,
+    payload,
+  );
+  reconcileAllProjectionPlayerRows(payload, {
+    minField: Math.min(8, players.length),
+    venueScoring,
+  });
+
+  const playersReconciled = payload.players || players;
+
   payload.meta.historyByDgId = historyByDgId;
   const ctx = createProjectionContext(payload);
   ctx.historyByDgId = historyByDgId;
@@ -659,7 +683,7 @@ export async function buildFullModelMuMapForEvent({
   /** @type {Map<number, Map<string, number>>} dg -> market -> mu */
   const byDg = new Map();
   const ALL_MARKETS = ["Total score", "Birdies", "Pars", "Bogeys", "GIR", "Fairways hit"];
-  for (const pl of players) {
+  for (const pl of playersReconciled) {
     const dg = Math.round(num(pl.dg_id, NaN));
     if (!Number.isFinite(dg)) continue;
     const mus = new Map();

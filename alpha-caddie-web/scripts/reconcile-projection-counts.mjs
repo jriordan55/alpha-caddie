@@ -13,8 +13,10 @@ const WEB = join(__dirname, "..");
 const projPath = join(WEB, "projections.json");
 
 const proj = JSON.parse(readFileSync(projPath, "utf8"));
-const { reconciled } = reconcileAllProjectionPlayerRows(proj, {
-  skipFieldCalibrate: true,
+const { reconciled, calibrated } = reconcileAllProjectionPlayerRows(proj, {
+  minField: 8,
 });
 writeFileSync(projPath, `${JSON.stringify(proj, null, 2)}\n`);
-console.log(`[reconcile:projection-counts] OK — ${reconciled} row(s) score-anchored (bird/bog/par from total)`);
+console.log(
+  `[reconcile:projection-counts] OK — ${reconciled} row(s) score-anchored; field markets ${calibrated?.rounds ?? 0} round(s)`,
+);

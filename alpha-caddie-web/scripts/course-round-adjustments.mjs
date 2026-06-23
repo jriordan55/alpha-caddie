@@ -435,7 +435,7 @@ export function buildWithinEventCountingMapFromLiveActuals(
  * }} VenueHistoricalScoring
  */
 
-function emptyVenueCountRaw() {
+export function emptyVenueCountRaw() {
   return {
     sumScore: 0,
     sumStp: 0,
@@ -469,7 +469,7 @@ function girOrFwToCount(raw, nHoles) {
   return NaN;
 }
 
-function accumulateVenueCountRow(raw, row, nFairwayHoles = 14) {
+export function accumulateVenueCountRow(raw, row, nFairwayHoles = 14) {
   const cp = num(row.course_par, NaN);
   const rs = num(row.round_score, NaN);
   if (!Number.isFinite(cp) || !Number.isFinite(rs)) return raw;
@@ -520,7 +520,7 @@ function accumulateVenueCountRow(raw, row, nFairwayHoles = 14) {
   return raw;
 }
 
-function finalizeVenueAgg(raw) {
+export function finalizeVenueAgg(raw) {
   const mean = (sum, n) => (n > 0 ? sum / n : NaN);
   return {
     avgScore: mean(raw.sumScore, raw.n),
@@ -607,8 +607,14 @@ export function reconcileProjectionRowCountsToScore(row, opts = {}) {
     ewScores,
   );
   const eventFieldStp = Number.isFinite(eventFieldScore) ? eventFieldScore - par18 : NaN;
-  const anchorBird = Number.isFinite(eventBird) ? 0.85 * eventBird + 0.15 * vBird : vBird;
-  const anchorBog = Number.isFinite(eventBog) ? 0.85 * eventBog + 0.15 * vBog : vBog;
+  const anchorBird =
+    Number.isFinite(eventBird) && Number.isFinite(eventFieldScore)
+      ? 0.85 * eventBird + 0.15 * vBird
+      : vBird;
+  const anchorBog =
+    Number.isFinite(eventBog) && Number.isFinite(eventFieldScore)
+      ? 0.85 * eventBog + 0.15 * vBog
+      : vBog;
   let b;
   let bg;
   let p;
@@ -688,6 +694,56 @@ export function reconcileProjectionRowCountsToScore(row, opts = {}) {
   return row;
 }
 
+/** Recompute field_avg_score_by_round + field_counting_means from current projection rows. */
+export function refreshProjectionFieldMeansFromPlayers(payload, opts = {}) {
+  const players = Array.isArray(payload?.players) ? payload.players : [];
+  const basis =
+    payload?.projection_course_basis && typeof payload.projection_course_basis === "object"
+      ? payload.projection_course_basis
+      : payload?.meta?.projection_course_basis;
+  if (!basis || !players.length) return { rounds: 0 };
+
+  const dgFilter = opts.dgFilter instanceof Set ? opts.dgFilter : null;
+  const minField = Math.max(8, Math.round(num(opts.minField, 12)) || 12);
+  const coursePar18 = Math.round(num(payload?.course_par_18, NaN)) || 72;
+  const lo = coursePar18 - 14;
+  const hi = coursePar18 + 22;
+
+  /** @type {Record<string, number>} */
+  const scoreByRound = {};
+  /** @type {Record<string, Record<string, number>>} */
+  const counting = { birdies: {}, bogeys: {}, gir: {}, fairways: {} };
+  let rounds = 0;
+
+  for (let rnd = 1; rnd <= 4; rnd++) {
+    let rows = players.filter((pl) => Math.round(num(pl.round, NaN)) === rnd);
+    if (opts.dkFieldOnly && dgFilter?.size >= minField) {
+      rows = rows.filter((pl) => dgFilter.has(Math.round(num(pl.dg_id, NaN))));
+    }
+    if (rows.length < minField) continue;
+    rounds++;
+
+    const scores = rows.map((pl) => num(pl.total_score, NaN)).filter((x) => Number.isFinite(x) && x >= lo && x <= hi);
+    if (scores.length) {
+      scoreByRound[String(rnd)] = Math.round(meanFinite(scores) * 100) / 100;
+    }
+    for (const stat of ["birdies", "bogeys", "gir", "fairways"]) {
+      const vals = rows.map((pl) => num(pl[stat], NaN)).filter(Number.isFinite);
+      if (vals.length) counting[stat][String(rnd)] = Math.round(meanFinite(vals) * 100) / 100;
+    }
+  }
+
+  if (Object.keys(scoreByRound).length) basis.field_avg_score_by_round = scoreByRound;
+  if (Object.keys(counting.birdies).length || Object.keys(counting.bogeys).length) {
+    basis.field_counting_means_by_round = counting;
+  }
+  if (payload?.projection_course_basis !== basis && payload?.projection_course_basis) {
+    payload.projection_course_basis.field_avg_score_by_round = basis.field_avg_score_by_round;
+    payload.projection_course_basis.field_counting_means_by_round = basis.field_counting_means_by_round;
+  }
+  return { rounds, scoreByRound, counting };
+}
+
 /** Reconcile every projection row to its total_score / μ anchor. */
 export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
   const meta = payload?.meta && typeof payload.meta === "object" ? payload.meta : payload;
@@ -698,9 +754,43 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
   if (payload?.projection_course_basis !== meta.projection_course_basis) {
     payload.projection_course_basis = meta.projection_course_basis;
   }
+  if (opts.skipRefreshFieldMeans !== true) {
+    refreshProjectionFieldMeansFromPlayers(payload, {
+      dgFilter: opts.dgFilter,
+      minField: opts.minField,
+      dkFieldOnly: opts.dkFieldOnly === true,
+    });
+  }
   const basis = meta.projection_course_basis;
   const coursePar18 = Math.round(num(payload?.course_par_18 ?? meta?.course_par_18, NaN)) || 72;
   const histCalib = payload?.historical_projection_calibration;
+
+  let venueScoreCal = { rounds: 0, shifts: {} };
+  if (opts.skipVenueScoreCalibrate !== true) {
+    venueScoreCal = calibrateProjectionTotalScoreToVenue(payload, {
+      dgFilter: opts.dgFilter,
+      minField: opts.minField,
+      dkFieldOnly: opts.dkFieldOnly === true,
+      venueScoring: opts.venueScoring || null,
+      minPlayerRounds: opts.minPlayerRounds,
+    });
+  }
+  let histVenueCal = { rounds: 0, shifts: {} };
+  if (opts.skipHistVenueScoreCalibrate !== true && opts.venueScoring) {
+    histVenueCal = calibrateProjectionScoresToHistoricalVenue(payload, opts.venueScoring, {
+      dgFilter: opts.dgFilter,
+      minField: opts.minField,
+      useDkFieldFilter: opts.dkFieldOnly === true,
+    });
+  }
+  if ((venueScoreCal.rounds > 0 || histVenueCal.rounds > 0) && opts.skipRefreshFieldMeans !== true) {
+    refreshProjectionFieldMeansFromPlayers(payload, {
+      dgFilter: opts.dgFilter,
+      minField: opts.minField,
+      dkFieldOnly: opts.dkFieldOnly === true,
+    });
+  }
+
   const recOpts = {
     coursePar18,
     venueAvgBirdies: num(basis.venue_avg_birdies, 4.2),
@@ -734,40 +824,6 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
     dkFieldOnly: opts.dkFieldOnly === true,
     skipCalibrate: opts.skipFieldCalibrate,
   });
-  let venueScoreCal = { rounds: 0, shifts: {} };
-  if (opts.skipVenueScoreCalibrate !== true) {
-    venueScoreCal = calibrateProjectionTotalScoreToVenue(payload, {
-      dgFilter: opts.dgFilter,
-      minField: opts.minField,
-      dkFieldOnly: opts.dkFieldOnly === true,
-      venueScoring: opts.venueScoring || null,
-      minPlayerRounds: opts.minPlayerRounds,
-    });
-    if (venueScoreCal.rounds > 0) {
-      reconcileAllProjectionPlayerRows(payload, {
-        ...opts,
-        skipFieldCalibrate: true,
-        skipVenueScoreCalibrate: true,
-        skipHistVenueScoreCalibrate: true,
-      });
-    }
-  }
-  let histVenueCal = { rounds: 0, shifts: {} };
-  if (opts.skipHistVenueScoreCalibrate !== true && opts.venueScoring) {
-    histVenueCal = calibrateProjectionScoresToHistoricalVenue(payload, opts.venueScoring, {
-      dgFilter: opts.dgFilter,
-      minField: opts.minField,
-      useDkFieldFilter: opts.dkFieldOnly === true,
-    });
-    if (histVenueCal.rounds > 0) {
-      reconcileAllProjectionPlayerRows(payload, {
-        ...opts,
-        skipFieldCalibrate: true,
-        skipVenueScoreCalibrate: true,
-        skipHistVenueScoreCalibrate: true,
-      });
-    }
-  }
   syncPreWeatherCountSnapshots(payload?.players);
   return { reconciled: n, calibrated: cal, venueScoreCalibrated: venueScoreCal, histVenueCalibrated: histVenueCal };
 }
@@ -882,6 +938,22 @@ export function historicalVenueStpTargetForRound(venueScoring, round) {
   return wRound * cappedRound + (1 - wRound) * overall;
 }
 
+/**
+ * Score-to-par anchor for projections: lean on long-run venue scoring (easy courses stay easy).
+ * When a round bucket scores harder than the venue long-run mean, keep the easier overall anchor.
+ * When a round bucket is easier than overall, blend toward that round (weekend scoring).
+ */
+export function venueProjectionStpAnchor(venueScoring, round, opts = {}) {
+  const overall = num(venueScoring?.venueAvgStp, NaN);
+  const roundShrunk = historicalVenueStpTargetForRound(venueScoring, round);
+  if (!Number.isFinite(overall)) return roundShrunk;
+  if (!Number.isFinite(roundShrunk)) return overall;
+  // Higher score-to-par = harder; round harder than long-run venue -> overall easy anchor.
+  if (roundShrunk > overall + 0.02) return overall;
+  const easyBias = clamp(envNum("GOLF_VENUE_EASY_ANCHOR_BIAS", 0.82), 0.55, 0.95);
+  return easyBias * roundShrunk + (1 - easyBias) * overall;
+}
+
 /** Shift total_score / score_to_par without changing μ_SG (venue calibration, not skill revision). */
 export function shiftProjectionRowScore(row, strokeShift, coursePar18) {
   if (!row || typeof row !== "object") return;
@@ -949,7 +1021,7 @@ export function calibrateProjectionScoresToHistoricalVenue(payload, venueScoring
   const useDkFieldFilter = opts.useDkFieldFilter === true;
   const minField = Math.max(8, Math.round(num(opts.minField, 12)) || 12);
   const maxShift = envNum("GOLF_HIST_VENUE_CALIB_MAX_SHIFT", 2.1);
-  const minShift = envNum("GOLF_HIST_VENUE_CALIB_MIN_SHIFT", 0.04);
+  const minShift = envNum("GOLF_HIST_VENUE_CALIB_MIN_SHIFT", 0.025);
 
   /** @type {Record<number, number>} */
   const shifts = {};
@@ -962,7 +1034,7 @@ export function calibrateProjectionScoresToHistoricalVenue(payload, venueScoring
     }
     if (rows.length < minField) continue;
 
-    const targetStp = historicalVenueStpTargetForRound(venueScoring, rnd);
+    const targetStp = venueProjectionStpAnchor(venueScoring, rnd, opts);
     if (!Number.isFinite(targetStp)) continue;
 
     const curStp = meanFinite(rows.map((pl) => num(pl.score_to_par, NaN)));
@@ -1007,10 +1079,10 @@ export function calibrateProjectionScoresToHistoricalVenue(payload, venueScoring
     }
   }
 
-  if (payload?.projection_round_adjustments && typeof payload.projection_round_adjustments === "object") {
-    payload.projection_round_adjustments.historical_venue_score_calibrated = rounds > 0;
-  } else if (payload?.meta?.projection_round_adjustments) {
-    payload.meta.projection_round_adjustments.historical_venue_score_calibrated = rounds > 0;
+  if (rounds > 0) {
+    const adjHost = payload?.meta && typeof payload.meta === "object" ? payload.meta : payload;
+    if (!adjHost.projection_round_adjustments) adjHost.projection_round_adjustments = {};
+    adjHost.projection_round_adjustments.historical_venue_score_calibrated = true;
   }
 
   return { rounds, shifts, venueAvgStp: venueScoring.venueAvgStp };
@@ -1279,13 +1351,13 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
 
 /** Venue-history weight in player/skill blends (books lean skill for elite players). */
 const VENUE_PLAYER_BLEND_MIN_ROUNDS = 3;
-const VENUE_PLAYER_BLEND_VENUE_MAX = 0.62;
-const VENUE_PLAYER_BLEND_VENUE_BASE = 0.24;
-const VENUE_PLAYER_BLEND_VENUE_PER_ROUND = 0.035;
-const VENUE_PLAYER_BLEND_VENUE_FLOOR = 0.08;
-const VENUE_PLAYER_BLEND_SKILL_PULL_BASE = 0.08;
-const VENUE_PLAYER_BLEND_SKILL_PULL_MU = 0.22;
-const VENUE_PLAYER_BLEND_SKILL_PULL_CAP = 0.45;
+const VENUE_PLAYER_BLEND_VENUE_MAX = 0.68;
+const VENUE_PLAYER_BLEND_VENUE_BASE = 0.28;
+const VENUE_PLAYER_BLEND_VENUE_PER_ROUND = 0.038;
+const VENUE_PLAYER_BLEND_VENUE_FLOOR = 0.1;
+const VENUE_PLAYER_BLEND_SKILL_PULL_BASE = 0.06;
+const VENUE_PLAYER_BLEND_SKILL_PULL_MU = 0.18;
+const VENUE_PLAYER_BLEND_SKILL_PULL_CAP = 0.38;
 const VENUE_FIELD_NO_PLAYER_WEIGHT = 0.32;
 const VENUE_COUNT_ALIGN_TO_STP = 0.48;
 
@@ -1386,7 +1458,7 @@ function skillScoreToPar({
   const fr = venueScoring?.fieldByRound?.get(rnd);
   let venueStp = num(venueScoring?.venueAvgStp, NaN);
   let source = "skill_around_venue_mean";
-  const shrunk = historicalVenueStpTargetForRound(venueScoring, rnd);
+  const shrunk = venueProjectionStpAnchor(venueScoring, rnd);
   if (Number.isFinite(shrunk)) {
     venueStp = shrunk;
     source =
@@ -1750,6 +1822,10 @@ export function ensureProjectionCourseBasisComplete(basis, payload = {}) {
 /** Blend historical venue anchors toward this-week field counting (books/DK field pace). */
 export function updateProjectionBasisFromEventWeek(basis, fieldMeans, opts = {}) {
   if (!basis || typeof basis !== "object") return basis;
+  const ewScores = basis.event_week_field_avg_score_by_round;
+  const hasLiveEventScores =
+    ewScores && typeof ewScores === "object" && Object.keys(ewScores).length > 0;
+  if (!hasLiveEventScores) return basis;
   const eventShare = clamp(num(opts.eventShare, NaN), 0.35, 0.85) || 0.65;
   const histShare = 1 - eventShare;
   const blendKey = (histKey, eventVal, fallback) => {
@@ -1943,10 +2019,6 @@ export function calibrateProjectionTotalScoreToVenue(payload, opts = {}) {
     for (const pl of calRows) shiftProjectionRowScore(pl, delta, coursePar18);
   }
 
-  if (rounds > 0) {
-    reconcileAllProjectionPlayerRows(payload, { skipFieldCalibrate: true, minField: opts.minField });
-  }
-
   const adjHost = payload?.meta && typeof payload.meta === "object" ? payload.meta : payload;
   if (!adjHost.projection_round_adjustments) adjHost.projection_round_adjustments = {};
   adjHost.projection_round_adjustments.total_score_venue_calibrated = rounds > 0;
@@ -1995,16 +2067,14 @@ export function calibrateProjectionFieldMarkets(payload, opts = {}) {
     if (rows.length < minField) continue;
     rounds++;
 
-    const applyAdditive = (stat, target, lo, hi) => {
+    const venueBird = num(basisRoot.venue_avg_birdies, NaN);
+    const venueBog = num(basisRoot.venue_avg_bogeys, NaN);
+    const applyUniformField = (stat, target, lo, hi) => {
       if (!Number.isFinite(target)) return;
       const cur = meanFinite(rows.map((pl) => num(pl[stat], NaN)));
       if (!Number.isFinite(cur)) return;
       const gap = target - cur;
-      if (Math.abs(gap) < 0.035) return;
-      if (gap < 0) {
-        applyDistributedFieldCalibration(rows, stat, target, shifts, rnd, { lo, hi });
-        return;
-      }
+      if (Math.abs(gap) < 0.04) return;
       shifts[stat][rnd] = Math.round(gap * 1000) / 1000;
       for (const pl of rows) {
         const v = num(pl[stat], NaN);
@@ -2013,13 +2083,24 @@ export function calibrateProjectionFieldMarkets(payload, opts = {}) {
       }
     };
 
-    applyAdditive("gir", fieldCountingTargetForRound(fieldMeans, "gir", rnd, pooled.gir), 6, 16.2);
-    applyAdditive(
+    applyUniformField("birdies", venueBird, 0.15, 7);
+    applyUniformField("bogeys", venueBog, 0.15, 8.5);
+    applyUniformField("gir", num(basisRoot.venue_avg_gir, NaN), 6, 16.2);
+    applyUniformField(
       "fairways",
-      fieldCountingTargetForRound(fieldMeans, "fairways", rnd, pooled.fairways),
+      num(basisRoot.venue_avg_fairways, NaN),
       2,
       num(basisRoot.fairway_holes_modeled, 14) + 0.5,
     );
+    for (const pl of rows) {
+      const e = num(pl.eagles, 0);
+      const d = num(pl.doubles, 0);
+      const b = num(pl.birdies, NaN);
+      const bg = num(pl.bogeys, NaN);
+      if (Number.isFinite(b) && Number.isFinite(bg)) {
+        pl.pars = Math.max(0.12, Math.round((18 - e - d - b - bg) * 100) / 100);
+      }
+    }
     if (Number.isFinite(pooled.putts) && pooled.putts >= 24) {
       const cur = meanFinite(rows.map((pl) => num(pl.putts, NaN)));
       if (Number.isFinite(cur)) {
@@ -2722,7 +2803,8 @@ export function resolveProjectionScoreToPar({
   if (hasPlayerHist) {
     const playerStp = playerAgg.avgScore - cp;
     const nEff = Math.max(playerAgg.n || 0, pr?.n || 0, pv?.n || 0);
-    const wPlayer = Math.min(0.84, 0.48 + 0.05 * Math.max(0, nEff - minPlayerRounds));
+    let wPlayer = Math.min(0.92, 0.66 + 0.055 * Math.max(0, nEff - minPlayerRounds));
+    if (nEff >= 8) wPlayer = Math.min(0.94, wPlayer + 0.04);
     const stp = wPlayer * playerStp + (1 - wPlayer) * skillRes.stp;
     return {
       stp: Math.round(stp * 1000) / 1000,
@@ -2802,6 +2884,7 @@ export async function reapplyProjectionTotalScoresFromVenueHistory(payload, opts
     minField: opts.minField,
     venueScoring,
     skipVenueScoreCalibrate: true,
+    skipHistVenueScoreCalibrate: true,
   });
   return { touched, venueScoring };
 }

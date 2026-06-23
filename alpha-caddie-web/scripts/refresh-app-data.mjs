@@ -146,12 +146,21 @@ run("fetch-datagolf-finish-tool-outrights.mjs", "Finish-tool outrights (fetch:fi
 run("merge-live-hole-pars-into-projections.mjs", "Merge live hole pars into projections");
 run("merge-live-round-meta-into-projections.mjs", "Merge live round meta into projections (display_round)");
 run(
+  "merge-field-teetimes-into-projections.mjs",
+  "field-updates tee times (ET) → projections.json dg_teetime_local",
+);
+run(
   "bake-weather-into-projections.mjs",
   "Open-Meteo tee-time weather → projections.json for display_round (bake:weather)",
 );
 run(
   "repair-projection-course-basis.mjs",
-  "Venue player/course history + total-score calibration (before course-fit overlay)",
+  "Venue player/course history + skill blend + total-score calibration (before within-event / course-fit)",
+);
+run(
+  "within-event-projection-apply.mjs",
+  "Prior-round form from live-in-play (after venue repair)",
+  { GOLF_WITHIN_EVENT_LIVE_ONLY: "1" },
 );
 run(
   "apply-unified-projection-factors.mjs",
@@ -161,6 +170,11 @@ run(
   "bake-outright-sim-probs.mjs",
   "Tournament MC outright probs → projections.json (precomputed for +EV)",
 );
+run(
+  "reconcile-projection-counts.mjs",
+  "Final score-anchored counts + venue field market calibration",
+);
+run("validate-projections-for-publish.mjs", "Validate par, birdies/pars, and O/U prop coverage");
 
 const skipHistory = String(process.env.GOLF_REFRESH_APP_SKIP_HISTORY || "").trim() === "1";
 if (skipHistory) {

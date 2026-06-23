@@ -2,7 +2,7 @@
 /**
  * Live-week refresh for `npm run push:live` — updates projections, live-in-play, book odds,
  * DK props, field-updates tee times, venue history + skill repair, within-event form, weather bake,
- * unified factors, pin sheet, vs-actual CSV, and fast history patches.
+ * unified factors, pin sheet, venue field market reconcile, vs-actual CSV, and fast history patches.
  *
  *   npm run refresh:live
  *
@@ -200,7 +200,7 @@ run(
 
 run(
   "reconcile-projection-counts.mjs",
-  "Final bird/bog/par reconcile from total_score (after pin + weather + unified)",
+  "Final score-anchored counts + venue field market calibration (after pin + weather + unified)",
 );
 
 run("validate-projections-for-publish.mjs", "Validate par, birdies/pars, and O/U prop coverage before publish");

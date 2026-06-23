@@ -65,7 +65,7 @@ if (String(process.env.GOLF_SKIP_PIN_SHEET || "").trim() !== "1") {
 
 run(
   "reconcile-projection-counts.mjs",
-  "Final bird/bog/par reconcile from total_score (after pin + weather + unified)",
+  "Final score-anchored counts + venue field market calibration",
 );
 
 const destDir = path.join(REPO_ROOT, "website", "public", "data");

@@ -228,7 +228,8 @@ if ($LiveWeekOnly) {
   Run-Npm "Venue player/course history + skill blend (repair:projection-course-basis) ..." run repair:projection-course-basis
   Run-Npm "Prior-round form from live-in-play (after venue repair) ..." run merge:within-event-form
   Run-Npm "Unified projection factors (course fit, tee wave - after venue repair) ..." run apply:unified-factors
-  Run-Npm "Reconcile bird/bog/par/GIR/FW to total_score ..." run reconcile:projection-counts
+  Run-Npm "Tournament MC outright probs (bake:outright-sim) ..." run bake:outright-sim
+  Run-Npm "Reconcile counts + venue field markets (reconcile:projection-counts) ..." run reconcile:projection-counts
   Run-Npm "DK round audit CSV with post-repair model lines ..." run export:dk-round-audit-csv
   Run-Npm "Validate par, birdies/pars, and DK O/U prop coverage before publish ..." run validate:projections
   Run-Npm "Running update:rounds (historical CSV + Historical Trends: player_round_history / embed / shards / shots web) ..." run update:rounds

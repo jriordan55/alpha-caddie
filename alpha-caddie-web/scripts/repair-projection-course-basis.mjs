@@ -13,6 +13,7 @@ import { fileURLToPath } from "url";
 import {
   calibrateProjectionScoresToHistoricalVenue,
   calibrateProjectionTotalScoreToVenue,
+  draftKingsDgIdsFromProjections,
   ensureProjectionCourseBasisComplete,
   populateEventWeekFieldScoreAvgs,
   reapplyProjectionTotalScoresFromVenueHistory,
@@ -67,7 +68,14 @@ const cal = calibrateProjectionTotalScoreToVenue(proj, {
   minField: 8,
   venueScoring,
 });
-const histCal = calibrateProjectionScoresToHistoricalVenue(proj, venueScoring, { minField: 8 });
+const histCal = calibrateProjectionScoresToHistoricalVenue(proj, venueScoring, {
+  minField: 8,
+  useDkFieldFilter: String(process.env.GOLF_VENUE_CALIB_DK_FIELD_ONLY ?? "0").trim() === "1",
+  dgFilter:
+    String(process.env.GOLF_VENUE_CALIB_DK_FIELD_ONLY ?? "0").trim() === "1"
+      ? draftKingsDgIdsFromProjections(proj)
+      : null,
+});
 reconcileAllProjectionPlayerRows(proj, {
   minField: 8,
   venueScoring,
