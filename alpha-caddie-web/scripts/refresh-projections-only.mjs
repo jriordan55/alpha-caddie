@@ -48,14 +48,14 @@ if (String(process.env.GOLF_REFRESH_PROJECTIONS_SKIP_DG || "").trim() !== "1") {
 run("fetch-live-in-play.mjs", "field-updates tee times + live bundle (fetch:in-play)");
 run("merge-live-round-meta-into-projections.mjs", "display_round from field_updates (merge-live-round-meta)");
 run("merge-field-teetimes-into-projections.mjs", "field-updates tee times → dg_teetime_local");
-run(
-  "within-event-projection-apply.mjs",
-  "Re-apply field-average prior-round form from live-in-play",
-);
 run("bake-weather-into-projections.mjs", "Tee-time weather for display_round (bake:weather)");
 run(
   "repair-projection-course-basis.mjs",
-  "Venue player/course history + total-score calibration (before course-fit overlay)",
+  "Venue player/course history + skill blend + total-score calibration",
+);
+run(
+  "within-event-projection-apply.mjs",
+  "Prior-round form from live-in-play (after venue repair)",
 );
 run("apply-unified-projection-factors.mjs", "Unified projection factors");
 

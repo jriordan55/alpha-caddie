@@ -82,9 +82,9 @@ function Run-Npm([string] $Label, [Parameter(ValueFromRemainingArguments = $true
 #   strokes (blend vs historical CSV); projections keep the full tournament field for Historical Trends. Before update:rounds.
 # Mirrors below copy projections + live + approach_skill *.json into website/public/data/ so both apps ship the same JSON.
 #
-# Round-projections / +EV weather: refresh:live runs merge:field-teetimes then bake:weather after merge:live-round-meta
-# (field_updates → dg_teetime_local for Tee time column; Open-Meteo per-tee slices + forecast_wave_* baked into
-# projections.json). merge:live-hole-pars runs late so course par / hole table stays aligned after DK refresh.
+# Round-projections / +EV weather: refresh:live (push:live) runs merge:field-teetimes → bake:weather →
+# repair:projection-course-basis (venue history + skill blend) → merge:within-event-form → apply:unified-factors
+# (course-table fit last). merge:live-hole-pars runs late so course par / hole table stays aligned after DK refresh.
 # Market rating: fetch:dg writes pga_tour_market_benchmarks; refresh:live re-runs refresh:market-benchmarks after the
 # post-live historical CSV merge so 2025–2026 μ/σ stay current in published projections.json.
 
@@ -221,13 +221,13 @@ if ($LiveWeekOnly) {
   Run-Npm "Running fetch:book-odds (matchups, outrights, DK round O/U props) ..." run fetch:book-odds
   Run-Npm 'Running fetch:finish-tool — outrights, same Scratch feed as DG Finish Position; runs after book-odds ...' run fetch:finish-tool
   Run-Npm "Merging live_hole_stats into projections (after book odds; preserves pars if book-odds ran inline fetch:dg) ..." run merge:live-hole-pars-into-projections
-  Run-Npm "Bundled course_holes.json → projections when live pars missing/wrong ..." run sync:bundled-hole-pars
-  Run-Npm "Merging tournament round + prior-round course difficulty from live-in-play → projections …" run merge:live-round-meta-into-projections
-  Run-Npm "field-updates tee times (ET) → projections.json dg_teetime_local ..." run merge:field-teetimes-into-projections
-  Run-Npm "Re-apply within-event prior-round form from fresh live-in-play ..." run merge:within-event-form
-  Run-Npm "Open-Meteo weather for upcoming display_round → projections.json (bake:weather) ..." run bake:weather
-  Run-Npm "Unified projection factors (last step before publish) ..." run apply:unified-factors
-  Run-Npm "Venue player/course history repair + total-score calibration ..." run repair:projection-course-basis
+  Run-Npm "Bundled course_holes.json -> projections when live pars missing/wrong ..." run sync:bundled-hole-pars
+  Run-Npm "Merging tournament round + prior-round course difficulty from live-in-play -> projections ..." run merge:live-round-meta-into-projections
+  Run-Npm "field-updates tee times (ET) -> projections.json dg_teetime_local ..." run merge:field-teetimes-into-projections
+  Run-Npm "Open-Meteo weather for upcoming display_round -> projections.json (bake:weather) ..." run bake:weather
+  Run-Npm "Venue player/course history + skill blend (repair:projection-course-basis) ..." run repair:projection-course-basis
+  Run-Npm "Prior-round form from live-in-play (after venue repair) ..." run merge:within-event-form
+  Run-Npm "Unified projection factors (course fit, tee wave - after venue repair) ..." run apply:unified-factors
   Run-Npm "Reconcile bird/bog/par/GIR/FW to total_score ..." run reconcile:projection-counts
   Run-Npm "DK round audit CSV with post-repair model lines ..." run export:dk-round-audit-csv
   Run-Npm "Validate par, birdies/pars, and DK O/U prop coverage before publish ..." run validate:projections

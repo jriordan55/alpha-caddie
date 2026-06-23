@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Live-week refresh for `npm run push:live` — updates projections, live-in-play, book odds,
- * DK props, field-updates tee times, venue score calibration, weather bake, fairway widen,
+ * DK props, field-updates tee times, venue history + skill repair, within-event form, weather bake,
  * unified factors, pin sheet, vs-actual CSV, and fast history patches.
  *
  *   npm run refresh:live
@@ -124,6 +124,7 @@ if (!skipDg) {
     GOLF_SKIP_HISTORY_ON_FETCH_DG: "1",
     ...liveFastEnv,
   });
+  run("build-course-table-json.mjs", "Course table JSON for unified course-fit factors (build:course-table)");
 } else {
   console.log("\n[refresh:live] GOLF_REFRESH_LIVE_SKIP_DG=1 — skipping fetch:dg + build:course-table.\n");
   if (!existsSync(path.join(WEB_ROOT, "projections.json"))) {
@@ -160,20 +161,18 @@ run(
   "field-updates tee times (ET) → projections.json dg_teetime_local",
 );
 run(
-  "within-event-projection-apply.mjs",
-  "Re-apply field-average prior-round form from fresh live-in-play (after fetch:in-play)",
-  { GOLF_WITHIN_EVENT_LIVE_ONLY: "1" },
-);
-run(
   "bake-weather-into-projections.mjs",
   "Open-Meteo tee-time weather → projections.json for display_round (bake:weather)",
 );
-
 run(
   "repair-projection-course-basis.mjs",
-  "Venue player/course history + total-score calibration (before course-fit overlay)",
+  "Venue player/course history + skill blend + total-score calibration (before within-event / course-fit)",
 );
-
+run(
+  "within-event-projection-apply.mjs",
+  "Prior-round form from live-in-play (after venue repair so R2+ builds on venue+skill base)",
+  { GOLF_WITHIN_EVENT_LIVE_ONLY: "1" },
+);
 run(
   "apply-unified-projection-factors.mjs",
   "Unified projection factors (course fit, tee wave, residuals)",
