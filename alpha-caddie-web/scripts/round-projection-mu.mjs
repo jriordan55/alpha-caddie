@@ -6,9 +6,9 @@ import { readFileSync, existsSync } from "fs";
 import { join } from "path";
 import { normCourseNameKey } from "./course-name-key.mjs";
 import {
-  effectiveWeatherForRow,
   statWeatherMuAdjustment,
 } from "./weather-projection-adjustments.mjs";
+import { marketBookSigmaScale } from "./market-book-calibration.mjs";
 
 export const EXPORT_MARKETS = [
   {
@@ -459,7 +459,7 @@ function sigmaOuDiscreteCounting(market, muAbs, fairwayHoles) {
   return Math.max(0.55, Math.sqrt(Math.max(m, 0.2)) * 0.9);
 }
 
-function sigmaForOu(market, row, meta, fairwayHoles) {
+export function sigmaForOu(market, row, meta, fairwayHoles) {
   const rec = OU_STAT_MAP[market] || OU_STAT_MAP["Total score"];
   if (rec.sdKey) {
     const s = num(row[rec.sdKey], NaN);
@@ -489,7 +489,7 @@ export function ouProjectedMeanForMode(market, row, meta, pricingMode, pricingSk
 export function modelProbOver(market, mu, line, row, meta) {
   if (!Number.isFinite(mu) || !Number.isFinite(line)) return NaN;
   const fairwayHoles = num(meta?.projection_course_basis?.fairway_holes_modeled, 14) || 14;
-  const sig = sigmaForOu(market, row, meta, Math.round(fairwayHoles));
+  const sig = sigmaForOu(market, row, meta, Math.round(fairwayHoles)) * marketBookSigmaScale(market);
   const z = (line - mu) / sig;
   return 1 - normalCdf(z);
 }

@@ -2,6 +2,7 @@
  * Summary tab for round_projection_vs_actual: model vs book line error + flat-unit EV backtest.
  */
 import { EXPORT_MARKETS } from "./round-projection-mu.mjs";
+import { pickBetSide } from "../projection-tracker/ev-math.mjs";
 
 /** Same step as Results tab min-EV filter (0.5% bins up to 20%). */
 export const EV_THRESHOLDS_PCT = [0, 2.5, 5, 7.5, 10, 12.5, 15, 17.5, 20];
@@ -84,30 +85,28 @@ export function buildRoundProjectionVsActualSummary(samples, meta) {
 
     if (s.bookOddsSource !== "pre_round_audit" || !s.hasActual) continue;
 
-    for (const side of ["over", "under"]) {
-      const edge = side === "over" ? s.edgeOver : s.edgeUnder;
+    for (const th of EV_THRESHOLDS_PCT) {
+      const pick = pickBetSide(s.edgeOver, s.edgeUnder, th);
+      if (!pick) continue;
+      const side = pick.side;
       const result = side === "over" ? s.overResult : s.underResult;
       const odds = side === "over" ? s.overOdds : s.underOdds;
-      if (!Number.isFinite(edge)) continue;
       if (result !== "W" && result !== "L" && result !== "") continue;
 
-      for (const th of EV_THRESHOLDS_PCT) {
-        if (edge < th) continue;
-        const ek = `${pk}\x1f${th}\x1f${side}`;
-        let acc = evAcc.get(ek);
-        if (!acc) {
-          acc = {
-            pricingMode: pm,
-            pricingSkill: ps,
-            marketKey: mk,
-            threshold: th,
-            side,
-            ...emptyEvAcc(),
-          };
-          evAcc.set(ek, acc);
-        }
-        addEvBet(acc, result, odds);
+      const ek = `${pk}\x1f${th}\x1f${side}`;
+      let acc = evAcc.get(ek);
+      if (!acc) {
+        acc = {
+          pricingMode: pm,
+          pricingSkill: ps,
+          marketKey: mk,
+          threshold: th,
+          side,
+          ...emptyEvAcc(),
+        };
+        evAcc.set(ek, acc);
       }
+      addEvBet(acc, result, odds);
     }
   }
 

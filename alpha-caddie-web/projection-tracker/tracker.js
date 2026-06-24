@@ -46,11 +46,19 @@ const MARKET_ORDER = [
   "Bogeys",
 ];
 
+/** Markets with real DK closing lines in odds.csv backtest (actionable book). */
+const BETTABLE_MARKETS = new Set(["Birdies", "Total score"]);
+
 /** @type {Record<string, string>[]} */
 let ALL_ROWS = [];
 
 /** @type {Record<string, string>[]} */
 let DETAIL_ROWS = [];
+
+/** @type {object | null} */
+let OOS_REPORT = null;
+
+const OOS_JSON_URL = "../data/walkforward_oos_roi.json";
 
 const state = {
   tab: "overview",
@@ -487,7 +495,57 @@ function allTournamentNames(rows = ALL_ROWS) {
 
 function isPerEventRow(r) {
   const s = String(r.section || "");
-  return s === "model_vs_book" || s === "ev_backtest";
+  return (
+    s === "model_vs_book" ||
+    s === "ev_backtest" ||
+    s === "model_vs_book_by_market" ||
+    s === "ev_backtest_by_market"
+  );
+}
+
+/** EV threshold buckets are cumulative — use one slice from ev_backtest_by_market. */
+function evRowsAtMinEdge(rows = activeRows(), { bettableOnly = false } = {}) {
+  return rows.filter((r) => {
+    if (r.section !== "ev_backtest_by_market") return false;
+    if (num(r.ev_threshold_pct) !== state.minEv) return false;
+    if (!num(r.bets)) return false;
+    if (bettableOnly && !BETTABLE_MARKETS.has(r.market)) return false;
+    if (state.market && r.market !== state.market) return false;
+    if (state.side && r.bet_side !== state.side) return false;
+    return true;
+  });
+}
+
+function tournamentScoreLineStats(rows) {
+  const tsRows = rows.filter(
+    (r) => r.section === "model_vs_book_by_market" && r.market === "Total score" && num(r.n_line_pairs) > 0,
+  );
+  if (!tsRows.length) {
+    const fallback = rows.find(
+      (r) => r.section === "model_vs_book" && r.market === "Total score" && r.pricing_mode === "default",
+    );
+    return { rmse: num(fallback?.rmse), mae: num(fallback?.mae) };
+  }
+  let sq = 0;
+  let abs = 0;
+  let n = 0;
+  for (const r of tsRows) {
+    const nn = num(r.n_line_pairs);
+    const rmse = num(r.rmse);
+    const mae = num(r.mae);
+    if (!nn || !Number.isFinite(rmse)) continue;
+    sq += rmse * rmse * nn;
+    abs += (Number.isFinite(mae) ? mae : rmse) * nn;
+    n += nn;
+  }
+  return { rmse: n ? Math.sqrt(sq / n) : NaN, mae: n ? abs / n : NaN };
+}
+
+function tournamentEvTotals(rows, { bettableOnly = false } = {}) {
+  const evRows = evRowsAtMinEdge(rows, { bettableOnly });
+  const units = evRows.reduce((s, r) => s + (num(r.units_net) || 0), 0);
+  const bets = evRows.reduce((s, r) => s + (num(r.bets) || 0), 0);
+  return { units, bets, roi: bets > 0 ? (units / bets) * 100 : NaN };
 }
 
 /** Each tournament's rows live under the export run that built them. */
@@ -778,14 +836,7 @@ function renderBets() {
 }
 
 function evRows() {
-  return activeRows()
-    .filter((r) => r.section === "ev_backtest")
-    .filter((r) => {
-      const th = num(r.ev_threshold_pct);
-      if (!Number.isFinite(th) || th < state.minEv) return false;
-      if (state.side && r.bet_side !== state.side) return false;
-      return num(r.bets) > 0;
-    })
+  return evRowsAtMinEdge(activeRows(), { bettableOnly: false })
     .sort((a, b) => {
       const ev = String(a.event_name).localeCompare(String(b.event_name));
       if (ev) return ev;
@@ -827,7 +878,7 @@ function aggregateEvByMarketSide(rows) {
   /** @type {Map<string, { market: string, side: string, bets: number, wins: number, losses: number, pushes: number, units: number }>} */
   const m = new Map();
   for (const r of rows) {
-    if (r.section !== "ev_backtest") continue;
+    if (r.section !== "ev_backtest" && r.section !== "ev_backtest_by_market") continue;
     const key = `${r.market}\x1f${r.bet_side}`;
     let acc = m.get(key);
     if (!acc) {
@@ -858,7 +909,7 @@ function bestEvPerMarket(rows) {
 }
 
 function heatmapData(rows) {
-  const evOnly = rows.filter((r) => r.section === "ev_backtest" && num(r.bets) > 0);
+  const evOnly = rows.filter((r) => r.section === "ev_backtest_by_market" && num(r.bets) > 0);
   const thresholds = uniqueSorted(evOnly.map((r) => r.ev_threshold_pct))
     .map(Number)
     .filter(Number.isFinite)
@@ -869,13 +920,13 @@ function heatmapData(rows) {
   const cell = new Map();
   for (const m of markets) {
     for (const th of thresholds) {
-      let best = NaN;
+      let units = 0;
+      let bets = 0;
       for (const c of evOnly.filter((r) => r.market === m && num(r.ev_threshold_pct) === th)) {
-        const roi = num(c.roi_pct);
-        if (!Number.isFinite(roi)) continue;
-        if (!Number.isFinite(best) || roi > best) best = roi;
+        units += num(c.units_net) || 0;
+        bets += num(c.bets) || 0;
       }
-      cell.set(`${m}\x1f${th}`, best);
+      cell.set(`${m}\x1f${th}`, bets > 0 ? (units / bets) * 100 : NaN);
     }
   }
   return { thresholds, markets, cell };
@@ -926,8 +977,7 @@ function overviewLineRows() {
 
 function renderOverview() {
   const lines = overviewLineRows();
-  const ev = evRows();
-  const evAgg = aggregateEvByMarketSide(ev);
+  const evAgg = aggregateEvByMarketSide(evRowsAtMinEdge(undefined, { bettableOnly: false }));
   const totalUnits = evAgg.reduce((s, a) => s + a.units, 0);
   const totalBets = evAgg.reduce((s, a) => s + a.bets, 0);
   const totalScore = lines.find((r) => r.market === "Total score");
@@ -948,7 +998,7 @@ function renderOverview() {
     <div class="kpi-card">
       <div class="kpi-label">EV units</div>
       <div class="kpi-value ${clsSigned(totalUnits)}">${totalUnits >= 0 ? "+" : ""}${fmt(totalUnits, 1)}u</div>
-      <div class="kpi-sub">${totalBets} bets · ≥${state.minEv}% edge</div>
+      <div class="kpi-sub">${totalBets} bets · all markets · ${state.minEv}% edge</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">ROI</div>
@@ -978,6 +1028,90 @@ function renderOverview() {
     bestEvPerMarket(ev).map((a) => ({ market: `${a.market} (${a.side})`, roi: a.roi })),
     { valueKey: "roi", format: (v) => fmtPct(v) },
   );
+  renderHonestOos();
+}
+
+function renderHonestOos() {
+  const card = document.getElementById("oos-honest-card");
+  const note = document.getElementById("oos-honest-note");
+  if (!card) return;
+  if (!OOS_REPORT?.combined_oos_at_5pct) {
+    card.hidden = true;
+    return;
+  }
+  card.hidden = false;
+  const c5 = OOS_REPORT.combined_oos_at_5pct;
+  const peak = OOS_REPORT.peak_oos_event_at_5pct;
+  const worst = OOS_REPORT.worst_oos_event_at_5pct;
+  const bestTh = OOS_REPORT.best_oos_threshold_calibrated;
+  const raw5 = OOS_REPORT.combined_oos_raw_at_5pct;
+
+  if (note) {
+    note.innerHTML =
+      `Walk-forward OOS across <strong>${OOS_REPORT.oos_event_count}</strong> completed events` +
+      (OOS_REPORT.excluded_live_event ? ` (excludes live week: ${OOS_REPORT.excluded_live_event})` : "") +
+      `. Calibration fit uses model−DK lines only — never bet results. ` +
+      `Regenerate: <code>npm run report:walkforward-oos-roi</code>`;
+  }
+
+  document.getElementById("oos-honest-kpis").innerHTML = `
+    <div class="kpi-card highlight">
+      <div class="kpi-label">OOS ROI @ 5% EV</div>
+      <div class="kpi-value ${clsSigned(c5.roi_pct)}">${fmtPct(c5.roi_pct)}</div>
+      <div class="kpi-sub">${c5.bets} bets · ${fmt(c5.hit_pct, 1)}% hit · +${fmt(c5.units, 0)}u</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Peak event OOS</div>
+      <div class="kpi-value ${clsSigned(peak?.roi_pct)}">${peak ? fmtPct(peak.roi_pct) : "—"}</div>
+      <div class="kpi-sub">${peak?.event ? peak.event.replace(/ presented by.*/i, "") : ""}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Worst event OOS</div>
+      <div class="kpi-value ${clsSigned(worst?.roi_pct)}">${worst ? fmtPct(worst.roi_pct) : "—"}</div>
+      <div class="kpi-sub">${worst?.event ? worst.event.replace(/ presented by.*/i, "") : ""}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Raw model @ 5%</div>
+      <div class="kpi-value ${clsSigned(raw5?.roi_pct)}">${raw5 ? fmtPct(raw5.roi_pct) : "—"}</div>
+      <div class="kpi-sub">no book calibration</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Best threshold (exploratory)</div>
+      <div class="kpi-value ${clsSigned(bestTh?.calibrated?.roi_pct)}">${bestTh ? fmtPct(bestTh.calibrated.roi_pct) : "—"}</div>
+      <div class="kpi-sub">${bestTh ? `≥${bestTh.min_ev_pct}% EV · ${bestTh.calibrated.bets} bets` : ""}</div>
+    </div>
+  `;
+
+  const markets = OOS_REPORT.by_market_at_5pct || [];
+  document.querySelector("#oos-market-table tbody").innerHTML = markets.length
+    ? markets
+        .map(
+          (m) => `<tr>
+        <td>${m.market}</td>
+        <td class="num ${clsSigned(m.roi_pct)}">${fmtPct(m.roi_pct)}</td>
+        <td class="num">${m.bets}</td>
+        <td class="num ${clsSigned(m.units)}">${m.units >= 0 ? "+" : ""}${fmt(m.units, 1)}u</td>
+        <td class="num">${fmt(m.hit_pct, 1)}%</td>
+      </tr>`,
+        )
+        .join("")
+    : `<tr><td colspan="5">No OOS market rows</td></tr>`;
+
+  const events = (OOS_REPORT.by_event || [])
+    .filter((e) => e.at_5pct?.bets > 0)
+    .sort((a, b) => num(b.at_5pct.roi_pct) - num(a.at_5pct.roi_pct));
+  document.querySelector("#oos-event-table tbody").innerHTML = events.length
+    ? events
+        .map(
+          (e) => `<tr>
+        <td>${e.event}</td>
+        <td class="num ${clsSigned(e.at_5pct.roi_pct)}">${fmtPct(e.at_5pct.roi_pct)}</td>
+        <td class="num">${e.at_5pct.bets}</td>
+        <td class="num ${clsSigned(e.at_5pct.units)}">${e.at_5pct.units >= 0 ? "+" : ""}${fmt(e.at_5pct.units, 1)}u</td>
+      </tr>`,
+        )
+        .join("")
+    : `<tr><td colspan="4">No OOS event rows</td></tr>`;
 }
 
 function renderAccuracy() {
@@ -1026,9 +1160,10 @@ function renderEv() {
 
   const hm = heatmapData(
     activeRows().filter((r) => {
-      if (r.section !== "ev_backtest") return false;
-      const th = num(r.ev_threshold_pct);
-      return Number.isFinite(th) && th >= state.minEv && num(r.bets) > 0;
+      if (r.section !== "ev_backtest_by_market") return false;
+      if (!num(r.bets)) return false;
+      if (state.market && r.market !== state.market) return false;
+      return true;
     }),
   );
   const table = document.getElementById("ev-heatmap");
@@ -1056,13 +1191,8 @@ function renderEvents() {
   grid.innerHTML = allTournamentNames()
     .map((name) => {
       const rows = latestRowsForTournament(name);
-      const ts = rows.find((r) => r.section === "model_vs_book" && r.market === "Total score");
-      const evEv = rows.filter(
-        (r) => r.section === "ev_backtest" && num(r.ev_threshold_pct) >= 5 && num(r.bets) > 0,
-      );
-      const units = evEv.reduce((s, r) => s + (num(r.units_net) || 0), 0);
-      const bets = evEv.reduce((s, r) => s + (num(r.bets) || 0), 0);
-      const roi = bets > 0 ? (units / bets) * 100 : NaN;
+      const ts = tournamentScoreLineStats(rows);
+      const { units, bets, roi } = tournamentEvTotals(rows);
       const course = rows.find((r) => r.section === "model_vs_book")?.course_used || "";
       const exp = latestExportForTournament(name);
       const exportLabel = exp ? new Date(exp).toLocaleDateString() : "";
@@ -1071,10 +1201,10 @@ function renderEvents() {
         <h3>${name}</h3>
         <div class="course">${course}${exportLabel ? ` · ${exportLabel}` : ""}</div>
         <div class="event-metrics">
-          <div><span>Score RMSE</span><strong>${fmt(num(ts?.rmse), 2)}</strong></div>
-          <div><span>Score MAE</span><strong>${fmt(num(ts?.mae), 2)}</strong></div>
-          <div><span>EV units (5%+)</span><strong class="${clsSigned(units)}">${units >= 0 ? "+" : ""}${fmt(units, 1)}u</strong></div>
-          <div><span>ROI (5%+)</span><strong class="${clsSigned(roi)}">${fmtPct(roi)}</strong></div>
+          <div><span>Score RMSE</span><strong>${fmt(ts.rmse, 2)}</strong></div>
+          <div><span>Score MAE</span><strong>${fmt(ts.mae, 2)}</strong></div>
+          <div><span>EV units (${state.minEv}%, book)</span><strong class="${clsSigned(units)}">${units >= 0 ? "+" : ""}${fmt(units, 1)}u</strong></div>
+          <div><span>ROI (${state.minEv}%, book)</span><strong class="${clsSigned(roi)}">${fmtPct(roi)}</strong></div>
         </div>
       </article>`;
     })
@@ -1090,7 +1220,7 @@ function renderEvents() {
 
 function buildInsights() {
   const lines = state.tournament ? lineRows() : overviewLineRows();
-  const ev = evRows();
+  const ev = evRowsAtMinEdge(undefined, { bettableOnly: false });
   const insights = [];
 
   const score = lines.find((r) => r.market === "Total score");
@@ -1272,11 +1402,26 @@ async function loadSummaryCsvText() {
   return pick.text;
 }
 
+async function loadOosReport() {
+  try {
+    const res = await fetch(`${OOS_JSON_URL}?t=${Date.now()}`, { cache: "no-store" });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
 async function loadData() {
   const errEl = document.getElementById("error-banner");
   errEl.hidden = true;
   try {
-    const [summaryText, detailText] = await Promise.all([loadSummaryCsvText(), loadDetailCsvText()]);
+    const [summaryText, detailText, oos] = await Promise.all([
+      loadSummaryCsvText(),
+      loadDetailCsvText(),
+      loadOosReport(),
+    ]);
+    OOS_REPORT = oos;
     ALL_ROWS = parseCsv(summaryText);
     if (!ALL_ROWS.length) throw new Error("Summary CSV is empty");
     DETAIL_ROWS = detailText ? parseCsv(detailText) : [];

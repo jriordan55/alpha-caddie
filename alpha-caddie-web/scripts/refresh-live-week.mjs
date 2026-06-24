@@ -2,7 +2,8 @@
 /**
  * Live-week refresh for `npm run push:live` — updates projections, live-in-play, book odds,
  * DK props, field-updates tee times, venue history + skill repair, within-event form, weather bake,
- * unified factors, pin sheet, venue field market reconcile, vs-actual CSV, and fast history patches.
+ * unified factors, pin sheet, venue field reconcile, vs-actual export, honest DK book calibration
+ * (fit on prior events → apply to live projections), walk-forward OOS report, and fast history patches.
  *
  *   npm run refresh:live
  *
@@ -13,7 +14,7 @@
  *   GOLF_REFRESH_LIVE_FULL_REBUILD=1
  *
  * Other env: DATAGOLF_API_KEY, GOLF_SKIP_PIN_SHEET=1, GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL=1,
- *   GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL_XLSX=1 (default on live refresh), GOLF_REFRESH_LIVE_SKIP_FINISH_TOOL=1 (default),
+ *   GOLF_SKIP_MARKET_BOOK_CALIBRATION=1, GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL_XLSX=1 (default on live refresh),
  *   GOLF_REFRESH_LIVE_SKIP_DG=1, GOLF_REFRESH_LIVE_SKIP_PGATOUR=1,
  *   GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI=1, GOLF_SKIP_DK_ROUND_AUDIT_CSV=1
  */
@@ -202,8 +203,38 @@ run(
 
 run(
   "reconcile-projection-counts.mjs",
-  "Final score-anchored counts + venue field market calibration (after pin + weather + unified)",
+  "Final score-anchored counts + venue field markets (book cal after vs-actual export)",
 );
+
+if (!envTruthy("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL", false)) {
+  run(
+    "export-round-projection-vs-actual-csv.mjs",
+    "Round projection vs actual CSV (walkforward backtest + current week)",
+    {
+      ...liveFastEnv,
+      GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS: "1",
+    },
+  );
+  run(
+    "promote-round-projection-vs-actual-csv.mjs",
+    "Publish round_projection_vs_actual.csv (promote .new if Excel had file open)",
+  );
+}
+
+if (!envTruthy("GOLF_SKIP_MARKET_BOOK_CALIBRATION", false)) {
+  run(
+    "fit-market-book-calibration.mjs",
+    "Fit DK book-alignment (prior events only, no outcome peek) → market_book_calibration.json",
+  );
+  run(
+    "report-walkforward-oos-roi.mjs",
+    "Walk-forward honest OOS ROI report → walkforward_oos_roi.json",
+  );
+  run(
+    "apply-market-book-calibration.mjs",
+    "Apply book-alignment shifts to projections.json for live week",
+  );
+}
 
 run("validate-projections-for-publish.mjs", "Validate par, birdies/pars, and O/U prop coverage before publish");
 
@@ -220,21 +251,6 @@ if (!skipPostCsvMerge) {
 } else {
   console.log(
     "[refresh:live] Skipping post-live CSV merge + market-benchmarks (fetch:dg already wrote benchmarks).\n",
-  );
-}
-
-if (!envTruthy("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL", false)) {
-  run(
-    "export-round-projection-vs-actual-csv.mjs",
-    "Round projection vs actual CSV (walkforward backtest + current week)",
-    {
-      ...liveFastEnv,
-      GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS: "1",
-    },
-  );
-  run(
-    "promote-round-projection-vs-actual-csv.mjs",
-    "Publish round_projection_vs_actual.csv (promote .new if Excel had file open)",
   );
 }
 

@@ -75,6 +75,38 @@
 
     <section id="panel-overview" class="panel active" role="tabpanel">
       <div class="kpi-grid" id="overview-kpis"></div>
+      <div class="chart-card" id="oos-honest-card">
+        <h2 class="section-title">Honest walk-forward OOS ROI</h2>
+        <p class="note" id="oos-honest-note">Fit book-alignment on prior events only; grade each tournament once. No outcome optimization. Regenerate: <code>npm run report:walkforward-oos-roi</code></p>
+        <div class="kpi-grid" id="oos-honest-kpis"></div>
+        <div class="table-wrap" style="margin-top:1rem">
+          <table class="data-table" id="oos-market-table">
+            <thead>
+              <tr>
+                <th>Market</th>
+                <th class="num">OOS ROI</th>
+                <th class="num">Bets</th>
+                <th class="num">Units</th>
+                <th class="num">Hit %</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="table-wrap" style="margin-top:1rem">
+          <table class="data-table" id="oos-event-table">
+            <thead>
+              <tr>
+                <th>Tournament</th>
+                <th class="num">OOS ROI</th>
+                <th class="num">Bets</th>
+                <th class="num">Units</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
       <div class="chart-card">
         <h2 class="section-title">RMSE vs book line (lower is better)</h2>
         <div class="bar-chart" id="overview-rmse-chart"></div>
@@ -338,7 +370,7 @@
 
       <article class="guide-block">
         <h2 class="guide-heading"><a href="#events">All tournaments</a></h2>
-        <p>Card per event: score RMSE/MAE, EV units &amp; ROI at 5%+ edge. Click a card to filter that tournament.</p>
+        <p>Card per event: score RMSE/MAE, EV units &amp; ROI on <strong>all markets</strong> at your min edge (after DK book calibration). Click a card to filter.</p>
       </article>
 
       <article class="guide-block">

@@ -9,6 +9,7 @@ import { parse } from "csv-parse";
 import { eventsLikelySame, foldComparableTitle } from "./dg-events-align.mjs";
 import { liveHoleStatsUsableForProjections } from "./dg-live-hole-pars.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
+import { applyMarketBookCalibrationToRow } from "./market-book-calibration.mjs";
 
 function num(x, fallback = NaN) {
   const n = Number(x);
@@ -828,6 +829,12 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
     dkFieldOnly: opts.dkFieldOnly === true,
     skipCalibrate: opts.skipFieldCalibrate,
   });
+  for (const pl of payload?.players || []) {
+    if (!pl || typeof pl !== "object") continue;
+    if (opts.skipMarketBookCalibration !== true) {
+      applyMarketBookCalibrationToRow(pl, coursePar18);
+    }
+  }
   syncPreWeatherCountSnapshots(payload?.players);
   return { reconciled: n, calibrated: cal, venueScoreCalibrated: venueScoreCal, histVenueCalibrated: histVenueCal };
 }

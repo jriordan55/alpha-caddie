@@ -434,7 +434,28 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, fairwayH
         rowCells[spec.actualCol] = fmtActual(spec.key, actual);
 
         if (Number.isFinite(modelLine) && Number.isFinite(bookLine)) {
-          const diff = modelLine - bookLine;
+          const stubRow =
+            spec.market === "Total score"
+              ? { total_score: modelLine, round_sd: 2.75 }
+              : spec.key === "birdies"
+                ? { birdies: modelLine }
+                : spec.key === "bogeys"
+                  ? { bogeys: modelLine }
+                  : spec.key === "gir"
+                    ? { gir: modelLine }
+                    : spec.key === "fairways"
+                      ? { fairways: modelLine }
+                      : { pars: modelLine };
+          const meta = { projection_course_basis: { fairway_holes_modeled: fairwayHoles } };
+          const edge = modelEdgePctAtLine(
+            spec.market,
+            modelLine,
+            bookLine,
+            stubRow,
+            meta,
+            overOdds,
+            underOdds,
+          );
           samples.push({
             _eventName: ev,
             _course: formatCourseLabelForDisplay(pr.course),
@@ -443,8 +464,8 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, fairwayH
             marketKey: spec.key,
             modelLine,
             bookLine,
-            edgeOver: Math.abs(diff),
-            edgeUnder: Math.abs(diff),
+            edgeOver: edge.edgeOver,
+            edgeUnder: edge.edgeUnder,
             overOdds,
             underOdds,
             overResult: sides.over,
@@ -558,12 +579,20 @@ function parseCsvRow(line) {
  * Build cumulative summary: preserve prior-event rows from existing summary CSV,
  * add backfill rows for newly discovered prior events, and regenerate current-event rows.
  */
-function buildCumulativeSummaryWithBackfill(summaryPath, currentEventName, currentSamples, currentMeta, backfillSummaryRows) {
+function buildCumulativeSummaryWithBackfill(
+  summaryPath,
+  currentEventName,
+  currentSamples,
+  currentMeta,
+  backfillSummaryRows,
+  opts = {},
+) {
   const currentContent = buildRoundProjectionVsActualSummary(currentSamples, currentMeta);
   const currentRows = currentContent.split(/\r?\n/).filter(Boolean).slice(1);
 
+  const forceFullRebuild = opts.forceFullRebuild === true;
   let priorRows = [];
-  if (existsSync(summaryPath)) {
+  if (!forceFullRebuild && existsSync(summaryPath)) {
     const existing = readFileSync(summaryPath, "utf8");
     const existingLines = existing.split(/\r?\n/).filter(Boolean);
     if (existingLines.length > 1) {
@@ -581,7 +610,9 @@ function buildCumulativeSummaryWithBackfill(summaryPath, currentEventName, curre
     }
   }
 
-  if (priorRows.length === 0 && backfillSummaryRows && backfillSummaryRows.length > 0) {
+  if (forceFullRebuild && backfillSummaryRows?.length) {
+    priorRows = [...backfillSummaryRows];
+  } else if (priorRows.length === 0 && backfillSummaryRows && backfillSummaryRows.length > 0) {
     priorRows = backfillSummaryRows;
   }
 
@@ -1124,7 +1155,16 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
     course,
     displayRound,
   };
-  const summaryContent = buildCumulativeSummaryWithBackfill(summaryPath, eventName, summarySamples, summaryMeta, priorSummaryRows);
+  const forceRebuildBacktest =
+    String(process.env.GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS || "").trim() === "1";
+  const summaryContent = buildCumulativeSummaryWithBackfill(
+    summaryPath,
+    eventName,
+    summarySamples,
+    summaryMeta,
+    priorSummaryRows,
+    { forceFullRebuild: forceRebuildBacktest },
+  );
   persistCsv(summaryPath, summaryContent);
   let xlsxWritten = false;
   const skipXlsx = String(process.env.GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL_XLSX || "").trim() === "1";

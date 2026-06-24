@@ -82,9 +82,8 @@ function Run-Npm([string] $Label, [Parameter(ValueFromRemainingArguments = $true
 #   strokes (blend vs historical CSV); projections keep the full tournament field for Historical Trends. Before update:rounds.
 # Mirrors below copy projections + live + approach_skill *.json into website/public/data/ so both apps ship the same JSON.
 #
-# Round-projections / +EV weather: refresh:live (push:live) runs merge:field-teetimes → bake:weather →
-# repair:projection-course-basis (venue history + skill blend) → merge:within-event-form → apply:unified-factors
-# (course-table fit last). merge:live-hole-pars runs late so course par / hole table stays aligned after DK refresh.
+# Round-projections / +EV: refresh:live runs reconcile → export vs-actual → fit book-alignment (prior
+# events only) → walk-forward OOS report → apply calibration to projections.json → validate.
 # Market rating: fetch:dg writes pga_tour_market_benchmarks; refresh:live re-runs refresh:market-benchmarks after the
 # post-live historical CSV merge so 2025–2026 μ/σ stay current in published projections.json.
 
@@ -234,13 +233,16 @@ if ($LiveWeekOnly) {
   Run-Npm "Prior-round form from live-in-play (after venue repair) ..." run merge:within-event-form
   Run-Npm "Unified projection factors (course fit, tee wave - after venue repair) ..." run apply:unified-factors
   Run-Npm "Tournament MC outright probs (bake:outright-sim) ..." run bake:outright-sim
-  Run-Npm "Reconcile counts + venue field markets (reconcile:projection-counts) ..." run reconcile:projection-counts
+  Run-Npm "Reconcile counts + venue field markets (book cal deferred until after vs-actual export) ..." run reconcile:projection-counts
   Run-Npm "DK round audit CSV with post-repair model lines ..." run export:dk-round-audit-csv
-  Run-Npm "Validate par, birdies/pars, and DK O/U prop coverage before publish ..." run validate:projections
   Run-Npm "Running update:rounds (historical CSV + Historical Trends: player_round_history / embed / shards / shots web) ..." run update:rounds
   Run-Npm "Patching current-event rounds (pgatouR + live GIR/FW into history shards) ..." run patch:current-event-history
   $env:GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS = "1"
   Run-Npm "Writing round_projection_vs_actual.csv (walkforward backtest + current week) ..." run export:round-projection-vs-actual
+  Run-Npm "Fit DK book-alignment on prior events only (no outcome peek) ..." run fit:market-book-calibration
+  Run-Npm "Walk-forward honest OOS ROI report ..." run report:walkforward-oos-roi
+  Run-Npm "Apply book-alignment to live projections.json ..." run apply:market-book-calibration
+  Run-Npm "Validate projections after book calibration ..." run validate:projections
   Run-Npm "Odds.csv model ROI backtest (walkforward venue-history projections) ..." run backtest:odds-model-roi
   Promote-RoundProjectionVsActualCsv $webRoot
 }
@@ -305,6 +307,8 @@ $artifacts = @(
   "alpha-caddie-web/data/round_projection_vs_actual.csv",
   "alpha-caddie-web/data/round_projection_vs_actual_summary.csv",
   "alpha-caddie-web/data/round_projection_vs_actual.xlsx",
+  "alpha-caddie-web/data/market_book_calibration.json",
+  "alpha-caddie-web/data/walkforward_oos_roi.json",
   "alpha-caddie-web/data/odds_model_roi_summary.csv",
   "alpha-caddie-web/data/odds_model_roi_detail.csv",
   "alpha-caddie-web/data/pgatour_event_rounds.json",
