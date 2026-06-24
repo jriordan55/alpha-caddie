@@ -5159,6 +5159,12 @@ dialog,
   font-variant-numeric: tabular-nums;
   color: var(--golf-accent, #7ec8a0);
 }
+.parlay-leg-model {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--golf-text-muted);
+  margin-left: 0.2rem;
+}
 .parlay-dk-indep-hint {
   margin-left: 0.15rem;
   font-size: 0.7rem;

@@ -1326,9 +1326,9 @@
         <h4 class="ev-devig-section-title" id="tab-help-parlay-pro-odds-h">Odds columns</h4>
         <dl class="ev-help-dl">
           <dt>Model fair</dt>
-          <dd>American parlay from multiplying each leg’s model fair price (same as stacking singles).</dd>
+          <dd>Product of each leg’s model fair price (matches Round projections <strong>price</strong> mode, without vig).</dd>
           <dt>Model + vig</dt>
-          <dd>Model fair with typical DK O/U hold (~4.8%) applied.</dd>
+          <dd>Product of each leg’s vigged model price (same as Round projections price mode). Leg chips show DK and model (+vig) per side.</dd>
           <dt>DK</dt>
           <dd>DK’s correlated parlay price — same stat/side legs in a round are adjusted together (not a naive multiply of singles). Hover the <strong>*</strong> to see the uncorrelated product.</dd>
           <dt>EV</dt>
@@ -1500,7 +1500,7 @@
     </div>
   </dialog>
 
-  <script src="parlay-pro.js?v=6"></script>
+  <script src="parlay-pro.js?v=7"></script>
   <script src="app.js?v=297"></script>
 </body>
 </html>

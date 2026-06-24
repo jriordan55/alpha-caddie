@@ -21792,6 +21792,8 @@ document.addEventListener("DOMContentLoaded", () => {
       decimalFromAmerican,
       impliedProbFromAmerican,
       propsNoVigOverProb,
+      viggedDecimalsForOverUnder,
+      modelAmericanFromProb,
       americanFromDecimal,
       formatAmerican,
       displayGolferName,

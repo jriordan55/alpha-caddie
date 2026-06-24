@@ -9,8 +9,21 @@
   /** @type {object | null} */
   let api = null;
 
-  const BOOK_HOLD = 0.048;
   const EXCLUDED_MARKETS = new Set(["GIR"]);
+
+  function modelLegPrices(pOver, side) {
+    const pWin = side === "over" ? pOver : api.clampProb01(1 - pOver);
+    const fairDec = 1 / pWin;
+    const { do: dO, du: dU } = api.viggedDecimalsForOverUnder(pOver);
+    const vigDec = side === "over" ? dO : dU;
+    return {
+      pWin,
+      fairDec,
+      vigDec,
+      fairAm: api.americanFromDecimal(fairDec),
+      vigAm: api.americanFromDecimal(vigDec),
+    };
+  }
 
   const DEFAULT_RHO = {
     same_player_same_market: 0.55,
@@ -234,7 +247,8 @@
       if (elim.size && elim.has(dgId)) continue;
       const pOver = api.clampProb01(api.modelProbOverMarket(mKey, prow, L));
       if (!Number.isFinite(pOver)) continue;
-      const pUnder = api.clampProb01(1 - pOver);
+      const overPx = modelLegPrices(pOver, "over");
+      const underPx = modelLegPrices(pOver, "under");
       const dO = api.decimalFromAmerican(oAm);
       const dU = api.decimalFromAmerican(uAm);
       const qOver = api.propsNoVigOverProb(oAm, uAm);
@@ -261,9 +275,12 @@
         oddsAm: oAm,
         decimal: dO,
         fairDecimal: fairDecO,
-        pWin: pOver,
-        modelFairAm: api.americanFromDecimal(1 / pOver),
-        modelEv: pOver * dO - 1,
+        pWin: overPx.pWin,
+        modelFairDec: overPx.fairDec,
+        modelVigDec: overPx.vigDec,
+        modelFairAm: overPx.fairAm,
+        modelVigAm: overPx.vigAm,
+        modelEv: overPx.pWin * dO - 1,
       });
       legs.push({
         ...base,
@@ -271,9 +288,12 @@
         oddsAm: uAm,
         decimal: dU,
         fairDecimal: fairDecU,
-        pWin: pUnder,
-        modelFairAm: api.americanFromDecimal(1 / pUnder),
-        modelEv: pUnder * dU - 1,
+        pWin: underPx.pWin,
+        modelFairDec: underPx.fairDec,
+        modelVigDec: underPx.vigDec,
+        modelFairAm: underPx.fairAm,
+        modelVigAm: underPx.vigAm,
+        modelEv: underPx.pWin * dU - 1,
       });
     }
     return legs;
@@ -287,10 +307,9 @@
     const indepProb = legs.reduce((p, l) => p * l.pWin, 1);
     const jointProb = jointWinProb(legs);
     const avgRho = avgPairRho(legs);
-    const indepFairDecimal = indepProb > 0 ? 1 / indepProb : NaN;
-    const vigMult = 1 / (1 + BOOK_HOLD);
-    const modelFairDecimal = indepFairDecimal;
-    const modelVigDecimal = Number.isFinite(modelFairDecimal) ? modelFairDecimal * vigMult : NaN;
+    const modelFairDecimal = legs.reduce((p, l) => p * l.modelFairDec, 1);
+    const modelVigDecimal = legs.reduce((p, l) => p * l.modelVigDec, 1);
+    const indepFairDecimal = modelFairDecimal;
     const modelEv = Number.isFinite(jointProb) && Number.isFinite(dkDecimal) ? jointProb * dkDecimal - 1 : NaN;
     const indepEv = Number.isFinite(indepProb) && Number.isFinite(dkDecimal) ? indepProb * dkDecimal - 1 : NaN;
     const edgeVsDk = Number.isFinite(jointProb) && Number.isFinite(dkJointProb) ? jointProb - dkJointProb : NaN;
@@ -330,7 +349,10 @@
       Number.isFinite(r.jointProb) &&
       Number.isFinite(r.dkJointProb) &&
       Number.isFinite(r.modelEv) &&
-      Number.isFinite(r.modelFairAmerican) &&
+      Number.isFinite(r.modelFairDecimal) &&
+      r.modelFairDecimal > 1 &&
+      Number.isFinite(r.modelVigDecimal) &&
+      r.modelVigDecimal > 1 &&
       Number.isFinite(r.dkAmerican) &&
       Number.isFinite(r.edgeVsDk) &&
       Number.isFinite(r.avgRho)
@@ -431,7 +453,14 @@
     return merged.slice(0, 25);
   }
 
+  function fmtModelDec(dec) {
+    if (!Number.isFinite(dec) || dec <= 1) return "N/A";
+    const s = api.modelAmericanFromProb(1 / dec);
+    return s === "—" ? "N/A" : s;
+  }
+
   function fmtAm(x) {
+    if (!Number.isFinite(x)) return "N/A";
     const f = api.formatAmerican(x);
     return f === "—" ? "N/A" : f;
   }
@@ -476,11 +505,11 @@
       </div>
       <div class="parlay-pro-hero-stat">
         <span class="parlay-pro-hero-label">Model odds (fair)</span>
-        <span class="parlay-pro-hero-value">${fmtAm(best.modelFairAmerican)}</span>
+        <span class="parlay-pro-hero-value">${fmtModelDec(best.modelFairDecimal)}</span>
       </div>
       <div class="parlay-pro-hero-stat">
         <span class="parlay-pro-hero-label">Model odds (+ vig)</span>
-        <span class="parlay-pro-hero-value">${fmtAm(best.modelVigAmerican)}</span>
+        <span class="parlay-pro-hero-value">${fmtModelDec(best.modelVigDecimal)}</span>
       </div>
       <div class="parlay-pro-hero-stat">
         <span class="parlay-pro-hero-label">DK parlay</span>
@@ -504,16 +533,17 @@
           const m = l.market.replace("Fairways hit", "FW").replace("Total Score", "Score");
           const w = l.teeWave ? ` · ${l.teeWave.slice(0, 3)}` : "";
           const dk = api.formatAmerican(l.oddsAm);
-          const mf = api.formatAmerican(l.modelFairAm);
-          return `<span class="parlay-leg-chip" title="DK ${dk} · model fair ${mf} · win ${fmtPct(l.pWin)}">${l.playerName.split(",")[0]} ${m} ${l.side === "over" ? "O" : "U"}${l.line}${w} <span class="parlay-leg-odds">${dk}</span></span>`;
+          const mv = fmtAm(l.modelVigAm);
+          const legFair = fmtAm(l.modelFairAm);
+          return `<span class="parlay-leg-chip" title="DK ${dk} · model fair ${legFair} · model +vig ${mv} · win ${fmtPct(l.pWin)}">${l.playerName.split(",")[0]} ${m} ${l.side === "over" ? "O" : "U"}${l.line}${w} <span class="parlay-leg-odds">${dk}</span> <span class="parlay-leg-model">${mv}</span></span>`;
         })
         .join("");
       html += `<tr>
         <td>${i + 1}</td>
         <td class="parlay-type-cell">${typeLabel(r.comboType)}${r.isNegCorr ? ' <span class="parlay-neg-tag">neg ρ</span>' : ""}</td>
         <td class="parlay-legs-cell">${legHtml}</td>
-        <td>${fmtAm(r.modelFairAmerican)}</td>
-        <td>${fmtAm(r.modelVigAmerican)}</td>
+        <td>${fmtModelDec(r.modelFairDecimal)}</td>
+        <td>${fmtModelDec(r.modelVigDecimal)}</td>
         <td>${fmtAm(r.dkAmerican)}${r.legs.length > 1 && r.dkCorrUplift > 1.02 ? `<span class="parlay-dk-indep-hint" title="Uncorrelated leg product would be ${fmtAm(r.dkNaiveAmerican)}">*</span>` : ""}</td>
         <td class="${r.modelEv >= 0 ? "ev-pos" : "ev-neg"}">${fmtEv(r.modelEv)}</td>
         <td class="${r.edgeVsDk >= 0 ? "ev-pos" : "ev-neg"}" title="Model joint win % minus DK parlay implied %">${fmtEdge(r.edgeVsDk)}</td>
