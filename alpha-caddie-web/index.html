@@ -1326,16 +1326,16 @@
       <section class="ev-help-section" aria-labelledby="tab-help-parlay-pro-odds-h">
         <h4 class="ev-devig-section-title" id="tab-help-parlay-pro-odds-h">Odds columns</h4>
         <dl class="ev-help-dl">
-          <dt>Your fair</dt>
-          <dd>American odds from your model’s joint win % (no book vig).</dd>
-          <dt>You + vig</dt>
-          <dd>Same joint % with typical DK O/U hold (~4.8%) applied — slightly worse payout than fair, like a real book price.</dd>
+          <dt>Model fair</dt>
+          <dd>American parlay from multiplying each leg’s model fair price (same as stacking singles).</dd>
+          <dt>Model + vig</dt>
+          <dd>Model fair with typical DK O/U hold (~4.8%) applied.</dd>
           <dt>DK</dt>
           <dd>DK’s correlated parlay price — same stat/side legs in a round are adjusted together (not a naive multiply of singles). Hover the <strong>*</strong> to see the uncorrelated product.</dd>
           <dt>EV</dt>
-          <dd>Expected profit per $1 staked at DK’s parlay price: (joint win % × DK decimal) − 1.</dd>
+          <dd>Expected profit per $1 at DK’s parlay price: (model joint win % × DK decimal) − 1.</dd>
           <dt>Win edge</dt>
-          <dd>Your joint win % minus DK’s implied win % from the posted parlay — e.g. +2.1% means you think the parlay hits 2.1% more often than DK’s price implies.</dd>
+          <dd>Model joint win % minus DK parlay implied % — e.g. +2.1% means the model thinks the parlay hits 2.1% more often than DK’s price implies.</dd>
           <dt>ρ (rho)</dt>
           <dd>Average correlation between legs. Positive = legs tend to hit together; negative = they offset (can create value on unders mixed with overs).</dd>
         </dl>
@@ -1501,7 +1501,7 @@
     </div>
   </dialog>
 
-  <script src="parlay-pro.js?v=4"></script>
+  <script src="parlay-pro.js?v=5"></script>
   <script src="app.js?v=297"></script>
 </body>
 </html>

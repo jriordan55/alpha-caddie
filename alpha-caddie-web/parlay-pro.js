@@ -71,7 +71,8 @@
 
   /** Gaussian copula P(both hit) with margins p1, p2 — Genz / Drezner pbivnorm. */
   function bivariateCopulaProb(p1, p2, rho) {
-    if (Math.abs(rho) < 1e-8) return p1 * p2;
+    if (!Number.isFinite(p1) || !Number.isFinite(p2)) return NaN;
+    if (Math.abs(rho) < 1e-8 || !Number.isFinite(rho)) return p1 * p2;
     const h = normalInv(p1);
     const k = normalInv(p2);
     const r = Math.max(-0.99, Math.min(0.99, rho));
@@ -88,6 +89,24 @@
   }
 
 
+  function defaultRhoDefs() {
+    return { ...DEFAULT_RHO, ...(corrData?.default_rho || {}) };
+  }
+
+  function finiteProb(x) {
+    return Number.isFinite(x) ? Math.max(0.0005, Math.min(0.9995, x)) : NaN;
+  }
+
+  function clampJointProb(p, ps) {
+    const q = finiteProb(p);
+    if (!Number.isFinite(q)) return NaN;
+    const lo = Math.max(0, ps.reduce((s, x) => s + x, 0) - (ps.length - 1));
+    const hi = Math.min(...ps);
+    if (!Number.isFinite(hi)) return NaN;
+    if (lo > hi) return Math.min(hi, q);
+    return Math.max(lo, Math.min(hi, q));
+  }
+
   function legPairKey(a, b) {
     const ka = `${a.market}|${a.side}`;
     const kb = `${b.market}|${b.side}`;
@@ -103,7 +122,7 @@
 
   function pairRho(a, b) {
     const rel = legRelation(a, b);
-    const defs = corrData?.default_rho || DEFAULT_RHO;
+    const defs = defaultRhoDefs();
     const pk = legPairKey(a, b);
     const bucket =
       rel === "same_player" ? corrData?.same_player : rel === "same_wave" ? corrData?.same_tee_wave : null;
@@ -139,20 +158,20 @@
 
   function jointProbForLegs(legs, probOf) {
     if (!legs.length) return NaN;
-    if (legs.length === 1) return probOf(legs[0]);
-    const ps = legs.map(probOf);
+    if (legs.length === 1) return finiteProb(probOf(legs[0]));
+    const ps = legs.map(probOf).map(finiteProb);
+    if (ps.some((x) => !Number.isFinite(x))) return NaN;
     let p = ps.reduce((s, x) => s * x, 1);
     for (let i = 0; i < legs.length; i++) {
       for (let j = i + 1; j < legs.length; j++) {
         const rho = pairRho(legs[i], legs[j]);
         const pij = bivariateCopulaProb(ps[i], ps[j], rho);
+        if (!Number.isFinite(pij)) return NaN;
         const indep = ps[i] * ps[j];
         if (indep > 1e-9) p *= pij / indep;
       }
     }
-    const lower = Math.max(0, ps.reduce((s, x) => s + x, 0) - (ps.length - 1));
-    const upper = Math.min(...ps);
-    return Math.max(lower, Math.min(upper, Math.max(0.0005, Math.min(0.9995, p))));
+    return clampJointProb(p, ps);
   }
 
   function jointWinProb(legs) {
@@ -260,27 +279,21 @@
 
   function scoreParlay(legs) {
     const dkNaiveDecimal = legs.reduce((p, l) => p * l.decimal, 1);
-    const dkFairNaiveDecimal = legs.reduce((p, l) => p * l.fairDecimal, 1);
     const dkIndepProb = legs.reduce((p, l) => p * (1 / l.decimal), 1);
     const dkJointProb = jointProbForLegs(legs, (l) => 1 / l.decimal);
-    const dkDecimal = 1 / dkJointProb;
-    const dkFairJointProb = jointProbForLegs(legs, (l) => 1 / l.fairDecimal);
-    const dkFairDecimal = 1 / dkFairJointProb;
+    const dkDecimal = Number.isFinite(dkJointProb) && dkJointProb > 0 ? 1 / dkJointProb : NaN;
     const indepProb = legs.reduce((p, l) => p * l.pWin, 1);
     const jointProb = jointWinProb(legs);
     const avgRho = avgPairRho(legs);
-    const modelFairDecimal = 1 / jointProb;
+    const indepFairDecimal = indepProb > 0 ? 1 / indepProb : NaN;
     const vigMult = 1 / (1 + BOOK_HOLD);
-    const modelVigDecimal = modelFairDecimal * vigMult;
-    const indepFairDecimal = 1 / indepProb;
-    const modelEv = jointProb * dkDecimal - 1;
-    const indepEv = indepProb * dkDecimal - 1;
-    const dkImplied = dkJointProb;
-    const dkFairImplied = dkFairJointProb;
-    const edgeVsDk = jointProb - dkJointProb;
-    const edgeVsDkFair = jointProb - dkFairJointProb;
-    const corrUplift = indepProb > 1e-9 ? jointProb / indepProb : 1;
-    const dkCorrUplift = dkIndepProb > 1e-9 ? dkJointProb / dkIndepProb : 1;
+    const modelFairDecimal = indepFairDecimal;
+    const modelVigDecimal = Number.isFinite(modelFairDecimal) ? modelFairDecimal * vigMult : NaN;
+    const modelEv = Number.isFinite(jointProb) && Number.isFinite(dkDecimal) ? jointProb * dkDecimal - 1 : NaN;
+    const indepEv = Number.isFinite(indepProb) && Number.isFinite(dkDecimal) ? indepProb * dkDecimal - 1 : NaN;
+    const edgeVsDk = Number.isFinite(jointProb) && Number.isFinite(dkJointProb) ? jointProb - dkJointProb : NaN;
+    const corrUplift = indepProb > 1e-9 && Number.isFinite(jointProb) ? jointProb / indepProb : 1;
+    const dkCorrUplift = dkIndepProb > 1e-9 && Number.isFinite(dkJointProb) ? dkJointProb / dkIndepProb : 1;
     const comboType = parlayComboType(legs);
     return {
       legs,
@@ -288,13 +301,11 @@
       avgRho,
       dkDecimal,
       dkNaiveDecimal,
-      dkFairDecimal,
       dkJointProb,
       dkIndepProb,
       dkCorrUplift,
       dkAmerican: api.americanFromDecimal(dkDecimal),
       dkNaiveAmerican: api.americanFromDecimal(dkNaiveDecimal),
-      dkFairAmerican: api.americanFromDecimal(dkFairDecimal),
       modelFairDecimal,
       modelFairAmerican: api.americanFromDecimal(modelFairDecimal),
       modelVigDecimal,
@@ -306,11 +317,22 @@
       modelEv,
       indepEv,
       edgeVsDk,
-      edgeVsDkFair,
       corrUplift,
-      evGainVsIndep: modelEv - indepEv,
+      evGainVsIndep: Number.isFinite(modelEv) && Number.isFinite(indepEv) ? modelEv - indepEv : NaN,
       isNegCorr: avgRho < -0.04 && corrUplift < 0.98,
     };
+  }
+
+  function isValidParlayScore(r) {
+    return (
+      Number.isFinite(r.jointProb) &&
+      Number.isFinite(r.dkJointProb) &&
+      Number.isFinite(r.modelEv) &&
+      Number.isFinite(r.modelFairAmerican) &&
+      Number.isFinite(r.dkAmerican) &&
+      Number.isFinite(r.edgeVsDk) &&
+      Number.isFinite(r.avgRho)
+    );
   }
 
   function comboAllowed(combo, style) {
@@ -348,7 +370,8 @@
     const scored = [];
     for (const combo of combos) {
       if (!comboAllowed(combo, style)) continue;
-      scored.push(scoreParlay(combo));
+      const s = scoreParlay(combo);
+      if (isValidParlayScore(s)) scored.push(s);
     }
     return scored;
   }
@@ -406,12 +429,27 @@
     return merged.slice(0, 25);
   }
 
-  function pct(x) {
-    return Number.isFinite(x) ? `${(x * 100).toFixed(1)}%` : "—";
+  function fmtAm(x) {
+    const f = api.formatAmerican(x);
+    return f === "—" ? "N/A" : f;
   }
 
-  function evPct(x) {
-    return Number.isFinite(x) ? `${x >= 0 ? "+" : ""}${(x * 100).toFixed(1)}%` : "—";
+  function fmtPct(x) {
+    return Number.isFinite(x) ? `${(x * 100).toFixed(1)}%` : "N/A";
+  }
+
+  function fmtEv(x) {
+    return Number.isFinite(x) ? `${x >= 0 ? "+" : ""}${(x * 100).toFixed(1)}%` : "N/A";
+  }
+
+  function fmtEdge(x) {
+    if (!Number.isFinite(x)) return "N/A";
+    return `${x >= 0 ? "+" : ""}${(x * 100).toFixed(1)}%`;
+  }
+
+  function fmtRho(x) {
+    if (!Number.isFinite(x)) return "N/A";
+    return `${x >= 0 ? "+" : ""}${x.toFixed(2)}`;
   }
 
   function typeLabel(t) {
@@ -432,29 +470,29 @@
     let html = `<div class="parlay-pro-hero">
       <div class="parlay-pro-hero-stat">
         <span class="parlay-pro-hero-label">Best EV @ DK</span>
-        <span class="parlay-pro-hero-value ${best.modelEv >= 0 ? "ev-pos" : "ev-neg"}">${evPct(best.modelEv)}</span>
+        <span class="parlay-pro-hero-value ${best.modelEv >= 0 ? "ev-pos" : "ev-neg"}">${fmtEv(best.modelEv)}</span>
       </div>
       <div class="parlay-pro-hero-stat">
-        <span class="parlay-pro-hero-label">Your odds (fair)</span>
-        <span class="parlay-pro-hero-value">${api.formatAmerican(best.modelFairAmerican)}</span>
+        <span class="parlay-pro-hero-label">Model odds (fair)</span>
+        <span class="parlay-pro-hero-value">${fmtAm(best.modelFairAmerican)}</span>
       </div>
       <div class="parlay-pro-hero-stat">
-        <span class="parlay-pro-hero-label">Your odds (+ vig)</span>
-        <span class="parlay-pro-hero-value">${api.formatAmerican(best.modelVigAmerican)}</span>
+        <span class="parlay-pro-hero-label">Model odds (+ vig)</span>
+        <span class="parlay-pro-hero-value">${fmtAm(best.modelVigAmerican)}</span>
       </div>
       <div class="parlay-pro-hero-stat">
         <span class="parlay-pro-hero-label">DK parlay</span>
         <span class="parlay-pro-hero-value">${api.formatAmerican(best.dkAmerican)}</span>
       </div>
       <div class="parlay-pro-hero-stat">
-        <span class="parlay-pro-hero-label">Win chance</span>
-        <span class="parlay-pro-hero-value">${pct(best.jointProb)}</span>
+        <span class="parlay-pro-hero-label">Model win %</span>
+        <span class="parlay-pro-hero-value">${fmtPct(best.jointProb)}</span>
       </div>
     </div>`;
 
     html += `<table class="data-table parlay-pro-table"><thead><tr>
       <th>#</th><th>Type</th><th>Legs</th>
-      <th>Your fair</th><th>You + vig</th><th>DK</th>
+      <th>Model fair</th><th>Model + vig</th><th>DK</th>
       <th>EV</th><th>Win edge</th><th>ρ</th>
     </tr></thead><tbody>`;
 
@@ -465,20 +503,19 @@
           const w = l.teeWave ? ` · ${l.teeWave.slice(0, 3)}` : "";
           const dk = api.formatAmerican(l.oddsAm);
           const mf = api.formatAmerican(l.modelFairAm);
-          return `<span class="parlay-leg-chip" title="DK ${dk} · model fair ${mf} · win ${pct(l.pWin)}">${l.playerName.split(",")[0]} ${m} ${l.side === "over" ? "O" : "U"}${l.line}${w} <span class="parlay-leg-odds">${dk}</span></span>`;
+          return `<span class="parlay-leg-chip" title="DK ${dk} · model fair ${mf} · win ${fmtPct(l.pWin)}">${l.playerName.split(",")[0]} ${m} ${l.side === "over" ? "O" : "U"}${l.line}${w} <span class="parlay-leg-odds">${dk}</span></span>`;
         })
         .join("");
-      const edgeLabel = `${r.edgeVsDk >= 0 ? "+" : ""}${(r.edgeVsDk * 100).toFixed(1)}%`;
       html += `<tr>
         <td>${i + 1}</td>
         <td class="parlay-type-cell">${typeLabel(r.comboType)}${r.isNegCorr ? ' <span class="parlay-neg-tag">neg ρ</span>' : ""}</td>
         <td class="parlay-legs-cell">${legHtml}</td>
-        <td>${api.formatAmerican(r.modelFairAmerican)}</td>
-        <td>${api.formatAmerican(r.modelVigAmerican)}</td>
-        <td>${api.formatAmerican(r.dkAmerican)}${r.legs.length > 1 && r.dkCorrUplift > 1.02 ? `<span class="parlay-dk-indep-hint" title="Uncorrelated leg product would be ${api.formatAmerican(r.dkNaiveAmerican)}">*</span>` : ""}</td>
-        <td class="${r.modelEv >= 0 ? "ev-pos" : "ev-neg"}">${evPct(r.modelEv)}</td>
-        <td class="${r.edgeVsDk >= 0 ? "ev-pos" : "ev-neg"}" title="Your win % minus DK posted implied %">${edgeLabel}</td>
-        <td>${r.avgRho >= 0 ? "+" : ""}${r.avgRho.toFixed(2)}</td>
+        <td>${fmtAm(r.modelFairAmerican)}</td>
+        <td>${fmtAm(r.modelVigAmerican)}</td>
+        <td>${fmtAm(r.dkAmerican)}${r.legs.length > 1 && r.dkCorrUplift > 1.02 ? `<span class="parlay-dk-indep-hint" title="Uncorrelated leg product would be ${fmtAm(r.dkNaiveAmerican)}">*</span>` : ""}</td>
+        <td class="${r.modelEv >= 0 ? "ev-pos" : "ev-neg"}">${fmtEv(r.modelEv)}</td>
+        <td class="${r.edgeVsDk >= 0 ? "ev-pos" : "ev-neg"}" title="Model joint win % minus DK parlay implied %">${fmtEdge(r.edgeVsDk)}</td>
+        <td>${fmtRho(r.avgRho)}</td>
       </tr>`;
     });
     html += "</tbody></table>";
