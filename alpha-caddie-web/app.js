@@ -4421,58 +4421,11 @@ async function refreshForecastWeatherFromOpenMeteo() {
   return true;
 }
 
-const PRICING_DEFAULTS = Object.freeze({ mode: "default", skill: "default" });
+const PRICING_STATE = Object.freeze({ mode: "default", skill: "default" });
 const PRICING_SKILL_COLUMNS = Object.freeze(["sg_total", "sg_ott", "sg_app", "sg_arg", "sg_putt", "sg_t2g"]);
-let PRICING_STATE = { ...PRICING_DEFAULTS };
 
-const PRICING_UI_IDS = [
-  { mode: "ou-pricing-mode", skill: "ou-pricing-skill", skillLabel: "ou-pricing-skill-label" },
-  { mode: "ev-pricing-mode", skill: "ev-pricing-skill", skillLabel: "ev-pricing-skill-label" },
-  { mode: "matchups-pricing-mode", skill: "matchups-pricing-skill", skillLabel: "matchups-pricing-skill-label" },
-  { mode: "outrights-pricing-mode", skill: "outrights-pricing-skill", skillLabel: "outrights-pricing-skill-label" },
-];
-
-function pricingFromUiIds(ids) {
-  const modeEl = document.getElementById(ids.mode);
-  const skillEl = document.getElementById(ids.skill);
-  const rawM = String(modeEl?.value || PRICING_DEFAULTS.mode).toLowerCase();
-  const mode = ["default", "recent", "course", "skill"].includes(rawM) ? rawM : "default";
-  let skill = PRICING_DEFAULTS.skill;
-  if (mode === "skill") {
-    const rawS = String(skillEl?.value || "sg_total").toLowerCase();
-    if (rawS === "default") skill = "sg_total";
-    else skill = PRICING_SKILL_COLUMNS.includes(rawS) ? rawS : "sg_total";
-  }
-  return { mode, skill };
-}
-
-/** History column for skill-focus pricing; never "default". */
 function pricingSkillHistoryKey() {
-  const s = PRICING_STATE.skill;
-  if (s && s !== "default" && PRICING_SKILL_COLUMNS.includes(s)) return s;
   return "sg_total";
-}
-
-function syncPricingUiFromState() {
-  for (const ids of PRICING_UI_IDS) {
-    const modeEl = document.getElementById(ids.mode);
-    const skillEl = document.getElementById(ids.skill);
-    if (modeEl) modeEl.value = PRICING_STATE.mode;
-    if (skillEl) {
-      skillEl.value = PRICING_STATE.skill;
-      // Skill pillar only affects μ_SG nudge in "Skill focus"; recent/course use fixed SG history shapes.
-      skillEl.disabled = PRICING_STATE.mode !== "skill";
-    }
-  }
-  updatePricingSkillLabelsVisibility();
-}
-
-function updatePricingSkillLabelsVisibility() {
-  const show = PRICING_STATE.mode === "skill";
-  for (const ids of PRICING_UI_IDS) {
-    const lab = document.getElementById(ids.skillLabel);
-    if (lab) lab.hidden = !show;
-  }
 }
 
 function refreshPricingAffectedViews() {
@@ -6504,7 +6457,7 @@ function ouSortedPlayerRows(market, round) {
 /** Field for Model O/U projection grid: best (lowest) projected round score first. */
 function ouSortedPlayerRowsProjection(round) {
   const postCut = tournamentPostCutListPhase() ? 1 : 0;
-  const sig = `r${round}|pc${postCut}|pm${PRICING_STATE.mode}|ps${PRICING_STATE.skill}|ep${historyMutationEpoch}|fp${playerDgFingerprint(DATA.players)}`;
+  const sig = `r${round}|pc${postCut}|ep${historyMutationEpoch}|fp${playerDgFingerprint(DATA.players)}`;
   if (ouProjectionSortCacheSig === sig && ouProjectionSortCache) return ouProjectionSortCache;
   let rows = DATA.players.filter((p) => samePlayerRound(p, round));
   if (postCut) rows = rows.filter((p) => !isPlayerEliminatedFromEvent(p));
@@ -21337,21 +21290,6 @@ function initTabs() {
 
 document.addEventListener("DOMContentLoaded", () => {
   syncWeatherUiFromState();
-  syncPricingUiFromState();
-  for (const ids of PRICING_UI_IDS) {
-    for (const id of [ids.mode, ids.skill]) {
-      const el = document.getElementById(id);
-      if (!el) continue;
-      el.addEventListener("change", () => {
-        PRICING_STATE = pricingFromUiIds(ids);
-        PRICING_MU_BONUS_CACHE.clear();
-        ouProjectionSortCacheSig = "";
-        ouProjectionSortCache = null;
-        syncPricingUiFromState();
-        refreshPricingAffectedViews();
-      });
-    }
-  }
   initPropsTopTableSortOnce();
   configureRoundPickerUi();
   initTabs();

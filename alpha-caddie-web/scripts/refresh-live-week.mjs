@@ -59,6 +59,19 @@ function run(rel, label, extraEnv = {}) {
   console.log(`[refresh:live] ${label} — ${elapsed}s`);
 }
 
+/** Always refresh DG field-updates, tee times, and Open-Meteo weather (never skipped on push:live). */
+function runWeatherAndTeeTimesPass(phase) {
+  run("refresh-field-updates-into-live.mjs", `Fresh field-updates → live-in-play (${phase})`);
+  run(
+    "merge-field-teetimes-into-projections.mjs",
+    `field-updates tee times → projections.json (${phase})`,
+  );
+  run(
+    "bake-weather-into-projections.mjs",
+    `Open-Meteo tee-time weather → projections.json (${phase})`,
+  );
+}
+
 function mirrorWebsitePublicData() {
   const destDir = path.join(REPO_ROOT, "website", "public", "data");
   mkdirSync(destDir, { recursive: true });
@@ -175,14 +188,7 @@ run(
   "merge-live-round-meta-into-projections.mjs",
   "Merge live round meta into projections (display_round for upcoming round)",
 );
-run(
-  "merge-field-teetimes-into-projections.mjs",
-  "field-updates tee times (ET) → projections.json dg_teetime_local",
-);
-run(
-  "bake-weather-into-projections.mjs",
-  "Open-Meteo tee-time weather → projections.json for display_round (bake:weather)",
-);
+runWeatherAndTeeTimesPass("pre-repair");
 run(
   "repair-projection-course-basis.mjs",
   "Venue player/course history + skill blend + total-score calibration (before within-event / course-fit)",
@@ -261,6 +267,8 @@ if (!envTruthy("GOLF_SKIP_MARKET_BOOK_CALIBRATION", false)) {
     "Reconcile counting stats after book calibration (book cal already applied)",
   );
 }
+
+runWeatherAndTeeTimesPass("publish");
 
 run("validate-projections-for-publish.mjs", "Validate par, birdies/pars, and O/U prop coverage before publish");
 

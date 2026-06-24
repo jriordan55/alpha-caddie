@@ -176,28 +176,6 @@
           <span class="weather-toolbar-title ou-block-heading">Weather</span>
           <div id="ou-weather-wave-summary" class="weather-auto-note text-muted" role="status" aria-live="polite"></div>
         </div>
-        <div class="toolbar weather-toolbar pricing-toolbar ou-pricing-block" aria-label="Pricing mode">
-          <span class="weather-toolbar-title ou-block-heading">Pricing</span>
-          <div class="ou-pricing-row">
-            <label class="toolbar-label">Mode
-              <select id="ou-pricing-mode" disabled title="Unified: recent form, course history, and course-weighted SG">
-                <option value="default" selected>Course adaptive</option>
-              </select>
-            </label>
-            <label class="toolbar-label pricing-skill-label" id="ou-pricing-skill-label" hidden>Skill
-              <select id="ou-pricing-skill" aria-label="Pricing skill focus">
-                <option value="default" selected>Default</option>
-                <option value="sg_total">Total SG</option>
-                <option value="sg_ott">Off the tee</option>
-                <option value="sg_app">Approach</option>
-                <option value="sg_arg">Around the green</option>
-                <option value="sg_putt">Putting</option>
-                <option value="sg_t2g">Tee to green</option>
-              </select>
-            </label>
-            <span id="ou-synthetic-odds-note" class="ou-synthetic-odds-note text-muted" hidden aria-hidden="true"></span>
-          </div>
-        </div>
       </div>
       <div class="table-wrap leaderboard-card ou-table-card">
         <table class="data-table table-ou-projections" id="table-ou">
@@ -816,25 +794,6 @@
         <span class="weather-toolbar-title">Weather</span>
         <div id="ev-weather-wave-summary" class="weather-auto-note text-muted" role="status" aria-live="polite"></div>
       </div>
-      <div class="toolbar weather-toolbar pricing-toolbar" aria-label="Pricing mode">
-        <span class="weather-toolbar-title">Pricing</span>
-        <label class="toolbar-label">Mode
-          <select id="ev-pricing-mode" disabled title="Unified: recent form, course history, and course-weighted SG">
-            <option value="default" selected>Course adaptive</option>
-          </select>
-        </label>
-        <label class="toolbar-label pricing-skill-label" id="ev-pricing-skill-label" hidden>Skill
-          <select id="ev-pricing-skill" aria-label="Pricing skill focus">
-            <option value="default" selected>Default</option>
-            <option value="sg_total">Total SG</option>
-            <option value="sg_ott">Off the tee</option>
-            <option value="sg_app">Approach</option>
-            <option value="sg_arg">Around the green</option>
-            <option value="sg_putt">Putting</option>
-            <option value="sg_t2g">Tee to green</option>
-          </select>
-        </label>
-      </div>
       <div class="table-wrap leaderboard-card">
         <table class="data-table data-table-outrights" id="table-ev">
           <thead>
@@ -914,25 +873,6 @@
           </select>
         </label>
       </div>
-      <div class="toolbar weather-toolbar pricing-toolbar" aria-label="Pricing mode">
-        <span class="weather-toolbar-title">Pricing</span>
-        <label class="toolbar-label">Mode
-          <select id="matchups-pricing-mode" disabled title="Unified: recent form, course history, and course-weighted SG">
-            <option value="default" selected>Course adaptive</option>
-          </select>
-        </label>
-        <label class="toolbar-label pricing-skill-label" id="matchups-pricing-skill-label" hidden>Skill
-          <select id="matchups-pricing-skill" aria-label="Pricing skill focus">
-            <option value="default" selected>Default</option>
-            <option value="sg_total">Total SG</option>
-            <option value="sg_ott">Off the tee</option>
-            <option value="sg_app">Approach</option>
-            <option value="sg_arg">Around the green</option>
-            <option value="sg_putt">Putting</option>
-            <option value="sg_t2g">Tee to green</option>
-          </select>
-        </label>
-      </div>
       <div class="table-wrap leaderboard-card outrights-table-wrap">
         <table class="data-table data-table-outrights" id="table-matchups">
           <thead><tr><th>Matchup</th><th>Player</th><th class="num">Model</th><th class="num">EV</th><th class="num">Best Book</th></tr></thead>
@@ -962,25 +902,6 @@
           </select>
         </label>
         <button type="button" class="btn-primary" id="btn-refresh-outrights">Refresh projections</button>
-      </div>
-      <div class="toolbar weather-toolbar pricing-toolbar" aria-label="Pricing mode">
-        <span class="weather-toolbar-title">Pricing</span>
-        <label class="toolbar-label">Mode
-          <select id="outrights-pricing-mode" disabled title="Unified: recent form, course history, and course-weighted SG">
-            <option value="default" selected>Course adaptive</option>
-          </select>
-        </label>
-        <label class="toolbar-label pricing-skill-label" id="outrights-pricing-skill-label" hidden>Skill
-          <select id="outrights-pricing-skill" aria-label="Pricing skill focus">
-            <option value="default" selected>Default</option>
-            <option value="sg_total">Total SG</option>
-            <option value="sg_ott">Off the tee</option>
-            <option value="sg_app">Approach</option>
-            <option value="sg_arg">Around the green</option>
-            <option value="sg_putt">Putting</option>
-            <option value="sg_t2g">Tee to green</option>
-          </select>
-        </label>
       </div>
       <div class="table-wrap leaderboard-card outrights-table-wrap">
         <table class="data-table data-table-outrights" id="table-outrights">
@@ -1193,16 +1114,10 @@
         </dl>
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-ou-pricing-h">
-        <h4 class="ev-devig-section-title" id="tab-help-ou-pricing-h">Pricing</h4>
+        <h4 class="ev-devig-section-title" id="tab-help-ou-pricing-h">Model</h4>
         <dl class="ev-help-dl">
-          <dt>Default</dt>
-          <dd>Baseline model — no form, course, or skill tilt.</dd>
-          <dt>Recent form</dt>
-          <dd>Favors players trending up or down lately.</dd>
-          <dt>Course history</dt>
-          <dd>Favors strong records at this course/event.</dd>
-          <dt>Skill focus</dt>
-          <dd>Tilt toward a strokes-gained pillar (Total SG, Off the tee, Approach, Around the green, Putting, Tee to green).</dd>
+          <dt>Course-adaptive</dt>
+          <dd>One projection path: recent form, course history, and strokes gained weighted by what this course demands (from course table). No mode or skill picker.</dd>
         </dl>
       </section>
       <footer class="ev-help-actions">

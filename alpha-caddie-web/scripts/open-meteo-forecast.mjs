@@ -2,6 +2,9 @@
  * Open-Meteo venue forecast + per-tee weather (shared by bake-weather-into-projections.mjs).
  * Logic mirrors alpha-caddie-web/app.js refreshForecastWeatherFromOpenMeteo.
  */
+import { readFileSync, existsSync } from "fs";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 import { eventsLikelySame, fieldWeekKey, fieldWeekKeysRoughMatch } from "./dg-events-align.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
 import { summarizeHourlyWeatherSlice } from "./open-meteo-weather-classify.mjs";
@@ -55,13 +58,36 @@ export const COURSE_COORDINATES_BY_NAME = {
   "hamilton golf and country club": { lat: 43.267, lon: -79.934 },
   "glen abbey golf club": { lat: 43.452, lon: -79.691 },
   "shinnecock hills golf club": { lat: 40.8847, lon: -72.4651 },
+  "tpc river highlands": { lat: 41.5951, lon: -72.64537 },
 };
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const COORDS_CACHE_PATH = join(__dirname, "..", "data", "course_coordinates_cache.json");
+let _coordsCache = null;
+
+function loadCourseCoordsCache() {
+  if (_coordsCache) return _coordsCache;
+  _coordsCache = {};
+  if (!existsSync(COORDS_CACHE_PATH)) return _coordsCache;
+  try {
+    _coordsCache = JSON.parse(readFileSync(COORDS_CACHE_PATH, "utf8"));
+  } catch {
+    _coordsCache = {};
+  }
+  return _coordsCache;
+}
 
 export function courseCoordinatesForProjections(proj) {
   const meta = projectionExportMeta(proj);
   const raw = meta?.course_used ?? proj?.course_used ?? "";
   const key = normCourseNameKey(raw);
-  return COURSE_COORDINATES_BY_NAME[key] || null;
+  const hard = COURSE_COORDINATES_BY_NAME[key];
+  if (hard) return hard;
+  const hit = loadCourseCoordsCache()[key];
+  if (hit && Number.isFinite(num(hit.lat, NaN)) && Number.isFinite(num(hit.lon, NaN))) {
+    return { lat: hit.lat, lon: hit.lon };
+  }
+  return null;
 }
 
 export function forecastTimezoneFromProjections(proj) {
@@ -429,7 +455,11 @@ export async function bakeOpenMeteoWeatherIntoProjections(proj, opts = {}) {
     const snap = hourlySliceWeatherSnapshot(hourly, ix, 5);
     if (snap) perTeeSamples.push(snap);
   }
-  const medianSnap = medianWeatherSnapshotFromSamples(perTeeSamples);
+  let medianSnap = medianWeatherSnapshotFromSamples(perTeeSamples);
+  if (!medianSnap && timesArr.length) {
+    const mid = Math.min(timesArr.length - 1, Math.max(0, Math.floor(timesArr.length * 0.45)));
+    medianSnap = hourlySliceWeatherSnapshot(hourly, mid, 5);
+  }
 
   let playersWithWeather = 0;
   for (const p of players) {
@@ -447,7 +477,11 @@ export async function bakeOpenMeteoWeatherIntoProjections(proj, opts = {}) {
     if (applyWeatherSnapshotToPlayer(p, snap)) playersWithWeather++;
   }
 
-  meta.forecast_weather_status = perTeeSamples.length ? "ok_tee_time" : medianSnap ? "ok_median" : "no_tee_match";
+  meta.forecast_weather_status = perTeeSamples.length
+    ? "ok_tee_time"
+    : medianSnap
+      ? "ok_venue_median"
+      : "no_tee_match";
   meta.forecast_weather_updated_at = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
   meta.forecast_weather_coords = { lat: coords.lat, lon: coords.lon, timezone: tz };
   delete meta.forecast_weather_error;
