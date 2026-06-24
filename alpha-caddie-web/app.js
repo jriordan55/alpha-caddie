@@ -10081,9 +10081,6 @@ function courseFitPlayerCourseFitRaw(row, ctRow) {
   return fit;
 }
 
-  return fit;
-}
-
 const ADAPTIVE_SG_KEYS = ["sg_ott", "sg_app", "sg_arg", "sg_putt"];
 const ADAPTIVE_CT_COEFF = { sg_ott: "ott_sg", sg_app: "app_sg", sg_arg: "arg_sg", sg_putt: "putt_sg" };
 
@@ -20119,6 +20116,7 @@ async function loadProjections(opts = {}) {
       showFileProtocolBanner(true);
       dataSource = "bundled-file";
       applyPayload(DEFAULT_PROJECTIONS_PAYLOAD);
+      if (isHomeViewActive()) updateHomePage();
       await finishOk();
       return;
     }
@@ -20135,6 +20133,7 @@ async function loadProjections(opts = {}) {
     dataSource = base === "projections.json" ? "projections.json" : url;
     applyPayload(j);
     if (!silent) setBootError("");
+    if (isHomeViewActive()) updateHomePage();
     await finishOk();
   } catch (e) {
     if (silent) {
@@ -20143,6 +20142,7 @@ async function loadProjections(opts = {}) {
       dataSource = "bundled-demo";
       applyPayload(DEFAULT_PROJECTIONS_PAYLOAD);
       setBootError(`Could not load ${projectionsJsonUrl()} (${e.message || e}). Using bundled demo.`);
+      if (isHomeViewActive()) updateHomePage();
       await finishOk();
     }
   } finally {
