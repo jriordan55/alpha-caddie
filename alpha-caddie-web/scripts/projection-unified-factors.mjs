@@ -17,6 +17,7 @@ import {
   flatVenuePlayerScoreAnchorEnabled,
 } from "./course-round-adjustments.mjs";
 import { projectionExportMeta } from "./projection-export-meta.mjs";
+import { ensureProjectionCoursePar } from "./projection-course-par.mjs";
 import {
   applyWeatherBakedCountsToAllPlayers,
   effectiveWeatherForRow,
@@ -311,11 +312,17 @@ export async function loadPlayerResidualCalibration(csvPath) {
   return out;
 }
 
-function priorRoundStpFromLive(liveBundle, dgId, roundNum) {
+function priorRoundStpFromLive(liveBundle, dgId, roundNum, coursePar18) {
   const data = Array.isArray(liveBundle?.data) ? liveBundle.data : [];
   const row = data.find((r) => Math.round(num(r.dg_id, NaN)) === dgId);
   if (!row) return NaN;
-  const cp = num(liveBundle?.course_par ?? liveBundle?.meta?.course_par, 72);
+  const cp =
+    Math.round(
+      num(
+        coursePar18 ?? liveBundle?.course_par_18 ?? liveBundle?.meta?.course_par_18,
+        NaN,
+      ),
+    ) || 72;
   const key = `R${roundNum}`;
   const gross = num(row[key], NaN);
   if (!Number.isFinite(gross)) return NaN;
@@ -362,7 +369,7 @@ function applyStatShiftsFromWeather(row) {
   }
 }
 
-function applyPlayerResidualToRow(row, residualMap) {
+function applyPlayerResidualToRow(row, residualMap, coursePar18) {
   const w = UNIFIED_FACTOR_WEIGHTS.playerResidual;
   if (w <= 0 || !residualMap?.size) return;
   const dg = Math.round(num(row.dg_id, NaN));
@@ -380,7 +387,7 @@ function applyPlayerResidualToRow(row, residualMap) {
     if (!Number.isFinite(bias)) continue;
     const delta = w * bias * sign;
     if (col === "score_to_par") {
-      applyStrokeShiftToRow(row, delta, row.course_par, [`residual:${market}`]);
+      applyStrokeShiftToRow(row, delta, coursePar18, [`residual:${market}`]);
     } else {
       const v = num(row[col], NaN);
       if (Number.isFinite(v)) row[col] = Math.round((v + delta) * 100) / 100;
@@ -446,6 +453,12 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
   if (!players.length) return { adjusted: 0, meta: { skipped: true, reason: "no_players" } };
 
   const meta = projectionExportMeta(payload);
+  const parEnsure = ensureProjectionCoursePar(payload);
+  if (!parEnsure.ok) {
+    return { adjusted: 0, meta: { skipped: true, reason: parEnsure.reason || "missing_par" } };
+  }
+  const coursePar18 = parEnsure.coursePar18;
+
   const hadWeatherBaked = !!meta?.projection_counts_weather_baked || players.some((p) => p?.weather_counts_baked);
   const restored = restorePreWeatherBaselines(players);
   if (restored > 0) {
@@ -453,7 +466,6 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
   }
   const courseLabel = String(meta.course_used ?? payload.course_used ?? "").trim();
   const courseKey = normCourseNameKey(courseLabel);
-  const coursePar18 = Math.round(num(payload.course_par_18 ?? meta.course_par_18, NaN)) || 72;
 
   const csvPath =
     opts.csvPath ||
@@ -527,14 +539,14 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
 
     if (rnd >= 2 && !flatVenuePlayerScoreAnchorEnabled()) {
       const prior = byDgRound.get(`${dg}|${rnd - 1}`);
-      const priorStpLive = priorRoundStpFromLive(liveBundle, dg, rnd - 1);
+      const priorStpLive = priorRoundStpFromLive(liveBundle, dg, rnd - 1, coursePar18);
       const priorStp = Number.isFinite(priorStpLive) ? priorStpLive : num(prior?.score_to_par, NaN);
       const expected = Number.isFinite(num(prior?.mu_sg, NaN)) ? -num(prior.mu_sg, 0) : num(prior?.score_to_par, NaN);
       let priorPriorStp = NaN;
       let expectedPrior = NaN;
       if (rnd >= 3) {
         const pp = byDgRound.get(`${dg}|${rnd - 2}`);
-        priorPriorStp = priorRoundStpFromLive(liveBundle, dg, rnd - 2);
+        priorPriorStp = priorRoundStpFromLive(liveBundle, dg, rnd - 2, coursePar18);
         if (!Number.isFinite(priorPriorStp)) priorPriorStp = num(pp?.score_to_par, NaN);
         expectedPrior = Number.isFinite(num(pp?.mu_sg, NaN)) ? -num(pp.mu_sg, 0) : num(pp?.score_to_par, NaN);
       }
@@ -569,7 +581,7 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
       }
     }
 
-    applyPlayerResidualToRow(row, residualMap);
+    applyPlayerResidualToRow(row, residualMap, coursePar18);
     if (residualMap.has(`${dg}|Total score`)) factorCounts.player_residual++;
   }
 
@@ -590,6 +602,9 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
   const rec = opts.skipReconcile
     ? null
     : reconcileAllProjectionPlayerRows(payload, {
+        skipMarketBookCalibration: true,
+        skipVenueScoreCalibrate: true,
+        skipHistVenueScoreCalibrate: true,
         ...(opts.reconcileOpts || {}),
       });
 

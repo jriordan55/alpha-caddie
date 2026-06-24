@@ -156,6 +156,11 @@ if (skipFinishTool) {
 run("merge-live-hole-pars-into-projections.mjs", "Merge live hole pars into projections");
 run("sync-bundled-hole-pars-into-projections.mjs", "Bundled course_holes.json → projections when live pars missing/wrong");
 run(
+  "ensure-projection-course-par.mjs",
+  "Lock course_par_18 from hole card + score↔par coherence (before venue repair)",
+  { GOLF_FAIL_ON_PAR_MISMATCH: "1" },
+);
+run(
   "merge-live-round-meta-into-projections.mjs",
   "Merge live round meta into projections (display_round for upcoming round)",
 );
@@ -233,6 +238,15 @@ if (!envTruthy("GOLF_SKIP_MARKET_BOOK_CALIBRATION", false)) {
   run(
     "apply-market-book-calibration.mjs",
     "Apply book-alignment shifts to projections.json for live week",
+  );
+  run(
+    "ensure-projection-course-par.mjs",
+    "Repair score↔par after book calibration",
+    { GOLF_FAIL_ON_PAR_MISMATCH: "1" },
+  );
+  run(
+    "reconcile-projection-counts.mjs",
+    "Reconcile counting stats after book calibration (book cal already applied)",
   );
 }
 

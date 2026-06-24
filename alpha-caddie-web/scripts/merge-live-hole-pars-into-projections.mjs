@@ -64,8 +64,14 @@ proj.course_par_18 = newPar;
 proj.hole_pars_source = "live_hole_stats";
 if (Number.isFinite(oldPar) && oldPar !== newPar) {
   const { rows } = recalcProjectionScoresForCoursePar(proj, newPar, oldPar);
-  reconcileAllProjectionPlayerRows(proj);
+  reconcileAllProjectionPlayerRows(proj, {
+    skipMarketBookCalibration: true,
+    skipVenueScoreCalibrate: true,
+    skipHistVenueScoreCalibrate: true,
+  });
   console.log(`merge-live-hole-pars: course_par ${oldPar} → ${newPar}, recalculated ${rows} row(s)`);
+} else {
+  proj.course_par_18 = newPar;
 }
 writeFileSync(projPath, JSON.stringify(proj, null, 2), "utf8");
 console.log(

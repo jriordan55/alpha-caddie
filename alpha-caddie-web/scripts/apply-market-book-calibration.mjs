@@ -11,6 +11,7 @@ import {
   loadMarketBookCalibration,
   marketBookCalibrationEnabled,
 } from "./market-book-calibration.mjs";
+import { readCoursePar18, repairProjectionScoreParCoherence, syncProjectionPlayerCoursePar } from "./projection-course-par.mjs";
 import { num } from "./round-projection-mu.mjs";
 
 const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -23,19 +24,26 @@ if (!marketBookCalibrationEnabled()) {
 
 const cal = loadMarketBookCalibration(true);
 const proj = JSON.parse(readFileSync(projPath, "utf8"));
-const par = Math.round(num(proj.meta?.course_par ?? proj.course_par, NaN)) || 72;
+const par = readCoursePar18(proj);
+if (!Number.isFinite(par)) {
+  console.error("[apply:market-book-calibration] FAIL: missing course_par_18 / hole_pars — run ensure:projection-course-par first");
+  process.exit(1);
+}
 let n = 0;
 for (const pl of proj.players || []) {
   if (!pl || typeof pl !== "object") continue;
   applyMarketBookCalibrationToRow(pl, par);
   n++;
 }
+syncProjectionPlayerCoursePar(proj, par);
+const { fixed } = repairProjectionScoreParCoherence(proj, par);
 writeFileSync(projPath, `${JSON.stringify(proj, null, 2)}\n`);
 
 const mk = cal.markets || {};
 console.log(
   `[apply:market-book-calibration] Applied to ${n} row(s) from ${cal.fit_method || "calibration"} ` +
-    `(excludes ${cal.excluded_live_event || "n/a"} from fit).`,
+    `(excludes ${cal.excluded_live_event || "n/a"} from fit).` +
+    (fixed ? ` Repaired ${fixed} score↔par row(s).` : ""),
 );
 for (const [market, m] of Object.entries(mk)) {
   console.log(`  ${market}: μ shift ${m.mu_shift}, σ×${m.sigma_scale}`);

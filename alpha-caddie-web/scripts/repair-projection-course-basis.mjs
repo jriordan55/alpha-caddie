@@ -3,7 +3,7 @@
  * Venue total-score repair on projections.json:
  *   1) sanitize stale event-week anchors
  *   2) re-apply per-player venue course history (or course average)
- *   3) calibrate only players without venue history toward historical venue targets
+ *   3) calibrate field total score toward venue_avg_round_score (full field when flat venue)
  *
  *   node scripts/repair-projection-course-basis.mjs
  */
@@ -21,6 +21,7 @@ import {
   reconcileAllProjectionPlayerRows,
   sanitizeEventWeekProjectionBasis,
 } from "./course-round-adjustments.mjs";
+import { ensureProjectionCoursePar } from "./projection-course-par.mjs";
 import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
 
 Object.assign(process.env, flatVenueProjectionPipelineEnv());
@@ -34,11 +35,16 @@ const path = join(WEB, "projections.json");
 const livePath = join(WEB, "live-in-play.json");
 
 const proj = JSON.parse(readFileSync(path, "utf8"));
+const parEnsure = ensureProjectionCoursePar(proj, { failOnMismatch: true });
+if (!parEnsure.ok) {
+  console.error(`[repair-projection-course-basis] FAIL: ${parEnsure.reason}`);
+  process.exit(1);
+}
+const coursePar18 = parEnsure.coursePar18;
+const eventName = String(proj.event_name || "").trim();
 if (!proj.projection_course_basis || typeof proj.projection_course_basis !== "object") {
   proj.projection_course_basis = {};
 }
-const coursePar18 = Math.round(Number(proj.course_par_18)) || 72;
-const eventName = String(proj.event_name || "").trim();
 
 if (sanitizeEventWeekProjectionBasis(proj.projection_course_basis)) {
   console.log("[repair-projection-course-basis] cleared stale event-week field / counting anchors");
@@ -93,6 +99,7 @@ reconcileAllProjectionPlayerRows(proj, {
   venueScoring,
   skipVenueScoreCalibrate: true,
   skipHistVenueScoreCalibrate: true,
+  skipMarketBookCalibration: true,
 });
 const after = proj.projection_course_basis.venue_avg_round_score;
 
@@ -107,14 +114,16 @@ proj.meta.projection_round_adjustments.flat_venue_player_score = flatVenuePlayer
 proj.updated_at = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
 writeFileSync(path, `${JSON.stringify(proj, null, 2)}\n`);
 console.log(
-  `[repair-projection-course-basis] OK venue_avg_round_score ${before ?? "—"} (target); calibrated ${cal.rounds} round(s) for non-venue-history players; field venue anchor ${histCal.rounds} round(s)`,
+  `[repair-projection-course-basis] OK venue_avg_round_score ${before ?? "—"} (target); calibrated ${cal.rounds} round(s) toward course avg; field venue anchor ${histCal.rounds} round(s)`,
 );
 if (cal.rounds || histCal.rounds) {
   for (const [rnd, shift] of Object.entries(histCal.shifts || {})) {
     console.log(`  R${rnd}: field venue anchor shift ${shift >= 0 ? "+" : ""}${shift} (all players)`);
   }
   for (const [rnd, shift] of Object.entries(cal.shifts || {})) {
-    console.log(`  R${rnd}: total_score shift ${shift >= 0 ? "+" : ""}${shift} (no-history cohort only)`);
+    console.log(
+      `  R${rnd}: total_score shift ${shift >= 0 ? "+" : ""}${shift} (${flatVenuePlayerScoreAnchorEnabled() ? "full field" : "no-history cohort"})`,
+    );
   }
 }
 

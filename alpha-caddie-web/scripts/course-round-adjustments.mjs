@@ -931,6 +931,11 @@ export function flatVenuePlayerScoreAnchorEnabled() {
   return envOn("GOLF_FLAT_VENUE_PLAYER_SCORE", true);
 }
 
+/** Max blend toward personal venue history when flat venue is on; rest is course-average skill anchor. */
+export function flatVenueMaxPlayerVenueWeight() {
+  return clamp(envNum("GOLF_FLAT_VENUE_MAX_PLAYER_SCORE_WEIGHT", 0.38), 0.08, 0.72);
+}
+
 /** Venue CSV year window — include prior US Opens / setups (not only the latest ~8 seasons). */
 function venueHistoryMinYear(calendarYear) {
   const cy = Math.round(num(calendarYear, new Date().getFullYear()));
@@ -2043,9 +2048,12 @@ export function calibrateProjectionTotalScoreToVenue(payload, opts = {}) {
     }
     if (rows.length < minField) continue;
 
-    const calRows = venueScoring
-      ? rows.filter((pl) => !playerHasVenueCourseHistory(pl.dg_id, rnd, venueScoring, minPlayerRounds))
-      : rows;
+    const flatVenue = flatVenuePlayerScoreAnchorEnabled();
+    const calRows = flatVenue
+      ? rows
+      : venueScoring
+        ? rows.filter((pl) => !playerHasVenueCourseHistory(pl.dg_id, rnd, venueScoring, minPlayerRounds))
+        : rows;
     if (calRows.length < Math.min(minField, 8)) continue;
 
     const cur = meanFinite(calRows.map((pl) => num(pl.total_score, NaN)));
@@ -2855,6 +2863,7 @@ export function resolveProjectionScoreToPar({
       : Math.max(playerAgg.n || 0, pr?.n || 0, pv?.n || 0);
     let wPlayer = Math.min(0.92, 0.66 + 0.055 * Math.max(0, nEff - minPlayerRounds));
     if (nEff >= 8) wPlayer = Math.min(0.94, wPlayer + 0.04);
+    if (flatVenue) wPlayer = Math.min(wPlayer, flatVenueMaxPlayerVenueWeight());
     const stp = wPlayer * playerStp + (1 - wPlayer) * skillRes.stp;
     return {
       stp: Math.round(stp * 1000) / 1000,

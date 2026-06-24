@@ -6,6 +6,7 @@ import { existsSync, readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { normCourseNameKey } from "./course-name-key.mjs";
+import { readCoursePar18 } from "./projection-course-par.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -77,7 +78,7 @@ const parFromHoles =
   Array.isArray(holePars) && holePars.length === 18
     ? holePars.reduce((s, p) => s + Math.round(num(p, 4)), 0)
     : NaN;
-const coursePar = Math.round(num(proj.course_par_18, parFromHoles));
+const coursePar = Math.round(num(readCoursePar18(proj), parFromHoles));
 const parSource = String(proj.hole_pars_source || "").trim().toLowerCase();
 const courseKey = normCourseNameKey(String(proj.course_used || "").trim());
 
@@ -102,6 +103,18 @@ if (courseKey.includes("shinnecock") && coursePar !== 70) {
 const displayRound = Math.round(num(proj.display_round ?? proj.datagolf_field_current_round, NaN)) || 1;
 const roundRows = players.filter((p) => Math.round(num(p.round, NaN)) === displayRound);
 if (!roundRows.length) fail(`no player rows for display round R${displayRound}`);
+
+const parBad = roundRows.filter((p) => {
+  const stp = num(p.score_to_par, NaN);
+  const ts = num(p.total_score, NaN);
+  if (!Number.isFinite(stp) || !Number.isFinite(ts)) return true;
+  return Math.abs(ts - (coursePar + stp)) > 0.05;
+});
+if (parBad.length) {
+  fail(
+    `${parBad.length}/${roundRows.length} R${displayRound} rows have total_score ≠ par+score_to_par (e.g. ${parBad[0]?.player_name || "?"} ts=${parBad[0]?.total_score} stp=${parBad[0]?.score_to_par}) — run npm run ensure:projection-course-par`,
+  );
+}
 
 const basis = proj.projection_course_basis || proj.meta?.projection_course_basis || {};
 const venueBird = num(basis.venue_avg_birdies, 3.2);
