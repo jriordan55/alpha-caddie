@@ -174,60 +174,6 @@ export function girFromRatesAndSg(opts = {}) {
   return Math.round(clamp(gir, 6, 16) * 100) / 100;
 }
 
-/** Anchor DG fairway rate to course layout + venue (elite fields inflate vs narrow courses). */
-function fairwayAnchorRate01(opts = {}) {
-  const nFw = Math.round(num(opts.nFairwayHoles, 14)) || 14;
-  const venueRate = clamp(num(opts.venueFairways, 9) / nFw, 0.35, 0.75);
-  const courseRate = num(opts.courseFairwayRate01, NaN);
-  if (Number.isFinite(courseRate)) {
-    return clamp(0.35 * venueRate + 0.65 * clamp(courseRate, 0.35, 0.75), 0.35, 0.75);
-  }
-  return venueRate;
-}
-
-/** Field-mean calibration target: course-table driving accuracy × FW holes when available. */
-export function fairwayCalibrationTargetMean(opts = {}) {
-  const nFw = Math.round(num(opts.nFairwayHoles, 14)) || 14;
-  const venue = num(opts.venueAvgFairways, NaN);
-  const courseCount = num(opts.courseFairwayRate01, NaN) * nFw;
-  if (Number.isFinite(courseCount)) {
-    let t = courseCount;
-    // Venue CSV avg often runs hot vs actual event FW counts; nudge toward historical pace.
-    if (Number.isFinite(venue) && venue - courseCount >= 0.15) {
-      t = courseCount - 0.14;
-    }
-    return Math.round(Math.max(8.5, t) * 100) / 100;
-  }
-  return venue;
-}
-
-/** Shift fairways so field mean matches course/venue target (preserves player spread). */
-export function calibrateFairwayFieldMean(players, opts = {}) {
-  const round = opts.round;
-  const target = fairwayCalibrationTargetMean(opts);
-  const nFw = Math.round(num(opts.nFairwayHoles, 14)) || 14;
-  const cap = nFw + 0.5;
-  const minDelta = num(opts.minDelta, 0.1);
-  if (!Number.isFinite(target)) return 0;
-
-  const rows = (players || []).filter((p) => {
-    if (Number.isFinite(round) && Math.round(num(p.round, NaN)) !== round) return false;
-    return Number.isFinite(num(p.fairways, NaN));
-  });
-  if (rows.length < 8) return 0;
-
-  const mean = rows.reduce((s, p) => s + num(p.fairways, 0), 0) / rows.length;
-  const delta = mean - target;
-  if (Math.abs(delta) < minDelta) return 0;
-
-  for (const p of rows) {
-    const fw = num(p.fairways, NaN);
-    if (!Number.isFinite(fw)) continue;
-    p.fairways = Math.round(clamp(fw - delta, 2, cap) * 100) / 100;
-  }
-  return rows.length;
-}
-
 /** Fairways count from DG accuracy% + SG:OTT (no score fallback). */
 export function fairwaysFromRatesAndSg(opts = {}) {
   const mu = num(opts.muSg, 0);
@@ -250,22 +196,12 @@ export function fairwaysFromRatesAndSg(opts = {}) {
   }
   if (!Number.isFinite(rate01)) rate01 = clamp(venueFw / nFw, 0.35, 0.75);
 
-  const anchor = fairwayAnchorRate01({
-    nFairwayHoles: nFw,
-    venueFairways: venueFw,
-    courseFairwayRate01: num(opts.courseFairwayRate01, NaN),
-  });
-  const spreadKeep = num(opts.fairwayCourseSpreadKeep, 0.24);
-  if (Number.isFinite(rate01) && Number.isFinite(anchor)) {
-    rate01 = anchor + spreadKeep * (rate01 - anchor);
-  }
-
   let fairways = fairwayHitsFromRate01(rate01, nFw);
   if (Number.isFinite(sk.avg_fairways, NaN) && nHist >= 4) {
     fairways = histBlend(sk.avg_fairways, fairways, nHist, 16);
   }
   const dOtt = sgDelta(sk, opts.fieldMeans || {}, "sg_ott");
-  fairways += 0.22 * dOtt + 0.025 * mu;
+  fairways += 0.48 * dOtt + 0.05 * mu;
   return Math.round(clamp(fairways, 2, nFw + 0.5) * 100) / 100;
 }
 
@@ -329,8 +265,6 @@ export function derivedStatsFromRatesAndSg(muRaw, nFairwayHoles, opts = {}) {
     fieldMeans,
     nFairwayHoles,
     venueFairways: opts.venueFairways,
-    courseFairwayRate01: opts.courseFairwayRate01,
-    fairwayCourseSpreadKeep: opts.fairwayCourseSpreadKeep,
   });
 
   const putts = puttsFromRatesAndSg({
