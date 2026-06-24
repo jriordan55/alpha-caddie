@@ -944,6 +944,28 @@ function venueHistoryMinYear(calendarYear) {
 }
 
 /**
+ * Optional year allow-list for venue CSV (e.g. 2024 Travelers when expecting easy scoring).
+ * GOLF_VENUE_HIST_YEARS=2024 or auto [2024] for TPC River Highlands unless GOLF_VENUE_USE_TRAVELERS_2024_ANCHOR=0.
+ */
+export function venueHistoryYearAllowList(courseKeyOpt, courseLabelOpt) {
+  const env = String(process.env.GOLF_VENUE_HIST_YEARS ?? "").trim();
+  if (env) {
+    const years = env
+      .split(/[,;\s]+/)
+      .map((s) => parseInt(s, 10))
+      .filter((y) => Number.isFinite(y));
+    if (years.length) return years;
+  }
+  const ck = courseKeyOpt ? normCourseNameKey(courseKeyOpt) : "";
+  const label = normCourseNameKey(courseLabelOpt || "");
+  const key = ck || label;
+  if (key === normCourseNameKey("tpc river highlands") && envOn("GOLF_VENUE_USE_TRAVELERS_2024_ANCHOR", true)) {
+    return [2024];
+  }
+  return null;
+}
+
+/**
  * Round-bucket venue mean shrunk toward full-course historical average.
  * Dampens noisy R1/R4 spikes (e.g. 2018 Shinnecock R1 +6.5 vs venue +4.4 all-years).
  */
@@ -1251,6 +1273,9 @@ export function syncVenueScoringToProjectionBasis(basis, venueScoring, coursePar
     basis.venue_historical_rounds = venueScoring.nVenueRounds;
   }
   if (venueScoring.source) basis.venue_scoring_source = venueScoring.source;
+  if (Array.isArray(venueScoring.scoringYears) && venueScoring.scoringYears.length) {
+    basis.venue_scoring_years = venueScoring.scoringYears;
+  }
   for (const [k, srcKey] of [
     ["venue_avg_birdies", "venueAvgBirdies"],
     ["venue_avg_pars", "venueAvgPars"],
@@ -1293,6 +1318,7 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
   }
 
   const cy = new Date().getFullYear();
+  const yearAllow = venueHistoryYearAllowList(ckWant, courseLabelOpt);
   const nFairwayHoles = Math.max(
     10,
     Math.min(16, Math.round(num(process.env.GOLF_VENUE_HIST_N_FAIRWAY_HOLES, 14))),
@@ -1327,8 +1353,12 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
       const ckRow = normCourseNameKey(row.course_name || row.Course_Name || "");
       if (!ckRow || ckRow !== ckWant) return;
       const yr = parseInt(row.year, 10);
-      const minYr = venueHistoryMinYear(cy);
-      if (Number.isFinite(yr) && (yr < minYr || yr > cy + 1)) return;
+      if (yearAllow?.length) {
+        if (!Number.isFinite(yr) || !yearAllow.includes(yr)) return;
+      } else {
+        const minYr = venueHistoryMinYear(cy);
+        if (Number.isFinite(yr) && (yr < minYr || yr > cy + 1)) return;
+      }
       ingestVenueHistoryRow(row, ctx, nFairwayHoles);
     });
     parser.on("end", resolve);
@@ -1358,7 +1388,12 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
 
   const venueAgg = finalizeVenueAgg(venueTotals);
   let venueAvgStp = venueAgg.n >= 40 ? venueAgg.avgStp : NaN;
-  let source = venueAgg.n >= 40 ? "historical_csv" : "none";
+  let source =
+    venueAgg.n >= 40
+      ? yearAllow?.length
+        ? `historical_csv_y${yearAllow.join("_")}`
+        : "historical_csv"
+      : "none";
   if (extraAdded > 0) {
     source = source === "historical_csv" ? "historical_csv+recent" : source === "none" ? "recent_live" : source;
   }
@@ -1375,6 +1410,7 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
     venueAvgScore: venueAgg.n >= 40 ? venueAgg.avgScore : NaN,
     nVenueRounds: venueAgg.n,
     source,
+    scoringYears: yearAllow?.length ? yearAllow : null,
     venueAvgBirdies: venueAgg.avgBirdies,
     venueAvgPars: venueAgg.avgPars,
     venueAvgBogeys: venueAgg.avgBogeys,

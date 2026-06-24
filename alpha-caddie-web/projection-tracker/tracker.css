@@ -589,3 +589,38 @@ a { color: var(--green); }
   .bar-row { grid-template-columns: 90px 1fr 56px; }
   .main { padding: 16px; }
 }
+
+.live-picks-table th,
+.live-picks-table td {
+  font-size: 0.82rem;
+}
+.live-picks-table td.live-picks-context {
+  white-space: normal;
+  min-width: 9rem;
+  max-width: 16rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.live-picks-row {
+  cursor: pointer;
+}
+.live-picks-row:hover td {
+  background: rgba(255, 255, 255, 0.04);
+}
+.live-picks-tag {
+  display: inline-block;
+  margin: 0 4px 2px 0;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--green);
+  font-size: 0.74rem;
+}
+.live-picks-tag.warn {
+  background: rgba(248, 113, 113, 0.12);
+  color: var(--red);
+}
+.live-picks-empty {
+  padding: 12px 8px;
+  color: var(--muted);
+}

@@ -15,6 +15,7 @@ import {
   pnlForResult,
 } from "./ev-math.mjs";
 import { buildEdgeSignalInsights } from "./edge-signal-insights.mjs";
+import { buildLiveBestBets, loadLiveBestBetsContext, invalidateLiveBestBetsCache } from "./live-best-bets.mjs";
 
 const RISK_STORAGE_KEY = "alphaCaddie_projection_tracker_risk_v1";
 
@@ -57,6 +58,9 @@ let DETAIL_ROWS = [];
 
 /** @type {object | null} */
 let OOS_REPORT = null;
+
+/** @type {Awaited<ReturnType<typeof loadLiveBestBetsContext>> | null} */
+let LIVE_CTX = null;
 
 const OOS_JSON_URL = "../data/walkforward_oos_roi.json";
 
@@ -977,7 +981,8 @@ function overviewLineRows() {
 
 function renderOverview() {
   const lines = overviewLineRows();
-  const evAgg = aggregateEvByMarketSide(evRowsAtMinEdge(undefined, { bettableOnly: false }));
+  const evRows = evRowsAtMinEdge(undefined, { bettableOnly: false });
+  const evAgg = aggregateEvByMarketSide(evRows);
   const totalUnits = evAgg.reduce((s, a) => s + a.units, 0);
   const totalBets = evAgg.reduce((s, a) => s + a.bets, 0);
   const totalScore = lines.find((r) => r.market === "Total score");
@@ -1025,7 +1030,7 @@ function renderOverview() {
 
   renderBarChart(
     document.getElementById("overview-roi-chart"),
-    bestEvPerMarket(ev).map((a) => ({ market: `${a.market} (${a.side})`, roi: a.roi })),
+    bestEvPerMarket(evRows).map((a) => ({ market: `${a.market} (${a.side})`, roi: a.roi })),
     { valueKey: "roi", format: (v) => fmtPct(v) },
   );
   renderHonestOos();
@@ -1330,6 +1335,86 @@ function selectTournament(name) {
   renderAll();
 }
 
+function renderLivePicks() {
+  const card = document.getElementById("live-picks-card");
+  const tbody = document.getElementById("live-picks-tbody");
+  const titleEl = document.getElementById("live-picks-title");
+  const noteEl = document.getElementById("live-picks-note");
+  if (!card || !tbody) return;
+
+  if (!LIVE_CTX?.projections) {
+    card.hidden = false;
+    if (titleEl) titleEl.textContent = "Best bets — live week";
+    if (noteEl) noteEl.textContent = "Could not load projections.json — run npm run refresh:live or npm start in alpha-caddie-web.";
+    tbody.innerHTML = `<tr><td colspan="10" class="live-picks-empty">No live projections available.</td></tr>`;
+    return;
+  }
+
+  const built = buildLiveBestBets({
+    projections: LIVE_CTX.projections,
+    oos: LIVE_CTX.oos || OOS_REPORT,
+    signals: LIVE_CTX.signals,
+    courseRow: LIVE_CTX.courseRow,
+    minEvPct: state.minEv,
+  });
+
+  card.hidden = false;
+  if (titleEl) {
+    titleEl.textContent = `Best bets — ${built.roundLabel}${built.eventName ? ` · ${built.eventName}` : ""}`;
+  }
+  const oosRoi = num((LIVE_CTX.oos || OOS_REPORT)?.combined_oos_at_5pct?.roi_pct, NaN);
+  const oosN = Math.round(num((LIVE_CTX.oos || OOS_REPORT)?.combined_oos_at_5pct?.bets, NaN)) || 0;
+  if (noteEl) {
+    const venue = built.venueNote ? ` ${built.venueNote}.` : "";
+    noteEl.textContent =
+      `Upcoming round picks from projections.json (${built.updatedAt ? `updated ${new Date(built.updatedAt).toLocaleString()}` : "live"}).${venue}` +
+      ` Ranked by model EV vs DK, walk-forward OOS market ROI` +
+      (Number.isFinite(oosRoi) ? ` (+${oosRoi.toFixed(1)}% on ${oosN} OOS bets @ 5%)` : "") +
+      `, and historical context signals. Uses toolbar Min EV %.`;
+  }
+
+  if (!built.picks.length) {
+    tbody.innerHTML = `<tr><td colspan="10" class="live-picks-empty">No picks at ≥${state.minEv}% EV for ${built.roundLabel} — lower Min EV or refresh DK props.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = built.picks
+    .map((p, i) => {
+      const hist =
+        Number.isFinite(p.histRoi) && p.histBets > 0
+          ? `${p.histRoi >= 0 ? "+" : ""}${p.histRoi.toFixed(1)}%`
+          : "—";
+      const edgeCls = p.edgePct > 0 ? "pos" : p.edgePct < 0 ? "neg" : "";
+      const tags = (p.contextTags || [])
+        .map((t) => {
+          const warn = String(t).startsWith("fade") || String(t).includes("% -");
+          return `<span class="live-picks-tag${warn ? " warn" : ""}">${esc(t)}</span>`;
+        })
+        .join("");
+      return `<tr class="live-picks-row" data-player="${esc(p.player_name)}" data-market="${esc(p.market)}" data-side="${esc(p.side)}">
+        <td class="num">${i + 1}</td>
+        <td>${esc(p.player_name)}</td>
+        <td>${esc(p.market)}</td>
+        <td class="num">${p.side === "over" ? "Over" : "Under"}</td>
+        <td class="num">${Number.isFinite(p.line) ? p.line : "—"}</td>
+        <td class="num">${esc(formatAmerican(p.odds))}</td>
+        <td class="num ${edgeCls}">${p.edgePct >= 0 ? "+" : ""}${p.edgePct.toFixed(1)}%</td>
+        <td class="num" title="${p.histBets ? `${p.histBets} OOS bets` : ""}">${hist}</td>
+        <td class="live-picks-context">${tags || '<span class="muted">—</span>'}</td>
+        <td class="num">${p.score.toFixed(1)}</td>
+      </tr>`;
+    })
+    .join("");
+}
+
+function esc(s) {
+  return String(s ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 function renderAll() {
   renderHeader();
   renderOverview();
@@ -1339,6 +1424,7 @@ function renderAll() {
   renderRisk();
   renderEvents();
   buildInsights();
+  renderLivePicks();
 }
 
 function setTab(name) {
@@ -1425,6 +1511,8 @@ async function loadData() {
     ALL_ROWS = parseCsv(summaryText);
     if (!ALL_ROWS.length) throw new Error("Summary CSV is empty");
     DETAIL_ROWS = detailText ? parseCsv(detailText) : [];
+    invalidateLiveBestBetsCache();
+    LIVE_CTX = await loadLiveBestBetsContext();
     populateTournamentSelect();
     populateMarketFilter();
     renderAll();
@@ -1473,11 +1561,29 @@ function bindUi() {
     el.addEventListener("change", syncRiskFromForm);
   }
   document.getElementById("btn-reload").addEventListener("click", loadData);
+  document.getElementById("live-picks-tbody")?.addEventListener("click", (ev) => {
+    const tr = ev.target.closest("tr.live-picks-row");
+    if (!tr) return;
+    const player = tr.dataset.player || "";
+    const market = tr.dataset.market || "";
+    const side = tr.dataset.side || "";
+    const pIn = document.getElementById("filter-player");
+    const mSel = document.getElementById("filter-market");
+    const sSel = document.getElementById("filter-side");
+    if (pIn && player) pIn.value = player;
+    if (mSel && market) mSel.value = market;
+    if (sSel && side) sSel.value = side;
+    state.market = market;
+    state.side = side;
+    state.player = player;
+    setTab("bets");
+    renderAll();
+  });
 }
 
 bindUi();
 const initialTab = String(location.hash || "").replace(/^#/, "");
-if (["overview", "accuracy", "ev", "bets", "risk", "events", "insights", "guide"].includes(initialTab)) {
+if (["overview", "accuracy", "ev", "bets", "risk", "events", "insights", "picks", "guide"].includes(initialTab)) {
   setTab(initialTab);
 }
 
