@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-24T03:49:03.925Z",
+  "generated_at": "2026-06-24T21:01:57.871Z",
   "fit_method": "book_alignment_no_outcome_peek",
   "min_ev_pct": 5,
   "excluded_live_event": "Travelers Championship",
@@ -13,52 +13,38 @@
   ],
   "walkforward_oos": {
     "events": 5,
-    "bets": 1916,
-    "units": 553.57,
-    "roi_pct": 28.9
+    "bets": 1625,
+    "units": 101.78,
+    "roi_pct": 6.3
   },
   "markets": {
     "Total score": {
-      "mu_shift": -0.469,
+      "mu_shift": 0.158,
       "sigma_scale": 1.32,
       "n_fit": 809,
-      "model_book_delta": 0.498,
-      "model_book_rmse": 4.909
+      "model_book_delta": -0.168,
+      "model_book_rmse": 4.744
     },
     "Birdies": {
-      "mu_shift": -0.417,
-      "sigma_scale": 1.127,
+      "mu_shift": 0.882,
+      "sigma_scale": 1.179,
       "n_fit": 963,
-      "model_book_delta": 0.439,
-      "model_book_rmse": 1.619
-    },
-    "Bogeys": {
-      "mu_shift": 0.233,
-      "sigma_scale": 1.107,
-      "n_fit": 490,
-      "model_book_delta": -0.257,
-      "model_book_rmse": 1.323
+      "model_book_delta": -0.927,
+      "model_book_rmse": 1.935
     },
     "GIR": {
-      "mu_shift": 0.942,
+      "mu_shift": 0.295,
       "sigma_scale": 1.109,
       "n_fit": 466,
-      "model_book_delta": -1.043,
-      "model_book_rmse": 1.865
+      "model_book_delta": -0.326,
+      "model_book_rmse": 1.867
     },
     "Fairways hit": {
-      "mu_shift": 0.709,
-      "sigma_scale": 1.082,
-      "n_fit": 514,
-      "model_book_delta": -0.778,
-      "model_book_rmse": 1.589
-    },
-    "Pars": {
-      "mu_shift": 0.175,
+      "mu_shift": 0.543,
       "sigma_scale": 1.08,
-      "n_fit": 489,
-      "model_book_delta": -0.193,
-      "model_book_rmse": 1.404
+      "n_fit": 514,
+      "model_book_delta": -0.596,
+      "model_book_rmse": 1.434
     }
   }
 }

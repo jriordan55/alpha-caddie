@@ -3549,7 +3549,6 @@ function ouCourseRatingTitle(market, venueVal) {
 const OU_PROJECTION_MARKETS = Object.freeze([
   { market: "Total score", label: "Round score" },
   { market: "Birdies", label: "Birdies" },
-  { market: "Pars", label: "Pars" },
   { market: "Bogeys", label: "Bogeys" },
   { market: "GIR", label: "GIR" },
   { market: "Fairways hit", label: "Fairways" },
@@ -6914,7 +6913,7 @@ function buildOuProjDetailPanel(player, col, side, mu, pick, rawName) {
   addM("Implied μ SG", Number.isFinite(num(player.implied_mu_sg, NaN)) ? num(player.implied_mu_sg).toFixed(3) : "—");
   addM("Score to par", Number.isFinite(num(player.score_to_par, NaN)) ? num(player.score_to_par).toFixed(2) : "—");
   addM("Weather", formatEffectiveWeatherLine(player));
-  addM("Pricing", PRICING_STATE.mode + (PRICING_STATE.mode === "skill" ? ` · ${PRICING_STATE.skill}` : ""));
+  addM("Pricing", "course adaptive");
   if (pick && Number.isFinite(pick.line)) {
     addM("Book line", String(pick.line));
     const nv = propsNoVigOverProb(pick.over, pick.under);
@@ -10080,6 +10079,156 @@ function courseFitPlayerCourseFitRaw(row, ctRow) {
     fit += 0.002 * (dist - num(ctRow.adj_driving_distance, 0));
   }
   return fit;
+}
+
+  return fit;
+}
+
+const ADAPTIVE_SG_KEYS = ["sg_ott", "sg_app", "sg_arg", "sg_putt"];
+const ADAPTIVE_CT_COEFF = { sg_ott: "ott_sg", sg_app: "app_sg", sg_arg: "arg_sg", sg_putt: "putt_sg" };
+
+function courseRequirementSgWeights(ctRow) {
+  const raw = {};
+  let sum = 0;
+  for (const sk of ADAPTIVE_SG_KEYS) {
+    const coeff = num(ctRow?.[ADAPTIVE_CT_COEFF[sk]], 0);
+    const w = Math.max(0, coeff);
+    raw[sk] = w;
+    sum += w;
+  }
+  if (sum < 1e-6) {
+    return { sg_ott: 0.25, sg_app: 0.25, sg_arg: 0.25, sg_putt: 0.25 };
+  }
+  const out = {};
+  for (const sk of ADAPTIVE_SG_KEYS) out[sk] = raw[sk] / sum;
+  return out;
+}
+
+function courseTablePlayerMuNudge(playerRow, ctRow, weight = 0.14) {
+  if (!ctRow || !playerRow) return 0;
+  const m = mergedPlayerRowForDrivingFields(playerRow);
+  let fit =
+    num(m.sg_putt, 0) * num(ctRow.putt_sg, 0) +
+    num(m.sg_arg, 0) * num(ctRow.arg_sg, 0) +
+    num(m.sg_app, 0) * num(ctRow.app_sg, 0) +
+    num(m.sg_ott, 0) * num(ctRow.ott_sg, 0);
+  return clamp(-fit * weight, -0.32, 0.32);
+}
+
+function courseWeightedSkillFormBonus(rounds, ctRow, dgId, modelRound) {
+  const weights = courseRequirementSgWeights(ctRow);
+  const nRec = Math.min(8, Math.max(3, Math.floor((rounds?.length || 0) / 2)));
+  const recent = rounds.slice(0, nRec);
+  const older = rounds.slice(nRec, Math.min(rounds.length, nRec + 24));
+  let formSum = 0;
+  let formW = 0;
+  for (const sk of ADAPTIVE_SG_KEYS) {
+    const w = weights[sk];
+    if (w < 0.02) continue;
+    const rMean = meanNumFromRounds(recent, sk);
+    const oMean = meanNumFromRounds(older, sk);
+    if (Number.isFinite(rMean) && Number.isFinite(oMean)) {
+      formSum += w * (rMean - oMean);
+      formW += w;
+    }
+  }
+  let out = formW > 0 ? clamp((formSum / formW) * 0.82, -0.38, 0.38) : 0;
+  if (Math.abs(out) < 0.04) {
+    const topSk = ADAPTIVE_SG_KEYS.reduce((best, sk) => (weights[sk] > weights[best] ? sk : best), "sg_app");
+    const fb = projectionSkillFocusNudgeFromField(dgId, topSk);
+    if (Number.isFinite(fb) && fb !== 0) out = clamp(fb * (weights[topSk] + 0.35), -0.28, 0.28);
+  }
+  const row = DATA?.players?.find(
+    (p) => Math.round(num(p.dg_id)) === dgId && Math.round(num(p.round)) === modelRound,
+  );
+  return clamp(out + courseTablePlayerMuNudge(row, ctRow, 0.1), -0.42, 0.42);
+}
+
+function recentFormMuBonusAdaptive(rounds) {
+  const nRec = Math.min(6, Math.max(3, Math.floor(rounds.length / 2)));
+  const recent = rounds.slice(0, nRec);
+  const older = rounds.slice(nRec, Math.min(rounds.length, nRec + 18));
+  let rMean = meanNumFromRounds(recent, "sg_total");
+  let oMean = meanNumFromRounds(older, "sg_total");
+  if (Number.isFinite(rMean) && Number.isFinite(oMean)) return clamp((rMean - oMean) * 0.9, -0.35, 0.35);
+  rMean = meanNumFromRounds(recent, "round_score");
+  oMean = meanNumFromRounds(older, "round_score");
+  if (Number.isFinite(rMean) && Number.isFinite(oMean)) return clamp(((oMean - rMean) / 6) * 0.85, -0.35, 0.35);
+  return 0;
+}
+
+function courseHistoryMuBonusAdaptive(rounds, venueName) {
+  if (!venueName || !rounds?.length) return { bonus: 0, venueRounds: 0 };
+  const here = rounds.filter((r) => courseNameMatchesVenue(r.course_name, venueName));
+  if (here.length < 2) return { bonus: 0, venueRounds: here.length };
+  const other = rounds.filter((r) => !courseNameMatchesVenue(r.course_name, venueName));
+  const hMean = meanNumFromRoundsRecencyWeighted(here, "sg_total", 0.84);
+  const oMean = meanNumFromRoundsRecencyWeighted(other.length ? other : rounds, "sg_total", 0.9);
+  if (Number.isFinite(hMean) && Number.isFinite(oMean)) {
+    return { bonus: clamp((hMean - oMean) * 1.05, -0.42, 0.42), venueRounds: here.length };
+  }
+  return { bonus: 0, venueRounds: here.length };
+}
+
+function blendAdaptiveMuSgBonus(recent, course, skill, venueRounds) {
+  let wRecent = 0.36;
+  let wCourse = 0.28;
+  let wSkill = 0.36;
+  if (venueRounds >= 4) {
+    wCourse = 0.34;
+    wRecent = 0.3;
+  } else if (venueRounds < 2) {
+    wCourse = 0.1;
+    wRecent = 0.34;
+    wSkill = 0.56;
+  }
+  return clamp(wRecent * recent + wCourse * course + wSkill * skill, -0.32, 0.32);
+}
+
+function courseWeightedMarketMuNudge(market, dgId) {
+  const vk = normCourseNameKey(venueCourseName());
+  const ctRow = resolveCourseTableRowForNormKey(vk);
+  if (!ctRow) return 0;
+  const modelRound = Math.round(num(DATA?.display_round ?? DATA?.meta?.display_round, 1)) || 1;
+  const row = DATA?.players?.find(
+    (p) => Math.round(num(p.dg_id)) === dgId && Math.round(num(p.round)) === modelRound,
+  );
+  if (!row) return 0;
+  const weights = courseRequirementSgWeights(ctRow);
+  const fieldMedian = (sk) => {
+    const vals = [];
+    for (const p of DATA?.players || []) {
+      if (Math.round(num(p.round)) !== modelRound) continue;
+      const x = num(p[sk], NaN);
+      if (Number.isFinite(x)) vals.push(x);
+    }
+    if (vals.length < 8) return NaN;
+    vals.sort((a, b) => a - b);
+    const mid = Math.floor(vals.length / 2);
+    return vals.length % 2 === 1 ? vals[mid] : (vals[mid - 1] + vals[mid]) / 2;
+  };
+  if (market === "Total score") {
+    return clamp(-courseTablePlayerMuNudge(row, ctRow, 0.22) * 1.05, -1.4, 1.4);
+  }
+  let sk = null;
+  let scale = 0;
+  if (market === "GIR") {
+    sk = "sg_app";
+    scale = 0.42 * (weights.sg_app + 0.25);
+  } else if (market === "Fairways hit") {
+    sk = "sg_ott";
+    scale = 0.35 * (weights.sg_ott + 0.2);
+  } else if (market === "Birdies") {
+    sk = weights.sg_app >= weights.sg_putt ? "sg_app" : "sg_putt";
+    scale = 0.38 * (weights.sg_app + weights.sg_putt);
+  } else if (market === "Putts") {
+    sk = "sg_putt";
+    scale = 0.4 * (weights.sg_putt + 0.2);
+  } else return 0;
+  const med = fieldMedian(sk);
+  const v = num(row[sk], NaN);
+  if (!Number.isFinite(med) || !Number.isFinite(v)) return 0;
+  return clamp((v - med) * scale, -1.6, 1.6);
 }
 
 /** Field z-scores per radar axis (player skill) + venue-weighted course rating for the ratings table. */
@@ -16632,12 +16781,25 @@ function pricingModeMuSgBonusForMode(dgId, modeRaw, skillRaw = PRICING_STATE.ski
   const venueKey = mode === "course" ? normCourseNameKey(venueCourseName()) : "";
   const cacheKey = `${id}|${mode}|${skillKey}|${venueKey}`;
   if (PRICING_MU_BONUS_CACHE.has(cacheKey)) return PRICING_MU_BONUS_CACHE.get(cacheKey) || 0;
-  if (mode === "default") {
-    const recent = pricingModeMuSgBonusForMode(id, "recent", skillRaw);
-    const course = pricingModeMuSgBonusForMode(id, "course", skillRaw);
-    const skill = pricingModeMuSgBonusForMode(id, "skill", skillRaw);
-    // Blended default: combine all modes, but keep magnitude below specialized modes.
-    const out = clamp(0.4 * recent + 0.25 * course + 0.35 * skill, -0.28, 0.28);
+  if (mode === "default" || mode === "adaptive") {
+    const rounds = historyRoundsChronoNewestFirst(id);
+    const vk = normCourseNameKey(venueCourseName());
+    const ctRow = resolveCourseTableRowForNormKey(vk);
+    const modelRound = Math.round(num(DATA?.display_round ?? DATA?.meta?.display_round, 1)) || 1;
+    let recent = 0;
+    let course = 0;
+    let skill = 0;
+    let venueRounds = 0;
+    if (rounds.length >= 4) {
+      recent = recentFormMuBonusAdaptive(rounds);
+      const ch = courseHistoryMuBonusAdaptive(rounds, venueCourseName());
+      course = ch.bonus;
+      venueRounds = ch.venueRounds;
+      skill = courseWeightedSkillFormBonus(rounds, ctRow, id, modelRound);
+    } else {
+      skill = courseWeightedSkillFormBonus([], ctRow, id, modelRound);
+    }
+    const out = blendAdaptiveMuSgBonus(recent, course, skill, venueRounds);
     PRICING_MU_BONUS_CACHE.set(cacheKey, out);
     return out;
   }
@@ -16747,7 +16909,9 @@ function effectiveMuSg(row, dgIdOpt, matchupMarketKind) {
 }
 
 function pricingCourseVenueStatMuNudge(market, dgId) {
-  if (String(PRICING_STATE.mode || "").toLowerCase() !== "course") return 0;
+  const mode = String(PRICING_STATE.mode || "default").toLowerCase();
+  if (mode !== "default" && mode !== "adaptive" && mode !== "course") return 0;
+  const strength = mode === "course" ? 1 : 0.62;
   const id = Math.round(num(dgId, NaN));
   if (!Number.isFinite(id)) return 0;
   const vn = venueCourseName();
@@ -16761,13 +16925,13 @@ function pricingCourseVenueStatMuNudge(market, dgId) {
   const broadAvg = meanNumFromRoundsRecencyWeightedStat(rounds, statKey, 0.9);
   if (!Number.isFinite(venueAvg) || !Number.isFinite(broadAvg)) return 0;
   const delta = venueAvg - broadAvg;
-  if (mKey === "Total score") return clamp(-delta * 0.55, -2.8, 2.8);
-  if (mKey === "Bogeys") return clamp(delta * 0.42, -1.8, 1.8);
-  if (mKey === "Birdies") return clamp(delta * 0.48, -1.8, 1.8);
-  if (mKey === "Pars") return clamp(delta * 0.12, -1.2, 1.2);
-  if (mKey === "GIR") return clamp(delta * 3.2, -2.2, 2.2);
-  if (mKey === "Fairways hit") return clamp(delta * 2.4, -2.2, 2.2);
-  if (mKey === "Putts") return clamp(-delta * 0.38, -2.2, 2.2);
+  if (mKey === "Total score") return clamp(-delta * 0.55 * strength, -2.8, 2.8);
+  if (mKey === "Bogeys") return clamp(delta * 0.42 * strength, -1.8, 1.8);
+  if (mKey === "Birdies") return clamp(delta * 0.48 * strength, -1.8, 1.8);
+  if (mKey === "Pars") return clamp(delta * 0.12 * strength, -1.2, 1.2);
+  if (mKey === "GIR") return clamp(delta * 3.2 * strength, -2.2, 2.2);
+  if (mKey === "Fairways hit") return clamp(delta * 2.4 * strength, -2.2, 2.2);
+  if (mKey === "Putts") return clamp(-delta * 0.38 * strength, -2.2, 2.2);
   return 0;
 }
 
@@ -16783,7 +16947,7 @@ function pricingStatMuAdjustment(market, dgId) {
     else if (market === "Fairways hit") out = 0.22 * b;
     else if (market === "Putts") out = -0.32 * b;
   }
-  return out + pricingCourseVenueStatMuNudge(market, dgId);
+  return out + pricingCourseVenueStatMuNudge(market, dgId) + courseWeightedMarketMuNudge(market, dgId);
 }
 
 function pricingModelHistoryNudge(statKey, dgId) {

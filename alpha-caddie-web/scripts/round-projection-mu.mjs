@@ -9,6 +9,16 @@ import {
   statWeatherMuAdjustment,
 } from "./weather-projection-adjustments.mjs";
 import { marketBookSigmaScale } from "./market-book-calibration.mjs";
+import {
+  adaptiveVenueStatMuNudge,
+  blendAdaptiveMuSgBonus,
+  courseHistoryMuBonus,
+  courseWeightedMarketMuNudge,
+  courseWeightedSkillFormBonus,
+  isAdaptivePricingMode,
+  recentFormMuBonus,
+  resolveCourseTableForVenue,
+} from "./course-adaptive-pricing.mjs";
 
 export const EXPORT_MARKETS = [
   {
@@ -48,30 +58,6 @@ export const EXPORT_MARKETS = [
     underCol: "birdies_under",
   },
   {
-    key: "pars",
-    market: "Pars",
-    propsMarket: "Pars",
-    lineCol: "pars_line",
-    bookLineCol: "pars_book_line",
-    overOddsCol: "pars_over_odds",
-    underOddsCol: "pars_under_odds",
-    actualCol: "actual_pars",
-    overCol: "pars_over",
-    underCol: "pars_under",
-  },
-  {
-    key: "bogeys",
-    market: "Bogeys",
-    propsMarket: "Bogeys",
-    lineCol: "bogeys_line",
-    bookLineCol: "bogeys_book_line",
-    overOddsCol: "bogeys_over_odds",
-    underOddsCol: "bogeys_under_odds",
-    actualCol: "actual_bogeys",
-    overCol: "bogeys_over",
-    underCol: "bogeys_under",
-  },
-  {
     key: "gir",
     market: "GIR",
     propsMarket: "GIR",
@@ -93,12 +79,8 @@ export const EXPORT_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.underOddsCol);
 export const EXPORT_OVER_RESULT_COLS = EXPORT_MARKETS.map((m) => m.overCol);
 export const EXPORT_UNDER_RESULT_COLS = EXPORT_MARKETS.map((m) => m.underCol);
 
-export const EXPORT_PRICING_MODES = [
-  { mode: "default", skill: "default" },
-  { mode: "recent", skill: "default" },
-  { mode: "course", skill: "default" },
-  { mode: "skill", skill: "sg_total" },
-];
+/** Single projection path: recent form + course history + course-weighted SG. */
+export const EXPORT_PRICING_MODES = [{ mode: "default", skill: "default" }];
 
 const OU_STAT_MAP = {
   "Total score": { field: "total_score", sdKey: "round_sd" },
@@ -211,6 +193,7 @@ function meanNumFromRoundsRecencyWeightedStat(rounds, statKey, decay = 0.86) {
     else if (statKey === "bogeys") v = num(row.bogies ?? row.bogeys, NaN);
     else if (statKey === "gir") v = num(row.gir, NaN);
     else if (statKey === "fairways") v = num(row.fairways, NaN);
+    else if (statKey === "putts") v = num(row.putts, NaN);
     if (!Number.isFinite(v)) continue;
     const w = decay ** i;
     sum += v * w;
@@ -255,16 +238,34 @@ function pricingModeMuSgBonusForMode(dgId, modeRaw, skillRaw, ctx) {
   const cacheKey = `${id}|${mode}|${skillKey}|${normCourseNameKey(venueName)}`;
   if (ctx.bonusCache.has(cacheKey)) return ctx.bonusCache.get(cacheKey);
 
-  if (mode === "default") {
-    const recent = pricingModeMuSgBonusForMode(id, "recent", skillRaw, ctx);
-    const course = pricingModeMuSgBonusForMode(id, "course", skillRaw, ctx);
-    const skill = pricingModeMuSgBonusForMode(id, "skill", skillRaw, ctx);
-    const out = clamp(0.4 * recent + 0.25 * course + 0.35 * skill, -0.28, 0.28);
+  const rec = historyByDgId[String(id)];
+
+  if (isAdaptivePricingMode(mode)) {
+    const rounds = Array.isArray(rec?.rounds)
+      ? rec.rounds.slice().sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a))
+      : [];
+    const ctRow = ctx.ctRow ?? resolveCourseTableForVenue(venueName);
+    const playerRow = players.find(
+      (p) => Math.round(num(p.dg_id)) === id && Math.round(num(p.round)) === modelRound,
+    );
+    let recent = 0;
+    let course = 0;
+    let skill = 0;
+    let venueRounds = 0;
+    if (rounds.length >= 4) {
+      recent = recentFormMuBonus(rounds);
+      const ch = courseHistoryMuBonus(rounds, venueName, courseNameMatchesVenue);
+      course = ch.bonus;
+      venueRounds = ch.venueRounds;
+      skill = courseWeightedSkillFormBonus(rounds, ctRow, playerRow, players, modelRound);
+    } else if (playerRow) {
+      skill = courseWeightedSkillFormBonus([], ctRow, playerRow, players, modelRound);
+    }
+    const out = blendAdaptiveMuSgBonus(recent, course, skill, venueRounds);
     ctx.bonusCache.set(cacheKey, out);
     return out;
   }
 
-  const rec = historyByDgId[String(id)];
   const rounds = Array.isArray(rec?.rounds)
     ? rec.rounds.slice().sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a))
     : [];
@@ -346,10 +347,10 @@ function pricingModeMuSgBonusForMode(dgId, modeRaw, skillRaw, ctx) {
 }
 
 function pricingCourseVenueStatMuNudge(market, dgId, modeRaw, ctx) {
-  if (String(modeRaw || "").toLowerCase() !== "course") return 0;
   const id = Math.round(num(dgId, NaN));
   const vn = ctx.venueName;
   if (!Number.isFinite(id) || !vn) return 0;
+  if (!isAdaptivePricingMode(modeRaw) && String(modeRaw || "").toLowerCase() !== "course") return 0;
   const rec = ctx.historyByDgId[String(id)];
   const rounds = Array.isArray(rec?.rounds)
     ? rec.rounds.slice().sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a))
@@ -369,18 +370,12 @@ function pricingCourseVenueStatMuNudge(market, dgId, modeRaw, ctx) {
               ? "gir"
               : market === "Fairways hit"
                 ? "fairways"
-                : "total";
+                : market === "Putts"
+                  ? "putts"
+                  : "total";
   const venueAvg = meanNumFromRoundsRecencyWeightedStat(here, statKey, 0.82);
   const broadAvg = meanNumFromRoundsRecencyWeightedStat(rounds, statKey, 0.9);
-  if (!Number.isFinite(venueAvg) || !Number.isFinite(broadAvg)) return 0;
-  const delta = venueAvg - broadAvg;
-  if (market === "Total score") return clamp(-delta * 0.55, -2.8, 2.8);
-  if (market === "Bogeys") return clamp(delta * 0.42, -1.8, 1.8);
-  if (market === "Birdies") return clamp(delta * 0.48, -1.8, 1.8);
-  if (market === "Pars") return clamp(delta * 0.12, -1.2, 1.2);
-  if (market === "GIR") return clamp(delta * 3.2, -2.2, 2.2);
-  if (market === "Fairways hit") return clamp(delta * 2.4, -2.2, 2.2);
-  return 0;
+  return adaptiveVenueStatMuNudge(market, venueAvg, broadAvg, modeRaw);
 }
 
 function pricingStatMuAdjustment(market, dgId, modeRaw, skillRaw, ctx) {
@@ -393,8 +388,18 @@ function pricingStatMuAdjustment(market, dgId, modeRaw, skillRaw, ctx) {
     else if (market === "Pars") out = 0.08 * b;
     else if (market === "GIR") out = 0.35 * b;
     else if (market === "Fairways hit") out = 0.22 * b;
+    else if (market === "Putts") out = -0.32 * b;
   }
-  return out + pricingCourseVenueStatMuNudge(market, dgId, modeRaw, ctx);
+  const id = Math.round(num(dgId, NaN));
+  const playerRow = ctx.players.find(
+    (p) => Math.round(num(p.dg_id)) === id && Math.round(num(p.round)) === ctx.modelRound,
+  );
+  const ctRow = ctx.ctRow ?? resolveCourseTableForVenue(ctx.venueName);
+  const courseW =
+    isAdaptivePricingMode(modeRaw) && playerRow
+      ? courseWeightedMarketMuNudge(market, playerRow, ctRow, ctx.players, ctx.modelRound)
+      : 0;
+  return out + pricingCourseVenueStatMuNudge(market, dgId, modeRaw, ctx) + courseW;
 }
 
 function liveRowMatchesRound(row, meta) {
@@ -543,12 +548,14 @@ export function loadHistoryByDgId(webRoot) {
 
 export function createProjectionContext(payload) {
   const meta = payload?.meta && typeof payload.meta === "object" ? payload.meta : payload;
+  const venueName = String(payload?.course_used || meta?.course_used || "").trim();
   return {
     meta,
-    venueName: String(payload?.course_used || meta?.course_used || "").trim(),
+    venueName,
     players: Array.isArray(payload?.players) ? payload.players : [],
     historyByDgId: loadHistoryByDgId(payload._webRoot || ""),
     bonusCache: new Map(),
     modelRound: Math.round(num(meta?.display_round, 1)) || 1,
+    ctRow: resolveCourseTableForVenue(venueName),
   };
 }

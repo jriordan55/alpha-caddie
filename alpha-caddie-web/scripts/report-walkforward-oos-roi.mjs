@@ -22,7 +22,14 @@ console.log(`Combined @ 5% EV (raw model):     ${report.combined_oos_raw_at_5pct
 
 console.log("By market @ 5% OOS:");
 for (const m of report.by_market_at_5pct) {
-  console.log(`  ${m.market.padEnd(14)} ${m.roi_pct}%  ${m.bets} bets  ${m.units >= 0 ? "+" : ""}${m.units}u`);
+  const rawM = report.by_market_at_5pct_raw?.find((r) => r.market === m.market);
+  const rawNote =
+    report.markets_skip_book_calibration?.includes(m.market) && rawM
+      ? `  (uncalibrated: ${rawM.roi_pct}% / ${rawM.units >= 0 ? "+" : ""}${rawM.units}u)`
+      : "";
+  console.log(
+    `  ${m.market.padEnd(14)} ${m.roi_pct}%  ${m.bets} bets  ${m.units >= 0 ? "+" : ""}${m.units}u${rawNote}`,
+  );
 }
 
 console.log("\nPer-event @ 5% OOS (calibrated):");

@@ -151,9 +151,11 @@ if (Number.isFinite(avgBogeys) && avgBogeys > Math.max(5.15, venueBog + 2.0)) {
     `R${displayRound} field avg bogeys ${avgBogeys.toFixed(2)} too high — event-week counting profile missing or stale`,
   );
 }
-if (Number.isFinite(avgBogeys) && avgBogeys < Math.max(2.0, venueBog * 0.55)) {
+// Venue-relative floor — easy courses (e.g. River Highlands ~1.8 bogeys) must not trip a global 2.0 minimum.
+const minBogeys = Math.max(1.15, venueBog * 0.72);
+if (Number.isFinite(avgBogeys) && avgBogeys < minBogeys) {
   fail(
-    `R${displayRound} field avg bogeys ${avgBogeys.toFixed(2)} too low — counting markets miscalibrated`,
+    `R${displayRound} field avg bogeys ${avgBogeys.toFixed(2)} too low (min ${minBogeys.toFixed(2)} from venue ${venueBog.toFixed(2)}) — counting markets miscalibrated`,
   );
 }
 if (Number.isFinite(avgBirdies) && Number.isFinite(avgBogeys) && avgBirdies + avgBogeys + avgPars < 16.5) {

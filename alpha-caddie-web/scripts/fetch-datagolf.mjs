@@ -9,9 +9,8 @@
  * markets (birdies/pars/bogeys/GIR/fairways/putts) coalesce player + field history at this venue before skill fallbacks.
  * Optional **preds/pre-tournament** per-round stroke column (when present in the feed) nudges μ_sg toward that baseline.
  * Historical CSV still calibrates count curves vs (score−par); GIR uses SG:APP vs median field (no fantasy blend).
- * Hole counts: historical rounds regress eagles/birdies/bogeys/doubles vs (round_score − course_par), shrunk with a
- * ceiling so legacy μ curves still spread the field; pars are residual. A **soft** bird/bog nudge partially aligns
- * implied strokes vs par with **score_to_par = −μ_sg** without collapsing pars across players.
+ * Hole counts: player rolling birdie/bogey rates from historical_rounds + SG:APP/PUTT/ARG/OTT
+ * (counting-from-rates-sg.mjs). Score-to-par derive is off for reconcile; light soft-align only.
  * R2–R4 rows re-derive from scaled μ_SG (default multipliers 1, 0.945, 0.885, 0.82 — override GOLF_NODE_ROUND_MU_MULT).
  * Set GOLF_SKIP_HIST_STATS_ON_FETCH=1 to skip the historical CSV calibration pass (count curves only; GIR/FW are skill-only).
  * Set GOLF_RESET_PROPS=1 so fetch:dg does not copy prior `props` from projections.json (default: preserve DK round O/U when the same week/event).
@@ -117,6 +116,11 @@ import {
   girRate01FromDg,
   traditionalRate01,
 } from "./dg-traditional-stats.mjs";
+import {
+  buildRollingHoleCountRatesByDg,
+  derivedStatsFromRatesAndSg,
+  mergeHoleCountRatesIntoSkillRow,
+} from "./counting-from-rates-sg.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -1308,6 +1312,9 @@ function parseRoundMuMult() {
 }
 
 function derivedStatsFromMuSg(muRaw, nFairwayHoles, opts = {}) {
+  if (opts.countingFromRatesSg !== false) {
+    return derivedStatsFromRatesAndSg(muRaw, nFairwayHoles, opts);
+  }
   const mu_sg = clampMuSg(muRaw);
   let im = imputeCountsWithHistory(mu_sg, opts.histCountFit);
   const stpVec = -mu_sg;
@@ -2035,6 +2042,7 @@ async function main() {
     fieldRows.map((fr) => Math.round(num(fr.dg_id, NaN))).filter((id) => Number.isFinite(id)),
   );
   const rollingTradByDg = await loadRollingTraditionalPctByDg(histCsvPath, fieldDgIds);
+  const rollingCountByDg = await buildRollingHoleCountRatesByDg(histCsvPath, fieldDgIds);
   if (rollingTradByDg.size) {
     console.log(
       `[fetch-dg] Rolling DataGolf traditional GIR/FW rates: ${rollingTradByDg.size} players (historical_rounds_all.csv)`,
@@ -2044,6 +2052,14 @@ async function main() {
       if (!roll) continue;
       if (Number.isFinite(roll.girRate01)) sk.dg_gir_pct = roll.girRate01;
       if (Number.isFinite(roll.fwRate01)) sk.dg_fairway_pct = roll.fwRate01;
+    }
+  }
+  if (rollingCountByDg.size) {
+    console.log(
+      `[fetch-dg] Rolling hole-count rates (bird/bog): ${rollingCountByDg.size} players (historical_rounds_all.csv)`,
+    );
+    for (const [id, sk] of skillByDg) {
+      mergeHoleCountRatesIntoSkillRow(sk, rollingCountByDg.get(id));
     }
   }
 
@@ -2068,6 +2084,20 @@ async function main() {
   }
   /** Median SG:APP in this field (same robustness as OTT for GIR rate). */
   const fieldMeanApp = fieldSkillMedian(appSamples);
+
+  const puttSamples = [];
+  const argSamples = [];
+  for (const fr of fieldRows) {
+    const sid = Math.round(num(fr.dg_id, NaN));
+    if (!Number.isFinite(sid)) continue;
+    const sk = skillByDg.get(sid);
+    const p = num(sk?.sg_putt, NaN);
+    const a = num(sk?.sg_arg, NaN);
+    if (Number.isFinite(p)) puttSamples.push(p);
+    if (Number.isFinite(a)) argSamples.push(a);
+  }
+  const fieldMeanPutt = fieldSkillMedian(puttSamples);
+  const fieldMeanArg = fieldSkillMedian(argSamples);
 
   const distSamples = [];
   for (const fr of fieldRows) {
@@ -2425,12 +2455,20 @@ async function main() {
         fieldMeanOtt,
         sg_app: row.sg_app,
         fieldMeanApp,
+        fieldMeanPutt,
+        fieldMeanArg,
         nGirHoles: 18,
         driving_distance: distR,
         fieldMeanDrive,
         histCountFit: histCalib,
         skRow: skRowR,
         liveTrad: liveTraditionalByDg.get(row.dg_id) ?? null,
+        venueBird: venueScoring.venueAvgBirdies,
+        venueBog: venueScoring.venueAvgBogeys,
+        venuePars: venueScoring.venueAvgPars,
+        venueGir: venueScoring.venueAvgGir,
+        venueFairways: venueScoring.venueAvgFairways,
+        venuePutts: venueScoring.venueAvgPutts,
       });
       const pretScore = pretStrokesByDg.get(row.dg_id);
       const scoreRes = resolveProjectionScoreToPar({

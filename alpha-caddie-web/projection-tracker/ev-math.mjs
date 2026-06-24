@@ -42,8 +42,8 @@ export function devigFairTwoWay(overOdds, underOdds) {
   };
 }
 
-export function modelEdgeVsFairAtLine(market, mu, line, overOdds, underOdds) {
-  const pOver = modelProbOver(market, mu, line);
+export function modelEdgeVsFairAtLine(market, mu, line, overOdds, underOdds, sigmaScale = 1) {
+  const pOver = modelProbOver(market, mu, line, sigmaScale);
   if (!Number.isFinite(pOver)) {
     return { edgeFairOver: NaN, edgeFairUnder: NaN, fairOver: NaN, fairUnder: NaN, pOver, pUnder: NaN };
   }
@@ -90,15 +90,16 @@ function sigmaDefault(market, muAbs) {
   return Math.max(0.55, Math.sqrt(Math.max(m, 0.2)) * 0.9);
 }
 
-export function modelProbOver(market, mu, line) {
+export function modelProbOver(market, mu, line, sigmaScale = 1) {
   if (!Number.isFinite(mu) || !Number.isFinite(line)) return NaN;
-  const sig = market === "Total score" ? 2.75 : sigmaDefault(market, mu);
+  const scale = Number.isFinite(sigmaScale) && sigmaScale > 0 ? sigmaScale : 1;
+  const sig = (market === "Total score" ? 2.75 : sigmaDefault(market, mu)) * scale;
   const z = (line - mu) / sig;
   return 1 - normalCdf(z);
 }
 
-export function modelEdgePctAtLine(market, mu, line, overOdds, underOdds) {
-  const pOver = modelProbOver(market, mu, line);
+export function modelEdgePctAtLine(market, mu, line, overOdds, underOdds, sigmaScale = 1) {
+  const pOver = modelProbOver(market, mu, line, sigmaScale);
   if (!Number.isFinite(pOver)) return { edgeOver: NaN, edgeUnder: NaN, best: NaN };
   const pUnder = 1 - pOver;
   const pImpOver = Number.isFinite(num(overOdds, NaN)) ? impliedProbFromAmerican(overOdds) : 100 / 210;

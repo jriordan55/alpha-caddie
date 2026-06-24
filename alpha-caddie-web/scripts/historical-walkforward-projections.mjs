@@ -82,8 +82,11 @@ function histRoundToHistoryRec(row) {
     birdies: birdiesPlusEaglesFromRow(row),
     pars: num(row.pars, NaN),
     bogeys: num(row.bogeys ?? row.bogies, NaN),
+    eagles_or_better: num(row.eagles_or_better ?? row.eagles, NaN),
+    doubles_or_worse: num(row.doubles_or_worse ?? row.doubles, NaN),
     gir: num(row.gir, NaN),
     fairways: num(row.driving_acc, NaN),
+    putts: num(row.putts, NaN),
     event_completed: String(row.event_completed || ""),
   };
 }
@@ -158,6 +161,27 @@ function skillRowFromHistory(rec) {
   );
   if (Number.isFinite(girR)) sk.dg_gir_pct = girR;
   if (Number.isFinite(fwR)) sk.dg_fairway_pct = fwR;
+  sk.avg_birdies = recencyWeightedMean(rounds, "birdies");
+  sk.avg_bogeys = recencyWeightedMean(rounds, "bogeys");
+  sk.avg_eagles = recencyWeightedMean(
+    rounds.map((r) => ({ v: num(r.eagles_or_better, num(r.eagles, 0)) })),
+    "v",
+  );
+  sk.avg_doubles = recencyWeightedMean(
+    rounds.map((r) => ({ v: num(r.doubles_or_worse, num(r.doubles, 0)) })),
+    "v",
+  );
+  sk.avg_pars = recencyWeightedMean(rounds, "pars");
+  sk.avg_putts = recencyWeightedMean(rounds, "putts");
+  sk.avg_gir = recencyWeightedMean(
+    rounds.map((r) => ({ v: traditionalRate01(r.gir, 18) * 18 })),
+    "v",
+  );
+  sk.avg_fairways = recencyWeightedMean(
+    rounds.map((r) => ({ v: traditionalRate01(r.fairways, N_FAIRWAY_HOLES) * N_FAIRWAY_HOLES })),
+    "v",
+  );
+  sk.counting_rounds = rounds.filter((r) => Number.isFinite(num(r.birdies, NaN))).length;
   return sk;
 }
 
@@ -456,6 +480,12 @@ export async function buildFullModelMuMapForEvent({
       fieldMeanOtt: NaN,
       sg_ott: skRow.sg_ott,
       sg_app: skRow.sg_app,
+      venueBird: venueScoring.venueAvgBirdies,
+      venueBog: venueScoring.venueAvgBogeys,
+      venuePars: venueScoring.venueAvgPars,
+      venueGir: venueScoring.venueAvgGir,
+      venueFairways: venueScoring.venueAvgFairways,
+      venuePutts: venueScoring.venueAvgPutts,
     });
     base.push({
       dg_id: dg,
@@ -485,8 +515,12 @@ export async function buildFullModelMuMapForEvent({
 
   const ottSamples = base.map((r) => num(r.sg_ott, NaN)).filter(Number.isFinite);
   const appSamples = base.map((r) => num(r.sg_app, NaN)).filter(Number.isFinite);
+  const puttSamples = base.map((r) => num(r.sg_putt, NaN)).filter(Number.isFinite);
+  const argSamples = base.map((r) => num(r.sg_arg, NaN)).filter(Number.isFinite);
   const fieldMeanOtt = fieldSkillMedian(ottSamples);
   const fieldMeanApp = fieldSkillMedian(appSamples);
+  const fieldMeanPutt = fieldSkillMedian(puttSamples);
+  const fieldMeanArg = fieldSkillMedian(argSamples);
 
   const flatVenue = flatVenuePlayerScoreAnchorEnabled();
   const formK = flatVenue ? 0 : num(process.env.GOLF_WITHIN_EVENT_FORM_CARRY, 0.1);
@@ -533,6 +567,15 @@ export async function buildFullModelMuMapForEvent({
       sg_t2g: row.sg_t2g,
       dg_gir_pct: row.dg_gir_pct,
       dg_fairway_pct: row.dg_fairway_pct,
+      avg_birdies: row.avg_birdies,
+      avg_bogeys: row.avg_bogeys,
+      avg_eagles: row.avg_eagles,
+      avg_doubles: row.avg_doubles,
+      avg_pars: row.avg_pars,
+      avg_putts: row.avg_putts,
+      avg_gir: row.avg_gir,
+      avg_fairways: row.avg_fairways,
+      counting_rounds: row.counting_rounds,
     };
     const liveTrad = rollingTrad.get(row.dg_id) || null;
 
@@ -556,9 +599,18 @@ export async function buildFullModelMuMapForEvent({
             liveTrad,
             fieldMeanOtt,
             fieldMeanApp,
+            fieldMeanPutt,
+            fieldMeanArg,
             sg_ott: row.sg_ott,
             sg_app: row.sg_app,
             nGirHoles: 18,
+            venueBird: venueScoring.venueAvgBirdies,
+            venueBog: venueScoring.venueAvgBogeys,
+            venuePars: venueScoring.venueAvgPars,
+            venueGir: venueScoring.venueAvgGir,
+            venueFairways: venueScoring.venueAvgFairways,
+            venuePutts: venueScoring.venueAvgPutts,
+            fieldMeanT2g: fieldSkillMedian(base.map((r) => num(r.sg_t2g, NaN)).filter(Number.isFinite)),
           });
 
     const scoreRes = resolveProjectionScoreToPar({

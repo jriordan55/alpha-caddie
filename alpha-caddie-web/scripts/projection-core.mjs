@@ -12,6 +12,7 @@ import {
   girRate01FromDg,
   num,
 } from "./dg-traditional-stats.mjs";
+import { derivedStatsFromRatesAndSg } from "./counting-from-rates-sg.mjs";
 
 export const RAW_ROUND_SD = Number(process.env.GOLF_RAW_ROUND_SD) || 2.75;
 export const N_FAIRWAY_HOLES = Number(process.env.GOLF_N_FAIRWAY_HOLES) || 14;
@@ -570,6 +571,14 @@ function parseRoundMuMult() {
 }
 
 function derivedStatsFromMuSg(muRaw, nFairwayHoles, opts = {}) {
+  const useRatesSg = opts.countingFromRatesSg !== false;
+  if (useRatesSg) {
+    return derivedStatsFromRatesAndSg(muRaw, nFairwayHoles, {
+      ...opts,
+      fieldMeanPutt: opts.fieldMeanPutt,
+      fieldMeanArg: opts.fieldMeanArg,
+    });
+  }
   const mu_sg = clampMuSg(muRaw);
   let im = imputeCountsWithHistory(mu_sg, opts.histCountFit);
   const stpVec = -mu_sg;

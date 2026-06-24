@@ -195,9 +195,9 @@ export function applyWeatherBakedCountsToPlayer(p, meta) {
     venueAvgPars: num(basis.venue_avg_pars, 11.2),
     nFairwayHoles: Math.round(num(basis.fairway_holes_modeled, 14)) || 14,
     fwStpLine: histCalib?.fw_stp_line,
-    scoreDeriveCounts: true,
-    girBlend: 0.22,
-    fairwaysBlend: 0.2,
+    scoreDeriveCounts: false,
+    girBlend: 0,
+    fairwaysBlend: 0,
   });
 
   for (const [market, field] of [

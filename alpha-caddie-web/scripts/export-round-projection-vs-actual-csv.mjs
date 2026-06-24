@@ -79,6 +79,11 @@ import {
 import { normCourseNameKey } from "./course-name-key.mjs";
 import { FullModelProjectionCache } from "./historical-walkforward-projections.mjs";
 import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
+import { applyMuShiftToModelLine, marketSkipsBookCalibration } from "./market-book-calibration.mjs";
+import {
+  buildWalkForwardCalibrationByEvent,
+  WALKFORWARD_OOS_JSON,
+} from "./walkforward-oos-roi.mjs";
 
 Object.assign(process.env, flatVenueProjectionPipelineEnv());
 
@@ -222,32 +227,233 @@ async function loadPriorEventRows(csvPath, summaryPath, currentEventName, opts =
     }
   }
 
-  const forceRebuildBacktest =
-    String(process.env.GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS || "").trim() === "1";
-
-  if (summaryHasPrior && !forceRebuildBacktest) return { priorLines, priorSummaryRows };
-
   const auditPath = opts.auditPath || defaultDkAuditPath(WEB_ROOT);
   const histPath = opts.histPath || resolveHistCsv();
   if (!existsSync(auditPath)) return { priorLines, priorSummaryRows };
 
-  const backfill = await backfillFromAudit(auditPath, histPath, currentEventName, opts.fairwayHoles || 14);
-  if (forceRebuildBacktest) {
-    priorLines.length = 0;
-  }
-  if (priorLines.length === 0) priorLines.push(...backfill.lines);
-  priorSummaryRows.push(...backfill.summaryRows);
+  const backfill = await backfillFromAudit(auditPath, histPath, currentEventName, {
+    fairwayHoles: opts.fairwayHoles || 14,
+    livePath: opts.livePath || join(WEB_ROOT, "live-in-play.json"),
+  });
   if (backfill.lines.length > 0) {
+    priorLines.length = 0;
+    priorLines.push(...backfill.lines);
     console.log(`[round-projection-vs-actual] Backfilled ${backfill.lines.length} prior-event detail row(s) from DK audit`);
+  } else if (summaryHasPrior && priorLines.length) {
+    /* keep cached prior detail when audit backfill unavailable */
   }
+  priorSummaryRows.push(...backfill.summaryRows);
   return { priorLines, priorSummaryRows };
+}
+
+function actualsKey(eventName, eventYear, dg, rnd) {
+  const yr = Math.round(num(eventYear, NaN));
+  const yPart = Number.isFinite(yr) ? `${yr}\x1f` : "";
+  return `${eventName}\x1f${yPart}${dg}|${rnd}`;
+}
+
+function readLiveBundleEvents(live) {
+  const fu = live?.field_updates && typeof live.field_updates === "object" ? live.field_updates : {};
+  const infoEvent = String(live?.info?.event_name || "").trim();
+  const fuEvent = String(fu.event_name || "").trim();
+  const ltsEvent = String(live?.live_tournament_stats?.event_name || "").trim();
+  return {
+    fu,
+    infoEvent,
+    fuEvent,
+    inPlayEvent: infoEvent || ltsEvent,
+    dateStartIso: String(fu.date_start || live?.info?.date_start || "").trim(),
+  };
+}
+
+/** preds/in-play `data` belongs to `info` when field_updates already advanced to next week. */
+function liveInPlayDataEventName(live) {
+  const { infoEvent, fuEvent, inPlayEvent } = readLiveBundleEvents(live);
+  if (infoEvent && fuEvent && !eventsLikelySame(infoEvent, fuEvent)) return inPlayEvent;
+  return inPlayEvent || fuEvent || infoEvent;
+}
+
+function liveBundleMatchesTargetEvent(live, targetEventName) {
+  if (!targetEventName || !live) return false;
+  const dataEvent = liveInPlayDataEventName(live);
+  if (!dataEvent) return false;
+  return eventsLikelySame(targetEventName, dataEvent);
+}
+
+function inPlayGrossForRound(row, rnd) {
+  const r = Math.round(num(rnd, NaN));
+  if (!Number.isFinite(r) || r < 1 || r > 4) return NaN;
+  return num(row?.[`R${r}`] ?? row?.[`r${r}`], NaN);
+}
+
+function enrichLiveCountingPatch(patch, act, coursePar = 70) {
+  if (!patch || typeof patch !== "object") return patch;
+  const par = Math.round(num(coursePar, NaN)) || 70;
+  const e = Math.max(0, num(act?.eagles ?? act?.eagles_or_better, 0));
+  const d = Math.max(0, num(act?.doubles ?? act?.doubles_or_worse, 0));
+  let b = num(patch.birdies, NaN);
+  const p = num(patch.pars, NaN);
+  const bg = num(patch.bogeys, NaN);
+  if (Number.isFinite(patch.total_score) && Number.isFinite(p) && Number.isFinite(bg) && (!Number.isFinite(b) || b === 0)) {
+    const implied = 18 - e - d - p - bg;
+    if (implied > 0 && implied < 12) patch.birdies = implied;
+  }
+  if (Number.isFinite(patch.total_score) && !Number.isFinite(p) && Number.isFinite(b) && Number.isFinite(bg)) {
+    patch.pars = Math.max(0, 18 - e - d - b - bg);
+  }
+  return patch;
+}
+
+function liveCountingPatchWeak(patch) {
+  if (!patch || !Number.isFinite(num(patch.total_score, NaN))) return false;
+  const b = num(patch.birdies, NaN);
+  const p = num(patch.pars, NaN);
+  const bg = num(patch.bogeys, NaN);
+  return (!Number.isFinite(b) || b === 0) && (!Number.isFinite(p) || p === 0) && (!Number.isFinite(bg) || bg === 0);
+}
+
+function patchFromPlayerHistoryShard(dg, eventName, eventYear, rnd, webRoot, fairwayHoles) {
+  const shardPath = join(webRoot, "player-history", "by-dg", `${Math.round(dg)}.json`);
+  if (!existsSync(shardPath)) return null;
+  let shard;
+  try {
+    shard = JSON.parse(readFileSync(shardPath, "utf8"));
+  } catch {
+    return null;
+  }
+  const row = (Array.isArray(shard?.rounds) ? shard.rounds : []).find((r) => {
+    if (Math.round(num(r.round_num, NaN)) !== rnd) return false;
+    if (Math.round(num(r.year, NaN)) !== Math.round(num(eventYear, NaN))) return false;
+    return eventsLikelySame(String(r.event_name || "").trim(), eventName);
+  });
+  if (!row) return null;
+  const score = num(row.round_score, NaN);
+  if (!Number.isFinite(score) || score <= 0) return null;
+  return {
+    total_score: Math.round(score * 10) / 10,
+    birdies: birdiesPlusEaglesFromRow(row),
+    pars: num(row.pars, NaN),
+    bogeys: num(row.bogeys ?? row.bogies, NaN),
+    gir: countFromRateOrRaw(row.gir, 18),
+    fairways: countFromRateOrRaw(row.fairways, fairwayHoles),
+    putts: Number.isFinite(num(row.putts, NaN)) && num(row.putts, NaN) > 1.5 ? Math.round(num(row.putts, NaN)) : NaN,
+    source: "player_history_shard",
+  };
+}
+
+function overlayPlayerHistoryActualsForBackfill(allActuals, auditEventName, eventYear, webRoot, fairwayHoles) {
+  if (!auditEventName || !Number.isFinite(num(eventYear, NaN))) return 0;
+  const prefix = `${auditEventName}\x1f${Math.round(eventYear)}\x1f`;
+  let n = 0;
+  for (const [key, prev] of allActuals) {
+    if (!key.startsWith(prefix)) continue;
+    const tail = key.slice(prefix.length);
+    const [dgStr, rndStr] = tail.split("|");
+    const dg = Math.round(num(dgStr, NaN));
+    const rnd = Math.round(num(rndStr, NaN));
+    if (!Number.isFinite(dg) || !Number.isFinite(rnd)) continue;
+    const shardPatch = patchFromPlayerHistoryShard(dg, auditEventName, eventYear, rnd, webRoot, fairwayHoles);
+    if (!shardPatch) continue;
+    const weak = liveCountingPatchWeak(prev);
+    const out = { ...prev };
+    if (weak || !Number.isFinite(num(prev.total_score, NaN))) {
+      Object.assign(out, shardPatch);
+    } else {
+      for (const k of ["birdies", "pars", "bogeys", "gir", "fairways", "putts"]) {
+        if (!Number.isFinite(num(prev[k], NaN)) && Number.isFinite(num(shardPatch[k], NaN))) out[k] = shardPatch[k];
+      }
+      if (liveCountingPatchWeak(prev)) {
+        out.birdies = shardPatch.birdies;
+        out.pars = shardPatch.pars;
+        out.bogeys = shardPatch.bogeys;
+      }
+      out.source = prev.source ? `${prev.source}+${shardPatch.source}` : shardPatch.source;
+    }
+    allActuals.set(key, out);
+    n++;
+  }
+  return n;
+}
+
+/** Audit capture year for recurring events (U.S. Open, Memorial, …). */
+function resolveAuditEventYear(evMap) {
+  const years = [];
+  for (const [, snap] of evMap || []) {
+    if (Number.isFinite(snap.capturedMs)) years.push(new Date(snap.capturedMs).getUTCFullYear());
+    const pat = String(snap.projAt || "").match(/^(\d{4})/);
+    if (pat) years.push(parseInt(pat[1], 10));
+  }
+  return years.length ? Math.max(...years) : NaN;
+}
+
+/** When field_updates rolled to next week, preds/in-play still holds the prior event's results. */
+function overlayStaleLiveActualsForBackfill(allActuals, auditEventName, eventYear, livePath, fairwayHoles) {
+  if (!auditEventName || !existsSync(livePath)) return 0;
+  let live;
+  try {
+    live = JSON.parse(readFileSync(livePath, "utf8"));
+  } catch {
+    return 0;
+  }
+  const fu = live.field_updates && typeof live.field_updates === "object" ? live.field_updates : {};
+  const { infoEvent, fuEvent } = readLiveBundleEvents(live);
+  const staleWeek = infoEvent && fuEvent && !eventsLikelySame(infoEvent, fuEvent);
+  const liveEvent = staleWeek
+    ? eventsLikelySame(auditEventName, infoEvent)
+      ? infoEvent
+      : ""
+    : eventsLikelySame(auditEventName, infoEvent)
+      ? infoEvent
+      : eventsLikelySame(auditEventName, fuEvent)
+        ? fuEvent
+        : "";
+  if (!liveEvent) return 0;
+
+  const roundPar = num(fu.course_par ?? live?.info?.course_par, 72) || 72;
+  const actualsByDg = resolveLiveRoundActualsByDg(live, { roundPar, fairwayHoles });
+  const inPlayByDg = new Map();
+  for (const row of Array.isArray(live.data) ? live.data : []) {
+    const id = Math.round(num(row?.dg_id ?? row?.dgId, NaN));
+    if (Number.isFinite(id)) inPlayByDg.set(id, row);
+  }
+
+  let n = 0;
+  for (const [dgKey, perRound] of Object.entries(actualsByDg || {})) {
+    const dg = Math.round(num(dgKey, NaN));
+    if (!Number.isFinite(dg) || !perRound || typeof perRound !== "object") continue;
+    const ipRow = inPlayByDg.get(dg);
+    for (const [rndKey, act] of Object.entries(perRound)) {
+      const rnd = Math.round(num(rndKey, NaN));
+      if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
+      let score = num(act?.round_score, NaN);
+      if (ipRow) {
+        const g = inPlayGrossForRound(ipRow, rnd);
+        if (Number.isFinite(g) && g > 0) score = g;
+      }
+      const patch = enrichLiveCountingPatch(
+        patchFromLiveRoundAct({ ...act, round_score: Number.isFinite(score) ? score : act?.round_score }, fairwayHoles),
+        act,
+        roundPar,
+      );
+      if (!patch) continue;
+      const key = actualsKey(auditEventName, eventYear, dg, rnd);
+      const prev = allActuals.get(key) || {};
+      const out = { ...prev, ...patch };
+      out.source = prev.source && patch.source ? `${prev.source}+${patch.source}` : patch.source || prev.source || "live_stale";
+      allActuals.set(key, out);
+      n++;
+    }
+  }
+  return n;
 }
 
 /**
  * Rebuild detail rows for prior events from DK audit + historical actuals.
  * Uses the last pre-round capture per player×round×market as the snapshot.
  */
-async function backfillFromAudit(auditPath, histPath, currentEventName, fairwayHoles) {
+async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {}) {
+  const fairwayHoles = opts.fairwayHoles ?? 14;
+  const livePath = opts.livePath || join(WEB_ROOT, "live-in-play.json");
   const MARKET_MODEL_COL = {
     "Total Score": "model_total_score",
     Birdies: "model_birdies",
@@ -321,7 +527,8 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, fairwayH
       if (!Number.isFinite(dg) || !Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
       const score = num(row.round_score);
       if (!Number.isFinite(score)) continue;
-      const key = `${ev}\x1f${dg}|${rnd}`;
+      const ry = Math.round(num(row.year, NaN)) || yearFromEventCompleted(row.event_completed);
+      const key = actualsKey(ev, ry, dg, rnd);
       histByKey.set(key, row);
       allActuals.set(key, {
         total_score: Math.round(score * 10) / 10,
@@ -330,23 +537,28 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, fairwayH
         bogeys: num(row.bogies, NaN),
         gir: countFromRateOrRaw(row.gir, 18),
         fairways: countFromRateOrRaw(row.driving_acc, fairwayHoles),
+        source: "historical_rounds",
       });
     }
   }
 
-  const wfCache = histRows.length ? new FullModelProjectionCache(REPO_ROOT, histRows) : null;
-  /** @type {Map<string, number>} */
-  const eventYearByName = new Map();
-  for (const row of histRows) {
-    const ev = String(row.event_name || "").trim();
-    const yr = Math.round(num(row.year, NaN));
-    if (ev && Number.isFinite(yr) && !eventYearByName.has(ev)) eventYearByName.set(ev, yr);
+  for (const [ev, evMap] of auditByEvent) {
+    const eventYear = resolveAuditEventYear(evMap);
+    overlayStaleLiveActualsForBackfill(allActuals, ev, eventYear, livePath, fairwayHoles);
+    overlayPlayerHistoryActualsForBackfill(allActuals, ev, eventYear, WEB_ROOT, fairwayHoles);
   }
+
+  const wfCache = histRows.length ? new FullModelProjectionCache(REPO_ROOT, histRows) : null;
 
   const resultLines = [];
   const samples = [];
+  /** @type {object[]} */
+  const wfTrainingRows = [];
+  /** @type {object[]} */
+  const pendingRows = [];
 
   for (const [ev, evMap] of auditByEvent) {
+    const eventYear = resolveAuditEventYear(evMap);
     const playerRounds = new Map();
     for (const [, snap] of evMap) {
       const prKey = `${snap.dg}|${snap.displayRound}`;
@@ -363,7 +575,7 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, fairwayH
     /** @type {Map<number, Map<number, Map<string, number>>>} */
     const wfByRound = new Map();
     if (wfCache) {
-      const year = eventYearByName.get(ev);
+      const year = eventYear;
       const fieldDgIds = [...new Set([...playerRounds.values()].map((p) => p.dg))];
       let betTimeMs = Infinity;
       for (const [, snap] of evMap) {
@@ -382,13 +594,18 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, fairwayH
       }
     }
 
+    let eventMs = Infinity;
+    for (const [, snap] of evMap) {
+      if (Number.isFinite(snap.capturedMs) && snap.capturedMs < eventMs) eventMs = snap.capturedMs;
+    }
+
     for (const [, pr] of playerRounds) {
-      const act = allActuals.get(`${ev}\x1f${pr.dg}|${pr.rnd}`) || {};
+      const act = allActuals.get(actualsKey(ev, eventYear, pr.dg, pr.rnd)) || {};
       const hasCompleted = Number.isFinite(act.total_score);
       let hasBookOdds = false;
-      const exported = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
+      /** @type {object[]} */
+      const marketDrafts = [];
 
-      const rowCells = {};
       for (const spec of EXPORT_MARKETS) {
         const snap = pr.markets[spec.propsMarket];
         const wfMu = wfByRound.get(pr.rnd)?.get(pr.dg)?.get(spec.market);
@@ -409,7 +626,7 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, fairwayH
                             : NaN,
                 ))
           : NaN;
-        const modelLine = Number.isFinite(wfMu)
+        const rawModelLine = Number.isFinite(wfMu)
           ? spec.propsMarket === "Total Score"
             ? Math.round(wfMu * 10) / 10
             : enforceHalfLine(wfMu)
@@ -419,117 +636,180 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, fairwayH
         const underOdds = snap?.underOdds;
         if (Number.isFinite(overOdds) || Number.isFinite(underOdds)) hasBookOdds = true;
 
-        rowCells[spec.lineCol] = fmtLine(spec.market, modelLine);
-        rowCells[spec.bookLineCol] = Number.isFinite(bookLine) ? fmtLine(spec.market, bookLine) : "";
-        rowCells[spec.overOddsCol] = formatAmericanOdds(overOdds);
-        rowCells[spec.underOddsCol] = formatAmericanOdds(underOdds);
-
-        const actual = actualForMarket(act, spec.key);
-        const gradeLine = Number.isFinite(bookLine) ? bookLine : modelLine;
-        const sides = Number.isFinite(actual)
-          ? ouSideResults(spec.market, actual, gradeLine)
-          : { over: "", under: "" };
-        rowCells[spec.overCol] = sides.over;
-        rowCells[spec.underCol] = sides.under;
-        rowCells[spec.actualCol] = fmtActual(spec.key, actual);
-
-        if (Number.isFinite(modelLine) && Number.isFinite(bookLine)) {
-          const stubRow =
-            spec.market === "Total score"
-              ? { total_score: modelLine, round_sd: 2.75 }
-              : spec.key === "birdies"
-                ? { birdies: modelLine }
-                : spec.key === "bogeys"
-                  ? { bogeys: modelLine }
-                  : spec.key === "gir"
-                    ? { gir: modelLine }
-                    : spec.key === "fairways"
-                      ? { fairways: modelLine }
-                      : { pars: modelLine };
-          const meta = { projection_course_basis: { fairway_holes_modeled: fairwayHoles } };
-          const edge = modelEdgePctAtLine(
-            spec.market,
-            modelLine,
-            bookLine,
-            stubRow,
-            meta,
-            overOdds,
-            underOdds,
-          );
-          samples.push({
-            _eventName: ev,
-            _course: formatCourseLabelForDisplay(pr.course),
-            pricingMode: "default",
-            pricingSkill: "default",
-            marketKey: spec.key,
-            modelLine,
-            bookLine,
-            edgeOver: edge.edgeOver,
-            edgeUnder: edge.edgeUnder,
-            overOdds,
-            underOdds,
-            overResult: sides.over,
-            underResult: sides.under,
-            hasActual: hasCompleted,
-            bookOddsSource: "pre_round_audit",
+        if (Number.isFinite(rawModelLine) && Number.isFinite(bookLine)) {
+          wfTrainingRows.push({
+            event: ev,
+            eventMs: Number.isFinite(eventMs) ? eventMs : Date.parse(pr.projAt) || NaN,
+            market: spec.market,
+            modelBookDelta: rawModelLine - bookLine,
           });
         }
+
+        marketDrafts.push({
+          spec,
+          rawModelLine,
+          bookLine,
+          overOdds,
+          underOdds,
+          act,
+        });
       }
 
       if (!hasBookOdds && !hasCompleted) continue;
 
-      const histRow = histByKey.get(`${ev}\x1f${pr.dg}|${pr.rnd}`);
-      let sigObj = histRow
-        ? extractSignalsFromHistRow(histRow, WEB_ROOT, {
-            courseUsed: pr.course,
-            eventName: ev,
-            projUpdatedAt: pr.projAt,
-            fairwayHoles,
-          })
-        : {};
-      if (!histRow) {
-        const mGir = pr.markets.GIR;
-        const mFw = pr.markets["Fairways hit"];
-        const modelGir = mGir ? num(mGir.modelGir, NaN) : NaN;
-        const modelFw = mFw ? num(mFw.modelFairways, NaN) : NaN;
-        sigObj = {
-          ...sigObj,
-          gir_minus_fw: Number.isFinite(modelGir) && Number.isFinite(modelFw) ? modelGir - modelFw : NaN,
-          course_fw_width: num(loadCourseTableByKey(WEB_ROOT).get(normCourseNameKey(pr.course))?.fw_width, NaN),
-          pin_sheet_active: pinSheetActiveFor(WEB_ROOT, {
-            courseUsed: pr.course,
-            eventName: ev,
-            round: pr.rnd,
-            projUpdatedAt: pr.projAt,
-          }),
-        };
-      }
-      const sigCells = signalCellsFromObject(sigObj);
-
-      const rowOrder = [
-        exported,
-        pr.projAt,
+      pendingRows.push({
         ev,
-        formatCourseLabelForDisplay(pr.course),
-        pr.rnd,
-        pr.rnd,
-        "default",
-        "default",
-        pr.dg,
-        pr.playerName,
-        ...EXPORT_ACTUAL_COLS.map((c) => rowCells[c] || (c === "actual_source" && hasCompleted ? "historical_rounds" : "") || ""),
-        "pre_round_audit",
-        ...EXPORT_MODEL_LINE_COLS.map((c) => rowCells[c] || ""),
-        ...EXPORT_BOOK_LINE_COLS.map((c) => rowCells[c] || ""),
-        ...EXPORT_OVER_ODDS_COLS.map((c) => rowCells[c] || ""),
-        ...EXPORT_UNDER_ODDS_COLS.map((c) => rowCells[c] || ""),
-        ...EXPORT_OVER_RESULT_COLS.map((c) => rowCells[c] || ""),
-        ...EXPORT_UNDER_RESULT_COLS.map((c) => rowCells[c] || ""),
-        ...EXPORT_SIGNAL_COLS.map((c) => sigCells[c] || ""),
-        "",
-      ];
-      resultLines.push(rowOrder.map(csvCell).join(",") + "\n");
+        eventYear,
+        pr,
+        act,
+        hasCompleted,
+        marketDrafts,
+      });
     }
+  }
+
+  const wfCalib = buildWalkForwardCalibrationByEvent(wfTrainingRows);
+  /** @type {Record<string, Record<string, { mu_shift: number, sigma_scale: number }>>} */
+  const eventCalibrationOut = {};
+  for (const [ev, params] of wfCalib.entries()) {
+    if (params) eventCalibrationOut[ev] = params;
+  }
+  try {
+    const prev = existsSync(WALKFORWARD_OOS_JSON)
+      ? JSON.parse(readFileSync(WALKFORWARD_OOS_JSON, "utf8"))
+      : {};
+    writeFileSync(
+      WALKFORWARD_OOS_JSON,
+      `${JSON.stringify({ ...prev, event_calibration: eventCalibrationOut, event_calibration_generated_at: new Date().toISOString() }, null, 2)}\n`,
+    );
+  } catch {
+    /* non-fatal */
+  }
+
+  for (const pending of pendingRows) {
+    const { ev, eventYear, pr, act, hasCompleted, marketDrafts } = pending;
+    const exported = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
+    const rowCells = {};
+
+    for (const md of marketDrafts) {
+      const { spec, rawModelLine, bookLine, overOdds, underOdds } = md;
+      const shift = marketSkipsBookCalibration(spec.market)
+        ? 0
+        : (wfCalib.get(ev)?.[spec.market]?.mu_shift ?? 0);
+      const modelLine = Number.isFinite(rawModelLine)
+        ? applyMuShiftToModelLine(spec.market, rawModelLine, shift)
+        : NaN;
+
+      rowCells[spec.lineCol] = fmtLine(spec.market, modelLine);
+      rowCells[spec.bookLineCol] = Number.isFinite(bookLine) ? fmtLine(spec.market, bookLine) : "";
+      rowCells[spec.overOddsCol] = formatAmericanOdds(overOdds);
+      rowCells[spec.underOddsCol] = formatAmericanOdds(underOdds);
+
+      const actual = actualForMarket(act, spec.key);
+      const gradeLine = Number.isFinite(bookLine) ? bookLine : modelLine;
+      const sides = Number.isFinite(actual)
+        ? ouSideResults(spec.market, actual, gradeLine)
+        : { over: "", under: "" };
+      rowCells[spec.overCol] = sides.over;
+      rowCells[spec.underCol] = sides.under;
+      rowCells[spec.actualCol] = fmtActual(spec.key, actual);
+
+      if (Number.isFinite(modelLine) && Number.isFinite(bookLine)) {
+        const stubRow =
+          spec.market === "Total score"
+            ? { total_score: modelLine, round_sd: 2.75 }
+            : spec.key === "birdies"
+              ? { birdies: modelLine }
+              : spec.key === "bogeys"
+                ? { bogeys: modelLine }
+                : spec.key === "gir"
+                  ? { gir: modelLine }
+                  : spec.key === "fairways"
+                    ? { fairways: modelLine }
+                    : { pars: modelLine };
+        const meta = { projection_course_basis: { fairway_holes_modeled: fairwayHoles } };
+        const edge = modelEdgePctAtLine(
+          spec.market,
+          modelLine,
+          bookLine,
+          stubRow,
+          meta,
+          overOdds,
+          underOdds,
+        );
+        samples.push({
+          _eventName: ev,
+          _course: formatCourseLabelForDisplay(pr.course),
+          pricingMode: "default",
+          pricingSkill: "default",
+          marketKey: spec.key,
+          modelLine,
+          bookLine,
+          edgeOver: edge.edgeOver,
+          edgeUnder: edge.edgeUnder,
+          overOdds,
+          underOdds,
+          overResult: sides.over,
+          underResult: sides.under,
+          hasActual: hasCompleted,
+          bookOddsSource: "pre_round_audit",
+        });
+      }
+    }
+
+    rowCells.actual_source = act.source || (hasCompleted ? "historical_rounds" : "");
+
+    const histRow = histByKey.get(actualsKey(ev, eventYear, pr.dg, pr.rnd));
+    let sigObj = histRow
+      ? extractSignalsFromHistRow(histRow, WEB_ROOT, {
+          courseUsed: pr.course,
+          eventName: ev,
+          projUpdatedAt: pr.projAt,
+          fairwayHoles,
+        })
+      : {};
+    if (!histRow) {
+      const mGir = pr.markets.GIR;
+      const mFw = pr.markets["Fairways hit"];
+      const modelGir = mGir ? num(mGir.modelGir, NaN) : NaN;
+      const modelFw = mFw ? num(mFw.modelFairways, NaN) : NaN;
+      sigObj = {
+        ...sigObj,
+        gir_minus_fw: Number.isFinite(modelGir) && Number.isFinite(modelFw) ? modelGir - modelFw : NaN,
+        course_fw_width: num(loadCourseTableByKey(WEB_ROOT).get(normCourseNameKey(pr.course))?.fw_width, NaN),
+        pin_sheet_active: pinSheetActiveFor(WEB_ROOT, {
+          courseUsed: pr.course,
+          eventName: ev,
+          round: pr.rnd,
+          projUpdatedAt: pr.projAt,
+        }),
+      };
+    }
+    const sigCells = signalCellsFromObject(sigObj);
+
+    const rowOrder = [
+      exported,
+      pr.projAt,
+      ev,
+      formatCourseLabelForDisplay(pr.course),
+      pr.rnd,
+      pr.rnd,
+      "default",
+      "default",
+      pr.dg,
+      pr.playerName,
+      ...EXPORT_ACTUAL_COLS.map((c) => rowCells[c] || ""),
+      "pre_round_audit",
+      ...EXPORT_MODEL_LINE_COLS.map((c) => rowCells[c] || ""),
+      ...EXPORT_BOOK_LINE_COLS.map((c) => rowCells[c] || ""),
+      ...EXPORT_OVER_ODDS_COLS.map((c) => rowCells[c] || ""),
+      ...EXPORT_UNDER_ODDS_COLS.map((c) => rowCells[c] || ""),
+      ...EXPORT_OVER_RESULT_COLS.map((c) => rowCells[c] || ""),
+      ...EXPORT_UNDER_RESULT_COLS.map((c) => rowCells[c] || ""),
+      ...EXPORT_SIGNAL_COLS.map((c) => sigCells[c] || ""),
+      "",
+    ];
+    resultLines.push(rowOrder.map(csvCell).join(",") + "\n");
   }
 
   const summaryRows = [];
@@ -865,22 +1145,36 @@ function overlayLiveRoundActuals(map, eventName, livePath, payload, fairwayHoles
   } catch {
     return 0;
   }
-  const fu = live.field_updates && typeof live.field_updates === "object" ? live.field_updates : {};
-  const liveEvent = String(fu.event_name || live?.info?.event_name || live?.live_tournament_stats?.event_name || "").trim();
-  if (liveEvent && eventName && !eventsLikelySame(eventName, liveEvent)) return 0;
+  if (!liveBundleMatchesTargetEvent(live, eventName)) return 0;
 
   const meta = payload?.meta && typeof payload.meta === "object" ? payload.meta : {};
+  const { fu } = readLiveBundleEvents(live);
   const roundPar =
     num(payload?.course_par_18 ?? meta.course_par_18 ?? fu.course_par ?? live?.info?.course_par, NaN) || 72;
   const actualsByDg = resolveLiveRoundActualsByDg(live, { roundPar, fairwayHoles });
+  const inPlayByDg = new Map();
+  for (const row of Array.isArray(live.data) ? live.data : []) {
+    const id = Math.round(num(row?.dg_id ?? row?.dgId, NaN));
+    if (Number.isFinite(id)) inPlayByDg.set(id, row);
+  }
   let n = 0;
   for (const [dgKey, perRound] of Object.entries(actualsByDg || {})) {
     const dg = Math.round(num(dgKey, NaN));
     if (!Number.isFinite(dg) || !perRound || typeof perRound !== "object") continue;
+    const ipRow = inPlayByDg.get(dg);
     for (const [rndKey, act] of Object.entries(perRound)) {
       const rnd = Math.round(num(rndKey, NaN));
       if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
-      const patch = patchFromLiveRoundAct(act, fairwayHoles);
+      let score = num(act?.round_score, NaN);
+      if (ipRow) {
+        const g = inPlayGrossForRound(ipRow, rnd);
+        if (Number.isFinite(g) && g > 0) score = g;
+      }
+      let patch = enrichLiveCountingPatch(
+        patchFromLiveRoundAct({ ...act, round_score: Number.isFinite(score) ? score : act?.round_score }, fairwayHoles),
+        act,
+        roundPar,
+      );
       if (!patch) continue;
       mergeActualEntry(map, dg, rnd, patch, {
         onlyIfMissing: true,

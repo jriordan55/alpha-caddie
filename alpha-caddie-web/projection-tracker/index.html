@@ -139,7 +139,7 @@
     </section>
 
     <section id="panel-bets" class="panel" role="tabpanel">
-      <p class="note">Each row is one player × round × market. <strong>Model</strong> = projection at export; <strong>DK</strong> = pre-round DraftKings line. <strong>EV%</strong> = edge vs posted odds; <strong>Fair EV%</strong> = edge vs devigged true price (margin removed). <strong>Beat fair price</strong> = hit rate minus average fair implied on your picks.</p>
+      <p class="note">Each row is one player × round × market. <strong>Model</strong> = projection at export; <strong>DK</strong> = pre-round DraftKings line. Qualified bets require min EV <em>and</em> min |model−DK| gap (0.5 score, 1.25 birdies, etc.) so flat DK buckets don’t auto-qualify. Core markets: total score, birdies, GIR, fairways.</p>
       <div class="kpi-grid" id="bets-kpis"></div>
       <div class="table-card">
         <div class="table-wrap table-wrap-tall">
@@ -327,7 +327,7 @@
           <dt>Tournament</dt>
           <dd>One event, or all combined (each event uses its latest export).</dd>
           <dt>Market</dt>
-          <dd>Total score, Birdies, GIR, Fairways, Pars, Bogeys, or all.</dd>
+          <dd>Total score, Birdies, GIR, Fairways, or all.</dd>
           <dt>Min EV %</dt>
           <dd>Only bets where model edge vs <em>posted</em> DK odds is at least this (default 5%).</dd>
           <dt>Bet side</dt>
@@ -430,6 +430,6 @@
     </section>
   </main>
 
-  <script type="module" src="tracker.js?v=13"></script>
+  <script type="module" src="tracker.js?v=17"></script>
 </body>
 </html>

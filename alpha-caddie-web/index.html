@@ -154,7 +154,6 @@
               <select id="ou-market-filter">
                 <option value="Total score">Round score</option>
                 <option>Birdies</option>
-                <option>Pars</option>
                 <option>Bogeys</option>
                 <option>GIR</option>
                 <option>Fairways hit</option>
@@ -181,11 +180,8 @@
           <span class="weather-toolbar-title ou-block-heading">Pricing</span>
           <div class="ou-pricing-row">
             <label class="toolbar-label">Mode
-              <select id="ou-pricing-mode">
-                <option value="default" selected>Default</option>
-                <option value="recent">Recent form (hot / cold)</option>
-                <option value="course">Course history</option>
-                <option value="skill">Skill focus</option>
+              <select id="ou-pricing-mode" disabled title="Unified: recent form, course history, and course-weighted SG">
+                <option value="default" selected>Course adaptive</option>
               </select>
             </label>
             <label class="toolbar-label pricing-skill-label" id="ou-pricing-skill-label" hidden>Skill
@@ -823,11 +819,8 @@
       <div class="toolbar weather-toolbar pricing-toolbar" aria-label="Pricing mode">
         <span class="weather-toolbar-title">Pricing</span>
         <label class="toolbar-label">Mode
-          <select id="ev-pricing-mode">
-            <option value="default" selected>Default</option>
-            <option value="recent">Recent form</option>
-            <option value="course">Course history</option>
-            <option value="skill">Skill focus</option>
+          <select id="ev-pricing-mode" disabled title="Unified: recent form, course history, and course-weighted SG">
+            <option value="default" selected>Course adaptive</option>
           </select>
         </label>
         <label class="toolbar-label pricing-skill-label" id="ev-pricing-skill-label" hidden>Skill
@@ -895,8 +888,6 @@
             <option value="">All markets</option>
             <option value="Total Score">Total Score</option>
             <option value="Birdies">Birdies</option>
-            <option value="Pars">Pars</option>
-            <option value="Bogeys">Bogeys</option>
             <option value="Fairways hit">Fairways hit</option>
           </select>
         </label>
@@ -926,11 +917,8 @@
       <div class="toolbar weather-toolbar pricing-toolbar" aria-label="Pricing mode">
         <span class="weather-toolbar-title">Pricing</span>
         <label class="toolbar-label">Mode
-          <select id="matchups-pricing-mode">
-            <option value="default" selected>Default</option>
-            <option value="recent">Recent form</option>
-            <option value="course">Course history</option>
-            <option value="skill">Skill focus</option>
+          <select id="matchups-pricing-mode" disabled title="Unified: recent form, course history, and course-weighted SG">
+            <option value="default" selected>Course adaptive</option>
           </select>
         </label>
         <label class="toolbar-label pricing-skill-label" id="matchups-pricing-skill-label" hidden>Skill
@@ -978,11 +966,8 @@
       <div class="toolbar weather-toolbar pricing-toolbar" aria-label="Pricing mode">
         <span class="weather-toolbar-title">Pricing</span>
         <label class="toolbar-label">Mode
-          <select id="outrights-pricing-mode">
-            <option value="default" selected>Default</option>
-            <option value="recent">Recent form</option>
-            <option value="course">Course history</option>
-            <option value="skill">Skill focus</option>
+          <select id="outrights-pricing-mode" disabled title="Unified: recent form, course history, and course-weighted SG">
+            <option value="default" selected>Course adaptive</option>
           </select>
         </label>
         <label class="toolbar-label pricing-skill-label" id="outrights-pricing-skill-label" hidden>Skill

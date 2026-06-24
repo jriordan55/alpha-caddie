@@ -639,7 +639,12 @@ function buildExportLiveRoundCap() {
     const live = JSON.parse(fs.readFileSync(LIVE_IN_PLAY_JSON, "utf8"));
     const fu = live?.field_updates && typeof live.field_updates === "object" ? live.field_updates : {};
     const info = live?.info && typeof live.info === "object" ? live.info : {};
-    const cands = [fu.current_round, info.current_round, live?.current_round];
+    const fuEv = String(fu.event_name || "").trim();
+    const infoEv = String(info.event_name || "").trim();
+    const staleWeek = fuEv && infoEv && !liveHistoryEventsLikelySame(fuEv, infoEv);
+    const cands = staleWeek
+      ? [info.current_round, live?.current_round, fu.current_round]
+      : [fu.current_round, info.current_round, live?.current_round];
     for (const c of cands) {
       const r = Math.round(num(c, NaN));
       if (Number.isFinite(r) && r >= 1 && r <= 4) return r;
@@ -882,6 +887,158 @@ function buildLiveHistoryRowsFromBundle() {
   }
 
   return out.length ? out : loadLiveRoundSnapshotByDg();
+}
+
+/** `date_start` when field_updates advanced but preds/in-play still has last week's results. */
+function inferStaleInPlayDateStartIso(live) {
+  const fu = live?.field_updates && typeof live.field_updates === "object" ? live.field_updates : {};
+  const infoEv = String(live?.info?.event_name || "").trim();
+  const fuEv = String(fu.event_name || "").trim();
+  if (fuEv && infoEv && !liveHistoryEventsLikelySame(fuEv, infoEv)) {
+    const lu = String(live?.info?.last_update || "").trim();
+    const m = lu.match(/(\d{4})-(\d{2})-(\d{2})/);
+    if (m) {
+      const r4Ms = Date.UTC(parseInt(m[1], 10), parseInt(m[2], 10) - 1, parseInt(m[3], 10));
+      const r1Ms = r4Ms - 3 * 86400000;
+      const dt = new Date(r1Ms);
+      return `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, "0")}-${String(dt.getUTCDate()).padStart(2, "0")}`;
+    }
+  }
+  return String(fu.date_start || live?.info?.date_start || "").trim();
+}
+
+/**
+ * Merge completed rounds from a stale preds/in-play bundle when projections.json already
+ * points at the next tournament (e.g. U.S. Open R4 while field_updates = Travelers).
+ */
+function buildStaleInPlayEventHistoryRows(proj) {
+  if (!fs.existsSync(PROJECTIONS_JSON) || !fs.existsSync(LIVE_IN_PLAY_JSON)) return null;
+  let live;
+  try {
+    live = JSON.parse(fs.readFileSync(LIVE_IN_PLAY_JSON, "utf8"));
+  } catch {
+    return null;
+  }
+  const meta = proj?.meta && typeof proj.meta === "object" ? proj.meta : {};
+  const fu = live.field_updates && typeof live.field_updates === "object" ? live.field_updates : {};
+  const projEvent = String(proj?.event_name || meta.event_name || "").trim();
+  const inPlayEvent = String(live?.info?.event_name || "").trim();
+  if (!inPlayEvent || !projEvent || liveHistoryEventsLikelySame(projEvent, inPlayEvent)) return null;
+
+  const dateStartIso = inferStaleInPlayDateStartIso(live);
+  if (!dateStartIso || dateStartIsFuture(dateStartIso)) return null;
+
+  const lts = live.live_tournament_stats && typeof live.live_tournament_stats === "object" ? live.live_tournament_stats : {};
+  let courseName = String(lts.course_name || lts.course || "").trim();
+  if (!courseName) {
+    const sample = (live.data || []).find((r) => String(r?.course || "").trim());
+    courseName = String(sample?.course || "").trim();
+  }
+  courseName = formatCourseLabelForDisplay(courseName) || courseName || inPlayEvent;
+
+  const roundPar = num(
+    lts.course_par ?? fu.course_par ?? live?.info?.course_par ?? proj?.course_par_18 ?? meta.course_par_18,
+    72,
+  );
+  const fairwayHoles = Math.round(
+    num(
+      proj?.projection_course_basis?.fairway_holes_modeled ??
+        meta.projection_course_basis?.fairway_holes_modeled,
+      NaN,
+    ),
+  );
+  const actualsByDg = resolveLiveRoundActualsByDg(live, {
+    roundPar: Number.isFinite(roundPar) ? roundPar : 72,
+    fairwayHoles: Number.isFinite(fairwayHoles) && fairwayHoles >= 1 ? fairwayHoles : 14,
+  });
+  const rows = Array.isArray(live.data) ? live.data : [];
+  if (!rows.length) return null;
+
+  const nameByDg = new Map();
+  for (const r of rows) {
+    const dg = Math.round(num(r?.dg_id ?? r?.dgId, NaN));
+    if (!Number.isFinite(dg)) continue;
+    const nm = String(r?.player_name ?? r?.playerName ?? "").trim();
+    if (nm) nameByDg.set(dg, nm);
+  }
+
+  /** @type {any[]} */
+  const out = [];
+  for (const [dgKey, perRound] of Object.entries(actualsByDg || {})) {
+    const dg = Math.round(num(dgKey, NaN));
+    if (!Number.isFinite(dg) || !perRound || typeof perRound !== "object") continue;
+    const ipRow = rows.find((r) => Math.round(num(r?.dg_id ?? r?.dgId, NaN)) === dg);
+    const displayName = nameByDg.get(dg) || String(ipRow?.player_name ?? "").trim();
+
+    for (const [rndKey, act] of Object.entries(perRound)) {
+      const rnd = Math.round(num(rndKey, NaN));
+      if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
+      let roundScore = num(act?.round_score, NaN);
+      if (ipRow) {
+        const g = liveInPlayGrossForRound(ipRow, rnd);
+        if (Number.isFinite(g)) roundScore = g;
+      }
+      if (!Number.isFinite(roundScore) || roundScore <= 0) continue;
+
+      const eventDate = eventCompletedMdYForRound(dateStartIso, rnd);
+      if (!eventDate || eventCompletedIsFutureMdY(eventDate)) continue;
+
+      const eventYear = parseInt(String(eventDate).split("/")[2] || "", 10);
+      let birdies = Number.isFinite(num(act?.birdies, NaN)) ? Math.round(num(act.birdies, NaN)) : null;
+      let pars = Number.isFinite(num(act?.pars, NaN)) ? Math.round(num(act.pars, NaN)) : null;
+      let bogeys = Number.isFinite(num(act?.bogeys, NaN)) ? Math.round(num(act.bogeys, NaN)) : null;
+      const girRaw = num(act?.gir, NaN);
+      let girVal = null;
+      if (Number.isFinite(girRaw)) girVal = Math.round(girRaw > 0 && girRaw <= 1.0001 ? girRaw * 18 : girRaw);
+      const fwVal = Number.isFinite(num(act?.fairways, NaN)) ? Math.round(num(act.fairways, NaN)) : null;
+      const puttsVal = Number.isFinite(num(act?.putts, NaN)) ? Math.round(num(act.putts, NaN)) : null;
+
+      let row = sanitizeLiveCountingFields({
+        dg_id: dg,
+        player_name: displayName,
+        sortKey: parseUsDateSortKey(eventDate) * 10 + rnd,
+        event_completed: eventDate,
+        year: Number.isFinite(eventYear) ? eventYear : new Date().getUTCFullYear(),
+        event_name: inPlayEvent,
+        event_id: fu.event_id != null && fu.event_id !== "" ? String(fu.event_id) : "",
+        course_name: courseName,
+        round_num: rnd,
+        fin_text: "",
+        round_score: Math.round(roundScore * 10) / 10,
+        birdies,
+        pars,
+        bogies: bogeys,
+        bogeys,
+        gir: girVal,
+        fairways: fwVal,
+        putts: puttsVal,
+        eagles_or_better: null,
+        doubles_or_worse: null,
+        weather_temp_f: null,
+        weather_wind_mph: null,
+        weather_humidity: null,
+        weather_condition: "",
+        sg_putt: Number.isFinite(num(act?.sg_putt, NaN)) ? num(act.sg_putt, NaN) : null,
+        sg_app: Number.isFinite(num(act?.sg_app, NaN)) ? num(act.sg_app, NaN) : null,
+        sg_arg: Number.isFinite(num(act?.sg_arg, NaN)) ? num(act.sg_arg, NaN) : null,
+        sg_ott: Number.isFinite(num(act?.sg_ott, NaN)) ? num(act.sg_ott, NaN) : null,
+        sg_t2g: Number.isFinite(num(act?.sg_t2g, NaN)) ? num(act.sg_t2g, NaN) : null,
+        sg_total: Number.isFinite(num(act?.sg_total, NaN)) ? num(act.sg_total, NaN) : null,
+        _from_live_tournament_stats: true,
+        _from_live_in_play: true,
+      });
+      const fixed = reconcileHoleCountsFromScore(row, Number.isFinite(roundPar) ? roundPar : 72);
+      if (Number.isFinite(fixed.birdies)) row.birdies = Math.round(fixed.birdies);
+      if (Number.isFinite(fixed.bogeys)) {
+        row.bogeys = Math.round(fixed.bogeys);
+        row.bogies = row.bogeys;
+      }
+      if (Number.isFinite(fixed.pars)) row.pars = Math.round(fixed.pars);
+      out.push(row);
+    }
+  }
+
+  return out.length ? out : null;
 }
 
 function resolveEventDateStartIsoForPgatour() {
@@ -1933,6 +2090,22 @@ async function main() {
   const shotsAgg = await loadShotsRoundAggMaps();
   const { byDgId, allowedTriples, courseAggByCourse } = await streamRounds(allowed, pgaMetaOverlay, shotsAgg, roundWeatherByKey, pinCtx);
   let liveMergedRows = 0;
+  let projForLive = null;
+  if (fs.existsSync(PROJECTIONS_JSON)) {
+    try {
+      projForLive = JSON.parse(fs.readFileSync(PROJECTIONS_JSON, "utf8"));
+    } catch {
+      projForLive = null;
+    }
+  }
+  const staleRows = projForLive ? buildStaleInPlayEventHistoryRows(projForLive) : null;
+  if (staleRows?.length) {
+    const nStale = upsertLiveRoundRows(byDgId, staleRows);
+    liveMergedRows += nStale;
+    console.log(
+      `[build-player-history] Merged ${nStale} stale in-play round row(s) for ${staleRows[0]?.event_name || "prior event"} (field_updates advanced).`,
+    );
+  }
   const liveRows = buildLiveHistoryRowsFromBundle();
   if (liveRows?.length) {
     const nLive = upsertLiveRoundRows(byDgId, liveRows);

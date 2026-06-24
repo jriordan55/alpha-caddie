@@ -19,8 +19,6 @@ const MARKET_MODEL = {
     const e = num(p.eagles, 0);
     return Number.isFinite(b) ? b + (Number.isFinite(e) ? e : 0) : NaN;
   },
-  Pars: (p) => num(p.pars, NaN),
-  Bogeys: (p) => num(p.bogeys, NaN),
   GIR: (p) => num(p.gir, NaN),
   "Fairways hit": (p) => num(p.fairways, NaN),
 };
@@ -28,8 +26,6 @@ const MARKET_MODEL = {
 const DK_TO_MARKET = {
   "Total Score": "Total score",
   Birdies: "Birdies",
-  Pars: "Pars",
-  Bogeys: "Bogeys",
   GIR: "GIR",
   "Fairways hit": "Fairways hit",
 };

@@ -643,27 +643,6 @@ export function reconcileProjectionRowCountsToScore(row, opts = {}) {
       b = split.birdies;
       bg = split.bogeys;
       p = split.pars;
-    } else {
-      const aligned = softAlignHoleCountsToStp(
-        { eagles: e, birdies: b, pars: p, bogeys: bg, doubles: d },
-        stp,
-        num(opts.alignStrength, 0.28),
-      );
-      b = aligned.birdies;
-      bg = aligned.bogeys;
-      p = aligned.pars;
-      const spread = spreadParsIntoBirdBogPairs(
-        { eagles: e, birdies: b, pars: p, bogeys: bg, doubles: d },
-        {
-          venueBirdies: vBird,
-          venueBogeys: vBog,
-          venuePars: num(opts.venueAvgPars, 11.2),
-          spreadStrength: num(opts.spreadStrength, 0),
-        },
-      );
-      b = spread.birdies;
-      bg = spread.bogeys;
-      p = spread.pars;
     }
   }
 
@@ -683,12 +662,15 @@ export function reconcileProjectionRowCountsToScore(row, opts = {}) {
 
   row.eagles = Math.round(e * 1000) / 1000;
   row.birdies = Math.round(b * 100) / 100;
-  row.pars = Math.round(p * 100) / 100;
   row.bogeys = Math.round(bg * 100) / 100;
   row.doubles = Math.round(d * 1000) / 1000;
   row.gir = Math.round(gir * 100) / 100;
   row.fairways = Math.round(fairways * 100) / 100;
-  row.pars = Math.max(0.12, Math.round((18 - e - d - b - bg) * 100) / 100);
+  if (opts.scoreDeriveCounts !== false) {
+    row.pars = Math.max(0.12, Math.round((18 - e - d - b - bg) * 100) / 100);
+  } else {
+    row.pars = Math.max(0.12, Math.round((18 - e - d - b - bg) * 100) / 100);
+  }
   if (Number.isFinite(num(row.putts, NaN))) {
     row.putts = Math.round(clamp(num(row.putts, NaN), 24, 34) * 100) / 100;
   }
@@ -807,11 +789,11 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
     eventWeekFieldScoreByRound: basis.event_week_field_avg_score_by_round || null,
     nFairwayHoles: Math.round(num(basis.fairway_holes_modeled, 14)) || 14,
     fwStpLine: histCalib?.fw_stp_line,
-    alignStrength: 0.28,
+    alignStrength: 0.1,
     spreadStrength: 0,
-    scoreDeriveCounts: true,
-    girBlend: 0.22,
-    fairwaysBlend: 0.2,
+    scoreDeriveCounts: false,
+    girBlend: 0,
+    fairwaysBlend: 0,
     ...opts,
   };
   let n = 0;
@@ -1434,7 +1416,7 @@ const VENUE_PLAYER_BLEND_SKILL_PULL_BASE = 0.06;
 const VENUE_PLAYER_BLEND_SKILL_PULL_MU = 0.18;
 const VENUE_PLAYER_BLEND_SKILL_PULL_CAP = 0.38;
 const VENUE_FIELD_NO_PLAYER_WEIGHT = 0.32;
-const VENUE_COUNT_ALIGN_TO_STP = 0.48;
+const VENUE_COUNT_ALIGN_TO_STP = 0;
 
 const VENUE_ROUND_BUCKET_BLEND_MIN = 0.44;
 const VENUE_ROUND_BUCKET_BLEND_MAX = 0.74;
@@ -1590,7 +1572,7 @@ export function resolveProjectionCounts({
     true,
   );
   const wBogeys = reduceVenueWeightWhenSkillBetter(
-    wVenue,
+    wVenue * 0.55,
     muForRound,
     sk.bogeys,
     playerAgg?.avgBogeys,
@@ -1603,7 +1585,7 @@ export function resolveProjectionCounts({
     playerAgg?.avgDoubles,
     false,
   );
-  const wPars = wVenue;
+  const wPars = 0;
   const wGir = reduceVenueWeightWhenSkillBetter(wVenue, muForRound, sk.gir, playerAgg?.avgGir, true);
   const wFairways = reduceVenueWeightWhenSkillBetter(
     wVenue,
@@ -1624,7 +1606,7 @@ export function resolveProjectionCounts({
   let birdies = blendVenueSkillScalar(sk.birdies, playerAgg?.avgBirdies, frOk ? fr.avgBirdies : NaN, wBirdies);
   let bogeys = blendVenueSkillScalar(sk.bogeys, playerAgg?.avgBogeys, frOk ? fr.avgBogeys : NaN, wBogeys);
   let doubles = blendVenueSkillScalar(sk.doubles, playerAgg?.avgDoubles, frOk ? fr.avgDoubles : NaN, wDoubles);
-  let pars = blendVenueSkillScalar(sk.pars, playerAgg?.avgPars, frOk ? fr.avgPars : NaN, wPars);
+  let pars = num(sk.pars, NaN);
   let gir = blendVenueSkillScalar(sk.gir, playerAgg?.avgGir, frOk ? fr.avgGir : NaN, wGir);
   let fairways = blendVenueSkillScalar(sk.fairways, playerAgg?.avgFairways, frOk ? fr.avgFairways : NaN, wFairways);
   let putts = blendVenueSkillScalar(sk.putts, playerAgg?.avgPutts, frOk ? fr.avgPutts : NaN, wPutts);
@@ -1633,21 +1615,23 @@ export function resolveProjectionCounts({
   birdies = Math.max(0.15, num(birdies, 0));
   bogeys = Math.max(0.15, num(bogeys, 0));
   doubles = Math.max(0.04, num(doubles, 0));
-  if (!Number.isFinite(pars)) pars = Math.max(0.12, 18 - eagles - birdies - bogeys - doubles);
+
+  const vBird = num(venueScoring?.venueAvgBirdies, 3.8);
+  const vBog = num(venueScoring?.venueAvgBogeys, 2.6);
+  if (frOk) {
+    const wFieldBog = 0.18;
+    if (Number.isFinite(fr.avgBogeys)) bogeys = (1 - wFieldBog) * bogeys + wFieldBog * fr.avgBogeys;
+  }
+  birdies = Math.max(0.15, birdies);
+  bogeys = Math.max(0.15, bogeys);
 
   const stp = num(targetStp, NaN);
   if (Number.isFinite(stp)) {
-    const aligned = softAlignHoleCountsToStp(
-      { eagles, birdies, pars, bogeys, doubles },
-      stp,
-      VENUE_COUNT_ALIGN_TO_STP,
-    );
-    eagles = aligned.eagles;
-    birdies = aligned.birdies;
-    pars = aligned.pars;
-    bogeys = aligned.bogeys;
-    doubles = aligned.doubles;
+    const split = inferHoleCountsFromScoreSplit(stp, vBird, vBog);
+    const wScoreBog = 0.4;
+    bogeys = Math.max(0.15, (1 - wScoreBog) * bogeys + wScoreBog * split.bogeys);
   }
+  pars = Math.max(0.12, 18 - eagles - birdies - bogeys - doubles);
 
   if (Number.isFinite(gir)) gir = Math.max(6, Math.min(16, gir));
   if (Number.isFinite(fairways)) fairways = Math.max(2, Math.min(nFairwayHoles + 0.5, fairways));

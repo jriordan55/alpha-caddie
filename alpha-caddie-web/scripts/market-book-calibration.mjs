@@ -15,11 +15,16 @@ let _cache = null;
 export const MARKET_BOOK_CALIBRATION_MARKETS = [
   "Total score",
   "Birdies",
-  "Bogeys",
   "GIR",
   "Fairways hit",
-  "Pars",
 ];
+
+/** Markets excluded from book calibration (none — pars/bogeys removed from export). */
+export const MARKETS_SKIP_BOOK_CALIBRATION = new Set();
+
+export function marketSkipsBookCalibration(market) {
+  return MARKETS_SKIP_BOOK_CALIBRATION.has(market);
+}
 
 /** RMSE baselines for σ inflation (model vs DK book, not outcomes). */
 const BOOK_RMSE_BASELINE = {
@@ -109,6 +114,7 @@ export function marketBookCalibrationEnabled() {
 }
 
 export function marketBookMuShift(market) {
+  if (marketSkipsBookCalibration(market)) return 0;
   if (!marketBookCalibrationEnabled()) return 0;
   const m = loadMarketBookCalibration().markets?.[market];
   const n = Number(m?.mu_shift);
@@ -116,6 +122,7 @@ export function marketBookMuShift(market) {
 }
 
 export function marketBookSigmaScale(market) {
+  if (marketSkipsBookCalibration(market)) return 1;
   if (!marketBookCalibrationEnabled()) return 1;
   const m = loadMarketBookCalibration().markets?.[market];
   const n = Number(m?.sigma_scale);
@@ -129,6 +136,21 @@ function num(v) {
 
 function clamp(x, lo, hi) {
   return Math.min(hi, Math.max(lo, x));
+}
+
+/** Apply a book-alignment μ shift to a single exported model line (counting clamps match live apply). */
+export function applyMuShiftToModelLine(market, rawLine, muShift) {
+  const raw = num(rawLine);
+  const shift = num(muShift);
+  if (!Number.isFinite(raw) || !Number.isFinite(shift) || shift === 0) return raw;
+  const next = raw + shift;
+  if (market === "Total score") return Math.round(next * 10) / 10;
+  if (market === "Birdies") return Math.round(clamp(next, 0.1, 8) * 100) / 100;
+  if (market === "Bogeys") return Math.round(clamp(next, 0.1, 9) * 100) / 100;
+  if (market === "GIR") return Math.round(clamp(next, 4, 17) * 100) / 100;
+  if (market === "Fairways hit") return Math.round(clamp(next, 2, 16) * 100) / 100;
+  if (market === "Pars") return Math.round(clamp(next, 4, 16) * 100) / 100;
+  return Math.round(next * 100) / 100;
 }
 
 /**

@@ -34,8 +34,6 @@ const MARKET_SPECS = [
   { market: "Birdies", modelCol: "birdies_line", bookCol: "birdies_book_line", overOdds: "birdies_over_odds", underOdds: "birdies_under_odds", overRes: "birdies_over", underRes: "birdies_under", actual: "actual_birdies", decimals: 1 },
   { market: "GIR", modelCol: "gir_line", bookCol: "gir_book_line", overOdds: "gir_over_odds", underOdds: "gir_under_odds", overRes: "gir_over", underRes: "gir_under", actual: "actual_gir", decimals: 0 },
   { market: "Fairways hit", modelCol: "fairways_line", bookCol: "fairways_book_line", overOdds: "fairways_over_odds", underOdds: "fairways_under_odds", overRes: "fairways_over", underRes: "fairways_under", actual: "actual_fairways", decimals: 0 },
-  { market: "Pars", modelCol: "pars_line", bookCol: "pars_book_line", overOdds: "pars_over_odds", underOdds: "pars_under_odds", overRes: "pars_over", underRes: "pars_under", actual: "actual_pars", decimals: 1 },
-  { market: "Bogeys", modelCol: "bogeys_line", bookCol: "bogeys_book_line", overOdds: "bogeys_over_odds", underOdds: "bogeys_under_odds", overRes: "bogeys_over", underRes: "bogeys_under", actual: "actual_bogeys", decimals: 1 },
 ];
 
 const MARKET_ORDER = [
@@ -43,12 +41,18 @@ const MARKET_ORDER = [
   "Birdies",
   "GIR",
   "Fairways hit",
-  "Pars",
-  "Bogeys",
 ];
 
 /** Markets with real DK closing lines in odds.csv backtest (actionable book). */
 const BETTABLE_MARKETS = new Set(["Birdies", "Total score"]);
+
+/** Min |model − DK| before counting a bet — avoids fake edge on flat DK buckets. */
+const MIN_LINE_GAP_BY_MARKET = {
+  "Total score": 0.5,
+  Birdies: 1.25,
+  GIR: 1.0,
+  "Fairways hit": 1.0,
+};
 
 /** @type {Record<string, string>[]} */
 let ALL_ROWS = [];
@@ -68,7 +72,7 @@ const state = {
   tab: "overview",
   /** "" = all tournaments combined; otherwise event name */
   tournament: "",
-  market: "",
+  market: "Total score",
   minEv: 5,
   side: "",
   player: "",
@@ -639,7 +643,10 @@ function explodeDetailToBets(rows) {
       const modelProb = side === "over" ? pModelOver : side === "under" ? pModelUnder : NaN;
       const edgeFairPick =
         side === "over" ? fair.edgeFairOver : side === "under" ? fair.edgeFairUnder : NaN;
-      const qualified = Boolean(pick);
+      const lineGap = Number.isFinite(modelLine) ? Math.abs(modelLine - bookLine) : NaN;
+      const minGap = MIN_LINE_GAP_BY_MARKET[spec.market] ?? 0.5;
+      const gapOk = Number.isFinite(lineGap) && lineGap >= minGap;
+      const qualified = Boolean(pick) && gapOk;
       out.push({
         event_name: row.event_name,
         round: row.round,
@@ -1324,7 +1331,7 @@ function populateMarketFilter() {
   const prev = state.market;
   mSel.innerHTML =
     `<option value="">All markets</option>` + markets.map((m) => `<option value="${m}">${m}</option>`).join("");
-  mSel.value = prev && markets.includes(prev) ? prev : "";
+  mSel.value = prev && markets.includes(prev) ? prev : markets.includes("Total score") ? "Total score" : "";
   state.market = mSel.value;
 }
 
