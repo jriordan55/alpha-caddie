@@ -118,7 +118,9 @@ import {
 } from "./dg-traditional-stats.mjs";
 import {
   buildRollingHoleCountRatesByDg,
+  calibrateFairwayFieldMean,
   derivedStatsFromRatesAndSg,
+  fairwayCalibrationTargetMean,
   mergeHoleCountRatesIntoSkillRow,
 } from "./counting-from-rates-sg.mjs";
 
@@ -196,6 +198,30 @@ function findCourseTableRowForCourse(course_used) {
     }
   }
   return best;
+}
+
+let courseTableJsonCache = null;
+function loadCourseTableJson() {
+  if (courseTableJsonCache) return courseTableJsonCache;
+  const p = join(ROOT, "course-table.json");
+  if (!existsSync(p)) {
+    courseTableJsonCache = null;
+    return null;
+  }
+  try {
+    courseTableJsonCache = JSON.parse(readFileSync(p, "utf8"));
+  } catch {
+    courseTableJsonCache = null;
+  }
+  return courseTableJsonCache;
+}
+
+function courseFairwayRate01FromTable(course_used) {
+  const ct = loadCourseTableJson();
+  if (!ct?.byNormKey) return NaN;
+  const key = normCourseNameKey(course_used);
+  const row = ct.byNormKey[key];
+  return num(row?.adj_driving_accuracy, NaN);
 }
 
 function lookupExpectedParFromCourseTable(course_used) {
@@ -2417,6 +2443,12 @@ async function main() {
     skill_around_round_venue_mean: 0,
     skill_rating: 0,
   };
+  const courseFairwayRate01 = courseFairwayRate01FromTable(course_used);
+  if (Number.isFinite(courseFairwayRate01)) {
+    console.log(
+      `[fetch-dg] Fairway course anchor: adj_driving_accuracy=${courseFairwayRate01.toFixed(3)} (${Math.round(courseFairwayRate01 * fairwayHolesThisCourse * 10) / 10} on ${fairwayHolesThisCourse} FW holes)`,
+    );
+  }
   const withinEventLiveWeek = dr >= 2 || withinEventCountingMap.size > 0;
   for (let r = 1; r <= 4; r++) {
     const mult = flatVenueScore
@@ -2469,6 +2501,7 @@ async function main() {
         venueGir: venueScoring.venueAvgGir,
         venueFairways: venueScoring.venueAvgFairways,
         venuePutts: venueScoring.venueAvgPutts,
+        courseFairwayRate01,
       });
       const pretScore = pretStrokesByDg.get(row.dg_id);
       const scoreRes = resolveProjectionScoreToPar({
@@ -2608,6 +2641,25 @@ async function main() {
       }
       roundRows.push(pl);
     }
+    const fwCalibN = calibrateFairwayFieldMean(roundRows, {
+      round: r,
+      venueAvgFairways: venueScoring.venueAvgFairways,
+      courseFairwayRate01,
+      nFairwayHoles: fairwayHolesThisCourse,
+    });
+    if (fwCalibN > 0) {
+      for (const pl of roundRows) {
+        const fw = num(pl.fairways, NaN);
+        if (!Number.isFinite(fw) || fw <= 1.02) continue;
+        pl.driving_accuracy = Math.round(((fw / fairwayHolesThisCourse) * 100) * 10) / 10;
+        pl.dg_fairway_pct = Math.round((fw / fairwayHolesThisCourse) * 1000) / 1000;
+      }
+      const meanFw =
+        roundRows.reduce((s, p) => s + num(p.fairways, 0), 0) / Math.max(1, roundRows.length);
+      console.log(
+        `[fetch-dg] R${r} fairway field calibration: ${fwCalibN} players → mean ${meanFw.toFixed(2)} (target ${fairwayCalibrationTargetMean({ venueAvgFairways: venueScoring.venueAvgFairways, courseFairwayRate01, nFairwayHoles: fairwayHolesThisCourse })})`,
+      );
+    }
     roundRows.sort((a, b) => num(a.total_score, NaN) - num(b.total_score, NaN));
     for (let i = 0; i < roundRows.length; i++) roundRows[i].position = i + 1;
     players.push(...roundRows);
@@ -2702,6 +2754,9 @@ async function main() {
     },
     projection_course_basis: {
       fairway_holes_modeled: fairwayHolesThisCourse,
+      course_adj_fairway_rate: Number.isFinite(courseFairwayRate01)
+        ? Math.round(courseFairwayRate01 * 10000) / 10000
+        : null,
       pret_expected_round_strokes_players: pretStrokesByDg.size,
       venue_avg_score_to_par: Number.isFinite(venueScoring.venueAvgStp)
         ? Math.round(venueScoring.venueAvgStp * 1000) / 1000

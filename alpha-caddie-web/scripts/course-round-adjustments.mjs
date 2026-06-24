@@ -10,10 +10,27 @@ import { eventsLikelySame, foldComparableTitle } from "./dg-events-align.mjs";
 import { liveHoleStatsUsableForProjections } from "./dg-live-hole-pars.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
 import { applyMarketBookCalibrationToRow } from "./market-book-calibration.mjs";
+import { calibrateFairwayFieldMean, fairwayCalibrationTargetMean } from "./counting-from-rates-sg.mjs";
 
 function num(x, fallback = NaN) {
   const n = Number(x);
   return Number.isFinite(n) ? n : fallback;
+}
+
+/** course-table.json adj_driving_accuracy (0–1) for fairway field calibration. */
+function courseAdjFairwayRateFromTable(courseUsed) {
+  const course = String(courseUsed || "").trim();
+  if (!course) return NaN;
+  const p = join(dirname(fileURLToPath(import.meta.url)), "..", "course-table.json");
+  if (!existsSync(p)) return NaN;
+  try {
+    const ct = JSON.parse(readFileSync(p, "utf8"));
+    const key = normCourseNameKey(course);
+    const row = ct?.byNormKey?.[key];
+    return num(row?.adj_driving_accuracy, NaN);
+  } catch {
+    return NaN;
+  }
 }
 
 function clamp(x, lo, hi) {
@@ -817,8 +834,26 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
       applyMarketBookCalibrationToRow(pl, coursePar18);
     }
   }
+  const nFw = Math.round(num(basis.fairway_holes_modeled, 14)) || 14;
+  const fwCalibOpts = {
+    venueAvgFairways: num(basis.venue_avg_fairways, NaN),
+    courseFairwayRate01: num(basis.course_adj_fairway_rate, NaN),
+    nFairwayHoles: nFw,
+  };
+  let fairwayFieldCalibRounds = 0;
+  for (let rnd = 1; rnd <= 4; rnd++) {
+    if (calibrateFairwayFieldMean(payload?.players, { ...fwCalibOpts, round: rnd }) > 0) {
+      fairwayFieldCalibRounds++;
+    }
+  }
   syncPreWeatherCountSnapshots(payload?.players);
-  return { reconciled: n, calibrated: cal, venueScoreCalibrated: venueScoreCal, histVenueCalibrated: histVenueCal };
+  return {
+    reconciled: n,
+    calibrated: cal,
+    venueScoreCalibrated: venueScoreCal,
+    histVenueCalibrated: histVenueCal,
+    fairwayFieldCalibRounds,
+  };
 }
 
 function syncPreWeatherCountSnapshots(players) {
@@ -1868,6 +1903,11 @@ export function ensureProjectionCourseBasisComplete(basis, payload = {}) {
     out.venue_avg_fairways = Math.round(num(out.venue_avg_gir, 0) * (nFw / 18) * 0.92 * 100) / 100;
   }
 
+  if (!Number.isFinite(num(out.course_adj_fairway_rate, NaN))) {
+    const fromCourse = courseAdjFairwayRateFromTable(payload.course_used);
+    if (Number.isFinite(fromCourse)) out.course_adj_fairway_rate = Math.round(fromCourse * 10000) / 10000;
+  }
+
   if (
     !Number.isFinite(num(out.venue_avg_pars, NaN)) &&
     Number.isFinite(num(out.venue_avg_birdies, NaN)) &&
@@ -2155,9 +2195,14 @@ export function calibrateProjectionFieldMarkets(payload, opts = {}) {
     applyUniformField("birdies", venueBird, 0.15, 7);
     applyUniformField("bogeys", venueBog, 0.15, 8.5);
     applyUniformField("gir", num(basisRoot.venue_avg_gir, NaN), 6, 16.2);
+    const fwTarget = fairwayCalibrationTargetMean({
+      venueAvgFairways: num(basisRoot.venue_avg_fairways, NaN),
+      courseFairwayRate01: num(basisRoot.course_adj_fairway_rate, NaN),
+      nFairwayHoles: Math.round(num(basisRoot.fairway_holes_modeled, 14)) || 14,
+    });
     applyUniformField(
       "fairways",
-      num(basisRoot.venue_avg_fairways, NaN),
+      fwTarget,
       2,
       num(basisRoot.fairway_holes_modeled, 14) + 0.5,
     );
