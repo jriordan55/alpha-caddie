@@ -10,6 +10,7 @@
   let api = null;
 
   const BOOK_HOLD = 0.048;
+  const EXCLUDED_MARKETS = new Set(["GIR"]);
 
   const DEFAULT_RHO = {
     same_player_same_market: 0.55,
@@ -220,6 +221,7 @@
 
     for (const pr of props) {
       const marketCanon = api.ouPropsCanonicalMarket(pr.market);
+      if (EXCLUDED_MARKETS.has(marketCanon)) continue;
       const mKey = marketCanon === "Total Score" ? "Total score" : marketCanon;
       const L = api.enforceHalfLine(api.num(pr.line, NaN));
       const oAm = Math.round(api.num(pr.over_odds, NaN));
