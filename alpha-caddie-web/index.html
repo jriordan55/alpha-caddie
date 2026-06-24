@@ -1309,7 +1309,7 @@
         <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
       </header>
       <p class="ev-help-intro text-muted">
-        Finds DraftKings <strong>round O/U parlays</strong> where your model’s <strong>joint win chance</strong> beats DK’s posted price after accounting for how legs move together (same golfer, same tee wave, historical co-hit rates).
+        Finds DraftKings <strong>round O/U parlays</strong> where the model’s joint win chance beats DK’s posted price. Leg correlation comes from <strong>historical co-hit rates</strong> in <code>round_projection_vs_actual.csv</code> (same player, same tee wave, same round, then sentiment-bucket averages).
       </p>
       <section class="ev-help-section" aria-labelledby="tab-help-parlay-pro-how-h">
         <h4 class="ev-devig-section-title" id="tab-help-parlay-pro-how-h">How to use</h4>
@@ -1317,7 +1317,7 @@
           <dt>Legs</dt>
           <dd>How many picks in the parlay (2–6). DK multiplies each leg’s price into one parlay ticket.</dd>
           <dt>Combo style</dt>
-          <dd><strong>All</strong> — best EV across styles. <strong>Same player</strong> — one golfer, different markets (e.g. Score Over + Birdies Under). <strong>Same market</strong> — same stat/side, different players in the same tee wave when possible. <strong>Negative correlation</strong> — legs that tend to move opposite; joint win % can be higher than DK assumes.</dd>
+          <dd><strong>All</strong> — best EV across styles. <strong>Same player</strong> — one golfer, different markets (e.g. O bogeys + O score = bad-day stack). <strong>Same market</strong> — same stat/side, different players in the same tee wave when possible. <strong>Negative correlation</strong> — good-day legs mixed with bad-day legs (e.g. U score + O bogeys); joint win % can beat DK’s naive stack.</dd>
           <dt>Min leg EV %</dt>
           <dd>Only consider legs your model already likes as singles at or above this EV.</dd>
         </dl>
@@ -1326,17 +1326,17 @@
         <h4 class="ev-devig-section-title" id="tab-help-parlay-pro-odds-h">Odds columns</h4>
         <dl class="ev-help-dl">
           <dt>Model fair</dt>
-          <dd>Product of each leg’s model fair price (matches Round projections <strong>price</strong> mode, without vig).</dd>
+          <dd>DK-style <strong>correlated</strong> parlay fair from calibrated leg win rates (model blended toward DK devigged implied per market). Should land near the DK column when correlation rules match.</dd>
           <dt>Model + vig</dt>
-          <dd>Product of each leg’s vigged model price (same as Round projections price mode). Leg chips show DK and model (+vig) per side.</dd>
+          <dd>Same correlated stack using posted DK vig on each leg blended with model +vig singles.</dd>
           <dt>DK</dt>
-          <dd>DK’s correlated parlay price — same stat/side legs in a round are adjusted together (not a naive multiply of singles). Hover the <strong>*</strong> to see the uncorrelated product.</dd>
+          <dd>DK parlay price from posted leg odds with the same correlation rules (good↔good, bad↔bad, good↔bad). Unrelated same-market field stacks keep a small same-wave nudge only.</dd>
           <dt>EV</dt>
-          <dd>Expected profit per $1 at DK’s parlay price: (model joint win % × DK decimal) − 1.</dd>
+          <dd>(Model win % × DK parlay decimal) − 1. Win % uses the same calibrated legs and copula as Model fair.</dd>
           <dt>Win edge</dt>
-          <dd>Model joint win % minus DK parlay implied % — e.g. +2.1% means the model thinks the parlay hits 2.1% more often than DK’s price implies.</dd>
+          <dd>Model win % minus DK parlay implied %. Tooltip shows raw (unblended) model edge for comparison.</dd>
           <dt>ρ (rho)</dt>
-          <dd>Average correlation between legs. Positive = legs tend to hit together; negative = they offset (can create value on unders mixed with overs).</dd>
+          <dd>Average pair correlation from <strong>historical data</strong> when the leg-pair exists in the backtest file (e.g. O bogeys + O score for the same player). Falls back to round-level or good/bad-day bucket averages only when that exact pair is thin.</dd>
         </dl>
       </section>
       <footer class="ev-help-actions">
@@ -1500,7 +1500,7 @@
     </div>
   </dialog>
 
-  <script src="parlay-pro.js?v=7"></script>
+  <script src="parlay-pro.js?v=12"></script>
   <script src="app.js?v=297"></script>
 </body>
 </html>

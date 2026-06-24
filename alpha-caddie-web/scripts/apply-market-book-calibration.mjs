@@ -37,6 +37,12 @@ for (const pl of proj.players || []) {
 }
 syncProjectionPlayerCoursePar(proj, par);
 const { fixed } = repairProjectionScoreParCoherence(proj, par);
+if (!proj.meta || typeof proj.meta !== "object") proj.meta = {};
+proj.meta.market_book_calibration = {
+  generated_at: cal.generated_at,
+  fit_method: cal.fit_method,
+  markets: cal.markets,
+};
 writeFileSync(projPath, `${JSON.stringify(proj, null, 2)}\n`);
 
 const mk = cal.markets || {};

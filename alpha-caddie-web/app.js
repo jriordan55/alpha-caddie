@@ -29,6 +29,43 @@
 const OU_HOLD = 0.048;
 const OU_DEFAULT_ODDS_AM = -110;
 
+/** DK book-alignment σ scale (fit on prior events); matches scripts/round-projection-mu.mjs + walkforward OOS. */
+const MARKET_BOOK_SIGMA_DEFAULTS = Object.freeze({
+  "Total score": 1.32,
+  Birdies: 1.127,
+  Bogeys: 1.107,
+  GIR: 1.109,
+  "Fairways hit": 1.082,
+  Pars: 1.08,
+});
+
+function marketBookSigmaScale(market) {
+  const mKey = ouModelMarketKey(market) || String(market || "").trim();
+  const embedded = DATA?.meta?.market_book_calibration?.markets?.[mKey]?.sigma_scale;
+  const n = num(embedded, NaN);
+  if (Number.isFinite(n) && n > 0) return n;
+  return MARKET_BOOK_SIGMA_DEFAULTS[mKey] ?? 1;
+}
+
+const MARKET_BOOK_RMSE_BASELINE = Object.freeze({
+  "Total score": 1.25,
+  Birdies: 0.85,
+  Bogeys: 0.75,
+  GIR: 1.05,
+  "Fairways hit": 1.0,
+  Pars: 0.9,
+});
+
+/** Parlay Pro: blend model leg win % toward DK devigged implied (more weight when model–book RMSE is high). */
+function marketBookBlendWeight(market) {
+  const mKey = ouModelMarketKey(market) || String(market || "").trim();
+  const embedded = DATA?.meta?.market_book_calibration?.markets?.[mKey]?.model_book_rmse;
+  const rmse = num(embedded, NaN);
+  const base = MARKET_BOOK_RMSE_BASELINE[mKey] ?? 1;
+  const r = Number.isFinite(rmse) && rmse > 0 ? rmse : base;
+  return clamp(r / (r + 0.72), 0.5, 0.88);
+}
+
 /**
  * When true in projections.json `meta`, preds/in-play mid-round fields shift **round** model odds
  * (O/U live thru/today, round_matchups / 3-ball SG delta, matchup win-share blend). Default false.
@@ -5614,8 +5651,10 @@ function modelProbOverMarket(market, row, line) {
   const mu = ouProjectedMean(market, row);
   if (!Number.isFinite(mu)) return NaN;
   const countLive = livePartialRoundCountPropAdjust(mKey, row);
-  let sig = sigmaForOu(mKey, row) * countLive.sigmaScale;
-  if (!Number.isFinite(sig) || sig < 0.06) sig = sigmaForOu(mKey, row);
+  let sig = sigmaForOu(mKey, row) * countLive.sigmaScale * marketBookSigmaScale(mKey);
+  if (!Number.isFinite(sig) || sig < 0.06) {
+    sig = sigmaForOu(mKey, row) * marketBookSigmaScale(mKey);
+  }
   const z = (line - mu) / sig;
   return 1 - normalCdf(z);
 }
@@ -6716,8 +6755,10 @@ function drawOuProjDetailDistribution(canvas, market, player, line) {
   const mKey = ouModelMarketKey(market) || "Total score";
   const mu = ouProjectedMean(market, player);
   const countLive = livePartialRoundCountPropAdjust(mKey, player);
-  let sig = sigmaForOu(mKey, player) * countLive.sigmaScale;
-  if (!Number.isFinite(sig) || sig < 0.06) sig = sigmaForOu(mKey, player);
+  let sig = sigmaForOu(mKey, player) * countLive.sigmaScale * marketBookSigmaScale(mKey);
+  if (!Number.isFinite(sig) || sig < 0.06) {
+    sig = sigmaForOu(mKey, player) * marketBookSigmaScale(mKey);
+  }
   const dpr = Math.min(2, window.devicePixelRatio || 1);
   const cssW = 340;
   const cssH = 140;
@@ -6801,8 +6842,10 @@ function buildOuProjDetailPanel(player, col, side, mu, pick, rawName) {
   const mKey = ouModelMarketKey(col.market) || "Total score";
   const rec = ouStatRec(mKey);
   const countLive = livePartialRoundCountPropAdjust(mKey, player);
-  let sig = sigmaForOu(mKey, player) * countLive.sigmaScale;
-  if (!Number.isFinite(sig) || sig < 0.06) sig = sigmaForOu(mKey, player);
+  let sig = sigmaForOu(mKey, player) * countLive.sigmaScale * marketBookSigmaScale(mKey);
+  if (!Number.isFinite(sig) || sig < 0.06) {
+    sig = sigmaForOu(mKey, player) * marketBookSigmaScale(mKey);
+  }
   const baseField = num(player[rec.field], NaN);
 
   const chartCol = document.createElement("div");
@@ -7119,8 +7162,10 @@ function buildOuTable() {
     if (Number.isFinite(mu)) {
       const mKey = ouModelMarketKey(col.market) || "Total score";
       const countLive = livePartialRoundCountPropAdjust(mKey, player);
-      let sig = sigmaForOu(mKey, player) * countLive.sigmaScale;
-      if (!Number.isFinite(sig) || sig < 0.06) sig = sigmaForOu(mKey, player);
+      let sig = sigmaForOu(mKey, player) * countLive.sigmaScale * marketBookSigmaScale(mKey);
+      if (!Number.isFinite(sig) || sig < 0.06) {
+        sig = sigmaForOu(mKey, player) * marketBookSigmaScale(mKey);
+      }
       if (Number.isFinite(sig)) {
         tr.title = `${col.label} · μ ${mu.toFixed(2)} · σ ${sig.toFixed(2)} · ${side === "over" ? "Over" : "Under"}`;
       }
@@ -21801,6 +21846,7 @@ document.addEventListener("DOMContentLoaded", () => {
       clampProb01,
       dgIdsEliminatedFromEventPostCut,
       parseTeetimeMinutes: dgTeetimeSortMinutes,
+      marketBookBlendWeight,
     });
   }
 });

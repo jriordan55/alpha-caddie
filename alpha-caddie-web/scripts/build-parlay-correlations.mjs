@@ -38,14 +38,15 @@ function bump(map, key, hitA, hitB, both) {
   if (both) r.both++;
 }
 
-function finalizeMap(map) {
+function finalizeMap(map, minN = 12) {
   const out = {};
   for (const [k, r] of map) {
-    if (r.n < 12) continue;
+    if (r.n < minN) continue;
     const pA = r.hitA / r.n;
     const pB = r.hitB / r.n;
     const pBoth = r.both / r.n;
     const indep = pA * pB;
+    const denom = Math.sqrt(pA * (1 - pA) * pB * (1 - pB));
     out[k] = {
       n: r.n,
       p_a: Math.round(pA * 1000) / 1000,
@@ -54,33 +55,121 @@ function finalizeMap(map) {
       indep: Math.round(indep * 1000) / 1000,
       lift: indep > 1e-6 ? Math.round((pBoth / indep) * 1000) / 1000 : 1,
       rho:
-        indep > 1e-6 && pA > 0.02 && pA < 0.98 && pB > 0.02 && pB < 0.98
-          ? Math.round(((pBoth - indep) / Math.sqrt(pA * (1 - pA) * pB * (1 - pB))) * 1000) / 1000
+        indep > 1e-6 && pA > 0.02 && pA < 0.98 && pB > 0.02 && pB < 0.98 && denom > 1e-9
+          ? Math.round(((pBoth - indep) / denom) * 1000) / 1000
           : 0,
     };
   }
   return out;
 }
 
-async function main() {
+/** Good / bad round script (matches parlay-pro.js). */
+function legSentiment(market, side) {
+  const over = side === "over";
+  if (market === "Total Score" || market === "Bogeys") return over ? "bad" : "good";
+  if (market === "Birdies" || market === "Fairways hit") return over ? "good" : "bad";
+  return null;
+}
+
+function sentimentPairKey(sa, sb) {
+  if (!sa || !sb) return "neutral";
+  if (sa === sb) return sa === "good" ? "good_good" : "bad_bad";
+  return "good_bad";
+}
+
+function parsePairKey(pk) {
+  const [ka, kb] = pk.split("+");
+  const [ma, sa] = ka.split("|");
+  const [mb, sb] = kb.split("|");
+  return { ma, sa, mb, sb };
+}
+
+function buildSentimentBuckets(...maps) {
+  const acc = {
+    good_good: { ws: 0, n: 0 },
+    bad_bad: { ws: 0, n: 0 },
+    good_bad: { ws: 0, n: 0 },
+    neutral: { ws: 0, n: 0 },
+  };
+  for (const map of maps) {
+    for (const [pk, r] of map.entries()) {
+      if (r.n < 12) continue;
+      const fin = finalizeMap(new Map([[pk, r]]), 12)[pk];
+      if (!fin || !Number.isFinite(fin.rho)) continue;
+      const { ma, sa, mb, sb } = parsePairKey(pk);
+      const sk = sentimentPairKey(legSentiment(ma, sa), legSentiment(mb, sb));
+      acc[sk].ws += fin.rho * r.n;
+      acc[sk].n += r.n;
+    }
+  }
+  const out = {};
+  for (const [k, v] of Object.entries(acc)) {
+    out[k] = {
+      n: Math.round(v.n),
+      rho: v.n > 0 ? Math.round((v.ws / v.n) * 1000) / 1000 : 0,
+    };
+  }
+  return out;
+}
+
+function weightedMeanRho(map, filter) {
+  let ws = 0;
+  let n = 0;
+  for (const [pk, r] of map.entries()) {
+    if (r.n < 12) continue;
+    const fin = finalizeMap(new Map([[pk, r]]), 12)[pk];
+    if (!fin || !Number.isFinite(fin.rho)) continue;
+    if (filter && !filter(pk, r, fin)) continue;
+    ws += fin.rho * r.n;
+    n += r.n;
+  }
+  return n > 0 ? Math.round((ws / n) * 1000) / 1000 : 0;
+}
+
+function parseRowLegs(c, idx) {
+  /** @type {{ market: string, side: string, hit: boolean }[]} */
+  const legs = [];
+  for (const [col, label] of MARKET_KEYS) {
+    for (const side of ["over", "under"]) {
+      const colName = `${col}_${side}`;
+      const i = idx[colName];
+      if (i === undefined) continue;
+      const res = String(c[i] || "").trim().toUpperCase();
+      if (res !== "W" && res !== "L") continue;
+      legs.push({ market: label, side, hit: res === "W" });
+    }
+  }
+  return legs;
+}
+
+function bumpCrossPairs(hits, map) {
+  for (let i = 0; i < hits.length; i++) {
+    for (let j = i + 1; j < hits.length; j++) {
+      if (hits[i].playerKey === hits[j].playerKey) continue;
+      const a = legKey(hits[i].market, hits[i].side);
+      const b = legKey(hits[j].market, hits[j].side);
+      bump(map, pairKey(a, b), hits[i].hit, hits[j].hit, hits[i].hit && hits[j].hit);
+    }
+  }
+}
+
+async function readCsvRows() {
   if (!existsSync(CSV)) {
     console.error("[build:parlay-correlations] missing", CSV);
     process.exit(1);
   }
-
-  let header = null;
+  /** @type {Record<string, number>} */
   const idx = {};
-  const samePlayer = new Map();
-  const sameWave = new Map();
-  let rowN = 0;
-
+  /** @type {{ eventRound: string, waveKey: string, dgId: string, legs: { market: string, side: string, hit: boolean }[] }[]} */
+  const rows = [];
   const rl = createInterface({ input: createReadStream(CSV), crlfDelay: Infinity });
+  let header = false;
   for await (const line of rl) {
     if (!header) {
-      header = line.split(",");
-      header.forEach((h, i) => {
+      line.split(",").forEach((h, i) => {
         idx[h] = i;
       });
+      header = true;
       continue;
     }
     if (!line.trim()) continue;
@@ -88,103 +177,93 @@ async function main() {
     const wave = String(c[idx.tee_wave] || "").trim().toLowerCase();
     const eventRound = `${c[idx.event_name]}|${c[idx.round]}`;
     const waveKey = wave ? `${eventRound}|${wave}` : "";
+    const dgId = String(c[idx.dg_id] || "");
+    const legs = parseRowLegs(c, idx);
+    if (legs.length < 1) continue;
+    rows.push({ eventRound, waveKey, dgId, legs });
+  }
+  return rows;
+}
 
-    /** @type {{ market: string, side: string, hit: boolean }[]} */
-    const legs = [];
-    for (const [col, label] of MARKET_KEYS) {
-      for (const side of ["over", "under"]) {
-        const colName = `${col}_${side}`;
-        const i = idx[colName];
-        if (i === undefined) continue;
-        const res = String(c[i] || "").trim().toUpperCase();
-        if (res !== "W" && res !== "L") continue;
-        legs.push({ market: label, side, hit: res === "W" });
-      }
-    }
+async function main() {
+  const rows = await readCsvRows();
+  const samePlayer = new Map();
+  const sameWave = new Map();
+  const sameRound = new Map();
+
+  for (const row of rows) {
+    const { legs } = row;
     if (legs.length < 2) continue;
-    rowN++;
-
     for (let i = 0; i < legs.length; i++) {
       for (let j = i + 1; j < legs.length; j++) {
         const a = legKey(legs[i].market, legs[i].side);
         const b = legKey(legs[j].market, legs[j].side);
-        const pk = pairKey(a, b);
-        const both = legs[i].hit && legs[j].hit;
-        bump(samePlayer, pk, legs[i].hit, legs[j].hit, both);
-      }
-    }
-
-    if (!waveKey) continue;
-    // cross-player same wave: aggregate at wave bucket level in second pass — use row as one player
-    // store legs on wave for merging — simplified: only same-player for wave-specific we use tee_wave tag on leg pairs where same row is trivial; for cross-player need wave-level store
-  }
-
-  // Second pass for same-wave cross-player: re-read with player grouping
-  const waveLegsByKey = new Map();
-  const rl2 = createInterface({ input: createReadStream(CSV), crlfDelay: Infinity });
-  let header2 = null;
-  for await (const line of rl2) {
-    if (!header2) {
-      header2 = line.split(",");
-      continue;
-    }
-    if (!line.trim()) continue;
-    const c = line.split(",");
-    const wave = String(c[idx.tee_wave] || "").trim().toLowerCase();
-    if (!wave) continue;
-    const waveKey = `${c[idx.event_name]}|${c[idx.round]}|${wave}`;
-    const dg = c[idx.dg_id];
-    const playerKey = `${waveKey}|${dg}`;
-
-    const hits = [];
-    for (const [col, label] of MARKET_KEYS) {
-      for (const side of ["over", "under"]) {
-        const colName = `${col}_${side}`;
-        const i = idx[colName];
-        if (i === undefined) continue;
-        const res = String(c[i] || "").trim().toUpperCase();
-        if (res !== "W" && res !== "L") continue;
-        hits.push({ market: label, side, hit: res === "W", playerKey });
-      }
-    }
-    if (!waveLegsByKey.has(waveKey)) waveLegsByKey.set(waveKey, []);
-    waveLegsByKey.get(waveKey).push(...hits);
-  }
-
-  for (const hits of waveLegsByKey.values()) {
-    for (let i = 0; i < hits.length; i++) {
-      for (let j = i + 1; j < hits.length; j++) {
-        if (hits[i].playerKey === hits[j].playerKey) continue;
-        const a = legKey(hits[i].market, hits[i].side);
-        const b = legKey(hits[j].market, hits[j].side);
-        const pk = pairKey(a, b);
-        bump(sameWave, pk, hits[i].hit, hits[j].hit, hits[i].hit && hits[j].hit);
+        bump(samePlayer, pairKey(a, b), legs[i].hit, legs[j].hit, legs[i].hit && legs[j].hit);
       }
     }
   }
+
+  const waveHits = new Map();
+  const roundHits = new Map();
+  for (const row of rows) {
+    if (!row.waveKey) continue;
+    const playerKey = `${row.waveKey}|${row.dgId}`;
+    const tagged = row.legs.map((l) => ({ ...l, playerKey }));
+    if (!waveHits.has(row.waveKey)) waveHits.set(row.waveKey, []);
+    waveHits.get(row.waveKey).push(...tagged);
+    if (!roundHits.has(row.eventRound)) roundHits.set(row.eventRound, []);
+    roundHits.get(row.eventRound).push(...tagged);
+  }
+
+  for (const hits of waveHits.values()) bumpCrossPairs(hits, sameWave);
+  for (const hits of roundHits.values()) bumpCrossPairs(hits, sameRound);
+
+  const sentiment_buckets = buildSentimentBuckets(samePlayer, sameWave, sameRound);
+
+  const default_rho = {
+    same_player_same_market: weightedMeanRho(samePlayer, (pk) => {
+      const { ma, mb } = parsePairKey(pk);
+      return ma === mb;
+    }),
+    same_player_cross_market: weightedMeanRho(samePlayer, (pk) => {
+      const { ma, mb } = parsePairKey(pk);
+      return ma !== mb;
+    }),
+    same_wave_same_market: weightedMeanRho(sameWave, (pk) => {
+      const { ma, sa, mb, sb } = parsePairKey(pk);
+      return ma === mb && sa === sb;
+    }),
+    same_round_same_market: weightedMeanRho(sameRound, (pk) => {
+      const { ma, sa, mb, sb } = parsePairKey(pk);
+      return ma === mb && sa === sb;
+    }),
+    cross_market_good_good: sentiment_buckets.good_good?.rho ?? 0,
+    cross_market_bad_bad: sentiment_buckets.bad_bad?.rho ?? 0,
+    cross_market_good_bad: sentiment_buckets.good_bad?.rho ?? 0,
+    cross_market_neutral: sentiment_buckets.neutral?.rho ?? 0,
+  };
 
   const payload = {
     generated_at: new Date().toISOString(),
     source: "round_projection_vs_actual.csv",
-    rows_scored: rowN,
+    rows_scored: rows.filter((r) => r.legs.length >= 2).length,
     same_player: finalizeMap(samePlayer),
     same_tee_wave: finalizeMap(sameWave),
-    default_rho: {
-      same_player_same_market: 0.55,
-      same_player_cross_market: 0.28,
-      same_wave_same_market: 0.18,
-      same_wave_cross_market: 0.1,
-      same_round_same_market: 0.125,
-      different_wave: 0.04,
-      different_player_diff_round: 0.02,
-    },
+    same_round: finalizeMap(sameRound),
+    sentiment_buckets,
+    default_rho,
   };
 
   writeFileSync(OUT, `${JSON.stringify(payload, null, 2)}\n`);
   console.log(
-    `[build:parlay-correlations] OK — ${rowN} player-rounds; ` +
+    `[build:parlay-correlations] OK — ${payload.rows_scored} player-rounds; ` +
       `${Object.keys(payload.same_player).length} same-player pairs; ` +
-      `${Object.keys(payload.same_tee_wave).length} same-wave pairs → ${OUT}`,
+      `${Object.keys(payload.same_tee_wave).length} same-wave pairs; ` +
+      `${Object.keys(payload.same_round).length} same-round pairs → ${OUT}`,
+  );
+  console.log(
+    `  sentiment ρ: good↔good ${sentiment_buckets.good_good.rho} (n=${sentiment_buckets.good_good.n}) ` +
+      `bad↔bad ${sentiment_buckets.bad_bad.rho} good↔bad ${sentiment_buckets.good_bad.rho}`,
   );
 }
 

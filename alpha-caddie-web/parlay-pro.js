@@ -28,11 +28,17 @@
   const DEFAULT_RHO = {
     same_player_same_market: 0.55,
     same_player_cross_market: 0.28,
-    same_wave_same_market: 0.18,
-    same_wave_cross_market: 0.1,
-    same_round_same_market: 0.125,
-    different_wave: 0.04,
-    different_player_diff_round: 0.02,
+    /** Different players, same market + side, same tee wave — small co-movement from weather/conditions. */
+    same_wave_same_market: 0.05,
+    /** Different players, same market + side, same round, different waves. */
+    same_round_same_market: 0.03,
+    /** Cross-market: good-day legs together (U score, O birdies, O FW, U bogeys). */
+    cross_market_good_good: 0.15,
+    /** Cross-market: bad-day legs together (O score, O bogeys, U birdies, U FW). */
+    cross_market_bad_bad: 0.15,
+    /** Cross-market: good leg + bad leg (mixed round script). */
+    cross_market_good_bad: -0.13,
+    cross_market_neutral: 0,
   };
 
   function normalInv(p) {
@@ -127,34 +133,147 @@
     return ka < kb ? `${ka}+${kb}` : `${kb}+${ka}`;
   }
 
-  function legRelation(a, b) {
-    if (a.dgId === b.dgId && a.roundNum === b.roundNum) return "same_player";
-    if (a.roundNum === b.roundNum && a.teeWave && b.teeWave && a.teeWave === b.teeWave) return "same_wave";
-    if (a.roundNum === b.roundNum) return "same_round";
-    return "other";
+  /**
+   * Round-quality script for one leg: good day vs bad day (for cross-market ρ sign).
+   * Good: U score, U bogeys, O birdies, O fairways. Bad: the opposite sides.
+   */
+  function legScoringSentiment(leg) {
+    const m = String(leg.market || "");
+    const over = leg.side === "over";
+    if (m === "Total Score" || m === "Bogeys" || m === "Putts") return over ? "bad" : "good";
+    if (m === "Birdies" || m === "Fairways hit") return over ? "good" : "bad";
+    return null;
+  }
+
+  function sentimentBaseRho(a, b, defs) {
+    const sa = legScoringSentiment(a);
+    const sb = legScoringSentiment(b);
+    if (!sa || !sb) return defs.cross_market_neutral ?? 0;
+    if (sa === sb) {
+      return sa === "good"
+        ? defs.cross_market_good_good ?? 0.15
+        : defs.cross_market_bad_bad ?? 0.15;
+    }
+    return defs.cross_market_good_bad ?? -0.13;
+  }
+
+  function roundScopeScale(sameRound, sameWave) {
+    if (!sameRound) return 0.35;
+    if (sameWave) return 1;
+    return 0.78;
+  }
+
+  function clampRho(r) {
+    if (!Number.isFinite(r)) return NaN;
+    return Math.max(-0.95, Math.min(0.95, r));
+  }
+
+  /** Historical pair ρ from a co-hit bucket; lift shrinkage when sample is thin. */
+  function empiricalPairRho(bucket, pk, minN) {
+    const emp = bucket?.[pk];
+    if (!emp) return null;
+    if (Number.isFinite(emp.rho) && emp.n >= minN) return clampRho(emp.rho);
+    if (emp.n >= 12 && emp.indep > 1e-6 && Number.isFinite(emp.co_hit)) {
+      const lift = emp.co_hit / emp.indep;
+      return clampRho((lift - 1) * 0.35);
+    }
+    return null;
+  }
+
+  function sentimentBucketRho(a, b, defs) {
+    const sa = legScoringSentiment(a);
+    const sb = legScoringSentiment(b);
+    const buckets = corrData?.sentiment_buckets;
+    if (buckets) {
+      if (!sa || !sb) {
+        const n = buckets.neutral;
+        if (n && Number.isFinite(n.rho) && n.n >= 40) return n.rho;
+        return defs.cross_market_neutral ?? 0;
+      }
+      if (sa === sb) {
+        const bkt = sa === "good" ? buckets.good_good : buckets.bad_bad;
+        if (bkt && Number.isFinite(bkt.rho) && bkt.n >= 40) return bkt.rho;
+        return sa === "good"
+          ? defs.cross_market_good_good ?? 0.15
+          : defs.cross_market_bad_bad ?? 0.15;
+      }
+      const opp = buckets.good_bad;
+      if (opp && Number.isFinite(opp.rho) && opp.n >= 40) return opp.rho;
+      return defs.cross_market_good_bad ?? -0.13;
+    }
+    return sentimentBaseRho(a, b, defs);
   }
 
   function pairRho(a, b) {
-    const rel = legRelation(a, b);
     const defs = defaultRhoDefs();
     const pk = legPairKey(a, b);
-    const bucket =
-      rel === "same_player" ? corrData?.same_player : rel === "same_wave" ? corrData?.same_tee_wave : null;
-    const emp = bucket?.[pk];
-    if (emp && Number.isFinite(emp.rho) && emp.n >= 20) return emp.rho;
-    if (emp && emp.indep > 1e-6 && emp.n >= 12) {
-      const lift = emp.co_hit / emp.indep;
-      return Math.max(-0.5, Math.min(0.75, (lift - 1) * 0.35));
-    }
     const sameMkt = a.market === b.market;
     const sameSide = a.side === b.side;
-    if (rel === "same_player") return sameMkt ? defs.same_player_same_market : defs.same_player_cross_market;
-    if (rel === "same_wave") return sameMkt && sameSide ? defs.same_wave_same_market : defs.same_wave_cross_market;
-    if (rel === "same_round") {
-      if (sameMkt && sameSide) return defs.same_round_same_market;
-      return defs.different_wave;
+    const sameRound = a.roundNum === b.roundNum;
+    const samePlayer = a.dgId === b.dgId && sameRound;
+    const sameWave =
+      sameRound && a.teeWave && b.teeWave && a.teeWave === b.teeWave;
+    const scope = roundScopeScale(sameRound, sameWave);
+
+    if (samePlayer) {
+      const r = empiricalPairRho(corrData?.same_player, pk, 20);
+      if (r !== null) return r;
+      if (sameMkt) return defs.same_player_same_market ?? 0.55;
+      return defs.same_player_cross_market ?? 0.28;
     }
-    return defs.different_player_diff_round;
+
+    if (sameWave) {
+      const r = empiricalPairRho(corrData?.same_tee_wave, pk, 15);
+      if (r !== null) return r;
+    }
+
+    if (sameRound) {
+      const r = empiricalPairRho(corrData?.same_round, pk, 20);
+      if (r !== null) return r * (sameWave ? 1 : scope);
+    }
+
+    if (sameMkt && sameSide) {
+      if (sameWave) return defs.same_wave_same_market ?? 0.05;
+      if (sameRound) return (defs.same_round_same_market ?? 0.03) * scope;
+      return 0;
+    }
+
+    const sent = sentimentBucketRho(a, b, defs);
+    return sent * scope;
+  }
+
+  function maxPairRho(legs) {
+    if (legs.length < 2) return 0;
+    let max = 0;
+    for (let i = 0; i < legs.length; i++) {
+      for (let j = i + 1; j < legs.length; j++) {
+        const r = Math.abs(pairRho(legs[i], legs[j]));
+        if (r > max) max = r;
+      }
+    }
+    return max;
+  }
+
+  function legMarketProb(leg) {
+    const p = 1 / leg.fairDecimal;
+    return Number.isFinite(p) && p > 0 ? p : 1 / leg.decimal;
+  }
+
+  function legPostedProb(leg) {
+    return 1 / leg.decimal;
+  }
+
+  /** Blend raw model win % toward DK devigged implied so parlay prices track DK's correlated stack. */
+  function legCalibMarginal(leg, usePostedVig) {
+    const w = api.marketBookBlendWeight?.(leg.mKey) ?? 0.65;
+    const pMkt = usePostedVig ? legPostedProb(leg) : legMarketProb(leg);
+    const pMod = usePostedVig ? 1 / leg.modelVigDec : leg.pWin;
+    if (!Number.isFinite(pMkt) || !Number.isFinite(pMod)) return leg.pWin;
+    return api.clampProb01((1 - w) * pMod + w * pMkt);
+  }
+
+  function jointCalibProb(legs, usePostedVig) {
+    return jointProbForLegs(legs, (l) => legCalibMarginal(l, usePostedVig));
   }
 
   function avgPairRho(legs) {
@@ -189,7 +308,7 @@
   }
 
   function jointWinProb(legs) {
-    return jointProbForLegs(legs, (l) => l.pWin);
+    return jointCalibProb(legs, false);
   }
 
   function combinations(arr, k, maxOut = 80000) {
@@ -301,18 +420,33 @@
 
   function scoreParlay(legs) {
     const dkNaiveDecimal = legs.reduce((p, l) => p * l.decimal, 1);
-    const dkIndepProb = legs.reduce((p, l) => p * (1 / l.decimal), 1);
-    const dkJointProb = jointProbForLegs(legs, (l) => 1 / l.decimal);
-    const dkDecimal = Number.isFinite(dkJointProb) && dkJointProb > 0 ? 1 / dkJointProb : NaN;
-    const indepProb = legs.reduce((p, l) => p * l.pWin, 1);
-    const jointProb = jointWinProb(legs);
+    const dkIndepProb = legs.reduce((p, l) => p * legPostedProb(l), 1);
+    const dkJointProb = jointProbForLegs(legs, legPostedProb);
+    const useDkCorr = maxPairRho(legs) > 0.001;
+    const dkDecimal = useDkCorr
+      ? Number.isFinite(dkJointProb) && dkJointProb > 0
+        ? 1 / dkJointProb
+        : dkNaiveDecimal
+      : dkNaiveDecimal;
+    const rawIndepProb = legs.reduce((p, l) => p * l.pWin, 1);
+    const rawJointProb = jointProbForLegs(legs, (l) => l.pWin);
+    const indepProb = legs.reduce((p, l) => p * legCalibMarginal(l, false), 1);
+    const jointProb = jointCalibProb(legs, false);
     const avgRho = avgPairRho(legs);
-    const modelFairDecimal = legs.reduce((p, l) => p * l.modelFairDec, 1);
-    const modelVigDecimal = legs.reduce((p, l) => p * l.modelVigDec, 1);
-    const indepFairDecimal = modelFairDecimal;
+    const modelLegStackDecimal = legs.reduce((p, l) => p * l.modelFairDec, 1);
+    const modelVigJointProb = jointCalibProb(legs, true);
+    const modelFairDecimal =
+      Number.isFinite(jointProb) && jointProb > 0 ? 1 / jointProb : modelLegStackDecimal;
+    const modelVigDecimal =
+      Number.isFinite(modelVigJointProb) && modelVigJointProb > 0
+        ? 1 / modelVigJointProb
+        : legs.reduce((p, l) => p * l.modelVigDec, 1);
+    const indepFairDecimal = modelLegStackDecimal;
     const modelEv = Number.isFinite(jointProb) && Number.isFinite(dkDecimal) ? jointProb * dkDecimal - 1 : NaN;
     const indepEv = Number.isFinite(indepProb) && Number.isFinite(dkDecimal) ? indepProb * dkDecimal - 1 : NaN;
     const edgeVsDk = Number.isFinite(jointProb) && Number.isFinite(dkJointProb) ? jointProb - dkJointProb : NaN;
+    const rawEdgeVsDk =
+      Number.isFinite(rawJointProb) && Number.isFinite(dkJointProb) ? rawJointProb - dkJointProb : NaN;
     const corrUplift = indepProb > 1e-9 && Number.isFinite(jointProb) ? jointProb / indepProb : 1;
     const dkCorrUplift = dkIndepProb > 1e-9 && Number.isFinite(dkJointProb) ? dkJointProb / dkIndepProb : 1;
     const comboType = parlayComboType(legs);
@@ -335,6 +469,9 @@
       indepFairAmerican: api.americanFromDecimal(indepFairDecimal),
       jointProb,
       indepProb,
+      rawJointProb,
+      rawIndepProb,
+      rawEdgeVsDk,
       modelEv,
       indepEv,
       edgeVsDk,
@@ -490,6 +627,13 @@
     return "Mixed";
   }
 
+  function sentimentLabel(leg) {
+    const s = legScoringSentiment(leg);
+    if (s === "good") return "good-day";
+    if (s === "bad") return "bad-day";
+    return "neutral";
+  }
+
   function renderResults(rows, nLegs) {
     const el = document.getElementById("parlay-pro-results");
     if (!el) return;
@@ -504,7 +648,7 @@
         <span class="parlay-pro-hero-value ${best.modelEv >= 0 ? "ev-pos" : "ev-neg"}">${fmtEv(best.modelEv)}</span>
       </div>
       <div class="parlay-pro-hero-stat">
-        <span class="parlay-pro-hero-label">Model odds (fair)</span>
+        <span class="parlay-pro-hero-label" title="Fair parlay price from calibrated leg win rates + same correlation structure as DK">Model odds (fair)</span>
         <span class="parlay-pro-hero-value">${fmtModelDec(best.modelFairDecimal)}</span>
       </div>
       <div class="parlay-pro-hero-stat">
@@ -516,7 +660,7 @@
         <span class="parlay-pro-hero-value">${api.formatAmerican(best.dkAmerican)}</span>
       </div>
       <div class="parlay-pro-hero-stat">
-        <span class="parlay-pro-hero-label">Model win %</span>
+        <span class="parlay-pro-hero-label" title="Correlation-adjusted win % (model blended toward DK devigged at each leg, same copula as DK)">Model win %</span>
         <span class="parlay-pro-hero-value">${fmtPct(best.jointProb)}</span>
       </div>
     </div>`;
@@ -535,7 +679,9 @@
           const dk = api.formatAmerican(l.oddsAm);
           const mv = fmtAm(l.modelVigAm);
           const legFair = fmtAm(l.modelFairAm);
-          return `<span class="parlay-leg-chip" title="DK ${dk} · model fair ${legFair} · model +vig ${mv} · win ${fmtPct(l.pWin)}">${l.playerName.split(",")[0]} ${m} ${l.side === "over" ? "O" : "U"}${l.line}${w} <span class="parlay-leg-odds">${dk}</span> <span class="parlay-leg-model">${mv}</span></span>`;
+          const dkPct = fmtPct(1 / l.decimal);
+          const modelPct = fmtPct(l.pWin);
+          return `<span class="parlay-leg-chip" title="${sentimentLabel(l)} · historical ρ when available · Model ${legFair} (${modelPct}) · DK ${dk} (${dkPct}) · model +vig ${mv}">${l.playerName.split(",")[0]} ${m} ${l.side === "over" ? "O" : "U"}${l.line}${w} <span class="parlay-leg-model">${mv}</span> <span class="parlay-leg-odds">${dk}</span></span>`;
         })
         .join("");
       html += `<tr>
@@ -546,7 +692,7 @@
         <td>${fmtModelDec(r.modelVigDecimal)}</td>
         <td>${fmtAm(r.dkAmerican)}${r.legs.length > 1 && r.dkCorrUplift > 1.02 ? `<span class="parlay-dk-indep-hint" title="Uncorrelated leg product would be ${fmtAm(r.dkNaiveAmerican)}">*</span>` : ""}</td>
         <td class="${r.modelEv >= 0 ? "ev-pos" : "ev-neg"}">${fmtEv(r.modelEv)}</td>
-        <td class="${r.edgeVsDk >= 0 ? "ev-pos" : "ev-neg"}" title="Model joint win % minus DK parlay implied %">${fmtEdge(r.edgeVsDk)}</td>
+        <td class="${r.edgeVsDk >= 0 ? "ev-pos" : "ev-neg"}" title="Calibrated model win % minus DK parlay implied %${Number.isFinite(r.rawEdgeVsDk) ? ` · raw model edge ${fmtEdge(r.rawEdgeVsDk)}` : ""}">${fmtEdge(r.edgeVsDk)}</td>
         <td>${fmtRho(r.avgRho)}</td>
       </tr>`;
     });
