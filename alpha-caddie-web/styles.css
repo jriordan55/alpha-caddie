@@ -5107,3 +5107,53 @@ dialog,
   line-height: 1.45;
   color: var(--golf-text-muted);
 }
+
+/* Parlay Pro */
+.parlay-pro-intro {
+  max-width: 52rem;
+  margin-bottom: 0.75rem;
+}
+.parlay-pro-toolbar {
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+}
+.parlay-pro-hero {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.75rem 1rem;
+  margin: 1rem 0 1.25rem;
+  padding: 1rem 1.1rem;
+  border-radius: var(--golf-radius, 8px);
+  background: var(--golf-surface-elevated, rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--golf-border, rgba(255, 255, 255, 0.08));
+}
+.parlay-pro-hero-label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--golf-text-muted);
+  margin-bottom: 0.2rem;
+}
+.parlay-pro-hero-value {
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.parlay-pro-table .parlay-legs-cell {
+  max-width: 28rem;
+  line-height: 1.5;
+}
+.parlay-leg-chip {
+  display: inline-block;
+  margin: 0.15rem 0.35rem 0.15rem 0;
+  padding: 0.2rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.parlay-pro-results {
+  margin-top: 0.5rem;
+}

@@ -60,6 +60,7 @@
     "backtest:odds-csv": "node scripts/backtest-odds-csv.mjs",
     "backtest:odds-model-roi": "node scripts/backtest-odds-model-roi.mjs",
     "build:course-table": "node scripts/build-course-table-json.mjs",
+    "build:parlay-correlations": "node scripts/build-parlay-correlations.mjs",
     "backfill:round-weather": "node scripts/backfill-historical-round-weather.mjs",
     "build:history": "node scripts/build-player-history.mjs && node scripts/build-course-history-shards.mjs && node scripts/embed-player-history.mjs && node scripts/build-player-shots-web.mjs",
     "rebuild:history-deep": "node scripts/rebuild-history-deep.mjs",

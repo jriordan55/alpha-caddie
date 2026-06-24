@@ -286,11 +286,21 @@ if (Test-Path $asL12Src) {
   Write-Host "Mirrored approach_skill_l12.json -> website/public/data/approach_skill_l12.json"
 }
 
+$parlayCorrSrc = Join-Path $webRoot "data/parlay_correlations.json"
+$parlayCorrDest = Join-Path $webDataDir "parlay_correlations.json"
+if (Test-Path $parlayCorrSrc) {
+  Copy-Item -Path $parlayCorrSrc -Destination $parlayCorrDest -Force
+  Write-Host "Mirrored parlay_correlations.json -> website/public/data/parlay_correlations.json"
+}
+
 Set-Location $repoRoot
 
 $artifacts = @(
   "alpha-caddie-web/app.js",
   "alpha-caddie-web/index.html",
+  "alpha-caddie-web/parlay-pro.js",
+  "alpha-caddie-web/styles.css",
+  "alpha-caddie-web/package.json",
   "alpha-caddie-web/projections.json",
   "alpha-caddie-web/live-in-play.json",
   "alpha-caddie-web/approach_skill_ytd.json",
@@ -309,6 +319,7 @@ $artifacts = @(
   "alpha-caddie-web/data/round_projection_vs_actual.xlsx",
   "alpha-caddie-web/data/market_book_calibration.json",
   "alpha-caddie-web/data/walkforward_oos_roi.json",
+  "alpha-caddie-web/data/parlay_correlations.json",
   "alpha-caddie-web/data/odds_model_roi_summary.csv",
   "alpha-caddie-web/data/odds_model_roi_detail.csv",
   "alpha-caddie-web/data/pgatour_event_rounds.json",
@@ -322,6 +333,7 @@ $artifacts = @(
   "website/public/data/live-in-play.json",
   "website/public/data/approach_skill_ytd.json",
   "website/public/data/approach_skill_l12.json",
+  "website/public/data/parlay_correlations.json",
   "data/historical_rounds_all.csv",
   "alpha-caddie-web/data/historical_rounds_all.csv",
   "alpha-caddie-web/player_round_history.json",

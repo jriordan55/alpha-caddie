@@ -3,7 +3,7 @@
  * Live-week refresh for `npm run push:live` — updates projections, live-in-play, book odds,
  * DK props, field-updates tee times, venue history + skill repair, within-event form, weather bake,
  * unified factors, pin sheet, venue field reconcile, vs-actual export, honest DK book calibration
- * (fit on prior events → apply to live projections), walk-forward OOS report, and fast history patches.
+ * (fit on prior events → apply to live projections), Parlay Pro correlations, walk-forward OOS report, and fast history patches.
  *
  *   npm run refresh:live
  *
@@ -69,6 +69,7 @@ function mirrorWebsitePublicData() {
     "approach_skill_ytd.json",
     "approach_skill_l12.json",
   ];
+  const dataFiles = ["parlay_correlations.json"];
   console.log("\n[refresh:live] Mirroring JSON → website/public/data/ …\n");
   for (const name of files) {
     const src = path.join(WEB_ROOT, name);
@@ -79,6 +80,16 @@ function mirrorWebsitePublicData() {
     }
     copyFileSync(src, dest);
     console.log(`[refresh:live]   ${name}`);
+  }
+  for (const name of dataFiles) {
+    const src = path.join(WEB_ROOT, "data", name);
+    const dest = path.join(destDir, name);
+    if (!existsSync(src)) {
+      console.log(`[refresh:live] skip (missing): data/${name}`);
+      continue;
+    }
+    copyFileSync(src, dest);
+    console.log(`[refresh:live]   data/${name}`);
   }
 }
 
@@ -224,6 +235,7 @@ if (!envTruthy("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL", false)) {
     "promote-round-projection-vs-actual-csv.mjs",
     "Publish round_projection_vs_actual.csv (promote .new if Excel had file open)",
   );
+  run("build-parlay-correlations.mjs", "Parlay Pro leg co-hit correlations → parlay_correlations.json");
 }
 
 if (!envTruthy("GOLF_SKIP_MARKET_BOOK_CALIBRATION", false)) {

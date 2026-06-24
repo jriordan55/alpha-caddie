@@ -4457,6 +4457,7 @@ function refreshPricingAffectedViews() {
   }
   if (tab === "live-prop") return void renderLivePropPredictor();
   if (tab === "course-fit") return void buildCourseFitTab();
+  if (tab === "parlay-pro" && window.ParlayPro) return void window.ParlayPro.render();
 }
 
 function weatherScalarFromInput(raw, cur, lo, hi) {
@@ -19860,6 +19861,7 @@ async function refreshAll() {
     await yieldToMain();
     buildCourseFitTab();
   }
+  if (tab === "parlay-pro" && window.ParlayPro) void window.ParlayPro.render();
 }
 
 /**
@@ -20043,6 +20045,11 @@ function showAppTab(tab) {
       if (!isFileProtocol()) {
         void loadProjections({ silent: true, reloadSidecar: false });
       }
+    });
+  }
+  if (tab === "parlay-pro") {
+    requestAnimationFrame(() => {
+      if (window.ParlayPro) void window.ParlayPro.render();
     });
   }
   if (tab === "results") {
@@ -21771,4 +21778,27 @@ document.addEventListener("DOMContentLoaded", () => {
     await loadProjections();
     startProjectionsPolling();
   })();
+
+  if (window.ParlayPro) {
+    window.ParlayPro.init({
+      getData: () => DATA,
+      getOuRound,
+      getModelRoundForEv,
+      draftKingsRoundPropsOnly,
+      projectionRowForPropPlayerSource,
+      modelProbOverMarket,
+      ouPropsCanonicalMarket,
+      enforceHalfLine,
+      decimalFromAmerican,
+      impliedProbFromAmerican,
+      propsNoVigOverProb,
+      americanFromDecimal,
+      formatAmerican,
+      displayGolferName,
+      num,
+      clampProb01,
+      dgIdsEliminatedFromEventPostCut,
+      parseTeetimeMinutes: dgTeetimeSortMinutes,
+    });
+  }
 });

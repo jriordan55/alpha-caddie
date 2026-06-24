@@ -48,6 +48,7 @@
       <button type="button" class="tab" data-tab="live-prop" role="tab">Live Prop Predictor</button>
       <button type="button" class="tab" data-tab="matchup-analysis" role="tab">Matchup Analysis Tool</button>
       <button type="button" class="tab" data-tab="ev" role="tab">+EV Bets</button>
+      <button type="button" class="tab" data-tab="parlay-pro" role="tab">Parlay Pro</button>
     </nav>
 
     <p id="data-status-primary" class="data-status-primary note tools-only" aria-live="polite" hidden></p>
@@ -94,6 +95,11 @@
           <span class="home-card-icon" aria-hidden="true">EV</span>
           <span class="home-card-title">+EV Bets</span>
           <span class="home-card-desc">Positive expected value outrights and props across books.</span>
+        </button>
+        <button type="button" class="home-card" data-go-tab="parlay-pro" role="listitem">
+          <span class="home-card-icon" aria-hidden="true">PP</span>
+          <span class="home-card-title">Parlay Pro</span>
+          <span class="home-card-desc">Best correlated DK round parlays — model joint EV vs book odds.</span>
         </button>
       </div>
     </section>
@@ -857,6 +863,47 @@
       </div>
     </section>
 
+    <!-- Parlay Pro: correlated DK round O/U parlays -->
+    <section id="panel-parlay-pro" class="panel" role="tabpanel" hidden>
+      <div class="ev-panel-head">
+        <h2 class="ev-devig-sr-only">Parlay Pro</h2>
+      </div>
+      <p class="text-muted parlay-pro-intro">
+        Builds <strong>correlated</strong> DraftKings round O/U parlays using historical leg co-hit rates (same player, same tee wave / weather bucket) and your model win probabilities.
+        DK parlay price = product of leg American decimals; <strong>model EV</strong> = joint win % × DK parlay decimal − 1.
+      </p>
+      <p class="text-muted" id="parlay-pro-meta" role="status"></p>
+      <div class="toolbar ou-filters parlay-pro-toolbar">
+        <label class="toolbar-label">Legs
+          <select id="parlay-pro-legs" aria-label="Number of parlay legs">
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+        </label>
+        <label class="toolbar-label">Min leg EV %
+          <input id="parlay-pro-min-ev" type="number" min="-10" max="50" step="1" value="0" title="Only legs with single-leg model EV at or above this %" />
+        </label>
+        <label class="toolbar-label">Market
+          <select id="parlay-pro-market" aria-label="Filter by market">
+            <option value="">All markets</option>
+            <option value="Total Score">Total Score</option>
+            <option value="Birdies">Birdies</option>
+            <option value="Pars">Pars</option>
+            <option value="Bogeys">Bogeys</option>
+            <option value="GIR">GIR</option>
+            <option value="Fairways hit">Fairways hit</option>
+          </select>
+        </label>
+        <button type="button" class="btn-primary" id="parlay-pro-search">Find best parlays</button>
+      </div>
+      <p class="note text-muted" id="parlay-pro-leg-pool" aria-live="polite"></p>
+      <p class="note" id="parlay-pro-status" aria-live="polite"></p>
+      <div id="parlay-pro-results" class="parlay-pro-results"></div>
+    </section>
+
     <!-- Round Matchups: data from projections.json → matchups (npm run fetch:dg) -->
     <section id="panel-matchups" class="panel" role="tabpanel" hidden>
       <div class="ev-panel-head">
@@ -1408,6 +1455,7 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=296"></script>
+  <script src="parlay-pro.js?v=1"></script>
+  <script src="app.js?v=297"></script>
 </body>
 </html>
