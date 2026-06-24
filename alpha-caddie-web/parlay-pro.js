@@ -9,7 +9,7 @@
   /** @type {object | null} */
   let api = null;
 
-  const MARKETS = ["Total Score", "Birdies", "Pars", "Bogeys", "GIR", "Fairways hit"];
+  const BOOK_HOLD = 0.048;
 
   const DEFAULT_RHO = {
     same_player_same_market: 0.55,
@@ -22,7 +22,6 @@
 
   function normalInv(p) {
     const clamped = Math.max(1e-6, Math.min(1 - 1e-6, p));
-    // Beasley-Springer-Moro approximation
     const a = [
       -3.969683028665376e1, 2.209460984245205e2, -2.759285104469687e2, 1.383577518672690e2,
       -3.066479806614716e1, 2.506628277459239e0,
@@ -38,7 +37,7 @@
     const d = [7.784695709041462e-3, 3.222443800069044e-1, 2.445134137142996e0, 3.754408661907416e0];
     const plow = 0.02425;
     const phigh = 1 - plow;
-    let q, r;
+    let q;
     if (clamped < plow) {
       q = Math.sqrt(-2 * Math.log(clamped));
       return (
@@ -54,7 +53,7 @@
       );
     }
     q = clamped - 0.5;
-    r = q * q;
+    const r = q * q;
     return (
       ((((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q) /
       (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1)
@@ -65,11 +64,9 @@
     const z1 = normalInv(p1);
     const z2 = normalInv(p2);
     const r = Math.max(-0.85, Math.min(0.85, rho));
-    // P(Z1<=z1, Z2<=z2) for standard bivariate normal — Drezner-Wesolowsky
     const h = z1;
     const k = z2;
     const hk = h * k;
-    const sum = Math.exp(-hk / 2);
     let acc = 0;
     const terms = [
       [0.325303, 0],
@@ -118,6 +115,19 @@
     return defs.different_player_diff_round;
   }
 
+  function avgPairRho(legs) {
+    if (legs.length < 2) return 0;
+    let sum = 0;
+    let n = 0;
+    for (let i = 0; i < legs.length; i++) {
+      for (let j = i + 1; j < legs.length; j++) {
+        sum += pairRho(legs[i], legs[j]);
+        n++;
+      }
+    }
+    return n ? sum / n : 0;
+  }
+
   function jointWinProb(legs) {
     if (!legs.length) return NaN;
     if (legs.length === 1) return legs[0].pWin;
@@ -155,6 +165,17 @@
     return out;
   }
 
+  function parlayComboType(legs) {
+    const players = new Set(legs.map((l) => l.dgId));
+    const mk = legs.map((l) => `${l.market}|${l.side}`);
+    const sameMarket = mk.every((m) => m === mk[0]);
+    const waves = legs.map((l) => l.teeWave || "").filter(Boolean);
+    const sameWave = waves.length === legs.length && new Set(waves).size === 1;
+    if (players.size === 1 && legs.length > 1) return "same_player";
+    if (sameMarket && players.size > 1) return sameWave ? "same_market_wave" : "same_market";
+    return "mixed";
+  }
+
   function buildCandidateLegs() {
     if (!api) return [];
     const props = api.draftKingsRoundPropsOnly();
@@ -179,9 +200,11 @@
       const pUnder = api.clampProb01(1 - pOver);
       const dO = api.decimalFromAmerican(oAm);
       const dU = api.decimalFromAmerican(uAm);
+      const qOver = api.propsNoVigOverProb(oAm, uAm);
+      const fairDecO = Number.isFinite(qOver) && qOver > 0 ? 1 / qOver : dO;
+      const fairDecU = Number.isFinite(qOver) && qOver < 1 ? 1 / (1 - qOver) : dU;
       const name = api.displayGolferName(String(prow.player_name || pr.player_name || ""));
       const teeWave = String(prow.dg_tee_wave || "").trim().toLowerCase();
-      const teeMin = api.parseTeetimeMinutes?.(prow.dg_teetime_local) ?? NaN;
 
       const base = {
         dgId,
@@ -191,7 +214,8 @@
         line: L,
         roundNum: rnd,
         teeWave,
-        teeMin,
+        overAm: oAm,
+        underAm: uAm,
       };
 
       legs.push({
@@ -199,18 +223,18 @@
         side: "over",
         oddsAm: oAm,
         decimal: dO,
+        fairDecimal: fairDecO,
         pWin: pOver,
         modelEv: pOver * dO - 1,
-        label: `${name} — ${marketCanon} O ${L}`,
       });
       legs.push({
         ...base,
         side: "under",
         oddsAm: uAm,
         decimal: dU,
+        fairDecimal: fairDecU,
         pWin: pUnder,
         modelEv: pUnder * dU - 1,
-        label: `${name} — ${marketCanon} U ${L}`,
       });
     }
     return legs;
@@ -218,45 +242,135 @@
 
   function scoreParlay(legs) {
     const dkDecimal = legs.reduce((p, l) => p * l.decimal, 1);
+    const dkFairDecimal = legs.reduce((p, l) => p * l.fairDecimal, 1);
     const indepProb = legs.reduce((p, l) => p * l.pWin, 1);
     const jointProb = jointWinProb(legs);
+    const avgRho = avgPairRho(legs);
+    const modelFairDecimal = 1 / jointProb;
+    const modelVigDecimal = modelFairDecimal / (1 - BOOK_HOLD);
     const modelEv = jointProb * dkDecimal - 1;
     const indepEv = indepProb * dkDecimal - 1;
     const dkImplied = 1 / dkDecimal;
+    const dkFairImplied = 1 / dkFairDecimal;
     const edgeVsDk = jointProb - dkImplied;
+    const edgeVsDkFair = jointProb - dkFairImplied;
     const corrUplift = indepProb > 1e-9 ? jointProb / indepProb : 1;
+    const comboType = parlayComboType(legs);
     return {
       legs,
+      comboType,
+      avgRho,
       dkDecimal,
+      dkFairDecimal,
       dkAmerican: api.americanFromDecimal(dkDecimal),
+      dkFairAmerican: api.americanFromDecimal(dkFairDecimal),
+      modelFairDecimal,
+      modelFairAmerican: api.americanFromDecimal(modelFairDecimal),
+      modelVigDecimal,
+      modelVigAmerican: api.americanFromDecimal(modelVigDecimal),
       jointProb,
       indepProb,
       modelEv,
       indepEv,
       edgeVsDk,
+      edgeVsDkFair,
       corrUplift,
       evGainVsIndep: modelEv - indepEv,
+      isNegCorr: avgRho < -0.04 && corrUplift < 0.98,
     };
   }
 
-  function searchBestParlays(legs, nLegs, minSingleEv, topK = 40) {
-    const pool = legs
-      .filter((l) => l.modelEv >= minSingleEv)
-      .sort((a, b) => b.modelEv - a.modelEv)
-      .slice(0, Math.max(nLegs + 2, Math.min(topK, 36)));
+  function comboAllowed(combo, style) {
+    const key = new Set(combo.map((l) => `${l.dgId}|${l.market}|${l.side}|${l.line}`));
+    if (key.size < combo.length) return false;
+    const type = parlayComboType(combo);
+    if (style === "same_player") return type === "same_player";
+    if (style === "same_market") return type === "same_market" || type === "same_market_wave";
+    if (style === "neg_corr") {
+      const s = scoreParlay(combo);
+      return s.isNegCorr && s.modelEv > 0;
+    }
+    return true;
+  }
 
+  function buildPools(legs, minSingleEv) {
+    const filtered = legs.filter((l) => l.modelEv >= minSingleEv);
+    const byPlayer = new Map();
+    const byMarketWave = new Map();
+    for (const l of filtered) {
+      if (!byPlayer.has(l.dgId)) byPlayer.set(l.dgId, []);
+      byPlayer.get(l.dgId).push(l);
+      const mk = `${l.market}|${l.side}|${l.teeWave || "any"}`;
+      if (!byMarketWave.has(mk)) byMarketWave.set(mk, []);
+      byMarketWave.get(mk).push(l);
+    }
+    for (const arr of byPlayer.values()) arr.sort((a, b) => b.modelEv - a.modelEv);
+    for (const arr of byMarketWave.values()) arr.sort((a, b) => b.modelEv - a.modelEv);
+    return { filtered, byPlayer, byMarketWave };
+  }
+
+  function searchPool(pool, nLegs, style, maxCombos) {
     if (pool.length < nLegs) return [];
-
-    const maxCombos = nLegs <= 3 ? 120000 : nLegs === 4 ? 60000 : 25000;
     const combos = combinations(pool, nLegs, maxCombos);
     const scored = [];
     for (const combo of combos) {
-      const dgKeys = new Set(combo.map((l) => `${l.dgId}|${l.market}|${l.side}|${l.line}`));
-      if (dgKeys.size < combo.length) continue;
+      if (!comboAllowed(combo, style)) continue;
       scored.push(scoreParlay(combo));
     }
-    scored.sort((a, b) => b.modelEv - a.modelEv);
-    return scored.slice(0, 25);
+    return scored;
+  }
+
+  function searchBestParlays(legs, nLegs, minSingleEv, style) {
+    const { filtered, byPlayer, byMarketWave } = buildPools(legs, minSingleEv);
+    const maxCombos = nLegs <= 3 ? 100000 : nLegs === 4 ? 50000 : 20000;
+    const seen = new Set();
+    const merged = [];
+
+    const add = (rows) => {
+      for (const r of rows) {
+        const k = r.legs
+          .map((l) => `${l.dgId}|${l.market}|${l.side}|${l.line}`)
+          .sort()
+          .join(";");
+        if (seen.has(k)) continue;
+        seen.add(k);
+        merged.push(r);
+      }
+    };
+
+    if (style === "all" || style === "same_player") {
+      const playerPools = [...byPlayer.values()]
+        .filter((a) => a.length >= nLegs)
+        .map((a) => a.slice(0, 14));
+      for (const pool of playerPools) {
+        add(searchPool(pool, nLegs, "same_player", Math.floor(maxCombos / Math.max(1, playerPools.length))));
+      }
+    }
+
+    if (style === "all" || style === "same_market") {
+      const wavePools = [...byMarketWave.values()]
+        .filter((a) => a.length >= nLegs)
+        .map((a) => a.slice(0, 14));
+      for (const pool of wavePools) {
+        add(searchPool(pool, nLegs, "same_market", Math.floor(maxCombos / Math.max(1, wavePools.length))));
+      }
+    }
+
+    if (style === "all" || style === "neg_corr") {
+      const top = filtered.sort((a, b) => b.modelEv - a.modelEv).slice(0, 32);
+      add(searchPool(top, nLegs, "neg_corr", maxCombos));
+    }
+
+    if (style === "all") {
+      const top = filtered.sort((a, b) => b.modelEv - a.modelEv).slice(0, 34);
+      add(searchPool(top, nLegs, "all", maxCombos));
+    } else if (style !== "same_player" && style !== "same_market" && style !== "neg_corr") {
+      const top = filtered.sort((a, b) => b.modelEv - a.modelEv).slice(0, 34);
+      add(searchPool(top, nLegs, style, maxCombos));
+    }
+
+    merged.sort((a, b) => b.modelEv - a.modelEv);
+    return merged.slice(0, 25);
   }
 
   function pct(x) {
@@ -267,88 +381,94 @@
     return Number.isFinite(x) ? `${x >= 0 ? "+" : ""}${(x * 100).toFixed(1)}%` : "—";
   }
 
+  function typeLabel(t) {
+    if (t === "same_player") return "Same player";
+    if (t === "same_market_wave") return "Same market · wave";
+    if (t === "same_market") return "Same market";
+    return "Mixed";
+  }
+
   function renderResults(rows, nLegs) {
     const el = document.getElementById("parlay-pro-results");
     if (!el) return;
     if (!rows.length) {
-      el.innerHTML = `<p class="note text-muted">No ${nLegs}-leg parlays found at your filters. Lower min leg EV or add DK lines.</p>`;
+      el.innerHTML = `<p class="note text-muted">No ${nLegs}-leg parlays at these filters. Try a lower min leg EV or a different combo style.</p>`;
       return;
     }
     const best = rows[0];
     let html = `<div class="parlay-pro-hero">
       <div class="parlay-pro-hero-stat">
-        <span class="parlay-pro-hero-label">Best model EV</span>
+        <span class="parlay-pro-hero-label">Best EV @ DK</span>
         <span class="parlay-pro-hero-value ${best.modelEv >= 0 ? "ev-pos" : "ev-neg"}">${evPct(best.modelEv)}</span>
       </div>
       <div class="parlay-pro-hero-stat">
-        <span class="parlay-pro-hero-label">DK parlay odds</span>
+        <span class="parlay-pro-hero-label">Your odds (fair)</span>
+        <span class="parlay-pro-hero-value">${api.formatAmerican(best.modelFairAmerican)}</span>
+      </div>
+      <div class="parlay-pro-hero-stat">
+        <span class="parlay-pro-hero-label">Your odds (+ vig)</span>
+        <span class="parlay-pro-hero-value">${api.formatAmerican(best.modelVigAmerican)}</span>
+      </div>
+      <div class="parlay-pro-hero-stat">
+        <span class="parlay-pro-hero-label">DK parlay</span>
         <span class="parlay-pro-hero-value">${api.formatAmerican(best.dkAmerican)}</span>
       </div>
       <div class="parlay-pro-hero-stat">
-        <span class="parlay-pro-hero-label">Joint win prob</span>
-        <span class="parlay-pro-hero-value">${pct(best.jointProb)} <small class="text-muted">(indep ${pct(best.indepProb)})</small></span>
-      </div>
-      <div class="parlay-pro-hero-stat">
-        <span class="parlay-pro-hero-label">vs DK implied</span>
-        <span class="parlay-pro-hero-value ${best.edgeVsDk >= 0 ? "ev-pos" : "ev-neg"}">${best.edgeVsDk >= 0 ? "+" : ""}${(best.edgeVsDk * 100).toFixed(1)} pp</span>
-      </div>
-      <div class="parlay-pro-hero-stat">
-        <span class="parlay-pro-hero-label">Corr uplift</span>
-        <span class="parlay-pro-hero-value">${(best.corrUplift * 100).toFixed(0)}% of indep</span>
+        <span class="parlay-pro-hero-label">Win chance</span>
+        <span class="parlay-pro-hero-value">${pct(best.jointProb)}</span>
       </div>
     </div>`;
 
     html += `<table class="data-table parlay-pro-table"><thead><tr>
-      <th>#</th><th>Legs</th><th>DK odds</th><th>Model EV</th><th>Indep EV</th><th>Joint P</th><th>vs DK</th>
+      <th>#</th><th>Type</th><th>Legs</th>
+      <th>Your fair</th><th>You + vig</th><th>DK</th>
+      <th>EV</th><th>Win edge</th><th>ρ</th>
     </tr></thead><tbody>`;
 
     rows.forEach((r, i) => {
       const legHtml = r.legs
-        .map(
-          (l) =>
-            `<span class="parlay-leg-chip">${l.side === "over" ? "O" : "U"} ${l.line} · ${l.playerName.split(",")[0]} · ${l.market.replace("Fairways hit", "FW")}${l.teeWave ? ` · ${l.teeWave}` : ""}</span>`,
-        )
+        .map((l) => {
+          const m = l.market.replace("Fairways hit", "FW").replace("Total Score", "Score");
+          const w = l.teeWave ? ` · ${l.teeWave.slice(0, 3)}` : "";
+          return `<span class="parlay-leg-chip">${l.playerName.split(",")[0]} ${m} ${l.side === "over" ? "O" : "U"}${l.line}${w}</span>`;
+        })
         .join("");
+      const edgeLabel = `${r.edgeVsDk >= 0 ? "+" : ""}${(r.edgeVsDk * 100).toFixed(1)}%`;
       html += `<tr>
         <td>${i + 1}</td>
+        <td class="parlay-type-cell">${typeLabel(r.comboType)}${r.isNegCorr ? ' <span class="parlay-neg-tag">neg ρ</span>' : ""}</td>
         <td class="parlay-legs-cell">${legHtml}</td>
+        <td>${api.formatAmerican(r.modelFairAmerican)}</td>
+        <td>${api.formatAmerican(r.modelVigAmerican)}</td>
         <td>${api.formatAmerican(r.dkAmerican)}</td>
         <td class="${r.modelEv >= 0 ? "ev-pos" : "ev-neg"}">${evPct(r.modelEv)}</td>
-        <td>${evPct(r.indepEv)}</td>
-        <td>${pct(r.jointProb)}</td>
-        <td class="${r.edgeVsDk >= 0 ? "ev-pos" : "ev-neg"}">${r.edgeVsDk >= 0 ? "+" : ""}${(r.edgeVsDk * 100).toFixed(1)}pp</td>
+        <td class="${r.edgeVsDk >= 0 ? "ev-pos" : "ev-neg"}" title="Your win % minus DK posted implied %">${edgeLabel}</td>
+        <td>${r.avgRho >= 0 ? "+" : ""}${r.avgRho.toFixed(2)}</td>
       </tr>`;
     });
     html += "</tbody></table>";
     el.innerHTML = html;
   }
 
-  function renderLegPool(legs, minEv) {
-    const el = document.getElementById("parlay-pro-leg-pool");
-    if (!el) return;
-    const filtered = legs.filter((l) => l.modelEv >= minEv).sort((a, b) => b.modelEv - a.modelEv);
-    el.textContent = `${filtered.length} DK legs with model EV ≥ ${(minEv * 100).toFixed(0)}% (${legs.length} total sides)`;
-  }
-
   function runSearch() {
     const nLegs = Math.round(Number(document.getElementById("parlay-pro-legs")?.value) || 2);
     const minEv = Number(document.getElementById("parlay-pro-min-ev")?.value) / 100 || 0;
     const marketFilter = String(document.getElementById("parlay-pro-market")?.value || "");
+    const style = String(document.getElementById("parlay-pro-style")?.value || "all");
     const status = document.getElementById("parlay-pro-status");
     if (status) status.textContent = "Searching…";
 
     const all = buildCandidateLegs();
     let legs = all;
     if (marketFilter) legs = legs.filter((l) => l.market === marketFilter);
-    renderLegPool(legs, minEv);
 
     const n = Math.max(2, Math.min(6, nLegs));
     setTimeout(() => {
-      const rows = searchBestParlays(legs, n, minEv);
+      const rows = searchBestParlays(legs, n, minEv, style);
       renderResults(rows, n);
       if (status) {
         status.textContent = rows.length
-          ? `Top ${rows.length} ${n}-leg combos (correlation-adjusted vs DK product odds).`
+          ? `${rows.length} ${n}-leg combos · style: ${style.replace("_", " ")}`
           : "No combos found.";
       }
     }, 10);
@@ -360,7 +480,7 @@
       const r = await fetch("data/parlay_correlations.json?v=" + Date.now());
       if (r.ok) corrData = await r.json();
     } catch {
-      /* offline / file protocol */
+      /* offline */
     }
     if (!corrData) corrData = { default_rho: DEFAULT_RHO, same_player: {}, same_tee_wave: {} };
     return corrData;
@@ -371,6 +491,7 @@
     document.getElementById("parlay-pro-legs")?.addEventListener("change", runSearch);
     document.getElementById("parlay-pro-min-ev")?.addEventListener("change", runSearch);
     document.getElementById("parlay-pro-market")?.addEventListener("change", runSearch);
+    document.getElementById("parlay-pro-style")?.addEventListener("change", runSearch);
   }
 
   window.ParlayPro = {
@@ -380,10 +501,6 @@
     },
     async render() {
       await loadCorrelations();
-      const meta = document.getElementById("parlay-pro-meta");
-      if (meta && corrData?.generated_at) {
-        meta.textContent = `Correlation data: ${corrData.rows_scored || "?"} historical player-rounds · updated ${String(corrData.generated_at).slice(0, 10)}`;
-      }
       runSearch();
     },
   };

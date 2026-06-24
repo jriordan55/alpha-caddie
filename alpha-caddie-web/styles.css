@@ -5154,6 +5154,23 @@ dialog,
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
+.parlay-type-cell {
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+.parlay-neg-tag {
+  display: inline-block;
+  margin-left: 0.25rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #7ec8ff;
+  background: rgba(126, 200, 255, 0.12);
+  border: 1px solid rgba(126, 200, 255, 0.25);
+}
 .parlay-pro-results {
   margin-top: 0.5rem;
 }

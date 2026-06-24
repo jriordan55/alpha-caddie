@@ -97,7 +97,7 @@
           <span class="home-card-desc">Positive expected value outrights and props across books.</span>
         </button>
         <button type="button" class="home-card" data-go-tab="parlay-pro" role="listitem">
-          <span class="home-card-icon" aria-hidden="true">PP</span>
+          <span class="home-card-icon" aria-hidden="true">+</span>
           <span class="home-card-title">Parlay Pro</span>
           <span class="home-card-desc">Best correlated DK round parlays — model joint EV vs book odds.</span>
         </button>
@@ -863,16 +863,12 @@
       </div>
     </section>
 
-    <!-- Parlay Pro: correlated DK round O/U parlays -->
+    <!-- Parlay Pro -->
     <section id="panel-parlay-pro" class="panel" role="tabpanel" hidden>
       <div class="ev-panel-head">
         <h2 class="ev-devig-sr-only">Parlay Pro</h2>
+        <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="parlay-pro" aria-label="Help: Parlay Pro tab">?</button>
       </div>
-      <p class="text-muted parlay-pro-intro">
-        Builds <strong>correlated</strong> DraftKings round O/U parlays using historical leg co-hit rates (same player, same tee wave / weather bucket) and your model win probabilities.
-        DK parlay price = product of leg American decimals; <strong>model EV</strong> = joint win % × DK parlay decimal − 1.
-      </p>
-      <p class="text-muted" id="parlay-pro-meta" role="status"></p>
       <div class="toolbar ou-filters parlay-pro-toolbar">
         <label class="toolbar-label">Legs
           <select id="parlay-pro-legs" aria-label="Number of parlay legs">
@@ -881,6 +877,14 @@
             <option value="4">4</option>
             <option value="5">5</option>
             <option value="6">6</option>
+          </select>
+        </label>
+        <label class="toolbar-label">Combo style
+          <select id="parlay-pro-style" aria-label="Parlay combo style">
+            <option value="all" selected>All (best)</option>
+            <option value="same_player">Same player · cross-market</option>
+            <option value="same_market">Same market · tee wave</option>
+            <option value="neg_corr">Negative correlation +EV</option>
           </select>
         </label>
         <label class="toolbar-label">Min leg EV %
@@ -897,10 +901,9 @@
             <option value="Fairways hit">Fairways hit</option>
           </select>
         </label>
-        <button type="button" class="btn-primary" id="parlay-pro-search">Find best parlays</button>
+        <button type="button" class="btn-primary" id="parlay-pro-search">Find parlays</button>
       </div>
-      <p class="note text-muted" id="parlay-pro-leg-pool" aria-live="polite"></p>
-      <p class="note" id="parlay-pro-status" aria-live="polite"></p>
+      <p class="note text-muted" id="parlay-pro-status" aria-live="polite"></p>
       <div id="parlay-pro-results" class="parlay-pro-results"></div>
     </section>
 
@@ -1300,6 +1303,49 @@
     </div>
   </dialog>
 
+  <dialog id="tab-help-dialog-parlay-pro" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-parlay-pro">
+    <div class="ev-devig-dialog-inner ev-help-dialog-inner">
+      <header class="ev-devig-head">
+        <h3 class="ev-devig-title" id="tab-help-title-parlay-pro">Parlay Pro</h3>
+        <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
+      </header>
+      <p class="ev-help-intro text-muted">
+        Finds DraftKings <strong>round O/U parlays</strong> where your model’s <strong>joint win chance</strong> beats DK’s posted price after accounting for how legs move together (same golfer, same tee wave, historical co-hit rates).
+      </p>
+      <section class="ev-help-section" aria-labelledby="tab-help-parlay-pro-how-h">
+        <h4 class="ev-devig-section-title" id="tab-help-parlay-pro-how-h">How to use</h4>
+        <dl class="ev-help-dl">
+          <dt>Legs</dt>
+          <dd>How many picks in the parlay (2–6). DK multiplies each leg’s price into one parlay ticket.</dd>
+          <dt>Combo style</dt>
+          <dd><strong>All</strong> — best EV across styles. <strong>Same player</strong> — one golfer, different markets (e.g. Score Over + Birdies Under). <strong>Same market</strong> — same stat/side, different players in the same tee wave when possible. <strong>Negative correlation</strong> — legs that tend to move opposite; joint win % can be higher than DK assumes.</dd>
+          <dt>Min leg EV %</dt>
+          <dd>Only consider legs your model already likes as singles at or above this EV.</dd>
+        </dl>
+      </section>
+      <section class="ev-help-section" aria-labelledby="tab-help-parlay-pro-odds-h">
+        <h4 class="ev-devig-section-title" id="tab-help-parlay-pro-odds-h">Odds columns</h4>
+        <dl class="ev-help-dl">
+          <dt>Your fair</dt>
+          <dd>American odds from your model’s joint win % (no book vig).</dd>
+          <dt>You + vig</dt>
+          <dd>Same joint % priced like a typical DK O/U hold (~4.8%) — closer to what a sportsbook would list.</dd>
+          <dt>DK</dt>
+          <dd>DK’s parlay price: product of each leg’s posted American odds (vig already in every leg).</dd>
+          <dt>EV</dt>
+          <dd>Expected profit per $1 staked at DK’s parlay price: (joint win % × DK decimal) − 1.</dd>
+          <dt>Win edge</dt>
+          <dd>Your joint win % minus DK’s implied win % from the posted parlay — e.g. +2.1% means you think the parlay hits 2.1% more often than DK’s price implies.</dd>
+          <dt>ρ (rho)</dt>
+          <dd>Average correlation between legs. Positive = legs tend to hit together; negative = they offset (can create value on unders mixed with overs).</dd>
+        </dl>
+      </section>
+      <footer class="ev-help-actions">
+        <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
+      </footer>
+    </div>
+  </dialog>
+
   <dialog id="tab-help-dialog-matchup-analysis" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-matchup-analysis">
     <div class="ev-devig-dialog-inner ev-help-dialog-inner">
       <header class="ev-devig-head">
@@ -1455,7 +1501,7 @@
     </div>
   </dialog>
 
-  <script src="parlay-pro.js?v=1"></script>
+  <script src="parlay-pro.js?v=2"></script>
   <script src="app.js?v=297"></script>
 </body>
 </html>
