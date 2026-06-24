@@ -1329,9 +1329,9 @@
           <dt>Your fair</dt>
           <dd>American odds from your model’s joint win % (no book vig).</dd>
           <dt>You + vig</dt>
-          <dd>Same joint % priced like a typical DK O/U hold (~4.8%) — closer to what a sportsbook would list.</dd>
+          <dd>Same joint % with typical DK O/U hold (~4.8%) applied — slightly worse payout than fair, like a real book price.</dd>
           <dt>DK</dt>
-          <dd>DK’s parlay price: product of each leg’s posted American odds (vig already in every leg).</dd>
+          <dd>DK’s correlated parlay price — same stat/side legs in a round are adjusted together (not a naive multiply of singles). Hover the <strong>*</strong> to see the uncorrelated product.</dd>
           <dt>EV</dt>
           <dd>Expected profit per $1 staked at DK’s parlay price: (joint win % × DK decimal) − 1.</dd>
           <dt>Win edge</dt>
@@ -1501,7 +1501,7 @@
     </div>
   </dialog>
 
-  <script src="parlay-pro.js?v=2"></script>
+  <script src="parlay-pro.js?v=4"></script>
   <script src="app.js?v=297"></script>
 </body>
 </html>

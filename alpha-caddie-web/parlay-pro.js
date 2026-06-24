@@ -16,6 +16,7 @@
     same_player_cross_market: 0.28,
     same_wave_same_market: 0.18,
     same_wave_cross_market: 0.1,
+    same_round_same_market: 0.125,
     different_wave: 0.04,
     different_player_diff_round: 0.02,
   };
@@ -60,28 +61,32 @@
     );
   }
 
-  function bivariateCopulaProb(p1, p2, rho) {
-    const z1 = normalInv(p1);
-    const z2 = normalInv(p2);
-    const r = Math.max(-0.85, Math.min(0.85, rho));
-    const h = z1;
-    const k = z2;
-    const hk = h * k;
-    let acc = 0;
-    const terms = [
-      [0.325303, 0],
-      [0.4215811, -0.392837],
-      [0.1333955, -0.202691],
-      [0.0063742, -0.052294],
-    ];
-    for (const [w, t] of terms) {
-      const sh = Math.sin(t * Math.PI * 0.5);
-      const sk = Math.sin(t * Math.PI * 0.5 * r);
-      acc += w * Math.exp((sh * sh * h * h + sk * sk * k * k - 2 * r * sh * sk * h * k) / (2 * (1 - r * r)));
-    }
-    const phi2 = acc / (2 * Math.PI * Math.sqrt(1 - r * r)) + 0.25;
-    return Math.max(0.001, Math.min(0.999, phi2));
+  function normalCdf(x) {
+    const t = 1 / (1 + 0.2316419 * Math.abs(x));
+    const d = 0.3989423 * Math.exp((-x * x) / 2);
+    let p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+    if (x > 0) p = 1 - p;
+    return p;
   }
+
+  /** Gaussian copula P(both hit) with margins p1, p2 — Genz / Drezner pbivnorm. */
+  function bivariateCopulaProb(p1, p2, rho) {
+    if (Math.abs(rho) < 1e-8) return p1 * p2;
+    const h = normalInv(p1);
+    const k = normalInv(p2);
+    const r = Math.max(-0.99, Math.min(0.99, rho));
+    const x = [0.325303, 0.4215811, 0.1333955, 0.0063742];
+    const y = [0, -0.392837, -0.202691, -0.052294];
+    const asr = Math.asin(r);
+    let bvn = 0;
+    for (let i = 0; i < 4; i++) {
+      const sn = Math.sin(y[i] * asr);
+      bvn += x[i] * Math.exp((sn * sn * (h * h + k * k - 2 * r * h * k)) / (2 * (1 - r * r)));
+    }
+    bvn = (bvn * asr) / (2 * Math.PI) + normalCdf(h) * normalCdf(k);
+    return Math.max(0.0005, Math.min(0.9995, bvn));
+  }
+
 
   function legPairKey(a, b) {
     const ka = `${a.market}|${a.side}`;
@@ -109,9 +114,13 @@
       return Math.max(-0.5, Math.min(0.75, (lift - 1) * 0.35));
     }
     const sameMkt = a.market === b.market;
+    const sameSide = a.side === b.side;
     if (rel === "same_player") return sameMkt ? defs.same_player_same_market : defs.same_player_cross_market;
-    if (rel === "same_wave") return sameMkt ? defs.same_wave_same_market : defs.same_wave_cross_market;
-    if (rel === "same_round") return defs.different_wave;
+    if (rel === "same_wave") return sameMkt && sameSide ? defs.same_wave_same_market : defs.same_wave_cross_market;
+    if (rel === "same_round") {
+      if (sameMkt && sameSide) return defs.same_round_same_market;
+      return defs.different_wave;
+    }
     return defs.different_player_diff_round;
   }
 
@@ -128,19 +137,26 @@
     return n ? sum / n : 0;
   }
 
-  function jointWinProb(legs) {
+  function jointProbForLegs(legs, probOf) {
     if (!legs.length) return NaN;
-    if (legs.length === 1) return legs[0].pWin;
-    let p = legs.reduce((s, l) => s * l.pWin, 1);
+    if (legs.length === 1) return probOf(legs[0]);
+    const ps = legs.map(probOf);
+    let p = ps.reduce((s, x) => s * x, 1);
     for (let i = 0; i < legs.length; i++) {
       for (let j = i + 1; j < legs.length; j++) {
         const rho = pairRho(legs[i], legs[j]);
-        const pij = bivariateCopulaProb(legs[i].pWin, legs[j].pWin, rho);
-        const indep = legs[i].pWin * legs[j].pWin;
+        const pij = bivariateCopulaProb(ps[i], ps[j], rho);
+        const indep = ps[i] * ps[j];
         if (indep > 1e-9) p *= pij / indep;
       }
     }
-    return Math.max(0.0005, Math.min(0.9995, p));
+    const lower = Math.max(0, ps.reduce((s, x) => s + x, 0) - (ps.length - 1));
+    const upper = Math.min(...ps);
+    return Math.max(lower, Math.min(upper, Math.max(0.0005, Math.min(0.9995, p))));
+  }
+
+  function jointWinProb(legs) {
+    return jointProbForLegs(legs, (l) => l.pWin);
   }
 
   function combinations(arr, k, maxOut = 80000) {
@@ -225,6 +241,7 @@
         decimal: dO,
         fairDecimal: fairDecO,
         pWin: pOver,
+        modelFairAm: api.americanFromDecimal(1 / pOver),
         modelEv: pOver * dO - 1,
       });
       legs.push({
@@ -234,6 +251,7 @@
         decimal: dU,
         fairDecimal: fairDecU,
         pWin: pUnder,
+        modelFairAm: api.americanFromDecimal(1 / pUnder),
         modelEv: pUnder * dU - 1,
       });
     }
@@ -241,33 +259,48 @@
   }
 
   function scoreParlay(legs) {
-    const dkDecimal = legs.reduce((p, l) => p * l.decimal, 1);
-    const dkFairDecimal = legs.reduce((p, l) => p * l.fairDecimal, 1);
+    const dkNaiveDecimal = legs.reduce((p, l) => p * l.decimal, 1);
+    const dkFairNaiveDecimal = legs.reduce((p, l) => p * l.fairDecimal, 1);
+    const dkIndepProb = legs.reduce((p, l) => p * (1 / l.decimal), 1);
+    const dkJointProb = jointProbForLegs(legs, (l) => 1 / l.decimal);
+    const dkDecimal = 1 / dkJointProb;
+    const dkFairJointProb = jointProbForLegs(legs, (l) => 1 / l.fairDecimal);
+    const dkFairDecimal = 1 / dkFairJointProb;
     const indepProb = legs.reduce((p, l) => p * l.pWin, 1);
     const jointProb = jointWinProb(legs);
     const avgRho = avgPairRho(legs);
     const modelFairDecimal = 1 / jointProb;
-    const modelVigDecimal = modelFairDecimal / (1 - BOOK_HOLD);
+    const vigMult = 1 / (1 + BOOK_HOLD);
+    const modelVigDecimal = modelFairDecimal * vigMult;
+    const indepFairDecimal = 1 / indepProb;
     const modelEv = jointProb * dkDecimal - 1;
     const indepEv = indepProb * dkDecimal - 1;
-    const dkImplied = 1 / dkDecimal;
-    const dkFairImplied = 1 / dkFairDecimal;
-    const edgeVsDk = jointProb - dkImplied;
-    const edgeVsDkFair = jointProb - dkFairImplied;
+    const dkImplied = dkJointProb;
+    const dkFairImplied = dkFairJointProb;
+    const edgeVsDk = jointProb - dkJointProb;
+    const edgeVsDkFair = jointProb - dkFairJointProb;
     const corrUplift = indepProb > 1e-9 ? jointProb / indepProb : 1;
+    const dkCorrUplift = dkIndepProb > 1e-9 ? dkJointProb / dkIndepProb : 1;
     const comboType = parlayComboType(legs);
     return {
       legs,
       comboType,
       avgRho,
       dkDecimal,
+      dkNaiveDecimal,
       dkFairDecimal,
+      dkJointProb,
+      dkIndepProb,
+      dkCorrUplift,
       dkAmerican: api.americanFromDecimal(dkDecimal),
+      dkNaiveAmerican: api.americanFromDecimal(dkNaiveDecimal),
       dkFairAmerican: api.americanFromDecimal(dkFairDecimal),
       modelFairDecimal,
       modelFairAmerican: api.americanFromDecimal(modelFairDecimal),
       modelVigDecimal,
       modelVigAmerican: api.americanFromDecimal(modelVigDecimal),
+      indepFairDecimal,
+      indepFairAmerican: api.americanFromDecimal(indepFairDecimal),
       jointProb,
       indepProb,
       modelEv,
@@ -430,7 +463,9 @@
         .map((l) => {
           const m = l.market.replace("Fairways hit", "FW").replace("Total Score", "Score");
           const w = l.teeWave ? ` · ${l.teeWave.slice(0, 3)}` : "";
-          return `<span class="parlay-leg-chip">${l.playerName.split(",")[0]} ${m} ${l.side === "over" ? "O" : "U"}${l.line}${w}</span>`;
+          const dk = api.formatAmerican(l.oddsAm);
+          const mf = api.formatAmerican(l.modelFairAm);
+          return `<span class="parlay-leg-chip" title="DK ${dk} · model fair ${mf} · win ${pct(l.pWin)}">${l.playerName.split(",")[0]} ${m} ${l.side === "over" ? "O" : "U"}${l.line}${w} <span class="parlay-leg-odds">${dk}</span></span>`;
         })
         .join("");
       const edgeLabel = `${r.edgeVsDk >= 0 ? "+" : ""}${(r.edgeVsDk * 100).toFixed(1)}%`;
@@ -440,7 +475,7 @@
         <td class="parlay-legs-cell">${legHtml}</td>
         <td>${api.formatAmerican(r.modelFairAmerican)}</td>
         <td>${api.formatAmerican(r.modelVigAmerican)}</td>
-        <td>${api.formatAmerican(r.dkAmerican)}</td>
+        <td>${api.formatAmerican(r.dkAmerican)}${r.legs.length > 1 && r.dkCorrUplift > 1.02 ? `<span class="parlay-dk-indep-hint" title="Uncorrelated leg product would be ${api.formatAmerican(r.dkNaiveAmerican)}">*</span>` : ""}</td>
         <td class="${r.modelEv >= 0 ? "ev-pos" : "ev-neg"}">${evPct(r.modelEv)}</td>
         <td class="${r.edgeVsDk >= 0 ? "ev-pos" : "ev-neg"}" title="Your win % minus DK posted implied %">${edgeLabel}</td>
         <td>${r.avgRho >= 0 ? "+" : ""}${r.avgRho.toFixed(2)}</td>
