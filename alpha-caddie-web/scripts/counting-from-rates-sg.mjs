@@ -24,7 +24,17 @@ import { fairwayProjectionCourseAnchored } from "./fairway-projection-alt.mjs";
 const FAIRWAY_COURSE_SPREAD_KEEP = 0.45;
 
 /** Venue birdie anchor: keep player spread vs course birdie mean (DK market ≈ birdies + eagles). */
-const BIRDIE_COURSE_SPREAD_KEEP = 0.42;
+const BIRDIE_COURSE_SPREAD_KEEP = 0.58;
+
+/** Stronger spread for above-venue birdie rates so elite players reach DK 5.5 lines. */
+function birdieSpreadKeepForPlayer(baseSpread, playerMkt, venueMkt, mu) {
+  let spread = num(baseSpread, BIRDIE_COURSE_SPREAD_KEEP);
+  if (Number.isFinite(playerMkt) && Number.isFinite(venueMkt) && playerMkt > venueMkt) {
+    const excess = playerMkt - venueMkt;
+    spread = clamp(spread + 0.4 * excess + 0.04 * Math.max(0, mu), spread, 0.9);
+  }
+  return spread;
+}
 
 /** Local numeric parse with fallback (dg-traditional-stats `num` has no fallback arg). */
 function num(v, fallback = NaN) {
@@ -209,13 +219,18 @@ function birdiesEaglesFromPlayerRates(opts = {}) {
   const venueMkt = venueBird + venueEag;
   // avg_birdies from rolling history is already birdies+eagles (DK birdies market).
   const playerMkt = num(sk.avg_birdies, NaN);
-  const spread = num(opts.birdieSkillSpreadKeep, BIRDIE_COURSE_SPREAD_KEEP);
+  const spread = birdieSpreadKeepForPlayer(
+    num(opts.birdieSkillSpreadKeep, BIRDIE_COURSE_SPREAD_KEEP),
+    playerMkt,
+    venueMkt,
+    mu,
+  );
   const dApp = sgDelta(sk, field, "sg_app");
   const dPutt = sgDelta(sk, field, "sg_putt");
 
   let mkt = venueMkt;
   if (Number.isFinite(playerMkt)) mkt = venueMkt + spread * (playerMkt - venueMkt);
-  mkt += 0.22 * dApp + 0.08 * dPutt + 0.025 * mu;
+  mkt += 0.28 * dApp + 0.1 * dPutt + 0.038 * mu;
 
   let eagles = num(sk.avg_eagles, NaN);
   if (!Number.isFinite(eagles)) eagles = venueEag;

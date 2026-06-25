@@ -94,7 +94,7 @@ export function blendWeightsFromHistCalib(histCalib) {
       sgPutt: 0.18,
       sgOtt: 0.02,
       mu: 0.012 + 0.008 * r2Gir,
-      spreadKeep: clamp(0.38 + 0.08 * r2Gir, 0.38, 0.52),
+      spreadKeep: clamp(0.5 + 0.1 * r2Gir, 0.5, 0.68),
     },
     bogeys: {
       wVenue: 0.18,

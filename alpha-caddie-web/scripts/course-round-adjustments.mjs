@@ -1626,7 +1626,7 @@ export function resolveProjectionCounts({
     true,
   );
   const wBirdies = reduceVenueWeightWhenSkillBetter(
-    wVenue * 0.55,
+    wVenue * 0.35,
     muForRound,
     sk.birdies,
     playerAgg?.avgBirdies,
@@ -2176,6 +2176,23 @@ export function calibrateProjectionTotalScoreToVenue(payload, opts = {}) {
   return { rounds, shifts, target: fallbackTarget };
 }
 
+/** Mean DK Birdies line (birdies+eagles market) for players in `dgInRound` on this round. */
+function dkBirdiesMarketMeanForRound(payload, rnd, dgInRound) {
+  const props = Array.isArray(payload?.props) ? payload.props : [];
+  const lines = [];
+  for (const pr of props) {
+    if (String(pr.market || "").trim() !== "Birdies") continue;
+    const prRnd = Math.round(num(pr.round_num ?? pr.display_round ?? rnd, NaN));
+    if (prRnd !== rnd) continue;
+    const dg = Math.round(num(pr.dg_id, NaN));
+    if (!Number.isFinite(dg) || (dgInRound && !dgInRound.has(dg))) continue;
+    const line = num(pr.line, NaN);
+    if (Number.isFinite(line)) lines.push(line);
+  }
+  if (lines.length < 8) return NaN;
+  return lines.reduce((a, b) => a + b, 0) / lines.length;
+}
+
 /**
  * Shift projection field means toward venue / event-week targets.
  * Default: full tournament field per round. Set dkFieldOnly to calibrate DraftKings slate only.
@@ -2234,7 +2251,12 @@ export function calibrateProjectionFieldMarkets(payload, opts = {}) {
 
     applyUniformField("bogeys", venueBog, 0.15, 8.5);
     const venueEag = num(basisRoot.venue_avg_eagles, 0.12);
-    const targetBirdMkt = Number.isFinite(venueBird) ? venueBird + venueEag : NaN;
+    let targetBirdMkt = Number.isFinite(venueBird) ? venueBird + venueEag : NaN;
+    const rowDg = new Set(
+      rows.map((pl) => Math.round(num(pl.dg_id, NaN))).filter((id) => Number.isFinite(id)),
+    );
+    const dkBirdMean = dkBirdiesMarketMeanForRound(payload, rnd, rowDg);
+    if (Number.isFinite(dkBirdMean)) targetBirdMkt = dkBirdMean;
     if (Number.isFinite(targetBirdMkt)) {
       const cur = meanFinite(
         rows.map((pl) => {
