@@ -10,10 +10,26 @@ import { eventsLikelySame, foldComparableTitle } from "./dg-events-align.mjs";
 import { liveHoleStatsUsableForProjections } from "./dg-live-hole-pars.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
 import { applyMarketBookCalibrationToRow } from "./market-book-calibration.mjs";
+import { calibrateFairwayFieldMean } from "./counting-from-rates-sg.mjs";
 
 function num(x, fallback = NaN) {
   const n = Number(x);
   return Number.isFinite(n) ? n : fallback;
+}
+
+function courseAdjFromTable(courseUsed, field) {
+  const course = String(courseUsed || "").trim();
+  if (!course) return NaN;
+  const p = join(dirname(fileURLToPath(import.meta.url)), "..", "course-table.json");
+  if (!existsSync(p)) return NaN;
+  try {
+    const ct = JSON.parse(readFileSync(p, "utf8"));
+    const key = normCourseNameKey(course);
+    const row = ct?.byNormKey?.[key];
+    return num(row?.[field], NaN);
+  } catch {
+    return NaN;
+  }
 }
 
 function clamp(x, lo, hi) {
@@ -817,8 +833,28 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
       applyMarketBookCalibrationToRow(pl, coursePar18);
     }
   }
+  const nFwCal = Math.round(num(basis.fairway_holes_modeled, 14)) || 14;
+  const fwCalibOpts = {
+    venueAvgFairways: num(basis.venue_avg_fairways, NaN),
+    courseFairwayRate01: num(basis.course_adj_fairway_rate, NaN),
+    nFairwayHoles: nFwCal,
+  };
+  let fairwaySkillCalibRounds = 0;
+  if (Number.isFinite(fwCalibOpts.courseFairwayRate01)) {
+    for (let rnd = 1; rnd <= 4; rnd++) {
+      if (calibrateFairwayFieldMean(payload?.players, { ...fwCalibOpts, round: rnd }) > 0) {
+        fairwaySkillCalibRounds++;
+      }
+    }
+  }
   syncPreWeatherCountSnapshots(payload?.players);
-  return { reconciled: n, calibrated: cal, venueScoreCalibrated: venueScoreCal, histVenueCalibrated: histVenueCal };
+  return {
+    reconciled: n,
+    calibrated: cal,
+    venueScoreCalibrated: venueScoreCal,
+    histVenueCalibrated: histVenueCal,
+    fairwaySkillCalibRounds,
+  };
 }
 
 function syncPreWeatherCountSnapshots(players) {
@@ -1544,6 +1580,7 @@ export function resolveProjectionCounts({
   nFairwayHoles = 14,
   minPlayerRounds = 3,
   minFieldRounds = 25,
+  courseSkillAnchor = false,
 }) {
   const sk = skillCounts || {};
   const rnd = Math.round(num(round, NaN));
@@ -1586,14 +1623,24 @@ export function resolveProjectionCounts({
     false,
   );
   const wPars = 0;
-  const wGir = reduceVenueWeightWhenSkillBetter(wVenue, muForRound, sk.gir, playerAgg?.avgGir, true);
-  const wFairways = reduceVenueWeightWhenSkillBetter(
-    wVenue,
-    muForRound,
-    sk.fairways,
-    playerAgg?.avgFairways,
-    true,
-  );
+  const wGir = courseSkillAnchor
+    ? 0
+    : Math.min(
+        0.18,
+        reduceVenueWeightWhenSkillBetter(wVenue, muForRound, sk.gir, playerAgg?.avgGir, true),
+      );
+  const wFairways = courseSkillAnchor
+    ? 0
+    : Math.min(
+        0.15,
+        reduceVenueWeightWhenSkillBetter(
+          wVenue,
+          muForRound,
+          sk.fairways,
+          playerAgg?.avgFairways,
+          true,
+        ),
+      );
   const wPutts = reduceVenueWeightWhenSkillBetter(
     wVenue,
     muForRound,
@@ -1866,6 +1913,15 @@ export function ensureProjectionCourseBasisComplete(basis, payload = {}) {
   if (!Number.isFinite(num(out.venue_avg_fairways, NaN)) && Number.isFinite(num(out.venue_avg_gir, NaN))) {
     const nFw = out.fairway_holes_modeled;
     out.venue_avg_fairways = Math.round(num(out.venue_avg_gir, 0) * (nFw / 18) * 0.92 * 100) / 100;
+  }
+
+  if (!Number.isFinite(num(out.course_adj_fairway_rate, NaN))) {
+    const fromCourse = courseAdjFromTable(payload.course_used, "adj_driving_accuracy");
+    if (Number.isFinite(fromCourse)) out.course_adj_fairway_rate = Math.round(fromCourse * 10000) / 10000;
+  }
+  if (!Number.isFinite(num(out.course_adj_gir_rate, NaN))) {
+    const fromCourse = courseAdjFromTable(payload.course_used, "adj_gir");
+    if (Number.isFinite(fromCourse)) out.course_adj_gir_rate = Math.round(fromCourse * 10000) / 10000;
   }
 
   if (
@@ -2155,12 +2211,14 @@ export function calibrateProjectionFieldMarkets(payload, opts = {}) {
     applyUniformField("birdies", venueBird, 0.15, 7);
     applyUniformField("bogeys", venueBog, 0.15, 8.5);
     applyUniformField("gir", num(basisRoot.venue_avg_gir, NaN), 6, 16.2);
-    applyUniformField(
-      "fairways",
-      num(basisRoot.venue_avg_fairways, NaN),
-      2,
-      num(basisRoot.fairway_holes_modeled, 14) + 0.5,
-    );
+    if (!Number.isFinite(num(basisRoot.course_adj_fairway_rate, NaN))) {
+      applyUniformField(
+        "fairways",
+        num(basisRoot.venue_avg_fairways, NaN),
+        2,
+        num(basisRoot.fairway_holes_modeled, 14) + 0.5,
+      );
+    }
     for (const pl of rows) {
       const e = num(pl.eagles, 0);
       const d = num(pl.doubles, 0);

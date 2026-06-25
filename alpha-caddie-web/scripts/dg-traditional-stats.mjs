@@ -2,10 +2,10 @@
  * DataGolf traditional-stat rates (GIR%, fairways%) for round projections.
  *
  * Sources (priority):
- * 1. preds/live-tournament-stats `gir` / `accuracy` (0–1 fractions) when merged for this field week
- * 2. preds/skill-ratings `driving_acc` — percentage-point edge vs tour field (see DataGolf FAQ)
- * 3. Rolling mean from historical_rounds_all.csv `gir` / `driving_acc` (same DG raw definitions)
- * 4. SG:APP / SG:OTT curves (fetch-datagolf fallback only)
+ * 1. preds/live-tournament-stats `gir` / `accuracy` when in-play counting refresh
+ * 2. preds/skill-ratings `driving_acc` / SG pillars (best player spread)
+ * 3. Cached `dg_*_pct` from rolling traditional CSV
+ * 4. SG:APP / SG:OTT curves (fallback)
  */
 
 import { createReadStream } from "fs";
@@ -31,23 +31,25 @@ export function traditionalRate01(raw, nHoles = 18) {
   return NaN;
 }
 
-/** skill-ratings `driving_acc` / `driving_accuracy`: pp vs field, not a 0–1 fairway share. */
-export function fairwayRate01FromSkillRatingsPp(skRow, tourAvg = DG_TOUR_AVG_FAIRWAY_RATE) {
+/** skill-ratings `driving_acc` / `driving_accuracy`: pp vs field, not always a 0–1 fairway share. */
+export function fairwayRate01FromSkillRatingsPp(skRow, tourAvg = DG_TOUR_AVG_FAIRWAY_RATE, nFw = 14) {
   if (!skRow || typeof skRow !== "object") return NaN;
-  const cands = [num(skRow.driving_accuracy, NaN), num(skRow.driving_acc, NaN)].filter((x) =>
-    Number.isFinite(x),
-  );
-  for (const a of cands) {
+  const nh = Math.round(num(nFw, 14)) || 14;
+
+  const accPp = num(skRow.driving_acc, NaN);
+  if (Number.isFinite(accPp) && accPp > -0.55 && accPp < 0.55) {
+    return Math.max(0.35, Math.min(0.88, tourAvg + accPp));
+  }
+
+  const acc = num(skRow.driving_accuracy, NaN);
+  if (Number.isFinite(acc)) {
+    if (acc >= 2 && acc <= nh + 1) return acc / nh;
+    if (acc > 0.15 && acc < 0.88) return acc;
+    if (acc > 1 && acc <= 100) return acc / 100;
+  }
+
+  for (const a of [accPp, acc].filter((x) => Number.isFinite(x))) {
     if (a > 0.15 && a < 0.88) return a;
-  }
-  for (const a of cands) {
-    if (a > 1 && a <= 100) return a / 100;
-  }
-  for (const a of cands) {
-    if (a > -0.55 && a < 0.55) {
-      const rate = tourAvg + a;
-      return Math.max(0.35, Math.min(0.88, rate));
-    }
   }
   return NaN;
 }
@@ -61,10 +63,10 @@ export function fairwayRate01FromDg(skRow, liveTrad, nFw = 14) {
     if (Number.isFinite(live)) return live;
   }
   if (skRow && typeof skRow === "object") {
+    const fromSkill = fairwayRate01FromSkillRatingsPp(skRow, DG_TOUR_AVG_FAIRWAY_RATE, nFw);
+    if (Number.isFinite(fromSkill)) return fromSkill;
     const cached = num(skRow.dg_fairway_pct, NaN);
     if (Number.isFinite(cached) && cached >= 0.15 && cached <= 0.88) return cached;
-    const fromSkill = fairwayRate01FromSkillRatingsPp(skRow);
-    if (Number.isFinite(fromSkill)) return fromSkill;
   }
   return NaN;
 }
@@ -84,13 +86,14 @@ export function girRate01FromDg(skRow, liveTrad, opts = {}) {
     if (Number.isFinite(live)) return live;
   }
   if (skRow && typeof skRow === "object") {
-    const cached = num(skRow.dg_gir_pct, NaN);
-    if (Number.isFinite(cached) && cached >= 0.15 && cached <= 0.95) return cached;
+    const fromSg = girRate01FromSgApp(opts.muSg, skRow.sg_app, opts.fieldMeanApp);
+    if (Number.isFinite(fromSg)) return fromSg;
     for (const k of ["gir_pct", "gir", "greens_in_regulation", "greens_in_regulation_pct", "gir_percent"]) {
       const r = traditionalRate01(skRow[k], 18);
       if (Number.isFinite(r)) return r;
     }
-    return girRate01FromSgApp(opts.muSg, skRow.sg_app, opts.fieldMeanApp);
+    const cached = num(skRow.dg_gir_pct, NaN);
+    if (Number.isFinite(cached) && cached >= 0.15 && cached <= 0.95) return cached;
   }
   return NaN;
 }

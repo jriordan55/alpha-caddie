@@ -121,6 +121,7 @@ import {
   derivedStatsFromRatesAndSg,
   mergeHoleCountRatesIntoSkillRow,
 } from "./counting-from-rates-sg.mjs";
+import { blendWeightsFromHistCalib } from "./optimized-counting-blend.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -196,6 +197,19 @@ function findCourseTableRowForCourse(course_used) {
     }
   }
   return best;
+}
+
+function courseAdjFromTableJson(course_used, field) {
+  const p = join(ROOT, "course-table.json");
+  if (!existsSync(p)) return NaN;
+  try {
+    const ct = JSON.parse(readFileSync(p, "utf8"));
+    const key = normCourseNameKey(course_used);
+    const row = ct?.byNormKey?.[key];
+    return num(row?.[field], NaN);
+  } catch {
+    return NaN;
+  }
 }
 
 function lookupExpectedParFromCourseTable(course_used) {
@@ -1193,9 +1207,10 @@ async function loadHistoricalCsvCalibration(modelRoot, courseKeyOpt) {
     }
   }
 
-  out.w_gir_skill = 1;
-  out.w_ott_skill = 1;
-  out.w_ott_decomp = 1;
+  const blendW = blendWeightsFromHistCalib(out);
+  out.w_gir_skill = blendW.w_gir_skill;
+  out.w_ott_skill = blendW.w_ott_skill;
+  out.w_ott_decomp = blendW.w_ott_decomp;
 
   const venueTag = ckWant ? ` at venue "${ckWant}"` : "";
   if (n >= 400) {
@@ -2050,8 +2065,12 @@ async function main() {
     for (const [id, sk] of skillByDg) {
       const roll = rollingTradByDg.get(id);
       if (!roll) continue;
-      if (Number.isFinite(roll.girRate01)) sk.dg_gir_pct = roll.girRate01;
-      if (Number.isFinite(roll.fwRate01)) sk.dg_fairway_pct = roll.fwRate01;
+      if (Number.isFinite(roll.girRate01) && !Number.isFinite(girRate01FromDg(sk, null, { fieldMeanApp: NaN }))) {
+        sk.dg_gir_pct = roll.girRate01;
+      }
+      if (Number.isFinite(roll.fwRate01) && !Number.isFinite(fairwayRate01FromDg(sk, null, N_FAIRWAY_HOLES))) {
+        sk.dg_fairway_pct = roll.fwRate01;
+      }
     }
   }
   if (rollingCountByDg.size) {
@@ -2408,6 +2427,7 @@ async function main() {
     }
   }
 
+  const histBlendW = blendWeightsFromHistCalib(histCalib);
   const players = [];
   const scoreSourceCounts = {
     player_venue_hist: 0,
@@ -2417,6 +2437,13 @@ async function main() {
     skill_around_round_venue_mean: 0,
     skill_rating: 0,
   };
+  const courseFairwayRate01 = courseAdjFromTableJson(course_used, "adj_driving_accuracy");
+  const courseGirRate01 = courseAdjFromTableJson(course_used, "adj_gir");
+  if (Number.isFinite(courseFairwayRate01)) {
+    console.log(
+      `[fetch-dg] Skill-specific FW/GIR: course adj_driving_accuracy=${courseFairwayRate01.toFixed(3)}, adj_gir=${Number.isFinite(courseGirRate01) ? courseGirRate01.toFixed(3) : "—"}`,
+    );
+  }
   const withinEventLiveWeek = dr >= 2 || withinEventCountingMap.size > 0;
   for (let r = 1; r <= 4; r++) {
     const mult = flatVenueScore
@@ -2450,6 +2477,10 @@ async function main() {
       let st;
       const skRowR = skillByDg.get(row.dg_id);
       const distR = isPlausibleDrivingDistanceYds(row.driving_distance) ? row.driving_distance : NaN;
+      const countingLiveTrad =
+        !preTournamentWeek && (withinEventLiveWeek || fieldApiRound >= 2)
+          ? (liveTraditionalByDg.get(row.dg_id) ?? null)
+          : null;
       st = derivedStatsFromMuSg(muForRound, fairwayHolesThisCourse, {
         sg_ott: row.sg_ott,
         fieldMeanOtt,
@@ -2462,13 +2493,15 @@ async function main() {
         fieldMeanDrive,
         histCountFit: histCalib,
         skRow: skRowR,
-        liveTrad: liveTraditionalByDg.get(row.dg_id) ?? null,
+        liveTrad: countingLiveTrad,
         venueBird: venueScoring.venueAvgBirdies,
         venueBog: venueScoring.venueAvgBogeys,
         venuePars: venueScoring.venueAvgPars,
         venueGir: venueScoring.venueAvgGir,
         venueFairways: venueScoring.venueAvgFairways,
         venuePutts: venueScoring.venueAvgPutts,
+        courseFairwayRate01,
+        courseGirRate01,
       });
       const pretScore = pretStrokesByDg.get(row.dg_id);
       const scoreRes = resolveProjectionScoreToPar({
@@ -2501,6 +2534,7 @@ async function main() {
         venueScoring,
         targetStp: stp,
         nFairwayHoles: fairwayHolesThisCourse,
+        courseSkillAnchor: Number.isFinite(courseFairwayRate01) || Number.isFinite(courseGirRate01),
       });
       st.eagles = venueCounts.eagles;
       st.birdies = venueCounts.birdies;
@@ -2702,6 +2736,14 @@ async function main() {
     },
     projection_course_basis: {
       fairway_holes_modeled: fairwayHolesThisCourse,
+      course_adj_fairway_rate: Number.isFinite(courseFairwayRate01)
+        ? Math.round(courseFairwayRate01 * 10000) / 10000
+        : null,
+      course_adj_gir_rate: Number.isFinite(courseGirRate01)
+        ? Math.round(courseGirRate01 * 10000) / 10000
+        : null,
+      fairway_skill_spread_keep: Math.round(histBlendW.fairways.spreadKeep * 1000) / 1000,
+      gir_skill_spread_keep: Math.round(histBlendW.gir.spreadKeep * 1000) / 1000,
       pret_expected_round_strokes_players: pretStrokesByDg.size,
       venue_avg_score_to_par: Number.isFinite(venueScoring.venueAvgStp)
         ? Math.round(venueScoring.venueAvgStp * 1000) / 1000
@@ -2768,6 +2810,13 @@ async function main() {
       w_gir_skill: Math.round(histCalib.w_gir_skill * 1000) / 1000,
       w_ott_skill: Math.round(histCalib.w_ott_skill * 1000) / 1000,
       w_ott_decomp: Math.round(histCalib.w_ott_decomp * 1000) / 1000,
+      counting_blend_weights: (() => {
+        const bw = blendWeightsFromHistCalib(histCalib);
+        return {
+          gir_spread_keep: Math.round(bw.gir.spreadKeep * 1000) / 1000,
+          fairway_spread_keep: Math.round(bw.fairways.spreadKeep * 1000) / 1000,
+        };
+      })(),
     },
     players,
     props: preservedProps,

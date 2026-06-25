@@ -13,6 +13,7 @@ import {
   num,
 } from "./dg-traditional-stats.mjs";
 import { derivedStatsFromRatesAndSg } from "./counting-from-rates-sg.mjs";
+import { blendWeightsFromHistCalib } from "./optimized-counting-blend.mjs";
 
 export const RAW_ROUND_SD = Number(process.env.GOLF_RAW_ROUND_SD) || 2.75;
 export const N_FAIRWAY_HOLES = Number(process.env.GOLF_N_FAIRWAY_HOLES) || 14;
@@ -452,9 +453,10 @@ async function loadHistoricalCsvCalibration(modelRoot, courseKeyOpt) {
     }
   }
 
-  out.w_gir_skill = 1;
-  out.w_ott_skill = 1;
-  out.w_ott_decomp = 1;
+  const blendW = blendWeightsFromHistCalib(out);
+  out.w_gir_skill = blendW.w_gir_skill;
+  out.w_ott_skill = blendW.w_ott_skill;
+  out.w_ott_decomp = blendW.w_ott_decomp;
 
   const venueTag = ckWant ? ` at venue "${ckWant}"` : "";
   if (n >= 400) {
