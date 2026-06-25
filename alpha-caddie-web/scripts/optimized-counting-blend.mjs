@@ -82,14 +82,15 @@ export function blendWeightsFromHistCalib(histCalib) {
       muCoeff: 0.03 + 0.025 * r2Fw,
     },
     birdies: {
-      wVenue: 0.2,
-      wRate: 0.32,
-      wSg: 0.38 + 0.18 * r2Gir,
-      wOls: olsW * 0.5,
-      sgApp: 0.52 + 0.24 * r2Gir,
-      sgPutt: 0.38,
-      sgOtt: 0.05,
-      mu: 0.06 + 0.03 * r2Gir,
+      wVenue: 0.4,
+      wRate: 0.38,
+      wSg: 0.14 + 0.06 * r2Gir,
+      wOls: olsW * 0.38,
+      sgApp: 0.28 + 0.1 * r2Gir,
+      sgPutt: 0.18,
+      sgOtt: 0.02,
+      mu: 0.012 + 0.008 * r2Gir,
+      spreadKeep: clamp(0.38 + 0.08 * r2Gir, 0.38, 0.52),
     },
     bogeys: {
       wVenue: 0.18,
@@ -213,8 +214,9 @@ export function optimizedHoleCounts(opts = {}) {
   const nHist = Math.round(num(sk.counting_rounds, 0)) || 0;
 
   const venueBird = num(opts.venueBird, 3.8);
-  const venueBog = num(opts.venueBog, 2.6);
   const venueEag = num(opts.venueEagles, 0.12);
+  const venueMarket = venueBird + venueEag;
+  const venueBog = num(opts.venueBog, 2.6);
   const venueDbl = num(opts.venueDoubles, 0.32);
 
   const dApp = num(opts.sgAppDelta, 0);
@@ -225,7 +227,8 @@ export function optimizedHoleCounts(opts = {}) {
   const playerGir = num(sk.avg_gir, NaN);
   const girMiss = Number.isFinite(playerGir) ? fieldGir - playerGir : 0;
 
-  const birdRate = num(sk.avg_birdies, NaN);
+  const birdRate =
+    num(sk.avg_birdies, NaN) + (Number.isFinite(num(sk.avg_eagles, NaN)) ? num(sk.avg_eagles, 0) : 0);
   const bogRate = num(sk.avg_bogeys, NaN);
   const eagRate = num(sk.avg_eagles, NaN);
   const dblRate = num(sk.avg_doubles, NaN);
@@ -243,7 +246,7 @@ export function optimizedHoleCounts(opts = {}) {
     wBog.dblExcess * dblExcess;
 
   const birdCore = weightedMean([
-    { w: wBird.wVenue, v: venueBird },
+    { w: wBird.wVenue, v: venueMarket },
     { w: wBird.wRate, v: birdRate },
     { w: wBird.wOls, v: olsCountAtStp(hist, "birdies", stp) },
   ]);
@@ -253,7 +256,7 @@ export function optimizedHoleCounts(opts = {}) {
     { w: wBog.wOls, v: olsCountAtStp(hist, "bogeys", stp) },
   ]);
 
-  let birdies = Number.isFinite(birdCore) ? birdCore + wBird.wSg * birdSg : birdSg + venueBird;
+  let birdies = Number.isFinite(birdCore) ? birdCore + wBird.wSg * birdSg : birdSg + venueMarket;
   let bogeys = Number.isFinite(bogCore) ? bogCore + wBog.wSg * bogSg : bogSg + venueBog;
 
   let eagles = weightedMean([
@@ -274,6 +277,15 @@ export function optimizedHoleCounts(opts = {}) {
   if (!Number.isFinite(bogeys)) bogeys = bogSg;
   if (!Number.isFinite(eagles)) eagles = venueEag;
   if (!Number.isFinite(doubles)) doubles = venueDbl;
+
+  const birdSpread = num(opts.birdieSkillSpreadKeep, wBird.spreadKeep);
+  const birdMarket = birdies + eagles;
+  if (Number.isFinite(birdMarket) && Number.isFinite(venueMarket)) {
+    const anchored = venueMarket + birdSpread * (birdMarket - venueMarket);
+    birdies = Math.max(0.15, anchored - eagles);
+  } else if (Number.isFinite(birdies) && Number.isFinite(venueBird)) {
+    birdies = venueBird + birdSpread * (birdies - venueBird);
+  }
 
   const scoreBog = clamp(venueBog + stp * 0.56, 0.15, 8.5);
   bogeys = (1 - wBog.wScoreStp) * bogeys + wBog.wScoreStp * scoreBog;

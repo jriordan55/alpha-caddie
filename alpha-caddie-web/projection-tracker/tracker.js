@@ -5,6 +5,7 @@
 import {
   americanToDecimal,
   computeStakeDollars,
+  capDirectionalPostedEdges,
   devigFairTwoWay,
   formatAmerican,
   impliedProbFromAmerican,
@@ -63,10 +64,14 @@ let DETAIL_ROWS = [];
 /** @type {object | null} */
 let OOS_REPORT = null;
 
+/** @type {object | null} */
+let ODDS_MODEL_ROI = null;
+
 /** @type {Awaited<ReturnType<typeof loadLiveBestBetsContext>> | null} */
 let LIVE_CTX = null;
 
 const OOS_JSON_URL = "../data/walkforward_oos_roi.json";
+const ODDS_ROI_URL = "../data/odds_model_roi_summary.csv";
 
 const state = {
   tab: "overview",
@@ -618,11 +623,12 @@ function explodeDetailToBets(rows) {
       const underOdds = nNum(row[spec.underOdds], NaN);
       const actual = parseLine(row[spec.actual]);
       const mu = Number.isFinite(modelLine) ? modelLine : NaN;
-      const { edgeOver, edgeUnder } = modelEdgePctAtLine(spec.market, mu, bookLine, overOdds, underOdds);
+      let { edgeOver, edgeUnder } = modelEdgePctAtLine(spec.market, mu, bookLine, overOdds, underOdds);
+      ({ edgeOver, edgeUnder } = capDirectionalPostedEdges(edgeOver, edgeUnder, mu, bookLine));
       const fair = modelEdgeVsFairAtLine(spec.market, mu, bookLine, overOdds, underOdds);
       const pModelOver = fair.pOver;
       const pModelUnder = fair.pUnder;
-      const pick = pickBetSide(edgeOver, edgeUnder, state.minEv);
+      const pick = pickBetSide(edgeOver, edgeUnder, state.minEv, mu, bookLine);
       const bestSide =
         Number.isFinite(edgeOver) && Number.isFinite(edgeUnder)
           ? edgeOver >= edgeUnder
@@ -862,8 +868,13 @@ function evRows() {
 function aggregateLineByMarket(rows) {
   /** @type {Map<string, { market: string, sq: number, abs: number, n: number }>} */
   const m = new Map();
-  for (const r of rows) {
-    if (r.section !== "model_vs_book") continue;
+  const byMarket = rows.filter(
+    (r) => r.section === "model_vs_book_by_market" && num(r.n_line_pairs) > 0,
+  );
+  const pool = byMarket.length
+    ? byMarket
+    : rows.filter((r) => r.section === "model_vs_book" && num(r.n_line_pairs) > 0);
+  for (const r of pool) {
     const n = num(r.n_line_pairs);
     const rmse = num(r.rmse);
     const mae = num(r.mae);
@@ -889,7 +900,7 @@ function aggregateEvByMarketSide(rows) {
   /** @type {Map<string, { market: string, side: string, bets: number, wins: number, losses: number, pushes: number, units: number }>} */
   const m = new Map();
   for (const r of rows) {
-    if (r.section !== "ev_backtest" && r.section !== "ev_backtest_by_market") continue;
+    if (r.section !== "ev_backtest_by_market") continue;
     const key = `${r.market}\x1f${r.bet_side}`;
     let acc = m.get(key);
     if (!acc) {
@@ -1041,6 +1052,47 @@ function renderOverview() {
     { valueKey: "roi", format: (v) => fmtPct(v) },
   );
   renderHonestOos();
+  renderOddsModelRoi();
+}
+
+function renderOddsModelRoi() {
+  const card = document.getElementById("odds-model-roi-card");
+  if (!card) return;
+  if (!ODDS_MODEL_ROI?.closeAll) {
+    card.hidden = true;
+    return;
+  }
+  card.hidden = false;
+  const note = document.getElementById("odds-model-roi-note");
+  if (note) {
+    const gen = ODDS_MODEL_ROI.generated_at
+      ? new Date(ODDS_MODEL_ROI.generated_at).toLocaleString()
+      : "";
+    note.innerHTML =
+      `Full-model walk-forward on <code>odds.csv</code> closing lines (178 event×round bundles). ` +
+      `Regenerate: <code>npm run backtest:odds-model-roi</code>` +
+      (gen ? ` · updated ${gen}` : "");
+  }
+  const rows = [
+    { label: "All O/U @ close", row: ODDS_MODEL_ROI.closeAll },
+    { label: "All O/U @ 5% EV", row: ODDS_MODEL_ROI.ev5All },
+    { label: "Birdies @ close", row: ODDS_MODEL_ROI.closeBirdies },
+    { label: "Birdies @ 5% EV", row: ODDS_MODEL_ROI.ev5Birdies },
+    { label: "Total score @ close", row: ODDS_MODEL_ROI.closeScore },
+    { label: "Total score @ 5% EV", row: ODDS_MODEL_ROI.ev5Score },
+  ].filter((x) => x.row);
+  document.getElementById("odds-model-roi-kpis").innerHTML = rows
+    .map(({ label, row }) => {
+      const roi = num(row.roi_close_pct);
+      const bets = Math.round(num(row.bets));
+      const units = num(row.units_close);
+      return `<div class="kpi-card">
+        <div class="kpi-label">${label}</div>
+        <div class="kpi-value ${clsSigned(roi)}">${fmtPct(roi)}</div>
+        <div class="kpi-sub">${bets} bets · ${units >= 0 ? "+" : ""}${fmt(units, 1)}u · ${fmt(num(row.hit_rate_pct), 1)}% hit</div>
+      </div>`;
+    })
+    .join("");
 }
 
 function renderHonestOos() {
@@ -1505,16 +1557,40 @@ async function loadOosReport() {
   }
 }
 
+async function loadOddsModelRoi() {
+  try {
+    const res = await fetch(`${ODDS_ROI_URL}?t=${Date.now()}`, { cache: "no-store" });
+    if (!res.ok) return null;
+    const rows = parseCsv(await res.text());
+    if (!rows.length) return null;
+    const pick = (strategy, market) =>
+      rows.find((r) => r.strategy === strategy && r.market === market) || null;
+    return {
+      generated_at: rows[0]?.generated_at || "",
+      closeAll: pick("line_any", "__all__"),
+      ev5All: pick("ev_5", "__all__"),
+      closeBirdies: pick("line_any", "Birdies"),
+      closeScore: pick("line_any", "Total score"),
+      ev5Birdies: pick("ev_5", "Birdies"),
+      ev5Score: pick("ev_5", "Total score"),
+    };
+  } catch {
+    return null;
+  }
+}
+
 async function loadData() {
   const errEl = document.getElementById("error-banner");
   errEl.hidden = true;
   try {
-    const [summaryText, detailText, oos] = await Promise.all([
+    const [summaryText, detailText, oos, oddsRoi] = await Promise.all([
       loadSummaryCsvText(),
       loadDetailCsvText(),
       loadOosReport(),
+      loadOddsModelRoi(),
     ]);
     OOS_REPORT = oos;
+    ODDS_MODEL_ROI = oddsRoi;
     ALL_ROWS = parseCsv(summaryText);
     if (!ALL_ROWS.length) throw new Error("Summary CSV is empty");
     DETAIL_ROWS = detailText ? parseCsv(detailText) : [];

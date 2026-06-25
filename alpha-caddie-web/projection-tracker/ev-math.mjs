@@ -109,6 +109,16 @@ export function modelEdgePctAtLine(market, mu, line, overOdds, underOdds, sigmaS
   return { edgeOver, edgeUnder, best: Math.max(edgeOver, edgeUnder) };
 }
 
+export function capDirectionalPostedEdges(edgeOver, edgeUnder, mu, line) {
+  let o = edgeOver;
+  let u = edgeUnder;
+  if (Number.isFinite(mu) && Number.isFinite(line)) {
+    if (mu <= line) o = Number.isFinite(o) ? Math.min(0, o) : o;
+    if (mu >= line) u = Number.isFinite(u) ? Math.min(0, u) : u;
+  }
+  return { edgeOver: o, edgeUnder: u };
+}
+
 export function pickBetSide(edgeOver, edgeUnder, minEvPct, mu, line) {
   const th = num(minEvPct, 0);
   if (!Number.isFinite(edgeOver) || !Number.isFinite(edgeUnder)) return null;

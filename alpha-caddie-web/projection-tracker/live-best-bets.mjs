@@ -2,6 +2,7 @@
  * Live-week best bets: projections.json + DK props, ranked by EV and historical OOS/signals.
  */
 import {
+  capDirectionalPostedEdges,
   modelEdgePctAtLine,
   num,
   pickBetSide,
@@ -291,7 +292,8 @@ export function buildLiveBestBets({ projections, oos, signals, courseRow, minEvP
     if (!muFn) continue;
     const mu = muFn(player);
     if (!Number.isFinite(mu)) continue;
-    const { edgeOver, edgeUnder } = modelEdgePctAtLine(market, mu, prop.line, prop.over, prop.under);
+    let { edgeOver, edgeUnder } = modelEdgePctAtLine(market, mu, prop.line, prop.over, prop.under);
+    ({ edgeOver, edgeUnder } = capDirectionalPostedEdges(edgeOver, edgeUnder, mu, prop.line));
     const pick = pickBetSide(edgeOver, edgeUnder, minEdge, mu, prop.line);
     if (!pick) continue;
     const side = pick.side;

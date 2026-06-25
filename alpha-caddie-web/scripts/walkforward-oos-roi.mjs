@@ -13,7 +13,7 @@ import {
   marketSkipsBookCalibration,
 } from "./market-book-calibration.mjs";
 import { EXPORT_MARKETS, num, sigmaForOu } from "./round-projection-mu.mjs";
-import { pickBetSide, pnlForResult } from "../projection-tracker/ev-math.mjs";
+import { capDirectionalPostedEdges, pickBetSide, pnlForResult } from "../projection-tracker/ev-math.mjs";
 
 const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
 const VS = join(WEB, "data", "round_projection_vs_actual.csv");
@@ -208,9 +208,10 @@ export function roiOnRows(testRows, markets, minEvPct, { marketFilter = null } =
     const z = (b.bookLine - mu) / sig;
     const pOver = 1 - normalCdf(z);
     const pUnder = 1 - pOver;
-    const edgeOver = (pOver - implied(b.overOdds)) * 100;
-    const edgeUnder = (pUnder - implied(b.underOdds)) * 100;
-    const pick = pickBetSide(edgeOver, edgeUnder, minEvPct);
+    let edgeOver = (pOver - implied(b.overOdds)) * 100;
+    let edgeUnder = (pUnder - implied(b.underOdds)) * 100;
+    ({ edgeOver, edgeUnder } = capDirectionalPostedEdges(edgeOver, edgeUnder, mu, b.bookLine));
+    const pick = pickBetSide(edgeOver, edgeUnder, minEvPct, mu, b.bookLine);
     if (!pick) continue;
     const res = pick.side === "over" ? b.overRes : b.underRes;
     const odds = pick.side === "over" ? b.overOdds : b.underOdds;

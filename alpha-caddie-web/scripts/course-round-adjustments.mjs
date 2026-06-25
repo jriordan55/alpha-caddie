@@ -10,7 +10,7 @@ import { eventsLikelySame, foldComparableTitle } from "./dg-events-align.mjs";
 import { liveHoleStatsUsableForProjections } from "./dg-live-hole-pars.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
 import { applyMarketBookCalibrationToRow, applyEventPropBookAlignment } from "./market-book-calibration.mjs";
-import { calibrateFairwayFieldMean } from "./counting-from-rates-sg.mjs";
+import { calibrateFairwayFieldMean, calibrateBirdiesFieldMean } from "./counting-from-rates-sg.mjs";
 
 function num(x, fallback = NaN) {
   const n = Number(x);
@@ -840,6 +840,7 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
     nFairwayHoles: nFwCal,
   };
   let fairwaySkillCalibRounds = 0;
+  let birdiesSkillCalibRounds = 0;
   if (Number.isFinite(fwCalibOpts.courseFairwayRate01)) {
     for (let rnd = 1; rnd <= 4; rnd++) {
       if (calibrateFairwayFieldMean(payload?.players, { ...fwCalibOpts, round: rnd }) > 0) {
@@ -847,18 +848,35 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
       }
     }
   }
+  const birdCalibOpts = {
+    venueAvgBirdies: num(basis.venue_avg_birdies, NaN),
+    venueAvgEagles: num(basis.venue_avg_eagles, 0.12),
+  };
+  if (Number.isFinite(birdCalibOpts.venueAvgBirdies)) {
+    for (let rnd = 1; rnd <= 4; rnd++) {
+      if (calibrateBirdiesFieldMean(payload?.players, { ...birdCalibOpts, round: rnd }) > 0) {
+        birdiesSkillCalibRounds++;
+      }
+    }
+  }
   syncPreWeatherCountSnapshots(payload?.players);
-  const propBookAlign = applyEventPropBookAlignment(payload, {
-    coursePar18,
-    displayRound: opts.displayRound,
-    minPairs: opts.eventPropBookMinPairs,
-  });
+  const skipEventPropAlign =
+    opts.skipEventPropBookAlignment === true ||
+    String(process.env.GOLF_SKIP_EVENT_PROP_BOOK_ALIGN || "").trim() === "1";
+  const propBookAlign = skipEventPropAlign
+    ? { applied: false, markets: {} }
+    : applyEventPropBookAlignment(payload, {
+        coursePar18,
+        displayRound: opts.displayRound,
+        minPairs: opts.eventPropBookMinPairs,
+      });
   return {
     reconciled: n,
     calibrated: cal,
     venueScoreCalibrated: venueScoreCal,
     histVenueCalibrated: histVenueCal,
     fairwaySkillCalibRounds,
+    birdiesSkillCalibRounds,
     eventPropBookAlignment: propBookAlign,
   };
 }
@@ -1608,7 +1626,7 @@ export function resolveProjectionCounts({
     true,
   );
   const wBirdies = reduceVenueWeightWhenSkillBetter(
-    wVenue,
+    wVenue * 0.55,
     muForRound,
     sk.birdies,
     playerAgg?.avgBirdies,
@@ -2214,8 +2232,29 @@ export function calibrateProjectionFieldMarkets(payload, opts = {}) {
       }
     };
 
-    applyUniformField("birdies", venueBird, 0.15, 7);
     applyUniformField("bogeys", venueBog, 0.15, 8.5);
+    const venueEag = num(basisRoot.venue_avg_eagles, 0.12);
+    const targetBirdMkt = Number.isFinite(venueBird) ? venueBird + venueEag : NaN;
+    if (Number.isFinite(targetBirdMkt)) {
+      const cur = meanFinite(
+        rows.map((pl) => {
+          const b = num(pl.birdies, NaN);
+          const e = num(pl.eagles, 0);
+          return Number.isFinite(b) ? b + (Number.isFinite(e) ? Math.max(0, e) : 0) : NaN;
+        }),
+      );
+      if (Number.isFinite(cur)) {
+        const gap = targetBirdMkt - cur;
+        if (Math.abs(gap) >= 0.04) {
+          shifts.birdies[rnd] = Math.round(gap * 1000) / 1000;
+          for (const pl of rows) {
+            const b = num(pl.birdies, NaN);
+            if (!Number.isFinite(b)) continue;
+            pl.birdies = Math.round(clamp(b + gap, 0.15, 7) * 100) / 100;
+          }
+        }
+      }
+    }
     applyUniformField("gir", num(basisRoot.venue_avg_gir, NaN), 6, 16.2);
     if (!Number.isFinite(num(basisRoot.course_adj_fairway_rate, NaN))) {
       applyUniformField(

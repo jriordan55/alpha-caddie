@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="tracker.css?v=7" />
+  <link rel="stylesheet" href="tracker.css?v=8" />
 </head>
 <body>
   <header class="app-header">
@@ -107,6 +107,11 @@
             <tbody></tbody>
           </table>
         </div>
+      </div>
+      <div class="chart-card" id="odds-model-roi-card">
+        <h2 class="section-title">Long-horizon odds.csv ROI (new projections)</h2>
+        <p class="note" id="odds-model-roi-note">Full-model walk-forward on historical closing lines. Regenerate: <code>npm run backtest:odds-model-roi</code></p>
+        <div class="kpi-grid" id="odds-model-roi-kpis"></div>
       </div>
       <div class="chart-card">
         <h2 class="section-title">RMSE vs book line (lower is better)</h2>
@@ -430,6 +435,6 @@
     </section>
   </main>
 
-  <script type="module" src="tracker.js?v=17"></script>
+  <script type="module" src="tracker.js?v=19"></script>
 </body>
 </html>

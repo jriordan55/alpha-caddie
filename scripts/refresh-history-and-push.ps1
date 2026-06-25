@@ -322,6 +322,7 @@ $artifacts = @(
   "alpha-caddie-web/data/parlay_correlations.json",
   "alpha-caddie-web/data/odds_model_roi_summary.csv",
   "alpha-caddie-web/data/odds_model_roi_detail.csv",
+  "alpha-caddie-web/projection-tracker",
   "alpha-caddie-web/data/pgatour_event_rounds.json",
   "alpha-caddie-web/data/historical_round_weather.json",
   "alpha-caddie-web/data/course_coordinates_cache.json",

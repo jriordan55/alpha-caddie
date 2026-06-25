@@ -735,6 +735,7 @@ export async function buildFullModelMuMapForEvent({
     minField: Math.min(8, players.length),
     venueScoring,
     skipMarketBookCalibration: true,
+    skipEventPropBookAlignment: true,
   });
 
   const playersReconciled = payload.players || players;
