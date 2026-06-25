@@ -2,7 +2,11 @@
  * Data-driven blend weights for counting markets: course anchor + player rates + SG + stp OLS.
  * Weights derive from historical_projection_calibration (R², n_counts, fw_stp_line).
  */
-import { num } from "./dg-traditional-stats.mjs";
+
+function num(v, fallback = NaN) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : fallback;
+}
 
 function clamp(x, lo, hi) {
   return Math.min(hi, Math.max(lo, x));
@@ -227,8 +231,7 @@ export function optimizedHoleCounts(opts = {}) {
   const playerGir = num(sk.avg_gir, NaN);
   const girMiss = Number.isFinite(playerGir) ? fieldGir - playerGir : 0;
 
-  const birdRate =
-    num(sk.avg_birdies, NaN) + (Number.isFinite(num(sk.avg_eagles, NaN)) ? num(sk.avg_eagles, 0) : 0);
+  const birdRate = num(sk.avg_birdies, NaN);
   const bogRate = num(sk.avg_bogeys, NaN);
   const eagRate = num(sk.avg_eagles, NaN);
   const dblRate = num(sk.avg_doubles, NaN);

@@ -11,7 +11,6 @@ import {
   girHitsFromRate01,
   girRate01FromDg,
   girRate01FromSgApp,
-  num,
   traditionalRate01,
 } from "./dg-traditional-stats.mjs";
 import {
@@ -26,6 +25,12 @@ const FAIRWAY_COURSE_SPREAD_KEEP = 0.45;
 
 /** Venue birdie anchor: keep player spread vs course birdie mean (DK market ≈ birdies + eagles). */
 const BIRDIE_COURSE_SPREAD_KEEP = 0.42;
+
+/** Local numeric parse with fallback (dg-traditional-stats `num` has no fallback arg). */
+function num(v, fallback = NaN) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : fallback;
+}
 
 /** Empirical DK-audit bias trim (model − actual); 0 = off. */
 const BIRDIE_ACTUAL_BIAS_TRIM = num(process.env.GOLF_BIRDIE_ACTUAL_BIAS_TRIM, 0);
@@ -202,8 +207,8 @@ function birdiesEaglesFromPlayerRates(opts = {}) {
   const venueBird = num(opts.venueBird, 3.8);
   const venueEag = num(opts.venueEagles, 0.12);
   const venueMkt = venueBird + venueEag;
-  const playerMkt =
-    num(sk.avg_birdies, NaN) + (Number.isFinite(num(sk.avg_eagles, NaN)) ? num(sk.avg_eagles, 0) : 0);
+  // avg_birdies from rolling history is already birdies+eagles (DK birdies market).
+  const playerMkt = num(sk.avg_birdies, NaN);
   const spread = num(opts.birdieSkillSpreadKeep, BIRDIE_COURSE_SPREAD_KEEP);
   const dApp = sgDelta(sk, field, "sg_app");
   const dPutt = sgDelta(sk, field, "sg_putt");
