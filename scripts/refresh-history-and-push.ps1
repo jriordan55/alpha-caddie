@@ -232,6 +232,7 @@ if ($LiveWeekOnly) {
   Run-Npm "Venue player/course history + skill blend (repair:projection-course-basis) ..." run repair:projection-course-basis
   Run-Npm "Prior-round form from live-in-play (after venue repair) ..." run merge:within-event-form
   Run-Npm "Unified projection factors (course fit, tee wave - after venue repair) ..." run apply:unified-factors
+  Run-Npm "Live scores into projections for +EV in-play pricing ..." run merge:live-in-play-scratch-into-projections
   Run-Npm "Tournament MC outright probs (bake:outright-sim) ..." run bake:outright-sim
   Run-Npm "Reconcile counts + venue field markets (book cal deferred until after vs-actual export) ..." run reconcile:projection-counts
   Run-Npm "DK round audit CSV with post-repair model lines ..." run export:dk-round-audit-csv
@@ -322,6 +323,7 @@ $artifacts = @(
   "alpha-caddie-web/data/parlay_correlations.json",
   "alpha-caddie-web/data/odds_model_roi_summary.csv",
   "alpha-caddie-web/data/odds_model_roi_detail.csv",
+  "alpha-caddie-web/data/odds_model_roi_lines.csv",
   "alpha-caddie-web/projection-tracker",
   "alpha-caddie-web/data/pgatour_event_rounds.json",
   "alpha-caddie-web/data/historical_round_weather.json",

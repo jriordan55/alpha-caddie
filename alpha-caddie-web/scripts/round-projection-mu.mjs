@@ -10,6 +10,12 @@ import {
 } from "./weather-projection-adjustments.mjs";
 import { marketBookSigmaScale, eventPropBookAlignedMarket } from "./market-book-calibration.mjs";
 import {
+  liveCurrentRoundTotalScoreMuDelta,
+  livePartialRoundCountPropAdjust,
+} from "./live-in-play-pricing.mjs";
+
+export { liveCurrentRoundTotalScoreMuDelta } from "./live-in-play-pricing.mjs";
+import {
   adaptiveVenueStatMuNudge,
   blendAdaptiveMuSgBonus,
   courseHistoryMuBonus,
@@ -402,42 +408,6 @@ function pricingStatMuAdjustment(market, dgId, modeRaw, skillRaw, ctx) {
   return out + pricingCourseVenueStatMuNudge(market, dgId, modeRaw, ctx) + courseW;
 }
 
-function liveRowMatchesRound(row, meta) {
-  const liveR = Math.round(num(meta?.datagolf_live_current_round ?? meta?.display_round, NaN));
-  const pr = Math.round(num(row?.round, NaN));
-  return Number.isFinite(liveR) && liveR >= 1 && liveR <= 4 && pr === liveR;
-}
-
-function livePartialRoundCountPropAdjust(market, row, meta) {
-  const out = { muDelta: 0, sigmaScale: 1 };
-  if (market !== "Birdies" && market !== "Pars" && market !== "Bogeys") return out;
-  if (!liveRowMatchesRound(row, meta)) return out;
-  const thru = Math.round(num(row.dg_live_thru, NaN));
-  if (!Number.isFinite(thru) || thru < 1) return out;
-  const rem = 18 - thru;
-  if (rem < 0) return out;
-  const field = market === "Birdies" ? "birdies" : market === "Pars" ? "pars" : "bogeys";
-  const muFull = num(row[field], NaN);
-  if (!Number.isFinite(muFull) || muFull < 0) return out;
-  let b = num(row.dg_live_birdies_so_far, NaN);
-  let bg = num(row.dg_live_bogeys_so_far, NaN);
-  if (!Number.isFinite(b)) b = 0;
-  if (!Number.isFinite(bg)) bg = 0;
-  const eg = num(row.dg_live_eagles_so_far, NaN);
-  const eagles = Number.isFinite(eg) && eg >= 0 ? Math.min(thru, Math.round(eg)) : 0;
-  let pSo = num(row.dg_live_pars_so_far, NaN);
-  if (!Number.isFinite(pSo)) {
-    pSo = Math.max(0, Math.min(thru, thru - b - bg - eagles));
-  }
-  const rate = muFull / 18;
-  let soFar = market === "Birdies" ? b + eagles : market === "Bogeys" ? bg : pSo;
-  let muLive = clamp(soFar + rate * rem, 0, 18);
-  out.muDelta = muLive - muFull;
-  if (thru >= 18) out.sigmaScale = 0.26;
-  else out.sigmaScale = clamp(Math.sqrt(rem / 18), 0.17, 1);
-  return out;
-}
-
 function ouMeanCountingStat(market, row, fairwayHoles) {
   const rec = OU_STAT_MAP[market] || OU_STAT_MAP["Total score"];
   if (market === "Birdies") return birdiesPlusEaglesFromRow(row);
@@ -491,14 +461,16 @@ export function ouProjectedMeanForMode(market, row, meta, pricingMode, pricingSk
   if (!Number.isFinite(base)) return NaN;
   const countLive = livePartialRoundCountPropAdjust(market, row, metaLive);
   if (eventPropBookAlignedMarket(metaLive, market)) {
-    return base + countLive.muDelta;
+    const liveScore =
+      market === "Total score" ? liveCurrentRoundTotalScoreMuDelta(row, metaLive) : 0;
+    return base + countLive.muDelta + liveScore;
   }
   const weatherAdj =
     metaLive?.projection_counts_weather_baked && row?.weather_counts_baked
       ? 0
       : statWeatherMuAdjustment(market, row);
   return (
-    base + weatherAdj + countLive.muDelta + pricingStatMuAdjustment(market, dgId, pricingMode, pricingSkill, ctx)
+    base + weatherAdj + countLive.muDelta + liveCurrentRoundTotalScoreMuDelta(row, metaLive) + pricingStatMuAdjustment(market, dgId, pricingMode, pricingSkill, ctx)
   );
 }
 

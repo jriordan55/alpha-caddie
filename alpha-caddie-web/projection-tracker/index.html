@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="tracker.css?v=8" />
+  <link rel="stylesheet" href="tracker.css?v=9" />
 </head>
 <body>
   <header class="app-header">
@@ -66,6 +66,7 @@
       <button type="button" class="tab active" data-tab="overview" role="tab">Overview</button>
       <button type="button" class="tab" data-tab="accuracy" role="tab">Line accuracy</button>
       <button type="button" class="tab" data-tab="ev" role="tab">EV backtest</button>
+      <button type="button" class="tab" data-tab="odds-csv" role="tab">odds.csv</button>
       <button type="button" class="tab" data-tab="bets" role="tab">Bet log</button>
       <button type="button" class="tab" data-tab="picks" role="tab">Best bets</button>
       <button type="button" class="tab" data-tab="risk" role="tab">Risk</button>
@@ -138,6 +139,44 @@
               </tr>
             </thead>
             <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-odds-csv" class="panel" role="tabpanel">
+      <p class="note" id="odds-csv-note">Every graded Over/Under side from <code>odds.csv</code> with walk-forward model μ. Toolbar Market, Min EV %, Bet side, and Player apply here.</p>
+      <div class="toolbar-card odds-csv-toolbar">
+        <label>Course
+          <select id="odds-filter-course">
+            <option value="">All courses</option>
+          </select>
+        </label>
+        <label>P/L odds
+          <select id="odds-filter-at">
+            <option value="close" selected>Closing</option>
+            <option value="open">Opening</option>
+          </select>
+        </label>
+        <label class="check-label">
+          <input type="checkbox" id="odds-filter-model-only" />
+          Model picks only
+        </label>
+        <label>Group by
+          <select id="odds-filter-view">
+            <option value="lines" selected>All lines</option>
+            <option value="market">Market</option>
+            <option value="course">Course</option>
+            <option value="player">Player</option>
+          </select>
+        </label>
+      </div>
+      <div class="kpi-grid" id="odds-csv-kpis"></div>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table class="data-table" id="odds-csv-table">
+            <thead id="odds-csv-thead"></thead>
+            <tbody id="odds-csv-tbody"></tbody>
           </table>
         </div>
       </div>
@@ -420,6 +459,17 @@
       </article>
 
       <article class="guide-block">
+        <h2 class="guide-heading"><a href="#odds-csv">odds.csv</a></h2>
+        <p>Long-horizon backtest on every graded DK line in <code>odds.csv</code> (Birdies &amp; Total score). Walk-forward model μ vs opening/closing odds.</p>
+        <ul class="guide-ul">
+          <li><strong>Filters</strong> — Course dropdown plus toolbar Market / Min EV % / Bet side / Player.</li>
+          <li><strong>Model picks only</strong> — Keep sides the model would bet at your EV threshold (μ vs line + edge).</li>
+          <li><strong>Group by</strong> — Roll up hit %, ROI, and P/L by market, course, or player.</li>
+          <li>Regenerate: <code>npm run backtest:odds-model-roi</code></li>
+        </ul>
+      </article>
+
+      <article class="guide-block">
         <h2 class="guide-heading"><a href="#insights">Insights</a></h2>
         <p>Auto bullets from current filters: calibration notes, best/worst pockets, beat-fair summary.</p>
       </article>
@@ -435,6 +485,6 @@
     </section>
   </main>
 
-  <script type="module" src="tracker.js?v=19"></script>
+  <script type="module" src="tracker.js?v=20"></script>
 </body>
 </html>

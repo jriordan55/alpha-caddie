@@ -17,6 +17,16 @@ import {
 } from "./ev-math.mjs";
 import { buildEdgeSignalInsights } from "./edge-signal-insights.mjs";
 import { buildLiveBestBets, loadLiveBestBetsContext, invalidateLiveBestBetsCache } from "./live-best-bets.mjs";
+import {
+  filterOddsLines,
+  fmtNum as oddsFmtNum,
+  fmtPct as oddsFmtPct,
+  summarizeByCourse,
+  summarizeByMarket,
+  summarizeByPlayer,
+  summarizeOddsLines,
+  uniqueCourses,
+} from "./odds-csv-tab.mjs";
 
 const RISK_STORAGE_KEY = "alphaCaddie_projection_tracker_risk_v1";
 
@@ -67,11 +77,12 @@ let OOS_REPORT = null;
 /** @type {object | null} */
 let ODDS_MODEL_ROI = null;
 
-/** @type {Awaited<ReturnType<typeof loadLiveBestBetsContext>> | null} */
-let LIVE_CTX = null;
+/** @type {Record<string, string>[]} */
+let ODDS_LINES_ROWS = [];
 
 const OOS_JSON_URL = "../data/walkforward_oos_roi.json";
 const ODDS_ROI_URL = "../data/odds_model_roi_summary.csv";
+const ODDS_LINES_URL = "../data/odds_model_roi_lines.csv";
 
 const state = {
   tab: "overview",
@@ -83,7 +94,14 @@ const state = {
   player: "",
   show: "bets",
   risk: loadRiskPrefs(),
+  oddsCourse: "",
+  oddsAt: "close",
+  oddsModelOnly: false,
+  oddsView: "lines",
 };
+
+/** @type {Awaited<ReturnType<typeof loadLiveBestBetsContext>> | null} */
+let LIVE_CTX = null;
 
 function num(v) {
   const n = Number(v);
@@ -1095,6 +1113,209 @@ function renderOddsModelRoi() {
     .join("");
 }
 
+function oddsCsvFilters() {
+  return {
+    course: state.oddsCourse,
+    player: state.player,
+    market: state.market,
+    side: state.side,
+    minEv: state.minEv,
+    modelOnly: state.oddsModelOnly,
+  };
+}
+
+function populateOddsCourseSelect() {
+  const sel = document.getElementById("odds-filter-course");
+  if (!sel) return;
+  const prev = state.oddsCourse;
+  const courses = uniqueCourses(ODDS_LINES_ROWS);
+  sel.innerHTML =
+    `<option value="">All courses (${courses.length})</option>` +
+    courses.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+  sel.value = prev && courses.includes(prev) ? prev : "";
+  state.oddsCourse = sel.value;
+}
+
+function renderOddsCsv() {
+  const kpis = document.getElementById("odds-csv-kpis");
+  const thead = document.getElementById("odds-csv-thead");
+  const tbody = document.getElementById("odds-csv-tbody");
+  const note = document.getElementById("odds-csv-note");
+  if (!kpis || !thead || !tbody) return;
+
+  if (!ODDS_LINES_ROWS.length) {
+    if (note) {
+      note.innerHTML =
+        `No <code>odds_model_roi_lines.csv</code> loaded. Run <code>npm run backtest:odds-model-roi</code> then Reload data.`;
+    }
+    kpis.innerHTML = "";
+    thead.innerHTML = "";
+    tbody.innerHTML = `<tr><td colspan="16" class="muted">No odds.csv line data.</td></tr>`;
+    return;
+  }
+
+  const gen = ODDS_LINES_ROWS[0]?.generated_at;
+  if (note) {
+    note.innerHTML =
+      `Every graded Over/Under side from <code>odds.csv</code> (Birdies &amp; Total score). ` +
+      `Walk-forward model μ vs DK odds. Toolbar Market, Min EV %, Bet side, and Player apply.` +
+      (gen ? ` Updated ${new Date(gen).toLocaleString()}.` : "");
+  }
+
+  const filtered = filterOddsLines(ODDS_LINES_ROWS, oddsCsvFilters());
+  const opts = { oddsAt: state.oddsAt };
+  const sum = summarizeOddsLines(filtered, opts);
+  const pnlKey = state.oddsAt === "open" ? "pnl_open" : "pnl_close";
+  const oddsLabel = state.oddsAt === "open" ? "opening" : "closing";
+
+  kpis.innerHTML = `
+    <div class="kpi-card highlight">
+      <div class="kpi-label">Lines</div>
+      <div class="kpi-value">${filtered.length.toLocaleString()}</div>
+      <div class="kpi-sub">${sum.bets.toLocaleString()} graded · flat 1u @ ${oddsLabel}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Hit rate</div>
+      <div class="kpi-value">${oddsFmtNum(sum.hit_pct, 1)}%</div>
+      <div class="kpi-sub">${sum.wins}W–${sum.losses}L–${sum.pushes}P</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">PnL</div>
+      <div class="kpi-value ${clsSigned(sum.units)}">${sum.units >= 0 ? "+" : ""}${fmt(sum.units, 1)}u</div>
+      <div class="kpi-sub">${oddsLabel} odds</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">ROI</div>
+      <div class="kpi-value ${clsSigned(sum.roi_pct)}">${oddsFmtPct(sum.roi_pct)}</div>
+      <div class="kpi-sub">per graded bet</div>
+    </div>
+  `;
+
+  const aggHead = `<tr>
+    <th>Name</th>
+    <th class="num">Bets</th>
+    <th class="num">W–L–P</th>
+    <th class="num">Hit %</th>
+    <th class="num">PnL</th>
+    <th class="num">ROI</th>
+  </tr>`;
+
+  if (state.oddsView === "market") {
+    const rows = summarizeByMarket(filtered, opts);
+    thead.innerHTML = aggHead.replace("Name", "Market");
+    tbody.innerHTML = rows.length
+      ? rows
+          .map(
+            (r) => `<tr>
+        <td>${esc(r.market)}</td>
+        <td class="num">${r.bets}</td>
+        <td class="num">${r.wins}–${r.losses}–${r.pushes}</td>
+        <td class="num">${oddsFmtNum(r.hit_pct, 1)}%</td>
+        <td class="num ${clsSigned(r.units)}">${r.units >= 0 ? "+" : ""}${fmt(r.units, 1)}u</td>
+        <td class="num ${clsSigned(r.roi_pct)}">${oddsFmtPct(r.roi_pct)}</td>
+      </tr>`,
+          )
+          .join("")
+      : `<tr><td colspan="6" class="muted">No rows match filters.</td></tr>`;
+    return;
+  }
+
+  if (state.oddsView === "course") {
+    const rows = summarizeByCourse(filtered, opts);
+    thead.innerHTML = aggHead.replace("Name", "Course");
+    tbody.innerHTML = rows.length
+      ? rows
+          .map(
+            (r) => `<tr>
+        <td>${esc(r.course)}</td>
+        <td class="num">${r.bets}</td>
+        <td class="num">${r.wins}–${r.losses}–${r.pushes}</td>
+        <td class="num">${oddsFmtNum(r.hit_pct, 1)}%</td>
+        <td class="num ${clsSigned(r.units)}">${r.units >= 0 ? "+" : ""}${fmt(r.units, 1)}u</td>
+        <td class="num ${clsSigned(r.roi_pct)}">${oddsFmtPct(r.roi_pct)}</td>
+      </tr>`,
+          )
+          .join("")
+      : `<tr><td colspan="6" class="muted">No rows match filters.</td></tr>`;
+    return;
+  }
+
+  if (state.oddsView === "player") {
+    const rows = summarizeByPlayer(filtered, opts).slice(0, 500);
+    thead.innerHTML = aggHead.replace("Name", "Player");
+    tbody.innerHTML = rows.length
+      ? rows
+          .map(
+            (r) => `<tr>
+        <td>${esc(r.player)}</td>
+        <td class="num">${r.bets}</td>
+        <td class="num">${r.wins}–${r.losses}–${r.pushes}</td>
+        <td class="num">${oddsFmtNum(r.hit_pct, 1)}%</td>
+        <td class="num ${clsSigned(r.units)}">${r.units >= 0 ? "+" : ""}${fmt(r.units, 1)}u</td>
+        <td class="num ${clsSigned(r.roi_pct)}">${oddsFmtPct(r.roi_pct)}</td>
+      </tr>`,
+          )
+          .join("")
+      : `<tr><td colspan="6" class="muted">No rows match filters.</td></tr>`;
+    return;
+  }
+
+  thead.innerHTML = `<tr>
+    <th>Course</th>
+    <th>Event</th>
+    <th class="num">Rnd</th>
+    <th>Player</th>
+    <th>Market</th>
+    <th class="num">Line</th>
+    <th>Side</th>
+    <th class="num">μ</th>
+    <th class="num">Edge %</th>
+    <th class="num">Actual</th>
+    <th>Result</th>
+    <th class="num">Open</th>
+    <th class="num">Close</th>
+    <th class="num">PnL</th>
+  </tr>`;
+
+  const sorted = [...filtered].sort((a, b) => {
+    const ev = String(b.event || "").localeCompare(String(a.event || ""));
+    if (ev) return ev;
+    return num(a.round) - num(b.round);
+  });
+
+  tbody.innerHTML = sorted.length
+    ? sorted
+        .slice(0, 2000)
+        .map((r) => {
+          const pnl = num(r[pnlKey], NaN);
+          const edge = num(r.model_edge_pct, NaN);
+          const res = String(r.result || "").toUpperCase();
+          const resCls = res === "W" ? "pos" : res === "L" ? "neg" : "";
+          return `<tr>
+        <td>${esc(r.course_name || "—")}</td>
+        <td>${esc(r.event || "")}</td>
+        <td class="num">${esc(r.round || "")}</td>
+        <td>${esc(r.matched_player || r.player || "")}</td>
+        <td>${esc(r.market || "")}</td>
+        <td class="num">${fmt(num(r.line), r.market === "Total score" ? 1 : 1)}</td>
+        <td>${String(r.side).toLowerCase() === "over" ? "Over" : "Under"}</td>
+        <td class="num">${fmt(num(r.model_mu), 2)}</td>
+        <td class="num ${clsSigned(edge)}">${Number.isFinite(edge) ? `${edge >= 0 ? "+" : ""}${edge.toFixed(1)}%` : "—"}</td>
+        <td class="num">${fmt(num(r.actual), r.market === "Total score" ? 0 : 1)}</td>
+        <td class="${resCls}">${res || "—"}</td>
+        <td class="num">${esc(formatAmerican(num(r.opening_american, NaN)))}</td>
+        <td class="num">${esc(formatAmerican(num(r.closing_american, NaN)))}</td>
+        <td class="num ${clsSigned(pnl)}">${Number.isFinite(pnl) ? `${pnl >= 0 ? "+" : ""}${pnl.toFixed(2)}u` : "—"}</td>
+      </tr>`;
+        })
+        .join("")
+    : `<tr><td colspan="14" class="muted">No rows match filters — try Birdies or Total score market, or lower Min EV %.</td></tr>`;
+
+  if (sorted.length > 2000) {
+    tbody.innerHTML += `<tr><td colspan="14" class="muted">Showing first 2,000 of ${sorted.length.toLocaleString()} lines.</td></tr>`;
+  }
+}
+
 function renderHonestOos() {
   const card = document.getElementById("oos-honest-card");
   const note = document.getElementById("oos-honest-note");
@@ -1479,6 +1700,7 @@ function renderAll() {
   renderOverview();
   renderAccuracy();
   renderEv();
+  renderOddsCsv();
   renderBets();
   renderRisk();
   renderEvents();
@@ -1579,18 +1801,30 @@ async function loadOddsModelRoi() {
   }
 }
 
+async function loadOddsLinesCsv() {
+  try {
+    const res = await fetch(`${ODDS_LINES_URL}?t=${Date.now()}`, { cache: "no-store" });
+    if (!res.ok) return [];
+    return parseCsv(await res.text());
+  } catch {
+    return [];
+  }
+}
+
 async function loadData() {
   const errEl = document.getElementById("error-banner");
   errEl.hidden = true;
   try {
-    const [summaryText, detailText, oos, oddsRoi] = await Promise.all([
+    const [summaryText, detailText, oos, oddsRoi, oddsLines] = await Promise.all([
       loadSummaryCsvText(),
       loadDetailCsvText(),
       loadOosReport(),
       loadOddsModelRoi(),
+      loadOddsLinesCsv(),
     ]);
     OOS_REPORT = oos;
     ODDS_MODEL_ROI = oddsRoi;
+    ODDS_LINES_ROWS = oddsLines;
     ALL_ROWS = parseCsv(summaryText);
     if (!ALL_ROWS.length) throw new Error("Summary CSV is empty");
     DETAIL_ROWS = detailText ? parseCsv(detailText) : [];
@@ -1598,6 +1832,7 @@ async function loadData() {
     LIVE_CTX = await loadLiveBestBetsContext();
     populateTournamentSelect();
     populateMarketFilter();
+    populateOddsCourseSelect();
     renderAll();
   } catch (e) {
     errEl.hidden = false;
@@ -1632,6 +1867,7 @@ function bindUi() {
     state.player = e.target.value.trim();
     renderBets();
     renderRisk();
+    renderOddsCsv();
   });
   document.getElementById("filter-show").addEventListener("change", (e) => {
     state.show = e.target.value;
@@ -1642,6 +1878,37 @@ function bindUi() {
     if (!el) continue;
     el.addEventListener("input", syncRiskFromForm);
     el.addEventListener("change", syncRiskFromForm);
+  }
+  const oddsCourse = document.getElementById("odds-filter-course");
+  if (oddsCourse) {
+    oddsCourse.addEventListener("change", (e) => {
+      state.oddsCourse = e.target.value;
+      renderOddsCsv();
+    });
+  }
+  const oddsAt = document.getElementById("odds-filter-at");
+  if (oddsAt) {
+    oddsAt.value = state.oddsAt;
+    oddsAt.addEventListener("change", (e) => {
+      state.oddsAt = e.target.value === "open" ? "open" : "close";
+      renderOddsCsv();
+    });
+  }
+  const oddsModelOnly = document.getElementById("odds-filter-model-only");
+  if (oddsModelOnly) {
+    oddsModelOnly.checked = state.oddsModelOnly;
+    oddsModelOnly.addEventListener("change", (e) => {
+      state.oddsModelOnly = e.target.checked;
+      renderOddsCsv();
+    });
+  }
+  const oddsView = document.getElementById("odds-filter-view");
+  if (oddsView) {
+    oddsView.value = state.oddsView;
+    oddsView.addEventListener("change", (e) => {
+      state.oddsView = e.target.value || "lines";
+      renderOddsCsv();
+    });
   }
   document.getElementById("btn-reload").addEventListener("click", loadData);
   document.getElementById("live-picks-tbody")?.addEventListener("click", (ev) => {
@@ -1666,7 +1933,7 @@ function bindUi() {
 
 bindUi();
 const initialTab = String(location.hash || "").replace(/^#/, "");
-if (["overview", "accuracy", "ev", "bets", "risk", "events", "insights", "picks", "guide"].includes(initialTab)) {
+if (["overview", "accuracy", "ev", "odds-csv", "bets", "risk", "events", "insights", "picks", "guide"].includes(initialTab)) {
   setTab(initialTab);
 }
 

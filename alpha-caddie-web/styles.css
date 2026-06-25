@@ -3077,6 +3077,7 @@ th.matchup-analysis-best-pick {
   border-top: 1px solid var(--golf-border);
   position: relative;
   z-index: 4;
+  pointer-events: auto;
 }
 .props-chart-steppers .props-stepper-block {
   flex: 1 1 156px;

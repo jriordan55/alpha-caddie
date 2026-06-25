@@ -202,6 +202,10 @@ run(
   "apply-unified-projection-factors.mjs",
   "Unified projection factors (course fit, tee wave, residuals)",
 );
+run(
+  "merge-live-in-play-scratch-into-projections.mjs",
+  "Live thru/today/current_score → projections + in_play_affects_round_odds for +EV",
+);
 
 if (!envTruthy("GOLF_SKIP_PIN_SHEET", false)) {
   run(

@@ -428,6 +428,27 @@ a { color: var(--green); }
   font: inherit;
 }
 
+.toolbar-card label.check-label {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  text-transform: none;
+  font-size: 0.875rem;
+  color: var(--text);
+  font-weight: 500;
+  padding-bottom: 8px;
+}
+
+.toolbar-card label.check-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--green);
+}
+
+.odds-csv-toolbar {
+  margin-bottom: 16px;
+}
+
 .card-surface,
 .risk-controls {
   background: var(--surface);

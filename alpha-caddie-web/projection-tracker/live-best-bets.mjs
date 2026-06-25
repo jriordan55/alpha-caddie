@@ -7,6 +7,7 @@ import {
   num,
   pickBetSide,
 } from "./ev-math.mjs";
+import { ouProjectedMeanWithLiveScratch } from "../scripts/live-in-play-pricing.mjs";
 
 const PROJECTIONS_URL = "../projections.json";
 const EDGE_SIGNALS_URL = "../data/edge_signal_scan.json";
@@ -14,12 +15,8 @@ const COURSE_TABLE_URL = "../data/course_table.csv";
 const TOP_N = 15;
 
 const MARKET_MODEL = {
-  "Total score": (p) => num(p.total_score, NaN),
-  Birdies: (p) => {
-    const b = num(p.birdies, NaN);
-    const e = num(p.eagles, 0);
-    return Number.isFinite(b) ? b + (Number.isFinite(e) ? e : 0) : NaN;
-  },
+  "Total score": (p, meta) => ouProjectedMeanWithLiveScratch("Total score", p, meta),
+  Birdies: (p, meta) => ouProjectedMeanWithLiveScratch("Birdies", p, meta),
   GIR: (p) => num(p.gir, NaN),
   "Fairways hit": (p) => num(p.fairways, NaN),
 };
@@ -280,6 +277,7 @@ export function buildLiveBestBets({ projections, oos, signals, courseRow, minEvP
   const players = playersForRound(projections, round);
   const pinActive = pinSheetActive(projections, round);
   const minEdge = minEvPct;
+  const meta = projections?.meta || projections || {};
 
   /** @type {object[]} */
   const candidates = [];
@@ -290,7 +288,7 @@ export function buildLiveBestBets({ projections, oos, signals, courseRow, minEvP
     if (!player) continue;
     const muFn = MARKET_MODEL[market];
     if (!muFn) continue;
-    const mu = muFn(player);
+    const mu = muFn.length >= 2 ? muFn(player, meta) : muFn(player);
     if (!Number.isFinite(mu)) continue;
     let { edgeOver, edgeUnder } = modelEdgePctAtLine(market, mu, prop.line, prop.over, prop.under);
     ({ edgeOver, edgeUnder } = capDirectionalPostedEdges(edgeOver, edgeUnder, mu, prop.line));

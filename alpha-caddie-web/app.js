@@ -395,6 +395,8 @@ let matchupAnalysisSelectedKey = "";
 /** Full matchup list for the active market (search / suggest); `<select>` may list fewer. */
 let matchupAnalysisRowsCache = [];
 let propsTrendsLineContextKey = "";
+/** User bumped line steppers or edited input; skip auto line until golfer/stat/course changes. */
+let propsTrendLineUserOverride = false;
 /** Perf caches for pricing-mode recomputes (cleared when history/context changes). */
 const HISTORY_ROUNDS_CHRONO_CACHE = new Map();
 const PRICING_MU_BONUS_CACHE = new Map();
@@ -16944,6 +16946,58 @@ function pricingModelHistoryNudge(statKey, dgId) {
   return 0;
 }
 
+function propsTrendLineSidebarFiltersContextKey() {
+  return [
+    propsTrendTempContextKey(),
+    propsTrendWindContextKey(),
+    propsTrendHumidityContextKey(),
+    selectedPropsWeatherConditionKeys().join(","),
+    selectedPropsTeeWaveFilter() || "all",
+    selectedPropsRoundNumsFilter().join(","),
+    Number.isFinite(selectedPropsYearFilter()) ? String(selectedPropsYearFilter()) : "all",
+  ].join("|");
+}
+
+function propsLineStepForStat(statKey) {
+  if (propsStatUsesTenthLineStep(statKey)) return 0.1;
+  if (statKey === "total") return 1;
+  return 0.5;
+}
+
+function syncPropsLineStep() {
+  const lineEl = document.getElementById("prop-line");
+  if (!lineEl) return;
+  const sk = statKeyFromPropSelect();
+  if (propsStatUsesTenthLineStep(sk)) {
+    lineEl.step = "0.1";
+    if (propsStatIsSg(sk)) {
+      lineEl.min = "-6";
+      lineEl.max = "6";
+    } else {
+      lineEl.min = "0";
+      lineEl.max = "100";
+    }
+  } else {
+    lineEl.step = "0.5";
+    lineEl.min = "0";
+    lineEl.removeAttribute("max");
+  }
+}
+
+function bumpPropsTrendLine(delta) {
+  syncPropsLineStep();
+  const lineInp = document.getElementById("prop-line");
+  const sk = statKeyFromPropSelect();
+  const cur = clampPropLineForMarket(sk, snapPropLineForMarket(sk, lineInp?.value));
+  const base = Number.isFinite(cur) ? cur : defaultPropLineForStat(sk);
+  const step = propsLineStepForStat(sk);
+  const v = clampPropLineForMarket(sk, base + delta * step);
+  if (lineInp) lineInp.value = formatPropLineValueForInput(v);
+  propsTrendLineUserOverride = true;
+  lockPropsTrendLineContextToCurrentFilter();
+  renderPropsTrendsNow();
+}
+
 function propsTrendLineContextKeyFromDom() {
   const dg = selectedDgId();
   const sk = statKeyFromPropSelect();
@@ -16954,8 +17008,8 @@ function propsTrendLineContextKeyFromDom() {
   );
   const winNKey = String(winN);
   const temp = propsTrendTempContextKey();
-  const side = propsSidebarFiltersContextKey();
-  const course = propsCourseWindowModeActive() ? propsEffectiveCourseKey() || "all" : "all";
+  const side = propsTrendLineSidebarFiltersContextKey();
+  const course = propsEffectiveCourseKey() || "all";
   const pm = PRICING_STATE.mode || "default";
   const ps = PRICING_STATE.skill === "default" ? "default" : pricingSkillHistoryKey();
   const cw = propsCourseWindowModeActive() ? 1 : 0;
@@ -19537,7 +19591,11 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   if (lineEditing && !Number.isFinite(line) && Number.isFinite(propsTrendLastGoodLine)) {
     line = propsTrendLastGoodLine;
   }
-  if (!lineEditing && (!Number.isFinite(line) || propsTrendsLineContextKey !== ctxKey)) {
+  if (
+    !lineEditing &&
+    !propsTrendLineUserOverride &&
+    (!Number.isFinite(line) || propsTrendsLineContextKey !== ctxKey)
+  ) {
     line = defaultLineForCourseWindow(statKey, entriesAll);
     if (lineInp) lineInp.value = formatPropLineValueForInput(line);
     propsTrendsLineContextKey = ctxKey;
@@ -19777,7 +19835,11 @@ function renderPropsTrends() {
     if (lineEditingEarly && !Number.isFinite(lineEarly) && Number.isFinite(propsTrendLastGoodLine)) {
       lineEarly = propsTrendLastGoodLine;
     }
-    if (!lineEditingEarly && (!Number.isFinite(lineEarly) || propsTrendsLineContextKey !== ctxKeyEarly)) {
+    if (
+      !lineEditingEarly &&
+      !propsTrendLineUserOverride &&
+      (!Number.isFinite(lineEarly) || propsTrendsLineContextKey !== ctxKeyEarly)
+    ) {
       lineEarly = propsAutoTrendLineForContext(dg, statKey, playerRow);
       if (lineInpEarly) lineInpEarly.value = formatPropLineValueForInput(lineEarly);
       propsTrendsLineContextKey = ctxKeyEarly;
@@ -19817,7 +19879,11 @@ function renderPropsTrends() {
   if (lineEditing && !Number.isFinite(line) && Number.isFinite(propsTrendLastGoodLine)) {
     line = propsTrendLastGoodLine;
   }
-  if (!lineEditing && (!Number.isFinite(line) || propsTrendsLineContextKey !== ctxKey)) {
+  if (
+    !lineEditing &&
+    !propsTrendLineUserOverride &&
+    (!Number.isFinite(line) || propsTrendsLineContextKey !== ctxKey)
+  ) {
     line = propsAutoTrendLineForContext(dg, statKey, playerRow);
     if (lineInp) lineInp.value = formatPropLineValueForInput(line);
     propsTrendsLineContextKey = ctxKey;
@@ -21634,6 +21700,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const el = document.getElementById(id);
     if (!el) return;
     el.addEventListener("change", () => {
+      if (
+        id === "prop-golfer" ||
+        id === "prop-stat" ||
+        id === "props-filter-course" ||
+        id === "props-filter-current-course" ||
+        id === "props-filter-course-window"
+      ) {
+        propsTrendLineUserOverride = false;
+      }
       if (id === "props-window-n") propsWindowNUserOverride = true;
       else {
         propsWindowNUserOverride = false;
@@ -21759,10 +21834,12 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("prop-line")?.addEventListener("change", (e) => {
     const el = /** @type {HTMLInputElement} */ (e.target);
     syncPropLineInputFromValue(el);
+    propsTrendLineUserOverride = true;
     lockPropsTrendLineContextToCurrentFilter();
     renderPropsTrendsNow();
   });
   document.getElementById("prop-line")?.addEventListener("input", () => {
+    propsTrendLineUserOverride = true;
     lockPropsTrendLineContextToCurrentFilter();
     scheduleRenderPropsTrends();
   });
@@ -21781,25 +21858,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (Number.isFinite(max)) v = Math.min(max, v);
     if (Number.isFinite(v)) inputEl.value = String(v);
   }
-  function syncPropsLineStep() {
-    const lineEl = document.getElementById("prop-line");
-    if (!lineEl) return;
-    const sk = statKeyFromPropSelect();
-    if (propsStatUsesTenthLineStep(sk)) {
-      lineEl.step = "0.1";
-      if (propsStatIsSg(sk)) {
-        lineEl.min = "-6";
-        lineEl.max = "6";
-      } else {
-        lineEl.min = "0";
-        lineEl.max = "100";
-      }
-    } else {
-      lineEl.step = "0.5";
-      lineEl.min = "0";
-      lineEl.removeAttribute("max");
-    }
-  }
   function bumpPropsWindowN(delta) {
     const el = document.getElementById("props-window-n");
     if (!el) return;
@@ -21809,6 +21867,18 @@ document.addEventListener("DOMContentLoaded", () => {
     v = clamp(v + delta, PROPS_HISTORY_ROUND_MIN, propsWindowNMax());
     el.value = String(v);
   }
+  document.getElementById("props-line-minus")?.addEventListener("click", (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    hidePropsChartTooltip();
+    bumpPropsTrendLine(-1);
+  });
+  document.getElementById("props-line-plus")?.addEventListener("click", (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    hidePropsChartTooltip();
+    bumpPropsTrendLine(1);
+  });
   /** Capture phase + high z-index on sidebar: chart/canvas stacking was winning hit-testing over the steppers. */
   document.body.addEventListener(
     "click",
@@ -21852,16 +21922,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         return;
       }
-      syncPropsLineStep();
-      const lineInp = document.getElementById("prop-line");
-      const sk = statKeyFromPropSelect();
-      const cur = clampPropLineForMarket(sk, snapPropLineForMarket(sk, lineInp?.value));
-      const base = Number.isFinite(cur) ? cur : defaultPropLineForStat(sk);
-      const step = propsStatUsesTenthLineStep(sk) ? 0.1 : statKey === "total" ? 1 : 1;
-      const v = clampPropLineForMarket(sk, btn.id === "props-line-minus" ? base - step : base + step);
-      if (lineInp) lineInp.value = formatPropLineValueForInput(v);
-      lockPropsTrendLineContextToCurrentFilter();
-      renderPropsTrendsNow();
+      if (btn.id === "props-line-minus") {
+        bumpPropsTrendLine(-1);
+        return;
+      }
+      if (btn.id === "props-line-plus") {
+        bumpPropsTrendLine(1);
+        return;
+      }
     },
     true
   );

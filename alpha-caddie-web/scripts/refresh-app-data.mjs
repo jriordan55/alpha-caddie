@@ -172,6 +172,10 @@ run(
   "Unified projection factors (course fit, tee wave, bounce-back, Sunday pressure, correlated markets)",
 );
 run(
+  "merge-live-in-play-scratch-into-projections.mjs",
+  "Live thru/today/current_score → projections + in_play_affects_round_odds for +EV",
+);
+run(
   "bake-outright-sim-probs.mjs",
   "Tournament MC outright probs → projections.json (precomputed for +EV)",
 );

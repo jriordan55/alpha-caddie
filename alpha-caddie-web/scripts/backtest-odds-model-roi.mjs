@@ -43,6 +43,7 @@ const ODDS_CSV = join(REPO_ROOT, "data", "odds.csv");
 const HIST_CSV = join(REPO_ROOT, "data", "historical_rounds_all.csv");
 const SUMMARY_OUT = join(WEB_ROOT, "data", "odds_model_roi_summary.csv");
 const DETAIL_OUT = join(WEB_ROOT, "data", "odds_model_roi_detail.csv");
+const LINES_OUT = join(WEB_ROOT, "data", "odds_model_roi_lines.csv");
 
 const OU_MARKETS = new Set([
   "GOLF:FT:CTBIR",
@@ -227,6 +228,7 @@ function attachActuals(props, histRows) {
       if (!oddsPlayerMatchesHist(p.player, h.player_name)) continue;
       p.matched_player = displayGolferName(h.player_name);
       p.dg_id = num(h.dg_id, NaN);
+      p.course_name = String(h.course_name || "").trim();
       p.actual_birdies = statFromHistRow(h, "birdies");
       p.actual_total = statFromHistRow(h, "total");
       break;
@@ -309,6 +311,55 @@ async function buildModelBets(props, projCache, playerRowByDg, opts = {}) {
   return bets;
 }
 
+/** Every gradable Over/Under side on odds.csv (walk-forward model μ). */
+async function buildAllGradedLines(props, projCache, playerRowByDg) {
+  const lines = [];
+  for (const p of props.values()) {
+    const actual = p.market_label === "Birdies" ? p.actual_birdies : p.actual_total;
+    if (!Number.isFinite(actual)) continue;
+    const dgId = Math.round(num(p.dg_id, NaN));
+    if (!Number.isFinite(dgId)) continue;
+
+    const modelMu = await projCache.muForProp(p, dgId, p.market_label);
+    if (!Number.isFinite(modelMu)) continue;
+
+    const playerRow = playerRowByDg.get(`${projCache.eventKey(p)}|${dgId}`) || {};
+    const sides = ouSideResults(p.market_label, actual, p.line);
+    const edge = modelEdgePctAtLine(
+      p.market_label,
+      modelMu,
+      p.line,
+      playerRow,
+      { projection_course_basis: { fairway_holes_modeled: 14 } },
+      p.over_am,
+      p.under_am,
+    );
+
+    for (const side of ["over", "under"]) {
+      const openAm = side === "over" ? p.over_am : p.under_am;
+      const closeAm = side === "over" ? p.close_over_am : p.close_under_am;
+      if (!Number.isFinite(openAm)) continue;
+      const result = side === "over" ? sides.over : sides.under;
+      if (result !== "W" && result !== "L" && result !== "P") continue;
+      const edgePct = side === "over" ? edge.edgeOver : edge.edgeUnder;
+      lines.push({
+        ...p,
+        model_mu: modelMu,
+        model_line_edge: modelMu - p.line,
+        side,
+        model_edge_pct: edgePct,
+        opening_american: openAm,
+        closing_american: closeAm,
+        actual,
+        result,
+        pnl_open: pnlForResult(result, openAm),
+        pnl_close: pnlForResult(result, closeAm),
+      });
+    }
+  }
+  return lines;
+}
+
 function summarize(bets, tag) {
   const graded = bets.filter((b) => b.result === "W" || b.result === "L");
   const unitsOpen = bets.reduce((s, b) => s + (b.pnl_open || 0), 0);
@@ -370,10 +421,11 @@ function writeOutputs(bets, summaries, generatedAt) {
   );
 
   const detHeader =
-    "generated_at,competition,event,year,round,player,matched_player,market,model_mu,line,model_line_edge,model_pick,actual,result,opening_american,closing_american,pnl_open,pnl_close\n";
+    "generated_at,course_name,competition,event,year,round,player,matched_player,market,model_mu,line,model_line_edge,model_pick,actual,result,opening_american,closing_american,pnl_open,pnl_close\n";
   const detRows = bets.map((b) =>
     [
       generatedAt,
+      b.course_name || "",
       b.competition,
       b.event,
       b.year,
@@ -399,6 +451,38 @@ function writeOutputs(bets, summaries, generatedAt) {
   mkdirSync(dirname(SUMMARY_OUT), { recursive: true });
   writeFileSync(SUMMARY_OUT, sumHeader + sumRows.join("\n") + "\n");
   writeFileSync(DETAIL_OUT, detHeader + detRows.join("\n") + "\n");
+}
+
+function writeLinesOutput(lines, generatedAt) {
+  const header =
+    "generated_at,course_name,competition,event,year,round,player,matched_player,market,line,model_mu,model_line_edge,side,model_edge_pct,actual,result,opening_american,closing_american,pnl_open,pnl_close\n";
+  const rows = lines.map((b) =>
+    [
+      generatedAt,
+      b.course_name || "",
+      b.competition,
+      b.event,
+      b.year,
+      b.round,
+      b.player,
+      b.matched_player || "",
+      b.market_label,
+      b.line,
+      fmtNum(b.model_mu, 3),
+      fmtNum(b.model_line_edge, 3),
+      b.side,
+      fmtNum(b.model_edge_pct, 2),
+      b.actual,
+      b.result,
+      b.opening_american,
+      b.closing_american,
+      fmtNum(b.pnl_open, 3),
+      fmtNum(b.pnl_close, 3),
+    ]
+      .map(csvCell)
+      .join(","),
+  );
+  writeFileSync(LINES_OUT, header + rows.join("\n") + "\n");
 }
 
 async function main() {
@@ -455,6 +539,10 @@ async function main() {
   }
 
   writeOutputs(allDetail, summaries, generatedAt);
+
+  const allLines = await buildAllGradedLines(props, projCache, playerRowByDg);
+  writeLinesOutput(allLines, generatedAt);
+  console.log(`Wrote ${LINES_OUT} (${allLines.length} graded sides)`);
 
   const base = summaries.find((s) => s.strategy === "line_any" && s.market === "__all__");
   const bird = summaries.find((s) => s.strategy === "line_any" && s.market === "Birdies");
