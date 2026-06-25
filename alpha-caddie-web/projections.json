@@ -9,7 +9,7 @@
   "datagolf_field_current_round": 1,
   "display_round": 1,
   "display_round_label": "R1 — next Thursday (auto, America/New_York)",
-  "updated_at": "2026-06-25T04:44:21Z",
+  "updated_at": "2026-06-25T07:49:23Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -22779,7 +22779,7 @@
     },
     {
       "player_name": "Scheffler, Scottie",
-      "line": 27.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -22806,7 +22806,7 @@
     },
     {
       "player_name": "Cantlay, Patrick",
-      "line": 29.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -22878,7 +22878,7 @@
     },
     {
       "player_name": "Lowry, Shane",
-      "line": 29.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -22914,7 +22914,7 @@
     },
     {
       "player_name": "Hovland, Viktor",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -22977,7 +22977,7 @@
     },
     {
       "player_name": "Fitzpatrick, Alex",
-      "line": 29.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -22986,7 +22986,7 @@
     },
     {
       "player_name": "Hoge, Tom",
-      "line": 30.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -23004,7 +23004,7 @@
     },
     {
       "player_name": "Matsuyama, Hideki",
-      "line": 29.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -23031,7 +23031,7 @@
     },
     {
       "player_name": "Fowler, Rickie",
-      "line": 29.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -23040,7 +23040,7 @@
     },
     {
       "player_name": "Reitan, Kristoffer",
-      "line": 29.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -23094,7 +23094,7 @@
     },
     {
       "player_name": "Hojgaard, Nicolai",
-      "line": 29.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -23103,7 +23103,7 @@
     },
     {
       "player_name": "Bradley, Keegan",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -23166,7 +23166,7 @@
     },
     {
       "player_name": "Fox, Ryan",
-      "line": 29.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -23175,7 +23175,7 @@
     },
     {
       "player_name": "Meissner, Mac",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -23265,7 +23265,7 @@
     },
     {
       "player_name": "Theegala, Sahith",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -23310,7 +23310,7 @@
     },
     {
       "player_name": "Griffin, Ben",
-      "line": 28.5,
+      "line": 27.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -23319,7 +23319,7 @@
     },
     {
       "player_name": "Spieth, Jordan",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -23337,7 +23337,7 @@
     },
     {
       "player_name": "English, Harris",
-      "line": 27.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -23382,7 +23382,7 @@
     },
     {
       "player_name": "Snedeker, Brandt",
-      "line": 29.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -35555,7 +35555,7 @@
       "match_list": "No 3_balls being offered right now."
     }
   },
-  "book_odds_refreshed_at": "2026-06-25T04:41:55Z",
+  "book_odds_refreshed_at": "2026-06-25T07:49:23Z",
   "live_round_actuals_by_dg": {
     "5716": {
       "1": {
@@ -47196,5 +47196,6 @@
         "model_book_rmse": 1.393
       }
     }
-  }
+  },
+  "dk_round_props_refreshed_at": "2026-06-25T07:49:23Z"
 }
