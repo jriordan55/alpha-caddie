@@ -292,7 +292,7 @@ export function buildLiveBestBets({ projections, oos, signals, courseRow, minEvP
     const mu = muFn(player);
     if (!Number.isFinite(mu)) continue;
     const { edgeOver, edgeUnder } = modelEdgePctAtLine(market, mu, prop.line, prop.over, prop.under);
-    const pick = pickBetSide(edgeOver, edgeUnder, minEdge);
+    const pick = pickBetSide(edgeOver, edgeUnder, minEdge, mu, prop.line);
     if (!pick) continue;
     const side = pick.side;
     const edgePct = pick.edge;

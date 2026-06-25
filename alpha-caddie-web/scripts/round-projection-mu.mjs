@@ -8,7 +8,7 @@ import { normCourseNameKey } from "./course-name-key.mjs";
 import {
   statWeatherMuAdjustment,
 } from "./weather-projection-adjustments.mjs";
-import { marketBookSigmaScale } from "./market-book-calibration.mjs";
+import { marketBookSigmaScale, eventPropBookAlignedMarket } from "./market-book-calibration.mjs";
 import {
   adaptiveVenueStatMuNudge,
   blendAdaptiveMuSgBonus,
@@ -475,15 +475,26 @@ export function sigmaForOu(market, row, meta, fairwayHoles) {
   return sigmaOuDiscreteCounting(market, Math.abs(muAbs), fairwayHoles);
 }
 
+function liveProjectionMeta(metaOrPayload) {
+  if (!metaOrPayload || typeof metaOrPayload !== "object") return {};
+  const nested =
+    metaOrPayload.meta && typeof metaOrPayload.meta === "object" ? metaOrPayload.meta : {};
+  return { ...metaOrPayload, ...nested };
+}
+
 export function ouProjectedMeanForMode(market, row, meta, pricingMode, pricingSkill, ctx) {
+  const metaLive = liveProjectionMeta(meta);
   const dgId = Math.round(num(row?.dg_id, NaN));
-  const fairwayHoles = num(meta?.projection_course_basis?.fairway_holes_modeled, NaN);
+  const fairwayHoles = num(metaLive?.projection_course_basis?.fairway_holes_modeled, NaN);
   const fwHoles = Number.isFinite(fairwayHoles) && fairwayHoles > 0 ? Math.round(fairwayHoles) : 14;
   const base = ouMeanCountingStat(market, row, fwHoles);
   if (!Number.isFinite(base)) return NaN;
-  const countLive = livePartialRoundCountPropAdjust(market, row, meta);
+  const countLive = livePartialRoundCountPropAdjust(market, row, metaLive);
+  if (eventPropBookAlignedMarket(metaLive, market)) {
+    return base + countLive.muDelta;
+  }
   const weatherAdj =
-    meta?.projection_counts_weather_baked && row?.weather_counts_baked
+    metaLive?.projection_counts_weather_baked && row?.weather_counts_baked
       ? 0
       : statWeatherMuAdjustment(market, row);
   return (
@@ -493,8 +504,9 @@ export function ouProjectedMeanForMode(market, row, meta, pricingMode, pricingSk
 
 export function modelProbOver(market, mu, line, row, meta) {
   if (!Number.isFinite(mu) || !Number.isFinite(line)) return NaN;
-  const fairwayHoles = num(meta?.projection_course_basis?.fairway_holes_modeled, 14) || 14;
-  const sig = sigmaForOu(market, row, meta, Math.round(fairwayHoles)) * marketBookSigmaScale(market);
+  const metaLive = liveProjectionMeta(meta);
+  const fairwayHoles = num(metaLive?.projection_course_basis?.fairway_holes_modeled, 14) || 14;
+  const sig = sigmaForOu(market, row, metaLive, Math.round(fairwayHoles)) * marketBookSigmaScale(market);
   const z = (line - mu) / sig;
   return 1 - normalCdf(z);
 }

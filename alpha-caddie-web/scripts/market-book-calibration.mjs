@@ -45,6 +45,38 @@ const MU_SHIFT_CLAMP = {
   Pars: 0.8,
 };
 
+/** Wider clamps for same-week DK prop alignment (centers field vs book, not cross-event generalization). */
+const EVENT_PROP_SHIFT_CLAMP = {
+  "Total score": 2.5,
+  Birdies: 1.75,
+  Bogeys: 1.5,
+  GIR: 1.5,
+  "Fairways hit": 1.5,
+  Pars: 1.2,
+};
+
+function birdiesPlusEaglesLine(row) {
+  const b = num(row?.birdies, NaN);
+  if (!Number.isFinite(b)) return NaN;
+  const e = num(row?.eagles ?? row?.eagles_or_better, 0);
+  return b + (Number.isFinite(e) ? Math.max(0, e) : 0);
+}
+
+function modelLineForPropMarket(market, row, col) {
+  if (market === "Birdies") return birdiesPlusEaglesLine(row);
+  return num(row?.[col], NaN);
+}
+
+const PROP_MARKET_TO_ROW = {
+  "Total Score": { market: "Total score", col: "total_score" },
+  "Total score": { market: "Total score", col: "total_score" },
+  Birdies: { market: "Birdies", col: "birdies" },
+  GIR: { market: "GIR", col: "gir" },
+  "Fairways hit": { market: "Fairways hit", col: "fairways" },
+  Bogeys: { market: "Bogeys", col: "bogeys" },
+  Pars: { market: "Pars", col: "pars" },
+};
+
 /** Conservative defaults until fit script runs. */
 const DEFAULT_CALIBRATION = {
   generated_at: "defaults",
@@ -151,6 +183,130 @@ export function applyMuShiftToModelLine(market, rawLine, muShift) {
   if (market === "Fairways hit") return Math.round(clamp(next, 2, 16) * 100) / 100;
   if (market === "Pars") return Math.round(clamp(next, 4, 16) * 100) / 100;
   return Math.round(next * 100) / 100;
+}
+
+/**
+ * Fit per-market μ shifts from model − DK line on current props (same event, no outcomes).
+ * Pulls model toward posted books so O/U edges are not all on one side.
+ */
+export function fitEventPropBookShifts(payload, opts = {}) {
+  const players = Array.isArray(payload?.players) ? payload.players : [];
+  const props = Array.isArray(payload?.props) ? payload.props : [];
+  const displayRound = Math.round(num(opts.displayRound ?? payload?.display_round ?? 1)) || 1;
+  const minPairs = Math.max(8, Math.round(num(opts.minPairs, 12)) || 12);
+  /** @type {Record<string, number[]>} */
+  const deltasByMarket = {};
+
+  for (const pr of props) {
+    const spec = PROP_MARKET_TO_ROW[String(pr.market || "").trim()];
+    if (!spec) continue;
+    const rnd = Math.round(num(pr.round_num ?? pr.display_round ?? displayRound));
+    if (rnd !== displayRound) continue;
+    const dg = Math.round(num(pr.dg_id, NaN));
+    const book = num(pr.line, NaN);
+    if (!Number.isFinite(dg) || !Number.isFinite(book)) continue;
+    const row = players.find(
+      (p) => Math.round(num(p.dg_id, NaN)) === dg && Math.round(num(p.round, NaN)) === rnd,
+    );
+    if (!row) continue;
+    const model = modelLineForPropMarket(spec.market, row, spec.col);
+    if (!Number.isFinite(model)) continue;
+    if (!deltasByMarket[spec.market]) deltasByMarket[spec.market] = [];
+    deltasByMarket[spec.market].push(model - book);
+  }
+
+  /** @type {Record<string, { mu_shift: number, n_pairs: number, mean_delta: number }>} */
+  const shifts = {};
+  for (const [market, deltas] of Object.entries(deltasByMarket)) {
+    const n = deltas.length;
+    if (n < minPairs) continue;
+    const mean = deltas.reduce((a, x) => a + x, 0) / n;
+    const clampAbs = EVENT_PROP_SHIFT_CLAMP[market] ?? MU_SHIFT_CLAMP[market] ?? 1.2;
+    const mu_shift = Math.round(clamp(-mean, -clampAbs, clampAbs) * 1000) / 1000;
+    shifts[market] = {
+      mu_shift,
+      n_pairs: n,
+      mean_delta: Math.round(mean * 1000) / 1000,
+    };
+  }
+  return { shifts, display_round: displayRound };
+}
+
+/** Apply event-week prop book shifts to every player row (additive on counting columns). */
+export function applyEventPropBookShiftsToRow(row, shifts, coursePar18 = 72) {
+  if (!row || typeof row !== "object" || !shifts || typeof shifts !== "object") return;
+  const par = Math.round(num(coursePar18, NaN)) || 72;
+
+  const scoreShift = num(shifts["Total score"]?.mu_shift, NaN);
+  if (scoreShift) {
+    const stp = num(row.score_to_par, NaN);
+    const ts = num(row.total_score, NaN);
+    if (Number.isFinite(stp)) {
+      row.score_to_par = Math.round((stp + scoreShift) * 100) / 100;
+      row.total_score = Math.round((par + row.score_to_par) * 100) / 100;
+    } else if (Number.isFinite(ts)) {
+      row.total_score = Math.round((ts + scoreShift) * 100) / 100;
+      row.score_to_par = Math.round((row.total_score - par) * 100) / 100;
+    }
+  }
+
+  const applyCount = (market, col, lo, hi) => {
+    const shift = num(shifts[market]?.mu_shift, NaN);
+    if (!shift) return;
+    const v = num(row[col], NaN);
+    if (!Number.isFinite(v)) return;
+    row[col] = Math.round(clamp(v + shift, lo, hi) * 100) / 100;
+  };
+
+  applyCount("Birdies", "birdies", 0.1, 8);
+  applyCount("Bogeys", "bogeys", 0.1, 9);
+  applyCount("GIR", "gir", 4, 17);
+  applyCount("Fairways hit", "fairways", 2, 16);
+  applyCount("Pars", "pars", 4, 16);
+
+  const e = num(row.eagles, 0);
+  const d = num(row.doubles, 0);
+  const b = num(row.birdies, NaN);
+  const bg = num(row.bogeys, NaN);
+  if (Number.isFinite(b) && Number.isFinite(bg)) {
+    row.pars = Math.max(0.1, Math.round((18 - e - d - b - bg) * 100) / 100);
+  }
+}
+
+/**
+ * Align model vs current DK props for the display round; stores meta.event_prop_book_alignment.
+ * @returns {{ applied: boolean, markets: Record<string, object> }}
+ */
+export function applyEventPropBookAlignment(payload, opts = {}) {
+  if (!marketBookCalibrationEnabled()) return { applied: false, markets: {} };
+  const fit = fitEventPropBookShifts(payload, opts);
+  const shiftMap = fit.shifts || {};
+  if (!Object.keys(shiftMap).length) return { applied: false, markets: {} };
+
+  const par = Math.round(num(opts.coursePar18 ?? payload?.course_par_18, NaN)) || 72;
+  for (const pl of payload?.players || []) {
+    if (!pl || typeof pl !== "object") continue;
+    applyEventPropBookShiftsToRow(pl, shiftMap, par);
+  }
+
+  if (!payload.meta || typeof payload.meta !== "object") payload.meta = {};
+  payload.meta.event_prop_book_alignment = {
+    generated_at: new Date().toISOString(),
+    display_round: fit.display_round,
+    method: "current_dk_props_zero_mean_delta",
+    markets: shiftMap,
+  };
+  return { applied: true, markets: shiftMap };
+}
+
+export function eventPropBookMuShift(market, meta) {
+  const m = meta?.event_prop_book_alignment?.markets?.[market];
+  const s = num(m?.mu_shift, NaN);
+  return Number.isFinite(s) ? s : 0;
+}
+
+export function eventPropBookAlignedMarket(meta, market) {
+  return Boolean(meta?.event_prop_book_alignment?.markets?.[market]);
 }
 
 /**

@@ -9,7 +9,7 @@ import { parse } from "csv-parse";
 import { eventsLikelySame, foldComparableTitle } from "./dg-events-align.mjs";
 import { liveHoleStatsUsableForProjections } from "./dg-live-hole-pars.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
-import { applyMarketBookCalibrationToRow } from "./market-book-calibration.mjs";
+import { applyMarketBookCalibrationToRow, applyEventPropBookAlignment } from "./market-book-calibration.mjs";
 import { calibrateFairwayFieldMean } from "./counting-from-rates-sg.mjs";
 
 function num(x, fallback = NaN) {
@@ -848,12 +848,18 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
     }
   }
   syncPreWeatherCountSnapshots(payload?.players);
+  const propBookAlign = applyEventPropBookAlignment(payload, {
+    coursePar18,
+    displayRound: opts.displayRound,
+    minPairs: opts.eventPropBookMinPairs,
+  });
   return {
     reconciled: n,
     calibrated: cal,
     venueScoreCalibrated: venueScoreCal,
     histVenueCalibrated: histVenueCal,
     fairwaySkillCalibRounds,
+    eventPropBookAlignment: propBookAlign,
   };
 }
 

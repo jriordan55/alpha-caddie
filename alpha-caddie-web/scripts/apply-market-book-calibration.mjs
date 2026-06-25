@@ -8,6 +8,7 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import {
   applyMarketBookCalibrationToRow,
+  applyEventPropBookAlignment,
   loadMarketBookCalibration,
   marketBookCalibrationEnabled,
 } from "./market-book-calibration.mjs";
@@ -35,6 +36,7 @@ for (const pl of proj.players || []) {
   applyMarketBookCalibrationToRow(pl, par);
   n++;
 }
+const propAlign = applyEventPropBookAlignment(proj, { coursePar18: par });
 syncProjectionPlayerCoursePar(proj, par);
 const { fixed } = repairProjectionScoreParCoherence(proj, par);
 if (!proj.meta || typeof proj.meta !== "object") proj.meta = {};
@@ -53,4 +55,11 @@ console.log(
 );
 for (const [market, m] of Object.entries(mk)) {
   console.log(`  ${market}: μ shift ${m.mu_shift}, σ×${m.sigma_scale}`);
+}
+if (propAlign.applied) {
+  for (const [market, m] of Object.entries(propAlign.markets)) {
+    console.log(
+      `  ${market} (event props): μ shift ${m.mu_shift}  n=${m.n_pairs}  meanΔ ${m.mean_delta}`,
+    );
+  }
 }

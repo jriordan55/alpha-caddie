@@ -2849,6 +2849,14 @@ async function main() {
       `[fetch-dg] Field market calibration: ${calResult.calibrated.rounds} round(s)${Number.isFinite(pb) ? `, pooled birdies≈${pb.toFixed(2)}` : ""}`,
     );
   }
+  if (calResult?.eventPropBookAlignment?.applied) {
+    const parts = Object.entries(calResult.eventPropBookAlignment.markets || {}).map(
+      ([m, v]) => `${m} shift ${v.mu_shift} (n=${v.n_pairs}, Δ=${v.mean_delta})`,
+    );
+    if (parts.length) {
+      console.log(`[fetch-dg] Event DK prop alignment: ${parts.join("; ")}`);
+    }
+  }
 
   const skipOutrightBake = String(process.env.GOLF_SKIP_OUTRIGHT_BAKE_ON_FETCH_DG || "").trim() === "1";
   if (skipOutrightBake) {

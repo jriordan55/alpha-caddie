@@ -5506,12 +5506,37 @@ function sigmaForOu(market, row) {
   return sig * weatherMult * liveShrink;
 }
 
+/** Model vs DK props aligned this week — use baked export μ (+ in-round partials only). */
+function eventPropBookAlignedMarket(mKey) {
+  const mk = mKey === "Total Score" ? "Total score" : mKey;
+  const align =
+    DATA?.meta?.event_prop_book_alignment?.markets?.[mk] ||
+    DATA?.event_prop_book_alignment?.markets?.[mk];
+  return Boolean(align);
+}
+
 /** Model-projected mean μ for one market / player / round (weather, live course, partial live round, pricing). */
 function ouProjectedMean(market, row) {
   const mKey = ouModelMarketKey(market) || "Total score";
   const rec = ouStatRec(mKey);
   const dgId = Math.round(num(row?.dg_id, NaN));
   const countLive = livePartialRoundCountPropAdjust(mKey, row);
+
+  if (eventPropBookAlignedMarket(mKey)) {
+    if (mKey === "Total score") {
+      const base = ouMeanCountingStat(mKey, row);
+      const baseScalar = Number.isFinite(base)
+        ? base
+        : ouFallbackScalarForProjectedMean(mKey, row, rec);
+      return (
+        baseScalar +
+        liveCurrentRoundTotalScoreMuDelta(row) +
+        countLive.muDelta
+      );
+    }
+    const base = ouMeanCountingStat(mKey, row);
+    if (Number.isFinite(base)) return base + countLive.muDelta;
+  }
 
   if (mKey === "Total score") {
     return ouProjectedTotalScoreMean(row);
@@ -6278,11 +6303,17 @@ function formatEdgePct(edge) {
 }
 
 function ouEdgeForCell(market, p, L, pImpOver, pImpUnder) {
+  const mKey = ouModelMarketKey(market) || market;
   const pOver = clampProb01(modelProbOverMarket(market, p, L));
   if (!Number.isFinite(pOver)) return { pOver: NaN, pUnder: NaN, edgeO: NaN, edgeU: NaN };
   const pUnder = clampProb01(1 - pOver);
-  const edgeO = Number.isFinite(pImpOver) ? pOver - pImpOver : NaN;
-  const edgeU = Number.isFinite(pImpUnder) ? pUnder - pImpUnder : NaN;
+  let edgeO = Number.isFinite(pImpOver) ? pOver - pImpOver : NaN;
+  let edgeU = Number.isFinite(pImpUnder) ? pUnder - pImpUnder : NaN;
+  const mu = ouProjectedMean(market, p);
+  if (eventPropBookAlignedMarket(mKey) && Number.isFinite(mu) && Number.isFinite(L)) {
+    if (mu <= L) edgeO = Number.isFinite(edgeO) ? Math.min(0, edgeO) : edgeO;
+    if (mu >= L) edgeU = Number.isFinite(edgeU) ? Math.min(0, edgeU) : edgeU;
+  }
   return { pOver, pUnder, edgeO, edgeU };
 }
 
