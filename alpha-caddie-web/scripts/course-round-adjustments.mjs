@@ -9,7 +9,11 @@ import { parse } from "csv-parse";
 import { eventsLikelySame, foldComparableTitle } from "./dg-events-align.mjs";
 import { liveHoleStatsUsableForProjections } from "./dg-live-hole-pars.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
-import { applyMarketBookCalibrationToRow, applyEventPropBookAlignment } from "./market-book-calibration.mjs";
+import {
+  applyMarketBookCalibrationToRow,
+  applyEventPropBookAlignment,
+  marketBookCalibrationEnabled,
+} from "./market-book-calibration.mjs";
 import { calibrateFairwayFieldMean, calibrateBirdiesFieldMean } from "./counting-from-rates-sg.mjs";
 
 function num(x, fallback = NaN) {
@@ -826,6 +830,7 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
     minField: opts.minField,
     dkFieldOnly: opts.dkFieldOnly === true,
     skipCalibrate: opts.skipFieldCalibrate,
+    skipEventPropBookAlignment: opts.skipEventPropBookAlignment,
   });
   for (const pl of payload?.players || []) {
     if (!pl || typeof pl !== "object") continue;
@@ -853,8 +858,16 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
     venueAvgEagles: num(basis.venue_avg_eagles, 0.12),
   };
   if (Number.isFinite(birdCalibOpts.venueAvgBirdies)) {
+    const players = payload?.players || [];
     for (let rnd = 1; rnd <= 4; rnd++) {
-      if (calibrateBirdiesFieldMean(payload?.players, { ...birdCalibOpts, round: rnd }) > 0) {
+      const rowDg = new Set(
+        players
+          .filter((pl) => Math.round(num(pl?.round, NaN)) === rnd)
+          .map((pl) => Math.round(num(pl.dg_id, NaN)))
+          .filter((id) => Number.isFinite(id)),
+      );
+      if (Number.isFinite(dkBirdiesMarketMeanForRound(payload, rnd, rowDg))) continue;
+      if (calibrateBirdiesFieldMean(players, { ...birdCalibOpts, round: rnd }) > 0) {
         birdiesSkillCalibRounds++;
       }
     }
@@ -2176,6 +2189,13 @@ export function calibrateProjectionTotalScoreToVenue(payload, opts = {}) {
   return { rounds, shifts, target: fallbackTarget };
 }
 
+function eventPropBirdiesAlignmentEnabled(opts = {}) {
+  if (!marketBookCalibrationEnabled()) return false;
+  if (opts.skipEventPropBookAlignment === true) return false;
+  if (String(process.env.GOLF_SKIP_EVENT_PROP_BOOK_ALIGN || "").trim() === "1") return false;
+  return true;
+}
+
 /** Mean DK Birdies line (birdies+eagles market) for players in `dgInRound` on this round. */
 function dkBirdiesMarketMeanForRound(payload, rnd, dgInRound) {
   const props = Array.isArray(payload?.props) ? payload.props : [];
@@ -2257,7 +2277,9 @@ export function calibrateProjectionFieldMarkets(payload, opts = {}) {
     );
     const dkBirdMean = dkBirdiesMarketMeanForRound(payload, rnd, rowDg);
     if (Number.isFinite(dkBirdMean)) targetBirdMkt = dkBirdMean;
-    if (Number.isFinite(targetBirdMkt)) {
+    const deferBirdiesToPropAlign =
+      eventPropBirdiesAlignmentEnabled(opts) && Number.isFinite(dkBirdMean);
+    if (Number.isFinite(targetBirdMkt) && !deferBirdiesToPropAlign) {
       const cur = meanFinite(
         rows.map((pl) => {
           const b = num(pl.birdies, NaN);
