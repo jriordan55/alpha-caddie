@@ -269,6 +269,8 @@ export function applyWeatherBakedCountsToAllPlayers(proj, opts = {}) {
       dkFieldOnly: opts.dkFieldOnly === true,
       dgFilter: opts.dkFieldOnly ? opts.dgFilter ?? draftKingsDgIdsFromProjections(proj) : null,
       skipFieldCalibrate: opts.skipFieldCalibrate === true || n <= 0,
+      displayRound: opts.displayRound ?? proj?.display_round,
+      skipMarketBookCalibration: true,
     });
   }
   return n;

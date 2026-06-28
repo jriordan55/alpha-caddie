@@ -274,6 +274,11 @@ if (!envTruthy("GOLF_SKIP_MARKET_BOOK_CALIBRATION", false)) {
 
 runWeatherAndTeeTimesPass("publish");
 
+run(
+  "reconcile-projection-counts.mjs",
+  "Reconcile counting stats after publish weather bake (before validate)",
+);
+
 run("validate-projections-for-publish.mjs", "Validate par, birdies/pars, and O/U prop coverage before publish");
 
 if (!skipPostCsvMerge) {

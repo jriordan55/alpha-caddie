@@ -494,6 +494,7 @@ export async function bakeOpenMeteoWeatherIntoProjections(proj, opts = {}) {
   const countsBaked = applyWeatherBakedCountsToAllPlayers(proj, {
     forecastRound,
     skipFieldCalibrate: opts.skipFieldCalibrate === true,
+    displayRound: forecastRound,
   });
 
   return {

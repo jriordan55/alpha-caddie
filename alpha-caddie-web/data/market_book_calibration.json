@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-25T04:44:20.842Z",
+  "generated_at": "2026-06-28T02:40:43.116Z",
   "fit_method": "book_alignment_no_outcome_peek",
   "min_ev_pct": 5,
   "excluded_live_event": "Travelers Championship",
@@ -12,10 +12,10 @@
     "U.S. Open"
   ],
   "walkforward_oos": {
-    "events": 5,
-    "bets": 1620,
-    "units": -27.52,
-    "roi_pct": -1.7
+    "events": 4,
+    "bets": 1038,
+    "units": 13.63,
+    "roi_pct": 1.3
   },
   "markets": {
     "Total score": {
@@ -26,11 +26,11 @@
       "model_book_rmse": 4.744
     },
     "Birdies": {
-      "mu_shift": -0.161,
-      "sigma_scale": 1.091,
+      "mu_shift": -0.605,
+      "sigma_scale": 1.142,
       "n_fit": 963,
-      "model_book_delta": 0.17,
-      "model_book_rmse": 1.4
+      "model_book_delta": 0.637,
+      "model_book_rmse": 1.71
     },
     "GIR": {
       "mu_shift": 0.141,

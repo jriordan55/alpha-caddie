@@ -20,6 +20,7 @@ const { reconciled, calibrated } = reconcileAllProjectionPlayerRows(proj, {
   minField: 8,
   skipHistVenueScoreCalibrate: flatVenuePlayerScoreAnchorEnabled(),
   skipMarketBookCalibration: true,
+  displayRound: proj.display_round,
 });
 writeFileSync(projPath, `${JSON.stringify(proj, null, 2)}\n`);
 console.log(
