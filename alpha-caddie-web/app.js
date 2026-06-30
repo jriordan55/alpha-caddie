@@ -3578,10 +3578,18 @@ function draftKingsRoundPropOddsAvailable() {
 }
 
 function updateOuSyntheticOddsNoteVisibility() {
-  const el = document.getElementById("ou-synthetic-odds-note");
+  const el = document.getElementById("ou-dk-status-note");
   if (!el) return;
-  el.hidden = true;
-  el.textContent = "";
+  if (draftKingsRoundPropOddsAvailable()) {
+    el.hidden = true;
+    el.textContent = "";
+    return;
+  }
+  el.hidden = false;
+  const note = String(DATA?.meta?.dk_round_props_note || "").trim();
+  el.textContent =
+    note ||
+    "DraftKings round O/U lines are not loaded for this round — table shows model projections at -110 reference odds until DK posts (rerun npm run update:dk-round-projections after lines appear).";
 }
 
 function ouPickIsDraftKings(pick) {
@@ -6606,8 +6614,10 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
         (Number.isFinite(id) && id > 0 ? dkPickMap.get(`${id}|${canon}`) : null) ||
         dkPickMap.get(`nm:${nameKey}|${canon}`) ||
         null;
-      if (!dkPick || !ouPickIsDraftKings(dkPick)) continue;
       const mu = ouProjectedMean(col.market, player);
+      let pick = dkPick && ouPickIsDraftKings(dkPick) ? dkPick : null;
+      if (!pick) pick = ouSyntheticModelPick(col.market, player, mu);
+      if (!pick) continue;
       const { playerAvg, marketRatingZ, marketRating100, ratingSource } = ouCachedFieldMarketRating(
         col.market,
         player,
@@ -6621,7 +6631,7 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
           colIdx,
           side,
           mu,
-          pick: dkPick,
+          pick,
           marketRatingZ,
           marketRating100,
           ratingSource,
@@ -6646,6 +6656,20 @@ function draftKingsRoundGolferCount() {
     if (pn) names.add(pn);
   }
   return names.size;
+}
+
+function ouRoundProjectionsEmptyMessage() {
+  if (!draftKingsRoundPropOddsAvailable()) {
+    const note = String(DATA?.meta?.dk_round_props_note || "").trim();
+    if (note) return note;
+    return (
+      "No DraftKings round O/U lines loaded for this round.\n\n" +
+      "• DraftKings may not have posted lines yet (common before the round starts).\n" +
+      "• If push:live logged HTTP 403, set DK_SITE_SEGMENT (e.g. US-NJ-SB) and rerun npm run update:dk-round-projections.\n" +
+      "• Requires Playwright Chromium where push:live runs."
+    );
+  }
+  return "No golfers match this filter for the selected round.";
 }
 
 function ouProjectionRowStatOrder(a, b) {
@@ -7003,7 +7027,7 @@ function buildOuTable() {
     const td = document.createElement("td");
     td.colSpan = projColCount;
     td.className = "ou-cell ou-proj-long-td ou-proj-empty-td";
-    td.textContent = "No golfers match this filter for the selected round.";
+    td.textContent = ouRoundProjectionsEmptyMessage();
     tr.appendChild(td);
     tbody.appendChild(tr);
   } else {
@@ -7101,7 +7125,7 @@ function buildOuTable() {
 
     const lineTd = document.createElement("td");
     lineTd.className = "ou-cell ou-proj-long-td num ou-proj-td-line";
-    lineTd.textContent = pick && ouPickIsDraftKings(pick) && Number.isFinite(pick.line) ? String(pick.line) : "";
+    lineTd.textContent = pick && Number.isFinite(pick.line) ? String(pick.line) : "";
     tr.appendChild(lineTd);
 
     const bookTd = document.createElement("td");
@@ -7121,12 +7145,15 @@ function buildOuTable() {
       bookWrap.appendChild(bookFb);
       bookTd.appendChild(bookWrap);
       attachBookLogoWithFallback(bookImg, bookFb, SPORTSBOOK_META.draftkings.domain);
+    } else if (pick) {
+      bookTd.textContent = "Model";
+      bookTd.title = "Model projection reference line (-110) — DraftKings line not loaded";
     }
     tr.appendChild(bookTd);
 
     const oddsTd = document.createElement("td");
     oddsTd.className = "ou-cell ou-proj-long-td num ou-proj-td-odds";
-    if (pick && ouPickIsDraftKings(pick)) {
+    if (pick) {
       const am = side === "over" ? pick.over : pick.under;
       oddsTd.textContent = Number.isFinite(am) ? formatAmerican(am) : "—";
     } else oddsTd.textContent = "";
@@ -7136,7 +7163,7 @@ function buildOuTable() {
     pTd.className = "ou-cell ou-proj-long-td num ou-proj-td-pmod";
     const edgeTd = document.createElement("td");
     edgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-edge";
-    if (pick && ouPickIsDraftKings(pick)) {
+    if (pick) {
       pTd.textContent = Number.isFinite(pMod) ? `${(pMod * 100).toFixed(1)}%` : "—";
       edgeTd.textContent = formatEdgePct(edge);
       if (edge > 0) edgeTd.classList.add("pos");

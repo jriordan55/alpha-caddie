@@ -342,16 +342,22 @@ async function main() {
   if (next.outright_live_score_placement_nudge == null) next.outright_live_score_placement_nudge = false;
 
   if (process.env.GOLF_SKIP_PROPS_CSV !== "1" || process.env.GOLF_SKIP_DK_OU !== "1") {
-    const { props, nCsv, nDk, nDkFresh, dkLeagueSlug, dkLeagueUrl } = await refreshRoundProjectionProps(
+    const { props, nCsv, nDk, nDkFresh, dkLeagueSlug, dkLeagueUrl, dkError } = await refreshRoundProjectionProps(
       payload,
       GOLF_MODEL_ROOT,
     );
     if (props.length) {
       next.props = props;
       if (dkLeagueSlug) next.dk_league_slug = dkLeagueSlug;
+      next.meta = { ...(next.meta && typeof next.meta === "object" ? next.meta : {}) };
       if (nDkFresh > 0) {
         next.dk_round_props_refreshed_at = next.book_odds_refreshed_at;
+        delete next.meta.dk_round_props_note;
       } else if (String(process.env.GOLF_SKIP_DK_OU || "").trim() !== "1") {
+        const errNote = String(dkError || "").trim();
+        next.meta.dk_round_props_note = errNote
+          ? errNote
+          : "DraftKings returned 0 round O/U props — lines may not be posted yet, or the Nash API scrape failed (see push:live logs).";
         console.warn(
           `[fetch-book-odds] DraftKings scrape returned 0 fresh props (${dkLeagueUrl || "no league URL"}) — round projections may show model_fallback lines`,
         );
