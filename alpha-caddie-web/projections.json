@@ -9,7 +9,7 @@
   "datagolf_field_current_round": 1,
   "display_round": 1,
   "display_round_label": "R1 — next Thursday (auto, America/New_York)",
-  "updated_at": "2026-06-30T20:53:24Z",
+  "updated_at": "2026-06-30T21:23:49Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -56812,7 +56812,7 @@
       "round_num": 1
     }
   },
-  "book_odds_refreshed_at": "2026-06-30T20:50:18Z",
+  "book_odds_refreshed_at": "2026-06-30T21:20:54Z",
   "live_round_actuals_by_dg": {
     "6093": {
       "1": {
@@ -60632,11 +60632,11 @@
     }
   },
   "datagolf_live_current_round": 1,
-  "dg_teetimes_merged_at": "2026-06-30T20:53:25Z",
+  "dg_teetimes_merged_at": "2026-06-30T21:23:51Z",
   "forecast_weather_tee_times_merged": 288,
   "forecast_weather_display_round": 1,
   "forecast_weather_status": "ok_tee_time",
-  "forecast_weather_updated_at": "2026-06-30T20:53:26Z",
+  "forecast_weather_updated_at": "2026-06-30T21:23:52Z",
   "forecast_weather_coords": {
     "lat": 41.51226,
     "lon": -90.41513,
@@ -60659,9 +60659,9 @@
   "forecast_wave_summary": "Morning tees: 83.5°F · 16.9 mph · 65% · storm.\nAfternoon tees: 90.5°F · 14.6 mph · 59% · storm.",
   "projection_counts_weather_baked": true,
   "projection_counts_weather_baked_round": 1,
-  "projection_counts_weather_baked_at": "2026-06-30T20:53:26Z",
+  "projection_counts_weather_baked_at": "2026-06-30T21:23:52Z",
   "projection_unified_factors": {
-    "applied_at": "2026-06-30T20:52:03.993Z",
+    "applied_at": "2026-06-30T21:22:37.022Z",
     "weights": {
       "courseTableFit": 0.16,
       "similarCourse": 0.1,
@@ -60698,8 +60698,8 @@
   },
   "outright_sim_probs": {
     "n_sims": 500,
-    "baked_at": "2026-06-30T20:52:08.360Z",
-    "ratings_updated_at": "2026-06-30T20:51:54Z",
+    "baked_at": "2026-06-30T21:22:39.929Z",
+    "ratings_updated_at": "2026-06-30T21:22:29Z",
     "live_through": "2026-06-27 6:15 PM",
     "by_dg": {
       "6169": {
@@ -61861,7 +61861,7 @@
   "datagolf_live_in_tournament": true,
   "live_matchup_model_blend": 0,
   "market_book_calibration": {
-    "generated_at": "2026-06-30T20:53:23.308Z",
+    "generated_at": "2026-06-30T21:23:49.018Z",
     "fit_method": "book_alignment_no_outcome_peek",
     "markets": {
       "Total score": {
