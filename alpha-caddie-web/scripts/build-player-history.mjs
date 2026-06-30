@@ -415,13 +415,14 @@ function writeFieldSeasonBundle(out, allowedDgIds) {
     const rounds = (Array.isArray(bucket?.rounds) ? bucket.rounds : []).filter(
       (r) => parseInt(String(r?.year || ""), 10) === seasonYear,
     );
+    if (!rounds.length) continue;
     roundCount += rounds.length;
     byDgId[String(id)] = {
       dg_id: id,
       player_name: String(bucket?.player_name || "").trim(),
       rounds,
       _propsSeasonSlice: seasonYear,
-      _propsSeasonEmpty: rounds.length === 0,
+      _propsSeasonEmpty: false,
     };
   }
   const file = `field-${seasonYear}.json`;

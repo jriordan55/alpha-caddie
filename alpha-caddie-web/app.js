@@ -375,6 +375,8 @@ let HISTORY = { meta: {}, byDgId: {}, holesByPlayerKey: {}, _ok: false };
 let playerHistoryLoadPromise = null;
 let embeddedRoundHistoryScriptPromise = null;
 const playerHistoryBucketLoadPromises = new Map();
+/** dg_ids confirmed absent from the history export (in-memory only; no placeholder files). */
+const playerHistoryAbsentDgIds = new Set();
 
 /** Same-origin cache from `approach_skill_ytd.json` (written by `npm run fetch:dg`). Falls back to legacy `approach_skill_l12.json`. Cleared when projections reload. */
 let approachSkillYtdCache = null;
@@ -525,6 +527,8 @@ let propsCoursesManifestCache = null;
 let propsCoursesManifestPromise = null;
 /** dg_id → display name from player-history/manifest.json (full archive field). */
 let propsDgIdNameById = null;
+/** dg_ids that have a career history shard in the export manifest. */
+let propsHistoryManifestDgIds = null;
 let propsDgIdNameManifestPromise = null;
 let propsDgIdNameManifestUiRefreshDone = false;
 /** Single-venue index for field-by-course (not all courses). */
@@ -12821,6 +12825,18 @@ function historyBucketLoaded(dgId) {
   );
 }
 
+function historyBucketResolved(dgId) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return false;
+  return historyBucketLoaded(id) || playerHistoryAbsentDgIds.has(id);
+}
+
+function markPlayerHistoryAbsent(dgId) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return;
+  playerHistoryAbsentDgIds.add(id);
+}
+
 async function extractHistoryBucketFromEmbedded(dgId) {
   const id = Math.round(num(dgId, NaN));
   if (!Number.isFinite(id)) return false;
@@ -12892,6 +12908,13 @@ async function loadPlayerHistoryBucket(dgId, opts = {}) {
           const ok = mergePlayerHistoryPartialPayload(sliced);
           if (ok) return true;
         } else {
+          const rawRounds = Array.isArray(raw?.rounds)
+            ? raw.rounds
+            : raw?.byDgId?.[String(id)]?.rounds;
+          if (Array.isArray(rawRounds) && !rawRounds.length) {
+            markPlayerHistoryAbsent(id);
+            return false;
+          }
           const ok = mergePlayerHistoryPartialPayload(raw);
           if (ok && historyBucketLoaded(id)) return true;
         }
@@ -12944,7 +12967,11 @@ async function loadPlayerHistory() {
       return;
     }
     try {
-      const res = await fetch(cacheBustFetchUrl("player_round_history.json"), { cache: "no-store" });
+      const fetchOpts = { cache: "no-store" };
+      if (typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function") {
+        fetchOpts.signal = AbortSignal.timeout(90000);
+      }
+      const res = await fetch(cacheBustFetchUrl("player_round_history.json"), fetchOpts);
       if (res.ok) {
         applyPlayerHistoryPayload(await res.json(), { partial: false });
         return;
@@ -17379,12 +17406,14 @@ function ensurePropsDgIdNameManifestLoaded() {
           if (Number.isFinite(id) && nm) m.set(id, nm);
         }
         propsDgIdNameById = m;
+        propsHistoryManifestDgIds = new Set(m.keys());
         return m;
       }
     } catch (_) {
       /* manifest optional */
     }
     propsDgIdNameById = new Map();
+    propsHistoryManifestDgIds = new Set();
     return propsDgIdNameById;
   })().finally(() => {
     propsDgIdNameManifestPromise = null;
@@ -19782,6 +19811,7 @@ function renderPropsTrends() {
   const titleEl = document.getElementById("props-trends-title");
   refreshPropsFilterOptionsForGolfer(dg);
   const statKey = statKeyFromPropSelect();
+  const historyResolved = historyBucketResolved(dg);
   const selectedHistoryMissing = Number.isFinite(dg) && !historyBucketLoaded(dg);
   if (selectedHistoryMissing && historyBucketLoading(dg)) {
     if (empty) {
@@ -19792,7 +19822,7 @@ function renderPropsTrends() {
     renderPropsHitRateAndTopTable(statKey, NaN, PROPS_HISTORY_ROUND_DEFAULT);
     return;
   }
-  if (selectedHistoryMissing && activeAppTabId() === "props") {
+  if (selectedHistoryMissing && !historyResolved && activeAppTabId() === "props") {
     void ensurePlayerHistoryLoadedForTab("props");
   }
   if (propsTopTableSortStatKey !== statKey) {
@@ -19815,9 +19845,12 @@ function renderPropsTrends() {
       empty.hidden = false;
       const metaHint = String(HISTORY.meta?.note || "").trim();
       const waiting =
-        historyBucketLoading(dg) || (HISTORY._loading && !historyHasSelectedBucket);
+        historyBucketLoading(dg) ||
+        (!historyResolved && HISTORY._loading && !historyHasSelectedBucket);
       empty.textContent = waiting
         ? "Loading player history..."
+        : historyResolved && !historyHasSelectedBucket
+        ? "No round history for this player in the export yet."
         : !HISTORY._ok
         ? "No history file."
         : metaHint ||
@@ -20332,14 +20365,21 @@ function ensurePlayerHistoryLoadedForTab(tab) {
       ? (async () => {
           const dg = selectedDgId();
           if (!Number.isFinite(dg)) return false;
-          if (!historyBucketLoaded(dg)) {
-            const ok = await loadPlayerHistoryBucket(dg);
-            if (!ok && !historyBucketLoaded(dg)) await extractHistoryBucketFromEmbedded(dg);
+          if (!historyBucketLoaded(dg) && !historyBucketResolved(dg)) {
+            await loadPlayerHistoryBucket(dg);
+            if (!historyBucketLoaded(dg) && !historyBucketResolved(dg)) {
+              await extractHistoryBucketFromEmbedded(dg);
+            }
+            if (!historyBucketLoaded(dg) && !historyBucketResolved(dg)) {
+              if (!HISTORY._ok || HISTORY._partial) {
+                await loadPlayerHistory();
+              }
+              if (!historyBucketLoaded(dg) && !historyBucketResolved(dg)) {
+                markPlayerHistoryAbsent(dg);
+              }
+            }
           }
-          if (!propsFieldLeaderboardEnabled() && !playerHistoryLoadPromise && !HISTORY._loading) {
-            void loadPlayerHistory();
-          }
-          return historyBucketLoaded(dg);
+          return historyBucketLoaded(dg) || historyBucketResolved(dg);
         })()
       : HISTORY._ok && !HISTORY._partial
         ? Promise.resolve(true)

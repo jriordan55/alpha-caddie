@@ -6,6 +6,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { spawnSync } from "child_process";
 import { resolveLiveRoundActualsByDg } from "./dg-live-tournament-stats.mjs";
 import { foldComparableTitle } from "./dg-events-align.mjs";
 import { normCourseNameKey, courseShardFileName } from "./course-name-key.mjs";
@@ -64,9 +65,21 @@ function enrichFromActuals(row, act) {
   return out;
 }
 
+function fieldPlayerNames(proj) {
+  /** @type {Map<number, string>} */
+  const names = new Map();
+  for (const p of proj?.players || []) {
+    const dg = Math.round(num(p.dg_id, NaN));
+    if (!Number.isFinite(dg)) continue;
+    names.set(dg, String(p.player_name || "").trim());
+  }
+  return names;
+}
+
+const proj = JSON.parse(fs.readFileSync(PROJ_JSON, "utf8"));
 const pga = JSON.parse(fs.readFileSync(PGA_JSON, "utf8"));
 const live = JSON.parse(fs.readFileSync(LIVE_JSON, "utf8"));
-const proj = JSON.parse(fs.readFileSync(PROJ_JSON, "utf8"));
+const fieldNames = fieldPlayerNames(proj);
 const fwHoles = Math.round(num(proj?.projection_course_basis?.fairway_holes_modeled, 14)) || 14;
 const roundPar = num(proj?.course_par_18, 70) || 70;
 const actualsByDg = resolveLiveRoundActualsByDg(live, { roundPar, fairwayHoles: fwHoles });
@@ -88,8 +101,17 @@ let patched = 0;
 let roundsAdded = 0;
 for (const [dg, pgaRows] of byDg) {
   const shardPath = path.join(SHARD_DIR, `${dg}.json`);
-  if (!fs.existsSync(shardPath)) continue;
-  const shard = JSON.parse(fs.readFileSync(shardPath, "utf8"));
+  if (!fs.existsSync(shardPath)) {
+    if (!pgaRows.length) continue;
+    fs.mkdirSync(SHARD_DIR, { recursive: true });
+  }
+  const shard = fs.existsSync(shardPath)
+    ? JSON.parse(fs.readFileSync(shardPath, "utf8"))
+    : {
+        dg_id: dg,
+        player_name: fieldNames.get(dg) || String(pgaRows[0]?.player_name || "").trim(),
+        rounds: [],
+      };
   if (!Array.isArray(shard.rounds)) shard.rounds = [];
   for (const liveRec of pgaRows) {
     const wantEvt = normEvt(liveRec.event_name);
@@ -194,3 +216,10 @@ console.log(
     (courseKey ? `; by-course ${courseShardFileName(courseKey)} (${courseEntriesPatched} row(s))` : "") +
     `; event="${metaEvent}"`,
 );
+
+const sync = spawnSync(process.execPath, ["scripts/sync-missing-field-history-from-csv.mjs"], {
+  cwd: WEB,
+  stdio: "inherit",
+  env: process.env,
+});
+if (sync.status !== 0 && sync.status != null) process.exit(sync.status);
