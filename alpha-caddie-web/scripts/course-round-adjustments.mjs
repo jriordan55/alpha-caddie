@@ -2214,9 +2214,6 @@ function historicalVenueScoreByRound(basis, rnd) {
 }
 
 function venueCalibrationTargetForRound(basis, rnd, coursePar18) {
-  if (flatVenuePlayerScoreAnchorEnabled()) {
-    return num(basis?.venue_avg_round_score, NaN);
-  }
   const ewMap = basis?.event_week_field_avg_score_by_round;
   const ew = num(ewMap?.[String(rnd)], NaN);
   const histRnd = historicalVenueScoreByRound(basis, rnd);

@@ -1,36 +1,37 @@
 {
-  "generated_at": "2026-06-28T02:40:43.116Z",
+  "generated_at": "2026-06-30T20:04:46.760Z",
   "fit_method": "book_alignment_no_outcome_peek",
   "min_ev_pct": 5,
-  "excluded_live_event": "Travelers Championship",
+  "excluded_live_event": "John Deere Classic",
   "train_events": [
     "PGA Championship",
     "THE CJ CUP Byron Nelson",
     "Charles Schwab Challenge",
     "the Memorial Tournament presented by Workday",
     "RBC Canadian Open",
-    "U.S. Open"
+    "U.S. Open",
+    "Travelers Championship"
   ],
   "walkforward_oos": {
-    "events": 4,
-    "bets": 1038,
-    "units": 13.63,
-    "roi_pct": 1.3
+    "events": 5,
+    "bets": 1109,
+    "units": 15.87,
+    "roi_pct": 1.4
   },
   "markets": {
     "Total score": {
-      "mu_shift": 0.158,
+      "mu_shift": -0.264,
       "sigma_scale": 1.32,
-      "n_fit": 809,
-      "model_book_delta": -0.168,
-      "model_book_rmse": 4.744
+      "n_fit": 925,
+      "model_book_delta": 0.279,
+      "model_book_rmse": 4.619
     },
     "Birdies": {
-      "mu_shift": -0.605,
-      "sigma_scale": 1.142,
-      "n_fit": 963,
-      "model_book_delta": 0.637,
-      "model_book_rmse": 1.71
+      "mu_shift": -0.536,
+      "sigma_scale": 1.128,
+      "n_fit": 1079,
+      "model_book_delta": 0.561,
+      "model_book_rmse": 1.627
     },
     "GIR": {
       "mu_shift": 0.141,
@@ -40,11 +41,11 @@
       "model_book_rmse": 2.18
     },
     "Fairways hit": {
-      "mu_shift": 0.626,
+      "mu_shift": 0.599,
       "sigma_scale": 1.08,
-      "n_fit": 514,
-      "model_book_delta": -0.687,
-      "model_book_rmse": 1.393
+      "n_fit": 584,
+      "model_book_delta": -0.651,
+      "model_book_rmse": 1.324
     }
   }
 }

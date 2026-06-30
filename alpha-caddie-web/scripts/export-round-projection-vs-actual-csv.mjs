@@ -84,6 +84,7 @@ import {
   buildWalkForwardCalibrationByEvent,
   WALKFORWARD_OOS_JSON,
 } from "./walkforward-oos-roi.mjs";
+import { buildBookPropsIndex } from "./projection-book-props.mjs";
 
 Object.assign(process.env, flatVenueProjectionPipelineEnv());
 
@@ -127,23 +128,6 @@ function dkPropForPlayer(dkIndex, dg, rnd, propsMarket) {
   return dkIndex.get(`${dg}|${rnd}|${propsMarket}`) || null;
 }
 
-/** Current DK scrape in projections.json keyed like the audit index. */
-function buildLiveDkPropsFromProjections(payload) {
-  const map = new Map();
-  for (const r of Array.isArray(payload?.props) ? payload.props : []) {
-    if (String(r.source || "").trim().toLowerCase() !== "draftkings") continue;
-    const dg = Math.round(num(r.dg_id, NaN));
-    const rnd = Math.round(num(r.round_num, NaN));
-    const market = String(r.market || "").trim();
-    const line = num(r.line, NaN);
-    const over = num(r.over_odds, NaN);
-    const under = num(r.under_odds, NaN);
-    if (!Number.isFinite(dg) || !Number.isFinite(rnd) || rnd < 1 || rnd > 4 || !market) continue;
-    if (!Number.isFinite(line) || !Number.isFinite(over) || !Number.isFinite(under)) continue;
-    map.set(`${dg}|${rnd}|${market}`, { line, over, under });
-  }
-  return map;
-}
 
 function roundHasCompletedScore(actuals, dg, rnd) {
   const act = actuals.get(`${dg}|${rnd}`);
@@ -160,7 +144,11 @@ function dkPropForExport(preRoundIndex, liveIndex, dg, rnd, propsMarket, actuals
   if (pre) return { ...pre, oddsSource: "pre_round_audit" };
   if (roundHasCompletedScore(actuals, dg, rnd)) return null;
   const live = liveIndex.get(key);
-  if (live) return { ...live, oddsSource: "live_snapshot" };
+  if (live) {
+    const src = String(live.source || "live_snapshot").trim().toLowerCase();
+    const oddsSource = src === "draftkings" ? "live_snapshot" : src;
+    return { line: live.line, over: live.over, under: live.under, oddsSource };
+  }
   return null;
 }
 
@@ -1295,7 +1283,7 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
   const roundStartUtcMs = buildRoundStartUtcMs(players, payload);
   const auditPath = opts.dkAuditPath || defaultDkAuditPath(WEB_ROOT);
   const preRoundDkIndex = await loadPreRoundDkPropsFromAudit(eventName, auditPath, roundStartUtcMs);
-  const liveDkIndex = buildLiveDkPropsFromProjections(payload);
+  const liveDkIndex = buildBookPropsIndex(payload);
   const ctx = createProjectionContext({ ...payload, _webRoot: WEB_ROOT });
   const lines = [HEADER];
   const summarySamples = [];
@@ -1345,17 +1333,24 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
         rowCells[spec.lineCol] = fmtLine(spec.market, mu);
 
         const dk = dkPropForExport(preRoundDkIndex, liveDkIndex, dg, rnd, spec.propsMarket, actuals);
-        const bookLine = dk ? enforceHalfLine(dk.line) : NaN;
-        const gradeLine = Number.isFinite(bookLine) ? bookLine : modelLine;
-        if (dk) {
+        const actual = actualForMarket(act, spec.key);
+        const roundComplete = Number.isFinite(actual);
+        let bookLine = dk ? enforceHalfLine(dk.line) : NaN;
+        if (!dk && !roundComplete && Number.isFinite(modelLine)) {
+          bookLine = modelLine;
+          if (!rowOddsSource) rowOddsSource = "model_projection";
+          rowCells[spec.bookLineCol] = fmtLine(spec.market, bookLine);
+          rowCells[spec.overOddsCol] = formatAmericanOdds(-110);
+          rowCells[spec.underOddsCol] = formatAmericanOdds(-110);
+        } else if (dk) {
           if (!rowOddsSource) rowOddsSource = dk.oddsSource;
           rowCells[spec.bookLineCol] = fmtLine(spec.market, bookLine);
           rowCells[spec.overOddsCol] = formatAmericanOdds(dk.over);
           rowCells[spec.underOddsCol] = formatAmericanOdds(dk.under);
         }
+        const gradeLine = Number.isFinite(bookLine) ? bookLine : modelLine;
 
-        const actual = actualForMarket(act, spec.key);
-        const sides = Number.isFinite(actual)
+        const sides = roundComplete
           ? ouSideResults(spec.market, actual, gradeLine)
           : { over: "", under: "" };
         rowCells[spec.overCol] = sides.over;
@@ -1404,7 +1399,8 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
         summarySamples.push({ ...sm, bookOddsSource: rowOddsSource });
       }
       if (rowOddsSource === "pre_round_audit") preRoundOddsRows++;
-      else if (rowOddsSource === "live_snapshot") liveSnapshotOddsRows++;
+      else if (rowOddsSource === "live_snapshot" || rowOddsSource === "model_fallback") liveSnapshotOddsRows++;
+      else if (rowOddsSource === "model_projection") liveSnapshotOddsRows++;
 
       const rowOrder = [
         exported,

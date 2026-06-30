@@ -8,6 +8,7 @@ import {
   pickBetSide,
 } from "./ev-math.mjs";
 import { ouProjectedMeanWithLiveScratch } from "../scripts/live-in-play-pricing.mjs";
+import { buildBookPropsIndex } from "../scripts/projection-book-props.mjs";
 
 const PROJECTIONS_URL = "../projections.json";
 const EDGE_SIGNALS_URL = "../data/edge_signal_scan.json";
@@ -85,6 +86,35 @@ async function loadCourseTableRow(courseName) {
   return null;
 }
 
+function snapHalfLine(x) {
+  const v = num(x, NaN);
+  if (!Number.isFinite(v)) return NaN;
+  return Math.round(v - 0.5) + 0.5;
+}
+
+/** When DK scrape fails, use model half-lines so the live tab still lists the current field. */
+function supplementModelProjectionProps(dk, players, meta, round) {
+  for (const [market, muFn] of Object.entries(MARKET_MODEL)) {
+    for (const player of players.values()) {
+      const dg = Math.round(num(player.dg_id, NaN));
+      if (!Number.isFinite(dg)) continue;
+      const key = `${dg}|${market}`;
+      if (dk.has(key)) continue;
+      const mu = muFn.length >= 2 ? muFn(player, meta) : muFn(player);
+      if (!Number.isFinite(mu)) continue;
+      let line = market === "Total score" ? mu : snapHalfLine(mu);
+      if (market === "Total score") line = Math.min(85.5, Math.max(63.5, line));
+      else line = Math.min(8.5, Math.max(0.5, line));
+      dk.set(key, {
+        line,
+        over: -110,
+        under: -110,
+        player_name: player.player_name,
+        source: "model_projection",
+      });
+    }
+  }
+}
 function liveTargetRound(projections) {
   const meta = projections?.meta || {};
   const dr = Math.round(num(meta.display_round ?? projections.display_round, NaN));
@@ -95,19 +125,19 @@ function liveTargetRound(projections) {
 }
 
 function dkPropsForRound(projections, round) {
+  const index = buildBookPropsIndex(projections, { round });
   const out = new Map();
-  for (const r of Array.isArray(projections?.props) ? projections.props : []) {
-    if (String(r.source || "").trim().toLowerCase() !== "draftkings") continue;
-    const mkt = DK_TO_MARKET[String(r.market || "").trim()];
-    if (!mkt) continue;
-    const rnd = Math.round(num(r.round_num, NaN));
-    if (Number.isFinite(rnd) && rnd >= 1 && rnd <= 4 && rnd !== round) continue;
-    const line = num(r.line, NaN);
-    const over = num(r.over_odds, NaN);
-    const under = num(r.under_odds, NaN);
-    const dg = Math.round(num(r.dg_id, NaN));
-    if (!Number.isFinite(dg) || !Number.isFinite(line) || !Number.isFinite(over) || !Number.isFinite(under)) continue;
-    out.set(`${dg}|${mkt}`, { line, over, under, player_name: r.player_name });
+  for (const [key, row] of index) {
+    const [dgStr, , marketRaw] = key.split("|");
+    const mkt = DK_TO_MARKET[marketRaw] || marketRaw;
+    if (!MARKET_MODEL[mkt]) continue;
+    out.set(`${dgStr}|${mkt}`, {
+      line: row.line,
+      over: row.over,
+      under: row.under,
+      player_name: row.player_name,
+      source: row.source,
+    });
   }
   return out;
 }
@@ -275,6 +305,7 @@ export function buildLiveBestBets({ projections, oos, signals, courseRow, minEvP
   const round = liveTargetRound(projections);
   const dk = dkPropsForRound(projections, round);
   const players = playersForRound(projections, round);
+  supplementModelProjectionProps(dk, players, projections?.meta || projections || {}, round);
   const pinActive = pinSheetActive(projections, round);
   const minEdge = minEvPct;
   const meta = projections?.meta || projections || {};
@@ -331,6 +362,7 @@ export function buildLiveBestBets({ projections, oos, signals, courseRow, minEvP
     eventName: String(projections?.event_name || projections?.meta?.event_name || "").trim(),
     updatedAt: String(projections?.updated_at || projections?.meta?.updated_at || "").trim(),
     venueNote: venueAnchorNote(projections),
+    modelLinesOnly: ![...dk.values()].some((p) => String(p.source || "").toLowerCase() === "draftkings"),
     picks: [...byKey.values()].sort((a, b) => b.score - a.score || b.edgePct - a.edgePct).slice(0, TOP_N),
   };
 }

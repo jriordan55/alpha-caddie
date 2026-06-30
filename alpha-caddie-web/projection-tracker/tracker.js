@@ -1646,9 +1646,12 @@ function renderLivePicks() {
   const oosN = Math.round(num((LIVE_CTX.oos || OOS_REPORT)?.combined_oos_at_5pct?.bets, NaN)) || 0;
   if (noteEl) {
     const venue = built.venueNote ? ` ${built.venueNote}.` : "";
+    const dkNote = built.modelLinesOnly
+      ? " DraftKings scrape unavailable — showing model half-lines at −110 (not real +EV until DK posts)."
+      : "";
     noteEl.textContent =
-      `Upcoming round picks from projections.json (${built.updatedAt ? `updated ${new Date(built.updatedAt).toLocaleString()}` : "live"}).${venue}` +
-      ` Ranked by model EV vs DK, walk-forward OOS market ROI` +
+      `Upcoming round picks from projections.json (${built.updatedAt ? `updated ${new Date(built.updatedAt).toLocaleString()}` : "live"}).${venue}${dkNote}` +
+      ` Ranked by model EV vs posted lines, walk-forward OOS market ROI` +
       (Number.isFinite(oosRoi) ? ` (+${oosRoi.toFixed(1)}% on ${oosN} OOS bets @ 5%)` : "") +
       `, and historical context signals. Uses toolbar Min EV %.`;
   }

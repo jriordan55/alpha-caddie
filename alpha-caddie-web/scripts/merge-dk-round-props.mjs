@@ -134,6 +134,7 @@ function modelFallbackOuForMarket(players, market, preferredRound) {
     const dg = Math.round(num(p.dg_id, NaN));
     const o = { player_name: pn, line: L, over_odds: -110, under_odds: -110, market };
     if (Number.isFinite(dg) && dg > 0) o.dg_id = dg;
+    if (roundFilter != null) o.round_num = roundFilter;
     out.push(o);
   }
   return out;
