@@ -20,6 +20,13 @@ export function num(x, fallback = NaN) {
   return Number.isFinite(n) ? n : fallback;
 }
 
+function envTruthy(name, defaultVal = false) {
+  const raw = process.env[name];
+  if (raw === undefined || String(raw).trim() === "") return defaultVal;
+  const s = String(raw).trim().toLowerCase();
+  return s === "1" || s === "true" || s === "yes";
+}
+
 function displayGolferName(nameRaw) {
   const s = String(nameRaw || "").trim();
   const m = s.match(/^([^,]+),\s*(.+)$/);
@@ -288,6 +295,7 @@ export async function refreshRoundProjectionProps(payload, golfModelRoot) {
   const skipCsv = process.env.GOLF_SKIP_PROPS_CSV === "1";
   const skipDk = process.env.GOLF_SKIP_DK_OU === "1";
   const skipModelFallback = String(process.env.GOLF_SKIP_MODEL_FALLBACK_OU || "").trim() === "1";
+  const requireFreshDk = envTruthy("GOLF_REQUIRE_DK_OU");
 
   if (skipCsv && skipDk) {
     return { props: [], nCsv: 0, nDk: 0, dkError: "skipped (GOLF_SKIP_PROPS_CSV and GOLF_SKIP_DK_OU)" };
@@ -326,18 +334,18 @@ export async function refreshRoundProjectionProps(payload, golfModelRoot) {
         const priorDk = (Array.isArray(payload.props) ? payload.props : []).filter(
           (r) => String(r?.source || "").trim().toLowerCase() === "draftkings" && propRowHasPostableOdds(r),
         );
-        if (priorDk.length) {
+        if (priorDk.length && !requireFreshDk) {
           dkProps = priorDk;
           console.warn(
             `[dk-round-props] DK scrape returned 0 rows for ${dkLeagueUrl || "(no url)"} — keeping ${priorDk.length} prior draftkings props`,
           );
         } else {
-          console.warn(
-            "DraftKings O/U:",
+          const msg =
             dk.error && !String(dk.error).startsWith("skipped")
               ? dk.error
-              : `0 props for ${dkLeagueUrl || "league URL"} — check slug (dk_league_slug) or Playwright / DK_SITE_SEGMENT`,
-          );
+              : `0 props for ${dkLeagueUrl || "league URL"} — check slug (dk_league_slug) or Playwright / DK_SITE_SEGMENT`;
+          dkError = requireFreshDk ? msg : dk.error || msg;
+          console.error(requireFreshDk ? `[dk-round-props] FAIL (GOLF_REQUIRE_DK_OU=1): ${msg}` : `DraftKings O/U: ${msg}`);
         }
       } else if (dk.error && !String(dk.error).startsWith("skipped")) {
         console.warn("DraftKings O/U:", dk.error);

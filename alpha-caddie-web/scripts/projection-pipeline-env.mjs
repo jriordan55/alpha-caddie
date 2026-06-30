@@ -12,3 +12,17 @@ export function flatVenueProjectionPipelineEnv() {
     GOLF_UNIFIED_BOUNCE_BACK_K: "0",
   };
 }
+
+/** DraftKings round O/U scrape — headed browser on desktop (DK blocks headless Chromium). */
+export function dkOuScrapeEnv() {
+  const env = {};
+  if (process.platform === "win32" || process.platform === "darwin") {
+    env.DK_HEADLESS = "0";
+  }
+  return env;
+}
+
+/** push:live / refresh:live — fail if DraftKings scrape returns 0 fresh round O/U props. */
+export function requireDkOuEnv() {
+  return { GOLF_REQUIRE_DK_OU: "1" };
+}

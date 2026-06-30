@@ -18,6 +18,8 @@
  *      Outright EV rows: DataGolf betting-tools/outrights API, which backs the Finish Position Betting Tool.
  *      GOLF_SKIP_PROPS_CSV=1 — do not merge data/player_props_*.csv into projections.props (Model O/U DK lines).
  *      GOLF_SKIP_DK_OU=1 — do not pull DK round props (see draftkings-ou-props.mjs).
+ *      GOLF_REQUIRE_DK_OU=1 — abort when DK scrape returns 0 fresh props (default on push:live / refresh:live).
+ *      DK_HEADLESS=0 — headed Chromium on Windows/macOS (DK blocks headless Nash API).
  *      GOLF_SKIP_DK_ROUND_AUDIT_CSV=1 — do not append alpha-caddie-web/data/dk_round_projection_audit.csv after merge.
  *      GOLF_SKIP_MODEL_FALLBACK_OU=1 — do not synthesize GIR / fairways / putts from projections.players for players DK omits.
  *      GIR/FW/Putts: each run drops stale csv+model_fallback rows for those markets, then re-adds model lines from current
@@ -51,6 +53,13 @@ const GOLF_MODEL_ROOT = process.env.GOLF_MODEL_DIR?.trim()
   ? resolve(process.env.GOLF_MODEL_DIR.trim())
   : resolve(WEB_ROOT, "..");
 const ENV_DEFAULT_TOUR = ((process.env.GOLF_DATAGOLF_TOUR || process.env.GOLF_TOUR || "pga").trim() || "pga").toLowerCase();
+
+function envTruthy(name, defaultVal = false) {
+  const raw = process.env[name];
+  if (raw === undefined || String(raw).trim() === "") return defaultVal;
+  const s = String(raw).trim().toLowerCase();
+  return s === "1" || s === "true" || s === "yes";
+}
 
 function loadApiKey() {
   const env = (process.env.DATAGOLF_API_KEY || "").trim();
@@ -359,7 +368,7 @@ async function main() {
           ? errNote
           : "DraftKings returned 0 round O/U props — lines may not be posted yet, or the Nash API scrape failed (see push:live logs).";
         console.warn(
-          `[fetch-book-odds] DraftKings scrape returned 0 fresh props (${dkLeagueUrl || "no league URL"}) — round projections may show model_fallback lines`,
+          `[fetch-book-odds] DraftKings scrape returned 0 fresh props (${dkLeagueUrl || "no league URL"}) — Round projections tab will be empty until DK lines load`,
         );
       }
       console.log(
@@ -373,6 +382,20 @@ async function main() {
         nDk,
         "total DK rows; model O/U for all counting markets where DK omits)",
       );
+    }
+    if (
+      envTruthy("GOLF_REQUIRE_DK_OU") &&
+      String(process.env.GOLF_SKIP_DK_OU || "").trim() !== "1" &&
+      nDkFresh === 0
+    ) {
+      const err =
+        String(dkError || "").trim() ||
+        "DraftKings scrape returned 0 fresh round O/U props — Round projections requires real DK lines";
+      console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_DK_OU=1): ${err}`);
+      console.error(
+        "[fetch-book-odds] Fix: install Playwright Chromium (npx playwright install chromium); on Windows/macOS use DK_HEADLESS=0 (set automatically by push:live).",
+      );
+      process.exit(1);
     }
   }
 

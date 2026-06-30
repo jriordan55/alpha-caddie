@@ -3577,7 +3577,7 @@ function draftKingsRoundPropOddsAvailable() {
   return draftKingsRoundPropsOnly().length > 0;
 }
 
-function updateOuSyntheticOddsNoteVisibility() {
+function updateOuDkStatusNoteVisibility() {
   const el = document.getElementById("ou-dk-status-note");
   if (!el) return;
   if (draftKingsRoundPropOddsAvailable()) {
@@ -3589,7 +3589,7 @@ function updateOuSyntheticOddsNoteVisibility() {
   const note = String(DATA?.meta?.dk_round_props_note || "").trim();
   el.textContent =
     note ||
-    "DraftKings round O/U lines are not loaded for this round — table shows model projections at -110 reference odds until DK posts (rerun npm run update:dk-round-projections after lines appear).";
+    "No DraftKings round O/U lines loaded — rerun npm run update:dk-round-projections (headed browser required on Windows; set DK_HEADLESS=0 if needed).";
 }
 
 function ouPickIsDraftKings(pick) {
@@ -6553,21 +6553,6 @@ function ouProjectionPlayerFromDkProp(propRow, fieldPlayer) {
   };
 }
 
-/** Model line at μ when DK (and props) are absent — same -110 grid as pre–DK-only tab. */
-function ouSyntheticModelPick(market, player, mu) {
-  const mKey = ouModelMarketKey(market);
-  if (!mKey || !player) return null;
-  let line = Number.isFinite(mu) ? mu : ouProjectedMean(market, player);
-  if (!Number.isFinite(line)) return null;
-  if (mKey !== "Total score") line = enforceHalfLine(line);
-  return {
-    line,
-    over: OU_DEFAULT_ODDS_AM,
-    under: OU_DEFAULT_ODDS_AM,
-    source: "model",
-  };
-}
-
 function ouAttachProjectionRowMetrics(row) {
   const { player, col, side, pick } = row;
   if (!pick) return row;
@@ -6615,8 +6600,7 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
         dkPickMap.get(`nm:${nameKey}|${canon}`) ||
         null;
       const mu = ouProjectedMean(col.market, player);
-      let pick = dkPick && ouPickIsDraftKings(dkPick) ? dkPick : null;
-      if (!pick) pick = ouSyntheticModelPick(col.market, player, mu);
+      const pick = dkPick && ouPickIsDraftKings(dkPick) ? dkPick : null;
       if (!pick) continue;
       const { playerAvg, marketRatingZ, marketRating100, ratingSource } = ouCachedFieldMarketRating(
         col.market,
@@ -6948,7 +6932,7 @@ function buildOuTable() {
   ensureOuMarketFilterValid();
   const table = document.getElementById("table-ou");
   if (!table) return;
-  updateOuSyntheticOddsNoteVisibility();
+  updateOuDkStatusNoteVisibility();
   initOuTableSortOnce();
   const round = getOuRound();
   const tbody = table.querySelector("tbody");
@@ -7145,9 +7129,6 @@ function buildOuTable() {
       bookWrap.appendChild(bookFb);
       bookTd.appendChild(bookWrap);
       attachBookLogoWithFallback(bookImg, bookFb, SPORTSBOOK_META.draftkings.domain);
-    } else if (pick) {
-      bookTd.textContent = "Model";
-      bookTd.title = "Model projection reference line (-110) — DraftKings line not loaded";
     }
     tr.appendChild(bookTd);
 

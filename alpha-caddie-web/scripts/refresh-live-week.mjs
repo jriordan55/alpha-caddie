@@ -17,13 +17,16 @@
  *   GOLF_SKIP_MARKET_BOOK_CALIBRATION=1, GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL_XLSX=1 (default on live refresh),
  *   GOLF_REFRESH_LIVE_SKIP_DG=1, GOLF_REFRESH_LIVE_SKIP_PGATOUR=1,
  *   GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI=1, GOLF_SKIP_DK_ROUND_AUDIT_CSV=1
+ *   GOLF_REQUIRE_DK_OU=1 (default on refresh:live) — abort if DK scrape returns 0 fresh props
+ *   GOLF_SKIP_DK_OU_VALIDATE=1 — skip DK line-count gate (pre-tournament only)
+ *   DK_HEADLESS=0 on Windows/macOS (dkOuScrapeEnv) — required for Nash API session
  */
 import { spawnSync } from "child_process";
 import { copyFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { fastHistoryBuildEnv } from "./historical-rounds-merge-env.mjs";
-import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
+import { flatVenueProjectionPipelineEnv, dkOuScrapeEnv, requireDkOuEnv } from "./projection-pipeline-env.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -37,7 +40,13 @@ function envTruthy(name, defaultVal) {
 }
 
 function buildBaseEnv() {
-  const e = { ...process.env, ...flatVenueProjectionPipelineEnv(), GOLF_MODEL_DIR: process.env.GOLF_MODEL_DIR?.trim() || REPO_ROOT };
+  const e = {
+    ...process.env,
+    ...flatVenueProjectionPipelineEnv(),
+    ...dkOuScrapeEnv(),
+    ...requireDkOuEnv(),
+    GOLF_MODEL_DIR: process.env.GOLF_MODEL_DIR?.trim() || REPO_ROOT,
+  };
   delete e.GOLF_HISTORICAL_ROUNDS_FULL_HISTORY;
   return e;
 }

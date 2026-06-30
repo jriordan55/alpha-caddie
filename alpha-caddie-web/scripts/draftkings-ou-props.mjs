@@ -9,6 +9,7 @@
  *   GOLF_SKIP_DK_OU=1 — skip entirely
  *   DK_LEAGUE_URL — e.g. https://sportsbook.draftkings.com/leagues/golf/rbc-heritage?category=round
  *   DK_SITE_SEGMENT — default US-MA-SB (set to your state segment if requests fail)
+ *   DK_HEADLESS — 0 = headed browser (required on Windows/macOS; DK blocks headless Chromium with 403)
  *   DK_LEAGUE_ID — optional explicit league id (auto-detected from page if omitted).
  *   DK_SUBCAT_JSON — optional override per stat (skips subcategory probe for keys you set).
  *   DK_OU_DEBUG_MARKETS=1 — extra selection key dump when a category returns markets but 0 parsed rows.
@@ -51,6 +52,39 @@ const SITE_SEGMENT_FALLBACKS = [
   ),
 ];
 
+/** Headless Playwright is blocked by DK bot protection (Nash 403). Desktop defaults to headed. */
+function resolveDkHeadless() {
+  const v = String(process.env.DK_HEADLESS ?? "").trim().toLowerCase();
+  if (v === "0" || v === "false" || v === "no") return false;
+  if (v === "1" || v === "true" || v === "yes") return true;
+  return process.platform !== "win32" && process.platform !== "darwin";
+}
+
+async function launchDkBrowser(headless) {
+  const browser = await chromium.launch({
+    headless,
+    args: headless ? ["--disable-blink-features=AutomationControlled"] : undefined,
+  });
+  const ctx = await browser.newContext({ viewport: { width: 1400, height: 900 }, locale: "en-US" });
+  await ctx.addInitScript(() => {
+    Object.defineProperty(navigator, "webdriver", { get: () => false });
+  });
+  const page = await ctx.newPage();
+  return { browser, ctx, page };
+}
+
+/** Wait until DK's anti-bot handshake completes and Nash API calls succeed in-browser. */
+async function waitForDkNashSession(page) {
+  const ms = Math.min(45000, Math.max(8000, Number(process.env.DK_PAGE_WAIT_MS || 15000)));
+  const ok = await page
+    .waitForResponse(
+      (r) => r.url().includes("sportsbook-nash.draftkings.com") && r.status() === 200,
+      { timeout: ms },
+    )
+    .catch(() => null);
+  if (!ok) await page.waitForTimeout(Math.min(12000, ms));
+}
+
 async function detectSiteSegmentFromPage(page, fallback = SITE) {
   try {
     const seg = await page.evaluate(() => {
@@ -72,27 +106,17 @@ async function detectSiteSegmentFromPage(page, fallback = SITE) {
   return fallback;
 }
 
-/** Nash API: in-page fetch (session cookies) first; Playwright APIRequest fallback. */
+/** Nash API via Playwright request context (session cookies). In-page fetch triggers DK bot blocks. */
 async function fetchMarketsJson(page, api, url) {
-  try {
-    const viaPage = await page.evaluate(async (fetchUrl) => {
-      try {
-        const res = await fetch(fetchUrl, {
-          credentials: "include",
-          headers: { accept: "application/json, text/plain, */*" },
-        });
-        if (!res.ok) return { ok: false, status: res.status };
-        return { ok: true, status: res.status, body: await res.json() };
-      } catch (e) {
-        return { ok: false, status: 0, err: String(e?.message || e) };
-      }
-    }, url);
-    if (viaPage.ok && viaPage.body) return { ok: true, status: viaPage.status, body: viaPage.body };
-    if (viaPage.status && viaPage.status !== 403) return { ok: false, status: viaPage.status };
-  } catch (_) {
-    /* try api */
-  }
-  const res = await api.get(url, { timeout: 60000 });
+  const referer = typeof page?.url === "function" ? page.url() : "https://sportsbook.draftkings.com/";
+  const res = await api.get(url, {
+    timeout: 60000,
+    headers: {
+      accept: "application/json, text/plain, */*",
+      referer,
+      origin: "https://sportsbook.draftkings.com",
+    },
+  });
   if (!res.ok()) return { ok: false, status: res.status() };
   try {
     return { ok: true, status: res.status(), body: await res.json() };
@@ -101,21 +125,10 @@ async function fetchMarketsJson(page, api, url) {
   }
 }
 
-async function resolveSiteSegment(page, api, leagueId, probeSub) {
+async function resolveSiteSegment(page, _api, _leagueId, _probeSub) {
   const detected = await detectSiteSegmentFromPage(page, SITE);
-  const candidates = [...new Set([detected, ...SITE_SEGMENT_FALLBACKS])];
-  const sub = String(probeSub || "11015").trim();
-  for (const seg of candidates) {
-    const u = marketsUrl(leagueId, sub, seg);
-    const r = await fetchMarketsJson(page, api, u);
-    if (r.ok) {
-      if (seg !== SITE && seg !== detected) {
-        console.log(`[draftkings-ou] using site segment ${seg} (detected ${detected || "none"})`);
-      }
-      return seg;
-    }
-  }
-  return detected;
+  if (detected) return detected;
+  return SITE;
 }
 
 const STAT_BY_SEO = {
@@ -155,13 +168,16 @@ const PROBE_SUBS_FIRST = {
 /** When nav omits Round Score tabs, try common PGA + US Open subcategory ids. */
 const FALLBACK_ROUND_SCORE_SUBS = ["11015", "11786", "18987"];
 
-/** U.S. Open @ Shinnecock (league 42731) — field round O/U subcategory ids (2026). */
-const US_OPEN_LEAGUE_SUBCATS = {
+/** Current PGA tour field round O/U subcategory ids (2026 John Deere / US Open pattern). */
+const PGA_FIELD_ROUND_SUBCATS = {
   Birdies: ["19010", "17299"],
   Pars: ["19011", "17300"],
   Bogeys: ["19012", "17301"],
   "Total Score": ["11015", "11786", "18987"],
 };
+
+/** @deprecated alias */
+const US_OPEN_LEAGUE_SUBCATS = PGA_FIELD_ROUND_SUBCATS;
 
 const PROBE_SUBS_ROUND_SCORE = ["11015", "11786", "18987"];
 
@@ -328,12 +344,25 @@ async function selectDraftKingsMarketTab(page, labelPatterns) {
   if (!pats.length) return false;
   try {
     const label = await page.evaluate((patterns) => {
-      const nodes = document.querySelectorAll('button,a,[role="tab"],[role="button"],[role="menuitem"]');
+      const nodes = document.querySelectorAll(
+        'button,a,[role="tab"],[role="button"],[role="menuitem"],[data-test-id*="subcategory"],[class*="subcategory"]',
+      );
       for (const raw of patterns) {
         const re = new RegExp(raw, "i");
         for (const el of nodes) {
           const t = String(el.textContent || "").replace(/\s+/g, " ").trim();
           if (!t || t.length > 48) continue;
+          if (re.test(t)) {
+            el.click();
+            return t;
+          }
+        }
+      }
+      for (const raw of patterns) {
+        const re = new RegExp(raw, "i");
+        for (const el of document.querySelectorAll("span,div")) {
+          const t = String(el.textContent || "").replace(/\s+/g, " ").trim();
+          if (!t || t.length > 36 || t.length < 3) continue;
           if (re.test(t)) {
             el.click();
             return t;
@@ -610,23 +639,45 @@ function propsFromMarketsBody(body, stat, players) {
 }
 
 /**
- * @param {{ players?: unknown[], leagueUrl?: string, leagueId?: string, siteSegment?: string }} [opts]
+ * @param {{ players?: unknown[], leagueUrl?: string, leagueId?: string, siteSegment?: string, headless?: boolean }} [opts]
  * @returns {Promise<{ props: object[], subcatsUsed: Record<string, string>, error?: string }>}
  */
 export async function fetchDraftKingsOuProps(opts = {}) {
   if (process.env.GOLF_SKIP_DK_OU === "1") {
     return { props: [], subcatsUsed: {}, error: "skipped (GOLF_SKIP_DK_OU=1)" };
   }
+  const preferred = opts.headless ?? resolveDkHeadless();
+  const attempts = [preferred];
+  if (preferred) attempts.push(false);
+  let last = { props: [], subcatsUsed: {}, error: "no attempt" };
+  for (let i = 0; i < attempts.length; i++) {
+    const headless = attempts[i];
+    last = await fetchDraftKingsOuPropsOnce({ ...opts, headless });
+    if (last.props.length > 0) return last;
+    const blocked = /403|Nash API failures/i.test(String(last.error || ""));
+    if (!blocked || !headless || i === attempts.length - 1) return last;
+    console.warn(
+      "[draftkings-ou] headless blocked by DK bot protection — retrying with headed browser (DK_HEADLESS=0)",
+    );
+  }
+  return last;
+}
+
+/**
+ * @param {{ players?: unknown[], leagueUrl?: string, leagueId?: string, siteSegment?: string, headless?: boolean }} [opts]
+ */
+async function fetchDraftKingsOuPropsOnce(opts = {}) {
   const players = opts.players;
   const leagueUrl = opts.leagueUrl || DEFAULT_URL;
   const requestedLeagueId = String(opts.leagueId || LEAGUE_ID || "").trim();
   const siteSegmentInitial = opts.siteSegment || SITE;
   let siteSegment = siteSegmentInitial;
+  const headless = opts.headless ?? resolveDkHeadless();
   const targetRound = Math.round(
     Number(opts.targetRound ?? opts.displayRound ?? process.env.DK_TARGET_ROUND ?? NaN),
   );
   console.log(
-    `[draftkings-ou] url=${leagueUrl} site=${siteSegment} players=${Array.isArray(players) ? players.length : 0}${Number.isFinite(targetRound) ? ` targetRound=R${targetRound}` : ""}`,
+    `[draftkings-ou] url=${leagueUrl} site=${siteSegment} headless=${headless} players=${Array.isArray(players) ? players.length : 0}${Number.isFinite(targetRound) ? ` targetRound=R${targetRound}` : ""}`,
   );
 
   let overrides = {};
@@ -641,14 +692,23 @@ export async function fetchDraftKingsOuProps(opts = {}) {
 
   let browser;
   try {
-    browser = await chromium.launch({ headless: true });
+    ({ browser } = await launchDkBrowser(headless));
   } catch (e) {
     return { props: [], subcatsUsed: {}, error: `playwright: ${e.message}` };
   }
 
-  // Default Playwright UA — custom Chrome UA strings often get Nash API 403 on round props.
-  const ctx = await browser.newContext({ viewport: { width: 1400, height: 900 } });
-  const page = await ctx.newPage();
+  const ctx = browser.contexts()[0];
+  const page = ctx.pages()[0] || (await ctx.newPage());
+  const nashCapture = [];
+  page.on("response", async (res) => {
+    const u = res.url();
+    if (!u.includes("sportsbook-nash") || !u.includes("/markets") || res.status() !== 200) return;
+    try {
+      nashCapture.push({ url: u, body: await res.json() });
+    } catch {
+      /* ignore */
+    }
+  });
   try {
     await page.goto(leagueUrl, { waitUntil: "domcontentloaded", timeout: 90000 });
     await page
@@ -656,11 +716,7 @@ export async function fetchDraftKingsOuProps(opts = {}) {
         timeout: 45000,
       })
       .catch(() => {});
-    const extraMs = Math.min(
-      30000,
-      Math.max(2000, Number(process.env.DK_PAGE_WAIT_MS || 8000)),
-    );
-    await page.waitForTimeout(extraMs);
+    await waitForDkNashSession(page);
     if (Number.isFinite(targetRound)) await selectDraftKingsRoundTab(page, targetRound);
   } catch (e) {
     await browser.close();
@@ -820,9 +876,16 @@ export async function fetchDraftKingsOuProps(opts = {}) {
     const fromNav = bySeo[seo] || bySeo[`__stat__${stat}`];
     const fromEnv = overrides[stat];
     const navList = subsByStatNav[stat] || [];
-    addStatSubs(stat, fromEnv || navList.length ? navList : fromNav ? [fromNav] : []);
+    // One primary sub per stat — nav subsByStat lists every title match (2-ball, hole props, etc.).
+    addStatSubs(stat, fromEnv || fromNav || (navList.length ? navList[0] : ""));
     if (!statToSubs[stat]?.length && FALLBACK_SUBCAT_BY_STAT[stat]) {
       addStatSubs(stat, FALLBACK_SUBCAT_BY_STAT[stat]);
+    }
+  }
+
+  if (/\/golf\//i.test(String(leagueUrl || ""))) {
+    for (const [stat, subs] of Object.entries(PGA_FIELD_ROUND_SUBCATS)) {
+      if (!statToSubs[stat]?.length && subs[0]) addStatSubs(stat, subs[0]);
     }
   }
 
@@ -830,7 +893,7 @@ export async function fetchDraftKingsOuProps(opts = {}) {
     leagueId === "42731" || /\/us-open(?:\?|$)/i.test(String(leagueUrl || ""));
   if (isUsOpenLeague) {
     for (const [stat, subs] of Object.entries(US_OPEN_LEAGUE_SUBCATS)) {
-      addStatSubs(stat, subs);
+      addStatSubs(stat, subs[0]);
     }
   }
 
@@ -844,78 +907,82 @@ export async function fetchDraftKingsOuProps(opts = {}) {
     "11015";
   siteSegment = await resolveSiteSegment(page, api, leagueId, probeSub);
   console.log(`[draftkings-ou] site segment=${siteSegment}`);
-  for (const st of ["Putts", "GIR", "Fairways hit", "Birdies", "Pars", "Bogeys"]) {
-    if (overrides[st]) continue;
-    const pref = statToSubs[st]?.[0] || "";
-    const hasProbe = (PROBE_SUBS_FIRST[st] || []).length > 0 || FALLBACK_SUBCAT_BY_STAT[st];
-    if (!pref && !hasProbe) continue;
-    const picked = await findAllSubcategoriesForStat(
-      page,
-      api,
-      leagueId,
-      siteSegment,
-      st,
-      pref,
-      statToSubs[st] || [],
-      allLeagueSubIds,
-      players,
-    );
-    if (picked.length) {
-      statToSubs[st] = picked;
-      subcatsUsed[st] = picked.join(",");
-    } else {
-      const trySubs = [
-        ...new Set(
-          [FALLBACK_SUBCAT_BY_STAT[st], ...(statToSubs[st] || []), ...(PROBE_SUBS_FIRST[st] || [])]
-            .map((x) => String(x || "").trim())
-            .filter(Boolean),
-        ),
-      ];
-      const verified = [];
-      for (const sub of trySubs) {
-        const n = await subcategoryYieldsStat(page, api, leagueId, siteSegment, st, sub, players);
-        if (n > 0) verified.push(sub);
-        await new Promise((r) => setTimeout(r, 45));
-      }
-      if (verified.length) {
-        statToSubs[st] = verified;
-        subcatsUsed[st] = verified.join(",");
-        console.log(`[draftkings-ou] ${st}: using fallback sub(s) ${verified.join(",")}`);
+
+  const subProbeOn = String(process.env.DK_SUB_PROBE || "").trim() === "1";
+  if (subProbeOn) {
+    for (const st of ["Putts", "GIR", "Fairways hit", "Birdies", "Pars", "Bogeys"]) {
+      if (overrides[st]) continue;
+      const pref = statToSubs[st]?.[0] || "";
+      const hasProbe = (PROBE_SUBS_FIRST[st] || []).length > 0 || FALLBACK_SUBCAT_BY_STAT[st];
+      if (!pref && !hasProbe) continue;
+      const picked = await findAllSubcategoriesForStat(
+        page,
+        api,
+        leagueId,
+        siteSegment,
+        st,
+        pref,
+        statToSubs[st] || [],
+        allLeagueSubIds,
+        players,
+      );
+      if (picked.length) {
+        statToSubs[st] = picked;
+        subcatsUsed[st] = picked.join(",");
       } else {
-        delete statToSubs[st];
-        delete subcatsUsed[st];
+        const trySubs = [
+          ...new Set(
+            [FALLBACK_SUBCAT_BY_STAT[st], ...(statToSubs[st] || []), ...(PROBE_SUBS_FIRST[st] || [])]
+              .map((x) => String(x || "").trim())
+              .filter(Boolean),
+          ),
+        ];
+        const verified = [];
+        for (const sub of trySubs) {
+          const n = await subcategoryYieldsStat(page, api, leagueId, siteSegment, st, sub, players);
+          if (n > 0) verified.push(sub);
+          await new Promise((r) => setTimeout(r, 45));
+        }
+        if (verified.length) {
+          statToSubs[st] = verified;
+          subcatsUsed[st] = verified.join(",");
+          console.log(`[draftkings-ou] ${st}: using fallback sub(s) ${verified.join(",")}`);
+        } else {
+          delete statToSubs[st];
+          delete subcatsUsed[st];
+        }
       }
     }
-  }
 
-  if (tsOv == null && roundScoreSubs.length) {
-    await selectDraftKingsMarketTab(page, ["^Round Score$", "Round Score"]);
-    if (Number.isFinite(targetRound)) await selectDraftKingsRoundTab(page, targetRound);
-    const probedScore = await findAllSubcategoriesForStat(
-      page,
-      api,
-      leagueId,
-      siteSegment,
-      "Total Score",
-      roundScoreSubs[0] || "",
-      roundScoreSubs,
-      [...new Set([...roundScoreSubs, ...PROBE_SUBS_ROUND_SCORE, ...allLeagueSubIds])],
-      players,
-    );
-    if (probedScore.length) {
-      roundScoreSubs = probedScore;
-    } else {
-      const verifiedScore = [];
-      for (const sub of [
-        ...new Set([...roundScoreSubs, ...PROBE_SUBS_ROUND_SCORE, ...allLeagueSubIds].map(String).filter(Boolean)),
-      ].slice(0, 40)) {
-        const n = await subcategoryYieldsStat(page, api, leagueId, siteSegment, "Total Score", sub, players);
-        if (n > 0) verifiedScore.push(sub);
-        await new Promise((r) => setTimeout(r, 45));
-      }
-      if (verifiedScore.length) {
-        roundScoreSubs = verifiedScore;
-        console.log(`[draftkings-ou] Total Score: verified sub(s) ${verifiedScore.join(",")}`);
+    if (tsOv == null && roundScoreSubs.length) {
+      await selectDraftKingsMarketTab(page, ["^Round Score$", "Round Score"]);
+      if (Number.isFinite(targetRound)) await selectDraftKingsRoundTab(page, targetRound);
+      const probedScore = await findAllSubcategoriesForStat(
+        page,
+        api,
+        leagueId,
+        siteSegment,
+        "Total Score",
+        roundScoreSubs[0] || "",
+        roundScoreSubs,
+        [...new Set([...roundScoreSubs, ...PROBE_SUBS_ROUND_SCORE, ...allLeagueSubIds])],
+        players,
+      );
+      if (probedScore.length) {
+        roundScoreSubs = probedScore;
+      } else {
+        const verifiedScore = [];
+        for (const sub of [
+          ...new Set([...roundScoreSubs, ...PROBE_SUBS_ROUND_SCORE, ...allLeagueSubIds].map(String).filter(Boolean)),
+        ].slice(0, 40)) {
+          const n = await subcategoryYieldsStat(page, api, leagueId, siteSegment, "Total Score", sub, players);
+          if (n > 0) verifiedScore.push(sub);
+          await new Promise((r) => setTimeout(r, 45));
+        }
+        if (verifiedScore.length) {
+          roundScoreSubs = verifiedScore;
+          console.log(`[draftkings-ou] Total Score: verified sub(s) ${verifiedScore.join(",")}`);
+        }
       }
     }
   }
@@ -937,17 +1004,16 @@ export async function fetchDraftKingsOuProps(opts = {}) {
   const tabCaptureOn = String(process.env.DK_SKIP_TAB_CAPTURE || "").trim() !== "1";
   const capturedStats = new Set();
   try {
-    if (tabCaptureOn) {
-      if (Number.isFinite(targetRound)) await selectDraftKingsRoundTab(page, targetRound);
-      for (const [stat, patterns] of Object.entries(STAT_TAB_PATTERNS)) {
-        const chunk = await fetchMarketsBySelectingTab(page, patterns, stat, players, targetRound);
+    for (const { body } of nashCapture) {
+      for (const stat of ["Birdies", "Pars", "Bogeys", "GIR", "Fairways hit", "Putts", "Total Score"]) {
+        if (capturedStats.has(stat) || all.some((p) => p.market === stat)) continue;
+        const chunk = propsFromMarketsBody(body, stat, players);
         if (chunk.length) {
           all.push(...chunk);
           capturedStats.add(stat);
-          subcatsUsed[stat] = subcatsUsed[stat] || "tab-capture";
-          console.log(`[draftkings-ou] ${stat}: captured ${chunk.length} prop row(s) via DK tab`);
+          subcatsUsed[stat] = subcatsUsed[stat] || "network-capture";
+          console.log(`[draftkings-ou] ${stat}: captured ${chunk.length} prop row(s) from page load`);
         }
-        await page.waitForTimeout(200);
       }
     }
 
@@ -967,39 +1033,47 @@ export async function fetchDraftKingsOuProps(opts = {}) {
         if (!Array.isArray(body?.markets)) apiBadShape++;
         const chunk = propsFromMarketsBody(body, stat, players);
         all.push(...chunk);
+        if (chunk.length) subcatsUsed[stat] = subcatsUsed[stat] || String(sub);
         if (!chunk.length && Array.isArray(body?.markets) && body.markets.length)
           logUnparsedSample(stat, body, "no-rows");
-        if (j < subs.length - 1) await page.waitForTimeout(250);
+        if (j < subs.length - 1) await page.waitForTimeout(120);
       }
-      if (i < entries.length - 1) await page.waitForTimeout(250);
+      if (i < entries.length - 1) await page.waitForTimeout(120);
     }
-    if (!capturedStats.has("Total Score")) {
-      await selectDraftKingsMarketTab(page, ["^Round Score$", "Round Score"]);
-      if (Number.isFinite(targetRound)) await selectDraftKingsRoundTab(page, targetRound);
 
+    if (!capturedStats.has("Total Score") && roundScoreSubs.length) {
       for (let i = 0; i < roundScoreSubs.length; i++) {
-      const sub = roundScoreSubs[i];
-      const u = marketsUrl(leagueId, sub, siteSegment);
-      let res = await fetchMarketsJson(page, api, u);
-      if (!res.ok && res.status === 403) {
-        await selectDraftKingsMarketTab(page, ["^Round Score$", "Round Score"]);
-        if (Number.isFinite(targetRound)) await selectDraftKingsRoundTab(page, targetRound);
-        res = await fetchMarketsJson(page, api, u);
+        const sub = roundScoreSubs[i];
+        const u = marketsUrl(leagueId, sub, siteSegment);
+        const res = await fetchMarketsJson(page, api, u);
+        if (!res.ok) {
+          apiFail++;
+          console.warn(`[draftkings-ou] round-score markets HTTP ${res.status} sub=${sub}`);
+          continue;
+        }
+        const body = res.body;
+        if (!Array.isArray(body?.markets)) apiBadShape++;
+        const chunkTs = propsFromMarketsBody(body, "Total Score", players);
+        all.push(...chunkTs);
+        if (chunkTs.length) subcatsUsed["Total Score"] = subcatsUsed["Total Score"] || String(sub);
+        if (!chunkTs.length && Array.isArray(body?.markets) && body.markets.length)
+          logUnparsedSample("Total Score", body, "no-rows");
+        if (i < roundScoreSubs.length - 1) await page.waitForTimeout(120);
       }
-      if (!res.ok) {
-        apiFail++;
-        console.warn(`[draftkings-ou] round-score markets HTTP ${res.status} sub=${sub}`);
-        continue;
-      }
-      const body = res.body;
-      if (!Array.isArray(body?.markets)) apiBadShape++;
-      const chunkTs = propsFromMarketsBody(body, "Total Score", players);
-      all.push(...chunkTs);
-      if (!chunkTs.length && Array.isArray(body?.markets) && body.markets.length)
-        logUnparsedSample("Total Score", body, "no-rows");
-      const prev = subcatsUsed["Total Score"];
-      subcatsUsed["Total Score"] = prev ? `${prev},${sub}` : sub;
-      if (i < roundScoreSubs.length - 1) await page.waitForTimeout(250);
+    }
+
+    if (tabCaptureOn) {
+      if (Number.isFinite(targetRound)) await selectDraftKingsRoundTab(page, targetRound);
+      for (const [stat, patterns] of Object.entries(STAT_TAB_PATTERNS)) {
+        if (capturedStats.has(stat) || all.some((p) => p.market === stat)) continue;
+        const chunk = await fetchMarketsBySelectingTab(page, patterns, stat, players, targetRound);
+        if (chunk.length) {
+          all.push(...chunk);
+          capturedStats.add(stat);
+          subcatsUsed[stat] = subcatsUsed[stat] || "tab-capture";
+          console.log(`[draftkings-ou] ${stat}: captured ${chunk.length} prop row(s) via DK tab`);
+        }
+        await page.waitForTimeout(200);
       }
     }
   } finally {

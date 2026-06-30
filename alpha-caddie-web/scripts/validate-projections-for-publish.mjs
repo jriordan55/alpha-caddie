@@ -13,7 +13,13 @@ const WEB_ROOT = join(__dirname, "..");
 const projPath = join(WEB_ROOT, "projections.json");
 
 const DK_CORE_MARKETS = ["Total Score", "Birdies", "Pars", "Bogeys"];
-const DK_MIN_LINES_PER_MARKET = 20;
+/** DK often posts fewer Round Score lines than counting stats — use per-market floors. */
+const DK_MIN_LINES_BY_MARKET = {
+  "Total Score": 10,
+  Birdies: 20,
+  Pars: 10,
+  Bogeys: 10,
+};
 /** Match course-round-adjustments event-week vs historical venue guard. */
 const EVENT_WEEK_VENUE_MAX_GAP_STROKES = 2.25;
 
@@ -28,8 +34,12 @@ function historicalVenueScoreForRound(basis, rnd) {
 }
 
 /** In-week live scoring anchor when trustworthy; else historical venue round average. */
-function totalScoreTargetForValidation(basis, displayRound, coursePar) {
+function totalScoreTargetForValidation(basis, displayRound, coursePar, opts = {}) {
   const hist = historicalVenueScoreForRound(basis, displayRound);
+  // push:live applies book cal + live scratch after the pre-tournament event_week anchor — venue hist band.
+  if (opts.liveInPlay && Number.isFinite(hist)) {
+    return { target: hist, eventWeekTrusted: false };
+  }
   const ew = num(basis?.event_week_field_avg_score_by_round?.[String(displayRound)], NaN);
   if (Number.isFinite(ew)) {
     if (!Number.isFinite(hist) || Math.abs(ew - hist) <= EVENT_WEEK_VENUE_MAX_GAP_STROKES) {
@@ -167,16 +177,19 @@ if (Number.isFinite(avgBirdies) && Number.isFinite(avgBogeys) && avgBirdies + av
 const props = Array.isArray(proj.props) ? proj.props : [];
 const dkSlug = String(proj.dk_league_slug || "").trim();
 const skipDkGate = envTruthy("GOLF_SKIP_DK_OU_VALIDATE", false);
+const requireDk = envTruthy("GOLF_REQUIRE_DK_OU", false);
 const anyDkProps = props.some((r) => String(r.source || "").trim().toLowerCase() === "draftkings");
 
-if (skipDkGate || !anyDkProps) {
-  const reason = skipDkGate
-    ? "GOLF_SKIP_DK_OU_VALIDATE=1"
-    : "DraftKings has not posted round O/U yet (pre-tournament)";
+if (skipDkGate) {
   console.warn(
-    `[validate:projections] WARN: skipping DK O/U coverage gate (${reason}). Re-run fetch:book-odds after DK posts lines.`,
+    `[validate:projections] WARN: skipping DK O/U coverage gate (GOLF_SKIP_DK_OU_VALIDATE=1).`,
   );
-} else {
+} else if (requireDk || anyDkProps) {
+  if (!anyDkProps) {
+    fail(
+      "GOLF_REQUIRE_DK_OU=1 but projections.props has 0 draftkings rows — DK scrape failed (see fetch:book-odds logs; on Windows use DK_HEADLESS=0 and Playwright Chromium)",
+    );
+  }
   for (const mkt of DK_CORE_MARKETS) {
     const dkLines = props.filter(
       (r) =>
@@ -191,12 +204,16 @@ if (skipDkGate || !anyDkProps) {
     if (fake.length) {
       fail(`${fake.length} non-DK ${mkt} props in projections.json — run fetch:book-odds (DK only for this market)`);
     }
-    if (dkLines.length < DK_MIN_LINES_PER_MARKET) {
+    if (dkLines.length < (DK_MIN_LINES_BY_MARKET[mkt] ?? 20)) {
       fail(
-        `DraftKings ${mkt}: only ${dkLines.length} lines (need ≥${DK_MIN_LINES_PER_MARKET}) — check DK league slug${dkSlug ? ` (${dkSlug})` : ""} / Playwright scrape`,
+        `DraftKings ${mkt}: only ${dkLines.length} lines (need ≥${DK_MIN_LINES_BY_MARKET[mkt] ?? 20}) — check DK league slug${dkSlug ? ` (${dkSlug})` : ""} / Playwright scrape`,
       );
     }
   }
+} else {
+  console.warn(
+    "[validate:projections] WARN: skipping DK O/U coverage gate (no draftkings props yet — pre-tournament). Set GOLF_REQUIRE_DK_OU=1 on push:live to enforce.",
+  );
 }
 
 const outrightBake = proj.outright_sim_probs;
@@ -210,10 +227,12 @@ if (outrightN < 20) {
 }
 
 const avgTotal = avg("total_score");
+const liveInPlay = proj.in_play_affects_round_odds === true;
 const { target: scoreTarget, eventWeekTrusted } = totalScoreTargetForValidation(
   basis,
   displayRound,
   coursePar,
+  { liveInPlay },
 );
 const minTotal = scoreTarget - (eventWeekTrusted ? 1.0 : 1.75);
 const maxTotal = scoreTarget + (eventWeekTrusted ? 0.55 : 2.75);
@@ -228,7 +247,11 @@ if (Number.isFinite(avgTotal) && avgTotal > maxTotal) {
   );
 }
 
-const targetLabel = eventWeekTrusted ? "event-week" : "venue-hist";
+const targetLabel = liveInPlay
+  ? "venue-hist (live in-play)"
+  : eventWeekTrusted
+    ? "event-week"
+    : "venue-hist";
 console.log(
   `[validate:projections] OK — par ${coursePar} (${parSource}), R${displayRound}: ${roundRows.length} golfers; avg total ${Number.isFinite(avgTotal) ? avgTotal.toFixed(2) : "?"} (target ${scoreTarget.toFixed(2)} ${targetLabel}); avg bird/pars/bog ${avgBirdies.toFixed(2)}/${avgPars.toFixed(2)}/${avgBogeys.toFixed(2)}; outright MC baked: ${outrightN} players; DK lines: ${DK_CORE_MARKETS.map((m) => `${m}=${props.filter((r) => r.source === "draftkings" && r.market === m).length}`).join(", ")}`,
 );
