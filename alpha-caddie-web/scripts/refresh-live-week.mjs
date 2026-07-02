@@ -2,7 +2,7 @@
 /**
  * Live-week refresh for `npm run push:live` — updates projections, live-in-play, book odds,
  * DK props, field-updates tee times, venue history + skill repair, within-event form, weather bake,
- * unified factors, pin sheet, venue field reconcile, vs-actual export, walk-forward OOS report
+ * unified factors, pin sheet, venue field reconcile (+ fairway driving-acc refresh), vs-actual export, walk-forward OOS report
  * (fit on prior events → apply to live projections), Parlay Pro correlations, walk-forward OOS report, and fast history patches.
  *
  *   npm run refresh:live

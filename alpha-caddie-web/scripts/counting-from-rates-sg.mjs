@@ -136,6 +136,65 @@ export function calibrateFairwayFieldMean(players, opts = {}) {
   return rows.length;
 }
 
+/** Re-derive fairways from driving accuracy / SG:OTT (fixes stale dg_fairway_pct on live rows). */
+export function refreshFairwaysFromDrivingAccuracy(players, opts = {}) {
+  const nFw = Math.round(num(opts.nFairwayHoles, 14)) || 14;
+  /** @type {Map<number, number[]>} */
+  const ottByRound = new Map();
+  for (const row of players || []) {
+    const rnd = Math.round(num(row.round, NaN));
+    const ott = num(row.sg_ott, NaN);
+    if (!Number.isFinite(rnd) || !Number.isFinite(ott)) continue;
+    if (!ottByRound.has(rnd)) ottByRound.set(rnd, []);
+    ottByRound.get(rnd).push(ott);
+  }
+  const fieldMedianOtt = (rnd) => {
+    const vals = ottByRound.get(rnd);
+    if (!vals?.length) return num(opts.fieldMeans?.sg_ott, 0);
+    vals.sort((a, b) => a - b);
+    const mid = Math.floor(vals.length / 2);
+    return vals.length % 2 === 1 ? vals[mid] : (vals[mid - 1] + vals[mid]) / 2;
+  };
+  let n = 0;
+  for (const row of players || []) {
+    if (!row || typeof row !== "object") continue;
+    const rnd = Math.round(num(row.round, NaN));
+    const dgPct = num(row.dg_fairway_pct, NaN);
+    const drvAcc = num(row.driving_accuracy, NaN);
+    const circularDrv =
+      Number.isFinite(dgPct) &&
+      dgPct >= 0.15 &&
+      Number.isFinite(drvAcc) &&
+      Math.abs(drvAcc / 100 - dgPct) < 0.012;
+    const dgValid = Number.isFinite(dgPct) && dgPct >= 0.15 && dgPct <= 0.88 && !circularDrv;
+    const skRow = {
+      sg_ott: row.sg_ott,
+      sg_app: row.sg_app,
+      sg_putt: row.sg_putt,
+      sg_arg: row.sg_arg,
+      sg_total: row.sg_total,
+      driving_acc: row.driving_acc,
+      driving_accuracy: circularDrv || dgValid ? NaN : row.driving_accuracy,
+      avg_fairways: row.avg_fairways,
+    };
+    if (dgValid) skRow.dg_fairway_pct = dgPct;
+    const fw = fairwaysFromDrivingAccuracyAndCourse({
+      skRow,
+      muSg: num(row.mu_sg, num(row.implied_mu_sg, 0)),
+      nFairwayHoles: nFw,
+      fieldMeans: { sg_ott: fieldMedianOtt(rnd) },
+    });
+    if (!Number.isFinite(fw)) continue;
+    const prev = num(row.fairways, NaN);
+    row.fairways = fw;
+    const rate01 = clamp(fw / nFw, 0.28, 0.88);
+    row.dg_fairway_pct = Math.round(rate01 * 1000) / 1000;
+    row.driving_accuracy = Math.round(rate01 * 1000) / 10;
+    if (!Number.isFinite(prev) || Math.abs(prev - fw) > 0.04) n++;
+  }
+  return n;
+}
+
 /** Shrink player fairway spread toward field mean (weak cross-player signal). */
 export function shrinkFairwayFieldSpread(players, opts = {}) {
   const round = opts.round;
@@ -452,7 +511,7 @@ function playerFairwayRate01FromDrivingAccuracy(sk, liveTrad, nFw, fieldMeans, m
     }
   }
   if (!Number.isFinite(rate01)) {
-    const dOtt = sgDelta(sk, fieldMeans, "sg_ott");
+    const dOtt = clamp(sgDelta(sk, fieldMeans, "sg_ott"), -0.28, 0.28);
     rate01 = clamp(DG_TOUR_AVG_FAIRWAY_RATE + 0.72 * dOtt + 0.08 * num(mu, 0), 0.32, 0.88);
   }
   return rate01;

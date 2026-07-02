@@ -31,26 +31,34 @@ export function traditionalRate01(raw, nHoles = 18) {
   return NaN;
 }
 
-/** skill-ratings `driving_acc` / `driving_accuracy`: pp vs field, not always a 0–1 fairway share. */
+/** skill-ratings `driving_acc` / `driving_accuracy`: pp vs field, or 0–1 rate from historical CSV. */
+function fairwayRate01FromDrivingAccPp(pp, tourAvg = DG_TOUR_AVG_FAIRWAY_RATE) {
+  const v = num(pp, NaN);
+  if (!Number.isFinite(v)) return NaN;
+  if (v >= 0.35 && v <= 0.88) return v;
+  if (Math.abs(v) <= 0.55) return Math.max(0.35, Math.min(0.88, tourAvg + v));
+  if (Math.abs(v) <= 25) return Math.max(0.35, Math.min(0.88, tourAvg + v / 100));
+  return NaN;
+}
+
 export function fairwayRate01FromSkillRatingsPp(skRow, tourAvg = DG_TOUR_AVG_FAIRWAY_RATE, nFw = 14) {
   if (!skRow || typeof skRow !== "object") return NaN;
   const nh = Math.round(num(nFw, 14)) || 14;
 
-  const accPp = num(skRow.driving_acc, NaN);
-  if (Number.isFinite(accPp) && accPp > -0.55 && accPp < 0.55) {
-    return Math.max(0.35, Math.min(0.88, tourAvg + accPp));
+  for (const key of ["driving_acc", "driving_accuracy"]) {
+    const fromPp = fairwayRate01FromDrivingAccPp(skRow[key], tourAvg);
+    if (Number.isFinite(fromPp)) return fromPp;
   }
 
   const acc = num(skRow.driving_accuracy, NaN);
   if (Number.isFinite(acc)) {
     if (acc >= 2 && acc <= nh + 1) return acc / nh;
     if (acc > 0.15 && acc < 0.88) return acc;
-    if (acc > 1 && acc <= 100) return acc / 100;
+    if (acc >= 45 && acc <= 88) return acc / 100;
   }
 
-  for (const a of [accPp, acc].filter((x) => Number.isFinite(x))) {
-    if (a > 0.15 && a < 0.88) return a;
-  }
+  const accPp = num(skRow.driving_acc, NaN);
+  if (Number.isFinite(accPp) && accPp > 0.15 && accPp < 0.88) return accPp;
   return NaN;
 }
 

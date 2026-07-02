@@ -102,7 +102,8 @@ function histRoundToHistoryRec(row) {
     eagles_or_better: num(row.eagles_or_better ?? row.eagles, NaN),
     doubles_or_worse: num(row.doubles_or_worse ?? row.doubles, NaN),
     gir: num(row.gir, NaN),
-    fairways: num(row.driving_acc, NaN),
+    driving_acc: num(row.driving_acc, NaN),
+    fairways: num(row.fairways, NaN),
     putts: num(row.putts, NaN),
     event_completed: String(row.event_completed || ""),
   };
@@ -174,7 +175,9 @@ function skillRowFromHistory(rec) {
   );
   const fwR = recencyWeightedMean(
     rounds.map((r) => ({
-      v: traditionalRate01(r.fairways ?? r.driving_acc, N_FAIRWAY_HOLES),
+      v:
+        traditionalRate01(r.driving_acc, N_FAIRWAY_HOLES) ??
+        traditionalRate01(r.fairways, N_FAIRWAY_HOLES),
     })),
     "v",
   );
@@ -201,13 +204,7 @@ function skillRowFromHistory(rec) {
     "v",
   );
   const daRaw = recencyWeightedMean(rounds, "driving_acc");
-  if (Number.isFinite(daRaw)) {
-    if (daRaw > -0.55 && daRaw < 0.55) sk.driving_acc = daRaw;
-    else {
-      const daRate = traditionalRate01(daRaw, N_FAIRWAY_HOLES);
-      if (Number.isFinite(daRate)) sk.driving_accuracy = daRate * 100;
-    }
-  }
+  if (Number.isFinite(daRaw)) sk.driving_acc = daRaw;
   const dist = recencyWeightedMean(rounds, "driving_dist");
   if (Number.isFinite(dist) && dist >= 235 && dist <= 380) sk.driving_distance = dist;
   sk.counting_rounds = rounds.filter((r) => Number.isFinite(num(r.birdies, NaN))).length;
@@ -654,6 +651,7 @@ export async function buildFullModelMuMapForEvent({
       avg_gir: row.avg_gir,
       avg_fairways: row.avg_fairways,
       counting_rounds: row.counting_rounds,
+      driving_acc: row.driving_acc,
       driving_distance: row.driving_distance,
     };
     const liveTrad = rollingTrad.get(row.dg_id) || null;

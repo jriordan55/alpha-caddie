@@ -2678,19 +2678,13 @@ async function main() {
       }
       if (Number.isFinite(row.dg_gir_pct)) pl.dg_gir_pct = row.dg_gir_pct;
       if (Number.isFinite(row.dg_fairway_pct)) pl.dg_fairway_pct = row.dg_fairway_pct;
-      const fwPct = Number.isFinite(row.dg_fairway_pct)
-        ? row.dg_fairway_pct * 100
-        : Number.isFinite(row.driving_accuracy)
-          ? row.driving_accuracy
-          : NaN;
-      if (Number.isFinite(fwPct)) {
-        pl.driving_accuracy = Math.round(fwPct * 10) / 10;
-      } else {
-        const fw = st.fairways;
-        if (Number.isFinite(fw) && fw > 1.02) {
-          pl.driving_accuracy = Math.round(((fw / fairwayHolesThisCourse) * 100) * 10) / 10;
-          pl.dg_fairway_pct = Math.round((fw / fairwayHolesThisCourse) * 1000) / 1000;
-        }
+      if (Number.isFinite(row.driving_acc)) {
+        pl.driving_acc = Math.round(row.driving_acc * 1000) / 1000;
+      }
+      const fw = st.fairways;
+      if (Number.isFinite(fw) && fw > 1.02) {
+        pl.driving_accuracy = Math.round(((fw / fairwayHolesThisCourse) * 100) * 10) / 10;
+        pl.dg_fairway_pct = Math.round((fw / fairwayHolesThisCourse) * 1000) / 1000;
       }
       roundRows.push(pl);
     }

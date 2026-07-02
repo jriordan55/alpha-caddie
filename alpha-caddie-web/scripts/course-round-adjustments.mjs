@@ -14,7 +14,7 @@ import {
   applyEventPropBookAlignment,
   marketBookCalibrationEnabled,
 } from "./market-book-calibration.mjs";
-import { calibrateFairwayFieldMean, calibrateBirdiesFieldMean, calibrateGirFieldMean } from "./counting-from-rates-sg.mjs";
+import { calibrateFairwayFieldMean, calibrateBirdiesFieldMean, calibrateGirFieldMean, refreshFairwaysFromDrivingAccuracy } from "./counting-from-rates-sg.mjs";
 
 function num(x, fallback = NaN) {
   const n = Number(x);
@@ -775,6 +775,10 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
     });
   }
   const basis = meta.projection_course_basis;
+  if (opts.skipFairwayRefresh !== true) {
+    const nFw = Math.round(num(basis.fairway_holes_modeled, 14)) || 14;
+    refreshFairwaysFromDrivingAccuracy(payload?.players || [], { nFairwayHoles: nFw });
+  }
   const coursePar18 = Math.round(num(payload?.course_par_18 ?? meta?.course_par_18, NaN)) || 72;
   const histCalib = payload?.historical_projection_calibration;
 
