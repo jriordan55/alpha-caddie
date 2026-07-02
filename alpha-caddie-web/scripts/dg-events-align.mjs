@@ -72,6 +72,10 @@ export function normEventName(s) {
 }
 
 export function eventsLikelySame(a, b) {
+  const fa = foldComparableTitle(a);
+  const fb = foldComparableTitle(b);
+  if (fa && fb && (fa === fb || fa.includes(fb) || fb.includes(fa))) return true;
+
   const x = normEventName(a);
   const y = normEventName(b);
   if (!x || !y) return false;

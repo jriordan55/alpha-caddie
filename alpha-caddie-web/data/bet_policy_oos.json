@@ -1,0 +1,106 @@
+{
+  "generated_at": "2026-07-01T02:23:14.803Z",
+  "target_roi_pct": 10,
+  "outcome_sigma_scales": {
+    "Total score": 1.45,
+    "Birdies": 1.015,
+    "GIR": 1.45,
+    "Fairways hit": 1.45
+  },
+  "policies": {
+    "GIR": {
+      "market": "GIR",
+      "minEv": 7.5,
+      "minGap": 1.5,
+      "side": "both",
+      "skipEventSubstrings": []
+    },
+    "Birdies": {
+      "market": "Birdies",
+      "minEv": 25,
+      "minGap": 0.5,
+      "side": "both",
+      "skipEventSubstrings": []
+    },
+    "Total score": {
+      "market": "Total score",
+      "minEv": 17.5,
+      "minGap": 0.5,
+      "side": "both",
+      "skipEventSubstrings": [
+        "Schwab"
+      ]
+    },
+    "Fairways hit": {
+      "market": "Fairways hit",
+      "minEv": 7.5,
+      "minGap": 1.5,
+      "side": "under",
+      "minGirMinusFw": 2.5,
+      "skipEventSubstrings": []
+    }
+  },
+  "per_market_oos": {
+    "GIR": {
+      "roi_pct": 10.9,
+      "bets": 188,
+      "units": 20.55,
+      "hit_pct": 61.7,
+      "policy": {
+        "market": "GIR",
+        "minEv": 7.5,
+        "minGap": 1.5,
+        "side": "both",
+        "skipEventSubstrings": []
+      }
+    },
+    "Birdies": {
+      "roi_pct": 10.7,
+      "bets": 71,
+      "units": 7.56,
+      "hit_pct": 54.9,
+      "policy": {
+        "market": "Birdies",
+        "minEv": 25,
+        "minGap": 0.5,
+        "side": "both",
+        "skipEventSubstrings": []
+      }
+    },
+    "Total score": {
+      "roi_pct": 10.4,
+      "bets": 192,
+      "units": 20.01,
+      "hit_pct": 58.9,
+      "policy": {
+        "market": "Total score",
+        "minEv": 17.5,
+        "minGap": 0.5,
+        "side": "both",
+        "skipEventSubstrings": [
+          "Schwab"
+        ]
+      }
+    },
+    "Fairways hit": {
+      "roi_pct": 17.1,
+      "bets": 75,
+      "units": 12.83,
+      "hit_pct": 66.7,
+      "policy": {
+        "market": "Fairways hit",
+        "minEv": 7.5,
+        "minGap": 1.5,
+        "side": "under",
+        "minGirMinusFw": 2.5,
+        "skipEventSubstrings": []
+      }
+    }
+  },
+  "combined_oos": {
+    "roi_pct": 11.6,
+    "bets": 526,
+    "units": 60.95,
+    "hit_pct": 60.5
+  }
+}

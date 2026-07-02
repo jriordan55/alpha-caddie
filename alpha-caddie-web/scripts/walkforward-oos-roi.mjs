@@ -1,5 +1,5 @@
 /**
- * Walk-forward out-of-sample ROI (no outcome fitting, no live-week training).
+ * Walk-forward out-of-sample ROI — raw model μ vs pre-round DK only (no book calibration).
  */
 import { readFileSync, existsSync, createReadStream } from "fs";
 import { dirname, join } from "path";
@@ -7,12 +7,21 @@ import { fileURLToPath } from "url";
 import { parse } from "csv-parse";
 import { eventsLikelySame } from "./dg-events-align.mjs";
 import {
-  MARKET_BOOK_CALIBRATION_MARKETS,
-  MARKETS_SKIP_BOOK_CALIBRATION,
-  fitMarketBookParamsFromDeltas,
-  marketSkipsBookCalibration,
-} from "./market-book-calibration.mjs";
-import { EXPORT_MARKETS, num, sigmaForOu } from "./round-projection-mu.mjs";
+  DEFAULT_MIN_EV_PCT,
+  isActionableMarket,
+  minEvForMarket,
+  qualifiesBet,
+} from "./bet-policy.mjs";
+import { RAW_ROUND_SD } from "./projection-core.mjs";
+import { EXPORT_MARKETS, num, modelProbOver } from "./round-projection-mu.mjs";
+import {
+  fitOutcomeMuBiasCorrections,
+  fitOutcomeSigmaScales,
+  outcomeSigmaScale,
+  setOutcomeMuBiasCorrections,
+  setOutcomeSigmaScales,
+} from "./projection-stat-model.mjs";
+import { MARKET_BOOK_CALIBRATION_MARKETS } from "./market-book-calibration.mjs";
 import { capDirectionalPostedEdges, pickBetSide, pnlForResult } from "../projection-tracker/ev-math.mjs";
 
 const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -55,19 +64,8 @@ function loadCurrentLiveEventName() {
   }
 }
 
-function loadEventCalibrationFromDisk() {
-  if (!existsSync(WALKFORWARD_OOS_JSON)) return {};
-  try {
-    const j = JSON.parse(readFileSync(WALKFORWARD_OOS_JSON, "utf8"));
-    return j?.event_calibration && typeof j.event_calibration === "object" ? j.event_calibration : {};
-  } catch {
-    return {};
-  }
-}
-
 export async function loadWalkForwardBetRows() {
   if (!existsSync(VS)) throw new Error(`Missing ${VS}`);
-  const eventCalibration = loadEventCalibrationFromDisk();
   /** @type {object[]} */
   const rows = [];
   await new Promise((resolve, reject) => {
@@ -81,19 +79,22 @@ export async function loadWalkForwardBetRows() {
         if (!event) return;
         const t = parseMs(row.projections_updated_at) || parseMs(row.exported_at);
         const meta = { projection_course_basis: { fairway_holes_modeled: 14 } };
-        const eventCalib = eventCalibration[event] || null;
-        const linesPreCalibrated = Boolean(eventCalib);
+        const context = {
+          gir_minus_fw: num(row.gir_minus_fw, NaN),
+          round: Math.round(num(row.round, NaN)),
+        };
         for (const market of MARKET_BOOK_CALIBRATION_MARKETS) {
           const cols = MARKET_COLS[market];
           if (!cols) continue;
           const modelLine = parseLine(row[cols.model]);
           const bookLine = parseLine(row[cols.book]);
           if (!Number.isFinite(modelLine) || !Number.isFinite(bookLine)) continue;
-          const shift = eventCalib?.[market]?.mu_shift ?? 0;
-          const rawModelLine = Number.isFinite(shift) && shift !== 0 ? modelLine - shift : modelLine;
           const stubRow =
             market === "Total score"
-              ? { total_score: modelLine, round_sd: 2.75 }
+              ? {
+                  total_score: modelLine,
+                  round_sd: RAW_ROUND_SD * outcomeSigmaScale("Total score"),
+                }
               : market === "Birdies"
                 ? { birdies: modelLine }
                 : market === "Bogeys"
@@ -108,9 +109,7 @@ export async function loadWalkForwardBetRows() {
             eventMs: t,
             market,
             modelLine,
-            rawModelLine,
-            modelBookDelta: rawModelLine - bookLine,
-            linesPreCalibrated,
+            modelBookDelta: modelLine - bookLine,
             bookLine,
             overOdds: num(row[cols.overOdds], NaN),
             underOdds: num(row[cols.underOdds], NaN),
@@ -118,6 +117,7 @@ export async function loadWalkForwardBetRows() {
             underRes: String(row[cols.underRes] || "").trim().toUpperCase(),
             stubRow,
             meta,
+            context,
           });
         }
       })
@@ -161,57 +161,36 @@ function implied(am) {
   return 100 / (v + 100);
 }
 
-export function fitParamsFromTrainRows(trainRows) {
-  const markets = {};
-  for (const market of MARKET_BOOK_CALIBRATION_MARKETS) {
-    const deltas = trainRows.filter((r) => r.market === market).map((r) => r.modelBookDelta);
-    markets[market] = fitMarketBookParamsFromDeltas(market, deltas);
-  }
-  return markets;
-}
-
-/**
- * Per-event walk-forward book calibration (fit on prior events only).
- * @returns {Map<string, Record<string, { mu_shift: number, sigma_scale: number }> | null>}
- */
-export function buildWalkForwardCalibrationByEvent(betRows, { minTrainRows = 80 } = {}) {
-  const events = eventOrderFromRows(betRows);
-  /** @type {Map<string, Record<string, { mu_shift: number, sigma_scale: number }> | null>} */
-  const byEvent = new Map();
-  for (let i = 0; i < events.length; i++) {
-    const ev = events[i];
-    const prior = events.slice(0, i);
-    const train = betRows.filter((r) => prior.includes(r.event));
-    if (train.length < minTrainRows) {
-      byEvent.set(ev, null);
-      continue;
-    }
-    byEvent.set(ev, fitParamsFromTrainRows(train));
-  }
-  return byEvent;
-}
-
-/** Grade rows with optional calibration params (null = raw model lines). */
-export function roiOnRows(testRows, markets, minEvPct, { marketFilter = null } = {}) {
+/** Grade rows with raw walk-forward model μ (no DK book μ-shift or σ-scale). */
+export function roiOnRows(testRows, minEvPct, { marketFilter = null, useRecommendedPolicy = false } = {}) {
   let units = 0;
   let wins = 0;
   let losses = 0;
   let n = 0;
   for (const b of testRows) {
     if (marketFilter && b.market !== marketFilter) continue;
-    const skipBook = marketSkipsBookCalibration(b.market);
-    const shift = b.linesPreCalibrated || skipBook ? 0 : (markets?.[b.market]?.mu_shift ?? 0);
-    const sigScale = skipBook ? 1 : (markets?.[b.market]?.sigma_scale ?? 1);
-    const mu = b.modelLine + shift;
-    const sigBase = sigmaForOu(b.market, b.stubRow, b.meta, 14);
-    const sig = sigBase * sigScale;
-    const z = (b.bookLine - mu) / sig;
-    const pOver = 1 - normalCdf(z);
+    if (useRecommendedPolicy) {
+      if (
+        !qualifiesBet({
+          market: b.market,
+          modelLine: b.modelLine,
+          bookLine: b.bookLine,
+          context: b.context || {},
+          eventName: b.event,
+        })
+      ) {
+        continue;
+      }
+    }
+    const mu = b.modelLine;
+    const pOver = modelProbOver(b.market, mu, b.bookLine, b.stubRow, b.meta);
+    if (!Number.isFinite(pOver)) continue;
     const pUnder = 1 - pOver;
     let edgeOver = (pOver - implied(b.overOdds)) * 100;
     let edgeUnder = (pUnder - implied(b.underOdds)) * 100;
     ({ edgeOver, edgeUnder } = capDirectionalPostedEdges(edgeOver, edgeUnder, mu, b.bookLine));
-    const pick = pickBetSide(edgeOver, edgeUnder, minEvPct, mu, b.bookLine);
+    const evTh = useRecommendedPolicy ? minEvForMarket(b.market, minEvPct) : minEvPct;
+    const pick = pickBetSide(edgeOver, edgeUnder, evTh, mu, b.bookLine);
     if (!pick) continue;
     const res = pick.side === "over" ? b.overRes : b.underRes;
     const odds = pick.side === "over" ? b.overOdds : b.underOdds;
@@ -233,91 +212,77 @@ export function roiOnRows(testRows, markets, minEvPct, { marketFilter = null } =
 }
 
 /**
- * Walk-forward OOS: for each event, fit book-alignment on all prior events only, grade once.
+ * Walk-forward OOS: grade each completed event once with raw model μ vs pre-round DK.
  */
 export function runWalkForwardOosReport({ excludeLiveEvent = true } = {}) {
-  return loadWalkForwardBetRows().then((allRows) => {
+  return Promise.all([fitOutcomeSigmaScales(VS), fitOutcomeMuBiasCorrections(VS)]).then(([scales, muBias]) => {
+    setOutcomeSigmaScales(scales);
+    setOutcomeMuBiasCorrections(muBias);
+    return loadWalkForwardBetRows().then((allRows) => {
     const liveEvent = excludeLiveEvent ? loadCurrentLiveEventName() : "";
     const events = eventOrderFromRows(allRows);
-    const oosEvents = events.filter((e) => !liveEvent || !eventsLikelySame(e, liveEvent));
 
     /** @type {Record<string, Record<string, object>>} */
     const byThreshold = {};
     /** @type {Record<string, Record<string, object>>} */
-    const byThresholdRaw = {};
-    /** @type {Record<string, Record<string, object[]>>} */
-    const byThresholdEvent = {};
+    const byThresholdPolicy = {};
 
     for (const th of EV_THRESHOLDS) {
       byThreshold[String(th)] = { __all__: { units: 0, bets: 0, wins: 0, losses: 0 } };
-      byThresholdRaw[String(th)] = { __all__: { units: 0, bets: 0, wins: 0, losses: 0 } };
-      byThresholdEvent[String(th)] = {};
+      byThresholdPolicy[String(th)] = { __all__: { units: 0, bets: 0, wins: 0, losses: 0 } };
       for (const m of MARKET_BOOK_CALIBRATION_MARKETS) {
         byThreshold[String(th)][m] = { units: 0, bets: 0, wins: 0, losses: 0 };
-        byThresholdRaw[String(th)][m] = { units: 0, bets: 0, wins: 0, losses: 0 };
+        byThresholdPolicy[String(th)][m] = { units: 0, bets: 0, wins: 0, losses: 0 };
       }
     }
 
     const eventDetails = [];
-    /** @type {Record<string, Record<string, { mu_shift: number, sigma_scale: number }>>} */
-    const eventCalibration = {};
+    const eventDetailsPolicy = [];
 
-    for (let i = 1; i < events.length; i++) {
-      const ev = events[i];
+    for (const ev of events) {
       if (liveEvent && eventsLikelySame(ev, liveEvent)) continue;
-      const prior = events.slice(0, i);
-      const train = allRows.filter((r) => prior.includes(r.event));
       const test = allRows.filter((r) => r.event === ev);
-      if (train.length < 80 || test.length < 20) continue;
+      if (test.length < 20) continue;
 
-      const wfMarkets = fitParamsFromTrainRows(train);
-      eventCalibration[ev] = wfMarkets;
       const perTh = {};
-      const perThRaw = {};
+      const perThPolicy = {};
 
       for (const th of EV_THRESHOLDS) {
-        const cal = roiOnRows(test, wfMarkets, th);
-        const raw = roiOnRows(test, null, th);
-        perTh[String(th)] = cal;
-        perThRaw[String(th)] = raw;
+        const graded = roiOnRows(test, th);
+        const gradedPolicy = roiOnRows(test, th, { useRecommendedPolicy: true });
+        perTh[String(th)] = graded;
+        perThPolicy[String(th)] = gradedPolicy;
 
-        const agg = byThreshold[String(th)].__all__;
-        agg.units += cal.units;
-        agg.bets += cal.bets;
-        agg.wins += cal.wins;
-        agg.losses += cal.losses;
-
-        const aggRaw = byThresholdRaw[String(th)].__all__;
-        aggRaw.units += raw.units;
-        aggRaw.bets += raw.bets;
-        aggRaw.wins += raw.wins;
-        aggRaw.losses += raw.losses;
-
-        byThresholdEvent[String(th)][ev] = cal;
+        for (const [bucket, g] of [
+          [byThreshold, graded],
+          [byThresholdPolicy, gradedPolicy],
+        ]) {
+          const agg = bucket[String(th)].__all__;
+          agg.units += g.units;
+          agg.bets += g.bets;
+          agg.wins += g.wins;
+          agg.losses += g.losses;
+        }
 
         for (const m of MARKET_BOOK_CALIBRATION_MARKETS) {
-          const mc = roiOnRows(test, wfMarkets, th, { marketFilter: m });
+          const mc = roiOnRows(test, th, { marketFilter: m });
           const ma = byThreshold[String(th)][m];
           ma.units += mc.units;
           ma.bets += mc.bets;
           ma.wins += mc.wins;
           ma.losses += mc.losses;
-          const mr = roiOnRows(test, null, th, { marketFilter: m });
-          const mar = byThresholdRaw[String(th)][m];
-          mar.units += mr.units;
-          mar.bets += mr.bets;
-          mar.wins += mr.wins;
-          mar.losses += mr.losses;
+
+          const mcp = roiOnRows(test, th, { marketFilter: m, useRecommendedPolicy: true });
+          const map = byThresholdPolicy[String(th)][m];
+          map.units += mcp.units;
+          map.bets += mcp.bets;
+          map.wins += mcp.wins;
+          map.losses += mcp.losses;
         }
       }
 
-      eventDetails.push({
-        event: ev,
-        train_events: prior.length,
-        calibration: wfMarkets,
-        by_threshold: perTh,
-        by_threshold_raw: perThRaw,
-      });
+      eventDetails.push({ event: ev, by_threshold: perTh });
+      eventDetailsPolicy.push({ event: ev, by_threshold: perThPolicy });
     }
 
     function finalizeAgg(map) {
@@ -338,67 +303,73 @@ export function runWalkForwardOosReport({ excludeLiveEvent = true } = {}) {
       return out;
     }
 
-    const calibrated = finalizeAgg(byThreshold);
-    const raw = finalizeAgg(byThresholdRaw);
+    const combined = finalizeAgg(byThreshold);
+    const combinedPolicy = finalizeAgg(byThresholdPolicy);
 
-    // Peak OOS event at default 5% (single-week high, not optimizable aggregate).
-    const defaultTh = "5";
-    const peakEventCal = eventDetails
+    const policyTh = String(DEFAULT_MIN_EV_PCT);
+    const legacyTh = "5";
+
+    const peakEventPolicy = eventDetailsPolicy
       .map((e) => ({
         event: e.event,
-        ...(e.by_threshold[defaultTh] || {}),
+        ...(e.by_threshold[policyTh] || {}),
       }))
       .filter((e) => e.bets > 0)
       .sort((a, b) => b.roi_pct - a.roi_pct);
 
-    const thresholdSummary = EV_THRESHOLDS.map((th) => ({
+    const thresholdSummaryPolicy = EV_THRESHOLDS.map((th) => ({
       min_ev_pct: th,
-      calibrated: calibrated[String(th)]?.__all__,
-      raw: raw[String(th)]?.__all__,
-    })).filter((r) => r.calibrated?.bets > 0);
+      ...(combinedPolicy[String(th)]?.__all__ || {}),
+    })).filter((r) => r.bets > 0);
 
-    const bestThresholdCal = [...thresholdSummary].sort((a, b) => b.calibrated.roi_pct - a.calibrated.roi_pct)[0];
-    const marketAt5 = MARKET_BOOK_CALIBRATION_MARKETS.map((m) => ({
+    const bestThresholdPolicy = [...thresholdSummaryPolicy].sort((a, b) => b.roi_pct - a.roi_pct)[0];
+    const marketAtPolicy = MARKET_BOOK_CALIBRATION_MARKETS.map((m) => ({
       market: m,
-      ...(calibrated[defaultTh]?.[m] || {}),
+      ...(combinedPolicy[policyTh]?.[m] || {}),
     })).filter((r) => r.bets > 0);
-    const marketAt5Raw = MARKET_BOOK_CALIBRATION_MARKETS.map((m) => ({
-      market: m,
-      ...(raw[defaultTh]?.[m] || {}),
-    })).filter((r) => r.bets > 0);
+
+    const recommended = combinedPolicy[policyTh]?.__all__ || null;
 
     return {
       generated_at: new Date().toISOString(),
       methodology: {
-        fit: "book_alignment_no_outcome_peek",
         grading: "walk_forward_oos_one_side_per_line",
-        calibration: "per_event_fit_on_prior_events_only",
+        model_lines: "walk_forward_stat_model_no_dk_calibration",
+        pricing: "poisson_birdies_normal_other_outcome_sigma",
         odds: "dk_pre_round_audit",
         pricing_mode: "default",
       },
+      outcome_sigma_scales: scales,
+      outcome_mu_bias_corrections: muBias,
+      recommended_policy: {
+        min_ev_pct: DEFAULT_MIN_EV_PCT,
+        uniform_ev_all_markets: true,
+        no_side_or_gap_filters: true,
+      },
       excluded_live_event: liveEvent || null,
       events_chronological: events,
-      oos_event_count: eventDetails.length,
-      default_min_ev_pct: 5,
-      combined_oos_at_5pct: calibrated[defaultTh]?.__all__,
-      combined_oos_raw_at_5pct: raw[defaultTh]?.__all__,
-      peak_oos_event_at_5pct: peakEventCal[0] || null,
-      worst_oos_event_at_5pct: peakEventCal[peakEventCal.length - 1] || null,
-      threshold_sweep_oos: thresholdSummary,
-      best_oos_threshold_calibrated: bestThresholdCal,
-      by_market_at_5pct: marketAt5.sort((a, b) => b.roi_pct - a.roi_pct),
-      by_market_at_5pct_raw: marketAt5Raw.sort((a, b) => b.roi_pct - a.roi_pct),
-      markets_skip_book_calibration: [...MARKETS_SKIP_BOOK_CALIBRATION],
-      event_calibration: eventCalibration,
-      by_threshold: calibrated,
-      by_threshold_raw: raw,
-      by_event: eventDetails.map((e) => ({
+      oos_event_count: eventDetailsPolicy.length,
+      default_min_ev_pct: DEFAULT_MIN_EV_PCT,
+      combined_oos_at_5pct: recommended,
+      combined_oos_recommended: recommended,
+      combined_oos_unfiltered_at_5pct: combined[legacyTh]?.__all__,
+      combined_oos_raw_at_5pct: combined[legacyTh]?.__all__,
+      peak_oos_event_at_5pct: peakEventPolicy[0] || null,
+      worst_oos_event_at_5pct: peakEventPolicy[peakEventPolicy.length - 1] || null,
+      threshold_sweep_oos: thresholdSummaryPolicy,
+      best_oos_threshold: bestThresholdPolicy,
+      by_market_at_5pct: marketAtPolicy.sort((a, b) => b.roi_pct - a.roi_pct),
+      by_market_at_5pct_raw: marketAtPolicy.sort((a, b) => b.roi_pct - a.roi_pct),
+      by_threshold: combinedPolicy,
+      by_threshold_raw: combined,
+      by_threshold_policy: combinedPolicy,
+      by_event: eventDetailsPolicy.map((e) => ({
         event: e.event,
-        train_events: e.train_events,
-        at_5pct: e.by_threshold["5"],
-        at_5pct_raw: e.by_threshold_raw["5"],
+        at_5pct: e.by_threshold[policyTh],
+        at_5pct_raw: e.by_threshold[policyTh],
         by_threshold: e.by_threshold,
       })),
     };
+  });
   });
 }

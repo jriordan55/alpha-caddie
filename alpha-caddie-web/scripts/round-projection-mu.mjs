@@ -10,6 +10,14 @@ import {
 } from "./weather-projection-adjustments.mjs";
 import { marketBookSigmaScale, eventPropBookAlignedMarket } from "./market-book-calibration.mjs";
 import {
+  applyOutcomeMuBiasCorrection,
+  binomialProbOver,
+  normalProbOver,
+  outcomeSigmaScale,
+  poissonProbOver,
+} from "./projection-stat-model.mjs";
+import { courseTailoringMuAdjustment, sgImportanceFromMeta } from "./course-skill-tailoring.mjs";
+import {
   liveCurrentRoundTotalScoreMuDelta,
   livePartialRoundCountPropAdjust,
 } from "./live-in-play-pricing.mjs";
@@ -24,6 +32,8 @@ import {
   isAdaptivePricingMode,
   recentFormMuBonus,
   resolveCourseTableForVenue,
+  RECENT_FORM_MIN,
+  RECENT_FORM_MAX,
 } from "./course-adaptive-pricing.mjs";
 
 export const EXPORT_MARKETS = [
@@ -287,9 +297,9 @@ function pricingModeMuSgBonusForMode(dgId, modeRaw, skillRaw, ctx) {
   }
 
   if (mode === "recent") {
-    const nRec = Math.min(6, Math.max(3, Math.floor(rounds.length / 2)));
+    const nRec = Math.min(RECENT_FORM_MAX, Math.max(RECENT_FORM_MIN, rounds.length >= RECENT_FORM_MIN ? 10 : 6));
     const recent = rounds.slice(0, nRec);
-    const older = rounds.slice(nRec, Math.min(rounds.length, nRec + 18));
+    const older = rounds.slice(nRec, Math.min(rounds.length, nRec + 24));
     let rMean = meanNumFromRounds(recent, "sg_total");
     let oMean = meanNumFromRounds(older, "sg_total");
     if (Number.isFinite(rMean) && Number.isFinite(oMean)) {
@@ -442,7 +452,7 @@ export function sigmaForOu(market, row, meta, fairwayHoles) {
   }
   const muAbs = ouMeanCountingStat(market, row, fairwayHoles);
   if (!Number.isFinite(muAbs) || muAbs <= 0) return 2.75;
-  return sigmaOuDiscreteCounting(market, Math.abs(muAbs), fairwayHoles);
+  return sigmaOuDiscreteCounting(market, Math.abs(muAbs), fairwayHoles) * outcomeSigmaScale(market);
 }
 
 function liveProjectionMeta(metaOrPayload) {
@@ -469,18 +479,39 @@ export function ouProjectedMeanForMode(market, row, meta, pricingMode, pricingSk
     metaLive?.projection_counts_weather_baked && row?.weather_counts_baked
       ? 0
       : statWeatherMuAdjustment(market, row);
-  return (
-    base + weatherAdj + countLive.muDelta + liveCurrentRoundTotalScoreMuDelta(row, metaLive) + pricingStatMuAdjustment(market, dgId, pricingMode, pricingSkill, ctx)
+  const tailoringActive = Boolean(sgImportanceFromMeta(metaLive));
+  const pricingAdj = tailoringActive
+    ? 0
+    : pricingStatMuAdjustment(market, dgId, pricingMode, pricingSkill, ctx);
+  return applyOutcomeMuBiasCorrection(
+    market,
+    base +
+      weatherAdj +
+      countLive.muDelta +
+      liveCurrentRoundTotalScoreMuDelta(row, metaLive) +
+      pricingAdj +
+      courseTailoringMuAdjustment(market, row, metaLive, ctx),
   );
 }
 
 export function modelProbOver(market, mu, line, row, meta) {
   if (!Number.isFinite(mu) || !Number.isFinite(line)) return NaN;
   const metaLive = liveProjectionMeta(meta);
-  const fairwayHoles = num(metaLive?.projection_course_basis?.fairway_holes_modeled, 14) || 14;
-  const sig = sigmaForOu(market, row, metaLive, Math.round(fairwayHoles)) * marketBookSigmaScale(market);
-  const z = (line - mu) / sig;
-  return 1 - normalCdf(z);
+  const fairwayHoles = Math.round(num(metaLive?.projection_course_basis?.fairway_holes_modeled, 14)) || 14;
+  if (market === "Birdies") {
+    const p = poissonProbOver(mu, line);
+    return Number.isFinite(p) ? p : NaN;
+  }
+  if (market === "GIR") {
+    const p = binomialProbOver(mu, 18, line);
+    return Number.isFinite(p) ? p : NaN;
+  }
+  if (market === "Fairways hit") {
+    const p = binomialProbOver(mu, fairwayHoles, line);
+    return Number.isFinite(p) ? p : NaN;
+  }
+  const sig = sigmaForOu(market, row, metaLive, fairwayHoles) * marketBookSigmaScale(market);
+  return normalProbOver(mu, line, sig);
 }
 
 /** W/L for over and under vs half-line (pushes blank). */
@@ -537,7 +568,8 @@ export function createProjectionContext(payload) {
     meta,
     venueName,
     players: Array.isArray(payload?.players) ? payload.players : [],
-    historyByDgId: loadHistoryByDgId(payload._webRoot || ""),
+    historyByDgId: payload?.historyByDgId || loadHistoryByDgId(payload._webRoot || ""),
+    venueScoring: payload?.venueScoring || null,
     bonusCache: new Map(),
     modelRound: Math.round(num(meta?.display_round, 1)) || 1,
     ctRow: resolveCourseTableForVenue(venueName),

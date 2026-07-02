@@ -4,7 +4,9 @@
  * over/under results vs actuals, and best edge (matches Round projections / Historical Trends).
  *
  * Walk-forward backtest projections use the same flat venue player score + field market reconcile as live
- * (historical-walkforward-projections.mjs → reconcileAllProjectionPlayerRows).
+ * (historical-walkforward-projections.mjs → reconcileAllProjectionPlayerRows). Model lines in the detail CSV
+ * are raw walk-forward μ at bet time — not book-calibrated snapshots from the audit log. DK lines/odds only
+ * from pre-round audit (or live_snapshot for in-progress weeks with real DK props).
  *
  *   npm run export:round-projection-vs-actual
  *
@@ -13,8 +15,8 @@
  * only for the matching event title + calendar year (never prior Byron Nelsons).
  * Birdies actuals include eagles (and eagles_or_better).
  * Book lines/odds: closing pre-round lines from dk_round_projection_audit.csv (last capture before
- * that round's first tee). Upcoming / in-progress rounds without a pre-round line use current
- * projections.props DraftKings rows (book_odds_source=live_snapshot) so R3/R4 lines are still exported.
+ * that round's first tee). Upcoming / in-progress rounds use current projections.props DraftKings rows
+ * (book_odds_source=live_snapshot) when real DK props exist. No synthetic −110 model-as-book lines.
  * Completed rounds never use live props for book lines (pre vs actual comparison stays honest).
  * Rows with no book odds and no completed round score are omitted.
  *
@@ -60,7 +62,10 @@ import {
 } from "./round-projection-mu.mjs";
 import {
   buildRoundStartUtcMs,
+  buildRoundStartUtcMsForAuditEvent,
+  buildRoundStartUtcMsFromDateStart,
   defaultDkAuditPath,
+  inferDateStartFromAuditCaptures,
   loadPreRoundDkPropsFromAudit,
 } from "./dk-pre-round-props.mjs";
 import {
@@ -77,16 +82,20 @@ import {
   signalCellsFromObject,
 } from "./projection-context-signals.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
-import { FullModelProjectionCache } from "./historical-walkforward-projections.mjs";
-import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
-import { applyMuShiftToModelLine, marketSkipsBookCalibration } from "./market-book-calibration.mjs";
 import {
-  buildWalkForwardCalibrationByEvent,
-  WALKFORWARD_OOS_JSON,
-} from "./walkforward-oos-roi.mjs";
+  fitOutcomeMuBiasCorrections,
+  fitOutcomeSigmaScales,
+  setOutcomeMuBiasCorrections,
+  setOutcomeSigmaScales,
+} from "./projection-stat-model.mjs";
+import { flatVenueProjectionPipelineEnv, walkforwardBacktestPipelineEnv } from "./projection-pipeline-env.mjs";
 import { buildBookPropsIndex } from "./projection-book-props.mjs";
 
-Object.assign(process.env, flatVenueProjectionPipelineEnv());
+if (String(process.env.GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS || "").trim() === "1") {
+  Object.assign(process.env, walkforwardBacktestPipelineEnv());
+} else {
+  Object.assign(process.env, flatVenueProjectionPipelineEnv());
+}
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -329,49 +338,79 @@ function patchFromPlayerHistoryShard(dg, eventName, eventYear, rnd, webRoot, fai
   };
 }
 
-function overlayPlayerHistoryActualsForBackfill(allActuals, auditEventName, eventYear, webRoot, fairwayHoles) {
+function mergeShardPatchIntoActuals(allActuals, key, prev, shardPatch) {
+  const weak = liveCountingPatchWeak(prev);
+  const out = { ...(prev || {}) };
+  if (weak || !Number.isFinite(num(prev?.total_score, NaN))) {
+    Object.assign(out, shardPatch);
+  } else {
+    for (const k of ["birdies", "pars", "bogeys", "gir", "fairways", "putts"]) {
+      if (!Number.isFinite(num(prev[k], NaN)) && Number.isFinite(num(shardPatch[k], NaN))) out[k] = shardPatch[k];
+    }
+    if (liveCountingPatchWeak(prev)) {
+      out.birdies = shardPatch.birdies;
+      out.pars = shardPatch.pars;
+      out.bogeys = shardPatch.bogeys;
+    }
+    out.source = prev.source ? `${prev.source}+${shardPatch.source}` : shardPatch.source;
+  }
+  allActuals.set(key, out);
+}
+
+/** Fill gaps from player-history shards — including rounds with no live/historical row yet (e.g. R4). */
+function overlayPlayerHistoryActualsForBackfill(
+  allActuals,
+  auditEventName,
+  eventYear,
+  webRoot,
+  fairwayHoles,
+  playerRounds = [],
+) {
   if (!auditEventName || !Number.isFinite(num(eventYear, NaN))) return 0;
-  const prefix = `${auditEventName}\x1f${Math.round(eventYear)}\x1f`;
-  let n = 0;
-  for (const [key, prev] of allActuals) {
+  const yr = Math.round(eventYear);
+  const targets = new Map();
+  for (const pr of playerRounds) {
+    const dg = Math.round(num(pr?.dg, NaN));
+    const rnd = Math.round(num(pr?.rnd, NaN));
+    if (!Number.isFinite(dg) || !Number.isFinite(rnd)) continue;
+    targets.set(`${dg}|${rnd}`, { dg, rnd });
+  }
+  const prefix = `${auditEventName}\x1f${yr}\x1f`;
+  for (const [key] of allActuals) {
     if (!key.startsWith(prefix)) continue;
     const tail = key.slice(prefix.length);
     const [dgStr, rndStr] = tail.split("|");
     const dg = Math.round(num(dgStr, NaN));
     const rnd = Math.round(num(rndStr, NaN));
-    if (!Number.isFinite(dg) || !Number.isFinite(rnd)) continue;
-    const shardPatch = patchFromPlayerHistoryShard(dg, auditEventName, eventYear, rnd, webRoot, fairwayHoles);
+    if (Number.isFinite(dg) && Number.isFinite(rnd)) targets.set(`${dg}|${rnd}`, { dg, rnd });
+  }
+
+  let n = 0;
+  for (const { dg, rnd } of targets.values()) {
+    const shardPatch = patchFromPlayerHistoryShard(dg, auditEventName, yr, rnd, webRoot, fairwayHoles);
     if (!shardPatch) continue;
-    const weak = liveCountingPatchWeak(prev);
-    const out = { ...prev };
-    if (weak || !Number.isFinite(num(prev.total_score, NaN))) {
-      Object.assign(out, shardPatch);
-    } else {
-      for (const k of ["birdies", "pars", "bogeys", "gir", "fairways", "putts"]) {
-        if (!Number.isFinite(num(prev[k], NaN)) && Number.isFinite(num(shardPatch[k], NaN))) out[k] = shardPatch[k];
-      }
-      if (liveCountingPatchWeak(prev)) {
-        out.birdies = shardPatch.birdies;
-        out.pars = shardPatch.pars;
-        out.bogeys = shardPatch.bogeys;
-      }
-      out.source = prev.source ? `${prev.source}+${shardPatch.source}` : shardPatch.source;
-    }
-    allActuals.set(key, out);
+    const key = actualsKey(auditEventName, yr, dg, rnd);
+    const prev = allActuals.get(key) || {};
+    mergeShardPatchIntoActuals(allActuals, key, prev, shardPatch);
     n++;
   }
   return n;
 }
 
 /** Audit capture year for recurring events (U.S. Open, Memorial, …). */
-function resolveAuditEventYear(evMap) {
+function resolveAuditEventYearFromSnaps(snaps) {
   const years = [];
-  for (const [, snap] of evMap || []) {
-    if (Number.isFinite(snap.capturedMs)) years.push(new Date(snap.capturedMs).getUTCFullYear());
-    const pat = String(snap.projAt || "").match(/^(\d{4})/);
+  for (const snap of snaps || []) {
+    if (Number.isFinite(snap?.capturedMs)) years.push(new Date(snap.capturedMs).getUTCFullYear());
+    const pat = String(snap?.projAt || "").match(/^(\d{4})/);
     if (pat) years.push(parseInt(pat[1], 10));
   }
   return years.length ? Math.max(...years) : NaN;
+}
+
+/** @deprecated use resolveAuditEventYearFromSnaps */
+function resolveAuditEventYear(evMap) {
+  return resolveAuditEventYearFromSnaps([...evMap.values()]);
 }
 
 /** When field_updates rolled to next week, preds/in-play still holds the prior event's results. */
@@ -440,6 +479,14 @@ function overlayStaleLiveActualsForBackfill(allActuals, auditEventName, eventYea
  * Uses the last pre-round capture per player×round×market as the snapshot.
  */
 async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {}) {
+  if (existsSync(DEFAULT_OUT)) {
+    const [scales, muBias] = await Promise.all([
+      fitOutcomeSigmaScales(DEFAULT_OUT),
+      fitOutcomeMuBiasCorrections(DEFAULT_OUT),
+    ]);
+    setOutcomeSigmaScales(scales);
+    setOutcomeMuBiasCorrections(muBias);
+  }
   const fairwayHoles = opts.fairwayHoles ?? 14;
   const livePath = opts.livePath || join(WEB_ROOT, "live-in-play.json");
   const MARKET_MODEL_COL = {
@@ -459,42 +506,13 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
     "Fairways hit": "fairways",
   };
 
-  const auditByEvent = new Map();
-  const auditParser = createReadStream(auditPath).pipe(
+  const auditEvents = new Set();
+  const auditParserScan = createReadStream(auditPath).pipe(
     parse({ columns: true, relax_quotes: true, relax_column_count: true, skip_records_with_error: true }),
   );
-  for await (const row of auditParser) {
+  for await (const row of auditParserScan) {
     const ev = String(row.event_name || "").trim();
-    if (!ev || eventsLikelySame(currentEventName, ev)) continue;
-    const rnd = Math.round(num(row.display_round));
-    const dg = Math.round(num(row.dg_id));
-    const market = String(row.market || "").trim();
-    if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4 || !Number.isFinite(dg) || !market) continue;
-
-    if (!auditByEvent.has(ev)) auditByEvent.set(ev, new Map());
-    const evMap = auditByEvent.get(ev);
-    const pk = `${dg}|${rnd}|${market}`;
-    const capturedMs = Date.parse(String(row.captured_at || ""));
-    const prev = evMap.get(pk);
-    if (prev && prev.capturedMs >= capturedMs) continue;
-    evMap.set(pk, {
-      capturedMs,
-      projAt: String(row.projections_updated_at || "").trim(),
-      course: String(row.course_used || "").trim(),
-      displayRound: rnd,
-      dg,
-      playerName: String(row.player_name || "").trim(),
-      market,
-      dkLine: num(row.dk_line, NaN),
-      overOdds: num(row.over_odds, NaN),
-      underOdds: num(row.under_odds, NaN),
-      modelTotal: num(row.model_total_score, NaN),
-      modelBirdies: num(row.model_birdies, NaN),
-      modelPars: num(row.model_pars, NaN),
-      modelBogeys: num(row.model_bogeys, NaN),
-      modelGir: num(row.model_gir, NaN),
-      modelFairways: num(row.model_fairways, NaN),
-    });
+    if (ev && !eventsLikelySame(currentEventName, ev)) auditEvents.add(ev);
   }
 
   const allActuals = new Map();
@@ -509,7 +527,7 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
       histRows.push(row);
       const ev = String(row.event_name || "").trim();
       if (!ev || eventsLikelySame(currentEventName, ev)) continue;
-      if (!auditByEvent.has(ev)) continue;
+      if (!auditEvents.has(ev)) continue;
       const dg = Math.round(num(row.dg_id));
       const rnd = Math.round(num(row.round_num));
       if (!Number.isFinite(dg) || !Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
@@ -530,13 +548,45 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
     }
   }
 
-  for (const [ev, evMap] of auditByEvent) {
-    const eventYear = resolveAuditEventYear(evMap);
-    overlayStaleLiveActualsForBackfill(allActuals, ev, eventYear, livePath, fairwayHoles);
-    overlayPlayerHistoryActualsForBackfill(allActuals, ev, eventYear, WEB_ROOT, fairwayHoles);
+  /** @type {Map<string, Map<string, object>>} event → pre-round DK index */
+  const auditByEvent = new Map();
+  for (const ev of auditEvents) {
+    const dateStart = await inferDateStartFromAuditCaptures(ev, auditPath);
+    let roundStart = buildRoundStartUtcMsForAuditEvent(ev, {
+      histRows,
+      livePath,
+      dateStart,
+    });
+    if (!roundStart.size && dateStart) {
+      roundStart = buildRoundStartUtcMsFromDateStart(dateStart, "America/New_York");
+    }
+    const preIndex = await loadPreRoundDkPropsFromAudit(ev, auditPath, roundStart);
+    if (preIndex.size) auditByEvent.set(ev, preIndex);
   }
 
-  const wfCache = histRows.length ? new FullModelProjectionCache(REPO_ROOT, histRows) : null;
+  for (const [ev, preIndex] of auditByEvent) {
+    const eventYear = resolveAuditEventYearFromSnaps([...preIndex.values()]);
+    const playerRounds = [];
+    const seen = new Set();
+    for (const pk of preIndex.keys()) {
+      const [dgStr, rndStr] = pk.split("|");
+      const dg = Math.round(num(dgStr, NaN));
+      const rnd = Math.round(num(rndStr, NaN));
+      const sk = `${dg}|${rnd}`;
+      if (!Number.isFinite(dg) || !Number.isFinite(rnd) || seen.has(sk)) continue;
+      seen.add(sk);
+      playerRounds.push({ dg, rnd });
+    }
+    overlayStaleLiveActualsForBackfill(allActuals, ev, eventYear, livePath, fairwayHoles);
+    overlayPlayerHistoryActualsForBackfill(allActuals, ev, eventYear, WEB_ROOT, fairwayHoles, playerRounds);
+  }
+
+  const wfCache = histRows.length
+    ? new (await import("./historical-walkforward-projections.mjs")).FullModelProjectionCache(
+        REPO_ROOT,
+        histRows,
+      )
+    : null;
 
   const resultLines = [];
   const samples = [];
@@ -545,19 +595,29 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
   /** @type {object[]} */
   const pendingRows = [];
 
-  for (const [ev, evMap] of auditByEvent) {
-    const eventYear = resolveAuditEventYear(evMap);
+  for (const [ev, preIndex] of auditByEvent) {
+    const snaps = [...preIndex.values()];
+    const eventYear = resolveAuditEventYearFromSnaps(snaps);
     const playerRounds = new Map();
-    for (const [, snap] of evMap) {
-      const prKey = `${snap.dg}|${snap.displayRound}`;
+    for (const [pk, snap] of preIndex) {
+      const [dgStr, rndStr, ...marketParts] = pk.split("|");
+      const dg = Math.round(num(dgStr, NaN));
+      const propRound = Math.round(num(rndStr, NaN));
+      const market = marketParts.join("|") || snap.market;
+      if (!Number.isFinite(dg) || !Number.isFinite(propRound)) continue;
+      const prKey = `${dg}|${propRound}`;
       if (!playerRounds.has(prKey)) {
         playerRounds.set(prKey, {
-          dg: snap.dg, rnd: snap.displayRound, playerName: snap.playerName,
-          course: snap.course, projAt: snap.projAt, markets: {},
+          dg,
+          rnd: propRound,
+          playerName: snap.playerName,
+          course: snap.course,
+          projAt: snap.projAt,
+          markets: {},
         });
       }
       const pr = playerRounds.get(prKey);
-      pr.markets[snap.market] = snap;
+      pr.markets[market] = snap;
     }
 
     /** @type {Map<number, Map<number, Map<string, number>>>} */
@@ -566,7 +626,7 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
       const year = eventYear;
       const fieldDgIds = [...new Set([...playerRounds.values()].map((p) => p.dg))];
       let betTimeMs = Infinity;
-      for (const [, snap] of evMap) {
+      for (const snap of snaps) {
         if (Number.isFinite(snap.capturedMs) && snap.capturedMs < betTimeMs) betTimeMs = snap.capturedMs;
       }
       for (let rnd = 1; rnd <= 4; rnd++) {
@@ -583,7 +643,7 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
     }
 
     let eventMs = Infinity;
-    for (const [, snap] of evMap) {
+    for (const snap of snaps) {
       if (Number.isFinite(snap.capturedMs) && snap.capturedMs < eventMs) eventMs = snap.capturedMs;
     }
 
@@ -598,27 +658,27 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
         const snap = pr.markets[spec.propsMarket];
         const wfMu = wfByRound.get(pr.rnd)?.get(pr.dg)?.get(spec.market);
         const auditModelLine = snap
-          ? (spec.propsMarket === "Total Score"
-              ? snap.modelTotal
-              : enforceHalfLine(
-                  spec.key === "birdies"
-                    ? snap.modelBirdies
-                    : spec.key === "pars"
-                      ? snap.modelPars
-                      : spec.key === "bogeys"
-                        ? snap.modelBogeys
-                        : spec.key === "gir"
-                          ? snap.modelGir
-                          : spec.key === "fairways"
-                            ? snap.modelFairways
-                            : NaN,
-                ))
+          ? spec.propsMarket === "Total Score"
+            ? snap.modelTotal
+            : spec.key === "birdies"
+              ? snap.modelBirdies
+              : spec.key === "pars"
+                ? snap.modelPars
+                : spec.key === "bogeys"
+                  ? snap.modelBogeys
+                  : spec.key === "gir"
+                    ? snap.modelGir
+                    : spec.key === "fairways"
+                      ? snap.modelFairways
+                      : NaN
           : NaN;
-        const rawModelLine = Number.isFinite(wfMu)
+        const wfModelLine = Number.isFinite(wfMu)
           ? spec.propsMarket === "Total Score"
             ? Math.round(wfMu * 10) / 10
-            : enforceHalfLine(wfMu)
-          : auditModelLine;
+            : wfMu
+          : NaN;
+        // Walk-forward full model (pre book-alignment) — audit snap is live-week calibrated toward DK.
+        const rawModelLine = Number.isFinite(wfModelLine) ? wfModelLine : auditModelLine;
         const bookLine = snap ? enforceHalfLine(snap.dkLine) : NaN;
         const overOdds = snap?.overOdds;
         const underOdds = snap?.underOdds;
@@ -656,24 +716,6 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
     }
   }
 
-  const wfCalib = buildWalkForwardCalibrationByEvent(wfTrainingRows);
-  /** @type {Record<string, Record<string, { mu_shift: number, sigma_scale: number }>>} */
-  const eventCalibrationOut = {};
-  for (const [ev, params] of wfCalib.entries()) {
-    if (params) eventCalibrationOut[ev] = params;
-  }
-  try {
-    const prev = existsSync(WALKFORWARD_OOS_JSON)
-      ? JSON.parse(readFileSync(WALKFORWARD_OOS_JSON, "utf8"))
-      : {};
-    writeFileSync(
-      WALKFORWARD_OOS_JSON,
-      `${JSON.stringify({ ...prev, event_calibration: eventCalibrationOut, event_calibration_generated_at: new Date().toISOString() }, null, 2)}\n`,
-    );
-  } catch {
-    /* non-fatal */
-  }
-
   for (const pending of pendingRows) {
     const { ev, eventYear, pr, act, hasCompleted, marketDrafts } = pending;
     const exported = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
@@ -681,14 +723,10 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
 
     for (const md of marketDrafts) {
       const { spec, rawModelLine, bookLine, overOdds, underOdds } = md;
-      const shift = marketSkipsBookCalibration(spec.market)
-        ? 0
-        : (wfCalib.get(ev)?.[spec.market]?.mu_shift ?? 0);
-      const modelLine = Number.isFinite(rawModelLine)
-        ? applyMuShiftToModelLine(spec.market, rawModelLine, shift)
-        : NaN;
+      // Backfill grades raw walk-forward μ vs DK; do not bake book μ-shift (that tightens toward DK).
+      const modelLine = Number.isFinite(rawModelLine) ? rawModelLine : NaN;
 
-      rowCells[spec.lineCol] = fmtLine(spec.market, modelLine);
+      rowCells[spec.lineCol] = fmtModelLine(spec.market, modelLine);
       rowCells[spec.bookLineCol] = Number.isFinite(bookLine) ? fmtLine(spec.market, bookLine) : "";
       rowCells[spec.overOddsCol] = formatAmericanOdds(overOdds);
       rowCells[spec.underOddsCol] = formatAmericanOdds(underOdds);
@@ -979,10 +1017,19 @@ function fmt(v) {
   return Number.isFinite(v) ? v : "";
 }
 
+/** DK book lines (half-point buckets). */
 function fmtLine(market, mu) {
   if (!Number.isFinite(mu)) return "";
   if (market === "Total score") return (Math.round(mu * 10) / 10).toFixed(1);
   return String(enforceHalfLine(mu));
+}
+
+/** Model μ for export/grading — keep precision; do not snap to DK half-lines. */
+function fmtModelLine(market, mu) {
+  if (!Number.isFinite(mu)) return "";
+  if (market === "Total score") return (Math.round(mu * 10) / 10).toFixed(1);
+  if (market === "Birdies" || market === "GIR") return (Math.round(mu * 10) / 10).toFixed(1);
+  return String(Math.round(mu));
 }
 
 function resolveHistCsv() {
@@ -1256,6 +1303,14 @@ function actualForMarket(act, marketKey) {
 export async function writeRoundProjectionVsActualCsv(opts = {}) {
   const projPath = opts.projectionsPath || join(WEB_ROOT, "projections.json");
   const outPath = opts.outPath || DEFAULT_OUT;
+  if (existsSync(outPath)) {
+    const [scales, muBias] = await Promise.all([
+      fitOutcomeSigmaScales(outPath),
+      fitOutcomeMuBiasCorrections(outPath),
+    ]);
+    setOutcomeSigmaScales(scales);
+    setOutcomeMuBiasCorrections(muBias);
+  }
   const livePath = opts.livePath || join(WEB_ROOT, "live-in-play.json");
 
   if (!existsSync(projPath)) {
@@ -1329,20 +1384,14 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
 
       for (const spec of EXPORT_MARKETS) {
         const mu = ouProjectedMeanForMode(spec.market, p, payload, pm.mode, pm.skill, ctx);
-        const modelLine = spec.market === "Total score" ? mu : enforceHalfLine(mu);
-        rowCells[spec.lineCol] = fmtLine(spec.market, mu);
+        const modelLine = mu;
+        rowCells[spec.lineCol] = fmtModelLine(spec.market, mu);
 
         const dk = dkPropForExport(preRoundDkIndex, liveDkIndex, dg, rnd, spec.propsMarket, actuals);
         const actual = actualForMarket(act, spec.key);
         const roundComplete = Number.isFinite(actual);
-        let bookLine = dk ? enforceHalfLine(dk.line) : NaN;
-        if (!dk && !roundComplete && Number.isFinite(modelLine)) {
-          bookLine = modelLine;
-          if (!rowOddsSource) rowOddsSource = "model_projection";
-          rowCells[spec.bookLineCol] = fmtLine(spec.market, bookLine);
-          rowCells[spec.overOddsCol] = formatAmericanOdds(-110);
-          rowCells[spec.underOddsCol] = formatAmericanOdds(-110);
-        } else if (dk) {
+        const bookLine = dk ? enforceHalfLine(dk.line) : NaN;
+        if (dk) {
           if (!rowOddsSource) rowOddsSource = dk.oddsSource;
           rowCells[spec.bookLineCol] = fmtLine(spec.market, bookLine);
           rowCells[spec.overOddsCol] = formatAmericanOdds(dk.over);
@@ -1400,7 +1449,6 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
       }
       if (rowOddsSource === "pre_round_audit") preRoundOddsRows++;
       else if (rowOddsSource === "live_snapshot" || rowOddsSource === "model_fallback") liveSnapshotOddsRows++;
-      else if (rowOddsSource === "model_projection") liveSnapshotOddsRows++;
 
       const rowOrder = [
         exported,

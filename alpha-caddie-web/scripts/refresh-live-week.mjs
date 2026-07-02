@@ -2,7 +2,7 @@
 /**
  * Live-week refresh for `npm run push:live` — updates projections, live-in-play, book odds,
  * DK props, field-updates tee times, venue history + skill repair, within-event form, weather bake,
- * unified factors, pin sheet, venue field reconcile, vs-actual export, honest DK book calibration
+ * unified factors, pin sheet, venue field reconcile, vs-actual export, walk-forward OOS report
  * (fit on prior events → apply to live projections), Parlay Pro correlations, walk-forward OOS report, and fast history patches.
  *
  *   npm run refresh:live
@@ -257,14 +257,10 @@ if (!envTruthy("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL", false)) {
   run("build-parlay-correlations.mjs", "Parlay Pro leg co-hit correlations → parlay_correlations.json");
 }
 
-if (!envTruthy("GOLF_SKIP_MARKET_BOOK_CALIBRATION", false)) {
+if (!envTruthy("GOLF_SKIP_MARKET_BOOK_CALIBRATION", true)) {
   run(
     "fit-market-book-calibration.mjs",
     "Fit DK book-alignment (prior events only, no outcome peek) → market_book_calibration.json",
-  );
-  run(
-    "report-walkforward-oos-roi.mjs",
-    "Walk-forward honest OOS ROI report → walkforward_oos_roi.json",
   );
   run(
     "apply-market-book-calibration.mjs",
@@ -279,7 +275,17 @@ if (!envTruthy("GOLF_SKIP_MARKET_BOOK_CALIBRATION", false)) {
     "reconcile-projection-counts.mjs",
     "Reconcile counting stats after book calibration (book cal already applied)",
   );
+} else {
+  run(
+    "apply-market-book-calibration.mjs",
+    "Strip baked-in DK book shifts from projections.json (calibration disabled)",
+  );
 }
+
+run(
+  "report-walkforward-oos-roi.mjs",
+  "Walk-forward OOS ROI report → walkforward_oos_roi.json",
+);
 
 runWeatherAndTeeTimesPass("publish");
 

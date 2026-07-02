@@ -13,6 +13,8 @@ import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
+const DG_TOUR_AVG_FAIRWAY_RATE = 0.6;
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
 const PROJ_PATH = join(WEB_ROOT, "projections.json");
@@ -51,11 +53,16 @@ export function fairwayProjectionCourseAnchored(opts = {}) {
   const nFw = Math.round(num(opts.nFairwayHoles, 14)) || 14;
   const courseRate = num(opts.courseAdjRate, 0.645);
   const dgRate = num(opts.dgFairwayPct, NaN);
+  const venueHits = num(opts.venueAvgFairways, NaN);
   if (!Number.isFinite(dgRate)) return NaN;
-  const spreadKeep = num(opts.spreadKeep, 0.35);
-  const course14 = courseRate * nFw;
-  const dg14 = dgRate * nFw;
-  const fw = course14 + spreadKeep * (dg14 - course14);
+  const spreadKeep = num(opts.spreadKeep, 0.36);
+  const courseHits = Number.isFinite(courseRate)
+    ? courseRate * nFw
+    : Number.isFinite(venueHits)
+      ? venueHits
+      : DG_TOUR_AVG_FAIRWAY_RATE * nFw;
+  const playerHits = dgRate * nFw;
+  const fw = courseHits + spreadKeep * (playerHits - courseHits);
   return Math.round(Math.max(2, Math.min(nFw + 0.5, fw)) * 100) / 100;
 }
 
@@ -68,7 +75,7 @@ export function fairwayProjectionVenueRelative(opts = {}) {
   const fieldMeanDg14 = num(opts.fieldMeanDg14, 10);
   const dg14 = num(opts.dgFairwayPct, NaN) * nFw;
   if (!Number.isFinite(dg14)) return NaN;
-  const fw = venueFw + (dg14 - fieldMeanDg14) * 0.4;
+  const fw = venueFw + (dg14 - fieldMeanDg14) * 0.32;
   return Math.round(Math.max(2, Math.min(nFw + 0.5, fw)) * 100) / 100;
 }
 

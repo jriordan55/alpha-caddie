@@ -16,6 +16,13 @@ import {
   pnlForResult,
 } from "./ev-math.mjs";
 import { buildEdgeSignalInsights } from "./edge-signal-insights.mjs";
+import {
+  DEFAULT_MIN_EV_PCT,
+  isActionableMarket,
+  minEvForMarket,
+  MIN_LINE_GAP_BY_MARKET,
+  qualifiesBet,
+} from "./bet-policy.mjs";
 import { buildLiveBestBets, loadLiveBestBetsContext, invalidateLiveBestBetsCache } from "./live-best-bets.mjs";
 import {
   filterOddsLines,
@@ -55,15 +62,7 @@ const MARKET_ORDER = [
 ];
 
 /** Markets with real DK closing lines in odds.csv backtest (actionable book). */
-const BETTABLE_MARKETS = new Set(["Birdies", "Total score"]);
-
-/** Min |model − DK| before counting a bet — avoids fake edge on flat DK buckets. */
-const MIN_LINE_GAP_BY_MARKET = {
-  "Total score": 0.5,
-  Birdies: 1.25,
-  GIR: 1.0,
-  "Fairways hit": 1.0,
-};
+const BETTABLE_MARKETS = new Set(["GIR", "Total score", "Birdies", "Fairways hit"]);
 
 /** @type {Record<string, string>[]} */
 let ALL_ROWS = [];
@@ -89,7 +88,7 @@ const state = {
   /** "" = all tournaments combined; otherwise event name */
   tournament: "",
   market: "Total score",
-  minEv: 5,
+  minEv: DEFAULT_MIN_EV_PCT,
   side: "",
   player: "",
   show: "bets",
@@ -641,12 +640,18 @@ function explodeDetailToBets(rows) {
       const underOdds = nNum(row[spec.underOdds], NaN);
       const actual = parseLine(row[spec.actual]);
       const mu = Number.isFinite(modelLine) ? modelLine : NaN;
+      const betContext = {
+        gir_minus_fw: nNum(row.gir_minus_fw, NaN),
+        round: Math.round(nNum(row.round, NaN)),
+      };
+      if (!isActionableMarket(spec.market)) continue;
       let { edgeOver, edgeUnder } = modelEdgePctAtLine(spec.market, mu, bookLine, overOdds, underOdds);
       ({ edgeOver, edgeUnder } = capDirectionalPostedEdges(edgeOver, edgeUnder, mu, bookLine));
       const fair = modelEdgeVsFairAtLine(spec.market, mu, bookLine, overOdds, underOdds);
       const pModelOver = fair.pOver;
       const pModelUnder = fair.pUnder;
-      const pick = pickBetSide(edgeOver, edgeUnder, state.minEv, mu, bookLine);
+      const marketMinEv = minEvForMarket(spec.market, state.minEv);
+      const pick = pickBetSide(edgeOver, edgeUnder, marketMinEv, mu, bookLine);
       const bestSide =
         Number.isFinite(edgeOver) && Number.isFinite(edgeUnder)
           ? edgeOver >= edgeUnder
@@ -667,10 +672,7 @@ function explodeDetailToBets(rows) {
       const modelProb = side === "over" ? pModelOver : side === "under" ? pModelUnder : NaN;
       const edgeFairPick =
         side === "over" ? fair.edgeFairOver : side === "under" ? fair.edgeFairUnder : NaN;
-      const lineGap = Number.isFinite(modelLine) ? Math.abs(modelLine - bookLine) : NaN;
-      const minGap = MIN_LINE_GAP_BY_MARKET[spec.market] ?? 0.5;
-      const gapOk = Number.isFinite(lineGap) && lineGap >= minGap;
-      const qualified = Boolean(pick) && gapOk;
+      const qualified = Boolean(pick) && qualifiesBet({ market: spec.market });
       out.push({
         event_name: row.event_name,
         round: row.round,
@@ -1328,22 +1330,28 @@ function renderHonestOos() {
   const c5 = OOS_REPORT.combined_oos_at_5pct;
   const peak = OOS_REPORT.peak_oos_event_at_5pct;
   const worst = OOS_REPORT.worst_oos_event_at_5pct;
-  const bestTh = OOS_REPORT.best_oos_threshold_calibrated;
-  const raw5 = OOS_REPORT.combined_oos_raw_at_5pct;
+  const bestTh = OOS_REPORT.best_oos_threshold;
 
   if (note) {
     note.innerHTML =
       `Walk-forward OOS across <strong>${OOS_REPORT.oos_event_count}</strong> completed events` +
       (OOS_REPORT.excluded_live_event ? ` (excludes live week: ${OOS_REPORT.excluded_live_event})` : "") +
-      `. Calibration fit uses model−DK lines only — never bet results. ` +
+      `. Uniform ${DEFAULT_MIN_EV_PCT}% EV on all markets (overs and unders). ` +
       `Regenerate: <code>npm run report:walkforward-oos-roi</code>`;
   }
 
+  const unfiltered = OOS_REPORT.combined_oos_unfiltered_at_5pct;
+
   document.getElementById("oos-honest-kpis").innerHTML = `
     <div class="kpi-card highlight">
-      <div class="kpi-label">OOS ROI @ 5% EV</div>
+      <div class="kpi-label">OOS ROI (recommended)</div>
       <div class="kpi-value ${clsSigned(c5.roi_pct)}">${fmtPct(c5.roi_pct)}</div>
-      <div class="kpi-sub">${c5.bets} bets · ${fmt(c5.hit_pct, 1)}% hit · +${fmt(c5.units, 0)}u</div>
+      <div class="kpi-sub">≥${DEFAULT_MIN_EV_PCT}% EV policy · ${c5.bets} bets · ${fmt(c5.hit_pct, 1)}% hit · +${fmt(c5.units, 0)}u</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Unfiltered @ 5%</div>
+      <div class="kpi-value ${clsSigned(unfiltered?.roi_pct)}">${unfiltered ? fmtPct(unfiltered.roi_pct) : "—"}</div>
+      <div class="kpi-sub">all markets, no line-gap filter</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">Peak event OOS</div>
@@ -1356,14 +1364,9 @@ function renderHonestOos() {
       <div class="kpi-sub">${worst?.event ? worst.event.replace(/ presented by.*/i, "") : ""}</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">Raw model @ 5%</div>
-      <div class="kpi-value ${clsSigned(raw5?.roi_pct)}">${raw5 ? fmtPct(raw5.roi_pct) : "—"}</div>
-      <div class="kpi-sub">no book calibration</div>
-    </div>
-    <div class="kpi-card">
       <div class="kpi-label">Best threshold (exploratory)</div>
-      <div class="kpi-value ${clsSigned(bestTh?.calibrated?.roi_pct)}">${bestTh ? fmtPct(bestTh.calibrated.roi_pct) : "—"}</div>
-      <div class="kpi-sub">${bestTh ? `≥${bestTh.min_ev_pct}% EV · ${bestTh.calibrated.bets} bets` : ""}</div>
+      <div class="kpi-value ${clsSigned(bestTh?.roi_pct)}">${bestTh ? fmtPct(bestTh.roi_pct) : "—"}</div>
+      <div class="kpi-sub">${bestTh ? `≥${bestTh.min_ev_pct}% EV · ${bestTh.bets} bets` : ""}</div>
     </div>
   `;
 
@@ -1582,10 +1585,72 @@ function renderHeader() {
   } else {
     sub = `${names.length} tournaments combined`;
   }
+  const live = LIVE_CTX?.projections;
+  const liveMeta = live
+    ? {
+        event: String(live.event_name || live.meta?.event_name || "").trim(),
+        course: String(live.course_used || live.meta?.course_used || "").trim(),
+        updated: String(live.updated_at || live.meta?.updated_at || "").trim(),
+      }
+    : null;
+  const liveLine =
+    liveMeta?.event && liveMeta?.course
+      ? `<div class="header-live">Live week: <strong>${esc(liveMeta.event)}</strong> · ${esc(liveMeta.course)}${
+          liveMeta.updated ? ` · ${esc(new Date(liveMeta.updated).toLocaleString())}` : ""
+        }</div>`
+      : "";
   document.getElementById("header-meta").innerHTML = `
     <div><strong>${state.tournament || "All tournaments"}</strong></div>
     <div>${sub}</div>
+    ${liveLine}
   `;
+}
+
+function renderLiveFactorsPanel(summary) {
+  const el = document.getElementById("live-picks-factors");
+  if (!el) return;
+  if (!summary?.chips?.length) {
+    el.hidden = true;
+    el.innerHTML = "";
+    return;
+  }
+  el.hidden = false;
+  const chips = summary.chips
+    .map((c) => {
+      const tone = c.tone ? ` live-factor-chip--${c.tone}` : "";
+      return `<span class="live-factor-chip${tone}"><span class="live-factor-label">${esc(c.label)}</span> ${esc(c.value)}</span>`;
+    })
+    .join("");
+  const bars = (summary.sgBars || [])
+    .map((b) => {
+      const w = Math.max(4, Math.round(b.pct * 100));
+      return `<div class="live-sg-bar" title="${esc(b.key)} ${w}%"><span class="live-sg-bar-fill" style="width:${w}%"></span><span class="live-sg-bar-label">${esc(b.key)}</span></div>`;
+    })
+    .join("");
+  const metaBits = [];
+  if (summary.sgSource) metaBits.push(`SG weights: ${summary.sgSource}`);
+  if (summary.sgVenueRounds > 0) metaBits.push(`${summary.sgVenueRounds} venue rounds`);
+  if (summary.recentFormWindow) metaBits.push(summary.recentFormWindow);
+  el.innerHTML = `
+    <div class="live-factors-chips">${chips}</div>
+    ${bars ? `<div class="live-sg-bars">${bars}</div>` : ""}
+    ${metaBits.length ? `<p class="live-factors-meta">${esc(metaBits.join(" · "))}</p>` : ""}
+  `;
+}
+
+function formatModelMu(market, mu) {
+  if (!Number.isFinite(mu)) return "—";
+  if (market === "Total score") return mu.toFixed(2);
+  if (market === "Birdies") return mu.toFixed(1);
+  return String(Math.round(mu));
+}
+
+function formatGap(market, gap) {
+  if (!Number.isFinite(gap)) return "—";
+  const sign = gap > 0 ? "+" : "";
+  if (market === "Total score") return `${sign}${gap.toFixed(2)}`;
+  if (market === "Birdies") return `${sign}${gap.toFixed(1)}`;
+  return `${sign}${Math.round(gap)}`;
 }
 
 function populateTournamentSelect() {
@@ -1626,7 +1691,8 @@ function renderLivePicks() {
     card.hidden = false;
     if (titleEl) titleEl.textContent = "Best bets — live week";
     if (noteEl) noteEl.textContent = "Could not load projections.json — run npm run refresh:live or npm start in alpha-caddie-web.";
-    tbody.innerHTML = `<tr><td colspan="10" class="live-picks-empty">No live projections available.</td></tr>`;
+    renderLiveFactorsPanel(null);
+    tbody.innerHTML = `<tr><td colspan="12" class="live-picks-empty">No live projections available.</td></tr>`;
     return;
   }
 
@@ -1639,6 +1705,7 @@ function renderLivePicks() {
   });
 
   card.hidden = false;
+  renderLiveFactorsPanel(built.factorsSummary);
   if (titleEl) {
     titleEl.textContent = `Best bets — ${built.roundLabel}${built.eventName ? ` · ${built.eventName}` : ""}`;
   }
@@ -1646,18 +1713,19 @@ function renderLivePicks() {
   const oosN = Math.round(num((LIVE_CTX.oos || OOS_REPORT)?.combined_oos_at_5pct?.bets, NaN)) || 0;
   if (noteEl) {
     const venue = built.venueNote ? ` ${built.venueNote}.` : "";
+    const factors = built.factorsNote ? ` ${built.factorsNote}.` : "";
     const dkNote = built.modelLinesOnly
       ? " DraftKings scrape unavailable — showing model half-lines at −110 (not real +EV until DK posts)."
       : "";
     noteEl.textContent =
-      `Upcoming round picks from projections.json (${built.updatedAt ? `updated ${new Date(built.updatedAt).toLocaleString()}` : "live"}).${venue}${dkNote}` +
+      `Upcoming round picks from projections.json (${built.updatedAt ? `updated ${new Date(built.updatedAt).toLocaleString()}` : "live"}).${factors}${venue}${dkNote}` +
       ` Ranked by model EV vs posted lines, walk-forward OOS market ROI` +
       (Number.isFinite(oosRoi) ? ` (+${oosRoi.toFixed(1)}% on ${oosN} OOS bets @ 5%)` : "") +
       `, and historical context signals. Uses toolbar Min EV %.`;
   }
 
   if (!built.picks.length) {
-    tbody.innerHTML = `<tr><td colspan="10" class="live-picks-empty">No picks at ≥${state.minEv}% EV for ${built.roundLabel} — lower Min EV or refresh DK props.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="12" class="live-picks-empty">No picks at ≥${state.minEv}% EV for ${built.roundLabel} — lower Min EV or refresh DK props.</td></tr>`;
     return;
   }
 
@@ -1668,10 +1736,13 @@ function renderLivePicks() {
           ? `${p.histRoi >= 0 ? "+" : ""}${p.histRoi.toFixed(1)}%`
           : "—";
       const edgeCls = p.edgePct > 0 ? "pos" : p.edgePct < 0 ? "neg" : "";
+      const gapCls = Number.isFinite(p.gap) ? (p.gap > 0 ? "pos" : p.gap < 0 ? "neg" : "") : "";
       const tags = (p.contextTags || [])
         .map((t) => {
           const warn = String(t).startsWith("fade") || String(t).includes("% -");
-          return `<span class="live-picks-tag${warn ? " warn" : ""}">${esc(t)}</span>`;
+          const tailor = String(t).startsWith("Course fit") || String(t).includes("recent form") || String(t).includes("Birdie-heavy");
+          const cls = warn ? " warn" : tailor ? " tailor" : "";
+          return `<span class="live-picks-tag${cls}">${esc(t)}</span>`;
         })
         .join("");
       return `<tr class="live-picks-row" data-player="${esc(p.player_name)}" data-market="${esc(p.market)}" data-side="${esc(p.side)}">
@@ -1679,7 +1750,9 @@ function renderLivePicks() {
         <td>${esc(p.player_name)}</td>
         <td>${esc(p.market)}</td>
         <td class="num">${p.side === "over" ? "Over" : "Under"}</td>
+        <td class="num" title="Model μ">${formatModelMu(p.market, p.mu)}</td>
         <td class="num">${Number.isFinite(p.line) ? p.line : "—"}</td>
+        <td class="num ${gapCls}">${formatGap(p.market, p.gap)}</td>
         <td class="num">${esc(formatAmerican(p.odds))}</td>
         <td class="num ${edgeCls}">${p.edgePct >= 0 ? "+" : ""}${p.edgePct.toFixed(1)}%</td>
         <td class="num" title="${p.histBets ? `${p.histBets} OOS bets` : ""}">${hist}</td>

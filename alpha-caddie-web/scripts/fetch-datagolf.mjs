@@ -122,6 +122,16 @@ import {
   mergeHoleCountRatesIntoSkillRow,
 } from "./counting-from-rates-sg.mjs";
 import { blendWeightsFromHistCalib } from "./optimized-counting-blend.mjs";
+import { resolveCourseTableForVenue } from "./course-adaptive-pricing.mjs";
+import {
+  applyCourseTailoringShiftsToRow,
+  computeCourseTailoringShifts,
+  fieldSgMedians,
+  fitVenueSgImportanceFromCsv,
+  loadPlayerHistoryRoundsByDg,
+  mergeSgImportance,
+  serializeSgImportanceForMeta,
+} from "./course-skill-tailoring.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -2137,6 +2147,24 @@ async function main() {
   ]);
   const pga_tour_market_benchmarks = serializePgaTourMarketBenchmarks(pgaTourBenchRaw);
   const pga_tour_course_benchmarks = serializePgaTourCourseBenchmarks(pgaTourCourseBenchRaw);
+  const courseFairwayRate01 = courseAdjFromTableJson(course_used, "adj_driving_accuracy");
+  const courseGirRate01 = courseAdjFromTableJson(course_used, "adj_gir");
+  const courseAdjDrivingDistance = courseAdjFromTableJson(course_used, "adj_driving_distance");
+  const courseFwWidth = courseAdjFromTableJson(course_used, "fw_width");
+  const courseFwDifficulty = courseAdjFromTableJson(course_used, "fw_diff");
+  const courseAdjScoreToPar = courseAdjFromTableJson(course_used, "adj_score_to_par");
+  const courseFwWidthNorm = Number.isFinite(courseFwWidth)
+    ? Math.max(0, Math.min(1, (courseFwWidth - 23.5) / (71.9 - 23.5)))
+    : NaN;
+  const courseBirdieEase = Number.isFinite(courseAdjScoreToPar) ? -0.12 * courseAdjScoreToPar : 0;
+  const courseCountOpts = {
+    courseFairwayRate01,
+    courseGirRate01,
+    courseFwWidthNorm,
+    courseAdjDrivingDistance,
+    courseFwDifficulty,
+    courseBirdieEase,
+  };
   if (!pgaTourBenchRaw?.meta?.skipped) {
     const b = pga_tour_market_benchmarks["Total score"];
     console.log(
@@ -2252,8 +2280,32 @@ async function main() {
     row.mu_sg = applyVenueCourseFitToMu(row.mu_sg, row.dg_id, venueScoring, fieldMeanMu);
     row.implied_mu_sg = row.mu_sg;
   }
+  const ctRowTailor = resolveCourseTableForVenue(course_used);
+  const venueSgFit = await fitVenueSgImportanceFromCsv(histCsvPath, courseKeyHist);
+  const sgImportance = mergeSgImportance(venueSgFit, ctRowTailor);
+  const historyByDgTailor = loadPlayerHistoryRoundsByDg(join(ROOT, "player_round_history.json"), fieldDgIds);
+  const tailoringMedians = fieldSgMedians(base);
+  for (const row of base) {
+    const shifts = computeCourseTailoringShifts({
+      row,
+      rounds: historyByDgTailor.get(Math.round(num(row.dg_id, NaN))) || [],
+      sgImportance,
+      fieldMedians: tailoringMedians,
+      venueScoring,
+      ctRow: ctRowTailor,
+      teeWaveShift: 0,
+    });
+    applyCourseTailoringShiftsToRow(row, shifts, course_par_18);
+  }
+  if (sgImportance?.dominant) {
+    console.log(
+      `[fetch-dg] Course-tailored projections: dominant ${sgImportance.dominant} (${sgImportance.source}${sgImportance.n ? `, n=${sgImportance.n}` : ""}); recent-form window ${8}–${12} rds`,
+    );
+  }
   const fieldMeanMuAdj =
     base.length > 0 ? base.reduce((s, r) => s + num(r.mu_sg, 0), 0) / base.length : fieldMeanMu;
+  const fieldMeanDgFairways14 =
+    base.length > 0 ? base.reduce((s, r) => s + num(r.fairways, 0), 0) / base.length : NaN;
 
   const tz = process.env.GOLF_OU_TZ || "America/New_York";
   const fieldDateStart = String(fieldRaw?.date_start ?? fieldRaw?.dateStart ?? "").trim();
@@ -2437,8 +2489,6 @@ async function main() {
     skill_around_round_venue_mean: 0,
     skill_rating: 0,
   };
-  const courseFairwayRate01 = courseAdjFromTableJson(course_used, "adj_driving_accuracy");
-  const courseGirRate01 = courseAdjFromTableJson(course_used, "adj_gir");
   if (Number.isFinite(courseFairwayRate01)) {
     console.log(
       `[fetch-dg] Skill-specific FW/GIR: course adj_driving_accuracy=${courseFairwayRate01.toFixed(3)}, adj_gir=${Number.isFinite(courseGirRate01) ? courseGirRate01.toFixed(3) : "—"}`,
@@ -2502,6 +2552,8 @@ async function main() {
         venuePutts: venueScoring.venueAvgPutts,
         courseFairwayRate01,
         courseGirRate01,
+        fieldMeanDgFairways14,
+        ...courseCountOpts,
       });
       const pretScore = pretStrokesByDg.get(row.dg_id);
       const scoreRes = resolveProjectionScoreToPar({
@@ -2742,6 +2794,13 @@ async function main() {
       course_adj_gir_rate: Number.isFinite(courseGirRate01)
         ? Math.round(courseGirRate01 * 10000) / 10000
         : null,
+      course_adj_score_to_par: Number.isFinite(courseAdjScoreToPar)
+        ? Math.round(courseAdjScoreToPar * 1000) / 1000
+        : null,
+      course_birdie_ease: Number.isFinite(courseBirdieEase)
+        ? Math.round(courseBirdieEase * 1000) / 1000
+        : null,
+      course_sg_importance: serializeSgImportanceForMeta(sgImportance),
       fairway_skill_spread_keep: Math.round(histBlendW.fairways.spreadKeep * 1000) / 1000,
       gir_skill_spread_keep: Math.round(histBlendW.gir.spreadKeep * 1000) / 1000,
       pret_expected_round_strokes_players: pretStrokesByDg.size,

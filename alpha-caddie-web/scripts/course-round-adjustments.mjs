@@ -14,7 +14,7 @@ import {
   applyEventPropBookAlignment,
   marketBookCalibrationEnabled,
 } from "./market-book-calibration.mjs";
-import { calibrateFairwayFieldMean, calibrateBirdiesFieldMean } from "./counting-from-rates-sg.mjs";
+import { calibrateFairwayFieldMean, calibrateBirdiesFieldMean, calibrateGirFieldMean } from "./counting-from-rates-sg.mjs";
 
 function num(x, fallback = NaN) {
   const n = Number(x);
@@ -34,6 +34,11 @@ function courseAdjFromTable(courseUsed, field) {
   } catch {
     return NaN;
   }
+}
+
+/** Course-table adjusted rate (adj_driving_accuracy, adj_gir, etc.). */
+export function loadCourseTableAdjRate(courseUsed, field) {
+  return courseAdjFromTable(courseUsed, field);
 }
 
 function clamp(x, lo, hi) {
@@ -669,10 +674,15 @@ export function reconcileProjectionRowCountsToScore(row, opts = {}) {
   const venueGir = num(opts.venueAvgGir, 12);
   const venueFw = num(opts.venueAvgFairways, 9);
   const nFw = Math.round(num(opts.nFairwayHoles, 14)) || 14;
-  const girFromScore = clamp(venueGir - stp * 0.55, 7.5, 16.2);
+  const nGir = 18;
+  const courseGirCount = num(opts.courseGirRate01, NaN) * nGir;
+  let girFromScore = clamp(venueGir - stp * 0.55, 7.5, 16.2);
   const fwFromScore = fairwaysFromScoreAnchor(stp, num(row.mu_sg, NaN), venueFw, nFw, opts.fwStpLine);
-  const girBlend = num(opts.girBlend, 0.22);
-  const fwBlend = num(opts.fairwaysBlend, 0.2);
+  if (Number.isFinite(courseGirCount)) {
+    girFromScore = 0.42 * girFromScore + 0.58 * courseGirCount;
+  }
+  const girBlend = num(opts.girBlend, 0.38);
+  const fwBlend = num(opts.fairwaysBlend, 0);
   let gir = num(row.gir, NaN);
   let fairways = num(row.fairways, NaN);
   if (Number.isFinite(gir)) gir = (1 - girBlend) * gir + girBlend * girFromScore;
@@ -808,6 +818,8 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
     fieldCountingMeans: basis.field_counting_means_by_round || null,
     eventWeekFieldScoreByRound: basis.event_week_field_avg_score_by_round || null,
     nFairwayHoles: Math.round(num(basis.fairway_holes_modeled, 14)) || 14,
+    courseGirRate01: num(basis.course_adj_gir_rate, NaN),
+    courseFairwayRate01: num(basis.course_adj_fairway_rate, NaN),
     fwStpLine: histCalib?.fw_stp_line,
     alignStrength: 0.1,
     spreadStrength: 0,
@@ -846,17 +858,32 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
     nFairwayHoles: nFwCal,
   };
   let fairwaySkillCalibRounds = 0;
+  let girSkillCalibRounds = 0;
   let birdiesSkillCalibRounds = 0;
-  if (Number.isFinite(fwCalibOpts.courseFairwayRate01)) {
+  if (opts.calibrateFairwaysToCourse === true && Number.isFinite(fwCalibOpts.courseFairwayRate01)) {
     for (let rnd = 1; rnd <= 4; rnd++) {
       if (calibrateFairwayFieldMean(payload?.players, { ...fwCalibOpts, round: rnd }) > 0) {
         fairwaySkillCalibRounds++;
       }
     }
   }
+  const girCalibOpts = {
+    venueAvgGir: num(basis.venue_avg_gir, NaN),
+    courseGirRate01: num(basis.course_adj_gir_rate, NaN),
+    nGirHoles: 18,
+    courseWeight: 0.84,
+  };
+  if (Number.isFinite(girCalibOpts.courseGirRate01)) {
+    for (let rnd = 1; rnd <= 4; rnd++) {
+      if (calibrateGirFieldMean(payload?.players, { ...girCalibOpts, round: rnd }) > 0) {
+        girSkillCalibRounds++;
+      }
+    }
+  }
   const birdCalibOpts = {
     venueAvgBirdies: birdiesVenueCalibrationTarget(basis, payload, opts),
     venueAvgEagles: num(basis.venue_avg_eagles, 0.12),
+    courseBirdieEase: num(basis.course_birdie_ease, NaN),
   };
   const displayRound =
     Math.round(num(opts.displayRound ?? payload?.display_round ?? 1)) || 1;
@@ -902,6 +929,7 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
     venueScoreCalibrated: venueScoreCal,
     histVenueCalibrated: histVenueCal,
     fairwaySkillCalibRounds,
+    girSkillCalibRounds,
     birdiesSkillCalibRounds,
     eventPropBookAlignment: propBookAlign,
     parHeavySpreadRows: parSpreadRows,
@@ -1668,7 +1696,7 @@ export function resolveProjectionCounts({
     true,
   );
   const wBirdies = reduceVenueWeightWhenSkillBetter(
-    wVenue * 0.35,
+    wVenue * (courseSkillAnchor ? 0.44 : 0.35),
     muForRound,
     sk.birdies,
     playerAgg?.avgBirdies,
@@ -1689,24 +1717,22 @@ export function resolveProjectionCounts({
     false,
   );
   const wPars = 0;
-  const wGir = courseSkillAnchor
-    ? 0
-    : Math.min(
-        0.18,
-        reduceVenueWeightWhenSkillBetter(wVenue, muForRound, sk.gir, playerAgg?.avgGir, true),
-      );
-  const wFairways = courseSkillAnchor
-    ? 0
-    : Math.min(
-        0.15,
-        reduceVenueWeightWhenSkillBetter(
-          wVenue,
-          muForRound,
-          sk.fairways,
-          playerAgg?.avgFairways,
-          true,
-        ),
-      );
+  const girVenueW = reduceVenueWeightWhenSkillBetter(
+    wVenue,
+    muForRound,
+    sk.gir,
+    playerAgg?.avgGir,
+    true,
+  );
+  const fwVenueW = reduceVenueWeightWhenSkillBetter(
+    wVenue,
+    muForRound,
+    sk.fairways,
+    playerAgg?.avgFairways,
+    true,
+  );
+  const wGir = courseSkillAnchor ? Math.min(0.32, girVenueW) : Math.min(0.18, girVenueW);
+  const wFairways = 0;
   const wPutts = reduceVenueWeightWhenSkillBetter(
     wVenue,
     muForRound,
@@ -2404,8 +2430,11 @@ export function calibrateProjectionFieldMarkets(payload, opts = {}) {
     const rowDg = new Set(
       rows.map((pl) => Math.round(num(pl.dg_id, NaN))).filter((id) => Number.isFinite(id)),
     );
-    const dkBirdMean = dkBirdiesMarketMeanForRound(payload, rnd, rowDg);
-    if (Number.isFinite(dkBirdMean)) targetBirdMkt = dkBirdMean;
+    let dkBirdMean = NaN;
+    if (marketBookCalibrationEnabled()) {
+      dkBirdMean = dkBirdiesMarketMeanForRound(payload, rnd, rowDg);
+      if (Number.isFinite(dkBirdMean)) targetBirdMkt = dkBirdMean;
+    }
     const deferBirdiesToPropAlign =
       eventPropBirdiesAlignmentEnabled(opts) &&
       Number.isFinite(dkBirdMean) &&

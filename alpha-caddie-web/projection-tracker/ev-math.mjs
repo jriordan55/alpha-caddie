@@ -42,8 +42,8 @@ export function devigFairTwoWay(overOdds, underOdds) {
   };
 }
 
-export function modelEdgeVsFairAtLine(market, mu, line, overOdds, underOdds, sigmaScale = 1) {
-  const pOver = modelProbOver(market, mu, line, sigmaScale);
+export function modelEdgeVsFairAtLine(market, mu, line, overOdds, underOdds, sigmaScale = 1, fairwayHoles = 14) {
+  const pOver = modelProbOver(market, mu, line, sigmaScale, fairwayHoles);
   if (!Number.isFinite(pOver)) {
     return { edgeFairOver: NaN, edgeFairUnder: NaN, fairOver: NaN, fairUnder: NaN, pOver, pUnder: NaN };
   }
@@ -90,16 +90,67 @@ function sigmaDefault(market, muAbs) {
   return Math.max(0.55, Math.sqrt(Math.max(m, 0.2)) * 0.9);
 }
 
-export function modelProbOver(market, mu, line, sigmaScale = 1) {
+function binomialPmf(n, p, k) {
+  if (k < 0 || k > n) return 0;
+  if (k === 0) return (1 - p) ** n;
+  if (k === n) return p ** n;
+  let logCoef = 0;
+  for (let i = 0; i < k; i++) logCoef += Math.log(n - i) - Math.log(i + 1);
+  return Math.exp(logCoef + k * Math.log(p) + (n - k) * Math.log(1 - p));
+}
+
+function poissonProbOver(mu, line) {
+  const lam = num(mu, NaN);
+  const L = num(line, NaN);
+  if (!Number.isFinite(lam) || lam <= 0 || !Number.isFinite(L)) return NaN;
+  const k = Math.floor(L + 1e-9);
+  let cdf = 0;
+  let term = Math.exp(-lam);
+  cdf += term;
+  for (let i = 1; i <= k; i++) {
+    term *= lam / i;
+    cdf += term;
+    if (cdf > 0.999999) break;
+  }
+  return clamp(1 - cdf, 0, 1);
+}
+
+function binomialProbOver(mu, nTrials, line) {
+  const n = Math.round(num(nTrials, NaN));
+  const L = num(line, NaN);
+  const m = num(mu, NaN);
+  if (!Number.isFinite(n) || n < 1 || !Number.isFinite(m) || !Number.isFinite(L)) return NaN;
+  const p = clamp(m / n, 0.02, 0.98);
+  const k = Math.floor(L + 1e-9);
+  let cdf = 0;
+  for (let i = 0; i <= k; i++) cdf += binomialPmf(n, p, i);
+  return clamp(1 - cdf, 0, 1);
+}
+
+const OUTCOME_SIGMA_SCALE = {
+  "Total score": 1.08,
+  Birdies: 1.15,
+  GIR: 1.02,
+  "Fairways hit": 1.2,
+};
+
+export function modelProbOver(market, mu, line, sigmaScale = 1, fairwayHoles = 14) {
   if (!Number.isFinite(mu) || !Number.isFinite(line)) return NaN;
-  const scale = Number.isFinite(sigmaScale) && sigmaScale > 0 ? sigmaScale : 1;
+  if (market === "Birdies") return poissonProbOver(mu, line);
+  if (market === "GIR") return binomialProbOver(mu, 18, line);
+  if (market === "Fairways hit") {
+    const n = Math.round(num(fairwayHoles, 14)) || 14;
+    return binomialProbOver(mu, n, line);
+  }
+  const scale =
+    (Number.isFinite(sigmaScale) && sigmaScale > 0 ? sigmaScale : 1) * (OUTCOME_SIGMA_SCALE[market] || 1);
   const sig = (market === "Total score" ? 2.75 : sigmaDefault(market, mu)) * scale;
   const z = (line - mu) / sig;
   return 1 - normalCdf(z);
 }
 
-export function modelEdgePctAtLine(market, mu, line, overOdds, underOdds, sigmaScale = 1) {
-  const pOver = modelProbOver(market, mu, line, sigmaScale);
+export function modelEdgePctAtLine(market, mu, line, overOdds, underOdds, sigmaScale = 1, fairwayHoles = 14) {
+  const pOver = modelProbOver(market, mu, line, sigmaScale, fairwayHoles);
   if (!Number.isFinite(pOver)) return { edgeOver: NaN, edgeUnder: NaN, best: NaN };
   const pUnder = 1 - pOver;
   const pImpOver = Number.isFinite(num(overOdds, NaN)) ? impliedProbFromAmerican(overOdds) : 100 / 210;

@@ -87,19 +87,3 @@ export function livePartialRoundCountPropAdjust(market, row, meta) {
   else out.sigmaScale = clamp(Math.sqrt(rem / 18), 0.17, 1);
   return out;
 }
-
-export function ouProjectedMeanWithLiveScratch(market, row, meta) {
-  const mKey = market === "Total Score" ? "Total score" : market;
-  let base = NaN;
-  if (mKey === "Total score") base = num(row.total_score, NaN);
-  else if (mKey === "Birdies") {
-    const b = num(row.birdies, NaN);
-    const e = num(row.eagles, 0);
-    base = Number.isFinite(b) ? b + (Number.isFinite(e) ? e : 0) : NaN;
-  } else if (mKey === "GIR") base = num(row.gir, NaN);
-  else if (mKey === "Fairways hit") base = num(row.fairways, NaN);
-  if (!Number.isFinite(base)) return NaN;
-  const liveScore = mKey === "Total score" ? liveCurrentRoundTotalScoreMuDelta(row, meta) : 0;
-  const countLive = livePartialRoundCountPropAdjust(mKey, row, meta);
-  return base + liveScore + countLive.muDelta;
-}

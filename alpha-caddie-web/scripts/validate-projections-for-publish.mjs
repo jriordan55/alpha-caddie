@@ -36,13 +36,13 @@ function historicalVenueScoreForRound(basis, rnd) {
 /** In-week live scoring anchor when trustworthy; else historical venue round average. */
 function totalScoreTargetForValidation(basis, displayRound, coursePar, opts = {}) {
   const hist = historicalVenueScoreForRound(basis, displayRound);
-  // push:live applies book cal + live scratch after the pre-tournament event_week anchor — venue hist band.
-  if (opts.liveInPlay && Number.isFinite(hist)) {
-    return { target: hist, eventWeekTrusted: false };
-  }
   const ew = num(basis?.event_week_field_avg_score_by_round?.[String(displayRound)], NaN);
   if (Number.isFinite(ew)) {
     if (!Number.isFinite(hist) || Math.abs(ew - hist) <= EVENT_WEEK_VENUE_MAX_GAP_STROKES) {
+      return { target: ew, eventWeekTrusted: true };
+    }
+    // Live week: projections stay on pre-tournament event-week anchor (not harder venue buckets).
+    if (opts.liveInPlay) {
       return { target: ew, eventWeekTrusted: true };
     }
   }
@@ -234,8 +234,8 @@ const { target: scoreTarget, eventWeekTrusted } = totalScoreTargetForValidation(
   coursePar,
   { liveInPlay },
 );
-const minTotal = scoreTarget - (eventWeekTrusted ? 1.0 : 1.75);
-const maxTotal = scoreTarget + (eventWeekTrusted ? 0.55 : 2.75);
+const minTotal = scoreTarget - (eventWeekTrusted ? (liveInPlay ? 2.0 : 1.0) : 1.75);
+const maxTotal = scoreTarget + (eventWeekTrusted ? (liveInPlay ? 1.25 : 0.55) : 2.75);
 if (Number.isFinite(avgTotal) && avgTotal < minTotal) {
   fail(
     `R${displayRound} field avg total ${avgTotal.toFixed(2)} too low (min ${minTotal.toFixed(2)}, target ${scoreTarget.toFixed(2)}${eventWeekTrusted ? ", event-week" : ", venue hist"}) — check repair:projection-course-basis`,
@@ -248,7 +248,9 @@ if (Number.isFinite(avgTotal) && avgTotal > maxTotal) {
 }
 
 const targetLabel = liveInPlay
-  ? "venue-hist (live in-play)"
+  ? eventWeekTrusted
+    ? "event-week (live in-play)"
+    : "venue-hist (live in-play)"
   : eventWeekTrusted
     ? "event-week"
     : "venue-hist";

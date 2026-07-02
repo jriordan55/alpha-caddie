@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
  * Apply honest DK book-alignment shifts to projections.json (post export + fit).
+ * When GOLF_MARKET_BOOK_CALIBRATION=0 (default), strips any baked-in shifts instead.
  *   npm run apply:market-book-calibration
  */
 import { readFileSync, writeFileSync } from "fs";
@@ -11,25 +12,36 @@ import {
   applyEventPropBookAlignment,
   loadMarketBookCalibration,
   marketBookCalibrationEnabled,
+  stripMarketBookCalibrationFromPayload,
 } from "./market-book-calibration.mjs";
 import { readCoursePar18, repairProjectionScoreParCoherence, syncProjectionPlayerCoursePar } from "./projection-course-par.mjs";
-import { num } from "./round-projection-mu.mjs";
 
 const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
 const projPath = join(WEB, "projections.json");
 
-if (!marketBookCalibrationEnabled()) {
-  console.log("[apply:market-book-calibration] Skipped (GOLF_MARKET_BOOK_CALIBRATION=0).");
-  process.exit(0);
-}
-
-const cal = loadMarketBookCalibration(true);
 const proj = JSON.parse(readFileSync(projPath, "utf8"));
 const par = readCoursePar18(proj);
 if (!Number.isFinite(par)) {
   console.error("[apply:market-book-calibration] FAIL: missing course_par_18 / hole_pars — run ensure:projection-course-par first");
   process.exit(1);
 }
+
+if (!marketBookCalibrationEnabled()) {
+  const stripped = stripMarketBookCalibrationFromPayload(proj, par);
+  syncProjectionPlayerCoursePar(proj, par);
+  const { fixed } = repairProjectionScoreParCoherence(proj, par);
+  writeFileSync(projPath, `${JSON.stringify(proj, null, 2)}\n`);
+  console.log(
+    `[apply:market-book-calibration] DK book calibration disabled — stripped shifts from ${stripped.rows} row(s)` +
+      (stripped.strippedEventProps ? " (event props)" : "") +
+      (stripped.strippedGlobal ? " (global)" : "") +
+      (fixed ? `; repaired ${fixed} score↔par row(s)` : "") +
+      ".",
+  );
+  process.exit(0);
+}
+
+const cal = loadMarketBookCalibration(true);
 let n = 0;
 for (const pl of proj.players || []) {
   if (!pl || typeof pl !== "object") continue;

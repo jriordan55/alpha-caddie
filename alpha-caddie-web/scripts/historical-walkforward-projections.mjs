@@ -3,9 +3,18 @@
  * Flat venue player score: same all-time course average every round; weather/pin/tee wave on live only.
  */
 import { join } from "path";
-import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
-
-Object.assign(process.env, flatVenueProjectionPipelineEnv());
+import {
+  applyVenueCountingIntercept,
+  applyVenueScoreIntercept,
+  clamp,
+  computeRecencyWeightedVenueMoments,
+  computeTourPriorsFromHist,
+  computeVenueStatisticalIntercept,
+  venueBirdieSgScale,
+  fitOutcomeSigmaScales,
+  setOutcomeSigmaScales,
+} from "./projection-stat-model.mjs";
+import { walkforwardBacktestPipelineEnv } from "./projection-pipeline-env.mjs";
 import { eventsLikelySame, foldComparableTitle } from "./dg-events-align.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
 import {
@@ -23,6 +32,7 @@ import {
   fieldCountingMeansFromWithinEventMap,
   ensureProjectionCourseBasisComplete,
   flatVenuePlayerScoreAnchorEnabled,
+  loadCourseTableAdjRate,
   reconcileAllProjectionPlayerRows,
   resolveProjectionCounts,
   resolveProjectionScoreToPar,
@@ -44,6 +54,13 @@ import {
   num,
   ouProjectedMeanForMode,
 } from "./round-projection-mu.mjs";
+import { resolveCourseTableForVenue } from "./course-adaptive-pricing.mjs";
+import {
+  collectVenueHistRowsForSgFit,
+  fitVenueSgImportanceFromRows,
+  mergeSgImportance,
+  serializeSgImportanceForMeta,
+} from "./course-skill-tailoring.mjs";
 
 function rowTimeMs(row) {
   const s = String(row?.event_completed || "").trim();
@@ -156,7 +173,9 @@ function skillRowFromHistory(rec) {
     "v",
   );
   const fwR = recencyWeightedMean(
-    rounds.map((r) => ({ v: traditionalRate01(r.fairways, N_FAIRWAY_HOLES) })),
+    rounds.map((r) => ({
+      v: traditionalRate01(r.fairways ?? r.driving_acc, N_FAIRWAY_HOLES),
+    })),
     "v",
   );
   if (Number.isFinite(girR)) sk.dg_gir_pct = girR;
@@ -181,6 +200,16 @@ function skillRowFromHistory(rec) {
     rounds.map((r) => ({ v: traditionalRate01(r.fairways, N_FAIRWAY_HOLES) * N_FAIRWAY_HOLES })),
     "v",
   );
+  const daRaw = recencyWeightedMean(rounds, "driving_acc");
+  if (Number.isFinite(daRaw)) {
+    if (daRaw > -0.55 && daRaw < 0.55) sk.driving_acc = daRaw;
+    else {
+      const daRate = traditionalRate01(daRaw, N_FAIRWAY_HOLES);
+      if (Number.isFinite(daRate)) sk.driving_accuracy = daRate * 100;
+    }
+  }
+  const dist = recencyWeightedMean(rounds, "driving_dist");
+  if (Number.isFinite(dist) && dist >= 235 && dist <= 380) sk.driving_distance = dist;
   sk.counting_rounds = rounds.filter((r) => Number.isFinite(num(r.birdies, NaN))).length;
   return sk;
 }
@@ -355,6 +384,11 @@ async function loadVenueScoringBeforeCutoff(histRows, courseKey, courseLabel, cu
   }
 
   const venueAgg = finalizeVenueAgg(venueTotals);
+  const recencyVenue = computeRecencyWeightedVenueMoments(histRows, courseKey, cutoffMs);
+  if (recencyVenue && recencyVenue.w >= 20 && Number.isFinite(recencyVenue.avgStp)) {
+    venueAgg.avgStp = recencyVenue.avgStp;
+    venueAgg.n = Math.max(venueAgg.n, Math.round(recencyVenue.w));
+  }
   const fieldByRound = new Map();
   for (const [rnd, raw] of fieldRaw) fieldByRound.set(rnd, finalizeVenueAgg(raw));
   const playerByRound = new Map();
@@ -435,6 +469,7 @@ export async function buildFullModelMuMapForEvent({
   betTimeMs,
   fieldDgIds,
 }) {
+  Object.assign(process.env, walkforwardBacktestPipelineEnv());
   const dgSet = new Set(fieldDgIds.filter((d) => Number.isFinite(d)));
   if (!dgSet.size) return new Map();
 
@@ -451,6 +486,13 @@ export async function buildFullModelMuMapForEvent({
     loadVenueScoringBeforeCutoff(histRows, courseKey, courseName, betTimeMs, eventName, eventYear, targetRound),
   ]);
 
+  const tourPriors = computeTourPriorsFromHist(histRows, betTimeMs);
+  const venueScoreIntercept = computeVenueStatisticalIntercept(histRows, courseKey, betTimeMs, tourPriors);
+  const birdSgScale = venueBirdieSgScale(venueScoring.venueAvgBirdies, tourPriors.avgBirdMkt);
+  const countOpts = {
+    venueBirdieSgScale: birdSgScale,
+  };
+
   const histEventCtx = buildEventContextFromHist(histRows, eventName, eventYear, courseKey, targetRound);
   const withinEventCountingMap = buildWithinEventCountingMap(
     histRows,
@@ -460,6 +502,26 @@ export async function buildFullModelMuMapForEvent({
     targetRound,
     venueScoring,
   );
+
+  const courseFairwayRate01 = loadCourseTableAdjRate(courseName, "adj_driving_accuracy");
+  const courseGirRate01 = loadCourseTableAdjRate(courseName, "adj_gir");
+  const courseAdjDrivingDistance = loadCourseTableAdjRate(courseName, "adj_driving_distance");
+  const courseFwWidth = loadCourseTableAdjRate(courseName, "fw_width");
+  const courseFwDifficulty = loadCourseTableAdjRate(courseName, "fw_diff");
+  const courseAdjScoreToPar = loadCourseTableAdjRate(courseName, "adj_score_to_par");
+  const courseFwWidthNorm = Number.isFinite(courseFwWidth)
+    ? Math.max(0, Math.min(1, (courseFwWidth - 23.5) / (71.9 - 23.5)))
+    : NaN;
+  const courseBirdieEase = Number.isFinite(courseAdjScoreToPar) ? -0.12 * courseAdjScoreToPar : 0;
+  const courseSkillAnchor = Number.isFinite(courseFairwayRate01) || Number.isFinite(courseGirRate01);
+  const courseCountOpts = {
+    courseFairwayRate01,
+    courseGirRate01,
+    courseFwWidthNorm,
+    courseAdjDrivingDistance,
+    courseFwDifficulty,
+    courseBirdieEase,
+  };
 
   const base = [];
   for (const dg of dgSet) {
@@ -486,6 +548,10 @@ export async function buildFullModelMuMapForEvent({
       venueGir: venueScoring.venueAvgGir,
       venueFairways: venueScoring.venueAvgFairways,
       venuePutts: venueScoring.venueAvgPutts,
+      courseFairwayRate01,
+      courseGirRate01,
+      ...countOpts,
+      ...courseCountOpts,
     });
     base.push({
       dg_id: dg,
@@ -506,11 +572,23 @@ export async function buildFullModelMuMapForEvent({
 
   if (!base.length) return new Map();
 
+  const fieldMeanDgFairways14 =
+    base.reduce((s, r) => s + num(r.fairways, 0), 0) / Math.max(1, base.length);
+  const driveSamples = base
+    .map((r) => num(r.driving_distance, NaN))
+    .filter((d) => Number.isFinite(d) && d >= 235 && d <= 380);
+  const fieldMeanDrive = driveSamples.length
+    ? driveSamples.reduce((s, d) => s + d, 0) / driveSamples.length
+    : courseAdjDrivingDistance;
+
   const fieldMeanMu = base.reduce((s, r) => s + num(r.mu_sg, 0), 0) / base.length;
   for (const row of base) {
     row.mu_sg = applyVenueCourseFitToMu(row.mu_sg, row.dg_id, venueScoring, fieldMeanMu);
     row.implied_mu_sg = row.mu_sg;
   }
+  const ctRow = resolveCourseTableForVenue(courseName);
+  const venueFitRows = collectVenueHistRowsForSgFit(histRows, courseKey, betTimeMs, rowTimeMs);
+  const sgImportance = mergeSgImportance(fitVenueSgImportanceFromRows(venueFitRows), ctRow);
   const fieldMeanMuAdj = base.reduce((s, r) => s + num(r.mu_sg, 0), 0) / base.length;
 
   const ottSamples = base.map((r) => num(r.sg_ott, NaN)).filter(Number.isFinite);
@@ -576,6 +654,7 @@ export async function buildFullModelMuMapForEvent({
       avg_gir: row.avg_gir,
       avg_fairways: row.avg_fairways,
       counting_rounds: row.counting_rounds,
+      driving_distance: row.driving_distance,
     };
     const liveTrad = rollingTrad.get(row.dg_id) || null;
 
@@ -603,6 +682,7 @@ export async function buildFullModelMuMapForEvent({
             fieldMeanArg,
             sg_ott: row.sg_ott,
             sg_app: row.sg_app,
+            driving_distance: row.driving_distance,
             nGirHoles: 18,
             venueBird: venueScoring.venueAvgBirdies,
             venueBog: venueScoring.venueAvgBogeys,
@@ -610,7 +690,13 @@ export async function buildFullModelMuMapForEvent({
             venueGir: venueScoring.venueAvgGir,
             venueFairways: venueScoring.venueAvgFairways,
             venuePutts: venueScoring.venueAvgPutts,
+            courseFairwayRate01,
+            courseGirRate01,
+            fieldMeanDgFairways14,
+            fieldMeanDrive,
             fieldMeanT2g: fieldSkillMedian(base.map((r) => num(r.sg_t2g, NaN)).filter(Number.isFinite)),
+            ...countOpts,
+            ...courseCountOpts,
           });
 
     const scoreRes = resolveProjectionScoreToPar({
@@ -642,6 +728,7 @@ export async function buildFullModelMuMapForEvent({
       venueScoring,
       targetStp: stp,
       nFairwayHoles: fairwayHoles,
+      courseSkillAnchor,
     });
     st.eagles = venueCounts.eagles;
     st.birdies = venueCounts.birdies;
@@ -690,20 +777,48 @@ export async function buildFullModelMuMapForEvent({
       sg_arg: row.sg_arg,
       sg_putt: row.sg_putt,
       sg_t2g: row.sg_t2g,
+      driving_distance: row.driving_distance,
     });
+    const lastPl = players[players.length - 1];
+    if (venueScoreIntercept?.scoreStp && venueScoreIntercept.nEff >= 35 && Math.abs(venueScoreIntercept.scoreStp) >= 0.12) {
+      const flatVenue = flatVenuePlayerScoreAnchorEnabled();
+      const scoreW = flatVenue
+        ? clamp(0.55 + 0.12 * Math.log10(venueScoreIntercept.nEff / 35), 0.55, 0.82)
+        : clamp(0.25 + 0.1 * Math.log10(venueScoreIntercept.nEff / 35), 0.25, 0.45);
+      applyVenueScoreIntercept(lastPl, { scoreStp: venueScoreIntercept.scoreStp * scoreW }, coursePar18);
+    }
+    if (venueScoreIntercept?.nEff >= 30) {
+      const countW = clamp(venueScoreIntercept.nEff / (venueScoreIntercept.nEff + 32), 0.5, 0.92);
+      applyVenueCountingIntercept(
+        lastPl,
+        {
+          birdMkt: venueScoreIntercept.birdMkt * countW,
+          gir: venueScoreIntercept.gir * countW,
+          fw: venueScoreIntercept.fw * countW,
+        },
+        fairwayHoles,
+      );
+    }
   }
 
   const meta = {
     display_round: targetRound,
     course_used: courseName,
     course_par_18: coursePar18,
-    projection_course_basis: { fairway_holes_modeled: fairwayHoles },
+    projection_course_basis: {
+      fairway_holes_modeled: fairwayHoles,
+      course_adj_fairway_rate: Number.isFinite(courseFairwayRate01) ? courseFairwayRate01 : undefined,
+      course_adj_gir_rate: Number.isFinite(courseGirRate01) ? courseGirRate01 : undefined,
+      course_adj_score_to_par: Number.isFinite(courseAdjScoreToPar) ? courseAdjScoreToPar : undefined,
+      course_birdie_ease: Number.isFinite(courseBirdieEase) ? courseBirdieEase : undefined,
+    },
     projection_counts_weather_baked: false,
     projection_round_adjustments: {
       flat_venue_player_score: flatVenuePlayerScoreAnchorEnabled(),
     },
   };
   syncVenueScoringToProjectionBasis(meta.projection_course_basis, venueScoring, coursePar18);
+  meta.projection_course_basis.course_sg_importance = serializeSgImportanceForMeta(sgImportance);
   if (fieldCountingMeans) {
     meta.projection_course_basis.field_counting_means_by_round = fieldCountingMeans;
   }
@@ -725,6 +840,8 @@ export async function buildFullModelMuMapForEvent({
     course_used: courseName,
     course_par_18: coursePar18,
     players,
+    venueScoring,
+    historical_projection_calibration: histCalib,
     _webRoot: join(repoRoot, "alpha-caddie-web"),
   };
   payload.projection_course_basis = ensureProjectionCourseBasisComplete(
@@ -736,6 +853,8 @@ export async function buildFullModelMuMapForEvent({
     venueScoring,
     skipMarketBookCalibration: true,
     skipEventPropBookAlignment: true,
+    girBlend: 0.38,
+    fairwaysBlend: 0,
   });
 
   const playersReconciled = payload.players || players;

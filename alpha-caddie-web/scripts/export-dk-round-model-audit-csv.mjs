@@ -20,7 +20,7 @@ const WEB_ROOT = join(__dirname, "..");
 const DEFAULT_OUT = join(WEB_ROOT, "data", "dk_round_projection_audit.csv");
 
 const HEADER =
-  "captured_at,book_odds_refreshed_at,projections_updated_at,event_name,course_used,display_round,dg_id,player_name,market,dk_line,over_odds,under_odds,model_total_score,model_birdies,model_pars,model_bogeys,model_gir,model_fairways,model_putts\n";
+  "captured_at,book_odds_refreshed_at,projections_updated_at,event_name,course_used,display_round,round_num,dg_id,player_name,market,dk_line,over_odds,under_odds,model_total_score,model_birdies,model_pars,model_bogeys,model_gir,model_fairways,model_putts\n";
 
 function num(v, d = NaN) {
   const n = Number(v);
@@ -67,7 +67,7 @@ export function appendDkRoundProjectionAuditCsv(payload, opts = {}) {
     return { appended: 0, path: outPath };
   }
 
-  const rnd = displayRoundFromPayload(payload);
+  const displayRnd = displayRoundFromPayload(payload);
   const players = Array.isArray(payload?.players) ? payload.players : [];
   const captured = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
   const bookAt = String(payload?.book_odds_refreshed_at || payload?.meta?.book_odds_refreshed_at || "").trim() || captured;
@@ -84,6 +84,9 @@ export function appendDkRoundProjectionAuditCsv(payload, opts = {}) {
   const lines = [];
   for (const pr of dkRows) {
     const dgId = Math.round(num(pr?.dg_id, NaN));
+    const propRound = Math.round(num(pr?.round_num, NaN));
+    const rnd =
+      Number.isFinite(propRound) && propRound >= 1 && propRound <= 4 ? propRound : displayRnd;
     const pl = Number.isFinite(dgId) ? playerRowForRound(players, dgId, rnd) : null;
     const row = [
       captured,
@@ -91,6 +94,7 @@ export function appendDkRoundProjectionAuditCsv(payload, opts = {}) {
       projAt,
       event,
       course,
+      displayRnd,
       rnd,
       Number.isFinite(dgId) ? dgId : "",
       String(pr?.player_name || "").trim(),

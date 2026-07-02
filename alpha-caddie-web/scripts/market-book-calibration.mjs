@@ -141,7 +141,7 @@ export function loadMarketBookCalibration(force = false) {
 }
 
 export function marketBookCalibrationEnabled() {
-  const v = String(process.env.GOLF_MARKET_BOOK_CALIBRATION ?? "1").trim();
+  const v = String(process.env.GOLF_MARKET_BOOK_CALIBRATION ?? "0").trim();
   return v !== "0" && v.toLowerCase() !== "false";
 }
 
@@ -306,6 +306,7 @@ export function eventPropBookMuShift(market, meta) {
 }
 
 export function eventPropBookAlignedMarket(meta, market) {
+  if (!marketBookCalibrationEnabled()) return false;
   return Boolean(meta?.event_prop_book_alignment?.markets?.[market]);
 }
 
@@ -350,4 +351,80 @@ export function applyMarketBookCalibrationToRow(row, coursePar18 = 72) {
   if (Number.isFinite(b) && Number.isFinite(bg)) {
     row.pars = Math.max(0.1, Math.round((18 - e - d - b - bg) * 100) / 100);
   }
+}
+
+function reverseMuShiftOnRow(row, shifts, coursePar18 = 72) {
+  if (!row || typeof row !== "object" || !shifts || typeof shifts !== "object") return;
+  const par = Math.round(num(coursePar18, NaN)) || 72;
+
+  const scoreShift = num(shifts["Total score"]?.mu_shift, NaN);
+  if (scoreShift) {
+    const stp = num(row.score_to_par, NaN);
+    const ts = num(row.total_score, NaN);
+    if (Number.isFinite(stp)) {
+      row.score_to_par = Math.round((stp - scoreShift) * 100) / 100;
+      row.total_score = Math.round((par + row.score_to_par) * 100) / 100;
+    } else if (Number.isFinite(ts)) {
+      row.total_score = Math.round((ts - scoreShift) * 100) / 100;
+      row.score_to_par = Math.round((row.total_score - par) * 100) / 100;
+    }
+  }
+
+  const reverseCount = (market, col, lo, hi) => {
+    const shift = num(shifts[market]?.mu_shift, NaN);
+    if (!shift) return;
+    const v = num(row[col], NaN);
+    if (!Number.isFinite(v)) return;
+    row[col] = Math.round(clamp(v - shift, lo, hi) * 100) / 100;
+  };
+
+  reverseCount("Birdies", "birdies", 0.1, 8);
+  reverseCount("Bogeys", "bogeys", 0.1, 9);
+  reverseCount("GIR", "gir", 4, 17);
+  reverseCount("Fairways hit", "fairways", 2, 16);
+  reverseCount("Pars", "pars", 4, 16);
+
+  const e = num(row.eagles, 0);
+  const d = num(row.doubles, 0);
+  const b = num(row.birdies, NaN);
+  const bg = num(row.bogeys, NaN);
+  if (Number.isFinite(b) && Number.isFinite(bg)) {
+    row.pars = Math.max(0.1, Math.round((18 - e - d - b - bg) * 100) / 100);
+  }
+}
+
+/**
+ * Remove baked-in DK book μ-shifts from projections.json (reverse apply order).
+ * @returns {{ strippedGlobal: boolean, strippedEventProps: boolean, rows: number }}
+ */
+export function stripMarketBookCalibrationFromPayload(payload, coursePar18 = 72) {
+  const par = Math.round(num(coursePar18, NaN)) || 72;
+  const players = Array.isArray(payload?.players) ? payload.players : [];
+  const meta = payload?.meta && typeof payload.meta === "object" ? payload.meta : null;
+  const eventShifts =
+    meta?.event_prop_book_alignment?.markets || payload?.event_prop_book_alignment?.markets;
+  let globalShifts =
+    meta?.market_book_calibration?.markets || payload?.market_book_calibration?.markets;
+  if (!globalShifts || !Object.keys(globalShifts).length) {
+    const fileCal = loadMarketBookCalibration();
+    if (fileCal?.markets && Object.keys(fileCal.markets).length) globalShifts = fileCal.markets;
+  }
+  let strippedEventProps = false;
+  let strippedGlobal = false;
+
+  if (eventShifts && typeof eventShifts === "object" && Object.keys(eventShifts).length) {
+    for (const pl of players) reverseMuShiftOnRow(pl, eventShifts, par);
+    strippedEventProps = true;
+    if (meta) delete meta.event_prop_book_alignment;
+    if (payload?.event_prop_book_alignment) delete payload.event_prop_book_alignment;
+  }
+
+  if (globalShifts && typeof globalShifts === "object" && Object.keys(globalShifts).length) {
+    for (const pl of players) reverseMuShiftOnRow(pl, globalShifts, par);
+    strippedGlobal = true;
+    if (meta) delete meta.market_book_calibration;
+    if (payload?.market_book_calibration) delete payload.market_book_calibration;
+  }
+
+  return { strippedGlobal, strippedEventProps, rows: players.length };
 }

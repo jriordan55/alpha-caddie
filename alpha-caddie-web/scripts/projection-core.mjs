@@ -15,7 +15,7 @@ import {
 import { derivedStatsFromRatesAndSg } from "./counting-from-rates-sg.mjs";
 import { blendWeightsFromHistCalib } from "./optimized-counting-blend.mjs";
 
-export const RAW_ROUND_SD = Number(process.env.GOLF_RAW_ROUND_SD) || 2.75;
+export const RAW_ROUND_SD = Number(process.env.GOLF_RAW_ROUND_SD) || 3.0;
 export const N_FAIRWAY_HOLES = Number(process.env.GOLF_N_FAIRWAY_HOLES) || 14;
 
 function imputeCountsFromNegMu(muSg) {
@@ -125,7 +125,7 @@ function isPlausibleDrivingDistanceYds(y) {
 }
 
 /** Yards for modeling (FW): measured carry/roll when present, else neutral + DG yards-vs-tour rating. */
-function impliedDrivingYardsFromSkillRow(sk) {
+export function impliedDrivingYardsFromSkillRow(sk) {
   if (!sk || typeof sk !== "object") return NaN;
   const y = num(sk.driving_distance, NaN);
   if (Number.isFinite(y) && isPlausibleDrivingDistanceYds(y)) return y;
@@ -528,7 +528,7 @@ function fairwaysMuImputeOnly(stpVec, nFw) {
 /**
  * Expected fairways (N_fw hole scale) from SG:OTT vs the field median + small total-SG tilt (μ-only fallback mixed in lightly).
  */
-function fairwaysExpectedFromSkill(muSg, sgOtt, nFw, fieldMeanOtt, drivingDistYds, fieldMeanDrive) {
+export function fairwaysExpectedFromSkill(muSg, sgOtt, nFw, fieldMeanOtt, drivingDistYds, fieldMeanDrive) {
   const mu = clampMuSg(muSg);
   const stp = -mu;
   const fallback = fairwaysMuImputeOnly(stp, nFw);

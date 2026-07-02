@@ -6,6 +6,8 @@
 import { loadCourseTablePayload, resolveCourseTableRow } from "./projection-unified-factors.mjs";
 
 const SG_KEYS = ["sg_ott", "sg_app", "sg_arg", "sg_putt"];
+export const RECENT_FORM_MIN = 8;
+export const RECENT_FORM_MAX = 12;
 const CT_COEFF = { sg_ott: "ott_sg", sg_app: "app_sg", sg_arg: "arg_sg", sg_putt: "putt_sg" };
 
 function num(x, fallback = NaN) {
@@ -72,9 +74,9 @@ export function courseTablePlayerMuNudge(playerRow, ctRow, weight = 0.14) {
 /** Recent-vs-older form delta on SG categories weighted by course requirements. */
 export function courseWeightedSkillFormBonus(rounds, ctRow, playerRow, players, modelRound) {
   const weights = courseRequirementSgWeights(ctRow);
-  const nRec = Math.min(8, Math.max(3, Math.floor((rounds?.length || 0) / 2)));
+  const nRec = Math.min(RECENT_FORM_MAX, Math.max(RECENT_FORM_MIN, rounds?.length >= RECENT_FORM_MIN ? 10 : 6));
   const recent = rounds.slice(0, nRec);
-  const older = rounds.slice(nRec, Math.min(rounds.length, nRec + 24));
+  const older = rounds.slice(nRec, Math.min(rounds.length, nRec + 28));
 
   let formSum = 0;
   let formW = 0;
@@ -121,9 +123,9 @@ export function courseWeightedSkillFormBonus(rounds, ctRow, playerRow, players, 
 }
 
 export function recentFormMuBonus(rounds) {
-  const nRec = Math.min(6, Math.max(3, Math.floor(rounds.length / 2)));
+  const nRec = Math.min(RECENT_FORM_MAX, Math.max(RECENT_FORM_MIN, rounds?.length >= RECENT_FORM_MIN ? 10 : 6));
   const recent = rounds.slice(0, nRec);
-  const older = rounds.slice(nRec, Math.min(rounds.length, nRec + 18));
+  const older = rounds.slice(nRec, Math.min(rounds.length, nRec + 24));
   let rMean = meanNumFromRounds(recent, "sg_total");
   let oMean = meanNumFromRounds(older, "sg_total");
   if (Number.isFinite(rMean) && Number.isFinite(oMean)) {

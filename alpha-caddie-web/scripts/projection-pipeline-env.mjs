@@ -6,10 +6,19 @@ export function flatVenueProjectionPipelineEnv() {
   return {
     GOLF_FLAT_VENUE_PLAYER_SCORE: "1",
     GOLF_FLAT_VENUE_MAX_PLAYER_SCORE_WEIGHT: "0.38",
-    GOLF_MARKET_BOOK_CALIBRATION: "1",
+    GOLF_MARKET_BOOK_CALIBRATION: "0",
     GOLF_COURSE_PRIOR_ROUND_DIFFICULTY: "0",
     GOLF_WITHIN_EVENT_FORM_CARRY: "0",
     GOLF_UNIFIED_BOUNCE_BACK_K: "0",
+  };
+}
+
+/** Walk-forward backtest: historical venue score calibration + in-event course difficulty. */
+export function walkforwardBacktestPipelineEnv() {
+  return {
+    ...flatVenueProjectionPipelineEnv(),
+    GOLF_FLAT_VENUE_PLAYER_SCORE: "0",
+    GOLF_COURSE_PRIOR_ROUND_DIFFICULTY: "1",
   };
 }
 

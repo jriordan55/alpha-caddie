@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="tracker.css?v=9" />
+  <link rel="stylesheet" href="tracker.css?v=10" />
 </head>
 <body>
   <header class="app-header">
@@ -36,10 +36,10 @@
         <select id="filter-min-ev">
           <option value="0">0%</option>
           <option value="2.5">2.5%</option>
-          <option value="5" selected>5%</option>
+          <option value="5">5%</option>
           <option value="7.5">7.5%</option>
           <option value="10">10%</option>
-          <option value="12.5">12.5%</option>
+          <option value="12.5" selected>12.5%</option>
           <option value="15">15%</option>
         </select>
       </label>
@@ -79,7 +79,7 @@
       <div class="kpi-grid" id="overview-kpis"></div>
       <div class="chart-card" id="oos-honest-card">
         <h2 class="section-title">Honest walk-forward OOS ROI</h2>
-        <p class="note" id="oos-honest-note">Fit book-alignment on prior events only; grade each tournament once. No outcome optimization. Regenerate: <code>npm run report:walkforward-oos-roi</code></p>
+        <p class="note" id="oos-honest-note">Uniform EV policy (default 10%) on all markets and both sides. Edge from projections only — no DK calibration. Regenerate: <code>npm run report:walkforward-oos-roi</code></p>
         <div class="kpi-grid" id="oos-honest-kpis"></div>
         <div class="table-wrap" style="margin-top:1rem">
           <table class="data-table" id="oos-market-table">
@@ -219,8 +219,9 @@
       <div class="chart-card" id="live-picks-card">
         <h2 class="section-title" id="live-picks-title">Best bets — live week</h2>
         <p class="note" id="live-picks-note">
-          Upcoming-round picks from <code>projections.json</code>, ranked by model EV vs DraftKings and historical walk-forward ROI / context signals.
+          Upcoming-round picks from <code>projections.json</code> using full model μ (course SG fit, 8–12 round form, weather, tee wave) vs DraftKings lines.
         </p>
+        <div id="live-picks-factors" class="live-picks-factors" hidden></div>
         <div class="table-wrap table-wrap-tall">
           <table class="data-table live-picks-table" id="live-picks-table">
             <thead>
@@ -229,7 +230,9 @@
                 <th>Player</th>
                 <th>Market</th>
                 <th class="num">Side</th>
+                <th class="num" title="Full model μ after course tailoring, weather, tee wave, and in-round scratch">Model μ</th>
                 <th class="num">Line</th>
+                <th class="num" title="Model μ minus DK line">Δ</th>
                 <th class="num">Odds</th>
                 <th class="num">EV</th>
                 <th class="num">OOS ROI</th>
@@ -362,7 +365,7 @@
 
       <article class="guide-block">
         <h2 class="guide-heading">What this tool does</h2>
-        <p>Backtests your <strong>round projections</strong> against <strong>pre-round DraftKings lines</strong> for completed tournaments. Data: <code>round_projection_vs_actual_summary.csv</code> (aggregates) and <code>round_projection_vs_actual.csv</code> (every player × round × market). Regenerate with <code>npm run export:round-projection-vs-actual</code>.</p>
+        <p>Backtests <strong>walk-forward round projections</strong> (raw model μ at bet time) against <strong>pre-round DraftKings lines</strong> for completed tournaments. Data: <code>round_projection_vs_actual_summary.csv</code> (aggregates) and <code>round_projection_vs_actual.csv</code> (every player × round × market). Regenerate with <code>npm run export:round-projection-vs-actual</code>.</p>
       </article>
 
       <article class="guide-block">
@@ -373,7 +376,7 @@
           <dt>Market</dt>
           <dd>Total score, Birdies, GIR, Fairways, or all.</dd>
           <dt>Min EV %</dt>
-          <dd>Only bets where model edge vs <em>posted</em> DK odds is at least this (default 5%).</dd>
+          <dd>Global floor; GIR 10%, Total score &amp; Birdies 15% per-market minimum. Default 12.5%.</dd>
           <dt>Bet side</dt>
           <dd>Over only, under only, or both.</dd>
           <dt>Player</dt>
@@ -417,20 +420,22 @@
         <h2 class="guide-heading"><a href="#picks">Best bets</a></h2>
         <p>Live-week action list for the <strong>upcoming round</strong> in <code>projections.json</code> (not graded backtest rows).</p>
         <ul class="guide-ul">
-          <li><strong>EV</strong> — Model edge vs posted DraftKings odds (same min EV % as toolbar).</li>
+          <li><strong>Model μ</strong> — Full projection mean: course SG emphasis, venue history, 8–12 round hot/cold form, birdie-heavy venue boosts, weather, morning/afternoon tee wave, and in-round scratch when live.</li>
+          <li><strong>Δ</strong> — Model μ minus the DraftKings line (positive = model above the book).</li>
+          <li><strong>EV</strong> — Model edge vs posted DraftKings odds (Poisson birdies, binomial GIR/FW, normal score).</li>
           <li><strong>OOS ROI</strong> — Walk-forward out-of-sample ROI for that market @ 5% EV on completed events.</li>
-          <li><strong>Context</strong> — Historical signal buckets (wind, course width, tee wave, edge tier) that match this pick.</li>
+          <li><strong>Context</strong> — Course fit tags (dominant SG, recent form), weather, tee wave, and historical signal buckets.</li>
           <li><strong>Score</strong> — EV × OOS market factor × context boost (ranking only).</li>
-          <li>Click a row to jump to Bet log with filters applied (for comparing similar historical lines when available).</li>
+          <li>Refresh live data: <code>npm run refresh:live</code> then reload this page.</li>
         </ul>
       </article>
 
       <article class="guide-block">
         <h2 class="guide-heading"><a href="#bets">Bet log</a></h2>
-        <p>One row = player × round × market (pre-round DK audit).</p>
+        <p>One row = player × round × market (pre-round DK audit). Model column is walk-forward μ — not book-calibrated.</p>
         <dl class="guide-dl guide-dl-compact">
           <dt>Model / DK / Δ</dt>
-          <dd>Your projection, book line, and difference.</dd>
+          <dd>Walk-forward projection, DK closing line, and difference.</dd>
           <dt>Over / Under</dt>
           <dd>American odds and W/L vs actual for each side.</dd>
           <dt>Pick / EV% / Fair EV%</dt>
@@ -455,7 +460,7 @@
 
       <article class="guide-block">
         <h2 class="guide-heading"><a href="#events">All tournaments</a></h2>
-        <p>Card per event: score RMSE/MAE, EV units &amp; ROI on <strong>all markets</strong> at your min edge (after DK book calibration). Click a card to filter.</p>
+        <p>Card per event: score RMSE/MAE, EV units &amp; ROI on <strong>all markets</strong> at your min edge (walk-forward model vs pre-round DK). Click a card to filter.</p>
       </article>
 
       <article class="guide-block">
@@ -485,6 +490,6 @@
     </section>
   </main>
 
-  <script type="module" src="tracker.js?v=20"></script>
+  <script type="module" src="tracker.js?v=21"></script>
 </body>
 </html>

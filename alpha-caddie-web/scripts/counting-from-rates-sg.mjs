@@ -6,8 +6,8 @@ import { parse } from "csv-parse";
 import {
   DG_TOUR_AVG_FAIRWAY_RATE,
   DG_TOUR_AVG_GIR_RATE,
-  fairwayHitsFromRate01,
   fairwayRate01FromDg,
+  fairwayRate01FromSkillRatingsPp,
   girHitsFromRate01,
   girRate01FromDg,
   girRate01FromSgApp,
@@ -18,13 +18,13 @@ import {
   optimizedGirCount,
   optimizedHoleCounts,
 } from "./optimized-counting-blend.mjs";
-import { fairwayProjectionCourseAnchored } from "./fairway-projection-alt.mjs";
+import { venueBirdieSgScale } from "./projection-stat-model.mjs";
 
-/** Course-layout FW anchor: keep this fraction of (player − course) driving accuracy (sheet ~0.42). */
-const FAIRWAY_COURSE_SPREAD_KEEP = 0.45;
+/** Player FW spread vs tour when course anchor is off (near 1 = pure driving accuracy). */
+const FAIRWAY_DRIVING_ACC_SPREAD = 0.94;
 
 /** Venue birdie anchor: keep player spread vs course birdie mean (DK market ≈ birdies + eagles). */
-const BIRDIE_COURSE_SPREAD_KEEP = 0.58;
+const BIRDIE_COURSE_SPREAD_KEEP = 0.42;
 
 /** Stronger spread for above-venue birdie rates so elite players reach DK 5.5 lines. */
 function birdieSpreadKeepForPlayer(baseSpread, playerMkt, venueMkt, mu) {
@@ -91,16 +91,22 @@ function skillSpreadRate01(playerRate01, anchorRate01, spreadKeep = 0.85) {
   return a + k * (p - a);
 }
 
+/** Course-heavy blend of layout table rate and venue historical mean. */
+function courseVenueCountTarget(courseCount, venueCount, courseWeight = 0.82) {
+  if (Number.isFinite(courseCount) && Number.isFinite(venueCount)) {
+    const w = clamp(num(courseWeight, 0.82), 0.65, 0.92);
+    return Math.round((w * courseCount + (1 - w) * venueCount) * 100) / 100;
+  }
+  if (Number.isFinite(courseCount)) return Math.round(courseCount * 100) / 100;
+  return venueCount;
+}
+
 /** Field-mean calibration target from course-table driving accuracy. */
 export function fairwayCalibrationTargetMean(opts = {}) {
   const nFw = Math.round(num(opts.nFairwayHoles, 14)) || 14;
   const venue = num(opts.venueAvgFairways, NaN);
   const courseCount = num(opts.courseFairwayRate01, NaN) * nFw;
-  if (Number.isFinite(courseCount) && Number.isFinite(venue)) {
-    return Math.round(Math.max(courseCount, venue * 0.94) * 100) / 100;
-  }
-  if (Number.isFinite(courseCount)) return Math.round(courseCount * 100) / 100;
-  return venue;
+  return courseVenueCountTarget(courseCount, venue, num(opts.courseWeight, 0.5));
 }
 
 /** Shift all fairways by constant so field mean hits target (spread unchanged). */
@@ -109,7 +115,7 @@ export function calibrateFairwayFieldMean(players, opts = {}) {
   const target = fairwayCalibrationTargetMean(opts);
   const nFw = Math.round(num(opts.nFairwayHoles, 14)) || 14;
   const cap = nFw + 0.5;
-  const minDelta = num(opts.minDelta, 0.08);
+  const minDelta = num(opts.minDelta, 0.04);
   if (!Number.isFinite(target)) return 0;
 
   const rows = (players || []).filter((p) => {
@@ -130,6 +136,61 @@ export function calibrateFairwayFieldMean(players, opts = {}) {
   return rows.length;
 }
 
+/** Shrink player fairway spread toward field mean (weak cross-player signal). */
+export function shrinkFairwayFieldSpread(players, opts = {}) {
+  const round = opts.round;
+  const nFw = Math.round(num(opts.nFairwayHoles, 14)) || 14;
+  const cap = nFw + 0.5;
+  const shrink = clamp(num(opts.shrink, 0.18), 0, 0.4);
+  const rows = (players || []).filter((p) => {
+    if (Number.isFinite(round) && Math.round(num(p.round, NaN)) !== round) return false;
+    return Number.isFinite(num(p.fairways, NaN));
+  });
+  if (rows.length < 8 || shrink <= 0) return 0;
+  const mean = rows.reduce((s, p) => s + num(p.fairways, 0), 0) / rows.length;
+  for (const p of rows) {
+    const fw = num(p.fairways, NaN);
+    if (!Number.isFinite(fw)) continue;
+    p.fairways = Math.round(clamp(mean + (1 - shrink) * (fw - mean), 2, cap) * 100) / 100;
+  }
+  return rows.length;
+}
+
+/** Field-mean GIR target from course-table GIR rate blended with venue. */
+export function girCalibrationTargetMean(opts = {}) {
+  const nGir = Math.round(num(opts.nGirHoles, 18)) || 18;
+  const venue = num(opts.venueAvgGir, NaN);
+  const courseCount = num(opts.courseGirRate01, NaN) * nGir;
+  return courseVenueCountTarget(courseCount, venue, num(opts.courseWeight, 0.84));
+}
+
+/** Shift all GIR by constant so field mean hits course+venue target (spread unchanged). */
+export function calibrateGirFieldMean(players, opts = {}) {
+  const round = opts.round;
+  const target = girCalibrationTargetMean(opts);
+  const nGir = Math.round(num(opts.nGirHoles, 18)) || 18;
+  const cap = nGir + 0.5;
+  const minDelta = num(opts.minDelta, 0.04);
+  if (!Number.isFinite(target)) return 0;
+
+  const rows = (players || []).filter((p) => {
+    if (Number.isFinite(round) && Math.round(num(p.round, NaN)) !== round) return false;
+    return Number.isFinite(num(p.gir, NaN));
+  });
+  if (rows.length < 8) return 0;
+
+  const mean = rows.reduce((s, p) => s + num(p.gir, 0), 0) / rows.length;
+  const delta = mean - target;
+  if (Math.abs(delta) < minDelta) return 0;
+
+  for (const p of rows) {
+    const g = num(p.gir, NaN);
+    if (!Number.isFinite(g)) continue;
+    p.gir = Math.round(clamp(g - delta, 4, cap) * 100) / 100;
+  }
+  return rows.length;
+}
+
 function birdiesPlusEaglesFromPlayer(pl) {
   const b = num(pl?.birdies, NaN);
   const e = num(pl?.eagles, 0);
@@ -137,15 +198,24 @@ function birdiesPlusEaglesFromPlayer(pl) {
   return b + (Number.isFinite(e) ? Math.max(0, e) : 0);
 }
 
-/** Shift birdies so field mean(birdies+eagles) hits venue birdie level (+ typical eagles). */
-export function calibrateBirdiesFieldMean(players, opts = {}) {
-  const round = opts.round;
+/** Birdies+eagles field target: venue history adjusted by course scoring ease. */
+export function birdieCalibrationTargetMean(opts = {}) {
   const venueBird = num(opts.venueAvgBirdies, NaN);
   const venueEag = num(opts.venueAvgEagles, 0.12);
-  const minDelta = num(opts.minDelta, 0.05);
-  if (!Number.isFinite(venueBird)) return 0;
+  const courseEase = num(opts.courseBirdieEase, NaN);
+  if (!Number.isFinite(venueBird)) return NaN;
+  const venueMkt = venueBird + venueEag;
+  if (!Number.isFinite(courseEase)) return venueMkt;
+  const courseMkt = venueMkt + courseEase;
+  return Math.round((0.8 * courseMkt + 0.2 * venueMkt) * 100) / 100;
+}
 
-  const target = venueBird + venueEag;
+/** Shift birdies so field mean(birdies+eagles) hits course-adjusted venue target. */
+export function calibrateBirdiesFieldMean(players, opts = {}) {
+  const round = opts.round;
+  const target = birdieCalibrationTargetMean(opts);
+  const minDelta = num(opts.minDelta, 0.04);
+  if (!Number.isFinite(target)) return 0;
   const rows = (players || []).filter((p) => {
     if (Number.isFinite(round) && Math.round(num(p.round, NaN)) !== round) return false;
     return Number.isFinite(birdiesPlusEaglesFromPlayer(p));
@@ -206,9 +276,18 @@ function finalizeHoleCounts(eagles, birdies, bogeys, doubles) {
   };
 }
 
+function courseScalarNorm01(v, lo, hi) {
+  if (!Number.isFinite(v) || !Number.isFinite(lo) || !Number.isFinite(hi) || hi - lo < 1e-9) return 0.5;
+  return clamp((v - lo) / (hi - lo), 0, 1);
+}
+
+/** Narrow fairways (low width yards) → 0, wide → 1. */
+function courseFwWidthNorm(fwWidthYds) {
+  return courseScalarNorm01(num(fwWidthYds, NaN), 23.5, 71.9);
+}
+
 /**
- * Birdies market (birdies+eagles): player rolling rate + light SG, venue-anchored.
- * Replaces heavy optimized SG blend for birdies (was ~+0.3 vs actual on DK audit).
+ * Birdies market (birdies+eagles): rolling rate + optimized SG blend + GIR opportunity.
  */
 function birdiesEaglesFromPlayerRates(opts = {}) {
   const sk = opts.skRow || {};
@@ -217,7 +296,6 @@ function birdiesEaglesFromPlayerRates(opts = {}) {
   const venueBird = num(opts.venueBird, 3.8);
   const venueEag = num(opts.venueEagles, 0.12);
   const venueMkt = venueBird + venueEag;
-  // avg_birdies from rolling history is already birdies+eagles (DK birdies market).
   const playerMkt = num(sk.avg_birdies, NaN);
   const spread = birdieSpreadKeepForPlayer(
     num(opts.birdieSkillSpreadKeep, BIRDIE_COURSE_SPREAD_KEEP),
@@ -227,12 +305,32 @@ function birdiesEaglesFromPlayerRates(opts = {}) {
   );
   const dApp = sgDelta(sk, field, "sg_app");
   const dPutt = sgDelta(sk, field, "sg_putt");
+  const dArg = sgDelta(sk, field, "sg_arg");
+  const dOtt = sgDelta(sk, field, "sg_ott");
 
-  let mkt = venueMkt;
-  if (Number.isFinite(playerMkt)) mkt = venueMkt + spread * (playerMkt - venueMkt);
-  mkt += 0.28 * dApp + 0.1 * dPutt + 0.038 * mu;
+  let rateMkt = venueMkt;
+  if (Number.isFinite(playerMkt)) rateMkt = venueMkt + spread * (playerMkt - venueMkt);
+  const birdSgScale = num(opts.venueBirdieSgScale, 1);
+  rateMkt += birdSgScale * (0.26 * dApp + 0.09 * dPutt + 0.03 * mu);
 
-  let eagles = num(sk.avg_eagles, NaN);
+  const optMkt = num(opts.optimizedBirdMarket, NaN);
+  let mkt = Number.isFinite(optMkt) ? 0.36 * rateMkt + 0.64 * optMkt : rateMkt;
+
+  const gir = num(opts.projectedGir, num(sk.avg_gir, NaN));
+  const venueGir = num(opts.venueGir, 12);
+  if (Number.isFinite(gir) && Number.isFinite(venueGir)) {
+    mkt += 0.28 * ((gir - venueGir) / 18);
+  }
+
+  const courseEase = num(opts.courseBirdieEase, 0);
+  if (Number.isFinite(courseEase)) mkt += courseEase;
+
+  mkt += birdSgScale * (0.14 * dArg + 0.06 * dOtt);
+
+  const venueAnchor = venueMkt + (Number.isFinite(courseEase) ? courseEase : 0);
+  mkt = 0.78 * mkt + 0.22 * venueAnchor;
+
+  let eagles = num(opts.optimizedEagles, num(sk.avg_eagles, NaN));
   if (!Number.isFinite(eagles)) eagles = venueEag;
   eagles = clamp(eagles, 0, 1.1);
   const birdies = clamp(mkt - eagles, 0.15, 7);
@@ -274,7 +372,13 @@ export function holeCountsFromRatesAndSg(opts = {}) {
     muSg: mu,
     venueBird: opts.venueBird,
     venueEagles: opts.venueEagles,
+    venueGir: opts.venueGir,
+    projectedGir: opts.projectedGir,
+    courseBirdieEase: opts.courseBirdieEase,
     birdieSkillSpreadKeep: num(opts.birdieSkillSpreadKeep, BIRDIE_COURSE_SPREAD_KEEP),
+    venueBirdieSgScale: opts.venueBirdieSgScale,
+    optimizedBirdMarket: Number.isFinite(opt.birdies) ? opt.birdies + opt.eagles : NaN,
+    optimizedEagles: opt.eagles,
   });
 
   let { eagles, birdies, bogeys, doubles } = {
@@ -328,44 +432,70 @@ export function girFromRatesAndSg(opts = {}) {
   return Math.round(clamp(gir, 6, 16) * 100) / 100;
 }
 
-/** Fairways: course-table driving accuracy anchor + shrunk player FW% (not the SG/stp optimized blend). */
-export function fairwaysFromRatesAndSg(opts = {}) {
-  const mu = num(opts.muSg, 0);
+/** Resolve player fairway rate (0–1) — driving accuracy is the primary signal. */
+function playerFairwayRate01FromDrivingAccuracy(sk, liveTrad, nFw, fieldMeans, mu) {
+  if (liveTrad && typeof liveTrad === "object") {
+    const live = traditionalRate01(liveTrad.accuracy, nFw);
+    if (Number.isFinite(live)) return live;
+  }
+
+  let rate01 = fairwayRate01FromSkillRatingsPp(sk, DG_TOUR_AVG_FAIRWAY_RATE, nFw);
+  if (!Number.isFinite(rate01)) rate01 = fairwayRate01FromDg(sk, liveTrad, nFw);
+  if (!Number.isFinite(rate01)) {
+    const cached = num(sk?.dg_fairway_pct, NaN);
+    if (Number.isFinite(cached) && cached >= 0.15 && cached <= 0.88) rate01 = cached;
+  }
+  if (!Number.isFinite(rate01)) {
+    const daCnt = num(sk?.avg_fairways, NaN);
+    if (Number.isFinite(daCnt) && daCnt >= 2 && daCnt <= nFw + 1) {
+      rate01 = clamp(daCnt / nFw, 0.28, 0.88);
+    }
+  }
+  if (!Number.isFinite(rate01)) {
+    const dOtt = sgDelta(sk, fieldMeans, "sg_ott");
+    rate01 = clamp(DG_TOUR_AVG_FAIRWAY_RATE + 0.72 * dOtt + 0.08 * num(mu, 0), 0.32, 0.88);
+  }
+  return rate01;
+}
+
+/**
+ * Fairways from player driving accuracy (no course-average anchor).
+ * μ ≈ player FW% × driving holes; small SG:OTT nudge when accuracy is pp-based.
+ */
+export function fairwaysFromDrivingAccuracyAndCourse(opts = {}) {
+  const nFw = Math.round(num(opts.nFairwayHoles, 14)) || 14;
   const sk = opts.skRow || {};
   const liveTrad = opts.liveTrad ?? null;
-  const nFw = Math.round(num(opts.nFairwayHoles, 14)) || 14;
-  const venueFw = num(opts.venueFairways, 9);
-  const courseRate = num(opts.courseFairwayRate01, NaN);
-  const spreadKeep = num(
+  const fieldMeans = opts.fieldMeans || {};
+  const mu = num(opts.muSg, 0);
+
+  const playerRate01 = playerFairwayRate01FromDrivingAccuracy(sk, liveTrad, nFw, fieldMeans, mu);
+  const tourHits = DG_TOUR_AVG_FAIRWAY_RATE * nFw;
+  const playerHits = playerRate01 * nFw;
+  const spread = num(
     opts.fairwaySkillSpreadKeep,
-    num(process.env.GOLF_FAIRWAY_SKILL_SPREAD_KEEP, FAIRWAY_COURSE_SPREAD_KEEP),
+    num(process.env.GOLF_FAIRWAY_SKILL_SPREAD_KEEP, FAIRWAY_DRIVING_ACC_SPREAD),
   );
+  let fairways = tourHits + spread * (playerHits - tourHits);
 
-  let playerRate01 = fairwayRate01FromDg(sk, liveTrad, nFw);
-  if (!Number.isFinite(playerRate01)) {
-    const histFw = num(sk.avg_fairways, NaN);
-    if (Number.isFinite(histFw) && histFw > 1) playerRate01 = clamp(histFw / nFw, 0.28, 0.88);
-  }
-  if (!Number.isFinite(playerRate01)) {
-    const dOtt = sgDelta(sk, opts.fieldMeans || {}, "sg_ott");
-    playerRate01 = clamp(DG_TOUR_AVG_FAIRWAY_RATE + 0.72 * dOtt + 0.08 * mu, 0.28, 0.88);
-  }
+  const dOtt = sgDelta(sk, fieldMeans, "sg_ott");
+  fairways += 0.28 * dOtt;
 
-  let fairways = NaN;
-  if (Number.isFinite(playerRate01) && Number.isFinite(courseRate)) {
-    fairways = fairwayProjectionCourseAnchored({
-      dgFairwayPct: playerRate01,
-      courseAdjRate: courseRate,
-      nFairwayHoles: nFw,
-      spreadKeep,
-    });
-  }
-
-  if (!Number.isFinite(fairways)) {
-    const rate01 = clamp(num(playerRate01, venueFw / nFw), 0.35, 0.75);
-    fairways = rate01 * nFw;
-  }
   return Math.round(clamp(fairways, 2, nFw + 0.5) * 100) / 100;
+}
+
+/** Fairways: driving accuracy primary (no course-average anchor). */
+export function fairwaysFromRatesAndSg(opts = {}) {
+  const fieldMeans = opts.fieldMeans || {
+    sg_ott: opts.fieldMeanOtt,
+    sg_app: opts.fieldMeanApp,
+    sg_putt: opts.fieldMeanPutt,
+    sg_arg: opts.fieldMeanArg,
+  };
+  const nFw = Math.round(num(opts.nFairwayHoles, 14)) || 14;
+  const fairways = fairwaysFromDrivingAccuracyAndCourse({ ...opts, fieldMeans });
+  if (Number.isFinite(fairways)) return fairways;
+  return Math.round(clamp(DG_TOUR_AVG_FAIRWAY_RATE * nFw, 2, nFw + 0.5) * 100) / 100;
 }
 
 /** Putts from rolling rate + SG:PUTT (+ missed GIR proxy). */
@@ -397,19 +527,6 @@ export function derivedStatsFromRatesAndSg(muRaw, nFairwayHoles, opts = {}) {
     sg_t2g: opts.fieldMeanT2g,
   };
 
-  const hole = holeCountsFromRatesAndSg({
-    muSg: mu_sg,
-    skRow: skR,
-    fieldMeans,
-    histCountFit: opts.histCountFit,
-    venueBird: opts.venueBird,
-    venueBog: opts.venueBog,
-    venueEagles: opts.venueEagles,
-    venueDoubles: opts.venueDoubles,
-    venueGir: opts.venueGir,
-    fieldGir: opts.venueGir,
-  });
-
   const blendW = blendWeightsFromHistCalib(opts.histCountFit);
   const girOpts = {
     muSg: mu_sg,
@@ -425,15 +542,37 @@ export function derivedStatsFromRatesAndSg(muRaw, nFairwayHoles, opts = {}) {
   };
   const gir = girFromRatesAndSg(girOpts);
 
+  const hole = holeCountsFromRatesAndSg({
+    muSg: mu_sg,
+    skRow: skR,
+    fieldMeans,
+    histCountFit: opts.histCountFit,
+    venueBird: opts.venueBird,
+    venueBog: opts.venueBog,
+    venueEagles: opts.venueEagles,
+    venueDoubles: opts.venueDoubles,
+    venueGir: opts.venueGir,
+    projectedGir: gir,
+    courseBirdieEase: opts.courseBirdieEase,
+    fieldGir: opts.venueGir,
+    venueBirdieSgScale: opts.venueBirdieSgScale ?? venueBirdieSgScale(opts.venueBird, 4.2),
+  });
+
   const fairways = fairwaysFromRatesAndSg({
     muSg: mu_sg,
     skRow: skR,
     liveTrad,
     fieldMeans,
     fieldMeanOtt: opts.fieldMeanOtt,
+    fieldMeanDrive: opts.fieldMeanDrive,
+    drivingDistance: opts.drivingDistance,
     nFairwayHoles,
     venueFairways: opts.venueFairways,
     courseFairwayRate01: opts.courseFairwayRate01,
+    fieldMeanDgFairways14: opts.fieldMeanDgFairways14,
+    courseFwWidthNorm: opts.courseFwWidthNorm,
+    courseAdjDrivingDistance: opts.courseAdjDrivingDistance,
+    courseFwDifficulty: opts.courseFwDifficulty,
     fairwaySkillSpreadKeep: num(opts.fairwaySkillSpreadKeep, blendW.fairways.spreadKeep),
     histCountFit: opts.histCountFit,
   });

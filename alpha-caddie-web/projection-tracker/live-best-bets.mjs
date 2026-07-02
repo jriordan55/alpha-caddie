@@ -7,8 +7,19 @@ import {
   num,
   pickBetSide,
 } from "./ev-math.mjs";
-import { ouProjectedMeanWithLiveScratch } from "../scripts/live-in-play-pricing.mjs";
+import {
+  isActionableMarket,
+  minEvForMarket,
+  qualifiesBet,
+} from "./bet-policy.mjs";
+import { ouProjectedMeanForLive } from "../scripts/projected-mean-live.mjs";
 import { buildBookPropsIndex } from "../scripts/projection-book-props.mjs";
+import {
+  buildLiveProjectionFactorsSummary,
+  courseTailoringTags,
+} from "./projection-factors-panel.mjs";
+
+export { buildLiveProjectionFactorsSummary } from "./projection-factors-panel.mjs";
 
 const PROJECTIONS_URL = "../projections.json";
 const EDGE_SIGNALS_URL = "../data/edge_signal_scan.json";
@@ -16,10 +27,10 @@ const COURSE_TABLE_URL = "../data/course_table.csv";
 const TOP_N = 15;
 
 const MARKET_MODEL = {
-  "Total score": (p, meta) => ouProjectedMeanWithLiveScratch("Total score", p, meta),
-  Birdies: (p, meta) => ouProjectedMeanWithLiveScratch("Birdies", p, meta),
-  GIR: (p) => num(p.gir, NaN),
-  "Fairways hit": (p) => num(p.fairways, NaN),
+  "Total score": (p, meta) => ouProjectedMeanForLive("Total score", p, meta),
+  Birdies: (p, meta) => ouProjectedMeanForLive("Birdies", p, meta),
+  GIR: (p, meta) => ouProjectedMeanForLive("GIR", p, meta),
+  "Fairways hit": (p, meta) => ouProjectedMeanForLive("Fairways hit", p, meta),
 };
 
 const DK_TO_MARKET = {
@@ -164,6 +175,41 @@ function projectionCourseBasis(projections) {
   return projections?.meta?.projection_course_basis || projections?.projection_course_basis || {};
 }
 
+function projectionFactorsNote(projections) {
+  const meta = projections?.meta || projections || {};
+  const parts = [];
+  if (meta.projection_counts_weather_baked) {
+    const rnd = Math.round(num(meta.projection_counts_weather_baked_round, NaN));
+    parts.push(
+      Number.isFinite(rnd) && rnd >= 1
+        ? `weather baked into R${rnd} counts`
+        : "weather baked into counts",
+    );
+  } else {
+    parts.push("weather applied at pricing time");
+  }
+  if (meta.pin_sheet && typeof meta.pin_sheet === "object") {
+    parts.push("pin sheet active");
+  }
+  if (meta.in_play_affects_round_odds === true) {
+    parts.push("in-round scratch on");
+  }
+  const sgImp = projectionCourseBasis(projections).course_sg_importance;
+  if (sgImp?.dominant_sg) {
+    const label = String(sgImp.dominant_sg).replace("sg_", "").toUpperCase();
+    parts.push(`course weights ${label}`);
+  }
+  const unified = meta.projection_unified_factors;
+  if (meta.projection_round_adjustments?.unified_factors_applied) {
+    parts.push("unified factors baked");
+  }
+  const teeDelta = num(unified?.tee_wave_bias?.deltaAfternoonMinusMorning, NaN);
+  if (Number.isFinite(teeDelta) && Math.abs(teeDelta) >= 0.04) {
+    parts.push(`tee wave ${teeDelta >= 0 ? "+" : ""}${teeDelta.toFixed(2)} stp PM`);
+  }
+  return parts.join(" · ");
+}
+
 function venueAnchorNote(projections) {
   const b = projectionCourseBasis(projections);
   const years = Array.isArray(b.venue_scoring_years) ? b.venue_scoring_years : [];
@@ -232,6 +278,7 @@ function contextLabels(market, side, edgePct, player, courseRow, pinActive, proj
     else if (sgOtt <= -0.15) labels.push("Weak OTT (≤−0.15)");
     else labels.push("Average OTT");
   }
+  for (const tag of courseTailoringTags(player)) labels.push(tag);
   if (edgePct >= 15) labels.push("Edge ≥15%");
   else if (edgePct >= 10) labels.push("Edge 10–15%");
   else labels.push("Edge 5–10%");
@@ -290,7 +337,8 @@ function marketFactor(market, oos) {
   const row = (oos?.by_market_at_5pct || []).find((m) => m.market === market);
   const roi = num(row?.roi_pct, NaN);
   if (!Number.isFinite(roi)) return 1;
-  return clamp(0.8 + roi / 75, 0.88, 1.42);
+  if (roi < 0) return 0.72;
+  return clamp(0.85 + roi / 60, 0.88, 1.45);
 }
 
 /**
@@ -306,9 +354,12 @@ export function buildLiveBestBets({ projections, oos, signals, courseRow, minEvP
   const dk = dkPropsForRound(projections, round);
   const players = playersForRound(projections, round);
   supplementModelProjectionProps(dk, players, projections?.meta || projections || {}, round);
+  const eventName = String(projections?.event_name || projections?.meta?.event_name || "");
   const pinActive = pinSheetActive(projections, round);
   const minEdge = minEvPct;
   const meta = projections?.meta || projections || {};
+  const fairwayHoles =
+    Math.round(num(meta?.projection_course_basis?.fairway_holes_modeled, NaN)) || 14;
 
   /** @type {object[]} */
   const candidates = [];
@@ -321,17 +372,31 @@ export function buildLiveBestBets({ projections, oos, signals, courseRow, minEvP
     if (!muFn) continue;
     const mu = muFn.length >= 2 ? muFn(player, meta) : muFn(player);
     if (!Number.isFinite(mu)) continue;
-    let { edgeOver, edgeUnder } = modelEdgePctAtLine(market, mu, prop.line, prop.over, prop.under);
+    const girMinusFw = num(player.gir, NaN) - num(player.fairways, NaN);
+    const betContext = { gir_minus_fw: girMinusFw, round };
+    if (!isActionableMarket(market)) continue;
+    let { edgeOver, edgeUnder } = modelEdgePctAtLine(
+      market,
+      mu,
+      prop.line,
+      prop.over,
+      prop.under,
+      1,
+      fairwayHoles,
+    );
     ({ edgeOver, edgeUnder } = capDirectionalPostedEdges(edgeOver, edgeUnder, mu, prop.line));
-    const pick = pickBetSide(edgeOver, edgeUnder, minEdge, mu, prop.line);
+    const marketMinEv = minEvForMarket(market, minEdge);
+    const pick = pickBetSide(edgeOver, edgeUnder, marketMinEv, mu, prop.line);
     if (!pick) continue;
     const side = pick.side;
     const edgePct = pick.edge;
     const labels = contextLabels(market, side, edgePct, player, courseRow, pinActive, projections);
     const { boost, tags } = signalBoost(market, labels, signals);
+    const tailoringTags = courseTailoringTags(player);
     const mFac = marketFactor(market, oos);
     const score = edgePct * mFac * boost;
     const mktHist = (oos?.by_market_at_5pct || []).find((m) => m.market === market);
+    const gap = Number.isFinite(mu) && Number.isFinite(prop.line) ? mu - prop.line : NaN;
     candidates.push({
       player_name: player.player_name || prop.player_name,
       dg_id: dg,
@@ -339,13 +404,15 @@ export function buildLiveBestBets({ projections, oos, signals, courseRow, minEvP
       market,
       side,
       mu,
+      gap,
       line: prop.line,
       odds: side === "over" ? prop.over : prop.under,
       edgePct,
       score,
       histRoi: num(mktHist?.roi_pct, NaN),
       histBets: Math.round(num(mktHist?.bets, NaN)) || 0,
-      contextTags: tags,
+      contextTags: [...tailoringTags, ...tags],
+      tailoringTags,
     });
   }
 
@@ -362,6 +429,8 @@ export function buildLiveBestBets({ projections, oos, signals, courseRow, minEvP
     eventName: String(projections?.event_name || projections?.meta?.event_name || "").trim(),
     updatedAt: String(projections?.updated_at || projections?.meta?.updated_at || "").trim(),
     venueNote: venueAnchorNote(projections),
+    factorsNote: projectionFactorsNote(projections),
+    factorsSummary: buildLiveProjectionFactorsSummary(projections),
     modelLinesOnly: ![...dk.values()].some((p) => String(p.source || "").toLowerCase() === "draftkings"),
     picks: [...byKey.values()].sort((a, b) => b.score - a.score || b.edgePct - a.edgePct).slice(0, TOP_N),
   };
