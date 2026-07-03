@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="tracker.css?v=10" />
+  <link rel="stylesheet" href="tracker.css?v=14" />
 </head>
 <body>
   <header class="app-header">
@@ -70,6 +70,7 @@
       <button type="button" class="tab" data-tab="bets" role="tab">Bet log</button>
       <button type="button" class="tab" data-tab="picks" role="tab">Best bets</button>
       <button type="button" class="tab" data-tab="risk" role="tab">Risk</button>
+      <button type="button" class="tab" data-tab="my-bets" role="tab">My bets</button>
       <button type="button" class="tab" data-tab="events" role="tab">All tournaments</button>
       <button type="button" class="tab" data-tab="insights" role="tab">Insights</button>
       <button type="button" class="tab" data-tab="guide" role="tab">Guide</button>
@@ -77,6 +78,11 @@
 
     <section id="panel-overview" class="panel active" role="tabpanel">
       <div class="kpi-grid" id="overview-kpis"></div>
+      <div class="chart-card" id="live-matchup-overview-card" hidden>
+        <h2 class="section-title">Live round matchups</h2>
+        <p class="note" id="live-matchup-overview-note"></p>
+        <div class="kpi-grid" id="live-matchup-overview-kpis"></div>
+      </div>
       <div class="chart-card" id="oos-honest-card">
         <h2 class="section-title">Honest walk-forward OOS ROI</h2>
         <p class="note" id="oos-honest-note">Uniform EV policy (default 10%) on all markets and both sides. Edge from projections only — no DK calibration. Regenerate: <code>npm run report:walkforward-oos-roi</code></p>
@@ -219,8 +225,15 @@
       <div class="chart-card" id="live-picks-card">
         <h2 class="section-title" id="live-picks-title">Best bets — live week</h2>
         <p class="note" id="live-picks-note">
-          Upcoming-round picks from <code>projections.json</code> using full model μ (course SG fit, 8–12 round form, weather, tee wave) vs DraftKings lines.
+          Upcoming-round picks from <code>projections.json</code> using full model μ vs DraftKings O/U lines and DraftKings round matchups.
         </p>
+        <div class="live-picks-toolbar">
+          <label>Market
+            <select id="picks-filter-market">
+              <option value="">All markets</option>
+            </select>
+          </label>
+        </div>
         <div id="live-picks-factors" class="live-picks-factors" hidden></div>
         <div class="table-wrap table-wrap-tall">
           <table class="data-table live-picks-table" id="live-picks-table">
@@ -238,6 +251,7 @@
                 <th class="num">OOS ROI</th>
                 <th>Context</th>
                 <th class="num">Score</th>
+                <th class="num" title="Add to My bets journal">+</th>
               </tr>
             </thead>
             <tbody id="live-picks-tbody"></tbody>
@@ -316,6 +330,131 @@
               <tbody></tbody>
             </table>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-my-bets" class="panel" role="tabpanel">
+      <p class="note">Pick from this week’s DraftKings round props and matchups, add to your slip, then enter stake sizes. Open bets auto-grade to W/L/P when you reload after results refresh.</p>
+      <div class="risk-controls card-surface my-bets-toolbar">
+        <label>Starting bankroll ($)
+          <input type="number" id="my-bets-bankroll" min="100" step="100" value="10000" />
+        </label>
+        <label class="my-bets-search-wrap">Search lines
+          <input type="search" id="my-bets-search" placeholder="Filter available lines only…" autocomplete="off" />
+        </label>
+        <div class="my-bets-subnav" role="tablist">
+          <button type="button" class="my-bets-subtab active" data-my-bets-view="browse" role="tab">Available lines</button>
+          <button type="button" class="my-bets-subtab" data-my-bets-view="slip" role="tab">My slip <span id="my-bets-slip-count" class="my-bets-slip-badge">0</span></button>
+        </div>
+      </div>
+
+      <div id="my-bets-browse" class="my-bets-step table-card">
+        <h2 class="section-title" id="my-bets-browse-title">Available lines</h2>
+        <p class="note" id="my-bets-browse-note">Loading live DraftKings lines…</p>
+        <div class="my-bets-browse-filters">
+          <label>Market
+            <select id="my-bets-browse-market">
+              <option value="">All markets</option>
+              <option value="Total score">Total score</option>
+              <option value="Birdies">Birdies</option>
+              <option value="GIR">GIR</option>
+              <option value="Fairways hit">Fairways hit</option>
+              <option value="Round matchups">Round matchups</option>
+            </select>
+          </label>
+        </div>
+        <div class="table-wrap table-wrap-tall">
+          <table class="data-table" id="my-bets-available-table">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Market</th>
+                <th>Pick</th>
+                <th class="num">Line</th>
+                <th class="num">Odds</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="my-bets-available-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="my-bets-slip" class="my-bets-step table-card" hidden>
+        <div class="my-bets-slip-head">
+          <h2 class="section-title">My bet slip</h2>
+          <button type="button" class="btn btn-sm" id="btn-my-bets-clear-all">Clear all</button>
+        </div>
+        <p class="note">Enter stake ($) for each bet. Results auto-fill on reload when round data is in the tracker CSVs; you can override manually.</p>
+        <div class="table-wrap table-wrap-tall">
+          <table class="data-table" id="my-bets-slip-table">
+            <thead>
+              <tr>
+                <th>Event</th>
+                <th class="num">Rnd</th>
+                <th>Player</th>
+                <th>Market</th>
+                <th>Pick</th>
+                <th class="num">Odds</th>
+                <th class="num">Stake ($)</th>
+                <th>Result</th>
+                <th class="num">P/L</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="my-bets-slip-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="kpi-grid" id="my-bets-kpis"></div>
+      <div class="chart-card">
+        <h2 class="section-title">Bankroll curve (your bets)</h2>
+        <div class="bankroll-chart-wrap">
+          <svg id="my-bets-chart" class="bankroll-chart" viewBox="0 0 800 220" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
+      <div class="table-card">
+        <h2 class="section-title">Performance by market</h2>
+        <p class="note risk-note">Settled bets with stake &gt; $0 only.</p>
+        <div class="table-wrap">
+          <table class="data-table" id="my-bets-market-table">
+            <thead>
+              <tr>
+                <th>Market</th>
+                <th class="num">Bets</th>
+                <th class="num">Hit %</th>
+                <th class="num">ROI %</th>
+                <th class="num">Avg stake</th>
+                <th class="num">P/L</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="table-card">
+        <h2 class="section-title">Logged bets</h2>
+        <p class="note risk-note">Remove any bet you did not place — KPIs and charts update immediately.</p>
+        <div class="table-wrap table-wrap-tall">
+          <table class="data-table" id="my-bets-history-table">
+            <thead>
+              <tr>
+                <th>Event</th>
+                <th class="num">Rnd</th>
+                <th>Player</th>
+                <th>Market</th>
+                <th>Pick</th>
+                <th class="num">Odds</th>
+                <th class="num">Stake</th>
+                <th>Result</th>
+                <th class="num">P/L</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
         </div>
       </div>
     </section>
@@ -423,7 +562,7 @@
           <li><strong>Model μ</strong> — Full projection mean: course SG emphasis, venue history, 8–12 round hot/cold form, birdie-heavy venue boosts, weather, morning/afternoon tee wave, and in-round scratch when live.</li>
           <li><strong>Δ</strong> — Model μ minus the DraftKings line (positive = model above the book).</li>
           <li><strong>EV</strong> — Model edge vs posted DraftKings odds (Poisson birdies, binomial GIR/FW, normal score).</li>
-          <li><strong>OOS ROI</strong> — Walk-forward out-of-sample ROI for that market @ 5% EV on completed events.</li>
+          <li><strong>Round matchups</strong> — Walk-forward μ_sg win % vs <strong>DraftKings</strong> closing odds from <code>historical_matchups_outcomes.csv</code>. Regenerate: <code>npm run update:odds</code> then <code>npm run export:matchup-backtest</code>.</li>
           <li><strong>Context</strong> — Course fit tags (dominant SG, recent form), weather, tee wave, and historical signal buckets.</li>
           <li><strong>Score</strong> — EV × OOS market factor × context boost (ranking only).</li>
           <li>Refresh live data: <code>npm run refresh:live</code> then reload this page.</li>
@@ -490,6 +629,6 @@
     </section>
   </main>
 
-  <script type="module" src="tracker.js?v=21"></script>
+  <script type="module" src="tracker.js?v=31"></script>
 </body>
 </html>

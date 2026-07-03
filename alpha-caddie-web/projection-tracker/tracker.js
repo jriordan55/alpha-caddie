@@ -23,7 +23,9 @@ import {
   MIN_LINE_GAP_BY_MARKET,
   qualifiesBet,
 } from "./bet-policy.mjs";
-import { buildLiveBestBets, loadLiveBestBetsContext, invalidateLiveBestBetsCache } from "./live-best-bets.mjs";
+import { buildLiveBestBets, buildAllLiveDkBetOptions, loadLiveBestBetsContext, invalidateLiveBestBetsCache, summarizeLiveRoundMatchups } from "./live-best-bets.mjs";
+import { simulateMyBetsLedger, myBetsSummaryByMarket } from "./my-bets-journal.mjs";
+import { autoGradeMyBets } from "./my-bets-grade.mjs";
 import {
   filterOddsLines,
   fmtNum as oddsFmtNum,
@@ -36,15 +38,26 @@ import {
 } from "./odds-csv-tab.mjs";
 
 const RISK_STORAGE_KEY = "alphaCaddie_projection_tracker_risk_v1";
+const MY_BETS_STORAGE_KEY = "alphaCaddie_my_dk_bets_v1";
 
 const CSV_CANDIDATES = [
   "../data/round_projection_vs_actual_summary.csv",
   "../data/round_projection_vs_actual_summary.csv.new",
 ];
 
+const MATCHUP_SUMMARY_CANDIDATES = [
+  "../data/matchup_backtest_summary.csv",
+  "../data/matchup_backtest_summary.csv.new",
+];
+
 const DETAIL_CANDIDATES = [
   "../data/round_projection_vs_actual.csv",
   "../data/round_projection_vs_actual.csv.new",
+];
+
+const MATCHUP_DETAIL_CANDIDATES = [
+  "../data/matchup_backtest_detail.csv",
+  "../data/matchup_backtest_detail.csv.new",
 ];
 
 const MARKET_SPECS = [
@@ -59,16 +72,161 @@ const MARKET_ORDER = [
   "Birdies",
   "GIR",
   "Fairways hit",
+  "Round matchups",
 ];
 
-/** Markets with real DK closing lines in odds.csv backtest (actionable book). */
-const BETTABLE_MARKETS = new Set(["GIR", "Total score", "Birdies", "Fairways hit"]);
+/** Markets with real closing lines in odds.csv backtest (actionable book). */
+const BETTABLE_MARKETS = new Set([
+  "GIR",
+  "Total score",
+  "Birdies",
+  "Fairways hit",
+  "Round matchups",
+]);
+
+function hasMatchupBacktest() {
+  return MATCHUP_DETAIL_ROWS.length > 0;
+}
+
+function pickMatchupSide(edge1, edge2, minEv) {
+  const th = num(minEv, 0);
+  if (!Number.isFinite(edge1) || !Number.isFinite(edge2)) return null;
+  if (edge1 >= th && edge1 >= edge2) return { side: "p1", edge: edge1 };
+  if (edge2 >= th && edge2 > edge1) return { side: "p2", edge: edge2 };
+  return null;
+}
+
+function isLiveOnlyMarket(market) {
+  return String(market || "").trim() === "Round matchups" && !hasMatchupBacktest();
+}
+
+function matchupBacktestNoteHtml() {
+  return (
+    `<strong>No matchup backtest loaded.</strong> ` +
+    `Run <code>npm run update:odds</code> then <code>npm run export:matchup-backtest</code> ` +
+    `(from <code>data/historical_matchups_outcomes.csv</code>), then Reload data. ` +
+    `Live picks: <a href="#picks">Best bets</a> tab.`
+  );
+}
+
+function setOverviewHistoricalVisible(show) {
+  for (const id of ["oos-honest-card", "odds-model-roi-card", "live-matchup-overview-card"]) {
+    const el = document.getElementById(id);
+    if (el) el.hidden = !show && id !== "live-matchup-overview-card";
+  }
+  const liveCard = document.getElementById("live-matchup-overview-card");
+  if (liveCard) liveCard.hidden = show;
+  const panel = document.getElementById("panel-overview");
+  if (!panel) return;
+  for (const card of panel.querySelectorAll(".chart-card")) {
+    const id = card.id || "";
+    if (id === "live-matchup-overview-card" || id === "oos-honest-card" || id === "odds-model-roi-card") continue;
+    card.hidden = !show;
+  }
+}
+
+function liveOnlyMarketNoteHtml() {
+  return matchupBacktestNoteHtml();
+}
+
+function renderLiveMatchupOverview() {
+  setOverviewHistoricalVisible(false);
+  const noteEl = document.getElementById("live-matchup-overview-note");
+  const kpisEl = document.getElementById("live-matchup-overview-kpis");
+  const card = document.getElementById("live-matchup-overview-card");
+  if (card) card.hidden = false;
+
+  if (!LIVE_CTX?.projections) {
+    document.getElementById("overview-kpis").innerHTML = `
+      <div class="kpi-card">
+        <div class="kpi-label">Round matchups</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-sub">Load projections.json to see live picks</div>
+      </div>`;
+    if (noteEl) noteEl.innerHTML = liveOnlyMarketNoteHtml();
+    if (kpisEl) kpisEl.innerHTML = "";
+    return;
+  }
+
+  const sum = summarizeLiveRoundMatchups({
+    projections: LIVE_CTX.projections,
+    minEvPct: state.minEv,
+  });
+  const top = sum.top;
+  const topLabel = top
+    ? `${top.player_name} vs ${top.opponent_name}`
+    : "—";
+
+  document.getElementById("overview-kpis").innerHTML = `
+    <div class="kpi-card highlight">
+      <div class="kpi-label">+EV picks</div>
+      <div class="kpi-value ${clsSigned(sum.qualified)}">${sum.qualified}</div>
+      <div class="kpi-sub">≥ ${state.minEv}% EV · ${sum.roundLabel}${sum.eventName ? ` · ${sum.eventName}` : ""}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Pairings listed</div>
+      <div class="kpi-value">${sum.listed}</div>
+      <div class="kpi-sub">${sum.priced} with model + book prices</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Avg EV (qualified)</div>
+      <div class="kpi-value ${clsSigned(sum.avgEdge)}">${Number.isFinite(sum.avgEdge) ? `${sum.avgEdge >= 0 ? "+" : ""}${fmt(sum.avgEdge, 1)}%` : "—"}</div>
+      <div class="kpi-sub">model win % vs best posted decimal</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Best edge</div>
+      <div class="kpi-value ${clsSigned(top?.edgePct)}">${top ? `${top.edgePct >= 0 ? "+" : ""}${fmt(top.edgePct, 1)}%` : "—"}</div>
+      <div class="kpi-sub">${top ? `${top.book || "book"} · ${topLabel}` : `try min EV below ${state.minEv}%`}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Top pick win %</div>
+      <div class="kpi-value">${top ? formatModelMu("Round matchups", top.mu) : "—"}</div>
+      <div class="kpi-sub">${top ? formatGap("Round matchups", top.gap) + " stroke edge" : ""}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Historical backtest</div>
+      <div class="kpi-value muted">N/A</div>
+      <div class="kpi-sub">no walk-forward matchup CSV yet</div>
+    </div>
+  `;
+
+  if (noteEl) {
+    noteEl.innerHTML = liveOnlyMarketNoteHtml();
+  }
+  if (kpisEl) {
+    const built = buildLiveBestBets({
+      projections: LIVE_CTX.projections,
+      oos: LIVE_CTX.oos || OOS_REPORT,
+      signals: LIVE_CTX.signals,
+      courseRow: LIVE_CTX.courseRow,
+      minEvPct: state.minEv,
+      marketFilter: "Round matchups",
+    });
+    if (!built.picks.length) {
+      kpisEl.innerHTML = `<p class="note muted">No round matchups at ≥${state.minEv}% EV — lower Min EV % or refresh book odds.</p>`;
+      return;
+    }
+    kpisEl.innerHTML = built.picks
+      .slice(0, 5)
+      .map(
+        (p, i) => `<div class="kpi-card compact">
+        <div class="kpi-label">#${i + 1} ${esc(p.player_name)}</div>
+        <div class="kpi-value ${clsSigned(p.edgePct)}">+${fmt(p.edgePct, 1)}%</div>
+        <div class="kpi-sub">vs ${esc(p.opponent_name)} · ${formatModelMu("Round matchups", p.mu)} model</div>
+      </div>`,
+      )
+      .join("");
+  }
+}
 
 /** @type {Record<string, string>[]} */
 let ALL_ROWS = [];
 
 /** @type {Record<string, string>[]} */
 let DETAIL_ROWS = [];
+
+/** @type {Record<string, string>[]} */
+let MATCHUP_DETAIL_ROWS = [];
 
 /** @type {object | null} */
 let OOS_REPORT = null;
@@ -88,11 +246,19 @@ const state = {
   /** "" = all tournaments combined; otherwise event name */
   tournament: "",
   market: "Total score",
+  /** Best bets tab only — "" = all live markets */
+  picksMarket: "",
   minEv: DEFAULT_MIN_EV_PCT,
   side: "",
   player: "",
   show: "bets",
   risk: loadRiskPrefs(),
+  myBets: {
+    ...loadMyBetsPrefs(),
+    view: "browse",
+    browseMarket: "",
+    browseSearch: "",
+  },
   oddsCourse: "",
   oddsAt: "close",
   oddsModelOnly: false,
@@ -134,6 +300,59 @@ function loadRiskPrefs() {
 function saveRiskPrefs() {
   try {
     localStorage.setItem(RISK_STORAGE_KEY, JSON.stringify(state.risk));
+  } catch {
+    /* ignore */
+  }
+}
+
+function loadMyBetsPrefs() {
+  const defaults = { bankroll: 10000, bets: [] };
+  try {
+    const raw = localStorage.getItem(MY_BETS_STORAGE_KEY);
+    if (!raw) return defaults;
+    const j = JSON.parse(raw);
+    const bets = Array.isArray(j.bets)
+      ? j.bets.map((b) => ({
+          id: String(b.id || crypto.randomUUID()),
+          placedAt: String(b.placedAt || new Date().toISOString()),
+          eventName: String(b.eventName || ""),
+          round: Math.min(4, Math.max(1, num(b.round) || 1)),
+          playerName: String(b.playerName || ""),
+          opponentName: String(b.opponentName || ""),
+          dg_id: num(b.dg_id),
+          opponent_dg_id: num(b.opponent_dg_id),
+          market: String(b.market || "Total score"),
+          side: String(b.side || "over"),
+          line: num(b.line),
+          odds: num(b.odds),
+          stake: Math.max(0, num(b.stake) || 0),
+          lineKey: String(b.lineKey || ""),
+          result: (() => {
+            const raw = String(b.result || "open");
+            if (raw.toLowerCase() === "open") return "open";
+            return raw.toUpperCase();
+          })(),
+          notes: String(b.notes || ""),
+        }))
+      : [];
+    return {
+      bankroll: Math.max(100, num(j.bankroll) || defaults.bankroll),
+      bets,
+    };
+  } catch {
+    return defaults;
+  }
+}
+
+function saveMyBetsPrefs() {
+  try {
+    localStorage.setItem(
+      MY_BETS_STORAGE_KEY,
+      JSON.stringify({
+        bankroll: state.myBets.bankroll,
+        bets: state.myBets.bets,
+      }),
+    );
   } catch {
     /* ignore */
   }
@@ -445,6 +664,476 @@ function syncRiskFromForm() {
   renderRisk();
 }
 
+function myBetsPickLabel(bet) {
+  const market = String(bet.market || "");
+  if (market === "Round matchups") {
+    const opp = bet.opponentName ? ` vs ${bet.opponentName}` : "";
+    return `${bet.playerName || "—"}${opp}`;
+  }
+  const side = String(bet.side || "").toLowerCase() === "under" ? "Under" : "Over";
+  const line = Number.isFinite(bet.line) ? ` ${bet.line}` : "";
+  return `${side}${line}`;
+}
+
+function myBetsOptionPickLabel(opt) {
+  if (opt.market === "Round matchups") {
+    return opt.playerName || "—";
+  }
+  const side = String(opt.side || "").toLowerCase() === "under" ? "Under" : "Over";
+  return `${side} ${Number.isFinite(opt.line) ? opt.line : "—"}`;
+}
+
+function myBetsMatchesSearch(text, q) {
+  if (!q) return true;
+  return String(text || "").toLowerCase().includes(q);
+}
+
+function myBetsOptionMatchesSearch(opt, q) {
+  if (!q) return true;
+  const pick = myBetsOptionPickLabel(opt);
+  return (
+    myBetsMatchesSearch(opt.playerName, q) ||
+    myBetsMatchesSearch(opt.opponentName, q) ||
+    myBetsMatchesSearch(opt.market, q) ||
+    myBetsMatchesSearch(opt.matchupLabel, q) ||
+    myBetsMatchesSearch(opt.p1Name, q) ||
+    myBetsMatchesSearch(opt.p2Name, q) ||
+    myBetsMatchesSearch(pick, q) ||
+    myBetsMatchesSearch(opt.side, q)
+  );
+}
+
+function myBetsBetMatchesSearch(bet, q) {
+  if (!q) return true;
+  return (
+    myBetsMatchesSearch(bet.playerName, q) ||
+    myBetsMatchesSearch(bet.opponentName, q) ||
+    myBetsMatchesSearch(bet.market, q) ||
+    myBetsMatchesSearch(bet.eventName, q) ||
+    myBetsMatchesSearch(myBetsPickLabel(bet), q)
+  );
+}
+
+function myBetsAddButton(lineKey, inSlip, label = "Add") {
+  if (inSlip.has(lineKey)) {
+    return `<button type="button" class="btn btn-sm my-bets-remove-line" data-line-key="${esc(lineKey)}">Remove</button>`;
+  }
+  return `<button type="button" class="btn btn-sm my-bets-add-line" data-line-key="${esc(lineKey)}">${esc(label)}</button>`;
+}
+
+function renderMyBetsBrowseOptionRow(o, inSlip) {
+  const added = inSlip.has(o.lineKey);
+  const lineCell = o.market === "Round matchups" ? "—" : Number.isFinite(o.line) ? o.line : "—";
+  const playerCell =
+    o.market === "Round matchups" ? esc(o.matchupLabel || `${o.playerName} vs ${o.opponentName}`) : esc(o.playerName);
+  return `<tr class="my-bets-available-row${added ? " my-bets-in-slip" : ""}" data-line-key="${esc(o.lineKey)}">
+    <td class="player-cell">${playerCell}</td>
+    <td>${esc(o.market)}</td>
+    <td>${esc(myBetsOptionPickLabel(o))}</td>
+    <td class="num">${lineCell}</td>
+    <td class="num">${formatAmerican(o.odds)}</td>
+    <td class="num">${myBetsAddButton(o.lineKey, inSlip)}</td>
+  </tr>`;
+}
+
+function renderMyBetsMatchupPairRows(sides, inSlip) {
+  const sorted = [...sides].sort((a, b) => String(a.side).localeCompare(String(b.side)));
+  const label = sorted[0]?.matchupLabel || `${sorted[0]?.playerName} vs ${sorted[0]?.opponentName}`;
+  if (sorted.length !== 2) {
+    return sorted.map((o) => renderMyBetsBrowseOptionRow(o, inSlip)).join("");
+  }
+  const [a, b] = sorted;
+  const rowCls =
+    inSlip.has(a.lineKey) && inSlip.has(b.lineKey)
+      ? " my-bets-in-slip"
+      : inSlip.has(a.lineKey) || inSlip.has(b.lineKey)
+        ? " my-bets-in-slip-partial"
+        : "";
+  return `<tr class="my-bets-matchup-row${rowCls}">
+    <td class="player-cell" rowspan="2">${esc(label)}</td>
+    <td rowspan="2">${esc(a.market)}</td>
+    <td>${esc(a.playerName)}</td>
+    <td class="num">—</td>
+    <td class="num">${formatAmerican(a.odds)}</td>
+    <td class="num">${myBetsAddButton(a.lineKey, inSlip, `Add ${a.playerName.split(" ").pop() || "P1"}`)}</td>
+  </tr>
+  <tr class="my-bets-matchup-row${rowCls}">
+    <td>${esc(b.playerName)}</td>
+    <td class="num">—</td>
+    <td class="num">${formatAmerican(b.odds)}</td>
+    <td class="num">${myBetsAddButton(b.lineKey, inSlip, `Add ${b.playerName.split(" ").pop() || "P2"}`)}</td>
+  </tr>`;
+}
+
+function renderMyBetsBrowseTableHtml(options, inSlip) {
+  const ou = options.filter((o) => o.pickType !== "matchup");
+  /** @type {Map<string, object[]>} */
+  const pairs = new Map();
+  for (const o of options) {
+    if (o.pickType !== "matchup") continue;
+    const pk = o.pairKey || o.lineKey;
+    if (!pairs.has(pk)) pairs.set(pk, []);
+    pairs.get(pk).push(o);
+  }
+  const matchupGroups = [...pairs.values()].sort((a, b) =>
+    String(a[0]?.matchupLabel || a[0]?.playerName).localeCompare(String(b[0]?.matchupLabel || b[0]?.playerName)),
+  );
+  return ou.map((o) => renderMyBetsBrowseOptionRow(o, inSlip)).join("") + matchupGroups.map((g) => renderMyBetsMatchupPairRows(g, inSlip)).join("");
+}
+
+function myBetsLineKeyFromBet(bet) {
+  if (bet.lineKey) return bet.lineKey;
+  const m = String(bet.market || "");
+  if (m === "Round matchups") {
+    return `${bet.playerName}|${m}|${bet.side}|${bet.opponentName}`;
+  }
+  return `${bet.playerName}|${m}|${bet.side}|${bet.line}`;
+}
+
+function myBetsSlipKeys() {
+  return new Set(state.myBets.bets.map((b) => myBetsLineKeyFromBet(b)));
+}
+
+function setMyBetsView(view) {
+  state.myBets.view = view === "slip" ? "slip" : "browse";
+  document.querySelectorAll(".my-bets-subtab").forEach((btn) => {
+    btn.classList.toggle("active", btn.getAttribute("data-my-bets-view") === state.myBets.view);
+  });
+  const browse = document.getElementById("my-bets-browse");
+  const slip = document.getElementById("my-bets-slip");
+  if (browse) browse.hidden = state.myBets.view !== "browse";
+  if (slip) slip.hidden = state.myBets.view !== "slip";
+}
+
+function syncMyBetsBankrollFromForm() {
+  state.myBets.bankroll = Math.max(100, num(document.getElementById("my-bets-bankroll")?.value) || 10000);
+  saveMyBetsPrefs();
+  renderMyBets();
+}
+
+/** @param {object} option */
+function addOptionToMyBetsSlip(option) {
+  const lineKey = option.lineKey || myBetsLineKeyFromBet(option);
+  const exists = state.myBets.bets.find(
+    (b) =>
+      myBetsLineKeyFromBet(b) === lineKey &&
+      b.eventName === option.eventName &&
+      num(b.round) === num(option.round),
+  );
+  if (!exists) {
+    state.myBets.bets.push({
+      id: crypto.randomUUID(),
+      placedAt: new Date().toISOString(),
+      lineKey,
+      eventName: option.eventName || "",
+      round: num(option.round) || 1,
+      playerName: option.playerName || "",
+      opponentName: option.opponentName || "",
+      dg_id: num(option.dg_id),
+      opponent_dg_id: num(option.opponent_dg_id),
+      market: option.market || "",
+      side: option.side || "",
+      line: num(option.line),
+      odds: num(option.odds),
+      stake: 0,
+      result: "open",
+      notes: "",
+    });
+    saveMyBetsPrefs();
+  }
+  setTab("my-bets");
+  setMyBetsView("slip");
+  renderMyBets();
+}
+
+/** @param {object} pick */
+function prefillMyBetsFromPick(pick) {
+  const isMatchup = pick.market === "Round matchups" || pick.pickType === "matchup";
+  const dg = pick.dg_id || pick.playerName;
+  const oppDg = pick.opponent_dg_id || pick.opponentName;
+  addOptionToMyBetsSlip({
+    lineKey: isMatchup
+      ? `${dg}|Round matchups|${pick.side}|${oppDg}`
+      : `${dg}|${pick.market}|${pick.side}`,
+    eventName: pick.eventName || "",
+    round: pick.round || 1,
+    playerName: pick.player_name || pick.playerName || "",
+    opponentName: pick.opponent_name || pick.opponentName || "",
+    dg_id: num(pick.dg_id),
+    opponent_dg_id: num(pick.opponent_dg_id),
+    market: pick.market || "",
+    side: pick.side || "",
+    line: num(pick.line),
+    odds: num(pick.odds),
+  });
+}
+
+function updateMyBetStake(id, stake) {
+  const bet = state.myBets.bets.find((b) => b.id === id);
+  if (!bet) return;
+  bet.stake = Math.max(0, num(stake) || 0);
+  saveMyBetsPrefs();
+  renderMyBets();
+}
+
+function updateMyBetResult(id, result) {
+  const bet = state.myBets.bets.find((b) => b.id === id);
+  if (!bet) return;
+  bet.result = result === "open" ? "open" : String(result).toUpperCase();
+  delete bet.autoGradedAt;
+  saveMyBetsPrefs();
+  renderMyBets();
+}
+
+function deleteMyBet(id) {
+  state.myBets.bets = state.myBets.bets.filter((b) => b.id !== id);
+  saveMyBetsPrefs();
+  renderMyBets();
+}
+
+function removeMyBetByLineKey(lineKey) {
+  if (!lineKey) return;
+  const before = state.myBets.bets.length;
+  state.myBets.bets = state.myBets.bets.filter((b) => {
+    const key = b.lineKey || myBetsLineKeyFromBet(b);
+    return key !== lineKey;
+  });
+  if (state.myBets.bets.length !== before) {
+    saveMyBetsPrefs();
+    renderMyBets();
+  }
+}
+
+function gradeMyBetsFromLoadedData() {
+  const changed = autoGradeMyBets(state.myBets.bets, {
+    detailRows: DETAIL_ROWS,
+    matchupRows: MATCHUP_DETAIL_ROWS,
+    marketSpecs: MARKET_SPECS,
+  });
+  if (changed > 0) saveMyBetsPrefs();
+  return changed;
+}
+
+function renderMyBetsBrowse() {
+  const title = document.getElementById("my-bets-browse-title");
+  const note = document.getElementById("my-bets-browse-note");
+  const tbody = document.getElementById("my-bets-available-tbody");
+  const marketSel = document.getElementById("my-bets-browse-market");
+  if (!tbody) return;
+
+  if (marketSel && marketSel.value !== state.myBets.browseMarket) {
+    marketSel.value = state.myBets.browseMarket;
+  }
+  const playerIn = document.getElementById("my-bets-search");
+  if (playerIn && playerIn.value !== state.myBets.browseSearch) {
+    playerIn.value = state.myBets.browseSearch;
+  }
+
+  if (!LIVE_CTX?.projections) {
+    if (title) title.textContent = "Available lines";
+    if (note) note.textContent = "Could not load projections.json — run npm run refresh:live.";
+    tbody.innerHTML = `<tr><td colspan="6">No live lines available.</td></tr>`;
+    return;
+  }
+
+  const built = buildAllLiveDkBetOptions(LIVE_CTX.projections);
+  if (title) {
+    title.textContent = `Available lines — ${built.roundLabel}${built.eventName ? ` · ${built.eventName}` : ""}`;
+  }
+  if (note) {
+    note.textContent = built.modelLinesOnly
+      ? "DraftKings scrape unavailable — showing model half-lines only."
+      : `${built.options.length} DraftKings sides · click Add to move to your slip`;
+  }
+
+  let options = built.options;
+  if (state.myBets.browseMarket) {
+    options = options.filter((o) => o.market === state.myBets.browseMarket);
+  }
+  if (state.myBets.browseSearch) {
+    const q = state.myBets.browseSearch.toLowerCase();
+    options = options.filter((o) => myBetsOptionMatchesSearch(o, q));
+  }
+
+  const inSlip = myBetsSlipKeys();
+  if (!options.length) {
+    tbody.innerHTML = `<tr><td colspan="6">No lines match filters.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = renderMyBetsBrowseTableHtml(options, inSlip);
+
+}
+
+function addMyBetsLineByKey(lineKey) {
+  if (!LIVE_CTX?.projections || !lineKey) return;
+  const opt = buildAllLiveDkBetOptions(LIVE_CTX.projections).options.find((o) => o.lineKey === lineKey);
+  if (opt) addOptionToMyBetsSlip(opt);
+}
+
+function renderMyBetsSlip() {
+  const tbody = document.getElementById("my-bets-slip-tbody");
+  const badge = document.getElementById("my-bets-slip-count");
+  if (badge) badge.textContent = String(state.myBets.bets.length);
+
+  const sim = simulateMyBetsLedger(state.myBets.bets, state.myBets.bankroll);
+  const byId = new Map(sim.ledger.map((r) => [r.id, r]));
+
+  if (!tbody) return;
+  const rows = [...state.myBets.bets].reverse();
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="10">No bets on your slip — pick lines from Available lines.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = rows
+    .map((bet) => {
+      const ledger = byId.get(bet.id);
+      const status = ledger?.status || "draft";
+      const pnlCell =
+        status === "draft"
+          ? `<span class="muted">—</span>`
+          : status === "open"
+            ? `<span class="muted">pending</span>`
+            : `<span class="num ${clsSigned(ledger.pnl)}">${ledger.pnl >= 0 ? "+" : ""}${fmtUsdPrecise(ledger.pnl)}</span>`;
+      const resVal = String(bet.result || "open").toUpperCase() === "OPEN" ? "open" : String(bet.result || "open").toUpperCase();
+      const stakeVal = Number.isFinite(bet.stake) && bet.stake > 0 ? bet.stake : "";
+      const autoNote = bet.autoGradedAt ? ' title="Auto-graded from refreshed results"' : "";
+      return `<tr data-bet-id="${esc(bet.id)}">
+        <td class="player-cell">${esc(bet.eventName || "—")}</td>
+        <td class="num">${bet.round}</td>
+        <td class="player-cell">${esc(bet.playerName)}</td>
+        <td>${esc(bet.market)}</td>
+        <td>${esc(myBetsPickLabel(bet))}</td>
+        <td class="num">${formatAmerican(bet.odds)}</td>
+        <td class="num"><input type="number" class="my-bets-stake-input" data-id="${esc(bet.id)}" min="0" step="1" placeholder="0" value="${stakeVal}" /></td>
+        <td${autoNote}>
+          <select class="my-bets-result-select" data-id="${esc(bet.id)}" aria-label="Result">
+            <option value="open"${resVal === "open" ? " selected" : ""}>Open</option>
+            <option value="W"${resVal === "W" ? " selected" : ""}>W</option>
+            <option value="L"${resVal === "L" ? " selected" : ""}>L</option>
+            <option value="P"${resVal === "P" ? " selected" : ""}>P</option>
+          </select>
+        </td>
+        <td class="num">${pnlCell}</td>
+        <td class="num"><button type="button" class="btn btn-sm my-bets-del" data-id="${esc(bet.id)}" title="Remove from slip">Remove</button></td>
+      </tr>`;
+    })
+    .join("");
+}
+
+function renderMyBets() {
+  const bankrollEl = document.getElementById("my-bets-bankroll");
+  if (bankrollEl) bankrollEl.value = String(state.myBets.bankroll);
+  setMyBetsView(state.myBets.view);
+  renderMyBetsBrowse();
+  renderMyBetsSlip();
+
+  const sim = simulateMyBetsLedger(state.myBets.bets, state.myBets.bankroll);
+  const activeN = state.myBets.bets.filter((b) => (num(b.stake) || 0) > 0).length;
+
+  document.getElementById("my-bets-kpis").innerHTML = `
+    <div class="kpi-card">
+      <div class="kpi-label">Starting bankroll</div>
+      <div class="kpi-value">${fmtUsd(sim.B0)}</div>
+      <div class="kpi-sub">${state.myBets.bets.length} on slip · ${activeN} staked</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Bankroll now</div>
+      <div class="kpi-value ${clsSigned(sim.pl)}">${fmtUsd(sim.ending)}</div>
+      <div class="kpi-sub">${sim.pl >= 0 ? "+" : ""}${fmtUsdPrecise(sim.pl)} settled P/L</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">ROI</div>
+      <div class="kpi-value ${clsSigned(sim.roi)}">${fmtPct(sim.roi)}</div>
+      <div class="kpi-sub">${fmtPct(sim.roiOnStaked)} on ${fmtUsd(sim.totalStaked)} staked</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Max drawdown</div>
+      <div class="kpi-value neg">${fmtUsd(sim.maxDd)}</div>
+      <div class="kpi-sub">${fmt(sim.maxDdPct, 1)}% from peak ${fmtUsd(sim.peak)}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Avg stake</div>
+      <div class="kpi-value">${fmtUsdPrecise(sim.avgStake)}</div>
+      <div class="kpi-sub">${fmtUsd(sim.totalStaked)} total risked (settled)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Record</div>
+      <div class="kpi-value">${sim.wins}-${sim.losses}-${sim.pushes}</div>
+      <div class="kpi-sub">${Number.isFinite(sim.hitPct) ? `${fmt(sim.hitPct, 1)}% hit` : "—"} · ${fmtUsd(sim.openStake)} open</div>
+    </div>
+  `;
+
+  renderBankrollChart(document.getElementById("my-bets-chart"), sim.series, sim.B0);
+
+  const byMarket = myBetsSummaryByMarket(sim.ledger);
+  document.querySelector("#my-bets-market-table tbody").innerHTML = byMarket.length
+    ? byMarket
+        .map(
+          (g) => `<tr>
+        <td>${esc(g.market)}</td>
+        <td class="num">${g.bets}</td>
+        <td class="num">${Number.isFinite(g.hitPct) ? `${fmt(g.hitPct, 1)}%` : "—"}</td>
+        <td class="num ${clsSigned(g.roi)}">${fmtPct(g.roi)}</td>
+        <td class="num">${fmtUsdPrecise(g.avgStake)}</td>
+        <td class="num ${clsSigned(g.totalPnl)}">${g.totalPnl >= 0 ? "+" : ""}${fmtUsdPrecise(g.totalPnl)}</td>
+      </tr>`,
+        )
+        .join("")
+    : `<tr><td colspan="6">No settled staked bets yet.</td></tr>`;
+
+  renderMyBetsHistory();
+}
+
+function clearAllMyBets() {
+  if (!state.myBets.bets.length) return;
+  if (!window.confirm("Remove all bets from your journal? This cannot be undone.")) return;
+  state.myBets.bets = [];
+  saveMyBetsPrefs();
+  renderMyBets();
+}
+
+function renderMyBetsHistory() {
+  const tbody = document.querySelector("#my-bets-history-table tbody");
+  if (!tbody) return;
+
+  const sim = simulateMyBetsLedger(state.myBets.bets, state.myBets.bankroll);
+  const byId = new Map(sim.ledger.map((r) => [r.id, r]));
+  const rows = [...state.myBets.bets].reverse();
+
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="10">No logged bets.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = rows
+    .map((bet) => {
+      const ledger = byId.get(bet.id);
+      const status = ledger?.status || "draft";
+      const resVal = String(bet.result || "open").toUpperCase() === "OPEN" ? "open" : String(bet.result || "open").toUpperCase();
+      const pnlCell =
+        status === "draft" || (num(bet.stake) || 0) <= 0
+          ? `<span class="muted">—</span>`
+          : status === "open"
+            ? `<span class="muted">pending</span>`
+            : `<span class="num ${clsSigned(ledger.pnl)}">${ledger.pnl >= 0 ? "+" : ""}${fmtUsdPrecise(ledger.pnl)}</span>`;
+      return `<tr data-bet-id="${esc(bet.id)}">
+        <td class="player-cell">${esc(bet.eventName || "—")}</td>
+        <td class="num">${bet.round}</td>
+        <td class="player-cell">${esc(bet.playerName)}</td>
+        <td>${esc(bet.market)}</td>
+        <td>${esc(myBetsPickLabel(bet))}</td>
+        <td class="num">${formatAmerican(bet.odds)}</td>
+        <td class="num">${(num(bet.stake) || 0) > 0 ? fmtUsdPrecise(bet.stake) : "—"}</td>
+        <td>${resultBadge(resVal === "open" ? "" : resVal)}</td>
+        <td class="num">${pnlCell}</td>
+        <td class="num"><button type="button" class="btn btn-sm my-bets-del" data-id="${esc(bet.id)}">Remove</button></td>
+      </tr>`;
+    })
+    .join("");
+}
+
 function fmt(v, d = 2) {
   if (!Number.isFinite(v)) return "—";
   return (Math.round(v * 10 ** d) / 10 ** d).toFixed(d);
@@ -716,11 +1405,94 @@ function explodeDetailToBets(rows) {
   return out;
 }
 
+function explodeMatchupDetailToBets(rows) {
+  /** @type {object[]} */
+  const out = [];
+  for (const row of rows) {
+    if (row.book_odds_source !== "historical_matchups_dk_close" && row.book_odds_source !== "historical_matchups_close") continue;
+    const market = "Round matchups";
+    if (!isActionableMarket(market)) continue;
+    const edge1 = num(row.edge_p1_pct, NaN);
+    const edge2 = num(row.edge_p2_pct, NaN);
+    const marketMinEv = minEvForMarket(market, state.minEv);
+    const pick = pickMatchupSide(edge1, edge2, marketMinEv);
+    const bestSide =
+      Number.isFinite(edge1) && Number.isFinite(edge2)
+        ? edge1 >= edge2
+          ? { side: "p1", edge: edge1 }
+          : { side: "p2", edge: edge2 }
+        : null;
+    const activePick = pick || (state.show === "all" ? bestSide : null);
+    const side = activePick?.side || null;
+    const isP1 = side === "p1";
+    const playerName = isP1 ? row.player_name : row.opponent_name;
+    const opponentName = isP1 ? row.opponent_name : row.player_name;
+    const modelWinPct = num(isP1 ? row.model_win_pct : 100 - num(row.model_win_pct, NaN), NaN);
+    const dec = num(isP1 ? row.p1_close_dec : row.p2_close_dec, NaN);
+    const impliedPct = dec > 1 ? (1 / dec) * 100 : NaN;
+    const betRes = isP1 ? row.p1_result : row.p2_result;
+    const betOdds = decimalToAmerican(dec);
+    const qualified = Boolean(pick) && qualifiesBet({ market });
+    out.push({
+      event_name: row.event_name,
+      round: row.round,
+      dg_id: isP1 ? row.dg_id : row.opponent_dg_id,
+      player_name: playerName,
+      opponent_name: opponentName,
+      market,
+      isMatchup: true,
+      modelLine: modelWinPct,
+      bookLine: impliedPct,
+      diff: Number.isFinite(modelWinPct) && Number.isFinite(impliedPct) ? modelWinPct - impliedPct : NaN,
+      overOdds: row.p1_close_dec ? decimalToAmerican(num(row.p1_close_dec, NaN)) : NaN,
+      underOdds: row.p2_close_dec ? decimalToAmerican(num(row.p2_close_dec, NaN)) : NaN,
+      overRes: row.p1_result,
+      underRes: row.p2_result,
+      actual: betRes === "W" ? 1 : betRes === "L" ? 0 : NaN,
+      edgeOver: edge1,
+      edgeUnder: edge2,
+      pickSide: side,
+      pickEdge: activePick?.edge ?? NaN,
+      edgeFairPick: activePick?.edge ?? NaN,
+      modelProb: Number.isFinite(modelWinPct) ? modelWinPct / 100 : NaN,
+      fairProb: Number.isFinite(impliedPct) ? impliedPct / 100 : NaN,
+      postedProb: Number.isFinite(impliedPct) ? impliedPct / 100 : NaN,
+      beatsFairPreBet:
+        qualified && Number.isFinite(modelWinPct) && Number.isFinite(impliedPct) ? modelWinPct > impliedPct : null,
+      qualified,
+      betRes,
+      betOdds,
+      betDec: dec,
+      exported_at: row.exported_at,
+      pnl: qualified && betRes === "W" ? dec - 1 : qualified && betRes === "L" ? -1 : NaN,
+      decimals: 1,
+      book: row.book,
+    });
+  }
+  return out;
+}
+
+function decimalToAmerican(dec) {
+  const d = num(dec, NaN);
+  if (!Number.isFinite(d) || d <= 1) return NaN;
+  if (d >= 2) return Math.round((d - 1) * 100);
+  return Math.round(-100 / (d - 1));
+}
+
 function activeBetRows() {
-  let rows = explodeDetailToBets(DETAIL_ROWS);
+  let rows = [...explodeDetailToBets(DETAIL_ROWS), ...explodeMatchupDetailToBets(MATCHUP_DETAIL_ROWS)];
   if (state.tournament) rows = rows.filter((r) => r.event_name === state.tournament);
   if (state.market) rows = rows.filter((r) => r.market === state.market);
-  if (state.side) rows = rows.filter((r) => r.pickSide === state.side);
+  if (state.side) {
+    rows = rows.filter((r) => {
+      if (r.isMatchup) {
+        const s = state.side.toLowerCase();
+        if (s === "p1" || s === "p2") return r.pickSide === s;
+        return true;
+      }
+      return r.pickSide === state.side;
+    });
+  }
   if (state.player) {
     const q = state.player.toLowerCase();
     rows = rows.filter((r) => String(r.player_name).toLowerCase().includes(q));
@@ -783,6 +1555,12 @@ function aggregateBeatFairStats(rows) {
 function renderBets() {
   const showEvent = !state.tournament;
   document.getElementById("bets-col-event").hidden = !showEvent;
+  if (isLiveOnlyMarket(state.market)) {
+    document.getElementById("bets-kpis").innerHTML = "";
+    document.querySelector("#bets-table tbody").innerHTML =
+      `<tr><td colspan="${showEvent ? 14 : 13}">${liveOnlyMarketNoteHtml()}</td></tr>`;
+    return;
+  }
   const rows = activeBetRows();
   const qualified = rows.filter((r) => r.qualified);
   const bets = qualified.length;
@@ -842,8 +1620,18 @@ function renderBets() {
         .map((r) => {
           const pickCls = r.qualified ? "pick-qualified" : "pick-muted";
           const pickLabel = r.pickSide
-            ? `<span class="${pickCls}">${r.pickSide}</span>`
+            ? r.isMatchup
+              ? `<span class="${pickCls}">vs ${esc(r.opponent_name || "—")}</span>`
+              : `<span class="${pickCls}">${r.pickSide}</span>`
             : "—";
+          const modelCell = r.isMatchup
+            ? formatModelMu(r.market, Number.isFinite(r.modelLine) ? r.modelLine / 100 : NaN)
+            : fmtLine(r.modelLine, r.decimals);
+          const bookCell = r.isMatchup
+            ? Number.isFinite(r.bookLine)
+              ? `${fmt(r.bookLine, 1)}%`
+              : "—"
+            : fmtLine(r.bookLine, r.decimals);
           const betCell = r.qualified ? resultBadge(r.betRes) : "—";
           const pnlCell = r.qualified && Number.isFinite(r.pnl)
             ? `<span class="${clsSigned(r.pnl)}">${r.pnl >= 0 ? "+" : ""}${fmt(r.pnl, 2)}</span>`
@@ -853,8 +1641,8 @@ function renderBets() {
         <td class="num">${r.round}</td>
         <td class="player-cell">${r.player_name}</td>
         <td>${r.market}</td>
-        <td class="num line-model">${fmtLine(r.modelLine, r.decimals)}</td>
-        <td class="num line-book">${fmtLine(r.bookLine, r.decimals)}</td>
+        <td class="num line-model">${modelCell}</td>
+        <td class="num line-book">${bookCell}</td>
         <td class="num ${clsSigned(-r.diff)}">${Number.isFinite(r.diff) ? (r.diff > 0 ? "+" : "") + fmt(r.diff, r.decimals) : "—"}</td>
         <td class="num">${formatAmerican(r.overOdds) || "—"}</td>
         <td>${resultBadge(r.overRes)}</td>
@@ -1018,23 +1806,33 @@ function overviewLineRows() {
 }
 
 function renderOverview() {
+  if (isLiveOnlyMarket(state.market)) {
+    renderLiveMatchupOverview();
+    return;
+  }
+  setOverviewHistoricalVisible(true);
+
   const lines = overviewLineRows();
   const evRows = evRowsAtMinEdge(undefined, { bettableOnly: false });
   const evAgg = aggregateEvByMarketSide(evRows);
   const totalUnits = evAgg.reduce((s, a) => s + a.units, 0);
   const totalBets = evAgg.reduce((s, a) => s + a.bets, 0);
-  const totalScore = lines.find((r) => r.market === "Total score");
+  const totalScore = state.market
+    ? lines.find((r) => r.market === state.market)
+    : lines.find((r) => r.market === "Total score");
+  const rmseLabel = state.market === "Round matchups" ? "Win % RMSE" : "Total score RMSE";
+  const maeLabel = state.market === "Round matchups" ? "Win % MAE" : "Total score MAE";
   const bestRoi = evAgg.reduce((best, a) => (!best || a.roi > best.roi ? a : best), null);
   const worstRmse = [...lines].sort((a, b) => num(b.rmse) - num(a.rmse))[0];
 
   document.getElementById("overview-kpis").innerHTML = `
     <div class="kpi-card">
-      <div class="kpi-label">Total score RMSE</div>
+      <div class="kpi-label">${rmseLabel}</div>
       <div class="kpi-value">${fmt(num(totalScore?.rmse), 2)}</div>
-      <div class="kpi-sub">${state.tournament || "combined"} · strokes vs book</div>
+      <div class="kpi-sub">${state.tournament || "combined"} · ${state.market === "Round matchups" ? "model vs book win %" : "strokes vs book"}</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">Total score MAE</div>
+      <div class="kpi-label">${maeLabel}</div>
       <div class="kpi-value">${fmt(num(totalScore?.mae), 2)}</div>
       <div class="kpi-sub">${totalScore?.n_line_pairs || 0} line pairs</div>
     </div>
@@ -1144,6 +1942,14 @@ function renderOddsCsv() {
   const tbody = document.getElementById("odds-csv-tbody");
   const note = document.getElementById("odds-csv-note");
   if (!kpis || !thead || !tbody) return;
+
+  if (isLiveOnlyMarket(state.market)) {
+    if (note) note.innerHTML = liveOnlyMarketNoteHtml();
+    kpis.innerHTML = "";
+    thead.innerHTML = "";
+    tbody.innerHTML = `<tr><td colspan="16" class="muted">${liveOnlyMarketNoteHtml()}</td></tr>`;
+    return;
+  }
 
   if (!ODDS_LINES_ROWS.length) {
     if (note) {
@@ -1405,6 +2211,11 @@ function renderHonestOos() {
 function renderAccuracy() {
   const showEvent = !state.tournament;
   document.getElementById("accuracy-col-event").hidden = !showEvent;
+  if (isLiveOnlyMarket(state.market)) {
+    document.querySelector("#accuracy-table tbody").innerHTML =
+      `<tr><td colspan="${showEvent ? 5 : 4}">${liveOnlyMarketNoteHtml()}</td></tr>`;
+    return;
+  }
   const lines = lineRows();
   document.querySelector("#accuracy-table tbody").innerHTML = lines.length
     ? lines
@@ -1424,6 +2235,13 @@ function renderAccuracy() {
 function renderEv() {
   const showEvent = !state.tournament;
   document.getElementById("ev-col-event").hidden = !showEvent;
+  if (isLiveOnlyMarket(state.market)) {
+    document.querySelector("#ev-table tbody").innerHTML =
+      `<tr><td colspan="${showEvent ? 9 : 8}">${liveOnlyMarketNoteHtml()}</td></tr>`;
+    const table = document.getElementById("ev-heatmap");
+    if (table) table.innerHTML = `<tbody><tr><td>${liveOnlyMarketNoteHtml()}</td></tr></tbody>`;
+    return;
+  }
   const rows = evRows();
   document.querySelector("#ev-table tbody").innerHTML = rows.length
     ? rows
@@ -1640,6 +2458,7 @@ function renderLiveFactorsPanel(summary) {
 
 function formatModelMu(market, mu) {
   if (!Number.isFinite(mu)) return "—";
+  if (market === "Round matchups") return `${(mu <= 1 ? mu * 100 : mu).toFixed(1)}%`;
   if (market === "Total score") return mu.toFixed(2);
   if (market === "Birdies") return mu.toFixed(1);
   return String(Math.round(mu));
@@ -1648,6 +2467,7 @@ function formatModelMu(market, mu) {
 function formatGap(market, gap) {
   if (!Number.isFinite(gap)) return "—";
   const sign = gap > 0 ? "+" : "";
+  if (market === "Round matchups") return `${sign}${gap.toFixed(2)} SG`;
   if (market === "Total score") return `${sign}${gap.toFixed(2)}`;
   if (market === "Birdies") return `${sign}${gap.toFixed(1)}`;
   return `${sign}${Math.round(gap)}`;
@@ -1662,9 +2482,22 @@ function populateTournamentSelect() {
   sel.value = state.tournament;
 }
 
+function populatePicksMarketFilter() {
+  const sel = document.getElementById("picks-filter-market");
+  if (!sel) return;
+  const markets = MARKET_ORDER.filter((m) => BETTABLE_MARKETS.has(m));
+  const prev = state.picksMarket;
+  sel.innerHTML =
+    `<option value="">All markets</option>` + markets.map((m) => `<option value="${m}">${m}</option>`).join("");
+  sel.value = prev && markets.includes(prev) ? prev : "";
+  state.picksMarket = sel.value;
+}
+
 function populateMarketFilter() {
   const rows = state.tournament ? latestRowsForTournament(state.tournament) : combinedTournamentRows();
-  const markets = uniqueSorted(rows.map((r) => r.market)).sort((a, b) => marketSortKey(a) - marketSortKey(b));
+  const markets = uniqueSorted(rows.map((r) => r.market)).sort(
+    (a, b) => marketSortKey(a) - marketSortKey(b),
+  );
   const mSel = document.getElementById("filter-market");
   const prev = state.market;
   mSel.innerHTML =
@@ -1692,7 +2525,7 @@ function renderLivePicks() {
     if (titleEl) titleEl.textContent = "Best bets — live week";
     if (noteEl) noteEl.textContent = "Could not load projections.json — run npm run refresh:live or npm start in alpha-caddie-web.";
     renderLiveFactorsPanel(null);
-    tbody.innerHTML = `<tr><td colspan="12" class="live-picks-empty">No live projections available.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="13" class="live-picks-empty">No live projections available.</td></tr>`;
     return;
   }
 
@@ -1702,6 +2535,7 @@ function renderLivePicks() {
     signals: LIVE_CTX.signals,
     courseRow: LIVE_CTX.courseRow,
     minEvPct: state.minEv,
+    marketFilter: state.picksMarket,
   });
 
   card.hidden = false;
@@ -1724,12 +2558,25 @@ function renderLivePicks() {
       `, and historical context signals. Uses toolbar Min EV %.`;
   }
 
-  if (!built.picks.length) {
-    tbody.innerHTML = `<tr><td colspan="12" class="live-picks-empty">No picks at ≥${state.minEv}% EV for ${built.roundLabel} — lower Min EV or refresh DK props.</td></tr>`;
+  let picks = built.picks;
+  if (state.side) {
+    picks = picks.filter((p) => {
+      if (p.pickType === "matchup" || p.market === "Round matchups") return true;
+      return String(p.side).toLowerCase() === state.side.toLowerCase();
+    });
+  }
+  if (state.player) {
+    const q = state.player.toLowerCase();
+    picks = picks.filter((p) => String(p.player_name || "").toLowerCase().includes(q));
+  }
+
+  if (!picks.length) {
+    const mktLabel = state.picksMarket ? ` for ${state.picksMarket}` : "";
+    tbody.innerHTML = `<tr><td colspan="13" class="live-picks-empty">No picks${mktLabel} at ≥${state.minEv}% EV for ${built.roundLabel} — lower Min EV %, try All markets, or refresh DK props.</td></tr>`;
     return;
   }
 
-  tbody.innerHTML = built.picks
+  tbody.innerHTML = picks
     .map((p, i) => {
       const hist =
         Number.isFinite(p.histRoi) && p.histBets > 0
@@ -1745,19 +2592,46 @@ function renderLivePicks() {
           return `<span class="live-picks-tag${cls}">${esc(t)}</span>`;
         })
         .join("");
-      return `<tr class="live-picks-row" data-player="${esc(p.player_name)}" data-market="${esc(p.market)}" data-side="${esc(p.side)}">
+      const isMatchup = p.pickType === "matchup" || p.market === "Round matchups";
+      const sideLabel = isMatchup
+        ? `vs ${p.opponent_name || "—"}`
+        : p.side === "over"
+          ? "Over"
+          : "Under";
+      const lineLabel = isMatchup
+        ? Number.isFinite(p.line)
+          ? `${p.line.toFixed(1)}%`
+          : p.book
+            ? esc(p.book)
+            : "—"
+        : Number.isFinite(p.line)
+          ? p.line
+          : "—";
+      const muTitle = isMatchup ? "Model win %" : "Model μ";
+      return `<tr class="live-picks-row"
+        data-event="${esc(built.eventName || "")}"
+        data-round="${built.round || ""}"
+        data-player="${esc(p.player_name)}"
+        data-market="${esc(p.market)}"
+        data-side="${esc(p.side)}"
+        data-opponent="${esc(p.opponent_name || "")}"
+        data-line="${Number.isFinite(p.line) ? p.line : ""}"
+        data-odds="${Number.isFinite(p.odds) ? Math.round(p.odds) : ""}"
+        data-dg-id="${p.dg_id || ""}"
+        data-opponent-dg-id="${p.opponent_dg_id || ""}">
         <td class="num">${i + 1}</td>
         <td>${esc(p.player_name)}</td>
         <td>${esc(p.market)}</td>
-        <td class="num">${p.side === "over" ? "Over" : "Under"}</td>
-        <td class="num" title="Model μ">${formatModelMu(p.market, p.mu)}</td>
-        <td class="num">${Number.isFinite(p.line) ? p.line : "—"}</td>
+        <td class="num">${esc(sideLabel)}</td>
+        <td class="num" title="${muTitle}">${formatModelMu(p.market, p.mu)}</td>
+        <td class="num" title="${isMatchup && p.book ? esc(p.book) : ""}">${lineLabel}</td>
         <td class="num ${gapCls}">${formatGap(p.market, p.gap)}</td>
         <td class="num">${esc(formatAmerican(p.odds))}</td>
         <td class="num ${edgeCls}">${p.edgePct >= 0 ? "+" : ""}${p.edgePct.toFixed(1)}%</td>
         <td class="num" title="${p.histBets ? `${p.histBets} OOS bets` : ""}">${hist}</td>
         <td class="live-picks-context">${tags || '<span class="muted">—</span>'}</td>
         <td class="num">${p.score.toFixed(1)}</td>
+        <td class="num"><button type="button" class="btn btn-sm btn-journal-add" title="Add to My bets">+</button></td>
       </tr>`;
     })
     .join("");
@@ -1779,6 +2653,7 @@ function renderAll() {
   renderOddsCsv();
   renderBets();
   renderRisk();
+  renderMyBets();
   renderEvents();
   buildInsights();
   renderLivePicks();
@@ -1792,9 +2667,29 @@ function setTab(name) {
   document.querySelectorAll(".panel").forEach((p) => {
     p.classList.toggle("active", p.id === `panel-${name}`);
   });
+  if (name === "picks") populatePicksMarketFilter();
   if (location.hash !== `#${name}`) {
     history.replaceState(null, "", `#${name}`);
   }
+}
+
+async function loadOptionalCsvText(candidates) {
+  /** @type {{ url: string, text: string, rows: number }[]} */
+  const loaded = [];
+  for (const url of candidates) {
+    try {
+      const res = await fetch(`${url}?t=${Date.now()}`, { cache: "no-store" });
+      if (!res.ok) continue;
+      const text = await res.text();
+      const rows = text.split(/\r?\n/).filter(Boolean).length - 1;
+      if (rows > 0) loaded.push({ url, text, rows });
+    } catch {
+      /* try next */
+    }
+  }
+  if (!loaded.length) return "";
+  loaded.sort((a, b) => b.rows - a.rows);
+  return loaded[0].text;
 }
 
 async function loadDetailCsvText() {
@@ -1891,9 +2786,12 @@ async function loadData() {
   const errEl = document.getElementById("error-banner");
   errEl.hidden = true;
   try {
-    const [summaryText, detailText, oos, oddsRoi, oddsLines] = await Promise.all([
+    const [summaryText, matchupSummaryText, detailText, matchupDetailText, oos, oddsRoi, oddsLines] =
+      await Promise.all([
       loadSummaryCsvText(),
+      loadOptionalCsvText(MATCHUP_SUMMARY_CANDIDATES),
       loadDetailCsvText(),
+      loadOptionalCsvText(MATCHUP_DETAIL_CANDIDATES),
       loadOosReport(),
       loadOddsModelRoi(),
       loadOddsLinesCsv(),
@@ -1901,14 +2799,20 @@ async function loadData() {
     OOS_REPORT = oos;
     ODDS_MODEL_ROI = oddsRoi;
     ODDS_LINES_ROWS = oddsLines;
-    ALL_ROWS = parseCsv(summaryText);
+    ALL_ROWS = [
+      ...parseCsv(summaryText),
+      ...(matchupSummaryText ? parseCsv(matchupSummaryText) : []),
+    ];
     if (!ALL_ROWS.length) throw new Error("Summary CSV is empty");
     DETAIL_ROWS = detailText ? parseCsv(detailText) : [];
+    MATCHUP_DETAIL_ROWS = matchupDetailText ? parseCsv(matchupDetailText) : [];
     invalidateLiveBestBetsCache();
     LIVE_CTX = await loadLiveBestBetsContext();
     populateTournamentSelect();
     populateMarketFilter();
+    populatePicksMarketFilter();
     populateOddsCourseSelect();
+    gradeMyBetsFromLoadedData();
     renderAll();
   } catch (e) {
     errEl.hidden = false;
@@ -1944,7 +2848,15 @@ function bindUi() {
     renderBets();
     renderRisk();
     renderOddsCsv();
+    renderLivePicks();
   });
+  const picksMarket = document.getElementById("picks-filter-market");
+  if (picksMarket) {
+    picksMarket.addEventListener("change", (e) => {
+      state.picksMarket = e.target.value;
+      renderLivePicks();
+    });
+  }
   document.getElementById("filter-show").addEventListener("change", (e) => {
     state.show = e.target.value;
     renderBets();
@@ -1955,6 +2867,61 @@ function bindUi() {
     el.addEventListener("input", syncRiskFromForm);
     el.addEventListener("change", syncRiskFromForm);
   }
+  const myBetsBankroll = document.getElementById("my-bets-bankroll");
+  if (myBetsBankroll) {
+    myBetsBankroll.addEventListener("input", syncMyBetsBankrollFromForm);
+    myBetsBankroll.addEventListener("change", syncMyBetsBankrollFromForm);
+  }
+  document.querySelectorAll(".my-bets-subtab").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      setMyBetsView(btn.getAttribute("data-my-bets-view") || "browse");
+      renderMyBets();
+    });
+  });
+  const browseSearch = document.getElementById("my-bets-search");
+  if (browseSearch) {
+    browseSearch.addEventListener("input", (e) => {
+      state.myBets.browseSearch = e.target.value.trim();
+      renderMyBetsBrowse();
+    });
+  }
+  document.getElementById("btn-my-bets-clear-all")?.addEventListener("click", clearAllMyBets);
+  const browseMarket = document.getElementById("my-bets-browse-market");
+  if (browseMarket) {
+    browseMarket.addEventListener("change", (e) => {
+      state.myBets.browseMarket = e.target.value;
+      renderMyBetsBrowse();
+    });
+  }
+  document.getElementById("my-bets-available-tbody")?.addEventListener("click", (ev) => {
+    const addBtn = ev.target.closest(".my-bets-add-line");
+    if (addBtn) {
+      addMyBetsLineByKey(addBtn.dataset.lineKey || "");
+      return;
+    }
+    const remBtn = ev.target.closest(".my-bets-remove-line");
+    if (remBtn) removeMyBetByLineKey(remBtn.dataset.lineKey || "");
+  });
+  document.getElementById("my-bets-slip-tbody")?.addEventListener("change", (ev) => {
+    const inp = ev.target.closest(".my-bets-stake-input");
+    if (inp) {
+      updateMyBetStake(inp.dataset.id, inp.value);
+      return;
+    }
+    const sel = ev.target.closest(".my-bets-result-select");
+    if (!sel) return;
+    updateMyBetResult(sel.dataset.id, sel.value);
+  });
+  document.getElementById("my-bets-slip-tbody")?.addEventListener("click", (ev) => {
+    const btn = ev.target.closest(".my-bets-del");
+    if (!btn) return;
+    deleteMyBet(btn.dataset.id);
+  });
+  document.getElementById("my-bets-history-table")?.addEventListener("click", (ev) => {
+    const btn = ev.target.closest(".my-bets-del");
+    if (!btn) return;
+    deleteMyBet(btn.dataset.id);
+  });
   const oddsCourse = document.getElementById("odds-filter-course");
   if (oddsCourse) {
     oddsCourse.addEventListener("change", (e) => {
@@ -1988,6 +2955,26 @@ function bindUi() {
   }
   document.getElementById("btn-reload").addEventListener("click", loadData);
   document.getElementById("live-picks-tbody")?.addEventListener("click", (ev) => {
+    const addBtn = ev.target.closest(".btn-journal-add");
+    if (addBtn) {
+      ev.stopPropagation();
+      const tr = addBtn.closest("tr.live-picks-row");
+      if (!tr) return;
+      prefillMyBetsFromPick({
+        eventName: tr.dataset.event || "",
+        round: num(tr.dataset.round) || 1,
+        playerName: tr.dataset.player || "",
+        opponentName: tr.dataset.opponent || "",
+        market: tr.dataset.market || "",
+        side: tr.dataset.side || "",
+        line: num(tr.dataset.line),
+        odds: num(tr.dataset.odds),
+        dg_id: tr.dataset.dgId || "",
+        opponent_dg_id: tr.dataset.opponentDgId || "",
+        pickType: tr.dataset.market === "Round matchups" ? "matchup" : "ou",
+      });
+      return;
+    }
     const tr = ev.target.closest("tr.live-picks-row");
     if (!tr) return;
     const player = tr.dataset.player || "";
@@ -2009,7 +2996,7 @@ function bindUi() {
 
 bindUi();
 const initialTab = String(location.hash || "").replace(/^#/, "");
-if (["overview", "accuracy", "ev", "odds-csv", "bets", "risk", "events", "insights", "picks", "guide"].includes(initialTab)) {
+if (["overview", "accuracy", "ev", "odds-csv", "bets", "risk", "my-bets", "events", "insights", "picks", "guide"].includes(initialTab)) {
   setTab(initialTab);
 }
 

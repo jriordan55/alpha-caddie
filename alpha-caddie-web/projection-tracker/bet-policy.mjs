@@ -4,7 +4,13 @@
 
 export const DEFAULT_MIN_EV_PCT = 10;
 
-export const ACTION_MARKETS = new Set(["GIR", "Total score", "Birdies", "Fairways hit"]);
+export const ACTION_MARKETS = new Set([
+  "GIR",
+  "Total score",
+  "Birdies",
+  "Fairways hit",
+  "Round matchups",
+]);
 export const PRIMARY_ACTION_MARKETS = ACTION_MARKETS;
 export const MIN_EV_BY_MARKET = {};
 export const MIN_LINE_GAP_BY_MARKET = {};

@@ -875,6 +875,8 @@ export async function buildFullModelMuMapForEvent({
     mus.set("Bogeys", pl.bogeys);
     mus.set("GIR", pl.gir);
     mus.set("Fairways hit", pl.fairways);
+    const muSg = num(pl.mu_sg, NaN);
+    if (Number.isFinite(muSg)) mus.set("__mu_sg__", muSg);
     for (const market of ALL_MARKETS) {
       const mu = ouProjectedMeanForMode(market, pl, meta, "default", "default", ctx);
       if (Number.isFinite(mu)) mus.set(market, mu);
@@ -936,6 +938,10 @@ export class FullModelProjectionCache {
     if (!Number.isFinite(dgId)) return NaN;
     const map = await this.ensureEvent(p);
     return map.get(Math.round(dgId))?.get(marketLabel) ?? NaN;
+  }
+
+  async muSgForProp(p, dgId) {
+    return this.muForProp(p, dgId, "__mu_sg__");
   }
 }
 
