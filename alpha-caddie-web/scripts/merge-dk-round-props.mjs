@@ -309,6 +309,7 @@ export async function refreshRoundProjectionProps(payload, golfModelRoot) {
   let dkLeagueUrl = "";
   let dkLeagueSlug = "";
   let nDkFresh = 0;
+  let dkRoundOuNotPosted = false;
 
   if (!skipDk) {
     try {
@@ -330,6 +331,7 @@ export async function refreshRoundProjectionProps(payload, golfModelRoot) {
       canonicalizeDkOuPropsAgainstProjections(dkProps, payload.players);
       dkError = dk.error;
       subcatsUsed = dk.subcatsUsed;
+      dkRoundOuNotPosted = !!dk.dkRoundOuNotPosted;
       if (!dkProps.length) {
         const priorDk = (Array.isArray(payload.props) ? payload.props : []).filter(
           (r) => String(r?.source || "").trim().toLowerCase() === "draftkings" && propRowHasPostableOdds(r),
@@ -344,8 +346,14 @@ export async function refreshRoundProjectionProps(payload, golfModelRoot) {
             dk.error && !String(dk.error).startsWith("skipped")
               ? dk.error
               : `0 props for ${dkLeagueUrl || "league URL"} — check slug (dk_league_slug) or Playwright / DK_SITE_SEGMENT`;
-          dkError = requireFreshDk ? msg : dk.error || msg;
-          console.error(requireFreshDk ? `[dk-round-props] FAIL (GOLF_REQUIRE_DK_OU=1): ${msg}` : `DraftKings O/U: ${msg}`);
+          dkError = msg;
+          if (dkRoundOuNotPosted) {
+            console.warn(`[dk-round-props] ${msg} — continuing with model O/U fallback`);
+          } else if (requireFreshDk) {
+            console.error(`[dk-round-props] FAIL (GOLF_REQUIRE_DK_OU=1): ${msg}`);
+          } else {
+            console.warn(`DraftKings O/U: ${msg}`);
+          }
         }
       } else if (dk.error && !String(dk.error).startsWith("skipped")) {
         console.warn("DraftKings O/U:", dk.error);
@@ -455,5 +463,6 @@ export async function refreshRoundProjectionProps(payload, golfModelRoot) {
     coverage,
     dkLeagueUrl,
     dkLeagueSlug,
+    dkRoundOuNotPosted,
   };
 }

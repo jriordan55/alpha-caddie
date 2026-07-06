@@ -7,6 +7,7 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { normCourseNameKey } from "./course-name-key.mjs";
 import { readCoursePar18 } from "./projection-course-par.mjs";
+import { projectionExportMeta } from "./projection-export-meta.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -178,11 +179,17 @@ const props = Array.isArray(proj.props) ? proj.props : [];
 const dkSlug = String(proj.dk_league_slug || "").trim();
 const skipDkGate = envTruthy("GOLF_SKIP_DK_OU_VALIDATE", false);
 const requireDk = envTruthy("GOLF_REQUIRE_DK_OU", false);
+const exportMeta = projectionExportMeta(proj);
+const dkRoundOuNotPosted = !!exportMeta.dk_round_ou_not_posted;
 const anyDkProps = props.some((r) => String(r.source || "").trim().toLowerCase() === "draftkings");
 
 if (skipDkGate) {
   console.warn(
     `[validate:projections] WARN: skipping DK O/U coverage gate (GOLF_SKIP_DK_OU_VALIDATE=1).`,
+  );
+} else if (dkRoundOuNotPosted) {
+  console.warn(
+    `[validate:projections] WARN: skipping DK O/U coverage gate — DraftKings has not posted round O/U for this event yet (model O/U fallback in props).`,
   );
 } else if (requireDk || anyDkProps) {
   if (!anyDkProps) {

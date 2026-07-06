@@ -3586,7 +3586,7 @@ function updateOuDkStatusNoteVisibility() {
     return;
   }
   el.hidden = false;
-  const note = String(DATA?.meta?.dk_round_props_note || "").trim();
+  const note = String(DATA?.dk_round_props_note || DATA?.meta?.dk_round_props_note || "").trim();
   el.textContent =
     note ||
     "No DraftKings round O/U lines loaded — rerun npm run update:dk-round-projections (headed browser required on Windows; set DK_HEADLESS=0 if needed).";
@@ -6644,7 +6644,7 @@ function draftKingsRoundGolferCount() {
 
 function ouRoundProjectionsEmptyMessage() {
   if (!draftKingsRoundPropOddsAvailable()) {
-    const note = String(DATA?.meta?.dk_round_props_note || "").trim();
+    const note = String(DATA?.dk_round_props_note || DATA?.meta?.dk_round_props_note || "").trim();
     if (note) return note;
     return (
       "No DraftKings round O/U lines loaded for this round.\n\n" +

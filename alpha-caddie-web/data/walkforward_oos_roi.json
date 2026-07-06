@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-03T01:55:39.159Z",
+  "generated_at": "2026-07-06T22:12:20.343Z",
   "methodology": {
     "grading": "walk_forward_oos_one_side_per_line",
     "model_lines": "walk_forward_stat_model_no_dk_calibration",
@@ -14,17 +14,17 @@
     "Fairways hit": 1.45
   },
   "outcome_mu_bias_corrections": {
-    "Total score": -0.251,
-    "Birdies": -0.63,
-    "GIR": 0.602,
-    "Fairways hit": 0.727
+    "Total score": -0.261,
+    "Birdies": -0.628,
+    "GIR": 0.597,
+    "Fairways hit": 0.706
   },
   "recommended_policy": {
     "min_ev_pct": 10,
     "uniform_ev_all_markets": true,
     "no_side_or_gap_filters": true
   },
-  "excluded_live_event": "John Deere Classic",
+  "excluded_live_event": "Genesis Scottish Open",
   "events_chronological": [
     "PGA Championship",
     "THE CJ CUP Byron Nelson",
@@ -35,48 +35,48 @@
     "Travelers Championship",
     "John Deere Classic"
   ],
-  "oos_event_count": 7,
+  "oos_event_count": 8,
   "default_min_ev_pct": 10,
   "combined_oos_at_5pct": {
-    "units": 71.68,
-    "bets": 1743,
-    "wins": 970,
-    "losses": 773,
-    "hit_pct": 55.7,
-    "roi_pct": 4.1
+    "units": 86.49,
+    "bets": 1788,
+    "wins": 1001,
+    "losses": 787,
+    "hit_pct": 56,
+    "roi_pct": 4.8
   },
   "combined_oos_recommended": {
-    "units": 71.68,
-    "bets": 1743,
-    "wins": 970,
-    "losses": 773,
-    "hit_pct": 55.7,
-    "roi_pct": 4.1
+    "units": 86.49,
+    "bets": 1788,
+    "wins": 1001,
+    "losses": 787,
+    "hit_pct": 56,
+    "roi_pct": 4.8
   },
   "combined_oos_unfiltered_at_5pct": {
-    "units": 67.32,
-    "bets": 2126,
-    "wins": 1176,
-    "losses": 950,
-    "hit_pct": 55.3,
-    "roi_pct": 3.2
+    "units": 90.57,
+    "bets": 2177,
+    "wins": 1214,
+    "losses": 963,
+    "hit_pct": 55.8,
+    "roi_pct": 4.2
   },
   "combined_oos_raw_at_5pct": {
-    "units": 67.32,
-    "bets": 2126,
-    "wins": 1176,
-    "losses": 950,
-    "hit_pct": 55.3,
-    "roi_pct": 3.2
+    "units": 90.57,
+    "bets": 2177,
+    "wins": 1214,
+    "losses": 963,
+    "hit_pct": 55.8,
+    "roi_pct": 4.2
   },
   "peak_oos_event_at_5pct": {
-    "event": "THE CJ CUP Byron Nelson",
-    "units": 29.888739404270854,
-    "bets": 289,
-    "wins": 170,
-    "losses": 119,
-    "hit_pct": 58.82352941176471,
-    "roi_pct": 10.342124361339396
+    "event": "John Deere Classic",
+    "units": 14.636296126777843,
+    "bets": 31,
+    "wins": 23,
+    "losses": 8,
+    "hit_pct": 74.19354838709677,
+    "roi_pct": 47.21385847347691
   },
   "worst_oos_event_at_5pct": {
     "event": "RBC Canadian Open",
@@ -90,113 +90,113 @@
   "threshold_sweep_oos": [
     {
       "min_ev_pct": 0,
-      "units": 41.95,
-      "bets": 2420,
-      "wins": 1326,
-      "losses": 1094,
-      "hit_pct": 54.8,
-      "roi_pct": 1.7
+      "units": 48.74,
+      "bets": 2491,
+      "wins": 1367,
+      "losses": 1124,
+      "hit_pct": 54.9,
+      "roi_pct": 2
     },
     {
       "min_ev_pct": 2.5,
-      "units": 55.42,
-      "bets": 2279,
-      "wins": 1254,
-      "losses": 1025,
-      "hit_pct": 55,
-      "roi_pct": 2.4
+      "units": 67.82,
+      "bets": 2332,
+      "wins": 1288,
+      "losses": 1044,
+      "hit_pct": 55.2,
+      "roi_pct": 2.9
     },
     {
       "min_ev_pct": 5,
-      "units": 67.32,
-      "bets": 2126,
-      "wins": 1176,
-      "losses": 950,
-      "hit_pct": 55.3,
-      "roi_pct": 3.2
+      "units": 90.57,
+      "bets": 2177,
+      "wins": 1214,
+      "losses": 963,
+      "hit_pct": 55.8,
+      "roi_pct": 4.2
     },
     {
       "min_ev_pct": 7.5,
-      "units": 75.16,
-      "bets": 1928,
-      "wins": 1072,
-      "losses": 856,
-      "hit_pct": 55.6,
-      "roi_pct": 3.9
+      "units": 85.8,
+      "bets": 1981,
+      "wins": 1105,
+      "losses": 876,
+      "hit_pct": 55.8,
+      "roi_pct": 4.3
     },
     {
       "min_ev_pct": 10,
-      "units": 71.68,
-      "bets": 1743,
-      "wins": 970,
-      "losses": 773,
-      "hit_pct": 55.7,
-      "roi_pct": 4.1
+      "units": 86.49,
+      "bets": 1788,
+      "wins": 1001,
+      "losses": 787,
+      "hit_pct": 56,
+      "roi_pct": 4.8
     },
     {
       "min_ev_pct": 12.5,
-      "units": 93.69,
-      "bets": 1545,
-      "wins": 875,
-      "losses": 670,
-      "hit_pct": 56.6,
-      "roi_pct": 6.1
+      "units": 106.29,
+      "bets": 1602,
+      "wins": 911,
+      "losses": 691,
+      "hit_pct": 56.9,
+      "roi_pct": 6.6
     },
     {
       "min_ev_pct": 15,
-      "units": 90.42,
-      "bets": 1357,
-      "wins": 774,
-      "losses": 583,
-      "hit_pct": 57,
-      "roi_pct": 6.7
+      "units": 106.99,
+      "bets": 1393,
+      "wins": 801,
+      "losses": 592,
+      "hit_pct": 57.5,
+      "roi_pct": 7.7
     },
     {
       "min_ev_pct": 17.5,
-      "units": 83.91,
-      "bets": 1174,
-      "wins": 671,
-      "losses": 503,
-      "hit_pct": 57.2,
-      "roi_pct": 7.1
+      "units": 96.4,
+      "bets": 1215,
+      "wins": 698,
+      "losses": 517,
+      "hit_pct": 57.4,
+      "roi_pct": 7.9
     },
     {
       "min_ev_pct": 20,
-      "units": 70.91,
-      "bets": 990,
-      "wins": 564,
-      "losses": 426,
-      "hit_pct": 57,
-      "roi_pct": 7.2
+      "units": 81.42,
+      "bets": 1023,
+      "wins": 586,
+      "losses": 437,
+      "hit_pct": 57.3,
+      "roi_pct": 8
     }
   ],
   "best_oos_threshold": {
     "min_ev_pct": 20,
-    "units": 70.91,
-    "bets": 990,
-    "wins": 564,
-    "losses": 426,
-    "hit_pct": 57,
-    "roi_pct": 7.2
+    "units": 81.42,
+    "bets": 1023,
+    "wins": 586,
+    "losses": 437,
+    "hit_pct": 57.3,
+    "roi_pct": 8
   },
   "by_market_at_5pct": [
     {
       "market": "Total score",
-      "units": 69.64,
-      "bets": 559,
-      "wins": 333,
-      "losses": 226,
-      "hit_pct": 59.6,
-      "roi_pct": 12.5
+      "units": 66.87,
+      "bets": 576,
+      "wins": 341,
+      "losses": 235,
+      "hit_pct": 59.2,
+      "roi_pct": 11.6
     },
     {
       "market": "GIR",
-      "units": 18.85,
-      "bets": 300,
-      "wins": 173,
+      "units": 33.29,
+      "bets": 314,
+      "wins": 187,
       "losses": 127,
-      "hit_pct": 57.7,
-      "roi_pct": 6.3
+      "hit_pct": 59.6,
+      "roi_pct": 10.6
     },
     {
       "market": "Birdies",
@@ -209,32 +209,32 @@
     },
     {
       "market": "Fairways hit",
-      "units": -26.6,
-      "bets": 489,
-      "wins": 251,
-      "losses": 238,
-      "hit_pct": 51.3,
-      "roi_pct": -5.4
+      "units": -23.45,
+      "bets": 503,
+      "wins": 260,
+      "losses": 243,
+      "hit_pct": 51.7,
+      "roi_pct": -4.7
     }
   ],
   "by_market_at_5pct_raw": [
     {
       "market": "Total score",
-      "units": 69.64,
-      "bets": 559,
-      "wins": 333,
-      "losses": 226,
-      "hit_pct": 59.6,
-      "roi_pct": 12.5
+      "units": 66.87,
+      "bets": 576,
+      "wins": 341,
+      "losses": 235,
+      "hit_pct": 59.2,
+      "roi_pct": 11.6
     },
     {
       "market": "GIR",
-      "units": 18.85,
-      "bets": 300,
-      "wins": 173,
+      "units": 33.29,
+      "bets": 314,
+      "wins": 187,
       "losses": 127,
-      "hit_pct": 57.7,
-      "roi_pct": 6.3
+      "hit_pct": 59.6,
+      "roi_pct": 10.6
     },
     {
       "market": "Birdies",
@@ -247,115 +247,115 @@
     },
     {
       "market": "Fairways hit",
-      "units": -26.6,
-      "bets": 489,
-      "wins": 251,
-      "losses": 238,
-      "hit_pct": 51.3,
-      "roi_pct": -5.4
+      "units": -23.45,
+      "bets": 503,
+      "wins": 260,
+      "losses": 243,
+      "hit_pct": 51.7,
+      "roi_pct": -4.7
     }
   ],
   "by_threshold": {
     "0": {
       "__all__": {
-        "units": 41.95,
-        "bets": 2420,
-        "wins": 1326,
-        "losses": 1094,
-        "hit_pct": 54.8,
-        "roi_pct": 1.7
+        "units": 48.74,
+        "bets": 2491,
+        "wins": 1367,
+        "losses": 1124,
+        "hit_pct": 54.9,
+        "roi_pct": 2
       },
       "Total score": {
-        "units": 51.7,
-        "bets": 774,
-        "wins": 440,
-        "losses": 334,
-        "hit_pct": 56.8,
-        "roi_pct": 6.7
+        "units": 45.28,
+        "bets": 795,
+        "wins": 448,
+        "losses": 347,
+        "hit_pct": 56.4,
+        "roi_pct": 5.7
       },
       "Birdies": {
-        "units": 8.6,
-        "bets": 741,
-        "wins": 403,
-        "losses": 338,
-        "hit_pct": 54.4,
-        "roi_pct": 1.2
+        "units": 9.6,
+        "bets": 767,
+        "wins": 418,
+        "losses": 349,
+        "hit_pct": 54.5,
+        "roi_pct": 1.3
       },
       "GIR": {
-        "units": 10.44,
-        "bets": 378,
-        "wins": 212,
+        "units": 20.44,
+        "bets": 387,
+        "wins": 221,
         "losses": 166,
-        "hit_pct": 56.1,
-        "roi_pct": 2.8
+        "hit_pct": 57.1,
+        "roi_pct": 5.3
       },
       "Fairways hit": {
-        "units": -28.8,
-        "bets": 527,
-        "wins": 271,
-        "losses": 256,
-        "hit_pct": 51.4,
-        "roi_pct": -5.5
+        "units": -26.57,
+        "bets": 542,
+        "wins": 280,
+        "losses": 262,
+        "hit_pct": 51.7,
+        "roi_pct": -4.9
       }
     },
     "5": {
       "__all__": {
-        "units": 67.32,
-        "bets": 2126,
-        "wins": 1176,
-        "losses": 950,
-        "hit_pct": 55.3,
-        "roi_pct": 3.2
+        "units": 90.57,
+        "bets": 2177,
+        "wins": 1214,
+        "losses": 963,
+        "hit_pct": 55.8,
+        "roi_pct": 4.2
       },
       "Total score": {
-        "units": 66.85,
-        "bets": 685,
-        "wins": 400,
-        "losses": 285,
-        "hit_pct": 58.4,
-        "roi_pct": 9.8
+        "units": 71.95,
+        "bets": 707,
+        "wins": 414,
+        "losses": 293,
+        "hit_pct": 58.6,
+        "roi_pct": 10.2
       },
       "Birdies": {
-        "units": 18.1,
-        "bets": 587,
-        "wins": 322,
-        "losses": 265,
-        "hit_pct": 54.9,
-        "roi_pct": 3.1
+        "units": 19.72,
+        "bets": 591,
+        "wins": 325,
+        "losses": 266,
+        "hit_pct": 55,
+        "roi_pct": 3.3
       },
       "GIR": {
-        "units": 10.1,
-        "bets": 347,
-        "wins": 194,
+        "units": 22.4,
+        "bets": 359,
+        "wins": 206,
         "losses": 153,
-        "hit_pct": 55.9,
-        "roi_pct": 2.9
+        "hit_pct": 57.4,
+        "roi_pct": 6.2
       },
       "Fairways hit": {
-        "units": -27.73,
-        "bets": 507,
-        "wins": 260,
-        "losses": 247,
-        "hit_pct": 51.3,
-        "roi_pct": -5.5
+        "units": -23.5,
+        "bets": 520,
+        "wins": 269,
+        "losses": 251,
+        "hit_pct": 51.7,
+        "roi_pct": -4.5
       }
     },
     "10": {
       "__all__": {
-        "units": 71.68,
-        "bets": 1743,
-        "wins": 970,
-        "losses": 773,
-        "hit_pct": 55.7,
-        "roi_pct": 4.1
+        "units": 86.49,
+        "bets": 1788,
+        "wins": 1001,
+        "losses": 787,
+        "hit_pct": 56,
+        "roi_pct": 4.8
       },
       "Total score": {
-        "units": 69.64,
-        "bets": 559,
-        "wins": 333,
-        "losses": 226,
-        "hit_pct": 59.6,
-        "roi_pct": 12.5
+        "units": 66.87,
+        "bets": 576,
+        "wins": 341,
+        "losses": 235,
+        "hit_pct": 59.2,
+        "roi_pct": 11.6
       },
       "Birdies": {
         "units": 9.79,
@@ -366,38 +366,38 @@
         "roi_pct": 2.5
       },
       "GIR": {
-        "units": 18.85,
-        "bets": 300,
-        "wins": 173,
+        "units": 33.29,
+        "bets": 314,
+        "wins": 187,
         "losses": 127,
-        "hit_pct": 57.7,
-        "roi_pct": 6.3
+        "hit_pct": 59.6,
+        "roi_pct": 10.6
       },
       "Fairways hit": {
-        "units": -26.6,
-        "bets": 489,
-        "wins": 251,
-        "losses": 238,
-        "hit_pct": 51.3,
-        "roi_pct": -5.4
+        "units": -23.45,
+        "bets": 503,
+        "wins": 260,
+        "losses": 243,
+        "hit_pct": 51.7,
+        "roi_pct": -4.7
       }
     },
     "15": {
       "__all__": {
-        "units": 90.42,
-        "bets": 1357,
-        "wins": 774,
-        "losses": 583,
-        "hit_pct": 57,
-        "roi_pct": 6.7
+        "units": 106.99,
+        "bets": 1393,
+        "wins": 801,
+        "losses": 592,
+        "hit_pct": 57.5,
+        "roi_pct": 7.7
       },
       "Total score": {
-        "units": 69.45,
-        "bets": 400,
-        "wins": 247,
-        "losses": 153,
-        "hit_pct": 61.8,
-        "roi_pct": 17.4
+        "units": 71.21,
+        "bets": 419,
+        "wins": 258,
+        "losses": 161,
+        "hit_pct": 61.6,
+        "roi_pct": 17
       },
       "Birdies": {
         "units": 18.44,
@@ -408,38 +408,38 @@
         "roi_pct": 7.5
       },
       "GIR": {
-        "units": 30.44,
-        "bets": 247,
-        "wins": 150,
-        "losses": 97,
-        "hit_pct": 60.7,
-        "roi_pct": 12.3
+        "units": 43.27,
+        "bets": 251,
+        "wins": 158,
+        "losses": 93,
+        "hit_pct": 62.9,
+        "roi_pct": 17.2
       },
       "Fairways hit": {
-        "units": -27.91,
-        "bets": 464,
-        "wins": 238,
-        "losses": 226,
-        "hit_pct": 51.3,
-        "roi_pct": -6
+        "units": -25.92,
+        "bets": 477,
+        "wins": 246,
+        "losses": 231,
+        "hit_pct": 51.6,
+        "roi_pct": -5.4
       }
     },
     "20": {
       "__all__": {
-        "units": 70.91,
-        "bets": 990,
-        "wins": 564,
-        "losses": 426,
-        "hit_pct": 57,
-        "roi_pct": 7.2
+        "units": 81.42,
+        "bets": 1023,
+        "wins": 586,
+        "losses": 437,
+        "hit_pct": 57.3,
+        "roi_pct": 8
       },
       "Total score": {
-        "units": 68.65,
-        "bets": 243,
-        "wins": 162,
-        "losses": 81,
-        "hit_pct": 66.7,
-        "roi_pct": 28.3
+        "units": 66.87,
+        "bets": 261,
+        "wins": 171,
+        "losses": 90,
+        "hit_pct": 65.5,
+        "roi_pct": 25.6
       },
       "Birdies": {
         "units": 3.64,
@@ -450,122 +450,122 @@
         "roi_pct": 2.7
       },
       "GIR": {
-        "units": 28.09,
-        "bets": 179,
-        "wins": 112,
-        "losses": 67,
-        "hit_pct": 62.6,
-        "roi_pct": 15.7
+        "units": 38.02,
+        "bets": 183,
+        "wins": 118,
+        "losses": 65,
+        "hit_pct": 64.5,
+        "roi_pct": 20.8
       },
       "Fairways hit": {
-        "units": -29.47,
-        "bets": 433,
-        "wins": 219,
-        "losses": 214,
-        "hit_pct": 50.6,
-        "roi_pct": -6.8
+        "units": -27.12,
+        "bets": 444,
+        "wins": 226,
+        "losses": 218,
+        "hit_pct": 50.9,
+        "roi_pct": -6.1
       }
     },
     "2.5": {
       "__all__": {
-        "units": 55.42,
-        "bets": 2279,
-        "wins": 1254,
-        "losses": 1025,
-        "hit_pct": 55,
-        "roi_pct": 2.4
+        "units": 67.82,
+        "bets": 2332,
+        "wins": 1288,
+        "losses": 1044,
+        "hit_pct": 55.2,
+        "roi_pct": 2.9
       },
       "Total score": {
-        "units": 58.01,
-        "bets": 740,
-        "wins": 425,
-        "losses": 315,
-        "hit_pct": 57.4,
-        "roi_pct": 7.8
+        "units": 56.03,
+        "bets": 757,
+        "wins": 433,
+        "losses": 324,
+        "hit_pct": 57.2,
+        "roi_pct": 7.4
       },
       "Birdies": {
-        "units": 15.73,
-        "bets": 663,
-        "wins": 363,
-        "losses": 300,
-        "hit_pct": 54.8,
-        "roi_pct": 2.4
-      },
-      "GIR": {
-        "units": 9.12,
-        "bets": 364,
-        "wins": 203,
-        "losses": 161,
-        "hit_pct": 55.8,
+        "units": 17.25,
+        "bets": 678,
+        "wins": 372,
+        "losses": 306,
+        "hit_pct": 54.9,
         "roi_pct": 2.5
       },
+      "GIR": {
+        "units": 18.73,
+        "bets": 371,
+        "wins": 211,
+        "losses": 160,
+        "hit_pct": 56.9,
+        "roi_pct": 5
+      },
       "Fairways hit": {
-        "units": -27.43,
-        "bets": 512,
-        "wins": 263,
-        "losses": 249,
-        "hit_pct": 51.4,
-        "roi_pct": -5.4
+        "units": -24.2,
+        "bets": 526,
+        "wins": 272,
+        "losses": 254,
+        "hit_pct": 51.7,
+        "roi_pct": -4.6
       }
     },
     "7.5": {
       "__all__": {
-        "units": 75.16,
-        "bets": 1928,
-        "wins": 1072,
-        "losses": 856,
-        "hit_pct": 55.6,
-        "roi_pct": 3.9
+        "units": 85.8,
+        "bets": 1981,
+        "wins": 1105,
+        "losses": 876,
+        "hit_pct": 55.8,
+        "roi_pct": 4.3
       },
       "Total score": {
-        "units": 70.18,
-        "bets": 616,
-        "wins": 365,
-        "losses": 251,
-        "hit_pct": 59.3,
-        "roi_pct": 11.4
+        "units": 66.44,
+        "bets": 642,
+        "wins": 377,
+        "losses": 265,
+        "hit_pct": 58.7,
+        "roi_pct": 10.3
       },
       "Birdies": {
-        "units": 15.98,
-        "bets": 491,
-        "wins": 268,
+        "units": 16.81,
+        "bets": 492,
+        "wins": 269,
         "losses": 223,
-        "hit_pct": 54.6,
-        "roi_pct": 3.3
+        "hit_pct": 54.7,
+        "roi_pct": 3.4
       },
       "GIR": {
-        "units": 16.96,
-        "bets": 321,
-        "wins": 183,
-        "losses": 138,
-        "hit_pct": 57,
-        "roi_pct": 5.3
+        "units": 27.28,
+        "bets": 333,
+        "wins": 194,
+        "losses": 139,
+        "hit_pct": 58.3,
+        "roi_pct": 8.2
       },
       "Fairways hit": {
-        "units": -27.97,
-        "bets": 500,
-        "wins": 256,
-        "losses": 244,
-        "hit_pct": 51.2,
-        "roi_pct": -5.6
+        "units": -24.74,
+        "bets": 514,
+        "wins": 265,
+        "losses": 249,
+        "hit_pct": 51.6,
+        "roi_pct": -4.8
       }
     },
     "12.5": {
       "__all__": {
-        "units": 93.69,
-        "bets": 1545,
-        "wins": 875,
-        "losses": 670,
-        "hit_pct": 56.6,
-        "roi_pct": 6.1
+        "units": 106.29,
+        "bets": 1602,
+        "wins": 911,
+        "losses": 691,
+        "hit_pct": 56.9,
+        "roi_pct": 6.6
       },
       "Total score": {
-        "units": 69.83,
-        "bets": 474,
-        "wins": 287,
-        "losses": 187,
-        "hit_pct": 60.5,
-        "roi_pct": 14.7
+        "units": 68.91,
+        "bets": 503,
+        "wins": 302,
+        "losses": 201,
+        "hit_pct": 60,
+        "roi_pct": 13.7
       },
       "Birdies": {
         "units": 17.93,
@@ -576,38 +576,38 @@
         "roi_pct": 5.5
       },
       "GIR": {
-        "units": 27.46,
-        "bets": 267,
-        "wins": 159,
-        "losses": 108,
-        "hit_pct": 59.6,
-        "roi_pct": 10.3
+        "units": 37.91,
+        "bets": 281,
+        "wins": 171,
+        "losses": 110,
+        "hit_pct": 60.9,
+        "roi_pct": 13.5
       },
       "Fairways hit": {
-        "units": -21.54,
-        "bets": 476,
-        "wins": 247,
-        "losses": 229,
-        "hit_pct": 51.9,
-        "roi_pct": -4.5
+        "units": -18.46,
+        "bets": 490,
+        "wins": 256,
+        "losses": 234,
+        "hit_pct": 52.2,
+        "roi_pct": -3.8
       }
     },
     "17.5": {
       "__all__": {
-        "units": 83.91,
-        "bets": 1174,
-        "wins": 671,
-        "losses": 503,
-        "hit_pct": 57.2,
-        "roi_pct": 7.1
+        "units": 96.4,
+        "bets": 1215,
+        "wins": 698,
+        "losses": 517,
+        "hit_pct": 57.4,
+        "roi_pct": 7.9
       },
       "Total score": {
-        "units": 68.08,
-        "bets": 320,
-        "wins": 203,
-        "losses": 117,
-        "hit_pct": 63.4,
-        "roi_pct": 21.3
+        "units": 66.83,
+        "bets": 340,
+        "wins": 213,
+        "losses": 127,
+        "hit_pct": 62.6,
+        "roi_pct": 19.7
       },
       "Birdies": {
         "units": 9.42,
@@ -618,124 +618,124 @@
         "roi_pct": 4.9
       },
       "GIR": {
-        "units": 33.11,
-        "bets": 211,
-        "wins": 132,
-        "losses": 79,
-        "hit_pct": 62.6,
-        "roi_pct": 15.7
+        "units": 44.86,
+        "bets": 219,
+        "wins": 141,
+        "losses": 78,
+        "hit_pct": 64.4,
+        "roi_pct": 20.5
       },
       "Fairways hit": {
-        "units": -26.7,
-        "bets": 451,
-        "wins": 231,
-        "losses": 220,
-        "hit_pct": 51.2,
-        "roi_pct": -5.9
+        "units": -24.72,
+        "bets": 464,
+        "wins": 239,
+        "losses": 225,
+        "hit_pct": 51.5,
+        "roi_pct": -5.3
       }
     }
   },
   "by_threshold_raw": {
     "0": {
       "__all__": {
-        "units": 41.95,
-        "bets": 2420,
-        "wins": 1326,
-        "losses": 1094,
-        "hit_pct": 54.8,
-        "roi_pct": 1.7
+        "units": 48.74,
+        "bets": 2491,
+        "wins": 1367,
+        "losses": 1124,
+        "hit_pct": 54.9,
+        "roi_pct": 2
       },
       "Total score": {
-        "units": 51.7,
-        "bets": 774,
-        "wins": 440,
-        "losses": 334,
-        "hit_pct": 56.8,
-        "roi_pct": 6.7
+        "units": 45.28,
+        "bets": 795,
+        "wins": 448,
+        "losses": 347,
+        "hit_pct": 56.4,
+        "roi_pct": 5.7
       },
       "Birdies": {
-        "units": 8.6,
-        "bets": 741,
-        "wins": 403,
-        "losses": 338,
-        "hit_pct": 54.4,
-        "roi_pct": 1.2
+        "units": 9.6,
+        "bets": 767,
+        "wins": 418,
+        "losses": 349,
+        "hit_pct": 54.5,
+        "roi_pct": 1.3
       },
       "GIR": {
-        "units": 10.44,
-        "bets": 378,
-        "wins": 212,
+        "units": 20.44,
+        "bets": 387,
+        "wins": 221,
         "losses": 166,
-        "hit_pct": 56.1,
-        "roi_pct": 2.8
+        "hit_pct": 57.1,
+        "roi_pct": 5.3
       },
       "Fairways hit": {
-        "units": -28.8,
-        "bets": 527,
-        "wins": 271,
-        "losses": 256,
-        "hit_pct": 51.4,
-        "roi_pct": -5.5
+        "units": -26.57,
+        "bets": 542,
+        "wins": 280,
+        "losses": 262,
+        "hit_pct": 51.7,
+        "roi_pct": -4.9
       }
     },
     "5": {
       "__all__": {
-        "units": 67.32,
-        "bets": 2126,
-        "wins": 1176,
-        "losses": 950,
-        "hit_pct": 55.3,
-        "roi_pct": 3.2
+        "units": 90.57,
+        "bets": 2177,
+        "wins": 1214,
+        "losses": 963,
+        "hit_pct": 55.8,
+        "roi_pct": 4.2
       },
       "Total score": {
-        "units": 66.85,
-        "bets": 685,
-        "wins": 400,
-        "losses": 285,
-        "hit_pct": 58.4,
-        "roi_pct": 9.8
+        "units": 71.95,
+        "bets": 707,
+        "wins": 414,
+        "losses": 293,
+        "hit_pct": 58.6,
+        "roi_pct": 10.2
       },
       "Birdies": {
-        "units": 18.1,
-        "bets": 587,
-        "wins": 322,
-        "losses": 265,
-        "hit_pct": 54.9,
-        "roi_pct": 3.1
+        "units": 19.72,
+        "bets": 591,
+        "wins": 325,
+        "losses": 266,
+        "hit_pct": 55,
+        "roi_pct": 3.3
       },
       "GIR": {
-        "units": 10.1,
-        "bets": 347,
-        "wins": 194,
+        "units": 22.4,
+        "bets": 359,
+        "wins": 206,
         "losses": 153,
-        "hit_pct": 55.9,
-        "roi_pct": 2.9
+        "hit_pct": 57.4,
+        "roi_pct": 6.2
       },
       "Fairways hit": {
-        "units": -27.73,
-        "bets": 507,
-        "wins": 260,
-        "losses": 247,
-        "hit_pct": 51.3,
-        "roi_pct": -5.5
+        "units": -23.5,
+        "bets": 520,
+        "wins": 269,
+        "losses": 251,
+        "hit_pct": 51.7,
+        "roi_pct": -4.5
       }
     },
     "10": {
       "__all__": {
-        "units": 71.68,
-        "bets": 1743,
-        "wins": 970,
-        "losses": 773,
-        "hit_pct": 55.7,
-        "roi_pct": 4.1
+        "units": 86.49,
+        "bets": 1788,
+        "wins": 1001,
+        "losses": 787,
+        "hit_pct": 56,
+        "roi_pct": 4.8
       },
       "Total score": {
-        "units": 69.64,
-        "bets": 559,
-        "wins": 333,
-        "losses": 226,
-        "hit_pct": 59.6,
-        "roi_pct": 12.5
+        "units": 66.87,
+        "bets": 576,
+        "wins": 341,
+        "losses": 235,
+        "hit_pct": 59.2,
+        "roi_pct": 11.6
       },
       "Birdies": {
         "units": 9.79,
@@ -746,38 +746,38 @@
         "roi_pct": 2.5
       },
       "GIR": {
-        "units": 18.85,
-        "bets": 300,
-        "wins": 173,
+        "units": 33.29,
+        "bets": 314,
+        "wins": 187,
         "losses": 127,
-        "hit_pct": 57.7,
-        "roi_pct": 6.3
+        "hit_pct": 59.6,
+        "roi_pct": 10.6
       },
       "Fairways hit": {
-        "units": -26.6,
-        "bets": 489,
-        "wins": 251,
-        "losses": 238,
-        "hit_pct": 51.3,
-        "roi_pct": -5.4
+        "units": -23.45,
+        "bets": 503,
+        "wins": 260,
+        "losses": 243,
+        "hit_pct": 51.7,
+        "roi_pct": -4.7
       }
     },
     "15": {
       "__all__": {
-        "units": 90.42,
-        "bets": 1357,
-        "wins": 774,
-        "losses": 583,
-        "hit_pct": 57,
-        "roi_pct": 6.7
+        "units": 106.99,
+        "bets": 1393,
+        "wins": 801,
+        "losses": 592,
+        "hit_pct": 57.5,
+        "roi_pct": 7.7
       },
       "Total score": {
-        "units": 69.45,
-        "bets": 400,
-        "wins": 247,
-        "losses": 153,
-        "hit_pct": 61.8,
-        "roi_pct": 17.4
+        "units": 71.21,
+        "bets": 419,
+        "wins": 258,
+        "losses": 161,
+        "hit_pct": 61.6,
+        "roi_pct": 17
       },
       "Birdies": {
         "units": 18.44,
@@ -788,38 +788,38 @@
         "roi_pct": 7.5
       },
       "GIR": {
-        "units": 30.44,
-        "bets": 247,
-        "wins": 150,
-        "losses": 97,
-        "hit_pct": 60.7,
-        "roi_pct": 12.3
+        "units": 43.27,
+        "bets": 251,
+        "wins": 158,
+        "losses": 93,
+        "hit_pct": 62.9,
+        "roi_pct": 17.2
       },
       "Fairways hit": {
-        "units": -27.91,
-        "bets": 464,
-        "wins": 238,
-        "losses": 226,
-        "hit_pct": 51.3,
-        "roi_pct": -6
+        "units": -25.92,
+        "bets": 477,
+        "wins": 246,
+        "losses": 231,
+        "hit_pct": 51.6,
+        "roi_pct": -5.4
       }
     },
     "20": {
       "__all__": {
-        "units": 70.91,
-        "bets": 990,
-        "wins": 564,
-        "losses": 426,
-        "hit_pct": 57,
-        "roi_pct": 7.2
+        "units": 81.42,
+        "bets": 1023,
+        "wins": 586,
+        "losses": 437,
+        "hit_pct": 57.3,
+        "roi_pct": 8
       },
       "Total score": {
-        "units": 68.65,
-        "bets": 243,
-        "wins": 162,
-        "losses": 81,
-        "hit_pct": 66.7,
-        "roi_pct": 28.3
+        "units": 66.87,
+        "bets": 261,
+        "wins": 171,
+        "losses": 90,
+        "hit_pct": 65.5,
+        "roi_pct": 25.6
       },
       "Birdies": {
         "units": 3.64,
@@ -830,122 +830,122 @@
         "roi_pct": 2.7
       },
       "GIR": {
-        "units": 28.09,
-        "bets": 179,
-        "wins": 112,
-        "losses": 67,
-        "hit_pct": 62.6,
-        "roi_pct": 15.7
+        "units": 38.02,
+        "bets": 183,
+        "wins": 118,
+        "losses": 65,
+        "hit_pct": 64.5,
+        "roi_pct": 20.8
       },
       "Fairways hit": {
-        "units": -29.47,
-        "bets": 433,
-        "wins": 219,
-        "losses": 214,
-        "hit_pct": 50.6,
-        "roi_pct": -6.8
+        "units": -27.12,
+        "bets": 444,
+        "wins": 226,
+        "losses": 218,
+        "hit_pct": 50.9,
+        "roi_pct": -6.1
       }
     },
     "2.5": {
       "__all__": {
-        "units": 55.42,
-        "bets": 2279,
-        "wins": 1254,
-        "losses": 1025,
-        "hit_pct": 55,
-        "roi_pct": 2.4
+        "units": 67.82,
+        "bets": 2332,
+        "wins": 1288,
+        "losses": 1044,
+        "hit_pct": 55.2,
+        "roi_pct": 2.9
       },
       "Total score": {
-        "units": 58.01,
-        "bets": 740,
-        "wins": 425,
-        "losses": 315,
-        "hit_pct": 57.4,
-        "roi_pct": 7.8
+        "units": 56.03,
+        "bets": 757,
+        "wins": 433,
+        "losses": 324,
+        "hit_pct": 57.2,
+        "roi_pct": 7.4
       },
       "Birdies": {
-        "units": 15.73,
-        "bets": 663,
-        "wins": 363,
-        "losses": 300,
-        "hit_pct": 54.8,
-        "roi_pct": 2.4
-      },
-      "GIR": {
-        "units": 9.12,
-        "bets": 364,
-        "wins": 203,
-        "losses": 161,
-        "hit_pct": 55.8,
+        "units": 17.25,
+        "bets": 678,
+        "wins": 372,
+        "losses": 306,
+        "hit_pct": 54.9,
         "roi_pct": 2.5
       },
+      "GIR": {
+        "units": 18.73,
+        "bets": 371,
+        "wins": 211,
+        "losses": 160,
+        "hit_pct": 56.9,
+        "roi_pct": 5
+      },
       "Fairways hit": {
-        "units": -27.43,
-        "bets": 512,
-        "wins": 263,
-        "losses": 249,
-        "hit_pct": 51.4,
-        "roi_pct": -5.4
+        "units": -24.2,
+        "bets": 526,
+        "wins": 272,
+        "losses": 254,
+        "hit_pct": 51.7,
+        "roi_pct": -4.6
       }
     },
     "7.5": {
       "__all__": {
-        "units": 75.16,
-        "bets": 1928,
-        "wins": 1072,
-        "losses": 856,
-        "hit_pct": 55.6,
-        "roi_pct": 3.9
+        "units": 85.8,
+        "bets": 1981,
+        "wins": 1105,
+        "losses": 876,
+        "hit_pct": 55.8,
+        "roi_pct": 4.3
       },
       "Total score": {
-        "units": 70.18,
-        "bets": 616,
-        "wins": 365,
-        "losses": 251,
-        "hit_pct": 59.3,
-        "roi_pct": 11.4
+        "units": 66.44,
+        "bets": 642,
+        "wins": 377,
+        "losses": 265,
+        "hit_pct": 58.7,
+        "roi_pct": 10.3
       },
       "Birdies": {
-        "units": 15.98,
-        "bets": 491,
-        "wins": 268,
+        "units": 16.81,
+        "bets": 492,
+        "wins": 269,
         "losses": 223,
-        "hit_pct": 54.6,
-        "roi_pct": 3.3
+        "hit_pct": 54.7,
+        "roi_pct": 3.4
       },
       "GIR": {
-        "units": 16.96,
-        "bets": 321,
-        "wins": 183,
-        "losses": 138,
-        "hit_pct": 57,
-        "roi_pct": 5.3
+        "units": 27.28,
+        "bets": 333,
+        "wins": 194,
+        "losses": 139,
+        "hit_pct": 58.3,
+        "roi_pct": 8.2
       },
       "Fairways hit": {
-        "units": -27.97,
-        "bets": 500,
-        "wins": 256,
-        "losses": 244,
-        "hit_pct": 51.2,
-        "roi_pct": -5.6
+        "units": -24.74,
+        "bets": 514,
+        "wins": 265,
+        "losses": 249,
+        "hit_pct": 51.6,
+        "roi_pct": -4.8
       }
     },
     "12.5": {
       "__all__": {
-        "units": 93.69,
-        "bets": 1545,
-        "wins": 875,
-        "losses": 670,
-        "hit_pct": 56.6,
-        "roi_pct": 6.1
+        "units": 106.29,
+        "bets": 1602,
+        "wins": 911,
+        "losses": 691,
+        "hit_pct": 56.9,
+        "roi_pct": 6.6
       },
       "Total score": {
-        "units": 69.83,
-        "bets": 474,
-        "wins": 287,
-        "losses": 187,
-        "hit_pct": 60.5,
-        "roi_pct": 14.7
+        "units": 68.91,
+        "bets": 503,
+        "wins": 302,
+        "losses": 201,
+        "hit_pct": 60,
+        "roi_pct": 13.7
       },
       "Birdies": {
         "units": 17.93,
@@ -956,38 +956,38 @@
         "roi_pct": 5.5
       },
       "GIR": {
-        "units": 27.46,
-        "bets": 267,
-        "wins": 159,
-        "losses": 108,
-        "hit_pct": 59.6,
-        "roi_pct": 10.3
+        "units": 37.91,
+        "bets": 281,
+        "wins": 171,
+        "losses": 110,
+        "hit_pct": 60.9,
+        "roi_pct": 13.5
       },
       "Fairways hit": {
-        "units": -21.54,
-        "bets": 476,
-        "wins": 247,
-        "losses": 229,
-        "hit_pct": 51.9,
-        "roi_pct": -4.5
+        "units": -18.46,
+        "bets": 490,
+        "wins": 256,
+        "losses": 234,
+        "hit_pct": 52.2,
+        "roi_pct": -3.8
       }
     },
     "17.5": {
       "__all__": {
-        "units": 83.91,
-        "bets": 1174,
-        "wins": 671,
-        "losses": 503,
-        "hit_pct": 57.2,
-        "roi_pct": 7.1
+        "units": 96.4,
+        "bets": 1215,
+        "wins": 698,
+        "losses": 517,
+        "hit_pct": 57.4,
+        "roi_pct": 7.9
       },
       "Total score": {
-        "units": 68.08,
-        "bets": 320,
-        "wins": 203,
-        "losses": 117,
-        "hit_pct": 63.4,
-        "roi_pct": 21.3
+        "units": 66.83,
+        "bets": 340,
+        "wins": 213,
+        "losses": 127,
+        "hit_pct": 62.6,
+        "roi_pct": 19.7
       },
       "Birdies": {
         "units": 9.42,
@@ -998,124 +998,124 @@
         "roi_pct": 4.9
       },
       "GIR": {
-        "units": 33.11,
-        "bets": 211,
-        "wins": 132,
-        "losses": 79,
-        "hit_pct": 62.6,
-        "roi_pct": 15.7
+        "units": 44.86,
+        "bets": 219,
+        "wins": 141,
+        "losses": 78,
+        "hit_pct": 64.4,
+        "roi_pct": 20.5
       },
       "Fairways hit": {
-        "units": -26.7,
-        "bets": 451,
-        "wins": 231,
-        "losses": 220,
-        "hit_pct": 51.2,
-        "roi_pct": -5.9
+        "units": -24.72,
+        "bets": 464,
+        "wins": 239,
+        "losses": 225,
+        "hit_pct": 51.5,
+        "roi_pct": -5.3
       }
     }
   },
   "by_threshold_policy": {
     "0": {
       "__all__": {
-        "units": 41.95,
-        "bets": 2420,
-        "wins": 1326,
-        "losses": 1094,
-        "hit_pct": 54.8,
-        "roi_pct": 1.7
+        "units": 48.74,
+        "bets": 2491,
+        "wins": 1367,
+        "losses": 1124,
+        "hit_pct": 54.9,
+        "roi_pct": 2
       },
       "Total score": {
-        "units": 51.7,
-        "bets": 774,
-        "wins": 440,
-        "losses": 334,
-        "hit_pct": 56.8,
-        "roi_pct": 6.7
+        "units": 45.28,
+        "bets": 795,
+        "wins": 448,
+        "losses": 347,
+        "hit_pct": 56.4,
+        "roi_pct": 5.7
       },
       "Birdies": {
-        "units": 8.6,
-        "bets": 741,
-        "wins": 403,
-        "losses": 338,
-        "hit_pct": 54.4,
-        "roi_pct": 1.2
+        "units": 9.6,
+        "bets": 767,
+        "wins": 418,
+        "losses": 349,
+        "hit_pct": 54.5,
+        "roi_pct": 1.3
       },
       "GIR": {
-        "units": 10.44,
-        "bets": 378,
-        "wins": 212,
+        "units": 20.44,
+        "bets": 387,
+        "wins": 221,
         "losses": 166,
-        "hit_pct": 56.1,
-        "roi_pct": 2.8
+        "hit_pct": 57.1,
+        "roi_pct": 5.3
       },
       "Fairways hit": {
-        "units": -28.8,
-        "bets": 527,
-        "wins": 271,
-        "losses": 256,
-        "hit_pct": 51.4,
-        "roi_pct": -5.5
+        "units": -26.57,
+        "bets": 542,
+        "wins": 280,
+        "losses": 262,
+        "hit_pct": 51.7,
+        "roi_pct": -4.9
       }
     },
     "5": {
       "__all__": {
-        "units": 67.32,
-        "bets": 2126,
-        "wins": 1176,
-        "losses": 950,
-        "hit_pct": 55.3,
-        "roi_pct": 3.2
+        "units": 90.57,
+        "bets": 2177,
+        "wins": 1214,
+        "losses": 963,
+        "hit_pct": 55.8,
+        "roi_pct": 4.2
       },
       "Total score": {
-        "units": 66.85,
-        "bets": 685,
-        "wins": 400,
-        "losses": 285,
-        "hit_pct": 58.4,
-        "roi_pct": 9.8
+        "units": 71.95,
+        "bets": 707,
+        "wins": 414,
+        "losses": 293,
+        "hit_pct": 58.6,
+        "roi_pct": 10.2
       },
       "Birdies": {
-        "units": 18.1,
-        "bets": 587,
-        "wins": 322,
-        "losses": 265,
-        "hit_pct": 54.9,
-        "roi_pct": 3.1
+        "units": 19.72,
+        "bets": 591,
+        "wins": 325,
+        "losses": 266,
+        "hit_pct": 55,
+        "roi_pct": 3.3
       },
       "GIR": {
-        "units": 10.1,
-        "bets": 347,
-        "wins": 194,
+        "units": 22.4,
+        "bets": 359,
+        "wins": 206,
         "losses": 153,
-        "hit_pct": 55.9,
-        "roi_pct": 2.9
+        "hit_pct": 57.4,
+        "roi_pct": 6.2
       },
       "Fairways hit": {
-        "units": -27.73,
-        "bets": 507,
-        "wins": 260,
-        "losses": 247,
-        "hit_pct": 51.3,
-        "roi_pct": -5.5
+        "units": -23.5,
+        "bets": 520,
+        "wins": 269,
+        "losses": 251,
+        "hit_pct": 51.7,
+        "roi_pct": -4.5
       }
     },
     "10": {
       "__all__": {
-        "units": 71.68,
-        "bets": 1743,
-        "wins": 970,
-        "losses": 773,
-        "hit_pct": 55.7,
-        "roi_pct": 4.1
+        "units": 86.49,
+        "bets": 1788,
+        "wins": 1001,
+        "losses": 787,
+        "hit_pct": 56,
+        "roi_pct": 4.8
       },
       "Total score": {
-        "units": 69.64,
-        "bets": 559,
-        "wins": 333,
-        "losses": 226,
-        "hit_pct": 59.6,
-        "roi_pct": 12.5
+        "units": 66.87,
+        "bets": 576,
+        "wins": 341,
+        "losses": 235,
+        "hit_pct": 59.2,
+        "roi_pct": 11.6
       },
       "Birdies": {
         "units": 9.79,
@@ -1126,38 +1126,38 @@
         "roi_pct": 2.5
       },
       "GIR": {
-        "units": 18.85,
-        "bets": 300,
-        "wins": 173,
+        "units": 33.29,
+        "bets": 314,
+        "wins": 187,
         "losses": 127,
-        "hit_pct": 57.7,
-        "roi_pct": 6.3
+        "hit_pct": 59.6,
+        "roi_pct": 10.6
       },
       "Fairways hit": {
-        "units": -26.6,
-        "bets": 489,
-        "wins": 251,
-        "losses": 238,
-        "hit_pct": 51.3,
-        "roi_pct": -5.4
+        "units": -23.45,
+        "bets": 503,
+        "wins": 260,
+        "losses": 243,
+        "hit_pct": 51.7,
+        "roi_pct": -4.7
       }
     },
     "15": {
       "__all__": {
-        "units": 90.42,
-        "bets": 1357,
-        "wins": 774,
-        "losses": 583,
-        "hit_pct": 57,
-        "roi_pct": 6.7
+        "units": 106.99,
+        "bets": 1393,
+        "wins": 801,
+        "losses": 592,
+        "hit_pct": 57.5,
+        "roi_pct": 7.7
       },
       "Total score": {
-        "units": 69.45,
-        "bets": 400,
-        "wins": 247,
-        "losses": 153,
-        "hit_pct": 61.8,
-        "roi_pct": 17.4
+        "units": 71.21,
+        "bets": 419,
+        "wins": 258,
+        "losses": 161,
+        "hit_pct": 61.6,
+        "roi_pct": 17
       },
       "Birdies": {
         "units": 18.44,
@@ -1168,38 +1168,38 @@
         "roi_pct": 7.5
       },
       "GIR": {
-        "units": 30.44,
-        "bets": 247,
-        "wins": 150,
-        "losses": 97,
-        "hit_pct": 60.7,
-        "roi_pct": 12.3
+        "units": 43.27,
+        "bets": 251,
+        "wins": 158,
+        "losses": 93,
+        "hit_pct": 62.9,
+        "roi_pct": 17.2
       },
       "Fairways hit": {
-        "units": -27.91,
-        "bets": 464,
-        "wins": 238,
-        "losses": 226,
-        "hit_pct": 51.3,
-        "roi_pct": -6
+        "units": -25.92,
+        "bets": 477,
+        "wins": 246,
+        "losses": 231,
+        "hit_pct": 51.6,
+        "roi_pct": -5.4
       }
     },
     "20": {
       "__all__": {
-        "units": 70.91,
-        "bets": 990,
-        "wins": 564,
-        "losses": 426,
-        "hit_pct": 57,
-        "roi_pct": 7.2
+        "units": 81.42,
+        "bets": 1023,
+        "wins": 586,
+        "losses": 437,
+        "hit_pct": 57.3,
+        "roi_pct": 8
       },
       "Total score": {
-        "units": 68.65,
-        "bets": 243,
-        "wins": 162,
-        "losses": 81,
-        "hit_pct": 66.7,
-        "roi_pct": 28.3
+        "units": 66.87,
+        "bets": 261,
+        "wins": 171,
+        "losses": 90,
+        "hit_pct": 65.5,
+        "roi_pct": 25.6
       },
       "Birdies": {
         "units": 3.64,
@@ -1210,122 +1210,122 @@
         "roi_pct": 2.7
       },
       "GIR": {
-        "units": 28.09,
-        "bets": 179,
-        "wins": 112,
-        "losses": 67,
-        "hit_pct": 62.6,
-        "roi_pct": 15.7
+        "units": 38.02,
+        "bets": 183,
+        "wins": 118,
+        "losses": 65,
+        "hit_pct": 64.5,
+        "roi_pct": 20.8
       },
       "Fairways hit": {
-        "units": -29.47,
-        "bets": 433,
-        "wins": 219,
-        "losses": 214,
-        "hit_pct": 50.6,
-        "roi_pct": -6.8
+        "units": -27.12,
+        "bets": 444,
+        "wins": 226,
+        "losses": 218,
+        "hit_pct": 50.9,
+        "roi_pct": -6.1
       }
     },
     "2.5": {
       "__all__": {
-        "units": 55.42,
-        "bets": 2279,
-        "wins": 1254,
-        "losses": 1025,
-        "hit_pct": 55,
-        "roi_pct": 2.4
+        "units": 67.82,
+        "bets": 2332,
+        "wins": 1288,
+        "losses": 1044,
+        "hit_pct": 55.2,
+        "roi_pct": 2.9
       },
       "Total score": {
-        "units": 58.01,
-        "bets": 740,
-        "wins": 425,
-        "losses": 315,
-        "hit_pct": 57.4,
-        "roi_pct": 7.8
+        "units": 56.03,
+        "bets": 757,
+        "wins": 433,
+        "losses": 324,
+        "hit_pct": 57.2,
+        "roi_pct": 7.4
       },
       "Birdies": {
-        "units": 15.73,
-        "bets": 663,
-        "wins": 363,
-        "losses": 300,
-        "hit_pct": 54.8,
-        "roi_pct": 2.4
-      },
-      "GIR": {
-        "units": 9.12,
-        "bets": 364,
-        "wins": 203,
-        "losses": 161,
-        "hit_pct": 55.8,
+        "units": 17.25,
+        "bets": 678,
+        "wins": 372,
+        "losses": 306,
+        "hit_pct": 54.9,
         "roi_pct": 2.5
       },
+      "GIR": {
+        "units": 18.73,
+        "bets": 371,
+        "wins": 211,
+        "losses": 160,
+        "hit_pct": 56.9,
+        "roi_pct": 5
+      },
       "Fairways hit": {
-        "units": -27.43,
-        "bets": 512,
-        "wins": 263,
-        "losses": 249,
-        "hit_pct": 51.4,
-        "roi_pct": -5.4
+        "units": -24.2,
+        "bets": 526,
+        "wins": 272,
+        "losses": 254,
+        "hit_pct": 51.7,
+        "roi_pct": -4.6
       }
     },
     "7.5": {
       "__all__": {
-        "units": 75.16,
-        "bets": 1928,
-        "wins": 1072,
-        "losses": 856,
-        "hit_pct": 55.6,
-        "roi_pct": 3.9
+        "units": 85.8,
+        "bets": 1981,
+        "wins": 1105,
+        "losses": 876,
+        "hit_pct": 55.8,
+        "roi_pct": 4.3
       },
       "Total score": {
-        "units": 70.18,
-        "bets": 616,
-        "wins": 365,
-        "losses": 251,
-        "hit_pct": 59.3,
-        "roi_pct": 11.4
+        "units": 66.44,
+        "bets": 642,
+        "wins": 377,
+        "losses": 265,
+        "hit_pct": 58.7,
+        "roi_pct": 10.3
       },
       "Birdies": {
-        "units": 15.98,
-        "bets": 491,
-        "wins": 268,
+        "units": 16.81,
+        "bets": 492,
+        "wins": 269,
         "losses": 223,
-        "hit_pct": 54.6,
-        "roi_pct": 3.3
+        "hit_pct": 54.7,
+        "roi_pct": 3.4
       },
       "GIR": {
-        "units": 16.96,
-        "bets": 321,
-        "wins": 183,
-        "losses": 138,
-        "hit_pct": 57,
-        "roi_pct": 5.3
+        "units": 27.28,
+        "bets": 333,
+        "wins": 194,
+        "losses": 139,
+        "hit_pct": 58.3,
+        "roi_pct": 8.2
       },
       "Fairways hit": {
-        "units": -27.97,
-        "bets": 500,
-        "wins": 256,
-        "losses": 244,
-        "hit_pct": 51.2,
-        "roi_pct": -5.6
+        "units": -24.74,
+        "bets": 514,
+        "wins": 265,
+        "losses": 249,
+        "hit_pct": 51.6,
+        "roi_pct": -4.8
       }
     },
     "12.5": {
       "__all__": {
-        "units": 93.69,
-        "bets": 1545,
-        "wins": 875,
-        "losses": 670,
-        "hit_pct": 56.6,
-        "roi_pct": 6.1
+        "units": 106.29,
+        "bets": 1602,
+        "wins": 911,
+        "losses": 691,
+        "hit_pct": 56.9,
+        "roi_pct": 6.6
       },
       "Total score": {
-        "units": 69.83,
-        "bets": 474,
-        "wins": 287,
-        "losses": 187,
-        "hit_pct": 60.5,
-        "roi_pct": 14.7
+        "units": 68.91,
+        "bets": 503,
+        "wins": 302,
+        "losses": 201,
+        "hit_pct": 60,
+        "roi_pct": 13.7
       },
       "Birdies": {
         "units": 17.93,
@@ -1336,38 +1336,38 @@
         "roi_pct": 5.5
       },
       "GIR": {
-        "units": 27.46,
-        "bets": 267,
-        "wins": 159,
-        "losses": 108,
-        "hit_pct": 59.6,
-        "roi_pct": 10.3
+        "units": 37.91,
+        "bets": 281,
+        "wins": 171,
+        "losses": 110,
+        "hit_pct": 60.9,
+        "roi_pct": 13.5
       },
       "Fairways hit": {
-        "units": -21.54,
-        "bets": 476,
-        "wins": 247,
-        "losses": 229,
-        "hit_pct": 51.9,
-        "roi_pct": -4.5
+        "units": -18.46,
+        "bets": 490,
+        "wins": 256,
+        "losses": 234,
+        "hit_pct": 52.2,
+        "roi_pct": -3.8
       }
     },
     "17.5": {
       "__all__": {
-        "units": 83.91,
-        "bets": 1174,
-        "wins": 671,
-        "losses": 503,
-        "hit_pct": 57.2,
-        "roi_pct": 7.1
+        "units": 96.4,
+        "bets": 1215,
+        "wins": 698,
+        "losses": 517,
+        "hit_pct": 57.4,
+        "roi_pct": 7.9
       },
       "Total score": {
-        "units": 68.08,
-        "bets": 320,
-        "wins": 203,
-        "losses": 117,
-        "hit_pct": 63.4,
-        "roi_pct": 21.3
+        "units": 66.83,
+        "bets": 340,
+        "wins": 213,
+        "losses": 127,
+        "hit_pct": 62.6,
+        "roi_pct": 19.7
       },
       "Birdies": {
         "units": 9.42,
@@ -1378,20 +1378,20 @@
         "roi_pct": 4.9
       },
       "GIR": {
-        "units": 33.11,
-        "bets": 211,
-        "wins": 132,
-        "losses": 79,
-        "hit_pct": 62.6,
-        "roi_pct": 15.7
+        "units": 44.86,
+        "bets": 219,
+        "wins": 141,
+        "losses": 78,
+        "hit_pct": 64.4,
+        "roi_pct": 20.5
       },
       "Fairways hit": {
-        "units": -26.7,
-        "bets": 451,
-        "wins": 231,
-        "losses": 220,
-        "hit_pct": 51.2,
-        "roi_pct": -5.9
+        "units": -24.72,
+        "bets": 464,
+        "wins": 239,
+        "losses": 225,
+        "hit_pct": 51.5,
+        "roi_pct": -5.3
       }
     }
   },
@@ -1399,113 +1399,113 @@
     {
       "event": "PGA Championship",
       "at_5pct": {
-        "units": 2.701496473735606,
-        "bets": 182,
-        "wins": 99,
-        "losses": 83,
-        "hit_pct": 54.395604395604394,
-        "roi_pct": 1.4843387218327504
+        "units": 1.644892700150702,
+        "bets": 185,
+        "wins": 100,
+        "losses": 85,
+        "hit_pct": 54.054054054054056,
+        "roi_pct": 0.8891311892706498
       },
       "at_5pct_raw": {
-        "units": 2.701496473735606,
-        "bets": 182,
-        "wins": 99,
-        "losses": 83,
-        "hit_pct": 54.395604395604394,
-        "roi_pct": 1.4843387218327504
+        "units": 1.644892700150702,
+        "bets": 185,
+        "wins": 100,
+        "losses": 85,
+        "hit_pct": 54.054054054054056,
+        "roi_pct": 0.8891311892706498
       },
       "by_threshold": {
         "0": {
-          "units": -2.6417222132499747,
-          "bets": 313,
-          "wins": 169,
-          "losses": 144,
-          "hit_pct": 53.99361022364217,
-          "roi_pct": -0.8440007071086182
+          "units": -6.421530260499882,
+          "bets": 315,
+          "wins": 168,
+          "losses": 147,
+          "hit_pct": 53.333333333333336,
+          "roi_pct": -2.0385810350793276
         },
         "5": {
-          "units": 4.680376877982949,
-          "bets": 255,
-          "wins": 140,
+          "units": 5.863445661051731,
+          "bets": 256,
+          "wins": 141,
           "losses": 115,
-          "hit_pct": 54.90196078431373,
-          "roi_pct": 1.8354419129344899
+          "hit_pct": 55.078125,
+          "roi_pct": 2.2904084613483326
         },
         "10": {
-          "units": 2.701496473735606,
-          "bets": 182,
-          "wins": 99,
-          "losses": 83,
-          "hit_pct": 54.395604395604394,
-          "roi_pct": 1.4843387218327504
+          "units": 1.644892700150702,
+          "bets": 185,
+          "wins": 100,
+          "losses": 85,
+          "hit_pct": 54.054054054054056,
+          "roi_pct": 0.8891311892706498
         },
         "15": {
-          "units": 6.867923853005136,
-          "bets": 127,
-          "wins": 71,
-          "losses": 56,
-          "hit_pct": 55.90551181102362,
-          "roi_pct": 5.40781405748436
+          "units": 4.760780995862278,
+          "bets": 131,
+          "wins": 72,
+          "losses": 59,
+          "hit_pct": 54.961832061068705,
+          "roi_pct": 3.634183966307083
         },
         "20": {
-          "units": 5.7890364479747785,
-          "bets": 87,
-          "wins": 49,
-          "losses": 38,
-          "hit_pct": 56.32183908045977,
-          "roi_pct": 6.654064882729631
+          "units": 7.613967954824092,
+          "bets": 91,
+          "wins": 52,
+          "losses": 39,
+          "hit_pct": 57.14285714285714,
+          "roi_pct": 8.366997752553948
         },
         "2.5": {
-          "units": -0.5226323895162401,
+          "units": -2.6907744326582783,
           "bets": 287,
-          "wins": 155,
-          "losses": 132,
-          "hit_pct": 54.00696864111498,
-          "roi_pct": -0.18210187788022303
+          "wins": 154,
+          "losses": 133,
+          "hit_pct": 53.65853658536586,
+          "roi_pct": -0.93755206712832
         },
         "7.5": {
-          "units": 4.751818836303456,
-          "bets": 215,
-          "wins": 118,
-          "losses": 97,
-          "hit_pct": 54.88372093023256,
-          "roi_pct": 2.2101482959550958
+          "units": 1.2595794748054387,
+          "bets": 222,
+          "wins": 120,
+          "losses": 102,
+          "hit_pct": 54.054054054054056,
+          "roi_pct": 0.5673781418042516
         },
         "12.5": {
-          "units": 7.948304285037006,
-          "bets": 146,
-          "wins": 82,
-          "losses": 64,
-          "hit_pct": 56.16438356164384,
-          "roi_pct": 5.444044030847264
+          "units": 5.619119502428311,
+          "bets": 154,
+          "wins": 85,
+          "losses": 69,
+          "hit_pct": 55.1948051948052,
+          "roi_pct": 3.648778897680721
         },
         "17.5": {
-          "units": 9.192029850768057,
-          "bets": 106,
-          "wins": 61,
-          "losses": 45,
-          "hit_pct": 57.54716981132076,
-          "roi_pct": 8.671726274309489
+          "units": 9.55542607718315,
+          "bets": 112,
+          "wins": 64,
+          "losses": 48,
+          "hit_pct": 57.14285714285714,
+          "roi_pct": 8.531630426056383
         }
       }
     },
     {
       "event": "THE CJ CUP Byron Nelson",
       "at_5pct": {
-        "units": 29.888739404270854,
+        "units": 31.646315161846612,
         "bets": 289,
-        "wins": 170,
-        "losses": 119,
-        "hit_pct": 58.82352941176471,
-        "roi_pct": 10.342124361339396
+        "wins": 171,
+        "losses": 118,
+        "hit_pct": 59.16955017301038,
+        "roi_pct": 10.950282062922703
       },
       "at_5pct_raw": {
-        "units": 29.888739404270854,
+        "units": 31.646315161846612,
         "bets": 289,
-        "wins": 170,
-        "losses": 119,
-        "hit_pct": 58.82352941176471,
-        "roi_pct": 10.342124361339396
+        "wins": 171,
+        "losses": 118,
+        "hit_pct": 59.16955017301038,
+        "roi_pct": 10.950282062922703
       },
       "by_threshold": {
         "0": {
@@ -1517,254 +1517,254 @@
           "roi_pct": 9.054300722544617
         },
         "5": {
-          "units": 30.526817804882285,
-          "bets": 334,
-          "wins": 195,
-          "losses": 139,
-          "hit_pct": 58.38323353293413,
-          "roi_pct": 9.139765809844995
+          "units": 35.71942446577394,
+          "bets": 337,
+          "wins": 199,
+          "losses": 138,
+          "hit_pct": 59.05044510385756,
+          "roi_pct": 10.599235746520456
         },
         "10": {
-          "units": 29.888739404270854,
+          "units": 31.646315161846612,
           "bets": 289,
-          "wins": 170,
-          "losses": 119,
-          "hit_pct": 58.82352941176471,
-          "roi_pct": 10.342124361339396
+          "wins": 171,
+          "losses": 118,
+          "hit_pct": 59.16955017301038,
+          "roi_pct": 10.950282062922703
         },
         "15": {
-          "units": 27.870946914184504,
-          "bets": 215,
-          "wins": 129,
-          "losses": 86,
-          "hit_pct": 60,
-          "roi_pct": 12.963231122876515
+          "units": 27.771431822106482,
+          "bets": 217,
+          "wins": 130,
+          "losses": 87,
+          "hit_pct": 59.907834101382484,
+          "roi_pct": 12.797894848896995
         },
         "20": {
-          "units": 15.171934467175735,
-          "bets": 142,
-          "wins": 83,
-          "losses": 59,
-          "hit_pct": 58.45070422535211,
-          "roi_pct": 10.684460892377277
+          "units": 10.613097148844744,
+          "bets": 143,
+          "wins": 81,
+          "losses": 62,
+          "hit_pct": 56.64335664335665,
+          "roi_pct": 7.421746257933387
         },
         "2.5": {
-          "units": 30.66011094561512,
-          "bets": 349,
-          "wins": 203,
+          "units": 31.680110945615116,
+          "bets": 350,
+          "wins": 204,
           "losses": 146,
-          "hit_pct": 58.16618911174785,
-          "roi_pct": 8.785132076107484
+          "hit_pct": 58.285714285714285,
+          "roi_pct": 9.051460270175747
         },
         "7.5": {
-          "units": 37.15066026883834,
+          "units": 33.40506221176487,
           "bets": 313,
-          "wins": 187,
-          "losses": 126,
-          "hit_pct": 59.7444089456869,
-          "roi_pct": 11.869220533175188
+          "wins": 185,
+          "losses": 128,
+          "hit_pct": 59.105431309904155,
+          "roi_pct": 10.67254383762456
         },
         "12.5": {
-          "units": 29.47620829837263,
-          "bets": 252,
-          "wins": 150,
-          "losses": 102,
-          "hit_pct": 59.523809523809526,
-          "roi_pct": 11.696908054909775
+          "units": 31.382398774563104,
+          "bets": 256,
+          "wins": 153,
+          "losses": 103,
+          "hit_pct": 59.765625,
+          "roi_pct": 12.258749521313712
         },
         "17.5": {
-          "units": 21.677708201950452,
-          "bets": 182,
+          "units": 20.76888814558783,
+          "bets": 183,
           "wins": 108,
-          "losses": 74,
-          "hit_pct": 59.34065934065934,
-          "roi_pct": 11.910828682390358
+          "losses": 75,
+          "hit_pct": 59.01639344262295,
+          "roi_pct": 11.349119205239251
         }
       }
     },
     {
       "event": "Charles Schwab Challenge",
       "at_5pct": {
-        "units": 5.746793759510719,
+        "units": 5.603986741966859,
         "bets": 160,
         "wins": 89,
         "losses": 71,
         "hit_pct": 55.625,
-        "roi_pct": 3.5917460996941992
+        "roi_pct": 3.5024917137292872
       },
       "at_5pct_raw": {
-        "units": 5.746793759510719,
+        "units": 5.603986741966859,
         "bets": 160,
         "wins": 89,
         "losses": 71,
         "hit_pct": 55.625,
-        "roi_pct": 3.5917460996941992
+        "roi_pct": 3.5024917137292872
       },
       "by_threshold": {
         "0": {
-          "units": -2.7036550140797306,
-          "bets": 288,
-          "wins": 154,
-          "losses": 134,
-          "hit_pct": 53.47222222222222,
-          "roi_pct": -0.9387691021110176
+          "units": -5.07926998734176,
+          "bets": 292,
+          "wins": 155,
+          "losses": 137,
+          "hit_pct": 53.082191780821915,
+          "roi_pct": -1.7394760230622468
         },
         "5": {
-          "units": -5.5485374661956275,
-          "bets": 221,
-          "wins": 116,
-          "losses": 105,
-          "hit_pct": 52.488687782805435,
-          "roi_pct": -2.5106504371925915
+          "units": -8.568537466195629,
+          "bets": 222,
+          "wins": 115,
+          "losses": 107,
+          "hit_pct": 51.80180180180181,
+          "roi_pct": -3.8597015613493824
         },
         "10": {
-          "units": 5.746793759510719,
+          "units": 5.603986741966859,
           "bets": 160,
           "wins": 89,
           "losses": 71,
           "hit_pct": 55.625,
-          "roi_pct": 3.5917460996941992
+          "roi_pct": 3.5024917137292872
         },
         "15": {
-          "units": 0.35864286223342345,
-          "bets": 131,
-          "wins": 71,
-          "losses": 60,
-          "hit_pct": 54.19847328244275,
-          "roi_pct": 0.2737731772774225
+          "units": 6.252293655884222,
+          "bets": 129,
+          "wins": 73,
+          "losses": 56,
+          "hit_pct": 56.58914728682171,
+          "roi_pct": 4.846739268127305
         },
         "20": {
-          "units": 11.412429166222864,
-          "bets": 97,
-          "wins": 58,
+          "units": 9.924333928127623,
+          "bets": 95,
+          "wins": 56,
           "losses": 39,
-          "hit_pct": 59.79381443298969,
-          "roi_pct": 11.765390893013263
+          "hit_pct": 58.94736842105262,
+          "roi_pct": 10.44666729276592
         },
         "2.5": {
-          "units": -12.97997928541351,
-          "bets": 252,
+          "units": -16.107122142556364,
+          "bets": 255,
           "wins": 129,
-          "losses": 123,
-          "hit_pct": 51.19047619047619,
-          "roi_pct": -5.150785430719647
+          "losses": 126,
+          "hit_pct": 50.588235294117645,
+          "roi_pct": -6.316518487277005
         },
         "7.5": {
-          "units": -3.2049087085401995,
-          "bets": 184,
-          "wins": 97,
-          "losses": 87,
-          "hit_pct": 52.71739130434783,
-          "roi_pct": -1.7417982111631518
+          "units": -2.0402749979982087,
+          "bets": 181,
+          "wins": 96,
+          "losses": 85,
+          "hit_pct": 53.03867403314917,
+          "roi_pct": -1.1272237558001152
         },
         "12.5": {
-          "units": 4.348960322550886,
-          "bets": 147,
-          "wins": 81,
-          "losses": 66,
-          "hit_pct": 55.10204081632652,
-          "roi_pct": 2.9584764098985623
+          "units": 5.198960322550886,
+          "bets": 144,
+          "wins": 80,
+          "losses": 64,
+          "hit_pct": 55.55555555555556,
+          "roi_pct": 3.6103891128825594
         },
         "17.5": {
-          "units": 10.887214290804852,
-          "bets": 115,
-          "wins": 68,
-          "losses": 47,
-          "hit_pct": 59.130434782608695,
-          "roi_pct": 9.467142861569437
+          "units": 10.98721429080485,
+          "bets": 117,
+          "wins": 69,
+          "losses": 48,
+          "hit_pct": 58.97435897435898,
+          "roi_pct": 9.390781445132351
         }
       }
     },
     {
       "event": "the Memorial Tournament presented by Workday",
       "at_5pct": {
-        "units": 4.139226326901255,
-        "bets": 176,
-        "wins": 97,
+        "units": 5.6149207713457,
+        "bets": 178,
+        "wins": 99,
         "losses": 79,
-        "hit_pct": 55.11363636363637,
-        "roi_pct": 2.351833140284804
+        "hit_pct": 55.61797752808989,
+        "roi_pct": 3.154449871542528
       },
       "at_5pct_raw": {
-        "units": 4.139226326901255,
-        "bets": 176,
-        "wins": 97,
+        "units": 5.6149207713457,
+        "bets": 178,
+        "wins": 99,
         "losses": 79,
-        "hit_pct": 55.11363636363637,
-        "roi_pct": 2.351833140284804
+        "hit_pct": 55.61797752808989,
+        "roi_pct": 3.154449871542528
       },
       "by_threshold": {
         "0": {
-          "units": -3.7862054736156714,
-          "bets": 264,
-          "wins": 142,
-          "losses": 122,
-          "hit_pct": 53.78787878787878,
-          "roi_pct": -1.4341687400059362
+          "units": -4.849601700030766,
+          "bets": 261,
+          "wins": 140,
+          "losses": 121,
+          "hit_pct": 53.63984674329502,
+          "roi_pct": -1.8580849425405233
         },
         "5": {
-          "units": 2.205434120131654,
-          "bets": 216,
-          "wins": 118,
+          "units": 2.963009877707408,
+          "bets": 217,
+          "wins": 119,
           "losses": 98,
-          "hit_pct": 54.629629629629626,
-          "roi_pct": 1.0210343148757657
+          "hit_pct": 54.83870967741935,
+          "roi_pct": 1.365442339957331
         },
         "10": {
-          "units": 4.139226326901255,
-          "bets": 176,
-          "wins": 97,
+          "units": 5.6149207713457,
+          "bets": 178,
+          "wins": 99,
           "losses": 79,
-          "hit_pct": 55.11363636363637,
-          "roi_pct": 2.351833140284804
+          "hit_pct": 55.61797752808989,
+          "roi_pct": 3.154449871542528
         },
         "15": {
-          "units": 8.342620275711075,
-          "bets": 151,
-          "wins": 86,
+          "units": 6.182620275711075,
+          "bets": 149,
+          "wins": 84,
           "losses": 65,
-          "hit_pct": 56.95364238410596,
-          "roi_pct": 5.524914089874884
+          "hit_pct": 56.375838926174495,
+          "roi_pct": 4.149409581014144
         },
         "20": {
-          "units": 3.748694753494869,
-          "bets": 114,
+          "units": 6.524134673052433,
+          "bets": 111,
           "wins": 63,
-          "losses": 51,
-          "hit_pct": 55.26315789473685,
-          "roi_pct": 3.28832873113585
+          "losses": 48,
+          "hit_pct": 56.75675675675676,
+          "roi_pct": 5.8775988045517416
         },
         "2.5": {
-          "units": 7.038600529005894,
-          "bets": 238,
+          "units": 7.84452645493182,
+          "bets": 237,
           "wins": 133,
-          "losses": 105,
-          "hit_pct": 55.88235294117647,
-          "roi_pct": 2.9573951802545775
+          "losses": 104,
+          "hit_pct": 56.118143459915615,
+          "roi_pct": 3.309926774232835
         },
         "7.5": {
-          "units": 3.7511794731822916,
-          "bets": 191,
-          "wins": 105,
+          "units": 4.436110980031604,
+          "bets": 192,
+          "wins": 106,
           "losses": 86,
-          "hit_pct": 54.973821989528794,
-          "roi_pct": 1.963968310566645
+          "hit_pct": 55.208333333333336,
+          "roi_pct": 2.3104744687664605
         },
         "12.5": {
-          "units": 9.33197092506173,
-          "bets": 156,
-          "wins": 89,
-          "losses": 67,
-          "hit_pct": 57.05128205128205,
-          "roi_pct": 5.98203264427034
+          "units": 9.116608606221154,
+          "bets": 160,
+          "wins": 91,
+          "losses": 69,
+          "hit_pct": 56.875,
+          "roi_pct": 5.697880378888222
         },
         "17.5": {
-          "units": 5.679216747448958,
-          "bets": 134,
-          "wins": 75,
-          "losses": 59,
-          "hit_pct": 55.970149253731336,
-          "roi_pct": 4.238221453320118
+          "units": 6.997821398611748,
+          "bets": 129,
+          "wins": 73,
+          "losses": 56,
+          "hit_pct": 56.58914728682171,
+          "roi_pct": 5.42466775086182
         }
       }
     },
@@ -1788,20 +1788,20 @@
       },
       "by_threshold": {
         "0": {
-          "units": -26.023085940934173,
-          "bets": 299,
-          "wins": 148,
-          "losses": 151,
-          "hit_pct": 49.49832775919732,
-          "roi_pct": -8.703373224392701
+          "units": -24.672436837134587,
+          "bets": 303,
+          "wins": 151,
+          "losses": 152,
+          "hit_pct": 49.834983498349835,
+          "roi_pct": -8.142718428097224
         },
         "5": {
-          "units": -12.521671872738201,
-          "bets": 267,
-          "wins": 138,
-          "losses": 129,
-          "hit_pct": 51.68539325842697,
-          "roi_pct": -4.689764746343895
+          "units": -11.686740365888888,
+          "bets": 270,
+          "wins": 140,
+          "losses": 130,
+          "hit_pct": 51.85185185185185,
+          "roi_pct": -4.328422357736625
         },
         "10": {
           "units": -10.229042357348465,
@@ -1812,165 +1812,165 @@
           "roi_pct": -4.6495647078856654
         },
         "15": {
-          "units": 3.844308604898412,
-          "bets": 165,
-          "wins": 92,
-          "losses": 73,
-          "hit_pct": 55.757575757575765,
-          "roi_pct": 2.329884002968735
+          "units": 4.829238093016317,
+          "bets": 170,
+          "wins": 95,
+          "losses": 75,
+          "hit_pct": 55.88235294117647,
+          "roi_pct": 2.840728290009598
         },
         "20": {
-          "units": 4.45796832688663,
-          "bets": 124,
+          "units": 3.457968326886629,
+          "bets": 125,
           "wins": 70,
-          "losses": 54,
-          "hit_pct": 56.451612903225815,
-          "roi_pct": 3.5951357474892176
+          "losses": 55,
+          "hit_pct": 56.00000000000001,
+          "roi_pct": 2.7663746615093032
         },
         "2.5": {
-          "units": -13.78990778670337,
-          "bets": 280,
+          "units": -16.789907786703374,
+          "bets": 283,
           "wins": 144,
-          "losses": 136,
-          "hit_pct": 51.42857142857142,
-          "roi_pct": -4.924967066679775
+          "losses": 139,
+          "hit_pct": 50.8833922261484,
+          "roi_pct": -5.932829606608966
         },
         "7.5": {
-          "units": -10.9888596512015,
-          "bets": 241,
-          "wins": 125,
-          "losses": 116,
-          "hit_pct": 51.867219917012456,
-          "roi_pct": -4.559692801328423
+          "units": -10.495989775978684,
+          "bets": 244,
+          "wins": 127,
+          "losses": 117,
+          "hit_pct": 52.04918032786885,
+          "roi_pct": -4.301635154089625
         },
         "12.5": {
-          "units": -2.4846348812157917,
-          "bets": 194,
-          "wins": 104,
-          "losses": 90,
-          "hit_pct": 53.608247422680414,
-          "roi_pct": -1.280739629492676
+          "units": -5.749340763568744,
+          "bets": 199,
+          "wins": 105,
+          "losses": 94,
+          "hit_pct": 52.76381909547738,
+          "roi_pct": -2.889115961592334
         },
         "17.5": {
-          "units": 3.52310032398257,
-          "bets": 138,
-          "wins": 77,
-          "losses": 61,
-          "hit_pct": 55.79710144927537,
-          "roi_pct": 2.552971249262732
+          "units": 4.197207466839716,
+          "bets": 141,
+          "wins": 79,
+          "losses": 62,
+          "hit_pct": 56.02836879432624,
+          "roi_pct": 2.976742884283486
         }
       }
     },
     {
       "event": "U.S. Open",
       "at_5pct": {
-        "units": 25.473540913041692,
-        "bets": 495,
-        "wins": 279,
-        "losses": 216,
-        "hit_pct": 56.36363636363636,
-        "roi_pct": 5.146169881422564
+        "units": 25.248253556719856,
+        "bets": 499,
+        "wins": 281,
+        "losses": 218,
+        "hit_pct": 56.312625250501,
+        "roi_pct": 5.059770251847667
       },
       "at_5pct_raw": {
-        "units": 25.473540913041692,
-        "bets": 495,
-        "wins": 279,
-        "losses": 216,
-        "hit_pct": 56.36363636363636,
-        "roi_pct": 5.146169881422564
+        "units": 25.248253556719856,
+        "bets": 499,
+        "wins": 281,
+        "losses": 218,
+        "hit_pct": 56.312625250501,
+        "roi_pct": 5.059770251847667
       },
       "by_threshold": {
         "0": {
-          "units": 28.590536367597178,
-          "bets": 608,
+          "units": 29.56283937272111,
+          "bets": 607,
           "wins": 343,
-          "losses": 265,
-          "hit_pct": 56.414473684210535,
-          "roi_pct": 4.702390849933746
+          "losses": 264,
+          "hit_pct": 56.50741350906095,
+          "roi_pct": 4.870319501272012
         },
         "5": {
-          "units": 30.39812573796998,
-          "bets": 564,
-          "wins": 319,
+          "units": 30.97283838164815,
+          "bets": 565,
+          "wins": 320,
           "losses": 245,
-          "hit_pct": 56.560283687943254,
-          "roi_pct": 5.389738606023046
+          "hit_pct": 56.63716814159292,
+          "roi_pct": 5.481918297636841
         },
         "10": {
-          "units": 25.473540913041692,
-          "bets": 495,
-          "wins": 279,
-          "losses": 216,
-          "hit_pct": 56.36363636363636,
-          "roi_pct": 5.146169881422564
+          "units": 25.248253556719856,
+          "bets": 499,
+          "wins": 281,
+          "losses": 218,
+          "hit_pct": 56.312625250501,
+          "roi_pct": 5.059770251847667
         },
         "15": {
-          "units": 26.25091513941137,
-          "bets": 415,
-          "wins": 236,
-          "losses": 179,
-          "hit_pct": 56.867469879518076,
-          "roi_pct": 6.325521720340088
+          "units": 29.912433338645066,
+          "bets": 413,
+          "wins": 237,
+          "losses": 176,
+          "hit_pct": 57.384987893462466,
+          "roi_pct": 7.2427199367179345
         },
         "20": {
-          "units": 22.634971075053535,
-          "bets": 327,
-          "wins": 185,
-          "losses": 142,
-          "hit_pct": 56.574923547400616,
-          "roi_pct": 6.922009503074475
+          "units": 22.960240351641268,
+          "bets": 332,
+          "wins": 188,
+          "losses": 144,
+          "hit_pct": 56.62650602409639,
+          "roi_pct": 6.915735045675081
         },
         "2.5": {
-          "units": 29.329443454717616,
-          "bets": 588,
-          "wins": 332,
-          "losses": 256,
-          "hit_pct": 56.4625850340136,
-          "roi_pct": 4.98800058753701
+          "units": 31.278812806385805,
+          "bets": 584,
+          "wins": 331,
+          "losses": 253,
+          "hit_pct": 56.678082191780824,
+          "roi_pct": 5.355961096983871
         },
         "7.5": {
-          "units": 25.65893465985528,
-          "bets": 534,
-          "wins": 300,
+          "units": 28.050087725856212,
+          "bets": 537,
+          "wins": 303,
           "losses": 234,
-          "hit_pct": 56.17977528089888,
-          "roi_pct": 4.805043943793123
+          "hit_pct": 56.424581005586596,
+          "roi_pct": 5.223480023436911
         },
         "12.5": {
-          "units": 25.05985198093202,
-          "bets": 458,
-          "wins": 259,
+          "units": 28.667816557862107,
+          "bets": 462,
+          "wins": 263,
           "losses": 199,
-          "hit_pct": 56.55021834061136,
-          "roi_pct": 5.471583401950222
+          "hit_pct": 56.926406926406926,
+          "roi_pct": 6.205155099104352
         },
         "17.5": {
-          "units": 20.36960373798074,
-          "bets": 377,
-          "wins": 212,
-          "losses": 165,
-          "hit_pct": 56.233421750663126,
-          "roi_pct": 5.403077914583751
+          "units": 20.998947266270804,
+          "bets": 380,
+          "wins": 214,
+          "losses": 166,
+          "hit_pct": 56.315789473684205,
+          "roi_pct": 5.526038754281791
         }
       }
     },
     {
       "event": "Travelers Championship",
       "at_5pct": {
-        "units": 13.957973978199856,
-        "bets": 221,
-        "wins": 122,
-        "losses": 99,
-        "hit_pct": 55.203619909502265,
-        "roi_pct": 6.315825329502197
+        "units": 12.328865996979186,
+        "bets": 226,
+        "wins": 124,
+        "losses": 102,
+        "hit_pct": 54.86725663716814,
+        "roi_pct": 5.455250441141233
       },
       "at_5pct_raw": {
-        "units": 13.957973978199856,
-        "bets": 221,
-        "wins": 122,
-        "losses": 99,
-        "hit_pct": 55.203619909502265,
-        "roi_pct": 6.315825329502197
+        "units": 12.328865996979186,
+        "bets": 226,
+        "wins": 124,
+        "losses": 102,
+        "hit_pct": 54.86725663716814,
+        "roi_pct": 5.455250441141233
       },
       "by_threshold": {
         "0": {
@@ -1982,36 +1982,36 @@
           "roi_pct": 5.551265143536285
         },
         "5": {
-          "units": 17.577399864689795,
-          "bets": 269,
-          "wins": 150,
+          "units": 19.188257297465043,
+          "bets": 271,
+          "wins": 152,
           "losses": 119,
-          "hit_pct": 55.762081784386616,
-          "roi_pct": 6.534349392077991
+          "hit_pct": 56.08856088560885,
+          "roi_pct": 7.080537748142082
         },
         "10": {
-          "units": 13.957973978199856,
-          "bets": 221,
-          "wins": 122,
-          "losses": 99,
-          "hit_pct": 55.203619909502265,
-          "roi_pct": 6.315825329502197
+          "units": 12.328865996979186,
+          "bets": 226,
+          "wins": 124,
+          "losses": 102,
+          "hit_pct": 54.86725663716814,
+          "roi_pct": 5.455250441141233
         },
         "15": {
-          "units": 16.87996694371603,
-          "bets": 153,
-          "wins": 89,
-          "losses": 64,
-          "hit_pct": 58.16993464052288,
-          "roi_pct": 11.032658133147732
+          "units": 14.64919771294679,
+          "bets": 157,
+          "wins": 90,
+          "losses": 67,
+          "hit_pct": 57.324840764331206,
+          "roi_pct": 9.330699180220886
         },
         "20": {
-          "units": 7.6931500991994,
-          "bets": 99,
+          "units": 6.6931500991994,
+          "bets": 100,
           "wins": 56,
-          "losses": 43,
-          "hit_pct": 56.56565656565656,
-          "roi_pct": 7.77085868606
+          "losses": 44,
+          "hit_pct": 56.00000000000001,
+          "roi_pct": 6.693150099199401
         },
         "2.5": {
           "units": 15.687550622783988,
@@ -2022,28 +2022,121 @@
           "roi_pct": 5.504403727292628
         },
         "7.5": {
-          "units": 18.036489067313482,
-          "bets": 250,
-          "wins": 140,
-          "losses": 110,
-          "hit_pct": 56.00000000000001,
-          "roi_pct": 7.2145956269253935
+          "units": 15.855272136096552,
+          "bets": 256,
+          "wins": 142,
+          "losses": 114,
+          "hit_pct": 55.46875,
+          "roi_pct": 6.193465678162716
         },
         "12.5": {
-          "units": 20.006507749061395,
-          "bets": 192,
-          "wins": 110,
-          "losses": 82,
-          "hit_pct": 57.291666666666664,
-          "roi_pct": 10.42005611930281
+          "units": 17.497890868813936,
+          "bets": 198,
+          "wins": 112,
+          "losses": 86,
+          "hit_pct": 56.56565656565656,
+          "roi_pct": 8.8373186206131
         },
         "17.5": {
-          "units": 12.579531550364553,
-          "bets": 122,
-          "wins": 70,
-          "losses": 52,
-          "hit_pct": 57.377049180327866,
-          "roi_pct": 10.311091434725043
+          "units": 10.264463057213865,
+          "bets": 126,
+          "wins": 71,
+          "losses": 55,
+          "hit_pct": 56.34920634920635,
+          "roi_pct": 8.146399251757035
+        }
+      }
+    },
+    {
+      "event": "John Deere Classic",
+      "at_5pct": {
+        "units": 14.636296126777843,
+        "bets": 31,
+        "wins": 23,
+        "losses": 8,
+        "hit_pct": 74.19354838709677,
+        "roi_pct": 47.21385847347691
+      },
+      "at_5pct_raw": {
+        "units": 14.636296126777843,
+        "bets": 31,
+        "wins": 23,
+        "losses": 8,
+        "hit_pct": 74.19354838709677,
+        "roi_pct": 47.21385847347691
+      },
+      "by_threshold": {
+        "0": {
+          "units": 11.684549094660621,
+          "bets": 65,
+          "wins": 40,
+          "losses": 25,
+          "hit_pct": 61.53846153846154,
+          "roi_pct": 17.97622937640096
+        },
+        "5": {
+          "units": 16.113498490977108,
+          "bets": 39,
+          "wins": 28,
+          "losses": 11,
+          "hit_pct": 71.7948717948718,
+          "roi_pct": 41.316662797377205
+        },
+        "10": {
+          "units": 14.636296126777843,
+          "bets": 31,
+          "wins": 23,
+          "losses": 8,
+          "hit_pct": 74.19354838709677,
+          "roi_pct": 47.21385847347691
+        },
+        "15": {
+          "units": 12.62984451387462,
+          "bets": 27,
+          "wins": 20,
+          "losses": 7,
+          "hit_pct": 74.07407407407408,
+          "roi_pct": 46.77720190323933
+        },
+        "20": {
+          "units": 13.62984451387462,
+          "bets": 26,
+          "wins": 20,
+          "losses": 6,
+          "hit_pct": 76.92307692307693,
+          "roi_pct": 52.42247889951776
+        },
+        "2.5": {
+          "units": 16.91306480201883,
+          "bets": 51,
+          "wins": 35,
+          "losses": 16,
+          "hit_pct": 68.62745098039215,
+          "roi_pct": 33.16287216082124
+        },
+        "7.5": {
+          "units": 15.32721459943006,
+          "bets": 36,
+          "wins": 26,
+          "losses": 10,
+          "hit_pct": 72.22222222222221,
+          "roi_pct": 42.57559610952795
+        },
+        "12.5": {
+          "units": 14.556296126777838,
+          "bets": 29,
+          "wins": 22,
+          "losses": 7,
+          "hit_pct": 75.86206896551724,
+          "roi_pct": 50.19412457509599
+        },
+        "17.5": {
+          "units": 12.62984451387462,
+          "bets": 27,
+          "wins": 20,
+          "losses": 7,
+          "hit_pct": 74.07407407407408,
+          "roi_pct": 46.77720190323933
         }
       }
     }

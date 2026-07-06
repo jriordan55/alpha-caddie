@@ -723,8 +723,12 @@ async function fetchDraftKingsOuPropsOnce(opts = {}) {
     return { props: [], subcatsUsed: {}, error: `goto: ${e.message}` };
   }
 
-  const nav = await page.evaluate((lidRaw) => {
+  const urlSlugMatch = String(leagueUrl || "").match(/\/golf\/([^/?]+)/i);
+  const urlSlug = urlSlugMatch ? urlSlugMatch[1].toLowerCase() : "";
+
+  const nav = await page.evaluate(({ lidRaw, slugRaw }) => {
     const ini = window.__INITIAL_STATE__;
+    const urlSlug = String(slugRaw || "").trim().toLowerCase();
     if (!ini)
       return {
         seoMap: {},
@@ -732,6 +736,7 @@ async function fetchDraftKingsOuPropsOnce(opts = {}) {
         roundScoreSubs: [],
         detectedLeagueId: "",
         allSubIdsForLeague: [],
+        roundOuNavPresent: false,
       };
     const requested = String(lidRaw || "").trim();
     const seoToStat = {
@@ -744,13 +749,14 @@ async function fetchDraftKingsOuPropsOnce(opts = {}) {
       "total-putts": "Putts",
       putts: "Putts",
     };
+    /** Exact tab titles only — loose /\bpar\b/ matched "Par 3 Winner" and mis-routed Pars subs. */
     const titleToStat = [
-      [/birdies?\s+or\s+better/i, "Birdies"],
-      [/\bpars?\b/i, "Pars"],
-      [/bogeys?\s+or\s+worse/i, "Bogeys"],
-      [/greens?\s+in\s+regulation|\bgir\b/i, "GIR"],
-      [/fairways?\s+hit/i, "Fairways hit"],
-      [/(?:total\s+)?putts?/i, "Putts"],
+      [/^birdies?\s+or\s+better$/i, "Birdies"],
+      [/^pars$/i, "Pars"],
+      [/^bogeys?\s+or\s+worse$/i, "Bogeys"],
+      [/^greens?\s+in\s+regulation$/i, "GIR"],
+      [/^fairways?\s+hit$/i, "Fairways hit"],
+      [/^(?:total\s+)?putts$/i, "Putts"],
     ];
     const bySeo = {};
     const subsByStat = {};
@@ -812,6 +818,16 @@ async function fetchDraftKingsOuPropsOnce(opts = {}) {
       if (!detectedLeagueId && roundScoreLeagues.size) {
         detectedLeagueId = [...roundScoreLeagues][0];
       }
+      if (!detectedLeagueId && urlSlug) {
+        for (const r of leagueRows) {
+          const seo = String(r.seo || "").trim().toLowerCase();
+          if (!seo || seo.startsWith("sub-zone")) continue;
+          if (urlSlug.includes(seo) || seo.includes(urlSlug.replace(/^genesis-/, ""))) {
+            detectedLeagueId = r.leagueId;
+            break;
+          }
+        }
+      }
     }
     for (const r of leagueRows) {
       if (detectedLeagueId && r.leagueId !== detectedLeagueId) continue;
@@ -832,21 +848,27 @@ async function fetchDraftKingsOuPropsOnce(opts = {}) {
       if (detectedLeagueId && r.leagueId !== detectedLeagueId) continue;
       allSubs.add(r.subcategoryId);
     }
+    const roundOuNavPresent =
+      Object.keys(subsByStat).length > 0 || scoreSubs.length > 0 || roundScoreLeagues.has(detectedLeagueId);
     return {
       seoMap: bySeo,
       subsByStat,
       roundScoreSubs: scoreSubs,
       detectedLeagueId,
       allSubIdsForLeague: [...allSubs].sort(),
+      roundOuNavPresent,
     };
-  }, requestedLeagueId);
+  }, { lidRaw: requestedLeagueId, slugRaw: urlSlug });
 
   const leagueId = String(nav?.detectedLeagueId || requestedLeagueId || "").trim();
   if (!leagueId) {
     await browser.close();
     return { props: [], subcatsUsed: {}, error: "Could not detect DK league id from page (set DK_LEAGUE_ID)." };
   }
-  console.log(`[draftkings-ou] leagueId=${leagueId} navStats=${Object.keys(nav?.subsByStat || {}).join(",") || "(none)"}`);
+  const roundOuNavPresent = nav?.roundOuNavPresent !== false;
+  console.log(
+    `[draftkings-ou] leagueId=${leagueId} navStats=${Object.keys(nav?.subsByStat || {}).join(",") || "(none)"} roundOuNav=${roundOuNavPresent}`,
+  );
 
   const bySeo = nav.seoMap || {};
   let roundScoreSubs = [];
@@ -908,7 +930,9 @@ async function fetchDraftKingsOuPropsOnce(opts = {}) {
   siteSegment = await resolveSiteSegment(page, api, leagueId, probeSub);
   console.log(`[draftkings-ou] site segment=${siteSegment}`);
 
-  const subProbeOn = String(process.env.DK_SUB_PROBE || "").trim() === "1";
+  const subProbeEnv = String(process.env.DK_SUB_PROBE || "").trim();
+  const subProbeOn =
+    subProbeEnv === "1" || (subProbeEnv !== "0" && !roundOuNavPresent);
   if (subProbeOn) {
     for (const st of ["Putts", "GIR", "Fairways hit", "Birdies", "Pars", "Bogeys"]) {
       if (overrides[st]) continue;
@@ -989,10 +1013,14 @@ async function fetchDraftKingsOuPropsOnce(opts = {}) {
 
   if (Object.keys(statToSubs).length === 0 && roundScoreSubs.length === 0) {
     await browser.close();
+    const hint = !roundOuNavPresent
+      ? "DraftKings has not posted round O/U props for this event yet (round page has no Birdies/Pars/GIR/etc. tabs)."
+      : "Could not resolve DK subcategory ids (try DK_SUBCAT_JSON or DK_LEAGUE_URL)";
     return {
       props: [],
       subcatsUsed: {},
-      error: "Could not resolve DK subcategory ids (try DK_SUBCAT_JSON or DK_LEAGUE_URL)",
+      error: hint,
+      dkRoundOuNotPosted: !roundOuNavPresent,
     };
   }
 
@@ -1088,8 +1116,10 @@ async function fetchDraftKingsOuPropsOnce(opts = {}) {
   let props = [...dedup.values()];
   props = preferPropsForTargetRound(props, Number.isFinite(targetRound) ? targetRound : NaN);
   if (!props.length && nAttempts > 0) {
-    const hint =
-      apiFail > 0
+    const dkRoundOuNotPosted = !roundOuNavPresent && apiFail === 0;
+    const hint = dkRoundOuNotPosted
+      ? "DraftKings has not posted round O/U props for this event yet (round page has no Birdies/Pars/GIR/etc. tabs)."
+      : apiFail > 0
         ? `Nash API failures (${apiFail}); try DK_SITE_SEGMENT (e.g. US-VA-SB) or rerun.`
         : apiBadShape > 0
           ? "Markets JSON missing markets/selections arrays (DK shape change?)."
@@ -1099,9 +1129,10 @@ async function fetchDraftKingsOuPropsOnce(opts = {}) {
       props,
       subcatsUsed,
       error: hint,
+      dkRoundOuNotPosted,
     };
   }
-  return { props, subcatsUsed };
+  return { props, subcatsUsed, dkRoundOuNotPosted: false };
 }
 
 async function main() {

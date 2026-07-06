@@ -47,6 +47,7 @@ import { fetchDataGolfOutrightsApi } from "./datagolf-outrights-api.mjs";
 import { fetchSportsbookOutrightsFromUrls } from "./sportsbook-outrights-scraper.mjs";
 import { appendDkRoundProjectionAuditCsv } from "./export-dk-round-model-audit-csv.mjs";
 import { refreshRoundProjectionProps } from "./merge-dk-round-props.mjs";
+import { projectionExportMeta } from "./projection-export-meta.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
 const GOLF_MODEL_ROOT = process.env.GOLF_MODEL_DIR?.trim()
@@ -351,24 +352,24 @@ async function main() {
   if (next.outright_live_score_placement_nudge == null) next.outright_live_score_placement_nudge = false;
 
   if (process.env.GOLF_SKIP_PROPS_CSV !== "1" || process.env.GOLF_SKIP_DK_OU !== "1") {
-    const { props, nCsv, nDk, nDkFresh, dkLeagueSlug, dkLeagueUrl, dkError } = await refreshRoundProjectionProps(
-      payload,
-      GOLF_MODEL_ROOT,
-    );
+    const { props, nCsv, nDk, nDkFresh, dkLeagueSlug, dkLeagueUrl, dkError, dkRoundOuNotPosted } =
+      await refreshRoundProjectionProps(payload, GOLF_MODEL_ROOT);
     if (props.length) {
       next.props = props;
       if (dkLeagueSlug) next.dk_league_slug = dkLeagueSlug;
-      next.meta = { ...(next.meta && typeof next.meta === "object" ? next.meta : {}) };
+      const exportMeta = projectionExportMeta(next);
       if (nDkFresh > 0) {
         next.dk_round_props_refreshed_at = next.book_odds_refreshed_at;
-        delete next.meta.dk_round_props_note;
+        delete exportMeta.dk_round_props_note;
+        delete exportMeta.dk_round_ou_not_posted;
       } else if (String(process.env.GOLF_SKIP_DK_OU || "").trim() !== "1") {
         const errNote = String(dkError || "").trim();
-        next.meta.dk_round_props_note = errNote
+        exportMeta.dk_round_props_note = errNote
           ? errNote
           : "DraftKings returned 0 round O/U props — lines may not be posted yet, or the Nash API scrape failed (see push:live logs).";
+        if (dkRoundOuNotPosted) exportMeta.dk_round_ou_not_posted = true;
         console.warn(
-          `[fetch-book-odds] DraftKings scrape returned 0 fresh props (${dkLeagueUrl || "no league URL"}) — Round projections tab will be empty until DK lines load`,
+          `[fetch-book-odds] DraftKings scrape returned 0 fresh props (${dkLeagueUrl || "no league URL"})${dkRoundOuNotPosted ? " — DK has not posted round O/U yet; using model O/U fallback" : " — Round projections tab will be empty until DK lines load"}`,
         );
       }
       console.log(
@@ -386,7 +387,8 @@ async function main() {
     if (
       envTruthy("GOLF_REQUIRE_DK_OU") &&
       String(process.env.GOLF_SKIP_DK_OU || "").trim() !== "1" &&
-      nDkFresh === 0
+      nDkFresh === 0 &&
+      !dkRoundOuNotPosted
     ) {
       const err =
         String(dkError || "").trim() ||

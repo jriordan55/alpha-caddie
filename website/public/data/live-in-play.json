@@ -3032,4473 +3032,1890 @@
     "last_update": "2026-07-02 7:30 PM"
   },
   "field_updates": {
-    "course_name": "TPC Deere Run",
-    "current_round": 2,
-    "date_end": "2026-07-05",
-    "date_start": "2026-07-02",
-    "event_id": 30,
-    "event_name": "John Deere Classic",
+    "course_name": "The Renaissance Club",
+    "current_round": 1,
+    "date_end": "2026-07-12",
+    "date_start": "2026-07-09",
+    "event_id": 541,
+    "event_name": "Genesis Scottish Open",
     "field": [
       {
-        "am": 1,
-        "country": "USA",
-        "dg_id": 30033853,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Adler, Patrick",
-        "player_num": 67601,
-        "pre_tourn_pageviews": 97,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 13:40",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 08:30",
-            "wave": "early"
-          }
-        ],
+        "am": 0,
+        "country": "SWE",
+        "dg_id": 23950,
+        "dg_rank": 11,
+        "owgr_rank": 19,
+        "player_name": "Aberg, Ludvig",
+        "player_num": 52955,
+        "pre_tourn_pageviews": 641,
+        "teetimes": [],
+        "tour_rank": "8"
+      },
+      {
+        "am": 0,
+        "country": "ENG",
+        "dg_id": 17813,
+        "dg_rank": 164,
+        "owgr_rank": 158,
+        "player_name": "Armitage, Marcus",
+        "player_num": 45194,
+        "pre_tourn_pageviews": 71,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "ESP",
+        "dg_id": 30445,
+        "dg_rank": 72,
+        "owgr_rank": 108,
+        "player_name": "Ayora, Angel",
+        "player_num": 64052,
+        "pre_tourn_pageviews": 269,
+        "teetimes": [],
         "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 19846,
-        "dg_rank": 95,
-        "owgr_rank": 161,
+        "dg_rank": 112,
+        "owgr_rank": 167,
         "player_name": "Bauchou, Zach",
         "player_num": 48001,
-        "pre_tourn_pageviews": 1587,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 13:40",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 08:30",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "84"
+        "pre_tourn_pageviews": 70,
+        "teetimes": [],
+        "tour_rank": "85"
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 17606,
-        "dg_rank": 73,
-        "owgr_rank": 47,
-        "player_name": "Berger, Daniel",
-        "player_num": 40026,
-        "pre_tourn_pageviews": 2306,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 07:13",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 12:23",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "50"
-      },
-      {
-        "am": 0,
-        "country": "RSA",
-        "dg_id": 18103,
-        "dg_rank": 68,
-        "owgr_rank": 100,
-        "player_name": "Bezuidenhout, Christiaan",
-        "player_num": 45522,
-        "pre_tourn_pageviews": 1443,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 12:56",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 07:46",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "95"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 17639,
-        "dg_rank": 146,
-        "owgr_rank": 187,
-        "player_name": "Blair, Zac",
-        "player_num": 40058,
-        "pre_tourn_pageviews": 790,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 07:46",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 12:56",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "160"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 24956,
-        "dg_rank": 188,
-        "owgr_rank": 111,
-        "player_name": "Blanchet, Chandler",
-        "player_num": 54788,
-        "pre_tourn_pageviews": 571,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 08:41",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 13:51",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "94"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 13872,
-        "dg_rank": 31,
-        "owgr_rank": 38,
-        "player_name": "Bradley, Keegan",
-        "player_num": 33141,
-        "pre_tourn_pageviews": 2960,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 12:45",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 07:35",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "69"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 10423,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Brehm, Ryan",
-        "player_num": 28420,
-        "pre_tourn_pageviews": 126,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 06:40",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 11:50",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "189"
+        "country": "ENG",
+        "dg_id": 29971,
+        "dg_rank": 200,
+        "owgr_rank": 150,
+        "player_name": "Bradbury, Dan",
+        "player_num": 63459,
+        "pre_tourn_pageviews": 163,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 29197,
-        "dg_rank": 98,
-        "owgr_rank": 60,
+        "dg_rank": 95,
+        "owgr_rank": 61,
         "player_name": "Brennan, Michael",
         "player_num": 61522,
-        "pre_tourn_pageviews": 1376,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 07:35",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 12:45",
-            "wave": "late"
-          }
-        ],
+        "pre_tourn_pageviews": 286,
+        "teetimes": [],
         "tour_rank": "102"
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 29433,
-        "dg_rank": 45,
-        "owgr_rank": 27,
-        "player_name": "Bridgeman, Jacob",
-        "player_num": 60004,
-        "pre_tourn_pageviews": 3329,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 07:13",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 12:23",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "11"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 32152,
-        "dg_rank": 117,
-        "owgr_rank": 106,
-        "player_name": "Brown, Blades",
-        "player_num": 66417,
-        "pre_tourn_pageviews": 2681,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 08:19",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 13:29",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": null
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 6931,
-        "dg_rank": 450,
-        "owgr_rank": null,
-        "player_name": "Byrd, Jonathan",
-        "player_num": 24925,
-        "pre_tourn_pageviews": 171,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 12:12",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 07:02",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "205"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 18628,
-        "dg_rank": 334,
+        "country": "ENG",
+        "dg_id": 20766,
+        "dg_rank": 201,
         "owgr_rank": 128,
-        "player_name": "Campbell, Brian",
-        "player_num": 46443,
-        "pre_tourn_pageviews": 1487,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 07:24",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 12:34",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "147"
-      },
-      {
-        "am": 0,
-        "country": "PUR",
-        "dg_id": 12909,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Campos, Rafael",
-        "player_num": 32070,
-        "pre_tourn_pageviews": 146,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 06:40",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 11:50",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "181"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 23542,
-        "dg_rank": 444,
-        "owgr_rank": 362,
-        "player_name": "Champ, Cameron",
-        "player_num": 52372,
-        "pre_tourn_pageviews": 282,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 13:18",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 08:08",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": null
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 30620,
-        "dg_rank": 354,
-        "owgr_rank": 319,
-        "player_name": "Chatfield, Davis",
-        "player_num": 59006,
-        "pre_tourn_pageviews": 227,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 13:51",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 08:41",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "177"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 32330,
-        "dg_rank": 275,
-        "owgr_rank": 270,
-        "player_name": "Clanton, Luke",
-        "player_num": 66743,
-        "pre_tourn_pageviews": 1256,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 13:29",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 08:19",
-            "wave": "early"
-          }
-        ],
+        "player_name": "Brown, Dan",
+        "player_num": 57259,
+        "pre_tourn_pageviews": 85,
+        "teetimes": [],
         "tour_rank": "142"
       },
       {
         "am": 0,
         "country": "USA",
+        "dg_id": 18628,
+        "dg_rank": 348,
+        "owgr_rank": 134,
+        "player_name": "Campbell, Brian",
+        "player_num": 46443,
+        "pre_tourn_pageviews": 55,
+        "teetimes": [],
+        "tour_rank": "150"
+      },
+      {
+        "am": 0,
+        "country": "ENG",
+        "dg_id": 14795,
+        "dg_rank": 215,
+        "owgr_rank": 149,
+        "player_name": "Canter, Laurie",
+        "player_num": 34362,
+        "pre_tourn_pageviews": 88,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 15466,
+        "dg_rank": 13,
+        "owgr_rank": 36,
+        "player_name": "Cantlay, Patrick",
+        "player_num": 35450,
+        "pre_tourn_pageviews": 348,
+        "teetimes": [],
+        "tour_rank": "41"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 27819,
+        "dg_rank": 105,
+        "owgr_rank": 99,
+        "player_name": "Castillo, Ricky",
+        "player_num": 59440,
+        "pre_tourn_pageviews": 84,
+        "teetimes": [],
+        "tour_rank": "66"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 14502,
+        "dg_rank": 34,
+        "owgr_rank": 38,
+        "player_name": "Cauley, Bud",
+        "player_num": 34021,
+        "pre_tourn_pageviews": 169,
+        "teetimes": [],
+        "tour_rank": "29"
+      },
+      {
+        "am": 0,
+        "country": "ESP",
+        "dg_id": 26745,
+        "dg_rank": 47,
+        "owgr_rank": 59,
+        "player_name": "Chacarra, Eugenio",
+        "player_num": 57492,
+        "pre_tourn_pageviews": 520,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "KOR",
+        "dg_id": 26580,
+        "dg_rank": null,
+        "owgr_rank": 392,
+        "player_name": "Choi, Seungbin",
+        "player_num": 57342,
+        "pre_tourn_pageviews": 34,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 23604,
+        "dg_rank": 7,
+        "owgr_rank": 8,
+        "player_name": "Clark, Wyndham",
+        "player_num": 51766,
+        "pre_tourn_pageviews": 923,
+        "teetimes": [],
+        "tour_rank": "4"
+      },
+      {
+        "am": 0,
+        "country": "USA",
         "dg_id": 21756,
-        "dg_rank": 42,
-        "owgr_rank": 69,
+        "dg_rank": 43,
+        "owgr_rank": 67,
         "player_name": "Cole, Eric",
         "player_num": 47591,
-        "pre_tourn_pageviews": 3116,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 07:13",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 12:23",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "41"
+        "pre_tourn_pageviews": 159,
+        "teetimes": [],
+        "tour_rank": "42"
+      },
+      {
+        "am": 0,
+        "country": "CAN",
+        "dg_id": 17576,
+        "dg_rank": 55,
+        "owgr_rank": 52,
+        "player_name": "Conners, Corey",
+        "player_num": 39997,
+        "pre_tourn_pageviews": 299,
+        "teetimes": [],
+        "tour_rank": "62"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 28309,
         "dg_rank": 64,
-        "owgr_rank": 59,
+        "owgr_rank": 58,
         "player_name": "Coody, Pierceson",
         "player_num": 59836,
-        "pre_tourn_pageviews": 1879,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 06:40",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 11:50",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "51"
+        "pre_tourn_pageviews": 218,
+        "teetimes": [],
+        "tour_rank": "52"
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 18579,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Cook, Austin",
-        "player_num": 46435,
-        "pre_tourn_pageviews": 0,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 11:50",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 06:40",
-            "wave": "early"
-          }
-        ],
+        "country": "FRA",
+        "dg_id": 27811,
+        "dg_rank": 205,
+        "owgr_rank": 164,
+        "player_name": "Couvra, Martin",
+        "player_num": 60073,
+        "pre_tourn_pageviews": 84,
+        "teetimes": [],
         "tour_rank": null
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 27780,
-        "dg_rank": 242,
-        "owgr_rank": 239,
-        "player_name": "Crowe, Trace",
-        "player_num": 52514,
-        "pre_tourn_pageviews": 350,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 08:41",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 13:51",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "156"
+        "country": "POR",
+        "dg_id": 27149,
+        "dg_rank": 330,
+        "owgr_rank": 240,
+        "player_name": "Da Costa Rodrigues, Daniel",
+        "player_num": 65956,
+        "pre_tourn_pageviews": 46,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 14509,
-        "dg_rank": 241,
-        "owgr_rank": 211,
-        "player_name": "Dahmen, Joel",
-        "player_num": 34076,
-        "pre_tourn_pageviews": 650,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 07:57",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 13:07",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "115"
+        "country": "AUS",
+        "dg_id": 17786,
+        "dg_rank": null,
+        "owgr_rank": 336,
+        "player_name": "Davis, Cam",
+        "player_num": 45157,
+        "pre_tourn_pageviews": 73,
+        "teetimes": [],
+        "tour_rank": "202"
       },
       {
         "am": 0,
-        "country": "CHN",
-        "dg_id": 16757,
-        "dg_rank": 160,
-        "owgr_rank": 192,
-        "player_name": "Dou, Zecheng",
-        "player_num": 37338,
-        "pre_tourn_pageviews": 343,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 13:40",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 08:30",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "117"
+        "country": "ESP",
+        "dg_id": 22259,
+        "dg_rank": 223,
+        "owgr_rank": 237,
+        "player_name": "Del Rey, Alejandro",
+        "player_num": 50762,
+        "pre_tourn_pageviews": 160,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
-        "country": "BEL",
-        "dg_id": 22002,
-        "dg_rank": 132,
-        "owgr_rank": 168,
-        "player_name": "Dumont De Chassart, Adrien",
-        "player_num": 50497,
-        "pre_tourn_pageviews": 532,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 08:41",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 13:51",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "103"
+        "country": "RSA",
+        "dg_id": 19421,
+        "dg_rank": 141,
+        "owgr_rank": 121,
+        "player_name": "Du Plessis, Hennie",
+        "player_num": 47497,
+        "pre_tourn_pageviews": 240,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 18187,
-        "dg_rank": 367,
-        "owgr_rank": 485,
-        "player_name": "Duncan, Tyler",
-        "player_num": 45609,
-        "pre_tourn_pageviews": 395,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 06:40",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 11:50",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "188"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 28270,
-        "dg_rank": 363,
-        "owgr_rank": 360,
-        "player_name": "Dunlap, Nick",
-        "player_num": 59866,
-        "pre_tourn_pageviews": 415,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 07:02",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 12:12",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "171"
+        "country": "COL",
+        "dg_id": 22833,
+        "dg_rank": 101,
+        "owgr_rank": 53,
+        "player_name": "Echavarria, Nico",
+        "player_num": 51349,
+        "pre_tourn_pageviews": 107,
+        "teetimes": [],
+        "tour_rank": "40"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 26653,
-        "dg_rank": 159,
-        "owgr_rank": 180,
+        "dg_rank": 163,
+        "owgr_rank": 189,
         "player_name": "Eckroat, Austin",
         "player_num": 57362,
-        "pre_tourn_pageviews": 1423,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 12:01",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 06:51",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "110"
+        "pre_tourn_pageviews": 70,
+        "teetimes": [],
+        "tour_rank": "114"
       },
       {
         "am": 0,
-        "country": "CAN",
-        "dg_id": 21883,
-        "dg_rank": 148,
-        "owgr_rank": 186,
-        "player_name": "Ewart, A.J.",
-        "player_num": 50286,
-        "pre_tourn_pageviews": 1179,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 08:19",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 13:29",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "88"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 26656,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Feagles, Michael",
-        "player_num": 57124,
-        "pre_tourn_pageviews": 116,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 08:30",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 13:40",
-            "wave": "late"
-          }
-        ],
+        "country": "ESP",
+        "dg_id": 12988,
+        "dg_rank": 202,
+        "owgr_rank": 135,
+        "player_name": "Elvira Mijares, Ignacio",
+        "player_num": 39201,
+        "pre_tourn_pageviews": 46,
+        "teetimes": [],
         "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 11676,
-        "dg_rank": 102,
-        "owgr_rank": 113,
-        "player_name": "Finau, Tony",
-        "player_num": 29725,
-        "pre_tourn_pageviews": 1209,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 12:23",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 07:13",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "77"
+        "dg_id": 14577,
+        "dg_rank": 22,
+        "owgr_rank": 29,
+        "player_name": "English, Harris",
+        "player_num": 34099,
+        "pre_tourn_pageviews": 249,
+        "teetimes": [],
+        "tour_rank": "45"
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 25094,
-        "dg_rank": 181,
-        "owgr_rank": 207,
-        "player_name": "Fishburn, Patrick",
-        "player_num": 54576,
-        "pre_tourn_pageviews": 398,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 08:19",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 13:29",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "157"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 23709,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Fisher, Darin",
-        "player_num": 52497,
-        "pre_tourn_pageviews": 163,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 08:41",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 13:51",
-            "wave": "late"
-          }
-        ],
+        "country": "SCO",
+        "dg_id": 21646,
+        "dg_rank": 131,
+        "owgr_rank": 191,
+        "player_name": "Ferguson, Ewen",
+        "player_num": 50223,
+        "pre_tourn_pageviews": 143,
+        "teetimes": [],
         "tour_rank": null
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 26657,
-        "dg_rank": 126,
-        "owgr_rank": 123,
-        "player_name": "Fisk, Steven",
-        "player_num": 57123,
-        "pre_tourn_pageviews": 572,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 12:23",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 07:13",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "96"
+        "country": "ENG",
+        "dg_id": 25362,
+        "dg_rank": 24,
+        "owgr_rank": 62,
+        "player_name": "Fitzpatrick, Alex",
+        "player_num": 55721,
+        "pre_tourn_pageviews": 542,
+        "teetimes": [],
+        "tour_rank": "17"
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 12965,
-        "dg_rank": 49,
-        "owgr_rank": 42,
-        "player_name": "Fowler, Rickie",
-        "player_num": 32102,
-        "pre_tourn_pageviews": 2261,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 12:34",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 07:24",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "33"
+        "country": "ENG",
+        "dg_id": 17646,
+        "dg_rank": 4,
+        "owgr_rank": 4,
+        "player_name": "Fitzpatrick, Matt",
+        "player_num": 40098,
+        "pre_tourn_pageviews": 612,
+        "teetimes": [],
+        "tour_rank": "2"
+      },
+      {
+        "am": 0,
+        "country": "ENG",
+        "dg_id": 12294,
+        "dg_rank": 5,
+        "owgr_rank": 9,
+        "player_name": "Fleetwood, Tommy",
+        "player_num": 30911,
+        "pre_tourn_pageviews": 532,
+        "teetimes": [],
+        "tour_rank": "11"
+      },
+      {
+        "am": 0,
+        "country": "SCO",
+        "dg_id": 16475,
+        "dg_rank": 255,
+        "owgr_rank": 201,
+        "player_name": "Forrest, Grant",
+        "player_num": 37066,
+        "pre_tourn_pageviews": 222,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "NZL",
+        "dg_id": 11889,
+        "dg_rank": 61,
+        "owgr_rank": 56,
+        "player_name": "Fox, Ryan",
+        "player_num": 29936,
+        "pre_tourn_pageviews": 282,
+        "teetimes": [],
+        "tour_rank": "61"
       },
       {
         "am": 0,
         "country": "RSA",
         "dg_id": 11955,
-        "dg_rank": 308,
-        "owgr_rank": 412,
+        "dg_rank": 313,
+        "owgr_rank": 419,
         "player_name": "Frittelli, Dylan",
         "player_num": 29970,
-        "pre_tourn_pageviews": 358,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 13:18",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 08:08",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 56,
+        "teetimes": [],
         "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 11451,
-        "dg_rank": 226,
-        "owgr_rank": 240,
-        "player_name": "Garnett, Brice",
-        "player_num": 29535,
-        "pre_tourn_pageviews": 615,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 12:01",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 06:51",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "112"
+        "dg_id": 29767,
+        "dg_rank": 33,
+        "owgr_rank": 28,
+        "player_name": "Gerard, Ryan",
+        "player_num": 59018,
+        "pre_tourn_pageviews": 197,
+        "teetimes": [],
+        "tour_rank": "22"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 24550,
-        "dg_rank": 82,
-        "owgr_rank": 174,
+        "dg_rank": 65,
+        "owgr_rank": 155,
         "player_name": "Ghim, Doug",
         "player_num": 52375,
-        "pre_tourn_pageviews": 2021,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 07:57",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 13:07",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "98"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 7399,
-        "dg_rank": 201,
-        "owgr_rank": 115,
-        "player_name": "Glover, Lucas",
-        "player_num": 25900,
-        "pre_tourn_pageviews": 1311,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 07:24",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 12:34",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "119"
-      },
-      {
-        "am": 0,
-        "country": "ARG",
-        "dg_id": 8571,
-        "dg_rank": 302,
-        "owgr_rank": 433,
-        "player_name": "Gomez, Fabian",
-        "player_num": 28679,
-        "pre_tourn_pageviews": 284,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 06:51",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 12:01",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "197"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 24837,
-        "dg_rank": 335,
-        "owgr_rank": 362,
-        "player_name": "Goodwin, Noah",
-        "player_num": 55165,
-        "pre_tourn_pageviews": 151,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 13:40",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 08:30",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": null
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 26660,
-        "dg_rank": null,
-        "owgr_rank": 457,
-        "player_name": "Gordon, Will",
-        "player_num": 56762,
-        "pre_tourn_pageviews": 122,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 12:45",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 07:35",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": null
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 27774,
-        "dg_rank": 19,
-        "owgr_rank": 14,
-        "player_name": "Gotterup, Chris",
-        "player_num": 59095,
-        "pre_tourn_pageviews": 3682,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 12:45",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 07:35",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "12"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 23465,
-        "dg_rank": 93,
-        "owgr_rank": 73,
-        "player_name": "Greyserman, Max",
-        "player_num": 51977,
-        "pre_tourn_pageviews": 1405,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 12:01",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 06:51",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 306,
+        "teetimes": [],
         "tour_rank": "87"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 24968,
-        "dg_rank": 18,
-        "owgr_rank": 16,
-        "player_name": "Griffin, Ben",
-        "player_num": 54591,
-        "pre_tourn_pageviews": 4673,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 07:35",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 12:45",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "31"
+        "dg_id": 27774,
+        "dg_rank": 16,
+        "owgr_rank": 7,
+        "player_name": "Gotterup, Chris",
+        "player_num": 59095,
+        "pre_tourn_pageviews": 1772,
+        "teetimes": [],
+        "tour_rank": "6"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 15330,
-        "dg_rank": 191,
-        "owgr_rank": 222,
-        "player_name": "Griffin, Lanto",
-        "player_num": 35310,
-        "pre_tourn_pageviews": 273,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 12:01",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 06:51",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "150"
+        "dg_id": 23465,
+        "dg_rank": 99,
+        "owgr_rank": 75,
+        "player_name": "Greyserman, Max",
+        "player_num": 51977,
+        "pre_tourn_pageviews": 130,
+        "teetimes": [],
+        "tour_rank": "91"
       },
       {
         "am": 0,
-        "country": "ARG",
-        "dg_id": 12808,
-        "dg_rank": 136,
-        "owgr_rank": 109,
-        "player_name": "Grillo, Emiliano",
-        "player_num": 31646,
-        "pre_tourn_pageviews": 2837,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 12:56",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 07:46",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "105"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 32683,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Gutschewski, Luke",
-        "player_num": 67202,
-        "pre_tourn_pageviews": 112,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 08:41",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 13:51",
-            "wave": "late"
-          }
-        ],
+        "country": "FRA",
+        "dg_id": 10201,
+        "dg_rank": 185,
+        "owgr_rank": 188,
+        "player_name": "Guerrier, Julien",
+        "player_num": 28340,
+        "pre_tourn_pageviews": 44,
+        "teetimes": [],
         "tour_rank": null
       },
       {
         "am": 0,
-        "country": "CAN",
-        "dg_id": 13965,
-        "dg_rank": 264,
-        "owgr_rank": 262,
-        "player_name": "Hadwin, Adam",
-        "player_num": 33399,
-        "pre_tourn_pageviews": 413,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 13:07",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 07:57",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "173"
+        "country": "USA",
+        "dg_id": 23892,
+        "dg_rank": null,
+        "owgr_rank": 332,
+        "player_name": "Gumberg, Jordan",
+        "player_num": 51989,
+        "pre_tourn_pageviews": 27,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "ENG",
+        "dg_id": 27194,
+        "dg_rank": 62,
+        "owgr_rank": 72,
+        "player_name": "Hall, Harry",
+        "player_num": 57975,
+        "pre_tourn_pageviews": 164,
+        "teetimes": [],
+        "tour_rank": "55"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 19865,
-        "dg_rank": 430,
+        "dg_id": 8825,
+        "dg_rank": 53,
+        "owgr_rank": 63,
+        "player_name": "Harman, Brian",
+        "player_num": 27644,
+        "pre_tourn_pageviews": 214,
+        "teetimes": [],
+        "tour_rank": "72"
+      },
+      {
+        "am": 0,
+        "country": "IRL",
+        "dg_id": 5716,
+        "dg_rank": 356,
         "owgr_rank": null,
-        "player_name": "Hardy, Nick",
-        "player_num": 47988,
-        "pre_tourn_pageviews": 217,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 08:08",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 13:18",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "191"
+        "player_name": "Harrington, Padraig",
+        "player_num": 20766,
+        "pre_tourn_pageviews": 215,
+        "teetimes": [],
+        "tour_rank": "172"
       },
       {
         "am": 0,
-        "country": "RSA",
-        "dg_id": 24342,
-        "dg_rank": 186,
-        "owgr_rank": 104,
-        "player_name": "Higgo, Garrick",
-        "player_num": 54421,
-        "pre_tourn_pageviews": 533,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 12:23",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 07:13",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "149"
+        "country": "ENG",
+        "dg_id": 14796,
+        "dg_rank": 29,
+        "owgr_rank": 21,
+        "player_name": "Hatton, Tyrrell",
+        "player_num": 34363,
+        "pre_tourn_pageviews": 908,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 14140,
-        "dg_rank": 340,
-        "owgr_rank": 326,
-        "player_name": "Higgs, Harry",
-        "player_num": 33597,
-        "pre_tourn_pageviews": 392,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 12:12",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 07:02",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "190"
+        "country": "ESP",
+        "dg_id": 24127,
+        "dg_rank": 415,
+        "owgr_rank": 305,
+        "player_name": "Hidalgo Portillo, Angel",
+        "player_num": 64594,
+        "pre_tourn_pageviews": 51,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 28469,
         "dg_rank": null,
-        "owgr_rank": 179,
+        "owgr_rank": 186,
         "player_name": "Highsmith, Joe",
         "player_num": 60067,
-        "pre_tourn_pageviews": 231,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 12:34",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 07:24",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "161"
+        "pre_tourn_pageviews": 33,
+        "teetimes": [],
+        "tour_rank": "165"
       },
       {
         "am": 0,
-        "country": "JPN",
-        "dg_id": 20954,
-        "dg_rank": 358,
-        "owgr_rank": 286,
-        "player_name": "Hirata, Kensei",
-        "player_num": 49120,
-        "pre_tourn_pageviews": 270,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 13:18",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 08:08",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "153"
+        "country": "SCO",
+        "dg_id": 25131,
+        "dg_rank": 135,
+        "owgr_rank": 139,
+        "player_name": "Hill, Calum",
+        "player_num": 55707,
+        "pre_tourn_pageviews": 133,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
-        "country": "JPN",
-        "dg_id": 22760,
-        "dg_rank": 89,
-        "owgr_rank": 64,
-        "player_name": "Hisatsune, Ryo",
-        "player_num": 51287,
-        "pre_tourn_pageviews": 2075,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 07:46",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 12:56",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "43"
+        "country": "NZL",
+        "dg_id": 21362,
+        "dg_rank": 80,
+        "owgr_rank": 102,
+        "player_name": "Hillier, Daniel",
+        "player_num": 49813,
+        "pre_tourn_pageviews": 191,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 25157,
-        "dg_rank": 169,
-        "owgr_rank": 155,
-        "player_name": "Hodges, Lee",
-        "player_num": 54628,
-        "pre_tourn_pageviews": 699,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 06:51",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 12:01",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "123"
-      },
-      {
-        "am": 0,
-        "country": "PHI",
-        "dg_id": 23504,
-        "dg_rank": 99,
-        "owgr_rank": 92,
-        "player_name": "Hoey, Rico",
-        "player_num": 51696,
-        "pre_tourn_pageviews": 1590,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 07:57",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 13:07",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "104"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 15575,
-        "dg_rank": 196,
-        "owgr_rank": 110,
-        "player_name": "Hoge, Tom",
-        "player_num": 35532,
-        "pre_tourn_pageviews": 1045,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 08:08",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 13:18",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "75"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 17538,
-        "dg_rank": 88,
-        "owgr_rank": 112,
-        "player_name": "Homa, Max",
-        "player_num": 39977,
-        "pre_tourn_pageviews": 2412,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 07:24",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 12:34",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "72"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 15470,
-        "dg_rank": 145,
-        "owgr_rank": 158,
-        "player_name": "Hossler, Beau",
-        "player_num": 35461,
-        "pre_tourn_pageviews": 777,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 06:40",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 11:50",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "116"
-      },
-      {
-        "am": 1,
-        "country": "USA",
-        "dg_id": 33759,
+        "dg_id": 5768,
         "dg_rank": null,
         "owgr_rank": null,
-        "player_name": "Howell, Mason",
-        "player_num": 68607,
-        "pre_tourn_pageviews": 251,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 13:29",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 08:19",
-            "wave": "early"
-          }
-        ],
+        "player_name": "Hoffman, Charley",
+        "player_num": 12716,
+        "pre_tourn_pageviews": 41,
+        "teetimes": [],
+        "tour_rank": "204"
+      },
+      {
+        "am": 0,
+        "country": "DEN",
+        "dg_id": 23602,
+        "dg_rank": 41,
+        "owgr_rank": 34,
+        "player_name": "Hojgaard, Nicolai",
+        "player_num": 52453,
+        "pre_tourn_pageviews": 767,
+        "teetimes": [],
+        "tour_rank": "26"
+      },
+      {
+        "am": 0,
+        "country": "DEN",
+        "dg_id": 23838,
+        "dg_rank": 118,
+        "owgr_rank": 86,
+        "player_name": "Hojgaard, Rasmus",
+        "player_num": 52686,
+        "pre_tourn_pageviews": 273,
+        "teetimes": [],
+        "tour_rank": "117"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 11276,
+        "dg_rank": 144,
+        "owgr_rank": 157,
+        "player_name": "Horschel, Billy",
+        "player_num": 29420,
+        "pre_tourn_pageviews": 87,
+        "teetimes": [],
+        "tour_rank": "96"
+      },
+      {
+        "am": 0,
+        "country": "JPN",
+        "dg_id": 19190,
+        "dg_rank": 395,
+        "owgr_rank": 475,
+        "player_name": "Hoshino, Rikuya",
+        "player_num": 47056,
+        "pre_tourn_pageviews": 39,
+        "teetimes": [],
         "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "NOR",
+        "dg_id": 18841,
+        "dg_rank": 17,
+        "owgr_rank": 13,
+        "player_name": "Hovland, Viktor",
+        "player_num": 46717,
+        "pre_tourn_pageviews": 484,
+        "teetimes": [],
+        "tour_rank": "20"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 16333,
-        "dg_rank": 215,
-        "owgr_rank": 127,
+        "dg_rank": 204,
+        "owgr_rank": 130,
         "player_name": "Hubbard, Mark",
         "player_num": 36801,
-        "pre_tourn_pageviews": 806,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 06:51",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 12:01",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "99"
-      },
-      {
-        "am": 0,
-        "country": "CAN",
-        "dg_id": 15556,
-        "dg_rank": 139,
-        "owgr_rank": 145,
-        "player_name": "Hughes, Mackenzie",
-        "player_num": 35506,
-        "pre_tourn_pageviews": 556,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 07:46",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 12:56",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "124"
+        "pre_tourn_pageviews": 62,
+        "teetimes": [],
+        "tour_rank": "101"
       },
       {
         "am": 0,
         "country": "KOR",
         "dg_id": 17488,
-        "dg_rank": 85,
-        "owgr_rank": 78,
+        "dg_rank": 102,
+        "owgr_rank": 80,
         "player_name": "Im, Sungjae",
         "player_num": 39971,
-        "pre_tourn_pageviews": 1736,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 12:23",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 07:13",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 152,
+        "teetimes": [],
         "tour_rank": "60"
       },
       {
         "am": 0,
-        "country": "GER",
-        "dg_id": 16394,
-        "dg_rank": 168,
-        "owgr_rank": 96,
-        "player_name": "Jaeger, Stephan",
-        "player_num": 36799,
-        "pre_tourn_pageviews": 769,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 07:35",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 12:45",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "80"
+        "country": "SCO",
+        "dg_id": 11397,
+        "dg_rank": 497,
+        "owgr_rank": 440,
+        "player_name": "Jamieson, Scott",
+        "player_num": 31138,
+        "pre_tourn_pageviews": 46,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "RSA",
+        "dg_id": 26947,
+        "dg_rank": 119,
+        "owgr_rank": 85,
+        "player_name": "Jarvis, Casey",
+        "player_num": 57688,
+        "pre_tourn_pageviews": 149,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 6986,
-        "dg_rank": 158,
-        "owgr_rank": 430,
-        "player_name": "Johnson, Zach",
-        "player_num": 24024,
-        "pre_tourn_pageviews": 1033,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 12:34",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 07:24",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "200"
+        "dg_id": 32449,
+        "dg_rank": null,
+        "owgr_rank": null,
+        "player_name": "Johnston, Ryggs",
+        "player_num": 63617,
+        "pre_tourn_pageviews": 123,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
         "country": "JPN",
-        "dg_id": 19729,
-        "dg_rank": 164,
-        "owgr_rank": 154,
-        "player_name": "Kanaya, Takumi",
-        "player_num": 47917,
-        "pre_tourn_pageviews": 384,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 11:50",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 06:40",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "131"
+        "dg_id": 28268,
+        "dg_rank": 115,
+        "owgr_rank": 105,
+        "player_name": "Kaneko, Kota",
+        "player_num": 61148,
+        "pre_tourn_pageviews": 76,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 21889,
-        "dg_rank": 338,
-        "owgr_rank": 257,
-        "player_name": "Kang, Jeffrey",
-        "player_num": 47393,
-        "pre_tourn_pageviews": 159,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 08:41",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 13:51",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "151"
+        "country": "JPN",
+        "dg_id": 20448,
+        "dg_rank": 424,
+        "owgr_rank": 394,
+        "player_name": "Katsuragawa, Yuto",
+        "player_num": 48632,
+        "pre_tourn_pageviews": 31,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 32457,
-        "dg_rank": 115,
-        "owgr_rank": 77,
+        "dg_rank": 126,
+        "owgr_rank": 81,
         "player_name": "Keefer, Johnny",
         "player_num": 63454,
-        "pre_tourn_pageviews": 1818,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 08:08",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 13:18",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "83"
+        "pre_tourn_pageviews": 115,
+        "teetimes": [],
+        "tour_rank": "84"
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 15004,
-        "dg_rank": 190,
-        "owgr_rank": 256,
-        "player_name": "Kim, Chan",
-        "player_num": 34587,
-        "pre_tourn_pageviews": 518,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 08:19",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 13:29",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "176"
+        "country": "KOR",
+        "dg_id": 27759,
+        "dg_rank": null,
+        "owgr_rank": 462,
+        "player_name": "Kim, Baekjun",
+        "player_num": 66834,
+        "pre_tourn_pageviews": 57,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 17543,
-        "dg_rank": 60,
-        "owgr_rank": 48,
+        "dg_rank": 71,
+        "owgr_rank": 51,
         "player_name": "Kim, Michael",
         "player_num": 39975,
-        "pre_tourn_pageviews": 1868,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 12:01",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 06:51",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "62"
+        "pre_tourn_pageviews": 110,
+        "teetimes": [],
+        "tour_rank": "63"
+      },
+      {
+        "am": 0,
+        "country": "KOR",
+        "dg_id": 14609,
+        "dg_rank": 14,
+        "owgr_rank": 22,
+        "player_name": "Kim, Si Woo",
+        "player_num": 37455,
+        "pre_tourn_pageviews": 250,
+        "teetimes": [],
+        "tour_rank": "7"
       },
       {
         "am": 0,
         "country": "KOR",
         "dg_id": 24766,
-        "dg_rank": 70,
+        "dg_rank": 69,
         "owgr_rank": 66,
         "player_name": "Kim, Tom",
         "player_num": 55182,
-        "pre_tourn_pageviews": 3875,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 12:45",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 07:35",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "57"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 13470,
-        "dg_rank": null,
-        "owgr_rank": 384,
-        "player_name": "Kizzire, Patton",
-        "player_num": 32757,
-        "pre_tourn_pageviews": 213,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 12:01",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 06:51",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "152"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 16395,
-        "dg_rank": 111,
-        "owgr_rank": 169,
-        "player_name": "Kohles, Ben",
-        "player_num": 36884,
-        "pre_tourn_pageviews": 2117,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 08:08",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 13:18",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "140"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 32319,
-        "dg_rank": 41,
-        "owgr_rank": 218,
-        "player_name": "Koivun, Jackson",
-        "player_num": 66701,
-        "pre_tourn_pageviews": 4329,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 07:35",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 12:45",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": null
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 6169,
-        "dg_rank": 122,
-        "owgr_rank": 181,
-        "player_name": "Kuchar, Matt",
-        "player_num": 23108,
-        "pre_tourn_pageviews": 1009,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 12:45",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 07:35",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "141"
-      },
-      {
-        "am": 0,
-        "country": "SCO",
-        "dg_id": 9586,
-        "dg_rank": 436,
-        "owgr_rank": 477,
-        "player_name": "Laird, Martin",
-        "player_num": 27936,
-        "pre_tourn_pageviews": 219,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 13:18",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 08:08",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "204"
-      },
-      {
-        "am": 0,
-        "country": "RSA",
-        "dg_id": 24343,
-        "dg_rank": 420,
-        "owgr_rank": 260,
-        "player_name": "Lamprecht, Christo",
-        "player_num": 54422,
-        "pre_tourn_pageviews": 166,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 08:19",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 13:29",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "184"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 21943,
-        "dg_rank": 268,
-        "owgr_rank": 238,
-        "player_name": "Lebioda, Hank",
-        "player_num": 49766,
-        "pre_tourn_pageviews": 219,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 12:12",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 07:02",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "130"
-      },
-      {
-        "am": 0,
-        "country": "CHN",
-        "dg_id": 15310,
-        "dg_rank": 149,
-        "owgr_rank": 95,
-        "player_name": "Li, Haotong",
-        "player_num": 35296,
-        "pre_tourn_pageviews": 821,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 08:30",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 13:40",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "109"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 16713,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Lindheim, Nicholas",
-        "player_num": 37278,
-        "pre_tourn_pageviews": 170,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 13:40",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 08:30",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": null
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 15980,
-        "dg_rank": 204,
-        "owgr_rank": 108,
-        "player_name": "Lipsky, David",
-        "player_num": 36326,
-        "pre_tourn_pageviews": 845,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 07:02",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 12:12",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "74"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 7960,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "List, Luke",
-        "player_num": 27129,
-        "pre_tourn_pageviews": 214,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 06:40",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 11:50",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "192"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 17723,
-        "dg_rank": 375,
-        "owgr_rank": 265,
-        "player_name": "Lower, Justin",
-        "player_num": 40162,
-        "pre_tourn_pageviews": 245,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 13:07",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 07:57",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "175"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 14926,
-        "dg_rank": 379,
-        "owgr_rank": null,
-        "player_name": "Malnati, Peter",
-        "player_num": 34466,
-        "pre_tourn_pageviews": 195,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 13:07",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 07:57",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "163"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 14007,
-        "dg_rank": null,
-        "owgr_rank": 490,
-        "player_name": "Martin, Ben",
-        "player_num": 33413,
-        "pre_tourn_pageviews": 190,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 12:56",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 07:46",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "158"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 19870,
-        "dg_rank": 67,
-        "owgr_rank": 102,
-        "player_name": "McCarthy, Denny",
-        "player_num": 47993,
-        "pre_tourn_pageviews": 3226,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 11:50",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 06:40",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "89"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 23505,
-        "dg_rank": 91,
-        "owgr_rank": 94,
-        "player_name": "McGreevy, Max",
-        "player_num": 51950,
-        "pre_tourn_pageviews": 1090,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 08:08",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 13:18",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "108"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 28159,
-        "dg_rank": 65,
-        "owgr_rank": 89,
-        "player_name": "Meissner, Mac",
-        "player_num": 59143,
-        "pre_tourn_pageviews": 1743,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 13:07",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 07:57",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "79"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 13367,
-        "dg_rank": 441,
-        "owgr_rank": 471,
-        "player_name": "Merritt, Troy",
-        "player_num": 32640,
-        "pre_tourn_pageviews": 308,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 06:51",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 12:01",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "196"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 17365,
-        "dg_rank": 34,
-        "owgr_rank": 68,
-        "player_name": "Mitchell, Keith",
-        "player_num": 39546,
-        "pre_tourn_pageviews": 3251,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 12:34",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 07:24",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "44"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 21944,
-        "dg_rank": 112,
-        "owgr_rank": 138,
-        "player_name": "Moore, Taylor",
-        "player_num": 49947,
-        "pre_tourn_pageviews": 995,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 12:12",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 07:02",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "81"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 29770,
-        "dg_rank": 137,
-        "owgr_rank": 129,
-        "player_name": "Mouw, William",
-        "player_num": 63121,
-        "pre_tourn_pageviews": 916,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 07:13",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 12:23",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "107"
-      },
-      {
-        "am": 0,
-        "country": "JPN",
-        "dg_id": 21074,
-        "dg_rank": 157,
-        "owgr_rank": 139,
-        "player_name": "Nakajima, Keita",
-        "player_num": 49228,
-        "pre_tourn_pageviews": 687,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 13:51",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 08:41",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "144"
-      },
-      {
-        "am": 0,
-        "country": "KOR",
-        "dg_id": 11117,
-        "dg_rank": 223,
-        "owgr_rank": 336,
-        "player_name": "Noh, S.Y.",
-        "player_num": 29289,
-        "pre_tourn_pageviews": 439,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 07:02",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 12:12",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "172"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 23475,
-        "dg_rank": 77,
-        "owgr_rank": 65,
-        "player_name": "Novak, Andrew",
-        "player_num": 51997,
-        "pre_tourn_pageviews": 2212,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 12:23",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 07:13",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "76"
-      },
-      {
-        "am": 0,
-        "country": "ARG",
-        "dg_id": 16796,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Nunez, Augusto",
-        "player_num": 36724,
-        "pre_tourn_pageviews": 111,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 13:51",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 08:41",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": null
-      },
-      {
-        "am": 0,
-        "country": "SWE",
-        "dg_id": 25475,
-        "dg_rank": 320,
-        "owgr_rank": 261,
-        "player_name": "Nyholm, Pontus",
-        "player_num": 55851,
-        "pre_tourn_pageviews": 206,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 13:18",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 08:08",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "129"
-      },
-      {
-        "am": 0,
-        "country": "DEN",
-        "dg_id": 13412,
-        "dg_rank": 110,
-        "owgr_rank": 134,
-        "player_name": "Olesen, Thorbjorn",
-        "player_num": 33968,
-        "pre_tourn_pageviews": 563,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 12:56",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 07:46",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "159"
-      },
-      {
-        "am": 0,
-        "country": "GER",
-        "dg_id": 22087,
-        "dg_rank": 453,
-        "owgr_rank": 304,
-        "player_name": "Paul, Jeremy",
-        "player_num": 50582,
-        "pre_tourn_pageviews": 295,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 13:29",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 08:19",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "178"
-      },
-      {
-        "am": 0,
-        "country": "FRA",
-        "dg_id": 19960,
-        "dg_rank": 173,
-        "owgr_rank": 269,
-        "player_name": "Pavon, Matthieu",
-        "player_num": 48153,
-        "pre_tourn_pageviews": 689,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 06:51",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 12:01",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "100"
-      },
-      {
-        "am": 0,
-        "country": "CAN",
-        "dg_id": 17780,
-        "dg_rank": 94,
-        "owgr_rank": 93,
-        "player_name": "Pendrith, Taylor",
-        "player_num": 40250,
-        "pre_tourn_pageviews": 891,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 07:24",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 12:34",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "92"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 16341,
-        "dg_rank": 256,
-        "owgr_rank": 252,
-        "player_name": "Peterson, Paul",
-        "player_num": 36824,
-        "pre_tourn_pageviews": 426,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 13:29",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 08:19",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "145"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 27164,
-        "dg_rank": 277,
-        "owgr_rank": 173,
-        "player_name": "Phillips, Chandler",
-        "player_num": 57900,
-        "pre_tourn_pageviews": 323,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 13:07",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 07:57",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "114"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 21554,
-        "dg_rank": 50,
-        "owgr_rank": 32,
-        "player_name": "Poston, J.T.",
-        "player_num": 49771,
-        "pre_tourn_pageviews": 2887,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 07:13",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 12:23",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "23"
-      },
-      {
-        "am": 0,
-        "country": "RSA",
-        "dg_id": 27900,
-        "dg_rank": 116,
-        "owgr_rank": 74,
-        "player_name": "Potgieter, Aldrich",
-        "player_num": 63343,
-        "pre_tourn_pageviews": 1956,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 12:23",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 07:13",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 566,
+        "teetimes": [],
         "tour_rank": "58"
       },
       {
         "am": 0,
-        "country": "IRL",
-        "dg_id": 10104,
-        "dg_rank": 141,
-        "owgr_rank": 198,
-        "player_name": "Power, Seamus",
-        "player_num": 28252,
-        "pre_tourn_pageviews": 894,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 07:46",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "113"
-      },
-      {
-        "am": 0,
         "country": "USA",
-        "dg_id": 14704,
-        "dg_rank": 81,
-        "owgr_rank": 88,
-        "player_name": "Putnam, Andrew",
-        "player_num": 34256,
-        "pre_tourn_pageviews": 1385,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 07:02",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 12:12",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "65"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 19840,
-        "dg_rank": 172,
-        "owgr_rank": 172,
-        "player_name": "Ramey, Chad",
-        "player_num": 47983,
-        "pre_tourn_pageviews": 312,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 12:56",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 07:46",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "120"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 19872,
-        "dg_rank": 488,
-        "owgr_rank": 167,
-        "player_name": "Riley, Davis",
-        "player_num": 47995,
-        "pre_tourn_pageviews": 338,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 07:13",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 12:23",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "136"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 18424,
-        "dg_rank": 209,
-        "owgr_rank": 135,
-        "player_name": "Roy, Kevin",
-        "player_num": 39335,
-        "pre_tourn_pageviews": 831,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 07:46",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 12:56",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "90"
-      },
-      {
-        "am": 0,
-        "country": "COL",
-        "dg_id": 16591,
-        "dg_rank": 455,
-        "owgr_rank": null,
-        "player_name": "Rozo, Marcelo",
-        "player_num": 37076,
-        "pre_tourn_pageviews": 271,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 08:30",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 13:40",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "195"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 30814,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Sargent, Gordon",
-        "player_num": 64442,
-        "pre_tourn_pageviews": 205,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 13:51",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 08:41",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "164"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 19477,
-        "dg_rank": 475,
-        "owgr_rank": 171,
-        "player_name": "Schenk, Adam",
-        "player_num": 47347,
-        "pre_tourn_pageviews": 352,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 12:34",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 07:24",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "143"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 32055,
-        "dg_rank": 259,
-        "owgr_rank": 193,
-        "player_name": "Shipley, Neal",
-        "player_num": 63807,
-        "pre_tourn_pageviews": 456,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 08:30",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 13:40",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "179"
-      },
-      {
-        "am": 0,
-        "country": "CAN",
-        "dg_id": 17381,
-        "dg_rank": 288,
-        "owgr_rank": 276,
-        "player_name": "Silverman, Ben",
-        "player_num": 39327,
-        "pre_tourn_pageviews": 337,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 11:50",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 06:40",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "146"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 11049,
-        "dg_rank": 200,
-        "owgr_rank": 476,
-        "player_name": "Simpson, Webb",
-        "player_num": 29221,
-        "pre_tourn_pageviews": 301,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 07:24",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 12:34",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "166"
-      },
-      {
-        "am": 0,
-        "country": "ENG",
-        "dg_id": 10873,
-        "dg_rank": 225,
-        "owgr_rank": 271,
-        "player_name": "Skinns, David",
-        "player_num": 27139,
-        "pre_tourn_pageviews": 394,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 13:29",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 08:19",
-            "wave": "early"
-          }
-        ],
+        "dg_id": 12423,
+        "dg_rank": 139,
+        "owgr_rank": 110,
+        "player_name": "Kirk, Chris",
+        "player_num": 30926,
+        "pre_tourn_pageviews": 46,
+        "teetimes": [],
         "tour_rank": "139"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 22985,
-        "dg_rank": 150,
-        "owgr_rank": 101,
-        "player_name": "Smotherman, Austin",
-        "player_num": 50095,
-        "pre_tourn_pageviews": 1181,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 07:02",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 12:12",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "68"
+        "dg_id": 21891,
+        "dg_rank": 28,
+        "owgr_rank": 33,
+        "player_name": "Kitayama, Kurt",
+        "player_num": 48117,
+        "pre_tourn_pageviews": 524,
+        "teetimes": [],
+        "tour_rank": "30"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 14636,
-        "dg_rank": 56,
-        "owgr_rank": 53,
-        "player_name": "Spieth, Jordan",
-        "player_num": 34046,
-        "pre_tourn_pageviews": 2758,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 07:35",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 12:45",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "52"
+        "dg_id": 19396,
+        "dg_rank": 35,
+        "owgr_rank": 44,
+        "player_name": "Knapp, Jake",
+        "player_num": 47420,
+        "pre_tourn_pageviews": 382,
+        "teetimes": [],
+        "tour_rank": "37"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 21995,
-        "dg_rank": 267,
-        "owgr_rank": 287,
-        "player_name": "Springer, Hayden",
-        "player_num": 50484,
-        "pre_tourn_pageviews": 396,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 08:30",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 13:40",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "127"
+        "dg_id": 16243,
+        "dg_rank": 74,
+        "owgr_rank": 115,
+        "player_name": "Koepka, Brooks",
+        "player_num": 36689,
+        "pre_tourn_pageviews": 378,
+        "teetimes": [],
+        "tour_rank": "81"
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 23048,
-        "dg_rank": 322,
-        "owgr_rank": 337,
-        "player_name": "Stanger, Jimmy",
-        "player_num": 51600,
-        "pre_tourn_pageviews": 371,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 13:40",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 08:30",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "121"
+        "country": "RSA",
+        "dg_id": 16896,
+        "dg_rank": 370,
+        "owgr_rank": 242,
+        "player_name": "Kruyswijk, Jacques",
+        "player_num": 37446,
+        "pre_tourn_pageviews": 41,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
-        "am": 1,
-        "country": "USA",
-        "dg_id": 32089,
-        "dg_rank": 177,
+        "am": 0,
+        "country": "FRA",
+        "dg_id": 23733,
+        "dg_rank": 251,
+        "owgr_rank": 243,
+        "player_name": "LaCroix, Frederic",
+        "player_num": 52585,
+        "pre_tourn_pageviews": 38,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "SWE",
+        "dg_id": 14780,
+        "dg_rank": 349,
+        "owgr_rank": 156,
+        "player_name": "Lagergren, Joakim",
+        "player_num": 34317,
+        "pre_tourn_pageviews": 95,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "ESP",
+        "dg_id": 9133,
+        "dg_rank": null,
         "owgr_rank": null,
-        "player_name": "Stout, Preston",
-        "player_num": 66416,
-        "pre_tourn_pageviews": 631,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 08:19",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 13:29",
-            "wave": "late"
-          }
-        ],
+        "player_name": "Larrazabal, Pablo",
+        "player_num": 29670,
+        "pre_tourn_pageviews": 29,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "RSA",
+        "dg_id": 18105,
+        "dg_rank": 321,
+        "owgr_rank": 159,
+        "player_name": "Lawrence, Thriston",
+        "player_num": 45523,
+        "pre_tourn_pageviews": 90,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "KOR",
+        "dg_id": 13498,
+        "dg_rank": null,
+        "owgr_rank": 286,
+        "player_name": "Lee, Junghwan",
+        "player_num": 47443,
+        "pre_tourn_pageviews": 28,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "AUS",
+        "dg_id": 16841,
+        "dg_rank": 44,
+        "owgr_rank": 39,
+        "player_name": "Lee, Min Woo",
+        "player_num": 37378,
+        "pre_tourn_pageviews": 455,
+        "teetimes": [],
+        "tour_rank": "25"
+      },
+      {
+        "am": 0,
+        "country": "CHN",
+        "dg_id": 15310,
+        "dg_rank": 162,
+        "owgr_rank": 100,
+        "player_name": "Li, Haotong",
+        "player_num": 35296,
+        "pre_tourn_pageviews": 179,
+        "teetimes": [],
+        "tour_rank": "116"
+      },
+      {
+        "am": 0,
+        "country": "SWE",
+        "dg_id": 20084,
+        "dg_rank": 165,
+        "owgr_rank": 133,
+        "player_name": "Lindberg, Mikael",
+        "player_num": 48293,
+        "pre_tourn_pageviews": 134,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "FIN",
+        "dg_id": 20085,
+        "dg_rank": 56,
+        "owgr_rank": 114,
+        "player_name": "Lindell, Oliver",
+        "player_num": 48237,
+        "pre_tourn_pageviews": 297,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "IRL",
+        "dg_id": 13900,
+        "dg_rank": 27,
+        "owgr_rank": 45,
+        "player_name": "Lowry, Shane",
+        "player_num": 33204,
+        "pre_tourn_pageviews": 388,
+        "teetimes": [],
+        "tour_rank": "54"
+      },
+      {
+        "am": 0,
+        "country": "NED",
+        "dg_id": 10158,
+        "dg_rank": 312,
+        "owgr_rank": 238,
+        "player_name": "Luiten, Joost",
+        "player_num": 28300,
+        "pre_tourn_pageviews": 38,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "SCO",
+        "dg_id": 23323,
+        "dg_rank": 21,
+        "owgr_rank": 20,
+        "player_name": "MacIntyre, Robert",
+        "player_num": 52215,
+        "pre_tourn_pageviews": 704,
+        "teetimes": [],
+        "tour_rank": "34"
+      },
+      {
+        "am": 0,
+        "country": "ITA",
+        "dg_id": 11460,
+        "dg_rank": 305,
+        "owgr_rank": 340,
+        "player_name": "Manassero, Matteo",
+        "player_num": 33199,
+        "pre_tourn_pageviews": 61,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "ENG",
+        "dg_id": 24185,
+        "dg_rank": 338,
+        "owgr_rank": 256,
+        "player_name": "Mansell, Richard",
+        "player_num": 54190,
+        "pre_tourn_pageviews": 124,
+        "teetimes": [],
         "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 14852,
+        "dg_id": 28635,
+        "dg_rank": 76,
+        "owgr_rank": 57,
+        "player_name": "McCarty, Matt",
+        "player_num": 59141,
+        "pre_tourn_pageviews": 113,
+        "teetimes": [],
+        "tour_rank": "43"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 23505,
+        "dg_rank": 94,
+        "owgr_rank": 97,
+        "player_name": "McGreevy, Max",
+        "player_num": 51950,
+        "pre_tourn_pageviews": 57,
+        "teetimes": [],
+        "tour_rank": "112"
+      },
+      {
+        "am": 0,
+        "country": "NIR",
+        "dg_id": 10091,
+        "dg_rank": 2,
+        "owgr_rank": 2,
+        "player_name": "McIlroy, Rory",
+        "player_num": 28237,
+        "pre_tourn_pageviews": 738,
+        "teetimes": [],
+        "tour_rank": "13"
+      },
+      {
+        "am": 0,
+        "country": "NIR",
+        "dg_id": 22322,
+        "dg_rank": 132,
+        "owgr_rank": 136,
+        "player_name": "McKibbin, Tom",
+        "player_num": 50823,
+        "pre_tourn_pageviews": 177,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 28159,
+        "dg_rank": 50,
+        "owgr_rank": 84,
+        "player_name": "Meissner, Mac",
+        "player_num": 59143,
+        "pre_tourn_pageviews": 217,
+        "teetimes": [],
+        "tour_rank": "68"
+      },
+      {
+        "am": 0,
+        "country": "POL",
+        "dg_id": 14196,
+        "dg_rank": 393,
+        "owgr_rank": null,
+        "player_name": "Meronk, Adrian",
+        "player_num": 33674,
+        "pre_tourn_pageviews": 90,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "ITA",
+        "dg_id": 17357,
+        "dg_rank": 274,
+        "owgr_rank": 254,
+        "player_name": "Migliozzi, Guido",
+        "player_num": 39834,
+        "pre_tourn_pageviews": 62,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "ITA",
+        "dg_id": 7655,
+        "dg_rank": 259,
+        "owgr_rank": 298,
+        "player_name": "Molinari, Francesco",
+        "player_num": 25198,
+        "pre_tourn_pageviews": 61,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 21944,
+        "dg_rank": 125,
+        "owgr_rank": 147,
+        "player_name": "Moore, Taylor",
+        "player_num": 49947,
+        "pre_tourn_pageviews": 81,
+        "teetimes": [],
+        "tour_rank": "82"
+      },
+      {
+        "am": 0,
+        "country": "RSA",
+        "dg_id": 19429,
         "dg_rank": null,
         "owgr_rank": null,
-        "player_name": "Streb, Robert",
-        "player_num": 34431,
-        "pre_tourn_pageviews": 158,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 07:02",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 12:12",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "207"
+        "player_name": "Naidoo, Dylan",
+        "player_num": 47505,
+        "pre_tourn_pageviews": 28,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "JPN",
+        "dg_id": 21074,
+        "dg_rank": 158,
+        "owgr_rank": 136,
+        "player_name": "Nakajima, Keita",
+        "player_num": 49228,
+        "pre_tourn_pageviews": 80,
+        "teetimes": [],
+        "tour_rank": "143"
+      },
+      {
+        "am": 0,
+        "country": "DEN",
+        "dg_id": 23841,
+        "dg_rank": 128,
+        "owgr_rank": 90,
+        "player_name": "Neergaard-Petersen, Rasmus",
+        "player_num": 52689,
+        "pre_tourn_pageviews": 173,
+        "teetimes": [],
+        "tour_rank": "123"
+      },
+      {
+        "am": 0,
+        "country": "SWE",
+        "dg_id": 10419,
+        "dg_rank": 38,
+        "owgr_rank": 24,
+        "player_name": "Noren, Alex",
+        "player_num": 27349,
+        "pre_tourn_pageviews": 218,
+        "teetimes": [],
+        "tour_rank": "50"
+      },
+      {
+        "am": 0,
+        "country": "DEN",
+        "dg_id": 15676,
+        "dg_rank": 263,
+        "owgr_rank": 263,
+        "player_name": "Norgaard, Niklas",
+        "player_num": 35706,
+        "pre_tourn_pageviews": 157,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "RSA",
+        "dg_id": 7677,
+        "dg_rank": 287,
+        "owgr_rank": 92,
+        "player_name": "Norris, Shaun",
+        "player_num": 26328,
+        "pre_tourn_pageviews": 75,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 8480,
+        "dg_id": 23475,
+        "dg_rank": 93,
+        "owgr_rank": 65,
+        "player_name": "Novak, Andrew",
+        "player_num": 51997,
+        "pre_tourn_pageviews": 116,
+        "teetimes": [],
+        "tour_rank": "80"
+      },
+      {
+        "am": 0,
+        "country": "KOR",
+        "dg_id": 21072,
+        "dg_rank": 473,
+        "owgr_rank": 252,
+        "player_name": "Ok, Taehoon",
+        "player_num": 49226,
+        "pre_tourn_pageviews": 26,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "DEN",
+        "dg_id": 13412,
+        "dg_rank": 147,
+        "owgr_rank": 142,
+        "player_name": "Olesen, Thorbjorn",
+        "player_num": 33968,
+        "pre_tourn_pageviews": 112,
+        "teetimes": [],
+        "tour_rank": "161"
+      },
+      {
+        "am": 0,
+        "country": "UAE",
+        "dg_id": 14975,
+        "dg_rank": 343,
+        "owgr_rank": 261,
+        "player_name": "Otaegui, Adrian",
+        "player_num": 34575,
+        "pre_tourn_pageviews": 32,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "ENG",
+        "dg_id": 13764,
+        "dg_rank": 117,
+        "owgr_rank": 88,
+        "player_name": "Parry, John",
+        "player_num": 28723,
+        "pre_tourn_pageviews": 126,
+        "teetimes": [],
+        "tour_rank": "83"
+      },
+      {
+        "am": 0,
+        "country": "FRA",
+        "dg_id": 19960,
+        "dg_rank": 183,
+        "owgr_rank": 273,
+        "player_name": "Pavon, Matthieu",
+        "player_num": 48153,
+        "pre_tourn_pageviews": 75,
+        "teetimes": [],
+        "tour_rank": "108"
+      },
+      {
+        "am": 0,
+        "country": "ENG",
+        "dg_id": 22465,
+        "dg_rank": 142,
+        "owgr_rank": 48,
+        "player_name": "Penge, Marco",
+        "player_num": 51003,
+        "pre_tourn_pageviews": 680,
+        "teetimes": [],
+        "tour_rank": "104"
+      },
+      {
+        "am": 0,
+        "country": "FRA",
+        "dg_id": 20730,
+        "dg_rank": 90,
+        "owgr_rank": 198,
+        "player_name": "Perez, Victor",
+        "player_num": 47679,
+        "pre_tourn_pageviews": 295,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "RSA",
+        "dg_id": 27900,
+        "dg_rank": 136,
+        "owgr_rank": 77,
+        "player_name": "Potgieter, Aldrich",
+        "player_num": 63343,
+        "pre_tourn_pageviews": 368,
+        "teetimes": [],
+        "tour_rank": "59"
+      },
+      {
+        "am": 0,
+        "country": "RSA",
+        "dg_id": 25890,
+        "dg_rank": null,
+        "owgr_rank": 259,
+        "player_name": "Premlall, Yurav",
+        "player_num": 56267,
+        "pre_tourn_pageviews": 63,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "ESP",
+        "dg_id": 28984,
+        "dg_rank": 57,
+        "owgr_rank": 64,
+        "player_name": "Puig, David",
+        "player_num": 61193,
+        "pre_tourn_pageviews": 370,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 14704,
+        "dg_rank": 86,
+        "owgr_rank": 89,
+        "player_name": "Putnam, Andrew",
+        "player_num": 34256,
+        "pre_tourn_pageviews": 57,
+        "teetimes": [],
+        "tour_rank": "65"
+      },
+      {
+        "am": 0,
+        "country": "ESP",
+        "dg_id": 19195,
+        "dg_rank": 3,
+        "owgr_rank": 11,
+        "player_name": "Rahm, Jon",
+        "player_num": 46970,
+        "pre_tourn_pageviews": 586,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "ENG",
+        "dg_id": 18554,
+        "dg_rank": 31,
+        "owgr_rank": 16,
+        "player_name": "Rai, Aaron",
+        "player_num": 46414,
+        "pre_tourn_pageviews": 348,
+        "teetimes": [],
+        "tour_rank": "27"
+      },
+      {
+        "am": 0,
+        "country": "FRA",
+        "dg_id": 23416,
+        "dg_rank": 309,
+        "owgr_rank": 400,
+        "player_name": "Ravetto, David",
+        "player_num": 52287,
+        "pre_tourn_pageviews": 38,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 14838,
+        "dg_rank": 48,
+        "owgr_rank": 31,
+        "player_name": "Reed, Patrick",
+        "player_num": 34360,
+        "pre_tourn_pageviews": 434,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "NOR",
+        "dg_id": 21407,
+        "dg_rank": 36,
+        "owgr_rank": 25,
+        "player_name": "Reitan, Kristoffer",
+        "player_num": 49855,
+        "pre_tourn_pageviews": 664,
+        "teetimes": [],
+        "tour_rank": "16"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 19872,
+        "dg_rank": 460,
+        "owgr_rank": 174,
+        "player_name": "Riley, Davis",
+        "player_num": 47995,
+        "pre_tourn_pageviews": 52,
+        "teetimes": [],
+        "tour_rank": "138"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 18424,
+        "dg_rank": 216,
+        "owgr_rank": 140,
+        "player_name": "Roy, Kevin",
+        "player_num": 39335,
+        "pre_tourn_pageviews": 42,
+        "teetimes": [],
+        "tour_rank": "95"
+      },
+      {
+        "am": 0,
+        "country": "FRA",
+        "dg_id": 18770,
+        "dg_rank": 172,
+        "owgr_rank": 209,
+        "player_name": "Rozner, Antoine",
+        "player_num": 46646,
+        "pre_tourn_pageviews": 113,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "FRA",
+        "dg_id": 14792,
+        "dg_rank": 232,
+        "owgr_rank": 125,
+        "player_name": "Saddier, Adrien",
+        "player_num": 34371,
+        "pre_tourn_pageviews": 39,
+        "teetimes": [],
+        "tour_rank": "176"
+      },
+      {
+        "am": 0,
+        "country": "RSA",
+        "dg_id": 26991,
+        "dg_rank": 108,
+        "owgr_rank": 79,
+        "player_name": "Schaper, Jayden",
+        "player_num": 57737,
+        "pre_tourn_pageviews": 141,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 19895,
+        "dg_rank": 9,
+        "owgr_rank": 14,
+        "player_name": "Schauffele, Xander",
+        "player_num": 48081,
+        "pre_tourn_pageviews": 544,
+        "teetimes": [],
+        "tour_rank": "15"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 18417,
+        "dg_rank": 1,
+        "owgr_rank": 1,
+        "player_name": "Scheffler, Scottie",
+        "player_num": 46046,
+        "pre_tourn_pageviews": 551,
+        "teetimes": [],
+        "tour_rank": "1"
+      },
+      {
+        "am": 0,
+        "country": "GER",
+        "dg_id": 20722,
+        "dg_rank": 159,
+        "owgr_rank": 78,
+        "player_name": "Schmid, Matti",
+        "player_num": 48867,
+        "pre_tourn_pageviews": 127,
+        "teetimes": [],
+        "tour_rank": "64"
+      },
+      {
+        "am": 0,
+        "country": "GER",
+        "dg_id": 27588,
         "dg_rank": 324,
-        "owgr_rank": 437,
-        "player_name": "Streelman, Kevin",
-        "player_num": 27214,
-        "pre_tourn_pageviews": 350,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 08:08",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 13:18",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "154"
+        "owgr_rank": 204,
+        "player_name": "Schott, Freddy",
+        "player_num": 58690,
+        "pre_tourn_pageviews": 73,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "AUS",
+        "dg_id": 6430,
+        "dg_rank": 39,
+        "owgr_rank": 55,
+        "player_name": "Scott, Adam",
+        "player_num": 24502,
+        "pre_tourn_pageviews": 354,
+        "teetimes": [],
+        "tour_rank": "33"
+      },
+      {
+        "am": 0,
+        "country": "GER",
+        "dg_id": 6950,
+        "dg_rank": null,
+        "owgr_rank": 443,
+        "player_name": "Siem, Marcel",
+        "player_num": 23481,
+        "pre_tourn_pageviews": 42,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 29279,
-        "dg_rank": 125,
-        "owgr_rank": 126,
-        "player_name": "Suber, Jackson",
-        "player_num": 60019,
-        "pre_tourn_pageviews": 2582,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 13:29",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 08:19",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "85"
+        "dg_id": 18474,
+        "dg_rank": 46,
+        "owgr_rank": 43,
+        "player_name": "Smalley, Alex",
+        "player_num": 46340,
+        "pre_tourn_pageviews": 164,
+        "teetimes": [],
+        "tour_rank": "21"
       },
       {
         "am": 0,
-        "country": "CAN",
-        "dg_id": 13997,
-        "dg_rank": 227,
-        "owgr_rank": 438,
-        "player_name": "Svensson, Adam",
-        "player_num": 40115,
-        "pre_tourn_pageviews": 457,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 11:50",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 06:40",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "165"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 27364,
-        "dg_rank": 97,
-        "owgr_rank": 148,
-        "player_name": "Thompson, Davis",
-        "player_num": 58168,
-        "pre_tourn_pageviews": 2135,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 07:24",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 12:34",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "93"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 26649,
-        "dg_rank": 78,
+        "country": "ENG",
+        "dg_id": 18586,
+        "dg_rank": 98,
         "owgr_rank": 82,
-        "player_name": "Thorbjornsen, Michael",
-        "player_num": 57364,
-        "pre_tourn_pageviews": 2916,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 12:56",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 07:46",
-            "wave": "early"
-          }
-        ],
+        "player_name": "Smith, Jordan",
+        "player_num": 46464,
+        "pre_tourn_pageviews": 186,
+        "teetimes": [],
         "tour_rank": "73"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 12425,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Todd, Brendon",
-        "player_num": 30927,
-        "pre_tourn_pageviews": 423,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 06:51",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 12:01",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "209"
+        "dg_id": 22985,
+        "dg_rank": 157,
+        "owgr_rank": 101,
+        "player_name": "Smotherman, Austin",
+        "player_num": 50095,
+        "pre_tourn_pageviews": 57,
+        "teetimes": [],
+        "tour_rank": "70"
       },
       {
         "am": 0,
-        "country": "ARG",
-        "dg_id": 17032,
-        "dg_rank": 454,
-        "owgr_rank": 379,
-        "player_name": "Tosti, Alejandro",
-        "player_num": 38991,
-        "pre_tourn_pageviews": 257,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 13:51",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 08:41",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "183"
+        "country": "USA",
+        "dg_id": 8820,
+        "dg_rank": 121,
+        "owgr_rank": 119,
+        "player_name": "Snedeker, Brandt",
+        "player_num": 27649,
+        "pre_tourn_pageviews": 63,
+        "teetimes": [],
+        "tour_rank": "76"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 17536,
+        "dg_rank": 15,
+        "owgr_rank": 12,
+        "player_name": "Spaun, J.J.",
+        "player_num": 39324,
+        "pre_tourn_pageviews": 285,
+        "teetimes": [],
+        "tour_rank": "18"
+      },
+      {
+        "am": 0,
+        "country": "RSA",
+        "dg_id": 7049,
+        "dg_rank": 320,
+        "owgr_rank": 120,
+        "player_name": "Sterne, Richard",
+        "player_num": 24459,
+        "pre_tourn_pageviews": 43,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 25569,
+        "dg_rank": 81,
+        "owgr_rank": 46,
+        "player_name": "Stevens, Sam",
+        "player_num": 55893,
+        "pre_tourn_pageviews": 170,
+        "teetimes": [],
+        "tour_rank": "47"
+      },
+      {
+        "am": 0,
+        "country": "AUT",
+        "dg_id": 17511,
+        "dg_rank": 100,
+        "owgr_rank": 23,
+        "player_name": "Straka, Sepp",
+        "player_num": 49960,
+        "pre_tourn_pageviews": 262,
+        "teetimes": [],
+        "tour_rank": "32"
+      },
+      {
+        "am": 0,
+        "country": "RSA",
+        "dg_id": 13731,
+        "dg_rank": null,
+        "owgr_rank": null,
+        "player_name": "Strydom, Ockie",
+        "player_num": 33023,
+        "pre_tourn_pageviews": 45,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "ENG",
+        "dg_id": 15326,
+        "dg_rank": 240,
+        "owgr_rank": 127,
+        "player_name": "Sullivan, Andy",
+        "player_num": 35314,
+        "pre_tourn_pageviews": 97,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "SWE",
+        "dg_id": 26850,
+        "dg_rank": 174,
+        "owgr_rank": 170,
+        "player_name": "Svensson, Jesper",
+        "player_num": 57586,
+        "pre_tourn_pageviews": 297,
+        "teetimes": [],
+        "tour_rank": "113"
+      },
+      {
+        "am": 0,
+        "country": "SCO",
+        "dg_id": 22089,
+        "dg_rank": null,
+        "owgr_rank": 366,
+        "player_name": "Syme, Connor",
+        "player_num": 50584,
+        "pre_tourn_pageviews": 97,
+        "teetimes": [],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "CAN",
+        "dg_id": 13126,
+        "dg_rank": 49,
+        "owgr_rank": 70,
+        "player_name": "Taylor, Nick",
+        "player_num": 25493,
+        "pre_tourn_pageviews": 145,
+        "teetimes": [],
+        "tour_rank": "57"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 23014,
+        "dg_rank": 58,
+        "owgr_rank": 76,
+        "player_name": "Theegala, Sahith",
+        "player_num": 51634,
+        "pre_tourn_pageviews": 305,
+        "teetimes": [],
+        "tour_rank": "39"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 14139,
+        "dg_rank": 18,
+        "owgr_rank": 18,
+        "player_name": "Thomas, Justin",
+        "player_num": 33448,
+        "pre_tourn_pageviews": 517,
+        "teetimes": [],
+        "tour_rank": "36"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 26649,
+        "dg_rank": 83,
+        "owgr_rank": 83,
+        "player_name": "Thorbjornsen, Michael",
+        "player_num": 57364,
+        "pre_tourn_pageviews": 161,
+        "teetimes": [],
+        "tour_rank": "77"
+      },
+      {
+        "am": 0,
+        "country": "NED",
+        "dg_id": 13374,
+        "dg_rank": 304,
+        "owgr_rank": 230,
+        "player_name": "Van Driel, Darius",
+        "player_num": 32659,
+        "pre_tourn_pageviews": 40,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
         "country": "RSA",
         "dg_id": 17550,
-        "dg_rank": 205,
-        "owgr_rank": 183,
+        "dg_rank": 177,
+        "owgr_rank": 181,
         "player_name": "Van Rooyen, Erik",
         "player_num": 40006,
-        "pre_tourn_pageviews": 659,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 07:57",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 13:07",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "137"
+        "pre_tourn_pageviews": 96,
+        "teetimes": [],
+        "tour_rank": "133"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 25319,
-        "dg_rank": 355,
+        "dg_id": 20522,
+        "dg_rank": null,
         "owgr_rank": 291,
-        "player_name": "VanDerLaan, John",
-        "player_num": 55573,
-        "pre_tourn_pageviews": 175,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 13:18",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 08:08",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "169"
-      },
-      {
-        "am": 0,
-        "country": "NOR",
-        "dg_id": 15651,
-        "dg_rank": 194,
-        "owgr_rank": 311,
-        "player_name": "Ventura, Kris",
-        "player_num": 35658,
-        "pre_tourn_pageviews": 305,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 08:30",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 13:40",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "126"
+        "player_name": "Veerman, Johannes",
+        "player_num": 48640,
+        "pre_tourn_pageviews": 35,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
         "country": "AUS",
         "dg_id": 24304,
-        "dg_rank": 232,
-        "owgr_rank": 196,
+        "dg_rank": 211,
+        "owgr_rank": 197,
         "player_name": "Vilips, Karl",
         "player_num": 54304,
-        "pre_tourn_pageviews": 466,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 12:45",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 07:35",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 114,
+        "teetimes": [],
         "tour_rank": "122"
       },
       {
         "am": 0,
-        "country": "COL",
-        "dg_id": 9171,
-        "dg_rank": 419,
-        "owgr_rank": 495,
-        "player_name": "Villegas, Camilo",
-        "player_num": 27770,
-        "pre_tourn_pageviews": 282,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 07:57",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 13:07",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "186"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 35545,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Voois, Ryan",
-        "player_num": 68994,
-        "pre_tourn_pageviews": 230,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 13:51",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 08:41",
-            "wave": "early"
-          }
-        ],
+        "country": "GER",
+        "dg_id": 22231,
+        "dg_rank": 404,
+        "owgr_rank": 258,
+        "player_name": "Von Dellingshausen, Nicolai",
+        "player_num": 50743,
+        "pre_tourn_pageviews": 42,
+        "teetimes": [],
         "tour_rank": null
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 25003,
-        "dg_rank": 373,
-        "owgr_rank": 254,
-        "player_name": "Walker, Danny",
-        "player_num": 54607,
-        "pre_tourn_pageviews": 183,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 13:07",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 07:57",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "148"
       },
       {
         "am": 0,
         "country": "ENG",
         "dg_id": 20706,
-        "dg_rank": 62,
-        "owgr_rank": 70,
+        "dg_rank": 59,
+        "owgr_rank": 69,
         "player_name": "Wallace, Matt",
         "player_num": 48887,
-        "pre_tourn_pageviews": 1523,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 07:46",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 12:56",
-            "wave": "late"
-          }
-        ],
+        "pre_tourn_pageviews": 167,
+        "teetimes": [],
         "tour_rank": "86"
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 25908,
-        "dg_rank": 176,
-        "owgr_rank": 166,
-        "player_name": "Whaley, Vince",
-        "player_num": 51894,
-        "pre_tourn_pageviews": 406,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 07:57",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 13:07",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "162"
+        "country": "ENG",
+        "dg_id": 12426,
+        "dg_rank": 273,
+        "owgr_rank": 342,
+        "player_name": "Waring, Paul",
+        "player_num": 31113,
+        "pre_tourn_pageviews": 41,
+        "teetimes": [],
+        "tour_rank": "185"
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 22051,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Wise, Aaron",
-        "player_num": 49964,
-        "pre_tourn_pageviews": 278,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 07:35",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 12:45",
-            "wave": "late"
-          }
-        ],
+        "country": "AUT",
+        "dg_id": 9531,
+        "dg_rank": 124,
+        "owgr_rank": 154,
+        "player_name": "Wiesberger, Bernd",
+        "player_num": 29454,
+        "pre_tourn_pageviews": 223,
+        "teetimes": [],
         "tour_rank": null
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 25002,
-        "dg_rank": 287,
-        "owgr_rank": 377,
-        "player_name": "Wu, Dylan",
-        "player_num": 54783,
-        "pre_tourn_pageviews": 260,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 11:50",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 06:40",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "155"
+        "country": "ENG",
+        "dg_id": 12920,
+        "dg_rank": 463,
+        "owgr_rank": 396,
+        "player_name": "Willett, Danny",
+        "player_num": 32139,
+        "pre_tourn_pageviews": 32,
+        "teetimes": [],
+        "tour_rank": "191"
+      },
+      {
+        "am": 0,
+        "country": "CHN",
+        "dg_id": 11763,
+        "dg_rank": 322,
+        "owgr_rank": 306,
+        "player_name": "Wu, Ashun",
+        "player_num": 33870,
+        "pre_tourn_pageviews": 45,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
         "country": "CAN",
         "dg_id": 29925,
-        "dg_rank": 79,
-        "owgr_rank": 99,
+        "dg_rank": 85,
+        "owgr_rank": 104,
         "player_name": "Yellamaraju, Sudarshan",
         "player_num": 60386,
-        "pre_tourn_pageviews": 1832,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 12:12",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 07:02",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 127,
+        "teetimes": [],
         "tour_rank": "48"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 23656,
-        "dg_rank": 182,
-        "owgr_rank": 175,
-        "player_name": "Young, Carson",
-        "player_num": 52513,
-        "pre_tourn_pageviews": 2058,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-02 12:12",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-03 07:02",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "185"
       },
       {
         "am": 0,
         "country": "TPE",
         "dg_id": 17881,
-        "dg_rank": 131,
-        "owgr_rank": 130,
+        "dg_rank": 104,
+        "owgr_rank": 124,
         "player_name": "Yu, Kevin",
         "player_num": 45242,
-        "pre_tourn_pageviews": 1458,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-02 12:34",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "TPC Deere Run",
-            "course_num": 669,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-03 07:24",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "128"
+        "pre_tourn_pageviews": 147,
+        "teetimes": [],
+        "tour_rank": "115"
       }
     ],
-    "last_updated": "2026-07-03 01:50:33 UTC",
+    "last_updated": "2026-07-06 22:10:59 UTC",
     "multi_course": "no",
     "tour": "pga",
-    "tz_offset": -18000
+    "tz_offset": 3600
   },
   "live_tournament_stats": {
     "course_name": "TPC Deere Run",
@@ -23172,5 +20589,5 @@
     "event_name": "John Deere Classic",
     "last_update": "2026-07-02 7:30 PM"
   },
-  "field_updates_refreshed_at": "2026-07-03T01:55:39.844Z"
+  "field_updates_refreshed_at": "2026-07-06T22:12:20.766Z"
 }
