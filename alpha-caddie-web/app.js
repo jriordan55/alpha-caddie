@@ -397,6 +397,8 @@ let matchupAnalysisSelectedKey = "";
 /** Full matchup list for the active market (search / suggest); `<select>` may list fewer. */
 let matchupAnalysisRowsCache = [];
 let matchupAnalysisBookCardsCache = [];
+/** Field metric samples for SG bars — rebuilt with {@link buildMatchupAnalysisTool}. */
+let matchupAnalysisFieldSamplesCache = null;
 let propsTrendsLineContextKey = "";
 /** User bumped line steppers or edited input; skip auto line until golfer/stat/course changes. */
 let propsTrendLineUserOverride = false;
@@ -9364,6 +9366,186 @@ function renderMatchupAnalysisBookCardsGrid(host, cards, selectedKey, onSelectCa
   host.appendChild(grid);
 }
 
+function renderMatchupAnalysisSgBreakdown(entry, fieldSamplesByMetric) {
+  const sgBody = document.querySelector("#table-matchup-analysis-sg tbody");
+  const titleA = document.getElementById("analysis-sg-player-a");
+  const titleB = document.getElementById("analysis-sg-player-b");
+  if (!sgBody) return;
+  sgBody.innerHTML = "";
+  if (!entry || !entry.left || !entry.right) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 6;
+    td.className = "text-muted";
+    td.textContent = "Select a head-to-head matchup.";
+    tr.appendChild(td);
+    sgBody.appendChild(tr);
+    return;
+  }
+  const narrowSgHead =
+    typeof window !== "undefined" &&
+    window.matchMedia &&
+    window.matchMedia("(max-width: 720px)").matches;
+  const fullA = displayGolferName(String(entry.left.name || "")) || "Player A";
+  const fullB = displayGolferName(String(entry.right.name || "")) || "Player B";
+  if (titleA) {
+    titleA.textContent = narrowSgHead ? matchupAnalysisShortPlayerHead(entry.left.name) : fullA;
+    titleA.title = fullA;
+  }
+  if (titleB) {
+    titleB.textContent = narrowSgHead ? matchupAnalysisShortPlayerHead(entry.right.name) : fullB;
+    titleB.title = fullB;
+  }
+  const metrics = [
+    ["SG: Total", "sg_total"],
+    ["SG: Tee-to-Green", "sg_t2g"],
+    ["Driving Accuracy Rating", "accuracy"],
+    ["Off Tee", "sg_ott"],
+    ["Approach", "sg_app"],
+    ["Around Green", "sg_arg"],
+    ["Putting", "sg_putt"],
+    ["Driving Distance Rating", "distance"],
+  ];
+  const barPctMatchup = (kind, v, samples) => {
+    const finite = (samples || []).filter((x) => Number.isFinite(x));
+    if (kind === "sg") {
+      let maxAbs = 0;
+      for (const s of finite) maxAbs = Math.max(maxAbs, Math.abs(s));
+      maxAbs = Math.max(maxAbs, Math.abs(v), 0.6);
+      return Math.max(0, Math.min(100, (Math.abs(v) / maxAbs) * 100));
+    }
+    let lo = Infinity;
+    let hi = -Infinity;
+    for (const s of finite) {
+      lo = Math.min(lo, s);
+      hi = Math.max(hi, s);
+    }
+    lo = Math.min(lo, v);
+    hi = Math.max(hi, v);
+    const span = hi - lo;
+    if (!Number.isFinite(span) || span < 1e-9) return 0;
+    return Math.max(0, Math.min(100, ((v - lo) / span) * 100));
+  };
+  const formatDistanceYards = (v) => {
+    const y = Math.round(v);
+    const unit = Math.abs(y) === 1 ? "yd" : "yds";
+    return `${y > 0 ? "+" : ""}${y} ${unit}`;
+  };
+  const buildMetricCell = (td, v, samples, kind = "sg") => {
+    td.className = "num matchup-analysis-bar-cell";
+    if (!Number.isFinite(v)) {
+      td.textContent = "—";
+      return;
+    }
+    const pct = barPctMatchup(kind, v, samples);
+    const wrap = document.createElement("span");
+    wrap.className = "matchup-analysis-bar-wrap";
+    const val = document.createElement("span");
+    if (kind === "sg") {
+      val.className = `matchup-analysis-bar-val${v >= 0 ? " pos" : " neg"}`;
+      val.textContent = `${v >= 0 ? "+" : ""}${v.toFixed(2)}`;
+    } else {
+      val.className = `matchup-analysis-bar-val neutral ${kind}`;
+      if (kind === "distance") val.textContent = formatDistanceYards(v);
+      else if (kind === "accuracy") val.textContent = `${v >= 0 ? "+" : ""}${v.toFixed(1)} pts`;
+      else val.textContent = `${v.toFixed(1)}%`;
+    }
+    const track = document.createElement("span");
+    track.className = "matchup-analysis-bar-track";
+    const fill = document.createElement("span");
+    fill.className = `matchup-analysis-bar-fill ${kind}`;
+    fill.style.width = `${pct.toFixed(1)}%`;
+    track.appendChild(fill);
+    wrap.appendChild(val);
+    wrap.appendChild(track);
+    td.appendChild(wrap);
+  };
+  const edgeForAdvantagedSide = (leftSide) => {
+    const side = leftSide ? entry.pricingSides?.[0] : entry.pricingSides?.[1];
+    return num(side?.edge, NaN);
+  };
+  const samplesByMetric = fieldSamplesByMetric || matchupAnalysisFieldSamplesCache || {};
+  for (const [label, keyMetric] of metrics) {
+    const samples = samplesByMetric[keyMetric] || [];
+    const a = matchupAnalysisMetricValue(entry.left.row, keyMetric);
+    const b = matchupAnalysisMetricValue(entry.right.row, keyMetric);
+    const diff = Number.isFinite(a) && Number.isFinite(b) ? a - b : NaN;
+    const pctA = matchupAnalysisFieldPctHigherBetter(samples, a);
+    const pctB = matchupAnalysisFieldPctHigherBetter(samples, b);
+    const tr = document.createElement("tr");
+    const tdMetric = document.createElement("td");
+    tdMetric.textContent = label;
+    const tdA = document.createElement("td");
+    buildMetricCell(tdA, a, samples, keyMetric === "sg_total" || keyMetric.startsWith("sg_") ? "sg" : keyMetric);
+    const tdPctA = document.createElement("td");
+    tdPctA.className = "num";
+    tdPctA.textContent = Number.isFinite(pctA) ? `${pctA.toFixed(0)}%` : "—";
+    const tdB = document.createElement("td");
+    buildMetricCell(tdB, b, samples, keyMetric === "sg_total" || keyMetric.startsWith("sg_") ? "sg" : keyMetric);
+    const tdPctB = document.createElement("td");
+    tdPctB.className = "num";
+    tdPctB.textContent = Number.isFinite(pctB) ? `${pctB.toFixed(0)}%` : "—";
+    const tdAdv = document.createElement("td");
+    const eps = keyMetric.startsWith("sg_") ? 0.005 : keyMetric === "distance" ? 0.2 : 0.2;
+    if (!Number.isFinite(diff) || Math.abs(diff) < eps) {
+      tdAdv.textContent = "Even";
+    } else {
+      const leftAdvantage = diff > 0;
+      const rawWho = leftAdvantage ? entry.left.name : entry.right.name;
+      const who = displayGolferName(String(rawWho || ""));
+      const adv = Math.abs(diff);
+      const edge = edgeForAdvantagedSide(leftAdvantage);
+      if (keyMetric.startsWith("sg_")) {
+        tdAdv.textContent = `${who} +${adv.toFixed(2)} strokes`;
+      } else if (keyMetric === "distance") {
+        tdAdv.textContent = `${who} +${Math.round(adv)} yds`;
+      } else {
+        tdAdv.textContent = `${who} +${adv.toFixed(1)} pts`;
+      }
+      if (edge > 0) tdAdv.className = "ev-pos";
+      else if (edge < 0) tdAdv.className = "ev-neg";
+    }
+    tr.appendChild(tdMetric);
+    tr.appendChild(tdA);
+    tr.appendChild(tdPctA);
+    tr.appendChild(tdB);
+    tr.appendChild(tdPctB);
+    tr.appendChild(tdAdv);
+    sgBody.appendChild(tr);
+  }
+}
+
+function updateMatchupBookCardSelection(selectedKey) {
+  document.querySelectorAll("#matchup-analysis-pricing .matchup-book-card").forEach((el) => {
+    el.classList.toggle("matchup-book-card-selected", el.dataset.matchupKey === selectedKey);
+  });
+}
+
+/** Select a matchup for SG breakdown without rebuilding the full card grid. */
+function selectMatchupAnalysisMatchup(matchupKey, opts = {}) {
+  const mk = String(matchupKey || "").trim();
+  if (!mk) return;
+  matchupAnalysisSelectedKey = mk;
+  const matchupPickEl = document.getElementById("analysis-matchup-select");
+  if (matchupPickEl) matchupPickEl.value = mk;
+  refreshGolferComboboxFromSelect("analysis-matchup-select");
+  updateMatchupBookCardSelection(mk);
+  const marketKey = String(document.getElementById("analysis-market")?.value || "round_matchups");
+  const hideSgTable = marketKey === "3_balls";
+  const sgWrap = document.getElementById("matchup-analysis-sg-wrap");
+  const sgHeading = document.getElementById("matchup-analysis-sg-heading");
+  if (sgHeading) sgHeading.hidden = hideSgTable;
+  if (sgWrap) sgWrap.hidden = hideSgTable;
+  const entry = matchupAnalysisRowsCache.find((r) => r.key === mk);
+  if (!hideSgTable) {
+    renderMatchupAnalysisSgBreakdown(entry, matchupAnalysisFieldSamplesCache);
+    if (opts.scroll !== false) {
+      const scrollTarget = sgHeading && !sgHeading.hidden ? sgHeading : sgWrap;
+      scrollTarget?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+}
+
 function renderMatchupAnalysisPricing(host, entry) {
   if (!host) return;
   host.innerHTML = "";
@@ -9511,6 +9693,7 @@ function buildMatchupAnalysisTool() {
     }
     matchupAnalysisRowsCache = [];
     matchupAnalysisBookCardsCache = [];
+    matchupAnalysisFieldSamplesCache = null;
     return;
   }
   if (note) note.hidden = true;
@@ -9521,6 +9704,7 @@ function buildMatchupAnalysisTool() {
     }
     matchupAnalysisRowsCache = [];
     matchupAnalysisBookCardsCache = [];
+    matchupAnalysisFieldSamplesCache = null;
     return;
   }
 
@@ -9535,6 +9719,7 @@ function buildMatchupAnalysisTool() {
       .map((row) => matchupAnalysisMetricValue(row, mk))
       .filter((x) => Number.isFinite(x));
   }
+  matchupAnalysisFieldSamplesCache = fieldSamplesByMetric;
 
   const rows = [];
   for (const m of list) {
@@ -9662,6 +9847,7 @@ function buildMatchupAnalysisTool() {
   if (!rows.length) {
     matchupAnalysisRowsCache = [];
     matchupAnalysisBookCardsCache = [];
+    matchupAnalysisFieldSamplesCache = null;
     if (matchupPickEl) {
       matchupPickEl.innerHTML = "";
       setMatchupPickUiHidden(true);
@@ -9693,161 +9879,13 @@ function buildMatchupAnalysisTool() {
     refreshGolferComboboxFromSelect("analysis-matchup-select");
   }
   renderMatchupAnalysisBookCardsGrid(pricingHost, matchupAnalysisBookCardsCache, selected.key, (mk) => {
-    if (!mk || mk === matchupAnalysisSelectedKey) return;
-    matchupAnalysisSelectedKey = mk;
-    if (matchupPickEl) matchupPickEl.value = mk;
-    refreshGolferComboboxFromSelect("analysis-matchup-select");
-    buildMatchupAnalysisTool();
+    selectMatchupAnalysisMatchup(mk);
   });
 
   const hideSgTable = hideSgTableMarket;
 
-  const renderSgBreakdown = (entry) => {
-    sgBody.innerHTML = "";
-    if (!entry || !entry.left || !entry.right) {
-      const tr = document.createElement("tr");
-      const td = document.createElement("td");
-      td.colSpan = 6;
-      td.className = "text-muted";
-      td.textContent = "Select a head-to-head matchup.";
-      tr.appendChild(td);
-      sgBody.appendChild(tr);
-      return;
-    }
-    const narrowSgHead =
-      typeof window !== "undefined" &&
-      window.matchMedia &&
-      window.matchMedia("(max-width: 720px)").matches;
-    const fullA = displayGolferName(String(entry.left.name || "")) || "Player A";
-    const fullB = displayGolferName(String(entry.right.name || "")) || "Player B";
-    if (titleA) {
-      titleA.textContent = narrowSgHead ? matchupAnalysisShortPlayerHead(entry.left.name) : fullA;
-      titleA.title = fullA;
-    }
-    if (titleB) {
-      titleB.textContent = narrowSgHead ? matchupAnalysisShortPlayerHead(entry.right.name) : fullB;
-      titleB.title = fullB;
-    }
-    const metrics = [
-      ["SG: Total", "sg_total"],
-      ["SG: Tee-to-Green", "sg_t2g"],
-      ["Driving Accuracy Rating", "accuracy"],
-      ["Off Tee", "sg_ott"],
-      ["Approach", "sg_app"],
-      ["Around Green", "sg_arg"],
-      ["Putting", "sg_putt"],
-      ["Driving Distance Rating", "distance"],
-    ];
-    const barPctMatchup = (kind, v, samples) => {
-      const finite = (samples || []).filter((x) => Number.isFinite(x));
-      if (kind === "sg") {
-        let maxAbs = 0;
-        for (const s of finite) maxAbs = Math.max(maxAbs, Math.abs(s));
-        maxAbs = Math.max(maxAbs, Math.abs(v), 0.6);
-        return Math.max(0, Math.min(100, (Math.abs(v) / maxAbs) * 100));
-      }
-      let lo = Infinity;
-      let hi = -Infinity;
-      for (const s of finite) {
-        lo = Math.min(lo, s);
-        hi = Math.max(hi, s);
-      }
-      lo = Math.min(lo, v);
-      hi = Math.max(hi, v);
-      const span = hi - lo;
-      if (!Number.isFinite(span) || span < 1e-9) return 0;
-      return Math.max(0, Math.min(100, ((v - lo) / span) * 100));
-    };
-    const formatDistanceYards = (v) => {
-      const y = Math.round(v);
-      const unit = Math.abs(y) === 1 ? "yd" : "yds";
-      return `${y > 0 ? "+" : ""}${y} ${unit}`;
-    };
-    const buildMetricCell = (td, v, samples, kind = "sg") => {
-      td.className = "num matchup-analysis-bar-cell";
-      if (!Number.isFinite(v)) {
-        td.textContent = "—";
-        return;
-      }
-      const pct = barPctMatchup(kind, v, samples);
-      const wrap = document.createElement("span");
-      wrap.className = "matchup-analysis-bar-wrap";
-      const val = document.createElement("span");
-      if (kind === "sg") {
-        val.className = `matchup-analysis-bar-val${v >= 0 ? " pos" : " neg"}`;
-        val.textContent = `${v >= 0 ? "+" : ""}${v.toFixed(2)}`;
-      } else {
-        val.className = `matchup-analysis-bar-val neutral ${kind}`;
-        if (kind === "distance") val.textContent = formatDistanceYards(v);
-        else if (kind === "accuracy") val.textContent = `${v >= 0 ? "+" : ""}${v.toFixed(1)} pts`;
-        else val.textContent = `${v.toFixed(1)}%`;
-      }
-      const track = document.createElement("span");
-      track.className = "matchup-analysis-bar-track";
-      const fill = document.createElement("span");
-      fill.className = `matchup-analysis-bar-fill ${kind}`;
-      fill.style.width = `${pct.toFixed(1)}%`;
-      track.appendChild(fill);
-      wrap.appendChild(val);
-      wrap.appendChild(track);
-      td.appendChild(wrap);
-    };
-    const edgeForAdvantagedSide = (leftSide) => {
-      const side = leftSide ? entry.pricingSides?.[0] : entry.pricingSides?.[1];
-      return num(side?.edge, NaN);
-    };
-    for (const [label, keyMetric] of metrics) {
-      const samples = fieldSamplesByMetric[keyMetric] || [];
-      const a = matchupAnalysisMetricValue(entry.left.row, keyMetric);
-      const b = matchupAnalysisMetricValue(entry.right.row, keyMetric);
-      const diff = Number.isFinite(a) && Number.isFinite(b) ? a - b : NaN;
-      const pctA = matchupAnalysisFieldPctHigherBetter(samples, a);
-      const pctB = matchupAnalysisFieldPctHigherBetter(samples, b);
-      const tr = document.createElement("tr");
-      const tdMetric = document.createElement("td");
-      tdMetric.textContent = label;
-      const tdA = document.createElement("td");
-      buildMetricCell(tdA, a, samples, keyMetric === "sg_total" || keyMetric.startsWith("sg_") ? "sg" : keyMetric);
-      const tdPctA = document.createElement("td");
-      tdPctA.className = "num";
-      tdPctA.textContent = Number.isFinite(pctA) ? `${pctA.toFixed(0)}%` : "—";
-      const tdB = document.createElement("td");
-      buildMetricCell(tdB, b, samples, keyMetric === "sg_total" || keyMetric.startsWith("sg_") ? "sg" : keyMetric);
-      const tdPctB = document.createElement("td");
-      tdPctB.className = "num";
-      tdPctB.textContent = Number.isFinite(pctB) ? `${pctB.toFixed(0)}%` : "—";
-      const tdAdv = document.createElement("td");
-      const eps = keyMetric.startsWith("sg_") ? 0.005 : keyMetric === "distance" ? 0.2 : 0.2;
-      if (!Number.isFinite(diff) || Math.abs(diff) < eps) {
-        tdAdv.textContent = "Even";
-      } else {
-        const leftAdvantage = diff > 0;
-        const rawWho = leftAdvantage ? entry.left.name : entry.right.name;
-        const who = displayGolferName(String(rawWho || ""));
-        const adv = Math.abs(diff);
-        const edge = edgeForAdvantagedSide(leftAdvantage);
-        if (keyMetric.startsWith("sg_")) {
-          tdAdv.textContent = `${who} +${adv.toFixed(2)} strokes`;
-        } else if (keyMetric === "distance") {
-          tdAdv.textContent = `${who} +${Math.round(adv)} yds`;
-        } else {
-          tdAdv.textContent = `${who} +${adv.toFixed(1)} pts`;
-        }
-        if (edge > 0) tdAdv.className = "ev-pos";
-        else if (edge < 0) tdAdv.className = "ev-neg";
-      }
-      tr.appendChild(tdMetric);
-      tr.appendChild(tdA);
-      tr.appendChild(tdPctA);
-      tr.appendChild(tdB);
-      tr.appendChild(tdPctB);
-      tr.appendChild(tdAdv);
-      sgBody.appendChild(tr);
-    }
-  };
-
   if (!hideSgTable) {
-    renderSgBreakdown(selected);
+    renderMatchupAnalysisSgBreakdown(selected, fieldSamplesByMetric);
   } else {
     sgBody.innerHTML = "";
     if (titleA) titleA.textContent = "Player A";
@@ -13590,8 +13628,7 @@ function commitGolferComboSearchToSelect(selectId) {
   if (!hit && selectId === "analysis-matchup-select" && matchupAnalysisRowsCache.length) {
     const row = matchupAnalysisRowsCache.find((r) => matchupRowLabelMatchesQuery(r.matchup, qLow));
     if (row) {
-      matchupAnalysisSelectedKey = row.key;
-      buildMatchupAnalysisTool();
+      selectMatchupAnalysisMatchup(row.key);
       return;
     }
   }
@@ -21815,8 +21852,7 @@ document.addEventListener("DOMContentLoaded", () => {
     buildMatchupAnalysisTool();
   });
   document.getElementById("analysis-matchup-select")?.addEventListener("change", (e) => {
-    matchupAnalysisSelectedKey = String(/** @type {HTMLSelectElement} */ (e.target).value || "");
-    buildMatchupAnalysisTool();
+    selectMatchupAnalysisMatchup(String(/** @type {HTMLSelectElement} */ (e.target).value || ""));
   });
   document.getElementById("ou-market-filter")?.addEventListener("change", () => {
     ouTableSort = { key: "pr-edge", dir: -1 };
