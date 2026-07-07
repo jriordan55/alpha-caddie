@@ -2232,6 +2232,110 @@ body {
   width: 100%;
 }
 
+.matchup-analysis-pricing-wrap {
+  width: 100%;
+}
+
+.matchup-book-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+  align-items: stretch;
+}
+
+.matchup-book-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--golf-border);
+  border-radius: 12px;
+  background: var(--golf-surface);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.matchup-book-card:hover {
+  border-color: rgba(137, 190, 168, 0.55);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.matchup-book-card-has-edge {
+  border-color: rgba(30, 207, 119, 0.45);
+}
+
+.matchup-book-card-selected {
+  box-shadow: 0 0 0 2px rgba(137, 190, 168, 0.35);
+}
+
+.matchup-book-card-head {
+  padding: 10px 14px 8px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--golf-text-muted);
+  text-transform: uppercase;
+}
+
+.matchup-book-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0 12px 12px;
+}
+
+.matchup-book-card-player {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.matchup-book-card-player-edge {
+  background: rgba(30, 207, 119, 0.1);
+  border: 1px solid rgba(30, 207, 119, 0.45);
+}
+
+.matchup-book-card-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--golf-text);
+  line-height: 1.25;
+}
+
+.matchup-book-card-odds {
+  margin-top: 4px;
+  font-size: 0.82rem;
+  color: var(--golf-text-muted);
+}
+
+.matchup-book-card-edge {
+  margin-top: 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--golf-green);
+}
+
+.matchup-book-card-vs {
+  align-self: center;
+  padding: 2px 0;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--golf-text-muted);
+}
+
+@media (max-width: 720px) {
+  .matchup-book-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 th.matchup-analysis-best-pick {
   box-shadow: inset 0 -3px 0 var(--golf-green);
 }

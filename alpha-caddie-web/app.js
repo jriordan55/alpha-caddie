@@ -396,6 +396,7 @@ let resultsChartHitRegions = [];
 let matchupAnalysisSelectedKey = "";
 /** Full matchup list for the active market (search / suggest); `<select>` may list fewer. */
 let matchupAnalysisRowsCache = [];
+let matchupAnalysisBookCardsCache = [];
 let propsTrendsLineContextKey = "";
 /** User bumped line steppers or edited input; skip auto line until golfer/stat/course changes. */
 let propsTrendLineUserOverride = false;
@@ -9189,6 +9190,180 @@ function matchupAnalysisMetricValue(row, key) {
   return num(row[key], NaN);
 }
 
+function formatMatchupEdgePct(edge) {
+  if (!Number.isFinite(edge)) return "—";
+  const p = edge * 100;
+  return `${p >= 0 ? "+" : ""}${p.toFixed(2)}%`;
+}
+
+/** One card per sportsbook × head-to-head matchup (or 3-ball) with per-book edge. */
+function buildMatchupAnalysisBookCards(list, marketKey, round, devigPrefs) {
+  const cards = [];
+  if (!Array.isArray(list) || !list.length) return cards;
+  const isThree = marketKey === "3_balls";
+
+  for (const m of list) {
+    const id1 = Math.round(num(m.p1_dg_id, NaN));
+    const id2 = Math.round(num(m.p2_dg_id, NaN));
+    const id3 = Math.round(num(m.p3_dg_id, NaN));
+    const row1 = projectionPlayerRowForModelByIdOrName(id1, m.p1_player_name, round);
+    const row2 = projectionPlayerRowForModelByIdOrName(id2, m.p2_player_name, round);
+    const row3 = projectionPlayerRowForModelByIdOrName(id3, m.p3_player_name, round);
+    const rawOdds = m.odds || {};
+    const oddsEv = filterOddsObjectForEvSportsbooks(rawOdds, {});
+    const mu1 = effectiveMuSg(row1, id1, marketKey);
+    const mu2 = effectiveMuSg(row2, id2, marketKey);
+    const mu3 = effectiveMuSg(row3, id3, marketKey);
+
+    let modelProbs = [];
+    let matchupKey = "";
+    let sides = [];
+
+    if (isThree && Number.isFinite(id3) && id3 > 0) {
+      const [p1, p2, p3] = threeBallModelProbsLiveBlended(mu1, mu2, mu3, row1, row2, row3);
+      modelProbs = [p1, p2, p3];
+      matchupKey = `3b:${id1}:${id2}:${id3}`;
+      sides = [
+        { side: "p1", name: String(m.p1_player_name || "") },
+        { side: "p2", name: String(m.p2_player_name || "") },
+        { side: "p3", name: String(m.p3_player_name || "") },
+      ];
+    } else {
+      const p1 = matchupWinProbLiveBlended(mu1, mu2, marketKey, row1, row2);
+      modelProbs = [p1, 1 - p1];
+      matchupKey = `h2h:${id1}:${id2}`;
+      sides = [
+        { side: "p1", name: String(m.p1_player_name || "") },
+        { side: "p2", name: String(m.p2_player_name || "") },
+      ];
+    }
+
+    for (const bk of Object.keys(oddsEv)) {
+      if (normalizeEvSportsbookKey(bk) === "datagolf") continue;
+      const pack = oddsEv[bk];
+      if (!pack || typeof pack !== "object") continue;
+
+      let decs = [];
+      if (isThree && sides.length === 3) {
+        const { d1, d2, d3 } = matchupOddsThreeWayFromPack(pack);
+        decs = [d1, d2, d3];
+      } else {
+        const { d1, d2 } = matchupOddsTwoWayFromPack(pack);
+        decs = [d1, d2];
+      }
+      if (!decs.every((d) => Number.isFinite(d) && d > 1)) continue;
+
+      const players = sides.map((s, i) => {
+        const edge = Number.isFinite(modelProbs[i]) ? modelProbs[i] * decs[i] - 1 : NaN;
+        return {
+          ...s,
+          dec: decs[i],
+          am: formatAmerican(americanFromDecimal(decs[i])),
+          edge,
+        };
+      });
+      let bestIdx = -1;
+      let bestEdge = NaN;
+      for (let i = 0; i < players.length; i++) {
+        const e = num(players[i].edge, NaN);
+        if (!Number.isFinite(e) || e <= 0) continue;
+        if (!Number.isFinite(bestEdge) || e > bestEdge) {
+          bestEdge = e;
+          bestIdx = i;
+        }
+      }
+      cards.push({
+        matchupKey,
+        book: bk,
+        bookLabel: bookMeta(bk).label.toUpperCase(),
+        players,
+        bestEdge: Number.isFinite(bestEdge) ? bestEdge : NaN,
+        bestIdx,
+        hasEdge: bestIdx >= 0,
+      });
+    }
+  }
+
+  cards.sort((a, b) => {
+    const ea = num(a.bestEdge, -99);
+    const eb = num(b.bestEdge, -99);
+    if (eb !== ea) return eb - ea;
+    return String(a.bookLabel || "").localeCompare(String(b.bookLabel || ""));
+  });
+  return cards;
+}
+
+function renderMatchupAnalysisBookCardsGrid(host, cards, selectedKey, onSelectCard) {
+  if (!host) return;
+  host.innerHTML = "";
+  if (!cards?.length) {
+    const p = document.createElement("p");
+    p.className = "text-muted";
+    p.textContent = "No sportsbook matchup prices loaded for this market.";
+    host.appendChild(p);
+    return;
+  }
+
+  const grid = document.createElement("div");
+  grid.className = "matchup-book-card-grid";
+
+  for (const card of cards) {
+    const el = document.createElement("button");
+    el.type = "button";
+    el.className = "matchup-book-card";
+    if (card.hasEdge) el.classList.add("matchup-book-card-has-edge");
+    if (card.matchupKey === selectedKey) el.classList.add("matchup-book-card-selected");
+    el.dataset.matchupKey = card.matchupKey;
+
+    const head = document.createElement("div");
+    head.className = "matchup-book-card-head";
+    head.textContent = card.bookLabel || bookMeta(card.book).label.toUpperCase();
+    el.appendChild(head);
+
+    const body = document.createElement("div");
+    body.className = "matchup-book-card-body";
+
+    for (let i = 0; i < card.players.length; i++) {
+      const pl = card.players[i];
+      if (i > 0) {
+        const vs = document.createElement("div");
+        vs.className = "matchup-book-card-vs";
+        vs.textContent = card.players.length === 3 && i === 2 ? "·" : "VS";
+        body.appendChild(vs);
+      }
+      const row = document.createElement("div");
+      row.className = "matchup-book-card-player";
+      if (card.bestIdx === i) row.classList.add("matchup-book-card-player-edge");
+
+      const name = document.createElement("div");
+      name.className = "matchup-book-card-name";
+      name.textContent = displayGolferName(String(pl.name || ""));
+
+      const odds = document.createElement("div");
+      odds.className = "matchup-book-card-odds";
+      odds.textContent = `Odds: ${pl.am || "—"}`;
+
+      row.appendChild(name);
+      row.appendChild(odds);
+      if (card.bestIdx === i && Number.isFinite(pl.edge) && pl.edge > 0) {
+        const edgeEl = document.createElement("div");
+        edgeEl.className = "matchup-book-card-edge";
+        edgeEl.textContent = `Edge: ${formatMatchupEdgePct(pl.edge)}`;
+        row.appendChild(edgeEl);
+      }
+      body.appendChild(row);
+    }
+
+    el.appendChild(body);
+    el.addEventListener("click", () => {
+      if (typeof onSelectCard === "function") onSelectCard(card.matchupKey);
+    });
+    grid.appendChild(el);
+  }
+
+  host.appendChild(grid);
+}
+
 function renderMatchupAnalysisPricing(host, entry) {
   if (!host) return;
   host.innerHTML = "";
@@ -9335,6 +9510,7 @@ function buildMatchupAnalysisTool() {
       setMatchupPickUiHidden(true);
     }
     matchupAnalysisRowsCache = [];
+    matchupAnalysisBookCardsCache = [];
     return;
   }
   if (note) note.hidden = true;
@@ -9344,6 +9520,7 @@ function buildMatchupAnalysisTool() {
       setMatchupPickUiHidden(true);
     }
     matchupAnalysisRowsCache = [];
+    matchupAnalysisBookCardsCache = [];
     return;
   }
 
@@ -9481,8 +9658,10 @@ function buildMatchupAnalysisTool() {
 
   rows.sort((a, b) => num(b.best?.edge, -99) - num(a.best?.edge, -99));
   matchupAnalysisRowsCache = rows;
+  matchupAnalysisBookCardsCache = buildMatchupAnalysisBookCards(list, key, r, devigPrefs);
   if (!rows.length) {
     matchupAnalysisRowsCache = [];
+    matchupAnalysisBookCardsCache = [];
     if (matchupPickEl) {
       matchupPickEl.innerHTML = "";
       setMatchupPickUiHidden(true);
@@ -9513,7 +9692,13 @@ function buildMatchupAnalysisTool() {
     matchupPickEl.value = selected.key;
     refreshGolferComboboxFromSelect("analysis-matchup-select");
   }
-  renderMatchupAnalysisPricing(pricingHost, selected);
+  renderMatchupAnalysisBookCardsGrid(pricingHost, matchupAnalysisBookCardsCache, selected.key, (mk) => {
+    if (!mk || mk === matchupAnalysisSelectedKey) return;
+    matchupAnalysisSelectedKey = mk;
+    if (matchupPickEl) matchupPickEl.value = mk;
+    refreshGolferComboboxFromSelect("analysis-matchup-select");
+    buildMatchupAnalysisTool();
+  });
 
   const hideSgTable = hideSgTableMarket;
 
