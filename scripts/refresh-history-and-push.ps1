@@ -114,7 +114,7 @@ if ($LiveWeekOnly) {
   $env:GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE = "1"
   $env:GOLF_REFRESH_LIVE_SKIP_HISTORY_REBUILD = "1"
   $env:GOLF_SKIP_ROUND_WEATHER_BACKFILL = "1"
-  Write-Host "LiveWeekOnly: npm run refresh:live (live feeds + DK props + tee times + weather bake; no CSV/history rebuild)."
+  Write-Host "LiveWeekOnly: npm run refresh:live (live feeds + DK/PP props + tee times + weather bake; no CSV/history rebuild)."
 } elseif (-not $NoFullHistory) {
   $env:GOLF_HISTORICAL_ROUNDS_FULL_HISTORY = "1"
   $env:GOLF_SKIP_HISTORY_ON_FETCH_DG = "1"
@@ -228,7 +228,7 @@ if ($LiveWeekOnly) {
   Remove-Item Env:\PERFECT_SKIP_FETCH_DK_OU -ErrorAction SilentlyContinue
   $env:GOLF_DEFER_DK_ROUND_AUDIT_UNTIL_REPAIR = "1"
   # fetch:book-odds pulls DK round props (Birdies/Total Score/GIR/etc.) via Playwright — no separate fetch:dk-ou (would duplicate Chromium).
-  Run-Npm "Running fetch:book-odds (matchups, outrights, DK round O/U props) ..." run fetch:book-odds
+  Run-Npm "Running fetch:book-odds (matchups, outrights, DK + PrizePicks round O/U props) ..." run fetch:book-odds
   Run-Npm 'Running fetch:finish-tool — outrights, same Scratch feed as DG Finish Position; runs after book-odds ...' run fetch:finish-tool
   Run-Npm "Merging live_hole_stats into projections (after book odds; preserves pars if book-odds ran inline fetch:dg) ..." run merge:live-hole-pars-into-projections
   Run-Npm "Bundled course_holes.json -> projections when live pars missing/wrong ..." run sync:bundled-hole-pars

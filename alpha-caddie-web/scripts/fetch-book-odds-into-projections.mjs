@@ -18,7 +18,9 @@
  *      Outright EV rows: DataGolf betting-tools/outrights API, which backs the Finish Position Betting Tool.
  *      GOLF_SKIP_PROPS_CSV=1 — do not merge data/player_props_*.csv into projections.props (Model O/U DK lines).
  *      GOLF_SKIP_DK_OU=1 — do not pull DK round props (see draftkings-ou-props.mjs).
+ *      GOLF_SKIP_PP_OU=1 — do not pull PrizePicks round props (see prizepicks-ou-props.mjs).
  *      GOLF_REQUIRE_DK_OU=1 — abort when DK scrape returns 0 fresh props (default on push:live / refresh:live).
+ *      GOLF_REQUIRE_PP_OU=1 — abort when PrizePicks fetch returns 0 fresh props (optional).
  *      DK_HEADLESS=0 — headed Chromium on Windows/macOS (DK blocks headless Nash API).
  *      GOLF_SKIP_DK_ROUND_AUDIT_CSV=1 — do not append alpha-caddie-web/data/dk_round_projection_audit.csv after merge.
  *      GOLF_SKIP_MODEL_FALLBACK_OU=1 — do not synthesize GIR / fairways / putts from projections.players for players DK omits.
@@ -47,6 +49,7 @@ import { fetchDataGolfOutrightsApi } from "./datagolf-outrights-api.mjs";
 import { fetchSportsbookOutrightsFromUrls } from "./sportsbook-outrights-scraper.mjs";
 import { appendDkRoundProjectionAuditCsv } from "./export-dk-round-model-audit-csv.mjs";
 import { refreshRoundProjectionProps } from "./merge-dk-round-props.mjs";
+import { refreshPrizePicksRoundProps } from "./merge-pp-round-props.mjs";
 import { projectionExportMeta } from "./projection-export-meta.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -398,6 +401,34 @@ async function main() {
         "[fetch-book-odds] Fix: install Playwright Chromium (npx playwright install chromium); on Windows/macOS use DK_HEADLESS=0 (set automatically by push:live).",
       );
       process.exit(1);
+    }
+  }
+
+  if (String(process.env.GOLF_SKIP_PP_OU || "").trim() !== "1") {
+    try {
+      const { props: ppMerged, nPp, ppError } = await refreshPrizePicksRoundProps(next);
+      next.props = ppMerged;
+      if (nPp > 0) {
+        next.pp_round_props_refreshed_at = next.book_odds_refreshed_at;
+        console.log(
+          `[fetch-book-odds] PrizePicks round props: ${nPp} fresh rows (${ppMerged.length} total props)`,
+        );
+      } else if (ppError && !String(ppError).startsWith("skipped")) {
+        console.warn(`[fetch-book-odds] PrizePicks: ${ppError}`);
+      }
+      if (envTruthy("GOLF_REQUIRE_PP_OU") && nPp === 0) {
+        const err =
+          String(ppError || "").trim() ||
+          "PrizePicks fetch returned 0 fresh round O/U props — check PP_LEAGUE_ID / API rate limits";
+        console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_PP_OU=1): ${err}`);
+        process.exit(1);
+      }
+    } catch (e) {
+      console.warn("[fetch-book-odds] PrizePicks O/U skipped:", e.message || e);
+      if (envTruthy("GOLF_REQUIRE_PP_OU")) {
+        console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_PP_OU=1): ${e.message || e}`);
+        process.exit(1);
+      }
     }
   }
 

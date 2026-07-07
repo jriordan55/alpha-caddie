@@ -1831,7 +1831,11 @@ body {
   font-variant-numeric: tabular-nums;
 }
 #table-ou.table-ou-projections .ou-proj-th-line,
-#table-ou.table-ou-projections .ou-proj-td-line {
+#table-ou.table-ou-projections .ou-proj-td-line,
+#table-ou.table-ou-projections .ou-proj-th-dk-line,
+#table-ou.table-ou-projections .ou-proj-td-dk-line,
+#table-ou.table-ou-projections .ou-proj-th-pp-line,
+#table-ou.table-ou-projections .ou-proj-td-pp-line {
   min-width: 3rem;
   color: #f4ca3c;
   font-weight: 800;
@@ -1841,6 +1845,58 @@ body {
   width: 48px;
   min-width: 44px;
   max-width: 56px;
+  text-align: center;
+  vertical-align: middle;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+#table-ou.table-ou-projections .ou-proj-th-book-head {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  line-height: 1.1;
+  vertical-align: middle;
+}
+#table-ou.table-ou-projections .ou-proj-th-book-text {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--golf-text-muted);
+}
+#table-ou.table-ou-projections .ou-proj-th-book-logo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 22px;
+}
+#table-ou.table-ou-projections .ou-proj-th-book-logo-img {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  object-fit: contain;
+  background: var(--golf-elevated-soft);
+  border: 1px solid var(--golf-border);
+}
+#table-ou.table-ou-projections .ou-proj-th-book-logo-fallback {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  min-height: 22px;
+  border-radius: 5px;
+  border: 1px solid var(--golf-border);
+  background: var(--golf-elevated-soft);
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--golf-green);
+}
+#table-ou.table-ou-projections .ou-proj-th-dk-line,
+#table-ou.table-ou-projections .ou-proj-th-dk-odds,
+#table-ou.table-ou-projections .ou-proj-th-pp-line,
+#table-ou.table-ou-projections .ou-proj-th-pp-odds {
   text-align: center;
   vertical-align: middle;
   padding-left: 6px;
@@ -1875,7 +1931,11 @@ body {
   color: var(--golf-green);
 }
 #table-ou.table-ou-projections .ou-proj-th-odds,
-#table-ou.table-ou-projections .ou-proj-td-odds {
+#table-ou.table-ou-projections .ou-proj-td-odds,
+#table-ou.table-ou-projections .ou-proj-th-dk-odds,
+#table-ou.table-ou-projections .ou-proj-td-dk-odds,
+#table-ou.table-ou-projections .ou-proj-th-pp-odds,
+#table-ou.table-ou-projections .ou-proj-td-pp-odds {
   min-width: 3.5rem;
   font-weight: 700;
 }
@@ -4513,14 +4573,18 @@ th.matchup-analysis-best-pick {
     font-size: 0.72rem;
   }
   #table-ou.table-ou-projections .ou-proj-th-book,
-  #table-ou.table-ou-projections .ou-proj-td-book {
+  #table-ou.table-ou-projections .ou-proj-td-book,
+  #table-ou.table-ou-projections .ou-proj-th-dk-line,
+  #table-ou.table-ou-projections .ou-proj-th-dk-odds,
+  #table-ou.table-ou-projections .ou-proj-th-pp-line,
+  #table-ou.table-ou-projections .ou-proj-th-pp-odds {
     min-width: 36px;
-    width: 36px;
-    max-width: 36px;
+    width: auto;
+    max-width: none;
     padding-left: 4px;
     padding-right: 4px;
   }
-  #table-ou.table-ou-projections .ou-proj-book-logo-img {
+  #table-ou.table-ou-projections .ou-proj-th-book-logo-img {
     width: 18px;
     height: 18px;
   }

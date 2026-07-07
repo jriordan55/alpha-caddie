@@ -14,6 +14,8 @@ const WEB_ROOT = join(__dirname, "..");
 const projPath = join(WEB_ROOT, "projections.json");
 
 const DK_CORE_MARKETS = ["Total Score", "Birdies", "Pars", "Bogeys"];
+/** Round O/U books allowed alongside DraftKings on core counting markets. */
+const ALLOWED_ROUND_OU_BOOK_SOURCES = new Set(["draftkings", "prizepicks"]);
 /** DK often posts fewer Round Score lines than counting stats — use per-market floors. */
 const DK_MIN_LINES_BY_MARKET = {
   "Total Score": 10,
@@ -205,11 +207,13 @@ if (skipDkGate) {
     );
     const fake = props.filter(
       (r) =>
-        String(r.source || "").trim().toLowerCase() !== "draftkings" &&
+        !ALLOWED_ROUND_OU_BOOK_SOURCES.has(String(r.source || "").trim().toLowerCase()) &&
         String(r.market || "").trim() === mkt,
     );
     if (fake.length) {
-      fail(`${fake.length} non-DK ${mkt} props in projections.json — run fetch:book-odds (DK only for this market)`);
+      fail(
+        `${fake.length} non-book ${mkt} props in projections.json — run fetch:book-odds (DraftKings / PrizePicks only for this market)`,
+      );
     }
     if (dkLines.length < (DK_MIN_LINES_BY_MARKET[mkt] ?? 20)) {
       fail(
@@ -262,5 +266,5 @@ const targetLabel = liveInPlay
     ? "event-week"
     : "venue-hist";
 console.log(
-  `[validate:projections] OK — par ${coursePar} (${parSource}), R${displayRound}: ${roundRows.length} golfers; avg total ${Number.isFinite(avgTotal) ? avgTotal.toFixed(2) : "?"} (target ${scoreTarget.toFixed(2)} ${targetLabel}); avg bird/pars/bog ${avgBirdies.toFixed(2)}/${avgPars.toFixed(2)}/${avgBogeys.toFixed(2)}; outright MC baked: ${outrightN} players; DK lines: ${DK_CORE_MARKETS.map((m) => `${m}=${props.filter((r) => r.source === "draftkings" && r.market === m).length}`).join(", ")}`,
+  `[validate:projections] OK — par ${coursePar} (${parSource}), R${displayRound}: ${roundRows.length} golfers; avg total ${Number.isFinite(avgTotal) ? avgTotal.toFixed(2) : "?"} (target ${scoreTarget.toFixed(2)} ${targetLabel}); avg bird/pars/bog ${avgBirdies.toFixed(2)}/${avgPars.toFixed(2)}/${avgBogeys.toFixed(2)}; outright MC baked: ${outrightN} players; DK lines: ${DK_CORE_MARKETS.map((m) => `${m}=${props.filter((r) => r.source === "draftkings" && r.market === m).length}`).join(", ")}; PP lines: ${props.filter((r) => String(r.source || "").trim().toLowerCase() === "prizepicks").length}`,
 );

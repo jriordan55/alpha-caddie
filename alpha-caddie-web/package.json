@@ -48,6 +48,8 @@
     "refresh:live-dk-round": "node scripts/refresh-live-dk-round.mjs",
     "refresh:round-ev": "node scripts/refresh-round-ev-tabs.mjs",
     "fetch:dk-ou": "node scripts/draftkings-ou-props.mjs",
+    "fetch:pp-ou": "node scripts/prizepicks-ou-props.mjs",
+    "update:pp-round-projections": "node scripts/update-pp-round-projections.mjs",
     "refresh:pgatour-event": "node scripts/run-refresh-pgatour-event-rounds.mjs",
     "patch:current-event-history": "node scripts/patch-current-event-history-shards.mjs",
     "sync:missing-field-history": "node scripts/sync-missing-field-history-from-csv.mjs",
