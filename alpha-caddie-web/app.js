@@ -3796,6 +3796,35 @@ function ouPropBookLineValue(r) {
   return enforceHalfLine(v);
 }
 
+/** PP milestone lines (e.g. Birdies 0.5) must lose to real counting lines in pick maps. */
+function ouPpLineSanityScore(market, line) {
+  const bands = {
+    "Total Score": [60, 85],
+    Birdies: [1.5, 8.5],
+    Pars: [6, 14.5],
+    Bogeys: [1.5, 8.5],
+    GIR: [5, 16.5],
+    "Fairways hit": [3, 14.5],
+  };
+  const b = bands[String(market || "").trim()];
+  const v = num(line, NaN);
+  if (!b || !Number.isFinite(v)) return -1;
+  return v >= b[0] && v <= b[1] ? 2 : -1;
+}
+
+function ouBookPickRank(pick, canon) {
+  if (!pick) return -1;
+  if (String(pick.source || "").trim().toLowerCase() === "prizepicks") {
+    return ouPpLineSanityScore(canon, pick.line);
+  }
+  return 2;
+}
+
+function ouMapStorePick(map, key, pick, canon) {
+  const prev = map.get(key);
+  if (!prev || ouBookPickRank(pick, canon) >= ouBookPickRank(prev, canon)) map.set(key, pick);
+}
+
 /** Canonical course par from export meta (root course_par_18 or summed hole_pars). */
 function coursePar18FromData() {
   const m = DATA?.meta;
@@ -6886,8 +6915,8 @@ function ouBuildBookPickMap(propsRows, resolvePlayer) {
     const pick = { line, over: o, under: u, source: src };
     const id = Math.round(num(player.dg_id, NaN));
     const nameKey = ouPropPlayerKeyLoose(displayGolferName(player.player_name || ""));
-    if (Number.isFinite(id) && id > 0) map.set(`${id}|${canon}`, pick);
-    map.set(`nm:${nameKey}|${canon}`, pick);
+    if (Number.isFinite(id) && id > 0) ouMapStorePick(map, `${id}|${canon}`, pick, canon);
+    ouMapStorePick(map, `nm:${nameKey}|${canon}`, pick, canon);
   }
   return map;
 }

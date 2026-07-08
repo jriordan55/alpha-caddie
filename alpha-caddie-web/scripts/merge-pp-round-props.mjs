@@ -3,6 +3,7 @@
  */
 import { fetchPrizePicksOuProps } from "./prizepicks-ou-props.mjs";
 import { canonicalizeDkOuPropsAgainstProjections } from "./merge-dk-round-props.mjs";
+import { sanitizePpRoundProps } from "./pp-ou-line-sanity.mjs";
 
 function num(x, fallback = NaN) {
   const n = Number(x);
@@ -65,7 +66,8 @@ export async function refreshPrizePicksRoundProps(payload) {
   const prior = (Array.isArray(payload.props) ? payload.props : []).filter(
     (r) => String(r?.source || "").trim().toLowerCase() !== "prizepicks",
   );
-  const merged = [...prior, ...ppProps.filter(propRowHasPostableLine)];
+  ppProps = sanitizePpRoundProps(ppProps.filter(propRowHasPostableLine), prior);
+  const merged = [...prior, ...ppProps];
   return {
     props: merged,
     nPp: ppProps.filter(propRowHasPostableLine).length,

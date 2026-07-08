@@ -19,6 +19,7 @@ import { fileURLToPath } from "url";
 import { chromium } from "playwright";
 import { matchPlayerByGolferLabel } from "./golfer-name-match.mjs";
 import { applyPrizePicksImpliedOddsAll } from "./prizepicks-implied-odds.mjs";
+import { dedupePpPropsOnePerPlayerMarket } from "./pp-ou-line-sanity.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -265,12 +266,14 @@ export function propsFromPrizePicksBody(body, payload = {}, targetRound = NaN) {
     out.push(prop);
   }
 
-  const dedup = new Map();
-  for (const r of out) {
-    const rk = Number.isFinite(r.round_num) ? `|R${r.round_num}` : "";
-    dedup.set(`${r.player_name}|${r.market}|${r.line}${rk}`, r);
-  }
-  return applyPrizePicksImpliedOddsAll([...dedup.values()]).filter(
+  const dkProps = (Array.isArray(payload?.props) ? payload.props : []).filter(
+    (r) => String(r?.source || "").trim().toLowerCase() === "draftkings",
+  );
+  const deduped = dedupePpPropsOnePerPlayerMarket(
+    out.map((r) => ({ ...r, source: "prizepicks" })),
+    dkProps,
+  );
+  return applyPrizePicksImpliedOddsAll(deduped).filter(
     (r) =>
       Number.isFinite(num(r.over_odds, NaN)) &&
       Number.isFinite(num(r.under_odds, NaN)) &&

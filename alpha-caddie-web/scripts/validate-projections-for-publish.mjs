@@ -8,6 +8,7 @@ import { fileURLToPath } from "url";
 import { normCourseNameKey } from "./course-name-key.mjs";
 import { readCoursePar18 } from "./projection-course-par.mjs";
 import { projectionExportMeta } from "./projection-export-meta.mjs";
+import { validatePpOuLinesInProps } from "./pp-ou-line-sanity.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -255,6 +256,13 @@ if (Number.isFinite(avgTotal) && avgTotal < minTotal) {
 if (Number.isFinite(avgTotal) && avgTotal > maxTotal) {
   fail(
     `R${displayRound} field avg total ${avgTotal.toFixed(2)} too high (max ${maxTotal.toFixed(2)}, target ${scoreTarget.toFixed(2)}${eventWeekTrusted ? ", event-week" : ", venue hist"}) — venue target overshot`,
+  );
+}
+
+const ppLineErrors = validatePpOuLinesInProps(props);
+if (ppLineErrors.length) {
+  fail(
+    `${ppLineErrors.length} PrizePicks O/U line issue(s) — ${ppLineErrors.slice(0, 3).join("; ")}${ppLineErrors.length > 3 ? "…" : ""} — rerun npm run update:pp-round-projections`,
   );
 }
 
