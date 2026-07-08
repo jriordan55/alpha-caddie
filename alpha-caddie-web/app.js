@@ -3189,26 +3189,60 @@ function ouPlayerMarketAverage(market, player, windowMode = ouProjAvgWindowMode(
 }
 
 let ouFieldHistoryLoadPromise = null;
+let ouFieldHistoryLoadedSig = "";
+let ouHistoryMergeRebuildRaf = 0;
+/** @type {object[] | null} */
+let ouProjectionFlatRowsCache = null;
+let ouProjectionFlatRowsCacheSig = "";
 
-function ouPlayerAvgHistoryPending(player) {
-  const id = Math.round(num(player?.dg_id, NaN));
-  if (!Number.isFinite(id)) return false;
-  if (historyBucketLoaded(id) || playerHistoryAbsentDgIds.has(id)) return false;
-  return Boolean(HISTORY?._loading) || Boolean(ouFieldHistoryLoadPromise);
+function ouFieldHistoryLoadSig() {
+  const seasonYear = ouProjectionFieldHistorySeasonYear();
+  const ids = [...propsFieldPlayerDgIds()]
+    .map((id) => Math.round(num(id, NaN)))
+    .filter((id) => Number.isFinite(id))
+    .sort((a, b) => a - b)
+    .join(",");
+  return `${seasonYear}|${ids}`;
 }
 
-function ouProjectionFieldHistorySeasonYear() {
-  return ouProjAvgWindowMode() === "season" ? propsFieldDefaultSeasonYear() : NaN;
+function ouFieldHistoryReadyForAverages() {
+  const seasonYear = ouProjectionFieldHistorySeasonYear();
+  const ids = [...propsFieldPlayerDgIds()];
+  if (!ids.length) return true;
+  const bucketReady = (id) =>
+    Number.isFinite(seasonYear) ? historyBucketReadyForFieldSeason(id, seasonYear) : historyBucketLoaded(id);
+  return ids.every((id) => bucketReady(id) || playerHistoryAbsentDgIds.has(id));
+}
+
+function scheduleOuTableRebuildAfterHistory() {
+  if (activeAppTabId() !== "ou") return;
+  if (ouHistoryMergeRebuildRaf) cancelAnimationFrame(ouHistoryMergeRebuildRaf);
+  ouHistoryMergeRebuildRaf = requestAnimationFrame(() => {
+    ouHistoryMergeRebuildRaf = 0;
+    OU_PROJ_AVG_CACHE.clear();
+    ouProjectionFlatRowsCacheSig = "";
+    scheduleBuildOuTable(true);
+  });
+}
+
+function ensureOuFieldHistoryOnce() {
+  if (ouFieldHistoryReadyForAverages()) return;
+  if (ouFieldHistoryLoadPromise) return;
+  scheduleOuProjectionFieldHistoryLoad();
 }
 
 async function ensureOuProjectionFieldHistoryLoaded() {
+  const sig = ouFieldHistoryLoadSig();
+  if (ouFieldHistoryLoadedSig === sig && ouFieldHistoryReadyForAverages()) return;
   if (!HISTORY._ok && !playerHistoryLoadPromise) {
     await loadPlayerHistory();
   }
   const seasonYear = ouProjectionFieldHistorySeasonYear();
   await ensurePropsFieldPlayerHistoryLoaded({ seasonYear });
+  ouFieldHistoryLoadedSig = sig;
   OU_PROJ_AVG_CACHE.clear();
   HISTORY_ROUNDS_CHRONO_CACHE.clear();
+  ouProjectionFlatRowsCacheSig = "";
 }
 
 function scheduleOuProjectionFieldHistoryLoad() {
@@ -3227,6 +3261,17 @@ function scheduleOuProjectionFieldHistoryLoad() {
 }
 
 const OU_PROJ_AVG_CACHE = new Map();
+
+function ouPlayerAvgHistoryPending(player) {
+  const id = Math.round(num(player?.dg_id, NaN));
+  if (!Number.isFinite(id)) return false;
+  if (historyBucketLoaded(id) || playerHistoryAbsentDgIds.has(id)) return false;
+  return Boolean(HISTORY?._loading) || Boolean(ouFieldHistoryLoadPromise);
+}
+
+function ouProjectionFieldHistorySeasonYear() {
+  return ouProjAvgWindowMode() === "season" ? propsFieldDefaultSeasonYear() : NaN;
+}
 
 function ouCachedPlayerMarketAverage(market, player, windowMode = ouProjAvgWindowMode()) {
   const id = Math.round(num(player?.dg_id, NaN));
@@ -5915,7 +5960,7 @@ let ouGolferSuggestLabelsSig = "";
 /** @type {string[]} */
 let ouGolferSuggestLabels = [];
 let ouProjTableChromeReady = false;
-const OU_PROJ_TABLE_CHROME_VER = 3;
+const OU_PROJ_TABLE_CHROME_VER = 4;
 let ouProjTableChromeBuiltVer = 0;
 let ouTableBuildRaf = 0;
 
@@ -5932,6 +5977,9 @@ function ouInvalidateProjectionPerfCaches() {
   OU_MARKET_RATING_CACHE.clear();
   OU_MARKET_RATING_ROUNDS_CACHE.clear();
   OU_PROJ_AVG_CACHE.clear();
+  ouProjectionFlatRowsCache = null;
+  ouProjectionFlatRowsCacheSig = "";
+  ouFieldHistoryLoadedSig = "";
 }
 
 /** Coalesce rapid O/U table rebuilds (filters, polls) into one frame. */
@@ -6705,16 +6753,8 @@ function ensureOuProjectionTableChrome() {
   hr.appendChild(ouProjMakeBookColumnTh("pr-dk-odds", "Odds", "ou-proj-th-dk-odds", "draftkings", sortInd));
   hr.appendChild(ouProjMakeBookColumnTh("pr-pp-line", "Line", "ou-proj-th-pp-line", "prizepicks", sortInd));
   hr.appendChild(ouProjMakeBookColumnTh("pr-pp-odds", "Odds", "ou-proj-th-pp-odds", "prizepicks", sortInd));
-  for (const [key, label, cls] of [
-    ["pr-dk-edge", "DK Edge", "sortable ou-proj-long-th num ou-proj-th-dk-edge"],
-    ["pr-pp-edge", "PP Edge", "sortable ou-proj-long-th num ou-proj-th-pp-edge"],
-  ]) {
-    const th = document.createElement("th");
-    th.className = cls;
-    th.dataset.sortKey = key;
-    th.innerHTML = `${label}${sortInd}`;
-    hr.appendChild(th);
-  }
+  hr.appendChild(ouProjMakeBookColumnTh("pr-dk-edge", "Edge", "ou-proj-th-dk-edge", "draftkings", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-pp-edge", "Edge", "ou-proj-th-pp-edge", "prizepicks", sortInd));
   thead.innerHTML = "";
   thead.appendChild(hr);
   ouProjTableChromeBuiltVer = OU_PROJ_TABLE_CHROME_VER;
@@ -6924,6 +6964,32 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
     }
   }
   return out;
+}
+
+function ouProjectionFlatRowsCacheKey(players, cols) {
+  const avgWindow = ouProjAvgWindowMode();
+  const round = getOuRound();
+  const colSig = cols.map((c) => c.label).join("\x1e");
+  return [
+    `r${round}`,
+    `aw${avgWindow}`,
+    `c${colSig}`,
+    `n${players.length}`,
+    `fp${playerDgFingerprint(players)}`,
+    `ep${historyMutationEpoch}`,
+    `rev${projectionsDataRev}`,
+    `dk${ouDkRoundPropsCacheSig}`,
+    `pp${ouPpRoundPropsCacheSig}`,
+  ].join("|");
+}
+
+function getOuProjectionFlatRows(players, cols) {
+  const sig = ouProjectionFlatRowsCacheKey(players, cols);
+  if (ouProjectionFlatRowsCacheSig === sig && ouProjectionFlatRowsCache) return ouProjectionFlatRowsCache;
+  const rows = ouProjectionFlatRowsForPlayers(players, cols);
+  ouProjectionFlatRowsCacheSig = sig;
+  ouProjectionFlatRowsCache = rows;
+  return rows;
 }
 
 /** DraftKings golfers with at least one line for the active O/U round (for status messaging). */
@@ -7262,13 +7328,17 @@ function buildOuTable() {
     if (prevQ && !allRows.some((p) => golferNameMatchesQuery(String(p.player_name || ""), prevQ))) pf.value = "";
   }
   const q = pf && pf instanceof HTMLInputElement ? String(pf.value || "").trim().toLowerCase() : "";
-  let playersFiltered = !q ? allRows : allRows.filter((p) => golferNameMatchesQuery(String(p.player_name || ""), q));
   const teeWave = selectedOuTeeWaveFilter();
-  if (teeWave) playersFiltered = playersFiltered.filter((p) => playerMatchesTeeWaveFilter(p, teeWave));
 
-  scheduleOuProjectionFieldHistoryLoad();
+  ensureOuFieldHistoryOnce();
 
-  let flatRows = ouProjectionFlatRowsForPlayers(playersFiltered, cols);
+  let flatRows = getOuProjectionFlatRows(allRows, cols);
+  if (q) {
+    flatRows = flatRows.filter((r) => golferNameMatchesQuery(String(r.player.player_name || ""), q));
+  }
+  if (teeWave) {
+    flatRows = flatRows.filter((r) => playerMatchesTeeWaveFilter(r.player, teeWave));
+  }
   const projMarketSel = String(document.getElementById("ou-proj-market-filter")?.value || "").trim();
   if (projMarketSel) flatRows = flatRows.filter((r) => String(r.col.label) === projMarketSel);
   const k = ouTableSort.key;
@@ -14747,7 +14817,7 @@ function mergePlayerHistoryPartialPayload(payload) {
   }
   PRICING_MU_BONUS_CACHE.clear();
   bumpHistoryMutationEpoch();
-  if (activeAppTabId() === "ou") scheduleBuildOuTable(true);
+  if (activeAppTabId() === "ou") scheduleOuTableRebuildAfterHistory();
   return true;
 }
 
@@ -23426,7 +23496,9 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("ou-proj-avg-window")?.addEventListener("change", () => {
     ouProjExpandedKey = "";
     OU_PROJ_AVG_CACHE.clear();
-    void scheduleOuProjectionFieldHistoryLoad();
+    ouProjectionFlatRowsCacheSig = "";
+    scheduleBuildOuTable(true);
+    if (!ouFieldHistoryReadyForAverages()) void scheduleOuProjectionFieldHistoryLoad();
   });
   document.getElementById("props-filter-tee-wave")?.addEventListener("change", (e) => {
     const ouEl = document.getElementById("ou-tee-wave-filter");
