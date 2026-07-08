@@ -80,7 +80,7 @@
         <button type="button" class="home-card" data-go-tab="course-fit" role="listitem">
           <span class="home-card-icon" aria-hidden="true">CF</span>
           <span class="home-card-title">Course fit</span>
-          <span class="home-card-desc">Skill profile vs venue — radar, similar courses, shot bins.</span>
+          <span class="home-card-desc">Skill profile vs venue — radar, similar courses, past-event distributions.</span>
         </button>
         <button type="button" class="home-card" data-go-tab="course-breakdown" role="listitem">
           <span class="home-card-icon" aria-hidden="true">CB</span>
@@ -499,7 +499,7 @@
 
         <div class="course-fit-subtabs" role="tablist" aria-label="Views">
           <button type="button" class="course-fit-subtab active" role="tab" aria-selected="true" data-course-fit-subtab="adjustments" id="course-fit-subtab-adjustments">Adjustments</button>
-          <button type="button" class="course-fit-subtab" role="tab" aria-selected="false" data-course-fit-subtab="shots" id="course-fit-subtab-shots">Predicted shot distance</button>
+          <button type="button" class="course-fit-subtab" role="tab" aria-selected="false" data-course-fit-subtab="distributions" id="course-fit-subtab-distributions">Past events</button>
         </div>
 
         <div id="course-fit-subpanel-adjustments" class="course-fit-subpanel">
@@ -555,53 +555,53 @@
           </div>
         </div>
 
-        <div id="course-fit-subpanel-shots" class="course-fit-subpanel" hidden>
-          <div class="leaderboard-card course-fit-shot-card" id="course-fit-shot-card">
-            <h3 class="course-fit-table-title" id="course-fit-shot-heading">Where are players hitting shots from?</h3>
-            <label class="course-fit-search-wrap">
-              <span class="course-fit-search-icon" aria-hidden="true">⌕</span>
-              <input type="search" id="course-fit-shots-search" class="course-fit-search" placeholder="Find golfers…" autocomplete="off" />
-            </label>
-            <div class="table-wrap course-fit-shot-table-wrap">
-              <table class="data-table course-fit-shot-table" id="table-course-fit-shots">
-                <thead>
-                  <tr>
-                    <th scope="col" rowspan="2" class="course-fit-shot-player-th">Golfer</th>
-                    <th scope="colgroup" colspan="3" class="course-fit-shot-group-th">Putting <span class="course-fit-shot-tag">est.</span></th>
-                    <th scope="colgroup" colspan="2" class="course-fit-shot-group-th">Rough approach <span class="course-fit-shot-tag">YTD</span></th>
-                    <th scope="colgroup" colspan="4" class="course-fit-shot-group-th">Fairway approach <span class="course-fit-shot-tag">YTD</span></th>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="course-fit-shot-sub num">2–5′</th>
-                    <th scope="col" class="course-fit-shot-sub num">5–30′</th>
-                    <th scope="col" class="course-fit-shot-sub num">30′+</th>
-                    <th scope="col" class="course-fit-shot-sub num">&lt;150 yds</th>
-                    <th scope="col" class="course-fit-shot-sub num">150+ yds</th>
-                    <th scope="col" class="course-fit-shot-sub num">50–100</th>
-                    <th scope="col" class="course-fit-shot-sub num">100–150</th>
-                    <th scope="col" class="course-fit-shot-sub num">150–200</th>
-                    <th scope="col" class="course-fit-shot-sub num">200+</th>
-                  </tr>
-                </thead>
-                <tbody id="course-fit-shot-tbody"></tbody>
-              </table>
+        <div id="course-fit-subpanel-distributions" class="course-fit-subpanel" hidden>
+          <div class="leaderboard-card course-fit-dist-card" id="course-fit-dist-card">
+            <div class="course-fit-dist-toolbar">
+              <div class="course-fit-dist-events-field">
+                <span class="course-fit-dist-toolbar-label">Analyze Past Events</span>
+                <div id="course-fit-past-events-host" class="course-fit-dist-events-host" role="group" aria-label="Past events at this course"></div>
+              </div>
+              <div class="course-fit-dist-round-field">
+                <span class="course-fit-dist-toolbar-label">Round</span>
+                <div class="course-fit-dist-round-toggle" role="group" aria-label="Round filter">
+                  <button type="button" class="course-fit-dist-round-btn active" data-cf-round="all">All</button>
+                  <button type="button" class="course-fit-dist-round-btn" data-cf-round="1">R1</button>
+                  <button type="button" class="course-fit-dist-round-btn" data-cf-round="2">R2</button>
+                  <button type="button" class="course-fit-dist-round-btn" data-cf-round="3">R3</button>
+                  <button type="button" class="course-fit-dist-round-btn" data-cf-round="4">R4</button>
+                </div>
+              </div>
+              <label class="course-fit-dist-prop-field">
+                <span class="course-fit-dist-toolbar-label">Round Prop</span>
+                <select id="course-fit-dist-prop" aria-label="Round prop for distributions">
+                  <option value="total" selected>Score</option>
+                  <option value="birdies">Birdies or Better</option>
+                  <option value="pars">Pars</option>
+                  <option value="bogeys">Bogeys or Worse</option>
+                  <option value="fairways">Fairways Hit</option>
+                  <option value="gir">Greens in Regulation</option>
+                </select>
+              </label>
+            </div>
+            <p id="course-fit-dist-empty" class="course-fit-dist-empty text-muted" hidden role="status">No data available for your chosen filters.</p>
+            <div class="course-fit-dist-charts" id="course-fit-dist-charts">
+              <div class="course-fit-dist-chart-card">
+                <h3 class="course-fit-dist-chart-title" id="course-fit-dist-avg-title">Score Distribution — Round Average</h3>
+                <div class="course-fit-dist-canvas-wrap">
+                  <canvas id="course-fit-dist-avg-canvas" class="course-fit-dist-canvas" width="560" height="320" aria-label="Round average distribution histogram"></canvas>
+                </div>
+                <dl class="course-fit-dist-stats" id="course-fit-dist-avg-stats"></dl>
+              </div>
+              <div class="course-fit-dist-chart-card">
+                <h3 class="course-fit-dist-chart-title" id="course-fit-dist-ind-title">Score Distribution — Individual</h3>
+                <div class="course-fit-dist-canvas-wrap">
+                  <canvas id="course-fit-dist-ind-canvas" class="course-fit-dist-canvas" width="560" height="320" aria-label="Individual round distribution histogram"></canvas>
+                </div>
+                <dl class="course-fit-dist-stats" id="course-fit-dist-ind-stats"></dl>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div id="course-fit-bin-tooltip" class="course-fit-bin-tooltip" hidden>
-          <p class="course-fit-tip-main"></p>
-          <div class="course-fit-tip-chart">
-            <span class="course-fit-tip-pred-num"></span>
-            <div class="course-fit-tip-track">
-              <div class="course-fit-tip-highlight" aria-hidden="true"></div>
-              <span class="course-fit-tip-line" aria-hidden="true"></span>
-              <span class="course-fit-tip-dot course-fit-tip-dot-field" aria-hidden="true"></span>
-              <span class="course-fit-tip-dot course-fit-tip-dot-player" aria-hidden="true"></span>
-            </div>
-          </div>
-          <p class="course-fit-tip-stat text-muted"></p>
-          <p class="course-fit-tip-dk text-muted"></p>
         </div>
       </div>
     </section>
@@ -1421,7 +1421,7 @@
       </p>
       <section class="ev-help-section" aria-labelledby="tab-help-cf-subtabs-h">
         <h4 class="ev-devig-section-title" id="tab-help-cf-subtabs-h">Two views</h4>
-        <p class="text-muted ev-help-devig-lede"><strong>Adjustments</strong> — Radar chart, course similarity, and the <strong>course ratings</strong> table (full field). <strong>Predicted shot distance</strong> — A grid of how many shots per round the model expects in each distance bucket (putting, rough approach, fairway approach).</p>
+        <p class="text-muted ev-help-devig-lede"><strong>Adjustments</strong> — Radar chart, course similarity, and the <strong>course ratings</strong> table (full field). <strong>Past events</strong> — Historical round-prop distributions at this course from archived tournament rounds.</p>
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-cf-adj-h">
         <h4 class="ev-devig-section-title" id="tab-help-cf-adj-h">Adjustments</h4>
@@ -1459,15 +1459,17 @@
           <dd>Click any column header to sort. Green/red coloring only highlights positive vs negative ratings, not EV or SG.</dd>
         </dl>
       </section>
-      <section class="ev-help-section" aria-labelledby="tab-help-cf-shots-h">
-        <h4 class="ev-devig-section-title" id="tab-help-cf-shots-h">Predicted shot dist'n</h4>
+      <section class="ev-help-section" aria-labelledby="tab-help-cf-dist-h">
+        <h4 class="ev-devig-section-title" id="tab-help-cf-dist-h">Past events</h4>
         <dl class="ev-help-dl">
-          <dt>Columns</dt>
-          <dd><strong>Putting</strong> splits expected putts into short, medium, and long bands from the same putting picture as the rest of the app. <strong>Rough</strong> and <strong>fairway approach</strong> split approach shots by lie and distance; counts are shown per round and lined up against the field average for each bin.</dd>
-          <dt>Numbers and bars</dt>
-          <dd>Each cell is predicted shots per round in that bin. The faint marker is the field baseline for the bin; the colored dot is this golfer. Green versus red indicates whether their underlying skill in that bucket is above or below the field for rough and fairway rows; putting uses putting skill vs the field.</dd>
-          <dt>Hover a cell</dt>
-          <dd>You get the exact predicted count versus the field baseline for that bin, a compact comparison strip, and a related headline stat (model putts, fairways, or greens in regulation vs the field). When an over/under line and prices are available for that stat, they appear at the bottom; otherwise that line is omitted.</dd>
+          <dt>Analyze Past Events</dt>
+          <dd>Select one or more prior tournaments played at the course in the sidebar (from <code>player-history/by-course</code> shards).</dd>
+          <dt>Round / Round Prop</dt>
+          <dd>Filter to a single round or all rounds, and pick the counting stat (score, birdies, pars, bogeys, fairways, GIR).</dd>
+          <dt>Round Average chart</dt>
+          <dd>One bar per player per event: the mean of that stat across the selected round(s) at that event.</dd>
+          <dt>Individual chart</dt>
+          <dd>Every completed round in the filter window. Shaded bands show ±1 SD and ±2 SD; the red line is the mean.</dd>
         </dl>
       </section>
       <footer class="ev-help-actions">
@@ -1477,6 +1479,6 @@
   </dialog>
 
   <script src="parlay-pro.js?v=12"></script>
-  <script src="app.js?v=302"></script>
+  <script src="app.js?v=303"></script>
 </body>
 </html>

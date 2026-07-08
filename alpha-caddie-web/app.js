@@ -10871,17 +10871,17 @@ function initCourseFitSubtabs() {
 
 function setCourseFitSubtab(id) {
   const adj = document.getElementById("course-fit-subpanel-adjustments");
-  const shot = document.getElementById("course-fit-subpanel-shots");
-  if (!adj || !shot) return;
-  const active = id === "shots" ? "shots" : "adjustments";
+  const dist = document.getElementById("course-fit-subpanel-distributions");
+  if (!adj || !dist) return;
+  const active = id === "distributions" ? "distributions" : "adjustments";
   adj.hidden = active !== "adjustments";
-  shot.hidden = active !== "shots";
+  dist.hidden = active !== "distributions";
   document.querySelectorAll("[data-course-fit-subtab]").forEach((btn) => {
     const on = String(btn.getAttribute("data-course-fit-subtab") || "") === active;
     btn.classList.toggle("active", on);
     btn.setAttribute("aria-selected", on ? "true" : "false");
   });
-  if (active === "shots") buildCourseFitTab();
+  if (active === "distributions") buildCourseFitTab();
 }
 
 /* ---------------- Course breakdown tab ---------------- */
@@ -12316,385 +12316,416 @@ function courseFitFindDraftKingsOuProp(dgId, playerName, market) {
   return null;
 }
 
-const COURSE_FIT_BIN_LABELS = {
-  put: ["putts from 2-5 feet", "putts from 5-30 feet", "putts from 30+ feet"],
-  rough: ["rough approach under 150 yards", "rough approach 150+ yards"],
-  fw: [
-    "fairway approach 50-100 yards",
-    "fairway approach 100-150 yards",
-    "fairway approach 150-200 yards",
-    "fairway approach 200+ yards",
-  ],
-};
+const COURSE_FIT_DIST_PROPS = Object.freeze([
+  { key: "total", label: "Score" },
+  { key: "birdies", label: "Birdies or Better" },
+  { key: "pars", label: "Pars" },
+  { key: "bogeys", label: "Bogeys or Worse" },
+  { key: "fairways", label: "Fairways Hit" },
+  { key: "gir", label: "Greens in Regulation" },
+]);
 
-function courseFitBinTooltipHide() {
-  const tip = document.getElementById("course-fit-bin-tooltip");
-  if (tip) tip.hidden = true;
+let courseFitDistRoundFilter = "all";
+let courseFitDistPropKey = "total";
+/** @type {Set<string>} */
+let courseFitDistSelectedEvents = new Set();
+let courseFitDistEventsVenueKey = "";
+let courseFitDistFiltersBound = false;
+
+function courseFitDistPropLabel(statKey) {
+  const hit = COURSE_FIT_DIST_PROPS.find((p) => p.key === statKey);
+  return hit ? hit.label : "Score";
 }
 
-function ensureCourseFitBinTooltipHandlers() {
-  const panel = document.getElementById("panel-course-fit");
-  if (!panel || panel.dataset.cfTipBound === "1") return;
-  panel.dataset.cfTipBound = "1";
-  panel.addEventListener("pointermove", (ev) => {
-    const td = ev.target.closest(".course-fit-shot-bin-td");
-    const tip = document.getElementById("course-fit-bin-tooltip");
-    if (!td || !tip || td.closest("#course-fit-shot-tbody") === null) {
-      courseFitBinTooltipHide();
-      return;
-    }
-    courseFitBinTooltipShow(td, ev.clientX, ev.clientY);
+function courseFitDistEventKey(row) {
+  if (!row || typeof row !== "object") return "";
+  const y = historyRoundSeasonYear(row);
+  const ev = String(row.event_name || "").trim();
+  if (!ev) return "";
+  return `${Number.isFinite(y) ? y : "na"}|${ev}`;
+}
+
+function courseFitDistEventDisplayLabel(row) {
+  const y = historyRoundSeasonYear(row);
+  const ev = formatEventNameForDisplay(String(row?.event_name || "").trim());
+  return Number.isFinite(y) ? `${y} ${ev}` : ev;
+}
+
+function courseFitDistEventsFromEntries(entries) {
+  const map = new Map();
+  for (const e of entries || []) {
+    const row = e?.row;
+    if (!row || !historyRoundCountsAsActual(row)) continue;
+    const key = courseFitDistEventKey(row);
+    if (!key || map.has(key)) continue;
+    map.set(key, { key, row, label: courseFitDistEventDisplayLabel(row) });
+  }
+  return [...map.values()].sort((a, b) => {
+    const ya = historyRoundSeasonYear(a.row);
+    const yb = historyRoundSeasonYear(b.row);
+    if (yb !== ya) return yb - ya;
+    return String(a.label).localeCompare(String(b.label));
   });
-  panel.addEventListener("pointerleave", () => courseFitBinTooltipHide());
 }
 
-function courseFitBinTooltipShow(td, clientX, clientY) {
-  const tip = document.getElementById("course-fit-bin-tooltip");
-  const tr = td.closest("tr");
-  if (!tip || !tr) return;
-  const dg = Math.round(num(tr.dataset.dgId, NaN));
-  const zone = String(td.dataset.cfZone || "");
-  const idx = Math.round(num(td.dataset.cfIdx, NaN));
-  const pred = num(td.dataset.cfPred, NaN);
-  const field = num(td.dataset.cfField, NaN);
-  const rows = courseFitPlayerPool();
-  const prow = rows.find((r) => Math.round(num(r.dg_id, NaN)) === dg);
-  const nm = displayGolferName(String(prow?.player_name || tr.querySelector(".course-fit-shot-player")?.textContent || ""));
-  const girs = rows.map((r) => num(r.gir, NaN)).filter(Number.isFinite);
-  const fws = rows.map((r) => num(r.fairways, NaN)).filter(Number.isFinite);
-  const puttsAll = rows.map((r) => num(r.putts, NaN)).filter(Number.isFinite);
-  const meanGir = girs.length ? girs.reduce((s, x) => s + x, 0) / girs.length : NaN;
-  const meanFw = fws.length ? fws.reduce((s, x) => s + x, 0) / fws.length : NaN;
-  const meanPutts = puttsAll.length ? puttsAll.reduce((s, x) => s + x, 0) / puttsAll.length : NaN;
-
-  let binPhrase = "shots";
-  if (zone === "put") binPhrase = COURSE_FIT_BIN_LABELS.put[idx] || "putting bin";
-  else if (zone === "rough") binPhrase = COURSE_FIT_BIN_LABELS.rough[idx] || "rough bin";
-  else if (zone === "fw") binPhrase = COURSE_FIT_BIN_LABELS.fw[idx] || "fairway approach bin";
-
-  const mainEl = tip.querySelector(".course-fit-tip-main");
-  const statEl = tip.querySelector(".course-fit-tip-stat");
-  const dkEl = tip.querySelector(".course-fit-tip-dk");
-  const predNumEl = tip.querySelector(".course-fit-tip-pred-num");
-  const hl = tip.querySelector(".course-fit-tip-highlight");
-  const dotF = tip.querySelector(".course-fit-tip-dot-field");
-  const dotP = tip.querySelector(".course-fit-tip-dot-player");
-  const lineEl = tip.querySelector(".course-fit-tip-line");
-  if (mainEl) {
-    const pStr = Number.isFinite(pred) ? pred.toFixed(1) : "—";
-    const fStr = Number.isFinite(field) ? field.toFixed(1) : "—";
-    mainEl.innerHTML = `We predict <strong>${escapeHtml(nm)}</strong> will hit <strong>${pStr}</strong> ${escapeHtml(binPhrase)} per round (scaled). At this field's average in-bin profile we use <strong>${fStr}</strong> per round.`;
-  }
-
-  const span = Math.max(Math.abs(pred - field) * 2.5, 0.35, Math.abs(pred - field) + 0.25);
-  const lo = Math.min(pred, field) - span * 0.25;
-  const hi = Math.max(pred, field) + span * 0.25;
-  const range = Math.max(hi - lo, 1e-6);
-  const fp = ((field - lo) / range) * 100;
-  const pp = ((pred - lo) / range) * 100;
-  if (dotF) dotF.style.left = `${clamp(fp, 5, 95)}%`;
-  if (dotP) dotP.style.left = `${clamp(pp, 5, 95)}%`;
-  if (hl) {
-    const left = Math.min(fp, pp);
-    const w = Math.abs(pp - fp);
-    hl.style.left = `${clamp(left, 0, 100)}%`;
-    hl.style.width = `${clamp(w, 2, 90)}%`;
-  }
-  if (lineEl) {
-    lineEl.style.left = `${clamp(Math.min(fp, pp), 5, 95)}%`;
-    lineEl.style.width = `${clamp(Math.abs(pp - fp), 0, 90)}%`;
-  }
-  if (predNumEl) predNumEl.textContent = Number.isFinite(pred) ? pred.toFixed(1) : "—";
-
-  if (statEl) {
-    let line = "";
-    if (zone === "put" && prow) {
-      const mp = num(prow.putts, NaN);
-      line = `Putts (model round): <strong>${Number.isFinite(mp) ? mp.toFixed(1) : "—"}</strong> vs field avg <strong>${Number.isFinite(meanPutts) ? meanPutts.toFixed(1) : "—"}</strong>.`;
-    } else if (zone === "rough" && prow) {
-      const mf = num(prow.fairways, NaN);
-      line = `Fairways hit (model round): <strong>${Number.isFinite(mf) ? mf.toFixed(1) : "—"}</strong> vs field avg <strong>${Number.isFinite(meanFw) ? meanFw.toFixed(1) : "—"}</strong>.`;
-    } else if (zone === "fw" && prow) {
-      const mg = num(prow.gir, NaN);
-      line = `GIR (model round): <strong>${Number.isFinite(mg) ? mg.toFixed(1) : "—"}</strong> vs field avg <strong>${Number.isFinite(meanGir) ? meanGir.toFixed(1) : "—"}</strong>.`;
-    }
-    statEl.innerHTML = line || "";
-  }
-
-  if (dkEl) {
-    dkEl.hidden = true;
-    dkEl.textContent = "";
-    const mk =
-      zone === "put" ? "Putts" : zone === "rough" ? "Fairways hit" : zone === "fw" ? "GIR" : "";
-    const dkRow = mk ? courseFitFindDraftKingsOuProp(dg, nm, mk) : null;
-    const rLab = num(DATA?.meta?.display_round, NaN);
-    const rStr = Number.isFinite(rLab) && rLab >= 1 && rLab <= 4 ? `R${Math.round(rLab)}` : "";
-    if (dkRow && Number.isFinite(num(dkRow.line, NaN))) {
-      const L = num(dkRow.line, NaN);
-      dkEl.hidden = false;
-      dkEl.innerHTML =
-        `${rStr ? `${rStr} · ` : ""}Line <strong>${L.toFixed(L % 1 === 0 ? 0 : 1)}</strong> · O ${formatAmericanOddsShort(dkRow.over_odds)} / U ${formatAmericanOddsShort(dkRow.under_odds)}`;
-    }
-  }
-
-  tip.hidden = false;
-  const pad = 14;
-  let x = clientX + pad;
-  let y = clientY + pad;
-  const rect = tip.getBoundingClientRect();
-  const vw = typeof window !== "undefined" ? window.innerWidth : 1200;
-  const vh = typeof window !== "undefined" ? window.innerHeight : 800;
-  if (x + rect.width > vw - 8) x = clientX - rect.width - pad;
-  if (y + rect.height > vh - 8) y = clientY - rect.height - pad;
-  tip.style.left = `${clamp(x, 8, vw - rect.width - 8)}px`;
-  tip.style.top = `${clamp(y, 8, vh - rect.height - 8)}px`;
+function courseFitDistRoundMatches(row, roundFilter) {
+  if (roundFilter === "all") return true;
+  const want = Math.round(num(roundFilter, NaN));
+  const rn = Math.round(num(row?.round_num, NaN));
+  return Number.isFinite(want) && want >= 1 && want <= 4 && rn === want;
 }
 
-/** Putting buckets: not in DataGolf JSON — split projected putts using SG putting percentile vs the field. */
-function courseFitPuttingThreeBins(putts, sgPutt, sortedSgPuttField) {
-  if (!Number.isFinite(putts) || putts <= 0 || !sortedSgPuttField.length || !Number.isFinite(sgPutt)) {
-    return [NaN, NaN, NaN];
+function courseFitDistIndividualValues(entries, statKey, roundFilter, selectedEvents) {
+  const out = [];
+  for (const e of entries || []) {
+    const row = e?.row;
+    if (!row || !historyRoundCountsAsActual(row)) continue;
+    const ek = courseFitDistEventKey(row);
+    if (selectedEvents.size && !selectedEvents.has(ek)) continue;
+    if (!courseFitDistRoundMatches(row, roundFilter)) continue;
+    const v = actualForRoundRow(statKey, row);
+    if (Number.isFinite(v)) out.push(v);
   }
-  let below = 0;
-  for (let i = 0; i < sortedSgPuttField.length; i++) {
-    if (sortedSgPuttField[i] < sgPutt) below++;
-    else break;
-  }
-  const rank = sortedSgPuttField.length ? below / sortedSgPuttField.length : 0.5;
-  const wShort = 0.09 + 0.06 * rank;
-  const wLong = 0.47 - 0.1 * rank;
-  const wMid = 1 - wShort - wLong;
-  return [putts * wShort, putts * wMid, putts * wLong];
+  return out;
 }
 
-function courseFitPuttingFieldBins(meanPutts) {
-  if (!Number.isFinite(meanPutts) || meanPutts <= 0) return [NaN, NaN, NaN];
-  const rank = 0.5;
-  const wShort = 0.09 + 0.06 * rank;
-  const wLong = 0.47 - 0.1 * rank;
-  const wMid = 1 - wShort - wLong;
-  return [meanPutts * wShort, meanPutts * wMid, meanPutts * wLong];
+function courseFitDistPlayerEventAverages(entries, statKey, roundFilter, selectedEvents) {
+  const byPe = new Map();
+  for (const e of entries || []) {
+    const row = e?.row;
+    if (!row || !historyRoundCountsAsActual(row)) continue;
+    const ek = courseFitDistEventKey(row);
+    if (selectedEvents.size && !selectedEvents.has(ek)) continue;
+    if (!courseFitDistRoundMatches(row, roundFilter)) continue;
+    const v = actualForRoundRow(statKey, row);
+    if (!Number.isFinite(v)) continue;
+    const dg = Math.round(num(e.dgId ?? row.dg_id, NaN));
+    const pk = `${ek}|${Number.isFinite(dg) ? dg : String(e.playerName || "")}`;
+    const hit = byPe.get(pk) || { sum: 0, n: 0 };
+    hit.sum += v;
+    hit.n += 1;
+    byPe.set(pk, hit);
+  }
+  const out = [];
+  for (const hit of byPe.values()) {
+    if (hit.n > 0) out.push(hit.sum / hit.n);
+  }
+  return out;
 }
 
-function courseFitShotBinStripHtml(playerVal, fieldVal, lo, hi, skillPositive) {
-  const span = Math.max(hi - lo, 1e-6);
-  const fp = ((num(fieldVal, NaN) - lo) / span) * 100;
-  const pp = ((num(playerVal, NaN) - lo) / span) * 100;
-  const fpC = clamp(Number.isFinite(fp) ? fp : 50, 0, 100);
-  const ppC = clamp(Number.isFinite(pp) ? pp : 50, 0, 100);
-  const cls = skillPositive ? "course-fit-bin-player course-fit-bin-good" : "course-fit-bin-player course-fit-bin-bad";
-  const disp = Number.isFinite(num(playerVal, NaN)) ? num(playerVal, 0).toFixed(1) : "—";
-  return `<div class="course-fit-bin-cell-inner">
-    <span class="course-fit-bin-val">${disp}</span>
-    <div class="course-fit-bin-track" role="presentation">
-      <span class="course-fit-bin-field-dot" style="left:${fpC}%"></span>
-      <span class="${cls}" style="left:${ppC}%"></span>
-    </div>
-  </div>`;
+function courseFitDistMeanSd(values) {
+  const xs = (values || []).filter((v) => Number.isFinite(v));
+  if (!xs.length) return { mean: NaN, sd: NaN, n: 0 };
+  const mean = xs.reduce((a, b) => a + b, 0) / xs.length;
+  if (xs.length < 2) return { mean, sd: 0, n: xs.length };
+  const variance = xs.reduce((a, v) => a + (v - mean) ** 2, 0) / (xs.length - 1);
+  return { mean, sd: Math.sqrt(Math.max(variance, 0)), n: xs.length };
 }
 
-function buildCourseFitShotBinsTable(rows, approachPayload, venueName, searchShots) {
-  const tbody = document.getElementById("course-fit-shot-tbody");
-  const headEl = document.getElementById("course-fit-shot-heading");
-  if (!tbody) return;
+function courseFitDistFormatStat(v, statKey, halfStep) {
+  if (!Number.isFinite(v)) return "—";
+  if (statKey === "total") return v.toFixed(2);
+  if (halfStep) return v.toFixed(2);
+  return Math.abs(v - Math.round(v)) < 1e-6 ? String(Math.round(v)) : v.toFixed(1);
+}
 
-  /** Approach-skill `*_shot_count` values are L12 totals; scale to ~per-round for display (DataGolf-style). */
-  const AP_SKILL_COUNT_PER_ROUND_DIV = 45;
+function courseFitDistBuildHistogram(values, opts = {}) {
+  const xs = (values || []).filter((v) => Number.isFinite(v));
+  if (!xs.length) return { bins: [], maxCount: 0 };
+  const integerMode = Boolean(opts.integerMode);
+  const binWidth = Number.isFinite(opts.binWidth) ? opts.binWidth : integerMode ? 1 : 0.5;
+  let minV = Math.min(...xs);
+  let maxV = Math.max(...xs);
+  if (integerMode) {
+    minV = Math.floor(minV);
+    maxV = Math.ceil(maxV);
+  } else {
+    minV = Math.floor(minV / binWidth) * binWidth;
+    maxV = Math.ceil(maxV / binWidth) * binWidth;
+  }
+  const span = Math.max(maxV - minV, binWidth);
+  const nBins = Math.max(1, Math.round(span / binWidth));
+  const bins = [];
+  for (let i = 0; i < nBins; i++) {
+    const lo = minV + i * binWidth;
+    const hi = lo + binWidth;
+    const count = xs.filter((v) => v >= lo - 1e-9 && v < hi - (integerMode ? 0 : 1e-9)).length;
+    const label = integerMode ? String(Math.round(lo)) : `${lo.toFixed(1)} – ${hi.toFixed(1)}`;
+    bins.push({ lo, hi, count, label, mid: lo + binWidth / 2 });
+  }
+  const maxCount = bins.reduce((m, b) => Math.max(m, b.count), 0);
+  return { bins, maxCount, minV, maxV, binWidth };
+}
 
-  if (headEl) headEl.textContent = `Where are players hitting shots from at ${venueName}?`;
+function drawCourseFitDistHistogram(canvas, values, opts = {}) {
+  const ctx = canvas?.getContext?.("2d");
+  if (!ctx || !canvas) return;
+  const statKey = String(opts.statKey || "total");
+  const titleMode = String(opts.titleMode || "individual");
+  const binWidth = titleMode === "avg" ? 0.5 : 1;
+  const integerMode = titleMode === "individual";
+  const hist = courseFitDistBuildHistogram(values, { integerMode, binWidth });
+  const { mean, sd } = courseFitDistMeanSd(values);
 
-  const q = String(searchShots || "")
-    .trim()
-    .toLowerCase();
-  const asMap = new Map();
-  const plist = Array.isArray(approachPayload?.players) ? approachPayload.players : [];
-  for (const p of plist) {
-    const id = Math.round(num(p.dg_id, NaN));
-    if (Number.isFinite(id)) asMap.set(id, p);
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const cssW = Math.max(320, canvas.clientWidth || 560);
+  const cssH = 300;
+  canvas.width = Math.round(cssW * dpr);
+  canvas.height = Math.round(cssH * dpr);
+  canvas.style.width = `${cssW}px`;
+  canvas.style.height = `${cssH}px`;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssW, cssH);
+
+  const pad = { l: 44, r: 16, t: 22, b: 48 };
+  const plotW = cssW - pad.l - pad.r;
+  const plotH = cssH - pad.t - pad.b;
+  const gridColor = "rgba(255,255,255,0.08)";
+  const textMuted = getComputedStyle(document.documentElement).getPropertyValue("--golf-text-muted").trim() || "#94a3b8";
+
+  if (!hist.bins.length) {
+    ctx.fillStyle = textMuted;
+    ctx.font = "600 13px system-ui, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("No data", cssW / 2, cssH / 2);
+    return;
   }
 
-  const sgPuttSorted = rows
-    .map((r) => num(r.sg_putt, NaN))
-    .filter(Number.isFinite)
-    .sort((a, b) => a - b);
-  const puttsVals = rows.map((r) => num(r.putts, NaN)).filter(Number.isFinite);
-  const meanPutts = puttsVals.length ? puttsVals.reduce((s, x) => s + x, 0) / puttsVals.length : NaN;
-  const meanSgPutt = sgPuttSorted.length ? sgPuttSorted.reduce((s, x) => s + x, 0) / sgPuttSorted.length : NaN;
-
-  const fieldPutBins = courseFitPuttingFieldBins(meanPutts);
-
-  const ROUGH_KEYS = ["under_150_rgh_shot_count", "over_150_rgh_shot_count"];
-  const ROUGH_SG_KEYS = ["under_150_rgh_sg_per_shot", "over_150_rgh_sg_per_shot"];
-  const FW_KEYS = ["50_100_fw_shot_count", "100_150_fw_shot_count", "150_200_fw_shot_count", "over_200_fw_shot_count"];
-  const FW_SG_KEYS = ["50_100_fw_sg_per_shot", "100_150_fw_sg_per_shot", "150_200_fw_sg_per_shot", "over_200_fw_sg_per_shot"];
-
-  const meanShot = {};
-  const meanSg = {};
-  for (const k of [...ROUGH_KEYS, ...FW_KEYS]) {
-    const xs = [];
-    for (const r of rows) {
-      const a = asMap.get(Math.round(num(r.dg_id, NaN)));
-      if (!a) continue;
-      const v = num(a[k], NaN);
-      if (Number.isFinite(v)) xs.push(v / AP_SKILL_COUNT_PER_ROUND_DIV);
-    }
-    meanShot[k] = xs.length ? xs.reduce((s, x) => s + x, 0) / xs.length : NaN;
-  }
-  for (const k of [...ROUGH_SG_KEYS, ...FW_SG_KEYS]) {
-    const xs = [];
-    for (const r of rows) {
-      const a = asMap.get(Math.round(num(r.dg_id, NaN)));
-      if (!a) continue;
-      const v = num(a[k], NaN);
-      if (Number.isFinite(v)) xs.push(v);
-    }
-    meanSg[k] = xs.length ? xs.reduce((s, x) => s + x, 0) / xs.length : NaN;
+  const maxCount = Math.max(hist.maxCount, 1);
+  const yTicks = 5;
+  for (let i = 0; i <= yTicks; i++) {
+    const y = pad.t + plotH - (i / yTicks) * plotH;
+    ctx.strokeStyle = gridColor;
+    ctx.beginPath();
+    ctx.moveTo(pad.l, y);
+    ctx.lineTo(pad.l + plotW, y);
+    ctx.stroke();
+    ctx.fillStyle = textMuted;
+    ctx.font = "500 10px system-ui, sans-serif";
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+    ctx.fillText(String(Math.round((i / yTicks) * maxCount)), pad.l - 6, y);
   }
 
-  /** @type {Array<{ nm: string; dg: number; put: number[]; rough: number[]; fw: number[]; sgPutt: number; ap: object }>} */
-  const built = [];
-  for (const r of rows) {
-    const nm = displayGolferName(String(r.player_name || ""));
-    if (q && !nm.toLowerCase().includes(q)) continue;
-    const dg = Math.round(num(r.dg_id, NaN));
-    const ap = asMap.get(dg);
-    if (!ap) continue;
-    const put = courseFitPuttingThreeBins(num(r.putts, NaN), num(r.sg_putt, NaN), sgPuttSorted);
-    const rough = [
-      num(ap[ROUGH_KEYS[0]], NaN) / AP_SKILL_COUNT_PER_ROUND_DIV,
-      num(ap[ROUGH_KEYS[1]], NaN) / AP_SKILL_COUNT_PER_ROUND_DIV,
+  const xMin = hist.minV;
+  const xMax = hist.maxV + hist.binWidth;
+  const xSpan = Math.max(xMax - xMin, hist.binWidth);
+  const xToPx = (x) => pad.l + ((x - xMin) / xSpan) * plotW;
+
+  if (Number.isFinite(mean) && Number.isFinite(sd) && sd > 0) {
+    const bands = [
+      { lo: mean - 2 * sd, hi: mean + 2 * sd, fill: "rgba(255,255,255,0.04)" },
+      { lo: mean - sd, hi: mean + sd, fill: "rgba(255,255,255,0.07)" },
     ];
-    const fw = FW_KEYS.map((k) => num(ap[k], NaN) / AP_SKILL_COUNT_PER_ROUND_DIV);
-    built.push({ nm, dg, put, rough, fw, sgPutt: num(r.sg_putt, NaN), ap });
-  }
-
-  tbody.innerHTML = "";
-
-  if (!plist.length) {
-    const tr = document.createElement("tr");
-    const td = document.createElement("td");
-    td.colSpan = 10;
-    td.className = "text-muted";
-    td.innerHTML =
-      "No <code>approach_skill_ytd.json</code> data. Run <code>npm run fetch:dg</code> with <code>DATAGOLF_API_KEY</code> (or <code>datagolf.local.json</code>) to embed DataGolf <code>preds/approach-skill</code> (year-to-date).";
-    tr.appendChild(td);
-    tbody.appendChild(tr);
-    return;
-  }
-
-  if (!built.length) {
-    const tr = document.createElement("tr");
-    const td = document.createElement("td");
-    td.colSpan = 10;
-    td.className = "text-muted";
-    td.textContent = q
-      ? "No players match this search with approach-skill rows."
-      : "No overlapping players between the projection field and approach-skill export.";
-    tr.appendChild(td);
-    tbody.appendChild(tr);
-    return;
-  }
-
-  const colValsPut = [[], [], []];
-  const colValsRough = [[], []];
-  const colValsFw = [[], [], [], []];
-  for (const b of built) {
-    for (let i = 0; i < 3; i++) colValsPut[i].push(b.put[i]);
-    for (let j = 0; j < 2; j++) colValsRough[j].push(b.rough[j]);
-    for (let j = 0; j < 4; j++) colValsFw[j].push(b.fw[j]);
-  }
-
-  const rangePut = fieldPutBins.map((fv, i) => {
-    const xs = colValsPut[i].filter(Number.isFinite);
-    const lo0 = xs.length ? Math.min(...xs, fv) : fv;
-    const hi0 = xs.length ? Math.max(...xs, fv) : fv;
-    const lo = lo0 - 0.05;
-    const hi = hi0 + 0.05;
-    return { lo: hi - lo < 0.08 ? lo - 0.15 : lo, hi: hi - lo < 0.08 ? hi + 0.15 : hi };
-  });
-
-  const rangeRough = ROUGH_KEYS.map((key, j) => {
-    const fv = meanShot[key];
-    const xs = colValsRough[j].filter(Number.isFinite);
-    const lo0 = xs.length ? Math.min(...xs, fv) : fv;
-    const hi0 = xs.length ? Math.max(...xs, fv) : fv;
-    const lo = lo0 - 0.05;
-    const hi = hi0 + 0.05;
-    return { lo: hi - lo < 0.08 ? lo - 0.2 : lo, hi: hi - lo < 0.08 ? hi + 0.2 : hi };
-  });
-
-  const rangeFw = FW_KEYS.map((key, j) => {
-    const fv = meanShot[key];
-    const xs = colValsFw[j].filter(Number.isFinite);
-    const lo0 = xs.length ? Math.min(...xs, fv) : fv;
-    const hi0 = xs.length ? Math.max(...xs, fv) : fv;
-    const lo = lo0 - 0.05;
-    const hi = hi0 + 0.05;
-    return { lo: hi - lo < 0.08 ? lo - 0.2 : lo, hi: hi - lo < 0.08 ? hi + 0.2 : hi };
-  });
-
-  for (const b of built) {
-    const tr = document.createElement("tr");
-    tr.dataset.dgId = String(b.dg);
-
-    const tdP = document.createElement("td");
-    tdP.className = "course-fit-shot-player";
-    tdP.textContent = b.nm;
-    tr.appendChild(tdP);
-
-    for (let i = 0; i < 3; i++) {
-      const td = document.createElement("td");
-      td.className = "num course-fit-shot-bin-td";
-      td.dataset.cfZone = "put";
-      td.dataset.cfIdx = String(i);
-      td.dataset.cfPred = String(b.put[i]);
-      td.dataset.cfField = String(fieldPutBins[i]);
-      const good = Number.isFinite(b.sgPutt) && Number.isFinite(meanSgPutt) && b.sgPutt >= meanSgPutt;
-      td.innerHTML = courseFitShotBinStripHtml(b.put[i], fieldPutBins[i], rangePut[i].lo, rangePut[i].hi, good);
-      tr.appendChild(td);
+    for (const b of bands) {
+      const x0 = xToPx(Math.max(b.lo, xMin));
+      const x1 = xToPx(Math.min(b.hi, xMax));
+      if (x1 > x0) {
+        ctx.fillStyle = b.fill;
+        ctx.fillRect(x0, pad.t, x1 - x0, plotH);
+      }
     }
-
-    for (let j = 0; j < 2; j++) {
-      const td = document.createElement("td");
-      td.className = "num course-fit-shot-bin-td";
-      td.dataset.cfZone = "rough";
-      td.dataset.cfIdx = String(j);
-      td.dataset.cfPred = String(b.rough[j]);
-      td.dataset.cfField = String(meanShot[ROUGH_KEYS[j]]);
-      const sgKey = ROUGH_SG_KEYS[j];
-      const fv = meanShot[ROUGH_KEYS[j]];
-      const meanSgV = meanSg[sgKey];
-      const good =
-        Number.isFinite(num(b.ap[sgKey], NaN)) && Number.isFinite(meanSgV)
-          ? num(b.ap[sgKey], NaN) >= meanSgV
-          : Number.isFinite(b.sgPutt) && Number.isFinite(meanSgPutt) && b.sgPutt >= meanSgPutt;
-      td.innerHTML = courseFitShotBinStripHtml(b.rough[j], fv, rangeRough[j].lo, rangeRough[j].hi, good);
-      tr.appendChild(td);
-    }
-
-    for (let j = 0; j < 4; j++) {
-      const td = document.createElement("td");
-      td.className = "num course-fit-shot-bin-td";
-      td.dataset.cfZone = "fw";
-      td.dataset.cfIdx = String(j);
-      td.dataset.cfPred = String(b.fw[j]);
-      td.dataset.cfField = String(meanShot[FW_KEYS[j]]);
-      const sgKey = FW_SG_KEYS[j];
-      const fv = meanShot[FW_KEYS[j]];
-      const meanSgV = meanSg[sgKey];
-      const good =
-        Number.isFinite(num(b.ap[sgKey], NaN)) && Number.isFinite(meanSgV)
-          ? num(b.ap[sgKey], NaN) >= meanSgV
-          : false;
-      td.innerHTML = courseFitShotBinStripHtml(b.fw[j], fv, rangeFw[j].lo, rangeFw[j].hi, good);
-      tr.appendChild(td);
-    }
-
-    tbody.appendChild(tr);
   }
 
-  ensureCourseFitBinTooltipHandlers();
+  const barGap = 2;
+  const barW = Math.max(4, plotW / hist.bins.length - barGap);
+  for (let i = 0; i < hist.bins.length; i++) {
+    const b = hist.bins[i];
+    const xCenter = xToPx(b.lo + hist.binWidth / 2);
+    const h = (b.count / maxCount) * plotH;
+    const x = xCenter - barW / 2;
+    const y = pad.t + plotH - h;
+    ctx.fillStyle = "#2ecfff";
+    ctx.fillRect(x, y, barW, h);
+    if (b.count > 0) {
+      ctx.fillStyle = "#e8f7ff";
+      ctx.font = "700 10px system-ui, sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "bottom";
+      ctx.fillText(String(b.count), xCenter, y - 2);
+    }
+  }
+
+  if (Number.isFinite(mean)) {
+    const mx = xToPx(mean);
+    ctx.strokeStyle = "#ef4444";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(mx, pad.t);
+    ctx.lineTo(mx, pad.t + plotH);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = textMuted;
+  ctx.font = "600 11px system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  const labelEvery = hist.bins.length > 16 ? 2 : 1;
+  for (let i = 0; i < hist.bins.length; i += labelEvery) {
+    const b = hist.bins[i];
+    const xCenter = xToPx(b.lo + hist.binWidth / 2);
+    ctx.save();
+    ctx.translate(xCenter, pad.t + plotH + 6);
+    ctx.rotate(-0.45);
+    ctx.textAlign = "right";
+    ctx.fillText(b.label, 0, 0);
+    ctx.restore();
+  }
+
+  ctx.save();
+  ctx.translate(14, pad.t + plotH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = "center";
+  ctx.fillStyle = textMuted;
+  ctx.font = "600 11px system-ui, sans-serif";
+  ctx.fillText("Count", 0, 0);
+  ctx.restore();
+
+  return { mean, sd, n: values.length };
 }
+
+function renderCourseFitDistStats(dl, mean, sd, statKey, halfStep) {
+  if (!dl) return;
+  dl.innerHTML = "";
+  const add = (label, value) => {
+    const dt = document.createElement("dt");
+    dt.textContent = label;
+    const dd = document.createElement("dd");
+    dd.textContent = value;
+    dl.appendChild(dt);
+    dl.appendChild(dd);
+  };
+  add("Mean", courseFitDistFormatStat(mean, statKey, halfStep));
+  if (Number.isFinite(mean) && Number.isFinite(sd)) {
+    add(
+      "±1 SD",
+      `${courseFitDistFormatStat(mean - sd, statKey, halfStep)} – ${courseFitDistFormatStat(mean + sd, statKey, halfStep)}`,
+    );
+    add(
+      "±2 SD",
+      `${courseFitDistFormatStat(mean - 2 * sd, statKey, halfStep)} – ${courseFitDistFormatStat(mean + 2 * sd, statKey, halfStep)}`,
+    );
+  }
+}
+
+function syncCourseFitDistEventCheckboxes(events, venueKey) {
+  const host = document.getElementById("course-fit-past-events-host");
+  if (!host) return;
+  if (courseFitDistEventsVenueKey !== venueKey) {
+    courseFitDistEventsVenueKey = venueKey;
+    courseFitDistSelectedEvents = new Set(events.map((e) => e.key));
+  }
+  host.innerHTML = "";
+  if (!events.length) {
+    host.innerHTML = '<p class="text-muted" style="margin:0;font-size:0.82rem">No archived events at this course yet.</p>';
+    return;
+  }
+  for (const ev of events) {
+    const lbl = document.createElement("label");
+    lbl.className = "course-fit-dist-event-row";
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.value = ev.key;
+    cb.checked = courseFitDistSelectedEvents.has(ev.key);
+    cb.addEventListener("change", () => {
+      if (cb.checked) courseFitDistSelectedEvents.add(ev.key);
+      else courseFitDistSelectedEvents.delete(ev.key);
+      buildCourseFitDistributionsPanel(venueKey);
+    });
+    lbl.appendChild(cb);
+    lbl.appendChild(document.createTextNode(ev.label));
+    host.appendChild(lbl);
+  }
+}
+
+function ensureCourseFitDistFiltersBound() {
+  if (courseFitDistFiltersBound) return;
+  courseFitDistFiltersBound = true;
+  document.querySelectorAll(".course-fit-dist-round-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const v = String(btn.getAttribute("data-cf-round") || "all");
+      courseFitDistRoundFilter = v;
+      document.querySelectorAll(".course-fit-dist-round-btn").forEach((b) => {
+        b.classList.toggle("active", String(b.getAttribute("data-cf-round") || "") === v);
+      });
+      buildCourseFitDistributionsPanel(courseFitDistEventsVenueKey);
+    });
+  });
+  document.getElementById("course-fit-dist-prop")?.addEventListener("change", (e) => {
+    courseFitDistPropKey = String(/** @type {HTMLSelectElement} */ (e.target).value || "total");
+    buildCourseFitDistributionsPanel(courseFitDistEventsVenueKey);
+  });
+}
+
+function buildCourseFitDistributionsPanel(venueKey) {
+  const panel = document.getElementById("course-fit-subpanel-distributions");
+  if (!panel || panel.hidden) return;
+  ensureCourseFitDistFiltersBound();
+
+  const emptyEl = document.getElementById("course-fit-dist-empty");
+  const chartsEl = document.getElementById("course-fit-dist-charts");
+  const avgCanvas = document.getElementById("course-fit-dist-avg-canvas");
+  const indCanvas = document.getElementById("course-fit-dist-ind-canvas");
+  const avgTitle = document.getElementById("course-fit-dist-avg-title");
+  const indTitle = document.getElementById("course-fit-dist-ind-title");
+  const avgStats = document.getElementById("course-fit-dist-avg-stats");
+  const indStats = document.getElementById("course-fit-dist-ind-stats");
+  const propSel = document.getElementById("course-fit-dist-prop");
+  if (propSel && propSel.value !== courseFitDistPropKey) propSel.value = courseFitDistPropKey;
+
+  const statKey = courseFitDistPropKey || "total";
+  const propLabel = courseFitDistPropLabel(statKey);
+  if (avgTitle) avgTitle.textContent = `${propLabel} Distribution — Round Average`;
+  if (indTitle) indTitle.textContent = `${propLabel} Distribution — Individual`;
+
+  const bucket = propsGetSingleCourseBucketSync(venueKey);
+  const entries = bucket?.entries || [];
+  const events = courseFitDistEventsFromEntries(entries);
+  syncCourseFitDistEventCheckboxes(events, venueKey);
+
+  const roundFilter = courseFitDistRoundFilter || "all";
+  const selected = courseFitDistSelectedEvents.size
+    ? courseFitDistSelectedEvents
+    : new Set(events.map((e) => e.key));
+
+  const avgValues = courseFitDistPlayerEventAverages(entries, statKey, roundFilter, selected);
+  const indValues = courseFitDistIndividualValues(entries, statKey, roundFilter, selected);
+  const hasData = avgValues.length > 0 || indValues.length > 0;
+
+  if (emptyEl) {
+    emptyEl.hidden = hasData;
+    if (!hasData) emptyEl.textContent = "No data available for your chosen filters.";
+  }
+  if (chartsEl) chartsEl.hidden = !hasData;
+
+  if (!hasData) {
+    if (avgStats) avgStats.innerHTML = "";
+    if (indStats) indStats.innerHTML = "";
+    return;
+  }
+
+  requestAnimationFrame(() => {
+    const avgHit = drawCourseFitDistHistogram(avgCanvas, avgValues, { statKey, titleMode: "avg" });
+    const indHit = drawCourseFitDistHistogram(indCanvas, indValues, { statKey, titleMode: "individual" });
+    renderCourseFitDistStats(avgStats, avgHit?.mean, avgHit?.sd, statKey, true);
+    renderCourseFitDistStats(indStats, indHit?.mean, indHit?.sd, statKey, false);
+  });
+}
+
+async function loadCourseFitDistributionsForVenue(venueKey) {
+  const panel = document.getElementById("course-fit-subpanel-distributions");
+  if (!panel || panel.hidden || !venueKey) return;
+  const emptyEl = document.getElementById("course-fit-dist-empty");
+  const chartsEl = document.getElementById("course-fit-dist-charts");
+  if (emptyEl) {
+    emptyEl.hidden = false;
+    emptyEl.textContent = "Loading course history…";
+  }
+  if (chartsEl) chartsEl.hidden = true;
+  await ensurePropsCourseIndexForKeyAsync(venueKey);
+  if (activeAppTabId() === "course-fit") buildCourseFitDistributionsPanel(venueKey);
+}
+
 
 const COURSE_FIT_TABLE_RADAR_KEYS_DEFAULT = Object.freeze([
   "adj_driving_accuracy",
@@ -13226,17 +13257,9 @@ function buildCourseFitTab() {
   }
   updateCourseFitTableSortIndicators();
 
-  const shotPanel = document.getElementById("course-fit-subpanel-shots");
-  if (shotPanel && !shotPanel.hidden) {
-    const shotSearch = String(document.getElementById("course-fit-shots-search")?.value || "")
-      .trim()
-      .toLowerCase();
-    void loadApproachSkillYtdJson().then((ap) => {
-      const shotVenueTitle = eventVk
-        ? courseFitPrettyCourseKey(eventVk)
-        : formatCourseNameForDisplay(eventVenueName);
-      buildCourseFitShotBinsTable(rows, ap, shotVenueTitle, shotSearch);
-    });
+  const distPanel = document.getElementById("course-fit-subpanel-distributions");
+  if (distPanel && !distPanel.hidden) {
+    void loadCourseFitDistributionsForVenue(vk);
   }
 }
 
@@ -23314,7 +23337,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initCourseFitSubtabs();
   initCourseFitSimilarListClick();
   initCourseFitTableSortOnce();
-  ensureCourseFitBinTooltipHandlers();
   initLivePropPredictorUi();
   initOutrightsTableSortOnce();
   initEvTableSortOnce();
@@ -23324,11 +23346,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const v = String(/** @type {HTMLSelectElement} */ (e.target).value || "").trim();
     courseFitVenueFilterKey = v || null;
     courseFitSimilarSelectedKey = null;
+    courseFitDistEventsVenueKey = "";
     buildCourseFitTab();
   });
   document.getElementById("course-fit-player")?.addEventListener("change", () => buildCourseFitTab());
   document.getElementById("course-fit-search")?.addEventListener("input", () => buildCourseFitTab());
-  document.getElementById("course-fit-shots-search")?.addEventListener("input", () => buildCourseFitTab());
   document.getElementById("btn-refresh-outrights")?.addEventListener("click", () => loadProjections());
   document.getElementById("analysis-market")?.addEventListener("change", () => {
     matchupAnalysisSelectedKey = "";
