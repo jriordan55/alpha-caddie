@@ -3118,6 +3118,103 @@ function ouMarketRatingPlayerRounds(player) {
   return out;
 }
 
+/** Round projections Average column window (toolbar filter). */
+function ouProjAvgWindowMode() {
+  const raw = String(document.getElementById("ou-proj-avg-window")?.value || "").trim();
+  if (raw === "course" || raw === "season") return raw;
+  const n = Math.round(num(raw, NaN));
+  if (n === 4 || n === 12 || n === 24 || n === 36 || n === 48) return n;
+  return "season";
+}
+
+function ouProjAvgWindowLabel(mode = ouProjAvgWindowMode()) {
+  if (mode === "season") return `This season (${propsFieldDefaultSeasonYear()})`;
+  if (mode === "course") {
+    const vn = venueCourseName();
+    return vn ? `At ${vn}` : "At this course";
+  }
+  if (typeof mode === "number") return `Last ${mode} rounds`;
+  return "Average";
+}
+
+function ouPlayerMarketAvgSampleRounds(player, windowMode = ouProjAvgWindowMode()) {
+  const id = Math.round(num(player?.dg_id, NaN));
+  if (!Number.isFinite(id)) return [];
+  let rounds = historyRoundsChronoNewestFirst(id).filter((r) => historyRoundCountsAsActual(r));
+  if (windowMode === "course") {
+    const venue = venueCourseName();
+    if (venue) {
+      const venueKey = normCourseNameKey(venue);
+      rounds = rounds.filter((r) => {
+        const ck = normCourseNameKey(r.course_name);
+        return ck === venueKey || courseNameMatchesVenueLoose(r.course_name, venue);
+      });
+    }
+  } else if (windowMode === "season") {
+    const seasonY = propsFieldDefaultSeasonYear();
+    rounds = rounds.filter((r) => historyRoundSeasonYear(r) === seasonY);
+  } else if (typeof windowMode === "number") {
+    rounds = rounds.slice(0, windowMode);
+  }
+  return rounds;
+}
+
+/** Player historical average for the selected window (raw stat units, not z-score). */
+function ouPlayerMarketAverage(market, player, windowMode = ouProjAvgWindowMode()) {
+  const mKey = ouModelMarketKey(market) || "Total score";
+  const rounds = ouPlayerMarketAvgSampleRounds(player, windowMode);
+  if (!rounds.length) {
+    if (mKey === "GIR" || mKey === "Fairways hit") {
+      const fromModel = ouPlayerModelAvgForMarket(market, player);
+      if (Number.isFinite(fromModel)) return { avg: fromModel, n: 0, source: "model", windowMode };
+    }
+    return { avg: NaN, n: 0, source: "none", windowMode };
+  }
+  const statKey = ouMarketRatingHistoryStatKey(mKey);
+  const vals = [];
+  for (const r of rounds) {
+    const v = actualForRoundRow(statKey, r);
+    if (Number.isFinite(v)) vals.push(v);
+  }
+  if (!vals.length) {
+    if (mKey === "GIR" || mKey === "Fairways hit") {
+      const fromModel = ouPlayerModelAvgForMarket(market, player);
+      if (Number.isFinite(fromModel)) return { avg: fromModel, n: 0, source: "model", windowMode };
+    }
+    return { avg: NaN, n: 0, source: "none", windowMode };
+  }
+  return {
+    avg: vals.reduce((a, b) => a + b, 0) / vals.length,
+    n: vals.length,
+    source: "history",
+    windowMode,
+  };
+}
+
+const OU_PROJ_AVG_CACHE = new Map();
+
+function ouCachedPlayerMarketAverage(market, player, windowMode = ouProjAvgWindowMode()) {
+  const id = Math.round(num(player?.dg_id, NaN));
+  const mKey = ouModelMarketKey(market) || "Total score";
+  const cacheKey = `${historyMutationEpoch}|${windowMode}|${id}|${mKey}`;
+  if (OU_PROJ_AVG_CACHE.has(cacheKey)) return OU_PROJ_AVG_CACHE.get(cacheKey);
+  const hit = ouPlayerMarketAverage(market, player, windowMode);
+  OU_PROJ_AVG_CACHE.set(cacheKey, hit);
+  return hit;
+}
+
+function ouPlayerMarketAverageTitle(market, hit) {
+  const label = ouProjAvgWindowLabel(hit?.windowMode);
+  const n = Math.round(num(hit?.n, 0));
+  const src = hit?.source === "model" ? " (skill estimate)" : "";
+  if (!Number.isFinite(hit?.avg)) {
+    if (!ouMarketRatingHistoryReady()) return `${label} — loading history…`;
+    return `${label} — no rounds in window`;
+  }
+  if (n > 0) return `${label} · n=${n}${src}`;
+  return `${label}${src}`;
+}
+
 /** Player historical average for a market (counts / strokes), not the round projection μ. */
 function ouPlayerHistoricalAvgForMarket(market, player) {
   const mKey = ouModelMarketKey(market) || "Total score";
@@ -5783,7 +5880,7 @@ let ouGolferSuggestLabelsSig = "";
 /** @type {string[]} */
 let ouGolferSuggestLabels = [];
 let ouProjTableChromeReady = false;
-const OU_PROJ_TABLE_CHROME_VER = 2;
+const OU_PROJ_TABLE_CHROME_VER = 3;
 let ouProjTableChromeBuiltVer = 0;
 let ouHistoryLoadKickoff = false;
 let ouTableBuildRaf = 0;
@@ -5791,6 +5888,8 @@ let ouTableBuildRaf = 0;
 function ouInvalidateProjectionPerfCaches() {
   ouDkRoundPropsCacheSig = "";
   ouDkRoundPropsCache = [];
+  ouPpRoundPropsCacheSig = "";
+  ouPpRoundPropsCache = [];
   ouProjectionSortCacheSig = "";
   ouProjectionSortCache = null;
   ouGolferSuggestLabelsSig = "";
@@ -5798,6 +5897,7 @@ function ouInvalidateProjectionPerfCaches() {
   OU_COURSE_RATING_CACHE.clear();
   OU_MARKET_RATING_CACHE.clear();
   OU_MARKET_RATING_ROUNDS_CACHE.clear();
+  OU_PROJ_AVG_CACHE.clear();
 }
 
 /** Coalesce rapid O/U table rebuilds (filters, polls) into one frame. */
@@ -6457,7 +6557,7 @@ function ouCellEdgeStackHtml(market, p, L, pImpOver, pImpUnder, viewMode, oddsOv
 }
 
 /** Default: same order as projections (expected total ↑, or stat ↓ for props-style markets). */
-let ouTableSort = { key: "pr-edge", dir: -1 };
+let ouTableSort = { key: "pr-dk-edge", dir: -1 };
 let ouTableSortInited = false;
 /** Last snapped O/U line; used while the line input is empty or mid-edit (avoid rewriting on every keystroke). */
 let ouLineCommitted = 70.5;
@@ -6557,8 +6657,7 @@ function ensureOuProjectionTableChrome() {
     ["pr-market", "Market", "sortable ou-proj-long-th ou-proj-th-market"],
     ["pr-side", "Side", "sortable ou-proj-long-th num ou-proj-th-side"],
     ["pr-mu", "Proj", "sortable ou-proj-long-th num ou-proj-th-mu"],
-    ["pr-mkt-rating", "Market rating", "sortable ou-proj-long-th num ou-proj-th-mkt-rating"],
-    ["pr-course-rating", "Course rating", "sortable ou-proj-long-th num ou-proj-th-course-rating"],
+    ["pr-avg", "Average", "sortable ou-proj-long-th num ou-proj-th-avg"],
   ];
   const hr = document.createElement("tr");
   for (const [key, label, cls] of projHeadSpecs) {
@@ -6573,8 +6672,8 @@ function ensureOuProjectionTableChrome() {
   hr.appendChild(ouProjMakeBookColumnTh("pr-pp-line", "Line", "ou-proj-th-pp-line", "prizepicks", sortInd));
   hr.appendChild(ouProjMakeBookColumnTh("pr-pp-odds", "Odds", "ou-proj-th-pp-odds", "prizepicks", sortInd));
   for (const [key, label, cls] of [
-    ["pr-pmod", "P(model)", "sortable ou-proj-long-th num ou-proj-th-pmod"],
-    ["pr-edge", "Edge", "sortable ou-proj-long-th num ou-proj-th-edge"],
+    ["pr-dk-edge", "DK Edge", "sortable ou-proj-long-th num ou-proj-th-dk-edge"],
+    ["pr-pp-edge", "PP Edge", "sortable ou-proj-long-th num ou-proj-th-pp-edge"],
   ]) {
     const th = document.createElement("th");
     th.className = cls;
@@ -6605,14 +6704,14 @@ function initOuTableSortOnce() {
       if (key === "golfer" || key === "pr-golfer") ouTableSort.dir = 1;
       else if (key === "pr-tee-time") ouTableSort.dir = 1;
       else if (key === "pr-market" || key === "pr-side") ouTableSort.dir = 1;
-      else if (key === "pr-mu") ouTableSort.dir = -1;
-      else if (key === "pr-mkt-rating" || key === "pr-course-rating") ouTableSort.dir = -1;
+      else if (key === "pr-mu" || key === "pr-avg") ouTableSort.dir = -1;
       else if (key === "pr-line" || key === "pr-dk-line" || key === "pr-pp-line") ouTableSort.dir = 1;
       else if (
         key === "pr-odds" ||
         key === "pr-dk-odds" ||
         key === "pr-pp-odds" ||
-        key === "pr-pmod" ||
+        key === "pr-dk-edge" ||
+        key === "pr-pp-edge" ||
         key === "pr-edge"
       )
         ouTableSort.dir = -1;
@@ -6729,17 +6828,26 @@ function ouLookupBookPick(map, id, nameKey, canon) {
 
 function ouAttachProjectionRowMetrics(row) {
   const { player, col, side, dkPick, ppPick } = row;
-  const pick = dkPick || ppPick;
-  row.pick = pick;
-  if (!pick) return row;
-  const pImpOver = impliedProbFromAmerican(pick.over);
-  const pImpUnder = impliedProbFromAmerican(pick.under);
-  const { pOver, pUnder, edgeO, edgeU } = ouEdgeForCell(col.market, player, pick.line, pImpOver, pImpUnder);
-  row.pMod = side === "over" ? pOver : pUnder;
-  row.edge = side === "over" ? edgeO : edgeU;
-  row.sortOdds = side === "over" ? pick.over : pick.under;
-  row.dkSortOdds = dkPick ? (side === "over" ? dkPick.over : dkPick.under) : NaN;
-  row.ppSortOdds = ppPick ? (side === "over" ? ppPick.over : ppPick.under) : NaN;
+  row.pick = dkPick || ppPick;
+
+  const edgeForPick = (pick) => {
+    if (!pick) return { edge: NaN, sortOdds: NaN };
+    const pImpOver = impliedProbFromAmerican(pick.over);
+    const pImpUnder = impliedProbFromAmerican(pick.under);
+    const { edgeO, edgeU } = ouEdgeForCell(col.market, player, pick.line, pImpOver, pImpUnder);
+    return {
+      edge: side === "over" ? edgeO : edgeU,
+      sortOdds: side === "over" ? pick.over : pick.under,
+    };
+  };
+
+  const dkHit = edgeForPick(dkPick);
+  const ppHit = edgeForPick(ppPick);
+  row.dkEdge = dkHit.edge;
+  row.ppEdge = ppHit.edge;
+  row.dkSortOdds = dkHit.sortOdds;
+  row.ppSortOdds = ppHit.sortOdds;
+  row.edge = Number.isFinite(dkHit.edge) ? dkHit.edge : ppHit.edge;
   return row;
 }
 
@@ -6748,7 +6856,7 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
   const out = [];
   const fieldIndex = buildOuProjectionFieldIndex(players);
   const resolvePlayer = ouBuildFastFieldPlayerResolver(fieldIndex);
-  const fieldMarketStats = buildOuFieldMarketStats(players, cols.map((c) => c.market));
+  const avgWindow = ouProjAvgWindowMode();
   const dkPickMap = ouBuildBookPickMap(draftKingsRoundPropsOnly(), resolvePlayer);
   const ppPickMap = ouBuildBookPickMap(prizePicksRoundPropsOnly(), resolvePlayer);
 
@@ -6762,12 +6870,7 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
       const ppPick = ouLookupBookPick(ppPickMap, id, nameKey, canon);
       if (!dkPick && !ppPick) continue;
       const mu = ouProjectedMean(col.market, player);
-      const { playerAvg, marketRatingZ, marketRating100, ratingSource } = ouCachedFieldMarketRating(
-        col.market,
-        player,
-        fieldMarketStats,
-      );
-      const { venueVal, courseRatingZ, courseRating100 } = ouCachedCourseRating(col.market);
+      const marketAvgHit = ouCachedPlayerMarketAverage(col.market, player, avgWindow);
       for (const side of ["over", "under"]) {
         const row = {
           player,
@@ -6777,14 +6880,10 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
           mu,
           dkPick,
           ppPick,
-          marketRatingZ,
-          marketRating100,
-          ratingSource,
-          playerAvg,
-          fieldMarketStats,
-          venueVal,
-          courseRatingZ,
-          courseRating100,
+          marketAvg: marketAvgHit.avg,
+          marketAvgN: marketAvgHit.n,
+          marketAvgSource: marketAvgHit.source,
+          marketAvgWindow: marketAvgHit.windowMode,
         };
         out.push(ouAttachProjectionRowMetrics(row));
       }
@@ -6836,20 +6935,7 @@ function ouTableSortValueProjRow(row, sortKey) {
   if (sortKey === "pr-market") return colIdx;
   if (sortKey === "pr-side") return side === "over" ? 0 : 1;
   if (sortKey === "pr-mu") return mu;
-  if (sortKey === "pr-mkt-rating") {
-    return Number.isFinite(row.marketRating100)
-      ? row.marketRating100
-      : Number.isFinite(row.marketRatingZ)
-        ? row.marketRatingZ
-        : NaN;
-  }
-  if (sortKey === "pr-course-rating") {
-    return Number.isFinite(row.courseRating100)
-      ? row.courseRating100
-      : Number.isFinite(row.courseRatingZ)
-        ? row.courseRatingZ
-        : NaN;
-  }
+  if (sortKey === "pr-avg") return num(row.marketAvg, NaN);
   if (sortKey === "pr-line" || sortKey === "pr-dk-line") {
     return dkPick && Number.isFinite(dkPick.line) ? dkPick.line : NaN;
   }
@@ -6866,22 +6952,20 @@ function ouTableSortValueProjRow(row, sortKey) {
     const am = side === "over" ? ppPick.over : ppPick.under;
     return Number.isFinite(am) ? am : NaN;
   }
-  if (sortKey === "pr-pmod") {
-    if (Number.isFinite(row.pMod)) return row.pMod;
-    if (!pick) return NaN;
-    const pImpOver = impliedProbFromAmerican(pick.over);
-    const pImpUnder = impliedProbFromAmerican(pick.under);
-    const { pOver, pUnder } = ouEdgeForCell(col.market, player, pick.line, pImpOver, pImpUnder);
-    return side === "over" ? pOver : pUnder;
+  if (sortKey === "pr-dk-edge") {
+    if (Number.isFinite(row.dkEdge)) return row.dkEdge;
+    return NaN;
+  }
+  if (sortKey === "pr-pp-edge") {
+    if (Number.isFinite(row.ppEdge)) return row.ppEdge;
+    return NaN;
   }
   if (sortKey === "pr-edge") {
-    if (Number.isFinite(row.edge)) return row.edge;
-    if (!pick) return NaN;
-    const pImpOver = impliedProbFromAmerican(pick.over);
-    const pImpUnder = impliedProbFromAmerican(pick.under);
-    const { edgeO, edgeU } = ouEdgeForCell(col.market, player, pick.line, pImpOver, pImpUnder);
-    const edge = side === "over" ? edgeO : edgeU;
-    return Number.isFinite(edge) ? edge : NaN;
+    const dkE = num(row.dkEdge, NaN);
+    const ppE = num(row.ppEdge, NaN);
+    if (Number.isFinite(dkE)) return dkE;
+    if (Number.isFinite(ppE)) return ppE;
+    return NaN;
   }
   return NaN;
 }
@@ -7114,7 +7198,11 @@ function buildOuTable() {
   const cols = ouProjectionColumnsActive();
   syncOuProjMarketFilterOptions(cols);
   if (ouTableSort.key.startsWith("proj-") || ouTableSort.key.startsWith("mkt-")) {
-    ouTableSort = { key: "pr-edge", dir: -1 };
+    ouTableSort = { key: "pr-dk-edge", dir: -1 };
+  }
+  if (ouTableSort.key === "pr-edge") ouTableSort.key = "pr-dk-edge";
+  if (ouTableSort.key === "pr-pmod" || ouTableSort.key === "pr-mkt-rating" || ouTableSort.key === "pr-course-rating") {
+    ouTableSort = { key: "pr-dk-edge", dir: -1 };
   }
   if (ouTableSort.key === "golfer") ouTableSort.key = "pr-golfer";
   if (ouTableSort.key === "pr-line") ouTableSort.key = "pr-dk-line";
@@ -7159,7 +7247,7 @@ function buildOuTable() {
     flatRows.sort(ouProjectionRowStatOrder);
   }
 
-  const projColCount = 13;
+  const projColCount = 12;
   const flatRowKeys = new Set(
     flatRows.map((rr) => ouProjMakeExpandKey(String(rr.player.player_name || ""), rr.col.label, rr.side)),
   );
@@ -7202,15 +7290,12 @@ function buildOuTable() {
       pick,
       dkPick,
       ppPick,
-      marketRatingZ,
-      marketRating100,
-      ratingSource,
-      playerAvg,
-      courseRatingZ,
-      courseRating100,
-      venueVal,
-      pMod,
-      edge,
+      marketAvg,
+      marketAvgN,
+      marketAvgSource,
+      marketAvgWindow,
+      dkEdge,
+      ppEdge,
     } = r;
     const rawName = String(player.player_name || "");
     const expandKey = ouProjMakeExpandKey(rawName, col.label, side);
@@ -7262,27 +7347,16 @@ function buildOuTable() {
     muTd.textContent = formatOuProjectedMean(mu);
     tr.appendChild(muTd);
 
-    const mktRatingTd = document.createElement("td");
-    const mktZ = num(marketRatingZ, NaN);
-    const mkt100 = num(marketRating100, NaN);
-    mktRatingTd.className = `ou-cell ou-proj-long-td ${ouRating100CellClass(mkt100)} ou-proj-td-mkt-rating`;
-    mktRatingTd.textContent =
-      !Number.isFinite(mkt100) && !ouMarketRatingHistoryReady() ? "…" : formatOuRating100(mkt100);
-    mktRatingTd.title = ouMarketRatingTitle(
-      col.market,
-      num(playerAvg, NaN),
-      r.ratingSource,
-      r.fieldMarketStats,
-    );
-    tr.appendChild(mktRatingTd);
-
-    const courseRatingTd = document.createElement("td");
-    const crsZ = num(courseRatingZ, NaN);
-    const crs100 = num(courseRating100, NaN);
-    courseRatingTd.className = `ou-cell ou-proj-long-td ${ouRating100CellClass(crs100)} ou-proj-td-course-rating`;
-    courseRatingTd.textContent = formatOuRating100(crs100);
-    courseRatingTd.title = ouCourseRatingTitle(col.market, num(venueVal, NaN));
-    tr.appendChild(courseRatingTd);
+    const avgTd = document.createElement("td");
+    avgTd.className = "ou-cell ou-proj-long-td num ou-proj-td-avg";
+    const avgHit = { avg: marketAvg, n: marketAvgN, source: marketAvgSource, windowMode: marketAvgWindow };
+    if (!Number.isFinite(marketAvg) && !ouMarketRatingHistoryReady()) {
+      avgTd.textContent = "…";
+    } else {
+      avgTd.textContent = Number.isFinite(marketAvg) ? formatOuProjectedMean(marketAvg) : "—";
+    }
+    avgTd.title = ouPlayerMarketAverageTitle(col.market, avgHit);
+    tr.appendChild(avgTd);
 
     const dkLineTd = document.createElement("td");
     dkLineTd.className = "ou-cell ou-proj-long-td num ou-proj-td-dk-line";
@@ -7310,21 +7384,22 @@ function buildOuTable() {
     } else ppOddsTd.textContent = "";
     tr.appendChild(ppOddsTd);
 
-    const pTd = document.createElement("td");
-    pTd.className = "ou-cell ou-proj-long-td num ou-proj-td-pmod";
-    const edgeTd = document.createElement("td");
-    edgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-edge";
-    if (pick) {
-      pTd.textContent = Number.isFinite(pMod) ? `${(pMod * 100).toFixed(1)}%` : "—";
-      edgeTd.textContent = formatEdgePct(edge);
-      if (edge > 0) edgeTd.classList.add("pos");
-      else if (edge < 0) edgeTd.classList.add("neg");
-    } else {
-      pTd.textContent = "";
-      edgeTd.textContent = "";
-    }
-    tr.appendChild(pTd);
-    tr.appendChild(edgeTd);
+    const dkEdgeTd = document.createElement("td");
+    dkEdgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-dk-edge";
+    const ppEdgeTd = document.createElement("td");
+    ppEdgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-pp-edge";
+    if (dkPick && Number.isFinite(dkEdge)) {
+      dkEdgeTd.textContent = formatEdgePct(dkEdge);
+      if (dkEdge > 0) dkEdgeTd.classList.add("pos");
+      else if (dkEdge < 0) dkEdgeTd.classList.add("neg");
+    } else dkEdgeTd.textContent = "";
+    if (ppPick && Number.isFinite(ppEdge)) {
+      ppEdgeTd.textContent = formatEdgePct(ppEdge);
+      if (ppEdge > 0) ppEdgeTd.classList.add("pos");
+      else if (ppEdge < 0) ppEdgeTd.classList.add("neg");
+    } else ppEdgeTd.textContent = "";
+    tr.appendChild(dkEdgeTd);
+    tr.appendChild(ppEdgeTd);
 
     if (Number.isFinite(mu)) {
       const mKey = ouModelMarketKey(col.market) || "Total score";
@@ -23263,7 +23338,7 @@ document.addEventListener("DOMContentLoaded", () => {
     selectMatchupAnalysisMatchup(String(/** @type {HTMLSelectElement} */ (e.target).value || ""));
   });
   document.getElementById("ou-market-filter")?.addEventListener("change", () => {
-    ouTableSort = { key: "pr-edge", dir: -1 };
+    ouTableSort = { key: "pr-dk-edge", dir: -1 };
     const m = getOuMarket();
     const rng = OU_LINE_RANGES[m] || OU_LINE_RANGES["Total score"];
     const inp = document.getElementById("ou-line-filter");
@@ -23288,7 +23363,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   document.getElementById("ou-proj-market-filter")?.addEventListener("change", () => {
     ouProjExpandedKey = "";
-    ouTableSort = { key: "pr-edge", dir: -1 };
+    ouTableSort = { key: "pr-dk-edge", dir: -1 };
+    scheduleBuildOuTable(true);
+  });
+  document.getElementById("ou-proj-avg-window")?.addEventListener("change", () => {
+    ouProjExpandedKey = "";
+    OU_PROJ_AVG_CACHE.clear();
     scheduleBuildOuTable(true);
   });
   document.getElementById("props-filter-tee-wave")?.addEventListener("change", (e) => {

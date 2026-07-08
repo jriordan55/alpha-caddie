@@ -1824,9 +1824,9 @@ body {
 #table-ev tbody tr:hover td.ev-col-golfer {
   background-color: var(--golf-surface-hover) !important;
 }
-#table-ou.table-ou-projections .ou-proj-th-mkt-rating,
-#table-ou.table-ou-projections .ou-proj-td-mkt-rating {
-  min-width: 4.5rem;
+#table-ou.table-ou-projections .ou-proj-th-avg,
+#table-ou.table-ou-projections .ou-proj-td-avg {
+  min-width: 4rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
@@ -1939,17 +1939,17 @@ body {
   min-width: 3.5rem;
   font-weight: 700;
 }
-#table-ou.table-ou-projections .ou-proj-th-pmod,
-#table-ou.table-ou-projections .ou-proj-td-pmod {
-  min-width: 4.25rem;
-}
-#table-ou.table-ou-projections .ou-proj-th-edge,
-#table-ou.table-ou-projections .ou-proj-td-edge {
+#table-ou.table-ou-projections .ou-proj-th-dk-edge,
+#table-ou.table-ou-projections .ou-proj-td-dk-edge,
+#table-ou.table-ou-projections .ou-proj-th-pp-edge,
+#table-ou.table-ou-projections .ou-proj-td-pp-edge {
   min-width: 4rem;
   font-weight: 800;
 }
-#table-ou.table-ou-projections td.ou-proj-td-edge.pos { color: #1ecf77; }
-#table-ou.table-ou-projections td.ou-proj-td-edge.neg { color: #ff646f; }
+#table-ou.table-ou-projections td.ou-proj-td-dk-edge.pos,
+#table-ou.table-ou-projections td.ou-proj-td-pp-edge.pos { color: #1ecf77; }
+#table-ou.table-ou-projections td.ou-proj-td-dk-edge.neg,
+#table-ou.table-ou-projections td.ou-proj-td-pp-edge.neg { color: #ff646f; }
 #table-ou.table-ou-projections td.ou-proj-empty-td {
   padding: 20px 18px;
   font-size: 0.88rem;

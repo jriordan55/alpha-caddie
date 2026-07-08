@@ -146,6 +146,17 @@
                 <option value="">All markets</option>
               </select>
             </label>
+            <label class="toolbar-label ou-filter-field">Average
+              <select id="ou-proj-avg-window" title="Window for the Average column (player history for the selected market)">
+                <option value="season" selected>This season</option>
+                <option value="4">Last 4 rounds</option>
+                <option value="12">Last 12 rounds</option>
+                <option value="24">Last 24 rounds</option>
+                <option value="36">Last 36 rounds</option>
+                <option value="48">Last 48 rounds</option>
+                <option value="course">At this course</option>
+              </select>
+            </label>
           </div>
         </div>
         <div class="ou-legacy-ou-controls" hidden aria-hidden="true">
@@ -1170,20 +1181,12 @@
           <dd>Who, which stat, and Over or Under on the book line.</dd>
           <dt>Proj</dt>
           <dd>Model projection for that stat this round.</dd>
-          <dt>Market rating</dt>
-          <dd>1–100 vs this week’s field on skill for that stat (50 ≈ field average; higher = better birdies/pars/GIR/FW, lower score/bogeys).</dd>
-          <dt>Course rating</dt>
-          <dd>1–100 vs other PGA venues on this stat (50 ≈ average).</dd>
-          <dt>Line</dt>
-          <dd>DraftKings O/U line.</dd>
-          <dt>Book</dt>
-          <dd>DraftKings logo when the line is from DK.</dd>
-          <dt>Odds</dt>
-          <dd>American price for the side shown.</dd>
-          <dt>P(model)</dt>
-          <dd>Model probability of that side vs the line.</dd>
-          <dt>Edge</dt>
-          <dd>Model probability minus implied probability from the odds.</dd>
+          <dt>Average</dt>
+          <dd>Player historical average for that market in the selected window (This season, last N rounds, or at this course).</dd>
+          <dt>DK / PP Line &amp; Odds</dt>
+          <dd>DraftKings and PrizePicks posted lines and American prices for the side shown.</dd>
+          <dt>DK Edge / PP Edge</dt>
+          <dd>Model probability minus implied probability from each book&apos;s odds (computed per book when a line is posted).</dd>
         </dl>
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-ou-pricing-h">
