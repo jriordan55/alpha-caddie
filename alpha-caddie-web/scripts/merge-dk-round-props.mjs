@@ -12,6 +12,7 @@ import {
 } from "./draftkings-league-url.mjs";
 import { fetchDraftKingsOuProps } from "./draftkings-ou-props.mjs";
 import { matchPlayerByGolferLabel } from "./golfer-name-match.mjs";
+import { preservePrizePicksRoundProps } from "./merge-pp-round-props.mjs";
 
 export { eventNameToDraftKingsSlug, inferDraftKingsLeagueUrlFromProjections };
 
@@ -452,6 +453,8 @@ export async function refreshRoundProjectionProps(payload, golfModelRoot) {
     if (!DK_POSTED_ONLY_MARKETS.has(m)) return true;
     return String(r.source || "").trim().toLowerCase() === "draftkings";
   });
+
+  merged = preservePrizePicksRoundProps(payload, merged);
 
   return {
     props: merged,

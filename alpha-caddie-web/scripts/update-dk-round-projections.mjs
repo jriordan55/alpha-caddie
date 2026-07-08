@@ -61,6 +61,7 @@ async function main() {
   }
 
   const { props, nCsv, nDk, dkError, dkLeagueSlug } = await refreshRoundProjectionProps(payload, GOLF_MODEL_ROOT);
+  const nPp = props.filter((r) => String(r?.source || "").trim().toLowerCase() === "prizepicks").length;
 
   if (!props.length) {
     console.error(
@@ -83,7 +84,7 @@ async function main() {
   const outJson = JSON.stringify(next, null, 2);
   writeFileSync(projPath, outJson, "utf8");
   console.log(
-    `[update:dk-round-projections] Wrote ${projPath} — ${props.length} prop rows (DK: ${nDk}, CSV: ${nCsv})`,
+    `[update:dk-round-projections] Wrote ${projPath} — ${props.length} prop rows (DK: ${nDk}, CSV: ${nCsv}, PP preserved: ${nPp})`,
   );
 
   const websiteProj = join(GOLF_MODEL_ROOT, "website", "public", "data", "projections.json");

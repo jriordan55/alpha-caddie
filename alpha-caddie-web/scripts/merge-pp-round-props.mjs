@@ -26,6 +26,23 @@ function propRowHasPostableLine(r) {
 }
 
 /**
+ * Keep existing PrizePicks rows when a DK-only props refresh runs (scheduled DK workflow).
+ * @param {object} payload projections.json payload before merge
+ * @param {object[]} nonPpProps merged DK / CSV / model_fallback rows
+ */
+export function preservePrizePicksRoundProps(payload, nonPpProps) {
+  const priorPp = (Array.isArray(payload?.props) ? payload.props : []).filter(
+    (r) => String(r?.source || "").trim().toLowerCase() === "prizepicks" && propRowHasPostableLine(r),
+  );
+  if (!priorPp.length) return nonPpProps;
+  const ppKept = sanitizePpRoundProps(priorPp, nonPpProps);
+  if (ppKept.length) {
+    console.log(`[pp-round-props] preserved ${ppKept.length} prizepicks row(s) alongside DK refresh`);
+  }
+  return [...nonPpProps, ...ppKept];
+}
+
+/**
  * Fetch PrizePicks props and merge into existing props array (keeps DK / CSV / model_fallback rows).
  * @returns {{ props: object[], nPp: number, ppError?: string }}
  */
