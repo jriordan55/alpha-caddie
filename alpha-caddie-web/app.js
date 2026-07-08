@@ -11257,43 +11257,57 @@ async function renderCourseBreakdownApproach(rows) {
   renderCourseImpactList(impact, sorted);
 }
 
+function courseBreakdownTopTourValue(benchKey, fmt, fallback) {
+  const bench = courseBreakdownBenchmarksRoot()?.pga_tour_course_benchmarks?.[benchKey];
+  const v = num(bench?.distribution?.mean ?? bench?.mean, NaN);
+  if (Number.isFinite(v)) return courseBreakdownToDisplay(fmt, v);
+  return fallback;
+}
+
 function renderCourseBreakdownInfo(rows, courseName) {
   const statsHost = document.getElementById("course-info-stats");
   if (!statsHost) return;
 
-  const firPct = courseBreakdownMean(
-    rows.map((r) => {
-      const dgFw = num(r.dg_fairway_pct, NaN);
-      if (Number.isFinite(dgFw)) return dgFw * 100;
-      const fw = num(r.fairways, NaN);
-      return Number.isFinite(fw) ? (fw / 14) * 100 : NaN;
-    }),
-  );
-  const girPct = courseBreakdownMean(
-    rows.map((r) => {
-      const g = num(r.gir, NaN);
-      if (Number.isFinite(g)) return (g / 18) * 100;
-      const dgG = num(r.dg_gir_pct, NaN);
-      return Number.isFinite(dgG) ? dgG * 100 : NaN;
-    }),
-  );
-  const birdies = courseBreakdownMean(rows.map((r) => num(r.birdies, NaN)));
-  const bogeys = courseBreakdownMean(rows.map((r) => num(r.bogeys, NaN)));
-  const pars = courseBreakdownMean(rows.map((r) => num(r.pars, NaN)));
-  const putts = courseBreakdownMean(rows.map((r) => num(r.putts, NaN)));
-
   const B = COURSE_BREAKDOWN_TOUR_BASELINES;
+  const fieldFallback = {
+    fir: courseBreakdownMean(
+      rows.map((r) => {
+        const dgFw = num(r.dg_fairway_pct, NaN);
+        if (Number.isFinite(dgFw)) return dgFw * 100;
+        const fw = num(r.fairways, NaN);
+        return Number.isFinite(fw) ? (fw / 14) * 100 : NaN;
+      }),
+    ),
+    gir: courseBreakdownMean(
+      rows.map((r) => {
+        const g = num(r.gir, NaN);
+        if (Number.isFinite(g)) return (g / 18) * 100;
+        const dgG = num(r.dg_gir_pct, NaN);
+        return Number.isFinite(dgG) ? dgG * 100 : NaN;
+      }),
+    ),
+    birdies: courseBreakdownMean(rows.map((r) => num(r.birdies, NaN))),
+    bogeys: courseBreakdownMean(rows.map((r) => num(r.bogeys, NaN))),
+    pars: courseBreakdownMean(rows.map((r) => num(r.pars, NaN))),
+    putts: courseBreakdownMean(rows.map((r) => num(r.putts, NaN))),
+  };
   const stats = [
-    { label: "FIR", value: firPct, fmt: "pct", tour: B.fir, betterHigh: true },
-    { label: "GIR", value: girPct, fmt: "pct", tour: B.gir, betterHigh: true },
-    { label: "Birds / Rnd", value: birdies, fmt: "num2", tour: B.birdies, betterHigh: true },
-    { label: "Bogs / Rnd", value: bogeys, fmt: "num2", tour: B.bogeys, betterHigh: false },
-    { label: "Pars / Rnd", value: pars, fmt: "num2", tour: B.pars, betterHigh: true },
-    { label: "Putts / Rnd", value: putts, fmt: "num1", tour: B.putts, betterHigh: false },
+    { label: "FIR", benchKey: "Fairways hit", venueKey: "fir", fmt: "pct", tour: B.fir, betterHigh: true },
+    { label: "GIR", benchKey: "GIR", venueKey: "gir", fmt: "pct", tour: B.gir, betterHigh: true },
+    { label: "Birds / Rnd", benchKey: "Birdies", venueKey: "birdies", fmt: "num2", tour: B.birdies, betterHigh: true },
+    { label: "Bogs / Rnd", benchKey: "Bogeys", venueKey: "bogeys", fmt: "num2", tour: B.bogeys, betterHigh: false },
+    { label: "Pars / Rnd", benchKey: "Pars", venueKey: "pars", fmt: "num2", tour: B.pars, betterHigh: true },
+    { label: "Putts / Rnd", benchKey: "", venueKey: "putts", fmt: "num1", tour: B.putts, betterHigh: false },
   ];
 
   statsHost.innerHTML = "";
-  for (const s of stats) {
+  for (const def of stats) {
+    const venueValue = courseBreakdownToDisplay(def.fmt, courseBreakdownVenueRaw(def.venueKey));
+    const s = {
+      ...def,
+      value: Number.isFinite(venueValue) ? venueValue : fieldFallback[def.venueKey],
+      tour: def.benchKey ? courseBreakdownTopTourValue(def.benchKey, def.fmt, def.tour) : def.tour,
+    };
     const cell = document.createElement("div");
     cell.className = "course-info-stat";
 
@@ -11362,7 +11376,9 @@ function courseBreakdownVenueRaw(venueKey) {
   if (venueKey === "scrambling") return num(b.historical_venue_avg_scrambling, NaN);
   if (venueKey === "stp") return num(b.venue_avg_score_to_par, NaN);
   if (venueKey === "birdies") return num(b.historical_venue_avg_birdies ?? b.venue_avg_birdies, NaN);
+  if (venueKey === "pars") return num(b.historical_venue_avg_pars ?? b.venue_avg_pars, NaN);
   if (venueKey === "bogeys") return num(b.historical_venue_avg_bogeys ?? b.venue_avg_bogeys, NaN);
+  if (venueKey === "putts") return num(b.historical_venue_avg_putts ?? b.venue_avg_putts, NaN);
   return NaN;
 }
 
