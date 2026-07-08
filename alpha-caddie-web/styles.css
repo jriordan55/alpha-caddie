@@ -5633,9 +5633,26 @@ dialog,
   gap: 4px;
 }
 .course-breakdown-insight-player-col li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   font-size: 0.88rem;
   line-height: 1.4;
   color: var(--golf-text);
+}
+.course-breakdown-insight-player-name {
+  font-weight: 600;
+  color: #f8fafc;
+}
+.course-breakdown-insight-player-fit {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+.course-breakdown-insight-sources {
+  margin: 8px 0 0;
+  font-size: 0.78rem;
+  color: #64748b;
+  font-style: italic;
 }
 .course-breakdown-insights-empty {
   margin: 0;

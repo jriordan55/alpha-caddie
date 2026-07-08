@@ -1,0 +1,27 @@
+{
+  "by_course": {
+    "the renaissance club": {
+      "location": "North Berwick, East Lothian, Scotland (Firth of Forth coast)",
+      "designer": "Tom Doak",
+      "style": "Coastal links built on fast fescue with firm, running ground and full exposure to sea air. Plays shorter on the card than the yardage suggests when conditions firm up.",
+      "yardage": 7282,
+      "par": 70,
+      "event_notes": [
+        "2026 Genesis Scottish Open reverted to the routing used at the 2019 debut: the first seven holes of each nine largely swap, while holes 8, 9, 17, and 18 stay the same.",
+        "The stadium par-3 formerly played as hole 6 is now hole 15, rebranded as The Thistle, with expanded grandstand capacity for a louder Sunday finish.",
+        "Hole 16 no longer plays as a par-5 (it was reachable in prior years). The closing four holes now run drivable par-4, short par-3, long par-4, long par-3, finishing par-4."
+      ],
+      "key_holes": [
+        { "hole": 7, "par": 5, "yards": 576, "note": "Front-nine par-5 scoring opportunity when wind cooperates." },
+        { "hole": 12, "par": 5, "yards": 600, "note": "Back-nine par-5 and the longest hole on the card." },
+        { "hole": 14, "par": 4, "yards": 347, "note": "Drivable par-4 with the right wind. Birdie-or-bust off the tee." },
+        { "hole": 15, "par": 3, "yards": 147, "note": "The Thistle stadium hole. Short but bunkered and exposed to crowd energy." },
+        { "hole": 16, "par": 4, "yards": 505, "note": "Demanding par-4 that replaced a former par-5. Pot bunkers right demand precision off the tee." },
+        { "hole": 17, "par": 3, "yards": 203, "note": "Long par-3 closer where club selection and wind matter late in the round." },
+        { "hole": 18, "par": 4, "yards": 483, "note": "Finishing par-4 back toward the clubhouse. Bogeys are common under Sunday pressure." }
+      ],
+      "weather_notes": "Scottish summer weeks often bring mild temperatures and wind that stays under 15 mph, but intermittent showers can soften fairways and change approach spin.",
+      "sources": ["DP World Tour 2026", "BBC Sport", "Golf.com"]
+    }
+  }
+}
