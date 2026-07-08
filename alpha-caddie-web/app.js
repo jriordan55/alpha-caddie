@@ -13633,7 +13633,57 @@ function courseFitDistFilteredEntries(entries, roundFilter, selectedEvents, golf
     if (!courseFitDistEntryMatchesGolfer(e, golferQ)) continue;
     out.push(e);
   }
-  return out;
+  return courseFitDistDedupeEntriesByPlayerEventRound(out);
+}
+
+function courseFitDistDedupeEntriesByPlayerEventRound(entries) {
+  const map = new Map();
+  for (const e of entries || []) {
+    const row = e?.row;
+    if (!row) continue;
+    const ek = courseFitDistEventKey(row);
+    const dg = Math.round(num(e.dgId ?? row.dg_id, NaN));
+    const rnd = Math.round(num(row?.round_num ?? row?.round, NaN));
+    const nameKey = String(e.playerName || row.player_name || "")
+      .trim()
+      .toLowerCase();
+    const pk = `${ek}|${Number.isFinite(dg) && dg > 0 ? dg : nameKey}|${Number.isFinite(rnd) ? rnd : "na"}`;
+    const prev = map.get(pk);
+    if (!prev) {
+      map.set(pk, e);
+      continue;
+    }
+    const sk = num(row.sortKey, 0);
+    const psk = num(prev.row?.sortKey, 0);
+    if (sk >= psk) map.set(pk, e);
+  }
+  return [...map.values()];
+}
+
+function courseFitDistFilteredGolferDisplayName(entries, golferQ) {
+  const q = String(golferQ || "").trim().toLowerCase();
+  if (!q) return "";
+  for (const e of entries || []) {
+    if (!courseFitDistEntryMatchesGolfer(e, q)) continue;
+    const nm = displayGolferName(String(e.playerName || e.row?.player_name || ""));
+    if (nm) return nm;
+  }
+  return q;
+}
+
+function courseFitDistEventRoundCount(entries, eventKey, roundFilter, golferQ) {
+  return courseFitDistFilteredEntries(entries, roundFilter, new Set([eventKey]), golferQ).length;
+}
+
+function courseFitDistSampleSummary(avgValues, indValues, golferQ, entries) {
+  const nEvents = avgValues.length;
+  const nRounds = indValues.length;
+  if (!nRounds && !nEvents) return "";
+  if (!String(golferQ || "").trim()) {
+    return `${nEvents} player-tournament average${nEvents === 1 ? "" : "s"} · ${nRounds} round${nRounds === 1 ? "" : "s"}. Left: one bar per player per event. Right: every round in the filter.`;
+  }
+  const nm = courseFitDistFilteredGolferDisplayName(entries, golferQ);
+  return `${nm}: ${nEvents} tournament average${nEvents === 1 ? "" : "s"} · ${nRounds} round${nRounds === 1 ? "" : "s"}. Left weights each tournament equally. Right weights every round — means differ when one year has more rounds (e.g. missed cut vs made weekend).`;
 }
 
 function courseFitDistIndividualValues(entries, statKey, roundFilter, selectedEvents, golferQ = courseFitDistGolferQuery) {
@@ -13861,7 +13911,7 @@ function renderCourseFitDistStats(dl, mean, sd, statKey, halfStep) {
   }
 }
 
-function syncCourseFitDistEventCheckboxes(events, venueKey) {
+function syncCourseFitDistEventCheckboxes(events, venueKey, entries, roundFilter, golferQ) {
   const host = document.getElementById("course-fit-past-events-host");
   if (!host) return;
   if (courseFitDistEventsVenueKey !== venueKey) {
@@ -13873,6 +13923,7 @@ function syncCourseFitDistEventCheckboxes(events, venueKey) {
     host.innerHTML = '<p class="text-muted" style="margin:0;font-size:0.82rem">No archived events at this course yet.</p>';
     return;
   }
+  const golferActive = Boolean(String(golferQ || "").trim());
   for (const ev of events) {
     const lbl = document.createElement("label");
     lbl.className = "course-fit-dist-event-row";
@@ -13886,7 +13937,12 @@ function syncCourseFitDistEventCheckboxes(events, venueKey) {
       buildCourseFitDistributionsPanel(venueKey);
     });
     lbl.appendChild(cb);
-    lbl.appendChild(document.createTextNode(ev.label));
+    let labelText = ev.label;
+    if (golferActive) {
+      const n = courseFitDistEventRoundCount(entries, ev.key, roundFilter, golferQ);
+      labelText += n > 0 ? ` (${n} round${n === 1 ? "" : "s"})` : " (no rounds for this golfer)";
+    }
+    lbl.appendChild(document.createTextNode(labelText));
     host.appendChild(lbl);
   }
 }
@@ -13960,8 +14016,6 @@ function buildCourseFitDistributionsPanel(venueKey) {
 
   const statKey = courseFitDistPropKey || "total";
   const propLabel = courseFitDistPropLabel(statKey);
-  if (avgTitle) avgTitle.textContent = `${propLabel} Distribution — Round Average`;
-  if (indTitle) indTitle.textContent = `${propLabel} Distribution — Individual`;
 
   const bucket = propsGetSingleCourseBucketSync(vk);
   const entries = bucket?.entries || [];
@@ -13975,7 +14029,20 @@ function buildCourseFitDistributionsPanel(venueKey) {
   }
 
   const events = courseFitDistEventsFromEntries(entries);
-  syncCourseFitDistEventCheckboxes(events, vk);
+  const roundFilter = courseFitDistRoundFilter || "all";
+  const golferQ = courseFitDistGolferQuery;
+  const golferName = courseFitDistFilteredGolferDisplayName(entries, golferQ);
+  if (avgTitle) {
+    avgTitle.textContent = golferName
+      ? `${propLabel} — Tournament Average (${golferName})`
+      : `${propLabel} Distribution — Tournament Average`;
+  }
+  if (indTitle) {
+    indTitle.textContent = golferName
+      ? `${propLabel} — Individual Rounds (${golferName})`
+      : `${propLabel} Distribution — Individual Rounds`;
+  }
+  syncCourseFitDistEventCheckboxes(events, vk, entries, roundFilter, golferQ);
   courseFitDistGolferLabels = courseFitDistGolferLabelsFromEntries(entries);
   const gf = document.getElementById("course-fit-dist-golfer");
   const gfPanel = document.getElementById("course-fit-dist-golfer-suggest");
@@ -13987,15 +14054,20 @@ function buildCourseFitDistributionsPanel(venueKey) {
     });
   }
 
-  const roundFilter = courseFitDistRoundFilter || "all";
   const selected = courseFitDistSelectedEvents.size
     ? courseFitDistSelectedEvents
     : new Set(events.map((e) => e.key));
-  const golferQ = courseFitDistGolferQuery;
 
   const avgValues = courseFitDistPlayerEventAverages(entries, statKey, roundFilter, selected, golferQ);
   const indValues = courseFitDistIndividualValues(entries, statKey, roundFilter, selected, golferQ);
   const hasData = avgValues.length > 0 || indValues.length > 0;
+
+  const sampleNote = document.getElementById("course-fit-dist-sample-note");
+  if (sampleNote) {
+    const summary = courseFitDistSampleSummary(avgValues, indValues, golferQ, entries);
+    sampleNote.textContent = summary;
+    sampleNote.hidden = !summary;
+  }
 
   if (!hasData) {
     const roundLabel = roundFilter === "all" ? "" : ` for R${roundFilter}`;
@@ -14007,6 +14079,8 @@ function buildCourseFitDistributionsPanel(venueKey) {
     clearCourseFitDistCanvases();
     if (avgStats) avgStats.innerHTML = "";
     if (indStats) indStats.innerHTML = "";
+    const sampleNote = document.getElementById("course-fit-dist-sample-note");
+    if (sampleNote) sampleNote.hidden = true;
     return;
   }
 

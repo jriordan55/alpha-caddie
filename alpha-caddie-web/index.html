@@ -598,16 +598,17 @@
               </label>
             </div>
             <p id="course-fit-dist-empty" class="course-fit-dist-empty text-muted" hidden role="status">No data available for your chosen filters.</p>
+            <p id="course-fit-dist-sample-note" class="course-fit-dist-sample-note text-muted" hidden></p>
             <div class="course-fit-dist-charts" id="course-fit-dist-charts">
               <div class="course-fit-dist-chart-card">
-                <h3 class="course-fit-dist-chart-title" id="course-fit-dist-avg-title">Score Distribution — Round Average</h3>
+                <h3 class="course-fit-dist-chart-title" id="course-fit-dist-avg-title">Score Distribution — Tournament Average</h3>
                 <div class="course-fit-dist-canvas-wrap">
                   <canvas id="course-fit-dist-avg-canvas" class="course-fit-dist-canvas" width="560" height="320" aria-label="Round average distribution histogram"></canvas>
                 </div>
                 <dl class="course-fit-dist-stats" id="course-fit-dist-avg-stats"></dl>
               </div>
               <div class="course-fit-dist-chart-card">
-                <h3 class="course-fit-dist-chart-title" id="course-fit-dist-ind-title">Score Distribution — Individual</h3>
+                <h3 class="course-fit-dist-chart-title" id="course-fit-dist-ind-title">Score Distribution — Individual Rounds</h3>
                 <div class="course-fit-dist-canvas-wrap">
                   <canvas id="course-fit-dist-ind-canvas" class="course-fit-dist-canvas" width="560" height="320" aria-label="Individual round distribution histogram"></canvas>
                 </div>
@@ -1490,10 +1491,10 @@
           <dd>Select one or more prior tournaments played at the course in the sidebar (from <code>player-history/by-course</code> shards).</dd>
           <dt>Round / Round Prop</dt>
           <dd>Filter to a single round or all rounds, and pick the counting stat (score, birdies, pars, bogeys, fairways, GIR).</dd>
-          <dt>Round Average chart</dt>
-          <dd>One bar per player per event: the mean of that stat across the selected round(s) at that event.</dd>
-          <dt>Individual chart</dt>
-          <dd>Every completed round in the filter window. Shaded bands show ±1 SD and ±2 SD; the red line is the mean.</dd>
+          <dt>Tournament Average chart</dt>
+          <dd>One value per player per event: the mean of that stat across the selected round(s) at that tournament. With a golfer filter, you get one bar per year they played (e.g. 2024 avg 65.8, 2025 avg 68.5).</dd>
+          <dt>Individual Rounds chart</dt>
+          <dd>Every completed round in the filter. Means can differ from the tournament chart when one year has more rounds (missed cut vs weekend).</dd>
         </dl>
       </section>
       <footer class="ev-help-actions">
@@ -1503,6 +1504,6 @@
   </dialog>
 
   <script src="parlay-pro.js?v=12"></script>
-  <script src="app.js?v=313"></script>
+  <script src="app.js?v=314"></script>
 </body>
 </html>
