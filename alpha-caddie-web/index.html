@@ -45,6 +45,7 @@
       <button type="button" class="tab" data-tab="ou" role="tab" aria-selected="false">Round projections</button>
       <button type="button" class="tab" data-tab="props" role="tab">Historical Trends</button>
       <button type="button" class="tab" data-tab="course-fit" role="tab">Course fit</button>
+      <button type="button" class="tab" data-tab="course-breakdown" role="tab">Course breakdown</button>
       <button type="button" class="tab" data-tab="live-prop" role="tab">Live Prop Predictor</button>
       <button type="button" class="tab" data-tab="matchup-analysis" role="tab">Matchup Analysis Tool</button>
       <button type="button" class="tab" data-tab="ev" role="tab">+EV Bets</button>
@@ -80,6 +81,11 @@
           <span class="home-card-icon" aria-hidden="true">CF</span>
           <span class="home-card-title">Course fit</span>
           <span class="home-card-desc">Skill profile vs venue — radar, similar courses, shot bins.</span>
+        </button>
+        <button type="button" class="home-card" data-go-tab="course-breakdown" role="listitem">
+          <span class="home-card-icon" aria-hidden="true">CB</span>
+          <span class="home-card-title">Course breakdown</span>
+          <span class="home-card-desc">Course-specific insights — strokes gained mix, approach zones, and scoring profile.</span>
         </button>
         <button type="button" class="home-card" data-go-tab="live-prop" role="listitem">
           <span class="home-card-icon" aria-hidden="true">LP</span>
@@ -585,6 +591,72 @@
           </div>
           <p class="course-fit-tip-stat text-muted"></p>
           <p class="course-fit-tip-dk text-muted"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Course breakdown -->
+    <section id="panel-course-breakdown" class="panel" role="tabpanel" hidden>
+      <div class="course-breakdown-shell">
+        <div class="ev-panel-head">
+          <h2 class="ev-devig-sr-only">Course breakdown</h2>
+        </div>
+        <p class="course-breakdown-lede">Course-specific insights and player performance metrics</p>
+
+        <div class="leaderboard-card course-info-card">
+          <div class="course-info-head">
+            <span class="course-info-pin" aria-hidden="true">◈</span>
+            <span class="course-info-head-title">Course Info</span>
+          </div>
+          <div class="course-info-body">
+            <div class="course-info-identity">
+              <p class="course-info-name" id="course-info-name">—</p>
+              <p class="course-info-loc" id="course-info-loc"></p>
+              <p class="course-info-par" id="course-info-par"></p>
+            </div>
+            <div class="course-info-stats" id="course-info-stats"></div>
+          </div>
+        </div>
+
+        <div class="course-boxplot-grid" id="course-boxplot-grid" aria-label="Course stat distributions vs PGA Tour venues"></div>
+
+        <div id="course-boxplot-tooltip" class="course-boxplot-tooltip" hidden>
+          <p class="course-boxplot-tooltip-title">All PGA Tour Courses</p>
+          <dl class="course-boxplot-tooltip-stats"></dl>
+        </div>
+
+        <h3 class="course-breakdown-section-title course-breakdowns-heading">Course Breakdowns</h3>
+        <div class="course-skill-grid" id="course-skill-grid" aria-label="Course skill breakdowns by category"></div>
+
+        <div class="leaderboard-card course-breakdown-viz-card">
+          <h3 class="course-breakdown-section-title">Strokes Gained Distribution</h3>
+          <div class="course-breakdown-viz-grid">
+            <div class="course-breakdown-chart-col">
+              <canvas id="course-sg-donut" width="360" height="360" aria-label="Strokes gained distribution donut chart"></canvas>
+              <div class="course-breakdown-legend" id="course-sg-legend"></div>
+            </div>
+            <div class="course-breakdown-impact-col">
+              <h4 class="course-breakdown-impact-title">Strokes Gained Impact Analysis</h4>
+              <div class="course-breakdown-impact-course" id="course-sg-impact-course"></div>
+              <div class="course-breakdown-impact-list" id="course-sg-impact-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="leaderboard-card course-breakdown-viz-card">
+          <h3 class="course-breakdown-section-title">Approach Shot Distribution</h3>
+          <div class="course-breakdown-viz-grid">
+            <div class="course-breakdown-chart-col">
+              <canvas id="course-approach-donut" width="360" height="360" aria-label="Approach shot distribution donut chart"></canvas>
+              <div class="course-breakdown-legend" id="course-approach-legend"></div>
+            </div>
+            <div class="course-breakdown-impact-col">
+              <h4 class="course-breakdown-impact-title">Approach Shot Impact Analysis</h4>
+              <div class="course-breakdown-impact-course" id="course-approach-impact-course"></div>
+              <div class="course-breakdown-impact-list" id="course-approach-impact-list"></div>
+              <p class="course-breakdown-empty text-muted" id="course-approach-empty" hidden></p>
+            </div>
+          </div>
         </div>
       </div>
     </section>

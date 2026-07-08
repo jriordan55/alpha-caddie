@@ -480,6 +480,8 @@ export function emptyVenueCountRaw() {
     nGir: 0,
     sumFw: 0,
     nFw: 0,
+    sumScramble: 0,
+    nScramble: 0,
     sumPutts: 0,
     nPutts: 0,
   };
@@ -538,6 +540,11 @@ export function accumulateVenueCountRow(raw, row, nFairwayHoles = 14) {
     raw.sumFw += fc;
     raw.nFw++;
   }
+  const scr = num(row.scrambling, NaN);
+  if (Number.isFinite(scr) && scr >= 0 && scr <= 1.0001) {
+    raw.sumScramble += scr;
+    raw.nScramble++;
+  }
   const put = num(row.putts, NaN);
   if (Number.isFinite(put) && put >= 20 && put <= 40) {
     raw.sumPutts += put;
@@ -559,6 +566,7 @@ export function finalizeVenueAgg(raw) {
     avgDoubles: mean(raw.sumDbl, raw.nDbl),
     avgGir: mean(raw.sumGir, raw.nGir),
     avgFairways: mean(raw.sumFw, raw.nFw),
+    avgScrambling: mean(raw.sumScramble, raw.nScramble),
     avgPutts: mean(raw.sumPutts, raw.nPutts),
   };
 }
@@ -1532,6 +1540,7 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
     venueAvgBogeys: venueAgg.avgBogeys,
     venueAvgGir: venueAgg.avgGir,
     venueAvgFairways: venueAgg.avgFairways,
+    venueAvgScrambling: venueAgg.avgScrambling,
     venueAvgPutts: venueAgg.avgPutts,
     fieldByRound,
     playerByRound,

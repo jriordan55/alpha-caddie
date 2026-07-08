@@ -70,7 +70,7 @@
     "unified_factors_applied": true
   },
   "projection_course_basis": {
-    "venue_avg_score_to_par": 0.008,
+    "venue_avg_score_to_par": 0.054,
     "venue_avg_round_score": 70.01,
     "venue_historical_rounds": 2004,
     "venue_scoring_source": "historical_csv+recent",
@@ -79,11 +79,11 @@
     "venue_avg_bogeys": 2.97,
     "venue_avg_gir": 11.7,
     "venue_avg_fairways": 8.52,
-    "historical_venue_avg_birdies": 3.342,
+    "historical_venue_avg_birdies": 3.313,
     "historical_venue_avg_pars": 11.298,
-    "historical_venue_avg_bogeys": 2.968,
-    "historical_venue_avg_gir": 11.765,
-    "historical_venue_avg_fairways": 7.21,
+    "historical_venue_avg_bogeys": 2.984,
+    "historical_venue_avg_gir": 11.764,
+    "historical_venue_avg_fairways": 7.206,
     "historical_venue_avg_score_by_round": {
       "1": 70.12,
       "2": 70.09,
@@ -128,7 +128,9 @@
     },
     "fairway_holes_modeled": 14,
     "course_adj_fairway_rate": 0.5171,
-    "course_adj_gir_rate": 0.6499
+    "course_adj_gir_rate": 0.6499,
+    "historical_venue_avg_scrambling": 0.595,
+    "course_breakdown_fw_opp": 12
   },
   "pga_tour_market_benchmarks": {
     "Total score": {
@@ -187,37 +189,121 @@
       "mean": 70.693,
       "sd": 1.355,
       "higherBetter": false,
-      "unit": "strokes"
+      "unit": "strokes",
+      "distribution": {
+        "min": 68.2773,
+        "q1": 69.8536,
+        "median": 70.4503,
+        "q3": 71.4646,
+        "max": 74.1779,
+        "mean": 70.6927,
+        "n_courses": 90
+      }
     },
     "Birdies": {
       "mean": 3.64,
       "sd": 0.669,
       "higherBetter": true,
-      "unit": "count"
+      "unit": "count",
+      "distribution": {
+        "min": 2.1891,
+        "q1": 3.2468,
+        "median": 3.6926,
+        "q3": 4.0443,
+        "max": 5.7088,
+        "mean": 3.6402,
+        "n_courses": 90
+      }
     },
     "Pars": {
       "mean": 11.179,
       "sd": 0.336,
       "higherBetter": true,
-      "unit": "count"
+      "unit": "count",
+      "distribution": {
+        "min": 10.1869,
+        "q1": 10.9862,
+        "median": 11.1883,
+        "q3": 11.4323,
+        "max": 11.8629,
+        "mean": 11.179,
+        "n_courses": 90
+      }
     },
     "Bogeys": {
       "mean": 2.729,
       "sd": 0.63,
       "higherBetter": false,
-      "unit": "count"
+      "unit": "count",
+      "distribution": {
+        "min": 1.3312,
+        "q1": 2.3025,
+        "median": 2.5701,
+        "q3": 3.0518,
+        "max": 4.714,
+        "mean": 2.7294,
+        "n_courses": 90
+      }
     },
     "GIR": {
       "mean": 0.609,
       "sd": 0.113,
       "higherBetter": true,
-      "unit": "rate"
+      "unit": "rate",
+      "distribution": {
+        "min": 0.1999,
+        "q1": 0.572,
+        "median": 0.6316,
+        "q3": 0.6806,
+        "max": 0.8198,
+        "mean": 0.6091,
+        "n_courses": 85
+      }
     },
     "Fairways hit": {
       "mean": 0.583,
       "sd": 0.122,
       "higherBetter": true,
-      "unit": "rate"
+      "unit": "rate",
+      "distribution": {
+        "min": 0,
+        "q1": 0.5444,
+        "median": 0.5838,
+        "q3": 0.6408,
+        "max": 0.888,
+        "mean": 0.5834,
+        "n_courses": 89
+      }
+    },
+    "Scrambling": {
+      "mean": 0.538,
+      "sd": 0.205,
+      "higherBetter": true,
+      "unit": "rate",
+      "distribution": {
+        "min": 0,
+        "q1": 0.5637,
+        "median": 0.6154,
+        "q3": 0.6376,
+        "max": 0.7339,
+        "mean": 0.5383,
+        "n_courses": 84
+      }
+    },
+    "Scoring vs Par": {
+      "mean": -0.327,
+      "sd": 1.514,
+      "higherBetter": false,
+      "unit": "strokes",
+      "distribution": {
+        "min": -4.4394,
+        "q1": -1.1497,
+        "median": -0.6678,
+        "q3": 0.4171,
+        "max": 4.1779,
+        "mean": -0.3273,
+        "n_courses": 90
+      }
     },
     "meta": {
       "skipped": false,
@@ -230,7 +316,9 @@
         "pars": 90,
         "bogeys": 90,
         "gir": 85,
-        "fairways": 89
+        "fairways": 89,
+        "scrambling": 84,
+        "score_to_par": 90
       }
     }
   },

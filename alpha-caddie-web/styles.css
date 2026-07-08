@@ -5360,3 +5360,526 @@ dialog,
 .parlay-pro-results {
   margin-top: 0.5rem;
 }
+
+/* Course breakdown tab */
+.course-breakdown-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.course-breakdown-lede {
+  color: var(--golf-text-muted);
+  margin: -4px 0 0;
+  font-size: 0.95rem;
+}
+.course-breakdown-viz-card {
+  padding: 20px 22px 24px;
+}
+.course-breakdown-section-title {
+  margin: 0 0 14px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--golf-text);
+}
+.course-breakdown-viz-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 42%) 1fr;
+  gap: 28px;
+  align-items: center;
+}
+@media (max-width: 780px) {
+  .course-breakdown-viz-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.course-breakdown-chart-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.course-breakdown-chart-col canvas {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+}
+.course-breakdown-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 16px;
+}
+.course-breakdown-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.82rem;
+  color: var(--golf-text-muted);
+  white-space: nowrap;
+}
+.course-breakdown-legend-swatch {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+.course-breakdown-impact-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.course-breakdown-impact-title {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--golf-text);
+}
+.course-breakdown-impact-course {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: var(--golf-green-bright);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.course-breakdown-impact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.course-breakdown-impact-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: var(--golf-surface-alt);
+  border: 1px solid var(--golf-card-border);
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+.course-breakdown-impact-row-swatch {
+  width: 4px;
+  align-self: stretch;
+  border-radius: 3px;
+  flex: 0 0 auto;
+}
+.course-breakdown-impact-row-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.course-breakdown-impact-row-text {
+  min-width: 0;
+}
+.course-breakdown-impact-row-label {
+  font-weight: 700;
+  color: var(--golf-text);
+  font-size: 0.95rem;
+}
+.course-breakdown-impact-row-desc {
+  color: var(--golf-text-muted);
+  font-size: 0.82rem;
+  margin-top: 2px;
+}
+.course-breakdown-impact-row-pct {
+  font-weight: 700;
+  color: var(--golf-green-bright);
+  font-size: 1rem;
+  flex: 0 0 auto;
+}
+
+/* Course info strip */
+.course-info-card {
+  padding: 18px 22px 20px;
+}
+.course-info-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.course-info-pin {
+  color: var(--golf-green-bright);
+  font-size: 1.1rem;
+}
+.course-info-head-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--golf-text);
+}
+.course-info-body {
+  display: flex;
+  gap: 24px;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+.course-info-identity {
+  flex: 0 0 auto;
+  min-width: 170px;
+}
+.course-info-name {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--golf-text);
+}
+.course-info-loc {
+  margin: 4px 0 0;
+  color: var(--golf-text-muted);
+  font-size: 0.9rem;
+}
+.course-info-par {
+  margin: 4px 0 0;
+  color: var(--golf-text-muted);
+  font-size: 0.9rem;
+}
+.course-info-stats {
+  flex: 1 1 420px;
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  background: var(--golf-surface-alt);
+  border: 1px solid var(--golf-card-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.course-info-stat {
+  flex: 0 0 auto;
+  min-width: 92px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.course-info-stat-label {
+  color: var(--golf-text-muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.course-info-stat-value {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--golf-text);
+  line-height: 1;
+}
+.course-info-stat-value.is-below {
+  color: var(--golf-danger);
+}
+.course-info-stat-value.is-above {
+  color: var(--golf-green-bright);
+}
+.course-info-stat-tour {
+  color: var(--golf-text-muted);
+  font-size: 0.72rem;
+}
+
+/* Course breakdown box-plot cards */
+.course-boxplot-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+@media (max-width: 1100px) {
+  .course-boxplot-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 680px) {
+  .course-boxplot-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.course-boxplot-card {
+  background: var(--golf-elevated);
+  border: 1px solid var(--golf-card-border);
+  border-radius: 14px;
+  padding: 18px 18px 14px;
+  box-shadow: var(--golf-shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 260px;
+}
+.course-boxplot-card-head {
+  text-align: center;
+}
+.course-boxplot-card-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--golf-text);
+}
+.course-boxplot-card-sub {
+  margin: 4px 0 0;
+  font-size: 0.78rem;
+  color: var(--golf-text-muted);
+}
+.course-boxplot-canvas-wrap {
+  position: relative;
+  width: 100%;
+  padding: 4px 0 0;
+}
+.course-boxplot-canvas-wrap canvas {
+  width: 100%;
+  height: 108px;
+  display: block;
+  cursor: crosshair;
+}
+.course-boxplot-foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+.course-boxplot-values {
+  display: flex;
+  gap: 22px;
+}
+.course-boxplot-val-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.course-boxplot-val-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--golf-text-muted);
+}
+.course-boxplot-val-num {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--golf-text);
+  line-height: 1.1;
+}
+.course-boxplot-val-num.is-harder {
+  color: var(--golf-danger);
+}
+.course-boxplot-val-num.is-easier {
+  color: var(--golf-green-bright);
+}
+.course-boxplot-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  border: 1px solid var(--golf-card-border);
+  background: var(--golf-surface-alt);
+  color: var(--golf-text-muted);
+}
+.course-boxplot-badge.is-harder {
+  background: rgba(248, 113, 113, 0.12);
+  border-color: rgba(248, 113, 113, 0.35);
+  color: #fca5a5;
+}
+.course-boxplot-badge.is-easier {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: var(--golf-green-bright);
+}
+.course-boxplot-badge-icon {
+  font-size: 0.9rem;
+  line-height: 1;
+}
+.course-boxplot-tooltip {
+  position: fixed;
+  z-index: 1200;
+  pointer-events: none;
+  background: #0f141c;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 10px 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  min-width: 170px;
+}
+.course-boxplot-tooltip-title {
+  margin: 0 0 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--golf-text);
+}
+.course-boxplot-tooltip-stats {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px 12px;
+  font-size: 0.78rem;
+}
+.course-boxplot-tooltip-stats dt {
+  margin: 0;
+  color: var(--golf-text-muted);
+}
+.course-boxplot-tooltip-stats dd {
+  margin: 0;
+  color: var(--golf-text);
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Course skill breakdowns (Driving / Approach / ARG / Putting) */
+.course-breakdowns-heading {
+  margin-top: 4px;
+}
+.course-skill-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+@media (max-width: 980px) {
+  .course-skill-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.course-skill-card {
+  background: var(--golf-elevated);
+  border: 1px solid var(--golf-card-border);
+  border-radius: 14px;
+  padding: 16px 18px 18px;
+  box-shadow: var(--golf-shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 320px;
+}
+.course-skill-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.course-skill-card-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(16, 185, 129, 0.14);
+  color: var(--golf-green-bright);
+  font-size: 0.95rem;
+  flex: 0 0 auto;
+}
+.course-skill-card-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--golf-text);
+}
+.course-skill-driving-meta {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 8px;
+  align-items: start;
+  font-size: 0.72rem;
+  color: var(--golf-text-muted);
+}
+.course-skill-driving-meta strong {
+  display: block;
+  color: var(--golf-text);
+  font-size: 0.95rem;
+  margin-top: 2px;
+}
+.course-skill-driving-meta-center {
+  text-align: center;
+  align-self: center;
+  font-weight: 600;
+  color: var(--golf-text);
+  white-space: nowrap;
+}
+.course-skill-gauge-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 0 0;
+}
+.course-skill-gauge-wrap canvas {
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+}
+.course-skill-gauge-label {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--golf-text);
+}
+.course-skill-split {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: stretch;
+}
+.course-skill-split-wide {
+  grid-template-columns: 1fr 1fr;
+}
+.course-skill-chart-wrap {
+  min-width: 0;
+}
+.course-skill-chart-wrap canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.course-skill-chart-title {
+  margin: 0 0 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--golf-text);
+}
+.course-skill-penalty-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 108px;
+}
+.course-skill-penalty-head {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--golf-text);
+}
+.course-skill-penalty-pill {
+  background: rgba(16, 185, 129, 0.14);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--golf-green-bright);
+  text-align: center;
+  white-space: nowrap;
+}
+.course-skill-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 6px;
+}
+.course-skill-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: var(--golf-text-muted);
+}
+.course-skill-legend-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex: 0 0 auto;
+}
+.course-skill-putting-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}

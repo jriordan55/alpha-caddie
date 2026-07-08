@@ -10809,6 +10809,1411 @@ function setCourseFitSubtab(id) {
   if (active === "shots") buildCourseFitTab();
 }
 
+/* ---------------- Course breakdown tab ---------------- */
+
+const COURSE_BREAKDOWN_GREENS = Object.freeze([
+  "#0f6b41",
+  "#188a54",
+  "#22a866",
+  "#43c489",
+  "#7fd9ae",
+  "#b3e8cf",
+]);
+
+/** PGA Tour season baselines shown as "Tour Avg" comparisons in the course-info strip. */
+const COURSE_BREAKDOWN_TOUR_BASELINES = Object.freeze({
+  fir: 59.6,
+  gir: 65.7,
+  birdies: 3.67,
+  bogeys: 2.66,
+  pars: 10.9,
+  putts: 29.0,
+});
+
+/** One row per player in the current field (dedupe on dg_id). */
+function courseBreakdownFieldRows() {
+  const rows = Array.isArray(DATA?.players) ? DATA.players : [];
+  const seen = new Set();
+  const out = [];
+  for (const r of rows) {
+    const id = Math.round(num(r?.dg_id, NaN));
+    if (!Number.isFinite(id) || seen.has(id)) continue;
+    seen.add(id);
+    out.push(r);
+  }
+  return out;
+}
+
+function courseBreakdownMean(values) {
+  const xs = values.filter((v) => Number.isFinite(v));
+  if (!xs.length) return NaN;
+  return xs.reduce((a, b) => a + b, 0) / xs.length;
+}
+
+function courseBreakdownStdDev(values) {
+  const xs = values.filter((v) => Number.isFinite(v));
+  if (xs.length < 2) return NaN;
+  const m = xs.reduce((a, b) => a + b, 0) / xs.length;
+  const varc = xs.reduce((a, b) => a + (b - m) * (b - m), 0) / xs.length;
+  return Math.sqrt(varc);
+}
+
+/** Draws a labelled donut chart into `canvas` from `segments` = [{label, value, color}]. */
+function drawCourseDonut(canvas, segments) {
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  const dpr = window.devicePixelRatio || 1;
+  const cssW = canvas.clientWidth || 280;
+  const cssH = cssW;
+  canvas.width = Math.round(cssW * dpr);
+  canvas.height = Math.round(cssH * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssW, cssH);
+
+  const cx = cssW / 2;
+  const cy = cssH / 2;
+  const outer = Math.max(20, Math.min(cx, cy) * 0.62);
+  const inner = outer * 0.56;
+  const total = segments.reduce((s, x) => s + (x.value > 0 ? x.value : 0), 0);
+  if (!(total > 0)) return;
+
+  const mutedColor =
+    getComputedStyle(document.documentElement).getPropertyValue("--golf-text-muted").trim() || "#94a3b8";
+  const bgColor =
+    getComputedStyle(document.documentElement).getPropertyValue("--golf-elevated").trim() || "#10141c";
+
+  let a0 = -Math.PI / 2;
+  for (const seg of segments) {
+    const val = seg.value > 0 ? seg.value : 0;
+    if (val <= 0) continue;
+    const a1 = a0 + (val / total) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.arc(cx, cy, outer, a0, a1);
+    ctx.arc(cx, cy, inner, a1, a0, true);
+    ctx.closePath();
+    ctx.fillStyle = seg.color;
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = bgColor;
+    ctx.stroke();
+
+    const mid = (a0 + a1) / 2;
+    const lr = outer + 20;
+    const ly = cy + Math.sin(mid) * lr;
+    ctx.fillStyle = mutedColor;
+    ctx.font = "600 11px system-ui, -apple-system, sans-serif";
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
+    const halfW = ctx.measureText(seg.label).width / 2;
+    const pad = halfW + 4;
+    const lx = Math.max(pad, Math.min(cssW - pad, cx + Math.cos(mid) * lr));
+    ctx.fillText(seg.label, lx, ly);
+    a0 = a1;
+  }
+}
+
+function renderCourseDonutLegend(host, segments) {
+  if (!host) return;
+  host.innerHTML = "";
+  for (const seg of segments) {
+    const item = document.createElement("span");
+    item.className = "course-breakdown-legend-item";
+    const sw = document.createElement("span");
+    sw.className = "course-breakdown-legend-swatch";
+    sw.style.background = seg.color;
+    const txt = document.createElement("span");
+    txt.textContent = seg.label;
+    item.appendChild(sw);
+    item.appendChild(txt);
+    host.appendChild(item);
+  }
+}
+
+function renderCourseImpactList(host, items) {
+  if (!host) return;
+  host.innerHTML = "";
+  for (const it of items) {
+    const row = document.createElement("div");
+    row.className = "course-breakdown-impact-row";
+
+    const main = document.createElement("div");
+    main.className = "course-breakdown-impact-row-main";
+    const sw = document.createElement("span");
+    sw.className = "course-breakdown-impact-row-swatch";
+    sw.style.background = it.color;
+    const text = document.createElement("div");
+    text.className = "course-breakdown-impact-row-text";
+    const label = document.createElement("div");
+    label.className = "course-breakdown-impact-row-label";
+    label.textContent = it.label;
+    const desc = document.createElement("div");
+    desc.className = "course-breakdown-impact-row-desc";
+    desc.textContent = it.desc;
+    text.appendChild(label);
+    text.appendChild(desc);
+    main.appendChild(sw);
+    main.appendChild(text);
+
+    const pct = document.createElement("div");
+    pct.className = "course-breakdown-impact-row-pct";
+    pct.textContent = `${it.pct.toFixed(1)}%`;
+
+    row.appendChild(main);
+    row.appendChild(pct);
+    host.appendChild(row);
+  }
+}
+
+function renderCourseBreakdownSg(rows) {
+  const donut = document.getElementById("course-sg-donut");
+  const legend = document.getElementById("course-sg-legend");
+  const impact = document.getElementById("course-sg-impact-list");
+  const defs = [
+    { key: "sg_ott", label: "SG: Off the Tee", desc: "Performance on tee shots" },
+    { key: "sg_app", label: "SG: Approach", desc: "Performance on approach shots to the green" },
+    { key: "sg_arg", label: "SG: Around Green", desc: "Performance on shots within 30 yards of the green" },
+    { key: "sg_putt", label: "SG: Putting", desc: "Performance on putts on the green" },
+  ];
+
+  const spreads = defs.map((d) => courseBreakdownStdDev(rows.map((r) => num(r[d.key], NaN))));
+  const total = spreads.reduce((s, v) => s + (Number.isFinite(v) ? v : 0), 0);
+
+  const segments = defs.map((d, i) => {
+    const share = total > 0 && Number.isFinite(spreads[i]) ? (spreads[i] / total) * 100 : 0;
+    return { label: d.label, value: share, pct: share, color: COURSE_BREAKDOWN_GREENS[i], desc: d.desc };
+  });
+
+  drawCourseDonut(donut, segments);
+  renderCourseDonutLegend(legend, segments);
+  renderCourseImpactList(impact, segments);
+}
+
+async function renderCourseBreakdownApproach(rows) {
+  const donut = document.getElementById("course-approach-donut");
+  const legend = document.getElementById("course-approach-legend");
+  const impact = document.getElementById("course-approach-impact-list");
+  const empty = document.getElementById("course-approach-empty");
+
+  const bins = [
+    { key: "50_100_fw_shot_count", label: "50-100 yards", desc: "Approach shots from 50-100 yards (fairway)" },
+    { key: "100_150_fw_shot_count", label: "100-150 yards", desc: "Approach shots from 100-150 yards (fairway)" },
+    { key: "150_200_fw_shot_count", label: "150-200 yards", desc: "Approach shots from 150-200 yards (fairway)" },
+    { key: "over_200_fw_shot_count", label: "200+ yards", desc: "Approach shots from 200+ yards (fairway)" },
+    { key: "under_150_rgh_shot_count", label: "Rough < 150 yards", desc: "Approach shots from the rough under 150 yards" },
+    { key: "over_150_rgh_shot_count", label: "Rough 150+ yards", desc: "Approach shots from the rough 150+ yards" },
+  ];
+
+  let asJson = null;
+  try {
+    asJson = await loadApproachSkillYtdJson();
+  } catch {
+    asJson = null;
+  }
+
+  const fieldIds = new Set(rows.map((r) => Math.round(num(r.dg_id, NaN))).filter(Number.isFinite));
+  const totals = bins.map(() => 0);
+  let matched = 0;
+  if (asJson && Array.isArray(asJson.players)) {
+    for (const p of asJson.players) {
+      const id = Math.round(num(p?.dg_id, NaN));
+      if (!Number.isFinite(id) || !fieldIds.has(id)) continue;
+      matched++;
+      bins.forEach((b, i) => {
+        totals[i] += Math.max(0, num(p[b.key], 0));
+      });
+    }
+  }
+
+  const grand = totals.reduce((s, v) => s + v, 0);
+  if (!matched || grand <= 0) {
+    if (empty) {
+      empty.hidden = false;
+      empty.innerHTML =
+        "No <code>approach_skill_ytd.json</code> data for this field. Run <code>npm run fetch:dg</code> to embed DataGolf approach-skill shot counts.";
+    }
+    drawCourseDonut(donut, []);
+    if (legend) legend.innerHTML = "";
+    if (impact) impact.innerHTML = "";
+    return;
+  }
+  if (empty) empty.hidden = true;
+
+  const segments = bins.map((b, i) => {
+    const pct = (totals[i] / grand) * 100;
+    return { label: b.label, value: pct, pct, color: COURSE_BREAKDOWN_GREENS[i], desc: b.desc };
+  });
+
+  const sorted = [...segments].sort((a, b) => b.pct - a.pct);
+
+  drawCourseDonut(donut, segments);
+  renderCourseDonutLegend(legend, sorted);
+  renderCourseImpactList(impact, sorted);
+}
+
+function renderCourseBreakdownInfo(rows, courseName) {
+  const statsHost = document.getElementById("course-info-stats");
+  if (!statsHost) return;
+
+  const firPct = courseBreakdownMean(
+    rows.map((r) => {
+      const dgFw = num(r.dg_fairway_pct, NaN);
+      if (Number.isFinite(dgFw)) return dgFw * 100;
+      const fw = num(r.fairways, NaN);
+      return Number.isFinite(fw) ? (fw / 14) * 100 : NaN;
+    }),
+  );
+  const girPct = courseBreakdownMean(
+    rows.map((r) => {
+      const g = num(r.gir, NaN);
+      if (Number.isFinite(g)) return (g / 18) * 100;
+      const dgG = num(r.dg_gir_pct, NaN);
+      return Number.isFinite(dgG) ? dgG * 100 : NaN;
+    }),
+  );
+  const birdies = courseBreakdownMean(rows.map((r) => num(r.birdies, NaN)));
+  const bogeys = courseBreakdownMean(rows.map((r) => num(r.bogeys, NaN)));
+  const pars = courseBreakdownMean(rows.map((r) => num(r.pars, NaN)));
+  const putts = courseBreakdownMean(rows.map((r) => num(r.putts, NaN)));
+
+  const B = COURSE_BREAKDOWN_TOUR_BASELINES;
+  const stats = [
+    { label: "FIR", value: firPct, fmt: "pct", tour: B.fir, betterHigh: true },
+    { label: "GIR", value: girPct, fmt: "pct", tour: B.gir, betterHigh: true },
+    { label: "Birds / Rnd", value: birdies, fmt: "num2", tour: B.birdies, betterHigh: true },
+    { label: "Bogs / Rnd", value: bogeys, fmt: "num2", tour: B.bogeys, betterHigh: false },
+    { label: "Pars / Rnd", value: pars, fmt: "num2", tour: B.pars, betterHigh: true },
+    { label: "Putts / Rnd", value: putts, fmt: "num1", tour: B.putts, betterHigh: false },
+  ];
+
+  statsHost.innerHTML = "";
+  for (const s of stats) {
+    const cell = document.createElement("div");
+    cell.className = "course-info-stat";
+
+    const label = document.createElement("span");
+    label.className = "course-info-stat-label";
+    label.textContent = s.label;
+
+    const val = document.createElement("span");
+    val.className = "course-info-stat-value";
+    if (Number.isFinite(s.value)) {
+      const better = s.betterHigh ? s.value >= s.tour : s.value <= s.tour;
+      val.classList.add(better ? "is-above" : "is-below");
+      val.textContent =
+        s.fmt === "pct"
+          ? `${s.value.toFixed(1)}%`
+          : s.fmt === "num1"
+            ? s.value.toFixed(1)
+            : s.value.toFixed(2);
+    } else {
+      val.textContent = "—";
+    }
+
+    const tour = document.createElement("span");
+    tour.className = "course-info-stat-tour";
+    tour.textContent = s.fmt === "pct" ? `Tour Avg: ${s.tour.toFixed(1)}%` : `Tour Avg: ${s.tour.toFixed(2)}`;
+
+    cell.appendChild(label);
+    cell.appendChild(val);
+    cell.appendChild(tour);
+    statsHost.appendChild(cell);
+  }
+}
+
+const COURSE_BOXPLOT_METRICS = Object.freeze([
+  { benchKey: "Fairways hit", title: "Fairways Hit (%)", fmt: "pct", venueKey: "fir" },
+  { benchKey: "GIR", title: "Greens in Regulation (%)", fmt: "pct", venueKey: "gir" },
+  { benchKey: "Scrambling", title: "Scrambling (%)", fmt: "pct", venueKey: "scrambling" },
+  { benchKey: "Scoring vs Par", title: "Scoring vs Par", fmt: "stp", venueKey: "stp" },
+  { benchKey: "Birdies", title: "Birdies per Round", fmt: "num2", venueKey: "birdies" },
+  { benchKey: "Bogeys", title: "Bogeys per Round", fmt: "num2", venueKey: "bogeys" },
+]);
+
+function courseBreakdownBenchmarksRoot() {
+  if (DATA?.pga_tour_course_benchmarks) return DATA;
+  if (DATA?.meta?.pga_tour_course_benchmarks) return DATA.meta;
+  return DATA || {};
+}
+
+function courseBreakdownBasisRow() {
+  return DATA?.projection_course_basis || DATA?.meta?.projection_course_basis || {};
+}
+
+function courseBreakdownVenueRaw(venueKey) {
+  const b = courseBreakdownBasisRow();
+  const fwOpp = fairwayHolesModeledFromData();
+  if (venueKey === "fir") {
+    const fw = num(b.historical_venue_avg_fairways ?? b.venue_avg_fairways, NaN);
+    if (!Number.isFinite(fw)) return NaN;
+    return fw <= 1.05 ? fw : fw / fwOpp;
+  }
+  if (venueKey === "gir") {
+    const g = num(b.historical_venue_avg_gir ?? b.venue_avg_gir, NaN);
+    if (!Number.isFinite(g)) return NaN;
+    return g <= 1.05 ? g : g / 18;
+  }
+  if (venueKey === "scrambling") return num(b.historical_venue_avg_scrambling, NaN);
+  if (venueKey === "stp") return num(b.venue_avg_score_to_par, NaN);
+  if (venueKey === "birdies") return num(b.historical_venue_avg_birdies ?? b.venue_avg_birdies, NaN);
+  if (venueKey === "bogeys") return num(b.historical_venue_avg_bogeys ?? b.venue_avg_bogeys, NaN);
+  return NaN;
+}
+
+function courseBreakdownToDisplay(fmt, raw) {
+  if (!Number.isFinite(raw)) return NaN;
+  if (fmt === "pct") return raw * 100;
+  return raw;
+}
+
+function courseBreakdownFormatDisplay(fmt, displayVal) {
+  if (!Number.isFinite(displayVal)) return "—";
+  if (fmt === "pct") return `${displayVal.toFixed(1)}%`;
+  if (fmt === "stp") return displayVal >= 0 ? `+${displayVal.toFixed(2)}` : displayVal.toFixed(2);
+  return displayVal.toFixed(2);
+}
+
+function courseBreakdownDistDisplay(fmt, raw) {
+  if (!raw || typeof raw !== "object") return null;
+  const out = {};
+  for (const k of ["min", "q1", "median", "q3", "max", "mean"]) {
+    const v = num(raw[k], NaN);
+    out[k] = Number.isFinite(v) ? courseBreakdownToDisplay(fmt, v) : NaN;
+  }
+  out.n_courses = Math.round(num(raw.n_courses, 0)) || 0;
+  return out;
+}
+
+function courseBreakdownDifficulty(benchKey, courseRaw, distRaw) {
+  if (!Number.isFinite(courseRaw) || !distRaw) return "average";
+  const iqr = num(distRaw.q3, NaN) - num(distRaw.q1, NaN);
+  const span = num(distRaw.max, NaN) - num(distRaw.min, NaN);
+  const margin = Math.max((Number.isFinite(iqr) ? iqr : 0) * 0.12, (Number.isFinite(span) ? span : 0) * 0.015);
+  const harderWhenLow = ["Fairways hit", "GIR", "Scrambling", "Birdies"].includes(benchKey);
+  if (harderWhenLow) {
+    if (courseRaw < num(distRaw.q1, NaN) - margin) return "harder";
+    if (courseRaw > num(distRaw.q3, NaN) + margin) return "easier";
+  } else {
+    if (courseRaw > num(distRaw.q3, NaN) + margin) return "harder";
+    if (courseRaw < num(distRaw.q1, NaN) - margin) return "easier";
+  }
+  return "average";
+}
+
+function courseBreakdownNiceTicks(minV, maxV, count = 5) {
+  const span = maxV - minV;
+  if (!(span > 0)) return [minV, maxV];
+  const raw = span / Math.max(2, count - 1);
+  const mag = 10 ** Math.floor(Math.log10(raw));
+  const step = Math.ceil(raw / mag) * mag;
+  const start = Math.floor(minV / step) * step;
+  const ticks = [];
+  for (let t = start; t <= maxV + step * 0.001; t += step) {
+    if (t >= minV - step * 0.001) ticks.push(t);
+    if (ticks.length > 8) break;
+  }
+  return ticks.length ? ticks : [minV, maxV];
+}
+
+function drawCourseBoxPlot(canvas, cfg) {
+  if (!canvas || !cfg?.dist) return;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  const dpr = window.devicePixelRatio || 1;
+  const cssW = canvas.clientWidth || 300;
+  const cssH = 108;
+  canvas.width = Math.round(cssW * dpr);
+  canvas.height = Math.round(cssH * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssW, cssH);
+
+  const dist = cfg.dist;
+  const toX = (raw) => courseBreakdownToDisplay(cfg.fmt, raw);
+  const dMin = toX(dist.min);
+  const dMax = toX(dist.max);
+  const pad = (dMax - dMin) * 0.1 || 1;
+  const axisMin = dMin - pad;
+  const axisMax = dMax + pad;
+  const plotL = 18;
+  const plotR = cssW - 12;
+  const plotW = plotR - plotL;
+  const midY = 46;
+  const boxH = 34;
+  const xPos = (displayVal) => plotL + ((displayVal - axisMin) / (axisMax - axisMin)) * plotW;
+
+  const q1x = xPos(toX(dist.q1));
+  const q3x = xPos(toX(dist.q3));
+  const medx = xPos(toX(dist.median));
+  const minx = xPos(toX(dist.min));
+  const maxx = xPos(toX(dist.max));
+  const courseX = Number.isFinite(cfg.courseDisplay) ? xPos(cfg.courseDisplay) : NaN;
+  const tourX = xPos(toX(dist.mean));
+
+  const boxBlue = "#4ea8ff";
+  const axisColor = "rgba(148, 163, 184, 0.35)";
+  const textMuted = getComputedStyle(document.documentElement).getPropertyValue("--golf-text-muted").trim() || "#94a3b8";
+
+  ctx.strokeStyle = axisColor;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(plotL, midY + boxH / 2 + 18);
+  ctx.lineTo(plotR, midY + boxH / 2 + 18);
+  ctx.stroke();
+
+  const ticks = courseBreakdownNiceTicks(axisMin, axisMax, 5);
+  ctx.fillStyle = textMuted;
+  ctx.font = "500 10px system-ui, -apple-system, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  for (const t of ticks) {
+    const tx = xPos(t);
+    ctx.beginPath();
+    ctx.moveTo(tx, midY + boxH / 2 + 18);
+    ctx.lineTo(tx, midY + boxH / 2 + 22);
+    ctx.stroke();
+    const lbl =
+      cfg.fmt === "pct"
+        ? `${t.toFixed(0)}%`
+        : cfg.fmt === "stp"
+          ? `${t >= 0 ? "+" : ""}${t.toFixed(2)}`
+          : t.toFixed(2);
+    ctx.fillText(lbl, tx, midY + boxH / 2 + 24);
+  }
+
+  ctx.strokeStyle = boxBlue;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(minx, midY);
+  ctx.lineTo(q1x, midY);
+  ctx.moveTo(maxx, midY);
+  ctx.lineTo(q3x, midY);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(minx, midY - 7);
+  ctx.lineTo(minx, midY + 7);
+  ctx.moveTo(maxx, midY - 7);
+  ctx.lineTo(maxx, midY + 7);
+  ctx.stroke();
+
+  ctx.strokeStyle = boxBlue;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(q1x, midY - boxH / 2, Math.max(2, q3x - q1x), boxH);
+  ctx.beginPath();
+  ctx.moveTo(medx, midY - boxH / 2);
+  ctx.lineTo(medx, midY + boxH / 2);
+  ctx.stroke();
+
+  const drawDiamond = (x, y, r, fill, stroke) => {
+    ctx.beginPath();
+    ctx.moveTo(x, y - r);
+    ctx.lineTo(x + r, y);
+    ctx.lineTo(x, y + r);
+    ctx.lineTo(x - r, y);
+    ctx.closePath();
+    ctx.fillStyle = fill;
+    ctx.fill();
+    if (stroke) {
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+  };
+
+  const drawStar = (x, y, r, fill, stroke) => {
+    ctx.beginPath();
+    for (let i = 0; i < 5; i++) {
+      const a = (-Math.PI / 2) + (i * 4 * Math.PI) / 5;
+      const rad = i % 2 === 0 ? r : r * 0.42;
+      const px = x + Math.cos(a) * rad;
+      const py = y + Math.sin(a) * rad;
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fillStyle = fill;
+    ctx.fill();
+    if (stroke) {
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+    }
+  };
+
+  drawDiamond(tourX, midY, 7, "#fbbf24", "#f59e0b");
+  if (Number.isFinite(courseX)) {
+    const starFill = cfg.difficulty === "harder" ? "#f87171" : "#cbd5e1";
+    const starStroke = cfg.difficulty === "harder" ? "#ef4444" : "#94a3b8";
+    drawStar(courseX, midY, 8, starFill, starStroke);
+  }
+
+  canvas._courseBoxplotMeta = { cfg, dist, axisMin, axisMax, plotL, plotR, cssW, cssH };
+}
+
+function ensureCourseBoxplotTooltipHandlers() {
+  const tip = document.getElementById("course-boxplot-tooltip");
+  if (!tip || tip.dataset.bound === "1") return;
+  tip.dataset.bound = "1";
+  const statsDl = tip.querySelector(".course-boxplot-tooltip-stats");
+
+  document.getElementById("course-boxplot-grid")?.addEventListener("mousemove", (ev) => {
+    const canvas = ev.target.closest("canvas.course-boxplot-canvas");
+    if (!canvas || !canvas._courseBoxplotMeta) {
+      tip.hidden = true;
+      return;
+    }
+    const meta = canvas._courseBoxplotMeta;
+    const rect = canvas.getBoundingClientRect();
+    const relX = ev.clientX - rect.left;
+    if (relX < meta.plotL - 8 || relX > meta.plotR + 8) {
+      tip.hidden = true;
+      return;
+    }
+    const d = courseBreakdownDistDisplay(meta.cfg.fmt, meta.dist);
+    if (!d || !statsDl) {
+      tip.hidden = true;
+      return;
+    }
+    statsDl.innerHTML = "";
+    const rows = [
+      ["Max", d.max],
+      ["Q3", d.q3],
+      ["Median", d.median],
+      ["Q1", d.q1],
+      ["Min", d.min],
+      ["Mean", d.mean],
+    ];
+    for (const [label, val] of rows) {
+      const dt = document.createElement("dt");
+      dt.textContent = `${label}:`;
+      const dd = document.createElement("dd");
+      dd.textContent = courseBreakdownFormatDisplay(meta.cfg.fmt, val);
+      statsDl.appendChild(dt);
+      statsDl.appendChild(dd);
+    }
+    tip.hidden = false;
+    tip.style.left = `${Math.min(window.innerWidth - 190, ev.clientX + 14)}px`;
+    tip.style.top = `${Math.max(8, ev.clientY - 80)}px`;
+  });
+
+  document.getElementById("course-boxplot-grid")?.addEventListener("mouseleave", () => {
+    tip.hidden = true;
+  });
+}
+
+function renderCourseBoxplotGrid() {
+  const host = document.getElementById("course-boxplot-grid");
+  if (!host) return;
+  host.innerHTML = "";
+
+  const benchRoot = courseBreakdownBenchmarksRoot();
+  const benchmarks = benchRoot?.pga_tour_course_benchmarks || {};
+
+  for (const metric of COURSE_BOXPLOT_METRICS) {
+    const bench = benchmarks[metric.benchKey];
+    const distRaw = bench?.distribution;
+    const dist = courseBreakdownDistDisplay(metric.fmt, distRaw);
+    const courseRaw = courseBreakdownVenueRaw(metric.venueKey);
+    const courseDisplay = courseBreakdownToDisplay(metric.fmt, courseRaw);
+    const tourDisplay = dist ? dist.mean : courseBreakdownToDisplay(metric.fmt, num(bench?.mean, NaN));
+    const difficulty = courseBreakdownDifficulty(metric.benchKey, courseRaw, distRaw);
+    const nCourses =
+      dist?.n_courses ||
+      Math.round(num(distRaw?.n_courses, NaN)) ||
+      Math.round(num(benchmarks?.meta?.n_courses?.fairways, NaN)) ||
+      0;
+
+    const card = document.createElement("article");
+    card.className = "course-boxplot-card";
+
+    const head = document.createElement("div");
+    head.className = "course-boxplot-card-head";
+    const title = document.createElement("h4");
+    title.className = "course-boxplot-card-title";
+    title.textContent = metric.title;
+    const sub = document.createElement("p");
+    sub.className = "course-boxplot-card-sub";
+    sub.textContent = nCourses ? `${nCourses} courses analyzed` : "Course distribution unavailable";
+    head.appendChild(title);
+    head.appendChild(sub);
+
+    const canvasWrap = document.createElement("div");
+    canvasWrap.className = "course-boxplot-canvas-wrap";
+    const canvas = document.createElement("canvas");
+    canvas.className = "course-boxplot-canvas";
+    canvas.width = 360;
+    canvas.height = 108;
+    canvas.setAttribute("aria-label", `${metric.title} distribution`);
+    canvasWrap.appendChild(canvas);
+
+    const foot = document.createElement("div");
+    foot.className = "course-boxplot-foot";
+
+    const values = document.createElement("div");
+    values.className = "course-boxplot-values";
+
+    const courseBlock = document.createElement("div");
+    courseBlock.className = "course-boxplot-val-block";
+    const courseLbl = document.createElement("span");
+    courseLbl.className = "course-boxplot-val-label";
+    courseLbl.textContent = "This course:";
+    const courseNum = document.createElement("span");
+    courseNum.className = "course-boxplot-val-num";
+    if (difficulty === "harder") courseNum.classList.add("is-harder");
+    if (difficulty === "easier") courseNum.classList.add("is-easier");
+    courseNum.textContent = courseBreakdownFormatDisplay(metric.fmt, courseDisplay);
+    courseBlock.appendChild(courseLbl);
+    courseBlock.appendChild(courseNum);
+
+    const tourBlock = document.createElement("div");
+    tourBlock.className = "course-boxplot-val-block";
+    const tourLbl = document.createElement("span");
+    tourLbl.className = "course-boxplot-val-label";
+    tourLbl.textContent = "Tour avg:";
+    const tourNum = document.createElement("span");
+    tourNum.className = "course-boxplot-val-num";
+    tourNum.textContent = courseBreakdownFormatDisplay(metric.fmt, tourDisplay);
+    tourBlock.appendChild(tourLbl);
+    tourBlock.appendChild(tourNum);
+
+    values.appendChild(courseBlock);
+    values.appendChild(tourBlock);
+
+    const badge = document.createElement("span");
+    badge.className = "course-boxplot-badge";
+    if (difficulty === "harder") badge.classList.add("is-harder");
+    if (difficulty === "easier") badge.classList.add("is-easier");
+    const icon = document.createElement("span");
+    icon.className = "course-boxplot-badge-icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = difficulty === "harder" ? "↘" : difficulty === "easier" ? "↗" : "—";
+    badge.appendChild(icon);
+    badge.appendChild(
+      document.createTextNode(
+        difficulty === "harder" ? "Harder" : difficulty === "easier" ? "Easier" : "Average",
+      ),
+    );
+
+    foot.appendChild(values);
+    foot.appendChild(badge);
+
+    card.appendChild(head);
+    card.appendChild(canvasWrap);
+    card.appendChild(foot);
+    host.appendChild(card);
+
+    if (dist) {
+      requestAnimationFrame(() => {
+        drawCourseBoxPlot(canvas, {
+          fmt: metric.fmt,
+          dist: distRaw,
+          courseDisplay,
+          difficulty,
+        });
+      });
+    }
+  }
+
+  ensureCourseBoxplotTooltipHandlers();
+}
+
+const COURSE_SKILL_COLORS = Object.freeze({
+  fairway: "#3b82f6",
+  rough: "#a855f7",
+  other: "#10b981",
+  fringe: "#f97316",
+  bunker: "#22c55e",
+  tourLine: "#ef4444",
+});
+
+const COURSE_SKILL_PUTT_BINS = Object.freeze([
+  { label: "0-3", share: 0.452 },
+  { label: "4-6", share: 0.114 },
+  { label: "7-10", share: 0.09 },
+  { label: "11-15", share: 0.079 },
+  { label: "16-20", share: 0.059 },
+  { label: "21-30", share: 0.079 },
+  { label: "31-40", share: 0.062 },
+  { label: "41-50", share: 0.038 },
+  { label: "51-60", share: 0.028 },
+  { label: "61+", share: 0.024 },
+]);
+
+const COURSE_SKILL_TOUR_MAKE_PCT = Object.freeze([
+  99, 88, 55, 32, 18, 9, 5, 3, 2, 1,
+]);
+
+function courseBreakdownActiveCourseRow() {
+  const venueRaw = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
+  const vk = normCourseNameKey(venueRaw);
+  return resolveCourseTableRowForNormKey(vk);
+}
+
+function courseBreakdownDriverHoles(holePars) {
+  const pars = Array.isArray(holePars) ? holePars : [];
+  if (pars.length) {
+    return pars.filter((p) => Math.round(num(p, 4)) >= 4).length;
+  }
+  return fairwayHolesModeledFromData();
+}
+
+async function courseBreakdownFieldApproachMeans() {
+  const rows = courseBreakdownFieldRows();
+  const asJson = await loadApproachSkillYtdJson();
+  if (!asJson?.players?.length || !rows.length) return null;
+  const fieldIds = new Set(rows.map((r) => Math.round(num(r.dg_id, NaN))).filter(Number.isFinite));
+  const sums = {
+    "50_100_fw_shot_count": 0,
+    "100_150_fw_shot_count": 0,
+    "150_200_fw_shot_count": 0,
+    "over_200_fw_shot_count": 0,
+    under_150_rgh_shot_count: 0,
+    over_150_rgh_shot_count: 0,
+  };
+  let n = 0;
+  for (const p of asJson.players) {
+    const id = Math.round(num(p?.dg_id, NaN));
+    if (!fieldIds.has(id)) continue;
+    n++;
+    for (const k of Object.keys(sums)) sums[k] += Math.max(0, num(p[k], 0));
+  }
+  if (!n) return null;
+  const out = {};
+  for (const [k, v] of Object.entries(sums)) out[k] = v / n;
+  return out;
+}
+
+function courseBreakdownScaleApproachRow(meansRow, courseRow, tourMeans) {
+  const div = 45;
+  const demand =
+    0.55 +
+    courseTableScalarNormTo01(num(courseRow?.adj_gir, NaN), "adj_gir") * 0.25 +
+    courseTableScalarNormTo01(num(courseRow?.greater_150_sg, NaN), "greater_150_sg") * 0.2;
+  const rghBoost = 1 + num(courseRow?.rgh_diff, 0) * 0.35;
+  const fw50 = num(meansRow["50_100_fw_shot_count"], 0) / div;
+  const fw100 = num(meansRow["100_150_fw_shot_count"], 0) / div;
+  const fw150 = num(meansRow["150_200_fw_shot_count"], 0) / div;
+  const fw200 = num(meansRow["over_200_fw_shot_count"], 0) / div;
+  const rghU = (num(meansRow.under_150_rgh_shot_count, 0) / div) * rghBoost;
+  const rghO = (num(meansRow.over_150_rgh_shot_count, 0) / div) * rghBoost;
+  const bins = [
+    {
+      label: "50-125",
+      fairway: (fw50 + fw100 * 0.35) * demand,
+      rough: rghU * 0.55,
+      other: fw100 * 0.08,
+    },
+    {
+      label: "126-175",
+      fairway: fw100 * 0.57 + fw150 * 0.22,
+      rough: rghU * 0.45,
+      other: fw100 * 0.06,
+    },
+    {
+      label: "176-225",
+      fairway: fw150 * 0.78 + fw200 * 0.18,
+      rough: rghO * 0.42,
+      other: fw150 * 0.05,
+    },
+    {
+      label: "226+",
+      fairway: fw200 * 0.82,
+      rough: rghO * 0.58,
+      other: fw200 * 0.06,
+    },
+  ];
+  const rghPen = bins.map((_, i) => {
+    const base = 0.12 + num(courseRow?.rgh_diff, 0) * 0.35 + num(tourMeans?.rgh_diff, 0) * 0.1;
+    return Math.round((base + i * 0.04) * 100) / 100;
+  });
+  return { bins, rghPen };
+}
+
+function courseBreakdownDrivingModel(courseRow, tourMeans, holePars) {
+  const row = courseRow || {};
+  const means = tourMeans || {};
+  const tourDist = num(means.adj_driving_distance, 302);
+  const dist = num(row.adj_driving_distance, tourDist);
+  const shortPen =
+    Math.round(
+      (-(num(row.miss_fw_pen_frac, 0) * 14 + num(row.fw_diff, 0) * 2.8 + Math.max(0, tourDist - dist) * 0.055)) *
+        100,
+    ) / 100;
+  const bombOpp =
+    Math.round(
+      (-num(row.adj_par_5_score, 0) * 2.6 +
+        Math.max(0, dist - tourDist + 8) * 0.06 +
+        num(row.adj_sd_distance, 0) * 0.045) *
+        100,
+    ) / 100;
+  const distNorm = courseTableScalarNormTo01(dist, "adj_driving_distance");
+  const par5Ease = courseTableScalarNormTo01(-num(row.adj_par_5_score, 0), "adj_par_5_score");
+  const missPen = courseTableScalarNormTo01(num(row.miss_fw_pen_frac, 0), "miss_fw_pen_frac");
+  const bomber = Math.round(clamp(2 + distNorm * 4.2 + par5Ease * 2.8 - missPen * 1.6, 0, 10));
+  return {
+    driverHoles: courseBreakdownDriverHoles(holePars),
+    shortPen,
+    bombOpp,
+    bomber,
+    bomberMax: 10,
+  };
+}
+
+function courseBreakdownArgModel(courseRow, tourMeans) {
+  const row = courseRow || {};
+  const argDemand = courseTableScalarNormTo01(num(row.arg_sg, NaN), "arg_sg");
+  const rgh = num(row.rgh_diff, 0);
+  const bins = [
+    { label: "0-15", vol: 2.6 + argDemand * 1.4 },
+    { label: "16-30", vol: 1.45 + argDemand * 0.75 },
+    { label: "31+", vol: 0.55 + argDemand * 0.35 },
+  ];
+  const lieSg = {
+    fairway: num(row.arg_fairway_sg, num(tourMeans?.arg_fairway_sg, 0)),
+    rough: num(row.arg_rough_sg, num(tourMeans?.arg_rough_sg, 0)),
+    bunker: num(row.arg_bunker_sg, num(tourMeans?.arg_bunker_sg, 0)),
+    fringe: num(row.arg_fairway_sg, 0) * 0.65 + num(row.arg_rough_sg, 0) * 0.35,
+  };
+  const distRows = bins.map((b, i) => {
+    const fringeShare = 0.14 + (i === 0 ? 0.08 : 0);
+    const bunkerShare = 0.16 + rgh * 0.12 + (i === 0 ? 0.06 : 0);
+    const roughShare = 0.22 + rgh * 0.18;
+    const fairwayShare = Math.max(0.2, 1 - fringeShare - bunkerShare - roughShare);
+    const total = b.vol;
+    return {
+      label: b.label,
+      fringe: total * fringeShare,
+      bunker: total * bunkerShare,
+      rough: total * roughShare,
+      fairway: total * fairwayShare,
+      strokes: {
+        fairway: Math.round((2.05 - lieSg.fairway * 2.8 + i * 0.08) * 100) / 100,
+        rough: Math.round((2.45 - lieSg.rough * 2.8 + i * 0.12) * 100) / 100,
+        bunker: Math.round((2.65 - lieSg.bunker * 2.8 + i * 0.1) * 100) / 100,
+        fringe: Math.round((2.2 - lieSg.fringe * 2.8 + i * 0.06) * 100) / 100,
+      },
+    };
+  });
+  return distRows;
+}
+
+function courseBreakdownPuttingModel(courseRow, tourMeans) {
+  const basis = courseBreakdownBasisRow();
+  const totalPutts =
+    num(
+      DATA?.meta?.projection_course_basis?.venue_avg_putts ??
+        basis.venue_avg_putts ??
+        courseBreakdownMean(courseBreakdownFieldRows().map((r) => num(r.putts, NaN))),
+      29,
+    ) || 29;
+  const puttSg = num(courseRow?.putt_sg, num(tourMeans?.putt_sg, 0));
+  const s5 = num(courseRow?.less_5_ft_sg, 0);
+  const s15 = num(courseRow?.greater_5_less_15_sg, 0);
+  const s30 = num(courseRow?.greater_15_sg, 0);
+  const bins = COURSE_SKILL_PUTT_BINS.map((b, i) => {
+    const count = Math.round(totalPutts * b.share * 10) / 10;
+    let makeAdj = puttSg * 4;
+    if (i <= 1) makeAdj += s5 * 120;
+    else if (i <= 4) makeAdj += s15 * 80;
+    else makeAdj += s30 * 50;
+    const tourMake = COURSE_SKILL_TOUR_MAKE_PCT[i];
+    const courseMake = clamp(Math.round(tourMake + makeAdj), 1, 99);
+    return { label: b.label, count, courseMake, tourMake };
+  });
+  return { bins, totalPutts };
+}
+
+function courseSkillPrepCanvas(canvas, cssW, cssH) {
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return null;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = Math.round(cssW * dpr);
+  canvas.height = Math.round(cssH * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssW, cssH);
+  return { ctx, cssW, cssH };
+}
+
+function drawCourseSkillGauge(canvas, score, maxScore, label) {
+  const prep = courseSkillPrepCanvas(canvas, canvas.clientWidth || 240, 130);
+  if (!prep) return;
+  const { ctx, cssW, cssH } = prep;
+  const cx = cssW / 2;
+  const cy = cssH - 14;
+  const r = Math.min(cssW * 0.36, 88);
+  const start = Math.PI;
+  const end = 0;
+  const frac = clamp(num(score, 0) / Math.max(1, num(maxScore, 10)), 0, 1);
+  const muted = "rgba(148, 163, 184, 0.2)";
+  ctx.lineWidth = 16;
+  ctx.lineCap = "round";
+  ctx.strokeStyle = muted;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, start, end);
+  ctx.stroke();
+  ctx.strokeStyle = "#10b981";
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, start, start + (end - start) * frac);
+  ctx.stroke();
+  ctx.fillStyle = "#f8fafc";
+  ctx.font = "800 26px system-ui, -apple-system, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(`${Math.round(num(score, 0))} / ${Math.round(num(maxScore, 10))}`, cx, cy - 6);
+  if (label) {
+    ctx.font = "600 12px system-ui, -apple-system, sans-serif";
+    ctx.fillStyle = "#94a3b8";
+    ctx.fillText(label, cx, cssH - 2);
+  }
+}
+
+function drawCourseSkillHStackBars(canvas, rows, legend, opts = {}) {
+  const rowH = opts.rowH || 34;
+  const cssH = Math.max(120, rows.length * rowH + 36);
+  const cssW = canvas.clientWidth || 320;
+  const prep = courseSkillPrepCanvas(canvas, cssW, cssH);
+  if (!prep) return;
+  const { ctx } = prep;
+  const padL = opts.padL ?? 54;
+  const padR = 12;
+  const padT = 22;
+  const plotW = cssW - padL - padR;
+  const maxX = Math.max(...rows.map((r) => (r.fairway || 0) + (r.rough || 0) + (r.other || 0) + (r.fringe || 0) + (r.bunker || 0)), 1);
+  const xMax = Math.ceil(maxX * 1.15);
+  ctx.fillStyle = "#94a3b8";
+  ctx.font = "600 10px system-ui, -apple-system, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText(opts.xLabel || "", padL + plotW / 2, 12);
+  for (let i = 0; i < rows.length; i++) {
+    const r = rows[i];
+    const y = padT + i * rowH + 8;
+    ctx.fillStyle = "#cbd5e1";
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+    ctx.fillText(r.label, padL - 8, y + 10);
+    let x0 = padL;
+    const segs = opts.segments || [
+      ["fairway", COURSE_SKILL_COLORS.fairway],
+      ["rough", COURSE_SKILL_COLORS.rough],
+      ["other", COURSE_SKILL_COLORS.other],
+    ];
+    for (const [key, color] of segs) {
+      const val = num(r[key], 0);
+      if (val <= 0) continue;
+      const w = (val / xMax) * plotW;
+      ctx.fillStyle = color;
+      ctx.fillRect(x0, y, Math.max(1, w), 18);
+      if (w > 16) {
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "600 9px system-ui, -apple-system, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(val.toFixed(1), x0 + w / 2, y + 10);
+      }
+      x0 += w;
+    }
+  }
+  ctx.strokeStyle = "rgba(148, 163, 184, 0.35)";
+  ctx.beginPath();
+  ctx.moveTo(padL, cssH - 8);
+  ctx.lineTo(padL + plotW, cssH - 8);
+  ctx.stroke();
+}
+
+function drawCourseSkillArgStrokes(canvas, rows) {
+  const rowH = 36;
+  const cssH = Math.max(120, rows.length * rowH + 30);
+  const cssW = canvas.clientWidth || 220;
+  const prep = courseSkillPrepCanvas(canvas, cssW, cssH);
+  if (!prep) return;
+  const { ctx } = prep;
+  const padL = 48;
+  const padR = 10;
+  const padT = 20;
+  const plotW = cssW - padL - padR;
+  const lies = [
+    ["fairway", COURSE_SKILL_COLORS.fairway],
+    ["rough", COURSE_SKILL_COLORS.rough],
+    ["bunker", COURSE_SKILL_COLORS.bunker],
+    ["fringe", COURSE_SKILL_COLORS.fringe],
+  ];
+  const maxV = 3.2;
+  for (let i = 0; i < rows.length; i++) {
+    const r = rows[i];
+    const y = padT + i * rowH + 6;
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "600 10px system-ui, -apple-system, sans-serif";
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+    ctx.fillText(r.label, padL - 6, y + 12);
+    const barH = 5;
+    const gap = 3;
+    lies.forEach(([key, color], j) => {
+      const v = num(r.strokes?.[key], NaN);
+      if (!Number.isFinite(v)) return;
+      const w = (v / maxV) * plotW;
+      const by = y + j * (barH + gap);
+      ctx.fillStyle = color;
+      ctx.fillRect(padL, by, Math.max(1, w), barH);
+    });
+  }
+}
+
+function drawCourseSkillPuttBars(canvas, bins, opts = {}) {
+  const cssW = canvas.clientWidth || 360;
+  const cssH = opts.height || 150;
+  const prep = courseSkillPrepCanvas(canvas, cssW, cssH);
+  if (!prep) return;
+  const { ctx } = prep;
+  const padL = 34;
+  const padR = 8;
+  const padB = 26;
+  const padT = 18;
+  const plotW = cssW - padL - padR;
+  const plotH = cssH - padT - padB;
+  const maxY = opts.maxY || Math.max(...bins.map((b) => b.count), 1) * 1.12;
+  const n = bins.length;
+  const gap = 4;
+  const barW = (plotW - gap * (n - 1)) / n;
+  ctx.fillStyle = "#94a3b8";
+  ctx.font = "600 10px system-ui, -apple-system, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText(opts.yLabel || "", 12, padT + plotH / 2);
+  for (let i = 0; i < n; i++) {
+    const b = bins[i];
+    const x = padL + i * (barW + gap);
+    const h = (b.count / maxY) * plotH;
+    const y = padT + plotH - h;
+    ctx.fillStyle = opts.barColor || COURSE_SKILL_COLORS.fairway;
+    ctx.fillRect(x, y, barW, h);
+    ctx.fillStyle = "#e2e8f0";
+    ctx.font = "600 9px system-ui, -apple-system, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(b.count.toFixed(1), x + barW / 2, y - 4);
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = "500 8px system-ui, -apple-system, sans-serif";
+    ctx.fillText(b.label, x + barW / 2, cssH - 8);
+  }
+}
+
+function drawCourseSkillMakePct(canvas, bins) {
+  const cssW = canvas.clientWidth || 360;
+  const cssH = 150;
+  const prep = courseSkillPrepCanvas(canvas, cssW, cssH);
+  if (!prep) return;
+  const { ctx } = prep;
+  const padL = 34;
+  const padR = 8;
+  const padB = 26;
+  const padT = 18;
+  const plotW = cssW - padL - padR;
+  const plotH = cssH - padT - padB;
+  const n = bins.length;
+  const gap = 4;
+  const barW = (plotW - gap * (n - 1)) / n;
+  const pts = [];
+  for (let i = 0; i < n; i++) {
+    const b = bins[i];
+    const x = padL + i * (barW + gap) + barW / 2;
+    const h = (b.courseMake / 100) * plotH;
+    const y = padT + plotH - h;
+    ctx.fillStyle = "rgba(59, 130, 246, 0.85)";
+    ctx.fillRect(padL + i * (barW + gap), y, barW, h);
+    const ty = padT + plotH - (b.tourMake / 100) * plotH;
+    pts.push({ x, y: ty });
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = "500 8px system-ui, -apple-system, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(b.label, x, cssH - 8);
+  }
+  if (pts.length > 1) {
+    ctx.strokeStyle = COURSE_SKILL_COLORS.tourLine;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+    ctx.stroke();
+    for (const p of pts) {
+      ctx.fillStyle = COURSE_SKILL_COLORS.tourLine;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+}
+
+function courseSkillLegend(host, items) {
+  host.innerHTML = "";
+  for (const it of items) {
+    const el = document.createElement("span");
+    el.className = "course-skill-legend-item";
+    const sw = document.createElement("span");
+    sw.className = "course-skill-legend-swatch";
+    sw.style.background = it.color;
+    const tx = document.createElement("span");
+    tx.textContent = it.label;
+    el.appendChild(sw);
+    el.appendChild(tx);
+    host.appendChild(el);
+  }
+}
+
+function courseSkillMakeCard(title, icon, bodyBuilder) {
+  const card = document.createElement("article");
+  card.className = "course-skill-card";
+  const head = document.createElement("div");
+  head.className = "course-skill-card-head";
+  const ic = document.createElement("span");
+  ic.className = "course-skill-card-icon";
+  ic.setAttribute("aria-hidden", "true");
+  ic.textContent = icon;
+  const h = document.createElement("h4");
+  h.className = "course-skill-card-title";
+  h.textContent = title;
+  head.appendChild(ic);
+  head.appendChild(h);
+  card.appendChild(head);
+  bodyBuilder(card);
+  return card;
+}
+
+async function renderCourseBreakdownSkillGrid(holePars) {
+  const host = document.getElementById("course-skill-grid");
+  if (!host) return;
+  host.innerHTML = "";
+  await loadCourseTableJson();
+  const courseRow = courseBreakdownActiveCourseRow();
+  const tourMeans = COURSE_TABLE_PAYLOAD?.means || {};
+  const approachMeans = await courseBreakdownFieldApproachMeans();
+
+  if (!courseRow) {
+    const p = document.createElement("p");
+    p.className = "text-muted";
+    p.textContent = "Load course-table.json (npm run build:course-table) for skill breakdowns.";
+    host.appendChild(p);
+    return;
+  }
+
+  const driving = courseBreakdownDrivingModel(courseRow, tourMeans, holePars);
+  host.appendChild(
+    courseSkillMakeCard("Driving", "⛳", (card) => {
+      const meta = document.createElement("div");
+      meta.className = "course-skill-driving-meta";
+      meta.innerHTML = `
+        <div><span>Short Penalty (10–25yds shorter than avg)</span><strong>${driving.shortPen.toFixed(2)} SG/Round</strong></div>
+        <div class="course-skill-driving-meta-center">&lt;- ${driving.driverHoles} Driver Holes -&gt;</div>
+        <div style="text-align:right"><span>Bomb Opportunity (20yds longer than avg)</span><strong>${driving.bombOpp.toFixed(1)} SG/Round</strong></div>`;
+      card.appendChild(meta);
+      const gaugeWrap = document.createElement("div");
+      gaugeWrap.className = "course-skill-gauge-wrap";
+      const gaugeLbl = document.createElement("p");
+      gaugeLbl.className = "course-skill-gauge-label";
+      gaugeLbl.textContent = "Bomber's Paradise?";
+      const canvas = document.createElement("canvas");
+      canvas.width = 260;
+      canvas.height = 130;
+      gaugeWrap.appendChild(gaugeLbl);
+      gaugeWrap.appendChild(canvas);
+      card.appendChild(gaugeWrap);
+      requestAnimationFrame(() => drawCourseSkillGauge(canvas, driving.bomber, driving.bomberMax));
+    }),
+  );
+
+  const approach = approachMeans
+    ? courseBreakdownScaleApproachRow(approachMeans, courseRow, tourMeans)
+    : { bins: [], rghPen: [] };
+  host.appendChild(
+    courseSkillMakeCard("Approach", "🏌", (card) => {
+      const split = document.createElement("div");
+      split.className = "course-skill-split";
+      const chartWrap = document.createElement("div");
+      chartWrap.className = "course-skill-chart-wrap";
+      const t = document.createElement("p");
+      t.className = "course-skill-chart-title";
+      t.textContent = "Approach Shot Distribution";
+      const canvas = document.createElement("canvas");
+      canvas.height = 160;
+      chartWrap.appendChild(t);
+      chartWrap.appendChild(canvas);
+      const legend = document.createElement("div");
+      legend.className = "course-skill-legend";
+      courseSkillLegend(legend, [
+        { label: "Other", color: COURSE_SKILL_COLORS.other },
+        { label: "Rough", color: COURSE_SKILL_COLORS.rough },
+        { label: "Fairway/Tee", color: COURSE_SKILL_COLORS.fairway },
+      ]);
+      chartWrap.appendChild(legend);
+      const penCol = document.createElement("div");
+      penCol.className = "course-skill-penalty-col";
+      const penHead = document.createElement("p");
+      penHead.className = "course-skill-penalty-head";
+      penHead.textContent = "Rough Penalty";
+      penCol.appendChild(penHead);
+      approach.bins.forEach((b, i) => {
+        const pill = document.createElement("div");
+        pill.className = "course-skill-penalty-pill";
+        pill.textContent = `${(approach.rghPen[i] ?? 0).toFixed(2)} Strokes`;
+        penCol.appendChild(pill);
+      });
+      split.appendChild(chartWrap);
+      split.appendChild(penCol);
+      card.appendChild(split);
+      requestAnimationFrame(() =>
+        drawCourseSkillHStackBars(canvas, approach.bins, null, { xLabel: "Shots per Round" }),
+      );
+    }),
+  );
+
+  const argRows = courseBreakdownArgModel(courseRow, tourMeans);
+  host.appendChild(
+    courseSkillMakeCard("Around the Green", "🎯", (card) => {
+      const split = document.createElement("div");
+      split.className = "course-skill-split course-skill-split-wide";
+      const left = document.createElement("div");
+      left.className = "course-skill-chart-wrap";
+      const t1 = document.createElement("p");
+      t1.className = "course-skill-chart-title";
+      t1.textContent = "ARG Shot Distribution";
+      const c1 = document.createElement("canvas");
+      c1.height = 140;
+      left.appendChild(t1);
+      left.appendChild(c1);
+      const leg1 = document.createElement("div");
+      leg1.className = "course-skill-legend";
+      courseSkillLegend(leg1, [
+        { label: "Fringe", color: COURSE_SKILL_COLORS.fringe },
+        { label: "Bunker", color: COURSE_SKILL_COLORS.bunker },
+        { label: "Rough", color: COURSE_SKILL_COLORS.rough },
+        { label: "Fairway", color: COURSE_SKILL_COLORS.fairway },
+      ]);
+      left.appendChild(leg1);
+      const right = document.createElement("div");
+      right.className = "course-skill-chart-wrap";
+      const t2 = document.createElement("p");
+      t2.className = "course-skill-chart-title";
+      t2.textContent = "Avg Strokes Remaining";
+      const c2 = document.createElement("canvas");
+      c2.height = 140;
+      right.appendChild(t2);
+      right.appendChild(c2);
+      const leg2 = document.createElement("div");
+      leg2.className = "course-skill-legend";
+      courseSkillLegend(leg2, [
+        { label: "Fairway", color: COURSE_SKILL_COLORS.fairway },
+        { label: "Rough", color: COURSE_SKILL_COLORS.rough },
+        { label: "Bunker", color: COURSE_SKILL_COLORS.bunker },
+        { label: "Fringe", color: COURSE_SKILL_COLORS.fringe },
+      ]);
+      right.appendChild(leg2);
+      split.appendChild(left);
+      split.appendChild(right);
+      card.appendChild(split);
+      const argDist = argRows.map((r) => ({
+        label: r.label,
+        fairway: r.fairway,
+        rough: r.rough,
+        bunker: r.bunker,
+        fringe: r.fringe,
+      }));
+      requestAnimationFrame(() => {
+        drawCourseSkillHStackBars(c1, argDist, null, {
+          xLabel: "Shots per Round",
+          segments: [
+            ["fringe", COURSE_SKILL_COLORS.fringe],
+            ["bunker", COURSE_SKILL_COLORS.bunker],
+            ["rough", COURSE_SKILL_COLORS.rough],
+            ["fairway", COURSE_SKILL_COLORS.fairway],
+          ],
+        });
+        drawCourseSkillArgStrokes(c2, argRows);
+      });
+    }),
+  );
+
+  const putting = courseBreakdownPuttingModel(courseRow, tourMeans);
+  host.appendChild(
+    courseSkillMakeCard("Putting", "⛳", (card) => {
+      const stack = document.createElement("div");
+      stack.className = "course-skill-putting-stack";
+      const top = document.createElement("div");
+      top.className = "course-skill-chart-wrap";
+      const t1 = document.createElement("p");
+      t1.className = "course-skill-chart-title";
+      t1.textContent = "Putt Distribution";
+      const c1 = document.createElement("canvas");
+      c1.height = 150;
+      top.appendChild(t1);
+      top.appendChild(c1);
+      const bot = document.createElement("div");
+      bot.className = "course-skill-chart-wrap";
+      const t2 = document.createElement("p");
+      t2.className = "course-skill-chart-title";
+      t2.textContent = "Make Percentage";
+      const c2 = document.createElement("canvas");
+      c2.height = 150;
+      const leg = document.createElement("div");
+      leg.className = "course-skill-legend";
+      courseSkillLegend(leg, [
+        { label: "Course", color: COURSE_SKILL_COLORS.fairway },
+        { label: "Tour Avg", color: COURSE_SKILL_COLORS.tourLine },
+      ]);
+      bot.appendChild(t2);
+      bot.appendChild(c2);
+      bot.appendChild(leg);
+      stack.appendChild(top);
+      stack.appendChild(bot);
+      card.appendChild(stack);
+      requestAnimationFrame(() => {
+        drawCourseSkillPuttBars(c1, putting.bins, { yLabel: "Putts", maxY: 14 });
+        drawCourseSkillMakePct(c2, putting.bins);
+      });
+    }),
+  );
+}
+
+function buildCourseBreakdownTab() {
+  const m = DATA?.meta || {};
+  const courseName =
+    formatCourseNameForDisplay(String(m.course_used || DATA?.course_used || "").trim()) || "Course";
+  const eventName = formatEventNameForDisplay(String(m.event_name || DATA?.event_name || "").trim()) || "";
+  const holePars = Array.isArray(m.hole_pars)
+    ? m.hole_pars
+    : Array.isArray(DATA?.hole_pars)
+      ? DATA.hole_pars
+      : [];
+  const par =
+    Math.round(num(m.course_par_18 ?? DATA?.course_par_18, NaN)) ||
+    (holePars.length ? holePars.reduce((s, p) => s + Math.round(num(p, 4)), 0) : 72);
+
+  const nameEl = document.getElementById("course-info-name");
+  const locEl = document.getElementById("course-info-loc");
+  const parEl = document.getElementById("course-info-par");
+  if (nameEl) nameEl.textContent = courseName;
+  if (locEl) locEl.textContent = eventName;
+  if (parEl) {
+    if (holePars.length) {
+      const p3 = holePars.filter((p) => Math.round(num(p, 4)) === 3).length;
+      const p4 = holePars.filter((p) => Math.round(num(p, 4)) === 4).length;
+      const p5 = holePars.filter((p) => Math.round(num(p, 4)) === 5).length;
+      parEl.textContent = `Par ${par} • ${p3} par 3s · ${p4} par 4s · ${p5} par 5s`;
+    } else {
+      parEl.textContent = `Par ${par}`;
+    }
+  }
+
+  const rows = courseBreakdownFieldRows();
+
+  const courseTagSg = document.getElementById("course-sg-impact-course");
+  if (courseTagSg) courseTagSg.textContent = `Course: ${courseName}`;
+  const courseTagAp = document.getElementById("course-approach-impact-course");
+  if (courseTagAp) courseTagAp.textContent = `Course: ${courseName}`;
+
+  renderCourseBreakdownInfo(rows, courseName);
+  renderCourseBoxplotGrid();
+  void renderCourseBreakdownSkillGrid(holePars);
+  renderCourseBreakdownSg(rows);
+  void renderCourseBreakdownApproach(rows);
+}
+
 function formatAmericanOddsShort(n) {
   const x = num(n, NaN);
   if (!Number.isFinite(x)) return "—";
@@ -20728,6 +22133,9 @@ function showAppTab(tab) {
       void ensurePlayerHistoryLoadedForTab("course-fit");
       buildCourseFitTab();
     });
+  }
+  if (tab === "course-breakdown") {
+    requestAnimationFrame(() => buildCourseBreakdownTab());
   }
   if (tab === "ev") {
     requestAnimationFrame(() => {

@@ -31,6 +31,30 @@ function meanSd(samples, minN = 80) {
   return { mean, sd: sd > 1e-6 ? sd : NaN, n };
 }
 
+/** Five-number summary + mean across per-course venue samples (for course-breakdown box plots). */
+function quartilesFromSamples(samples, minN = 6) {
+  const sorted = samples.filter(Number.isFinite).sort((a, b) => a - b);
+  const n = sorted.length;
+  if (n < minN) return null;
+  const q = (p) => {
+    const i = (n - 1) * p;
+    const lo = Math.floor(i);
+    const hi = Math.ceil(i);
+    if (lo === hi) return sorted[lo];
+    return sorted[lo] + (sorted[hi] - sorted[lo]) * (i - lo);
+  };
+  const mean = sorted.reduce((a, b) => a + b, 0) / n;
+  return {
+    min: sorted[0],
+    q1: q(0.25),
+    median: q(0.5),
+    q3: q(0.75),
+    max: sorted[n - 1],
+    mean,
+    n_courses: n,
+  };
+}
+
 function girCount(row) {
   const raw = num(row.gir, NaN);
   if (!Number.isFinite(raw)) return NaN;
@@ -162,7 +186,19 @@ const COURSE_BENCHMARK_MIN_ROUNDS = 24;
 const COURSE_BENCHMARK_MIN_VENUES = 6;
 
 function emptyCourseAgg() {
-  return { n: 0, sumScore: 0, sumBirdies: 0, sumPars: 0, sumBogeys: 0, sumGir: 0, sumFw: 0, sumFwOpp: 0 };
+  return {
+    n: 0,
+    sumScore: 0,
+    sumStp: 0,
+    sumBirdies: 0,
+    sumPars: 0,
+    sumBogeys: 0,
+    sumGir: 0,
+    sumFw: 0,
+    sumFwOpp: 0,
+    sumScramble: 0,
+    nScramble: 0,
+  };
 }
 
 function finalizeCourseAgg(agg) {
@@ -171,11 +207,13 @@ function finalizeCourseAgg(agg) {
   const fwOpp = agg.sumFwOpp > 0 ? agg.sumFwOpp / n : NaN;
   return {
     score: agg.sumScore / n,
+    scoreToPar: agg.sumStp / n,
     birdies: agg.sumBirdies / n,
     pars: agg.sumPars / n,
     bogeys: agg.sumBogeys / n,
     girRate: agg.sumGir > 0 ? agg.sumGir / (18 * n) : NaN,
     fwRate: Number.isFinite(fwOpp) && fwOpp > 0 ? agg.sumFw / agg.sumFwOpp : NaN,
+    scrambleRate: agg.nScramble > 0 ? agg.sumScramble / agg.nScramble : NaN,
     n,
   };
 }
@@ -208,6 +246,8 @@ export async function loadPgaTourCourseBenchmarks(modelRoot, opts = {}) {
     Bogeys: { mean: NaN, sd: NaN, higherBetter: false, unit: "count" },
     GIR: { mean: NaN, sd: NaN, higherBetter: true, unit: "rate" },
     "Fairways hit": { mean: NaN, sd: NaN, higherBetter: true, unit: "rate" },
+    Scrambling: { mean: NaN, sd: NaN, higherBetter: true, unit: "rate" },
+    "Scoring vs Par": { mean: NaN, sd: NaN, higherBetter: false, unit: "strokes" },
     meta: { skipped: true, csv_path: csvPath, min_year: minYear, max_year: maxYear },
   };
   if (!existsSync(csvPath)) return empty;
@@ -240,6 +280,8 @@ export async function loadPgaTourCourseBenchmarks(modelRoot, opts = {}) {
       }
       agg.n++;
       agg.sumScore += rs;
+      const cp = num(row.course_par, NaN);
+      if (Number.isFinite(cp)) agg.sumStp += rs - cp;
       const b = num(row.birdies, NaN);
       const p = num(row.pars, NaN);
       const bg = num(row.bogies, NaN);
@@ -254,6 +296,11 @@ export async function loadPgaTourCourseBenchmarks(modelRoot, opts = {}) {
         agg.sumFw += fw;
         agg.sumFwOpp += fwOpp;
       }
+      const scr = num(row.scrambling, NaN);
+      if (Number.isFinite(scr) && scr >= 0 && scr <= 1.0001) {
+        agg.sumScramble += scr;
+        agg.nScramble++;
+      }
     });
     parser.on("error", reject);
     parser.on("end", resolve);
@@ -265,6 +312,8 @@ export async function loadPgaTourCourseBenchmarks(modelRoot, opts = {}) {
   const bogeys = [];
   const girRates = [];
   const fwRates = [];
+  const scrambleRates = [];
+  const scoreToPar = [];
 
   for (const agg of byCourse.values()) {
     if (agg.n < COURSE_BENCHMARK_MIN_ROUNDS) continue;
@@ -276,6 +325,8 @@ export async function loadPgaTourCourseBenchmarks(modelRoot, opts = {}) {
     pushSample(bogeys, fin.bogeys);
     if (Number.isFinite(fin.girRate)) pushSample(girRates, fin.girRate);
     if (Number.isFinite(fin.fwRate)) pushSample(fwRates, fin.fwRate);
+    if (Number.isFinite(fin.scrambleRate)) pushSample(scrambleRates, fin.scrambleRate);
+    if (Number.isFinite(fin.scoreToPar)) pushSample(scoreToPar, fin.scoreToPar);
   }
 
   const ms = meanSd(score, COURSE_BENCHMARK_MIN_VENUES);
@@ -284,14 +335,27 @@ export async function loadPgaTourCourseBenchmarks(modelRoot, opts = {}) {
   const mbg = meanSd(bogeys, COURSE_BENCHMARK_MIN_VENUES);
   const mg = meanSd(girRates, COURSE_BENCHMARK_MIN_VENUES);
   const mf = meanSd(fwRates, COURSE_BENCHMARK_MIN_VENUES);
+  const msc = meanSd(scrambleRates, COURSE_BENCHMARK_MIN_VENUES);
+  const mstp = meanSd(scoreToPar, COURSE_BENCHMARK_MIN_VENUES);
+
+  const distScore = quartilesFromSamples(score, COURSE_BENCHMARK_MIN_VENUES);
+  const distBirdies = quartilesFromSamples(birdies, COURSE_BENCHMARK_MIN_VENUES);
+  const distPars = quartilesFromSamples(pars, COURSE_BENCHMARK_MIN_VENUES);
+  const distBogeys = quartilesFromSamples(bogeys, COURSE_BENCHMARK_MIN_VENUES);
+  const distGir = quartilesFromSamples(girRates, COURSE_BENCHMARK_MIN_VENUES);
+  const distFw = quartilesFromSamples(fwRates, COURSE_BENCHMARK_MIN_VENUES);
+  const distScramble = quartilesFromSamples(scrambleRates, COURSE_BENCHMARK_MIN_VENUES);
+  const distStp = quartilesFromSamples(scoreToPar, COURSE_BENCHMARK_MIN_VENUES);
 
   return {
-    "Total score": { mean: ms.mean, sd: ms.sd, higherBetter: false, unit: "strokes" },
-    Birdies: { mean: mb.mean, sd: mb.sd, higherBetter: true, unit: "count" },
-    Pars: { mean: mp.mean, sd: mp.sd, higherBetter: true, unit: "count" },
-    Bogeys: { mean: mbg.mean, sd: mbg.sd, higherBetter: false, unit: "count" },
-    GIR: { mean: mg.mean, sd: mg.sd, higherBetter: true, unit: "rate" },
-    "Fairways hit": { mean: mf.mean, sd: mf.sd, higherBetter: true, unit: "rate" },
+    "Total score": { mean: ms.mean, sd: ms.sd, higherBetter: false, unit: "strokes", distribution: distScore },
+    Birdies: { mean: mb.mean, sd: mb.sd, higherBetter: true, unit: "count", distribution: distBirdies },
+    Pars: { mean: mp.mean, sd: mp.sd, higherBetter: true, unit: "count", distribution: distPars },
+    Bogeys: { mean: mbg.mean, sd: mbg.sd, higherBetter: false, unit: "count", distribution: distBogeys },
+    GIR: { mean: mg.mean, sd: mg.sd, higherBetter: true, unit: "rate", distribution: distGir },
+    "Fairways hit": { mean: mf.mean, sd: mf.sd, higherBetter: true, unit: "rate", distribution: distFw },
+    Scrambling: { mean: msc.mean, sd: msc.sd, higherBetter: true, unit: "rate", distribution: distScramble },
+    "Scoring vs Par": { mean: mstp.mean, sd: mstp.sd, higherBetter: false, unit: "strokes", distribution: distStp },
     meta: {
       skipped: false,
       csv_path: csvPath,
@@ -304,6 +368,8 @@ export async function loadPgaTourCourseBenchmarks(modelRoot, opts = {}) {
         bogeys: mbg.n,
         gir: mg.n,
         fairways: mf.n,
+        scrambling: msc.n,
+        score_to_par: mstp.n,
       },
     },
   };
@@ -311,8 +377,18 @@ export async function loadPgaTourCourseBenchmarks(modelRoot, opts = {}) {
 
 /** Rounded copy for projections.json */
 export function serializePgaTourCourseBenchmarks(raw) {
+  const keys = [
+    "Total score",
+    "Birdies",
+    "Pars",
+    "Bogeys",
+    "GIR",
+    "Fairways hit",
+    "Scrambling",
+    "Scoring vs Par",
+  ];
   const out = {};
-  for (const key of ["Total score", "Birdies", "Pars", "Bogeys", "GIR", "Fairways hit"]) {
+  for (const key of keys) {
     const b = raw[key];
     if (!b) continue;
     out[key] = {
@@ -321,9 +397,25 @@ export function serializePgaTourCourseBenchmarks(raw) {
       higherBetter: !!b.higherBetter,
       unit: b.unit || null,
     };
+    if (b.distribution && typeof b.distribution === "object") {
+      const d = b.distribution;
+      out[key].distribution = {
+        min: roundDist(d.min),
+        q1: roundDist(d.q1),
+        median: roundDist(d.median),
+        q3: roundDist(d.q3),
+        max: roundDist(d.max),
+        mean: roundDist(d.mean),
+        n_courses: Math.round(num(d.n_courses, 0)) || 0,
+      };
+    }
   }
   out.meta = raw.meta || {};
   return out;
+}
+
+function roundDist(v) {
+  return Number.isFinite(v) ? Math.round(v * 10000) / 10000 : null;
 }
 
 /** Rounded copy for projections.json */
