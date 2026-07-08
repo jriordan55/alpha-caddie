@@ -5989,7 +5989,7 @@ let ouGolferSuggestLabelsSig = "";
 /** @type {string[]} */
 let ouGolferSuggestLabels = [];
 let ouProjTableChromeReady = false;
-const OU_PROJ_TABLE_CHROME_VER = 4;
+const OU_PROJ_TABLE_CHROME_VER = 5;
 let ouProjTableChromeBuiltVer = 0;
 let ouTableBuildRaf = 0;
 
@@ -6628,6 +6628,94 @@ function formatEdgePct(edge) {
   return `${p >= 0 ? "+" : ""}${p.toFixed(1)}%`;
 }
 
+const OU_PROJ_KELLY_PREFS_KEY = "alphaCaddie_ou_proj_kelly_v1";
+
+function loadOuProjKellyPrefs() {
+  try {
+    const j = JSON.parse(localStorage.getItem(OU_PROJ_KELLY_PREFS_KEY) || "{}");
+    const frac = num(j.fraction, 0.25);
+    return {
+      bankroll: Math.max(1, Math.round(num(j.bankroll, 1000))),
+      fraction: frac === 0.5 || frac === 1 ? frac : 0.25,
+    };
+  } catch {
+    return { bankroll: 1000, fraction: 0.25 };
+  }
+}
+
+function saveOuProjKellyPrefs() {
+  try {
+    localStorage.setItem(
+      OU_PROJ_KELLY_PREFS_KEY,
+      JSON.stringify({
+        bankroll: ouProjBankrollFromUi(),
+        fraction: ouProjKellyFractionFromUi(),
+      }),
+    );
+  } catch {
+    /* ignore */
+  }
+}
+
+function syncOuProjKellyPrefsToUi() {
+  const p = loadOuProjKellyPrefs();
+  const br = document.getElementById("ou-proj-bankroll");
+  const kf = document.getElementById("ou-proj-kelly-fraction");
+  if (br instanceof HTMLInputElement) br.value = String(p.bankroll);
+  if (kf instanceof HTMLSelectElement) kf.value = String(p.fraction);
+}
+
+function ouProjBankrollFromUi() {
+  const el = document.getElementById("ou-proj-bankroll");
+  const v = num(el instanceof HTMLInputElement ? el.value : NaN, NaN);
+  return Number.isFinite(v) && v >= 1 ? v : loadOuProjKellyPrefs().bankroll;
+}
+
+function ouProjKellyFractionFromUi() {
+  const el = document.getElementById("ou-proj-kelly-fraction");
+  const v = num(el instanceof HTMLSelectElement ? el.value : NaN, NaN);
+  if (v === 0.25 || v === 0.5 || v === 1) return v;
+  return loadOuProjKellyPrefs().fraction;
+}
+
+function ouProjKellyFractionLabel(frac) {
+  if (frac >= 0.99) return "Full Kelly";
+  if (frac >= 0.49) return "½ Kelly";
+  return "¼ Kelly";
+}
+
+/** Kelly stake in dollars from model win probability and American odds. */
+function ouKellyStakeDollars(modelProb, americanOdds, bankroll, kellyFraction = 0.25) {
+  const dec = decimalFromAmerican(americanOdds);
+  if (!Number.isFinite(modelProb) || modelProb <= 0 || !Number.isFinite(dec) || dec <= 1) return NaN;
+  if (!Number.isFinite(bankroll) || bankroll <= 0) return NaN;
+  const b = dec - 1;
+  if (b <= 0) return NaN;
+  const fFull = (modelProb * dec - 1) / b;
+  if (!Number.isFinite(fFull) || fFull <= 0) return 0;
+  const mult = Number.isFinite(kellyFraction) && kellyFraction > 0 ? kellyFraction : 0.25;
+  return fFull * mult * bankroll;
+}
+
+function formatOuKellyDollars(v) {
+  if (!Number.isFinite(v) || v <= 0) return "";
+  if (v >= 100) return `$${Math.round(v)}`;
+  if (v >= 10) return `$${Math.round(v)}`;
+  return `$${v.toFixed(2)}`;
+}
+
+function ouKellyStakeForProjectionSide(market, player, pick, side, bankroll, kellyFraction) {
+  if (!pick) return NaN;
+  const pImpOver = impliedProbFromAmerican(pick.over);
+  const pImpUnder = impliedProbFromAmerican(pick.under);
+  const { pOver, pUnder, edgeO, edgeU } = ouEdgeForCell(market, player, pick.line, pImpOver, pImpUnder);
+  const edge = side === "over" ? edgeO : edgeU;
+  if (!Number.isFinite(edge) || edge <= 0) return 0;
+  const pModel = side === "over" ? pOver : pUnder;
+  const am = side === "over" ? pick.over : pick.under;
+  return ouKellyStakeDollars(pModel, am, bankroll, kellyFraction);
+}
+
 function ouEdgeForCell(market, p, L, pImpOver, pImpUnder) {
   const mKey = ouModelMarketKey(market) || market;
   const pOver = clampProb01(modelProbOverMarket(market, p, L));
@@ -6784,6 +6872,11 @@ function ensureOuProjectionTableChrome() {
   hr.appendChild(ouProjMakeBookColumnTh("pr-pp-odds", "Odds", "ou-proj-th-pp-odds", "prizepicks", sortInd));
   hr.appendChild(ouProjMakeBookColumnTh("pr-dk-edge", "Edge", "ou-proj-th-dk-edge", "draftkings", sortInd));
   hr.appendChild(ouProjMakeBookColumnTh("pr-pp-edge", "Edge", "ou-proj-th-pp-edge", "prizepicks", sortInd));
+  const kellyTh = document.createElement("th");
+  kellyTh.className = "sortable ou-proj-long-th num ou-proj-th-kelly";
+  kellyTh.dataset.sortKey = "pr-kelly";
+  kellyTh.innerHTML = `Kelly${sortInd}`;
+  hr.appendChild(kellyTh);
   thead.innerHTML = "";
   thead.appendChild(hr);
   ouProjTableChromeBuiltVer = OU_PROJ_TABLE_CHROME_VER;
@@ -6815,6 +6908,7 @@ function initOuTableSortOnce() {
         key === "pr-pp-odds" ||
         key === "pr-dk-edge" ||
         key === "pr-pp-edge" ||
+        key === "pr-kelly" ||
         key === "pr-edge"
       )
         ouTableSort.dir = -1;
@@ -6932,6 +7026,8 @@ function ouLookupBookPick(map, id, nameKey, canon) {
 function ouAttachProjectionRowMetrics(row) {
   const { player, col, side, dkPick, ppPick } = row;
   row.pick = dkPick || ppPick;
+  const bankroll = ouProjBankrollFromUi();
+  const kellyFraction = ouProjKellyFractionFromUi();
 
   const edgeForPick = (pick) => {
     if (!pick) return { edge: NaN, sortOdds: NaN };
@@ -6950,6 +7046,9 @@ function ouAttachProjectionRowMetrics(row) {
   row.ppEdge = ppHit.edge;
   row.dkSortOdds = dkHit.sortOdds;
   row.ppSortOdds = ppHit.sortOdds;
+  row.dkKelly = ouKellyStakeForProjectionSide(col.market, player, dkPick, side, bankroll, kellyFraction);
+  row.ppKelly = ouKellyStakeForProjectionSide(col.market, player, ppPick, side, bankroll, kellyFraction);
+  row.kellySort = Math.max(num(row.dkKelly, 0), num(row.ppKelly, 0));
   row.edge = Number.isFinite(dkHit.edge) ? dkHit.edge : ppHit.edge;
   return row;
 }
@@ -7002,6 +7101,8 @@ function ouProjectionFlatRowsCacheKey(players, cols) {
   return [
     `r${round}`,
     `aw${avgWindow}`,
+    `br${Math.round(ouProjBankrollFromUi())}`,
+    `kf${ouProjKellyFractionFromUi()}`,
     `c${colSig}`,
     `n${players.length}`,
     `fp${playerDgFingerprint(players)}`,
@@ -7087,6 +7188,10 @@ function ouTableSortValueProjRow(row, sortKey) {
   }
   if (sortKey === "pr-pp-edge") {
     if (Number.isFinite(row.ppEdge)) return row.ppEdge;
+    return NaN;
+  }
+  if (sortKey === "pr-kelly") {
+    if (Number.isFinite(row.kellySort)) return row.kellySort;
     return NaN;
   }
   if (sortKey === "pr-edge") {
@@ -7378,7 +7483,7 @@ function buildOuTable() {
     flatRows.sort(ouProjectionRowStatOrder);
   }
 
-  const projColCount = 12;
+  const projColCount = 13;
   const flatRowKeys = new Set(
     flatRows.map((rr) => ouProjMakeExpandKey(String(rr.player.player_name || ""), rr.col.label, rr.side)),
   );
@@ -7427,6 +7532,8 @@ function buildOuTable() {
       marketAvgWindow,
       dkEdge,
       ppEdge,
+      dkKelly,
+      ppKelly,
     } = r;
     const rawName = String(player.player_name || "");
     const expandKey = ouProjMakeExpandKey(rawName, col.label, side);
@@ -7531,6 +7638,38 @@ function buildOuTable() {
     } else ppEdgeTd.textContent = "";
     tr.appendChild(dkEdgeTd);
     tr.appendChild(ppEdgeTd);
+
+    const kellyTd = document.createElement("td");
+    kellyTd.className = "ou-cell ou-proj-long-td num ou-proj-td-kelly";
+    const bankroll = ouProjBankrollFromUi();
+    const kellyLabel = ouProjKellyFractionLabel(ouProjKellyFractionFromUi());
+    const kellyBits = [];
+    if (dkPick && Number.isFinite(dkKelly) && dkKelly > 0) {
+      kellyBits.push({ book: "DK", amt: dkKelly });
+    }
+    if (ppPick && Number.isFinite(ppKelly) && ppKelly > 0) {
+      kellyBits.push({ book: "PP", amt: ppKelly });
+    }
+    if (!kellyBits.length) {
+      kellyTd.textContent = "";
+    } else if (kellyBits.length === 1) {
+      kellyTd.textContent = formatOuKellyDollars(kellyBits[0].amt);
+      kellyTd.classList.add("pos");
+      kellyTd.title = `${kellyBits[0].book} · ${kellyLabel} · $${Math.round(bankroll).toLocaleString()} bankroll`;
+    } else {
+      kellyTd.className = "ou-cell ou-proj-long-td ou-proj-td-kelly ou-proj-td-kelly-stack";
+      const stack = document.createElement("div");
+      stack.className = "ou-proj-kelly-stack";
+      for (const bit of kellyBits) {
+        const line = document.createElement("div");
+        line.className = "ou-proj-kelly-line pos";
+        line.textContent = `${formatOuKellyDollars(bit.amt)} ${bit.book}`;
+        line.title = `${bit.book} · ${kellyLabel} · $${Math.round(bankroll).toLocaleString()} bankroll`;
+        stack.appendChild(line);
+      }
+      kellyTd.appendChild(stack);
+    }
+    tr.appendChild(kellyTd);
 
     if (Number.isFinite(mu)) {
       const mKey = ouModelMarketKey(col.market) || "Total score";
@@ -13675,17 +13814,6 @@ function courseFitDistEventRoundCount(entries, eventKey, roundFilter, golferQ) {
   return courseFitDistFilteredEntries(entries, roundFilter, new Set([eventKey]), golferQ).length;
 }
 
-function courseFitDistSampleSummary(avgValues, indValues, golferQ, entries) {
-  const nEvents = avgValues.length;
-  const nRounds = indValues.length;
-  if (!nRounds && !nEvents) return "";
-  if (!String(golferQ || "").trim()) {
-    return `${nEvents} player-tournament average${nEvents === 1 ? "" : "s"} · ${nRounds} round${nRounds === 1 ? "" : "s"}. Left: one bar per player per event. Right: every round in the filter.`;
-  }
-  const nm = courseFitDistFilteredGolferDisplayName(entries, golferQ);
-  return `${nm}: ${nEvents} tournament average${nEvents === 1 ? "" : "s"} · ${nRounds} round${nRounds === 1 ? "" : "s"}. Left weights each tournament equally. Right weights every round — means differ when one year has more rounds (e.g. missed cut vs made weekend).`;
-}
-
 function courseFitDistIndividualValues(entries, statKey, roundFilter, selectedEvents, golferQ = courseFitDistGolferQuery) {
   const out = [];
   for (const e of courseFitDistFilteredEntries(entries, roundFilter, selectedEvents, golferQ)) {
@@ -14062,13 +14190,6 @@ function buildCourseFitDistributionsPanel(venueKey) {
   const indValues = courseFitDistIndividualValues(entries, statKey, roundFilter, selected, golferQ);
   const hasData = avgValues.length > 0 || indValues.length > 0;
 
-  const sampleNote = document.getElementById("course-fit-dist-sample-note");
-  if (sampleNote) {
-    const summary = courseFitDistSampleSummary(avgValues, indValues, golferQ, entries);
-    sampleNote.textContent = summary;
-    sampleNote.hidden = !summary;
-  }
-
   if (!hasData) {
     const roundLabel = roundFilter === "all" ? "" : ` for R${roundFilter}`;
     const golferLabel = golferQ ? " for that golfer" : "";
@@ -14079,8 +14200,6 @@ function buildCourseFitDistributionsPanel(venueKey) {
     clearCourseFitDistCanvases();
     if (avgStats) avgStats.innerHTML = "";
     if (indStats) indStats.innerHTML = "";
-    const sampleNote = document.getElementById("course-fit-dist-sample-note");
-    if (sampleNote) sampleNote.hidden = true;
     return;
   }
 
@@ -24819,6 +24938,22 @@ document.addEventListener("DOMContentLoaded", () => {
     ouProjectionFlatRowsCacheSig = "";
     scheduleBuildOuTable(true);
     if (!ouFieldHistoryReadyForAverages()) void scheduleOuProjectionFieldHistoryLoad();
+  });
+  syncOuProjKellyPrefsToUi();
+  document.getElementById("ou-proj-bankroll")?.addEventListener("change", () => {
+    saveOuProjKellyPrefs();
+    ouProjectionFlatRowsCacheSig = "";
+    scheduleBuildOuTable(true);
+  });
+  document.getElementById("ou-proj-bankroll")?.addEventListener("input", () => {
+    saveOuProjKellyPrefs();
+    ouProjectionFlatRowsCacheSig = "";
+    scheduleBuildOuTable();
+  });
+  document.getElementById("ou-proj-kelly-fraction")?.addEventListener("change", () => {
+    saveOuProjKellyPrefs();
+    ouProjectionFlatRowsCacheSig = "";
+    scheduleBuildOuTable(true);
   });
   document.getElementById("props-filter-tee-wave")?.addEventListener("change", (e) => {
     const ouEl = document.getElementById("ou-tee-wave-filter");

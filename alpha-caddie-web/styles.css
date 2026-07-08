@@ -1423,12 +1423,6 @@ body {
   margin: 0 0 14px;
   font-size: 0.88rem;
 }
-.course-fit-dist-sample-note {
-  margin: 0 0 14px;
-  font-size: 0.86rem;
-  line-height: 1.45;
-  color: var(--golf-text-muted);
-}
 .course-fit-dist-charts {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2109,6 +2103,25 @@ body {
 #table-ou.table-ou-projections .ou-proj-th-pp-edge,
 #table-ou.table-ou-projections .ou-proj-td-pp-edge {
   min-width: 4rem;
+  font-weight: 800;
+}
+#table-ou.table-ou-projections .ou-proj-th-kelly,
+#table-ou.table-ou-projections .ou-proj-td-kelly {
+  min-width: 4.25rem;
+  font-weight: 800;
+}
+#table-ou.table-ou-projections .ou-proj-td-kelly.pos {
+  color: #1ecf77;
+}
+#table-ou.table-ou-projections .ou-proj-kelly-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-end;
+}
+#table-ou.table-ou-projections .ou-proj-kelly-line {
+  font-size: 0.82rem;
+  line-height: 1.2;
   font-weight: 800;
 }
 #table-ou.table-ou-projections td.ou-proj-td-dk-edge.pos,

@@ -157,6 +157,23 @@
                 <option value="course">At this course</option>
               </select>
             </label>
+            <label class="toolbar-label ou-filter-field">Bankroll
+              <input
+                id="ou-proj-bankroll"
+                type="number"
+                min="1"
+                step="1"
+                value="1000"
+                title="Bankroll for Kelly stake sizing"
+              />
+            </label>
+            <label class="toolbar-label ou-filter-field">Kelly
+              <select id="ou-proj-kelly-fraction" title="Fraction of full Kelly to bet">
+                <option value="0.25" selected>¼ Kelly</option>
+                <option value="0.5">½ Kelly</option>
+                <option value="1">Full Kelly</option>
+              </select>
+            </label>
           </div>
         </div>
         <div class="ou-legacy-ou-controls" hidden aria-hidden="true">
@@ -598,7 +615,6 @@
               </label>
             </div>
             <p id="course-fit-dist-empty" class="course-fit-dist-empty text-muted" hidden role="status">No data available for your chosen filters.</p>
-            <p id="course-fit-dist-sample-note" class="course-fit-dist-sample-note text-muted" hidden></p>
             <div class="course-fit-dist-charts" id="course-fit-dist-charts">
               <div class="course-fit-dist-chart-card">
                 <h3 class="course-fit-dist-chart-title" id="course-fit-dist-avg-title">Score Distribution — Tournament Average</h3>
@@ -1504,6 +1520,6 @@
   </dialog>
 
   <script src="parlay-pro.js?v=12"></script>
-  <script src="app.js?v=314"></script>
+  <script src="app.js?v=316"></script>
 </body>
 </html>
