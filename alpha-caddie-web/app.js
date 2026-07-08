@@ -3152,7 +3152,8 @@ function ouPlayerMarketAvgSampleRounds(player, windowMode = ouProjAvgWindowMode(
     }
   } else if (windowMode === "season") {
     const seasonY = propsFieldDefaultSeasonYear();
-    rounds = rounds.filter((r) => historyRoundSeasonYear(r) === seasonY);
+    const seasonRounds = rounds.filter((r) => historyRoundSeasonYear(r) === seasonY);
+    rounds = seasonRounds.length ? seasonRounds : rounds.slice(0, 12);
   } else if (typeof windowMode === "number") {
     rounds = rounds.slice(0, windowMode);
   }
@@ -3164,10 +3165,8 @@ function ouPlayerMarketAverage(market, player, windowMode = ouProjAvgWindowMode(
   const mKey = ouModelMarketKey(market) || "Total score";
   const rounds = ouPlayerMarketAvgSampleRounds(player, windowMode);
   if (!rounds.length) {
-    if (mKey === "GIR" || mKey === "Fairways hit") {
-      const fromModel = ouPlayerModelAvgForMarket(market, player);
-      if (Number.isFinite(fromModel)) return { avg: fromModel, n: 0, source: "model", windowMode };
-    }
+    const fromModel = ouPlayerModelAvgForMarket(market, player);
+    if (Number.isFinite(fromModel)) return { avg: fromModel, n: 0, source: "model", windowMode };
     return { avg: NaN, n: 0, source: "none", windowMode };
   }
   const statKey = ouMarketRatingHistoryStatKey(mKey);
@@ -3177,10 +3176,8 @@ function ouPlayerMarketAverage(market, player, windowMode = ouProjAvgWindowMode(
     if (Number.isFinite(v)) vals.push(v);
   }
   if (!vals.length) {
-    if (mKey === "GIR" || mKey === "Fairways hit") {
-      const fromModel = ouPlayerModelAvgForMarket(market, player);
-      if (Number.isFinite(fromModel)) return { avg: fromModel, n: 0, source: "model", windowMode };
-    }
+    const fromModel = ouPlayerModelAvgForMarket(market, player);
+    if (Number.isFinite(fromModel)) return { avg: fromModel, n: 0, source: "model", windowMode };
     return { avg: NaN, n: 0, source: "none", windowMode };
   }
   return {
@@ -3189,6 +3186,44 @@ function ouPlayerMarketAverage(market, player, windowMode = ouProjAvgWindowMode(
     source: "history",
     windowMode,
   };
+}
+
+let ouFieldHistoryLoadPromise = null;
+
+function ouPlayerAvgHistoryPending(player) {
+  const id = Math.round(num(player?.dg_id, NaN));
+  if (!Number.isFinite(id)) return false;
+  if (historyBucketLoaded(id) || playerHistoryAbsentDgIds.has(id)) return false;
+  return Boolean(HISTORY?._loading) || Boolean(ouFieldHistoryLoadPromise);
+}
+
+function ouProjectionFieldHistorySeasonYear() {
+  return ouProjAvgWindowMode() === "season" ? propsFieldDefaultSeasonYear() : NaN;
+}
+
+async function ensureOuProjectionFieldHistoryLoaded() {
+  if (!HISTORY._ok && !playerHistoryLoadPromise) {
+    await loadPlayerHistory();
+  }
+  const seasonYear = ouProjectionFieldHistorySeasonYear();
+  await ensurePropsFieldPlayerHistoryLoaded({ seasonYear });
+  OU_PROJ_AVG_CACHE.clear();
+  HISTORY_ROUNDS_CHRONO_CACHE.clear();
+}
+
+function scheduleOuProjectionFieldHistoryLoad() {
+  if (ouFieldHistoryLoadPromise) return ouFieldHistoryLoadPromise;
+  ouFieldHistoryLoadPromise = ensureOuProjectionFieldHistoryLoaded()
+    .then(() => {
+      if (activeAppTabId() === "ou") scheduleBuildOuTable(true);
+    })
+    .catch(() => {
+      if (activeAppTabId() === "ou") scheduleBuildOuTable(true);
+    })
+    .finally(() => {
+      ouFieldHistoryLoadPromise = null;
+    });
+  return ouFieldHistoryLoadPromise;
 }
 
 const OU_PROJ_AVG_CACHE = new Map();
@@ -3208,7 +3243,7 @@ function ouPlayerMarketAverageTitle(market, hit) {
   const n = Math.round(num(hit?.n, 0));
   const src = hit?.source === "model" ? " (skill estimate)" : "";
   if (!Number.isFinite(hit?.avg)) {
-    if (!ouMarketRatingHistoryReady()) return `${label} — loading history…`;
+    if (ouFieldHistoryLoadPromise) return `${label} — loading history…`;
     return `${label} — no rounds in window`;
   }
   if (n > 0) return `${label} · n=${n}${src}`;
@@ -5882,7 +5917,6 @@ let ouGolferSuggestLabels = [];
 let ouProjTableChromeReady = false;
 const OU_PROJ_TABLE_CHROME_VER = 3;
 let ouProjTableChromeBuiltVer = 0;
-let ouHistoryLoadKickoff = false;
 let ouTableBuildRaf = 0;
 
 function ouInvalidateProjectionPerfCaches() {
@@ -7232,10 +7266,8 @@ function buildOuTable() {
   const teeWave = selectedOuTeeWaveFilter();
   if (teeWave) playersFiltered = playersFiltered.filter((p) => playerMatchesTeeWaveFilter(p, teeWave));
 
-  if (!ouMarketRatingHistoryReady() && !ouHistoryLoadKickoff) {
-    ouHistoryLoadKickoff = true;
-    void ensurePlayerHistoryLoadedForTab("ou");
-  }
+  scheduleOuProjectionFieldHistoryLoad();
+
   let flatRows = ouProjectionFlatRowsForPlayers(playersFiltered, cols);
   const projMarketSel = String(document.getElementById("ou-proj-market-filter")?.value || "").trim();
   if (projMarketSel) flatRows = flatRows.filter((r) => String(r.col.label) === projMarketSel);
@@ -7350,7 +7382,7 @@ function buildOuTable() {
     const avgTd = document.createElement("td");
     avgTd.className = "ou-cell ou-proj-long-td num ou-proj-td-avg";
     const avgHit = { avg: marketAvg, n: marketAvgN, source: marketAvgSource, windowMode: marketAvgWindow };
-    if (!Number.isFinite(marketAvg) && !ouMarketRatingHistoryReady()) {
+    if (!Number.isFinite(marketAvg) && ouPlayerAvgHistoryPending(player)) {
       avgTd.textContent = "…";
     } else {
       avgTd.textContent = Number.isFinite(marketAvg) ? formatOuProjectedMean(marketAvg) : "—";
@@ -14715,6 +14747,7 @@ function mergePlayerHistoryPartialPayload(payload) {
   }
   PRICING_MU_BONUS_CACHE.clear();
   bumpHistoryMutationEpoch();
+  if (activeAppTabId() === "ou") scheduleBuildOuTable(true);
   return true;
 }
 
@@ -22285,7 +22318,9 @@ function ensurePlayerHistoryLoadedForTab(tab) {
           }
           return historyBucketLoaded(dg) || historyBucketResolved(dg);
         })()
-      : HISTORY._ok && !HISTORY._partial
+      : tab === "ou"
+        ? scheduleOuProjectionFieldHistoryLoad()
+        : HISTORY._ok && !HISTORY._partial
         ? Promise.resolve(true)
         : loadPlayerHistory();
   return p.then(() => {
@@ -23391,7 +23426,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("ou-proj-avg-window")?.addEventListener("change", () => {
     ouProjExpandedKey = "";
     OU_PROJ_AVG_CACHE.clear();
-    scheduleBuildOuTable(true);
+    void scheduleOuProjectionFieldHistoryLoad();
   });
   document.getElementById("props-filter-tee-wave")?.addEventListener("change", (e) => {
     const ouEl = document.getElementById("ou-tee-wave-filter");
