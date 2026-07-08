@@ -12433,6 +12433,54 @@ let courseFitDistPropKey = "total";
 let courseFitDistSelectedEvents = new Set();
 let courseFitDistEventsVenueKey = "";
 let courseFitDistFiltersBound = false;
+let courseFitDistGolferQuery = "";
+let courseFitDistGolferDebounce = 0;
+/** @type {string[]} */
+let courseFitDistGolferLabels = [];
+let courseFitDistLoadPromise = null;
+
+function courseFitDistActiveVenueKey(fallbackVk = "") {
+  if (courseFitDistEventsVenueKey) return courseFitDistEventsVenueKey;
+  const venueRaw = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
+  if (venueRaw) return normCourseNameKey(venueRaw);
+  return fallbackVk;
+}
+
+function courseFitDistEntryMatchesGolfer(entry, golferQ) {
+  const q = String(golferQ || "").trim().toLowerCase();
+  if (!q) return true;
+  const nm = displayGolferName(String(entry?.playerName || entry?.row?.player_name || ""));
+  return golferNameMatchesQuery(nm, q);
+}
+
+function courseFitDistGolferLabelsFromEntries(entries) {
+  const names = new Set();
+  for (const e of entries || []) {
+    const nm = displayGolferName(String(e?.playerName || e?.row?.player_name || ""));
+    if (nm) names.add(nm);
+  }
+  return [...names].sort((a, b) => a.localeCompare(b));
+}
+
+function setCourseFitDistPanelVisibility(hasData, emptyMessage = "") {
+  const emptyEl = document.getElementById("course-fit-dist-empty");
+  const chartsEl = document.getElementById("course-fit-dist-charts");
+  if (emptyEl) {
+    emptyEl.hidden = Boolean(hasData);
+    if (!hasData && emptyMessage) emptyEl.textContent = emptyMessage;
+  }
+  if (chartsEl) chartsEl.hidden = !hasData;
+}
+
+function clearCourseFitDistCanvases() {
+  for (const id of ["course-fit-dist-avg-canvas", "course-fit-dist-ind-canvas"]) {
+    const canvas = document.getElementById(id);
+    const ctx = canvas?.getContext?.("2d");
+    if (!ctx || !canvas) continue;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+}
 
 function courseFitDistPropLabel(statKey) {
   const hit = COURSE_FIT_DIST_PROPS.find((p) => p.key === statKey);
@@ -12457,7 +12505,7 @@ function courseFitDistEventsFromEntries(entries) {
   const map = new Map();
   for (const e of entries || []) {
     const row = e?.row;
-    if (!row || !historyRoundCountsAsActual(row)) continue;
+    if (!row || !courseFitDistRoundCountsAsActual(row)) continue;
     const key = courseFitDistEventKey(row);
     if (!key || map.has(key)) continue;
     map.set(key, { key, row, label: courseFitDistEventDisplayLabel(row) });
@@ -12473,32 +12521,68 @@ function courseFitDistEventsFromEntries(entries) {
 function courseFitDistRoundMatches(row, roundFilter) {
   if (roundFilter === "all") return true;
   const want = Math.round(num(roundFilter, NaN));
-  const rn = Math.round(num(row?.round_num, NaN));
+  const rn = Math.round(num(row?.round_num ?? row?.round, NaN));
   return Number.isFinite(want) && want >= 1 && want <= 4 && rn === want;
 }
 
-function courseFitDistIndividualValues(entries, statKey, roundFilter, selectedEvents) {
+/** Past-events distributions: archived rounds only; don't cap prior years' R2–R4 for the live event name. */
+function courseFitDistRoundCountsAsActual(row) {
+  if (!row || typeof row !== "object") return false;
+  if (!historyRowFromDgHistoricalRoundsApi(row)) return false;
+  if (historyRoundIsPlaceholderAllMarketsZero(row)) return false;
+  if (historyDateMdYIsFuture(row.event_completed)) return false;
+  if (historyRoundChartDateIsFuture(row)) return false;
+
+  if (row._from_live_tournament_stats) {
+    const rs = num(row.round_score, NaN);
+    if (!Number.isFinite(rs) || rs <= 0) return false;
+  }
+
+  if (historyRoundMatchesCurrentEvent(row)) {
+    const seasonY = historyRoundSeasonYear(row);
+    const currentY = currentEventSeasonYearFromMeta();
+    if (Number.isFinite(seasonY) && Number.isFinite(currentY) && seasonY === currentY) {
+      const rnd = Math.round(num(row?.round_num ?? row?.round, NaN));
+      const rs = num(row.round_score, NaN);
+      const liveGrossLocked =
+        (row._from_live_tournament_stats || row._from_pgatour) && Number.isFinite(rs) && rs > 0;
+      if (!liveGrossLocked) {
+        const cap = currentTournamentProgressRoundCap();
+        if (Number.isFinite(rnd) && Number.isFinite(cap) && rnd > cap) return false;
+      }
+    }
+  }
+  return true;
+}
+
+function courseFitDistFilteredEntries(entries, roundFilter, selectedEvents, golferQ) {
   const out = [];
   for (const e of entries || []) {
     const row = e?.row;
-    if (!row || !historyRoundCountsAsActual(row)) continue;
+    if (!row || !courseFitDistRoundCountsAsActual(row)) continue;
     const ek = courseFitDistEventKey(row);
     if (selectedEvents.size && !selectedEvents.has(ek)) continue;
     if (!courseFitDistRoundMatches(row, roundFilter)) continue;
-    const v = actualForRoundRow(statKey, row);
+    if (!courseFitDistEntryMatchesGolfer(e, golferQ)) continue;
+    out.push(e);
+  }
+  return out;
+}
+
+function courseFitDistIndividualValues(entries, statKey, roundFilter, selectedEvents, golferQ = courseFitDistGolferQuery) {
+  const out = [];
+  for (const e of courseFitDistFilteredEntries(entries, roundFilter, selectedEvents, golferQ)) {
+    const v = actualForRoundRow(statKey, e.row);
     if (Number.isFinite(v)) out.push(v);
   }
   return out;
 }
 
-function courseFitDistPlayerEventAverages(entries, statKey, roundFilter, selectedEvents) {
+function courseFitDistPlayerEventAverages(entries, statKey, roundFilter, selectedEvents, golferQ = courseFitDistGolferQuery) {
   const byPe = new Map();
-  for (const e of entries || []) {
-    const row = e?.row;
-    if (!row || !historyRoundCountsAsActual(row)) continue;
+  for (const e of courseFitDistFilteredEntries(entries, roundFilter, selectedEvents, golferQ)) {
+    const row = e.row;
     const ek = courseFitDistEventKey(row);
-    if (selectedEvents.size && !selectedEvents.has(ek)) continue;
-    if (!courseFitDistRoundMatches(row, roundFilter)) continue;
     const v = actualForRoundRow(statKey, row);
     if (!Number.isFinite(v)) continue;
     const dg = Math.round(num(e.dgId ?? row.dg_id, NaN));
@@ -12750,13 +12834,46 @@ function ensureCourseFitDistFiltersBound() {
       document.querySelectorAll(".course-fit-dist-round-btn").forEach((b) => {
         b.classList.toggle("active", String(b.getAttribute("data-cf-round") || "") === v);
       });
-      buildCourseFitDistributionsPanel(courseFitDistEventsVenueKey);
+      buildCourseFitDistributionsPanel(courseFitDistActiveVenueKey());
     });
   });
   document.getElementById("course-fit-dist-prop")?.addEventListener("change", (e) => {
     courseFitDistPropKey = String(/** @type {HTMLSelectElement} */ (e.target).value || "total");
-    buildCourseFitDistributionsPanel(courseFitDistEventsVenueKey);
+    buildCourseFitDistributionsPanel(courseFitDistActiveVenueKey());
   });
+  const gf = document.getElementById("course-fit-dist-golfer");
+  const gfPanel = document.getElementById("course-fit-dist-golfer-suggest");
+  if (gf && gf instanceof HTMLInputElement && gfPanel) {
+    wireGolferSuggestGlobalDismissOnce();
+    const refreshGolferPanel = () => {
+      golferSuggestWriteLabels(gfPanel, courseFitDistGolferLabels);
+      openGolferSuggestForSearchInput(gf, gfPanel, () => {
+        courseFitDistGolferQuery = String(gf.value || "").trim().toLowerCase();
+        buildCourseFitDistributionsPanel(courseFitDistActiveVenueKey());
+      });
+    };
+    gf.addEventListener("focus", refreshGolferPanel);
+    gf.addEventListener("input", () => {
+      if (courseFitDistGolferDebounce) clearTimeout(courseFitDistGolferDebounce);
+      courseFitDistGolferDebounce = window.setTimeout(() => {
+        courseFitDistGolferDebounce = 0;
+        courseFitDistGolferQuery = String(gf.value || "").trim().toLowerCase();
+        refreshGolferPanel();
+        buildCourseFitDistributionsPanel(courseFitDistActiveVenueKey());
+      }, 140);
+    });
+    gf.addEventListener("change", () => {
+      courseFitDistGolferQuery = String(gf.value || "").trim().toLowerCase();
+      buildCourseFitDistributionsPanel(courseFitDistActiveVenueKey());
+    });
+    gf.addEventListener("blur", () => {
+      setTimeout(() => {
+        if (gfPanel.contains(document.activeElement)) return;
+        gfPanel.hidden = true;
+        gfPanel.innerHTML = "";
+      }, 160);
+    });
+  }
 }
 
 function buildCourseFitDistributionsPanel(venueKey) {
@@ -12764,8 +12881,7 @@ function buildCourseFitDistributionsPanel(venueKey) {
   if (!panel || panel.hidden) return;
   ensureCourseFitDistFiltersBound();
 
-  const emptyEl = document.getElementById("course-fit-dist-empty");
-  const chartsEl = document.getElementById("course-fit-dist-charts");
+  const vk = venueKey || courseFitDistActiveVenueKey();
   const avgCanvas = document.getElementById("course-fit-dist-avg-canvas");
   const indCanvas = document.getElementById("course-fit-dist-ind-canvas");
   const avgTitle = document.getElementById("course-fit-dist-avg-title");
@@ -12780,51 +12896,76 @@ function buildCourseFitDistributionsPanel(venueKey) {
   if (avgTitle) avgTitle.textContent = `${propLabel} Distribution — Round Average`;
   if (indTitle) indTitle.textContent = `${propLabel} Distribution — Individual`;
 
-  const bucket = propsGetSingleCourseBucketSync(venueKey);
+  const bucket = propsGetSingleCourseBucketSync(vk);
   const entries = bucket?.entries || [];
+  if (!entries.length) {
+    setCourseFitDistPanelVisibility(false, "Loading course history…");
+    clearCourseFitDistCanvases();
+    if (avgStats) avgStats.innerHTML = "";
+    if (indStats) indStats.innerHTML = "";
+    void loadCourseFitDistributionsForVenue(vk);
+    return;
+  }
+
   const events = courseFitDistEventsFromEntries(entries);
-  syncCourseFitDistEventCheckboxes(events, venueKey);
+  syncCourseFitDistEventCheckboxes(events, vk);
+  courseFitDistGolferLabels = courseFitDistGolferLabelsFromEntries(entries);
+  const gf = document.getElementById("course-fit-dist-golfer");
+  const gfPanel = document.getElementById("course-fit-dist-golfer-suggest");
+  if (gf && gf instanceof HTMLInputElement && gfPanel) {
+    golferSuggestWriteLabels(gfPanel, courseFitDistGolferLabels);
+    reopenGolferSuggestIfSearchFocused(gf, gfPanel, () => {
+      courseFitDistGolferQuery = String(gf.value || "").trim().toLowerCase();
+      buildCourseFitDistributionsPanel(vk);
+    });
+  }
 
   const roundFilter = courseFitDistRoundFilter || "all";
   const selected = courseFitDistSelectedEvents.size
     ? courseFitDistSelectedEvents
     : new Set(events.map((e) => e.key));
+  const golferQ = courseFitDistGolferQuery;
 
-  const avgValues = courseFitDistPlayerEventAverages(entries, statKey, roundFilter, selected);
-  const indValues = courseFitDistIndividualValues(entries, statKey, roundFilter, selected);
+  const avgValues = courseFitDistPlayerEventAverages(entries, statKey, roundFilter, selected, golferQ);
+  const indValues = courseFitDistIndividualValues(entries, statKey, roundFilter, selected, golferQ);
   const hasData = avgValues.length > 0 || indValues.length > 0;
 
-  if (emptyEl) {
-    emptyEl.hidden = hasData;
-    if (!hasData) emptyEl.textContent = "No data available for your chosen filters.";
-  }
-  if (chartsEl) chartsEl.hidden = !hasData;
-
   if (!hasData) {
+    const roundLabel = roundFilter === "all" ? "" : ` for R${roundFilter}`;
+    const golferLabel = golferQ ? " for that golfer" : "";
+    setCourseFitDistPanelVisibility(
+      false,
+      `No data available${roundLabel}${golferLabel} with your chosen filters.`,
+    );
+    clearCourseFitDistCanvases();
     if (avgStats) avgStats.innerHTML = "";
     if (indStats) indStats.innerHTML = "";
     return;
   }
 
-  requestAnimationFrame(() => {
-    const avgHit = drawCourseFitDistHistogram(avgCanvas, avgValues, { statKey, titleMode: "avg" });
-    const indHit = drawCourseFitDistHistogram(indCanvas, indValues, { statKey, titleMode: "individual" });
-    renderCourseFitDistStats(avgStats, avgHit?.mean, avgHit?.sd, statKey, true);
-    renderCourseFitDistStats(indStats, indHit?.mean, indHit?.sd, statKey, false);
-  });
+  setCourseFitDistPanelVisibility(true);
+  const avgHit = drawCourseFitDistHistogram(avgCanvas, avgValues, { statKey, titleMode: "avg" });
+  const indHit = drawCourseFitDistHistogram(indCanvas, indValues, { statKey, titleMode: "individual" });
+  renderCourseFitDistStats(avgStats, avgHit?.mean, avgHit?.sd, statKey, true);
+  renderCourseFitDistStats(indStats, indHit?.mean, indHit?.sd, statKey, false);
 }
 
 async function loadCourseFitDistributionsForVenue(venueKey) {
   const panel = document.getElementById("course-fit-subpanel-distributions");
   if (!panel || panel.hidden || !venueKey) return;
-  const emptyEl = document.getElementById("course-fit-dist-empty");
-  const chartsEl = document.getElementById("course-fit-dist-charts");
-  if (emptyEl) {
-    emptyEl.hidden = false;
-    emptyEl.textContent = "Loading course history…";
+  if (courseFitDistLoadPromise) return courseFitDistLoadPromise;
+  const cached = propsGetSingleCourseBucketSync(venueKey);
+  if (cached?.entries?.length) {
+    buildCourseFitDistributionsPanel(venueKey);
+    return;
   }
-  if (chartsEl) chartsEl.hidden = true;
-  await ensurePropsCourseIndexForKeyAsync(venueKey);
+  setCourseFitDistPanelVisibility(false, "Loading course history…");
+  clearCourseFitDistCanvases();
+  courseFitDistLoadPromise = ensurePropsCourseIndexForKeyAsync(venueKey)
+    .finally(() => {
+      courseFitDistLoadPromise = null;
+    });
+  await courseFitDistLoadPromise;
   if (activeAppTabId() === "course-fit") buildCourseFitDistributionsPanel(venueKey);
 }
 
@@ -13361,7 +13502,9 @@ function buildCourseFitTab() {
 
   const distPanel = document.getElementById("course-fit-subpanel-distributions");
   if (distPanel && !distPanel.hidden) {
-    void loadCourseFitDistributionsForVenue(vk);
+    const bucket = propsGetSingleCourseBucketSync(vk);
+    if (bucket?.entries?.length) buildCourseFitDistributionsPanel(vk);
+    else void loadCourseFitDistributionsForVenue(vk);
   }
 }
 

@@ -1367,6 +1367,23 @@ body {
 .course-fit-dist-round-field {
   flex: 0 0 auto;
 }
+.course-fit-dist-golfer-field {
+  flex: 1 1 12rem;
+  min-width: 10rem;
+  max-width: 18rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.course-fit-dist-golfer-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+#course-fit-dist-empty[hidden],
+#course-fit-dist-charts[hidden] {
+  display: none !important;
+}
 .course-fit-dist-round-toggle {
   display: inline-flex;
   gap: 4px;

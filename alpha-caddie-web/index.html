@@ -572,6 +572,19 @@
                   <button type="button" class="course-fit-dist-round-btn" data-cf-round="4">R4</button>
                 </div>
               </div>
+              <label class="course-fit-dist-golfer-field golfer-suggest-anchor">
+                <span class="course-fit-dist-toolbar-label">Golfer</span>
+                <input
+                  type="search"
+                  id="course-fit-dist-golfer"
+                  class="golfer-combobox-input course-fit-dist-golfer-input"
+                  placeholder="All golfers"
+                  autocomplete="off"
+                  spellcheck="false"
+                  aria-label="Filter distributions by golfer"
+                />
+                <div id="course-fit-dist-golfer-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Golfer suggestions"></div>
+              </label>
               <label class="course-fit-dist-prop-field">
                 <span class="course-fit-dist-toolbar-label">Round Prop</span>
                 <select id="course-fit-dist-prop" aria-label="Round prop for distributions">
@@ -1479,6 +1492,6 @@
   </dialog>
 
   <script src="parlay-pro.js?v=12"></script>
-  <script src="app.js?v=305"></script>
+  <script src="app.js?v=307"></script>
 </body>
 </html>
