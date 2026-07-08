@@ -12392,6 +12392,745 @@ async function renderCourseBreakdownSkillGrid(holePars) {
   );
 }
 
+function courseBreakdownSgImpactSegments(rows) {
+  const defs = [
+    { key: "sg_ott", label: "Off the Tee" },
+    { key: "sg_app", label: "Approach" },
+    { key: "sg_arg", label: "Around the Green" },
+    { key: "sg_putt", label: "Putting" },
+  ];
+  const spreads = defs.map((d) => courseBreakdownStdDev(rows.map((r) => num(r[d.key], NaN))));
+  const total = spreads.reduce((s, v) => s + (Number.isFinite(v) ? v : 0), 0);
+  return defs
+    .map((d, i) => ({
+      label: d.label,
+      pct: total > 0 && Number.isFinite(spreads[i]) ? (spreads[i] / total) * 100 : 0,
+    }))
+    .sort((a, b) => b.pct - a.pct);
+}
+
+async function courseBreakdownApproachImpactSegments(rows) {
+  const bins = [
+    { key: "50_100_fw_shot_count", label: "50-100 yards" },
+    { key: "100_150_fw_shot_count", label: "100-150 yards" },
+    { key: "150_200_fw_shot_count", label: "150-200 yards" },
+    { key: "over_200_fw_shot_count", label: "200+ yards" },
+    { key: "under_150_rgh_shot_count", label: "Rough < 150 yards" },
+    { key: "over_150_rgh_shot_count", label: "Rough 150+ yards" },
+  ];
+  let asJson = null;
+  try {
+    asJson = await loadApproachSkillYtdJson();
+  } catch {
+    asJson = null;
+  }
+  const fieldIds = new Set(rows.map((r) => Math.round(num(r.dg_id, NaN))).filter(Number.isFinite));
+  const totals = bins.map(() => 0);
+  let matched = 0;
+  if (asJson?.players?.length) {
+    for (const p of asJson.players) {
+      const id = Math.round(num(p?.dg_id, NaN));
+      if (!fieldIds.has(id)) continue;
+      matched++;
+      bins.forEach((b, i) => {
+        totals[i] += Math.max(0, num(p[b.key], 0));
+      });
+    }
+  }
+  const grand = totals.reduce((s, v) => s + v, 0);
+  if (!matched || grand <= 0) return [];
+  return bins
+    .map((b, i) => ({ label: b.label, pct: (totals[i] / grand) * 100 }))
+    .sort((a, b) => b.pct - a.pct);
+}
+
+function courseBreakdownMetricSnapshots() {
+  const benchmarks = courseBreakdownBenchmarksRoot()?.pga_tour_course_benchmarks || {};
+  return COURSE_BOXPLOT_METRICS.map((metric) => {
+    const bench = benchmarks[metric.benchKey];
+    const distRaw = bench?.distribution;
+    const courseRaw = courseBreakdownVenueRaw(metric.venueKey);
+    const courseDisplay = courseBreakdownToDisplay(metric.fmt, courseRaw);
+    const tourDisplay = courseBreakdownToDisplay(
+      metric.fmt,
+      num(distRaw?.mean ?? bench?.mean, NaN),
+    );
+    return {
+      ...metric,
+      courseRaw,
+      courseDisplay,
+      tourDisplay,
+      difficulty: courseBreakdownDifficulty(metric.benchKey, courseRaw, distRaw),
+    };
+  });
+}
+
+function courseBreakdownPlayerFitLists(courseRow, limit = 5) {
+  if (!courseRow) return { fits: [], struggles: [] };
+  const pool = courseFitPlayerPool();
+  const scored = pool
+    .map((r) => ({
+      row: r,
+      fit: courseFitPlayerCourseFitRaw(r, courseRow),
+      name: displayGolferName(r.player_name || ""),
+    }))
+    .filter((x) => Number.isFinite(x.fit) && x.name);
+  scored.sort((a, b) => b.fit - a.fit);
+  return {
+    fits: scored.slice(0, limit),
+    struggles: [...scored].reverse().slice(0, limit),
+  };
+}
+
+function courseBreakdownInsightComparePhrase(label, courseVal, tourVal, fmt, higherBetter = true) {
+  if (!Number.isFinite(courseVal) || !Number.isFinite(tourVal)) return "";
+  const gap = courseVal - tourVal;
+  if (Math.abs(gap) < (fmt === "pct" ? 0.8 : 0.08)) {
+    return `${label} runs close to tour average`;
+  }
+  const dir = higherBetter ? (gap > 0 ? "above" : "below") : gap > 0 ? "above" : "below";
+  const adj = higherBetter ? (gap > 0 ? "easier" : "tougher") : gap > 0 ? "tougher" : "easier";
+  const unit = fmt === "pct" ? `${Math.abs(gap).toFixed(1)} pts` : Math.abs(gap).toFixed(2);
+  return `${label} is ${unit} ${dir} tour average (${adj} scoring environment)`;
+}
+
+function courseBreakdownPropMarketIdeas(metrics, basis, courseRow, weatherCtx = null) {
+  const ideas = [];
+  const byKey = Object.fromEntries(metrics.map((m) => [m.benchKey, m]));
+  const stp = num(basis.venue_avg_score_to_par, NaN);
+  if (Number.isFinite(stp)) {
+    if (stp > 0.35) {
+      ideas.push({
+        market: "Total Score",
+        angle: "Over",
+        reason: `Venue scoring sits around +${stp.toFixed(2)} vs par — missed greens and bogey clusters tend to inflate round totals.`,
+      });
+    } else if (stp < -0.35) {
+      ideas.push({
+        market: "Total Score",
+        angle: "Under",
+        reason: `Historical scoring is ${stp.toFixed(2)} vs par — pars stack up and blow-up holes are less common.`,
+      });
+    }
+  }
+  const pushCounting = (benchKey, market, easierSide, harderSide, easierWhy, harderWhy) => {
+    const m = byKey[benchKey];
+    if (!m) return;
+    if (m.difficulty === "easier") {
+      ideas.push({ market, angle: easierSide, reason: easierWhy });
+    } else if (m.difficulty === "harder") {
+      ideas.push({ market, angle: harderSide, reason: harderWhy });
+    }
+  };
+  pushCounting(
+    "Birdies",
+    "Birdies",
+    "Over",
+    "Under",
+    "Birdie rate ranks above most PGA Tour venues — aggressive iron play and makeable birdie looks show up often.",
+    "Birdie opportunities are scarce here relative to tour courses.",
+  );
+  pushCounting(
+    "Bogeys",
+    "Bogeys",
+    "Over",
+    "Under",
+    "Bogey rate runs high — trouble off the tee and around the greens creates stress pars.",
+    "Bogeys are harder to come by; clean ball-striking keeps mistakes in check.",
+  );
+  pushCounting(
+    "GIR",
+    "GIR",
+    "Over",
+    "Under",
+    "Greens are more reachable in regulation than at a typical tour stop.",
+    "Approach stress is elevated — GIR counts tend to compress.",
+  );
+  pushCounting(
+    "Fairways hit",
+    "Fairways Hit",
+    "Under",
+    "Over",
+    "Fairways are narrow or penal — missed tee shots are common.",
+    "Driving corridors are generous and FIR counts trend high.",
+  );
+  const scram = metrics.find((m) => m.benchKey === "Scrambling");
+  if (scram?.difficulty === "harder") {
+    ideas.push({
+      market: "Pars",
+      angle: "Over",
+      reason: "Scrambling is below tour average — missed greens often turn into bogeys instead of saved pars.",
+    });
+  }
+  if (courseRow && num(courseRow.rgh_diff, 0) > 0.08) {
+    ideas.push({
+      market: "Bogeys",
+      angle: "Over (miss-fit players)",
+      reason: "Rough penalty is above tour average — players who miss fairways bleed strokes quickly.",
+    });
+  }
+  if (courseRow && num(courseRow.putt_sg, 0) > 0.04) {
+    ideas.push({
+      market: "Birdies",
+      angle: "Over (strong putters)",
+      reason: "Putting profile is favorable — lag putting and short putt conversion can unlock birdies without perfect ball-striking.",
+    });
+  }
+  const seen = new Set();
+  const base = ideas.filter((x) => {
+    const k = `${x.market}|${x.angle}`;
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+  return [...base, ...courseBreakdownWeatherPropIdeas(weatherCtx).filter((x) => {
+    const k = `${x.market}|${x.angle}`;
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  })];
+}
+
+function courseBreakdownVenueHistoricalWeatherRows(courseName) {
+  const vk = normCourseNameKey(courseName);
+  const rows = [];
+  const map = propsRoundWeatherByKey;
+  if (!map?.size || !vk) return rows;
+  for (const snap of map.values()) {
+    const ck = normCourseNameKey(snap.course_name || "");
+    if (ck === vk || courseNameMatchesVenueLoose(snap.course_name, courseName)) rows.push(snap);
+  }
+  return rows;
+}
+
+function courseBreakdownWeatherAggregate(rows) {
+  if (!rows?.length) return null;
+  const temps = [];
+  const winds = [];
+  const hums = [];
+  /** @type {Record<string, number>} */
+  const condCounts = {};
+  for (const r of rows) {
+    if (Number.isFinite(num(r.tempF, NaN))) temps.push(num(r.tempF, NaN));
+    if (Number.isFinite(num(r.windMph, NaN))) winds.push(num(r.windMph, NaN));
+    if (Number.isFinite(num(r.humidityPct, NaN))) hums.push(num(r.humidityPct, NaN));
+    const c = weatherConditionDisplayLabel(r.condition);
+    condCounts[c] = (condCounts[c] || 0) + 1;
+  }
+  const mean = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : NaN);
+  const topConditions = Object.entries(condCounts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([condition, count]) => ({ condition, count, share: count / rows.length }));
+  return {
+    n: rows.length,
+    avgTemp: mean(temps),
+    avgWind: mean(winds),
+    avgHumidity: mean(hums),
+    topConditions,
+  };
+}
+
+function courseBreakdownForecastWeatherSlots() {
+  hydrateBakedWeatherFromPlayerFields();
+  finalizeForecastWaveSummary(null);
+  const slots = DATA?.meta?.forecast_wave_slots;
+  const morning = slots && typeof slots === "object" ? slots.morning : null;
+  const afternoon = slots && typeof slots === "object" ? slots.afternoon : null;
+  const round = Math.round(num(DATA?.meta?.forecast_weather_display_round, NaN));
+  return {
+    morning: morning && Number.isFinite(num(morning.tempF, NaN)) ? morning : null,
+    afternoon: afternoon && Number.isFinite(num(afternoon.tempF, NaN)) ? afternoon : null,
+    round: Number.isFinite(round) && round >= 1 ? round : effectiveUiModelRoundFromMeta(),
+    status: String(DATA?.meta?.forecast_weather_status || ""),
+  };
+}
+
+function courseBreakdownWeatherComparePhrase(metric, forecastVal, histVal, unit, higherIsNotable = true) {
+  if (!Number.isFinite(forecastVal) || !Number.isFinite(histVal)) return "";
+  const gap = forecastVal - histVal;
+  const thresh = metric === "temp" ? 4 : metric === "wind" ? 3 : 8;
+  if (Math.abs(gap) < thresh) {
+    return `${unit} is in line with past events here (${histVal.toFixed(1)} historical avg across archived rounds)`;
+  }
+  const dir = gap > 0 ? "warmer" : "cooler";
+  const windDir = gap > 0 ? "windier" : "calmer";
+  const humDir = gap > 0 ? "more humid" : "drier";
+  if (metric === "temp") return `Temperature runs ${dir} than the ${histVal.toFixed(1)}°F historical average (+${gap.toFixed(1)}°F)`;
+  if (metric === "wind") {
+    return `Wind looks ${windDir} than typical (${forecastVal.toFixed(1)} mph vs ${histVal.toFixed(1)} mph historical avg)`;
+  }
+  return `Humidity is ${humDir} than the ${histVal.toFixed(0)}% historical average`;
+}
+
+function courseBreakdownVenueWeatherScoringSamples(courseName) {
+  const vk = normCourseNameKey(courseName);
+  const out = {
+    all: [],
+    windy: [],
+    rain: [],
+    calm: [],
+  };
+  if (!vk || !HISTORY?._ok || !propsRoundWeatherByKey?.size) return out;
+  for (const rec of Object.values(HISTORY.byDgId || {})) {
+    for (const r of rec.rounds || []) {
+      if (!historyRoundCountsAsActual(r)) continue;
+      const ck = normCourseNameKey(historyRoundCourseName(r));
+      if (ck !== vk && !courseNameMatchesVenueLoose(r.course_name, courseName)) continue;
+      const stp = num(r.score_to_par, NaN);
+      if (!Number.isFinite(stp)) continue;
+      out.all.push(stp);
+      const w = propsRoundWeatherByKey.get(historyRoundWeatherLookupKey(r));
+      const cond = weatherConditionDisplayLabel(w?.condition);
+      const wind = num(w?.windMph, NaN);
+      if (cond === "windy" || cond === "storm" || (Number.isFinite(wind) && wind >= 16)) out.windy.push(stp);
+      if (cond === "rain") out.rain.push(stp);
+      if (cond === "clear" || cond === "cloudy" || cond === "neutral") {
+        if (!Number.isFinite(wind) || wind < 14) out.calm.push(stp);
+      }
+    }
+  }
+  return out;
+}
+
+function courseBreakdownWeatherScoringPhrase(label, samples) {
+  if (!samples?.length) return "";
+  const avg = samples.reduce((a, b) => a + b, 0) / samples.length;
+  const sign = avg >= 0 ? "+" : "";
+  return `When conditions were ${label} here historically, rounds averaged ${sign}${avg.toFixed(2)} vs par (${samples.length} archived round${samples.length === 1 ? "" : "s"})`;
+}
+
+function courseBreakdownWeatherPropIdeas(weatherCtx) {
+  if (!weatherCtx?.hasData) return [];
+  const ideas = [];
+  const { morning, afternoon, hist, waveDelta } = weatherCtx;
+  const snap = afternoon || morning;
+  if (!snap) return ideas;
+  const wind = num(snap.windMph, NaN);
+  const cond = weatherConditionDisplayLabel(snap.condition);
+  const diff = weatherDifficultyDeltaFromSnapshot(snap);
+  if (Number.isFinite(wind) && wind >= 14) {
+    ideas.push({
+      market: "Total Score",
+      angle: "Over",
+      reason: `Forecast wind (${wind.toFixed(1)} mph) is above the venue's historical average — approach and wedge control get harder.`,
+    });
+    ideas.push({
+      market: "Fairways Hit",
+      angle: "Under",
+      reason: "Breezy conditions historically compress fairway percentages at this course.",
+    });
+  }
+  if (cond === "rain" || (hist?.topConditions?.[0]?.condition === "rain" && cond === "windy")) {
+    ideas.push({
+      market: "Birdies",
+      angle: "Over (if soft)",
+      reason: "Wet rounds here have tended to play softer — missed approaches can still yield birdie looks if greens hold shots.",
+    });
+  }
+  if (Number.isFinite(diff) && diff > 0.12) {
+    ideas.push({
+      market: "Bogeys",
+      angle: "Over",
+      reason: "Model weather difficulty is elevated vs neutral — stress pars and doubles show up more often.",
+    });
+  }
+  if (Number.isFinite(waveDelta) && Math.abs(waveDelta) >= 0.08) {
+    const fav = waveDelta > 0 ? "afternoon" : "morning";
+    const disfav = waveDelta > 0 ? "morning" : "afternoon";
+    ideas.push({
+      market: "Total Score",
+      angle: `${fav === "morning" ? "Morning" : "Afternoon"} wave Under`,
+      reason: `Tee-wave weather gap: ${disfav} tees face tougher wind/temperature profile than ${fav} — check wave splits in Round Projections.`,
+    });
+  }
+  const hotAfternoon =
+    afternoon &&
+    morning &&
+    Number.isFinite(num(afternoon.tempF, NaN)) &&
+    Number.isFinite(num(morning.tempF, NaN)) &&
+    num(afternoon.tempF, NaN) - num(morning.tempF, NaN) >= 6;
+  if (hotAfternoon) {
+    ideas.push({
+      market: "Total Score",
+      angle: "Afternoon Over / Morning Under",
+      reason: `Afternoon tees are ~${(num(afternoon.tempF, NaN) - num(morning.tempF, NaN)).toFixed(0)}°F warmer — fatigue and firmer conditions can inflate late scores.`,
+    });
+  }
+  return ideas;
+}
+
+function courseBreakdownWeatherInsightSection(weatherCtx) {
+  if (!weatherCtx?.hasData) {
+    return {
+      title: "Weather outlook",
+      paragraphs: [
+        "Forecast and archived weather are not loaded yet — open Round Projections or refresh after push:live to pull Open-Meteo tee-time conditions.",
+      ],
+      bullets: [],
+    };
+  }
+  const { morning, afternoon, hist, forecastRound, scoring, waveDelta } = weatherCtx;
+  const paragraphs = [];
+  const bullets = [];
+  const rndLabel = Number.isFinite(forecastRound) ? `R${forecastRound}` : "this round";
+  if (morning && afternoon) {
+    paragraphs.push(
+      `For ${rndLabel}, morning tees (${formatWeatherSnapshotCompact(morning)}) and afternoon tees (${formatWeatherSnapshotCompact(afternoon)}) diverge — wave timing matters for round-score props.`,
+    );
+  } else if (morning || afternoon) {
+    paragraphs.push(
+      `${rndLabel} forecast at tee time: ${formatWeatherSnapshotCompact(morning || afternoon)}.`,
+    );
+  }
+  if (hist?.n >= 4) {
+    const top = hist.topConditions
+      .slice(0, 2)
+      .map((c) => `${c.condition} (${Math.round(c.share * 100)}% of ${hist.n} archived rounds)`)
+      .join(", ");
+    paragraphs.push(
+      `Historically at this venue (${hist.n} archived PGA rounds): avg ${hist.avgTemp.toFixed(1)}°F, ${hist.avgWind.toFixed(1)} mph wind, ${hist.avgHumidity.toFixed(0)}% humidity — most common conditions: ${top}.`,
+    );
+    const snap = afternoon || morning;
+    if (snap) {
+      const cmp = [
+        courseBreakdownWeatherComparePhrase("temp", num(snap.tempF, NaN), hist.avgTemp, "temp"),
+        courseBreakdownWeatherComparePhrase("wind", num(snap.windMph, NaN), hist.avgWind, "wind"),
+      ].filter(Boolean);
+      if (cmp.length) bullets.push(cmp.join("; ") + ".");
+    }
+  } else if (hist?.n > 0) {
+    paragraphs.push(`Limited archived weather at this course (${hist.n} round${hist.n === 1 ? "" : "s"}) — treat historical comparisons as directional.`);
+  }
+  const windyPhrase = courseBreakdownWeatherScoringPhrase("windy", scoring.windy);
+  const rainPhrase = courseBreakdownWeatherScoringPhrase("wet", scoring.rain);
+  const calmPhrase = courseBreakdownWeatherScoringPhrase("calmer", scoring.calm);
+  if (windyPhrase) bullets.push(windyPhrase + ".");
+  if (rainPhrase) bullets.push(rainPhrase + ".");
+  if (calmPhrase && !windyPhrase) bullets.push(calmPhrase + ".");
+  const leadSnap = afternoon || morning;
+  if (leadSnap) {
+    const d = weatherDifficultyDeltaFromSnapshot(leadSnap);
+    const cond = weatherConditionDisplayLabel(leadSnap.condition);
+    if (d > 0.1) {
+      bullets.push(
+        `Expect a tougher scoring environment than neutral — wind/heat pushes up total-score and bogey prop baselines${cond === "windy" ? " (wind is the main driver)" : ""}.`,
+      );
+    } else if (d < -0.08) {
+      bullets.push("Soft or mild conditions vs model neutral — birdie and GIR overs get a small tailwind if course setup stays accessible.");
+    }
+  }
+  if (Number.isFinite(waveDelta) && Math.abs(waveDelta) >= 0.06 && morning && afternoon) {
+    const easier = waveDelta > 0 ? "afternoon" : "morning";
+    const tougher = waveDelta > 0 ? "morning" : "afternoon";
+    bullets.push(
+      `Tee-wave edge: ${easier} wave draws the easier weather profile; ${tougher} tees carry ~${Math.abs(waveDelta).toFixed(2)} strokes more weather difficulty in the model.`,
+    );
+  }
+  if (!paragraphs.length && !bullets.length) {
+    paragraphs.push("Forecast loaded but comparable historical weather at this venue is thin.");
+  }
+  return { title: "Weather outlook", paragraphs, bullets };
+}
+
+async function courseBreakdownGatherWeatherContext(courseName) {
+  await ensurePropsRoundWeatherLoaded();
+  hydrateBakedWeatherFromPlayerFields();
+  finalizeForecastWaveSummary(null);
+  const forecast = courseBreakdownForecastWeatherSlots();
+  const histRows = courseBreakdownVenueHistoricalWeatherRows(courseName);
+  const hist = courseBreakdownWeatherAggregate(histRows);
+  const scoring = courseBreakdownVenueWeatherScoringSamples(courseName);
+  const morning = forecast.morning;
+  const afternoon = forecast.afternoon;
+  let waveDelta = NaN;
+  if (morning && afternoon) {
+    waveDelta =
+      weatherDifficultyDeltaFromSnapshot(afternoon) - weatherDifficultyDeltaFromSnapshot(morning);
+  }
+  const hasData = Boolean((morning || afternoon) && (hist?.n || scoring.all.length));
+  return {
+    hasData: Boolean(morning || afternoon || hist?.n),
+    morning,
+    afternoon,
+    hist,
+    scoring,
+    forecastRound: forecast.round,
+    waveDelta,
+    hasForecast: Boolean(morning || afternoon),
+    hasHistory: Boolean(hist?.n),
+  };
+}
+
+function courseBreakdownGenerateInsightSections(ctx) {
+  const {
+    courseName,
+    eventName,
+    par,
+    holePars,
+    metrics,
+    basis,
+    courseRow,
+    driving,
+    approach,
+    putting,
+    sgImpact,
+    approachImpact,
+    playerFit,
+    weatherCtx,
+  } = ctx;
+
+  const p3 = holePars.filter((p) => Math.round(num(p, 4)) === 3).length;
+  const p4 = holePars.filter((p) => Math.round(num(p, 4)) === 4).length;
+  const p5 = holePars.filter((p) => Math.round(num(p, 4)) === 5).length;
+  const fir = metrics.find((m) => m.venueKey === "fir");
+  const gir = metrics.find((m) => m.venueKey === "gir");
+  const bird = metrics.find((m) => m.venueKey === "birdies");
+  const bog = metrics.find((m) => m.venueKey === "bogeys");
+  const scram = metrics.find((m) => m.benchKey === "Scrambling");
+  const stp = metrics.find((m) => m.venueKey === "stp");
+
+  const profileBits = [];
+  if (holePars.length) {
+    profileBits.push(
+      `${courseName} plays as a par ${par} test with ${p3} par 3s, ${p4} par 4s, and ${p5} par 5s`,
+    );
+  } else {
+    profileBits.push(`${courseName} is a par ${par} venue`);
+  }
+  if (eventName) profileBits.push(`hosting the ${eventName}`);
+  if (Number.isFinite(stp?.courseDisplay)) {
+    const v = stp.courseDisplay;
+    profileBits.push(
+      v > 0.25
+        ? `historically plays ${v >= 0 ? "+" : ""}${v.toFixed(2)} vs par`
+        : v < -0.25
+          ? `historically plays ${v.toFixed(2)} vs par (under-par scoring)`
+          : "scores close to par on average",
+    );
+  }
+  const countingNotes = [fir, gir, bird, bog]
+    .map((m) =>
+      m
+        ? courseBreakdownInsightComparePhrase(
+            m.title.replace(/ per Round|\s\(%\)/g, ""),
+            m.courseDisplay,
+            m.tourDisplay,
+            m.fmt,
+            m.benchKey !== "Bogeys",
+          )
+        : "",
+    )
+    .filter(Boolean);
+  if (countingNotes.length) profileBits.push(countingNotes.slice(0, 2).join("; "));
+
+  const profile = {
+    title: "What this course is like",
+    paragraphs: [profileBits.join(" — ") + "."],
+    bullets: [],
+  };
+  if (scram?.difficulty === "harder") {
+    profile.bullets.push(
+      `Scrambling (${courseBreakdownFormatDisplay("pct", scram.courseDisplay)}) is below tour average — missed greens cost more here.`,
+    );
+  } else if (scram?.difficulty === "easier") {
+    profile.bullets.push(
+      `Scrambling is strong (${courseBreakdownFormatDisplay("pct", scram.courseDisplay)}), so pars are salvageable even when approaches miss.`,
+    );
+  }
+
+  const successBullets = [];
+  if (sgImpact[0]?.pct >= 18) {
+    successBullets.push(
+      `${sgImpact[0].label} separates the field most this week (${sgImpact[0].pct.toFixed(0)}% of strokes-gained spread) — lean into players who excel there.`,
+    );
+  }
+  if (approachImpact[0]?.pct >= 18) {
+    successBullets.push(
+      `Approach volume clusters in the ${approachImpact[0].label} window (${approachImpact[0].pct.toFixed(0)}% of field approach shots) — distance control from that zone matters.`,
+    );
+  }
+  if (driving?.bomber >= 7) {
+    successBullets.push(
+      `Length helps: bomber profile scores ${driving.bomber}/10 with ${driving.driverHoles} driver holes and a ${driving.bombOpp.toFixed(1)} SG bomb opportunity.`,
+    );
+  } else if (driving?.shortPen < -0.35) {
+    successBullets.push(
+      `Position off the tee is rewarded — shorter-than-average drives cost about ${Math.abs(driving.shortPen).toFixed(2)} SG per round.`,
+    );
+  }
+  if (courseRow && num(courseRow.app_sg, 0) > 0.03) {
+    successBullets.push("Iron play is a primary separator — clean approach proximity creates birdie looks.");
+  }
+  if (courseRow && num(courseRow.putt_sg, 0) > 0.03) {
+    successBullets.push("Putting surface rewards strong laggers and confident short-putt converters.");
+  }
+  if (!successBullets.length) {
+    successBullets.push("Balanced ball-striking across tee-to-green play — no single skill completely dominates.");
+  }
+
+  const problemBullets = [];
+  if (fir?.difficulty === "harder") {
+    problemBullets.push(
+      `Fairways are tight (${courseBreakdownFormatDisplay("pct", fir.courseDisplay)} FIR) — rough and recovery shots pile up quickly.`,
+    );
+  }
+  if (approach?.rghPen?.some((v) => v >= 0.18)) {
+    const maxPen = Math.max(...approach.rghPen);
+    problemBullets.push(
+      `Rough penalty runs up to ${maxPen.toFixed(2)} strokes on approach — missing fairways is expensive.`,
+    );
+  }
+  if (bog?.difficulty === "harder" || (bird?.courseDisplay && bog?.courseDisplay && bog.courseDisplay > bird.courseDisplay)) {
+    problemBullets.push(
+      `Bogey rate (${courseBreakdownFormatDisplay("num2", bog?.courseDisplay)}) outpaces birdie rate — one loose stretch can stall a round.`,
+    );
+  }
+  if (gir?.difficulty === "harder") {
+    problemBullets.push(
+      `GIR is below tour average (${courseBreakdownFormatDisplay("pct", gir.courseDisplay)}) — players who can't hold greens face constant scrambles.`,
+    );
+  }
+  if (courseRow && num(courseRow.arg_sg, 0) > 0.04) {
+    problemBullets.push("Short-game volume is high — poor chipping and bunker play show up on the card.");
+  }
+  if (!problemBullets.length) {
+    problemBullets.push("Few extreme penalty spots — mistakes are more about missed scoring chances than big-number blow-ups.");
+  }
+
+  const propIdeas = courseBreakdownPropMarketIdeas(metrics, basis, courseRow, weatherCtx);
+
+  return [
+    profile,
+    courseBreakdownWeatherInsightSection(weatherCtx),
+    {
+      title: "What you need to do well",
+      paragraphs: [],
+      bullets: successBullets,
+    },
+    {
+      title: "What can cause problems",
+      paragraphs: [],
+      bullets: problemBullets,
+    },
+    {
+      title: "Who fits vs. who struggles",
+      paragraphs: [
+        playerFit.fits.length
+          ? "Course-table fit blends each player's SG profile with this venue's skill demands."
+          : "Player fit lists need course-table data — run npm run build:course-table.",
+      ],
+      playerFit: playerFit,
+    },
+    {
+      title: "Prop markets to consider",
+      paragraphs:
+        propIdeas.length === 0
+          ? ["No strong venue skew vs tour benchmarks — lean on player-specific edges in Round Projections."]
+          : [],
+      bullets: propIdeas.map((x) => `<strong>${x.market} ${x.angle}</strong> — ${x.reason}`),
+    },
+  ];
+}
+
+function renderCourseBreakdownInsights(sections) {
+  const card = document.getElementById("course-breakdown-insights-card");
+  const body = document.getElementById("course-breakdown-insights-body");
+  if (!card || !body) return;
+  if (!sections?.length) {
+    card.hidden = true;
+    return;
+  }
+  card.hidden = false;
+  body.innerHTML = "";
+  for (const sec of sections) {
+    const block = document.createElement("section");
+    block.className = "course-breakdown-insight-section";
+    const h = document.createElement("h4");
+    h.textContent = sec.title;
+    block.appendChild(h);
+    for (const p of sec.paragraphs || []) {
+      const el = document.createElement("p");
+      el.textContent = p;
+      block.appendChild(el);
+    }
+    if (sec.bullets?.length) {
+      const ul = document.createElement("ul");
+      ul.className = "course-breakdown-insight-list";
+      for (const b of sec.bullets) {
+        const li = document.createElement("li");
+        if (b.includes("<strong>")) li.innerHTML = b;
+        else li.textContent = b;
+        ul.appendChild(li);
+      }
+      block.appendChild(ul);
+    }
+    if (sec.playerFit && (sec.playerFit.fits.length || sec.playerFit.struggles.length)) {
+      const grid = document.createElement("div");
+      grid.className = "course-breakdown-insight-players";
+      for (const [kind, title] of [
+        ["fits", "Best fit this week"],
+        ["struggles", "Likely to struggle"],
+      ]) {
+        const col = document.createElement("div");
+        col.className = "course-breakdown-insight-player-col";
+        const h5 = document.createElement("h5");
+        h5.textContent = title;
+        col.appendChild(h5);
+        const ul = document.createElement("ul");
+        for (const x of sec.playerFit[kind] || []) {
+          const li = document.createElement("li");
+          li.textContent = x.name;
+          ul.appendChild(li);
+        }
+        col.appendChild(ul);
+        grid.appendChild(col);
+      }
+      block.appendChild(grid);
+    }
+    body.appendChild(block);
+  }
+}
+
+async function buildCourseBreakdownInsights(holePars, rows, courseName) {
+  await loadCourseTableJson();
+  const courseRow = courseBreakdownActiveCourseRow();
+  const tourMeans = COURSE_TABLE_PAYLOAD?.means || {};
+  const basis = courseBreakdownBasisRow();
+  const metrics = courseBreakdownMetricSnapshots();
+  const approachMeans = await courseBreakdownFieldApproachMeans();
+  const approach = approachMeans
+    ? courseBreakdownScaleApproachRow(approachMeans, courseRow || {}, tourMeans)
+    : { bins: [], rghPen: [] };
+  const driving = courseRow ? courseBreakdownDrivingModel(courseRow, tourMeans, holePars) : null;
+  const putting = courseRow ? courseBreakdownPuttingModel(courseRow, tourMeans) : null;
+  const sgImpact = courseBreakdownSgImpactSegments(rows);
+  const approachImpact = await courseBreakdownApproachImpactSegments(rows);
+  const playerFit = courseBreakdownPlayerFitLists(courseRow);
+  const weatherCtx = await courseBreakdownGatherWeatherContext(courseName);
+  const m = DATA?.meta || {};
+  const eventName = formatEventNameForDisplay(String(m.event_name || DATA?.event_name || "").trim()) || "";
+  const par =
+    Math.round(num(m.course_par_18 ?? DATA?.course_par_18, NaN)) ||
+    (holePars.length ? holePars.reduce((s, p) => s + Math.round(num(p, 4)), 0) : 72);
+  const sections = courseBreakdownGenerateInsightSections({
+    courseName,
+    eventName,
+    par,
+    holePars,
+    metrics,
+    basis,
+    courseRow,
+    driving,
+    approach,
+    putting,
+    sgImpact,
+    approachImpact,
+    playerFit,
+    weatherCtx,
+  });
+  renderCourseBreakdownInsights(sections);
+}
+
 function buildCourseBreakdownTab() {
   const m = DATA?.meta || {};
   const courseName =
@@ -12434,6 +13173,7 @@ function buildCourseBreakdownTab() {
   void renderCourseBreakdownSkillGrid(holePars);
   renderCourseBreakdownSg(rows);
   void renderCourseBreakdownApproach(rows);
+  void buildCourseBreakdownInsights(holePars, rows, courseName);
 }
 
 function formatAmericanOddsShort(n) {
