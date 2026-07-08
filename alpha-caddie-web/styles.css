@@ -2109,20 +2109,26 @@ body {
 #table-ou.table-ou-projections .ou-proj-td-kelly {
   min-width: 4.25rem;
   font-weight: 800;
+  text-align: center;
+  vertical-align: middle;
 }
-#table-ou.table-ou-projections .ou-proj-td-kelly.pos {
+#table-ou.table-ou-projections .ou-proj-td-kelly.has-kelly,
+#table-ou.table-ou-projections .ou-proj-kelly-line {
   color: #1ecf77;
 }
 #table-ou.table-ou-projections .ou-proj-kelly-stack {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  align-items: flex-end;
+  gap: 3px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 #table-ou.table-ou-projections .ou-proj-kelly-line {
-  font-size: 0.82rem;
-  line-height: 1.2;
+  font-size: inherit;
+  line-height: 1.25;
   font-weight: 800;
+  font-variant-numeric: tabular-nums;
 }
 #table-ou.table-ou-projections td.ou-proj-td-dk-edge.pos,
 #table-ou.table-ou-projections td.ou-proj-td-pp-edge.pos { color: #1ecf77; }

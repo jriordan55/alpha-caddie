@@ -7652,22 +7652,23 @@ function buildOuTable() {
     }
     if (!kellyBits.length) {
       kellyTd.textContent = "";
-    } else if (kellyBits.length === 1) {
-      kellyTd.textContent = formatOuKellyDollars(kellyBits[0].amt);
-      kellyTd.classList.add("pos");
-      kellyTd.title = `${kellyBits[0].book} · ${kellyLabel} · $${Math.round(bankroll).toLocaleString()} bankroll`;
     } else {
-      kellyTd.className = "ou-cell ou-proj-long-td ou-proj-td-kelly ou-proj-td-kelly-stack";
-      const stack = document.createElement("div");
-      stack.className = "ou-proj-kelly-stack";
-      for (const bit of kellyBits) {
-        const line = document.createElement("div");
-        line.className = "ou-proj-kelly-line pos";
-        line.textContent = `${formatOuKellyDollars(bit.amt)} ${bit.book}`;
-        line.title = `${bit.book} · ${kellyLabel} · $${Math.round(bankroll).toLocaleString()} bankroll`;
-        stack.appendChild(line);
+      kellyTd.classList.add("has-kelly");
+      if (kellyBits.length === 1) {
+        kellyTd.textContent = formatOuKellyDollars(kellyBits[0].amt);
+        kellyTd.title = `${kellyBits[0].book} · ${kellyLabel} · $${Math.round(bankroll).toLocaleString()} bankroll`;
+      } else {
+        const stack = document.createElement("div");
+        stack.className = "ou-proj-kelly-stack";
+        for (const bit of kellyBits) {
+          const line = document.createElement("div");
+          line.className = "ou-proj-kelly-line";
+          line.textContent = `${formatOuKellyDollars(bit.amt)} ${bit.book}`;
+          line.title = `${bit.book} · ${kellyLabel} · $${Math.round(bankroll).toLocaleString()} bankroll`;
+          stack.appendChild(line);
+        }
+        kellyTd.appendChild(stack);
       }
-      kellyTd.appendChild(stack);
     }
     tr.appendChild(kellyTd);
 
