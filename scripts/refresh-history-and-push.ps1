@@ -111,10 +111,10 @@ if ($IsWindows -or ($env:OS -match "Windows") -or $IsMacOS) {
 if ($LiveWeekOnly) {
   Remove-Item Env:\GOLF_HISTORICAL_ROUNDS_FULL_HISTORY -ErrorAction SilentlyContinue
   $env:GOLF_REFRESH_LIVE_SKIP_CSV_MERGE = "1"
-  $env:GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE = "1"
+  Remove-Item Env:\GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE -ErrorAction SilentlyContinue
   $env:GOLF_REFRESH_LIVE_SKIP_HISTORY_REBUILD = "1"
   $env:GOLF_SKIP_ROUND_WEATHER_BACKFILL = "1"
-  Write-Host "LiveWeekOnly: npm run refresh:live (live feeds + DK/PP props + tee times + weather bake; no CSV/history rebuild)."
+  Write-Host "LiveWeekOnly: npm run refresh:live (live feeds + DK/PP props + tee times + weather bake + field history refresh for Trends)."
 } elseif (-not $NoFullHistory) {
   $env:GOLF_HISTORICAL_ROUNDS_FULL_HISTORY = "1"
   $env:GOLF_SKIP_HISTORY_ON_FETCH_DG = "1"

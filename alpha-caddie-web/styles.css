@@ -3588,6 +3588,7 @@ th.matchup-analysis-best-pick {
   border: none;
   border-top: 1px solid var(--golf-border);
   position: relative;
+  z-index: 20;
   background: transparent;
 }
 @media (min-width: 1025px) {

@@ -14973,6 +14973,19 @@ function historyBucketLoaded(dgId) {
   );
 }
 
+function historyBucketIsSeasonSliceOnly(dgId) {
+  const id = Math.round(num(dgId, NaN));
+  const bucket = HISTORY.byDgId?.[String(id)];
+  return Boolean(bucket && Number.isFinite(bucket._propsSeasonSlice));
+}
+
+async function ensurePlayerCareerHistoryLoaded(dgId) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return false;
+  if (historyBucketLoaded(id) && !historyBucketIsSeasonSliceOnly(id)) return true;
+  return loadPlayerHistoryBucket(id);
+}
+
 function historyBucketResolved(dgId) {
   const id = Math.round(num(dgId, NaN));
   if (!Number.isFinite(id)) return false;
@@ -15013,9 +15026,10 @@ async function loadPlayerHistoryBucket(dgId, opts = {}) {
   if (!Number.isFinite(id)) return false;
   const seasonYear = Number.isFinite(num(opts.seasonYear, NaN)) ? Math.round(num(opts.seasonYear, NaN)) : NaN;
   const existing = HISTORY.byDgId?.[String(id)];
+  const wantsCareer = !Number.isFinite(seasonYear);
   if (existing) {
-    if (!Number.isFinite(seasonYear) && historyBucketLoaded(id)) return true;
-    if (Number.isFinite(seasonYear) && historyBucketReadyForFieldSeason(id, seasonYear)) return true;
+    if (wantsCareer && historyBucketLoaded(id) && !historyBucketIsSeasonSliceOnly(id)) return true;
+    if (!wantsCareer && historyBucketReadyForFieldSeason(id, seasonYear)) return true;
   }
   if (isFileProtocol()) {
     await loadPlayerHistory();
@@ -20830,13 +20844,24 @@ function showPropsChartTooltip(canvas, ev, hit) {
   const pad = 12;
   tip.style.position = "fixed";
   tip.style.zIndex = "1200";
+  const wrapRect = wrap.getBoundingClientRect();
+  const sidebar = document.querySelector(".props-trends-sidebar");
+  const sideRect = sidebar?.getBoundingClientRect();
   let left = ev.clientX + pad;
   let top = ev.clientY + pad;
   const tw = tip.offsetWidth || 160;
   const th = tip.offsetHeight || 72;
-  if (left + tw > window.innerWidth - pad) left = ev.clientX - tw - pad;
-  if (top + th > window.innerHeight - pad) top = ev.clientY - th - pad;
-  left = Math.max(pad, Math.min(left, window.innerWidth - tw - pad));
+  const maxRight = sideRect ? sideRect.left - pad : wrapRect.right - pad;
+  const minLeft = wrapRect.left + pad;
+  const minTop = wrapRect.top + pad;
+  const maxBottom = wrapRect.bottom - pad;
+  if (left + tw > maxRight) left = ev.clientX - tw - pad;
+  if (left + tw > maxRight) left = maxRight - tw;
+  if (left < minLeft) left = minLeft;
+  if (top + th > maxBottom) top = ev.clientY - th - pad;
+  if (top < minTop) top = minTop;
+  if (top + th > maxBottom) top = maxBottom - th;
+  left = Math.max(pad, Math.min(left, maxRight - tw));
   top = Math.max(pad, Math.min(top, window.innerHeight - th - pad));
   tip.style.left = `${left}px`;
   tip.style.top = `${top}px`;
@@ -21986,7 +22011,20 @@ function renderPropsTrends() {
   } else {
     if (titleEl) titleEl.textContent = "—";
   }
-  const historyHasSelectedBucket = Number.isFinite(dg) && historyBucketLoaded(dg);
+  const historyHasSelectedBucket =
+    Number.isFinite(dg) &&
+    historyBucketLoaded(dg) &&
+    (propsCourseWindowModeOn() || !historyBucketIsSeasonSliceOnly(dg));
+  if (
+    Number.isFinite(dg) &&
+    !propsCourseWindowModeOn() &&
+    historyBucketIsSeasonSliceOnly(dg) &&
+    !playerHistoryBucketLoadPromises.has(dg)
+  ) {
+    void ensurePlayerCareerHistoryLoaded(dg).then(() => {
+      if (activeAppTabId() === "props") scheduleRenderPropsTrends(0);
+    });
+  }
   if (!HISTORY._ok || !historyHasSelectedBucket) {
     if (empty) {
       empty.hidden = false;
@@ -22515,18 +22553,16 @@ function ensurePlayerHistoryLoadedForTab(tab) {
       ? (async () => {
           const dg = selectedDgId();
           if (!Number.isFinite(dg)) return false;
+          await ensurePlayerCareerHistoryLoaded(dg);
           if (!historyBucketLoaded(dg) && !historyBucketResolved(dg)) {
-            await loadPlayerHistoryBucket(dg);
-            if (!historyBucketLoaded(dg) && !historyBucketResolved(dg)) {
-              await extractHistoryBucketFromEmbedded(dg);
+            await extractHistoryBucketFromEmbedded(dg);
+          }
+          if (!historyBucketLoaded(dg) && !historyBucketResolved(dg)) {
+            if (!HISTORY._ok || HISTORY._partial) {
+              await loadPlayerHistory();
             }
             if (!historyBucketLoaded(dg) && !historyBucketResolved(dg)) {
-              if (!HISTORY._ok || HISTORY._partial) {
-                await loadPlayerHistory();
-              }
-              if (!historyBucketLoaded(dg) && !historyBucketResolved(dg)) {
-                markPlayerHistoryAbsent(dg);
-              }
+              markPlayerHistoryAbsent(dg);
             }
           }
           return historyBucketLoaded(dg) || historyBucketResolved(dg);

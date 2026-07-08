@@ -323,9 +323,14 @@ if (!envTruthy("GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI", false)) {
 
 if (skipHistoryRebuild) {
   run(
+    "sync-field-history-from-csv.mjs",
+    "Merge recent CSV rounds into field player-history shards",
+  );
+  run(
     "patch-current-event-history-shards.mjs",
     "Patch current-event live rows into player-history shards (no CSV rescan)",
   );
+  run("rebuild-field-season-bundle.mjs", "Rebuild field-{year}.json for Historical Trends");
 } else {
   if (Object.keys(fh).length) {
     console.log(
@@ -359,8 +364,8 @@ mirrorWebsitePublicData();
 
 console.log("\n[refresh:live] Done.");
 if (skipHistoryRebuild) {
-  console.log("  • Live week updated; historical CSV / player_round_history unchanged on disk.");
-  console.log("  • Full rebuild: GOLF_REFRESH_LIVE_FULL_REBUILD=1 npm run refresh:live");
+  console.log("  • Live week updated; field shards + field-{year}.json refreshed for Historical Trends.");
+  console.log("  • Full CSV/history rebuild: GOLF_REFRESH_LIVE_FULL_REBUILD=1 npm run refresh:live");
 } else {
   console.log("  • Historical Trends rebuilt from CSV + live feeds.");
 }
