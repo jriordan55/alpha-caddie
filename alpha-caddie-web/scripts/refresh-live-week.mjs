@@ -331,6 +331,7 @@ if (skipHistoryRebuild) {
     "Patch current-event live rows into player-history shards (no CSV rescan)",
   );
   run("rebuild-field-season-bundle.mjs", "Rebuild field-{year}.json for Historical Trends");
+  run("build-course-history-shards.mjs", "Course history shards for At-this-course O/U averages");
 } else {
   if (Object.keys(fh).length) {
     console.log(
@@ -358,7 +359,11 @@ if (skipHistoryRebuild) {
     },
   );
   run("embed-player-history.mjs", "Embed history for static deploy (embed:history)");
+  run("build-course-history-shards.mjs", "Course history shards for At-this-course O/U averages");
 }
+
+run("verify-ou-round-projection-means.mjs", "Guard Round Projections Proj μ (no in-play collapse)");
+run("verify-ou-proj-avg.mjs", "Guard Round Projections course averages vs Course Fit");
 
 mirrorWebsitePublicData();
 

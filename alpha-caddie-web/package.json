@@ -39,7 +39,7 @@
     "refresh:app": "node scripts/refresh-app-data.mjs",
     "refresh:live": "node scripts/refresh-live-week.mjs",
     "refresh:projections": "node scripts/refresh-projections-only.mjs",
-    "verify:web-deploy": "node scripts/verify-web-deploy-invariants.mjs && node scripts/verify-ou-round-projection-means.mjs",
+    "verify:web-deploy": "node scripts/verify-web-deploy-invariants.mjs && node scripts/verify-ou-round-projection-means.mjs && node scripts/verify-ou-proj-avg.mjs",
     "verify:ou-round-projection-means": "node scripts/verify-ou-round-projection-means.mjs",
     "verify:ou-proj-avg": "node scripts/verify-ou-proj-avg.mjs",
     "repair:projection-course-basis": "node scripts/repair-projection-course-basis.mjs",
