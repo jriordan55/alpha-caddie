@@ -3118,6 +3118,50 @@ function ouMarketRatingPlayerRounds(player) {
   return out;
 }
 
+/** Round projections field — not Props-tab DK/course filters. */
+function ouProjectionFieldPlayerDgIds() {
+  const ids = new Set();
+  for (const p of roundProjectionPlayersForOuRound()) {
+    const id = Math.round(num(p.dg_id, NaN));
+    if (Number.isFinite(id) && id > 0) ids.add(id);
+  }
+  for (const r of [...draftKingsRoundPropsOnly(), ...prizePicksRoundPropsOnly()]) {
+    const id = Math.round(num(r.dg_id, NaN));
+    if (Number.isFinite(id) && id > 0) ids.add(id);
+  }
+  return ids;
+}
+
+function invalidateOuProjectionAvgCaches() {
+  OU_PROJ_AVG_CACHE.clear();
+  ouProjectionFlatRowsCache = null;
+  ouProjectionFlatRowsCacheSig = "";
+}
+
+function syncOuProjAvgColumnHeader() {
+  const th = document.querySelector("#table-ou thead th[data-sort-key='pr-avg']");
+  if (!th) return;
+  const label = ouProjAvgWindowLabel();
+  const sortInd = th.querySelector(".sort-ind");
+  for (const child of [...th.childNodes]) {
+    if (child !== sortInd) th.removeChild(child);
+  }
+  th.insertBefore(document.createTextNode(label), sortInd);
+  if (!sortInd) {
+    th.insertAdjacentHTML(
+      "beforeend",
+      `<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span>`,
+    );
+  }
+  th.title = `Historical average — ${label}`;
+}
+
+/** Live average for one projection row (always uses toolbar window). */
+function ouProjectionRowMarketAvgHit(row) {
+  const { player, col } = row;
+  return ouCachedPlayerMarketAverage(col.market, player, ouProjAvgWindowMode());
+}
+
 /** Round projections Average column window (toolbar filter). */
 function ouProjAvgWindowMode() {
   const raw = String(document.getElementById("ou-proj-avg-window")?.value || "").trim();
@@ -3197,7 +3241,7 @@ let ouProjectionFlatRowsCacheSig = "";
 
 function ouFieldHistoryLoadSig() {
   const seasonYear = ouProjectionFieldHistorySeasonYear();
-  const ids = [...propsFieldPlayerDgIds()]
+  const ids = [...ouProjectionFieldPlayerDgIds()]
     .map((id) => Math.round(num(id, NaN)))
     .filter((id) => Number.isFinite(id))
     .sort((a, b) => a - b)
@@ -3207,7 +3251,7 @@ function ouFieldHistoryLoadSig() {
 
 function ouFieldHistoryReadyForAverages() {
   const seasonYear = ouProjectionFieldHistorySeasonYear();
-  const ids = [...propsFieldPlayerDgIds()];
+  const ids = [...ouProjectionFieldPlayerDgIds()];
   if (!ids.length) return true;
   const bucketReady = (id) =>
     Number.isFinite(seasonYear) ? historyBucketReadyForFieldSeason(id, seasonYear) : historyBucketLoaded(id);
@@ -3219,8 +3263,7 @@ function scheduleOuTableRebuildAfterHistory() {
   if (ouHistoryMergeRebuildRaf) cancelAnimationFrame(ouHistoryMergeRebuildRaf);
   ouHistoryMergeRebuildRaf = requestAnimationFrame(() => {
     ouHistoryMergeRebuildRaf = 0;
-    OU_PROJ_AVG_CACHE.clear();
-    ouProjectionFlatRowsCacheSig = "";
+    invalidateOuProjectionAvgCaches();
     scheduleBuildOuTable(true);
   });
 }
@@ -3238,11 +3281,10 @@ async function ensureOuProjectionFieldHistoryLoaded() {
     await loadPlayerHistory();
   }
   const seasonYear = ouProjectionFieldHistorySeasonYear();
-  await ensurePropsFieldPlayerHistoryLoaded({ seasonYear });
+  await ensurePropsFieldPlayerHistoryLoaded({ seasonYear, ids: ouProjectionFieldPlayerDgIds() });
   ouFieldHistoryLoadedSig = sig;
-  OU_PROJ_AVG_CACHE.clear();
+  invalidateOuProjectionAvgCaches();
   HISTORY_ROUNDS_CHRONO_CACHE.clear();
-  ouProjectionFlatRowsCacheSig = "";
 }
 
 function scheduleOuProjectionFieldHistoryLoad() {
@@ -7241,7 +7283,7 @@ function ouTableSortValueProjRow(row, sortKey) {
   if (sortKey === "pr-market") return colIdx;
   if (sortKey === "pr-side") return side === "over" ? 0 : 1;
   if (sortKey === "pr-mu") return mu;
-  if (sortKey === "pr-avg") return num(row.marketAvg, NaN);
+  if (sortKey === "pr-avg") return num(ouProjectionRowMarketAvgHit(row).avg, NaN);
   if (sortKey === "pr-line" || sortKey === "pr-dk-line") {
     return dkPick && Number.isFinite(dkPick.line) ? dkPick.line : NaN;
   }
@@ -7507,6 +7549,7 @@ function buildOuTable() {
   if (!table) return;
   updateOuDkStatusNoteVisibility();
   initOuTableSortOnce();
+  syncOuProjAvgColumnHeader();
   const round = getOuRound();
   const tbody = table.querySelector("tbody");
   if (!tbody) return;
@@ -7608,10 +7651,6 @@ function buildOuTable() {
       pick,
       dkPick,
       ppPick,
-      marketAvg,
-      marketAvgN,
-      marketAvgSource,
-      marketAvgWindow,
       dkEdge,
       ppEdge,
       dkKelly,
@@ -7669,11 +7708,11 @@ function buildOuTable() {
 
     const avgTd = document.createElement("td");
     avgTd.className = "ou-cell ou-proj-long-td num ou-proj-td-avg";
-    const avgHit = { avg: marketAvg, n: marketAvgN, source: marketAvgSource, windowMode: marketAvgWindow };
-    if (!Number.isFinite(marketAvg) && ouPlayerAvgHistoryPending(player)) {
+    const avgHit = ouProjectionRowMarketAvgHit(r);
+    if (!Number.isFinite(avgHit.avg) && ouPlayerAvgHistoryPending(player)) {
       avgTd.textContent = "…";
     } else {
-      avgTd.textContent = Number.isFinite(marketAvg) ? formatOuProjectedMean(marketAvg) : "—";
+      avgTd.textContent = Number.isFinite(avgHit.avg) ? formatOuProjectedMean(avgHit.avg) : "—";
     }
     avgTd.title = ouPlayerMarketAverageTitle(col.market, avgHit);
     tr.appendChild(avgTd);
@@ -18289,7 +18328,7 @@ async function ensurePropsFieldPlayerHistoryLoaded(opts = {}) {
   const seasonYear = Number.isFinite(num(opts.seasonYear, NaN))
     ? Math.round(num(opts.seasonYear, NaN))
     : propsFieldEffectiveSeasonYear();
-  const ids = [...propsFieldPlayerDgIds()];
+  const ids = opts.ids ? [...opts.ids] : [...propsFieldPlayerDgIds()];
   if (!ids.length) return 0;
   const bucketReady = (id) =>
     Number.isFinite(seasonYear) ? historyBucketReadyForFieldSeason(id, seasonYear) : historyBucketLoaded(id);
@@ -25136,10 +25175,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   document.getElementById("ou-proj-avg-window")?.addEventListener("change", () => {
     ouProjExpandedKey = "";
-    OU_PROJ_AVG_CACHE.clear();
-    ouProjectionFlatRowsCacheSig = "";
+    invalidateOuProjectionAvgCaches();
+    ouFieldHistoryLoadedSig = "";
+    syncOuProjAvgColumnHeader();
+    void scheduleOuProjectionFieldHistoryLoad();
     scheduleBuildOuTable(true);
-    if (!ouFieldHistoryReadyForAverages()) void scheduleOuProjectionFieldHistoryLoad();
   });
   syncOuProjKellyPrefsToUi();
   document.getElementById("ou-proj-bankroll")?.addEventListener("change", () => {
