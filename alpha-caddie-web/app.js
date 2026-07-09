@@ -3156,10 +3156,11 @@ function syncOuProjAvgColumnHeader() {
   th.title = `Historical average — ${label}`;
 }
 
-/** Live average for one projection row (always uses toolbar window). */
+/** Live average for one projection row (always uses toolbar window + row market). */
 function ouProjectionRowMarketAvgHit(row) {
   const { player, col } = row;
-  return ouCachedPlayerMarketAverage(col.market, player, ouProjAvgWindowMode());
+  const mKey = ouModelMarketKey(col?.market) || ouModelMarketKey(col?.label) || "Total score";
+  return ouCachedPlayerMarketAverage(mKey, player, ouProjAvgWindowMode());
 }
 
 /** Round projections Average column window (toolbar filter). */
@@ -3174,11 +3175,60 @@ function ouProjAvgWindowMode() {
 function ouProjAvgWindowLabel(mode = ouProjAvgWindowMode()) {
   if (mode === "season") return `This season (${propsFieldDefaultSeasonYear()})`;
   if (mode === "course") {
-    const vn = venueCourseName();
+    const raw = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
+    const vn = raw ? formatCourseNameForDisplay(raw) : "";
     return vn ? `At ${vn}` : "At this course";
   }
   if (typeof mode === "number") return `Last ${mode} rounds`;
   return "Average";
+}
+
+/** Course-shard rounds for one player (same source as Course Fit distributions). */
+function ouPlayerMarketCourseShardRounds(player, venueKey) {
+  const id = Math.round(num(player?.dg_id, NaN));
+  const vk = String(venueKey || "").trim();
+  if (!Number.isFinite(id) || !vk) return [];
+  const bucket = propsGetSingleCourseBucketSync(vk);
+  if (!bucket?.entries?.length) return [];
+  const out = [];
+  for (const e of bucket.entries) {
+    const row = e?.row;
+    if (!row) continue;
+    const dg = Math.round(num(e.dgId ?? e.dg_id ?? row.dg_id, NaN));
+    if (dg !== id) continue;
+    if (!courseFitDistRoundCountsAsActual(row)) continue;
+    out.push(row);
+  }
+  return out.sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
+}
+
+function ouCourseShardReadyForProjAvg() {
+  const vk = courseFitDistActiveVenueKey();
+  if (!vk) return true;
+  const bucket = propsGetSingleCourseBucketSync(vk);
+  if (bucket?.entries?.length) return true;
+  return Boolean(bucket?.shardMissing);
+}
+
+let ouCourseShardForProjAvgPromise = null;
+
+function scheduleOuCourseShardForProjAvg() {
+  if (ouProjAvgWindowMode() !== "course") return null;
+  const vk = courseFitDistActiveVenueKey();
+  if (!vk || ouCourseShardReadyForProjAvg()) return null;
+  if (ouCourseShardForProjAvgPromise) return ouCourseShardForProjAvgPromise;
+  ouCourseShardForProjAvgPromise = ensurePropsCourseIndexForKeyAsync(vk)
+    .then(() => {
+      invalidateOuProjectionAvgCaches();
+      if (activeAppTabId() === "ou") scheduleBuildOuTable(true);
+    })
+    .catch(() => {
+      if (activeAppTabId() === "ou") scheduleBuildOuTable(true);
+    })
+    .finally(() => {
+      ouCourseShardForProjAvgPromise = null;
+    });
+  return ouCourseShardForProjAvgPromise;
 }
 
 function ouPlayerMarketAvgSampleRounds(player, windowMode = ouProjAvgWindowMode()) {
@@ -3186,12 +3236,20 @@ function ouPlayerMarketAvgSampleRounds(player, windowMode = ouProjAvgWindowMode(
   if (!Number.isFinite(id)) return [];
   let rounds = historyRoundsChronoNewestFirst(id).filter((r) => historyRoundCountsAsActual(r));
   if (windowMode === "course") {
-    const venue = venueCourseName();
-    if (venue) {
-      const venueKey = normCourseNameKey(venue);
+    const venueKey = courseFitDistActiveVenueKey();
+    if (venueKey) {
+      const shardRounds = ouPlayerMarketCourseShardRounds(player, venueKey);
+      if (shardRounds.length) return shardRounds;
+      const displayVenue =
+        formatCourseNameForDisplay(DATA?.meta?.course_used || DATA?.course_used || "") || venueKey;
       rounds = rounds.filter((r) => {
-        const ck = normCourseNameKey(r.course_name);
-        return ck === venueKey || courseNameMatchesVenueLoose(r.course_name, venue);
+        const cn = historyRoundCourseName(r);
+        const ck = normCourseNameKey(cn);
+        return (
+          ck === venueKey ||
+          courseNameMatchesVenueLoose(cn, displayVenue) ||
+          courseNameMatchesVenueLoose(cn, venueKey)
+        );
       });
     }
   } else if (windowMode === "season") {
@@ -3241,15 +3299,18 @@ let ouProjectionFlatRowsCacheSig = "";
 
 function ouFieldHistoryLoadSig() {
   const seasonYear = ouProjectionFieldHistorySeasonYear();
+  const avgMode = ouProjAvgWindowMode();
+  const courseKey = avgMode === "course" ? courseFitDistActiveVenueKey() : "";
   const ids = [...ouProjectionFieldPlayerDgIds()]
     .map((id) => Math.round(num(id, NaN)))
     .filter((id) => Number.isFinite(id))
     .sort((a, b) => a - b)
     .join(",");
-  return `${seasonYear}|${ids}`;
+  return `${seasonYear}|${avgMode}|${courseKey}|${ids}`;
 }
 
 function ouFieldHistoryReadyForAverages() {
+  if (ouProjAvgWindowMode() === "course" && !ouCourseShardReadyForProjAvg()) return false;
   const seasonYear = ouProjectionFieldHistorySeasonYear();
   const ids = [...ouProjectionFieldPlayerDgIds()];
   if (!ids.length) return true;
@@ -3269,19 +3330,26 @@ function scheduleOuTableRebuildAfterHistory() {
 }
 
 function ensureOuFieldHistoryOnce() {
-  if (ouFieldHistoryReadyForAverages()) return;
+  scheduleOuCourseShardForProjAvg();
+  if (ouFieldHistoryReadyForAverages() && ouCourseShardReadyForProjAvg()) return;
   if (ouFieldHistoryLoadPromise) return;
   scheduleOuProjectionFieldHistoryLoad();
 }
 
 async function ensureOuProjectionFieldHistoryLoaded() {
   const sig = ouFieldHistoryLoadSig();
-  if (ouFieldHistoryLoadedSig === sig && ouFieldHistoryReadyForAverages()) return;
+  if (ouFieldHistoryLoadedSig === sig && ouFieldHistoryReadyForAverages() && ouCourseShardReadyForProjAvg()) return;
   if (!HISTORY._ok && !playerHistoryLoadPromise) {
     await loadPlayerHistory();
   }
   const seasonYear = ouProjectionFieldHistorySeasonYear();
   await ensurePropsFieldPlayerHistoryLoaded({ seasonYear, ids: ouProjectionFieldPlayerDgIds() });
+  if (ouProjAvgWindowMode() === "course") {
+    const vk = courseFitDistActiveVenueKey();
+    if (vk && !ouCourseShardReadyForProjAvg()) {
+      await ensurePropsCourseIndexForKeyAsync(vk);
+    }
+  }
   ouFieldHistoryLoadedSig = sig;
   invalidateOuProjectionAvgCaches();
   HISTORY_ROUNDS_CHRONO_CACHE.clear();
@@ -3307,8 +3375,9 @@ const OU_PROJ_AVG_CACHE = new Map();
 function ouPlayerAvgHistoryPending(player) {
   const id = Math.round(num(player?.dg_id, NaN));
   if (!Number.isFinite(id)) return false;
+  if (ouProjAvgWindowMode() === "course" && !ouCourseShardReadyForProjAvg()) return true;
   if (historyBucketLoaded(id) || playerHistoryAbsentDgIds.has(id)) return false;
-  return Boolean(HISTORY?._loading) || Boolean(ouFieldHistoryLoadPromise);
+  return Boolean(HISTORY?._loading) || Boolean(ouFieldHistoryLoadPromise) || Boolean(ouCourseShardForProjAvgPromise);
 }
 
 function ouProjectionFieldHistorySeasonYear() {
@@ -3317,10 +3386,10 @@ function ouProjectionFieldHistorySeasonYear() {
 
 function ouCachedPlayerMarketAverage(market, player, windowMode = ouProjAvgWindowMode()) {
   const id = Math.round(num(player?.dg_id, NaN));
-  const mKey = ouModelMarketKey(market) || "Total score";
+  const mKey = OU_STAT_MAP[market] ? market : ouModelMarketKey(market) || "Total score";
   const cacheKey = `${historyMutationEpoch}|${windowMode}|${id}|${mKey}`;
   if (OU_PROJ_AVG_CACHE.has(cacheKey)) return OU_PROJ_AVG_CACHE.get(cacheKey);
-  const hit = ouPlayerMarketAverage(market, player, windowMode);
+  const hit = ouPlayerMarketAverage(mKey, player, windowMode);
   OU_PROJ_AVG_CACHE.set(cacheKey, hit);
   return hit;
 }
@@ -7190,7 +7259,8 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
       const ppPick = ouLookupBookPick(ppPickMap, id, nameKey, canon);
       if (!dkPick && !ppPick) continue;
       const mu = ouProjectedMean(col.market, player, OU_PROJ_TABLE_MEAN_OPTS);
-      const marketAvgHit = ouCachedPlayerMarketAverage(col.market, player, avgWindow);
+      const mKey = ouModelMarketKey(col.market) || "Total score";
+      const marketAvgHit = ouCachedPlayerMarketAverage(mKey, player, avgWindow);
       for (const side of ["over", "under"]) {
         const row = {
           player,
@@ -25178,6 +25248,7 @@ document.addEventListener("DOMContentLoaded", () => {
     invalidateOuProjectionAvgCaches();
     ouFieldHistoryLoadedSig = "";
     syncOuProjAvgColumnHeader();
+    scheduleOuCourseShardForProjAvg();
     void scheduleOuProjectionFieldHistoryLoad();
     scheduleBuildOuTable(true);
   });
