@@ -6670,22 +6670,28 @@ function loadOuProjKellyPrefs() {
   }
 }
 
-function saveOuProjKellyPrefs() {
+function persistKellySizingPrefs(bankroll, fraction) {
+  const br = Math.max(1, Math.round(num(bankroll, 1000)));
+  const frac = num(fraction, 0.25);
+  const saved = {
+    bankroll: br,
+    fraction: frac === 0.5 || frac === 1 ? frac : 0.25,
+  };
   try {
-    const brEl = document.getElementById("ou-proj-bankroll") || document.getElementById("analysis-bankroll");
-    const kfEl = document.getElementById("ou-proj-kelly-fraction") || document.getElementById("analysis-kelly-fraction");
-    const frac = num(kfEl instanceof HTMLSelectElement ? kfEl.value : NaN, 0.25);
-    localStorage.setItem(
-      OU_PROJ_KELLY_PREFS_KEY,
-      JSON.stringify({
-        bankroll: Math.max(1, Math.round(num(brEl instanceof HTMLInputElement ? brEl.value : NaN, 1000))),
-        fraction: frac === 0.5 || frac === 1 ? frac : 0.25,
-      }),
-    );
-    syncOuProjKellyPrefsToUi();
+    localStorage.setItem(OU_PROJ_KELLY_PREFS_KEY, JSON.stringify(saved));
   } catch {
     /* ignore */
   }
+  syncOuProjKellyPrefsToUi();
+  return saved;
+}
+
+function saveOuProjKellyPrefs() {
+  persistKellySizingPrefs(ouProjBankrollFromUi(), ouProjKellyFractionFromUi());
+}
+
+function saveMatchupAnalysisKellyPrefs() {
+  persistKellySizingPrefs(matchupAnalysisBankrollFromUi(), matchupAnalysisKellyFractionFromUi());
 }
 
 function syncOuProjKellyPrefsToUi() {
@@ -25082,16 +25088,21 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("analysis-matchup-select")?.addEventListener("change", (e) => {
     selectMatchupAnalysisMatchup(String(/** @type {HTMLSelectElement} */ (e.target).value || ""));
   });
-  document.getElementById("analysis-bankroll")?.addEventListener("change", () => {
-    saveOuProjKellyPrefs();
+  document.getElementById("analysis-bankroll")?.addEventListener("change", (e) => {
+    const bankroll = Math.max(1, Math.round(num(/** @type {HTMLInputElement} */ (e.target).value, 1000)));
+    persistKellySizingPrefs(bankroll, matchupAnalysisKellyFractionFromUi());
     refreshMatchupAnalysisKellyDisplay();
   });
-  document.getElementById("analysis-bankroll")?.addEventListener("input", () => {
-    saveOuProjKellyPrefs();
+  document.getElementById("analysis-bankroll")?.addEventListener("input", (e) => {
+    const raw = num(/** @type {HTMLInputElement} */ (e.target).value, NaN);
+    if (Number.isFinite(raw) && raw >= 1) {
+      persistKellySizingPrefs(Math.max(1, Math.round(raw)), matchupAnalysisKellyFractionFromUi());
+    }
     refreshMatchupAnalysisKellyDisplay();
   });
-  document.getElementById("analysis-kelly-fraction")?.addEventListener("change", () => {
-    saveOuProjKellyPrefs();
+  document.getElementById("analysis-kelly-fraction")?.addEventListener("change", (e) => {
+    const fraction = num(/** @type {HTMLSelectElement} */ (e.target).value, 0.25);
+    persistKellySizingPrefs(matchupAnalysisBankrollFromUi(), fraction);
     refreshMatchupAnalysisKellyDisplay();
   });
   document.getElementById("ou-market-filter")?.addEventListener("change", () => {
