@@ -834,6 +834,23 @@
             <select id="analysis-matchup-select" aria-label="Choose matchup" hidden></select>
           </div>
         </label>
+        <label class="toolbar-label ou-filter-field">Bankroll
+          <input
+            id="analysis-bankroll"
+            type="number"
+            min="1"
+            step="1"
+            value="1000"
+            title="Bankroll for Kelly stake sizing"
+          />
+        </label>
+        <label class="toolbar-label ou-filter-field">Kelly
+          <select id="analysis-kelly-fraction" title="Fraction of full Kelly to bet">
+            <option value="0.25" selected>¼ Kelly</option>
+            <option value="0.5">½ Kelly</option>
+            <option value="1">Full Kelly</option>
+          </select>
+        </label>
         <p id="analysis-market-note" class="text-muted matchup-analysis-note" hidden></p>
       </div>
       <h3 class="section-heading">Matchup edges by book</h3>
@@ -1526,6 +1543,6 @@
   </dialog>
 
   <script src="parlay-pro.js?v=12"></script>
-  <script src="app.js?v=320"></script>
+  <script src="app.js?v=321"></script>
 </body>
 </html>

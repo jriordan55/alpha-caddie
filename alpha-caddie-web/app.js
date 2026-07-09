@@ -6672,13 +6672,17 @@ function loadOuProjKellyPrefs() {
 
 function saveOuProjKellyPrefs() {
   try {
+    const brEl = document.getElementById("ou-proj-bankroll") || document.getElementById("analysis-bankroll");
+    const kfEl = document.getElementById("ou-proj-kelly-fraction") || document.getElementById("analysis-kelly-fraction");
+    const frac = num(kfEl instanceof HTMLSelectElement ? kfEl.value : NaN, 0.25);
     localStorage.setItem(
       OU_PROJ_KELLY_PREFS_KEY,
       JSON.stringify({
-        bankroll: ouProjBankrollFromUi(),
-        fraction: ouProjKellyFractionFromUi(),
+        bankroll: Math.max(1, Math.round(num(brEl instanceof HTMLInputElement ? brEl.value : NaN, 1000))),
+        fraction: frac === 0.5 || frac === 1 ? frac : 0.25,
       }),
     );
+    syncOuProjKellyPrefsToUi();
   } catch {
     /* ignore */
   }
@@ -6686,10 +6690,14 @@ function saveOuProjKellyPrefs() {
 
 function syncOuProjKellyPrefsToUi() {
   const p = loadOuProjKellyPrefs();
-  const br = document.getElementById("ou-proj-bankroll");
-  const kf = document.getElementById("ou-proj-kelly-fraction");
-  if (br instanceof HTMLInputElement) br.value = String(p.bankroll);
-  if (kf instanceof HTMLSelectElement) kf.value = String(p.fraction);
+  for (const id of ["ou-proj-bankroll", "analysis-bankroll"]) {
+    const br = document.getElementById(id);
+    if (br instanceof HTMLInputElement) br.value = String(p.bankroll);
+  }
+  for (const id of ["ou-proj-kelly-fraction", "analysis-kelly-fraction"]) {
+    const kf = document.getElementById(id);
+    if (kf instanceof HTMLSelectElement) kf.value = String(p.fraction);
+  }
 }
 
 function ouProjBankrollFromUi() {
@@ -6703,6 +6711,27 @@ function ouProjKellyFractionFromUi() {
   const v = num(el instanceof HTMLSelectElement ? el.value : NaN, NaN);
   if (v === 0.25 || v === 0.5 || v === 1) return v;
   return loadOuProjKellyPrefs().fraction;
+}
+
+function matchupAnalysisBankrollFromUi() {
+  const el = document.getElementById("analysis-bankroll");
+  const v = num(el instanceof HTMLInputElement ? el.value : NaN, NaN);
+  return Number.isFinite(v) && v >= 1 ? v : loadOuProjKellyPrefs().bankroll;
+}
+
+function matchupAnalysisKellyFractionFromUi() {
+  const el = document.getElementById("analysis-kelly-fraction");
+  const v = num(el instanceof HTMLSelectElement ? el.value : NaN, NaN);
+  if (v === 0.25 || v === 0.5 || v === 1) return v;
+  return loadOuProjKellyPrefs().fraction;
+}
+
+function refreshMatchupAnalysisKellyDisplay() {
+  const host = document.getElementById("matchup-analysis-pricing");
+  if (!host || !matchupAnalysisBookCardsCache?.length) return;
+  renderMatchupAnalysisBookCardsGrid(host, matchupAnalysisBookCardsCache, matchupAnalysisSelectedKey, (mk) => {
+    selectMatchupAnalysisMatchup(mk, { scroll: false });
+  });
 }
 
 function ouProjKellyFractionLabel(frac) {
@@ -9653,10 +9682,13 @@ function buildMatchupAnalysisBookCards(list, marketKey, round, devigPrefs) {
 
       const players = sides.map((s, i) => {
         const edge = Number.isFinite(modelProbs[i]) ? modelProbs[i] * decs[i] - 1 : NaN;
+        const amNum = americanFromDecimal(decs[i]);
         return {
           ...s,
           dec: decs[i],
-          am: formatAmerican(americanFromDecimal(decs[i])),
+          am: formatAmerican(amNum),
+          amNum,
+          modelProb: modelProbs[i],
           edge,
         };
       });
@@ -9746,7 +9778,13 @@ function renderMatchupAnalysisBookCardsGrid(host, cards, selectedKey, onSelectCa
       if (card.bestIdx === i && Number.isFinite(pl.edge) && pl.edge > 0) {
         const edgeEl = document.createElement("div");
         edgeEl.className = "matchup-book-card-edge";
-        edgeEl.textContent = `Edge: ${formatMatchupEdgePct(pl.edge)}`;
+        const bankroll = matchupAnalysisBankrollFromUi();
+        const kellyFrac = matchupAnalysisKellyFractionFromUi();
+        const kelly = ouKellyStakeDollars(pl.modelProb, pl.amNum, bankroll, kellyFrac);
+        const kellyStr = formatOuKellyDollars(kelly);
+        edgeEl.textContent = kellyStr
+          ? `Edge: ${formatMatchupEdgePct(pl.edge)} · ${kellyStr}`
+          : `Edge: ${formatMatchupEdgePct(pl.edge)}`;
         row.appendChild(edgeEl);
       }
       body.appendChild(row);
@@ -25044,6 +25082,18 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("analysis-matchup-select")?.addEventListener("change", (e) => {
     selectMatchupAnalysisMatchup(String(/** @type {HTMLSelectElement} */ (e.target).value || ""));
   });
+  document.getElementById("analysis-bankroll")?.addEventListener("change", () => {
+    saveOuProjKellyPrefs();
+    refreshMatchupAnalysisKellyDisplay();
+  });
+  document.getElementById("analysis-bankroll")?.addEventListener("input", () => {
+    saveOuProjKellyPrefs();
+    refreshMatchupAnalysisKellyDisplay();
+  });
+  document.getElementById("analysis-kelly-fraction")?.addEventListener("change", () => {
+    saveOuProjKellyPrefs();
+    refreshMatchupAnalysisKellyDisplay();
+  });
   document.getElementById("ou-market-filter")?.addEventListener("change", () => {
     ouTableSort = { key: "pr-dk-edge", dir: -1 };
     const m = getOuMarket();
@@ -25085,16 +25135,19 @@ document.addEventListener("DOMContentLoaded", () => {
     saveOuProjKellyPrefs();
     ouProjectionFlatRowsCacheSig = "";
     scheduleBuildOuTable(true);
+    refreshMatchupAnalysisKellyDisplay();
   });
   document.getElementById("ou-proj-bankroll")?.addEventListener("input", () => {
     saveOuProjKellyPrefs();
     ouProjectionFlatRowsCacheSig = "";
     scheduleBuildOuTable();
+    refreshMatchupAnalysisKellyDisplay();
   });
   document.getElementById("ou-proj-kelly-fraction")?.addEventListener("change", () => {
     saveOuProjKellyPrefs();
     ouProjectionFlatRowsCacheSig = "";
     scheduleBuildOuTable(true);
+    refreshMatchupAnalysisKellyDisplay();
   });
   document.getElementById("props-filter-tee-wave")?.addEventListener("change", (e) => {
     const ouEl = document.getElementById("ou-tee-wave-filter");
