@@ -85,7 +85,7 @@
     "dev:fast": "node scripts/serve-with-refresh.mjs --fast",
     "serve:only": "npx --yes serve . -p 5173",
     "projection-tracker": "node scripts/serve-projection-tracker.mjs",
-    "projection-tracker:refresh": "node scripts/export-round-projection-vs-actual-csv.mjs && node scripts/promote-round-projection-vs-actual-csv.mjs && node scripts/export-matchup-backtest-csv.mjs",
+    "projection-tracker:refresh": "node scripts/export-round-projection-vs-actual-csv.mjs --full-backtest-rebuild && node scripts/promote-round-projection-vs-actual-csv.mjs && node scripts/export-matchup-backtest-csv.mjs",
     "export:matchup-backtest": "node scripts/export-matchup-backtest-csv.mjs",
     "push:all": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/refresh-history-and-push.ps1",
     "push:live": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/refresh-history-and-push.ps1 -LiveWeekOnly -PullFirst",

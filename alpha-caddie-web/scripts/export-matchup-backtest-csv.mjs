@@ -18,11 +18,11 @@ import {
   attachFieldDgIdsToProps,
   FullModelProjectionCache,
 } from "./historical-walkforward-projections.mjs";
-import { walkforwardBacktestPipelineEnv } from "./projection-pipeline-env.mjs";
+import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
 import { EV_THRESHOLDS_PCT } from "./round-projection-vs-actual-summary.mjs";
 import { matchupWinProb, modelEvPct, decimalToAmerican, isDraftKingsMatchupBook } from "../projection-tracker/matchup-math.mjs";
 
-Object.assign(process.env, walkforwardBacktestPipelineEnv());
+Object.assign(process.env, flatVenueProjectionPipelineEnv());
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");

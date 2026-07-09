@@ -13,7 +13,7 @@ export function flatVenueProjectionPipelineEnv() {
   };
 }
 
-/** Walk-forward backtest: historical venue score calibration + in-event course difficulty. */
+/** Legacy backtest (off by default): historical venue score calibration + in-event course difficulty. */
 export function walkforwardBacktestPipelineEnv() {
   return {
     ...flatVenueProjectionPipelineEnv(),

@@ -12799,30 +12799,114 @@ function courseBreakdownPlayerFitCategory(row, courseRow) {
   return courseFitPlayerCatAndFitOnAxes(tour5, venue5, player5, axisIdxs);
 }
 
-function courseBreakdownPlayerFitLists(courseRow, limit = 5) {
-  if (!courseRow) return { fits: [], struggles: [], emphasis: [] };
-  const pool = courseFitPlayerPool();
+function courseBreakdownKeySkillAxisIndices(courseRow, tour5, venue5) {
+  const weights = courseRequirementSgWeights(courseRow || {});
+  const sgToIdx = { sg_ott: 1, sg_app: 2, sg_arg: 3, sg_putt: 4 };
+  const byCoeff = Object.entries(sgToIdx)
+    .map(([sk, idx]) => ({ idx, w: num(weights[sk], 0) }))
+    .filter((x) => x.w > 0.05)
+    .sort((a, b) => b.w - a.w);
+  const venueEmphasis = courseFitVenueEmphasisAxisIndices(tour5, venue5);
+  const out = [];
+  const seen = new Set();
+  for (const { idx } of byCoeff.slice(0, 2)) {
+    if (!seen.has(idx)) {
+      out.push(idx);
+      seen.add(idx);
+    }
+  }
+  for (const i of venueEmphasis) {
+    if (!seen.has(i) && out.length < 2) {
+      out.push(i);
+      seen.add(i);
+    }
+  }
+  if (!out.length && byCoeff.length) out.push(byCoeff[0].idx);
+  if (!out.length && venueEmphasis.length) out.push(venueEmphasis[0]);
+  return out;
+}
+
+function courseBreakdownElitePlayerIds(pool, opts = {}) {
+  const minCount = opts.minCount ?? 20;
+  const maxCount = opts.maxCount ?? 35;
+  const fraction = opts.fraction ?? 0.4;
+  const ranked = [...pool]
+    .map((r) => ({ id: Math.round(num(r.dg_id, NaN)), sg: num(r.sg_total, NaN) }))
+    .filter((x) => Number.isFinite(x.id) && Number.isFinite(x.sg))
+    .sort((a, b) => b.sg - a.sg);
+  const cut = Math.min(maxCount, Math.max(minCount, Math.ceil(pool.length * fraction)));
+  return { ids: new Set(ranked.slice(0, cut).map((x) => x.id)), cut, ranked };
+}
+
+function courseBreakdownEliteKeySkillScore(axisZ, keyIdxs, venue5, tour5) {
+  let sum = 0;
+  let wSum = 0;
+  for (const i of keyIdxs) {
+    const z = axisZ[i];
+    if (!Number.isFinite(z)) continue;
+    const stress = Math.abs(num(venue5?.[i], 0.5) - num(tour5?.[i], 0.5));
+    const w = stress > 0.02 ? stress : 1;
+    sum += z * w;
+    wSum += w;
+  }
+  return wSum > 0 ? sum / wSum : NaN;
+}
+
+function courseBreakdownDominantSkillLabel(axisZ, keyIdxs, pickLowest = false) {
+  if (!keyIdxs?.length) return "";
+  let pickI = keyIdxs[0];
+  let pickZ = pickLowest ? Infinity : -Infinity;
+  for (const i of keyIdxs) {
+    const z = axisZ[i];
+    if (!Number.isFinite(z)) continue;
+    if (pickLowest ? z < pickZ : z > pickZ) {
+      pickZ = z;
+      pickI = i;
+    }
+  }
+  return COURSE_FIT_RADAR_SPOKE_LABELS[pickI] || "";
+}
+
+function courseBreakdownPlayerFitLists(courseRow, fieldRows = null, limit = 5) {
+  if (!courseRow) return { fits: [], struggles: [], emphasis: [], eliteCut: 0 };
+  const pool = fieldRows?.length ? fieldRows : courseFitPlayerPool();
+  if (!pool.length) return { fits: [], struggles: [], emphasis: [], eliteCut: 0 };
   const tour5 = courseFitTourCourseMean5();
   const venue5 = courseFitVenue5Profile(courseRow);
-  const axisIdxs = courseFitVenueEmphasisAxisIndices(tour5, venue5);
-  const emphasis = axisIdxs.map((i) => COURSE_FIT_RADAR_SPOKE_LABELS[i]).filter(Boolean);
-  const scored = pool
-    .map((r) => {
-      const { cat } = courseBreakdownPlayerFitCategory(r, courseRow);
+  const keyIdxs = courseBreakdownKeySkillAxisIndices(courseRow, tour5, venue5);
+  const emphasis = keyIdxs.map((i) => COURSE_FIT_RADAR_SPOKE_LABELS[i]).filter(Boolean);
+  const { ids: eliteIds, cut: eliteCut } = courseBreakdownElitePlayerIds(pool);
+  const archetypeRows = courseFitArchetypeTableRows(pool, tour5, venue5, courseRow);
+  const scored = archetypeRows
+    .filter((row) => eliteIds.has(Math.round(num(row.r?.dg_id, NaN))))
+    .map((row) => {
+      const skillZ = courseBreakdownEliteKeySkillScore(row.axisZ, keyIdxs, venue5, tour5);
       return {
-        row: r,
-        fit: courseFitPlayerCourseFitRaw(r, courseRow),
-        name: displayGolferName(r.player_name || ""),
-        cat: cat && cat !== "—" ? cat : "",
+        row: row.r,
+        skillZ,
+        sgTotal: num(row.r?.sg_total, NaN),
+        name: displayGolferName(row.r?.player_name || ""),
+        catBest: courseBreakdownDominantSkillLabel(row.axisZ, keyIdxs, false),
+        catWorst: courseBreakdownDominantSkillLabel(row.axisZ, keyIdxs, true),
       };
     })
-    .filter((x) => Number.isFinite(x.fit) && x.name);
-  scored.sort((a, b) => b.fit - a.fit);
-  return {
-    fits: scored.slice(0, limit),
-    struggles: [...scored].reverse().slice(0, limit),
-    emphasis,
-  };
+    .filter((x) => x.name && Number.isFinite(x.skillZ));
+  scored.sort((a, b) => b.skillZ - a.skillZ || b.sgTotal - a.sgTotal);
+  const fits = scored.slice(0, limit).map((x) => ({
+    ...x,
+    fit: x.skillZ,
+    cat: x.catBest,
+  }));
+  const fitNames = new Set(fits.map((x) => x.name));
+  const strugglePool = [...scored].reverse().filter((x) => x.skillZ <= 0 && !fitNames.has(x.name));
+  const strugglesSource =
+    strugglePool.length >= Math.min(limit, 3) ? strugglePool : [...scored].reverse().filter((x) => !fitNames.has(x.name));
+  const struggles = strugglesSource.slice(0, limit).map((x) => ({
+    ...x,
+    fit: x.skillZ,
+    cat: x.catWorst,
+  }));
+  return { fits, struggles, emphasis, eliteCut };
 }
 
 function courseBreakdownExternalContextSection(externalCtx, eventName, courseRow) {
@@ -13399,9 +13483,13 @@ function courseBreakdownGenerateInsightSections(ctx) {
   const propIdeas = courseBreakdownPropMarketIdeas(metrics, basis, courseRow, weatherCtx);
 
   const fitParagraphs = [];
-  if (playerFit.emphasis?.length) {
+  if (playerFit.emphasis?.length && playerFit.eliteCut) {
     fitParagraphs.push(
-      `Course-table fit weights ${playerFit.emphasis.join(" and ")} most at this venue vs tour average.`,
+      `Among the top ${playerFit.eliteCut} players by SG:Total, who rates best and worst on ${playerFit.emphasis.join(" and ")} — the skills this course rewards most.`,
+    );
+  } else if (playerFit.emphasis?.length) {
+    fitParagraphs.push(
+      `Field leaders on ${playerFit.emphasis.join(" and ")} — the skills this course rewards most vs tour average.`,
     );
   } else if (playerFit.fits.length) {
     fitParagraphs.push("Course-table fit blends each player's SG profile with this venue's skill demands.");
@@ -13476,8 +13564,8 @@ function renderCourseBreakdownInsights(sections) {
       const grid = document.createElement("div");
       grid.className = "course-breakdown-insight-players";
       for (const [kind, title] of [
-        ["fits", "Best fit this week"],
-        ["struggles", "Likely to struggle"],
+        ["fits", "Best among top field"],
+        ["struggles", "Top field — weakest on key skills"],
       ]) {
         const col = document.createElement("div");
         col.className = "course-breakdown-insight-player-col";
@@ -13487,9 +13575,11 @@ function renderCourseBreakdownInsights(sections) {
         const ul = document.createElement("ul");
         for (const x of sec.playerFit[kind] || []) {
           const li = document.createElement("li");
-          const fitStr = Number.isFinite(x.fit) ? `${x.fit >= 0 ? "+" : ""}${x.fit.toFixed(2)} fit` : "";
-          const catStr = x.cat ? ` via ${x.cat}` : "";
-          li.innerHTML = `<span class="course-breakdown-insight-player-name">${x.name}</span>${fitStr ? `<span class="course-breakdown-insight-player-fit">${fitStr}${catStr}</span>` : ""}`;
+          const zStr = Number.isFinite(x.skillZ ?? x.fit)
+            ? `${(x.skillZ ?? x.fit) >= 0 ? "+" : ""}${(x.skillZ ?? x.fit).toFixed(2)} vs field`
+            : "";
+          const catStr = x.cat ? ` on ${x.cat}` : "";
+          li.innerHTML = `<span class="course-breakdown-insight-player-name">${x.name}</span>${zStr ? `<span class="course-breakdown-insight-player-fit">${zStr}${catStr}</span>` : ""}`;
           ul.appendChild(li);
         }
         col.appendChild(ul);
@@ -13525,7 +13615,7 @@ async function buildCourseBreakdownInsights(holePars, rows, courseName) {
   const putting = courseRow ? courseBreakdownPuttingModel(courseRow, tourMeans) : null;
   const sgImpact = courseBreakdownSgImpactSegments(rows);
   const approachImpact = await courseBreakdownApproachImpactSegments(rows);
-  const playerFit = courseBreakdownPlayerFitLists(courseRow);
+  const playerFit = courseBreakdownPlayerFitLists(courseRow, rows);
   const m = DATA?.meta || {};
   const eventName = formatEventNameForDisplay(String(m.event_name || DATA?.event_name || "").trim()) || "";
   const externalCtx = courseBreakdownResolveEventContext(eventCtxMap, courseName, eventName);

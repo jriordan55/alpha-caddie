@@ -112,6 +112,27 @@ body {
   outline: 2px solid var(--golf-focus-ring);
   outline-offset: 4px;
 }
+.nav-aux-link {
+  flex-shrink: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--golf-text-muted);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: var(--golf-radius-md);
+  border: 1px solid var(--golf-border);
+  background: rgba(255, 255, 255, 0.03);
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.nav-aux-link:hover {
+  color: var(--golf-text);
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+}
+.nav-aux-link:focus-visible {
+  outline: 2px solid var(--golf-focus-ring);
+  outline-offset: 2px;
+}
 .nav-logo {
   flex-shrink: 0;
   width: 40px;
@@ -5460,6 +5481,11 @@ dialog,
   font-size: 0.8125rem;
   line-height: 1.45;
   color: var(--golf-text-muted);
+}
+
+.home-card-link {
+  text-decoration: none;
+  color: inherit;
 }
 
 /* Parlay Pro */

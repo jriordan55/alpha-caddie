@@ -9,6 +9,7 @@
  * from pre-round audit (or live_snapshot for in-progress weeks with real DK props).
  *
  *   npm run export:round-projection-vs-actual
+ *   npm run export:round-projection-vs-actual -- --full-backtest-rebuild  (regrade all prior events)
  *
  * Actuals (same priority as build-player-history): pgatour_event_rounds.json for the current event,
  * then preds/live-tournament-stats + in-play R1–R4 via live-in-play.json, then historical_rounds_all.csv
@@ -88,14 +89,13 @@ import {
   setOutcomeMuBiasCorrections,
   setOutcomeSigmaScales,
 } from "./projection-stat-model.mjs";
-import { flatVenueProjectionPipelineEnv, walkforwardBacktestPipelineEnv } from "./projection-pipeline-env.mjs";
+import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
 import { buildBookPropsIndex } from "./projection-book-props.mjs";
 
-if (String(process.env.GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS || "").trim() === "1") {
-  Object.assign(process.env, walkforwardBacktestPipelineEnv());
-} else {
-  Object.assign(process.env, flatVenueProjectionPipelineEnv());
+if (process.argv.includes("--full-backtest-rebuild")) {
+  process.env.GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS = "1";
 }
+Object.assign(process.env, flatVenueProjectionPipelineEnv());
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");

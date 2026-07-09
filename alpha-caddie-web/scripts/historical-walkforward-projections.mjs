@@ -14,7 +14,7 @@ import {
   fitOutcomeSigmaScales,
   setOutcomeSigmaScales,
 } from "./projection-stat-model.mjs";
-import { walkforwardBacktestPipelineEnv } from "./projection-pipeline-env.mjs";
+import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
 import { eventsLikelySame, foldComparableTitle } from "./dg-events-align.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
 import {
@@ -466,7 +466,7 @@ export async function buildFullModelMuMapForEvent({
   betTimeMs,
   fieldDgIds,
 }) {
-  Object.assign(process.env, walkforwardBacktestPipelineEnv());
+  Object.assign(process.env, flatVenueProjectionPipelineEnv());
   const dgSet = new Set(fieldDgIds.filter((d) => Number.isFinite(d)));
   if (!dgSet.size) return new Map();
 
