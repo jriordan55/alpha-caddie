@@ -74,6 +74,18 @@ export const EXPORT_MARKETS = [
     underCol: "birdies_under",
   },
   {
+    key: "bogeys",
+    market: "Bogeys",
+    propsMarket: "Bogeys",
+    lineCol: "bogeys_line",
+    bookLineCol: "bogeys_book_line",
+    overOddsCol: "bogeys_over_odds",
+    underOddsCol: "bogeys_under_odds",
+    actualCol: "actual_bogeys",
+    overCol: "bogeys_over",
+    underCol: "bogeys_under",
+  },
+  {
     key: "gir",
     market: "GIR",
     propsMarket: "GIR",
@@ -498,7 +510,7 @@ export function modelProbOver(market, mu, line, row, meta) {
   if (!Number.isFinite(mu) || !Number.isFinite(line)) return NaN;
   const metaLive = liveProjectionMeta(meta);
   const fairwayHoles = Math.round(num(metaLive?.projection_course_basis?.fairway_holes_modeled, 14)) || 14;
-  if (market === "Birdies") {
+  if (market === "Birdies" || market === "Bogeys") {
     const p = poissonProbOver(mu, line);
     return Number.isFinite(p) ? p : NaN;
   }

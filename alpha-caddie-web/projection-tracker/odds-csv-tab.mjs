@@ -100,7 +100,7 @@ export function summarizeByCourse(rows, opts) {
 }
 
 export function summarizeByMarket(rows, opts) {
-  const order = { Birdies: 0, "Total score": 1 };
+  const order = { Birdies: 0, Bogeys: 1, "Total score": 2 };
   const by = new Map();
   for (const r of rows) {
     const m = String(r.market || "").trim();

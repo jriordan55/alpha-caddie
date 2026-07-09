@@ -8,6 +8,7 @@ export const ACTION_MARKETS = new Set([
   "GIR",
   "Total score",
   "Birdies",
+  "Bogeys",
   "Fairways hit",
   "Round matchups",
 ]);

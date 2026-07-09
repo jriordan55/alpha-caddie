@@ -130,13 +130,14 @@ function binomialProbOver(mu, nTrials, line) {
 const OUTCOME_SIGMA_SCALE = {
   "Total score": 1.08,
   Birdies: 1.15,
+  Bogeys: 1.15,
   GIR: 1.02,
   "Fairways hit": 1.2,
 };
 
 export function modelProbOver(market, mu, line, sigmaScale = 1, fairwayHoles = 14) {
   if (!Number.isFinite(mu) || !Number.isFinite(line)) return NaN;
-  if (market === "Birdies") return poissonProbOver(mu, line);
+  if (market === "Birdies" || market === "Bogeys") return poissonProbOver(mu, line);
   if (market === "GIR") return binomialProbOver(mu, 18, line);
   if (market === "Fairways hit") {
     const n = Math.round(num(fairwayHoles, 14)) || 14;

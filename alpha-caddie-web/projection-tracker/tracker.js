@@ -63,6 +63,7 @@ const MATCHUP_DETAIL_CANDIDATES = [
 const MARKET_SPECS = [
   { market: "Total score", modelCol: "round_score_line", bookCol: "round_score_book_line", overOdds: "round_score_over_odds", underOdds: "round_score_under_odds", overRes: "round_score_over", underRes: "round_score_under", actual: "actual_round_score", decimals: 2 },
   { market: "Birdies", modelCol: "birdies_line", bookCol: "birdies_book_line", overOdds: "birdies_over_odds", underOdds: "birdies_under_odds", overRes: "birdies_over", underRes: "birdies_under", actual: "actual_birdies", decimals: 1 },
+  { market: "Bogeys", modelCol: "bogeys_line", bookCol: "bogeys_book_line", overOdds: "bogeys_over_odds", underOdds: "bogeys_under_odds", overRes: "bogeys_over", underRes: "bogeys_under", actual: "actual_bogeys", decimals: 1 },
   { market: "GIR", modelCol: "gir_line", bookCol: "gir_book_line", overOdds: "gir_over_odds", underOdds: "gir_under_odds", overRes: "gir_over", underRes: "gir_under", actual: "actual_gir", decimals: 0 },
   { market: "Fairways hit", modelCol: "fairways_line", bookCol: "fairways_book_line", overOdds: "fairways_over_odds", underOdds: "fairways_under_odds", overRes: "fairways_over", underRes: "fairways_under", actual: "actual_fairways", decimals: 0 },
 ];
@@ -70,6 +71,7 @@ const MARKET_SPECS = [
 const MARKET_ORDER = [
   "Total score",
   "Birdies",
+  "Bogeys",
   "GIR",
   "Fairways hit",
   "Round matchups",
@@ -80,6 +82,7 @@ const BETTABLE_MARKETS = new Set([
   "GIR",
   "Total score",
   "Birdies",
+  "Bogeys",
   "Fairways hit",
   "Round matchups",
 ]);
@@ -2460,7 +2463,7 @@ function formatModelMu(market, mu) {
   if (!Number.isFinite(mu)) return "—";
   if (market === "Round matchups") return `${(mu <= 1 ? mu * 100 : mu).toFixed(1)}%`;
   if (market === "Total score") return mu.toFixed(2);
-  if (market === "Birdies") return mu.toFixed(1);
+  if (market === "Birdies" || market === "Bogeys") return mu.toFixed(1);
   return String(Math.round(mu));
 }
 
@@ -2469,7 +2472,7 @@ function formatGap(market, gap) {
   const sign = gap > 0 ? "+" : "";
   if (market === "Round matchups") return `${sign}${gap.toFixed(2)} SG`;
   if (market === "Total score") return `${sign}${gap.toFixed(2)}`;
-  if (market === "Birdies") return `${sign}${gap.toFixed(1)}`;
+  if (market === "Birdies" || market === "Bogeys") return `${sign}${gap.toFixed(1)}`;
   return `${sign}${Math.round(gap)}`;
 }
 

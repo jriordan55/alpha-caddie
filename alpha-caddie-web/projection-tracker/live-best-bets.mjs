@@ -33,6 +33,7 @@ const TOP_N = 15;
 const MARKET_MODEL = {
   "Total score": (p, meta) => ouProjectedMeanForLive("Total score", p, meta),
   Birdies: (p, meta) => ouProjectedMeanForLive("Birdies", p, meta),
+  Bogeys: (p, meta) => ouProjectedMeanForLive("Bogeys", p, meta),
   GIR: (p, meta) => ouProjectedMeanForLive("GIR", p, meta),
   "Fairways hit": (p, meta) => ouProjectedMeanForLive("Fairways hit", p, meta),
 };
@@ -40,6 +41,7 @@ const MARKET_MODEL = {
 const DK_TO_MARKET = {
   "Total Score": "Total score",
   Birdies: "Birdies",
+  Bogeys: "Bogeys",
   GIR: "GIR",
   "Fairways hit": "Fairways hit",
 };
@@ -479,6 +481,7 @@ export function buildLiveBestBets({ projections, oos, signals, courseRow, minEvP
 const JOURNAL_MARKET_ORDER = [
   "Total score",
   "Birdies",
+  "Bogeys",
   "GIR",
   "Fairways hit",
   ROUND_MATCHUP_MARKET,

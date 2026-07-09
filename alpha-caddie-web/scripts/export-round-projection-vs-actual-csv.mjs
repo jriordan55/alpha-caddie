@@ -1028,7 +1028,7 @@ function fmtLine(market, mu) {
 function fmtModelLine(market, mu) {
   if (!Number.isFinite(mu)) return "";
   if (market === "Total score") return (Math.round(mu * 10) / 10).toFixed(1);
-  if (market === "Birdies" || market === "GIR") return (Math.round(mu * 10) / 10).toFixed(1);
+  if (market === "Birdies" || market === "Bogeys" || market === "GIR") return (Math.round(mu * 10) / 10).toFixed(1);
   return String(Math.round(mu));
 }
 

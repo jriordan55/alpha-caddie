@@ -4,7 +4,7 @@
 
 export const DEFAULT_MIN_EV_PCT = 10;
 
-export const ACTION_MARKETS = new Set(["GIR", "Total score", "Birdies", "Fairways hit"]);
+export const ACTION_MARKETS = new Set(["GIR", "Total score", "Birdies", "Bogeys", "Fairways hit"]);
 
 /** @deprecated use ACTION_MARKETS */
 export const PRIMARY_ACTION_MARKETS = ACTION_MARKETS;
