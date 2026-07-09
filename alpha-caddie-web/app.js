@@ -5051,8 +5051,7 @@ function liveCurrentRoundTotalScoreMuDelta(row) {
   if (!Number.isFinite(today)) return 0;
 
   if (Number.isFinite(thru) && thru >= 18) {
-    const finalStrokes = par18 + today;
-    return clamp(finalStrokes - baseMu, -14, 14);
+    return 0;
   }
   if (!Number.isFinite(thru) || thru < 1) return 0;
 
@@ -5100,6 +5099,7 @@ function livePartialRoundCountPropAdjust(market, row) {
   const thru = Math.round(num(row.dg_live_thru, NaN));
   const today = num(row.dg_live_today, NaN);
   if (!Number.isFinite(thru) || thru < 1) return out;
+  if (thru >= 18) return out;
   const rem = 18 - thru;
   if (rem < 0) return out;
 
@@ -5403,9 +5403,9 @@ function coherentCountingMeansAtTotal(row, projectedTotal) {
   };
 }
 
-function ouProjectedTotalScoreMean(row) {
+function ouProjectedTotalScoreMean(row, opts = {}) {
   const dgId = Math.round(num(row?.dg_id, NaN));
-  const liveRoundAdj = liveCurrentRoundTotalScoreMuDelta(row);
+  const liveRoundAdj = ouInPlayMuDeltaForTotalScore(row, opts);
   const baseMean = ouMeanCountingStat("Total score", row);
   const baseScalar = Number.isFinite(baseMean) ? baseMean : ouFallbackScalarForProjectedMean("Total score", row, ouStatRec("Total score"));
   return (
@@ -5415,7 +5415,7 @@ function ouProjectedTotalScoreMean(row) {
     combinedCourseDifficultyOUMuAdjustment("Total score", row) +
     eventWeekFieldScoringMuAdjustment(row) +
     liveRoundAdj +
-    livePartialRoundCountPropAdjust("Total score", row).muDelta +
+    ouInPlayCountingAdjust("Total score", row, opts).muDelta +
     pricingStatMuAdjustment("Total score", dgId)
   );
 }
@@ -5759,12 +5759,39 @@ function eventPropBookAlignedMarket(mKey) {
   return Boolean(align);
 }
 
+/** Round Projections vs DK/PrizePicks full-round O/U — never apply in-play μ collapse on this table. */
+const OU_PROJ_TABLE_MEAN_OPTS = Object.freeze({ useFullRoundBookMean: true });
+
+function ouUsesFullRoundBookMean(opts = {}) {
+  return opts.useFullRoundBookMean === true || opts.skipLivePartial === true;
+}
+
+function ouInPlayMuDeltaForTotalScore(row, opts = {}) {
+  if (ouUsesFullRoundBookMean(opts)) return 0;
+  return liveCurrentRoundTotalScoreMuDelta(row);
+}
+
+function ouInPlayCountingAdjust(market, row, opts = {}) {
+  if (ouUsesFullRoundBookMean(opts)) return { muDelta: 0, sigmaScale: 1 };
+  return livePartialRoundCountPropAdjust(market, row);
+}
+
+function ouInPlaySigmaScaleForMarket(market, row, rec, opts = {}) {
+  if (ouUsesFullRoundBookMean(opts)) return 1;
+  const countLive = livePartialRoundCountPropAdjust(market, row);
+  const mKey = ouModelMarketKey(market) || "Total score";
+  if (mKey === "Total score") {
+    return countLive.sigmaScale * sigmaLiveRoundShrinkForTotalScore(row, rec);
+  }
+  return countLive.sigmaScale;
+}
+
 /** Model-projected mean μ for one market / player / round (weather, live course, partial live round, pricing). */
-function ouProjectedMean(market, row) {
+function ouProjectedMean(market, row, opts = {}) {
   const mKey = ouModelMarketKey(market) || "Total score";
   const rec = ouStatRec(mKey);
   const dgId = Math.round(num(row?.dg_id, NaN));
-  const countLive = livePartialRoundCountPropAdjust(mKey, row);
+  const countLive = ouInPlayCountingAdjust(mKey, row, opts);
 
   if (eventPropBookAlignedMarket(mKey)) {
     if (mKey === "Total score") {
@@ -5774,7 +5801,7 @@ function ouProjectedMean(market, row) {
         : ouFallbackScalarForProjectedMean(mKey, row, rec);
       return (
         baseScalar +
-        liveCurrentRoundTotalScoreMuDelta(row) +
+        ouInPlayMuDeltaForTotalScore(row, opts) +
         countLive.muDelta
       );
     }
@@ -5783,7 +5810,7 @@ function ouProjectedMean(market, row) {
   }
 
   if (mKey === "Total score") {
-    return ouProjectedTotalScoreMean(row);
+    return ouProjectedTotalScoreMean(row, opts);
   }
 
   if (
@@ -5808,7 +5835,7 @@ function ouProjectedMean(market, row) {
     !pinSheetAppliesToProjectionRow(row) &&
     (mKey === "Birdies" || mKey === "Pars" || mKey === "Bogeys" || mKey === "GIR" || mKey === "Fairways hit")
   ) {
-    const totalMu = ouProjectedTotalScoreMean(row);
+    const totalMu = ouProjectedTotalScoreMean(row, opts);
     if (Number.isFinite(totalMu)) {
       const coherent = coherentCountingMeansAtTotal(row, totalMu);
       const v = coherent[mKey];
@@ -5823,7 +5850,7 @@ function ouProjectedMean(market, row) {
     }
   }
 
-  const liveRoundAdj = mKey === "Total score" ? liveCurrentRoundTotalScoreMuDelta(row) : 0;
+  const liveRoundAdj = mKey === "Total score" ? ouInPlayMuDeltaForTotalScore(row, opts) : 0;
   const baseMean = ouMeanCountingStat(mKey, row);
   const baseScalar = Number.isFinite(baseMean) ? baseMean : ouFallbackScalarForProjectedMean(mKey, row, rec);
 
@@ -5867,15 +5894,15 @@ function ouProjectedMean(market, row) {
   );
 }
 
-function modelProbOverMarket(market, row, line) {
+function modelProbOverMarket(market, row, line, opts = {}) {
   const mKey = ouModelMarketKey(market) || "Total score";
-  const mu = ouProjectedMean(market, row);
+  const rec = ouStatRec(mKey);
+  const mu = ouProjectedMean(market, row, opts);
   if (!Number.isFinite(mu)) return NaN;
-  const countLive = livePartialRoundCountPropAdjust(mKey, row);
-  let sig = sigmaForOu(mKey, row) * countLive.sigmaScale * marketBookSigmaScale(mKey);
-  if (!Number.isFinite(sig) || sig < 0.06) {
-    sig = sigmaForOu(mKey, row) * marketBookSigmaScale(mKey);
-  }
+  const sig =
+    sigmaForOu(mKey, row) *
+    ouInPlaySigmaScaleForMarket(mKey, row, rec, opts) *
+    marketBookSigmaScale(mKey);
   const z = (line - mu) / sig;
   return 1 - normalCdf(z);
 }
@@ -6708,7 +6735,14 @@ function ouKellyStakeForProjectionSide(market, player, pick, side, bankroll, kel
   if (!pick) return NaN;
   const pImpOver = impliedProbFromAmerican(pick.over);
   const pImpUnder = impliedProbFromAmerican(pick.under);
-  const { pOver, pUnder, edgeO, edgeU } = ouEdgeForCell(market, player, pick.line, pImpOver, pImpUnder);
+  const { pOver, pUnder, edgeO, edgeU } = ouEdgeForCell(
+    market,
+    player,
+    pick.line,
+    pImpOver,
+    pImpUnder,
+    OU_PROJ_TABLE_MEAN_OPTS,
+  );
   const edge = side === "over" ? edgeO : edgeU;
   if (!Number.isFinite(edge) || edge <= 0) return 0;
   const pModel = side === "over" ? pOver : pUnder;
@@ -6716,14 +6750,14 @@ function ouKellyStakeForProjectionSide(market, player, pick, side, bankroll, kel
   return ouKellyStakeDollars(pModel, am, bankroll, kellyFraction);
 }
 
-function ouEdgeForCell(market, p, L, pImpOver, pImpUnder) {
+function ouEdgeForCell(market, p, L, pImpOver, pImpUnder, opts = {}) {
   const mKey = ouModelMarketKey(market) || market;
-  const pOver = clampProb01(modelProbOverMarket(market, p, L));
+  const pOver = clampProb01(modelProbOverMarket(market, p, L, opts));
   if (!Number.isFinite(pOver)) return { pOver: NaN, pUnder: NaN, edgeO: NaN, edgeU: NaN };
   const pUnder = clampProb01(1 - pOver);
   let edgeO = Number.isFinite(pImpOver) ? pOver - pImpOver : NaN;
   let edgeU = Number.isFinite(pImpUnder) ? pUnder - pImpUnder : NaN;
-  const mu = ouProjectedMean(market, p);
+  const mu = ouProjectedMean(market, p, opts);
   if (eventPropBookAlignedMarket(mKey) && Number.isFinite(mu) && Number.isFinite(L)) {
     if (mu <= L) edgeO = Number.isFinite(edgeO) ? Math.min(0, edgeO) : edgeO;
     if (mu >= L) edgeU = Number.isFinite(edgeU) ? Math.min(0, edgeU) : edgeU;
@@ -6950,7 +6984,7 @@ function ouSortedPlayerRowsProjection(round) {
   for (const p of rows) {
     const id = Math.round(num(p.dg_id, NaN));
     const key = Number.isFinite(id) && id > 0 ? id : String(p.player_name || "");
-    scoreById.set(key, ouProjectedMean("Total score", p));
+    scoreById.set(key, ouProjectedMean("Total score", p, OU_PROJ_TABLE_MEAN_OPTS));
   }
   rows.sort((a, b) => {
     const ida = Math.round(num(a.dg_id, NaN));
@@ -7033,7 +7067,14 @@ function ouAttachProjectionRowMetrics(row) {
     if (!pick) return { edge: NaN, sortOdds: NaN };
     const pImpOver = impliedProbFromAmerican(pick.over);
     const pImpUnder = impliedProbFromAmerican(pick.under);
-    const { edgeO, edgeU } = ouEdgeForCell(col.market, player, pick.line, pImpOver, pImpUnder);
+    const { edgeO, edgeU } = ouEdgeForCell(
+      col.market,
+      player,
+      pick.line,
+      pImpOver,
+      pImpUnder,
+      OU_PROJ_TABLE_MEAN_OPTS,
+    );
     return {
       edge: side === "over" ? edgeO : edgeU,
       sortOdds: side === "over" ? pick.over : pick.under,
@@ -7071,7 +7112,7 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
       const dkPick = ouLookupBookPick(dkPickMap, id, nameKey, canon);
       const ppPick = ouLookupBookPick(ppPickMap, id, nameKey, canon);
       if (!dkPick && !ppPick) continue;
-      const mu = ouProjectedMean(col.market, player);
+      const mu = ouProjectedMean(col.market, player, OU_PROJ_TABLE_MEAN_OPTS);
       const marketAvgHit = ouCachedPlayerMarketAverage(col.market, player, avgWindow);
       for (const side of ["over", "under"]) {
         const row = {
@@ -7238,9 +7279,12 @@ function drawOuProjDetailDistribution(canvas, market, player, line) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
   const mKey = ouModelMarketKey(market) || "Total score";
-  const mu = ouProjectedMean(market, player);
-  const countLive = livePartialRoundCountPropAdjust(mKey, player);
-  let sig = sigmaForOu(mKey, player) * countLive.sigmaScale * marketBookSigmaScale(mKey);
+  const mu = ouProjectedMean(market, player, OU_PROJ_TABLE_MEAN_OPTS);
+  const countLive = ouInPlayCountingAdjust(mKey, player, OU_PROJ_TABLE_MEAN_OPTS);
+  let sig =
+    sigmaForOu(mKey, player) *
+    ouInPlaySigmaScaleForMarket(mKey, player, ouStatRec(mKey), OU_PROJ_TABLE_MEAN_OPTS) *
+    marketBookSigmaScale(mKey);
   if (!Number.isFinite(sig) || sig < 0.06) {
     sig = sigmaForOu(mKey, player) * marketBookSigmaScale(mKey);
   }
@@ -7326,8 +7370,11 @@ function buildOuProjDetailPanel(player, col, side, mu, pick, rawName, dkPick, pp
   wrap.className = "ou-proj-detail-wrap";
   const mKey = ouModelMarketKey(col.market) || "Total score";
   const rec = ouStatRec(mKey);
-  const countLive = livePartialRoundCountPropAdjust(mKey, player);
-  let sig = sigmaForOu(mKey, player) * countLive.sigmaScale * marketBookSigmaScale(mKey);
+  const countLive = ouInPlayCountingAdjust(mKey, player, OU_PROJ_TABLE_MEAN_OPTS);
+  let sig =
+    sigmaForOu(mKey, player) *
+    ouInPlaySigmaScaleForMarket(mKey, player, rec, OU_PROJ_TABLE_MEAN_OPTS) *
+    marketBookSigmaScale(mKey);
   if (!Number.isFinite(sig) || sig < 0.06) {
     sig = sigmaForOu(mKey, player) * marketBookSigmaScale(mKey);
   }
@@ -7674,8 +7721,11 @@ function buildOuTable() {
 
     if (Number.isFinite(mu)) {
       const mKey = ouModelMarketKey(col.market) || "Total score";
-      const countLive = livePartialRoundCountPropAdjust(mKey, player);
-      let sig = sigmaForOu(mKey, player) * countLive.sigmaScale * marketBookSigmaScale(mKey);
+      const countLive = ouInPlayCountingAdjust(mKey, player, OU_PROJ_TABLE_MEAN_OPTS);
+      let sig =
+        sigmaForOu(mKey, player) *
+        ouInPlaySigmaScaleForMarket(mKey, player, ouStatRec(mKey), OU_PROJ_TABLE_MEAN_OPTS) *
+        marketBookSigmaScale(mKey);
       if (!Number.isFinite(sig) || sig < 0.06) {
         sig = sigmaForOu(mKey, player) * marketBookSigmaScale(mKey);
       }
