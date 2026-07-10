@@ -73,6 +73,50 @@ function girFairwaysCountFromRawForOu(v, holes) {
   return Math.min(holes, Math.max(0, Math.round(n)));
 }
 
+function actualBirdiesForAvg(row) {
+  const b = num(row?.birdies, NaN);
+  if (Number.isFinite(b)) return b + Math.max(0, num(row?.eagles_or_better, 0));
+  return NaN;
+}
+
+function historyRowHasStoredCountingStat(row, key) {
+  if (!row || typeof row !== "object") return false;
+  const v = row[key];
+  if (v == null || v === "") return false;
+  const n = Number(v);
+  if (!Number.isFinite(n)) return false;
+  if ((key === "gir" || key === "fairways" || key === "putts") && (n === 0 || n === 1)) return false;
+  if (
+    (key === "birdies" || key === "pars" || key === "bogies" || key === "bogeys") &&
+    n === 0 &&
+    row._from_live_tournament_stats &&
+    !row._from_pgatour
+  ) {
+    return false;
+  }
+  return true;
+}
+
+function ouMarketAvgValueForRoundRow(statKey, row) {
+  const v = statKey === "birdies" ? actualBirdiesForAvg(row) : statKey === "bogeys" ? actualBogeys(row) : NaN;
+  if (!Number.isFinite(v)) return NaN;
+  if (statKey === "birdies") {
+    if (
+      historyRowHasStoredCountingStat(row, "birdies") ||
+      historyRowHasStoredCountingStat(row, "eagles_or_better") ||
+      historyRowHasStoredCountingStat(row, "eagles")
+    ) {
+      return v;
+    }
+    return NaN;
+  }
+  if (statKey === "bogeys") {
+    if (historyRowHasStoredCountingStat(row, "bogeys") || historyRowHasStoredCountingStat(row, "bogies")) return v;
+    return NaN;
+  }
+  return v;
+}
+
 function actualGirFromHistoryRow(row) {
   let v = girFairwaysCountFromRawForOu(row?.gir, 18);
   if (!Number.isFinite(v) || v === 0 || v === 1) return NaN;
@@ -87,6 +131,8 @@ const appSrc = readFileSync(join(WEB, "app.js"), "utf8");
 for (const needle of [
   "ouPlayerMarketCourseShardRounds",
   "ouPlayerMarketAvgHistoryStillLoading",
+  "ouMarketAvgValueForRoundRow",
+  "ouFieldHistoryReadyForAverages()",
   "courseFitDistRoundCountsAsActual(row)",
   "ensurePropsCourseIndexForKeyAsync(vk)",
   "ouModelMarketKey(col?.market)",
@@ -100,6 +146,9 @@ if (avgFnBody.includes("ouPlayerModelAvgForMarket")) {
 }
 if (avgFnBody.includes('source: "model"')) {
   fail('ouPlayerMarketAverage must not emit source: "model"');
+}
+if (!avgFnBody.includes("ouMarketAvgValueForRoundRow")) {
+  fail("ouPlayerMarketAverage must use ouMarketAvgValueForRoundRow for raw posted stats");
 }
 const ratingFnIdx = appSrc.indexOf("function ouPlayerAvgForMarketRating");
 const ratingFnBody = ratingFnIdx >= 0 ? appSrc.slice(ratingFnIdx, ratingFnIdx + 500) : "";
@@ -218,6 +267,27 @@ if (existsSync(hovlandShardPath)) {
     fail(
       `Hovland dg_gir_pct×18 (${bogusDgPct.toFixed(2)}) too close to real season GIR (${seasonGirMean.toFixed(2)}) — average column must use history only`,
     );
+  }
+}
+
+// Field season birdies averages must be real history (~3–5), not bogus live-placeholder zeros.
+const taylorId = 13126;
+const taylorShardPath = join(WEB, `player-history/by-dg/${taylorId}.json`);
+if (existsSync(taylorShardPath)) {
+  const taylorShard = JSON.parse(readFileSync(taylorShardPath, "utf8"));
+  const seasonBirdies = (taylorShard.rounds || [])
+    .filter((r) => historyRoundSeasonYear(r) === seasonYear)
+    .map((r) => ouMarketAvgValueForRoundRow("birdies", r))
+    .filter(Number.isFinite);
+  const seasonBirdMean = mean(seasonBirdies);
+  if (!Number.isFinite(seasonBirdMean) || seasonBirdies.length < 20) {
+    fail(`Taylor ${seasonYear} season birdies history too thin (n=${seasonBirdies.length})`);
+  }
+  if (seasonBirdMean < 2.5 || seasonBirdMean > 5.5) {
+    fail(`Taylor ${seasonYear} season birdies mean out of range: ${seasonBirdMean.toFixed(2)}`);
+  }
+  if (seasonBirdMean < 0.05) {
+    fail(`Taylor ${seasonYear} season birdies mean is ~0 — live placeholder rows leaking into averages`);
   }
 }
 

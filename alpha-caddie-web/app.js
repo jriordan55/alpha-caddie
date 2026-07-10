@@ -3267,11 +3267,39 @@ function ouPlayerMarketAvgHistoryStillLoading(player, windowMode = ouProjAvgWind
   if (windowMode === "course") {
     if (!ouCourseShardReadyForProjAvg()) return true;
     if (ouFieldHistoryLoadPromise || ouCourseShardForProjAvgPromise) return true;
+  } else if (windowMode === "season" || typeof windowMode === "number") {
+    if (!ouFieldHistoryReadyForAverages()) return true;
   }
   const id = Math.round(num(player?.dg_id, NaN));
   if (!Number.isFinite(id)) return false;
   if (historyBucketLoaded(id) || playerHistoryAbsentDgIds.has(id)) return false;
   return Boolean(HISTORY?._loading) || Boolean(ouFieldHistoryLoadPromise) || Boolean(ouCourseShardForProjAvgPromise);
+}
+
+/** Round Projections Average: only count rows with a real posted stat (not inferred 0 from live placeholders). */
+function ouMarketAvgValueForRoundRow(statKey, row) {
+  const v = actualForRoundRow(statKey, row);
+  if (!Number.isFinite(v)) return NaN;
+  if (statKey === "birdies") {
+    if (
+      historyRowHasStoredCountingStat(row, "birdies") ||
+      historyRowHasStoredCountingStat(row, "eagles_or_better") ||
+      historyRowHasStoredCountingStat(row, "eagles")
+    ) {
+      return v;
+    }
+    return NaN;
+  }
+  if (statKey === "bogeys") {
+    if (historyRowHasStoredCountingStat(row, "bogeys") || historyRowHasStoredCountingStat(row, "bogies")) return v;
+    return NaN;
+  }
+  if (statKey === "gir" || statKey === "fairways" || statKey === "pars") {
+    const rawKey = statKey === "bogeys" ? "bogeys" : statKey;
+    if (!historyRowHasStoredCountingStat(row, rawKey)) return NaN;
+    return v;
+  }
+  return v;
 }
 
 /** Player historical average for the selected window (raw completed-round stats only). */
@@ -3287,7 +3315,7 @@ function ouPlayerMarketAverage(market, player, windowMode = ouProjAvgWindowMode(
   const statKey = ouMarketRatingHistoryStatKey(mKey);
   const vals = [];
   for (const r of rounds) {
-    const v = actualForRoundRow(statKey, r);
+    const v = ouMarketAvgValueForRoundRow(statKey, r);
     if (Number.isFinite(v)) vals.push(v);
   }
   if (!vals.length) {
@@ -3387,11 +3415,7 @@ function scheduleOuProjectionFieldHistoryLoad() {
 const OU_PROJ_AVG_CACHE = new Map();
 
 function ouPlayerAvgHistoryPending(player) {
-  const id = Math.round(num(player?.dg_id, NaN));
-  if (!Number.isFinite(id)) return false;
-  if (ouProjAvgWindowMode() === "course" && !ouCourseShardReadyForProjAvg()) return true;
-  if (historyBucketLoaded(id) || playerHistoryAbsentDgIds.has(id)) return false;
-  return Boolean(HISTORY?._loading) || Boolean(ouFieldHistoryLoadPromise) || Boolean(ouCourseShardForProjAvgPromise);
+  return ouPlayerMarketAvgHistoryStillLoading(player, ouProjAvgWindowMode());
 }
 
 function ouProjectionFieldHistorySeasonYear() {
@@ -7146,6 +7170,14 @@ function formatOuProjectedMean(mu) {
   return Number.isFinite(mu) ? mu.toFixed(1) : "—";
 }
 
+/** Average column: never show bogus 0.0 when counting stats lack real history. */
+function formatOuMarketAverage(mu, market) {
+  if (!Number.isFinite(mu)) return "—";
+  const mKey = ouModelMarketKey(market) || "Total score";
+  if (mu === 0 && mKey !== "Total score") return "—";
+  return mu.toFixed(1);
+}
+
 function projectionSortComparable(val, dir) {
   if (typeof val === "string") return val;
   if (Number.isFinite(val)) return val;
@@ -7777,7 +7809,7 @@ function buildOuTable() {
     ) {
       avgTd.textContent = "…";
     } else {
-      avgTd.textContent = Number.isFinite(avgHit.avg) ? formatOuProjectedMean(avgHit.avg) : "—";
+      avgTd.textContent = formatOuMarketAverage(avgHit.avg, col.market);
     }
     avgTd.title = ouPlayerMarketAverageTitle(col.market, avgHit);
     tr.appendChild(avgTd);
@@ -20810,9 +20842,14 @@ function birdiesPlusEaglesFromRow(row) {
   const b = historyScalarOrNaN(row.birdies);
   const eob = historyScalarOrNaN(row.eagles_or_better);
   const eg = historyScalarOrNaN(row.eagles);
-  const eagleAdd = Number.isFinite(eob) ? eob : Number.isFinite(eg) ? eg : 0;
-  if (!Number.isFinite(b) && !Number.isFinite(eob) && !Number.isFinite(eg)) return NaN;
-  return (Number.isFinite(b) ? b : 0) + eagleAdd;
+  if (!Number.isFinite(b)) {
+    if (Number.isFinite(eob) && eob > 0) return eob;
+    if (Number.isFinite(eg) && eg > 0) return eg;
+    return NaN;
+  }
+  const eagleAdd =
+    Number.isFinite(eob) && eob > 0 ? eob : Number.isFinite(eg) && eg > 0 ? eg : 0;
+  return b + eagleAdd;
 }
 
 /**
