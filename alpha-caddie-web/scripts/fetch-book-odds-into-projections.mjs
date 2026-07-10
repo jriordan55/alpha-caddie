@@ -48,6 +48,7 @@ import {
 import { fetchDataGolfOutrightsApi } from "./datagolf-outrights-api.mjs";
 import { fetchSportsbookOutrightsFromUrls } from "./sportsbook-outrights-scraper.mjs";
 import { appendDkRoundProjectionAuditCsv } from "./export-dk-round-model-audit-csv.mjs";
+import { appendPpRoundProjectionAuditCsv } from "./export-pp-round-model-audit-csv.mjs";
 import { refreshRoundProjectionProps } from "./merge-dk-round-props.mjs";
 import { refreshPrizePicksRoundProps } from "./merge-pp-round-props.mjs";
 import { projectionExportMeta } from "./projection-export-meta.mjs";
@@ -413,6 +414,14 @@ async function main() {
         console.log(
           `[fetch-book-odds] PrizePicks round props: ${nPp} fresh rows (${ppMerged.length} total props)`,
         );
+        try {
+          const ppAudit = appendPpRoundProjectionAuditCsv(next);
+          if (ppAudit.appended > 0) {
+            console.log(`[fetch-book-odds] PP round audit CSV +${ppAudit.appended} rows -> ${ppAudit.path}`);
+          }
+        } catch (e) {
+          console.warn("[fetch-book-odds] PP round audit CSV:", e.message || e);
+        }
       } else if (ppError && !String(ppError).startsWith("skipped")) {
         console.warn(`[fetch-book-odds] PrizePicks: ${ppError}`);
       }

@@ -61,11 +61,11 @@ const MATCHUP_DETAIL_CANDIDATES = [
 ];
 
 const MARKET_SPECS = [
-  { market: "Total score", modelCol: "round_score_line", bookCol: "round_score_book_line", overOdds: "round_score_over_odds", underOdds: "round_score_under_odds", overRes: "round_score_over", underRes: "round_score_under", actual: "actual_round_score", decimals: 2 },
-  { market: "Birdies", modelCol: "birdies_line", bookCol: "birdies_book_line", overOdds: "birdies_over_odds", underOdds: "birdies_under_odds", overRes: "birdies_over", underRes: "birdies_under", actual: "actual_birdies", decimals: 1 },
-  { market: "Bogeys", modelCol: "bogeys_line", bookCol: "bogeys_book_line", overOdds: "bogeys_over_odds", underOdds: "bogeys_under_odds", overRes: "bogeys_over", underRes: "bogeys_under", actual: "actual_bogeys", decimals: 1 },
-  { market: "GIR", modelCol: "gir_line", bookCol: "gir_book_line", overOdds: "gir_over_odds", underOdds: "gir_under_odds", overRes: "gir_over", underRes: "gir_under", actual: "actual_gir", decimals: 0 },
-  { market: "Fairways hit", modelCol: "fairways_line", bookCol: "fairways_book_line", overOdds: "fairways_over_odds", underOdds: "fairways_under_odds", overRes: "fairways_over", underRes: "fairways_under", actual: "actual_fairways", decimals: 0 },
+  { market: "Total score", modelCol: "round_score_line", bookCol: "round_score_book_line", ppBookCol: "round_score_pp_line", overOdds: "round_score_over_odds", underOdds: "round_score_under_odds", ppOverOdds: "round_score_pp_over_odds", ppUnderOdds: "round_score_pp_under_odds", overRes: "round_score_over", underRes: "round_score_under", actual: "actual_round_score", decimals: 2 },
+  { market: "Birdies", modelCol: "birdies_line", bookCol: "birdies_book_line", ppBookCol: "birdies_pp_line", overOdds: "birdies_over_odds", underOdds: "birdies_under_odds", ppOverOdds: "birdies_pp_over_odds", ppUnderOdds: "birdies_pp_under_odds", overRes: "birdies_over", underRes: "birdies_under", actual: "actual_birdies", decimals: 1 },
+  { market: "Bogeys", modelCol: "bogeys_line", bookCol: "bogeys_book_line", ppBookCol: "bogeys_pp_line", overOdds: "bogeys_over_odds", underOdds: "bogeys_under_odds", ppOverOdds: "bogeys_pp_over_odds", ppUnderOdds: "bogeys_pp_under_odds", overRes: "bogeys_over", underRes: "bogeys_under", actual: "actual_bogeys", decimals: 1 },
+  { market: "GIR", modelCol: "gir_line", bookCol: "gir_book_line", ppBookCol: "gir_pp_line", overOdds: "gir_over_odds", underOdds: "gir_under_odds", ppOverOdds: "gir_pp_over_odds", ppUnderOdds: "gir_pp_under_odds", overRes: "gir_over", underRes: "gir_under", actual: "actual_gir", decimals: 0 },
+  { market: "Fairways hit", modelCol: "fairways_line", bookCol: "fairways_book_line", ppBookCol: "fairways_pp_line", overOdds: "fairways_over_odds", underOdds: "fairways_under_odds", ppOverOdds: "fairways_pp_over_odds", ppUnderOdds: "fairways_pp_under_odds", overRes: "fairways_over", underRes: "fairways_under", actual: "actual_fairways", decimals: 0 },
 ];
 
 const MARKET_ORDER = [
@@ -1325,87 +1325,112 @@ function explodeDetailToBets(rows) {
     if (row.pricing_mode !== "default" || row.pricing_skill !== "default") continue;
     if (row.book_odds_source !== "pre_round_audit") continue;
     for (const spec of MARKET_SPECS) {
-      const bookLine = parseLine(row[spec.bookCol]);
-      if (!Number.isFinite(bookLine)) continue;
-      const modelLine = parseLine(row[spec.modelCol]);
-      const overOdds = nNum(row[spec.overOdds], NaN);
-      const underOdds = nNum(row[spec.underOdds], NaN);
-      const actual = parseLine(row[spec.actual]);
-      const mu = Number.isFinite(modelLine) ? modelLine : NaN;
-      const betContext = {
-        gir_minus_fw: nNum(row.gir_minus_fw, NaN),
-        round: Math.round(nNum(row.round, NaN)),
-      };
-      if (!isActionableMarket(spec.market)) continue;
-      let { edgeOver, edgeUnder } = modelEdgePctAtLine(spec.market, mu, bookLine, overOdds, underOdds);
-      ({ edgeOver, edgeUnder } = capDirectionalPostedEdges(edgeOver, edgeUnder, mu, bookLine));
-      const fair = modelEdgeVsFairAtLine(spec.market, mu, bookLine, overOdds, underOdds);
-      const pModelOver = fair.pOver;
-      const pModelUnder = fair.pUnder;
-      const marketMinEv = minEvForMarket(spec.market, state.minEv);
-      const pick = pickBetSide(edgeOver, edgeUnder, marketMinEv, mu, bookLine);
-      const bestSide =
-        Number.isFinite(edgeOver) && Number.isFinite(edgeUnder)
-          ? edgeOver >= edgeUnder
-            ? { side: "over", edge: edgeOver }
-            : { side: "under", edge: edgeUnder }
-          : null;
-      const activePick = pick || (state.show === "all" ? bestSide : null);
-      const side = activePick?.side || null;
-      const betRes = side === "over" ? row[spec.overRes] : side === "under" ? row[spec.underRes] : "";
-      const betOdds = side === "over" ? overOdds : side === "under" ? underOdds : NaN;
-      const fairProb = side === "over" ? fair.fairOver : side === "under" ? fair.fairUnder : NaN;
-      const postedProb =
-        side === "over"
-          ? impliedProbFromAmerican(overOdds)
-          : side === "under"
-            ? impliedProbFromAmerican(underOdds)
-            : NaN;
-      const modelProb = side === "over" ? pModelOver : side === "under" ? pModelUnder : NaN;
-      const edgeFairPick =
-        side === "over" ? fair.edgeFairOver : side === "under" ? fair.edgeFairUnder : NaN;
-      const qualified = Boolean(pick) && qualifiesBet({ market: spec.market });
-      out.push({
-        event_name: row.event_name,
-        round: row.round,
-        dg_id: row.dg_id,
-        player_name: row.player_name,
-        market: spec.market,
-        modelLine,
-        bookLine,
-        diff: Number.isFinite(modelLine) ? modelLine - bookLine : NaN,
-        overOdds,
-        underOdds,
-        overRes: row[spec.overRes],
-        underRes: row[spec.underRes],
-        actual,
-        edgeOver,
-        edgeUnder,
-        edgeFairOver: fair.edgeFairOver,
-        edgeFairUnder: fair.edgeFairUnder,
-        fairOver: fair.fairOver,
-        fairUnder: fair.fairUnder,
-        pModelOver,
-        pModelUnder,
-        pickSide: side,
-        pickEdge: activePick?.edge ?? NaN,
-        edgeFairPick,
-        modelProb,
-        fairProb,
-        postedProb,
-        beatsFairPreBet:
-          qualified && Number.isFinite(modelProb) && Number.isFinite(fairProb) ? modelProb > fairProb : null,
-        qualified,
-        betRes,
-        betOdds,
-        betDec: americanToDecimal(betOdds),
-        exported_at: row.exported_at,
-        pnl: qualified && side ? pnlForResult(String(betRes).trim().toUpperCase(), betOdds) : NaN,
-        decimals: spec.decimals,
-      });
+      out.push(...explodeDetailBetForBook(row, spec, {
+        bookCol: spec.bookCol,
+        overOddsCol: spec.overOdds,
+        underOddsCol: spec.underOdds,
+        bookLabel: "DraftKings",
+      }));
     }
   }
   return out;
+}
+
+function explodePpDetailToBets(rows) {
+  /** @type {object[]} */
+  const out = [];
+  for (const row of rows) {
+    if (row.pricing_mode !== "default" || row.pricing_skill !== "default") continue;
+    if (String(row.pp_book_odds_source || "").trim() !== "prizepicks_live") continue;
+    for (const spec of MARKET_SPECS) {
+      out.push(...explodeDetailBetForBook(row, spec, {
+        bookCol: spec.ppBookCol,
+        overOddsCol: spec.ppOverOdds,
+        underOddsCol: spec.ppUnderOdds,
+        bookLabel: "PrizePicks",
+      }));
+    }
+  }
+  return out;
+}
+
+function explodeDetailBetForBook(row, spec, book) {
+  const bookLine = parseLine(row[book.bookCol]);
+  if (!Number.isFinite(bookLine)) return [];
+  const modelLine = parseLine(row[spec.modelCol]);
+  const overOdds = nNum(row[book.overOddsCol], NaN);
+  const underOdds = nNum(row[book.underOddsCol], NaN);
+  const actual = parseLine(row[spec.actual]);
+  const mu = Number.isFinite(modelLine) ? modelLine : NaN;
+  if (!isActionableMarket(spec.market)) return [];
+  let { edgeOver, edgeUnder } = modelEdgePctAtLine(spec.market, mu, bookLine, overOdds, underOdds);
+  ({ edgeOver, edgeUnder } = capDirectionalPostedEdges(edgeOver, edgeUnder, mu, bookLine));
+  const fair = modelEdgeVsFairAtLine(spec.market, mu, bookLine, overOdds, underOdds);
+  const pModelOver = fair.pOver;
+  const pModelUnder = fair.pUnder;
+  const marketMinEv = minEvForMarket(spec.market, state.minEv);
+  const pick = pickBetSide(edgeOver, edgeUnder, marketMinEv, mu, bookLine);
+  const bestSide =
+    Number.isFinite(edgeOver) && Number.isFinite(edgeUnder)
+      ? edgeOver >= edgeUnder
+        ? { side: "over", edge: edgeOver }
+        : { side: "under", edge: edgeUnder }
+      : null;
+  const activePick = pick || (state.show === "all" ? bestSide : null);
+  const side = activePick?.side || null;
+  const betRes = side === "over" ? row[spec.overRes] : side === "under" ? row[spec.underRes] : "";
+  const betOdds = side === "over" ? overOdds : side === "under" ? underOdds : NaN;
+  const fairProb = side === "over" ? fair.fairOver : side === "under" ? fair.fairUnder : NaN;
+  const postedProb =
+    side === "over"
+      ? impliedProbFromAmerican(overOdds)
+      : side === "under"
+        ? impliedProbFromAmerican(underOdds)
+        : NaN;
+  const modelProb = side === "over" ? pModelOver : side === "under" ? pModelUnder : NaN;
+  const edgeFairPick = side === "over" ? fair.edgeFairOver : side === "under" ? fair.edgeFairUnder : NaN;
+  const qualified = Boolean(pick) && qualifiesBet({ market: spec.market });
+  return [
+    {
+      event_name: row.event_name,
+      round: row.round,
+      dg_id: row.dg_id,
+      player_name: row.player_name,
+      market: spec.market,
+      book: book.bookLabel,
+      modelLine,
+      bookLine,
+      diff: Number.isFinite(modelLine) ? modelLine - bookLine : NaN,
+      overOdds,
+      underOdds,
+      overRes: row[spec.overRes],
+      underRes: row[spec.underRes],
+      actual,
+      edgeOver,
+      edgeUnder,
+      edgeFairOver: fair.edgeFairOver,
+      edgeFairUnder: fair.edgeFairUnder,
+      fairOver: fair.fairOver,
+      fairUnder: fair.fairUnder,
+      pModelOver,
+      pModelUnder,
+      pickSide: side,
+      pickEdge: activePick?.edge ?? NaN,
+      edgeFairPick,
+      modelProb,
+      fairProb,
+      postedProb,
+      beatsFairPreBet:
+        qualified && Number.isFinite(modelProb) && Number.isFinite(fairProb) ? modelProb > fairProb : null,
+      qualified,
+      betRes,
+      betOdds,
+      betDec: americanToDecimal(betOdds),
+      exported_at: row.exported_at,
+      pnl: qualified && side ? pnlForResult(String(betRes).trim().toUpperCase(), betOdds) : NaN,
+      decimals: spec.decimals,
+    },
+  ];
 }
 
 function explodeMatchupDetailToBets(rows) {
@@ -1483,7 +1508,7 @@ function decimalToAmerican(dec) {
 }
 
 function activeBetRows() {
-  let rows = [...explodeDetailToBets(DETAIL_ROWS), ...explodeMatchupDetailToBets(MATCHUP_DETAIL_ROWS)];
+  let rows = [...explodeDetailToBets(DETAIL_ROWS), ...explodePpDetailToBets(DETAIL_ROWS), ...explodeMatchupDetailToBets(MATCHUP_DETAIL_ROWS)];
   if (state.tournament) rows = rows.filter((r) => r.event_name === state.tournament);
   if (state.market) rows = rows.filter((r) => r.market === state.market);
   if (state.side) {

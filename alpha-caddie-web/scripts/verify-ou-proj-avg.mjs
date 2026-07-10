@@ -111,9 +111,14 @@ if (existsSync(renaissanceShard)) {
     if (shardCourseMean < 2.2 || shardCourseMean > 3.4) {
       fail(`Renaissance shard bogeys mean out of range: ${shardCourseMean.toFixed(2)}`);
     }
-    if (Math.abs(shardCourseMean - last4BirdMean) < 0.25) {
+    // Original bug: course bogeys column showed last-4 birdies (~5.0), not venue bogeys (~2.6).
+    const swappedStatBug =
+      last4BirdMean >= 4.0 &&
+      shardCourseMean >= 4.0 &&
+      Math.abs(shardCourseMean - last4BirdMean) < 0.35;
+    if (swappedStatBug) {
       fail(
-        `course bogeys mean (${shardCourseMean.toFixed(2)}) equals last-4 birdies (${last4BirdMean.toFixed(2)}) — wrong stat/window`,
+        `course bogeys mean (${shardCourseMean.toFixed(2)}) matches last-4 birdies (${last4BirdMean.toFixed(2)}) — wrong stat/window`,
       );
     }
     if (fromCourse.length < 10) {

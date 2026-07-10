@@ -6,26 +6,36 @@ export function num(v, fallback = NaN) {
   return Number.isFinite(n) ? n : fallback;
 }
 
-/** Sources the tracker + vs-actual export treat as posted lines (not walk-forward model-only). */
+/** Sources the tracker + vs-actual export treat as posted DK lines (not PP). */
 export function isBookLikePropSource(source) {
   const s = String(source || "").trim().toLowerCase();
   return s === "draftkings" || s === "model_fallback" || s === "csv";
 }
 
+export function isPrizePicksPropSource(source) {
+  return String(source || "").trim().toLowerCase() === "prizepicks";
+}
+
 /**
- * Map `${dg}|${round}|${market}` → { line, over, under, source }.
+ * Map `${dg}|${round}|${market}` → { line, over, under, source } for one book source.
  * @param {object} payload projections.json
- * @param {{ round?: number, markets?: Set<string> }} [opts]
+ * @param {{ round?: number, markets?: Set<string>, source?: string }} [opts]
  */
-export function buildBookPropsIndex(payload, opts = {}) {
+function buildPropsIndexForSource(payload, opts = {}) {
   const map = new Map();
   const roundFilter = Math.round(num(opts.round, NaN));
   const displayRound = Math.round(
     num(opts.displayRound ?? payload?.display_round ?? payload?.meta?.display_round, 1),
   ) || 1;
   const markets = opts.markets instanceof Set ? opts.markets : null;
+  const wantSource = String(opts.source || "").trim().toLowerCase();
   for (const r of Array.isArray(payload?.props) ? payload.props : []) {
-    if (!isBookLikePropSource(r.source)) continue;
+    const src = String(r.source || "").trim().toLowerCase();
+    if (wantSource) {
+      if (src !== wantSource) continue;
+    } else if (!isBookLikePropSource(r.source)) {
+      continue;
+    }
     const market = String(r.market || "").trim();
     if (markets && !markets.has(market)) continue;
     const dg = Math.round(num(r.dg_id, NaN));
@@ -37,7 +47,6 @@ export function buildBookPropsIndex(payload, opts = {}) {
     if (!Number.isFinite(dg) || !market) continue;
     if (Number.isFinite(roundFilter) && rnd !== roundFilter) continue;
     if (!Number.isFinite(line) || !Number.isFinite(over) || !Number.isFinite(under)) continue;
-    const src = String(r.source || "").trim().toLowerCase();
     map.set(`${dg}|${rnd}|${market}`, {
       line,
       over,
@@ -47,4 +56,18 @@ export function buildBookPropsIndex(payload, opts = {}) {
     });
   }
   return map;
+}
+
+/**
+ * Map `${dg}|${round}|${market}` → { line, over, under, source }.
+ * @param {object} payload projections.json
+ * @param {{ round?: number, markets?: Set<string> }} [opts]
+ */
+export function buildBookPropsIndex(payload, opts = {}) {
+  return buildPropsIndexForSource(payload, opts);
+}
+
+/** PrizePicks-only index (same keys as buildBookPropsIndex). */
+export function buildPpPropsIndex(payload, opts = {}) {
+  return buildPropsIndexForSource(payload, { ...opts, source: "prizepicks" });
 }

@@ -3262,11 +3262,22 @@ function ouPlayerMarketAvgSampleRounds(player, windowMode = ouProjAvgWindowMode(
   return rounds;
 }
 
+/** Course average still loading — don't show model μ as a fake historical average. */
+function ouPlayerMarketCourseAvgStillLoading(player, windowMode = ouProjAvgWindowMode()) {
+  if (windowMode !== "course") return false;
+  if (!ouCourseShardReadyForProjAvg()) return true;
+  if (ouFieldHistoryLoadPromise || ouCourseShardForProjAvgPromise) return true;
+  return ouPlayerAvgHistoryPending(player);
+}
+
 /** Player historical average for the selected window (raw stat units, not z-score). */
 function ouPlayerMarketAverage(market, player, windowMode = ouProjAvgWindowMode()) {
   const mKey = ouModelMarketKey(market) || "Total score";
   const rounds = ouPlayerMarketAvgSampleRounds(player, windowMode);
   if (!rounds.length) {
+    if (ouPlayerMarketCourseAvgStillLoading(player, windowMode)) {
+      return { avg: NaN, n: 0, source: "pending", windowMode };
+    }
     const fromModel = ouPlayerModelAvgForMarket(market, player);
     if (Number.isFinite(fromModel)) return { avg: fromModel, n: 0, source: "model", windowMode };
     return { avg: NaN, n: 0, source: "none", windowMode };
@@ -3278,6 +3289,9 @@ function ouPlayerMarketAverage(market, player, windowMode = ouProjAvgWindowMode(
     if (Number.isFinite(v)) vals.push(v);
   }
   if (!vals.length) {
+    if (ouPlayerMarketCourseAvgStillLoading(player, windowMode)) {
+      return { avg: NaN, n: 0, source: "pending", windowMode };
+    }
     const fromModel = ouPlayerModelAvgForMarket(market, player);
     if (Number.isFinite(fromModel)) return { avg: fromModel, n: 0, source: "model", windowMode };
     return { avg: NaN, n: 0, source: "none", windowMode };
@@ -3399,7 +3413,9 @@ function ouPlayerMarketAverageTitle(market, hit) {
   const n = Math.round(num(hit?.n, 0));
   const src = hit?.source === "model" ? " (skill estimate)" : "";
   if (!Number.isFinite(hit?.avg)) {
-    if (ouFieldHistoryLoadPromise) return `${label} — loading history…`;
+    if (hit?.source === "pending" || ouFieldHistoryLoadPromise || ouCourseShardForProjAvgPromise) {
+      return `${label} — loading history…`;
+    }
     return `${label} — no rounds in window`;
   }
   if (n > 0) return `${label} · n=${n}${src}`;
@@ -3951,20 +3967,25 @@ function coursePar18FromData() {
 
 /**
  * Columns for the Round projections grid + Market filter.
- * Core counting markets always listed; GIR / Fairways only when DraftKings has posted lines this round.
+ * Core counting markets always listed; GIR / Fairways when DK or PrizePicks has posted lines for a field player.
  */
 function draftKingsHasMarketForRound(market, round) {
   const canon = ouPropsCanonicalMarket(market);
   if (!canon) return false;
   const wantR = Math.round(num(round, NaN));
   const bookRows = [...draftKingsRoundPropsOnly(true), ...prizePicksRoundPropsOnly(true)];
+  const needFieldMatch = canon === "GIR" || canon === "Fairways hit";
+  const fieldPlayers = needFieldMatch ? roundProjectionPlayersForOuRound() : [];
   for (const r of bookRows) {
     if (ouPropsCanonicalMarket(r.market) !== canon) continue;
     const pr = Math.round(num(r.round_num, NaN));
     if (Number.isFinite(wantR) && wantR >= 1 && wantR <= 4) {
       if (Number.isFinite(pr) && pr >= 1 && pr <= 4 && pr !== wantR) continue;
     }
-    return true;
+    if (!needFieldMatch) return true;
+    for (const p of fieldPlayers) {
+      if (ouPropRowMatchesPlayer(r, p)) return true;
+    }
   }
   return false;
 }
@@ -3983,16 +4004,22 @@ function ouProjectionColumnsActive() {
 
   const props = Array.isArray(DATA.props) ? DATA.props : [];
   const dk = props.filter((r) => String(r.source || "").trim().toLowerCase() === "draftkings");
+  const pp = props.filter((r) => String(r.source || "").trim().toLowerCase() === "prizepicks");
   const nonDk = props.filter((r) => {
     const s = String(r.source || "").trim().toLowerCase();
     return s === "csv" || s === "model_fallback" || !s;
   });
   const dkSet = new Set(dk.map((r) => String(r.market || "").trim()));
+  const ppSet = new Set(pp.map((r) => String(r.market || "").trim()));
   const nonDkSet = new Set(nonDk.map((r) => String(r.market || "").trim()));
   const out = [];
   for (const col of OU_PROJECTION_MARKETS) {
     const canon = ouPropsCanonicalMarket(col.market);
-    if (dkSet.has(canon) || nonDkSet.has(canon)) out.push(col);
+    if (col.market === "GIR" || col.market === "Fairways hit") {
+      if (dkSet.has(canon) || ppSet.has(canon)) out.push(col);
+      continue;
+    }
+    if (dkSet.has(canon) || ppSet.has(canon) || nonDkSet.has(canon)) out.push(col);
   }
   return out;
 }
@@ -7779,7 +7806,10 @@ function buildOuTable() {
     const avgTd = document.createElement("td");
     avgTd.className = "ou-cell ou-proj-long-td num ou-proj-td-avg";
     const avgHit = ouProjectionRowMarketAvgHit(r);
-    if (!Number.isFinite(avgHit.avg) && ouPlayerAvgHistoryPending(player)) {
+    if (
+      !Number.isFinite(avgHit.avg) &&
+      (ouPlayerAvgHistoryPending(player) || avgHit.source === "pending")
+    ) {
       avgTd.textContent = "…";
     } else {
       avgTd.textContent = Number.isFinite(avgHit.avg) ? formatOuProjectedMean(avgHit.avg) : "—";

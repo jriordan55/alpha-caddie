@@ -233,6 +233,13 @@ if (!envTruthy("GOLF_SKIP_DK_ROUND_AUDIT_CSV", false)) {
   );
 }
 
+if (!envTruthy("GOLF_SKIP_PP_ROUND_AUDIT_CSV", false)) {
+  run(
+    "export-pp-round-model-audit-csv.mjs",
+    "PrizePicks round audit CSV (all PP lines/odds + model snapshots)",
+  );
+}
+
 run(
   "bake-outright-sim-probs.mjs",
   "Tournament MC outright probs → projections.json (precomputed for +EV)",
@@ -297,6 +304,7 @@ run(
 );
 
 run("validate-projections-for-publish.mjs", "Validate par, birdies/pars, and O/U prop coverage before publish");
+run("verify-pp-round-props.mjs", "PrizePicks field alignment + projection-tracker PP columns");
 
 if (!skipPostCsvMerge) {
   run(

@@ -19,7 +19,8 @@ import { fileURLToPath } from "url";
 import { chromium } from "playwright";
 import { matchPlayerByGolferLabel } from "./golfer-name-match.mjs";
 import { applyPrizePicksImpliedOddsAll } from "./prizepicks-implied-odds.mjs";
-import { dedupePpPropsOnePerPlayerMarket } from "./pp-ou-line-sanity.mjs";
+import { dedupePpPropsOnePerPlayerMarket, ppLineIsSane } from "./pp-ou-line-sanity.mjs";
+import { ppMatchingGameIds } from "./pp-field-align.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -44,9 +45,11 @@ const PP_STAT_TO_MARKET = {
   "Bogeys or worse": "Bogeys",
   Pars: "Pars",
   "Greens in Regulation": "GIR",
+  "Greens In Regulation": "GIR",
   "Green in Regulation": "GIR",
   GIR: "GIR",
   "Fairways Hit": "Fairways hit",
+  "Fairways hit": "Fairways hit",
   "Fairways hit": "Fairways hit",
 };
 
@@ -228,22 +231,29 @@ export function propsFromPrizePicksBody(body, payload = {}, targetRound = NaN) {
   const players = Array.isArray(payload?.players) ? payload.players : [];
   const { players: playerMap, stats: statMap, games: gameMap } = buildIncludedMaps(body?.included);
   const wantRound = Math.round(num(targetRound, NaN));
+  const matchingGameIds = ppMatchingGameIds(gameMap, payload);
   const out = [];
   for (const row of body?.data || []) {
     const attrs = row.attributes || {};
     const rel = row.relationships || {};
+    const gameId = String(rel.game?.data?.id || "");
+    if (matchingGameIds && gameId && !matchingGameIds.has(gameId)) continue;
     const pl = playerMap.get(String(rel.new_player?.data?.id || ""));
     const st = statMap.get(String(rel.stat_type?.data?.id || ""));
-    const gm = gameMap.get(String(rel.game?.data?.id || ""));
+    const gm = gameMap.get(gameId);
     const statName = String(st?.name || attrs.stat_type || "").trim();
     const market = canonicalPpMarket(statName);
     if (!market || !ROUND_MARKETS.has(market)) continue;
 
-    const oddsType = String(attrs.odds_type || "standard").trim().toLowerCase();
-    if (!PP_INCLUDE_DEMON_GOBLIN && oddsType !== "standard") continue;
-
     const line = num(attrs.line_score, NaN);
     if (!Number.isFinite(line)) continue;
+
+    const oddsType = String(attrs.odds_type || "standard").trim().toLowerCase();
+    if (!PP_INCLUDE_DEMON_GOBLIN && oddsType !== "standard") {
+      const allowAlt =
+        (market === "GIR" || market === "Fairways hit") && ppLineIsSane(market, line);
+      if (!allowAlt) continue;
+    }
 
     const playerLabel = String(pl?.name || pl?.display_name || "").trim();
     if (!playerLabel) continue;

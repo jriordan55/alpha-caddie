@@ -4,6 +4,7 @@
 import { fetchPrizePicksOuProps } from "./prizepicks-ou-props.mjs";
 import { canonicalizeDkOuPropsAgainstProjections } from "./merge-dk-round-props.mjs";
 import { sanitizePpRoundProps } from "./pp-ou-line-sanity.mjs";
+import { filterPpPropsToProjectionField } from "./pp-field-align.mjs";
 
 function num(x, fallback = NaN) {
   const n = Number(x);
@@ -35,7 +36,10 @@ export function preservePrizePicksRoundProps(payload, nonPpProps) {
     (r) => String(r?.source || "").trim().toLowerCase() === "prizepicks" && propRowHasPostableLine(r),
   );
   if (!priorPp.length) return nonPpProps;
-  const ppKept = sanitizePpRoundProps(priorPp, nonPpProps);
+  const modelRound = Math.round(num(payload.display_round ?? payload.datagolf_field_current_round, NaN)) || 1;
+  let ppKept = sanitizePpRoundProps(priorPp, nonPpProps);
+  canonicalizeDkOuPropsAgainstProjections(ppKept, payload.players);
+  ppKept = filterPpPropsToProjectionField(ppKept, payload.players, modelRound);
   if (ppKept.length) {
     console.log(`[pp-round-props] preserved ${ppKept.length} prizepicks row(s) alongside DK refresh`);
   }
@@ -84,6 +88,14 @@ export async function refreshPrizePicksRoundProps(payload) {
     (r) => String(r?.source || "").trim().toLowerCase() !== "prizepicks",
   );
   ppProps = sanitizePpRoundProps(ppProps.filter(propRowHasPostableLine), prior);
+  canonicalizeDkOuPropsAgainstProjections(ppProps, payload.players);
+  const beforeField = ppProps.length;
+  ppProps = filterPpPropsToProjectionField(ppProps, payload.players, modelRound);
+  if (beforeField > ppProps.length) {
+    console.log(
+      `[pp-round-props] dropped ${beforeField - ppProps.length} PP row(s) not in R${modelRound} field`,
+    );
+  }
   const merged = [...prior, ...ppProps];
   return {
     props: merged,
