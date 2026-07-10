@@ -3262,24 +3262,26 @@ function ouPlayerMarketAvgSampleRounds(player, windowMode = ouProjAvgWindowMode(
   return rounds;
 }
 
-/** Course average still loading — don't show model μ as a fake historical average. */
-function ouPlayerMarketCourseAvgStillLoading(player, windowMode = ouProjAvgWindowMode()) {
-  if (windowMode !== "course") return false;
-  if (!ouCourseShardReadyForProjAvg()) return true;
-  if (ouFieldHistoryLoadPromise || ouCourseShardForProjAvgPromise) return true;
-  return ouPlayerAvgHistoryPending(player);
+/** History / course shards still loading — don't show model μ as a fake historical average. */
+function ouPlayerMarketAvgHistoryStillLoading(player, windowMode = ouProjAvgWindowMode()) {
+  if (windowMode === "course") {
+    if (!ouCourseShardReadyForProjAvg()) return true;
+    if (ouFieldHistoryLoadPromise || ouCourseShardForProjAvgPromise) return true;
+  }
+  const id = Math.round(num(player?.dg_id, NaN));
+  if (!Number.isFinite(id)) return false;
+  if (historyBucketLoaded(id) || playerHistoryAbsentDgIds.has(id)) return false;
+  return Boolean(HISTORY?._loading) || Boolean(ouFieldHistoryLoadPromise) || Boolean(ouCourseShardForProjAvgPromise);
 }
 
-/** Player historical average for the selected window (raw stat units, not z-score). */
+/** Player historical average for the selected window (raw completed-round stats only). */
 function ouPlayerMarketAverage(market, player, windowMode = ouProjAvgWindowMode()) {
   const mKey = ouModelMarketKey(market) || "Total score";
   const rounds = ouPlayerMarketAvgSampleRounds(player, windowMode);
   if (!rounds.length) {
-    if (ouPlayerMarketCourseAvgStillLoading(player, windowMode)) {
+    if (ouPlayerMarketAvgHistoryStillLoading(player, windowMode)) {
       return { avg: NaN, n: 0, source: "pending", windowMode };
     }
-    const fromModel = ouPlayerModelAvgForMarket(market, player);
-    if (Number.isFinite(fromModel)) return { avg: fromModel, n: 0, source: "model", windowMode };
     return { avg: NaN, n: 0, source: "none", windowMode };
   }
   const statKey = ouMarketRatingHistoryStatKey(mKey);
@@ -3289,11 +3291,9 @@ function ouPlayerMarketAverage(market, player, windowMode = ouProjAvgWindowMode(
     if (Number.isFinite(v)) vals.push(v);
   }
   if (!vals.length) {
-    if (ouPlayerMarketCourseAvgStillLoading(player, windowMode)) {
+    if (ouPlayerMarketAvgHistoryStillLoading(player, windowMode)) {
       return { avg: NaN, n: 0, source: "pending", windowMode };
     }
-    const fromModel = ouPlayerModelAvgForMarket(market, player);
-    if (Number.isFinite(fromModel)) return { avg: fromModel, n: 0, source: "model", windowMode };
     return { avg: NaN, n: 0, source: "none", windowMode };
   }
   return {
@@ -3411,15 +3411,14 @@ function ouCachedPlayerMarketAverage(market, player, windowMode = ouProjAvgWindo
 function ouPlayerMarketAverageTitle(market, hit) {
   const label = ouProjAvgWindowLabel(hit?.windowMode);
   const n = Math.round(num(hit?.n, 0));
-  const src = hit?.source === "model" ? " (skill estimate)" : "";
   if (!Number.isFinite(hit?.avg)) {
     if (hit?.source === "pending" || ouFieldHistoryLoadPromise || ouCourseShardForProjAvgPromise) {
       return `${label} — loading history…`;
     }
     return `${label} — no rounds in window`;
   }
-  if (n > 0) return `${label} · n=${n}${src}`;
-  return `${label}${src}`;
+  if (n > 0) return `${label} · n=${n}`;
+  return label;
 }
 
 /** Player historical average for a market (counts / strokes), not the round projection μ. */
@@ -3437,46 +3436,15 @@ function ouPlayerHistoricalAvgForMarket(market, player) {
   return vals.reduce((a, b) => a + b, 0) / vals.length;
 }
 
-/** Fallback when history lacks counting stats (DG rounds CSV often has null GIR). Uses model / skill ratings. */
-function ouPlayerModelAvgForMarket(market, player) {
-  if (!player || typeof player !== "object") return NaN;
-  const mKey = ouModelMarketKey(market) || "Total score";
-  if (mKey === "Total score") return num(player.total_score, NaN);
-  if (mKey === "Birdies") return birdiesPlusEaglesFromRow(player);
-  if (mKey === "Pars") return num(player.pars, NaN);
-  if (mKey === "Bogeys") return num(player.bogeys ?? player.bogies, NaN);
-  if (mKey === "GIR") {
-    const rate = num(player.dg_gir_pct, NaN);
-    if (Number.isFinite(rate) && rate > 0 && rate <= 1.05) return rate * 18;
-    return num(player.gir, NaN);
-  }
-  if (mKey === "Fairways hit") {
-    const rate = num(player.dg_fairway_pct, NaN);
-    const opp = fairwayHolesModeledFromData();
-    if (Number.isFinite(rate) && rate > 0 && rate <= 1.05 && Number.isFinite(opp)) return rate * opp;
-    return num(player.fairways, NaN);
-  }
-  return NaN;
-}
-
+/** Player historical average for market ratings (completed rounds only — never projection μ). */
 function ouPlayerAvgForMarketRating(market, player) {
-  const mKey = ouModelMarketKey(market) || "Total score";
-  /** DG historical rounds CSV rarely has GIR — skill rates are more reliable than null history. */
-  if (mKey === "GIR" || mKey === "Fairways hit") {
-    const fromModel = ouPlayerModelAvgForMarket(market, player);
-    if (Number.isFinite(fromModel)) return { playerAvg: fromModel, ratingSource: "model" };
-  }
   const fromHist = ouPlayerHistoricalAvgForMarket(market, player);
   if (Number.isFinite(fromHist)) return { playerAvg: fromHist, ratingSource: "history" };
-  const fromModel = ouPlayerModelAvgForMarket(market, player);
-  if (Number.isFinite(fromModel)) return { playerAvg: fromModel, ratingSource: "model" };
   return { playerAvg: NaN, ratingSource: "none" };
 }
 
-/** Skill / model value for field-relative market rating (consistent source across the tee sheet). */
+/** Field-relative market rating uses the same raw historical averages as the Average column logic. */
 function ouPlayerValueForFieldMarketRating(market, player) {
-  const fromModel = ouPlayerModelAvgForMarket(market, player);
-  if (Number.isFinite(fromModel)) return { playerAvg: fromModel, ratingSource: "model" };
   const fromHist = ouPlayerHistoricalAvgForMarket(market, player);
   if (Number.isFinite(fromHist)) return { playerAvg: fromHist, ratingSource: "history" };
   return { playerAvg: NaN, ratingSource: "none" };
@@ -3827,10 +3795,7 @@ function ouMarketRatingTourAvgDisplay(market, bench) {
 function ouMarketRatingTitle(market, playerAvg, ratingSource = "history", fieldStats = null) {
   const mKey = ouModelMarketKey(market) || "Total score";
   const label = ouPropsCanonicalMarket(market);
-  const src =
-    ratingSource === "model"
-      ? "model skill / projection"
-      : "player historical avg";
+  const src = "player historical avg";
   const fs = fieldStats?.get?.(mKey);
   if (!fs || !Number.isFinite(playerAvg)) {
     return `Market rating: ${src} vs field average (1–100; higher = better on this stat)`;

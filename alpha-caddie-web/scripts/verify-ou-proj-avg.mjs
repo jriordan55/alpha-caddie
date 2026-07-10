@@ -53,6 +53,32 @@ function actualBirdies(row) {
   return num(row?.birdies, NaN);
 }
 
+function historyRoundSeasonYear(r) {
+  const y = num(r?.year, NaN);
+  if (Number.isFinite(y) && y >= 1990 && y <= 2100) return Math.round(y);
+  const ec = String(r?.event_completed || "").trim();
+  const m = ec.match(/(\d{4})/);
+  if (m) {
+    const yy = parseInt(m[1], 10);
+    if (yy >= 1990 && yy <= 2100) return yy;
+  }
+  return NaN;
+}
+
+function girFairwaysCountFromRawForOu(v, holes) {
+  const n = num(v, NaN);
+  if (!Number.isFinite(n)) return NaN;
+  if (n > 0 && n <= 1.0001) return Math.min(holes, Math.max(0, Math.round(n * holes)));
+  if (n > 1.0001 && n <= holes + 1e-6) return Math.min(holes, Math.max(0, n));
+  return Math.min(holes, Math.max(0, Math.round(n)));
+}
+
+function actualGirFromHistoryRow(row) {
+  let v = girFairwaysCountFromRawForOu(row?.gir, 18);
+  if (!Number.isFinite(v) || v === 0 || v === 1) return NaN;
+  return v;
+}
+
 function mean(xs) {
   return xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : NaN;
 }
@@ -60,11 +86,25 @@ function mean(xs) {
 const appSrc = readFileSync(join(WEB, "app.js"), "utf8");
 for (const needle of [
   "ouPlayerMarketCourseShardRounds",
+  "ouPlayerMarketAvgHistoryStillLoading",
   "courseFitDistRoundCountsAsActual(row)",
   "ensurePropsCourseIndexForKeyAsync(vk)",
   "ouModelMarketKey(col?.market)",
 ]) {
   if (!appSrc.includes(needle)) fail(`app.js missing ${needle}`);
+}
+const avgFnIdx = appSrc.indexOf("function ouPlayerMarketAverage");
+const avgFnBody = avgFnIdx >= 0 ? appSrc.slice(avgFnIdx, avgFnIdx + 1200) : "";
+if (avgFnBody.includes("ouPlayerModelAvgForMarket")) {
+  fail("ouPlayerMarketAverage must not fall back to model/skill averages");
+}
+if (avgFnBody.includes('source: "model"')) {
+  fail('ouPlayerMarketAverage must not emit source: "model"');
+}
+const ratingFnIdx = appSrc.indexOf("function ouPlayerAvgForMarketRating");
+const ratingFnBody = ratingFnIdx >= 0 ? appSrc.slice(ratingFnIdx, ratingFnIdx + 500) : "";
+if (ratingFnBody.includes("ouPlayerModelAvgForMarket")) {
+  fail("ouPlayerAvgForMarketRating must not use model/skill averages (projections must stay independent)");
 }
 
 let proj;
@@ -147,6 +187,37 @@ if (bogeysProps.length >= 5) {
   ).length;
   if (nAtVenue < 2) {
     fail(`field player ${sampleId} has DK bogeys line but only ${nAtVenue} rounds at ${venueRaw} in course shard`);
+  }
+}
+
+// Season GIR average must come from history, not dg_gir_pct×18 (Hovland dg_gir_pct=0.944 → bogus ~17).
+const hovlandId = 18841;
+const seasonYear = num(
+  String(proj?.datagolf_field_date_start || proj?.meta?.datagolf_field_date_start || "").slice(0, 4),
+  2026,
+);
+const hovlandShardPath = join(WEB, `player-history/by-dg/${hovlandId}.json`);
+if (existsSync(hovlandShardPath)) {
+  const hovlandShard = JSON.parse(readFileSync(hovlandShardPath, "utf8"));
+  const seasonGir = (hovlandShard.rounds || [])
+    .filter((r) => historyRoundSeasonYear(r) === seasonYear)
+    .map(actualGirFromHistoryRow)
+    .filter(Number.isFinite);
+  const seasonGirMean = mean(seasonGir);
+  const hovlandProj = players.find(
+    (p) => Math.round(num(p.dg_id, NaN)) === hovlandId && Math.round(num(p.round, 1)) === dr,
+  );
+  const bogusDgPct = num(hovlandProj?.dg_gir_pct, NaN) * 18;
+  if (!Number.isFinite(seasonGirMean) || seasonGir.length < 20) {
+    fail(`Hovland ${seasonYear} season GIR history too thin (n=${seasonGir.length})`);
+  }
+  if (seasonGirMean < 10.5 || seasonGirMean > 14.5) {
+    fail(`Hovland ${seasonYear} season GIR mean out of range: ${seasonGirMean.toFixed(2)} (expected ~12)`);
+  }
+  if (Number.isFinite(bogusDgPct) && bogusDgPct > 15.5 && Math.abs(bogusDgPct - seasonGirMean) < 1.5) {
+    fail(
+      `Hovland dg_gir_pct×18 (${bogusDgPct.toFixed(2)}) too close to real season GIR (${seasonGirMean.toFixed(2)}) — average column must use history only`,
+    );
   }
 }
 
