@@ -333,7 +333,9 @@ function signalBoost(market, labels, signals) {
   return { boost: clamp(boost, 0.55, 1.55), tags: [...new Set(tags)].slice(0, 4) };
 }
 
-  return num(courseRow?.avg_fairway_width, num(courseRow?.fairway_width, NaN));
+function courseFwWidth(courseRow) {
+  if (!courseRow) return NaN;
+  return num(courseRow.fw_width, num(courseRow.avg_fairway_width, num(courseRow.fairway_width, NaN)));
 }
 
 function marketFactor(market, oos) {
