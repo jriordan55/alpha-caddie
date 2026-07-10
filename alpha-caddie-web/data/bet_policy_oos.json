@@ -1,17 +1,23 @@
 {
-  "generated_at": "2026-07-01T02:23:14.803Z",
+  "generated_at": "2026-07-10T04:53:38.582Z",
   "target_roi_pct": 10,
   "outcome_sigma_scales": {
     "Total score": 1.45,
-    "Birdies": 1.015,
-    "GIR": 1.45,
+    "Birdies": 0.945,
+    "GIR": 1.449,
     "Fairways hit": 1.45
+  },
+  "outcome_mu_bias_corrections": {
+    "Total score": -2.5,
+    "Birdies": -0.85,
+    "GIR": 0.049,
+    "Fairways hit": 0.319
   },
   "policies": {
     "GIR": {
       "market": "GIR",
       "minEv": 7.5,
-      "minGap": 1.5,
+      "minGap": 0.5,
       "side": "both",
       "skipEventSubstrings": []
     },
@@ -24,12 +30,10 @@
     },
     "Total score": {
       "market": "Total score",
-      "minEv": 17.5,
+      "minEv": 15,
       "minGap": 0.5,
       "side": "both",
-      "skipEventSubstrings": [
-        "Schwab"
-      ]
+      "skipEventSubstrings": []
     },
     "Fairways hit": {
       "market": "Fairways hit",
@@ -38,27 +42,35 @@
       "side": "under",
       "minGirMinusFw": 2.5,
       "skipEventSubstrings": []
+    },
+    "Bogeys": {
+      "market": "Bogeys",
+      "minEv": 20,
+      "minGap": 1,
+      "side": "both",
+      "disabled": true,
+      "skipEventSubstrings": []
     }
   },
   "per_market_oos": {
     "GIR": {
-      "roi_pct": 10.9,
-      "bets": 188,
-      "units": 20.55,
-      "hit_pct": 61.7,
+      "roi_pct": 14.3,
+      "bets": 270,
+      "units": 38.54,
+      "hit_pct": 61.5,
       "policy": {
         "market": "GIR",
         "minEv": 7.5,
-        "minGap": 1.5,
+        "minGap": 0.5,
         "side": "both",
         "skipEventSubstrings": []
       }
     },
     "Birdies": {
-      "roi_pct": 10.7,
-      "bets": 71,
-      "units": 7.56,
-      "hit_pct": 54.9,
+      "roi_pct": 14.3,
+      "bets": 43,
+      "units": 6.16,
+      "hit_pct": 62.8,
       "policy": {
         "market": "Birdies",
         "minEv": 25,
@@ -68,25 +80,23 @@
       }
     },
     "Total score": {
-      "roi_pct": 10.4,
-      "bets": 192,
-      "units": 20.01,
-      "hit_pct": 58.9,
+      "roi_pct": 12.9,
+      "bets": 357,
+      "units": 45.9,
+      "hit_pct": 59.7,
       "policy": {
         "market": "Total score",
-        "minEv": 17.5,
+        "minEv": 15,
         "minGap": 0.5,
         "side": "both",
-        "skipEventSubstrings": [
-          "Schwab"
-        ]
+        "skipEventSubstrings": []
       }
     },
     "Fairways hit": {
-      "roi_pct": 17.1,
-      "bets": 75,
-      "units": 12.83,
-      "hit_pct": 66.7,
+      "roi_pct": 21.8,
+      "bets": 127,
+      "units": 27.63,
+      "hit_pct": 66.9,
       "policy": {
         "market": "Fairways hit",
         "minEv": 7.5,
@@ -98,9 +108,9 @@
     }
   },
   "combined_oos": {
-    "roi_pct": 11.6,
-    "bets": 526,
-    "units": 60.95,
-    "hit_pct": 60.5
+    "roi_pct": 14.8,
+    "bets": 797,
+    "units": 118.23,
+    "hit_pct": 61.6
   }
 }

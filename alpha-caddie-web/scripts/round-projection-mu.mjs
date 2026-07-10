@@ -10,7 +10,6 @@ import {
 } from "./weather-projection-adjustments.mjs";
 import { marketBookSigmaScale, eventPropBookAlignedMarket } from "./market-book-calibration.mjs";
 import {
-  applyOutcomeMuBiasCorrection,
   binomialProbOver,
   normalProbOver,
   outcomeSigmaScale,
@@ -513,34 +512,37 @@ export function ouProjectedMeanForMode(market, row, meta, pricingMode, pricingSk
   const pricingAdj = tailoringActive
     ? 0
     : pricingStatMuAdjustment(market, dgId, pricingMode, pricingSkill, ctx);
-  return applyOutcomeMuBiasCorrection(
-    market,
+  return (
     base +
       weatherAdj +
       countLive.muDelta +
       liveCurrentRoundTotalScoreMuDelta(row, metaLive) +
       pricingAdj +
-      courseTailoringMuAdjustment(market, row, metaLive, ctx),
+      courseTailoringMuAdjustment(market, row, metaLive, ctx)
   );
+}
+
+function countingStubRowForMu(market, mu, row, fairwayHoles) {
+  const base = row && typeof row === "object" ? { ...row } : {};
+  if (market === "Birdies") return { ...base, birdies: mu };
+  if (market === "Bogeys") return { ...base, bogeys: mu };
+  if (market === "GIR") return { ...base, gir: mu };
+  if (market === "Fairways hit") return { ...base, fairways: mu };
+  return base;
 }
 
 export function modelProbOver(market, mu, line, row, meta) {
   if (!Number.isFinite(mu) || !Number.isFinite(line)) return NaN;
   const metaLive = liveProjectionMeta(meta);
   const fairwayHoles = Math.round(num(metaLive?.projection_course_basis?.fairway_holes_modeled, 14)) || 14;
-  if (market === "Birdies" || market === "Bogeys") {
-    const p = poissonProbOver(mu, line);
-    return Number.isFinite(p) ? p : NaN;
-  }
-  if (market === "GIR") {
-    const p = binomialProbOver(mu, 18, line);
-    return Number.isFinite(p) ? p : NaN;
-  }
-  if (market === "Fairways hit") {
-    const p = binomialProbOver(mu, fairwayHoles, line);
-    return Number.isFinite(p) ? p : NaN;
-  }
-  const sig = sigmaForOu(market, row, metaLive, fairwayHoles) * marketBookSigmaScale(market);
+  const muRow =
+    market === "Birdies" ||
+    market === "Bogeys" ||
+    market === "GIR" ||
+    market === "Fairways hit"
+      ? countingStubRowForMu(market, mu, row, fairwayHoles)
+      : row;
+  const sig = sigmaForOu(market, muRow, metaLive, fairwayHoles) * marketBookSigmaScale(market);
   return normalProbOver(mu, line, sig);
 }
 

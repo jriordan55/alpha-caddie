@@ -8,8 +8,17 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { OOS_MARKET_POLICY } from "./bet-policy.mjs";
 import { loadWalkForwardBetRows } from "./walkforward-oos-roi.mjs";
-import { fitOutcomeSigmaScales, setOutcomeSigmaScales } from "./projection-stat-model.mjs";
-import { capDirectionalPostedEdges, pickBetSide, pnlForResult } from "../projection-tracker/ev-math.mjs";
+import {
+  fitOutcomeSigmaScales,
+  setOutcomeMuBiasCorrections,
+  setOutcomeSigmaScales,
+} from "./projection-stat-model.mjs";
+import {
+  capDirectionalPostedEdges,
+  devigFairTwoWay,
+  pickBetSide,
+  pnlForResult,
+} from "../projection-tracker/ev-math.mjs";
 import { modelProbOver } from "./round-projection-mu.mjs";
 
 const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -42,6 +51,7 @@ function gradeRows(rows, policies) {
     if (p.side === "over" && !(b.modelLine > b.bookLine)) continue;
     if (p.side === "under" && !(b.modelLine < b.bookLine)) continue;
     if (Number.isFinite(p.minGirMinusFw) && num(b.context?.gir_minus_fw) < p.minGirMinusFw) continue;
+    if (Number.isFinite(p.minCourseFwWidth) && num(b.context?.course_fw_width) < p.minCourseFwWidth) continue;
     if (Array.isArray(p.rounds) && p.rounds.length && !p.rounds.includes(b.context?.round)) continue;
     if (Array.isArray(p.skipEventSubstrings) && p.skipEventSubstrings.some((s) => b.event.includes(s))) continue;
 
@@ -49,8 +59,9 @@ function gradeRows(rows, policies) {
     const pOver = modelProbOver(b.market, mu, b.bookLine, b.stubRow, b.meta);
     if (!Number.isFinite(pOver)) continue;
     const pUnder = 1 - pOver;
-    let edgeOver = (pOver - implied(b.overOdds)) * 100;
-    let edgeUnder = (pUnder - implied(b.underOdds)) * 100;
+    const { fairOver, fairUnder } = devigFairTwoWay(b.overOdds, b.underOdds);
+    let edgeOver = Number.isFinite(fairOver) ? (pOver - fairOver) * 100 : (pOver - implied(b.overOdds)) * 100;
+    let edgeUnder = Number.isFinite(fairUnder) ? (pUnder - fairUnder) * 100 : (pUnder - implied(b.underOdds)) * 100;
     ({ edgeOver, edgeUnder } = capDirectionalPostedEdges(edgeOver, edgeUnder, mu, b.bookLine));
     const pick = pickBetSide(edgeOver, edgeUnder, p.minEv, mu, b.bookLine);
     if (!pick) continue;
@@ -106,20 +117,23 @@ function searchMarket(sub, targetRoi = TARGET_ROI) {
     for (const minEv of minEvs) {
       for (const minGap of [1.5, 2, 2.5, 3]) {
         for (const minGirMinusFw of [2.5, 3, 3.5, 4]) {
-          for (const side of sides) {
-            for (const skipSchwab of [false, true]) {
-              const policy = {
-                minEv,
-                minGap,
-                side,
-                minGirMinusFw,
-                skipEventSubstrings: skipSchwab ? ["Schwab"] : [],
-              };
-              const g2 = gradeRows(sub, { [market]: policy });
-              const row = { ...g2, policy: { market, ...policy } };
-              if (g2.bets >= 8 && g2.roi_pct > best.roi_pct) best = row;
-              if (g2.bets >= 8 && g2.roi_pct >= targetRoi && (!bestAboveTarget || g2.bets > bestAboveTarget.bets)) {
-                bestAboveTarget = row;
+          for (const minCourseFwWidth of [null, 28, 30, 32]) {
+            for (const side of sides) {
+              for (const skipSchwab of [false, true]) {
+                const policy = {
+                  minEv,
+                  minGap,
+                  side,
+                  minGirMinusFw,
+                  minCourseFwWidth: minCourseFwWidth ?? undefined,
+                  skipEventSubstrings: skipSchwab ? ["Schwab"] : [],
+                };
+                const g2 = gradeRows(sub, { [market]: policy });
+                const row = { ...g2, policy: { market, ...policy } };
+                if (g2.bets >= 8 && g2.roi_pct > best.roi_pct) best = row;
+                if (g2.bets >= 8 && g2.roi_pct >= targetRoi && (!bestAboveTarget || g2.bets > bestAboveTarget.bets)) {
+                  bestAboveTarget = row;
+                }
               }
             }
           }
@@ -159,6 +173,7 @@ function searchMarket(sub, targetRoi = TARGET_ROI) {
 
 const scales = await fitOutcomeSigmaScales(VS);
 setOutcomeSigmaScales(scales);
+setOutcomeMuBiasCorrections(null);
 const rows = await loadWalkForwardBetRows();
 const markets = ["GIR", "Birdies", "Total score", "Fairways hit"];
 

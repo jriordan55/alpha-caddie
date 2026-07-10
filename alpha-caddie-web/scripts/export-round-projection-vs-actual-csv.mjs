@@ -3,8 +3,8 @@
  * Write one CSV row per projections.json player×round×pricing_mode with model lines,
  * over/under results vs actuals, and best edge (matches Round projections / Historical Trends).
  *
- * Walk-forward backtest projections use the same flat venue player score + field market reconcile as live
- * (historical-walkforward-projections.mjs → reconcileAllProjectionPlayerRows). Model lines in the detail CSV
+ * Walk-forward backtest and live week both use historical course anchor
+ * (walkforwardBacktestPipelineEnv / liveProjectionPipelineEnv). Model lines are raw μ
  * are raw walk-forward μ at bet time — not book-calibrated snapshots from the audit log. DK lines/odds only
  * from pre-round audit (or live_snapshot for in-progress weeks with real DK props).
  *
@@ -92,13 +92,16 @@ import {
   setOutcomeMuBiasCorrections,
   setOutcomeSigmaScales,
 } from "./projection-stat-model.mjs";
-import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
+import {
+  flatVenueProjectionPipelineEnv,
+  walkforwardBacktestPipelineEnv,
+} from "./projection-pipeline-env.mjs";
 import { buildBookPropsIndex, buildPpPropsIndex } from "./projection-book-props.mjs";
 
 if (process.argv.includes("--full-backtest-rebuild")) {
   process.env.GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS = "1";
 }
-Object.assign(process.env, flatVenueProjectionPipelineEnv());
+Object.assign(process.env, walkforwardBacktestPipelineEnv());
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -493,13 +496,14 @@ function overlayStaleLiveActualsForBackfill(allActuals, auditEventName, eventYea
  * Uses the last pre-round capture per player×round×market as the snapshot.
  */
 async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {}) {
+  const forceRebuild =
+    String(process.env.GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS || "").trim() === "1";
   if (existsSync(DEFAULT_OUT)) {
-    const [scales, muBias] = await Promise.all([
-      fitOutcomeSigmaScales(DEFAULT_OUT),
-      fitOutcomeMuBiasCorrections(DEFAULT_OUT),
-    ]);
+    const scales = await fitOutcomeSigmaScales(DEFAULT_OUT);
     setOutcomeSigmaScales(scales);
-    setOutcomeMuBiasCorrections(muBias);
+    setOutcomeMuBiasCorrections(null);
+  } else {
+    setOutcomeMuBiasCorrections(null);
   }
   const fairwayHoles = opts.fairwayHoles ?? 14;
   const livePath = opts.livePath || join(WEB_ROOT, "live-in-play.json");
@@ -840,10 +844,14 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
       pr.playerName,
       ...EXPORT_ACTUAL_COLS.map((c) => rowCells[c] || ""),
       "pre_round_audit",
+      "",
       ...EXPORT_MODEL_LINE_COLS.map((c) => rowCells[c] || ""),
       ...EXPORT_BOOK_LINE_COLS.map((c) => rowCells[c] || ""),
+      ...EXPORT_PP_LINE_COLS.map(() => ""),
       ...EXPORT_OVER_ODDS_COLS.map((c) => rowCells[c] || ""),
       ...EXPORT_UNDER_ODDS_COLS.map((c) => rowCells[c] || ""),
+      ...EXPORT_PP_OVER_ODDS_COLS.map(() => ""),
+      ...EXPORT_PP_UNDER_ODDS_COLS.map(() => ""),
       ...EXPORT_OVER_RESULT_COLS.map((c) => rowCells[c] || ""),
       ...EXPORT_UNDER_RESULT_COLS.map((c) => rowCells[c] || ""),
       ...EXPORT_SIGNAL_COLS.map((c) => sigCells[c] || ""),
@@ -1317,13 +1325,14 @@ function actualForMarket(act, marketKey) {
 export async function writeRoundProjectionVsActualCsv(opts = {}) {
   const projPath = opts.projectionsPath || join(WEB_ROOT, "projections.json");
   const outPath = opts.outPath || DEFAULT_OUT;
+  const forceRebuild =
+    String(process.env.GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS || "").trim() === "1";
   if (existsSync(outPath)) {
-    const [scales, muBias] = await Promise.all([
-      fitOutcomeSigmaScales(outPath),
-      fitOutcomeMuBiasCorrections(outPath),
-    ]);
+    const scales = await fitOutcomeSigmaScales(outPath);
     setOutcomeSigmaScales(scales);
-    setOutcomeMuBiasCorrections(muBias);
+    setOutcomeMuBiasCorrections(null);
+  } else {
+    setOutcomeMuBiasCorrections(null);
   }
   const livePath = opts.livePath || join(WEB_ROOT, "live-in-play.json");
 

@@ -40,7 +40,7 @@ function runRefreshScript(rel, label) {
 if (!envTruthy("GOLF_SKIP_TRACKER_REFRESH")) {
   runRefreshScript("export-round-projection-vs-actual-csv.mjs", "Refreshing round_projection_vs_actual CSV");
   runRefreshScript("promote-round-projection-vs-actual-csv.mjs", "Publishing tracker CSV");
-  runRefreshScript("export-matchup-backtest-csv.mjs", "Refreshing matchup backtest CSV");
+  runRefreshScript("report-walkforward-oos-roi.mjs", "Refreshing walkforward OOS ROI");
 } else {
   console.log("[projection-tracker] GOLF_SKIP_TRACKER_REFRESH=1 — using existing CSV on disk.");
 }
@@ -49,7 +49,7 @@ console.log(`[projection-tracker] Serving ${WEB}`);
 console.log(`[projection-tracker] Bet log: ${url}#bets`);
 console.log(`[projection-tracker] Risk / bankroll: ${url}#risk`);
 console.log(`[projection-tracker] Guide: ${url}#guide`);
-console.log("[projection-tracker] CSV: data/round_projection_vs_actual_summary.csv + matchup_backtest_summary.csv");
+console.log("[projection-tracker] CSV: data/round_projection_vs_actual_summary.csv + round_projection_vs_actual.csv");
 console.log("[projection-tracker] Manual refresh: npm run projection-tracker:refresh");
 
 const child = spawn("npx", ["--yes", "serve", ".", "-p", PORT], {

@@ -28,7 +28,11 @@ import { copyFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { fastHistoryBuildEnv } from "./historical-rounds-merge-env.mjs";
-import { flatVenueProjectionPipelineEnv, dkOuScrapeEnv, requireDkOuEnv } from "./projection-pipeline-env.mjs";
+import {
+  dkOuScrapeEnv,
+  liveProjectionPipelineEnv,
+  requireDkOuEnv,
+} from "./projection-pipeline-env.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -44,7 +48,7 @@ function envTruthy(name, defaultVal) {
 function buildBaseEnv() {
   const e = {
     ...process.env,
-    ...flatVenueProjectionPipelineEnv(),
+    ...liveProjectionPipelineEnv(),
     ...dkOuScrapeEnv(),
     ...requireDkOuEnv(),
     GOLF_MODEL_DIR: process.env.GOLF_MODEL_DIR?.trim() || REPO_ROOT,
@@ -130,7 +134,7 @@ const skipDg = envTruthy("GOLF_REFRESH_LIVE_SKIP_DG", false);
 const skipPgatour = envTruthy("GOLF_REFRESH_LIVE_SKIP_PGATOUR", false);
 const skipFinishTool = envTruthy("GOLF_REFRESH_LIVE_SKIP_FINISH_TOOL", true);
 const liveFastEnv = {
-  ...flatVenueProjectionPipelineEnv(),
+  ...liveProjectionPipelineEnv(),
   GOLF_SKIP_OUTRIGHT_BAKE_ON_FETCH_DG: "1",
   GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL_XLSX: "1",
   GOLF_SKIP_SPORTSBOOK_OUTRIGHT_SCRAPE: "1",

@@ -7,6 +7,7 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { normCourseNameKey } from "./course-name-key.mjs";
 import { recalcProjectionScoresForCoursePar, reconcileAllProjectionPlayerRows } from "./course-round-adjustments.mjs";
+import { fairwayHoleCountFromPars, coursePar18FromHolePars } from "./course-hole-layout.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -69,7 +70,8 @@ if (!bundled) {
 }
 
 const newPars = bundled.pars.map((p) => Math.round(num(p, 4)));
-const newPar = newPars.reduce((s, p) => s + p, 0);
+const newPar = coursePar18FromHolePars(newPars, newPars.reduce((s, p) => s + p, 0));
+const newFwHoles = fairwayHoleCountFromPars(newPars);
 const oldPar = Math.round(num(proj.course_par_18, NaN));
 const src = String(proj.hole_pars_source || "").trim().toLowerCase();
 const prevJson = JSON.stringify(proj.hole_pars);
@@ -87,6 +89,13 @@ const oldParFinite = Number.isFinite(oldPar) ? oldPar : newPar;
 proj.hole_pars = newPars;
 proj.course_par_18 = newPar;
 proj.hole_pars_source = bundled.source;
+if (!proj.projection_course_basis || typeof proj.projection_course_basis !== "object") {
+  proj.projection_course_basis = {};
+}
+proj.projection_course_basis.fairway_holes_modeled = newFwHoles;
+if (proj.meta?.projection_course_basis) {
+  proj.meta.projection_course_basis.fairway_holes_modeled = newFwHoles;
+}
 if (oldParFinite !== newPar) {
   const { rows } = recalcProjectionScoresForCoursePar(proj, newPar, oldParFinite);
   reconcileAllProjectionPlayerRows(proj);

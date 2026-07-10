@@ -16,14 +16,17 @@ import {
   pnlForResult,
 } from "./ev-math.mjs";
 import { buildEdgeSignalInsights } from "./edge-signal-insights.mjs";
+import { patchDetailRowsFromLiveSources } from "./live-detail-patch.mjs";
+import { alignDetailCsvText } from "./detail-csv-align.mjs";
 import {
   DEFAULT_MIN_EV_PCT,
   isActionableMarket,
   minEvForMarket,
   MIN_LINE_GAP_BY_MARKET,
+  OOS_MARKET_POLICY,
   qualifiesBet,
 } from "./bet-policy.mjs";
-import { buildLiveBestBets, buildAllLiveDkBetOptions, loadLiveBestBetsContext, invalidateLiveBestBetsCache, summarizeLiveRoundMatchups } from "./live-best-bets.mjs";
+import { buildLiveBestBets, buildAllLiveDkBetOptions, loadLiveBestBetsContext, invalidateLiveBestBetsCache } from "./live-best-bets.mjs";
 import { simulateMyBetsLedger, myBetsSummaryByMarket } from "./my-bets-journal.mjs";
 import { autoGradeMyBets } from "./my-bets-grade.mjs";
 import {
@@ -45,19 +48,9 @@ const CSV_CANDIDATES = [
   "../data/round_projection_vs_actual_summary.csv.new",
 ];
 
-const MATCHUP_SUMMARY_CANDIDATES = [
-  "../data/matchup_backtest_summary.csv",
-  "../data/matchup_backtest_summary.csv.new",
-];
-
 const DETAIL_CANDIDATES = [
   "../data/round_projection_vs_actual.csv",
   "../data/round_projection_vs_actual.csv.new",
-];
-
-const MATCHUP_DETAIL_CANDIDATES = [
-  "../data/matchup_backtest_detail.csv",
-  "../data/matchup_backtest_detail.csv.new",
 ];
 
 const MARKET_SPECS = [
@@ -74,7 +67,6 @@ const MARKET_ORDER = [
   "Bogeys",
   "GIR",
   "Fairways hit",
-  "Round matchups",
 ];
 
 /** Markets with real closing lines in odds.csv backtest (actionable book). */
@@ -84,141 +76,19 @@ const BETTABLE_MARKETS = new Set([
   "Birdies",
   "Bogeys",
   "Fairways hit",
-  "Round matchups",
 ]);
 
-function hasMatchupBacktest() {
-  return MATCHUP_DETAIL_ROWS.length > 0;
-}
-
-function pickMatchupSide(edge1, edge2, minEv) {
-  const th = num(minEv, 0);
-  if (!Number.isFinite(edge1) || !Number.isFinite(edge2)) return null;
-  if (edge1 >= th && edge1 >= edge2) return { side: "p1", edge: edge1 };
-  if (edge2 >= th && edge2 > edge1) return { side: "p2", edge: edge2 };
-  return null;
-}
-
-function isLiveOnlyMarket(market) {
-  return String(market || "").trim() === "Round matchups" && !hasMatchupBacktest();
-}
-
-function matchupBacktestNoteHtml() {
-  return (
-    `<strong>No matchup backtest loaded.</strong> ` +
-    `Run <code>npm run update:odds</code> then <code>npm run export:matchup-backtest</code> ` +
-    `(from <code>data/historical_matchups_outcomes.csv</code>), then Reload data. ` +
-    `Live picks: <a href="#picks">Best bets</a> tab.`
-  );
-}
-
 function setOverviewHistoricalVisible(show) {
-  for (const id of ["oos-honest-card", "odds-model-roi-card", "live-matchup-overview-card"]) {
+  for (const id of ["oos-honest-card", "odds-model-roi-card"]) {
     const el = document.getElementById(id);
-    if (el) el.hidden = !show && id !== "live-matchup-overview-card";
+    if (el) el.hidden = !show;
   }
-  const liveCard = document.getElementById("live-matchup-overview-card");
-  if (liveCard) liveCard.hidden = show;
   const panel = document.getElementById("panel-overview");
   if (!panel) return;
   for (const card of panel.querySelectorAll(".chart-card")) {
     const id = card.id || "";
-    if (id === "live-matchup-overview-card" || id === "oos-honest-card" || id === "odds-model-roi-card") continue;
+    if (id === "oos-honest-card" || id === "odds-model-roi-card") continue;
     card.hidden = !show;
-  }
-}
-
-function liveOnlyMarketNoteHtml() {
-  return matchupBacktestNoteHtml();
-}
-
-function renderLiveMatchupOverview() {
-  setOverviewHistoricalVisible(false);
-  const noteEl = document.getElementById("live-matchup-overview-note");
-  const kpisEl = document.getElementById("live-matchup-overview-kpis");
-  const card = document.getElementById("live-matchup-overview-card");
-  if (card) card.hidden = false;
-
-  if (!LIVE_CTX?.projections) {
-    document.getElementById("overview-kpis").innerHTML = `
-      <div class="kpi-card">
-        <div class="kpi-label">Round matchups</div>
-        <div class="kpi-value">—</div>
-        <div class="kpi-sub">Load projections.json to see live picks</div>
-      </div>`;
-    if (noteEl) noteEl.innerHTML = liveOnlyMarketNoteHtml();
-    if (kpisEl) kpisEl.innerHTML = "";
-    return;
-  }
-
-  const sum = summarizeLiveRoundMatchups({
-    projections: LIVE_CTX.projections,
-    minEvPct: state.minEv,
-  });
-  const top = sum.top;
-  const topLabel = top
-    ? `${top.player_name} vs ${top.opponent_name}`
-    : "—";
-
-  document.getElementById("overview-kpis").innerHTML = `
-    <div class="kpi-card highlight">
-      <div class="kpi-label">+EV picks</div>
-      <div class="kpi-value ${clsSigned(sum.qualified)}">${sum.qualified}</div>
-      <div class="kpi-sub">≥ ${state.minEv}% EV · ${sum.roundLabel}${sum.eventName ? ` · ${sum.eventName}` : ""}</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Pairings listed</div>
-      <div class="kpi-value">${sum.listed}</div>
-      <div class="kpi-sub">${sum.priced} with model + book prices</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Avg EV (qualified)</div>
-      <div class="kpi-value ${clsSigned(sum.avgEdge)}">${Number.isFinite(sum.avgEdge) ? `${sum.avgEdge >= 0 ? "+" : ""}${fmt(sum.avgEdge, 1)}%` : "—"}</div>
-      <div class="kpi-sub">model win % vs best posted decimal</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Best edge</div>
-      <div class="kpi-value ${clsSigned(top?.edgePct)}">${top ? `${top.edgePct >= 0 ? "+" : ""}${fmt(top.edgePct, 1)}%` : "—"}</div>
-      <div class="kpi-sub">${top ? `${top.book || "book"} · ${topLabel}` : `try min EV below ${state.minEv}%`}</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Top pick win %</div>
-      <div class="kpi-value">${top ? formatModelMu("Round matchups", top.mu) : "—"}</div>
-      <div class="kpi-sub">${top ? formatGap("Round matchups", top.gap) + " stroke edge" : ""}</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Historical backtest</div>
-      <div class="kpi-value muted">N/A</div>
-      <div class="kpi-sub">no walk-forward matchup CSV yet</div>
-    </div>
-  `;
-
-  if (noteEl) {
-    noteEl.innerHTML = liveOnlyMarketNoteHtml();
-  }
-  if (kpisEl) {
-    const built = buildLiveBestBets({
-      projections: LIVE_CTX.projections,
-      oos: LIVE_CTX.oos || OOS_REPORT,
-      signals: LIVE_CTX.signals,
-      courseRow: LIVE_CTX.courseRow,
-      minEvPct: state.minEv,
-      marketFilter: "Round matchups",
-    });
-    if (!built.picks.length) {
-      kpisEl.innerHTML = `<p class="note muted">No round matchups at ≥${state.minEv}% EV — lower Min EV % or refresh book odds.</p>`;
-      return;
-    }
-    kpisEl.innerHTML = built.picks
-      .slice(0, 5)
-      .map(
-        (p, i) => `<div class="kpi-card compact">
-        <div class="kpi-label">#${i + 1} ${esc(p.player_name)}</div>
-        <div class="kpi-value ${clsSigned(p.edgePct)}">+${fmt(p.edgePct, 1)}%</div>
-        <div class="kpi-sub">vs ${esc(p.opponent_name)} · ${formatModelMu("Round matchups", p.mu)} model</div>
-      </div>`,
-      )
-      .join("");
   }
 }
 
@@ -227,9 +97,6 @@ let ALL_ROWS = [];
 
 /** @type {Record<string, string>[]} */
 let DETAIL_ROWS = [];
-
-/** @type {Record<string, string>[]} */
-let MATCHUP_DETAIL_ROWS = [];
 
 /** @type {object | null} */
 let OOS_REPORT = null;
@@ -668,20 +535,12 @@ function syncRiskFromForm() {
 }
 
 function myBetsPickLabel(bet) {
-  const market = String(bet.market || "");
-  if (market === "Round matchups") {
-    const opp = bet.opponentName ? ` vs ${bet.opponentName}` : "";
-    return `${bet.playerName || "—"}${opp}`;
-  }
   const side = String(bet.side || "").toLowerCase() === "under" ? "Under" : "Over";
   const line = Number.isFinite(bet.line) ? ` ${bet.line}` : "";
   return `${side}${line}`;
 }
 
 function myBetsOptionPickLabel(opt) {
-  if (opt.market === "Round matchups") {
-    return opt.playerName || "—";
-  }
   const side = String(opt.side || "").toLowerCase() === "under" ? "Under" : "Over";
   return `${side} ${Number.isFinite(opt.line) ? opt.line : "—"}`;
 }
@@ -696,11 +555,7 @@ function myBetsOptionMatchesSearch(opt, q) {
   const pick = myBetsOptionPickLabel(opt);
   return (
     myBetsMatchesSearch(opt.playerName, q) ||
-    myBetsMatchesSearch(opt.opponentName, q) ||
     myBetsMatchesSearch(opt.market, q) ||
-    myBetsMatchesSearch(opt.matchupLabel, q) ||
-    myBetsMatchesSearch(opt.p1Name, q) ||
-    myBetsMatchesSearch(opt.p2Name, q) ||
     myBetsMatchesSearch(pick, q) ||
     myBetsMatchesSearch(opt.side, q)
   );
@@ -726,11 +581,9 @@ function myBetsAddButton(lineKey, inSlip, label = "Add") {
 
 function renderMyBetsBrowseOptionRow(o, inSlip) {
   const added = inSlip.has(o.lineKey);
-  const lineCell = o.market === "Round matchups" ? "—" : Number.isFinite(o.line) ? o.line : "—";
-  const playerCell =
-    o.market === "Round matchups" ? esc(o.matchupLabel || `${o.playerName} vs ${o.opponentName}`) : esc(o.playerName);
+  const lineCell = Number.isFinite(o.line) ? o.line : "—";
   return `<tr class="my-bets-available-row${added ? " my-bets-in-slip" : ""}" data-line-key="${esc(o.lineKey)}">
-    <td class="player-cell">${playerCell}</td>
+    <td class="player-cell">${esc(o.playerName)}</td>
     <td>${esc(o.market)}</td>
     <td>${esc(myBetsOptionPickLabel(o))}</td>
     <td class="num">${lineCell}</td>
@@ -739,58 +592,13 @@ function renderMyBetsBrowseOptionRow(o, inSlip) {
   </tr>`;
 }
 
-function renderMyBetsMatchupPairRows(sides, inSlip) {
-  const sorted = [...sides].sort((a, b) => String(a.side).localeCompare(String(b.side)));
-  const label = sorted[0]?.matchupLabel || `${sorted[0]?.playerName} vs ${sorted[0]?.opponentName}`;
-  if (sorted.length !== 2) {
-    return sorted.map((o) => renderMyBetsBrowseOptionRow(o, inSlip)).join("");
-  }
-  const [a, b] = sorted;
-  const rowCls =
-    inSlip.has(a.lineKey) && inSlip.has(b.lineKey)
-      ? " my-bets-in-slip"
-      : inSlip.has(a.lineKey) || inSlip.has(b.lineKey)
-        ? " my-bets-in-slip-partial"
-        : "";
-  return `<tr class="my-bets-matchup-row${rowCls}">
-    <td class="player-cell" rowspan="2">${esc(label)}</td>
-    <td rowspan="2">${esc(a.market)}</td>
-    <td>${esc(a.playerName)}</td>
-    <td class="num">—</td>
-    <td class="num">${formatAmerican(a.odds)}</td>
-    <td class="num">${myBetsAddButton(a.lineKey, inSlip, `Add ${a.playerName.split(" ").pop() || "P1"}`)}</td>
-  </tr>
-  <tr class="my-bets-matchup-row${rowCls}">
-    <td>${esc(b.playerName)}</td>
-    <td class="num">—</td>
-    <td class="num">${formatAmerican(b.odds)}</td>
-    <td class="num">${myBetsAddButton(b.lineKey, inSlip, `Add ${b.playerName.split(" ").pop() || "P2"}`)}</td>
-  </tr>`;
-}
-
 function renderMyBetsBrowseTableHtml(options, inSlip) {
-  const ou = options.filter((o) => o.pickType !== "matchup");
-  /** @type {Map<string, object[]>} */
-  const pairs = new Map();
-  for (const o of options) {
-    if (o.pickType !== "matchup") continue;
-    const pk = o.pairKey || o.lineKey;
-    if (!pairs.has(pk)) pairs.set(pk, []);
-    pairs.get(pk).push(o);
-  }
-  const matchupGroups = [...pairs.values()].sort((a, b) =>
-    String(a[0]?.matchupLabel || a[0]?.playerName).localeCompare(String(b[0]?.matchupLabel || b[0]?.playerName)),
-  );
-  return ou.map((o) => renderMyBetsBrowseOptionRow(o, inSlip)).join("") + matchupGroups.map((g) => renderMyBetsMatchupPairRows(g, inSlip)).join("");
+  return options.map((o) => renderMyBetsBrowseOptionRow(o, inSlip)).join("");
 }
 
 function myBetsLineKeyFromBet(bet) {
   if (bet.lineKey) return bet.lineKey;
-  const m = String(bet.market || "");
-  if (m === "Round matchups") {
-    return `${bet.playerName}|${m}|${bet.side}|${bet.opponentName}`;
-  }
-  return `${bet.playerName}|${m}|${bet.side}|${bet.line}`;
+  return `${bet.playerName}|${bet.market}|${bet.side}|${bet.line}`;
 }
 
 function myBetsSlipKeys() {
@@ -851,19 +659,13 @@ function addOptionToMyBetsSlip(option) {
 
 /** @param {object} pick */
 function prefillMyBetsFromPick(pick) {
-  const isMatchup = pick.market === "Round matchups" || pick.pickType === "matchup";
   const dg = pick.dg_id || pick.playerName;
-  const oppDg = pick.opponent_dg_id || pick.opponentName;
   addOptionToMyBetsSlip({
-    lineKey: isMatchup
-      ? `${dg}|Round matchups|${pick.side}|${oppDg}`
-      : `${dg}|${pick.market}|${pick.side}`,
+    lineKey: `${dg}|${pick.market}|${pick.side}`,
     eventName: pick.eventName || "",
     round: pick.round || 1,
     playerName: pick.player_name || pick.playerName || "",
-    opponentName: pick.opponent_name || pick.opponentName || "",
     dg_id: num(pick.dg_id),
-    opponent_dg_id: num(pick.opponent_dg_id),
     market: pick.market || "",
     side: pick.side || "",
     line: num(pick.line),
@@ -910,7 +712,6 @@ function removeMyBetByLineKey(lineKey) {
 function gradeMyBetsFromLoadedData() {
   const changed = autoGradeMyBets(state.myBets.bets, {
     detailRows: DETAIL_ROWS,
-    matchupRows: MATCHUP_DETAIL_ROWS,
     marketSpecs: MARKET_SPECS,
   });
   if (changed > 0) saveMyBetsPrefs();
@@ -1323,14 +1124,73 @@ function explodeDetailToBets(rows) {
   const out = [];
   for (const row of rows) {
     if (row.pricing_mode !== "default" || row.pricing_skill !== "default") continue;
-    if (row.book_odds_source !== "pre_round_audit") continue;
+    const src = String(row.book_odds_source || "").trim();
+    if (src !== "pre_round_audit" && src !== "live_snapshot") continue;
     for (const spec of MARKET_SPECS) {
       out.push(...explodeDetailBetForBook(row, spec, {
         bookCol: spec.bookCol,
         overOddsCol: spec.overOdds,
         underOddsCol: spec.underOdds,
-        bookLabel: "DraftKings",
+        bookLabel: src === "live_snapshot" ? "DraftKings (live)" : "DraftKings",
       }));
+    }
+  }
+  return out;
+}
+
+function explodeProjectionActualToBets(rows) {
+  /** @type {object[]} */
+  const out = [];
+  for (const row of rows) {
+    if (row.pricing_mode !== "default" || row.pricing_skill !== "default") continue;
+    for (const spec of MARKET_SPECS) {
+      const bookLine = parseLine(row[spec.bookCol]);
+      if (Number.isFinite(bookLine)) continue;
+      const ppLine = parseLine(row[spec.ppBookCol]);
+      if (Number.isFinite(ppLine)) continue;
+      const actual = parseLine(row[spec.actual]);
+      const modelLine = parseLine(row[spec.modelCol]);
+      if (!Number.isFinite(actual) || !Number.isFinite(modelLine)) continue;
+      if (!isActionableMarket(spec.market)) continue;
+      out.push({
+        event_name: row.event_name,
+        round: row.round,
+        dg_id: row.dg_id,
+        player_name: row.player_name,
+        market: spec.market,
+        book: "Model vs actual",
+        modelLine,
+        bookLine: NaN,
+        diff: modelLine - actual,
+        overOdds: NaN,
+        underOdds: NaN,
+        overRes: row[spec.overRes],
+        underRes: row[spec.underRes],
+        actual,
+        edgeOver: NaN,
+        edgeUnder: NaN,
+        edgeFairOver: NaN,
+        edgeFairUnder: NaN,
+        fairOver: NaN,
+        fairUnder: NaN,
+        pModelOver: NaN,
+        pModelUnder: NaN,
+        pickSide: null,
+        pickEdge: NaN,
+        edgeFairPick: NaN,
+        modelProb: NaN,
+        fairProb: NaN,
+        postedProb: NaN,
+        beatsFairPreBet: null,
+        qualified: false,
+        betRes: "",
+        betOdds: NaN,
+        betDec: NaN,
+        exported_at: row.exported_at,
+        pnl: NaN,
+        decimals: spec.decimals,
+        projectionActual: true,
+      });
     }
   }
   return out;
@@ -1363,9 +1223,15 @@ function explodeDetailBetForBook(row, spec, book) {
   const actual = parseLine(row[spec.actual]);
   const mu = Number.isFinite(modelLine) ? modelLine : NaN;
   if (!isActionableMarket(spec.market)) return [];
-  let { edgeOver, edgeUnder } = modelEdgePctAtLine(spec.market, mu, bookLine, overOdds, underOdds);
-  ({ edgeOver, edgeUnder } = capDirectionalPostedEdges(edgeOver, edgeUnder, mu, bookLine));
   const fair = modelEdgeVsFairAtLine(spec.market, mu, bookLine, overOdds, underOdds);
+  let edgeOver = fair.edgeFairOver;
+  let edgeUnder = fair.edgeFairUnder;
+  if (!Number.isFinite(edgeOver) || !Number.isFinite(edgeUnder)) {
+    const posted = modelEdgePctAtLine(spec.market, mu, bookLine, overOdds, underOdds);
+    edgeOver = posted.edgeOver;
+    edgeUnder = posted.edgeUnder;
+  }
+  ({ edgeOver, edgeUnder } = capDirectionalPostedEdges(edgeOver, edgeUnder, mu, bookLine));
   const pModelOver = fair.pOver;
   const pModelUnder = fair.pUnder;
   const marketMinEv = minEvForMarket(spec.market, state.minEv);
@@ -1389,7 +1255,20 @@ function explodeDetailBetForBook(row, spec, book) {
         : NaN;
   const modelProb = side === "over" ? pModelOver : side === "under" ? pModelUnder : NaN;
   const edgeFairPick = side === "over" ? fair.edgeFairOver : side === "under" ? fair.edgeFairUnder : NaN;
-  const qualified = Boolean(pick) && qualifiesBet({ market: spec.market });
+  const qualified =
+    Boolean(pick) &&
+    qualifiesBet({
+      market: spec.market,
+      modelLine,
+      bookLine,
+      context: {
+        gir_minus_fw: nNum(row.gir_minus_fw, NaN),
+        course_fw_width: nNum(row.course_fw_width, NaN),
+        round: Math.round(nNum(row.round, NaN)),
+      },
+      eventName: row.event_name,
+      side: pick?.side || null,
+    });
   return [
     {
       event_name: row.event_name,
@@ -1433,99 +1312,20 @@ function explodeDetailBetForBook(row, spec, book) {
   ];
 }
 
-function explodeMatchupDetailToBets(rows) {
-  /** @type {object[]} */
-  const out = [];
-  for (const row of rows) {
-    if (row.book_odds_source !== "historical_matchups_dk_close" && row.book_odds_source !== "historical_matchups_close") continue;
-    const market = "Round matchups";
-    if (!isActionableMarket(market)) continue;
-    const edge1 = num(row.edge_p1_pct, NaN);
-    const edge2 = num(row.edge_p2_pct, NaN);
-    const marketMinEv = minEvForMarket(market, state.minEv);
-    const pick = pickMatchupSide(edge1, edge2, marketMinEv);
-    const bestSide =
-      Number.isFinite(edge1) && Number.isFinite(edge2)
-        ? edge1 >= edge2
-          ? { side: "p1", edge: edge1 }
-          : { side: "p2", edge: edge2 }
-        : null;
-    const activePick = pick || (state.show === "all" ? bestSide : null);
-    const side = activePick?.side || null;
-    const isP1 = side === "p1";
-    const playerName = isP1 ? row.player_name : row.opponent_name;
-    const opponentName = isP1 ? row.opponent_name : row.player_name;
-    const modelWinPct = num(isP1 ? row.model_win_pct : 100 - num(row.model_win_pct, NaN), NaN);
-    const dec = num(isP1 ? row.p1_close_dec : row.p2_close_dec, NaN);
-    const impliedPct = dec > 1 ? (1 / dec) * 100 : NaN;
-    const betRes = isP1 ? row.p1_result : row.p2_result;
-    const betOdds = decimalToAmerican(dec);
-    const qualified = Boolean(pick) && qualifiesBet({ market });
-    out.push({
-      event_name: row.event_name,
-      round: row.round,
-      dg_id: isP1 ? row.dg_id : row.opponent_dg_id,
-      player_name: playerName,
-      opponent_name: opponentName,
-      market,
-      isMatchup: true,
-      modelLine: modelWinPct,
-      bookLine: impliedPct,
-      diff: Number.isFinite(modelWinPct) && Number.isFinite(impliedPct) ? modelWinPct - impliedPct : NaN,
-      overOdds: row.p1_close_dec ? decimalToAmerican(num(row.p1_close_dec, NaN)) : NaN,
-      underOdds: row.p2_close_dec ? decimalToAmerican(num(row.p2_close_dec, NaN)) : NaN,
-      overRes: row.p1_result,
-      underRes: row.p2_result,
-      actual: betRes === "W" ? 1 : betRes === "L" ? 0 : NaN,
-      edgeOver: edge1,
-      edgeUnder: edge2,
-      pickSide: side,
-      pickEdge: activePick?.edge ?? NaN,
-      edgeFairPick: activePick?.edge ?? NaN,
-      modelProb: Number.isFinite(modelWinPct) ? modelWinPct / 100 : NaN,
-      fairProb: Number.isFinite(impliedPct) ? impliedPct / 100 : NaN,
-      postedProb: Number.isFinite(impliedPct) ? impliedPct / 100 : NaN,
-      beatsFairPreBet:
-        qualified && Number.isFinite(modelWinPct) && Number.isFinite(impliedPct) ? modelWinPct > impliedPct : null,
-      qualified,
-      betRes,
-      betOdds,
-      betDec: dec,
-      exported_at: row.exported_at,
-      pnl: qualified && betRes === "W" ? dec - 1 : qualified && betRes === "L" ? -1 : NaN,
-      decimals: 1,
-      book: row.book,
-    });
-  }
-  return out;
-}
-
-function decimalToAmerican(dec) {
-  const d = num(dec, NaN);
-  if (!Number.isFinite(d) || d <= 1) return NaN;
-  if (d >= 2) return Math.round((d - 1) * 100);
-  return Math.round(-100 / (d - 1));
-}
-
 function activeBetRows() {
-  let rows = [...explodeDetailToBets(DETAIL_ROWS), ...explodePpDetailToBets(DETAIL_ROWS), ...explodeMatchupDetailToBets(MATCHUP_DETAIL_ROWS)];
+  let rows = [
+    ...explodeDetailToBets(DETAIL_ROWS),
+    ...explodePpDetailToBets(DETAIL_ROWS),
+    ...explodeProjectionActualToBets(DETAIL_ROWS),
+  ];
   if (state.tournament) rows = rows.filter((r) => r.event_name === state.tournament);
   if (state.market) rows = rows.filter((r) => r.market === state.market);
-  if (state.side) {
-    rows = rows.filter((r) => {
-      if (r.isMatchup) {
-        const s = state.side.toLowerCase();
-        if (s === "p1" || s === "p2") return r.pickSide === s;
-        return true;
-      }
-      return r.pickSide === state.side;
-    });
-  }
+  if (state.side) rows = rows.filter((r) => r.pickSide === state.side);
   if (state.player) {
     const q = state.player.toLowerCase();
     rows = rows.filter((r) => String(r.player_name).toLowerCase().includes(q));
   }
-  if (state.show === "bets") rows = rows.filter((r) => r.qualified);
+  if (state.show === "bets") rows = rows.filter((r) => r.qualified || r.projectionActual);
   return rows.sort((a, b) => {
     const ev = String(a.event_name).localeCompare(String(b.event_name));
     if (ev) return ev;
@@ -1583,12 +1383,6 @@ function aggregateBeatFairStats(rows) {
 function renderBets() {
   const showEvent = !state.tournament;
   document.getElementById("bets-col-event").hidden = !showEvent;
-  if (isLiveOnlyMarket(state.market)) {
-    document.getElementById("bets-kpis").innerHTML = "";
-    document.querySelector("#bets-table tbody").innerHTML =
-      `<tr><td colspan="${showEvent ? 14 : 13}">${liveOnlyMarketNoteHtml()}</td></tr>`;
-    return;
-  }
   const rows = activeBetRows();
   const qualified = rows.filter((r) => r.qualified);
   const bets = qualified.length;
@@ -1648,18 +1442,12 @@ function renderBets() {
         .map((r) => {
           const pickCls = r.qualified ? "pick-qualified" : "pick-muted";
           const pickLabel = r.pickSide
-            ? r.isMatchup
-              ? `<span class="${pickCls}">vs ${esc(r.opponent_name || "—")}</span>`
-              : `<span class="${pickCls}">${r.pickSide}</span>`
-            : "—";
-          const modelCell = r.isMatchup
-            ? formatModelMu(r.market, Number.isFinite(r.modelLine) ? r.modelLine / 100 : NaN)
-            : fmtLine(r.modelLine, r.decimals);
-          const bookCell = r.isMatchup
-            ? Number.isFinite(r.bookLine)
-              ? `${fmt(r.bookLine, 1)}%`
-              : "—"
-            : fmtLine(r.bookLine, r.decimals);
+            ? `<span class="${pickCls}">${r.pickSide}</span>`
+            : r.projectionActual
+              ? `<span class="${pickCls} pick-muted">μ vs actual</span>`
+              : "—";
+          const modelCell = fmtLine(r.modelLine, r.decimals);
+          const bookCell = r.projectionActual ? "—" : fmtLine(r.bookLine, r.decimals);
           const betCell = r.qualified ? resultBadge(r.betRes) : "—";
           const pnlCell = r.qualified && Number.isFinite(r.pnl)
             ? `<span class="${clsSigned(r.pnl)}">${r.pnl >= 0 ? "+" : ""}${fmt(r.pnl, 2)}</span>`
@@ -1834,10 +1622,6 @@ function overviewLineRows() {
 }
 
 function renderOverview() {
-  if (isLiveOnlyMarket(state.market)) {
-    renderLiveMatchupOverview();
-    return;
-  }
   setOverviewHistoricalVisible(true);
 
   const lines = overviewLineRows();
@@ -1848,19 +1632,17 @@ function renderOverview() {
   const totalScore = state.market
     ? lines.find((r) => r.market === state.market)
     : lines.find((r) => r.market === "Total score");
-  const rmseLabel = state.market === "Round matchups" ? "Win % RMSE" : "Total score RMSE";
-  const maeLabel = state.market === "Round matchups" ? "Win % MAE" : "Total score MAE";
   const bestRoi = evAgg.reduce((best, a) => (!best || a.roi > best.roi ? a : best), null);
   const worstRmse = [...lines].sort((a, b) => num(b.rmse) - num(a.rmse))[0];
 
   document.getElementById("overview-kpis").innerHTML = `
     <div class="kpi-card">
-      <div class="kpi-label">${rmseLabel}</div>
+      <div class="kpi-label">Total score RMSE</div>
       <div class="kpi-value">${fmt(num(totalScore?.rmse), 2)}</div>
-      <div class="kpi-sub">${state.tournament || "combined"} · ${state.market === "Round matchups" ? "model vs book win %" : "strokes vs book"}</div>
+      <div class="kpi-sub">${state.tournament || "combined"} · strokes vs book</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">${maeLabel}</div>
+      <div class="kpi-label">Total score MAE</div>
       <div class="kpi-value">${fmt(num(totalScore?.mae), 2)}</div>
       <div class="kpi-sub">${totalScore?.n_line_pairs || 0} line pairs</div>
     </div>
@@ -1970,14 +1752,6 @@ function renderOddsCsv() {
   const tbody = document.getElementById("odds-csv-tbody");
   const note = document.getElementById("odds-csv-note");
   if (!kpis || !thead || !tbody) return;
-
-  if (isLiveOnlyMarket(state.market)) {
-    if (note) note.innerHTML = liveOnlyMarketNoteHtml();
-    kpis.innerHTML = "";
-    thead.innerHTML = "";
-    tbody.innerHTML = `<tr><td colspan="16" class="muted">${liveOnlyMarketNoteHtml()}</td></tr>`;
-    return;
-  }
 
   if (!ODDS_LINES_ROWS.length) {
     if (note) {
@@ -2161,16 +1935,17 @@ function renderHonestOos() {
     return;
   }
   card.hidden = false;
-  const c5 = OOS_REPORT.combined_oos_at_5pct;
+  const rec = OOS_REPORT.combined_oos_recommended || OOS_REPORT.combined_oos_at_5pct;
   const peak = OOS_REPORT.peak_oos_event_at_5pct;
   const worst = OOS_REPORT.worst_oos_event_at_5pct;
   const bestTh = OOS_REPORT.best_oos_threshold;
 
   if (note) {
+    const pol = OOS_MARKET_POLICY;
     note.innerHTML =
       `Walk-forward OOS across <strong>${OOS_REPORT.oos_event_count}</strong> completed events` +
       (OOS_REPORT.excluded_live_event ? ` (excludes live week: ${OOS_REPORT.excluded_live_event})` : "") +
-      `. Uniform ${DEFAULT_MIN_EV_PCT}% EV on all markets (overs and unders). ` +
+      `. Per-market policy: GIR EV≥${pol.GIR?.minEv}% gap≥${pol.GIR?.minGap}; Total EV≥${pol["Total score"]?.minEv}%; Birdies EV≥${pol.Birdies?.minEv}%; FW under-only + gir−fw≥${pol["Fairways hit"]?.minGirMinusFw}. ` +
       `Regenerate: <code>npm run report:walkforward-oos-roi</code>`;
   }
 
@@ -2179,8 +1954,8 @@ function renderHonestOos() {
   document.getElementById("oos-honest-kpis").innerHTML = `
     <div class="kpi-card highlight">
       <div class="kpi-label">OOS ROI (recommended)</div>
-      <div class="kpi-value ${clsSigned(c5.roi_pct)}">${fmtPct(c5.roi_pct)}</div>
-      <div class="kpi-sub">≥${DEFAULT_MIN_EV_PCT}% EV policy · ${c5.bets} bets · ${fmt(c5.hit_pct, 1)}% hit · +${fmt(c5.units, 0)}u</div>
+      <div class="kpi-value ${clsSigned(rec?.roi_pct)}">${fmtPct(rec?.roi_pct)}</div>
+      <div class="kpi-sub">per-market policy · ${rec?.bets || 0} bets · ${fmt(rec?.hit_pct, 1)}% hit · ${rec?.units >= 0 ? "+" : ""}${fmt(rec?.units, 0)}u</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">Unfiltered @ 5%</div>
@@ -2239,11 +2014,6 @@ function renderHonestOos() {
 function renderAccuracy() {
   const showEvent = !state.tournament;
   document.getElementById("accuracy-col-event").hidden = !showEvent;
-  if (isLiveOnlyMarket(state.market)) {
-    document.querySelector("#accuracy-table tbody").innerHTML =
-      `<tr><td colspan="${showEvent ? 5 : 4}">${liveOnlyMarketNoteHtml()}</td></tr>`;
-    return;
-  }
   const lines = lineRows();
   document.querySelector("#accuracy-table tbody").innerHTML = lines.length
     ? lines
@@ -2263,13 +2033,6 @@ function renderAccuracy() {
 function renderEv() {
   const showEvent = !state.tournament;
   document.getElementById("ev-col-event").hidden = !showEvent;
-  if (isLiveOnlyMarket(state.market)) {
-    document.querySelector("#ev-table tbody").innerHTML =
-      `<tr><td colspan="${showEvent ? 9 : 8}">${liveOnlyMarketNoteHtml()}</td></tr>`;
-    const table = document.getElementById("ev-heatmap");
-    if (table) table.innerHTML = `<tbody><tr><td>${liveOnlyMarketNoteHtml()}</td></tr></tbody>`;
-    return;
-  }
   const rows = evRows();
   document.querySelector("#ev-table tbody").innerHTML = rows.length
     ? rows
@@ -2442,8 +2205,8 @@ function renderHeader() {
   const liveLine =
     liveMeta?.event && liveMeta?.course
       ? `<div class="header-live">Live week: <strong>${esc(liveMeta.event)}</strong> · ${esc(liveMeta.course)}${
-          liveMeta.updated ? ` · ${esc(new Date(liveMeta.updated).toLocaleString())}` : ""
-        }</div>`
+          liveMeta.updated ? ` · projections ${esc(new Date(liveMeta.updated).toLocaleString())}` : ""
+        } · Reload merges pgatour + live actuals into bet log</div>`
       : "";
   document.getElementById("header-meta").innerHTML = `
     <div><strong>${state.tournament || "All tournaments"}</strong></div>
@@ -2486,7 +2249,6 @@ function renderLiveFactorsPanel(summary) {
 
 function formatModelMu(market, mu) {
   if (!Number.isFinite(mu)) return "—";
-  if (market === "Round matchups") return `${(mu <= 1 ? mu * 100 : mu).toFixed(1)}%`;
   if (market === "Total score") return mu.toFixed(2);
   if (market === "Birdies" || market === "Bogeys") return mu.toFixed(1);
   return String(Math.round(mu));
@@ -2495,7 +2257,6 @@ function formatModelMu(market, mu) {
 function formatGap(market, gap) {
   if (!Number.isFinite(gap)) return "—";
   const sign = gap > 0 ? "+" : "";
-  if (market === "Round matchups") return `${sign}${gap.toFixed(2)} SG`;
   if (market === "Total score") return `${sign}${gap.toFixed(2)}`;
   if (market === "Birdies" || market === "Bogeys") return `${sign}${gap.toFixed(1)}`;
   return `${sign}${Math.round(gap)}`;
@@ -2582,16 +2343,13 @@ function renderLivePicks() {
     noteEl.textContent =
       `Upcoming round picks from projections.json (${built.updatedAt ? `updated ${new Date(built.updatedAt).toLocaleString()}` : "live"}).${factors}${venue}${dkNote}` +
       ` Ranked by model EV vs posted lines, walk-forward OOS market ROI` +
-      (Number.isFinite(oosRoi) ? ` (+${oosRoi.toFixed(1)}% on ${oosN} OOS bets @ 5%)` : "") +
+      (Number.isFinite(oosRoi) ? ` (${oosRoi >= 0 ? "+" : ""}${oosRoi.toFixed(1)}% on ${oosN} OOS policy bets)` : "") +
       `, and historical context signals. Uses toolbar Min EV %.`;
   }
 
   let picks = built.picks;
   if (state.side) {
-    picks = picks.filter((p) => {
-      if (p.pickType === "matchup" || p.market === "Round matchups") return true;
-      return String(p.side).toLowerCase() === state.side.toLowerCase();
-    });
+    picks = picks.filter((p) => String(p.side).toLowerCase() === state.side.toLowerCase());
   }
   if (state.player) {
     const q = state.player.toLowerCase();
@@ -2620,39 +2378,23 @@ function renderLivePicks() {
           return `<span class="live-picks-tag${cls}">${esc(t)}</span>`;
         })
         .join("");
-      const isMatchup = p.pickType === "matchup" || p.market === "Round matchups";
-      const sideLabel = isMatchup
-        ? `vs ${p.opponent_name || "—"}`
-        : p.side === "over"
-          ? "Over"
-          : "Under";
-      const lineLabel = isMatchup
-        ? Number.isFinite(p.line)
-          ? `${p.line.toFixed(1)}%`
-          : p.book
-            ? esc(p.book)
-            : "—"
-        : Number.isFinite(p.line)
-          ? p.line
-          : "—";
-      const muTitle = isMatchup ? "Model win %" : "Model μ";
+      const sideLabel = p.side === "over" ? "Over" : "Under";
+      const lineLabel = Number.isFinite(p.line) ? p.line : "—";
       return `<tr class="live-picks-row"
         data-event="${esc(built.eventName || "")}"
         data-round="${built.round || ""}"
         data-player="${esc(p.player_name)}"
         data-market="${esc(p.market)}"
         data-side="${esc(p.side)}"
-        data-opponent="${esc(p.opponent_name || "")}"
         data-line="${Number.isFinite(p.line) ? p.line : ""}"
         data-odds="${Number.isFinite(p.odds) ? Math.round(p.odds) : ""}"
-        data-dg-id="${p.dg_id || ""}"
-        data-opponent-dg-id="${p.opponent_dg_id || ""}">
+        data-dg-id="${p.dg_id || ""}">
         <td class="num">${i + 1}</td>
         <td>${esc(p.player_name)}</td>
         <td>${esc(p.market)}</td>
         <td class="num">${esc(sideLabel)}</td>
-        <td class="num" title="${muTitle}">${formatModelMu(p.market, p.mu)}</td>
-        <td class="num" title="${isMatchup && p.book ? esc(p.book) : ""}">${lineLabel}</td>
+        <td class="num" title="Model μ">${formatModelMu(p.market, p.mu)}</td>
+        <td class="num">${lineLabel}</td>
         <td class="num ${gapCls}">${formatGap(p.market, p.gap)}</td>
         <td class="num">${esc(formatAmerican(p.odds))}</td>
         <td class="num ${edgeCls}">${p.edgePct >= 0 ? "+" : ""}${p.edgePct.toFixed(1)}%</td>
@@ -2701,25 +2443,6 @@ function setTab(name) {
   }
 }
 
-async function loadOptionalCsvText(candidates) {
-  /** @type {{ url: string, text: string, rows: number }[]} */
-  const loaded = [];
-  for (const url of candidates) {
-    try {
-      const res = await fetch(`${url}?t=${Date.now()}`, { cache: "no-store" });
-      if (!res.ok) continue;
-      const text = await res.text();
-      const rows = text.split(/\r?\n/).filter(Boolean).length - 1;
-      if (rows > 0) loaded.push({ url, text, rows });
-    } catch {
-      /* try next */
-    }
-  }
-  if (!loaded.length) return "";
-  loaded.sort((a, b) => b.rows - a.rows);
-  return loaded[0].text;
-}
-
 async function loadDetailCsvText() {
   /** @type {{ url: string, text: string, rows: number }[]} */
   const loaded = [];
@@ -2740,7 +2463,7 @@ async function loadDetailCsvText() {
   if (pick.url.endsWith(".new")) {
     console.warn("[projection-tracker] Using .new detail CSV (main file locked in Excel?)");
   }
-  return pick.text;
+  return alignDetailCsvText(pick.text);
 }
 
 async function loadSummaryCsvText() {
@@ -2810,16 +2533,23 @@ async function loadOddsLinesCsv() {
   }
 }
 
+async function loadPgatourEventRounds() {
+  try {
+    const res = await fetch(`../data/pgatour_event_rounds.json?t=${Date.now()}`, { cache: "no-store" });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
 async function loadData() {
   const errEl = document.getElementById("error-banner");
   errEl.hidden = true;
   try {
-    const [summaryText, matchupSummaryText, detailText, matchupDetailText, oos, oddsRoi, oddsLines] =
-      await Promise.all([
+    const [summaryText, detailText, oos, oddsRoi, oddsLines] = await Promise.all([
       loadSummaryCsvText(),
-      loadOptionalCsvText(MATCHUP_SUMMARY_CANDIDATES),
       loadDetailCsvText(),
-      loadOptionalCsvText(MATCHUP_DETAIL_CANDIDATES),
       loadOosReport(),
       loadOddsModelRoi(),
       loadOddsLinesCsv(),
@@ -2827,15 +2557,13 @@ async function loadData() {
     OOS_REPORT = oos;
     ODDS_MODEL_ROI = oddsRoi;
     ODDS_LINES_ROWS = oddsLines;
-    ALL_ROWS = [
-      ...parseCsv(summaryText),
-      ...(matchupSummaryText ? parseCsv(matchupSummaryText) : []),
-    ];
+    ALL_ROWS = parseCsv(summaryText).filter((r) => String(r.market || "").trim() !== "Round matchups");
     if (!ALL_ROWS.length) throw new Error("Summary CSV is empty");
     DETAIL_ROWS = detailText ? parseCsv(detailText) : [];
-    MATCHUP_DETAIL_ROWS = matchupDetailText ? parseCsv(matchupDetailText) : [];
     invalidateLiveBestBetsCache();
-    LIVE_CTX = await loadLiveBestBetsContext();
+    const [liveCtx, pgRounds] = await Promise.all([loadLiveBestBetsContext(), loadPgatourEventRounds()]);
+    LIVE_CTX = liveCtx;
+    DETAIL_ROWS = patchDetailRowsFromLiveSources(DETAIL_ROWS, LIVE_CTX?.projections, pgRounds);
     populateTournamentSelect();
     populateMarketFilter();
     populatePicksMarketFilter();
@@ -2992,14 +2720,11 @@ function bindUi() {
         eventName: tr.dataset.event || "",
         round: num(tr.dataset.round) || 1,
         playerName: tr.dataset.player || "",
-        opponentName: tr.dataset.opponent || "",
         market: tr.dataset.market || "",
         side: tr.dataset.side || "",
         line: num(tr.dataset.line),
         odds: num(tr.dataset.odds),
         dg_id: tr.dataset.dgId || "",
-        opponent_dg_id: tr.dataset.opponentDgId || "",
-        pickType: tr.dataset.market === "Round matchups" ? "matchup" : "ou",
       });
       return;
     }

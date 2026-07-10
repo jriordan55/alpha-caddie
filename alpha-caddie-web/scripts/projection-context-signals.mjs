@@ -6,6 +6,11 @@ import { join } from "path";
 import { normCourseNameKey } from "./course-name-key.mjs";
 import { teeWaveFromTeetimeAndLabel } from "./open-meteo-forecast.mjs";
 import {
+  EXPORT_PP_LINE_COLS,
+  EXPORT_PP_OVER_ODDS_COLS,
+  EXPORT_PP_UNDER_ODDS_COLS,
+} from "./round-projection-mu.mjs";
+import {
   effectiveWeatherForRow,
   weatherDifficultyDeltaFromSnapshot,
 } from "./weather-projection-adjustments.mjs";
@@ -231,22 +236,38 @@ export function extractSignalsFromHistRow(row, webRoot, ctx = {}) {
   };
 }
 
+const PP_DETAIL_INSERT_COUNT =
+  1 +
+  EXPORT_PP_LINE_COLS.length +
+  EXPORT_PP_OVER_ODDS_COLS.length +
+  EXPORT_PP_UNDER_ODDS_COLS.length;
+
 export function alignDetailCsvContent(text, targetHeaderLine) {
   const lines = String(text || "").split(/\r?\n/).filter(Boolean);
   if (!lines.length) return targetHeaderLine;
   const oldHeader = lines[0].split(",");
   const newHeader = targetHeaderLine.replace(/\n$/, "").split(",");
-  if (oldHeader.length === newHeader.length) {
-    return lines.join("\n") + "\n";
-  }
   const oldIdx = Object.fromEntries(oldHeader.map((h, i) => [h, i]));
+  const bookSrcIdx = newHeader.indexOf("book_odds_source");
   const out = [targetHeaderLine.replace(/\n$/, "")];
   for (let i = 1; i < lines.length; i++) {
-    const cells = parseCsvRowSimple(lines[i]);
+    let cells = parseCsvRowSimple(lines[i]);
+    if (
+      bookSrcIdx >= 0 &&
+      cells.length + PP_DETAIL_INSERT_COUNT === newHeader.length &&
+      cells.length < newHeader.length
+    ) {
+      cells = [
+        ...cells.slice(0, bookSrcIdx + 1),
+        ...Array(PP_DETAIL_INSERT_COUNT).fill(""),
+        ...cells.slice(bookSrcIdx + 1),
+      ];
+    }
     const row = new Array(newHeader.length).fill("");
     for (let j = 0; j < newHeader.length; j++) {
       const oi = oldIdx[newHeader[j]];
       if (oi >= 0 && oi < cells.length) row[j] = cells[oi];
+      else if (j < cells.length && oldHeader.length !== newHeader.length) row[j] = cells[j];
     }
     out.push(row.map(csvCell).join(","));
   }

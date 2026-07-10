@@ -234,10 +234,6 @@ a { color: var(--green); }
   font: inherit;
 }
 
-tr.my-bets-matchup-row td {
-  vertical-align: middle;
-}
-
 tr.my-bets-in-slip td {
   opacity: 0.72;
 }

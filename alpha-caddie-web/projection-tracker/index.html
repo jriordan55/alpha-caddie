@@ -38,8 +38,8 @@
           <option value="2.5">2.5%</option>
           <option value="5">5%</option>
           <option value="7.5">7.5%</option>
-          <option value="10">10%</option>
-          <option value="12.5" selected>12.5%</option>
+          <option value="10" selected>10%</option>
+          <option value="12.5">12.5%</option>
           <option value="15">15%</option>
         </select>
       </label>
@@ -78,11 +78,6 @@
 
     <section id="panel-overview" class="panel active" role="tabpanel">
       <div class="kpi-grid" id="overview-kpis"></div>
-      <div class="chart-card" id="live-matchup-overview-card" hidden>
-        <h2 class="section-title">Live round matchups</h2>
-        <p class="note" id="live-matchup-overview-note"></p>
-        <div class="kpi-grid" id="live-matchup-overview-kpis"></div>
-      </div>
       <div class="chart-card" id="oos-honest-card">
         <h2 class="section-title">Honest walk-forward OOS ROI</h2>
         <p class="note" id="oos-honest-note">Uniform EV policy (default 10%) on all markets and both sides. Edge from projections only — no DK calibration. Regenerate: <code>npm run report:walkforward-oos-roi</code></p>
@@ -225,7 +220,7 @@
       <div class="chart-card" id="live-picks-card">
         <h2 class="section-title" id="live-picks-title">Best bets — live week</h2>
         <p class="note" id="live-picks-note">
-          Upcoming-round picks from <code>projections.json</code> using full model μ vs DraftKings O/U lines and DraftKings round matchups.
+          Upcoming-round picks from <code>projections.json</code> using full model μ vs DraftKings O/U lines.
         </p>
         <div class="live-picks-toolbar">
           <label>Market
@@ -335,7 +330,7 @@
     </section>
 
     <section id="panel-my-bets" class="panel" role="tabpanel">
-      <p class="note">Pick from this week’s DraftKings round props and matchups, add to your slip, then enter stake sizes. Open bets auto-grade to W/L/P when you reload after results refresh.</p>
+      <p class="note">Pick from this week’s DraftKings round props, add to your slip, then enter stake sizes. Open bets auto-grade to W/L/P when you reload after results refresh.</p>
       <div class="risk-controls card-surface my-bets-toolbar">
         <label>Starting bankroll ($)
           <input type="number" id="my-bets-bankroll" min="100" step="100" value="10000" />
@@ -361,7 +356,6 @@
               <option value="Bogeys">Bogeys</option>
               <option value="GIR">GIR</option>
               <option value="Fairways hit">Fairways hit</option>
-              <option value="Round matchups">Round matchups</option>
             </select>
           </label>
         </div>
@@ -563,7 +557,6 @@
           <li><strong>Model μ</strong> — Full projection mean: course SG emphasis, venue history, 8–12 round hot/cold form, birdie-heavy venue boosts, weather, morning/afternoon tee wave, and in-round scratch when live.</li>
           <li><strong>Δ</strong> — Model μ minus the DraftKings line (positive = model above the book).</li>
           <li><strong>EV</strong> — Model edge vs posted DraftKings odds (Poisson birdies, binomial GIR/FW, normal score).</li>
-          <li><strong>Round matchups</strong> — Walk-forward μ_sg win % vs <strong>DraftKings</strong> closing odds from <code>historical_matchups_outcomes.csv</code>. Regenerate: <code>npm run update:odds</code> then <code>npm run export:matchup-backtest</code>.</li>
           <li><strong>Context</strong> — Course fit tags (dominant SG, recent form), weather, tee wave, and historical signal buckets.</li>
           <li><strong>Score</strong> — EV × OOS market factor × context boost (ranking only).</li>
           <li>Refresh live data: <code>npm run refresh:live</code> then reload this page.</li>
@@ -630,6 +623,6 @@
     </section>
   </main>
 
-  <script type="module" src="tracker.js?v=32"></script>
+  <script type="module" src="tracker.js?v=35"></script>
 </body>
 </html>

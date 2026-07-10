@@ -15,6 +15,7 @@ import {
   marketBookCalibrationEnabled,
 } from "./market-book-calibration.mjs";
 import { calibrateFairwayFieldMean, calibrateBirdiesFieldMean, calibrateGirFieldMean, refreshFairwaysFromDrivingAccuracy } from "./counting-from-rates-sg.mjs";
+import { resolveCourseLayout, syncCourseLayoutIntoProjection } from "./course-hole-layout.mjs";
 
 function num(x, fallback = NaN) {
   const n = Number(x);
@@ -768,6 +769,7 @@ export function refreshProjectionFieldMeansFromPlayers(payload, opts = {}) {
 /** Reconcile every projection row to its total_score / μ anchor. */
 export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
   const meta = payload?.meta && typeof payload.meta === "object" ? payload.meta : payload;
+  syncCourseLayoutIntoProjection(payload, payload?._webRoot);
   if (!meta.projection_course_basis || typeof meta.projection_course_basis !== "object") {
     meta.projection_course_basis = payload?.projection_course_basis || {};
   }
@@ -2053,10 +2055,17 @@ function applyDistributedFieldCalibration(rows, stat, target, shifts, rnd, opts 
  */
 export function ensureProjectionCourseBasisComplete(basis, payload = {}) {
   const out = basis && typeof basis === "object" ? basis : {};
-  const coursePar18 = Math.round(num(payload.course_par_18, NaN)) || 72;
+  const layout = resolveCourseLayout({
+    holePars: payload.hole_pars,
+    coursePar18: payload.course_par_18 ?? payload.meta?.course_par_18,
+    courseUsed: payload.course_used ?? payload.meta?.course_used,
+    eventName: payload.event_name ?? payload.meta?.event_name,
+    webRoot: payload._webRoot,
+  });
+  const coursePar18 = layout.course_par_18;
   const lo = coursePar18 - 14;
   const hi = coursePar18 + 22;
-  out.fairway_holes_modeled = Math.round(num(out.fairway_holes_modeled, 14)) || 14;
+  out.fairway_holes_modeled = layout.fairway_holes_modeled;
 
   const roundMaps = [out.field_avg_score_by_round, out.event_week_field_avg_score_by_round];
   const roundScores = [];

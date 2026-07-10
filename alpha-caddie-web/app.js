@@ -780,8 +780,21 @@ function getModelRoundForEv() {
   return ouDisplayRoundAuto();
 }
 
-/** Regulation fairway opportunities from projections meta (pars-based in fetch-datagolf); 14 when absent. */
+/** Regulation fairway opportunities from hole pars when available; else meta basis. */
+function fairwayHoleCountFromHoleParsClient(pars) {
+  if (!Array.isArray(pars) || pars.length !== 18) return NaN;
+  let n = 0;
+  for (const p of pars) {
+    const v = Math.round(num(p, NaN));
+    if (!Number.isFinite(v) || v < 3 || v > 5) return NaN;
+    if (v === 4 || v === 5) n++;
+  }
+  return n >= 1 ? n : NaN;
+}
+
 function fairwayHolesModeledFromData() {
+  const fromPars = fairwayHoleCountFromHoleParsClient(DATA?.hole_pars);
+  if (Number.isFinite(fromPars)) return fromPars;
   const n = num(DATA?.meta?.projection_course_basis?.fairway_holes_modeled, NaN);
   if (Number.isFinite(n) && n > 0) return Math.round(n);
   return 14;
@@ -3621,10 +3634,25 @@ function ouPgaTourCourseBenchmarkForMarket(market) {
 function ensureProjectionCourseBasisComplete(basis, payload = {}) {
   const out = basis && typeof basis === "object" ? basis : {};
   const meta = payload && typeof payload === "object" ? payload : {};
-  const coursePar18 = Math.round(num(meta.course_par_18, NaN)) || 72;
+  const holePars = Array.isArray(meta.hole_pars) ? meta.hole_pars : DATA?.hole_pars;
+  const fromPars = fairwayHoleCountFromHoleParsClient(holePars);
+  const coursePar18 = (() => {
+    if (Array.isArray(holePars) && holePars.length === 18) {
+      let sum = 0;
+      for (const p of holePars) {
+        const v = Math.round(num(p, NaN));
+        if (!Number.isFinite(v) || v < 3 || v > 5) break;
+        sum += v;
+      }
+      if (sum >= 63 && sum <= 76) return sum;
+    }
+    return Math.round(num(meta.course_par_18, NaN)) || 72;
+  })();
   const lo = coursePar18 - 14;
   const hi = coursePar18 + 22;
-  out.fairway_holes_modeled = Math.round(num(out.fairway_holes_modeled, 14)) || 14;
+  out.fairway_holes_modeled = Number.isFinite(fromPars)
+    ? fromPars
+    : Math.round(num(out.fairway_holes_modeled, 14)) || 14;
 
   const roundScores = [];
   for (const m of [out.field_avg_score_by_round, out.event_week_field_avg_score_by_round]) {
@@ -5850,22 +5878,38 @@ function eventWeekFieldScoringMuAdjustment(row) {
   return 0.55 * (eventAvg - venueAvg);
 }
 
+const OUTCOME_SIGMA_SCALE_DEFAULT = {
+  "Total score": 1.45,
+  Birdies: 0.945,
+  Bogeys: 0.945,
+  GIR: 1.449,
+  "Fairways hit": 1.45,
+};
+
+function outcomeSigmaScaleForMarket(market) {
+  const mKey = ouModelMarketKey(market) || market;
+  const s = DATA?.meta?.outcome_calibration?.sigma_scales?.[mKey];
+  if (Number.isFinite(s) && s > 0) return s;
+  return OUTCOME_SIGMA_SCALE_DEFAULT[mKey] || 1;
+}
+
 function sigmaForOu(market, row) {
   const mKey = ouModelMarketKey(market) || "Total score";
   const rec = ouStatRec(mKey);
+  const outcomeScale = outcomeSigmaScaleForMarket(mKey);
   const weatherMult = projectionCountsWeatherBaked(row)
     ? 1
     : weatherSigmaMultiplierFromSnapshot(effectiveWeatherForProjectionRow(row));
   const liveShrink = sigmaLiveRoundShrinkForTotalScore(row, rec);
   if (rec.sdKey) {
     const s = num(row[rec.sdKey], NaN);
-    if (Number.isFinite(s) && s > 0.05) return s * weatherMult * liveShrink;
-    return 2.75 * weatherMult * liveShrink;
+    if (Number.isFinite(s) && s > 0.05) return s * weatherMult * liveShrink * outcomeScale;
+    return 2.75 * weatherMult * liveShrink * outcomeScale;
   }
   const muFull = ouMeanCountingStat(mKey, row);
   const muFallback = ouFallbackScalarForProjectedMean(mKey, row, rec);
   const muAbs = Number.isFinite(muFull) && muFull > 0 ? Math.abs(muFull) : Math.abs(num(muFallback, NaN));
-  if (!Number.isFinite(muAbs) || muAbs <= 0) return 2.75 * weatherMult * liveShrink;
+  if (!Number.isFinite(muAbs) || muAbs <= 0) return 2.75 * weatherMult * liveShrink * outcomeScale;
   let sig = sigmaOuDiscreteCounting(mKey, muAbs);
   const bench = ouPgaTourBenchmarkForMarket(mKey);
   if (bench && Number.isFinite(bench.sd) && bench.sd > 0) {
@@ -5874,7 +5918,7 @@ function sigmaForOu(market, row) {
       sig = Math.min(sig, bench.sd * 1.08);
     }
   }
-  return sig * weatherMult * liveShrink;
+  return sig * weatherMult * liveShrink * outcomeScale;
 }
 
 /** Model vs DK props aligned this week — use baked export μ (+ in-round partials only). */

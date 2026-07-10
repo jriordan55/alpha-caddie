@@ -74,7 +74,7 @@ export function formatAmerican(am) {
   return v > 0 ? `+${v}` : String(v);
 }
 
-function sigmaDefault(market, muAbs) {
+function sigmaDefault(market, muAbs, fairwayHoles = 14) {
   const m = num(muAbs, NaN);
   if (!Number.isFinite(m) || m <= 0) return 2.4;
   if (market === "GIR") {
@@ -82,8 +82,9 @@ function sigmaDefault(market, muAbs) {
     return Math.max(1.05, Math.sqrt(18 * p * (1 - p)));
   }
   if (market === "Fairways hit") {
-    const p = clamp(m / 14, 0.07, 0.93);
-    return Math.max(1.05, Math.sqrt(14 * p * (1 - p)));
+    const n = Math.round(num(fairwayHoles, 14)) || 14;
+    const p = clamp(m / n, 0.07, 0.93);
+    return Math.max(1.05, Math.sqrt(n * p * (1 - p)));
   }
   if (market === "Birdies" || market === "Bogeys") return clamp(Math.sqrt(m * 1.08), 1.05, 3.15);
   if (market === "Pars") return clamp(Math.sqrt(m * 1.06), 1.15, 3.35);
@@ -128,24 +129,20 @@ function binomialProbOver(mu, nTrials, line) {
 }
 
 const OUTCOME_SIGMA_SCALE = {
-  "Total score": 1.08,
-  Birdies: 1.15,
-  Bogeys: 1.15,
-  GIR: 1.02,
-  "Fairways hit": 1.2,
+  "Total score": 1.45,
+  Birdies: 0.945,
+  Bogeys: 0.945,
+  GIR: 1.449,
+  "Fairways hit": 1.45,
 };
 
 export function modelProbOver(market, mu, line, sigmaScale = 1, fairwayHoles = 14) {
   if (!Number.isFinite(mu) || !Number.isFinite(line)) return NaN;
-  if (market === "Birdies" || market === "Bogeys") return poissonProbOver(mu, line);
-  if (market === "GIR") return binomialProbOver(mu, 18, line);
-  if (market === "Fairways hit") {
-    const n = Math.round(num(fairwayHoles, 14)) || 14;
-    return binomialProbOver(mu, n, line);
-  }
   const scale =
-    (Number.isFinite(sigmaScale) && sigmaScale > 0 ? sigmaScale : 1) * (OUTCOME_SIGMA_SCALE[market] || 1);
-  const sig = (market === "Total score" ? 2.75 : sigmaDefault(market, mu)) * scale;
+    (Number.isFinite(sigmaScale) && sigmaScale > 0 ? sigmaScale : 1) *
+    (OUTCOME_SIGMA_SCALE[market] || 1);
+  const sig =
+    (market === "Total score" ? 2.75 : sigmaDefault(market, mu, fairwayHoles)) * scale;
   const z = (line - mu) / sig;
   return 1 - normalCdf(z);
 }

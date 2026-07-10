@@ -50,7 +50,7 @@ import { copyFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { fastHistoryBuildEnv } from "./historical-rounds-merge-env.mjs";
-import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
+import { liveProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -64,7 +64,7 @@ for (const a of process.argv.slice(2)) {
 function buildBaseEnv() {
   const e = {
     ...process.env,
-    ...flatVenueProjectionPipelineEnv(),
+    ...liveProjectionPipelineEnv(),
     GOLF_MODEL_DIR: process.env.GOLF_MODEL_DIR?.trim() || REPO_ROOT,
   };
   // Avoid inheriting a stray FULL_HISTORY=1 from the shell when user wants the lighter default.

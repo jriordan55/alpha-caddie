@@ -14,7 +14,7 @@ import {
   fitOutcomeSigmaScales,
   setOutcomeSigmaScales,
 } from "./projection-stat-model.mjs";
-import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
+import { walkforwardBacktestPipelineEnv } from "./projection-pipeline-env.mjs";
 import { eventsLikelySame, foldComparableTitle } from "./dg-events-align.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
 import {
@@ -38,6 +38,7 @@ import {
   resolveProjectionScoreToPar,
   syncVenueScoringToProjectionBasis,
 } from "./course-round-adjustments.mjs";
+import { resolveCourseLayout } from "./course-hole-layout.mjs";
 import { traditionalRate01 } from "./dg-traditional-stats.mjs";
 import {
   RAW_ROUND_SD,
@@ -465,15 +466,22 @@ export async function buildFullModelMuMapForEvent({
   targetRound,
   betTimeMs,
   fieldDgIds,
+  pipelineEnv = null,
 }) {
-  Object.assign(process.env, flatVenueProjectionPipelineEnv());
+  Object.assign(process.env, walkforwardBacktestPipelineEnv(), pipelineEnv || {});
   const dgSet = new Set(fieldDgIds.filter((d) => Number.isFinite(d)));
   if (!dgSet.size) return new Map();
 
   const courseName = inferCourseName(histRows, eventName, eventYear);
   const courseKey = normCourseNameKey(courseName);
-  const coursePar18 = inferCoursePar(histRows, eventName, eventYear, courseKey);
-  const fairwayHoles = N_FAIRWAY_HOLES;
+  const layout = resolveCourseLayout({
+    coursePar18: inferCoursePar(histRows, eventName, eventYear, courseKey),
+    courseUsed: courseName,
+    eventName,
+    webRoot: join(repoRoot, "alpha-caddie-web"),
+  });
+  const coursePar18 = layout.course_par_18;
+  const fairwayHoles = layout.fairway_holes_modeled;
 
   const historyByDgId = buildWalkForwardHistoryByDgId(histRows, betTimeMs, dgSet);
   const rollingTrad = buildRollingTradFromHist(histRows, dgSet, betTimeMs);
@@ -625,7 +633,12 @@ export async function buildFullModelMuMapForEvent({
       : fieldCountingFromEvent || fieldCountingFromHistory;
 
   const roundMuMult = parseRoundMuMult();
-  const mult = flatVenue ? 1 : num(roundMuMult[targetRound - 1], 1);
+  const flatRoundMuAfterR1 =
+    !flatVenue &&
+    targetRound >= 2 &&
+    String(process.env.GOLF_ROUND_MU_FLAT_AFTER_R1 || "").trim() === "1" &&
+    (histEventCtx?.playerRounds?.length > 0 || withinEventCountingMap.size > 0);
+  const mult = flatVenue || flatRoundMuAfterR1 ? 1 : num(roundMuMult[targetRound - 1], 1);
   const players = [];
 
   for (const row of base) {

@@ -1,28 +1,34 @@
 /**
  * Walk-forward out-of-sample ROI — raw model μ vs pre-round DK only (no book calibration).
  */
-import { readFileSync, existsSync, createReadStream } from "fs";
+import { readFileSync, existsSync } from "fs";
+import { Readable } from "stream";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { parse } from "csv-parse";
 import { eventsLikelySame } from "./dg-events-align.mjs";
+import { alignDetailCsvContent } from "./projection-context-signals.mjs";
 import {
   DEFAULT_MIN_EV_PCT,
   isActionableMarket,
   minEvForMarket,
+  OOS_MARKET_POLICY,
   qualifiesBet,
 } from "./bet-policy.mjs";
 import { RAW_ROUND_SD } from "./projection-core.mjs";
 import { EXPORT_MARKETS, num, modelProbOver } from "./round-projection-mu.mjs";
 import {
-  fitOutcomeMuBiasCorrections,
   fitOutcomeSigmaScales,
   outcomeSigmaScale,
-  setOutcomeMuBiasCorrections,
   setOutcomeSigmaScales,
 } from "./projection-stat-model.mjs";
 import { MARKET_BOOK_CALIBRATION_MARKETS } from "./market-book-calibration.mjs";
-import { capDirectionalPostedEdges, pickBetSide, pnlForResult } from "../projection-tracker/ev-math.mjs";
+import {
+  capDirectionalPostedEdges,
+  devigFairTwoWay,
+  pickBetSide,
+  pnlForResult,
+} from "../projection-tracker/ev-math.mjs";
 
 const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
 const VS = join(WEB, "data", "round_projection_vs_actual.csv");
@@ -66,10 +72,13 @@ function loadCurrentLiveEventName() {
 
 export async function loadWalkForwardBetRows() {
   if (!existsSync(VS)) throw new Error(`Missing ${VS}`);
+  const raw = readFileSync(VS, "utf8");
+  const headerLine = `${raw.split(/\r?\n/).filter(Boolean)[0]}\n`;
+  const aligned = alignDetailCsvContent(raw, headerLine);
   /** @type {object[]} */
   const rows = [];
   await new Promise((resolve, reject) => {
-    createReadStream(VS)
+    Readable.from([aligned])
       .pipe(parse({ columns: true, relax_quotes: true, relax_column_count: true, skip_records_with_error: true }))
       .on("data", (row) => {
         if (String(row.pricing_mode || "") !== "default") return;
@@ -81,6 +90,7 @@ export async function loadWalkForwardBetRows() {
         const meta = { projection_course_basis: { fairway_holes_modeled: 14 } };
         const context = {
           gir_minus_fw: num(row.gir_minus_fw, NaN),
+          course_fw_width: num(row.course_fw_width, NaN),
           round: Math.round(num(row.round, NaN)),
         };
         for (const market of MARKET_BOOK_CALIBRATION_MARKETS) {
@@ -161,7 +171,7 @@ function implied(am) {
   return 100 / (v + 100);
 }
 
-/** Grade rows with raw walk-forward model μ (no DK book μ-shift or σ-scale). */
+/** Grade rows with calibrated model μ (residual bias + devigged fair EV). */
 export function roiOnRows(testRows, minEvPct, { marketFilter = null, useRecommendedPolicy = false } = {}) {
   let units = 0;
   let wins = 0;
@@ -169,11 +179,12 @@ export function roiOnRows(testRows, minEvPct, { marketFilter = null, useRecommen
   let n = 0;
   for (const b of testRows) {
     if (marketFilter && b.market !== marketFilter) continue;
+    const mu = b.modelLine;
     if (useRecommendedPolicy) {
       if (
         !qualifiesBet({
           market: b.market,
-          modelLine: b.modelLine,
+          modelLine: mu,
           bookLine: b.bookLine,
           context: b.context || {},
           eventName: b.event,
@@ -182,16 +193,29 @@ export function roiOnRows(testRows, minEvPct, { marketFilter = null, useRecommen
         continue;
       }
     }
-    const mu = b.modelLine;
     const pOver = modelProbOver(b.market, mu, b.bookLine, b.stubRow, b.meta);
     if (!Number.isFinite(pOver)) continue;
     const pUnder = 1 - pOver;
-    let edgeOver = (pOver - implied(b.overOdds)) * 100;
-    let edgeUnder = (pUnder - implied(b.underOdds)) * 100;
+    const { fairOver, fairUnder } = devigFairTwoWay(b.overOdds, b.underOdds);
+    let edgeOver = Number.isFinite(fairOver) ? (pOver - fairOver) * 100 : (pOver - implied(b.overOdds)) * 100;
+    let edgeUnder = Number.isFinite(fairUnder) ? (pUnder - fairUnder) * 100 : (pUnder - implied(b.underOdds)) * 100;
     ({ edgeOver, edgeUnder } = capDirectionalPostedEdges(edgeOver, edgeUnder, mu, b.bookLine));
     const evTh = useRecommendedPolicy ? minEvForMarket(b.market, minEvPct) : minEvPct;
     const pick = pickBetSide(edgeOver, edgeUnder, evTh, mu, b.bookLine);
     if (!pick) continue;
+    if (
+      useRecommendedPolicy &&
+      !qualifiesBet({
+        market: b.market,
+        modelLine: mu,
+        bookLine: b.bookLine,
+        context: b.context || {},
+        eventName: b.event,
+        side: pick.side,
+      })
+    ) {
+      continue;
+    }
     const res = pick.side === "over" ? b.overRes : b.underRes;
     const odds = pick.side === "over" ? b.overOdds : b.underOdds;
     if (res !== "W" && res !== "L" && res !== "P") continue;
@@ -215,9 +239,8 @@ export function roiOnRows(testRows, minEvPct, { marketFilter = null, useRecommen
  * Walk-forward OOS: grade each completed event once with raw model μ vs pre-round DK.
  */
 export function runWalkForwardOosReport({ excludeLiveEvent = true } = {}) {
-  return Promise.all([fitOutcomeSigmaScales(VS), fitOutcomeMuBiasCorrections(VS)]).then(([scales, muBias]) => {
+  return Promise.all([fitOutcomeSigmaScales(VS)]).then(([scales]) => {
     setOutcomeSigmaScales(scales);
-    setOutcomeMuBiasCorrections(muBias);
     return loadWalkForwardBetRows().then((allRows) => {
     const liveEvent = excludeLiveEvent ? loadCurrentLiveEventName() : "";
     const events = eventOrderFromRows(allRows);
@@ -340,11 +363,11 @@ export function runWalkForwardOosReport({ excludeLiveEvent = true } = {}) {
         pricing_mode: "default",
       },
       outcome_sigma_scales: scales,
-      outcome_mu_bias_corrections: muBias,
       recommended_policy: {
         min_ev_pct: DEFAULT_MIN_EV_PCT,
-        uniform_ev_all_markets: true,
-        no_side_or_gap_filters: true,
+        per_market: OOS_MARKET_POLICY,
+        devigged_fair_odds: true,
+        outcome_mu_bias_applied: false,
       },
       excluded_live_event: liveEvent || null,
       events_chronological: events,

@@ -1,5 +1,5 @@
 /**
- * Auto-grade My bets slip from refreshed projection vs actual + matchup outcome CSVs.
+ * Auto-grade My bets slip from refreshed projection vs actual CSVs.
  */
 
 function num(v) {
@@ -38,13 +38,6 @@ function ouSideResults(actual, line) {
   return { over: "P", under: "P" };
 }
 
-function matchupPairKey(dgA, dgB) {
-  const a = Math.round(num(dgA, NaN));
-  const b = Math.round(num(dgB, NaN));
-  if (!Number.isFinite(a) || !Number.isFinite(b)) return "";
-  return a < b ? `${a}|${b}` : `${b}|${a}`;
-}
-
 /**
  * @param {object[]} detailRows
  * @param {object[]} marketSpecs
@@ -81,31 +74,6 @@ export function buildOuGradeIndex(detailRows, marketSpecs) {
   return idx;
 }
 
-/** @param {object[]} matchupRows */
-export function buildMatchupGradeIndex(matchupRows) {
-  /** @type {Map<string, { p1Res: string, p2Res: string, p1Dg: number, p2Dg: number }>} */
-  const idx = new Map();
-  for (const row of matchupRows) {
-    const book = String(row.book || "").trim().toLowerCase();
-    if (book && book !== "draftkings") continue;
-    const event = normEventName(row.event_name);
-    const round = Math.round(num(row.round, NaN));
-    const dg1 = Math.round(num(row.dg_id, NaN));
-    const dg2 = Math.round(num(row.opponent_dg_id, NaN));
-    if (!event || !Number.isFinite(round) || !Number.isFinite(dg1) || !Number.isFinite(dg2)) continue;
-    const pk = matchupPairKey(dg1, dg2);
-    if (!pk) continue;
-    const key = `${event}|${round}|${pk}`;
-    idx.set(key, {
-      p1Dg: dg1,
-      p2Dg: dg2,
-      p1Res: normResult(row.p1_result),
-      p2Res: normResult(row.p2_result),
-    });
-  }
-  return idx;
-}
-
 function lookupOuEntry(bet, ouIndex) {
   const event = normEventName(bet.eventName);
   const round = Math.round(num(bet.round, NaN));
@@ -138,61 +106,20 @@ export function gradeOuBet(bet, ouIndex) {
   return null;
 }
 
-function parseMatchupIds(bet) {
-  const dg = Math.round(num(bet.dg_id, NaN));
-  const opp = Math.round(num(bet.opponent_dg_id, NaN));
-  if (Number.isFinite(dg) && Number.isFinite(opp)) return { dg, opp };
-  const parts = String(bet.lineKey || "").split("|");
-  if (parts.length >= 4 && parts[1] === "Round matchups") {
-    return { dg: Math.round(num(parts[0], NaN)), opp: Math.round(num(parts[3], NaN)) };
-  }
-  return { dg: NaN, opp: NaN };
-}
-
-/** @param {object} bet @param {Map<string, object>} matchupIndex @param {Map<string, object>} ouIndex */
-export function gradeMatchupBet(bet, matchupIndex, ouIndex) {
-  const event = normEventName(bet.eventName);
-  const round = Math.round(num(bet.round, NaN));
-  const { dg, opp } = parseMatchupIds(bet);
-  if (!event || !Number.isFinite(round) || !Number.isFinite(dg) || !Number.isFinite(opp)) return null;
-
-  const pk = matchupPairKey(dg, opp);
-  const row = matchupIndex.get(`${event}|${round}|${pk}`);
-  if (row) {
-    if (dg === row.p1Dg) return row.p1Res || null;
-    if (dg === row.p2Dg) return row.p2Res || null;
-  }
-
-  const e1 = lookupOuEntry({ ...bet, dg_id: dg, playerName: bet.playerName }, ouIndex);
-  const e2 = lookupOuEntry({ ...bet, dg_id: opp, playerName: bet.opponentName }, ouIndex);
-  const s1 = parseLine(e1?.actual_round_score);
-  const s2 = parseLine(e2?.actual_round_score);
-  if (!Number.isFinite(s1) || !Number.isFinite(s2) || s1 <= 0 || s2 <= 0) return null;
-  if (Math.abs(s1 - s2) < 0.001) return "P";
-  const pickedWins = s1 < s2 ? dg : opp;
-  return pickedWins === dg ? "W" : "L";
-}
-
 /**
  * @param {object[]} bets
- * @param {{ detailRows: object[], matchupRows: object[], marketSpecs: object[] }} ctx
+ * @param {{ detailRows: object[], marketSpecs: object[] }} ctx
  * @returns {number} count of bets newly graded
  */
 export function autoGradeMyBets(bets, ctx) {
   const ouIndex = buildOuGradeIndex(ctx.detailRows || [], ctx.marketSpecs || []);
-  const matchupIndex = buildMatchupGradeIndex(ctx.matchupRows || []);
   let changed = 0;
 
   for (const bet of bets) {
     const cur = String(bet.result || "open").toLowerCase();
     if (cur !== "open") continue;
 
-    let graded = null;
-    if (String(bet.market) === "Round matchups") {
-      graded = gradeMatchupBet(bet, matchupIndex, ouIndex);
-    } else {
-      graded = gradeOuBet(bet, ouIndex);
-    }
+    const graded = gradeOuBet(bet, ouIndex);
     if (graded) {
       bet.result = graded;
       bet.autoGradedAt = new Date().toISOString();

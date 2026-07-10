@@ -7,9 +7,9 @@ import { readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { reconcileAllProjectionPlayerRows, flatVenuePlayerScoreAnchorEnabled } from "./course-round-adjustments.mjs";
-import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
+import { liveProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
 
-Object.assign(process.env, flatVenueProjectionPipelineEnv());
+Object.assign(process.env, liveProjectionPipelineEnv());
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB = join(__dirname, "..");

@@ -4,6 +4,7 @@
 import {
   capDirectionalPostedEdges,
   modelEdgePctAtLine,
+  modelEdgeVsFairAtLine,
   num,
   pickBetSide,
 } from "./ev-math.mjs";
@@ -18,13 +19,6 @@ import {
   buildLiveProjectionFactorsSummary,
   courseTailoringTags,
 } from "./projection-factors-panel.mjs";
-import {
-  buildRoundMatchupPicks,
-  decimalToAmerican,
-  draftKingsMatchupDecimals,
-  ROUND_MATCHUP_MARKET,
-} from "./matchup-math.mjs";
-
 const PROJECTIONS_URL = "../projections.json";
 const EDGE_SIGNALS_URL = "../data/edge_signal_scan.json";
 const COURSE_TABLE_URL = "../data/course_table.csv";
@@ -339,6 +333,9 @@ function signalBoost(market, labels, signals) {
   return { boost: clamp(boost, 0.55, 1.55), tags: [...new Set(tags)].slice(0, 4) };
 }
 
+  return num(courseRow?.avg_fairway_width, num(courseRow?.fairway_width, NaN));
+}
+
 function marketFactor(market, oos) {
   const row = (oos?.by_market_at_5pct || []).find((m) => m.market === market);
   const roi = num(row?.roi_pct, NaN);
@@ -380,21 +377,47 @@ export function buildLiveBestBets({ projections, oos, signals, courseRow, minEvP
     const mu = muFn.length >= 2 ? muFn(player, meta) : muFn(player);
     if (!Number.isFinite(mu)) continue;
     const girMinusFw = num(player.gir, NaN) - num(player.fairways, NaN);
-    const betContext = { gir_minus_fw: girMinusFw, round };
+    const betContext = {
+      gir_minus_fw: girMinusFw,
+      course_fw_width: courseFwWidth(courseRow),
+      round,
+    };
     if (!isActionableMarket(market)) continue;
-    let { edgeOver, edgeUnder } = modelEdgePctAtLine(
-      market,
-      mu,
-      prop.line,
-      prop.over,
-      prop.under,
-      1,
-      fairwayHoles,
-    );
+    if (
+      !qualifiesBet({
+        market,
+        modelLine: mu,
+        bookLine: prop.line,
+        context: betContext,
+        eventName,
+      })
+    ) {
+      continue;
+    }
+    const fair = modelEdgeVsFairAtLine(market, mu, prop.line, prop.over, prop.under, 1, fairwayHoles);
+    let edgeOver = fair.edgeFairOver;
+    let edgeUnder = fair.edgeFairUnder;
+    if (!Number.isFinite(edgeOver) || !Number.isFinite(edgeUnder)) {
+      const posted = modelEdgePctAtLine(market, mu, prop.line, prop.over, prop.under, 1, fairwayHoles);
+      edgeOver = posted.edgeOver;
+      edgeUnder = posted.edgeUnder;
+    }
     ({ edgeOver, edgeUnder } = capDirectionalPostedEdges(edgeOver, edgeUnder, mu, prop.line));
     const marketMinEv = minEvForMarket(market, minEdge);
     const pick = pickBetSide(edgeOver, edgeUnder, marketMinEv, mu, prop.line);
     if (!pick) continue;
+    if (
+      !qualifiesBet({
+        market,
+        modelLine: mu,
+        bookLine: prop.line,
+        context: betContext,
+        eventName,
+        side: pick.side,
+      })
+    ) {
+      continue;
+    }
     const side = pick.side;
     const edgePct = pick.edge;
     const labels = contextLabels(market, side, edgePct, player, courseRow, pinActive, projections);
@@ -423,25 +446,9 @@ export function buildLiveBestBets({ projections, oos, signals, courseRow, minEvP
     });
   }
 
-  const matchupCandidates = buildRoundMatchupPicks({
-    projections,
-    players,
-    round,
-    minEvPct: minEdge,
-    marketFactor,
-    signalBoost,
-    oos,
-    signals,
-  });
-
   const byKey = new Map();
   for (const c of candidates) {
     const k = `${c.dg_id}|${c.market}`;
-    const prev = byKey.get(k);
-    if (!prev || c.edgePct > prev.edgePct) byKey.set(k, c);
-  }
-  for (const c of matchupCandidates) {
-    const k = `${c.dg_id}|${c.opponent_dg_id}|${c.market}`;
     const prev = byKey.get(k);
     if (!prev || c.edgePct > prev.edgePct) byKey.set(k, c);
   }
@@ -484,7 +491,6 @@ const JOURNAL_MARKET_ORDER = [
   "Bogeys",
   "GIR",
   "Fairways hit",
-  ROUND_MATCHUP_MARKET,
 ];
 
 function journalMarketSortKey(m) {
@@ -493,7 +499,7 @@ function journalMarketSortKey(m) {
 }
 
 /**
- * All DraftKings round O/U sides and round matchup sides for the live week (no EV filter).
+ * All DraftKings round O/U sides for the live week (no EV filter).
  * @param {object} projections
  */
 export function buildAllLiveDkBetOptions(projections) {
@@ -537,65 +543,6 @@ export function buildAllLiveDkBetOptions(projections) {
     }
   }
 
-  const list = projections?.matchups?.round_matchups?.match_list;
-  const oddsFormat = String(projections?.meta?.matchups_odds_format || "").trim();
-  if (Array.isArray(list)) {
-    for (const m of list) {
-      const id1 = Math.round(num(m.p1_dg_id, NaN));
-      const id2 = Math.round(num(m.p2_dg_id, NaN));
-      if (!Number.isFinite(id1) || !Number.isFinite(id2)) continue;
-      const row1 = players.get(id1);
-      const row2 = players.get(id2);
-      const p1Name = String(m.p1_player_name || row1?.player_name || "").trim();
-      const p2Name = String(m.p2_player_name || row2?.player_name || "").trim();
-      if (!p1Name || !p2Name) continue;
-      const pairKey = id1 < id2 ? `${id1}|${id2}` : `${id2}|${id1}`;
-      const matchupLabel = `${p1Name} vs ${p2Name}`;
-      const dkOdds = draftKingsMatchupDecimals(m.odds || {}, oddsFormat);
-
-      const sides = [
-        {
-          side: "p1",
-          dg_id: id1,
-          player_name: p1Name,
-          opponent_dg_id: id2,
-          opponent_name: p2Name,
-          dec: dkOdds.d1,
-        },
-        {
-          side: "p2",
-          dg_id: id2,
-          player_name: p2Name,
-          opponent_dg_id: id1,
-          opponent_name: p1Name,
-          dec: dkOdds.d2,
-        },
-      ];
-      for (const s of sides) {
-        if (!Number.isFinite(s.dec) || s.dec <= 1) continue;
-        const am = decimalToAmerican(s.dec);
-        if (!Number.isFinite(am)) continue;
-        options.push({
-          lineKey: `${s.dg_id}|${ROUND_MATCHUP_MARKET}|${s.side}|${s.opponent_dg_id}`,
-          eventName,
-          round,
-          dg_id: s.dg_id,
-          playerName: String(s.player_name || "").trim(),
-          opponentName: String(s.opponent_name || "").trim(),
-          market: ROUND_MATCHUP_MARKET,
-          side: s.side,
-          line: NaN,
-          odds: am,
-          pickType: "matchup",
-          pairKey,
-          matchupLabel,
-          p1Name,
-          p2Name,
-        });
-      }
-    }
-  }
-
   options.sort((a, b) => {
     const mk = journalMarketSortKey(a.market) - journalMarketSortKey(b.market);
     if (mk) return mk;
@@ -629,22 +576,6 @@ export async function loadLiveBestBetsContext() {
     })();
   }
   return _ctxLoad;
-}
-
-export function summarizeLiveRoundMatchups({ projections, minEvPct }) {
-  const round = liveTargetRound(projections);
-  const players = playersForRound(projections, round);
-  const listed = projections?.matchups?.round_matchups?.match_list?.length ?? 0;
-  const all = buildRoundMatchupPicks({ projections, players, round, minEvPct: 0 });
-  const qualified = buildRoundMatchupPicks({ projections, players, round, minEvPct });
-  const edges = qualified.map((p) => p.edgePct).filter(Number.isFinite);
-  const avgEdge = edges.length ? edges.reduce((s, e) => s + e, 0) / edges.length : NaN;
-  const top = [...qualified].sort((a, b) => b.edgePct - a.edgePct)[0] || null;
-  const roundLabel =
-    String(projections?.meta?.display_round_label || projections?.display_round_label || "").trim() ||
-    `R${round}`;
-  const eventName = String(projections?.event_name || projections?.meta?.event_name || "").trim();
-  return { listed, priced: all.length, qualified: qualified.length, avgEdge, top, round, roundLabel, eventName };
 }
 
 export function invalidateLiveBestBetsCache() {
