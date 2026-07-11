@@ -59,10 +59,13 @@ import {
   birdiesPlusEaglesFromRow,
   createProjectionContext,
   enforceHalfLine,
+  fmtDkBookLine,
+  fmtPpBookLine,
   modelEdgePctAtLine,
   num,
   ouProjectedMeanForMode,
   ouSideResults,
+  parseDkBookLine,
 } from "./round-projection-mu.mjs";
 import {
   buildRoundStartUtcMs,
@@ -72,6 +75,14 @@ import {
   inferDateStartFromAuditCaptures,
   loadPreRoundDkPropsFromAudit,
 } from "./dk-pre-round-props.mjs";
+import {
+  completedRoundCapFromPayload,
+  pgatourRowBelongsToEvent,
+} from "./live-event-actuals-cap.mjs";
+import {
+  defaultPpAuditPath,
+  loadPreRoundPpPropsFromAudit,
+} from "./pp-pre-round-props.mjs";
 import {
   buildRoundProjectionVsActualSummary,
   writeRoundProjectionVsActualWorkbook,
@@ -140,7 +151,7 @@ function formatAmericanOdds(am) {
 function fmtActual(marketKey, v) {
   if (!Number.isFinite(v)) return "";
   if (marketKey === "total") return (Math.round(v * 10) / 10).toFixed(1);
-  return String(Math.round(v * 10) / 10 === Math.round(v) ? Math.round(v) : v);
+  return String(Math.round(v));
 }
 
 function dkPropForPlayer(dkIndex, dg, rnd, propsMarket) {
@@ -152,6 +163,69 @@ function roundHasCompletedScore(actuals, dg, rnd) {
   const act = actuals.get(`${dg}|${rnd}`);
   const score = num(act?.total_score, NaN);
   return Number.isFinite(score) && score > 0;
+}
+
+const LIVE_EVENT_BOOK_PROPS_PATH = join(WEB_ROOT, "data", "live_event_book_props.json");
+
+function propsIndexToJson(map) {
+  const out = {};
+  for (const [k, v] of map) {
+    out[k] = {
+      line: num(v.line, NaN),
+      over: num(v.over, NaN),
+      under: num(v.under, NaN),
+      modelTotal: num(v.modelTotal, NaN),
+      modelBirdies: num(v.modelBirdies, NaN),
+      modelPars: num(v.modelPars, NaN),
+      modelBogeys: num(v.modelBogeys, NaN),
+      modelGir: num(v.modelGir, NaN),
+      modelFairways: num(v.modelFairways, NaN),
+    };
+  }
+  return out;
+}
+
+/** Small JSON snapshot for projection-tracker Reload (pre-round audit + live DK/PP props). */
+function writeLiveEventBookPropsSnapshot(
+  eventName,
+  generatedAt,
+  preRoundDkIndex,
+  liveDkIndex,
+  livePpIndex,
+  preRoundPpIndex,
+) {
+  if (!eventName) return;
+  try {
+    mkdirSync(dirname(LIVE_EVENT_BOOK_PROPS_PATH), { recursive: true });
+    writeFileSync(
+      LIVE_EVENT_BOOK_PROPS_PATH,
+      JSON.stringify(
+        {
+          event_name: eventName,
+          generated_at: generatedAt,
+          pre_round_dk: propsIndexToJson(preRoundDkIndex),
+          pre_round_pp: propsIndexToJson(preRoundPpIndex),
+          live_dk: propsIndexToJson(liveDkIndex),
+          live_pp: propsIndexToJson(livePpIndex),
+        },
+        null,
+        0,
+      ),
+    );
+  } catch (e) {
+    console.warn(`[round-projection-vs-actual] live_event_book_props.json write failed: ${e?.message || e}`);
+  }
+}
+
+function auditModelFromSnap(snap, spec) {
+  if (!snap) return NaN;
+  if (spec.key === "total") return num(snap.modelTotal, NaN);
+  if (spec.key === "birdies") return num(snap.modelBirdies, NaN);
+  if (spec.key === "pars") return num(snap.modelPars, NaN);
+  if (spec.key === "bogeys") return num(snap.modelBogeys, NaN);
+  if (spec.key === "gir") return num(snap.modelGir, NaN);
+  if (spec.key === "fairways") return num(snap.modelFairways, NaN);
+  return NaN;
 }
 
 /**
@@ -171,9 +245,12 @@ function dkPropForExport(preRoundIndex, liveIndex, dg, rnd, propsMarket, actuals
   return null;
 }
 
-function ppPropForExport(livePpIndex, dg, rnd, propsMarket, actuals) {
+function ppPropForExport(preRoundIndex, liveIndex, dg, rnd, propsMarket, actuals) {
+  const key = `${dg}|${rnd}|${propsMarket}`;
+  const pre = preRoundIndex.get(key);
+  if (pre) return { ...pre, oddsSource: "pre_round_audit" };
   if (roundHasCompletedScore(actuals, dg, rnd)) return null;
-  const live = livePpIndex.get(`${dg}|${rnd}|${propsMarket}`);
+  const live = liveIndex.get(key);
   if (!live) return null;
   return { line: live.line, over: live.over, under: live.under, oddsSource: "prizepicks_live" };
 }
@@ -314,6 +391,11 @@ function enrichLiveCountingPatch(patch, act, coursePar = 70) {
   }
   if (Number.isFinite(patch.total_score) && !Number.isFinite(p) && Number.isFinite(b) && Number.isFinite(bg)) {
     patch.pars = Math.max(0, 18 - e - d - b - bg);
+  }
+  if (liveCountingPatchWeak(patch)) {
+    patch.birdies = NaN;
+    patch.pars = NaN;
+    patch.bogeys = NaN;
   }
   return patch;
 }
@@ -697,7 +779,7 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
           : NaN;
         // Walk-forward full model (pre book-alignment) — audit snap is live-week calibrated toward DK.
         const rawModelLine = Number.isFinite(wfModelLine) ? wfModelLine : auditModelLine;
-        const bookLine = snap ? enforceHalfLine(snap.dkLine) : NaN;
+        const bookLine = snap ? parseDkBookLine(snap.dkLine) : NaN;
         const overOdds = snap?.overOdds;
         const underOdds = snap?.underOdds;
         if (Number.isFinite(overOdds) || Number.isFinite(underOdds)) hasBookOdds = true;
@@ -1041,9 +1123,7 @@ function fmt(v) {
 
 /** DK book lines (half-point buckets). */
 function fmtLine(market, mu) {
-  if (!Number.isFinite(mu)) return "";
-  if (market === "Total score") return (Math.round(mu * 10) / 10).toFixed(1);
-  return String(enforceHalfLine(mu));
+  return fmtDkBookLine(market, mu);
 }
 
 /** Model μ for export/grading — keep precision; do not snap to DK half-lines. */
@@ -1125,22 +1205,14 @@ function mergeActualEntry(map, dg, rnd, patch, opts = {}) {
 function patchFromLiveRoundAct(act, fairwayHoles) {
   if (!act || typeof act !== "object") return null;
   const score = num(act.round_score, NaN);
-  const birdies = birdiesPlusEaglesFromRow(act);
-  const pars = num(act.pars, NaN);
-  const bogeys = num(act.bogeys ?? act.bogies, NaN);
+  let birdies = birdiesPlusEaglesFromRow(act);
+  let pars = num(act.pars, NaN);
+  let bogeys = num(act.bogeys ?? act.bogies, NaN);
   const gir = countFromRateOrRaw(act.gir, 18);
   const fairways = countFromRateOrRaw(act.fairways, fairwayHoles);
   const puttsRaw = num(act.putts, NaN);
   const putts = Number.isFinite(puttsRaw) && puttsRaw > 1.5 && puttsRaw < 80 ? Math.round(puttsRaw) : NaN;
-  if (
-    !Number.isFinite(score) &&
-    !Number.isFinite(birdies) &&
-    !Number.isFinite(pars) &&
-    !Number.isFinite(bogeys)
-  ) {
-    return null;
-  }
-  return {
+  const patch = {
     total_score: Number.isFinite(score) ? Math.round(score * 10) / 10 : NaN,
     birdies,
     pars,
@@ -1150,9 +1222,18 @@ function patchFromLiveRoundAct(act, fairwayHoles) {
     putts,
     source: String(act.source || "live").trim() || "live",
   };
+  if (
+    !Number.isFinite(patch.total_score) &&
+    !Number.isFinite(patch.birdies) &&
+    !Number.isFinite(patch.pars) &&
+    !Number.isFinite(patch.bogeys)
+  ) {
+    return null;
+  }
+  return enrichLiveCountingPatch(patch, act, 70);
 }
 
-function overlayPgatourEventActuals(map, eventName, webRoot, fairwayHoles = 14) {
+function overlayPgatourEventActuals(map, eventName, webRoot, fairwayHoles = 14, payload = null) {
   const pgPath = join(webRoot, "data", "pgatour_event_rounds.json");
   if (!eventName || !existsSync(pgPath)) return 0;
   let raw;
@@ -1165,14 +1246,18 @@ function overlayPgatourEventActuals(map, eventName, webRoot, fairwayHoles = 14) 
   if (metaEvent && foldComparableTitle(metaEvent) !== foldComparableTitle(eventName)) {
     if (!eventsLikelySame(eventName, metaEvent)) return 0;
   }
+  const completedCap = payload ? completedRoundCapFromPayload(payload) : NaN;
   const list = (Array.isArray(raw?.rounds) ? raw.rounds : []).filter((r) => r?._from_pgatour);
   let n = 0;
+  const courseUsed = String(payload?.course_used || "").trim();
   for (const r of list) {
+    if (!pgatourRowBelongsToEvent(r, eventName, { courseUsed })) continue;
     const dg = Math.round(num(r.dg_id, NaN));
     const rnd = Math.round(num(r.round_num, NaN));
     const score = num(r.round_score, NaN);
     if (!Number.isFinite(dg) || !Number.isFinite(rnd) || rnd < 1 || rnd > 4 || !Number.isFinite(score) || score <= 0)
       continue;
+    if (Number.isFinite(completedCap) && rnd > completedCap) continue;
     const pgPatch = {
       total_score: Math.round(score * 10) / 10,
       birdies: birdiesPlusEaglesFromRow(r),
@@ -1188,7 +1273,17 @@ function overlayPgatourEventActuals(map, eventName, webRoot, fairwayHoles = 14) 
     if (Number.isFinite(gir)) pgPatch.gir = gir;
     if (Number.isFinite(fairways)) pgPatch.fairways = fairways;
     if (Number.isFinite(putts)) pgPatch.putts = putts;
-    mergeActualEntry(map, dg, rnd, pgPatch);
+    mergeActualEntry(map, dg, rnd, pgPatch, {
+      onlyIfMissing: true,
+      fields: ["total_score"],
+    });
+    mergeActualEntry(map, dg, rnd, pgPatch, {
+      onlyIfMissing: true,
+      fields: ["gir", "fairways", "putts"],
+    });
+    mergeActualEntry(map, dg, rnd, pgPatch, {
+      fields: ["birdies", "pars", "bogeys"],
+    });
     n++;
   }
   return n;
@@ -1246,6 +1341,31 @@ function overlayLiveRoundActuals(map, eventName, livePath, payload, fairwayHoles
   return n;
 }
 
+function overlayBakedLiveActualsFromPayload(map, payload, fairwayHoles) {
+  const actualsByDg = payload?.live_round_actuals_by_dg;
+  if (!actualsByDg || typeof actualsByDg !== "object") return 0;
+  const completedCap = completedRoundCapFromPayload(payload);
+  let n = 0;
+  for (const [dgKey, perRound] of Object.entries(actualsByDg)) {
+    const dg = Math.round(num(dgKey, NaN));
+    if (!Number.isFinite(dg) || !perRound || typeof perRound !== "object") continue;
+    for (const [rndKey, act] of Object.entries(perRound)) {
+      const rnd = Math.round(num(rndKey, NaN));
+      if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
+      if (Number.isFinite(completedCap) && rnd > completedCap) continue;
+      let patch = enrichLiveCountingPatch(
+        patchFromLiveRoundAct(act, fairwayHoles),
+        act,
+        num(payload?.course_par_18 ?? payload?.meta?.course_par_18, NaN) || 72,
+      );
+      if (!patch) continue;
+      mergeActualEntry(map, dg, rnd, patch);
+      n++;
+    }
+  }
+  return n;
+}
+
 async function fillHistoricalActualGaps(map, eventName, eventYear, csvPath, fairwayHoles) {
   if (!eventName || !existsSync(csvPath)) return 0;
   let n = 0;
@@ -1272,9 +1392,9 @@ async function fillHistoricalActualGaps(map, eventName, eventYear, csvPath, fair
       total_score: Math.round(score * 10) / 10,
       birdies: birdiesPlusEaglesFromRow(row),
       pars: num(row.pars, NaN),
-      bogeys: num(row.bogies, NaN),
+      bogeys: num(row.bogeys ?? row.bogies, NaN),
       gir: countFromRateOrRaw(row.gir, 18),
-      fairways: countFromRateOrRaw(row.driving_acc, fairwayHoles),
+      fairways: countFromRateOrRaw(row.fairways ?? row.driving_acc, fairwayHoles),
       putts: NaN,
       source: "historical_rounds",
     };
@@ -1285,12 +1405,36 @@ async function fillHistoricalActualGaps(map, eventName, eventYear, csvPath, fair
     for (const k of ["total_score", "birdies", "pars", "bogeys", "gir", "fairways", "putts"]) {
       if (!Number.isFinite(prev[k]) && Number.isFinite(patch[k])) merged = true;
     }
-    if (!merged && Number.isFinite(prev.total_score)) continue;
+    if (!merged) continue;
 
-    mergeActualEntry(map, dg, rnd, patch);
+    mergeActualEntry(map, dg, rnd, patch, { onlyIfMissing: true, fields: ["total_score"] });
+    mergeActualEntry(map, dg, rnd, patch, {
+      fields: ["birdies", "pars", "bogeys", "gir", "fairways", "putts"],
+    });
     n++;
   }
   return n;
+}
+
+function sanitizeActualsMapEntry(entry) {
+  if (!entry || typeof entry !== "object") return entry;
+  const src = String(entry.source || "");
+  const official =
+    src.includes("pgatour") || src.includes("historical") || src.includes("player_history_shard");
+  if (
+    !official &&
+    liveCountingPatchWeak({
+      total_score: entry.total_score,
+      birdies: entry.birdies,
+      pars: entry.pars,
+      bogeys: entry.bogeys,
+    })
+  ) {
+    entry.birdies = NaN;
+    entry.pars = NaN;
+    entry.bogeys = NaN;
+  }
+  return entry;
 }
 
 export async function buildActualsMapForEvent(payload, opts = {}) {
@@ -1301,9 +1445,15 @@ export async function buildActualsMapForEvent(payload, opts = {}) {
   const histPath = opts.histPath || resolveHistCsv();
   const map = new Map();
 
-  const liveN = overlayLiveRoundActuals(map, eventName, livePath, payload, fairwayHoles);
-  const pgN = overlayPgatourEventActuals(map, eventName, WEB_ROOT, fairwayHoles);
+  const liveN =
+    overlayLiveRoundActuals(map, eventName, livePath, payload, fairwayHoles) +
+    overlayBakedLiveActualsFromPayload(map, payload, fairwayHoles);
+  const pgN = overlayPgatourEventActuals(map, eventName, WEB_ROOT, fairwayHoles, payload);
   const histN = await fillHistoricalActualGaps(map, eventName, eventYear, histPath, fairwayHoles);
+
+  for (const [key, entry] of map.entries()) {
+    map.set(key, sanitizeActualsMapEntry(entry));
+  }
 
   return { map, pgN, liveN, histN, eventYear };
 }
@@ -1313,7 +1463,7 @@ function actualForMarket(act, marketKey) {
   if (marketKey === "total") return num(act.total_score, NaN);
   if (marketKey === "birdies") return num(act.birdies, NaN);
   if (marketKey === "pars") return num(act.pars, NaN);
-  if (marketKey === "bogeys") return num(act.bogeys, NaN);
+  if (marketKey === "bogeys") return num(act.bogeys ?? act.bogies, NaN);
   if (marketKey === "gir") return num(act.gir, NaN);
   if (marketKey === "fairways") return num(act.fairways, NaN);
   return NaN;
@@ -1361,8 +1511,18 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
   const roundStartUtcMs = buildRoundStartUtcMs(players, payload);
   const auditPath = opts.dkAuditPath || defaultDkAuditPath(WEB_ROOT);
   const preRoundDkIndex = await loadPreRoundDkPropsFromAudit(eventName, auditPath, roundStartUtcMs);
+  const ppAuditPath = opts.ppAuditPath || defaultPpAuditPath(WEB_ROOT);
+  const preRoundPpIndex = await loadPreRoundPpPropsFromAudit(eventName, ppAuditPath, roundStartUtcMs);
   const liveDkIndex = buildBookPropsIndex(payload);
   const livePpIndex = buildPpPropsIndex(payload);
+  writeLiveEventBookPropsSnapshot(
+    eventName,
+    exported,
+    preRoundDkIndex,
+    liveDkIndex,
+    livePpIndex,
+    preRoundPpIndex,
+  );
   const ctx = createProjectionContext({ ...payload, _webRoot: WEB_ROOT });
   const lines = [HEADER];
   const summarySamples = [];
@@ -1413,25 +1573,29 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
       const rowMarketSamples = [];
 
       for (const spec of EXPORT_MARKETS) {
-        const mu = ouProjectedMeanForMode(spec.market, p, payload, pm.mode, pm.skill, ctx);
+        const dk = dkPropForExport(preRoundDkIndex, liveDkIndex, dg, rnd, spec.propsMarket, actuals);
+        const pp = ppPropForExport(preRoundPpIndex, livePpIndex, dg, rnd, spec.propsMarket, actuals);
+        let mu = ouProjectedMeanForMode(spec.market, p, payload, pm.mode, pm.skill, ctx);
+        const auditSnap =
+          dk?.oddsSource === "pre_round_audit" ? dk : pp?.oddsSource === "pre_round_audit" ? pp : null;
+        const auditMu = auditModelFromSnap(auditSnap, spec);
+        if (Number.isFinite(auditMu)) mu = auditMu;
         const modelLine = mu;
         rowCells[spec.lineCol] = fmtModelLine(spec.market, mu);
 
-        const dk = dkPropForExport(preRoundDkIndex, liveDkIndex, dg, rnd, spec.propsMarket, actuals);
-        const pp = ppPropForExport(livePpIndex, dg, rnd, spec.propsMarket, actuals);
         const actual = actualForMarket(act, spec.key);
         const roundComplete = Number.isFinite(actual);
-        const bookLine = dk ? enforceHalfLine(dk.line) : NaN;
+        const bookLine = dk ? parseDkBookLine(dk.line) : NaN;
         if (dk) {
           if (!rowOddsSource) rowOddsSource = dk.oddsSource;
-          rowCells[spec.bookLineCol] = fmtLine(spec.market, bookLine);
+          rowCells[spec.bookLineCol] = fmtDkBookLine(spec.market, bookLine);
           rowCells[spec.overOddsCol] = formatAmericanOdds(dk.over);
           rowCells[spec.underOddsCol] = formatAmericanOdds(dk.under);
         }
         if (pp) {
           if (!rowPpOddsSource) rowPpOddsSource = pp.oddsSource;
           const ppLine = num(pp.line, NaN);
-          rowCells[spec.ppLineCol] = fmtLine(spec.market, ppLine);
+          rowCells[spec.ppLineCol] = fmtPpBookLine(spec.market, ppLine);
           rowCells[spec.ppOverOddsCol] = formatAmericanOdds(pp.over);
           rowCells[spec.ppUnderOddsCol] = formatAmericanOdds(pp.under);
         }

@@ -153,6 +153,36 @@ export function enforceHalfLine(v) {
   return Math.round(x * 2) / 2;
 }
 
+/** Parse a DraftKings posted line (always half-point buckets). */
+export function parseDkBookLine(v) {
+  return enforceHalfLine(num(v, NaN));
+}
+
+/** Parse a PrizePicks posted line (whole numbers allowed). */
+export function parsePpBookLine(v) {
+  return num(v, NaN);
+}
+
+/** Format a DraftKings book line for CSV/display. */
+export function fmtDkBookLine(market, v) {
+  const n = parseDkBookLine(v);
+  if (!Number.isFinite(n)) return "";
+  if (market === "Total score") return (Math.round(n * 10) / 10).toFixed(1);
+  return String(n);
+}
+
+/** Format a PrizePicks book line for CSV/display (preserve whole numbers). */
+export function fmtPpBookLine(market, v) {
+  const n = parsePpBookLine(v);
+  if (!Number.isFinite(n)) return "";
+  if (market === "Total score") {
+    if (n === Math.round(n)) return `${Math.round(n)}.0`;
+    return (Math.round(n * 10) / 10).toFixed(1);
+  }
+  if (n === Math.round(n)) return String(Math.round(n));
+  return (Math.round(n * 10) / 10).toFixed(1);
+}
+
 function normalCdf(z) {
   const t = 1 / (1 + 0.2316419 * Math.abs(z));
   const d = 0.3989423 * Math.exp((-z * z) / 2);

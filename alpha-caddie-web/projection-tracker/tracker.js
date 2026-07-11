@@ -18,6 +18,7 @@ import {
 import { buildEdgeSignalInsights } from "./edge-signal-insights.mjs";
 import { patchDetailRowsFromLiveSources } from "./live-detail-patch.mjs";
 import { alignDetailCsvText } from "./detail-csv-align.mjs";
+import { ouSideResults, parseDkBookLine, parsePpBookLine, fmtDkBookLine, fmtPpBookLine } from "./detail-market-specs.mjs";
 import {
   DEFAULT_MIN_EV_PCT,
   isActionableMarket,
@@ -138,6 +139,30 @@ const state = {
 /** @type {Awaited<ReturnType<typeof loadLiveBestBetsContext>> | null} */
 let LIVE_CTX = null;
 
+/** @type {object[] | null} */
+let EXPLODED_BET_ROWS = null;
+/** @type {string | null} */
+let EXPLODED_BET_ROWS_KEY = null;
+let explodedBetRowsGen = 0;
+
+function explodedBetRowsCacheKey() {
+  return `${explodedBetRowsGen}|ev:${state.minEv}|show:${state.show}`;
+}
+
+function invalidateExplodedBetRows() {
+  explodedBetRowsGen++;
+  EXPLODED_BET_ROWS = null;
+  EXPLODED_BET_ROWS_KEY = null;
+}
+
+function allExplodedBetRows() {
+  const key = explodedBetRowsCacheKey();
+  if (EXPLODED_BET_ROWS && EXPLODED_BET_ROWS_KEY === key) return EXPLODED_BET_ROWS;
+  EXPLODED_BET_ROWS = [...explodeDetailToBets(DETAIL_ROWS), ...explodePpDetailToBets(DETAIL_ROWS)];
+  EXPLODED_BET_ROWS_KEY = key;
+  return EXPLODED_BET_ROWS;
+}
+
 function num(v) {
   const n = Number(v);
   return Number.isFinite(n) ? n : NaN;
@@ -246,7 +271,7 @@ function riskKellyMult(method) {
 }
 
 function qualifiedBetRowsForRisk() {
-  return explodeDetailToBets(DETAIL_ROWS)
+  return allExplodedBetRows()
     .filter((r) => {
       if (!r.qualified) return false;
       if (state.tournament && r.event_name !== state.tournament) return false;
@@ -1132,6 +1157,7 @@ function explodeDetailToBets(rows) {
         overOddsCol: spec.overOdds,
         underOddsCol: spec.underOdds,
         bookLabel: src === "live_snapshot" ? "DraftKings (live)" : "DraftKings",
+        isPrizePicks: false,
       }));
     }
   }
@@ -1201,13 +1227,15 @@ function explodePpDetailToBets(rows) {
   const out = [];
   for (const row of rows) {
     if (row.pricing_mode !== "default" || row.pricing_skill !== "default") continue;
-    if (String(row.pp_book_odds_source || "").trim() !== "prizepicks_live") continue;
+    const src = String(row.pp_book_odds_source || "").trim();
+    if (src !== "prizepicks_live" && src !== "pre_round_audit") continue;
     for (const spec of MARKET_SPECS) {
       out.push(...explodeDetailBetForBook(row, spec, {
         bookCol: spec.ppBookCol,
         overOddsCol: spec.ppOverOdds,
         underOddsCol: spec.ppUnderOdds,
-        bookLabel: "PrizePicks",
+        bookLabel: src === "pre_round_audit" ? "PrizePicks" : "PrizePicks (live)",
+        isPrizePicks: true,
       }));
     }
   }
@@ -1215,7 +1243,8 @@ function explodePpDetailToBets(rows) {
 }
 
 function explodeDetailBetForBook(row, spec, book) {
-  const bookLine = parseLine(row[book.bookCol]);
+  const rawLine = parseLine(row[book.bookCol]);
+  const bookLine = book.isPrizePicks ? parsePpBookLine(rawLine) : parseDkBookLine(rawLine);
   if (!Number.isFinite(bookLine)) return [];
   const modelLine = parseLine(row[spec.modelCol]);
   const overOdds = nNum(row[book.overOddsCol], NaN);
@@ -1234,8 +1263,7 @@ function explodeDetailBetForBook(row, spec, book) {
   ({ edgeOver, edgeUnder } = capDirectionalPostedEdges(edgeOver, edgeUnder, mu, bookLine));
   const pModelOver = fair.pOver;
   const pModelUnder = fair.pUnder;
-  const marketMinEv = minEvForMarket(spec.market, state.minEv);
-  const pick = pickBetSide(edgeOver, edgeUnder, marketMinEv, mu, bookLine);
+  const pick = pickBetSide(edgeOver, edgeUnder, state.minEv, mu, bookLine);
   const bestSide =
     Number.isFinite(edgeOver) && Number.isFinite(edgeUnder)
       ? edgeOver >= edgeUnder
@@ -1244,7 +1272,13 @@ function explodeDetailBetForBook(row, spec, book) {
       : null;
   const activePick = pick || (state.show === "all" ? bestSide : null);
   const side = activePick?.side || null;
-  const betRes = side === "over" ? row[spec.overRes] : side === "under" ? row[spec.underRes] : "";
+  const graded =
+    Number.isFinite(actual) && Number.isFinite(bookLine)
+      ? ouSideResults(actual, bookLine)
+      : { over: row[spec.overRes], under: row[spec.underRes] };
+  const overRes = graded.over;
+  const underRes = graded.under;
+  const betRes = side === "over" ? overRes : side === "under" ? underRes : "";
   const betOdds = side === "over" ? overOdds : side === "under" ? underOdds : NaN;
   const fairProb = side === "over" ? fair.fairOver : side === "under" ? fair.fairUnder : NaN;
   const postedProb =
@@ -1282,8 +1316,8 @@ function explodeDetailBetForBook(row, spec, book) {
       diff: Number.isFinite(modelLine) ? modelLine - bookLine : NaN,
       overOdds,
       underOdds,
-      overRes: row[spec.overRes],
-      underRes: row[spec.underRes],
+      overRes,
+      underRes,
       actual,
       edgeOver,
       edgeUnder,
@@ -1308,16 +1342,13 @@ function explodeDetailBetForBook(row, spec, book) {
       exported_at: row.exported_at,
       pnl: qualified && side ? pnlForResult(String(betRes).trim().toUpperCase(), betOdds) : NaN,
       decimals: spec.decimals,
+      isPrizePicks: Boolean(book.isPrizePicks),
     },
   ];
 }
 
 function activeBetRows() {
-  let rows = [
-    ...explodeDetailToBets(DETAIL_ROWS),
-    ...explodePpDetailToBets(DETAIL_ROWS),
-    ...explodeProjectionActualToBets(DETAIL_ROWS),
-  ];
+  let rows = allExplodedBetRows();
   if (state.tournament) rows = rows.filter((r) => r.event_name === state.tournament);
   if (state.market) rows = rows.filter((r) => r.market === state.market);
   if (state.side) rows = rows.filter((r) => r.pickSide === state.side);
@@ -1325,7 +1356,7 @@ function activeBetRows() {
     const q = state.player.toLowerCase();
     rows = rows.filter((r) => String(r.player_name).toLowerCase().includes(q));
   }
-  if (state.show === "bets") rows = rows.filter((r) => r.qualified || r.projectionActual);
+  if (state.show === "bets") rows = rows.filter((r) => r.qualified);
   return rows.sort((a, b) => {
     const ev = String(a.event_name).localeCompare(String(b.event_name));
     if (ev) return ev;
@@ -1437,17 +1468,20 @@ function renderBets() {
   `;
 
   const fmtLine = (v, d) => (Number.isFinite(v) ? fmt(v, d) : "—");
+  const fmtBookLineCell = (r) => {
+    if (!Number.isFinite(r.bookLine)) return "—";
+    const isPp = Boolean(r.isPrizePicks);
+    const formatted = isPp ? fmtPpBookLine(r.market, r.bookLine) : fmtDkBookLine(r.market, r.bookLine);
+    const prefix = isPp ? "PP" : "DK";
+    return `${prefix} ${formatted}`;
+  };
   document.querySelector("#bets-table tbody").innerHTML = rows.length
     ? rows
         .map((r) => {
           const pickCls = r.qualified ? "pick-qualified" : "pick-muted";
-          const pickLabel = r.pickSide
-            ? `<span class="${pickCls}">${r.pickSide}</span>`
-            : r.projectionActual
-              ? `<span class="${pickCls} pick-muted">μ vs actual</span>`
-              : "—";
+          const pickLabel = r.pickSide ? `<span class="${pickCls}">${r.pickSide}</span>` : "—";
           const modelCell = fmtLine(r.modelLine, r.decimals);
-          const bookCell = r.projectionActual ? "—" : fmtLine(r.bookLine, r.decimals);
+          const bookCell = fmtBookLineCell(r);
           const betCell = r.qualified ? resultBadge(r.betRes) : "—";
           const pnlCell = r.qualified && Number.isFinite(r.pnl)
             ? `<span class="${clsSigned(r.pnl)}">${r.pnl >= 0 ? "+" : ""}${fmt(r.pnl, 2)}</span>`
@@ -2139,7 +2173,7 @@ function buildInsights() {
     insights.push({ tone: "", text: `Best pocket: ${t.market} ${t.side} — ${fmtPct(t.roi)} ROI on ${t.bets} bets (+${fmt(t.units, 1)}u).` });
   }
 
-  const fairStats = aggregateBeatFairStats(explodeDetailToBets(DETAIL_ROWS).filter((r) => {
+  const fairStats = aggregateBeatFairStats(allExplodedBetRows().filter((r) => {
     if (state.tournament && r.event_name !== state.tournament) return false;
     if (state.market && r.market !== state.market) return false;
     if (!r.qualified) return false;
@@ -2166,7 +2200,7 @@ function buildInsights() {
     });
   }
 
-  const signalPool = explodeDetailToBets(DETAIL_ROWS).filter((r) => {
+  const signalPool = allExplodedBetRows().filter((r) => {
     if (state.tournament && r.event_name !== state.tournament) return false;
     if (state.market && r.market !== state.market) return false;
     if (state.side && r.pickSide !== state.side) return false;
@@ -2206,7 +2240,7 @@ function renderHeader() {
     liveMeta?.event && liveMeta?.course
       ? `<div class="header-live">Live week: <strong>${esc(liveMeta.event)}</strong> · ${esc(liveMeta.course)}${
           liveMeta.updated ? ` · projections ${esc(new Date(liveMeta.updated).toLocaleString())}` : ""
-        } · Reload merges pgatour + live actuals into bet log</div>`
+        } · Reload merges pgatour actuals + DK/PP book props into bet log</div>`
       : "";
   document.getElementById("header-meta").innerHTML = `
     <div><strong>${state.tournament || "All tournaments"}</strong></div>
@@ -2543,6 +2577,16 @@ async function loadPgatourEventRounds() {
   }
 }
 
+async function loadLiveEventBookProps() {
+  try {
+    const res = await fetch(`../data/live_event_book_props.json?t=${Date.now()}`, { cache: "no-store" });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
 async function loadData() {
   const errEl = document.getElementById("error-banner");
   errEl.hidden = true;
@@ -2560,10 +2604,16 @@ async function loadData() {
     ALL_ROWS = parseCsv(summaryText).filter((r) => String(r.market || "").trim() !== "Round matchups");
     if (!ALL_ROWS.length) throw new Error("Summary CSV is empty");
     DETAIL_ROWS = detailText ? parseCsv(detailText) : [];
+    invalidateExplodedBetRows();
     invalidateLiveBestBetsCache();
-    const [liveCtx, pgRounds] = await Promise.all([loadLiveBestBetsContext(), loadPgatourEventRounds()]);
+    const [liveCtx, pgRounds, liveBookProps] = await Promise.all([
+      loadLiveBestBetsContext(),
+      loadPgatourEventRounds(),
+      loadLiveEventBookProps(),
+    ]);
     LIVE_CTX = liveCtx;
-    DETAIL_ROWS = patchDetailRowsFromLiveSources(DETAIL_ROWS, LIVE_CTX?.projections, pgRounds);
+    DETAIL_ROWS = patchDetailRowsFromLiveSources(DETAIL_ROWS, LIVE_CTX?.projections, pgRounds, liveBookProps);
+    invalidateExplodedBetRows();
     populateTournamentSelect();
     populateMarketFilter();
     populatePicksMarketFilter();
@@ -2593,6 +2643,7 @@ function bindUi() {
   });
   document.getElementById("filter-min-ev").addEventListener("change", (e) => {
     state.minEv = num(e.target.value) || 0;
+    invalidateExplodedBetRows();
     renderAll();
   });
   document.getElementById("filter-side").addEventListener("change", (e) => {
@@ -2615,7 +2666,8 @@ function bindUi() {
   }
   document.getElementById("filter-show").addEventListener("change", (e) => {
     state.show = e.target.value;
-    renderBets();
+    invalidateExplodedBetRows();
+    renderAll();
   });
   for (const id of ["risk-bankroll", "risk-method", "risk-unit-pct", "risk-max-stake", "risk-round-cap"]) {
     const el = document.getElementById(id);

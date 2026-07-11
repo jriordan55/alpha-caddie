@@ -6,10 +6,12 @@
  * Temporal tee-window inference is only used when both are missing.
  */
 import { createReadStream, existsSync, readFileSync } from "fs";
+import { Readable } from "stream";
 import { join } from "path";
 import { parse } from "csv-parse";
 import { eventsLikelySame } from "./dg-events-align.mjs";
 import { parseDgTeetimeParts } from "./open-meteo-forecast.mjs";
+import { parseDkBookLine } from "./round-projection-mu.mjs";
 
 export function num(v) {
   const n = Number(v);
@@ -197,6 +199,40 @@ export function auditPropRoundFromCapture(row, roundStartUtcMs, capturedMs) {
   return NaN;
 }
 
+/**
+ * Legacy audit header omitted round_num; newer rows include it and shift columns right.
+ */
+export function normalizeAuditRow(row) {
+  if (!row || typeof row !== "object") return row;
+  const dg = Math.round(num(row.dg_id, NaN));
+  const pn = String(row.player_name || "").trim();
+  if (Number.isFinite(dg) && dg >= 1 && dg <= 4 && /^\d{1,6}$/.test(pn)) {
+    return {
+      ...row,
+      display_round: Math.round(num(row.display_round, dg)) || dg,
+      round_num: dg,
+      dg_id: Math.round(num(pn)),
+      player_name: String(row.market || "").trim(),
+      market: String(row.dk_line || "").trim(),
+      dk_line: row.over_odds,
+      over_odds: row.under_odds,
+      under_odds: row.model_total_score,
+      model_total_score: row.model_birdies,
+      model_birdies: row.model_pars,
+      model_pars: row.model_bogeys,
+      model_bogeys: row.model_gir,
+      model_gir: row.model_fairways,
+      model_fairways: row.model_putts,
+    };
+  }
+  const rn = Math.round(num(row.round_num, NaN));
+  if (!Number.isFinite(rn)) {
+    const dr = Math.round(num(row.display_round, NaN));
+    if (Number.isFinite(dr)) return { ...row, round_num: dr };
+  }
+  return row;
+}
+
 function snapFromAuditRow(row, capturedMs) {
   return {
     capturedMs,
@@ -223,6 +259,61 @@ function snapFromAuditRow(row, capturedMs) {
  * @param {Map<number, number>} roundStartUtcMs
  * @returns {Promise<Map<string, object>>} keys `${dg_id}|${round}|${market}`
  */
+function ingestAuditRow(best, row, roundStartUtcMs) {
+  const norm = normalizeAuditRow(row);
+  const dg = Math.round(num(norm.dg_id));
+  const market = String(norm.market || "").trim();
+  if (!Number.isFinite(dg) || !market) return;
+
+  const capturedMs = Date.parse(String(norm.captured_at || "").trim());
+  const propRound = auditPropRoundFromCapture(norm, roundStartUtcMs, capturedMs);
+  if (!Number.isFinite(propRound) || propRound < 1 || propRound > 4) return;
+
+  const line = parseDkBookLine(norm.dk_line);
+  const over = num(norm.over_odds, NaN);
+  const under = num(norm.under_odds, NaN);
+  if (!Number.isFinite(line) || !Number.isFinite(over) || !Number.isFinite(under)) return;
+
+  const key = `${dg}|${propRound}|${market}`;
+  const prev = best.get(key);
+  const snap = snapFromAuditRow(norm, capturedMs);
+  if (!prev || capturedMs > prev.capturedMs) {
+    best.set(key, {
+      line,
+      over,
+      under,
+      capturedMs,
+      ...snap,
+      displayRound: propRound,
+    });
+  }
+}
+
+/** Parse audit CSV text (browser or Node) into pre-round DK props index. */
+export async function loadPreRoundDkPropsFromAuditText(eventName, csvText, roundStartUtcMs) {
+  const best = new Map();
+  if (!eventName || !String(csvText || "").trim()) return best;
+  await new Promise((resolve, reject) => {
+    Readable.from([csvText])
+      .pipe(
+        parse({
+          columns: true,
+          relax_quotes: true,
+          relax_column_count: true,
+          skip_records_with_error: true,
+        }),
+      )
+      .on("data", (row) => {
+        const ev = String(row.event_name || "").trim();
+        if (!eventsLikelySame(eventName, ev)) return;
+        ingestAuditRow(best, row, roundStartUtcMs);
+      })
+      .on("end", resolve)
+      .on("error", reject);
+  });
+  return best;
+}
+
 export async function loadPreRoundDkPropsFromAudit(eventName, auditPath, roundStartUtcMs) {
   const best = new Map();
   if (!eventName || !existsSync(auditPath)) return best;
@@ -239,32 +330,7 @@ export async function loadPreRoundDkPropsFromAudit(eventName, auditPath, roundSt
   for await (const row of parser) {
     const ev = String(row.event_name || "").trim();
     if (!eventsLikelySame(eventName, ev)) continue;
-    const dg = Math.round(num(row.dg_id));
-    const market = String(row.market || "").trim();
-    if (!Number.isFinite(dg) || !market) continue;
-
-    const capturedMs = Date.parse(String(row.captured_at || "").trim());
-    const propRound = auditPropRoundFromCapture(row, roundStartUtcMs, capturedMs);
-    if (!Number.isFinite(propRound) || propRound < 1 || propRound > 4) continue;
-
-    const line = num(row.dk_line, NaN);
-    const over = num(row.over_odds, NaN);
-    const under = num(row.under_odds, NaN);
-    if (!Number.isFinite(line) || !Number.isFinite(over) || !Number.isFinite(under)) continue;
-
-    const key = `${dg}|${propRound}|${market}`;
-    const prev = best.get(key);
-    const snap = snapFromAuditRow(row, capturedMs);
-    if (!prev || capturedMs > prev.capturedMs) {
-      best.set(key, {
-        line,
-        over,
-        under,
-        capturedMs,
-        ...snap,
-        displayRound: propRound,
-      });
-    }
+    ingestAuditRow(best, row, roundStartUtcMs);
   }
   return best;
 }

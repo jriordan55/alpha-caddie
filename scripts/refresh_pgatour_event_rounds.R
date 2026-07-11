@@ -115,7 +115,23 @@ if (nrow(sched) == 0L || !"tournament_id" %in% names(sched)) {
   quit(save = "no", status = 0L)
 }
 
-hit <- which(vapply(sched$tournament_name, function(n) events_likely_same(n, event_name), logical(1)))
+hit <- which(vapply(seq_len(nrow(sched)), function(i) {
+  cn <- as.character(sched$course_name[i])
+  nv <- norm_evt(course_used)
+  nc <- norm_evt(cn)
+  nzchar(nv) && nzchar(nc) && (grepl(nv, nc, fixed = TRUE) || grepl(nc, nv, fixed = TRUE))
+}, logical(1)))
+if (length(hit) == 0L) {
+  hit <- which(vapply(sched$tournament_name, function(n) events_likely_same(n, event_name), logical(1)))
+}
+if (length(hit) > 1L && nzchar(course_used)) {
+  hit <- hit[which(vapply(hit, function(i) {
+    cn <- as.character(sched$course_name[i])
+    nv <- norm_evt(course_used)
+    nc <- norm_evt(cn)
+    nzchar(nv) && nzchar(nc) && (grepl(nv, nc, fixed = TRUE) || grepl(nc, nv, fixed = TRUE))
+  }, logical(1)))]
+}
 if (length(hit) == 0L && nzchar(course_used)) {
   hit <- which(vapply(sched$course_name, function(cn) {
     nc <- norm_evt(cn)
@@ -250,7 +266,7 @@ for (i in seq_len(nrow(pl))) {
       sortKey = sk,
       event_completed = event_completed,
       year = as.integer(year),
-      event_name = tourn_name,
+      event_name = event_name,
       event_id = tid,
       course_name = cn,
       round_num = as.integer(rn),

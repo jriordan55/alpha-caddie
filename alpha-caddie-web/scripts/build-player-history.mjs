@@ -40,6 +40,10 @@ import { execFileSync } from "child_process";
 import { parse } from "csv-parse";
 import { eventsLikelySame, foldComparableTitle } from "./dg-events-align.mjs";
 import {
+  completedRoundCapFromPayload,
+  pgatourRowBelongsToEvent,
+} from "./live-event-actuals-cap.mjs";
+import {
   resolveLiveRoundActualsByDg,
   sanitizeLiveCountingFields,
   countingFromInPlayRow,
@@ -1100,6 +1104,22 @@ function loadPgatourEventRoundRows() {
       return null;
     }
     list = list.filter((r) => r && typeof r === "object" && r._from_pgatour);
+    let projPayload = null;
+    if (fs.existsSync(PROJECTIONS_JSON)) {
+      try {
+        projPayload = JSON.parse(fs.readFileSync(PROJECTIONS_JSON, "utf8"));
+      } catch {
+        projPayload = null;
+      }
+    }
+    const completedCap = projPayload ? completedRoundCapFromPayload(projPayload) : NaN;
+    const courseUsed = projPayload
+      ? String(projPayload.course_used || projPayload?.meta?.course_used || "").trim()
+      : "";
+    list = list.filter((r) => pgatourRowBelongsToEvent(r, projEvent || metaEvent, { courseUsed }));
+    if (Number.isFinite(completedCap)) {
+      list = list.filter((r) => Math.round(num(r.round_num, NaN)) <= completedCap);
+    }
     list = normalizePgatourEventRoundDates(list);
     list = list.map((r) => {
       const cn = String(r.course_name || "").trim();

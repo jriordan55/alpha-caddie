@@ -2003,11 +2003,83 @@ function currentEventLiveRoundNum() {
   return Number.isFinite(liveR) && liveR >= 1 && liveR <= 4 ? liveR : NaN;
 }
 
-function currentTournamentProgressRoundCap() {
+function currentTournamentCompletedRoundCap() {
+  const actuals = liveRoundActualsMapFromApp();
+  let maxComplete = 0;
+  if (actuals && typeof actuals === "object") {
+    for (const perRound of Object.values(actuals)) {
+      if (!perRound || typeof perRound !== "object") continue;
+      for (const [rndKey, act] of Object.entries(perRound)) {
+        const rnd = Math.round(num(rndKey, NaN));
+        const score = num(act?.round_score, NaN);
+        const thru = Math.round(num(act?.thru, NaN));
+        if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
+        if (!Number.isFinite(score) || score <= 0) continue;
+        if (!Number.isFinite(thru) || thru >= 18) maxComplete = Math.max(maxComplete, rnd);
+      }
+    }
+  }
+  if (maxComplete > 0) return maxComplete;
+  const baked = DATA?.meta?.live_round_actuals_by_dg;
+  if (baked && typeof baked === "object") {
+    for (const perRound of Object.values(baked)) {
+      if (!perRound || typeof perRound !== "object") continue;
+      for (const [rndKey, act] of Object.entries(perRound)) {
+        const rnd = Math.round(num(rndKey, NaN));
+        const score = num(act?.round_score, NaN);
+        const thru = Math.round(num(act?.thru, NaN));
+        if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
+        if (!Number.isFinite(score) || score <= 0) continue;
+        if (!Number.isFinite(thru) || thru >= 18) maxComplete = Math.max(maxComplete, rnd);
+      }
+    }
+  }
+  if (maxComplete > 0) return maxComplete;
   const liveR = currentEventLiveRoundNum();
-  if (Number.isFinite(liveR)) return liveR;
+  if (Number.isFinite(liveR) && liveR > 1) return liveR - 1;
+  return Number.isFinite(liveR) ? liveR : NaN;
+}
+
+function currentTournamentProgressRoundCap() {
+  const completed = currentTournamentCompletedRoundCap();
+  if (Number.isFinite(completed)) return completed;
+  const liveR = currentEventLiveRoundNum();
+  if (Number.isFinite(liveR) && liveR > 1) return liveR - 1;
   const dr = Math.round(num(DATA?.meta?.display_round, NaN));
-  return Number.isFinite(dr) && dr >= 1 && dr <= 4 ? dr : NaN;
+  if (Number.isFinite(dr) && dr > 1) return dr - 1;
+  return Number.isFinite(dr) ? dr : NaN;
+}
+
+function foldComparablePgatourTitle(s) {
+  return String(s || "")
+    .toLowerCase()
+    .replace(/\b(the|presented by|powered by|in partnership with)\b[^a-z0-9]*/gi, " ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/** pgatouR rows must match projections event (e.g. Genesis Scottish vs Genesis Invitational). */
+function pgatourRowBelongsToEvent(row, eventName) {
+  const want = String(eventName || "").trim();
+  const courseUsed = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
+  const rowCourse = String(row?.course_name || "").trim();
+  if (want && courseUsed && rowCourse && courseNameMatchesVenueLoose(rowCourse, courseUsed)) return true;
+
+  const rowEv = String(row?.event_name || row?.tournament_name || "").trim();
+  if (!rowEv || !want) return false;
+  const pe = foldComparablePgatourTitle(want);
+  const re = foldComparablePgatourTitle(rowEv);
+  const skip = new Set(["genesis", "the", "open", "pga", "tour"]);
+  const projWords = pe.split(/\s+/).filter((w) => w.length >= 5 && !skip.has(w));
+  for (const w of projWords) {
+    if (!re.includes(w)) return false;
+  }
+  const rowWords = re.split(/\s+/).filter((w) => w.length >= 5 && !skip.has(w));
+  for (const w of rowWords) {
+    if (!pe.includes(w)) return false;
+  }
+  return eventNameMatchesCurrentSchedule(rowEv, want);
 }
 
 function historyRoundMatchesCurrentEvent(row) {
@@ -2340,24 +2412,52 @@ function historyRowMissingChartableGirFairwaysPutts(row, statKey) {
   return false;
 }
 
-/** Fill null GIR/FW/putts on current-week pgatour rows from live tournament stats actuals. */
+/** Fill null GIR/FW/putts/birdies/bogeys on current-week rows from live stats + pgatour scorecards. */
 function enrichHistoryRowFromLiveActuals(row) {
   if (!row || typeof row !== "object") return row;
   const dg = Math.round(num(row.dg_id, NaN));
   const rnd = Math.round(num(row.round_num ?? row.round, NaN));
   if (!Number.isFinite(dg) || !Number.isFinite(rnd)) return row;
-  const actuals = liveRoundActualsMapFromApp();
-  if (!actuals) return row;
-  const act = actuals[String(dg)]?.[String(rnd)];
-  if (!act || typeof act !== "object") return row;
   const out = { ...row };
+
+  if (row._from_pgatour) {
+    const b = birdiesPlusEaglesFromRow(row);
+    const bg = num(row.bogeys ?? row.bogies, NaN);
+    if (Number.isFinite(b) && !Number.isFinite(num(out.birdies, NaN))) out.birdies = b;
+    if (Number.isFinite(bg) && !Number.isFinite(num(out.bogeys ?? out.bogies, NaN))) {
+      out.bogeys = bg;
+      out.bogies = bg;
+    }
+  }
+
+  const actuals = liveRoundActualsMapFromApp();
+  if (!actuals) return out;
+  const act = actuals[String(dg)]?.[String(rnd)];
+  if (!act || typeof act !== "object") return out;
+
+  const livePlaceholder =
+    num(act.birdies, 0) === 0 &&
+    num(act.pars, 0) === 0 &&
+    num(act.bogeys ?? act.bogies, 0) === 0;
+
+  if (!livePlaceholder) {
+    if (!Number.isFinite(num(out.birdies, NaN)) && Number.isFinite(num(act.birdies, NaN))) {
+      out.birdies = Math.round(num(act.birdies, NaN));
+    }
+    const actBg = num(act.bogeys ?? act.bogies, NaN);
+    if (!Number.isFinite(num(out.bogeys ?? out.bogies, NaN)) && Number.isFinite(actBg)) {
+      out.bogeys = Math.round(actBg);
+      out.bogies = Math.round(actBg);
+    }
+  }
+
   if (historyRowMissingChartableGirFairwaysPutts(out, "gir")) {
     const g = historyGirOrFairwaysCount(act.gir, 18);
     if (Number.isFinite(g) && g > 1) out.gir = g;
   }
   if (historyRowMissingChartableGirFairwaysPutts(out, "fairways")) {
     const fw = historyGirOrFairwaysCount(act.fairways, fairwayHolesModeledFromData());
-    if (Number.isFinite(fw) && fw > 1) out.fairways = fw;
+    if (Number.isFinite(fw) && fw >= 0) out.fairways = fw;
   }
   if (historyRowMissingChartableGirFairwaysPutts(out, "putts")) {
     const p = historyScalarOrNaN(act.putts);
@@ -2427,6 +2527,8 @@ function mergeLiveInPlayIntoRoundHistory(j) {
       if (!act || typeof act !== "object") continue;
       const rnd = Math.round(num(rndKey, NaN));
       if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
+      const completedCap = currentTournamentCompletedRoundCap();
+      if (Number.isFinite(completedCap) && rnd > completedCap) continue;
       let actScore = num(act.round_score, NaN);
       if (ipRow) {
         const g = liveInPlayGrossForRound(ipRow, rnd);
@@ -14114,13 +14216,9 @@ function courseFitDistRoundCountsAsActual(row) {
     const currentY = currentEventSeasonYearFromMeta();
     if (Number.isFinite(seasonY) && Number.isFinite(currentY) && seasonY === currentY) {
       const rnd = Math.round(num(row?.round_num ?? row?.round, NaN));
-      const rs = num(row.round_score, NaN);
-      const liveGrossLocked =
-        (row._from_live_tournament_stats || row._from_pgatour) && Number.isFinite(rs) && rs > 0;
-      if (!liveGrossLocked) {
-        const cap = currentTournamentProgressRoundCap();
-        if (Number.isFinite(rnd) && Number.isFinite(cap) && rnd > cap) return false;
-      }
+      const cap = currentTournamentProgressRoundCap();
+      if (Number.isFinite(rnd) && Number.isFinite(cap) && rnd > cap) return false;
+      if (row._from_pgatour && !pgatourRowBelongsToEvent(row, String(DATA?.meta?.event_name || ""))) return false;
     }
   }
   return true;
@@ -20185,13 +20283,9 @@ function historyRoundCountsAsActual(row) {
 
   if (historyRoundMatchesCurrentEvent(row)) {
     const rnd = Math.round(num(row.round_num, NaN));
-    const rs = num(row.round_score, NaN);
-    const liveGrossLocked =
-      (row._from_live_tournament_stats || row._from_pgatour) && Number.isFinite(rs) && rs > 0;
-    if (!liveGrossLocked) {
-      const cap = currentTournamentProgressRoundCap();
-      if (Number.isFinite(rnd) && Number.isFinite(cap) && rnd > cap) return false;
-    }
+    const cap = currentTournamentProgressRoundCap();
+    if (Number.isFinite(rnd) && Number.isFinite(cap) && rnd > cap) return false;
+    if (row._from_pgatour && !pgatourRowBelongsToEvent(row, String(DATA?.meta?.event_name || ""))) return false;
   }
   return true;
 }
@@ -20948,27 +21042,29 @@ function actualForRoundRow(statKey, row) {
   if (!row || typeof row !== "object") return NaN;
   if (statKey === "total" || statKey === "birdies" || statKey === "pars" || statKey === "bogeys") {
     if (!historyRowFromDgHistoricalRoundsApi(row)) return NaN;
-    if (statKey === "total") return historyScalarOrNaN(row.round_score);
-    const cp = num(row.course_par, NaN) || num(DATA?.meta?.course_par_18, NaN);
+    const enriched = enrichHistoryRowFromLiveActuals(row);
+    if (statKey === "total") return historyScalarOrNaN(enriched.round_score);
+    const cp = num(enriched.course_par, NaN) || num(DATA?.meta?.course_par_18, NaN);
     const rec = reconcileHoleCountsFromScoreRuntime(
       {
-        birdies: row.birdies,
-        pars: row.pars,
-        bogeys: row.bogeys ?? row.bogies,
-        round_score: row.round_score ?? row.score,
-        eagles_or_better: row.eagles_or_better,
-        doubles_or_worse: row.doubles_or_worse,
+        birdies: enriched.birdies,
+        pars: enriched.pars,
+        bogeys: enriched.bogeys ?? enriched.bogies,
+        round_score: enriched.round_score ?? enriched.score,
+        eagles_or_better: enriched.eagles_or_better,
+        doubles_or_worse: enriched.doubles_or_worse,
       },
       cp,
     );
-    if (!historyLiveCountingTrusted(row) && !Number.isFinite(rec.birdies) && !Number.isFinite(rec.bogeys)) return NaN;
+    if (!historyLiveCountingTrusted(enriched) && !Number.isFinite(rec.birdies) && !Number.isFinite(rec.bogeys))
+      return NaN;
     if (statKey === "birdies") {
       const b = num(rec.birdies, NaN);
-      if (Number.isFinite(b)) return b + Math.max(0, num(rec.eagles ?? row.eagles_or_better, 0));
-      return birdiesPlusEaglesFromRow(row);
+      if (Number.isFinite(b)) return b + Math.max(0, num(rec.eagles ?? enriched.eagles_or_better, 0));
+      return birdiesPlusEaglesFromRow(enriched);
     }
-    if (statKey === "pars") return historyScalarOrNaN(rec.pars ?? row.pars);
-    return historyScalarOrNaN(rec.bogeys ?? row.bogeys ?? row.bogies);
+    if (statKey === "pars") return historyScalarOrNaN(rec.pars ?? enriched.pars);
+    return historyScalarOrNaN(rec.bogeys ?? enriched.bogeys ?? enriched.bogies);
   }
   if (statKey === "gir") {
     const enriched = enrichHistoryRowFromLiveActuals(row);
@@ -20986,9 +21082,9 @@ function actualForRoundRow(statKey, row) {
     let v = historyGirOrFairwaysCount(enriched.fairways, fairwayHolesModeledFromData());
     if (!Number.isFinite(v) || v === 0 || v === 1) {
       const liveV = liveRoundActualStatForDgRound(row.dg_id, row.round_num ?? row.round, "fairways");
-      if (Number.isFinite(liveV) && liveV > 1) v = liveV;
+      if (Number.isFinite(liveV) && liveV >= 0) v = liveV;
     }
-    return v === 0 || v === 1 ? NaN : v;
+    return Number.isFinite(v) && v >= 0 ? v : NaN;
   }
   if (statKey === "putts") {
     const enriched = enrichHistoryRowFromLiveActuals(row);

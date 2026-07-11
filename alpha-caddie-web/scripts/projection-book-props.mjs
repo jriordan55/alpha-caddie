@@ -1,6 +1,8 @@
 /**
  * Book-like O/U props from projections.json (DK scrape, CSV, or model fallback when DK is blocked).
  */
+import { enforceHalfLine } from "./round-projection-mu.mjs";
+
 export function num(v, fallback = NaN) {
   const n = Number(v);
   return Number.isFinite(n) ? n : fallback;
@@ -14,6 +16,13 @@ export function isBookLikePropSource(source) {
 
 export function isPrizePicksPropSource(source) {
   return String(source || "").trim().toLowerCase() === "prizepicks";
+}
+
+function normalizeIndexedPropLine(source, line) {
+  const n = num(line, NaN);
+  if (!Number.isFinite(n)) return NaN;
+  if (isPrizePicksPropSource(source)) return n;
+  return enforceHalfLine(n);
 }
 
 /**
@@ -41,7 +50,7 @@ function buildPropsIndexForSource(payload, opts = {}) {
     const dg = Math.round(num(r.dg_id, NaN));
     let rnd = Math.round(num(r.round_num ?? r.display_round, NaN));
     if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) rnd = displayRound;
-    const line = num(r.line, NaN);
+    const line = normalizeIndexedPropLine(src, r.line);
     const over = num(r.over_odds, NaN);
     const under = num(r.under_odds, NaN);
     if (!Number.isFinite(dg) || !market) continue;

@@ -3,7 +3,20 @@
  * and pgatour_event_rounds.json (without re-running the full CSV export).
  */
 import { eventsLikelySame } from "../scripts/dg-events-align.mjs";
+import {
+  completedRoundCapFromPayload,
+  pgatourRowBelongsToEvent,
+} from "../scripts/live-event-actuals-cap.mjs";
 import { ouProjectedMeanForLive } from "../scripts/projected-mean-live.mjs";
+import {
+  DETAIL_EXPORT_MARKETS,
+  fmtDkBookLine,
+  fmtPpBookLine,
+  gradeLineForDetailRow,
+  ouSideResults,
+  parseDkBookLine,
+} from "./detail-market-specs.mjs";
+import { formatAmerican } from "./ev-math.mjs";
 
 function num(v) {
   const n = Number(v);
@@ -18,6 +31,7 @@ function normEvent(s) {
 
 function birdiesFromAct(act) {
   if (!act || typeof act !== "object") return NaN;
+  if (liveCountingPlaceholder(act)) return NaN;
   const b = num(act.birdies);
   const eob = num(act.eagles_or_better);
   const eg = num(act.eagles);
@@ -29,32 +43,46 @@ function birdiesFromAct(act) {
 function fmtActual(marketKey, v) {
   if (!Number.isFinite(v)) return "";
   if (marketKey === "total") return (Math.round(v * 10) / 10).toFixed(1);
-  return String(Math.round(v * 10) / 10 === Math.round(v) ? Math.round(v) : v);
+  return String(Math.round(v));
 }
 
-function ouSideResults(actual, line) {
-  if (!Number.isFinite(actual) || !Number.isFinite(line)) return { over: "", under: "" };
-  if (actual > line) return { over: "W", under: "L" };
-  if (actual < line) return { over: "L", under: "W" };
-  return { over: "P", under: "P" };
-}
+const RESULT_COLS = {
+  total: {
+    actualCol: "actual_round_score",
+    overCol: "round_score_over",
+    underCol: "round_score_under",
+  },
+  birdies: { actualCol: "actual_birdies", overCol: "birdies_over", underCol: "birdies_under" },
+  bogeys: { actualCol: "actual_bogeys", overCol: "bogeys_over", underCol: "bogeys_under" },
+  gir: { actualCol: "actual_gir", overCol: "gir_over", underCol: "gir_under" },
+  fairways: { actualCol: "actual_fairways", overCol: "fairways_over", underCol: "fairways_under" },
+};
 
-const MARKET_ACTUAL = [
-  { market: "Total score", key: "total", actualCol: "actual_round_score", modelCol: "round_score_line", overCol: "round_score_over", underCol: "round_score_under" },
-  { market: "Birdies", key: "birdies", actualCol: "actual_birdies", modelCol: "birdies_line", overCol: "birdies_over", underCol: "birdies_under" },
-  { market: "Bogeys", key: "bogeys", actualCol: "actual_bogeys", modelCol: "bogeys_line", overCol: "bogeys_over", underCol: "bogeys_under" },
-  { market: "GIR", key: "gir", actualCol: "actual_gir", modelCol: "gir_line", overCol: "gir_over", underCol: "gir_under" },
-  { market: "Fairways hit", key: "fairways", actualCol: "actual_fairways", modelCol: "fairways_line", overCol: "fairways_over", underCol: "fairways_under" },
-];
+const MARKET_ACTUAL = DETAIL_EXPORT_MARKETS.map((spec) => ({
+  ...spec,
+  ...RESULT_COLS[spec.key],
+  modelCol: spec.lineCol,
+}));
 
 function actualForMarket(act, marketKey) {
   if (!act || typeof act !== "object") return NaN;
   if (marketKey === "total") return num(act.round_score ?? act.total_score);
   if (marketKey === "birdies") return birdiesFromAct(act);
-  if (marketKey === "bogeys") return num(act.bogeys ?? act.bogies);
+  if (marketKey === "bogeys") {
+    if (liveCountingPlaceholder(act)) return NaN;
+    return num(act.bogeys ?? act.bogies);
+  }
   if (marketKey === "gir") return num(act.gir);
   if (marketKey === "fairways") return num(act.fairways);
   return NaN;
+}
+
+function liveCountingPlaceholder(act) {
+  if (!act || typeof act !== "object") return true;
+  const b = num(act.birdies);
+  const p = num(act.pars);
+  const bg = num(act.bogeys ?? act.bogies);
+  return b === 0 && p === 0 && bg === 0;
 }
 
 /** @param {Map<string, object>} out */
@@ -72,13 +100,20 @@ function overlayLiveActuals(out, projections, eventName) {
       if (!Number.isFinite(score) || score <= 0) continue;
       const key = `${dg}|${rnd}`;
       const prev = out.get(key) || {};
-      out.set(key, {
+      const next = {
         ...prev,
-        ...act,
         round_score: score,
         total_score: score,
-        source: act.source || prev.source || "live_projections",
-      });
+        source: prev.source ? `${prev.source}+live` : act.source || "live_projections",
+      };
+      if (!liveCountingPlaceholder(act)) {
+        if (Number.isFinite(num(act.birdies))) next.birdies = act.birdies;
+        if (Number.isFinite(num(act.pars))) next.pars = act.pars;
+        if (Number.isFinite(num(act.bogeys ?? act.bogies))) next.bogeys = act.bogeys ?? act.bogies;
+      }
+      if (Number.isFinite(num(act.gir)) && num(act.gir) >= 0) next.gir = act.gir;
+      if (Number.isFinite(num(act.fairways)) && num(act.fairways) >= 0) next.fairways = act.fairways;
+      out.set(key, next);
       n++;
     }
   }
@@ -86,29 +121,36 @@ function overlayLiveActuals(out, projections, eventName) {
 }
 
 /** @param {Map<string, object>} out */
-function overlayPgatourActuals(out, pgPayload, eventName) {
+function overlayPgatourActuals(out, pgPayload, eventName, projections) {
   const rounds = Array.isArray(pgPayload?.rounds) ? pgPayload.rounds : [];
   const metaEvent = String(pgPayload?.meta?.event_name || "").trim();
   if (metaEvent && !eventsLikelySame(eventName, metaEvent)) return 0;
+  const completedCap = projections ? completedRoundCapFromPayload(projections) : NaN;
+  const courseUsed = String(projections?.course_used || projections?.meta?.course_used || "").trim();
   let n = 0;
   for (const r of rounds) {
+    if (!r?._from_pgatour) continue;
+    if (!pgatourRowBelongsToEvent(r, eventName, { courseUsed })) continue;
     const dg = Math.round(num(r.dg_id));
     const rnd = Math.round(num(r.round_num));
     const score = num(r.round_score);
     if (!Number.isFinite(dg) || !Number.isFinite(rnd) || !Number.isFinite(score) || score <= 0) continue;
+    if (Number.isFinite(completedCap) && rnd > completedCap) continue;
     const key = `${dg}|${rnd}`;
     const prev = out.get(key) || {};
-    out.set(key, {
-      ...prev,
-      round_score: score,
-      total_score: score,
-      birdies: num(r.birdies),
-      bogeys: num(r.bogies ?? r.bogies),
-      gir: num(r.gir),
-      fairways: num(r.fairways),
-      eagles_or_better: num(r.eagles_or_better),
-      source: "pgatour_event_rounds",
-    });
+    const next = { ...prev, source: prev.source ? `${prev.source}+pgatour` : "pgatour_event_rounds" };
+    const eob = num(r.eagles_or_better);
+    const b = num(r.birdies);
+    if (Number.isFinite(b)) next.birdies = b + (Number.isFinite(eob) ? eob : 0);
+    const bg = num(r.bogeys ?? r.bogies);
+    if (Number.isFinite(bg)) next.bogeys = bg;
+    if (Number.isFinite(num(r.gir))) next.gir = num(r.gir);
+    if (Number.isFinite(num(r.fairways))) next.fairways = num(r.fairways);
+    if (!Number.isFinite(num(prev.round_score))) {
+      next.round_score = score;
+      next.total_score = score;
+    }
+    out.set(key, next);
     n++;
   }
   return n;
@@ -170,7 +212,8 @@ function patchModelLinesFromProjections(detailRows, projections) {
       }
       const actual = parseLine(next[spec.actualCol]);
       if (Number.isFinite(actual)) {
-        const sides = ouSideResults(actual, mu);
+        const gradeLine = gradeLineForDetailRow(next, spec);
+        const sides = ouSideResults(actual, gradeLine);
         if (next[spec.overCol] !== sides.over) {
           next[spec.overCol] = sides.over;
           changed = true;
@@ -192,21 +235,152 @@ function patchModelLinesFromProjections(detailRows, projections) {
   return detailRows;
 }
 
+function rowHasCompletedScore(row) {
+  const score = num(row.actual_round_score);
+  return Number.isFinite(score) && score > 0;
+}
+
+function fmtBookLine(market, line, { prizePicks = false } = {}) {
+  return prizePicks ? fmtPpBookLine(market, line) : fmtDkBookLine(market, line);
+}
+
+function dkPropForPatch(preRound, liveDk, dg, rnd, propsMarket, row) {
+  const key = `${dg}|${rnd}|${propsMarket}`;
+  const pre = preRound?.[key];
+  if (pre && Number.isFinite(pre.line)) return { ...pre, oddsSource: "pre_round_audit" };
+  if (rowHasCompletedScore(row)) return null;
+  const live = liveDk?.[key];
+  if (live && Number.isFinite(live.line)) return { ...live, oddsSource: "live_snapshot" };
+  return null;
+}
+
+function ppPropForPatch(preRound, livePp, dg, rnd, propsMarket, row) {
+  const key = `${dg}|${rnd}|${propsMarket}`;
+  const pre = preRound?.[key];
+  if (pre && Number.isFinite(pre.line)) return { ...pre, oddsSource: "pre_round_audit" };
+  if (rowHasCompletedScore(row)) return null;
+  const live = livePp?.[key];
+  if (live && Number.isFinite(live.line)) return { ...live, oddsSource: "prizepicks_live" };
+  return null;
+}
+
+function auditModelFromPropSnap(snap, spec) {
+  if (!snap) return NaN;
+  if (spec.key === "total") return num(snap.modelTotal);
+  if (spec.key === "birdies") return num(snap.modelBirdies);
+  if (spec.key === "pars") return num(snap.modelPars);
+  if (spec.key === "bogeys") return num(snap.modelBogeys);
+  if (spec.key === "gir") return num(snap.modelGir);
+  if (spec.key === "fairways") return num(snap.modelFairways);
+  return NaN;
+}
+
+function patchBookLinesFromLiveProps(detailRows, projections, liveBookProps) {
+  if (!liveBookProps || !Array.isArray(detailRows) || !detailRows.length) return detailRows;
+  const eventName = String(liveBookProps.event_name || projections?.event_name || "").trim();
+  if (!eventName) return detailRows;
+
+  const preRoundDk = liveBookProps.pre_round_dk || {};
+  const preRoundPp = liveBookProps.pre_round_pp || {};
+  const liveDk = liveBookProps.live_dk || {};
+  const livePp = liveBookProps.live_pp || {};
+  let patched = 0;
+
+  for (let i = 0; i < detailRows.length; i++) {
+    const row = detailRows[i];
+    if (!eventsLikelySame(row.event_name, eventName)) continue;
+    if (row.pricing_mode !== "default" || row.pricing_skill !== "default") continue;
+    if (String(row.book_odds_source || "").trim() && String(row.pp_book_odds_source || "").trim()) continue;
+
+    const dg = Math.round(num(row.dg_id));
+    const rnd = Math.round(num(row.round));
+    if (!Number.isFinite(dg) || !Number.isFinite(rnd)) continue;
+
+    const next = { ...row };
+    let changed = false;
+    let oddsSource = String(next.book_odds_source || "").trim();
+    let ppOddsSource = String(next.pp_book_odds_source || "").trim();
+
+    for (const spec of DETAIL_EXPORT_MARKETS) {
+      const hasBook =
+        String(next[spec.bookLineCol] || "").trim() &&
+        (String(next[spec.overOddsCol] || "").trim() || String(next[spec.underOddsCol] || "").trim());
+      if (!hasBook) {
+        const dk = dkPropForPatch(preRoundDk, liveDk, dg, rnd, spec.propsMarket, row);
+        if (dk) {
+          next[spec.bookLineCol] = fmtBookLine(spec.market, parseDkBookLine(dk.line));
+          next[spec.overOddsCol] = formatAmerican(dk.over);
+          next[spec.underOddsCol] = formatAmerican(dk.under);
+          if (!oddsSource) oddsSource = dk.oddsSource;
+          if (dk.oddsSource === "pre_round_audit") {
+            const auditMu = auditModelFromPropSnap(dk, spec);
+            if (Number.isFinite(auditMu)) {
+              next[spec.lineCol] = fmtModelLine(spec.market, auditMu);
+            }
+          }
+          changed = true;
+        }
+      }
+
+      const hasPp =
+        String(next[spec.ppLineCol] || "").trim() &&
+        (String(next[spec.ppOverOddsCol] || "").trim() || String(next[spec.ppUnderOddsCol] || "").trim());
+      if (!hasPp) {
+        const pp = ppPropForPatch(preRoundPp, livePp, dg, rnd, spec.propsMarket, row);
+        if (pp) {
+          next[spec.ppLineCol] = fmtBookLine(spec.market, num(pp.line), { prizePicks: true });
+          next[spec.ppOverOddsCol] = formatAmerican(pp.over);
+          next[spec.ppUnderOddsCol] = formatAmerican(pp.under);
+          if (!ppOddsSource) ppOddsSource = pp.oddsSource;
+          if (pp.oddsSource === "pre_round_audit") {
+            const auditMu = auditModelFromPropSnap(pp, spec);
+            if (Number.isFinite(auditMu)) {
+              next[spec.lineCol] = fmtModelLine(spec.market, auditMu);
+            }
+          }
+          changed = true;
+        }
+      }
+    }
+
+    if (oddsSource && next.book_odds_source !== oddsSource) {
+      next.book_odds_source = oddsSource;
+      changed = true;
+    }
+    if (ppOddsSource && next.pp_book_odds_source !== ppOddsSource) {
+      next.pp_book_odds_source = ppOddsSource;
+      changed = true;
+    }
+
+    if (changed) {
+      detailRows[i] = next;
+      patched++;
+    }
+  }
+
+  if (patched > 0) {
+    console.log(`[projection-tracker] Patched book lines on ${patched} live-week row(s) from live_event_book_props.json`);
+  }
+  return detailRows;
+}
+
 /**
  * @param {Record<string, string>[]} detailRows
  * @param {object | null} projections
  * @param {object | null} pgPayload
+ * @param {object | null} [liveBookProps]
  */
-export function patchDetailRowsFromLiveSources(detailRows, projections, pgPayload) {
+export function patchDetailRowsFromLiveSources(detailRows, projections, pgPayload, liveBookProps = null) {
   if (!Array.isArray(detailRows) || !detailRows.length) return detailRows;
   patchModelLinesFromProjections(detailRows, projections);
+  patchBookLinesFromLiveProps(detailRows, projections, liveBookProps);
   const eventName = String(projections?.event_name || projections?.meta?.event_name || pgPayload?.meta?.event_name || "").trim();
   if (!eventName) return detailRows;
 
   /** @type {Map<string, object>} */
   const actuals = new Map();
+  overlayPgatourActuals(actuals, pgPayload, eventName, projections);
   overlayLiveActuals(actuals, projections, eventName);
-  overlayPgatourActuals(actuals, pgPayload, eventName);
   if (!actuals.size) return detailRows;
 
   /** @type {Map<string, number>} */
@@ -235,9 +409,9 @@ export function patchDetailRowsFromLiveSources(detailRows, projections, pgPayloa
         row[spec.actualCol] = formatted;
         changed = true;
       }
-      const modelLine = parseLine(row[spec.modelCol]);
-      if (Number.isFinite(modelLine)) {
-        const sides = ouSideResults(actual, modelLine);
+      const gradeLine = gradeLineForDetailRow(row, spec);
+      if (Number.isFinite(gradeLine)) {
+        const sides = ouSideResults(actual, gradeLine);
         if (row[spec.overCol] !== sides.over) {
           row[spec.overCol] = sides.over;
           changed = true;

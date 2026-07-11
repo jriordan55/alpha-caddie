@@ -184,7 +184,7 @@
     </section>
 
     <section id="panel-bets" class="panel" role="tabpanel">
-      <p class="note">Each row is one player × round × market. <strong>Model</strong> = projection at export; <strong>DK</strong> = pre-round DraftKings line. Qualified bets require min EV <em>and</em> min |model−DK| gap (0.5 score, 1.25 birdies, etc.) so flat DK buckets don’t auto-qualify. Core markets: total score, birdies, GIR, fairways.</p>
+      <p class="note">Each row is one player × round × market with a real DraftKings or PrizePicks line. <strong>Model</strong> = projection at export; <strong>Book</strong> = DK/PP line. Qualified bets require min EV <em>and</em> min |model−book| gap (0.5 score, 1.25 birdies, etc.) so flat book buckets don’t auto-qualify. Core markets: total score, birdies, GIR, fairways.</p>
       <div class="kpi-grid" id="bets-kpis"></div>
       <div class="table-card">
         <div class="table-wrap table-wrap-tall">
@@ -196,7 +196,7 @@
                 <th>Player</th>
                 <th>Market</th>
                 <th class="num">Model</th>
-                <th class="num">DK</th>
+                <th class="num">Book</th>
                 <th class="num">Δ</th>
                 <th class="num">Over</th>
                 <th>Over</th>
@@ -516,7 +516,7 @@
           <dt>Player</dt>
           <dd>Name search (Bet log &amp; Risk).</dd>
           <dt>Show</dt>
-          <dd><strong>Bet log only:</strong> qualified bets vs all graded lines (every DK line with a result).</dd>
+          <dd><strong>Bet log only:</strong> qualified bets vs all graded lines (every DK/PP line with a result).</dd>
         </dl>
       </article>
 
@@ -623,6 +623,6 @@
     </section>
   </main>
 
-  <script type="module" src="tracker.js?v=36"></script>
+  <script type="module" src="tracker.js?v=49"></script>
 </body>
 </html>
