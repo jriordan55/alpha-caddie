@@ -18601,11 +18601,11 @@ function propsEventVenueCourseKey() {
   return metaVenue ? normCourseNameKey(metaVenue) : "";
 }
 
-/** In field mode: Course dropdown (empty = all courses). Single-player: current-course checkbox. */
+/** In field mode: Course dropdown (empty = all courses) or Current course only. Single-player: current-course checkbox. */
 function propsEffectiveCourseKey() {
   const sel = selectedPropsCourseFilter();
-  if (propsCourseWindowModeOn()) return sel;
   if (courseFilterOn()) return propsEventVenueCourseKey();
+  if (propsCourseWindowModeOn()) return sel;
   return sel;
 }
 
@@ -18617,19 +18617,12 @@ function propsChartHitCourseLabel(hist) {
   return ck ? courseFitPrettyCourseKey(ck) : "";
 }
 
-/** This week's projection field (optionally DraftKings-available only). */
+/** This week's projection field. */
 function propsFieldPlayerDgIds() {
   const ids = new Set();
-  const dkOnly = propsFilterDraftKingsOnlyOn() && propsCourseWindowModeOn();
-  const statKey = dkOnly ? statKeyFromPropSelect() : "";
-  const nameByDg = dkOnly ? buildPropsGolferDisplayNameMap() : null;
   for (const p of roundProjectionPlayersForOuRound()) {
     const id = Math.round(num(p.dg_id, NaN));
     if (!Number.isFinite(id)) continue;
-    if (dkOnly) {
-      const name = resolveGolferDisplayNameForDg(id, p.player_name, nameByDg);
-      if (!propsTrendPlayerHasDraftKingsLine(id, name, statKey)) continue;
-    }
     ids.add(id);
   }
   return ids;
@@ -19247,9 +19240,9 @@ function propsCourseWindowModeActive() {
   return propsCourseWindowModeOn();
 }
 
-/** Field-by-course: limit to round projections tab field (DraftKings Available Players). */
+/** Removed DraftKings-only field filter — always full projection field. */
 function propsFilterDraftKingsOnlyOn() {
-  return Boolean(document.getElementById("props-filter-draftkings-only")?.checked);
+  return false;
 }
 
 /** Field-by-course + DK: default From/To to R1–R4 only when both dates are blank (never overwrite user range). */
@@ -23319,10 +23312,6 @@ function syncPropsCourseWindowUiState() {
   if (topGolfer) topGolfer.hidden = modeOn;
   const golferSearch = document.getElementById("prop-golfer-search");
   if (golferSearch) golferSearch.disabled = modeOn;
-  const sessExtra = document.getElementById("props-course-session-extra");
-  if (sessExtra) sessExtra.hidden = !modeOn;
-  const curCourse = document.getElementById("props-filter-current-course");
-  if (curCourse && modeOn) curCourse.checked = false;
   const roundsStepper = document.querySelector(".props-chart-steppers .props-stepper-block");
   if (roundsStepper) roundsStepper.hidden = modeOn;
   const topRounds = document.querySelector(".props-trends-top-rounds");
@@ -23541,9 +23530,7 @@ function renderPropsTrendsCourseWindowBody(gen, courseBucket) {
   if (flagEl) flagEl.hidden = true;
   if (titleEl) {
     if (!courseKey) {
-      titleEl.textContent = propsFilterDraftKingsOnlyOn()
-        ? `This week's field · all courses${yearSuffix}`
-        : `Field · all courses${yearSuffix}`;
+      titleEl.textContent = `This week's field · all courses${yearSuffix}`;
     } else {
       titleEl.textContent = `${courseFitPrettyCourseKey(courseKey)}${yearSuffix}`;
     }
@@ -25788,7 +25775,6 @@ document.addEventListener("DOMContentLoaded", () => {
     "props-filter-year",
     "props-filter-course",
     "props-filter-course-window",
-    "props-filter-draftkings-only",
     "props-window-n",
   ];
   propsIds.forEach((id) => {
@@ -25899,17 +25885,6 @@ document.addEventListener("DOMContentLoaded", () => {
         void ensurePropsCourseIndexForKeyAsync(venueCk);
       }
       ensurePropsFieldYearDefault(true);
-      propsWindowNUserOverride = false;
-      syncPropsWindowNDefault(true);
-    }
-    invalidateCourseWindowRoundEntriesCache();
-    renderPropsTrendsNow();
-  });
-  document.getElementById("props-filter-draftkings-only")?.addEventListener("change", () => {
-    if (propsCourseWindowModeOn() && propsFilterDraftKingsOnlyOn()) {
-      const yearSel = document.getElementById("props-filter-year");
-      if (yearSel) yearSel.value = "";
-    } else if (propsCourseWindowModeOn()) {
       propsWindowNUserOverride = false;
       syncPropsWindowNDefault(true);
     }

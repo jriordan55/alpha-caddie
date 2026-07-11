@@ -465,12 +465,6 @@
                 <input type="checkbox" id="props-filter-course-window" />
                 <span>This week&apos;s field</span>
               </label>
-              <div id="props-course-session-extra" class="props-course-session-extra" hidden>
-                <label class="props-sidebar-label props-filter-row" for="props-filter-draftkings-only">
-                  <input type="checkbox" id="props-filter-draftkings-only" />
-                  <span>DraftKings Available Players</span>
-                </label>
-              </div>
             </div>
           </div>
           <label class="props-sidebar-label props-current-course-option" for="props-filter-current-course">
@@ -1289,9 +1283,9 @@
         <h4 class="ev-devig-section-title" id="tab-help-props-filters-h">Filters</h4>
         <dl class="ev-help-dl">
           <dt>This week&apos;s field</dt>
-          <dd>Chart every golfer in this week&apos;s projection field. Defaults to all rounds in the current season year (2026). Use Course, Year, and optional From/To dates to narrow further.</dd>
+          <dd>Chart every golfer in this week&apos;s projection field. Defaults to all rounds in the current season year (2026). Use Course, Year, Current course only, and optional From/To dates to narrow further.</dd>
           <dt>Current course only</dt>
-          <dd>Single-golfer mode: all past rounds at this week&apos;s course.</dd>
+          <dd>Limit to rounds at this week&apos;s venue (The Renaissance Club, etc.). Works in single-golfer mode and with This week&apos;s field.</dd>
           <dt>Course dropdown</dt>
           <dd>Limit to one course by name.</dd>
           <dt>Weather filters</dt>
@@ -1543,6 +1537,6 @@
   </dialog>
 
   <script src="parlay-pro.js?v=12"></script>
-  <script src="app.js?v=335"></script>
+  <script src="app.js?v=336"></script>
 </body>
 </html>
