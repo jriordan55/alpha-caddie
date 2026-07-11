@@ -150,6 +150,14 @@ if (avgFnBody.includes('source: "model"')) {
 if (!avgFnBody.includes("ouMarketAvgValueForRoundRow")) {
   fail("ouPlayerMarketAverage must use ouMarketAvgValueForRoundRow for raw posted stats");
 }
+const avgValFnIdx = appSrc.indexOf("function ouMarketAvgValueForRoundRow");
+const avgValFnBody = avgValFnIdx >= 0 ? appSrc.slice(avgValFnIdx, avgValFnIdx + 900) : "";
+if (!avgValFnBody.includes("enrichHistoryRowFromLiveActuals(row)")) {
+  fail("ouMarketAvgValueForRoundRow must enrich rows before actualForRoundRow (GIR/FW live fill)");
+}
+if (avgValFnBody.includes('historyRowHasStoredCountingStat(row, "gir")')) {
+  fail("ouMarketAvgValueForRoundRow must not gate GIR on raw row when enrich supplies live actuals");
+}
 const ratingFnIdx = appSrc.indexOf("function ouPlayerAvgForMarketRating");
 const ratingFnBody = ratingFnIdx >= 0 ? appSrc.slice(ratingFnIdx, ratingFnIdx + 500) : "";
 if (ratingFnBody.includes("ouPlayerModelAvgForMarket")) {
@@ -288,6 +296,33 @@ if (existsSync(taylorShardPath)) {
   }
   if (seasonBirdMean < 0.05) {
     fail(`Taylor ${seasonYear} season birdies mean is ~0 — live placeholder rows leaking into averages`);
+  }
+}
+
+// Field player with a posted GIR line must have a season GIR average from history (not blank).
+const girProps = props.filter(
+  (r) =>
+    String(r.market || "").trim() === "GIR" &&
+    fieldIds.has(Math.round(num(r.dg_id, NaN))),
+);
+if (girProps.length >= 3) {
+  const sampleId = Math.round(num(girProps[0].dg_id, NaN));
+  const sampleShardPath = join(WEB, `player-history/by-dg/${sampleId}.json`);
+  if (existsSync(sampleShardPath)) {
+    const sampleShard = JSON.parse(readFileSync(sampleShardPath, "utf8"));
+    const seasonGir = (sampleShard.rounds || [])
+      .filter((r) => historyRoundSeasonYear(r) === seasonYear)
+      .map(actualGirFromHistoryRow)
+      .filter(Number.isFinite);
+    const seasonGirMean = mean(seasonGir);
+    if (!Number.isFinite(seasonGirMean) || seasonGir.length < 10) {
+      fail(
+        `field GIR line player ${sampleId} ${seasonYear} season GIR history too thin (n=${seasonGir.length}) — Average column would show —`,
+      );
+    }
+    if (seasonGirMean < 8 || seasonGirMean > 16) {
+      fail(`field GIR line player ${sampleId} season GIR mean out of range: ${seasonGirMean.toFixed(2)}`);
+    }
   }
 }
 

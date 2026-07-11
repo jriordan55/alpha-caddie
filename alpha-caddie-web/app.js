@@ -1049,6 +1049,9 @@ let fieldTeeTimesPollTimerId = 0;
 let datagolfLivePeriodicForceTick = 0;
 /** Last preds/in-play bundle for Historical Trends (independent of live odds polling). */
 let lastLiveInPlayBundleForHistory = null;
+/** @type {object | null} */
+let PGATOUR_EVENT_ROUNDS = null;
+let pgatourEventRoundsLoadPromise = null;
 let liveTournamentHistoryMergeInFlight = null;
 let propsTrendsLiveHistoryFetchQueued = false;
 
@@ -2082,6 +2085,72 @@ function pgatourRowBelongsToEvent(row, eventName) {
   return eventNameMatchesCurrentSchedule(rowEv, want);
 }
 
+function pgatourEventRoundsUrl() {
+  return "data/pgatour_event_rounds.json";
+}
+
+async function ensurePgatourEventRoundsLoaded() {
+  if (PGATOUR_EVENT_ROUNDS !== null || isFileProtocol()) return PGATOUR_EVENT_ROUNDS;
+  if (pgatourEventRoundsLoadPromise) return pgatourEventRoundsLoadPromise;
+  pgatourEventRoundsLoadPromise = (async () => {
+    try {
+      const res = await fetch(cacheBustFetchUrl(pgatourEventRoundsUrl()), { cache: "no-store" });
+      if (!res.ok) {
+        PGATOUR_EVENT_ROUNDS = { rounds: [] };
+        return PGATOUR_EVENT_ROUNDS;
+      }
+      PGATOUR_EVENT_ROUNDS = await res.json();
+    } catch {
+      PGATOUR_EVENT_ROUNDS = { rounds: [] };
+    }
+    return PGATOUR_EVENT_ROUNDS;
+  })();
+  return pgatourEventRoundsLoadPromise;
+}
+
+function pgatourEventRoundForDg(dg, rnd) {
+  const payload = PGATOUR_EVENT_ROUNDS;
+  const rounds = Array.isArray(payload?.rounds) ? payload.rounds : [];
+  if (!rounds.length) return null;
+  const eventName = String(DATA?.meta?.event_name || "").trim();
+  const dgN = Math.round(num(dg, NaN));
+  const rndN = Math.round(num(rnd, NaN));
+  if (!Number.isFinite(dgN) || !Number.isFinite(rndN)) return null;
+  const completedCap = currentTournamentCompletedRoundCap();
+  if (Number.isFinite(completedCap) && rndN > completedCap) return null;
+  for (const r of rounds) {
+    if (!r?._from_pgatour) continue;
+    if (!pgatourRowBelongsToEvent(r, eventName)) continue;
+    if (Math.round(num(r.dg_id, NaN)) !== dgN) continue;
+    if (Math.round(num(r.round_num, NaN)) !== rndN) continue;
+    return r;
+  }
+  return null;
+}
+
+function overlayPgatourOntoHistoryRow(rec, dg, rnd) {
+  const pg = pgatourEventRoundForDg(dg, rnd);
+  if (!pg) return rec;
+  const out = { ...rec, _from_pgatour: true };
+  const score = num(pg.round_score, NaN);
+  if (Number.isFinite(score) && score > 0) out.round_score = score;
+  const b = birdiesPlusEaglesFromRow(pg);
+  const bg = num(pg.bogeys ?? pg.bogies, NaN);
+  if (Number.isFinite(b)) out.birdies = b;
+  if (Number.isFinite(num(pg.pars, NaN))) out.pars = num(pg.pars, NaN);
+  if (Number.isFinite(bg)) {
+    out.bogeys = bg;
+    out.bogies = bg;
+  }
+  if (!Number.isFinite(num(out.fairways, NaN)) && Number.isFinite(num(pg.fairways, NaN))) {
+    out.fairways = num(pg.fairways, NaN);
+  }
+  if (!Number.isFinite(num(out.gir, NaN)) && Number.isFinite(num(pg.gir, NaN))) {
+    out.gir = num(pg.gir, NaN);
+  }
+  return out;
+}
+
 function historyRoundMatchesCurrentEvent(row) {
   if (!row || typeof row !== "object") return false;
   const metaEvent = String(DATA?.meta?.event_name || "").trim();
@@ -2398,7 +2467,7 @@ function liveRoundActualStatForDgRound(dgId, roundNum, statKey) {
 function historyRowMissingChartableGirFairwaysPutts(row, statKey) {
   if (!row || typeof row !== "object") return true;
   if (statKey === "gir") {
-    const v = historyGirOrFairwaysCount(scrubLivePlaceholderCountingOnRow(row).gir, 18);
+    const v = historyGirOrFairwaysCount(row.gir, 18);
     return !Number.isFinite(v) || v === 0 || v === 1;
   }
   if (statKey === "fairways") {
@@ -2419,6 +2488,24 @@ function enrichHistoryRowFromLiveActuals(row) {
   const rnd = Math.round(num(row.round_num ?? row.round, NaN));
   if (!Number.isFinite(dg) || !Number.isFinite(rnd)) return row;
   const out = { ...row };
+
+  const pg = pgatourEventRoundForDg(dg, rnd);
+  if (pg) {
+    out._from_pgatour = true;
+    const b = birdiesPlusEaglesFromRow(pg);
+    const bg = num(pg.bogeys ?? pg.bogies, NaN);
+    if (Number.isFinite(b) && !Number.isFinite(num(out.birdies, NaN))) out.birdies = b;
+    if (Number.isFinite(bg) && !Number.isFinite(num(out.bogeys ?? out.bogies, NaN))) {
+      out.bogeys = bg;
+      out.bogies = bg;
+    }
+    if (!Number.isFinite(num(out.gir, NaN)) && Number.isFinite(num(pg.gir, NaN))) {
+      out.gir = num(pg.gir, NaN);
+    }
+    if (!Number.isFinite(num(out.fairways, NaN)) && Number.isFinite(num(pg.fairways, NaN))) {
+      out.fairways = num(pg.fairways, NaN);
+    }
+  }
 
   if (row._from_pgatour) {
     const b = birdiesPlusEaglesFromRow(row);
@@ -2568,7 +2655,9 @@ function mergeLiveInPlayIntoRoundHistory(j) {
 
       const eventYear = parseInt(String(eventDate).split("/")[2] || "", 10);
       const chronoBase = parseEventCompletedChronoBase(eventDate);
-      const liveRec = scrubLivePlaceholderCountingOnRow({
+      const liveRec = scrubLivePlaceholderCountingOnRow(
+        overlayPgatourOntoHistoryRow(
+          {
         dg_id: dg,
         player_name: plyName,
         sortKey: chronoBase * 10 + rnd,
@@ -2599,7 +2688,11 @@ function mergeLiveInPlayIntoRoundHistory(j) {
         sg_t2g: Number.isFinite(num(act.sg_t2g, NaN)) ? num(act.sg_t2g, NaN) : null,
         sg_total: Number.isFinite(num(act.sg_total, NaN)) ? num(act.sg_total, NaN) : null,
         _from_live_tournament_stats: true,
-      });
+          },
+          dg,
+          rnd,
+        ),
+      );
       const chartProbe = { ...liveRec, event_name: eventName };
       if (historyDateMdYIsFuture(eventDate) || historyRoundChartDateIsFuture(chartProbe)) continue;
 
@@ -2649,6 +2742,7 @@ async function ensureLiveTournamentHistoryMerged(opts = {}) {
   if (liveTournamentHistoryMergeInFlight) return liveTournamentHistoryMergeInFlight;
   liveTournamentHistoryMergeInFlight = (async () => {
     try {
+      await ensurePgatourEventRoundsLoaded();
       const res = await fetch(cacheBustFetchUrl(liveInPlayJsonUrl()), { cache: "no-store" });
       if (!res.ok) return 0;
       const j = await res.json();
@@ -2948,6 +3042,9 @@ function applyPayload(raw) {
   if (raw.meta && typeof raw.meta === "object") {
     Object.assign(meta, raw.meta);
     delete meta.meta;
+  }
+  if (raw.live_round_actuals_by_dg && typeof raw.live_round_actuals_by_dg === "object") {
+    meta.live_round_actuals_by_dg = raw.live_round_actuals_by_dg;
   }
   if (!meta.projection_course_basis || typeof meta.projection_course_basis !== "object") {
     meta.projection_course_basis = {};
@@ -3393,26 +3490,12 @@ function ouPlayerMarketAvgHistoryStillLoading(player, windowMode = ouProjAvgWind
 
 /** Round Projections Average: only count rows with a real posted stat (not inferred 0 from live placeholders). */
 function ouMarketAvgValueForRoundRow(statKey, row) {
-  const v = actualForRoundRow(statKey, row);
+  const enriched = enrichHistoryRowFromLiveActuals(row);
+  const v = actualForRoundRow(statKey, enriched);
   if (!Number.isFinite(v)) return NaN;
-  if (statKey === "birdies") {
-    if (
-      historyRowHasStoredCountingStat(row, "birdies") ||
-      historyRowHasStoredCountingStat(row, "eagles_or_better") ||
-      historyRowHasStoredCountingStat(row, "eagles")
-    ) {
-      return v;
-    }
-    return NaN;
-  }
-  if (statKey === "bogeys") {
-    if (historyRowHasStoredCountingStat(row, "bogeys") || historyRowHasStoredCountingStat(row, "bogies")) return v;
-    return NaN;
-  }
-  if (statKey === "gir" || statKey === "fairways" || statKey === "pars") {
-    const rawKey = statKey === "bogeys" ? "bogeys" : statKey;
-    if (!historyRowHasStoredCountingStat(row, rawKey)) return NaN;
-    return v;
+  if (statKey === "total") return v;
+  if (statKey === "birdies" || statKey === "pars" || statKey === "bogeys") {
+    return historyLiveCountingTrusted(enriched) ? v : NaN;
   }
   return v;
 }
@@ -3498,6 +3581,10 @@ async function ensureOuProjectionFieldHistoryLoaded() {
   if (ouFieldHistoryLoadedSig === sig && ouFieldHistoryReadyForAverages() && ouCourseShardReadyForProjAvg()) return;
   if (!HISTORY._ok && !playerHistoryLoadPromise) {
     await loadPlayerHistory();
+  }
+  await ensurePgatourEventRoundsLoaded();
+  if (HISTORY._ok && lastLiveInPlayBundleForHistory) {
+    reapplyLiveInPlayHistoryMerge();
   }
   const seasonYear = ouProjectionFieldHistorySeasonYear();
   await ensurePropsFieldPlayerHistoryLoaded({ seasonYear, ids: ouProjectionFieldPlayerDgIds() });
@@ -21068,13 +21155,16 @@ function actualForRoundRow(statKey, row) {
   }
   if (statKey === "gir") {
     const enriched = enrichHistoryRowFromLiveActuals(row);
-    const scrubbed = scrubLivePlaceholderCountingOnRow(enriched);
-    let v = historyGirOrFairwaysCount(scrubbed.gir, 18);
+    let v = historyGirOrFairwaysCount(enriched.gir, 18);
     if (!Number.isFinite(v) || v === 0 || v === 1) {
-      const liveV = liveRoundActualStatForDgRound(row.dg_id, row.round_num ?? row.round, "gir");
+      const liveV = liveRoundActualStatForDgRound(
+        enriched.dg_id ?? row.dg_id,
+        enriched.round_num ?? enriched.round ?? row.round_num ?? row.round,
+        "gir",
+      );
       if (Number.isFinite(liveV) && liveV > 1) v = liveV;
     }
-    if (v === 0 || v === 1) return NaN;
+    if (!Number.isFinite(v) || v === 0 || v === 1) return NaN;
     return v;
   }
   if (statKey === "fairways") {
@@ -24092,6 +24182,14 @@ async function loadProjections(opts = {}) {
     }
     await fetchAndMergeFieldTeeTimes({ force: true });
     await ensureForecastWeatherLoaded();
+    void ensurePgatourEventRoundsLoaded().then(() => {
+      if (HISTORY._ok && lastLiveInPlayBundleForHistory) {
+        reapplyLiveInPlayHistoryMerge();
+      }
+      invalidateOuProjectionAvgCaches();
+      HISTORY_ROUNDS_CHRONO_CACHE.clear();
+      if (activeAppTabId() === "ou") scheduleBuildOuTable(true);
+    });
     await refreshAll();
     updateStatusBar();
     stopDatagolfLivePolling();
