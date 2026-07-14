@@ -147,6 +147,22 @@ const STANDARD_PAR_72_FALLBACK = [4, 5, 4, 3, 4, 4, 3, 5, 4, 4, 4, 3, 5, 4, 4, 3
 /** Shinnecock Hills (U.S. Open) — par 70. */
 const SHINNECOCK_PAR_70_FALLBACK = [4, 4, 4, 3, 5, 4, 4, 3, 4, 4, 4, 3, 4, 5, 4, 3, 4, 4];
 
+/**
+ * Realistic 18-hole template for a known total par when no real hole card exists.
+ * The total par is what score math / validation depend on; the per-hole layout is a plausible mix.
+ */
+function genericHoleParTemplateForPar(par) {
+  const templates = {
+    69: [4, 4, 3, 4, 4, 3, 4, 5, 4, 4, 3, 4, 4, 3, 4, 3, 5, 4],
+    70: [...SHINNECOCK_PAR_70_FALLBACK],
+    71: [...GENERIC_HOLE_PARS_FALLBACK],
+    72: [...STANDARD_PAR_72_FALLBACK],
+    73: [4, 5, 3, 4, 4, 5, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 3, 5],
+  };
+  const t = templates[Math.round(num(par, NaN))];
+  return t ? [...t] : null;
+}
+
 function holeParsSum(pars) {
   if (!Array.isArray(pars) || pars.length !== 18) return NaN;
   return pars.reduce((s, p) => s + Math.round(num(p, 4)), 0);
@@ -233,10 +249,65 @@ function lookupHoleParsFromCourseTable(course_used) {
   const maps = loadCourseHolesMaps();
   const fromMap = lookupHoleParsFromMaps(maps, course_used, "");
   if (fromMap && holeParsSum(fromMap.pars) === row.par) return fromMap;
-  if (row.par === 72) return { pars: [...STANDARD_PAR_72_FALLBACK], source: "course_table_par72" };
-  if (row.par === 71) return { pars: [...GENERIC_HOLE_PARS_FALLBACK], source: "course_table_par71" };
-  if (row.par === 70) return { pars: [...SHINNECOCK_PAR_70_FALLBACK], source: "course_table_par70" };
+  const template = genericHoleParTemplateForPar(row.par);
+  if (template) return { pars: template, source: `course_table_par${row.par}` };
   return null;
+}
+
+/**
+ * Last-resort par source before "generic": modal course_par for this course in
+ * data/historical_rounds_all.csv. Guarantees the correct TOTAL par for any venue
+ * the tour has visited before, even when no hole card is bundled anywhere.
+ */
+function lookupHoleParsFromHistoricalCsvPar(course_used) {
+  const ck = normCourseNameKey(course_used);
+  if (!ck) return null;
+  const csvPath = join(GOLF_MODEL_ROOT, "data", "historical_rounds_all.csv");
+  if (!existsSync(csvPath)) return null;
+  let text;
+  try {
+    text = readFileSync(csvPath, "utf8");
+  } catch {
+    return null;
+  }
+  const nl = text.indexOf("\n");
+  if (nl < 0) return null;
+  const header = parseCsvLine(text.slice(0, nl).trim());
+  const ci = header.indexOf("course_name");
+  const pi = header.indexOf("course_par");
+  if (ci < 0 || pi < 0) return null;
+  const parCounts = new Map();
+  let pos = nl + 1;
+  while (pos < text.length) {
+    let end = text.indexOf("\n", pos);
+    if (end < 0) end = text.length;
+    const line = text.slice(pos, end);
+    pos = end + 1;
+    // Cheap pre-filter: skip lines that can't contain the course name.
+    if (!line) continue;
+    const cells = parseCsvLine(line.trim());
+    if (cells.length <= Math.max(ci, pi)) continue;
+    if (normCourseNameKey(cells[ci]) !== ck) continue;
+    const par = Math.round(num(cells[pi], NaN));
+    if (!Number.isFinite(par) || par < 68 || par > 73) continue;
+    parCounts.set(par, (parCounts.get(par) || 0) + 1);
+  }
+  let bestPar = NaN;
+  let bestN = 0;
+  for (const [par, n] of parCounts) {
+    if (n > bestN) {
+      bestN = n;
+      bestPar = par;
+    }
+  }
+  if (!Number.isFinite(bestPar) || bestN < 50) return null;
+  const template = genericHoleParTemplateForPar(bestPar);
+  if (!template) return null;
+  return {
+    pars: template,
+    source: `historical_csv_par${bestPar}`,
+    detail: `${bestN} rounds at ${ck}`,
+  };
 }
 
 function lookupKnownVenueHolePars(course_used, event_name) {
@@ -249,20 +320,38 @@ function lookupKnownVenueHolePars(course_used, event_name) {
 }
 
 function reconcileHoleParsWithCourseTable(holeRes, course_used, event_name) {
-  const expectedPar = lookupExpectedParFromCourseTable(course_used);
+  // Live feeds are ground truth for the current setup — don't second-guess them.
+  if (holeRes?.source === "live_hole_stats" || holeRes?.source === "field_updates") return holeRes;
+  let expectedPar = lookupExpectedParFromCourseTable(course_used);
+  let expectedSrc = "course_table";
+  if (!Number.isFinite(expectedPar)) {
+    const hist = lookupHoleParsFromHistoricalCsvPar(course_used);
+    if (hist) {
+      expectedPar = holeParsSum(hist.pars);
+      expectedSrc = "historical_csv";
+    }
+  }
   const sum = holeParsSum(holeRes?.pars);
   if (!Number.isFinite(expectedPar) || !Number.isFinite(sum) || sum === expectedPar) return holeRes;
   const maps = loadCourseHolesMaps();
-  const alt =
-    lookupHoleParsFromMaps(maps, course_used, event_name) || lookupHoleParsFromCourseTable(course_used);
-  if (alt && holeParsSum(alt.pars) === expectedPar) {
-    console.warn(
-      `[fetch-dg] Hole pars sum ${sum} != course_table par ${expectedPar} (${holeRes.source}); using ${alt.source}`,
-    );
-    return alt;
+  const candidates = [
+    lookupHoleParsFromMaps(maps, course_used, event_name),
+    lookupHoleParsFromCourseTable(course_used),
+    (() => {
+      const t = genericHoleParTemplateForPar(expectedPar);
+      return t ? { pars: t, source: `${expectedSrc}_par${expectedPar}` } : null;
+    })(),
+  ];
+  for (const alt of candidates) {
+    if (alt && holeParsSum(alt.pars) === expectedPar) {
+      console.warn(
+        `[fetch-dg] Hole pars sum ${sum} != ${expectedSrc} par ${expectedPar} (${holeRes.source}); using ${alt.source}`,
+      );
+      return alt;
+    }
   }
   console.warn(
-    `[fetch-dg] Hole pars sum ${sum} != course_table par ${expectedPar} (${holeRes.source}); no correction available`,
+    `[fetch-dg] Hole pars sum ${sum} != ${expectedSrc} par ${expectedPar} (${holeRes.source}); no correction available`,
   );
   return holeRes;
 }
@@ -549,6 +638,9 @@ function resolveHoleParsForEvent({ fieldRaw, course_used, event_name, field_upda
 
   const knownVenue = lookupKnownVenueHolePars(course_used, event_name);
   if (knownVenue) return knownVenue;
+
+  const fromHistCsv = lookupHoleParsFromHistoricalCsvPar(course_used);
+  if (fromHistCsv) return fromHistCsv;
 
   return { pars: [...GENERIC_HOLE_PARS_FALLBACK], source: "generic" };
 }

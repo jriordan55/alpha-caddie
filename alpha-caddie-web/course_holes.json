@@ -7,16 +7,23 @@
     "muirfield village golf club": [4, 4, 4, 3, 5, 4, 5, 3, 4, 4, 5, 3, 4, 4, 5, 3, 4, 4],
     "shinnecock hills golf club": [4, 4, 4, 3, 5, 4, 4, 3, 4, 4, 4, 3, 4, 5, 4, 3, 4, 4],
     "the renaissance club": [5, 4, 3, 4, 3, 4, 5, 4, 3, 4, 4, 5, 4, 4, 3, 4, 3, 4],
-    "royal birkdale golf club": [4, 4, 4, 3, 4, 4, 3, 4, 4, 4, 4, 3, 4, 5, 3, 4, 5, 4]
+    "royal birkdale golf club": [4, 4, 4, 3, 4, 4, 3, 4, 4, 4, 4, 3, 4, 5, 3, 4, 5, 4],
+    "bellerive country club": [4, 4, 3, 4, 4, 3, 4, 5, 4, 4, 4, 4, 3, 4, 4, 3, 5, 4],
+    "the cliffs at walnut cove": [4, 3, 4, 4, 3, 5, 4, 5, 4, 4, 3, 5, 4, 3, 4, 3, 5, 4],
+    "medinah country club (no. 3)": [4, 3, 4, 4, 5, 4, 5, 4, 4, 5, 3, 4, 3, 4, 4, 4, 3, 5],
+    "omni barton creek resort & spa (fazio canyons course)": [4, 4, 3, 4, 5, 4, 5, 3, 4, 4, 3, 4, 4, 5, 4, 4, 3, 5],
+    "east lake golf club": [4, 3, 4, 4, 4, 5, 4, 4, 3, 4, 3, 4, 4, 4, 3, 4, 4, 5]
   },
+  "by_event_note": "Only events with a FIXED venue belong in by_event. Rotating majors (PGA Championship, U.S. Open, The Open) must use by_course so next year's venue never inherits the wrong pars.",
   "by_event": {
     "valero texas open": [4, 5, 3, 4, 4, 4, 3, 5, 4, 4, 4, 4, 3, 5, 4, 3, 4, 5],
     "zurich classic of new orleans": [4, 5, 3, 4, 4, 4, 5, 4, 3, 4, 5, 4, 4, 3, 4, 4, 3, 5],
     "masters tournament": [4, 5, 4, 3, 4, 3, 4, 5, 4, 4, 4, 3, 5, 4, 5, 3, 4, 4],
-    "pga championship": [4, 4, 4, 4, 3, 4, 4, 3, 5, 4, 4, 4, 4, 3, 4, 5, 3, 4],
     "the memorial tournament presented by workday": [4, 4, 4, 3, 5, 4, 5, 3, 4, 4, 5, 3, 4, 4, 5, 3, 4, 4],
-    "u.s. open": [4, 4, 4, 3, 5, 4, 4, 3, 4, 4, 4, 3, 4, 5, 4, 3, 4, 4],
     "genesis scottish open": [5, 4, 3, 4, 3, 4, 5, 4, 3, 4, 4, 5, 4, 4, 3, 4, 3, 4],
-    "the open championship": [4, 4, 4, 3, 4, 4, 3, 4, 4, 4, 4, 3, 4, 5, 3, 4, 5, 4]
+    "tour championship": [4, 3, 4, 4, 4, 5, 4, 4, 3, 4, 3, 4, 4, 4, 3, 4, 4, 5],
+    "presidents cup": [4, 3, 4, 4, 5, 4, 5, 4, 4, 5, 3, 4, 3, 4, 4, 4, 3, 5],
+    "biltmore championship asheville": [4, 3, 4, 4, 3, 5, 4, 5, 4, 4, 3, 5, 4, 3, 4, 3, 5, 4],
+    "good good championship": [4, 4, 3, 4, 5, 4, 5, 3, 4, 4, 3, 4, 4, 5, 4, 4, 3, 5]
   }
 }
