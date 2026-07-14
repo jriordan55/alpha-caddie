@@ -306,7 +306,6 @@ Set-Location $repoRoot
 $artifacts = @(
   "alpha-caddie-web/app.js",
   "alpha-caddie-web/index.html",
-  "alpha-caddie-web/parlay-pro.js",
   "alpha-caddie-web/styles.css",
   "alpha-caddie-web/package.json",
   "alpha-caddie-web/projections.json",

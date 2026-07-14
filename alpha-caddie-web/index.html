@@ -37,7 +37,6 @@
           <span class="nav-subtitle">Model-driven projections &amp; edge tools</span>
         </div>
       </button>
-      <a class="nav-aux-link" href="projection-tracker/" target="_blank" rel="noopener">Projection tracker</a>
     </div>
   </header>
 
@@ -47,10 +46,8 @@
       <button type="button" class="tab" data-tab="props" role="tab">Historical Trends</button>
       <button type="button" class="tab" data-tab="course-fit" role="tab">Course fit</button>
       <button type="button" class="tab" data-tab="course-breakdown" role="tab">Course breakdown</button>
-      <button type="button" class="tab" data-tab="live-prop" role="tab">Live Prop Predictor</button>
       <button type="button" class="tab" data-tab="matchup-analysis" role="tab">Matchup Analysis Tool</button>
       <button type="button" class="tab" data-tab="ev" role="tab">+EV Bets</button>
-      <button type="button" class="tab" data-tab="parlay-pro" role="tab">Parlay Pro</button>
     </nav>
 
     <p id="data-status-primary" class="data-status-primary note tools-only" aria-live="polite" hidden></p>
@@ -88,11 +85,6 @@
           <span class="home-card-title">Course breakdown</span>
           <span class="home-card-desc">Course-specific insights — strokes gained mix, approach zones, and scoring profile.</span>
         </button>
-        <button type="button" class="home-card" data-go-tab="live-prop" role="listitem">
-          <span class="home-card-icon" aria-hidden="true">LP</span>
-          <span class="home-card-title">Live Prop Predictor</span>
-          <span class="home-card-desc">In-round prop pricing from live stats and remaining holes.</span>
-        </button>
         <button type="button" class="home-card" data-go-tab="matchup-analysis" role="listitem">
           <span class="home-card-icon" aria-hidden="true">MA</span>
           <span class="home-card-title">Matchup Analysis</span>
@@ -103,16 +95,6 @@
           <span class="home-card-title">+EV Bets</span>
           <span class="home-card-desc">Positive expected value outrights and props across books.</span>
         </button>
-        <button type="button" class="home-card" data-go-tab="parlay-pro" role="listitem">
-          <span class="home-card-icon" aria-hidden="true">+</span>
-          <span class="home-card-title">Parlay Pro</span>
-          <span class="home-card-desc">Best correlated DK round parlays — model joint EV vs book odds.</span>
-        </button>
-        <a class="home-card home-card-link" href="projection-tracker/" role="listitem">
-          <span class="home-card-icon" aria-hidden="true">PT</span>
-          <span class="home-card-title">Projection tracker</span>
-          <span class="home-card-desc">Backtest model vs DK — bet log, ROI by EV threshold, and bankroll risk.</span>
-        </a>
       </div>
     </section>
 
@@ -713,92 +695,6 @@
       </div>
     </section>
 
-    <!-- Live Prop Predictor -->
-    <section id="panel-live-prop" class="panel" role="tabpanel" hidden>
-      <div class="ev-panel-head">
-        <h2 class="ev-devig-sr-only">Live Prop Predictor</h2>
-        <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="live-prop" aria-label="Help: Live Prop Predictor tab">?</button>
-      </div>
-      <div class="live-prop-layout">
-        <div class="leaderboard-card live-prop-card live-prop-input-card">
-          <h3 class="live-prop-card-title">Inputs</h3>
-          <div class="live-prop-form-grid">
-            <label class="toolbar-label live-prop-field-span">Golfer
-              <div class="golfer-combobox-wrap golfer-suggest-anchor">
-                <input
-                  type="search"
-                  id="live-prop-golfer-search"
-                  class="live-prop-input golfer-combobox-input"
-                  placeholder="Search golfer…"
-                  autocomplete="off"
-                  spellcheck="false"
-                  aria-label="Golfer"
-                />
-                <div id="live-prop-golfer-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Golfer suggestions"></div>
-                <select id="live-prop-golfer" class="live-prop-input" hidden></select>
-              </div>
-            </label>
-            <label class="toolbar-label live-prop-field-span">Market
-              <select id="live-prop-market" class="live-prop-input" aria-label="Prop market">
-                <option value="total">Round score</option>
-                <option value="birdies">Birdies</option>
-                <option value="pars">Pars</option>
-                <option value="bogeys">Bogeys</option>
-                <option value="gir">GIR</option>
-                <option value="fairways">Fairways hit</option>
-                <option value="putts">Putts</option>
-              </select>
-            </label>
-            <label class="toolbar-label live-prop-field-span">Starting hole
-              <select id="live-prop-start-hole" class="live-prop-input" aria-label="First hole of this round (shotgun or split tees)" title="Playing order: e.g. 10 → 11 … 18, then 1 … 9">
-                <option value="1" selected>1 (front)</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10 (back)</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
-                <option value="16">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
-              </select>
-            </label>
-            <div class="live-prop-field-span live-prop-through-field" role="group" aria-label="Holes completed">
-              <span class="live-prop-through-label">Through</span>
-              <input id="live-prop-through-holes" class="live-prop-input live-prop-input-number" type="number" min="0" max="18" step="1" value="6" inputmode="numeric" aria-label="Number of holes completed" />
-              <span class="live-prop-through-suffix">holes</span>
-            </div>
-            <label class="toolbar-label live-prop-field-span"><span id="live-prop-current-label">Current total</span>
-              <input id="live-prop-current" class="live-prop-input" type="number" min="0" step="0.1" value="2" inputmode="decimal" placeholder="0" />
-            </label>
-            <label class="toolbar-label live-prop-field-span">Live line
-              <input id="live-prop-line" class="live-prop-input" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="4.5" />
-            </label>
-            <div class="live-prop-odds-pair" role="group" aria-label="Over and under prices">
-              <label class="toolbar-label">Over
-                <input id="live-prop-over-am" class="live-prop-input" type="text" inputmode="text" value="-110" />
-              </label>
-              <label class="toolbar-label">Under
-                <input id="live-prop-under-am" class="live-prop-input" type="text" inputmode="text" value="-110" />
-              </label>
-            </div>
-          </div>
-        </div>
-        <div class="leaderboard-card live-prop-card live-prop-output-card">
-          <h3 class="live-prop-card-title">Projection &amp; Edge</h3>
-          <div id="live-prop-results" class="live-prop-results" aria-live="polite"></div>
-        </div>
-      </div>
-    </section>
-
     <!-- Matchup Analysis Tool -->
     <section id="panel-matchup-analysis" class="panel" role="tabpanel" hidden>
       <div class="ev-panel-head">
@@ -957,46 +853,6 @@
       </div>
     </section>
 
-    <!-- Parlay Pro -->
-    <section id="panel-parlay-pro" class="panel" role="tabpanel" hidden>
-      <div class="ev-panel-head">
-        <h2 class="ev-devig-sr-only">Parlay Pro</h2>
-        <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="parlay-pro" aria-label="Help: Parlay Pro tab">?</button>
-      </div>
-      <div class="toolbar ou-filters parlay-pro-toolbar">
-        <label class="toolbar-label">Legs
-          <select id="parlay-pro-legs" aria-label="Number of parlay legs">
-            <option value="2">2</option>
-            <option value="3" selected>3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-          </select>
-        </label>
-        <label class="toolbar-label">Combo style
-          <select id="parlay-pro-style" aria-label="Parlay combo style">
-            <option value="all" selected>All (best)</option>
-            <option value="same_player">Same player · cross-market</option>
-            <option value="same_market">Same market · tee wave</option>
-            <option value="neg_corr">Negative correlation +EV</option>
-          </select>
-        </label>
-        <label class="toolbar-label">Min leg EV %
-          <input id="parlay-pro-min-ev" type="number" min="-10" max="50" step="1" value="0" title="Only legs with single-leg model EV at or above this %" />
-        </label>
-        <label class="toolbar-label">Market
-          <select id="parlay-pro-market" aria-label="Filter by market">
-            <option value="">All markets</option>
-            <option value="Total Score">Total Score</option>
-            <option value="Birdies">Birdies</option>
-            <option value="Fairways hit">Fairways hit</option>
-          </select>
-        </label>
-        <button type="button" class="btn-primary" id="parlay-pro-search">Find parlays</button>
-      </div>
-      <p class="note text-muted" id="parlay-pro-status" aria-live="polite"></p>
-      <div id="parlay-pro-results" class="parlay-pro-results"></div>
-    </section>
 
     <!-- Round Matchups: data from projections.json → matchups (npm run fetch:dg) -->
     <section id="panel-matchups" class="panel" role="tabpanel" hidden>
@@ -1302,83 +1158,6 @@
     </div>
   </dialog>
 
-  <dialog id="tab-help-dialog-live-prop" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-live-prop">
-    <div class="ev-devig-dialog-inner ev-help-dialog-inner">
-      <header class="ev-devig-head">
-        <h3 class="ev-devig-title" id="tab-help-title-live-prop">Live Prop Predictor</h3>
-        <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
-      </header>
-      <p class="ev-help-intro text-muted">
-        Estimate <strong>full-round</strong> totals mid-event using the same stat columns as <strong>Round projections</strong>, plus how uncertain the remaining holes are from historical rounds (when hole-by-hole rows exist) and the usual Round projection spread scaled to holes left.
-      </p>
-      <section class="ev-help-section" aria-labelledby="tab-help-live-prop-how-h">
-        <h4 class="ev-devig-section-title" id="tab-help-live-prop-how-h">How to fill it in</h4>
-        <dl class="ev-help-dl">
-          <dt>Through … holes</dt>
-          <dd>How many holes are finished (0–18), in order from <strong>Starting hole</strong> (e.g. start 10 → holes 10–18 then 1–9). Round score “to par” uses each hole’s par from the current course.</dd>
-          <dt>Starting hole</dt>
-          <dd>Shotgun or split-tee order: the first hole you played this round (1 or 10, etc.). Historical checkpoints use the same order when hole-by-hole data exists.</dd>
-          <dt>Fairways hit</dt>
-          <dd>Par 3s are not fairway holes; remainder mean and volatility use only par 4/5 holes from <code>projections.json</code> hole pars for this venue.</dd>
-          <dt>Round score, birdies, pars, bogeys</dt>
-          <dd>Where history includes hole-by-hole scores for a round, we learn the distribution of “what’s left” after your checkpoint and blend it with the model.</dd>
-          <dt>GIR, fairways, putts</dt>
-          <dd>Hole files rarely break these down per hole; we scale the Round projection mean and volatility to the holes remaining (fairways: par 3s excluded when course hole pars exist).</dd>
-          <dt>Weather &amp; pricing</dt>
-          <dd>Uses the same global Weather and Pricing controls as the Round projections tab — adjust there first.</dd>
-          <dt>Live line &amp; prices</dt>
-          <dd>When <code>projections.json</code> includes DraftKings round props, changing golfer or market fills DK line and Over/Under prices; otherwise defaults apply and you can edit.</dd>
-        </dl>
-      </section>
-      <footer class="ev-help-actions">
-        <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
-      </footer>
-    </div>
-  </dialog>
-
-  <dialog id="tab-help-dialog-parlay-pro" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-parlay-pro">
-    <div class="ev-devig-dialog-inner ev-help-dialog-inner">
-      <header class="ev-devig-head">
-        <h3 class="ev-devig-title" id="tab-help-title-parlay-pro">Parlay Pro</h3>
-        <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
-      </header>
-      <p class="ev-help-intro text-muted">
-        Finds DraftKings <strong>round O/U parlays</strong> where the model’s joint win chance beats DK’s posted price. Leg correlation comes from <strong>historical co-hit rates</strong> in <code>round_projection_vs_actual.csv</code> (same player, same tee wave, same round, then sentiment-bucket averages).
-      </p>
-      <section class="ev-help-section" aria-labelledby="tab-help-parlay-pro-how-h">
-        <h4 class="ev-devig-section-title" id="tab-help-parlay-pro-how-h">How to use</h4>
-        <dl class="ev-help-dl">
-          <dt>Legs</dt>
-          <dd>How many picks in the parlay (2–6). DK multiplies each leg’s price into one parlay ticket.</dd>
-          <dt>Combo style</dt>
-          <dd><strong>All</strong> — best EV across styles. <strong>Same player</strong> — one golfer, different markets (e.g. O bogeys + O score = bad-day stack). <strong>Same market</strong> — same stat/side, different players in the same tee wave when possible. <strong>Negative correlation</strong> — good-day legs mixed with bad-day legs (e.g. U score + O bogeys); joint win % can beat DK’s naive stack.</dd>
-          <dt>Min leg EV %</dt>
-          <dd>Only consider legs your model already likes as singles at or above this EV.</dd>
-        </dl>
-      </section>
-      <section class="ev-help-section" aria-labelledby="tab-help-parlay-pro-odds-h">
-        <h4 class="ev-devig-section-title" id="tab-help-parlay-pro-odds-h">Odds columns</h4>
-        <dl class="ev-help-dl">
-          <dt>Model fair</dt>
-          <dd>DK-style <strong>correlated</strong> parlay fair from calibrated leg win rates (model blended toward DK devigged implied per market). Should land near the DK column when correlation rules match.</dd>
-          <dt>Model + vig</dt>
-          <dd>Same correlated stack using posted DK vig on each leg blended with model +vig singles.</dd>
-          <dt>DK</dt>
-          <dd>DK parlay price from posted leg odds with the same correlation rules (good↔good, bad↔bad, good↔bad). Unrelated same-market field stacks keep a small same-wave nudge only.</dd>
-          <dt>EV</dt>
-          <dd>(Model win % × DK parlay decimal) − 1. Win % uses the same calibrated legs and copula as Model fair.</dd>
-          <dt>Win edge</dt>
-          <dd>Model win % minus DK parlay implied %. Tooltip shows raw (unblended) model edge for comparison.</dd>
-          <dt>ρ (rho)</dt>
-          <dd>Average pair correlation from <strong>historical data</strong> when the leg-pair exists in the backtest file (e.g. O bogeys + O score for the same player). Falls back to round-level or good/bad-day bucket averages only when that exact pair is thin.</dd>
-        </dl>
-      </section>
-      <footer class="ev-help-actions">
-        <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
-      </footer>
-    </div>
-  </dialog>
-
   <dialog id="tab-help-dialog-matchup-analysis" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-matchup-analysis">
     <div class="ev-devig-dialog-inner ev-help-dialog-inner">
       <header class="ev-devig-head">
@@ -1536,7 +1315,6 @@
     </div>
   </dialog>
 
-  <script src="parlay-pro.js?v=12"></script>
-  <script src="app.js?v=336"></script>
+  <script src="app.js?v=337"></script>
 </body>
 </html>

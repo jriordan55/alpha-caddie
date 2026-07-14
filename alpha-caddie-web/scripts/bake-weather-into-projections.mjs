@@ -59,8 +59,28 @@ async function main() {
   console.log(
     `[bake-weather] status=${result.status} display_round=${meta.forecast_weather_display_round ?? "?"} players=${result.playersWithWeather}/${result.playerCount} tee_slices=${result.teeMatches} counts_baked=${result.countsWeatherBaked ?? 0}`,
   );
-  /* Weather is best-effort — do not fail push:live on API/network issues. */
+  /*
+   * no_course_coords is a fixable config gap (new venue not in COURSE_COORDINATES_BY_NAME and
+   * geocoding failed), not a transient network issue — fail push:live fast with an actionable
+   * message so weather is never silently skipped. Network/API errors stay best-effort (exit 0).
+   */
+  if (result.status === "no_course_coords" && !envTruthy("GOLF_ALLOW_MISSING_WEATHER_COORDS")) {
+    const course = String(proj?.meta?.course_used ?? proj?.course_used ?? "?").trim();
+    console.error(
+      `[bake-weather] FAIL: no coordinates for "${course}" and geocoding failed — add { lat, lon, timezone } ` +
+        `to COURSE_COORDINATES_BY_NAME in scripts/open-meteo-forecast.mjs, then re-run push:live ` +
+        `(or set GOLF_ALLOW_MISSING_WEATHER_COORDS=1 to skip weather for this run).`,
+    );
+    process.exit(1);
+  }
   process.exit(0);
+}
+
+function envTruthy(name) {
+  const raw = process.env[name];
+  if (raw === undefined || String(raw).trim() === "") return false;
+  const s = String(raw).trim().toLowerCase();
+  return s === "1" || s === "true" || s === "yes";
 }
 
 main().catch((e) => {

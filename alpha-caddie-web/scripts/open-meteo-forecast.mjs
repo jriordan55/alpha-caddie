@@ -31,7 +31,12 @@ function playerRowMatchesForecastRound(p, forecastRound) {
   return !Number.isFinite(forecastRound) || !Number.isFinite(rnd) || rnd === forecastRound;
 }
 
-/** Normalized course_used → lat/lon (extend as venues change). */
+/**
+ * Normalized course_used → { lat, lon, timezone? } (extend as venues change).
+ * timezone is required for non-US venues so tee-time hour alignment (and the returned
+ * Open-Meteo hourly grid) matches the event's local clock; US venues default to ET via
+ * forecastTimezoneFromProjections when omitted.
+ */
 export const COURSE_COORDINATES_BY_NAME = {
   "aronimink golf club": { lat: 39.991, lon: -75.308 },
   "quail hollow club": { lat: 35.1158, lon: -80.8529 },
@@ -44,21 +49,39 @@ export const COURSE_COORDINATES_BY_NAME = {
   "the oceans course at half moon bay golf links": { lat: 37.4636, lon: -122.449 },
   "pebble beach golf links": { lat: 36.5698, lon: -121.9506 },
   "harbour town golf links": { lat: 32.1392, lon: -80.8107 },
-  "east lake golf club": { lat: 33.7437, lon: -84.349 },
+  "east lake golf club": { lat: 33.7437, lon: -84.349, timezone: "America/New_York" },
   "wilmington country club": { lat: 39.7878, lon: -84.2108 },
-  "castle pines golf club": { lat: 39.4189, lon: -104.894 },
-  "detroit golf club": { lat: 42.4369, lon: -83.161 },
-  "royal liverpool golf club": { lat: 53.3728, lon: -3.184 },
-  "the riviera country club": { lat: 34.0497, lon: -118.501 },
-  "colonial country club": { lat: 32.7248, lon: -97.434 },
-  "muirfield village golf club": { lat: 40.1416, lon: -82.791 },
+  "castle pines golf club": { lat: 39.4189, lon: -104.894, timezone: "America/Denver" },
+  "detroit golf club": { lat: 42.4369, lon: -83.161, timezone: "America/Detroit" },
+  "royal liverpool golf club": { lat: 53.3728, lon: -3.184, timezone: "Europe/London" },
+  "the riviera country club": { lat: 34.0497, lon: -118.501, timezone: "America/Los_Angeles" },
+  "colonial country club": { lat: 32.7248, lon: -97.434, timezone: "America/Chicago" },
+  "muirfield village golf club": { lat: 40.1416, lon: -82.791, timezone: "America/New_York" },
   "congressional country club": { lat: 39.0299, lon: -77.164 },
-  "tpc toronto at osprey valley": { lat: 43.874, lon: -79.982 },
-  "tpc toronto at osprey valley north course": { lat: 43.874, lon: -79.982 },
-  "hamilton golf and country club": { lat: 43.267, lon: -79.934 },
-  "glen abbey golf club": { lat: 43.452, lon: -79.691 },
-  "shinnecock hills golf club": { lat: 40.8847, lon: -72.4651 },
-  "tpc river highlands": { lat: 41.5951, lon: -72.64537 },
+  "tpc toronto at osprey valley": { lat: 43.874, lon: -79.982, timezone: "America/Toronto" },
+  "tpc toronto at osprey valley north course": { lat: 43.874, lon: -79.982, timezone: "America/Toronto" },
+  "hamilton golf and country club": { lat: 43.267, lon: -79.934, timezone: "America/Toronto" },
+  "glen abbey golf club": { lat: 43.452, lon: -79.691, timezone: "America/Toronto" },
+  "shinnecock hills golf club": { lat: 40.8847, lon: -72.4651, timezone: "America/New_York" },
+  "tpc river highlands": { lat: 41.5951, lon: -72.64537, timezone: "America/New_York" },
+  // 2026 season venues — verified lat/lon so weather always bakes (no generic fallback).
+  "royal birkdale golf club": { lat: 53.6217, lon: -3.0325, timezone: "Europe/London" },
+  "puntacana resort and club": { lat: 18.504, lon: -68.3618, timezone: "America/Santo_Domingo" },
+  "corales golf club": { lat: 18.504, lon: -68.3618, timezone: "America/Santo_Domingo" },
+  "tpc twin cities": { lat: 45.1806, lon: -93.2122, timezone: "America/Chicago" },
+  "sedgefield country club": { lat: 36.0726, lon: -79.792, timezone: "America/New_York" },
+  "tpc southwind": { lat: 35.0466, lon: -89.8022, timezone: "America/Chicago" },
+  "bellerive country club": { lat: 38.636, lon: -90.4363, timezone: "America/Chicago" },
+  "the cliffs at walnut cove": { lat: 35.4586, lon: -82.5593, timezone: "America/New_York" },
+  "medinah country club": { lat: 41.966, lon: -88.048, timezone: "America/Chicago" },
+  "black desert resort": { lat: 37.1686, lon: -113.6794, timezone: "America/Denver" },
+  "yokohama country club": { lat: 35.446, lon: 139.549, timezone: "Asia/Tokyo" },
+  "port royal golf course": { lat: 32.2543, lon: -64.8776, timezone: "Atlantic/Bermuda" },
+  "vidanta vallarta": { lat: 20.6835, lon: -105.2664, timezone: "America/Mexico_City" },
+  "el cardonal at diamante": { lat: 22.9017, lon: -109.985, timezone: "America/Mazatlan" },
+  "omni barton creek resort and spa": { lat: 30.2965, lon: -97.964, timezone: "America/Chicago" },
+  "sea island golf club": { lat: 31.133, lon: -81.3727, timezone: "America/New_York" },
+  "albany golf club": { lat: 25.0044, lon: -77.506, timezone: "America/Nassau" },
 };
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -82,10 +105,39 @@ export function courseCoordinatesForProjections(proj) {
   const raw = meta?.course_used ?? proj?.course_used ?? "";
   const key = normCourseNameKey(raw);
   const hard = COURSE_COORDINATES_BY_NAME[key];
-  if (hard) return hard;
+  if (hard) return { lat: hard.lat, lon: hard.lon, timezone: hard.timezone || null };
   const hit = loadCourseCoordsCache()[key];
   if (hit && Number.isFinite(num(hit.lat, NaN)) && Number.isFinite(num(hit.lon, NaN))) {
-    return { lat: hit.lat, lon: hit.lon };
+    return { lat: hit.lat, lon: hit.lon, timezone: hit.timezone || null };
+  }
+  return null;
+}
+
+/**
+ * Geocode this week's venue when it isn't in the hardcoded map or coords cache, and persist
+ * the hit so subsequent runs are instant. Dynamic import avoids a circular dependency with
+ * historical-round-weather.mjs (which imports COURSE_COORDINATES_BY_NAME from this module).
+ */
+async function geocodeProjectionCourseCoords(proj) {
+  const meta = projectionExportMeta(proj);
+  const course = String(meta?.course_used ?? proj?.course_used ?? "").trim();
+  if (!course) return null;
+  try {
+    const { geocodeCourseName } = await import("./historical-round-weather.mjs");
+    const eventName = String(meta?.event_name ?? proj?.event_name ?? "").trim();
+    const hit = await geocodeCourseName(course, {
+      coordsCachePath: COORDS_CACHE_PATH,
+      eventName,
+    });
+    if (hit && Number.isFinite(num(hit.lat, NaN)) && Number.isFinite(num(hit.lon, NaN))) {
+      _coordsCache = null; // force reload of the file we just wrote
+      console.warn(
+        `[open-meteo] geocoded "${course}" → ${hit.lat},${hit.lon} (${hit.timezone || "tz?"}) — add to COURSE_COORDINATES_BY_NAME for an exact fix`,
+      );
+      return { lat: hit.lat, lon: hit.lon, timezone: hit.timezone || null };
+    }
+  } catch (e) {
+    console.warn("[open-meteo] geocode fallback failed:", e?.message || e);
   }
   return null;
 }
@@ -404,7 +456,12 @@ export async function bakeOpenMeteoWeatherIntoProjections(proj, opts = {}) {
     meta.forecast_weather_tee_times_merged = teeN;
   }
 
-  const coords = courseCoordinatesForProjections(proj);
+  let coords = courseCoordinatesForProjections(proj);
+  // New venue with no bundled/cached coords — geocode on the fly and persist so weather
+  // is never silently skipped on push:live (self-heals for any future course).
+  if (!coords && players.length) {
+    coords = await geocodeProjectionCourseCoords(proj);
+  }
   if (!coords || !players.length) {
     for (const p of players) {
       delete p.dg_auto_weather;
@@ -419,7 +476,7 @@ export async function bakeOpenMeteoWeatherIntoProjections(proj, opts = {}) {
     return { status: meta.forecast_weather_status, playerCount: players.length, playersWithWeather: 0, teeMatches: 0 };
   }
 
-  const tz = forecastTimezoneFromProjections(proj);
+  const tz = coords.timezone || forecastTimezoneFromProjections(proj);
   let hourly;
   try {
     const res = await fetch(openMeteoForecastUrl(coords.lat, coords.lon, tz));
