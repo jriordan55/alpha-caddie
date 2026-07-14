@@ -11,6 +11,7 @@
     "merge:within-event-form": "node scripts/within-event-projection-apply.mjs",
     "merge:field-teetimes-into-projections": "node scripts/merge-field-teetimes-into-projections.mjs",
     "sync:bundled-hole-pars": "node scripts/sync-bundled-hole-pars-into-projections.mjs",
+    "check:hole-pars": "node scripts/check-hole-pars-resolved.mjs",
     "validate:projections": "node scripts/validate-projections-for-publish.mjs",
     "bake:weather": "node scripts/bake-weather-into-projections.mjs",
     "apply:unified-factors": "node scripts/apply-unified-projection-factors.mjs",

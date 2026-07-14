@@ -195,6 +195,10 @@ if (skipFinishTool) {
 run("merge-live-hole-pars-into-projections.mjs", "Merge live hole pars into projections");
 run("sync-bundled-hole-pars-into-projections.mjs", "Bundled course_holes.json → projections when live pars missing/wrong");
 run(
+  "check-hole-pars-resolved.mjs",
+  "Fail fast if hole pars are still the generic fallback (new venue needs course_holes.json)",
+);
+run(
   "ensure-projection-course-par.mjs",
   "Lock course_par_18 from hole card + score↔par coherence (before venue repair)",
   { GOLF_FAIL_ON_PAR_MISMATCH: "1" },

@@ -232,6 +232,7 @@ if ($LiveWeekOnly) {
   Run-Npm 'Running fetch:finish-tool — outrights, same Scratch feed as DG Finish Position; runs after book-odds ...' run fetch:finish-tool
   Run-Npm "Merging live_hole_stats into projections (after book odds; preserves pars if book-odds ran inline fetch:dg) ..." run merge:live-hole-pars-into-projections
   Run-Npm "Bundled course_holes.json -> projections when live pars missing/wrong ..." run sync:bundled-hole-pars
+  Run-Npm "Fail fast if hole pars still generic (new venue needs course_holes.json) ..." run check:hole-pars
   Run-Npm "Merging tournament round + prior-round course difficulty from live-in-play -> projections ..." run merge:live-round-meta-into-projections
   Run-Npm "field-updates tee times (ET) -> projections.json dg_teetime_local ..." run merge:field-teetimes-into-projections
   Run-Npm "Open-Meteo weather for upcoming display_round -> projections.json (bake:weather) ..." run bake:weather
