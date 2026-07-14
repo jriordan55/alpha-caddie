@@ -65,7 +65,6 @@ import {
   attachPinToHoleRows,
   courseKeyFromName,
   loadAllPinLocationSheetsMap,
-  loadPinLocationSheet,
   pinLocationKey,
   playDateIsoFromMdY,
 } from "./pin-locations-db.mjs";
@@ -638,8 +637,10 @@ function historyRoundChartDateUtcMs(row) {
   return Date.UTC(y, mo - 1, d) + dayBump * 86400000;
 }
 
+let buildExportLiveRoundCapCache;
 function buildExportLiveRoundCap() {
-  if (!fs.existsSync(LIVE_IN_PLAY_JSON)) return NaN;
+  if (buildExportLiveRoundCapCache !== undefined) return buildExportLiveRoundCapCache;
+  if (!fs.existsSync(LIVE_IN_PLAY_JSON)) return (buildExportLiveRoundCapCache = NaN);
   try {
     const live = JSON.parse(fs.readFileSync(LIVE_IN_PLAY_JSON, "utf8"));
     const fu = live?.field_updates && typeof live.field_updates === "object" ? live.field_updates : {};
@@ -652,7 +653,7 @@ function buildExportLiveRoundCap() {
       : [fu.current_round, info.current_round, live?.current_round];
     for (const c of cands) {
       const r = Math.round(num(c, NaN));
-      if (Number.isFinite(r) && r >= 1 && r <= 4) return r;
+      if (Number.isFinite(r) && r >= 1 && r <= 4) return (buildExportLiveRoundCapCache = r);
     }
   } catch {
     /* ignore */
@@ -661,12 +662,12 @@ function buildExportLiveRoundCap() {
     try {
       const proj = JSON.parse(fs.readFileSync(PROJECTIONS_JSON, "utf8"));
       const r = Math.round(num(proj?.display_round ?? proj?.datagolf_field_current_round, NaN));
-      if (Number.isFinite(r) && r >= 1 && r <= 4) return r;
+      if (Number.isFinite(r) && r >= 1 && r <= 4) return (buildExportLiveRoundCapCache = r);
     } catch {
       /* ignore */
     }
   }
-  return NaN;
+  return (buildExportLiveRoundCapCache = NaN);
 }
 
 function historyRoundChartDateIsFuture(row) {
@@ -1458,7 +1459,7 @@ function mergeLiveTournamentStatsOntoHistoryRound(existing, liveRec) {
     return scrubLivePlaceholderCountingOnRow(out);
   }
   const cleaned = sanitizeLiveCountingFields({ ...liveRec });
-  const prev = sanitizeLivePlaceholderCountingOnRow(existing);
+  const prev = scrubLivePlaceholderCountingOnRow(existing);
   const out = preserveHistoryTeetime(prev, { ...existing, ...cleaned });
   for (const k of LIVE_HISTORY_COUNTING_KEYS) {
     if (historyRowHasStoredCountingStat(prev, k) && historyLiveCountingTrusted(prev)) out[k] = prev[k];
@@ -1898,10 +1899,11 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg, roundWeather
     let pinLocationKeyVal = "";
     let pinSheetForRound = null;
     if (pinCtx?.enabled && courseRaw && playIso) {
-      const pinSheet = loadPinLocationSheet(courseRaw, playIso, rnd, pinCtx.rootDir);
+      const candidatePinKey = pinLocationKey(courseKeyFromName(courseRaw), playIso, rnd);
+      const pinSheet = pinCtx.pinLocationsByKey?.[candidatePinKey] || null;
       if (pinSheet?.holes?.length) {
         pinSheetForRound = pinSheet;
-        pinLocationKeyVal = pinLocationKey(courseKeyFromName(courseRaw), playIso, rnd);
+        pinLocationKeyVal = candidatePinKey;
         if (pinCtx.pinKeyByEventRound && evtNormHist && Number.isFinite(yrHist)) {
           pinCtx.pinKeyByEventRound.set(`${evtNormHist}|${yrHist}|${rnHist}`, pinLocationKeyVal);
         }
