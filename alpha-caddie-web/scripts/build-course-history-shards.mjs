@@ -42,6 +42,49 @@ function num(v) {
   return Number.isFinite(n) ? n : NaN;
 }
 
+/** Round a rate (0–1) or raw count to a whole number of holes; null when out of range. */
+function countFromRateOrRaw(raw, holes) {
+  const n = num(raw);
+  if (!Number.isFinite(n)) return null;
+  const c = n > 0 && n <= 1.0001 ? Math.round(n * holes) : Math.round(n);
+  return Math.min(holes, Math.max(0, c));
+}
+
+/** Per-round strokes-gained columns straight from historical_rounds_all.csv (null when absent). */
+function sgFieldsFromCsv(row) {
+  const f = (k) => {
+    const v = num(row[k]);
+    return Number.isFinite(v) ? v : null;
+  };
+  return {
+    sg_putt: f("sg_putt"),
+    sg_app: f("sg_app"),
+    sg_arg: f("sg_arg"),
+    sg_ott: f("sg_ott"),
+    sg_t2g: f("sg_t2g"),
+    sg_total: f("sg_total"),
+  };
+}
+
+/** Counting stats from CSV; 0/1 GIR/fairways/putts are almost always bad joins, so drop them. */
+function countingFieldsFromCsv(row) {
+  const faDirect = num(row.fairways);
+  const fwRaw = Number.isFinite(faDirect) ? faDirect : num(row.driving_acc);
+  let girCount = countFromRateOrRaw(row.gir, 18);
+  let fwCount = Number.isFinite(fwRaw) ? countFromRateOrRaw(fwRaw, 14) : null;
+  if (girCount === 0 || girCount === 1) girCount = null;
+  if (fwCount === 0 || fwCount === 1) fwCount = null;
+  const ptRaw = num(row.putts);
+  const puttsCount = Number.isFinite(ptRaw) && ptRaw > 1.5 && ptRaw < 80 ? Math.round(ptRaw) : null;
+  return {
+    gir: girCount,
+    fairways: fwCount,
+    putts: puttsCount,
+    eagles_or_better: Number.isFinite(num(row.eagles_or_better)) ? num(row.eagles_or_better) : undefined,
+    doubles_or_worse: Number.isFinite(num(row.doubles_or_worse)) ? num(row.doubles_or_worse) : undefined,
+  };
+}
+
 function normEvt(s) {
   return String(s || "")
     .toLowerCase()
@@ -71,15 +114,13 @@ function courseShardEntryKey(entry) {
 }
 
 function mergeCourseShardEntries(existing, incoming) {
-  const out = [];
-  const seen = new Set();
-  for (const e of [...(existing || []), ...(incoming || [])]) {
-    const k = courseShardEntryKey(e);
-    if (seen.has(k)) continue;
-    seen.add(k);
-    out.push(e);
-  }
-  return out;
+  // Freshly rebuilt rows (incoming) are derived from the current CSV + enriched index and are the
+  // source of truth (e.g. they carry strokes gained); let them override same-key rows from a prior
+  // shard, while still preserving any prior-only rows not present in this build.
+  const byKey = new Map();
+  for (const e of existing || []) byKey.set(courseShardEntryKey(e), e);
+  for (const e of incoming || []) byKey.set(courseShardEntryKey(e), e);
+  return [...byKey.values()];
 }
 
 function writeJsonAtomic(outPath, payload) {
@@ -136,6 +177,8 @@ function csvRowToHistoryEntry(row, enrichedIdx) {
       birdies: num(row.birdies),
       pars: num(row.pars),
       bogies: num(row.bogies),
+      ...countingFieldsFromCsv(row),
+      ...sgFieldsFromCsv(row),
       _from_dg_historical_rounds: true,
     },
   };
