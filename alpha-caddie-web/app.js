@@ -13376,7 +13376,7 @@ function courseBreakdownExternalContextSection(externalCtx, eventName, courseRow
   if (!externalCtx) return null;
   const paragraphs = [];
   const bullets = [];
-  if (externalCtx.style) paragraphs.push(externalCtx.style);
+  if (externalCtx.style && !externalCtx.terrain) paragraphs.push(externalCtx.style);
   if (externalCtx.designer) {
     const loc = externalCtx.location ? ` in ${externalCtx.location}` : "";
     paragraphs.push(`${externalCtx.designer} design${loc}.`);
@@ -13406,6 +13406,173 @@ function courseBreakdownExternalContextSection(externalCtx, eventName, courseRow
     paragraphs,
     bullets,
     sources: Array.isArray(externalCtx.sources) ? externalCtx.sources : [],
+  };
+}
+
+function courseBreakdownTerrainAndTurfSection(externalCtx) {
+  if (!externalCtx) return null;
+  const terrain = externalCtx.terrain && typeof externalCtx.terrain === "object" ? externalCtx.terrain : null;
+  const grass = externalCtx.grass && typeof externalCtx.grass === "object" ? externalCtx.grass : null;
+  if (!terrain && !grass && !externalCtx.style) return null;
+  const paragraphs = [];
+  const bullets = [];
+  if (terrain?.summary || externalCtx.style) paragraphs.push(String(terrain?.summary || externalCtx.style));
+  const add = (label, value) => {
+    if (value) bullets.push(`${label}: ${value}.`);
+  };
+  add("Topography", terrain?.topography);
+  add("Exposure and wind", terrain?.exposure);
+  add("Ground and drainage", terrain?.ground);
+  add("Primary hazards", terrain?.hazards);
+  const grassList = (value) =>
+    Array.isArray(value) ? value.filter(Boolean).join(", ") : String(value || "").trim();
+  add("Greens", grassList(grass?.greens));
+  add("Fairways and tees", grassList(grass?.fairways));
+  add("Rough", grassList(grass?.rough));
+  add("Green surrounds", grassList(grass?.surrounds));
+  add("Turf behavior", grass?.playing_characteristics);
+  return {
+    title: "Terrain and turf",
+    paragraphs,
+    bullets,
+    sources: Array.isArray(externalCtx.sources) ? externalCtx.sources : [],
+  };
+}
+
+function courseBreakdownCurrentEventDateBase() {
+  const m = DATA?.meta || {};
+  const raw = String(
+    m.datagolf_field_date_start ??
+      DATA?.datagolf_field_date_start ??
+      m.event_start_date ??
+      DATA?.event_start_date ??
+      "",
+  ).trim();
+  const iso = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) return Number(`${iso[1]}${iso[2]}${iso[3]}`);
+  return NaN;
+}
+
+function courseBreakdownPriorEventFromEntries(entries) {
+  const currentDateBase = courseBreakdownCurrentEventDateBase();
+  const currentYear = Number.isFinite(currentDateBase)
+    ? Math.floor(currentDateBase / 10000)
+    : new Date().getFullYear();
+  const groups = new Map();
+  for (const entry of entries || []) {
+    const row = entry?.row;
+    // Use the uncapped past-events predicate. The generic history predicate caps same-named
+    // events to this week's live round (e.g. a current R2 Open must not hide 2017 R3/R4).
+    if (!row || !courseFitDistRoundCountsAsActual(row)) continue;
+    const year = historyRoundSeasonYear(row);
+    if (!Number.isFinite(year) || year > currentYear) continue;
+    const sortKey = Math.floor(num(row.sortKey, 0));
+    const dateBase = sortKey >= 100000000 ? Math.floor(sortKey / 10) : 0;
+    if (Number.isFinite(currentDateBase) && dateBase >= currentDateBase) continue;
+    if (!Number.isFinite(currentDateBase) && year >= currentYear) continue;
+    const eventId = String(row.event_id || "").trim();
+    const eventName = formatEventNameForDisplay(String(row.event_name || "").trim()) || "Event";
+    const key = `${year}|${eventId || normCourseNameKey(eventName)}`;
+    let group = groups.get(key);
+    if (!group) {
+      group = { key, year, eventId, eventName, dateBase: 0, entries: [] };
+      groups.set(key, group);
+    }
+    group.dateBase = Math.max(group.dateBase, dateBase);
+    group.entries.push(entry);
+  }
+  const prior = [...groups.values()].sort((a, b) => b.dateBase - a.dateBase || b.year - a.year)[0];
+  if (!prior) return null;
+
+  const seen = new Set();
+  const rows = [];
+  const playerIds = new Set();
+  for (const entry of prior.entries) {
+    const row = entry.row;
+    const round = Math.round(num(row.round_num ?? row.round, NaN));
+    const player = Math.round(num(entry.dg_id ?? row.dg_id, NaN));
+    const dedupe = `${Number.isFinite(player) ? player : entry.player_name}|${round}|${row.sortKey || ""}`;
+    if (seen.has(dedupe)) continue;
+    seen.add(dedupe);
+    rows.push(row);
+    if (Number.isFinite(player)) playerIds.add(player);
+  }
+  const mean = (statKey) => {
+    const values = rows.map((row) => actualForRoundRow(statKey, row)).filter(Number.isFinite);
+    if (!values.length) return { value: NaN, n: 0 };
+    return { value: values.reduce((sum, value) => sum + value, 0) / values.length, n: values.length };
+  };
+  return {
+    ...prior,
+    rows: rows.length,
+    players: playerIds.size,
+    score: mean("total"),
+    birdies: mean("birdies"),
+    bogeys: mean("bogeys"),
+    gir: mean("gir"),
+    fairways: mean("fairways"),
+  };
+}
+
+function courseBreakdownProjectedCountingMean(basis, statKey) {
+  const values = Object.values(basis?.field_counting_means_by_round?.[statKey] || {})
+    .map((value) => num(value, NaN))
+    .filter(Number.isFinite);
+  return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : NaN;
+}
+
+function courseBreakdownPriorEventSection(priorEvent, externalCtx, basis, currentPar) {
+  if (!priorEvent) return null;
+  const previousSetup = externalCtx?.previous_event || {};
+  const bullets = [];
+  const previousPar = Math.round(num(previousSetup.par, NaN));
+  const currentYardage = Math.round(num(externalCtx?.yardage, NaN));
+  const previousYardage = Math.round(num(previousSetup.yardage, NaN));
+  if (Number.isFinite(previousPar)) {
+    bullets.push(
+      previousPar === currentPar
+        ? `Par is unchanged at ${currentPar}.`
+        : `Par changed from ${previousPar} to ${currentPar} (${currentPar - previousPar > 0 ? "+" : ""}${currentPar - previousPar}).`,
+    );
+  }
+  if (Number.isFinite(currentYardage) && Number.isFinite(previousYardage)) {
+    const delta = currentYardage - previousYardage;
+    bullets.push(
+      `Championship yardage: ${currentYardage.toLocaleString()} yards vs ${previousYardage.toLocaleString()} in ${previousSetup.year || priorEvent.year} (${delta >= 0 ? "+" : ""}${delta.toLocaleString()} yards).`,
+    );
+  }
+  for (const change of externalCtx?.changes_since_previous || []) {
+    if (change) bullets.push(change);
+  }
+
+  const currentScore = num(basis?.event_week_field_avg_score, NaN);
+  if (Number.isFinite(currentScore) && Number.isFinite(priorEvent.score.value)) {
+    const delta = currentScore - priorEvent.score.value;
+    bullets.push(
+      `Scoring: this week's field projects ${currentScore.toFixed(2)} vs ${priorEvent.score.value.toFixed(2)} actual last time (${Math.abs(delta).toFixed(2)} strokes ${delta < 0 ? "lower/easier" : "higher/tougher"}).`,
+    );
+  }
+  for (const [statKey, label] of [
+    ["birdies", "Birdies"],
+    ["bogeys", "Bogeys"],
+    ["gir", "GIR"],
+    ["fairways", "Fairways hit"],
+  ]) {
+    const projected = courseBreakdownProjectedCountingMean(basis, statKey);
+    const historical = priorEvent[statKey];
+    if (!Number.isFinite(projected) || !Number.isFinite(historical?.value)) continue;
+    const delta = projected - historical.value;
+    bullets.push(
+      `${label}: ${projected.toFixed(2)} projected per round vs ${historical.value.toFixed(2)} last time (${delta >= 0 ? "+" : ""}${delta.toFixed(2)}).`,
+    );
+  }
+  const sample = `${priorEvent.rows.toLocaleString()} completed rounds${priorEvent.players ? ` from ${priorEvent.players} players` : ""}`;
+  return {
+    title: `What changed since ${priorEvent.year}`,
+    paragraphs: [
+      `The last event at this course was the ${priorEvent.year} ${priorEvent.eventName}. Comparisons use ${sample}; missing statistics are omitted rather than treated as zero.`,
+    ],
+    bullets,
   };
 }
 
@@ -13819,6 +13986,7 @@ function courseBreakdownGenerateInsightSections(ctx) {
     playerFit,
     weatherCtx,
     externalCtx,
+    priorEvent,
   } = ctx;
 
   const p3 = holePars.filter((p) => Math.round(num(p, 4)) === 3).length;
@@ -13851,6 +14019,8 @@ function courseBreakdownGenerateInsightSections(ctx) {
   };
 
   const setupSection = courseBreakdownExternalContextSection(externalCtx, eventName, courseRow);
+  const terrainSection = courseBreakdownTerrainAndTurfSection(externalCtx);
+  const priorEventSection = courseBreakdownPriorEventSection(priorEvent, externalCtx, basis, par);
 
   const successBullets = [];
   const sgLines = sgImpact
@@ -13962,6 +14132,8 @@ function courseBreakdownGenerateInsightSections(ctx) {
 
   const sections = [
     profile,
+    ...(priorEventSection ? [priorEventSection] : []),
+    ...(terrainSection ? [terrainSection] : []),
     ...(setupSection ? [setupSection] : []),
     courseBreakdownWeatherInsightSection(weatherCtx),
     {
@@ -14062,9 +14234,11 @@ function renderCourseBreakdownInsights(sections) {
 
 async function buildCourseBreakdownInsights(holePars, rows, courseName) {
   await loadCourseTableJson();
-  const [eventCtxMap, weatherCtx] = await Promise.all([
+  const courseKey = normCourseNameKey(courseName);
+  const [eventCtxMap, weatherCtx, courseHistory] = await Promise.all([
     ensureCourseEventContextLoaded(),
     courseBreakdownGatherWeatherContext(courseName),
+    ensurePropsCourseIndexForKeyAsync(courseKey),
   ]);
   const courseRow = courseBreakdownActiveCourseRow();
   const tourMeans = COURSE_TABLE_PAYLOAD?.means || {};
@@ -14082,6 +14256,7 @@ async function buildCourseBreakdownInsights(holePars, rows, courseName) {
   const m = DATA?.meta || {};
   const eventName = formatEventNameForDisplay(String(m.event_name || DATA?.event_name || "").trim()) || "";
   const externalCtx = courseBreakdownResolveEventContext(eventCtxMap, courseName, eventName);
+  const priorEvent = courseBreakdownPriorEventFromEntries(courseHistory?.entries || []);
   const par =
     Math.round(num(m.course_par_18 ?? DATA?.course_par_18, NaN)) ||
     (holePars.length ? holePars.reduce((s, p) => s + Math.round(num(p, 4)), 0) : 72);
@@ -14102,6 +14277,7 @@ async function buildCourseBreakdownInsights(holePars, rows, courseName) {
     playerFit,
     weatherCtx,
     externalCtx,
+    priorEvent,
   });
   renderCourseBreakdownInsights(sections);
 }

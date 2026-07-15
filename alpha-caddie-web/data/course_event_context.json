@@ -1,5 +1,59 @@
 {
   "by_course": {
+    "royal birkdale golf club": {
+      "location": "Southport, Merseyside, England (Irish Sea coast)",
+      "designer": "J.H. Taylor and Fred Hawtree; 2026 changes by Mackenzie & Ebert",
+      "style": "Classic coastal links routed through low-lying fairway corridors between towering dunes.",
+      "yardage": 7223,
+      "par": 70,
+      "terrain": {
+        "summary": "A coastal links set in a dramatic dunescape. The playing corridors are relatively flat and low-lying, while dunes roughly 20 to 40 feet high frame and isolate many holes like natural stadium walls.",
+        "topography": "Mostly modest, low-lying fairway contours between tall dunes, with several elevated tees, raised greens, steep run-offs, and uneven native rough lies",
+        "exposure": "Highly exposed to winds off the Irish Sea; holes repeatedly change direction, so wind angle and shelter can shift quickly during a round",
+        "ground": "Firm, fast-running links turf supported by extensive drainage in the low areas; raised greens and bunkers help keep the course playable and firm",
+        "hazards": "Deep revetted pot bunkers that often force sideways recovery, thick dune grass and gorse, severe closely mown run-offs, and out of bounds on selected holes"
+      },
+      "grass": {
+        "greens": ["fescue", "browntop bentgrass"],
+        "fairways": ["fescue-dominant turf"],
+        "rough": ["red fescue", "marram grass", "sweet vernal grass", "bentgrass", "native links grasses and wildflowers"],
+        "surrounds": ["predominantly fescue", "some browntop bentgrass"],
+        "playing_characteristics": "Fine fescue promotes firm bounce and run in dry conditions; the fescue/bent greens and closely mown surrounds bring ground-game approaches and collection-area recoveries into play"
+      },
+      "previous_event": {
+        "year": 2017,
+        "event_name": "The Open Championship",
+        "yardage": 7156,
+        "par": 70
+      },
+      "changes_since_previous": [
+        "The course is 67 yards longer than in 2017, but the larger difference is the routing: the old par-5 15th is now the par-5 14th, and a new 241-yard par-3 occupies the 15th.",
+        "Hole 5 is a completely redesigned 321-yard risk-reward par-4 with a visible green and severe trouble long; the 2017 hole measured 346 yards and played partly blind.",
+        "Hole 7 has a new raised, smaller and more undulating green with steep run-offs and the deepest bunkers on the course.",
+        "The 4th is about 20 yards longer, the 13th has a revised fairway angle, and the 18th tee moved left to create a straighter 508-yard finish lined by fairway bunkers.",
+        "Bunkers and green surrounds were rebuilt across the course, adding more closely mown hollows and run-offs while improving drainage and visibility."
+      ],
+      "event_notes": [
+        "Accuracy remains the central demand: many tee shots favor placement clubs because deep fairway bunkers can remove any realistic chance of reaching the green.",
+        "The 2026 card contains five par-3s and two par-5s. Three par-3s measure at least 186 yards, including the new 241-yard 15th.",
+        "Firmness and wind determine whether the links plays as a running, positional test or a long aerial test into raised greens."
+      ],
+      "key_holes": [
+        { "hole": 5, "par": 4, "yards": 321, "note": "Completely redesigned risk-reward hole. The lay-up is about 200 yards; misses long face a deep, severe recovery." },
+        { "hole": 6, "par": 4, "yards": 514, "note": "The hardest hole in 2017, normally into the prevailing wind with a long approach to an elevated green." },
+        { "hole": 7, "par": 3, "yards": 151, "note": "New raised green with steep run-offs, extreme bunkering, and the smallest, most undulating target on the course." },
+        { "hole": 14, "par": 5, "yards": 602, "note": "Bunkers influence every shot and a small, undulating green sheds aggressive approaches into deep run-offs." },
+        { "hole": 15, "par": 3, "yards": 241, "note": "New long par-3 playing downwind to a large but visually narrow green that slopes away from the player." },
+        { "hole": 18, "par": 4, "yards": 508, "note": "New tee alignment creates a straight but heavily bunkered finish where many players may choose less than driver." }
+      ],
+      "weather_notes": "The exposed links can change character quickly with wind direction, rain, and firmness. Low-trajectory control and the ability to use the ground become more valuable as the turf dries and wind rises.",
+      "sources": [
+        "The Open — Royal Birkdale 2026 course guide",
+        "PGA TOUR — Nine things to know: Royal Birkdale (2026)",
+        "PGA TOUR Media — 2017 Royal Birkdale scorecard",
+        "Golf Course Architecture — Royal Birkdale 2026 design changes"
+      ]
+    },
     "the renaissance club": {
       "location": "North Berwick, East Lothian, Scotland (Firth of Forth coast)",
       "designer": "Tom Doak",
