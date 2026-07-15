@@ -14285,7 +14285,7 @@ function courseFitDistRoundMatches(row, roundFilter) {
   return Number.isFinite(want) && want >= 1 && want <= 4 && rn === want;
 }
 
-/** Past-events distributions: archived rounds only; don't cap prior years' R2–R4 for the live event name. */
+/** Past-events distributions: include every archived actual; never cap rows to live tournament progress. */
 function courseFitDistRoundCountsAsActual(row) {
   if (!row || typeof row !== "object") return false;
   if (!historyRowFromDgHistoricalRoundsApi(row)) return false;
@@ -14302,9 +14302,6 @@ function courseFitDistRoundCountsAsActual(row) {
     const seasonY = historyRoundSeasonYear(row);
     const currentY = currentEventSeasonYearFromMeta();
     if (Number.isFinite(seasonY) && Number.isFinite(currentY) && seasonY === currentY) {
-      const rnd = Math.round(num(row?.round_num ?? row?.round, NaN));
-      const cap = currentTournamentProgressRoundCap();
-      if (Number.isFinite(rnd) && Number.isFinite(cap) && rnd > cap) return false;
       if (row._from_pgatour && !pgatourRowBelongsToEvent(row, String(DATA?.meta?.event_name || ""))) return false;
     }
   }
