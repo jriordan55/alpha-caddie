@@ -485,6 +485,8 @@ const MAX_ROUNDS_PER_PLAYER = (() => {
 const HOLE_JOIN_TAIL = 28;
 
 function num(x) {
+  // Number("") === 0 (and Number(null) === 0), but an empty CSV cell / null means "missing", not zero.
+  if (x == null || (typeof x === "string" && x.trim() === "")) return NaN;
   const n = Number(x);
   return Number.isFinite(n) ? n : NaN;
 }

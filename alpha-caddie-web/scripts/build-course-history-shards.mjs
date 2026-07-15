@@ -38,6 +38,8 @@ const MIN_YEAR = (() => {
 })();
 
 function num(v) {
+  // Number("") === 0, but an empty CSV cell means "missing", not zero.
+  if (v == null || String(v).trim() === "") return NaN;
   const n = Number(v);
   return Number.isFinite(n) ? n : NaN;
 }
