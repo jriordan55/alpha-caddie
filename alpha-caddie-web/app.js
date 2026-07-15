@@ -14422,12 +14422,17 @@ function courseFitDistBuildHistogram(values, opts = {}) {
     maxV = Math.ceil(maxV / binWidth) * binWidth;
   }
   const span = Math.max(maxV - minV, binWidth);
-  const nBins = Math.max(1, Math.round(span / binWidth));
+  // Integer mode: one bin per integer value, minV..maxV inclusive — a half-open [maxV-1, maxV)
+  // last bin would silently drop the max value (e.g. a 5-bogey round vanished from the chart).
+  const nBins = integerMode ? Math.round(maxV - minV) + 1 : Math.max(1, Math.round(span / binWidth));
   const bins = [];
   for (let i = 0; i < nBins; i++) {
     const lo = minV + i * binWidth;
     const hi = lo + binWidth;
-    const count = xs.filter((v) => v >= lo - 1e-9 && v < hi - (integerMode ? 0 : 1e-9)).length;
+    const isLast = i === nBins - 1;
+    const count = xs.filter(
+      (v) => v >= lo - 1e-9 && (isLast ? v <= hi + 1e-9 : v < hi - (integerMode ? 0 : 1e-9)),
+    ).length;
     const label = integerMode ? String(Math.round(lo)) : `${lo.toFixed(1)} – ${hi.toFixed(1)}`;
     bins.push({ lo, hi, count, label, mid: lo + binWidth / 2 });
   }
