@@ -345,9 +345,11 @@ $artifacts = @(
   "website/public/data/parlay_correlations.json",
   "data/historical_rounds_all.csv",
   "alpha-caddie-web/data/historical_rounds_all.csv",
-  "alpha-caddie-web/player_round_history.json",
-  "alpha-caddie-web/embedded-player-round-history.js"
+  "alpha-caddie-web/player_round_history.json"
 )
+# NOTE: embedded-player-round-history.js is intentionally NOT published. Render serves over HTTP and
+# fetches player_round_history.json directly; the embed is only a file:// demo fallback. Committing it
+# added ~52 MB to every deploy transfer (and per-push churn) for a file the live site never loads.
 
 foreach ($rel in $artifacts) {
   $abs = Join-Path $repoRoot $rel
