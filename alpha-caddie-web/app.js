@@ -18374,8 +18374,6 @@ function propsSuggestedWindowN() {
     if (tail === "best" || tail === "worst") {
       return PROPS_FIELD_GOLFER_HORIZONTAL_MAX;
     }
-    const cap = currentTournamentProgressRoundCap();
-    if (Number.isFinite(cap) && cap >= 1) return Math.round(cap);
     const sel = selectedPropsRoundNumsFilter();
     if (sel.length && sel.length < 4) return sel.length;
     return PROPS_HISTORY_ROUND_DEFAULT;
