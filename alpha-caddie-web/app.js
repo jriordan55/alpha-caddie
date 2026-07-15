@@ -7092,10 +7092,48 @@ function matchupAnalysisKellyFractionFromUi() {
   return loadOuProjKellyPrefs().fraction;
 }
 
+/** Selected sportsbook key on the Matchup Analysis "Book" filter; "" = all books. */
+function matchupAnalysisBookFilterFromUi() {
+  const el = document.getElementById("analysis-book-filter");
+  const v = normalizeEvSportsbookKey(el instanceof HTMLSelectElement ? el.value : "");
+  return v && v !== "all" ? v : "";
+}
+
+function matchupAnalysisFilteredBookCards() {
+  const cards = matchupAnalysisBookCardsCache || [];
+  const book = matchupAnalysisBookFilterFromUi();
+  if (!book) return cards;
+  return cards.filter((c) => normalizeEvSportsbookKey(c.book) === book);
+}
+
+/** Rebuild the Book filter options from the books present in the current card set (keeps selection). */
+function syncMatchupAnalysisBookFilterOptions() {
+  const el = document.getElementById("analysis-book-filter");
+  if (!(el instanceof HTMLSelectElement)) return;
+  const prev = normalizeEvSportsbookKey(el.value) || "all";
+  const books = new Map();
+  for (const c of matchupAnalysisBookCardsCache || []) {
+    const k = normalizeEvSportsbookKey(c.book);
+    if (k && !books.has(k)) books.set(k, c.bookLabel || bookMeta(k).label.toUpperCase());
+  }
+  el.innerHTML = "";
+  const all = document.createElement("option");
+  all.value = "all";
+  all.textContent = "All books";
+  el.appendChild(all);
+  for (const [k, label] of [...books.entries()].sort((a, b) => a[1].localeCompare(b[1]))) {
+    const opt = document.createElement("option");
+    opt.value = k;
+    opt.textContent = label;
+    el.appendChild(opt);
+  }
+  el.value = books.has(prev) ? prev : "all";
+}
+
 function refreshMatchupAnalysisKellyDisplay() {
   const host = document.getElementById("matchup-analysis-pricing");
   if (!host || !matchupAnalysisBookCardsCache?.length) return;
-  renderMatchupAnalysisBookCardsGrid(host, matchupAnalysisBookCardsCache, matchupAnalysisSelectedKey, (mk) => {
+  renderMatchupAnalysisBookCardsGrid(host, matchupAnalysisFilteredBookCards(), matchupAnalysisSelectedKey, (mk) => {
     selectMatchupAnalysisMatchup(mk, { scroll: false });
   });
 }
@@ -10503,6 +10541,7 @@ function buildMatchupAnalysisTool() {
     matchupAnalysisRowsCache = [];
     matchupAnalysisBookCardsCache = [];
     matchupAnalysisFieldSamplesCache = null;
+    syncMatchupAnalysisBookFilterOptions();
     return;
   }
   if (note) note.hidden = true;
@@ -10514,6 +10553,7 @@ function buildMatchupAnalysisTool() {
     matchupAnalysisRowsCache = [];
     matchupAnalysisBookCardsCache = [];
     matchupAnalysisFieldSamplesCache = null;
+    syncMatchupAnalysisBookFilterOptions();
     return;
   }
 
@@ -10653,10 +10693,12 @@ function buildMatchupAnalysisTool() {
   rows.sort((a, b) => num(b.best?.edge, -99) - num(a.best?.edge, -99));
   matchupAnalysisRowsCache = rows;
   matchupAnalysisBookCardsCache = buildMatchupAnalysisBookCards(list, key, r, devigPrefs);
+  syncMatchupAnalysisBookFilterOptions();
   if (!rows.length) {
     matchupAnalysisRowsCache = [];
     matchupAnalysisBookCardsCache = [];
     matchupAnalysisFieldSamplesCache = null;
+    syncMatchupAnalysisBookFilterOptions();
     if (matchupPickEl) {
       matchupPickEl.innerHTML = "";
       setMatchupPickUiHidden(true);
@@ -10687,7 +10729,7 @@ function buildMatchupAnalysisTool() {
     matchupPickEl.value = selected.key;
     refreshGolferComboboxFromSelect("analysis-matchup-select");
   }
-  renderMatchupAnalysisBookCardsGrid(pricingHost, matchupAnalysisBookCardsCache, selected.key, (mk) => {
+  renderMatchupAnalysisBookCardsGrid(pricingHost, matchupAnalysisFilteredBookCards(), selected.key, (mk) => {
     selectMatchupAnalysisMatchup(mk);
   });
 
@@ -25626,6 +25668,9 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("analysis-market")?.addEventListener("change", () => {
     matchupAnalysisSelectedKey = "";
     buildMatchupAnalysisTool();
+  });
+  document.getElementById("analysis-book-filter")?.addEventListener("change", () => {
+    refreshMatchupAnalysisKellyDisplay();
   });
   document.getElementById("analysis-matchup-select")?.addEventListener("change", (e) => {
     selectMatchupAnalysisMatchup(String(/** @type {HTMLSelectElement} */ (e.target).value || ""));
