@@ -9139,6 +9139,168 @@ function outrightConsensusProbFromBooks(bookDecItems, prefs) {
   return avgDec > 1 ? 1 / avgDec : NaN;
 }
 
+function oddsScreenDevigMethod(prefs) {
+  const method = evDevigMethodValid(prefs?.method) ? prefs.method : "none";
+  return method === "none" ? "multiplicative" : method;
+}
+
+function oddsScreenWeightedAverage(items) {
+  const valid = (items || []).filter(
+    (item) => Number.isFinite(item?.p) && item.p > 0 && item.p < 1 && Number.isFinite(item?.w) && item.w > 0,
+  );
+  const weight = valid.reduce((sum, item) => sum + item.w, 0);
+  return {
+    p: weight > 0 ? valid.reduce((sum, item) => sum + item.p * item.w, 0) / weight : NaN,
+    count: valid.length,
+  };
+}
+
+/**
+ * Fair matchup probability from every selected source except the sportsbook offering the best price.
+ * DataGolf is a non-actionable independent source and is always eligible.
+ */
+function oddsScreenMatchupFair(oddsObj, sideKey, bestBook, prefs, isThree = false) {
+  const bestKey = normalizeEvSportsbookKey(bestBook);
+  const method = oddsScreenDevigMethod(prefs);
+  const other = [];
+  let dataGolfP = NaN;
+  for (const [bookRaw, pack] of Object.entries(oddsObj || {})) {
+    const book = normalizeEvSportsbookKey(bookRaw);
+    if (!book || book === bestKey || !pack || typeof pack !== "object") continue;
+    const isDataGolf = book === "datagolf";
+    if (!isDataGolf && (!evSportsbookAllowed(book) || !evBookAllowedInConsensus(book, prefs))) continue;
+    let fairP = NaN;
+    if (isThree) {
+      const { d1, d2, d3 } = matchupOddsThreeWayFromPack(pack);
+      if (![d1, d2, d3].every((d) => Number.isFinite(d) && d > 1)) continue;
+      const qs = [1 / d1, 1 / d2, 1 / d3];
+      const total = qs.reduce((sum, q) => sum + q, 0);
+      const idx = sideKey === "p1" ? 0 : sideKey === "p2" ? 1 : 2;
+      fairP = total > 0 ? qs[idx] / total : NaN;
+    } else {
+      const { d1, d2 } = matchupOddsTwoWayFromPack(pack);
+      if (![d1, d2].every((d) => Number.isFinite(d) && d > 1)) continue;
+      // DataGolf matchup prices are already fair; normalization only protects against rounding.
+      fairP = devigFairForSide(1 / d1, 1 / d2, isDataGolf ? "multiplicative" : method, sideKey);
+    }
+    if (!Number.isFinite(fairP) || fairP <= 0 || fairP >= 1) continue;
+    if (isDataGolf) {
+      dataGolfP = fairP;
+    } else {
+      const w = prefs?.bookWeights ? evConsensusWeightForBook(book, prefs) : 1;
+      if (w > 0) other.push({ book, p: fairP, w });
+    }
+  }
+  const otherAvg = oddsScreenWeightedAverage(other);
+  const combined = [...other];
+  if (Number.isFinite(dataGolfP)) combined.push({ book: "datagolf", p: dataGolfP, w: 1 });
+  const fair = oddsScreenWeightedAverage(combined);
+  return {
+    fairP: fair.p,
+    otherBooksP: otherAvg.p,
+    dataGolfP,
+    sourceCount: fair.count,
+    otherBookCount: otherAvg.count,
+  };
+}
+
+function oddsScreenOutrightTargetMass(marketKey) {
+  if (marketKey === "top_5") return 5;
+  if (marketKey === "top_10") return 10;
+  if (marketKey === "top_20") return 20;
+  return 1;
+}
+
+/**
+ * Per-book devigged outright probabilities for a complete field. Placement markets are normalized
+ * to their finishing-slot mass; make/miss-cut markets are devigged as two-way player markets.
+ */
+function oddsScreenOutrightFairByBook(marketKey, pack, prefs) {
+  const byBook = new Map();
+  const rows = Array.isArray(pack?.rows) ? pack.rows : [];
+  const books = (Array.isArray(pack?.bookKeys) ? pack.bookKeys : [])
+    .map(normalizeEvSportsbookKey)
+    .filter((book) => book && evSportsbookAllowed(book) && evBookAllowedInConsensus(book, prefs));
+  if (marketKey === "make_cut" || marketKey === "mc") {
+    const oppositeKey = marketKey === "make_cut" ? "mc" : "make_cut";
+    const oppositeRows = Array.isArray(DATA.outrights?.[oppositeKey]?.rows) ? DATA.outrights[oppositeKey].rows : [];
+    const oppositeById = new Map(
+      oppositeRows.map((row) => [Math.round(num(row.dg_id, NaN)), row]).filter(([id]) => Number.isFinite(id)),
+    );
+    const method = oddsScreenDevigMethod(prefs);
+    for (const book of books) {
+      const playerMap = new Map();
+      for (const row of rows) {
+        const id = Math.round(num(row.dg_id, NaN));
+        const opposite = oppositeById.get(id);
+        if (!Number.isFinite(id) || !opposite) continue;
+        const qThis = outrightFeedPlaceholderProbNaN(
+          impliedPctFromOutrightBookField(row[book]) / 100,
+          marketKey,
+          book,
+        );
+        const qOpp = outrightFeedPlaceholderProbNaN(
+          impliedPctFromOutrightBookField(opposite[book]) / 100,
+          oppositeKey,
+          book,
+        );
+        if (![qThis, qOpp].every((q) => Number.isFinite(q) && q > 0 && q < 1)) continue;
+        const p = devigFairForSide(qThis, qOpp, method, "p1");
+        if (Number.isFinite(p) && p > 0 && p < 1) playerMap.set(id, p);
+      }
+      if (playerMap.size) byBook.set(book, playerMap);
+    }
+    return byBook;
+  }
+
+  const targetMass = oddsScreenOutrightTargetMass(marketKey);
+  const minimumCoverage = Math.max(12, Math.ceil(rows.length * 0.7));
+  for (const book of books) {
+    const raw = [];
+    for (const row of rows) {
+      const id = Math.round(num(row.dg_id, NaN));
+      const pct = impliedPctFromOutrightBookField(row[book]);
+      const q = outrightFeedPlaceholderProbNaN(pct / 100, marketKey, book);
+      if (Number.isFinite(id) && Number.isFinite(q) && q > 0 && q < 1) raw.push({ id, q });
+    }
+    if (raw.length < minimumCoverage) continue;
+    const rawMass = raw.reduce((sum, item) => sum + item.q, 0);
+    if (!(rawMass > 0)) continue;
+    const playerMap = new Map();
+    for (const item of raw) {
+      const p = clamp(item.q * targetMass / rawMass, 1e-9, 1 - 1e-9);
+      playerMap.set(item.id, p);
+    }
+    byBook.set(book, playerMap);
+  }
+  return byBook;
+}
+
+function oddsScreenOutrightFairForPlayer(row, bestBook, fairByBook, prefs) {
+  const id = Math.round(num(row?.dg_id, NaN));
+  const bestKey = normalizeEvSportsbookKey(bestBook);
+  const other = [];
+  for (const [book, playerMap] of fairByBook || []) {
+    if (book === bestKey) continue;
+    const p = playerMap.get(id);
+    const w = prefs?.bookWeights ? evConsensusWeightForBook(book, prefs) : 1;
+    if (Number.isFinite(p) && p > 0 && p < 1 && w > 0) other.push({ book, p, w });
+  }
+  const dgRaw = num(row?.dg_model, NaN) / 100;
+  const dataGolfP = Number.isFinite(dgRaw) && dgRaw > 0 && dgRaw < 1 ? dgRaw : NaN;
+  const otherAvg = oddsScreenWeightedAverage(other);
+  const combined = [...other];
+  if (Number.isFinite(dataGolfP)) combined.push({ book: "datagolf", p: dataGolfP, w: 1 });
+  const fair = oddsScreenWeightedAverage(combined);
+  return {
+    fairP: fair.p,
+    otherBooksP: otherAvg.p,
+    dataGolfP,
+    sourceCount: fair.count,
+    otherBookCount: otherAvg.count,
+  };
+}
+
 function draftKingsFinishOddsByDgIndex() {
   const markets = ["win", "top_5", "top_10", "top_20"];
   const byId = new Map();
@@ -9382,7 +9544,6 @@ function closeEvHelpDialog() {
 function collectUnifiedEvRows() {
   const rows = [];
   const devigPrefs = loadEvDevigPrefs();
-  const r = getModelRoundForEv();
   const elim = dgIdsEliminatedFromEventPostCut();
   const mpack = DATA.matchups || {};
   for (const mk of ["tournament_matchups", "round_matchups", "3_balls"]) {
@@ -9394,118 +9555,83 @@ function collectUnifiedEvRows() {
       const id1 = Math.round(num(m.p1_dg_id, NaN));
       const id2 = Math.round(num(m.p2_dg_id, NaN));
       const id3 = Math.round(num(m.p3_dg_id, NaN));
-      const row1 = projectionPlayerRowForModelByIdOrName(id1, m.p1_player_name, r);
-      const row2 = projectionPlayerRowForModelByIdOrName(id2, m.p2_player_name, r);
-      const row3 = projectionPlayerRowForModelByIdOrName(id3, m.p3_player_name, r);
-      const mu1 = effectiveMuSg(row1, id1, mk);
-      const mu2 = effectiveMuSg(row2, id2, mk);
-      const mu3 = effectiveMuSg(row3, id3, mk);
       const isThreeBall = mk === "3_balls" && Number.isFinite(id3) && id3 > 0;
       if (elim.size && (elim.has(id1) || elim.has(id2) || (isThreeBall && elim.has(id3)))) continue;
       const oddsEv = filterOddsObjectForEvSportsbooks(m.odds || {}, { allowDatagolf: true });
       if (isThreeBall) {
-        const [tp1, tp2, tp3] = threeBallModelProbsLiveBlended(mu1, mu2, mu3, row1, row2, row3);
         const b1 = bestBookDecimalForSideWithFallback(oddsEv, "p1", devigPrefs);
         const b2 = bestBookDecimalForSideWithFallback(oddsEv, "p2", devigPrefs);
         const b3 = bestBookDecimalForSideWithFallback(oddsEv, "p3", devigPrefs);
         const n1 = displayGolferName(String(m.p1_player_name || ""));
         const n2 = displayGolferName(String(m.p2_player_name || ""));
         const n3 = displayGolferName(String(m.p3_player_name || ""));
-        const mp1 = matchupConsensusThreeWaySide(oddsEv, "p1", devigPrefs);
-        const mp2 = matchupConsensusThreeWaySide(oddsEv, "p2", devigPrefs);
-        const mp3 = matchupConsensusThreeWaySide(oddsEv, "p3", devigPrefs);
+        const f1 = oddsScreenMatchupFair(oddsEv, "p1", b1.book, devigPrefs, true);
+        const f2 = oddsScreenMatchupFair(oddsEv, "p2", b2.book, devigPrefs, true);
+        const f3 = oddsScreenMatchupFair(oddsEv, "p3", b3.book, devigPrefs, true);
         rows.push({
           golfer: n1,
           market: marketLabel,
           bet: `3-ball vs ${n2} & ${n3}`,
-          modelPct: tp1,
-          modelEv: Number.isFinite(b1.dec) ? tp1 * b1.dec - 1 : NaN,
           bestBook: b1.book,
           bestBookOdds: Number.isFinite(b1.dec) ? formatAmerican(americanFromDecimal(b1.dec)) : "—",
           bestDec: b1.dec,
-          consensusP: mp1,
+          ...f1,
         });
         rows.push({
           golfer: n2,
           market: marketLabel,
           bet: `3-ball vs ${n1} & ${n3}`,
-          modelPct: tp2,
-          modelEv: Number.isFinite(b2.dec) ? tp2 * b2.dec - 1 : NaN,
           bestBook: b2.book,
           bestBookOdds: Number.isFinite(b2.dec) ? formatAmerican(americanFromDecimal(b2.dec)) : "—",
           bestDec: b2.dec,
-          consensusP: mp2,
+          ...f2,
         });
         rows.push({
           golfer: n3,
           market: marketLabel,
           bet: `3-ball vs ${n1} & ${n2}`,
-          modelPct: tp3,
-          modelEv: Number.isFinite(b3.dec) ? tp3 * b3.dec - 1 : NaN,
           bestBook: b3.book,
           bestBookOdds: Number.isFinite(b3.dec) ? formatAmerican(americanFromDecimal(b3.dec)) : "—",
           bestDec: b3.dec,
-          consensusP: mp3,
+          ...f3,
         });
         continue;
       }
-      const p1 = matchupWinProbLiveBlended(mu1, mu2, mk, row1, row2);
       const b1 = bestBookDecimalForSideWithFallback(oddsEv, "p1", devigPrefs);
       const b2 = bestBookDecimalForSideWithFallback(oddsEv, "p2", devigPrefs);
-      const modelEv1 = Number.isFinite(b1.dec) ? p1 * b1.dec - 1 : NaN;
-      const modelEv2 = Number.isFinite(b2.dec) ? (1 - p1) * b2.dec - 1 : NaN;
-      const marketP1 = matchupConsensusSide(oddsEv, "p1", devigPrefs);
-      const marketP2 = matchupConsensusSide(oddsEv, "p2", devigPrefs);
+      const f1 = oddsScreenMatchupFair(oddsEv, "p1", b1.book, devigPrefs, false);
+      const f2 = oddsScreenMatchupFair(oddsEv, "p2", b2.book, devigPrefs, false);
       rows.push({
         golfer: displayGolferName(String(m.p1_player_name || "")),
         market: marketLabel,
         bet: `vs ${displayGolferName(String(m.p2_player_name || ""))}`,
-        modelPct: p1,
-        modelEv: modelEv1,
         bestBook: b1.book,
         bestBookOdds: Number.isFinite(b1.dec) ? formatAmerican(americanFromDecimal(b1.dec)) : "—",
         bestDec: b1.dec,
-        consensusP: marketP1,
+        ...f1,
       });
       rows.push({
         golfer: displayGolferName(String(m.p2_player_name || "")),
         market: marketLabel,
         bet: `vs ${displayGolferName(String(m.p1_player_name || ""))}`,
-        modelPct: 1 - p1,
-        modelEv: modelEv2,
         bestBook: b2.book,
         bestBookOdds: Number.isFinite(b2.dec) ? formatAmerican(americanFromDecimal(b2.dec)) : "—",
         bestDec: b2.dec,
-        consensusP: marketP2,
+        ...f2,
       });
     }
   }
   const opack = DATA.outrights || {};
-  const rOut = getModelRoundForEv();
-  const evLbOpts = outrightEvLiveLeaderboardModelEnabled() ? { evLiveLeaderboard: true } : {};
-  if (evLbOpts.evLiveLeaderboard) ensureOutrightEvLiveLeaderboardProbCache();
   for (const mk of ["win", "top_5", "top_10", "top_20", "make_cut", "mc", "frl"]) {
     const pack = opack[mk];
     if (!pack || !Array.isArray(pack.rows)) continue;
     const books = Array.isArray(pack.bookKeys)
       ? pack.bookKeys.filter((k) => k && k !== "datagolf" && k !== "dg_model" && evSportsbookAllowed(k))
       : [];
+    const fairByBook = oddsScreenOutrightFairByBook(mk, pack, devigPrefs);
     for (const row of pack.rows) {
       const id = Math.round(num(row.dg_id, NaN));
       if (elim.size && elim.has(id) && mk !== "make_cut" && mk !== "mc") continue;
-      let modelP = modelProbOutrightFromRowOrProjections(row, mk, evLbOpts);
-      const modelOk = Number.isFinite(modelP) && modelP > 0;
-      const decItems = [];
-      for (const bk of books) {
-        const bkNorm = normalizeEvSportsbookKey(bk);
-        if (!evBookAllowedInConsensus(bkNorm, devigPrefs)) continue;
-        const pct = impliedPctFromOutrightBookField(row[bk] ?? row[bkNorm]);
-        if (!Number.isFinite(pct) || pct <= 0) continue;
-        const pp = pct / 100;
-        if (pp <= 0 || pp >= 1) continue;
-        decItems.push({ bk: bkNorm, dec: 1 / pp });
-      }
-      const marketP = outrightConsensusProbFromBooks(decItems, devigPrefs);
       const marketLabel =
         mk === "win"
           ? "Outright Win"
@@ -9527,28 +9653,26 @@ function collectUnifiedEvRows() {
       for (const bk of books) {
         const bkNorm = normalizeEvSportsbookKey(bk);
         const pct = impliedPctFromOutrightBookField(row[bk] ?? row[bkNorm]);
-        if (!Number.isFinite(pct) || pct <= 0 || !modelOk) continue;
-        const pBook = pct / 100;
+        if (!Number.isFinite(pct) || pct <= 0) continue;
+        const rawP = pct / 100;
+        const pBook = outrightFeedPlaceholderProbNaN(rawP, mk, bkNorm);
         if (!Number.isFinite(pBook) || pBook <= 0 || pBook >= 1) continue;
-        const modelEv = outrightEvFromModelAndBook(modelP, pBook, mk);
-        if (!Number.isFinite(modelEv)) continue;
         const am = Math.round(americanFromImpliedProb(pBook));
         const dec = 1 / pBook;
-        byBook.push({ bkNorm, dec, pBook, modelEv, am });
+        byBook.push({ bkNorm, dec, pBook, am });
       }
       if (!byBook.length) continue;
       byBook.sort((a, b) => b.dec - a.dec || String(a.bkNorm).localeCompare(String(b.bkNorm)));
       const best = byBook[0];
+      const fair = oddsScreenOutrightFairForPlayer(row, best.bkNorm, fairByBook, devigPrefs);
       rows.push({
         golfer: displayGolferName(String(row.player_name || "")),
         market: marketLabel,
         bet: betLabel,
-        modelPct: modelP,
-        modelEv: best.modelEv,
         bestBook: best.bkNorm,
         bestBookOdds: Number.isFinite(best.am) ? formatAmerican(best.am) : "—",
         bestDec: best.dec,
-        consensusP: marketP,
+        ...fair,
       });
     }
   }
@@ -9618,7 +9742,7 @@ function selectedEvFilterBookSet() {
   return new Set([k]);
 }
 
-let evSort = { key: "model_ev", dir: -1 };
+let evSort = { key: "ev", dir: -1 };
 let evSortInited = false;
 
 function updateEvSortIndicators() {
@@ -9638,14 +9762,15 @@ function initEvTableSortOnce() {
   const table = document.getElementById("table-ev");
   if (!table) return;
   const keyOrder = [
-    "model_ev",
+    "ev",
     "golfer",
     "kelly",
     "best_book",
-    "model",
-    "consensus",
-    "implied",
-    "delta",
+    "fair_odds",
+    "fair_pct",
+    "datagolf",
+    "other_books",
+    "sources",
     "market",
     "bet",
   ];
@@ -9679,17 +9804,18 @@ function initEvTableSortOnce() {
 }
 
 function evSortValue(row, key) {
-  if (key === "model_ev") return row._modelEv;
+  if (key === "ev") return row._ev;
   if (key === "kelly") return row._kelly;
   if (key === "best_book") return String(row.bestBook || "");
   if (key === "golfer") return String(row.golfer || "");
-  if (key === "model") return row.modelPct;
-  if (key === "consensus") return row.consensusP;
-  if (key === "implied") return row._bookImp;
-  if (key === "delta") return row._deltaPct;
+  if (key === "fair_odds") return Number.isFinite(row.fairP) ? 1 / row.fairP : NaN;
+  if (key === "fair_pct") return row.fairP;
+  if (key === "datagolf") return row.dataGolfP;
+  if (key === "other_books") return row.otherBooksP;
+  if (key === "sources") return row.sourceCount;
   if (key === "market") return String(row.market || "");
   if (key === "bet") return String(row.bet || "");
-  return row._modelEv;
+  return row._ev;
 }
 
 function compareEvRows(a, b, key, dir) {
@@ -9722,17 +9848,10 @@ function buildEvTable() {
   const bookFilter = selectedEvFilterBookSet();
   const bankroll = num(document.getElementById("ev-bankroll")?.value, 1000);
   const boostPct = evProfitBoostPctFromUi();
-  const devigPrefs = loadEvDevigPrefs();
-  const useDevigProbForEv = evDevigAffectsEvAndKelly(devigPrefs);
-  const evProbForRow = (r) => {
-    const pDevig = num(r.consensusP, NaN);
-    if (useDevigProbForEv && Number.isFinite(pDevig) && pDevig > 0 && pDevig < 1) return pDevig;
-    return r.modelPct;
-  };
-  const modelEvWithBoost = (r) => {
+  const evWithBoost = (r) => {
     const d0 = num(r.bestDec, NaN);
     const d = decimalWithProfitBoost(d0, boostPct);
-    const p = evProbForRow(r);
+    const p = num(r.fairP, NaN);
     return Number.isFinite(d) && d > 1 && Number.isFinite(p) ? p * d - 1 : NaN;
   };
   const gLow = g.toLowerCase();
@@ -9750,11 +9869,10 @@ function buildEvTable() {
       const dec = decimalWithProfitBoost(dec0, boostPct);
       const bookImp = Number.isFinite(dec) && dec > 1 ? 1 / dec : NaN;
       const am = Number.isFinite(dec) && dec > 1 ? americanFromDecimal(dec) : NaN;
-      const evProb = evProbForRow(r);
-      const mEv = modelEvWithBoost(r);
-      const kelly = evKellyDollarsFromDecimal(evProb, dec, bankroll);
-      const deltaPct = Number.isFinite(evProb) && Number.isFinite(bookImp) ? (evProb - bookImp) * 100 : NaN;
-      return { ...r, _dec: dec, _am: am, _bookImp: bookImp, _evProb: evProb, _modelEv: mEv, _kelly: kelly, _deltaPct: deltaPct };
+      const fairP = num(r.fairP, NaN);
+      const ev = evWithBoost(r);
+      const kelly = evKellyDollarsFromDecimal(fairP, dec, bankroll);
+      return { ...r, _dec: dec, _am: am, _bookImp: bookImp, _ev: ev, _kelly: kelly };
     })
     .filter((r) => {
       const hasSportsbookOdds =
@@ -9763,21 +9881,15 @@ function buildEvTable() {
       if (Number.isFinite(maxAmericanOdds) && Number.isFinite(r._am) && r._am >= maxAmericanOdds) return false;
       return true;
     });
-  /** Drop pathological model-EV rows, then cap count: pool = top 500 by model EV (desc), then apply table sort. */
-  const EV_TABLE_MODEL_EV_ABS_MAX = 0.5;
+  /** Odds screen: keep the broad market, rank fair-price EV first, then apply the selected table sort. */
   const EV_TABLE_MAX_ROWS = 500;
-  out = out.filter((r) => {
-    const me = num(r._modelEv, NaN);
-    if (!Number.isFinite(me)) return true;
-    return me <= EV_TABLE_MODEL_EV_ABS_MAX && me >= -EV_TABLE_MODEL_EV_ABS_MAX;
-  });
   out.sort((a, b) => {
-    const ma = num(a._modelEv, NaN);
-    const mb = num(b._modelEv, NaN);
-    if (!Number.isFinite(ma) && !Number.isFinite(mb)) return 0;
-    if (!Number.isFinite(ma)) return 1;
-    if (!Number.isFinite(mb)) return -1;
-    return mb - ma;
+    const ea = num(a._ev, NaN);
+    const eb = num(b._ev, NaN);
+    if (!Number.isFinite(ea) && !Number.isFinite(eb)) return 0;
+    if (!Number.isFinite(ea)) return 1;
+    if (!Number.isFinite(eb)) return -1;
+    return eb - ea;
   });
   if (out.length > EV_TABLE_MAX_ROWS) out = out.slice(0, EV_TABLE_MAX_ROWS);
   out = out.slice().sort((a, c) => compareEvRows(a, c, evSort.key, evSort.dir));
@@ -9786,7 +9898,7 @@ function buildEvTable() {
   if (!out.length) {
     const tr = document.createElement("tr");
     const td = document.createElement("td");
-    td.colSpan = 10;
+    td.colSpan = 11;
     td.className = "text-muted";
     td.textContent = "No bets for current filters.";
     tr.appendChild(td);
@@ -9813,20 +9925,13 @@ function buildEvTable() {
       return td;
     };
     const dec = r._dec;
-    const bookImp = r._bookImp;
-    const impliedStr = Number.isFinite(bookImp) ? `${(bookImp * 100).toFixed(1)}%` : "";
-    let deltaStr = "";
-    if (Number.isFinite(r._deltaPct)) {
-      const dPct = r._deltaPct;
-      deltaStr = `${dPct >= 0 ? "+" : ""}${dPct.toFixed(1)}%`;
-    }
     const kelly$ = r._kelly;
     const kellyStr = Number.isFinite(kelly$) ? `$${kelly$.toFixed(2)}` : "";
 
-    const mEv = r._modelEv;
-    const modelEvTd = mkTd(Number.isFinite(mEv) ? `${(mEv * 100).toFixed(1)}%` : "", "num");
-    if (Number.isFinite(mEv)) modelEvTd.classList.add(mEv >= 0 ? "ev-pos" : "ev-neg");
-    tr.appendChild(modelEvTd);
+    const ev = r._ev;
+    const evTd = mkTd(Number.isFinite(ev) ? `${(ev * 100).toFixed(1)}%` : "", "num");
+    if (Number.isFinite(ev)) evTd.classList.add(ev >= 0 ? "ev-pos" : "ev-neg");
+    tr.appendChild(evTd);
     tr.appendChild(mkTd(evCell(r.golfer), "ev-col-golfer"));
     tr.appendChild(mkTd(evCell(kellyStr), "num"));
     const bb = document.createElement("td");
@@ -9839,13 +9944,13 @@ function buildEvTable() {
       bb.innerHTML = `${bookBadgeHtml(r.bestBook)} <span class="best-book-odds">${evDash(oddsDisp)}</span>`;
     }
     tr.appendChild(bb);
-    const modelTd = document.createElement("td");
-    modelTd.className = "num";
-    modelTd.textContent = evCell(modelAmericanFromProb(r.modelPct));
-    tr.appendChild(modelTd);
-    tr.appendChild(mkTd(evCell(modelAmericanFromProb(r.consensusP)), "num"));
-    tr.appendChild(mkTd(evCell(impliedStr), "num"));
-    tr.appendChild(mkTd(evCell(deltaStr), "num"));
+    tr.appendChild(mkTd(evCell(modelAmericanFromProb(r.fairP)), "num"));
+    tr.appendChild(
+      mkTd(Number.isFinite(r.fairP) ? `${(r.fairP * 100).toFixed(1)}%` : "", "num"),
+    );
+    tr.appendChild(mkTd(evCell(modelAmericanFromProb(r.dataGolfP)), "num"));
+    tr.appendChild(mkTd(evCell(modelAmericanFromProb(r.otherBooksP)), "num"));
+    tr.appendChild(mkTd(Number.isFinite(r.sourceCount) ? String(r.sourceCount) : "", "num"));
     tr.appendChild(mkTd(evCell(r.market), ""));
     tr.appendChild(mkTd(evCell(r.bet), ""));
     evFrag.appendChild(tr);
@@ -24612,7 +24717,7 @@ function ensurePlayerHistoryLoadedForTab(tab) {
   });
 }
 
-/** Rebuild +EV table from already-loaded DATA (book odds come from projections.json; optional background poll updates DATA). */
+/** Rebuild the Odds Screen from already-loaded sportsbook and DataGolf prices. */
 function syncEvTabOddsAfterShow() {
   buildEvTable();
 }

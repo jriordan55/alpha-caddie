@@ -47,7 +47,7 @@
       <button type="button" class="tab" data-tab="course-fit" role="tab">Course fit</button>
       <button type="button" class="tab" data-tab="course-breakdown" role="tab">Course breakdown</button>
       <button type="button" class="tab" data-tab="matchup-analysis" role="tab">Matchup Analysis Tool</button>
-      <button type="button" class="tab" data-tab="ev" role="tab">+EV Bets</button>
+      <button type="button" class="tab" data-tab="ev" role="tab">Odds Screen</button>
     </nav>
 
     <p id="data-status-primary" class="data-status-primary note tools-only" aria-live="polite" hidden></p>
@@ -62,7 +62,7 @@
       <div class="home-hero">
         <p class="home-eyebrow">This week</p>
         <h1 class="home-title" id="home-event-line">Loading tournament…</h1>
-        <p class="home-lede" id="home-event-meta">Round projections, historical trends, course fit, and +EV tools for the current field.</p>
+        <p class="home-lede" id="home-event-meta">Round projections, historical trends, course fit, and market odds for the current field.</p>
       </div>
       <div class="home-grid" role="list">
         <button type="button" class="home-card" data-go-tab="ou" role="listitem">
@@ -92,8 +92,8 @@
         </button>
         <button type="button" class="home-card" data-go-tab="ev" role="listitem">
           <span class="home-card-icon" aria-hidden="true">EV</span>
-          <span class="home-card-title">+EV Bets</span>
-          <span class="home-card-desc">Positive expected value outrights and props across books.</span>
+          <span class="home-card-title">Odds Screen</span>
+          <span class="home-card-desc">Best prices vs devigged market average and DataGolf fair odds.</span>
         </button>
       </div>
     </section>
@@ -768,16 +768,16 @@
       </div>
     </section>
 
-    <!-- +EV -->
+    <!-- Odds screen -->
     <section id="panel-ev" class="panel" role="tabpanel" hidden>
       <div class="ev-panel-head">
-        <h2 class="ev-devig-sr-only">+EV Bets</h2>
+        <h2 class="ev-devig-sr-only">Odds Screen</h2>
         <button
           type="button"
           class="ev-help-btn"
           id="btn-ev-help"
-          title="Help: full +EV tab (table, weather, pricing, devig)"
-          aria-label="Help: +EV Bets tab"
+          title="Help: odds screen and fair-price calculation"
+          aria-label="Help: Odds Screen tab"
         >
           ?
         </button>
@@ -831,24 +831,21 @@
         <label class="toolbar-label">Boost %
           <input id="ev-boost-pct" type="number" min="0" max="500" step="1" value="25" disabled title="Used when Boost is Custom" />
         </label>
-        <button type="button" class="ev-devig-btn-toolbar" id="btn-ev-devig" title="Consensus and devig settings for EV, Kelly, and CS">Devig</button>
-      </div>
-      <div class="toolbar weather-toolbar" aria-label="Weather">
-        <span class="weather-toolbar-title">Weather</span>
-        <div id="ev-weather-wave-summary" class="weather-auto-note text-muted" role="status" aria-live="polite"></div>
+        <button type="button" class="ev-devig-btn-toolbar" id="btn-ev-devig" title="Fair-price source weights and devig method">Fair price</button>
       </div>
       <div class="table-wrap leaderboard-card">
         <table class="data-table data-table-outrights" id="table-ev">
           <thead>
             <tr>
-              <th class="num">Model EV</th>
+              <th class="num" title="Best-price EV using the leave-one-out fair probability">EV</th>
               <th class="ev-col-golfer">Golfer</th>
               <th class="num">Kelly</th>
-              <th>Best book</th>
-              <th class="num" title="Model-implied US odds (no sportsbook margin)">Model</th>
-              <th class="num" title="CS: market consensus — average of posted decimal odds (all books), fair US odds from that">CS</th>
-              <th class="num">Implied</th>
-              <th class="num" title="Model win % minus book implied %">Δ</th>
+              <th>Best price</th>
+              <th class="num" title="Fair American odds from other books after devig plus DataGolf">Fair odds</th>
+              <th class="num" title="Combined fair win probability">Fair %</th>
+              <th class="num" title="DataGolf fair American odds">DataGolf</th>
+              <th class="num" title="Average devigged fair odds from sportsbooks other than the best-price book">Market avg</th>
+              <th class="num" title="Number of independent sources used in fair price">Sources</th>
               <th>Market</th>
               <th>Bet</th>
             </tr>
@@ -925,11 +922,11 @@
   <dialog id="ev-devig-dialog" class="ev-devig-dialog" aria-labelledby="ev-devig-title">
     <div class="ev-devig-dialog-inner">
       <header class="ev-devig-head">
-        <h3 class="ev-devig-title" id="ev-devig-title">Select Devig Books</h3>
+        <h3 class="ev-devig-title" id="ev-devig-title">Fair Price Settings</h3>
         <button type="button" class="ev-devig-close-x" id="ev-devig-close-x" aria-label="Close">×</button>
       </header>
       <p class="ev-devig-lede text-muted">
-        Choose which sportsbooks set the fair probability for <strong>EV</strong>, <strong>Kelly</strong>, and <strong>CS</strong>. For head-to-head markets you can also pick a <strong>method</strong> that changes how tight the fair price sits versus the posted lines. <strong>Apply &amp; rescan</strong> updates the +EV table.
+        Choose which sportsbooks contribute to the market-average fair price. The sportsbook offering the best actionable price is always excluded from that row's fair estimate; DataGolf remains an independent source. <strong>Apply &amp; rescan</strong> updates the odds screen.
       </p>
       <div class="ev-devig-toolbar-row">
         <input
@@ -942,7 +939,7 @@
         <label class="ev-devig-method-field">
           <span class="ev-devig-method-label">Method</span>
           <select id="ev-devig-method" class="ev-devig-select">
-            <option value="none">None (avg. decimals)</option>
+            <option value="none">Standard (multiplicative)</option>
             <option value="multiplicative">Multiplicative</option>
             <option value="additive">Additive</option>
             <option value="power">Power</option>
@@ -956,8 +953,8 @@
       <details class="ev-devig-method-help">
         <summary>Picking a method</summary>
         <div class="ev-devig-method-help-body text-muted">
-          <p>Methods only affect <strong>two-way</strong> matchups (not win/top-N outrights). They change how the app turns posted odds into a single fair price for <strong>EV</strong>, <strong>Kelly</strong>, and <strong>CS</strong>.</p>
-          <p><strong>Tip:</strong> Start with <strong>Multiplicative</strong> or <strong>Average</strong>. Use <strong>Worst case</strong> when you want the stingiest fair price for your side. If unsure, compare a couple of methods and see which <strong>CS</strong> lines up with how you read the market.</p>
+          <p>Methods affect two-way matchup and make/miss-cut vig removal. Three-balls and full-field placement markets use multiplicative normalization.</p>
+          <p><strong>Tip:</strong> Standard multiplicative devig is the default. Use <strong>Worst case</strong> for the most conservative fair probability.</p>
         </div>
       </details>
 
@@ -992,7 +989,7 @@
         <div id="ev-devig-split-list" class="ev-devig-split-list"></div>
       </section>
 
-      <p class="ev-devig-footnote text-muted">Apply saves preferences and rescans the +EV table.</p>
+      <p class="ev-devig-footnote text-muted">Apply saves preferences and rebuilds the Odds Screen.</p>
       <footer class="ev-devig-actions">
         <button type="button" class="ev-devig-btn-secondary" id="ev-devig-clear">Clear weights</button>
         <button type="button" class="ev-devig-btn-apply" id="ev-devig-apply">Apply &amp; rescan</button>
@@ -1004,26 +1001,12 @@
   <dialog id="ev-help-dialog" class="ev-devig-dialog ev-help-dialog" aria-labelledby="ev-help-title">
     <div class="ev-devig-dialog-inner ev-help-dialog-inner">
       <header class="ev-devig-head">
-        <h3 class="ev-devig-title" id="ev-help-title">+EV Bets</h3>
+        <h3 class="ev-devig-title" id="ev-help-title">Odds Screen</h3>
         <button type="button" class="ev-devig-close-x" id="ev-help-close-x" aria-label="Close help">×</button>
       </header>
       <p class="ev-help-intro text-muted">
-        Scan matchup and outright bets in one place, sorted by <strong>Model EV</strong> so the biggest model edges float to the top. Narrow the list with the filters, then compare model prices to book prices column by column.
+        Compare the best available sportsbook price with a leave-one-out fair price built from the other books after vig removal and DataGolf. Alpha Caddie's model is not used for EV on this screen.
       </p>
-
-      <section class="ev-help-section" aria-labelledby="ev-help-weather-h">
-        <h4 class="ev-devig-section-title" id="ev-help-weather-h">Weather</h4>
-        <p class="text-muted ev-help-devig-lede">
-          Use the same weather controls as Round projections. Set temp, wind, humidity, and <strong>Condition</strong> to match the expected day; that updates fair win chances on every row here. Choosing <strong>Default</strong> for condition resets the numbers to the baseline weather snapshot (then adjust sliders again if needed).
-        </p>
-      </section>
-
-      <section class="ev-help-section" aria-labelledby="ev-help-pricing-h">
-        <h4 class="ev-devig-section-title" id="ev-help-pricing-h">Pricing</h4>
-        <p class="text-muted ev-help-devig-lede">
-          <strong>Mode</strong> and <strong>Skill</strong> match the rest of the app: switch them when the goal is to weight recent form, this course, or a specific part of the game. Model % and Model EV update to reflect that choice.
-        </p>
-      </section>
 
       <section class="ev-help-section" aria-labelledby="ev-help-toolbar-h">
         <h4 class="ev-devig-section-title" id="ev-help-toolbar-h">Toolbar</h4>
@@ -1039,31 +1022,31 @@
           <dt>Bankroll ($)</dt>
           <dd>Your bankroll for the <strong>quarter Kelly</strong> dollar suggestion (subject to the app’s stake caps).</dd>
           <dt>Boost / Boost %</dt>
-          <dd>Turn on when a promo boosts profit on winning bets; Model EV and displayed odds follow the boost.</dd>
-          <dt>Devig</dt>
-          <dd>Opens book selection, weights, and devig method for <strong>EV</strong>, <strong>Kelly</strong>, and the <strong>CS</strong> column. Tap <strong>Apply &amp; rescan</strong> after changes.</dd>
+          <dd>Turn on when a promo boosts profit on winning bets; EV and displayed best odds follow the boost.</dd>
+          <dt>Fair price</dt>
+          <dd>Opens source weights and the devig method used to remove sportsbook margin.</dd>
         </dl>
       </section>
 
       <section class="ev-help-section" aria-labelledby="ev-help-cols-h">
         <h4 class="ev-devig-section-title" id="ev-help-cols-h">Table columns</h4>
         <dl class="ev-help-dl">
-          <dt>Model EV</dt>
-          <dd>Edge vs the best available price at a glance: green for positive, red for negative.</dd>
+          <dt>EV</dt>
+          <dd>Expected value of the best available price using the combined market/DataGolf fair probability.</dd>
           <dt>Kelly</dt>
           <dd>Suggested quarter Kelly stake in dollars from the bankroll above, using the boosted best price.</dd>
           <dt>Best book</dt>
           <dd>Where that best price lives; American odds (boosted when a boost is on).</dd>
           <dt>Golfer</dt>
           <dd>Who the bet is on.</dd>
-          <dt>Model</dt>
-          <dd>Fair American odds from Alpha Caddie round projections (Monte Carlo on projected scores), not DataGolf placement.</dd>
-          <dt>CS</dt>
-          <dd>Consensus “market fair” odds built from the books and weights in <strong>Devig</strong>. Use it to see how the model compares to the books you care about.</dd>
-          <dt>Implied</dt>
-          <dd>Win probability implied by the actual best price (after boost).</dd>
-          <dt>Δ (delta)</dt>
-          <dd>How far the model win % sits above or below that implied win %.</dd>
+          <dt>Fair odds / Fair %</dt>
+          <dd>Combined fair price from devigged prices at books other than the best-price book, plus DataGolf.</dd>
+          <dt>DataGolf</dt>
+          <dd>DataGolf's fair price, shown separately and included as one independent fair source.</dd>
+          <dt>Market avg</dt>
+          <dd>Average fair price after each eligible competing sportsbook is devigged.</dd>
+          <dt>Sources</dt>
+          <dd>Number of independent prices used for the combined fair estimate.</dd>
           <dt>Market</dt>
           <dd>Whether the row is a matchup type or an outright market.</dd>
           <dt>Bet</dt>
@@ -1072,9 +1055,9 @@
       </section>
 
       <section class="ev-help-section" aria-labelledby="ev-help-devig-h">
-        <h4 class="ev-devig-section-title" id="ev-help-devig-h">Devig settings</h4>
+        <h4 class="ev-devig-section-title" id="ev-help-devig-h">Fair-price settings</h4>
         <p class="text-muted ev-help-devig-lede">
-          Open <strong>Devig</strong> to choose which books feed <strong>EV</strong>, <strong>Kelly</strong>, and <strong>CS</strong>, split weights between them, and (for head-to-heads) pick a <strong>method</strong> that nudges consensus tighter or looser versus the board. Selected devig books are hidden from the bet offers so you do not bet into the same book used as the fair source.
+          Open <strong>Fair price</strong> to choose which competing books feed EV and Kelly. For every row, the best-price sportsbook is automatically left out of the fair estimate to prevent circular EV.
         </p>
         <p class="text-muted ev-help-devig-lede">
           <strong>Tip:</strong> Try <strong>Average</strong> or <strong>Multiplicative</strong> first. Use <strong>Worst case</strong> when you want a cautious read on an edge.
@@ -1178,7 +1161,7 @@
           <dt>Market</dt><dd class="text-muted">Implied win probability from the posted prices.</dd>
           <dt>Edge</dt><dd class="text-muted">Expected value vs fair at the price shown (positive is favorable).</dd>
           <dt>Odds</dt><dd class="text-muted">American odds for that golfer at the listed book.</dd>
-          <dt>Best Book</dt><dd class="text-muted">Best decimal price among the same sportsbooks used on the +EV tab (respects your Devig book toggles).</dd>
+          <dt>Best Book</dt><dd class="text-muted">Best actionable decimal price among supported sportsbooks on the Odds Screen.</dd>
         </dl>
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-ma-sg-cols-h">
@@ -1244,7 +1227,7 @@
       </p>
       <section class="ev-help-section" aria-labelledby="tab-help-outrights-global-h">
         <h4 class="ev-devig-section-title" id="tab-help-outrights-global-h">Weather and pricing</h4>
-        <p class="text-muted ev-help-devig-lede">Weather lives on Round projections and +EV but still moves fair chances here. Use the <strong>Pricing</strong> row to align with form, course, or skill the same way as on other tabs.</p>
+        <p class="text-muted ev-help-devig-lede">Weather and projection controls affect this model-driven matchup analysis. The Odds Screen is market-priced separately from this tool.</p>
       </section>
       <footer class="ev-help-actions">
         <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
@@ -1320,6 +1303,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=342"></script>
+  <script src="app.js?v=343"></script>
 </body>
 </html>
