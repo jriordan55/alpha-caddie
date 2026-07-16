@@ -11767,13 +11767,14 @@ function setCourseFitSubtab(id) {
 
 /* ---------------- Course breakdown tab ---------------- */
 
-const COURSE_BREAKDOWN_GREENS = Object.freeze([
-  "#0f6b41",
-  "#188a54",
-  "#22a866",
-  "#43c489",
-  "#7fd9ae",
-  "#b3e8cf",
+/** Distinct hues (not a green ramp) so adjacent donut slices and legend swatches are tellable apart. */
+const COURSE_BREAKDOWN_CHART_COLORS = Object.freeze([
+  "#22c55e",
+  "#3b82f6",
+  "#f59e0b",
+  "#a855f7",
+  "#ec4899",
+  "#14b8a6",
 ]);
 
 /** PGA Tour season baselines shown as "Tour Avg" comparisons in the course-info strip. */
@@ -11829,13 +11830,11 @@ function drawCourseDonut(canvas, segments) {
 
   const cx = cssW / 2;
   const cy = cssH / 2;
-  const outer = Math.max(20, Math.min(cx, cy) * 0.62);
-  const inner = outer * 0.56;
+  const outer = Math.max(20, Math.min(cx, cy) * 0.82);
+  const inner = outer * 0.58;
   const total = segments.reduce((s, x) => s + (x.value > 0 ? x.value : 0), 0);
   if (!(total > 0)) return;
 
-  const mutedColor =
-    getComputedStyle(document.documentElement).getPropertyValue("--golf-text-muted").trim() || "#94a3b8";
   const bgColor =
     getComputedStyle(document.documentElement).getPropertyValue("--golf-elevated").trim() || "#10141c";
 
@@ -11854,17 +11853,26 @@ function drawCourseDonut(canvas, segments) {
     ctx.strokeStyle = bgColor;
     ctx.stroke();
 
-    const mid = (a0 + a1) / 2;
-    const lr = outer + 20;
-    const ly = cy + Math.sin(mid) * lr;
-    ctx.fillStyle = mutedColor;
-    ctx.font = "600 11px system-ui, -apple-system, sans-serif";
-    ctx.textBaseline = "middle";
-    ctx.textAlign = "center";
-    const halfW = ctx.measureText(seg.label).width / 2;
-    const pad = halfW + 4;
-    const lx = Math.max(pad, Math.min(cssW - pad, cx + Math.cos(mid) * lr));
-    ctx.fillText(seg.label, lx, ly);
+    /*
+     * Percentage inside the slice; slice names live in the legend below. The old outer
+     * text labels collided whenever two small slices were adjacent (e.g. at 12 o'clock).
+     */
+    const share = (val / total) * 100;
+    if (share >= 5) {
+      const mid = (a0 + a1) / 2;
+      const lr = (outer + inner) / 2;
+      const lx = cx + Math.cos(mid) * lr;
+      const ly = cy + Math.sin(mid) * lr;
+      ctx.font = "700 12px system-ui, -apple-system, sans-serif";
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "center";
+      const txt = `${share >= 10 ? share.toFixed(0) : share.toFixed(1)}%`;
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = "rgba(8, 12, 16, 0.55)";
+      ctx.strokeText(txt, lx, ly);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText(txt, lx, ly);
+    }
     a0 = a1;
   }
 }
@@ -11937,7 +11945,7 @@ function renderCourseBreakdownSg(rows) {
 
   const segments = defs.map((d, i) => {
     const share = total > 0 && Number.isFinite(spreads[i]) ? (spreads[i] / total) * 100 : 0;
-    return { label: d.label, value: share, pct: share, color: COURSE_BREAKDOWN_GREENS[i], desc: d.desc };
+    return { label: d.label, value: share, pct: share, color: COURSE_BREAKDOWN_CHART_COLORS[i], desc: d.desc };
   });
 
   drawCourseDonut(donut, segments);
@@ -11997,7 +12005,7 @@ async function renderCourseBreakdownApproach(rows) {
 
   const segments = bins.map((b, i) => {
     const pct = (totals[i] / grand) * 100;
-    return { label: b.label, value: pct, pct, color: COURSE_BREAKDOWN_GREENS[i], desc: b.desc };
+    return { label: b.label, value: pct, pct, color: COURSE_BREAKDOWN_CHART_COLORS[i], desc: b.desc };
   });
 
   const sorted = [...segments].sort((a, b) => b.pct - a.pct);
@@ -13279,77 +13287,65 @@ function courseBreakdownMetricTourRankPhrase(benchKey, courseRaw, distRaw) {
   return `middle of the pack${suffix}`;
 }
 
+/** Skill takeaway per venue metric — only metrics that meaningfully skew get a line. */
+const COURSE_BREAKDOWN_METRIC_SKILL_NOTES = Object.freeze({
+  "Fairways hit": {
+    harder: "tight corridors make driving accuracy a genuine separator; wild drivers give back their length",
+    easier: "landing zones are generous, muting the driving-accuracy edge",
+  },
+  GIR: {
+    harder: "greens are hard to hold — elite approach play and a reliable short game carry rounds",
+    easier: "greens are receptive; good iron proximity converts straight into birdie looks",
+  },
+  Scrambling: {
+    harder: "up-and-downs are scarce, so a missed green usually costs a full shot",
+    easier: "misses are savable; short-game specialists claw back strokes",
+  },
+  Birdies: {
+    harder: "birdies are scarce — bogey avoidance and par grinding beat raw firepower",
+    easier: "birdies flow freely, rewarding aggressive iron play and hot putters",
+  },
+  Bogeys: {
+    harder: "bogeys cluster here — ball-striking consistency and avoiding the big miss rank above upside",
+    easier: "clean cards are common; damage control matters less than usual",
+  },
+  "Scoring vs Par": {
+    harder: "the venue plays over its card — total-score overs get a structural tailwind",
+    easier: "the venue yields low scores — total-score unders get a structural tailwind",
+  },
+});
+
 function courseBreakdownMetricGranularLine(m) {
+  if (!Number.isFinite(m.courseDisplay)) return "";
+  const note = COURSE_BREAKDOWN_METRIC_SKILL_NOTES[m.benchKey]?.[m.difficulty];
+  if (!note) return "";
   const title = m.title.replace(/ per Round|\s\(%\)/g, "");
   const courseFmt = courseBreakdownFormatDisplay(m.fmt, m.courseDisplay);
   const tourFmt = courseBreakdownFormatDisplay(m.fmt, m.tourDisplay);
-  const gap = Number.isFinite(m.courseDisplay) && Number.isFinite(m.tourDisplay) ? m.courseDisplay - m.tourDisplay : NaN;
-  const higherBetter = m.benchKey !== "Bogeys" && m.benchKey !== "Scoring vs Par";
-  const gapThresh = m.fmt === "pct" ? 0.4 : m.fmt === "stp" ? 0.04 : 0.06;
-  let gapPhrase = "";
-  if (Number.isFinite(gap) && Math.abs(gap) >= gapThresh) {
-    const mag = m.fmt === "pct" ? Math.abs(gap).toFixed(1) : Math.abs(gap).toFixed(2);
-    const unit = m.fmt === "pct" ? " pts" : "";
-    if (higherBetter) {
-      gapPhrase = gap > 0 ? `${mag}${unit} above tour mean` : `${mag}${unit} below tour mean`;
-    } else {
-      gapPhrase = gap > 0 ? `${mag}${unit} above tour mean (tougher)` : `${mag}${unit} below tour mean (easier)`;
-    }
-  }
-  const rank = courseBreakdownMetricTourRankPhrase(m.benchKey, m.courseRaw, m.distRaw);
-  const diffWord =
-    m.difficulty === "harder" ? "Harder than typical" : m.difficulty === "easier" ? "Easier than typical" : "Near tour average";
-  let line = `${title}: ${courseFmt} here vs ${tourFmt} tour average`;
-  if (gapPhrase) line += ` (${gapPhrase})`;
-  if (rank) line += `. Ranks in the ${rank}`;
-  line += `. ${diffWord} for this stat.`;
-  return line;
+  return `${title} ${courseFmt} vs ${tourFmt} tour: ${note}.`;
 }
 
 function courseBreakdownBasisInsightBullets(basis, metrics) {
   const bullets = [];
-  const nRounds = Math.round(num(basis.venue_historical_rounds, 0));
-  if (nRounds > 0) {
-    bullets.push(`Venue sample: ${nRounds.toLocaleString()} archived PGA rounds in the model.`);
-  }
-  const byRnd = basis.historical_venue_avg_score_by_round;
-  if (byRnd && typeof byRnd === "object") {
-    const pairs = Object.entries(byRnd)
-      .map(([r, v]) => ({ r: Math.round(num(r, NaN)), v: num(v, NaN) }))
-      .filter((x) => Number.isFinite(x.r) && Number.isFinite(x.v))
-      .sort((a, b) => a.r - b.r);
-    if (pairs.length >= 2) {
-      const vals = pairs.map((p) => p.v);
-      const spread = Math.max(...vals) - Math.min(...vals);
-      const trend =
-        spread >= 0.35
-          ? `Round scoring ranges from ${Math.min(...vals).toFixed(2)} to ${Math.max(...vals).toFixed(2)} across R${pairs.map((p) => p.r).join("/R")}.`
-          : `Scoring stays flat by round (${pairs.map((p) => `R${p.r} ${p.v.toFixed(2)}`).join(", ")}).`;
-      bullets.push(trend);
-    }
-  }
   const fieldBird = num(basis.field_counting_means_by_round?.birdies?.["1"], NaN);
   const venueBird = num(basis.venue_avg_birdies, NaN);
   if (Number.isFinite(fieldBird) && Number.isFinite(venueBird) && Math.abs(fieldBird - venueBird) >= 0.12) {
     bullets.push(
-      `This week's field projects ${fieldBird.toFixed(2)} birdies/round vs ${venueBird.toFixed(2)} historical at the venue (${fieldBird > venueBird ? "more aggressive scoring than course history" : "tighter birdie environment than course history"}).`,
+      fieldBird > venueBird
+        ? `This week's field projects ${fieldBird.toFixed(2)} birdies/round vs ${venueBird.toFixed(2)} venue history — expect more scoring than the course's past suggests.`
+        : `This week's field projects ${fieldBird.toFixed(2)} birdies/round vs ${venueBird.toFixed(2)} venue history — a tighter birdie environment; lean cautious on birdie overs.`,
     );
   }
-  const fwModeled = Math.round(num(basis.fairway_holes_modeled, 0));
-  const adjFw = num(basis.course_adj_fairway_rate, NaN);
-  if (fwModeled > 0 && Number.isFinite(adjFw)) {
-    bullets.push(`Fairway model uses ${fwModeled} driving holes with an adjusted hit rate of ${(adjFw * 100).toFixed(1)}%.`);
-  }
+  // The Scoring-vs-Par skill note already covers strong scoring skews; only add the bias
+  // line when the metric sits in the "average" band but still leans one way.
   const stpM = metrics.find((x) => x.venueKey === "stp");
-  if (stpM && Number.isFinite(stpM.courseDisplay)) {
+  if (stpM && Number.isFinite(stpM.courseDisplay) && stpM.difficulty === "average") {
     const v = stpM.courseDisplay;
-    bullets.push(
-      v > 0.2
-        ? `Historical scoring bias: +${v.toFixed(2)} vs par. Over props on totals and bogeys carry a venue tailwind.`
-        : v < -0.2
-          ? `Historical scoring bias: ${v.toFixed(2)} vs par. Under-friendly venue for total-score markets.`
-          : `Historical scoring bias: ${v >= 0 ? "+" : ""}${v.toFixed(2)} vs par. Neutral scoring baseline.`,
-    );
+    if (v > 0.2) {
+      bullets.push(`Venue historically plays +${v.toFixed(2)} vs par — a mild tailwind for total-score overs.`);
+    } else if (v < -0.2) {
+      bullets.push(`Venue historically plays ${v.toFixed(2)} vs par — a mild tailwind for total-score unders.`);
+    }
   }
   return bullets;
 }
@@ -13358,44 +13354,47 @@ function courseBreakdownModelCoeffBullets(courseRow, tourMeans) {
   if (!courseRow) return [];
   const bullets = [];
   const means = tourMeans || {};
-  const coeff = (label, key, posGood = true) => {
+  const amplified = [];
+  const discounted = [];
+  const coeff = (label, key) => {
     const v = num(courseRow[key], NaN);
     const m = num(means[key], NaN);
-    if (!Number.isFinite(v)) return;
-    const gap = Number.isFinite(m) ? v - m : NaN;
-    if (!Number.isFinite(gap) || Math.abs(gap) < 0.018) return;
-    const dir = posGood ? (gap > 0 ? "rewards" : "punishes") : gap > 0 ? "punishes" : "rewards";
-    bullets.push(`${label} coefficient ${v >= 0 ? "+" : ""}${v.toFixed(3)} (${dir} ${label.toLowerCase()} vs tour mean ${Number.isFinite(m) ? m.toFixed(3) : "n/a"}).`);
+    if (!Number.isFinite(v) || !Number.isFinite(m)) return;
+    const gap = v - m;
+    if (Math.abs(gap) < 0.018) return;
+    (gap > 0 ? amplified : discounted).push(label);
   };
-  coeff("Off-the-tee SG", "ott_sg");
-  coeff("Approach SG", "app_sg");
-  coeff("Around-the-green SG", "arg_sg");
-  coeff("Putting SG", "putt_sg");
+  coeff("off-the-tee", "ott_sg");
+  coeff("approach", "app_sg");
+  coeff("around-the-green", "arg_sg");
+  coeff("putting", "putt_sg");
+  if (amplified.length) {
+    bullets.push(
+      `The course model amplifies ${amplified.join(" and ")} skill — edges there convert into more strokes than at a typical tour stop.`,
+    );
+  }
+  if (discounted.length) {
+    bullets.push(
+      `Raw ${discounted.join(", ")} skill converts below tour norm here — course management and links adaptability close the gap on paper-superior ball-strikers.`,
+    );
+  }
   const fwW = num(courseRow.fw_width, NaN);
   const fwM = num(means.fw_width, NaN);
   if (Number.isFinite(fwW) && Number.isFinite(fwM) && Math.abs(fwW - fwM) >= 1.5) {
     bullets.push(
-      `Fairway width ${fwW.toFixed(1)} yds vs ${fwM.toFixed(1)} tour average (${fwW < fwM ? "narrower corridors" : "wider corridors"}).`,
+      fwW < fwM
+        ? `Fairways average ${fwW.toFixed(0)} yds wide (tour ${fwM.toFixed(0)}) — accuracy off the tee is a real separator, and many players will club down.`
+        : `Fairways average ${fwW.toFixed(0)} yds wide (tour ${fwM.toFixed(0)}) — bombers can swing freely without paying for misses.`,
     );
   }
   const rgh = num(courseRow.rgh_diff, NaN);
   const rghM = num(means.rgh_diff, NaN);
   if (Number.isFinite(rgh) && Number.isFinite(rghM) && Math.abs(rgh - rghM) >= 0.04) {
     bullets.push(
-      `Rough penalty index ${rgh.toFixed(2)} vs ${rghM.toFixed(2)} tour mean (${rgh > rghM ? "missed fairways cost more" : "rough is less punitive"}).`,
+      rgh > rghM
+        ? "Rough penalty runs above tour norm — missed fairways bleed strokes, favoring straight drivers over long ones."
+        : "Rough is lighter than tour norm — wayward drives are recoverable, so length keeps its value even without precision.",
     );
-  }
-  const gir = num(courseRow.adj_gir, NaN);
-  const girM = num(means.adj_gir, NaN);
-  if (Number.isFinite(gir) && Number.isFinite(girM) && Math.abs(gir - girM) >= 0.015) {
-    bullets.push(
-      `Adjusted GIR rate ${(gir * 100).toFixed(1)}% vs ${(girM * 100).toFixed(1)}% tour mean.`,
-    );
-  }
-  const yard = Math.round(num(courseRow.yardage, NaN));
-  const yardM = Math.round(num(means.yardage, NaN));
-  if (Number.isFinite(yard) && Number.isFinite(yardM) && Math.abs(yard - yardM) >= 120) {
-    bullets.push(`Card yardage ${yard.toLocaleString()} yds vs ${yardM.toLocaleString()} tour average.`);
   }
   return bullets;
 }
@@ -13672,53 +13671,50 @@ function courseBreakdownPriorEventSection(priorEvent, externalCtx, basis, curren
   if (!priorEvent) return null;
   const previousSetup = externalCtx?.previous_event || {};
   const bullets = [];
+
+  const setupBits = [];
   const previousPar = Math.round(num(previousSetup.par, NaN));
+  if (Number.isFinite(previousPar)) {
+    setupBits.push(previousPar === currentPar ? `par ${currentPar} unchanged` : `par ${previousPar} → ${currentPar}`);
+  }
   const currentYardage = Math.round(num(externalCtx?.yardage, NaN));
   const previousYardage = Math.round(num(previousSetup.yardage, NaN));
-  if (Number.isFinite(previousPar)) {
-    bullets.push(
-      previousPar === currentPar
-        ? `Par is unchanged at ${currentPar}.`
-        : `Par changed from ${previousPar} to ${currentPar} (${currentPar - previousPar > 0 ? "+" : ""}${currentPar - previousPar}).`,
-    );
-  }
   if (Number.isFinite(currentYardage) && Number.isFinite(previousYardage)) {
     const delta = currentYardage - previousYardage;
-    bullets.push(
-      `Championship yardage: ${currentYardage.toLocaleString()} yards vs ${previousYardage.toLocaleString()} in ${previousSetup.year || priorEvent.year} (${delta >= 0 ? "+" : ""}${delta.toLocaleString()} yards).`,
-    );
+    setupBits.push(`${currentYardage.toLocaleString()} yds (${delta >= 0 ? "+" : ""}${delta.toLocaleString()} vs ${previousSetup.year || priorEvent.year})`);
   }
+  if (setupBits.length) bullets.push(`Setup: ${setupBits.join("; ")}.`);
+
   for (const change of externalCtx?.changes_since_previous || []) {
     if (change) bullets.push(change);
   }
 
+  // One predictive takeaway instead of a stat-by-stat projected-vs-actual dump.
   const currentScore = num(basis?.event_week_field_avg_score, NaN);
   if (Number.isFinite(currentScore) && Number.isFinite(priorEvent.score.value)) {
     const delta = currentScore - priorEvent.score.value;
-    bullets.push(
-      `Scoring: this week's field projects ${currentScore.toFixed(2)} vs ${priorEvent.score.value.toFixed(2)} actual last time (${Math.abs(delta).toFixed(2)} strokes ${delta < 0 ? "lower/easier" : "higher/tougher"}).`,
-    );
+    if (Math.abs(delta) >= 0.75) {
+      const projBird = courseBreakdownProjectedCountingMean(basis, "birdies");
+      const projBog = courseBreakdownProjectedCountingMean(basis, "bogeys");
+      const shifts = [];
+      if (Number.isFinite(projBird) && Number.isFinite(priorEvent.birdies?.value)) {
+        shifts.push(projBird > priorEvent.birdies.value ? "more birdies" : "fewer birdies");
+      }
+      if (Number.isFinite(projBog) && Number.isFinite(priorEvent.bogeys?.value)) {
+        shifts.push(projBog > priorEvent.bogeys.value ? "more bogeys" : "fewer bogeys");
+      }
+      bullets.push(
+        `The model expects a ${delta < 0 ? "softer" : "tougher"} test than ${priorEvent.year} (${currentScore.toFixed(1)} projected field average vs ${priorEvent.score.value.toFixed(1)} then${shifts.length ? `; ${shifts.join(", ")}` : ""}) — weight current form and setup over raw ${priorEvent.year} results.`,
+      );
+    } else {
+      bullets.push(
+        `Projected scoring (${currentScore.toFixed(1)}) sits close to the ${priorEvent.year} field average (${priorEvent.score.value.toFixed(1)}) — history here should transfer well.`,
+      );
+    }
   }
-  for (const [statKey, label] of [
-    ["birdies", "Birdies"],
-    ["bogeys", "Bogeys"],
-    ["gir", "GIR"],
-    ["fairways", "Fairways hit"],
-  ]) {
-    const projected = courseBreakdownProjectedCountingMean(basis, statKey);
-    const historical = priorEvent[statKey];
-    if (!Number.isFinite(projected) || !Number.isFinite(historical?.value)) continue;
-    const delta = projected - historical.value;
-    bullets.push(
-      `${label}: ${projected.toFixed(2)} projected per round vs ${historical.value.toFixed(2)} last time (${delta >= 0 ? "+" : ""}${delta.toFixed(2)}).`,
-    );
-  }
-  const sample = `${priorEvent.rows.toLocaleString()} completed rounds${priorEvent.players ? ` from ${priorEvent.players} players` : ""}`;
   return {
     title: `What changed since ${priorEvent.year}`,
-    paragraphs: [
-      `The last event at this course was the ${priorEvent.year} ${priorEvent.eventName}. Comparisons use ${sample}; missing statistics are omitted rather than treated as zero.`,
-    ],
+    paragraphs: [`Last played: ${priorEvent.year} ${priorEvent.eventName}.`],
     bullets,
   };
 }
@@ -13765,11 +13761,10 @@ function courseBreakdownPropMarketIdeas(metrics, basis, courseRow, weatherCtx = 
   const pushCounting = (benchKey, market, easierSide, harderSide, easierWhy, harderWhy) => {
     const m = byKey[benchKey];
     if (!m) return;
-    const gap =
+    const gapNote =
       Number.isFinite(m.courseDisplay) && Number.isFinite(m.tourDisplay)
-        ? Math.abs(m.courseDisplay - m.tourDisplay).toFixed(m.fmt === "pct" ? 1 : 2)
+        ? ` (${courseBreakdownFormatDisplay(m.fmt, m.courseDisplay)} here vs ${courseBreakdownFormatDisplay(m.fmt, m.tourDisplay)} tour avg)`
         : "";
-    const gapNote = gap ? ` (${m.courseDisplay} here vs ${m.tourDisplay} tour avg)` : "";
     if (m.difficulty === "easier") {
       ideas.push({ market, angle: easierSide, reason: easierWhy + gapNote });
     } else if (m.difficulty === "harder") {
@@ -13787,10 +13782,10 @@ function courseBreakdownPropMarketIdeas(metrics, basis, courseRow, weatherCtx = 
   pushCounting(
     "Bogeys",
     "Bogeys",
-    "Over",
     "Under",
-    "Bogey rate runs high. Trouble off the tee and around the greens creates stress pars.",
+    "Over",
     "Bogeys are harder to come by; clean ball-striking keeps mistakes in check.",
+    "Bogey rate runs high. Trouble off the tee and around the greens creates stress pars.",
   );
   pushCounting(
     "GIR",
@@ -13812,8 +13807,8 @@ function courseBreakdownPropMarketIdeas(metrics, basis, courseRow, weatherCtx = 
   if (scram?.difficulty === "harder") {
     ideas.push({
       market: "Pars",
-      angle: "Over",
-      reason: "Scrambling is below tour average. Missed greens often turn into bogeys instead of saved pars.",
+      angle: "Under",
+      reason: "Scrambling is below tour average. Missed greens turn into bogeys instead of saved pars.",
     });
   }
   if (courseRow && num(courseRow.rgh_diff, 0) > 0.08) {
@@ -13830,19 +13825,27 @@ function courseBreakdownPropMarketIdeas(metrics, basis, courseRow, weatherCtx = 
       reason: "Putting profile is favorable. Lag putting and short putt conversion can unlock birdies without perfect ball-striking.",
     });
   }
-  const seen = new Set();
-  const base = ideas.filter((x) => {
-    const k = `${x.market}|${x.angle}`;
-    if (seen.has(k)) return false;
-    seen.add(k);
+  /*
+   * Keep the first supported direction for each market. Later conditional signals (rough,
+   * putting, weather) may reinforce it, but must never publish the opposite side beside it.
+   */
+  const seenExact = new Set();
+  const directionByMarket = new Map();
+  return [...ideas, ...courseBreakdownWeatherPropIdeas(weatherCtx)].filter((idea) => {
+    const market = String(idea.market || "").trim().toLowerCase();
+    const angle = String(idea.angle || "").trim();
+    const exactKey = `${market}|${angle.toLowerCase()}`;
+    if (seenExact.has(exactKey)) return false;
+
+    const sideMatch = angle.match(/^(over|under)\b/i);
+    const side = sideMatch ? sideMatch[1].toLowerCase() : "";
+    const existingSide = directionByMarket.get(market);
+    if (side && existingSide && existingSide !== side) return false;
+
+    seenExact.add(exactKey);
+    if (side && !existingSide) directionByMarket.set(market, side);
     return true;
   });
-  return [...base, ...courseBreakdownWeatherPropIdeas(weatherCtx).filter((x) => {
-    const k = `${x.market}|${x.angle}`;
-    if (seen.has(k)) return false;
-    seen.add(k);
-    return true;
-  })];
 }
 
 function courseBreakdownVenueHistoricalWeatherRows(courseName) {
@@ -14156,13 +14159,18 @@ function courseBreakdownGenerateInsightSections(ctx) {
   }
   if (eventName) profileIntro.push(`hosting the ${eventName}`);
 
+  const skewLines = metrics.map((m) => courseBreakdownMetricGranularLine(m)).filter(Boolean);
+  const nearAverage = metrics
+    .filter((m) => Number.isFinite(m.courseDisplay) && !COURSE_BREAKDOWN_METRIC_SKILL_NOTES[m.benchKey]?.[m.difficulty])
+    .map((m) => m.title.replace(/ per Round|\s\(%\)/g, ""));
+  const profileBullets = [...skewLines];
+  if (nearAverage.length) {
+    profileBullets.push(`${nearAverage.join(", ")}: near tour average — no venue skew worth pricing.`);
+  }
   const profile = {
     title: "What this course is like",
     paragraphs: [profileIntro.join("; ") + "."],
-    bullets: [
-      ...metrics.map((m) => courseBreakdownMetricGranularLine(m)),
-      ...courseBreakdownBasisInsightBullets(basis, metrics),
-    ],
+    bullets: [...profileBullets, ...courseBreakdownBasisInsightBullets(basis, metrics)],
   };
 
   const setupSection = courseBreakdownExternalContextSection(externalCtx, eventName, courseRow);
@@ -14170,46 +14178,34 @@ function courseBreakdownGenerateInsightSections(ctx) {
   const priorEventSection = courseBreakdownPriorEventSection(priorEvent, externalCtx, basis, par);
 
   const successBullets = [];
-  const sgLines = sgImpact
-    .filter((s) => s.pct >= 8)
-    .map((s) => `${s.label}: ${s.pct.toFixed(0)}% of field SG spread`);
-  if (sgLines.length) {
-    successBullets.push(`Strokes-gained separation this week: ${sgLines.join("; ")}.`);
-  }
   if (sgImpact[0]?.pct >= 15) {
+    const second = sgImpact[1]?.pct >= 15 ? sgImpact[1] : null;
     successBullets.push(
-      `Primary edge: ${sgImpact[0].label} (${sgImpact[0].pct.toFixed(0)}% of spread). Target players with top-tier ${sgImpact[0].label.toLowerCase()} in this field.`,
+      second
+        ? `${sgImpact[0].label} and ${second.label} separate this field most (${sgImpact[0].pct.toFixed(0)}% and ${second.pct.toFixed(0)}% of SG spread). Target players elite in both; putting alone won't carry a bad ball-striking week.`
+        : `${sgImpact[0].label} separates this field most (${sgImpact[0].pct.toFixed(0)}% of SG spread). Target players with a top-tier ${sgImpact[0].label.toLowerCase()} profile.`,
     );
+  } else if (sgImpact.length) {
+    successBullets.push("SG spread is balanced across categories — no single skill dominates; look for well-rounded profiles.");
   }
-  const approachLines = approachImpact
-    .filter((a) => a.pct >= 10)
-    .slice(0, 4)
-    .map((a) => `${a.label} (${a.pct.toFixed(0)}% of approach volume)`);
-  if (approachLines.length) {
-    successBullets.push(`Approach stress zones: ${approachLines.join(", ")}.`);
+  const topZones = approachImpact.filter((a) => a.pct >= 15).slice(0, 2);
+  if (topZones.length) {
+    successBullets.push(
+      `Most approaches come from ${topZones.map((a) => a.label.toLowerCase()).join(" and ")} (${topZones.map((a) => `${a.pct.toFixed(0)}%`).join(" / ")} of volume) — proximity from these windows is the iron-play skill that matters here.`,
+    );
   }
   if (driving) {
     if (driving.bomber >= 7) {
       successBullets.push(
-        `Length helps: bomber score ${driving.bomber}/10 with ${driving.driverHoles} driver holes, ${driving.bombOpp >= 0 ? "+" : ""}${driving.bombOpp.toFixed(2)} SG bomb opportunity, short-drive penalty ${driving.shortPen.toFixed(2)}.`,
+        `Length is an asset (bomber score ${driving.bomber}/10 across ${driving.driverHoles} driver holes) — long hitters can shorten the course faster than the rough punishes them.`,
       );
     } else if (driving.shortPen < -0.35) {
       successBullets.push(
-        `Position off the tee is rewarded. Shorter-than-average drives cost about ${Math.abs(driving.shortPen).toFixed(2)} SG per round across ${driving.driverHoles} driving holes.`,
-      );
-    } else {
-      successBullets.push(
-        `Driving profile: bomber ${driving.bomber}/10, ${driving.driverHoles} driver holes, bomb opp ${driving.bombOpp >= 0 ? "+" : ""}${driving.bombOpp.toFixed(2)}, short-penalty ${driving.shortPen.toFixed(2)}.`,
+        `Position beats power off the tee: short, out-of-position drives cost about ${Math.abs(driving.shortPen).toFixed(2)} SG per round here, so disciplined club selection is a scoring skill in itself.`,
       );
     }
   }
   successBullets.push(...courseBreakdownModelCoeffBullets(courseRow, tourMeans));
-  if (putting?.bins?.length) {
-    const topBin = [...putting.bins].sort((a, b) => num(b.count, 0) - num(a.count, 0))[0];
-    if (topBin?.label) {
-      successBullets.push(`Putting volume peaks in the ${topBin.label} ft bucket (${num(topBin.count, 0).toFixed(1)} putts/round on this profile).`);
-    }
-  }
   if (!successBullets.length) {
     successBullets.push("Balanced ball-striking across tee-to-green play. No single skill completely dominates.");
   }
@@ -14232,7 +14228,7 @@ function courseBreakdownGenerateInsightSections(ctx) {
     const ratio = bog.courseDisplay - bird.courseDisplay;
     if (ratio >= 0.15 || bog.difficulty === "harder") {
       problemBullets.push(
-        `Bogey rate ${courseBreakdownFormatDisplay("num2", bog.courseDisplay)} vs birdie rate ${courseBreakdownFormatDisplay("num2", bird.courseDisplay)} per round. One loose stretch can stall scoring.`,
+        `Bogeys (${courseBreakdownFormatDisplay("num2", bog.courseDisplay)}/round) come nearly as often as birdies (${courseBreakdownFormatDisplay("num2", bird.courseDisplay)}) — one loose stretch erases an hour of good golf, so favor players who avoid doubles over pure upside.`,
       );
     }
   }
@@ -14248,12 +14244,12 @@ function courseBreakdownGenerateInsightSections(ctx) {
   }
   if (courseRow && num(courseRow.arg_sg, 0) > 0.04) {
     problemBullets.push(
-      `Short-game demand is elevated (ARG coefficient +${num(courseRow.arg_sg, 0).toFixed(3)}). Poor chipping and bunker play show on the card.`,
+      "Short-game demand is elevated — players with weak chipping or bunker play will leak strokes around these greens.",
     );
   }
   if (courseRow && num(courseRow.miss_fw_pen_frac, 0) > num(tourMeans?.miss_fw_pen_frac, 0) + 0.002) {
     problemBullets.push(
-      `Missed-fairway penalty fraction ${(num(courseRow.miss_fw_pen_frac, 0) * 100).toFixed(2)}% vs ${(num(tourMeans?.miss_fw_pen_frac, 0) * 100).toFixed(2)}% tour mean.`,
+      "Missed fairways are punished more than usual here — crooked drivers face a compounding penalty.",
     );
   }
   if (!problemBullets.length) {
