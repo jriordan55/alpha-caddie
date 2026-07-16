@@ -3076,6 +3076,8 @@ function applyPayload(raw) {
   }
   approachSkillYtdCache = null;
   approachSkillYtdLoadPromise = null;
+  approachSkillByDgIdCache = null;
+  courseFitApproachBinWeightsCache = null;
   COURSE_TABLE_PAYLOAD = null;
   const nextFieldFp = playerDgFingerprint(players);
   if (prevFieldFp !== nextFieldFp) {
@@ -11573,19 +11575,43 @@ function courseWeightedMarketMuNudge(market, dgId) {
   return clamp((v - med) * scale, -1.6, 1.6);
 }
 
+/** Cached venue approach-bin weights for Course Fit rating blend (set when breakdown/fit builds). */
+let courseFitApproachBinWeightsCache = null;
+
+function courseFitSetApproachBinWeights(weights) {
+  courseFitApproachBinWeightsCache = Array.isArray(weights) && weights.length ? weights : null;
+}
+
 /** Field z-scores per radar axis (player skill) + venue-weighted course rating for the ratings table. */
 function courseFitArchetypeTableRows(rows, _tourCourseMean5, venue5, _ctRow) {
   const nAx = COURSE_FIT_RADAR_SPOKE_LABELS.length;
+  const asMap = approachSkillByDgIdCache;
+  const binWeights = courseFitApproachBinWeightsCache;
+  const useApproachBins = Boolean(asMap?.size && binWeights?.length);
   const raw = rows.map((r) => {
     const playerN = courseFitPlayerRadarVectorMerged(rows, r);
     const skillRaw = playerN.map((v) => (Number.isFinite(v) ? v - 0.5 : NaN));
-    return { r, skillRaw };
+    const approachBinSg = useApproachBins ? courseFitPlayerVenueApproachSg(r, binWeights, asMap) : NaN;
+    return { r, skillRaw, approachBinSg };
   });
   const skillStats = Array.from({ length: nAx }, (_, j) =>
     courseFitAxisStatsAcrossField(raw.map((x) => x.skillRaw[j])),
   );
+  const binStats = useApproachBins
+    ? courseFitAxisStatsAcrossField(raw.map((x) => x.approachBinSg))
+    : null;
   const withAxisZ = raw.map((x) => {
     const axisZ = x.skillRaw.map((v, j) => courseFitZScore(v, skillStats[j]));
+    // Blend overall SG:Approach with venue-weighted distance-bin SG so Course Breakdown
+    // approach mix (150-200, rough, etc.) moves Course Fit ratings.
+    if (binStats && Number.isFinite(x.approachBinSg)) {
+      const binZ = courseFitZScore(x.approachBinSg, binStats);
+      if (Number.isFinite(binZ) && Number.isFinite(axisZ[2])) {
+        axisZ[2] = 0.45 * axisZ[2] + 0.55 * binZ;
+      } else if (Number.isFinite(binZ)) {
+        axisZ[2] = binZ;
+      }
+    }
     let archetypeRaw = 0;
     for (let j = 0; j < nAx; j++) {
       const z = axisZ[j];
@@ -11739,6 +11765,125 @@ async function loadApproachSkillYtdJson() {
     approachSkillYtdLoadPromise = null;
   });
   return approachSkillYtdLoadPromise;
+}
+
+/** Approach distance/lie bins shared by Course Breakdown + Course Fit ratings. */
+const APPROACH_SKILL_BIN_DEFS = Object.freeze([
+  { countKey: "50_100_fw_shot_count", sgKey: "50_100_fw_sg_per_shot", label: "50-100 yards (fairway)", short: "50-100 fw" },
+  { countKey: "100_150_fw_shot_count", sgKey: "100_150_fw_sg_per_shot", label: "100-150 yards (fairway)", short: "100-150 fw" },
+  { countKey: "150_200_fw_shot_count", sgKey: "150_200_fw_sg_per_shot", label: "150-200 yards (fairway)", short: "150-200 fw" },
+  { countKey: "over_200_fw_shot_count", sgKey: "over_200_fw_sg_per_shot", label: "200+ yards (fairway)", short: "200+ fw" },
+  { countKey: "under_150_rgh_shot_count", sgKey: "under_150_rgh_sg_per_shot", label: "Rough < 150 yards", short: "Rough <150" },
+  { countKey: "over_150_rgh_shot_count", sgKey: "over_150_rgh_sg_per_shot", label: "Rough 150+ yards", short: "Rough 150+" },
+]);
+
+/** @type {Map<number, object>|null} */
+let approachSkillByDgIdCache = null;
+
+function approachSkillByDgIdMap(asJson = approachSkillYtdCache) {
+  if (approachSkillByDgIdCache && asJson === approachSkillYtdCache) return approachSkillByDgIdCache;
+  const map = new Map();
+  for (const p of asJson?.players || []) {
+    const id = Math.round(num(p?.dg_id, NaN));
+    if (Number.isFinite(id)) map.set(id, p);
+  }
+  if (asJson === approachSkillYtdCache) approachSkillByDgIdCache = map;
+  return map;
+}
+
+async function ensureApproachSkillByDgId() {
+  const j = await loadApproachSkillYtdJson();
+  return approachSkillByDgIdMap(j);
+}
+
+/**
+ * Venue approach-bin weights from this week's course volume mix (Course Breakdown),
+ * falling back to course-table long/short emphasis or equal fairway bins.
+ */
+function courseFitVenueApproachBinWeights(approachImpact = null, courseRow = null) {
+  const weights = APPROACH_SKILL_BIN_DEFS.map(() => 0);
+  const labelMap = {
+    "50-100 yards": 0,
+    "100-150 yards": 1,
+    "150-200 yards": 2,
+    "200+ yards": 3,
+    "Rough < 150 yards": 4,
+    "Rough 150+ yards": 5,
+  };
+  for (const x of Array.isArray(approachImpact) ? approachImpact : []) {
+    const idx = labelMap[String(x.label || "").trim()];
+    if (Number.isFinite(idx) && Number.isFinite(x.pct)) weights[idx] = Math.max(0, num(x.pct, 0));
+  }
+  let sum = weights.reduce((a, b) => a + b, 0);
+  if (!(sum > 0) && courseRow) {
+    const g150 = Math.max(0, num(courseRow.greater_150_sg, 0));
+    const l150 = Math.max(0, num(courseRow.less_150_sg, 0));
+    const tot = g150 + l150;
+    if (tot > 1e-6) {
+      weights[0] = l150 * 0.25;
+      weights[1] = l150 * 0.75;
+      weights[2] = g150 * 0.55;
+      weights[3] = g150 * 0.45;
+      weights[4] = 0.08;
+      weights[5] = 0.08;
+      sum = weights.reduce((a, b) => a + b, 0);
+    }
+  }
+  if (!(sum > 0)) {
+    for (let i = 0; i < 4; i++) weights[i] = 1;
+    sum = 4;
+  }
+  return weights.map((w) => w / sum);
+}
+
+/** Venue-weighted approach SG/shot for one player (DataGolf approach-skill bins). */
+function courseFitPlayerVenueApproachSg(mrow, binWeights, asMap = approachSkillByDgIdCache) {
+  if (!mrow || !asMap?.size || !binWeights?.length) return NaN;
+  const id = Math.round(num(mrow.dg_id, NaN));
+  if (!Number.isFinite(id)) return NaN;
+  const skill = asMap.get(id);
+  if (!skill) return NaN;
+  let sum = 0;
+  let wSum = 0;
+  for (let i = 0; i < APPROACH_SKILL_BIN_DEFS.length; i++) {
+    const sg = num(skill[APPROACH_SKILL_BIN_DEFS[i].sgKey], NaN);
+    const w = num(binWeights[i], 0);
+    if (!Number.isFinite(sg) || !(w > 0)) continue;
+    sum += sg * w;
+    wSum += w;
+  }
+  return wSum > 0 ? sum / wSum : NaN;
+}
+
+function courseBreakdownApproachBinLeaders(fieldRows, asMap, limit = 3, minShots = 15) {
+  if (!asMap?.size || !fieldRows?.length) return [];
+  const out = [];
+  for (const def of APPROACH_SKILL_BIN_DEFS) {
+    const scored = [];
+    for (const r of fieldRows) {
+      const id = Math.round(num(r.dg_id, NaN));
+      const skill = asMap.get(id);
+      if (!skill) continue;
+      const sg = num(skill[def.sgKey], NaN);
+      const n = num(skill[def.countKey], NaN);
+      if (!Number.isFinite(sg) || !Number.isFinite(n) || n < minShots) continue;
+      scored.push({
+        name: displayGolferName(r.player_name || skill.player_name || ""),
+        sg,
+        n: Math.round(n),
+        dg_id: id,
+      });
+    }
+    scored.sort((a, b) => b.sg - a.sg || b.n - a.n);
+    if (!scored.length) continue;
+    out.push({
+      label: def.label,
+      short: def.short,
+      sgKey: def.sgKey,
+      leaders: scored.slice(0, limit),
+    });
+  }
+  return out;
 }
 
 function initCourseFitSubtabs() {
@@ -13408,6 +13553,155 @@ function courseBreakdownPlayerFitCategory(row, courseRow) {
   return courseFitPlayerCatAndFitOnAxes(tour5, venue5, player5, axisIdxs);
 }
 
+function courseBreakdownApproachLeadersSection(approachImpact, binLeaders) {
+  if (!binLeaders?.length) return null;
+  const volumeOrder = new Map(
+    (approachImpact || []).map((x, i) => [String(x.label || "").trim().toLowerCase(), num(x.pct, 0) || 100 - i]),
+  );
+  const sorted = [...binLeaders].sort((a, b) => {
+    const pa = volumeOrder.get(String(a.label || "").toLowerCase()) ?? 0;
+    const pb = volumeOrder.get(String(b.label || "").toLowerCase()) ?? 0;
+    return pb - pa;
+  });
+  const bullets = [];
+  for (const bin of sorted.slice(0, 6)) {
+    if (!bin.leaders?.length) continue;
+    const names = bin.leaders
+      .map((p) => `${p.name} (${p.sg >= 0 ? "+" : ""}${p.sg.toFixed(3)}/shot, n=${p.n})`)
+      .join("; ");
+    const vol = (approachImpact || []).find((x) => String(x.label || "").trim().toLowerCase() === String(bin.label || "").split(" (")[0].toLowerCase());
+    const volNote = Number.isFinite(vol?.pct) ? ` — ${vol.pct.toFixed(0)}% of approaches here` : "";
+    bullets.push(`<strong>${bin.label}${volNote}</strong>: ${names}`);
+  }
+  if (!bullets.length) return null;
+  return {
+    title: "Approach distance leaders (YTD)",
+    paragraphs: [
+      "Top players in this field by strokes gained per shot in each approach window. These bins feed Course Fit ratings using this course's approach mix.",
+    ],
+    bullets,
+  };
+}
+
+/**
+ * Skills that historically / model-wise correlate with scoring at this venue, plus who in the
+ * field ranks best on each. Uses course-table coeffs, approach mix, and venue counting skews.
+ */
+function courseBreakdownSuccessSkillsSection(ctx) {
+  const { courseRow, tourMeans, fieldRows, approachImpact, binLeaders, driving, metrics, asMap } = ctx;
+  if (!fieldRows?.length) return null;
+  const skills = [];
+
+  const addSgSkill = (label, why, getter, higherBetter = true) => {
+    const scored = [];
+    for (const r of fieldRows) {
+      const v = getter(r);
+      if (!Number.isFinite(v)) continue;
+      scored.push({ name: displayGolferName(r.player_name || ""), v, dg_id: Math.round(num(r.dg_id, NaN)) });
+    }
+    if (scored.length < 5) return;
+    scored.sort((a, b) => (higherBetter ? b.v - a.v : a.v - b.v));
+    const top = scored.slice(0, 3);
+    const fmt = (x) =>
+      Math.abs(x.v) >= 1 ? x.v.toFixed(2) : `${x.v >= 0 ? "+" : ""}${x.v.toFixed(3)}`;
+    skills.push({
+      label,
+      why,
+      leaders: top.map((x) => `${x.name} (${fmt(x)})`).join("; "),
+    });
+  };
+
+  if (courseRow) {
+    const ottGap = num(courseRow.ott_sg, 0) - num(tourMeans?.ott_sg, 0);
+    const appGap = num(courseRow.app_sg, 0) - num(tourMeans?.app_sg, 0);
+    const argGap = num(courseRow.arg_sg, 0) - num(tourMeans?.arg_sg, 0);
+    const puttGap = num(courseRow.putt_sg, 0) - num(tourMeans?.putt_sg, 0);
+    const fwW = num(courseRow.fw_width, NaN);
+    const fwM = num(tourMeans?.fw_width, NaN);
+
+    if (ottGap >= 0.01 || (driving && driving.bomber >= 6)) {
+      addSgSkill(
+        "SG: Off the Tee",
+        "Course model and driver-hole profile reward tee-ball quality/length here",
+        (r) => num(r.sg_ott, NaN),
+      );
+    }
+    if (Number.isFinite(fwW) && Number.isFinite(fwM) && fwW < fwM - 1.5) {
+      addSgSkill(
+        "Driving accuracy",
+        `Fairways average ${fwW.toFixed(0)} yds (tour ${fwM.toFixed(0)}) — accuracy separates the field`,
+        (r) => playerDrivingAccuracyFrac(r),
+      );
+    }
+    if (appGap >= 0.01 || (approachImpact || []).some((x) => num(x.pct, 0) >= 20)) {
+      addSgSkill(
+        "SG: Approach",
+        "Iron play is a primary strokes-gained separator on this setup",
+        (r) => num(r.sg_app, NaN),
+      );
+    }
+    if (argGap >= 0.015) {
+      addSgSkill(
+        "SG: Around the Green",
+        "Short-game coefficient is elevated vs tour mean at this venue",
+        (r) => num(r.sg_arg, NaN),
+      );
+    }
+    if (puttGap >= 0.015) {
+      addSgSkill(
+        "SG: Putting",
+        "Putting coefficient is elevated — lag and make % show up on the card",
+        (r) => num(r.sg_putt, NaN),
+      );
+    }
+    if (driving && driving.shortPen < -0.5) {
+      addSgSkill(
+        "Driving distance",
+        `Short drives cost ~${Math.abs(driving.shortPen).toFixed(2)} SG/round across ${driving.driverHoles} driver holes`,
+        (r) => playerDrivingDistanceYds(r),
+      );
+    }
+  }
+
+  // Highest-volume approach bins from Course Breakdown — leaders already computed.
+  for (const bin of binLeaders || []) {
+    const vol = (approachImpact || []).find(
+      (x) => String(x.label || "").trim().toLowerCase() === String(bin.label || "").split(" (")[0].toLowerCase(),
+    );
+    if (!vol || num(vol.pct, 0) < 12) continue;
+    if (!bin.leaders?.length) continue;
+    skills.push({
+      label: `Approach SG: ${bin.short}`,
+      why: `${num(vol.pct, 0).toFixed(0)}% of approaches at this course come from this window (DataGolf YTD SG/shot)`,
+      leaders: bin.leaders
+        .map((p) => `${p.name} (${p.sg >= 0 ? "+" : ""}${p.sg.toFixed(3)}/shot)`)
+        .join("; "),
+    });
+  }
+
+  const bog = metrics?.find((m) => m.benchKey === "Bogeys");
+  if (bog?.difficulty === "harder") {
+    addSgSkill(
+      "SG: Total (bogey avoidance proxy)",
+      "Bogey rate runs high here — overall ball-striking stability matters more than pure upside",
+      (r) => num(r.sg_total, NaN),
+    );
+  }
+
+  if (!skills.length && asMap?.size) {
+    addSgSkill("SG: Approach", "Default iron-play separator when venue coeffs are thin", (r) => num(r.sg_app, NaN));
+  }
+  if (!skills.length) return null;
+
+  return {
+    title: "Skills that correlate with success here",
+    paragraphs: [
+      "These are the traits the course model, approach mix, and venue scoring profile point to. Leaders are from this week's field (DataGolf skill ratings / approach-skill YTD).",
+    ],
+    bullets: skills.map((s) => `<strong>${s.label}</strong>: ${s.why}. Best in field — ${s.leaders}.`),
+  };
+}
+
 function courseBreakdownKeySkillAxisIndices(courseRow, tour5, venue5) {
   const weights = courseRequirementSgWeights(courseRow || {});
   const sgToIdx = { sg_ott: 1, sg_app: 2, sg_arg: 3, sg_putt: 4 };
@@ -14137,6 +14431,8 @@ function courseBreakdownGenerateInsightSections(ctx) {
     weatherCtx,
     externalCtx,
     priorEvent,
+    approachBinLeaders,
+    asMap,
   } = ctx;
 
   const p3 = holePars.filter((p) => Math.round(num(p, 4)) === 3).length;
@@ -14273,6 +14569,18 @@ function courseBreakdownGenerateInsightSections(ctx) {
     fitParagraphs.push("Player fit lists need course-table data. Run npm run build:course-table.");
   }
 
+  const approachLeadersSection = courseBreakdownApproachLeadersSection(approachImpact, approachBinLeaders);
+  const successSkillsSection = courseBreakdownSuccessSkillsSection({
+    courseRow,
+    tourMeans,
+    fieldRows: courseBreakdownFieldRows(),
+    approachImpact,
+    binLeaders: approachBinLeaders,
+    driving,
+    metrics,
+    asMap,
+  });
+
   const sections = [
     profile,
     ...(priorEventSection ? [priorEventSection] : []),
@@ -14289,6 +14597,8 @@ function courseBreakdownGenerateInsightSections(ctx) {
       paragraphs: [],
       bullets: problemBullets,
     },
+    ...(successSkillsSection ? [successSkillsSection] : []),
+    ...(approachLeadersSection ? [approachLeadersSection] : []),
     {
       title: "Who fits vs. who struggles",
       paragraphs: fitParagraphs,
@@ -14395,6 +14705,9 @@ async function buildCourseBreakdownInsights(holePars, rows, courseName) {
   const putting = courseRow ? courseBreakdownPuttingModel(courseRow, tourMeans) : null;
   const sgImpact = courseBreakdownSgImpactSegments(rows);
   const approachImpact = await courseBreakdownApproachImpactSegments(rows);
+  const asMap = await ensureApproachSkillByDgId();
+  courseFitSetApproachBinWeights(courseFitVenueApproachBinWeights(approachImpact, courseRow));
+  const approachBinLeaders = courseBreakdownApproachBinLeaders(rows, asMap, 3, 15);
   const playerFit = courseBreakdownPlayerFitLists(courseRow, rows);
   const m = DATA?.meta || {};
   const eventName = formatEventNameForDisplay(String(m.event_name || DATA?.event_name || "").trim()) || "";
@@ -14417,6 +14730,8 @@ async function buildCourseBreakdownInsights(holePars, rows, courseName) {
     putting,
     sgImpact,
     approachImpact,
+    approachBinLeaders,
+    asMap,
     playerFit,
     weatherCtx,
     externalCtx,
@@ -14814,7 +15129,8 @@ function drawCourseFitDistHistogram(canvas, values, opts = {}) {
   const binWidth = titleMode === "avg" ? 0.5 : 1;
   const integerMode = titleMode === "individual";
   const overlayMean = Number.isFinite(opts.overlayMean) ? opts.overlayMean : NaN;
-  const overlayLabel = String(opts.overlayLabel || "").trim();
+  const showMeanLine = opts.showMeanLine !== false;
+  const showOverlayLabel = Boolean(opts.showOverlayLabel);
   const hist = courseFitDistBuildHistogram(values, { integerMode, binWidth });
   const { mean, sd } = courseFitDistMeanSd(values);
 
@@ -14902,7 +15218,7 @@ function drawCourseFitDistHistogram(canvas, values, opts = {}) {
     }
   }
 
-  if (Number.isFinite(mean)) {
+  if (showMeanLine && Number.isFinite(mean)) {
     const mx = xToPx(mean);
     ctx.strokeStyle = "#ef4444";
     ctx.lineWidth = 2;
@@ -14922,16 +15238,19 @@ function drawCourseFitDistHistogram(canvas, values, opts = {}) {
     ctx.lineTo(ox, pad.t + plotH);
     ctx.stroke();
     ctx.setLineDash([]);
-    const tag = overlayLabel
-      ? `${overlayLabel} ${courseFitDistFormatStat(overlayMean, statKey, titleMode === "avg")}`
-      : courseFitDistFormatStat(overlayMean, statKey, titleMode === "avg");
-    ctx.fillStyle = "#f59e0b";
-    ctx.font = "700 11px system-ui, sans-serif";
-    ctx.textBaseline = "bottom";
-    const tw = ctx.measureText(tag).width;
-    const tx = Math.max(pad.l + 2, Math.min(pad.l + plotW - tw - 2, ox + 4));
-    ctx.textAlign = "left";
-    ctx.fillText(tag, tx, pad.t + 14);
+    if (showOverlayLabel) {
+      const overlayLabel = String(opts.overlayLabel || "").trim();
+      const tag = overlayLabel
+        ? `${overlayLabel} ${courseFitDistFormatStat(overlayMean, statKey, titleMode === "avg")}`
+        : courseFitDistFormatStat(overlayMean, statKey, titleMode === "avg");
+      ctx.fillStyle = "#f59e0b";
+      ctx.font = "700 11px system-ui, sans-serif";
+      ctx.textBaseline = "bottom";
+      const tw = ctx.measureText(tag).width;
+      const tx = Math.max(pad.l + 2, Math.min(pad.l + plotW - tw - 2, ox + 4));
+      ctx.textAlign = "left";
+      ctx.fillText(tag, tx, pad.t + 14);
+    }
   }
 
   ctx.fillStyle = textMuted;
@@ -15046,20 +15365,32 @@ function ensureCourseFitDistFiltersBound() {
   const gfPanel = document.getElementById("course-fit-dist-golfer-suggest");
   if (gf && gf instanceof HTMLInputElement && gfPanel) {
     wireGolferSuggestGlobalDismissOnce();
-    const refreshGolferPanel = () => {
-      golferSuggestWriteLabels(gfPanel, courseFitDistGolferLabels);
-      openGolferSuggestForSearchInput(gf, gfPanel, () => {
-        courseFitDistGolferQuery = String(gf.value || "").trim().toLowerCase();
-        buildCourseFitDistributionsPanel(courseFitDistActiveVenueKey());
-      });
+    const onPick = () => {
+      courseFitDistGolferQuery = String(gf.value || "").trim().toLowerCase();
+      buildCourseFitDistributionsPanel(courseFitDistActiveVenueKey());
     };
-    gf.addEventListener("focus", refreshGolferPanel);
+    const refreshGolferPanel = (showAll = false) => {
+      golferSuggestWriteLabels(gfPanel, courseFitDistGolferLabels);
+      openGolferSuggestForSearchInput(gf, gfPanel, onPick, { showAll });
+    };
+    gf.addEventListener("focus", () => {
+      // Select current name so typing replaces it; open the full roster (not just the match).
+      try {
+        gf.select();
+      } catch {
+        /* ignore */
+      }
+      refreshGolferPanel(true);
+    });
+    gf.addEventListener("click", () => {
+      if (gfPanel.hidden) refreshGolferPanel(true);
+    });
     gf.addEventListener("input", () => {
       if (courseFitDistGolferDebounce) clearTimeout(courseFitDistGolferDebounce);
       courseFitDistGolferDebounce = window.setTimeout(() => {
         courseFitDistGolferDebounce = 0;
         courseFitDistGolferQuery = String(gf.value || "").trim().toLowerCase();
-        refreshGolferPanel();
+        refreshGolferPanel(false);
         buildCourseFitDistributionsPanel(courseFitDistActiveVenueKey());
       }, 140);
     });
@@ -15167,9 +15498,13 @@ function buildCourseFitDistributionsPanel(venueKey) {
     statKey,
     titleMode: "avg",
     overlayMean: playerOverlayMean,
-    overlayLabel: golferName || "",
+    showOverlayLabel: false,
   });
-  const indHit = drawCourseFitDistHistogram(indCanvas, indValues, { statKey, titleMode: "individual" });
+  const indHit = drawCourseFitDistHistogram(indCanvas, indValues, {
+    statKey,
+    titleMode: "individual",
+    showMeanLine: false,
+  });
   renderCourseFitDistStats(avgStats, avgHit?.mean, avgHit?.sd, statKey, true, {
     playerLabel: golferName ? `${golferName} avg` : "",
     playerMean: playerOverlayMean,
@@ -15475,6 +15810,19 @@ function buildCourseFitTab() {
     if (capEl) capEl.textContent = "Loading course_table map…";
     if (legEl) legEl.innerHTML = "";
     return;
+  }
+
+  // Approach-bin SG (Course Breakdown mix) feeds Course Fit ratings — load once, then rebuild.
+  if (!approachSkillByDgIdCache || !courseFitApproachBinWeightsCache) {
+    void (async () => {
+      await ensureApproachSkillByDgId();
+      const pool = courseFitPlayerPool();
+      const impact = await courseBreakdownApproachImpactSegments(pool);
+      const venueName = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
+      const ctRow = resolveCourseTableRowForNormKey(normCourseNameKey(venueName));
+      courseFitSetApproachBinWeights(courseFitVenueApproachBinWeights(impact, ctRow));
+      if (activeAppTabId() === "course-fit") buildCourseFitTab();
+    })();
   }
 
   const eventVenueName = String(DATA?.meta?.course_used || DATA?.course_used || "this venue").trim() || "this venue";
@@ -17509,9 +17857,10 @@ function wireGolferSuggestGlobalDismissOnce() {
   );
 }
 
-function openGolferSuggestForSearchInput(search, panel, onPickFromList) {
+function openGolferSuggestForSearchInput(search, panel, onPickFromList, opts = {}) {
   const labels = golferSuggestReadLabels(panel);
-  const q = String(search.value || "");
+  // showAll: focus/open should list every golfer; typing still filters.
+  const q = opts.showAll ? "" : String(search.value || "");
   const picked = filterGolferSuggestLabels(labels, q);
   renderOpenGolferSuggestPanel(panel, picked, (lab) => {
     search.value = lab;
@@ -17521,14 +17870,20 @@ function openGolferSuggestForSearchInput(search, panel, onPickFromList) {
 }
 
 /** After label cache updates: keep the panel open if the user is still typing (table/select refresh must not wipe it). */
-function reopenGolferSuggestIfSearchFocused(search, panel, onPickFromList) {
+function reopenGolferSuggestIfSearchFocused(search, panel, onPickFromList, opts = {}) {
   if (!panel) return;
   if (!search || document.activeElement !== search) {
     panel.innerHTML = "";
     panel.hidden = true;
     return;
   }
-  openGolferSuggestForSearchInput(search, panel, onPickFromList);
+  const labels = golferSuggestReadLabels(panel);
+  const v = String(search.value || "").trim().toLowerCase();
+  const exact = Boolean(v) && labels.some((l) => String(l).toLowerCase() === v);
+  // Exact full name selected → show the full roster so the user can pick someone else.
+  openGolferSuggestForSearchInput(search, panel, onPickFromList, {
+    showAll: Boolean(opts.showAll) || (opts.showAllIfExact !== false && exact),
+  });
 }
 
 function wireOuPlayerFilterSuggestOnce() {
