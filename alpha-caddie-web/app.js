@@ -14673,7 +14673,54 @@ function courseFitDistFilteredGolferDisplayName(entries, golferQ) {
     const nm = displayGolferName(String(e.playerName || e.row?.player_name || ""));
     if (nm) return nm;
   }
-  return q;
+  return "";
+}
+
+/** Prefer a golfer from this week's field who has history here; otherwise first label A→Z. */
+function courseFitDistDefaultGolferName(entries, labels) {
+  const names = Array.isArray(labels) && labels.length ? labels : courseFitDistGolferLabelsFromEntries(entries);
+  if (!names.length) return "";
+  const fieldNames = new Set();
+  for (const p of Array.isArray(DATA?.players) ? DATA.players : []) {
+    const nm = displayGolferName(String(p?.player_name || ""));
+    if (nm) fieldNames.add(nm.toLowerCase());
+  }
+  if (fieldNames.size) {
+    const inField = names.find((nm) => fieldNames.has(String(nm).toLowerCase()));
+    if (inField) return inField;
+  }
+  return names[0];
+}
+
+/**
+ * Individual-rounds chart always needs one golfer. Resolve a concrete name from the
+ * query (or auto-pick), and sync the search input so the UI never shows "All golfers".
+ * Does not overwrite the input while the user is mid-edit.
+ */
+function courseFitDistEnsureGolferSelected(entries) {
+  const labels = courseFitDistGolferLabelsFromEntries(entries);
+  courseFitDistGolferLabels = labels;
+  const gf = document.getElementById("course-fit-dist-golfer");
+  const focused = gf instanceof HTMLInputElement && document.activeElement === gf;
+  const typed = gf instanceof HTMLInputElement ? String(gf.value || "").trim() : "";
+  const q = String(courseFitDistGolferQuery || typed || "")
+    .trim()
+    .toLowerCase();
+
+  let name = "";
+  if (q) {
+    name = labels.find((nm) => nm.toLowerCase() === q) || "";
+    if (!name) name = courseFitDistFilteredGolferDisplayName(entries, q);
+  }
+  if (!name) name = courseFitDistDefaultGolferName(entries, labels);
+
+  courseFitDistGolferQuery = name ? name.toLowerCase() : "";
+  if (gf instanceof HTMLInputElement && name) {
+    if (!focused || !typed) {
+      if (String(gf.value || "").trim() !== name) gf.value = name;
+    }
+  }
+  return name;
 }
 
 function courseFitDistEventRoundCount(entries, eventKey, roundFilter, golferQ) {
@@ -14766,6 +14813,8 @@ function drawCourseFitDistHistogram(canvas, values, opts = {}) {
   const titleMode = String(opts.titleMode || "individual");
   const binWidth = titleMode === "avg" ? 0.5 : 1;
   const integerMode = titleMode === "individual";
+  const overlayMean = Number.isFinite(opts.overlayMean) ? opts.overlayMean : NaN;
+  const overlayLabel = String(opts.overlayLabel || "").trim();
   const hist = courseFitDistBuildHistogram(values, { integerMode, binWidth });
   const { mean, sd } = courseFitDistMeanSd(values);
 
@@ -14809,8 +14858,13 @@ function drawCourseFitDistHistogram(canvas, values, opts = {}) {
     ctx.fillText(String(Math.round((i / yTicks) * maxCount)), pad.l - 6, y);
   }
 
-  const xMin = hist.minV;
-  const xMax = hist.maxV + hist.binWidth;
+  let xMin = hist.minV;
+  let xMax = hist.maxV + hist.binWidth;
+  // Keep an out-of-range player marker on-plot by expanding the axis.
+  if (Number.isFinite(overlayMean)) {
+    xMin = Math.min(xMin, overlayMean - hist.binWidth * 0.25);
+    xMax = Math.max(xMax, overlayMean + hist.binWidth * 0.25);
+  }
   const xSpan = Math.max(xMax - xMin, hist.binWidth);
   const xToPx = (x) => pad.l + ((x - xMin) / xSpan) * plotW;
 
@@ -14858,6 +14912,28 @@ function drawCourseFitDistHistogram(canvas, values, opts = {}) {
     ctx.stroke();
   }
 
+  if (Number.isFinite(overlayMean)) {
+    const ox = xToPx(overlayMean);
+    ctx.strokeStyle = "#f59e0b";
+    ctx.lineWidth = 2.5;
+    ctx.setLineDash([5, 4]);
+    ctx.beginPath();
+    ctx.moveTo(ox, pad.t);
+    ctx.lineTo(ox, pad.t + plotH);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    const tag = overlayLabel
+      ? `${overlayLabel} ${courseFitDistFormatStat(overlayMean, statKey, titleMode === "avg")}`
+      : courseFitDistFormatStat(overlayMean, statKey, titleMode === "avg");
+    ctx.fillStyle = "#f59e0b";
+    ctx.font = "700 11px system-ui, sans-serif";
+    ctx.textBaseline = "bottom";
+    const tw = ctx.measureText(tag).width;
+    const tx = Math.max(pad.l + 2, Math.min(pad.l + plotW - tw - 2, ox + 4));
+    ctx.textAlign = "left";
+    ctx.fillText(tag, tx, pad.t + 14);
+  }
+
   ctx.fillStyle = textMuted;
   ctx.font = "600 11px system-ui, sans-serif";
   ctx.textAlign = "center";
@@ -14883,10 +14959,10 @@ function drawCourseFitDistHistogram(canvas, values, opts = {}) {
   ctx.fillText("Count", 0, 0);
   ctx.restore();
 
-  return { mean, sd, n: values.length };
+  return { mean, sd, n: values.length, overlayMean };
 }
 
-function renderCourseFitDistStats(dl, mean, sd, statKey, halfStep) {
+function renderCourseFitDistStats(dl, mean, sd, statKey, halfStep, extra = null) {
   if (!dl) return;
   dl.innerHTML = "";
   const add = (label, value) => {
@@ -14907,6 +14983,9 @@ function renderCourseFitDistStats(dl, mean, sd, statKey, halfStep) {
       "±2 SD",
       `${courseFitDistFormatStat(mean - 2 * sd, statKey, halfStep)} – ${courseFitDistFormatStat(mean + 2 * sd, statKey, halfStep)}`,
     );
+  }
+  if (extra?.playerLabel && Number.isFinite(extra.playerMean)) {
+    add(extra.playerLabel, courseFitDistFormatStat(extra.playerMean, statKey, halfStep));
   }
 }
 
@@ -14993,6 +15072,8 @@ function ensureCourseFitDistFiltersBound() {
         if (gfPanel.contains(document.activeElement)) return;
         gfPanel.hidden = true;
         gfPanel.innerHTML = "";
+        courseFitDistGolferQuery = String(gf.value || "").trim().toLowerCase();
+        buildCourseFitDistributionsPanel(courseFitDistActiveVenueKey());
       }, 160);
     });
   }
@@ -15029,20 +15110,20 @@ function buildCourseFitDistributionsPanel(venueKey) {
 
   const events = courseFitDistEventsFromEntries(entries);
   const roundFilter = courseFitDistRoundFilter || "all";
+  // Right chart always needs one golfer; left stays field-wide with that player's average overlaid.
+  const golferName = courseFitDistEnsureGolferSelected(entries);
   const golferQ = courseFitDistGolferQuery;
-  const golferName = courseFitDistFilteredGolferDisplayName(entries, golferQ);
   if (avgTitle) {
     avgTitle.textContent = golferName
-      ? `${propLabel} — Tournament Average (${golferName})`
+      ? `${propLabel} Distribution — Tournament Average (field + ${golferName})`
       : `${propLabel} Distribution — Tournament Average`;
   }
   if (indTitle) {
     indTitle.textContent = golferName
       ? `${propLabel} — Individual Rounds (${golferName})`
-      : `${propLabel} Distribution — Individual Rounds`;
+      : `${propLabel} — Individual Rounds`;
   }
   syncCourseFitDistEventCheckboxes(events, vk, entries, roundFilter, golferQ);
-  courseFitDistGolferLabels = courseFitDistGolferLabelsFromEntries(entries);
   const gf = document.getElementById("course-fit-dist-golfer");
   const gfPanel = document.getElementById("course-fit-dist-golfer-suggest");
   if (gf && gf instanceof HTMLInputElement && gfPanel) {
@@ -15057,13 +15138,20 @@ function buildCourseFitDistributionsPanel(venueKey) {
     ? courseFitDistSelectedEvents
     : new Set(events.map((e) => e.key));
 
-  const avgValues = courseFitDistPlayerEventAverages(entries, statKey, roundFilter, selected, golferQ);
+  // Left: always the full field tournament averages for the selected events/rounds.
+  const avgValues = courseFitDistPlayerEventAverages(entries, statKey, roundFilter, selected, "");
+  // Right: always the selected golfer's individual rounds.
   const indValues = courseFitDistIndividualValues(entries, statKey, roundFilter, selected, golferQ);
+  const playerAvgValues = courseFitDistPlayerEventAverages(entries, statKey, roundFilter, selected, golferQ);
+  const playerOverlayMean = (() => {
+    if (!playerAvgValues.length) return NaN;
+    return playerAvgValues.reduce((a, b) => a + b, 0) / playerAvgValues.length;
+  })();
   const hasData = avgValues.length > 0 || indValues.length > 0;
 
   if (!hasData) {
     const roundLabel = roundFilter === "all" ? "" : ` for R${roundFilter}`;
-    const golferLabel = golferQ ? " for that golfer" : "";
+    const golferLabel = golferName ? ` for ${golferName}` : "";
     setCourseFitDistPanelVisibility(
       false,
       `No data available${roundLabel}${golferLabel} with your chosen filters.`,
@@ -15075,9 +15163,17 @@ function buildCourseFitDistributionsPanel(venueKey) {
   }
 
   setCourseFitDistPanelVisibility(true);
-  const avgHit = drawCourseFitDistHistogram(avgCanvas, avgValues, { statKey, titleMode: "avg" });
+  const avgHit = drawCourseFitDistHistogram(avgCanvas, avgValues, {
+    statKey,
+    titleMode: "avg",
+    overlayMean: playerOverlayMean,
+    overlayLabel: golferName || "",
+  });
   const indHit = drawCourseFitDistHistogram(indCanvas, indValues, { statKey, titleMode: "individual" });
-  renderCourseFitDistStats(avgStats, avgHit?.mean, avgHit?.sd, statKey, true);
+  renderCourseFitDistStats(avgStats, avgHit?.mean, avgHit?.sd, statKey, true, {
+    playerLabel: golferName ? `${golferName} avg` : "",
+    playerMean: playerOverlayMean,
+  });
   renderCourseFitDistStats(indStats, indHit?.mean, indHit?.sd, statKey, false);
 }
 
