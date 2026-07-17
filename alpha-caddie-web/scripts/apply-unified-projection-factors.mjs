@@ -12,7 +12,15 @@ import { applyUnifiedProjectionFactors } from "./projection-unified-factors.mjs"
 import { flattenProjectionExportMeta } from "./projection-export-meta.mjs";
 import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
 
-Object.assign(process.env, flatVenueProjectionPipelineEnv());
+Object.assign(
+  process.env,
+  Object.fromEntries(
+    Object.entries({
+      ...flatVenueProjectionPipelineEnv(),
+      GOLF_UNIFIED_TEE_WAVE_W: process.env.GOLF_UNIFIED_TEE_WAVE_W || "0.30",
+    }).filter(([k]) => process.env[k] === undefined || String(process.env[k]).trim() === ""),
+  ),
+);
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");

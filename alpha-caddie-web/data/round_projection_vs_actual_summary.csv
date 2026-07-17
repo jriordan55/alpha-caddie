@@ -1401,68 +1401,6 @@ ev_backtest_all,2026-07-17T01:30:39Z,,(all events),,,(all),(all),Birdies,,,,10.0
 ev_backtest_all,2026-07-17T01:30:39Z,,(all events),,,(all),(all),Birdies,,,,2.5,under,40,22,18,0,1.92,4.8
 ev_backtest_all,2026-07-17T01:30:39Z,,(all events),,,(all),(all),Birdies,,,,5.0,under,27,16,11,0,3.13,11.6
 ev_backtest_all,2026-07-17T01:30:39Z,,(all events),,,(all),(all),Birdies,,,,7.5,under,13,10,3,0,5.21,40.1
-model_vs_book,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Birdies,0.513,0.405,151,,,,,,,,
-model_vs_book,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,2.209,1.890,73,,,,,,,,
-model_vs_book,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,GIR,1.649,1.175,40,,,,,,,,
-model_vs_book,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Total score,0.927,0.740,151,,,,,,,,
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Birdies,,,,0.0,over,20,9,11,0,-0.67,-3.4
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Birdies,,,,0.0,under,6,4,2,0,1.65,27.6
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Birdies,,,,2.5,over,8,5,3,0,2.66,33.3
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Birdies,,,,2.5,under,2,1,1,0,-0.14,-6.9
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Birdies,,,,5.0,over,2,1,1,0,0.38,19.0
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Birdies,,,,5.0,under,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,,,,0.0,over,35,15,20,0,-8.61,-24.6
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,,,,0.0,under,38,34,4,0,-4.00,-10.5
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,,,,10.0,over,20,7,13,0,-7.51,-37.6
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,,,,12.5,over,10,5,5,0,-0.82,-8.2
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,,,,15.0,over,3,2,1,0,1.00,33.4
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,,,,17.5,over,3,2,1,0,1.00,33.4
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,,,,2.5,over,34,15,19,0,-7.61,-22.4
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,,,,20.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,,,,5.0,over,33,15,18,0,-6.61,-20.0
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,,,,7.5,over,28,13,15,0,-4.89,-17.5
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Fairways hit,,,,0.0,under,75,45,30,0,-30.00,-40.0
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,GIR,,,,0.0,under,75,24,51,0,-51.00,-68.0
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Total score,,,,0.0,over,1,1,0,0,0.66,65.8
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Total score,,,,0.0,under,68,25,43,0,-21.52,-31.6
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Total score,,,,10.0,under,22,8,14,0,-7.01,-31.8
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Total score,,,,12.5,under,12,4,8,0,-4.40,-36.6
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Total score,,,,15.0,under,4,4,0,0,3.60,90.1
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Total score,,,,17.5,under,1,1,0,0,0.71,71.4
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Total score,,,,2.5,under,59,23,36,0,-16.55,-28.0
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Total score,,,,5.0,under,46,20,26,0,-9.29,-20.2
-ev_backtest,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Total score,,,,7.5,under,33,14,19,0,-7.04,-21.3
-model_vs_book_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Birdies,0.513,0.405,151,,,,,,,,
-model_vs_book_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,2.209,1.890,73,,,,,,,,
-model_vs_book_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),GIR,1.649,1.175,40,,,,,,,,
-model_vs_book_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Total score,0.927,0.740,151,,,,,,,,
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Birdies,,,,0.0,over,20,9,11,0,-0.67,-3.4
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Birdies,,,,0.0,under,6,4,2,0,1.65,27.6
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Birdies,,,,2.5,over,8,5,3,0,2.66,33.3
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Birdies,,,,2.5,under,2,1,1,0,-0.14,-6.9
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Birdies,,,,5.0,over,2,1,1,0,0.38,19.0
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Birdies,,,,5.0,under,1,0,1,0,-1.00,-100.0
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,,,,0.0,over,35,15,20,0,-8.61,-24.6
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,,,,0.0,under,38,34,4,0,-4.00,-10.5
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,,,,10.0,over,20,7,13,0,-7.51,-37.6
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,,,,12.5,over,10,5,5,0,-0.82,-8.2
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,,,,15.0,over,3,2,1,0,1.00,33.4
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,,,,17.5,over,3,2,1,0,1.00,33.4
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,,,,2.5,over,34,15,19,0,-7.61,-22.4
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,,,,20.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,,,,5.0,over,33,15,18,0,-6.61,-20.0
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,,,,7.5,over,28,13,15,0,-4.89,-17.5
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Fairways hit,,,,0.0,under,75,45,30,0,-30.00,-40.0
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),GIR,,,,0.0,under,75,24,51,0,-51.00,-68.0
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Total score,,,,0.0,over,1,1,0,0,0.66,65.8
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Total score,,,,0.0,under,68,25,43,0,-21.52,-31.6
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Total score,,,,10.0,under,22,8,14,0,-7.01,-31.8
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Total score,,,,12.5,under,12,4,8,0,-4.40,-36.6
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Total score,,,,15.0,under,4,4,0,0,3.60,90.1
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Total score,,,,17.5,under,1,1,0,0,0.71,71.4
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Total score,,,,2.5,under,59,23,36,0,-16.55,-28.0
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Total score,,,,5.0,under,46,20,26,0,-9.29,-20.2
-ev_backtest_by_market,2026-07-17T01:42:40Z,2026-07-17T01:42:18Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Total score,,,,7.5,under,33,14,19,0,-7.04,-21.3
 model_vs_book_all,2026-07-17T01:42:58Z,,(all events),,,(all),(all),Birdies,1.171,0.936,1431,,,,,,,,
 model_vs_book_all,2026-07-17T01:42:58Z,,(all events),,,(all),(all),Bogeys,1.192,0.935,720,,,,,,,,
 model_vs_book_all,2026-07-17T01:42:58Z,,(all events),,,(all),(all),Fairways hit,2.327,1.950,609,,,,,,,,
@@ -1552,3 +1490,154 @@ ev_backtest_all,2026-07-17T01:42:58Z,,(all events),,,(all),(all),Birdies,,,,10.0
 ev_backtest_all,2026-07-17T01:42:58Z,,(all events),,,(all),(all),Birdies,,,,2.5,under,40,22,18,0,1.92,4.8
 ev_backtest_all,2026-07-17T01:42:58Z,,(all events),,,(all),(all),Birdies,,,,5.0,under,27,16,11,0,3.13,11.6
 ev_backtest_all,2026-07-17T01:42:58Z,,(all events),,,(all),(all),Birdies,,,,7.5,under,13,10,3,0,5.21,40.1
+model_vs_book,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Birdies,0.474,0.382,151,,,,,,,,
+model_vs_book,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,2.108,1.818,73,,,,,,,,
+model_vs_book,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,GIR,0.470,0.254,40,,,,,,,,
+model_vs_book,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Total score,0.978,0.846,151,,,,,,,,
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Birdies,,,,0.0,over,20,9,11,0,-0.67,-3.4
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Birdies,,,,0.0,under,6,4,2,0,1.65,27.6
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Birdies,,,,2.5,over,8,5,3,0,2.66,33.3
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Birdies,,,,2.5,under,2,1,1,0,-0.14,-6.9
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Birdies,,,,5.0,over,2,1,1,0,0.38,19.0
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Birdies,,,,5.0,under,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,,,,0.0,over,35,15,20,0,-8.61,-24.6
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,,,,0.0,under,38,34,4,0,-4.00,-10.5
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,,,,10.0,over,20,7,13,0,-7.51,-37.6
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,,,,12.5,over,10,5,5,0,-0.82,-8.2
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,,,,15.0,over,3,2,1,0,1.00,33.4
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,,,,17.5,over,3,2,1,0,1.00,33.4
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,,,,2.5,over,34,15,19,0,-7.61,-22.4
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,,,,20.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,,,,5.0,over,33,15,18,0,-6.61,-20.0
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Bogeys,,,,7.5,over,28,13,15,0,-4.89,-17.5
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Fairways hit,,,,0.0,under,75,41,34,0,-34.00,-45.3
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,GIR,,,,0.0,under,75,24,51,0,-51.00,-68.0
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Total score,,,,0.0,over,1,1,0,0,0.66,65.8
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Total score,,,,0.0,under,68,25,43,0,-21.52,-31.6
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Total score,,,,10.0,under,22,8,14,0,-7.01,-31.8
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Total score,,,,12.5,under,12,4,8,0,-4.40,-36.6
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Total score,,,,15.0,under,4,4,0,0,3.60,90.1
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Total score,,,,17.5,under,1,1,0,0,0.71,71.4
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Total score,,,,2.5,under,59,23,36,0,-16.55,-28.0
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Total score,,,,5.0,under,46,20,26,0,-9.29,-20.2
+ev_backtest,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,default,default,Total score,,,,7.5,under,33,14,19,0,-7.04,-21.3
+model_vs_book_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Birdies,0.474,0.382,151,,,,,,,,
+model_vs_book_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,2.108,1.818,73,,,,,,,,
+model_vs_book_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),GIR,0.470,0.254,40,,,,,,,,
+model_vs_book_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Total score,0.978,0.846,151,,,,,,,,
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Birdies,,,,0.0,over,20,9,11,0,-0.67,-3.4
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Birdies,,,,0.0,under,6,4,2,0,1.65,27.6
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Birdies,,,,2.5,over,8,5,3,0,2.66,33.3
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Birdies,,,,2.5,under,2,1,1,0,-0.14,-6.9
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Birdies,,,,5.0,over,2,1,1,0,0.38,19.0
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Birdies,,,,5.0,under,1,0,1,0,-1.00,-100.0
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,,,,0.0,over,35,15,20,0,-8.61,-24.6
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,,,,0.0,under,38,34,4,0,-4.00,-10.5
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,,,,10.0,over,20,7,13,0,-7.51,-37.6
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,,,,12.5,over,10,5,5,0,-0.82,-8.2
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,,,,15.0,over,3,2,1,0,1.00,33.4
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,,,,17.5,over,3,2,1,0,1.00,33.4
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,,,,2.5,over,34,15,19,0,-7.61,-22.4
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,,,,20.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,,,,5.0,over,33,15,18,0,-6.61,-20.0
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Bogeys,,,,7.5,over,28,13,15,0,-4.89,-17.5
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Fairways hit,,,,0.0,under,75,41,34,0,-34.00,-45.3
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),GIR,,,,0.0,under,75,24,51,0,-51.00,-68.0
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Total score,,,,0.0,over,1,1,0,0,0.66,65.8
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Total score,,,,0.0,under,68,25,43,0,-21.52,-31.6
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Total score,,,,10.0,under,22,8,14,0,-7.01,-31.8
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Total score,,,,12.5,under,12,4,8,0,-4.40,-36.6
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Total score,,,,15.0,under,4,4,0,0,3.60,90.1
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Total score,,,,17.5,under,1,1,0,0,0.71,71.4
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Total score,,,,2.5,under,59,23,36,0,-16.55,-28.0
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Total score,,,,5.0,under,46,20,26,0,-9.29,-20.2
+ev_backtest_by_market,2026-07-17T02:30:05Z,2026-07-17T02:29:38Z,The Open Championship,Royal Birkdale Golf Club,2,(all),(all),Total score,,,,7.5,under,33,14,19,0,-7.04,-21.3
+model_vs_book_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Birdies,1.170,0.934,1431,,,,,,,,
+model_vs_book_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Bogeys,1.174,0.928,720,,,,,,,,
+model_vs_book_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Fairways hit,2.327,1.950,609,,,,,,,,
+model_vs_book_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),GIR,1.423,1.078,555,,,,,,,,
+model_vs_book_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Total score,3.673,1.184,1250,,,,,,,,
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Birdies,,,,0.0,over,1044,529,515,0,-56.05,-5.4
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Birdies,,,,10.0,over,623,321,302,0,-15.01,-2.4
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Birdies,,,,12.5,over,470,243,227,0,-11.77,-2.5
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Birdies,,,,15.0,over,320,163,157,0,-12.02,-3.8
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Birdies,,,,17.5,over,224,116,108,0,-1.66,-0.7
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Birdies,,,,2.5,over,965,497,468,0,-36.69,-3.8
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Birdies,,,,20.0,over,149,74,75,0,-4.50,-3.0
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Birdies,,,,5.0,over,878,447,431,0,-39.57,-4.5
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Birdies,,,,7.5,over,752,384,368,0,-28.76,-3.8
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Bogeys,,,,0.0,over,538,223,315,0,-132.04,-24.5
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Bogeys,,,,0.0,under,88,65,23,0,0.45,0.5
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Bogeys,,,,10.0,over,322,122,200,0,-98.62,-30.6
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Bogeys,,,,12.5,over,246,88,158,0,-82.34,-33.5
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Bogeys,,,,15.0,over,179,61,118,0,-65.03,-36.3
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Bogeys,,,,2.5,over,494,205,289,0,-120.21,-24.3
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Bogeys,,,,2.5,under,38,22,16,0,0.01,0.0
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Bogeys,,,,5.0,over,450,185,265,0,-113.66,-25.3
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Bogeys,,,,5.0,under,23,16,7,0,4.05,17.6
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Bogeys,,,,7.5,over,391,161,230,0,-98.50,-25.2
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Bogeys,,,,7.5,under,12,9,3,0,3.18,26.5
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Fairways hit,,,,0.0,over,261,137,124,0,-11.05,-4.2
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Fairways hit,,,,0.0,under,359,194,165,0,-33.69,-9.4
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Fairways hit,,,,10.0,over,200,106,94,0,-4.78,-2.4
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Fairways hit,,,,10.0,under,236,124,112,0,-4.11,-1.7
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Fairways hit,,,,12.5,over,186,98,88,0,-5.11,-2.7
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Fairways hit,,,,12.5,under,231,123,108,0,-1.09,-0.5
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Fairways hit,,,,15.0,over,171,90,81,0,-4.67,-2.7
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Fairways hit,,,,15.0,under,221,119,102,0,0.77,0.3
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Fairways hit,,,,17.5,over,152,79,73,0,-5.04,-3.3
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Fairways hit,,,,17.5,under,204,106,98,0,-6.39,-3.1
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Fairways hit,,,,2.5,over,246,129,117,0,-10.49,-4.3
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Fairways hit,,,,2.5,under,274,145,129,0,-3.84,-1.4
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Fairways hit,,,,20.0,over,142,74,68,0,-4.10,-2.9
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Fairways hit,,,,20.0,under,188,97,91,0,-6.40,-3.4
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Fairways hit,,,,5.0,over,237,125,112,0,-8.95,-3.8
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Fairways hit,,,,5.0,under,265,140,125,0,-4.64,-1.8
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Fairways hit,,,,7.5,over,214,114,100,0,-4.68,-2.2
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Fairways hit,,,,7.5,under,253,133,120,0,-5.27,-2.1
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),GIR,,,,0.0,over,119,60,58,1,-3.60,-3.0
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),GIR,,,,10.0,over,82,42,40,0,-1.34,-1.6
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),GIR,,,,12.5,over,71,36,35,0,-1.08,-1.5
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),GIR,,,,15.0,over,57,29,28,0,-0.46,-0.8
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),GIR,,,,17.5,over,50,26,24,0,0.95,1.9
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),GIR,,,,2.5,over,114,56,57,1,-6.13,-5.4
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),GIR,,,,20.0,over,36,19,17,0,2.29,6.4
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),GIR,,,,5.0,over,97,47,50,0,-7.55,-7.8
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),GIR,,,,7.5,over,89,43,46,0,-6.71,-7.5
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Total score,,,,0.0,over,503,269,234,0,-4.47,-0.9
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Total score,,,,0.0,under,450,260,190,0,39.41,8.8
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Total score,,,,10.0,over,281,155,126,0,7.50,2.7
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Total score,,,,10.0,under,222,139,83,0,40.27,18.1
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Total score,,,,12.5,over,224,123,101,0,6.36,2.8
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Total score,,,,12.5,under,175,109,66,0,31.39,17.9
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Total score,,,,15.0,over,182,97,85,0,-0.06,0.0
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Total score,,,,15.0,under,141,89,52,0,28.54,20.2
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Total score,,,,17.5,over,132,67,65,0,-6.46,-4.9
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Total score,,,,17.5,under,98,63,35,0,21.33,21.8
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Total score,,,,2.5,over,449,244,205,0,3.05,0.7
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Total score,,,,2.5,under,385,225,160,0,38.41,10.0
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Total score,,,,20.0,over,95,50,45,0,-1.93,-2.0
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Total score,,,,20.0,under,80,48,32,0,10.51,13.1
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Total score,,,,5.0,over,392,211,181,0,-0.78,-0.2
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Total score,,,,5.0,under,331,198,133,0,41.47,12.5
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Total score,,,,7.5,over,334,182,152,0,5.56,1.7
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Total score,,,,7.5,under,271,164,107,0,37.16,13.7
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Bogeys,,,,10.0,under,5,5,0,0,3.46,69.2
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Bogeys,,,,12.5,under,2,2,0,0,1.41,70.5
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Bogeys,,,,15.0,under,1,1,0,0,0.65,65.0
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),GIR,,,,0.0,under,387,194,180,13,-35.16,-9.1
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),GIR,,,,10.0,under,165,99,61,5,23.07,14.0
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),GIR,,,,12.5,under,119,73,41,5,22.13,18.6
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),GIR,,,,2.5,under,279,157,110,12,24.07,8.6
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),GIR,,,,5.0,under,236,134,92,10,22.59,9.6
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),GIR,,,,7.5,under,204,119,79,6,23.29,11.4
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Bogeys,,,,17.5,over,126,41,85,0,-47.82,-38.0
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Bogeys,,,,20.0,over,80,26,54,0,-29.30,-36.6
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),GIR,,,,15.0,under,94,61,31,2,22.01,23.4
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),GIR,,,,17.5,under,66,43,22,1,15.25,23.1
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),GIR,,,,20.0,under,47,35,12,0,18.85,40.1
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Birdies,,,,0.0,under,75,42,33,0,4.99,6.7
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Birdies,,,,10.0,under,4,3,1,0,1.92,48.0
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Birdies,,,,2.5,under,40,22,18,0,1.92,4.8
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Birdies,,,,5.0,under,27,16,11,0,3.13,11.6
+ev_backtest_all,2026-07-17T02:30:23Z,,(all events),,,(all),(all),Birdies,,,,7.5,under,13,10,3,0,5.21,40.1

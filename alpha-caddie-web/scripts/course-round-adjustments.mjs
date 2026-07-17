@@ -1042,6 +1042,26 @@ export function flatVenuePlayerScoreAnchorEnabled() {
   return envOn("GOLF_FLAT_VENUE_PLAYER_SCORE", true);
 }
 
+/** R2+ bird/bog blend toward yesterday's field means — off under flat venue (wave + weather only). */
+export function withinEventCountingBlendEnabled() {
+  if (flatVenuePlayerScoreAnchorEnabled()) {
+    return envOn("GOLF_WITHIN_EVENT_COUNTING_BLEND", false);
+  }
+  return envOn("GOLF_WITHIN_EVENT_COUNTING_BLEND", true);
+}
+
+/** Field-wide bird/bog lift after a heavy/light scoring day — 0 under flat venue by default. */
+export function fieldDayCountingLiftFrac() {
+  if (flatVenuePlayerScoreAnchorEnabled()) {
+    return envNum("GOLF_FIELD_DAY_COUNTING_LIFT_FRAC", 0);
+  }
+  const raw = process.env.GOLF_FIELD_DAY_COUNTING_LIFT_FRAC;
+  if (raw !== undefined && String(raw).trim() !== "") {
+    return envNum("GOLF_FIELD_DAY_COUNTING_LIFT_FRAC", FIELD_DAY_COUNTING_LIFT_FRAC);
+  }
+  return FIELD_DAY_COUNTING_LIFT_FRAC;
+}
+
 /** Max blend toward personal venue history when flat venue is on; rest is course-average skill anchor. */
 export function flatVenueMaxPlayerVenueWeight() {
   return clamp(envNum("GOLF_FLAT_VENUE_MAX_PLAYER_SCORE_WEIGHT", 0.38), 0.08, 0.72);
@@ -1868,6 +1888,21 @@ function historicalVenueCountingLocked(basis) {
 
 /** DK / book-style bird+bog split at venue score-to-par (CSV hole counts are often par-heavy). */
 function projectionCountingAnchorFromBasis(basis, payload, opts = {}) {
+  // Prefer DataGolf live-hole-stats field totals (same feed as DG wave split) when present.
+  const liveTot = basis?.live_hole_stats_wave?.total;
+  if (liveTot && Number.isFinite(num(liveTot.birdies, NaN)) && Number.isFinite(num(liveTot.bogeys, NaN))) {
+    return {
+      birdies: Math.round(clamp(num(liveTot.birdies, NaN), 0.15, 7) * 100) / 100,
+      bogeys: Math.round(clamp(num(liveTot.bogeys, NaN), 0.15, 8.5) * 100) / 100,
+      pars: Math.round(
+        Math.max(0.12, num(liveTot.pars, 18 - num(liveTot.birdies, 0) - num(liveTot.bogeys, 0))) * 100,
+      ) / 100,
+      eagles: Math.max(0, num(liveTot.eagles, 0)),
+      doubles: Math.max(0, num(liveTot.doubles, 0)),
+      source: "live_hole_stats",
+    };
+  }
+
   const stp = num(basis?.venue_avg_score_to_par, NaN);
   const histBird = num(basis?.historical_venue_avg_birdies, num(basis?.venue_avg_birdies, NaN));
   const histEag = num(
@@ -2593,11 +2628,13 @@ export function withinEventCountingBlendWeight(nPriorRounds, playerRow) {
 }
 
 /** Field-wide lift when this week's completed round scored birdie-/bogey-heavy vs venue history. */
-export function fieldDayCountingLift(fieldAvg, venueAvg, frac = FIELD_DAY_COUNTING_LIFT_FRAC) {
+export function fieldDayCountingLift(fieldAvg, venueAvg, frac) {
   const f = num(fieldAvg, NaN);
   const v = num(venueAvg, NaN);
   if (!Number.isFinite(f) || !Number.isFinite(v)) return 0;
-  return frac * (f - v);
+  const liftFrac = Number.isFinite(num(frac, NaN)) ? num(frac, NaN) : fieldDayCountingLiftFrac();
+  if (liftFrac <= 0) return 0;
+  return liftFrac * (f - v);
 }
 
 /** Pars as residual hole count — no score-to-par forcing. */

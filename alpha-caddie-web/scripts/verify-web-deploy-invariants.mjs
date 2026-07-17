@@ -124,6 +124,55 @@ if (pinMeta?.summary && /\.{3}|…/.test(pinMeta.summary)) {
   fail(`projections pin_sheet.summary must not truncate with ellipsis: ${pinMeta.summary}`);
 }
 
+// When DataGolf live-hole-stats has AM/PM wave splits, push:live must have applied them.
+const livePath = join(WEB, "live-in-play.json");
+if (existsSync(livePath)) {
+  try {
+    const live = JSON.parse(readFileSync(livePath, "utf8"));
+    const courses = live?.live_hole_stats?.courses;
+    let hasWave = false;
+    if (Array.isArray(courses)) {
+      for (const c of courses) {
+        for (const rnd of c?.rounds || []) {
+          const holes = rnd?.holes || [];
+          const amOk = holes.some((h) => Number(h?.morning_wave?.players_thru) >= 8);
+          const pmOk = holes.some((h) => Number(h?.afternoon_wave?.players_thru) >= 8);
+          if (amOk && pmOk && holes.length >= 9) {
+            hasWave = true;
+            break;
+          }
+        }
+        if (hasWave) break;
+      }
+    }
+    if (hasWave) {
+      const wave = proj.projection_course_basis?.live_hole_stats_wave || proj.meta?.projection_course_basis?.live_hole_stats_wave;
+      const uf = proj.projection_unified_factors || proj.meta?.projection_unified_factors || {};
+      const sourceOk =
+        (wave && Number.isFinite(Number(wave.delta_stp ?? wave.deltaAfternoonMinusMorning))) ||
+        uf?.tee_wave_bias?.source === "live_hole_stats" ||
+        uf?.tee_wave_source === "live_hole_stats";
+      if (!sourceOk) {
+        fail(
+          "live-in-play has DataGolf AM/PM hole-stats wave split but projections missing live_hole_stats_wave — re-run apply:unified-factors after fetch:in-play",
+        );
+      }
+      const bogMean = (() => {
+        const vals = r1Players.map((p) => Number(p.bogeys)).filter(Number.isFinite);
+        return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : NaN;
+      })();
+      const dgBog = Number(wave?.total?.bogeys);
+      if (Number.isFinite(bogMean) && Number.isFinite(dgBog) && Math.abs(bogMean - dgBog) > 1.25) {
+        fail(
+          `field avg bogeys ${bogMean.toFixed(2)} far from DG live-hole-stats ${dgBog.toFixed(2)} — wave recenter missing after weather bake`,
+        );
+      }
+    }
+  } catch (e) {
+    console.warn(`[verify:web-deploy] WARN: could not check live_hole_stats wave — ${e.message || e}`);
+  }
+}
+
 console.log(
   `[verify:web-deploy] OK — pin copy clean, field GIR market rating for ${Math.min(12, r1Players.length)} sample players, Total score spread best/worst validated, course round score ${venueRoundScore}, app.js cache bust present`,
 );

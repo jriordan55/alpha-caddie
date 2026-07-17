@@ -5,6 +5,8 @@ const COURSE_NAME_CANONICAL_KEYS = {
   albany: "albany golf club",
   "albany bahamas": "albany golf club",
   "sea island resort": "sea island golf club",
+  "royal birkdale": "royal birkdale golf club",
+  "royal birkdale gc": "royal birkdale golf club",
 };
 
 export function normCourseNameKey(raw) {

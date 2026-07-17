@@ -13472,6 +13472,17 @@ function courseBreakdownMetricGranularLine(m) {
 
 function courseBreakdownBasisInsightBullets(basis, metrics) {
   const bullets = [];
+  const nHist = Math.round(num(basis.venue_historical_rounds ?? basis.venue_rounds, 0));
+  if (nHist > 0) {
+    const stp = num(basis.venue_avg_score_to_par, NaN);
+    const bird = num(basis.historical_venue_avg_birdies ?? basis.venue_avg_birdies, NaN);
+    const bog = num(basis.historical_venue_avg_bogeys ?? basis.venue_avg_bogeys, NaN);
+    const bits = [`${nHist.toLocaleString()} archived rounds at this venue`];
+    if (Number.isFinite(stp)) bits.push(`avg ${stp >= 0 ? "+" : ""}${stp.toFixed(2)} vs par`);
+    if (Number.isFinite(bird)) bits.push(`${bird.toFixed(2)} birdies`);
+    if (Number.isFinite(bog)) bits.push(`${bog.toFixed(2)} bogeys`);
+    bullets.push(`${bits.join(" — ")}.`);
+  }
   const fieldBird = num(basis.field_counting_means_by_round?.birdies?.["1"], NaN);
   const venueBird = num(basis.venue_avg_birdies, NaN);
   if (Number.isFinite(fieldBird) && Number.isFinite(venueBird) && Math.abs(fieldBird - venueBird) >= 0.12) {
@@ -13921,36 +13932,87 @@ function courseBreakdownPriorEventFromEntries(entries) {
     group.dateBase = Math.max(group.dateBase, dateBase);
     group.entries.push(entry);
   }
-  const prior = [...groups.values()].sort((a, b) => b.dateBase - a.dateBase || b.year - a.year)[0];
-  if (!prior) return null;
+  const allEvents = [...groups.values()].sort((a, b) => b.dateBase - a.dateBase || b.year - a.year);
+  if (!allEvents.length) return null;
 
-  const seen = new Set();
-  const rows = [];
-  const playerIds = new Set();
-  for (const entry of prior.entries) {
-    const row = entry.row;
-    const round = Math.round(num(row.round_num ?? row.round, NaN));
-    const player = Math.round(num(entry.dg_id ?? row.dg_id, NaN));
-    const dedupe = `${Number.isFinite(player) ? player : entry.player_name}|${round}|${row.sortKey || ""}`;
-    if (seen.has(dedupe)) continue;
-    seen.add(dedupe);
-    rows.push(row);
-    if (Number.isFinite(player)) playerIds.add(player);
-  }
-  const mean = (statKey) => {
+  const meanFromRows = (rows, statKey) => {
     const values = rows.map((row) => actualForRoundRow(statKey, row)).filter(Number.isFinite);
     if (!values.length) return { value: NaN, n: 0 };
     return { value: values.reduce((sum, value) => sum + value, 0) / values.length, n: values.length };
   };
+
+  const summarizeEvent = (ev) => {
+    const seen = new Set();
+    const rows = [];
+    const playerIds = new Set();
+    for (const entry of ev.entries) {
+      const row = entry.row;
+      const round = Math.round(num(row.round_num ?? row.round, NaN));
+      const player = Math.round(num(entry.dg_id ?? row.dg_id, NaN));
+      const dedupe = `${Number.isFinite(player) ? player : entry.player_name}|${round}|${row.sortKey || ""}`;
+      if (seen.has(dedupe)) continue;
+      seen.add(dedupe);
+      rows.push(row);
+      if (Number.isFinite(player)) playerIds.add(player);
+    }
+    return {
+      year: ev.year,
+      eventId: ev.eventId,
+      eventName: ev.eventName,
+      dateBase: ev.dateBase,
+      rows: rows.length,
+      players: playerIds.size,
+      score: meanFromRows(rows, "total"),
+      birdies: meanFromRows(rows, "birdies"),
+      bogeys: meanFromRows(rows, "bogeys"),
+      gir: meanFromRows(rows, "gir"),
+      fairways: meanFromRows(rows, "fairways"),
+      _rows: rows,
+    };
+  };
+
+  const events = allEvents.map(summarizeEvent);
+  const allRows = events.flatMap((e) => e._rows);
+  const allPlayerIds = new Set();
+  for (const entry of entries || []) {
+    const row = entry?.row;
+    if (!row || !courseFitDistRoundCountsAsActual(row)) continue;
+    const year = historyRoundSeasonYear(row);
+    if (!Number.isFinite(year) || year > currentYear) continue;
+    const sortKey = Math.floor(num(row.sortKey, 0));
+    const dateBase = sortKey >= 100000000 ? Math.floor(sortKey / 10) : 0;
+    if (Number.isFinite(currentDateBase) && dateBase >= currentDateBase) continue;
+    if (!Number.isFinite(currentDateBase) && year >= currentYear) continue;
+    const player = Math.round(num(entry.dg_id ?? row.dg_id, NaN));
+    if (Number.isFinite(player)) allPlayerIds.add(player);
+  }
+  const years = [...new Set(events.map((e) => e.year))].sort((a, b) => a - b);
+  const latest = events[0];
+  for (const e of events) delete e._rows;
+
   return {
-    ...prior,
-    rows: rows.length,
-    players: playerIds.size,
-    score: mean("total"),
-    birdies: mean("birdies"),
-    bogeys: mean("bogeys"),
-    gir: mean("gir"),
-    fairways: mean("fairways"),
+    // Latest prior event (for "what changed since …" setup notes)
+    year: latest.year,
+    eventId: latest.eventId,
+    eventName: latest.eventName,
+    dateBase: latest.dateBase,
+    rows: latest.rows,
+    players: latest.players,
+    score: latest.score,
+    birdies: latest.birdies,
+    bogeys: latest.bogeys,
+    gir: latest.gir,
+    fairways: latest.fairways,
+    // All archived rounds at this venue (every prior Open / event year)
+    allEvents: events,
+    years,
+    totalRows: allRows.length,
+    totalPlayers: allPlayerIds.size,
+    allScore: meanFromRows(allRows, "total"),
+    allBirdies: meanFromRows(allRows, "birdies"),
+    allBogeys: meanFromRows(allRows, "bogeys"),
+    allGir: meanFromRows(allRows, "gir"),
+    allFairways: meanFromRows(allRows, "fairways"),
   };
 }
 
@@ -13965,6 +14027,39 @@ function courseBreakdownPriorEventSection(priorEvent, externalCtx, basis, curren
   if (!priorEvent) return null;
   const previousSetup = externalCtx?.previous_event || {};
   const bullets = [];
+  const years = Array.isArray(priorEvent.years) && priorEvent.years.length
+    ? priorEvent.years
+    : [priorEvent.year].filter(Number.isFinite);
+  const yearLabel =
+    years.length > 1 ? `${years[0]}–${years[years.length - 1]}` : String(years[0] || priorEvent.year);
+
+  const nRounds = Math.round(num(priorEvent.totalRows ?? priorEvent.rows, 0));
+  const nPlayers = Math.round(num(priorEvent.totalPlayers ?? priorEvent.players, 0));
+  if (nRounds > 0) {
+    const allScore = priorEvent.allScore?.value ?? priorEvent.score?.value;
+    const allBird = priorEvent.allBirdies?.value ?? priorEvent.birdies?.value;
+    const allBog = priorEvent.allBogeys?.value ?? priorEvent.bogeys?.value;
+    const allGir = priorEvent.allGir?.value ?? priorEvent.gir?.value;
+    const bits = [];
+    if (Number.isFinite(allScore)) bits.push(`${allScore.toFixed(1)} scoring avg`);
+    if (Number.isFinite(allBird)) bits.push(`${allBird.toFixed(2)} birdies`);
+    if (Number.isFinite(allBog)) bits.push(`${allBog.toFixed(2)} bogeys`);
+    if (Number.isFinite(allGir)) bits.push(`${allGir.toFixed(1)} GIR`);
+    bullets.push(
+      `All archived rounds here: ${nRounds} rounds across ${years.length} event${years.length === 1 ? "" : "s"} (${yearLabel}${nPlayers ? `; ${nPlayers} players` : ""})${bits.length ? ` — ${bits.join(", ")}` : ""}.`,
+    );
+  }
+
+  if (Array.isArray(priorEvent.allEvents) && priorEvent.allEvents.length > 1) {
+    for (const ev of priorEvent.allEvents) {
+      const sc = Number.isFinite(ev.score?.value) ? ev.score.value.toFixed(1) : "—";
+      const bird = Number.isFinite(ev.birdies?.value) ? ev.birdies.value.toFixed(2) : "—";
+      const bog = Number.isFinite(ev.bogeys?.value) ? ev.bogeys.value.toFixed(2) : "—";
+      bullets.push(
+        `${ev.year} ${ev.eventName}: ${ev.rows} rounds, field avg ${sc} (birdies ${bird}, bogeys ${bog}).`,
+      );
+    }
+  }
 
   const setupBits = [];
   const previousPar = Math.round(num(previousSetup.par, NaN));
@@ -13977,38 +14072,48 @@ function courseBreakdownPriorEventSection(priorEvent, externalCtx, basis, curren
     const delta = currentYardage - previousYardage;
     setupBits.push(`${currentYardage.toLocaleString()} yds (${delta >= 0 ? "+" : ""}${delta.toLocaleString()} vs ${previousSetup.year || priorEvent.year})`);
   }
-  if (setupBits.length) bullets.push(`Setup: ${setupBits.join("; ")}.`);
+  if (setupBits.length) bullets.push(`Setup vs last visit: ${setupBits.join("; ")}.`);
 
   for (const change of externalCtx?.changes_since_previous || []) {
     if (change) bullets.push(change);
   }
 
-  // One predictive takeaway instead of a stat-by-stat projected-vs-actual dump.
-  const currentScore = num(basis?.event_week_field_avg_score, NaN);
-  if (Number.isFinite(currentScore) && Number.isFinite(priorEvent.score.value)) {
-    const delta = currentScore - priorEvent.score.value;
+  // Compare this week to the full venue archive (all prior rounds), not only the latest Open.
+  const histScore = num(priorEvent.allScore?.value ?? priorEvent.score?.value, NaN);
+  const histBird = num(priorEvent.allBirdies?.value ?? priorEvent.birdies?.value, NaN);
+  const histBog = num(priorEvent.allBogeys?.value ?? priorEvent.bogeys?.value, NaN);
+  const currentScore = num(
+    basis?.event_week_field_avg_score ?? basis?.venue_avg_round_score,
+    NaN,
+  );
+  if (Number.isFinite(currentScore) && Number.isFinite(histScore)) {
+    const delta = currentScore - histScore;
     if (Math.abs(delta) >= 0.75) {
       const projBird = courseBreakdownProjectedCountingMean(basis, "birdies");
       const projBog = courseBreakdownProjectedCountingMean(basis, "bogeys");
       const shifts = [];
-      if (Number.isFinite(projBird) && Number.isFinite(priorEvent.birdies?.value)) {
-        shifts.push(projBird > priorEvent.birdies.value ? "more birdies" : "fewer birdies");
+      if (Number.isFinite(projBird) && Number.isFinite(histBird)) {
+        shifts.push(projBird > histBird ? "more birdies" : "fewer birdies");
       }
-      if (Number.isFinite(projBog) && Number.isFinite(priorEvent.bogeys?.value)) {
-        shifts.push(projBog > priorEvent.bogeys.value ? "more bogeys" : "fewer bogeys");
+      if (Number.isFinite(projBog) && Number.isFinite(histBog)) {
+        shifts.push(projBog > histBog ? "more bogeys" : "fewer bogeys");
       }
       bullets.push(
-        `The model expects a ${delta < 0 ? "softer" : "tougher"} test than ${priorEvent.year} (${currentScore.toFixed(1)} projected field average vs ${priorEvent.score.value.toFixed(1)} then${shifts.length ? `; ${shifts.join(", ")}` : ""}) — weight current form and setup over raw ${priorEvent.year} results.`,
+        `The model expects a ${delta < 0 ? "softer" : "tougher"} test than this venue's archive (${currentScore.toFixed(1)} projected field average vs ${histScore.toFixed(1)} across ${yearLabel}${shifts.length ? `; ${shifts.join(", ")}` : ""}) — weight current form, weather, and tee wave over raw past results.`,
       );
     } else {
       bullets.push(
-        `Projected scoring (${currentScore.toFixed(1)}) sits close to the ${priorEvent.year} field average (${priorEvent.score.value.toFixed(1)}) — history here should transfer well.`,
+        `Projected scoring (${currentScore.toFixed(1)}) sits close to the venue archive (${histScore.toFixed(1)} across ${yearLabel}) — history here should transfer well.`,
       );
     }
   }
   return {
-    title: `What changed since ${priorEvent.year}`,
-    paragraphs: [`Last played: ${priorEvent.year} ${priorEvent.eventName}.`],
+    title: years.length > 1 ? `History at this course (${yearLabel})` : `What changed since ${priorEvent.year}`,
+    paragraphs: [
+      years.length > 1
+        ? `Archived tournaments at this venue: ${years.join(", ")}.`
+        : `Last played: ${priorEvent.year} ${priorEvent.eventName}.`,
+    ],
     bullets,
   };
 }
@@ -21208,6 +21313,8 @@ const COURSE_NAME_CANONICAL_KEYS = Object.freeze({
   albany: "albany golf club",
   "albany bahamas": "albany golf club",
   "sea island resort": "sea island golf club",
+  "royal birkdale": "royal birkdale golf club",
+  "royal birkdale gc": "royal birkdale golf club",
 });
 
 /** Course-name canonical key for filters/matching (e.g. "Trump National Doral" vs "(Blue Monster)"). */

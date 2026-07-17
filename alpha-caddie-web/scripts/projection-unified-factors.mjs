@@ -15,9 +15,11 @@ import {
   reconcileAllProjectionPlayerRows,
   reconcileProjectionRowCountsToScore,
   flatVenuePlayerScoreAnchorEnabled,
+  residualParsFromHoleCounts,
 } from "./course-round-adjustments.mjs";
 import { projectionExportMeta } from "./projection-export-meta.mjs";
 import { ensureProjectionCoursePar } from "./projection-course-par.mjs";
+import { waveScoringBiasFromLiveHoleStats } from "./dg-live-hole-pars.mjs";
 import {
   applyWeatherBakedCountsToAllPlayers,
   effectiveWeatherForRow,
@@ -55,7 +57,7 @@ function envOn(name, defaultOn = true) {
 export const UNIFIED_FACTOR_WEIGHTS = Object.freeze({
   courseTableFit: envNum("GOLF_UNIFIED_COURSE_TABLE_FIT_W", 0.16),
   similarCourse: envNum("GOLF_UNIFIED_SIMILAR_COURSE_W", 0.1),
-  teeWave: envNum("GOLF_UNIFIED_TEE_WAVE_W", 0.07),
+  teeWave: envNum("GOLF_UNIFIED_TEE_WAVE_W", 0.28),
   bounceBack: envNum("GOLF_UNIFIED_BOUNCE_BACK_K", 0.032),
   bounceBackCap: envNum("GOLF_UNIFIED_BOUNCE_BACK_CAP", 0.11),
   sundayPressure: envNum("GOLF_UNIFIED_SUNDAY_PRESSURE_W", 1),
@@ -147,11 +149,21 @@ export function similarCoursesFromTable(ctPayload, venueKey, topN = 6) {
   return out.slice(0, topN);
 }
 
-/** Stream CSV once: morning vs afternoon mean score-to-par at venue. */
+/** Stream CSV once: morning vs afternoon mean score-to-par + bird/bog at venue. */
 export async function loadTeeWaveScoringBias(csvPath, courseKey) {
   const ck = normCourseNameKey(courseKey);
-  const bias = { morning: { n: 0, sum: 0 }, afternoon: { n: 0, sum: 0 } };
-  if (!ck || !csvPath || !existsSync(csvPath)) return { deltaAfternoonMinusMorning: 0, n: 0 };
+  const bias = {
+    morning: { n: 0, stpSum: 0, birdSum: 0, bogSum: 0 },
+    afternoon: { n: 0, stpSum: 0, birdSum: 0, bogSum: 0 },
+  };
+  if (!ck || !csvPath || !existsSync(csvPath)) {
+    return {
+      deltaAfternoonMinusMorning: 0,
+      deltaBirdiesAfternoonMinusMorning: 0,
+      deltaBogeysAfternoonMinusMorning: 0,
+      n: 0,
+    };
+  }
 
   await new Promise((resolve, reject) => {
     const parser = createReadStream(csvPath).pipe(
@@ -166,19 +178,45 @@ export async function loadTeeWaveScoringBias(csvPath, courseKey) {
       const rs = num(row.round_score, NaN);
       if (!Number.isFinite(cp) || !Number.isFinite(rs)) return;
       const stp = rs - cp;
+      const bird = num(row.birdies, NaN);
+      const bog = num(row.bogeys ?? row.bogies, NaN);
       const wave = teeWaveFromTeetimeAndLabel(tee, "");
       if (!wave) return;
       bias[wave].n++;
-      bias[wave].sum += stp;
+      bias[wave].stpSum += stp;
+      if (Number.isFinite(bird)) bias[wave].birdSum += bird;
+      if (Number.isFinite(bog)) bias[wave].bogSum += bog;
     });
     parser.on("end", resolve);
     parser.on("error", reject);
   });
 
-  const mStp = bias.morning.n > 40 ? bias.morning.sum / bias.morning.n : NaN;
-  const aStp = bias.afternoon.n > 40 ? bias.afternoon.sum / bias.afternoon.n : NaN;
-  if (!Number.isFinite(mStp) || !Number.isFinite(aStp)) return { deltaAfternoonMinusMorning: 0, n: bias.morning.n + bias.afternoon.n };
-  return { deltaAfternoonMinusMorning: aStp - mStp, n: bias.morning.n + bias.afternoon.n };
+  const mN = bias.morning.n;
+  const aN = bias.afternoon.n;
+  const mStp = mN > 40 ? bias.morning.stpSum / mN : NaN;
+  const aStp = aN > 40 ? bias.afternoon.stpSum / aN : NaN;
+  const mBird = mN > 40 && bias.morning.birdSum > 0 ? bias.morning.birdSum / mN : NaN;
+  const aBird = aN > 40 && bias.afternoon.birdSum > 0 ? bias.afternoon.birdSum / aN : NaN;
+  const mBog = mN > 40 && bias.morning.bogSum > 0 ? bias.morning.bogSum / mN : NaN;
+  const aBog = aN > 40 && bias.afternoon.bogSum > 0 ? bias.afternoon.bogSum / aN : NaN;
+  if (!Number.isFinite(mStp) || !Number.isFinite(aStp)) {
+    return {
+      deltaAfternoonMinusMorning: 0,
+      deltaBirdiesAfternoonMinusMorning: 0,
+      deltaBogeysAfternoonMinusMorning: 0,
+      n: mN + aN,
+    };
+  }
+  return {
+    deltaAfternoonMinusMorning: aStp - mStp,
+    deltaBirdiesAfternoonMinusMorning:
+      Number.isFinite(mBird) && Number.isFinite(aBird) ? aBird - mBird : 0,
+    deltaBogeysAfternoonMinusMorning:
+      Number.isFinite(mBog) && Number.isFinite(aBog) ? aBog - mBog : 0,
+    n: mN + aN,
+    morning_n: mN,
+    afternoon_n: aN,
+  };
 }
 
 /** Similar-venue mean stp blend when primary venue sample is thin. */
@@ -267,17 +305,52 @@ export function teeWaveStrokeShift(wave, waveBias, morningSnap, afternoonSnap) {
   if (w <= 0) return 0;
   let shift = 0;
   const histDelta = num(waveBias?.deltaAfternoonMinusMorning, 0);
-  if (wave === "afternoon") shift += histDelta * 0.5 * w;
-  else if (wave === "morning") shift -= histDelta * 0.5 * w;
+  const liveStrength = waveBias?.source === "live_hole_stats" ? 0.85 : 0.5;
+  if (wave === "afternoon") shift += histDelta * liveStrength * w;
+  else if (wave === "morning") shift -= histDelta * liveStrength * w;
+  const wxScale = waveBias?.source === "live_hole_stats" ? 0.15 : 0.35;
   if (morningSnap && afternoonSnap && wave) {
     const dM = weatherDifficultyDeltaFromSnapshot(morningSnap);
     const dA = weatherDifficultyDeltaFromSnapshot(afternoonSnap);
     if (Number.isFinite(dM) && Number.isFinite(dA)) {
       const waveDiff = dA - dM;
-      shift += (wave === "afternoon" ? waveDiff : -waveDiff) * 0.35 * w;
+      shift += (wave === "afternoon" ? waveDiff : -waveDiff) * wxScale * w;
     }
   }
   return shift;
+}
+
+/** Venue-history + forecast AM/PM bird/bog differential (primary round separator under flat venue). */
+export function teeWaveCountingShifts(wave, waveBias, morningSnap, afternoonSnap) {
+  const w = UNIFIED_FACTOR_WEIGHTS.teeWave;
+  if (w <= 0 || !wave) return { birdies: 0, bogeys: 0 };
+  // Event-week DG live_hole_stats is the ground truth for this course/setup — apply most of the observed split.
+  const liveStrength = waveBias?.source === "live_hole_stats" ? 0.85 : 0.5;
+  let birdShift = 0;
+  let bogShift = 0;
+  const histBirdDelta = num(waveBias?.deltaBirdiesAfternoonMinusMorning, 0);
+  const histBogDelta = num(waveBias?.deltaBogeysAfternoonMinusMorning, 0);
+  if (wave === "afternoon") {
+    birdShift += histBirdDelta * liveStrength * w;
+    bogShift += histBogDelta * liveStrength * w;
+  } else if (wave === "morning") {
+    birdShift -= histBirdDelta * liveStrength * w;
+    bogShift -= histBogDelta * liveStrength * w;
+  }
+  // Forecast weather AM/PM differential only when we lack live hole-stats wave (or as a small add-on).
+  const wxScale = waveBias?.source === "live_hole_stats" ? 0.15 : 0.35;
+  if (morningSnap && afternoonSnap) {
+    const dM = weatherDifficultyDeltaFromSnapshot(morningSnap);
+    const dA = weatherDifficultyDeltaFromSnapshot(afternoonSnap);
+    if (Number.isFinite(dM) && Number.isFinite(dA)) {
+      const waveDiff = dA - dM;
+      const wxBird = -0.5 * waveDiff;
+      const wxBog = 0.45 * waveDiff;
+      birdShift += (wave === "afternoon" ? wxBird : -wxBird) * wxScale * w;
+      bogShift += (wave === "afternoon" ? wxBog : -wxBog) * wxScale * w;
+    }
+  }
+  return { birdies: birdShift, bogeys: bogShift };
 }
 
 /** Per-player residual bias from round_projection_vs_actual.csv (shrink by sample). */
@@ -479,11 +552,94 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
   const ctPayload = loadCourseTablePayload();
   const ctRow = resolveCourseTableRow(ctPayload, courseLabel);
   const similar = similarCoursesFromTable(ctPayload, courseKey, 6);
-  const [waveBias, similarStp, residualMap] = await Promise.all([
+  const [histWaveBias, similarStp, residualMap] = await Promise.all([
     loadTeeWaveScoringBias(csvPath, courseKey),
     loadSimilarCourseStpBlend(csvPath, similar),
     loadPlayerResidualCalibration(residualCsv),
   ]);
+
+  // Prefer DataGolf live-hole-stats AM/PM (same feed as DG "SPLIT BY WAVE") over empty/thin hist CSV.
+  const liveWaveBias = liveBundle?.live_hole_stats
+    ? waveScoringBiasFromLiveHoleStats(
+        liveBundle.live_hole_stats,
+        courseLabel,
+        liveBundle.field_updates,
+        String(meta.event_name ?? payload.event_name ?? "").trim(),
+      )
+    : null;
+  const waveBias =
+    liveWaveBias && Number.isFinite(liveWaveBias.deltaAfternoonMinusMorning)
+      ? liveWaveBias
+      : histWaveBias;
+
+  if (liveWaveBias?.total && meta.projection_course_basis && typeof meta.projection_course_basis === "object") {
+    const tot = liveWaveBias.total;
+    const fm = meta.projection_course_basis.field_counting_means_by_round || {
+      birdies: {},
+      bogeys: {},
+      gir: {},
+      fairways: {},
+    };
+    const rndKey = String(liveWaveBias.round || Math.round(num(payload.display_round, 1)) || 1);
+    if (Number.isFinite(tot.birdies)) fm.birdies[rndKey] = tot.birdies;
+    if (Number.isFinite(tot.bogeys)) fm.bogeys[rndKey] = tot.bogeys;
+    meta.projection_course_basis.field_counting_means_by_round = fm;
+    meta.projection_course_basis.live_hole_stats_wave = {
+      round: liveWaveBias.round,
+      morning: liveWaveBias.morning,
+      afternoon: liveWaveBias.afternoon,
+      total: liveWaveBias.total,
+      delta_stp: liveWaveBias.deltaAfternoonMinusMorning,
+      delta_birdies: liveWaveBias.deltaBirdiesAfternoonMinusMorning,
+      delta_bogeys: liveWaveBias.deltaBogeysAfternoonMinusMorning,
+    };
+    // Flat export schema: keep root basis in sync for calibrateProjectionFieldMarkets.
+    if (payload.projection_course_basis && payload.projection_course_basis !== meta.projection_course_basis) {
+      payload.projection_course_basis.field_counting_means_by_round = fm;
+      payload.projection_course_basis.live_hole_stats_wave =
+        meta.projection_course_basis.live_hole_stats_wave;
+    } else {
+      payload.projection_course_basis = meta.projection_course_basis;
+    }
+
+    // Recenter field bird/bog toward DG hole-stats totals (fixes live_tournament_stats zeros → bogus ~5.2 bogeys).
+    // Apply to every unfinished round row so R1–R4 stay coherent after late weather/reconcile passes.
+    const targetBird = num(tot.birdies, NaN);
+    const targetBog = num(tot.bogeys, NaN);
+    if (Number.isFinite(targetBird) && Number.isFinite(targetBog)) {
+      const displayRnd = Math.round(num(payload.display_round, liveWaveBias.round || 1)) || 1;
+      const fieldRows = players.filter((p) => {
+        const rnd = Math.round(num(p.round, NaN));
+        return Number.isFinite(rnd) && rnd >= displayRnd && rnd <= 4;
+      });
+      const sampleRows =
+        fieldRows.length >= 20
+          ? fieldRows.filter((p) => Math.round(num(p.round, NaN)) === displayRnd)
+          : fieldRows;
+      const mean = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : NaN);
+      const curBird = mean(sampleRows.map((p) => num(p.birdies, NaN)).filter(Number.isFinite));
+      const curBog = mean(sampleRows.map((p) => num(p.bogeys, NaN)).filter(Number.isFinite));
+      const dBird = Number.isFinite(curBird) ? targetBird - curBird : 0;
+      const dBog = Number.isFinite(curBog) ? targetBog - curBog : 0;
+      if (Math.abs(dBird) > 0.05 || Math.abs(dBog) > 0.05) {
+        for (const p of players) {
+          const rnd = Math.round(num(p.round, NaN));
+          if (!Number.isFinite(rnd) || rnd < displayRnd) continue;
+          if (Number.isFinite(num(p.birdies, NaN))) {
+            p.birdies = Math.round(Math.max(0.15, num(p.birdies, 0) + dBird) * 100) / 100;
+          }
+          if (Number.isFinite(num(p.bogeys, NaN))) {
+            p.bogeys = Math.round(Math.max(0.15, num(p.bogeys, 0) + dBog) * 100) / 100;
+          }
+          const pars = residualParsFromHoleCounts(p);
+          if (Number.isFinite(pars)) p.pars = Math.round(pars * 100) / 100;
+        }
+        console.log(
+          `[unified-factors] recentered bird/bog to DG live-hole-stats totals (bird ${curBird?.toFixed?.(2)}→${targetBird}, bog ${curBog?.toFixed?.(2)}→${targetBog}; rounds R${displayRnd}–R4)`,
+        );
+      }
+    }
+  }
 
   const morningSnap = meta?.forecast_wave_slots?.morning ?? meta?.forecast_weather_morning ?? null;
   const afternoonSnap = meta?.forecast_wave_slots?.afternoon ?? meta?.forecast_weather_afternoon ?? null;
@@ -505,6 +661,7 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
     sunday_pressure: 0,
     weather_round: 0,
     player_residual: 0,
+    live_hole_stats_wave: liveWaveBias ? 1 : 0,
   };
 
   for (const row of players) {
@@ -535,6 +692,22 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
       totalShift += twShift;
       factorCounts.tee_wave++;
       reasons.push(`tee_wave:${twShift.toFixed(3)}`);
+    }
+
+    const countWave = teeWaveCountingShifts(wave, waveBias, morningSnap, afternoonSnap);
+    if (Math.abs(countWave.birdies) > 1e-5 || Math.abs(countWave.bogeys) > 1e-5) {
+      if (Number.isFinite(num(row.birdies, NaN))) {
+        row.birdies = Math.round((num(row.birdies, 0) + countWave.birdies) * 100) / 100;
+      }
+      if (Number.isFinite(num(row.bogeys, NaN))) {
+        row.bogeys = Math.round((num(row.bogeys, 0) + countWave.bogeys) * 100) / 100;
+      }
+      const pars = residualParsFromHoleCounts(row);
+      if (Number.isFinite(pars)) row.pars = Math.round(pars * 100) / 100;
+      factorCounts.tee_wave++;
+      reasons.push(
+        `tee_wave_counts:bird${countWave.birdies >= 0 ? "+" : ""}${countWave.birdies.toFixed(3)},bog${countWave.bogeys >= 0 ? "+" : ""}${countWave.bogeys.toFixed(3)}`,
+      );
     }
 
     if (rnd >= 2 && !flatVenuePlayerScoreAnchorEnabled()) {
@@ -613,6 +786,7 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
     weights: { ...UNIFIED_FACTOR_WEIGHTS },
     factor_counts: factorCounts,
     tee_wave_bias: waveBias,
+    tee_wave_source: waveBias?.source || "historical_csv",
     similar_courses: similar.map((s) => s.label).slice(0, 4),
     similar_stp_blend: Number.isFinite(similarStp) ? Math.round(similarStp * 1000) / 1000 : null,
     player_residuals_loaded: residualMap.size,
@@ -629,7 +803,7 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
   };
 
   console.log(
-    `[unified-factors] adjusted ${adjusted}/${players.length} rows | course_fit=${factorCounts.course_table_fit} tee_wave=${factorCounts.tee_wave} bounce_back=${factorCounts.bounce_back} sunday=${factorCounts.sunday_pressure} weather=${factorCounts.weather_round} residual=${factorCounts.player_residual}`,
+    `[unified-factors] adjusted ${adjusted}/${players.length} rows | course_fit=${factorCounts.course_table_fit} tee_wave=${factorCounts.tee_wave} (${waveBias?.source || "hist"} Δstp=${num(waveBias?.deltaAfternoonMinusMorning, 0).toFixed(2)} Δbog=${num(waveBias?.deltaBogeysAfternoonMinusMorning, 0).toFixed(2)}) bounce_back=${factorCounts.bounce_back} sunday=${factorCounts.sunday_pressure} weather=${factorCounts.weather_round} residual=${factorCounts.player_residual}`,
   );
   return { adjusted, meta: summary, reconciled: rec };
 }

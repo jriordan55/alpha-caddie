@@ -9,7 +9,14 @@ import { fileURLToPath } from "url";
 import { reconcileAllProjectionPlayerRows, flatVenuePlayerScoreAnchorEnabled } from "./course-round-adjustments.mjs";
 import { liveProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
 
-Object.assign(process.env, liveProjectionPipelineEnv());
+Object.assign(
+  process.env,
+  Object.fromEntries(
+    Object.entries(liveProjectionPipelineEnv()).filter(
+      ([k]) => process.env[k] === undefined || String(process.env[k]).trim() === "",
+    ),
+  ),
+);
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB = join(__dirname, "..");

@@ -48,13 +48,20 @@ function envTruthy(name, defaultVal) {
 }
 
 function buildBaseEnv() {
+  const pipeline = liveProjectionPipelineEnv();
   const e = {
     ...process.env,
-    ...liveProjectionPipelineEnv(),
+    ...pipeline,
     ...dkOuScrapeEnv(),
     ...requireDkOuEnv(),
     GOLF_MODEL_DIR: process.env.GOLF_MODEL_DIR?.trim() || REPO_ROOT,
   };
+  // push:live sets flat-venue / wave weights on process.env before refresh:live — never clobber those.
+  for (const key of Object.keys(pipeline)) {
+    if (process.env[key] !== undefined && String(process.env[key]).trim() !== "") {
+      e[key] = process.env[key];
+    }
+  }
   delete e.GOLF_HISTORICAL_ROUNDS_FULL_HISTORY;
   return e;
 }
@@ -375,6 +382,13 @@ run(
 
 runWeatherAndTeeTimesPass("publish");
 
+// Re-apply unified factors AFTER final weather/tee-time bake so DG live-hole-stats AM/PM wave
+// + bird/bog recenter always survive the late weather pass (publish weather used to overwrite them).
+run(
+  "apply-unified-projection-factors.mjs",
+  "Re-apply unified factors after publish weather (DG live-hole-stats AM/PM wave + bird/bog)",
+);
+
 run(
   "reconcile-projection-counts.mjs",
   "Reconcile counting stats after publish weather bake (before validate)",
@@ -436,7 +450,12 @@ if (skipHistoryRebuild) {
     softOpt,
   );
   run("rebuild-field-season-bundle.mjs", "Rebuild field-{year}.json for Historical Trends", {}, softOpt);
-  run("build-course-history-shards.mjs", "Course history shards for At-this-course O/U averages", {}, softOpt);
+  run(
+    "build-course-history-shards.mjs",
+    "Course history shards for At-this-course O/U averages (all years from 2004)",
+    { GOLF_HISTORY_MIN_YEAR: "2004" },
+    softOpt,
+  );
 } else {
   if (Object.keys(fh).length) {
     console.log(
@@ -464,7 +483,11 @@ if (skipHistoryRebuild) {
     },
   );
   run("embed-player-history.mjs", "Embed history for static deploy (embed:history)");
-  run("build-course-history-shards.mjs", "Course history shards for At-this-course O/U averages");
+  run(
+    "build-course-history-shards.mjs",
+    "Course history shards for At-this-course O/U averages",
+    { GOLF_HISTORY_MIN_YEAR: "2004" },
+  );
 }
 
 run("verify-ou-round-projection-means.mjs", "Guard Round Projections Proj μ (no in-play collapse)", {}, softOpt);

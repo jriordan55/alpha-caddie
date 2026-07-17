@@ -31,6 +31,7 @@ import {
   updateProjectionBasisFromEventWeek,
   withinEventCountingBlendWeight,
   flatVenuePlayerScoreAnchorEnabled,
+  withinEventCountingBlendEnabled,
 } from "./course-round-adjustments.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -269,33 +270,36 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
     }
 
     const current = roundCounts(countingRowForUnblend(pl), countKeys);
-    const skillBeforeBlend = unblendWithinEventCounts(
-      current,
-      priorByStat,
-      oldFieldMeans,
-      r,
-      pl,
-      ["birdies", "bogeys", "gir", "fairways", "putts"],
-    );
+    const countingBlendOn = withinEventCountingBlendEnabled();
+    if (countingBlendOn) {
+      const skillBeforeBlend = unblendWithinEventCounts(
+        current,
+        priorByStat,
+        oldFieldMeans,
+        r,
+        pl,
+        ["birdies", "bogeys", "gir", "fairways", "putts"],
+      );
 
-    const blended = blendTowardWithinEventActuals(skillBeforeBlend, priorByStat, r, {
-      playerRow: pl,
-      skillCounts: skillBeforeBlend,
-      fieldMeans: fieldCountingMeans,
-    });
+      const blended = blendTowardWithinEventActuals(skillBeforeBlend, priorByStat, r, {
+        playerRow: pl,
+        skillCounts: skillBeforeBlend,
+        fieldMeans: fieldCountingMeans,
+      });
 
-    if (fieldCountingMeans) {
-      applyFieldDayCountingLiftNatural(blended, r, fieldCountingMeans, venueScoring);
+      if (fieldCountingMeans) {
+        applyFieldDayCountingLiftNatural(blended, r, fieldCountingMeans, venueScoring);
+      }
+
+      pl.eagles = Math.round(num(blended.eagles, pl.eagles) * 1000) / 1000;
+      pl.birdies = Math.round(num(blended.birdies, pl.birdies) * 100) / 100;
+      pl.pars = Math.round(num(blended.pars, pl.pars) * 100) / 100;
+      pl.bogeys = Math.round(num(blended.bogeys, pl.bogeys) * 100) / 100;
+      pl.doubles = Math.round(num(blended.doubles, pl.doubles) * 1000) / 1000;
+      if (Number.isFinite(num(blended.gir, NaN))) pl.gir = Math.round(blended.gir * 100) / 100;
+      if (Number.isFinite(num(blended.fairways, NaN))) pl.fairways = Math.round(blended.fairways * 100) / 100;
+      if (Number.isFinite(num(blended.putts, NaN))) pl.putts = Math.round(blended.putts * 100) / 100;
     }
-
-    pl.eagles = Math.round(num(blended.eagles, pl.eagles) * 1000) / 1000;
-    pl.birdies = Math.round(num(blended.birdies, pl.birdies) * 100) / 100;
-    pl.pars = Math.round(num(blended.pars, pl.pars) * 100) / 100;
-    pl.bogeys = Math.round(num(blended.bogeys, pl.bogeys) * 100) / 100;
-    pl.doubles = Math.round(num(blended.doubles, pl.doubles) * 1000) / 1000;
-    if (Number.isFinite(num(blended.gir, NaN))) pl.gir = Math.round(blended.gir * 100) / 100;
-    if (Number.isFinite(num(blended.fairways, NaN))) pl.fairways = Math.round(blended.fairways * 100) / 100;
-    if (Number.isFinite(num(blended.putts, NaN))) pl.putts = Math.round(blended.putts * 100) / 100;
     playersTouched++;
   }
 
@@ -310,6 +314,7 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
   meta.projection_round_adjustments.within_event_form_carry = formK;
   meta.projection_round_adjustments.within_event_form_cap = formCap;
   meta.projection_round_adjustments.flat_venue_player_score = flatVenuePlayerScoreAnchorEnabled();
+  meta.projection_round_adjustments.within_event_counting_blend = withinEventCountingBlendEnabled();
   delete meta.projection_round_adjustments.within_event_r1_anchor;
   proj.meta = meta;
 

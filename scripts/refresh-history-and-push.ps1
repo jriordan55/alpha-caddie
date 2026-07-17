@@ -127,8 +127,12 @@ if ($LiveWeekOnly) {
   $env:GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS = "0"
   $env:GOLF_FAIL_ON_PAR_MISMATCH = "0"
   $env:GOLF_LIVE_VALIDATE_SOFT = "1"
+  $env:GOLF_UNIFIED_TEE_WAVE_W = "0.30"
+  $env:GOLF_FIELD_DAY_COUNTING_LIFT_FRAC = "0"
+  $env:GOLF_WITHIN_EVENT_COUNTING_BLEND = "0"
   Write-Host "LiveWeekOnly: npm run refresh:live (live feeds + DK/PP props + tee times + weather bake + field history refresh for Trends)."
   Write-Host "LiveWeekOnly soft mode: DK not required, skip odds ROI backtest, no full vs-actual rebuild, soft validate."
+  Write-Host "LiveWeekOnly projection: flat venue anchor; AM/PM wave + weather separate rounds (no prior-day field bird/bog lift)."
 } elseif (-not $NoFullHistory) {
   $env:GOLF_HISTORICAL_ROUNDS_FULL_HISTORY = "1"
   $env:GOLF_SKIP_HISTORY_ON_FETCH_DG = "1"

@@ -25,9 +25,14 @@ export function walkforwardBacktestPipelineEnv() {
   };
 }
 
-/** Alias — live week uses the same μ engine as honest walk-forward backtest. */
+/** Live week: stable venue-anchored μ; round separation from weather, pin sheet, and tee wave only. */
 export function liveProjectionPipelineEnv() {
-  return walkforwardBacktestPipelineEnv();
+  return {
+    ...flatVenueProjectionPipelineEnv(),
+    GOLF_UNIFIED_TEE_WAVE_W: process.env.GOLF_UNIFIED_TEE_WAVE_W || "0.30",
+    GOLF_FIELD_DAY_COUNTING_LIFT_FRAC: process.env.GOLF_FIELD_DAY_COUNTING_LIFT_FRAC || "0",
+    GOLF_WITHIN_EVENT_COUNTING_BLEND: process.env.GOLF_WITHIN_EVENT_COUNTING_BLEND || "0",
+  };
 }
 
 /** DraftKings round O/U scrape — headed browser on desktop (DK blocks headless Chromium). */

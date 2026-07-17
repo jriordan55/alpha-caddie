@@ -79,6 +79,7 @@ import {
   fieldCountingMeansFromEventContext,
   fieldCountingMeansFromWithinEventMap,
   flatVenuePlayerScoreAnchorEnabled,
+  withinEventCountingBlendEnabled,
   loadEventRoundContextFromHistoricalCsv,
   loadRecentVenueRoundRowsForProjections,
   loadVenueHistoricalScoring,
@@ -2688,7 +2689,7 @@ async function main() {
       st.gir = venueCounts.gir;
       st.fairways = venueCounts.fairways;
       st.putts = venueCounts.putts;
-      if (r >= 2 && withinEventCountingMap.size) {
+      if (r >= 2 && withinEventCountingBlendEnabled() && withinEventCountingMap.size) {
         const priorByStat = buildPriorByStatForPlayer(withinEventCountingMap, row.dg_id, r);
         if (priorByStat) {
           const skillBeforeBlend = {
@@ -2717,7 +2718,7 @@ async function main() {
           st.putts = blended.putts;
         }
       }
-      if (r >= 2 && fieldCountingMeans) {
+      if (r >= 2 && withinEventCountingBlendEnabled() && fieldCountingMeans) {
         applyFieldDayCountingLiftNatural(st, r, fieldCountingMeans, venueScoring);
       }
       const pl = {
