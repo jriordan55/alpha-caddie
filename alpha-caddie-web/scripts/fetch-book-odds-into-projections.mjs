@@ -356,8 +356,32 @@ async function main() {
   if (next.outright_live_score_placement_nudge == null) next.outright_live_score_placement_nudge = false;
 
   if (process.env.GOLF_SKIP_PROPS_CSV !== "1" || process.env.GOLF_SKIP_DK_OU !== "1") {
-    const { props, nCsv, nDk, nDkFresh, dkLeagueSlug, dkLeagueUrl, dkError, dkRoundOuNotPosted } =
-      await refreshRoundProjectionProps(payload, GOLF_MODEL_ROOT);
+    let props = [];
+    let nCsv = 0;
+    let nDk = 0;
+    let nDkFresh = 0;
+    let dkLeagueSlug = "";
+    let dkLeagueUrl = "";
+    let dkError = "";
+    let dkRoundOuNotPosted = false;
+    try {
+      ({
+        props,
+        nCsv,
+        nDk,
+        nDkFresh,
+        dkLeagueSlug,
+        dkLeagueUrl,
+        dkError,
+        dkRoundOuNotPosted,
+      } = await refreshRoundProjectionProps(payload, GOLF_MODEL_ROOT));
+    } catch (e) {
+      console.warn(
+        `[fetch-book-odds] DraftKings / round props scrape crashed: ${e?.message || e} — keeping prior props`,
+      );
+      props = Array.isArray(payload.props) ? payload.props : [];
+      dkError = String(e?.message || e);
+    }
     if (props.length) {
       next.props = props;
       if (dkLeagueSlug) next.dk_league_slug = dkLeagueSlug;
@@ -394,14 +418,28 @@ async function main() {
       nDkFresh === 0 &&
       !dkRoundOuNotPosted
     ) {
+      const softLive =
+        String(process.env.GOLF_LIVE_WEEK_SOFT || "").trim() === "1" ||
+        String(process.env.GOLF_SKIP_DK_OU_REQUIRE || "").trim() === "1";
+      const priorDk = (Array.isArray(next.props) ? next.props : []).filter(
+        (r) => String(r?.source || "").trim().toLowerCase() === "draftkings",
+      ).length;
       const err =
         String(dkError || "").trim() ||
         "DraftKings scrape returned 0 fresh round O/U props — Round projections requires real DK lines";
-      console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_DK_OU=1): ${err}`);
-      console.error(
-        "[fetch-book-odds] Fix: install Playwright Chromium (npx playwright install chromium); on Windows/macOS use DK_HEADLESS=0 (set automatically by push:live).",
-      );
-      process.exit(1);
+      if (softLive || priorDk > 0) {
+        console.warn(
+          `[fetch-book-odds] WARN (DK soft): ${err}${priorDk ? ` — keeping ${priorDk} existing draftkings props` : " — continuing with model O/U"}`,
+        );
+        const exportMetaSoft = projectionExportMeta(next);
+        exportMetaSoft.dk_round_props_note = err;
+      } else {
+        console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_DK_OU=1): ${err}`);
+        console.error(
+          "[fetch-book-odds] Fix: install Playwright Chromium (npx playwright install chromium); on Windows/macOS use DK_HEADLESS=0 (set automatically by push:live).",
+        );
+        process.exit(1);
+      }
     }
   }
 

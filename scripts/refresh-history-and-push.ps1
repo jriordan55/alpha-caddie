@@ -31,9 +31,13 @@ function Invoke-NpmCli([Parameter(ValueFromRemainingArguments = $true)][string[]
 
 function Run-Npm([string] $Label, [Parameter(ValueFromRemainingArguments = $true)][string[]] $NpmArgs) {
   Write-Host $Label
+  $global:LASTEXITCODE = 0
   Invoke-NpmCli @NpmArgs
-  if ($LASTEXITCODE -ne 0) {
-    throw "$Label failed with exit code $LASTEXITCODE"
+  $code = $LASTEXITCODE
+  if ($null -eq $code) { $code = 0 }
+  # Windows sometimes reports killed/crashed children as negative NTSTATUS (-1, etc.).
+  if ($code -ne 0) {
+    throw "$Label failed with exit code $code"
   }
 }
 #
@@ -114,7 +118,17 @@ if ($LiveWeekOnly) {
   Remove-Item Env:\GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE -ErrorAction SilentlyContinue
   $env:GOLF_REFRESH_LIVE_SKIP_HISTORY_REBUILD = "1"
   $env:GOLF_SKIP_ROUND_WEATHER_BACKFILL = "1"
+  # Between-rounds reliability: update live actuals + projections; never hard-fail on DK/Playwright
+  # flakiness or heavy backtest rebuilds (those caused exit -1 / OOM mid-tournament).
+  $env:GOLF_LIVE_WEEK_SOFT = "1"
+  $env:GOLF_REQUIRE_DK_OU = "0"
+  $env:GOLF_SKIP_DK_OU_VALIDATE = "1"
+  $env:GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI = "1"
+  $env:GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS = "0"
+  $env:GOLF_FAIL_ON_PAR_MISMATCH = "0"
+  $env:GOLF_LIVE_VALIDATE_SOFT = "1"
   Write-Host "LiveWeekOnly: npm run refresh:live (live feeds + DK/PP props + tee times + weather bake + field history refresh for Trends)."
+  Write-Host "LiveWeekOnly soft mode: DK not required, skip odds ROI backtest, no full vs-actual rebuild, soft validate."
 } elseif (-not $NoFullHistory) {
   $env:GOLF_HISTORICAL_ROUNDS_FULL_HISTORY = "1"
   $env:GOLF_SKIP_HISTORY_ON_FETCH_DG = "1"

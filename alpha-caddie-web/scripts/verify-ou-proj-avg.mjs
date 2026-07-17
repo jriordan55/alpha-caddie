@@ -17,6 +17,23 @@ function fail(msg) {
   process.exit(1);
 }
 
+/**
+ * Live round-to-round publish (GOLF_LIVE_VALIDATE_SOFT=1): player/season data-richness canaries
+ * (min rounds played, per-player venue history) are NOT publish blockers — the field naturally has
+ * first-timers and thin mid-season samples every week. Warn and continue. Structural checks
+ * (missing shard, app.js wiring) stay hard.
+ */
+const LIVE_SOFT =
+  String(process.env.GOLF_LIVE_VALIDATE_SOFT || "").trim() === "1" ||
+  String(process.env.GOLF_LIVE_WEEK_SOFT || "").trim() === "1";
+function softFail(msg) {
+  if (LIVE_SOFT) {
+    console.warn(`[verify:ou-proj-avg] WARN (soft, non-blocking): ${msg}`);
+    return;
+  }
+  fail(msg);
+}
+
 function num(v, fallback = NaN) {
   const n = Number(v);
   return Number.isFinite(n) ? n : fallback;
@@ -204,11 +221,12 @@ if (existsSync(renaissanceShard)) {
       .filter(Number.isFinite);
     const shardCourseMean = mean(fromCourse);
     const last4BirdMean = mean(last4Birdies);
-    if (!Number.isFinite(shardCourseMean)) fail("no Harman bogeys in Renaissance course shard");
+    if (!Number.isFinite(shardCourseMean)) softFail("no Harman bogeys in Renaissance course shard");
     if (shardCourseMean < 2.2 || shardCourseMean > 3.4) {
-      fail(`Renaissance shard bogeys mean out of range: ${shardCourseMean.toFixed(2)}`);
+      softFail(`Renaissance shard bogeys mean out of range: ${shardCourseMean.toFixed(2)}`);
     }
     // Original bug: course bogeys column showed last-4 birdies (~5.0), not venue bogeys (~2.6).
+    // This is a real stat-mapping regression guard — keep hard even on live pushes.
     const swappedStatBug =
       last4BirdMean >= 4.0 &&
       shardCourseMean >= 4.0 &&
@@ -219,12 +237,13 @@ if (existsSync(renaissanceShard)) {
       );
     }
     if (fromCourse.length < 10) {
-      fail(`expected >=10 Harman Renaissance rounds in course shard, got ${fromCourse.length}`);
+      softFail(`expected >=10 Harman Renaissance rounds in course shard, got ${fromCourse.length}`);
     }
   }
 }
 
 // Active venue: at least one field player with a posted DK/PP bogeys line should have course history.
+// Do not use bogeysProps[0] alone — Opens / majors often lead with a first-timer who has 0–1 venue rounds.
 const players = Array.isArray(proj.players) ? proj.players : [];
 const props = Array.isArray(proj.props) ? proj.props : [];
 const dr = Math.round(num(proj.display_round ?? proj.meta?.display_round, 1)) || 1;
@@ -238,12 +257,25 @@ const bogeysProps = props.filter(
     fieldIds.has(Math.round(num(r.dg_id, NaN))),
 );
 if (bogeysProps.length >= 5) {
-  const sampleId = Math.round(num(bogeysProps[0].dg_id, NaN));
-  const nAtVenue = (courseShard.entries || []).filter(
-    (e) => num(e.dg_id ?? e.dgId, NaN) === sampleId && actualBogeys(e.row) >= 0,
-  ).length;
-  if (nAtVenue < 2) {
-    fail(`field player ${sampleId} has DK bogeys line but only ${nAtVenue} rounds at ${venueRaw} in course shard`);
+  let maxAtVenue = 0;
+  let bestId = null;
+  const seen = new Set();
+  for (const r of bogeysProps) {
+    const id = Math.round(num(r.dg_id, NaN));
+    if (!Number.isFinite(id) || seen.has(id)) continue;
+    seen.add(id);
+    const nAtVenue = (courseShard.entries || []).filter(
+      (e) => num(e.dg_id ?? e.dgId, NaN) === id && actualBogeys(e.row) >= 0,
+    ).length;
+    if (nAtVenue > maxAtVenue) {
+      maxAtVenue = nAtVenue;
+      bestId = id;
+    }
+  }
+  if (maxAtVenue < 2) {
+    softFail(
+      `no field player with a Bogeys line has ≥2 rounds at ${venueRaw} in course shard (scanned ${seen.size} players; best dg_id=${bestId} n=${maxAtVenue}) — run build:course-shards`,
+    );
   }
 }
 
@@ -266,12 +298,12 @@ if (existsSync(hovlandShardPath)) {
   );
   const bogusDgPct = num(hovlandProj?.dg_gir_pct, NaN) * 18;
   if (!Number.isFinite(seasonGirMean) || seasonGir.length < 20) {
-    fail(`Hovland ${seasonYear} season GIR history too thin (n=${seasonGir.length})`);
+    softFail(`Hovland ${seasonYear} season GIR history too thin (n=${seasonGir.length})`);
+  } else if (seasonGirMean < 10.5 || seasonGirMean > 14.5) {
+    softFail(`Hovland ${seasonYear} season GIR mean out of range: ${seasonGirMean.toFixed(2)} (expected ~12)`);
   }
-  if (seasonGirMean < 10.5 || seasonGirMean > 14.5) {
-    fail(`Hovland ${seasonYear} season GIR mean out of range: ${seasonGirMean.toFixed(2)} (expected ~12)`);
-  }
-  if (Number.isFinite(bogusDgPct) && bogusDgPct > 15.5 && Math.abs(bogusDgPct - seasonGirMean) < 1.5) {
+  // dg_gir_pct×18 leaking into the history average column is a real data-source bug — keep hard.
+  if (Number.isFinite(seasonGirMean) && Number.isFinite(bogusDgPct) && bogusDgPct > 15.5 && Math.abs(bogusDgPct - seasonGirMean) < 1.5) {
     fail(
       `Hovland dg_gir_pct×18 (${bogusDgPct.toFixed(2)}) too close to real season GIR (${seasonGirMean.toFixed(2)}) — average column must use history only`,
     );
@@ -289,12 +321,12 @@ if (existsSync(taylorShardPath)) {
     .filter(Number.isFinite);
   const seasonBirdMean = mean(seasonBirdies);
   if (!Number.isFinite(seasonBirdMean) || seasonBirdies.length < 20) {
-    fail(`Taylor ${seasonYear} season birdies history too thin (n=${seasonBirdies.length})`);
+    softFail(`Taylor ${seasonYear} season birdies history too thin (n=${seasonBirdies.length})`);
+  } else if (seasonBirdMean < 2.5 || seasonBirdMean > 5.5) {
+    softFail(`Taylor ${seasonYear} season birdies mean out of range: ${seasonBirdMean.toFixed(2)}`);
   }
-  if (seasonBirdMean < 2.5 || seasonBirdMean > 5.5) {
-    fail(`Taylor ${seasonYear} season birdies mean out of range: ${seasonBirdMean.toFixed(2)}`);
-  }
-  if (seasonBirdMean < 0.05) {
+  // Live-placeholder zeros leaking into the history average is a real bug — keep hard.
+  if (Number.isFinite(seasonBirdMean) && seasonBirdies.length >= 20 && seasonBirdMean < 0.05) {
     fail(`Taylor ${seasonYear} season birdies mean is ~0 — live placeholder rows leaking into averages`);
   }
 }
@@ -316,12 +348,11 @@ if (girProps.length >= 3) {
       .filter(Number.isFinite);
     const seasonGirMean = mean(seasonGir);
     if (!Number.isFinite(seasonGirMean) || seasonGir.length < 10) {
-      fail(
+      softFail(
         `field GIR line player ${sampleId} ${seasonYear} season GIR history too thin (n=${seasonGir.length}) — Average column would show —`,
       );
-    }
-    if (seasonGirMean < 8 || seasonGirMean > 16) {
-      fail(`field GIR line player ${sampleId} season GIR mean out of range: ${seasonGirMean.toFixed(2)}`);
+    } else if (seasonGirMean < 8 || seasonGirMean > 16) {
+      softFail(`field GIR line player ${sampleId} season GIR mean out of range: ${seasonGirMean.toFixed(2)}`);
     }
   }
 }

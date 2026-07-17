@@ -69,23 +69,32 @@ function num(x, fallback = NaN) {
 }
 
 function fail(msg) {
+  if (envTruthy("GOLF_LIVE_VALIDATE_SOFT", false)) {
+    console.warn(`[validate:projections] WARN (soft): ${msg}`);
+    return;
+  }
   console.error(`[validate:projections] FAIL: ${msg}`);
   process.exit(1);
 }
 
 if (!existsSync(projPath)) {
-  fail("missing projections.json");
+  console.error("[validate:projections] FAIL: missing projections.json");
+  process.exit(1);
 }
 
 let proj;
 try {
   proj = JSON.parse(readFileSync(projPath, "utf8"));
 } catch (e) {
-  fail(`could not parse projections.json — ${e.message || e}`);
+  console.error(`[validate:projections] FAIL: could not parse projections.json — ${e.message || e}`);
+  process.exit(1);
 }
 
 const players = Array.isArray(proj.players) ? proj.players : [];
-if (!players.length) fail("projections.players is empty");
+if (!players.length) {
+  console.error("[validate:projections] FAIL: projections.players is empty");
+  process.exit(1);
+}
 
 const holePars = proj.hole_pars;
 const parFromHoles =

@@ -18,6 +18,8 @@
  *   GOLF_REFRESH_LIVE_SKIP_DG=1, GOLF_REFRESH_LIVE_SKIP_PGATOUR=1,
  *   GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI=1, GOLF_SKIP_DK_ROUND_AUDIT_CSV=1
  *   GOLF_REQUIRE_DK_OU=1 (default on refresh:live) — abort if DK scrape returns 0 fresh props
+ *   GOLF_LIVE_WEEK_SOFT=1 (push:live LiveWeekOnly) — soft DK require, skip odds ROI backtest,
+ *     no full vs-actual prior rebuild, soft validate / optional late steps (never abort mid-tournament)
  *   GOLF_SKIP_PP_OU=1 — skip PrizePicks round props in fetch:book-odds
  *   GOLF_REQUIRE_PP_OU=1 — abort if PrizePicks fetch returns 0 fresh props (optional)
  *   GOLF_SKIP_DK_OU_VALIDATE=1 — skip DK line-count gate (pre-tournament only)
@@ -57,7 +59,15 @@ function buildBaseEnv() {
   return e;
 }
 
-function run(rel, label, extraEnv = {}) {
+/**
+ * @param {string} rel
+ * @param {string} label
+ * @param {Record<string, string>} [extraEnv]
+ * @param {{ optional?: boolean }} [opts] — optional: warn and continue on non-zero / crash
+ * @returns {boolean}
+ */
+function run(rel, label, extraEnv = {}, opts = {}) {
+  const optional = !!opts.optional;
   const script = path.join(WEB_ROOT, "scripts", rel);
   console.log(`\n[refresh:live] ${label}…\n`);
   const t0 = Date.now();
@@ -67,11 +77,23 @@ function run(rel, label, extraEnv = {}) {
     env: { ...buildBaseEnv(), ...extraEnv },
   });
   const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
-  if (r.status !== 0) {
-    console.error(`[refresh:live] ${label} failed (exit ${r.status ?? "?"}) after ${elapsed}s`);
-    process.exit(r.status ?? 1);
+  const code = r.status;
+  const crashed = code == null && !!r.signal;
+  if (code !== 0 || crashed) {
+    const detail = crashed
+      ? `signal ${r.signal}`
+      : `exit ${code ?? "?"}`;
+    if (optional) {
+      console.warn(
+        `[refresh:live] WARN: ${label} failed (${detail}) after ${elapsed}s — continuing live publish.`,
+      );
+      return false;
+    }
+    console.error(`[refresh:live] ${label} failed (${detail}) after ${elapsed}s`);
+    process.exit(typeof code === "number" && code !== 0 ? code : 1);
   }
   console.log(`[refresh:live] ${label} — ${elapsed}s`);
+  return true;
 }
 
 /** Always refresh DG field-updates, tee times, and Open-Meteo weather (never skipped on push:live). */
@@ -122,6 +144,7 @@ function mirrorWebsitePublicData() {
 }
 
 const fullRebuild = envTruthy("GOLF_REFRESH_LIVE_FULL_REBUILD", false);
+const liveWeekSoft = envTruthy("GOLF_LIVE_WEEK_SOFT", false);
 const skipCsvMerge =
   fullRebuild ? false : envTruthy("GOLF_REFRESH_LIVE_SKIP_CSV_MERGE", true);
 const skipPostCsvMerge =
@@ -133,6 +156,16 @@ const skipWeatherBackfill =
 const skipDg = envTruthy("GOLF_REFRESH_LIVE_SKIP_DG", false);
 const skipPgatour = envTruthy("GOLF_REFRESH_LIVE_SKIP_PGATOUR", false);
 const skipFinishTool = envTruthy("GOLF_REFRESH_LIVE_SKIP_FINISH_TOOL", true);
+/** Mid-tournament soft: skip heavy odds ROI walk-forward (OOM / exit -1 on Windows). */
+const skipBacktestRoi = envTruthy("GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI", liveWeekSoft);
+/** Never force full prior-event vs-actual rebuild on live week soft (loads entire hist CSV). */
+const rebuildPriorVsActual = liveWeekSoft
+  ? false
+  : envTruthy("GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS", true);
+const failOnParMismatch = liveWeekSoft
+  ? envTruthy("GOLF_FAIL_ON_PAR_MISMATCH", false)
+  : envTruthy("GOLF_FAIL_ON_PAR_MISMATCH", true);
+const softOpt = liveWeekSoft ? { optional: true } : {};
 const liveFastEnv = {
   ...liveProjectionPipelineEnv(),
   GOLF_SKIP_OUTRIGHT_BAKE_ON_FETCH_DG: "1",
@@ -149,6 +182,11 @@ if (fullRebuild) {
 } else {
   console.log(
     "\n[refresh:live] Live-week update only (no CSV/history/weather rebuild). Set GOLF_REFRESH_LIVE_FULL_REBUILD=1 for full rebuild.\n",
+  );
+}
+if (liveWeekSoft) {
+  console.log(
+    "[refresh:live] GOLF_LIVE_WEEK_SOFT=1 — soft DK require, skip odds ROI backtest, no prior vs-actual rebuild, optional late steps.\n",
   );
 }
 
@@ -181,12 +219,22 @@ run(
 );
 
 if (!skipPgatour) {
-  run("run-refresh-pgatour-event-rounds.mjs", "pgatouR scorecards for current event (refresh:pgatour-event)");
+  run(
+    "run-refresh-pgatour-event-rounds.mjs",
+    "pgatouR scorecards for current event (refresh:pgatour-event)",
+    {},
+    softOpt,
+  );
 } else {
   console.log("[refresh:live] Skipping pgatouR refresh.\n");
 }
 
-run("fetch-book-odds-into-projections.mjs", "Sportsbook + DK + PrizePicks round props (fetch:book-odds)", liveFastEnv);
+run(
+  "fetch-book-odds-into-projections.mjs",
+  "Sportsbook + DK + PrizePicks round props (fetch:book-odds)",
+  liveFastEnv,
+  softOpt,
+);
 if (skipFinishTool) {
   console.log("[refresh:live] Skipping fetch:finish-tool (outrights already from fetch:dg + book-odds). Set GOLF_REFRESH_LIVE_SKIP_FINISH_TOOL=0 to re-run.\n");
 } else {
@@ -197,11 +245,13 @@ run("sync-bundled-hole-pars-into-projections.mjs", "Bundled course_holes.json �
 run(
   "check-hole-pars-resolved.mjs",
   "Fail fast if hole pars are still the generic fallback (new venue needs course_holes.json)",
+  {},
+  softOpt,
 );
 run(
   "ensure-projection-course-par.mjs",
   "Lock course_par_18 from hole card + score↔par coherence (before venue repair)",
-  { GOLF_FAIL_ON_PAR_MISMATCH: "1" },
+  { GOLF_FAIL_ON_PAR_MISMATCH: failOnParMismatch ? "1" : "0" },
 );
 run(
   "merge-live-round-meta-into-projections.mjs",
@@ -230,14 +280,18 @@ if (!envTruthy("GOLF_SKIP_PIN_SHEET", false)) {
   run(
     "apply-pin-sheet-to-projections.mjs",
     "Pin sheet → projections (Bayesian calibrated) + pin_locations DB when armed",
+    {},
+    softOpt,
   );
-  run("sync-pin-locations.mjs", "Mirror pin_locations DB → alpha-caddie-web/data (after tee sheet save)");
+  run("sync-pin-locations.mjs", "Mirror pin_locations DB → alpha-caddie-web/data (after tee sheet save)", {}, softOpt);
 }
 
 if (!envTruthy("GOLF_SKIP_DK_ROUND_AUDIT_CSV", false)) {
   run(
     "export-dk-round-model-audit-csv.mjs",
     "DK round audit CSV with post-repair model lines (model_total_score, birdies, …)",
+    {},
+    softOpt,
   );
 }
 
@@ -245,6 +299,8 @@ if (!envTruthy("GOLF_SKIP_PP_ROUND_AUDIT_CSV", false)) {
   run(
     "export-pp-round-model-audit-csv.mjs",
     "PrizePicks round audit CSV (all PP lines/odds + model snapshots)",
+    {},
+    softOpt,
   );
 }
 
@@ -261,17 +317,28 @@ run(
 if (!envTruthy("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL", false)) {
   run(
     "export-round-projection-vs-actual-csv.mjs",
-    "Round projection vs actual CSV (walkforward backtest + current week)",
+    rebuildPriorVsActual
+      ? "Round projection vs actual CSV (walkforward backtest + current week)"
+      : "Round projection vs actual CSV (current week / incremental; no full prior rebuild)",
     {
       ...liveFastEnv,
-      GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS: "1",
+      GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS: rebuildPriorVsActual ? "1" : "0",
     },
+    // Heavy hist CSV + walk-forward can OOM (exit -1) on Windows — never block live publish.
+    { optional: true },
   );
   run(
     "promote-round-projection-vs-actual-csv.mjs",
     "Publish round_projection_vs_actual.csv (promote .new if Excel had file open)",
+    {},
+    { optional: true },
   );
-  run("build-parlay-correlations.mjs", "Parlay Pro leg co-hit correlations → parlay_correlations.json");
+  run(
+    "build-parlay-correlations.mjs",
+    "Parlay Pro leg co-hit correlations → parlay_correlations.json",
+    {},
+    softOpt,
+  );
 }
 
 if (!envTruthy("GOLF_SKIP_MARKET_BOOK_CALIBRATION", true)) {
@@ -286,7 +353,7 @@ if (!envTruthy("GOLF_SKIP_MARKET_BOOK_CALIBRATION", true)) {
   run(
     "ensure-projection-course-par.mjs",
     "Repair score↔par after book calibration",
-    { GOLF_FAIL_ON_PAR_MISMATCH: "1" },
+    { GOLF_FAIL_ON_PAR_MISMATCH: failOnParMismatch ? "1" : "0" },
   );
   run(
     "reconcile-projection-counts.mjs",
@@ -302,6 +369,8 @@ if (!envTruthy("GOLF_SKIP_MARKET_BOOK_CALIBRATION", true)) {
 run(
   "report-walkforward-oos-roi.mjs",
   "Walk-forward OOS ROI report → walkforward_oos_roi.json",
+  {},
+  { optional: true },
 );
 
 runWeatherAndTeeTimesPass("publish");
@@ -311,8 +380,18 @@ run(
   "Reconcile counting stats after publish weather bake (before validate)",
 );
 
-run("validate-projections-for-publish.mjs", "Validate par, birdies/pars, and O/U prop coverage before publish");
-run("verify-pp-round-props.mjs", "PrizePicks field alignment + projection-tracker PP columns");
+run(
+  "validate-projections-for-publish.mjs",
+  "Validate par, birdies/pars, and O/U prop coverage before publish",
+  liveWeekSoft ? { GOLF_LIVE_VALIDATE_SOFT: "1", GOLF_SKIP_DK_OU_VALIDATE: "1" } : {},
+  softOpt,
+);
+run(
+  "verify-pp-round-props.mjs",
+  "PrizePicks field alignment + projection-tracker PP columns",
+  {},
+  softOpt,
+);
 
 if (!skipPostCsvMerge) {
   run(
@@ -330,10 +409,16 @@ if (!skipPostCsvMerge) {
   );
 }
 
-if (!envTruthy("GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI", false)) {
+if (!skipBacktestRoi) {
   run(
     "backtest-odds-model-roi.mjs",
     "Odds.csv model ROI backtest (walkforward venue-history projections)",
+    {},
+    { optional: true },
+  );
+} else {
+  console.log(
+    "[refresh:live] Skipping odds-model ROI backtest (GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI or live soft / non-full rebuild).\n",
   );
 }
 
@@ -341,13 +426,17 @@ if (skipHistoryRebuild) {
   run(
     "sync-field-history-from-csv.mjs",
     "Merge recent CSV rounds into field player-history shards",
+    {},
+    softOpt,
   );
   run(
     "patch-current-event-history-shards.mjs",
     "Patch current-event live rows into player-history shards (no CSV rescan)",
+    {},
+    softOpt,
   );
-  run("rebuild-field-season-bundle.mjs", "Rebuild field-{year}.json for Historical Trends");
-  run("build-course-history-shards.mjs", "Course history shards for At-this-course O/U averages");
+  run("rebuild-field-season-bundle.mjs", "Rebuild field-{year}.json for Historical Trends", {}, softOpt);
+  run("build-course-history-shards.mjs", "Course history shards for At-this-course O/U averages", {}, softOpt);
 } else {
   if (Object.keys(fh).length) {
     console.log(
@@ -378,8 +467,8 @@ if (skipHistoryRebuild) {
   run("build-course-history-shards.mjs", "Course history shards for At-this-course O/U averages");
 }
 
-run("verify-ou-round-projection-means.mjs", "Guard Round Projections Proj μ (no in-play collapse)");
-run("verify-ou-proj-avg.mjs", "Guard Round Projections course averages vs Course Fit");
+run("verify-ou-round-projection-means.mjs", "Guard Round Projections Proj μ (no in-play collapse)", {}, softOpt);
+run("verify-ou-proj-avg.mjs", "Guard Round Projections course averages vs Course Fit", {}, softOpt);
 
 mirrorWebsitePublicData();
 

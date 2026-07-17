@@ -322,6 +322,17 @@ async function loadPriorEventRows(csvPath, summaryPath, currentEventName, opts =
   const histPath = opts.histPath || resolveHistCsv();
   if (!existsSync(auditPath)) return { priorLines, priorSummaryRows };
 
+  const forceRebuild =
+    String(process.env.GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS || "").trim() === "1";
+  if (!forceRebuild) {
+    if (priorLines.length) {
+      console.log(
+        `[round-projection-vs-actual] Keeping ${priorLines.length} cached prior-event row(s) (no full audit backfill; set GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=1 to rebuild)`,
+      );
+    }
+    return { priorLines, priorSummaryRows };
+  }
+
   const backfill = await backfillFromAudit(auditPath, histPath, currentEventName, {
     fairwayHoles: opts.fairwayHoles || 14,
     livePath: opts.livePath || join(WEB_ROOT, "live-in-play.json"),
