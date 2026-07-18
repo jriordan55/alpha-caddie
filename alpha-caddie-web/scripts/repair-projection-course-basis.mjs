@@ -16,13 +16,16 @@ import {
   draftKingsDgIdsFromProjections,
   ensureProjectionCourseBasisComplete,
   flatVenuePlayerScoreAnchorEnabled,
+  loadRecentVenueRoundRowsForProjections,
   populateEventWeekFieldScoreAvgs,
   reapplyProjectionTotalScoresFromVenueHistory,
   reconcileAllProjectionPlayerRows,
   sanitizeEventWeekProjectionBasis,
 } from "./course-round-adjustments.mjs";
+import { resolveLiveRoundActualsByDg, sanitizeLiveRoundActualsByDg } from "./dg-live-tournament-stats.mjs";
 import { ensureProjectionCoursePar } from "./projection-course-par.mjs";
 import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
+import { normCourseNameKey } from "./course-name-key.mjs";
 
 Object.assign(process.env, flatVenueProjectionPipelineEnv());
 
@@ -75,10 +78,47 @@ if (flatVenuePlayerScoreAnchorEnabled()) {
   );
 }
 
+/** Mid-week PGA + sanitized live counting only — never stub 0/0/0 hole counts. */
+let extraRows = [];
+try {
+  let actualsByDg = {};
+  if (existsSync(livePath)) {
+    const live = JSON.parse(readFileSync(livePath, "utf8"));
+    actualsByDg = resolveLiveRoundActualsByDg(live, {
+      roundPar: coursePar18,
+      fairwayHoles: Math.round(Number(proj.projection_course_basis?.fairway_holes_modeled) || 14) || 14,
+    });
+  }
+  // Also strip any stub zeros already on projections.json before they re-enter venue means.
+  if (proj.live_round_actuals_by_dg && typeof proj.live_round_actuals_by_dg === "object") {
+    proj.live_round_actuals_by_dg = sanitizeLiveRoundActualsByDg(proj.live_round_actuals_by_dg);
+  }
+  extraRows = loadRecentVenueRoundRowsForProjections(WEB, {
+    courseKey: normCourseNameKey(proj.course_used || ""),
+    courseLabel: proj.course_used,
+    coursePar18,
+    eventName,
+    actualsByDg,
+  });
+  if (extraRows.length) {
+    console.log(
+      `[repair-projection-course-basis] +${extraRows.length} recent venue round(s) (real counting only) for anchors`,
+    );
+  }
+} catch (e) {
+  console.warn("[repair-projection-course-basis] recent venue rows skipped:", e?.message || e);
+}
+
 const { touched, venueScoring } = await reapplyProjectionTotalScoresFromVenueHistory(proj, {
   repoRoot: REPO_ROOT,
+  extraRows,
 });
 console.log(`[repair-projection-course-basis] re-applied venue player/course scores for ${touched} rows`);
+if (Number.isFinite(Number(venueScoring?.venueAvgBirdies))) {
+  console.log(
+    `[repair-projection-course-basis] venue avg birdies=${Number(venueScoring.venueAvgBirdies).toFixed(2)} bogeys=${Number(venueScoring.venueAvgBogeys).toFixed(2)} (n=${venueScoring.nVenueRounds}, ${venueScoring.source})`,
+  );
+}
 
 const cal = calibrateProjectionTotalScoreToVenue(proj, {
   minField: 8,

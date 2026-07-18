@@ -362,6 +362,57 @@ if (girProps.length >= 3) {
   }
 }
 
+// Venue birdie/bogey anchors + live_round_actuals must never carry DG 0/0/0 stubs.
+{
+  const basis = proj.projection_course_basis || proj.meta?.projection_course_basis || {};
+  const venueBird = num(basis.venue_avg_birdies, NaN);
+  const histBird = num(basis.historical_venue_avg_birdies, NaN);
+  const liveWaveBird = num(basis.live_hole_stats_wave?.total?.birdies, NaN);
+  const nVenue = num(basis.venue_historical_rounds, 0);
+  if (nVenue >= 40 && Number.isFinite(venueBird) && venueBird > 0 && venueBird < 1.85) {
+    fail(
+      `venue_avg_birdies=${venueBird.toFixed(2)} looks diluted by placeholder zeros (n=${nVenue}) — omit missing hole counts from venue anchors`,
+    );
+  }
+  if (
+    Number.isFinite(histBird) &&
+    Number.isFinite(venueBird) &&
+    histBird >= 2.0 &&
+    venueBird < histBird * 0.75
+  ) {
+    fail(
+      `venue_avg_birdies=${venueBird.toFixed(2)} far below historical_venue_avg_birdies=${histBird.toFixed(2)} — stub zeros likely re-entered recent venue rows`,
+    );
+  }
+  if (Number.isFinite(liveWaveBird) && Number.isFinite(venueBird) && liveWaveBird >= 2.5 && venueBird < 1.9) {
+    softFail(
+      `venue_avg_birdies=${venueBird.toFixed(2)} vs live_hole_stats wave birdies=${liveWaveBird.toFixed(2)} — check recent counting ingest`,
+    );
+  }
+
+  const liveActs = proj.live_round_actuals_by_dg || proj.meta?.live_round_actuals_by_dg;
+  if (liveActs && typeof liveActs === "object") {
+    let n = 0;
+    let stub = 0;
+    for (const per of Object.values(liveActs)) {
+      if (!per || typeof per !== "object") continue;
+      for (const act of Object.values(per)) {
+        if (!act || typeof act !== "object") continue;
+        n++;
+        const b = num(act.birdies, NaN);
+        const p = num(act.pars, NaN);
+        const bg = num(act.bogeys ?? act.bogies, NaN);
+        if (b === 0 && p === 0 && bg === 0) stub++;
+      }
+    }
+    if (n >= 20 && stub / n >= 0.25) {
+      fail(
+        `${stub}/${n} live_round_actuals rows still have birdies=pars=bogeys=0 stubs — sanitize before publish`,
+      );
+    }
+  }
+}
+
 console.log(
   `[verify:ou-proj-avg] OK — course shard for ${venueRaw} (${courseShard.entries.length} entries); app.js course-average path wired`,
 );

@@ -90,7 +90,23 @@ function liveCountingPlaceholder(act) {
   const b = num(act.birdies);
   const p = num(act.pars);
   const bg = num(act.bogeys ?? act.bogies);
-  return b === 0 && p === 0 && bg === 0;
+  // Missing entirely is not usable as a posted hole-count actual.
+  if (!Number.isFinite(b) && !Number.isFinite(p) && !Number.isFinite(bg)) return true;
+  // Explicit zero triad (or zero bird+bog with empty pars) = DG/live stub.
+  if (b === 0 && bg === 0 && (!Number.isFinite(p) || p === 0)) return true;
+  if (b === 0 && bg === 0 && Number.isFinite(p) && p >= 10) return true;
+  return false;
+}
+
+function clearCountingActualCols(row) {
+  for (const spec of MARKET_ACTUAL) {
+    if (spec.key === "total" || spec.key === "gir" || spec.key === "fairways") continue;
+    if (row[spec.actualCol] !== "" && row[spec.actualCol] != null) {
+      row[spec.actualCol] = "";
+    }
+    if (spec.overCol) row[spec.overCol] = "";
+    if (spec.underCol) row[spec.underCol] = "";
+  }
 }
 
 /** @param {Map<string, object>} out */
@@ -114,10 +130,18 @@ function overlayLiveActuals(out, projections, eventName) {
         total_score: score,
         source: prev.source ? `${prev.source}+live` : act.source || "live_projections",
       };
+      // Prefer real PGA counting already on `prev`; never write stub zeros from live.
       if (!liveCountingPlaceholder(act)) {
         if (Number.isFinite(num(act.birdies))) next.birdies = act.birdies;
         if (Number.isFinite(num(act.pars))) next.pars = act.pars;
         if (Number.isFinite(num(act.bogeys ?? act.bogies))) next.bogeys = act.bogeys ?? act.bogies;
+        if (Number.isFinite(num(act.eagles_or_better))) next.eagles_or_better = act.eagles_or_better;
+        if (Number.isFinite(num(act.doubles_or_worse))) next.doubles_or_worse = act.doubles_or_worse;
+        delete next._live_counting_placeholder;
+      } else if (liveCountingPlaceholder(next)) {
+        next._live_counting_placeholder = true;
+      } else {
+        delete next._live_counting_placeholder;
       }
       if (Number.isFinite(num(act.gir)) && num(act.gir) >= 0) next.gir = act.gir;
       if (Number.isFinite(num(act.fairways)) && num(act.fairways) >= 0) next.fairways = act.fairways;
@@ -147,11 +171,20 @@ function overlayPgatourActuals(out, pgPayload, eventName, projections) {
     const key = `${dg}|${rnd}`;
     const prev = out.get(key) || {};
     const next = { ...prev, source: prev.source ? `${prev.source}+pgatour` : "pgatour_event_rounds" };
-    const eob = num(r.eagles_or_better);
-    const b = num(r.birdies);
-    if (Number.isFinite(b)) next.birdies = b + (Number.isFinite(eob) ? eob : 0);
-    const bg = num(r.bogeys ?? r.bogies);
-    if (Number.isFinite(bg)) next.bogeys = bg;
+    const probe = {
+      birdies: num(r.birdies),
+      pars: num(r.pars),
+      bogeys: num(r.bogeys ?? r.bogies),
+    };
+    if (!liveCountingPlaceholder(probe)) {
+      const eob = num(r.eagles_or_better);
+      const b = num(r.birdies);
+      if (Number.isFinite(b)) next.birdies = b + (Number.isFinite(eob) ? eob : 0);
+      const bg = num(r.bogeys ?? r.bogies);
+      if (Number.isFinite(bg)) next.bogeys = bg;
+      if (Number.isFinite(num(r.pars))) next.pars = num(r.pars);
+      delete next._live_counting_placeholder;
+    }
     if (Number.isFinite(num(r.gir))) next.gir = num(r.gir);
     if (Number.isFinite(num(r.fairways))) next.fairways = num(r.fairways);
     if (!Number.isFinite(num(prev.round_score))) {
@@ -387,6 +420,7 @@ export function patchDetailRowsFromLiveSources(detailRows, projections, pgPayloa
 
   /** @type {Map<string, object>} */
   const actuals = new Map();
+  // PGA first (real hole counts), then live (score/SG/GIR — never stub bird/bog zeros).
   overlayPgatourActuals(actuals, pgPayload, eventName, projections);
   overlayLiveActuals(actuals, projections, eventName);
   if (!actuals.size) return detailRows;
@@ -403,13 +437,31 @@ export function patchDetailRowsFromLiveSources(detailRows, projections, pgPayloa
   }
 
   let patched = 0;
+  let clearedStub = 0;
   for (const [key, act] of actuals.entries()) {
     const idx = rowIdx.get(key);
     if (idx === undefined) continue;
     const row = { ...detailRows[idx] };
     let changed = false;
 
+    const countingMissing = liveCountingPlaceholder(act) || act._live_counting_placeholder;
+    if (countingMissing) {
+      // Wipe CSV / prior stub zeros so tracker ROI never grades fake 0 birdies.
+      const hadStub =
+        String(row.actual_birdies || "").trim() === "0" ||
+        String(row.actual_bogeys || "").trim() === "0" ||
+        String(row.actual_pars || "").trim() === "0";
+      clearCountingActualCols(row);
+      if (hadStub) {
+        clearedStub++;
+        changed = true;
+      }
+    }
+
     for (const spec of MARKET_ACTUAL) {
+      if (countingMissing && (spec.key === "birdies" || spec.key === "bogeys" || spec.key === "pars")) {
+        continue;
+      }
       const actual = actualForMarket(act, spec.key);
       if (!Number.isFinite(actual)) continue;
       const formatted = fmtActual(spec.key, actual);
@@ -443,7 +495,10 @@ export function patchDetailRowsFromLiveSources(detailRows, projections, pgPayloa
   }
 
   if (patched > 0) {
-    console.log(`[projection-tracker] Patched ${patched} live-week detail row(s) from projections / pgatour actuals`);
+    console.log(
+      `[projection-tracker] Patched ${patched} live-week detail row(s) from projections / pgatour actuals` +
+        (clearedStub ? ` (cleared ${clearedStub} stub zero counting actuals)` : ""),
+    );
   }
   return detailRows;
 }

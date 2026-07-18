@@ -116,7 +116,7 @@ export function countingFromInPlayRow(ipRow, thruRounded) {
   return { birdies, pars, bogeys, eagles };
 }
 
-/** Drop DG live-stats placeholders (e.g. pars=18 with no birdies/bogeys). */
+/** Drop DG live-stats placeholders (e.g. pars=18 with no birdies/bogeys, or 0/0/0 stubs). */
 export function sanitizeLiveCountingFields(act) {
   if (!act || typeof act !== "object") return act;
   const thru = Math.round(num(act.thru, NaN));
@@ -127,7 +127,12 @@ export function sanitizeLiveCountingFields(act) {
   if (Number.isFinite(p) && (p >= 14 || (Number.isFinite(thru) && thru >= 10 && p >= thru - 1))) {
     if (!Number.isFinite(b) && !Number.isFinite(bg)) p = NaN;
   }
-  if (b === 0 && bg === 0 && Number.isFinite(p) && p >= 10) {
+  // Explicit zero triad (or zero bird+bog with empty pars) is a missing-stat stub, not a real round.
+  if (b === 0 && bg === 0 && (!Number.isFinite(p) || p === 0)) {
+    b = NaN;
+    p = NaN;
+    bg = NaN;
+  } else if (b === 0 && bg === 0 && Number.isFinite(p) && p >= 10) {
     b = NaN;
     p = NaN;
     bg = NaN;
@@ -348,9 +353,23 @@ export function liveRoundActualsRoundCounts(byDg) {
   return counts;
 }
 
+/** Strip DG/live 0/0/0 hole-count stubs from every player-round in a live_round_actuals map. */
+export function sanitizeLiveRoundActualsByDg(byDg) {
+  if (!byDg || typeof byDg !== "object") return byDg || {};
+  for (const per of Object.values(byDg)) {
+    if (!per || typeof per !== "object") continue;
+    for (const [rk, rec] of Object.entries(per)) {
+      if (!rec || typeof rec !== "object") continue;
+      per[rk] = sanitizeLiveCountingFields({ ...rec });
+    }
+  }
+  return byDg;
+}
+
 /**
  * Build or augment `live_round_actuals_by_dg` from a preds/in-play bundle
  * (precomputed block, per-round LTS payloads, and/or in-play `R*` columns).
+ * Always sanitizes so push:live never re-bakes placeholder bird/par/bog zeros.
  */
 export function resolveLiveRoundActualsByDg(bundle, opts = {}) {
   if (!bundle || typeof bundle !== "object") return {};
@@ -368,11 +387,13 @@ export function resolveLiveRoundActualsByDg(bundle, opts = {}) {
       ? bundle.live_tournament_stats_by_round
       : {};
   const fairwayHoles = Number.isFinite(num(opts.fairwayHoles, NaN)) ? Math.round(num(opts.fairwayHoles, NaN)) : 14;
-  const built = buildLiveRoundActualsByDg(statsByRound, inPlayByDg, { roundPar, fairwayHoles });
+  const built = sanitizeLiveRoundActualsByDg(
+    buildLiveRoundActualsByDg(statsByRound, inPlayByDg, { roundPar, fairwayHoles }),
+  );
   const pre = bundle.live_round_actuals_by_dg;
   if (!pre || typeof pre !== "object") return built;
   /** @type {Record<string, Record<string, object>>} */
-  const out = { ...pre };
+  const out = sanitizeLiveRoundActualsByDg(JSON.parse(JSON.stringify(pre)));
   for (const [dgKey, per] of Object.entries(built)) {
     if (!per || typeof per !== "object") continue;
     if (!out[dgKey]) out[dgKey] = {};
@@ -382,11 +403,15 @@ export function resolveLiveRoundActualsByDg(bundle, opts = {}) {
         const merged = { ...prev, ...rec };
         if (Number.isFinite(num(prev.round_score, NaN)) && !Number.isFinite(num(rec.round_score, NaN)))
           merged.round_score = prev.round_score;
-        out[dgKey][rk] = merged;
+        // Never keep prior stub zeros when the fresh build cleared counting.
+        for (const k of ["birdies", "pars", "bogeys"]) {
+          if (rec[k] == null && (prev[k] === 0 || prev[k] == null)) merged[k] = null;
+        }
+        out[dgKey][rk] = sanitizeLiveCountingFields(merged);
       } else {
         out[dgKey][rk] = rec;
       }
     }
   }
-  return out;
+  return sanitizeLiveRoundActualsByDg(out);
 }

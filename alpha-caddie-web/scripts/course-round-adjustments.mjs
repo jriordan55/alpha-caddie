@@ -407,6 +407,18 @@ export function buildWithinEventCountingMapFromLiveActuals(
       if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
       const rs = num(act.round_score, NaN);
       if (!Number.isFinite(rs) || rs <= 0) continue;
+      // Placeholder 0/0/0 stubs must not be invented into synthetic bird/bog for anchors.
+      if (isPlaceholderHoleCounts(act)) {
+        const girOnly = girOrFwToCount(act.gir, 18);
+        if (!Number.isFinite(girOnly)) continue;
+        let per = out.get(dg);
+        if (!per) {
+          per = new Map();
+          out.set(dg, per);
+        }
+        per.set(rnd, { gir: girOnly, round_score: rs });
+        continue;
+      }
       let rec = {
         birdies: num(act.birdies, NaN),
         bogeys: num(act.bogeys ?? act.bogies, NaN),
@@ -415,7 +427,7 @@ export function buildWithinEventCountingMapFromLiveActuals(
         eagles: num(act.eagles, NaN),
         doubles: num(act.doubles, NaN),
       };
-      if (Number.isFinite(cp)) {
+      if (Number.isFinite(cp) && Number.isFinite(rec.birdies)) {
         rec = reconcileHoleCountsFromScore(rec, cp, num(venueBirdies, 2.88), num(venueBogeys, 2.93));
       }
       if (!Number.isFinite(rec.birdies) && !Number.isFinite(rec.bogeys) && !Number.isFinite(rec.gir)) continue;
@@ -498,6 +510,22 @@ function girOrFwToCount(raw, nHoles) {
   return NaN;
 }
 
+/**
+ * DG/live stubs often post birdies=pars=bogeys=0 when hole counts are missing.
+ * Those must never enter venue anchors — omit, do not treat as real zeros.
+ * Real 0-birdie rounds still pass when pars/bogeys look coherent.
+ */
+export function isPlaceholderHoleCounts(row) {
+  if (!row || typeof row !== "object") return false;
+  const b = num(row.birdies, NaN);
+  const p = num(row.pars, NaN);
+  const bg = num(row.bogies ?? row.bogeys, NaN);
+  if (!Number.isFinite(b) && !Number.isFinite(p) && !Number.isFinite(bg)) return false;
+  if (b === 0 && bg === 0 && (!Number.isFinite(p) || p === 0)) return true;
+  if (b === 0 && bg === 0 && Number.isFinite(p) && p >= 10) return true;
+  return false;
+}
+
 export function accumulateVenueCountRow(raw, row, nFairwayHoles = 14) {
   const cp = num(row.course_par, NaN);
   const rs = num(row.round_score, NaN);
@@ -506,28 +534,29 @@ export function accumulateVenueCountRow(raw, row, nFairwayHoles = 14) {
   raw.sumScore += rs;
   raw.sumStp += rs - cp;
 
+  const holeCountsOk = !isPlaceholderHoleCounts(row);
   const b = num(row.birdies, NaN);
-  if (Number.isFinite(b) && b >= 0 && b <= 18) {
+  if (holeCountsOk && Number.isFinite(b) && b >= 0 && b <= 18) {
     raw.sumBird += b;
     raw.nBird++;
   }
   const p = num(row.pars, NaN);
-  if (Number.isFinite(p) && p >= 0 && p <= 18) {
+  if (holeCountsOk && Number.isFinite(p) && p >= 0 && p <= 18) {
     raw.sumPar += p;
     raw.nPar++;
   }
-  const bg = num(row.bogies, NaN);
-  if (Number.isFinite(bg) && bg >= 0 && bg <= 18) {
+  const bg = num(row.bogies ?? row.bogeys, NaN);
+  if (holeCountsOk && Number.isFinite(bg) && bg >= 0 && bg <= 18) {
     raw.sumBog += bg;
     raw.nBog++;
   }
-  const e = num(row.eagles_or_better, NaN);
-  if (Number.isFinite(e) && e >= 0 && e <= 6) {
+  const e = num(row.eagles_or_better ?? row.eagles, NaN);
+  if (holeCountsOk && Number.isFinite(e) && e >= 0 && e <= 6) {
     raw.sumEag += e;
     raw.nEag++;
   }
-  const d = num(row.doubles_or_worse, NaN);
-  if (Number.isFinite(d) && d >= 0 && d <= 10) {
+  const d = num(row.doubles_or_worse ?? row.doubles, NaN);
+  if (holeCountsOk && Number.isFinite(d) && d >= 0 && d <= 10) {
     raw.sumDbl += d;
     raw.nDbl++;
   }
@@ -1365,6 +1394,12 @@ export function loadRecentVenueRoundRowsForProjections(webRoot, opts = {}) {
       if (rs < minRs || rs > maxRs) continue;
 
       const act = actualsByDg[String(dg)]?.[String(rnd)] || null;
+      const actCounts = act && !isPlaceholderHoleCounts(act) ? act : null;
+      const rowCounts = {
+        birdies: num(actCounts?.birdies, num(r.birdies, NaN)),
+        pars: num(actCounts?.pars, num(r.pars, NaN)),
+        bogeys: num(actCounts?.bogeys ?? actCounts?.bogies, num(r.bogeys ?? r.bogies, NaN)),
+      };
       const row = {
         dg_id: dg,
         year: parseInt(String(r.year || new Date().getFullYear()), 10),
@@ -1373,16 +1408,24 @@ export function loadRecentVenueRoundRowsForProjections(webRoot, opts = {}) {
         course_par: coursePar,
         round_num: rnd,
         round_score: rs,
-        birdies: num(act?.birdies, num(r.birdies, NaN)),
-        pars: num(act?.pars, num(r.pars, NaN)),
-        bogies: num(act?.bogeys, num(r.bogeys, NaN)),
-        eagles_or_better: num(r.eagles_or_better, 0),
-        doubles_or_worse: num(r.doubles_or_worse, 0),
+        // Never default missing hole counts to 0 — omit (NaN) so venue anchors stay real-only.
+        birdies: rowCounts.birdies,
+        pars: rowCounts.pars,
+        bogies: rowCounts.bogeys,
+        eagles_or_better: num(r.eagles_or_better ?? r.eagles, NaN),
+        doubles_or_worse: num(r.doubles_or_worse ?? r.doubles, NaN),
         gir: num(act?.gir, num(r.gir, NaN)),
         driving_acc: num(act?.fairways, num(r.fairways, NaN)),
         putts: num(act?.putts, num(r.putts, NaN)),
         sg_total: num(act?.sg_total, NaN),
       };
+      if (isPlaceholderHoleCounts(row)) {
+        row.birdies = NaN;
+        row.pars = NaN;
+        row.bogies = NaN;
+        row.eagles_or_better = NaN;
+        row.doubles_or_worse = NaN;
+      }
       if (!Number.isFinite(row.sg_total)) row.sg_total = -(rs - coursePar);
       rows.push(row);
     }
@@ -2784,6 +2827,16 @@ export function reconcileHoleCountsFromScore(counts, coursePar18, venueBirdies, 
   const cp = num(coursePar18, NaN);
   const rs = num(counts.round_score ?? counts.score, NaN);
   if (!Number.isFinite(cp) || !Number.isFinite(rs)) return counts;
+  // Missing hole counts: strip stubs — never invent synthetic bird/bog for anchors/actuals.
+  if (isPlaceholderHoleCounts(counts)) {
+    return {
+      ...counts,
+      birdies: null,
+      pars: null,
+      bogeys: null,
+      round_score: rs,
+    };
+  }
   const stp = rs - cp;
   const vBird = num(venueBirdies, 2.88);
   const vBog = num(venueBogeys, 2.93);

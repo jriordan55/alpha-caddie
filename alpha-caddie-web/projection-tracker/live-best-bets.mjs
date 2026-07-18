@@ -218,7 +218,7 @@ function venueAnchorNote(projections) {
   const parts = [];
   if (years.length) parts.push(`venue markets anchored to ${years.join(", ")}`);
   if (Number.isFinite(stp)) parts.push(`${stp >= 0 ? "+" : ""}${stp.toFixed(2)} vs par`);
-  if (Number.isFinite(bird)) parts.push(`~${bird.toFixed(1)} birdies/rd`);
+  if (Number.isFinite(bird) && bird >= 1.85) parts.push(`~${bird.toFixed(1)} birdies/rd`);
   return parts.join(" · ");
 }
 

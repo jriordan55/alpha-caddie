@@ -87,7 +87,8 @@ export function buildLiveProjectionFactorsSummary(projections) {
   }
 
   const bird = num(basis.venue_avg_birdies, NaN);
-  if (Number.isFinite(bird)) {
+  // Skip diluted stub-zero anchors (< ~1.85 on a real PGA venue is almost always contamination).
+  if (Number.isFinite(bird) && bird >= 1.85) {
     chips.push({
       label: "Venue birdies",
       value: `~${bird.toFixed(1)}/rd`,
