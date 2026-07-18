@@ -63,11 +63,16 @@ function historyRoundChronoKey(r) {
 }
 
 function actualBogeys(row) {
-  return num(row?.bogeys ?? row?.bogies, NaN);
+  const bg = num(row?.bogeys ?? row?.bogies, NaN);
+  const d = num(row?.doubles_or_worse ?? row?.doubles, 0);
+  if (!Number.isFinite(bg)) return NaN;
+  return bg + (Number.isFinite(d) ? Math.max(0, d) : 0);
 }
 
 function actualBirdies(row) {
-  return num(row?.birdies, NaN);
+  const b = num(row?.birdies, NaN);
+  if (!Number.isFinite(b)) return NaN;
+  return b + Math.max(0, num(row?.eagles_or_better ?? row?.eagles, 0));
 }
 
 function historyRoundSeasonYear(r) {

@@ -69,7 +69,14 @@ export function livePartialRoundCountPropAdjust(market, row, meta) {
   const rem = 18 - thru;
   if (rem < 0) return out;
   const field = market === "Birdies" ? "birdies" : market === "Pars" ? "pars" : "bogeys";
-  const muFull = num(row[field], NaN);
+  let muFull = num(row[field], NaN);
+  if (market === "Birdies") {
+    const e = num(row.eagles ?? row.eagles_or_better, 0);
+    if (Number.isFinite(muFull)) muFull = muFull + Math.max(0, Number.isFinite(e) ? e : 0);
+  } else if (market === "Bogeys") {
+    const d = num(row.doubles ?? row.doubles_or_worse, 0);
+    if (Number.isFinite(muFull)) muFull = muFull + Math.max(0, Number.isFinite(d) ? d : 0);
+  }
   if (!Number.isFinite(muFull) || muFull < 0) return out;
   let b = num(row.dg_live_birdies_so_far, NaN);
   let bg = num(row.dg_live_bogeys_so_far, NaN);
@@ -77,10 +84,13 @@ export function livePartialRoundCountPropAdjust(market, row, meta) {
   if (!Number.isFinite(bg)) bg = 0;
   const eg = num(row.dg_live_eagles_so_far, NaN);
   const eagles = Number.isFinite(eg) && eg >= 0 ? Math.min(thru, Math.round(eg)) : 0;
+  const dblRaw = num(row.dg_live_doubles_so_far, NaN);
+  const doubles = Number.isFinite(dblRaw) && dblRaw >= 0 ? Math.min(thru, Math.round(dblRaw)) : 0;
   let pSo = num(row.dg_live_pars_so_far, NaN);
-  if (!Number.isFinite(pSo)) pSo = Math.max(0, Math.min(thru, thru - b - bg - eagles));
+  if (!Number.isFinite(pSo)) pSo = Math.max(0, Math.min(thru, thru - b - bg - eagles - doubles));
   const rate = muFull / 18;
-  const soFar = market === "Birdies" ? b + eagles : market === "Bogeys" ? bg : pSo;
+  const soFar =
+    market === "Birdies" ? b + eagles : market === "Bogeys" ? bg + doubles : pSo;
   const muLive = clamp(soFar + rate * rem, 0, 18);
   out.muDelta = muLive - muFull;
   if (thru >= 18) out.sigmaScale = 0.26;

@@ -1891,14 +1891,20 @@ function projectionCountingAnchorFromBasis(basis, payload, opts = {}) {
   // Prefer DataGolf live-hole-stats field totals (same feed as DG wave split) when present.
   const liveTot = basis?.live_hole_stats_wave?.total;
   if (liveTot && Number.isFinite(num(liveTot.birdies, NaN)) && Number.isFinite(num(liveTot.bogeys, NaN))) {
+    const birdMkt =
+      num(liveTot.birdies, NaN) + Math.max(0, num(liveTot.eagles ?? liveTot.eagles_or_better, 0));
+    const bogMkt =
+      num(liveTot.bogeys, NaN) + Math.max(0, num(liveTot.doubles ?? liveTot.doubles_or_worse, 0));
+    const eag = Math.max(0, num(liveTot.eagles ?? liveTot.eagles_or_better, 0));
+    const dbl = Math.max(0, num(liveTot.doubles ?? liveTot.doubles_or_worse, 0));
     return {
-      birdies: Math.round(clamp(num(liveTot.birdies, NaN), 0.15, 7) * 100) / 100,
-      bogeys: Math.round(clamp(num(liveTot.bogeys, NaN), 0.15, 8.5) * 100) / 100,
+      birdies: Math.round(clamp(Math.max(0.15, birdMkt - eag), 0.15, 7) * 100) / 100,
+      bogeys: Math.round(clamp(Math.max(0.15, bogMkt - dbl), 0.15, 8.5) * 100) / 100,
       pars: Math.round(
-        Math.max(0.12, num(liveTot.pars, 18 - num(liveTot.birdies, 0) - num(liveTot.bogeys, 0))) * 100,
+        Math.max(0.12, num(liveTot.pars, 18 - birdMkt - bogMkt)) * 100,
       ) / 100,
-      eagles: Math.max(0, num(liveTot.eagles, 0)),
-      doubles: Math.max(0, num(liveTot.doubles, 0)),
+      eagles: eag,
+      doubles: dbl,
       source: "live_hole_stats",
     };
   }

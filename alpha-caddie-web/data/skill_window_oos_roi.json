@@ -1,0 +1,171 @@
+{
+  "generated_at": "2026-07-17T03:11:00.579Z",
+  "hypothetical": true,
+  "note": "Walk-forward OOS: rebuild model μ using only each player's last N skill rounds (recency decay unchanged). Does not change live projections — comparison only.",
+  "methodology": {
+    "baseline_skill_max_rounds": 80,
+    "windows_tested": [80, 48, 36, 24, 12, 4],
+    "oos_bet_rows": 3503,
+    "oos_event_count": 9,
+    "excluded_live_event": "The Open Championship",
+    "events": [
+      "PGA Championship",
+      "THE CJ CUP Byron Nelson",
+      "Charles Schwab Challenge",
+      "the Memorial Tournament presented by Workday",
+      "RBC Canadian Open",
+      "U.S. Open",
+      "Travelers Championship",
+      "John Deere Classic",
+      "Genesis Scottish Open"
+    ],
+    "policy": "recommended per-market EV/gap filters (DEFAULT_MIN_EV_PCT / bet-policy.mjs)",
+    "unfiltered": "flat 5% EV threshold, no gap/side policy"
+  },
+  "windows": [
+    {
+      "name": "current (last 80 rounds)",
+      "skill_max_rounds": 80,
+      "is_current": true,
+      "recommended": {
+        "roi_pct": 6.3,
+        "units": 66.24,
+        "bets": 1051,
+        "hit_pct": 57.1,
+        "by_market": {
+          "Birdies": { "units": -2.3, "bets": 262 },
+          "Total score": { "units": 37.1, "bets": 422 },
+          "GIR": { "units": 19.1, "bets": 303 },
+          "Fairways hit": { "units": 12.3, "bets": 64 }
+        }
+      },
+      "unfiltered_at_5pct": {
+        "roi_pct": -0.5,
+        "units": -14.5,
+        "bets": 2825
+      }
+    },
+    {
+      "name": "last 48 rounds",
+      "skill_max_rounds": 48,
+      "is_current": false,
+      "delta_vs_current": { "roi_pct": 0.2, "units": 1.67 },
+      "recommended": {
+        "roi_pct": 6.5,
+        "units": 67.91,
+        "bets": 1051,
+        "hit_pct": 57.2,
+        "by_market": {
+          "Birdies": { "units": -2.3, "bets": 262 },
+          "Total score": { "units": 38.8, "bets": 422 },
+          "GIR": { "units": 19.1, "bets": 303 },
+          "Fairways hit": { "units": 12.3, "bets": 64 }
+        }
+      },
+      "unfiltered_at_5pct": {
+        "roi_pct": -0.5,
+        "units": -14.64,
+        "bets": 2823
+      }
+    },
+    {
+      "name": "last 36 rounds",
+      "skill_max_rounds": 36,
+      "is_current": false,
+      "delta_vs_current": { "roi_pct": 0.4, "units": 3.71 },
+      "recommended": {
+        "roi_pct": 6.7,
+        "units": 69.95,
+        "bets": 1049,
+        "hit_pct": 57.3,
+        "by_market": {
+          "Birdies": { "units": -1.3, "bets": 261 },
+          "Total score": { "units": 38.8, "bets": 422 },
+          "GIR": { "units": 20.1, "bets": 302 },
+          "Fairways hit": { "units": 12.3, "bets": 64 }
+        }
+      },
+      "unfiltered_at_5pct": {
+        "roi_pct": -0.6,
+        "units": -17.88,
+        "bets": 2828
+      }
+    },
+    {
+      "name": "last 24 rounds",
+      "skill_max_rounds": 24,
+      "is_current": false,
+      "delta_vs_current": { "roi_pct": 0.1, "units": 1.68 },
+      "recommended": {
+        "roi_pct": 6.4,
+        "units": 67.92,
+        "bets": 1059,
+        "hit_pct": 57.1,
+        "by_market": {
+          "Birdies": { "units": -0.6, "bets": 264 },
+          "Total score": { "units": 35.8, "bets": 427 },
+          "GIR": { "units": 19.4, "bets": 303 },
+          "Fairways hit": { "units": 13.4, "bets": 65 }
+        }
+      },
+      "unfiltered_at_5pct": {
+        "roi_pct": -1.0,
+        "units": -29.38,
+        "bets": 2827
+      }
+    },
+    {
+      "name": "last 12 rounds",
+      "skill_max_rounds": 12,
+      "is_current": false,
+      "delta_vs_current": { "roi_pct": -1.2, "units": -10.05 },
+      "recommended": {
+        "roi_pct": 5.1,
+        "units": 56.19,
+        "bets": 1104,
+        "hit_pct": 56.3,
+        "by_market": {
+          "Birdies": { "units": 3.1, "bets": 273 },
+          "Total score": { "units": 20.9, "bets": 457 },
+          "GIR": { "units": 16.2, "bets": 308 },
+          "Fairways hit": { "units": 16.0, "bets": 66 }
+        }
+      },
+      "unfiltered_at_5pct": {
+        "roi_pct": -0.7,
+        "units": -18.9,
+        "bets": 2846
+      }
+    },
+    {
+      "name": "last 4 rounds",
+      "skill_max_rounds": 4,
+      "is_current": false,
+      "delta_vs_current": { "roi_pct": -2.0, "units": -16.24 },
+      "recommended": {
+        "roi_pct": 4.3,
+        "units": 50.0,
+        "bets": 1166,
+        "hit_pct": 56.1,
+        "by_market": {
+          "Birdies": { "units": -13.9, "bets": 303 },
+          "Total score": { "units": 24.4, "bets": 471 },
+          "GIR": { "units": 23.2, "bets": 313 },
+          "Fairways hit": { "units": 16.3, "bets": 79 }
+        }
+      },
+      "unfiltered_at_5pct": {
+        "roi_pct": -0.8,
+        "units": -21.59,
+        "bets": 2853
+      }
+    }
+  ],
+  "best_window": {
+    "skill_max_rounds": 36,
+    "name": "last 36 rounds",
+    "roi_pct": 6.7,
+    "units": 69.95,
+    "vs_current_units": 3.71
+  }
+}

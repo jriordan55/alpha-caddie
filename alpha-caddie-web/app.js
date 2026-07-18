@@ -5450,7 +5450,9 @@ function livePartialRoundCountPropAdjust(market, row) {
   if (rem < 0) return out;
 
   const field = market === "Birdies" ? "birdies" : market === "Pars" ? "pars" : "bogeys";
-  const muFull = num(row[field], NaN);
+  let muFull = num(row[field], NaN);
+  if (market === "Birdies") muFull = birdiesPlusEaglesFromRow(row);
+  else if (market === "Bogeys") muFull = bogeysPlusDoublesFromRow(row);
   if (!Number.isFinite(muFull) || muFull < 0) return out;
 
   let b = num(row.dg_live_birdies_so_far, NaN);
@@ -5462,17 +5464,19 @@ function livePartialRoundCountPropAdjust(market, row) {
 
   const eg = num(row.dg_live_eagles_so_far, NaN);
   const eagles = Number.isFinite(eg) && eg >= 0 ? Math.min(thru, Math.round(eg)) : 0;
+  const dblRaw = num(row.dg_live_doubles_so_far, NaN);
+  const doubles = Number.isFinite(dblRaw) && dblRaw >= 0 ? Math.min(thru, Math.round(dblRaw)) : 0;
 
   let pSo = num(row.dg_live_pars_so_far, NaN);
   if (!Number.isFinite(pSo)) {
-    pSo = Math.max(0, thru - b - bg - eagles);
+    pSo = Math.max(0, thru - b - bg - eagles - doubles);
     pSo = Math.min(thru, pSo);
   }
 
   const rate = muFull / 18;
   let soFar;
   if (market === "Birdies") soFar = b + eagles;
-  else if (market === "Bogeys") soFar = bg;
+  else if (market === "Bogeys") soFar = bg + doubles;
   else soFar = pSo;
 
   let muLive = soFar + rate * rem;
@@ -21947,6 +21951,22 @@ function birdiesPlusEaglesFromRow(row) {
   return b + eagleAdd;
 }
 
+/** Bogeys O/U: doubles_or_worse count toward bogeys (DraftKings / PrizePicks “Bogeys or Worse”). */
+function bogeysPlusDoublesFromRow(row) {
+  if (!row || typeof row !== "object") return NaN;
+  const bg = historyScalarOrNaN(row.bogeys ?? row.bogies);
+  const dow = historyScalarOrNaN(row.doubles_or_worse);
+  const dbl = historyScalarOrNaN(row.doubles);
+  if (!Number.isFinite(bg)) {
+    if (Number.isFinite(dow) && dow > 0) return dow;
+    if (Number.isFinite(dbl) && dbl > 0) return dbl;
+    return NaN;
+  }
+  const dblAdd =
+    Number.isFinite(dow) && dow > 0 ? dow : Number.isFinite(dbl) && dbl > 0 ? dbl : 0;
+  return bg + dblAdd;
+}
+
 /**
  * GIR / fairways: values in (0, 1] are share-of-holes (e.g. 0.72 → integer hole counts); values in (1, holes]
  * are expected counts from history or projections — keep fractional scale (do not `Math.round` to whole holes;
@@ -21967,6 +21987,7 @@ function historyGirOrFairwaysCount(v, holes) {
 /** Fallback μ when `ouMeanCountingStat` is NaN — must not use `num(null)` (Number(null) is 0). */
 function ouFallbackScalarForProjectedMean(mKey, row, rec) {
   if (mKey === "Birdies") return birdiesPlusEaglesFromRow(row);
+  if (mKey === "Bogeys") return bogeysPlusDoublesFromRow(row);
   const v = historyScalarOrNaN(row?.[rec.field]);
   if (mKey === "GIR") return girFairwaysCountFromRawForOu(v, 18);
   if (mKey === "Fairways hit") return girFairwaysCountFromRawForOu(v, fairwayHolesModeledFromData());
@@ -21978,6 +21999,7 @@ function ouMeanCountingStat(market, row) {
   const mKey = ouModelMarketKey(market) || "Total score";
   const rec = ouStatRec(mKey);
   if (mKey === "Birdies") return birdiesPlusEaglesFromRow(row);
+  if (mKey === "Bogeys") return bogeysPlusDoublesFromRow(row);
   const raw = historyScalarOrNaN(row?.[rec.field]);
   if (!Number.isFinite(raw)) return NaN;
   if (mKey === "GIR") return girFairwaysCountFromRawForOu(raw, 18);
@@ -22021,7 +22043,11 @@ function actualForRoundRow(statKey, row) {
       return birdiesPlusEaglesFromRow(enriched);
     }
     if (statKey === "pars") return historyScalarOrNaN(rec.pars ?? enriched.pars);
-    return historyScalarOrNaN(rec.bogeys ?? enriched.bogeys ?? enriched.bogies);
+    return bogeysPlusDoublesFromRow({
+      bogeys: rec.bogeys ?? enriched.bogeys ?? enriched.bogies,
+      doubles: enriched.doubles,
+      doubles_or_worse: enriched.doubles_or_worse ?? rec.doubles,
+    });
   }
   if (statKey === "gir") {
     const enriched = enrichHistoryRowFromLiveActuals(row);

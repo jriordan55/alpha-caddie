@@ -222,6 +222,7 @@ export function optimizedHoleCounts(opts = {}) {
   const venueMarket = venueBird + venueEag;
   const venueBog = num(opts.venueBog, 2.6);
   const venueDbl = num(opts.venueDoubles, 0.32);
+  const venueBogMarket = venueBog + venueDbl;
 
   const dApp = num(opts.sgAppDelta, 0);
   const dPutt = num(opts.sgPuttDelta, 0);
@@ -232,6 +233,7 @@ export function optimizedHoleCounts(opts = {}) {
   const girMiss = Number.isFinite(playerGir) ? fieldGir - playerGir : 0;
 
   const birdRate = num(sk.avg_birdies, NaN);
+  // avg_bogeys is bogey-or-worse (bogeys + doubles), same convention as avg_birdies.
   const bogRate = num(sk.avg_bogeys, NaN);
   const eagRate = num(sk.avg_eagles, NaN);
   const dblRate = num(sk.avg_doubles, NaN);
@@ -254,13 +256,13 @@ export function optimizedHoleCounts(opts = {}) {
     { w: wBird.wOls, v: olsCountAtStp(hist, "birdies", stp) },
   ]);
   const bogCore = weightedMean([
-    { w: wBog.wVenue, v: venueBog },
+    { w: wBog.wVenue, v: venueBogMarket },
     { w: wBog.wRate, v: bogRate },
     { w: wBog.wOls, v: olsCountAtStp(hist, "bogeys", stp) },
   ]);
 
   let birdies = Number.isFinite(birdCore) ? birdCore + wBird.wSg * birdSg : birdSg + venueMarket;
-  let bogeys = Number.isFinite(bogCore) ? bogCore + wBog.wSg * bogSg : bogSg + venueBog;
+  let bogeys = Number.isFinite(bogCore) ? bogCore + wBog.wSg * bogSg : bogSg + venueBogMarket;
 
   let eagles = weightedMean([
     { w: 0.35, v: venueEag },
@@ -290,8 +292,16 @@ export function optimizedHoleCounts(opts = {}) {
     birdies = venueBird + birdSpread * (birdies - venueBird);
   }
 
-  const scoreBog = clamp(venueBog + stp * 0.56, 0.15, 8.5);
-  bogeys = (1 - wBog.wScoreStp) * bogeys + wBog.wScoreStp * scoreBog;
+  // bogeys variable is bogey-or-worse market; split doubles so score identity stays valid.
+  const bogSpread = num(opts.bogeySkillSpreadKeep, wBog.spreadKeep ?? 0.55);
+  let bogMarket = bogeys;
+  if (Number.isFinite(bogMarket) && Number.isFinite(venueBogMarket)) {
+    bogMarket = venueBogMarket + bogSpread * (bogMarket - venueBogMarket);
+  }
+  const scoreBogMkt = clamp(venueBogMarket + stp * 0.56, 0.15, 10);
+  bogMarket = (1 - wBog.wScoreStp) * bogMarket + wBog.wScoreStp * scoreBogMkt;
+  doubles = clamp(num(doubles, venueDbl), 0.04, 2.5);
+  bogeys = Math.max(0.15, bogMarket - doubles);
 
   return { eagles, birdies, bogeys, doubles, nHist };
 }

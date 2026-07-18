@@ -40,6 +40,17 @@ function birdiesFromAct(act) {
   return (Number.isFinite(b) ? b : 0) + eagleAdd;
 }
 
+function bogeysFromAct(act) {
+  if (!act || typeof act !== "object") return NaN;
+  if (liveCountingPlaceholder(act)) return NaN;
+  const bg = num(act.bogeys ?? act.bogies);
+  const dow = num(act.doubles_or_worse);
+  const dbl = num(act.doubles);
+  const dblAdd = Number.isFinite(dow) ? dow : Number.isFinite(dbl) ? dbl : 0;
+  if (!Number.isFinite(bg) && !Number.isFinite(dow) && !Number.isFinite(dbl)) return NaN;
+  return (Number.isFinite(bg) ? bg : 0) + Math.max(0, dblAdd);
+}
+
 function fmtActual(marketKey, v) {
   if (!Number.isFinite(v)) return "";
   if (marketKey === "total") return (Math.round(v * 10) / 10).toFixed(1);
@@ -68,10 +79,7 @@ function actualForMarket(act, marketKey) {
   if (!act || typeof act !== "object") return NaN;
   if (marketKey === "total") return num(act.round_score ?? act.total_score);
   if (marketKey === "birdies") return birdiesFromAct(act);
-  if (marketKey === "bogeys") {
-    if (liveCountingPlaceholder(act)) return NaN;
-    return num(act.bogeys ?? act.bogies);
-  }
+  if (marketKey === "bogeys") return bogeysFromAct(act);
   if (marketKey === "gir") return num(act.gir);
   if (marketKey === "fairways") return num(act.fairways);
   return NaN;

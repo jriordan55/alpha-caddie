@@ -80,7 +80,7 @@ const BETTABLE_MARKETS = new Set([
 ]);
 
 function setOverviewHistoricalVisible(show) {
-  for (const id of ["oos-honest-card", "odds-model-roi-card"]) {
+  for (const id of ["oos-honest-card", "odds-model-roi-card", "skill-window-card"]) {
     const el = document.getElementById(id);
     if (el) el.hidden = !show;
   }
@@ -88,7 +88,7 @@ function setOverviewHistoricalVisible(show) {
   if (!panel) return;
   for (const card of panel.querySelectorAll(".chart-card")) {
     const id = card.id || "";
-    if (id === "oos-honest-card" || id === "odds-model-roi-card") continue;
+    if (id === "oos-honest-card" || id === "odds-model-roi-card" || id === "skill-window-card") continue;
     card.hidden = !show;
   }
 }
@@ -111,6 +111,10 @@ let ODDS_LINES_ROWS = [];
 const OOS_JSON_URL = "../data/walkforward_oos_roi.json";
 const ODDS_ROI_URL = "../data/odds_model_roi_summary.csv";
 const ODDS_LINES_URL = "../data/odds_model_roi_lines.csv";
+const SKILL_WINDOW_JSON_URL = "../data/skill_window_oos_roi.json";
+
+/** @type {object | null} */
+let SKILL_WINDOW_REPORT = null;
 
 const state = {
   tab: "overview",
@@ -1714,7 +1718,167 @@ function renderOverview() {
     { valueKey: "roi", format: (v) => fmtPct(v) },
   );
   renderHonestOos();
+  renderSkillWindowOos();
   renderOddsModelRoi();
+}
+
+function renderSkillWindowOos() {
+  const card = document.getElementById("skill-window-card");
+  if (!card) return;
+  const windows = SKILL_WINDOW_REPORT?.windows;
+  if (!Array.isArray(windows) || !windows.length) {
+    card.hidden = true;
+    return;
+  }
+  card.hidden = false;
+  const note = document.getElementById("skill-window-note");
+  const meth = SKILL_WINDOW_REPORT.methodology || {};
+  const best = SKILL_WINDOW_REPORT.best_window;
+  if (note) {
+    const gen = SKILL_WINDOW_REPORT.generated_at
+      ? new Date(SKILL_WINDOW_REPORT.generated_at).toLocaleString()
+      : "";
+    note.innerHTML =
+      `<strong>Hypothetical only</strong> — live Round projections still use last ${meth.baseline_skill_max_rounds || 80} rounds. ` +
+      `Walk-forward OOS on <strong>${meth.oos_event_count || windows.length}</strong> completed events` +
+      (meth.excluded_live_event ? ` (excludes ${esc(meth.excluded_live_event)})` : "") +
+      `. Recommended bet policy ROI/PnL if skill history were capped at N rounds.` +
+      (best
+        ? ` Best window: <strong>last ${best.skill_max_rounds}</strong> (${fmtPct(best.roi_pct)}, ${best.units >= 0 ? "+" : ""}${fmt(best.units, 1)}u` +
+          (best.vs_current_units
+            ? `, ${best.vs_current_units >= 0 ? "+" : ""}${fmt(best.vs_current_units, 1)}u vs current`
+            : "") +
+          `).`
+        : "") +
+      ` Regenerate: <code>node scripts/compare-skill-window-oos.mjs</code>` +
+      (gen ? ` · ${gen}` : "");
+  }
+
+  const current = windows.find((w) => w.is_current) || windows[0];
+  const bestWin = best ? windows.find((w) => w.skill_max_rounds === best.skill_max_rounds) : null;
+  document.getElementById("skill-window-kpis").innerHTML = `
+    <div class="kpi-card highlight">
+      <div class="kpi-label">Current (last ${current?.skill_max_rounds || 80})</div>
+      <div class="kpi-value ${clsSigned(current?.recommended?.roi_pct)}">${fmtPct(current?.recommended?.roi_pct)}</div>
+      <div class="kpi-sub">${current?.recommended?.units >= 0 ? "+" : ""}${fmt(current?.recommended?.units, 1)}u · ${current?.recommended?.bets || 0} bets</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Best hypothetical</div>
+      <div class="kpi-value ${clsSigned(bestWin?.recommended?.roi_pct)}">${bestWin ? fmtPct(bestWin.recommended.roi_pct) : "—"}</div>
+      <div class="kpi-sub">${bestWin ? `last ${bestWin.skill_max_rounds} · ${bestWin.recommended.units >= 0 ? "+" : ""}${fmt(bestWin.recommended.units, 1)}u` : ""}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Last 12 vs current</div>
+      <div class="kpi-value ${clsSigned(windows.find((w) => w.skill_max_rounds === 12)?.delta_vs_current?.units)}">${(() => {
+        const d = windows.find((w) => w.skill_max_rounds === 12)?.delta_vs_current?.units;
+        return Number.isFinite(num(d)) ? `${d >= 0 ? "+" : ""}${fmt(d, 1)}u` : "—";
+      })()}</div>
+      <div class="kpi-sub">PnL delta (recommended policy)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Last 4 vs current</div>
+      <div class="kpi-value ${clsSigned(windows.find((w) => w.skill_max_rounds === 4)?.delta_vs_current?.units)}">${(() => {
+        const d = windows.find((w) => w.skill_max_rounds === 4)?.delta_vs_current?.units;
+        return Number.isFinite(num(d)) ? `${d >= 0 ? "+" : ""}${fmt(d, 1)}u` : "—";
+      })()}</div>
+      <div class="kpi-sub">PnL delta (recommended policy)</div>
+    </div>
+  `;
+
+  const tbody = document.querySelector("#skill-window-table tbody");
+  if (tbody) {
+    tbody.innerHTML = windows
+      .map((w) => {
+        const rec = w.recommended || {};
+        const d = w.delta_vs_current;
+        const vs =
+          w.is_current || !d
+            ? "—"
+            : `${d.units >= 0 ? "+" : ""}${fmt(d.units, 1)}u (${d.roi_pct >= 0 ? "+" : ""}${fmt(d.roi_pct, 1)}pt)`;
+        const label = w.is_current
+          ? `<strong>${esc(w.name)}</strong>`
+          : esc(w.name);
+        const uf = w.unfiltered_at_5pct;
+        return `<tr${w.is_current ? ' class="row-current"' : bestWin && w.skill_max_rounds === bestWin.skill_max_rounds ? ' class="row-best"' : ""}>
+          <td>${label}</td>
+          <td class="num ${clsSigned(rec.roi_pct)}">${fmtPct(rec.roi_pct)}</td>
+          <td class="num ${clsSigned(rec.units)}">${rec.units >= 0 ? "+" : ""}${fmt(rec.units, 1)}u</td>
+          <td class="num ${clsSigned(d?.units)}">${vs}</td>
+          <td class="num">${rec.bets ?? "—"}</td>
+          <td class="num">${fmt(rec.hit_pct, 1)}%</td>
+          <td class="num ${clsSigned(uf?.roi_pct)}">${uf ? fmtPct(uf.roi_pct) : "—"}</td>
+        </tr>`;
+      })
+      .join("");
+  }
+
+  const breakdown = document.getElementById("skill-window-market-breakdown");
+  if (breakdown) {
+    const marketOrder = ["Total score", "Birdies", "Bogeys", "GIR", "Fairways hit"];
+    const present = marketOrder.filter((m) =>
+      windows.some((w) => w.recommended?.by_market?.[m]),
+    );
+    const marketRoi = (cell) => {
+      if (!cell || !Number.isFinite(num(cell.bets)) || num(cell.bets) === 0) return NaN;
+      return (num(cell.units) / num(cell.bets)) * 100;
+    };
+    breakdown.innerHTML = present
+      .map((market) => {
+        const baseCell = current?.recommended?.by_market?.[market];
+        const baseUnits = num(baseCell?.units, NaN);
+        // Best window for this market = most PnL.
+        let bestSkill = null;
+        let bestUnits = -Infinity;
+        for (const w of windows) {
+          const c = w.recommended?.by_market?.[market];
+          const u = num(c?.units, NaN);
+          if (Number.isFinite(u) && u > bestUnits) {
+            bestUnits = u;
+            bestSkill = w.skill_max_rounds;
+          }
+        }
+        const rows = windows
+          .map((w) => {
+            const c = w.recommended?.by_market?.[market];
+            const roi = marketRoi(c);
+            const units = num(c?.units, NaN);
+            const bets = Math.round(num(c?.bets, 0));
+            const vs =
+              w.is_current || !Number.isFinite(units) || !Number.isFinite(baseUnits)
+                ? "—"
+                : `${units - baseUnits >= 0 ? "+" : ""}${fmt(units - baseUnits, 1)}u`;
+            const cls = w.is_current
+              ? "row-current"
+              : bestSkill === w.skill_max_rounds
+                ? "row-best"
+                : "";
+            return `<tr${cls ? ` class="${cls}"` : ""}>
+              <td>${w.is_current ? `<strong>${esc(w.name)}</strong>` : esc(w.name)}</td>
+              <td class="num ${clsSigned(roi)}">${Number.isFinite(roi) ? fmtPct(roi) : "—"}</td>
+              <td class="num ${clsSigned(units)}">${Number.isFinite(units) ? `${units >= 0 ? "+" : ""}${fmt(units, 1)}u` : "—"}</td>
+              <td class="num ${clsSigned(w.is_current ? NaN : units - baseUnits)}">${vs}</td>
+              <td class="num">${bets || "—"}</td>
+            </tr>`;
+          })
+          .join("");
+        return `<div class="table-wrap" style="margin-top:0.75rem">
+          <table class="data-table skill-window-market">
+            <thead>
+              <tr><th colspan="5">${esc(market)}</th></tr>
+              <tr>
+                <th>Skill window</th>
+                <th class="num">ROI</th>
+                <th class="num">PnL</th>
+                <th class="num">vs current</th>
+                <th class="num">Bets</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>`;
+      })
+      .join("");
+  }
 }
 
 function renderOddsModelRoi() {
@@ -2535,6 +2699,16 @@ async function loadOosReport() {
   }
 }
 
+async function loadSkillWindowReport() {
+  try {
+    const res = await fetch(`${SKILL_WINDOW_JSON_URL}?t=${Date.now()}`, { cache: "no-store" });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
 async function loadOddsModelRoi() {
   try {
     const res = await fetch(`${ODDS_ROI_URL}?t=${Date.now()}`, { cache: "no-store" });
@@ -2591,16 +2765,18 @@ async function loadData() {
   const errEl = document.getElementById("error-banner");
   errEl.hidden = true;
   try {
-    const [summaryText, detailText, oos, oddsRoi, oddsLines] = await Promise.all([
+    const [summaryText, detailText, oos, oddsRoi, oddsLines, skillWindow] = await Promise.all([
       loadSummaryCsvText(),
       loadDetailCsvText(),
       loadOosReport(),
       loadOddsModelRoi(),
       loadOddsLinesCsv(),
+      loadSkillWindowReport(),
     ]);
     OOS_REPORT = oos;
     ODDS_MODEL_ROI = oddsRoi;
     ODDS_LINES_ROWS = oddsLines;
+    SKILL_WINDOW_REPORT = skillWindow;
     ALL_ROWS = parseCsv(summaryText).filter((r) => String(r.market || "").trim() !== "Round matchups");
     if (!ALL_ROWS.length) throw new Error("Summary CSV is empty");
     DETAIL_ROWS = detailText ? parseCsv(detailText) : [];

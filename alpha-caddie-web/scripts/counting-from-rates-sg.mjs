@@ -52,6 +52,14 @@ function birdiesFromHistRow(row) {
   return b + (Number.isFinite(e) ? Math.max(0, e) : 0);
 }
 
+/** Bogey-or-worse count (bogeys + doubles) — matches DK / PP Bogeys market. */
+function bogeysFromHistRow(row) {
+  const bg = num(row.bogeys ?? row.bogies, NaN);
+  const d = num(row.doubles_or_worse ?? row.doubles, 0);
+  if (!Number.isFinite(bg)) return NaN;
+  return bg + (Number.isFinite(d) ? Math.max(0, d) : 0);
+}
+
 function countFromRateOrRaw(raw, nHoles) {
   const r = traditionalRate01(raw, nHoles);
   if (!Number.isFinite(r)) return NaN;
@@ -692,8 +700,8 @@ export async function buildRollingHoleCountRatesByDg(csvPath, dgIdSet, opts = {}
 
         const b = birdiesFromHistRow(row);
         if (Number.isFinite(b) && b >= 0 && b <= 10) slot.bird.push(b);
-        const bg = num(row.bogeys ?? row.bogies, NaN);
-        if (Number.isFinite(bg) && bg >= 0 && bg <= 12) slot.bog.push(bg);
+        const bg = bogeysFromHistRow(row);
+        if (Number.isFinite(bg) && bg >= 0 && bg <= 14) slot.bog.push(bg);
         const e = num(row.eagles_or_better ?? row.eagles, 0);
         if (Number.isFinite(e) && e >= 0 && e <= 3) slot.eag.push(e);
         const d = num(row.doubles_or_worse ?? row.doubles, 0);

@@ -307,6 +307,13 @@ tr.my-bets-in-slip-partial td {
   background: linear-gradient(145deg, var(--surface) 0%, rgba(0, 196, 107, 0.08) 100%);
 }
 
+#skill-window-table tr.row-current td {
+  font-weight: 600;
+}
+#skill-window-table tr.row-best td {
+  background: rgba(0, 196, 107, 0.08);
+}
+
 .kpi-label {
   font-size: 0.72rem;
   font-weight: 600;

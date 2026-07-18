@@ -602,10 +602,12 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
       payload.projection_course_basis = meta.projection_course_basis;
     }
 
-    // Recenter field bird/bog toward DG hole-stats totals (fixes live_tournament_stats zeros → bogus ~5.2 bogeys).
-    // Apply to every unfinished round row so R1–R4 stay coherent after late weather/reconcile passes.
-    const targetBird = num(tot.birdies, NaN);
-    const targetBog = num(tot.bogeys, NaN);
+    // Recenter field birdie-or-better / bogey-or-worse toward DG hole-stats totals
+    // (DK/PP markets). Apply to unfinished rounds so R1–R4 stay coherent.
+    const targetBird =
+      num(tot.birdies, NaN) + Math.max(0, num(tot.eagles ?? tot.eagles_or_better, 0));
+    const targetBog =
+      num(tot.bogeys, NaN) + Math.max(0, num(tot.doubles ?? tot.doubles_or_worse, 0));
     if (Number.isFinite(targetBird) && Number.isFinite(targetBog)) {
       const displayRnd = Math.round(num(payload.display_round, liveWaveBias.round || 1)) || 1;
       const fieldRows = players.filter((p) => {
@@ -617,8 +619,12 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
           ? fieldRows.filter((p) => Math.round(num(p.round, NaN)) === displayRnd)
           : fieldRows;
       const mean = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : NaN);
-      const curBird = mean(sampleRows.map((p) => num(p.birdies, NaN)).filter(Number.isFinite));
-      const curBog = mean(sampleRows.map((p) => num(p.bogeys, NaN)).filter(Number.isFinite));
+      const birdMkt = (p) =>
+        num(p.birdies, NaN) + Math.max(0, num(p.eagles ?? p.eagles_or_better, 0));
+      const bogMkt = (p) =>
+        num(p.bogeys, NaN) + Math.max(0, num(p.doubles ?? p.doubles_or_worse, 0));
+      const curBird = mean(sampleRows.map(birdMkt).filter(Number.isFinite));
+      const curBog = mean(sampleRows.map(bogMkt).filter(Number.isFinite));
       const dBird = Number.isFinite(curBird) ? targetBird - curBird : 0;
       const dBog = Number.isFinite(curBog) ? targetBog - curBog : 0;
       if (Math.abs(dBird) > 0.05 || Math.abs(dBog) > 0.05) {
@@ -635,7 +641,7 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
           if (Number.isFinite(pars)) p.pars = Math.round(pars * 100) / 100;
         }
         console.log(
-          `[unified-factors] recentered bird/bog to DG live-hole-stats totals (bird ${curBird?.toFixed?.(2)}→${targetBird}, bog ${curBog?.toFixed?.(2)}→${targetBog}; rounds R${displayRnd}–R4)`,
+          `[unified-factors] recentered birdie-or-better / bogey-or-worse to DG live-hole-stats (bird ${curBird?.toFixed?.(2)}→${targetBird.toFixed?.(2)}, bog ${curBog?.toFixed?.(2)}→${targetBog.toFixed?.(2)}; rounds R${displayRnd}–R4)`,
         );
       }
     }

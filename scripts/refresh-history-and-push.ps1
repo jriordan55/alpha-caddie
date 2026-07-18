@@ -1,4 +1,4 @@
-param(
+﻿param(
   [switch] $SkipPush,
   [switch] $NoFullHistory,
   [switch] $LiveWeekOnly,
@@ -41,15 +41,15 @@ function Run-Npm([string] $Label, [Parameter(ValueFromRemainingArguments = $true
   }
 }
 #
-# Course fit tab — generated artifacts this pipeline must publish:
-#   • course-table.json — built from data/course_table.csv (course mapping for Course Fit radar, similarity,
+# Course fit tab - generated artifacts this pipeline must publish:
+#   * course-table.json - built from data/course_table.csv (course mapping for Course Fit radar, similarity,
 #     fit table, and static live-prop difficulty prior). Built by npm run build:course-table after each fetch:dg
 #     and again in push:all after fetch:dg; mirrored to website/public/data/course-table.json.
-#   • projections.json — field + meta.course_used (fetch:dg); outrights win/top5/10/20/cut after fetch:book-odds merge into DATA.outrights
+#   * projections.json - field + meta.course_used (fetch:dg); outrights win/top5/10/20/cut after fetch:book-odds merge into DATA.outrights
 #     (same Scratch API as datagolf.com/betting-tool-finish IMPLIED %). fetch:finish-tool re-merges that feed so the standalone script stays exercised;
 #     set GOLF_FINISH_TOOL_PLAYWRIGHT=1 (+ optional DATAGOLF_PLAYWRIGHT_STORAGE_STATE) to capture browser JSON instead of direct API for missing markets.
-#   • approach_skill_ytd.json — Predicted shot distance bins (fetch:dg preds/approach-skill); optional approach_skill_l12.json fallback if present.
-#   • embedded-player-round-history.js (+ CSV / player_round_history.json / player-history shards) — Hole Hangout
+#   * approach_skill_ytd.json - Predicted shot distance bins (fetch:dg preds/approach-skill); optional approach_skill_l12.json fallback if present.
+#   * embedded-player-round-history.js (+ CSV / player_round_history.json / player-history shards) - Hole Hangout
 #     hole-level priors and **Historical Trends** (update:rounds + build:history; live round rows merged when live-in-play.json exists).
 #     Default push:all sets GOLF_HISTORICAL_ROUNDS_FULL_HISTORY=1; **update:rounds** (after fetch:in-play) refreshes
 #     historical_rounds_all.csv + player_round_history / embed / shards once. fetch:dg skips that merge (faster).
@@ -57,14 +57,14 @@ function Run-Npm([string] $Label, [Parameter(ValueFromRemainingArguments = $true
 #     before update:rounds so build-player-history merges the live week into exported history (Aronimink / current PGA rounds).
 #     Course Fit uses course-table.json for layout vs field SG.
 #
-# Hole Hangout — hole pars per hole for the active course/event:
-#   • fetch:dg calls preds/live-hole-stats and writes hole_pars / hole_pars_source (live_hole_stats when DG serves it).
-#   • fetch:in-play → live-in-play.json (bundled live_hole_stats); merge:live-hole-pars-into-projections (after fetch:book-odds)
+# Hole Hangout - hole pars per hole for the active course/event:
+#   * fetch:dg calls preds/live-hole-stats and writes hole_pars / hole_pars_source (live_hole_stats when DG serves it).
+#   * fetch:in-play -> live-in-play.json (bundled live_hole_stats); merge:live-hole-pars-into-projections (after fetch:book-odds)
 #     re-aligns projections.json from that bundle so push:all publishes the same per-hole table as the live feed even when
 #     fetch:book-odds runs inline fetch:dg and refreshes the JSON.
-#   • course_holes.json — bundled overrides / gaps (committed); course_holes.local.json is gitignored for secrets.
-#   • hole_pars_from_shots.json — fallback map from build:history (build-player-shots-web.mjs) after rounds CSV refresh.
-#   • player-history/by-dg/*.json + manifest.json — hole-level score rows (hole_data.csv join in build-player-history.mjs);
+#   * course_holes.json - bundled overrides / gaps (committed); course_holes.local.json is gitignored for secrets.
+#   * hole_pars_from_shots.json - fallback map from build:history (build-player-shots-web.mjs) after rounds CSV refresh.
+#   * player-history/by-dg/*.json + manifest.json - hole-level score rows (hole_data.csv join in build-player-history.mjs);
 #     Hole Hangout fetches shards at player-history/by-dg/{dg_id}.json. Staged below with other history artifacts.
 #
 # Alpha Caddie browser shell (props trends dates, cache-busted index.html, etc.): alpha-caddie-web/app.js +
@@ -72,24 +72,24 @@ function Run-Npm([string] $Label, [Parameter(ValueFromRemainingArguments = $true
 #   data. Default `npm run push:all` also runs `git add -A`, which stages any other web changes.
 #
 # Matchup Analysis Tool stays fresh when these commands succeed:
-#   fetch:dg  → projections.players (SG pillars + merged preds/live-tournament-stats driving when DG serves it),
+#   fetch:dg  -> projections.players (SG pillars + merged preds/live-tournament-stats driving when DG serves it),
 #               projections.matchups (betting-tools/matchups), approach_skill_ytd.json (Course Fit shot bins)
-#   fetch:book-odds → matchup/outright odds + DraftKings round O/U props (Playwright) merged into projections.json;
+#   fetch:book-odds -> matchup/outright odds + DraftKings round O/U props (Playwright) merged into projections.json;
 #     appends alpha-caddie-web/data/dk_round_projection_audit.csv (DK line + model round stats per prop).
-#   export:round-projection-vs-actual — alpha-caddie-web/data/round_projection_vs_actual.csv (model vs actual per player×round).
-#   fetch:in-play → live-in-play.json (live_round_actuals_by_dg) → build-player-history merges into player_round_history + shards;
+#   export:round-projection-vs-actual - alpha-caddie-web/data/round_projection_vs_actual.csv (model vs actual per player×round).
+#   fetch:in-play -> live-in-play.json (live_round_actuals_by_dg) -> build-player-history merges into player_round_history + shards;
 #     browser also merges live-in-play on Historical Trends open (app.js ensureLiveTournamentHistoryMerged).
-#     fetch-live-in-play.mjs carries forward dropped R1–R3 gross columns when the field advances.
+#     fetch-live-in-play.mjs carries forward dropped R1-R3 gross columns when the field advances.
 #   merge:live-hole-pars-into-projections runs AFTER fetch:book-odds + fetch:finish-tool so an inline fetch:dg inside
 #   book-odds does not leave projections without live_hole_stats hole_pars (tee-adjacent UI + consistency with Hole Hangout).
 #   merge:live-round-meta-into-projections bumps display_round from live-in-play + reapplies μ_SG prior-round
 #   strokes (blend vs historical CSV); projections keep the full tournament field for Historical Trends. Before update:rounds.
 # Mirrors below copy projections + live + approach_skill *.json into website/public/data/ so both apps ship the same JSON.
 #
-# Round-projections / +EV: refresh:live runs reconcile → export vs-actual → fit book-alignment (prior
-# events only) → walk-forward OOS report → apply calibration to projections.json → validate.
+# Round-projections / +EV: refresh:live runs reconcile -> export vs-actual -> fit book-alignment (prior
+# events only) -> walk-forward OOS report -> apply calibration to projections.json -> validate.
 # Market rating: fetch:dg writes pga_tour_market_benchmarks; refresh:live re-runs refresh:market-benchmarks after the
-# post-live historical CSV merge so 2025–2026 μ/σ stay current in published projections.json.
+# post-live historical CSV merge so 2025-2026 μ/σ stay current in published projections.json.
 
 $scriptsDir = $PSScriptRoot
 $repoRoot = Resolve-GolfRepoRoot $scriptsDir
@@ -107,7 +107,7 @@ $env:GOLF_WITHIN_EVENT_FORM_CARRY = "0"
 $env:GOLF_UNIFIED_BOUNCE_BACK_K = "0"
 # Round projections tab: require a fresh DraftKings scrape (no stale / empty publish).
 $env:GOLF_REQUIRE_DK_OU = "1"
-# DK Nash API blocks headless Playwright on desktop — headed Chromium is required.
+# DK Nash API blocks headless Playwright on desktop - headed Chromium is required.
 if ($IsWindows -or ($env:OS -match "Windows") -or $IsMacOS) {
   $env:DK_HEADLESS = "0"
 }
@@ -130,19 +130,20 @@ if ($LiveWeekOnly) {
   $env:GOLF_UNIFIED_TEE_WAVE_W = "0.30"
   $env:GOLF_FIELD_DAY_COUNTING_LIFT_FRAC = "0"
   $env:GOLF_WITHIN_EVENT_COUNTING_BLEND = "0"
-  Write-Host "LiveWeekOnly: npm run refresh:live (live feeds + DK/PP props + tee times + weather bake + field history refresh for Trends)."
-  Write-Host "LiveWeekOnly soft mode: DK not required, skip odds ROI backtest, no full vs-actual rebuild, soft validate."
-  Write-Host "LiveWeekOnly projection: flat venue anchor; AM/PM wave + weather separate rounds (no prior-day field bird/bog lift)."
+  Write-Host 'LiveWeekOnly: npm run refresh:live (live feeds + DK/PP props + tee times + weather bake + field history refresh for Trends).'
+  Write-Host 'LiveWeekOnly soft mode: DK not required, skip odds ROI backtest, no full vs-actual rebuild, soft validate.'
+  Write-Host 'LiveWeekOnly projection: flat venue anchor; AM/PM wave + weather separate rounds (no prior-day field bird/bog lift).'
+  Write-Host 'LiveWeekOnly markets: Birdies = birdies+eagles (or better), Bogeys = bogeys+doubles (or worse), same as DK/PP.'
 } elseif (-not $NoFullHistory) {
   $env:GOLF_HISTORICAL_ROUNDS_FULL_HISTORY = "1"
   $env:GOLF_SKIP_HISTORY_ON_FETCH_DG = "1"
   Remove-Item Env:\GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_HISTORICAL_ROUNDS_FETCH_ALL_YEARS -ErrorAction SilentlyContinue
-  Write-Host "Historical Trends: one full CSV merge + build via update:rounds (after in-play). fetch:dg skips duplicate history work."
+  Write-Host 'Historical Trends: one full CSV merge + build via update:rounds after in-play. fetch:dg skips duplicate history work.'
 } else {
   $env:GOLF_SKIP_HISTORY_ON_FETCH_DG = "1"
   Remove-Item Env:\GOLF_HISTORICAL_ROUNDS_FULL_HISTORY -ErrorAction SilentlyContinue
-  Write-Host "NoFullHistory: update:rounds uses default year rules (not FULL_HISTORY=1)."
+  Write-Host 'NoFullHistory: update:rounds uses default year rules (not FULL_HISTORY=1).'
 }
 
 # When fetch output matches HEAD exactly, still bump app.js?v= so deploys pick up fresh HTML/JS.
@@ -245,9 +246,9 @@ if ($LiveWeekOnly) {
   Remove-Item Env:\GOLF_SKIP_DK_OU -ErrorAction SilentlyContinue
   Remove-Item Env:\PERFECT_SKIP_FETCH_DK_OU -ErrorAction SilentlyContinue
   $env:GOLF_DEFER_DK_ROUND_AUDIT_UNTIL_REPAIR = "1"
-  # fetch:book-odds pulls DK round props (Birdies/Total Score/GIR/etc.) via Playwright — no separate fetch:dk-ou (would duplicate Chromium).
+  # fetch:book-odds pulls DK round props (Birdies/Total Score/GIR/etc.) via Playwright - no separate fetch:dk-ou (would duplicate Chromium).
   Run-Npm "Running fetch:book-odds (matchups, outrights, DK + PrizePicks round O/U props) ..." run fetch:book-odds
-  Run-Npm 'Running fetch:finish-tool — outrights, same Scratch feed as DG Finish Position; runs after book-odds ...' run fetch:finish-tool
+  Run-Npm 'Running fetch:finish-tool - outrights, same Scratch feed as DG Finish Position; runs after book-odds ...' run fetch:finish-tool
   Run-Npm "Merging live_hole_stats into projections (after book odds; preserves pars if book-odds ran inline fetch:dg) ..." run merge:live-hole-pars-into-projections
   Run-Npm "Bundled course_holes.json -> projections when live pars missing/wrong ..." run sync:bundled-hole-pars
   Run-Npm "Fail fast if hole pars still generic (new venue needs course_holes.json) ..." run check:hole-pars

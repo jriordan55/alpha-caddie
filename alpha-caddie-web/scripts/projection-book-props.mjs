@@ -1,11 +1,18 @@
 /**
  * Book-like O/U props from projections.json (DK scrape, CSV, or model fallback when DK is blocked).
+ * Browser-safe: do not import round-projection-mu.mjs (it pulls Node `fs`).
  */
-import { enforceHalfLine } from "./round-projection-mu.mjs";
 
 export function num(v, fallback = NaN) {
   const n = Number(v);
   return Number.isFinite(n) ? n : fallback;
+}
+
+/** DraftKings half-point buckets (same as round-projection-mu.enforceHalfLine). */
+function enforceHalfLine(v) {
+  const x = num(v, NaN);
+  if (!Number.isFinite(x)) return NaN;
+  return Math.round(x * 2) / 2;
 }
 
 /** Sources the tracker + vs-actual export treat as posted DK lines (not PP). */

@@ -99,7 +99,12 @@ function histRoundToHistoryRec(row) {
     round_score: num(row.round_score, NaN),
     birdies: birdiesPlusEaglesFromRow(row),
     pars: num(row.pars, NaN),
-    bogeys: num(row.bogeys ?? row.bogies, NaN),
+    bogeys: (() => {
+      const bg = num(row.bogeys ?? row.bogies, NaN);
+      const d = num(row.doubles_or_worse ?? row.doubles, 0);
+      if (!Number.isFinite(bg)) return NaN;
+      return bg + (Number.isFinite(d) ? Math.max(0, d) : 0);
+    })(),
     eagles_or_better: num(row.eagles_or_better ?? row.eagles, NaN),
     doubles_or_worse: num(row.doubles_or_worse ?? row.doubles, NaN),
     gir: num(row.gir, NaN),
@@ -139,7 +144,12 @@ export function buildWalkForwardHistoryByDgId(histRows, cutoffMs, dgIds) {
 
   for (const rec of Object.values(out)) {
     rec.rounds.sort((a, b) => num(b.sortKey, 0) - num(a.sortKey, 0));
-    if (rec.rounds.length > 80) rec.rounds = rec.rounds.slice(0, 80);
+    // Skill window: last N rounds per player (backtest knob; live default 80).
+    const cap = (() => {
+      const env = Math.round(num(process.env.GOLF_WF_SKILL_MAX_ROUNDS, NaN));
+      return Number.isFinite(env) && env >= 2 ? Math.min(env, 200) : 80;
+    })();
+    if (rec.rounds.length > cap) rec.rounds = rec.rounds.slice(0, cap);
   }
   return out;
 }

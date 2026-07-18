@@ -204,6 +204,17 @@ export function birdiesPlusEaglesFromRow(row) {
   return (Number.isFinite(b) ? b : 0) + eagleAdd;
 }
 
+/** DK / PP “Bogeys or Worse”: bogeys + doubles_or_worse. */
+export function bogeysPlusDoublesFromRow(row) {
+  if (!row || typeof row !== "object") return NaN;
+  const bg = num(row.bogeys ?? row.bogies, NaN);
+  const dow = num(row.doubles_or_worse, NaN);
+  const dbl = num(row.doubles, NaN);
+  const dblAdd = Number.isFinite(dow) ? dow : Number.isFinite(dbl) ? dbl : 0;
+  if (!Number.isFinite(bg) && !Number.isFinite(dow) && !Number.isFinite(dbl)) return NaN;
+  return (Number.isFinite(bg) ? bg : 0) + Math.max(0, dblAdd);
+}
+
 function girFairwaysCountFromRaw(v, holes) {
   const n = num(v, NaN);
   if (!Number.isFinite(n)) return NaN;
@@ -265,7 +276,7 @@ function meanNumFromRoundsRecencyWeightedStat(rounds, statKey, decay = 0.86) {
     if (statKey === "total") v = num(row.round_score, NaN);
     else if (statKey === "birdies") v = actualBirdiesFromHistoryRow(row);
     else if (statKey === "pars") v = num(row.pars, NaN);
-    else if (statKey === "bogeys") v = num(row.bogies ?? row.bogeys, NaN);
+    else if (statKey === "bogeys") v = bogeysPlusDoublesFromRow(row);
     else if (statKey === "gir") v = num(row.gir, NaN);
     else if (statKey === "fairways") v = num(row.fairways, NaN);
     else if (statKey === "putts") v = num(row.putts, NaN);
@@ -480,6 +491,7 @@ function pricingStatMuAdjustment(market, dgId, modeRaw, skillRaw, ctx) {
 function ouMeanCountingStat(market, row, fairwayHoles) {
   const rec = OU_STAT_MAP[market] || OU_STAT_MAP["Total score"];
   if (market === "Birdies") return birdiesPlusEaglesFromRow(row);
+  if (market === "Bogeys") return bogeysPlusDoublesFromRow(row);
   const raw = num(row?.[rec.field], NaN);
   if (!Number.isFinite(raw)) return NaN;
   if (market === "GIR") return girFairwaysCountFromRaw(raw, 18);

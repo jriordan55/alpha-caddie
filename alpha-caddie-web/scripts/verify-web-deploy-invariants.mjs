@@ -158,13 +158,49 @@ if (existsSync(livePath)) {
         );
       }
       const bogMean = (() => {
-        const vals = r1Players.map((p) => Number(p.bogeys)).filter(Number.isFinite);
+        // DK/PP “Bogeys or Worse” = bogeys + doubles
+        const vals = r1Players
+          .map((p) => {
+            const bg = Number(p.bogeys);
+            const d = Number(p.doubles ?? p.doubles_or_worse);
+            if (!Number.isFinite(bg)) return NaN;
+            return bg + (Number.isFinite(d) ? Math.max(0, d) : 0);
+          })
+          .filter(Number.isFinite);
         return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : NaN;
       })();
-      const dgBog = Number(wave?.total?.bogeys);
-      if (Number.isFinite(bogMean) && Number.isFinite(dgBog) && Math.abs(bogMean - dgBog) > 1.25) {
+      const birdMean = (() => {
+        // DK/PP “Birdies or Better” = birdies + eagles
+        const vals = r1Players
+          .map((p) => {
+            const b = Number(p.birdies);
+            const e = Number(p.eagles ?? p.eagles_or_better);
+            if (!Number.isFinite(b)) return NaN;
+            return b + (Number.isFinite(e) ? Math.max(0, e) : 0);
+          })
+          .filter(Number.isFinite);
+        return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : NaN;
+      })();
+      const dgBog =
+        Number(wave?.total?.bogeys) + Math.max(0, Number(wave?.total?.doubles ?? wave?.total?.doubles_or_worse) || 0);
+      const dgBird =
+        Number(wave?.total?.birdies) + Math.max(0, Number(wave?.total?.eagles ?? wave?.total?.eagles_or_better) || 0);
+      if (Number.isFinite(bogMean) && Number.isFinite(dgBog) && dgBog > 0 && Math.abs(bogMean - dgBog) > 1.25) {
         fail(
-          `field avg bogeys ${bogMean.toFixed(2)} far from DG live-hole-stats ${dgBog.toFixed(2)} — wave recenter missing after weather bake`,
+          `field avg Bogeys-or-Worse ${bogMean.toFixed(2)} far from DG live-hole-stats ${dgBog.toFixed(2)} — wave recenter missing after weather bake`,
+        );
+      }
+      if (Number.isFinite(birdMean) && Number.isFinite(dgBird) && dgBird > 0 && Math.abs(birdMean - dgBird) > 1.25) {
+        fail(
+          `field avg Birdies-or-Better ${birdMean.toFixed(2)} far from DG live-hole-stats ${dgBird.toFixed(2)} — wave recenter missing after weather bake`,
+        );
+      }
+      // Spot-check: every unfinished R1+ row must carry doubles so Bogeys market μ = bogeys+doubles.
+      const sample = r1Players.slice(0, 20);
+      const missingDbl = sample.filter((p) => Number.isFinite(Number(p.bogeys)) && !Number.isFinite(Number(p.doubles ?? p.doubles_or_worse)));
+      if (missingDbl.length > sample.length * 0.5) {
+        fail(
+          `most field rows missing doubles — Bogeys-or-Worse μ cannot be formed (missing ${missingDbl.length}/${sample.length})`,
         );
       }
     }

@@ -49,7 +49,8 @@ export function playerModelAvgForMarket(market, player, fairwayOpp = 14) {
   if (mKey === "Total score") return num(player.total_score, NaN);
   if (mKey === "Birdies") return num(player.birdies, NaN) + num(player.eagles, 0);
   if (mKey === "Pars") return num(player.pars, NaN);
-  if (mKey === "Bogeys") return num(player.bogeys ?? player.bogies, NaN);
+  if (mKey === "Bogeys")
+    return num(player.bogeys ?? player.bogies, NaN) + Math.max(0, num(player.doubles ?? player.doubles_or_worse, 0));
   return NaN;
 }
 

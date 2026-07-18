@@ -57,6 +57,7 @@ import {
   EXPORT_PP_UNDER_ODDS_COLS,
   EXPORT_UNDER_RESULT_COLS,
   birdiesPlusEaglesFromRow,
+  bogeysPlusDoublesFromRow,
   createProjectionContext,
   enforceHalfLine,
   fmtDkBookLine,
@@ -440,7 +441,7 @@ function patchFromPlayerHistoryShard(dg, eventName, eventYear, rnd, webRoot, fai
     total_score: Math.round(score * 10) / 10,
     birdies: birdiesPlusEaglesFromRow(row),
     pars: num(row.pars, NaN),
-    bogeys: num(row.bogeys ?? row.bogies, NaN),
+    bogeys: bogeysPlusDoublesFromRow(row),
     gir: countFromRateOrRaw(row.gir, 18),
     fairways: countFromRateOrRaw(row.fairways, fairwayHoles),
     putts: Number.isFinite(num(row.putts, NaN)) && num(row.putts, NaN) > 1.5 ? Math.round(num(row.putts, NaN)) : NaN,
@@ -651,7 +652,7 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
         total_score: Math.round(score * 10) / 10,
         birdies: birdiesPlusEaglesFromRow(row),
         pars: num(row.pars, NaN),
-        bogeys: num(row.bogies, NaN),
+        bogeys: bogeysPlusDoublesFromRow(row),
         gir: countFromRateOrRaw(row.gir, 18),
         fairways: countFromRateOrRaw(row.driving_acc, fairwayHoles),
         source: "historical_rounds",
@@ -1218,7 +1219,7 @@ function patchFromLiveRoundAct(act, fairwayHoles) {
   const score = num(act.round_score, NaN);
   let birdies = birdiesPlusEaglesFromRow(act);
   let pars = num(act.pars, NaN);
-  let bogeys = num(act.bogeys ?? act.bogies, NaN);
+  let bogeys = bogeysPlusDoublesFromRow(act);
   const gir = countFromRateOrRaw(act.gir, 18);
   const fairways = countFromRateOrRaw(act.fairways, fairwayHoles);
   const puttsRaw = num(act.putts, NaN);
@@ -1273,7 +1274,7 @@ function overlayPgatourEventActuals(map, eventName, webRoot, fairwayHoles = 14, 
       total_score: Math.round(score * 10) / 10,
       birdies: birdiesPlusEaglesFromRow(r),
       pars: num(r.pars, NaN),
-      bogeys: num(r.bogies ?? r.bogeys, NaN),
+      bogeys: bogeysPlusDoublesFromRow(r),
       source: "pgatour",
     };
     const gir = countFromRateOrRaw(r.gir, 18);
@@ -1403,7 +1404,7 @@ async function fillHistoricalActualGaps(map, eventName, eventYear, csvPath, fair
       total_score: Math.round(score * 10) / 10,
       birdies: birdiesPlusEaglesFromRow(row),
       pars: num(row.pars, NaN),
-      bogeys: num(row.bogeys ?? row.bogies, NaN),
+      bogeys: bogeysPlusDoublesFromRow(row),
       gir: countFromRateOrRaw(row.gir, 18),
       fairways: countFromRateOrRaw(row.fairways ?? row.driving_acc, fairwayHoles),
       putts: NaN,
@@ -1474,7 +1475,7 @@ function actualForMarket(act, marketKey) {
   if (marketKey === "total") return num(act.total_score, NaN);
   if (marketKey === "birdies") return num(act.birdies, NaN);
   if (marketKey === "pars") return num(act.pars, NaN);
-  if (marketKey === "bogeys") return num(act.bogeys ?? act.bogies, NaN);
+  if (marketKey === "bogeys") return bogeysPlusDoublesFromRow(act);
   if (marketKey === "gir") return num(act.gir, NaN);
   if (marketKey === "fairways") return num(act.fairways, NaN);
   return NaN;

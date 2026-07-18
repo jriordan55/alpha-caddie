@@ -5,6 +5,11 @@
  * unified factors, pin sheet, venue field reconcile (+ fairway driving-acc refresh), vs-actual export, walk-forward OOS report
  * (fit on prior events → apply to live projections), Parlay Pro correlations, walk-forward OOS report, and fast history patches.
  *
+ * Round O/U counting markets match sportsbooks:
+ *   Birdies = birdies + eagles (Birdies or Better)
+ *   Bogeys  = bogeys + doubles (Bogeys or Worse)
+ * plus venue / SG rates, AM/PM live_hole_stats wave, weather, and pin bake.
+ *
  *   npm run refresh:live
  *
  * **Default (push:live): no full rebuild.** Skips historical CSV merge, weather archive backfill,

@@ -25,7 +25,8 @@ export function walkforwardBacktestPipelineEnv() {
   };
 }
 
-/** Live week: stable venue-anchored μ; round separation from weather, pin sheet, and tee wave only. */
+/** Live week: stable venue-anchored μ; round separation from weather, pin sheet, and tee wave only.
+ *  Birdies/Bogeys markets always use birdie-or-better / bogey-or-worse (see round-projection-mu). */
 export function liveProjectionPipelineEnv() {
   return {
     ...flatVenueProjectionPipelineEnv(),

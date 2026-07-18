@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="tracker.css?v=14" />
+  <link rel="stylesheet" href="tracker.css?v=15" />
 </head>
 <body>
   <header class="app-header">
@@ -109,6 +109,33 @@
             <tbody></tbody>
           </table>
         </div>
+      </div>
+      <div class="chart-card" id="skill-window-card">
+        <h2 class="section-title">Hypothetical skill window (last N rounds)</h2>
+        <p class="note" id="skill-window-note">
+          What OOS ROI/PnL would look like if Round projections used only each player’s last N rounds for skill
+          (current = 80). Live projections are unchanged — comparison only. Regenerate:
+          <code>node scripts/compare-skill-window-oos.mjs</code>
+        </p>
+        <div class="kpi-grid" id="skill-window-kpis"></div>
+        <div class="table-wrap" style="margin-top:1rem">
+          <table class="data-table" id="skill-window-table">
+            <thead>
+              <tr>
+                <th>Skill window</th>
+                <th class="num">ROI</th>
+                <th class="num">PnL</th>
+                <th class="num">vs current</th>
+                <th class="num">Bets</th>
+                <th class="num">Hit %</th>
+                <th class="num">@5% ROI</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="note" style="margin-top:1.25rem">Per-market breakdown — ROI / PnL by skill window (best window per market highlighted).</p>
+        <div id="skill-window-market-breakdown"></div>
       </div>
       <div class="chart-card" id="odds-model-roi-card">
         <h2 class="section-title">Long-horizon odds.csv ROI (new projections)</h2>
@@ -623,6 +650,6 @@
     </section>
   </main>
 
-  <script type="module" src="tracker.js?v=49"></script>
+  <script type="module" src="tracker.js?v=52"></script>
 </body>
 </html>
