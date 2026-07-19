@@ -3,7 +3,7 @@
  * Final pass: tie bird/bog/par/GIR/FW to total_score for every projection row.
  * DK book-alignment is applied later via apply:market-book-calibration (after vs-actual export + fit).
  */
-import { readFileSync, writeFileSync } from "fs";
+import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { reconcileAllProjectionPlayerRows, flatVenuePlayerScoreAnchorEnabled } from "./course-round-adjustments.mjs";
@@ -23,10 +23,25 @@ const WEB = join(__dirname, "..");
 const projPath = join(WEB, "projections.json");
 
 const proj = JSON.parse(readFileSync(projPath, "utf8"));
+const nostradamusPath = join(WEB, "data", "gamedaymath_nostradamus_props.json");
+if (existsSync(nostradamusPath)) {
+  try {
+    const raw = JSON.parse(readFileSync(nostradamusPath, "utf8"));
+    const rows = Array.isArray(raw) ? raw : Array.isArray(raw?.props) ? raw.props : [];
+    const round = Math.round(Number(proj.display_round || proj.meta?.display_round || 1)) || 1;
+    const priors = rows
+      .filter((row) => Math.round(Number(row.round_num ?? row.display_round ?? round)) === round)
+      .map((row) => ({ ...row, source: "gamedaymath" }));
+    if (priors.length) proj.props = [...(proj.props || []), ...priors];
+  } catch (error) {
+    console.warn(`[reconcile:projection-counts] Ignoring invalid Nostradamus prior file: ${error.message}`);
+  }
+}
 const { reconciled, calibrated, venueScoreCalibrated } = reconcileAllProjectionPlayerRows(proj, {
   minField: 8,
   skipHistVenueScoreCalibrate: flatVenuePlayerScoreAnchorEnabled(),
   skipMarketBookCalibration: true,
+  applyBayesianMarketCalibration: true,
   displayRound: proj.display_round,
 });
 writeFileSync(projPath, `${JSON.stringify(proj, null, 2)}\n`);

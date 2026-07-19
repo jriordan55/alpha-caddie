@@ -9,12 +9,22 @@ import { parse } from "csv-parse";
 import { eventsLikelySame, foldComparableTitle } from "./dg-events-align.mjs";
 import { liveHoleStatsUsableForProjections } from "./dg-live-hole-pars.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
+import { applyBayesianMarketPosteriors } from "./bayesian-market-posterior.mjs";
 import {
   applyMarketBookCalibrationToRow,
   applyEventPropBookAlignment,
   marketBookCalibrationEnabled,
 } from "./market-book-calibration.mjs";
-import { calibrateFairwayFieldMean, calibrateBirdiesFieldMean, calibrateGirFieldMean, refreshFairwaysFromDrivingAccuracy } from "./counting-from-rates-sg.mjs";
+import {
+  BIRDIE_COURSE_SPREAD_KEEP,
+  BIRDIE_PLAYER_COURSE_MAX_WEIGHT,
+  BIRDIE_PLAYER_COURSE_MIN_ROUNDS,
+  birdieCourseSpreadKeep,
+  calibrateFairwayFieldMean,
+  calibrateBirdiesFieldMean,
+  calibrateGirFieldMean,
+  refreshFairwaysFromDrivingAccuracy,
+} from "./counting-from-rates-sg.mjs";
 import { resolveCourseLayout, syncCourseLayoutIntoProjection } from "./course-hole-layout.mjs";
 
 function num(x, fallback = NaN) {
@@ -885,6 +895,8 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
     minField: opts.minField,
     dkFieldOnly: opts.dkFieldOnly === true,
     skipCalibrate: opts.skipFieldCalibrate,
+    skipBirdiesFieldCalibrate: opts.skipBirdiesFieldCalibrate === true,
+    birdieFieldCalibStrength: opts.birdieFieldCalibStrength,
     skipEventPropBookAlignment: opts.skipEventPropBookAlignment,
     displayRound: opts.displayRound ?? payload?.display_round,
   });
@@ -926,11 +938,16 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
   const birdCalibOpts = {
     venueAvgBirdies: birdiesVenueCalibrationTarget(basis, payload, opts),
     venueAvgEagles: num(basis.venue_avg_eagles, 0.12),
-    courseBirdieEase: num(basis.course_birdie_ease, NaN),
+    // Course history already supplies the BoB target; do not add layout ease again.
+    courseBirdieEase: NaN,
   };
   const displayRound =
     Math.round(num(opts.displayRound ?? payload?.display_round ?? 1)) || 1;
-  if (Number.isFinite(birdCalibOpts.venueAvgBirdies)) {
+  if (
+    !opts.skipBirdiesFieldCalibrate &&
+    Number.isFinite(birdCalibOpts.venueAvgBirdies) &&
+    !(Number.isFinite(num(opts.birdieFieldCalibStrength, NaN)) && num(opts.birdieFieldCalibStrength, 1) < 0.999)
+  ) {
     const players = payload?.players || [];
     for (let rnd = 1; rnd <= 4; rnd++) {
       const rowDg = new Set(
@@ -950,17 +967,23 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
       }
     }
   }
-  syncPreWeatherCountSnapshots(payload?.players);
+  const bayesianMarket = opts.applyBayesianMarketCalibration === true
+    ? applyBayesianMarketPosteriors(payload, {
+        displayRound: opts.displayRound ?? payload?.display_round,
+        modelEvidenceWeights: opts.modelEvidenceWeights,
+      })
+    : { applied: false, rows: 0, markets: {} };
   const skipEventPropAlign =
     opts.skipEventPropBookAlignment === true ||
     String(process.env.GOLF_SKIP_EVENT_PROP_BOOK_ALIGN || "").trim() === "1";
-  const propBookAlign = skipEventPropAlign
+  const propBookAlign = skipEventPropAlign || bayesianMarket.applied
     ? { applied: false, markets: {} }
     : applyEventPropBookAlignment(payload, {
         coursePar18,
         displayRound: opts.displayRound ?? payload?.display_round,
         minPairs: opts.eventPropBookMinPairs,
       });
+  syncPreWeatherCountSnapshots(payload?.players);
   const parSpreadRows = enforceParHeavyFieldSpread(payload, {
     displayRound: opts.displayRound ?? payload?.display_round,
     minField: opts.minField,
@@ -974,6 +997,7 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
     fairwaySkillCalibRounds,
     girSkillCalibRounds,
     birdiesSkillCalibRounds,
+    bayesianMarketCalibration: bayesianMarket,
     eventPropBookAlignment: propBookAlign,
     parHeavySpreadRows: parSpreadRows,
   };
@@ -1310,6 +1334,55 @@ function venueHistoryRowKey(row) {
   return `${dg}|${yr || ""}|${evt}|${rnd}`;
 }
 
+function venueFieldRoundKey(row) {
+  const yr = parseInt(String(row.year ?? ""), 10);
+  const rnd = Math.round(num(row.round_num ?? row.round, NaN));
+  const evt = foldComparableTitle(String(row.event_name || row.Event_Name || "").trim());
+  if (!Number.isFinite(rnd) || !evt) return "";
+  return `${yr || ""}|${evt}|${rnd}`;
+}
+
+function venueFieldRoundOrder(row) {
+  const rawDate = String(
+    row.event_completed ?? row.completed_at ?? row.event_date ?? row.date ?? "",
+  ).trim();
+  const parsed = Date.parse(rawDate);
+  const yr = parseInt(String(row.year ?? ""), 10);
+  const rnd = Math.round(num(row.round_num ?? row.round, 1));
+  const day = Number.isFinite(parsed)
+    ? Math.floor(parsed / 86400000)
+    : (Number.isFinite(yr) ? yr : 0) * 400;
+  return day * 10 + rnd;
+}
+
+/**
+ * Rows from the latest N completed field rounds at a course. A field round is
+ * event × year × round, not an individual player's row.
+ */
+export function latestVenueFieldRoundRows(rows, courseKey, limit = 4) {
+  const ckWant = normCourseNameKey(courseKey || "");
+  const bundles = new Map();
+  for (const row of rows || []) {
+    if (ckWant && normCourseNameKey(row.course_name || row.Course_Name || "") !== ckWant) continue;
+    const key = venueFieldRoundKey(row);
+    if (!key) continue;
+    const order = venueFieldRoundOrder(row);
+    const prev = bundles.get(key);
+    if (!prev) bundles.set(key, { key, order, rows: [row] });
+    else {
+      prev.rows.push(row);
+      if (order > prev.order) prev.order = order;
+    }
+  }
+  const selected = [...bundles.values()]
+    .sort((a, b) => b.order - a.order || b.key.localeCompare(a.key))
+    .slice(0, Math.max(1, Math.round(num(limit, 4)) || 4));
+  return {
+    rows: selected.flatMap((bundle) => bundle.rows),
+    roundKeys: selected.map((bundle) => bundle.key),
+  };
+}
+
 /** Plausible PGA round gross at a venue (keep 58–64 birdie rounds; drop corrupt sub-58 only). */
 export function venueRoundScoreBounds(coursePar18) {
   const cp = Math.round(num(coursePar18, NaN));
@@ -1447,6 +1520,12 @@ export function syncVenueScoringToProjectionBasis(basis, venueScoring, coursePar
     basis.venue_historical_rounds = venueScoring.nVenueRounds;
   }
   if (venueScoring.source) basis.venue_scoring_source = venueScoring.source;
+  if (
+    Array.isArray(venueScoring.rollingCourseRoundKeys) &&
+    venueScoring.rollingCourseRoundKeys.length
+  ) {
+    basis.rolling_course_round_keys = [...venueScoring.rollingCourseRoundKeys];
+  }
   if (Array.isArray(venueScoring.scoringYears) && venueScoring.scoringYears.length) {
     basis.venue_scoring_years = venueScoring.scoringYears;
   }
@@ -1463,10 +1542,10 @@ export function syncVenueScoringToProjectionBasis(basis, venueScoring, coursePar
   }
   if (num(venueScoring.nVenueRounds, 0) >= 40) {
     for (const [k, srcKey] of [
-      ["venue_avg_birdies", "venueAvgBirdies"],
+      ["venue_avg_birdies", "historicalVenueAvgBirdies"],
       ["venue_avg_pars", "venueAvgPars"],
       ["venue_avg_bogeys", "venueAvgBogeys"],
-      ["venue_avg_eagles", "venueAvgEagles"],
+      ["venue_avg_eagles", "historicalVenueAvgEagles"],
       ["venue_avg_gir", "venueAvgGir"],
       ["venue_avg_fairways", "venueAvgFairways"],
     ]) {
@@ -1492,6 +1571,8 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
     venueAvgScore: NaN,
     nVenueRounds: 0,
     source: "none",
+    historicalVenueAvgBirdies: NaN,
+    historicalVenueAvgEagles: NaN,
     fieldByRound: new Map(),
     playerByRound: new Map(),
     playerByVenue: new Map(),
@@ -1520,7 +1601,7 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
   const playerAllRaw = new Map();
   /** @type {Map<number, { sumSg: number, n: number }>} */
   const fitRaw = new Map();
-  const ctx = {
+  const allCtx = {
     venueTotals: emptyVenueCountRaw(),
     fieldRaw,
     playerRaw,
@@ -1528,6 +1609,7 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
     fitRaw,
     seen: new Set(),
   };
+  const candidateRows = [];
 
   await new Promise((resolve, reject) => {
     const parser = createReadStream(csvPath).pipe(
@@ -1548,7 +1630,7 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
         const minYr = venueHistoryMinYear(cy);
         if (Number.isFinite(yr) && (yr < minYr || yr > cy + 1)) return;
       }
-      ingestVenueHistoryRow(row, ctx, nFairwayHoles);
+      candidateRows.push(row);
     });
     parser.on("end", resolve);
     parser.on("error", reject);
@@ -1557,12 +1639,33 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
   const extraRows = Array.isArray(opts.extraRows) ? opts.extraRows : [];
   let extraAdded = 0;
   for (const row of extraRows) {
-    if (ingestVenueHistoryRow(row, ctx, nFairwayHoles)) extraAdded++;
+    if (normCourseNameKey(row.course_name || row.Course_Name || "") !== ckWant) continue;
+    candidateRows.push(row);
+    extraAdded++;
   }
-  let venueTotals = ctx.venueTotals;
+
+  // Keep all course history for player-at-course and course-fit features.
+  const validRows = [];
+  for (const row of candidateRows) {
+    if (ingestVenueHistoryRow(row, allCtx, nFairwayHoles)) validRows.push(row);
+  }
+
+  // Every field-level course anchor uses only the latest four completed
+  // event-rounds. This is four field rounds, not four player observations.
+  const rolling = latestVenueFieldRoundRows(validRows, ckWant, 4);
+  const rollingCtx = {
+    venueTotals: emptyVenueCountRaw(),
+    fieldRaw: new Map(),
+    playerRaw: new Map(),
+    playerAllRaw: new Map(),
+    fitRaw: new Map(),
+    seen: new Set(),
+  };
+  for (const row of rolling.rows) ingestVenueHistoryRow(row, rollingCtx, nFairwayHoles);
+  const venueTotals = rollingCtx.venueTotals;
 
   const fieldByRound = new Map();
-  for (const [rnd, raw] of fieldRaw) fieldByRound.set(rnd, finalizeVenueAgg(raw));
+  for (const [rnd, raw] of rollingCtx.fieldRaw) fieldByRound.set(rnd, finalizeVenueAgg(raw));
 
   const playerByRound = new Map();
   for (const [pk, raw] of playerRaw) playerByRound.set(pk, finalizeVenueAgg(raw));
@@ -1576,12 +1679,12 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
   }
 
   const venueAgg = finalizeVenueAgg(venueTotals);
-  let venueAvgStp = venueAgg.n >= 40 ? venueAgg.avgStp : NaN;
+  let venueAvgStp = venueAgg.n > 0 ? venueAgg.avgStp : NaN;
   let source =
-    venueAgg.n >= 40
+    venueAgg.n > 0
       ? yearAllow?.length
-        ? `historical_csv_y${yearAllow.join("_")}`
-        : "historical_csv"
+        ? `rolling_4_course_rounds_y${yearAllow.join("_")}`
+        : "rolling_4_course_rounds"
       : "none";
   if (extraAdded > 0) {
     source = source === "historical_csv" ? "historical_csv+recent" : source === "none" ? "recent_live" : source;
@@ -1596,11 +1699,15 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
 
   return {
     venueAvgStp,
-    venueAvgScore: venueAgg.n >= 40 ? venueAgg.avgScore : NaN,
+    venueAvgScore: venueAgg.n > 0 ? venueAgg.avgScore : NaN,
     nVenueRounds: venueAgg.n,
     source,
+    rollingCourseRoundKeys: rolling.roundKeys,
     scoringYears: yearAllow?.length ? yearAllow : null,
     venueAvgBirdies: venueAgg.avgBirdies,
+    venueAvgEagles: venueAgg.avgEagles,
+    historicalVenueAvgBirdies: venueAgg.avgBirdies,
+    historicalVenueAvgEagles: venueAgg.avgEagles,
     venueAvgPars: venueAgg.avgPars,
     venueAvgBogeys: venueAgg.avgBogeys,
     venueAvgGir: venueAgg.avgGir,
@@ -1739,6 +1846,62 @@ function skillScoreToPar({
 }
 
 /**
+ * Backtested Birdies-market resolver:
+ * rolling player BoB% → course spread-keep → player-at-course blend.
+ * Field-mean calibration is applied after all player rows are built.
+ */
+export function resolveBobBirdiesMarket({
+  dg_id,
+  skillCounts,
+  venueScoring,
+  fallbackMarket = 3.65,
+}) {
+  const sk = skillCounts || {};
+  const skillBird = num(sk.birdies, NaN);
+  const skillEag = Math.max(0, num(sk.eagles, 0));
+  const skillMkt = Number.isFinite(skillBird) ? skillBird + skillEag : NaN;
+  const courseBird = num(
+    venueScoring?.historicalVenueAvgBirdies ?? venueScoring?.venueAvgBirdies,
+    NaN,
+  );
+  const courseEag = Math.max(
+    0,
+    num(venueScoring?.historicalVenueAvgEagles ?? venueScoring?.venueAvgEagles, 0),
+  );
+  const courseMkt = Number.isFinite(courseBird) ? courseBird + courseEag : num(fallbackMarket, 3.65);
+
+  let market = Number.isFinite(skillMkt) ? skillMkt : courseMkt;
+  if (Number.isFinite(market) && Number.isFinite(courseMkt)) {
+    const keep = birdieCourseSpreadKeep(market, courseMkt, BIRDIE_COURSE_SPREAD_KEEP);
+    market = courseMkt + keep * (market - courseMkt);
+  }
+
+  const dg = Math.round(num(dg_id, NaN));
+  const playerCourse = venueScoring?.playerByVenue?.get(dg);
+  const pcBird = num(playerCourse?.avgBirdies, NaN);
+  const pcEag = Math.max(0, num(playerCourse?.avgEagles, 0));
+  const pcMkt = Number.isFinite(pcBird) ? pcBird + pcEag : NaN;
+  const pcN = Math.max(0, Math.round(num(playerCourse?.n, 0)));
+  let playerCourseWeight = 0;
+  if (
+    pcN >= BIRDIE_PLAYER_COURSE_MIN_ROUNDS &&
+    Number.isFinite(pcMkt) &&
+    Number.isFinite(market)
+  ) {
+    playerCourseWeight = Math.min(BIRDIE_PLAYER_COURSE_MAX_WEIGHT, pcN / (pcN + 10));
+    market = (1 - playerCourseWeight) * market + playerCourseWeight * pcMkt;
+  }
+
+  return {
+    market: clamp(market, 0.15, 8.1),
+    courseMarket: courseMkt,
+    playerCourseMarket: pcMkt,
+    playerCourseRounds: pcN,
+    playerCourseWeight,
+  };
+}
+
+/**
  * Hole-count markets: blend skill projection with round-specific + full-course venue history,
  * then field venue averages; lightly align bird/bog to blended score-to-par.
  */
@@ -1771,13 +1934,6 @@ export function resolveProjectionCounts({
     muForRound,
     sk.eagles,
     playerAgg?.avgEagles,
-    true,
-  );
-  const wBirdies = reduceVenueWeightWhenSkillBetter(
-    wVenue * (courseSkillAnchor ? 0.44 : 0.35),
-    muForRound,
-    sk.birdies,
-    playerAgg?.avgBirdies,
     true,
   );
   const wBogeys = reduceVenueWeightWhenSkillBetter(
@@ -1820,7 +1976,8 @@ export function resolveProjectionCounts({
   );
 
   let eagles = blendVenueSkillScalar(sk.eagles, playerAgg?.avgEagles, frOk ? fr.avgEagles : NaN, wEagles);
-  let birdies = blendVenueSkillScalar(sk.birdies, playerAgg?.avgBirdies, frOk ? fr.avgBirdies : NaN, wBirdies);
+  const bob = resolveBobBirdiesMarket({ dg_id: dg, skillCounts: sk, venueScoring });
+  let birdies = bob.market - Math.max(0, num(eagles, 0));
   let bogeys = blendVenueSkillScalar(sk.bogeys, playerAgg?.avgBogeys, frOk ? fr.avgBogeys : NaN, wBogeys);
   let doubles = blendVenueSkillScalar(sk.doubles, playerAgg?.avgDoubles, frOk ? fr.avgDoubles : NaN, wDoubles);
   let pars = num(sk.pars, NaN);
@@ -1974,7 +2131,21 @@ function projectionCountingAnchorFromBasis(basis, payload, opts = {}) {
 }
 
 function birdiesVenueCalibrationTarget(basis, payload, opts = {}) {
-  return projectionCountingAnchorFromBasis(basis, payload, opts).birdies;
+  const bird = num(
+    basis?.historical_venue_avg_birdies ?? basis?.venue_avg_birdies,
+    NaN,
+  );
+  const eag = Math.max(
+    0,
+    num(basis?.historical_venue_avg_eagles ?? basis?.venue_avg_eagles, 0),
+  );
+  if (Number.isFinite(bird)) return bird;
+  const tourMkt = num(
+    payload?.pga_tour_market_benchmarks?.Birdies?.mean ??
+      payload?.meta?.pga_tour_market_benchmarks?.Birdies?.mean,
+    NaN,
+  );
+  return Number.isFinite(tourMkt) ? Math.max(0.15, tourMkt - eag) : NaN;
 }
 
 function bogeysVenueCalibrationTarget(basis, payload, opts = {}) {
@@ -2448,6 +2619,7 @@ export function calibrateProjectionTotalScoreToVenue(payload, opts = {}) {
 }
 
 function eventPropBirdiesAlignmentEnabled(opts = {}) {
+  if (opts.useBookBirdiesAlignment !== true) return false;
   if (!marketBookCalibrationEnabled()) return false;
   if (opts.skipEventPropBookAlignment === true) return false;
   if (String(process.env.GOLF_SKIP_EVENT_PROP_BOOK_ALIGN || "").trim() === "1") return false;
@@ -2537,7 +2709,7 @@ export function calibrateProjectionFieldMarkets(payload, opts = {}) {
       rows.map((pl) => Math.round(num(pl.dg_id, NaN))).filter((id) => Number.isFinite(id)),
     );
     let dkBirdMean = NaN;
-    if (marketBookCalibrationEnabled()) {
+    if (opts.useBookBirdiesAlignment === true && marketBookCalibrationEnabled()) {
       dkBirdMean = dkBirdiesMarketMeanForRound(payload, rnd, rowDg);
       if (Number.isFinite(dkBirdMean)) targetBirdMkt = dkBirdMean;
     }
@@ -2545,7 +2717,7 @@ export function calibrateProjectionFieldMarkets(payload, opts = {}) {
       eventPropBirdiesAlignmentEnabled(opts) &&
       Number.isFinite(dkBirdMean) &&
       rnd === displayRound;
-    if (Number.isFinite(targetBirdMkt) && !deferBirdiesToPropAlign) {
+    if (Number.isFinite(targetBirdMkt) && !deferBirdiesToPropAlign && opts.skipBirdiesFieldCalibrate !== true) {
       const cur = meanFinite(
         rows.map((pl) => {
           const b = num(pl.birdies, NaN);
@@ -2554,7 +2726,8 @@ export function calibrateProjectionFieldMarkets(payload, opts = {}) {
         }),
       );
       if (Number.isFinite(cur)) {
-        const gap = targetBirdMkt - cur;
+        const strength = clamp(num(opts.birdieFieldCalibStrength, 1), 0, 1);
+        const gap = strength * (targetBirdMkt - cur);
         if (Math.abs(gap) >= 0.04) {
           shifts.birdies[rnd] = Math.round(gap * 1000) / 1000;
           for (const pl of rows) {

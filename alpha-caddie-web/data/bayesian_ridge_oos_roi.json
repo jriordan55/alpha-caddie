@@ -1,0 +1,1085 @@
+{
+  "generated_at": "2026-07-18T04:05:25Z",
+  "hypothetical": true,
+  "methodology": {
+    "oos_event_count": 9,
+    "events": [
+      "PGA Championship",
+      "THE CJ CUP Byron Nelson",
+      "Charles Schwab Challenge",
+      "the Memorial Tournament presented by Workday",
+      "RBC Canadian Open",
+      "U.S. Open",
+      "Travelers Championship",
+      "John Deere Classic",
+      "Genesis Scottish Open"
+    ],
+    "excluded_live_event": "The Open Championship",
+    "candidate_windows": [
+      8,
+      12,
+      20,
+      36,
+      50
+    ],
+    "window_selection": "inner chronological 80/20 validation by MAE inside each outer event",
+    "candidate_book_blends": [
+      0.0,
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8
+    ],
+    "book_blend_selection": "per-market expanding walk-forward MAE using earlier OOS events only; unblended until 80 prior graded rows",
+    "weather_source": "historical_round_weather.json Open-Meteo realized archive; retrospective weather proxy, not a captured pre-round forecast",
+    "tee_wave_source": "historical_rounds_all.csv teetime; morning before noon, afternoon noon or later",
+    "features": "selected rolling form/SG, weather, condition, AM/PM wave, missingness indicators",
+    "coverage": {
+      "test_rows": 3415,
+      "weather_rows": 1869,
+      "morning_rows": 1759,
+      "afternoon_rows": 1656
+    },
+    "elapsed_sec": 92.7
+  },
+  "window_tuning": {
+    "Birdies|PGA Championship": {
+      "chosen_window": 12,
+      "inner_mae": {
+        "8": 1.4199,
+        "12": 1.4188,
+        "20": 1.4232,
+        "36": 1.4239,
+        "50": 1.4229
+      }
+    },
+    "Birdies|THE CJ CUP Byron Nelson": {
+      "chosen_window": 8,
+      "inner_mae": {
+        "8": 1.4187,
+        "12": 1.4206,
+        "20": 1.4234,
+        "36": 1.4241,
+        "50": 1.4227
+      }
+    },
+    "Birdies|Charles Schwab Challenge": {
+      "chosen_window": 12,
+      "inner_mae": {
+        "8": 1.4229,
+        "12": 1.4221,
+        "20": 1.4261,
+        "36": 1.4251,
+        "50": 1.4246
+      }
+    },
+    "Birdies|the Memorial Tournament presented by Workday": {
+      "chosen_window": 12,
+      "inner_mae": {
+        "8": 1.4244,
+        "12": 1.4235,
+        "20": 1.4267,
+        "36": 1.4258,
+        "50": 1.425
+      }
+    },
+    "Birdies|RBC Canadian Open": {
+      "chosen_window": 8,
+      "inner_mae": {
+        "8": 1.423,
+        "12": 1.424,
+        "20": 1.426,
+        "36": 1.4265,
+        "50": 1.4237
+      }
+    },
+    "Birdies|U.S. Open": {
+      "chosen_window": 50,
+      "inner_mae": {
+        "8": 1.417,
+        "12": 1.4165,
+        "20": 1.4173,
+        "36": 1.4202,
+        "50": 1.4163
+      }
+    },
+    "Birdies|Travelers Championship": {
+      "chosen_window": 12,
+      "inner_mae": {
+        "8": 1.4229,
+        "12": 1.4202,
+        "20": 1.4223,
+        "36": 1.4236,
+        "50": 1.4267
+      }
+    },
+    "Birdies|John Deere Classic": {
+      "chosen_window": 8,
+      "inner_mae": {
+        "8": 1.4229,
+        "12": 1.4231,
+        "20": 1.4271,
+        "36": 1.4279,
+        "50": 1.4257
+      }
+    },
+    "Birdies|Genesis Scottish Open": {
+      "chosen_window": 8,
+      "inner_mae": {
+        "8": 1.4207,
+        "12": 1.4212,
+        "20": 1.425,
+        "36": 1.4254,
+        "50": 1.4234
+      }
+    },
+    "Total score|PGA Championship": {
+      "chosen_window": 12,
+      "inner_mae": {
+        "8": 2.4532,
+        "12": 2.4512,
+        "20": 2.469,
+        "36": 2.4811,
+        "50": 2.4839
+      }
+    },
+    "Total score|THE CJ CUP Byron Nelson": {
+      "chosen_window": 12,
+      "inner_mae": {
+        "8": 2.4433,
+        "12": 2.4355,
+        "20": 2.4517,
+        "36": 2.4615,
+        "50": 2.4608
+      }
+    },
+    "Total score|Charles Schwab Challenge": {
+      "chosen_window": 12,
+      "inner_mae": {
+        "8": 2.4388,
+        "12": 2.4323,
+        "20": 2.4495,
+        "36": 2.4598,
+        "50": 2.4572
+      }
+    },
+    "Total score|the Memorial Tournament presented by Workday": {
+      "chosen_window": 12,
+      "inner_mae": {
+        "8": 2.4246,
+        "12": 2.4235,
+        "20": 2.4334,
+        "36": 2.4416,
+        "50": 2.441
+      }
+    },
+    "Total score|RBC Canadian Open": {
+      "chosen_window": 12,
+      "inner_mae": {
+        "8": 2.4557,
+        "12": 2.4542,
+        "20": 2.4706,
+        "36": 2.4781,
+        "50": 2.4768
+      }
+    },
+    "Total score|U.S. Open": {
+      "chosen_window": 12,
+      "inner_mae": {
+        "8": 2.4517,
+        "12": 2.4513,
+        "20": 2.4637,
+        "36": 2.4731,
+        "50": 2.4749
+      }
+    },
+    "Total score|Travelers Championship": {
+      "chosen_window": 8,
+      "inner_mae": {
+        "8": 2.4601,
+        "12": 2.4626,
+        "20": 2.4749,
+        "36": 2.4843,
+        "50": 2.4856
+      }
+    },
+    "Total score|John Deere Classic": {
+      "chosen_window": 8,
+      "inner_mae": {
+        "8": 2.4691,
+        "12": 2.4692,
+        "20": 2.4806,
+        "36": 2.4885,
+        "50": 2.4893
+      }
+    },
+    "Total score|Genesis Scottish Open": {
+      "chosen_window": 12,
+      "inner_mae": {
+        "8": 2.458,
+        "12": 2.4579,
+        "20": 2.4685,
+        "36": 2.4833,
+        "50": 2.4814
+      }
+    },
+    "GIR|PGA Championship": {
+      "chosen_window": 8,
+      "inner_mae": {
+        "8": 1.7734,
+        "12": 1.7787,
+        "20": 1.7915,
+        "36": 1.8046,
+        "50": 1.8086
+      }
+    },
+    "GIR|THE CJ CUP Byron Nelson": {
+      "chosen_window": 8,
+      "inner_mae": {
+        "8": 1.7707,
+        "12": 1.7755,
+        "20": 1.7858,
+        "36": 1.8011,
+        "50": 1.8036
+      }
+    },
+    "GIR|Charles Schwab Challenge": {
+      "chosen_window": 8,
+      "inner_mae": {
+        "8": 1.7474,
+        "12": 1.7504,
+        "20": 1.7622,
+        "36": 1.7767,
+        "50": 1.7826
+      }
+    },
+    "GIR|the Memorial Tournament presented by Workday": {
+      "chosen_window": 8,
+      "inner_mae": {
+        "8": 1.7527,
+        "12": 1.7542,
+        "20": 1.7657,
+        "36": 1.778,
+        "50": 1.7797
+      }
+    },
+    "GIR|RBC Canadian Open": {
+      "chosen_window": 8,
+      "inner_mae": {
+        "8": 1.7635,
+        "12": 1.7658,
+        "20": 1.7773,
+        "36": 1.789,
+        "50": 1.7913
+      }
+    },
+    "GIR|U.S. Open": {
+      "chosen_window": 8,
+      "inner_mae": {
+        "8": 1.7624,
+        "12": 1.7653,
+        "20": 1.7759,
+        "36": 1.7877,
+        "50": 1.7914
+      }
+    },
+    "GIR|John Deere Classic": {
+      "chosen_window": 8,
+      "inner_mae": {
+        "8": 1.7802,
+        "12": 1.7809,
+        "20": 1.7933,
+        "36": 1.8069,
+        "50": 1.8068
+      }
+    },
+    "GIR|Genesis Scottish Open": {
+      "chosen_window": 12,
+      "inner_mae": {
+        "8": 1.7843,
+        "12": 1.7841,
+        "20": 1.7939,
+        "36": 1.8096,
+        "50": 1.8103
+      }
+    },
+    "Fairways hit|PGA Championship": {
+      "chosen_window": 8,
+      "inner_mae": {
+        "8": 1.7794,
+        "12": 1.7795,
+        "20": 1.7794,
+        "36": 1.7828,
+        "50": 1.7877
+      }
+    },
+    "Fairways hit|THE CJ CUP Byron Nelson": {
+      "chosen_window": 12,
+      "inner_mae": {
+        "8": 1.7819,
+        "12": 1.7809,
+        "20": 1.7809,
+        "36": 1.7878,
+        "50": 1.7817
+      }
+    },
+    "Fairways hit|Charles Schwab Challenge": {
+      "chosen_window": 50,
+      "inner_mae": {
+        "8": 1.7746,
+        "12": 1.7732,
+        "20": 1.773,
+        "36": 1.7787,
+        "50": 1.772
+      }
+    },
+    "Fairways hit|the Memorial Tournament presented by Workday": {
+      "chosen_window": 20,
+      "inner_mae": {
+        "8": 1.7717,
+        "12": 1.7683,
+        "20": 1.7669,
+        "36": 1.7686,
+        "50": 1.7679
+      }
+    },
+    "Fairways hit|RBC Canadian Open": {
+      "chosen_window": 36,
+      "inner_mae": {
+        "8": 1.7684,
+        "12": 1.7637,
+        "20": 1.7681,
+        "36": 1.7611,
+        "50": 1.765
+      }
+    },
+    "Fairways hit|U.S. Open": {
+      "chosen_window": 12,
+      "inner_mae": {
+        "8": 1.7622,
+        "12": 1.7588,
+        "20": 1.7597,
+        "36": 1.7612,
+        "50": 1.7595
+      }
+    },
+    "Fairways hit|Travelers Championship": {
+      "chosen_window": 12,
+      "inner_mae": {
+        "8": 1.7628,
+        "12": 1.7621,
+        "20": 1.7683,
+        "36": 1.7627,
+        "50": 1.7624
+      }
+    },
+    "Fairways hit|John Deere Classic": {
+      "chosen_window": 8,
+      "inner_mae": {
+        "8": 1.7591,
+        "12": 1.7599,
+        "20": 1.7692,
+        "36": 1.7632,
+        "50": 1.763
+      }
+    },
+    "Fairways hit|Genesis Scottish Open": {
+      "chosen_window": 8,
+      "inner_mae": {
+        "8": 1.7561,
+        "12": 1.758,
+        "20": 1.7675,
+        "36": 1.7627,
+        "50": 1.7628
+      }
+    }
+  },
+  "book_blend_tuning": {
+    "Birdies|PGA Championship": {
+      "chosen_blend": 0.0,
+      "selection_source": "insufficient_prior_rows_unblended",
+      "prior_rows": 0,
+      "prior_mae": {}
+    },
+    "Birdies|THE CJ CUP Byron Nelson": {
+      "chosen_blend": 0.6,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 165,
+      "prior_mae": {
+        "0.0": 1.3469,
+        "0.1": 1.3257,
+        "0.2": 1.3086,
+        "0.3": 1.2942,
+        "0.4": 1.2832,
+        "0.5": 1.2764,
+        "0.6": 1.2762,
+        "0.7": 1.2916,
+        "0.8": 1.3126
+      }
+    },
+    "Birdies|Charles Schwab Challenge": {
+      "chosen_blend": 0.7,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 302,
+      "prior_mae": {
+        "0.0": 1.5069,
+        "0.1": 1.4743,
+        "0.2": 1.4452,
+        "0.3": 1.42,
+        "0.4": 1.3975,
+        "0.5": 1.3777,
+        "0.6": 1.3622,
+        "0.7": 1.3612,
+        "0.8": 1.3693
+      }
+    },
+    "Birdies|the Memorial Tournament presented by Workday": {
+      "chosen_blend": 0.6,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 452,
+      "prior_mae": {
+        "0.0": 1.4518,
+        "0.1": 1.4262,
+        "0.2": 1.4034,
+        "0.3": 1.3845,
+        "0.4": 1.3698,
+        "0.5": 1.3578,
+        "0.6": 1.3489,
+        "0.7": 1.3497,
+        "0.8": 1.3566
+      }
+    },
+    "Birdies|RBC Canadian Open": {
+      "chosen_blend": 0.6,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 551,
+      "prior_mae": {
+        "0.0": 1.4374,
+        "0.1": 1.4153,
+        "0.2": 1.3965,
+        "0.3": 1.3812,
+        "0.4": 1.37,
+        "0.5": 1.3615,
+        "0.6": 1.3557,
+        "0.7": 1.3582,
+        "0.8": 1.3664
+      }
+    },
+    "Birdies|U.S. Open": {
+      "chosen_blend": 0.6,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 661,
+      "prior_mae": {
+        "0.0": 1.4334,
+        "0.1": 1.4102,
+        "0.2": 1.3902,
+        "0.3": 1.3739,
+        "0.4": 1.3617,
+        "0.5": 1.3527,
+        "0.6": 1.3469,
+        "0.7": 1.3492,
+        "0.8": 1.3563
+      }
+    },
+    "Birdies|Travelers Championship": {
+      "chosen_blend": 0.7,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 877,
+      "prior_mae": {
+        "0.0": 1.4726,
+        "0.1": 1.4298,
+        "0.2": 1.3931,
+        "0.3": 1.3605,
+        "0.4": 1.3322,
+        "0.5": 1.3083,
+        "0.6": 1.2873,
+        "0.7": 1.2759,
+        "0.8": 1.2779
+      }
+    },
+    "Birdies|John Deere Classic": {
+      "chosen_blend": 0.7,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 992,
+      "prior_mae": {
+        "0.0": 1.4953,
+        "0.1": 1.4524,
+        "0.2": 1.4149,
+        "0.3": 1.3812,
+        "0.4": 1.352,
+        "0.5": 1.3278,
+        "0.6": 1.308,
+        "0.7": 1.2971,
+        "0.8": 1.2982
+      }
+    },
+    "Birdies|Genesis Scottish Open": {
+      "chosen_blend": 0.7,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 1061,
+      "prior_mae": {
+        "0.0": 1.4849,
+        "0.1": 1.4418,
+        "0.2": 1.4041,
+        "0.3": 1.3702,
+        "0.4": 1.3412,
+        "0.5": 1.3179,
+        "0.6": 1.2991,
+        "0.7": 1.2886,
+        "0.8": 1.2898
+      }
+    },
+    "Total score|PGA Championship": {
+      "chosen_blend": 0.0,
+      "selection_source": "insufficient_prior_rows_unblended",
+      "prior_rows": 0,
+      "prior_mae": {}
+    },
+    "Total score|THE CJ CUP Byron Nelson": {
+      "chosen_blend": 0.3,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 96,
+      "prior_mae": {
+        "0.0": 2.2681,
+        "0.1": 2.2652,
+        "0.2": 2.2631,
+        "0.3": 2.2623,
+        "0.4": 2.2643,
+        "0.5": 2.2716,
+        "0.6": 2.28,
+        "0.7": 2.2907,
+        "0.8": 2.3043
+      }
+    },
+    "Total score|Charles Schwab Challenge": {
+      "chosen_blend": 0.8,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 233,
+      "prior_mae": {
+        "0.0": 2.5626,
+        "0.1": 2.4996,
+        "0.2": 2.4383,
+        "0.3": 2.3843,
+        "0.4": 2.3363,
+        "0.5": 2.3008,
+        "0.6": 2.2738,
+        "0.7": 2.2512,
+        "0.8": 2.238
+      }
+    },
+    "Total score|the Memorial Tournament presented by Workday": {
+      "chosen_blend": 0.8,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 339,
+      "prior_mae": {
+        "0.0": 2.4648,
+        "0.1": 2.4163,
+        "0.2": 2.37,
+        "0.3": 2.3291,
+        "0.4": 2.2928,
+        "0.5": 2.265,
+        "0.6": 2.2443,
+        "0.7": 2.228,
+        "0.8": 2.2185
+      }
+    },
+    "Total score|RBC Canadian Open": {
+      "chosen_blend": 0.8,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 425,
+      "prior_mae": {
+        "0.0": 2.5866,
+        "0.1": 2.5206,
+        "0.2": 2.4602,
+        "0.3": 2.4086,
+        "0.4": 2.3626,
+        "0.5": 2.3325,
+        "0.6": 2.3152,
+        "0.7": 2.303,
+        "0.8": 2.2989
+      }
+    },
+    "Total score|U.S. Open": {
+      "chosen_blend": 0.8,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 535,
+      "prior_mae": {
+        "0.0": 2.6175,
+        "0.1": 2.538,
+        "0.2": 2.4654,
+        "0.3": 2.403,
+        "0.4": 2.3504,
+        "0.5": 2.3117,
+        "0.6": 2.2866,
+        "0.7": 2.2686,
+        "0.8": 2.2591
+      }
+    },
+    "Total score|Travelers Championship": {
+      "chosen_blend": 0.8,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 758,
+      "prior_mae": {
+        "0.0": 2.6449,
+        "0.1": 2.5367,
+        "0.2": 2.4398,
+        "0.3": 2.3604,
+        "0.4": 2.3005,
+        "0.5": 2.2571,
+        "0.6": 2.2317,
+        "0.7": 2.2179,
+        "0.8": 2.2158
+      }
+    },
+    "Total score|John Deere Classic": {
+      "chosen_blend": 0.8,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 874,
+      "prior_mae": {
+        "0.0": 2.7366,
+        "0.1": 2.6188,
+        "0.2": 2.5123,
+        "0.3": 2.4224,
+        "0.4": 2.3524,
+        "0.5": 2.3,
+        "0.6": 2.2657,
+        "0.7": 2.2418,
+        "0.8": 2.2284
+      }
+    },
+    "Total score|Genesis Scottish Open": {
+      "chosen_blend": 0.8,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 926,
+      "prior_mae": {
+        "0.0": 2.705,
+        "0.1": 2.5905,
+        "0.2": 2.4872,
+        "0.3": 2.4001,
+        "0.4": 2.3324,
+        "0.5": 2.2813,
+        "0.6": 2.2479,
+        "0.7": 2.2246,
+        "0.8": 2.2126
+      }
+    },
+    "GIR|PGA Championship": {
+      "chosen_blend": 0.0,
+      "selection_source": "insufficient_prior_rows_unblended",
+      "prior_rows": 0,
+      "prior_mae": {}
+    },
+    "GIR|THE CJ CUP Byron Nelson": {
+      "chosen_blend": 0.8,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 96,
+      "prior_mae": {
+        "0.0": 1.8185,
+        "0.1": 1.8067,
+        "0.2": 1.7958,
+        "0.3": 1.7848,
+        "0.4": 1.774,
+        "0.5": 1.768,
+        "0.6": 1.7644,
+        "0.7": 1.762,
+        "0.8": 1.7614
+      }
+    },
+    "GIR|Charles Schwab Challenge": {
+      "chosen_blend": 0.8,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 140,
+      "prior_mae": {
+        "0.0": 1.8066,
+        "0.1": 1.789,
+        "0.2": 1.772,
+        "0.3": 1.7549,
+        "0.4": 1.7387,
+        "0.5": 1.7282,
+        "0.6": 1.7211,
+        "0.7": 1.7171,
+        "0.8": 1.7162
+      }
+    },
+    "GIR|the Memorial Tournament presented by Workday": {
+      "chosen_blend": 0.5,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 205,
+      "prior_mae": {
+        "0.0": 1.8327,
+        "0.1": 1.8237,
+        "0.2": 1.816,
+        "0.3": 1.8087,
+        "0.4": 1.8021,
+        "0.5": 1.7993,
+        "0.6": 1.7994,
+        "0.7": 1.8023,
+        "0.8": 1.8072
+      }
+    },
+    "GIR|RBC Canadian Open": {
+      "chosen_blend": 0.6,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 268,
+      "prior_mae": {
+        "0.0": 1.854,
+        "0.1": 1.8374,
+        "0.2": 1.8222,
+        "0.3": 1.8082,
+        "0.4": 1.7957,
+        "0.5": 1.7883,
+        "0.6": 1.7835,
+        "0.7": 1.7838,
+        "0.8": 1.7887
+      }
+    },
+    "GIR|U.S. Open": {
+      "chosen_blend": 0.5,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 320,
+      "prior_mae": {
+        "0.0": 1.8145,
+        "0.1": 1.7856,
+        "0.2": 1.7607,
+        "0.3": 1.74,
+        "0.4": 1.7256,
+        "0.5": 1.7209,
+        "0.6": 1.7247,
+        "0.7": 1.7328,
+        "0.8": 1.7466
+      }
+    },
+    "GIR|Travelers Championship": {
+      "chosen_blend": 0.5,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 421,
+      "prior_mae": {
+        "0.0": 1.8141,
+        "0.1": 1.7951,
+        "0.2": 1.7791,
+        "0.3": 1.7664,
+        "0.4": 1.7588,
+        "0.5": 1.7586,
+        "0.6": 1.7663,
+        "0.7": 1.7791,
+        "0.8": 1.7967
+      }
+    },
+    "GIR|John Deere Classic": {
+      "chosen_blend": 0.5,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 421,
+      "prior_mae": {
+        "0.0": 1.8141,
+        "0.1": 1.7951,
+        "0.2": 1.7791,
+        "0.3": 1.7664,
+        "0.4": 1.7588,
+        "0.5": 1.7586,
+        "0.6": 1.7663,
+        "0.7": 1.7791,
+        "0.8": 1.7967
+      }
+    },
+    "GIR|Genesis Scottish Open": {
+      "chosen_blend": 0.5,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 452,
+      "prior_mae": {
+        "0.0": 1.7903,
+        "0.1": 1.7684,
+        "0.2": 1.7511,
+        "0.3": 1.738,
+        "0.4": 1.7296,
+        "0.5": 1.7284,
+        "0.6": 1.7346,
+        "0.7": 1.7474,
+        "0.8": 1.7668
+      }
+    },
+    "Fairways hit|PGA Championship": {
+      "chosen_blend": 0.0,
+      "selection_source": "insufficient_prior_rows_unblended",
+      "prior_rows": 0,
+      "prior_mae": {}
+    },
+    "Fairways hit|THE CJ CUP Byron Nelson": {
+      "chosen_blend": 0.7,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 96,
+      "prior_mae": {
+        "0.0": 1.4656,
+        "0.1": 1.451,
+        "0.2": 1.4378,
+        "0.3": 1.4268,
+        "0.4": 1.4204,
+        "0.5": 1.4191,
+        "0.6": 1.4186,
+        "0.7": 1.4181,
+        "0.8": 1.4206
+      }
+    },
+    "Fairways hit|Charles Schwab Challenge": {
+      "chosen_blend": 0.6,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 160,
+      "prior_mae": {
+        "0.0": 1.5616,
+        "0.1": 1.5467,
+        "0.2": 1.5331,
+        "0.3": 1.5216,
+        "0.4": 1.5144,
+        "0.5": 1.5106,
+        "0.6": 1.5073,
+        "0.7": 1.5093,
+        "0.8": 1.5142
+      }
+    },
+    "Fairways hit|the Memorial Tournament presented by Workday": {
+      "chosen_blend": 0.6,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 226,
+      "prior_mae": {
+        "0.0": 1.5441,
+        "0.1": 1.5344,
+        "0.2": 1.5266,
+        "0.3": 1.5202,
+        "0.4": 1.517,
+        "0.5": 1.5161,
+        "0.6": 1.5156,
+        "0.7": 1.5188,
+        "0.8": 1.5241
+      }
+    },
+    "Fairways hit|RBC Canadian Open": {
+      "chosen_blend": 0.3,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 289,
+      "prior_mae": {
+        "0.0": 1.5928,
+        "0.1": 1.5894,
+        "0.2": 1.5874,
+        "0.3": 1.5867,
+        "0.4": 1.5884,
+        "0.5": 1.5928,
+        "0.6": 1.5991,
+        "0.7": 1.6085,
+        "0.8": 1.6194
+      }
+    },
+    "Fairways hit|U.S. Open": {
+      "chosen_blend": 0.5,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 341,
+      "prior_mae": {
+        "0.0": 1.5739,
+        "0.1": 1.5652,
+        "0.2": 1.5579,
+        "0.3": 1.5516,
+        "0.4": 1.5477,
+        "0.5": 1.5474,
+        "0.6": 1.5497,
+        "0.7": 1.5572,
+        "0.8": 1.5686
+      }
+    },
+    "Fairways hit|Travelers Championship": {
+      "chosen_blend": 0.8,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 481,
+      "prior_mae": {
+        "0.0": 1.8564,
+        "0.1": 1.8011,
+        "0.2": 1.7492,
+        "0.3": 1.6999,
+        "0.4": 1.6551,
+        "0.5": 1.6183,
+        "0.6": 1.5892,
+        "0.7": 1.5643,
+        "0.8": 1.5472
+      }
+    },
+    "Fairways hit|John Deere Classic": {
+      "chosen_blend": 0.8,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 551,
+      "prior_mae": {
+        "0.0": 1.8378,
+        "0.1": 1.783,
+        "0.2": 1.7311,
+        "0.3": 1.6821,
+        "0.4": 1.6376,
+        "0.5": 1.6005,
+        "0.6": 1.5718,
+        "0.7": 1.5489,
+        "0.8": 1.5346
+      }
+    },
+    "Fairways hit|Genesis Scottish Open": {
+      "chosen_blend": 0.8,
+      "selection_source": "prior_event_mae",
+      "prior_rows": 566,
+      "prior_mae": {
+        "0.0": 1.8329,
+        "0.1": 1.7806,
+        "0.2": 1.7313,
+        "0.3": 1.6849,
+        "0.4": 1.6427,
+        "0.5": 1.6079,
+        "0.6": 1.5815,
+        "0.7": 1.5608,
+        "0.8": 1.5483
+      }
+    }
+  },
+  "strategies": [
+    {
+      "id": "bayesian_ridge_weather_wave_tuned_pure",
+      "book_blend": 0.0,
+      "recommended": {
+        "units": 59.36,
+        "bets": 1178,
+        "wins": 668,
+        "hit_pct": 56.7,
+        "roi_pct": 5.0,
+        "by_market": {
+          "Birdies": {
+            "units": -7.4,
+            "bets": 204,
+            "wins": 103
+          },
+          "Total score": {
+            "units": 14.3,
+            "bets": 636,
+            "wins": 349
+          },
+          "GIR": {
+            "units": 48.0,
+            "bets": 285,
+            "wins": 184
+          },
+          "Fairways hit": {
+            "units": 4.5,
+            "bets": 53,
+            "wins": 32
+          }
+        }
+      },
+      "model_vs_actual": {
+        "Birdies": {
+          "n": 1223,
+          "bias": 0.05,
+          "mae": 1.48
+        },
+        "Fairways hit": {
+          "n": 596,
+          "bias": -0.56,
+          "mae": 1.82
+        },
+        "GIR": {
+          "n": 484,
+          "bias": -0.13,
+          "mae": 1.81
+        },
+        "Total score": {
+          "n": 1068,
+          "bias": 0.3,
+          "mae": 2.66
+        }
+      }
+    },
+    {
+      "id": "bayesian_ridge_weather_wave_tuned_book_blend_35_reference",
+      "book_blend": 0.35,
+      "recommended": {
+        "units": 91.53,
+        "bets": 702,
+        "wins": 423,
+        "hit_pct": 60.3,
+        "roi_pct": 13.0,
+        "by_market": {
+          "Birdies": {
+            "units": 4.0,
+            "bets": 33,
+            "wins": 16
+          },
+          "Total score": {
+            "units": 35.6,
+            "bets": 445,
+            "wins": 255
+          },
+          "GIR": {
+            "units": 47.8,
+            "bets": 202,
+            "wins": 137
+          },
+          "Fairways hit": {
+            "units": 4.2,
+            "bets": 22,
+            "wins": 15
+          }
+        }
+      },
+      "model_vs_actual": null
+    },
+    {
+      "id": "bayesian_ridge_weather_wave_nested_window_and_book",
+      "book_blend": "walk_forward_selected",
+      "recommended": {
+        "units": 28.51,
+        "bets": 195,
+        "wins": 123,
+        "hit_pct": 63.1,
+        "roi_pct": 14.6,
+        "by_market": {
+          "Birdies": {
+            "units": 1.2,
+            "bets": 1,
+            "wins": 1
+          },
+          "Total score": {
+            "units": -5.2,
+            "bets": 41,
+            "wins": 19
+          },
+          "GIR": {
+            "units": 32.5,
+            "bets": 150,
+            "wins": 101
+          },
+          "Fairways hit": {
+            "units": 0.1,
+            "bets": 3,
+            "wins": 2
+          }
+        }
+      },
+      "model_vs_actual": {
+        "Birdies": {
+          "n": 1223,
+          "bias": 0.01,
+          "mae": 1.32
+        },
+        "Fairways hit": {
+          "n": 596,
+          "bias": -0.2,
+          "mae": 1.63
+        },
+        "GIR": {
+          "n": 484,
+          "bias": -0.02,
+          "mae": 1.77
+        },
+        "Total score": {
+          "n": 1068,
+          "bias": 0.39,
+          "mae": 2.26
+        }
+      }
+    }
+  ]
+}

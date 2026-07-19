@@ -10,15 +10,14 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { applyUnifiedProjectionFactors } from "./projection-unified-factors.mjs";
 import { flattenProjectionExportMeta } from "./projection-export-meta.mjs";
-import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
+import { liveProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
 
 Object.assign(
   process.env,
   Object.fromEntries(
-    Object.entries({
-      ...flatVenueProjectionPipelineEnv(),
-      GOLF_UNIFIED_TEE_WAVE_W: process.env.GOLF_UNIFIED_TEE_WAVE_W || "0.30",
-    }).filter(([k]) => process.env[k] === undefined || String(process.env[k]).trim() === ""),
+    Object.entries(liveProjectionPipelineEnv()).filter(
+      ([k]) => process.env[k] === undefined || String(process.env[k]).trim() === "",
+    ),
   ),
 );
 

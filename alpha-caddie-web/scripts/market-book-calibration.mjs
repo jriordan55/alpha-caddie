@@ -194,12 +194,14 @@ export function fitEventPropBookShifts(payload, opts = {}) {
   const props = Array.isArray(payload?.props) ? payload.props : [];
   const displayRound = Math.round(num(opts.displayRound ?? payload?.display_round ?? 1)) || 1;
   const minPairs = Math.max(8, Math.round(num(opts.minPairs, 12)) || 12);
+  const excludedMarkets = new Set(["Birdies", ...(opts.excludeMarkets || [])]);
   /** @type {Record<string, number[]>} */
   const deltasByMarket = {};
 
   for (const pr of props) {
     const spec = PROP_MARKET_TO_ROW[String(pr.market || "").trim()];
     if (!spec) continue;
+    if (excludedMarkets.has(spec.market)) continue;
     const rnd = Math.round(num(pr.round_num ?? pr.display_round ?? displayRound));
     if (rnd !== displayRound) continue;
     const dg = Math.round(num(pr.dg_id, NaN));
@@ -313,9 +315,10 @@ export function eventPropBookAlignedMarket(meta, market) {
 /**
  * Apply fitted μ shifts to projection player row (post-reconcile).
  */
-export function applyMarketBookCalibrationToRow(row, coursePar18 = 72) {
+export function applyMarketBookCalibrationToRow(row, coursePar18 = 72, opts = {}) {
   if (!marketBookCalibrationEnabled() || !row || typeof row !== "object") return;
   const par = Math.round(num(coursePar18, NaN)) || 72;
+  const excludedMarkets = new Set(["Birdies", ...(opts.excludeMarkets || [])]);
 
   const scoreShift = marketBookMuShift("Total score");
   if (scoreShift) {
@@ -331,6 +334,7 @@ export function applyMarketBookCalibrationToRow(row, coursePar18 = 72) {
   }
 
   const applyCount = (market, col, lo, hi) => {
+    if (excludedMarkets.has(market)) return;
     const shift = marketBookMuShift(market);
     if (!shift) return;
     const v = num(row[col], NaN);

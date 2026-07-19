@@ -1,6 +1,8 @@
 /**
- * Shared env for push:live / backtest: same all-time venue player score every round;
- * round separation from weather, pin sheet, and tee wave only.
+ * Shared env for push:live / backtest projection pipelines.
+ *
+ * Live default = OOS winner: day/form + skill 36, no soft book μ alignment
+ * (book cal + counting blends hurt Birdies ROI in sportsbook_live_oos_roi.json).
  */
 
 export function flatVenueProjectionPipelineEnv() {
@@ -14,7 +16,7 @@ export function flatVenueProjectionPipelineEnv() {
   };
 }
 
-/** Walk-forward backtest + live projections: historical venue anchor + prior-round difficulty + within-event form. */
+/** Walk-forward backtest: historical venue anchor + prior-round difficulty + within-event form. */
 export function walkforwardBacktestPipelineEnv() {
   return {
     ...flatVenueProjectionPipelineEnv(),
@@ -22,14 +24,26 @@ export function walkforwardBacktestPipelineEnv() {
     GOLF_COURSE_PRIOR_ROUND_DIFFICULTY: "1",
     GOLF_WITHIN_EVENT_FORM_CARRY: "0.1",
     GOLF_WITHIN_EVENT_FORM_CAP: "0.75",
+    GOLF_WF_SKILL_MAX_ROUNDS: process.env.GOLF_WF_SKILL_MAX_ROUNDS || "36",
+    GOLF_MARKET_BOOK_CALIBRATION: "0",
   };
 }
 
-/** Live week: stable venue-anchored μ; round separation from weather, pin sheet, and tee wave only.
- *  Birdies/Bogeys markets always use birdie-or-better / bogey-or-worse (see round-projection-mu). */
+/**
+ * Live week = OOS-winning reconstruction.
+ * Birdies/Bogeys markets always use birdie-or-better / bogey-or-worse.
+ */
 export function liveProjectionPipelineEnv() {
   return {
-    ...flatVenueProjectionPipelineEnv(),
+    ...walkforwardBacktestPipelineEnv(),
+    GOLF_FLAT_VENUE_PLAYER_SCORE: "0",
+    GOLF_COURSE_PRIOR_ROUND_DIFFICULTY: "1",
+    GOLF_WITHIN_EVENT_FORM_CARRY: "0.1",
+    GOLF_WITHIN_EVENT_FORM_CAP: "0.75",
+    GOLF_UNIFIED_BOUNCE_BACK_K: process.env.GOLF_UNIFIED_BOUNCE_BACK_K || "0.12",
+    GOLF_WF_SKILL_MAX_ROUNDS: process.env.GOLF_WF_SKILL_MAX_ROUNDS || "36",
+    GOLF_MARKET_BOOK_CALIBRATION: process.env.GOLF_MARKET_BOOK_CALIBRATION || "0",
+    GOLF_SKIP_MARKET_BOOK_CALIBRATION: process.env.GOLF_SKIP_MARKET_BOOK_CALIBRATION || "1",
     GOLF_UNIFIED_TEE_WAVE_W: process.env.GOLF_UNIFIED_TEE_WAVE_W || "0.30",
     GOLF_FIELD_DAY_COUNTING_LIFT_FRAC: process.env.GOLF_FIELD_DAY_COUNTING_LIFT_FRAC || "0",
     GOLF_WITHIN_EVENT_COUNTING_BLEND: process.env.GOLF_WITHIN_EVENT_COUNTING_BLEND || "0",
@@ -59,7 +73,6 @@ export function requireDkOuEnv() {
       GOLF_SKIP_DK_OU_VALIDATE: process.env.GOLF_SKIP_DK_OU_VALIDATE || "1",
     };
   }
-  // Honor explicit caller override (LiveWeekOnly sets GOLF_REQUIRE_DK_OU=0 before refresh:live).
   if (String(process.env.GOLF_REQUIRE_DK_OU || "").trim() !== "") {
     return {};
   }

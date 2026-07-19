@@ -11,7 +11,7 @@ import { spawnSync } from "child_process";
 import { copyFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
+import { liveProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -25,7 +25,13 @@ function run(rel, label, extraEnv = {}) {
     stdio: "inherit",
     env: {
       ...process.env,
-      ...flatVenueProjectionPipelineEnv(),
+      ...liveProjectionPipelineEnv(),
+      // Caller / push:live env wins over sportsbook defaults.
+      ...Object.fromEntries(
+        Object.entries(process.env).filter(
+          ([k, v]) => k.startsWith("GOLF_") && v !== undefined && String(v).trim() !== "",
+        ),
+      ),
       GOLF_MODEL_DIR: process.env.GOLF_MODEL_DIR?.trim() || REPO_ROOT,
       ...extraEnv,
     },
@@ -37,6 +43,10 @@ function run(rel, label, extraEnv = {}) {
 }
 
 const baseEnv = { GOLF_SKIP_HISTORY_ON_FETCH_DG: "1" };
+
+// The rolling four-course-round anchor must advance before projections are
+// built (e.g. tomorrow = today's R3 + R2 + R1 + latest prior venue round).
+run("run-refresh-pgatour-event-rounds.mjs", "Current-event completed rounds (rolling course window)");
 
 if (String(process.env.GOLF_REFRESH_PROJECTIONS_SKIP_DG || "").trim() !== "1") {
   run("fetch-datagolf.mjs", "Field + projections (fetch:dg)", baseEnv);

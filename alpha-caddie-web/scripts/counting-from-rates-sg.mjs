@@ -23,15 +23,18 @@ import { venueBirdieSgScale } from "./projection-stat-model.mjs";
 /** Player FW spread vs tour when course anchor is off (near 1 = pure driving accuracy). */
 const FAIRWAY_DRIVING_ACC_SPREAD = 0.94;
 
-/** Venue birdie anchor: keep player spread vs course birdie mean (DK market ≈ birdies + eagles). */
-const BIRDIE_COURSE_SPREAD_KEEP = 0.42;
+/** Backtested BoB model constants (DK Birdies market = birdies + eagles). */
+export const BIRDIE_BOB_WINDOW = 50;
+export const BIRDIE_COURSE_SPREAD_KEEP = 0.42;
+export const BIRDIE_PLAYER_COURSE_MIN_ROUNDS = 4;
+export const BIRDIE_PLAYER_COURSE_MAX_WEIGHT = 0.45;
 
-/** Stronger spread for above-venue birdie rates so elite players reach DK 5.5 lines. */
-function birdieSpreadKeepForPlayer(baseSpread, playerMkt, venueMkt, mu) {
+/** Backtested dynamic spread: preserve more separation for above-course BoB players. */
+export function birdieCourseSpreadKeep(playerMkt, venueMkt, baseSpread = BIRDIE_COURSE_SPREAD_KEEP) {
   let spread = num(baseSpread, BIRDIE_COURSE_SPREAD_KEEP);
   if (Number.isFinite(playerMkt) && Number.isFinite(venueMkt) && playerMkt > venueMkt) {
     const excess = playerMkt - venueMkt;
-    spread = clamp(spread + 0.4 * excess + 0.04 * Math.max(0, mu), spread, 0.9);
+    spread = clamp(spread + 0.4 * excess + 0.04 * Math.max(0, playerMkt), spread, 0.9);
   }
   return spread;
 }
@@ -353,51 +356,16 @@ function courseFwWidthNorm(fwWidthYds) {
   return courseScalarNorm01(num(fwWidthYds, NaN), 23.5, 71.9);
 }
 
-/**
- * Birdies market (birdies+eagles): rolling rate + optimized SG blend + GIR opportunity.
- */
+/** Birdies market (birdies+eagles): rolling player BoB% only before course calibration. */
 function birdiesEaglesFromPlayerRates(opts = {}) {
   const sk = opts.skRow || {};
-  const field = opts.fieldMeans || {};
-  const mu = num(opts.muSg, 0);
   const venueBird = num(opts.venueBird, 3.8);
   const venueEag = num(opts.venueEagles, 0.12);
   const venueMkt = venueBird + venueEag;
   const playerMkt = num(sk.avg_birdies, NaN);
-  const spread = birdieSpreadKeepForPlayer(
-    num(opts.birdieSkillSpreadKeep, BIRDIE_COURSE_SPREAD_KEEP),
-    playerMkt,
-    venueMkt,
-    mu,
-  );
-  const dApp = sgDelta(sk, field, "sg_app");
-  const dPutt = sgDelta(sk, field, "sg_putt");
-  const dArg = sgDelta(sk, field, "sg_arg");
-  const dOtt = sgDelta(sk, field, "sg_ott");
+  const mkt = Number.isFinite(playerMkt) ? playerMkt : venueMkt;
 
-  let rateMkt = venueMkt;
-  if (Number.isFinite(playerMkt)) rateMkt = venueMkt + spread * (playerMkt - venueMkt);
-  const birdSgScale = num(opts.venueBirdieSgScale, 1);
-  rateMkt += birdSgScale * (0.26 * dApp + 0.09 * dPutt + 0.03 * mu);
-
-  const optMkt = num(opts.optimizedBirdMarket, NaN);
-  let mkt = Number.isFinite(optMkt) ? 0.36 * rateMkt + 0.64 * optMkt : rateMkt;
-
-  const gir = num(opts.projectedGir, num(sk.avg_gir, NaN));
-  const venueGir = num(opts.venueGir, 12);
-  if (Number.isFinite(gir) && Number.isFinite(venueGir)) {
-    mkt += 0.28 * ((gir - venueGir) / 18);
-  }
-
-  const courseEase = num(opts.courseBirdieEase, 0);
-  if (Number.isFinite(courseEase)) mkt += courseEase;
-
-  mkt += birdSgScale * (0.14 * dArg + 0.06 * dOtt);
-
-  const venueAnchor = venueMkt + (Number.isFinite(courseEase) ? courseEase : 0);
-  mkt = 0.78 * mkt + 0.22 * venueAnchor;
-
-  let eagles = num(opts.optimizedEagles, num(sk.avg_eagles, NaN));
+  let eagles = num(sk.avg_eagles, NaN);
   if (!Number.isFinite(eagles)) eagles = venueEag;
   eagles = clamp(eagles, 0, 1.1);
   const birdies = clamp(mkt - eagles, 0.15, 7);
@@ -669,7 +637,7 @@ export function derivedStatsFromRatesAndSg(muRaw, nFairwayHoles, opts = {}) {
  * Rolling per-player counting means from historical_rounds_all.csv.
  */
 export async function buildRollingHoleCountRatesByDg(csvPath, dgIdSet, opts = {}) {
-  const maxR = Math.max(8, Math.round(num(opts.maxRoundsPerPlayer, 36)));
+  const maxR = Math.max(8, Math.round(num(opts.maxRoundsPerPlayer, BIRDIE_BOB_WINDOW)));
   const nFw = Math.round(num(opts.nFairwayHoles, 14)) || 14;
   const cy = new Date().getFullYear();
   const minYear = cy - 2;
@@ -693,27 +661,29 @@ export async function buildRollingHoleCountRatesByDg(csvPath, dgIdSet, opts = {}
 
         let slot = buf.get(id);
         if (!slot) {
-          slot = { bird: [], bog: [], eag: [], dbl: [], par: [], putt: [], gir: [], fw: [] };
+          slot = { rows: [] };
           buf.set(id, slot);
         }
-        if (slot.bird.length >= maxR) return;
-
         const b = birdiesFromHistRow(row);
-        if (Number.isFinite(b) && b >= 0 && b <= 10) slot.bird.push(b);
         const bg = bogeysFromHistRow(row);
-        if (Number.isFinite(bg) && bg >= 0 && bg <= 14) slot.bog.push(bg);
         const e = num(row.eagles_or_better ?? row.eagles, 0);
-        if (Number.isFinite(e) && e >= 0 && e <= 3) slot.eag.push(e);
         const d = num(row.doubles_or_worse ?? row.doubles, 0);
-        if (Number.isFinite(d) && d >= 0 && d <= 5) slot.dbl.push(d);
         const p = num(row.pars, NaN);
-        if (Number.isFinite(p) && p >= 4 && p <= 16) slot.par.push(p);
         const pt = num(row.putts, NaN);
-        if (Number.isFinite(pt) && pt >= 24 && pt <= 36) slot.putt.push(pt);
         const g = countFromRateOrRaw(row.gir, 18);
-        if (Number.isFinite(g) && g >= 4 && g <= 17) slot.gir.push(g);
         const f = countFromRateOrRaw(row.driving_acc, nFw);
-        if (Number.isFinite(f) && f >= 2 && f <= nFw + 1) slot.fw.push(f);
+        slot.rows.push({
+          ts: Date.parse(row.event_completed || "") || (Number.isFinite(yr) ? Date.UTC(yr, 0, 1) : 0),
+          round: Math.round(num(row.round_num, 0)),
+          bird: Number.isFinite(b) && b >= 0 && b <= 10 ? b : NaN,
+          bog: Number.isFinite(bg) && bg >= 0 && bg <= 14 ? bg : NaN,
+          eag: Number.isFinite(e) && e >= 0 && e <= 3 ? e : NaN,
+          dbl: Number.isFinite(d) && d >= 0 && d <= 5 ? d : NaN,
+          par: Number.isFinite(p) && p >= 4 && p <= 16 ? p : NaN,
+          putt: Number.isFinite(pt) && pt >= 24 && pt <= 36 ? pt : NaN,
+          gir: Number.isFinite(g) && g >= 4 && g <= 17 ? g : NaN,
+          fw: Number.isFinite(f) && f >= 2 && f <= nFw + 1 ? f : NaN,
+        });
       })
       .on("end", resolve)
       .on("error", reject);
@@ -723,17 +693,23 @@ export async function buildRollingHoleCountRatesByDg(csvPath, dgIdSet, opts = {}
   /** @type {Map<number, object>} */
   const out = new Map();
   for (const [id, slot] of buf) {
-    const n = Math.max(slot.bird.length, slot.bog.length);
+    const recent = slot.rows
+      .sort((a, b) => b.ts - a.ts || b.round - a.round)
+      .slice(0, maxR);
+    const vals = (key) => recent.map((row) => row[key]).filter(Number.isFinite);
+    const bird = vals("bird");
+    const bog = vals("bog");
+    const n = Math.max(bird.length, bog.length);
     if (!n) continue;
     out.set(id, {
-      avg_birdies: mean(slot.bird),
-      avg_bogeys: mean(slot.bog),
-      avg_eagles: mean(slot.eag),
-      avg_doubles: mean(slot.dbl),
-      avg_pars: mean(slot.par),
-      avg_putts: mean(slot.putt),
-      avg_gir: mean(slot.gir),
-      avg_fairways: mean(slot.fw),
+      avg_birdies: mean(bird),
+      avg_bogeys: mean(bog),
+      avg_eagles: mean(vals("eag")),
+      avg_doubles: mean(vals("dbl")),
+      avg_pars: mean(vals("par")),
+      avg_putts: mean(vals("putt")),
+      avg_gir: mean(vals("gir")),
+      avg_fairways: mean(vals("fw")),
       counting_rounds: n,
     });
   }

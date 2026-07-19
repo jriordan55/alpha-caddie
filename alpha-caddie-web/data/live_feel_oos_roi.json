@@ -1,0 +1,348 @@
+{
+  "generated_at": "2026-07-18T02:39:31.579Z",
+  "hypothetical": true,
+  "note": "Walk-forward OOS comparing live flat-venue pipeline vs day/form/counting levers. Does not change live projections.",
+  "methodology": {
+    "oos_bet_rows": 3503,
+    "oos_event_count": 9,
+    "excluded_live_event": "The Open Championship",
+    "events": [
+      "PGA Championship",
+      "THE CJ CUP Byron Nelson",
+      "Charles Schwab Challenge",
+      "the Memorial Tournament presented by Workday",
+      "RBC Canadian Open",
+      "U.S. Open",
+      "Travelers Championship",
+      "John Deere Classic",
+      "Genesis Scottish Open"
+    ],
+    "policy": "recommended per-market EV/gap filters",
+    "elapsed_sec": 1242
+  },
+  "baseline_id": "live_flat_current",
+  "strategies": [
+    {
+      "id": "wf_skill36",
+      "name": "walk-forward day+form + skill 36",
+      "note": "Best skill window from prior OOS on top of day/form separation",
+      "is_current_live": false,
+      "delta_vs_live_flat": {
+        "roi_pct": 2.9,
+        "units": 34.81
+      },
+      "recommended": {
+        "roi_pct": 6.6,
+        "units": 69.68,
+        "bets": 1051,
+        "hit_pct": 57.3,
+        "by_market": {
+          "Birdies": {
+            "units": -1.6,
+            "bets": 263,
+            "wins": 139
+          },
+          "Total score": {
+            "units": 38.8,
+            "bets": 422,
+            "wins": 246
+          },
+          "GIR": {
+            "units": 20.1,
+            "bets": 302,
+            "wins": 175
+          },
+          "Fairways hit": {
+            "units": 12.3,
+            "bets": 64,
+            "wins": 42
+          }
+        }
+      },
+      "unfiltered_at_5pct": {
+        "roi_pct": -0.6,
+        "units": -17.88,
+        "bets": 2828
+      },
+      "model_vs_actual": {
+        "Birdies": {
+          "n": 1223,
+          "bias": 0.9,
+          "mae": 1.61
+        },
+        "Total score": {
+          "n": 1068,
+          "bias": 0.11,
+          "mae": 2.35
+        },
+        "GIR": {
+          "n": 484,
+          "bias": -0.26,
+          "mae": 1.96
+        },
+        "Fairways hit": {
+          "n": 596,
+          "bias": 0.33,
+          "mae": 2.31
+        }
+      }
+    },
+    {
+      "id": "wf_day_form",
+      "name": "walk-forward day+form",
+      "note": "Non-flat venue + prior-round difficulty + within-event form (backtest default)",
+      "is_current_live": false,
+      "delta_vs_live_flat": {
+        "roi_pct": 2.6,
+        "units": 31.37
+      },
+      "recommended": {
+        "roi_pct": 6.3,
+        "units": 66.24,
+        "bets": 1051,
+        "hit_pct": 57.1,
+        "by_market": {
+          "Birdies": {
+            "units": -2.3,
+            "bets": 262,
+            "wins": 138
+          },
+          "Total score": {
+            "units": 37.1,
+            "bets": 422,
+            "wins": 245
+          },
+          "GIR": {
+            "units": 19.1,
+            "bets": 303,
+            "wins": 175
+          },
+          "Fairways hit": {
+            "units": 12.3,
+            "bets": 64,
+            "wins": 42
+          }
+        }
+      },
+      "unfiltered_at_5pct": {
+        "roi_pct": -0.5,
+        "units": -14.5,
+        "bets": 2825
+      },
+      "model_vs_actual": {
+        "Birdies": {
+          "n": 1223,
+          "bias": 0.9,
+          "mae": 1.61
+        },
+        "Total score": {
+          "n": 1068,
+          "bias": 0.11,
+          "mae": 2.35
+        },
+        "GIR": {
+          "n": 484,
+          "bias": -0.26,
+          "mae": 1.96
+        },
+        "Fairways hit": {
+          "n": 596,
+          "bias": 0.33,
+          "mae": 2.3
+        }
+      }
+    },
+    {
+      "id": "live_flat_current",
+      "name": "live flat (push:live today)",
+      "note": "Flat venue score, no form, no prior-day difficulty, no counting lift",
+      "is_current_live": true,
+      "delta_vs_live_flat": null,
+      "recommended": {
+        "roi_pct": 3.7,
+        "units": 34.88,
+        "bets": 947,
+        "hit_pct": 55.8,
+        "by_market": {
+          "Birdies": {
+            "units": 0.5,
+            "bets": 259,
+            "wins": 138
+          },
+          "GIR": {
+            "units": 20.8,
+            "bets": 287,
+            "wins": 167
+          },
+          "Total score": {
+            "units": -4,
+            "bets": 348,
+            "wins": 184
+          },
+          "Fairways hit": {
+            "units": 17.5,
+            "bets": 53,
+            "wins": 39
+          }
+        }
+      },
+      "unfiltered_at_5pct": {
+        "roi_pct": -1.8,
+        "units": -48.95,
+        "bets": 2760
+      },
+      "model_vs_actual": {
+        "Birdies": {
+          "n": 1223,
+          "bias": 0.89,
+          "mae": 1.61
+        },
+        "Total score": {
+          "n": 1068,
+          "bias": 0.4,
+          "mae": 2.37
+        },
+        "GIR": {
+          "n": 484,
+          "bias": -0.22,
+          "mae": 1.92
+        },
+        "Fairways hit": {
+          "n": 596,
+          "bias": 0.65,
+          "mae": 2.53
+        }
+      }
+    },
+    {
+      "id": "flat_plus_form",
+      "name": "flat venue + form only",
+      "note": "Keep flat venue score but restore within-event form carry",
+      "is_current_live": false,
+      "delta_vs_live_flat": {
+        "roi_pct": 0,
+        "units": 0
+      },
+      "recommended": {
+        "roi_pct": 3.7,
+        "units": 34.88,
+        "bets": 947,
+        "hit_pct": 55.8,
+        "by_market": {
+          "Birdies": {
+            "units": 0.5,
+            "bets": 259,
+            "wins": 138
+          },
+          "GIR": {
+            "units": 20.8,
+            "bets": 287,
+            "wins": 167
+          },
+          "Total score": {
+            "units": -4,
+            "bets": 348,
+            "wins": 184
+          },
+          "Fairways hit": {
+            "units": 17.5,
+            "bets": 53,
+            "wins": 39
+          }
+        }
+      },
+      "unfiltered_at_5pct": {
+        "roi_pct": -1.8,
+        "units": -48.95,
+        "bets": 2760
+      },
+      "model_vs_actual": {
+        "Birdies": {
+          "n": 1223,
+          "bias": 0.89,
+          "mae": 1.61
+        },
+        "Total score": {
+          "n": 1068,
+          "bias": 0.4,
+          "mae": 2.37
+        },
+        "GIR": {
+          "n": 484,
+          "bias": -0.22,
+          "mae": 1.92
+        },
+        "Fairways hit": {
+          "n": 596,
+          "bias": 0.65,
+          "mae": 2.53
+        }
+      }
+    },
+    {
+      "id": "counting_lift_035",
+      "name": "live flat + counting lift 0.35",
+      "note": "Allow this-week field bird/bog means to pull counting markets",
+      "is_current_live": false,
+      "delta_vs_live_flat": {
+        "roi_pct": -0.1,
+        "units": -0.75
+      },
+      "recommended": {
+        "roi_pct": 3.6,
+        "units": 34.13,
+        "bets": 946,
+        "hit_pct": 55.7,
+        "by_market": {
+          "Birdies": {
+            "units": -0.3,
+            "bets": 258,
+            "wins": 137
+          },
+          "GIR": {
+            "units": 20.8,
+            "bets": 287,
+            "wins": 167
+          },
+          "Total score": {
+            "units": -4,
+            "bets": 348,
+            "wins": 184
+          },
+          "Fairways hit": {
+            "units": 17.5,
+            "bets": 53,
+            "wins": 39
+          }
+        }
+      },
+      "unfiltered_at_5pct": {
+        "roi_pct": -1.8,
+        "units": -48.95,
+        "bets": 2760
+      },
+      "model_vs_actual": {
+        "Birdies": {
+          "n": 1223,
+          "bias": 0.89,
+          "mae": 1.61
+        },
+        "Total score": {
+          "n": 1068,
+          "bias": 0.4,
+          "mae": 2.37
+        },
+        "GIR": {
+          "n": 484,
+          "bias": -0.22,
+          "mae": 1.92
+        },
+        "Fairways hit": {
+          "n": 596,
+          "bias": 0.65,
+          "mae": 2.53
+        }
+      }
+    }
+  ]
+}

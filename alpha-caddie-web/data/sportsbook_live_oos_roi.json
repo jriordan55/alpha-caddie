@@ -1,0 +1,218 @@
+{
+  "generated_at": "2026-07-18T03:09:27.408Z",
+  "hypothetical": true,
+  "note": "Walk-forward OOS: OLD flat live vs NEW sportsbook live (day/form + skill 36 + book align). Does not change live projections.",
+  "methodology": {
+    "oos_bet_rows": 3503,
+    "oos_event_count": 9,
+    "excluded_live_event": "The Open Championship",
+    "events": [
+      "PGA Championship",
+      "THE CJ CUP Byron Nelson",
+      "Charles Schwab Challenge",
+      "the Memorial Tournament presented by Workday",
+      "RBC Canadian Open",
+      "U.S. Open",
+      "Travelers Championship",
+      "John Deere Classic",
+      "Genesis Scottish Open"
+    ],
+    "policy": "recommended per-market EV/gap filters",
+    "elapsed_sec": 703
+  },
+  "baseline_id": "old_live_flat",
+  "strategies": [
+    {
+      "id": "wf_skill36",
+      "name": "WF day+form + skill 36 (no book cal)",
+      "note": "Same reconstruction as NEW without DK book μ/σ shifts",
+      "is_current_live": false,
+      "delta_vs_old_flat": {
+        "roi_pct": 2.8,
+        "units": 33.85
+      },
+      "recommended": {
+        "roi_pct": 6.8,
+        "units": 71.65,
+        "bets": 1056,
+        "hit_pct": 57.6,
+        "by_market": {
+          "Birdies": {
+            "units": -0.3,
+            "bets": 244,
+            "wins": 130
+          },
+          "Total score": {
+            "units": 38.8,
+            "bets": 422,
+            "wins": 246
+          },
+          "GIR": {
+            "units": 20.9,
+            "bets": 326,
+            "wins": 190
+          },
+          "Fairways hit": {
+            "units": 12.3,
+            "bets": 64,
+            "wins": 42
+          }
+        }
+      },
+      "unfiltered_at_5pct": {
+        "roi_pct": -0.3,
+        "units": -7.72,
+        "bets": 2832
+      },
+      "model_vs_actual": {
+        "Birdies": {
+          "n": 1223,
+          "bias": 0.9,
+          "mae": 1.61
+        },
+        "Total score": {
+          "n": 1068,
+          "bias": 0.11,
+          "mae": 2.35
+        },
+        "GIR": {
+          "n": 484,
+          "bias": -0.26,
+          "mae": 1.96
+        },
+        "Fairways hit": {
+          "n": 596,
+          "bias": 0.33,
+          "mae": 2.31
+        }
+      }
+    },
+    {
+      "id": "old_live_flat",
+      "name": "OLD live flat",
+      "note": "Previous push:live — flat venue, no form, no prior difficulty, no book cal",
+      "is_current_live": false,
+      "delta_vs_old_flat": null,
+      "recommended": {
+        "roi_pct": 4,
+        "units": 37.8,
+        "bets": 950,
+        "hit_pct": 56.2,
+        "by_market": {
+          "Birdies": {
+            "units": 2.2,
+            "bets": 235,
+            "wins": 127
+          },
+          "GIR": {
+            "units": 22.1,
+            "bets": 314,
+            "wins": 184
+          },
+          "Total score": {
+            "units": -4,
+            "bets": 348,
+            "wins": 184
+          },
+          "Fairways hit": {
+            "units": 17.5,
+            "bets": 53,
+            "wins": 39
+          }
+        }
+      },
+      "unfiltered_at_5pct": {
+        "roi_pct": -1.1,
+        "units": -31.87,
+        "bets": 2778
+      },
+      "model_vs_actual": {
+        "Birdies": {
+          "n": 1223,
+          "bias": 0.89,
+          "mae": 1.61
+        },
+        "Total score": {
+          "n": 1068,
+          "bias": 0.4,
+          "mae": 2.37
+        },
+        "GIR": {
+          "n": 484,
+          "bias": -0.22,
+          "mae": 1.92
+        },
+        "Fairways hit": {
+          "n": 596,
+          "bias": 0.65,
+          "mae": 2.53
+        }
+      }
+    },
+    {
+      "id": "new_sportsbook_live",
+      "name": "NEW sportsbook live",
+      "note": "Current push:live — day/form + skill 36 + soft book align + mild counting blend",
+      "is_current_live": true,
+      "delta_vs_old_flat": {
+        "roi_pct": -3.3,
+        "units": -30.28
+      },
+      "recommended": {
+        "roi_pct": 0.7,
+        "units": 7.52,
+        "bets": 1065,
+        "hit_pct": 54.1,
+        "by_market": {
+          "Birdies": {
+            "units": -39.7,
+            "bets": 564,
+            "wins": 283
+          },
+          "Total score": {
+            "units": 25.4,
+            "bets": 293,
+            "wins": 168
+          },
+          "GIR": {
+            "units": 9.6,
+            "bets": 144,
+            "wins": 83
+          },
+          "Fairways hit": {
+            "units": 12.3,
+            "bets": 64,
+            "wins": 42
+          }
+        }
+      },
+      "unfiltered_at_5pct": {
+        "roi_pct": -1.2,
+        "units": -32.64,
+        "bets": 2625
+      },
+      "model_vs_actual": {
+        "Birdies": {
+          "n": 1223,
+          "bias": 0.9,
+          "mae": 1.61
+        },
+        "Total score": {
+          "n": 1068,
+          "bias": 0.11,
+          "mae": 2.35
+        },
+        "GIR": {
+          "n": 484,
+          "bias": -0.26,
+          "mae": 1.96
+        },
+        "Fairways hit": {
+          "n": 596,
+          "bias": 0.33,
+          "mae": 2.31
+        }
+      }
+    }
+  ]
+}

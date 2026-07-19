@@ -7,7 +7,6 @@ import {
   applyVenueCountingIntercept,
   applyVenueScoreIntercept,
   clamp,
-  computeRecencyWeightedVenueMoments,
   computeTourPriorsFromHist,
   computeVenueStatisticalIntercept,
   venueBirdieSgScale,
@@ -32,6 +31,7 @@ import {
   fieldCountingMeansFromWithinEventMap,
   ensureProjectionCourseBasisComplete,
   flatVenuePlayerScoreAnchorEnabled,
+  latestVenueFieldRoundRows,
   loadCourseTableAdjRate,
   reconcileAllProjectionPlayerRows,
   resolveProjectionCounts,
@@ -194,6 +194,8 @@ function skillRowFromHistory(rec) {
   );
   if (Number.isFinite(girR)) sk.dg_gir_pct = girR;
   if (Number.isFinite(fwR)) sk.dg_fairway_pct = fwR;
+  // histRoundToHistoryRec stores the DK Birdies market (birdies + eagles)
+  // in `birdies`; adding eagles again would double-count them.
   sk.avg_birdies = recencyWeightedMean(rounds, "birdies");
   sk.avg_bogeys = recencyWeightedMean(rounds, "bogeys");
   sk.avg_eagles = recencyWeightedMean(
@@ -325,56 +327,56 @@ function buildEventContextFromHist(histRows, eventName, eventYear, courseKey, ta
 
 async function loadVenueScoringBeforeCutoff(histRows, courseKey, courseLabel, cutoffMs, eventName, eventYear, targetRound) {
   const nFairwayHoles = N_FAIRWAY_HOLES;
-  if (!courseKey) {
-    return {
-      venueAvgStp: NaN,
-      nVenueRounds: 0,
-      source: "none",
-      fieldByRound: new Map(),
-      playerByRound: new Map(),
-      playerByVenue: new Map(),
-      courseFitByDg: new Map(),
-    };
-  }
-
   let venueTotals = emptyVenueCountRaw();
   const fieldRaw = new Map();
   const playerRaw = new Map();
   const playerAllRaw = new Map();
   const fitRaw = new Map();
+  const eligibleVenueRows = [];
 
   function histRowToVenueRow(row) {
     return {
       course_par: num(row.course_par, NaN),
       round_score: num(row.round_score, NaN),
       birdies: num(row.birdies, NaN),
+      eagles_or_better: num(row.eagles_or_better ?? row.eagles, NaN),
       pars: num(row.pars, NaN),
       bogies: num(row.bogeys ?? row.bogies, NaN),
+      doubles_or_worse: num(row.doubles_or_worse ?? row.doubles, NaN),
       gir: num(row.gir, NaN),
       driving_acc: num(row.driving_acc, NaN),
     };
   }
 
   for (const row of histRows) {
-    const ckRow = normCourseNameKey(row.course_name || "");
-    if (!ckRow || ckRow !== courseKey) continue;
     const t = rowTimeMs(row);
-    if (Number.isFinite(cutoffMs) && Number.isFinite(t) && t >= cutoffMs) continue;
-    if (eventsLikelySame(eventName, String(row.event_name || "").trim())) {
-      const yr = Math.round(num(row.year, NaN));
-      const rnd = Math.round(num(row.round_num, NaN));
-      if (Number.isFinite(eventYear) && yr === eventYear && Number.isFinite(rnd) && rnd >= targetRound) continue;
+    const yr = Math.round(num(row.year, NaN));
+    const rnd = Math.round(num(row.round_num, NaN));
+    const sameCurrentEvent =
+      eventsLikelySame(eventName, String(row.event_name || "").trim()) &&
+      (!Number.isFinite(eventYear) || !Number.isFinite(yr) || yr === eventYear);
+    const completedEarlierThisEvent =
+      sameCurrentEvent && Number.isFinite(rnd) && rnd >= 1 && rnd < targetRound;
+    if (
+      Number.isFinite(cutoffMs) &&
+      Number.isFinite(t) &&
+      t >= cutoffMs &&
+      !completedEarlierThisEvent
+    ) {
+      continue;
     }
+    if (sameCurrentEvent && Number.isFinite(rnd) && rnd >= targetRound) continue;
     const cp = num(row.course_par, NaN);
     const rs = num(row.round_score, NaN);
     if (!Number.isFinite(cp) || cp < 63 || cp > 76) continue;
     if (!Number.isFinite(rs) || rs < 55 || rs > 95) continue;
-    const rnd = Math.round(num(row.round_num, NaN));
     if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
 
+    const ckRow = normCourseNameKey(row.course_name || "");
+    if (!courseKey || !ckRow || ckRow !== courseKey) continue;
+
     const vr = histRowToVenueRow(row);
-    venueTotals = accumulateVenueCountRow(venueTotals, vr, nFairwayHoles);
-    fieldRaw.set(rnd, accumulateVenueCountRow(fieldRaw.get(rnd) || emptyVenueCountRaw(), vr, nFairwayHoles));
+    eligibleVenueRows.push(row);
 
     const dg = Math.round(num(row.dg_id, NaN));
     if (Number.isFinite(dg)) {
@@ -391,12 +393,18 @@ async function loadVenueScoringBeforeCutoff(histRows, courseKey, courseLabel, cu
     }
   }
 
-  const venueAgg = finalizeVenueAgg(venueTotals);
-  const recencyVenue = computeRecencyWeightedVenueMoments(histRows, courseKey, cutoffMs);
-  if (recencyVenue && recencyVenue.w >= 20 && Number.isFinite(recencyVenue.avgStp)) {
-    venueAgg.avgStp = recencyVenue.avgStp;
-    venueAgg.n = Math.max(venueAgg.n, Math.round(recencyVenue.w));
+  const rolling = latestVenueFieldRoundRows(eligibleVenueRows, courseKey, 4);
+  for (const row of rolling.rows) {
+    const rnd = Math.round(num(row.round_num, NaN));
+    const vr = histRowToVenueRow(row);
+    venueTotals = accumulateVenueCountRow(venueTotals, vr, nFairwayHoles);
+    fieldRaw.set(
+      rnd,
+      accumulateVenueCountRow(fieldRaw.get(rnd) || emptyVenueCountRaw(), vr, nFairwayHoles),
+    );
   }
+
+  const venueAgg = finalizeVenueAgg(venueTotals);
   const fieldByRound = new Map();
   for (const [rnd, raw] of fieldRaw) fieldByRound.set(rnd, finalizeVenueAgg(raw));
   const playerByRound = new Map();
@@ -407,11 +415,17 @@ async function loadVenueScoringBeforeCutoff(histRows, courseKey, courseLabel, cu
   for (const [dg, raw] of fitRaw) courseFitByDg.set(dg, { avgSg: raw.sumSg / raw.n, n: raw.n });
 
   return {
-    venueAvgStp: venueAgg.n >= 20 ? venueAgg.avgStp : NaN,
-    venueAvgScore: venueAgg.n >= 20 ? venueAgg.avgScore : NaN,
+    venueAvgStp: venueAgg.n > 0 ? venueAgg.avgStp : NaN,
+    venueAvgScore: venueAgg.n > 0 ? venueAgg.avgScore : NaN,
     nVenueRounds: venueAgg.n,
-    source: venueAgg.n >= 20 ? "historical_csv_walkforward" : "none",
+    source: venueAgg.n > 0 ? "rolling_4_course_rounds_walkforward" : "none",
+    rollingCourseRoundKeys: rolling.roundKeys,
     venueAvgBirdies: venueAgg.avgBirdies,
+    venueAvgEagles: venueAgg.avgEagles,
+    historicalVenueAvgBirdies: venueAgg.avgBirdies,
+    historicalVenueAvgEagles: venueAgg.avgEagles,
+    birdieTargetSource: venueAgg.n > 0 ? "rolling_4_course_rounds" : "none",
+    birdieTargetRounds: rolling.roundKeys.length,
     venueAvgPars: venueAgg.avgPars,
     venueAvgBogeys: venueAgg.avgBogeys,
     venueAvgGir: venueAgg.avgGir,
@@ -476,13 +490,15 @@ export async function buildFullModelMuMapForEvent({
   targetRound,
   betTimeMs,
   fieldDgIds,
+  courseName: courseNameOverride = "",
   pipelineEnv = null,
 }) {
   Object.assign(process.env, walkforwardBacktestPipelineEnv(), pipelineEnv || {});
   const dgSet = new Set(fieldDgIds.filter((d) => Number.isFinite(d)));
   if (!dgSet.size) return new Map();
 
-  const courseName = inferCourseName(histRows, eventName, eventYear);
+  const courseName =
+    String(courseNameOverride || "").trim() || inferCourseName(histRows, eventName, eventYear);
   const courseKey = normCourseNameKey(courseName);
   const layout = resolveCourseLayout({
     coursePar18: inferCoursePar(histRows, eventName, eventYear, courseKey),
@@ -503,7 +519,9 @@ export async function buildFullModelMuMapForEvent({
 
   const tourPriors = computeTourPriorsFromHist(histRows, betTimeMs);
   const venueScoreIntercept = computeVenueStatisticalIntercept(histRows, courseKey, betTimeMs, tourPriors);
-  const birdSgScale = venueBirdieSgScale(venueScoring.venueAvgBirdies, tourPriors.avgBirdMkt);
+  const venueBirdMkt =
+    num(venueScoring.venueAvgBirdies, NaN) + Math.max(0, num(venueScoring.venueAvgEagles, 0));
+  const birdSgScale = venueBirdieSgScale(venueBirdMkt, tourPriors.avgBirdMkt);
   const countOpts = {
     venueBirdieSgScale: birdSgScale,
   };
@@ -813,7 +831,9 @@ export async function buildFullModelMuMapForEvent({
       applyVenueCountingIntercept(
         lastPl,
         {
-          birdMkt: venueScoreIntercept.birdMkt * countW,
+          // Birdies are field-calibrated to the recency-weighted venue BoB target;
+          // do not also apply the shrunk tour-relative bird intercept.
+          birdMkt: 0,
           gir: venueScoreIntercept.gir * countW,
           fw: venueScoreIntercept.fw * countW,
         },
@@ -839,6 +859,17 @@ export async function buildFullModelMuMapForEvent({
     },
   };
   syncVenueScoringToProjectionBasis(meta.projection_course_basis, venueScoring, coursePar18);
+  // Walk-forward Birdies: recency-weighted venue BoB (all prior rounds, no min N).
+  if (Number.isFinite(num(venueScoring.historicalVenueAvgBirdies, NaN))) {
+    meta.projection_course_basis.historical_venue_avg_birdies =
+      Math.round(venueScoring.historicalVenueAvgBirdies * 1000) / 1000;
+  }
+  if (Number.isFinite(num(venueScoring.historicalVenueAvgEagles, NaN))) {
+    meta.projection_course_basis.historical_venue_avg_eagles =
+      Math.round(venueScoring.historicalVenueAvgEagles * 1000) / 1000;
+  }
+  meta.projection_course_basis.birdie_target_source = venueScoring.birdieTargetSource;
+  meta.projection_course_basis.birdie_target_rounds = venueScoring.birdieTargetRounds;
   meta.projection_course_basis.course_sg_importance = serializeSgImportanceForMeta(sgImportance);
   if (fieldCountingMeans) {
     meta.projection_course_basis.field_counting_means_by_round = fieldCountingMeans;
@@ -874,6 +905,7 @@ export async function buildFullModelMuMapForEvent({
     venueScoring,
     skipMarketBookCalibration: true,
     skipEventPropBookAlignment: true,
+    birdieFieldCalibStrength: 1,
     girBlend: 0.38,
     fairwaysBlend: 0,
   });
@@ -901,6 +933,11 @@ export async function buildFullModelMuMapForEvent({
     const muSg = num(pl.mu_sg, NaN);
     if (Number.isFinite(muSg)) mus.set("__mu_sg__", muSg);
     for (const market of ALL_MARKETS) {
+      // Birdies were already resolved from rolling BoB%, player-at-course,
+      // spread-keep, and field-calibrated to the all-history venue target.
+      // The generic O/U path adds SG/course tailoring, which would move the
+      // final exported mean away from that target.
+      if (market === "Birdies") continue;
       const mu = ouProjectedMeanForMode(market, pl, meta, "default", "default", ctx);
       if (Number.isFinite(mu)) mus.set(market, mu);
     }
@@ -933,6 +970,7 @@ export class FullModelProjectionCache {
       targetRound: p.round,
       betTimeMs: p.bet_time_ms,
       fieldDgIds: p._field_dg_ids || (p.dg_id ? [Math.round(p.dg_id)] : []),
+      courseName: p.course,
     });
     this.cache.set(key, map);
     return map;

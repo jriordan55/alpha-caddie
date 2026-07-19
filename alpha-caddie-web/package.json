@@ -72,6 +72,7 @@
     "build:results": "node scripts/build-results-backtest.mjs",
     "backtest:odds-csv": "node scripts/backtest-odds-csv.mjs",
     "backtest:odds-model-roi": "node scripts/backtest-odds-model-roi.mjs",
+    "compare:live-feel-oos": "node scripts/compare-live-feel-oos.mjs",
     "build:course-table": "node scripts/build-course-table-json.mjs",
     "build:parlay-correlations": "node scripts/build-parlay-correlations.mjs",
     "backfill:round-weather": "node scripts/backfill-historical-round-weather.mjs",

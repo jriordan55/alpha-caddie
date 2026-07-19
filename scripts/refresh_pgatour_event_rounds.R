@@ -195,14 +195,76 @@ pl <- pl[is.finite(pl$dg_id) & nzchar(as.character(pl$player_name)), , drop = FA
 sleep_sec <- suppressWarnings(as.double(Sys.getenv("PGA_EVENT_SLEEP_SEC", unset = "0.08")))
 if (!is.finite(sleep_sec) || sleep_sec < 0) sleep_sec <- 0.08
 
+# Tournament leaderboard supplies official player_id for field members missing from
+# the static dg↔pga map (common for Open Championship internationals / amateurs).
+as_chr <- function(x) {
+  if (is.null(x) || length(x) < 1L) return("")
+  s <- as.character(x[[1]])
+  if (is.na(s)) return("")
+  s
+}
+norm_person <- function(s) {
+  s <- tolower(trimws(as_chr(s)))
+  s <- gsub("[^a-z0-9]+", " ", s)
+  trimws(gsub("\\s+", " ", s))
+}
+name_key_last_first <- function(display_or_last_first) {
+  s <- trimws(as_chr(display_or_last_first))
+  if (!nzchar(s)) return("")
+  if (grepl(",", s, fixed = TRUE)) {
+    parts <- strsplit(s, ",", fixed = TRUE)[[1]]
+    last <- norm_person(parts[[1]])
+    first <- if (length(parts) >= 2L) norm_person(parts[[2]]) else ""
+    return(trimws(paste(last, first)))
+  }
+  parts <- strsplit(norm_person(s), "\\s+")[[1]]
+  if (!length(parts)) return("")
+  if (length(parts) == 1L) return(parts[[1]])
+  paste(parts[[length(parts)]], paste(parts[-length(parts)], collapse = " "))
+}
+
+lb_by_key <- new.env(parent = emptyenv())
+lb <- tryCatch(pgatouR::pga_leaderboard(tid), error = function(e) NULL)
+if (!is.null(lb) && is.data.frame(lb) && nrow(lb) > 0L) {
+  for (j in seq_len(nrow(lb))) {
+    pid <- as_chr(lb$player_id[j])
+    if (!nzchar(pid)) next
+    keys <- unique(c(
+      name_key_last_first(lb$display_name[j]),
+      name_key_last_first(paste(as_chr(lb$last_name[j]), as_chr(lb$first_name[j]), sep = ", ")),
+      paste(norm_person(lb$last_name[j]), norm_person(lb$first_name[j]))
+    ))
+    keys <- keys[nzchar(keys)]
+    for (k in keys) assign(k, pid, envir = lb_by_key)
+  }
+  message("[refresh-pgatour-event] Leaderboard name map: ", length(ls(lb_by_key)), " key(s)")
+}
+
+resolve_pga_id <- function(dg, pname) {
+  pid <- dg_id_to_pga_player_id(dg, map_df)
+  if (length(pid) == 1L && !is.na(pid) && nzchar(pid)) return(as.character(pid))
+  k1 <- name_key_last_first(pname)
+  if (nzchar(k1) && exists(k1, envir = lb_by_key, inherits = FALSE)) {
+    return(as.character(get(k1, envir = lb_by_key, inherits = FALSE)))
+  }
+  NA_character_
+}
+
 round_rows <- list()
 n_ok <- 0L
+n_map_miss <- 0L
+n_lb_rescue <- 0L
 
 for (i in seq_len(nrow(pl))) {
   dg <- as.integer(pl$dg_id[i])
   pname <- as.character(pl$player_name[i])
-  pga_id <- dg_id_to_pga_player_id(dg, map_df)
-  if (length(pga_id) != 1L || is.na(pga_id) || !nzchar(pga_id)) next
+  mapped <- dg_id_to_pga_player_id(dg, map_df)
+  pga_id <- resolve_pga_id(dg, pname)
+  if (length(pga_id) != 1L || is.na(pga_id) || !nzchar(pga_id)) {
+    n_map_miss <- n_map_miss + 1L
+    next
+  }
+  if (length(mapped) != 1L || is.na(mapped) || !nzchar(mapped)) n_lb_rescue <- n_lb_rescue + 1L
   Sys.sleep(sleep_sec)
   sc <- pga_scorecard_safe(tid, pga_id)
   if (nrow(sc) == 0L) next
@@ -309,5 +371,8 @@ message(
   tourn_name,
   " (",
   tid,
-  ")"
+  "); leaderboard-rescued players=",
+  n_lb_rescue,
+  ", still-unmapped=",
+  n_map_miss
 )

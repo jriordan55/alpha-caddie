@@ -2919,6 +2919,15 @@ async function main() {
       venue_avg_birdies: Number.isFinite(venueScoring.venueAvgBirdies)
         ? Math.round(venueScoring.venueAvgBirdies * 100) / 100
         : null,
+      venue_avg_eagles: Number.isFinite(venueScoring.venueAvgEagles)
+        ? Math.round(venueScoring.venueAvgEagles * 1000) / 1000
+        : null,
+      historical_venue_avg_birdies: Number.isFinite(venueScoring.historicalVenueAvgBirdies)
+        ? Math.round(venueScoring.historicalVenueAvgBirdies * 1000) / 1000
+        : null,
+      historical_venue_avg_eagles: Number.isFinite(venueScoring.historicalVenueAvgEagles)
+        ? Math.round(venueScoring.historicalVenueAvgEagles * 1000) / 1000
+        : null,
       venue_avg_pars: Number.isFinite(venueScoring.venueAvgPars)
         ? Math.round(venueScoring.venueAvgPars * 100) / 100
         : null,

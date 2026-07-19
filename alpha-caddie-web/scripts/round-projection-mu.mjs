@@ -541,6 +541,11 @@ export function ouProjectedMeanForMode(market, row, meta, pricingMode, pricingSk
   const base = ouMeanCountingStat(market, row, fwHoles);
   if (!Number.isFinite(base)) return NaN;
   const countLive = livePartialRoundCountPropAdjust(market, row, metaLive);
+  if (row?.bayesian_market_posterior?.[market]) {
+    const liveScore =
+      market === "Total score" ? liveCurrentRoundTotalScoreMuDelta(row, metaLive) : 0;
+    return base + countLive.muDelta + liveScore;
+  }
   if (eventPropBookAlignedMarket(metaLive, market)) {
     const liveScore =
       market === "Total score" ? liveCurrentRoundTotalScoreMuDelta(row, metaLive) : 0;
@@ -577,14 +582,22 @@ export function modelProbOver(market, mu, line, row, meta) {
   if (!Number.isFinite(mu) || !Number.isFinite(line)) return NaN;
   const metaLive = liveProjectionMeta(meta);
   const fairwayHoles = Math.round(num(metaLive?.projection_course_basis?.fairway_holes_modeled, 14)) || 14;
-  const muRow =
-    market === "Birdies" ||
-    market === "Bogeys" ||
-    market === "GIR" ||
-    market === "Fairways hit"
-      ? countingStubRowForMu(market, mu, row, fairwayHoles)
-      : row;
-  const sig = sigmaForOu(market, muRow, metaLive, fairwayHoles) * marketBookSigmaScale(market);
+  const bookSig = marketBookSigmaScale(market);
+  // Sportsbook-style: Poisson bird/bog, binomial GIR/FW, normal total score.
+  if (market === "Birdies" || market === "Bogeys" || market === "Pars") {
+    const lam = Math.max(0.05, mu * clamp(bookSig, 0.85, 1.25));
+    return poissonProbOver(lam, line);
+  }
+  if (market === "GIR") {
+    const m = Math.max(0.05, mu * clamp(bookSig, 0.85, 1.25));
+    return binomialProbOver(m, 18, line);
+  }
+  if (market === "Fairways hit") {
+    const m = Math.max(0.05, mu * clamp(bookSig, 0.85, 1.25));
+    return binomialProbOver(m, fairwayHoles, line);
+  }
+  const muRow = row;
+  const sig = sigmaForOu(market, muRow, metaLive, fairwayHoles) * bookSig;
   return normalProbOver(mu, line, sig);
 }
 

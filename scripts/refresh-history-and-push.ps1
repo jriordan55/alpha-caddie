@@ -101,10 +101,15 @@ if (-not (Test-Path (Join-Path $webRoot "package.json"))) {
 
 Set-Location $webRoot
 
-$env:GOLF_FLAT_VENUE_PLAYER_SCORE = "1"
-$env:GOLF_COURSE_PRIOR_ROUND_DIFFICULTY = "0"
-$env:GOLF_WITHIN_EVENT_FORM_CARRY = "0"
-$env:GOLF_UNIFIED_BOUNCE_BACK_K = "0"
+# OOS winner: day/form + skill-36 (no soft book μ align — that hurt Birdies ROI).
+$env:GOLF_FLAT_VENUE_PLAYER_SCORE = "0"
+$env:GOLF_COURSE_PRIOR_ROUND_DIFFICULTY = "1"
+$env:GOLF_WITHIN_EVENT_FORM_CARRY = "0.1"
+$env:GOLF_WITHIN_EVENT_FORM_CAP = "0.75"
+$env:GOLF_UNIFIED_BOUNCE_BACK_K = "0.12"
+$env:GOLF_WF_SKILL_MAX_ROUNDS = "36"
+$env:GOLF_MARKET_BOOK_CALIBRATION = "0"
+$env:GOLF_SKIP_MARKET_BOOK_CALIBRATION = "1"
 # Round projections tab: require a fresh DraftKings scrape (no stale / empty publish).
 $env:GOLF_REQUIRE_DK_OU = "1"
 # DK Nash API blocks headless Playwright on desktop - headed Chromium is required.
@@ -132,7 +137,7 @@ if ($LiveWeekOnly) {
   $env:GOLF_WITHIN_EVENT_COUNTING_BLEND = "0"
   Write-Host 'LiveWeekOnly: npm run refresh:live (live feeds + DK/PP props + tee times + weather bake + field history refresh for Trends).'
   Write-Host 'LiveWeekOnly soft mode: DK not required, skip odds ROI backtest, no full vs-actual rebuild, soft validate.'
-  Write-Host 'LiveWeekOnly projection: flat venue anchor; AM/PM wave + weather separate rounds (no prior-day field bird/bog lift).'
+  Write-Host 'LiveWeekOnly projection: day+form + skill-36 (OOS winner; no soft book mu align).'
   Write-Host 'LiveWeekOnly markets: Birdies = birdies+eagles (or better), Bogeys = bogeys+doubles (or worse), same as DK/PP.'
 } elseif (-not $NoFullHistory) {
   $env:GOLF_HISTORICAL_ROUNDS_FULL_HISTORY = "1"

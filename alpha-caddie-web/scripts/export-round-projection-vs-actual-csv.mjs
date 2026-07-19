@@ -109,6 +109,7 @@ import {
   walkforwardBacktestPipelineEnv,
 } from "./projection-pipeline-env.mjs";
 import { buildBookPropsIndex, buildPpPropsIndex } from "./projection-book-props.mjs";
+import { bayesianPosteriorForProp } from "./bayesian-market-posterior.mjs";
 
 if (process.argv.includes("--full-backtest-rebuild")) {
   process.env.GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS = "1";
@@ -741,6 +742,8 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
       for (const snap of snaps) {
         if (Number.isFinite(snap.capturedMs) && snap.capturedMs < betTimeMs) betTimeMs = snap.capturedMs;
       }
+      const auditedCourse =
+        [...playerRounds.values()].map((p) => String(p.course || "").trim()).find(Boolean) || "";
       for (let rnd = 1; rnd <= 4; rnd++) {
         if (![...playerRounds.values()].some((p) => p.rnd === rnd)) continue;
         const wfMap = await wfCache.ensureEvent({
@@ -749,6 +752,7 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
           round: rnd,
           bet_time_ms: Number.isFinite(betTimeMs) ? betTimeMs : undefined,
           _field_dg_ids: fieldDgIds,
+          course: auditedCourse,
         });
         wfByRound.set(rnd, wfMap);
       }
@@ -789,11 +793,27 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
             ? Math.round(wfMu * 10) / 10
             : wfMu
           : NaN;
-        // Walk-forward full model (pre book-alignment) — audit snap is live-week calibrated toward DK.
-        const rawModelLine = Number.isFinite(wfModelLine) ? wfModelLine : auditModelLine;
         const bookLine = snap ? parseDkBookLine(snap.dkLine) : NaN;
         const overOdds = snap?.overOdds;
         const underOdds = snap?.underOdds;
+        // Independent rolling-course model is evidence; sharp no-vig odds are
+        // the prior. If no real two-way prior exists, retain the pure model.
+        const independentModelLine = Number.isFinite(wfModelLine) ? wfModelLine : auditModelLine;
+        const bayesian = bayesianPosteriorForProp({
+          market: spec.market,
+          modelMean: independentModelLine,
+          prop: {
+            line: bookLine,
+            over_odds: overOdds,
+            under_odds: underOdds,
+            source: "draftkings",
+          },
+          roundSd: 3.2,
+          fairwayHoles,
+        });
+        const rawModelLine = Number.isFinite(bayesian?.posterior_mean)
+          ? bayesian.posterior_mean
+          : independentModelLine;
         if (Number.isFinite(overOdds) || Number.isFinite(underOdds)) hasBookOdds = true;
 
         if (Number.isFinite(rawModelLine) && Number.isFinite(bookLine)) {
@@ -815,7 +835,10 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
         });
       }
 
-      if (!hasBookOdds && !hasCompleted) continue;
+      // Prior-event backtest only grades rounds with a real completed score.
+      // CUT/WD/DNS props (odds without an actual) must not appear as blank results.
+      if (!hasCompleted) continue;
+      if (!hasBookOdds) continue;
 
       pendingRows.push({
         ev,
@@ -1449,6 +1472,41 @@ function sanitizeActualsMapEntry(entry) {
   return entry;
 }
 
+function overlayPlayerHistoryShardsForEvent(map, eventName, eventYear, fairwayHoles, playerRounds = []) {
+  if (!eventName || !Number.isFinite(num(eventYear, NaN))) return 0;
+  const yr = Math.round(eventYear);
+  const targets = new Map();
+  for (const pr of playerRounds) {
+    const dg = Math.round(num(pr?.dg ?? pr?.dg_id, NaN));
+    const rnd = Math.round(num(pr?.rnd ?? pr?.round, NaN));
+    if (!Number.isFinite(dg) || !Number.isFinite(rnd)) continue;
+    targets.set(`${dg}|${rnd}`, { dg, rnd });
+  }
+  for (const [key] of map) {
+    const [dgStr, rndStr] = String(key).split("|");
+    const dg = Math.round(num(dgStr, NaN));
+    const rnd = Math.round(num(rndStr, NaN));
+    if (Number.isFinite(dg) && Number.isFinite(rnd)) targets.set(`${dg}|${rnd}`, { dg, rnd });
+  }
+  let n = 0;
+  for (const { dg, rnd } of targets.values()) {
+    const shardPatch = patchFromPlayerHistoryShard(dg, eventName, yr, rnd, WEB_ROOT, fairwayHoles);
+    if (!shardPatch) continue;
+    const prev = map.get(`${dg}|${rnd}`) || {};
+    const weak = liveCountingPatchWeak(prev);
+    if (weak || !Number.isFinite(num(prev.total_score, NaN))) {
+      mergeActualEntry(map, dg, rnd, shardPatch);
+    } else {
+      mergeActualEntry(map, dg, rnd, shardPatch, {
+        onlyIfMissing: true,
+        fields: ["birdies", "pars", "bogeys", "gir", "fairways", "putts"],
+      });
+    }
+    n++;
+  }
+  return n;
+}
+
 export async function buildActualsMapForEvent(payload, opts = {}) {
   const eventName = String(payload.event_name || "").trim();
   const eventYear = eventYearFromPayload(payload);
@@ -1462,12 +1520,19 @@ export async function buildActualsMapForEvent(payload, opts = {}) {
     overlayBakedLiveActualsFromPayload(map, payload, fairwayHoles);
   const pgN = overlayPgatourEventActuals(map, eventName, WEB_ROOT, fairwayHoles, payload);
   const histN = await fillHistoricalActualGaps(map, eventName, eventYear, histPath, fairwayHoles);
+  const players = Array.isArray(payload.players) ? payload.players : [];
+  const playerRounds = players.flatMap((p) => {
+    const dg = Math.round(num(p?.dg_id, NaN));
+    if (!Number.isFinite(dg)) return [];
+    return [1, 2, 3, 4].map((rnd) => ({ dg, rnd }));
+  });
+  const shardN = overlayPlayerHistoryShardsForEvent(map, eventName, eventYear, fairwayHoles, playerRounds);
 
   for (const [key, entry] of map.entries()) {
     map.set(key, sanitizeActualsMapEntry(entry));
   }
 
-  return { map, pgN, liveN, histN, eventYear };
+  return { map, pgN, liveN, histN: histN + shardN, eventYear };
 }
 
 function actualForMarket(act, marketKey) {
@@ -1655,6 +1720,11 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
 
       const hasBook = rowHasAnyBookOdds(rowCells);
       const hasCompleted = roundHasCompletedScore(actuals, dg, rnd);
+      // Finished rounds (before display_round) must carry a real score — never blank actuals.
+      if (rnd < displayRound && !hasCompleted) {
+        skippedEmpty++;
+        continue;
+      }
       if (!hasBook && !hasCompleted) {
         skippedEmpty++;
         continue;

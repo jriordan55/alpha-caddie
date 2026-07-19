@@ -24,10 +24,13 @@ import {
 } from "./course-round-adjustments.mjs";
 import { resolveLiveRoundActualsByDg, sanitizeLiveRoundActualsByDg } from "./dg-live-tournament-stats.mjs";
 import { ensureProjectionCoursePar } from "./projection-course-par.mjs";
-import { flatVenueProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
+import { liveProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
 
-Object.assign(process.env, flatVenueProjectionPipelineEnv());
+// Sportsbook-style defaults; honor already-set push:live / shell env.
+for (const [k, v] of Object.entries(liveProjectionPipelineEnv())) {
+  if (process.env[k] === undefined || String(process.env[k]).trim() === "") process.env[k] = v;
+}
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB = join(__dirname, "..");

@@ -141,9 +141,22 @@ export function modelProbOver(market, mu, line, sigmaScale = 1, fairwayHoles = 1
   const scale =
     (Number.isFinite(sigmaScale) && sigmaScale > 0 ? sigmaScale : 1) *
     (OUTCOME_SIGMA_SCALE[market] || 1);
-  const sig =
-    (market === "Total score" ? 2.75 : sigmaDefault(market, mu, fairwayHoles)) * scale;
-  const z = (line - mu) / sig;
+  // Sportsbook-style: discrete markets use count distributions; score stays normal.
+  if (market === "Birdies" || market === "Bogeys" || market === "Pars") {
+    const lam = Math.max(0.05, mu * Math.max(0.85, Math.min(1.25, scale)));
+    return poissonProbOver(lam, line);
+  }
+  if (market === "GIR") {
+    const m = Math.max(0.05, mu * Math.max(0.85, Math.min(1.25, scale)));
+    return binomialProbOver(m, 18, line);
+  }
+  if (market === "Fairways hit") {
+    const n = Math.round(num(fairwayHoles, 14)) || 14;
+    const m = Math.max(0.05, mu * Math.max(0.85, Math.min(1.25, scale)));
+    return binomialProbOver(m, n, line);
+  }
+  const sig = 2.75 * scale;
+  const z = (line - mu) / Math.max(0.35, sig);
   return 1 - normalCdf(z);
 }
 
