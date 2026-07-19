@@ -446,13 +446,17 @@ export function patchDetailRowsFromLiveSources(detailRows, projections, pgPayloa
 
     const countingMissing = liveCountingPlaceholder(act) || act._live_counting_placeholder;
     if (countingMissing) {
-      // Wipe CSV / prior stub zeros so tracker ROI never grades fake 0 birdies.
-      const hadStub =
-        String(row.actual_birdies || "").trim() === "0" ||
-        String(row.actual_bogeys || "").trim() === "0" ||
-        String(row.actual_pars || "").trim() === "0";
-      clearCountingActualCols(row);
-      if (hadStub) {
+      // Only strip explicit stub zeros already on the row. Never wipe real CSV
+      // birdie/bogey counts just because live stats omit hole counting.
+      const bird = String(row.actual_birdies ?? "").trim();
+      const bog = String(row.actual_bogeys ?? "").trim();
+      const pars = String(row.actual_pars ?? "").trim();
+      const isStubZero =
+        (bird === "0" && bog === "0") ||
+        (bird === "0" && bog === "" && (pars === "" || pars === "0")) ||
+        (bog === "0" && bird === "" && (pars === "" || pars === "0"));
+      if (isStubZero) {
+        clearCountingActualCols(row);
         clearedStub++;
         changed = true;
       }

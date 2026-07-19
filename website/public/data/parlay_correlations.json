@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-07-19T03:58:41.067Z",
+  "generated_at": "2026-07-19T04:47:39.991Z",
   "source": "round_projection_vs_actual.csv",
   "rows_scored": 1635,
   "same_player": {
     "Total Score|over+Total Score|under": {
       "n": 1635,
-      "p_a": 0.497,
-      "p_b": 0.503,
+      "p_a": 0.498,
+      "p_b": 0.502,
       "co_hit": 0,
       "indep": 0.25,
       "lift": 0,
@@ -14,126 +14,126 @@
     },
     "Birdies|over+Total Score|over": {
       "n": 1633,
-      "p_a": 0.496,
+      "p_a": 0.497,
       "p_b": 0.481,
-      "co_hit": 0.2,
-      "indep": 0.238,
-      "lift": 0.84,
-      "rho": -0.153
+      "co_hit": 0.201,
+      "indep": 0.239,
+      "lift": 0.843,
+      "rho": -0.15
     },
     "Birdies|under+Total Score|over": {
       "n": 1633,
-      "p_a": 0.496,
+      "p_a": 0.497,
       "p_b": 0.519,
       "co_hit": 0.296,
       "indep": 0.258,
-      "lift": 1.148,
-      "rho": 0.153
+      "lift": 1.145,
+      "rho": 0.15
     },
     "Bogeys|over+Total Score|over": {
-      "n": 1620,
-      "p_a": 0.499,
-      "p_b": 0.481,
-      "co_hit": 0.27,
-      "indep": 0.24,
-      "lift": 1.123,
-      "rho": 0.119
+      "n": 1635,
+      "p_a": 0.498,
+      "p_b": 0.48,
+      "co_hit": 0.267,
+      "indep": 0.239,
+      "lift": 1.12,
+      "rho": 0.114
     },
     "Bogeys|under+Total Score|over": {
-      "n": 1620,
-      "p_a": 0.499,
-      "p_b": 0.519,
-      "co_hit": 0.229,
+      "n": 1635,
+      "p_a": 0.498,
+      "p_b": 0.52,
+      "co_hit": 0.231,
       "indep": 0.259,
-      "lift": 0.886,
-      "rho": -0.119
+      "lift": 0.89,
+      "rho": -0.114
     },
     "GIR|over+Total Score|over": {
-      "n": 1620,
-      "p_a": 0.499,
+      "n": 1635,
+      "p_a": 0.498,
       "p_b": 0.394,
       "co_hit": 0.174,
       "indep": 0.196,
-      "lift": 0.886,
-      "rho": -0.092
+      "lift": 0.884,
+      "rho": -0.093
     },
     "GIR|under+Total Score|over": {
-      "n": 1620,
-      "p_a": 0.499,
+      "n": 1635,
+      "p_a": 0.498,
       "p_b": 0.606,
-      "co_hit": 0.325,
-      "indep": 0.302,
-      "lift": 1.074,
-      "rho": 0.092
+      "co_hit": 0.324,
+      "indep": 0.301,
+      "lift": 1.075,
+      "rho": 0.093
     },
     "Fairways hit|under+Total Score|over": {
       "n": 1635,
-      "p_a": 0.497,
+      "p_a": 0.498,
       "p_b": 0.547,
       "co_hit": 0.32,
       "indep": 0.272,
-      "lift": 1.178,
+      "lift": 1.177,
       "rho": 0.194
     },
     "Birdies|over+Total Score|under": {
       "n": 1633,
-      "p_a": 0.504,
+      "p_a": 0.503,
       "p_b": 0.481,
-      "co_hit": 0.28,
+      "co_hit": 0.279,
       "indep": 0.242,
-      "lift": 1.158,
-      "rho": 0.153
+      "lift": 1.155,
+      "rho": 0.15
     },
     "Birdies|under+Total Score|under": {
       "n": 1633,
-      "p_a": 0.504,
+      "p_a": 0.503,
       "p_b": 0.519,
       "co_hit": 0.224,
-      "indep": 0.262,
-      "lift": 0.854,
-      "rho": -0.153
+      "indep": 0.261,
+      "lift": 0.856,
+      "rho": -0.15
     },
     "Bogeys|over+Total Score|under": {
-      "n": 1620,
-      "p_a": 0.501,
-      "p_b": 0.481,
+      "n": 1635,
+      "p_a": 0.502,
+      "p_b": 0.48,
       "co_hit": 0.212,
       "indep": 0.241,
-      "lift": 0.877,
-      "rho": -0.119
+      "lift": 0.881,
+      "rho": -0.114
     },
     "Bogeys|under+Total Score|under": {
-      "n": 1620,
-      "p_a": 0.501,
-      "p_b": 0.519,
+      "n": 1635,
+      "p_a": 0.502,
+      "p_b": 0.52,
       "co_hit": 0.29,
-      "indep": 0.26,
-      "lift": 1.114,
-      "rho": 0.119
+      "indep": 0.261,
+      "lift": 1.109,
+      "rho": 0.114
     },
     "GIR|over+Total Score|under": {
-      "n": 1620,
-      "p_a": 0.501,
+      "n": 1635,
+      "p_a": 0.502,
       "p_b": 0.394,
-      "co_hit": 0.22,
-      "indep": 0.197,
-      "lift": 1.113,
-      "rho": 0.092
+      "co_hit": 0.221,
+      "indep": 0.198,
+      "lift": 1.115,
+      "rho": 0.093
     },
     "GIR|under+Total Score|under": {
-      "n": 1620,
-      "p_a": 0.501,
+      "n": 1635,
+      "p_a": 0.502,
       "p_b": 0.606,
       "co_hit": 0.281,
       "indep": 0.304,
-      "lift": 0.926,
-      "rho": -0.092
+      "lift": 0.925,
+      "rho": -0.093
     },
     "Fairways hit|under+Total Score|under": {
       "n": 1635,
-      "p_a": 0.503,
+      "p_a": 0.502,
       "p_b": 0.547,
-      "co_hit": 0.227,
+      "co_hit": 0.226,
       "indep": 0.275,
       "lift": 0.824,
       "rho": -0.194
@@ -148,39 +148,39 @@
       "rho": -1
     },
     "Birdies|over+Bogeys|over": {
-      "n": 1618,
-      "p_a": 0.48,
-      "p_b": 0.481,
-      "co_hit": 0.098,
-      "indep": 0.231,
-      "lift": 0.426,
-      "rho": -0.531
+      "n": 1633,
+      "p_a": 0.481,
+      "p_b": 0.479,
+      "co_hit": 0.099,
+      "indep": 0.23,
+      "lift": 0.428,
+      "rho": -0.528
     },
     "Birdies|over+Bogeys|under": {
-      "n": 1618,
-      "p_a": 0.48,
-      "p_b": 0.519,
-      "co_hit": 0.381,
-      "indep": 0.249,
-      "lift": 1.533,
-      "rho": 0.531
+      "n": 1633,
+      "p_a": 0.481,
+      "p_b": 0.521,
+      "co_hit": 0.382,
+      "indep": 0.25,
+      "lift": 1.527,
+      "rho": 0.528
     },
     "Birdies|over+GIR|over": {
-      "n": 1618,
-      "p_a": 0.48,
+      "n": 1633,
+      "p_a": 0.481,
       "p_b": 0.394,
-      "co_hit": 0.315,
-      "indep": 0.189,
-      "lift": 1.669,
+      "co_hit": 0.316,
+      "indep": 0.19,
+      "lift": 1.667,
       "rho": 0.518
     },
     "Birdies|over+GIR|under": {
-      "n": 1618,
-      "p_a": 0.48,
+      "n": 1633,
+      "p_a": 0.481,
       "p_b": 0.606,
-      "co_hit": 0.164,
+      "co_hit": 0.165,
       "indep": 0.291,
-      "lift": 0.565,
+      "lift": 0.566,
       "rho": -0.518
     },
     "Birdies|over+Fairways hit|under": {
@@ -193,26 +193,26 @@
       "rho": -0.289
     },
     "Birdies|under+Bogeys|over": {
-      "n": 1618,
-      "p_a": 0.52,
-      "p_b": 0.481,
-      "co_hit": 0.383,
-      "indep": 0.251,
-      "lift": 1.529,
-      "rho": 0.531
+      "n": 1633,
+      "p_a": 0.519,
+      "p_b": 0.479,
+      "co_hit": 0.381,
+      "indep": 0.249,
+      "lift": 1.53,
+      "rho": 0.528
     },
     "Birdies|under+Bogeys|under": {
-      "n": 1618,
-      "p_a": 0.52,
-      "p_b": 0.519,
-      "co_hit": 0.137,
+      "n": 1633,
+      "p_a": 0.519,
+      "p_b": 0.521,
+      "co_hit": 0.138,
       "indep": 0.27,
-      "lift": 0.508,
-      "rho": -0.531
+      "lift": 0.512,
+      "rho": -0.528
     },
     "Birdies|under+GIR|over": {
-      "n": 1618,
-      "p_a": 0.52,
+      "n": 1633,
+      "p_a": 0.519,
       "p_b": 0.394,
       "co_hit": 0.078,
       "indep": 0.205,
@@ -220,12 +220,12 @@
       "rho": -0.518
     },
     "Birdies|under+GIR|under": {
-      "n": 1618,
-      "p_a": 0.52,
+      "n": 1633,
+      "p_a": 0.519,
       "p_b": 0.606,
-      "co_hit": 0.442,
-      "indep": 0.316,
-      "lift": 1.401,
+      "co_hit": 0.441,
+      "indep": 0.314,
+      "lift": 1.402,
       "rho": 0.518
     },
     "Birdies|under+Fairways hit|under": {
@@ -238,70 +238,70 @@
       "rho": 0.289
     },
     "Bogeys|over+Bogeys|under": {
-      "n": 1620,
-      "p_a": 0.481,
-      "p_b": 0.519,
+      "n": 1635,
+      "p_a": 0.48,
+      "p_b": 0.52,
       "co_hit": 0,
       "indep": 0.25,
       "lift": 0,
       "rho": -1
     },
     "Bogeys|over+GIR|over": {
-      "n": 1620,
-      "p_a": 0.481,
+      "n": 1635,
+      "p_a": 0.48,
       "p_b": 0.394,
-      "co_hit": 0.164,
-      "indep": 0.19,
-      "lift": 0.866,
-      "rho": -0.104
+      "co_hit": 0.165,
+      "indep": 0.189,
+      "lift": 0.87,
+      "rho": -0.101
     },
     "Bogeys|over+GIR|under": {
-      "n": 1620,
-      "p_a": 0.481,
+      "n": 1635,
+      "p_a": 0.48,
       "p_b": 0.606,
-      "co_hit": 0.317,
-      "indep": 0.292,
-      "lift": 1.087,
-      "rho": 0.104
+      "co_hit": 0.315,
+      "indep": 0.29,
+      "lift": 1.085,
+      "rho": 0.101
     },
     "Bogeys|over+Fairways hit|under": {
-      "n": 1620,
-      "p_a": 0.481,
-      "p_b": 0.549,
-      "co_hit": 0.306,
-      "indep": 0.265,
-      "lift": 1.157,
+      "n": 1635,
+      "p_a": 0.48,
+      "p_b": 0.547,
+      "co_hit": 0.304,
+      "indep": 0.262,
+      "lift": 1.159,
       "rho": 0.168
     },
     "Bogeys|under+GIR|over": {
-      "n": 1620,
-      "p_a": 0.519,
+      "n": 1635,
+      "p_a": 0.52,
       "p_b": 0.394,
       "co_hit": 0.23,
-      "indep": 0.204,
-      "lift": 1.124,
-      "rho": 0.104
+      "indep": 0.205,
+      "lift": 1.12,
+      "rho": 0.101
     },
     "Bogeys|under+GIR|under": {
-      "n": 1620,
-      "p_a": 0.519,
+      "n": 1635,
+      "p_a": 0.52,
       "p_b": 0.606,
-      "co_hit": 0.289,
-      "indep": 0.314,
-      "lift": 0.919,
-      "rho": -0.104
+      "co_hit": 0.291,
+      "indep": 0.315,
+      "lift": 0.922,
+      "rho": -0.101
     },
     "Bogeys|under+Fairways hit|under": {
-      "n": 1620,
-      "p_a": 0.519,
-      "p_b": 0.549,
+      "n": 1635,
+      "p_a": 0.52,
+      "p_b": 0.547,
       "co_hit": 0.243,
       "indep": 0.285,
-      "lift": 0.854,
+      "lift": 0.853,
       "rho": -0.168
     },
     "GIR|over+GIR|under": {
-      "n": 1620,
+      "n": 1635,
       "p_a": 0.394,
       "p_b": 0.606,
       "co_hit": 0,
@@ -310,21 +310,21 @@
       "rho": -1
     },
     "Fairways hit|under+GIR|over": {
-      "n": 1620,
+      "n": 1635,
       "p_a": 0.394,
-      "p_b": 0.549,
-      "co_hit": 0.145,
+      "p_b": 0.547,
+      "co_hit": 0.144,
       "indep": 0.216,
-      "lift": 0.67,
+      "lift": 0.669,
       "rho": -0.293
     },
     "Fairways hit|under+GIR|under": {
-      "n": 1620,
+      "n": 1635,
       "p_a": 0.606,
-      "p_b": 0.549,
-      "co_hit": 0.404,
-      "indep": 0.333,
-      "lift": 1.214,
+      "p_b": 0.547,
+      "co_hit": 0.402,
+      "indep": 0.331,
+      "lift": 1.216,
       "rho": 0.293
     }
   },
@@ -766,46 +766,46 @@
     "Birdies|under+Total Score|over": {
       "n": 96925,
       "p_a": 0.507,
-      "p_b": 0.518,
+      "p_b": 0.517,
       "co_hit": 0.266,
       "indep": 0.262,
       "lift": 1.013,
       "rho": 0.013
     },
     "Bogeys|over+Total Score|over": {
-      "n": 96185,
+      "n": 97012,
       "p_a": 0.485,
-      "p_b": 0.498,
-      "co_hit": 0.242,
-      "indep": 0.242,
+      "p_b": 0.497,
+      "co_hit": 0.241,
+      "indep": 0.241,
       "lift": 1.002,
       "rho": 0.002
     },
     "Bogeys|under+Total Score|over": {
-      "n": 96185,
+      "n": 97012,
       "p_a": 0.491,
       "p_b": 0.524,
       "co_hit": 0.257,
-      "indep": 0.257,
+      "indep": 0.258,
       "lift": 0.999,
-      "rho": -0.001
+      "rho": -0.002
     },
     "GIR|over+Total Score|over": {
-      "n": 96185,
-      "p_a": 0.422,
-      "p_b": 0.457,
+      "n": 97012,
+      "p_a": 0.423,
+      "p_b": 0.456,
       "co_hit": 0.187,
       "indep": 0.193,
       "lift": 0.972,
       "rho": -0.022
     },
     "GIR|under+Total Score|over": {
-      "n": 96185,
-      "p_a": 0.555,
+      "n": 97012,
+      "p_a": 0.554,
       "p_b": 0.565,
-      "co_hit": 0.312,
+      "co_hit": 0.311,
       "indep": 0.313,
-      "lift": 0.995,
+      "lift": 0.996,
       "rho": -0.006
     },
     "Fairways hit|under+Total Score|over": {
@@ -829,7 +829,7 @@
     "Birdies|over+Total Score|under": {
       "n": 96925,
       "p_a": 0.493,
-      "p_b": 0.482,
+      "p_b": 0.483,
       "co_hit": 0.241,
       "indep": 0.238,
       "lift": 1.014,
@@ -845,37 +845,37 @@
       "rho": -0.014
     },
     "Bogeys|over+Total Score|under": {
-      "n": 96185,
+      "n": 97012,
       "p_a": 0.509,
       "p_b": 0.476,
       "co_hit": 0.242,
       "indep": 0.242,
-      "lift": 0.999,
-      "rho": -0.001
+      "lift": 0.998,
+      "rho": -0.002
     },
     "Bogeys|under+Total Score|under": {
-      "n": 96185,
+      "n": 97012,
       "p_a": 0.515,
-      "p_b": 0.502,
-      "co_hit": 0.259,
+      "p_b": 0.503,
+      "co_hit": 0.26,
       "indep": 0.259,
       "lift": 1.002,
       "rho": 0.002
     },
     "GIR|over+Total Score|under": {
-      "n": 96185,
-      "p_a": 0.445,
+      "n": 97012,
+      "p_a": 0.446,
       "p_b": 0.435,
-      "co_hit": 0.192,
+      "co_hit": 0.193,
       "indep": 0.194,
       "lift": 0.993,
       "rho": -0.006
     },
     "GIR|under+Total Score|under": {
-      "n": 96185,
-      "p_a": 0.578,
-      "p_b": 0.543,
-      "co_hit": 0.309,
+      "n": 97012,
+      "p_a": 0.577,
+      "p_b": 0.544,
+      "co_hit": 0.308,
       "indep": 0.314,
       "lift": 0.983,
       "rho": -0.022
@@ -891,7 +891,7 @@
     },
     "Birdies|over+Birdies|over": {
       "n": 48419,
-      "p_a": 0.463,
+      "p_a": 0.462,
       "p_b": 0.486,
       "co_hit": 0.235,
       "indep": 0.225,
@@ -908,40 +908,40 @@
       "rho": -0.043
     },
     "Birdies|over+Bogeys|over": {
-      "n": 96098,
+      "n": 96925,
       "p_a": 0.478,
-      "p_b": 0.48,
+      "p_b": 0.479,
       "co_hit": 0.22,
       "indep": 0.229,
       "lift": 0.96,
       "rho": -0.037
     },
     "Birdies|over+Bogeys|under": {
-      "n": 96098,
-      "p_a": 0.485,
-      "p_b": 0.505,
+      "n": 96925,
+      "p_a": 0.484,
+      "p_b": 0.507,
       "co_hit": 0.254,
       "indep": 0.245,
       "lift": 1.036,
-      "rho": 0.036
+      "rho": 0.035
     },
     "Birdies|over+GIR|over": {
-      "n": 96098,
-      "p_a": 0.415,
-      "p_b": 0.438,
-      "co_hit": 0.187,
+      "n": 96925,
+      "p_a": 0.416,
+      "p_b": 0.439,
+      "co_hit": 0.188,
       "indep": 0.182,
-      "lift": 1.029,
-      "rho": 0.022
+      "lift": 1.028,
+      "rho": 0.021
     },
     "Birdies|over+GIR|under": {
-      "n": 96098,
-      "p_a": 0.548,
+      "n": 96925,
+      "p_a": 0.547,
       "p_b": 0.547,
-      "co_hit": 0.286,
+      "co_hit": 0.287,
       "indep": 0.299,
-      "lift": 0.957,
-      "rho": -0.052
+      "lift": 0.958,
+      "rho": -0.051
     },
     "Birdies|over+Fairways hit|under": {
       "n": 96925,
@@ -954,7 +954,7 @@
     },
     "Birdies|under+Birdies|under": {
       "n": 48419,
-      "p_a": 0.537,
+      "p_a": 0.538,
       "p_b": 0.514,
       "co_hit": 0.286,
       "indep": 0.276,
@@ -962,44 +962,44 @@
       "rho": 0.041
     },
     "Birdies|under+Bogeys|over": {
-      "n": 96098,
-      "p_a": 0.515,
-      "p_b": 0.495,
-      "co_hit": 0.264,
-      "indep": 0.255,
+      "n": 96925,
+      "p_a": 0.516,
+      "p_b": 0.493,
+      "co_hit": 0.263,
+      "indep": 0.254,
       "lift": 1.035,
-      "rho": 0.036
+      "rho": 0.035
     },
     "Birdies|under+Bogeys|under": {
-      "n": 96098,
+      "n": 96925,
       "p_a": 0.522,
-      "p_b": 0.52,
-      "co_hit": 0.262,
+      "p_b": 0.521,
+      "co_hit": 0.263,
       "indep": 0.272,
       "lift": 0.966,
       "rho": -0.037
     },
     "Birdies|under+GIR|over": {
-      "n": 96098,
-      "p_a": 0.452,
+      "n": 96925,
+      "p_a": 0.453,
       "p_b": 0.453,
-      "co_hit": 0.192,
+      "co_hit": 0.193,
       "indep": 0.205,
-      "lift": 0.938,
-      "rho": -0.052
+      "lift": 0.939,
+      "rho": -0.051
     },
     "Birdies|under+GIR|under": {
-      "n": 96098,
-      "p_a": 0.585,
-      "p_b": 0.562,
-      "co_hit": 0.334,
+      "n": 96925,
+      "p_a": 0.584,
+      "p_b": 0.561,
+      "co_hit": 0.333,
       "indep": 0.328,
       "lift": 1.016,
-      "rho": 0.022
+      "rho": 0.021
     },
     "Birdies|under+Fairways hit|under": {
       "n": 96925,
-      "p_a": 0.556,
+      "p_a": 0.557,
       "p_b": 0.544,
       "co_hit": 0.303,
       "indep": 0.303,
@@ -1007,130 +1007,130 @@
       "rho": 0.001
     },
     "Bogeys|over+Bogeys|over": {
-      "n": 47685,
+      "n": 48506,
       "p_a": 0.494,
-      "p_b": 0.474,
-      "co_hit": 0.246,
-      "indep": 0.234,
-      "lift": 1.05,
+      "p_b": 0.472,
+      "co_hit": 0.245,
+      "indep": 0.233,
+      "lift": 1.049,
       "rho": 0.046
     },
     "Bogeys|over+Bogeys|under": {
-      "n": 95370,
+      "n": 97012,
       "p_a": 0.5,
       "p_b": 0.5,
       "co_hit": 0.238,
       "indep": 0.25,
-      "lift": 0.953,
-      "rho": -0.047
+      "lift": 0.954,
+      "rho": -0.046
     },
     "Bogeys|over+GIR|over": {
-      "n": 95370,
-      "p_a": 0.43,
-      "p_b": 0.433,
-      "co_hit": 0.18,
-      "indep": 0.187,
-      "lift": 0.967,
-      "rho": -0.025
+      "n": 97012,
+      "p_a": 0.431,
+      "p_b": 0.432,
+      "co_hit": 0.181,
+      "indep": 0.186,
+      "lift": 0.969,
+      "rho": -0.024
     },
     "Bogeys|over+GIR|under": {
-      "n": 95370,
-      "p_a": 0.563,
-      "p_b": 0.541,
-      "co_hit": 0.304,
-      "indep": 0.305,
-      "lift": 0.996,
-      "rho": -0.004
+      "n": 97012,
+      "p_a": 0.562,
+      "p_b": 0.54,
+      "co_hit": 0.303,
+      "indep": 0.304,
+      "lift": 0.995,
+      "rho": -0.006
     },
     "Bogeys|over+Fairways hit|under": {
-      "n": 96185,
+      "n": 97012,
       "p_a": 0.535,
-      "p_b": 0.524,
+      "p_b": 0.523,
       "co_hit": 0.274,
       "indep": 0.28,
       "lift": 0.98,
       "rho": -0.023
     },
     "Bogeys|under+Bogeys|under": {
-      "n": 47685,
+      "n": 48506,
       "p_a": 0.506,
-      "p_b": 0.526,
+      "p_b": 0.528,
       "co_hit": 0.278,
-      "indep": 0.266,
-      "lift": 1.044,
+      "indep": 0.267,
+      "lift": 1.043,
       "rho": 0.046
     },
     "Bogeys|under+GIR|over": {
-      "n": 95370,
-      "p_a": 0.437,
-      "p_b": 0.459,
-      "co_hit": 0.199,
-      "indep": 0.2,
-      "lift": 0.995,
-      "rho": -0.004
+      "n": 97012,
+      "p_a": 0.438,
+      "p_b": 0.46,
+      "co_hit": 0.2,
+      "indep": 0.201,
+      "lift": 0.993,
+      "rho": -0.006
     },
     "Bogeys|under+GIR|under": {
-      "n": 95370,
-      "p_a": 0.57,
-      "p_b": 0.567,
+      "n": 97012,
+      "p_a": 0.569,
+      "p_b": 0.568,
       "co_hit": 0.317,
       "indep": 0.323,
-      "lift": 0.981,
-      "rho": -0.025
+      "lift": 0.982,
+      "rho": -0.024
     },
     "Bogeys|under+Fairways hit|under": {
-      "n": 96185,
+      "n": 97012,
       "p_a": 0.541,
-      "p_b": 0.549,
-      "co_hit": 0.3,
-      "indep": 0.297,
+      "p_b": 0.55,
+      "co_hit": 0.301,
+      "indep": 0.298,
       "lift": 1.009,
       "rho": 0.011
     },
     "GIR|over+GIR|over": {
-      "n": 47685,
-      "p_a": 0.367,
+      "n": 48506,
+      "p_a": 0.369,
       "p_b": 0.392,
       "co_hit": 0.154,
       "indep": 0.144,
-      "lift": 1.07,
-      "rho": 0.043
+      "lift": 1.067,
+      "rho": 0.041
     },
     "GIR|over+GIR|under": {
-      "n": 95370,
+      "n": 97012,
       "p_a": 0.5,
       "p_b": 0.5,
       "co_hit": 0.226,
       "indep": 0.25,
-      "lift": 0.903,
-      "rho": -0.097
+      "lift": 0.905,
+      "rho": -0.095
     },
     "Fairways hit|under+GIR|over": {
-      "n": 96185,
-      "p_a": 0.471,
+      "n": 97012,
+      "p_a": 0.472,
       "p_b": 0.482,
-      "co_hit": 0.211,
-      "indep": 0.227,
+      "co_hit": 0.212,
+      "indep": 0.228,
       "lift": 0.93,
       "rho": -0.064
     },
     "GIR|under+GIR|under": {
-      "n": 47685,
-      "p_a": 0.633,
+      "n": 48506,
+      "p_a": 0.631,
       "p_b": 0.608,
-      "co_hit": 0.395,
-      "indep": 0.385,
-      "lift": 1.026,
-      "rho": 0.043
+      "co_hit": 0.394,
+      "indep": 0.384,
+      "lift": 1.025,
+      "rho": 0.041
     },
     "Fairways hit|under+GIR|under": {
-      "n": 96185,
+      "n": 97012,
       "p_a": 0.604,
-      "p_b": 0.59,
+      "p_b": 0.591,
       "co_hit": 0.363,
       "indep": 0.357,
       "lift": 1.017,
-      "rho": 0.025
+      "rho": 0.026
     },
     "Fairways hit|under+Fairways hit|under": {
       "n": 48506,
@@ -1144,30 +1144,30 @@
   },
   "sentiment_buckets": {
     "good_good": {
-      "n": 439022,
+      "n": 441527,
       "rho": 0.027
     },
     "bad_bad": {
-      "n": 782797,
+      "n": 786144,
       "rho": 0.018
     },
     "good_bad": {
-      "n": 1178164,
+      "n": 1184031,
       "rho": -0.027
     },
     "neutral": {
-      "n": 1559198,
-      "rho": -0.017
+      "n": 1577545,
+      "rho": -0.018
     }
   },
   "default_rho": {
     "same_player_same_market": -1,
     "same_player_cross_market": 0,
     "same_wave_same_market": 0.146,
-    "same_round_same_market": 0.04,
+    "same_round_same_market": 0.039,
     "cross_market_good_good": 0.027,
     "cross_market_bad_bad": 0.018,
     "cross_market_good_bad": -0.027,
-    "cross_market_neutral": -0.017
+    "cross_market_neutral": -0.018
   }
 }

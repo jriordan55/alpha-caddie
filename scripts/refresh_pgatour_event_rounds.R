@@ -203,49 +203,118 @@ as_chr <- function(x) {
   if (is.na(s)) return("")
   s
 }
+fold_ascii <- function(s) {
+  s <- as_chr(s)
+  if (!nzchar(s)) return("")
+  out <- suppressWarnings(iconv(s, from = "", to = "ASCII//TRANSLIT"))
+  if (is.na(out) || !nzchar(out)) out <- s
+  # Common Nordic leftovers when iconv is unavailable/partial.
+  out <- gsub("\u00C5|\u00E5", "a", out, perl = TRUE)
+  out <- gsub("\u00D8|\u00F8", "o", out, perl = TRUE)
+  out <- gsub("\u00C6|\u00E6", "ae", out, perl = TRUE)
+  out <- gsub("\u00D6|\u00F6", "o", out, perl = TRUE)
+  out <- gsub("\u00C4|\u00E4", "a", out, perl = TRUE)
+  out
+}
 norm_person <- function(s) {
-  s <- tolower(trimws(as_chr(s)))
+  s <- tolower(trimws(fold_ascii(s)))
   s <- gsub("[^a-z0-9]+", " ", s)
   trimws(gsub("\\s+", " ", s))
 }
-name_key_last_first <- function(display_or_last_first) {
+split_last_first <- function(display_or_last_first) {
   s <- trimws(as_chr(display_or_last_first))
-  if (!nzchar(s)) return("")
+  if (!nzchar(s)) return(c(last = "", first = ""))
   if (grepl(",", s, fixed = TRUE)) {
     parts <- strsplit(s, ",", fixed = TRUE)[[1]]
-    last <- norm_person(parts[[1]])
-    first <- if (length(parts) >= 2L) norm_person(parts[[2]]) else ""
-    return(trimws(paste(last, first)))
+    return(c(last = norm_person(parts[[1]]), first = if (length(parts) >= 2L) norm_person(parts[[2]]) else ""))
   }
   parts <- strsplit(norm_person(s), "\\s+")[[1]]
+  if (!length(parts)) return(c(last = "", first = ""))
+  if (length(parts) == 1L) return(c(last = parts[[1]], first = ""))
+  c(last = parts[[length(parts)]], first = paste(parts[-length(parts)], collapse = " "))
+}
+name_key_last_first <- function(display_or_last_first) {
+  lf <- split_last_first(display_or_last_first)
+  trimws(paste(lf[["last"]], lf[["first"]]))
+}
+first_token <- function(s) {
+  parts <- strsplit(norm_person(s), "\\s+")[[1]]
   if (!length(parts)) return("")
-  if (length(parts) == 1L) return(parts[[1]])
-  paste(parts[[length(parts)]], paste(parts[-length(parts)], collapse = " "))
+  parts[[1]]
 }
 
 lb_by_key <- new.env(parent = emptyenv())
+lb_by_last <- new.env(parent = emptyenv())
+lb_by_last_first1 <- new.env(parent = emptyenv())
 lb <- tryCatch(pgatouR::pga_leaderboard(tid), error = function(e) NULL)
 if (!is.null(lb) && is.data.frame(lb) && nrow(lb) > 0L) {
   for (j in seq_len(nrow(lb))) {
     pid <- as_chr(lb$player_id[j])
     if (!nzchar(pid)) next
+    last <- norm_person(lb$last_name[j])
+    first <- norm_person(lb$first_name[j])
+    # Compound last names (e.g. "Bjoernevikl Skogen") — also index final token.
+    last_tokens <- strsplit(last, "\\s+")[[1]]
+    last_tail <- if (length(last_tokens)) last_tokens[[length(last_tokens)]] else ""
     keys <- unique(c(
       name_key_last_first(lb$display_name[j]),
       name_key_last_first(paste(as_chr(lb$last_name[j]), as_chr(lb$first_name[j]), sep = ", ")),
-      paste(norm_person(lb$last_name[j]), norm_person(lb$first_name[j]))
+      paste(last, first),
+      if (nzchar(last_tail) && last_tail != last) paste(last_tail, first) else ""
     ))
     keys <- keys[nzchar(keys)]
     for (k in keys) assign(k, pid, envir = lb_by_key)
+    for (lk in unique(c(last, last_tail))) {
+      if (!nzchar(lk)) next
+      prev <- if (exists(lk, envir = lb_by_last, inherits = FALSE)) get(lk, envir = lb_by_last, inherits = FALSE) else character()
+      assign(lk, unique(c(prev, pid)), envir = lb_by_last)
+      f1 <- substr(first, 1L, 1L)
+      if (nzchar(f1)) {
+        k2 <- paste(lk, f1)
+        assign(k2, pid, envir = lb_by_last_first1)
+      }
+    }
   }
   message("[refresh-pgatour-event] Leaderboard name map: ", length(ls(lb_by_key)), " key(s)")
 }
 
+normalize_pga_player_id <- function(pid) {
+  pid <- as_chr(pid)
+  if (!nzchar(pid)) return("")
+  # Keep official string form; pad classic short numeric ids (e.g. 9011 -> 09011).
+  if (grepl("^[0-9]+$", pid) && nchar(pid) < 5L) {
+    return(sprintf("%05d", as.integer(pid)))
+  }
+  pid
+}
+
 resolve_pga_id <- function(dg, pname) {
   pid <- dg_id_to_pga_player_id(dg, map_df)
-  if (length(pid) == 1L && !is.na(pid) && nzchar(pid)) return(as.character(pid))
+  if (length(pid) == 1L && !is.na(pid) && nzchar(pid)) {
+    # Prefer tournament leaderboard id when names match — map ids can drop leading zeros.
+    k1 <- name_key_last_first(pname)
+    if (nzchar(k1) && exists(k1, envir = lb_by_key, inherits = FALSE)) {
+      return(normalize_pga_player_id(get(k1, envir = lb_by_key, inherits = FALSE)))
+    }
+    return(normalize_pga_player_id(pid))
+  }
   k1 <- name_key_last_first(pname)
   if (nzchar(k1) && exists(k1, envir = lb_by_key, inherits = FALSE)) {
-    return(as.character(get(k1, envir = lb_by_key, inherits = FALSE)))
+    return(normalize_pga_player_id(get(k1, envir = lb_by_key, inherits = FALSE)))
+  }
+  lf <- split_last_first(pname)
+  last <- lf[["last"]]
+  first <- lf[["first"]]
+  f1 <- substr(first_token(first), 1L, 1L)
+  if (nzchar(last) && nzchar(f1)) {
+    k2 <- paste(last, f1)
+    if (exists(k2, envir = lb_by_last_first1, inherits = FALSE)) {
+      return(normalize_pga_player_id(get(k2, envir = lb_by_last_first1, inherits = FALSE)))
+    }
+  }
+  if (nzchar(last) && exists(last, envir = lb_by_last, inherits = FALSE)) {
+    cands <- get(last, envir = lb_by_last, inherits = FALSE)
+    if (length(cands) == 1L) return(normalize_pga_player_id(cands[[1]]))
   }
   NA_character_
 }
@@ -267,6 +336,10 @@ for (i in seq_len(nrow(pl))) {
   if (length(mapped) != 1L || is.na(mapped) || !nzchar(mapped)) n_lb_rescue <- n_lb_rescue + 1L
   Sys.sleep(sleep_sec)
   sc <- pga_scorecard_safe(tid, pga_id)
+  if (nrow(sc) == 0L) {
+    Sys.sleep(max(0.15, sleep_sec))
+    sc <- pga_scorecard_safe(tid, pga_id)
+  }
   if (nrow(sc) == 0L) next
 
   rcol <- pick_col(sc, c("round_number", "roundNumber"))

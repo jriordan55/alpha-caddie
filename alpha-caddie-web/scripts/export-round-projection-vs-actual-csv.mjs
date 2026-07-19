@@ -835,10 +835,9 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
         });
       }
 
-      // Prior-event backtest only grades rounds with a real completed score.
-      // CUT/WD/DNS props (odds without an actual) must not appear as blank results.
+      // Include every completed player-round with real actuals. Book odds are
+      // optional — missing odds must not drop completed results from the tracker.
       if (!hasCompleted) continue;
-      if (!hasBookOdds) continue;
 
       pendingRows.push({
         ev,
@@ -1720,20 +1719,17 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
 
       const hasBook = rowHasAnyBookOdds(rowCells);
       const hasCompleted = roundHasCompletedScore(actuals, dg, rnd);
-      // Finished rounds (before display_round) must carry a real score — never blank actuals.
-      if (rnd < displayRound && !hasCompleted) {
-        skippedEmpty++;
-        continue;
-      }
-      if (!hasBook && !hasCompleted) {
+      // Keep every completed player-round with real actuals. Upcoming rounds
+      // (no score yet) stay out. Odds are optional so Actual coverage is complete.
+      if (!hasCompleted) {
         skippedEmpty++;
         continue;
       }
       for (const sm of rowMarketSamples) {
         summarySamples.push({ ...sm, bookOddsSource: rowOddsSource });
       }
-      if (rowOddsSource === "pre_round_audit") preRoundOddsRows++;
-      else if (rowOddsSource === "live_snapshot" || rowOddsSource === "model_fallback") liveSnapshotOddsRows++;
+      if (hasBook && rowOddsSource === "pre_round_audit") preRoundOddsRows++;
+      else if (hasBook && (rowOddsSource === "live_snapshot" || rowOddsSource === "model_fallback")) liveSnapshotOddsRows++;
 
       const rowOrder = [
         exported,
