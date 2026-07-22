@@ -9,7 +9,7 @@
   "datagolf_field_current_round": 1,
   "display_round": 1,
   "display_round_label": "R1 — next Thursday (auto, America/New_York)",
-  "updated_at": "2026-07-22T02:06:48Z",
+  "updated_at": "2026-07-22T02:36:46Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -64729,7 +64729,7 @@
       "round_num": 1
     }
   },
-  "book_odds_refreshed_at": "2026-07-22T02:04:51Z",
+  "book_odds_refreshed_at": "2026-07-22T02:35:24Z",
   "dk_round_props_note": "DraftKings has not posted round O/U props for this event yet (round page has no Birdies/Pars/GIR/etc. tabs).",
   "dk_round_ou_not_posted": true,
   "live_round_actuals_by_dg": {
@@ -71660,11 +71660,11 @@
     }
   },
   "datagolf_live_current_round": 1,
-  "dg_teetimes_merged_at": "2026-07-22T02:07:09Z",
+  "dg_teetimes_merged_at": "2026-07-22T02:37:10Z",
   "forecast_weather_tee_times_merged": 288,
   "forecast_weather_display_round": 1,
   "forecast_weather_status": "ok_tee_time",
-  "forecast_weather_updated_at": "2026-07-22T02:07:10Z",
+  "forecast_weather_updated_at": "2026-07-22T02:37:11Z",
   "forecast_weather_coords": {
     "lat": 45.1806,
     "lon": -93.2122,
@@ -71687,9 +71687,9 @@
   "forecast_wave_summary": "Morning tees: 70.9°F · 13.2 mph · 51% · cloudy.\nAfternoon tees: 83.7°F · 11.6 mph · 28% · cloudy.",
   "projection_counts_weather_baked": true,
   "projection_counts_weather_baked_round": 1,
-  "projection_counts_weather_baked_at": "2026-07-22T02:07:14Z",
+  "projection_counts_weather_baked_at": "2026-07-22T02:37:16Z",
   "projection_unified_factors": {
-    "applied_at": "2026-07-22T02:07:14.518Z",
+    "applied_at": "2026-07-22T02:37:16.040Z",
     "weights": {
       "courseTableFit": 0.16,
       "similarCourse": 0.1,
@@ -71730,8 +71730,8 @@
   },
   "outright_sim_probs": {
     "n_sims": 500,
-    "baked_at": "2026-07-22T02:06:57.786Z",
-    "ratings_updated_at": "2026-07-22T02:06:48Z",
+    "baked_at": "2026-07-22T02:36:57.436Z",
+    "ratings_updated_at": "2026-07-22T02:36:46Z",
     "live_through": "2026-07-18 9:05 PM",
     "by_dg": {
       "6169": {
@@ -72889,7 +72889,7 @@
     }
   },
   "outcome_calibration": {
-    "generated_at": "2026-07-22T02:07:09.117Z",
+    "generated_at": "2026-07-22T02:37:10.162Z",
     "sigma_scales": {
       "Total score": 1.043,
       "Birdies": 0.85,
