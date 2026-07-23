@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 /**
- * Live-week refresh for `npm run push:live` — updates projections, live-in-play, book odds,
- * DraftKings + PrizePicks round props, field-updates tee times, venue history + skill repair, within-event form, weather bake,
- * unified factors, pin sheet, venue field reconcile (+ fairway driving-acc refresh), vs-actual export, walk-forward OOS report
- * (fit on prior events → apply to live projections), Parlay Pro correlations, walk-forward OOS report, and fast history patches.
+ * Live-week refresh for `npm run push:live` — projections, live-in-play, book odds,
+ * DraftKings + PrizePicks round props, tee times, venue repair, within-event form, weather bake,
+ * unified factors, odds audit CSVs, vs-actual (projection tracker), and prior-round Trends patches.
  *
  * Round O/U counting markets match sportsbooks:
  *   Birdies = birdies + eagles (Birdies or Better)
@@ -12,10 +11,11 @@
  *
  *   npm run refresh:live
  *
- * **Default (push:live): no full rebuild.** Skips historical CSV merge, weather archive backfill,
- * and build-player-history / embed. Committed player_round_history + pin_locations stay on disk.
+ * **Default (push:live lean):** projections + odds + current-event Trends patch + tracker.
+ * Skips full historical CSV merge, weather archive backfill, and full build-player-history.
+ * Prior rounds still land in Trends via sync-field-history + patch-current-event-history.
  *
- * Opt-in full rebuild (slow, ~20–30 min):
+ * Full rebuild (slow, ~20-30 min) — use push:all or:
  *   GOLF_REFRESH_LIVE_FULL_REBUILD=1
  *
  * Other env: DATAGOLF_API_KEY, GOLF_SKIP_PIN_SHEET=1, GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL=1,
@@ -23,7 +23,7 @@
  *   GOLF_REFRESH_LIVE_SKIP_DG=1, GOLF_REFRESH_LIVE_SKIP_PGATOUR=1,
  *   GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI=1, GOLF_SKIP_DK_ROUND_AUDIT_CSV=1
  *   GOLF_REQUIRE_DK_OU=1 (default on refresh:live) — abort if DK scrape returns 0 fresh props
- *   GOLF_LIVE_WEEK_SOFT=1 (push:live LiveWeekOnly) — soft DK require, skip odds ROI backtest,
+ *   GOLF_LIVE_WEEK_SOFT=1 (push:live) — soft DK require, skip odds ROI backtest,
  *     no full vs-actual prior rebuild, soft validate / optional late steps (never abort mid-tournament)
  *   GOLF_SKIP_PP_OU=1 — skip PrizePicks round props in fetch:book-odds
  *   GOLF_REQUIRE_PP_OU=1 — abort if PrizePicks fetch returns 0 fresh props (optional)
@@ -178,6 +178,8 @@ const failOnParMismatch = liveWeekSoft
   ? envTruthy("GOLF_FAIL_ON_PAR_MISMATCH", false)
   : envTruthy("GOLF_FAIL_ON_PAR_MISMATCH", true);
 const softOpt = liveWeekSoft ? { optional: true } : {};
+/** Soft mid-tournament: heavy steps warn-and-continue. Hard fail only on lean non-soft runs. */
+const heavyOpt = liveWeekSoft ? { optional: true } : {};
 const liveFastEnv = {
   ...liveProjectionPipelineEnv(),
   GOLF_SKIP_OUTRIGHT_BAKE_ON_FETCH_DG: "1",
@@ -193,7 +195,7 @@ if (fullRebuild) {
   recentYears = String(process.env.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "25").trim();
 } else {
   console.log(
-    "\n[refresh:live] Live-week update only (no CSV/history/weather rebuild). Set GOLF_REFRESH_LIVE_FULL_REBUILD=1 for full rebuild.\n",
+    "\n[refresh:live] Lean live-week: projections + odds + Trends patch + tracker (no full CSV/history/weather rebuild).\n",
   );
 }
 if (liveWeekSoft) {
@@ -336,14 +338,14 @@ if (!envTruthy("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL", false)) {
       ...liveFastEnv,
       GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS: rebuildPriorVsActual ? "1" : "0",
     },
-    // Heavy hist CSV + walk-forward can OOM (exit -1) on Windows — never block live publish.
-    { optional: true },
+    // Soft mode: heavy hist CSV can OOM — never block mid-tournament publish.
+    heavyOpt,
   );
   run(
     "promote-round-projection-vs-actual-csv.mjs",
     "Publish round_projection_vs_actual.csv (promote .new if Excel had file open)",
     {},
-    { optional: true },
+    heavyOpt,
   );
   run(
     "build-parlay-correlations.mjs",
@@ -382,7 +384,7 @@ run(
   "report-walkforward-oos-roi.mjs",
   "Walk-forward OOS ROI report → walkforward_oos_roi.json",
   {},
-  { optional: true },
+  heavyOpt,
 );
 
 runWeatherAndTeeTimesPass("publish");
@@ -433,7 +435,7 @@ if (!skipBacktestRoi) {
     "backtest-odds-model-roi.mjs",
     "Odds.csv model ROI backtest (walkforward venue-history projections)",
     {},
-    { optional: true },
+    heavyOpt,
   );
 } else {
   console.log(

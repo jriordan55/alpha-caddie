@@ -118,26 +118,32 @@ if ($IsWindows -or ($env:OS -match "Windows") -or $IsMacOS) {
 }
 
 if ($LiveWeekOnly) {
+  # Lean mid-tournament publish: projections + book odds + prior-round Trends + tracker.
+  # Not a full CSV/history/weather/ROI rebuild (use push:all for that).
+  Remove-Item Env:\GOLF_REFRESH_LIVE_FULL_REBUILD -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_HISTORICAL_ROUNDS_FULL_HISTORY -ErrorAction SilentlyContinue
   $env:GOLF_REFRESH_LIVE_SKIP_CSV_MERGE = "1"
   Remove-Item Env:\GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE -ErrorAction SilentlyContinue
   $env:GOLF_REFRESH_LIVE_SKIP_HISTORY_REBUILD = "1"
   $env:GOLF_SKIP_ROUND_WEATHER_BACKFILL = "1"
-  # Between-rounds reliability: update live actuals + projections; never hard-fail on DK/Playwright
-  # flakiness or heavy backtest rebuilds (those caused exit -1 / OOM mid-tournament).
+  $env:GOLF_REFRESH_LIVE_SKIP_FINISH_TOOL = "1"
+  $env:GOLF_SKIP_MARKET_BOOK_CALIBRATION = "1"
+  $env:GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI = "1"
+  $env:GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS = "0"
+  $env:GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL = "0"
+  $env:GOLF_SKIP_DK_ROUND_AUDIT_CSV = "0"
+  $env:GOLF_SKIP_PP_ROUND_AUDIT_CSV = "0"
+  # Soft: DK/Playwright flakiness and late optional steps must not kill the publish.
   $env:GOLF_LIVE_WEEK_SOFT = "1"
   $env:GOLF_REQUIRE_DK_OU = "0"
   $env:GOLF_SKIP_DK_OU_VALIDATE = "1"
-  $env:GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI = "1"
-  $env:GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS = "0"
   $env:GOLF_FAIL_ON_PAR_MISMATCH = "0"
   $env:GOLF_LIVE_VALIDATE_SOFT = "1"
   $env:GOLF_UNIFIED_TEE_WAVE_W = "0.30"
   $env:GOLF_FIELD_DAY_COUNTING_LIFT_FRAC = "0"
   $env:GOLF_WITHIN_EVENT_COUNTING_BLEND = "0"
-  Write-Host 'LiveWeekOnly: npm run refresh:live (live feeds + DK/PP props + tee times + weather bake + field history refresh for Trends).'
-  Write-Host 'LiveWeekOnly soft mode: DK not required, skip odds ROI backtest, no full vs-actual rebuild, soft validate.'
-  Write-Host 'LiveWeekOnly projection: day+form + skill-36 (OOS winner; no soft book mu align).'
+  Write-Host 'LiveWeekOnly (lean): projections + odds + prior-round Trends patch + odds audit + projection tracker.'
+  Write-Host 'Skipped: full CSV merge, weather archive, finish-tool, book-cal fit, odds ROI backtest.'
   Write-Host 'LiveWeekOnly markets: Birdies = birdies+eagles (or better), Bogeys = bogeys+doubles (or worse), same as DK/PP.'
 } elseif (-not $NoFullHistory) {
   $env:GOLF_HISTORICAL_ROUNDS_FULL_HISTORY = "1"
@@ -241,7 +247,7 @@ function Invoke-GitPushPublish([string] $Root, [string] $Branch, [switch] $SyncF
 }
 
 if ($LiveWeekOnly) {
-  Run-Npm "Live-week refresh (no full historical CSV / build:history) ..." run refresh:live
+  Run-Npm "Live-week refresh (projections + odds + Trends patch + tracker) ..." run refresh:live
   Promote-RoundProjectionVsActualCsv $webRoot
 } else {
   Run-Npm "Running fetch:dg ..." run fetch:dg
