@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-24T04:57:23.190Z",
+  "generated_at": "2026-07-25T13:48:37.159Z",
   "methodology": {
     "grading": "walk_forward_oos_one_side_per_line",
     "model_lines": "walk_forward_stat_model_no_dk_calibration",
@@ -8,9 +8,9 @@
     "pricing_mode": "default"
   },
   "outcome_sigma_scales": {
-    "Total score": 1.03,
+    "Total score": 1.036,
     "Birdies": 0.85,
-    "GIR": 1.094,
+    "GIR": 1.1,
     "Fairways hit": 1.45
   },
   "recommended_policy": {
@@ -91,20 +91,20 @@
     "roi_pct": 13.5
   },
   "combined_oos_unfiltered_at_5pct": {
-    "units": -21.56,
-    "bets": 653,
-    "wins": 361,
+    "units": -23.01,
+    "bets": 651,
+    "wins": 359,
     "losses": 292,
-    "hit_pct": 55.3,
-    "roi_pct": -3.3
+    "hit_pct": 55.1,
+    "roi_pct": -3.5
   },
   "combined_oos_raw_at_5pct": {
-    "units": -21.56,
-    "bets": 653,
-    "wins": 361,
+    "units": -23.01,
+    "bets": 651,
+    "wins": 359,
     "losses": 292,
-    "hit_pct": 55.3,
-    "roi_pct": -3.3
+    "hit_pct": 55.1,
+    "roi_pct": -3.5
   },
   "peak_oos_event_at_5pct": {
     "event": "RBC Canadian Open",
@@ -621,20 +621,20 @@
   "by_threshold_raw": {
     "0": {
       "__all__": {
-        "units": -115,
-        "bets": 2495,
-        "wins": 1388,
-        "losses": 1107,
+        "units": -116.07,
+        "bets": 2466,
+        "wins": 1371,
+        "losses": 1095,
         "hit_pct": 55.6,
-        "roi_pct": -4.6
+        "roi_pct": -4.7
       },
       "Total score": {
-        "units": -32.59,
-        "bets": 808,
-        "wins": 441,
-        "losses": 367,
-        "hit_pct": 54.6,
-        "roi_pct": -4
+        "units": -33.67,
+        "bets": 779,
+        "wins": 424,
+        "losses": 355,
+        "hit_pct": 54.4,
+        "roi_pct": -4.3
       },
       "Birdies": {
         "units": -25.77,
@@ -663,20 +663,20 @@
     },
     "5": {
       "__all__": {
-        "units": -21.56,
-        "bets": 653,
-        "wins": 361,
+        "units": -23.01,
+        "bets": 651,
+        "wins": 359,
         "losses": 292,
-        "hit_pct": 55.3,
-        "roi_pct": -3.3
+        "hit_pct": 55.1,
+        "roi_pct": -3.5
       },
       "Total score": {
-        "units": -1.44,
-        "bets": 16,
-        "wins": 8,
+        "units": -2.89,
+        "bets": 14,
+        "wins": 6,
         "losses": 8,
-        "hit_pct": 50,
-        "roi_pct": -9
+        "hit_pct": 42.9,
+        "roi_pct": -20.6
       },
       "Birdies": {
         "units": -0.97,
