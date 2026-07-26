@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-25T13:48:37.159Z",
+  "generated_at": "2026-07-26T04:38:25.037Z",
   "methodology": {
     "grading": "walk_forward_oos_one_side_per_line",
     "model_lines": "walk_forward_stat_model_no_dk_calibration",
@@ -10,7 +10,7 @@
   "outcome_sigma_scales": {
     "Total score": 1.036,
     "Birdies": 0.85,
-    "GIR": 1.1,
+    "GIR": 1.101,
     "Fairways hit": 1.45
   },
   "recommended_policy": {
