@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
  * Live-week refresh for `npm run push:live` — projections, live-in-play, book odds,
- * DraftKings + PrizePicks round props, tee times, venue repair, within-event form, weather bake,
- * unified factors, odds audit CSVs, vs-actual (projection tracker), and prior-round Trends patches.
+ * DraftKings + PrizePicks + Sleeper + Underdog round props, tee times, venue repair,
+ * within-event form, weather bake, unified factors, odds audit CSVs, vs-actual (projection tracker),
+ * and prior-round Trends patches.
  *
  * Round O/U counting markets match sportsbooks:
  *   Birdies = birdies + eagles (Birdies or Better)
@@ -26,7 +27,9 @@
  *   GOLF_LIVE_WEEK_SOFT=1 (push:live) — soft DK require, skip odds ROI backtest,
  *     no full vs-actual prior rebuild, soft validate / optional late steps (never abort mid-tournament)
  *   GOLF_SKIP_PP_OU=1 — skip PrizePicks round props in fetch:book-odds
- *   GOLF_REQUIRE_PP_OU=1 — abort if PrizePicks fetch returns 0 fresh props (optional)
+ *   GOLF_SKIP_SL_OU=1 — skip Sleeper round props in fetch:book-odds
+ *   GOLF_SKIP_UD_OU=1 — skip Underdog round props in fetch:book-odds
+ *   GOLF_REQUIRE_PP_OU=1 / GOLF_REQUIRE_SL_OU=1 / GOLF_REQUIRE_UD_OU=1 — abort if 0 fresh props
  *   GOLF_SKIP_DK_OU_VALIDATE=1 — skip DK line-count gate (pre-tournament only)
  *   DK_HEADLESS=0 on Windows/macOS (dkOuScrapeEnv) — required for Nash API session
  */
@@ -245,7 +248,7 @@ if (!skipPgatour) {
 
 run(
   "fetch-book-odds-into-projections.mjs",
-  "Sportsbook + DK + PrizePicks round props (fetch:book-odds)",
+  "Sportsbook + DK + PrizePicks + Sleeper + Underdog round props (fetch:book-odds)",
   liveFastEnv,
   softOpt,
 );
@@ -313,6 +316,24 @@ if (!envTruthy("GOLF_SKIP_PP_ROUND_AUDIT_CSV", false)) {
   run(
     "export-pp-round-model-audit-csv.mjs",
     "PrizePicks round audit CSV (all PP lines/odds + model snapshots)",
+    {},
+    softOpt,
+  );
+}
+
+if (!envTruthy("GOLF_SKIP_SL_ROUND_AUDIT_CSV", false)) {
+  run(
+    "export-sl-round-model-audit-csv.mjs",
+    "Sleeper round audit CSV (all SL lines/odds + model snapshots)",
+    {},
+    softOpt,
+  );
+}
+
+if (!envTruthy("GOLF_SKIP_UD_ROUND_AUDIT_CSV", false)) {
+  run(
+    "export-ud-round-model-audit-csv.mjs",
+    "Underdog round audit CSV (all UD lines/odds + model snapshots)",
     {},
     softOpt,
   );

@@ -43,10 +43,16 @@ export const EXPORT_MARKETS = [
     lineCol: "fairways_line",
     bookLineCol: "fairways_book_line",
     ppLineCol: "fairways_pp_line",
+    slLineCol: "fairways_sl_line",
+    udLineCol: "fairways_ud_line",
     overOddsCol: "fairways_over_odds",
     underOddsCol: "fairways_under_odds",
     ppOverOddsCol: "fairways_pp_over_odds",
     ppUnderOddsCol: "fairways_pp_under_odds",
+    slOverOddsCol: "fairways_sl_over_odds",
+    slUnderOddsCol: "fairways_sl_under_odds",
+    udOverOddsCol: "fairways_ud_over_odds",
+    udUnderOddsCol: "fairways_ud_under_odds",
     actualCol: "actual_fairways",
     overCol: "fairways_over",
     underCol: "fairways_under",
@@ -58,10 +64,16 @@ export const EXPORT_MARKETS = [
     lineCol: "round_score_line",
     bookLineCol: "round_score_book_line",
     ppLineCol: "round_score_pp_line",
+    slLineCol: "round_score_sl_line",
+    udLineCol: "round_score_ud_line",
     overOddsCol: "round_score_over_odds",
     underOddsCol: "round_score_under_odds",
     ppOverOddsCol: "round_score_pp_over_odds",
     ppUnderOddsCol: "round_score_pp_under_odds",
+    slOverOddsCol: "round_score_sl_over_odds",
+    slUnderOddsCol: "round_score_sl_under_odds",
+    udOverOddsCol: "round_score_ud_over_odds",
+    udUnderOddsCol: "round_score_ud_under_odds",
     actualCol: "actual_round_score",
     overCol: "round_score_over",
     underCol: "round_score_under",
@@ -73,10 +85,16 @@ export const EXPORT_MARKETS = [
     lineCol: "birdies_line",
     bookLineCol: "birdies_book_line",
     ppLineCol: "birdies_pp_line",
+    slLineCol: "birdies_sl_line",
+    udLineCol: "birdies_ud_line",
     overOddsCol: "birdies_over_odds",
     underOddsCol: "birdies_under_odds",
     ppOverOddsCol: "birdies_pp_over_odds",
     ppUnderOddsCol: "birdies_pp_under_odds",
+    slOverOddsCol: "birdies_sl_over_odds",
+    slUnderOddsCol: "birdies_sl_under_odds",
+    udOverOddsCol: "birdies_ud_over_odds",
+    udUnderOddsCol: "birdies_ud_under_odds",
     actualCol: "actual_birdies",
     overCol: "birdies_over",
     underCol: "birdies_under",
@@ -88,10 +106,16 @@ export const EXPORT_MARKETS = [
     lineCol: "bogeys_line",
     bookLineCol: "bogeys_book_line",
     ppLineCol: "bogeys_pp_line",
+    slLineCol: "bogeys_sl_line",
+    udLineCol: "bogeys_ud_line",
     overOddsCol: "bogeys_over_odds",
     underOddsCol: "bogeys_under_odds",
     ppOverOddsCol: "bogeys_pp_over_odds",
     ppUnderOddsCol: "bogeys_pp_under_odds",
+    slOverOddsCol: "bogeys_sl_over_odds",
+    slUnderOddsCol: "bogeys_sl_under_odds",
+    udOverOddsCol: "bogeys_ud_over_odds",
+    udUnderOddsCol: "bogeys_ud_under_odds",
     actualCol: "actual_bogeys",
     overCol: "bogeys_over",
     underCol: "bogeys_under",
@@ -103,10 +127,16 @@ export const EXPORT_MARKETS = [
     lineCol: "gir_line",
     bookLineCol: "gir_book_line",
     ppLineCol: "gir_pp_line",
+    slLineCol: "gir_sl_line",
+    udLineCol: "gir_ud_line",
     overOddsCol: "gir_over_odds",
     underOddsCol: "gir_under_odds",
     ppOverOddsCol: "gir_pp_over_odds",
     ppUnderOddsCol: "gir_pp_under_odds",
+    slOverOddsCol: "gir_sl_over_odds",
+    slUnderOddsCol: "gir_sl_under_odds",
+    udOverOddsCol: "gir_ud_over_odds",
+    udUnderOddsCol: "gir_ud_under_odds",
     actualCol: "actual_gir",
     overCol: "gir_over",
     underCol: "gir_under",
@@ -117,10 +147,16 @@ export const EXPORT_ACTUAL_COLS = EXPORT_MARKETS.map((m) => m.actualCol).concat(
 export const EXPORT_MODEL_LINE_COLS = EXPORT_MARKETS.map((m) => m.lineCol);
 export const EXPORT_BOOK_LINE_COLS = EXPORT_MARKETS.map((m) => m.bookLineCol);
 export const EXPORT_PP_LINE_COLS = EXPORT_MARKETS.map((m) => m.ppLineCol);
+export const EXPORT_SL_LINE_COLS = EXPORT_MARKETS.map((m) => m.slLineCol);
+export const EXPORT_UD_LINE_COLS = EXPORT_MARKETS.map((m) => m.udLineCol);
 export const EXPORT_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.overOddsCol);
 export const EXPORT_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.underOddsCol);
 export const EXPORT_PP_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.ppOverOddsCol);
 export const EXPORT_PP_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.ppUnderOddsCol);
+export const EXPORT_SL_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.slOverOddsCol);
+export const EXPORT_SL_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.slUnderOddsCol);
+export const EXPORT_UD_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.udOverOddsCol);
+export const EXPORT_UD_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.udUnderOddsCol);
 export const EXPORT_OVER_RESULT_COLS = EXPORT_MARKETS.map((m) => m.overCol);
 export const EXPORT_UNDER_RESULT_COLS = EXPORT_MARKETS.map((m) => m.underCol);
 

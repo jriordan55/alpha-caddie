@@ -19,8 +19,11 @@
  *      GOLF_SKIP_PROPS_CSV=1 — do not merge data/player_props_*.csv into projections.props (Model O/U DK lines).
  *      GOLF_SKIP_DK_OU=1 — do not pull DK round props (see draftkings-ou-props.mjs).
  *      GOLF_SKIP_PP_OU=1 — do not pull PrizePicks round props (see prizepicks-ou-props.mjs).
+ *      GOLF_SKIP_SL_OU=1 — do not pull Sleeper round props (see sleeper-ou-props.mjs).
+ *      GOLF_SKIP_UD_OU=1 — do not pull Underdog round props (see underdog-ou-props.mjs).
  *      GOLF_REQUIRE_DK_OU=1 — abort when DK scrape returns 0 fresh props (default on push:live / refresh:live).
  *      GOLF_REQUIRE_PP_OU=1 — abort when PrizePicks fetch returns 0 fresh props (optional).
+ *      GOLF_REQUIRE_SL_OU=1 / GOLF_REQUIRE_UD_OU=1 — abort when Sleeper/Underdog return 0 rows (optional).
  *      DK_HEADLESS=0 — headed Chromium on Windows/macOS (DK blocks headless Nash API).
  *      GOLF_SKIP_DK_ROUND_AUDIT_CSV=1 — do not append alpha-caddie-web/data/dk_round_projection_audit.csv after merge.
  *      GOLF_SKIP_MODEL_FALLBACK_OU=1 — do not synthesize GIR / fairways / putts from projections.players for players DK omits.
@@ -49,8 +52,14 @@ import { fetchDataGolfOutrightsApi } from "./datagolf-outrights-api.mjs";
 import { fetchSportsbookOutrightsFromUrls } from "./sportsbook-outrights-scraper.mjs";
 import { appendDkRoundProjectionAuditCsv } from "./export-dk-round-model-audit-csv.mjs";
 import { appendPpRoundProjectionAuditCsv } from "./export-pp-round-model-audit-csv.mjs";
+import {
+  appendSlRoundProjectionAuditCsv,
+  appendUdRoundProjectionAuditCsv,
+} from "./export-pickem-round-model-audit-csv.mjs";
 import { refreshRoundProjectionProps } from "./merge-dk-round-props.mjs";
 import { refreshPrizePicksRoundProps } from "./merge-pp-round-props.mjs";
+import { refreshSleeperRoundProps } from "./merge-sleeper-round-props.mjs";
+import { refreshUnderdogRoundProps } from "./merge-underdog-round-props.mjs";
 import { projectionExportMeta } from "./projection-export-meta.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -474,6 +483,72 @@ async function main() {
       console.warn("[fetch-book-odds] PrizePicks O/U skipped:", e.message || e);
       if (envTruthy("GOLF_REQUIRE_PP_OU")) {
         console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_PP_OU=1): ${e.message || e}`);
+        process.exit(1);
+      }
+    }
+  }
+
+  if (String(process.env.GOLF_SKIP_SL_OU || "").trim() !== "1") {
+    try {
+      const { props: slMerged, nSl, slError } = await refreshSleeperRoundProps(next);
+      next.props = slMerged;
+      if (nSl > 0) {
+        next.sl_round_props_refreshed_at = next.book_odds_refreshed_at;
+        console.log(
+          `[fetch-book-odds] Sleeper round props: ${nSl} fresh rows (${slMerged.length} total props)`,
+        );
+        try {
+          const slAudit = appendSlRoundProjectionAuditCsv(next);
+          if (slAudit.appended > 0) {
+            console.log(`[fetch-book-odds] SL round audit CSV +${slAudit.appended} rows -> ${slAudit.path}`);
+          }
+        } catch (e) {
+          console.warn("[fetch-book-odds] SL round audit CSV:", e.message || e);
+        }
+      } else if (slError && !String(slError).startsWith("skipped")) {
+        console.warn(`[fetch-book-odds] Sleeper: ${slError}`);
+      }
+      if (envTruthy("GOLF_REQUIRE_SL_OU") && nSl === 0) {
+        console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_SL_OU=1): ${slError || "0 Sleeper rows"}`);
+        process.exit(1);
+      }
+    } catch (e) {
+      console.warn("[fetch-book-odds] Sleeper O/U skipped:", e.message || e);
+      if (envTruthy("GOLF_REQUIRE_SL_OU")) {
+        console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_SL_OU=1): ${e.message || e}`);
+        process.exit(1);
+      }
+    }
+  }
+
+  if (String(process.env.GOLF_SKIP_UD_OU || "").trim() !== "1") {
+    try {
+      const { props: udMerged, nUd, udError } = await refreshUnderdogRoundProps(next);
+      next.props = udMerged;
+      if (nUd > 0) {
+        next.ud_round_props_refreshed_at = next.book_odds_refreshed_at;
+        console.log(
+          `[fetch-book-odds] Underdog round props: ${nUd} fresh rows (${udMerged.length} total props)`,
+        );
+        try {
+          const udAudit = appendUdRoundProjectionAuditCsv(next);
+          if (udAudit.appended > 0) {
+            console.log(`[fetch-book-odds] UD round audit CSV +${udAudit.appended} rows -> ${udAudit.path}`);
+          }
+        } catch (e) {
+          console.warn("[fetch-book-odds] UD round audit CSV:", e.message || e);
+        }
+      } else if (udError && !String(udError).startsWith("skipped")) {
+        console.warn(`[fetch-book-odds] Underdog: ${udError}`);
+      }
+      if (envTruthy("GOLF_REQUIRE_UD_OU") && nUd === 0) {
+        console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_UD_OU=1): ${udError || "0 Underdog rows"}`);
+        process.exit(1);
+      }
+    } catch (e) {
+      console.warn("[fetch-book-odds] Underdog O/U skipped:", e.message || e);
+      if (envTruthy("GOLF_REQUIRE_UD_OU")) {
+        console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_UD_OU=1): ${e.message || e}`);
         process.exit(1);
       }
     }

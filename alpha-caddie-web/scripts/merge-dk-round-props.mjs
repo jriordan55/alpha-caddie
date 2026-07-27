@@ -13,6 +13,8 @@ import {
 import { fetchDraftKingsOuProps } from "./draftkings-ou-props.mjs";
 import { matchPlayerByGolferLabel } from "./golfer-name-match.mjs";
 import { preservePrizePicksRoundProps } from "./merge-pp-round-props.mjs";
+import { preserveSleeperRoundProps } from "./merge-sleeper-round-props.mjs";
+import { preserveUnderdogRoundProps } from "./merge-underdog-round-props.mjs";
 
 export { eventNameToDraftKingsSlug, inferDraftKingsLeagueUrlFromProjections };
 
@@ -455,6 +457,8 @@ export async function refreshRoundProjectionProps(payload, golfModelRoot) {
   });
 
   merged = preservePrizePicksRoundProps(payload, merged);
+  merged = preserveSleeperRoundProps(payload, merged);
+  merged = preserveUnderdogRoundProps(payload, merged);
 
   return {
     props: merged,

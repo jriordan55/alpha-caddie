@@ -25,10 +25,20 @@ export function isPrizePicksPropSource(source) {
   return String(source || "").trim().toLowerCase() === "prizepicks";
 }
 
+export function isSleeperPropSource(source) {
+  return String(source || "").trim().toLowerCase() === "sleeper";
+}
+
+export function isUnderdogPropSource(source) {
+  return String(source || "").trim().toLowerCase() === "underdog";
+}
+
 function normalizeIndexedPropLine(source, line) {
   const n = num(line, NaN);
   if (!Number.isFinite(n)) return NaN;
-  if (isPrizePicksPropSource(source)) return n;
+  if (isPrizePicksPropSource(source) || isSleeperPropSource(source) || isUnderdogPropSource(source)) {
+    return n;
+  }
   return enforceHalfLine(n);
 }
 
@@ -86,4 +96,14 @@ export function buildBookPropsIndex(payload, opts = {}) {
 /** PrizePicks-only index (same keys as buildBookPropsIndex). */
 export function buildPpPropsIndex(payload, opts = {}) {
   return buildPropsIndexForSource(payload, { ...opts, source: "prizepicks" });
+}
+
+/** Sleeper-only index. */
+export function buildSlPropsIndex(payload, opts = {}) {
+  return buildPropsIndexForSource(payload, { ...opts, source: "sleeper" });
+}
+
+/** Underdog-only index. */
+export function buildUdPropsIndex(payload, opts = {}) {
+  return buildPropsIndexForSource(payload, { ...opts, source: "underdog" });
 }

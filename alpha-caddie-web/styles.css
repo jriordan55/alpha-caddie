@@ -2015,7 +2015,11 @@ body {
 #table-ou.table-ou-projections .ou-proj-th-dk-line,
 #table-ou.table-ou-projections .ou-proj-td-dk-line,
 #table-ou.table-ou-projections .ou-proj-th-pp-line,
-#table-ou.table-ou-projections .ou-proj-td-pp-line {
+#table-ou.table-ou-projections .ou-proj-td-pp-line,
+#table-ou.table-ou-projections .ou-proj-th-sl-line,
+#table-ou.table-ou-projections .ou-proj-td-sl-line,
+#table-ou.table-ou-projections .ou-proj-th-ud-line,
+#table-ou.table-ou-projections .ou-proj-td-ud-line {
   min-width: 3rem;
   color: #f4ca3c;
   font-weight: 800;
@@ -2076,7 +2080,11 @@ body {
 #table-ou.table-ou-projections .ou-proj-th-dk-line,
 #table-ou.table-ou-projections .ou-proj-th-dk-odds,
 #table-ou.table-ou-projections .ou-proj-th-pp-line,
-#table-ou.table-ou-projections .ou-proj-th-pp-odds {
+#table-ou.table-ou-projections .ou-proj-th-pp-odds,
+#table-ou.table-ou-projections .ou-proj-th-sl-line,
+#table-ou.table-ou-projections .ou-proj-th-sl-odds,
+#table-ou.table-ou-projections .ou-proj-th-ud-line,
+#table-ou.table-ou-projections .ou-proj-th-ud-odds {
   text-align: center;
   vertical-align: middle;
   padding-left: 6px;
@@ -2115,14 +2123,22 @@ body {
 #table-ou.table-ou-projections .ou-proj-th-dk-odds,
 #table-ou.table-ou-projections .ou-proj-td-dk-odds,
 #table-ou.table-ou-projections .ou-proj-th-pp-odds,
-#table-ou.table-ou-projections .ou-proj-td-pp-odds {
+#table-ou.table-ou-projections .ou-proj-td-pp-odds,
+#table-ou.table-ou-projections .ou-proj-th-sl-odds,
+#table-ou.table-ou-projections .ou-proj-td-sl-odds,
+#table-ou.table-ou-projections .ou-proj-th-ud-odds,
+#table-ou.table-ou-projections .ou-proj-td-ud-odds {
   min-width: 3.5rem;
   font-weight: 700;
 }
 #table-ou.table-ou-projections .ou-proj-th-dk-edge,
 #table-ou.table-ou-projections .ou-proj-td-dk-edge,
 #table-ou.table-ou-projections .ou-proj-th-pp-edge,
-#table-ou.table-ou-projections .ou-proj-td-pp-edge {
+#table-ou.table-ou-projections .ou-proj-td-pp-edge,
+#table-ou.table-ou-projections .ou-proj-th-sl-edge,
+#table-ou.table-ou-projections .ou-proj-td-sl-edge,
+#table-ou.table-ou-projections .ou-proj-th-ud-edge,
+#table-ou.table-ou-projections .ou-proj-td-ud-edge {
   min-width: 4rem;
   font-weight: 800;
 }
@@ -2152,9 +2168,13 @@ body {
   font-variant-numeric: tabular-nums;
 }
 #table-ou.table-ou-projections td.ou-proj-td-dk-edge.pos,
-#table-ou.table-ou-projections td.ou-proj-td-pp-edge.pos { color: #1ecf77; }
+#table-ou.table-ou-projections td.ou-proj-td-pp-edge.pos,
+#table-ou.table-ou-projections td.ou-proj-td-sl-edge.pos,
+#table-ou.table-ou-projections td.ou-proj-td-ud-edge.pos { color: #1ecf77; }
 #table-ou.table-ou-projections td.ou-proj-td-dk-edge.neg,
-#table-ou.table-ou-projections td.ou-proj-td-pp-edge.neg { color: #ff646f; }
+#table-ou.table-ou-projections td.ou-proj-td-pp-edge.neg,
+#table-ou.table-ou-projections td.ou-proj-td-sl-edge.neg,
+#table-ou.table-ou-projections td.ou-proj-td-ud-edge.neg { color: #ff646f; }
 #table-ou.table-ou-projections td.ou-proj-empty-td {
   padding: 20px 18px;
   font-size: 0.88rem;
@@ -4887,7 +4907,11 @@ th.matchup-analysis-best-pick {
   #table-ou.table-ou-projections .ou-proj-th-dk-line,
   #table-ou.table-ou-projections .ou-proj-th-dk-odds,
   #table-ou.table-ou-projections .ou-proj-th-pp-line,
-  #table-ou.table-ou-projections .ou-proj-th-pp-odds {
+  #table-ou.table-ou-projections .ou-proj-th-pp-odds,
+  #table-ou.table-ou-projections .ou-proj-th-sl-line,
+  #table-ou.table-ou-projections .ou-proj-th-sl-odds,
+  #table-ou.table-ou-projections .ou-proj-th-ud-line,
+  #table-ou.table-ou-projections .ou-proj-th-ud-odds {
     min-width: 36px;
     width: auto;
     max-width: none;
