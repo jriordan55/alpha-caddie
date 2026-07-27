@@ -9,7 +9,7 @@
   "datagolf_field_current_round": 1,
   "display_round": 1,
   "display_round_label": "R1 — next Thursday (auto, America/New_York)",
-  "updated_at": "2026-07-27T11:27:25Z",
+  "updated_at": "2026-07-27T14:41:09Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -49023,7 +49023,7 @@
       "match_list": "No 3_balls being offered right now."
     }
   },
-  "book_odds_refreshed_at": "2026-07-27T11:27:25Z",
+  "book_odds_refreshed_at": "2026-07-27T14:41:09Z",
   "dk_round_props_note": "Could not detect DK league id from page (set DK_LEAGUE_ID).",
   "live_round_actuals_by_dg": {
     "5768": {
@@ -56574,5 +56574,5 @@
   "in_play_affects_round_odds": true,
   "datagolf_live_in_tournament": true,
   "live_matchup_model_blend": 0,
-  "dk_round_props_refreshed_at": "2026-07-27T11:27:25Z"
+  "dk_round_props_refreshed_at": "2026-07-27T14:41:09Z"
 }
