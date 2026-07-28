@@ -25,6 +25,7 @@ const MIME = {
   ".mjs": "text/javascript; charset=utf-8",
   ".css": "text/css; charset=utf-8",
   ".json": "application/json; charset=utf-8",
+  ".csv": "text/csv; charset=utf-8",
   ".svg": "image/svg+xml",
   ".png": "image/png",
   ".jpg": "image/jpeg",
@@ -130,6 +131,9 @@ const server = http.createServer((req, res) => {
   }
 
   if (pathname === "/" || pathname === "") pathname = "/index.html";
+  // Directory indexes (Projection Tracker lives at /projection-tracker/)
+  if (pathname.endsWith("/")) pathname = `${pathname}index.html`;
+  else if (pathname === "/projection-tracker") pathname = "/projection-tracker/index.html";
 
   const filePath = resolvedPathForUrlPathname(pathname);
   if (!filePath) {
@@ -147,7 +151,7 @@ const server = http.createServer((req, res) => {
     }
     const ext = path.extname(filePath).toLowerCase();
     res.setHeader("Content-Type", MIME[ext] || "application/octet-stream");
-    if (ext === ".json") {
+    if (ext === ".json" || ext === ".csv") {
       res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
       res.setHeader("Pragma", "no-cache");
       res.setHeader("Expires", "0");

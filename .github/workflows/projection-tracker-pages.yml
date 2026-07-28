@@ -1,0 +1,77 @@
+# Publish Projection Tracker + live data to GitHub Pages.
+# URL (after enabling Pages → Source: GitHub Actions):
+#   https://jriordan55.github.io/alpha-caddie/
+#   https://jriordan55.github.io/alpha-caddie/projection-tracker/
+#
+# Rebuilds whenever main updates tracker UI, projections, or tracker CSVs
+# (including after push:live). Also runs after the DK round-props workflow
+# (those commits use [skip ci]) and on a light schedule as a backstop.
+
+name: Projection Tracker Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "alpha-caddie-web/projection-tracker/**"
+      - "alpha-caddie-web/projections.json"
+      - "alpha-caddie-web/data/round_projection_vs_actual.csv"
+      - "alpha-caddie-web/data/round_projection_vs_actual_summary.csv"
+      - "alpha-caddie-web/data/round_projection_vs_actual.csv.new"
+      - "alpha-caddie-web/data/round_projection_vs_actual_summary.csv.new"
+      - "alpha-caddie-web/data/walkforward_oos_roi.json"
+      - "alpha-caddie-web/data/skill_window_oos_roi.json"
+      - "alpha-caddie-web/data/odds_model_roi_summary.csv"
+      - "alpha-caddie-web/data/odds_model_roi_lines.csv"
+      - "alpha-caddie-web/data/pgatour_event_rounds.json"
+      - "alpha-caddie-web/data/live_event_book_props.json"
+      - "alpha-caddie-web/data/edge_signal_scan.json"
+      - "alpha-caddie-web/data/course_table.csv"
+      - "alpha-caddie-web/scripts/assemble-projection-tracker-pages.mjs"
+      - ".github/workflows/projection-tracker-pages.yml"
+  workflow_dispatch:
+  schedule:
+    # Catch DK [skip ci] pushes and other data-only updates
+    - cron: "20 */2 * * *"
+  workflow_run:
+    workflows: ["DraftKings round projections"]
+    types: [completed]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: projection-tracker-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Assemble tracker site
+        run: node alpha-caddie-web/scripts/assemble-projection-tracker-pages.mjs --out tracker-pages
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: tracker-pages
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
