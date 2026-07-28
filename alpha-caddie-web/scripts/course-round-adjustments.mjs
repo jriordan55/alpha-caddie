@@ -9,6 +9,7 @@ import { parse } from "csv-parse";
 import { eventsLikelySame, foldComparableTitle } from "./dg-events-align.mjs";
 import { liveHoleStatsUsableForProjections } from "./dg-live-hole-pars.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
+import { canonicalizeCourseName, histCourseKeyFromRow } from "./dual-course-venues.mjs";
 import { applyBayesianMarketPosteriors } from "./bayesian-market-posterior.mjs";
 import {
   applyMarketBookCalibrationToRow,
@@ -139,7 +140,7 @@ export async function loadEventRoundContextFromHistoricalCsv(csvPath, eventName,
     parser.on("data", (row) => {
       if (!eventsLikelySame(eventName, String(row.event_name || "").trim())) return;
       if (ckWant) {
-        const ckRow = normCourseNameKey(row.course_name || row.Course_Name || "");
+        const ckRow = histCourseKeyFromRow(row);
         if (!ckRow || ckRow !== ckWant) return;
       }
       const yr = parseInt(row.year, 10);
@@ -1363,7 +1364,7 @@ export function latestVenueFieldRoundRows(rows, courseKey, limit = 4) {
   const ckWant = normCourseNameKey(courseKey || "");
   const bundles = new Map();
   for (const row of rows || []) {
-    if (ckWant && normCourseNameKey(row.course_name || row.Course_Name || "") !== ckWant) continue;
+    if (ckWant && histCourseKeyFromRow(row) !== ckWant) continue;
     const key = venueFieldRoundKey(row);
     if (!key) continue;
     const order = venueFieldRoundOrder(row);
@@ -1621,7 +1622,7 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
       }),
     );
     parser.on("data", (row) => {
-      const ckRow = normCourseNameKey(row.course_name || row.Course_Name || "");
+      const ckRow = histCourseKeyFromRow(row);
       if (!ckRow || ckRow !== ckWant) return;
       const yr = parseInt(row.year, 10);
       if (yearAllow?.length) {
@@ -1639,7 +1640,7 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
   const extraRows = Array.isArray(opts.extraRows) ? opts.extraRows : [];
   let extraAdded = 0;
   for (const row of extraRows) {
-    if (normCourseNameKey(row.course_name || row.Course_Name || "") !== ckWant) continue;
+    if (histCourseKeyFromRow(row) !== ckWant) continue;
     candidateRows.push(row);
     extraAdded++;
   }
@@ -2386,6 +2387,38 @@ export function ensureProjectionCourseBasisComplete(basis, payload = {}) {
     if (Number.isFinite(fromCourse)) out.course_adj_gir_rate = Math.round(fromCourse * 10000) / 10000;
   }
 
+  // Brand-new course layouts (Detroit North 2026): seed counting anchors from tour benchmarks
+  // so field calibration does not collapse to stub event-week means.
+  // Note: JSON null becomes Number(null)===0 — treat null/empty/near-zero as missing.
+  const birdMissing =
+    out.venue_avg_birdies == null ||
+    out.venue_avg_birdies === "" ||
+    !Number.isFinite(Number(out.venue_avg_birdies)) ||
+    Number(out.venue_avg_birdies) < 0.5;
+  if (birdMissing) {
+    const tourBird = num(
+      payload?.pga_tour_market_benchmarks?.Birdies?.mean ??
+        payload?.meta?.pga_tour_market_benchmarks?.Birdies?.mean,
+      NaN,
+    );
+    if (Number.isFinite(tourBird)) {
+      out.venue_avg_birdies = Math.round(clamp(tourBird, 2.5, 5.5) * 100) / 100;
+    } else {
+      out.venue_avg_birdies = 3.8;
+    }
+  }
+  const bogMissing =
+    out.venue_avg_bogeys == null ||
+    out.venue_avg_bogeys === "" ||
+    !Number.isFinite(Number(out.venue_avg_bogeys)) ||
+    Number(out.venue_avg_bogeys) < 0.5;
+  if (bogMissing) {
+    out.venue_avg_bogeys = 2.4;
+  }
+  if (out.venue_avg_eagles == null || !Number.isFinite(Number(out.venue_avg_eagles))) {
+    out.venue_avg_eagles = 0.12;
+  }
+
   if (
     !Number.isFinite(num(out.venue_avg_pars, NaN)) &&
     Number.isFinite(num(out.venue_avg_birdies, NaN)) &&
@@ -2448,7 +2481,12 @@ export function updateProjectionBasisFromEventWeek(basis, fieldMeans, opts = {})
     "fairways",
   );
   const lockCounting = historicalVenueCountingLocked(basis);
-  if (!lockCounting) {
+  // New dual-course layouts (e.g. Detroit North 2026) have no venue hist yet — refuse
+  // stub event-week birdie means (~0.2) that would wreck field calibration.
+  const nHist = Math.max(0, Math.round(num(basis.venue_historical_rounds, 0)));
+  const eventWeekBirdiesUnusable =
+    nHist < 8 && Number.isFinite(pooledBird) && pooledBird < 2.2;
+  if (!lockCounting && !eventWeekBirdiesUnusable) {
     blendKey("venue_avg_birdies", pooledBird, 4.2);
     blendKey("venue_avg_bogeys", pooledBog, 2.5);
     if (Number.isFinite(basis.venue_avg_birdies) && Number.isFinite(basis.venue_avg_bogeys)) {
@@ -3386,13 +3424,18 @@ export function lookupAdjScoreToParFromCourseTable(courseLabel) {
     for (const p of paths) {
       if (!existsSync(p)) continue;
       const j = JSON.parse(readFileSync(p, "utf8"));
+      const exact = j?.byNormKey?.[ck];
+      if (exact) {
+        const v = num(exact.adj_score_to_par, NaN);
+        if (Number.isFinite(v) && Math.abs(v) < 6) return v;
+      }
       const rows = Array.isArray(j?.rows) ? j.rows : [];
+      // Exact name match only — never let "Detroit Golf Club" steal North/South.
       for (const row of rows) {
         const rk = normCourseNameKey(row.course ?? row.course_name ?? "");
-        if (rk && (rk === ck || rk.includes(ck) || ck.includes(rk))) {
-          const v = num(row.adj_score_to_par, NaN);
-          if (Number.isFinite(v) && Math.abs(v) < 6) return v;
-        }
+        if (rk !== ck) continue;
+        const v = num(row.adj_score_to_par, NaN);
+        if (Number.isFinite(v) && Math.abs(v) < 6) return v;
       }
     }
   } catch {

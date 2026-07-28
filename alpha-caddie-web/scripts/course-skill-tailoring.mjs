@@ -5,6 +5,7 @@
 import { createReadStream, existsSync, readFileSync } from "fs";
 import { parse } from "csv-parse";
 import { normCourseNameKey } from "./course-name-key.mjs";
+import { histCourseKeyFromRow } from "./dual-course-venues.mjs";
 import { courseRequirementSgWeights } from "./course-adaptive-pricing.mjs";
 import { teeWaveFromTeetimeAndLabel } from "./open-meteo-forecast.mjs";
 import { teeWaveStrokeShift } from "./projection-unified-factors.mjs";
@@ -320,7 +321,7 @@ export function collectVenueHistRowsForSgFit(histRows, courseKey, cutoffMs, time
   const out = [];
   for (const row of histRows || []) {
     if (ck) {
-      const rk = normCourseNameKey(row.course_name || "");
+      const rk = histCourseKeyFromRow(row) || normCourseNameKey(row.course_name || "");
       if (rk && rk !== ck) continue;
     }
     const t = timeOf(row);
@@ -341,7 +342,7 @@ export async function fitVenueSgImportanceFromCsv(csvPath, courseKey, cutoffMs =
       parse({ columns: true, relax_quotes: true, relax_column_count: true, skip_records_with_error: true }),
     );
     parser.on("data", (row) => {
-      const rk = normCourseNameKey(row.course_name || row.Course_Name || "");
+      const rk = histCourseKeyFromRow(row);
       if (!rk || rk !== ck) return;
       const completed = String(row.event_completed || "").trim();
       if (Number.isFinite(cutoffMs) && completed) {

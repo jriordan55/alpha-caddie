@@ -7,6 +7,7 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { eventsLikelySame, fieldWeekKey, fieldWeekKeysRoughMatch } from "./dg-events-align.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
+import { canonicalizeCourseName } from "./dual-course-venues.mjs";
 import { summarizeHourlyWeatherSlice } from "./open-meteo-weather-classify.mjs";
 import { applyWeatherBakedCountsToAllPlayers } from "./weather-projection-adjustments.mjs";
 import { projectionExportMeta } from "./projection-export-meta.mjs";
@@ -53,6 +54,8 @@ export const COURSE_COORDINATES_BY_NAME = {
   "wilmington country club": { lat: 39.7878, lon: -84.2108 },
   "castle pines golf club": { lat: 39.4189, lon: -104.894, timezone: "America/Denver" },
   "detroit golf club": { lat: 42.4369, lon: -83.161, timezone: "America/Detroit" },
+  "detroit golf club north course": { lat: 42.4369, lon: -83.161, timezone: "America/Detroit" },
+  "detroit golf club south course": { lat: 42.4369, lon: -83.161, timezone: "America/Detroit" },
   "royal liverpool golf club": { lat: 53.3728, lon: -3.184, timezone: "Europe/London" },
   "the riviera country club": { lat: 34.0497, lon: -118.501, timezone: "America/Los_Angeles" },
   "colonial country club": { lat: 32.7248, lon: -97.434, timezone: "America/Chicago" },
@@ -413,6 +416,8 @@ export function mergeFieldTeeTimesIntoProjections(proj, fieldUpdatesRaw) {
     if (!Array.isArray(tt)) {
       delete p.dg_teetime_local;
       delete p.dg_tee_wave;
+      delete p.dg_course_num;
+      delete p.dg_course_name;
       continue;
     }
     const rnd = Math.round(num(p.round, NaN));
@@ -420,10 +425,23 @@ export function mergeFieldTeeTimesIntoProjections(proj, fieldUpdatesRaw) {
     if (slot && slot.teetime != null && String(slot.teetime).trim() !== "") {
       p.dg_teetime_local = String(slot.teetime).trim();
       p.dg_tee_wave = String(slot.wave || "").trim();
+      const cnum = Math.round(num(slot.course_num ?? slot.courseNum, NaN));
+      if (Number.isFinite(cnum) && cnum > 0) {
+        p.dg_course_num = cnum;
+        p.dg_course_name = canonicalizeCourseName(
+          slot.course_name || slot.courseName || "",
+          cnum,
+        );
+      } else {
+        delete p.dg_course_num;
+        delete p.dg_course_name;
+      }
       n++;
     } else {
       delete p.dg_teetime_local;
       delete p.dg_tee_wave;
+      delete p.dg_course_num;
+      delete p.dg_course_name;
     }
   }
   return n;

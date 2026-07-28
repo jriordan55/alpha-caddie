@@ -50,6 +50,7 @@ import {
 } from "./dg-live-tournament-stats.mjs";
 import { reconcileHoleCountsFromScore } from "./course-round-adjustments.mjs";
 import { normCourseNameKey, courseShardFileName, formatCourseLabelForDisplay } from "./course-name-key.mjs";
+import { canonicalizeCourseName, histCourseKeyFromRow } from "./dual-course-venues.mjs";
 import {
   historyRoundChartUtcIsoDay,
   roundEventCompletedMdYFromEventEnd,
@@ -295,7 +296,7 @@ function writeCourseHistoryShards(out, courseAggByCourse = null) {
     if (!Number.isFinite(dg) || !bucket?.rounds) continue;
     const playerName = String(bucket.player_name || "").trim();
     for (const r of bucket.rounds) {
-      ingest(normCourseNameKey(r.course_name), dg, playerName, r);
+      ingest(histCourseKeyFromRow(r) || normCourseNameKey(r.course_name), dg, playerName, r);
     }
   }
 

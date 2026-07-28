@@ -4345,6 +4345,8 @@ const COURSE_COORDINATES_BY_NAME = {
   "wilmington country club": { lat: 39.7878, lon: -84.2108 },
   "castle pines golf club": { lat: 39.4189, lon: -104.894 },
   "detroit golf club": { lat: 42.4369, lon: -83.161 },
+  "detroit golf club north course": { lat: 42.4369, lon: -83.161 },
+  "detroit golf club south course": { lat: 42.4369, lon: -83.161 },
   "royal liverpool golf club": { lat: 53.3728, lon: -3.184 },
   "the riviera country club": { lat: 34.0497, lon: -118.501 },
   "colonial country club": { lat: 32.7248, lon: -97.434 },
@@ -21545,9 +21547,22 @@ const COURSE_NAME_CANONICAL_KEYS = Object.freeze({
   "royal birkdale gc": "royal birkdale golf club",
 });
 
+/** Pull North/South course side before stripping parentheses (must match course-name-key.mjs). */
+function extractCourseSideToken(s) {
+  const t = String(s || "").toLowerCase();
+  const inParen = t.match(/\(\s*(north|south|east|west)\s*(course)?\s*\)/i);
+  if (inParen) return `${inParen[1].toLowerCase()} course`;
+  const outside = t.match(/\b(north|south|east|west)\s+course\b/i);
+  if (outside) return `${outside[1].toLowerCase()} course`;
+  const shortParen = t.match(/\(\s*(north|south|east|west)\s*\)/i);
+  if (shortParen) return `${shortParen[1].toLowerCase()} course`;
+  return "";
+}
+
 /** Course-name canonical key for filters/matching (e.g. "Trump National Doral" vs "(Blue Monster)"). */
 function normCourseNameKey(raw) {
   let s = String(raw || "").trim().toLowerCase();
+  const side = extractCourseSideToken(s);
   s = s.replace(/\([^)]*\)/g, " ");
   s = s.replace(/\b(blue monster|stadium course|championship course|club de golf)\b/g, " ");
   s = s.replace(/&/g, " and ");
@@ -21560,8 +21575,10 @@ function normCourseNameKey(raw) {
   s = s.replace(/\bgolf club(\s+golf club)+\b/gi, "golf club");
   s = s.replace(/\bcountry club(\s+country club)+\b/gi, "country club");
   s = s.replace(/\bgolf links(\s+golf links)+\b/gi, "golf links");
+  s = s.replace(/\b(north|south|east|west)\s+course\b/g, " ");
   s = s.replace(/[^a-z0-9]+/g, " ");
   s = s.replace(/\s+/g, " ").trim();
+  if (side) s = `${s} ${side}`.replace(/\s+/g, " ").trim();
   const alias = COURSE_NAME_CANONICAL_KEYS[s];
   return alias || s;
 }

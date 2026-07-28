@@ -17,6 +17,13 @@ const REPO_ROOT = resolveGolfModelDir(WEB_ROOT);
 
 function normCourseNameKeyFetch(raw) {
   let s = String(raw || "").trim().toLowerCase();
+  const sideMatch =
+    s.match(/\(\s*(north|south|east|west)\s*(course)?\s*\)/i) ||
+    s.match(/\b(north|south|east|west)\s+course\b/i) ||
+    s.match(/\(\s*(north|south|east|west)\s*\)/i);
+  const side = sideMatch
+    ? `${String(sideMatch[1]).toLowerCase()} course`
+    : "";
   s = s.replace(/\([^)]*\)/g, " ");
   s = s.replace(/\b(blue monster|stadium course|championship course|club de golf)\b/g, " ");
   s = s.replace(/&/g, " and ");
@@ -27,8 +34,10 @@ function normCourseNameKeyFetch(raw) {
   s = s.replace(/\bgolf club(\s+golf club)+\b/gi, "golf club");
   s = s.replace(/\bcountry club(\s+country club)+\b/gi, "country club");
   s = s.replace(/\bgolf links(\s+golf links)+\b/gi, "golf links");
+  s = s.replace(/\b(north|south|east|west)\s+course\b/g, " ");
   s = s.replace(/[^a-z0-9]+/g, " ");
   s = s.replace(/\s+/g, " ").trim();
+  if (side) s = `${s} ${side}`.replace(/\s+/g, " ").trim();
   const aliases = {
     albany: "albany golf club",
     "albany bahamas": "albany golf club",

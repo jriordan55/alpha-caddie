@@ -17,6 +17,7 @@ import {
   courseShardFileName,
   formatCourseLabelForDisplay,
 } from "./course-name-key.mjs";
+import { canonicalizeCourseName, histCourseKeyFromRow } from "./dual-course-venues.mjs";
 import {
   historyRoundChartUtcIsoDay,
   roundEventCompletedMdYFromEventEnd,
@@ -162,7 +163,10 @@ function csvRowToHistoryEntry(row, enrichedIdx) {
 
   const eventDate = roundEventCompletedMdYFromEventEnd(row.event_completed, rnd, tour);
   const sortKey = parseEventCompletedChronoBase(eventDate) * 10 + rnd;
-  const courseRaw = String(row.course_name || "").trim();
+  const courseRaw = canonicalizeCourseName(
+    String(row.course_name || "").trim(),
+    row.course_num ?? row.courseNum,
+  );
   return {
     dg_id: dg,
     player_name: String(row.player_name || "").trim(),
@@ -173,6 +177,7 @@ function csvRowToHistoryEntry(row, enrichedIdx) {
       event_name: eventName,
       event_id: String(row.event_id || ""),
       course_name: formatCourseLabelForDisplay(courseRaw) || courseRaw || eventName,
+      course_num: Math.round(Number(row.course_num ?? row.courseNum)) || undefined,
       round_num: rnd,
       fin_text: String(row.fin_text || ""),
       round_score: num(row.round_score),
@@ -219,8 +224,11 @@ async function streamCourseShardsFromCsv(enrichedIdx) {
     const rs = num(row.round_score);
     if (!Number.isFinite(dg) || !Number.isFinite(rs) || rs <= 0) continue;
 
-    const courseRaw = String(row.course_name || "").trim();
-    const ck = normCourseNameKey(formatCourseLabelForDisplay(courseRaw) || courseRaw);
+    const courseRaw = canonicalizeCourseName(
+      String(row.course_name || "").trim(),
+      row.course_num ?? row.courseNum,
+    );
+    const ck = histCourseKeyFromRow(row) || normCourseNameKey(formatCourseLabelForDisplay(courseRaw) || courseRaw);
     if (!ck) continue;
 
     let b = byCourse.get(ck);

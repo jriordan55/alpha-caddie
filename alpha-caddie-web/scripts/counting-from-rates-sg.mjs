@@ -1,7 +1,7 @@
 /**
  * Counting markets from player rolling rates + SG categories (no score-to-par derive).
  */
-import { createReadStream, existsSync } from "fs";
+import { createReadStream, existsSync, readFileSync } from "fs";
 import { parse } from "csv-parse";
 import {
   DG_TOUR_AVG_FAIRWAY_RATE,
@@ -29,12 +29,19 @@ export const BIRDIE_COURSE_SPREAD_KEEP = 0.42;
 export const BIRDIE_PLAYER_COURSE_MIN_ROUNDS = 4;
 export const BIRDIE_PLAYER_COURSE_MAX_WEIGHT = 0.45;
 
-/** Backtested dynamic spread: preserve more separation for above-course BoB players. */
+/**
+ * Dynamic spread: preserve separation for players clearly above *or* below course BoB.
+ * Thin/stale unknowns were getting pulled to venue mean (keep≈0.42) and looking like birdie machines.
+ */
 export function birdieCourseSpreadKeep(playerMkt, venueMkt, baseSpread = BIRDIE_COURSE_SPREAD_KEEP) {
   let spread = num(baseSpread, BIRDIE_COURSE_SPREAD_KEEP);
-  if (Number.isFinite(playerMkt) && Number.isFinite(venueMkt) && playerMkt > venueMkt) {
+  if (!Number.isFinite(playerMkt) || !Number.isFinite(venueMkt)) return spread;
+  if (playerMkt > venueMkt) {
     const excess = playerMkt - venueMkt;
     spread = clamp(spread + 0.4 * excess + 0.04 * Math.max(0, playerMkt), spread, 0.9);
+  } else if (playerMkt < venueMkt) {
+    const deficit = venueMkt - playerMkt;
+    spread = clamp(spread + 0.32 * deficit + 0.03 * Math.max(0, venueMkt - playerMkt), spread, 0.88);
   }
   return spread;
 }
@@ -356,16 +363,37 @@ function courseFwWidthNorm(fwWidthYds) {
   return courseScalarNorm01(num(fwWidthYds, NaN), 23.5, 71.9);
 }
 
-/** Birdies market (birdies+eagles): rolling player BoB% only before course calibration. */
+/**
+ * Birdies market (birdies+eagles) before course calibration.
+ * Prefer rolling player BoB; if missing, use SG/OLS optimized prior — never invent full venue
+ * rates for skill-less longshots (that made sponsor invites look like field birdie leaders).
+ */
 function birdiesEaglesFromPlayerRates(opts = {}) {
   const sk = opts.skRow || {};
   const venueBird = num(opts.venueBird, 3.8);
   const venueEag = num(opts.venueEagles, 0.12);
   const venueMkt = venueBird + venueEag;
   const playerMkt = num(sk.avg_birdies, NaN);
-  const mkt = Number.isFinite(playerMkt) ? playerMkt : venueMkt;
+  const optMkt = num(opts.optimizedBirdMarket, NaN);
+  const makeCut = num(opts.makeCut ?? sk.make_cut, NaN);
+  const hasSkill = opts.hasSkillRatings === true || Number.isFinite(num(sk.sg_total, NaN));
+
+  let mkt;
+  if (Number.isFinite(playerMkt)) {
+    mkt = playerMkt;
+  } else if (!hasSkill && Number.isFinite(makeCut) && makeCut < 0.25) {
+    // No counting history + no skill ratings + longshot make-cut → conservative BoB prior.
+    const weakScale = clamp(0.4 + 0.6 * Math.min(1, makeCut / 0.4), 0.4, 1);
+    const weakMkt = venueMkt * weakScale;
+    mkt = Number.isFinite(optMkt) ? 0.35 * optMkt + 0.65 * weakMkt : weakMkt;
+  } else if (Number.isFinite(optMkt)) {
+    mkt = optMkt;
+  } else {
+    mkt = venueMkt;
+  }
 
   let eagles = num(sk.avg_eagles, NaN);
+  if (!Number.isFinite(eagles)) eagles = num(opts.optimizedEagles, venueEag);
   if (!Number.isFinite(eagles)) eagles = venueEag;
   eagles = clamp(eagles, 0, 1.1);
   const birdies = clamp(mkt - eagles, 0.15, 7);
@@ -414,6 +442,8 @@ export function holeCountsFromRatesAndSg(opts = {}) {
     venueBirdieSgScale: opts.venueBirdieSgScale,
     optimizedBirdMarket: Number.isFinite(opt.birdies) ? opt.birdies + opt.eagles : NaN,
     optimizedEagles: opt.eagles,
+    makeCut: opts.makeCut,
+    hasSkillRatings: opts.hasSkillRatings,
   });
 
   let { eagles, birdies, bogeys, doubles } = {
@@ -591,6 +621,8 @@ export function derivedStatsFromRatesAndSg(muRaw, nFairwayHoles, opts = {}) {
     courseBirdieEase: opts.courseBirdieEase,
     fieldGir: opts.venueGir,
     venueBirdieSgScale: opts.venueBirdieSgScale ?? venueBirdieSgScale(opts.venueBird, 4.2),
+    makeCut: opts.makeCut,
+    hasSkillRatings: opts.hasSkillRatings,
   });
 
   const fairways = fairwaysFromRatesAndSg({
@@ -635,12 +667,15 @@ export function derivedStatsFromRatesAndSg(muRaw, nFairwayHoles, opts = {}) {
 
 /**
  * Rolling per-player counting means from historical_rounds_all.csv.
+ * Prefer last ~2 years; if that window is empty/thin, backfill older rounds (sponsor invites,
+ * Monday qualifiers) so birdies don't fall through to venue mean.
  */
 export async function buildRollingHoleCountRatesByDg(csvPath, dgIdSet, opts = {}) {
   const maxR = Math.max(8, Math.round(num(opts.maxRoundsPerPlayer, BIRDIE_BOB_WINDOW)));
   const nFw = Math.round(num(opts.nFairwayHoles, 14)) || 14;
   const cy = new Date().getFullYear();
-  const minYear = cy - 2;
+  const minYearRecent = cy - 2;
+  const minYearStale = cy - 20;
   /** @type {Map<number, object>} */
   const buf = new Map();
   if (!existsSync(csvPath) || !dgIdSet?.size) return new Map();
@@ -653,7 +688,7 @@ export async function buildRollingHoleCountRatesByDg(csvPath, dgIdSet, opts = {}
         const tour = String(row.tour || "").toLowerCase();
         if (tour !== "pga" && tour !== "liv") return;
         const yr = parseInt(row.year, 10);
-        if (Number.isFinite(yr) && yr < minYear) return;
+        if (Number.isFinite(yr) && yr < minYearStale) return;
         const id = Math.round(num(row.dg_id, NaN));
         if (!Number.isFinite(id) || !dgIdSet.has(id)) return;
         const rs = num(row.round_score, NaN);
@@ -674,6 +709,7 @@ export async function buildRollingHoleCountRatesByDg(csvPath, dgIdSet, opts = {}
         const f = countFromRateOrRaw(row.driving_acc, nFw);
         slot.rows.push({
           ts: Date.parse(row.event_completed || "") || (Number.isFinite(yr) ? Date.UTC(yr, 0, 1) : 0),
+          year: Number.isFinite(yr) ? yr : 0,
           round: Math.round(num(row.round_num, 0)),
           bird: Number.isFinite(b) && b >= 0 && b <= 10 ? b : NaN,
           bog: Number.isFinite(bg) && bg >= 0 && bg <= 14 ? bg : NaN,
@@ -689,18 +725,40 @@ export async function buildRollingHoleCountRatesByDg(csvPath, dgIdSet, opts = {}
       .on("error", reject);
   });
 
+  return summarizeHoleCountRateBuf(buf, maxR, minYearRecent);
+}
+
+/**
+ * @param {Map<number, { rows: object[] }>} buf
+ * @param {number} maxR
+ * @param {number} minYearRecent
+ */
+function summarizeHoleCountRateBuf(buf, maxR, minYearRecent) {
   const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : NaN);
   /** @type {Map<number, object>} */
   const out = new Map();
   for (const [id, slot] of buf) {
-    const recent = slot.rows
-      .sort((a, b) => b.ts - a.ts || b.round - a.round)
-      .slice(0, maxR);
-    const vals = (key) => recent.map((row) => row[key]).filter(Number.isFinite);
+    const sorted = slot.rows.sort((a, b) => b.ts - a.ts || b.round - a.round);
+    const recent = sorted.filter((r) => r.year >= minYearRecent);
+    let chosen = recent.slice(0, maxR);
+    let staleUsed = 0;
+    if (chosen.length < 4) {
+      const need = maxR - chosen.length;
+      const older = sorted.filter((r) => r.year < minYearRecent).slice(0, need);
+      staleUsed = older.length;
+      chosen = chosen.concat(older);
+    }
+    const vals = (key) => chosen.map((row) => row[key]).filter(Number.isFinite);
     const bird = vals("bird");
     const bog = vals("bog");
-    const n = Math.max(bird.length, bog.length);
-    if (!n) continue;
+    const nRaw = Math.max(bird.length, bog.length);
+    if (!nRaw) continue;
+    // Discount stale-only samples so 2016 major rates don't dominate Detroit soft-field priors.
+    const nRecentBird = recent.map((r) => r.bird).filter(Number.isFinite).length;
+    const nEff =
+      nRecentBird >= 4
+        ? nRaw
+        : Math.max(1, Math.round(nRecentBird + staleUsed * 0.4));
     out.set(id, {
       avg_birdies: mean(bird),
       avg_bogeys: mean(bog),
@@ -710,10 +768,84 @@ export async function buildRollingHoleCountRatesByDg(csvPath, dgIdSet, opts = {}
       avg_putts: mean(vals("putt")),
       avg_gir: mean(vals("gir")),
       avg_fairways: mean(vals("fw")),
-      counting_rounds: n,
+      counting_rounds: nEff,
+      rates_stale: staleUsed > 0 && nRecentBird < 4,
     });
   }
   return out;
+}
+
+/**
+ * Fill missing rolling rates from player-history/by-dg shards (invitees often absent from
+ * repo data/historical_rounds_all.csv but present in web shards).
+ * @param {Map<number, object>} ratesMap
+ * @param {Set<number>} dgIdSet
+ * @param {string} shardDir
+ */
+export function supplementHoleCountRatesFromPlayerShards(ratesMap, dgIdSet, shardDir) {
+  if (!ratesMap || !dgIdSet?.size || !shardDir || !existsSync(shardDir)) return 0;
+  const cy = new Date().getFullYear();
+  const minYearRecent = cy - 2;
+  const maxR = BIRDIE_BOB_WINDOW;
+  /** @type {Map<number, object>} */
+  const buf = new Map();
+  let added = 0;
+  for (const id of dgIdSet) {
+    if (ratesMap.has(id)) continue;
+    const shardPath = joinShardPath(shardDir, id);
+    if (!existsSync(shardPath)) continue;
+    let doc;
+    try {
+      doc = JSON.parse(readFileSync(shardPath, "utf8"));
+    } catch {
+      continue;
+    }
+    const rounds = Array.isArray(doc?.rounds) ? doc.rounds : [];
+    if (!rounds.length) continue;
+    const slot = { rows: [] };
+    for (const row of rounds) {
+      const yr = parseInt(row.year, 10);
+      if (Number.isFinite(yr) && yr < cy - 20) continue;
+      const rs = num(row.round_score, NaN);
+      if (Number.isFinite(rs) && (rs < 55 || rs > 95)) continue;
+      const b = birdiesFromHistRow(row);
+      const bg = bogeysFromHistRow(row);
+      const e = num(row.eagles_or_better ?? row.eagles, 0);
+      const d = num(row.doubles_or_worse ?? row.doubles, 0);
+      const p = num(row.pars, NaN);
+      const pt = num(row.putts, NaN);
+      const g = countFromRateOrRaw(row.gir, 18);
+      slot.rows.push({
+        ts: Date.parse(row.event_completed || "") || (Number.isFinite(yr) ? Date.UTC(yr, 0, 1) : 0),
+        year: Number.isFinite(yr) ? yr : 0,
+        round: Math.round(num(row.round_num, 0)),
+        bird: Number.isFinite(b) && b >= 0 && b <= 10 ? b : NaN,
+        bog: Number.isFinite(bg) && bg >= 0 && bg <= 14 ? bg : NaN,
+        eag: Number.isFinite(e) && e >= 0 && e <= 3 ? e : NaN,
+        dbl: Number.isFinite(d) && d >= 0 && d <= 5 ? d : NaN,
+        par: Number.isFinite(p) && p >= 4 && p <= 16 ? p : NaN,
+        putt: Number.isFinite(pt) && pt >= 24 && pt <= 36 ? pt : NaN,
+        gir: Number.isFinite(g) && g >= 4 && g <= 17 ? g : NaN,
+        fw: NaN,
+      });
+    }
+    if (!slot.rows.length) continue;
+    buf.set(id, slot);
+  }
+  const extra = summarizeHoleCountRateBuf(buf, maxR, minYearRecent);
+  for (const [id, rates] of extra) {
+    if (ratesMap.has(id)) continue;
+    ratesMap.set(id, rates);
+    added++;
+  }
+  return added;
+}
+
+function joinShardPath(shardDir, dgId) {
+  // Avoid importing path — keep this module light; shards are always by-dg/<id>.json
+  const sep = shardDir.includes("\\") ? "\\" : "/";
+  const base = shardDir.endsWith(sep) ? shardDir.slice(0, -1) : shardDir;
+  return `${base}${sep}${Math.round(dgId)}.json`;
 }
 
 /** Attach rolling counting rates onto a skill-ratings row object. */
@@ -729,7 +861,12 @@ export function mergeHoleCountRatesIntoSkillRow(skRow, rates) {
     "avg_gir",
     "avg_fairways",
     "counting_rounds",
+    "rates_stale",
   ]) {
+    if (k === "rates_stale") {
+      if (rates[k] != null) skRow[k] = !!rates[k];
+      continue;
+    }
     if (Number.isFinite(rates[k]) || k === "counting_rounds") skRow[k] = rates[k];
   }
   // avg_gir / avg_fairways are career hole-count means for optimized blend only —

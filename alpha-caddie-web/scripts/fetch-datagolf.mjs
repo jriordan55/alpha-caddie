@@ -96,6 +96,12 @@ import {
 import { holeParsFromLiveHoleStatsPayload } from "./dg-live-hole-pars.mjs";
 import { normCourseNameKey, formatCourseLabelForDisplay } from "./course-name-key.mjs";
 import {
+  DETROIT_NORTH_HOLE_PARS_2026,
+  canonicalizeCourseName,
+  histCourseKeyFromRow,
+  resolveEventCourseUsed,
+} from "./dual-course-venues.mjs";
+import {
   loadPgaTourCourseBenchmarks,
   loadPgaTourMarketBenchmarks,
   serializePgaTourCourseBenchmarks,
@@ -121,6 +127,7 @@ import {
   buildRollingHoleCountRatesByDg,
   derivedStatsFromRatesAndSg,
   mergeHoleCountRatesIntoSkillRow,
+  supplementHoleCountRatesFromPlayerShards,
 } from "./counting-from-rates-sg.mjs";
 import { blendWeightsFromHistCalib } from "./optimized-counting-blend.mjs";
 import { resolveCourseTableForVenue } from "./course-adaptive-pricing.mjs";
@@ -210,14 +217,22 @@ function findCourseTableRowForCourse(course_used) {
   const ck = normCourseNameKey(course_used);
   if (!ck) return null;
   const rows = loadCourseTableRows();
+  // Exact key wins — never let "detroit golf club" steal "detroit golf club north course".
+  const exact = rows.find((r) => r.key === ck);
+  if (exact) return exact;
   let best = null;
   let bestScore = -1;
   for (const r of rows) {
-    if (!r.key) continue;
+    if (!r.key || r.key === ck) continue;
+    // Only allow parent→child style containment when the row key is a prefix of the query
+    // (e.g. query is more specific). Never match a shorter parent when an exact child exists
+    // above; here we only run after no exact match.
     let score = 0;
-    if (r.key === ck) score = 10000;
-    else if (ck.includes(r.key) || r.key.includes(ck)) score = 1000 + r.key.length;
-    else continue;
+    if (ck.startsWith(r.key + " ") || r.key.startsWith(ck + " ")) {
+      score = 1000 + Math.min(ck.length, r.key.length);
+    } else if (ck.includes(r.key) || r.key.includes(ck)) {
+      score = 100 + Math.min(ck.length, r.key.length);
+    } else continue;
     if (score > bestScore) {
       bestScore = score;
       best = r;
@@ -317,12 +332,21 @@ function lookupKnownVenueHolePars(course_used, event_name) {
   if (ck.includes("shinnecock") || (ek.includes("u s open") && ck.includes("shinnecock"))) {
     return { pars: [...SHINNECOCK_PAR_70_FALLBACK], source: "known_venue_shinnecock" };
   }
+  // 2026 Rocket Classic restored North Course (par 70) — do not use legacy Detroit par-72 template.
+  if (
+    ck === "detroit golf club north course" ||
+    (/\brocket\b/.test(ek) && ck.includes("detroit") && ck.includes("north"))
+  ) {
+    return { pars: [...DETROIT_NORTH_HOLE_PARS_2026], source: "known_venue_detroit_north_2026" };
+  }
   return null;
 }
 
 function reconcileHoleParsWithCourseTable(holeRes, course_used, event_name) {
   // Live feeds are ground truth for the current setup — don't second-guess them.
   if (holeRes?.source === "live_hole_stats" || holeRes?.source === "field_updates") return holeRes;
+  // Explicit known layouts (Detroit North 2026, Shinnecock, …) beat fuzzy course-table matches.
+  if (String(holeRes?.source || "").startsWith("known_venue_")) return holeRes;
   let expectedPar = lookupExpectedParFromCourseTable(course_used);
   let expectedSrc = "course_table";
   if (!Number.isFinite(expectedPar)) {
@@ -634,11 +658,12 @@ function resolveHoleParsForEvent({ fieldRaw, course_used, event_name, field_upda
     if (hp) return { pars: hp, source: "csv", detail: csvPath };
   }
 
-  const fromCourseTable = lookupHoleParsFromCourseTable(course_used);
-  if (fromCourseTable) return fromCourseTable;
-
+  // Known venue layouts (Detroit North par 70, Shinnecock, …) before generic course-table templates.
   const knownVenue = lookupKnownVenueHolePars(course_used, event_name);
   if (knownVenue) return knownVenue;
+
+  const fromCourseTable = lookupHoleParsFromCourseTable(course_used);
+  if (fromCourseTable) return fromCourseTable;
 
   const fromHistCsv = lookupHoleParsFromHistoricalCsvPar(course_used);
   if (fromHistCsv) return fromHistCsv;
@@ -1189,7 +1214,7 @@ async function loadHistoricalCsvCalibration(modelRoot, courseKeyOpt) {
       const tour = String(row.tour || "").toLowerCase();
       if (tour !== "pga" && tour !== "liv") return;
       if (ckWant) {
-        const ckRow = normCourseNameKey(row.course_name || row.Course_Name || "");
+        const ckRow = histCourseKeyFromRow(row);
         if (!ckRow || ckRow !== ckWant) return;
         const yr = parseInt(row.year, 10);
         if (Number.isFinite(yr) && yr < cy - 8) return;
@@ -1823,6 +1848,16 @@ async function main() {
   if (!skipSchedule && anchor?.name && fieldCandidateMatchesSchedule(event_name, anchor.name)) {
     event_name = anchor.name;
   }
+  course_used = resolveEventCourseUsed({
+    eventName: event_name,
+    courseUsed: course_used,
+    fieldRaw,
+  });
+  if (course_used !== field_updates_course_used) {
+    console.log(
+      `[fetch-dg] Course label resolved for dual-course venue: "${field_updates_course_used}" → "${course_used}"`,
+    );
+  }
 
   console.log(
     `[field-updates] chose tour=${tourForFeeds} "${event_name || "(unnamed)"}" (${fieldRows.length} players, ts=${win.ts}); scanned:`,
@@ -1875,6 +1910,7 @@ async function main() {
     if (!Number.isFinite(fid) || skillByDg.has(fid)) continue;
     const rawOnly = decompByDgRaw.get(fid);
     if (rawOnly) skillByDg.set(fid, mergeSkillDrivingProfile(rawOnly));
+    else skillByDg.set(fid, mergeSkillDrivingProfile({ dg_id: fid }));
   }
 
   console.log("Fetching preds/approach-skill (YTD → approach_skill_ytd.json for Course Fit shot bins)…");
@@ -2047,6 +2083,13 @@ async function main() {
     }
   }
 
+  // Re-assert dual-course labels after pret may overwrite with parent club name.
+  course_used = resolveEventCourseUsed({
+    eventName: event_name,
+    courseUsed: course_used,
+    fieldRaw,
+  });
+
   const pretByDg = new Map();
   for (const row of pretList) {
     const id = num(row.dg_id ?? row.id ?? row.dgId, NaN);
@@ -2161,6 +2204,32 @@ async function main() {
   );
   const rollingTradByDg = await loadRollingTraditionalPctByDg(histCsvPath, fieldDgIds);
   const rollingCountByDg = await buildRollingHoleCountRatesByDg(histCsvPath, fieldDgIds);
+  // Web mirror often has invitee/qualifier rounds missing from repo data/historical_rounds_all.csv.
+  const webHistCsv = join(ROOT, "data", "historical_rounds_all.csv");
+  if (webHistCsv !== histCsvPath && existsSync(webHistCsv)) {
+    const webRates = await buildRollingHoleCountRatesByDg(webHistCsv, fieldDgIds);
+    let filled = 0;
+    for (const [id, rates] of webRates) {
+      if (rollingCountByDg.has(id)) continue;
+      rollingCountByDg.set(id, rates);
+      filled++;
+    }
+    if (filled) {
+      console.log(
+        `[fetch-dg] Hole-count rates: filled ${filled} player(s) from alpha-caddie-web/data/historical_rounds_all.csv`,
+      );
+    }
+  }
+  const shardFilled = supplementHoleCountRatesFromPlayerShards(
+    rollingCountByDg,
+    fieldDgIds,
+    join(ROOT, "player-history", "by-dg"),
+  );
+  if (shardFilled) {
+    console.log(
+      `[fetch-dg] Hole-count rates: filled ${shardFilled} player(s) from player-history/by-dg shards`,
+    );
+  }
   if (rollingTradByDg.size) {
     console.log(
       `[fetch-dg] Rolling DataGolf traditional GIR/FW rates: ${rollingTradByDg.size} players (historical_rounds_all.csv)`,
@@ -2646,6 +2715,8 @@ async function main() {
         courseFairwayRate01,
         courseGirRate01,
         fieldMeanDgFairways14,
+        makeCut: row.make_cut,
+        hasSkillRatings: Number.isFinite(num(row.sg_total, NaN)),
         ...courseCountOpts,
       });
       const pretScore = pretStrokesByDg.get(row.dg_id);
