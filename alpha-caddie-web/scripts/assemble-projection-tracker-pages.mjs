@@ -8,6 +8,7 @@
  *     index.html              → redirect to projection-tracker/
  *     projections.json
  *     data/<tracker CSVs + JSON>
+ *     scripts/<browser modules imported via ../scripts/>
  *     projection-tracker/*    → UI
  *
  * Usage:
@@ -44,9 +45,21 @@ const DATA_FILES = [
   "parlay_correlations.json",
 ];
 
+/** Browser modules imported by projection-tracker via ../scripts/ (must ship on Pages). */
+const SCRIPT_MODULES = [
+  "projected-mean-live.mjs",
+  "weather-mu-adjustments.mjs",
+  "live-in-play-pricing.mjs",
+  "projection-book-props.mjs",
+  "dg-events-align.mjs",
+  "live-event-actuals-cap.mjs",
+  "course-name-key.mjs",
+];
+
 const out = argOut();
 if (existsSync(out)) rmSync(out, { recursive: true, force: true });
 mkdirSync(join(out, "data"), { recursive: true });
+mkdirSync(join(out, "scripts"), { recursive: true });
 mkdirSync(join(out, "projection-tracker"), { recursive: true });
 
 writeFileSync(join(out, ".nojekyll"), "");
@@ -90,6 +103,23 @@ for (const name of DATA_FILES) {
   copied++;
 }
 
+const scriptsDir = join(WEB, "scripts");
+let scriptsCopied = 0;
+const missingScripts = [];
+for (const name of SCRIPT_MODULES) {
+  const src = join(scriptsDir, name);
+  if (!existsSync(src)) {
+    missingScripts.push(name);
+    continue;
+  }
+  copyFileSync(src, join(out, "scripts", name));
+  scriptsCopied++;
+}
+if (missingScripts.length) {
+  console.error("[assemble-tracker-pages] missing browser script modules:", missingScripts.join(", "));
+  process.exit(1);
+}
+
 writeFileSync(
   join(out, "deploy-meta.json"),
   JSON.stringify(
@@ -97,10 +127,13 @@ writeFileSync(
       assembled_at: new Date().toISOString(),
       source: "alpha-caddie-web",
       data_files_copied: copied,
+      script_modules_copied: scriptsCopied,
     },
     null,
     2,
   ),
 );
 
-console.log(`[assemble-tracker-pages] wrote ${out} (tracker + projections + ${copied} data files)`);
+console.log(
+  `[assemble-tracker-pages] wrote ${out} (tracker + projections + ${copied} data files + ${scriptsCopied} scripts)`,
+);

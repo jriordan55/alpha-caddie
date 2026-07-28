@@ -28,6 +28,13 @@ on:
       - "alpha-caddie-web/data/edge_signal_scan.json"
       - "alpha-caddie-web/data/course_table.csv"
       - "alpha-caddie-web/scripts/assemble-projection-tracker-pages.mjs"
+      - "alpha-caddie-web/scripts/projected-mean-live.mjs"
+      - "alpha-caddie-web/scripts/weather-mu-adjustments.mjs"
+      - "alpha-caddie-web/scripts/live-in-play-pricing.mjs"
+      - "alpha-caddie-web/scripts/projection-book-props.mjs"
+      - "alpha-caddie-web/scripts/dg-events-align.mjs"
+      - "alpha-caddie-web/scripts/live-event-actuals-cap.mjs"
+      - "alpha-caddie-web/scripts/course-name-key.mjs"
       - ".github/workflows/projection-tracker-pages.yml"
   workflow_dispatch:
   schedule:
