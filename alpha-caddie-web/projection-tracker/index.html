@@ -7,14 +7,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="tracker.css?v=15" />
+  <link rel="stylesheet" href="tracker.css?v=16" />
 </head>
 <body>
   <header class="app-header">
     <div class="header-inner">
       <div>
         <h1 class="brand-title">Projection tracker</h1>
-        <p class="brand-sub">Model vs DraftKings lines · odds · W/L bet log</p>
+        <p class="brand-sub">Calibrated win probability vs DraftKings · beat the book price</p>
       </div>
       <div class="header-meta" id="header-meta">Loading…</div>
     </div>
@@ -32,13 +32,13 @@
           <option value="">All markets</option>
         </select>
       </label>
-      <label>Min EV %
+      <label>Min confidence edge %
         <select id="filter-min-ev">
-          <option value="0">0%</option>
+          <option value="0" selected>0% (any beat-book)</option>
           <option value="2.5">2.5%</option>
           <option value="5">5%</option>
           <option value="7.5">7.5%</option>
-          <option value="10" selected>10%</option>
+          <option value="10">10%</option>
           <option value="12.5">12.5%</option>
           <option value="15">15%</option>
         </select>
@@ -211,7 +211,7 @@
     </section>
 
     <section id="panel-bets" class="panel" role="tabpanel">
-      <p class="note">Each row is one player × round × market with a real DraftKings or PrizePicks line. <strong>Model</strong> = projection at export; <strong>Book</strong> = DK/PP line. Qualified bets require min EV <em>and</em> min |model−book| gap (0.5 score, 1.25 birdies, etc.) so flat book buckets don’t auto-qualify. Core markets: total score, birdies, GIR, fairways.</p>
+      <p class="note">Each row is one player × round × market with a real DraftKings or PrizePicks line. <strong>Model μ</strong> = projection; <strong>Conf %</strong> = calibrated P(pick wins); <strong>Book %</strong> = de-vigged fair price; <strong>Edge</strong> = conf − book. Beat-book bets need conf ≥ book (min confidence filter) and a minimum |μ−line| gap. Core markets: total score, birdies, GIR, fairways.</p>
       <div class="kpi-grid" id="bets-kpis"></div>
       <div class="table-card">
         <div class="table-wrap table-wrap-tall">
@@ -222,16 +222,17 @@
                 <th class="num">Rnd</th>
                 <th>Player</th>
                 <th>Market</th>
-                <th class="num">Model</th>
+                <th class="num">Model μ</th>
                 <th class="num">Book</th>
-                <th class="num">Δ</th>
+                <th class="num">μ−line</th>
                 <th class="num">Over</th>
                 <th>Over</th>
                 <th class="num">Under</th>
                 <th>Under</th>
                 <th>Pick</th>
-                <th class="num">EV%</th>
-                <th class="num" title="Edge vs devigged fair price">Fair EV%</th>
+                <th class="num" title="Calibrated P(pick wins)">Conf %</th>
+                <th class="num" title="Devigged book fair">Book %</th>
+                <th class="num" title="Confidence − book fair">Edge</th>
                 <th class="num">Actual</th>
                 <th>Bet</th>
                 <th class="num">P/L</th>
@@ -269,7 +270,9 @@
                 <th class="num">Line</th>
                 <th class="num" title="Model μ minus DK line">Δ</th>
                 <th class="num">Odds</th>
-                <th class="num">EV</th>
+                <th class="num" title="Calibrated P(win)">Conf %</th>
+                <th class="num" title="Devigged book fair">Book %</th>
+                <th class="num" title="Confidence − book fair">Edge</th>
                 <th class="num">OOS ROI</th>
                 <th>Context</th>
                 <th class="num">Score</th>

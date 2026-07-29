@@ -40,6 +40,11 @@ import {
   summarizeOddsLines,
   uniqueCourses,
 } from "./odds-csv-tab.mjs";
+import {
+  loadWinProbCalibration,
+  priceSidesAgainstBook,
+  getWinProbCalibration,
+} from "./win-prob-calibration.mjs";
 
 const RISK_STORAGE_KEY = "alphaCaddie_projection_tracker_risk_v1";
 const MY_BETS_STORAGE_KEY = "alphaCaddie_my_dk_bets_v1";
@@ -1209,6 +1214,7 @@ function explodeProjectionActualToBets(rows) {
         pickEdge: NaN,
         edgeFairPick: NaN,
         modelProb: NaN,
+        rawModelProb: NaN,
         fairProb: NaN,
         postedProb: NaN,
         beatsFairPreBet: null,
@@ -1257,16 +1263,31 @@ function explodeDetailBetForBook(row, spec, book) {
   const mu = Number.isFinite(modelLine) ? modelLine : NaN;
   if (!isActionableMarket(spec.market)) return [];
   const fair = modelEdgeVsFairAtLine(spec.market, mu, bookLine, overOdds, underOdds);
-  let edgeOver = fair.edgeFairOver;
-  let edgeUnder = fair.edgeFairUnder;
+  const postedOver = impliedProbFromAmerican(overOdds);
+  const postedUnder = impliedProbFromAmerican(underOdds);
+  const priced = priceSidesAgainstBook({
+    market: spec.market,
+    pRawOver: fair.pOver,
+    fairOver: fair.fairOver,
+    fairUnder: fair.fairUnder,
+    postedOver,
+    postedUnder,
+  });
+  // Confidence edge (calibrated P − fair) is the primary price signal.
+  let edgeOver = priced.confEdgeOver;
+  let edgeUnder = priced.confEdgeUnder;
+  if (!Number.isFinite(edgeOver) || !Number.isFinite(edgeUnder)) {
+    edgeOver = fair.edgeFairOver;
+    edgeUnder = fair.edgeFairUnder;
+  }
   if (!Number.isFinite(edgeOver) || !Number.isFinite(edgeUnder)) {
     const posted = modelEdgePctAtLine(spec.market, mu, bookLine, overOdds, underOdds);
     edgeOver = posted.edgeOver;
     edgeUnder = posted.edgeUnder;
   }
   ({ edgeOver, edgeUnder } = capDirectionalPostedEdges(edgeOver, edgeUnder, mu, bookLine));
-  const pModelOver = fair.pOver;
-  const pModelUnder = fair.pUnder;
+  const pModelOver = priced.pCalOver;
+  const pModelUnder = priced.pCalUnder;
   const pick = pickBetSide(edgeOver, edgeUnder, state.minEv, mu, bookLine);
   const bestSide =
     Number.isFinite(edgeOver) && Number.isFinite(edgeUnder)
@@ -1284,15 +1305,12 @@ function explodeDetailBetForBook(row, spec, book) {
   const underRes = graded.under;
   const betRes = side === "over" ? overRes : side === "under" ? underRes : "";
   const betOdds = side === "over" ? overOdds : side === "under" ? underOdds : NaN;
-  const fairProb = side === "over" ? fair.fairOver : side === "under" ? fair.fairUnder : NaN;
-  const postedProb =
-    side === "over"
-      ? impliedProbFromAmerican(overOdds)
-      : side === "under"
-        ? impliedProbFromAmerican(underOdds)
-        : NaN;
+  const fairProb = side === "over" ? priced.fairOver : side === "under" ? priced.fairUnder : NaN;
+  const postedProb = side === "over" ? postedOver : side === "under" ? postedUnder : NaN;
   const modelProb = side === "over" ? pModelOver : side === "under" ? pModelUnder : NaN;
-  const edgeFairPick = side === "over" ? fair.edgeFairOver : side === "under" ? fair.edgeFairUnder : NaN;
+  const rawModelProb =
+    side === "over" ? priced.pRawOver : side === "under" ? priced.pRawUnder : NaN;
+  const edgeFairPick = side === "over" ? priced.confEdgeOver : side === "under" ? priced.confEdgeUnder : NaN;
   const qualified =
     Boolean(pick) &&
     qualifiesBet({
@@ -1325,16 +1343,19 @@ function explodeDetailBetForBook(row, spec, book) {
       actual,
       edgeOver,
       edgeUnder,
-      edgeFairOver: fair.edgeFairOver,
-      edgeFairUnder: fair.edgeFairUnder,
-      fairOver: fair.fairOver,
-      fairUnder: fair.fairUnder,
+      edgeFairOver: priced.confEdgeOver,
+      edgeFairUnder: priced.confEdgeUnder,
+      fairOver: priced.fairOver,
+      fairUnder: priced.fairUnder,
       pModelOver,
       pModelUnder,
+      pRawOver: priced.pRawOver,
+      pRawUnder: priced.pRawUnder,
       pickSide: side,
       pickEdge: activePick?.edge ?? NaN,
       edgeFairPick,
       modelProb,
+      rawModelProb,
       fairProb,
       postedProb,
       beatsFairPreBet:
@@ -1432,10 +1453,10 @@ function renderBets() {
     <div class="kpi-card">
       <div class="kpi-label">Rows shown</div>
       <div class="kpi-value">${rows.length}</div>
-      <div class="kpi-sub">${state.show === "bets" ? `≥${state.minEv}% edge` : "all graded lines"}</div>
+      <div class="kpi-sub">${state.show === "bets" ? `conf edge ≥${state.minEv}%` : "all graded lines"}</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">Qualified bets</div>
+      <div class="kpi-label">Beat-book bets</div>
       <div class="kpi-value">${bets}</div>
       <div class="kpi-sub">${wins}W · ${losses}L · ${pushes}P</div>
     </div>
@@ -1447,10 +1468,10 @@ function renderBets() {
     <div class="kpi-card">
       <div class="kpi-label">ROI</div>
       <div class="kpi-value ${clsSigned(roi)}">${fmtPct(roi)}</div>
-      <div class="kpi-sub">qualified bets only</div>
+      <div class="kpi-sub">beat-book bets only</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">Beat fair price</div>
+      <div class="kpi-label">Hit vs fair</div>
       <div class="kpi-value ${clsSigned(fairStats.beatFair)}">${fmtPct(fairStats.beatFair)}</div>
       <div class="kpi-sub">${fmt(fairStats.hitRate, 1)}% hit vs ${fmt(fairStats.avgFair, 1)}% fair (${fairStats.graded} graded)</div>
     </div>
@@ -1460,18 +1481,19 @@ function renderBets() {
       <div class="kpi-sub">posted − fair implied on picks</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">Model &gt; fair (pre-bet)</div>
+      <div class="kpi-label">Conf &gt; fair (pre-bet)</div>
       <div class="kpi-value">${fmt(fairStats.preBetPct, 1)}%</div>
-      <div class="kpi-sub">${fairStats.preBetBeats}/${fairStats.preBetEligible} qualified picks</div>
+      <div class="kpi-sub">${fairStats.preBetBeats}/${fairStats.preBetEligible} beat-book picks</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">Lines model beats fair</div>
+      <div class="kpi-label">Lines conf beats fair</div>
       <div class="kpi-value">${fmt(fairStats.modelBeatsFairPct, 1)}%</div>
-      <div class="kpi-sub">${fairStats.modelBeatsFairLine}/${fairStats.withModel} with model + DK odds</div>
+      <div class="kpi-sub">${fairStats.modelBeatsFairLine}/${fairStats.withModel} with calibrated price + DK odds</div>
     </div>
   `;
 
   const fmtLine = (v, d) => (Number.isFinite(v) ? fmt(v, d) : "—");
+  const fmtProb = (v) => (Number.isFinite(v) ? `${fmt(v * 100, 1)}%` : "—");
   const fmtBookLineCell = (r) => {
     if (!Number.isFinite(r.bookLine)) return "—";
     const isPp = Boolean(r.isPrizePicks);
@@ -1503,15 +1525,16 @@ function renderBets() {
         <td class="num">${formatAmerican(r.underOdds) || "—"}</td>
         <td>${resultBadge(r.underRes)}</td>
         <td>${pickLabel}</td>
-        <td class="num ${clsSigned(r.pickEdge)}">${Number.isFinite(r.pickEdge) ? fmtPct(r.pickEdge) : "—"}</td>
-        <td class="num ${clsSigned(r.edgeFairPick)}" title="Model edge vs devigged fair price (no margin)">${Number.isFinite(r.edgeFairPick) ? fmtPct(r.edgeFairPick) : "—"}</td>
+        <td class="num" title="Calibrated P(pick wins)">${fmtProb(r.modelProb)}</td>
+        <td class="num" title="Book fair (devigged) price">${fmtProb(r.fairProb)}</td>
+        <td class="num ${clsSigned(r.edgeFairPick)}" title="Calibrated confidence − book fair">${Number.isFinite(r.edgeFairPick) ? fmtPct(r.edgeFairPick) : "—"}</td>
         <td class="num">${fmtLine(r.actual, r.decimals)}</td>
         <td>${betCell}</td>
         <td class="num">${pnlCell}</td>
       </tr>`;
         })
         .join("")
-    : `<tr><td colspan="${showEvent ? 17 : 16}">No bet rows — lower min EV %, switch to “All graded lines”, or pick another tournament.</td></tr>`;
+    : `<tr><td colspan="${showEvent ? 17 : 16}">No bet rows — set Min confidence to 0%, switch to “All graded lines”, or pick another tournament.</td></tr>`;
 }
 
 function evRows() {
@@ -2406,9 +2429,14 @@ function renderHeader() {
           liveMeta.updated ? ` · projections ${esc(new Date(liveMeta.updated).toLocaleString())}` : ""
         } · Reload merges pgatour actuals + DK/PP book props into bet log</div>`
       : "";
+  const cal = getWinProbCalibration();
+  const calNote = cal?.generated_at
+    ? `<div class="header-cal">Confidence = calibrated P(win) vs book fair · fit ${esc(new Date(cal.generated_at).toLocaleDateString())}</div>`
+    : `<div class="header-cal">Confidence = raw model P(win) vs book fair (run <code>npm run fit:win-prob-calibration</code>)</div>`;
   document.getElementById("header-meta").innerHTML = `
     <div><strong>${state.tournament || "All tournaments"}</strong></div>
     <div>${sub}</div>
+    ${calNote}
     ${liveLine}
   `;
 }
@@ -2540,9 +2568,9 @@ function renderLivePicks() {
       : "";
     noteEl.textContent =
       `Upcoming round picks from projections.json (${built.updatedAt ? `updated ${new Date(built.updatedAt).toLocaleString()}` : "live"}).${factors}${venue}${dkNote}` +
-      ` Ranked by model EV vs posted lines, walk-forward OOS market ROI` +
+      ` Ranked by calibrated confidence vs book fair, walk-forward OOS market ROI` +
       (Number.isFinite(oosRoi) ? ` (${oosRoi >= 0 ? "+" : ""}${oosRoi.toFixed(1)}% on ${oosN} OOS policy bets)` : "") +
-      `, and historical context signals. Uses toolbar Min EV %.`;
+      `, and historical context signals. Uses toolbar Min confidence edge %.`;
   }
 
   let picks = built.picks;
@@ -2556,7 +2584,7 @@ function renderLivePicks() {
 
   if (!picks.length) {
     const mktLabel = state.picksMarket ? ` for ${state.picksMarket}` : "";
-    tbody.innerHTML = `<tr><td colspan="13" class="live-picks-empty">No picks${mktLabel} at ≥${state.minEv}% EV for ${built.roundLabel} — lower Min EV %, try All markets, or refresh DK props.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="14" class="live-picks-empty">No picks${mktLabel} at ≥${state.minEv}% confidence edge for ${built.roundLabel} — set Min confidence to 0%, try All markets, or refresh DK props.</td></tr>`;
     return;
   }
 
@@ -2568,6 +2596,8 @@ function renderLivePicks() {
           : "—";
       const edgeCls = p.edgePct > 0 ? "pos" : p.edgePct < 0 ? "neg" : "";
       const gapCls = Number.isFinite(p.gap) ? (p.gap > 0 ? "pos" : p.gap < 0 ? "neg" : "") : "";
+      const confPct = Number.isFinite(p.confP) ? `${(p.confP * 100).toFixed(1)}%` : "—";
+      const bookPct = Number.isFinite(p.fairP) ? `${(p.fairP * 100).toFixed(1)}%` : "—";
       const tags = (p.contextTags || [])
         .map((t) => {
           const warn = String(t).startsWith("fade") || String(t).includes("% -");
@@ -2595,6 +2625,8 @@ function renderLivePicks() {
         <td class="num">${lineLabel}</td>
         <td class="num ${gapCls}">${formatGap(p.market, p.gap)}</td>
         <td class="num">${esc(formatAmerican(p.odds))}</td>
+        <td class="num" title="Calibrated P(win)">${confPct}</td>
+        <td class="num" title="Book fair">${bookPct}</td>
         <td class="num ${edgeCls}">${p.edgePct >= 0 ? "+" : ""}${p.edgePct.toFixed(1)}%</td>
         <td class="num" title="${p.histBets ? `${p.histBets} OOS bets` : ""}">${hist}</td>
         <td class="live-picks-context">${tags || '<span class="muted">—</span>'}</td>
@@ -2773,6 +2805,7 @@ async function loadData() {
       loadOddsLinesCsv(),
       loadSkillWindowReport(),
     ]);
+    await loadWinProbCalibration();
     OOS_REPORT = oos;
     ODDS_MODEL_ROI = oddsRoi;
     ODDS_LINES_ROWS = oddsLines;

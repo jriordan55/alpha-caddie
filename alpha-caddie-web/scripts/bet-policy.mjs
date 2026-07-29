@@ -3,7 +3,7 @@
  * Re-fit with: npm run fit:bet-policy-from-oos
  */
 
-export const DEFAULT_MIN_EV_PCT = 10;
+export const DEFAULT_MIN_EV_PCT = 0;
 
 /** @type {Record<string, object>} */
 export const OOS_MARKET_POLICY = {

@@ -3,6 +3,7 @@
  */
 import {
   capDirectionalPostedEdges,
+  impliedProbFromAmerican,
   modelEdgePctAtLine,
   modelEdgeVsFairAtLine,
   num,
@@ -10,7 +11,6 @@ import {
 } from "./ev-math.mjs";
 import {
   isActionableMarket,
-  minEvForMarket,
   qualifiesBet,
 } from "./bet-policy.mjs";
 import { ouProjectedMeanForLive } from "../scripts/projected-mean-live.mjs";
@@ -19,6 +19,7 @@ import {
   buildLiveProjectionFactorsSummary,
   courseTailoringTags,
 } from "./projection-factors-panel.mjs";
+import { priceSidesAgainstBook } from "./win-prob-calibration.mjs";
 const PROJECTIONS_URL = "../projections.json";
 const EDGE_SIGNALS_URL = "../data/edge_signal_scan.json";
 const COURSE_TABLE_URL = "../data/course_table.csv";
@@ -397,16 +398,27 @@ export function buildLiveBestBets({ projections, oos, signals, courseRow, minEvP
       continue;
     }
     const fair = modelEdgeVsFairAtLine(market, mu, prop.line, prop.over, prop.under, 1, fairwayHoles);
-    let edgeOver = fair.edgeFairOver;
-    let edgeUnder = fair.edgeFairUnder;
+    const priced = priceSidesAgainstBook({
+      market,
+      pRawOver: fair.pOver,
+      fairOver: fair.fairOver,
+      fairUnder: fair.fairUnder,
+      postedOver: impliedProbFromAmerican(prop.over),
+      postedUnder: impliedProbFromAmerican(prop.under),
+    });
+    let edgeOver = priced.confEdgeOver;
+    let edgeUnder = priced.confEdgeUnder;
+    if (!Number.isFinite(edgeOver) || !Number.isFinite(edgeUnder)) {
+      edgeOver = fair.edgeFairOver;
+      edgeUnder = fair.edgeFairUnder;
+    }
     if (!Number.isFinite(edgeOver) || !Number.isFinite(edgeUnder)) {
       const posted = modelEdgePctAtLine(market, mu, prop.line, prop.over, prop.under, 1, fairwayHoles);
       edgeOver = posted.edgeOver;
       edgeUnder = posted.edgeUnder;
     }
     ({ edgeOver, edgeUnder } = capDirectionalPostedEdges(edgeOver, edgeUnder, mu, prop.line));
-    const marketMinEv = minEvForMarket(market, minEdge);
-    const pick = pickBetSide(edgeOver, edgeUnder, marketMinEv, mu, prop.line);
+    const pick = pickBetSide(edgeOver, edgeUnder, minEdge, mu, prop.line);
     if (!pick) continue;
     if (
       !qualifiesBet({
@@ -422,6 +434,8 @@ export function buildLiveBestBets({ projections, oos, signals, courseRow, minEvP
     }
     const side = pick.side;
     const edgePct = pick.edge;
+    const confP = side === "over" ? priced.pCalOver : priced.pCalUnder;
+    const fairP = side === "over" ? priced.fairOver : priced.fairUnder;
     const labels = contextLabels(market, side, edgePct, player, courseRow, pinActive, projections);
     const { boost, tags } = signalBoost(market, labels, signals);
     const tailoringTags = courseTailoringTags(player);
@@ -440,6 +454,8 @@ export function buildLiveBestBets({ projections, oos, signals, courseRow, minEvP
       line: prop.line,
       odds: side === "over" ? prop.over : prop.under,
       edgePct,
+      confP,
+      fairP,
       score,
       histRoi: num(mktHist?.roi_pct, NaN),
       histBets: Math.round(num(mktHist?.bets, NaN)) || 0,

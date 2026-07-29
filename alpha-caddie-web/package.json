@@ -34,6 +34,7 @@
     "export:round-projection-vs-actual": "node scripts/export-round-projection-vs-actual-csv.mjs",
     "recover:dk-audit-rows": "node scripts/recover-missing-dk-audit-rows.mjs",
     "fit:market-book-calibration": "node scripts/fit-market-book-calibration.mjs",
+    "fit:win-prob-calibration": "node scripts/fit-win-prob-calibration.mjs",
     "report:walkforward-oos-roi": "node scripts/report-walkforward-oos-roi.mjs",
     "fit:bet-policy-from-oos": "node scripts/fit-bet-policy-from-oos.mjs",
     "apply:market-book-calibration": "node scripts/apply-market-book-calibration.mjs",

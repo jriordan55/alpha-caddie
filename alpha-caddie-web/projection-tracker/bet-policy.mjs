@@ -2,7 +2,8 @@
  * Walk-forward OOS bet policy — browser copy of scripts/bet-policy.mjs
  */
 
-export const DEFAULT_MIN_EV_PCT = 10;
+/** Default confidence-edge floor (0 = any side that beats book fair after calibration). */
+export const DEFAULT_MIN_EV_PCT = 0;
 
 /** @type {Record<string, object>} */
 export const OOS_MARKET_POLICY = {

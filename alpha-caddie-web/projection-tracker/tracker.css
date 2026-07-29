@@ -794,6 +794,15 @@ tr.my-bets-in-slip-partial td {
   color: var(--green);
 }
 
+.header-cal {
+  margin-top: 4px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.header-cal code {
+  font-size: 0.78em;
+}
+
 .live-picks-toolbar {
   display: flex;
   flex-wrap: wrap;

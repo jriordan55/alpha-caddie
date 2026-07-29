@@ -43,6 +43,7 @@ const DATA_FILES = [
   "edge_signal_scan.json",
   "course_table.csv",
   "parlay_correlations.json",
+  "win_prob_calibration.json",
 ];
 
 /** Browser modules imported by projection-tracker via ../scripts/ (must ship on Pages). */
