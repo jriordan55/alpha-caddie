@@ -9,7 +9,11 @@ import { parse } from "csv-parse";
 import { eventsLikelySame, foldComparableTitle } from "./dg-events-align.mjs";
 import { liveHoleStatsUsableForProjections } from "./dg-live-hole-pars.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
-import { canonicalizeCourseName, histCourseKeyFromRow } from "./dual-course-venues.mjs";
+import {
+  canonicalizeCourseName,
+  histCourseKeyFromRow,
+  venueHistoryCourseKeys,
+} from "./dual-course-venues.mjs";
 import { applyBayesianMarketPosteriors } from "./bayesian-market-posterior.mjs";
 import {
   applyMarketBookCalibrationToRow,
@@ -730,7 +734,7 @@ export function reconcileProjectionRowCountsToScore(row, opts = {}) {
   if (Number.isFinite(courseGirCount)) {
     girFromScore = 0.42 * girFromScore + 0.58 * courseGirCount;
   }
-  const girBlend = num(opts.girBlend, 0.38);
+  const girBlend = num(opts.girBlend, 0);
   const fwBlend = num(opts.fairwaysBlend, 0);
   let gir = num(row.gir, NaN);
   let fairways = num(row.fairways, NaN);
@@ -927,7 +931,9 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
     venueAvgGir: num(basis.venue_avg_gir, NaN),
     courseGirRate01: num(basis.course_adj_gir_rate, NaN),
     nGirHoles: 18,
-    courseWeight: 0.84,
+    // Light field recenter only — skill rank already set above.
+    courseWeight: 0.35,
+    minDelta: 0.12,
   };
   if (Number.isFinite(girCalibOpts.courseGirRate01)) {
     for (let rnd = 1; rnd <= 4; rnd++) {
@@ -1118,8 +1124,17 @@ export function fieldDayCountingLiftFrac() {
 
 /** Max blend toward personal venue history when flat venue is on; rest is course-average skill anchor. */
 export function flatVenueMaxPlayerVenueWeight() {
-  return clamp(envNum("GOLF_FLAT_VENUE_MAX_PLAYER_SCORE_WEIGHT", 0.38), 0.08, 0.72);
+  return clamp(envNum("GOLF_FLAT_VENUE_MAX_PLAYER_SCORE_WEIGHT", 0.16), 0.05, 0.45);
 }
+
+/**
+ * Total score skill recipe:
+ *   STP = courseBaseline − SCORE_SKILL_KEEP × (μ_SG − fieldMeanμ)
+ * Keep near 1 so better players actually project lower scores.
+ */
+export const SCORE_SKILL_KEEP = clamp(envNum("GOLF_SCORE_SKILL_KEEP", 0.98), 0.7, 1);
+/** Cap on player-at-course history when blending with skill STP. */
+export const SCORE_PLAYER_COURSE_MAX_W = clamp(envNum("GOLF_SCORE_PLAYER_COURSE_MAX_W", 0.16), 0, 0.4);
 
 /** Venue CSV year window — include prior US Opens / setups (not only the latest ~8 seasons). */
 function venueHistoryMinYear(calendarYear) {
@@ -1361,10 +1376,15 @@ function venueFieldRoundOrder(row) {
  * event × year × round, not an individual player's row.
  */
 export function latestVenueFieldRoundRows(rows, courseKey, limit = 4) {
-  const ckWant = normCourseNameKey(courseKey || "");
+  const accept = new Set(
+    Array.isArray(courseKey)
+      ? courseKey.map((k) => normCourseNameKey(k)).filter(Boolean)
+      : venueHistoryCourseKeys(courseKey),
+  );
   const bundles = new Map();
   for (const row of rows || []) {
-    if (ckWant && histCourseKeyFromRow(row) !== ckWant) continue;
+    const ckRow = histCourseKeyFromRow(row);
+    if (accept.size && (!ckRow || !accept.has(ckRow))) continue;
     const key = venueFieldRoundKey(row);
     if (!key) continue;
     const order = venueFieldRoundOrder(row);
@@ -1517,6 +1537,9 @@ export function syncVenueScoringToProjectionBasis(basis, venueScoring, coursePar
     basis.venue_avg_score_to_par = Math.round(venueScoring.venueAvgStp * 1000) / 1000;
     basis.venue_avg_round_score = Math.round((cp + venueScoring.venueAvgStp) * 100) / 100;
   }
+  if (Number.isFinite(num(venueScoring.courseAdjStp, NaN))) {
+    basis.course_adj_score_to_par = Math.round(venueScoring.courseAdjStp * 1000) / 1000;
+  }
   if (Number.isFinite(num(venueScoring.nVenueRounds, NaN))) {
     basis.venue_historical_rounds = venueScoring.nVenueRounds;
   }
@@ -1578,12 +1601,14 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
     playerByRound: new Map(),
     playerByVenue: new Map(),
     courseFitByDg: new Map(),
+    courseAdjStp: NaN,
   };
   const ckWant = courseKeyOpt ? normCourseNameKey(courseKeyOpt) : "";
+  const acceptKeys = new Set(venueHistoryCourseKeys(courseLabelOpt || courseKeyOpt || ckWant));
   if (!ckWant || !csvPath || !existsSync(csvPath)) {
     const adj = lookupAdjScoreToParFromCourseTable(courseLabelOpt || courseKeyOpt);
     if (Number.isFinite(adj)) {
-      return { ...empty, venueAvgStp: adj, source: "course_table" };
+      return { ...empty, venueAvgStp: adj, courseAdjStp: adj, source: "course_table" };
     }
     return empty;
   }
@@ -1611,6 +1636,8 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
     seen: new Set(),
   };
   const candidateRows = [];
+  /** @type {Map<string, number>} */
+  const histKeyCounts = new Map();
 
   await new Promise((resolve, reject) => {
     const parser = createReadStream(csvPath).pipe(
@@ -1623,7 +1650,7 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
     );
     parser.on("data", (row) => {
       const ckRow = histCourseKeyFromRow(row);
-      if (!ckRow || ckRow !== ckWant) return;
+      if (!ckRow || !acceptKeys.has(ckRow)) return;
       const yr = parseInt(row.year, 10);
       if (yearAllow?.length) {
         if (!Number.isFinite(yr) || !yearAllow.includes(yr)) return;
@@ -1632,6 +1659,7 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
         if (Number.isFinite(yr) && (yr < minYr || yr > cy + 1)) return;
       }
       candidateRows.push(row);
+      histKeyCounts.set(ckRow, (histKeyCounts.get(ckRow) || 0) + 1);
     });
     parser.on("end", resolve);
     parser.on("error", reject);
@@ -1640,8 +1668,10 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
   const extraRows = Array.isArray(opts.extraRows) ? opts.extraRows : [];
   let extraAdded = 0;
   for (const row of extraRows) {
-    if (histCourseKeyFromRow(row) !== ckWant) continue;
+    const ckRow = histCourseKeyFromRow(row);
+    if (!ckRow || !acceptKeys.has(ckRow)) continue;
     candidateRows.push(row);
+    histKeyCounts.set(ckRow, (histKeyCounts.get(ckRow) || 0) + 1);
     extraAdded++;
   }
 
@@ -1653,7 +1683,7 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
 
   // Every field-level course anchor uses only the latest four completed
   // event-rounds. This is four field rounds, not four player observations.
-  const rolling = latestVenueFieldRoundRows(validRows, ckWant, 4);
+  const rolling = latestVenueFieldRoundRows(validRows, [...acceptKeys], 4);
   const rollingCtx = {
     venueTotals: emptyVenueCountRaw(),
     fieldRaw: new Map(),
@@ -1681,17 +1711,29 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
 
   const venueAgg = finalizeVenueAgg(venueTotals);
   let venueAvgStp = venueAgg.n > 0 ? venueAgg.avgStp : NaN;
+  const courseAdjStp = lookupAdjScoreToParFromCourseTable(courseLabelOpt || courseKeyOpt);
+  const exactHistN = histKeyCounts.get(ckWant) || 0;
+  const layoutStpShift = clubLayoutStpShiftFromHistKeys(ckWant, histKeyCounts, courseAdjStp);
+  const usedClubPool = acceptKeys.size > 1 && exactHistN < Math.max(25, 0.35 * (venueAgg.n || 0));
+  if (Number.isFinite(venueAvgStp) && Number.isFinite(layoutStpShift) && Math.abs(layoutStpShift) >= 0.02) {
+    venueAvgStp += layoutStpShift;
+  }
   let source =
     venueAgg.n > 0
       ? yearAllow?.length
         ? `rolling_4_course_rounds_y${yearAllow.join("_")}`
         : "rolling_4_course_rounds"
       : "none";
+  if (usedClubPool && venueAgg.n > 0) {
+    source = `${source}+club_pool`;
+  }
   if (extraAdded > 0) {
     source = source === "historical_csv" ? "historical_csv+recent" : source === "none" ? "recent_live" : source;
   }
   if (!Number.isFinite(venueAvgStp)) {
-    const adj = lookupAdjScoreToParFromCourseTable(courseLabelOpt || courseKeyOpt);
+    const adj = Number.isFinite(courseAdjStp)
+      ? courseAdjStp
+      : lookupAdjScoreToParFromCourseTable(courseLabelOpt || courseKeyOpt);
     if (Number.isFinite(adj)) {
       venueAvgStp = adj;
       source = "course_table";
@@ -1719,6 +1761,10 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
     playerByRound,
     playerByVenue,
     courseFitByDg,
+    courseAdjStp,
+    layoutStpShift: Number.isFinite(layoutStpShift) ? layoutStpShift : 0,
+    histKeyCounts: Object.fromEntries(histKeyCounts),
+    usedClubPool: usedClubPool === true,
   };
 }
 
@@ -1822,6 +1868,8 @@ function skillScoreToPar({
   round,
   fieldMeanMu,
   minFieldRounds,
+  courseAdjStp,
+  skillKeep = SCORE_SKILL_KEEP,
 }) {
   const cp = num(course_par_18, NaN);
   const mu = num(muForRound, 0);
@@ -1829,21 +1877,43 @@ function skillScoreToPar({
 
   const rnd = Math.round(num(round, NaN));
   const fr = venueScoring?.fieldByRound?.get(rnd);
-  let venueStp = num(venueScoring?.venueAvgStp, NaN);
-  let source = "skill_around_venue_mean";
-  if (!flatVenuePlayerScoreAnchorEnabled()) {
-    const shrunk = venueProjectionStpAnchor(venueScoring, rnd);
-    if (Number.isFinite(shrunk)) {
-      venueStp = shrunk;
-      source =
-        fr && fr.n >= minFieldRounds && Number.isFinite(fr.avgStp)
-          ? "skill_around_shrunk_round_venue_mean"
-          : "skill_around_venue_mean";
+  const adj = num(courseAdjStp, num(venueScoring?.courseAdjStp, NaN));
+  const venueStp = num(venueScoring?.venueAvgStp, NaN);
+  const nVenue = num(venueScoring?.nVenueRounds, 0);
+  const histOk =
+    nVenue >= minFieldRounds &&
+    Number.isFinite(venueStp) &&
+    String(venueScoring?.source || "") !== "course_table";
+
+  let baselineStp = NaN;
+  let source = "skill_rating";
+  if (histOk) {
+    baselineStp = venueStp;
+    source = "skill_around_venue_mean";
+    if (!flatVenuePlayerScoreAnchorEnabled()) {
+      const shrunk = venueProjectionStpAnchor(venueScoring, rnd);
+      if (Number.isFinite(shrunk)) {
+        baselineStp = shrunk;
+        source =
+          fr && fr.n >= minFieldRounds && Number.isFinite(fr.avgStp)
+            ? "skill_around_shrunk_round_venue_mean"
+            : "skill_around_venue_mean";
+      }
     }
+  } else if (Number.isFinite(adj)) {
+    baselineStp = adj;
+    source = "skill_around_course_baseline";
+  } else if (Number.isFinite(venueStp)) {
+    baselineStp = venueStp;
+    source = "skill_around_venue_mean";
   }
+
   const fm = num(fieldMeanMu, 0);
-  if (Number.isFinite(venueStp)) return { stp: venueStp - (mu - fm), source };
-  return { stp: -mu, source: "skill_rating" };
+  const keep = clamp(num(skillKeep, SCORE_SKILL_KEEP), 0.7, 1);
+  if (Number.isFinite(baselineStp)) {
+    return { stp: baselineStp - keep * (mu - fm), source };
+  }
+  return { stp: -keep * mu, source: "skill_rating" };
 }
 
 /**
@@ -2003,7 +2073,8 @@ export function resolveProjectionCounts({
   const stp = num(targetStp, NaN);
   if (Number.isFinite(stp)) {
     const split = inferHoleCountsFromScoreSplit(stp, vBird, vBog);
-    const wScoreBog = 0.4;
+    // Keep bogeys mostly rate/skill-driven; score split was over-projecting (bias −0.35).
+    const wScoreBog = 0.1;
     bogeys = Math.max(0.15, (1 - wScoreBog) * bogeys + wScoreBog * split.bogeys);
   }
   pars = Math.max(0.12, 18 - eagles - birdies - bogeys - doubles);
@@ -3444,6 +3515,33 @@ export function lookupAdjScoreToParFromCourseTable(courseLabel) {
   return NaN;
 }
 
+/**
+ * When North/South borrows parent-club hist (different par/layout), shift STP by
+ * course-table adj gap so difficulty transfers: NorthAdj − parentAdj.
+ */
+export function clubLayoutStpShiftFromHistKeys(ckWant, histKeyCounts, targetAdjStp) {
+  const want = normCourseNameKey(ckWant);
+  if (!want || !(histKeyCounts instanceof Map) || !histKeyCounts.size) return 0;
+  const exactN = histKeyCounts.get(want) || 0;
+  let total = 0;
+  for (const n of histKeyCounts.values()) total += n;
+  if (exactN >= 25 && exactN >= 0.35 * total) return 0;
+
+  let bestKey = "";
+  let bestN = 0;
+  for (const [k, n] of histKeyCounts) {
+    if (n > bestN) {
+      bestN = n;
+      bestKey = k;
+    }
+  }
+  if (!bestKey || bestKey === want) return 0;
+  const sourceAdj = lookupAdjScoreToParFromCourseTable(bestKey);
+  const targetAdj = num(targetAdjStp, lookupAdjScoreToParFromCourseTable(want));
+  if (!Number.isFinite(sourceAdj) || !Number.isFinite(targetAdj)) return 0;
+  return targetAdj - sourceAdj;
+}
+
 /** Shrink player SG at this venue vs field skill mean (round_projections.R course_fit_hist). */
 export function applyVenueCourseFitToMu(mu_sg, dg_id, venueScoring, fieldMeanSg) {
   const cf = venueScoring?.courseFitByDg?.get(Math.round(num(dg_id, NaN)));
@@ -3455,10 +3553,12 @@ export function applyVenueCourseFitToMu(mu_sg, dg_id, venueScoring, fieldMeanSg)
   return clamp(mu_sg + w * shrink * raw, -4, 4);
 }
 
-/** μ used when re-resolving score_to_par from venue history + skill (row may include round/form shifts). */
+/** μ used when resolving score_to_par — prefer round μ_SG (already skill-based). */
 export function projectionMuForScoreResolution(row) {
   if (!row || typeof row !== "object") return NaN;
-  return num(row.implied_mu_sg ?? row.mu_sg, NaN);
+  const mu = num(row.implied_mu_sg ?? row.mu_sg, NaN);
+  if (Number.isFinite(mu)) return mu;
+  return num(row.sg_total, NaN);
 }
 
 /** Player venue target: full-course history; optional R1–R4 bucket blend when flat anchor is off. */
@@ -3478,8 +3578,8 @@ function resolvePlayerVenueTargetAgg(pv, pr, minPlayerRounds) {
 }
 
 /**
- * score_to_par: player course history when available; else skill-adjusted venue average.
- * Pre-tournament strokes blend only for players without venue history.
+ * Total score STP: course baseline + skill (μ_SG / SG:Total), light player-course residual.
+ * Same philosophy as GIR/FW — don't crush stars toward the field mean.
  */
 export function resolveProjectionScoreToPar({
   dg_id,
@@ -3489,8 +3589,10 @@ export function resolveProjectionScoreToPar({
   venueScoring,
   pretRoundScore,
   fieldMeanMu,
+  courseAdjStp,
   minPlayerRounds = 3,
   minFieldRounds = 25,
+  skillKeep = SCORE_SKILL_KEEP,
 }) {
   const cp = num(course_par_18, NaN);
   if (!Number.isFinite(cp)) return { stp: -num(muForRound, 0), source: "skill_rating" };
@@ -3502,6 +3604,8 @@ export function resolveProjectionScoreToPar({
     round,
     fieldMeanMu,
     minFieldRounds,
+    courseAdjStp,
+    skillKeep,
   });
 
   const dg = Math.round(num(dg_id, NaN));
@@ -3516,33 +3620,29 @@ export function resolveProjectionScoreToPar({
     (flatVenue ? pv && pv.n >= minPlayerRounds : (pv && pv.n >= minPlayerRounds) || (pr && pr.n >= 2));
 
   if (hasPlayerHist) {
-    const playerStp = Number.isFinite(playerAgg.avgStp)
+    let playerStp = Number.isFinite(playerAgg.avgStp)
       ? playerAgg.avgStp
       : playerAgg.avgScore - cp;
+    const layoutShift = num(venueScoring?.layoutStpShift, 0);
+    if (Number.isFinite(layoutShift) && Math.abs(layoutShift) >= 0.02) {
+      playerStp += layoutShift;
+    }
     const nEff = flatVenue
       ? pv?.n || 0
       : Math.max(playerAgg.n || 0, pr?.n || 0, pv?.n || 0);
-    let wPlayer = Math.min(0.92, 0.66 + 0.055 * Math.max(0, nEff - minPlayerRounds));
-    if (nEff >= 8) wPlayer = Math.min(0.94, wPlayer + 0.04);
+    let wPlayer = Math.min(SCORE_PLAYER_COURSE_MAX_W, 0.06 + 0.015 * Math.max(0, nEff - minPlayerRounds));
     if (flatVenue) wPlayer = Math.min(wPlayer, flatVenueMaxPlayerVenueWeight());
-    const stp = wPlayer * playerStp + (1 - wPlayer) * skillRes.stp;
+    const stp = (1 - wPlayer) * skillRes.stp + wPlayer * playerStp;
     return {
       stp: Math.round(stp * 1000) / 1000,
-      source:
-        wPlayer >= 0.72
-          ? flatVenue || !(pr && pr.n >= 2)
-            ? "player_venue_hist"
-            : "player_venue_round_hist"
-          : flatVenue || !(pr && pr.n >= 2)
-            ? "player_venue_skill_blend"
-            : "player_venue_round_skill_blend",
+      source: wPlayer >= 0.1 ? "skill_first_player_course" : skillRes.source,
     };
   }
 
   const pret = num(pretRoundScore, NaN);
   if (Number.isFinite(pret)) {
     const pretStp = pret - cp;
-    const stp = 0.28 * pretStp + 0.72 * skillRes.stp;
+    const stp = 0.1 * pretStp + 0.9 * skillRes.stp;
     return { stp: Math.round(stp * 1000) / 1000, source: "pret_skill_blend" };
   }
 
@@ -3572,7 +3672,7 @@ export async function reapplyProjectionTotalScoresFromVenueHistory(payload, opts
   const fieldMeanByRound = new Map();
   for (let rnd = 1; rnd <= 4; rnd++) {
     const rows = players.filter((pl) => Math.round(num(pl.round, NaN)) === rnd);
-    const mus = rows.map((pl) => num(pl.mu_sg, NaN)).filter(Number.isFinite);
+    const mus = rows.map((pl) => projectionMuForScoreResolution(pl)).filter(Number.isFinite);
     fieldMeanByRound.set(
       rnd,
       mus.length ? mus.reduce((a, b) => a + b, 0) / mus.length : NaN,
@@ -3592,6 +3692,7 @@ export async function reapplyProjectionTotalScoresFromVenueHistory(payload, opts
       venueScoring,
       pretRoundScore: pretByDg.get(dg),
       fieldMeanMu: fieldMeanByRound.get(rnd),
+      courseAdjStp: venueScoring?.courseAdjStp,
     });
     pl.score_to_par = Math.round(scoreRes.stp * 100) / 100;
     pl.total_score = Math.round((coursePar18 + scoreRes.stp) * 100) / 100;

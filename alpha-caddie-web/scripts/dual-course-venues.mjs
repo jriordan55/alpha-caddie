@@ -116,7 +116,7 @@ export function histCourseKeyFromRow(row) {
 }
 
 /**
- * Related-but-distinct club siblings (do not pool for venue anchors).
+ * Related-but-distinct club siblings (do not pool for Torrey-style anchors).
  * @param {string} courseKey normalized key
  * @returns {string[]} sibling normalized keys
  */
@@ -139,4 +139,25 @@ export function dualCourseSiblingKeys(courseKey) {
     ].filter((x) => x !== k);
   }
   return [];
+}
+
+/**
+ * Course keys accepted when loading venue history.
+ * Detroit North/South share Rocket Classic club history under parent "Detroit Golf Club"
+ * (DG 876 / par 72) — exact North (947) has little CSV yet, so pool the club family.
+ * Torrey stays exact-side only (layouts differ more).
+ * @param {string} courseKeyOrLabel
+ * @returns {string[]} normalized keys
+ */
+export function venueHistoryCourseKeys(courseKeyOrLabel) {
+  const k = normCourseNameKey(courseKeyOrLabel);
+  if (!k) return [];
+  if (k.startsWith("detroit golf club")) {
+    return [
+      "detroit golf club",
+      "detroit golf club north course",
+      "detroit golf club south course",
+    ];
+  }
+  return [k];
 }

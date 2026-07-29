@@ -746,6 +746,7 @@ export async function buildFullModelMuMapForEvent({
       venueScoring,
       pretRoundScore: NaN,
       fieldMeanMu: fieldMeanMuAdj,
+      courseAdjStp: courseAdjScoreToPar,
     });
     const stp = scoreRes.stp;
     const ts = coursePar18 + stp;
@@ -822,9 +823,12 @@ export async function buildFullModelMuMapForEvent({
     if (venueScoreIntercept?.scoreStp && venueScoreIntercept.nEff >= 35 && Math.abs(venueScoreIntercept.scoreStp) >= 0.12) {
       const flatVenue = flatVenuePlayerScoreAnchorEnabled();
       const scoreW = flatVenue
-        ? clamp(0.55 + 0.12 * Math.log10(venueScoreIntercept.nEff / 35), 0.55, 0.82)
-        : clamp(0.25 + 0.1 * Math.log10(venueScoreIntercept.nEff / 35), 0.25, 0.45);
-      applyVenueScoreIntercept(lastPl, { scoreStp: venueScoreIntercept.scoreStp * scoreW }, coursePar18);
+        ? clamp(0.38 + 0.1 * Math.log10(venueScoreIntercept.nEff / 35), 0.38, 0.62)
+        : clamp(0.16 + 0.08 * Math.log10(venueScoreIntercept.nEff / 35), 0.16, 0.32);
+      // Slight optimistic offset: DK-paired score μ ran ~0.3 high vs actual.
+      const scoreShift =
+        venueScoreIntercept.scoreStp * scoreW - Math.sign(venueScoreIntercept.scoreStp || 1) * 0.08;
+      applyVenueScoreIntercept(lastPl, { scoreStp: scoreShift }, coursePar18);
     }
     if (venueScoreIntercept?.nEff >= 30) {
       const countW = clamp(venueScoreIntercept.nEff / (venueScoreIntercept.nEff + 32), 0.5, 0.92);
@@ -906,7 +910,7 @@ export async function buildFullModelMuMapForEvent({
     skipMarketBookCalibration: true,
     skipEventPropBookAlignment: true,
     birdieFieldCalibStrength: 1,
-    girBlend: 0.38,
+    girBlend: 0,
     fairwaysBlend: 0,
   });
 

@@ -216,8 +216,20 @@ function venueAnchorNote(projections) {
   const years = Array.isArray(b.venue_scoring_years) ? b.venue_scoring_years : [];
   const stp = num(b.venue_avg_score_to_par, NaN);
   const bird = num(b.venue_avg_birdies, NaN);
+  const histN = Math.round(num(b.venue_historical_rounds, 0));
+  const src = String(b.venue_scoring_source || "").trim();
   const parts = [];
-  if (years.length) parts.push(`venue markets anchored to ${years.join(", ")}`);
+  if (src.includes("club_pool")) {
+    parts.push("skill-first score · Detroit club hist (N/S pool)");
+  } else if (src.includes("rolling") || src.includes("historical")) {
+    parts.push("skill-first score · venue hist");
+  } else if (src === "course_table") {
+    parts.push("skill-first score · course-table baseline");
+  } else {
+    parts.push("skill-first score");
+  }
+  if (histN > 0) parts.push(`${histN} venue rounds`);
+  if (years.length) parts.push(`anchored ${years.join(", ")}`);
   if (Number.isFinite(stp)) parts.push(`${stp >= 0 ? "+" : ""}${stp.toFixed(2)} vs par`);
   if (Number.isFinite(bird) && bird >= 1.85) parts.push(`~${bird.toFixed(1)} birdies/rd`);
   return parts.join(" · ");

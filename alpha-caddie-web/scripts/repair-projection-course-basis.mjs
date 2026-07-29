@@ -154,7 +154,13 @@ if (!Number.isFinite(Number(after))) {
 if (!proj.meta || typeof proj.meta !== "object") proj.meta = {};
 if (!proj.meta.projection_round_adjustments) proj.meta.projection_round_adjustments = {};
 proj.meta.projection_round_adjustments.flat_venue_player_score = flatVenuePlayerScoreAnchorEnabled();
+proj.meta.score_projection_recipe = "skill_first_club_pool";
+proj.meta.score_skill_keep = Number(process.env.GOLF_SCORE_SKILL_KEEP || 0.98);
+if (venueScoring?.source) {
+  proj.meta.venue_scoring_source = venueScoring.source;
+}
 proj.updated_at = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
+proj.meta.updated_at = proj.updated_at;
 writeFileSync(path, `${JSON.stringify(proj, null, 2)}\n`);
 console.log(
   `[repair-projection-course-basis] OK venue_avg_round_score ${before ?? "—"} (target); calibrated ${cal.rounds} round(s) toward course avg; field venue anchor ${histCal.rounds} round(s)`,

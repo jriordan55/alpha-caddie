@@ -16,6 +16,7 @@ import {
 import {
   blendWeightsFromHistCalib,
   optimizedGirCount,
+  optimizedFairwayCount,
   optimizedHoleCounts,
 } from "./optimized-counting-blend.mjs";
 import { venueBirdieSgScale } from "./projection-stat-model.mjs";
@@ -112,7 +113,7 @@ function skillSpreadRate01(playerRate01, anchorRate01, spreadKeep = 0.85) {
 /** Course-heavy blend of layout table rate and venue historical mean. */
 function courseVenueCountTarget(courseCount, venueCount, courseWeight = 0.82) {
   if (Number.isFinite(courseCount) && Number.isFinite(venueCount)) {
-    const w = clamp(num(courseWeight, 0.82), 0.65, 0.92);
+    const w = clamp(num(courseWeight, 0.82), 0.2, 0.92);
     return Math.round((w * courseCount + (1 - w) * venueCount) * 100) / 100;
   }
   if (Number.isFinite(courseCount)) return Math.round(courseCount * 100) / 100;
@@ -459,7 +460,7 @@ export function holeCountsFromRatesAndSg(opts = {}) {
   return finalizeHoleCounts(eagles, birdies, bogeys, doubles);
 }
 
-/** GIR count from optimized course + GIR% + SG:APP blend. */
+/** GIR count from course baseline + GIR% + SG:APP/T2G skill blend. */
 export function girFromRatesAndSg(opts = {}) {
   const mu = num(opts.muSg, 0);
   const sk = opts.skRow || {};
@@ -468,14 +469,26 @@ export function girFromRatesAndSg(opts = {}) {
   const venueGir = num(opts.venueGir, 12);
   const histCountFit = opts.histCountFit || null;
   const blendW = blendWeightsFromHistCalib(histCountFit);
+  const field = opts.fieldMeans || {};
 
-  let playerRate01 = girRate01FromDg(sk, liveTrad, { muSg: mu, fieldMeanApp: opts.fieldMeanApp });
+  // Prefer traditional GIR% for the rate leg; SG is blended inside optimizedGirCount.
+  let playerRate01 = NaN;
+  if (liveTrad && typeof liveTrad === "object") {
+    playerRate01 = traditionalRate01(liveTrad.gir, 18);
+  }
+  if (!Number.isFinite(playerRate01)) {
+    const cached = num(sk.dg_gir_pct, NaN);
+    if (Number.isFinite(cached) && cached >= 0.15 && cached <= 0.95) playerRate01 = cached;
+  }
   if (!Number.isFinite(playerRate01)) {
     const histGir = num(sk.avg_gir, NaN);
     if (Number.isFinite(histGir) && histGir > 4) playerRate01 = clamp(histGir / nGir, 0.35, 0.85);
   }
-  if (!Number.isFinite(playerRate01)) {
-    playerRate01 = girRate01FromSgApp(mu, sk.sg_app, opts.fieldMeanApp, DG_TOUR_AVG_GIR_RATE);
+  const sgRate = girRate01FromSgApp(mu, sk.sg_app, opts.fieldMeanApp ?? field.sg_app, DG_TOUR_AVG_GIR_RATE);
+  if (Number.isFinite(playerRate01) && Number.isFinite(sgRate)) {
+    playerRate01 = 0.55 * playerRate01 + 0.45 * sgRate;
+  } else if (!Number.isFinite(playerRate01) && Number.isFinite(sgRate)) {
+    playerRate01 = sgRate;
   }
 
   const gir = optimizedGirCount({
@@ -487,14 +500,16 @@ export function girFromRatesAndSg(opts = {}) {
     courseGirRate01: opts.courseGirRate01,
     playerGirRate01: playerRate01,
     girSkillSpreadKeep: num(opts.girSkillSpreadKeep, blendW.gir.spreadKeep),
-    sgAppDelta: sgDelta(sk, opts.fieldMeans || {}, "sg_app"),
+    sgAppDelta: sgDelta(sk, field, "sg_app"),
+    sgT2gDelta: sgDelta(sk, field, "sg_t2g"),
+    sgPuttDelta: sgDelta(sk, field, "sg_putt"),
   });
 
   if (!Number.isFinite(gir)) {
     const rate01 = clamp(num(playerRate01, venueGir / nGir), 0.4, 0.8);
     return Math.round(clamp(rate01 * nGir, 6, 16) * 100) / 100;
   }
-  return Math.round(clamp(gir, 6, 16) * 100) / 100;
+  return Math.round(clamp(gir, 6, 16.5) * 100) / 100;
 }
 
 /** Resolve player fairway rate (0–1) — driving accuracy is the primary signal. */
@@ -524,8 +539,7 @@ function playerFairwayRate01FromDrivingAccuracy(sk, liveTrad, nFw, fieldMeans, m
 }
 
 /**
- * Fairways from player driving accuracy (no course-average anchor).
- * μ ≈ player FW% × driving holes; small SG:OTT nudge when accuracy is pp-based.
+ * Fairways: course baseline + driving accuracy + SG:OTT (skill-heavy).
  */
 export function fairwaysFromDrivingAccuracyAndCourse(opts = {}) {
   const nFw = Math.round(num(opts.nFairwayHoles, 14)) || 14;
@@ -533,20 +547,27 @@ export function fairwaysFromDrivingAccuracyAndCourse(opts = {}) {
   const liveTrad = opts.liveTrad ?? null;
   const fieldMeans = opts.fieldMeans || {};
   const mu = num(opts.muSg, 0);
+  const histCountFit = opts.histCountFit || null;
+  const blendW = blendWeightsFromHistCalib(histCountFit);
 
   const playerRate01 = playerFairwayRate01FromDrivingAccuracy(sk, liveTrad, nFw, fieldMeans, mu);
+  const fairways = optimizedFairwayCount({
+    histCountFit,
+    skRow: sk,
+    muSg: mu,
+    nFairwayHoles: nFw,
+    venueFairways: num(opts.venueFairways, DG_TOUR_AVG_FAIRWAY_RATE * nFw),
+    courseFairwayRate01: opts.courseFairwayRate01,
+    playerFwRate01: playerRate01,
+    fairwaySkillSpreadKeep: num(opts.fairwaySkillSpreadKeep, blendW.fairways.spreadKeep),
+    sgOttDelta: sgDelta(sk, fieldMeans, "sg_ott"),
+    sgAppDelta: sgDelta(sk, fieldMeans, "sg_app"),
+  });
+  if (Number.isFinite(fairways)) return Math.round(clamp(fairways, 2, nFw + 0.5) * 100) / 100;
+
   const tourHits = DG_TOUR_AVG_FAIRWAY_RATE * nFw;
-  const playerHits = playerRate01 * nFw;
-  const spread = num(
-    opts.fairwaySkillSpreadKeep,
-    num(process.env.GOLF_FAIRWAY_SKILL_SPREAD_KEEP, FAIRWAY_DRIVING_ACC_SPREAD),
-  );
-  let fairways = tourHits + spread * (playerHits - tourHits);
-
   const dOtt = sgDelta(sk, fieldMeans, "sg_ott");
-  fairways += 0.28 * dOtt;
-
-  return Math.round(clamp(fairways, 2, nFw + 0.5) * 100) / 100;
+  return Math.round(clamp(tourHits + 0.9 * dOtt, 2, nFw + 0.5) * 100) / 100;
 }
 
 /** Fairways: driving accuracy primary (no course-average anchor). */

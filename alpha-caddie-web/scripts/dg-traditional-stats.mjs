@@ -84,8 +84,9 @@ export function girRate01FromSgApp(muSg, sgApp, fieldMeanApp, tourAvg = DG_TOUR_
   const m = num(fieldMeanApp, NaN);
   if (!Number.isFinite(a) || !Number.isFinite(m)) return NaN;
   const mu = num(muSg, 0);
-  let rate = tourAvg + 0.34 * (a - m) + 0.04 * mu;
-  return Math.max(0.48, Math.min(0.82, rate));
+  // Stronger APP→GIR mapping (was 0.34); keep in a realistic band.
+  let rate = tourAvg + 0.48 * (a - m) + 0.05 * mu;
+  return Math.max(0.45, Math.min(0.88, rate));
 }
 
 export function girRate01FromDg(skRow, liveTrad, opts = {}) {

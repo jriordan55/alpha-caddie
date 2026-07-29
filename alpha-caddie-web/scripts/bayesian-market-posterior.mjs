@@ -11,15 +11,13 @@
  */
 
 const DEFAULT_MODEL_EVIDENCE_WEIGHT = {
-  // Fit from OOS model-vs-actual and no-vig-prior-vs-actual disagreement.
-  // The market remains the dominant prior; the independent model moves it
-  // only where historical disagreement has contained useful information.
-  "Total score": 0.1,
-  Birdies: 0.24,
-  Bogeys: 0.2,
-  Pars: 0.2,
-  GIR: 0.22,
-  "Fairways hit": 0.05,
+  // Model μ is course + skill; keep the book from washing that out.
+  "Total score": 0.65,
+  Birdies: 0.75,
+  Bogeys: 0.7,
+  Pars: 0.65,
+  GIR: 0.85,
+  "Fairways hit": 0.8,
 };
 
 function num(v, fallback = NaN) {

@@ -8,7 +8,9 @@
 export function flatVenueProjectionPipelineEnv() {
   return {
     GOLF_FLAT_VENUE_PLAYER_SCORE: "1",
-    GOLF_FLAT_VENUE_MAX_PLAYER_SCORE_WEIGHT: "0.38",
+    GOLF_FLAT_VENUE_MAX_PLAYER_SCORE_WEIGHT: "0.16",
+    GOLF_SCORE_SKILL_KEEP: "0.98",
+    GOLF_SCORE_PLAYER_COURSE_MAX_W: "0.16",
     GOLF_MARKET_BOOK_CALIBRATION: "0",
     GOLF_COURSE_PRIOR_ROUND_DIFFICULTY: "0",
     GOLF_WITHIN_EVENT_FORM_CARRY: "0",
@@ -30,13 +32,17 @@ export function walkforwardBacktestPipelineEnv() {
 }
 
 /**
- * Live week = OOS-winning reconstruction.
+ * Live week = OOS-winning reconstruction + skill-first score/GIR/FW origins.
  * Birdies/Bogeys markets always use birdie-or-better / bogey-or-worse.
+ * Detroit North/South pools club hist in loadVenueHistoricalScoring (layout STP shift).
  */
 export function liveProjectionPipelineEnv() {
   return {
     ...walkforwardBacktestPipelineEnv(),
     GOLF_FLAT_VENUE_PLAYER_SCORE: "0",
+    GOLF_FLAT_VENUE_MAX_PLAYER_SCORE_WEIGHT: "0.16",
+    GOLF_SCORE_SKILL_KEEP: process.env.GOLF_SCORE_SKILL_KEEP || "0.98",
+    GOLF_SCORE_PLAYER_COURSE_MAX_W: process.env.GOLF_SCORE_PLAYER_COURSE_MAX_W || "0.16",
     GOLF_COURSE_PRIOR_ROUND_DIFFICULTY: "1",
     GOLF_WITHIN_EVENT_FORM_CARRY: "0.1",
     GOLF_WITHIN_EVENT_FORM_CAP: "0.75",

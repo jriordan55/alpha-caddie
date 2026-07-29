@@ -2728,6 +2728,7 @@ async function main() {
         venueScoring,
         pretRoundScore: pretScore,
         fieldMeanMu: fieldMeanMuRound,
+        courseAdjStp: courseAdjScoreToPar,
       });
       if (scoreRes.source in scoreSourceCounts) scoreSourceCounts[scoreRes.source]++;
       const stp = scoreRes.stp;

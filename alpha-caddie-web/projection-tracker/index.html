@@ -266,7 +266,7 @@
                 <th>Player</th>
                 <th>Market</th>
                 <th class="num">Side</th>
-                <th class="num" title="Full model μ after course tailoring, weather, tee wave, and in-round scratch">Model μ</th>
+                <th class="num" title="Skill-first μ: course baseline + μ_SG keep; weather/tee/scratch when live">Model μ</th>
                 <th class="num">Line</th>
                 <th class="num" title="Model μ minus DK line">Δ</th>
                 <th class="num">Odds</th>
@@ -584,12 +584,13 @@
         <h2 class="guide-heading"><a href="#picks">Best bets</a></h2>
         <p>Live-week action list for the <strong>upcoming round</strong> in <code>projections.json</code> (not graded backtest rows).</p>
         <ul class="guide-ul">
-          <li><strong>Model μ</strong> — Full projection mean: course SG emphasis, venue history, 8–12 round hot/cold form, birdie-heavy venue boosts, weather, morning/afternoon tee wave, and in-round scratch when live.</li>
+          <li><strong>Model μ</strong> — Skill-first means: course baseline (venue hist or course-table adj) + high keep of μ_SG edge. GIR/FW use course rate + skill; total score pools Detroit North/South club history with a layout STP shift when needed. Weather, tee wave, and in-round scratch layer on when live.</li>
           <li><strong>Δ</strong> — Model μ minus the DraftKings line (positive = model above the book).</li>
           <li><strong>EV</strong> — Model edge vs posted DraftKings odds (Poisson birdies, binomial GIR/FW, normal score).</li>
+          <li><strong>Conf %</strong> — Calibrated win probability that the bet wins (not raw EV).</li>
           <li><strong>Context</strong> — Course fit tags (dominant SG, recent form), weather, tee wave, and historical signal buckets.</li>
           <li><strong>Score</strong> — EV × OOS market factor × context boost (ranking only).</li>
-          <li>Refresh live data: <code>npm run refresh:live</code> then reload this page.</li>
+          <li>Refresh live data: <code>npm run refresh:live</code> then reload this page. Full μ rebuild: <code>npm run projection-tracker:refresh</code>.</li>
         </ul>
       </article>
 

@@ -53,11 +53,6 @@ export function blendWeightsFromHistCalib(histCalib) {
   const r2Gir = clamp(num(histCalib?.r2_gir_app, NaN), 0.22, 0.88) || 0.48;
   const r2Fw = clamp(num(histCalib?.r2_fw_ott, NaN), 0.18, 0.82) || 0.36;
   const olsW = olsTrust(histCalib);
-  const hasFwStp = !!(
-    histCalib?.fw_stp_line &&
-    Number.isFinite(histCalib.fw_stp_line.a) &&
-    Number.isFinite(histCalib.fw_stp_line.b)
-  );
 
   const wGirSkill = clamp(0.5 + 0.4 * Math.sqrt(r2Gir), 0.55, 0.92);
   const wOttSkill = clamp(0.46 + 0.42 * Math.sqrt(r2Fw), 0.5, 0.9);
@@ -67,48 +62,50 @@ export function blendWeightsFromHistCalib(histCalib) {
     w_ott_skill: wOttSkill,
     w_ott_decomp: clamp(0.52 + 0.32 * Math.sqrt(r2Fw), 0.52, 0.86),
     gir: {
-      spreadKeep: clamp(0.52 + 0.12 * r2Gir, 0.52, 0.72),
-      wVenue: 0.32,
-      wRate: 0.48 + 0.18 * wGirSkill,
-      wSg: wGirSkill,
-      wCareerCap: 0.08 + 0.08 * (1 - r2Gir),
-      sgAppCoeff: 0.38 + 0.32 * r2Gir,
-      muCoeff: 0.035 + 0.03 * r2Gir,
+      // Skill-first: μ = course + keep·(rate/SG blend − course)
+      spreadKeep: clamp(0.92 + 0.05 * r2Gir, 0.92, 0.98),
+      wVenue: 0,
+      wRate: 1,
+      wSg: 0,
+      wCareerCap: 0,
+      sgAppCoeff: 0.62,
+      muCoeff: 0.06,
     },
     fairways: {
-      spreadKeep: clamp(0.48 + 0.12 * r2Fw, 0.48, 0.68),
-      wVenue: 0.32,
-      wRate: 0.46 + 0.2 * wOttSkill,
-      wSg: wOttSkill,
-      wStp: hasFwStp ? clamp(0.06 + 0.1 * r2Fw, 0.06, 0.16) : 0,
-      wCareerCap: 0.06 + 0.08 * (1 - r2Fw),
-      sgOttCoeff: 0.28 + 0.3 * r2Fw,
-      muCoeff: 0.03 + 0.025 * r2Fw,
+      spreadKeep: clamp(0.9 + 0.06 * r2Fw, 0.9, 0.98),
+      wVenue: 0,
+      wRate: 1,
+      wSg: 0,
+      wStp: 0,
+      wCareerCap: 0,
+      sgOttCoeff: 0.95,
+      muCoeff: 0.05,
     },
     birdies: {
-      wVenue: 0.52,
-      wRate: 0.32,
-      wSg: 0.13 + 0.05 * r2Gir,
-      wOls: olsW * 0.34,
-      sgApp: 0.26 + 0.09 * r2Gir,
-      sgPutt: 0.15,
-      sgOtt: 0.02,
-      mu: 0.011 + 0.007 * r2Gir,
-      spreadKeep: clamp(0.36 + 0.09 * r2Gir, 0.36, 0.52),
+      wVenue: 0.28,
+      wRate: 0.38,
+      wSg: 0.28 + 0.08 * r2Gir,
+      wOls: olsW * 0.2,
+      sgApp: 0.38 + 0.1 * r2Gir,
+      sgPutt: 0.28,
+      sgOtt: 0.08,
+      mu: 0.04 + 0.02 * r2Gir,
+      spreadKeep: clamp(0.55 + 0.15 * r2Gir, 0.55, 0.78),
     },
     bogeys: {
-      wVenue: 0.18,
-      wRate: 0.3,
-      wSg: 0.36 + 0.16 * r2Gir,
-      wOls: olsW * 0.48,
-      sgArg: 0.48,
-      sgApp: 0.18,
-      mu: 0.28,
-      sgPutt: 0.08,
-      sgOtt: 0.06,
-      girMiss: 0.1,
-      dblExcess: 0.12,
-      wScoreStp: 0.22,
+      wVenue: 0.12,
+      wRate: 0.38,
+      wSg: 0.4 + 0.12 * r2Gir,
+      wOls: olsW * 0.2,
+      sgArg: 0.55,
+      sgApp: 0.22,
+      mu: 0.22,
+      sgPutt: 0.1,
+      sgOtt: 0.08,
+      girMiss: 0.12,
+      dblExcess: 0.1,
+      wScoreStp: 0.04,
+      spreadKeep: clamp(0.75 + 0.12 * r2Gir, 0.75, 0.9),
     },
   };
 }
@@ -131,7 +128,9 @@ export function fairwaysFromHistoricalStp(muSg, nFw, histCalib, fieldMeanOtt, sk
 }
 
 /**
- * Optimized GIR: course adj rate + player GIR% + SG:APP delta + career mean.
+ * GIR: course baseline + skill (GIR% and SG:APP / T2G), skill-heavy.
+ * μ = course + keep·(skill − course)
+ * skill = blend(rate hits, SG-implied hits)
  */
 export function optimizedGirCount(opts = {}) {
   const hist = opts.histCountFit || null;
@@ -140,34 +139,44 @@ export function optimizedGirCount(opts = {}) {
   const nGir = num(opts.nGirHoles, 18);
   const venueGir = num(opts.venueGir, 12);
   const courseRate = num(opts.courseGirRate01, NaN);
-  const courseAnchor = Number.isFinite(courseRate) ? courseRate * nGir : venueGir;
-  const nHist = Math.round(num(sk.counting_rounds, 0)) || 0;
+  const courseHits = Number.isFinite(courseRate) ? courseRate * nGir : venueGir;
+  const tourRate = 0.665; // ~12/18 tour-ish baseline for SG→hits
 
   const playerRate01 = num(opts.playerGirRate01, NaN);
-  const spreadKeep = num(opts.girSkillSpreadKeep, w.spreadKeep);
-  const anchorRate = Number.isFinite(courseRate) ? courseRate : venueGir / nGir;
-  let skillRate01 = playerRate01;
-  if (Number.isFinite(skillRate01) && Number.isFinite(anchorRate)) {
-    skillRate01 = anchorRate + spreadKeep * (skillRate01 - anchorRate);
-  }
-  const fromRate = Number.isFinite(skillRate01) ? skillRate01 * nGir : NaN;
+  const career = num(sk.avg_gir, NaN);
+  const rateHits = Number.isFinite(playerRate01)
+    ? playerRate01 * nGir
+    : Number.isFinite(career)
+      ? career
+      : NaN;
 
   const dApp = num(opts.sgAppDelta, 0);
+  const dT2g = num(opts.sgT2gDelta, 0);
+  const dPutt = num(opts.sgPuttDelta, 0);
   const mu = num(opts.muSg, 0);
-  const career = num(sk.avg_gir, NaN);
-  const wCar = careerShrink(nHist, 28, w.wCareerCap);
+  // ~1 SG:APP ≈ +0.55–0.7 GIR historically; T2G adds approach+ott context.
+  const sgHits =
+    courseHits +
+    0.62 * dApp +
+    0.18 * dT2g -
+    0.08 * dPutt + // strong putters often miss more GIR for birdie looks; small fade
+    0.06 * mu;
 
-  const core = weightedMean([
-    { w: w.wVenue, v: courseAnchor },
-    { w: w.wRate, v: fromRate },
-    { w: wCar, v: career },
-  ]);
-  if (!Number.isFinite(core)) return NaN;
-  return core + w.sgAppCoeff * dApp + w.muCoeff * mu;
+  let skillHits = rateHits;
+  if (Number.isFinite(rateHits) && Number.isFinite(sgHits)) {
+    skillHits = 0.52 * rateHits + 0.48 * sgHits;
+  } else if (Number.isFinite(sgHits)) {
+    skillHits = sgHits;
+  } else if (!Number.isFinite(skillHits)) {
+    skillHits = courseHits + 0.55 * (tourRate * nGir - courseHits) + 0.5 * dApp;
+  }
+
+  const keep = clamp(num(opts.girSkillSpreadKeep, w.spreadKeep), 0.88, 0.98);
+  return clamp(courseHits + keep * (skillHits - courseHits), 6, 16.5);
 }
 
 /**
- * Optimized fairways: course adj + FW% + SG:OTT delta + stp line + career mean.
+ * Fairways: course baseline + driving accuracy / SG:OTT skill blend.
  */
 export function optimizedFairwayCount(opts = {}) {
   const hist = opts.histCountFit || null;
@@ -176,33 +185,33 @@ export function optimizedFairwayCount(opts = {}) {
   const nFw = Math.round(num(opts.nFairwayHoles, 14)) || 14;
   const venueFw = num(opts.venueFairways, 9);
   const courseRate = num(opts.courseFairwayRate01, NaN);
-  const courseAnchor = Number.isFinite(courseRate) ? courseRate * nFw : venueFw;
-  const nHist = Math.round(num(sk.counting_rounds, 0)) || 0;
+  const courseHits = Number.isFinite(courseRate) ? courseRate * nFw : venueFw;
 
   const playerRate01 = num(opts.playerFwRate01, NaN);
-  const spreadKeep = num(opts.fairwaySkillSpreadKeep, w.spreadKeep);
-  const anchorRate = Number.isFinite(courseRate) ? courseRate : venueFw / nFw;
-  let skillRate01 = playerRate01;
-  if (Number.isFinite(skillRate01) && Number.isFinite(anchorRate)) {
-    skillRate01 = anchorRate + spreadKeep * (skillRate01 - anchorRate);
-  }
-  const fromRate = Number.isFinite(skillRate01) ? skillRate01 * nFw : NaN;
+  const career = num(sk.avg_fairways, NaN);
+  const rateHits = Number.isFinite(playerRate01)
+    ? playerRate01 * nFw
+    : Number.isFinite(career)
+      ? career
+      : NaN;
 
   const dOtt = num(opts.sgOttDelta, 0);
+  const dApp = num(opts.sgAppDelta, 0);
   const mu = num(opts.muSg, 0);
-  const fromStp = fairwaysFromHistoricalStp(mu, nFw, hist, opts.fieldMeanOtt, sk);
+  // SG:OTT is the primary FW skill; mild APP correlation on tight courses.
+  const sgHits = courseHits + 0.95 * dOtt + 0.12 * dApp + 0.05 * mu;
 
-  const career = num(sk.avg_fairways, NaN);
-  const wCar = careerShrink(nHist, 28, w.wCareerCap);
+  let skillHits = rateHits;
+  if (Number.isFinite(rateHits) && Number.isFinite(sgHits)) {
+    skillHits = 0.55 * rateHits + 0.45 * sgHits;
+  } else if (Number.isFinite(sgHits)) {
+    skillHits = sgHits;
+  } else if (!Number.isFinite(skillHits)) {
+    skillHits = courseHits + 0.9 * dOtt;
+  }
 
-  const core = weightedMean([
-    { w: w.wVenue, v: courseAnchor },
-    { w: w.wRate, v: fromRate },
-    { w: w.wStp, v: fromStp },
-    { w: wCar, v: career },
-  ]);
-  if (!Number.isFinite(core)) return NaN;
-  return core + w.sgOttCoeff * dOtt + w.muCoeff * mu;
+  const keep = clamp(num(opts.fairwaySkillSpreadKeep, w.spreadKeep), 0.85, 0.98);
+  return clamp(courseHits + keep * (skillHits - courseHits), 2, nFw + 0.5);
 }
 
 /**
@@ -293,14 +302,16 @@ export function optimizedHoleCounts(opts = {}) {
   }
 
   // bogeys variable is bogey-or-worse market; split doubles so score identity stays valid.
-  const bogSpread = num(opts.bogeySkillSpreadKeep, wBog.spreadKeep ?? 0.55);
+  const bogSpread = num(opts.bogeySkillSpreadKeep, wBog.spreadKeep ?? 0.75);
   let bogMarket = bogeys;
   if (Number.isFinite(bogMarket) && Number.isFinite(venueBogMarket)) {
     bogMarket = venueBogMarket + bogSpread * (bogMarket - venueBogMarket);
   }
-  const scoreBogMkt = clamp(venueBogMarket + stp * 0.56, 0.15, 10);
+  // Light score anchor only — hard courses already lift venueBogMarket.
+  const scoreBogMkt = clamp(venueBogMarket + stp * 0.32, 0.15, 8.5);
   bogMarket = (1 - wBog.wScoreStp) * bogMarket + wBog.wScoreStp * scoreBogMkt;
-  doubles = clamp(num(doubles, venueDbl), 0.04, 2.5);
+  bogMarket = clamp(bogMarket, 0.35, 7.2);
+  doubles = clamp(num(doubles, venueDbl), 0.04, 2.2);
   bogeys = Math.max(0.15, bogMarket - doubles);
 
   return { eagles, birdies, bogeys, doubles, nHist };

@@ -103,7 +103,11 @@ if (-not (Test-Path (Join-Path $webRoot "package.json"))) {
 Set-Location $webRoot
 
 # OOS winner: day/form + skill-36 (no soft book μ align — that hurt Birdies ROI).
+# Skill-first total score / GIR / FW (course baseline + high μ_SG keep; Detroit club pool in code).
 $env:GOLF_FLAT_VENUE_PLAYER_SCORE = "0"
+$env:GOLF_FLAT_VENUE_MAX_PLAYER_SCORE_WEIGHT = "0.16"
+$env:GOLF_SCORE_SKILL_KEEP = "0.98"
+$env:GOLF_SCORE_PLAYER_COURSE_MAX_W = "0.16"
 $env:GOLF_COURSE_PRIOR_ROUND_DIFFICULTY = "1"
 $env:GOLF_WITHIN_EVENT_FORM_CARRY = "0.1"
 $env:GOLF_WITHIN_EVENT_FORM_CAP = "0.75"
@@ -157,6 +161,7 @@ if ($LiveWeekOnly) {
   $env:GOLF_FIELD_DAY_COUNTING_LIFT_FRAC = "0"
   $env:GOLF_WITHIN_EVENT_COUNTING_BLEND = "0"
   Write-Host 'LiveWeekOnly (lean): projections + odds (DK/PP/Sleeper/Underdog) + Trends patch + tracker.'
+  Write-Host 'Skill-first score (keep 0.98) + Detroit club hist pool when North/South exact hist is thin.'
   Write-Host 'Skipped: full CSV merge, weather archive, finish-tool, book-cal fit, odds ROI backtest.'
   Write-Host 'LiveWeekOnly markets: Birdies = birdies+eagles (or better), Bogeys = bogeys+doubles (or worse), same as DK/PP/SL/UD.'
 } elseif (-not $NoFullHistory) {
