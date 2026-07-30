@@ -9,8 +9,9 @@
  * markets (birdies/pars/bogeys/GIR/fairways/putts) coalesce player + field history at this venue before skill fallbacks.
  * Optional **preds/pre-tournament** per-round stroke column (when present in the feed) nudges μ_sg toward that baseline.
  * Historical CSV still calibrates count curves vs (score−par); GIR uses SG:APP vs median field (no fantasy blend).
- * Hole counts: player rolling birdie/bogey rates from historical_rounds + SG:APP/PUTT/ARG/OTT
- * (counting-from-rates-sg.mjs). Score-to-par derive is off for reconcile; light soft-align only.
+ * Hole counts: player rolling birdie/bogey rates from historical_rounds + SG:APP/PUTT/ARG/OTT/T2G
+ * (counting-from-rates-sg.mjs). Good T2G + poor putting raises residual pars (missed birdie conversions).
+ * Score-to-par derive is off for reconcile; light soft-align only.
  * R2–R4 rows re-derive from scaled μ_SG (default multipliers 1, 0.945, 0.885, 0.82 — override GOLF_NODE_ROUND_MU_MULT).
  * Set GOLF_SKIP_HIST_STATS_ON_FETCH=1 to skip the historical CSV calibration pass (count curves only; GIR/FW are skill-only).
  * Set GOLF_RESET_PROPS=1 so fetch:dg does not copy prior `props` from projections.json (default: preserve DK round O/U when the same week/event).
@@ -2290,6 +2291,16 @@ async function main() {
   const fieldMeanPutt = fieldSkillMedian(puttSamples);
   const fieldMeanArg = fieldSkillMedian(argSamples);
 
+  const t2gSamples = [];
+  for (const fr of fieldRows) {
+    const sid = Math.round(num(fr.dg_id, NaN));
+    if (!Number.isFinite(sid)) continue;
+    const sk = skillByDg.get(sid);
+    const t = num(sk?.sg_t2g, NaN);
+    if (Number.isFinite(t)) t2gSamples.push(t);
+  }
+  const fieldMeanT2g = fieldSkillMedian(t2gSamples);
+
   const distSamples = [];
   for (const fr of fieldRows) {
     const sid = Math.round(num(fr.dg_id, NaN));
@@ -2700,6 +2711,7 @@ async function main() {
         fieldMeanApp,
         fieldMeanPutt,
         fieldMeanArg,
+        fieldMeanT2g,
         nGirHoles: 18,
         driving_distance: distR,
         fieldMeanDrive,

@@ -18,6 +18,7 @@ import {
   optimizedGirCount,
   optimizedFairwayCount,
   optimizedHoleCounts,
+  applyT2gPuttParShape,
 } from "./optimized-counting-blend.mjs";
 import { venueBirdieSgScale } from "./projection-stat-model.mjs";
 
@@ -403,6 +404,7 @@ function birdiesEaglesFromPlayerRates(opts = {}) {
 
 /**
  * Birdies / bogeys / eagles / doubles from rolling rates + SG; pars is always residual to 18 holes.
+ * Good T2G + poor putting shifts birdie/bogey looks into pars (par-machine profile).
  */
 export function holeCountsFromRatesAndSg(opts = {}) {
   const mu = num(opts.muSg, 0);
@@ -413,6 +415,9 @@ export function holeCountsFromRatesAndSg(opts = {}) {
   const dPutt = sgDelta(sk, field, "sg_putt");
   const dArg = sgDelta(sk, field, "sg_arg");
   const dOtt = sgDelta(sk, field, "sg_ott");
+  const hasT2g =
+    Number.isFinite(num(sk.sg_t2g, NaN)) && Number.isFinite(num(field.sg_t2g, NaN));
+  const dT2g = hasT2g ? sgDelta(sk, field, "sg_t2g") : dApp + dOtt + dArg;
 
   const opt = optimizedHoleCounts({
     histCountFit,
@@ -427,6 +432,8 @@ export function holeCountsFromRatesAndSg(opts = {}) {
     sgPuttDelta: dPutt,
     sgArgDelta: dArg,
     sgOttDelta: dOtt,
+    sgT2gDelta: dT2g,
+    sgT2gKnown: hasT2g,
     birdieSkillSpreadKeep: num(opts.birdieSkillSpreadKeep, BIRDIE_COURSE_SPREAD_KEEP),
   });
 
@@ -457,7 +464,20 @@ export function holeCountsFromRatesAndSg(opts = {}) {
     birdies = Math.max(0.15, birdies - BIRDIE_ACTUAL_BIAS_TRIM);
   }
 
-  return finalizeHoleCounts(eagles, birdies, bogeys, doubles);
+  // Apply once after BoB rate merge so rolling avg_birdies and SG bogeys both get the shift.
+  const shaped = applyT2gPuttParShape(
+    { eagles, birdies, bogeys, doubles },
+    {
+      sgT2gDelta: dT2g,
+      sgT2gKnown: hasT2g,
+      sgAppDelta: dApp,
+      sgOttDelta: dOtt,
+      sgArgDelta: dArg,
+      sgPuttDelta: dPutt,
+    },
+  );
+
+  return finalizeHoleCounts(shaped.eagles, shaped.birdies, shaped.bogeys, shaped.doubles);
 }
 
 /** GIR count from course baseline + GIR% + SG:APP/T2G skill blend. */

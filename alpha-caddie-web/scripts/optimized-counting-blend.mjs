@@ -216,6 +216,7 @@ export function optimizedFairwayCount(opts = {}) {
 
 /**
  * Optimized birdies / bogeys / eagles / doubles from venue + rates + SG + stp OLS.
+ * Pars remain residual (18 − others); good T2G + poor putting shifts bird/bog → pars.
  */
 export function optimizedHoleCounts(opts = {}) {
   const hist = opts.histCountFit || null;
@@ -315,4 +316,44 @@ export function optimizedHoleCounts(opts = {}) {
   bogeys = Math.max(0.15, bogMarket - doubles);
 
   return { eagles, birdies, bogeys, doubles, nHist };
+}
+
+/**
+ * Resolve SG:T2G vs field. Prefer explicit t2g; else OTT+APP+ARG (same composition DG uses).
+ */
+export function resolveSgT2gDelta(opts = {}) {
+  const explicit = num(opts.sgT2gDelta, NaN);
+  if (opts.sgT2gKnown === true && Number.isFinite(explicit)) return explicit;
+  if (Number.isFinite(explicit) && Math.abs(explicit) > 1e-9) return explicit;
+  return num(opts.sgAppDelta, 0) + num(opts.sgOttDelta, 0) + num(opts.sgArgDelta, 0);
+}
+
+/**
+ * Good tee-to-green + poor putting → more pars.
+ * Missed birdie conversions on greens (birdies ↓) and less bogey inflation from weak
+ * putting when ball-striking is strong (bogeys ↓); residual pars rise in finalizeHoleCounts.
+ *
+ * @returns {{ eagles: number, birdies: number, bogeys: number, doubles: number, parShape: number }}
+ */
+export function applyT2gPuttParShape(counts = {}, opts = {}) {
+  let eagles = num(counts.eagles, 0.12);
+  let birdies = num(counts.birdies, 3.5);
+  let bogeys = num(counts.bogeys, 2.4);
+  let doubles = num(counts.doubles, 0.3);
+  const dT2g = resolveSgT2gDelta(opts);
+  const dPutt = num(opts.sgPuttDelta, 0);
+  const t2gGood = Math.max(0, dT2g);
+  const puttPoor = Math.max(0, -dPutt);
+  // Geometric interaction: both legs required for the classic "par machine" profile.
+  const raw = Math.sqrt(t2gGood * puttPoor);
+  const strength = clamp(raw, 0, 1.25);
+  if (strength < 0.03) {
+    return { eagles, birdies, bogeys, doubles, parShape: 0 };
+  }
+  // Birdie looks that two-putt → pars; modest bogey damp (poor putting is lag/miss, not always double).
+  const birdShift = clamp(0.58 * strength, 0, 0.85);
+  const bogShift = clamp(0.28 * strength, 0, 0.5);
+  birdies = Math.max(0.15, birdies - birdShift);
+  bogeys = Math.max(0.15, bogeys - bogShift);
+  return { eagles, birdies, bogeys, doubles, parShape: Math.round(strength * 1000) / 1000 };
 }
