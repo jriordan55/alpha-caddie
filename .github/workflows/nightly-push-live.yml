@@ -1,0 +1,73 @@
+# Nightly live-week publish (same as `npm run push:live`).
+# Runs in GitHub Actions so it still runs when your PC is off.
+#
+# Schedule: 01:00 UTC = 9:00 PM Eastern Daylight Time (EDT).
+#   During EST (winter) that is 8:00 PM Eastern — adjust cron if you need exact 9pm year-round.
+#
+# One-time setup (repo → Settings → Secrets and variables → Actions):
+#   DATAGOLF_API_KEY          (required)
+#   DK_LEAGUE_URL             (optional; helps DraftKings scrape)
+#   DK_SITE_SEGMENT           (optional)
+#   DK_LEAGUE_ID              (optional)
+#
+# Manual run: Actions → "Nightly push:live" → Run workflow
+
+name: Nightly push:live
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 9:00 PM Eastern Daylight Time
+    - cron: "0 1 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nightly-push-live
+  cancel-in-progress: false
+
+jobs:
+  push-live:
+    runs-on: windows-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: alpha-caddie-web/package-lock.json
+
+      - name: Install dependencies
+        working-directory: alpha-caddie-web
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        working-directory: alpha-caddie-web
+        run: npx playwright install --with-deps chromium
+
+      - name: Git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: npm run push:live
+        working-directory: alpha-caddie-web
+        env:
+          GOLF_MODEL_DIR: ${{ github.workspace }}
+          DATAGOLF_API_KEY: ${{ secrets.DATAGOLF_API_KEY }}
+          DK_LEAGUE_URL: ${{ secrets.DK_LEAGUE_URL }}
+          DK_SITE_SEGMENT: ${{ secrets.DK_SITE_SEGMENT }}
+          DK_LEAGUE_ID: ${{ secrets.DK_LEAGUE_ID }}
+          # Headless books in CI (no interactive browser session).
+          DK_HEADLESS: "1"
+          FD_HEADLESS: "1"
+          CZR_HEADLESS: "1"
+          GOLF_SKIP_PROPS_CSV: "1"
+        run: npm run push:live
