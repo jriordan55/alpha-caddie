@@ -1,7 +1,9 @@
 # Nightly live-week publish (same as `npm run push:live`).
 # Runs in GitHub Actions so it still runs when your PC is off.
-# Refreshes both trackers (O/U projection-tracker + matchup-tracker) and pushes;
-# "Projection Tracker Pages" then rebuilds GitHub Pages from the new CSVs.
+# Refreshes both trackers:
+#   - O/U projection-tracker (DK / PrizePicks / Sleeper / Underdog / FanDuel / Caesars / Kalshi)
+#   - matchup-tracker (round matchups + 3-balls)
+# then pushes; "Projection Tracker Pages" rebuilds GitHub Pages from the new CSVs.
 #
 # Schedule: 01:00 UTC = 9:00 PM Eastern Daylight Time (EDT).
 #   During EST (winter) that is 8:00 PM Eastern — adjust cron if you need exact 9pm year-round.
@@ -59,7 +61,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: npm run push:live (includes both trackers)
+      - name: npm run push:live (multi-book O/U + matchup trackers)
         working-directory: alpha-caddie-web
         env:
           GOLF_MODEL_DIR: ${{ github.workspace }}
@@ -76,4 +78,19 @@ jobs:
           GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL: "0"
           GOLF_REQUIRE_TRACKER_REFRESH: "1"
           GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS: "0"
+          # Multi-book O/U props + audit CSVs for projection-tracker (never skip on nightly).
+          GOLF_SKIP_DK_OU: "0"
+          GOLF_SKIP_PP_OU: "0"
+          GOLF_SKIP_SL_OU: "0"
+          GOLF_SKIP_UD_OU: "0"
+          GOLF_SKIP_FD_OU: "0"
+          GOLF_SKIP_KL_OU: "0"
+          GOLF_SKIP_CZR_OU: "0"
+          GOLF_SKIP_DK_ROUND_AUDIT_CSV: "0"
+          GOLF_SKIP_PP_ROUND_AUDIT_CSV: "0"
+          GOLF_SKIP_SL_ROUND_AUDIT_CSV: "0"
+          GOLF_SKIP_UD_ROUND_AUDIT_CSV: "0"
+          GOLF_SKIP_FD_ROUND_AUDIT_CSV: "0"
+          GOLF_SKIP_CZR_ROUND_AUDIT_CSV: "0"
+          GOLF_SKIP_KL_ROUND_AUDIT_CSV: "0"
         run: npm run push:live

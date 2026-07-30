@@ -1,5 +1,17 @@
 /** Browser-safe detail CSV market columns (subset of scripts/round-projection-mu.mjs). */
 
+function altBookCols(stem) {
+  const books = ["pp", "sl", "ud", "fd", "czr", "kl"];
+  /** @type {Record<string, string>} */
+  const cols = {};
+  for (const b of books) {
+    cols[`${b}LineCol`] = `${stem}_${b}_line`;
+    cols[`${b}OverOddsCol`] = `${stem}_${b}_over_odds`;
+    cols[`${b}UnderOddsCol`] = `${stem}_${b}_under_odds`;
+  }
+  return cols;
+}
+
 export const DETAIL_EXPORT_MARKETS = [
   {
     key: "fairways",
@@ -7,11 +19,9 @@ export const DETAIL_EXPORT_MARKETS = [
     propsMarket: "Fairways hit",
     lineCol: "fairways_line",
     bookLineCol: "fairways_book_line",
-    ppLineCol: "fairways_pp_line",
+    ...altBookCols("fairways"),
     overOddsCol: "fairways_over_odds",
     underOddsCol: "fairways_under_odds",
-    ppOverOddsCol: "fairways_pp_over_odds",
-    ppUnderOddsCol: "fairways_pp_under_odds",
   },
   {
     key: "total",
@@ -19,11 +29,9 @@ export const DETAIL_EXPORT_MARKETS = [
     propsMarket: "Total Score",
     lineCol: "round_score_line",
     bookLineCol: "round_score_book_line",
-    ppLineCol: "round_score_pp_line",
+    ...altBookCols("round_score"),
     overOddsCol: "round_score_over_odds",
     underOddsCol: "round_score_under_odds",
-    ppOverOddsCol: "round_score_pp_over_odds",
-    ppUnderOddsCol: "round_score_pp_under_odds",
   },
   {
     key: "birdies",
@@ -31,11 +39,9 @@ export const DETAIL_EXPORT_MARKETS = [
     propsMarket: "Birdies",
     lineCol: "birdies_line",
     bookLineCol: "birdies_book_line",
-    ppLineCol: "birdies_pp_line",
+    ...altBookCols("birdies"),
     overOddsCol: "birdies_over_odds",
     underOddsCol: "birdies_under_odds",
-    ppOverOddsCol: "birdies_pp_over_odds",
-    ppUnderOddsCol: "birdies_pp_under_odds",
   },
   {
     key: "bogeys",
@@ -43,11 +49,9 @@ export const DETAIL_EXPORT_MARKETS = [
     propsMarket: "Bogeys",
     lineCol: "bogeys_line",
     bookLineCol: "bogeys_book_line",
-    ppLineCol: "bogeys_pp_line",
+    ...altBookCols("bogeys"),
     overOddsCol: "bogeys_over_odds",
     underOddsCol: "bogeys_under_odds",
-    ppOverOddsCol: "bogeys_pp_over_odds",
-    ppUnderOddsCol: "bogeys_pp_under_odds",
   },
   {
     key: "gir",
@@ -55,11 +59,90 @@ export const DETAIL_EXPORT_MARKETS = [
     propsMarket: "GIR",
     lineCol: "gir_line",
     bookLineCol: "gir_book_line",
-    ppLineCol: "gir_pp_line",
+    ...altBookCols("gir"),
     overOddsCol: "gir_over_odds",
     underOddsCol: "gir_under_odds",
-    ppOverOddsCol: "gir_pp_over_odds",
-    ppUnderOddsCol: "gir_pp_under_odds",
+  },
+];
+
+/** Books exploded in the projection tracker bet log / EV tabs. */
+export const TRACKER_OU_BOOKS = [
+  {
+    id: "draftkings",
+    label: "DraftKings",
+    liveLabel: "DraftKings (live)",
+    sourceCol: "book_odds_source",
+    acceptSources: ["pre_round_audit", "live_snapshot"],
+    lineKey: "bookLineCol",
+    overKey: "overOddsCol",
+    underKey: "underOddsCol",
+    wholeLine: false,
+  },
+  {
+    id: "prizepicks",
+    label: "PrizePicks",
+    liveLabel: "PrizePicks (live)",
+    sourceCol: "pp_book_odds_source",
+    acceptSources: ["pre_round_audit", "prizepicks_live"],
+    lineKey: "ppLineCol",
+    overKey: "ppOverOddsCol",
+    underKey: "ppUnderOddsCol",
+    wholeLine: true,
+  },
+  {
+    id: "sleeper",
+    label: "Sleeper",
+    liveLabel: "Sleeper (live)",
+    sourceCol: "sl_book_odds_source",
+    acceptSources: ["pre_round_audit", "sleeper_live"],
+    lineKey: "slLineCol",
+    overKey: "slOverOddsCol",
+    underKey: "slUnderOddsCol",
+    wholeLine: true,
+  },
+  {
+    id: "underdog",
+    label: "Underdog",
+    liveLabel: "Underdog (live)",
+    sourceCol: "ud_book_odds_source",
+    acceptSources: ["pre_round_audit", "underdog_live"],
+    lineKey: "udLineCol",
+    overKey: "udOverOddsCol",
+    underKey: "udUnderOddsCol",
+    wholeLine: true,
+  },
+  {
+    id: "fanduel",
+    label: "FanDuel",
+    liveLabel: "FanDuel (live)",
+    sourceCol: "fd_book_odds_source",
+    acceptSources: ["pre_round_audit", "fanduel_live"],
+    lineKey: "fdLineCol",
+    overKey: "fdOverOddsCol",
+    underKey: "fdUnderOddsCol",
+    wholeLine: false,
+  },
+  {
+    id: "caesars",
+    label: "Caesars",
+    liveLabel: "Caesars (live)",
+    sourceCol: "czr_book_odds_source",
+    acceptSources: ["pre_round_audit", "caesars_live"],
+    lineKey: "czrLineCol",
+    overKey: "czrOverOddsCol",
+    underKey: "czrUnderOddsCol",
+    wholeLine: false,
+  },
+  {
+    id: "kalshi",
+    label: "Kalshi",
+    liveLabel: "Kalshi (live)",
+    sourceCol: "kl_book_odds_source",
+    acceptSources: ["pre_round_audit", "kalshi_live"],
+    lineKey: "klLineCol",
+    overKey: "klOverOddsCol",
+    underKey: "klUnderOddsCol",
+    wholeLine: false,
   },
 ];
 
@@ -74,7 +157,7 @@ export function parseDkBookLine(v) {
   return enforceHalfLine(Number(v));
 }
 
-/** Parse a PrizePicks posted line (whole numbers allowed). */
+/** Parse a PrizePicks / pick'em posted line (whole numbers allowed). */
 export function parsePpBookLine(v) {
   const n = Number(v);
   return Number.isFinite(n) ? n : NaN;
@@ -117,13 +200,13 @@ export function ouSideResults(actual, line) {
 export function gradeLineForDetailRow(row, spec) {
   if (!row || !spec) return NaN;
   const dk = parseDkBookLine(row[spec.bookLineCol]);
-  const pp = parsePpBookLine(row[spec.ppLineCol]);
-  const model = parseLine(row[spec.lineCol]);
   if (Number.isFinite(dk)) return dk;
-  if (Number.isFinite(pp)) return pp;
-  return model;
-}
-
-export function ouSideResultsForDetailRow(row, spec, actual) {
-  return ouSideResults(actual, gradeLineForDetailRow(row, spec));
+  for (const book of TRACKER_OU_BOOKS) {
+    if (book.id === "draftkings") continue;
+    const col = spec[book.lineKey];
+    if (!col) continue;
+    const line = book.wholeLine ? parsePpBookLine(row[col]) : parseDkBookLine(row[col]);
+    if (Number.isFinite(line)) return line;
+  }
+  return parseLine(row[spec.lineCol]);
 }

@@ -153,6 +153,9 @@ if ($LiveWeekOnly) {
   $env:GOLF_SKIP_PP_ROUND_AUDIT_CSV = "0"
   $env:GOLF_SKIP_SL_ROUND_AUDIT_CSV = "0"
   $env:GOLF_SKIP_UD_ROUND_AUDIT_CSV = "0"
+  $env:GOLF_SKIP_FD_ROUND_AUDIT_CSV = "0"
+  $env:GOLF_SKIP_CZR_ROUND_AUDIT_CSV = "0"
+  $env:GOLF_SKIP_KL_ROUND_AUDIT_CSV = "0"
   # Round O/U books: DK + PP + SL + UD + FanDuel + Kalshi + Caesars (never skip on push:live).
   Remove-Item Env:\GOLF_SKIP_DK_OU -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_SKIP_PP_OU -ErrorAction SilentlyContinue
@@ -184,7 +187,7 @@ if ($LiveWeekOnly) {
   $env:GOLF_WITHIN_EVENT_COUNTING_BLEND = "0"
   Write-Host 'LiveWeekOnly (lean): projections + odds (DK/PP/SL/UD/FD/Kalshi/Caesars) + Trends patch + tracker.'
   Write-Host 'Live Open-Meteo weather bake always runs on push:live (tee-time forecast into scores).'
-  Write-Host 'Both trackers incremental from last recorded date: O/U projection-tracker + matchup-tracker.'
+  Write-Host 'Both trackers incremental from last recorded date: O/U projection-tracker (DK/PP/SL/UD/FD/CZR/KL) + matchup-tracker.'
   Write-Host 'Skill-first score (keep 1.0) + Detroit club hist pool when North/South exact hist is thin.'
   Write-Host 'Skipped: full CSV merge, weather archive backfill, finish-tool, book-cal fit, odds ROI backtest, full prior O/U rebuild.'
   Write-Host 'LiveWeekOnly markets: Birdies = birdies+eagles (or better), Bogeys = bogeys+doubles (or worse), same as DK/PP/SL/UD/FD/CZR.'

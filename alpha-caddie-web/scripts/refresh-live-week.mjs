@@ -382,6 +382,33 @@ if (!envTruthy("GOLF_SKIP_UD_ROUND_AUDIT_CSV", false)) {
   );
 }
 
+if (!envTruthy("GOLF_SKIP_FD_ROUND_AUDIT_CSV", false)) {
+  run(
+    "export-fd-round-model-audit-csv.mjs",
+    "FanDuel round audit CSV (all FD lines/odds + model snapshots)",
+    {},
+    softOpt,
+  );
+}
+
+if (!envTruthy("GOLF_SKIP_CZR_ROUND_AUDIT_CSV", false)) {
+  run(
+    "export-czr-round-model-audit-csv.mjs",
+    "Caesars round audit CSV (all CZR lines/odds + model snapshots)",
+    {},
+    softOpt,
+  );
+}
+
+if (!envTruthy("GOLF_SKIP_KL_ROUND_AUDIT_CSV", false)) {
+  run(
+    "export-kl-round-model-audit-csv.mjs",
+    "Kalshi round audit CSV (all KL lines/odds + model snapshots)",
+    {},
+    softOpt,
+  );
+}
+
 run(
   "bake-outright-sim-probs.mjs",
   "Tournament MC outright probs → projections.json (precomputed for +EV)",

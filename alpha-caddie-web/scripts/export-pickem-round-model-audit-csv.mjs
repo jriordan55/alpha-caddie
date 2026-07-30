@@ -50,7 +50,21 @@ export function appendPickemRoundProjectionAuditCsv(payload, opts) {
   if (skipEnv && String(process.env[skipEnv] || "").trim() === "1") {
     return { appended: 0, path: opts.outPath || "", skipped: true };
   }
-  const short = source === "underdog" ? "ud" : source === "sleeper" ? "sl" : source.slice(0, 2);
+  const shortFromSource =
+    source === "underdog"
+      ? "ud"
+      : source === "sleeper"
+        ? "sl"
+        : source === "prizepicks"
+          ? "pp"
+          : source === "fanduel"
+            ? "fd"
+            : source === "caesars"
+              ? "czr"
+              : source === "kalshi"
+                ? "kl"
+                : source.slice(0, 2);
+  const short = String(opts.short || shortFromSource).trim() || shortFromSource;
   const outPath = opts.outPath || join(WEB_ROOT, "data", `${short}_round_projection_audit.csv`);
   const props = Array.isArray(payload?.props) ? payload.props : [];
   const rows = props.filter((r) => String(r?.source || "").trim().toLowerCase() === source);
@@ -135,6 +149,36 @@ export function appendSlRoundProjectionAuditCsv(payload, opts = {}) {
     skipEnv: "GOLF_SKIP_SL_ROUND_AUDIT_CSV",
     refreshedAtKey: "sl_round_props_refreshed_at",
     lineCol: "sl_line",
+    ...opts,
+  });
+}
+
+export function appendFdRoundProjectionAuditCsv(payload, opts = {}) {
+  return appendPickemRoundProjectionAuditCsv(payload, {
+    source: "fanduel",
+    skipEnv: "GOLF_SKIP_FD_ROUND_AUDIT_CSV",
+    refreshedAtKey: "fd_round_props_refreshed_at",
+    lineCol: "fd_line",
+    ...opts,
+  });
+}
+
+export function appendCzrRoundProjectionAuditCsv(payload, opts = {}) {
+  return appendPickemRoundProjectionAuditCsv(payload, {
+    source: "caesars",
+    skipEnv: "GOLF_SKIP_CZR_ROUND_AUDIT_CSV",
+    refreshedAtKey: "czr_round_props_refreshed_at",
+    lineCol: "czr_line",
+    ...opts,
+  });
+}
+
+export function appendKlRoundProjectionAuditCsv(payload, opts = {}) {
+  return appendPickemRoundProjectionAuditCsv(payload, {
+    source: "kalshi",
+    skipEnv: "GOLF_SKIP_KL_ROUND_AUDIT_CSV",
+    refreshedAtKey: "kl_round_props_refreshed_at",
+    lineCol: "kl_line",
     ...opts,
   });
 }

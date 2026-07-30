@@ -14,7 +14,7 @@
     <div class="header-inner">
       <div>
         <h1 class="brand-title">Projection tracker</h1>
-        <p class="brand-sub">Calibrated win probability vs DraftKings · beat the book price · <a href="../matchup-tracker/">Matchup tracker</a></p>
+        <p class="brand-sub">Calibrated win probability vs DK · PP · Sleeper · Underdog · FanDuel · Caesars · Kalshi · <a href="../matchup-tracker/">Matchup tracker</a></p>
       </div>
       <div class="header-meta" id="header-meta">Loading…</div>
     </div>
@@ -30,6 +30,18 @@
       <label>Market
         <select id="filter-market">
           <option value="">All markets</option>
+        </select>
+      </label>
+      <label>Book
+        <select id="filter-book">
+          <option value="">All books</option>
+          <option value="draftkings">DraftKings</option>
+          <option value="prizepicks">PrizePicks</option>
+          <option value="sleeper">Sleeper</option>
+          <option value="underdog">Underdog</option>
+          <option value="fanduel">FanDuel</option>
+          <option value="caesars">Caesars</option>
+          <option value="kalshi">Kalshi</option>
         </select>
       </label>
       <label>Min confidence edge %
@@ -211,7 +223,7 @@
     </section>
 
     <section id="panel-bets" class="panel" role="tabpanel">
-      <p class="note">Each row is one player × round × market with a real DraftKings or PrizePicks line. <strong>Model μ</strong> = projection; <strong>Conf %</strong> = calibrated P(pick wins); <strong>Book %</strong> = de-vigged fair price; <strong>Edge</strong> = conf − book. Beat-book bets need conf ≥ book (min confidence filter) and a minimum |μ−line| gap. Core markets: total score, birdies, GIR, fairways.</p>
+      <p class="note">Each row is one player × round × market × book with a real posted line (DraftKings, PrizePicks, Sleeper, Underdog, FanDuel, Caesars, Kalshi). <strong>Model μ</strong> = projection; <strong>Conf %</strong> = calibrated P(pick wins); <strong>Book %</strong> = de-vigged fair price; <strong>Edge</strong> = conf − book. Beat-book bets need conf ≥ book (min confidence filter) and a minimum |μ−line| gap. Core markets: total score, birdies, GIR, fairways.</p>
       <div class="kpi-grid" id="bets-kpis"></div>
       <div class="table-card">
         <div class="table-wrap table-wrap-tall">
@@ -222,8 +234,9 @@
                 <th class="num">Rnd</th>
                 <th>Player</th>
                 <th>Market</th>
+                <th>Sportsbook</th>
                 <th class="num">Model μ</th>
-                <th class="num">Book</th>
+                <th class="num">Line</th>
                 <th class="num">μ−line</th>
                 <th class="num">Over</th>
                 <th>Over</th>

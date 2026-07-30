@@ -33,10 +33,26 @@ export function isUnderdogPropSource(source) {
   return String(source || "").trim().toLowerCase() === "underdog";
 }
 
+export function isFanDuelPropSource(source) {
+  return String(source || "").trim().toLowerCase() === "fanduel";
+}
+
+export function isCaesarsPropSource(source) {
+  return String(source || "").trim().toLowerCase() === "caesars";
+}
+
+export function isKalshiPropSource(source) {
+  return String(source || "").trim().toLowerCase() === "kalshi";
+}
+
 function normalizeIndexedPropLine(source, line) {
   const n = num(line, NaN);
   if (!Number.isFinite(n)) return NaN;
-  if (isPrizePicksPropSource(source) || isSleeperPropSource(source) || isUnderdogPropSource(source)) {
+  if (
+    isPrizePicksPropSource(source) ||
+    isSleeperPropSource(source) ||
+    isUnderdogPropSource(source)
+  ) {
     return n;
   }
   return enforceHalfLine(n);
@@ -106,4 +122,19 @@ export function buildSlPropsIndex(payload, opts = {}) {
 /** Underdog-only index. */
 export function buildUdPropsIndex(payload, opts = {}) {
   return buildPropsIndexForSource(payload, { ...opts, source: "underdog" });
+}
+
+/** FanDuel-only index. */
+export function buildFdPropsIndex(payload, opts = {}) {
+  return buildPropsIndexForSource(payload, { ...opts, source: "fanduel" });
+}
+
+/** Caesars-only index. */
+export function buildCzrPropsIndex(payload, opts = {}) {
+  return buildPropsIndexForSource(payload, { ...opts, source: "caesars" });
+}
+
+/** Kalshi-only index. */
+export function buildKlPropsIndex(payload, opts = {}) {
+  return buildPropsIndexForSource(payload, { ...opts, source: "kalshi" });
 }

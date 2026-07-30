@@ -47,16 +47,33 @@ import { resolveLiveRoundActualsByDg } from "./dg-live-tournament-stats.mjs";
 import { formatCourseLabelForDisplay } from "./course-name-key.mjs";
 import {
   EXPORT_ACTUAL_COLS,
+  EXPORT_ALT_BOOKS,
+  EXPORT_ALT_SOURCE_COLS,
   EXPORT_BOOK_LINE_COLS,
   EXPORT_PP_LINE_COLS,
+  EXPORT_SL_LINE_COLS,
+  EXPORT_UD_LINE_COLS,
+  EXPORT_FD_LINE_COLS,
+  EXPORT_CZR_LINE_COLS,
+  EXPORT_KL_LINE_COLS,
   EXPORT_MARKETS,
   EXPORT_MODEL_LINE_COLS,
   EXPORT_OVER_ODDS_COLS,
   EXPORT_PP_OVER_ODDS_COLS,
+  EXPORT_SL_OVER_ODDS_COLS,
+  EXPORT_UD_OVER_ODDS_COLS,
+  EXPORT_FD_OVER_ODDS_COLS,
+  EXPORT_CZR_OVER_ODDS_COLS,
+  EXPORT_KL_OVER_ODDS_COLS,
   EXPORT_OVER_RESULT_COLS,
   EXPORT_PRICING_MODES,
   EXPORT_UNDER_ODDS_COLS,
   EXPORT_PP_UNDER_ODDS_COLS,
+  EXPORT_SL_UNDER_ODDS_COLS,
+  EXPORT_UD_UNDER_ODDS_COLS,
+  EXPORT_FD_UNDER_ODDS_COLS,
+  EXPORT_CZR_UNDER_ODDS_COLS,
+  EXPORT_KL_UNDER_ODDS_COLS,
   EXPORT_UNDER_RESULT_COLS,
   birdiesPlusEaglesFromRow,
   bogeysPlusDoublesFromRow,
@@ -83,9 +100,19 @@ import {
   pgatourRowBelongsToEvent,
 } from "./live-event-actuals-cap.mjs";
 import {
+  defaultCzrAuditPath,
+  defaultFdAuditPath,
+  defaultKlAuditPath,
   defaultPpAuditPath,
+  defaultSlAuditPath,
+  defaultUdAuditPath,
+  loadPreRoundCzrPropsFromAudit,
+  loadPreRoundFdPropsFromAudit,
+  loadPreRoundKlPropsFromAudit,
   loadPreRoundPpPropsFromAudit,
-} from "./pp-pre-round-props.mjs";
+  loadPreRoundSlPropsFromAudit,
+  loadPreRoundUdPropsFromAudit,
+} from "./pickem-pre-round-props.mjs";
 import {
   buildRoundProjectionVsActualSummary,
   writeRoundProjectionVsActualWorkbook,
@@ -110,7 +137,15 @@ import {
   flatVenueProjectionPipelineEnv,
   walkforwardBacktestPipelineEnv,
 } from "./projection-pipeline-env.mjs";
-import { buildBookPropsIndex, buildPpPropsIndex } from "./projection-book-props.mjs";
+import {
+  buildBookPropsIndex,
+  buildCzrPropsIndex,
+  buildFdPropsIndex,
+  buildKlPropsIndex,
+  buildPpPropsIndex,
+  buildSlPropsIndex,
+  buildUdPropsIndex,
+} from "./projection-book-props.mjs";
 import { bayesianPosteriorForProp } from "./bayesian-market-posterior.mjs";
 
 if (process.argv.includes("--full-backtest-rebuild")) {
@@ -127,17 +162,21 @@ const DEFAULT_OUT = join(WEB_ROOT, "data", "round_projection_vs_actual.csv");
 const DEFAULT_SUMMARY_OUT = join(WEB_ROOT, "data", "round_projection_vs_actual_summary.csv");
 const DEFAULT_XLSX_OUT = join(WEB_ROOT, "data", "round_projection_vs_actual.xlsx");
 
+const ALT_LINE_COLS = EXPORT_ALT_BOOKS.flatMap((b) => b.lineCols);
+const ALT_OVER_COLS = EXPORT_ALT_BOOKS.flatMap((b) => b.overCols);
+const ALT_UNDER_COLS = EXPORT_ALT_BOOKS.flatMap((b) => b.underCols);
+
 const DETAIL_MID_COLS = [
   ...EXPORT_ACTUAL_COLS,
   "book_odds_source",
-  "pp_book_odds_source",
+  ...EXPORT_ALT_SOURCE_COLS,
   ...EXPORT_MODEL_LINE_COLS,
   ...EXPORT_BOOK_LINE_COLS,
-  ...EXPORT_PP_LINE_COLS,
+  ...ALT_LINE_COLS,
   ...EXPORT_OVER_ODDS_COLS,
   ...EXPORT_UNDER_ODDS_COLS,
-  ...EXPORT_PP_OVER_ODDS_COLS,
-  ...EXPORT_PP_UNDER_ODDS_COLS,
+  ...ALT_OVER_COLS,
+  ...ALT_UNDER_COLS,
   ...EXPORT_OVER_RESULT_COLS,
   ...EXPORT_UNDER_RESULT_COLS,
 ];
@@ -190,32 +229,19 @@ function propsIndexToJson(map) {
 }
 
 /** Small JSON snapshot for projection-tracker Reload (pre-round audit + live DK/PP props). */
-function writeLiveEventBookPropsSnapshot(
-  eventName,
-  generatedAt,
-  preRoundDkIndex,
-  liveDkIndex,
-  livePpIndex,
-  preRoundPpIndex,
-) {
+function writeLiveEventBookPropsSnapshot(eventName, generatedAt, packs) {
   if (!eventName) return;
   try {
     mkdirSync(dirname(LIVE_EVENT_BOOK_PROPS_PATH), { recursive: true });
-    writeFileSync(
-      LIVE_EVENT_BOOK_PROPS_PATH,
-      JSON.stringify(
-        {
-          event_name: eventName,
-          generated_at: generatedAt,
-          pre_round_dk: propsIndexToJson(preRoundDkIndex),
-          pre_round_pp: propsIndexToJson(preRoundPpIndex),
-          live_dk: propsIndexToJson(liveDkIndex),
-          live_pp: propsIndexToJson(livePpIndex),
-        },
-        null,
-        0,
-      ),
-    );
+    /** @type {Record<string, object>} */
+    const body = {
+      event_name: eventName,
+      generated_at: generatedAt,
+    };
+    for (const [key, map] of Object.entries(packs || {})) {
+      body[key] = propsIndexToJson(map);
+    }
+    writeFileSync(LIVE_EVENT_BOOK_PROPS_PATH, JSON.stringify(body, null, 0));
   } catch (e) {
     console.warn(`[round-projection-vs-actual] live_event_book_props.json write failed: ${e?.message || e}`);
   }
@@ -249,25 +275,79 @@ function dkPropForExport(preRoundIndex, liveIndex, dg, rnd, propsMarket, actuals
   return null;
 }
 
-function ppPropForExport(preRoundIndex, liveIndex, dg, rnd, propsMarket, actuals) {
+/**
+ * Pick'em / alt-book: pre-round audit when available; live props for open rounds.
+ * @param {string} liveOddsSource e.g. prizepicks_live
+ */
+function altPropForExport(preRoundIndex, liveIndex, dg, rnd, propsMarket, actuals, liveOddsSource) {
   const key = `${dg}|${rnd}|${propsMarket}`;
-  const pre = preRoundIndex.get(key);
+  const pre = preRoundIndex?.get?.(key);
   if (pre) return { ...pre, oddsSource: "pre_round_audit" };
   if (roundHasCompletedScore(actuals, dg, rnd)) return null;
-  const live = liveIndex.get(key);
+  const live = liveIndex?.get?.(key);
   if (!live) return null;
-  return { line: live.line, over: live.over, under: live.under, oddsSource: "prizepicks_live" };
+  return { line: live.line, over: live.over, under: live.under, oddsSource: liveOddsSource };
 }
 
-/** Keep row when at least one market has DK or PrizePicks posted odds. */
+/** Keep row when at least one market has posted odds from any tracked book. */
 function rowHasAnyBookOdds(rowCells) {
-  for (const col of [...EXPORT_OVER_ODDS_COLS, ...EXPORT_PP_OVER_ODDS_COLS]) {
-    if (String(rowCells[col] ?? "").trim()) return true;
-  }
-  for (const col of [...EXPORT_UNDER_ODDS_COLS, ...EXPORT_PP_UNDER_ODDS_COLS]) {
+  for (const col of [...EXPORT_OVER_ODDS_COLS, ...ALT_OVER_COLS, ...EXPORT_UNDER_ODDS_COLS, ...ALT_UNDER_COLS]) {
     if (String(rowCells[col] ?? "").trim()) return true;
   }
   return false;
+}
+
+function fmtAltBookLine(market, v, wholeLine) {
+  return wholeLine ? fmtPpBookLine(market, v) : fmtDkBookLine(market, v);
+}
+
+function emptyDetailRowCells() {
+  return Object.fromEntries(
+    [
+      ...EXPORT_ACTUAL_COLS,
+      "book_odds_source",
+      ...EXPORT_ALT_SOURCE_COLS,
+      ...EXPORT_MODEL_LINE_COLS,
+      ...EXPORT_BOOK_LINE_COLS,
+      ...ALT_LINE_COLS,
+      ...EXPORT_OVER_ODDS_COLS,
+      ...EXPORT_UNDER_ODDS_COLS,
+      ...ALT_OVER_COLS,
+      ...ALT_UNDER_COLS,
+      ...EXPORT_OVER_RESULT_COLS,
+      ...EXPORT_UNDER_RESULT_COLS,
+      "edge",
+    ].map((c) => [c, ""]),
+  );
+}
+
+function detailRowOrderCells(rowCells, playerSignals, meta) {
+  return [
+    meta.exported,
+    meta.projAt,
+    meta.eventName,
+    meta.course,
+    meta.displayRound,
+    meta.rnd,
+    meta.pricingMode,
+    meta.pricingSkill,
+    meta.dg,
+    meta.playerName,
+    ...EXPORT_ACTUAL_COLS.map((c) => rowCells[c]),
+    rowCells.book_odds_source,
+    ...EXPORT_ALT_SOURCE_COLS.map((c) => rowCells[c]),
+    ...EXPORT_MODEL_LINE_COLS.map((c) => rowCells[c]),
+    ...EXPORT_BOOK_LINE_COLS.map((c) => rowCells[c]),
+    ...ALT_LINE_COLS.map((c) => rowCells[c]),
+    ...EXPORT_OVER_ODDS_COLS.map((c) => rowCells[c]),
+    ...EXPORT_UNDER_ODDS_COLS.map((c) => rowCells[c]),
+    ...ALT_OVER_COLS.map((c) => rowCells[c]),
+    ...ALT_UNDER_COLS.map((c) => rowCells[c]),
+    ...EXPORT_OVER_RESULT_COLS.map((c) => rowCells[c]),
+    ...EXPORT_UNDER_RESULT_COLS.map((c) => rowCells[c]),
+    ...EXPORT_SIGNAL_COLS.map((c) => playerSignals[c] || ""),
+    rowCells.edge,
+  ];
 }
 
 function csvCell(v) {
@@ -730,6 +810,25 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
 
   /** @type {Map<string, Map<string, object>>} event → pre-round DK index */
   const auditByEvent = new Map();
+  /** @type {Map<string, Map<string, Map<string, object>>>} short → event → index */
+  const altAuditByBook = new Map(EXPORT_ALT_BOOKS.map((b) => [b.short, new Map()]));
+  const altAuditPaths = {
+    pp: opts.ppAuditPath || defaultPpAuditPath(WEB_ROOT),
+    sl: opts.slAuditPath || defaultSlAuditPath(WEB_ROOT),
+    ud: opts.udAuditPath || defaultUdAuditPath(WEB_ROOT),
+    fd: opts.fdAuditPath || defaultFdAuditPath(WEB_ROOT),
+    czr: opts.czrAuditPath || defaultCzrAuditPath(WEB_ROOT),
+    kl: opts.klAuditPath || defaultKlAuditPath(WEB_ROOT),
+  };
+  const altLoaders = {
+    pp: loadPreRoundPpPropsFromAudit,
+    sl: loadPreRoundSlPropsFromAudit,
+    ud: loadPreRoundUdPropsFromAudit,
+    fd: loadPreRoundFdPropsFromAudit,
+    czr: loadPreRoundCzrPropsFromAudit,
+    kl: loadPreRoundKlPropsFromAudit,
+  };
+
   for (const ev of auditEvents) {
     const dateStart = await inferDateStartFromAuditCaptures(ev, auditPath);
     let roundStart = buildRoundStartUtcMsForAuditEvent(ev, {
@@ -742,6 +841,13 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
     }
     const preIndex = await loadPreRoundDkPropsFromAudit(ev, auditPath, roundStart);
     if (preIndex.size) auditByEvent.set(ev, preIndex);
+    for (const book of EXPORT_ALT_BOOKS) {
+      const loader = altLoaders[book.short];
+      const path = altAuditPaths[book.short];
+      if (!loader || !path) continue;
+      const idx = await loader(ev, path, roundStart);
+      if (idx.size) altAuditByBook.get(book.short).set(ev, idx);
+    }
   }
 
   for (const [ev, preIndex] of auditByEvent) {
@@ -1014,32 +1120,47 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
     }
     const sigCells = signalCellsFromObject(sigObj);
 
-    const rowOrder = [
-      exported,
-      pr.projAt,
-      ev,
-      formatCourseLabelForDisplay(pr.course),
-      pr.rnd,
-      pr.rnd,
-      "default",
-      "default",
-      pr.dg,
-      pr.playerName,
-      ...EXPORT_ACTUAL_COLS.map((c) => rowCells[c] || ""),
-      "pre_round_audit",
-      "",
-      ...EXPORT_MODEL_LINE_COLS.map((c) => rowCells[c] || ""),
-      ...EXPORT_BOOK_LINE_COLS.map((c) => rowCells[c] || ""),
-      ...EXPORT_PP_LINE_COLS.map(() => ""),
-      ...EXPORT_OVER_ODDS_COLS.map((c) => rowCells[c] || ""),
-      ...EXPORT_UNDER_ODDS_COLS.map((c) => rowCells[c] || ""),
-      ...EXPORT_PP_OVER_ODDS_COLS.map(() => ""),
-      ...EXPORT_PP_UNDER_ODDS_COLS.map(() => ""),
-      ...EXPORT_OVER_RESULT_COLS.map((c) => rowCells[c] || ""),
-      ...EXPORT_UNDER_RESULT_COLS.map((c) => rowCells[c] || ""),
-      ...EXPORT_SIGNAL_COLS.map((c) => sigCells[c] || ""),
-      "",
-    ];
+    // Overlay PrizePicks / Sleeper / Underdog / FanDuel / Caesars / Kalshi pre-round lines.
+    /** @type {Record<string, string>} */
+    const altSources = {};
+    for (const book of EXPORT_ALT_BOOKS) {
+      const idx = altAuditByBook.get(book.short)?.get(ev);
+      if (!idx) continue;
+      let any = false;
+      for (const spec of EXPORT_MARKETS) {
+        const snap = idx.get(`${pr.dg}|${pr.rnd}|${spec.propsMarket}`);
+        if (!snap) continue;
+        any = true;
+        const lineVal = book.wholeLine ? num(snap.line, NaN) : parseDkBookLine(snap.line);
+        rowCells[spec[book.lineKey]] = fmtAltBookLine(spec.market, lineVal, book.wholeLine);
+        rowCells[spec[book.overKey]] = formatAmericanOdds(snap.over);
+        rowCells[spec[book.underKey]] = formatAmericanOdds(snap.under);
+      }
+      if (any) altSources[book.sourceCol] = "pre_round_audit";
+    }
+
+    const rowOrder = detailRowOrderCells(
+      {
+        ...emptyDetailRowCells(),
+        ...rowCells,
+        book_odds_source: "pre_round_audit",
+        ...Object.fromEntries(EXPORT_ALT_SOURCE_COLS.map((c) => [c, altSources[c] || ""])),
+        edge: "",
+      },
+      sigCells,
+      {
+        exported,
+        projAt: pr.projAt,
+        eventName: ev,
+        course: formatCourseLabelForDisplay(pr.course),
+        displayRound: pr.rnd,
+        rnd: pr.rnd,
+        pricingMode: "default",
+        pricingSkill: "default",
+        dg: pr.dg,
+        playerName: pr.playerName,
+      },
+    );
     resultLines.push(rowOrder.map(csvCell).join(",") + "\n");
   }
 
@@ -1654,18 +1775,57 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
   const roundStartUtcMs = buildRoundStartUtcMs(players, payload);
   const auditPath = opts.dkAuditPath || defaultDkAuditPath(WEB_ROOT);
   const preRoundDkIndex = await loadPreRoundDkPropsFromAudit(eventName, auditPath, roundStartUtcMs);
-  const ppAuditPath = opts.ppAuditPath || defaultPpAuditPath(WEB_ROOT);
-  const preRoundPpIndex = await loadPreRoundPpPropsFromAudit(eventName, ppAuditPath, roundStartUtcMs);
   const liveDkIndex = buildBookPropsIndex(payload);
-  const livePpIndex = buildPpPropsIndex(payload);
-  writeLiveEventBookPropsSnapshot(
-    eventName,
-    exported,
-    preRoundDkIndex,
-    liveDkIndex,
-    livePpIndex,
-    preRoundPpIndex,
-  );
+
+  const altBookRuntime = [
+    {
+      book: EXPORT_ALT_BOOKS[0],
+      pre: await loadPreRoundPpPropsFromAudit(eventName, opts.ppAuditPath || defaultPpAuditPath(WEB_ROOT), roundStartUtcMs),
+      live: buildPpPropsIndex(payload),
+    },
+    {
+      book: EXPORT_ALT_BOOKS[1],
+      pre: await loadPreRoundSlPropsFromAudit(eventName, opts.slAuditPath || defaultSlAuditPath(WEB_ROOT), roundStartUtcMs),
+      live: buildSlPropsIndex(payload),
+    },
+    {
+      book: EXPORT_ALT_BOOKS[2],
+      pre: await loadPreRoundUdPropsFromAudit(eventName, opts.udAuditPath || defaultUdAuditPath(WEB_ROOT), roundStartUtcMs),
+      live: buildUdPropsIndex(payload),
+    },
+    {
+      book: EXPORT_ALT_BOOKS[3],
+      pre: await loadPreRoundFdPropsFromAudit(eventName, opts.fdAuditPath || defaultFdAuditPath(WEB_ROOT), roundStartUtcMs),
+      live: buildFdPropsIndex(payload),
+    },
+    {
+      book: EXPORT_ALT_BOOKS[4],
+      pre: await loadPreRoundCzrPropsFromAudit(eventName, opts.czrAuditPath || defaultCzrAuditPath(WEB_ROOT), roundStartUtcMs),
+      live: buildCzrPropsIndex(payload),
+    },
+    {
+      book: EXPORT_ALT_BOOKS[5],
+      pre: await loadPreRoundKlPropsFromAudit(eventName, opts.klAuditPath || defaultKlAuditPath(WEB_ROOT), roundStartUtcMs),
+      live: buildKlPropsIndex(payload),
+    },
+  ];
+
+  writeLiveEventBookPropsSnapshot(eventName, exported, {
+    pre_round_dk: preRoundDkIndex,
+    live_dk: liveDkIndex,
+    pre_round_pp: altBookRuntime[0].pre,
+    live_pp: altBookRuntime[0].live,
+    pre_round_sl: altBookRuntime[1].pre,
+    live_sl: altBookRuntime[1].live,
+    pre_round_ud: altBookRuntime[2].pre,
+    live_ud: altBookRuntime[2].live,
+    pre_round_fd: altBookRuntime[3].pre,
+    live_fd: altBookRuntime[3].live,
+    pre_round_czr: altBookRuntime[4].pre,
+    live_czr: altBookRuntime[4].live,
+    pre_round_kl: altBookRuntime[5].pre,
+    live_kl: altBookRuntime[5].live,
+  });
   const ctx = createProjectionContext({ ...payload, _webRoot: WEB_ROOT });
   const lines = [HEADER];
   const summarySamples = [];
@@ -1685,42 +1845,31 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
     const playerSignals = signalCellsFromObject(extractSignalsFromPlayerRow(p, payload, WEB_ROOT));
 
     for (const pm of EXPORT_PRICING_MODES) {
-      const rowCells = Object.fromEntries(
-        [
-          ...EXPORT_ACTUAL_COLS,
-          "book_odds_source",
-          "pp_book_odds_source",
-          ...EXPORT_MODEL_LINE_COLS,
-          ...EXPORT_BOOK_LINE_COLS,
-          ...EXPORT_PP_LINE_COLS,
-          ...EXPORT_OVER_ODDS_COLS,
-          ...EXPORT_UNDER_ODDS_COLS,
-          ...EXPORT_PP_OVER_ODDS_COLS,
-          ...EXPORT_PP_UNDER_ODDS_COLS,
-          ...EXPORT_OVER_RESULT_COLS,
-          ...EXPORT_UNDER_RESULT_COLS,
-          "edge",
-        ].map((c) => [c, ""]),
-      );
+      const rowCells = emptyDetailRowCells();
 
       for (const spec of EXPORT_MARKETS) {
         rowCells[spec.actualCol] = fmtActual(spec.key, actualForMarket(act, spec.key));
       }
       rowCells.actual_source = act.source || "";
       rowCells.book_odds_source = "";
-      rowCells.pp_book_odds_source = "";
+      for (const srcCol of EXPORT_ALT_SOURCE_COLS) rowCells[srcCol] = "";
 
       let bestEdge = NaN;
       let rowOddsSource = "";
-      let rowPpOddsSource = "";
+      /** @type {Record<string, string>} */
+      const rowAltOddsSources = {};
       const rowMarketSamples = [];
 
       for (const spec of EXPORT_MARKETS) {
         const dk = dkPropForExport(preRoundDkIndex, liveDkIndex, dg, rnd, spec.propsMarket, actuals);
-        const pp = ppPropForExport(preRoundPpIndex, livePpIndex, dg, rnd, spec.propsMarket, actuals);
         let mu = ouProjectedMeanForMode(spec.market, p, payload, pm.mode, pm.skill, ctx);
+        const altHits = altBookRuntime.map((ab) =>
+          altPropForExport(ab.pre, ab.live, dg, rnd, spec.propsMarket, actuals, ab.book.liveOddsSource),
+        );
         const auditSnap =
-          dk?.oddsSource === "pre_round_audit" ? dk : pp?.oddsSource === "pre_round_audit" ? pp : null;
+          dk?.oddsSource === "pre_round_audit"
+            ? dk
+            : altHits.find((h) => h?.oddsSource === "pre_round_audit") || null;
         const auditMu = auditModelFromSnap(auditSnap, spec);
         if (Number.isFinite(auditMu)) mu = auditMu;
         const modelLine = mu;
@@ -1735,12 +1884,15 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
           rowCells[spec.overOddsCol] = formatAmericanOdds(dk.over);
           rowCells[spec.underOddsCol] = formatAmericanOdds(dk.under);
         }
-        if (pp) {
-          if (!rowPpOddsSource) rowPpOddsSource = pp.oddsSource;
-          const ppLine = num(pp.line, NaN);
-          rowCells[spec.ppLineCol] = fmtPpBookLine(spec.market, ppLine);
-          rowCells[spec.ppOverOddsCol] = formatAmericanOdds(pp.over);
-          rowCells[spec.ppUnderOddsCol] = formatAmericanOdds(pp.under);
+        for (let bi = 0; bi < altBookRuntime.length; bi++) {
+          const ab = altBookRuntime[bi];
+          const hit = altHits[bi];
+          if (!hit) continue;
+          if (!rowAltOddsSources[ab.book.sourceCol]) rowAltOddsSources[ab.book.sourceCol] = hit.oddsSource;
+          const lineVal = ab.book.wholeLine ? num(hit.line, NaN) : parseDkBookLine(hit.line);
+          rowCells[spec[ab.book.lineKey]] = fmtAltBookLine(spec.market, lineVal, ab.book.wholeLine);
+          rowCells[spec[ab.book.overKey]] = formatAmericanOdds(hit.over);
+          rowCells[spec[ab.book.underKey]] = formatAmericanOdds(hit.under);
         }
         const gradeLine = Number.isFinite(bookLine) ? bookLine : modelLine;
 
@@ -1781,7 +1933,9 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
       }
 
       rowCells.book_odds_source = rowOddsSource;
-      rowCells.pp_book_odds_source = rowPpOddsSource;
+      for (const [srcCol, srcVal] of Object.entries(rowAltOddsSources)) {
+        rowCells[srcCol] = srcVal;
+      }
       rowCells.edge = Number.isFinite(bestEdge) ? (Math.round(bestEdge * 10) / 10).toFixed(1) : "";
 
       const hasBook = rowHasAnyBookOdds(rowCells);
@@ -1798,32 +1952,18 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
       if (hasBook && rowOddsSource === "pre_round_audit") preRoundOddsRows++;
       else if (hasBook && (rowOddsSource === "live_snapshot" || rowOddsSource === "model_fallback")) liveSnapshotOddsRows++;
 
-      const rowOrder = [
+      const rowOrder = detailRowOrderCells(rowCells, playerSignals, {
         exported,
         projAt,
         eventName,
         course,
         displayRound,
         rnd,
-        pm.mode,
-        pm.skill,
+        pricingMode: pm.mode,
+        pricingSkill: pm.skill,
         dg,
-        String(p?.player_name || "").trim(),
-        ...EXPORT_ACTUAL_COLS.map((c) => rowCells[c]),
-        rowCells.book_odds_source,
-        rowCells.pp_book_odds_source,
-        ...EXPORT_MODEL_LINE_COLS.map((c) => rowCells[c]),
-        ...EXPORT_BOOK_LINE_COLS.map((c) => rowCells[c]),
-        ...EXPORT_PP_LINE_COLS.map((c) => rowCells[c]),
-        ...EXPORT_OVER_ODDS_COLS.map((c) => rowCells[c]),
-        ...EXPORT_UNDER_ODDS_COLS.map((c) => rowCells[c]),
-        ...EXPORT_PP_OVER_ODDS_COLS.map((c) => rowCells[c]),
-        ...EXPORT_PP_UNDER_ODDS_COLS.map((c) => rowCells[c]),
-        ...EXPORT_OVER_RESULT_COLS.map((c) => rowCells[c]),
-        ...EXPORT_UNDER_RESULT_COLS.map((c) => rowCells[c]),
-        ...EXPORT_SIGNAL_COLS.map((c) => playerSignals[c] || ""),
-        rowCells.edge,
-      ];
+        playerName: String(p?.player_name || "").trim(),
+      });
 
       lines.push(rowOrder.map(csvCell).join(",") + "\n");
     }

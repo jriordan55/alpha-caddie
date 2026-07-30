@@ -35,6 +35,19 @@ import {
   RECENT_FORM_MAX,
 } from "./course-adaptive-pricing.mjs";
 
+/** @param {string} stem fairways|round_score|birdies|bogeys|gir */
+function altBookCols(stem) {
+  const books = ["pp", "sl", "ud", "fd", "czr", "kl"];
+  /** @type {Record<string, string>} */
+  const cols = {};
+  for (const b of books) {
+    cols[`${b}LineCol`] = `${stem}_${b}_line`;
+    cols[`${b}OverOddsCol`] = `${stem}_${b}_over_odds`;
+    cols[`${b}UnderOddsCol`] = `${stem}_${b}_under_odds`;
+  }
+  return cols;
+}
+
 export const EXPORT_MARKETS = [
   {
     key: "fairways",
@@ -42,17 +55,9 @@ export const EXPORT_MARKETS = [
     propsMarket: "Fairways hit",
     lineCol: "fairways_line",
     bookLineCol: "fairways_book_line",
-    ppLineCol: "fairways_pp_line",
-    slLineCol: "fairways_sl_line",
-    udLineCol: "fairways_ud_line",
+    ...altBookCols("fairways"),
     overOddsCol: "fairways_over_odds",
     underOddsCol: "fairways_under_odds",
-    ppOverOddsCol: "fairways_pp_over_odds",
-    ppUnderOddsCol: "fairways_pp_under_odds",
-    slOverOddsCol: "fairways_sl_over_odds",
-    slUnderOddsCol: "fairways_sl_under_odds",
-    udOverOddsCol: "fairways_ud_over_odds",
-    udUnderOddsCol: "fairways_ud_under_odds",
     actualCol: "actual_fairways",
     overCol: "fairways_over",
     underCol: "fairways_under",
@@ -63,17 +68,9 @@ export const EXPORT_MARKETS = [
     propsMarket: "Total Score",
     lineCol: "round_score_line",
     bookLineCol: "round_score_book_line",
-    ppLineCol: "round_score_pp_line",
-    slLineCol: "round_score_sl_line",
-    udLineCol: "round_score_ud_line",
+    ...altBookCols("round_score"),
     overOddsCol: "round_score_over_odds",
     underOddsCol: "round_score_under_odds",
-    ppOverOddsCol: "round_score_pp_over_odds",
-    ppUnderOddsCol: "round_score_pp_under_odds",
-    slOverOddsCol: "round_score_sl_over_odds",
-    slUnderOddsCol: "round_score_sl_under_odds",
-    udOverOddsCol: "round_score_ud_over_odds",
-    udUnderOddsCol: "round_score_ud_under_odds",
     actualCol: "actual_round_score",
     overCol: "round_score_over",
     underCol: "round_score_under",
@@ -84,17 +81,9 @@ export const EXPORT_MARKETS = [
     propsMarket: "Birdies",
     lineCol: "birdies_line",
     bookLineCol: "birdies_book_line",
-    ppLineCol: "birdies_pp_line",
-    slLineCol: "birdies_sl_line",
-    udLineCol: "birdies_ud_line",
+    ...altBookCols("birdies"),
     overOddsCol: "birdies_over_odds",
     underOddsCol: "birdies_under_odds",
-    ppOverOddsCol: "birdies_pp_over_odds",
-    ppUnderOddsCol: "birdies_pp_under_odds",
-    slOverOddsCol: "birdies_sl_over_odds",
-    slUnderOddsCol: "birdies_sl_under_odds",
-    udOverOddsCol: "birdies_ud_over_odds",
-    udUnderOddsCol: "birdies_ud_under_odds",
     actualCol: "actual_birdies",
     overCol: "birdies_over",
     underCol: "birdies_under",
@@ -105,17 +94,9 @@ export const EXPORT_MARKETS = [
     propsMarket: "Bogeys",
     lineCol: "bogeys_line",
     bookLineCol: "bogeys_book_line",
-    ppLineCol: "bogeys_pp_line",
-    slLineCol: "bogeys_sl_line",
-    udLineCol: "bogeys_ud_line",
+    ...altBookCols("bogeys"),
     overOddsCol: "bogeys_over_odds",
     underOddsCol: "bogeys_under_odds",
-    ppOverOddsCol: "bogeys_pp_over_odds",
-    ppUnderOddsCol: "bogeys_pp_under_odds",
-    slOverOddsCol: "bogeys_sl_over_odds",
-    slUnderOddsCol: "bogeys_sl_under_odds",
-    udOverOddsCol: "bogeys_ud_over_odds",
-    udUnderOddsCol: "bogeys_ud_under_odds",
     actualCol: "actual_bogeys",
     overCol: "bogeys_over",
     underCol: "bogeys_under",
@@ -126,17 +107,9 @@ export const EXPORT_MARKETS = [
     propsMarket: "GIR",
     lineCol: "gir_line",
     bookLineCol: "gir_book_line",
-    ppLineCol: "gir_pp_line",
-    slLineCol: "gir_sl_line",
-    udLineCol: "gir_ud_line",
+    ...altBookCols("gir"),
     overOddsCol: "gir_over_odds",
     underOddsCol: "gir_under_odds",
-    ppOverOddsCol: "gir_pp_over_odds",
-    ppUnderOddsCol: "gir_pp_under_odds",
-    slOverOddsCol: "gir_sl_over_odds",
-    slUnderOddsCol: "gir_sl_under_odds",
-    udOverOddsCol: "gir_ud_over_odds",
-    udUnderOddsCol: "gir_ud_under_odds",
     actualCol: "actual_gir",
     overCol: "gir_over",
     underCol: "gir_under",
@@ -149,6 +122,9 @@ export const EXPORT_BOOK_LINE_COLS = EXPORT_MARKETS.map((m) => m.bookLineCol);
 export const EXPORT_PP_LINE_COLS = EXPORT_MARKETS.map((m) => m.ppLineCol);
 export const EXPORT_SL_LINE_COLS = EXPORT_MARKETS.map((m) => m.slLineCol);
 export const EXPORT_UD_LINE_COLS = EXPORT_MARKETS.map((m) => m.udLineCol);
+export const EXPORT_FD_LINE_COLS = EXPORT_MARKETS.map((m) => m.fdLineCol);
+export const EXPORT_CZR_LINE_COLS = EXPORT_MARKETS.map((m) => m.czrLineCol);
+export const EXPORT_KL_LINE_COLS = EXPORT_MARKETS.map((m) => m.klLineCol);
 export const EXPORT_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.overOddsCol);
 export const EXPORT_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.underOddsCol);
 export const EXPORT_PP_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.ppOverOddsCol);
@@ -157,8 +133,98 @@ export const EXPORT_SL_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.slOverOddsCo
 export const EXPORT_SL_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.slUnderOddsCol);
 export const EXPORT_UD_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.udOverOddsCol);
 export const EXPORT_UD_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.udUnderOddsCol);
+export const EXPORT_FD_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.fdOverOddsCol);
+export const EXPORT_FD_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.fdUnderOddsCol);
+export const EXPORT_CZR_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.czrOverOddsCol);
+export const EXPORT_CZR_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.czrUnderOddsCol);
+export const EXPORT_KL_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.klOverOddsCol);
+export const EXPORT_KL_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.klUnderOddsCol);
 export const EXPORT_OVER_RESULT_COLS = EXPORT_MARKETS.map((m) => m.overCol);
 export const EXPORT_UNDER_RESULT_COLS = EXPORT_MARKETS.map((m) => m.underCol);
+
+/** Extra sportsbooks beyond DraftKings (wide detail CSV columns). */
+export const EXPORT_ALT_BOOKS = [
+  {
+    id: "prizepicks",
+    short: "pp",
+    sourceCol: "pp_book_odds_source",
+    lineCols: EXPORT_PP_LINE_COLS,
+    overCols: EXPORT_PP_OVER_ODDS_COLS,
+    underCols: EXPORT_PP_UNDER_ODDS_COLS,
+    lineKey: "ppLineCol",
+    overKey: "ppOverOddsCol",
+    underKey: "ppUnderOddsCol",
+    liveOddsSource: "prizepicks_live",
+    wholeLine: true,
+  },
+  {
+    id: "sleeper",
+    short: "sl",
+    sourceCol: "sl_book_odds_source",
+    lineCols: EXPORT_SL_LINE_COLS,
+    overCols: EXPORT_SL_OVER_ODDS_COLS,
+    underCols: EXPORT_SL_UNDER_ODDS_COLS,
+    lineKey: "slLineCol",
+    overKey: "slOverOddsCol",
+    underKey: "slUnderOddsCol",
+    liveOddsSource: "sleeper_live",
+    wholeLine: true,
+  },
+  {
+    id: "underdog",
+    short: "ud",
+    sourceCol: "ud_book_odds_source",
+    lineCols: EXPORT_UD_LINE_COLS,
+    overCols: EXPORT_UD_OVER_ODDS_COLS,
+    underCols: EXPORT_UD_UNDER_ODDS_COLS,
+    lineKey: "udLineCol",
+    overKey: "udOverOddsCol",
+    underKey: "udUnderOddsCol",
+    liveOddsSource: "underdog_live",
+    wholeLine: true,
+  },
+  {
+    id: "fanduel",
+    short: "fd",
+    sourceCol: "fd_book_odds_source",
+    lineCols: EXPORT_FD_LINE_COLS,
+    overCols: EXPORT_FD_OVER_ODDS_COLS,
+    underCols: EXPORT_FD_UNDER_ODDS_COLS,
+    lineKey: "fdLineCol",
+    overKey: "fdOverOddsCol",
+    underKey: "fdUnderOddsCol",
+    liveOddsSource: "fanduel_live",
+    wholeLine: false,
+  },
+  {
+    id: "caesars",
+    short: "czr",
+    sourceCol: "czr_book_odds_source",
+    lineCols: EXPORT_CZR_LINE_COLS,
+    overCols: EXPORT_CZR_OVER_ODDS_COLS,
+    underCols: EXPORT_CZR_UNDER_ODDS_COLS,
+    lineKey: "czrLineCol",
+    overKey: "czrOverOddsCol",
+    underKey: "czrUnderOddsCol",
+    liveOddsSource: "caesars_live",
+    wholeLine: false,
+  },
+  {
+    id: "kalshi",
+    short: "kl",
+    sourceCol: "kl_book_odds_source",
+    lineCols: EXPORT_KL_LINE_COLS,
+    overCols: EXPORT_KL_OVER_ODDS_COLS,
+    underCols: EXPORT_KL_UNDER_ODDS_COLS,
+    lineKey: "klLineCol",
+    overKey: "klOverOddsCol",
+    underKey: "klUnderOddsCol",
+    liveOddsSource: "kalshi_live",
+    wholeLine: false,
+  },
+];
+
+export const EXPORT_ALT_SOURCE_COLS = EXPORT_ALT_BOOKS.map((b) => b.sourceCol);
 
 /** Single projection path: recent form + course history + course-weighted SG. */
 export const EXPORT_PRICING_MODES = [{ mode: "default", skill: "default" }];

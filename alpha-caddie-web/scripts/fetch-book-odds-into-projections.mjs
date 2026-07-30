@@ -57,6 +57,9 @@ import { fetchSportsbookOutrightsFromUrls } from "./sportsbook-outrights-scraper
 import { appendDkRoundProjectionAuditCsv } from "./export-dk-round-model-audit-csv.mjs";
 import { appendPpRoundProjectionAuditCsv } from "./export-pp-round-model-audit-csv.mjs";
 import {
+  appendCzrRoundProjectionAuditCsv,
+  appendFdRoundProjectionAuditCsv,
+  appendKlRoundProjectionAuditCsv,
   appendSlRoundProjectionAuditCsv,
   appendUdRoundProjectionAuditCsv,
 } from "./export-pickem-round-model-audit-csv.mjs";
@@ -570,6 +573,14 @@ async function main() {
         console.log(
           `[fetch-book-odds] FanDuel round props: ${nFd} fresh rows (${fdMerged.length} total props)`,
         );
+        try {
+          const fdAudit = appendFdRoundProjectionAuditCsv(next);
+          if (fdAudit.appended > 0) {
+            console.log(`[fetch-book-odds] FD round audit CSV +${fdAudit.appended} rows -> ${fdAudit.path}`);
+          }
+        } catch (e) {
+          console.warn("[fetch-book-odds] FD round audit CSV:", e.message || e);
+        }
       } else if (fdError && !String(fdError).startsWith("skipped")) {
         console.warn(`[fetch-book-odds] FanDuel: ${fdError}`);
       }
@@ -595,6 +606,14 @@ async function main() {
         console.log(
           `[fetch-book-odds] Kalshi round props: ${nKl} fresh rows (${klMerged.length} total props)`,
         );
+        try {
+          const klAudit = appendKlRoundProjectionAuditCsv(next);
+          if (klAudit.appended > 0) {
+            console.log(`[fetch-book-odds] KL round audit CSV +${klAudit.appended} rows -> ${klAudit.path}`);
+          }
+        } catch (e) {
+          console.warn("[fetch-book-odds] KL round audit CSV:", e.message || e);
+        }
       } else if (klError && !String(klError).startsWith("skipped")) {
         console.warn(`[fetch-book-odds] Kalshi: ${klError}`);
       }
@@ -620,6 +639,14 @@ async function main() {
         console.log(
           `[fetch-book-odds] Caesars round props: ${nCzr} fresh rows (${czrMerged.length} total props)`,
         );
+        try {
+          const czrAudit = appendCzrRoundProjectionAuditCsv(next);
+          if (czrAudit.appended > 0) {
+            console.log(`[fetch-book-odds] CZR round audit CSV +${czrAudit.appended} rows -> ${czrAudit.path}`);
+          }
+        } catch (e) {
+          console.warn("[fetch-book-odds] CZR round audit CSV:", e.message || e);
+        }
       } else if (czrError && !String(czrError).startsWith("skipped")) {
         console.warn(`[fetch-book-odds] Caesars: ${czrError}`);
       }

@@ -18,7 +18,7 @@ import {
 import { buildEdgeSignalInsights } from "./edge-signal-insights.mjs";
 import { patchDetailRowsFromLiveSources } from "./live-detail-patch.mjs";
 import { alignDetailCsvText } from "./detail-csv-align.mjs";
-import { ouSideResults, parseDkBookLine, parsePpBookLine, fmtDkBookLine, fmtPpBookLine } from "./detail-market-specs.mjs";
+import { ouSideResults, parseDkBookLine, parsePpBookLine, fmtDkBookLine, fmtPpBookLine, TRACKER_OU_BOOKS } from "./detail-market-specs.mjs";
 import {
   DEFAULT_MIN_EV_PCT,
   isActionableMarket,
@@ -60,11 +60,11 @@ const DETAIL_CANDIDATES = [
 ];
 
 const MARKET_SPECS = [
-  { market: "Total score", modelCol: "round_score_line", bookCol: "round_score_book_line", ppBookCol: "round_score_pp_line", overOdds: "round_score_over_odds", underOdds: "round_score_under_odds", ppOverOdds: "round_score_pp_over_odds", ppUnderOdds: "round_score_pp_under_odds", overRes: "round_score_over", underRes: "round_score_under", actual: "actual_round_score", decimals: 2 },
-  { market: "Birdies", modelCol: "birdies_line", bookCol: "birdies_book_line", ppBookCol: "birdies_pp_line", overOdds: "birdies_over_odds", underOdds: "birdies_under_odds", ppOverOdds: "birdies_pp_over_odds", ppUnderOdds: "birdies_pp_under_odds", overRes: "birdies_over", underRes: "birdies_under", actual: "actual_birdies", decimals: 1 },
-  { market: "Bogeys", modelCol: "bogeys_line", bookCol: "bogeys_book_line", ppBookCol: "bogeys_pp_line", overOdds: "bogeys_over_odds", underOdds: "bogeys_under_odds", ppOverOdds: "bogeys_pp_over_odds", ppUnderOdds: "bogeys_pp_under_odds", overRes: "bogeys_over", underRes: "bogeys_under", actual: "actual_bogeys", decimals: 1 },
-  { market: "GIR", modelCol: "gir_line", bookCol: "gir_book_line", ppBookCol: "gir_pp_line", overOdds: "gir_over_odds", underOdds: "gir_under_odds", ppOverOdds: "gir_pp_over_odds", ppUnderOdds: "gir_pp_under_odds", overRes: "gir_over", underRes: "gir_under", actual: "actual_gir", decimals: 0 },
-  { market: "Fairways hit", modelCol: "fairways_line", bookCol: "fairways_book_line", ppBookCol: "fairways_pp_line", overOdds: "fairways_over_odds", underOdds: "fairways_under_odds", ppOverOdds: "fairways_pp_over_odds", ppUnderOdds: "fairways_pp_under_odds", overRes: "fairways_over", underRes: "fairways_under", actual: "actual_fairways", decimals: 0 },
+  { market: "Total score", modelCol: "round_score_line", bookCol: "round_score_book_line", ppBookCol: "round_score_pp_line", slBookCol: "round_score_sl_line", udBookCol: "round_score_ud_line", fdBookCol: "round_score_fd_line", czrBookCol: "round_score_czr_line", klBookCol: "round_score_kl_line", overOdds: "round_score_over_odds", underOdds: "round_score_under_odds", ppOverOdds: "round_score_pp_over_odds", ppUnderOdds: "round_score_pp_under_odds", slOverOdds: "round_score_sl_over_odds", slUnderOdds: "round_score_sl_under_odds", udOverOdds: "round_score_ud_over_odds", udUnderOdds: "round_score_ud_under_odds", fdOverOdds: "round_score_fd_over_odds", fdUnderOdds: "round_score_fd_under_odds", czrOverOdds: "round_score_czr_over_odds", czrUnderOdds: "round_score_czr_under_odds", klOverOdds: "round_score_kl_over_odds", klUnderOdds: "round_score_kl_under_odds", overRes: "round_score_over", underRes: "round_score_under", actual: "actual_round_score", decimals: 2, bookLineCol: "round_score_book_line", overOddsCol: "round_score_over_odds", underOddsCol: "round_score_under_odds", ppLineCol: "round_score_pp_line", ppOverOddsCol: "round_score_pp_over_odds", ppUnderOddsCol: "round_score_pp_under_odds", slLineCol: "round_score_sl_line", slOverOddsCol: "round_score_sl_over_odds", slUnderOddsCol: "round_score_sl_under_odds", udLineCol: "round_score_ud_line", udOverOddsCol: "round_score_ud_over_odds", udUnderOddsCol: "round_score_ud_under_odds", fdLineCol: "round_score_fd_line", fdOverOddsCol: "round_score_fd_over_odds", fdUnderOddsCol: "round_score_fd_under_odds", czrLineCol: "round_score_czr_line", czrOverOddsCol: "round_score_czr_over_odds", czrUnderOddsCol: "round_score_czr_under_odds", klLineCol: "round_score_kl_line", klOverOddsCol: "round_score_kl_over_odds", klUnderOddsCol: "round_score_kl_under_odds" },
+  { market: "Birdies", modelCol: "birdies_line", bookCol: "birdies_book_line", ppBookCol: "birdies_pp_line", overOdds: "birdies_over_odds", underOdds: "birdies_under_odds", ppOverOdds: "birdies_pp_over_odds", ppUnderOdds: "birdies_pp_under_odds", overRes: "birdies_over", underRes: "birdies_under", actual: "actual_birdies", decimals: 1, bookLineCol: "birdies_book_line", overOddsCol: "birdies_over_odds", underOddsCol: "birdies_under_odds", ppLineCol: "birdies_pp_line", ppOverOddsCol: "birdies_pp_over_odds", ppUnderOddsCol: "birdies_pp_under_odds", slLineCol: "birdies_sl_line", slOverOddsCol: "birdies_sl_over_odds", slUnderOddsCol: "birdies_sl_under_odds", udLineCol: "birdies_ud_line", udOverOddsCol: "birdies_ud_over_odds", udUnderOddsCol: "birdies_ud_under_odds", fdLineCol: "birdies_fd_line", fdOverOddsCol: "birdies_fd_over_odds", fdUnderOddsCol: "birdies_fd_under_odds", czrLineCol: "birdies_czr_line", czrOverOddsCol: "birdies_czr_over_odds", czrUnderOddsCol: "birdies_czr_under_odds", klLineCol: "birdies_kl_line", klOverOddsCol: "birdies_kl_over_odds", klUnderOddsCol: "birdies_kl_under_odds" },
+  { market: "Bogeys", modelCol: "bogeys_line", bookCol: "bogeys_book_line", ppBookCol: "bogeys_pp_line", overOdds: "bogeys_over_odds", underOdds: "bogeys_under_odds", ppOverOdds: "bogeys_pp_over_odds", ppUnderOdds: "bogeys_pp_under_odds", overRes: "bogeys_over", underRes: "bogeys_under", actual: "actual_bogeys", decimals: 1, bookLineCol: "bogeys_book_line", overOddsCol: "bogeys_over_odds", underOddsCol: "bogeys_under_odds", ppLineCol: "bogeys_pp_line", ppOverOddsCol: "bogeys_pp_over_odds", ppUnderOddsCol: "bogeys_pp_under_odds", slLineCol: "bogeys_sl_line", slOverOddsCol: "bogeys_sl_over_odds", slUnderOddsCol: "bogeys_sl_under_odds", udLineCol: "bogeys_ud_line", udOverOddsCol: "bogeys_ud_over_odds", udUnderOddsCol: "bogeys_ud_under_odds", fdLineCol: "bogeys_fd_line", fdOverOddsCol: "bogeys_fd_over_odds", fdUnderOddsCol: "bogeys_fd_under_odds", czrLineCol: "bogeys_czr_line", czrOverOddsCol: "bogeys_czr_over_odds", czrUnderOddsCol: "bogeys_czr_under_odds", klLineCol: "bogeys_kl_line", klOverOddsCol: "bogeys_kl_over_odds", klUnderOddsCol: "bogeys_kl_under_odds" },
+  { market: "GIR", modelCol: "gir_line", bookCol: "gir_book_line", ppBookCol: "gir_pp_line", overOdds: "gir_over_odds", underOdds: "gir_under_odds", ppOverOdds: "gir_pp_over_odds", ppUnderOdds: "gir_pp_under_odds", overRes: "gir_over", underRes: "gir_under", actual: "actual_gir", decimals: 0, bookLineCol: "gir_book_line", overOddsCol: "gir_over_odds", underOddsCol: "gir_under_odds", ppLineCol: "gir_pp_line", ppOverOddsCol: "gir_pp_over_odds", ppUnderOddsCol: "gir_pp_under_odds", slLineCol: "gir_sl_line", slOverOddsCol: "gir_sl_over_odds", slUnderOddsCol: "gir_sl_under_odds", udLineCol: "gir_ud_line", udOverOddsCol: "gir_ud_over_odds", udUnderOddsCol: "gir_ud_under_odds", fdLineCol: "gir_fd_line", fdOverOddsCol: "gir_fd_over_odds", fdUnderOddsCol: "gir_fd_under_odds", czrLineCol: "gir_czr_line", czrOverOddsCol: "gir_czr_over_odds", czrUnderOddsCol: "gir_czr_under_odds", klLineCol: "gir_kl_line", klOverOddsCol: "gir_kl_over_odds", klUnderOddsCol: "gir_kl_under_odds" },
+  { market: "Fairways hit", modelCol: "fairways_line", bookCol: "fairways_book_line", ppBookCol: "fairways_pp_line", overOdds: "fairways_over_odds", underOdds: "fairways_under_odds", ppOverOdds: "fairways_pp_over_odds", ppUnderOdds: "fairways_pp_under_odds", overRes: "fairways_over", underRes: "fairways_under", actual: "actual_fairways", decimals: 0, bookLineCol: "fairways_book_line", overOddsCol: "fairways_over_odds", underOddsCol: "fairways_under_odds", ppLineCol: "fairways_pp_line", ppOverOddsCol: "fairways_pp_over_odds", ppUnderOddsCol: "fairways_pp_under_odds", slLineCol: "fairways_sl_line", slOverOddsCol: "fairways_sl_over_odds", slUnderOddsCol: "fairways_sl_under_odds", udLineCol: "fairways_ud_line", udOverOddsCol: "fairways_ud_over_odds", udUnderOddsCol: "fairways_ud_under_odds", fdLineCol: "fairways_fd_line", fdOverOddsCol: "fairways_fd_over_odds", fdUnderOddsCol: "fairways_fd_under_odds", czrLineCol: "fairways_czr_line", czrOverOddsCol: "fairways_czr_over_odds", czrUnderOddsCol: "fairways_czr_under_odds", klLineCol: "fairways_kl_line", klOverOddsCol: "fairways_kl_over_odds", klUnderOddsCol: "fairways_kl_under_odds" },
 ];
 
 const MARKET_ORDER = [
@@ -128,6 +128,8 @@ const state = {
   market: "Total score",
   /** Best bets tab only — "" = all live markets */
   picksMarket: "",
+  /** "" = all books; otherwise TRACKER_OU_BOOKS id */
+  book: "",
   minEv: DEFAULT_MIN_EV_PCT,
   side: "",
   player: "",
@@ -167,7 +169,7 @@ function invalidateExplodedBetRows() {
 function allExplodedBetRows() {
   const key = explodedBetRowsCacheKey();
   if (EXPLODED_BET_ROWS && EXPLODED_BET_ROWS_KEY === key) return EXPLODED_BET_ROWS;
-  EXPLODED_BET_ROWS = [...explodeDetailToBets(DETAIL_ROWS), ...explodePpDetailToBets(DETAIL_ROWS)];
+  EXPLODED_BET_ROWS = explodeAllBookDetailToBets(DETAIL_ROWS);
   EXPLODED_BET_ROWS_KEY = key;
   return EXPLODED_BET_ROWS;
 }
@@ -1154,23 +1156,7 @@ function resultBadge(res) {
 }
 
 function explodeDetailToBets(rows) {
-  /** @type {object[]} */
-  const out = [];
-  for (const row of rows) {
-    if (row.pricing_mode !== "default" || row.pricing_skill !== "default") continue;
-    const src = String(row.book_odds_source || "").trim();
-    if (src !== "pre_round_audit" && src !== "live_snapshot") continue;
-    for (const spec of MARKET_SPECS) {
-      out.push(...explodeDetailBetForBook(row, spec, {
-        bookCol: spec.bookCol,
-        overOddsCol: spec.overOdds,
-        underOddsCol: spec.underOdds,
-        bookLabel: src === "live_snapshot" ? "DraftKings (live)" : "DraftKings",
-        isPrizePicks: false,
-      }));
-    }
-  }
-  return out;
+  return explodeAllBookDetailToBets(rows).filter((r) => r.bookId === "draftkings");
 }
 
 function explodeProjectionActualToBets(rows) {
@@ -1179,10 +1165,15 @@ function explodeProjectionActualToBets(rows) {
   for (const row of rows) {
     if (row.pricing_mode !== "default" || row.pricing_skill !== "default") continue;
     for (const spec of MARKET_SPECS) {
-      const bookLine = parseLine(row[spec.bookCol]);
-      if (Number.isFinite(bookLine)) continue;
-      const ppLine = parseLine(row[spec.ppBookCol]);
-      if (Number.isFinite(ppLine)) continue;
+      let hasAnyBook = false;
+      for (const book of TRACKER_OU_BOOKS) {
+        const col = spec[book.lineKey];
+        if (col && Number.isFinite(parseLine(row[col]))) {
+          hasAnyBook = true;
+          break;
+        }
+      }
+      if (hasAnyBook) continue;
       const actual = parseLine(row[spec.actual]);
       const modelLine = parseLine(row[spec.modelCol]);
       if (!Number.isFinite(actual) || !Number.isFinite(modelLine)) continue;
@@ -1194,6 +1185,7 @@ function explodeProjectionActualToBets(rows) {
         player_name: row.player_name,
         market: spec.market,
         book: "Model vs actual",
+        bookId: "model",
         modelLine,
         bookLine: NaN,
         diff: modelLine - actual,
@@ -1233,20 +1225,31 @@ function explodeProjectionActualToBets(rows) {
 }
 
 function explodePpDetailToBets(rows) {
+  return explodeAllBookDetailToBets(rows).filter((r) => r.bookId === "prizepicks");
+}
+
+function explodeAllBookDetailToBets(rows) {
   /** @type {object[]} */
   const out = [];
   for (const row of rows) {
     if (row.pricing_mode !== "default" || row.pricing_skill !== "default") continue;
-    const src = String(row.pp_book_odds_source || "").trim();
-    if (src !== "prizepicks_live" && src !== "pre_round_audit") continue;
-    for (const spec of MARKET_SPECS) {
-      out.push(...explodeDetailBetForBook(row, spec, {
-        bookCol: spec.ppBookCol,
-        overOddsCol: spec.ppOverOdds,
-        underOddsCol: spec.ppUnderOdds,
-        bookLabel: src === "pre_round_audit" ? "PrizePicks" : "PrizePicks (live)",
-        isPrizePicks: true,
-      }));
+    for (const book of TRACKER_OU_BOOKS) {
+      const src = String(row[book.sourceCol] || "").trim();
+      if (!book.acceptSources.includes(src)) continue;
+      const isLive = src !== "pre_round_audit";
+      for (const spec of MARKET_SPECS) {
+        out.push(
+          ...explodeDetailBetForBook(row, spec, {
+            bookCol: spec[book.lineKey],
+            overOddsCol: spec[book.overKey],
+            underOddsCol: spec[book.underKey],
+            bookId: book.id,
+            bookLabel: isLive ? book.liveLabel : book.label,
+            wholeLine: book.wholeLine,
+            isPrizePicks: book.wholeLine,
+          }),
+        );
+      }
     }
   }
   return out;
@@ -1254,7 +1257,7 @@ function explodePpDetailToBets(rows) {
 
 function explodeDetailBetForBook(row, spec, book) {
   const rawLine = parseLine(row[book.bookCol]);
-  const bookLine = book.isPrizePicks ? parsePpBookLine(rawLine) : parseDkBookLine(rawLine);
+  const bookLine = book.wholeLine || book.isPrizePicks ? parsePpBookLine(rawLine) : parseDkBookLine(rawLine);
   if (!Number.isFinite(bookLine)) return [];
   const modelLine = parseLine(row[spec.modelCol]);
   const overOdds = nNum(row[book.overOddsCol], NaN);
@@ -1333,6 +1336,7 @@ function explodeDetailBetForBook(row, spec, book) {
       player_name: row.player_name,
       market: spec.market,
       book: book.bookLabel,
+      bookId: book.bookId || "",
       modelLine,
       bookLine,
       diff: Number.isFinite(modelLine) ? modelLine - bookLine : NaN,
@@ -1367,7 +1371,7 @@ function explodeDetailBetForBook(row, spec, book) {
       exported_at: row.exported_at,
       pnl: qualified && side ? pnlForResult(String(betRes).trim().toUpperCase(), betOdds) : NaN,
       decimals: spec.decimals,
-      isPrizePicks: Boolean(book.isPrizePicks),
+      isPrizePicks: Boolean(book.wholeLine || book.isPrizePicks),
     },
   ];
 }
@@ -1375,6 +1379,7 @@ function explodeDetailBetForBook(row, spec, book) {
 function activeBetRows() {
   let rows = allExplodedBetRows();
   if (state.tournament) rows = rows.filter((r) => r.event_name === state.tournament);
+  if (state.book) rows = rows.filter((r) => r.bookId === state.book);
   if (state.market) rows = rows.filter((r) => r.market === state.market);
   if (state.side) rows = rows.filter((r) => r.pickSide === state.side);
   if (state.player) {
@@ -1389,6 +1394,8 @@ function activeBetRows() {
     if (rd) return rd;
     const pl = String(a.player_name).localeCompare(String(b.player_name));
     if (pl) return pl;
+    const bk = String(a.book).localeCompare(String(b.book));
+    if (bk) return bk;
     return marketSortKey(a.market) - marketSortKey(b.market);
   });
 }
@@ -1496,9 +1503,24 @@ function renderBets() {
   const fmtProb = (v) => (Number.isFinite(v) ? `${fmt(v * 100, 1)}%` : "—");
   const fmtBookLineCell = (r) => {
     if (!Number.isFinite(r.bookLine)) return "—";
-    const isPp = Boolean(r.isPrizePicks);
-    const formatted = isPp ? fmtPpBookLine(r.market, r.bookLine) : fmtDkBookLine(r.market, r.bookLine);
-    const prefix = isPp ? "PP" : "DK";
+    const isWhole = Boolean(r.isPrizePicks);
+    const formatted = isWhole ? fmtPpBookLine(r.market, r.bookLine) : fmtDkBookLine(r.market, r.bookLine);
+    const prefix =
+      r.bookId === "prizepicks"
+        ? "PP"
+        : r.bookId === "sleeper"
+          ? "SL"
+          : r.bookId === "underdog"
+            ? "UD"
+            : r.bookId === "fanduel"
+              ? "FD"
+              : r.bookId === "caesars"
+                ? "CZR"
+                : r.bookId === "kalshi"
+                  ? "KL"
+                  : r.bookId === "draftkings"
+                    ? "DK"
+                    : String(r.book || "").slice(0, 3).toUpperCase() || "BK";
     return `${prefix} ${formatted}`;
   };
   document.querySelector("#bets-table tbody").innerHTML = rows.length
@@ -1517,6 +1539,7 @@ function renderBets() {
         <td class="num">${r.round}</td>
         <td class="player-cell">${r.player_name}</td>
         <td>${r.market}</td>
+        <td>${r.book || "—"}</td>
         <td class="num line-model">${modelCell}</td>
         <td class="num line-book">${bookCell}</td>
         <td class="num ${clsSigned(-r.diff)}">${Number.isFinite(r.diff) ? (r.diff > 0 ? "+" : "") + fmt(r.diff, r.decimals) : "—"}</td>
@@ -1534,7 +1557,7 @@ function renderBets() {
       </tr>`;
         })
         .join("")
-    : `<tr><td colspan="${showEvent ? 17 : 16}">No bet rows — set Min confidence to 0%, switch to “All graded lines”, or pick another tournament.</td></tr>`;
+    : `<tr><td colspan="${showEvent ? 18 : 17}">No bet rows — set Min confidence to 0%, switch to “All graded lines”, or pick another tournament.</td></tr>`;
 }
 
 function evRows() {
@@ -2850,6 +2873,13 @@ function bindUi() {
     state.market = e.target.value;
     renderAll();
   });
+  const filterBook = document.getElementById("filter-book");
+  if (filterBook) {
+    filterBook.addEventListener("change", (e) => {
+      state.book = e.target.value;
+      renderAll();
+    });
+  }
   document.getElementById("filter-min-ev").addEventListener("change", (e) => {
     state.minEv = num(e.target.value) || 0;
     invalidateExplodedBetRows();
