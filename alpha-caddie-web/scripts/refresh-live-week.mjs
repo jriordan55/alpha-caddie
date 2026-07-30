@@ -186,6 +186,14 @@ const skipFinishTool = envTruthy("GOLF_REFRESH_LIVE_SKIP_FINISH_TOOL", true);
 const skipBacktestRoi = envTruthy("GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI", liveWeekSoft);
 /** Rebuild prior-event walkforward rows for projection-tracker on every projection publish. */
 const rebuildPriorVsActual = envTruthy("GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS", true);
+/** Incremental matchup/3-ball backtest window on live publish (full rebuild via matchup-tracker:refresh). */
+const matchupSinceIso = (() => {
+  const raw = String(process.env.GOLF_MATCHUP_BACKTEST_SINCE || "").trim();
+  if (raw) return raw;
+  const d = new Date();
+  d.setUTCDate(d.getUTCDate() - 120);
+  return d.toISOString().slice(0, 10);
+})();
 const failOnParMismatch = liveWeekSoft
   ? envTruthy("GOLF_FAIL_ON_PAR_MISMATCH", false)
   : envTruthy("GOLF_FAIL_ON_PAR_MISMATCH", true);
@@ -428,10 +436,24 @@ if (!envTruthy("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL", false)) {
     {},
     heavyOpt,
   );
+  // Keep matchup tracker current: pull DG historical matchups (DK/FD/MGM) then rebuild backtest.
+  if (!envTruthy("GOLF_SKIP_MATCHUP_ODDS_UPDATE", false)) {
+    run(
+      "update-historical-odds-node.mjs",
+      "DataGolf historical matchups refresh (DK/FD/BetMGM → historical_matchups_outcomes.csv)",
+      {
+        GOLF_MATCHUPS_BOOKS: "draftkings,fanduel,betmgm",
+        GOLF_ODDS_SKIP_OUTRIGHTS: "1",
+      },
+      softOpt,
+    );
+  }
   run(
     "export-matchup-backtest-csv.mjs",
-    "Matchup backtest CSV for projection-tracker",
-    {},
+    "Matchup + 3-ball backtest CSV (DK/FD/BetMGM) for matchup-tracker",
+    {
+      GOLF_MATCHUP_BACKTEST_SINCE: matchupSinceIso,
+    },
     softOpt,
   );
   run(

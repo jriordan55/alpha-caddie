@@ -106,6 +106,8 @@
     "projection-tracker": "node scripts/serve-projection-tracker.mjs",
     "projection-tracker:refresh": "node scripts/export-round-projection-vs-actual-csv.mjs --full-backtest-rebuild && node scripts/promote-round-projection-vs-actual-csv.mjs && node scripts/export-matchup-backtest-csv.mjs",
     "projection-tracker:pages": "node scripts/assemble-projection-tracker-pages.mjs",
+    "matchup-tracker": "node scripts/serve-matchup-tracker.mjs",
+    "matchup-tracker:refresh": "node scripts/refresh-matchup-tracker.mjs",
     "export:matchup-backtest": "node scripts/export-matchup-backtest-csv.mjs",
     "push:all": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/refresh-history-and-push.ps1",
     "push:live": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/refresh-history-and-push.ps1 -LiveWeekOnly -PullFirst",

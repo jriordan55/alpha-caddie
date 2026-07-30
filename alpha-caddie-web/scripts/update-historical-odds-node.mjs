@@ -19,6 +19,8 @@
  *   GOLF_DG_ODDS_TOUR — default pga
  *   GOLF_DG_ODDS_DELAY_MS — delay between requests (default 1200; lowers 429 rate)
  *   GOLF_DG_MAX_ATTEMPTS — retries on 429/5xx (default 12)
+ *   GOLF_MATCHUPS_BOOKS — comma list (e.g. draftkings,fanduel,betmgm) to limit matchup fetch
+ *   GOLF_ODDS_SKIP_OUTRIGHTS=1 — matchups CSV only (faster for matchup-tracker refresh)
  */
 import fs from "fs";
 import path from "path";
@@ -52,7 +54,7 @@ const OUTRIGHTS_BOOKS = [
 ];
 const OUTRIGHTS_MARKETS = ["win", "top_5", "top_10", "top_20", "make_cut", "mc"];
 
-const MATCHUPS_BOOKS = [
+const MATCHUPS_BOOKS_DEFAULT = [
   "5dimes",
   "bet365",
   "betcris",
@@ -68,6 +70,19 @@ const MATCHUPS_BOOKS = [
   "williamhill",
   "unibet",
 ];
+
+/** Optional: GOLF_MATCHUPS_BOOKS=draftkings,fanduel,betmgm (matchup tracker). */
+function resolveMatchupsBooks() {
+  const raw = String(process.env.GOLF_MATCHUPS_BOOKS || "").trim();
+  if (!raw) return MATCHUPS_BOOKS_DEFAULT;
+  const books = raw
+    .split(/[,;\s]+/)
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+  return books.length ? books : MATCHUPS_BOOKS_DEFAULT;
+}
+
+const MATCHUPS_BOOKS = resolveMatchupsBooks();
 
 const OUT_COLS = [
   "event_id",
@@ -512,24 +527,30 @@ async function main() {
   }
   console.log("Tour:", tour);
 
-  /** @type {any[]} */
-  const allOut = [];
-  for (const y of years) {
-    console.log(`\n--- Outrights ${y} ---`);
-    const outRows = await fetchOutrightsYear(y, tour, key);
-    console.log(`Fetched ${outRows.length.toLocaleString()} outright rows (API)`);
-    appendAll(allOut, outRows);
+  const skipOutrights = String(process.env.GOLF_ODDS_SKIP_OUTRIGHTS || "").trim() === "1";
+  console.log("Matchup books:", MATCHUPS_BOOKS.join(", "));
+  if (skipOutrights) {
+    console.log("Skipping outrights (GOLF_ODDS_SKIP_OUTRIGHTS=1)");
+  } else {
+    /** @type {any[]} */
+    const allOut = [];
+    for (const y of years) {
+      console.log(`\n--- Outrights ${y} ---`);
+      const outRows = await fetchOutrightsYear(y, tour, key);
+      console.log(`Fetched ${outRows.length.toLocaleString()} outright rows (API)`);
+      appendAll(allOut, outRows);
+    }
+    const outToWrite = sinceIso ? filterRowsOnOrAfterSince(allOut, sinceIso) : allOut;
+    if (sinceIso) {
+      console.log(`After ${sinceIso} filter: ${outToWrite.length.toLocaleString()} outright rows to append`);
+    }
+    if (outToWrite.length === 0) {
+      console.error("Refusing to write outrights: 0 rows to write (check API, filters, or GOLF_ODDS_SINCE).");
+      process.exit(1);
+    }
+    console.log("\nWriting historical_outrights_outcomes.csv …");
+    await mergeWriteCsv(pathOut, OUT_COLS, mergeOpts, outToWrite);
   }
-  const outToWrite = sinceIso ? filterRowsOnOrAfterSince(allOut, sinceIso) : allOut;
-  if (sinceIso) {
-    console.log(`After ${sinceIso} filter: ${outToWrite.length.toLocaleString()} outright rows to append`);
-  }
-  if (outToWrite.length === 0) {
-    console.error("Refusing to write outrights: 0 rows to write (check API, filters, or GOLF_ODDS_SINCE).");
-    process.exit(1);
-  }
-  console.log("\nWriting historical_outrights_outcomes.csv …");
-  await mergeWriteCsv(pathOut, OUT_COLS, mergeOpts, outToWrite);
 
   /** @type {any[]} */
   const allMat = [];

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Matchup tracker · AlphaCaddie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="tracker.css?v=1" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <div>
+        <h1 class="brand-title">Matchup tracker</h1>
+        <p class="brand-sub">Round matchups + 3-balls · DraftKings · FanDuel · BetMGM · DataGolf historical</p>
+      </div>
+      <div class="header-meta" id="header-meta">Loading…</div>
+    </div>
+  </header>
+
+  <main class="main">
+    <p id="error-banner" class="error-banner" hidden></p>
+
+    <div class="toolbar-card">
+      <label>Tournament
+        <select id="filter-tournament"></select>
+      </label>
+      <label>Market
+        <select id="filter-market">
+          <option value="">All markets</option>
+          <option value="Round matchups">Round matchups</option>
+          <option value="3-balls">3-balls</option>
+        </select>
+      </label>
+      <label>Book
+        <select id="filter-book">
+          <option value="">All (DK / FD / MGM)</option>
+          <option value="draftkings">DraftKings</option>
+          <option value="fanduel">FanDuel</option>
+          <option value="betmgm">BetMGM</option>
+        </select>
+      </label>
+      <label>Min confidence edge %
+        <select id="filter-min-ev">
+          <option value="0" selected>0% (any beat-book)</option>
+          <option value="2.5">2.5%</option>
+          <option value="5">5%</option>
+          <option value="7.5">7.5%</option>
+          <option value="10">10%</option>
+          <option value="12.5">12.5%</option>
+          <option value="15">15%</option>
+        </select>
+      </label>
+      <label>Bet side
+        <select id="filter-side">
+          <option value="">Any side</option>
+          <option value="p1">P1</option>
+          <option value="p2">P2</option>
+          <option value="p3">P3</option>
+        </select>
+      </label>
+      <label>Player
+        <input type="search" id="filter-player" placeholder="Search name…" autocomplete="off" />
+      </label>
+      <label>Show
+        <select id="filter-show">
+          <option value="bets" selected>Qualified bets only</option>
+          <option value="all">All graded lines</option>
+        </select>
+      </label>
+      <button type="button" class="btn" id="btn-reload" title="Reload CSV from disk">Reload data</button>
+    </div>
+
+    <nav class="tabs" role="tablist">
+      <button type="button" class="tab active" data-tab="overview" role="tab">Overview</button>
+      <button type="button" class="tab" data-tab="accuracy" role="tab">Line accuracy</button>
+      <button type="button" class="tab" data-tab="ev" role="tab">EV backtest</button>
+      <button type="button" class="tab" data-tab="bets" role="tab">Bet log</button>
+      <button type="button" class="tab" data-tab="picks" role="tab">Best bets</button>
+      <button type="button" class="tab" data-tab="guide" role="tab">Guide</button>
+    </nav>
+
+    <section id="panel-overview" class="panel active" role="tabpanel">
+      <div class="kpi-grid" id="overview-kpis"></div>
+      <div class="chart-card">
+        <h2 class="section-title">ROI by market (pick side @ selected edge)</h2>
+        <div class="table-wrap">
+          <table class="data-table" id="overview-market-table">
+            <thead>
+              <tr>
+                <th>Market</th>
+                <th class="num">Bets</th>
+                <th class="num">Win %</th>
+                <th class="num">Units</th>
+                <th class="num">ROI</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h2 class="section-title">ROI by book</h2>
+        <div class="table-wrap">
+          <table class="data-table" id="overview-book-table">
+            <thead>
+              <tr>
+                <th>Book</th>
+                <th class="num">Bets</th>
+                <th class="num">Win %</th>
+                <th class="num">Units</th>
+                <th class="num">ROI</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-accuracy" class="panel" role="tabpanel">
+      <div class="chart-card">
+        <h2 class="section-title">Model win % vs close implied %</h2>
+        <p class="note">RMSE / MAE of walk-forward μ_SG win probability vs closing book implied (p1 side).</p>
+        <div class="table-wrap">
+          <table class="data-table" id="accuracy-table">
+            <thead>
+              <tr>
+                <th>Scope</th>
+                <th>Market</th>
+                <th class="num">RMSE</th>
+                <th class="num">MAE</th>
+                <th class="num">N</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-ev" class="panel" role="tabpanel">
+      <div class="chart-card">
+        <h2 class="section-title">EV backtest by threshold</h2>
+        <p class="note">Flat 1u on the highest-edge side when edge ≥ threshold. Books: DK / FD / BetMGM only.</p>
+        <div class="table-wrap">
+          <table class="data-table" id="ev-table">
+            <thead>
+              <tr>
+                <th>Market</th>
+                <th class="num">Min edge %</th>
+                <th>Side</th>
+                <th class="num">Bets</th>
+                <th class="num">W-L-P</th>
+                <th class="num">Units</th>
+                <th class="num">ROI</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-bets" class="panel" role="tabpanel">
+      <div class="chart-card">
+        <h2 class="section-title">Historical bet log</h2>
+        <div class="table-wrap">
+          <table class="data-table" id="bets-table">
+            <thead>
+              <tr>
+                <th>Event</th>
+                <th>R</th>
+                <th>Market</th>
+                <th>Book</th>
+                <th>Player</th>
+                <th>Opp</th>
+                <th class="num">Model %</th>
+                <th class="num">Implied %</th>
+                <th class="num">Edge P1</th>
+                <th class="num">Edge P2</th>
+                <th class="num">Edge P3</th>
+                <th>Pick@10</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-picks" class="panel" role="tabpanel">
+      <div class="chart-card">
+        <h2 class="section-title">Live best bets</h2>
+        <p class="note" id="picks-note">From current <code>projections.json</code> matchups (DK / FD / BetMGM).</p>
+        <div class="table-wrap">
+          <table class="data-table" id="picks-table">
+            <thead>
+              <tr>
+                <th>Market</th>
+                <th>Book</th>
+                <th>Player</th>
+                <th>Field</th>
+                <th class="num">Win %</th>
+                <th class="num">Odds</th>
+                <th class="num">Edge %</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-guide" class="panel" role="tabpanel">
+      <div class="chart-card guide">
+        <h2 class="section-title">Guide</h2>
+        <p>This tracker mirrors the O/U Projection tracker for <strong>round matchups</strong> and <strong>3-balls</strong> only.</p>
+        <ul>
+          <li>Odds source: DataGolf <code>/historical-odds/matchups</code> + live <code>/betting-tools/matchups</code></li>
+          <li>Books: <strong>DraftKings</strong>, <strong>FanDuel</strong>, <strong>BetMGM</strong> only</li>
+          <li>Model: walk-forward μ_SG (same pipeline as live projections)</li>
+          <li>2-way: Gaussian win prob (σ_diff = 2.85)</li>
+          <li>3-ball: softmax on μ_SG (T = 2.05)</li>
+        </ul>
+        <p>Refresh: <code>npm run matchup-tracker:refresh</code> · Local: <code>npm run matchup-tracker</code></p>
+        <p>Pages: <a href="../projection-tracker/">Projection tracker (O/U)</a> · this page (matchups)</p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="tracker.js?v=1"></script>
+</body>
+</html>

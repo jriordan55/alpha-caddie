@@ -34,6 +34,8 @@ const DATA_FILES = [
   "round_projection_vs_actual_summary.csv",
   "round_projection_vs_actual.csv.new",
   "round_projection_vs_actual_summary.csv.new",
+  "matchup_backtest_detail.csv",
+  "matchup_backtest_summary.csv",
   "walkforward_oos_roi.json",
   "skill_window_oos_roi.json",
   "odds_model_roi_summary.csv",
@@ -62,6 +64,7 @@ if (existsSync(out)) rmSync(out, { recursive: true, force: true });
 mkdirSync(join(out, "data"), { recursive: true });
 mkdirSync(join(out, "scripts"), { recursive: true });
 mkdirSync(join(out, "projection-tracker"), { recursive: true });
+mkdirSync(join(out, "matchup-tracker"), { recursive: true });
 
 writeFileSync(join(out, ".nojekyll"), "");
 writeFileSync(
@@ -70,12 +73,20 @@ writeFileSync(
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta http-equiv="refresh" content="0; url=projection-tracker/" />
-  <title>Alpha Caddie · Projection Tracker</title>
+  <title>Alpha Caddie · Trackers</title>
   <link rel="canonical" href="projection-tracker/" />
+  <style>
+    body { font-family: system-ui, sans-serif; background:#090b10; color:#f1f5f9; padding:2rem; }
+    a { color:#10b981; }
+    li { margin:0.75rem 0; }
+  </style>
 </head>
 <body>
-  <p><a href="projection-tracker/">Open Projection Tracker</a></p>
+  <h1>Alpha Caddie trackers</h1>
+  <ul>
+    <li><a href="projection-tracker/">Projection tracker</a> — round O/U vs actual</li>
+    <li><a href="matchup-tracker/">Matchup tracker</a> — round matchups + 3-balls (DK / FanDuel / BetMGM)</li>
+  </ul>
 </body>
 </html>
 `,
@@ -87,6 +98,13 @@ if (!existsSync(trackerSrc)) {
   process.exit(1);
 }
 cpSync(trackerSrc, join(out, "projection-tracker"), { recursive: true });
+
+const matchupSrc = join(WEB, "matchup-tracker");
+if (existsSync(matchupSrc)) {
+  cpSync(matchupSrc, join(out, "matchup-tracker"), { recursive: true });
+} else {
+  console.warn("[assemble-tracker-pages] matchup-tracker missing — Pages will omit matchup UI");
+}
 
 const projSrc = join(WEB, "projections.json");
 if (existsSync(projSrc)) {

@@ -23,9 +23,14 @@ npm run promote:round-projection-vs-actual
 
 # Full walk-forward μ rebuild (Bet log / OOS) + matchups + Pages assemble
 npm run projection-tracker:refresh
+npm run matchup-tracker:refresh
 npm run projection-tracker:pages
 ```
 
+## Sibling: Matchup tracker
+
+Round matchups + 3-balls (DraftKings / FanDuel / BetMGM):  
+https://jriordan55.github.io/alpha-caddie/matchup-tracker/
 ## One-time setup
 
 In the GitHub repo: **Settings → Pages → Build and deployment → Source: GitHub Actions**.

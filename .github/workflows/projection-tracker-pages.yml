@@ -1,7 +1,8 @@
-# Publish Projection Tracker + live data to GitHub Pages.
+# Publish Projection Tracker + Matchup Tracker + live data to GitHub Pages.
 # URL (after enabling Pages → Source: GitHub Actions):
 #   https://jriordan55.github.io/alpha-caddie/
 #   https://jriordan55.github.io/alpha-caddie/projection-tracker/
+#   https://jriordan55.github.io/alpha-caddie/matchup-tracker/
 #
 # Rebuilds whenever main updates tracker UI, projections, or tracker CSVs
 # (including after push:live). Also runs after the DK round-props workflow
@@ -14,11 +15,14 @@ on:
     branches: [main]
     paths:
       - "alpha-caddie-web/projection-tracker/**"
+      - "alpha-caddie-web/matchup-tracker/**"
       - "alpha-caddie-web/projections.json"
       - "alpha-caddie-web/data/round_projection_vs_actual.csv"
       - "alpha-caddie-web/data/round_projection_vs_actual_summary.csv"
       - "alpha-caddie-web/data/round_projection_vs_actual.csv.new"
       - "alpha-caddie-web/data/round_projection_vs_actual_summary.csv.new"
+      - "alpha-caddie-web/data/matchup_backtest_detail.csv"
+      - "alpha-caddie-web/data/matchup_backtest_summary.csv"
       - "alpha-caddie-web/data/walkforward_oos_roi.json"
       - "alpha-caddie-web/data/skill_window_oos_roi.json"
       - "alpha-caddie-web/data/odds_model_roi_summary.csv"
