@@ -278,12 +278,17 @@ function csvCell(v) {
 
 /**
  * Read prior-event detail rows from the existing CSV so the detail tab accumulates across events.
- * If none exist, backfill from the DK audit + historical actuals for all past events.
+ * Incremental mode (GOLF_OU_BACKTEST_SINCE / auto watermark): keep rows older than sinceIso,
+ * re-backfill only events touched on/after that date. Full rebuild: GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=1.
  * Returns { priorLines: string[], priorSummarySamples: object[] }.
  */
 async function loadPriorEventRows(csvPath, summaryPath, currentEventName, opts = {}) {
   const priorLines = [];
   const priorSummaryRows = [];
+  const sinceIso = String(opts.sinceIso || process.env.GOLF_OU_BACKTEST_SINCE || "").trim();
+  /** @type {Set<string>} */
+  const refreshEvents = new Set();
+
   if (existsSync(csvPath)) {
     const raw = readFileSync(csvPath, "utf8");
     const aligned = alignDetailCsvContent(raw, HEADER);
@@ -291,11 +296,17 @@ async function loadPriorEventRows(csvPath, summaryPath, currentEventName, opts =
     if (rows.length >= 2) {
       const cols = rows[0].split(",");
       const iEvent = cols.indexOf("event_name");
+      const iExported = cols.indexOf("exported_at");
       if (iEvent >= 0) {
         for (let i = 1; i < rows.length; i++) {
           const cells = parseCsvRow(rows[i]);
           const ev = (cells[iEvent] || "").trim();
           if (!ev || eventsLikelySame(currentEventName, ev)) continue;
+          const exportedIso = iExported >= 0 ? String(cells[iExported] || "").slice(0, 10) : "";
+          if (sinceIso && exportedIso && exportedIso >= sinceIso) {
+            refreshEvents.add(ev);
+            continue;
+          }
           priorLines.push(rows[i] + "\n");
         }
       }
@@ -328,6 +339,30 @@ async function loadPriorEventRows(csvPath, summaryPath, currentEventName, opts =
 
   const forceRebuild =
     String(process.env.GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS || "").trim() === "1";
+
+  // Incremental: re-backfill only recent events (since watermark), keep older cached rows.
+  if (!forceRebuild && sinceIso) {
+    const keptCount = priorLines.length;
+    const backfill = await backfillFromAudit(auditPath, histPath, currentEventName, {
+      fairwayHoles: opts.fairwayHoles || 14,
+      livePath: opts.livePath || join(WEB_ROOT, "live-in-play.json"),
+      onlyEvents: refreshEvents.size ? refreshEvents : null,
+      sinceIso,
+    });
+    if (backfill.lines.length > 0) {
+      priorLines.push(...backfill.lines);
+      console.log(
+        `[round-projection-vs-actual] Incremental since ${sinceIso}: kept ${keptCount} older row(s), refreshed ${backfill.lines.length} recent prior-event row(s)`,
+      );
+    } else if (keptCount) {
+      console.log(
+        `[round-projection-vs-actual] Incremental since ${sinceIso}: kept ${keptCount} prior-event row(s) (no recent audit backfill)`,
+      );
+    }
+    priorSummaryRows.push(...backfill.summaryRows);
+    return { priorLines, priorSummaryRows };
+  }
+
   if (!forceRebuild) {
     if (priorLines.length) {
       console.log(
@@ -604,6 +639,10 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
   }
   const fairwayHoles = opts.fairwayHoles ?? 14;
   const livePath = opts.livePath || join(WEB_ROOT, "live-in-play.json");
+  const sinceIso = String(opts.sinceIso || "").trim();
+  /** @type {Set<string>|null} */
+  const onlyEvents =
+    opts.onlyEvents instanceof Set && opts.onlyEvents.size > 0 ? opts.onlyEvents : null;
   const MARKET_MODEL_COL = {
     "Total Score": "model_total_score",
     Birdies: "model_birdies",
@@ -627,7 +666,33 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
   );
   for await (const row of auditParserScan) {
     const ev = String(row.event_name || "").trim();
-    if (ev && !eventsLikelySame(currentEventName, ev)) auditEvents.add(ev);
+    if (!ev || eventsLikelySame(currentEventName, ev)) continue;
+    if (onlyEvents) {
+      let hit = false;
+      for (const name of onlyEvents) {
+        if (eventsLikelySame(name, ev)) {
+          hit = true;
+          break;
+        }
+      }
+      if (!hit) continue;
+    }
+    if (sinceIso) {
+      const cap = String(row.captured_at || row.captured_at_utc || row.exported_at || "").slice(0, 10);
+      if (cap && cap < sinceIso) continue;
+    }
+    auditEvents.add(ev);
+  }
+
+  if (onlyEvents && auditEvents.size === 0 && onlyEvents.size > 0) {
+    // Fall back to named events even if capture dates are older than sinceIso.
+    for (const name of onlyEvents) {
+      if (name && !eventsLikelySame(currentEventName, name)) auditEvents.add(name);
+    }
+  }
+
+  if (!auditEvents.size) {
+    return { lines: [], summaryRows: [] };
   }
 
   const allActuals = new Map();
@@ -1769,6 +1834,7 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
     auditPath: opts.dkAuditPath || defaultDkAuditPath(WEB_ROOT),
     histPath: resolveHistCsv(),
     fairwayHoles,
+    sinceIso: String(opts.sinceIso || process.env.GOLF_OU_BACKTEST_SINCE || "").trim(),
   });
   const detailContent = [HEADER, ...priorLines, ...lines.slice(1)].join("");
   persistCsv(outPath, detailContent);

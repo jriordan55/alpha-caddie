@@ -26,10 +26,11 @@
  *   GOLF_REQUIRE_DK_OU=1 (default on refresh:live) — abort if DK scrape returns 0 fresh props
  *   GOLF_LIVE_WEEK_SOFT=1 (push:live) — soft DK require, skip odds ROI backtest,
  *     soft validate / optional late steps (never abort mid-tournament).
- *     O/U tracker: current-week only by default (set GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=1 for full prior).
- *     Matchup tracker: incremental from last recorded date in matchup_backtest_detail.csv.
+ *     O/U + matchup trackers: incremental from last recorded date by default
+ *     (set GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=1 for full O/U prior rebuild).
+ *   GOLF_OU_BACKTEST_SINCE=YYYY-MM-DD — override O/U incremental watermark
  *   GOLF_MATCHUP_BACKTEST_SINCE=YYYY-MM-DD — override matchup incremental watermark
- *   GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=0 — keep cached prior vs-actual rows (default on push:live soft)
+ *   GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=0 — O/U incremental (default on push:live soft)
  *   GOLF_SKIP_PP_OU=1 — skip PrizePicks round props in fetch:book-odds
  *   GOLF_SKIP_SL_OU=1 — skip Sleeper round props in fetch:book-odds
  *   GOLF_SKIP_UD_OU=1 — skip Underdog round props in fetch:book-odds
@@ -51,7 +52,7 @@ import {
   liveProjectionPipelineEnv,
   requireDkOuEnv,
 } from "./projection-pipeline-env.mjs";
-import { resolveMatchupIncrementalSinceIso } from "./matchup-tracker-incremental.mjs";
+import { resolveMatchupIncrementalSinceIso, resolveOuIncrementalSinceIso } from "./tracker-incremental.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -187,15 +188,17 @@ const skipFinishTool = envTruthy("GOLF_REFRESH_LIVE_SKIP_FINISH_TOOL", true);
 /** Mid-tournament soft: skip heavy odds ROI walk-forward (OOM / exit -1 on Windows). */
 const skipBacktestRoi = envTruthy("GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI", liveWeekSoft);
 /**
- * Lean push:live keeps prior O/U backtest cached and only refreshes the current week
- * (full prior rebuild: GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=1 or matchup-tracker:refresh).
+ * Lean push:live keeps older tracker history cached and incrementally refreshes
+ * from each tracker's last recorded date (full rebuild: GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=1).
  */
 const rebuildPriorVsActual = liveWeekSoft
   ? envTruthy("GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS", false)
   : envTruthy("GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS", true);
-/** Matchup tracker: only refresh from last recorded close/export date (+2d overlap). */
+/** Both trackers: refresh from last recorded close/export date (+2d overlap). */
 const matchupInc = resolveMatchupIncrementalSinceIso({ overlapDays: 2, fallbackDays: 14 });
 const matchupSinceIso = matchupInc.sinceIso;
+const ouInc = resolveOuIncrementalSinceIso({ overlapDays: 2, fallbackDays: 14 });
+const ouSinceIso = ouInc.sinceIso;
 const failOnParMismatch = liveWeekSoft
   ? envTruthy("GOLF_FAIL_ON_PAR_MISMATCH", false)
   : envTruthy("GOLF_FAIL_ON_PAR_MISMATCH", true);
@@ -228,8 +231,15 @@ if (liveWeekSoft) {
   console.log(
     "[refresh:live] GOLF_LIVE_WEEK_SOFT=1 — soft DK require, skip odds ROI backtest, optional late steps." +
       (rebuildPriorVsActual
-        ? " Prior O/U vs-actual rebuild ON.\n"
-        : " Prior O/U vs-actual cached (current week only).\n"),
+        ? " Prior O/U vs-actual FULL rebuild ON.\n"
+        : " Prior O/U vs-actual incremental from last recorded date.\n"),
+  );
+  console.log(
+    `[refresh:live] O/U tracker incremental since ${ouSinceIso}` +
+      (ouInc.lastRecordedIso
+        ? ` (last recorded ${ouInc.lastRecordedIso} via ${ouInc.source})`
+        : ` (${ouInc.source})`) +
+      ".\n",
   );
   console.log(
     `[refresh:live] Matchup tracker incremental since ${matchupSinceIso}` +
@@ -434,11 +444,12 @@ if (!envTruthy("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL", false)) {
   run(
     "export-round-projection-vs-actual-csv.mjs",
     rebuildPriorVsActual
-      ? "Projection tracker O/U CSV (walkforward backtest rebuild + current week)"
-      : "Projection tracker O/U CSV (current week / incremental; no full prior rebuild)",
+      ? "Projection tracker O/U CSV (full walkforward prior rebuild + current week)"
+      : `Projection tracker O/U CSV (incremental since ${ouSinceIso} + current week)`,
     {
       ...liveFastEnv,
       GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS: rebuildPriorVsActual ? "1" : "0",
+      GOLF_OU_BACKTEST_SINCE: rebuildPriorVsActual ? "" : ouSinceIso,
     },
     trackerOpt,
   );

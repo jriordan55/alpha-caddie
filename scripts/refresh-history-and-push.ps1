@@ -146,6 +146,7 @@ if ($LiveWeekOnly) {
   $env:GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL = "0"
   $env:GOLF_REQUIRE_TRACKER_REFRESH = "1"
   Remove-Item Env:\GOLF_MATCHUP_BACKTEST_SINCE -ErrorAction SilentlyContinue
+  Remove-Item Env:\GOLF_OU_BACKTEST_SINCE -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_ODDS_SINCE -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_SKIP_MATCHUP_ODDS_UPDATE -ErrorAction SilentlyContinue
   $env:GOLF_SKIP_DK_ROUND_AUDIT_CSV = "0"
@@ -183,7 +184,7 @@ if ($LiveWeekOnly) {
   $env:GOLF_WITHIN_EVENT_COUNTING_BLEND = "0"
   Write-Host 'LiveWeekOnly (lean): projections + odds (DK/PP/SL/UD/FD/Kalshi/Caesars) + Trends patch + tracker.'
   Write-Host 'Live Open-Meteo weather bake always runs on push:live (tee-time forecast into scores).'
-  Write-Host 'Both trackers always refresh: O/U projection-tracker + matchup-tracker (incremental from last date).'
+  Write-Host 'Both trackers incremental from last recorded date: O/U projection-tracker + matchup-tracker.'
   Write-Host 'Skill-first score (keep 1.0) + Detroit club hist pool when North/South exact hist is thin.'
   Write-Host 'Skipped: full CSV merge, weather archive backfill, finish-tool, book-cal fit, odds ROI backtest, full prior O/U rebuild.'
   Write-Host 'LiveWeekOnly markets: Birdies = birdies+eagles (or better), Bogeys = bogeys+doubles (or worse), same as DK/PP/SL/UD/FD/CZR.'
