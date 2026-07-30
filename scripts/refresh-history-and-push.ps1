@@ -74,7 +74,7 @@ function Run-Npm([string] $Label, [Parameter(ValueFromRemainingArguments = $true
 # Matchup Analysis Tool stays fresh when these commands succeed:
 #   fetch:dg  -> projections.players (SG pillars + merged preds/live-tournament-stats driving when DG serves it),
 #               projections.matchups (betting-tools/matchups), approach_skill_ytd.json (Course Fit shot bins)
-#   fetch:book-odds -> matchup/outright odds + DraftKings + PrizePicks + Sleeper + Underdog round O/U props
+#   fetch:book-odds -> matchup/outright odds + DraftKings + PrizePicks + Sleeper + Underdog + FanDuel + Kalshi + Caesars round O/U props
 #     merged into projections.json; appends alpha-caddie-web/data/dk_round_projection_audit.csv
 #     (+ pp_/sl_/ud_ round audit CSVs when those books return lines).
 #   export:round-projection-vs-actual - alpha-caddie-web/data/round_projection_vs_actual.csv (model vs actual per player×round).
@@ -117,9 +117,11 @@ $env:GOLF_MARKET_BOOK_CALIBRATION = "0"
 $env:GOLF_SKIP_MARKET_BOOK_CALIBRATION = "1"
 # Round projections tab: require a fresh DraftKings scrape (no stale / empty publish).
 $env:GOLF_REQUIRE_DK_OU = "1"
-# DK Nash API blocks headless Playwright on desktop - headed Chromium is required.
+# DK / Caesars / FanDuel Nash-style APIs often block headless Playwright on desktop - headed Chromium.
 if ($IsWindows -or ($env:OS -match "Windows") -or $IsMacOS) {
   $env:DK_HEADLESS = "0"
+  $env:CZR_HEADLESS = "0"
+  $env:FD_HEADLESS = "0"
 }
 
 if ($LiveWeekOnly) {
@@ -140,30 +142,39 @@ if ($LiveWeekOnly) {
   $env:GOLF_SKIP_PP_ROUND_AUDIT_CSV = "0"
   $env:GOLF_SKIP_SL_ROUND_AUDIT_CSV = "0"
   $env:GOLF_SKIP_UD_ROUND_AUDIT_CSV = "0"
-  # Round O/U books: DK + PrizePicks + Sleeper + Underdog (never skip on push:live).
+  # Round O/U books: DK + PP + SL + UD + FanDuel + Kalshi + Caesars (never skip on push:live).
   Remove-Item Env:\GOLF_SKIP_DK_OU -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_SKIP_PP_OU -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_SKIP_SL_OU -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_SKIP_UD_OU -ErrorAction SilentlyContinue
+  Remove-Item Env:\GOLF_SKIP_FD_OU -ErrorAction SilentlyContinue
+  Remove-Item Env:\GOLF_SKIP_KL_OU -ErrorAction SilentlyContinue
+  Remove-Item Env:\GOLF_SKIP_CZR_OU -ErrorAction SilentlyContinue
   $env:GOLF_SKIP_SL_OU = "0"
   $env:GOLF_SKIP_UD_OU = "0"
   $env:GOLF_SKIP_PP_OU = "0"
+  $env:GOLF_SKIP_FD_OU = "0"
+  $env:GOLF_SKIP_KL_OU = "0"
+  $env:GOLF_SKIP_CZR_OU = "0"
   # Soft: DK/Playwright flakiness and late optional steps must not kill the publish.
   $env:GOLF_LIVE_WEEK_SOFT = "1"
   $env:GOLF_REQUIRE_DK_OU = "0"
   $env:GOLF_REQUIRE_PP_OU = "0"
   $env:GOLF_REQUIRE_SL_OU = "0"
   $env:GOLF_REQUIRE_UD_OU = "0"
+  $env:GOLF_REQUIRE_FD_OU = "0"
+  $env:GOLF_REQUIRE_KL_OU = "0"
+  $env:GOLF_REQUIRE_CZR_OU = "0"
   $env:GOLF_SKIP_DK_OU_VALIDATE = "1"
   $env:GOLF_FAIL_ON_PAR_MISMATCH = "0"
   $env:GOLF_LIVE_VALIDATE_SOFT = "1"
   $env:GOLF_UNIFIED_TEE_WAVE_W = "0.30"
   $env:GOLF_FIELD_DAY_COUNTING_LIFT_FRAC = "0"
   $env:GOLF_WITHIN_EVENT_COUNTING_BLEND = "0"
-  Write-Host 'LiveWeekOnly (lean): projections + odds (DK/PP/Sleeper/Underdog) + Trends patch + tracker.'
+  Write-Host 'LiveWeekOnly (lean): projections + odds (DK/PP/SL/UD/FD/Kalshi/Caesars) + Trends patch + tracker.'
   Write-Host 'Skill-first score (keep 0.98) + Detroit club hist pool when North/South exact hist is thin.'
   Write-Host 'Skipped: full CSV merge, weather archive, finish-tool, book-cal fit, odds ROI backtest.'
-  Write-Host 'LiveWeekOnly markets: Birdies = birdies+eagles (or better), Bogeys = bogeys+doubles (or worse), same as DK/PP/SL/UD.'
+  Write-Host 'LiveWeekOnly markets: Birdies = birdies+eagles (or better), Bogeys = bogeys+doubles (or worse), same as DK/PP/SL/UD/FD/CZR.'
 } elseif (-not $NoFullHistory) {
   $env:GOLF_HISTORICAL_ROUNDS_FULL_HISTORY = "1"
   $env:GOLF_SKIP_HISTORY_ON_FETCH_DG = "1"
@@ -274,10 +285,19 @@ if ($LiveWeekOnly) {
   Run-Npm "Running fetch:in-play ..." run fetch:in-play
   Run-Npm "Refreshing current-event PGA rounds from pgatouR ..." run refresh:pgatour-event
   Remove-Item Env:\GOLF_SKIP_DK_OU -ErrorAction SilentlyContinue
+  Remove-Item Env:\GOLF_SKIP_PP_OU -ErrorAction SilentlyContinue
+  Remove-Item Env:\GOLF_SKIP_SL_OU -ErrorAction SilentlyContinue
+  Remove-Item Env:\GOLF_SKIP_UD_OU -ErrorAction SilentlyContinue
+  Remove-Item Env:\GOLF_SKIP_FD_OU -ErrorAction SilentlyContinue
+  Remove-Item Env:\GOLF_SKIP_KL_OU -ErrorAction SilentlyContinue
+  Remove-Item Env:\GOLF_SKIP_CZR_OU -ErrorAction SilentlyContinue
   Remove-Item Env:\PERFECT_SKIP_FETCH_DK_OU -ErrorAction SilentlyContinue
+  $env:GOLF_SKIP_FD_OU = "0"
+  $env:GOLF_SKIP_KL_OU = "0"
+  $env:GOLF_SKIP_CZR_OU = "0"
   $env:GOLF_DEFER_DK_ROUND_AUDIT_UNTIL_REPAIR = "1"
   # fetch:book-odds pulls DK round props (Birdies/Total Score/GIR/etc.) via Playwright - no separate fetch:dk-ou (would duplicate Chromium).
-  Run-Npm "Running fetch:book-odds (matchups, outrights, DK + PP + Sleeper + Underdog round O/U props) ..." run fetch:book-odds
+  Run-Npm "Running fetch:book-odds (matchups, outrights, DK + PP + SL + UD + FD + Kalshi + Caesars round O/U props) ..." run fetch:book-odds
   Run-Npm 'Running fetch:finish-tool - outrights, same Scratch feed as DG Finish Position; runs after book-odds ...' run fetch:finish-tool
   Run-Npm "Merging live_hole_stats into projections (after book odds; preserves pars if book-odds ran inline fetch:dg) ..." run merge:live-hole-pars-into-projections
   Run-Npm "Bundled course_holes.json -> projections when live pars missing/wrong ..." run sync:bundled-hole-pars

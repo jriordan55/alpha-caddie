@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Live-week refresh for `npm run push:live` — projections, live-in-play, book odds,
- * DraftKings + PrizePicks + Sleeper + Underdog round props, tee times, venue repair,
+ * DraftKings + PrizePicks + Sleeper + Underdog + FanDuel + Kalshi + Caesars round props, tee times, venue repair,
  * within-event form, weather bake, unified factors, odds audit CSVs, vs-actual (projection tracker),
  * and prior-round Trends patches.
  *
@@ -29,9 +29,13 @@
  *   GOLF_SKIP_PP_OU=1 — skip PrizePicks round props in fetch:book-odds
  *   GOLF_SKIP_SL_OU=1 — skip Sleeper round props in fetch:book-odds
  *   GOLF_SKIP_UD_OU=1 — skip Underdog round props in fetch:book-odds
+ *   GOLF_SKIP_FD_OU=1 — skip FanDuel round props in fetch:book-odds
+ *   GOLF_SKIP_KL_OU=1 — skip Kalshi round props in fetch:book-odds
+ *   GOLF_SKIP_CZR_OU=1 — skip Caesars round props in fetch:book-odds
  *   GOLF_REQUIRE_PP_OU=1 / GOLF_REQUIRE_SL_OU=1 / GOLF_REQUIRE_UD_OU=1 — abort if 0 fresh props
+ *   GOLF_REQUIRE_FD_OU=1 / GOLF_REQUIRE_KL_OU=1 / GOLF_REQUIRE_CZR_OU=1 — abort if 0 fresh props (optional; soft on push:live)
  *   GOLF_SKIP_DK_OU_VALIDATE=1 — skip DK line-count gate (pre-tournament only)
- *   DK_HEADLESS=0 on Windows/macOS (dkOuScrapeEnv) — required for Nash API session
+ *   DK_HEADLESS / CZR_HEADLESS / FD_HEADLESS =0 on Windows/macOS (dkOuScrapeEnv) — required for book sessions
  */
 import { spawnSync } from "child_process";
 import { copyFileSync, existsSync, mkdirSync } from "fs";
@@ -248,7 +252,7 @@ if (!skipPgatour) {
 
 run(
   "fetch-book-odds-into-projections.mjs",
-  "Sportsbook + DK + PrizePicks + Sleeper + Underdog round props (fetch:book-odds)",
+  "Sportsbook + DK + PP + SL + UD + FanDuel + Kalshi + Caesars round props (fetch:book-odds)",
   liveFastEnv,
   softOpt,
 );

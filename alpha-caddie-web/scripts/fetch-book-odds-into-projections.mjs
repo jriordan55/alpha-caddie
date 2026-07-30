@@ -21,9 +21,13 @@
  *      GOLF_SKIP_PP_OU=1 — do not pull PrizePicks round props (see prizepicks-ou-props.mjs).
  *      GOLF_SKIP_SL_OU=1 — do not pull Sleeper round props (see sleeper-ou-props.mjs).
  *      GOLF_SKIP_UD_OU=1 — do not pull Underdog round props (see underdog-ou-props.mjs).
+ *      GOLF_SKIP_FD_OU=1 — do not pull FanDuel round props (see fanduel-ou-props.mjs).
+ *      GOLF_SKIP_KL_OU=1 — do not pull Kalshi round-score props (see kalshi-ou-props.mjs).
+ *      GOLF_SKIP_CZR_OU=1 — do not pull Caesars round props (see caesars-ou-props.mjs).
  *      GOLF_REQUIRE_DK_OU=1 — abort when DK scrape returns 0 fresh props (default on push:live / refresh:live).
  *      GOLF_REQUIRE_PP_OU=1 — abort when PrizePicks fetch returns 0 fresh props (optional).
  *      GOLF_REQUIRE_SL_OU=1 / GOLF_REQUIRE_UD_OU=1 — abort when Sleeper/Underdog return 0 rows (optional).
+ *      GOLF_REQUIRE_FD_OU=1 / GOLF_REQUIRE_KL_OU=1 / GOLF_REQUIRE_CZR_OU=1 — abort when those books return 0 (optional).
  *      DK_HEADLESS=0 — headed Chromium on Windows/macOS (DK blocks headless Nash API).
  *      GOLF_SKIP_DK_ROUND_AUDIT_CSV=1 — do not append alpha-caddie-web/data/dk_round_projection_audit.csv after merge.
  *      GOLF_SKIP_MODEL_FALLBACK_OU=1 — do not synthesize GIR / fairways / putts from projections.players for players DK omits.
@@ -56,7 +60,10 @@ import {
   appendSlRoundProjectionAuditCsv,
   appendUdRoundProjectionAuditCsv,
 } from "./export-pickem-round-model-audit-csv.mjs";
+import { refreshCaesarsRoundProps } from "./merge-caesars-round-props.mjs";
 import { refreshRoundProjectionProps } from "./merge-dk-round-props.mjs";
+import { refreshFanduelRoundProps } from "./merge-fanduel-round-props.mjs";
+import { refreshKalshiRoundProps } from "./merge-kalshi-round-props.mjs";
 import { refreshPrizePicksRoundProps } from "./merge-pp-round-props.mjs";
 import { refreshSleeperRoundProps } from "./merge-sleeper-round-props.mjs";
 import { refreshUnderdogRoundProps } from "./merge-underdog-round-props.mjs";
@@ -549,6 +556,81 @@ async function main() {
       console.warn("[fetch-book-odds] Underdog O/U skipped:", e.message || e);
       if (envTruthy("GOLF_REQUIRE_UD_OU")) {
         console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_UD_OU=1): ${e.message || e}`);
+        process.exit(1);
+      }
+    }
+  }
+
+  if (String(process.env.GOLF_SKIP_FD_OU || "").trim() !== "1") {
+    try {
+      const { props: fdMerged, nFd, fdError } = await refreshFanduelRoundProps(next);
+      next.props = fdMerged;
+      if (nFd > 0) {
+        next.fd_round_props_refreshed_at = next.book_odds_refreshed_at;
+        console.log(
+          `[fetch-book-odds] FanDuel round props: ${nFd} fresh rows (${fdMerged.length} total props)`,
+        );
+      } else if (fdError && !String(fdError).startsWith("skipped")) {
+        console.warn(`[fetch-book-odds] FanDuel: ${fdError}`);
+      }
+      if (envTruthy("GOLF_REQUIRE_FD_OU") && nFd === 0) {
+        console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_FD_OU=1): ${fdError || "0 FanDuel rows"}`);
+        process.exit(1);
+      }
+    } catch (e) {
+      console.warn("[fetch-book-odds] FanDuel O/U skipped:", e.message || e);
+      if (envTruthy("GOLF_REQUIRE_FD_OU")) {
+        console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_FD_OU=1): ${e.message || e}`);
+        process.exit(1);
+      }
+    }
+  }
+
+  if (String(process.env.GOLF_SKIP_KL_OU || "").trim() !== "1") {
+    try {
+      const { props: klMerged, nKl, klError } = await refreshKalshiRoundProps(next);
+      next.props = klMerged;
+      if (nKl > 0) {
+        next.kl_round_props_refreshed_at = next.book_odds_refreshed_at;
+        console.log(
+          `[fetch-book-odds] Kalshi round props: ${nKl} fresh rows (${klMerged.length} total props)`,
+        );
+      } else if (klError && !String(klError).startsWith("skipped")) {
+        console.warn(`[fetch-book-odds] Kalshi: ${klError}`);
+      }
+      if (envTruthy("GOLF_REQUIRE_KL_OU") && nKl === 0) {
+        console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_KL_OU=1): ${klError || "0 Kalshi rows"}`);
+        process.exit(1);
+      }
+    } catch (e) {
+      console.warn("[fetch-book-odds] Kalshi O/U skipped:", e.message || e);
+      if (envTruthy("GOLF_REQUIRE_KL_OU")) {
+        console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_KL_OU=1): ${e.message || e}`);
+        process.exit(1);
+      }
+    }
+  }
+
+  if (String(process.env.GOLF_SKIP_CZR_OU || "").trim() !== "1") {
+    try {
+      const { props: czrMerged, nCzr, czrError } = await refreshCaesarsRoundProps(next);
+      next.props = czrMerged;
+      if (nCzr > 0) {
+        next.czr_round_props_refreshed_at = next.book_odds_refreshed_at;
+        console.log(
+          `[fetch-book-odds] Caesars round props: ${nCzr} fresh rows (${czrMerged.length} total props)`,
+        );
+      } else if (czrError && !String(czrError).startsWith("skipped")) {
+        console.warn(`[fetch-book-odds] Caesars: ${czrError}`);
+      }
+      if (envTruthy("GOLF_REQUIRE_CZR_OU") && nCzr === 0) {
+        console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_CZR_OU=1): ${czrError || "0 Caesars rows"}`);
+        process.exit(1);
+      }
+    } catch (e) {
+      console.warn("[fetch-book-odds] Caesars O/U skipped:", e.message || e);
+      if (envTruthy("GOLF_REQUIRE_CZR_OU")) {
+        console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_CZR_OU=1): ${e.message || e}`);
         process.exit(1);
       }
     }

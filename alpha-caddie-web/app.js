@@ -3344,6 +3344,9 @@ function ouProjectionFieldPlayerDgIds() {
     ...prizePicksRoundPropsOnly(),
     ...sleeperRoundPropsOnly(),
     ...underdogRoundPropsOnly(),
+    ...fanduelRoundPropsOnly(),
+    ...kalshiRoundPropsOnly(),
+    ...caesarsRoundPropsOnly(),
   ]) {
     const id = Math.round(num(r.dg_id, NaN));
     if (Number.isFinite(id) && id > 0) ids.add(id);
@@ -4071,10 +4074,11 @@ function ouCourseRatingTitle(market, venueVal) {
   return `Course rating (${label}: venue avg ${venueStr} vs all courses avg ${crossStr}${nSuffix}, ${yrs})`;
 }
 
-/** Model O/U tab market order; displayed columns are dynamic from live DK props. */
+/** Model O/U tab market order; displayed columns are dynamic from live book props. */
 const OU_PROJECTION_MARKETS = Object.freeze([
   { market: "Total score", label: "Round score" },
-  { market: "Birdies", label: "Birdies" },
+  { market: "Birdies", label: "Birdies or better" },
+  { market: "Pars", label: "Pars" },
   { market: "Bogeys", label: "Bogeys" },
   { market: "GIR", label: "GIR" },
   { market: "Fairways hit", label: "Fairways" },
@@ -4094,6 +4098,9 @@ function ouRoundOuPropsForLines() {
       s === "prizepicks" ||
       s === "sleeper" ||
       s === "underdog" ||
+      s === "fanduel" ||
+      s === "kalshi" ||
+      s === "caesars" ||
       s === "csv" ||
       s === "model_fallback"
     );
@@ -4117,12 +4124,27 @@ function underdogRoundPropOddsAvailable() {
   return underdogRoundPropsOnly().length > 0;
 }
 
+function fanduelRoundPropOddsAvailable() {
+  return fanduelRoundPropsOnly().length > 0;
+}
+
+function kalshiRoundPropOddsAvailable() {
+  return kalshiRoundPropsOnly().length > 0;
+}
+
+function caesarsRoundPropOddsAvailable() {
+  return caesarsRoundPropsOnly().length > 0;
+}
+
 function roundBookPropOddsAvailable() {
   return (
     draftKingsRoundPropOddsAvailable() ||
     prizePicksRoundPropOddsAvailable() ||
     sleeperRoundPropOddsAvailable() ||
-    underdogRoundPropOddsAvailable()
+    underdogRoundPropOddsAvailable() ||
+    fanduelRoundPropOddsAvailable() ||
+    kalshiRoundPropOddsAvailable() ||
+    caesarsRoundPropOddsAvailable()
   );
 }
 
@@ -4182,7 +4204,10 @@ function ouBookPickRank(pick, canon) {
   }
   if (
     String(pick.source || "").trim().toLowerCase() === "sleeper" ||
-    String(pick.source || "").trim().toLowerCase() === "underdog"
+    String(pick.source || "").trim().toLowerCase() === "underdog" ||
+    String(pick.source || "").trim().toLowerCase() === "fanduel" ||
+    String(pick.source || "").trim().toLowerCase() === "kalshi" ||
+    String(pick.source || "").trim().toLowerCase() === "caesars"
   ) {
     return 2;
   }
@@ -4220,6 +4245,9 @@ function draftKingsHasMarketForRound(market, round) {
     ...prizePicksRoundPropsOnly(true),
     ...sleeperRoundPropsOnly(true),
     ...underdogRoundPropsOnly(true),
+    ...fanduelRoundPropsOnly(true),
+    ...kalshiRoundPropsOnly(true),
+    ...caesarsRoundPropsOnly(true),
   ];
   const needFieldMatch = canon === "GIR" || canon === "Fairways hit";
   const fieldPlayers = needFieldMatch ? roundProjectionPlayersForOuRound() : [];
@@ -6423,7 +6451,7 @@ let ouGolferSuggestLabelsSig = "";
 /** @type {string[]} */
 let ouGolferSuggestLabels = [];
 let ouProjTableChromeReady = false;
-const OU_PROJ_TABLE_CHROME_VER = 6;
+const OU_PROJ_TABLE_CHROME_VER = 7;
 let ouProjTableChromeBuiltVer = 0;
 let ouTableBuildRaf = 0;
 
@@ -6436,6 +6464,12 @@ function ouInvalidateProjectionPerfCaches() {
   ouSlRoundPropsCache = [];
   ouUdRoundPropsCacheSig = "";
   ouUdRoundPropsCache = [];
+  ouFdRoundPropsCacheSig = "";
+  ouFdRoundPropsCache = [];
+  ouKlRoundPropsCacheSig = "";
+  ouKlRoundPropsCache = [];
+  ouCzrRoundPropsCacheSig = "";
+  ouCzrRoundPropsCache = [];
   ouProjectionSortCacheSig = "";
   ouProjectionSortCache = null;
   ouGolferSuggestLabelsSig = "";
@@ -6603,6 +6637,12 @@ let ouSlRoundPropsCacheSig = "";
 let ouSlRoundPropsCache = [];
 let ouUdRoundPropsCacheSig = "";
 let ouUdRoundPropsCache = [];
+let ouFdRoundPropsCacheSig = "";
+let ouFdRoundPropsCache = [];
+let ouKlRoundPropsCacheSig = "";
+let ouKlRoundPropsCache = [];
+let ouCzrRoundPropsCacheSig = "";
+let ouCzrRoundPropsCache = [];
 
 /** Shared round filter for any props[].source (PrizePicks-style line value). */
 function roundPropsForSource(source, allRounds = false) {
@@ -6684,7 +6724,46 @@ function underdogRoundPropsOnly(allRounds = false) {
   return out;
 }
 
-/** DraftKings when posted; otherwise PrizePicks / Sleeper / Underdog lines for the Round projections tab. */
+function fanduelRoundPropsOnly(allRounds = false) {
+  const wantR = allRounds ? NaN : Math.round(getOuRound());
+  const propsLen = Array.isArray(DATA.props) ? DATA.props.length : 0;
+  const sig = `${allRounds ? "all" : `r${wantR}`}|n${propsLen}|rev${projectionsDataRev}`;
+  if (!allRounds && ouFdRoundPropsCacheSig === sig) return ouFdRoundPropsCache;
+  const out = roundPropsForSource("fanduel", allRounds);
+  if (!allRounds) {
+    ouFdRoundPropsCacheSig = sig;
+    ouFdRoundPropsCache = out;
+  }
+  return out;
+}
+
+function kalshiRoundPropsOnly(allRounds = false) {
+  const wantR = allRounds ? NaN : Math.round(getOuRound());
+  const propsLen = Array.isArray(DATA.props) ? DATA.props.length : 0;
+  const sig = `${allRounds ? "all" : `r${wantR}`}|n${propsLen}|rev${projectionsDataRev}`;
+  if (!allRounds && ouKlRoundPropsCacheSig === sig) return ouKlRoundPropsCache;
+  const out = roundPropsForSource("kalshi", allRounds);
+  if (!allRounds) {
+    ouKlRoundPropsCacheSig = sig;
+    ouKlRoundPropsCache = out;
+  }
+  return out;
+}
+
+function caesarsRoundPropsOnly(allRounds = false) {
+  const wantR = allRounds ? NaN : Math.round(getOuRound());
+  const propsLen = Array.isArray(DATA.props) ? DATA.props.length : 0;
+  const sig = `${allRounds ? "all" : `r${wantR}`}|n${propsLen}|rev${projectionsDataRev}`;
+  if (!allRounds && ouCzrRoundPropsCacheSig === sig) return ouCzrRoundPropsCache;
+  const out = roundPropsForSource("caesars", allRounds);
+  if (!allRounds) {
+    ouCzrRoundPropsCacheSig = sig;
+    ouCzrRoundPropsCache = out;
+  }
+  return out;
+}
+
+/** DraftKings when posted; otherwise next available book lines for the Round projections tab. */
 function roundBookPropsOnly(allRounds = false) {
   const dk = draftKingsRoundPropsOnly(allRounds);
   if (dk.length) return dk;
@@ -6692,7 +6771,13 @@ function roundBookPropsOnly(allRounds = false) {
   if (pp.length) return pp;
   const sl = sleeperRoundPropsOnly(allRounds);
   if (sl.length) return sl;
-  return underdogRoundPropsOnly(allRounds);
+  const ud = underdogRoundPropsOnly(allRounds);
+  if (ud.length) return ud;
+  const fd = fanduelRoundPropsOnly(allRounds);
+  if (fd.length) return fd;
+  const kl = kalshiRoundPropsOnly(allRounds);
+  if (kl.length) return kl;
+  return caesarsRoundPropsOnly(allRounds);
 }
 
 function draftKingsPostedRounds() {
@@ -7481,10 +7566,19 @@ function ensureOuProjectionTableChrome() {
   hr.appendChild(ouProjMakeBookColumnTh("pr-sl-odds", "Odds", "ou-proj-th-sl-odds", "sleeper", sortInd));
   hr.appendChild(ouProjMakeBookColumnTh("pr-ud-line", "Line", "ou-proj-th-ud-line", "underdog", sortInd));
   hr.appendChild(ouProjMakeBookColumnTh("pr-ud-odds", "Odds", "ou-proj-th-ud-odds", "underdog", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-fd-line", "Line", "ou-proj-th-fd-line", "fanduel", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-fd-odds", "Odds", "ou-proj-th-fd-odds", "fanduel", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-kl-line", "Line", "ou-proj-th-kl-line", "kalshi", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-kl-odds", "Odds", "ou-proj-th-kl-odds", "kalshi", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-czr-line", "Line", "ou-proj-th-czr-line", "caesars", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-czr-odds", "Odds", "ou-proj-th-czr-odds", "caesars", sortInd));
   hr.appendChild(ouProjMakeBookColumnTh("pr-dk-edge", "Edge", "ou-proj-th-dk-edge", "draftkings", sortInd));
   hr.appendChild(ouProjMakeBookColumnTh("pr-pp-edge", "Edge", "ou-proj-th-pp-edge", "prizepicks", sortInd));
   hr.appendChild(ouProjMakeBookColumnTh("pr-sl-edge", "Edge", "ou-proj-th-sl-edge", "sleeper", sortInd));
   hr.appendChild(ouProjMakeBookColumnTh("pr-ud-edge", "Edge", "ou-proj-th-ud-edge", "underdog", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-fd-edge", "Edge", "ou-proj-th-fd-edge", "fanduel", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-kl-edge", "Edge", "ou-proj-th-kl-edge", "kalshi", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-czr-edge", "Edge", "ou-proj-th-czr-edge", "caesars", sortInd));
   const kellyTh = document.createElement("th");
   kellyTh.className = "sortable ou-proj-long-th num ou-proj-th-kelly";
   kellyTh.dataset.sortKey = "pr-kelly";
@@ -7514,17 +7608,23 @@ function initOuTableSortOnce() {
       else if (key === "pr-tee-time") ouTableSort.dir = 1;
       else if (key === "pr-market" || key === "pr-side") ouTableSort.dir = 1;
       else if (key === "pr-mu" || key === "pr-avg") ouTableSort.dir = -1;
-      else if (key === "pr-line" || key === "pr-dk-line" || key === "pr-pp-line" || key === "pr-sl-line" || key === "pr-ud-line") ouTableSort.dir = 1;
+      else if (key === "pr-line" || key === "pr-dk-line" || key === "pr-pp-line" || key === "pr-sl-line" || key === "pr-ud-line" || key === "pr-fd-line" || key === "pr-kl-line" || key === "pr-czr-line") ouTableSort.dir = 1;
       else if (
         key === "pr-odds" ||
         key === "pr-dk-odds" ||
         key === "pr-pp-odds" ||
         key === "pr-sl-odds" ||
         key === "pr-ud-odds" ||
+        key === "pr-fd-odds" ||
+        key === "pr-kl-odds" ||
+        key === "pr-czr-odds" ||
         key === "pr-dk-edge" ||
         key === "pr-pp-edge" ||
         key === "pr-sl-edge" ||
         key === "pr-ud-edge" ||
+        key === "pr-fd-edge" ||
+        key === "pr-kl-edge" ||
+        key === "pr-czr-edge" ||
         key === "pr-kelly" ||
         key === "pr-edge"
       )
@@ -7649,8 +7749,8 @@ function ouLookupBookPick(map, id, nameKey, canon) {
 }
 
 function ouAttachProjectionRowMetrics(row) {
-  const { player, col, side, dkPick, ppPick, slPick, udPick } = row;
-  row.pick = dkPick || ppPick || slPick || udPick;
+  const { player, col, side, dkPick, ppPick, slPick, udPick, fdPick, klPick, czrPick } = row;
+  row.pick = dkPick || ppPick || slPick || udPick || fdPick || klPick || czrPick;
   const bankroll = ouProjBankrollFromUi();
   const kellyFraction = ouProjKellyFractionFromUi();
 
@@ -7676,25 +7776,42 @@ function ouAttachProjectionRowMetrics(row) {
   const ppHit = edgeForPick(ppPick);
   const slHit = edgeForPick(slPick);
   const udHit = edgeForPick(udPick);
+  const fdHit = edgeForPick(fdPick);
+  const klHit = edgeForPick(klPick);
+  const czrHit = edgeForPick(czrPick);
   row.dkEdge = dkHit.edge;
   row.ppEdge = ppHit.edge;
   row.slEdge = slHit.edge;
   row.udEdge = udHit.edge;
+  row.fdEdge = fdHit.edge;
+  row.klEdge = klHit.edge;
+  row.czrEdge = czrHit.edge;
   row.dkSortOdds = dkHit.sortOdds;
   row.ppSortOdds = ppHit.sortOdds;
   row.slSortOdds = slHit.sortOdds;
   row.udSortOdds = udHit.sortOdds;
+  row.fdSortOdds = fdHit.sortOdds;
+  row.klSortOdds = klHit.sortOdds;
+  row.czrSortOdds = czrHit.sortOdds;
   row.dkKelly = ouKellyStakeForProjectionSide(col.market, player, dkPick, side, bankroll, kellyFraction);
   row.ppKelly = ouKellyStakeForProjectionSide(col.market, player, ppPick, side, bankroll, kellyFraction);
   row.slKelly = ouKellyStakeForProjectionSide(col.market, player, slPick, side, bankroll, kellyFraction);
   row.udKelly = ouKellyStakeForProjectionSide(col.market, player, udPick, side, bankroll, kellyFraction);
+  row.fdKelly = ouKellyStakeForProjectionSide(col.market, player, fdPick, side, bankroll, kellyFraction);
+  row.klKelly = ouKellyStakeForProjectionSide(col.market, player, klPick, side, bankroll, kellyFraction);
+  row.czrKelly = ouKellyStakeForProjectionSide(col.market, player, czrPick, side, bankroll, kellyFraction);
   row.kellySort = Math.max(
     num(row.dkKelly, 0),
     num(row.ppKelly, 0),
     num(row.slKelly, 0),
     num(row.udKelly, 0),
+    num(row.fdKelly, 0),
+    num(row.klKelly, 0),
+    num(row.czrKelly, 0),
   );
-  row.edge = [dkHit.edge, ppHit.edge, slHit.edge, udHit.edge].find((e) => Number.isFinite(e));
+  row.edge = [dkHit.edge, ppHit.edge, slHit.edge, udHit.edge, fdHit.edge, klHit.edge, czrHit.edge].find((e) =>
+    Number.isFinite(e),
+  );
   return row;
 }
 
@@ -7708,6 +7825,9 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
   const ppPickMap = ouBuildBookPickMap(prizePicksRoundPropsOnly(), resolvePlayer);
   const slPickMap = ouBuildBookPickMap(sleeperRoundPropsOnly(), resolvePlayer);
   const udPickMap = ouBuildBookPickMap(underdogRoundPropsOnly(), resolvePlayer);
+  const fdPickMap = ouBuildBookPickMap(fanduelRoundPropsOnly(), resolvePlayer);
+  const klPickMap = ouBuildBookPickMap(kalshiRoundPropsOnly(), resolvePlayer);
+  const czrPickMap = ouBuildBookPickMap(caesarsRoundPropsOnly(), resolvePlayer);
 
   for (const player of players) {
     const id = Math.round(num(player.dg_id, NaN));
@@ -7719,7 +7839,10 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
       const ppPick = ouLookupBookPick(ppPickMap, id, nameKey, canon);
       const slPick = ouLookupBookPick(slPickMap, id, nameKey, canon);
       const udPick = ouLookupBookPick(udPickMap, id, nameKey, canon);
-      if (!dkPick && !ppPick && !slPick && !udPick) continue;
+      const fdPick = ouLookupBookPick(fdPickMap, id, nameKey, canon);
+      const klPick = ouLookupBookPick(klPickMap, id, nameKey, canon);
+      const czrPick = ouLookupBookPick(czrPickMap, id, nameKey, canon);
+      if (!dkPick && !ppPick && !slPick && !udPick && !fdPick && !klPick && !czrPick) continue;
       const mu = ouProjectedMean(col.market, player, OU_PROJ_TABLE_MEAN_OPTS);
       const mKey = ouModelMarketKey(col.market) || "Total score";
       const marketAvgHit = ouCachedPlayerMarketAverage(mKey, player, avgWindow);
@@ -7734,6 +7857,9 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
           ppPick,
           slPick,
           udPick,
+          fdPick,
+          klPick,
+          czrPick,
           marketAvg: marketAvgHit.avg,
           marketAvgN: marketAvgHit.n,
           marketAvgSource: marketAvgHit.source,
@@ -7764,6 +7890,9 @@ function ouProjectionFlatRowsCacheKey(players, cols) {
     `pp${ouPpRoundPropsCacheSig}`,
     `sl${ouSlRoundPropsCacheSig}`,
     `ud${ouUdRoundPropsCacheSig}`,
+    `fd${ouFdRoundPropsCacheSig}`,
+    `kl${ouKlRoundPropsCacheSig}`,
+    `czr${ouCzrRoundPropsCacheSig}`,
   ].join("|");
 }
 
@@ -7804,7 +7933,7 @@ function ouProjectionRowStatOrder(a, b) {
 }
 
 function ouTableSortValueProjRow(row, sortKey) {
-  const { player, col, colIdx, side, mu, dkPick, ppPick, slPick, udPick, pick } = row;
+  const { player, col, colIdx, side, mu, dkPick, ppPick, slPick, udPick, fdPick, klPick, czrPick, pick } = row;
   if (sortKey === "pr-tee-time") return dgTeetimeSortMinutes(playerDgTeetimeForRound(player));
   if (sortKey === "pr-golfer" || sortKey === "golfer") {
     return displayGolferName(player.player_name || "").toLowerCase();
@@ -7819,6 +7948,9 @@ function ouTableSortValueProjRow(row, sortKey) {
   if (sortKey === "pr-pp-line") return ppPick && Number.isFinite(ppPick.line) ? ppPick.line : NaN;
   if (sortKey === "pr-sl-line") return slPick && Number.isFinite(slPick.line) ? slPick.line : NaN;
   if (sortKey === "pr-ud-line") return udPick && Number.isFinite(udPick.line) ? udPick.line : NaN;
+  if (sortKey === "pr-fd-line") return fdPick && Number.isFinite(fdPick.line) ? fdPick.line : NaN;
+  if (sortKey === "pr-kl-line") return klPick && Number.isFinite(klPick.line) ? klPick.line : NaN;
+  if (sortKey === "pr-czr-line") return czrPick && Number.isFinite(czrPick.line) ? czrPick.line : NaN;
   if (sortKey === "pr-odds" || sortKey === "pr-dk-odds") {
     if (Number.isFinite(row.dkSortOdds)) return row.dkSortOdds;
     if (!dkPick) return NaN;
@@ -7843,6 +7975,24 @@ function ouTableSortValueProjRow(row, sortKey) {
     const am = side === "over" ? udPick.over : udPick.under;
     return Number.isFinite(am) ? am : NaN;
   }
+  if (sortKey === "pr-fd-odds") {
+    if (Number.isFinite(row.fdSortOdds)) return row.fdSortOdds;
+    if (!fdPick) return NaN;
+    const am = side === "over" ? fdPick.over : fdPick.under;
+    return Number.isFinite(am) ? am : NaN;
+  }
+  if (sortKey === "pr-kl-odds") {
+    if (Number.isFinite(row.klSortOdds)) return row.klSortOdds;
+    if (!klPick) return NaN;
+    const am = side === "over" ? klPick.over : klPick.under;
+    return Number.isFinite(am) ? am : NaN;
+  }
+  if (sortKey === "pr-czr-odds") {
+    if (Number.isFinite(row.czrSortOdds)) return row.czrSortOdds;
+    if (!czrPick) return NaN;
+    const am = side === "over" ? czrPick.over : czrPick.under;
+    return Number.isFinite(am) ? am : NaN;
+  }
   if (sortKey === "pr-dk-edge") {
     if (Number.isFinite(row.dkEdge)) return row.dkEdge;
     return NaN;
@@ -7859,12 +8009,26 @@ function ouTableSortValueProjRow(row, sortKey) {
     if (Number.isFinite(row.udEdge)) return row.udEdge;
     return NaN;
   }
+  if (sortKey === "pr-fd-edge") {
+    if (Number.isFinite(row.fdEdge)) return row.fdEdge;
+    return NaN;
+  }
+  if (sortKey === "pr-kl-edge") {
+    if (Number.isFinite(row.klEdge)) return row.klEdge;
+    return NaN;
+  }
+  if (sortKey === "pr-czr-edge") {
+    if (Number.isFinite(row.czrEdge)) return row.czrEdge;
+    return NaN;
+  }
   if (sortKey === "pr-kelly") {
     if (Number.isFinite(row.kellySort)) return row.kellySort;
     return NaN;
   }
   if (sortKey === "pr-edge") {
-    const edges = [row.dkEdge, row.ppEdge, row.slEdge, row.udEdge].map((e) => num(e, NaN));
+    const edges = [row.dkEdge, row.ppEdge, row.slEdge, row.udEdge, row.fdEdge, row.klEdge, row.czrEdge].map((e) =>
+      num(e, NaN),
+    );
     return edges.find((e) => Number.isFinite(e)) ?? NaN;
   }
   return NaN;
@@ -7990,7 +8154,7 @@ function drawOuProjDetailDistribution(canvas, market, player, line) {
   );
 }
 
-function buildOuProjDetailPanel(player, col, side, mu, pick, rawName, dkPick, ppPick, slPick, udPick) {
+function buildOuProjDetailPanel(player, col, side, mu, pick, rawName, dkPick, ppPick, slPick, udPick, fdPick, klPick, czrPick) {
   const wrap = document.createElement("div");
   wrap.className = "ou-proj-detail-wrap";
   const mKey = ouModelMarketKey(col.market) || "Total score";
@@ -8082,6 +8246,9 @@ function buildOuProjDetailPanel(player, col, side, mu, pick, rawName, dkPick, pp
   addBookLine("PP", ppPick);
   addBookLine("SL", slPick);
   addBookLine("UD", udPick);
+  addBookLine("FD", fdPick);
+  addBookLine("KL", klPick);
+  addBookLine("CZR", czrPick);
   modelCol.appendChild(h3);
   modelCol.appendChild(dl2);
 
@@ -8158,7 +8325,7 @@ function buildOuTable() {
     flatRows.sort(ouProjectionRowStatOrder);
   }
 
-  const projColCount = 19;
+  const projColCount = 28;
   const flatRowKeys = new Set(
     flatRows.map((rr) => ouProjMakeExpandKey(String(rr.player.player_name || ""), rr.col.label, rr.side)),
   );
@@ -8203,14 +8370,23 @@ function buildOuTable() {
       ppPick,
       slPick,
       udPick,
+      fdPick,
+      klPick,
+      czrPick,
       dkEdge,
       ppEdge,
       slEdge,
       udEdge,
+      fdEdge,
+      klEdge,
+      czrEdge,
       dkKelly,
       ppKelly,
       slKelly,
       udKelly,
+      fdKelly,
+      klKelly,
+      czrKelly,
     } = r;
     const rawName = String(player.player_name || "");
     const expandKey = ouProjMakeExpandKey(rawName, col.label, side);
@@ -8328,6 +8504,45 @@ function buildOuTable() {
     } else udOddsTd.textContent = "";
     tr.appendChild(udOddsTd);
 
+    const fdLineTd = document.createElement("td");
+    fdLineTd.className = "ou-cell ou-proj-long-td num ou-proj-td-fd-line";
+    fdLineTd.textContent = fdPick && Number.isFinite(fdPick.line) ? String(fdPick.line) : "";
+    tr.appendChild(fdLineTd);
+
+    const fdOddsTd = document.createElement("td");
+    fdOddsTd.className = "ou-cell ou-proj-long-td num ou-proj-td-fd-odds";
+    if (fdPick) {
+      const am = side === "over" ? fdPick.over : fdPick.under;
+      fdOddsTd.textContent = Number.isFinite(am) ? formatAmerican(am) : "—";
+    } else fdOddsTd.textContent = "";
+    tr.appendChild(fdOddsTd);
+
+    const klLineTd = document.createElement("td");
+    klLineTd.className = "ou-cell ou-proj-long-td num ou-proj-td-kl-line";
+    klLineTd.textContent = klPick && Number.isFinite(klPick.line) ? String(klPick.line) : "";
+    tr.appendChild(klLineTd);
+
+    const klOddsTd = document.createElement("td");
+    klOddsTd.className = "ou-cell ou-proj-long-td num ou-proj-td-kl-odds";
+    if (klPick) {
+      const am = side === "over" ? klPick.over : klPick.under;
+      klOddsTd.textContent = Number.isFinite(am) ? formatAmerican(am) : "—";
+    } else klOddsTd.textContent = "";
+    tr.appendChild(klOddsTd);
+
+    const czrLineTd = document.createElement("td");
+    czrLineTd.className = "ou-cell ou-proj-long-td num ou-proj-td-czr-line";
+    czrLineTd.textContent = czrPick && Number.isFinite(czrPick.line) ? String(czrPick.line) : "";
+    tr.appendChild(czrLineTd);
+
+    const czrOddsTd = document.createElement("td");
+    czrOddsTd.className = "ou-cell ou-proj-long-td num ou-proj-td-czr-odds";
+    if (czrPick) {
+      const am = side === "over" ? czrPick.over : czrPick.under;
+      czrOddsTd.textContent = Number.isFinite(am) ? formatAmerican(am) : "—";
+    } else czrOddsTd.textContent = "";
+    tr.appendChild(czrOddsTd);
+
     const dkEdgeTd = document.createElement("td");
     dkEdgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-dk-edge";
     const ppEdgeTd = document.createElement("td");
@@ -8336,6 +8551,12 @@ function buildOuTable() {
     slEdgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-sl-edge";
     const udEdgeTd = document.createElement("td");
     udEdgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-ud-edge";
+    const fdEdgeTd = document.createElement("td");
+    fdEdgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-fd-edge";
+    const klEdgeTd = document.createElement("td");
+    klEdgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-kl-edge";
+    const czrEdgeTd = document.createElement("td");
+    czrEdgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-czr-edge";
     const paintEdge = (td, pick, edge) => {
       if (pick && Number.isFinite(edge)) {
         td.textContent = formatEdgePct(edge);
@@ -8347,10 +8568,16 @@ function buildOuTable() {
     paintEdge(ppEdgeTd, ppPick, ppEdge);
     paintEdge(slEdgeTd, slPick, slEdge);
     paintEdge(udEdgeTd, udPick, udEdge);
+    paintEdge(fdEdgeTd, fdPick, fdEdge);
+    paintEdge(klEdgeTd, klPick, klEdge);
+    paintEdge(czrEdgeTd, czrPick, czrEdge);
     tr.appendChild(dkEdgeTd);
     tr.appendChild(ppEdgeTd);
     tr.appendChild(slEdgeTd);
     tr.appendChild(udEdgeTd);
+    tr.appendChild(fdEdgeTd);
+    tr.appendChild(klEdgeTd);
+    tr.appendChild(czrEdgeTd);
 
     const kellyTd = document.createElement("td");
     kellyTd.className = "ou-cell ou-proj-long-td num ou-proj-td-kelly";
@@ -8368,6 +8595,15 @@ function buildOuTable() {
     }
     if (udPick && Number.isFinite(udKelly) && udKelly > 0) {
       kellyBits.push({ book: "UD", amt: udKelly });
+    }
+    if (fdPick && Number.isFinite(fdKelly) && fdKelly > 0) {
+      kellyBits.push({ book: "FD", amt: fdKelly });
+    }
+    if (klPick && Number.isFinite(klKelly) && klKelly > 0) {
+      kellyBits.push({ book: "KL", amt: klKelly });
+    }
+    if (czrPick && Number.isFinite(czrKelly) && czrKelly > 0) {
+      kellyBits.push({ book: "CZR", amt: czrKelly });
     }
     if (!kellyBits.length) {
       kellyTd.textContent = "";
@@ -8412,7 +8648,7 @@ function buildOuTable() {
       const dtd = document.createElement("td");
       dtd.colSpan = projColCount;
       dtd.className = "ou-proj-detail-td";
-      dtd.appendChild(buildOuProjDetailPanel(player, col, side, mu, pick, rawName, dkPick, ppPick, slPick, udPick));
+      dtd.appendChild(buildOuProjDetailPanel(player, col, side, mu, pick, rawName, dkPick, ppPick, slPick, udPick, fdPick, klPick, czrPick));
       dtr.appendChild(dtd);
       ouTbodyFrag.appendChild(dtr);
     }
@@ -8762,6 +8998,7 @@ const SPORTSBOOK_META = {
   sleeper: { label: "Sleeper", short: "SL", domain: "sleeper.com" },
   underdog: { label: "Underdog", short: "UD", domain: "underdogfantasy.com" },
   fanduel: { label: "FanDuel", short: "FD", domain: "fanduel.com" },
+  kalshi: { label: "Kalshi", short: "KL", domain: "kalshi.com" },
   betmgm: { label: "BetMGM", short: "MGM", domain: "betmgm.com" },
   caesars: { label: "Caesars", short: "CZR", domain: "caesars.com" },
   bet365: { label: "Bet365", short: "365", domain: "bet365.com" },

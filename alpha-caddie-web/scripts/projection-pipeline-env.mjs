@@ -56,11 +56,13 @@ export function liveProjectionPipelineEnv() {
   };
 }
 
-/** DraftKings round O/U scrape — headed browser on desktop (DK blocks headless Chromium). */
+/** DraftKings / Caesars / FanDuel round O/U scrape — headed browser on desktop (books often block headless Chromium). */
 export function dkOuScrapeEnv() {
   const env = {};
   if (process.platform === "win32" || process.platform === "darwin") {
     env.DK_HEADLESS = "0";
+    env.CZR_HEADLESS = "0";
+    env.FD_HEADLESS = "0";
   }
   return env;
 }

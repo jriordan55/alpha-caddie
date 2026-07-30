@@ -2019,7 +2019,13 @@ body {
 #table-ou.table-ou-projections .ou-proj-th-sl-line,
 #table-ou.table-ou-projections .ou-proj-td-sl-line,
 #table-ou.table-ou-projections .ou-proj-th-ud-line,
-#table-ou.table-ou-projections .ou-proj-td-ud-line {
+#table-ou.table-ou-projections .ou-proj-td-ud-line,
+#table-ou.table-ou-projections .ou-proj-th-fd-line,
+#table-ou.table-ou-projections .ou-proj-td-fd-line,
+#table-ou.table-ou-projections .ou-proj-th-kl-line,
+#table-ou.table-ou-projections .ou-proj-td-kl-line,
+#table-ou.table-ou-projections .ou-proj-th-czr-line,
+#table-ou.table-ou-projections .ou-proj-td-czr-line {
   min-width: 3rem;
   color: #f4ca3c;
   font-weight: 800;
@@ -2084,7 +2090,13 @@ body {
 #table-ou.table-ou-projections .ou-proj-th-sl-line,
 #table-ou.table-ou-projections .ou-proj-th-sl-odds,
 #table-ou.table-ou-projections .ou-proj-th-ud-line,
-#table-ou.table-ou-projections .ou-proj-th-ud-odds {
+#table-ou.table-ou-projections .ou-proj-th-ud-odds,
+#table-ou.table-ou-projections .ou-proj-th-fd-line,
+#table-ou.table-ou-projections .ou-proj-th-fd-odds,
+#table-ou.table-ou-projections .ou-proj-th-kl-line,
+#table-ou.table-ou-projections .ou-proj-th-kl-odds,
+#table-ou.table-ou-projections .ou-proj-th-czr-line,
+#table-ou.table-ou-projections .ou-proj-th-czr-odds {
   text-align: center;
   vertical-align: middle;
   padding-left: 6px;
@@ -2127,7 +2139,13 @@ body {
 #table-ou.table-ou-projections .ou-proj-th-sl-odds,
 #table-ou.table-ou-projections .ou-proj-td-sl-odds,
 #table-ou.table-ou-projections .ou-proj-th-ud-odds,
-#table-ou.table-ou-projections .ou-proj-td-ud-odds {
+#table-ou.table-ou-projections .ou-proj-td-ud-odds,
+#table-ou.table-ou-projections .ou-proj-th-fd-odds,
+#table-ou.table-ou-projections .ou-proj-td-fd-odds,
+#table-ou.table-ou-projections .ou-proj-th-kl-odds,
+#table-ou.table-ou-projections .ou-proj-td-kl-odds,
+#table-ou.table-ou-projections .ou-proj-th-czr-odds,
+#table-ou.table-ou-projections .ou-proj-td-czr-odds {
   min-width: 3.5rem;
   font-weight: 700;
 }
@@ -2138,7 +2156,13 @@ body {
 #table-ou.table-ou-projections .ou-proj-th-sl-edge,
 #table-ou.table-ou-projections .ou-proj-td-sl-edge,
 #table-ou.table-ou-projections .ou-proj-th-ud-edge,
-#table-ou.table-ou-projections .ou-proj-td-ud-edge {
+#table-ou.table-ou-projections .ou-proj-td-ud-edge,
+#table-ou.table-ou-projections .ou-proj-th-fd-edge,
+#table-ou.table-ou-projections .ou-proj-td-fd-edge,
+#table-ou.table-ou-projections .ou-proj-th-kl-edge,
+#table-ou.table-ou-projections .ou-proj-td-kl-edge,
+#table-ou.table-ou-projections .ou-proj-th-czr-edge,
+#table-ou.table-ou-projections .ou-proj-td-czr-edge {
   min-width: 4rem;
   font-weight: 800;
 }
