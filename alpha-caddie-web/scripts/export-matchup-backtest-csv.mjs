@@ -44,6 +44,17 @@ const SUMMARY_OUT = join(WEB_ROOT, "data", "matchup_backtest_summary.csv");
 
 const MAX_ROWS = Math.max(0, Math.round(Number(process.env.GOLF_MATCHUP_BACKTEST_MAX_ROWS || "0")));
 const SINCE_ISO = String(process.env.GOLF_MATCHUP_BACKTEST_SINCE || "").trim();
+/** Comma list: round,3ball (default both). */
+const MARKET_FILTER = new Set(
+  String(process.env.GOLF_MATCHUP_MARKETS || "round,3ball")
+    .toLowerCase()
+    .split(/[,;\s]+/)
+    .map((s) => s.trim())
+    .filter(Boolean),
+);
+const WANT_ROUND = MARKET_FILTER.has("round") || MARKET_FILTER.has("round_matchups") || MARKET_FILTER.has("matchup");
+const WANT_THREE = MARKET_FILTER.has("3ball") || MARKET_FILTER.has("3balls") || MARKET_FILTER.has("3-balls") || MARKET_FILTER.has("three");
+
 
 const DETAIL_HEADER = [
   "exported_at",
@@ -399,13 +410,14 @@ function loadExistingDetailForMerge(replaceEvents) {
 
 async function readMatchupRows() {
   /** @type {object[]} */
-  const rows = [];
+  const roundRows = [];
+  /** @type {object[]} */
+  const threeRows = [];
   const rl = createInterface({
     input: createReadStream(MATCHUPS_CSV, { encoding: "utf8" }),
     crlfDelay: Infinity,
   });
   let header = null;
-  let n = 0;
   for await (const line of rl) {
     if (!line.trim()) continue;
     const cols = parseCsvLine(line);
@@ -417,6 +429,8 @@ async function readMatchupRows() {
     for (let i = 0; i < header.length; i++) row[header[i]] = cols[i] ?? "";
     const market = marketLabelForBetType(row.bet_type);
     if (!market) continue;
+    if (market === ROUND_MATCHUP_MARKET && !WANT_ROUND) continue;
+    if (market === THREE_BALL_MARKET && !WANT_THREE) continue;
     if (!isAllowedMatchupTrackerBook(row.book)) continue;
 
     const o1 = num(row.p1_outcome, NaN);
@@ -430,11 +444,18 @@ async function readMatchupRows() {
       const d = closeDateIso(row);
       if (!d || d < SINCE_ISO) continue;
     }
-    rows.push(row);
-    n += 1;
-    if (MAX_ROWS > 0 && n >= MAX_ROWS) break;
+    if (market === THREE_BALL_MARKET) threeRows.push(row);
+    else roundRows.push(row);
   }
-  return rows;
+
+  // Round matchups first so capped / interrupted runs still have H2H history.
+  let rows = [...roundRows, ...threeRows];
+  if (MAX_ROWS > 0 && rows.length > MAX_ROWS) {
+    const roundTake = Math.min(roundRows.length, Math.ceil(MAX_ROWS * 0.6));
+    const threeTake = Math.min(threeRows.length, MAX_ROWS - roundTake);
+    rows = [...roundRows.slice(0, roundTake), ...threeRows.slice(0, threeTake)];
+  }
+  return { rows, nRound: roundRows.length, nThree: threeRows.length };
 }
 
 async function main() {
@@ -447,13 +468,13 @@ async function main() {
     process.exit(1);
   }
 
-  console.log("Reading historical_matchups_outcomes.csv (round matchups + 3-balls; DK/FD/BetMGM) …");
-  if (SINCE_ISO) console.log(`  Since filter: close_time >= ${SINCE_ISO}`);
-  const matchupRows = await readMatchupRows();
-  const nRound = matchupRows.filter((r) => isRoundMatchupBetType(r.bet_type)).length;
-  const n3 = matchupRows.filter((r) => isThreeBallBetType(r.bet_type)).length;
   console.log(
-    `  ${matchupRows.length.toLocaleString()} graded rows (${nRound.toLocaleString()} round / ${n3.toLocaleString()} 3-ball)`,
+    `Reading historical_matchups_outcomes.csv (DK/FD/BetMGM; markets=${[WANT_ROUND ? "round" : null, WANT_THREE ? "3ball" : null].filter(Boolean).join("+")}) …`,
+  );
+  if (SINCE_ISO) console.log(`  Since filter: close_time >= ${SINCE_ISO}`);
+  const { rows: matchupRows, nRound, nThree } = await readMatchupRows();
+  console.log(
+    `  ${matchupRows.length.toLocaleString()} graded rows to price (${nRound.toLocaleString()} round available / ${nThree.toLocaleString()} 3-ball available)`,
   );
 
   const replaceEvents = new Set(matchupRows.map((r) => String(r.event_name || "").trim()).filter(Boolean));
