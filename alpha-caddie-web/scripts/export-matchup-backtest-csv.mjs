@@ -56,7 +56,7 @@ const WANT_ROUND = MARKET_FILTER.has("round") || MARKET_FILTER.has("round_matchu
 const WANT_THREE = MARKET_FILTER.has("3ball") || MARKET_FILTER.has("3balls") || MARKET_FILTER.has("3-balls") || MARKET_FILTER.has("three");
 
 
-const DETAIL_HEADER = [
+const DETAIL_HEADER_COLS = [
   "exported_at",
   "event_name",
   "year",
@@ -64,6 +64,7 @@ const DETAIL_HEADER = [
   "book",
   "bet_type",
   "market",
+  "close_time",
   "dg_id",
   "player_name",
   "opponent_dg_id",
@@ -87,7 +88,8 @@ const DETAIL_HEADER = [
   "p3_result",
   "pick_side_at_10",
   "book_odds_source",
-].join(",");
+];
+const DETAIL_HEADER = DETAIL_HEADER_COLS.join(",");
 
 function num(v, fb = NaN) {
   const n = Number(v);
@@ -378,22 +380,21 @@ function buildSummary(samples, exportedAt) {
   return header + rows.join("\n") + (rows.length ? "\n" : "");
 }
 
+function rowToDetailLine(rowObj) {
+  return DETAIL_HEADER_COLS.map((k) => csvCell(rowObj[k] ?? "")).join(",");
+}
+
 function loadExistingDetailForMerge(replaceEvents) {
   if (!SINCE_ISO || !existsSync(DETAIL_OUT)) return { lines: [], samples: [] };
   const text = readFileSync(DETAIL_OUT, "utf8").trim();
   const lines = text.split(/\r?\n/).filter(Boolean);
   if (lines.length < 2) return { lines: [], samples: [] };
   const header = parseCsvLine(lines[0]);
-  if (header.join(",") !== DETAIL_HEADER) {
-    console.log(
-      "[matchup-backtest] Existing detail CSV has a different schema — skipping merge (full rewrite for since-window rows).",
-    );
-    return { lines: [], samples: [] };
-  }
   /** @type {string[]} */
   const kept = [];
   /** @type {object[]} */
   const samples = [];
+  let remapped = 0;
   for (let i = 1; i < lines.length; i++) {
     const cols = parseCsvLine(lines[i]);
     const row = {};
@@ -402,8 +403,18 @@ function loadExistingDetailForMerge(replaceEvents) {
     if (!isAllowedMatchupTrackerBook(row.book)) continue;
     const market = String(row.market || "").trim();
     if (market !== ROUND_MATCHUP_MARKET && market !== THREE_BALL_MARKET) continue;
-    kept.push(lines[i]);
-    samples.push(sampleFromDetailFields(row));
+    // Remap by column name so adding close_time (etc.) does not drop prior history.
+    const normalized = {};
+    for (const k of DETAIL_HEADER_COLS) normalized[k] = row[k] ?? "";
+    if (!normalized.close_time) remapped += 1;
+    kept.push(rowToDetailLine(normalized));
+    samples.push(sampleFromDetailFields(normalized));
+  }
+  if (header.join(",") !== DETAIL_HEADER && kept.length) {
+    console.log(
+      `[matchup-backtest] Remapped ${kept.length.toLocaleString()} prior detail row(s) to current schema` +
+        (remapped ? ` (${remapped.toLocaleString()} missing close_time)` : ""),
+    );
   }
   return { lines: kept, samples };
 }
@@ -591,6 +602,8 @@ async function main() {
     const o1 = outcomeToResult(num(row.p1_outcome, NaN));
     const o2 = outcomeToResult(num(row.p2_outcome, NaN));
 
+    const closeTime = String(row.close_time || row.open_time || "").trim();
+
     samples.push({
       event_name: event,
       market,
@@ -608,40 +621,39 @@ async function main() {
     });
 
     detailLines.push(
-      [
-        exportedAt,
-        event,
+      rowToDetailLine({
+        exported_at: exportedAt,
+        event_name: event,
         year,
         round,
         book,
-        row.bet_type,
+        bet_type: row.bet_type,
         market,
-        id1,
-        row.p1_player_name,
-        id2,
-        row.p2_player_name,
-        opp2Id,
-        opp2Name,
-        fmtNum(mu1, 3),
-        fmtNum(mu2, 3),
-        fmtNum(mu3, 3),
-        fmtNum(mu1 - mu2, 3),
-        fmtNum(wp1 * 100, 2),
-        fmtNum(implied1, 2),
-        fmtNum(d1, 4),
-        fmtNum(d2, 4),
-        market === THREE_BALL_MARKET ? fmtNum(d3, 4) : "",
-        fmtNum(edge1, 2),
-        fmtNum(edge2, 2),
-        market === THREE_BALL_MARKET ? fmtNum(edge3, 2) : "",
-        o1,
-        o2,
-        o3,
-        pick10?.side || "",
-        "historical_matchups_dk_fd_mgm_close",
-      ]
-        .map(csvCell)
-        .join(","),
+        close_time: closeTime,
+        dg_id: id1,
+        player_name: row.p1_player_name,
+        opponent_dg_id: id2,
+        opponent_name: row.p2_player_name,
+        opponent2_dg_id: opp2Id,
+        opponent2_name: opp2Name,
+        model_mu_sg: fmtNum(mu1, 3),
+        opp_mu_sg: fmtNum(mu2, 3),
+        opp2_mu_sg: fmtNum(mu3, 3),
+        sg_gap: fmtNum(mu1 - mu2, 3),
+        model_win_pct: fmtNum(wp1 * 100, 2),
+        close_implied_pct: fmtNum(implied1, 2),
+        p1_close_dec: fmtNum(d1, 4),
+        p2_close_dec: fmtNum(d2, 4),
+        p3_close_dec: market === THREE_BALL_MARKET ? fmtNum(d3, 4) : "",
+        edge_p1_pct: fmtNum(edge1, 2),
+        edge_p2_pct: fmtNum(edge2, 2),
+        edge_p3_pct: market === THREE_BALL_MARKET ? fmtNum(edge3, 2) : "",
+        p1_result: o1,
+        p2_result: o2,
+        p3_result: o3,
+        pick_side_at_10: pick10?.side || "",
+        book_odds_source: "historical_matchups_dk_fd_mgm_close",
+      }),
     );
   }
   process.stdout.write("\n");

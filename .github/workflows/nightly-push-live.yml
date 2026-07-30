@@ -1,5 +1,7 @@
 # Nightly live-week publish (same as `npm run push:live`).
 # Runs in GitHub Actions so it still runs when your PC is off.
+# Refreshes both trackers (O/U projection-tracker + matchup-tracker) and pushes;
+# "Projection Tracker Pages" then rebuilds GitHub Pages from the new CSVs.
 #
 # Schedule: 01:00 UTC = 9:00 PM Eastern Daylight Time (EDT).
 #   During EST (winter) that is 8:00 PM Eastern — adjust cron if you need exact 9pm year-round.
@@ -57,7 +59,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: npm run push:live
+      - name: npm run push:live (includes both trackers)
         working-directory: alpha-caddie-web
         env:
           GOLF_MODEL_DIR: ${{ github.workspace }}
@@ -70,4 +72,8 @@ jobs:
           FD_HEADLESS: "1"
           CZR_HEADLESS: "1"
           GOLF_SKIP_PROPS_CSV: "1"
+          # Always refresh both trackers (O/U + matchups/3-balls).
+          GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL: "0"
+          GOLF_REQUIRE_TRACKER_REFRESH: "1"
+          GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS: "0"
         run: npm run push:live

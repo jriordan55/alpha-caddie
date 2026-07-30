@@ -46,7 +46,9 @@ on:
     # Catch DK [skip ci] pushes and other data-only updates
     - cron: "20 */2 * * *"
   workflow_run:
-    workflows: ["DraftKings round projections"]
+    workflows:
+      - "DraftKings round projections"
+      - "Nightly push:live"
     types: [completed]
 
 permissions:

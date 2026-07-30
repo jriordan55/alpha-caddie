@@ -26,9 +26,10 @@
  *   GOLF_REQUIRE_DK_OU=1 (default on refresh:live) — abort if DK scrape returns 0 fresh props
  *   GOLF_LIVE_WEEK_SOFT=1 (push:live) — soft DK require, skip odds ROI backtest,
  *     soft validate / optional late steps (never abort mid-tournament).
- *     Round-projection tracker vs-actual still rebuilds prior-event backtest by default
- *     (GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=1) so tracker OOS matches the latest model.
- *   GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=0 — keep cached prior vs-actual rows (faster lean publish)
+ *     O/U tracker: current-week only by default (set GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=1 for full prior).
+ *     Matchup tracker: incremental from last recorded date in matchup_backtest_detail.csv.
+ *   GOLF_MATCHUP_BACKTEST_SINCE=YYYY-MM-DD — override matchup incremental watermark
+ *   GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=0 — keep cached prior vs-actual rows (default on push:live soft)
  *   GOLF_SKIP_PP_OU=1 — skip PrizePicks round props in fetch:book-odds
  *   GOLF_SKIP_SL_OU=1 — skip Sleeper round props in fetch:book-odds
  *   GOLF_SKIP_UD_OU=1 — skip Underdog round props in fetch:book-odds
@@ -50,6 +51,7 @@ import {
   liveProjectionPipelineEnv,
   requireDkOuEnv,
 } from "./projection-pipeline-env.mjs";
+import { resolveMatchupIncrementalSinceIso } from "./matchup-tracker-incremental.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -184,22 +186,26 @@ const skipPgatour = envTruthy("GOLF_REFRESH_LIVE_SKIP_PGATOUR", false);
 const skipFinishTool = envTruthy("GOLF_REFRESH_LIVE_SKIP_FINISH_TOOL", true);
 /** Mid-tournament soft: skip heavy odds ROI walk-forward (OOM / exit -1 on Windows). */
 const skipBacktestRoi = envTruthy("GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI", liveWeekSoft);
-/** Rebuild prior-event walkforward rows for projection-tracker on every projection publish. */
-const rebuildPriorVsActual = envTruthy("GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS", true);
-/** Incremental matchup/3-ball backtest window on live publish (full rebuild via matchup-tracker:refresh). */
-const matchupSinceIso = (() => {
-  const raw = String(process.env.GOLF_MATCHUP_BACKTEST_SINCE || "").trim();
-  if (raw) return raw;
-  const d = new Date();
-  d.setUTCDate(d.getUTCDate() - 120);
-  return d.toISOString().slice(0, 10);
-})();
+/**
+ * Lean push:live keeps prior O/U backtest cached and only refreshes the current week
+ * (full prior rebuild: GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=1 or matchup-tracker:refresh).
+ */
+const rebuildPriorVsActual = liveWeekSoft
+  ? envTruthy("GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS", false)
+  : envTruthy("GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS", true);
+/** Matchup tracker: only refresh from last recorded close/export date (+2d overlap). */
+const matchupInc = resolveMatchupIncrementalSinceIso({ overlapDays: 2, fallbackDays: 14 });
+const matchupSinceIso = matchupInc.sinceIso;
 const failOnParMismatch = liveWeekSoft
   ? envTruthy("GOLF_FAIL_ON_PAR_MISMATCH", false)
   : envTruthy("GOLF_FAIL_ON_PAR_MISMATCH", true);
 const softOpt = liveWeekSoft ? { optional: true } : {};
 /** Soft mid-tournament: heavy steps warn-and-continue. Hard fail only on lean non-soft runs. */
 const heavyOpt = liveWeekSoft ? { optional: true } : {};
+/** Nightly CI: force O/U + matchup tracker CSVs to refresh (do not soft-skip). */
+const requireTrackers = envTruthy("GOLF_REQUIRE_TRACKER_REFRESH", false);
+const trackerOpt = requireTrackers ? {} : heavyOpt;
+const trackerOddsOpt = requireTrackers ? softOpt : softOpt;
 const liveFastEnv = {
   ...liveProjectionPipelineEnv(),
   GOLF_SKIP_OUTRIGHT_BAKE_ON_FETCH_DG: "1",
@@ -222,8 +228,15 @@ if (liveWeekSoft) {
   console.log(
     "[refresh:live] GOLF_LIVE_WEEK_SOFT=1 — soft DK require, skip odds ROI backtest, optional late steps." +
       (rebuildPriorVsActual
-        ? " Prior vs-actual backtest rebuild ON (tracker matches latest model).\n"
-        : " Prior vs-actual rebuild OFF (cached prior rows).\n"),
+        ? " Prior O/U vs-actual rebuild ON.\n"
+        : " Prior O/U vs-actual cached (current week only).\n"),
+  );
+  console.log(
+    `[refresh:live] Matchup tracker incremental since ${matchupSinceIso}` +
+      (matchupInc.lastRecordedIso
+        ? ` (last recorded ${matchupInc.lastRecordedIso} via ${matchupInc.source})`
+        : ` (${matchupInc.source})`) +
+      ".\n",
   );
 }
 
@@ -416,45 +429,45 @@ run(
 );
 
 // Tracker backtest AFTER final weather/unified so current-week model lines match published
-// projections, and prior-event walkforward rebuilds whenever the projection model changes.
+// projections. Both trackers (O/U projection-tracker + matchup-tracker) refresh here.
 if (!envTruthy("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL", false)) {
   run(
     "export-round-projection-vs-actual-csv.mjs",
     rebuildPriorVsActual
-      ? "Round projection vs actual CSV (walkforward backtest rebuild + current week)"
-      : "Round projection vs actual CSV (current week / incremental; no full prior rebuild)",
+      ? "Projection tracker O/U CSV (walkforward backtest rebuild + current week)"
+      : "Projection tracker O/U CSV (current week / incremental; no full prior rebuild)",
     {
       ...liveFastEnv,
       GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS: rebuildPriorVsActual ? "1" : "0",
     },
-    // Soft mode: heavy hist CSV can OOM — warn-and-continue so mid-tournament publish still ships.
-    heavyOpt,
+    trackerOpt,
   );
   run(
     "promote-round-projection-vs-actual-csv.mjs",
     "Publish round_projection_vs_actual.csv (promote .new if Excel had file open)",
     {},
-    heavyOpt,
+    trackerOpt,
   );
-  // Keep matchup tracker current: pull DG historical matchups (DK/FD/MGM) then rebuild backtest.
+  // Keep matchup tracker current from last recorded date (all tabs: Overview/EV/Bet log + live Best bets).
   if (!envTruthy("GOLF_SKIP_MATCHUP_ODDS_UPDATE", false)) {
     run(
       "update-historical-odds-node.mjs",
-      "DataGolf historical matchups refresh (DK/FD/BetMGM → historical_matchups_outcomes.csv)",
+      `DataGolf historical matchups since ${matchupSinceIso} (DK/FD/BetMGM)`,
       {
         GOLF_MATCHUPS_BOOKS: "draftkings,fanduel,betmgm",
         GOLF_ODDS_SKIP_OUTRIGHTS: "1",
+        GOLF_ODDS_SINCE: matchupSinceIso,
       },
-      softOpt,
+      trackerOddsOpt,
     );
   }
   run(
     "export-matchup-backtest-csv.mjs",
-    "Matchup + 3-ball backtest CSV (DK/FD/BetMGM) for matchup-tracker",
+    `Matchup tracker CSV (round matchups + 3-balls) incremental since ${matchupSinceIso}`,
     {
       GOLF_MATCHUP_BACKTEST_SINCE: matchupSinceIso,
     },
-    softOpt,
+    trackerOpt,
   );
   run(
     "build-parlay-correlations.mjs",
@@ -464,9 +477,9 @@ if (!envTruthy("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL", false)) {
   );
   run(
     "report-walkforward-oos-roi.mjs",
-    "Walk-forward OOS ROI report → walkforward_oos_roi.json (after vs-actual rebuild)",
+    "Walk-forward OOS ROI report → walkforward_oos_roi.json (projection-tracker Overview)",
     {},
-    heavyOpt,
+    trackerOpt,
   );
 }
 
