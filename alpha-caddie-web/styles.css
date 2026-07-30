@@ -2167,17 +2167,33 @@ body {
   font-weight: 800;
 }
 #table-ou.table-ou-projections .ou-proj-th-kelly,
-#table-ou.table-ou-projections .ou-proj-td-kelly {
-  min-width: 4.25rem;
+#table-ou.table-ou-projections .ou-proj-td-kelly,
+#table-ou.table-ou-projections .ou-proj-th-best,
+#table-ou.table-ou-projections .ou-proj-td-best {
+  min-width: 5.5rem;
   font-weight: 800;
   text-align: center;
   vertical-align: middle;
 }
+#table-ou.table-ou-projections .ou-proj-th-fair,
+#table-ou.table-ou-projections .ou-proj-td-fair,
+#table-ou.table-ou-projections .ou-proj-th-avg-fair,
+#table-ou.table-ou-projections .ou-proj-td-avg-fair,
+#table-ou.table-ou-projections .ou-proj-th-delta-avg,
+#table-ou.table-ou-projections .ou-proj-td-delta-avg,
+#table-ou.table-ou-projections .ou-proj-th-delta-best,
+#table-ou.table-ou-projections .ou-proj-td-delta-best {
+  min-width: 4.25rem;
+  font-weight: 800;
+}
 #table-ou.table-ou-projections .ou-proj-td-kelly.has-kelly,
-#table-ou.table-ou-projections .ou-proj-kelly-line {
+#table-ou.table-ou-projections .ou-proj-td-best.has-kelly,
+#table-ou.table-ou-projections .ou-proj-kelly-line,
+#table-ou.table-ou-projections .ou-proj-best-kelly {
   color: #1ecf77;
 }
-#table-ou.table-ou-projections .ou-proj-kelly-stack {
+#table-ou.table-ou-projections .ou-proj-kelly-stack,
+#table-ou.table-ou-projections .ou-proj-best-stack {
   display: flex;
   flex-direction: column;
   gap: 3px;
@@ -2185,20 +2201,59 @@ body {
   justify-content: center;
   width: 100%;
 }
-#table-ou.table-ou-projections .ou-proj-kelly-line {
+#table-ou.table-ou-projections .ou-proj-best-top {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+#table-ou.table-ou-projections .ou-proj-best-odds {
+  font-variant-numeric: tabular-nums;
+}
+#table-ou.table-ou-projections .ou-proj-kelly-line,
+#table-ou.table-ou-projections .ou-proj-best-kelly {
   font-size: inherit;
   line-height: 1.25;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
 }
+#table-ou.table-ou-projections .ou-proj-odds-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  line-height: 1.2;
+}
+#table-ou.table-ou-projections .ou-proj-odds-posted {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+#table-ou.table-ou-projections .ou-proj-odds-fair {
+  font-size: 0.72em;
+  font-weight: 600;
+  color: #8b93a5;
+  font-variant-numeric: tabular-nums;
+}
 #table-ou.table-ou-projections td.ou-proj-td-dk-edge.pos,
 #table-ou.table-ou-projections td.ou-proj-td-pp-edge.pos,
 #table-ou.table-ou-projections td.ou-proj-td-sl-edge.pos,
-#table-ou.table-ou-projections td.ou-proj-td-ud-edge.pos { color: #1ecf77; }
+#table-ou.table-ou-projections td.ou-proj-td-ud-edge.pos,
+#table-ou.table-ou-projections td.ou-proj-td-fd-edge.pos,
+#table-ou.table-ou-projections td.ou-proj-td-kl-edge.pos,
+#table-ou.table-ou-projections td.ou-proj-td-czr-edge.pos,
+#table-ou.table-ou-projections td.ou-proj-td-delta-avg.pos,
+#table-ou.table-ou-projections td.ou-proj-td-delta-best.pos { color: #1ecf77; }
 #table-ou.table-ou-projections td.ou-proj-td-dk-edge.neg,
 #table-ou.table-ou-projections td.ou-proj-td-pp-edge.neg,
 #table-ou.table-ou-projections td.ou-proj-td-sl-edge.neg,
-#table-ou.table-ou-projections td.ou-proj-td-ud-edge.neg { color: #ff646f; }
+#table-ou.table-ou-projections td.ou-proj-td-ud-edge.neg,
+#table-ou.table-ou-projections td.ou-proj-td-fd-edge.neg,
+#table-ou.table-ou-projections td.ou-proj-td-kl-edge.neg,
+#table-ou.table-ou-projections td.ou-proj-td-czr-edge.neg,
+#table-ou.table-ou-projections td.ou-proj-td-delta-avg.neg,
+#table-ou.table-ou-projections td.ou-proj-td-delta-best.neg { color: #ff646f; }
 #table-ou.table-ou-projections td.ou-proj-empty-td {
   padding: 20px 18px;
   font-size: 0.88rem;

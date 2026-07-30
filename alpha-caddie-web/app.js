@@ -6451,7 +6451,7 @@ let ouGolferSuggestLabelsSig = "";
 /** @type {string[]} */
 let ouGolferSuggestLabels = [];
 let ouProjTableChromeReady = false;
-const OU_PROJ_TABLE_CHROME_VER = 7;
+const OU_PROJ_TABLE_CHROME_VER = 8;
 let ouProjTableChromeBuiltVer = 0;
 let ouTableBuildRaf = 0;
 
@@ -7240,6 +7240,41 @@ function formatEdgePct(edge) {
   return `${p >= 0 ? "+" : ""}${p.toFixed(1)}%`;
 }
 
+/** Posted American odds + no-vig fair American for one book cell. */
+function paintOuProjOddsTd(td, pick, side, fairP) {
+  td.textContent = "";
+  if (!pick) return;
+  const am = ouProjSideAmerican(pick, side);
+  if (!Number.isFinite(am)) {
+    td.textContent = "—";
+    return;
+  }
+  const stack = document.createElement("div");
+  stack.className = "ou-proj-odds-stack";
+  const posted = document.createElement("div");
+  posted.className = "ou-proj-odds-posted";
+  posted.textContent = formatAmerican(am);
+  stack.appendChild(posted);
+  if (Number.isFinite(fairP)) {
+    const fair = document.createElement("div");
+    fair.className = "ou-proj-odds-fair";
+    fair.textContent = modelAmericanFromProb(fairP);
+    fair.title = "No-vig fair value";
+    stack.appendChild(fair);
+  }
+  td.appendChild(stack);
+}
+
+function paintOuProjDeltaTd(td, delta) {
+  if (!Number.isFinite(delta)) {
+    td.textContent = "";
+    return;
+  }
+  td.textContent = formatEdgePct(delta);
+  if (delta > 0) td.classList.add("pos");
+  else if (delta < 0) td.classList.add("neg");
+}
+
 const OU_PROJ_KELLY_PREFS_KEY = "alphaCaddie_ou_proj_kelly_v1";
 
 function loadOuProjKellyPrefs() {
@@ -7406,6 +7441,47 @@ function ouKellyStakeForProjectionSide(market, player, pick, side, bankroll, kel
   const pModel = side === "over" ? pOver : pUnder;
   const am = side === "over" ? pick.over : pick.under;
   return ouKellyStakeDollars(pModel, am, bankroll, kellyFraction);
+}
+
+/** Round-proj books in column order (line / odds / edge / fair). */
+const OU_PROJ_BOOK_SPECS = Object.freeze([
+  { key: "draftkings", pick: "dkPick", edge: "dkEdge", kelly: "dkKelly", fair: "dkFairP", model: "dkModelP" },
+  { key: "prizepicks", pick: "ppPick", edge: "ppEdge", kelly: "ppKelly", fair: "ppFairP", model: "ppModelP" },
+  { key: "sleeper", pick: "slPick", edge: "slEdge", kelly: "slKelly", fair: "slFairP", model: "slModelP" },
+  { key: "underdog", pick: "udPick", edge: "udEdge", kelly: "udKelly", fair: "udFairP", model: "udModelP" },
+  { key: "fanduel", pick: "fdPick", edge: "fdEdge", kelly: "fdKelly", fair: "fdFairP", model: "fdModelP" },
+  { key: "kalshi", pick: "klPick", edge: "klEdge", kelly: "klKelly", fair: "klFairP", model: "klModelP" },
+  { key: "caesars", pick: "czrPick", edge: "czrEdge", kelly: "czrKelly", fair: "czrFairP", model: "czrModelP" },
+]);
+
+function ouProjSideAmerican(pick, side) {
+  if (!pick) return NaN;
+  const am = side === "over" ? pick.over : pick.under;
+  return Number.isFinite(am) ? am : NaN;
+}
+
+function ouProjNoVigSideProb(pick, side) {
+  if (!pick) return NaN;
+  const nv = propsNoVigOverProb(pick.over, pick.under);
+  if (!Number.isFinite(nv)) return NaN;
+  return side === "over" ? nv : clampProb01(1 - nv);
+}
+
+/** Pick best available book for this side: max Kelly $, else longest price. */
+function ouProjPickBestBook(entries) {
+  const priced = (entries || []).filter((e) => e && Number.isFinite(e.dec) && e.dec > 1);
+  if (!priced.length) return null;
+  const withKelly = priced.filter((e) => num(e.kelly, 0) > 0);
+  const pool = withKelly.length ? withKelly : priced;
+  let best = pool[0];
+  for (let i = 1; i < pool.length; i++) {
+    const e = pool[i];
+    const bk = num(best.kelly, 0);
+    const ek = num(e.kelly, 0);
+    if (ek > bk + 1e-9) best = e;
+    else if (Math.abs(ek - bk) <= 1e-9 && e.dec > best.dec) best = e;
+  }
+  return best;
 }
 
 function ouEdgeForCell(market, p, L, pImpOver, pImpUnder, opts = {}) {
@@ -7579,11 +7655,36 @@ function ensureOuProjectionTableChrome() {
   hr.appendChild(ouProjMakeBookColumnTh("pr-fd-edge", "Edge", "ou-proj-th-fd-edge", "fanduel", sortInd));
   hr.appendChild(ouProjMakeBookColumnTh("pr-kl-edge", "Edge", "ou-proj-th-kl-edge", "kalshi", sortInd));
   hr.appendChild(ouProjMakeBookColumnTh("pr-czr-edge", "Edge", "ou-proj-th-czr-edge", "caesars", sortInd));
-  const kellyTh = document.createElement("th");
-  kellyTh.className = "sortable ou-proj-long-th num ou-proj-th-kelly";
-  kellyTh.dataset.sortKey = "pr-kelly";
-  kellyTh.innerHTML = `Kelly${sortInd}`;
-  hr.appendChild(kellyTh);
+  const fairTh = document.createElement("th");
+  fairTh.className = "sortable ou-proj-long-th num ou-proj-th-fair";
+  fairTh.dataset.sortKey = "pr-fair";
+  fairTh.title = "Model fair American odds for this side (no vig)";
+  fairTh.innerHTML = `Fair${sortInd}`;
+  hr.appendChild(fairTh);
+  const avgFairTh = document.createElement("th");
+  avgFairTh.className = "sortable ou-proj-long-th num ou-proj-th-avg-fair";
+  avgFairTh.dataset.sortKey = "pr-avg-fair";
+  avgFairTh.title = "Average no-vig fair odds across books with a posted line";
+  avgFairTh.innerHTML = `Avg FV${sortInd}`;
+  hr.appendChild(avgFairTh);
+  const bestTh = document.createElement("th");
+  bestTh.className = "sortable ou-proj-long-th num ou-proj-th-best";
+  bestTh.dataset.sortKey = "pr-best";
+  bestTh.title = "Best available book for this side · Kelly $ only for that book";
+  bestTh.innerHTML = `Best${sortInd}`;
+  hr.appendChild(bestTh);
+  const dAvgTh = document.createElement("th");
+  dAvgTh.className = "sortable ou-proj-long-th num ou-proj-th-delta-avg";
+  dAvgTh.dataset.sortKey = "pr-delta-avg";
+  dAvgTh.title = "Model price − average book fair value (probability pts)";
+  dAvgTh.innerHTML = `Δ Avg${sortInd}`;
+  hr.appendChild(dAvgTh);
+  const dBestTh = document.createElement("th");
+  dBestTh.className = "sortable ou-proj-long-th num ou-proj-th-delta-best";
+  dBestTh.dataset.sortKey = "pr-delta-best";
+  dBestTh.title = "Model price − best book implied (probability pts)";
+  dBestTh.innerHTML = `Δ Best${sortInd}`;
+  hr.appendChild(dBestTh);
   thead.innerHTML = "";
   thead.appendChild(hr);
   ouProjTableChromeBuiltVer = OU_PROJ_TABLE_CHROME_VER;
@@ -7626,6 +7727,11 @@ function initOuTableSortOnce() {
         key === "pr-kl-edge" ||
         key === "pr-czr-edge" ||
         key === "pr-kelly" ||
+        key === "pr-best" ||
+        key === "pr-fair" ||
+        key === "pr-avg-fair" ||
+        key === "pr-delta-avg" ||
+        key === "pr-delta-best" ||
         key === "pr-edge"
       )
         ouTableSort.dir = -1;
@@ -7755,10 +7861,10 @@ function ouAttachProjectionRowMetrics(row) {
   const kellyFraction = ouProjKellyFractionFromUi();
 
   const edgeForPick = (pick) => {
-    if (!pick) return { edge: NaN, sortOdds: NaN };
+    if (!pick) return { edge: NaN, sortOdds: NaN, modelP: NaN, fairP: NaN };
     const pImpOver = impliedProbFromAmerican(pick.over);
     const pImpUnder = impliedProbFromAmerican(pick.under);
-    const { edgeO, edgeU } = ouEdgeForCell(
+    const { pOver, pUnder, edgeO, edgeU } = ouEdgeForCell(
       col.market,
       player,
       pick.line,
@@ -7769,6 +7875,8 @@ function ouAttachProjectionRowMetrics(row) {
     return {
       edge: side === "over" ? edgeO : edgeU,
       sortOdds: side === "over" ? pick.over : pick.under,
+      modelP: side === "over" ? pOver : pUnder,
+      fairP: ouProjNoVigSideProb(pick, side),
     };
   };
 
@@ -7793,6 +7901,20 @@ function ouAttachProjectionRowMetrics(row) {
   row.fdSortOdds = fdHit.sortOdds;
   row.klSortOdds = klHit.sortOdds;
   row.czrSortOdds = czrHit.sortOdds;
+  row.dkFairP = dkHit.fairP;
+  row.ppFairP = ppHit.fairP;
+  row.slFairP = slHit.fairP;
+  row.udFairP = udHit.fairP;
+  row.fdFairP = fdHit.fairP;
+  row.klFairP = klHit.fairP;
+  row.czrFairP = czrHit.fairP;
+  row.dkModelP = dkHit.modelP;
+  row.ppModelP = ppHit.modelP;
+  row.slModelP = slHit.modelP;
+  row.udModelP = udHit.modelP;
+  row.fdModelP = fdHit.modelP;
+  row.klModelP = klHit.modelP;
+  row.czrModelP = czrHit.modelP;
   row.dkKelly = ouKellyStakeForProjectionSide(col.market, player, dkPick, side, bankroll, kellyFraction);
   row.ppKelly = ouKellyStakeForProjectionSide(col.market, player, ppPick, side, bankroll, kellyFraction);
   row.slKelly = ouKellyStakeForProjectionSide(col.market, player, slPick, side, bankroll, kellyFraction);
@@ -7800,15 +7922,47 @@ function ouAttachProjectionRowMetrics(row) {
   row.fdKelly = ouKellyStakeForProjectionSide(col.market, player, fdPick, side, bankroll, kellyFraction);
   row.klKelly = ouKellyStakeForProjectionSide(col.market, player, klPick, side, bankroll, kellyFraction);
   row.czrKelly = ouKellyStakeForProjectionSide(col.market, player, czrPick, side, bankroll, kellyFraction);
-  row.kellySort = Math.max(
-    num(row.dkKelly, 0),
-    num(row.ppKelly, 0),
-    num(row.slKelly, 0),
-    num(row.udKelly, 0),
-    num(row.fdKelly, 0),
-    num(row.klKelly, 0),
-    num(row.czrKelly, 0),
-  );
+
+  const entries = [];
+  for (const spec of OU_PROJ_BOOK_SPECS) {
+    const pick = row[spec.pick];
+    if (!pick) continue;
+    const am = ouProjSideAmerican(pick, side);
+    const dec = decimalFromAmerican(am);
+    if (!Number.isFinite(dec) || dec <= 1) continue;
+    entries.push({
+      key: spec.key,
+      pick,
+      am,
+      dec,
+      fairP: num(row[spec.fair], NaN),
+      modelP: num(row[spec.model], NaN),
+      edge: num(row[spec.edge], NaN),
+      kelly: num(row[spec.kelly], NaN),
+    });
+  }
+
+  const fairPs = entries.map((e) => e.fairP).filter((p) => Number.isFinite(p));
+  const modelPs = entries.map((e) => e.modelP).filter((p) => Number.isFinite(p));
+  row.avgFairP = fairPs.length ? fairPs.reduce((a, b) => a + b, 0) / fairPs.length : NaN;
+  row.avgModelP = modelPs.length ? modelPs.reduce((a, b) => a + b, 0) / modelPs.length : NaN;
+  row.deltaAvg =
+    Number.isFinite(row.avgModelP) && Number.isFinite(row.avgFairP) ? row.avgModelP - row.avgFairP : NaN;
+
+  const best = ouProjPickBestBook(entries);
+  row.bestBookKey = best?.key || "";
+  row.bestBookAm = best ? best.am : NaN;
+  row.bestKelly = best && Number.isFinite(best.kelly) && best.kelly > 0 ? best.kelly : best ? 0 : NaN;
+  row.modelFairP = Number.isFinite(best?.modelP)
+    ? best.modelP
+    : Number.isFinite(row.avgModelP)
+      ? row.avgModelP
+      : NaN;
+  row.deltaBest =
+    best && Number.isFinite(best.modelP) && Number.isFinite(best.am)
+      ? best.modelP - impliedProbFromAmerican(best.am)
+      : NaN;
+  row.kellySort = Number.isFinite(row.bestKelly) ? row.bestKelly : 0;
   row.edge = [dkHit.edge, ppHit.edge, slHit.edge, udHit.edge, fdHit.edge, klHit.edge, czrHit.edge].find((e) =>
     Number.isFinite(e),
   );
@@ -8021,8 +8175,24 @@ function ouTableSortValueProjRow(row, sortKey) {
     if (Number.isFinite(row.czrEdge)) return row.czrEdge;
     return NaN;
   }
-  if (sortKey === "pr-kelly") {
+  if (sortKey === "pr-fair") {
+    if (Number.isFinite(row.modelFairP)) return row.modelFairP;
+    return NaN;
+  }
+  if (sortKey === "pr-avg-fair") {
+    if (Number.isFinite(row.avgFairP)) return row.avgFairP;
+    return NaN;
+  }
+  if (sortKey === "pr-best" || sortKey === "pr-kelly") {
     if (Number.isFinite(row.kellySort)) return row.kellySort;
+    return NaN;
+  }
+  if (sortKey === "pr-delta-avg") {
+    if (Number.isFinite(row.deltaAvg)) return row.deltaAvg;
+    return NaN;
+  }
+  if (sortKey === "pr-delta-best") {
+    if (Number.isFinite(row.deltaBest)) return row.deltaBest;
     return NaN;
   }
   if (sortKey === "pr-edge") {
@@ -8283,6 +8453,7 @@ function buildOuTable() {
   if (ouTableSort.key === "golfer") ouTableSort.key = "pr-golfer";
   if (ouTableSort.key === "pr-line") ouTableSort.key = "pr-dk-line";
   if (ouTableSort.key === "pr-odds") ouTableSort.key = "pr-dk-odds";
+  if (ouTableSort.key === "pr-kelly") ouTableSort.key = "pr-best";
 
   const allRows = ouSortedPlayerRowsProjection(round);
   const pf = document.getElementById("ou-player-filter");
@@ -8325,7 +8496,7 @@ function buildOuTable() {
     flatRows.sort(ouProjectionRowStatOrder);
   }
 
-  const projColCount = 28;
+  const projColCount = 32;
   const flatRowKeys = new Set(
     flatRows.map((rr) => ouProjMakeExpandKey(String(rr.player.player_name || ""), rr.col.label, rr.side)),
   );
@@ -8380,13 +8551,20 @@ function buildOuTable() {
       fdEdge,
       klEdge,
       czrEdge,
-      dkKelly,
-      ppKelly,
-      slKelly,
-      udKelly,
-      fdKelly,
-      klKelly,
-      czrKelly,
+      dkFairP,
+      ppFairP,
+      slFairP,
+      udFairP,
+      fdFairP,
+      klFairP,
+      czrFairP,
+      modelFairP,
+      avgFairP,
+      bestBookKey,
+      bestBookAm,
+      bestKelly,
+      deltaAvg,
+      deltaBest,
     } = r;
     const rawName = String(player.player_name || "");
     const expandKey = ouProjMakeExpandKey(rawName, col.label, side);
@@ -8459,10 +8637,7 @@ function buildOuTable() {
 
     const dkOddsTd = document.createElement("td");
     dkOddsTd.className = "ou-cell ou-proj-long-td num ou-proj-td-dk-odds";
-    if (dkPick) {
-      const am = side === "over" ? dkPick.over : dkPick.under;
-      dkOddsTd.textContent = Number.isFinite(am) ? formatAmerican(am) : "—";
-    } else dkOddsTd.textContent = "";
+    paintOuProjOddsTd(dkOddsTd, dkPick, side, dkFairP);
     tr.appendChild(dkOddsTd);
 
     const ppLineTd = document.createElement("td");
@@ -8472,10 +8647,7 @@ function buildOuTable() {
 
     const ppOddsTd = document.createElement("td");
     ppOddsTd.className = "ou-cell ou-proj-long-td num ou-proj-td-pp-odds";
-    if (ppPick) {
-      const am = side === "over" ? ppPick.over : ppPick.under;
-      ppOddsTd.textContent = Number.isFinite(am) ? formatAmerican(am) : "—";
-    } else ppOddsTd.textContent = "";
+    paintOuProjOddsTd(ppOddsTd, ppPick, side, ppFairP);
     tr.appendChild(ppOddsTd);
 
     const slLineTd = document.createElement("td");
@@ -8485,10 +8657,7 @@ function buildOuTable() {
 
     const slOddsTd = document.createElement("td");
     slOddsTd.className = "ou-cell ou-proj-long-td num ou-proj-td-sl-odds";
-    if (slPick) {
-      const am = side === "over" ? slPick.over : slPick.under;
-      slOddsTd.textContent = Number.isFinite(am) ? formatAmerican(am) : "—";
-    } else slOddsTd.textContent = "";
+    paintOuProjOddsTd(slOddsTd, slPick, side, slFairP);
     tr.appendChild(slOddsTd);
 
     const udLineTd = document.createElement("td");
@@ -8498,10 +8667,7 @@ function buildOuTable() {
 
     const udOddsTd = document.createElement("td");
     udOddsTd.className = "ou-cell ou-proj-long-td num ou-proj-td-ud-odds";
-    if (udPick) {
-      const am = side === "over" ? udPick.over : udPick.under;
-      udOddsTd.textContent = Number.isFinite(am) ? formatAmerican(am) : "—";
-    } else udOddsTd.textContent = "";
+    paintOuProjOddsTd(udOddsTd, udPick, side, udFairP);
     tr.appendChild(udOddsTd);
 
     const fdLineTd = document.createElement("td");
@@ -8511,10 +8677,7 @@ function buildOuTable() {
 
     const fdOddsTd = document.createElement("td");
     fdOddsTd.className = "ou-cell ou-proj-long-td num ou-proj-td-fd-odds";
-    if (fdPick) {
-      const am = side === "over" ? fdPick.over : fdPick.under;
-      fdOddsTd.textContent = Number.isFinite(am) ? formatAmerican(am) : "—";
-    } else fdOddsTd.textContent = "";
+    paintOuProjOddsTd(fdOddsTd, fdPick, side, fdFairP);
     tr.appendChild(fdOddsTd);
 
     const klLineTd = document.createElement("td");
@@ -8524,10 +8687,7 @@ function buildOuTable() {
 
     const klOddsTd = document.createElement("td");
     klOddsTd.className = "ou-cell ou-proj-long-td num ou-proj-td-kl-odds";
-    if (klPick) {
-      const am = side === "over" ? klPick.over : klPick.under;
-      klOddsTd.textContent = Number.isFinite(am) ? formatAmerican(am) : "—";
-    } else klOddsTd.textContent = "";
+    paintOuProjOddsTd(klOddsTd, klPick, side, klFairP);
     tr.appendChild(klOddsTd);
 
     const czrLineTd = document.createElement("td");
@@ -8537,10 +8697,7 @@ function buildOuTable() {
 
     const czrOddsTd = document.createElement("td");
     czrOddsTd.className = "ou-cell ou-proj-long-td num ou-proj-td-czr-odds";
-    if (czrPick) {
-      const am = side === "over" ? czrPick.over : czrPick.under;
-      czrOddsTd.textContent = Number.isFinite(am) ? formatAmerican(am) : "—";
-    } else czrOddsTd.textContent = "";
+    paintOuProjOddsTd(czrOddsTd, czrPick, side, czrFairP);
     tr.appendChild(czrOddsTd);
 
     const dkEdgeTd = document.createElement("td");
@@ -8557,8 +8714,8 @@ function buildOuTable() {
     klEdgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-kl-edge";
     const czrEdgeTd = document.createElement("td");
     czrEdgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-czr-edge";
-    const paintEdge = (td, pick, edge) => {
-      if (pick && Number.isFinite(edge)) {
+    const paintEdge = (td, bookPick, edge) => {
+      if (bookPick && Number.isFinite(edge)) {
         td.textContent = formatEdgePct(edge);
         if (edge > 0) td.classList.add("pos");
         else if (edge < 0) td.classList.add("neg");
@@ -8579,53 +8736,58 @@ function buildOuTable() {
     tr.appendChild(klEdgeTd);
     tr.appendChild(czrEdgeTd);
 
-    const kellyTd = document.createElement("td");
-    kellyTd.className = "ou-cell ou-proj-long-td num ou-proj-td-kelly";
-    const bankroll = ouProjBankrollFromUi();
-    const kellyLabel = ouProjKellyFractionLabel(ouProjKellyFractionFromUi());
-    const kellyBits = [];
-    if (dkPick && Number.isFinite(dkKelly) && dkKelly > 0) {
-      kellyBits.push({ book: "DK", amt: dkKelly });
-    }
-    if (ppPick && Number.isFinite(ppKelly) && ppKelly > 0) {
-      kellyBits.push({ book: "PP", amt: ppKelly });
-    }
-    if (slPick && Number.isFinite(slKelly) && slKelly > 0) {
-      kellyBits.push({ book: "SL", amt: slKelly });
-    }
-    if (udPick && Number.isFinite(udKelly) && udKelly > 0) {
-      kellyBits.push({ book: "UD", amt: udKelly });
-    }
-    if (fdPick && Number.isFinite(fdKelly) && fdKelly > 0) {
-      kellyBits.push({ book: "FD", amt: fdKelly });
-    }
-    if (klPick && Number.isFinite(klKelly) && klKelly > 0) {
-      kellyBits.push({ book: "KL", amt: klKelly });
-    }
-    if (czrPick && Number.isFinite(czrKelly) && czrKelly > 0) {
-      kellyBits.push({ book: "CZR", amt: czrKelly });
-    }
-    if (!kellyBits.length) {
-      kellyTd.textContent = "";
-    } else {
-      kellyTd.classList.add("has-kelly");
-      if (kellyBits.length === 1) {
-        kellyTd.textContent = formatOuKellyDollars(kellyBits[0].amt);
-        kellyTd.title = `${kellyBits[0].book} · ${kellyLabel} · $${Math.round(bankroll).toLocaleString()} bankroll`;
-      } else {
-        const stack = document.createElement("div");
-        stack.className = "ou-proj-kelly-stack";
-        for (const bit of kellyBits) {
-          const line = document.createElement("div");
-          line.className = "ou-proj-kelly-line";
-          line.textContent = `${formatOuKellyDollars(bit.amt)} ${bit.book}`;
-          line.title = `${bit.book} · ${kellyLabel} · $${Math.round(bankroll).toLocaleString()} bankroll`;
-          stack.appendChild(line);
-        }
-        kellyTd.appendChild(stack);
+    const fairTd = document.createElement("td");
+    fairTd.className = "ou-cell ou-proj-long-td num ou-proj-td-fair";
+    fairTd.textContent = Number.isFinite(modelFairP) ? modelAmericanFromProb(modelFairP) : "";
+    fairTd.title = Number.isFinite(modelFairP)
+      ? `Model fair · ${(modelFairP * 100).toFixed(1)}%`
+      : "";
+    tr.appendChild(fairTd);
+
+    const avgFairTd = document.createElement("td");
+    avgFairTd.className = "ou-cell ou-proj-long-td num ou-proj-td-avg-fair";
+    avgFairTd.textContent = Number.isFinite(avgFairP) ? modelAmericanFromProb(avgFairP) : "";
+    avgFairTd.title = Number.isFinite(avgFairP)
+      ? `Avg no-vig fair · ${(avgFairP * 100).toFixed(1)}%`
+      : "";
+    tr.appendChild(avgFairTd);
+
+    const bestTd = document.createElement("td");
+    bestTd.className = "ou-cell ou-proj-long-td num ou-proj-td-best";
+    if (bestBookKey && Number.isFinite(bestBookAm)) {
+      const bankroll = ouProjBankrollFromUi();
+      const kellyLabel = ouProjKellyFractionLabel(ouProjKellyFractionFromUi());
+      const wrap = document.createElement("div");
+      wrap.className = "ou-proj-best-stack";
+      const top = document.createElement("div");
+      top.className = "ou-proj-best-top";
+      top.innerHTML = `${bookBadgeHtml(bestBookKey)} <span class="ou-proj-best-odds">${formatAmerican(bestBookAm)}</span>`;
+      wrap.appendChild(top);
+      if (Number.isFinite(bestKelly) && bestKelly > 0) {
+        const kellyLine = document.createElement("div");
+        kellyLine.className = "ou-proj-best-kelly";
+        kellyLine.textContent = formatOuKellyDollars(bestKelly);
+        kellyLine.title = `${bookMeta(bestBookKey).short} · ${kellyLabel} · $${Math.round(bankroll).toLocaleString()} bankroll`;
+        wrap.appendChild(kellyLine);
+        bestTd.classList.add("has-kelly");
       }
+      bestTd.appendChild(wrap);
+    } else {
+      bestTd.textContent = "";
     }
-    tr.appendChild(kellyTd);
+    tr.appendChild(bestTd);
+
+    const dAvgTd = document.createElement("td");
+    dAvgTd.className = "ou-cell ou-proj-long-td num ou-proj-td-delta-avg";
+    paintOuProjDeltaTd(dAvgTd, deltaAvg);
+    dAvgTd.title = "Model − average book fair value";
+    tr.appendChild(dAvgTd);
+
+    const dBestTd = document.createElement("td");
+    dBestTd.className = "ou-cell ou-proj-long-td num ou-proj-td-delta-best";
+    paintOuProjDeltaTd(dBestTd, deltaBest);
+    dBestTd.title = "Model − best book implied price";
+    tr.appendChild(dBestTd);
 
     if (Number.isFinite(mu)) {
       const mKey = ouModelMarketKey(col.market) || "Total score";
