@@ -87,8 +87,9 @@ function Run-Npm([string] $Label, [Parameter(ValueFromRemainingArguments = $true
 #   strokes (blend vs historical CSV); projections keep the full tournament field for Historical Trends. Before update:rounds.
 # Mirrors below copy projections + live + approach_skill *.json into website/public/data/ so both apps ship the same JSON.
 #
-# Round-projections / +EV: refresh:live runs reconcile -> export vs-actual -> fit book-alignment (prior
-# events only) -> walk-forward OOS report -> apply calibration to projections.json -> validate.
+# Round-projections / +EV: refresh:live finishes weather/unified, then rebuilds
+# round_projection_vs_actual (prior walkforward + current week) + matchup backtest +
+# walk-forward OOS report so projection-tracker always matches the published model.
 # Market rating: fetch:dg writes pga_tour_market_benchmarks; refresh:live re-runs refresh:market-benchmarks after the
 # post-live historical CSV merge so 2025-2026 μ/σ stay current in published projections.json.
 
@@ -103,11 +104,11 @@ if (-not (Test-Path (Join-Path $webRoot "package.json"))) {
 Set-Location $webRoot
 
 # OOS winner: day/form + skill-36 (no soft book μ align — that hurt Birdies ROI).
-# Skill-first total score / GIR / FW (course baseline + high μ_SG keep; Detroit club pool in code).
+# Skill-first total score: full μ_SG keep; tiny player-course residual (Detroit club pool was flattening).
 $env:GOLF_FLAT_VENUE_PLAYER_SCORE = "0"
-$env:GOLF_FLAT_VENUE_MAX_PLAYER_SCORE_WEIGHT = "0.16"
-$env:GOLF_SCORE_SKILL_KEEP = "0.98"
-$env:GOLF_SCORE_PLAYER_COURSE_MAX_W = "0.16"
+$env:GOLF_FLAT_VENUE_MAX_PLAYER_SCORE_WEIGHT = "0.06"
+$env:GOLF_SCORE_SKILL_KEEP = "1"
+$env:GOLF_SCORE_PLAYER_COURSE_MAX_W = "0.06"
 $env:GOLF_COURSE_PRIOR_ROUND_DIFFICULTY = "1"
 $env:GOLF_WITHIN_EVENT_FORM_CARRY = "0.1"
 $env:GOLF_WITHIN_EVENT_FORM_CAP = "0.75"
@@ -126,17 +127,21 @@ if ($IsWindows -or ($env:OS -match "Windows") -or $IsMacOS) {
 
 if ($LiveWeekOnly) {
   # Lean mid-tournament publish: projections + book odds + prior-round Trends + tracker.
-  # Not a full CSV/history/weather/ROI rebuild (use push:all for that).
+  # Live Open-Meteo tee-time weather bake always runs (archive backfill is what is skipped).
+  # Not a full CSV/history/ROI rebuild (use push:all for that).
   Remove-Item Env:\GOLF_REFRESH_LIVE_FULL_REBUILD -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_HISTORICAL_ROUNDS_FULL_HISTORY -ErrorAction SilentlyContinue
   $env:GOLF_REFRESH_LIVE_SKIP_CSV_MERGE = "1"
   Remove-Item Env:\GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE -ErrorAction SilentlyContinue
   $env:GOLF_REFRESH_LIVE_SKIP_HISTORY_REBUILD = "1"
   $env:GOLF_SKIP_ROUND_WEATHER_BACKFILL = "1"
+  # Never allow lean mode to skip the live Open-Meteo bake.
+  Remove-Item Env:\GOLF_ALLOW_MISSING_WEATHER_COORDS -ErrorAction SilentlyContinue
   $env:GOLF_REFRESH_LIVE_SKIP_FINISH_TOOL = "1"
   $env:GOLF_SKIP_MARKET_BOOK_CALIBRATION = "1"
   $env:GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI = "1"
-  $env:GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS = "0"
+  # Always rebuild tracker prior-event walkforward when projections change (set 0 to keep cache).
+  $env:GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS = "1"
   $env:GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL = "0"
   $env:GOLF_SKIP_DK_ROUND_AUDIT_CSV = "0"
   $env:GOLF_SKIP_PP_ROUND_AUDIT_CSV = "0"
@@ -172,8 +177,10 @@ if ($LiveWeekOnly) {
   $env:GOLF_FIELD_DAY_COUNTING_LIFT_FRAC = "0"
   $env:GOLF_WITHIN_EVENT_COUNTING_BLEND = "0"
   Write-Host 'LiveWeekOnly (lean): projections + odds (DK/PP/SL/UD/FD/Kalshi/Caesars) + Trends patch + tracker.'
-  Write-Host 'Skill-first score (keep 0.98) + Detroit club hist pool when North/South exact hist is thin.'
-  Write-Host 'Skipped: full CSV merge, weather archive, finish-tool, book-cal fit, odds ROI backtest.'
+  Write-Host 'Live Open-Meteo weather bake always runs on push:live (tee-time forecast into scores).'
+  Write-Host 'Projection-tracker vs-actual backtest rebuilds on every push:live (prior events + current week).'
+  Write-Host 'Skill-first score (keep 1.0) + Detroit club hist pool when North/South exact hist is thin.'
+  Write-Host 'Skipped: full CSV merge, weather archive backfill, finish-tool, book-cal fit, odds ROI backtest.'
   Write-Host 'LiveWeekOnly markets: Birdies = birdies+eagles (or better), Bogeys = bogeys+doubles (or worse), same as DK/PP/SL/UD/FD/CZR.'
 } elseif (-not $NoFullHistory) {
   $env:GOLF_HISTORICAL_ROUNDS_FULL_HISTORY = "1"
@@ -277,7 +284,7 @@ function Invoke-GitPushPublish([string] $Root, [string] $Branch, [switch] $SyncF
 }
 
 if ($LiveWeekOnly) {
-  Run-Npm "Live-week refresh (projections + odds + Trends patch + tracker) ..." run refresh:live
+  Run-Npm "Live-week refresh (projections + odds + weather + Trends patch + tracker) ..." run refresh:live
   Promote-RoundProjectionVsActualCsv $webRoot
 } else {
   Run-Npm "Running fetch:dg ..." run fetch:dg

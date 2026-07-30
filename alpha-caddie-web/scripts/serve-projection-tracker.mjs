@@ -38,8 +38,12 @@ function runRefreshScript(rel, label) {
 }
 
 if (!envTruthy("GOLF_SKIP_TRACKER_REFRESH")) {
-  runRefreshScript("export-round-projection-vs-actual-csv.mjs", "Refreshing round_projection_vs_actual CSV");
+  // Full prior rebuild so local tracker OOS matches latest projection model.
+  process.env.GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS =
+    process.env.GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS || "1";
+  runRefreshScript("export-round-projection-vs-actual-csv.mjs", "Refreshing round_projection_vs_actual CSV (backtest rebuild)");
   runRefreshScript("promote-round-projection-vs-actual-csv.mjs", "Publishing tracker CSV");
+  runRefreshScript("export-matchup-backtest-csv.mjs", "Refreshing matchup backtest CSV");
   runRefreshScript("report-walkforward-oos-roi.mjs", "Refreshing walkforward OOS ROI");
 } else {
   console.log("[projection-tracker] GOLF_SKIP_TRACKER_REFRESH=1 — using existing CSV on disk.");

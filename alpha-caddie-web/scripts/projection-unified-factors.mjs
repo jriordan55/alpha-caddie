@@ -505,11 +505,8 @@ function restorePreWeatherBaselines(players) {
       n++;
     }
     p.weather_counts_baked = false;
-    delete p.dg_auto_weather;
-    p.weather_temp_f = null;
-    p.weather_wind_mph = null;
-    p.weather_humidity = null;
-    p.weather_condition = "";
+    // Keep tee-time weather fields / dg_auto_weather / _weather_bake_snapshot so the
+    // post-unified re-bake applies real Open-Meteo difficulty (not default 72°F/8mph).
   }
   return n;
 }
@@ -760,6 +757,20 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
     hadWeatherBaked || meta?.forecast_wave_slots || meta?.forecast_weather_morning;
 
   if (willWeatherBake) {
+    // Prefer per-player forecast snaps left on the row; fall back to wave slots.
+    for (const p of players) {
+      if (p?.dg_auto_weather || Number.isFinite(num(p?.weather_temp_f, NaN))) continue;
+      const baked = p?._weather_bake_snapshot;
+      if (baked && Number.isFinite(num(baked.tempF, NaN))) {
+        p.dg_auto_weather = { ...baked };
+        p.weather_temp_f = Math.round(num(baked.tempF, NaN) * 10) / 10;
+        p.weather_wind_mph = Math.round(num(baked.windMph, NaN) * 10) / 10;
+        p.weather_humidity = Math.round(num(baked.humidityPct, NaN));
+        p.weather_condition = String(baked.condition || "default").toLowerCase();
+        continue;
+      }
+      assignPerRoundWeatherFromWaveSlots(p, meta);
+    }
     const forecastRound =
       Math.round(num(meta?.projection_counts_weather_baked_round ?? payload.display_round, NaN)) || 1;
     const nWx = applyWeatherBakedCountsToAllPlayers(payload, {

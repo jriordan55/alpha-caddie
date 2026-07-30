@@ -155,7 +155,7 @@ if (!proj.meta || typeof proj.meta !== "object") proj.meta = {};
 if (!proj.meta.projection_round_adjustments) proj.meta.projection_round_adjustments = {};
 proj.meta.projection_round_adjustments.flat_venue_player_score = flatVenuePlayerScoreAnchorEnabled();
 proj.meta.score_projection_recipe = "skill_first_club_pool";
-proj.meta.score_skill_keep = Number(process.env.GOLF_SCORE_SKILL_KEEP || 0.98);
+proj.meta.score_skill_keep = Number(process.env.GOLF_SCORE_SKILL_KEEP || 1);
 if (venueScoring?.source) {
   proj.meta.venue_scoring_source = venueScoring.source;
 }

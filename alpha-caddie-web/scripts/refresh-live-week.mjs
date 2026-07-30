@@ -25,7 +25,10 @@
  *   GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI=1, GOLF_SKIP_DK_ROUND_AUDIT_CSV=1
  *   GOLF_REQUIRE_DK_OU=1 (default on refresh:live) — abort if DK scrape returns 0 fresh props
  *   GOLF_LIVE_WEEK_SOFT=1 (push:live) — soft DK require, skip odds ROI backtest,
- *     no full vs-actual prior rebuild, soft validate / optional late steps (never abort mid-tournament)
+ *     soft validate / optional late steps (never abort mid-tournament).
+ *     Round-projection tracker vs-actual still rebuilds prior-event backtest by default
+ *     (GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=1) so tracker OOS matches the latest model.
+ *   GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=0 — keep cached prior vs-actual rows (faster lean publish)
  *   GOLF_SKIP_PP_OU=1 — skip PrizePicks round props in fetch:book-odds
  *   GOLF_SKIP_SL_OU=1 — skip Sleeper round props in fetch:book-odds
  *   GOLF_SKIP_UD_OU=1 — skip Underdog round props in fetch:book-odds
@@ -116,12 +119,16 @@ function run(rel, label, extraEnv = {}, opts = {}) {
 }
 
 /** Always refresh DG field-updates, tee times, and Open-Meteo weather (never skipped on push:live). */
-function runWeatherAndTeeTimesPass(phase) {
-  run("refresh-field-updates-into-live.mjs", `Fresh field-updates → live-in-play (${phase})`);
+function runWeatherAndTeeTimesPass(phase, opts = {}) {
+  const soft = opts.optional === true;
+  run("refresh-field-updates-into-live.mjs", `Fresh field-updates → live-in-play (${phase})`, {}, soft ? { optional: true } : {});
   run(
     "merge-field-teetimes-into-projections.mjs",
     `field-updates tee times → projections.json (${phase})`,
+    {},
+    soft ? { optional: true } : {},
   );
+  // Live Open-Meteo bake is required on every push:live — never optional.
   run(
     "bake-weather-into-projections.mjs",
     `Open-Meteo tee-time weather → projections.json (${phase})`,
@@ -177,10 +184,8 @@ const skipPgatour = envTruthy("GOLF_REFRESH_LIVE_SKIP_PGATOUR", false);
 const skipFinishTool = envTruthy("GOLF_REFRESH_LIVE_SKIP_FINISH_TOOL", true);
 /** Mid-tournament soft: skip heavy odds ROI walk-forward (OOM / exit -1 on Windows). */
 const skipBacktestRoi = envTruthy("GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI", liveWeekSoft);
-/** Never force full prior-event vs-actual rebuild on live week soft (loads entire hist CSV). */
-const rebuildPriorVsActual = liveWeekSoft
-  ? false
-  : envTruthy("GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS", true);
+/** Rebuild prior-event walkforward rows for projection-tracker on every projection publish. */
+const rebuildPriorVsActual = envTruthy("GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS", true);
 const failOnParMismatch = liveWeekSoft
   ? envTruthy("GOLF_FAIL_ON_PAR_MISMATCH", false)
   : envTruthy("GOLF_FAIL_ON_PAR_MISMATCH", true);
@@ -198,16 +203,19 @@ let recentYears = String(process.env.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS |
 const fh = fullRebuild ? {} : fastHistoryBuildEnv({ defaultLiveFast: true });
 
 if (fullRebuild) {
-  console.log("\n[refresh:live] GOLF_REFRESH_LIVE_FULL_REBUILD=1 — including CSV merge + history + weather backfill.\n");
+  console.log("\n[refresh:live] GOLF_REFRESH_LIVE_FULL_REBUILD=1 — including CSV merge + history + weather archive backfill.\n");
   recentYears = String(process.env.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "25").trim();
 } else {
   console.log(
-    "\n[refresh:live] Lean live-week: projections + odds + Trends patch + tracker (no full CSV/history/weather rebuild).\n",
+    "\n[refresh:live] Lean live-week: projections + odds + Trends + tracker. Live Open-Meteo weather bake always runs (archive backfill skipped).\n",
   );
 }
 if (liveWeekSoft) {
   console.log(
-    "[refresh:live] GOLF_LIVE_WEEK_SOFT=1 — soft DK require, skip odds ROI backtest, no prior vs-actual rebuild, optional late steps.\n",
+    "[refresh:live] GOLF_LIVE_WEEK_SOFT=1 — soft DK require, skip odds ROI backtest, optional late steps." +
+      (rebuildPriorVsActual
+        ? " Prior vs-actual backtest rebuild ON (tracker matches latest model).\n"
+        : " Prior vs-actual rebuild OFF (cached prior rows).\n"),
   );
 }
 
@@ -350,35 +358,8 @@ run(
 
 run(
   "reconcile-projection-counts.mjs",
-  "Final score-anchored counts + venue field markets (book cal after vs-actual export)",
+  "Score-anchored counts + venue field markets (pre book-cal / weather publish)",
 );
-
-if (!envTruthy("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL", false)) {
-  run(
-    "export-round-projection-vs-actual-csv.mjs",
-    rebuildPriorVsActual
-      ? "Round projection vs actual CSV (walkforward backtest + current week)"
-      : "Round projection vs actual CSV (current week / incremental; no full prior rebuild)",
-    {
-      ...liveFastEnv,
-      GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS: rebuildPriorVsActual ? "1" : "0",
-    },
-    // Soft mode: heavy hist CSV can OOM — never block mid-tournament publish.
-    heavyOpt,
-  );
-  run(
-    "promote-round-projection-vs-actual-csv.mjs",
-    "Publish round_projection_vs_actual.csv (promote .new if Excel had file open)",
-    {},
-    heavyOpt,
-  );
-  run(
-    "build-parlay-correlations.mjs",
-    "Parlay Pro leg co-hit correlations → parlay_correlations.json",
-    {},
-    softOpt,
-  );
-}
 
 if (!envTruthy("GOLF_SKIP_MARKET_BOOK_CALIBRATION", true)) {
   run(
@@ -405,26 +386,67 @@ if (!envTruthy("GOLF_SKIP_MARKET_BOOK_CALIBRATION", true)) {
   );
 }
 
-run(
-  "report-walkforward-oos-roi.mjs",
-  "Walk-forward OOS ROI report → walkforward_oos_roi.json",
-  {},
-  heavyOpt,
-);
-
 runWeatherAndTeeTimesPass("publish");
 
-// Re-apply unified factors AFTER final weather/tee-time bake so DG live-hole-stats AM/PM wave
-// + bird/bog recenter always survive the late weather pass (publish weather used to overwrite them).
+// Re-apply unified factors AFTER weather/tee-time bake so DG live-hole-stats AM/PM wave
+// + bird/bog recenter use current tee times / forecast slots.
 run(
   "apply-unified-projection-factors.mjs",
   "Re-apply unified factors after publish weather (DG live-hole-stats AM/PM wave + bird/bog)",
+);
+
+// Final required Open-Meteo bake so weather difficulty always lands on the published scores
+// (unified factors restore pre-weather baselines, then this re-applies live forecast).
+run(
+  "bake-weather-into-projections.mjs",
+  "Final Open-Meteo weather bake into projections (required on every push:live)",
 );
 
 run(
   "reconcile-projection-counts.mjs",
   "Reconcile counting stats after publish weather bake (before validate)",
 );
+
+// Tracker backtest AFTER final weather/unified so current-week model lines match published
+// projections, and prior-event walkforward rebuilds whenever the projection model changes.
+if (!envTruthy("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL", false)) {
+  run(
+    "export-round-projection-vs-actual-csv.mjs",
+    rebuildPriorVsActual
+      ? "Round projection vs actual CSV (walkforward backtest rebuild + current week)"
+      : "Round projection vs actual CSV (current week / incremental; no full prior rebuild)",
+    {
+      ...liveFastEnv,
+      GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS: rebuildPriorVsActual ? "1" : "0",
+    },
+    // Soft mode: heavy hist CSV can OOM — warn-and-continue so mid-tournament publish still ships.
+    heavyOpt,
+  );
+  run(
+    "promote-round-projection-vs-actual-csv.mjs",
+    "Publish round_projection_vs_actual.csv (promote .new if Excel had file open)",
+    {},
+    heavyOpt,
+  );
+  run(
+    "export-matchup-backtest-csv.mjs",
+    "Matchup backtest CSV for projection-tracker",
+    {},
+    softOpt,
+  );
+  run(
+    "build-parlay-correlations.mjs",
+    "Parlay Pro leg co-hit correlations → parlay_correlations.json",
+    {},
+    softOpt,
+  );
+  run(
+    "report-walkforward-oos-roi.mjs",
+    "Walk-forward OOS ROI report → walkforward_oos_roi.json (after vs-actual rebuild)",
+    {},
+    heavyOpt,
+  );
+}
 
 run(
   "validate-projections-for-publish.mjs",

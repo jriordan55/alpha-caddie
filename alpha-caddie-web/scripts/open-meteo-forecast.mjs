@@ -566,10 +566,13 @@ export async function bakeOpenMeteoWeatherIntoProjections(proj, opts = {}) {
   meta.forecast_wave_slots = { morning, afternoon };
   meta.forecast_wave_summary = buildForecastWaveSummaryString(morning, afternoon);
 
+  // Always restore `_pre_weather_counts` when present so re-running bake:weather
+  // (publish pass + final pass on push:live) never double-applies difficulty.
   const countsBaked = applyWeatherBakedCountsToAllPlayers(proj, {
     forecastRound,
     skipFieldCalibrate: opts.skipFieldCalibrate === true,
     displayRound: forecastRound,
+    preserveBaselines: true,
   });
 
   return {

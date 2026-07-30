@@ -25,7 +25,9 @@
  *   alpha-caddie-web/data/round_projection_vs_actual.csv (detail rows)
  *   alpha-caddie-web/data/round_projection_vs_actual_summary.csv (RMSE/MAE + EV-threshold units)
  *   alpha-caddie-web/data/round_projection_vs_actual.xlsx (detail + summary tabs)
- * `npm run push:live` (refresh:live) runs this after live merges + post-live CSV merge.
+ * `npm run push:live` / `npm run refresh:live` always re-exports this after the final
+ * weather/unified projection pass, and rebuilds prior-event walkforward rows by default
+ * (GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=1) so projection-tracker OOS matches the latest model.
  */
 import {
   copyFileSync,

@@ -1124,7 +1124,7 @@ export function fieldDayCountingLiftFrac() {
 
 /** Max blend toward personal venue history when flat venue is on; rest is course-average skill anchor. */
 export function flatVenueMaxPlayerVenueWeight() {
-  return clamp(envNum("GOLF_FLAT_VENUE_MAX_PLAYER_SCORE_WEIGHT", 0.16), 0.05, 0.45);
+  return clamp(envNum("GOLF_FLAT_VENUE_MAX_PLAYER_SCORE_WEIGHT", 0.06), 0.02, 0.45);
 }
 
 /**
@@ -1132,9 +1132,9 @@ export function flatVenueMaxPlayerVenueWeight() {
  *   STP = courseBaseline − SCORE_SKILL_KEEP × (μ_SG − fieldMeanμ)
  * Keep near 1 so better players actually project lower scores.
  */
-export const SCORE_SKILL_KEEP = clamp(envNum("GOLF_SCORE_SKILL_KEEP", 0.98), 0.7, 1);
-/** Cap on player-at-course history when blending with skill STP. */
-export const SCORE_PLAYER_COURSE_MAX_W = clamp(envNum("GOLF_SCORE_PLAYER_COURSE_MAX_W", 0.16), 0, 0.4);
+export const SCORE_SKILL_KEEP = clamp(envNum("GOLF_SCORE_SKILL_KEEP", 1), 0.7, 1);
+/** Cap on player-at-course history when blending with skill STP (keep small — club-pool hist flattens stars). */
+export const SCORE_PLAYER_COURSE_MAX_W = clamp(envNum("GOLF_SCORE_PLAYER_COURSE_MAX_W", 0.06), 0, 0.4);
 
 /** Venue CSV year window — include prior US Opens / setups (not only the latest ~8 seasons). */
 function venueHistoryMinYear(calendarYear) {
@@ -1765,6 +1765,8 @@ export async function loadVenueHistoricalScoring(csvPath, courseKeyOpt, courseLa
     layoutStpShift: Number.isFinite(layoutStpShift) ? layoutStpShift : 0,
     histKeyCounts: Object.fromEntries(histKeyCounts),
     usedClubPool: usedClubPool === true,
+    exact_hist_share:
+      venueAgg.n > 0 ? Math.round((exactHistN / Math.max(1, venueAgg.n)) * 1000) / 1000 : NaN,
   };
 }
 
@@ -3630,12 +3632,30 @@ export function resolveProjectionScoreToPar({
     const nEff = flatVenue
       ? pv?.n || 0
       : Math.max(playerAgg.n || 0, pr?.n || 0, pv?.n || 0);
-    let wPlayer = Math.min(SCORE_PLAYER_COURSE_MAX_W, 0.06 + 0.015 * Math.max(0, nEff - minPlayerRounds));
+    // Skill-first: history is a light residual only (Detroit club-pool hist was washing out μ_SG).
+    let wPlayer = Math.min(
+      SCORE_PLAYER_COURSE_MAX_W,
+      0.03 + 0.008 * Math.max(0, nEff - minPlayerRounds),
+    );
     if (flatVenue) wPlayer = Math.min(wPlayer, flatVenueMaxPlayerVenueWeight());
+    // When personal course avg disagrees hard with skill STP, trust skill more.
+    const disagree = Math.abs(playerStp - skillRes.stp);
+    if (disagree > 0.6) {
+      wPlayer *= clamp(1 - 0.4 * (disagree - 0.6), 0.2, 1);
+    }
+    // Club-pool / non-exact layout hist is noisier — cut residual further.
+    if (venueScoring?.usedClubPool === true) {
+      wPlayer *= 0.55;
+    } else if (Math.abs(layoutShift) >= 0.02) {
+      wPlayer *= 0.65;
+    } else {
+      const exactShare = num(venueScoring?.exact_hist_share, NaN);
+      if (Number.isFinite(exactShare) && exactShare < 0.35) wPlayer *= 0.55;
+    }
     const stp = (1 - wPlayer) * skillRes.stp + wPlayer * playerStp;
     return {
       stp: Math.round(stp * 1000) / 1000,
-      source: wPlayer >= 0.1 ? "skill_first_player_course" : skillRes.source,
+      source: wPlayer >= 0.04 ? "skill_first_player_course" : skillRes.source,
     };
   }
 
