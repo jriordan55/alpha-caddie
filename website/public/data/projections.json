@@ -9,7 +9,7 @@
   "datagolf_field_current_round": 1,
   "display_round": 1,
   "display_round_label": "R1 — next Thursday (auto, America/New_York)",
-  "updated_at": "2026-08-03T22:20:07Z",
+  "updated_at": "2026-08-03T23:04:56Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -43766,7 +43766,7 @@
     },
     {
       "player_name": "Rai, Aaron",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -43966,7 +43966,7 @@
     },
     {
       "player_name": "Kim, Michael",
-      "line": 27.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -44506,7 +44506,7 @@
     },
     {
       "player_name": "Fishburn, Patrick",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -44576,7 +44576,7 @@
     },
     {
       "player_name": "Potgieter, Aldrich",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -44636,7 +44636,7 @@
     },
     {
       "player_name": "Smotherman, Austin",
-      "line": 29.5,
+      "line": 30.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -44766,7 +44766,7 @@
     },
     {
       "player_name": "Sargent, Gordon",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -56421,7 +56421,7 @@
       "match_list": "No 3_balls being offered right now."
     }
   },
-  "book_odds_refreshed_at": "2026-08-03T22:18:10Z",
+  "book_odds_refreshed_at": "2026-08-03T23:04:56Z",
   "dk_round_props_note": "Nash API failures (4); try DK_SITE_SEGMENT (e.g. US-VA-SB) or rerun.",
   "dg_teetimes_merged_at": "2026-08-03T22:20:17Z",
   "forecast_weather_tee_times_merged": 0,
@@ -60577,5 +60577,6 @@
         }
       }
     }
-  }
+  },
+  "dk_round_props_refreshed_at": "2026-08-03T23:04:56Z"
 }
