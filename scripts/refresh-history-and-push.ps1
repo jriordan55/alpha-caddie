@@ -119,7 +119,9 @@ $env:GOLF_SKIP_MARKET_BOOK_CALIBRATION = "1"
 # Round projections tab: require a fresh DraftKings scrape (no stale / empty publish).
 $env:GOLF_REQUIRE_DK_OU = "1"
 # DK / Caesars / FanDuel Nash-style APIs often block headless Playwright on desktop - headed Chromium.
-if ($IsWindows -or ($env:OS -match "Windows") -or $IsMacOS) {
+# GitHub Actions has no interactive display — keep whatever headless flags CI set (usually 1).
+$isCi = ($env:GITHUB_ACTIONS -eq "true") -or ($env:CI -eq "true")
+if (-not $isCi -and ($IsWindows -or ($env:OS -match "Windows") -or $IsMacOS)) {
   $env:DK_HEADLESS = "0"
   $env:CZR_HEADLESS = "0"
   $env:FD_HEADLESS = "0"
@@ -400,6 +402,12 @@ $artifacts = @(
   "alpha-caddie-web/course-table.json",
   "alpha-caddie-web/data/course_table.csv",
   "alpha-caddie-web/data/dk_round_projection_audit.csv",
+  "alpha-caddie-web/data/pp_round_projection_audit.csv",
+  "alpha-caddie-web/data/sl_round_projection_audit.csv",
+  "alpha-caddie-web/data/ud_round_projection_audit.csv",
+  "alpha-caddie-web/data/fd_round_projection_audit.csv",
+  "alpha-caddie-web/data/czr_round_projection_audit.csv",
+  "alpha-caddie-web/data/kl_round_projection_audit.csv",
   "alpha-caddie-web/data/pin_sheets/pin_sheet_active.json",
   "alpha-caddie-web/data/pin_sheets/pin_sheet.png",
   "alpha-caddie-web/data/pin_locations/index.json",

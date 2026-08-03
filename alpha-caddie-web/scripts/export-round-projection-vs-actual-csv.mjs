@@ -358,16 +358,20 @@ function csvCell(v) {
 
 /**
  * Read prior-event detail rows from the existing CSV so the detail tab accumulates across events.
- * Incremental mode (GOLF_OU_BACKTEST_SINCE / auto watermark): keep rows older than sinceIso,
- * re-backfill only events touched on/after that date. Full rebuild: GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=1.
+ * Incremental mode (GOLF_OU_BACKTEST_SINCE / auto watermark): keep all prior-event rows except
+ * events that appear in the DK audit on/after sinceIso (those are re-backfilled). Do not drop
+ * rows based on exported_at — that wiped history after a couple of nightly re-exports.
+ * Full rebuild: GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=1.
  * Returns { priorLines: string[], priorSummarySamples: object[] }.
  */
 async function loadPriorEventRows(csvPath, summaryPath, currentEventName, opts = {}) {
   const priorLines = [];
   const priorSummaryRows = [];
   const sinceIso = String(opts.sinceIso || process.env.GOLF_OU_BACKTEST_SINCE || "").trim();
-  /** @type {Set<string>} */
-  const refreshEvents = new Set();
+  /** @type {Map<string, string>} event → raw CSV line (without trailing logic) */
+  const priorByEventLines = new Map();
+  /** @type {string[]} */
+  const priorOrder = [];
 
   if (existsSync(csvPath)) {
     const raw = readFileSync(csvPath, "utf8");
@@ -376,21 +380,48 @@ async function loadPriorEventRows(csvPath, summaryPath, currentEventName, opts =
     if (rows.length >= 2) {
       const cols = rows[0].split(",");
       const iEvent = cols.indexOf("event_name");
-      const iExported = cols.indexOf("exported_at");
       if (iEvent >= 0) {
         for (let i = 1; i < rows.length; i++) {
           const cells = parseCsvRow(rows[i]);
           const ev = (cells[iEvent] || "").trim();
           if (!ev || eventsLikelySame(currentEventName, ev)) continue;
-          const exportedIso = iExported >= 0 ? String(cells[iExported] || "").slice(0, 10) : "";
-          if (sinceIso && exportedIso && exportedIso >= sinceIso) {
-            refreshEvents.add(ev);
-            continue;
+          const line = rows[i] + "\n";
+          if (!priorByEventLines.has(ev)) {
+            priorByEventLines.set(ev, "");
+            priorOrder.push(ev);
           }
-          priorLines.push(rows[i] + "\n");
+          priorByEventLines.set(ev, priorByEventLines.get(ev) + line);
         }
       }
     }
+  }
+
+  /** @type {Set<string>} */
+  const refreshEvents = new Set();
+  const auditPathEarly = opts.auditPath || defaultDkAuditPath(WEB_ROOT);
+  if (sinceIso && existsSync(auditPathEarly)) {
+    const auditParserScan = createReadStream(auditPathEarly).pipe(
+      parse({ columns: true, relax_quotes: true, relax_column_count: true, skip_records_with_error: true }),
+    );
+    for await (const row of auditParserScan) {
+      const ev = String(row.event_name || "").trim();
+      if (!ev || eventsLikelySame(currentEventName, ev)) continue;
+      const cap = String(row.captured_at || row.captured_at_utc || "").slice(0, 10);
+      if (cap && cap >= sinceIso) refreshEvents.add(ev);
+    }
+  }
+
+  function eventNeedsRefresh(ev) {
+    for (const re of refreshEvents) {
+      if (eventsLikelySame(ev, re)) return true;
+    }
+    return false;
+  }
+
+  for (const ev of priorOrder) {
+    if (eventNeedsRefresh(ev)) continue;
+    const block = priorByEventLines.get(ev) || "";
+    if (block) priorLines.push(block);
   }
 
   let summaryHasPrior = false;
@@ -413,7 +444,7 @@ async function loadPriorEventRows(csvPath, summaryPath, currentEventName, opts =
     }
   }
 
-  const auditPath = opts.auditPath || defaultDkAuditPath(WEB_ROOT);
+  const auditPath = auditPathEarly;
   const histPath = opts.histPath || resolveHistCsv();
   if (!existsSync(auditPath)) return { priorLines, priorSummaryRows };
 

@@ -545,11 +545,18 @@ async function main() {
       console.log(`After ${sinceIso} filter: ${outToWrite.length.toLocaleString()} outright rows to append`);
     }
     if (outToWrite.length === 0) {
-      console.error("Refusing to write outrights: 0 rows to write (check API, filters, or GOLF_ODDS_SINCE).");
-      process.exit(1);
+      if (fs.existsSync(pathOut)) {
+        console.warn(
+          "No new outright rows on/after since filter — keeping existing historical_outrights_outcomes.csv.",
+        );
+      } else {
+        console.error("Refusing to write outrights: 0 rows to write (check API, filters, or GOLF_ODDS_SINCE).");
+        process.exit(1);
+      }
+    } else {
+      console.log("\nWriting historical_outrights_outcomes.csv …");
+      await mergeWriteCsv(pathOut, OUT_COLS, mergeOpts, outToWrite);
     }
-    console.log("\nWriting historical_outrights_outcomes.csv …");
-    await mergeWriteCsv(pathOut, OUT_COLS, mergeOpts, outToWrite);
   }
 
   /** @type {any[]} */
@@ -565,11 +572,28 @@ async function main() {
     console.log(`After ${sinceIso} filter: ${matToWrite.length.toLocaleString()} matchup rows to append`);
   }
   if (matToWrite.length === 0) {
-    console.error("Refusing to write matchups: 0 rows to write.");
-    process.exit(1);
+    if (fs.existsSync(pathMat)) {
+      console.warn(
+        "No new matchup rows on/after since filter — keeping existing historical_matchups_outcomes.csv.",
+      );
+    } else if (allMat.length > 0) {
+      // CI / fresh clone: outcomes CSV is gitignored; bootstrap from full year fetch.
+      console.warn(
+        "No existing historical_matchups_outcomes.csv and 0 rows after since filter — writing full year fetch (bootstrap).",
+      );
+      await mergeWriteCsv(pathMat, MAT_COLS, { mode: "years", replaceYears: new Set(years) }, allMat);
+      console.log("\nDone (bootstrapped matchups).");
+      console.log(" ", pathOut);
+      console.log(" ", pathMat);
+      return;
+    } else {
+      console.error("Refusing to write matchups: 0 rows to write.");
+      process.exit(1);
+    }
+  } else {
+    console.log("\nWriting historical_matchups_outcomes.csv …");
+    await mergeWriteCsv(pathMat, MAT_COLS, mergeOpts, matToWrite);
   }
-  console.log("\nWriting historical_matchups_outcomes.csv …");
-  await mergeWriteCsv(pathMat, MAT_COLS, mergeOpts, matToWrite);
 
   console.log("\nDone.");
   console.log(" ", pathOut);

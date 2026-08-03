@@ -471,6 +471,12 @@ async function readMatchupRows() {
 
 async function main() {
   if (!existsSync(MATCHUPS_CSV)) {
+    if (existsSync(DETAIL_OUT)) {
+      console.warn(
+        `Missing ${MATCHUPS_CSV} — keeping existing matchup_backtest_detail.csv (run npm run update:odds to refresh).`,
+      );
+      process.exit(0);
+    }
     console.error(`Missing ${MATCHUPS_CSV} — run npm run update:odds`);
     process.exit(1);
   }
