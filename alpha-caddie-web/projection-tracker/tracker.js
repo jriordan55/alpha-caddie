@@ -55,7 +55,34 @@ import {
 } from "./win-prob-calibration.mjs";
 
 const RISK_STORAGE_KEY = "alphaCaddie_projection_tracker_risk_v1";
+const OVERVIEW_KELLY_STORAGE_KEY = "alphaCaddie_projection_tracker_overview_kelly_v1";
 const MY_BETS_STORAGE_KEY = "alphaCaddie_my_dk_bets_v1";
+
+const OVERVIEW_KELLY_METHODS = new Set(["kelly_unit_cap", "kelly_q", "kelly_half"]);
+
+function loadOverviewKellyMethod() {
+  try {
+    const raw = localStorage.getItem(OVERVIEW_KELLY_STORAGE_KEY);
+    if (OVERVIEW_KELLY_METHODS.has(raw)) return raw;
+  } catch {
+    /* ignore */
+  }
+  return "kelly_unit_cap";
+}
+
+function saveOverviewKellyMethod() {
+  try {
+    localStorage.setItem(OVERVIEW_KELLY_STORAGE_KEY, state.overviewKellyMethod);
+  } catch {
+    /* ignore */
+  }
+}
+
+function overviewKellyMethodLabel(method) {
+  if (method === "kelly_half") return "½ Kelly";
+  if (method === "kelly_q") return "¼ Kelly";
+  return "¼ Kelly +1%";
+}
 
 const CSV_CANDIDATES = [
   "../data/round_projection_vs_actual_summary.csv",
@@ -158,6 +185,7 @@ const state = {
   side: "",
   player: "",
   show: "bets",
+  overviewKellyMethod: loadOverviewKellyMethod(),
   risk: loadRiskPrefs(),
   myBets: {
     ...loadMyBetsPrefs(),
@@ -328,6 +356,59 @@ function qualifiedBetRowsForRisk() {
       if (rd) return rd;
       return String(a.player_name).localeCompare(String(b.player_name));
     });
+}
+
+/** Overview Kelly sizing — match flat EV summary (DK) unless Book filter is set. */
+function qualifiedBetRowsForOverviewKelly() {
+  const bookId = state.book || "draftkings";
+  return qualifiedBetRowsForRisk().filter((r) => r.bookId === bookId);
+}
+
+/**
+ * Size qualified bets with Kelly (or flat) and return units + stake-weighted ROI.
+ * Units = $ P/L ÷ starting 1-unit ($), matching Risk tab unit %.
+ */
+function overviewSizedStaking(method) {
+  const risk = {
+    ...state.risk,
+    method: OVERVIEW_KELLY_METHODS.has(method) || method === "flat_fixed" || method === "flat_compound"
+      ? method
+      : "kelly_unit_cap",
+  };
+  const bets = qualifiedBetRowsForOverviewKelly();
+  const sim = simulateBankrollHistory(bets, risk);
+  const oneUnit = risk.bankroll * (risk.unitPct / 100);
+  const units = oneUnit > 0 ? sim.pl / oneUnit : NaN;
+  const roi = sim.totalStaked > 0 ? (sim.pl / sim.totalStaked) * 100 : NaN;
+
+  /** @type {Map<string, { market: string, pl: number, staked: number, bets: number }>} */
+  const byMarket = new Map();
+  for (const e of sim.ledger) {
+    const m = e.market || "—";
+    let acc = byMarket.get(m);
+    if (!acc) acc = { market: m, pl: 0, staked: 0, bets: 0 };
+    acc.pl += num(e.pnl) || 0;
+    acc.staked += num(e.stake) || 0;
+    acc.bets += 1;
+    byMarket.set(m, acc);
+  }
+  const marketRoi = sortMarkets(
+    [...byMarket.values()].map((a) => ({
+      market: a.market,
+      units: oneUnit > 0 ? a.pl / oneUnit : NaN,
+      roi: a.staked > 0 ? (a.pl / a.staked) * 100 : NaN,
+      bets: a.bets,
+    })),
+  );
+
+  return {
+    units,
+    roi,
+    bets: sim.bets,
+    totalStaked: sim.totalStaked,
+    pl: sim.pl,
+    marketRoi,
+  };
 }
 
 function simulateBankrollHistory(bets, risk) {
@@ -592,6 +673,7 @@ function syncRiskFromForm() {
   };
   saveRiskPrefs();
   renderRisk();
+  if (state.tab === "overview") renderOverview();
 }
 
 function myBetsPickLabel(bet) {
@@ -1762,11 +1844,17 @@ function overviewLineRows() {
 function renderOverview() {
   setOverviewHistoricalVisible(true);
 
+  const kellyEl = document.getElementById("overview-kelly-method");
+  if (kellyEl) kellyEl.value = state.overviewKellyMethod;
+
   const lines = overviewLineRows();
   const evRows = evRowsAtMinEdge(undefined, { bettableOnly: false });
   const evAgg = aggregateEvByMarketSide(evRows);
   const totalUnits = evAgg.reduce((s, a) => s + a.units, 0);
   const totalBets = evAgg.reduce((s, a) => s + a.bets, 0);
+  const flatRoi = totalBets ? (totalUnits / totalBets) * 100 : NaN;
+  const kelly = overviewSizedStaking(state.overviewKellyMethod);
+  const kellyLabel = overviewKellyMethodLabel(state.overviewKellyMethod);
   const totalScore = state.market
     ? lines.find((r) => r.market === state.market)
     : lines.find((r) => r.market === "Total score");
@@ -1784,15 +1872,33 @@ function renderOverview() {
       <div class="kpi-value">${fmt(num(totalScore?.mae), 2)}</div>
       <div class="kpi-sub">${totalScore?.n_line_pairs || 0} line pairs</div>
     </div>
-    <div class="kpi-card">
-      <div class="kpi-label">EV units</div>
-      <div class="kpi-value ${clsSigned(totalUnits)}">${totalUnits >= 0 ? "+" : ""}${fmt(totalUnits, 1)}u</div>
-      <div class="kpi-sub">${totalBets} bets · all markets · ${state.minEv}% edge</div>
+    <div class="kpi-card kpi-dual-card">
+      <div class="kpi-label">Units won</div>
+      <div class="kpi-dual-row">
+        <div>
+          <div class="kpi-value ${clsSigned(totalUnits)}">${totalUnits >= 0 ? "+" : ""}${fmt(totalUnits, 1)}u</div>
+          <div class="kpi-sub">flat 1u</div>
+        </div>
+        <div>
+          <div class="kpi-value ${clsSigned(kelly.units)}">${Number.isFinite(kelly.units) ? `${kelly.units >= 0 ? "+" : ""}${fmt(kelly.units, 1)}u` : "—"}</div>
+          <div class="kpi-sub">${esc(kellyLabel)}</div>
+        </div>
+      </div>
+      <div class="kpi-sub">${totalBets} flat · ${kelly.bets} Kelly · ${state.minEv}% edge</div>
     </div>
-    <div class="kpi-card">
+    <div class="kpi-card kpi-dual-card">
       <div class="kpi-label">ROI</div>
-      <div class="kpi-value ${clsSigned(totalBets ? (totalUnits / totalBets) * 100 : NaN)}">${fmtPct(totalBets ? (totalUnits / totalBets) * 100 : NaN)}</div>
-      <div class="kpi-sub">flat 1u per bet</div>
+      <div class="kpi-dual-row">
+        <div>
+          <div class="kpi-value ${clsSigned(flatRoi)}">${fmtPct(flatRoi)}</div>
+          <div class="kpi-sub">flat 1u / bet</div>
+        </div>
+        <div>
+          <div class="kpi-value ${clsSigned(kelly.roi)}">${fmtPct(kelly.roi)}</div>
+          <div class="kpi-sub">on $ risked</div>
+        </div>
+      </div>
+      <div class="kpi-sub">${esc(kellyLabel)} · Risk bankroll settings</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">Best edge pocket</div>
@@ -1811,6 +1917,13 @@ function renderOverview() {
     invert: true,
     format: (v) => fmt(v, 2),
   });
+
+  const roiNote = document.getElementById("overview-roi-chart-note");
+  if (roiNote) {
+    roiNote.textContent = `Flat 1u by market below. Kelly (${kellyLabel}): ${
+      Number.isFinite(kelly.roi) ? fmtPct(kelly.roi) : "—"
+    } overall ROI on amount risked · ${kelly.bets} sized bets.`;
+  }
 
   renderBarChart(
     document.getElementById("overview-roi-chart"),
@@ -2938,6 +3051,12 @@ function bindUi() {
     state.minEv = num(e.target.value) || 0;
     invalidateExplodedBetRows();
     renderAll();
+  });
+  document.getElementById("overview-kelly-method")?.addEventListener("change", (e) => {
+    const v = String(e.target.value || "");
+    state.overviewKellyMethod = OVERVIEW_KELLY_METHODS.has(v) ? v : "kelly_unit_cap";
+    saveOverviewKellyMethod();
+    renderOverview();
   });
   document.getElementById("filter-side").addEventListener("change", (e) => {
     state.side = e.target.value;

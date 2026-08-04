@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="tracker.css?v=16" />
+  <link rel="stylesheet" href="tracker.css?v=17" />
 </head>
 <body>
   <header class="app-header">
@@ -89,6 +89,16 @@
     </nav>
 
     <section id="panel-overview" class="panel active" role="tabpanel">
+      <div class="toolbar-card overview-stake-toolbar">
+        <label>Kelly method (units / ROI)
+          <select id="overview-kelly-method">
+            <option value="kelly_unit_cap" selected>Quarter Kelly + 1% cap (+EV app)</option>
+            <option value="kelly_q">Quarter Kelly (max 5%)</option>
+            <option value="kelly_half">Half Kelly (max 5%)</option>
+          </select>
+        </label>
+        <p class="note overview-stake-note">Flat 1u and Kelly units/ROI use the same toolbar filters (tournament, market, min edge, side). Kelly uses DraftKings graded picks unless Book is set.</p>
+      </div>
       <div class="kpi-grid" id="overview-kpis"></div>
       <div class="chart-card" id="oos-honest-card">
         <h2 class="section-title">Honest walk-forward OOS ROI</h2>
@@ -159,7 +169,8 @@
         <div class="bar-chart" id="overview-rmse-chart"></div>
       </div>
       <div class="chart-card">
-        <h2 class="section-title">EV ROI by market (min edge filter applied)</h2>
+        <h2 class="section-title">EV ROI by market (flat 1u, min edge filter)</h2>
+        <p class="note" id="overview-roi-chart-note">Flat 1u by market. Kelly units/ROI are in the KPIs above.</p>
         <div class="bar-chart" id="overview-roi-chart"></div>
       </div>
     </section>
@@ -571,7 +582,7 @@
         <p>High-level dashboard: calibration + betting edge at a glance.</p>
         <ul class="guide-ul">
           <li><strong>Total score RMSE / MAE</strong> — How far projected round scores sit from DK lines (lower = closer).</li>
-          <li><strong>EV units / ROI</strong> — Flat 1-unit P/L on every side clearing min EV %.</li>
+          <li><strong>EV units / ROI</strong> — Flat 1u and Kelly (¼ / ½, optional 1% cap) P/L on every side clearing min EV %.</li>
           <li><strong>Best edge pocket</strong> — Market + side with best ROI at your filter.</li>
           <li>Charts: RMSE by market; EV ROI by market.</li>
         </ul>
@@ -670,6 +681,6 @@
     </section>
   </main>
 
-  <script type="module" src="tracker.js?v=52"></script>
+  <script type="module" src="tracker.js?v=53"></script>
 </body>
 </html>

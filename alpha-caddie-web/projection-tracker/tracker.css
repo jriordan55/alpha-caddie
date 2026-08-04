@@ -295,11 +295,44 @@ tr.my-bets-in-slip-partial td {
   margin-bottom: 22px;
 }
 
+.overview-stake-toolbar {
+  margin-bottom: 14px;
+  align-items: end;
+}
+
+.overview-stake-note {
+  margin: 0;
+  max-width: 36rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: var(--muted, #94a3b8);
+}
+
 .kpi-card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 14px 16px;
+}
+
+.kpi-card.kpi-dual-card {
+  min-width: 240px;
+}
+
+.kpi-dual-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 14px;
+  margin-top: 2px;
+}
+
+.kpi-dual-row .kpi-value {
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+
+.kpi-dual-row .kpi-sub {
+  margin-top: 2px;
 }
 
 .kpi-card.highlight {
