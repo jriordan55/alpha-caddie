@@ -44,7 +44,13 @@ function altBookCols(stem) {
     cols[`${b}LineCol`] = `${stem}_${b}_line`;
     cols[`${b}OverOddsCol`] = `${stem}_${b}_over_odds`;
     cols[`${b}UnderOddsCol`] = `${stem}_${b}_under_odds`;
+    cols[`${b}OpenLineCol`] = `${stem}_${b}_open_line`;
+    cols[`${b}OpenOverOddsCol`] = `${stem}_${b}_open_over_odds`;
+    cols[`${b}OpenUnderOddsCol`] = `${stem}_${b}_open_under_odds`;
   }
+  cols.bookOpenLineCol = `${stem}_book_open_line`;
+  cols.openOverOddsCol = `${stem}_open_over_odds`;
+  cols.openUnderOddsCol = `${stem}_open_under_odds`;
   return cols;
 }
 
@@ -119,6 +125,9 @@ export const EXPORT_MARKETS = [
 export const EXPORT_ACTUAL_COLS = EXPORT_MARKETS.map((m) => m.actualCol).concat(["actual_source"]);
 export const EXPORT_MODEL_LINE_COLS = EXPORT_MARKETS.map((m) => m.lineCol);
 export const EXPORT_BOOK_LINE_COLS = EXPORT_MARKETS.map((m) => m.bookLineCol);
+export const EXPORT_BOOK_OPEN_LINE_COLS = EXPORT_MARKETS.map((m) => m.bookOpenLineCol);
+export const EXPORT_OPEN_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.openOverOddsCol);
+export const EXPORT_OPEN_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.openUnderOddsCol);
 export const EXPORT_PP_LINE_COLS = EXPORT_MARKETS.map((m) => m.ppLineCol);
 export const EXPORT_SL_LINE_COLS = EXPORT_MARKETS.map((m) => m.slLineCol);
 export const EXPORT_UD_LINE_COLS = EXPORT_MARKETS.map((m) => m.udLineCol);
@@ -139,6 +148,24 @@ export const EXPORT_CZR_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.czrOverOdds
 export const EXPORT_CZR_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.czrUnderOddsCol);
 export const EXPORT_KL_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.klOverOddsCol);
 export const EXPORT_KL_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.klUnderOddsCol);
+export const EXPORT_PP_OPEN_LINE_COLS = EXPORT_MARKETS.map((m) => m.ppOpenLineCol);
+export const EXPORT_SL_OPEN_LINE_COLS = EXPORT_MARKETS.map((m) => m.slOpenLineCol);
+export const EXPORT_UD_OPEN_LINE_COLS = EXPORT_MARKETS.map((m) => m.udOpenLineCol);
+export const EXPORT_FD_OPEN_LINE_COLS = EXPORT_MARKETS.map((m) => m.fdOpenLineCol);
+export const EXPORT_CZR_OPEN_LINE_COLS = EXPORT_MARKETS.map((m) => m.czrOpenLineCol);
+export const EXPORT_KL_OPEN_LINE_COLS = EXPORT_MARKETS.map((m) => m.klOpenLineCol);
+export const EXPORT_PP_OPEN_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.ppOpenOverOddsCol);
+export const EXPORT_PP_OPEN_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.ppOpenUnderOddsCol);
+export const EXPORT_SL_OPEN_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.slOpenOverOddsCol);
+export const EXPORT_SL_OPEN_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.slOpenUnderOddsCol);
+export const EXPORT_UD_OPEN_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.udOpenOverOddsCol);
+export const EXPORT_UD_OPEN_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.udOpenUnderOddsCol);
+export const EXPORT_FD_OPEN_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.fdOpenOverOddsCol);
+export const EXPORT_FD_OPEN_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.fdOpenUnderOddsCol);
+export const EXPORT_CZR_OPEN_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.czrOpenOverOddsCol);
+export const EXPORT_CZR_OPEN_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.czrOpenUnderOddsCol);
+export const EXPORT_KL_OPEN_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.klOpenOverOddsCol);
+export const EXPORT_KL_OPEN_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.klOpenUnderOddsCol);
 export const EXPORT_OVER_RESULT_COLS = EXPORT_MARKETS.map((m) => m.overCol);
 export const EXPORT_UNDER_RESULT_COLS = EXPORT_MARKETS.map((m) => m.underCol);
 
@@ -148,12 +175,20 @@ export const EXPORT_ALT_BOOKS = [
     id: "prizepicks",
     short: "pp",
     sourceCol: "pp_book_odds_source",
+    openAtCol: "pp_book_odds_open_at",
+    closeAtCol: "pp_book_odds_close_at",
     lineCols: EXPORT_PP_LINE_COLS,
     overCols: EXPORT_PP_OVER_ODDS_COLS,
     underCols: EXPORT_PP_UNDER_ODDS_COLS,
+    openLineCols: EXPORT_PP_OPEN_LINE_COLS,
+    openOverCols: EXPORT_PP_OPEN_OVER_ODDS_COLS,
+    openUnderCols: EXPORT_PP_OPEN_UNDER_ODDS_COLS,
     lineKey: "ppLineCol",
     overKey: "ppOverOddsCol",
     underKey: "ppUnderOddsCol",
+    openLineKey: "ppOpenLineCol",
+    openOverKey: "ppOpenOverOddsCol",
+    openUnderKey: "ppOpenUnderOddsCol",
     liveOddsSource: "prizepicks_live",
     wholeLine: true,
   },
@@ -161,12 +196,20 @@ export const EXPORT_ALT_BOOKS = [
     id: "sleeper",
     short: "sl",
     sourceCol: "sl_book_odds_source",
+    openAtCol: "sl_book_odds_open_at",
+    closeAtCol: "sl_book_odds_close_at",
     lineCols: EXPORT_SL_LINE_COLS,
     overCols: EXPORT_SL_OVER_ODDS_COLS,
     underCols: EXPORT_SL_UNDER_ODDS_COLS,
+    openLineCols: EXPORT_SL_OPEN_LINE_COLS,
+    openOverCols: EXPORT_SL_OPEN_OVER_ODDS_COLS,
+    openUnderCols: EXPORT_SL_OPEN_UNDER_ODDS_COLS,
     lineKey: "slLineCol",
     overKey: "slOverOddsCol",
     underKey: "slUnderOddsCol",
+    openLineKey: "slOpenLineCol",
+    openOverKey: "slOpenOverOddsCol",
+    openUnderKey: "slOpenUnderOddsCol",
     liveOddsSource: "sleeper_live",
     wholeLine: true,
   },
@@ -174,12 +217,20 @@ export const EXPORT_ALT_BOOKS = [
     id: "underdog",
     short: "ud",
     sourceCol: "ud_book_odds_source",
+    openAtCol: "ud_book_odds_open_at",
+    closeAtCol: "ud_book_odds_close_at",
     lineCols: EXPORT_UD_LINE_COLS,
     overCols: EXPORT_UD_OVER_ODDS_COLS,
     underCols: EXPORT_UD_UNDER_ODDS_COLS,
+    openLineCols: EXPORT_UD_OPEN_LINE_COLS,
+    openOverCols: EXPORT_UD_OPEN_OVER_ODDS_COLS,
+    openUnderCols: EXPORT_UD_OPEN_UNDER_ODDS_COLS,
     lineKey: "udLineCol",
     overKey: "udOverOddsCol",
     underKey: "udUnderOddsCol",
+    openLineKey: "udOpenLineCol",
+    openOverKey: "udOpenOverOddsCol",
+    openUnderKey: "udOpenUnderOddsCol",
     liveOddsSource: "underdog_live",
     wholeLine: true,
   },
@@ -187,12 +238,20 @@ export const EXPORT_ALT_BOOKS = [
     id: "fanduel",
     short: "fd",
     sourceCol: "fd_book_odds_source",
+    openAtCol: "fd_book_odds_open_at",
+    closeAtCol: "fd_book_odds_close_at",
     lineCols: EXPORT_FD_LINE_COLS,
     overCols: EXPORT_FD_OVER_ODDS_COLS,
     underCols: EXPORT_FD_UNDER_ODDS_COLS,
+    openLineCols: EXPORT_FD_OPEN_LINE_COLS,
+    openOverCols: EXPORT_FD_OPEN_OVER_ODDS_COLS,
+    openUnderCols: EXPORT_FD_OPEN_UNDER_ODDS_COLS,
     lineKey: "fdLineCol",
     overKey: "fdOverOddsCol",
     underKey: "fdUnderOddsCol",
+    openLineKey: "fdOpenLineCol",
+    openOverKey: "fdOpenOverOddsCol",
+    openUnderKey: "fdOpenUnderOddsCol",
     liveOddsSource: "fanduel_live",
     wholeLine: false,
   },
@@ -200,12 +259,20 @@ export const EXPORT_ALT_BOOKS = [
     id: "caesars",
     short: "czr",
     sourceCol: "czr_book_odds_source",
+    openAtCol: "czr_book_odds_open_at",
+    closeAtCol: "czr_book_odds_close_at",
     lineCols: EXPORT_CZR_LINE_COLS,
     overCols: EXPORT_CZR_OVER_ODDS_COLS,
     underCols: EXPORT_CZR_UNDER_ODDS_COLS,
+    openLineCols: EXPORT_CZR_OPEN_LINE_COLS,
+    openOverCols: EXPORT_CZR_OPEN_OVER_ODDS_COLS,
+    openUnderCols: EXPORT_CZR_OPEN_UNDER_ODDS_COLS,
     lineKey: "czrLineCol",
     overKey: "czrOverOddsCol",
     underKey: "czrUnderOddsCol",
+    openLineKey: "czrOpenLineCol",
+    openOverKey: "czrOpenOverOddsCol",
+    openUnderKey: "czrOpenUnderOddsCol",
     liveOddsSource: "caesars_live",
     wholeLine: false,
   },
@@ -213,18 +280,28 @@ export const EXPORT_ALT_BOOKS = [
     id: "kalshi",
     short: "kl",
     sourceCol: "kl_book_odds_source",
+    openAtCol: "kl_book_odds_open_at",
+    closeAtCol: "kl_book_odds_close_at",
     lineCols: EXPORT_KL_LINE_COLS,
     overCols: EXPORT_KL_OVER_ODDS_COLS,
     underCols: EXPORT_KL_UNDER_ODDS_COLS,
+    openLineCols: EXPORT_KL_OPEN_LINE_COLS,
+    openOverCols: EXPORT_KL_OPEN_OVER_ODDS_COLS,
+    openUnderCols: EXPORT_KL_OPEN_UNDER_ODDS_COLS,
     lineKey: "klLineCol",
     overKey: "klOverOddsCol",
     underKey: "klUnderOddsCol",
+    openLineKey: "klOpenLineCol",
+    openOverKey: "klOpenOverOddsCol",
+    openUnderKey: "klOpenUnderOddsCol",
     liveOddsSource: "kalshi_live",
     wholeLine: false,
   },
 ];
 
 export const EXPORT_ALT_SOURCE_COLS = EXPORT_ALT_BOOKS.map((b) => b.sourceCol);
+export const EXPORT_ALT_OPEN_AT_COLS = EXPORT_ALT_BOOKS.map((b) => b.openAtCol);
+export const EXPORT_ALT_CLOSE_AT_COLS = EXPORT_ALT_BOOKS.map((b) => b.closeAtCol);
 
 /** Single projection path: recent form + course history + course-weighted SG. */
 export const EXPORT_PRICING_MODES = [{ mode: "default", skill: "default" }];

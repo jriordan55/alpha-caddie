@@ -63,16 +63,43 @@ function ingestPickemAuditRow(best, row, roundStartUtcMs, lineCol) {
   const key = `${dg}|${propRound}|${market}`;
   const prev = best.get(key);
   const snap = snapFromAuditRow(norm, capturedMs);
-  if (!prev || capturedMs > prev.capturedMs) {
+  if (!prev) {
     best.set(key, {
       line,
       over,
       under,
       capturedMs,
       ...snap,
+      openLine: line,
+      openOver: over,
+      openUnder: under,
+      openCapturedMs: capturedMs,
       displayRound: propRound,
     });
+    return;
   }
+  const next = { ...prev };
+  if (!Number.isFinite(prev.openCapturedMs) || capturedMs < prev.openCapturedMs) {
+    next.openLine = line;
+    next.openOver = over;
+    next.openUnder = under;
+    next.openCapturedMs = capturedMs;
+  }
+  if (!Number.isFinite(prev.capturedMs) || capturedMs > prev.capturedMs) {
+    Object.assign(next, {
+      line,
+      over,
+      under,
+      capturedMs,
+      ...snap,
+      displayRound: propRound,
+      openLine: next.openLine,
+      openOver: next.openOver,
+      openUnder: next.openUnder,
+      openCapturedMs: next.openCapturedMs,
+    });
+  }
+  best.set(key, next);
 }
 
 /**

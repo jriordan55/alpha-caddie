@@ -13,8 +13,9 @@
  *   npm run refresh:live
  *
  * **Default (push:live lean):** projections + odds + current-event Trends patch + tracker.
- * Skips full historical CSV merge, weather archive backfill, and full build-player-history.
- * Prior rounds still land in Trends via sync-field-history + patch-current-event-history.
+ * Skips pre-fetch full CSV merge, weather archive backfill, and full build-player-history.
+ * After live feeds: merges recent DataGolf rounds into CSV (post-live), then Trends via
+ * sync-field-history + patch-current-event-history (live-in-play + matching pgatouR).
  *
  * Full rebuild (slow, ~20-30 min) — use push:all or:
  *   GOLF_REFRESH_LIVE_FULL_REBUILD=1
@@ -176,8 +177,9 @@ const fullRebuild = envTruthy("GOLF_REFRESH_LIVE_FULL_REBUILD", false);
 const liveWeekSoft = envTruthy("GOLF_LIVE_WEEK_SOFT", false);
 const skipCsvMerge =
   fullRebuild ? false : envTruthy("GOLF_REFRESH_LIVE_SKIP_CSV_MERGE", true);
+/** Lean default: still merge recent DG rounds after live-in-play so Trends gets completed rounds. */
 const skipPostCsvMerge =
-  fullRebuild ? false : envTruthy("GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE", true);
+  fullRebuild ? false : envTruthy("GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE", false);
 const skipHistoryRebuild =
   fullRebuild ? false : envTruthy("GOLF_REFRESH_LIVE_SKIP_HISTORY_REBUILD", true);
 const skipWeatherBackfill =
@@ -567,16 +569,12 @@ if (skipHistoryRebuild) {
   run(
     "sync-field-history-from-csv.mjs",
     "Merge recent CSV rounds into field player-history shards",
-    {},
-    softOpt,
   );
   run(
     "patch-current-event-history-shards.mjs",
     "Patch current-event live rows into player-history shards (no CSV rescan)",
-    {},
-    softOpt,
   );
-  run("rebuild-field-season-bundle.mjs", "Rebuild field-{year}.json for Historical Trends", {}, softOpt);
+  run("rebuild-field-season-bundle.mjs", "Rebuild field-{year}.json for Historical Trends");
   run(
     "build-course-history-shards.mjs",
     "Course history shards for At-this-course O/U averages (all years from 2004)",

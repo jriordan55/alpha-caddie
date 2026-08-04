@@ -8,7 +8,13 @@ function altBookCols(stem) {
     cols[`${b}LineCol`] = `${stem}_${b}_line`;
     cols[`${b}OverOddsCol`] = `${stem}_${b}_over_odds`;
     cols[`${b}UnderOddsCol`] = `${stem}_${b}_under_odds`;
+    cols[`${b}OpenLineCol`] = `${stem}_${b}_open_line`;
+    cols[`${b}OpenOverOddsCol`] = `${stem}_${b}_open_over_odds`;
+    cols[`${b}OpenUnderOddsCol`] = `${stem}_${b}_open_under_odds`;
   }
+  cols.bookOpenLineCol = `${stem}_book_open_line`;
+  cols.openOverOddsCol = `${stem}_open_over_odds`;
+  cols.openUnderOddsCol = `${stem}_open_under_odds`;
   return cols;
 }
 
@@ -76,6 +82,11 @@ export const TRACKER_OU_BOOKS = [
     lineKey: "bookLineCol",
     overKey: "overOddsCol",
     underKey: "underOddsCol",
+    openLineKey: "bookOpenLineCol",
+    openOverKey: "openOverOddsCol",
+    openUnderKey: "openUnderOddsCol",
+    openAtCol: "book_odds_open_at",
+    closeAtCol: "book_odds_close_at",
     wholeLine: false,
   },
   {
@@ -87,6 +98,11 @@ export const TRACKER_OU_BOOKS = [
     lineKey: "ppLineCol",
     overKey: "ppOverOddsCol",
     underKey: "ppUnderOddsCol",
+    openLineKey: "ppOpenLineCol",
+    openOverKey: "ppOpenOverOddsCol",
+    openUnderKey: "ppOpenUnderOddsCol",
+    openAtCol: "pp_book_odds_open_at",
+    closeAtCol: "pp_book_odds_close_at",
     wholeLine: true,
   },
   {
@@ -98,6 +114,11 @@ export const TRACKER_OU_BOOKS = [
     lineKey: "slLineCol",
     overKey: "slOverOddsCol",
     underKey: "slUnderOddsCol",
+    openLineKey: "slOpenLineCol",
+    openOverKey: "slOpenOverOddsCol",
+    openUnderKey: "slOpenUnderOddsCol",
+    openAtCol: "sl_book_odds_open_at",
+    closeAtCol: "sl_book_odds_close_at",
     wholeLine: true,
   },
   {
@@ -109,6 +130,11 @@ export const TRACKER_OU_BOOKS = [
     lineKey: "udLineCol",
     overKey: "udOverOddsCol",
     underKey: "udUnderOddsCol",
+    openLineKey: "udOpenLineCol",
+    openOverKey: "udOpenOverOddsCol",
+    openUnderKey: "udOpenUnderOddsCol",
+    openAtCol: "ud_book_odds_open_at",
+    closeAtCol: "ud_book_odds_close_at",
     wholeLine: true,
   },
   {
@@ -120,6 +146,11 @@ export const TRACKER_OU_BOOKS = [
     lineKey: "fdLineCol",
     overKey: "fdOverOddsCol",
     underKey: "fdUnderOddsCol",
+    openLineKey: "fdOpenLineCol",
+    openOverKey: "fdOpenOverOddsCol",
+    openUnderKey: "fdOpenUnderOddsCol",
+    openAtCol: "fd_book_odds_open_at",
+    closeAtCol: "fd_book_odds_close_at",
     wholeLine: false,
   },
   {
@@ -131,6 +162,11 @@ export const TRACKER_OU_BOOKS = [
     lineKey: "czrLineCol",
     overKey: "czrOverOddsCol",
     underKey: "czrUnderOddsCol",
+    openLineKey: "czrOpenLineCol",
+    openOverKey: "czrOpenOverOddsCol",
+    openUnderKey: "czrOpenUnderOddsCol",
+    openAtCol: "czr_book_odds_open_at",
+    closeAtCol: "czr_book_odds_close_at",
     wholeLine: false,
   },
   {
@@ -142,6 +178,11 @@ export const TRACKER_OU_BOOKS = [
     lineKey: "klLineCol",
     overKey: "klOverOddsCol",
     underKey: "klUnderOddsCol",
+    openLineKey: "klOpenLineCol",
+    openOverKey: "klOpenOverOddsCol",
+    openUnderKey: "klOpenUnderOddsCol",
+    openAtCol: "kl_book_odds_open_at",
+    closeAtCol: "kl_book_odds_close_at",
     wholeLine: false,
   },
 ];

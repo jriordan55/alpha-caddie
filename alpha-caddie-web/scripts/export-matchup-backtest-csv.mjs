@@ -64,6 +64,7 @@ const DETAIL_HEADER_COLS = [
   "book",
   "bet_type",
   "market",
+  "open_time",
   "close_time",
   "dg_id",
   "player_name",
@@ -76,10 +77,17 @@ const DETAIL_HEADER_COLS = [
   "opp2_mu_sg",
   "sg_gap",
   "model_win_pct",
+  "open_implied_pct",
   "close_implied_pct",
+  "p1_open_dec",
+  "p2_open_dec",
+  "p3_open_dec",
   "p1_close_dec",
   "p2_close_dec",
   "p3_close_dec",
+  "edge_p1_open_pct",
+  "edge_p2_open_pct",
+  "edge_p3_open_pct",
   "edge_p1_pct",
   "edge_p2_pct",
   "edge_p3_pct",
@@ -554,6 +562,9 @@ async function main() {
     const d1 = num(row.p1_close, NaN);
     const d2 = num(row.p2_close, NaN);
     const d3 = num(row.p3_close, NaN);
+    const oDec1 = num(row.p1_open, NaN);
+    const oDec2 = num(row.p2_open, NaN);
+    const oDec3 = num(row.p3_open, NaN);
     if (!Number.isFinite(id1) || !Number.isFinite(id2) || !(d1 > 1) || !(d2 > 1)) continue;
 
     const prop = {
@@ -604,10 +615,18 @@ async function main() {
     }
 
     const implied1 = (1 / d1) * 100;
+    const openImplied1 = oDec1 > 1 ? (1 / oDec1) * 100 : NaN;
+    let edge1Open = oDec1 > 1 ? modelEvPct(wp1, oDec1) : NaN;
+    let edge2Open = oDec2 > 1 ? modelEvPct(wp2, oDec2) : NaN;
+    let edge3Open = NaN;
+    if (market === THREE_BALL_MARKET && oDec3 > 1 && Number.isFinite(wp3)) {
+      edge3Open = modelEvPct(wp3, oDec3);
+    }
     const pick10 = pickMatchupSide({ p1: edge1, p2: edge2, p3: edge3 }, 10);
     const o1 = outcomeToResult(num(row.p1_outcome, NaN));
     const o2 = outcomeToResult(num(row.p2_outcome, NaN));
 
+    const openTime = String(row.open_time || "").trim();
     const closeTime = String(row.close_time || row.open_time || "").trim();
 
     samples.push({
@@ -635,6 +654,7 @@ async function main() {
         book,
         bet_type: row.bet_type,
         market,
+        open_time: openTime,
         close_time: closeTime,
         dg_id: id1,
         player_name: row.p1_player_name,
@@ -647,10 +667,18 @@ async function main() {
         opp2_mu_sg: fmtNum(mu3, 3),
         sg_gap: fmtNum(mu1 - mu2, 3),
         model_win_pct: fmtNum(wp1 * 100, 2),
+        open_implied_pct: Number.isFinite(openImplied1) ? fmtNum(openImplied1, 2) : "",
         close_implied_pct: fmtNum(implied1, 2),
+        p1_open_dec: oDec1 > 1 ? fmtNum(oDec1, 4) : "",
+        p2_open_dec: oDec2 > 1 ? fmtNum(oDec2, 4) : "",
+        p3_open_dec: market === THREE_BALL_MARKET && oDec3 > 1 ? fmtNum(oDec3, 4) : "",
         p1_close_dec: fmtNum(d1, 4),
         p2_close_dec: fmtNum(d2, 4),
         p3_close_dec: market === THREE_BALL_MARKET ? fmtNum(d3, 4) : "",
+        edge_p1_open_pct: Number.isFinite(edge1Open) ? fmtNum(edge1Open, 2) : "",
+        edge_p2_open_pct: Number.isFinite(edge2Open) ? fmtNum(edge2Open, 2) : "",
+        edge_p3_open_pct:
+          market === THREE_BALL_MARKET && Number.isFinite(edge3Open) ? fmtNum(edge3Open, 2) : "",
         edge_p1_pct: fmtNum(edge1, 2),
         edge_p2_pct: fmtNum(edge2, 2),
         edge_p3_pct: market === THREE_BALL_MARKET ? fmtNum(edge3, 2) : "",
@@ -658,7 +686,7 @@ async function main() {
         p2_result: o2,
         p3_result: o3,
         pick_side_at_10: pick10?.side || "",
-        book_odds_source: "historical_matchups_dk_fd_mgm_close",
+        book_odds_source: "historical_matchups_dk_fd_mgm_open_close",
       }),
     );
   }

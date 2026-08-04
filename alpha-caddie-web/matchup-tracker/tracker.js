@@ -102,22 +102,31 @@ function resultFromPick(row, side) {
   return "";
 }
 
-function edgeForSide(row, side) {
-  if (side === "p1") return num(row.edge_p1_pct, NaN);
-  if (side === "p2") return num(row.edge_p2_pct, NaN);
-  if (side === "p3") return num(row.edge_p3_pct, NaN);
+function edgeForSide(row, side, oddsAt = "close") {
+  const open = oddsAt === "open";
+  if (side === "p1") return num(open ? row.edge_p1_open_pct : row.edge_p1_pct, NaN);
+  if (side === "p2") return num(open ? row.edge_p2_open_pct : row.edge_p2_pct, NaN);
+  if (side === "p3") return num(open ? row.edge_p3_open_pct : row.edge_p3_pct, NaN);
   return NaN;
 }
 
-function bestSide(row, minEv) {
+function bestSide(row, minEv, oddsAt = "close") {
   const sides = ["p1", "p2", "p3"];
   let best = null;
   for (const side of sides) {
-    const edge = edgeForSide(row, side);
+    const edge = edgeForSide(row, side, oddsAt);
     if (!Number.isFinite(edge) || edge < minEv) continue;
     if (!best || edge > best.edge) best = { side, edge };
   }
   return best;
+}
+
+function decForSide(row, side, oddsAt = "close") {
+  const open = oddsAt === "open";
+  if (side === "p1") return num(open ? row.p1_open_dec : row.p1_close_dec, NaN);
+  if (side === "p2") return num(open ? row.p2_open_dec : row.p2_close_dec, NaN);
+  if (side === "p3") return num(open ? row.p3_open_dec : row.p3_close_dec, NaN);
+  return NaN;
 }
 
 function explodeDetailBets(detailRows) {
@@ -134,32 +143,32 @@ function explodeDetailBets(detailRows) {
       if (!blob.includes(f.player)) continue;
     }
 
-    const pick = bestSide(row, f.minEv);
+    // Qualify and P/L always on close (most recent DG closing price).
+    const pick = bestSide(row, f.minEv, "close");
     if (f.show === "bets" && !pick) continue;
     const side = f.side || pick?.side || String(row.pick_side_at_10 || "").trim() || "p1";
     if (f.side && side !== f.side) continue;
-    const edge = edgeForSide(row, side);
+    const edge = edgeForSide(row, side, "close");
     if (f.show === "bets" && !(Number.isFinite(edge) && edge >= f.minEv)) continue;
 
     const result = resultFromPick(row, side);
-    const dec =
-      side === "p1"
-        ? num(row.p1_close_dec, NaN)
-        : side === "p2"
-          ? num(row.p2_close_dec, NaN)
-          : num(row.p3_close_dec, NaN);
+    const closeDec = decForSide(row, side, "close");
+    const openDec = decForSide(row, side, "open");
     let units = 0;
-    if (result === "W" && dec > 1) units = dec - 1;
+    if (result === "W" && closeDec > 1) units = closeDec - 1;
     else if (result === "L") units = -1;
 
     out.push({
       ...row,
       side,
       edge,
+      edgeOpen: edgeForSide(row, side, "open"),
       result,
-      dec,
+      dec: closeDec,
+      openDec,
       units,
-      american: decimalToAmerican(dec),
+      american: decimalToAmerican(closeDec),
+      americanOpen: decimalToAmerican(openDec),
     });
   }
   return out;
@@ -323,6 +332,11 @@ function renderEv() {
     .join("") || `<tr><td colspan="7">No EV rows.</td></tr>`;
 }
 
+function fmtAmerican(am) {
+  if (!Number.isFinite(am)) return "—";
+  return am > 0 ? `+${Math.round(am)}` : String(Math.round(am));
+}
+
 function renderBets() {
   const rows = state.bets.slice(0, 500);
   document.querySelector("#bets-table tbody").innerHTML = rows
@@ -339,15 +353,17 @@ function renderBets() {
         <td>${escapeHtml(r.player_name)} <span class="muted">(${escapeHtml(r.side)})</span></td>
         <td>${escapeHtml(opp)}</td>
         <td class="num">${escapeHtml(r.model_win_pct)}</td>
-        <td class="num">${escapeHtml(r.close_implied_pct)}</td>
-        <td class="num">${escapeHtml(r.edge_p1_pct)}</td>
-        <td class="num">${escapeHtml(r.edge_p2_pct)}</td>
-        <td class="num">${escapeHtml(r.edge_p3_pct || "—")}</td>
+        <td class="num" title="Open ${escapeHtml(r.open_time || "—")}">${escapeHtml(r.open_implied_pct || "—")}</td>
+        <td class="num" title="Close ${escapeHtml(r.close_time || "—")}">${escapeHtml(r.close_implied_pct)}</td>
+        <td class="num">${fmtAmerican(r.americanOpen)}</td>
+        <td class="num">${fmtAmerican(r.american)}</td>
+        <td class="num">${Number.isFinite(r.edgeOpen) ? fmtPct(r.edgeOpen) : "—"}</td>
+        <td class="num">${Number.isFinite(r.edge) ? fmtPct(r.edge) : "—"}</td>
         <td>${escapeHtml(r.pick_side_at_10 || r.side)}</td>
         <td>${resultBadge(r.result)}</td>
       </tr>`;
     })
-    .join("") || `<tr><td colspan="13">No graded bets for filters.</td></tr>`;
+    .join("") || `<tr><td colspan="15">No graded bets for filters.</td></tr>`;
 }
 
 function playersByDg(projections, round) {

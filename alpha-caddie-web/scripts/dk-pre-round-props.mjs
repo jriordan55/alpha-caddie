@@ -277,16 +277,47 @@ function ingestAuditRow(best, row, roundStartUtcMs) {
   const key = `${dg}|${propRound}|${market}`;
   const prev = best.get(key);
   const snap = snapFromAuditRow(norm, capturedMs);
-  if (!prev || capturedMs > prev.capturedMs) {
+  const openFields = {
+    openLine: line,
+    openOver: over,
+    openUnder: under,
+    openCapturedMs: capturedMs,
+  };
+  // Close = most recent pre-tee capture; open = earliest pre-tee capture.
+  if (!prev) {
     best.set(key, {
       line,
       over,
       under,
       capturedMs,
       ...snap,
+      ...openFields,
       displayRound: propRound,
     });
+    return;
   }
+  const next = { ...prev };
+  if (!Number.isFinite(prev.openCapturedMs) || capturedMs < prev.openCapturedMs) {
+    next.openLine = line;
+    next.openOver = over;
+    next.openUnder = under;
+    next.openCapturedMs = capturedMs;
+  }
+  if (!Number.isFinite(prev.capturedMs) || capturedMs > prev.capturedMs) {
+    Object.assign(next, {
+      line,
+      over,
+      under,
+      capturedMs,
+      ...snap,
+      displayRound: propRound,
+      openLine: next.openLine,
+      openOver: next.openOver,
+      openUnder: next.openUnder,
+      openCapturedMs: next.openCapturedMs,
+    });
+  }
+  best.set(key, next);
 }
 
 /** Parse audit CSV text (browser or Node) into pre-round DK props index. */

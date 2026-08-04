@@ -134,7 +134,10 @@ if ($LiveWeekOnly) {
   Remove-Item Env:\GOLF_REFRESH_LIVE_FULL_REBUILD -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_HISTORICAL_ROUNDS_FULL_HISTORY -ErrorAction SilentlyContinue
   $env:GOLF_REFRESH_LIVE_SKIP_CSV_MERGE = "1"
-  Remove-Item Env:\GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE -ErrorAction SilentlyContinue
+  # After live-in-play: merge recent DataGolf rounds into CSV so Historical Trends gets
+  # completed / prior-round rows (CI has no R/pgatouR). Must be "0" — unsetting still
+  # defaults skipPostCsvMerge=true in refresh-live-week.mjs.
+  $env:GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE = "0"
   $env:GOLF_REFRESH_LIVE_SKIP_HISTORY_REBUILD = "1"
   $env:GOLF_SKIP_ROUND_WEATHER_BACKFILL = "1"
   # Never allow lean mode to skip the live Open-Meteo bake.
@@ -189,9 +192,10 @@ if ($LiveWeekOnly) {
   $env:GOLF_WITHIN_EVENT_COUNTING_BLEND = "0"
   Write-Host 'LiveWeekOnly (lean): projections + odds (DK/PP/SL/UD/FD/Kalshi/Caesars) + Trends patch + tracker.'
   Write-Host 'Live Open-Meteo weather bake always runs on push:live (tee-time forecast into scores).'
+  Write-Host 'Historical Trends: post-live DataGolf rounds CSV merge + live-in-play shard patch (no full build:history).'
   Write-Host 'Both trackers incremental from last recorded date: O/U projection-tracker (DK/PP/SL/UD/FD/CZR/KL) + matchup-tracker.'
   Write-Host 'Skill-first score (keep 1.0) + Detroit club hist pool when North/South exact hist is thin.'
-  Write-Host 'Skipped: full CSV merge, weather archive backfill, finish-tool, book-cal fit, odds ROI backtest, full prior O/U rebuild.'
+  Write-Host 'Skipped: pre-fetch full CSV merge, weather archive backfill, finish-tool, book-cal fit, odds ROI backtest, full prior O/U rebuild.'
   Write-Host 'LiveWeekOnly markets: Birdies = birdies+eagles (or better), Bogeys = bogeys+doubles (or worse), same as DK/PP/SL/UD/FD/CZR.'
 } elseif (-not $NoFullHistory) {
   $env:GOLF_HISTORICAL_ROUNDS_FULL_HISTORY = "1"

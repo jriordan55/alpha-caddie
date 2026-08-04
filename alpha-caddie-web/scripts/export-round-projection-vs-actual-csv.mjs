@@ -49,31 +49,18 @@ import {
   EXPORT_ACTUAL_COLS,
   EXPORT_ALT_BOOKS,
   EXPORT_ALT_SOURCE_COLS,
+  EXPORT_ALT_OPEN_AT_COLS,
+  EXPORT_ALT_CLOSE_AT_COLS,
   EXPORT_BOOK_LINE_COLS,
-  EXPORT_PP_LINE_COLS,
-  EXPORT_SL_LINE_COLS,
-  EXPORT_UD_LINE_COLS,
-  EXPORT_FD_LINE_COLS,
-  EXPORT_CZR_LINE_COLS,
-  EXPORT_KL_LINE_COLS,
+  EXPORT_BOOK_OPEN_LINE_COLS,
+  EXPORT_OPEN_OVER_ODDS_COLS,
+  EXPORT_OPEN_UNDER_ODDS_COLS,
   EXPORT_MARKETS,
   EXPORT_MODEL_LINE_COLS,
   EXPORT_OVER_ODDS_COLS,
-  EXPORT_PP_OVER_ODDS_COLS,
-  EXPORT_SL_OVER_ODDS_COLS,
-  EXPORT_UD_OVER_ODDS_COLS,
-  EXPORT_FD_OVER_ODDS_COLS,
-  EXPORT_CZR_OVER_ODDS_COLS,
-  EXPORT_KL_OVER_ODDS_COLS,
   EXPORT_OVER_RESULT_COLS,
   EXPORT_PRICING_MODES,
   EXPORT_UNDER_ODDS_COLS,
-  EXPORT_PP_UNDER_ODDS_COLS,
-  EXPORT_SL_UNDER_ODDS_COLS,
-  EXPORT_UD_UNDER_ODDS_COLS,
-  EXPORT_FD_UNDER_ODDS_COLS,
-  EXPORT_CZR_UNDER_ODDS_COLS,
-  EXPORT_KL_UNDER_ODDS_COLS,
   EXPORT_UNDER_RESULT_COLS,
   birdiesPlusEaglesFromRow,
   bogeysPlusDoublesFromRow,
@@ -165,18 +152,32 @@ const DEFAULT_XLSX_OUT = join(WEB_ROOT, "data", "round_projection_vs_actual.xlsx
 const ALT_LINE_COLS = EXPORT_ALT_BOOKS.flatMap((b) => b.lineCols);
 const ALT_OVER_COLS = EXPORT_ALT_BOOKS.flatMap((b) => b.overCols);
 const ALT_UNDER_COLS = EXPORT_ALT_BOOKS.flatMap((b) => b.underCols);
+const ALT_OPEN_LINE_COLS = EXPORT_ALT_BOOKS.flatMap((b) => b.openLineCols);
+const ALT_OPEN_OVER_COLS = EXPORT_ALT_BOOKS.flatMap((b) => b.openOverCols);
+const ALT_OPEN_UNDER_COLS = EXPORT_ALT_BOOKS.flatMap((b) => b.openUnderCols);
 
+/** Close = most recent pre-tee capture; open = earliest. Timestamps + open/close odds for every book. */
 const DETAIL_MID_COLS = [
   ...EXPORT_ACTUAL_COLS,
   "book_odds_source",
   ...EXPORT_ALT_SOURCE_COLS,
+  "book_odds_open_at",
+  "book_odds_close_at",
+  ...EXPORT_ALT_OPEN_AT_COLS,
+  ...EXPORT_ALT_CLOSE_AT_COLS,
   ...EXPORT_MODEL_LINE_COLS,
   ...EXPORT_BOOK_LINE_COLS,
   ...ALT_LINE_COLS,
+  ...EXPORT_BOOK_OPEN_LINE_COLS,
+  ...ALT_OPEN_LINE_COLS,
   ...EXPORT_OVER_ODDS_COLS,
   ...EXPORT_UNDER_ODDS_COLS,
   ...ALT_OVER_COLS,
   ...ALT_UNDER_COLS,
+  ...EXPORT_OPEN_OVER_ODDS_COLS,
+  ...EXPORT_OPEN_UNDER_ODDS_COLS,
+  ...ALT_OPEN_OVER_COLS,
+  ...ALT_OPEN_UNDER_COLS,
   ...EXPORT_OVER_RESULT_COLS,
   ...EXPORT_UNDER_RESULT_COLS,
 ];
@@ -189,6 +190,15 @@ function formatAmericanOdds(am) {
   const v = Math.round(num(am, NaN));
   if (!Number.isFinite(v) || v === 0) return "";
   return v > 0 ? `+${v}` : String(v);
+}
+
+function isoFromMs(ms) {
+  if (!Number.isFinite(ms)) return "";
+  try {
+    return new Date(ms).toISOString().replace(/\.\d{3}Z$/, "Z");
+  } catch {
+    return "";
+  }
 }
 
 function fmtActual(marketKey, v) {
@@ -217,6 +227,11 @@ function propsIndexToJson(map) {
       line: num(v.line, NaN),
       over: num(v.over, NaN),
       under: num(v.under, NaN),
+      openLine: num(v.openLine, NaN),
+      openOver: num(v.openOver, NaN),
+      openUnder: num(v.openUnder, NaN),
+      openCapturedMs: num(v.openCapturedMs, NaN),
+      capturedMs: num(v.capturedMs, NaN),
       modelTotal: num(v.modelTotal, NaN),
       modelBirdies: num(v.modelBirdies, NaN),
       modelPars: num(v.modelPars, NaN),
@@ -307,13 +322,23 @@ function emptyDetailRowCells() {
       ...EXPORT_ACTUAL_COLS,
       "book_odds_source",
       ...EXPORT_ALT_SOURCE_COLS,
+      "book_odds_open_at",
+      "book_odds_close_at",
+      ...EXPORT_ALT_OPEN_AT_COLS,
+      ...EXPORT_ALT_CLOSE_AT_COLS,
       ...EXPORT_MODEL_LINE_COLS,
       ...EXPORT_BOOK_LINE_COLS,
       ...ALT_LINE_COLS,
+      ...EXPORT_BOOK_OPEN_LINE_COLS,
+      ...ALT_OPEN_LINE_COLS,
       ...EXPORT_OVER_ODDS_COLS,
       ...EXPORT_UNDER_ODDS_COLS,
       ...ALT_OVER_COLS,
       ...ALT_UNDER_COLS,
+      ...EXPORT_OPEN_OVER_ODDS_COLS,
+      ...EXPORT_OPEN_UNDER_ODDS_COLS,
+      ...ALT_OPEN_OVER_COLS,
+      ...ALT_OPEN_UNDER_COLS,
       ...EXPORT_OVER_RESULT_COLS,
       ...EXPORT_UNDER_RESULT_COLS,
       "edge",
@@ -336,13 +361,23 @@ function detailRowOrderCells(rowCells, playerSignals, meta) {
     ...EXPORT_ACTUAL_COLS.map((c) => rowCells[c]),
     rowCells.book_odds_source,
     ...EXPORT_ALT_SOURCE_COLS.map((c) => rowCells[c]),
+    rowCells.book_odds_open_at,
+    rowCells.book_odds_close_at,
+    ...EXPORT_ALT_OPEN_AT_COLS.map((c) => rowCells[c]),
+    ...EXPORT_ALT_CLOSE_AT_COLS.map((c) => rowCells[c]),
     ...EXPORT_MODEL_LINE_COLS.map((c) => rowCells[c]),
     ...EXPORT_BOOK_LINE_COLS.map((c) => rowCells[c]),
     ...ALT_LINE_COLS.map((c) => rowCells[c]),
+    ...EXPORT_BOOK_OPEN_LINE_COLS.map((c) => rowCells[c]),
+    ...ALT_OPEN_LINE_COLS.map((c) => rowCells[c]),
     ...EXPORT_OVER_ODDS_COLS.map((c) => rowCells[c]),
     ...EXPORT_UNDER_ODDS_COLS.map((c) => rowCells[c]),
     ...ALT_OVER_COLS.map((c) => rowCells[c]),
     ...ALT_UNDER_COLS.map((c) => rowCells[c]),
+    ...EXPORT_OPEN_OVER_ODDS_COLS.map((c) => rowCells[c]),
+    ...EXPORT_OPEN_UNDER_ODDS_COLS.map((c) => rowCells[c]),
+    ...ALT_OPEN_OVER_COLS.map((c) => rowCells[c]),
+    ...ALT_OPEN_UNDER_COLS.map((c) => rowCells[c]),
     ...EXPORT_OVER_RESULT_COLS.map((c) => rowCells[c]),
     ...EXPORT_UNDER_RESULT_COLS.map((c) => rowCells[c]),
     ...EXPORT_SIGNAL_COLS.map((c) => playerSignals[c] || ""),
@@ -997,9 +1032,16 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
             ? Math.round(wfMu * 10) / 10
             : wfMu
           : NaN;
-        const bookLine = snap ? parseDkBookLine(snap.dkLine) : NaN;
-        const overOdds = snap?.overOdds;
-        const underOdds = snap?.underOdds;
+        const bookLine = snap ? parseDkBookLine(snap.dkLine ?? snap.line) : NaN;
+        const overOdds = snap?.overOdds ?? snap?.over;
+        const underOdds = snap?.underOdds ?? snap?.under;
+        const openLine = snap
+          ? parseDkBookLine(Number.isFinite(snap.openLine) ? snap.openLine : snap.dkLine ?? snap.line)
+          : NaN;
+        const openOver = Number.isFinite(snap?.openOver) ? snap.openOver : overOdds;
+        const openUnder = Number.isFinite(snap?.openUnder) ? snap.openUnder : underOdds;
+        const openCapturedMs = snap?.openCapturedMs;
+        const closeCapturedMs = snap?.capturedMs;
         // Independent rolling-course model is evidence; sharp no-vig odds are
         // the prior. If no real two-way prior exists, retain the pure model.
         const independentModelLine = Number.isFinite(wfModelLine) ? wfModelLine : auditModelLine;
@@ -1035,6 +1077,11 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
           bookLine,
           overOdds,
           underOdds,
+          openLine,
+          openOver,
+          openUnder,
+          openCapturedMs,
+          closeCapturedMs,
           act,
         });
       }
@@ -1060,7 +1107,18 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
     const rowCells = {};
 
     for (const md of marketDrafts) {
-      const { spec, rawModelLine, bookLine, overOdds, underOdds } = md;
+      const {
+        spec,
+        rawModelLine,
+        bookLine,
+        overOdds,
+        underOdds,
+        openLine,
+        openOver,
+        openUnder,
+        openCapturedMs,
+        closeCapturedMs,
+      } = md;
       // Backfill grades raw walk-forward μ vs DK; do not bake book μ-shift (that tightens toward DK).
       const modelLine = Number.isFinite(rawModelLine) ? rawModelLine : NaN;
 
@@ -1068,6 +1126,15 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
       rowCells[spec.bookLineCol] = Number.isFinite(bookLine) ? fmtLine(spec.market, bookLine) : "";
       rowCells[spec.overOddsCol] = formatAmericanOdds(overOdds);
       rowCells[spec.underOddsCol] = formatAmericanOdds(underOdds);
+      rowCells[spec.bookOpenLineCol] = Number.isFinite(openLine) ? fmtLine(spec.market, openLine) : "";
+      rowCells[spec.openOverOddsCol] = formatAmericanOdds(openOver);
+      rowCells[spec.openUnderOddsCol] = formatAmericanOdds(openUnder);
+      if (!rowCells.book_odds_open_at && Number.isFinite(openCapturedMs)) {
+        rowCells.book_odds_open_at = isoFromMs(openCapturedMs);
+      }
+      if (!rowCells.book_odds_close_at && Number.isFinite(closeCapturedMs)) {
+        rowCells.book_odds_close_at = isoFromMs(closeCapturedMs);
+      }
 
       const actual = actualForMarket(act, spec.key);
       const gradeLine = Number.isFinite(bookLine) ? bookLine : modelLine;
@@ -1166,6 +1233,21 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
         rowCells[spec[book.lineKey]] = fmtAltBookLine(spec.market, lineVal, book.wholeLine);
         rowCells[spec[book.overKey]] = formatAmericanOdds(snap.over);
         rowCells[spec[book.underKey]] = formatAmericanOdds(snap.under);
+        const openRaw = Number.isFinite(snap.openLine) ? snap.openLine : snap.line;
+        const openVal = book.wholeLine ? num(openRaw, NaN) : parseDkBookLine(openRaw);
+        rowCells[spec[book.openLineKey]] = fmtAltBookLine(spec.market, openVal, book.wholeLine);
+        rowCells[spec[book.openOverKey]] = formatAmericanOdds(
+          Number.isFinite(snap.openOver) ? snap.openOver : snap.over,
+        );
+        rowCells[spec[book.openUnderKey]] = formatAmericanOdds(
+          Number.isFinite(snap.openUnder) ? snap.openUnder : snap.under,
+        );
+        if (!rowCells[book.openAtCol]) {
+          rowCells[book.openAtCol] = isoFromMs(snap.openCapturedMs) || isoFromMs(snap.capturedMs);
+        }
+        if (!rowCells[book.closeAtCol]) {
+          rowCells[book.closeAtCol] = isoFromMs(snap.capturedMs);
+        }
       }
       if (any) altSources[book.sourceCol] = "pre_round_audit";
     }
@@ -1914,6 +1996,20 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
           rowCells[spec.bookLineCol] = fmtDkBookLine(spec.market, bookLine);
           rowCells[spec.overOddsCol] = formatAmericanOdds(dk.over);
           rowCells[spec.underOddsCol] = formatAmericanOdds(dk.under);
+          const openLine = Number.isFinite(dk.openLine) ? parseDkBookLine(dk.openLine) : bookLine;
+          rowCells[spec.bookOpenLineCol] = fmtDkBookLine(spec.market, openLine);
+          rowCells[spec.openOverOddsCol] = formatAmericanOdds(
+            Number.isFinite(dk.openOver) ? dk.openOver : dk.over,
+          );
+          rowCells[spec.openUnderOddsCol] = formatAmericanOdds(
+            Number.isFinite(dk.openUnder) ? dk.openUnder : dk.under,
+          );
+          if (!rowCells.book_odds_open_at) {
+            rowCells.book_odds_open_at = isoFromMs(dk.openCapturedMs) || isoFromMs(dk.capturedMs);
+          }
+          if (!rowCells.book_odds_close_at) {
+            rowCells.book_odds_close_at = isoFromMs(dk.capturedMs);
+          }
         }
         for (let bi = 0; bi < altBookRuntime.length; bi++) {
           const ab = altBookRuntime[bi];
@@ -1924,6 +2020,21 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
           rowCells[spec[ab.book.lineKey]] = fmtAltBookLine(spec.market, lineVal, ab.book.wholeLine);
           rowCells[spec[ab.book.overKey]] = formatAmericanOdds(hit.over);
           rowCells[spec[ab.book.underKey]] = formatAmericanOdds(hit.under);
+          const openRaw = Number.isFinite(hit.openLine) ? hit.openLine : hit.line;
+          const openVal = ab.book.wholeLine ? num(openRaw, NaN) : parseDkBookLine(openRaw);
+          rowCells[spec[ab.book.openLineKey]] = fmtAltBookLine(spec.market, openVal, ab.book.wholeLine);
+          rowCells[spec[ab.book.openOverKey]] = formatAmericanOdds(
+            Number.isFinite(hit.openOver) ? hit.openOver : hit.over,
+          );
+          rowCells[spec[ab.book.openUnderKey]] = formatAmericanOdds(
+            Number.isFinite(hit.openUnder) ? hit.openUnder : hit.under,
+          );
+          if (!rowCells[ab.book.openAtCol]) {
+            rowCells[ab.book.openAtCol] = isoFromMs(hit.openCapturedMs) || isoFromMs(hit.capturedMs);
+          }
+          if (!rowCells[ab.book.closeAtCol]) {
+            rowCells[ab.book.closeAtCol] = isoFromMs(hit.capturedMs);
+          }
         }
         const gradeLine = Number.isFinite(bookLine) ? bookLine : modelLine;
 

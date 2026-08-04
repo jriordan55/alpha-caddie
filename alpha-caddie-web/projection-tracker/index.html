@@ -223,7 +223,7 @@
     </section>
 
     <section id="panel-bets" class="panel" role="tabpanel">
-      <p class="note">Each row is one player × round × market × book with a real posted line (DraftKings, PrizePicks, Sleeper, Underdog, FanDuel, Caesars, Kalshi). <strong>Model μ</strong> = projection; <strong>Conf %</strong> = calibrated P(pick wins); <strong>Book %</strong> = de-vigged fair price; <strong>Edge</strong> = conf − book. Beat-book bets need conf ≥ book (min confidence filter) and a minimum |μ−line| gap. Core markets: total score, birdies, GIR, fairways.</p>
+      <p class="note">Each row is one player × round × market × book with a real posted line (DraftKings, PrizePicks, Sleeper, Underdog, FanDuel, Caesars, Kalshi). <strong>Close line/odds</strong> = most recent pre-tee audit capture (used for edge &amp; P/L). <strong>Open</strong> = earliest pre-tee capture when available. <strong>Model μ</strong> = projection; <strong>Conf %</strong> = calibrated P(pick wins); <strong>Book %</strong> = de-vigged fair price; <strong>Edge</strong> = conf − book. Core markets: total score, birdies, GIR, fairways.</p>
       <div class="kpi-grid" id="bets-kpis"></div>
       <div class="table-card">
         <div class="table-wrap table-wrap-tall">
@@ -236,11 +236,14 @@
                 <th>Market</th>
                 <th>Sportsbook</th>
                 <th class="num">Model μ</th>
-                <th class="num">Line</th>
-                <th class="num">μ−line</th>
-                <th class="num">Over</th>
+                <th class="num" title="Earliest pre-tee line">Open line</th>
+                <th class="num" title="Most recent pre-tee line (pricing)">Close line</th>
+                <th class="num">μ−close</th>
+                <th class="num" title="Opening over odds">Open O</th>
+                <th class="num" title="Closing over odds">Close O</th>
                 <th>Over</th>
-                <th class="num">Under</th>
+                <th class="num" title="Opening under odds">Open U</th>
+                <th class="num" title="Closing under odds">Close U</th>
                 <th>Under</th>
                 <th>Pick</th>
                 <th class="num" title="Calibrated P(pick wins)">Conf %</th>

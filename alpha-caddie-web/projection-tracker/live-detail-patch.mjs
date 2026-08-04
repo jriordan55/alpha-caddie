@@ -352,6 +352,12 @@ function patchBookLinesFromLiveProps(detailRows, projections, liveBookProps) {
           next[spec.bookLineCol] = fmtBookLine(spec.market, parseDkBookLine(dk.line));
           next[spec.overOddsCol] = formatAmerican(dk.over);
           next[spec.underOddsCol] = formatAmerican(dk.under);
+          const openLine = Number.isFinite(num(dk.openLine)) ? parseDkBookLine(dk.openLine) : parseDkBookLine(dk.line);
+          if (Number.isFinite(openLine) && spec.bookOpenLineCol) {
+            next[spec.bookOpenLineCol] = fmtBookLine(spec.market, openLine);
+            next[spec.openOverOddsCol] = formatAmerican(Number.isFinite(num(dk.openOver)) ? dk.openOver : dk.over);
+            next[spec.openUnderOddsCol] = formatAmerican(Number.isFinite(num(dk.openUnder)) ? dk.openUnder : dk.under);
+          }
           if (!oddsSource) oddsSource = dk.oddsSource;
           if (dk.oddsSource === "pre_round_audit") {
             const auditMu = auditModelFromPropSnap(dk, spec);
@@ -372,6 +378,12 @@ function patchBookLinesFromLiveProps(detailRows, projections, liveBookProps) {
           next[spec.ppLineCol] = fmtBookLine(spec.market, num(pp.line), { prizePicks: true });
           next[spec.ppOverOddsCol] = formatAmerican(pp.over);
           next[spec.ppUnderOddsCol] = formatAmerican(pp.under);
+          const openLine = Number.isFinite(num(pp.openLine)) ? num(pp.openLine) : num(pp.line);
+          if (Number.isFinite(openLine) && spec.ppOpenLineCol) {
+            next[spec.ppOpenLineCol] = fmtBookLine(spec.market, openLine, { prizePicks: true });
+            next[spec.ppOpenOverOddsCol] = formatAmerican(Number.isFinite(num(pp.openOver)) ? pp.openOver : pp.over);
+            next[spec.ppOpenUnderOddsCol] = formatAmerican(Number.isFinite(num(pp.openUnder)) ? pp.openUnder : pp.under);
+          }
           if (!ppOddsSource) ppOddsSource = pp.oddsSource;
           if (pp.oddsSource === "pre_round_audit") {
             const auditMu = auditModelFromPropSnap(pp, spec);

@@ -3095,322 +3095,132 @@
     "last_update": "2026-07-30 7:45 PM"
   },
   "field_updates": {
-    "course_name": "Detroit Golf Club",
-    "current_round": 2,
-    "date_end": "2026-08-02",
-    "date_start": "2026-07-30",
-    "event_id": 524,
-    "event_name": "Rocket Classic",
+    "course_name": "Sedgefield Country Club",
+    "current_round": 1,
+    "date_end": "2026-08-09",
+    "date_start": "2026-08-06",
+    "event_id": 13,
+    "event_name": "Wyndham Championship",
     "field": [
       {
-        "am": 0,
+        "am": 1,
         "country": "USA",
-        "dg_id": 35071,
-        "dg_rank": null,
+        "dg_id": 32652,
+        "dg_rank": 342,
         "owgr_rank": null,
-        "player_name": "Azallion, Daniel",
-        "player_num": 63552,
-        "pre_tourn_pageviews": 123,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 08:50",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 14:00",
-            "wave": "late"
-          }
-        ],
+        "player_name": "Akina, Kihei",
+        "player_num": 67118,
+        "pre_tourn_pageviews": 98,
+        "teetimes": [],
         "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 19846,
-        "dg_rank": 100,
-        "owgr_rank": 155,
+        "dg_rank": 110,
+        "owgr_rank": 159,
         "player_name": "Bauchou, Zach",
         "player_num": 48001,
-        "pre_tourn_pageviews": 598,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 14:00",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 08:50",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "89"
+        "pre_tourn_pageviews": 158,
+        "teetimes": [],
+        "tour_rank": "93"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 17606,
+        "dg_rank": 105,
+        "owgr_rank": 56,
+        "player_name": "Berger, Daniel",
+        "player_num": 40026,
+        "pre_tourn_pageviews": 358,
+        "teetimes": [],
+        "tour_rank": "58"
       },
       {
         "am": 0,
         "country": "RSA",
         "dg_id": 18103,
-        "dg_rank": 68,
-        "owgr_rank": 99,
+        "dg_rank": 71,
+        "owgr_rank": 98,
         "player_name": "Bezuidenhout, Christiaan",
         "player_num": 45522,
-        "pre_tourn_pageviews": 999,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 07:11",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 12:21",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "91"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 26096,
-        "dg_rank": 31,
-        "owgr_rank": 32,
-        "player_name": "Bhatia, Akshay",
-        "player_num": 56630,
-        "pre_tourn_pageviews": 3432,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 07:55",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 13:05",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "12"
+        "pre_tourn_pageviews": 443,
+        "teetimes": [],
+        "tour_rank": "92"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 17639,
-        "dg_rank": 82,
-        "owgr_rank": 142,
+        "dg_rank": 86,
+        "owgr_rank": 143,
         "player_name": "Blair, Zac",
         "player_num": 40058,
-        "pre_tourn_pageviews": 1315,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 07:11",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 12:21",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "115"
+        "pre_tourn_pageviews": 457,
+        "teetimes": [],
+        "tour_rank": "117"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 24956,
-        "dg_rank": 247,
-        "owgr_rank": 123,
+        "dg_rank": 201,
+        "owgr_rank": 119,
         "player_name": "Blanchet, Chandler",
         "player_num": 54788,
-        "pre_tourn_pageviews": 401,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 14:00",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 08:50",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "105"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 13872,
-        "dg_rank": 44,
-        "owgr_rank": 44,
-        "player_name": "Bradley, Keegan",
-        "player_num": 33141,
-        "pre_tourn_pageviews": 1915,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 07:33",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 12:43",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "76"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 29197,
-        "dg_rank": 87,
-        "owgr_rank": 60,
-        "player_name": "Brennan, Michael",
-        "player_num": 61522,
-        "pre_tourn_pageviews": 2177,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 13:16",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 08:06",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 245,
+        "teetimes": [],
         "tour_rank": "106"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 29433,
-        "dg_rank": 35,
-        "owgr_rank": 31,
-        "player_name": "Bridgeman, Jacob",
-        "player_num": 60004,
-        "pre_tourn_pageviews": 2154,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 13:16",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 08:06",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "13"
+        "dg_id": 13872,
+        "dg_rank": 34,
+        "owgr_rank": 45,
+        "player_name": "Bradley, Keegan",
+        "player_num": 33141,
+        "pre_tourn_pageviews": 613,
+        "teetimes": [],
+        "tour_rank": "72"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 29197,
+        "dg_rank": 67,
+        "owgr_rank": 58,
+        "player_name": "Brennan, Michael",
+        "player_num": 61522,
+        "pre_tourn_pageviews": 472,
+        "teetimes": [],
+        "tour_rank": "105"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 32152,
+        "dg_rank": 73,
+        "owgr_rank": 94,
+        "player_name": "Brown, Blades",
+        "player_num": 66417,
+        "pre_tourn_pageviews": 808,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 18628,
-        "dg_rank": 373,
-        "owgr_rank": 148,
+        "dg_rank": 354,
+        "owgr_rank": 149,
         "player_name": "Campbell, Brian",
         "player_num": 46443,
-        "pre_tourn_pageviews": 276,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 13:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 07:55",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "165"
+        "pre_tourn_pageviews": 338,
+        "teetimes": [],
+        "tour_rank": "161"
       },
       {
         "am": 0,
@@ -3420,1547 +3230,549 @@
         "owgr_rank": null,
         "player_name": "Campos, Rafael",
         "player_num": 32070,
-        "pre_tourn_pageviews": 183,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 13:38",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 08:28",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "174"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 15466,
-        "dg_rank": 16,
-        "owgr_rank": 39,
-        "player_name": "Cantlay, Patrick",
-        "player_num": 35450,
-        "pre_tourn_pageviews": 2996,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 13:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 07:55",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "43"
+        "pre_tourn_pageviews": 83,
+        "teetimes": [],
+        "tour_rank": "175"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 27819,
-        "dg_rank": 105,
-        "owgr_rank": 102,
+        "dg_rank": 90,
+        "owgr_rank": 96,
         "player_name": "Castillo, Ricky",
         "player_num": 59440,
-        "pre_tourn_pageviews": 626,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 07:33",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 12:43",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "68"
+        "pre_tourn_pageviews": 278,
+        "teetimes": [],
+        "tour_rank": "66"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 29665,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Celano, Ryan",
-        "player_num": 58303,
-        "pre_tourn_pageviews": 305,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 08:39",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 13:49",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": null
+        "dg_id": 14502,
+        "dg_rank": 49,
+        "owgr_rank": 42,
+        "player_name": "Cauley, Bud",
+        "player_num": 34021,
+        "pre_tourn_pageviews": 578,
+        "teetimes": [],
+        "tour_rank": "33"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 30620,
-        "dg_rank": 199,
-        "owgr_rank": 245,
+        "dg_rank": 206,
+        "owgr_rank": 249,
         "player_name": "Chatfield, Davis",
         "player_num": 59006,
-        "pre_tourn_pageviews": 870,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 09:01",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 14:11",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "135"
+        "pre_tourn_pageviews": 391,
+        "teetimes": [],
+        "tour_rank": "138"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 32330,
-        "dg_rank": 288,
-        "owgr_rank": 305,
+        "dg_rank": 235,
+        "owgr_rank": 269,
         "player_name": "Clanton, Luke",
         "player_num": 66743,
-        "pre_tourn_pageviews": 632,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 13:49",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 08:39",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "156"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 23604,
-        "dg_rank": 11,
-        "owgr_rank": 9,
-        "player_name": "Clark, Wyndham",
-        "player_num": 51766,
-        "pre_tourn_pageviews": 3403,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 07:33",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 12:43",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "4"
+        "pre_tourn_pageviews": 429,
+        "teetimes": [],
+        "tour_rank": "147"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 21756,
-        "dg_rank": 58,
-        "owgr_rank": 70,
+        "dg_rank": 63,
+        "owgr_rank": 74,
         "player_name": "Cole, Eric",
         "player_num": 47591,
-        "pre_tourn_pageviews": 1688,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 07:00",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 12:10",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "44"
+        "pre_tourn_pageviews": 391,
+        "teetimes": [],
+        "tour_rank": "45"
       },
       {
         "am": 0,
-        "country": "CAN",
-        "dg_id": 17576,
-        "dg_rank": 55,
-        "owgr_rank": 50,
-        "player_name": "Conners, Corey",
-        "player_num": 39997,
-        "pre_tourn_pageviews": 1657,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 12:54",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 07:44",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "56"
+        "country": "USA",
+        "dg_id": 28077,
+        "dg_rank": null,
+        "owgr_rank": null,
+        "player_name": "Collet, Tyler",
+        "player_num": 59570,
+        "pre_tourn_pageviews": 52,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 28309,
-        "dg_rank": 94,
-        "owgr_rank": 62,
+        "dg_rank": 108,
+        "owgr_rank": 64,
         "player_name": "Coody, Pierceson",
         "player_num": 59836,
-        "pre_tourn_pageviews": 1197,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 08:28",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 13:38",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "52"
+        "pre_tourn_pageviews": 149,
+        "teetimes": [],
+        "tour_rank": "53"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 27780,
-        "dg_rank": 243,
-        "owgr_rank": 241,
+        "dg_rank": 266,
+        "owgr_rank": 247,
         "player_name": "Crowe, Trace",
         "player_num": 52514,
-        "pre_tourn_pageviews": 295,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 14:00",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 08:50",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "155"
+        "pre_tourn_pageviews": 197,
+        "teetimes": [],
+        "tour_rank": "156"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 14509,
-        "dg_rank": 187,
-        "owgr_rank": 206,
+        "dg_rank": 188,
+        "owgr_rank": 211,
         "player_name": "Dahmen, Joel",
         "player_num": 34076,
-        "pre_tourn_pageviews": 667,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 07:00",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 12:10",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "113"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 21501,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Dalke, Brad",
-        "player_num": 49826,
-        "pre_tourn_pageviews": 1032,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 13:49",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 08:39",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": null
+        "pre_tourn_pageviews": 240,
+        "teetimes": [],
+        "tour_rank": "119"
       },
       {
         "am": 0,
         "country": "AUS",
         "dg_id": 17786,
-        "dg_rank": 499,
-        "owgr_rank": 307,
+        "dg_rank": null,
+        "owgr_rank": 317,
         "player_name": "Davis, Cam",
         "player_num": 45157,
-        "pre_tourn_pageviews": 1440,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 13:16",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 08:06",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 103,
+        "teetimes": [],
         "tour_rank": "191"
+      },
+      {
+        "am": 0,
+        "country": "AUS",
+        "dg_id": 9771,
+        "dg_rank": 77,
+        "owgr_rank": 61,
+        "player_name": "Day, Jason",
+        "player_num": 28089,
+        "pre_tourn_pageviews": 204,
+        "teetimes": [],
+        "tour_rank": "75"
       },
       {
         "am": 0,
         "country": "CHN",
         "dg_id": 16757,
-        "dg_rank": 136,
+        "dg_rank": 138,
         "owgr_rank": 189,
         "player_name": "Dou, Zecheng",
         "player_num": 37338,
-        "pre_tourn_pageviews": 707,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 13:49",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 08:39",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "110"
+        "pre_tourn_pageviews": 127,
+        "teetimes": [],
+        "tour_rank": "115"
       },
       {
         "am": 0,
         "country": "BEL",
         "dg_id": 22002,
-        "dg_rank": 144,
-        "owgr_rank": 177,
+        "dg_rank": 149,
+        "owgr_rank": 180,
         "player_name": "Dumont De Chassart, Adrien",
         "player_num": 50497,
-        "pre_tourn_pageviews": 434,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 08:39",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 13:49",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "117"
+        "pre_tourn_pageviews": 97,
+        "teetimes": [],
+        "tour_rank": "123"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 28270,
-        "dg_rank": 297,
-        "owgr_rank": 368,
+        "dg_rank": 341,
+        "owgr_rank": 386,
         "player_name": "Dunlap, Nick",
         "player_num": 59866,
-        "pre_tourn_pageviews": 487,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 07:00",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 12:10",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "163"
+        "pre_tourn_pageviews": 85,
+        "teetimes": [],
+        "tour_rank": "165"
       },
       {
         "am": 0,
         "country": "COL",
         "dg_id": 22833,
-        "dg_rank": 101,
-        "owgr_rank": 56,
+        "dg_rank": 111,
+        "owgr_rank": 59,
         "player_name": "Echavarria, Nico",
         "player_num": 51349,
-        "pre_tourn_pageviews": 1115,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 08:17",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 13:27",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "42"
+        "pre_tourn_pageviews": 395,
+        "teetimes": [],
+        "tour_rank": "44"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 26653,
-        "dg_rank": 171,
+        "dg_rank": 150,
         "owgr_rank": 187,
         "player_name": "Eckroat, Austin",
         "player_num": 57362,
-        "pre_tourn_pageviews": 451,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 13:27",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 08:17",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "119"
+        "pre_tourn_pageviews": 185,
+        "teetimes": [],
+        "tour_rank": "118"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 14577,
-        "dg_rank": 28,
-        "owgr_rank": 34,
+        "dg_rank": 44,
+        "owgr_rank": 36,
         "player_name": "English, Harris",
         "player_num": 34099,
-        "pre_tourn_pageviews": 1414,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 13:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 07:55",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "48"
+        "pre_tourn_pageviews": 504,
+        "teetimes": [],
+        "tour_rank": "49"
       },
       {
         "am": 0,
         "country": "CAN",
         "dg_id": 21883,
-        "dg_rank": 157,
-        "owgr_rank": 182,
+        "dg_rank": 163,
+        "owgr_rank": 183,
         "player_name": "Ewart, A.J.",
         "player_num": 50286,
-        "pre_tourn_pageviews": 487,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 13:49",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 08:39",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "96"
+        "pre_tourn_pageviews": 150,
+        "teetimes": [],
+        "tour_rank": "100"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 11676,
-        "dg_rank": 137,
-        "owgr_rank": 130,
+        "dg_rank": 154,
+        "owgr_rank": 134,
         "player_name": "Finau, Tony",
         "player_num": 29725,
-        "pre_tourn_pageviews": 1212,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 07:33",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 12:43",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "87"
+        "pre_tourn_pageviews": 166,
+        "teetimes": [],
+        "tour_rank": "89"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 25094,
-        "dg_rank": 182,
-        "owgr_rank": 210,
+        "dg_rank": 170,
+        "owgr_rank": 209,
         "player_name": "Fishburn, Patrick",
         "player_num": 54576,
-        "pre_tourn_pageviews": 508,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 08:50",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 14:00",
-            "wave": "late"
-          }
-        ],
+        "pre_tourn_pageviews": 192,
+        "teetimes": [],
         "tour_rank": "145"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 26657,
-        "dg_rank": 128,
-        "owgr_rank": 85,
+        "dg_rank": 158,
+        "owgr_rank": 86,
         "player_name": "Fisk, Steven",
         "player_num": 57123,
-        "pre_tourn_pageviews": 588,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 12:54",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 07:44",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "66"
+        "pre_tourn_pageviews": 110,
+        "teetimes": [],
+        "tour_rank": "69"
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 12965,
-        "dg_rank": 41,
-        "owgr_rank": 41,
-        "player_name": "Fowler, Rickie",
-        "player_num": 32102,
-        "pre_tourn_pageviews": 2252,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 07:44",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 12:54",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "32"
+        "country": "ENG",
+        "dg_id": 25362,
+        "dg_rank": 37,
+        "owgr_rank": 68,
+        "player_name": "Fitzpatrick, Alex",
+        "player_num": 55721,
+        "pre_tourn_pageviews": 859,
+        "teetimes": [],
+        "tour_rank": "19"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 11451,
-        "dg_rank": 295,
-        "owgr_rank": 260,
+        "dg_rank": 303,
+        "owgr_rank": 265,
         "player_name": "Garnett, Brice",
         "player_num": 29535,
-        "pre_tourn_pageviews": 226,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 12:21",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 07:11",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "128"
+        "pre_tourn_pageviews": 124,
+        "teetimes": [],
+        "tour_rank": "131"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 29767,
-        "dg_rank": 23,
-        "owgr_rank": 24,
+        "dg_rank": 21,
+        "owgr_rank": 25,
         "player_name": "Gerard, Ryan",
         "player_num": 59018,
-        "pre_tourn_pageviews": 3593,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 08:06",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 13:16",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "18"
+        "pre_tourn_pageviews": 1373,
+        "teetimes": [],
+        "tour_rank": "16"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 24550,
-        "dg_rank": 76,
-        "owgr_rank": 169,
+        "dg_rank": 64,
+        "owgr_rank": 155,
         "player_name": "Ghim, Doug",
         "player_num": 52375,
-        "pre_tourn_pageviews": 1168,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 08:28",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 13:38",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "101"
+        "pre_tourn_pageviews": 572,
+        "teetimes": [],
+        "tour_rank": "97"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 7399,
-        "dg_rank": 147,
-        "owgr_rank": 93,
+        "dg_rank": 172,
+        "owgr_rank": 100,
         "player_name": "Glover, Lucas",
         "player_num": 25900,
-        "pre_tourn_pageviews": 1132,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 07:44",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 12:54",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "92"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 27774,
-        "dg_rank": 13,
-        "owgr_rank": 7,
-        "player_name": "Gotterup, Chris",
-        "player_num": 59095,
-        "pre_tourn_pageviews": 3864,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 07:44",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 12:54",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "5"
+        "pre_tourn_pageviews": 492,
+        "teetimes": [],
+        "tour_rank": "96"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 23465,
-        "dg_rank": 98,
-        "owgr_rank": 83,
+        "dg_rank": 103,
+        "owgr_rank": 84,
         "player_name": "Greyserman, Max",
         "player_num": 51977,
-        "pre_tourn_pageviews": 1768,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 13:27",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 08:17",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 213,
+        "teetimes": [],
         "tour_rank": "99"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 24968,
-        "dg_rank": 21,
-        "owgr_rank": 19,
+        "dg_rank": 23,
+        "owgr_rank": 20,
         "player_name": "Griffin, Ben",
         "player_num": 54591,
-        "pre_tourn_pageviews": 3208,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 12:54",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 07:44",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 1147,
+        "teetimes": [],
         "tour_rank": "36"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 15330,
-        "dg_rank": 245,
-        "owgr_rank": 226,
+        "dg_rank": 277,
+        "owgr_rank": 233,
         "player_name": "Griffin, Lanto",
         "player_num": 35310,
-        "pre_tourn_pageviews": 302,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 07:00",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 12:10",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "154"
+        "pre_tourn_pageviews": 59,
+        "teetimes": [],
+        "tour_rank": "155"
       },
       {
         "am": 0,
         "country": "ARG",
         "dg_id": 12808,
-        "dg_rank": 89,
-        "owgr_rank": 101,
+        "dg_rank": 79,
+        "owgr_rank": 99,
         "player_name": "Grillo, Emiliano",
         "player_num": 31646,
-        "pre_tourn_pageviews": 1568,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 07:11",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 12:21",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "103"
+        "pre_tourn_pageviews": 651,
+        "teetimes": [],
+        "tour_rank": "104"
       },
       {
         "am": 0,
         "country": "ENG",
         "dg_id": 27194,
-        "dg_rank": 78,
-        "owgr_rank": 86,
+        "dg_rank": 92,
+        "owgr_rank": 88,
         "player_name": "Hall, Harry",
         "player_num": 57975,
-        "pre_tourn_pageviews": 705,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 08:17",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 13:27",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "60"
+        "pre_tourn_pageviews": 194,
+        "teetimes": [],
+        "tour_rank": "62"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 14578,
-        "dg_rank": 9,
-        "owgr_rank": 5,
-        "player_name": "Henley, Russell",
-        "player_num": 34098,
-        "pre_tourn_pageviews": 2434,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 12:43",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 07:33",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "14"
+        "dg_id": 8825,
+        "dg_rank": 56,
+        "owgr_rank": 60,
+        "player_name": "Harman, Brian",
+        "player_num": 27644,
+        "pre_tourn_pageviews": 642,
+        "teetimes": [],
+        "tour_rank": "63"
       },
       {
         "am": 0,
         "country": "RSA",
         "dg_id": 24342,
-        "dg_rank": 232,
-        "owgr_rank": 110,
+        "dg_rank": 251,
+        "owgr_rank": 117,
         "player_name": "Higgo, Garrick",
         "player_num": 54421,
-        "pre_tourn_pageviews": 346,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 12:43",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 07:33",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "161"
+        "pre_tourn_pageviews": 64,
+        "teetimes": [],
+        "tour_rank": "163"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 28469,
-        "dg_rank": 397,
-        "owgr_rank": 193,
+        "dg_rank": 331,
+        "owgr_rank": 194,
         "player_name": "Highsmith, Joe",
         "player_num": 60067,
-        "pre_tourn_pageviews": 250,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 12:54",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 07:44",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "153"
+        "pre_tourn_pageviews": 94,
+        "teetimes": [],
+        "tour_rank": "150"
       },
       {
         "am": 0,
         "country": "JPN",
         "dg_id": 20954,
-        "dg_rank": null,
-        "owgr_rank": 316,
+        "dg_rank": 490,
+        "owgr_rank": 323,
         "player_name": "Hirata, Kensei",
         "player_num": 49120,
-        "pre_tourn_pageviews": 199,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 08:39",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 13:49",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "166"
+        "pre_tourn_pageviews": 87,
+        "teetimes": [],
+        "tour_rank": "167"
       },
       {
         "am": 0,
         "country": "JPN",
         "dg_id": 22760,
-        "dg_rank": 70,
-        "owgr_rank": 65,
+        "dg_rank": 74,
+        "owgr_rank": 66,
         "player_name": "Hisatsune, Ryo",
         "player_num": 51287,
-        "pre_tourn_pageviews": 1726,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 12:32",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 07:22",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "40"
+        "pre_tourn_pageviews": 658,
+        "teetimes": [],
+        "tour_rank": "42"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 25157,
-        "dg_rank": 118,
-        "owgr_rank": 122,
+        "dg_rank": 120,
+        "owgr_rank": 130,
         "player_name": "Hodges, Lee",
         "player_num": 54628,
-        "pre_tourn_pageviews": 723,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 12:32",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 07:22",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "100"
+        "pre_tourn_pageviews": 228,
+        "teetimes": [],
+        "tour_rank": "101"
       },
       {
         "am": 0,
         "country": "PHI",
         "dg_id": 23504,
-        "dg_rank": 168,
-        "owgr_rank": 112,
+        "dg_rank": 134,
+        "owgr_rank": 103,
         "player_name": "Hoey, Rico",
         "player_num": 51696,
-        "pre_tourn_pageviews": 545,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 12:21",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 07:11",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "120"
+        "pre_tourn_pageviews": 199,
+        "teetimes": [],
+        "tour_rank": "112"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 15575,
-        "dg_rank": 179,
-        "owgr_rank": 118,
+        "dg_rank": 185,
+        "owgr_rank": 124,
         "player_name": "Hoge, Tom",
         "player_num": 35532,
-        "pre_tourn_pageviews": 579,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 13:27",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 08:17",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "77"
-      },
-      {
-        "am": 0,
-        "country": "DEN",
-        "dg_id": 23602,
-        "dg_rank": 43,
-        "owgr_rank": 38,
-        "player_name": "Hojgaard, Nicolai",
-        "player_num": 52453,
-        "pre_tourn_pageviews": 2534,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 13:16",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 08:06",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "30"
+        "pre_tourn_pageviews": 197,
+        "teetimes": [],
+        "tour_rank": "79"
       },
       {
         "am": 0,
         "country": "DEN",
         "dg_id": 23838,
-        "dg_rank": 133,
-        "owgr_rank": 95,
+        "dg_rank": 93,
+        "owgr_rank": 77,
         "player_name": "Hojgaard, Rasmus",
         "player_num": 52686,
-        "pre_tourn_pageviews": 921,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 13:38",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 08:28",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "125"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 33913,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Hooks, Joe",
-        "player_num": 59862,
-        "pre_tourn_pageviews": 364,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 08:50",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 14:00",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": null
+        "pre_tourn_pageviews": 334,
+        "teetimes": [],
+        "tour_rank": "103"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 11276,
-        "dg_rank": 122,
-        "owgr_rank": 164,
+        "dg_rank": 126,
+        "owgr_rank": 176,
         "player_name": "Horschel, Billy",
         "player_num": 29420,
-        "pre_tourn_pageviews": 1557,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 13:16",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 08:06",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "102"
+        "pre_tourn_pageviews": 667,
+        "teetimes": [],
+        "tour_rank": "107"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 15470,
-        "dg_rank": 151,
-        "owgr_rank": 163,
+        "dg_rank": 137,
+        "owgr_rank": 165,
         "player_name": "Hossler, Beau",
         "player_num": 35461,
-        "pre_tourn_pageviews": 574,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 12:21",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 07:11",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "121"
+        "pre_tourn_pageviews": 153,
+        "teetimes": [],
+        "tour_rank": "122"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 35195,
+        "dg_rank": null,
+        "owgr_rank": null,
+        "player_name": "Hrabak, Cooper",
+        "player_num": 66830,
+        "pre_tourn_pageviews": 31,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 16333,
-        "dg_rank": 207,
-        "owgr_rank": 137,
+        "dg_rank": 203,
+        "owgr_rank": 138,
         "player_name": "Hubbard, Mark",
         "player_num": 36801,
-        "pre_tourn_pageviews": 526,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 07:11",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 12:21",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "111"
+        "pre_tourn_pageviews": 333,
+        "teetimes": [],
+        "tour_rank": "116"
       },
       {
         "am": 0,
         "country": "CAN",
         "dg_id": 15556,
-        "dg_rank": 121,
-        "owgr_rank": 146,
+        "dg_rank": 122,
+        "owgr_rank": 150,
         "player_name": "Hughes, Mackenzie",
         "player_num": 35506,
-        "pre_tourn_pageviews": 518,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 08:28",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 13:38",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "114"
+        "pre_tourn_pageviews": 146,
+        "teetimes": [],
+        "tour_rank": "120"
       },
       {
         "am": 0,
@@ -4970,1445 +3782,645 @@
         "owgr_rank": null,
         "player_name": "Huskey, Keenan",
         "player_num": 56926,
-        "pre_tourn_pageviews": 184,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 09:01",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 14:11",
-            "wave": "late"
-          }
-        ],
+        "pre_tourn_pageviews": 40,
+        "teetimes": [],
         "tour_rank": null
       },
       {
         "am": 0,
         "country": "KOR",
         "dg_id": 17488,
-        "dg_rank": 111,
-        "owgr_rank": 79,
+        "dg_rank": 89,
+        "owgr_rank": 75,
         "player_name": "Im, Sungjae",
         "player_num": 39971,
-        "pre_tourn_pageviews": 1525,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 12:43",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 07:33",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "58"
+        "pre_tourn_pageviews": 920,
+        "teetimes": [],
+        "tour_rank": "57"
       },
       {
         "am": 0,
         "country": "GER",
         "dg_id": 16394,
-        "dg_rank": 146,
-        "owgr_rank": 106,
+        "dg_rank": 125,
+        "owgr_rank": 104,
         "player_name": "Jaeger, Stephan",
         "player_num": 36799,
-        "pre_tourn_pageviews": 1039,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 08:06",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 13:16",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "79"
+        "pre_tourn_pageviews": 164,
+        "teetimes": [],
+        "tour_rank": "77"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 29827,
-        "dg_rank": 102,
-        "owgr_rank": 397,
+        "dg_rank": 98,
+        "owgr_rank": 353,
         "player_name": "James, Ben",
         "player_num": 57869,
-        "pre_tourn_pageviews": 1361,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 09:01",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 14:11",
-            "wave": "late"
-          }
-        ],
+        "pre_tourn_pageviews": 451,
+        "teetimes": [],
         "tour_rank": "141"
-      },
-      {
-        "am": 1,
-        "country": "USA",
-        "dg_id": 35417,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Jennings, William",
-        "player_num": 70415,
-        "pre_tourn_pageviews": 173,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 14:11",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 09:01",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": null
       },
       {
         "am": 0,
         "country": "JPN",
         "dg_id": 19729,
-        "dg_rank": 181,
-        "owgr_rank": 166,
+        "dg_rank": 189,
+        "owgr_rank": 171,
         "player_name": "Kanaya, Takumi",
         "player_num": 47917,
-        "pre_tourn_pageviews": 266,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 07:22",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 12:32",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "139"
+        "pre_tourn_pageviews": 106,
+        "teetimes": [],
+        "tour_rank": "143"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 21889,
-        "dg_rank": 370,
-        "owgr_rank": 273,
+        "dg_rank": 380,
+        "owgr_rank": 275,
         "player_name": "Kang, Jeffrey",
         "player_num": 47393,
-        "pre_tourn_pageviews": 166,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 14:22",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 09:12",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "160"
+        "pre_tourn_pageviews": 46,
+        "teetimes": [],
+        "tour_rank": "162"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 32457,
-        "dg_rank": 93,
-        "owgr_rank": 63,
+        "dg_rank": 101,
+        "owgr_rank": 65,
         "player_name": "Keefer, Johnny",
         "player_num": 63454,
-        "pre_tourn_pageviews": 1920,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 09:01",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 14:11",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "73"
+        "pre_tourn_pageviews": 238,
+        "teetimes": [],
+        "tour_rank": "74"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 17543,
-        "dg_rank": 69,
-        "owgr_rank": 55,
+        "dg_rank": 59,
+        "owgr_rank": 51,
         "player_name": "Kim, Michael",
         "player_num": 39975,
-        "pre_tourn_pageviews": 1038,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 07:11",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 12:21",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "61"
+        "pre_tourn_pageviews": 646,
+        "teetimes": [],
+        "tour_rank": "59"
       },
       {
         "am": 0,
         "country": "KOR",
-        "dg_id": 14609,
-        "dg_rank": 7,
-        "owgr_rank": 18,
-        "player_name": "Kim, Si Woo",
-        "player_num": 37455,
-        "pre_tourn_pageviews": 2759,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 07:55",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 13:05",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "7"
+        "dg_id": 24766,
+        "dg_rank": 46,
+        "owgr_rank": 33,
+        "player_name": "Kim, Tom",
+        "player_num": 55182,
+        "pre_tourn_pageviews": 1123,
+        "teetimes": [],
+        "tour_rank": "34"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 12423,
-        "dg_rank": 132,
-        "owgr_rank": 120,
+        "dg_rank": 102,
+        "owgr_rank": 105,
         "player_name": "Kirk, Chris",
         "player_num": 30926,
-        "pre_tourn_pageviews": 1724,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 07:33",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 12:43",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "142"
+        "pre_tourn_pageviews": 737,
+        "teetimes": [],
+        "tour_rank": "127"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 13470,
         "dg_rank": null,
-        "owgr_rank": 428,
+        "owgr_rank": 447,
         "player_name": "Kizzire, Patton",
         "player_num": 32757,
-        "pre_tourn_pageviews": 212,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 07:22",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 12:32",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "162"
+        "pre_tourn_pageviews": 61,
+        "teetimes": [],
+        "tour_rank": "164"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 19396,
-        "dg_rank": 36,
-        "owgr_rank": 47,
-        "player_name": "Knapp, Jake",
-        "player_num": 47420,
-        "pre_tourn_pageviews": 4262,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 13:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 07:55",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "38"
+        "dg_id": 16243,
+        "dg_rank": 69,
+        "owgr_rank": 114,
+        "player_name": "Koepka, Brooks",
+        "player_num": 36689,
+        "pre_tourn_pageviews": 418,
+        "teetimes": [],
+        "tour_rank": "86"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 16395,
-        "dg_rank": 60,
-        "owgr_rank": 114,
+        "dg_rank": 57,
+        "owgr_rank": 108,
         "player_name": "Kohles, Ben",
         "player_num": 36884,
-        "pre_tourn_pageviews": 2476,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 13:38",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 08:28",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "97"
+        "pre_tourn_pageviews": 961,
+        "teetimes": [],
+        "tour_rank": "95"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 32319,
-        "dg_rank": 30,
-        "owgr_rank": 73,
+        "dg_rank": 26,
+        "owgr_rank": 70,
         "player_name": "Koivun, Jackson",
         "player_num": 66701,
-        "pre_tourn_pageviews": 6505,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 07:33",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 12:43",
-            "wave": "late"
-          }
-        ],
+        "pre_tourn_pageviews": 1365,
+        "teetimes": [],
         "tour_rank": "70"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 6169,
-        "dg_rank": 139,
-        "owgr_rank": 185,
+        "dg_rank": 133,
+        "owgr_rank": 182,
         "player_name": "Kuchar, Matt",
         "player_num": 23108,
-        "pre_tourn_pageviews": 405,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 07:55",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 13:05",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "140"
+        "pre_tourn_pageviews": 203,
+        "teetimes": [],
+        "tour_rank": "142"
       },
       {
         "am": 0,
         "country": "RSA",
         "dg_id": 24343,
         "dg_rank": null,
-        "owgr_rank": 287,
+        "owgr_rank": 300,
         "player_name": "Lamprecht, Christo",
         "player_num": 54422,
-        "pre_tourn_pageviews": 332,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 08:39",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 13:49",
-            "wave": "late"
-          }
-        ],
+        "pre_tourn_pageviews": 54,
+        "teetimes": [],
         "tour_rank": "198"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 21943,
-        "dg_rank": 274,
-        "owgr_rank": 250,
+        "dg_rank": 244,
+        "owgr_rank": 246,
         "player_name": "Lebioda, Hank",
         "player_num": 49766,
-        "pre_tourn_pageviews": 274,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 13:27",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 08:17",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 81,
+        "teetimes": [],
         "tour_rank": "137"
       },
       {
         "am": 0,
         "country": "CHN",
         "dg_id": 15310,
-        "dg_rank": 204,
-        "owgr_rank": 109,
+        "dg_rank": 207,
+        "owgr_rank": 112,
         "player_name": "Li, Haotong",
         "player_num": 35296,
-        "pre_tourn_pageviews": 565,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 08:39",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 13:49",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "127"
+        "pre_tourn_pageviews": 107,
+        "teetimes": [],
+        "tour_rank": "129"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 15980,
-        "dg_rank": 200,
+        "dg_rank": 164,
         "owgr_rank": 115,
         "player_name": "Lipsky, David",
         "player_num": 36326,
-        "pre_tourn_pageviews": 377,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 12:10",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 07:00",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 138,
+        "teetimes": [],
         "tour_rank": "78"
       },
       {
         "am": 0,
         "country": "USA",
+        "dg_id": 7960,
+        "dg_rank": 424,
+        "owgr_rank": null,
+        "player_name": "List, Luke",
+        "player_num": 27129,
+        "pre_tourn_pageviews": 53,
+        "teetimes": [],
+        "tour_rank": "190"
+      },
+      {
+        "am": 0,
+        "country": "USA",
         "dg_id": 17723,
-        "dg_rank": 395,
-        "owgr_rank": 294,
+        "dg_rank": 321,
+        "owgr_rank": 285,
         "player_name": "Lower, Justin",
         "player_num": 40162,
-        "pre_tourn_pageviews": 280,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 12:10",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 07:00",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "182"
+        "pre_tourn_pageviews": 114,
+        "teetimes": [],
+        "tour_rank": "174"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 14926,
-        "dg_rank": 438,
+        "dg_rank": 429,
         "owgr_rank": null,
         "player_name": "Malnati, Peter",
         "player_num": 34466,
-        "pre_tourn_pageviews": 256,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 07:22",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 12:32",
-            "wave": "late"
-          }
-        ],
+        "pre_tourn_pageviews": 226,
+        "teetimes": [],
         "tour_rank": "170"
       },
       {
         "am": 0,
         "country": "JPN",
         "dg_id": 13562,
-        "dg_rank": 22,
-        "owgr_rank": 25,
+        "dg_rank": 18,
+        "owgr_rank": 24,
         "player_name": "Matsuyama, Hideki",
         "player_num": 32839,
-        "pre_tourn_pageviews": 3247,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 12:43",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 07:33",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "26"
+        "pre_tourn_pageviews": 1464,
+        "teetimes": [],
+        "tour_rank": "24"
       },
       {
         "am": 0,
         "country": "ITA",
         "dg_id": 20844,
-        "dg_rank": 324,
+        "dg_rank": 359,
         "owgr_rank": 208,
         "player_name": "Mazzoli, Stefano",
         "player_num": 49037,
-        "pre_tourn_pageviews": 335,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 08:06",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 13:16",
-            "wave": "late"
-          }
-        ],
+        "pre_tourn_pageviews": 105,
+        "teetimes": [],
         "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 19870,
-        "dg_rank": 61,
-        "owgr_rank": 90,
+        "dg_rank": 76,
+        "owgr_rank": 92,
         "player_name": "McCarthy, Denny",
         "player_num": 47993,
-        "pre_tourn_pageviews": 1253,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 12:10",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 07:00",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "81"
+        "pre_tourn_pageviews": 482,
+        "teetimes": [],
+        "tour_rank": "84"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 28635,
-        "dg_rank": 83,
-        "owgr_rank": 67,
+        "dg_rank": 87,
+        "owgr_rank": 69,
         "player_name": "McCarty, Matt",
         "player_num": 59141,
-        "pre_tourn_pageviews": 807,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 12:43",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 07:33",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "45"
+        "pre_tourn_pageviews": 413,
+        "teetimes": [],
+        "tour_rank": "46"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 12477,
+        "dg_rank": null,
+        "owgr_rank": null,
+        "player_name": "McGirt, William",
+        "player_num": 31202,
+        "pre_tourn_pageviews": 38,
+        "teetimes": [],
+        "tour_rank": "219"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 23505,
-        "dg_rank": 96,
-        "owgr_rank": 107,
+        "dg_rank": 124,
+        "owgr_rank": 111,
         "player_name": "McGreevy, Max",
         "player_num": 51950,
-        "pre_tourn_pageviews": 586,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 07:00",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 12:10",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "116"
+        "pre_tourn_pageviews": 212,
+        "teetimes": [],
+        "tour_rank": "121"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 18634,
+        "dg_rank": 25,
+        "owgr_rank": 44,
+        "player_name": "McNealy, Maverick",
+        "player_num": 46442,
+        "pre_tourn_pageviews": 484,
+        "teetimes": [],
+        "tour_rank": "50"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 28159,
-        "dg_rank": 54,
-        "owgr_rank": 87,
+        "dg_rank": 50,
+        "owgr_rank": 85,
         "player_name": "Meissner, Mac",
         "player_num": 59143,
-        "pre_tourn_pageviews": 1191,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 13:27",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 08:17",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "72"
+        "pre_tourn_pageviews": 934,
+        "teetimes": [],
+        "tour_rank": "71"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 17365,
+        "dg_rank": 53,
+        "owgr_rank": 72,
+        "player_name": "Mitchell, Keith",
+        "player_num": 39546,
+        "pre_tourn_pageviews": 287,
+        "teetimes": [],
+        "tour_rank": "47"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 21944,
+        "dg_rank": 166,
+        "owgr_rank": 158,
+        "player_name": "Moore, Taylor",
+        "player_num": 49947,
+        "pre_tourn_pageviews": 109,
+        "teetimes": [],
+        "tour_rank": "98"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 29770,
-        "dg_rank": 120,
-        "owgr_rank": 133,
+        "dg_rank": 132,
+        "owgr_rank": 136,
         "player_name": "Mouw, William",
         "player_num": 63121,
-        "pre_tourn_pageviews": 1410,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 07:55",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 13:05",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "109"
-      },
-      {
-        "am": 0,
-        "country": "JPN",
-        "dg_id": 21074,
-        "dg_rank": 115,
-        "owgr_rank": 100,
-        "player_name": "Nakajima, Keita",
-        "player_num": 49228,
-        "pre_tourn_pageviews": 616,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 08:50",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 14:00",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "118"
+        "pre_tourn_pageviews": 226,
+        "teetimes": [],
+        "tour_rank": "114"
       },
       {
         "am": 0,
         "country": "DEN",
         "dg_id": 23841,
-        "dg_rank": 74,
-        "owgr_rank": 77,
+        "dg_rank": 88,
+        "owgr_rank": 80,
         "player_name": "Neergaard-Petersen, Rasmus",
         "player_num": 52689,
-        "pre_tourn_pageviews": 1850,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 14:11",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 09:01",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "90"
+        "pre_tourn_pageviews": 255,
+        "teetimes": [],
+        "tour_rank": "94"
+      },
+      {
+        "am": 0,
+        "country": "SWE",
+        "dg_id": 10419,
+        "dg_rank": 45,
+        "owgr_rank": 27,
+        "player_name": "Noren, Alex",
+        "player_num": 27349,
+        "pre_tourn_pageviews": 607,
+        "teetimes": [],
+        "tour_rank": "48"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 23475,
-        "dg_rank": 107,
-        "owgr_rank": 75,
+        "dg_rank": 141,
+        "owgr_rank": 78,
         "player_name": "Novak, Andrew",
         "player_num": 51997,
-        "pre_tourn_pageviews": 758,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 07:44",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 12:54",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "88"
+        "pre_tourn_pageviews": 195,
+        "teetimes": [],
+        "tour_rank": "91"
       },
       {
         "am": 0,
         "country": "SWE",
         "dg_id": 25475,
-        "dg_rank": 269,
-        "owgr_rank": 257,
+        "dg_rank": 308,
+        "owgr_rank": 259,
         "player_name": "Nyholm, Pontus",
         "player_num": 55851,
-        "pre_tourn_pageviews": 501,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 08:50",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 14:00",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "130"
+        "pre_tourn_pageviews": 56,
+        "teetimes": [],
+        "tour_rank": "133"
       },
       {
         "am": 0,
         "country": "DEN",
         "dg_id": 13412,
-        "dg_rank": 165,
-        "owgr_rank": 158,
+        "dg_rank": 144,
+        "owgr_rank": 152,
         "player_name": "Olesen, Thorbjorn",
         "player_num": 33968,
-        "pre_tourn_pageviews": 394,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 12:32",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 07:22",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "172"
+        "pre_tourn_pageviews": 129,
+        "teetimes": [],
+        "tour_rank": "166"
+      },
+      {
+        "am": 0,
+        "country": "TPE",
+        "dg_id": 15475,
+        "dg_rank": 348,
+        "owgr_rank": null,
+        "player_name": "Pan, C.T.",
+        "player_num": 29908,
+        "pre_tourn_pageviews": 101,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
         "country": "ENG",
         "dg_id": 13764,
-        "dg_rank": 104,
+        "dg_rank": 115,
         "owgr_rank": 91,
         "player_name": "Parry, John",
         "player_num": 28723,
-        "pre_tourn_pageviews": 620,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 14:11",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 09:01",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "85"
+        "pre_tourn_pageviews": 205,
+        "teetimes": [],
+        "tour_rank": "87"
       },
       {
         "am": 0,
         "country": "FRA",
         "dg_id": 19960,
-        "dg_rank": 225,
-        "owgr_rank": 290,
+        "dg_rank": 232,
+        "owgr_rank": 293,
         "player_name": "Pavon, Matthieu",
         "player_num": 48153,
-        "pre_tourn_pageviews": 300,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 12:21",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 07:11",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "123"
+        "pre_tourn_pageviews": 106,
+        "teetimes": [],
+        "tour_rank": "125"
       },
       {
         "am": 0,
         "country": "CAN",
         "dg_id": 17780,
-        "dg_rank": 138,
-        "owgr_rank": 92,
+        "dg_rank": 151,
+        "owgr_rank": 95,
         "player_name": "Pendrith, Taylor",
         "player_num": 40250,
-        "pre_tourn_pageviews": 969,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 13:16",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 08:06",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "82"
+        "pre_tourn_pageviews": 127,
+        "teetimes": [],
+        "tour_rank": "85"
       },
       {
         "am": 0,
         "country": "ENG",
         "dg_id": 22465,
         "dg_rank": 106,
-        "owgr_rank": 51,
+        "owgr_rank": 52,
         "player_name": "Penge, Marco",
         "player_num": 51003,
-        "pre_tourn_pageviews": 1691,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 13:49",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 08:39",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "107"
+        "pre_tourn_pageviews": 208,
+        "teetimes": [],
+        "tour_rank": "109"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 27164,
-        "dg_rank": 145,
-        "owgr_rank": 132,
+        "dg_rank": 156,
+        "owgr_rank": 135,
         "player_name": "Phillips, Chandler",
         "player_num": 57900,
-        "pre_tourn_pageviews": 1611,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 07:22",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 12:32",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "86"
+        "pre_tourn_pageviews": 230,
+        "teetimes": [],
+        "tour_rank": "90"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 21554,
+        "dg_rank": 62,
+        "owgr_rank": 35,
+        "player_name": "Poston, J.T.",
+        "player_num": 49771,
+        "pre_tourn_pageviews": 587,
+        "teetimes": [],
+        "tour_rank": "29"
       },
       {
         "am": 0,
         "country": "RSA",
         "dg_id": 27900,
-        "dg_rank": 141,
-        "owgr_rank": 88,
+        "dg_rank": 157,
+        "owgr_rank": 89,
         "player_name": "Potgieter, Aldrich",
         "player_num": 63343,
-        "pre_tourn_pageviews": 2077,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 07:55",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 13:05",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "64"
+        "pre_tourn_pageviews": 116,
+        "teetimes": [],
+        "tour_rank": "65"
       },
       {
         "am": 0,
         "country": "IRL",
         "dg_id": 10104,
-        "dg_rank": 124,
-        "owgr_rank": 184,
+        "dg_rank": 142,
+        "owgr_rank": 190,
         "player_name": "Power, Seamus",
         "player_num": 28252,
-        "pre_tourn_pageviews": 835,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 07:11",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 12:21",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "104"
+        "pre_tourn_pageviews": 132,
+        "teetimes": [],
+        "tour_rank": "110"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 14704,
-        "dg_rank": 110,
-        "owgr_rank": 96,
+        "dg_rank": 113,
+        "owgr_rank": 101,
         "player_name": "Putnam, Andrew",
         "player_num": 34256,
-        "pre_tourn_pageviews": 628,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 12:32",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 07:22",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "71"
+        "pre_tourn_pageviews": 272,
+        "teetimes": [],
+        "tour_rank": "73"
       },
       {
         "am": 0,
-        "country": "PHI",
-        "dg_id": 15981,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Quiban, Justin",
-        "player_num": 36327,
-        "pre_tourn_pageviews": 167,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 14:11",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 09:01",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": null
+        "country": "ENG",
+        "dg_id": 18554,
+        "dg_rank": 40,
+        "owgr_rank": 19,
+        "player_name": "Rai, Aaron",
+        "player_num": 46414,
+        "pre_tourn_pageviews": 1163,
+        "teetimes": [],
+        "tour_rank": "35"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 19840,
-        "dg_rank": 223,
-        "owgr_rank": 186,
+        "dg_rank": 254,
+        "owgr_rank": 191,
         "player_name": "Ramey, Chad",
         "player_num": 47983,
-        "pre_tourn_pageviews": 219,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 12:10",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 07:00",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "129"
+        "pre_tourn_pageviews": 70,
+        "teetimes": [],
+        "tour_rank": "132"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 19872,
-        "dg_rank": 457,
-        "owgr_rank": 180,
+        "dg_rank": 313,
+        "owgr_rank": 116,
         "player_name": "Riley, Davis",
         "player_num": 47995,
-        "pre_tourn_pageviews": 323,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 07:44",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 12:54",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "146"
+        "pre_tourn_pageviews": 309,
+        "teetimes": [],
+        "tour_rank": "108"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 16283,
-        "dg_rank": 189,
-        "owgr_rank": 97,
+        "dg_rank": 224,
+        "owgr_rank": 102,
         "player_name": "Rodgers, Patrick",
         "player_num": 36699,
-        "pre_tourn_pageviews": 422,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 12:21",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "63"
+        "pre_tourn_pageviews": 309,
+        "teetimes": [],
+        "tour_rank": "64"
+      },
+      {
+        "am": 1,
+        "country": "USA",
+        "dg_id": 30043173,
+        "dg_rank": null,
+        "owgr_rank": null,
+        "player_name": "Rodriguez, Lorenzo",
+        "player_num": 71059,
+        "pre_tourn_pageviews": 24,
+        "teetimes": [],
+        "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 18424,
-        "dg_rank": 162,
-        "owgr_rank": 121,
+        "dg_rank": 136,
+        "owgr_rank": 118,
         "player_name": "Roy, Kevin",
         "player_num": 39335,
-        "pre_tourn_pageviews": 882,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 12:10",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 07:00",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "94"
+        "pre_tourn_pageviews": 161,
+        "teetimes": [],
+        "tour_rank": "88"
       },
       {
         "am": 0,
@@ -6418,1175 +4430,417 @@
         "owgr_rank": null,
         "player_name": "Rozo, Marcelo",
         "player_num": 37076,
-        "pre_tourn_pageviews": 151,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 14:11",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 09:01",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "204"
-      },
-      {
-        "am": 0,
-        "country": "AUS",
-        "dg_id": 17169,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Ruffels, Ryan",
-        "player_num": 39251,
-        "pre_tourn_pageviews": 545,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 09:01",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 14:11",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": null
+        "pre_tourn_pageviews": 82,
+        "teetimes": [],
+        "tour_rank": "201"
       },
       {
         "am": 0,
         "country": "FRA",
         "dg_id": 14792,
-        "dg_rank": 248,
-        "owgr_rank": 139,
+        "dg_rank": 227,
+        "owgr_rank": 140,
         "player_name": "Saddier, Adrien",
         "player_num": 34371,
-        "pre_tourn_pageviews": 215,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 14:11",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 09:01",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "184"
+        "pre_tourn_pageviews": 93,
+        "teetimes": [],
+        "tour_rank": "179"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 30814,
-        "dg_rank": null,
-        "owgr_rank": 345,
+        "dg_rank": 451,
+        "owgr_rank": 326,
         "player_name": "Sargent, Gordon",
         "player_num": 64442,
-        "pre_tourn_pageviews": 693,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 08:39",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 13:49",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "131"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 19895,
-        "dg_rank": 15,
-        "owgr_rank": 15,
-        "player_name": "Schauffele, Xander",
-        "player_num": 48081,
-        "pre_tourn_pageviews": 3059,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 07:44",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 12:54",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "15"
+        "pre_tourn_pageviews": 130,
+        "teetimes": [],
+        "tour_rank": "130"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 19477,
-        "dg_rank": 480,
-        "owgr_rank": 190,
+        "dg_rank": 444,
+        "owgr_rank": 187,
         "player_name": "Schenk, Adam",
         "player_num": 47347,
-        "pre_tourn_pageviews": 317,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 08:06",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 13:16",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "158"
+        "pre_tourn_pageviews": 80,
+        "teetimes": [],
+        "tour_rank": "157"
       },
       {
         "am": 0,
         "country": "GER",
         "dg_id": 20722,
-        "dg_rank": 131,
-        "owgr_rank": 84,
+        "dg_rank": 147,
+        "owgr_rank": 83,
         "player_name": "Schmid, Matti",
         "player_num": 48867,
-        "pre_tourn_pageviews": 743,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 13:38",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 08:28",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "65"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 32055,
-        "dg_rank": 246,
-        "owgr_rank": 204,
-        "player_name": "Shipley, Neal",
-        "player_num": 63807,
-        "pre_tourn_pageviews": 660,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 08:50",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 14:00",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "187"
-      },
-      {
-        "am": 0,
-        "country": "CAN",
-        "dg_id": 17381,
-        "dg_rank": 257,
-        "owgr_rank": 221,
-        "player_name": "Silverman, Ben",
-        "player_num": 39327,
-        "pre_tourn_pageviews": 186,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 12:43",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 07:33",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "134"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 11049,
-        "dg_rank": 212,
-        "owgr_rank": null,
-        "player_name": "Simpson, Webb",
-        "player_num": 29221,
-        "pre_tourn_pageviews": 273,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 13:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 07:55",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "179"
-      },
-      {
-        "am": 0,
-        "country": "ENG",
-        "dg_id": 18586,
-        "dg_rank": 71,
-        "owgr_rank": 76,
-        "player_name": "Smith, Jordan",
-        "player_num": 46464,
-        "pre_tourn_pageviews": 1364,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 12:32",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 07:22",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 138,
+        "teetimes": [],
         "tour_rank": "67"
       },
       {
         "am": 0,
         "country": "USA",
+        "dg_id": 32055,
+        "dg_rank": 233,
+        "owgr_rank": 207,
+        "player_name": "Shipley, Neal",
+        "player_num": 63807,
+        "pre_tourn_pageviews": 224,
+        "teetimes": [],
+        "tour_rank": "184"
+      },
+      {
+        "am": 0,
+        "country": "CAN",
+        "dg_id": 17381,
+        "dg_rank": 250,
+        "owgr_rank": 228,
+        "player_name": "Silverman, Ben",
+        "player_num": 39327,
+        "pre_tourn_pageviews": 54,
+        "teetimes": [],
+        "tour_rank": "136"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 11049,
+        "dg_rank": 221,
+        "owgr_rank": null,
+        "player_name": "Simpson, Webb",
+        "player_num": 29221,
+        "pre_tourn_pageviews": 254,
+        "teetimes": [],
+        "tour_rank": "181"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 18474,
+        "dg_rank": 54,
+        "owgr_rank": 46,
+        "player_name": "Smalley, Alex",
+        "player_num": 46340,
+        "pre_tourn_pageviews": 660,
+        "teetimes": [],
+        "tour_rank": "25"
+      },
+      {
+        "am": 0,
+        "country": "ENG",
+        "dg_id": 18586,
+        "dg_rank": 65,
+        "owgr_rank": 76,
+        "player_name": "Smith, Jordan",
+        "player_num": 46464,
+        "pre_tourn_pageviews": 449,
+        "teetimes": [],
+        "tour_rank": "68"
+      },
+      {
+        "am": 0,
+        "country": "USA",
         "dg_id": 22985,
-        "dg_rank": 156,
-        "owgr_rank": 104,
+        "dg_rank": 225,
+        "owgr_rank": 107,
         "player_name": "Smotherman, Austin",
         "player_num": 50095,
-        "pre_tourn_pageviews": 919,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 07:22",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 12:32",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "75"
+        "pre_tourn_pageviews": 339,
+        "teetimes": [],
+        "tour_rank": "76"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 8820,
-        "dg_rank": 211,
-        "owgr_rank": 129,
+        "dg_rank": 179,
+        "owgr_rank": 127,
         "player_name": "Snedeker, Brandt",
         "player_num": 27649,
-        "pre_tourn_pageviews": 431,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 08:06",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 13:16",
-            "wave": "late"
-          }
-        ],
+        "pre_tourn_pageviews": 261,
+        "teetimes": [],
         "tour_rank": "83"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 17536,
-        "dg_rank": 19,
-        "owgr_rank": 14,
-        "player_name": "Spaun, J.J.",
-        "player_num": 39324,
-        "pre_tourn_pageviews": 3571,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 12:54",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 07:44",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "20"
-      },
-      {
-        "am": 0,
-        "country": "USA",
         "dg_id": 14636,
-        "dg_rank": 91,
+        "dg_rank": 82,
         "owgr_rank": 57,
         "player_name": "Spieth, Jordan",
         "player_num": 34046,
-        "pre_tourn_pageviews": 1864,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 13:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 07:55",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 692,
+        "teetimes": [],
         "tour_rank": "55"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 21995,
-        "dg_rank": 260,
-        "owgr_rank": 298,
+        "dg_rank": 268,
+        "owgr_rank": 309,
         "player_name": "Springer, Hayden",
         "player_num": 50484,
-        "pre_tourn_pageviews": 359,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 14:00",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 08:50",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "132"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 23048,
-        "dg_rank": 386,
-        "owgr_rank": 332,
-        "player_name": "Stanger, Jimmy",
-        "player_num": 51600,
-        "pre_tourn_pageviews": 0,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 13:38",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 08:28",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "133"
+        "pre_tourn_pageviews": 58,
+        "teetimes": [],
+        "tour_rank": "134"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 25569,
-        "dg_rank": 126,
-        "owgr_rank": 53,
+        "dg_rank": 135,
+        "owgr_rank": 55,
         "player_name": "Stevens, Sam",
         "player_num": 55893,
-        "pre_tourn_pageviews": 929,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 08:28",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 13:38",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "51"
+        "pre_tourn_pageviews": 160,
+        "teetimes": [],
+        "tour_rank": "52"
+      },
+      {
+        "am": 0,
+        "country": "AUT",
+        "dg_id": 17511,
+        "dg_rank": 109,
+        "owgr_rank": 26,
+        "player_name": "Straka, Sepp",
+        "player_num": 49960,
+        "pre_tourn_pageviews": 559,
+        "teetimes": [],
+        "tour_rank": "37"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 8480,
-        "dg_rank": 254,
-        "owgr_rank": 397,
+        "dg_rank": 276,
+        "owgr_rank": 407,
         "player_name": "Streelman, Kevin",
         "player_num": 27214,
-        "pre_tourn_pageviews": 312,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 08:17",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 13:27",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "151"
+        "pre_tourn_pageviews": 90,
+        "teetimes": [],
+        "tour_rank": "153"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 29279,
-        "dg_rank": 97,
-        "owgr_rank": 105,
+        "dg_rank": 100,
+        "owgr_rank": 109,
         "player_name": "Suber, Jackson",
         "player_num": 60019,
-        "pre_tourn_pageviews": 3121,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 14:00",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 08:50",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "80"
+        "pre_tourn_pageviews": 392,
+        "teetimes": [],
+        "tour_rank": "82"
       },
       {
         "am": 0,
         "country": "CAN",
         "dg_id": 13997,
-        "dg_rank": 329,
-        "owgr_rank": 476,
+        "dg_rank": 330,
+        "owgr_rank": 475,
         "player_name": "Svensson, Adam",
         "player_num": 40115,
-        "pre_tourn_pageviews": 260,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 08:28",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 13:38",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "177"
+        "pre_tourn_pageviews": 127,
+        "teetimes": [],
+        "tour_rank": "176"
       },
       {
         "am": 0,
         "country": "SWE",
         "dg_id": 26850,
-        "dg_rank": 186,
-        "owgr_rank": 168,
+        "dg_rank": 194,
+        "owgr_rank": 169,
         "player_name": "Svensson, Jesper",
         "player_num": 57586,
-        "pre_tourn_pageviews": 863,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 09:01",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 14:11",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "122"
+        "pre_tourn_pageviews": 76,
+        "teetimes": [],
+        "tour_rank": "124"
       },
       {
         "am": 0,
         "country": "CAN",
         "dg_id": 13126,
-        "dg_rank": 49,
-        "owgr_rank": 72,
+        "dg_rank": 58,
+        "owgr_rank": 73,
         "player_name": "Taylor, Nick",
         "player_num": 25493,
-        "pre_tourn_pageviews": 1045,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 08:06",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 13:16",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "59"
+        "pre_tourn_pageviews": 407,
+        "teetimes": [],
+        "tour_rank": "61"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 23014,
+        "dg_rank": 72,
+        "owgr_rank": 82,
+        "player_name": "Theegala, Sahith",
+        "player_num": 51634,
+        "pre_tourn_pageviews": 396,
+        "teetimes": [],
+        "tour_rank": "43"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 14139,
+        "dg_rank": 24,
+        "owgr_rank": 22,
+        "player_name": "Thomas, Justin",
+        "player_num": 33448,
+        "pre_tourn_pageviews": 918,
+        "teetimes": [],
+        "tour_rank": "40"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 27364,
-        "dg_rank": 72,
-        "owgr_rank": 136,
+        "dg_rank": 60,
+        "owgr_rank": 123,
         "player_name": "Thompson, Davis",
         "player_num": 58168,
-        "pre_tourn_pageviews": 2538,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 08:17",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 13:27",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "93"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 26649,
-        "dg_rank": 56,
-        "owgr_rank": 68,
-        "player_name": "Thorbjornsen, Michael",
-        "player_num": 57364,
-        "pre_tourn_pageviews": 3066,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 12:21",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 07:11",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "69"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 12425,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Todd, Brendon",
-        "player_num": 30927,
-        "pre_tourn_pageviews": 329,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 07:00",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 12:10",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "217"
+        "pre_tourn_pageviews": 1026,
+        "teetimes": [],
+        "tour_rank": "81"
       },
       {
         "am": 0,
         "country": "ARG",
         "dg_id": 17032,
-        "dg_rank": 471,
-        "owgr_rank": 396,
+        "dg_rank": null,
+        "owgr_rank": 410,
         "player_name": "Tosti, Alejandro",
         "player_num": 38991,
-        "pre_tourn_pageviews": 285,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 14:00",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 08:50",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "185"
+        "pre_tourn_pageviews": 72,
+        "teetimes": [],
+        "tour_rank": "186"
       },
       {
         "am": 0,
         "country": "RSA",
         "dg_id": 17550,
-        "dg_rank": 192,
-        "owgr_rank": 195,
+        "dg_rank": 190,
+        "owgr_rank": 198,
         "player_name": "Van Rooyen, Erik",
         "player_num": 40006,
-        "pre_tourn_pageviews": 380,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 13:38",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 08:28",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "144"
+        "pre_tourn_pageviews": 75,
+        "teetimes": [],
+        "tour_rank": "146"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 25319,
-        "dg_rank": 311,
-        "owgr_rank": 293,
+        "dg_rank": 322,
+        "owgr_rank": 297,
         "player_name": "VanDerLaan, John",
         "player_num": 55573,
-        "pre_tourn_pageviews": 225,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 14:22",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 09:12",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "167"
+        "pre_tourn_pageviews": 59,
+        "teetimes": [],
+        "tour_rank": "168"
       },
       {
         "am": 0,
         "country": "NOR",
         "dg_id": 15651,
-        "dg_rank": 155,
-        "owgr_rank": 262,
+        "dg_rank": 119,
+        "owgr_rank": 192,
         "player_name": "Ventura, Kristoffer",
         "player_num": 35658,
-        "pre_tourn_pageviews": 506,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 13:49",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 08:39",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "112"
+        "pre_tourn_pageviews": 340,
+        "teetimes": [],
+        "tour_rank": "102"
       },
       {
         "am": 0,
         "country": "AUS",
         "dg_id": 24304,
-        "dg_rank": 210,
-        "owgr_rank": 196,
+        "dg_rank": 213,
+        "owgr_rank": 197,
         "player_name": "Vilips, Karl",
         "player_num": 54304,
-        "pre_tourn_pageviews": 485,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 08:17",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 13:27",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "126"
+        "pre_tourn_pageviews": 140,
+        "teetimes": [],
+        "tour_rank": "128"
+      },
+      {
+        "am": 0,
+        "country": "COL",
+        "dg_id": 9171,
+        "dg_rank": 389,
+        "owgr_rank": 473,
+        "player_name": "Villegas, Camilo",
+        "player_num": 27770,
+        "pre_tourn_pageviews": 48,
+        "teetimes": [],
+        "tour_rank": "194"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 25003,
         "dg_rank": null,
-        "owgr_rank": 277,
+        "owgr_rank": 284,
         "player_name": "Walker, Danny",
         "player_num": 54607,
-        "pre_tourn_pageviews": 242,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 07:22",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 12:32",
-            "wave": "late"
-          }
-        ],
+        "pre_tourn_pageviews": 57,
+        "teetimes": [],
         "tour_rank": "159"
       },
       {
         "am": 0,
         "country": "ENG",
         "dg_id": 20706,
-        "dg_rank": 62,
-        "owgr_rank": 74,
+        "dg_rank": 52,
+        "owgr_rank": 62,
         "player_name": "Wallace, Matt",
         "player_num": 48887,
-        "pre_tourn_pageviews": 913,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 12:32",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 07:22",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "98"
+        "pre_tourn_pageviews": 524,
+        "teetimes": [],
+        "tour_rank": "80"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 25908,
-        "dg_rank": 216,
-        "owgr_rank": 181,
+        "dg_rank": 209,
+        "owgr_rank": 184,
         "player_name": "Whaley, Vince",
         "player_num": 51894,
-        "pre_tourn_pageviews": 350,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 08:28",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 13:38",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "168"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 14001,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Wilkes-Krier, Patrick",
-        "player_num": 33445,
-        "pre_tourn_pageviews": 212,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 14:22",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 09:12",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": null
+        "pre_tourn_pageviews": 75,
+        "teetimes": [],
+        "tour_rank": "169"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 22051,
-        "dg_rank": 448,
-        "owgr_rank": 466,
+        "dg_rank": 432,
+        "owgr_rank": 460,
         "player_name": "Wise, Aaron",
         "player_num": 49964,
-        "pre_tourn_pageviews": 433,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-07-30 08:17",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-07-31 13:27",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "148"
+        "pre_tourn_pageviews": 120,
+        "teetimes": [],
+        "tour_rank": "149"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 25002,
-        "dg_rank": 287,
-        "owgr_rank": 388,
+        "dg_rank": 286,
+        "owgr_rank": 389,
         "player_name": "Wu, Dylan",
         "player_num": 54783,
-        "pre_tourn_pageviews": 241,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 13:27",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 08:17",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "164"
-      },
-      {
-        "am": 0,
-        "country": "CAN",
-        "dg_id": 29925,
-        "dg_rank": 108,
-        "owgr_rank": 103,
-        "player_name": "Yellamaraju, Sudarshan",
-        "player_num": 60386,
-        "pre_tourn_pageviews": 802,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 12:10",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 07:00",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "53"
+        "pre_tourn_pageviews": 70,
+        "teetimes": [],
+        "tour_rank": "160"
       },
       {
         "am": 0,
@@ -7596,62 +4850,24 @@
         "owgr_rank": 3,
         "player_name": "Young, Cameron",
         "player_num": 57366,
-        "pre_tourn_pageviews": 3718,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 12:54",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 07:44",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 1178,
+        "teetimes": [],
         "tour_rank": "3"
       },
       {
         "am": 0,
         "country": "TPE",
         "dg_id": 17881,
-        "dg_rank": 103,
-        "owgr_rank": 127,
+        "dg_rank": 96,
+        "owgr_rank": 126,
         "player_name": "Yu, Kevin",
         "player_num": 45242,
-        "pre_tourn_pageviews": 1179,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-07-30 07:55",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Detroit Golf Club",
-            "course_num": 947,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-07-31 13:05",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "108"
+        "pre_tourn_pageviews": 226,
+        "teetimes": [],
+        "tour_rank": "111"
       }
     ],
-    "last_updated": "2026-07-31 02:40:33 UTC",
+    "last_updated": "2026-08-04 02:30:50 UTC",
     "multi_course": "no",
     "tour": "pga",
     "tz_offset": -14400
@@ -23587,5 +20803,5 @@
     "event_name": "Rocket Classic",
     "last_update": "2026-07-30 7:45 PM"
   },
-  "field_updates_refreshed_at": "2026-07-31T02:45:50.091Z"
+  "field_updates_refreshed_at": "2026-08-04T02:40:13.552Z"
 }

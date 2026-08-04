@@ -18,7 +18,15 @@ import {
 import { buildEdgeSignalInsights } from "./edge-signal-insights.mjs";
 import { patchDetailRowsFromLiveSources } from "./live-detail-patch.mjs";
 import { alignDetailCsvText } from "./detail-csv-align.mjs";
-import { ouSideResults, parseDkBookLine, parsePpBookLine, fmtDkBookLine, fmtPpBookLine, TRACKER_OU_BOOKS } from "./detail-market-specs.mjs";
+import {
+  ouSideResults,
+  parseDkBookLine,
+  parsePpBookLine,
+  fmtDkBookLine,
+  fmtPpBookLine,
+  TRACKER_OU_BOOKS,
+  DETAIL_EXPORT_MARKETS,
+} from "./detail-market-specs.mjs";
 import {
   DEFAULT_MIN_EV_PCT,
   isActionableMarket,
@@ -59,13 +67,29 @@ const DETAIL_CANDIDATES = [
   "../data/round_projection_vs_actual.csv.new",
 ];
 
-const MARKET_SPECS = [
-  { market: "Total score", modelCol: "round_score_line", bookCol: "round_score_book_line", ppBookCol: "round_score_pp_line", slBookCol: "round_score_sl_line", udBookCol: "round_score_ud_line", fdBookCol: "round_score_fd_line", czrBookCol: "round_score_czr_line", klBookCol: "round_score_kl_line", overOdds: "round_score_over_odds", underOdds: "round_score_under_odds", ppOverOdds: "round_score_pp_over_odds", ppUnderOdds: "round_score_pp_under_odds", slOverOdds: "round_score_sl_over_odds", slUnderOdds: "round_score_sl_under_odds", udOverOdds: "round_score_ud_over_odds", udUnderOdds: "round_score_ud_under_odds", fdOverOdds: "round_score_fd_over_odds", fdUnderOdds: "round_score_fd_under_odds", czrOverOdds: "round_score_czr_over_odds", czrUnderOdds: "round_score_czr_under_odds", klOverOdds: "round_score_kl_over_odds", klUnderOdds: "round_score_kl_under_odds", overRes: "round_score_over", underRes: "round_score_under", actual: "actual_round_score", decimals: 2, bookLineCol: "round_score_book_line", overOddsCol: "round_score_over_odds", underOddsCol: "round_score_under_odds", ppLineCol: "round_score_pp_line", ppOverOddsCol: "round_score_pp_over_odds", ppUnderOddsCol: "round_score_pp_under_odds", slLineCol: "round_score_sl_line", slOverOddsCol: "round_score_sl_over_odds", slUnderOddsCol: "round_score_sl_under_odds", udLineCol: "round_score_ud_line", udOverOddsCol: "round_score_ud_over_odds", udUnderOddsCol: "round_score_ud_under_odds", fdLineCol: "round_score_fd_line", fdOverOddsCol: "round_score_fd_over_odds", fdUnderOddsCol: "round_score_fd_under_odds", czrLineCol: "round_score_czr_line", czrOverOddsCol: "round_score_czr_over_odds", czrUnderOddsCol: "round_score_czr_under_odds", klLineCol: "round_score_kl_line", klOverOddsCol: "round_score_kl_over_odds", klUnderOddsCol: "round_score_kl_under_odds" },
-  { market: "Birdies", modelCol: "birdies_line", bookCol: "birdies_book_line", ppBookCol: "birdies_pp_line", overOdds: "birdies_over_odds", underOdds: "birdies_under_odds", ppOverOdds: "birdies_pp_over_odds", ppUnderOdds: "birdies_pp_under_odds", overRes: "birdies_over", underRes: "birdies_under", actual: "actual_birdies", decimals: 1, bookLineCol: "birdies_book_line", overOddsCol: "birdies_over_odds", underOddsCol: "birdies_under_odds", ppLineCol: "birdies_pp_line", ppOverOddsCol: "birdies_pp_over_odds", ppUnderOddsCol: "birdies_pp_under_odds", slLineCol: "birdies_sl_line", slOverOddsCol: "birdies_sl_over_odds", slUnderOddsCol: "birdies_sl_under_odds", udLineCol: "birdies_ud_line", udOverOddsCol: "birdies_ud_over_odds", udUnderOddsCol: "birdies_ud_under_odds", fdLineCol: "birdies_fd_line", fdOverOddsCol: "birdies_fd_over_odds", fdUnderOddsCol: "birdies_fd_under_odds", czrLineCol: "birdies_czr_line", czrOverOddsCol: "birdies_czr_over_odds", czrUnderOddsCol: "birdies_czr_under_odds", klLineCol: "birdies_kl_line", klOverOddsCol: "birdies_kl_over_odds", klUnderOddsCol: "birdies_kl_under_odds" },
-  { market: "Bogeys", modelCol: "bogeys_line", bookCol: "bogeys_book_line", ppBookCol: "bogeys_pp_line", overOdds: "bogeys_over_odds", underOdds: "bogeys_under_odds", ppOverOdds: "bogeys_pp_over_odds", ppUnderOdds: "bogeys_pp_under_odds", overRes: "bogeys_over", underRes: "bogeys_under", actual: "actual_bogeys", decimals: 1, bookLineCol: "bogeys_book_line", overOddsCol: "bogeys_over_odds", underOddsCol: "bogeys_under_odds", ppLineCol: "bogeys_pp_line", ppOverOddsCol: "bogeys_pp_over_odds", ppUnderOddsCol: "bogeys_pp_under_odds", slLineCol: "bogeys_sl_line", slOverOddsCol: "bogeys_sl_over_odds", slUnderOddsCol: "bogeys_sl_under_odds", udLineCol: "bogeys_ud_line", udOverOddsCol: "bogeys_ud_over_odds", udUnderOddsCol: "bogeys_ud_under_odds", fdLineCol: "bogeys_fd_line", fdOverOddsCol: "bogeys_fd_over_odds", fdUnderOddsCol: "bogeys_fd_under_odds", czrLineCol: "bogeys_czr_line", czrOverOddsCol: "bogeys_czr_over_odds", czrUnderOddsCol: "bogeys_czr_under_odds", klLineCol: "bogeys_kl_line", klOverOddsCol: "bogeys_kl_over_odds", klUnderOddsCol: "bogeys_kl_under_odds" },
-  { market: "GIR", modelCol: "gir_line", bookCol: "gir_book_line", ppBookCol: "gir_pp_line", overOdds: "gir_over_odds", underOdds: "gir_under_odds", ppOverOdds: "gir_pp_over_odds", ppUnderOdds: "gir_pp_under_odds", overRes: "gir_over", underRes: "gir_under", actual: "actual_gir", decimals: 0, bookLineCol: "gir_book_line", overOddsCol: "gir_over_odds", underOddsCol: "gir_under_odds", ppLineCol: "gir_pp_line", ppOverOddsCol: "gir_pp_over_odds", ppUnderOddsCol: "gir_pp_under_odds", slLineCol: "gir_sl_line", slOverOddsCol: "gir_sl_over_odds", slUnderOddsCol: "gir_sl_under_odds", udLineCol: "gir_ud_line", udOverOddsCol: "gir_ud_over_odds", udUnderOddsCol: "gir_ud_under_odds", fdLineCol: "gir_fd_line", fdOverOddsCol: "gir_fd_over_odds", fdUnderOddsCol: "gir_fd_under_odds", czrLineCol: "gir_czr_line", czrOverOddsCol: "gir_czr_over_odds", czrUnderOddsCol: "gir_czr_under_odds", klLineCol: "gir_kl_line", klOverOddsCol: "gir_kl_over_odds", klUnderOddsCol: "gir_kl_under_odds" },
-  { market: "Fairways hit", modelCol: "fairways_line", bookCol: "fairways_book_line", ppBookCol: "fairways_pp_line", overOdds: "fairways_over_odds", underOdds: "fairways_under_odds", ppOverOdds: "fairways_pp_over_odds", ppUnderOdds: "fairways_pp_under_odds", overRes: "fairways_over", underRes: "fairways_under", actual: "actual_fairways", decimals: 0, bookLineCol: "fairways_book_line", overOddsCol: "fairways_over_odds", underOddsCol: "fairways_under_odds", ppLineCol: "fairways_pp_line", ppOverOddsCol: "fairways_pp_over_odds", ppUnderOddsCol: "fairways_pp_under_odds", slLineCol: "fairways_sl_line", slOverOddsCol: "fairways_sl_over_odds", slUnderOddsCol: "fairways_sl_under_odds", udLineCol: "fairways_ud_line", udOverOddsCol: "fairways_ud_over_odds", udUnderOddsCol: "fairways_ud_under_odds", fdLineCol: "fairways_fd_line", fdOverOddsCol: "fairways_fd_over_odds", fdUnderOddsCol: "fairways_fd_under_odds", czrLineCol: "fairways_czr_line", czrOverOddsCol: "fairways_czr_over_odds", czrUnderOddsCol: "fairways_czr_under_odds", klLineCol: "fairways_kl_line", klOverOddsCol: "fairways_kl_over_odds", klUnderOddsCol: "fairways_kl_under_odds" },
-];
+const MARKET_DECIMALS = {
+  "Total score": 2,
+  Birdies: 1,
+  Bogeys: 1,
+  GIR: 0,
+  "Fairways hit": 0,
+};
+
+/** Close line/odds = most recent pre-tee audit; open = earliest. Pricing uses close. */
+const MARKET_SPECS = DETAIL_EXPORT_MARKETS.map((m) => {
+  const stem = m.key === "total" ? "round_score" : m.key === "fairways" ? "fairways" : m.key;
+  return {
+    ...m,
+    modelCol: m.lineCol,
+    bookCol: m.bookLineCol,
+    overOdds: m.overOddsCol,
+    underOdds: m.underOddsCol,
+    overRes: `${stem}_over`,
+    underRes: `${stem}_under`,
+    actual: m.key === "total" ? "actual_round_score" : `actual_${m.key === "fairways" ? "fairways" : m.key}`,
+    decimals: MARKET_DECIMALS[m.market] ?? 1,
+  };
+});
 
 const MARKET_ORDER = [
   "Total score",
@@ -1243,6 +1267,11 @@ function explodeAllBookDetailToBets(rows) {
             bookCol: spec[book.lineKey],
             overOddsCol: spec[book.overKey],
             underOddsCol: spec[book.underKey],
+            openLineCol: spec[book.openLineKey],
+            openOverOddsCol: spec[book.openOverKey],
+            openUnderOddsCol: spec[book.openUnderKey],
+            openAt: String(row[book.openAtCol] || "").trim(),
+            closeAt: String(row[book.closeAtCol] || "").trim(),
             bookId: book.id,
             bookLabel: isLive ? book.liveLabel : book.label,
             wholeLine: book.wholeLine,
@@ -1256,12 +1285,22 @@ function explodeAllBookDetailToBets(rows) {
 }
 
 function explodeDetailBetForBook(row, spec, book) {
+  // Close = most recent pre-tee capture (primary pricing / grading line).
   const rawLine = parseLine(row[book.bookCol]);
   const bookLine = book.wholeLine || book.isPrizePicks ? parsePpBookLine(rawLine) : parseDkBookLine(rawLine);
   if (!Number.isFinite(bookLine)) return [];
   const modelLine = parseLine(row[spec.modelCol]);
   const overOdds = nNum(row[book.overOddsCol], NaN);
   const underOdds = nNum(row[book.underOddsCol], NaN);
+  const openRaw = book.openLineCol ? parseLine(row[book.openLineCol]) : NaN;
+  const openLine =
+    Number.isFinite(openRaw)
+      ? book.wholeLine || book.isPrizePicks
+        ? parsePpBookLine(openRaw)
+        : parseDkBookLine(openRaw)
+      : NaN;
+  const openOverOdds = book.openOverOddsCol ? nNum(row[book.openOverOddsCol], NaN) : NaN;
+  const openUnderOdds = book.openUnderOddsCol ? nNum(row[book.openUnderOddsCol], NaN) : NaN;
   const actual = parseLine(row[spec.actual]);
   const mu = Number.isFinite(modelLine) ? modelLine : NaN;
   if (!isActionableMarket(spec.market)) return [];
@@ -1308,6 +1347,7 @@ function explodeDetailBetForBook(row, spec, book) {
   const underRes = graded.under;
   const betRes = side === "over" ? overRes : side === "under" ? underRes : "";
   const betOdds = side === "over" ? overOdds : side === "under" ? underOdds : NaN;
+  const betOpenOdds = side === "over" ? openOverOdds : side === "under" ? openUnderOdds : NaN;
   const fairProb = side === "over" ? priced.fairOver : side === "under" ? priced.fairUnder : NaN;
   const postedProb = side === "over" ? postedOver : side === "under" ? postedUnder : NaN;
   const modelProb = side === "over" ? pModelOver : side === "under" ? pModelUnder : NaN;
@@ -1339,9 +1379,14 @@ function explodeDetailBetForBook(row, spec, book) {
       bookId: book.bookId || "",
       modelLine,
       bookLine,
+      openLine,
       diff: Number.isFinite(modelLine) ? modelLine - bookLine : NaN,
       overOdds,
       underOdds,
+      openOverOdds,
+      openUnderOdds,
+      openAt: book.openAt || "",
+      closeAt: book.closeAt || "",
       overRes,
       underRes,
       actual,
@@ -1367,6 +1412,7 @@ function explodeDetailBetForBook(row, spec, book) {
       qualified,
       betRes,
       betOdds,
+      betOpenOdds,
       betDec: americanToDecimal(betOdds),
       exported_at: row.exported_at,
       pnl: qualified && side ? pnlForResult(String(betRes).trim().toUpperCase(), betOdds) : NaN,
@@ -1501,10 +1547,10 @@ function renderBets() {
 
   const fmtLine = (v, d) => (Number.isFinite(v) ? fmt(v, d) : "—");
   const fmtProb = (v) => (Number.isFinite(v) ? `${fmt(v * 100, 1)}%` : "—");
-  const fmtBookLineCell = (r) => {
-    if (!Number.isFinite(r.bookLine)) return "—";
+  const fmtBookLineCell = (r, lineVal) => {
+    if (!Number.isFinite(lineVal)) return "—";
     const isWhole = Boolean(r.isPrizePicks);
-    const formatted = isWhole ? fmtPpBookLine(r.market, r.bookLine) : fmtDkBookLine(r.market, r.bookLine);
+    const formatted = isWhole ? fmtPpBookLine(r.market, lineVal) : fmtDkBookLine(r.market, lineVal);
     const prefix =
       r.bookId === "prizepicks"
         ? "PP"
@@ -1529,22 +1575,30 @@ function renderBets() {
           const pickCls = r.qualified ? "pick-qualified" : "pick-muted";
           const pickLabel = r.pickSide ? `<span class="${pickCls}">${r.pickSide}</span>` : "—";
           const modelCell = fmtLine(r.modelLine, r.decimals);
-          const bookCell = fmtBookLineCell(r);
+          const openLineCell = fmtBookLineCell(r, r.openLine);
+          const closeLineCell = fmtBookLineCell(r, r.bookLine);
           const betCell = r.qualified ? resultBadge(r.betRes) : "—";
           const pnlCell = r.qualified && Number.isFinite(r.pnl)
             ? `<span class="${clsSigned(r.pnl)}">${r.pnl >= 0 ? "+" : ""}${fmt(r.pnl, 2)}</span>`
             : "—";
-          return `<tr>
+          const tsTitle =
+            r.openAt || r.closeAt
+              ? `title="Open ${r.openAt || "—"} · Close ${r.closeAt || "—"}"`
+              : "";
+          return `<tr ${tsTitle}>
         ${showEvent ? `<td>${r.event_name}</td>` : ""}
         <td class="num">${r.round}</td>
         <td class="player-cell">${r.player_name}</td>
         <td>${r.market}</td>
         <td>${r.book || "—"}</td>
         <td class="num line-model">${modelCell}</td>
-        <td class="num line-book">${bookCell}</td>
+        <td class="num line-book">${openLineCell}</td>
+        <td class="num line-book">${closeLineCell}</td>
         <td class="num ${clsSigned(-r.diff)}">${Number.isFinite(r.diff) ? (r.diff > 0 ? "+" : "") + fmt(r.diff, r.decimals) : "—"}</td>
+        <td class="num">${formatAmerican(r.openOverOdds) || "—"}</td>
         <td class="num">${formatAmerican(r.overOdds) || "—"}</td>
         <td>${resultBadge(r.overRes)}</td>
+        <td class="num">${formatAmerican(r.openUnderOdds) || "—"}</td>
         <td class="num">${formatAmerican(r.underOdds) || "—"}</td>
         <td>${resultBadge(r.underRes)}</td>
         <td>${pickLabel}</td>
@@ -1557,7 +1611,7 @@ function renderBets() {
       </tr>`;
         })
         .join("")
-    : `<tr><td colspan="${showEvent ? 18 : 17}">No bet rows — set Min confidence to 0%, switch to “All graded lines”, or pick another tournament.</td></tr>`;
+    : `<tr><td colspan="${showEvent ? 22 : 21}">No bet rows — set Min confidence to 0%, switch to “All graded lines”, or pick another tournament.</td></tr>`;
 }
 
 function evRows() {

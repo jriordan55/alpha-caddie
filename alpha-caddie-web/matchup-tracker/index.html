@@ -167,6 +167,7 @@
     <section id="panel-bets" class="panel" role="tabpanel">
       <div class="chart-card">
         <h2 class="section-title">Historical bet log</h2>
+        <p class="note">Qualify and P/L use <strong>closing</strong> prices (DataGolf close). Open % / odds / edge are recorded when opening prices exist.</p>
         <div class="table-wrap">
           <table class="data-table" id="bets-table">
             <thead>
@@ -178,10 +179,12 @@
                 <th>Player</th>
                 <th>Opp</th>
                 <th class="num">Model %</th>
-                <th class="num">Implied %</th>
-                <th class="num">Edge P1</th>
-                <th class="num">Edge P2</th>
-                <th class="num">Edge P3</th>
+                <th class="num" title="Implied from opening price">Open %</th>
+                <th class="num" title="Implied from closing price (pricing)">Close %</th>
+                <th class="num" title="Opening American odds for pick side">Open odds</th>
+                <th class="num" title="Closing American odds for pick side (P/L)">Close odds</th>
+                <th class="num" title="Edge at open">Edge open</th>
+                <th class="num" title="Edge at close (qualify + P/L)">Edge close</th>
                 <th>Pick@10</th>
                 <th>Result</th>
               </tr>
