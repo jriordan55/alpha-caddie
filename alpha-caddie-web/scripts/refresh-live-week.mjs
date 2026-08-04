@@ -552,6 +552,42 @@ if (!skipPostCsvMerge) {
   );
 }
 
+// Approach SG by distance/lie (from shot traces) — refresh shots then upsert current event.
+{
+  const skipSgDist = String(process.env.GOLF_SKIP_SG_DISTANCE || "").trim() === "1";
+  if (skipSgDist) {
+    console.log("[refresh:live] Skipping round SG-by-distance (GOLF_SKIP_SG_DISTANCE=1).\n");
+  } else {
+    run(
+      "run-update-latest-shots.mjs",
+      "Append latest pgatouR shot traces → all_shots (for distance-bucket SG)",
+      {},
+      softOpt,
+    );
+    run(
+      "build-round-sg-by-distance.mjs",
+      "Round approach SG by distance/lie buckets (current event upsert)",
+      { GOLF_SG_DISTANCE_LIVE: "1" },
+      softOpt,
+    );
+    run(
+      "build-round-sg-putt-by-distance.mjs",
+      "Round putting SG by distance buckets (current event upsert)",
+      { GOLF_SG_PUTT_DISTANCE_LIVE: "1" },
+      softOpt,
+    );
+    // Full rebuild of player×course×hole SG (opt-in; ~1–2 min). Default off for live speed.
+    if (String(process.env.GOLF_BUILD_COURSE_HOLE_SG || "").trim() === "1") {
+      run(
+        "build-player-course-hole-sg.mjs",
+        "Player × course × hole strokes gained (from shot hole scores)",
+        {},
+        softOpt,
+      );
+    }
+  }
+}
+
 if (!skipBacktestRoi) {
   run(
     "backtest-odds-model-roi.mjs",
@@ -573,6 +609,12 @@ if (skipHistoryRebuild) {
   run(
     "patch-current-event-history-shards.mjs",
     "Patch current-event live rows into player-history shards (no CSV rescan)",
+  );
+  run(
+    "merge-round-sg-distance-into-history.mjs",
+    "Merge approach SG-by-distance buckets onto field history shards",
+    {},
+    softOpt,
   );
   run("rebuild-field-season-bundle.mjs", "Rebuild field-{year}.json for Historical Trends");
   run(
@@ -606,6 +648,12 @@ if (skipHistoryRebuild) {
           }
         : {}),
     },
+  );
+  run(
+    "merge-round-sg-distance-into-history.mjs",
+    "Merge approach SG-by-distance buckets onto history shards",
+    { GOLF_SG_DISTANCE_MERGE_FIELD_ONLY: "0" },
+    softOpt,
   );
   run("embed-player-history.mjs", "Embed history for static deploy (embed:history)");
   run(

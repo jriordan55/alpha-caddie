@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "source_shots": "C:\\Users\\student\\Documents\\golfModel\\data\\all_shots_2022_2026.csv",
+    "method": "Empirical putting SG vs tour mean strokes-to-hole by start distance (feet), green putts only.",
+    "buckets_ft": [
+      "0-5",
+      "5-10",
+      "10-15",
+      "15-25",
+      "25+"
+    ],
+    "rows_scanned": 5641503,
+    "putt_shots": 1859627,
+    "player_rounds": 64630,
+    "created_at": "2026-08-04T05:20:04.919Z"
+  },
+  "baselines": {
+    "putt_0_5ft": {
+      "n": 911902,
+      "mean_strokes_to_hole": 1.0311546635493727
+    },
+    "putt_5_10ft": {
+      "n": 264602,
+      "mean_strokes_to_hole": 1.429913606095192
+    },
+    "putt_10_15ft": {
+      "n": 172946,
+      "mean_strokes_to_hole": 1.695621754767384
+    },
+    "putt_15_25ft": {
+      "n": 220173,
+      "mean_strokes_to_hole": 1.8519119056378393
+    },
+    "putt_25plus_ft": {
+      "n": 290004,
+      "mean_strokes_to_hole": 2.033744362146729
+    }
+  }
+}

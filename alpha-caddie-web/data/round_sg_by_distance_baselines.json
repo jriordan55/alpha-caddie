@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "source_shots": "C:\\Users\\student\\Documents\\golfModel\\data\\all_shots_2022_2026.csv",
+    "method": "Empirical strokes-gained vs tour mean strokes-to-hole by distance/lie bucket (from pgatouR shot traces).",
+    "note": "Not official PGA Tour / DataGolf ShotLink SG. Approach shots only (≥50 yds).",
+    "rows_scanned": 5641503,
+    "approach_shots": 1341563,
+    "player_rounds": 79937,
+    "created_at": "2026-08-04T05:27:00.235Z"
+  },
+  "baselines": {
+    "50_100_fw": {
+      "n": 84404,
+      "mean_strokes_to_hole": 2.8150324629164496
+    },
+    "100_150_fw": {
+      "n": 263159,
+      "mean_strokes_to_hole": 2.9020820112555525
+    },
+    "150_200_fw": {
+      "n": 386078,
+      "mean_strokes_to_hole": 3.049427835825921
+    },
+    "over_200_fw": {
+      "n": 304093,
+      "mean_strokes_to_hole": 3.375589046771876
+    },
+    "under_150_rgh": {
+      "n": 115740,
+      "mean_strokes_to_hole": 3.03443062035597
+    },
+    "over_150_rgh": {
+      "n": 188089,
+      "mean_strokes_to_hole": 3.492096826502347
+    }
+  }
+}

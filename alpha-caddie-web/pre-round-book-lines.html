@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SG categories + combos vs sportsbook O/U</title>
+<style>
+:root{--bg:#0f1218;--panel:#171b24;--text:#e8eaed;--muted:#9aa3b2;--line:#2a3140;--accent:#6ea8fe;--good:#3dd68c;--bad:#f07178;--warn:#f5a524}
+*{box-sizing:border-box}body{margin:0;font:15px/1.5 system-ui,Segoe UI,sans-serif;background:var(--bg);color:var(--text);padding:32px 20px 64px}
+main{max-width:1100px;margin:0 auto}h1{font-size:1.55rem;margin:0 0 8px}h2{font-size:1.15rem;margin:28px 0 12px}h3{font-size:1rem;margin:20px 0 8px}
+.sub{color:var(--muted);margin:0 0 20px}.callout{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);padding:14px 16px;margin:16px 0}
+table{width:100%;border-collapse:collapse;font-size:.85rem}th,td{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600}.pos{color:var(--good)}.neg{color:var(--bad)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
+.stat{background:var(--panel);border:1px solid var(--line);padding:12px}.stat b{display:block;font-size:1.2rem;color:var(--accent)}.stat span{color:var(--muted);font-size:.8rem}
+@media(max-width:700px){.stats{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<main>
+<h1>SG categories + combos vs sportsbook O/U</h1>
+<p class="sub">All base SG (OTT/APP/ARG/PUTT/T2G/Total) + 2/3/4-way sums · rolling L1–L32, season, career, EWMA · median &amp; tertile · DK lines, flat 1u</p>
+<div class="callout"><strong>4,987</strong> graded bets · <strong>2,890</strong> strategies · 18 SG features × 16 windows</div>
+
+<div class="stats">
+  <div class="stat"><b>18</b><span>SG cats + combos</span></div>
+  <div class="stat"><b>16</b><span>Lookbacks (incl. L1)</span></div>
+  <div class="stat"><b>2890</b><span>Rules tested</span></div>
+  <div class="stat"><b>4987</b><span>O/U decisions</span></div>
+</div>
+
+<h2>SG features tested</h2>
+<p class="sub">SG:Total · SG:T2G · SG:OTT · SG:APP · SG:ARG · SG:PUTT · SG:OTT+APP · SG:OTT+ARG · SG:OTT+PUTT · SG:APP+ARG · SG:APP+PUTT · SG:ARG+PUTT · SG:T2G+PUTT · SG:OTT+APP+ARG · SG:OTT+APP+PUTT · SG:OTT+ARG+PUTT · SG:APP+ARG+PUTT · SG:OTT+APP+ARG+PUTT</p>
+
+<h2>Base rates</h2>
+<table>
+<thead><tr><th>Market</th><th>n</th><th>Over</th><th>Under</th><th>Always over</th><th>Always under</th></tr></thead>
+<tbody>
+<tr><td>Round score</td><td>1370</td><td>47.1%</td><td>52.9%</td>
+    <td class="neg">-12.7%</td>
+    <td class="neg">-1.1%</td></tr><tr><td>Birdies</td><td>1568</td><td>48.0%</td><td>52.0%</td>
+    <td class="neg">-11.6%</td>
+    <td class="neg">-3.9%</td></tr><tr><td>Bogeys</td><td>794</td><td>46.1%</td><td>53.9%</td>
+    <td class="neg">-15.2%</td>
+    <td class="neg">-1.9%</td></tr><tr><td>GIR</td><td>646</td><td>48.8%</td><td>51.2%</td>
+    <td class="neg">-8.9%</td>
+    <td class="neg">-5.8%</td></tr><tr><td>Fairways hit</td><td>609</td><td>47.9%</td><td>52.1%</td>
+    <td class="neg">-12.6%</td>
+    <td class="neg">-4%</td></tr>
+</tbody>
+</table>
+
+<h2>Best SG combo per market</h2>
+<h3>Round score (1370)</h3>
+    <table><thead><tr><th>Combo</th><th>Window</th><th>Rule</th><th>n</th><th>Hit</th><th>ROI</th><th>Units</th></tr></thead><tbody><tr><td>SG:APP+ARG+PUTT</td><td>career</td><td>SG tertile high→under</td><td>914</td><td>52.4%</td><td class="neg">-2.5%</td><td class="neg">-23u</td></tr><tr><td>SG:APP+ARG</td><td>career</td><td>SG tertile high→under</td><td>914</td><td>52.3%</td><td class="neg">-2.9%</td><td class="neg">-26.86u</td></tr><tr><td>SG:Total</td><td>season</td><td>SG high → under</td><td>1365</td><td>52.2%</td><td class="neg">-3.3%</td><td class="neg">-45.41u</td></tr><tr><td>SG:ARG</td><td>career</td><td>SG tertile high→under</td><td>914</td><td>51.9%</td><td class="neg">-3.4%</td><td class="neg">-31.38u</td></tr><tr><td>SG:PUTT</td><td>season</td><td>SG high → under</td><td>1364</td><td>51.9%</td><td class="neg">-3.4%</td><td class="neg">-46.69u</td></tr><tr><td>SG:T2G+PUTT</td><td>career</td><td>SG high → under</td><td>1369</td><td>51.9%</td><td class="neg">-3.5%</td><td class="neg">-48.45u</td></tr><tr><td>SG:OTT+ARG+PUTT</td><td>L20</td><td>SG high → under</td><td>1369</td><td>51.9%</td><td class="neg">-3.5%</td><td class="neg">-47.24u</td></tr><tr><td>SG:OTT+APP+ARG+PUTT</td><td>career</td><td>SG high → under</td><td>1369</td><td>51.9%</td><td class="neg">-3.5%</td><td class="neg">-48.45u</td></tr><tr><td>SG:ARG+PUTT</td><td>season</td><td>SG high → under</td><td>1364</td><td>51.9%</td><td class="neg">-3.7%</td><td class="neg">-50.27u</td></tr><tr><td>SG:OTT+ARG</td><td>L32</td><td>SG tertile high→under</td><td>914</td><td>51.8%</td><td class="neg">-3.9%</td><td class="neg">-35.28u</td></tr><tr><td>SG:OTT</td><td>L1</td><td>SG tertile high→under</td><td>905</td><td>51.2%</td><td class="neg">-4.4%</td><td class="neg">-40.01u</td></tr><tr><td>SG:APP</td><td>L2</td><td>SG tertile high→under</td><td>904</td><td>51.5%</td><td class="neg">-4.4%</td><td class="neg">-39.33u</td></tr><tr><td>SG:OTT+PUTT</td><td>L2</td><td>SG high → under</td><td>1355</td><td>51.2%</td><td class="neg">-4.6%</td><td class="neg">-63.01u</td></tr><tr><td>SG:OTT+APP+PUTT</td><td>L12</td><td>SG high → under</td><td>1369</td><td>51.1%</td><td class="neg">-4.8%</td><td class="neg">-65.51u</td></tr><tr><td>SG:APP+PUTT</td><td>career</td><td>SG tertile high→under</td><td>914</td><td>51.2%</td><td class="neg">-4.9%</td><td class="neg">-44.97u</td></tr><tr><td>SG:T2G</td><td>L2</td><td>SG high → under</td><td>1355</td><td>51.0%</td><td class="neg">-5%</td><td class="neg">-67.51u</td></tr><tr><td>SG:OTT+APP+ARG</td><td>L2</td><td>SG high → under</td><td>1355</td><td>51.0%</td><td class="neg">-5%</td><td class="neg">-67.51u</td></tr><tr><td>SG:OTT+APP</td><td>L2</td><td>SG tertile high→under</td><td>904</td><td>50.7%</td><td class="neg">-5.9%</td><td class="neg">-53.68u</td></tr></tbody></table><h3>Birdies (1568)</h3>
+    <table><thead><tr><th>Combo</th><th>Window</th><th>Rule</th><th>n</th><th>Hit</th><th>ROI</th><th>Units</th></tr></thead><tbody><tr><td>SG:ARG</td><td>L32</td><td>SG tertile high→over</td><td>1046</td><td>51.1%</td><td class="neg">-5.5%</td><td class="neg">-58.03u</td></tr><tr><td>SG:OTT</td><td>L2</td><td>SG tertile high→over</td><td>1037</td><td>51.2%</td><td class="neg">-5.6%</td><td class="neg">-57.59u</td></tr><tr><td>SG:ARG+PUTT</td><td>L32</td><td>SG tertile high→over</td><td>1046</td><td>51.0%</td><td class="neg">-5.9%</td><td class="neg">-61.98u</td></tr><tr><td>SG:OTT+ARG</td><td>L10</td><td>SG high → over</td><td>1567</td><td>50.9%</td><td class="neg">-6.1%</td><td class="neg">-94.87u</td></tr><tr><td>SG:OTT+PUTT</td><td>L2</td><td>SG high → over</td><td>1553</td><td>50.6%</td><td class="neg">-6.3%</td><td class="neg">-98.47u</td></tr><tr><td>SG:OTT+ARG+PUTT</td><td>career</td><td>SG high → over</td><td>1567</td><td>51.0%</td><td class="neg">-6.3%</td><td class="neg">-99.11u</td></tr><tr><td>SG:APP+ARG</td><td>L32</td><td>SG high → over</td><td>1567</td><td>51.0%</td><td class="neg">-6.4%</td><td class="neg">-100.14u</td></tr><tr><td>SG:PUTT</td><td>career</td><td>SG high → over</td><td>1567</td><td>50.5%</td><td class="neg">-6.9%</td><td class="neg">-108.64u</td></tr><tr><td>SG:APP+ARG+PUTT</td><td>career</td><td>SG high → over</td><td>1567</td><td>50.5%</td><td class="neg">-7.2%</td><td class="neg">-112.6u</td></tr><tr><td>SG:T2G</td><td>L12</td><td>SG tertile high→over</td><td>1046</td><td>50.3%</td><td class="neg">-7.6%</td><td class="neg">-79.71u</td></tr><tr><td>SG:OTT+APP+ARG</td><td>L12</td><td>SG tertile high→over</td><td>1046</td><td>50.3%</td><td class="neg">-7.6%</td><td class="neg">-79.71u</td></tr><tr><td>SG:T2G+PUTT</td><td>career</td><td>SG high → over</td><td>1567</td><td>50.4%</td><td class="neg">-7.9%</td><td class="neg">-124.24u</td></tr><tr><td>SG:OTT+APP+ARG+PUTT</td><td>career</td><td>SG high → over</td><td>1567</td><td>50.4%</td><td class="neg">-7.9%</td><td class="neg">-124.24u</td></tr><tr><td>SG:OTT+APP</td><td>L1</td><td>SG high → over</td><td>1553</td><td>49.8%</td><td class="neg">-8.3%</td><td class="neg">-129.41u</td></tr><tr><td>SG:APP</td><td>L5</td><td>SG high → over</td><td>1567</td><td>49.8%</td><td class="neg">-8.4%</td><td class="neg">-132.08u</td></tr><tr><td>SG:APP+PUTT</td><td>career</td><td>SG high → over</td><td>1567</td><td>50.0%</td><td class="neg">-8.4%</td><td class="neg">-131.22u</td></tr><tr><td>SG:Total</td><td>L1</td><td>SG high → over</td><td>1568</td><td>49.4%</td><td class="neg">-9.1%</td><td class="neg">-142.43u</td></tr><tr><td>SG:OTT+APP+PUTT</td><td>L12</td><td>SG high → over</td><td>1567</td><td>49.3%</td><td class="neg">-9.6%</td><td class="neg">-151.07u</td></tr></tbody></table><h3>Bogeys (794)</h3>
+    <table><thead><tr><th>Combo</th><th>Window</th><th>Rule</th><th>n</th><th>Hit</th><th>ROI</th><th>Units</th></tr></thead><tbody><tr><td>SG:APP+PUTT</td><td>L5</td><td>SG tertile high→under</td><td>530</td><td>53.8%</td><td class="neg">-2.3%</td><td class="neg">-12.09u</td></tr><tr><td>SG:ARG+PUTT</td><td>L32</td><td>SG tertile high→under</td><td>530</td><td>51.9%</td><td class="neg">-3.9%</td><td class="neg">-20.41u</td></tr><tr><td>SG:APP</td><td>L2</td><td>SG tertile high→under</td><td>526</td><td>52.5%</td><td class="neg">-4%</td><td class="neg">-20.79u</td></tr><tr><td>SG:PUTT</td><td>L16</td><td>SG tertile high→under</td><td>530</td><td>52.8%</td><td class="neg">-4.4%</td><td class="neg">-23.43u</td></tr><tr><td>SG:OTT+APP</td><td>L2</td><td>SG tertile high→under</td><td>526</td><td>51.5%</td><td class="neg">-5%</td><td class="neg">-26.25u</td></tr><tr><td>SG:OTT</td><td>L16</td><td>SG high → under</td><td>794</td><td>51.6%</td><td class="neg">-5.1%</td><td class="neg">-40.73u</td></tr><tr><td>SG:OTT+ARG+PUTT</td><td>L12</td><td>SG high → under</td><td>794</td><td>51.9%</td><td class="neg">-5.3%</td><td class="neg">-42.46u</td></tr><tr><td>SG:OTT+APP+PUTT</td><td>L5</td><td>SG high → under</td><td>794</td><td>51.6%</td><td class="neg">-5.6%</td><td class="neg">-44.6u</td></tr><tr><td>SG:T2G</td><td>L2</td><td>SG tertile high→under</td><td>526</td><td>51.0%</td><td class="neg">-6.1%</td><td class="neg">-31.87u</td></tr><tr><td>SG:OTT+APP+ARG</td><td>L2</td><td>SG tertile high→under</td><td>526</td><td>51.0%</td><td class="neg">-6.1%</td><td class="neg">-31.87u</td></tr><tr><td>SG:ARG</td><td>L32</td><td>SG high → under</td><td>794</td><td>50.6%</td><td class="neg">-6.4%</td><td class="neg">-50.51u</td></tr><tr><td>SG:APP+ARG</td><td>L2</td><td>SG high → under</td><td>787</td><td>51.0%</td><td class="neg">-6.5%</td><td class="neg">-51.33u</td></tr><tr><td>SG:APP+ARG+PUTT</td><td>season</td><td>SG tertile high→under</td><td>529</td><td>50.7%</td><td class="neg">-6.7%</td><td class="neg">-35.44u</td></tr><tr><td>SG:T2G+PUTT</td><td>L12</td><td>SG tertile high→under</td><td>530</td><td>50.6%</td><td class="neg">-6.8%</td><td class="neg">-35.79u</td></tr><tr><td>SG:OTT+APP+ARG+PUTT</td><td>L12</td><td>SG tertile high→under</td><td>530</td><td>50.6%</td><td class="neg">-6.8%</td><td class="neg">-35.79u</td></tr><tr><td>SG:OTT+PUTT</td><td>L12</td><td>SG tertile high→under</td><td>530</td><td>50.8%</td><td class="neg">-7.1%</td><td class="neg">-37.79u</td></tr><tr><td>SG:OTT+ARG</td><td>L32</td><td>SG high → under</td><td>794</td><td>50.4%</td><td class="neg">-7.5%</td><td class="neg">-59.42u</td></tr><tr><td>SG:Total</td><td>L12</td><td>SG tertile high→under</td><td>530</td><td>50.0%</td><td class="neg">-8.1%</td><td class="neg">-43.04u</td></tr></tbody></table><h3>GIR (646)</h3>
+    <table><thead><tr><th>Combo</th><th>Window</th><th>Rule</th><th>n</th><th>Hit</th><th>ROI</th><th>Units</th></tr></thead><tbody><tr><td>SG:APP+PUTT</td><td>L6</td><td>SG tertile high→over</td><td>432</td><td>55.1%</td><td class="pos">2.3%</td><td class="pos">9.75u</td></tr><tr><td>SG:OTT+APP+PUTT</td><td>ewma</td><td>SG tertile high→over</td><td>432</td><td>55.1%</td><td class="pos">2%</td><td class="pos">8.86u</td></tr><tr><td>SG:T2G</td><td>L3</td><td>SG tertile high→over</td><td>431</td><td>54.5%</td><td class="pos">1.6%</td><td class="pos">7.03u</td></tr><tr><td>SG:OTT+APP+ARG</td><td>L3</td><td>SG tertile high→over</td><td>431</td><td>54.5%</td><td class="pos">1.6%</td><td class="pos">7.03u</td></tr><tr><td>SG:OTT+PUTT</td><td>L6</td><td>SG tertile high→over</td><td>432</td><td>54.6%</td><td class="pos">1.3%</td><td class="pos">5.7u</td></tr><tr><td>SG:APP+ARG</td><td>L4</td><td>SG tertile high→over</td><td>431</td><td>53.8%</td><td class="pos">0.7%</td><td class="pos">3.09u</td></tr><tr><td>SG:APP+ARG+PUTT</td><td>L6</td><td>SG tertile high→over</td><td>432</td><td>54.2%</td><td class="pos">0.5%</td><td class="pos">1.97u</td></tr><tr><td>SG:PUTT</td><td>L8</td><td>SG tertile high→over</td><td>432</td><td>54.4%</td><td class="pos">0.2%</td><td class="pos">1.02u</td></tr><tr><td>SG:APP</td><td>L3</td><td>SG tertile high→over</td><td>431</td><td>53.6%</td><td class="neg">-0.2%</td><td class="neg">-1.03u</td></tr><tr><td>SG:T2G+PUTT</td><td>L6</td><td>SG tertile high→over</td><td>432</td><td>53.7%</td><td class="neg">-0.3%</td><td class="neg">-1.23u</td></tr><tr><td>SG:OTT+APP+ARG+PUTT</td><td>L6</td><td>SG tertile high→over</td><td>432</td><td>53.7%</td><td class="neg">-0.3%</td><td class="neg">-1.23u</td></tr><tr><td>SG:OTT</td><td>L2</td><td>SG tertile high→over</td><td>430</td><td>53.0%</td><td class="neg">-0.5%</td><td class="neg">-2.33u</td></tr><tr><td>SG:Total</td><td>L6</td><td>SG tertile high→over</td><td>432</td><td>53.5%</td><td class="neg">-0.7%</td><td class="neg">-3.04u</td></tr><tr><td>SG:ARG</td><td>L24</td><td>SG tertile high→over</td><td>432</td><td>53.5%</td><td class="neg">-0.7%</td><td class="neg">-2.82u</td></tr><tr><td>SG:OTT+ARG</td><td>L1</td><td>SG tertile high→over</td><td>430</td><td>53.5%</td><td class="neg">-1%</td><td class="neg">-4.35u</td></tr><tr><td>SG:OTT+ARG+PUTT</td><td>career</td><td>SG tertile high→over</td><td>432</td><td>53.0%</td><td class="neg">-1.1%</td><td class="neg">-4.74u</td></tr><tr><td>SG:ARG+PUTT</td><td>L32</td><td>SG tertile high→over</td><td>432</td><td>53.2%</td><td class="neg">-1.3%</td><td class="neg">-5.5u</td></tr><tr><td>SG:OTT+APP</td><td>L3</td><td>SG high → over</td><td>645</td><td>52.6%</td><td class="neg">-2%</td><td class="neg">-12.63u</td></tr></tbody></table><h3>Fairways hit (609)</h3>
+    <table><thead><tr><th>Combo</th><th>Window</th><th>Rule</th><th>n</th><th>Hit</th><th>ROI</th><th>Units</th></tr></thead><tbody><tr><td>SG:OTT+PUTT</td><td>L8</td><td>SG tertile high→over</td><td>407</td><td>58.7%</td><td class="pos">7.3%</td><td class="pos">29.82u</td></tr><tr><td>SG:OTT+ARG</td><td>L24</td><td>SG tertile high→over</td><td>407</td><td>57.0%</td><td class="pos">5.9%</td><td class="pos">23.97u</td></tr><tr><td>SG:OTT</td><td>L20</td><td>SG tertile high→over</td><td>407</td><td>57.5%</td><td class="pos">5.7%</td><td class="pos">23.1u</td></tr><tr><td>SG:T2G</td><td>L24</td><td>SG tertile high→over</td><td>407</td><td>56.3%</td><td class="pos">4%</td><td class="pos">16.1u</td></tr><tr><td>SG:OTT+APP+ARG</td><td>L24</td><td>SG tertile high→over</td><td>407</td><td>56.3%</td><td class="pos">4%</td><td class="pos">16.1u</td></tr><tr><td>SG:OTT+APP</td><td>L8</td><td>SG high → over</td><td>609</td><td>56.3%</td><td class="pos">3.6%</td><td class="pos">22.12u</td></tr><tr><td>SG:OTT+APP+PUTT</td><td>L6</td><td>SG tertile high→over</td><td>407</td><td>56.3%</td><td class="pos">3.6%</td><td class="pos">14.77u</td></tr><tr><td>SG:Total</td><td>L24</td><td>SG tertile high→over</td><td>407</td><td>56.3%</td><td class="pos">3.5%</td><td class="pos">14.27u</td></tr><tr><td>SG:T2G+PUTT</td><td>L16</td><td>SG tertile high→over</td><td>407</td><td>56.3%</td><td class="pos">3.2%</td><td class="pos">12.88u</td></tr><tr><td>SG:OTT+APP+ARG+PUTT</td><td>L16</td><td>SG tertile high→over</td><td>407</td><td>56.3%</td><td class="pos">3.2%</td><td class="pos">12.88u</td></tr><tr><td>SG:OTT+ARG+PUTT</td><td>L10</td><td>SG tertile high→over</td><td>407</td><td>56.5%</td><td class="pos">3.1%</td><td class="pos">12.53u</td></tr><tr><td>SG:APP+PUTT</td><td>L5</td><td>SG tertile high→over</td><td>407</td><td>56.0%</td><td class="pos">1.8%</td><td class="pos">7.49u</td></tr><tr><td>SG:APP</td><td>L2</td><td>SG tertile high→over</td><td>402</td><td>54.2%</td><td class="neg">-0.7%</td><td class="neg">-2.68u</td></tr><tr><td>SG:APP+ARG+PUTT</td><td>L32</td><td>SG high → over</td><td>609</td><td>54.0%</td><td class="neg">-1.2%</td><td class="neg">-7.13u</td></tr><tr><td>SG:PUTT</td><td>L5</td><td>SG tertile high→over</td><td>407</td><td>53.6%</td><td class="neg">-1.4%</td><td class="neg">-5.89u</td></tr><tr><td>SG:APP+ARG</td><td>L2</td><td>SG high → over</td><td>602</td><td>53.3%</td><td class="neg">-2.6%</td><td class="neg">-15.92u</td></tr><tr><td>SG:ARG+PUTT</td><td>L24</td><td>SG tertile high→over</td><td>407</td><td>53.3%</td><td class="neg">-2.8%</td><td class="neg">-11.27u</td></tr><tr><td>SG:ARG</td><td>L32</td><td>SG high → over</td><td>609</td><td>51.4%</td><td class="neg">-5.6%</td><td class="neg">-34.25u</td></tr></tbody></table>
+
+<h2>Best last-round (L1) SG by market</h2>
+<h3>Round score</h3>
+    <table><thead><tr><th>Combo</th><th>Rule</th><th>n</th><th>Hit</th><th>ROI</th><th>Units</th></tr></thead><tbody><tr><td>SG:ARG</td><td>SG tertile high→under</td><td>905</td><td>51.6%</td><td class="neg">-3.9%</td><td>-35.1u</td></tr><tr><td>SG:OTT</td><td>SG tertile high→under</td><td>905</td><td>51.2%</td><td class="neg">-4.4%</td><td>-40.01u</td></tr><tr><td>SG:OTT+ARG</td><td>SG tertile high→under</td><td>904</td><td>50.9%</td><td class="neg">-5.1%</td><td>-46.26u</td></tr><tr><td>SG:T2G</td><td>SG high → under</td><td>1355</td><td>50.8%</td><td class="neg">-5.2%</td><td>-70.92u</td></tr><tr><td>SG:OTT+APP+ARG</td><td>SG high → under</td><td>1355</td><td>50.8%</td><td class="neg">-5.2%</td><td>-70.92u</td></tr><tr><td>SG:PUTT</td><td>SG tertile high→under</td><td>905</td><td>50.9%</td><td class="neg">-5.4%</td><td>-48.66u</td></tr><tr><td>SG:APP+ARG</td><td>SG high → under</td><td>1355</td><td>50.7%</td><td class="neg">-5.6%</td><td>-75.42u</td></tr><tr><td>SG:OTT+ARG</td><td>SG high → under</td><td>1355</td><td>50.6%</td><td class="neg">-5.8%</td><td>-78.69u</td></tr></tbody></table><h3>Birdies</h3>
+    <table><thead><tr><th>Combo</th><th>Rule</th><th>n</th><th>Hit</th><th>ROI</th><th>Units</th></tr></thead><tbody><tr><td>SG:OTT</td><td>SG tertile high→over</td><td>1036</td><td>50.8%</td><td class="neg">-6%</td><td>-62.25u</td></tr><tr><td>SG:OTT</td><td>SG high → over</td><td>1553</td><td>50.0%</td><td class="neg">-7.4%</td><td>-114.71u</td></tr><tr><td>SG:OTT+ARG+PUTT</td><td>SG tertile high→over</td><td>1036</td><td>49.9%</td><td class="neg">-7.8%</td><td>-81.2u</td></tr><tr><td>SG:ARG</td><td>SG tertile high→over</td><td>1037</td><td>49.8%</td><td class="neg">-8.1%</td><td>-83.63u</td></tr><tr><td>SG:OTT+ARG</td><td>SG high → over</td><td>1553</td><td>49.6%</td><td class="neg">-8.2%</td><td>-127.34u</td></tr><tr><td>SG:OTT+APP</td><td>SG high → over</td><td>1553</td><td>49.8%</td><td class="neg">-8.3%</td><td>-129.41u</td></tr><tr><td>SG:T2G</td><td>SG high → over</td><td>1553</td><td>49.7%</td><td class="neg">-8.4%</td><td>-131.02u</td></tr><tr><td>SG:OTT+APP+ARG</td><td>SG high → over</td><td>1553</td><td>49.7%</td><td class="neg">-8.4%</td><td>-131.02u</td></tr></tbody></table><h3>Bogeys</h3>
+    <table><thead><tr><th>Combo</th><th>Rule</th><th>n</th><th>Hit</th><th>ROI</th><th>Units</th></tr></thead><tbody><tr><td>SG:APP</td><td>SG tertile high→under</td><td>526</td><td>49.6%</td><td class="neg">-9%</td><td>-47.58u</td></tr><tr><td>SG:APP+PUTT</td><td>SG high → under</td><td>787</td><td>49.0%</td><td class="neg">-9.6%</td><td>-75.91u</td></tr><tr><td>SG:OTT</td><td>SG tertile high→under</td><td>526</td><td>49.2%</td><td class="neg">-9.7%</td><td>-51.08u</td></tr><tr><td>SG:APP+PUTT</td><td>SG tertile high→under</td><td>526</td><td>49.6%</td><td class="neg">-9.7%</td><td>-51.15u</td></tr><tr><td>SG:PUTT</td><td>SG high → under</td><td>787</td><td>49.2%</td><td class="neg">-9.9%</td><td>-78.14u</td></tr><tr><td>SG:OTT+ARG</td><td>SG high → under</td><td>787</td><td>48.9%</td><td class="neg">-10%</td><td>-78.7u</td></tr><tr><td>SG:OTT+APP+PUTT</td><td>SG tertile high→under</td><td>526</td><td>49.0%</td><td class="neg">-10.4%</td><td>-54.54u</td></tr><tr><td>SG:OTT+PUTT</td><td>SG high → under</td><td>787</td><td>48.4%</td><td class="neg">-10.6%</td><td>-83.27u</td></tr></tbody></table><h3>GIR</h3>
+    <table><thead><tr><th>Combo</th><th>Rule</th><th>n</th><th>Hit</th><th>ROI</th><th>Units</th></tr></thead><tbody><tr><td>SG:OTT+ARG</td><td>SG tertile high→over</td><td>430</td><td>53.5%</td><td class="neg">-1%</td><td>-4.35u</td></tr><tr><td>SG:OTT+ARG+PUTT</td><td>SG tertile high→over</td><td>430</td><td>53.5%</td><td class="neg">-1.2%</td><td>-5.21u</td></tr><tr><td>SG:OTT+PUTT</td><td>SG high → over</td><td>643</td><td>52.6%</td><td class="neg">-1.9%</td><td>-12.45u</td></tr><tr><td>SG:OTT+APP+PUTT</td><td>SG tertile high→over</td><td>430</td><td>52.1%</td><td class="neg">-3.2%</td><td>-13.85u</td></tr><tr><td>SG:OTT+APP+ARG+PUTT</td><td>SG high → over</td><td>643</td><td>52.3%</td><td class="neg">-3.6%</td><td>-23.14u</td></tr><tr><td>SG:OTT</td><td>SG high → over</td><td>643</td><td>51.6%</td><td class="neg">-3.7%</td><td>-23.8u</td></tr><tr><td>SG:T2G+PUTT</td><td>SG high → over</td><td>643</td><td>52.1%</td><td class="neg">-3.8%</td><td>-24.69u</td></tr><tr><td>SG:OTT+APP+PUTT</td><td>SG high → over</td><td>643</td><td>51.9%</td><td class="neg">-3.9%</td><td>-24.91u</td></tr></tbody></table><h3>Fairways hit</h3>
+    <table><thead><tr><th>Combo</th><th>Rule</th><th>n</th><th>Hit</th><th>ROI</th><th>Units</th></tr></thead><tbody><tr><td>SG:OTT</td><td>SG tertile high→over</td><td>402</td><td>53.5%</td><td class="neg">-2%</td><td>-8.1u</td></tr><tr><td>SG:OTT+ARG</td><td>SG tertile high→over</td><td>402</td><td>53.2%</td><td class="neg">-2.4%</td><td>-9.63u</td></tr><tr><td>SG:OTT+ARG+PUTT</td><td>SG tertile high→over</td><td>402</td><td>52.2%</td><td class="neg">-4.7%</td><td>-18.78u</td></tr><tr><td>SG:APP</td><td>SG tertile high→over</td><td>402</td><td>51.5%</td><td class="neg">-5.1%</td><td>-20.43u</td></tr><tr><td>SG:OTT+APP+ARG</td><td>SG tertile high→over</td><td>402</td><td>51.5%</td><td class="neg">-5.2%</td><td>-21.03u</td></tr><tr><td>SG:OTT+APP</td><td>SG high → over</td><td>602</td><td>51.3%</td><td class="neg">-5.4%</td><td>-32.22u</td></tr><tr><td>SG:OTT+APP</td><td>SG tertile high→over</td><td>402</td><td>51.5%</td><td class="neg">-5.4%</td><td>-21.52u</td></tr><tr><td>SG:T2G</td><td>SG high → over</td><td>602</td><td>51.3%</td><td class="neg">-5.6%</td><td>-33.46u</td></tr></tbody></table>
+
+<h2>Top 40 overall</h2>
+<table>
+<thead><tr><th>Market</th><th>Combo</th><th>Window</th><th>Rule</th><th>n</th><th>Hit</th><th>ROI</th><th>Units</th></tr></thead>
+<tbody>
+<tr>
+      <td>Fairways hit</td><td>SG:OTT+PUTT</td><td>L8</td><td>SG tertile high→over</td>
+      <td>407</td><td>58.7%</td>
+      <td class="pos">7.3%</td>
+      <td class="pos">+29.82u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+ARG</td><td>L24</td><td>SG tertile high→over</td>
+      <td>407</td><td>57.0%</td>
+      <td class="pos">5.9%</td>
+      <td class="pos">+23.97u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT</td><td>L20</td><td>SG tertile high→over</td>
+      <td>407</td><td>57.5%</td>
+      <td class="pos">5.7%</td>
+      <td class="pos">+23.1u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT</td><td>L8</td><td>SG high → over</td>
+      <td>609</td><td>57.3%</td>
+      <td class="pos">5.6%</td>
+      <td class="pos">+33.85u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT</td><td>L12</td><td>SG tertile high→over</td>
+      <td>407</td><td>57.5%</td>
+      <td class="pos">5.6%</td>
+      <td class="pos">+22.81u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT</td><td>L24</td><td>SG tertile high→over</td>
+      <td>407</td><td>57.2%</td>
+      <td class="pos">5.6%</td>
+      <td class="pos">+22.63u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT</td><td>L32</td><td>SG tertile high→over</td>
+      <td>407</td><td>57.2%</td>
+      <td class="pos">5.6%</td>
+      <td class="pos">+22.77u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+ARG</td><td>L16</td><td>SG tertile high→over</td>
+      <td>407</td><td>57.2%</td>
+      <td class="pos">5.6%</td>
+      <td class="pos">+22.73u</td>
+    </tr><tr>
+      <td>GIR</td><td>model_mu</td><td>?</td><td>model_vs_book_gap_0.5</td>
+      <td>391</td><td>58.6%</td>
+      <td class="pos">5%</td>
+      <td class="pos">+19.65u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+PUTT</td><td>L12</td><td>SG tertile high→over</td>
+      <td>407</td><td>57.2%</td>
+      <td class="pos">4.8%</td>
+      <td class="pos">+19.39u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+PUTT</td><td>L16</td><td>SG tertile high→over</td>
+      <td>407</td><td>57.2%</td>
+      <td class="pos">4.7%</td>
+      <td class="pos">+18.98u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT</td><td>L10</td><td>SG tertile high→over</td>
+      <td>407</td><td>56.8%</td>
+      <td class="pos">4.4%</td>
+      <td class="pos">+17.77u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT</td><td>season</td><td>SG tertile high→over</td>
+      <td>406</td><td>55.9%</td>
+      <td class="pos">4.1%</td>
+      <td class="pos">+16.45u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:T2G</td><td>L24</td><td>SG tertile high→over</td>
+      <td>407</td><td>56.3%</td>
+      <td class="pos">4%</td>
+      <td class="pos">+16.1u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+APP+ARG</td><td>L24</td><td>SG tertile high→over</td>
+      <td>407</td><td>56.3%</td>
+      <td class="pos">4%</td>
+      <td class="pos">+16.1u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+PUTT</td><td>L10</td><td>SG tertile high→over</td>
+      <td>407</td><td>57.0%</td>
+      <td class="pos">3.8%</td>
+      <td class="pos">+15.49u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT</td><td>ewma</td><td>SG tertile high→over</td>
+      <td>407</td><td>56.3%</td>
+      <td class="pos">3.6%</td>
+      <td class="pos">+14.84u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+APP</td><td>L8</td><td>SG high → over</td>
+      <td>609</td><td>56.3%</td>
+      <td class="pos">3.6%</td>
+      <td class="pos">+22.12u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+APP+PUTT</td><td>L6</td><td>SG tertile high→over</td>
+      <td>407</td><td>56.3%</td>
+      <td class="pos">3.6%</td>
+      <td class="pos">+14.77u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:Total</td><td>L24</td><td>SG tertile high→over</td>
+      <td>407</td><td>56.3%</td>
+      <td class="pos">3.5%</td>
+      <td class="pos">+14.27u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT</td><td>career</td><td>SG tertile high→over</td>
+      <td>407</td><td>56.0%</td>
+      <td class="pos">3.5%</td>
+      <td class="pos">+14.36u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+APP+PUTT</td><td>L8</td><td>SG high → over</td>
+      <td>609</td><td>56.7%</td>
+      <td class="pos">3.5%</td>
+      <td class="pos">+21.51u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT</td><td>L12</td><td>SG high → over</td>
+      <td>609</td><td>56.0%</td>
+      <td class="pos">3.4%</td>
+      <td class="pos">+20.88u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:Total</td><td>L16</td><td>SG tertile high→over</td>
+      <td>407</td><td>56.3%</td>
+      <td class="pos">3.3%</td>
+      <td class="pos">+13.46u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+PUTT</td><td>L32</td><td>SG tertile high→over</td>
+      <td>407</td><td>56.3%</td>
+      <td class="pos">3.3%</td>
+      <td class="pos">+13.32u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+APP+PUTT</td><td>L6</td><td>SG high → over</td>
+      <td>609</td><td>56.3%</td>
+      <td class="pos">3.3%</td>
+      <td class="pos">+19.84u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT</td><td>L8</td><td>SG tertile high→over</td>
+      <td>407</td><td>56.0%</td>
+      <td class="pos">3.2%</td>
+      <td class="pos">+12.87u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+ARG</td><td>L20</td><td>SG tertile high→over</td>
+      <td>407</td><td>55.8%</td>
+      <td class="pos">3.2%</td>
+      <td class="pos">+12.84u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+PUTT</td><td>L24</td><td>SG tertile high→over</td>
+      <td>407</td><td>56.5%</td>
+      <td class="pos">3.2%</td>
+      <td class="pos">+13.01u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:T2G+PUTT</td><td>L16</td><td>SG tertile high→over</td>
+      <td>407</td><td>56.3%</td>
+      <td class="pos">3.2%</td>
+      <td class="pos">+12.88u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+APP+PUTT</td><td>season</td><td>SG tertile high→over</td>
+      <td>406</td><td>56.2%</td>
+      <td class="pos">3.2%</td>
+      <td class="pos">+12.83u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+APP+ARG+PUTT</td><td>L16</td><td>SG tertile high→over</td>
+      <td>407</td><td>56.3%</td>
+      <td class="pos">3.2%</td>
+      <td class="pos">+12.88u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+ARG+PUTT</td><td>L10</td><td>SG tertile high→over</td>
+      <td>407</td><td>56.5%</td>
+      <td class="pos">3.1%</td>
+      <td class="pos">+12.53u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+APP+PUTT</td><td>L12</td><td>SG tertile high→over</td>
+      <td>407</td><td>56.3%</td>
+      <td class="pos">3%</td>
+      <td class="pos">+12.34u</td>
+    </tr><tr>
+      <td>Round score</td><td>model_mu</td><td>?</td><td>model_vs_book_gap_0.5</td>
+      <td>794</td><td>56.7%</td>
+      <td class="pos">2.9%</td>
+      <td class="pos">+22.74u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+APP</td><td>season</td><td>SG high → over</td>
+      <td>608</td><td>55.8%</td>
+      <td class="pos">2.8%</td>
+      <td class="pos">+16.91u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+PUTT</td><td>L6</td><td>SG tertile high→over</td>
+      <td>407</td><td>56.3%</td>
+      <td class="pos">2.8%</td>
+      <td class="pos">+11.31u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+APP+PUTT</td><td>L8</td><td>SG tertile high→over</td>
+      <td>407</td><td>55.5%</td>
+      <td class="pos">2.8%</td>
+      <td class="pos">+11.44u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT+APP+PUTT</td><td>L32</td><td>SG tertile high→over</td>
+      <td>407</td><td>56.0%</td>
+      <td class="pos">2.8%</td>
+      <td class="pos">+11.56u</td>
+    </tr><tr>
+      <td>Fairways hit</td><td>SG:OTT</td><td>L6</td><td>SG tertile high→over</td>
+      <td>407</td><td>56.0%</td>
+      <td class="pos">2.7%</td>
+      <td class="pos">+11.16u</td>
+    </tr>
+</tbody>
+</table>
+
+<div class="callout" style="border-left-color:var(--warn);margin-top:28px">
+<strong>Note:</strong> 2890 comparisons → expect some lucky positives. Prefer combos that win across several nearby windows with n ≳ 300. Model μ rows are reference only.
+</div>
+</main>
+</body>
+</html>

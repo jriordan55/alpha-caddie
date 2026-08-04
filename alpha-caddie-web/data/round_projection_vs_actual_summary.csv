@@ -1733,98 +1733,98 @@ ev_backtest_all,2026-08-04T02:41:15Z,,(all events),,,(all),(all),Birdies,,,,20.0
 ev_backtest_all,2026-08-04T02:41:15Z,,(all events),,,(all),(all),Bogeys,,,,17.5,under,16,12,4,0,6.06,37.9
 ev_backtest_all,2026-08-04T02:41:15Z,,(all events),,,(all),(all),Bogeys,,,,20.0,under,7,7,0,0,5.61,80.1
 ev_backtest_all,2026-08-04T02:41:15Z,,(all events),,,(all),(all),Total score,,,,20.0,under,62,42,20,0,17.74,28.6
-model_vs_book_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Birdies,0.604,0.460,1574,,,,,,,,
-model_vs_book_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Bogeys,0.920,0.804,796,,,,,,,,
-model_vs_book_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Fairways hit,1.394,1.156,610,,,,,,,,
-model_vs_book_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),GIR,0.973,0.787,646,,,,,,,,
-model_vs_book_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Total score,1.177,0.896,1377,,,,,,,,
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Birdies,,,,0.0,over,206,97,109,0,-23.78,-11.5
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Birdies,,,,0.0,under,994,508,486,0,-49.16,-4.9
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Birdies,,,,10.0,under,326,174,152,0,1.34,0.4
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Birdies,,,,12.5,under,202,103,99,0,-5.82,-2.9
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Birdies,,,,15.0,under,124,65,59,0,-0.52,-0.4
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Birdies,,,,17.5,under,69,38,31,0,3.05,4.4
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Birdies,,,,2.5,over,165,79,86,0,-15.67,-9.5
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Birdies,,,,2.5,under,829,430,399,0,-28.49,-3.4
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Birdies,,,,20.0,under,33,18,15,0,3.03,9.2
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Birdies,,,,5.0,over,126,64,62,0,-7.22,-5.7
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Birdies,,,,5.0,under,625,334,291,0,-3.31,-0.5
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Birdies,,,,7.5,under,464,248,216,0,-1.40,-0.3
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Bogeys,,,,0.0,over,562,278,284,0,-51.30,-9.1
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Bogeys,,,,10.0,over,303,151,152,0,-20.52,-6.8
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Bogeys,,,,12.5,over,218,104,114,0,-20.85,-9.6
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Bogeys,,,,15.0,over,138,65,73,0,-14.14,-10.2
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Bogeys,,,,17.5,over,80,36,44,0,-9.04,-11.3
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Bogeys,,,,2.5,over,522,263,259,0,-39.17,-7.5
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Bogeys,,,,20.0,over,36,13,23,0,-10.23,-28.4
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Bogeys,,,,5.0,over,467,234,233,0,-35.62,-7.6
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Bogeys,,,,7.5,over,400,200,200,0,-28.60,-7.1
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Fairways hit,,,,0.0,over,184,94,90,0,-14.77,-8.0
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Fairways hit,,,,0.0,under,363,196,167,0,-5.09,-1.4
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Fairways hit,,,,10.0,over,118,61,57,0,-6.29,-5.3
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Fairways hit,,,,10.0,under,287,154,133,0,-1.43,-0.5
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Fairways hit,,,,12.5,over,108,56,52,0,-6.28,-5.8
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Fairways hit,,,,12.5,under,270,147,123,0,2.18,0.8
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Fairways hit,,,,15.0,over,84,42,42,0,-6.92,-8.2
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Fairways hit,,,,15.0,under,254,141,113,0,6.81,2.7
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Fairways hit,,,,17.5,over,69,36,33,0,-1.96,-2.8
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Fairways hit,,,,17.5,under,228,129,99,0,10.89,4.8
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Fairways hit,,,,2.5,over,168,83,85,0,-17.62,-10.5
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Fairways hit,,,,2.5,under,340,184,156,0,-4.06,-1.2
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Fairways hit,,,,20.0,over,53,30,23,0,3.21,6.1
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Fairways hit,,,,20.0,under,207,117,90,0,11.12,5.4
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Fairways hit,,,,5.0,over,154,79,75,0,-10.89,-7.1
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Fairways hit,,,,5.0,under,321,173,148,0,-2.22,-0.7
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Fairways hit,,,,7.5,over,135,69,66,0,-7.81,-5.8
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Fairways hit,,,,7.5,under,305,164,141,0,-1.01,-0.3
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),GIR,,,,0.0,over,125,64,61,0,-3.82,-3.1
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),GIR,,,,0.0,under,416,227,189,0,2.00,0.5
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),GIR,,,,10.0,over,43,23,20,0,1.31,3.0
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),GIR,,,,10.0,under,243,136,107,0,8.92,3.7
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),GIR,,,,12.5,over,31,17,14,0,1.89,6.1
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),GIR,,,,12.5,under,197,115,82,0,15.70,8.0
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),GIR,,,,15.0,over,21,11,10,0,0.65,3.1
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),GIR,,,,15.0,under,159,95,64,0,16.53,10.4
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),GIR,,,,17.5,over,15,7,8,0,-0.86,-5.7
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),GIR,,,,2.5,over,104,51,53,0,-6.91,-6.6
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),GIR,,,,2.5,under,374,206,168,0,6.06,1.6
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),GIR,,,,20.0,over,14,7,7,0,0.14,1.0
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),GIR,,,,5.0,over,75,37,38,0,-3.38,-4.5
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),GIR,,,,5.0,under,337,186,151,0,6.54,1.9
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),GIR,,,,7.5,over,51,26,25,0,-0.78,-1.5
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),GIR,,,,7.5,under,283,159,124,0,10.86,3.8
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Total score,,,,0.0,over,843,430,413,0,-47.12,-5.6
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Total score,,,,0.0,under,233,152,81,0,54.34,23.3
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Total score,,,,10.0,over,357,184,173,0,-16.19,-4.5
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Total score,,,,12.5,over,281,149,132,0,-4.76,-1.7
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Total score,,,,15.0,over,230,125,105,0,1.55,0.7
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Total score,,,,17.5,over,186,101,85,0,1.80,1.0
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Total score,,,,2.5,over,720,365,355,0,-45.85,-6.4
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Total score,,,,2.5,under,174,119,55,0,51.40,29.5
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Total score,,,,20.0,over,152,82,70,0,-0.25,-0.2
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Total score,,,,5.0,over,584,304,280,0,-21.54,-3.7
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Total score,,,,7.5,over,468,245,223,0,-13.32,-2.8
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Bogeys,,,,0.0,under,129,82,47,0,16.34,12.7
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Bogeys,,,,10.0,under,55,41,14,0,18.06,32.8
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Bogeys,,,,12.5,under,40,29,11,0,12.70,31.8
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Bogeys,,,,15.0,under,29,22,7,0,10.89,37.6
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Bogeys,,,,2.5,under,99,65,34,0,14.91,15.1
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Bogeys,,,,5.0,under,76,54,22,0,18.86,24.8
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Bogeys,,,,7.5,under,64,46,18,0,17.37,27.1
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),GIR,,,,17.5,under,113,70,43,0,17.55,15.5
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),GIR,,,,20.0,under,81,52,29,0,16.29,20.1
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Total score,,,,10.0,under,87,64,23,0,35.47,40.8
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Total score,,,,12.5,under,80,58,22,0,30.62,38.3
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Total score,,,,15.0,under,77,56,21,0,29.73,38.6
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Total score,,,,17.5,under,70,49,21,0,23.06,32.9
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Total score,,,,5.0,under,127,91,36,0,46.83,36.9
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Total score,,,,7.5,under,104,77,27,0,43.32,41.7
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Birdies,,,,7.5,over,98,56,42,0,5.76,5.9
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Birdies,,,,10.0,over,87,49,38,0,3.72,4.3
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Birdies,,,,12.5,over,80,46,34,0,4.78,6.0
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Birdies,,,,15.0,over,64,36,28,0,4.95,7.7
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Birdies,,,,17.5,over,49,24,25,0,-0.17,-0.3
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Birdies,,,,20.0,over,36,17,19,0,0.23,0.6
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Bogeys,,,,17.5,under,16,12,4,0,6.06,37.9
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Bogeys,,,,20.0,under,7,7,0,0,5.61,80.1
-ev_backtest_all,2026-08-04T04:05:14Z,,(all events),,,(all),(all),Total score,,,,20.0,under,62,42,20,0,17.74,28.6
+model_vs_book_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Birdies,0.604,0.460,1574,,,,,,,,
+model_vs_book_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Bogeys,0.920,0.804,796,,,,,,,,
+model_vs_book_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Fairways hit,1.394,1.156,610,,,,,,,,
+model_vs_book_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),GIR,0.973,0.787,646,,,,,,,,
+model_vs_book_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Total score,1.177,0.896,1377,,,,,,,,
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Birdies,,,,0.0,over,206,97,109,0,-23.78,-11.5
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Birdies,,,,0.0,under,994,508,486,0,-49.16,-4.9
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Birdies,,,,10.0,under,326,174,152,0,1.34,0.4
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Birdies,,,,12.5,under,202,103,99,0,-5.82,-2.9
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Birdies,,,,15.0,under,124,65,59,0,-0.52,-0.4
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Birdies,,,,17.5,under,69,38,31,0,3.05,4.4
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Birdies,,,,2.5,over,165,79,86,0,-15.67,-9.5
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Birdies,,,,2.5,under,829,430,399,0,-28.49,-3.4
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Birdies,,,,20.0,under,33,18,15,0,3.03,9.2
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Birdies,,,,5.0,over,126,64,62,0,-7.22,-5.7
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Birdies,,,,5.0,under,625,334,291,0,-3.31,-0.5
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Birdies,,,,7.5,under,464,248,216,0,-1.40,-0.3
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Bogeys,,,,0.0,over,562,278,284,0,-51.30,-9.1
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Bogeys,,,,10.0,over,303,151,152,0,-20.52,-6.8
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Bogeys,,,,12.5,over,218,104,114,0,-20.85,-9.6
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Bogeys,,,,15.0,over,138,65,73,0,-14.14,-10.2
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Bogeys,,,,17.5,over,80,36,44,0,-9.04,-11.3
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Bogeys,,,,2.5,over,522,263,259,0,-39.17,-7.5
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Bogeys,,,,20.0,over,36,13,23,0,-10.23,-28.4
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Bogeys,,,,5.0,over,467,234,233,0,-35.62,-7.6
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Bogeys,,,,7.5,over,400,200,200,0,-28.60,-7.1
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Fairways hit,,,,0.0,over,184,94,90,0,-14.77,-8.0
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Fairways hit,,,,0.0,under,363,196,167,0,-5.09,-1.4
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Fairways hit,,,,10.0,over,118,61,57,0,-6.29,-5.3
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Fairways hit,,,,10.0,under,287,154,133,0,-1.43,-0.5
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Fairways hit,,,,12.5,over,108,56,52,0,-6.28,-5.8
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Fairways hit,,,,12.5,under,270,147,123,0,2.18,0.8
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Fairways hit,,,,15.0,over,84,42,42,0,-6.92,-8.2
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Fairways hit,,,,15.0,under,254,141,113,0,6.81,2.7
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Fairways hit,,,,17.5,over,69,36,33,0,-1.96,-2.8
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Fairways hit,,,,17.5,under,228,129,99,0,10.89,4.8
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Fairways hit,,,,2.5,over,168,83,85,0,-17.62,-10.5
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Fairways hit,,,,2.5,under,340,184,156,0,-4.06,-1.2
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Fairways hit,,,,20.0,over,53,30,23,0,3.21,6.1
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Fairways hit,,,,20.0,under,207,117,90,0,11.12,5.4
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Fairways hit,,,,5.0,over,154,79,75,0,-10.89,-7.1
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Fairways hit,,,,5.0,under,321,173,148,0,-2.22,-0.7
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Fairways hit,,,,7.5,over,135,69,66,0,-7.81,-5.8
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Fairways hit,,,,7.5,under,305,164,141,0,-1.01,-0.3
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),GIR,,,,0.0,over,125,64,61,0,-3.82,-3.1
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),GIR,,,,0.0,under,416,227,189,0,2.00,0.5
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),GIR,,,,10.0,over,43,23,20,0,1.31,3.0
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),GIR,,,,10.0,under,243,136,107,0,8.92,3.7
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),GIR,,,,12.5,over,31,17,14,0,1.89,6.1
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),GIR,,,,12.5,under,197,115,82,0,15.70,8.0
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),GIR,,,,15.0,over,21,11,10,0,0.65,3.1
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),GIR,,,,15.0,under,159,95,64,0,16.53,10.4
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),GIR,,,,17.5,over,15,7,8,0,-0.86,-5.7
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),GIR,,,,2.5,over,104,51,53,0,-6.91,-6.6
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),GIR,,,,2.5,under,374,206,168,0,6.06,1.6
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),GIR,,,,20.0,over,14,7,7,0,0.14,1.0
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),GIR,,,,5.0,over,75,37,38,0,-3.38,-4.5
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),GIR,,,,5.0,under,337,186,151,0,6.54,1.9
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),GIR,,,,7.5,over,51,26,25,0,-0.78,-1.5
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),GIR,,,,7.5,under,283,159,124,0,10.86,3.8
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Total score,,,,0.0,over,843,430,413,0,-47.12,-5.6
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Total score,,,,0.0,under,233,152,81,0,54.34,23.3
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Total score,,,,10.0,over,357,184,173,0,-16.19,-4.5
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Total score,,,,12.5,over,281,149,132,0,-4.76,-1.7
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Total score,,,,15.0,over,230,125,105,0,1.55,0.7
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Total score,,,,17.5,over,186,101,85,0,1.80,1.0
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Total score,,,,2.5,over,720,365,355,0,-45.85,-6.4
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Total score,,,,2.5,under,174,119,55,0,51.40,29.5
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Total score,,,,20.0,over,152,82,70,0,-0.25,-0.2
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Total score,,,,5.0,over,584,304,280,0,-21.54,-3.7
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Total score,,,,7.5,over,468,245,223,0,-13.32,-2.8
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Bogeys,,,,0.0,under,129,82,47,0,16.34,12.7
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Bogeys,,,,10.0,under,55,41,14,0,18.06,32.8
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Bogeys,,,,12.5,under,40,29,11,0,12.70,31.8
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Bogeys,,,,15.0,under,29,22,7,0,10.89,37.6
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Bogeys,,,,2.5,under,99,65,34,0,14.91,15.1
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Bogeys,,,,5.0,under,76,54,22,0,18.86,24.8
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Bogeys,,,,7.5,under,64,46,18,0,17.37,27.1
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),GIR,,,,17.5,under,113,70,43,0,17.55,15.5
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),GIR,,,,20.0,under,81,52,29,0,16.29,20.1
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Total score,,,,10.0,under,87,64,23,0,35.47,40.8
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Total score,,,,12.5,under,80,58,22,0,30.62,38.3
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Total score,,,,15.0,under,77,56,21,0,29.73,38.6
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Total score,,,,17.5,under,70,49,21,0,23.06,32.9
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Total score,,,,5.0,under,127,91,36,0,46.83,36.9
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Total score,,,,7.5,under,104,77,27,0,43.32,41.7
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Birdies,,,,7.5,over,98,56,42,0,5.76,5.9
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Birdies,,,,10.0,over,87,49,38,0,3.72,4.3
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Birdies,,,,12.5,over,80,46,34,0,4.78,6.0
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Birdies,,,,15.0,over,64,36,28,0,4.95,7.7
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Birdies,,,,17.5,over,49,24,25,0,-0.17,-0.3
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Birdies,,,,20.0,over,36,17,19,0,0.23,0.6
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Bogeys,,,,17.5,under,16,12,4,0,6.06,37.9
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Bogeys,,,,20.0,under,7,7,0,0,5.61,80.1
+ev_backtest_all,2026-08-04T20:58:12Z,,(all events),,,(all),(all),Total score,,,,20.0,under,62,42,20,0,17.74,28.6

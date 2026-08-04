@@ -193,6 +193,7 @@ if ($LiveWeekOnly) {
   Write-Host 'LiveWeekOnly (lean): projections + odds (DK/PP/SL/UD/FD/Kalshi/Caesars) + Trends patch + tracker.'
   Write-Host 'Live Open-Meteo weather bake always runs on push:live (tee-time forecast into scores).'
   Write-Host 'Historical Trends: post-live DataGolf rounds CSV merge + live-in-play shard patch (no full build:history).'
+  Write-Host 'Approach SG-by-distance: refresh shots (soft) + upsert current-event buckets onto history shards.'
   Write-Host 'Both trackers incremental from last recorded date: O/U projection-tracker (DK/PP/SL/UD/FD/CZR/KL) + matchup-tracker.'
   Write-Host 'Skill-first score (keep 1.0) + Detroit club hist pool when North/South exact hist is thin.'
   Write-Host 'Skipped: pre-fetch full CSV merge, weather archive backfill, finish-tool, book-cal fit, odds ROI backtest, full prior O/U rebuild.'
@@ -432,6 +433,12 @@ $artifacts = @(
   "alpha-caddie-web/projection-tracker",
   "alpha-caddie-web/matchup-tracker",
   "alpha-caddie-web/data/pgatour_event_rounds.json",
+  "alpha-caddie-web/data/round_sg_by_distance.csv",
+  "alpha-caddie-web/data/round_sg_by_distance_baselines.json",
+  "alpha-caddie-web/data/round_sg_putt_by_distance.csv",
+  "alpha-caddie-web/data/round_sg_putt_by_distance_baselines.json",
+  "alpha-caddie-web/data/player_course_hole_sg.csv",
+  "alpha-caddie-web/data/course_hole_sg_baselines.json",
   "alpha-caddie-web/data/historical_round_weather.json",
   "alpha-caddie-web/data/course_coordinates_cache.json",
   "alpha-caddie-web/hole_pars_from_shots.json",
