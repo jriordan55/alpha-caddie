@@ -196,12 +196,21 @@ function buildLiveHistoryRows(proj, live, actualsByDg, fieldNames) {
   const projEvent = String(proj?.event_name || "").trim();
   const fieldEvent = String(fu.event_name || "").trim();
   const inPlayEvent = String(live?.info?.event_name || live?.event_name || "").trim();
+  // Prefer field_updates (aligned with projections) over stale info.event_name left from the prior week.
   const eventName = String(projEvent || fieldEvent || inPlayEvent).trim();
   if (!eventName) return [];
 
   if (projEvent && fieldEvent && !eventsCompatible(projEvent, fieldEvent)) return [];
-  if (projEvent && inPlayEvent && !eventsCompatible(projEvent, inPlayEvent)) return [];
-
+  // Only require in-play info to match when field_updates is missing. Stale info.event_name
+  // (e.g. still "Rocket Classic" after roll to Wyndham) must not block current-event patches.
+  if (!fieldEvent && projEvent && inPlayEvent && !eventsCompatible(projEvent, inPlayEvent)) {
+    return [];
+  }
+  if (fieldEvent && inPlayEvent && !eventsCompatible(fieldEvent, inPlayEvent)) {
+    console.warn(
+      `[patch-current-event] live.info event "${inPlayEvent}" lags field_updates "${fieldEvent}" — patching from field_updates/projections.`,
+    );
+  }
   const dateStartIso = String(fu.date_start || live?.info?.date_start || "").trim();
   if (dateStartIsFuture(dateStartIso)) return [];
 

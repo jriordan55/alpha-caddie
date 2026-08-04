@@ -255,6 +255,23 @@
                 <option value="sg_arg">SG: Around the green</option>
                 <option value="sg_putt">SG: Putting</option>
               </optgroup>
+              <optgroup label="SG: Approach by distance">
+                <option value="sg_50_100_fw">SG: App 50–100 (FW)</option>
+                <option value="sg_100_150_fw">SG: App 100–150 (FW)</option>
+                <option value="sg_150_200_fw">SG: App 150–200 (FW)</option>
+                <option value="sg_over_200_fw">SG: App 200+ (FW)</option>
+                <option value="sg_under_150_rgh">SG: App &lt;150 (RGH)</option>
+                <option value="sg_over_150_rgh">SG: App 150+ (RGH)</option>
+                <option value="sg_app_dist_total">SG: App distance total</option>
+              </optgroup>
+              <optgroup label="SG: Putting by distance">
+                <option value="sg_putt_0_5ft">SG: Putt 0–5 ft</option>
+                <option value="sg_putt_5_10ft">SG: Putt 5–10 ft</option>
+                <option value="sg_putt_10_15ft">SG: Putt 10–15 ft</option>
+                <option value="sg_putt_15_25ft">SG: Putt 15–25 ft</option>
+                <option value="sg_putt_25plus_ft">SG: Putt 25+ ft</option>
+                <option value="sg_putt_dist_total">SG: Putt distance total</option>
+              </optgroup>
               <optgroup label="Percentages">
                 <option value="gir_pct">GIR %</option>
                 <option value="fairways_pct">Fairways %</option>
@@ -1136,7 +1153,7 @@
           <dt>Weather filters</dt>
           <dd>Optional temp, wind, and humidity bands.</dd>
           <dt>Stat</dt>
-          <dd>Round score, counting stats, strokes gained (total, tee-to-green, OTT, approach, ARG, putting), GIR %, fairways %, or raw GIR/fairway counts. SG and % stats use 0.1 line steps; no sportsbook lines are posted for SG.</dd>
+          <dd>Round score, counting stats, strokes gained (pillars plus approach-by-distance and putting-by-distance buckets from shot traces), GIR %, fairways %, or raw GIR/fairway counts. SG and % stats use 0.1 line steps; no sportsbook lines are posted for SG. Distance-bucket SG is available when shot data exists for that round (mostly 2022+).</dd>
           <dt>Rounds / line</dt>
           <dd>How many recent rounds to chart and which O/U line to test.</dd>
         </dl>
@@ -1304,6 +1321,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=353"></script>
+  <script src="app.js?v=354"></script>
 </body>
 </html>

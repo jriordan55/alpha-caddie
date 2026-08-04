@@ -5617,6 +5617,19 @@ function ouMarketKeyFromStatKey(statKey) {
   if (statKey === "sg_arg") return "SG: Around the green";
   if (statKey === "sg_putt") return "SG: Putting";
   if (statKey === "sg_t2g") return "SG: Tee to green";
+  if (statKey === "sg_50_100_fw") return "SG: App 50–100 (FW)";
+  if (statKey === "sg_100_150_fw") return "SG: App 100–150 (FW)";
+  if (statKey === "sg_150_200_fw") return "SG: App 150–200 (FW)";
+  if (statKey === "sg_over_200_fw") return "SG: App 200+ (FW)";
+  if (statKey === "sg_under_150_rgh") return "SG: App <150 (RGH)";
+  if (statKey === "sg_over_150_rgh") return "SG: App 150+ (RGH)";
+  if (statKey === "sg_app_dist_total") return "SG: App distance total";
+  if (statKey === "sg_putt_0_5ft") return "SG: Putt 0–5 ft";
+  if (statKey === "sg_putt_5_10ft") return "SG: Putt 5–10 ft";
+  if (statKey === "sg_putt_10_15ft") return "SG: Putt 10–15 ft";
+  if (statKey === "sg_putt_15_25ft") return "SG: Putt 15–25 ft";
+  if (statKey === "sg_putt_25plus_ft") return "SG: Putt 25+ ft";
+  if (statKey === "sg_putt_dist_total") return "SG: Putt distance total";
   if (statKey === "gir_pct") return "GIR %";
   if (statKey === "fairways_pct") return "Fairways %";
   return "Total score";
@@ -21622,7 +21635,29 @@ function refreshPropsFilterOptionsForGolfer(dgId) {
   refreshPropsYearFilterOptions(dgId);
 }
 
-const PROPS_SG_STAT_KEYS = Object.freeze(["sg_total", "sg_ott", "sg_app", "sg_arg", "sg_putt", "sg_t2g"]);
+const PROPS_SG_STAT_KEYS = Object.freeze([
+  "sg_total",
+  "sg_ott",
+  "sg_app",
+  "sg_arg",
+  "sg_putt",
+  "sg_t2g",
+  // Approach SG by distance/lie (from shot traces)
+  "sg_50_100_fw",
+  "sg_100_150_fw",
+  "sg_150_200_fw",
+  "sg_over_200_fw",
+  "sg_under_150_rgh",
+  "sg_over_150_rgh",
+  "sg_app_dist_total",
+  // Putting SG by start distance (feet)
+  "sg_putt_0_5ft",
+  "sg_putt_5_10ft",
+  "sg_putt_10_15ft",
+  "sg_putt_15_25ft",
+  "sg_putt_25plus_ft",
+  "sg_putt_dist_total",
+]);
 const PROPS_PCT_STAT_KEYS = Object.freeze(["gir_pct", "fairways_pct"]);
 
 function propsStatIsSg(statKey) {
@@ -22866,6 +22901,19 @@ function propMarketLabelFromKey(statKey) {
   if (statKey === "sg_arg") return "SG: Around the green";
   if (statKey === "sg_putt") return "SG: Putting";
   if (statKey === "sg_t2g") return "SG: Tee to green";
+  if (statKey === "sg_50_100_fw") return "SG: App 50–100 (FW)";
+  if (statKey === "sg_100_150_fw") return "SG: App 100–150 (FW)";
+  if (statKey === "sg_150_200_fw") return "SG: App 150–200 (FW)";
+  if (statKey === "sg_over_200_fw") return "SG: App 200+ (FW)";
+  if (statKey === "sg_under_150_rgh") return "SG: App <150 (RGH)";
+  if (statKey === "sg_over_150_rgh") return "SG: App 150+ (RGH)";
+  if (statKey === "sg_app_dist_total") return "SG: App distance total";
+  if (statKey === "sg_putt_0_5ft") return "SG: Putt 0–5 ft";
+  if (statKey === "sg_putt_5_10ft") return "SG: Putt 5–10 ft";
+  if (statKey === "sg_putt_10_15ft") return "SG: Putt 10–15 ft";
+  if (statKey === "sg_putt_15_25ft") return "SG: Putt 15–25 ft";
+  if (statKey === "sg_putt_25plus_ft") return "SG: Putt 25+ ft";
+  if (statKey === "sg_putt_dist_total") return "SG: Putt distance total";
   if (statKey === "gir_pct") return "GIR %";
   if (statKey === "fairways_pct") return "Fairways %";
   return String(statKey || "");

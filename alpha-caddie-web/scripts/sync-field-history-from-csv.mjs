@@ -1,7 +1,14 @@
 #!/usr/bin/env node
 /**
- * Merge historical_rounds_all.csv rows into field-player shards (adds completed tournaments).
- * Fast path for push:live when full build:history is skipped.
+ * Merge historical_rounds_all.csv rows into player-history shards for Historical Trends.
+ *
+ * Covers:
+ *   1) Current projection field (always)
+ *   2) Any player who already has a by-dg shard and appears in CSV for events completed
+ *      in the last GOLF_HISTORY_SYNC_RECENT_DAYS days (default 21) — so weekend rounds from
+ *      the prior tournament still land after the field rolls to next week.
+ *
+ * Always writes when rounds are added OR updated (previous bug skipped write on update-only).
  */
 import fs from "fs";
 import path from "path";
@@ -20,6 +27,12 @@ const MIN_YEAR = (() => {
   const env = parseInt(String(process.env.GOLF_HISTORY_MIN_YEAR ?? "").trim(), 10);
   if (Number.isFinite(env) && env >= 1990) return env;
   return 2004;
+})();
+
+const RECENT_DAYS = (() => {
+  const env = parseInt(String(process.env.GOLF_HISTORY_SYNC_RECENT_DAYS ?? "").trim(), 10);
+  if (Number.isFinite(env) && env >= 1) return env;
+  return 21;
 })();
 
 function num(v) {
@@ -43,6 +56,12 @@ function parseUsSortKey(mdy, rnd) {
   const mo = +m[1];
   const d = +m[2];
   return (y * 10000 + mo * 100 + d) * 10 + (rnd || 1);
+}
+
+function parseCompletedDate(mdy) {
+  const m = String(mdy || "").match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!m) return null;
+  return new Date(Date.UTC(+m[3], +m[1] - 1, +m[2]));
 }
 
 function csvRowToHistoryRec(row) {
@@ -121,53 +140,75 @@ function fieldDgIds(proj) {
   return ids;
 }
 
-async function loadCsvRowsForField(fieldIds) {
-  /** @type {Map<number, object[]>} */
-  const byDg = new Map();
-  if (!fs.existsSync(ROUNDS_CSV)) return byDg;
-  await new Promise((resolve, reject) => {
-    const parser = createReadStream(ROUNDS_CSV).pipe(
-      parse({ columns: true, relax_quotes: true, relax_column_count: true, skip_records_with_error: true }),
-    );
-    parser.on("data", (row) => {
-      const tour = String(row.tour || "").toLowerCase();
-      if (tour !== "pga" && tour !== "liv") return;
-      const yr = parseInt(row.year, 10);
-      if (Number.isFinite(yr) && yr < MIN_YEAR) return;
-      const id = Math.round(num(row.dg_id, NaN));
-      if (!fieldIds.has(id)) return;
-      const rs = num(row.round_score);
-      if (!Number.isFinite(rs) || rs <= 0) return;
-      const rec = csvRowToHistoryRec(row);
-      if (!byDg.has(id)) byDg.set(id, []);
-      byDg.get(id).push(rec);
-    });
-    parser.on("end", resolve);
-    parser.on("error", reject);
-  });
-  for (const rows of byDg.values()) {
-    rows.sort((a, b) => num(a.sortKey, 0) - num(b.sortKey, 0));
+function existingShardDgIds() {
+  const ids = new Set();
+  if (!fs.existsSync(SHARD_DIR)) return ids;
+  for (const f of fs.readdirSync(SHARD_DIR)) {
+    if (!f.endsWith(".json")) continue;
+    const dg = Math.round(num(f.replace(/\.json$/i, ""), NaN));
+    if (Number.isFinite(dg)) ids.add(dg);
   }
-  return byDg;
+  return ids;
 }
 
 const proj = JSON.parse(fs.readFileSync(PROJ_JSON, "utf8"));
 const fieldIds = fieldDgIds(proj);
+const shardIds = existingShardDgIds();
+const targetIds = new Set([...fieldIds, ...shardIds]);
+
+const recentCutoff = new Date(Date.now() - RECENT_DAYS * 86400000);
+recentCutoff.setUTCHours(0, 0, 0, 0);
 
 if (!fs.existsSync(ROUNDS_CSV)) {
   console.warn("[sync-field-history] No CSV — skipping:", ROUNDS_CSV);
   process.exit(0);
 }
 
-const csvByDg = await loadCsvRowsForField(fieldIds);
+console.log(
+  `[sync-field-history] Targets: ${fieldIds.size} field + ${shardIds.size} shards → ${targetIds.size} unique; recent non-field window ${RECENT_DAYS}d`,
+);
+
+/** @type {Map<number, object[]>} */
+const csvByDg = new Map();
+await new Promise((resolve, reject) => {
+  const parser = createReadStream(ROUNDS_CSV).pipe(
+    parse({ columns: true, relax_quotes: true, relax_column_count: true, skip_records_with_error: true }),
+  );
+  parser.on("data", (row) => {
+    const tour = String(row.tour || "").toLowerCase();
+    if (tour !== "pga" && tour !== "liv") return;
+    const yr = parseInt(row.year, 10);
+    if (Number.isFinite(yr) && yr < MIN_YEAR) return;
+    const id = Math.round(num(row.dg_id, NaN));
+    if (!targetIds.has(id)) return;
+    const rs = num(row.round_score);
+    if (!Number.isFinite(rs) || rs <= 0) return;
+    const isField = fieldIds.has(id);
+    if (!isField) {
+      const d = parseCompletedDate(row.event_completed);
+      if (!d || d < recentCutoff) return;
+    }
+    const rec = csvRowToHistoryRec(row);
+    if (!csvByDg.has(id)) csvByDg.set(id, []);
+    csvByDg.get(id).push(rec);
+  });
+  parser.on("end", resolve);
+  parser.on("error", reject);
+});
+for (const rows of csvByDg.values()) {
+  rows.sort((a, b) => num(a.sortKey, 0) - num(b.sortKey, 0));
+}
+
 let patched = 0;
 let roundsAdded = 0;
+let roundsUpdated = 0;
 
-for (const dg of fieldIds) {
+for (const dg of targetIds) {
+  if (typeof dg !== "number") continue;
   const csvRows = csvByDg.get(dg);
   if (!csvRows?.length) continue;
   const shardPath = path.join(SHARD_DIR, `${dg}.json`);
-  /** @type {{ dg_id: number, player_name: string, rounds: object[] }} */
+  /** @type {{ dg_id: number, player_name: string, rounds: object[], updated_at?: string }} */
   let shard = {
     dg_id: dg,
     player_name: String(csvRows[csvRows.length - 1]?.player_name || "").trim(),
@@ -186,28 +227,33 @@ for (const dg of fieldIds) {
     index.set(roundDedupeKey(shard.rounds[i]), i);
   }
   let added = 0;
+  let updated = 0;
   for (const rec of csvRows) {
     const key = roundDedupeKey(rec);
     const hit = index.get(key);
     if (hit !== undefined) {
+      const before = JSON.stringify(shard.rounds[hit]);
       shard.rounds[hit] = { ...shard.rounds[hit], ...rec };
+      if (JSON.stringify(shard.rounds[hit]) !== before) updated += 1;
     } else {
       index.set(key, shard.rounds.length);
       shard.rounds.push(rec);
       added += 1;
     }
   }
-  if (!added && shard.rounds.length === index.size) continue;
+  if (!added && !updated) continue;
   shard.rounds.sort((a, b) => num(a.sortKey, 0) - num(b.sortKey, 0));
   if (!shard.player_name) {
     shard.player_name = String(csvRows[csvRows.length - 1]?.player_name || "").trim();
   }
+  shard.updated_at = new Date().toISOString();
   fs.mkdirSync(SHARD_DIR, { recursive: true });
   fs.writeFileSync(shardPath, JSON.stringify(shard));
   patched += 1;
   roundsAdded += added;
+  roundsUpdated += updated;
 }
 
 console.log(
-  `[sync-field-history] Patched ${patched} field shard(s) from CSV (+${roundsAdded} new round row(s)).`,
+  `[sync-field-history] Patched ${patched} shard(s) from CSV (+${roundsAdded} new, ~${roundsUpdated} updated round row(s)).`,
 );

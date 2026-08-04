@@ -604,7 +604,7 @@ if (!skipBacktestRoi) {
 if (skipHistoryRebuild) {
   run(
     "sync-field-history-from-csv.mjs",
-    "Merge recent CSV rounds into field player-history shards",
+    "Merge CSV rounds into field + recent prior-event player-history shards",
   );
   run(
     "patch-current-event-history-shards.mjs",
@@ -614,6 +614,12 @@ if (skipHistoryRebuild) {
     "merge-round-sg-distance-into-history.mjs",
     "Merge approach SG-by-distance buckets onto field history shards",
     {},
+    softOpt,
+  );
+  run(
+    "verify-recent-event-history.mjs",
+    "Verify latest completed event rounds are on Historical Trends shards",
+    { GOLF_HISTORY_VERIFY_SOFT: liveWeekSoft ? "1" : "0" },
     softOpt,
   );
   run("rebuild-field-season-bundle.mjs", "Rebuild field-{year}.json for Historical Trends");
