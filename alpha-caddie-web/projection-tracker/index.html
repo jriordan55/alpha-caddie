@@ -101,17 +101,17 @@
       </div>
       <div class="kpi-grid" id="overview-kpis"></div>
       <div class="chart-card" id="oos-honest-card">
-        <h2 class="section-title">Honest walk-forward OOS ROI</h2>
-        <p class="note" id="oos-honest-note">Uniform EV policy (default 10%) on all markets and both sides. Edge from projections only — no DK calibration. Regenerate: <code>npm run report:walkforward-oos-roi</code></p>
+        <h2 class="section-title">Honest walk-forward OOS P/L</h2>
+        <p class="note" id="oos-honest-note">$10k bankroll · sequential event/round path · flat $100 and ¼ Kelly + 1% cap. Regenerate: <code>npm run report:walkforward-oos-roi</code></p>
         <div class="kpi-grid" id="oos-honest-kpis"></div>
         <div class="table-wrap" style="margin-top:1rem">
           <table class="data-table" id="oos-market-table">
             <thead>
               <tr>
                 <th>Market</th>
-                <th class="num">OOS ROI</th>
+                <th class="num">Kelly $</th>
+                <th class="num">Flat $</th>
                 <th class="num">Bets</th>
-                <th class="num">Units</th>
                 <th class="num">Hit %</th>
               </tr>
             </thead>
@@ -123,9 +123,9 @@
             <thead>
               <tr>
                 <th>Tournament</th>
-                <th class="num">OOS ROI</th>
+                <th class="num">Kelly $</th>
+                <th class="num">Flat $</th>
                 <th class="num">Bets</th>
-                <th class="num">Units</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -410,6 +410,7 @@
               <option value="">All markets</option>
               <option value="Total score">Total score</option>
               <option value="Birdies">Birdies</option>
+              <option value="Pars">Pars</option>
               <option value="Bogeys">Bogeys</option>
               <option value="GIR">GIR</option>
               <option value="Fairways hit">Fairways hit</option>
@@ -565,7 +566,7 @@
           <dt>Tournament</dt>
           <dd>One event, or all combined (each event uses its latest export).</dd>
           <dt>Market</dt>
-          <dd>Total score, Birdies, Bogeys, GIR, Fairways, or all.</dd>
+          <dd>Total score, Birdies, Pars, Bogeys, GIR, Fairways, or all.</dd>
           <dt>Min EV %</dt>
           <dd>Global floor; GIR 10%, Total score, Birdies &amp; Bogeys 15% per-market minimum. Default 12.5%.</dd>
           <dt>Bet side</dt>
@@ -583,6 +584,7 @@
         <ul class="guide-ul">
           <li><strong>Total score RMSE / MAE</strong> — How far projected round scores sit from DK lines (lower = closer).</li>
           <li><strong>EV units / ROI</strong> — Flat 1u and Kelly (¼ / ½, optional 1% cap) P/L on every side clearing min EV %.</li>
+          <li><strong>Honest OOS P/L</strong> — Walk-forward $10k bankroll path (flat $100 and ¼ Kelly + 1% cap) on completed events only.</li>
           <li><strong>Best edge pocket</strong> — Market + side with best ROI at your filter.</li>
           <li>Charts: RMSE by market; EV ROI by market.</li>
         </ul>
@@ -675,12 +677,12 @@
         <ul class="guide-ul">
           <li>Pre-round DK lines/odds only (<code>pre_round_audit</code>).</li>
           <li>Default pricing mode/skill unless noted.</li>
-          <li>Flat 1u in Overview, EV backtest, Bet log; Risk tab uses your bankroll rules.</li>
+          <li>Flat 1u in Overview filters, EV backtest, Bet log; Overview OOS card and Risk tab use $ bankroll rules.</li>
         </ul>
       </article>
     </section>
   </main>
 
-  <script type="module" src="tracker.js?v=53"></script>
+  <script type="module" src="tracker.js?v=54"></script>
 </body>
 </html>

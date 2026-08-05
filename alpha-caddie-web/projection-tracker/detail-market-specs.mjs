@@ -50,6 +50,16 @@ export const DETAIL_EXPORT_MARKETS = [
     underOddsCol: "birdies_under_odds",
   },
   {
+    key: "pars",
+    market: "Pars",
+    propsMarket: "Pars",
+    lineCol: "pars_line",
+    bookLineCol: "pars_book_line",
+    ...altBookCols("pars"),
+    overOddsCol: "pars_over_odds",
+    underOddsCol: "pars_under_odds",
+  },
+  {
     key: "bogeys",
     market: "Bogeys",
     propsMarket: "Bogeys",

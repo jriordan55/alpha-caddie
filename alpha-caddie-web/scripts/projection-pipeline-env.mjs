@@ -1,8 +1,10 @@
 /**
  * Shared env for push:live / backtest projection pipelines.
  *
- * Live default = OOS winner: day/form + skill 36, no soft book μ alignment
- * (book cal + counting blends hurt Birdies ROI in sportsbook_live_oos_roi.json).
+ * Default recipe (no sportsbook calibration):
+ *   skill = last 12 rounds (decay) blended lightly toward year baseline
+ *   course fit = venue SG-importance (OTT/APP/ARG/PUTT) + per-course hist calib
+ *   weather by tee wave for all markets
  */
 
 export function flatVenueProjectionPipelineEnv() {
@@ -18,7 +20,7 @@ export function flatVenueProjectionPipelineEnv() {
   };
 }
 
-/** Walk-forward backtest: historical venue anchor + prior-round difficulty + within-event form. */
+/** Walk-forward backtest: skill12+year, course SG fit, wave weather — never book-calibrated. */
 export function walkforwardBacktestPipelineEnv() {
   return {
     ...flatVenueProjectionPipelineEnv(),
@@ -26,8 +28,24 @@ export function walkforwardBacktestPipelineEnv() {
     GOLF_COURSE_PRIOR_ROUND_DIFFICULTY: "1",
     GOLF_WITHIN_EVENT_FORM_CARRY: "0.1",
     GOLF_WITHIN_EVENT_FORM_CAP: "0.75",
-    GOLF_WF_SKILL_MAX_ROUNDS: process.env.GOLF_WF_SKILL_MAX_ROUNDS || "36",
+    // Primary skill window = last 12; year blend pulls lightly toward season baseline.
+    GOLF_WF_SKILL_MAX_ROUNDS: process.env.GOLF_WF_SKILL_MAX_ROUNDS || "12",
+    GOLF_WF_YEAR_ROUNDS: process.env.GOLF_WF_YEAR_ROUNDS || "48",
+    GOLF_WF_YEAR_BLEND: process.env.GOLF_WF_YEAR_BLEND || "0.18",
+    GOLF_WF_SKILL_DECAY: process.env.GOLF_WF_SKILL_DECAY || "0.86",
+    GOLF_WF_YEAR_DECAY: process.env.GOLF_WF_YEAR_DECAY || "0.92",
     GOLF_MARKET_BOOK_CALIBRATION: "0",
+    GOLF_OUTCOME_MU_DEBIAS: "0",
+    GOLF_EXPORT_RAW_MODEL_MU: "1",
+    GOLF_COURSE_SG_FIT: process.env.GOLF_COURSE_SG_FIT || "1",
+    GOLF_UNIFIED_TEE_WAVE_W: process.env.GOLF_UNIFIED_TEE_WAVE_W || "0.30",
+    // Player×course×hole SG from shot traces (cutoff-aware plays file).
+    GOLF_HOLE_SG_BLEND: process.env.GOLF_HOLE_SG_BLEND || "1",
+    GOLF_HOLE_SG_WEIGHT: process.env.GOLF_HOLE_SG_WEIGHT || "0.28",
+    GOLF_DISTANCE_SG_BLEND: process.env.GOLF_DISTANCE_SG_BLEND || "1",
+    GOLF_DISTANCE_SG_WEIGHT: process.env.GOLF_DISTANCE_SG_WEIGHT || "0.42",
+    GOLF_DISTANCE_SG_COURSE_FOCUS: process.env.GOLF_DISTANCE_SG_COURSE_FOCUS || "0.88",
+    GOLF_WF_WEATHER: process.env.GOLF_WF_WEATHER || "1",
   };
 }
 
@@ -47,12 +65,23 @@ export function liveProjectionPipelineEnv() {
     GOLF_WITHIN_EVENT_FORM_CARRY: "0.1",
     GOLF_WITHIN_EVENT_FORM_CAP: "0.75",
     GOLF_UNIFIED_BOUNCE_BACK_K: process.env.GOLF_UNIFIED_BOUNCE_BACK_K || "0.12",
-    GOLF_WF_SKILL_MAX_ROUNDS: process.env.GOLF_WF_SKILL_MAX_ROUNDS || "36",
+    GOLF_WF_SKILL_MAX_ROUNDS: process.env.GOLF_WF_SKILL_MAX_ROUNDS || "12",
+    GOLF_WF_YEAR_ROUNDS: process.env.GOLF_WF_YEAR_ROUNDS || "48",
+    GOLF_WF_YEAR_BLEND: process.env.GOLF_WF_YEAR_BLEND || "0.18",
     GOLF_MARKET_BOOK_CALIBRATION: process.env.GOLF_MARKET_BOOK_CALIBRATION || "0",
     GOLF_SKIP_MARKET_BOOK_CALIBRATION: process.env.GOLF_SKIP_MARKET_BOOK_CALIBRATION || "1",
+    GOLF_OUTCOME_MU_DEBIAS: process.env.GOLF_OUTCOME_MU_DEBIAS || "0",
+    GOLF_EXPORT_RAW_MODEL_MU: process.env.GOLF_EXPORT_RAW_MODEL_MU || "1",
+    GOLF_COURSE_SG_FIT: process.env.GOLF_COURSE_SG_FIT || "1",
     GOLF_UNIFIED_TEE_WAVE_W: process.env.GOLF_UNIFIED_TEE_WAVE_W || "0.30",
     GOLF_FIELD_DAY_COUNTING_LIFT_FRAC: process.env.GOLF_FIELD_DAY_COUNTING_LIFT_FRAC || "0",
     GOLF_WITHIN_EVENT_COUNTING_BLEND: process.env.GOLF_WITHIN_EVENT_COUNTING_BLEND || "0",
+    GOLF_HOLE_SG_BLEND: process.env.GOLF_HOLE_SG_BLEND || "1",
+    GOLF_HOLE_SG_WEIGHT: process.env.GOLF_HOLE_SG_WEIGHT || "0.28",
+    GOLF_DISTANCE_SG_BLEND: process.env.GOLF_DISTANCE_SG_BLEND || "1",
+    GOLF_DISTANCE_SG_WEIGHT: process.env.GOLF_DISTANCE_SG_WEIGHT || "0.42",
+    GOLF_DISTANCE_SG_COURSE_FOCUS: process.env.GOLF_DISTANCE_SG_COURSE_FOCUS || "0.88",
+    GOLF_WF_WEATHER: process.env.GOLF_WF_WEATHER || "1",
   };
 }
 

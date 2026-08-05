@@ -97,6 +97,7 @@ const DETAIL_CANDIDATES = [
 const MARKET_DECIMALS = {
   "Total score": 2,
   Birdies: 1,
+  Pars: 1,
   Bogeys: 1,
   GIR: 0,
   "Fairways hit": 0,
@@ -121,6 +122,7 @@ const MARKET_SPECS = DETAIL_EXPORT_MARKETS.map((m) => {
 const MARKET_ORDER = [
   "Total score",
   "Birdies",
+  "Pars",
   "Bogeys",
   "GIR",
   "Fairways hit",
@@ -131,6 +133,7 @@ const BETTABLE_MARKETS = new Set([
   "GIR",
   "Total score",
   "Birdies",
+  "Pars",
   "Bogeys",
   "Fairways hit",
 ]);
@@ -2027,7 +2030,7 @@ function renderSkillWindowOos() {
 
   const breakdown = document.getElementById("skill-window-market-breakdown");
   if (breakdown) {
-    const marketOrder = ["Total score", "Birdies", "Bogeys", "GIR", "Fairways hit"];
+    const marketOrder = ["Total score", "Birdies", "Pars", "Bogeys", "GIR", "Fairways hit"];
     const present = marketOrder.filter((m) =>
       windows.some((w) => w.recommended?.by_market?.[m]),
     );
@@ -2337,6 +2340,12 @@ function renderOddsCsv() {
   }
 }
 
+function fmtOosUsd(v) {
+  if (!Number.isFinite(v)) return "—";
+  const sign = v > 0 ? "+" : v < 0 ? "−" : "";
+  return `${sign}$${Math.abs(v).toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
+}
+
 function renderHonestOos() {
   const card = document.getElementById("oos-honest-card");
   const note = document.getElementById("oos-honest-note");
@@ -2347,46 +2356,48 @@ function renderHonestOos() {
   }
   card.hidden = false;
   const rec = OOS_REPORT.combined_oos_recommended || OOS_REPORT.combined_oos_at_5pct;
-  const peak = OOS_REPORT.peak_oos_event_at_5pct;
-  const worst = OOS_REPORT.worst_oos_event_at_5pct;
-  const bestTh = OOS_REPORT.best_oos_threshold;
+  const money = OOS_REPORT.money?.recommended_policy;
+  const moneyUnf = OOS_REPORT.money?.unfiltered_at_5pct;
+  const flat = money?.flat_fixed;
+  const kelly = money?.kelly_unit_cap;
+  const peak = OOS_REPORT.peak_oos_event_money || OOS_REPORT.peak_oos_event_at_5pct;
+  const worst = OOS_REPORT.worst_oos_event_money || OOS_REPORT.worst_oos_event_at_5pct;
 
   if (note) {
     const pol = OOS_MARKET_POLICY;
     note.innerHTML =
-      `Walk-forward OOS across <strong>${OOS_REPORT.oos_event_count}</strong> completed events` +
+      `Walk-forward OOS $ P/L on a <strong>$10,000</strong> bankroll across <strong>${OOS_REPORT.oos_event_count}</strong> completed events` +
       (OOS_REPORT.excluded_live_event ? ` (excludes live week: ${OOS_REPORT.excluded_live_event})` : "") +
-      `. Per-market policy: GIR EV≥${pol.GIR?.minEv}% gap≥${pol.GIR?.minGap}; Total EV≥${pol["Total score"]?.minEv}%; Birdies EV≥${pol.Birdies?.minEv}%; FW under-only + gir−fw≥${pol["Fairways hit"]?.minGirMinusFw}. ` +
+      `. Sequential by event then round, 15% round cap. Flat = $100/bet (1% of start). Kelly = ¼ Kelly capped at 1% of current bankroll. ` +
+      `Policy: GIR EV≥${pol.GIR?.minEv}% gap≥${pol.GIR?.minGap}; Total EV≥${pol["Total score"]?.minEv}%; Birdies EV≥${pol.Birdies?.minEv}%; FW under-only + gir−fw≥${pol["Fairways hit"]?.minGirMinusFw}. ` +
       `Regenerate: <code>npm run report:walkforward-oos-roi</code>`;
   }
 
-  const unfiltered = OOS_REPORT.combined_oos_unfiltered_at_5pct;
-
   document.getElementById("oos-honest-kpis").innerHTML = `
     <div class="kpi-card highlight">
-      <div class="kpi-label">OOS ROI (recommended)</div>
-      <div class="kpi-value ${clsSigned(rec?.roi_pct)}">${fmtPct(rec?.roi_pct)}</div>
-      <div class="kpi-sub">per-market policy · ${rec?.bets || 0} bets · ${fmt(rec?.hit_pct, 1)}% hit · ${rec?.units >= 0 ? "+" : ""}${fmt(rec?.units, 0)}u</div>
+      <div class="kpi-label">Kelly P/L ($10k)</div>
+      <div class="kpi-value ${clsSigned(kelly?.pl)}">${fmtOosUsd(kelly?.pl)}</div>
+      <div class="kpi-sub">¼ Kelly + 1% cap · ends ${fmtUsd(kelly?.bankroll_end)} · max DD ${fmtUsd(kelly?.max_drawdown)} · ${kelly?.bets || 0} bets</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">Unfiltered @ 5%</div>
-      <div class="kpi-value ${clsSigned(unfiltered?.roi_pct)}">${unfiltered ? fmtPct(unfiltered.roi_pct) : "—"}</div>
-      <div class="kpi-sub">all markets, no line-gap filter</div>
+      <div class="kpi-label">Flat $100 P/L</div>
+      <div class="kpi-value ${clsSigned(flat?.pl)}">${fmtOosUsd(flat?.pl)}</div>
+      <div class="kpi-sub">fixed 1% of start · ends ${fmtUsd(flat?.bankroll_end)} · max DD ${fmtUsd(flat?.max_drawdown)} · ${flat?.bets || rec?.bets || 0} bets</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">Peak event OOS</div>
-      <div class="kpi-value ${clsSigned(peak?.roi_pct)}">${peak ? fmtPct(peak.roi_pct) : "—"}</div>
-      <div class="kpi-sub">${peak?.event ? peak.event.replace(/ presented by.*/i, "") : ""}</div>
+      <div class="kpi-label">ROI on $ staked</div>
+      <div class="kpi-value ${clsSigned(kelly?.roi_on_staked_pct)}">${kelly ? fmtPct(kelly.roi_on_staked_pct) : "—"}</div>
+      <div class="kpi-sub">Kelly ${fmtUsd(kelly?.total_staked)} staked · flat ${fmtPct(flat?.roi_on_staked_pct)} on ${fmtUsd(flat?.total_staked)}</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">Worst event OOS</div>
-      <div class="kpi-value ${clsSigned(worst?.roi_pct)}">${worst ? fmtPct(worst.roi_pct) : "—"}</div>
-      <div class="kpi-sub">${worst?.event ? worst.event.replace(/ presented by.*/i, "") : ""}</div>
+      <div class="kpi-label">Unfiltered @ 5% $</div>
+      <div class="kpi-value ${clsSigned(moneyUnf?.kelly_unit_cap?.pl)}">${fmtOosUsd(moneyUnf?.kelly_unit_cap?.pl)}</div>
+      <div class="kpi-sub">Kelly · flat ${fmtOosUsd(moneyUnf?.flat_fixed?.pl)} · no line-gap filter</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">Best threshold (exploratory)</div>
-      <div class="kpi-value ${clsSigned(bestTh?.roi_pct)}">${bestTh ? fmtPct(bestTh.roi_pct) : "—"}</div>
-      <div class="kpi-sub">${bestTh ? `≥${bestTh.min_ev_pct}% EV · ${bestTh.bets} bets` : ""}</div>
+      <div class="kpi-label">Best / worst event $</div>
+      <div class="kpi-value ${clsSigned(peak?.pl)}">${fmtOosUsd(peak?.pl)}</div>
+      <div class="kpi-sub">${peak?.event ? peak.event.replace(/ presented by.*/i, "") : ""} · worst ${fmtOosUsd(worst?.pl)} ${worst?.event ? worst.event.replace(/ presented by.*/i, "") : ""}</div>
     </div>
   `;
 
@@ -2396,9 +2407,9 @@ function renderHonestOos() {
         .map(
           (m) => `<tr>
         <td>${m.market}</td>
-        <td class="num ${clsSigned(m.roi_pct)}">${fmtPct(m.roi_pct)}</td>
+        <td class="num ${clsSigned(m.kelly_pl)}">${fmtOosUsd(m.kelly_pl)}</td>
+        <td class="num ${clsSigned(m.flat_pl)}">${fmtOosUsd(m.flat_pl)}</td>
         <td class="num">${m.bets}</td>
-        <td class="num ${clsSigned(m.units)}">${m.units >= 0 ? "+" : ""}${fmt(m.units, 1)}u</td>
         <td class="num">${fmt(m.hit_pct, 1)}%</td>
       </tr>`,
         )
@@ -2406,16 +2417,16 @@ function renderHonestOos() {
     : `<tr><td colspan="5">No OOS market rows</td></tr>`;
 
   const events = (OOS_REPORT.by_event || [])
-    .filter((e) => e.at_5pct?.bets > 0)
-    .sort((a, b) => num(b.at_5pct.roi_pct) - num(a.at_5pct.roi_pct));
+    .filter((e) => e.at_5pct?.bets > 0 || e.money?.kelly_bets > 0 || e.money?.flat_bets > 0)
+    .sort((a, b) => num(b.money?.kelly_pl) - num(a.money?.kelly_pl));
   document.querySelector("#oos-event-table tbody").innerHTML = events.length
     ? events
         .map(
           (e) => `<tr>
         <td>${e.event}</td>
-        <td class="num ${clsSigned(e.at_5pct.roi_pct)}">${fmtPct(e.at_5pct.roi_pct)}</td>
-        <td class="num">${e.at_5pct.bets}</td>
-        <td class="num ${clsSigned(e.at_5pct.units)}">${e.at_5pct.units >= 0 ? "+" : ""}${fmt(e.at_5pct.units, 1)}u</td>
+        <td class="num ${clsSigned(e.money?.kelly_pl)}">${fmtOosUsd(e.money?.kelly_pl)}</td>
+        <td class="num ${clsSigned(e.money?.flat_pl)}">${fmtOosUsd(e.money?.flat_pl)}</td>
+        <td class="num">${e.at_5pct?.bets || e.money?.flat_bets || 0}</td>
       </tr>`,
         )
         .join("")
@@ -2748,18 +2759,21 @@ function renderLivePicks() {
   if (titleEl) {
     titleEl.textContent = `Best bets — ${built.roundLabel}${built.eventName ? ` · ${built.eventName}` : ""}`;
   }
-  const oosRoi = num((LIVE_CTX.oos || OOS_REPORT)?.combined_oos_at_5pct?.roi_pct, NaN);
-  const oosN = Math.round(num((LIVE_CTX.oos || OOS_REPORT)?.combined_oos_at_5pct?.bets, NaN)) || 0;
+  const oosMoney = (LIVE_CTX.oos || OOS_REPORT)?.money?.recommended_policy?.kelly_unit_cap;
+  const oosPl = num(oosMoney?.pl, NaN);
+  const oosN = Math.round(num(oosMoney?.bets ?? (LIVE_CTX.oos || OOS_REPORT)?.combined_oos_at_5pct?.bets)) || 0;
   if (noteEl) {
     const venue = built.venueNote ? ` ${built.venueNote}.` : "";
     const factors = built.factorsNote ? ` ${built.factorsNote}.` : "";
     const dkNote = built.modelLinesOnly
       ? " DraftKings scrape unavailable — showing model half-lines at −110 (not real +EV until DK posts)."
       : "";
+    const oosNote = Number.isFinite(oosPl)
+      ? ` (Kelly ${oosPl >= 0 ? "+" : "−"}$${Math.abs(Math.round(oosPl)).toLocaleString()} on $10k · ${oosN} bets)`
+      : "";
     noteEl.textContent =
       `Upcoming round picks from projections.json (${built.updatedAt ? `updated ${new Date(built.updatedAt).toLocaleString()}` : "live"}).${factors}${venue}${dkNote}` +
-      ` Ranked by calibrated confidence vs book fair, walk-forward OOS market ROI` +
-      (Number.isFinite(oosRoi) ? ` (${oosRoi >= 0 ? "+" : ""}${oosRoi.toFixed(1)}% on ${oosN} OOS policy bets)` : "") +
+      ` Ranked by calibrated confidence vs book fair, walk-forward OOS $ P/L${oosNote}` +
       `, and historical context signals. Uses toolbar Min confidence edge %.`;
   }
 

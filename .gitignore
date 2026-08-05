@@ -32,6 +32,7 @@ data/all_shots_2024_2026.fixed.csv - Shortcut.lnk
 data/all_shots_progress.rds
 # Mirrored from repo root by scripts; large — do not commit the web copy
 alpha-caddie-web/data/historical_rounds_all.csv
+alpha-caddie-web/data/player_course_hole_sg_plays.csv
 **/hole_data.csv
 **/historical_rounds_all_with_tournament_metadata.csv
 **/historical_rounds_all_with_tournament_metadata_*.csv

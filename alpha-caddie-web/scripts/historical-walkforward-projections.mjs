@@ -1,8 +1,9 @@
 /**
  * Walk-forward full round projections (same pipeline as fetch:dg / export-round-projection-vs-actual).
- * Flat venue player score: same all-time course average every round; weather/pin/tee wave on live only.
+ * Hole SG + course-focused approach/putt distance SG + historical round weather (Open-Meteo archive).
  */
 import { join } from "path";
+import { existsSync, readFileSync } from "fs";
 import {
   applyVenueCountingIntercept,
   applyVenueScoreIntercept,
@@ -39,6 +40,17 @@ import {
   syncVenueScoringToProjectionBasis,
 } from "./course-round-adjustments.mjs";
 import { resolveCourseLayout } from "./course-hole-layout.mjs";
+import {
+  applyHoleSgToBirdies,
+  buildHoleSgAdjustmentsAsOf,
+  holeSgBlendEnabled,
+} from "./course-hole-sg-asof.mjs";
+import {
+  applyDistanceSgToBirdies,
+  applyGranularSgToScoreStp,
+  buildDistanceSgAdjustmentsAsOf,
+  distanceSgBlendEnabled,
+} from "./course-distance-sg-asof.mjs";
 import { traditionalRate01 } from "./dg-traditional-stats.mjs";
 import {
   RAW_ROUND_SD,
@@ -61,7 +73,225 @@ import {
   fitVenueSgImportanceFromRows,
   mergeSgImportance,
   serializeSgImportanceForMeta,
+  applyCourseTailoringToPlayers,
+  fieldSgMedians,
 } from "./course-skill-tailoring.mjs";
+import {
+  loadHistoricalRoundWeatherMap,
+  roundWeatherKey,
+  DEFAULT_ROUND_WEATHER_JSON,
+} from "./historical-round-weather.mjs";
+import { applyWeatherBakedCountsToAllPlayers } from "./weather-projection-adjustments.mjs";
+import { teeWaveFromTeetimeAndLabel } from "./open-meteo-forecast.mjs";
+import { teeWaveStrokeShift, teeWaveCountingShifts } from "./projection-unified-factors.mjs";
+
+function envOn(name, defaultOn = true) {
+  const raw = String(process.env[name] ?? "").trim();
+  if (!raw) return defaultOn;
+  return raw !== "0" && raw.toLowerCase() !== "false" && raw !== "off";
+}
+
+function courseSgFitEnabled() {
+  return envOn("GOLF_COURSE_SG_FIT", true);
+}
+
+function teeWaveBiasFromHist(histRows, courseKey, cutoffMs) {
+  const buckets = {
+    morning: { n: 0, stp: 0, bird: 0, bog: 0 },
+    afternoon: { n: 0, stp: 0, bird: 0, bog: 0 },
+  };
+  for (const row of histRows || []) {
+    const t = rowTimeMs(row);
+    if (Number.isFinite(cutoffMs) && Number.isFinite(t) && t >= cutoffMs) continue;
+    if (normCourseNameKey(row.course_name || "") !== courseKey) continue;
+    const wave = teeWaveFromTeetimeAndLabel(row.teetime ?? row.tee_time, row.dg_tee_wave);
+    if (wave !== "morning" && wave !== "afternoon") continue;
+    const cp = num(row.course_par, NaN);
+    const rs = num(row.round_score, NaN);
+    if (!Number.isFinite(cp) || !Number.isFinite(rs)) continue;
+    buckets[wave].n++;
+    buckets[wave].stp += rs - cp;
+    const bird = num(row.birdies, NaN);
+    const bog = num(row.bogeys ?? row.bogies, NaN);
+    if (Number.isFinite(bird)) buckets[wave].bird += bird;
+    if (Number.isFinite(bog)) buckets[wave].bog += bog;
+  }
+  const m = buckets.morning;
+  const a = buckets.afternoon;
+  if (m.n <= 40 || a.n <= 40) {
+    return {
+      deltaAfternoonMinusMorning: 0,
+      deltaBirdiesAfternoonMinusMorning: 0,
+      deltaBogeysAfternoonMinusMorning: 0,
+      n: m.n + a.n,
+    };
+  }
+  return {
+    deltaAfternoonMinusMorning: a.stp / a.n - m.stp / m.n,
+    deltaBirdiesAfternoonMinusMorning: a.bird / a.n - m.bird / m.n,
+    deltaBogeysAfternoonMinusMorning: a.bog / a.n - m.bog / m.n,
+    n: m.n + a.n,
+    morning_n: m.n,
+    afternoon_n: a.n,
+  };
+}
+
+function playerWavesThisRound(histRows, eventName, eventYear, targetRound) {
+  /** @type {Map<number, string>} */
+  const out = new Map();
+  for (const row of histRows || []) {
+    const dg = Math.round(num(row.dg_id, NaN));
+    const yr = Math.round(num(row.year, NaN));
+    const rnd = Math.round(num(row.round_num, NaN));
+    if (!Number.isFinite(dg) || yr !== eventYear || rnd !== targetRound) continue;
+    if (!eventsLikelySame(eventName, String(row.event_name || "").trim())) continue;
+    const wave = teeWaveFromTeetimeAndLabel(row.teetime ?? row.tee_time, row.dg_tee_wave);
+    if (wave) out.set(dg, wave);
+  }
+  return out;
+}
+
+function applyWaveWeatherToPlayers(players, waveByDg, waveBias, weatherSnap, fairwayHoles) {
+  if (!players?.length) return 0;
+  const w = num(process.env.GOLF_UNIFIED_TEE_WAVE_W, 0.3);
+  if (!(w > 0)) return 0;
+  // Single archive snap: use as both AM/PM baseline; hist wave Δ + difficulty still apply.
+  const morningSnap = weatherSnap || null;
+  const afternoonSnap = weatherSnap || null;
+  let n = 0;
+  for (const pl of players) {
+    const dg = Math.round(num(pl.dg_id, NaN));
+    const wave = waveByDg.get(dg) || "";
+    if (!wave) continue;
+    pl.dg_tee_wave = wave;
+    const stroke = teeWaveStrokeShift(wave, waveBias, morningSnap, afternoonSnap);
+    const counts = teeWaveCountingShifts(wave, waveBias, morningSnap, afternoonSnap);
+    if (Number.isFinite(stroke) && Math.abs(stroke) > 1e-5) {
+      const stp = num(pl.score_to_par, NaN);
+      const ts = num(pl.total_score, NaN);
+      if (Number.isFinite(stp) && Number.isFinite(ts)) {
+        pl.score_to_par = Math.round((stp + stroke) * 100) / 100;
+        pl.total_score = Math.round((ts + stroke) * 100) / 100;
+      }
+      if (Number.isFinite(num(pl.mu_sg, NaN))) {
+        pl.mu_sg = Math.round((num(pl.mu_sg, 0) - stroke) * 1000) / 1000;
+      }
+      // GIR / FW move with scoring difficulty (softer weather → more greens/fairways).
+      if (Number.isFinite(num(pl.gir, NaN))) {
+        pl.gir = Math.round(clamp(num(pl.gir, 0) - 0.22 * stroke, 0, 18) * 100) / 100;
+      }
+      if (Number.isFinite(num(pl.fairways, NaN))) {
+        const fh = Number.isFinite(fairwayHoles) ? fairwayHoles : N_FAIRWAY_HOLES;
+        pl.fairways = Math.round(clamp(num(pl.fairways, 0) - 0.14 * stroke, 0, fh) * 100) / 100;
+      }
+      n++;
+    }
+    if (Number.isFinite(counts?.birdies) && Math.abs(counts.birdies) > 1e-5 && Number.isFinite(num(pl.birdies, NaN))) {
+      pl.birdies = Math.round((num(pl.birdies, 0) + counts.birdies) * 100) / 100;
+    }
+    if (Number.isFinite(counts?.bogeys) && Math.abs(counts.bogeys) > 1e-5 && Number.isFinite(num(pl.bogeys, NaN))) {
+      pl.bogeys = Math.round(Math.max(0, num(pl.bogeys, 0) + counts.bogeys) * 100) / 100;
+    }
+    pl._tee_wave_shift = stroke;
+  }
+  return n;
+}
+
+function walkforwardWeatherEnabled() {
+  return envOn("GOLF_WF_WEATHER", true);
+}
+
+/** @type {{ map: Map<string, object>, byName: Map<string, object> } | null} */
+let wfWeatherCache = null;
+
+function loadWalkforwardWeatherIndex(webRoot) {
+  if (wfWeatherCache) return wfWeatherCache;
+  const jsonPath = join(webRoot, "data", "historical_round_weather.json");
+  const file = existsSync(jsonPath) ? jsonPath : DEFAULT_ROUND_WEATHER_JSON;
+  const map = loadHistoricalRoundWeatherMap(file);
+  /** @type {Map<string, object>} */
+  const byName = new Map();
+  try {
+    if (existsSync(file)) {
+      const raw = JSON.parse(readFileSync(file, "utf8"));
+      for (const v of Object.values(raw?.byKey || {})) {
+        if (!v || typeof v !== "object") continue;
+        const ev = String(v.event_name || "").trim();
+        const yr = Math.round(Number(v.year));
+        const rnd = Math.round(Number(v.round_num));
+        if (!ev || !Number.isFinite(yr) || !Number.isFinite(rnd)) continue;
+        const snap = {
+          tempF: Number(v.tempF ?? v.weather_temp_f),
+          windMph: Number(v.windMph ?? v.weather_wind_mph),
+          humidityPct: Number(v.humidityPct ?? v.weather_humidity),
+          condition: String(v.condition ?? v.weather_condition ?? "default").toLowerCase(),
+          event_name: ev,
+        };
+        if (!Number.isFinite(snap.tempF)) continue;
+        byName.set(`${foldComparableTitle(ev)}|${yr}|${rnd}`, snap);
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+  wfWeatherCache = { map, byName };
+  return wfWeatherCache;
+}
+
+function inferEventId(histRows, eventName, eventYear) {
+  for (const row of histRows) {
+    if (!eventsLikelySame(eventName, String(row.event_name || "").trim())) continue;
+    const yr = Math.round(num(row.year, NaN));
+    if (Number.isFinite(eventYear) && yr !== eventYear) continue;
+    const eid = Math.round(num(row.event_id, NaN));
+    if (Number.isFinite(eid)) return eid;
+  }
+  return NaN;
+}
+
+export function resolveWalkforwardWeather({ webRoot, histRows, eventName, eventYear, targetRound }) {
+  if (!walkforwardWeatherEnabled()) return null;
+  const { map, byName } = loadWalkforwardWeatherIndex(webRoot);
+  const yr = Math.round(num(eventYear, NaN));
+  const rnd = Math.round(num(targetRound, NaN));
+  if (!Number.isFinite(yr) || !Number.isFinite(rnd)) return null;
+
+  const eid = inferEventId(histRows, eventName, yr);
+  if (Number.isFinite(eid)) {
+    const snap = map.get(roundWeatherKey(eid, yr, rnd));
+    if (snap && Number.isFinite(snap.tempF)) return snap;
+  }
+
+  const exact = byName.get(`${foldComparableTitle(eventName)}|${yr}|${rnd}`);
+  if (exact && Number.isFinite(exact.tempF)) return exact;
+
+  for (const [k, snap] of byName) {
+    const parts = k.split("|");
+    if (Number(parts[1]) !== yr || Number(parts[2]) !== rnd) continue;
+    if (eventsLikelySame(eventName, snap.event_name)) return snap;
+  }
+  return null;
+}
+
+function attachWeatherSnapshotToPlayers(players, snap) {
+  if (!snap || !players?.length) return 0;
+  let n = 0;
+  for (const p of players) {
+    if (!p || typeof p !== "object") continue;
+    p.weather_temp_f = snap.tempF;
+    p.weather_wind_mph = snap.windMph;
+    p.weather_humidity = snap.humidityPct;
+    p.weather_condition = snap.condition || "default";
+    p.dg_auto_weather = {
+      tempF: snap.tempF,
+      windMph: snap.windMph,
+      humidityPct: snap.humidityPct,
+      condition: snap.condition || "default",
+    };
+    n++;
+  }
+  return n;
+}
 
 function rowTimeMs(row) {
   const s = String(row?.event_completed || "").trim();
@@ -111,6 +341,8 @@ function histRoundToHistoryRec(row) {
     driving_acc: num(row.driving_acc, NaN),
     fairways: num(row.fairways, NaN),
     putts: num(row.putts, NaN),
+    driving_dist: num(row.driving_dist, NaN),
+    teetime: String(row.teetime ?? row.tee_time ?? ""),
     event_completed: String(row.event_completed || ""),
   };
 }
@@ -144,11 +376,16 @@ export function buildWalkForwardHistoryByDgId(histRows, cutoffMs, dgIds) {
 
   for (const rec of Object.values(out)) {
     rec.rounds.sort((a, b) => num(b.sortKey, 0) - num(a.sortKey, 0));
-    // Skill window: last N rounds per player (backtest knob; live default 80).
-    const cap = (() => {
-      const env = Math.round(num(process.env.GOLF_WF_SKILL_MAX_ROUNDS, NaN));
-      return Number.isFinite(env) && env >= 2 ? Math.min(env, 200) : 80;
+    // Keep year window for baseline blend; skill rating uses first GOLF_WF_SKILL_MAX_ROUNDS.
+    const yearCap = (() => {
+      const env = Math.round(num(process.env.GOLF_WF_YEAR_ROUNDS, NaN));
+      return Number.isFinite(env) && env >= 12 ? Math.min(env, 200) : 48;
     })();
+    const skillCap = (() => {
+      const env = Math.round(num(process.env.GOLF_WF_SKILL_MAX_ROUNDS, NaN));
+      return Number.isFinite(env) && env >= 2 ? Math.min(env, 200) : 12;
+    })();
+    const cap = Math.max(yearCap, skillCap);
     if (rec.rounds.length > cap) rec.rounds = rec.rounds.slice(0, cap);
   }
   return out;
@@ -167,24 +404,57 @@ function recencyWeightedMean(rows, key, decay = 0.86) {
   return wsum > 0 ? sum / wsum : NaN;
 }
 
+function skillDecay() {
+  const d = num(process.env.GOLF_WF_SKILL_DECAY, 0.86);
+  return Number.isFinite(d) && d > 0.5 && d < 1 ? d : 0.86;
+}
+
+function yearDecay() {
+  const d = num(process.env.GOLF_WF_YEAR_DECAY, 0.92);
+  return Number.isFinite(d) && d > 0.5 && d < 1 ? d : 0.92;
+}
+
+function yearBlendWeight() {
+  const w = num(process.env.GOLF_WF_YEAR_BLEND, 0.18);
+  return Number.isFinite(w) ? Math.min(0.45, Math.max(0, w)) : 0.18;
+}
+
+function skillWindowN() {
+  const env = Math.round(num(process.env.GOLF_WF_SKILL_MAX_ROUNDS, NaN));
+  return Number.isFinite(env) && env >= 2 ? Math.min(env, 80) : 12;
+}
+
+/** Blend last-N skill (strong decay) with year baseline (mild decay). */
+function blendedSkillMean(rounds, key) {
+  const nSkill = skillWindowN();
+  const recent = rounds.slice(0, nSkill);
+  const rMean = recencyWeightedMean(recent, key, skillDecay());
+  const yMean = recencyWeightedMean(rounds, key, yearDecay());
+  const wY = yearBlendWeight();
+  if (Number.isFinite(rMean) && Number.isFinite(yMean) && rounds.length > nSkill) {
+    return (1 - wY) * rMean + wY * yMean;
+  }
+  return Number.isFinite(rMean) ? rMean : yMean;
+}
+
 function skillRowFromHistory(rec) {
   const rounds = Array.isArray(rec?.rounds) ? rec.rounds : [];
   if (rounds.length < 3) return null;
-  const sg_total = recencyWeightedMean(rounds, "sg_total");
+  const sg_total = blendedSkillMean(rounds, "sg_total");
   if (!Number.isFinite(sg_total)) return null;
   const sk = {
     sg_total,
-    sg_ott: recencyWeightedMean(rounds, "sg_ott"),
-    sg_app: recencyWeightedMean(rounds, "sg_app"),
-    sg_arg: recencyWeightedMean(rounds, "sg_arg"),
-    sg_putt: recencyWeightedMean(rounds, "sg_putt"),
-    sg_t2g: recencyWeightedMean(rounds, "sg_t2g"),
+    sg_ott: blendedSkillMean(rounds, "sg_ott"),
+    sg_app: blendedSkillMean(rounds, "sg_app"),
+    sg_arg: blendedSkillMean(rounds, "sg_arg"),
+    sg_putt: blendedSkillMean(rounds, "sg_putt"),
+    sg_t2g: blendedSkillMean(rounds, "sg_t2g"),
   };
-  const girR = recencyWeightedMean(
+  const girR = blendedSkillMean(
     rounds.map((r) => ({ v: traditionalRate01(r.gir, 18) })),
     "v",
   );
-  const fwR = recencyWeightedMean(
+  const fwR = blendedSkillMean(
     rounds.map((r) => ({
       v:
         traditionalRate01(r.driving_acc, N_FAIRWAY_HOLES) ??
@@ -196,31 +466,33 @@ function skillRowFromHistory(rec) {
   if (Number.isFinite(fwR)) sk.dg_fairway_pct = fwR;
   // histRoundToHistoryRec stores the DK Birdies market (birdies + eagles)
   // in `birdies`; adding eagles again would double-count them.
-  sk.avg_birdies = recencyWeightedMean(rounds, "birdies");
-  sk.avg_bogeys = recencyWeightedMean(rounds, "bogeys");
-  sk.avg_eagles = recencyWeightedMean(
+  sk.avg_birdies = blendedSkillMean(rounds, "birdies");
+  sk.avg_bogeys = blendedSkillMean(rounds, "bogeys");
+  sk.avg_eagles = blendedSkillMean(
     rounds.map((r) => ({ v: num(r.eagles_or_better, num(r.eagles, 0)) })),
     "v",
   );
-  sk.avg_doubles = recencyWeightedMean(
+  sk.avg_doubles = blendedSkillMean(
     rounds.map((r) => ({ v: num(r.doubles_or_worse, num(r.doubles, 0)) })),
     "v",
   );
-  sk.avg_pars = recencyWeightedMean(rounds, "pars");
-  sk.avg_putts = recencyWeightedMean(rounds, "putts");
-  sk.avg_gir = recencyWeightedMean(
+  sk.avg_pars = blendedSkillMean(rounds, "pars");
+  sk.avg_putts = blendedSkillMean(rounds, "putts");
+  sk.avg_gir = blendedSkillMean(
     rounds.map((r) => ({ v: traditionalRate01(r.gir, 18) * 18 })),
     "v",
   );
-  sk.avg_fairways = recencyWeightedMean(
+  sk.avg_fairways = blendedSkillMean(
     rounds.map((r) => ({ v: traditionalRate01(r.fairways, N_FAIRWAY_HOLES) * N_FAIRWAY_HOLES })),
     "v",
   );
-  const daRaw = recencyWeightedMean(rounds, "driving_acc");
+  const daRaw = blendedSkillMean(rounds, "driving_acc");
   if (Number.isFinite(daRaw)) sk.driving_acc = daRaw;
-  const dist = recencyWeightedMean(rounds, "driving_dist");
+  const dist = blendedSkillMean(rounds, "driving_dist");
   if (Number.isFinite(dist) && dist >= 235 && dist <= 380) sk.driving_distance = dist;
   sk.counting_rounds = rounds.filter((r) => Number.isFinite(num(r.birdies, NaN))).length;
+  sk.skill_rounds = Math.min(skillWindowN(), rounds.length);
+  sk.year_rounds = rounds.length;
   return sk;
 }
 
@@ -325,7 +597,7 @@ function buildEventContextFromHist(histRows, eventName, eventYear, courseKey, ta
   return ctx;
 }
 
-async function loadVenueScoringBeforeCutoff(histRows, courseKey, courseLabel, cutoffMs, eventName, eventYear, targetRound) {
+export async function loadVenueScoringBeforeCutoff(histRows, courseKey, courseLabel, cutoffMs, eventName, eventYear, targetRound) {
   const nFairwayHoles = N_FAIRWAY_HOLES;
   let venueTotals = emptyVenueCountRaw();
   const fieldRaw = new Map();
@@ -428,6 +700,7 @@ async function loadVenueScoringBeforeCutoff(histRows, courseKey, courseLabel, cu
     birdieTargetRounds: rolling.roundKeys.length,
     venueAvgPars: venueAgg.avgPars,
     venueAvgBogeys: venueAgg.avgBogeys,
+    venueAvgDoubles: venueAgg.avgDoubles,
     venueAvgGir: venueAgg.avgGir,
     venueAvgFairways: venueAgg.avgFairways,
     venueAvgPutts: venueAgg.avgPutts,
@@ -453,6 +726,14 @@ async function loadHistoricalCsvCalibrationCached(repoRoot, courseKey) {
     }));
   }
   return histCalibCache.get(key);
+}
+
+export function inferCourseParFromHist(histRows, eventName, eventYear, courseKey) {
+  return inferCoursePar(histRows, eventName, eventYear, courseKey);
+}
+
+export function inferCourseNameFromHist(histRows, eventName, eventYear) {
+  return inferCourseName(histRows, eventName, eventYear);
 }
 
 function inferCoursePar(histRows, eventName, eventYear, courseKey) {
@@ -494,6 +775,19 @@ export async function buildFullModelMuMapForEvent({
   pipelineEnv = null,
 }) {
   Object.assign(process.env, walkforwardBacktestPipelineEnv(), pipelineEnv || {});
+  if (String(process.env.GOLF_STRICT_FIT_FORM || "").trim() === "1") {
+    const { buildStrictFitFormMuMapForEvent } = await import("./strict-fit-form-mu.mjs");
+    return buildStrictFitFormMuMapForEvent({
+      repoRoot,
+      histRows,
+      eventName,
+      eventYear,
+      targetRound,
+      betTimeMs,
+      fieldDgIds,
+      courseName: courseNameOverride,
+    });
+  }
   const dgSet = new Set(fieldDgIds.filter((d) => Number.isFinite(d)));
   if (!dgSet.size) return new Map();
 
@@ -508,13 +802,45 @@ export async function buildFullModelMuMapForEvent({
   });
   const coursePar18 = layout.course_par_18;
   const fairwayHoles = layout.fairway_holes_modeled;
+  const webRoot = join(repoRoot, "alpha-caddie-web");
+  const weatherSnap = resolveWalkforwardWeather({
+    webRoot,
+    histRows,
+    eventName,
+    eventYear,
+    targetRound,
+  });
 
   const historyByDgId = buildWalkForwardHistoryByDgId(histRows, betTimeMs, dgSet);
   const rollingTrad = buildRollingTradFromHist(histRows, dgSet, betTimeMs);
 
-  const [histCalib, venueScoring] = await Promise.all([
+  const [histCalib, venueScoring, holeSgByDg, distSgByDg] = await Promise.all([
     loadHistoricalCsvCalibrationCached(repoRoot, courseKey),
     loadVenueScoringBeforeCutoff(histRows, courseKey, courseName, betTimeMs, eventName, eventYear, targetRound),
+    holeSgBlendEnabled()
+      ? buildHoleSgAdjustmentsAsOf({
+          webRoot,
+          courseKey,
+          courseName,
+          cutoffMs: betTimeMs,
+          eventName,
+          eventYear,
+          targetRound,
+          fieldDgIds: dgSet,
+        })
+      : Promise.resolve(new Map()),
+    distanceSgBlendEnabled()
+      ? buildDistanceSgAdjustmentsAsOf({
+          webRoot,
+          courseKey,
+          courseName,
+          cutoffMs: betTimeMs,
+          eventName,
+          eventYear,
+          targetRound,
+          fieldDgIds: dgSet,
+        })
+      : Promise.resolve(new Map()),
   ]);
 
   const tourPriors = computeTourPriorsFromHist(histRows, betTimeMs);
@@ -748,7 +1074,10 @@ export async function buildFullModelMuMapForEvent({
       fieldMeanMu: fieldMeanMuAdj,
       courseAdjStp: courseAdjScoreToPar,
     });
-    const stp = scoreRes.stp;
+    const holeAdj = holeSgByDg.get(Math.round(num(row.dg_id, NaN)));
+    const distAdj = distSgByDg.get(Math.round(num(row.dg_id, NaN)));
+    const scored = applyGranularSgToScoreStp(scoreRes.stp, holeAdj, distAdj, scoreRes.source);
+    const stp = scored.stp;
     const ts = coursePar18 + stp;
 
     const venueCounts = resolveProjectionCounts({
@@ -771,7 +1100,7 @@ export async function buildFullModelMuMapForEvent({
       courseSkillAnchor,
     });
     st.eagles = venueCounts.eagles;
-    st.birdies = venueCounts.birdies;
+    st.birdies = applyDistanceSgToBirdies(applyHoleSgToBirdies(venueCounts.birdies, holeAdj), distAdj);
     st.pars = venueCounts.pars;
     st.bogeys = venueCounts.bogeys;
     st.doubles = venueCounts.doubles;
@@ -802,7 +1131,7 @@ export async function buildFullModelMuMapForEvent({
       mu_sg: Math.round(st.mu_sg * 1000) / 1000,
       total_score: Math.round(ts * 100) / 100,
       score_to_par: Math.round(stp * 100) / 100,
-      score_source: scoreRes.source,
+      score_source: scored.source,
       round_sd: RAW_ROUND_SD,
       eagles: Math.round(st.eagles * 1000) / 1000,
       birdies: Math.round(st.birdies * 100) / 100,
@@ -846,6 +1175,25 @@ export async function buildFullModelMuMapForEvent({
     }
   }
 
+  // Course SG-importance fit + recent form (8–12) baked into rows before weather/wave.
+  const waveByDg = playerWavesThisRound(histRows, eventName, eventYear, targetRound);
+  const waveBias = teeWaveBiasFromHist(histRows, courseKey, betTimeMs);
+  /** @type {Map<number, number>} */
+  const teeWaveShiftByDg = new Map();
+  if (courseSgFitEnabled()) {
+    const fieldMedians = fieldSgMedians(base);
+    applyCourseTailoringToPlayers(players, {
+      historyByDgId,
+      sgImportance,
+      fieldMedians,
+      venueScoring,
+      ctRow,
+      coursePar18,
+      teeWaveShiftByDg,
+    });
+  }
+  const nWave = applyWaveWeatherToPlayers(players, waveByDg, waveBias, weatherSnap, fairwayHoles);
+
   const meta = {
     display_round: targetRound,
     course_used: courseName,
@@ -860,7 +1208,15 @@ export async function buildFullModelMuMapForEvent({
     projection_counts_weather_baked: false,
     projection_round_adjustments: {
       flat_venue_player_score: flatVenuePlayerScoreAnchorEnabled(),
+      hole_sg_blend: holeSgBlendEnabled(),
+      distance_sg_blend: distanceSgBlendEnabled(),
+      weather_blend: Boolean(weatherSnap),
+      course_sg_fit: courseSgFitEnabled(),
+      skill_rounds: skillWindowN(),
+      year_blend: yearBlendWeight(),
+      tee_wave_players: nWave,
     },
+    tee_wave_bias: waveBias,
   };
   syncVenueScoringToProjectionBasis(meta.projection_course_basis, venueScoring, coursePar18);
   // Walk-forward Birdies: recency-weighted venue BoB (all prior rounds, no min N).
@@ -898,7 +1254,8 @@ export async function buildFullModelMuMapForEvent({
     players,
     venueScoring,
     historical_projection_calibration: histCalib,
-    _webRoot: join(repoRoot, "alpha-caddie-web"),
+    _webRoot: webRoot,
+    display_round: targetRound,
   };
   payload.projection_course_basis = ensureProjectionCourseBasisComplete(
     meta.projection_course_basis,
@@ -913,6 +1270,25 @@ export async function buildFullModelMuMapForEvent({
     girBlend: 0,
     fairwaysBlend: 0,
   });
+
+  if (weatherSnap) {
+    attachWeatherSnapshotToPlayers(payload.players || players, weatherSnap);
+    const nWx = applyWeatherBakedCountsToAllPlayers(payload, {
+      forecastRound: targetRound,
+      displayRound: targetRound,
+      skipFieldCalibrate: true,
+      minField: Math.min(8, players.length),
+    });
+    meta.projection_counts_weather_baked = nWx > 0;
+    meta.projection_counts_weather_baked_round = targetRound;
+    meta.projection_round_adjustments.weather = {
+      tempF: weatherSnap.tempF,
+      windMph: weatherSnap.windMph,
+      humidityPct: weatherSnap.humidityPct,
+      condition: weatherSnap.condition || "default",
+      source: "open_meteo_archive",
+    };
+  }
 
   const playersReconciled = payload.players || players;
 

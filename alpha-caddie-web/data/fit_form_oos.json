@@ -1,0 +1,149 @@
+{
+  "generated_at": "2026-08-05T01:34:57.526Z",
+  "formula": "μ = venue + shrink(player@course) + shrink(recent form) + weather + tee wave + course distance SG + hole SG only if |stpAdj|≥0.25",
+  "constants": {
+    "k": 10,
+    "n_form": 10,
+    "n_skill": 36,
+    "decay": 0.86
+  },
+  "methodology": {
+    "oos_bet_rows": 4348,
+    "oos_event_count": 12,
+    "excluded_live_event": "Wyndham Championship",
+    "events": [
+      "PGA Championship",
+      "THE CJ CUP Byron Nelson",
+      "Charles Schwab Challenge",
+      "the Memorial Tournament presented by Workday",
+      "RBC Canadian Open",
+      "U.S. Open",
+      "Travelers Championship",
+      "John Deere Classic",
+      "Genesis Scottish Open",
+      "The Open Championship",
+      "3M Open",
+      "Rocket Classic"
+    ],
+    "elapsed_sec": 362,
+    "primary_metric": "mae_vs_actual"
+  },
+  "strategies": [
+    {
+      "id": "current_wf",
+      "name": "Current WF stack",
+      "note": "Hole/distance SG, weather, form carry, round μ decay, venue intercepts",
+      "model_vs_actual": {
+        "Birdies": {
+          "n": 1618,
+          "bias": -0.16,
+          "mae": 1.388,
+          "mae_vs_book": 0.581
+        },
+        "Total score": {
+          "n": 1426,
+          "bias": 0.43,
+          "mae": 2.312,
+          "mae_vs_book": 1.031
+        },
+        "GIR": {
+          "n": 661,
+          "bias": -0.41,
+          "mae": 1.82,
+          "mae_vs_book": 0.813
+        },
+        "Fairways hit": {
+          "n": 610,
+          "bias": -0.61,
+          "mae": 2.107,
+          "mae_vs_book": 1.528
+        }
+      },
+      "unfiltered_at_5pct": {
+        "roi_pct": -3.9,
+        "units": -126.66,
+        "bets": 3261,
+        "by_market": {
+          "Birdies": {
+            "units": -58.3,
+            "bets": 1122,
+            "roi_pct": -5.2
+          },
+          "GIR": {
+            "units": -12.2,
+            "bets": 519,
+            "roi_pct": -2.4
+          },
+          "Fairways hit": {
+            "units": -39.5,
+            "bets": 544,
+            "roi_pct": -7.3
+          },
+          "Total score": {
+            "units": -16.7,
+            "bets": 1076,
+            "roi_pct": -1.5
+          }
+        }
+      }
+    },
+    {
+      "id": "strict_fit_form",
+      "name": "Strict course fit + recent form",
+      "note": "fit+form + weather + tee wave + course distance SG + hole SG only if major (|stpAdj|≥0.25)",
+      "model_vs_actual": {
+        "Birdies": {
+          "n": 1619,
+          "bias": -0.46,
+          "mae": 1.393,
+          "mae_vs_book": 0.66
+        },
+        "Total score": {
+          "n": 1427,
+          "bias": 0.83,
+          "mae": 2.423,
+          "mae_vs_book": 1.201
+        },
+        "GIR": {
+          "n": 661,
+          "bias": -0.58,
+          "mae": 1.805,
+          "mae_vs_book": 0.809
+        },
+        "Fairways hit": {
+          "n": 610,
+          "bias": -0.31,
+          "mae": 1.703,
+          "mae_vs_book": 0.815
+        }
+      },
+      "unfiltered_at_5pct": {
+        "roi_pct": -2.9,
+        "units": -99.58,
+        "bets": 3434,
+        "by_market": {
+          "Birdies": {
+            "units": -24.2,
+            "bets": 1266,
+            "roi_pct": -1.9
+          },
+          "Total score": {
+            "units": -46.7,
+            "bets": 1170,
+            "roi_pct": -4
+          },
+          "GIR": {
+            "units": -25.1,
+            "bets": 510,
+            "roi_pct": -4.9
+          },
+          "Fairways hit": {
+            "units": -3.6,
+            "bets": 488,
+            "roi_pct": -0.7
+          }
+        }
+      }
+    }
+  ]
+}

@@ -9,6 +9,7 @@ import {
   statWeatherMuAdjustment,
 } from "./weather-projection-adjustments.mjs";
 import { marketBookSigmaScale, eventPropBookAlignedMarket } from "./market-book-calibration.mjs";
+import { applyOutcomeMuDebias } from "./outcome-mu-debias.mjs";
 import {
   binomialProbOver,
   normalProbOver,
@@ -93,6 +94,19 @@ export const EXPORT_MARKETS = [
     actualCol: "actual_birdies",
     overCol: "birdies_over",
     underCol: "birdies_under",
+  },
+  {
+    key: "pars",
+    market: "Pars",
+    propsMarket: "Pars",
+    lineCol: "pars_line",
+    bookLineCol: "pars_book_line",
+    ...altBookCols("pars"),
+    overOddsCol: "pars_over_odds",
+    underOddsCol: "pars_under_odds",
+    actualCol: "actual_pars",
+    overCol: "pars_over",
+    underCol: "pars_under",
   },
   {
     key: "bogeys",
@@ -720,32 +734,47 @@ export function ouProjectedMeanForMode(market, row, meta, pricingMode, pricingSk
   const base = ouMeanCountingStat(market, row, fwHoles);
   if (!Number.isFinite(base)) return NaN;
   const countLive = livePartialRoundCountPropAdjust(market, row, metaLive);
+  let mu;
   if (row?.bayesian_market_posterior?.[market]) {
     const liveScore =
       market === "Total score" ? liveCurrentRoundTotalScoreMuDelta(row, metaLive) : 0;
-    return base + countLive.muDelta + liveScore;
-  }
-  if (eventPropBookAlignedMarket(metaLive, market)) {
+    mu = base + countLive.muDelta + liveScore;
+  } else if (eventPropBookAlignedMarket(metaLive, market)) {
     const liveScore =
       market === "Total score" ? liveCurrentRoundTotalScoreMuDelta(row, metaLive) : 0;
-    return base + countLive.muDelta + liveScore;
-  }
-  const weatherAdj =
-    metaLive?.projection_counts_weather_baked && row?.weather_counts_baked
+    mu = base + countLive.muDelta + liveScore;
+  } else {
+    const weatherAdj =
+      metaLive?.projection_counts_weather_baked && row?.weather_counts_baked
+        ? 0
+        : statWeatherMuAdjustment(market, row);
+    const tailoringActive = Boolean(sgImportanceFromMeta(metaLive));
+    const pricingAdj = tailoringActive
       ? 0
-      : statWeatherMuAdjustment(market, row);
-  const tailoringActive = Boolean(sgImportanceFromMeta(metaLive));
-  const pricingAdj = tailoringActive
-    ? 0
-    : pricingStatMuAdjustment(market, dgId, pricingMode, pricingSkill, ctx);
-  return (
-    base +
+      : pricingStatMuAdjustment(market, dgId, pricingMode, pricingSkill, ctx);
+    mu =
+      base +
       weatherAdj +
       countLive.muDelta +
       liveCurrentRoundTotalScoreMuDelta(row, metaLive) +
       pricingAdj +
-      courseTailoringMuAdjustment(market, row, metaLive, ctx)
+      courseTailoringMuAdjustment(market, row, metaLive, ctx);
+  }
+  const bookLine = num(
+    row?.[`book_line_${market}`] ??
+      row?.book_line ??
+      (market === "Total score"
+        ? row?.round_score_book_line
+        : market === "Birdies"
+          ? row?.birdies_book_line
+          : market === "GIR"
+            ? row?.gir_book_line
+            : market === "Fairways hit"
+              ? row?.fairways_book_line
+              : NaN),
+    NaN,
   );
+  return applyOutcomeMuDebias(market, mu, bookLine);
 }
 
 function countingStubRowForMu(market, mu, row, fairwayHoles) {

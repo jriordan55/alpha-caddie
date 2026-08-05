@@ -91,6 +91,7 @@ export function statWeatherMuAdjustment(market, row) {
   if (market === "Total score") return d;
   if (market === "Bogeys") return 0.45 * d;
   if (market === "Birdies") return -0.5 * d;
+  if (market === "Pars") return 0.2 * d;
   if (market === "Putts") return 0.35 * d;
   if (market === "GIR") return -0.22 * d;
   if (market === "Fairways hit") return -0.14 * d;

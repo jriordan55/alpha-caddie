@@ -1,6 +1,7 @@
 /**
  * Walk-forward OOS bet policy — per-market EV, gap, side, and signal filters.
- * Re-fit with: npm run fit:bet-policy-from-oos
+ * Gaps tuned for both-side play after outcome μ debias (see data/outcome_mu_debias.json).
+ * Re-fit: npm run fit:outcome-mu-debias && npm run fit:bet-policy-from-oos
  */
 
 export const DEFAULT_MIN_EV_PCT = 0;
@@ -9,21 +10,21 @@ export const DEFAULT_MIN_EV_PCT = 0;
 export const OOS_MARKET_POLICY = {
   GIR: {
     market: "GIR",
-    minEv: 7.5,
+    minEv: 5,
     minGap: 0.5,
     side: "both",
     skipEventSubstrings: [],
   },
   Birdies: {
     market: "Birdies",
-    minEv: 25,
-    minGap: 0.5,
+    minEv: 5,
+    minGap: 0.35,
     side: "both",
     skipEventSubstrings: [],
   },
   "Total score": {
     market: "Total score",
-    minEv: 15,
+    minEv: 5,
     minGap: 0.5,
     side: "both",
     skipEventSubstrings: [],
@@ -31,10 +32,15 @@ export const OOS_MARKET_POLICY = {
   "Fairways hit": {
     market: "Fairways hit",
     minEv: 7.5,
-    minGap: 1.5,
-    side: "under",
-    minGirMinusFw: 2.5,
-    minCourseFwWidth: 30,
+    minGap: 1.0,
+    side: "both",
+    skipEventSubstrings: [],
+  },
+  Pars: {
+    market: "Pars",
+    minEv: 5,
+    minGap: 0.5,
+    side: "both",
     skipEventSubstrings: [],
   },
   Bogeys: {

@@ -1,0 +1,544 @@
+{
+  "generated_at": "2026-08-05T02:04:03.090Z",
+  "goal": "unbiased projections with edge on overs AND unders",
+  "formula": "μ_deb=μ−bias_LOO; μ*=book+α(μ_deb−book); bet when |μ*−book|≥gap, side=both",
+  "excluded_live_event": "Wyndham Championship",
+  "by_market": {
+    "Total score": {
+      "n": 1427,
+      "book_range": [
+        55,
+        95
+      ],
+      "raw_wf": {
+        "n": 1427,
+        "bias": 0.8,
+        "mae": 2.314,
+        "over": {
+          "n": 853,
+          "hit_pct": 51.1,
+          "roi_pct": -6.7
+        },
+        "under": {
+          "n": 200,
+          "hit_pct": 67.5,
+          "roi_pct": 23.1
+        },
+        "both_positive": false
+      },
+      "debiased": {
+        "n": 1427,
+        "bias": -0.006,
+        "mae": 2.217,
+        "over": {
+          "n": 357,
+          "hit_pct": 54.9,
+          "roi_pct": -1
+        },
+        "under": {
+          "n": 662,
+          "hit_pct": 57.9,
+          "roi_pct": 6.4
+        },
+        "both_positive": false
+      },
+      "mu_star": {
+        "n": 1427,
+        "bias": 0.134,
+        "mae": 2.167,
+        "over": {
+          "n": 206,
+          "hit_pct": 54.4,
+          "roi_pct": -1.4
+        },
+        "under": {
+          "n": 282,
+          "hit_pct": 60.6,
+          "roi_pct": 10.9
+        },
+        "both_positive": false
+      },
+      "mu_star_by_gap": {
+        "1": {
+          "n": 1427,
+          "bias": 0.134,
+          "mae": 2.167,
+          "over": {
+            "n": 21,
+            "hit_pct": 76.2,
+            "roi_pct": 32.7
+          },
+          "under": {
+            "n": 3,
+            "hit_pct": 66.7,
+            "roi_pct": 16.8
+          },
+          "both_positive": true
+        },
+        "0.35": {
+          "n": 1427,
+          "bias": 0.134,
+          "mae": 2.167,
+          "over": {
+            "n": 206,
+            "hit_pct": 54.4,
+            "roi_pct": -1.4
+          },
+          "under": {
+            "n": 282,
+            "hit_pct": 60.6,
+            "roi_pct": 10.9
+          },
+          "both_positive": false
+        },
+        "0.5": {
+          "n": 1427,
+          "bias": 0.134,
+          "mae": 2.167,
+          "over": {
+            "n": 140,
+            "hit_pct": 55.7,
+            "roi_pct": 0.7
+          },
+          "under": {
+            "n": 138,
+            "hit_pct": 67.4,
+            "roi_pct": 21.6
+          },
+          "both_positive": true
+        },
+        "0.75": {
+          "n": 1427,
+          "bias": 0.134,
+          "mae": 2.167,
+          "over": {
+            "n": 68,
+            "hit_pct": 61.8,
+            "roi_pct": 9.9
+          },
+          "under": {
+            "n": 26,
+            "hit_pct": 73.1,
+            "roi_pct": 28
+          },
+          "both_positive": true
+        },
+        "1.25": {
+          "n": 1427,
+          "bias": 0.134,
+          "mae": 2.167,
+          "over": {
+            "n": 2,
+            "hit_pct": 50,
+            "roi_pct": -16.2
+          },
+          "under": {
+            "n": 1,
+            "hit_pct": 100,
+            "roi_pct": 65.8
+          },
+          "both_positive": false
+        }
+      },
+      "recommended": {
+        "gap": 0.5,
+        "n": 1427,
+        "bias": 0.134,
+        "mae": 2.167,
+        "over": {
+          "n": 140,
+          "hit_pct": 55.7,
+          "roi_pct": 0.7
+        },
+        "under": {
+          "n": 138,
+          "hit_pct": 67.4,
+          "roi_pct": 21.6
+        },
+        "both_positive": true
+      }
+    },
+    "Birdies": {
+      "n": 1650,
+      "book_range": [
+        0.5,
+        12
+      ],
+      "raw_wf": {
+        "n": 1650,
+        "bias": -0.137,
+        "mae": 1.374,
+        "over": {
+          "n": 281,
+          "hit_pct": 50.9,
+          "roi_pct": -12.3
+        },
+        "under": {
+          "n": 595,
+          "hit_pct": 54.8,
+          "roi_pct": -5.7
+        },
+        "both_positive": false
+      },
+      "debiased": {
+        "n": 1650,
+        "bias": 0.007,
+        "mae": 1.38,
+        "over": {
+          "n": 388,
+          "hit_pct": 49.5,
+          "roi_pct": -14.8
+        },
+        "under": {
+          "n": 451,
+          "hit_pct": 56.8,
+          "roi_pct": -3
+        },
+        "both_positive": false
+      },
+      "mu_star": {
+        "n": 1650,
+        "bias": -0.001,
+        "mae": 1.34,
+        "over": {
+          "n": 50,
+          "hit_pct": 62,
+          "roi_pct": 0.8
+        },
+        "under": {
+          "n": 11,
+          "hit_pct": 72.7,
+          "roi_pct": 15.2
+        },
+        "both_positive": true
+      },
+      "mu_star_by_gap": {
+        "1": {
+          "n": 1650,
+          "bias": -0.001,
+          "mae": 1.34,
+          "over": null,
+          "under": null,
+          "both_positive": false
+        },
+        "0.35": {
+          "n": 1650,
+          "bias": -0.001,
+          "mae": 1.34,
+          "over": {
+            "n": 50,
+            "hit_pct": 62,
+            "roi_pct": 0.8
+          },
+          "under": {
+            "n": 11,
+            "hit_pct": 72.7,
+            "roi_pct": 15.2
+          },
+          "both_positive": true
+        },
+        "0.5": {
+          "n": 1650,
+          "bias": -0.001,
+          "mae": 1.34,
+          "over": {
+            "n": 10,
+            "hit_pct": 60,
+            "roi_pct": -10.1
+          },
+          "under": null,
+          "both_positive": false
+        },
+        "0.75": {
+          "n": 1650,
+          "bias": -0.001,
+          "mae": 1.34,
+          "over": null,
+          "under": null,
+          "both_positive": false
+        },
+        "1.25": {
+          "n": 1650,
+          "bias": -0.001,
+          "mae": 1.34,
+          "over": null,
+          "under": null,
+          "both_positive": false
+        }
+      },
+      "recommended": {
+        "gap": 0.35,
+        "n": 1650,
+        "bias": -0.001,
+        "mae": 1.34,
+        "over": {
+          "n": 50,
+          "hit_pct": 62,
+          "roi_pct": 0.8
+        },
+        "under": {
+          "n": 11,
+          "hit_pct": 72.7,
+          "roi_pct": 15.2
+        },
+        "both_positive": true
+      }
+    },
+    "GIR": {
+      "n": 661,
+      "book_range": [
+        4,
+        18
+      ],
+      "raw_wf": {
+        "n": 661,
+        "bias": -0.583,
+        "mae": 1.795,
+        "over": {
+          "n": 80,
+          "hit_pct": 57.5,
+          "roi_pct": 2.5
+        },
+        "under": {
+          "n": 411,
+          "hit_pct": 55.7,
+          "roi_pct": 0.4
+        },
+        "both_positive": true
+      },
+      "debiased": {
+        "n": 661,
+        "bias": -0.011,
+        "mae": 1.731,
+        "over": {
+          "n": 200,
+          "hit_pct": 57.5,
+          "roi_pct": 3.1
+        },
+        "under": {
+          "n": 249,
+          "hit_pct": 57.4,
+          "roi_pct": 2.3
+        },
+        "both_positive": true
+      },
+      "mu_star": {
+        "n": 661,
+        "bias": 0.024,
+        "mae": 1.715,
+        "over": {
+          "n": 124,
+          "hit_pct": 54.8,
+          "roi_pct": -2.2
+        },
+        "under": {
+          "n": 139,
+          "hit_pct": 58.3,
+          "roi_pct": 2.5
+        },
+        "both_positive": false
+      },
+      "mu_star_by_gap": {
+        "1": {
+          "n": 661,
+          "bias": 0.024,
+          "mae": 1.715,
+          "over": {
+            "n": 10,
+            "hit_pct": 60,
+            "roi_pct": 8.4
+          },
+          "under": {
+            "n": 3,
+            "hit_pct": 100,
+            "roi_pct": 64.7
+          },
+          "both_positive": true
+        },
+        "0.35": {
+          "n": 661,
+          "bias": 0.024,
+          "mae": 1.715,
+          "over": {
+            "n": 124,
+            "hit_pct": 54.8,
+            "roi_pct": -2.2
+          },
+          "under": {
+            "n": 139,
+            "hit_pct": 58.3,
+            "roi_pct": 2.5
+          },
+          "both_positive": false
+        },
+        "0.5": {
+          "n": 661,
+          "bias": 0.024,
+          "mae": 1.715,
+          "over": {
+            "n": 76,
+            "hit_pct": 57.9,
+            "roi_pct": 3.7
+          },
+          "under": {
+            "n": 72,
+            "hit_pct": 63.9,
+            "roi_pct": 10.1
+          },
+          "both_positive": true
+        },
+        "0.75": {
+          "n": 661,
+          "bias": 0.024,
+          "mae": 1.715,
+          "over": {
+            "n": 27,
+            "hit_pct": 59.3,
+            "roi_pct": 9.3
+          },
+          "under": {
+            "n": 19,
+            "hit_pct": 78.9,
+            "roi_pct": 31.7
+          },
+          "both_positive": true
+        },
+        "1.25": {
+          "n": 661,
+          "bias": 0.024,
+          "mae": 1.715,
+          "over": {
+            "n": 4,
+            "hit_pct": 75,
+            "roi_pct": 50.8
+          },
+          "under": null,
+          "both_positive": false
+        }
+      },
+      "recommended": {
+        "gap": 0.5,
+        "n": 661,
+        "bias": 0.024,
+        "mae": 1.715,
+        "over": {
+          "n": 76,
+          "hit_pct": 57.9,
+          "roi_pct": 3.7
+        },
+        "under": {
+          "n": 72,
+          "hit_pct": 63.9,
+          "roi_pct": 10.1
+        },
+        "both_positive": true
+      }
+    },
+    "Fairways hit": {
+      "n": 610,
+      "book_range": [
+        2,
+        15
+      ],
+      "raw_wf": {
+        "n": 610,
+        "bias": -0.661,
+        "mae": 1.926,
+        "over": {
+          "n": 174,
+          "hit_pct": 50.6,
+          "roi_pct": -8.9
+        },
+        "under": {
+          "n": 436,
+          "hit_pct": 53.2,
+          "roi_pct": -3
+        },
+        "both_positive": false
+      },
+      "debiased": {
+        "n": 610,
+        "bias": -0.06,
+        "mae": 1.965,
+        "over": {
+          "n": 174,
+          "hit_pct": 50.6,
+          "roi_pct": -8.9
+        },
+        "under": {
+          "n": 293,
+          "hit_pct": 53.6,
+          "roi_pct": -3
+        },
+        "both_positive": false
+      },
+      "mu_star": {
+        "n": 610,
+        "bias": 0.105,
+        "mae": 1.59,
+        "over": null,
+        "under": {
+          "n": 74,
+          "hit_pct": 40.5,
+          "roi_pct": -27.8
+        },
+        "both_positive": false
+      },
+      "mu_star_by_gap": {
+        "1": {
+          "n": 610,
+          "bias": 0.105,
+          "mae": 1.59,
+          "over": null,
+          "under": null,
+          "both_positive": false
+        },
+        "0.35": {
+          "n": 610,
+          "bias": 0.105,
+          "mae": 1.59,
+          "over": null,
+          "under": {
+            "n": 74,
+            "hit_pct": 40.5,
+            "roi_pct": -27.8
+          },
+          "both_positive": false
+        },
+        "0.5": {
+          "n": 610,
+          "bias": 0.105,
+          "mae": 1.59,
+          "over": null,
+          "under": {
+            "n": 26,
+            "hit_pct": 46.2,
+            "roi_pct": -21.6
+          },
+          "both_positive": false
+        },
+        "0.75": {
+          "n": 610,
+          "bias": 0.105,
+          "mae": 1.59,
+          "over": null,
+          "under": {
+            "n": 1,
+            "hit_pct": 100,
+            "roi_pct": 52.1
+          },
+          "both_positive": false
+        },
+        "1.25": {
+          "n": 610,
+          "bias": 0.105,
+          "mae": 1.59,
+          "over": null,
+          "under": null,
+          "both_positive": false
+        }
+      },
+      "recommended": null
+    }
+  }
+}

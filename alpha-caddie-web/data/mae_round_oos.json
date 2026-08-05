@@ -1,0 +1,267 @@
+{
+  "generated_at": "2026-08-05T01:52:52.518Z",
+  "goal": "minimize MAE vs actual for all round markets",
+  "method": "Walk-forward Connolly–Rendleman / DataGolf stack: exp-decay SG (sequence+calendar), SG-category reweight, shrunk course/year/round/wave/start-hole + course-fit slopes + weather. MAE blends via event LOO residual-on-book (α) and consensus books.",
+  "citations": [
+    "Connolly & Rendleman JASA 2008 — player skill + round-course difficulty",
+    "DataGolf predictive model (2018–2021) — exp decay, SG cats OTT>APP>ARG>PUTT, random-effects course fit, weather",
+    "Efron–Morris / James–Stein shrinkage; arxiv 2506.21822 putting-like stats shrink harder",
+    "Book residual correction: μ* = book + α(model−book) is the MAE-optimal linear blend"
+  ],
+  "constants": {
+    "K": {
+      "Total score": {
+        "course": 8,
+        "year": 5,
+        "round": 8,
+        "wave": 12,
+        "player": 14,
+        "pc": 22,
+        "hole": 18
+      },
+      "Birdies": {
+        "course": 12,
+        "year": 6,
+        "round": 10,
+        "wave": 14,
+        "player": 26,
+        "pc": 24,
+        "hole": 20
+      },
+      "GIR": {
+        "course": 10,
+        "year": 5,
+        "round": 8,
+        "wave": 12,
+        "player": 16,
+        "pc": 16,
+        "hole": 18
+      },
+      "Fairways hit": {
+        "course": 8,
+        "year": 4,
+        "round": 8,
+        "wave": 12,
+        "player": 10,
+        "pc": 12,
+        "hole": 16
+      }
+    },
+    "LAMBDA_SEQ": 0.024079456086518722,
+    "LAMBDA_TIME": 0.0046209812037329686,
+    "SEQ_SHARE": 0.55,
+    "SAME_EVENT_BOOST": 2.4,
+    "CAT_MIX": 0.28,
+    "CAT_BETA": {
+      "ott": 1.15,
+      "app": 1,
+      "arg": 0.88,
+      "putt": 0.55
+    },
+    "FIT_K": 90
+  },
+  "recommended_mu": {
+    "Total score": "consensus_plus_additive_loo",
+    "Birdies": "consensus_plus_wf_loo",
+    "GIR": "blend_add_wf_loo",
+    "Fairways hit": "book_dk"
+  },
+  "excluded_live_event": "Wyndham Championship",
+  "events": [
+    "PGA Championship",
+    "THE CJ CUP Byron Nelson",
+    "Charles Schwab Challenge",
+    "the Memorial Tournament presented by Workday",
+    "RBC Canadian Open",
+    "U.S. Open",
+    "Travelers Championship",
+    "John Deere Classic",
+    "Genesis Scottish Open",
+    "The Open Championship",
+    "3M Open",
+    "Rocket Classic"
+  ],
+  "elapsed_sec": 153,
+  "by_market": {
+    "Total score": {
+      "book_dk": {
+        "n": 1427,
+        "mae": 2.199,
+        "bias": 0.18
+      },
+      "book_consensus": {
+        "n": 1472,
+        "mae": 2.211,
+        "bias": 0.19
+      },
+      "current_wf": {
+        "n": 1660,
+        "mae": 2.384,
+        "bias": 0.82
+      },
+      "additive": {
+        "n": 1661,
+        "mae": 2.325,
+        "bias": -0.38
+      },
+      "blend_add_wf_loo": {
+        "n": 1660,
+        "mae": 2.272,
+        "bias": 0.08,
+        "mean_w_additive": 0.53
+      },
+      "book_plus_additive_loo": {
+        "n": 1661,
+        "mae": 2.19,
+        "bias": -0.17,
+        "mean_alpha": 0.4
+      },
+      "consensus_plus_additive_loo": {
+        "n": 1661,
+        "mae": 2.177,
+        "bias": -0.17,
+        "mean_alpha": 0.38
+      },
+      "consensus_plus_wf_loo": {
+        "n": 1660,
+        "mae": 2.252,
+        "bias": 0.34
+      }
+    },
+    "Birdies": {
+      "book_dk": {
+        "n": 1619,
+        "mae": 1.314,
+        "bias": -0.06
+      },
+      "book_consensus": {
+        "n": 1624,
+        "mae": 1.305,
+        "bias": -0.07
+      },
+      "current_wf": {
+        "n": 1628,
+        "mae": 1.339,
+        "bias": -0.2
+      },
+      "additive": {
+        "n": 1629,
+        "mae": 1.507,
+        "bias": 0.44
+      },
+      "blend_add_wf_loo": {
+        "n": 1628,
+        "mae": 1.344,
+        "bias": -0.07,
+        "mean_w_additive": 0.18
+      },
+      "book_plus_additive_loo": {
+        "n": 1629,
+        "mae": 1.307,
+        "bias": 0.03,
+        "mean_alpha": 0.16
+      },
+      "consensus_plus_additive_loo": {
+        "n": 1629,
+        "mae": 1.3,
+        "bias": 0.01,
+        "mean_alpha": 0.15
+      },
+      "consensus_plus_wf_loo": {
+        "n": 1628,
+        "mae": 1.299,
+        "bias": -0.1
+      }
+    },
+    "GIR": {
+      "book_dk": {
+        "n": 661,
+        "mae": 1.757,
+        "bias": 0.03
+      },
+      "book_consensus": {
+        "n": 661,
+        "mae": 1.755,
+        "bias": 0.03
+      },
+      "current_wf": {
+        "n": 1659,
+        "mae": 1.814,
+        "bias": -0.55
+      },
+      "additive": {
+        "n": 1661,
+        "mae": 1.728,
+        "bias": -0.06
+      },
+      "blend_add_wf_loo": {
+        "n": 1659,
+        "mae": 1.707,
+        "bias": -0.21,
+        "mean_w_additive": 0.7
+      },
+      "book_plus_additive_loo": {
+        "n": 1661,
+        "mae": 1.715,
+        "bias": -0.04,
+        "mean_alpha": 0.55
+      },
+      "consensus_plus_additive_loo": {
+        "n": 1661,
+        "mae": 1.715,
+        "bias": -0.04,
+        "mean_alpha": 0.55
+      },
+      "consensus_plus_wf_loo": {
+        "n": 1659,
+        "mae": 1.786,
+        "bias": -0.39
+      }
+    },
+    "Fairways hit": {
+      "book_dk": {
+        "n": 610,
+        "mae": 1.585,
+        "bias": 0.17
+      },
+      "book_consensus": {
+        "n": 610,
+        "mae": 1.585,
+        "bias": 0.17
+      },
+      "current_wf": {
+        "n": 1650,
+        "mae": 2.041,
+        "bias": -0.5
+      },
+      "additive": {
+        "n": 1651,
+        "mae": 1.717,
+        "bias": -0.06
+      },
+      "blend_add_wf_loo": {
+        "n": 1650,
+        "mae": 1.725,
+        "bias": -0.07,
+        "mean_w_additive": 0.99
+      },
+      "book_plus_additive_loo": {
+        "n": 1651,
+        "mae": 1.692,
+        "bias": 0.03,
+        "mean_alpha": 0.25
+      },
+      "consensus_plus_additive_loo": {
+        "n": 1651,
+        "mae": 1.692,
+        "bias": 0.03,
+        "mean_alpha": 0.25
+      },
+      "consensus_plus_wf_loo": {
+        "n": 1650,
+        "mae": 1.915,
+        "bias": -0.24
+      }
+    }
+  }
+}

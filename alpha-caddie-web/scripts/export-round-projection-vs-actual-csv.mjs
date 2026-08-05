@@ -5,6 +5,7 @@
  *
  * Walk-forward backtest and live week both use historical course anchor
  * (walkforwardBacktestPipelineEnv / liveProjectionPipelineEnv). Model lines are raw μ
+ * (skill12+year, course SG fit, wave weather) — GOLF_EXPORT_RAW_MODEL_MU=1 skips DK Bayesian blend.
  * are raw walk-forward μ at bet time — not book-calibrated snapshots from the audit log. DK lines/odds only
  * from pre-round audit (or live_snapshot for in-progress weeks with real DK props).
  *
@@ -1042,24 +1043,27 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
         const openUnder = Number.isFinite(snap?.openUnder) ? snap.openUnder : underOdds;
         const openCapturedMs = snap?.openCapturedMs;
         const closeCapturedMs = snap?.capturedMs;
-        // Independent rolling-course model is evidence; sharp no-vig odds are
-        // the prior. If no real two-way prior exists, retain the pure model.
+        // Independent skill/course model is the export μ. Never Bayesian-blend toward DK.
         const independentModelLine = Number.isFinite(wfModelLine) ? wfModelLine : auditModelLine;
-        const bayesian = bayesianPosteriorForProp({
-          market: spec.market,
-          modelMean: independentModelLine,
-          prop: {
-            line: bookLine,
-            over_odds: overOdds,
-            under_odds: underOdds,
-            source: "draftkings",
-          },
-          roundSd: 3.2,
-          fairwayHoles,
-        });
-        const rawModelLine = Number.isFinite(bayesian?.posterior_mean)
-          ? bayesian.posterior_mean
-          : independentModelLine;
+        const exportRaw =
+          String(process.env.GOLF_EXPORT_RAW_MODEL_MU || "1").trim() !== "0" &&
+          String(process.env.GOLF_EXPORT_RAW_MODEL_MU || "1").trim().toLowerCase() !== "false";
+        let rawModelLine = independentModelLine;
+        if (!exportRaw) {
+          const bayesian = bayesianPosteriorForProp({
+            market: spec.market,
+            modelMean: independentModelLine,
+            prop: {
+              line: bookLine,
+              over_odds: overOdds,
+              under_odds: underOdds,
+              source: "draftkings",
+            },
+            roundSd: 3.2,
+            fairwayHoles,
+          });
+          if (Number.isFinite(bayesian?.posterior_mean)) rawModelLine = bayesian.posterior_mean;
+        }
         if (Number.isFinite(overOdds) || Number.isFinite(underOdds)) hasBookOdds = true;
 
         if (Number.isFinite(rawModelLine) && Number.isFinite(bookLine)) {
@@ -1465,7 +1469,9 @@ function fmtLine(market, mu) {
 function fmtModelLine(market, mu) {
   if (!Number.isFinite(mu)) return "";
   if (market === "Total score") return (Math.round(mu * 10) / 10).toFixed(1);
-  if (market === "Birdies" || market === "Bogeys" || market === "GIR") return (Math.round(mu * 10) / 10).toFixed(1);
+  if (market === "Birdies" || market === "Bogeys" || market === "Pars" || market === "GIR") {
+    return (Math.round(mu * 10) / 10).toFixed(1);
+  }
   return String(Math.round(mu));
 }
 

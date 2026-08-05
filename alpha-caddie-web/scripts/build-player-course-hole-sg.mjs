@@ -43,8 +43,24 @@ function argNum(name, fb) {
   return Number.isFinite(n) ? n : fb;
 }
 const MAX_ROWS = argNum("max-rows", Infinity);
-const WRITE_PLAYS = hasFlag("plays") || String(process.env.GOLF_COURSE_HOLE_SG_PLAYS || "").trim() === "1";
+const WRITE_PLAYS =
+  !hasFlag("no-plays") &&
+  (hasFlag("plays") ||
+    String(process.env.GOLF_COURSE_HOLE_SG_PLAYS || "1").trim() !== "0");
 const MIN_BASELINE_N = argNum("min-baseline-n", 30);
+
+function parseEventCompletedMs(s) {
+  const raw = String(s || "").trim();
+  const iso = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) return Date.parse(`${iso[1]}-${iso[2]}-${iso[3]}T12:00:00Z`);
+  const mdy = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (mdy) {
+    return Date.parse(
+      `${mdy[3]}-${mdy[1].padStart(2, "0")}-${mdy[2].padStart(2, "0")}T12:00:00Z`,
+    );
+  }
+  return NaN;
+}
 
 function num(v, fb = NaN) {
   const n = Number(v);
@@ -113,7 +129,7 @@ async function loadTournamentCourseFallback() {
  */
 async function loadHistoricalCourseIndex() {
   const file = existsSync(HIST) ? HIST : HIST_FALLBACK;
-  /** @type {Map<string, {course_num:number|null, course_name:string, course_key:string}>} */
+  /** @type {Map<string, {course_num:number|null, course_name:string, course_key:string, time_ms:number}>} */
   const idx = new Map();
   let n = 0;
   if (!existsSync(file)) {
@@ -130,10 +146,16 @@ async function loadHistoricalCourseIndex() {
         const rnd = Math.round(num(r.round_num, NaN));
         const cname = String(r.course_name || "").trim();
         if (!Number.isFinite(dg) || !Number.isFinite(yr) || !Number.isFinite(rnd) || !cname) return;
+        let time_ms = parseEventCompletedMs(r.event_completed);
+        if (!Number.isFinite(time_ms) && Number.isFinite(yr)) {
+          // Mid-year proxy so as-of can still order seasons without dates.
+          time_ms = Date.parse(`${yr}-06-01T12:00:00Z`) + rnd * 86400000;
+        }
         const payload = {
           course_num: Number.isFinite(num(r.course_num, NaN)) ? Math.round(num(r.course_num)) : null,
           course_name: cname,
           course_key: normCourseNameKey(cname),
+          time_ms,
         };
         const evt = normEvt(r.event_name);
         if (evt) idx.set(`n|${dg}|${yr}|${evt}|${rnd}`, payload);
@@ -224,7 +246,16 @@ function resolveCourse(play, dg, histIdx, tidCourse) {
   }
   const fb = tidCourse.get(play.tid);
   if (fb) {
-    return { course_num: null, course_name: fb.course_name, course_key: fb.course_key };
+    const yr = play.year;
+    const time_ms = Number.isFinite(yr)
+      ? Date.parse(`${yr}-06-01T12:00:00Z`) + (Number.isFinite(play.rnd) ? play.rnd * 86400000 : 0)
+      : NaN;
+    return {
+      course_num: null,
+      course_name: fb.course_name,
+      course_key: fb.course_key,
+      time_ms,
+    };
   }
   return null;
 }
@@ -304,6 +335,7 @@ for (const play of holePlays.values()) {
     course_key: course.course_key,
     course_name: course.course_name,
     course_num: course.course_num,
+    time_ms: Number.isFinite(course.time_ms) ? course.time_ms : NaN,
   });
 }
 
@@ -351,6 +383,7 @@ if (WRITE_PLAYS) {
       "score",
       "field_mean",
       "sg",
+      "time_ms",
     ].join(",") + "\n",
   );
 }
@@ -409,6 +442,7 @@ for (const p of enriched) {
         p.score,
         bl.mean_score.toFixed(4),
         sg.toFixed(4),
+        Number.isFinite(p.time_ms) ? Math.round(p.time_ms) : "",
       ].join(",") + "\n",
     );
   }

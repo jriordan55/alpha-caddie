@@ -1,0 +1,143 @@
+{
+  "generated_at": "2026-08-05T02:04:01.989Z",
+  "goal": "unbiased μ with both-side O/U edge vs DK",
+  "method": "Event LOO: bias = mean(model−actual); α from regressing (actual−book) on (debiased−book); μ*=book+α(μ_deb−book)",
+  "excluded_live_event": "Wyndham Championship",
+  "markets": {
+    "Total score": {
+      "bias": 0.801,
+      "alpha": 0.379,
+      "min_gap_both_sides": 0.5,
+      "n": 1427,
+      "n_events": 12,
+      "loo_mae": 2.167,
+      "loo_bias": 0.134,
+      "both_side_gaps": [
+        {
+          "gap": 0.5,
+          "over": {
+            "n": 140,
+            "hit_pct": 55.7,
+            "roi_pct": 0.7
+          },
+          "under": {
+            "n": 138,
+            "hit_pct": 67.4,
+            "roi_pct": 21.6
+          }
+        },
+        {
+          "gap": 0.75,
+          "over": {
+            "n": 68,
+            "hit_pct": 61.8,
+            "roi_pct": 9.9
+          },
+          "under": {
+            "n": 26,
+            "hit_pct": 73.1,
+            "roi_pct": 28
+          }
+        }
+      ],
+      "recommended_gap": 0.5,
+      "book_range": [
+        55,
+        95
+      ],
+      "side": "both",
+      "notes": "Both O/U flat ROI > 0 at |μ*−book|≥0.5 (event LOO)"
+    },
+    "Birdies": {
+      "bias": -0.201,
+      "alpha": 0.295,
+      "min_gap_both_sides": 0.75,
+      "n": 1619,
+      "n_events": 12,
+      "loo_mae": 1.304,
+      "loo_bias": -0.043,
+      "both_side_gaps": [],
+      "recommended_gap": null,
+      "book_range": [
+        0.5,
+        12
+      ],
+      "side": "both",
+      "notes": "No gap found with both sides +ROI at n≥8; prefer pass / softer books"
+    },
+    "GIR": {
+      "bias": -0.582,
+      "alpha": 0.491,
+      "min_gap_both_sides": 0.25,
+      "n": 661,
+      "n_events": 11,
+      "loo_mae": 1.715,
+      "loo_bias": 0.024,
+      "both_side_gaps": [
+        {
+          "gap": 0.25,
+          "over": {
+            "n": 168,
+            "hit_pct": 57.1,
+            "roi_pct": 2.4
+          },
+          "under": {
+            "n": 190,
+            "hit_pct": 56.8,
+            "roi_pct": 0.7
+          }
+        },
+        {
+          "gap": 0.5,
+          "over": {
+            "n": 76,
+            "hit_pct": 57.9,
+            "roi_pct": 3.7
+          },
+          "under": {
+            "n": 72,
+            "hit_pct": 63.9,
+            "roi_pct": 10.1
+          }
+        },
+        {
+          "gap": 0.75,
+          "over": {
+            "n": 27,
+            "hit_pct": 59.3,
+            "roi_pct": 9.3
+          },
+          "under": {
+            "n": 19,
+            "hit_pct": 78.9,
+            "roi_pct": 31.7
+          }
+        }
+      ],
+      "recommended_gap": 0.25,
+      "book_range": [
+        4,
+        18
+      ],
+      "side": "both",
+      "notes": "Both O/U flat ROI > 0 at |μ*−book|≥0.25 (event LOO)"
+    },
+    "Fairways hit": {
+      "bias": -0.655,
+      "alpha": 0.081,
+      "min_gap_both_sides": 0.75,
+      "n": 610,
+      "n_events": 10,
+      "loo_mae": 1.59,
+      "loo_bias": 0.105,
+      "both_side_gaps": [],
+      "recommended_gap": null,
+      "book_range": [
+        2,
+        15
+      ],
+      "side": "both",
+      "notes": "No gap found with both sides +ROI at n≥8; prefer pass / softer books"
+    }
+  }
+}

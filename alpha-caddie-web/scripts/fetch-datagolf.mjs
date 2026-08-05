@@ -94,6 +94,17 @@ import {
   updateProjectionBasisFromEventWeek,
   withinEventCountingBlendWeight,
 } from "./course-round-adjustments.mjs";
+import {
+  applyHoleSgToBirdies,
+  buildHoleSgAdjustmentsAsOf,
+  holeSgBlendEnabled,
+} from "./course-hole-sg-asof.mjs";
+import {
+  applyDistanceSgToBirdies,
+  applyGranularSgToScoreStp,
+  buildDistanceSgAdjustmentsAsOf,
+  distanceSgBlendEnabled,
+} from "./course-distance-sg-asof.mjs";
 import { holeParsFromLiveHoleStatsPayload } from "./dg-live-hole-pars.mjs";
 import { normCourseNameKey, formatCourseLabelForDisplay } from "./course-name-key.mjs";
 import {
@@ -2668,6 +2679,50 @@ async function main() {
     );
   }
   const withinEventLiveWeek = dr >= 2 || withinEventCountingMap.size > 0;
+
+  /** @type {Map<number, Map<number, object>>} */
+  const holeSgByRound = new Map();
+  /** @type {Map<number, Map<number, object>>} */
+  const distSgByRound = new Map();
+  if ((holeSgBlendEnabled() || distanceSgBlendEnabled()) && courseKeyHist) {
+    const eventYearLive = (() => {
+      const y = Math.round(
+        num(
+          fieldRaw?.year ?? fieldRaw?.season ?? fieldRaw?.event_year,
+          NaN,
+        ),
+      );
+      if (Number.isFinite(y) && y >= 2015 && y <= 2100) return y;
+      return new Date().getUTCFullYear();
+    })();
+    const cutoffLive = Date.now();
+    for (let rr = 1; rr <= 4; rr++) {
+      const opts = {
+        webRoot: ROOT,
+        courseKey: courseKeyHist,
+        courseName: course_used,
+        cutoffMs: cutoffLive,
+        eventName: event_name,
+        eventYear: eventYearLive,
+        targetRound: rr,
+        fieldDgIds,
+      };
+      const [holeM, distM] = await Promise.all([
+        holeSgBlendEnabled() ? buildHoleSgAdjustmentsAsOf(opts) : Promise.resolve(new Map()),
+        distanceSgBlendEnabled() ? buildDistanceSgAdjustmentsAsOf(opts) : Promise.resolve(new Map()),
+      ]);
+      holeSgByRound.set(rr, holeM);
+      distSgByRound.set(rr, distM);
+    }
+    const coveredHole = holeSgByRound.get(dr)?.size || 0;
+    const coveredDist = distSgByRound.get(dr)?.size || 0;
+    if (coveredHole || coveredDist) {
+      console.log(
+        `[fetch-dg] Granular SG blend R${dr}: hole=${coveredHole} players, distance(app/putt)=${coveredDist} players (course-focused)`,
+      );
+    }
+  }
+
   for (let r = 1; r <= 4; r++) {
     const mult = flatVenueScore
       ? 1
@@ -2742,8 +2797,12 @@ async function main() {
         fieldMeanMu: fieldMeanMuRound,
         courseAdjStp: courseAdjScoreToPar,
       });
-      if (scoreRes.source in scoreSourceCounts) scoreSourceCounts[scoreRes.source]++;
-      const stp = scoreRes.stp;
+      const holeAdj = holeSgByRound.get(r)?.get(Math.round(num(row.dg_id, NaN)));
+      const distAdj = distSgByRound.get(r)?.get(Math.round(num(row.dg_id, NaN)));
+      const scored = applyGranularSgToScoreStp(scoreRes.stp, holeAdj, distAdj, scoreRes.source);
+      if (scored.source in scoreSourceCounts) scoreSourceCounts[scored.source]++;
+      else if (scoreRes.source in scoreSourceCounts) scoreSourceCounts[scoreRes.source]++;
+      const stp = scored.stp;
       const ts = course_par_18 + stp;
 
       const venueCounts = resolveProjectionCounts({
@@ -2766,7 +2825,7 @@ async function main() {
         courseSkillAnchor: Number.isFinite(courseFairwayRate01) || Number.isFinite(courseGirRate01),
       });
       st.eagles = venueCounts.eagles;
-      st.birdies = venueCounts.birdies;
+      st.birdies = applyDistanceSgToBirdies(applyHoleSgToBirdies(venueCounts.birdies, holeAdj), distAdj);
       st.pars = venueCounts.pars;
       st.bogeys = venueCounts.bogeys;
       st.doubles = venueCounts.doubles;
@@ -2824,7 +2883,7 @@ async function main() {
         score_to_par: Math.round(stp * 100) / 100,
         total_score: Math.round(ts * 100) / 100,
         course_par: course_par_18,
-        score_source: scoreRes.source,
+        score_source: scored.source,
         round_sd: RAW_ROUND_SD,
         gir: Math.round(st.gir * 100) / 100,
         fairways: Math.round(st.fairways * 100) / 100,
