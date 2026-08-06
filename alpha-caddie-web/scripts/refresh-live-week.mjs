@@ -149,7 +149,7 @@ function mirrorWebsitePublicData() {
     "approach_skill_ytd.json",
     "approach_skill_l12.json",
   ];
-  const dataFiles = ["parlay_correlations.json"];
+  const dataFiles = ["parlay_correlations.json", "live_hole_props.json", "both_side_roi.json", "both_side_bets.json"];
   console.log("\n[refresh:live] Mirroring JSON → website/public/data/ …\n");
   for (const name of files) {
     const src = path.join(WEB_ROOT, name);
@@ -337,6 +337,19 @@ run(
   "merge-live-in-play-scratch-into-projections.mjs",
   "Live thru/today/current_score → projections + in_play_affects_round_odds for +EV",
 );
+
+if (!envTruthy("GOLF_SKIP_HOLE_PROPS", false)) {
+  run("fetch-dk-hole-props.mjs", "DraftKings hole score + hole winner props (fetch:dk-hole)", {}, softOpt);
+  run("fetch-ud-hole-props.mjs", "Underdog holes 10-18 / 16-17-18 props (fetch:ud-hole)", {}, softOpt);
+  run(
+    "bake-hole-props-projections.mjs",
+    "Bake hole props projections (hole avg + SG) → data/live_hole_props.json",
+    { GOLF_HOLE_PROPS_SKIP_FETCH: "1" },
+    softOpt,
+  );
+} else {
+  console.log("[refresh:live] Skipping hole props (GOLF_SKIP_HOLE_PROPS=1).\n");
+}
 
 if (!envTruthy("GOLF_SKIP_PIN_SHEET", false)) {
   run(

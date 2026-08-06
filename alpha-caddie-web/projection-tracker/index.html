@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Both-side edge · AlphaCaddie</title>
+  <title>Projections · AlphaCaddie</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -14,163 +14,253 @@
     <div class="top-inner">
       <div>
         <p class="eyebrow">AlphaCaddie</p>
-        <h1>Both-side edge</h1>
-        <p class="lede">Only markets where OVER and UNDER both print historically. Gap + bias from walk-forward bake.</p>
+        <h1 id="page-title">Both-side edge</h1>
+        <p class="lede" id="page-lede">Only markets where OVER and UNDER both print historically. Gap + bias from walk-forward bake.</p>
       </div>
       <div class="top-actions">
         <button type="button" class="btn" id="btn-reload">Reload</button>
         <a class="btn btn-ghost" href="../matchup-tracker/">Matchups</a>
       </div>
     </div>
+    <nav class="tab-nav" aria-label="Projection views">
+      <button type="button" class="tab-btn active" data-tab="both-side">Both-side edge</button>
+      <button type="button" class="tab-btn" data-tab="hole-props">Hole Props</button>
+    </nav>
   </header>
 
   <main class="wrap">
     <p id="error" class="error" hidden></p>
 
-    <section class="hero-kpis" id="hero-kpis">
-      <div class="kpi"><span class="kpi-label">Both-side markets</span><strong id="kpi-markets">—</strong></div>
-      <div class="kpi"><span class="kpi-label">Combined PnL</span><strong id="kpi-pnl">—</strong></div>
-      <div class="kpi"><span class="kpi-label">Bets</span><strong id="kpi-bets">—</strong></div>
-      <div class="kpi"><span class="kpi-label">Min side ROI</span><strong id="kpi-minroi">—</strong></div>
-    </section>
+    <div id="panel-both-side" class="tab-panel">
+      <section class="hero-kpis" id="hero-kpis">
+        <div class="kpi"><span class="kpi-label">Both-side markets</span><strong id="kpi-markets">—</strong></div>
+        <div class="kpi"><span class="kpi-label">Combined PnL</span><strong id="kpi-pnl">—</strong></div>
+        <div class="kpi"><span class="kpi-label">Bets</span><strong id="kpi-bets">—</strong></div>
+        <div class="kpi"><span class="kpi-label">Min side ROI</span><strong id="kpi-minroi">—</strong></div>
+      </section>
 
-    <section class="card">
-      <h2>Market report card</h2>
-      <p class="note">Green = OVER and UNDER both &gt; 0% ROI (≥40 bets/side). Red markets are disabled for live picks.</p>
-      <div class="table-scroll">
-        <table id="market-table">
-          <thead>
-            <tr>
-              <th>Market</th>
-              <th>Status</th>
-              <th class="num">Gap</th>
-              <th>Bias</th>
-              <th class="num">Over bets</th>
-              <th class="num">Over ROI</th>
-              <th class="num">Under bets</th>
-              <th class="num">Under ROI</th>
-              <th class="num">Min ROI</th>
-              <th class="num">PnL ($100)</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="card-head">
-        <h2>Analytics</h2>
-        <p class="note">Cumulative bankroll, drawdown, PnL, and ROI across graded both-side bets (chronological by date). Flat $100 stakes.</p>
-      </div>
-      <div class="filters">
-        <label>Market
-          <select id="an-market"><option value="">All passing markets</option></select>
-        </label>
-        <label>Tournament
-          <select id="an-event"><option value="">All events</option></select>
-        </label>
-        <label>Start bankroll ($)
-          <input id="an-bankroll" type="number" min="100" step="100" value="10000" />
-        </label>
-      </div>
-      <div class="kpi-row" id="an-kpis"></div>
-      <div class="charts-grid">
-        <div class="chart-card">
-          <h3>Cumulative PnL</h3>
-          <canvas id="chart-pnl" height="220" aria-label="Cumulative PnL over time"></canvas>
+      <section class="card">
+        <h2>Market report card</h2>
+        <p class="note">Green = OVER and UNDER both &gt; 0% ROI (≥40 bets/side). Red markets are disabled for live picks.</p>
+        <div class="table-scroll">
+          <table id="market-table">
+            <thead>
+              <tr>
+                <th>Market</th>
+                <th>Status</th>
+                <th class="num">Gap</th>
+                <th>Bias</th>
+                <th class="num">Over bets</th>
+                <th class="num">Over ROI</th>
+                <th class="num">Under bets</th>
+                <th class="num">Under ROI</th>
+                <th class="num">Min ROI</th>
+                <th class="num">PnL ($100)</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
         </div>
-        <div class="chart-card">
-          <h3>Bankroll &amp; drawdown</h3>
-          <canvas id="chart-bankroll" height="220" aria-label="Bankroll and drawdown over time"></canvas>
-        </div>
-        <div class="chart-card chart-card-wide">
-          <h3>Cumulative ROI</h3>
-          <canvas id="chart-roi" height="220" aria-label="Cumulative ROI over time"></canvas>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="card">
-      <div class="card-head">
-        <h2>Live picks</h2>
-        <p class="note" id="live-note">Loading projections…</p>
-      </div>
-      <div class="filters">
-        <label>Market
-          <select id="live-market"><option value="">Both-side markets only</option></select>
-        </label>
-        <label>Min |μ − line|
-          <select id="live-gap">
-            <option value="policy" selected>Policy gap</option>
-            <option value="0.5">0.5</option>
-            <option value="0.75">0.75</option>
-            <option value="1">1.0</option>
-            <option value="1.5">1.5</option>
-          </select>
-        </label>
-      </div>
-      <div class="table-scroll">
-        <table id="live-table">
-          <thead>
-            <tr>
-              <th>Player</th>
-              <th>Market</th>
-              <th class="num">Side</th>
-              <th class="num">Model μ</th>
-              <th class="num">DK line</th>
-              <th class="num">Gap</th>
-              <th class="num">Odds</th>
-              <th class="num">Edge</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
+      <section class="card">
+        <div class="card-head">
+          <h2>Analytics</h2>
+          <p class="note">Cumulative bankroll, drawdown, PnL, and ROI across graded both-side bets (all sportsbooks, chronological by date). Flat $100 stakes.</p>
+        </div>
+        <div class="filters">
+          <label>Market
+            <select id="an-market"><option value="">All passing markets</option></select>
+          </label>
+          <label>Book
+            <select id="an-book"><option value="">All books</option></select>
+          </label>
+          <label>Tournament
+            <select id="an-event"><option value="">All events</option></select>
+          </label>
+          <label>Start bankroll ($)
+            <input id="an-bankroll" type="number" min="100" step="100" value="10000" />
+          </label>
+        </div>
+        <div class="kpi-row" id="an-kpis"></div>
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h3>Cumulative PnL</h3>
+            <canvas id="chart-pnl" height="220" aria-label="Cumulative PnL over time"></canvas>
+          </div>
+          <div class="chart-card">
+            <h3>Bankroll &amp; drawdown</h3>
+            <canvas id="chart-bankroll" height="220" aria-label="Bankroll and drawdown over time"></canvas>
+          </div>
+          <div class="chart-card chart-card-wide">
+            <h3>Cumulative ROI</h3>
+            <canvas id="chart-roi" height="220" aria-label="Cumulative ROI over time"></canvas>
+          </div>
+        </div>
+      </section>
 
-    <section class="card">
-      <div class="card-head">
-        <h2>Graded both-side bets</h2>
-        <p class="note">Historical DK lines under each market’s recommended gap + bias. Flat $100.</p>
-      </div>
-      <div class="filters">
-        <label>Market
-          <select id="hist-market"><option value="">All passing markets</option></select>
-        </label>
-        <label>Side
-          <select id="hist-side">
-            <option value="">Both</option>
-            <option value="over">Over</option>
-            <option value="under">Under</option>
-          </select>
-        </label>
-        <label>Event
-          <select id="hist-event"><option value="">All events</option></select>
-        </label>
-      </div>
-      <div class="kpi-row" id="hist-kpis"></div>
-      <div class="table-scroll">
-        <table id="hist-table">
-          <thead>
-            <tr>
-              <th>Event</th>
-              <th class="num">R</th>
-              <th>Player</th>
-              <th>Market</th>
-              <th class="num">Side</th>
-              <th class="num">μ</th>
-              <th class="num">Line</th>
-              <th class="num">Odds</th>
-              <th class="num">Actual</th>
-              <th>Result</th>
-              <th class="num">PnL</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
+      <section class="card">
+        <div class="card-head">
+          <h2>Live picks</h2>
+          <p class="note" id="live-note">Loading projections…</p>
+        </div>
+        <div class="filters">
+          <label>Market
+            <select id="live-market"><option value="">Both-side markets only</option></select>
+          </label>
+          <label>Book
+            <select id="live-book"><option value="">All books</option></select>
+          </label>
+          <label>Min |μ − line|
+            <select id="live-gap">
+              <option value="policy" selected>Policy gap</option>
+              <option value="0.5">0.5</option>
+              <option value="0.75">0.75</option>
+              <option value="1">1.0</option>
+              <option value="1.5">1.5</option>
+            </select>
+          </label>
+        </div>
+        <div class="table-scroll">
+          <table id="live-table">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Book</th>
+                <th>Market</th>
+                <th class="num">Side</th>
+                <th class="num">Model μ</th>
+                <th class="num">Line</th>
+                <th class="num">Gap</th>
+                <th class="num">Odds</th>
+                <th class="num">Edge</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Graded both-side bets</h2>
+          <p class="note">Historical lines across all sportsbooks under each market’s recommended gap + bias. Flat $100.</p>
+        </div>
+        <div class="filters">
+          <label>Market
+            <select id="hist-market"><option value="">All passing markets</option></select>
+          </label>
+          <label>Book
+            <select id="hist-book"><option value="">All books</option></select>
+          </label>
+          <label>Side
+            <select id="hist-side">
+              <option value="">Both</option>
+              <option value="over">Over</option>
+              <option value="under">Under</option>
+            </select>
+          </label>
+          <label>Event
+            <select id="hist-event"><option value="">All events</option></select>
+          </label>
+        </div>
+        <div class="kpi-row" id="hist-kpis"></div>
+        <div class="table-scroll">
+          <table id="hist-table">
+            <thead>
+              <tr>
+                <th>Event</th>
+                <th class="num">R</th>
+                <th>Player</th>
+                <th>Book</th>
+                <th>Market</th>
+                <th class="num">Side</th>
+                <th class="num">μ</th>
+                <th class="num">Line</th>
+                <th class="num">Odds</th>
+                <th class="num">Actual</th>
+                <th>Result</th>
+                <th class="num">PnL</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <div id="panel-hole-props" class="tab-panel" hidden>
+      <section class="hero-kpis" id="hp-kpis">
+        <div class="kpi"><span class="kpi-label">Projections</span><strong id="hp-kpi-n">—</strong></div>
+        <div class="kpi"><span class="kpi-label">+Edge rows</span><strong id="hp-kpi-edge">—</strong></div>
+        <div class="kpi"><span class="kpi-label">Best EV</span><strong id="hp-kpi-ev">—</strong></div>
+        <div class="kpi"><span class="kpi-label">Hole history</span><strong id="hp-kpi-cov">—</strong></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Hole Props</h2>
+          <p class="note" id="hp-note">Model μ from course hole average + strokes gained. DK hole score / winner / matchup · UD holes 10–18 / 16–17–18.</p>
+        </div>
+        <div class="filters">
+          <label>Market
+            <select id="hp-market">
+              <option value="">All markets</option>
+              <option value="Hole Score">Hole Score</option>
+              <option value="Hole Winner">Hole Winner</option>
+              <option value="Hole Matchup">Hole Matchup</option>
+              <option value="Holes 10-18">Holes 10-18</option>
+              <option value="Holes 16-17-18">Holes 16-17-18</option>
+            </select>
+          </label>
+          <label>Book
+            <select id="hp-book">
+              <option value="">All books</option>
+              <option value="draftkings">DraftKings</option>
+              <option value="underdog">Underdog</option>
+              <option value="model">Model only</option>
+            </select>
+          </label>
+          <label>Hole
+            <select id="hp-hole">
+              <option value="">All</option>
+            </select>
+          </label>
+          <label>Min edge
+            <select id="hp-min-edge">
+              <option value="0">Any</option>
+              <option value="0.02" selected>≥2%</option>
+              <option value="0.05">≥5%</option>
+              <option value="0.08">≥8%</option>
+            </select>
+          </label>
+          <label>Player
+            <input id="hp-player" type="search" placeholder="Search…" />
+          </label>
+        </div>
+        <div class="table-scroll">
+          <table id="hp-table">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Book</th>
+                <th>Market</th>
+                <th class="num">Hole(s)</th>
+                <th class="num">μ</th>
+                <th class="num">Line</th>
+                <th class="num">Side</th>
+                <th class="num">Model %</th>
+                <th class="num">Implied %</th>
+                <th class="num">Edge</th>
+                <th class="num">EV</th>
+                <th class="num">Odds</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>

@@ -5,6 +5,7 @@ const ROI_URL = "../data/both_side_roi.json";
 const BETS_URL = "../data/both_side_bets.json";
 const PROJ_URL = "../projections.json";
 const LIVE_PROPS_URL = "../data/live_event_book_props.json";
+const HOLE_PROPS_URL = "../data/live_hole_props.json";
 
 const MARKET_TO_PLAYER = {
   "Total score": (p) => Number(p.total_score),
@@ -15,7 +16,8 @@ const MARKET_TO_PLAYER = {
   "Fairways hit": (p) => Number(p.fairways),
 };
 
-const DK_MARKET = {
+/** ROI market → live props market label */
+const PROP_MARKET = {
   "Total score": "Total Score",
   Birdies: "Birdies",
   Bogeys: "Bogeys",
@@ -24,12 +26,24 @@ const DK_MARKET = {
   "Fairways hit": "Fairways hit",
 };
 
+const LIVE_BOOKS = [
+  { id: "draftkings", label: "DraftKings", short: "dk" },
+  { id: "prizepicks", label: "PrizePicks", short: "pp" },
+  { id: "sleeper", label: "Sleeper", short: "sl" },
+  { id: "underdog", label: "Underdog", short: "ud" },
+  { id: "fanduel", label: "FanDuel", short: "fd" },
+  { id: "caesars", label: "Caesars", short: "czr" },
+  { id: "kalshi", label: "Kalshi", short: "kl" },
+];
+
 let ROI = null;
 let BETS = null;
 let PROJ = null;
 let LIVE_PROPS = null;
+let HOLE_PROPS = null;
 /** @type {{ pnl?: import("chart.js").Chart, bank?: import("chart.js").Chart, roi?: import("chart.js").Chart }} */
 let AN_CHARTS = {};
+let ACTIVE_TAB = "both-side";
 
 const STAKE = 100;
 
@@ -67,6 +81,35 @@ async function loadJson(url) {
 
 function passingMarkets() {
   return ROI?.overall?.both_side_positive_markets || [];
+}
+
+function bookCatalog() {
+  const fromRoi = Array.isArray(ROI?.books) ? ROI.books : [];
+  if (fromRoi.length) return fromRoi.map((b) => ({ id: b.id, label: b.label || b.id }));
+  const ids = new Set();
+  for (const b of BETS?.bets || []) {
+    if (b.book_id) ids.add(b.book_id);
+  }
+  if (ids.size) {
+    return [...ids].map((id) => {
+      const hit = LIVE_BOOKS.find((x) => x.id === id);
+      return { id, label: hit?.label || id };
+    });
+  }
+  return LIVE_BOOKS.map((b) => ({ id: b.id, label: b.label }));
+}
+
+function fillBookSelects() {
+  const books = bookCatalog();
+  for (const id of ["live-book", "hist-book", "an-book"]) {
+    const sel = $(id);
+    if (!sel) continue;
+    const cur = sel.value;
+    sel.innerHTML =
+      `<option value="">All books</option>` +
+      books.map((b) => `<option value="${b.id}">${b.label}</option>`).join("");
+    if ([...sel.options].some((o) => o.value === cur)) sel.value = cur;
+  }
 }
 
 function renderHero() {
@@ -170,6 +213,7 @@ function fillMarketSelects() {
       events.map((e) => `<option value="${e}">${e}</option>`).join("");
     if ([...es.options].some((o) => o.value === evCur)) es.value = evCur;
   }
+  fillBookSelects();
 }
 
 function histFiltered() {
@@ -177,11 +221,13 @@ function histFiltered() {
   const mkt = $("hist-market").value;
   const side = $("hist-side").value;
   const ev = $("hist-event").value;
+  const book = $("hist-book")?.value || "";
   return (BETS?.bets || []).filter((b) => {
     if (!pass.has(b.market)) return false;
     if (mkt && b.market !== mkt) return false;
     if (side && String(b.side).toLowerCase() !== side) return false;
     if (ev && b.event !== ev) return false;
+    if (book && b.book_id !== book) return false;
     return true;
   });
 }
@@ -210,10 +256,12 @@ function renderHist() {
   $("hist-table").querySelector("tbody").innerHTML = show
     .map((b) => {
       const resCls = b.result === "W" ? "pos" : b.result === "L" ? "neg" : "";
+      const bookLabel = b.book_label || b.book_id || "—";
       return `<tr>
         <td>${b.event}</td>
         <td class="num">${b.round ?? ""}</td>
         <td>${b.player || ""}</td>
+        <td>${bookLabel}</td>
         <td>${b.market}</td>
         <td class="num">${b.side}</td>
         <td class="num">${Number(b.model).toFixed(1)}</td>
@@ -227,20 +275,27 @@ function renderHist() {
     .join("");
 }
 
-function dkPropIndex() {
-  const pack = LIVE_PROPS?.pre_round_dk || LIVE_PROPS?.live_dk || {};
-  return pack;
+function bookPropPack(book) {
+  if (!LIVE_PROPS) return {};
+  const pre = LIVE_PROPS[`pre_round_${book.short}`];
+  const live = LIVE_PROPS[`live_${book.short}`];
+  if (pre && Object.keys(pre).length) return pre;
+  return live || {};
 }
 
 function livePicks() {
   if (!PROJ?.players?.length) return [];
   const pass = passingMarkets();
   const mktFilter = $("live-market").value;
+  const bookFilter = $("live-book")?.value || "";
   const gapMode = $("live-gap").value;
   const rnd = Math.round(Number(PROJ.display_round || 1)) || 1;
-  const bias = BETS?.live_bias || ROI?.live_bias || {};
-  const props = dkPropIndex();
+  const biasAlreadyApplied = Boolean(PROJ?.both_side_bias_applied?.at);
+  const bias = biasAlreadyApplied ? {} : BETS?.live_bias || ROI?.live_bias || {};
   const out = [];
+  const books = bookFilter
+    ? LIVE_BOOKS.filter((b) => b.id === bookFilter)
+    : LIVE_BOOKS;
 
   for (const p of PROJ.players) {
     if (Math.round(Number(p.round)) !== rnd) continue;
@@ -254,42 +309,48 @@ function livePicks() {
       if (!Number.isFinite(rawMu)) continue;
       const b = Number(bias[market]) || 0;
       const mu = rawMu - b;
-      const key = `${dg}|${rnd}|${DK_MARKET[market]}`;
-      const prop = props[key];
-      const line = Number(prop?.line);
-      const over = Number(prop?.over);
-      const under = Number(prop?.under);
-      if (!Number.isFinite(line)) continue;
       const gapOver = Number(rec.gap_over ?? rec.gap);
       const gapUnder = Number(rec.gap_under ?? rec.gap);
       const gapNeedOver = gapMode === "policy" ? gapOver : Number(gapMode);
       const gapNeedUnder = gapMode === "policy" ? gapUnder : Number(gapMode);
-      const delta = mu - line;
-      let side = null;
-      if (delta > gapNeedOver) side = "OVER";
-      else if (delta < -gapNeedUnder) side = "UNDER";
-      if (!side) continue;
-      const odds = side === "OVER" ? over : under;
-      if (!Number.isFinite(odds)) continue;
-      const underMin = rec.odds_rule?.under_min_american;
-      const overMin = rec.odds_rule?.over_min_american;
-      if (side === "UNDER" && Number.isFinite(underMin) && !(odds >= underMin)) continue;
-      if (side === "OVER" && Number.isFinite(overMin) && !(odds >= overMin)) continue;
-      const fair = americanToImplied(odds);
-      // crude edge: distance past line as confidence proxy
-      const gapNeed = side === "OVER" ? gapNeedOver : gapNeedUnder;
-      const edge = Math.abs(delta) - gapNeed;
-      out.push({
-        player: name,
-        market,
-        side,
-        mu: Math.round(mu * 10) / 10,
-        line,
-        gap: Math.round(delta * 100) / 100,
-        odds,
-        fair,
-        edge,
-      });
+      const propMarket = PROP_MARKET[market];
+      const key = `${dg}|${rnd}|${propMarket}`;
+
+      for (const book of books) {
+        const props = bookPropPack(book);
+        const prop = props[key];
+        const line = Number(prop?.line);
+        const over = Number(prop?.over);
+        const under = Number(prop?.under);
+        if (!Number.isFinite(line)) continue;
+        const delta = mu - line;
+        let side = null;
+        if (delta > gapNeedOver) side = "OVER";
+        else if (delta < -gapNeedUnder) side = "UNDER";
+        if (!side) continue;
+        const odds = side === "OVER" ? over : under;
+        if (!Number.isFinite(odds)) continue;
+        const underMin = rec.odds_rule?.under_min_american;
+        const overMin = rec.odds_rule?.over_min_american;
+        if (side === "UNDER" && Number.isFinite(underMin) && !(odds >= underMin)) continue;
+        if (side === "OVER" && Number.isFinite(overMin) && !(odds >= overMin)) continue;
+        const fair = americanToImplied(odds);
+        const gapNeed = side === "OVER" ? gapNeedOver : gapNeedUnder;
+        const edge = Math.abs(delta) - gapNeed;
+        out.push({
+          player: name,
+          book_id: book.id,
+          book_label: book.label,
+          market,
+          side,
+          mu: Math.round(mu * 10) / 10,
+          line,
+          gap: Math.round(delta * 100) / 100,
+          odds,
+          fair,
+          edge,
+        });
+      }
     }
   }
   out.sort((a, b) => b.edge - a.edge);
@@ -302,14 +363,15 @@ function renderLive() {
   if (!PROJ) {
     note.textContent = "No projections.json — run refresh:live / apply:dg-methodology.";
   } else {
-    note.textContent = `${PROJ.event_name || "Live"} · R${PROJ.display_round || "?"} · μ corrected by chrono bias · only both-side+ markets`;
+    note.textContent = `${PROJ.event_name || "Live"} · R${PROJ.display_round || "?"} · μ corrected by chrono bias · all sportsbooks · only both-side+ markets`;
   }
   $("live-table").querySelector("tbody").innerHTML = picks.length
     ? picks
-        .slice(0, 80)
+        .slice(0, 120)
         .map(
           (p) => `<tr>
         <td>${p.player}</td>
+        <td>${p.book_label}</td>
         <td>${p.market}</td>
         <td class="num">${p.side}</td>
         <td class="num">${p.mu.toFixed(1)}</td>
@@ -320,7 +382,7 @@ function renderLive() {
       </tr>`,
         )
         .join("")
-    : `<tr><td colspan="8">No live DK props past policy gap for both-side markets.</td></tr>`;
+    : `<tr><td colspan="9">No live props past policy gap for both-side markets.</td></tr>`;
 }
 
 function betTs(b) {
@@ -343,10 +405,12 @@ function anFiltered() {
   const pass = new Set(passingMarkets());
   const mkt = $("an-market")?.value || "";
   const ev = $("an-event")?.value || "";
+  const book = $("an-book")?.value || "";
   return (BETS?.bets || []).filter((b) => {
     if (!pass.has(b.market)) return false;
     if (mkt && b.market !== mkt) return false;
     if (ev && b.event !== ev) return false;
+    if (book && b.book_id !== book) return false;
     return true;
   });
 }
@@ -634,17 +698,177 @@ function renderAll() {
   renderAnalytics();
   renderHist();
   renderLive();
+  renderHoleProps();
+}
+
+function setTab(tab) {
+  ACTIVE_TAB = tab === "hole-props" ? "hole-props" : "both-side";
+  const both = $("panel-both-side");
+  const hole = $("panel-hole-props");
+  if (both) both.hidden = ACTIVE_TAB !== "both-side";
+  if (hole) hole.hidden = ACTIVE_TAB !== "hole-props";
+  document.querySelectorAll(".tab-btn").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.tab === ACTIVE_TAB);
+  });
+  const title = $("page-title");
+  const lede = $("page-lede");
+  if (ACTIVE_TAB === "hole-props") {
+    if (title) title.textContent = "Hole Props";
+    if (lede) {
+      lede.textContent =
+        "Hole score, winner & matchup (DraftKings) plus holes 10–18 / 16–17–18 (Underdog). Model μ from course hole average + strokes gained.";
+    }
+  } else {
+    if (title) title.textContent = "Both-side edge";
+    if (lede) {
+      lede.textContent =
+        "Only markets where OVER and UNDER both print historically. Gap + bias from walk-forward bake.";
+    }
+  }
+  if (ACTIVE_TAB === "both-side") renderAnalytics();
+}
+
+function fmtProb(x) {
+  if (!Number.isFinite(x)) return "—";
+  return `${(x * 100).toFixed(1)}%`;
+}
+
+function fmtOdds(o) {
+  if (!Number.isFinite(o)) return "—";
+  return `${o > 0 ? "+" : ""}${o}`;
+}
+
+function holesLabel(r) {
+  if (Array.isArray(r.holes) && r.holes.length > 1) {
+    if (r.holes.length === 9 && r.holes[0] === 10) return "10–18";
+    if (r.holes.length === 3 && r.holes[0] === 16) return "16–17–18";
+    return r.holes.join(",");
+  }
+  if (Number.isFinite(Number(r.hole))) return String(r.hole);
+  return "—";
+}
+
+function hpFiltered() {
+  const mkt = $("hp-market")?.value || "";
+  const book = $("hp-book")?.value || "";
+  const hole = $("hp-hole")?.value || "";
+  const minEdge = Number($("hp-min-edge")?.value || 0);
+  const q = String($("hp-player")?.value || "")
+    .trim()
+    .toLowerCase();
+  return (HOLE_PROPS?.projections || []).filter((r) => {
+    if (mkt && r.market !== mkt) return false;
+    if (book && r.book !== book) return false;
+    if (hole) {
+      const h = Math.round(Number(hole));
+      if (Number.isFinite(Number(r.hole))) {
+        if (Math.round(Number(r.hole)) !== h) return false;
+      } else if (Array.isArray(r.holes)) {
+        if (!r.holes.includes(h)) return false;
+      } else return false;
+    }
+    if (Number.isFinite(minEdge) && minEdge > 0) {
+      if (!(Number.isFinite(r.edge) && r.edge >= minEdge)) return false;
+    }
+    if (q && !String(r.player || "").toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+function fillHoleSelect() {
+  const sel = $("hp-hole");
+  if (!sel) return;
+  const cur = sel.value;
+  const holes = new Set();
+  for (const r of HOLE_PROPS?.projections || []) {
+    if (Number.isFinite(Number(r.hole))) holes.add(Math.round(Number(r.hole)));
+    for (const h of r.holes || []) {
+      if (Number.isFinite(Number(h))) holes.add(Math.round(Number(h)));
+    }
+  }
+  const list = [...holes].sort((a, b) => a - b);
+  sel.innerHTML =
+    `<option value="">All</option>` + list.map((h) => `<option value="${h}">${h}</option>`).join("");
+  if ([...sel.options].some((o) => o.value === cur)) sel.value = cur;
+}
+
+function renderHoleProps() {
+  const note = $("hp-note");
+  if (!HOLE_PROPS) {
+    if (note) {
+      note.textContent =
+        "No live_hole_props.json yet — run npm run bake:hole-props (or push:live).";
+    }
+    const tbody = $("hp-table")?.querySelector("tbody");
+    if (tbody) tbody.innerHTML = `<tr><td colspan="12">No hole props data.</td></tr>`;
+    return;
+  }
+
+  fillHoleSelect();
+  const cov = HOLE_PROPS.coverage || {};
+  const meta = HOLE_PROPS.meta || {};
+  if (note) {
+    const dkE = HOLE_PROPS.odds?.dk_error ? ` · DK: ${HOLE_PROPS.odds.dk_error}` : "";
+    const udE = HOLE_PROPS.odds?.ud_error ? ` · UD: ${HOLE_PROPS.odds.ud_error}` : "";
+    note.textContent = `${HOLE_PROPS.event_name || "Event"} · R${HOLE_PROPS.round || "?"} · ${HOLE_PROPS.course_key || "course"} · model ${meta.model || "hole_avg+sg"} · DK ${meta.n_dk ?? 0} / UD ${meta.n_ud ?? 0} odds${dkE}${udE}`;
+  }
+
+  const nEl = $("hp-kpi-n");
+  const eEl = $("hp-kpi-edge");
+  const vEl = $("hp-kpi-ev");
+  const cEl = $("hp-kpi-cov");
+  if (nEl) nEl.textContent = String(meta.n_projections ?? HOLE_PROPS.projections?.length ?? "—");
+  if (eEl) eEl.textContent = String(meta.n_positive_edge ?? "—");
+  if (vEl) {
+    const ev = meta.best_ev;
+    vEl.textContent = Number.isFinite(ev) ? `${ev >= 0 ? "+" : ""}${(ev * 100).toFixed(1)}%` : "—";
+    vEl.className = clsSigned(ev);
+  }
+  if (cEl) {
+    cEl.textContent =
+      cov.with_hole_history != null ? `${cov.with_hole_history}/${cov.players || "?"}` : "—";
+  }
+
+  const rows = hpFiltered();
+  const tbody = $("hp-table")?.querySelector("tbody");
+  if (!tbody) return;
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="12">No rows match filters.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = rows
+    .slice(0, 400)
+    .map((r) => {
+      const edge = Number(r.edge);
+      const ev = Number(r.ev);
+      return `<tr>
+        <td>${r.player || ""}</td>
+        <td>${r.book || ""}</td>
+        <td>${r.market || ""}</td>
+        <td class="num">${holesLabel(r)}</td>
+        <td class="num">${Number.isFinite(Number(r.mu)) ? Number(r.mu).toFixed(2) : "—"}</td>
+        <td class="num">${r.line == null || r.line === "" ? "—" : r.line}</td>
+        <td class="num">${r.side || "—"}</td>
+        <td class="num">${fmtProb(Number(r.model_prob))}</td>
+        <td class="num">${fmtProb(Number(r.implied))}</td>
+        <td class="num ${clsSigned(edge)}">${Number.isFinite(edge) ? `${(edge * 100).toFixed(1)}%` : "—"}</td>
+        <td class="num ${clsSigned(ev)}">${Number.isFinite(ev) ? `${(ev * 100).toFixed(1)}%` : "—"}</td>
+        <td class="num">${fmtOdds(Number(r.odds))}</td>
+      </tr>`;
+    })
+    .join("");
 }
 
 async function boot() {
   const err = $("error");
   err.hidden = true;
   try {
-    [ROI, BETS, PROJ, LIVE_PROPS] = await Promise.all([
+    [ROI, BETS, PROJ, LIVE_PROPS, HOLE_PROPS] = await Promise.all([
       loadJson(ROI_URL),
       loadJson(BETS_URL),
       loadJson(PROJ_URL).catch(() => null),
       loadJson(LIVE_PROPS_URL).catch(() => null),
+      loadJson(HOLE_PROPS_URL).catch(() => null),
     ]);
     renderAll();
   } catch (e) {
@@ -654,16 +878,26 @@ async function boot() {
 }
 
 $("btn-reload")?.addEventListener("click", () => boot());
-for (const id of ["hist-market", "hist-side", "hist-event"]) {
+document.querySelectorAll(".tab-btn").forEach((btn) => {
+  btn.addEventListener("click", () => setTab(btn.dataset.tab));
+});
+for (const id of ["hist-market", "hist-side", "hist-event", "hist-book"]) {
   $(id)?.addEventListener("change", () => renderHist());
 }
-for (const id of ["live-market", "live-gap"]) {
+for (const id of ["live-market", "live-gap", "live-book"]) {
   $(id)?.addEventListener("change", () => renderLive());
 }
-for (const id of ["an-market", "an-event"]) {
+for (const id of ["an-market", "an-event", "an-book"]) {
   $(id)?.addEventListener("change", () => renderAnalytics());
 }
 $("an-bankroll")?.addEventListener("change", () => renderAnalytics());
 $("an-bankroll")?.addEventListener("input", () => renderAnalytics());
+for (const id of ["hp-market", "hp-book", "hp-hole", "hp-min-edge"]) {
+  $(id)?.addEventListener("change", () => renderHoleProps());
+}
+$("hp-player")?.addEventListener("input", () => renderHoleProps());
+
+const hash = String(location.hash || "").replace(/^#/, "");
+if (hash === "hole-props") setTab("hole-props");
 
 boot();

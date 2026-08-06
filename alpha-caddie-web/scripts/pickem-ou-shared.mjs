@@ -13,6 +13,45 @@ export const ROUND_OU_MARKETS = new Set([
   "Putts",
 ]);
 
+/** Underdog / pick'em hole-pack O/U markets (not round counting props). */
+export const HOLE_PACK_OU_MARKETS = new Set(["Holes 10-18", "Holes 16-17-18"]);
+
+/**
+ * Map provider labels → hole-pack markets (10–18 back nine, closing three).
+ * @param {string} raw
+ */
+export function canonicalHolePackOuMarket(raw) {
+  const s = String(raw || "").trim();
+  if (!s) return "";
+  // Keep hyphens for hole ranges; only collapse underscores / whitespace.
+  const low = s
+    .toLowerCase()
+    .replace(/_+/g, " ")
+    .replace(/\s+/g, " ")
+    .replace(/[–—]/g, "-")
+    .trim();
+  if (
+    /holes?\s*16\s*(?:\/|,|&|and|-)?\s*17\s*(?:\/|,|&|and|-)?\s*18/.test(low) ||
+    /16\s*-\s*17\s*-\s*18/.test(low) ||
+    /closing\s*three/.test(low) ||
+    /last\s*3\s*holes?/.test(low) ||
+    /holes?\s*16\s*to\s*18/.test(low)
+  ) {
+    return "Holes 16-17-18";
+  }
+  if (
+    /holes?\s*10\s*(?:-|to|thru|through)\s*18/.test(low) ||
+    /10\s*-\s*18/.test(low) ||
+    /holes?\s*10\s+18/.test(low) ||
+    /back\s*nine/.test(low) ||
+    /holes?\s*10\s*to\s*18/.test(low) ||
+    /back\s*9/.test(low)
+  ) {
+    return "Holes 10-18";
+  }
+  return "";
+}
+
 /**
  * Map provider stat / wager labels → our Round Projections market names.
  * @param {string} raw
@@ -21,6 +60,8 @@ export function canonicalRoundOuMarket(raw) {
   const s = String(raw || "").trim();
   if (!s) return "";
   const low = s.toLowerCase().replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim();
+  // Prefer hole packs before generic "score" / "stroke" matches.
+  if (canonicalHolePackOuMarket(raw)) return "";
   if (
     low.includes("stroke") ||
     low === "score" ||

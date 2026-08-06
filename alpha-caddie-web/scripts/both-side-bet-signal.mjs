@@ -1,6 +1,7 @@
 /**
  * Bet / no-bet signal matching projection-tracker live picks:
  * both-side+ markets only, policy gap_over/gap_under, optional odds floors.
+ * Applies to all sportsbooks present on projections props / live packs.
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
@@ -8,7 +9,7 @@ import { fileURLToPath } from "url";
 
 const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
 
-/** DK / CSV market label → both_side_roi market key */
+/** Prop market label → both_side_roi market key */
 export const DK_TO_ROI_MARKET = {
   "Total Score": "Total score",
   "Total score": "Total score",
@@ -18,6 +19,20 @@ export const DK_TO_ROI_MARKET = {
   GIR: "GIR",
   "Fairways hit": "Fairways hit",
 };
+
+/** Sportsbook source → live_event_book_props pack suffix */
+export const BOOK_SOURCE_PACKS = [
+  { source: "draftkings", short: "dk", label: "DraftKings" },
+  { source: "prizepicks", short: "pp", label: "PrizePicks" },
+  { source: "sleeper", short: "sl", label: "Sleeper" },
+  { source: "underdog", short: "ud", label: "Underdog" },
+  { source: "fanduel", short: "fd", label: "FanDuel" },
+  { source: "caesars", short: "czr", label: "Caesars" },
+  { source: "kalshi", short: "kl", label: "Kalshi" },
+];
+
+const BOOK_SOURCE_SET = new Set(BOOK_SOURCE_PACKS.map((b) => b.source));
+const SOURCE_TO_PACK = Object.fromEntries(BOOK_SOURCE_PACKS.map((b) => [b.source, b]));
 
 export function loadBothSidePolicy(webRoot = WEB) {
   const roiPath = join(webRoot, "data", "both_side_roi.json");
@@ -159,7 +174,7 @@ export function evaluateBothSideBetSignal(opts = {}) {
 }
 
 /**
- * Stamp bet_over / bet_under on DraftKings prop rows for the display round.
+ * Stamp bet_over / bet_under on sportsbook prop rows for the display round.
  * @returns {number} count of YES sides
  */
 export function annotatePropsWithBetSignals(payload, webRoot = WEB) {
@@ -169,7 +184,8 @@ export function annotatePropsWithBetSignals(payload, webRoot = WEB) {
   const players = Array.isArray(payload?.players) ? payload.players : [];
   let yes = 0;
   for (const pr of payload?.props || []) {
-    if (String(pr?.source || "").trim().toLowerCase() !== "draftkings") continue;
+    const src = String(pr?.source || "").trim().toLowerCase();
+    if (!BOOK_SOURCE_SET.has(src)) continue;
     const rnd = Math.round(Number(pr?.round_num));
     if (Number.isFinite(rnd) && rnd !== displayRound) continue;
     const dg = Math.round(Number(pr?.dg_id));
@@ -207,19 +223,22 @@ export function annotatePropsWithBetSignals(payload, webRoot = WEB) {
   return yes;
 }
 
-/** Sync tracker live_dk pack from annotated projections props. */
+/** Sync tracker live_* packs from annotated projections props (all sportsbooks). */
 export function syncLiveEventBookProps(payload, webRoot = WEB) {
   const displayRound = Math.round(Number(payload?.display_round)) || 1;
-  /** @type {Record<string, object>} */
-  const live = {};
+  /** @type {Record<string, Record<string, object>>} */
+  const byShort = Object.fromEntries(BOOK_SOURCE_PACKS.map((b) => [b.short, {}]));
+
   for (const pr of payload?.props || []) {
-    if (String(pr?.source || "").trim().toLowerCase() !== "draftkings") continue;
+    const src = String(pr?.source || "").trim().toLowerCase();
+    const pack = SOURCE_TO_PACK[src];
+    if (!pack) continue;
     const rnd = Math.round(Number(pr?.round_num ?? displayRound));
     if (Number.isFinite(rnd) && rnd !== displayRound) continue;
     const dg = Math.round(Number(pr?.dg_id));
     const market = String(pr?.market || "").trim();
     if (!Number.isFinite(dg) || !market) continue;
-    live[`${dg}|${rnd}|${market}`] = {
+    byShort[pack.short][`${dg}|${rnd}|${market}`] = {
       line: Number(pr.line),
       over: Number(pr.over_odds),
       under: Number(pr.under_odds),
@@ -227,6 +246,7 @@ export function syncLiveEventBookProps(payload, webRoot = WEB) {
       bet_under: pr.bet_under || "NO",
     };
   }
+
   const outPath = join(webRoot, "data", "live_event_book_props.json");
   mkdirSync(dirname(outPath), { recursive: true });
   let prev = {};
@@ -235,13 +255,24 @@ export function syncLiveEventBookProps(payload, webRoot = WEB) {
   } catch {
     prev = {};
   }
+
   const next = {
     ...prev,
     event_name: payload?.event_name || prev.event_name || "",
     generated_at: new Date().toISOString(),
-    live_dk: live,
-    pre_round_dk: prev.pre_round_dk || live,
   };
+  let total = 0;
+  for (const b of BOOK_SOURCE_PACKS) {
+    const liveKey = `live_${b.short}`;
+    const preKey = `pre_round_${b.short}`;
+    const live = byShort[b.short];
+    if (Object.keys(live).length) {
+      next[liveKey] = live;
+      // Freeze pre-round once set (same as historic DK behavior).
+      next[preKey] = prev[preKey] && Object.keys(prev[preKey] || {}).length ? prev[preKey] : live;
+      total += Object.keys(live).length;
+    }
+  }
   writeFileSync(outPath, `${JSON.stringify(next, null, 2)}\n`);
-  return Object.keys(live).length;
+  return total;
 }

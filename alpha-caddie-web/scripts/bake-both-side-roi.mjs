@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /**
- * Sweep gap + optional μ bias so OVER and UNDER are both profitable vs DK book.
+ * Sweep gap + optional μ bias so OVER and UNDER are both profitable vs all sportsbooks
+ * (DraftKings, PrizePicks, Sleeper, Underdog, FanDuel, Caesars, Kalshi).
  *
  *   node scripts/bake-both-side-roi.mjs
- *   → data/both_side_roi.json
+ *   → data/both_side_roi.json + data/both_side_bets.json
  */
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { Readable } from "stream";
@@ -12,7 +13,13 @@ import { fileURLToPath } from "url";
 import { parse } from "csv-parse";
 import { eventsLikelySame } from "./dg-events-align.mjs";
 import { alignDetailCsvContent } from "./projection-context-signals.mjs";
-import { EXPORT_MARKETS, num, parseDkBookLine, ouSideResults } from "./round-projection-mu.mjs";
+import {
+  EXPORT_MARKETS,
+  num,
+  parseDkBookLine,
+  parsePpBookLine,
+  ouSideResults,
+} from "./round-projection-mu.mjs";
 
 const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
 const VS = join(WEB, "data", "round_projection_vs_actual.csv");
@@ -55,14 +62,27 @@ const ODDS_RULE_SWEEPS = {
 
 const BIAS_MODES = ["none", "loo", "chrono"];
 
+/** All O/U sportsbooks present in round_projection_vs_actual.csv. */
+const BOOKS = [
+  { id: "draftkings", label: "DraftKings", lineKey: "bookLineCol", overKey: "overOddsCol", underKey: "underOddsCol", wholeLine: false },
+  { id: "prizepicks", label: "PrizePicks", lineKey: "ppLineCol", overKey: "ppOverOddsCol", underKey: "ppUnderOddsCol", wholeLine: true },
+  { id: "sleeper", label: "Sleeper", lineKey: "slLineCol", overKey: "slOverOddsCol", underKey: "slUnderOddsCol", wholeLine: true },
+  { id: "underdog", label: "Underdog", lineKey: "udLineCol", overKey: "udOverOddsCol", underKey: "udUnderOddsCol", wholeLine: true },
+  { id: "fanduel", label: "FanDuel", lineKey: "fdLineCol", overKey: "fdOverOddsCol", underKey: "fdUnderOddsCol", wholeLine: false },
+  { id: "caesars", label: "Caesars", lineKey: "czrLineCol", overKey: "czrOverOddsCol", underKey: "czrUnderOddsCol", wholeLine: false },
+  { id: "kalshi", label: "Kalshi", lineKey: "klLineCol", overKey: "klOverOddsCol", underKey: "klUnderOddsCol", wholeLine: false },
+];
+
 const MARKETS = EXPORT_MARKETS.map((m) => ({
   market: m.market,
   modelCol: m.lineCol,
-  bookCol: m.bookLineCol,
-  overOddsCol: m.overOddsCol,
-  underOddsCol: m.underOddsCol,
   actualCol: m.actualCol,
+  spec: m,
 }));
+
+function parseBookLine(raw, wholeLine) {
+  return wholeLine ? parsePpBookLine(raw) : parseDkBookLine(raw);
+}
 
 function parseMs(v) {
   const t = Date.parse(String(v || ""));
@@ -118,10 +138,23 @@ function gradeSide(actual, bookLine, side) {
   return isHalf ? null : "P";
 }
 
+function rowIdentityKey(r) {
+  return `${r.dg_id}|${r.event}|${r.round}`;
+}
+
+function uniqueModelRows(rows) {
+  const seen = new Map();
+  for (const r of rows) {
+    const k = rowIdentityKey(r);
+    if (!seen.has(k)) seen.set(k, r);
+  }
+  return [...seen.values()];
+}
+
 function meanBias(pairs) {
   let s = 0;
   let n = 0;
-  for (const p of pairs) {
+  for (const p of uniqueModelRows(pairs)) {
     if (!Number.isFinite(p.model) || !Number.isFinite(p.actual)) continue;
     s += p.model - p.actual;
     n++;
@@ -238,7 +271,7 @@ function applyBias(rows, biasMode, eventOrder) {
       biasByEvent.set(ev, b);
       const cur = rows.filter((r) => r.event === ev);
       for (const r of cur) r.adjModel = r.model - b;
-      prior = prior.concat(cur);
+      prior = prior.concat(uniqueModelRows(cur));
     }
     // Any event not in order (shouldn't happen)
     for (const r of rows) {
@@ -305,6 +338,8 @@ async function loadRows() {
   const byMarket = Object.fromEntries(MARKETS.map((m) => [m.market, []]));
   /** @type {Map<string, number>} */
   const eventTs = new Map();
+  /** @type {Record<string, number>} */
+  const bookCounts = Object.fromEntries(BOOKS.map((b) => [b.id, 0]));
 
   await new Promise((resolve, reject) => {
     Readable.from([aligned])
@@ -330,30 +365,45 @@ async function loadRows() {
 
         for (const m of MARKETS) {
           const model = num(row[m.modelCol], NaN);
-          const bookRaw = String(row[m.bookCol] ?? "").trim();
-          if (!bookRaw) continue;
-          const book = parseDkBookLine(bookRaw);
           const actual = num(row[m.actualCol], NaN);
-          const overOddsRaw = String(row[m.overOddsCol] ?? "").trim();
-          const underOddsRaw = String(row[m.underOddsCol] ?? "").trim();
-          if (!overOddsRaw || !underOddsRaw) continue;
-          const overOdds = Number(overOddsRaw);
-          const underOdds = Number(underOddsRaw);
-          if (!Number.isFinite(model) || !Number.isFinite(book) || !Number.isFinite(actual)) continue;
-          if (!Number.isFinite(overOdds) || !Number.isFinite(underOdds) || overOdds === 0 || underOdds === 0)
-            continue;
-          byMarket[m.market].push({
-            event,
-            round: Math.round(num(row.round, NaN)),
-            dg_id: Math.round(num(row.dg_id, NaN)),
-            player: String(row.player_name || "").trim(),
-            model,
-            book,
-            actual,
-            overOdds,
-            underOdds,
-            t: Number.isFinite(t) ? t : 0,
-          });
+          if (!Number.isFinite(model) || !Number.isFinite(actual)) continue;
+          const round = Math.round(num(row.round, NaN));
+          const dg_id = Math.round(num(row.dg_id, NaN));
+          const player = String(row.player_name || "").trim();
+
+          for (const bk of BOOKS) {
+            const lineCol = m.spec[bk.lineKey];
+            const overCol = m.spec[bk.overKey];
+            const underCol = m.spec[bk.underKey];
+            if (!lineCol || !overCol || !underCol) continue;
+            const bookRaw = String(row[lineCol] ?? "").trim();
+            if (!bookRaw) continue;
+            const book = parseBookLine(bookRaw, bk.wholeLine);
+            const overOddsRaw = String(row[overCol] ?? "").trim();
+            const underOddsRaw = String(row[underCol] ?? "").trim();
+            if (!overOddsRaw || !underOddsRaw) continue;
+            const overOdds = Number(overOddsRaw);
+            const underOdds = Number(underOddsRaw);
+            if (!Number.isFinite(book)) continue;
+            if (!Number.isFinite(overOdds) || !Number.isFinite(underOdds) || overOdds === 0 || underOdds === 0)
+              continue;
+            bookCounts[bk.id]++;
+            byMarket[m.market].push({
+              event,
+              round,
+              dg_id,
+              player,
+              market: m.market,
+              model,
+              book,
+              actual,
+              overOdds,
+              underOdds,
+              book_id: bk.id,
+              book_label: bk.label,
+              t: Number.isFinite(t) ? t : 0,
+            });
+          }
         }
       })
       .on("end", resolve)
@@ -375,18 +425,19 @@ async function loadRows() {
     }
   }
 
-  return { byMarket, eventOrder, live };
+  return { byMarket, eventOrder, live, bookCounts };
 }
 
 async function main() {
-  const { byMarket, eventOrder, live } = await loadRows();
+  const { byMarket, eventOrder, live, bookCounts } = await loadRows();
   /** @type {object} */
   const out = {
     generated_at: new Date().toISOString(),
     source: "data/round_projection_vs_actual.csv",
     pricing_mode: "default",
     pricing_skill: "default",
-    book: "DraftKings (*_book_line / *_over_odds / *_under_odds)",
+    books: BOOKS.map((b) => ({ id: b.id, label: b.label })),
+    book_graded_rows: bookCounts,
     stake_dollars: STAKE,
     min_bets_per_side: MIN_BETS_PER_SIDE,
     gaps: GAPS,
@@ -399,7 +450,10 @@ async function main() {
     recommended: {},
   };
 
-  console.log("\nBoth-side ROI bake (model vs DK book, flat $100)\n");
+  console.log("\nBoth-side ROI bake (model vs all sportsbooks, flat $100)\n");
+  console.log(
+    `Graded book rows: ${BOOKS.map((b) => `${b.label}=${bookCounts[b.id] || 0}`).join(" · ")}\n`,
+  );
   console.log(
     `${"Market".padEnd(14)} ${"Both+".padEnd(6)} ${"Gap".padEnd(6)} ${"Bias".padEnd(8)} ${"O n".padStart(5)} ${"O ROI".padStart(8)} ${"U n".padStart(5)} ${"U ROI".padStart(8)} ${"minROI".padStart(8)} ${"CombPnL".padStart(10)}`,
   );
@@ -498,12 +552,13 @@ async function main() {
     const baseRows = byMarket[m.market].map((r) => ({ ...r }));
     const biasMeta = applyBias(baseRows, rec.bias, eventOrder);
     const biases = Object.values(biasMeta.biasByEvent || {}).filter((x) => Number.isFinite(x));
-    // Next-event (live) bias ≈ last chrono state = mean residual over all history.
+    // Next-event (live) bias ≈ mean residual over all unique player×event×round rows.
+    // Pass full rows so uniqueModelRows can dedupe (stripping identity collapses to 1 row).
     liveBias[m.market] =
       rec.bias === "none"
         ? 0
         : biases.length
-          ? Math.round(meanBias(baseRows.map((r) => ({ model: r.model, actual: r.actual }))) * 1000) / 1000
+          ? Math.round(meanBias(baseRows) * 1000) / 1000
           : 0;
 
     if (!rec.both_sides_positive) continue;
@@ -534,6 +589,8 @@ async function main() {
         player: r.player,
         dg_id: r.dg_id,
         market: m.market,
+        book_id: r.book_id,
+        book_label: r.book_label,
         side,
         model: Math.round(mu * 100) / 100,
         book: r.book,
