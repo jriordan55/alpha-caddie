@@ -60,6 +60,39 @@
 
     <section class="card">
       <div class="card-head">
+        <h2>Analytics</h2>
+        <p class="note">Cumulative bankroll, drawdown, PnL, and ROI across graded both-side bets (chronological by date). Flat $100 stakes.</p>
+      </div>
+      <div class="filters">
+        <label>Market
+          <select id="an-market"><option value="">All passing markets</option></select>
+        </label>
+        <label>Tournament
+          <select id="an-event"><option value="">All events</option></select>
+        </label>
+        <label>Start bankroll ($)
+          <input id="an-bankroll" type="number" min="100" step="100" value="10000" />
+        </label>
+      </div>
+      <div class="kpi-row" id="an-kpis"></div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h3>Cumulative PnL</h3>
+          <canvas id="chart-pnl" height="220" aria-label="Cumulative PnL over time"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Bankroll &amp; drawdown</h3>
+          <canvas id="chart-bankroll" height="220" aria-label="Bankroll and drawdown over time"></canvas>
+        </div>
+        <div class="chart-card chart-card-wide">
+          <h3>Cumulative ROI</h3>
+          <canvas id="chart-roi" height="220" aria-label="Cumulative ROI over time"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
         <h2>Live picks</h2>
         <p class="note" id="live-note">Loading projections…</p>
       </div>
@@ -140,6 +173,7 @@
     </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
   <script type="module" src="app.js"></script>
 </body>
 </html>

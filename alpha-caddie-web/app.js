@@ -20176,10 +20176,17 @@ function propsEventVenueCourseKey() {
 
 /** In field mode: Course dropdown (empty = all courses) or Current course only. Single-player: current-course checkbox. */
 function propsEffectiveCourseKey() {
-  const sel = selectedPropsCourseFilter();
   if (courseFilterOn()) return propsEventVenueCourseKey();
+  const sel = selectedPropsCourseFilter();
   if (propsCourseWindowModeOn()) return sel;
   return sel;
+}
+
+/** Keep only entries whose row course_name matches the active course key. */
+function filterCourseWindowEntriesToCourseKey(entries, courseKey) {
+  const ck = String(courseKey || "").trim();
+  if (!ck) return entries || [];
+  return (entries || []).filter((e) => normCourseNameKey(e?.row?.course_name) === ck);
 }
 
 /** Label for chart tooltip / hit regions (row course_name, else active venue filter). */
@@ -20511,13 +20518,11 @@ async function loadPropsCoursesManifest() {
 function propsCourseShardFilesToTry(courseKey) {
   const files = new Set();
   if (courseKey) files.add(propsCourseShardFileName(courseKey));
-  const venueRaw = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
   for (const c of propsCoursesManifestCache?.courses || []) {
     const ck = String(c.course_key || "").trim();
     const file = String(c.file || "").trim();
     if (!file) continue;
     if (ck && normCourseNameKey(ck) === courseKey) files.add(file);
-    if (venueRaw && ck && courseNameMatchesVenueLoose(ck, venueRaw)) files.add(file);
   }
   return [...files];
 }
@@ -21221,28 +21226,29 @@ function propsCourseWindowRawEntriesCacheSig(bucketOpt) {
 function collectCourseWindowEntriesFromBucket(bucket, courseKey) {
   const fromRaw = String(document.getElementById("props-filter-date-from")?.value || "").trim();
   const toRaw = String(document.getElementById("props-filter-date-to")?.value || "").trim();
+  const entries = filterCourseWindowEntriesToCourseKey(bucket?.entries || [], courseKey);
   if (!fromRaw && !toRaw) {
-    return (bucket.entries || [])
+    return entries
       .map((e) => enrichCourseWindowEntry(e))
       .sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
   }
   const bounds = propsCourseWindowDateBoundsMs();
   let { fromMs, toMs } = bounds;
   let out = [];
-  for (const e of bucket.entries || []) {
+  for (const e of entries) {
     const enriched = enrichCourseWindowEntry(e);
     if (!historyRoundInCourseDateWindow(enriched.row, fromMs, toMs)) continue;
     out.push(enriched);
   }
   out.sort((a, b) => historyRoundChronoKey(a.row) - historyRoundChronoKey(b.row));
-  if (!out.length && bucket.entries?.length && fromRaw && toRaw && fromRaw === toRaw) {
+  if (!out.length && entries.length && fromRaw && toRaw && fromRaw === toRaw) {
     const near = propsPickNearestCourseSessionDay(bucket, fromRaw, toRaw);
     if (near) {
       propsCourseWindowDateFallbackIso = near;
       fromMs = propsCourseWindowDateInputToUtcMs(near, false);
       toMs = propsCourseWindowDateInputToUtcMs(near, true);
       out = [];
-      for (const e of bucket.entries || []) {
+      for (const e of entries) {
         const enriched = enrichCourseWindowEntry(e);
         if (!historyRoundInCourseDateWindow(enriched.row, fromMs, toMs)) continue;
         out.push(enriched);
@@ -21267,7 +21273,8 @@ function collectCourseWindowRoundEntriesRaw(bucketOpt) {
   const rawOpts = { applySidebarFilters: false };
   let out;
   if (!courseKey) {
-    out = collectFieldRoundEntriesFromPlayerHistory(rawOpts);
+    // "Current course only" with unknown venue must not fall back to all-course field history.
+    out = courseFilterOn() ? [] : collectFieldRoundEntriesFromPlayerHistory(rawOpts);
   } else {
     const bucket = (bucketOpt?.entries?.length ? bucketOpt : null) || propsGetSingleCourseBucketSync(courseKey);
     if (!bucket) {
@@ -22118,13 +22125,17 @@ function eventNameMatchesCurrentSchedule(histNameRaw, metaNameRaw) {
 }
 
 /** Current tournament context match for history rows.
- * If venue is known, require course match for "Current course only".
+ * If venue is known, require a strict normalized course-key match (no loose substring leaks).
  * Event-name fallback is used only when venue is unavailable.
  */
 function currentTournamentContextMatchesRound(r) {
   const vn = venueCourseName();
   const metaEvent = String(DATA.meta.event_name || "").trim();
-  if (vn) return courseNameMatchesVenueLoose(r.course_name, vn);
+  if (vn) {
+    const rk = normCourseNameKey(r?.course_name);
+    const vk = normCourseNameKey(vn);
+    return Boolean(rk && vk && rk === vk);
+  }
   if (metaEvent) return eventNameMatchesCurrentSchedule(r.event_name, metaEvent);
   return false;
 }
@@ -22195,30 +22206,24 @@ function filteredHistoryRounds(dgId) {
     ? playerHistoryRoundsAugmentedForCourseFilter(id)
     : historyRoundsForDg(id);
   if (courseFilterOn()) {
-    const vn = venueCourseName();
-    const metaEvent = String(DATA.meta.event_name || "").trim();
-    if (vn || metaEvent) {
-      list = list.filter((r) => currentTournamentContextMatchesRound(r));
+    const venueKey = propsEventVenueCourseKey();
+    if (venueKey) {
+      list = list.filter((r) => normCourseNameKey(r.course_name) === venueKey);
+    } else {
+      const metaEvent = String(DATA.meta.event_name || "").trim();
+      if (metaEvent) list = list.filter((r) => currentTournamentContextMatchesRound(r));
     }
   }
-  const courseFilter = propsCourseWindowModeActive() ? propsEffectiveCourseKey() : "";
+  const courseFilter = propsCourseWindowModeActive() || courseFilterOn() ? propsEffectiveCourseKey() : "";
   if (courseFilter) {
     list = list.filter((r) => normCourseNameKey(r.course_name) === normCourseNameKey(courseFilter));
   }
   list = applyPropsSidebarFiltersToRounds(list, id);
   list = list.filter((r) => !historyRoundIsPlaceholderAllMarketsZero(r));
-  /* Current-course filter can yield zero rows (rookies, first-time venue) — fall back only when venue is unknown. */
+  /* Current-course filter can yield zero rows (rookies, first-time venue) — never fall back to other courses. */
   if (courseFilterOn() && !list.length) {
-    const vn = venueCourseName();
-    if (!vn) {
-      list = historyRoundsForDg(dgId).filter((r) => !historyRoundIsPlaceholderAllMarketsZero(r));
-      if (courseFilter) {
-        list = list.filter((r) => normCourseNameKey(r.course_name) === normCourseNameKey(courseFilter));
-      }
-      list = applyPropsSidebarFiltersToRounds(list, id);
-      list.sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
-      list = list.slice(0, 60);
-    }
+    filteredHistoryRoundsMemoByDgId.set(id, list);
+    return list;
   }
   list.sort((a, b) => historyRoundChronoKey(b) - historyRoundChronoKey(a));
   filteredHistoryRoundsMemoByDgId.set(id, list);
@@ -23271,11 +23276,14 @@ function roundsMatchingCourseSelectionOnly(dgId) {
   if (!propsTrendCourseFilterActive()) return [];
   let list = playerHistoryRoundsAugmentedForCourseFilter(id);
   if (courseFilterOn()) {
-    const vn = venueCourseName();
-    const metaEvent = String(DATA.meta?.event_name || "").trim();
-    if (vn || metaEvent) list = list.filter((r) => currentTournamentContextMatchesRound(r));
+    const venueKey = propsEventVenueCourseKey();
+    if (venueKey) list = list.filter((r) => normCourseNameKey(r.course_name) === venueKey);
+    else {
+      const metaEvent = String(DATA.meta?.event_name || "").trim();
+      if (metaEvent) list = list.filter((r) => currentTournamentContextMatchesRound(r));
+    }
   }
-  const courseSel = propsCourseWindowModeActive() ? propsEffectiveCourseKey() : "";
+  const courseSel = propsCourseWindowModeActive() || courseFilterOn() ? propsEffectiveCourseKey() : "";
   if (courseSel) list = list.filter((r) => normCourseNameKey(r.course_name) === normCourseNameKey(courseSel));
   return list;
 }
@@ -23323,7 +23331,7 @@ function rebuildPropsFieldVenueMemorySupplement() {
     if (!rec || !Array.isArray(rec.rounds)) continue;
     for (const r of rec.rounds) {
       if (historyRoundIsPlaceholderAllMarketsZero(r)) continue;
-      if (!courseNameMatchesVenueLoose(r.course_name, venueRaw)) continue;
+      if (normCourseNameKey(r.course_name) !== normCourseNameKey(venueRaw)) continue;
       all.push(r);
       if (historyRoundSeasonYear(r) === PROPS_TREND_DISPLAY_SEASON_YEAR) season.push(r);
     }
@@ -27471,6 +27479,15 @@ document.addEventListener("DOMContentLoaded", () => {
           propsWindowNUserOverride = false;
         }
         syncPropsAverageUiState();
+      } else if (id === "props-filter-current-course") {
+        propsCourseWindowStructureKey = "";
+        invalidateCourseWindowRoundEntriesCache();
+        if (courseFilterOn()) {
+          propsFieldCourseUserPicked = false;
+          ensurePropsCourseSelectedForWindow({ force: true });
+        }
+        filteredHistoryRoundsMemoSigStored = "";
+        filteredHistoryRoundsMemoByDgId.clear();
       } else if (id === "props-filter-avg-sort" || id === "props-filter-course-window" || id === "props-filter-tail-mode") {
         syncPropsAverageUiState();
         if (propsCourseWindowModeOn() && propsAverageModeOn() && propsFieldUncappedAggregateSeries?.length) {

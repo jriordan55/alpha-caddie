@@ -525,9 +525,12 @@ async function main() {
       if (!result) continue;
       const pnl = americanPnlDollars(result, odds);
       if (!Number.isFinite(pnl) && result !== "P") continue;
+      const ts = Number(r.t) || 0;
       betRows.push({
         event: r.event,
         round: r.round,
+        date: ts ? new Date(ts).toISOString().slice(0, 10) : "",
+        ts: ts || null,
         player: r.player,
         dg_id: r.dg_id,
         market: m.market,

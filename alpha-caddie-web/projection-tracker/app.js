@@ -28,6 +28,10 @@ let ROI = null;
 let BETS = null;
 let PROJ = null;
 let LIVE_PROPS = null;
+/** @type {{ pnl?: import("chart.js").Chart, bank?: import("chart.js").Chart, roi?: import("chart.js").Chart }} */
+let AN_CHARTS = {};
+
+const STAKE = 100;
 
 function $(id) {
   return document.getElementById(id);
@@ -132,20 +136,40 @@ function renderMarketTable() {
 
 function fillMarketSelects() {
   const pass = passingMarkets();
-  for (const id of ["live-market", "hist-market"]) {
+  for (const id of ["live-market", "hist-market", "an-market"]) {
     const sel = $(id);
+    if (!sel) continue;
     const cur = sel.value;
+    const allLabel =
+      id === "live-market"
+        ? "Both-side markets only"
+        : id === "an-market"
+          ? "All passing markets"
+          : "All passing markets";
     sel.innerHTML =
-      `<option value="">${id === "live-market" ? "Both-side markets only" : "All passing markets"}</option>` +
+      `<option value="">${allLabel}</option>` +
       pass.map((m) => `<option value="${m}">${m}</option>`).join("");
     if ([...sel.options].some((o) => o.value === cur)) sel.value = cur;
   }
-  const events = [...new Set((BETS?.bets || []).map((b) => b.event))].sort();
-  const es = $("hist-event");
-  const evCur = es.value;
-  es.innerHTML =
-    `<option value="">All events</option>` + events.map((e) => `<option value="${e}">${e}</option>`).join("");
-  if ([...es.options].some((o) => o.value === evCur)) es.value = evCur;
+  const events = [...new Set((BETS?.bets || []).map((b) => b.event).filter(Boolean))];
+  const order = ROI?.event_order || [];
+  events.sort((a, b) => {
+    const ia = order.indexOf(a);
+    const ib = order.indexOf(b);
+    if (ia >= 0 && ib >= 0) return ia - ib;
+    if (ia >= 0) return -1;
+    if (ib >= 0) return 1;
+    return String(a).localeCompare(String(b));
+  });
+  for (const id of ["hist-event", "an-event"]) {
+    const es = $(id);
+    if (!es) continue;
+    const evCur = es.value;
+    es.innerHTML =
+      `<option value="">All events</option>` +
+      events.map((e) => `<option value="${e}">${e}</option>`).join("");
+    if ([...es.options].some((o) => o.value === evCur)) es.value = evCur;
+  }
 }
 
 function histFiltered() {
@@ -299,10 +323,315 @@ function renderLive() {
     : `<tr><td colspan="8">No live DK props past policy gap for both-side markets.</td></tr>`;
 }
 
+function betTs(b) {
+  const t = Number(b?.ts);
+  if (Number.isFinite(t) && t > 0) return t;
+  const d = Date.parse(String(b?.date || ""));
+  return Number.isFinite(d) ? d : NaN;
+}
+
+function fmtChartDate(ms) {
+  if (!Number.isFinite(ms)) return "";
+  return new Date(ms).toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "2-digit",
+  });
+}
+
+function anFiltered() {
+  const pass = new Set(passingMarkets());
+  const mkt = $("an-market")?.value || "";
+  const ev = $("an-event")?.value || "";
+  return (BETS?.bets || []).filter((b) => {
+    if (!pass.has(b.market)) return false;
+    if (mkt && b.market !== mkt) return false;
+    if (ev && b.event !== ev) return false;
+    return true;
+  });
+}
+
+function sortBetsChrono(bets) {
+  return [...bets].sort((a, b) => {
+    const ta = betTs(a);
+    const tb = betTs(b);
+    const fa = Number.isFinite(ta);
+    const fb = Number.isFinite(tb);
+    if (fa && fb && ta !== tb) return ta - tb;
+    if (fa !== fb) return fa ? -1 : 1;
+    const ra = Number(a.round) || 0;
+    const rb = Number(b.round) || 0;
+    if (ra !== rb) return ra - rb;
+    const ma = String(a.market || "").localeCompare(String(b.market || ""));
+    if (ma) return ma;
+    return String(a.player || "").localeCompare(String(b.player || ""));
+  });
+}
+
+function buildAnalyticsSeries(bets, startBankroll) {
+  const stake = Number(BETS?.stake_dollars) || STAKE;
+  const start = Number.isFinite(startBankroll) && startBankroll > 0 ? startBankroll : 10000;
+  const sorted = sortBetsChrono(bets);
+  const meta = [];
+  const cumPnl = [];
+  const bankroll = [];
+  const drawdown = [];
+  const cumRoi = [];
+  let pnl = 0;
+  let bank = start;
+  let peak = start;
+  let maxDd = 0;
+  let dayBucket = "";
+  /** Flush one chart point per calendar day (end-of-day) for smooth curves. */
+  const flushDay = (m, values) => {
+    meta.push(m);
+    cumPnl.push({ x: m.x, y: values.pnl });
+    bankroll.push({ x: m.x, y: values.bank });
+    drawdown.push({ x: m.x, y: values.dd });
+    cumRoi.push({ x: m.x, y: values.roi });
+  };
+
+  let pending = null;
+  for (let i = 0; i < sorted.length; i++) {
+    const b = sorted[i];
+    const p = Number(b.pnl);
+    const dp = Number.isFinite(p) ? p : 0;
+    pnl += dp;
+    bank += dp;
+    if (bank > peak) peak = bank;
+    const ddPct = peak > 0 ? ((peak - bank) / peak) * 100 : 0;
+    if (ddPct > maxDd) maxDd = ddPct;
+    const base = betTs(b);
+    const day = Number.isFinite(base)
+      ? new Date(base).toISOString().slice(0, 10)
+      : `idx-${i}`;
+    if (day !== dayBucket) {
+      if (pending) flushDay(pending.meta, pending.values);
+      dayBucket = day;
+    }
+    const x = Number.isFinite(base) ? base : i;
+    pending = {
+      meta: {
+        x,
+        date: b.date || (Number.isFinite(base) ? new Date(base).toISOString().slice(0, 10) : ""),
+        event: b.event,
+        round: b.round,
+        player: b.player,
+        market: b.market,
+        side: b.side,
+        betIndex: i + 1,
+        betsThrough: i + 1,
+      },
+      values: {
+        pnl: Math.round(pnl * 100) / 100,
+        bank: Math.round(bank * 100) / 100,
+        dd: Math.round(ddPct * 100) / 100,
+        roi: Math.round((pnl / ((i + 1) * stake)) * 10000) / 100,
+      },
+    };
+  }
+  if (pending) flushDay(pending.meta, pending.values);
+
+  return {
+    meta,
+    cumPnl,
+    bankroll,
+    drawdown,
+    cumRoi,
+    n: sorted.length,
+    pnl,
+    bank,
+    peak,
+    maxDd,
+    finalRoi: sorted.length ? pnl / (sorted.length * stake) : NaN,
+    start,
+    stake,
+  };
+}
+
+const CHART_DEFAULTS = {
+  color: "#9aab9c",
+  borderColor: "#2c382e",
+  font: { family: "'Instrument Sans', system-ui, sans-serif", size: 11 },
+};
+
+function chartCommonOptions(yTitle, yTickFn, meta) {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    parsing: false,
+    interaction: { mode: "nearest", axis: "x", intersect: false },
+    plugins: {
+      legend: {
+        display: true,
+        labels: { color: CHART_DEFAULTS.color, boxWidth: 12, font: CHART_DEFAULTS.font },
+      },
+      tooltip: {
+        callbacks: {
+          title(items) {
+            const i = items?.[0]?.dataIndex ?? 0;
+            const m = meta?.[i];
+            if (!m) return `Bet #${i + 1}`;
+            const d = m.date || fmtChartDate(m.x);
+            return `${d} · ${m.betsThrough || m.betIndex} bets`;
+          },
+          afterTitle(items) {
+            const i = items?.[0]?.dataIndex ?? 0;
+            const m = meta?.[i];
+            if (!m) return "";
+            return `${m.event || ""} · R${m.round ?? "?"}`;
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        type: "linear",
+        title: { display: true, text: "Date", color: CHART_DEFAULTS.color },
+        ticks: {
+          color: CHART_DEFAULTS.color,
+          maxRotation: 45,
+          autoSkip: true,
+          maxTicksLimit: 10,
+          callback(val) {
+            return fmtChartDate(val);
+          },
+        },
+        grid: { color: "rgba(44,56,46,0.45)" },
+      },
+      y: {
+        title: { display: true, text: yTitle, color: CHART_DEFAULTS.color },
+        ticks: {
+          color: CHART_DEFAULTS.color,
+          callback: yTickFn || ((v) => v),
+        },
+        grid: { color: "rgba(44,56,46,0.45)" },
+      },
+    },
+  };
+}
+
+function upsertChart(key, canvasId, config) {
+  const canvas = $(canvasId);
+  if (!canvas || typeof Chart === "undefined") return;
+  if (AN_CHARTS[key]) {
+    AN_CHARTS[key].destroy();
+    delete AN_CHARTS[key];
+  }
+  AN_CHARTS[key] = new Chart(canvas.getContext("2d"), config);
+}
+
+function renderAnalytics() {
+  const startEl = $("an-bankroll");
+  const start = Number(startEl?.value);
+  const series = buildAnalyticsSeries(anFiltered(), start);
+  const kpi = $("an-kpis");
+  if (kpi) {
+    kpi.innerHTML = `
+      <span>Bets <strong>${series.n}</strong></span>
+      <span>PnL <strong class="${clsSigned(series.pnl)}">${fmtMoney(series.pnl)}</strong></span>
+      <span>ROI <strong class="${clsSigned(series.finalRoi)}">${fmtPct(series.finalRoi)}</strong></span>
+      <span>End bankroll <strong>$${Math.round(series.bank).toLocaleString()}</strong></span>
+      <span>Max drawdown <strong class="neg">${series.maxDd.toFixed(1)}%</strong></span>
+    `;
+  }
+
+  if (!series.n) {
+    for (const k of Object.keys(AN_CHARTS)) {
+      AN_CHARTS[k]?.destroy();
+      delete AN_CHARTS[k];
+    }
+    return;
+  }
+
+  const moneyTick = (v) =>
+    `${v < 0 ? "−" : ""}$${Math.abs(Math.round(v)).toLocaleString()}`;
+  const pctTick = (v) => `${v}%`;
+  const baseOpts = (yTitle, yTick) => chartCommonOptions(yTitle, yTick, series.meta);
+  const curve = {
+    tension: 0.45,
+    cubicInterpolationMode: "monotone",
+    pointRadius: 0,
+    pointHoverRadius: 4,
+    borderWidth: 2.5,
+  };
+
+  upsertChart("pnl", "chart-pnl", {
+    type: "line",
+    data: {
+      datasets: [
+        {
+          label: "Cumulative PnL",
+          data: series.cumPnl,
+          borderColor: "#c4a35a",
+          backgroundColor: "rgba(196,163,90,0.12)",
+          fill: true,
+          ...curve,
+        },
+      ],
+    },
+    options: baseOpts("PnL ($)", moneyTick),
+  });
+
+  const bankOpts = baseOpts("Bankroll ($)", moneyTick);
+  bankOpts.scales.y1 = {
+    position: "right",
+    title: { display: true, text: "Drawdown %", color: CHART_DEFAULTS.color },
+    ticks: { color: CHART_DEFAULTS.color, callback: pctTick },
+    grid: { drawOnChartArea: false },
+    min: 0,
+  };
+
+  upsertChart("bank", "chart-bankroll", {
+    type: "line",
+    data: {
+      datasets: [
+        {
+          label: "Bankroll",
+          data: series.bankroll,
+          borderColor: "#5dcc7a",
+          backgroundColor: "transparent",
+          ...curve,
+          yAxisID: "y",
+        },
+        {
+          label: "Drawdown %",
+          data: series.drawdown,
+          borderColor: "#e07070",
+          backgroundColor: "rgba(224,112,112,0.15)",
+          fill: true,
+          ...curve,
+          borderWidth: 2,
+          yAxisID: "y1",
+        },
+      ],
+    },
+    options: bankOpts,
+  });
+
+  upsertChart("roi", "chart-roi", {
+    type: "line",
+    data: {
+      datasets: [
+        {
+          label: "Cumulative ROI %",
+          data: series.cumRoi,
+          borderColor: "#7eb8e8",
+          backgroundColor: "rgba(126,184,232,0.12)",
+          fill: true,
+          ...curve,
+        },
+      ],
+    },
+    options: baseOpts("ROI %", pctTick),
+  });
+}
+
 function renderAll() {
   renderHero();
   renderMarketTable();
   fillMarketSelects();
+  renderAnalytics();
   renderHist();
   renderLive();
 }
@@ -331,5 +660,10 @@ for (const id of ["hist-market", "hist-side", "hist-event"]) {
 for (const id of ["live-market", "live-gap"]) {
   $(id)?.addEventListener("change", () => renderLive());
 }
+for (const id of ["an-market", "an-event"]) {
+  $(id)?.addEventListener("change", () => renderAnalytics());
+}
+$("an-bankroll")?.addEventListener("change", () => renderAnalytics());
+$("an-bankroll")?.addEventListener("input", () => renderAnalytics());
 
 boot();

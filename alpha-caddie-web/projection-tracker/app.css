@@ -175,6 +175,42 @@ th {
 }
 .kpi-row strong { color: var(--text); font-family: var(--mono); font-weight: 500; }
 
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+.chart-card {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.75rem 0.85rem 0.5rem;
+  min-width: 0;
+}
+.chart-card-wide { grid-column: 1 / -1; }
+.chart-card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.chart-card canvas {
+  width: 100% !important;
+  height: 240px !important;
+}
+input[type="number"] {
+  font: inherit;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--bg2);
+  color: var(--text);
+  padding: 0.45rem 0.7rem;
+  width: 8rem;
+}
+
 .error {
   background: color-mix(in srgb, var(--bad) 18%, var(--bg1));
   border: 1px solid color-mix(in srgb, var(--bad) 45%, var(--line));
@@ -186,4 +222,6 @@ th {
 @media (max-width: 800px) {
   .hero-kpis { grid-template-columns: 1fr 1fr; }
   .top-inner { flex-direction: column; }
+  .charts-grid { grid-template-columns: 1fr; }
+  .chart-card-wide { grid-column: auto; }
 }
