@@ -1772,7 +1772,31 @@ body {
 /* Round projections table: always allow horizontal swipe (iOS Safari can ignore :has fallback). */
 #panel-ou .ou-table-card.table-wrap {
   overflow-x: auto;
+  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  max-width: 100%;
+  /* Prefer a visible track so wide book grids are obviously scrollable */
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(140, 170, 140, 0.55) rgba(0, 0, 0, 0.25);
+}
+#panel-ou .ou-table-card.table-wrap::-webkit-scrollbar {
+  height: 10px;
+}
+#panel-ou .ou-table-card.table-wrap::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: 0 0 var(--golf-radius-lg) var(--golf-radius-lg);
+}
+#panel-ou .ou-table-card.table-wrap::-webkit-scrollbar-thumb {
+  background: rgba(140, 170, 140, 0.55);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+#panel-ou .ou-table-card.table-wrap::-webkit-scrollbar-thumb:hover {
+  background: rgba(160, 200, 160, 0.75);
+  background-clip: padding-box;
 }
 #table-ou {
   table-layout: auto;
@@ -1780,6 +1804,12 @@ body {
   border-collapse: separate;
   border-spacing: 0;
   background: var(--golf-surface-deep);
+}
+/* Dense round-projections grid: size to content so empty book cols don't inflate */
+#table-ou.table-ou-projections {
+  --ou-proj-tee-col-w: 58px;
+  width: max-content;
+  table-layout: auto;
 }
 #table-ou thead th {
   padding: 12px 12px;
@@ -1794,6 +1824,12 @@ body {
   border-bottom: 1px solid var(--golf-border);
   border-top: 1px solid var(--golf-border);
 }
+#table-ou.table-ou-projections thead th {
+  padding: 5px 3px;
+  font-size: 0.58rem;
+  letter-spacing: 0.04em;
+  line-height: 1.15;
+}
 #table-ou thead th.sortable {
   white-space: nowrap;
 }
@@ -1802,6 +1838,13 @@ body {
   vertical-align: middle;
   border-bottom: 1px solid var(--golf-border);
   background: var(--golf-surface-mid);
+}
+#table-ou.table-ou-projections tbody td {
+  padding: 4px 3px;
+}
+#table-ou.table-ou-projections .ou-cell {
+  font-size: 0.68rem;
+  line-height: 1.2;
 }
 /* Leaderboard-style first column: do not apply to round O/U long rows (.ou-proj-td-golfer) or colspan detail cells — WebKit can mis-layout sticky + wide tables when max-width:0 hits the wrong td. */
 #table-ou thead th:first-child:not(.ou-proj-th-golfer):not(.ou-proj-th-tee),
@@ -1851,10 +1894,6 @@ body {
 }
 
 /* Freeze tee time + golfer columns while scrolling wide round projections */
-#table-ou.table-ou-projections {
-  --ou-proj-tee-col-w: 76px;
-}
-
 #table-ou.table-ou-projections thead th.ou-proj-th-tee,
 #table-ou.table-ou-projections tbody td.ou-proj-td-tee {
   position: -webkit-sticky;
@@ -1870,6 +1909,9 @@ body {
   -webkit-transform: translateZ(0);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+  font-size: 0.62rem;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 #table-ou.table-ou-projections thead th.ou-proj-th-tee {
@@ -1895,27 +1937,30 @@ body {
 
 #table-ou.table-ou-projections thead th.ou-proj-th-golfer,
 #table-ou.table-ou-projections tbody td.ou-proj-td-golfer {
-  width: 170px;
-  min-width: 170px;
-  max-width: 170px;
+  width: 118px;
+  min-width: 118px;
+  max-width: 118px;
   box-sizing: border-box;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 0.68rem;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 #table-ou.table-ou-projections thead th.ou-proj-th-market,
 #table-ou.table-ou-projections tbody td.ou-proj-td-market {
-  width: 96px;
-  min-width: 96px;
-  max-width: 96px;
+  width: 64px;
+  min-width: 64px;
+  max-width: 64px;
   box-sizing: border-box;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 #table-ou.table-ou-projections thead th.ou-proj-th-side,
 #table-ou.table-ou-projections tbody td.ou-proj-td-side {
-  width: 60px;
-  min-width: 60px;
-  max-width: 60px;
+  width: 40px;
+  min-width: 40px;
+  max-width: 40px;
   box-sizing: border-box;
 }
 
@@ -1947,12 +1992,12 @@ body {
 /* Round projections — long rows (golfer × market × Over|Under) */
 #table-ou.table-ou-projections tbody td.ou-proj-td-golfer .ou-player-flag {
   display: inline-block;
-  width: 18px;
-  height: 13px;
+  width: 14px;
+  height: 10px;
   object-fit: cover;
   border-radius: 2px;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  margin-right: 8px;
+  margin-right: 4px;
   vertical-align: -1px;
 }
 #table-ou.table-ou-projections .ou-proj-th-market,
@@ -1961,8 +2006,12 @@ body {
 }
 #table-ou.table-ou-projections .ou-proj-th-mu,
 #table-ou.table-ou-projections .ou-proj-td-mu {
-  min-width: 3rem;
+  min-width: 2.2rem;
+  max-width: 2.8rem;
+  width: 2.4rem;
   font-weight: 800;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 
 /* +EV table: freeze golfer column while horizontal scroll */
@@ -2006,9 +2055,13 @@ body {
 }
 #table-ou.table-ou-projections .ou-proj-th-avg,
 #table-ou.table-ou-projections .ou-proj-td-avg {
-  min-width: 4rem;
+  min-width: 2.4rem;
+  max-width: 3rem;
+  width: 2.6rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 #table-ou.table-ou-projections .ou-proj-th-line,
 #table-ou.table-ou-projections .ou-proj-td-line,
@@ -2026,45 +2079,51 @@ body {
 #table-ou.table-ou-projections .ou-proj-td-kl-line,
 #table-ou.table-ou-projections .ou-proj-th-czr-line,
 #table-ou.table-ou-projections .ou-proj-td-czr-line {
-  min-width: 3rem;
+  min-width: 2rem;
+  max-width: 2.6rem;
+  width: 2.2rem;
   color: #f4ca3c;
   font-weight: 800;
+  padding-left: 1px;
+  padding-right: 1px;
 }
 #table-ou.table-ou-projections .ou-proj-th-book,
 #table-ou.table-ou-projections .ou-proj-td-book {
-  width: 48px;
-  min-width: 44px;
-  max-width: 56px;
+  width: 36px;
+  min-width: 32px;
+  max-width: 40px;
   text-align: center;
   vertical-align: middle;
-  padding-left: 6px;
-  padding-right: 6px;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 #table-ou.table-ou-projections .ou-proj-th-book-head {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  line-height: 1.1;
+  gap: 1px;
+  line-height: 1.05;
   vertical-align: middle;
 }
 #table-ou.table-ou-projections .ou-proj-th-book-text {
-  font-size: 0.68rem;
+  font-size: 0.5rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0;
+  line-height: 1;
   color: var(--golf-text-muted);
+  text-transform: uppercase;
 }
 #table-ou.table-ou-projections .ou-proj-th-book-logo-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 22px;
+  min-height: 16px;
 }
 #table-ou.table-ou-projections .ou-proj-th-book-logo-img {
-  width: 22px;
-  height: 22px;
-  border-radius: 5px;
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
   object-fit: contain;
   background: var(--golf-elevated-soft);
   border: 1px solid var(--golf-border);
@@ -2073,14 +2132,14 @@ body {
   display: none;
   align-items: center;
   justify-content: center;
-  min-width: 22px;
-  min-height: 22px;
-  border-radius: 5px;
+  min-width: 16px;
+  min-height: 16px;
+  border-radius: 3px;
   border: 1px solid var(--golf-border);
   background: var(--golf-elevated-soft);
-  font-size: 0.58rem;
+  font-size: 0.5rem;
   font-weight: 800;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   color: var(--golf-green);
 }
 #table-ou.table-ou-projections .ou-proj-th-dk-line,
@@ -2099,19 +2158,19 @@ body {
 #table-ou.table-ou-projections .ou-proj-th-czr-odds {
   text-align: center;
   vertical-align: middle;
-  padding-left: 6px;
-  padding-right: 6px;
+  padding-left: 1px;
+  padding-right: 1px;
 }
 #table-ou.table-ou-projections .ou-proj-book-logo-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 26px;
+  min-height: 16px;
 }
 #table-ou.table-ou-projections .ou-proj-book-logo-img {
-  width: 24px;
-  height: 24px;
-  border-radius: 5px;
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
   object-fit: contain;
   background: var(--golf-elevated-soft);
   border: 1px solid var(--golf-border);
@@ -2120,14 +2179,14 @@ body {
   display: none;
   align-items: center;
   justify-content: center;
-  min-width: 24px;
-  min-height: 24px;
-  border-radius: 5px;
+  min-width: 16px;
+  min-height: 16px;
+  border-radius: 3px;
   border: 1px solid var(--golf-border);
   background: var(--golf-elevated-soft);
-  font-size: 0.62rem;
+  font-size: 0.5rem;
   font-weight: 800;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   color: var(--golf-green);
 }
 #table-ou.table-ou-projections .ou-proj-th-odds,
@@ -2146,8 +2205,12 @@ body {
 #table-ou.table-ou-projections .ou-proj-td-kl-odds,
 #table-ou.table-ou-projections .ou-proj-th-czr-odds,
 #table-ou.table-ou-projections .ou-proj-td-czr-odds {
-  min-width: 3.5rem;
+  min-width: 2.3rem;
+  max-width: 3rem;
+  width: 2.5rem;
   font-weight: 700;
+  padding-left: 1px;
+  padding-right: 1px;
 }
 #table-ou.table-ou-projections .ou-proj-th-dk-edge,
 #table-ou.table-ou-projections .ou-proj-td-dk-edge,
@@ -2163,17 +2226,25 @@ body {
 #table-ou.table-ou-projections .ou-proj-td-kl-edge,
 #table-ou.table-ou-projections .ou-proj-th-czr-edge,
 #table-ou.table-ou-projections .ou-proj-td-czr-edge {
-  min-width: 4rem;
+  min-width: 2.4rem;
+  max-width: 3.2rem;
+  width: 2.6rem;
   font-weight: 800;
+  padding-left: 1px;
+  padding-right: 1px;
 }
 #table-ou.table-ou-projections .ou-proj-th-kelly,
 #table-ou.table-ou-projections .ou-proj-td-kelly,
 #table-ou.table-ou-projections .ou-proj-th-best,
 #table-ou.table-ou-projections .ou-proj-td-best {
-  min-width: 5.5rem;
+  min-width: 3.6rem;
+  max-width: 4.5rem;
+  width: 3.8rem;
   font-weight: 800;
   text-align: center;
   vertical-align: middle;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 #table-ou.table-ou-projections .ou-proj-th-fair,
 #table-ou.table-ou-projections .ou-proj-td-fair,
@@ -2183,8 +2254,12 @@ body {
 #table-ou.table-ou-projections .ou-proj-td-delta-avg,
 #table-ou.table-ou-projections .ou-proj-th-delta-best,
 #table-ou.table-ou-projections .ou-proj-td-delta-best {
-  min-width: 4.25rem;
+  min-width: 2.6rem;
+  max-width: 3.4rem;
+  width: 2.8rem;
   font-weight: 800;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 #table-ou.table-ou-projections .ou-proj-td-kelly.has-kelly,
 #table-ou.table-ou-projections .ou-proj-td-best.has-kelly,
@@ -4973,13 +5048,13 @@ th.matchup-analysis-best-pick {
      do not consume the full visible width and block access to later columns. */
   #panel-ou #table-ou.table-ou-projections {
     width: max-content;
-    min-width: 760px;
+    min-width: 720px;
     table-layout: auto;
   }
   #table-ou.table-ou-projections thead th,
   #table-ou.table-ou-projections tbody td {
-    padding: 8px 8px;
-    font-size: 0.72rem;
+    padding: 4px 2px;
+    font-size: 0.64rem;
   }
   #table-ou.table-ou-projections .ou-proj-th-book,
   #table-ou.table-ou-projections .ou-proj-td-book,
@@ -4991,15 +5066,15 @@ th.matchup-analysis-best-pick {
   #table-ou.table-ou-projections .ou-proj-th-sl-odds,
   #table-ou.table-ou-projections .ou-proj-th-ud-line,
   #table-ou.table-ou-projections .ou-proj-th-ud-odds {
-    min-width: 36px;
+    min-width: 28px;
     width: auto;
-    max-width: none;
-    padding-left: 4px;
-    padding-right: 4px;
+    max-width: 36px;
+    padding-left: 1px;
+    padding-right: 1px;
   }
   #table-ou.table-ou-projections .ou-proj-th-book-logo-img {
-    width: 18px;
-    height: 18px;
+    width: 14px;
+    height: 14px;
   }
 
 }
