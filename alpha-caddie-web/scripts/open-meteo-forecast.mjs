@@ -164,6 +164,8 @@ export function openMeteoForecastUrl(lat, lon, timezone) {
   u.searchParams.set("windspeed_unit", "mph");
   u.searchParams.set("temperature_unit", "fahrenheit");
   u.searchParams.set("forecast_days", "8");
+  // Need overnight hours before morning tees for prior-rain soft.
+  u.searchParams.set("past_days", "1");
   u.searchParams.set("timezone", timezone || "America/New_York");
   return u.href;
 }
@@ -230,6 +232,7 @@ function medianWeatherSnapshotFromSamples(samples) {
   const mt = medianFinite(samples.map((s) => s.tempF));
   const mw = medianFinite(samples.map((s) => s.windMph));
   const mh = medianFinite(samples.map((s) => s.humidityPct));
+  const prior = medianFinite(samples.map((s) => s.priorPrecipMm));
   if (!Number.isFinite(mt) || !Number.isFinite(mw) || !Number.isFinite(mh)) return null;
   const rank = { storm: 5, rain: 4, windy: 3, cloudy: 2, clear: 1, default: 0 };
   let bestC = "default";
@@ -242,7 +245,15 @@ function medianWeatherSnapshotFromSamples(samples) {
       bestC = c;
     }
   }
-  return { tempF: mt, windMph: mw, humidityPct: mh, condition: bestC };
+  const priorPrecipMm = Number.isFinite(prior) ? prior : 0;
+  return {
+    tempF: mt,
+    windMph: mw,
+    humidityPct: mh,
+    condition: bestC,
+    priorPrecipMm,
+    priorRainSoft: priorPrecipMm >= 0.4,
+  };
 }
 
 function forecastAnchorDateYmd(hourly, players, meta) {
@@ -379,13 +390,25 @@ function applyWeatherSnapshotToPlayer(p, snap) {
     p.weather_wind_mph = null;
     p.weather_humidity = null;
     p.weather_condition = "";
+    p.weather_prior_precip_mm = null;
+    p.weather_prior_rain_soft = false;
     return false;
   }
-  p.dg_auto_weather = { ...snap };
+  const priorPrecipMm = Number.isFinite(snap.priorPrecipMm) ? snap.priorPrecipMm : 0;
+  p.dg_auto_weather = {
+    tempF: snap.tempF,
+    windMph: snap.windMph,
+    humidityPct: snap.humidityPct,
+    condition: snap.condition,
+    priorPrecipMm,
+    priorRainSoft: priorPrecipMm >= 0.4 || Boolean(snap.priorRainSoft),
+  };
   p.weather_temp_f = Math.round(snap.tempF * 10) / 10;
   p.weather_wind_mph = Math.round(snap.windMph * 10) / 10;
   p.weather_humidity = Math.round(snap.humidityPct);
   p.weather_condition = String(snap.condition || "default").toLowerCase();
+  p.weather_prior_precip_mm = Math.round(priorPrecipMm * 100) / 100;
+  p.weather_prior_rain_soft = priorPrecipMm >= 0.4;
   return true;
 }
 

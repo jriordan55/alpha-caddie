@@ -192,9 +192,17 @@ async function main() {
       continue;
     }
 
+    // Pull day-before hours so overnight/pre-tee precip soft is available.
+    const startYmd = (() => {
+      const m = String(ev.minYmd || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (!m) return ev.minYmd;
+      const t = Date.UTC(+m[1], +m[2] - 1, +m[3]) - 86400000;
+      const d = new Date(t);
+      return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+    })();
     let hourly;
     try {
-      hourly = await archive.fetch(coords.lat, coords.lon, ev.minYmd, ev.maxYmd, coords.timezone, {
+      hourly = await archive.fetch(coords.lat, coords.lon, startYmd, ev.maxYmd, coords.timezone, {
         delayMs: fetchedEvents > 0 ? 120 : 0,
       });
       fetchedEvents++;
@@ -208,6 +216,7 @@ async function main() {
       const snap = roundWeatherFromHourly(hourly, g.teeParts);
       if (!snap) continue;
       const k = roundWeatherKey(g.event_id, g.year, g.round_num);
+      const priorPrecipMm = Number.isFinite(snap.priorPrecipMm) ? snap.priorPrecipMm : 0;
       roundWeather[k] = {
         event_id: g.event_id,
         year: g.year,
@@ -218,6 +227,8 @@ async function main() {
         windMph: Math.round(snap.windMph * 10) / 10,
         humidityPct: Math.round(snap.humidityPct),
         condition: snap.condition,
+        priorPrecipMm: Math.round(priorPrecipMm * 100) / 100,
+        priorRainSoft: priorPrecipMm >= 0.4,
       };
       roundsWithWeather++;
     }

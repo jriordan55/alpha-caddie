@@ -426,6 +426,8 @@ $artifacts = @(
   "alpha-caddie-web/data/matchup_backtest_summary.csv",
   "alpha-caddie-web/data/market_book_calibration.json",
   "alpha-caddie-web/data/walkforward_oos_roi.json",
+  "alpha-caddie-web/data/both_side_roi.json",
+  "alpha-caddie-web/data/both_side_bets.json",
   "alpha-caddie-web/data/parlay_correlations.json",
   "alpha-caddie-web/data/odds_model_roi_summary.csv",
   "alpha-caddie-web/data/odds_model_roi_detail.csv",

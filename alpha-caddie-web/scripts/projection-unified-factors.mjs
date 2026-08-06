@@ -26,6 +26,11 @@ import {
   statWeatherMuAdjustment,
   weatherDifficultyDeltaFromSnapshot,
 } from "./weather-projection-adjustments.mjs";
+import {
+  HIST_TEE_WAVE_AFTERNOON_BOGEYS,
+  HIST_TEE_WAVE_AFTERNOON_BIRDIES,
+  HIST_TEE_WAVE_AFTERNOON_STP,
+} from "./weather-mu-adjustments.mjs";
 import { teeWaveFromTeetimeAndLabel } from "./open-meteo-forecast.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -304,11 +309,14 @@ export function teeWaveStrokeShift(wave, waveBias, morningSnap, afternoonSnap) {
   const w = UNIFIED_FACTOR_WEIGHTS.teeWave;
   if (w <= 0) return 0;
   let shift = 0;
-  const histDelta = num(waveBias?.deltaAfternoonMinusMorning, 0);
-  const liveStrength = waveBias?.source === "live_hole_stats" ? 0.85 : 0.5;
+  let histDelta = num(waveBias?.deltaAfternoonMinusMorning, NaN);
+  if (!Number.isFinite(histDelta)) histDelta = HIST_TEE_WAVE_AFTERNOON_STP;
+  // Never zero out the AM/PM gap when live stats are missing — hist prior is +0.13 STP.
+  if (Math.abs(histDelta) < 0.02) histDelta = HIST_TEE_WAVE_AFTERNOON_STP;
+  const liveStrength = waveBias?.source === "live_hole_stats" ? 0.85 : 0.55;
   if (wave === "afternoon") shift += histDelta * liveStrength * w;
   else if (wave === "morning") shift -= histDelta * liveStrength * w;
-  const wxScale = waveBias?.source === "live_hole_stats" ? 0.15 : 0.35;
+  const wxScale = waveBias?.source === "live_hole_stats" ? 0.15 : 0.4;
   if (morningSnap && afternoonSnap && wave) {
     const dM = weatherDifficultyDeltaFromSnapshot(morningSnap);
     const dA = weatherDifficultyDeltaFromSnapshot(afternoonSnap);
@@ -324,12 +332,15 @@ export function teeWaveStrokeShift(wave, waveBias, morningSnap, afternoonSnap) {
 export function teeWaveCountingShifts(wave, waveBias, morningSnap, afternoonSnap) {
   const w = UNIFIED_FACTOR_WEIGHTS.teeWave;
   if (w <= 0 || !wave) return { birdies: 0, bogeys: 0 };
-  // Event-week DG live_hole_stats is the ground truth for this course/setup — apply most of the observed split.
-  const liveStrength = waveBias?.source === "live_hole_stats" ? 0.85 : 0.5;
+  const liveStrength = waveBias?.source === "live_hole_stats" ? 0.85 : 0.55;
   let birdShift = 0;
   let bogShift = 0;
-  const histBirdDelta = num(waveBias?.deltaBirdiesAfternoonMinusMorning, 0);
-  const histBogDelta = num(waveBias?.deltaBogeysAfternoonMinusMorning, 0);
+  let histBirdDelta = num(waveBias?.deltaBirdiesAfternoonMinusMorning, NaN);
+  let histBogDelta = num(waveBias?.deltaBogeysAfternoonMinusMorning, NaN);
+  if (!Number.isFinite(histBirdDelta)) histBirdDelta = HIST_TEE_WAVE_AFTERNOON_BIRDIES;
+  if (!Number.isFinite(histBogDelta)) histBogDelta = HIST_TEE_WAVE_AFTERNOON_BOGEYS;
+  if (Math.abs(histBirdDelta) < 0.01) histBirdDelta = HIST_TEE_WAVE_AFTERNOON_BIRDIES;
+  if (Math.abs(histBogDelta) < 0.01) histBogDelta = HIST_TEE_WAVE_AFTERNOON_BOGEYS;
   if (wave === "afternoon") {
     birdShift += histBirdDelta * liveStrength * w;
     bogShift += histBogDelta * liveStrength * w;
@@ -337,8 +348,7 @@ export function teeWaveCountingShifts(wave, waveBias, morningSnap, afternoonSnap
     birdShift -= histBirdDelta * liveStrength * w;
     bogShift -= histBogDelta * liveStrength * w;
   }
-  // Forecast weather AM/PM differential only when we lack live hole-stats wave (or as a small add-on).
-  const wxScale = waveBias?.source === "live_hole_stats" ? 0.15 : 0.35;
+  const wxScale = waveBias?.source === "live_hole_stats" ? 0.15 : 0.4;
   if (morningSnap && afternoonSnap) {
     const dM = weatherDifficultyDeltaFromSnapshot(morningSnap);
     const dA = weatherDifficultyDeltaFromSnapshot(afternoonSnap);

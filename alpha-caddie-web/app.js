@@ -4336,9 +4336,9 @@ const WEATHER_CONDITION_MEAN_DELTA = Object.freeze({
   default: 0,
   clear: 0,
   cloudy: 0.04,
-  windy: 0.22,
-  rain: -0.38,
-  storm: 0.12,
+  windy: 0.05,
+  rain: 0.18,
+  storm: 0.28,
 });
 
 const WEATHER_CONDITION_SIGMA_DELTA = Object.freeze({
@@ -4349,6 +4349,9 @@ const WEATHER_CONDITION_SIGMA_DELTA = Object.freeze({
   rain: 0.06,
   storm: 0.14,
 });
+
+const WIND_EFFECT_FLOOR_MPH = 5;
+const WIND_STROKES_PER_MPH = 0.1;
 
 let WEATHER_STATE = { ...WEATHER_DEFAULTS };
 
@@ -5150,15 +5153,30 @@ function weatherDifficultyDeltaFromSnapshot(w) {
   const hum = num(w.humidityPct, 55);
   const cond = String(w.condition || "default").toLowerCase();
   let tempAdj = tempF >= 72 ? 0.03 * (tempF - 72) : 0.02 * (tempF - 72);
-  if (wind < 9 && cond !== "windy" && cond !== "storm") tempAdj *= 0.35;
-  const windAdj = 0.045 * (wind - 8);
+  if (wind < WIND_EFFECT_FLOOR_MPH && cond !== "windy" && cond !== "storm") tempAdj *= 0.35;
+  const windAdj = Math.max(0, wind - WIND_EFFECT_FLOOR_MPH) * WIND_STROKES_PER_MPH;
   const humAdj = 0.006 * (hum - 55);
   let d = tempAdj + windAdj + humAdj;
   if (cond !== "default") d += WEATHER_CONDITION_MEAN_DELTA[cond] ?? 0;
-  const softTurf =
-    cond === "rain" || (wind < 9 && cond !== "windy" && cond !== "storm");
-  if (softTurf) d -= 0.12;
-  return clamp(d, -0.65, 0.85);
+  let priorMm = num(w.priorPrecipMm, NaN);
+  if (!Number.isFinite(priorMm) && (w.priorRainSoft === true || w.priorRainSoft === 1)) priorMm = 3;
+  if (Number.isFinite(priorMm) && priorMm >= 0.4) {
+    if (priorMm < 1.5) d -= 0.12;
+    else if (priorMm < 4) d -= 0.25;
+    else if (priorMm < 8) d -= 0.35;
+    else if (priorMm < 15) d -= 0.45;
+    else d -= 0.55;
+  }
+  if (
+    !(priorMm >= 0.4) &&
+    wind < WIND_EFFECT_FLOOR_MPH &&
+    cond !== "windy" &&
+    cond !== "storm" &&
+    cond !== "rain"
+  ) {
+    d -= 0.08;
+  }
+  return clamp(d, -1.2, 2.6);
 }
 
 function projectionCountsWeatherBaked(row) {
@@ -5184,13 +5202,15 @@ function weatherDifficultyDelta() {
 
 function weatherSigmaMultiplierFromSnapshot(w) {
   if (!w || typeof w !== "object") return 1;
-  const windVar = 0.01 * Math.max(0, w.windMph - 8);
+  const windVar = 0.012 * Math.max(0, w.windMph - WIND_EFFECT_FLOOR_MPH);
   const humVar = 0.0015 * Math.max(0, w.humidityPct - 55);
+  const priorMm = num(w.priorPrecipMm, 0);
+  const softVar = priorMm >= 2 ? 0.03 : 0;
   if (w.condition === "default") {
-    return clamp(1 + windVar + humVar, 0.9, 1.5);
+    return clamp(1 + windVar + humVar + softVar, 0.9, 1.55);
   }
   const condVar = WEATHER_CONDITION_SIGMA_DELTA[w.condition] ?? 0;
-  return clamp(1 + windVar + humVar + condVar, 0.9, 1.5);
+  return clamp(1 + windVar + humVar + condVar + softVar, 0.9, 1.55);
 }
 
 function weatherSigmaMultiplier() {
@@ -5212,9 +5232,15 @@ function effectiveWeatherForProjectionRow(row) {
       windMph: auto.windMph,
       humidityPct: auto.humidityPct,
       condition: String(auto.condition || "default").toLowerCase(),
+      priorPrecipMm: num(auto.priorPrecipMm, NaN),
+      priorRainSoft: Boolean(auto.priorRainSoft),
     };
   }
-  return { ...WEATHER_STATE };
+  return {
+    ...WEATHER_STATE,
+    priorPrecipMm: num(row?.weather_prior_precip_mm, NaN),
+    priorRainSoft: Boolean(row?.weather_prior_rain_soft),
+  };
 }
 
 /** Weather line for expanded projection “Model inputs” (every player gets a readable snapshot). */
@@ -5228,7 +5254,7 @@ function statWeatherMuAdjustment(market, row) {
   if (market === "Total score") return d;
   if (market === "Bogeys") return 0.45 * d;
   if (market === "Birdies") return -0.5 * d;
-  if (market === "Pars") return 0.05 * d;
+  if (market === "Pars") return 0.2 * d;
   if (market === "Putts") return 0.35 * d;
   if (market === "GIR") return -0.22 * d;
   if (market === "Fairways hit") return -0.14 * d;

@@ -679,6 +679,14 @@ if (String(process.env.GOLF_DG_METHODOLOGY || "1").trim() !== "0") {
     {},
     softOpt,
   );
+  if (!envTruthy("GOLF_SKIP_BAKE_BOTH_SIDE", false)) {
+    run(
+      "bake-both-side-roi.mjs",
+      "Bake both-side ROI + bets (both-side edge tracker)",
+      {},
+      softOpt,
+    );
+  }
   run(
     "apply-both-side-bias-to-projections.mjs",
     "Both-side chrono/loo μ bias (apply:both-side-bias)",

@@ -2,7 +2,11 @@
  * Live-week projection μ for browser + shared scripts (weather, pin sheet, in-round scratch).
  * Mirrors round-projection-mu.mjs ouProjectedMeanForMode plus runtime pin-sheet deltas.
  */
-import { statWeatherMuAdjustment, weatherDifficultyDeltaFromSnapshot } from "./weather-mu-adjustments.mjs";
+import {
+  HIST_TEE_WAVE_AFTERNOON_STP,
+  statWeatherMuAdjustment,
+  weatherDifficultyDeltaFromSnapshot,
+} from "./weather-mu-adjustments.mjs";
 import {
   liveCurrentRoundTotalScoreMuDelta,
   livePartialRoundCountPropAdjust,
@@ -115,25 +119,27 @@ function teeWaveMuAdjustment(market, row, meta) {
   if (meta?.projection_round_adjustments?.unified_factors_applied) return 0;
   if (row?.course_tailoring_applied) return 0;
   const waveBias = meta?.projection_unified_factors?.tee_wave_bias || meta?.tee_wave_bias;
-  if (!waveBias) return 0;
   const wave = teeWaveFromRow(row);
   if (!wave) return 0;
-  const w = 0.07;
+  const w = 0.28;
   let shift = 0;
-  const histDelta = num(waveBias?.deltaAfternoonMinusMorning, 0);
-  if (wave === "afternoon") shift += histDelta * 0.5 * w;
-  else shift -= histDelta * 0.5 * w;
+  let histDelta = num(waveBias?.deltaAfternoonMinusMorning, NaN);
+  if (!Number.isFinite(histDelta) || Math.abs(histDelta) < 0.02) histDelta = HIST_TEE_WAVE_AFTERNOON_STP;
+  if (wave === "afternoon") shift += histDelta * 0.55 * w;
+  else shift -= histDelta * 0.55 * w;
   const slots = meta?.forecast_wave_slots;
   if (slots?.morning && slots?.afternoon) {
     const dM = weatherDifficultyDeltaFromSnapshot(slots.morning);
     const dA = weatherDifficultyDeltaFromSnapshot(slots.afternoon);
     if (Number.isFinite(dM) && Number.isFinite(dA)) {
       const waveDiff = dA - dM;
-      shift += (wave === "afternoon" ? waveDiff : -waveDiff) * 0.35 * w;
+      shift += (wave === "afternoon" ? waveDiff : -waveDiff) * 0.4 * w;
     }
   }
   if (market === "Total score") return shift;
+  if (market === "Bogeys") return 0.45 * shift;
   if (market === "Birdies") return -0.5 * shift;
+  if (market === "Pars") return 0.2 * shift;
   if (market === "GIR") return -0.22 * shift;
   if (market === "Fairways hit") return -0.14 * shift;
   return 0;

@@ -52,8 +52,25 @@ export function openMeteoConditionFromHourSlice(codeWorst, maxPrecipProb, maxPre
   return "cloudy";
 }
 
+/**
+ * Sum precip (mm) in the lookback hours ending at teeStartIdx (exclusive of the
+ * tee window itself). Captures overnight + morning-before rain that softens turf.
+ */
+export function priorPrecipMmBeforeTee(hourly, teeStartIdx, lookbackHours = 12) {
+  const R = hourly?.precipitation;
+  if (!Array.isArray(R) || !Number.isFinite(teeStartIdx) || teeStartIdx <= 0) return 0;
+  const start = Math.max(0, Math.floor(teeStartIdx) - Math.max(1, lookbackHours));
+  const end = Math.floor(teeStartIdx);
+  let mm = 0;
+  for (let i = start; i < end; i++) {
+    const v = num(R[i], 0);
+    if (Number.isFinite(v) && v > 0) mm += v;
+  }
+  return Math.round(mm * 100) / 100;
+}
+
 /** Aggregate hourly arrays for a tee-time window. */
-export function summarizeHourlyWeatherSlice(hourly, startIdx, spanHours) {
+export function summarizeHourlyWeatherSlice(hourly, startIdx, spanHours, opts = {}) {
   const times = hourly?.time;
   const T = hourly?.temperature_2m;
   const W = hourly?.windspeed_10m;
@@ -109,11 +126,17 @@ export function summarizeHourlyWeatherSlice(hourly, startIdx, spanHours) {
   const windMph = windMphFromMeanSustainedAndMaxGust(meanSustained, maxGust);
   const peakForCond = Math.max(peakWind, peakGust);
   const cond = openMeteoConditionFromHourSlice(worstCode, maxPP, maxMm, peakForCond);
+  const lookback = Number.isFinite(num(opts.priorLookbackHours, NaN))
+    ? Math.round(num(opts.priorLookbackHours, 12))
+    : 12;
+  const priorPrecipMm = priorPrecipMmBeforeTee(hourly, startIdx, lookback);
   return {
     tempF: sT / nt,
     /** Median of mean sustained 10 m wind and max gust in the tee-time window (mph). */
     windMph,
     humidityPct: sH / nt,
     condition: cond,
+    priorPrecipMm,
+    priorRainSoft: priorPrecipMm >= 0.4,
   };
 }

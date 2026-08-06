@@ -82,6 +82,11 @@ import {
   DEFAULT_ROUND_WEATHER_JSON,
 } from "./historical-round-weather.mjs";
 import { applyWeatherBakedCountsToAllPlayers } from "./weather-projection-adjustments.mjs";
+import {
+  HIST_TEE_WAVE_AFTERNOON_BOGEYS,
+  HIST_TEE_WAVE_AFTERNOON_BIRDIES,
+  HIST_TEE_WAVE_AFTERNOON_STP,
+} from "./weather-mu-adjustments.mjs";
 import { teeWaveFromTeetimeAndLabel } from "./open-meteo-forecast.mjs";
 import { teeWaveStrokeShift, teeWaveCountingShifts } from "./projection-unified-factors.mjs";
 
@@ -118,21 +123,29 @@ function teeWaveBiasFromHist(histRows, courseKey, cutoffMs) {
   }
   const m = buckets.morning;
   const a = buckets.afternoon;
-  if (m.n <= 40 || a.n <= 40) {
-    return {
-      deltaAfternoonMinusMorning: 0,
-      deltaBirdiesAfternoonMinusMorning: 0,
-      deltaBogeysAfternoonMinusMorning: 0,
-      n: m.n + a.n,
-    };
-  }
+  // Empirically: afternoon ~+0.13 STP vs morning (paired same event-round, PGA 2015+).
+  const prior = {
+    deltaAfternoonMinusMorning: HIST_TEE_WAVE_AFTERNOON_STP,
+    deltaBirdiesAfternoonMinusMorning: HIST_TEE_WAVE_AFTERNOON_BIRDIES,
+    deltaBogeysAfternoonMinusMorning: HIST_TEE_WAVE_AFTERNOON_BOGEYS,
+    n: m.n + a.n,
+    source: "hist_prior_paired",
+  };
+  if (m.n <= 40 || a.n <= 40) return prior;
+  const rawStp = a.stp / a.n - m.stp / m.n;
+  const rawBird = a.bird / a.n - m.bird / m.n;
+  const rawBog = a.bog / a.n - m.bog / m.n;
+  const nEff = Math.min(m.n, a.n);
+  const shrink = nEff / (nEff + 80);
   return {
-    deltaAfternoonMinusMorning: a.stp / a.n - m.stp / m.n,
-    deltaBirdiesAfternoonMinusMorning: a.bird / a.n - m.bird / m.n,
-    deltaBogeysAfternoonMinusMorning: a.bog / a.n - m.bog / m.n,
+    deltaAfternoonMinusMorning: shrink * rawStp + (1 - shrink) * HIST_TEE_WAVE_AFTERNOON_STP,
+    deltaBirdiesAfternoonMinusMorning:
+      shrink * rawBird + (1 - shrink) * HIST_TEE_WAVE_AFTERNOON_BIRDIES,
+    deltaBogeysAfternoonMinusMorning: shrink * rawBog + (1 - shrink) * HIST_TEE_WAVE_AFTERNOON_BOGEYS,
     n: m.n + a.n,
     morning_n: m.n,
     afternoon_n: a.n,
+    source: "course_hist_shrink",
   };
 }
 
@@ -225,6 +238,8 @@ function loadWalkforwardWeatherIndex(webRoot) {
           windMph: Number(v.windMph ?? v.weather_wind_mph),
           humidityPct: Number(v.humidityPct ?? v.weather_humidity),
           condition: String(v.condition ?? v.weather_condition ?? "default").toLowerCase(),
+          priorPrecipMm: Number(v.priorPrecipMm ?? v.weather_prior_precip_mm ?? NaN),
+          priorRainSoft: Boolean(v.priorRainSoft ?? v.weather_prior_rain_soft),
           event_name: ev,
         };
         if (!Number.isFinite(snap.tempF)) continue;
@@ -275,6 +290,8 @@ export function resolveWalkforwardWeather({ webRoot, histRows, eventName, eventY
 
 function attachWeatherSnapshotToPlayers(players, snap) {
   if (!snap || !players?.length) return 0;
+  const priorPrecipMm = Number.isFinite(Number(snap.priorPrecipMm)) ? Number(snap.priorPrecipMm) : 0;
+  const priorRainSoft = priorPrecipMm >= 0.4 || Boolean(snap.priorRainSoft);
   let n = 0;
   for (const p of players) {
     if (!p || typeof p !== "object") continue;
@@ -282,11 +299,15 @@ function attachWeatherSnapshotToPlayers(players, snap) {
     p.weather_wind_mph = snap.windMph;
     p.weather_humidity = snap.humidityPct;
     p.weather_condition = snap.condition || "default";
+    p.weather_prior_precip_mm = priorPrecipMm;
+    p.weather_prior_rain_soft = priorRainSoft;
     p.dg_auto_weather = {
       tempF: snap.tempF,
       windMph: snap.windMph,
       humidityPct: snap.humidityPct,
       condition: snap.condition || "default",
+      priorPrecipMm,
+      priorRainSoft,
     };
     n++;
   }

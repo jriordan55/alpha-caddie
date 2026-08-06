@@ -251,6 +251,7 @@ function medianWeatherFromSnapshots(samples) {
   const mt = medianFinite(samples.map((s) => s.tempF));
   const mw = medianFinite(samples.map((s) => s.windMph));
   const mh = medianFinite(samples.map((s) => s.humidityPct));
+  const prior = medianFinite(samples.map((s) => s.priorPrecipMm));
   if (!Number.isFinite(mt)) return null;
   const rank = { storm: 5, rain: 4, windy: 3, cloudy: 2, clear: 1, default: 0 };
   let bestC = "default";
@@ -263,7 +264,15 @@ function medianWeatherFromSnapshots(samples) {
       bestC = c;
     }
   }
-  return { tempF: mt, windMph: mw, humidityPct: mh, condition: bestC };
+  const priorPrecipMm = Number.isFinite(prior) ? prior : 0;
+  return {
+    tempF: mt,
+    windMph: mw,
+    humidityPct: mh,
+    condition: bestC,
+    priorPrecipMm,
+    priorRainSoft: priorPrecipMm >= 0.4,
+  };
 }
 
 export function weatherSnapshotAtTeetime(hourly, teetimeParts, spanHours = 3) {
@@ -334,6 +343,8 @@ export function loadHistoricalRoundWeatherMap(jsonPath = DEFAULT_ROUND_WEATHER_J
           windMph: Number(r.windMph ?? r.weather_wind_mph),
           humidityPct: Number(r.humidityPct ?? r.weather_humidity),
           condition: String(r.condition ?? r.weather_condition ?? ""),
+          priorPrecipMm: Number(r.priorPrecipMm ?? r.weather_prior_precip_mm ?? NaN),
+          priorRainSoft: Boolean(r.priorRainSoft ?? r.weather_prior_rain_soft),
         });
       }
     } else if (rows && typeof rows === "object") {
@@ -344,6 +355,8 @@ export function loadHistoricalRoundWeatherMap(jsonPath = DEFAULT_ROUND_WEATHER_J
           windMph: Number(v.windMph ?? v.weather_wind_mph),
           humidityPct: Number(v.humidityPct ?? v.weather_humidity),
           condition: String(v.condition ?? v.weather_condition ?? ""),
+          priorPrecipMm: Number(v.priorPrecipMm ?? v.weather_prior_precip_mm ?? NaN),
+          priorRainSoft: Boolean(v.priorRainSoft ?? v.weather_prior_rain_soft),
         });
       }
     }
