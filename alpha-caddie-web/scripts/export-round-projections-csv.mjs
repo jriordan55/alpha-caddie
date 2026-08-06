@@ -12,6 +12,12 @@ import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { formatCourseLabelForDisplay } from "./course-name-key.mjs";
 import { matchPlayerByGolferLabel } from "./golfer-name-match.mjs";
+import {
+  evaluateBothSideBetSignal,
+  loadBothSidePolicy,
+  modelMuForRoiMarket,
+  DK_TO_ROI_MARKET,
+} from "./both-side-bet-signal.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -20,7 +26,7 @@ const DEFAULT_OUT = join(WEB_ROOT, "data", "round_projections.csv");
 const HEADER =
   "exported_at,projections_updated_at,dk_round_props_refreshed_at,event_name,course_used,display_round,round_num," +
   "dg_id,player_name,country,market,side,line,american_odds,over_odds,under_odds,book," +
-  "model_projection,p_model,p_implied,edge_pct,mu_sg\n";
+  "model_projection,p_model,p_implied,edge_pct,mu_sg,bet,bet_reason,bet_gap,bet_gap_need\n";
 
 const MARKET_FIELD = {
   "Total Score": "total_score",
@@ -131,6 +137,8 @@ function playerRowForRound(players, dgId, name, rnd) {
 }
 
 function modelProjectionForMarket(pl, market) {
+  const roi = DK_TO_ROI_MARKET[String(market || "").trim()];
+  if (roi) return modelMuForRoiMarket(pl, roi);
   const field = MARKET_FIELD[market];
   if (!field || !pl) return NaN;
   return num(pl[field], NaN);
@@ -168,8 +176,11 @@ export function writeRoundProjectionsCsv(payload, opts = {}) {
   const course = formatCourseLabelForDisplay(String(payload?.course_used || "").trim());
   const players = Array.isArray(payload?.players) ? payload.players : [];
   const dkRows = dkPropsForRound(payload?.props, displayRound);
+  const policy = opts.policy || loadBothSidePolicy(WEB_ROOT);
+  const biasAlreadyApplied = Boolean(payload?.both_side_bias_applied?.at);
 
   const lines = [HEADER];
+  let betYes = 0;
   for (const pr of dkRows) {
     const market = String(pr?.market || "").trim();
     const lineRaw = num(pr?.line, NaN);
@@ -197,6 +208,16 @@ export function writeRoundProjectionsCsv(payload, opts = {}) {
       ["over", overAm, pOver, pImpOver, edgeOver],
       ["under", underAm, pUnder, pImpUnder, edgeUnder],
     ]) {
+      const sig = evaluateBothSideBetSignal({
+        dkMarket: market,
+        side,
+        line,
+        americanOdds: am,
+        player: pl,
+        policy,
+        biasAlreadyApplied,
+      });
+      if (sig.bet === "YES") betYes++;
       const row = [
         exportedAt,
         projAt,
@@ -220,6 +241,10 @@ export function writeRoundProjectionsCsv(payload, opts = {}) {
         fmt(pImp, 4),
         fmt(edge * 100, 2),
         pl ? fmt(num(pl.mu_sg, NaN), 3) : "",
+        sig.bet,
+        sig.reason,
+        Number.isFinite(sig.gap) ? fmt(sig.gap, 2) : "",
+        Number.isFinite(sig.gap_need) ? fmt(sig.gap_need, 2) : "",
       ];
       lines.push(row.map(csvCell).join(",") + "\n");
     }
@@ -235,6 +260,7 @@ export function writeRoundProjectionsCsv(payload, opts = {}) {
     golfers: golfers.size,
     rows: sides,
     displayRound,
+    betYes,
   };
 }
 
@@ -251,7 +277,7 @@ function main() {
   const opts = Number.isFinite(roundEnv) && roundEnv >= 1 && roundEnv <= 4 ? { displayRound: roundEnv } : {};
   const out = writeRoundProjectionsCsv(payload, opts);
   console.log(
-    `[round-projections-csv] ${out.rows} rows (${out.dkProps} DK lines, ${out.golfers} golfers, R${out.displayRound}) -> ${out.path}`,
+    `[round-projections-csv] ${out.rows} rows (${out.dkProps} DK lines, ${out.golfers} golfers, R${out.displayRound}, bet=YES ${out.betYes}) -> ${out.path}`,
   );
 }
 

@@ -693,15 +693,25 @@ function overlayPlayerHistoryActualsForBackfill(
   return n;
 }
 
-/** Audit capture year for recurring events (U.S. Open, Memorial, …). */
-function resolveAuditEventYearFromSnaps(snaps) {
+/**
+ * Tournament calendar year for an audited event.
+ * Prefer the inferred Thursday date_start (event week), not max(capture years) —
+ * re-exports / late stamps must not shift e.g. a May event into the wrong season.
+ */
+function resolveAuditEventYearFromSnaps(snaps, opts = {}) {
+  const ds = String(opts.dateStart || "").trim();
+  if (/^\d{4}-\d{2}-\d{2}/.test(ds)) {
+    const y = parseInt(ds.slice(0, 4), 10);
+    if (Number.isFinite(y)) return y;
+  }
   const years = [];
   for (const snap of snaps || []) {
     if (Number.isFinite(snap?.capturedMs)) years.push(new Date(snap.capturedMs).getUTCFullYear());
     const pat = String(snap?.projAt || "").match(/^(\d{4})/);
     if (pat) years.push(parseInt(pat[1], 10));
   }
-  return years.length ? Math.max(...years) : NaN;
+  // Min (event-week captures), not max — max picks future re-scrape stamps.
+  return years.length ? Math.min(...years) : NaN;
 }
 
 /** @deprecated use resolveAuditEventYearFromSnaps */
@@ -877,6 +887,10 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
 
   /** @type {Map<string, Map<string, object>>} event → pre-round DK index */
   const auditByEvent = new Map();
+  /** @type {Map<string, string>} event → YYYY-MM-DD Thursday of event week */
+  const dateStartByEvent = new Map();
+  /** @type {Map<string, Map<number, number>>} event → round → tee UTC ms */
+  const roundStartByEvent = new Map();
   /** @type {Map<string, Map<string, Map<string, object>>>} short → event → index */
   const altAuditByBook = new Map(EXPORT_ALT_BOOKS.map((b) => [b.short, new Map()]));
   const altAuditPaths = {
@@ -898,6 +912,7 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
 
   for (const ev of auditEvents) {
     const dateStart = await inferDateStartFromAuditCaptures(ev, auditPath);
+    if (dateStart) dateStartByEvent.set(ev, dateStart);
     let roundStart = buildRoundStartUtcMsForAuditEvent(ev, {
       histRows,
       livePath,
@@ -906,6 +921,7 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
     if (!roundStart.size && dateStart) {
       roundStart = buildRoundStartUtcMsFromDateStart(dateStart, "America/New_York");
     }
+    if (roundStart.size) roundStartByEvent.set(ev, roundStart);
     const preIndex = await loadPreRoundDkPropsFromAudit(ev, auditPath, roundStart);
     if (preIndex.size) auditByEvent.set(ev, preIndex);
     for (const book of EXPORT_ALT_BOOKS) {
@@ -918,7 +934,9 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
   }
 
   for (const [ev, preIndex] of auditByEvent) {
-    const eventYear = resolveAuditEventYearFromSnaps([...preIndex.values()]);
+    const eventYear = resolveAuditEventYearFromSnaps([...preIndex.values()], {
+      dateStart: dateStartByEvent.get(ev) || "",
+    });
     const playerRounds = [];
     const seen = new Set();
     for (const pk of preIndex.keys()) {
@@ -950,7 +968,9 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
 
   for (const [ev, preIndex] of auditByEvent) {
     const snaps = [...preIndex.values()];
-    const eventYear = resolveAuditEventYearFromSnaps(snaps);
+    const eventYear = resolveAuditEventYearFromSnaps(snaps, {
+      dateStart: dateStartByEvent.get(ev) || "",
+    });
     const playerRounds = new Map();
     for (const [pk, snap] of preIndex) {
       const [dgStr, rndStr, ...marketParts] = pk.split("|");
@@ -975,17 +995,32 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
 
     /** @type {Map<number, Map<number, Map<string, number>>>} */
     const wfByRound = new Map();
+    let auditMuFallbacks = 0;
+    let wfMuHits = 0;
     if (wfCache) {
       const year = eventYear;
       const fieldDgIds = [...new Set([...playerRounds.values()].map((p) => p.dg))];
-      let betTimeMs = Infinity;
-      for (const snap of snaps) {
-        if (Number.isFinite(snap.capturedMs) && snap.capturedMs < betTimeMs) betTimeMs = snap.capturedMs;
-      }
       const auditedCourse =
         [...playerRounds.values()].map((p) => String(p.course || "").trim()).find(Boolean) || "";
+      const roundStarts = roundStartByEvent.get(ev) || new Map();
       for (let rnd = 1; rnd <= 4; rnd++) {
         if (![...playerRounds.values()].some((p) => p.rnd === rnd)) continue;
+        // Per-round cutoff: earliest pre-round snap for this round (not event-wide min).
+        let betTimeMs = Infinity;
+        for (const pr of playerRounds.values()) {
+          if (pr.rnd !== rnd) continue;
+          for (const snap of Object.values(pr.markets)) {
+            if (Number.isFinite(snap.capturedMs) && snap.capturedMs < betTimeMs) {
+              betTimeMs = snap.capturedMs;
+            }
+          }
+        }
+        const teeMs = roundStarts instanceof Map ? roundStarts.get(rnd) : NaN;
+        if (Number.isFinite(teeMs)) {
+          const preTee = teeMs - 60_000;
+          if (!Number.isFinite(betTimeMs) || betTimeMs === Infinity) betTimeMs = preTee;
+          else betTimeMs = Math.min(betTimeMs, preTee);
+        }
         const wfMap = await wfCache.ensureEvent({
           event: ev,
           year,
@@ -1002,6 +1037,10 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
     for (const snap of snaps) {
       if (Number.isFinite(snap.capturedMs) && snap.capturedMs < eventMs) eventMs = snap.capturedMs;
     }
+
+    const dgMuOnly =
+      String(process.env.GOLF_DG_METHODOLOGY || "").trim() === "1" &&
+      String(process.env.GOLF_ALLOW_AUDIT_MU_FALLBACK || "").trim() !== "1";
 
     for (const [, pr] of playerRounds) {
       const act = allActuals.get(actualsKey(ev, eventYear, pr.dg, pr.rnd)) || {};
@@ -1044,7 +1083,17 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
         const openCapturedMs = snap?.openCapturedMs;
         const closeCapturedMs = snap?.capturedMs;
         // Independent skill/course model is the export μ. Never Bayesian-blend toward DK.
-        const independentModelLine = Number.isFinite(wfModelLine) ? wfModelLine : auditModelLine;
+        // Under DG methodology, do not silently fall back to stale audit (kitchen-sink) model lines.
+        let independentModelLine = NaN;
+        if (Number.isFinite(wfModelLine)) {
+          independentModelLine = wfModelLine;
+          wfMuHits++;
+        } else if (!dgMuOnly && Number.isFinite(auditModelLine)) {
+          independentModelLine = auditModelLine;
+          auditMuFallbacks++;
+        } else if (Number.isFinite(auditModelLine)) {
+          auditMuFallbacks++;
+        }
         const exportRaw =
           String(process.env.GOLF_EXPORT_RAW_MODEL_MU || "1").trim() !== "0" &&
           String(process.env.GOLF_EXPORT_RAW_MODEL_MU || "1").trim().toLowerCase() !== "false";
@@ -1102,6 +1151,13 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
         hasCompleted,
         marketDrafts,
       });
+    }
+    if (wfCache && (auditMuFallbacks > 0 || wfMuHits > 0)) {
+      console.log(
+        `[round-projection-vs-actual] ${ev} yr=${eventYear}: wfμ=${wfMuHits} auditFallback=${auditMuFallbacks}${
+          dgMuOnly && auditMuFallbacks ? " (DG: audit μ skipped)" : ""
+        }`,
+      );
     }
   }
 

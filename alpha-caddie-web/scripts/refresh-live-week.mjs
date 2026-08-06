@@ -672,6 +672,15 @@ if (skipHistoryRebuild) {
 run("verify-ou-round-projection-means.mjs", "Guard Round Projections Proj μ (no in-play collapse)", {}, softOpt);
 run("verify-ou-proj-avg.mjs", "Guard Round Projections course averages vs Course Fit", {}, softOpt);
 
+if (String(process.env.GOLF_DG_METHODOLOGY || "1").trim() !== "0") {
+  run(
+    "apply-dg-methodology-to-projections.mjs",
+    "DataGolf predictive methodology μ (apply:dg-methodology)",
+    {},
+    softOpt,
+  );
+}
+
 mirrorWebsitePublicData();
 
 console.log("\n[refresh:live] Done.");

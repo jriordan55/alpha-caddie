@@ -305,17 +305,6 @@ function ppPropForPatch(preRound, livePp, dg, rnd, propsMarket, row) {
   return null;
 }
 
-function auditModelFromPropSnap(snap, spec) {
-  if (!snap) return NaN;
-  if (spec.key === "total") return num(snap.modelTotal);
-  if (spec.key === "birdies") return num(snap.modelBirdies);
-  if (spec.key === "pars") return num(snap.modelPars);
-  if (spec.key === "bogeys") return num(snap.modelBogeys);
-  if (spec.key === "gir") return num(snap.modelGir);
-  if (spec.key === "fairways") return num(snap.modelFairways);
-  return NaN;
-}
-
 function patchBookLinesFromLiveProps(detailRows, projections, liveBookProps) {
   if (!liveBookProps || !Array.isArray(detailRows) || !detailRows.length) return detailRows;
   const eventName = String(liveBookProps.event_name || projections?.event_name || "").trim();
@@ -359,12 +348,7 @@ function patchBookLinesFromLiveProps(detailRows, projections, liveBookProps) {
             next[spec.openUnderOddsCol] = formatAmerican(Number.isFinite(num(dk.openUnder)) ? dk.openUnder : dk.under);
           }
           if (!oddsSource) oddsSource = dk.oddsSource;
-          if (dk.oddsSource === "pre_round_audit") {
-            const auditMu = auditModelFromPropSnap(dk, spec);
-            if (Number.isFinite(auditMu)) {
-              next[spec.lineCol] = fmtModelLine(spec.market, auditMu);
-            }
-          }
+          // Never overwrite walk-forward / DG model μ with stale audit kitchen-sink lines.
           changed = true;
         }
       }
@@ -385,12 +369,7 @@ function patchBookLinesFromLiveProps(detailRows, projections, liveBookProps) {
             next[spec.ppOpenUnderOddsCol] = formatAmerican(Number.isFinite(num(pp.openUnder)) ? pp.openUnder : pp.under);
           }
           if (!ppOddsSource) ppOddsSource = pp.oddsSource;
-          if (pp.oddsSource === "pre_round_audit") {
-            const auditMu = auditModelFromPropSnap(pp, spec);
-            if (Number.isFinite(auditMu)) {
-              next[spec.lineCol] = fmtModelLine(spec.market, auditMu);
-            }
-          }
+          // Keep projection μ from projections.json / CSV — do not restore audit model lines.
           changed = true;
         }
       }

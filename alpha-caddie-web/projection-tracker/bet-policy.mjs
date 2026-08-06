@@ -1,48 +1,52 @@
 /**
  * Walk-forward OOS bet policy — browser copy of scripts/bet-policy.mjs
+ * Keep in sync with scripts/bet-policy.mjs
  */
 
-/** Default confidence-edge floor (0 = any side that beats book fair after calibration). */
 export const DEFAULT_MIN_EV_PCT = 0;
 
 /** @type {Record<string, object>} */
 export const OOS_MARKET_POLICY = {
   GIR: {
     market: "GIR",
-    minEv: 7.5,
+    minEv: 5,
     minGap: 0.5,
     side: "both",
     skipEventSubstrings: [],
   },
   Birdies: {
     market: "Birdies",
-    minEv: 25,
-    minGap: 0.5,
+    minEv: 5,
+    minGap: 0.35,
     side: "both",
     skipEventSubstrings: [],
   },
   "Total score": {
     market: "Total score",
-    minEv: 15,
-    minGap: 0.5,
+    minEv: 7.5,
+    minGap: 0.75,
     side: "both",
     skipEventSubstrings: [],
   },
   "Fairways hit": {
     market: "Fairways hit",
     minEv: 7.5,
-    minGap: 1.5,
-    side: "under",
-    minGirMinusFw: 2.5,
-    minCourseFwWidth: 30,
+    minGap: 1.0,
+    side: "both",
+    skipEventSubstrings: [],
+  },
+  Pars: {
+    market: "Pars",
+    minEv: 5,
+    minGap: 0.5,
+    side: "both",
     skipEventSubstrings: [],
   },
   Bogeys: {
     market: "Bogeys",
-    minEv: 20,
-    minGap: 1,
+    minEv: 5,
+    minGap: 0.75,
     side: "both",
-    disabled: true,
     skipEventSubstrings: [],
   },
 };
@@ -53,6 +57,7 @@ export const ACTION_MARKETS = new Set(
     .map(([m]) => m),
 );
 
+/** @deprecated use ACTION_MARKETS */
 export const PRIMARY_ACTION_MARKETS = ACTION_MARKETS;
 
 export const MIN_EV_BY_MARKET = Object.fromEntries(

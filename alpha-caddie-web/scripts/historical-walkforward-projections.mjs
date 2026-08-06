@@ -775,6 +775,22 @@ export async function buildFullModelMuMapForEvent({
   pipelineEnv = null,
 }) {
   Object.assign(process.env, walkforwardBacktestPipelineEnv(), pipelineEnv || {});
+  if (
+    String(process.env.GOLF_DG_METHODOLOGY || "").trim() === "1" ||
+    ["true", "yes", "on"].includes(String(process.env.GOLF_DG_METHODOLOGY || "").trim().toLowerCase())
+  ) {
+    const { buildDgMethodologyMuMapForEvent } = await import("./dg-methodology-mu.mjs");
+    return buildDgMethodologyMuMapForEvent({
+      repoRoot,
+      histRows,
+      eventName,
+      eventYear,
+      targetRound,
+      betTimeMs,
+      fieldDgIds,
+      courseName: courseNameOverride,
+    });
+  }
   if (String(process.env.GOLF_STRICT_FIT_FORM || "").trim() === "1") {
     const { buildStrictFitFormMuMapForEvent } = await import("./strict-fit-form-mu.mjs");
     return buildStrictFitFormMuMapForEvent({
@@ -1326,7 +1342,7 @@ export async function buildFullModelMuMapForEvent({
   return byDg;
 }
 
-/** Cache full-model μ lookups across odds props (keyed by event×year×round×betTime). */
+/** Cache full-model μ lookups across odds props (keyed by event×year×round×betTime×course×field). */
 export class FullModelProjectionCache {
   constructor(repoRoot, histRows) {
     this.repoRoot = repoRoot;
@@ -1336,7 +1352,13 @@ export class FullModelProjectionCache {
   }
 
   eventKey(p) {
-    return `${p.year}|${foldComparableTitle(p.event)}|${p.round}`;
+    const bt = Number.isFinite(p.bet_time_ms) ? Math.round(p.bet_time_ms) : "na";
+    const course = String(p.course || "")
+      .trim()
+      .toLowerCase()
+      .slice(0, 48);
+    const nField = Array.isArray(p._field_dg_ids) ? p._field_dg_ids.length : 0;
+    return `${p.year}|${foldComparableTitle(p.event)}|${p.round}|${bt}|${course}|${nField}`;
   }
 
   async ensureEvent(p) {

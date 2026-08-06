@@ -47,6 +47,8 @@ const MARKET_COLS = Object.fromEntries(
       book: m.bookLineCol,
       overOdds: m.overOddsCol,
       underOdds: m.underOddsCol,
+      openOverOdds: m.openOverOddsCol,
+      openUnderOdds: m.openUnderOddsCol,
       overRes: m.overCol,
       underRes: m.underCol,
     },
@@ -134,6 +136,8 @@ export async function loadWalkForwardBetRows() {
             bookLine,
             overOdds: num(row[cols.overOdds], NaN),
             underOdds: num(row[cols.underOdds], NaN),
+            openOverOdds: num(row[cols.openOverOdds], NaN),
+            openUnderOdds: num(row[cols.openUnderOdds], NaN),
             overRes: String(row[cols.overRes] || "").trim().toUpperCase(),
             underRes: String(row[cols.underRes] || "").trim().toUpperCase(),
             stubRow,
@@ -243,6 +247,10 @@ export function collectOosBets(testRows, minEvPct, { marketFilter = null, useRec
       dec,
       res,
       unitPnl: pnlForResult(res, odds),
+      overOdds: b.overOdds,
+      underOdds: b.underOdds,
+      openOverOdds: b.openOverOdds,
+      openUnderOdds: b.openUnderOdds,
     });
   }
   return bets;

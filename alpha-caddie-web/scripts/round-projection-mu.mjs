@@ -341,14 +341,17 @@ export function clamp(x, lo, hi) {
 }
 
 export function enforceHalfLine(v) {
-  const x = num(v, NaN);
+  if (v == null) return NaN;
+  const s = String(v).trim();
+  if (!s) return NaN;
+  const x = Number(s);
   if (!Number.isFinite(x)) return NaN;
   return Math.round(x * 2) / 2;
 }
 
-/** Parse a DraftKings posted line (always half-point buckets). */
+/** Parse a DraftKings posted line (always half-point buckets). Blank → NaN (not 0). */
 export function parseDkBookLine(v) {
-  return enforceHalfLine(num(v, NaN));
+  return enforceHalfLine(v);
 }
 
 /** Parse a PrizePicks posted line (whole numbers allowed). */

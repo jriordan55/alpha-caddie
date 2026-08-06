@@ -80,6 +80,11 @@ run(
   "Final score-anchored counts + venue field market calibration",
 );
 
+// DataGolf predictive methodology overwrites round O/U μ (default on).
+if (String(process.env.GOLF_DG_METHODOLOGY || "1").trim() !== "0") {
+  run("apply-dg-methodology-to-projections.mjs", "DataGolf methodology μ (apply:dg-methodology)");
+}
+
 const destDir = path.join(REPO_ROOT, "website", "public", "data");
 mkdirSync(destDir, { recursive: true });
 copyFileSync(path.join(WEB_ROOT, "projections.json"), path.join(destDir, "projections.json"));

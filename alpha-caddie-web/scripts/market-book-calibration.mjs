@@ -15,12 +15,13 @@ let _cache = null;
 export const MARKET_BOOK_CALIBRATION_MARKETS = [
   "Total score",
   "Birdies",
+  "Bogeys",
   "Pars",
   "GIR",
   "Fairways hit",
 ];
 
-/** Markets excluded from book calibration (none — bogeys remain disabled in bet policy). */
+/** Markets excluded from book calibration. */
 export const MARKETS_SKIP_BOOK_CALIBRATION = new Set();
 
 export function marketSkipsBookCalibration(market) {

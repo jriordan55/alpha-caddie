@@ -37,6 +37,8 @@ const DATA_FILES = [
   "matchup_backtest_detail.csv",
   "matchup_backtest_summary.csv",
   "walkforward_oos_roi.json",
+  "both_side_roi.json",
+  "both_side_bets.json",
   "skill_window_oos_roi.json",
   "odds_model_roi_summary.csv",
   "odds_model_roi_lines.csv",

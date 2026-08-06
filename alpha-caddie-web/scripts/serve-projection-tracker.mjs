@@ -38,23 +38,21 @@ function runRefreshScript(rel, label) {
 }
 
 if (!envTruthy("GOLF_SKIP_TRACKER_REFRESH")) {
-  // Full prior rebuild so local tracker OOS matches latest projection model.
-  process.env.GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS =
-    process.env.GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS || "1";
-  runRefreshScript("export-round-projection-vs-actual-csv.mjs", "Refreshing round_projection_vs_actual CSV (backtest rebuild)");
-  runRefreshScript("promote-round-projection-vs-actual-csv.mjs", "Publishing tracker CSV");
-  runRefreshScript("export-matchup-backtest-csv.mjs", "Refreshing matchup backtest CSV");
+  // Light refresh: keep patched counting/score μ; re-bake + OOS + live apply.
+  // Full CSV rebuild: GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=1 npm run projection-tracker:refresh
+  runRefreshScript("patch-birdie-fairway-mu.mjs", "Patching counting/score μ (as-of)");
+  runRefreshScript("bake-both-side-roi.mjs", "Baking both-side ROI");
   runRefreshScript("report-walkforward-oos-roi.mjs", "Refreshing walkforward OOS ROI");
+  runRefreshScript("apply-dg-methodology-to-projections.mjs", "Applying DG μ to live projections");
+  runRefreshScript("apply-both-side-bias-to-projections.mjs", "Applying both-side bias");
 } else {
-  console.log("[projection-tracker] GOLF_SKIP_TRACKER_REFRESH=1 — using existing CSV on disk.");
+  console.log("[projection-tracker] GOLF_SKIP_TRACKER_REFRESH=1 — using existing CSV / JSON on disk.");
 }
 
 console.log(`[projection-tracker] Serving ${WEB}`);
-console.log(`[projection-tracker] Bet log: ${url}#bets`);
-console.log(`[projection-tracker] Risk / bankroll: ${url}#risk`);
-console.log(`[projection-tracker] Guide: ${url}#guide`);
-console.log("[projection-tracker] CSV: data/round_projection_vs_actual_summary.csv + round_projection_vs_actual.csv");
-console.log("[projection-tracker] Manual refresh: npm run projection-tracker:refresh");
+console.log(`[projection-tracker] Both-side edge: ${url}`);
+console.log("[projection-tracker] Data: data/both_side_roi.json + both_side_bets.json + walkforward_oos_roi.json");
+console.log("[projection-tracker] Manual full rebuild: npm run projection-tracker:refresh");
 
 const child = spawn("npx", ["--yes", "serve", ".", "-p", PORT], {
   cwd: WEB,

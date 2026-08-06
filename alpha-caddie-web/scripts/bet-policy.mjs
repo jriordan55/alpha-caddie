@@ -24,8 +24,8 @@ export const OOS_MARKET_POLICY = {
   },
   "Total score": {
     market: "Total score",
-    minEv: 5,
-    minGap: 0.5,
+    minEv: 7.5,
+    minGap: 0.75,
     side: "both",
     skipEventSubstrings: [],
   },
@@ -45,10 +45,9 @@ export const OOS_MARKET_POLICY = {
   },
   Bogeys: {
     market: "Bogeys",
-    minEv: 20,
-    minGap: 1,
+    minEv: 5,
+    minGap: 0.75,
     side: "both",
-    disabled: true,
     skipEventSubstrings: [],
   },
 };

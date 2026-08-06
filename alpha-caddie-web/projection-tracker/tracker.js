@@ -168,12 +168,16 @@ let ODDS_MODEL_ROI = null;
 let ODDS_LINES_ROWS = [];
 
 const OOS_JSON_URL = "../data/walkforward_oos_roi.json";
+const BETTOR_VARIANCE_URL = "../data/golf_bettor_variance.json";
 const ODDS_ROI_URL = "../data/odds_model_roi_summary.csv";
 const ODDS_LINES_URL = "../data/odds_model_roi_lines.csv";
 const SKILL_WINDOW_JSON_URL = "../data/skill_window_oos_roi.json";
 
 /** @type {object | null} */
 let SKILL_WINDOW_REPORT = null;
+
+/** @type {object | null} */
+let BETTOR_VARIANCE = null;
 
 const state = {
   tab: "overview",
@@ -2364,12 +2368,21 @@ function renderHonestOos() {
   const worst = OOS_REPORT.worst_oos_event_money || OOS_REPORT.worst_oos_event_at_5pct;
 
   if (note) {
-    const pol = OOS_MARKET_POLICY;
+    const pol = OOS_MARKET_POLICY || {};
+    const polBits = Object.values(pol)
+      .filter((p) => p && !p.disabled)
+      .map((p) => {
+        const bits = [`${p.market} EV≥${p.minEv}%`];
+        if (Number.isFinite(p.minGap)) bits.push(`gap≥${p.minGap}`);
+        if (p.side && p.side !== "both") bits.push(p.side);
+        if (Number.isFinite(p.minGirMinusFw)) bits.push(`gir−fw≥${p.minGirMinusFw}`);
+        return bits.join(" ");
+      });
     note.innerHTML =
       `Walk-forward OOS $ P/L on a <strong>$10,000</strong> bankroll across <strong>${OOS_REPORT.oos_event_count}</strong> completed events` +
       (OOS_REPORT.excluded_live_event ? ` (excludes live week: ${OOS_REPORT.excluded_live_event})` : "") +
       `. Sequential by event then round, 15% round cap. Flat = $100/bet (1% of start). Kelly = ¼ Kelly capped at 1% of current bankroll. ` +
-      `Policy: GIR EV≥${pol.GIR?.minEv}% gap≥${pol.GIR?.minGap}; Total EV≥${pol["Total score"]?.minEv}%; Birdies EV≥${pol.Birdies?.minEv}%; FW under-only + gir−fw≥${pol["Fairways hit"]?.minGirMinusFw}. ` +
+      `Policy: ${polBits.join("; ") || "see bet-policy.mjs"}. ` +
       `Regenerate: <code>npm run report:walkforward-oos-roi</code>`;
   }
 
@@ -2849,6 +2862,148 @@ function esc(s) {
     .replace(/"/g, "&quot;");
 }
 
+function renderVariance() {
+  const kpis = document.getElementById("variance-kpis");
+  if (!kpis) return;
+  const r = BETTOR_VARIANCE;
+  if (!r?.combined) {
+    kpis.innerHTML = `<div class="kpi"><div class="kpi-label">Odds mix</div><div class="kpi-value">—</div><div class="kpi-sub">Run <code>npm run report:golf-bettor-variance</code></div></div>`;
+    return;
+  }
+  const c = r.combined;
+  const src = r.sources || {};
+  kpis.innerHTML = `
+    <div class="kpi"><div class="kpi-label">Bet log</div><div class="kpi-value">${c.bets || 0}</div>
+      <div class="kpi-sub">props ${src.round_props_policy || 0} · odds.csv ${src.odds_csv_model || 0} · matchups ${src.matchups_at_10pct || 0}</div></div>
+    <div class="kpi"><div class="kpi-label">Realized</div><div class="kpi-value ${clsSigned(c.realized_units)}">${fmtSigned(c.realized_units)}u</div>
+      <div class="kpi-sub">hit ${fmt(c.hit_pct, 1)}%</div></div>
+    <div class="kpi"><div class="kpi-label">E[fair close]</div><div class="kpi-value ${clsSigned(c.expected_fair_units)}">${c.expected_fair_units == null ? "—" : `${fmtSigned(c.expected_fair_units)}u`}</div>
+      <div class="kpi-sub">devigged close EV sum</div></div>
+    <div class="kpi"><div class="kpi-label">Gap</div><div class="kpi-value ${clsSigned(c.gap_realized_minus_fair)}">${c.gap_realized_minus_fair == null ? "—" : `${fmtSigned(c.gap_realized_minus_fair)}u`}</div>
+      <div class="kpi-sub">realized − fair EV (not pure skill)</div></div>
+    <div class="kpi"><div class="kpi-label">Mean CLV</div><div class="kpi-value ${clsSigned(c.mean_clv_prob_pts)}">${c.mean_clv_prob_pts == null ? "—" : `${fmtSigned(c.mean_clv_prob_pts)} pts`}</div>
+      <div class="kpi-sub">probability points · n=${c.clv_sample || 0} · ratio ${c.mean_clv_ratio_pct == null ? "—" : `${fmt(c.mean_clv_ratio_pct, 2)}%`}</div></div>
+  `;
+
+  const ladderBody = document.querySelector("#variance-ladder-table tbody");
+  if (ladderBody) {
+    ladderBody.innerHTML = (r.breakeven_ladder || [])
+      .map(
+        (row) => `<tr>
+        <td class="num">${esc(formatAmerican(row.american))}</td>
+        <td class="num">${fmt(row.breakeven_pct, 1)}%</td>
+        <td class="num">${fmt(row.sd_per_unit, 2)}</td>
+        <td class="num">${Math.round(row.bets_to_2sigma).toLocaleString()}</td>
+      </tr>`,
+      )
+      .join("");
+  }
+
+  const mixNote = document.getElementById("variance-mix-note");
+  if (mixNote) {
+    mixNote.textContent = `Generated ${r.generated_at || "—"}${r.excluded_live_event ? ` · excludes live: ${r.excluded_live_event}` : ""}`;
+  }
+  const mixBody = document.querySelector("#variance-mix-table tbody");
+  if (mixBody) {
+    mixBody.innerHTML = (r.price_mix || []).length
+      ? r.price_mix
+          .map(
+            (row) => `<tr>
+        <td>${esc(row.bucket)}</td>
+        <td class="num">${row.bets}</td>
+        <td class="num">${fmt(row.hit_pct, 1)}</td>
+        <td class="num ${clsSigned(row.realized_units)}">${fmtSigned(row.realized_units)}</td>
+        <td class="num">${row.expected_fair_units == null ? "—" : fmtSigned(row.expected_fair_units)}</td>
+        <td class="num ${clsSigned(row.gap_units)}">${row.gap_units == null ? "—" : fmtSigned(row.gap_units)}</td>
+        <td class="num">${row.mean_clv_prob_pts == null ? "—" : fmt(row.mean_clv_prob_pts, 2)}</td>
+      </tr>`,
+          )
+          .join("")
+      : `<tr><td colspan="7">No bets in mix.</td></tr>`;
+  }
+
+  const seasonNote = document.getElementById("variance-season-note");
+  const sim = r.season_sim?.your_mix_200_at_5pct || {};
+  const simRound = r.season_sim?.round_props_policy || {};
+  const simFav = r.season_sim?.all_minus110_200_at_5pct || {};
+  const simDog = r.season_sim?.all_plus400_200_at_5pct || {};
+  if (seasonNote) {
+    seasonNote.textContent =
+      sim.note || "200-bet season at 5% edge using your historical price mix.";
+  }
+  const seasonKpis = document.getElementById("variance-season-kpis");
+  if (seasonKpis) {
+    const p = sim.percentiles || {};
+    seasonKpis.innerHTML = `
+      <div class="kpi"><div class="kpi-label">Your mix · P(down)</div><div class="kpi-value">${fmt(sim.pctDown, 1)}%</div>
+        <div class="kpi-sub">200 bets · 5% edge · seed ${sim.seed ?? "—"}</div></div>
+      <div class="kpi"><div class="kpi-label">vs all -110</div><div class="kpi-value">${fmt(simFav.pctDown, 1)}%</div>
+        <div class="kpi-sub">same edge, shorter prices</div></div>
+      <div class="kpi"><div class="kpi-label">vs all +400</div><div class="kpi-value">${fmt(simDog.pctDown, 1)}%</div>
+        <div class="kpi-sub">same edge, longshot variance</div></div>
+      <div class="kpi"><div class="kpi-label">Mix p5 / p95</div><div class="kpi-value">${fmtSigned(p.p5)} / ${fmtSigned(p.p95)}</div>
+        <div class="kpi-sub">median ${fmtSigned(p.p50)}u · round-prop path P(down) ${fmt(simRound.pctDown, 1)}%</div></div>
+    `;
+  }
+
+  const srcBody = document.querySelector("#variance-source-table tbody");
+  if (srcBody) {
+    srcBody.innerHTML = (r.by_source || [])
+      .map(
+        (row) => `<tr>
+        <td>${esc(row.source)}</td>
+        <td class="num">${row.bets}</td>
+        <td class="num ${clsSigned(row.realized_units)}">${fmtSigned(row.realized_units)}</td>
+        <td class="num">${row.expected_fair_units == null ? "—" : fmtSigned(row.expected_fair_units)}</td>
+        <td class="num ${clsSigned(row.gap_realized_minus_fair)}">${row.gap_realized_minus_fair == null ? "—" : fmtSigned(row.gap_realized_minus_fair)}</td>
+        <td class="num">${row.mean_clv_prob_pts == null ? "—" : fmt(row.mean_clv_prob_pts, 2)}</td>
+      </tr>`,
+      )
+      .join("");
+  }
+
+  const mktBody = document.querySelector("#variance-market-table tbody");
+  if (mktBody) {
+    mktBody.innerHTML = (r.by_market || [])
+      .slice(0, 20)
+      .map(
+        (row) => `<tr>
+        <td>${esc(row.market)}</td>
+        <td class="num">${row.bets}</td>
+        <td class="num ${clsSigned(row.realized_units)}">${fmtSigned(row.realized_units)}</td>
+        <td class="num ${clsSigned(row.gap_realized_minus_fair)}">${row.gap_realized_minus_fair == null ? "—" : fmtSigned(row.gap_realized_minus_fair)}</td>
+        <td class="num">${fmt(row.hit_pct, 1)}</td>
+      </tr>`,
+      )
+      .join("");
+  }
+
+  const clvRow = (row) => `<tr>
+      <td class="player-cell">${esc(row.event)}</td>
+      <td>${esc(row.market)}</td>
+      <td class="num">${esc(formatAmerican(row.open))}→${esc(formatAmerican(row.close))}</td>
+      <td class="num">${fmt(row.ratio_pct, 2)}</td>
+      <td class="num">${fmt(row.prob_pts, 2)}</td>
+    </tr>`;
+  const ratioBody = document.querySelector("#variance-clv-ratio-table tbody");
+  if (ratioBody) {
+    ratioBody.innerHTML = (r.clv_ranking_demo?.top_by_ratio || []).map(clvRow).join("") ||
+      `<tr><td colspan="5">No CLV sample (open≈close).</td></tr>`;
+  }
+  const ptsBody = document.querySelector("#variance-clv-pts-table tbody");
+  if (ptsBody) {
+    ptsBody.innerHTML = (r.clv_ranking_demo?.top_by_prob_points || []).map(clvRow).join("") ||
+      `<tr><td colspan="5">No CLV sample (open≈close).</td></tr>`;
+  }
+}
+
+function fmtSigned(v) {
+  const n = num(v, NaN);
+  if (!Number.isFinite(n)) return "—";
+  const s = fmt(n, Math.abs(n) >= 100 ? 0 : 1);
+  return n > 0 ? `+${s}` : s;
+}
+
 function renderAll() {
   renderHeader();
   renderOverview();
@@ -2857,6 +3012,7 @@ function renderAll() {
   renderOddsCsv();
   renderBets();
   renderRisk();
+  renderVariance();
   renderMyBets();
   renderEvents();
   buildInsights();
@@ -2935,6 +3091,16 @@ async function loadOosReport() {
   }
 }
 
+async function loadBettorVarianceReport() {
+  try {
+    const res = await fetch(`${BETTOR_VARIANCE_URL}?t=${Date.now()}`, { cache: "no-store" });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
 async function loadSkillWindowReport() {
   try {
     const res = await fetch(`${SKILL_WINDOW_JSON_URL}?t=${Date.now()}`, { cache: "no-store" });
@@ -3001,19 +3167,21 @@ async function loadData() {
   const errEl = document.getElementById("error-banner");
   errEl.hidden = true;
   try {
-    const [summaryText, detailText, oos, oddsRoi, oddsLines, skillWindow] = await Promise.all([
+    const [summaryText, detailText, oos, oddsRoi, oddsLines, skillWindow, bettorVar] = await Promise.all([
       loadSummaryCsvText(),
       loadDetailCsvText(),
       loadOosReport(),
       loadOddsModelRoi(),
       loadOddsLinesCsv(),
       loadSkillWindowReport(),
+      loadBettorVarianceReport(),
     ]);
     await loadWinProbCalibration();
     OOS_REPORT = oos;
     ODDS_MODEL_ROI = oddsRoi;
     ODDS_LINES_ROWS = oddsLines;
     SKILL_WINDOW_REPORT = skillWindow;
+    BETTOR_VARIANCE = bettorVar;
     ALL_ROWS = parseCsv(summaryText).filter((r) => String(r.market || "").trim() !== "Round matchups");
     if (!ALL_ROWS.length) throw new Error("Summary CSV is empty");
     DETAIL_ROWS = detailText ? parseCsv(detailText) : [];
