@@ -103,6 +103,7 @@
     "bake:both-side-roi": "node scripts/bake-both-side-roi.mjs",
     "patch:birdie-fairway-mu": "node scripts/patch-birdie-fairway-mu.mjs",
     "apply:both-side-bias": "node scripts/apply-both-side-bias-to-projections.mjs",
+    "apply:both-side-bet-signals": "node scripts/apply-both-side-bet-signals-to-projections.mjs",
     "build:course-table": "node scripts/build-course-table-json.mjs",
     "build:parlay-correlations": "node scripts/build-parlay-correlations.mjs",
     "backfill:round-weather": "node scripts/backfill-historical-round-weather.mjs",

@@ -679,6 +679,18 @@ if (String(process.env.GOLF_DG_METHODOLOGY || "1").trim() !== "0") {
     {},
     softOpt,
   );
+  run(
+    "apply-both-side-bias-to-projections.mjs",
+    "Both-side chrono/loo μ bias (apply:both-side-bias)",
+    {},
+    softOpt,
+  );
+  run(
+    "apply-both-side-bet-signals-to-projections.mjs",
+    "Tracker bet YES/NO on DK props + round_projections.csv",
+    {},
+    softOpt,
+  );
 }
 
 mirrorWebsitePublicData();

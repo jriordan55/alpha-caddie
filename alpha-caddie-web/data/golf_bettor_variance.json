@@ -1,0 +1,514 @@
+{
+  "generated_at": "2026-08-05T20:15:00.205Z",
+  "thesis": "Price mix drives variance even at fixed EV. Measure CLV in probability points — not odds ratio. Gap (realized − expected vs fair close) is residual luck/skill, not either alone.",
+  "edge_frac_assumed": 0.05,
+  "excluded_live_event": "Wyndham Championship",
+  "sources": {
+    "round_props_policy": 2358,
+    "round_props_unfiltered_5pct": 3391,
+    "odds_csv_model": 896,
+    "matchups_at_10pct": 44467,
+    "combined": 47721
+  },
+  "combined": {
+    "bets": 47721,
+    "wins": 19849,
+    "losses": 23545,
+    "pushes": 4327,
+    "hit_pct": 45.7413,
+    "realized_units": 932.3706,
+    "expected_fair_units": -3033.1932,
+    "expected_raw_close_units": -31.5922,
+    "gap_realized_minus_fair": 3965.5639,
+    "mean_clv_prob_pts": -0.0463,
+    "mean_clv_ratio_pct": -0.0662,
+    "clv_sample": 47721
+  },
+  "by_source": [
+    {
+      "source": "round_props",
+      "bets": 2358,
+      "wins": 1308,
+      "losses": 1050,
+      "pushes": 0,
+      "hit_pct": 55.4707,
+      "realized_units": -1.6002,
+      "expected_fair_units": -171.6681,
+      "expected_raw_close_units": 4.0474,
+      "gap_realized_minus_fair": 170.0679,
+      "mean_clv_prob_pts": 0.0495,
+      "mean_clv_ratio_pct": 0.1716,
+      "clv_sample": 2358
+    },
+    {
+      "source": "odds_csv_model",
+      "bets": 896,
+      "wins": 503,
+      "losses": 393,
+      "pushes": 0,
+      "hit_pct": 56.1384,
+      "realized_units": 17.113,
+      "expected_fair_units": null,
+      "expected_raw_close_units": -60.3349,
+      "gap_realized_minus_fair": null,
+      "mean_clv_prob_pts": -3.733,
+      "mean_clv_ratio_pct": -6.7338,
+      "clv_sample": 896
+    },
+    {
+      "source": "matchups",
+      "bets": 44467,
+      "wins": 18038,
+      "losses": 22102,
+      "pushes": 4327,
+      "hit_pct": 44.9377,
+      "realized_units": 916.8579,
+      "expected_fair_units": -2861.5251,
+      "expected_raw_close_units": 24.6953,
+      "gap_realized_minus_fair": 3778.383,
+      "mean_clv_prob_pts": 0.0229,
+      "mean_clv_ratio_pct": 0.0555,
+      "clv_sample": 44467
+    }
+  ],
+  "by_market": [
+    {
+      "market": "Round matchups",
+      "bets": 21872,
+      "wins": 11363,
+      "losses": 8401,
+      "pushes": 2108,
+      "hit_pct": 57.4934,
+      "realized_units": 2186.0217,
+      "expected_fair_units": -985.2361,
+      "expected_raw_close_units": 23.1025,
+      "gap_realized_minus_fair": 3171.2577,
+      "mean_clv_prob_pts": 0.0411,
+      "mean_clv_ratio_pct": 0.1056,
+      "clv_sample": 21872
+    },
+    {
+      "market": "GIR",
+      "bets": 323,
+      "wins": 200,
+      "losses": 123,
+      "pushes": 0,
+      "hit_pct": 61.9195,
+      "realized_units": 35.905,
+      "expected_fair_units": -22.6374,
+      "expected_raw_close_units": 0.9408,
+      "gap_realized_minus_fair": 58.5424,
+      "mean_clv_prob_pts": 0.06,
+      "mean_clv_ratio_pct": 0.2913,
+      "clv_sample": 323
+    },
+    {
+      "market": "Pars",
+      "bets": 231,
+      "wins": 134,
+      "losses": 97,
+      "pushes": 0,
+      "hit_pct": 58.0087,
+      "realized_units": 11.9548,
+      "expected_fair_units": -18.4053,
+      "expected_raw_close_units": -0.1334,
+      "gap_realized_minus_fair": 30.3601,
+      "mean_clv_prob_pts": -0.0329,
+      "mean_clv_ratio_pct": -0.0577,
+      "clv_sample": 231
+    },
+    {
+      "market": "Birdies",
+      "bets": 1469,
+      "wins": 827,
+      "losses": 642,
+      "pushes": 0,
+      "hit_pct": 56.2968,
+      "realized_units": 9.8954,
+      "expected_fair_units": -61.8362,
+      "expected_raw_close_units": -41.6857,
+      "gap_realized_minus_fair": 71.7316,
+      "mean_clv_prob_pts": -1.6121,
+      "mean_clv_ratio_pct": -2.8377,
+      "clv_sample": 1469
+    },
+    {
+      "market": "Fairways hit",
+      "bets": 98,
+      "wins": 54,
+      "losses": 44,
+      "pushes": 0,
+      "hit_pct": 55.102,
+      "realized_units": -4.7132,
+      "expected_fair_units": -7.4432,
+      "expected_raw_close_units": 0.6845,
+      "gap_realized_minus_fair": 2.73,
+      "mean_clv_prob_pts": 0.3691,
+      "mean_clv_ratio_pct": 0.6985,
+      "clv_sample": 98
+    },
+    {
+      "market": "Total score",
+      "bets": 1133,
+      "wins": 596,
+      "losses": 537,
+      "pushes": 0,
+      "hit_pct": 52.6037,
+      "realized_units": -37.5293,
+      "expected_fair_units": -61.346,
+      "expected_raw_close_units": -16.0937,
+      "gap_realized_minus_fair": 23.8168,
+      "mean_clv_prob_pts": -0.8012,
+      "mean_clv_ratio_pct": -1.4204,
+      "clv_sample": 1133
+    },
+    {
+      "market": "3-balls",
+      "bets": 22595,
+      "wins": 6675,
+      "losses": 13701,
+      "pushes": 2219,
+      "hit_pct": 32.7591,
+      "realized_units": -1269.1638,
+      "expected_fair_units": -1876.2891,
+      "expected_raw_close_units": 1.5928,
+      "gap_realized_minus_fair": 607.1253,
+      "mean_clv_prob_pts": 0.0054,
+      "mean_clv_ratio_pct": 0.007,
+      "clv_sample": 22595
+    }
+  ],
+  "round_props_policy": {
+    "bets": 2358,
+    "wins": 1308,
+    "losses": 1050,
+    "pushes": 0,
+    "hit_pct": 55.4707,
+    "realized_units": -1.6002,
+    "expected_fair_units": -171.6681,
+    "expected_raw_close_units": 4.0474,
+    "gap_realized_minus_fair": 170.0679,
+    "mean_clv_prob_pts": 0.0495,
+    "mean_clv_ratio_pct": 0.1716,
+    "clv_sample": 2358
+  },
+  "round_props_unfiltered": {
+    "bets": 3391,
+    "wins": 1825,
+    "losses": 1566,
+    "pushes": 0,
+    "hit_pct": 53.8189,
+    "realized_units": -26.1933,
+    "expected_fair_units": -251.7234,
+    "expected_raw_close_units": 5.0733,
+    "gap_realized_minus_fair": 225.5301,
+    "mean_clv_prob_pts": 0.0458,
+    "mean_clv_ratio_pct": 0.1496,
+    "clv_sample": 3391
+  },
+  "price_mix": [
+    {
+      "bucket": "≤-200",
+      "bets": 794,
+      "hit_pct": 70.02518891687657,
+      "realized_units": 65.075,
+      "expected_fair_units": -37.9203,
+      "gap_units": 102.9953,
+      "mean_clv_prob_pts": -0.0079,
+      "mean_clv_ratio_pct": 0.18,
+      "share_of_realized_abs": 65.075
+    },
+    {
+      "bucket": "-199…-150",
+      "bets": 2448,
+      "hit_pct": 59.43627450980392,
+      "realized_units": 53.8755,
+      "expected_fair_units": -119.9736,
+      "gap_units": 173.8491,
+      "mean_clv_prob_pts": -0.2281,
+      "mean_clv_ratio_pct": -0.3243,
+      "share_of_realized_abs": 53.8755
+    },
+    {
+      "bucket": "-149…-120",
+      "bets": 6583,
+      "hit_pct": 55.339510861309435,
+      "realized_units": 394.8844,
+      "expected_fair_units": -328.8036,
+      "gap_units": 723.688,
+      "mean_clv_prob_pts": -0.1649,
+      "mean_clv_ratio_pct": -0.2868,
+      "share_of_realized_abs": 394.8844
+    },
+    {
+      "bucket": "-119…-100",
+      "bets": 6770,
+      "hit_pct": 52.703101920236335,
+      "realized_units": 637.0957,
+      "expected_fair_units": -352.3558,
+      "gap_units": 989.4515,
+      "mean_clv_prob_pts": -0.0751,
+      "mean_clv_ratio_pct": -0.1413,
+      "share_of_realized_abs": 637.0957
+    },
+    {
+      "bucket": "+100…+120",
+      "bets": 6999,
+      "hit_pct": 48.03543363337619,
+      "realized_units": 625.33,
+      "expected_fair_units": -368.0156,
+      "gap_units": 993.3456,
+      "mean_clv_prob_pts": -0.0651,
+      "mean_clv_ratio_pct": -0.1276,
+      "share_of_realized_abs": 625.33
+    },
+    {
+      "bucket": "+121…+200",
+      "bets": 14134,
+      "hit_pct": 35.9629262770624,
+      "realized_units": 355.96,
+      "expected_fair_units": -1019.4549,
+      "gap_units": 1375.4149,
+      "mean_clv_prob_pts": 0.027,
+      "mean_clv_ratio_pct": 0.0712,
+      "share_of_realized_abs": 355.96
+    },
+    {
+      "bucket": "+201…+400",
+      "bets": 9534,
+      "hit_pct": 22.456471575414305,
+      "realized_units": -1023.2,
+      "expected_fair_units": -772.5644,
+      "gap_units": -250.6356,
+      "mean_clv_prob_pts": -0.0034,
+      "mean_clv_ratio_pct": -0.0165,
+      "share_of_realized_abs": 1023.2
+    },
+    {
+      "bucket": "≥+401",
+      "bets": 459,
+      "hit_pct": 8.932461873638344,
+      "realized_units": -176.65,
+      "expected_fair_units": -34.105,
+      "gap_units": -142.545,
+      "mean_clv_prob_pts": 0.1232,
+      "mean_clv_ratio_pct": 0.8291,
+      "share_of_realized_abs": 176.65
+    }
+  ],
+  "breakeven_ladder": [
+    {
+      "american": -200,
+      "breakeven_pct": 66.67,
+      "sd_per_unit": 0.687,
+      "bets_to_2sigma": 756
+    },
+    {
+      "american": -150,
+      "breakeven_pct": 60,
+      "sd_per_unit": 0.805,
+      "bets_to_2sigma": 1036
+    },
+    {
+      "american": -130,
+      "breakeven_pct": 56.52,
+      "sd_per_unit": 0.869,
+      "bets_to_2sigma": 1208
+    },
+    {
+      "american": -110,
+      "breakeven_pct": 52.38,
+      "sd_per_unit": 0.95,
+      "bets_to_2sigma": 1443
+    },
+    {
+      "american": 100,
+      "breakeven_pct": 50,
+      "sd_per_unit": 0.999,
+      "bets_to_2sigma": 1596
+    },
+    {
+      "american": 120,
+      "breakeven_pct": 45.45,
+      "sd_per_unit": 1.099,
+      "bets_to_2sigma": 1932
+    },
+    {
+      "american": 150,
+      "breakeven_pct": 40,
+      "sd_per_unit": 1.234,
+      "bets_to_2sigma": 2436
+    },
+    {
+      "american": 200,
+      "breakeven_pct": 33.33,
+      "sd_per_unit": 1.431,
+      "bets_to_2sigma": 3276
+    },
+    {
+      "american": 300,
+      "breakeven_pct": 25,
+      "sd_per_unit": 1.76,
+      "bets_to_2sigma": 4956
+    },
+    {
+      "american": 400,
+      "breakeven_pct": 20,
+      "sd_per_unit": 2.037,
+      "bets_to_2sigma": 6636
+    },
+    {
+      "american": 600,
+      "breakeven_pct": 14.29,
+      "sd_per_unit": 2.499,
+      "bets_to_2sigma": 9996
+    }
+  ],
+  "season_sim": {
+    "round_props_policy": {
+      "seed": 20260805,
+      "paths": 4000,
+      "nBets": 2358,
+      "meanEnd": 528.4178290399586,
+      "pctDown": 0,
+      "percentiles": {
+        "p5": 459.779205457132,
+        "p25": 501.7665875072592,
+        "p50": 529.4392162521408,
+        "p75": 555.080206218448,
+        "p95": 593.3036018859493
+      },
+      "note": "Monte Carlo replaying round-prop policy bets with model win probs."
+    },
+    "your_mix_200_at_5pct": {
+      "seed": 77,
+      "paths": 5000,
+      "nBets": 200,
+      "meanEnd": 10.045002041215184,
+      "pctDown": 29.2,
+      "percentiles": {
+        "p5": -19.0874110241635,
+        "p25": -2.1621512754736774,
+        "p50": 10.081576244434727,
+        "p75": 21.981984346966303,
+        "p95": 40.12882860164438
+      },
+      "note": "200 bets sampled from your historical price mix at a flat 5% edge — shows variance from prices alone."
+    },
+    "all_minus110_200_at_5pct": {
+      "seed": 77,
+      "paths": 5000,
+      "nBets": 200,
+      "meanEnd": 9.878963636363643,
+      "pctDown": 21.98,
+      "percentiles": {
+        "p5": -12.909090909090864,
+        "p25": 0.45454545454547723,
+        "p50": 10.000000000000032,
+        "p75": 19.5454545454546,
+        "p95": 32.90909090909092
+      }
+    },
+    "all_plus400_200_at_5pct": {
+      "seed": 77,
+      "paths": 5000,
+      "nBets": 200,
+      "meanEnd": 10.055,
+      "pctDown": 33.9,
+      "percentiles": {
+        "p5": -35,
+        "p25": -10,
+        "p50": 10,
+        "p75": 30,
+        "p95": 60
+      }
+    }
+  },
+  "clv_ranking_demo": {
+    "top_by_ratio": [
+      {
+        "event": "WM Phoenix Open",
+        "market": "3-balls",
+        "open": 425,
+        "close": 200,
+        "ratio_pct": 75,
+        "prob_pts": 14.29
+      },
+      {
+        "event": "U.S. Open",
+        "market": "Birdies",
+        "open": 152,
+        "close": -215,
+        "ratio_pct": 72,
+        "prob_pts": 28.57
+      },
+      {
+        "event": "U.S. Open",
+        "market": "Birdies",
+        "open": 150,
+        "close": -220,
+        "ratio_pct": 71.88,
+        "prob_pts": 28.75
+      },
+      {
+        "event": "U.S. Open",
+        "market": "Birdies",
+        "open": 154,
+        "close": -205,
+        "ratio_pct": 70.72,
+        "prob_pts": 27.84
+      },
+      {
+        "event": "U.S. Open",
+        "market": "Birdies",
+        "open": 150,
+        "close": -215,
+        "ratio_pct": 70.63,
+        "prob_pts": 28.25
+      }
+    ],
+    "top_by_prob_points": [
+      {
+        "event": "U.S. Open",
+        "market": "Birdies",
+        "open": 150,
+        "close": -220,
+        "ratio_pct": 71.88,
+        "prob_pts": 28.75
+      },
+      {
+        "event": "U.S. Open",
+        "market": "Birdies",
+        "open": 152,
+        "close": -215,
+        "ratio_pct": 72,
+        "prob_pts": 28.57
+      },
+      {
+        "event": "U.S. Open",
+        "market": "Birdies",
+        "open": 150,
+        "close": -215,
+        "ratio_pct": 70.63,
+        "prob_pts": 28.25
+      },
+      {
+        "event": "U.S. Open",
+        "market": "Birdies",
+        "open": 154,
+        "close": -205,
+        "ratio_pct": 70.72,
+        "prob_pts": 27.84
+      },
+      {
+        "event": "U.S. Open",
+        "market": "Birdies",
+        "open": 148,
+        "close": -210,
+        "ratio_pct": 68,
+        "prob_pts": 27.42
+      }
+    ]
+  },
+  "events_in_round_props": 12
+}

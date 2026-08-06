@@ -2,7 +2,7 @@
  * Bet / no-bet signal matching projection-tracker live picks:
  * both-side+ markets only, policy gap_over/gap_under, optional odds floors.
  */
-import { existsSync, readFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
@@ -156,4 +156,92 @@ export function evaluateBothSideBetSignal(opts = {}) {
     gap_need: side === "over" ? gapOver : gapUnder,
     roi_market: roiMarket,
   };
+}
+
+/**
+ * Stamp bet_over / bet_under on DraftKings prop rows for the display round.
+ * @returns {number} count of YES sides
+ */
+export function annotatePropsWithBetSignals(payload, webRoot = WEB) {
+  const policy = loadBothSidePolicy(webRoot);
+  const biasAlreadyApplied = Boolean(payload?.both_side_bias_applied?.at);
+  const displayRound = Math.round(Number(payload?.display_round)) || 1;
+  const players = Array.isArray(payload?.players) ? payload.players : [];
+  let yes = 0;
+  for (const pr of payload?.props || []) {
+    if (String(pr?.source || "").trim().toLowerCase() !== "draftkings") continue;
+    const rnd = Math.round(Number(pr?.round_num));
+    if (Number.isFinite(rnd) && rnd !== displayRound) continue;
+    const dg = Math.round(Number(pr?.dg_id));
+    const pl =
+      players.find(
+        (p) =>
+          Math.round(Number(p?.dg_id)) === dg && Math.round(Number(p?.round)) === displayRound,
+      ) || null;
+    const line = Number(pr?.line);
+    const overSig = evaluateBothSideBetSignal({
+      dkMarket: pr?.market,
+      side: "over",
+      line,
+      americanOdds: pr?.over_odds,
+      player: pl,
+      policy,
+      biasAlreadyApplied,
+    });
+    const underSig = evaluateBothSideBetSignal({
+      dkMarket: pr?.market,
+      side: "under",
+      line,
+      americanOdds: pr?.under_odds,
+      player: pl,
+      policy,
+      biasAlreadyApplied,
+    });
+    pr.bet_over = overSig.bet;
+    pr.bet_under = underSig.bet;
+    pr.bet_reason_over = overSig.reason;
+    pr.bet_reason_under = underSig.reason;
+    if (overSig.bet === "YES") yes++;
+    if (underSig.bet === "YES") yes++;
+  }
+  return yes;
+}
+
+/** Sync tracker live_dk pack from annotated projections props. */
+export function syncLiveEventBookProps(payload, webRoot = WEB) {
+  const displayRound = Math.round(Number(payload?.display_round)) || 1;
+  /** @type {Record<string, object>} */
+  const live = {};
+  for (const pr of payload?.props || []) {
+    if (String(pr?.source || "").trim().toLowerCase() !== "draftkings") continue;
+    const rnd = Math.round(Number(pr?.round_num ?? displayRound));
+    if (Number.isFinite(rnd) && rnd !== displayRound) continue;
+    const dg = Math.round(Number(pr?.dg_id));
+    const market = String(pr?.market || "").trim();
+    if (!Number.isFinite(dg) || !market) continue;
+    live[`${dg}|${rnd}|${market}`] = {
+      line: Number(pr.line),
+      over: Number(pr.over_odds),
+      under: Number(pr.under_odds),
+      bet_over: pr.bet_over || "NO",
+      bet_under: pr.bet_under || "NO",
+    };
+  }
+  const outPath = join(webRoot, "data", "live_event_book_props.json");
+  mkdirSync(dirname(outPath), { recursive: true });
+  let prev = {};
+  try {
+    if (existsSync(outPath)) prev = JSON.parse(readFileSync(outPath, "utf8"));
+  } catch {
+    prev = {};
+  }
+  const next = {
+    ...prev,
+    event_name: payload?.event_name || prev.event_name || "",
+    generated_at: new Date().toISOString(),
+    live_dk: live,
+    pre_round_dk: prev.pre_round_dk || live,
+  };
+  writeFileSync(outPath, `${JSON.stringify(next, null, 2)}\n`);
+  return Object.keys(live).length;
 }
