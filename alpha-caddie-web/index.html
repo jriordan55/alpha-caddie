@@ -13,7 +13,7 @@
     onload="this.media='all'"
   />
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" /></noscript>
-  <link rel="stylesheet" href="styles.css?v=15" />
+  <link rel="stylesheet" href="styles.css?v=16" />
 </head>
 <body>
   <header class="app-nav">
@@ -200,11 +200,15 @@
         </div>
       </div>
       <p id="ou-dk-status-note" class="ou-dk-status-note muted" hidden role="status" aria-live="polite"></p>
-      <div class="table-wrap leaderboard-card ou-table-card">
-        <table class="data-table table-ou-projections" id="table-ou">
-          <thead></thead>
-          <tbody></tbody>
-        </table>
+      <div class="ou-table-scroll-shell" id="ou-table-scroll-shell">
+        <button type="button" class="ou-table-scroll-btn ou-table-scroll-btn-left" id="ou-table-scroll-left" aria-label="Scroll table left" hidden>‹</button>
+        <button type="button" class="ou-table-scroll-btn ou-table-scroll-btn-right" id="ou-table-scroll-right" aria-label="Scroll table right" hidden>›</button>
+        <div class="table-wrap leaderboard-card ou-table-card" id="ou-table-scroll">
+          <table class="data-table table-ou-projections" id="table-ou">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
       <div class="ou-chart-card leaderboard-card" id="ou-chart-card" hidden>
         <div class="ou-chart-head">
@@ -1321,6 +1325,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=355"></script>
+  <script src="app.js?v=356"></script>
 </body>
 </html>

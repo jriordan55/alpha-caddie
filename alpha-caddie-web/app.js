@@ -6464,7 +6464,7 @@ let ouGolferSuggestLabelsSig = "";
 /** @type {string[]} */
 let ouGolferSuggestLabels = [];
 let ouProjTableChromeReady = false;
-const OU_PROJ_TABLE_CHROME_VER = 9;
+const OU_PROJ_TABLE_CHROME_VER = 8;
 let ouProjTableChromeBuiltVer = 0;
 let ouTableBuildRaf = 0;
 
@@ -7599,9 +7599,7 @@ function ouProjMakeBookColumnTh(sortKey, label, thClass, bookKey, sortIndHtml) {
   th.className = `sortable ou-proj-long-th num ${thClass}`;
   th.dataset.sortKey = sortKey;
   const meta = bookMeta(bookKey);
-  const fullLabel =
-    label === "L" ? "Line" : label === "O" ? "Odds" : label === "E" ? "Edge" : label;
-  th.title = `${meta.label} ${fullLabel}`;
+  th.title = `${meta.label} ${label}`;
   const headWrap = document.createElement("span");
   headWrap.className = "ou-proj-th-book-head";
   const logoWrap = document.createElement("span");
@@ -7627,6 +7625,60 @@ function ouProjMakeBookColumnTh(sortKey, label, thClass, bookKey, sortIndHtml) {
   return th;
 }
 
+function initOuTableHorizontalScroll() {
+  const shell = document.getElementById("ou-table-scroll-shell");
+  const scroller = document.getElementById("ou-table-scroll");
+  const btnL = document.getElementById("ou-table-scroll-left");
+  const btnR = document.getElementById("ou-table-scroll-right");
+  if (!shell || !scroller || scroller.dataset.ouHScrollBound === "1") return;
+  scroller.dataset.ouHScrollBound = "1";
+
+  const sync = () => {
+    const max = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+    const x = scroller.scrollLeft;
+    const canL = x > 2;
+    const canR = x < max - 2;
+    shell.classList.toggle("can-scroll-left", canL);
+    shell.classList.toggle("can-scroll-right", canR);
+    if (btnL) btnL.hidden = !canL;
+    if (btnR) btnR.hidden = !canR;
+  };
+
+  const step = () => Math.max(220, Math.round(scroller.clientWidth * 0.55));
+  btnL?.addEventListener("click", () => {
+    scroller.scrollBy({ left: -step(), behavior: "smooth" });
+  });
+  btnR?.addEventListener("click", () => {
+    scroller.scrollBy({ left: step(), behavior: "smooth" });
+  });
+  scroller.addEventListener("scroll", sync, { passive: true });
+  scroller.addEventListener(
+    "wheel",
+    (ev) => {
+      // Convert vertical wheel to horizontal when the table overflows (easier to pan books).
+      if (scroller.scrollWidth <= scroller.clientWidth + 2) return;
+      if (Math.abs(ev.deltaY) <= Math.abs(ev.deltaX)) return;
+      ev.preventDefault();
+      scroller.scrollLeft += ev.deltaY;
+    },
+    { passive: false },
+  );
+  window.addEventListener("resize", sync, { passive: true });
+  // After chrome/rows paint
+  requestAnimationFrame(() => {
+    sync();
+    setTimeout(sync, 50);
+    setTimeout(sync, 300);
+  });
+  scroller._ouSyncHScroll = sync;
+}
+
+function syncOuTableHorizontalScroll() {
+  const scroller = document.getElementById("ou-table-scroll");
+  if (typeof scroller?._ouSyncHScroll === "function") scroller._ouSyncHScroll();
+  else initOuTableHorizontalScroll();
+}
+
 function ensureOuProjectionTableChrome() {
   if (ouProjTableChromeReady && ouProjTableChromeBuiltVer === OU_PROJ_TABLE_CHROME_VER) return;
   const table = document.getElementById("table-ou");
@@ -7649,27 +7701,27 @@ function ensureOuProjectionTableChrome() {
     th.innerHTML = `${label}${sortInd}`;
     hr.appendChild(th);
   }
-  hr.appendChild(ouProjMakeBookColumnTh("pr-dk-line", "L", "ou-proj-th-dk-line", "draftkings", sortInd));
-  hr.appendChild(ouProjMakeBookColumnTh("pr-dk-odds", "O", "ou-proj-th-dk-odds", "draftkings", sortInd));
-  hr.appendChild(ouProjMakeBookColumnTh("pr-pp-line", "L", "ou-proj-th-pp-line", "prizepicks", sortInd));
-  hr.appendChild(ouProjMakeBookColumnTh("pr-pp-odds", "O", "ou-proj-th-pp-odds", "prizepicks", sortInd));
-  hr.appendChild(ouProjMakeBookColumnTh("pr-sl-line", "L", "ou-proj-th-sl-line", "sleeper", sortInd));
-  hr.appendChild(ouProjMakeBookColumnTh("pr-sl-odds", "O", "ou-proj-th-sl-odds", "sleeper", sortInd));
-  hr.appendChild(ouProjMakeBookColumnTh("pr-ud-line", "L", "ou-proj-th-ud-line", "underdog", sortInd));
-  hr.appendChild(ouProjMakeBookColumnTh("pr-ud-odds", "O", "ou-proj-th-ud-odds", "underdog", sortInd));
-  hr.appendChild(ouProjMakeBookColumnTh("pr-fd-line", "L", "ou-proj-th-fd-line", "fanduel", sortInd));
-  hr.appendChild(ouProjMakeBookColumnTh("pr-fd-odds", "O", "ou-proj-th-fd-odds", "fanduel", sortInd));
-  hr.appendChild(ouProjMakeBookColumnTh("pr-kl-line", "L", "ou-proj-th-kl-line", "kalshi", sortInd));
-  hr.appendChild(ouProjMakeBookColumnTh("pr-kl-odds", "O", "ou-proj-th-kl-odds", "kalshi", sortInd));
-  hr.appendChild(ouProjMakeBookColumnTh("pr-czr-line", "L", "ou-proj-th-czr-line", "caesars", sortInd));
-  hr.appendChild(ouProjMakeBookColumnTh("pr-czr-odds", "O", "ou-proj-th-czr-odds", "caesars", sortInd));
-  hr.appendChild(ouProjMakeBookColumnTh("pr-dk-edge", "E", "ou-proj-th-dk-edge", "draftkings", sortInd));
-  hr.appendChild(ouProjMakeBookColumnTh("pr-pp-edge", "E", "ou-proj-th-pp-edge", "prizepicks", sortInd));
-  hr.appendChild(ouProjMakeBookColumnTh("pr-sl-edge", "E", "ou-proj-th-sl-edge", "sleeper", sortInd));
-  hr.appendChild(ouProjMakeBookColumnTh("pr-ud-edge", "E", "ou-proj-th-ud-edge", "underdog", sortInd));
-  hr.appendChild(ouProjMakeBookColumnTh("pr-fd-edge", "E", "ou-proj-th-fd-edge", "fanduel", sortInd));
-  hr.appendChild(ouProjMakeBookColumnTh("pr-kl-edge", "E", "ou-proj-th-kl-edge", "kalshi", sortInd));
-  hr.appendChild(ouProjMakeBookColumnTh("pr-czr-edge", "E", "ou-proj-th-czr-edge", "caesars", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-dk-line", "Line", "ou-proj-th-dk-line", "draftkings", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-dk-odds", "Odds", "ou-proj-th-dk-odds", "draftkings", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-pp-line", "Line", "ou-proj-th-pp-line", "prizepicks", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-pp-odds", "Odds", "ou-proj-th-pp-odds", "prizepicks", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-sl-line", "Line", "ou-proj-th-sl-line", "sleeper", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-sl-odds", "Odds", "ou-proj-th-sl-odds", "sleeper", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-ud-line", "Line", "ou-proj-th-ud-line", "underdog", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-ud-odds", "Odds", "ou-proj-th-ud-odds", "underdog", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-fd-line", "Line", "ou-proj-th-fd-line", "fanduel", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-fd-odds", "Odds", "ou-proj-th-fd-odds", "fanduel", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-kl-line", "Line", "ou-proj-th-kl-line", "kalshi", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-kl-odds", "Odds", "ou-proj-th-kl-odds", "kalshi", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-czr-line", "Line", "ou-proj-th-czr-line", "caesars", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-czr-odds", "Odds", "ou-proj-th-czr-odds", "caesars", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-dk-edge", "Edge", "ou-proj-th-dk-edge", "draftkings", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-pp-edge", "Edge", "ou-proj-th-pp-edge", "prizepicks", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-sl-edge", "Edge", "ou-proj-th-sl-edge", "sleeper", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-ud-edge", "Edge", "ou-proj-th-ud-edge", "underdog", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-fd-edge", "Edge", "ou-proj-th-fd-edge", "fanduel", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-kl-edge", "Edge", "ou-proj-th-kl-edge", "kalshi", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-czr-edge", "Edge", "ou-proj-th-czr-edge", "caesars", sortInd));
   const fairTh = document.createElement("th");
   fairTh.className = "sortable ou-proj-long-th num ou-proj-th-fair";
   fairTh.dataset.sortKey = "pr-fair";
@@ -7712,6 +7764,7 @@ function initOuTableSortOnce() {
   if (!table) return;
   ouTableSortInited = true;
   ensureOuProjectionTableChrome();
+  initOuTableHorizontalScroll();
   table.querySelector("thead")?.addEventListener("click", (ev) => {
     const th = ev.target.closest("th.sortable");
     if (!th || !table.contains(th)) return;
@@ -8834,6 +8887,7 @@ function buildOuTable() {
   }
 
   updateOuSortIndicators();
+  syncOuTableHorizontalScroll();
   syncOuChartCard();
   syncForecastWaveBannerTexts();
   if (ouProjExpandedDetail) {
