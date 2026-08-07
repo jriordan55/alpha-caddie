@@ -2153,247 +2153,263 @@ ev_backtest_all,2026-08-06T05:16:51Z,,(all events),,,(all),(all),Fairways hit,,,
 ev_backtest_all,2026-08-06T05:16:51Z,,(all events),,,(all),(all),Birdies,,,,17.5,over,63,36,27,0,4.45,7.1
 ev_backtest_all,2026-08-06T05:16:51Z,,(all events),,,(all),(all),Birdies,,,,20.0,over,49,25,24,0,1.90,3.9
 ev_backtest_all,2026-08-06T05:16:51Z,,(all events),,,(all),(all),Pars,,,,20.0,over,1,0,1,0,-1.00,-100.0
-model_vs_book,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Birdies,0.390,0.345,43,,,,,,,,
-model_vs_book,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,0.660,0.514,18,,,,,,,,
-model_vs_book,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,0.470,0.355,18,,,,,,,,
-model_vs_book,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,0.480,0.380,18,,,,,,,,
-model_vs_book,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Pars,0.701,0.671,18,,,,,,,,
-model_vs_book,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Total score,0.614,0.504,43,,,,,,,,
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Birdies,,,,0.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Birdies,,,,0.0,under,20,20,0,0,14.55,72.7
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Birdies,,,,2.5,under,7,7,0,0,5.80,82.9
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Birdies,,,,5.0,under,3,3,0,0,2.82,93.9
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Birdies,,,,7.5,under,1,1,0,0,1.30,130.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,0.0,over,14,0,14,0,-14.00,-100.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,0.0,under,17,17,0,0,0.00,0.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,10.0,over,2,0,2,0,-2.00,-100.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,10.0,under,7,7,0,0,0.00,0.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,12.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,12.5,under,5,5,0,0,0.00,0.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,15.0,under,4,4,0,0,0.00,0.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,17.5,under,2,2,0,0,0.00,0.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,2.5,over,14,0,14,0,-14.00,-100.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,2.5,under,17,17,0,0,0.00,0.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,5.0,over,11,0,11,0,-11.00,-100.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,5.0,under,16,16,0,0,0.00,0.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,7.5,over,6,0,6,0,-6.00,-100.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,7.5,under,11,11,0,0,0.00,0.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,0.0,over,28,15,13,0,-8.04,-28.7
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,0.0,under,7,3,4,0,-4.00,-57.1
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,10.0,over,8,5,3,0,-3.00,-37.5
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,12.5,over,4,2,2,0,-2.00,-50.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,15.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,17.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,2.5,over,24,13,11,0,-7.65,-31.9
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,2.5,under,7,3,4,0,-4.00,-57.1
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,20.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,5.0,over,17,9,8,0,-6.60,-38.8
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,5.0,under,6,2,4,0,-4.00,-66.7
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,7.5,over,12,8,4,0,-3.38,-28.2
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,7.5,under,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,0.0,over,13,6,7,0,-6.14,-47.2
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,0.0,under,22,15,7,0,-3.09,-14.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,10.0,over,6,2,4,0,-4.00,-66.7
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,10.0,under,6,4,2,0,0.11,1.8
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,12.5,over,3,1,2,0,-2.00,-66.7
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,12.5,under,3,3,0,0,2.11,70.3
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,15.0,over,2,0,2,0,-2.00,-100.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,15.0,under,1,1,0,0,1.20,120.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,17.5,over,2,0,2,0,-2.00,-100.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,17.5,under,1,1,0,0,1.20,120.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,2.5,over,11,5,6,0,-6.00,-54.5
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,2.5,under,20,15,5,0,-1.09,-5.4
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,20.0,under,1,1,0,0,1.20,120.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,5.0,over,11,5,6,0,-6.00,-54.5
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,5.0,under,15,11,4,0,-0.09,-0.6
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,7.5,over,8,3,5,0,-5.00,-62.5
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,7.5,under,10,8,2,0,1.37,13.7
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Pars,,,,0.0,over,9,9,0,0,0.00,0.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Pars,,,,0.0,under,21,0,21,0,-21.00,-100.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Pars,,,,2.5,over,9,9,0,0,0.00,0.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Pars,,,,2.5,under,20,0,20,0,-20.00,-100.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Pars,,,,5.0,over,6,6,0,0,0.00,0.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Pars,,,,5.0,under,12,0,12,0,-12.00,-100.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Pars,,,,7.5,under,6,0,6,0,-6.00,-100.0
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Total score,,,,0.0,over,36,13,23,0,-11.26,-31.3
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Total score,,,,10.0,over,2,2,0,0,1.96,98.1
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Total score,,,,2.5,over,29,10,19,0,-10.09,-34.8
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Total score,,,,5.0,over,16,5,11,0,-6.42,-40.1
-ev_backtest,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Total score,,,,7.5,over,8,3,5,0,-2.35,-29.4
-model_vs_book_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Birdies,0.390,0.345,43,,,,,,,,
-model_vs_book_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,0.660,0.514,18,,,,,,,,
-model_vs_book_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,0.470,0.355,18,,,,,,,,
-model_vs_book_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,0.480,0.380,18,,,,,,,,
-model_vs_book_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Pars,0.701,0.671,18,,,,,,,,
-model_vs_book_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Total score,0.614,0.504,43,,,,,,,,
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Birdies,,,,0.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Birdies,,,,0.0,under,20,20,0,0,14.55,72.7
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Birdies,,,,2.5,under,7,7,0,0,5.80,82.9
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Birdies,,,,5.0,under,3,3,0,0,2.82,93.9
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Birdies,,,,7.5,under,1,1,0,0,1.30,130.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,0.0,over,14,0,14,0,-14.00,-100.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,0.0,under,17,17,0,0,0.00,0.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,10.0,over,2,0,2,0,-2.00,-100.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,10.0,under,7,7,0,0,0.00,0.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,12.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,12.5,under,5,5,0,0,0.00,0.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,15.0,under,4,4,0,0,0.00,0.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,17.5,under,2,2,0,0,0.00,0.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,2.5,over,14,0,14,0,-14.00,-100.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,2.5,under,17,17,0,0,0.00,0.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,5.0,over,11,0,11,0,-11.00,-100.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,5.0,under,16,16,0,0,0.00,0.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,7.5,over,6,0,6,0,-6.00,-100.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,7.5,under,11,11,0,0,0.00,0.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,0.0,over,28,15,13,0,-8.04,-28.7
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,0.0,under,7,3,4,0,-4.00,-57.1
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,10.0,over,8,5,3,0,-3.00,-37.5
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,12.5,over,4,2,2,0,-2.00,-50.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,15.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,17.5,over,1,0,1,0,-1.00,-100.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,2.5,over,24,13,11,0,-7.65,-31.9
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,2.5,under,7,3,4,0,-4.00,-57.1
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,20.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,5.0,over,17,9,8,0,-6.60,-38.8
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,5.0,under,6,2,4,0,-4.00,-66.7
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,7.5,over,12,8,4,0,-3.38,-28.2
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,7.5,under,1,0,1,0,-1.00,-100.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,0.0,over,13,6,7,0,-6.14,-47.2
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,0.0,under,22,15,7,0,-3.09,-14.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,10.0,over,6,2,4,0,-4.00,-66.7
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,10.0,under,6,4,2,0,0.11,1.8
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,12.5,over,3,1,2,0,-2.00,-66.7
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,12.5,under,3,3,0,0,2.11,70.3
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,15.0,over,2,0,2,0,-2.00,-100.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,15.0,under,1,1,0,0,1.20,120.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,17.5,over,2,0,2,0,-2.00,-100.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,17.5,under,1,1,0,0,1.20,120.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,2.5,over,11,5,6,0,-6.00,-54.5
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,2.5,under,20,15,5,0,-1.09,-5.4
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,20.0,under,1,1,0,0,1.20,120.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,5.0,over,11,5,6,0,-6.00,-54.5
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,5.0,under,15,11,4,0,-0.09,-0.6
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,7.5,over,8,3,5,0,-5.00,-62.5
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,7.5,under,10,8,2,0,1.37,13.7
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Pars,,,,0.0,over,9,9,0,0,0.00,0.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Pars,,,,0.0,under,21,0,21,0,-21.00,-100.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Pars,,,,2.5,over,9,9,0,0,0.00,0.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Pars,,,,2.5,under,20,0,20,0,-20.00,-100.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Pars,,,,5.0,over,6,6,0,0,0.00,0.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Pars,,,,5.0,under,12,0,12,0,-12.00,-100.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Pars,,,,7.5,under,6,0,6,0,-6.00,-100.0
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Total score,,,,0.0,over,36,13,23,0,-11.26,-31.3
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Total score,,,,10.0,over,2,2,0,0,1.96,98.1
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Total score,,,,2.5,over,29,10,19,0,-10.09,-34.8
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Total score,,,,5.0,over,16,5,11,0,-6.42,-40.1
-ev_backtest_by_market,2026-08-07T03:51:28Z,2026-08-07T03:50:20Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Total score,,,,7.5,over,8,3,5,0,-2.35,-29.4
-model_vs_book_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Birdies,0.632,0.493,1693,,,,,,,,
-model_vs_book_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Bogeys,0.703,0.518,850,,,,,,,,
-model_vs_book_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Fairways hit,0.737,0.572,628,,,,,,,,
-model_vs_book_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),GIR,0.829,0.632,679,,,,,,,,
-model_vs_book_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Pars,0.670,0.527,850,,,,,,,,
-model_vs_book_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Total score,1.351,1.066,1470,,,,,,,,
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Birdies,,,,0.0,under,1106,590,516,0,-13.14,-1.2
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Birdies,,,,10.0,under,408,208,200,0,-14.78,-3.6
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Birdies,,,,12.5,under,250,125,125,0,-13.80,-5.5
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Birdies,,,,15.0,under,156,79,77,0,-5.55,-3.6
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Birdies,,,,17.5,under,76,33,43,0,-12.16,-16.0
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Birdies,,,,2.5,under,943,489,454,0,-35.13,-3.7
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Birdies,,,,20.0,under,29,16,13,0,2.73,9.4
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Birdies,,,,5.0,under,783,404,379,0,-31.48,-4.0
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Birdies,,,,7.5,under,595,303,292,0,-28.36,-4.8
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Bogeys,,,,0.0,over,234,116,118,0,-13.91,-5.9
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Bogeys,,,,0.0,under,410,256,154,0,46.25,11.3
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Bogeys,,,,10.0,under,198,127,71,0,29.14,14.7
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Bogeys,,,,12.5,under,149,98,51,0,26.30,17.7
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Bogeys,,,,15.0,under,118,77,41,0,17.89,15.2
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Bogeys,,,,17.5,under,93,62,31,0,17.67,19.0
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Bogeys,,,,2.5,over,182,91,91,0,-8.88,-4.9
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Bogeys,,,,2.5,under,349,217,132,0,34.73,10.0
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Bogeys,,,,20.0,under,64,45,19,0,19.00,29.7
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Bogeys,,,,5.0,over,125,62,63,0,-4.23,-3.4
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Bogeys,,,,5.0,under,303,194,109,0,38.78,12.8
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Bogeys,,,,7.5,over,81,44,37,0,7.91,9.8
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Bogeys,,,,7.5,under,255,161,94,0,31.23,12.2
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Fairways hit,,,,0.0,over,187,89,98,0,-34.06,-18.2
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Fairways hit,,,,0.0,under,307,161,146,0,-12.63,-4.1
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Fairways hit,,,,10.0,over,49,23,26,0,-10.83,-22.1
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Fairways hit,,,,10.0,under,122,65,57,0,-0.82,-0.7
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Fairways hit,,,,12.5,over,34,16,18,0,-6.27,-18.4
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Fairways hit,,,,12.5,under,95,50,45,0,-2.46,-2.6
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Fairways hit,,,,15.0,over,23,10,13,0,-4.12,-17.9
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Fairways hit,,,,17.5,over,15,6,9,0,-3.79,-25.3
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Fairways hit,,,,2.5,over,145,76,69,0,-15.47,-10.7
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Fairways hit,,,,2.5,under,246,127,119,0,-14.93,-6.1
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Fairways hit,,,,20.0,over,10,5,5,0,-0.75,-7.5
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Fairways hit,,,,5.0,over,106,56,50,0,-11.47,-10.8
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Fairways hit,,,,5.0,under,195,103,92,0,-6.16,-3.2
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Fairways hit,,,,7.5,over,78,43,35,0,-6.52,-8.4
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Fairways hit,,,,7.5,under,150,82,68,0,2.97,2.0
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),GIR,,,,0.0,over,292,166,126,0,19.07,6.5
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),GIR,,,,0.0,under,253,148,105,0,11.76,4.6
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),GIR,,,,10.0,over,100,62,38,0,17.57,17.6
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),GIR,,,,10.0,under,114,78,36,0,27.96,24.5
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),GIR,,,,12.5,over,74,43,31,0,9.11,12.3
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),GIR,,,,15.0,over,48,27,21,0,3.82,8.0
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),GIR,,,,17.5,over,30,18,12,0,5.29,17.6
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),GIR,,,,2.5,over,240,134,106,0,10.70,4.5
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),GIR,,,,2.5,under,224,136,88,0,18.60,8.3
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),GIR,,,,20.0,over,21,12,9,0,2.58,12.3
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),GIR,,,,5.0,over,192,113,79,0,18.23,9.5
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),GIR,,,,5.0,under,189,121,68,0,29.78,15.8
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),GIR,,,,7.5,over,141,82,59,0,13.99,9.9
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),GIR,,,,7.5,under,149,98,51,0,28.64,19.2
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Pars,,,,0.0,over,294,174,120,0,27.79,9.5
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Pars,,,,10.0,over,29,14,15,0,-1.70,-5.9
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Pars,,,,12.5,over,13,5,8,0,-3.24,-24.9
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Pars,,,,15.0,over,8,4,4,0,-0.42,-5.2
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Pars,,,,17.5,over,2,0,2,0,-2.00,-100.0
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Pars,,,,2.5,over,175,105,70,0,18.42,10.5
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Pars,,,,5.0,over,94,53,41,0,3.47,3.7
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Pars,,,,7.5,over,44,21,23,0,-2.63,-6.0
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Total score,,,,0.0,over,1008,493,515,0,-89.82,-8.9
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Total score,,,,10.0,over,515,273,242,0,-6.56,-1.3
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Total score,,,,12.5,over,409,216,193,0,-6.83,-1.7
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Total score,,,,15.0,over,308,164,144,0,-1.79,-0.6
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Total score,,,,17.5,over,244,130,114,0,-1.57,-0.6
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Total score,,,,2.5,over,885,435,450,0,-74.84,-8.5
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Total score,,,,20.0,over,184,99,85,0,1.08,0.6
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Total score,,,,5.0,over,757,377,380,0,-54.87,-7.2
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Total score,,,,7.5,over,644,333,311,0,-24.11,-3.7
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Birdies,,,,0.0,over,269,140,129,0,-2.87,-1.1
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Birdies,,,,10.0,over,87,51,36,0,7.47,8.6
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Birdies,,,,12.5,over,71,42,29,0,7.00,9.9
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Birdies,,,,15.0,over,67,39,28,0,5.89,8.8
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Birdies,,,,2.5,over,232,123,109,0,3.26,1.4
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Birdies,,,,5.0,over,174,95,79,0,9.81,5.6
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Birdies,,,,7.5,over,111,66,45,0,15.43,13.9
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Fairways hit,,,,15.0,under,81,42,39,0,-2.61,-3.2
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Fairways hit,,,,17.5,under,73,37,36,0,-3.80,-5.2
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Pars,,,,0.0,under,155,63,92,0,-32.13,-20.7
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Pars,,,,2.5,under,86,27,59,0,-31.01,-36.1
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Pars,,,,5.0,under,35,9,26,0,-15.68,-44.8
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Pars,,,,7.5,under,13,3,10,0,-6.51,-50.1
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Total score,,,,0.0,under,226,144,82,0,43.61,19.3
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Total score,,,,10.0,under,147,104,43,0,48.20,32.8
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Total score,,,,12.5,under,134,95,39,0,44.66,33.3
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Total score,,,,15.0,under,107,76,31,0,36.97,34.6
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Total score,,,,17.5,under,84,62,22,0,32.90,39.2
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Total score,,,,2.5,under,202,132,70,0,44.78,22.2
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Total score,,,,20.0,under,72,53,19,0,28.09,39.0
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Total score,,,,5.0,under,181,121,60,0,45.95,25.4
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Total score,,,,7.5,under,165,112,53,0,45.47,27.6
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Bogeys,,,,10.0,over,58,35,23,0,12.85,22.2
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Bogeys,,,,12.5,over,44,27,17,0,9.05,20.6
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Bogeys,,,,15.0,over,28,17,11,0,6.07,21.7
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Bogeys,,,,17.5,over,16,8,8,0,2.28,14.2
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Bogeys,,,,20.0,over,7,4,3,0,2.98,42.6
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),GIR,,,,12.5,under,94,66,28,0,26.75,28.5
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),GIR,,,,15.0,under,70,51,19,0,22.56,32.2
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Pars,,,,10.0,under,1,0,1,0,-1.00,-100.0
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),GIR,,,,17.5,under,59,44,15,0,20.78,35.2
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),GIR,,,,20.0,under,49,38,11,0,19.77,40.3
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Fairways hit,,,,20.0,under,58,27,31,0,-6.97,-12.0
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Birdies,,,,17.5,over,63,36,27,0,4.45,7.1
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Birdies,,,,20.0,over,49,25,24,0,1.90,3.9
-ev_backtest_all,2026-08-07T03:51:53Z,,(all events),,,(all),(all),Pars,,,,20.0,over,1,0,1,0,-1.00,-100.0
+model_vs_book,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Birdies,0.421,0.368,44,,,,,,,,
+model_vs_book,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,0.743,0.570,18,,,,,,,,
+model_vs_book,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,0.764,0.681,18,,,,,,,,
+model_vs_book,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,0.691,0.564,18,,,,,,,,
+model_vs_book,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Pars,0.871,0.834,18,,,,,,,,
+model_vs_book,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Total score,1.270,1.141,44,,,,,,,,
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Birdies,,,,0.0,over,2,1,1,0,0.16,8.0
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Birdies,,,,0.0,under,27,19,8,0,6.00,22.2
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Birdies,,,,2.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Birdies,,,,2.5,under,14,10,4,0,3.23,23.1
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Birdies,,,,5.0,under,5,4,1,0,1.86,37.1
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Birdies,,,,7.5,under,1,1,0,0,0.83,83.3
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,0.0,over,22,11,11,0,-4.44,-20.2
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,0.0,under,22,16,6,0,-6.00,-27.3
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,10.0,over,5,2,3,0,-1.54,-30.8
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,10.0,under,11,8,3,0,-3.00,-27.3
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,12.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,12.5,under,9,6,3,0,-3.00,-33.3
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,15.0,under,7,4,3,0,-3.00,-42.9
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,17.5,under,2,1,1,0,-1.00,-50.0
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,2.5,over,21,10,11,0,-4.91,-23.4
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,2.5,under,22,16,6,0,-6.00,-27.3
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,5.0,over,19,10,9,0,-2.91,-15.3
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,5.0,under,21,15,6,0,-6.00,-28.6
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,7.5,over,14,7,7,0,-2.04,-14.6
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Bogeys,,,,7.5,under,16,12,4,0,-4.00,-25.0
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,0.0,over,19,10,9,0,-8.38,-44.1
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,0.0,under,22,6,16,0,-12.59,-57.2
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,10.0,over,9,6,3,0,-2.38,-26.5
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,10.0,under,3,1,2,0,-1.06,-35.2
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,12.5,over,4,2,2,0,-2.00,-50.0
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,12.5,under,3,1,2,0,-1.06,-35.2
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,15.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,15.0,under,3,1,2,0,-1.06,-35.2
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,17.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,17.5,under,1,1,0,0,0.94,94.3
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,2.5,over,19,10,9,0,-8.38,-44.1
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,2.5,under,21,6,15,0,-11.59,-55.2
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,20.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,20.0,under,1,1,0,0,0.94,94.3
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,5.0,over,14,9,5,0,-4.38,-31.3
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,5.0,under,17,4,13,0,-11.34,-66.7
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,7.5,over,11,7,4,0,-3.38,-30.8
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Fairways hit,,,,7.5,under,5,1,4,0,-3.06,-61.1
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,0.0,over,25,12,13,0,-6.62,-26.5
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,0.0,under,16,11,5,0,-2.00,-12.5
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,10.0,over,11,6,5,0,-2.19,-19.9
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,10.0,under,6,4,2,0,-0.20,-3.3
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,12.5,over,6,5,1,0,1.01,16.9
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,12.5,under,1,1,0,0,0.00,0.0
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,15.0,over,3,2,1,0,-0.25,-8.5
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,17.5,over,1,1,0,0,0.00,0.0
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,2.5,over,23,11,12,0,-6.77,-29.4
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,2.5,under,16,11,5,0,-2.00,-12.5
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,5.0,over,21,11,10,0,-4.77,-22.7
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,5.0,under,13,9,4,0,-1.00,-7.7
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,7.5,over,14,7,7,0,-3.48,-24.8
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,GIR,,,,7.5,under,10,6,4,0,-2.20,-22.0
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Pars,,,,0.0,over,9,4,5,0,-5.00,-55.6
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Pars,,,,0.0,under,35,12,23,0,-17.39,-49.7
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Pars,,,,10.0,under,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Pars,,,,2.5,over,9,4,5,0,-5.00,-55.6
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Pars,,,,2.5,under,34,12,22,0,-16.39,-48.2
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Pars,,,,5.0,over,5,1,4,0,-4.00,-80.0
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Pars,,,,5.0,under,19,8,11,0,-7.73,-40.7
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Pars,,,,7.5,under,15,6,9,0,-7.32,-48.8
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Total score,,,,0.0,over,41,13,28,0,-16.03,-39.1
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Total score,,,,10.0,over,29,8,21,0,-13.69,-47.2
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Total score,,,,12.5,over,20,5,15,0,-10.35,-51.7
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Total score,,,,15.0,over,16,4,12,0,-8.05,-50.3
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Total score,,,,17.5,over,7,1,6,0,-5.04,-72.0
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Total score,,,,2.5,over,41,13,28,0,-16.03,-39.1
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Total score,,,,20.0,over,6,1,5,0,-4.04,-67.3
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Total score,,,,5.0,over,39,12,27,0,-15.84,-40.6
+ev_backtest,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,default,default,Total score,,,,7.5,over,36,11,25,0,-14.52,-40.3
+model_vs_book_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Birdies,0.421,0.368,44,,,,,,,,
+model_vs_book_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,0.743,0.570,18,,,,,,,,
+model_vs_book_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,0.764,0.681,18,,,,,,,,
+model_vs_book_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,0.691,0.564,18,,,,,,,,
+model_vs_book_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Pars,0.871,0.834,18,,,,,,,,
+model_vs_book_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Total score,1.270,1.141,44,,,,,,,,
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Birdies,,,,0.0,over,2,1,1,0,0.16,8.0
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Birdies,,,,0.0,under,27,19,8,0,6.00,22.2
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Birdies,,,,2.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Birdies,,,,2.5,under,14,10,4,0,3.23,23.1
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Birdies,,,,5.0,under,5,4,1,0,1.86,37.1
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Birdies,,,,7.5,under,1,1,0,0,0.83,83.3
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,0.0,over,22,11,11,0,-4.44,-20.2
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,0.0,under,22,16,6,0,-6.00,-27.3
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,10.0,over,5,2,3,0,-1.54,-30.8
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,10.0,under,11,8,3,0,-3.00,-27.3
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,12.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,12.5,under,9,6,3,0,-3.00,-33.3
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,15.0,under,7,4,3,0,-3.00,-42.9
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,17.5,under,2,1,1,0,-1.00,-50.0
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,2.5,over,21,10,11,0,-4.91,-23.4
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,2.5,under,22,16,6,0,-6.00,-27.3
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,5.0,over,19,10,9,0,-2.91,-15.3
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,5.0,under,21,15,6,0,-6.00,-28.6
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,7.5,over,14,7,7,0,-2.04,-14.6
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Bogeys,,,,7.5,under,16,12,4,0,-4.00,-25.0
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,0.0,over,19,10,9,0,-8.38,-44.1
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,0.0,under,22,6,16,0,-12.59,-57.2
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,10.0,over,9,6,3,0,-2.38,-26.5
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,10.0,under,3,1,2,0,-1.06,-35.2
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,12.5,over,4,2,2,0,-2.00,-50.0
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,12.5,under,3,1,2,0,-1.06,-35.2
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,15.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,15.0,under,3,1,2,0,-1.06,-35.2
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,17.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,17.5,under,1,1,0,0,0.94,94.3
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,2.5,over,19,10,9,0,-8.38,-44.1
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,2.5,under,21,6,15,0,-11.59,-55.2
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,20.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,20.0,under,1,1,0,0,0.94,94.3
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,5.0,over,14,9,5,0,-4.38,-31.3
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,5.0,under,17,4,13,0,-11.34,-66.7
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,7.5,over,11,7,4,0,-3.38,-30.8
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Fairways hit,,,,7.5,under,5,1,4,0,-3.06,-61.1
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,0.0,over,25,12,13,0,-6.62,-26.5
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,0.0,under,16,11,5,0,-2.00,-12.5
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,10.0,over,11,6,5,0,-2.19,-19.9
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,10.0,under,6,4,2,0,-0.20,-3.3
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,12.5,over,6,5,1,0,1.01,16.9
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,12.5,under,1,1,0,0,0.00,0.0
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,15.0,over,3,2,1,0,-0.25,-8.5
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,17.5,over,1,1,0,0,0.00,0.0
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,2.5,over,23,11,12,0,-6.77,-29.4
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,2.5,under,16,11,5,0,-2.00,-12.5
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,5.0,over,21,11,10,0,-4.77,-22.7
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,5.0,under,13,9,4,0,-1.00,-7.7
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,7.5,over,14,7,7,0,-3.48,-24.8
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),GIR,,,,7.5,under,10,6,4,0,-2.20,-22.0
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Pars,,,,0.0,over,9,4,5,0,-5.00,-55.6
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Pars,,,,0.0,under,35,12,23,0,-17.39,-49.7
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Pars,,,,10.0,under,1,0,1,0,-1.00,-100.0
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Pars,,,,2.5,over,9,4,5,0,-5.00,-55.6
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Pars,,,,2.5,under,34,12,22,0,-16.39,-48.2
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Pars,,,,5.0,over,5,1,4,0,-4.00,-80.0
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Pars,,,,5.0,under,19,8,11,0,-7.73,-40.7
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Pars,,,,7.5,under,15,6,9,0,-7.32,-48.8
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Total score,,,,0.0,over,41,13,28,0,-16.03,-39.1
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Total score,,,,10.0,over,29,8,21,0,-13.69,-47.2
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Total score,,,,12.5,over,20,5,15,0,-10.35,-51.7
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Total score,,,,15.0,over,16,4,12,0,-8.05,-50.3
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Total score,,,,17.5,over,7,1,6,0,-5.04,-72.0
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Total score,,,,2.5,over,41,13,28,0,-16.03,-39.1
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Total score,,,,20.0,over,6,1,5,0,-4.04,-67.3
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Total score,,,,5.0,over,39,12,27,0,-15.84,-40.6
+ev_backtest_by_market,2026-08-07T04:02:04Z,2026-08-07T03:59:58Z,Wyndham Championship,Sedgefield Country Club,2,(all),(all),Total score,,,,7.5,over,36,11,25,0,-14.52,-40.3
+model_vs_book_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Birdies,0.633,0.493,1694,,,,,,,,
+model_vs_book_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Bogeys,0.705,0.519,850,,,,,,,,
+model_vs_book_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Fairways hit,0.744,0.581,628,,,,,,,,
+model_vs_book_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),GIR,0.832,0.637,679,,,,,,,,
+model_vs_book_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Pars,0.674,0.531,850,,,,,,,,
+model_vs_book_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Total score,1.365,1.085,1471,,,,,,,,
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Birdies,,,,0.0,under,1113,589,524,0,-21.69,-1.9
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Birdies,,,,10.0,under,408,208,200,0,-14.78,-3.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Birdies,,,,12.5,under,250,125,125,0,-13.80,-5.5
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Birdies,,,,15.0,under,156,79,77,0,-5.55,-3.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Birdies,,,,17.5,under,76,33,43,0,-12.16,-16.0
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Birdies,,,,2.5,under,950,492,458,0,-37.70,-4.0
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Birdies,,,,20.0,under,29,16,13,0,2.73,9.4
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Birdies,,,,5.0,under,785,405,380,0,-32.44,-4.1
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Birdies,,,,7.5,under,595,303,292,0,-28.83,-4.8
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Bogeys,,,,0.0,over,242,127,115,0,-4.35,-1.8
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Bogeys,,,,0.0,under,415,255,160,0,40.25,9.7
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Bogeys,,,,10.0,under,202,128,74,0,26.14,12.9
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Bogeys,,,,12.5,under,153,99,54,0,23.30,15.2
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Bogeys,,,,15.0,under,121,77,44,0,14.89,12.3
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Bogeys,,,,17.5,under,93,61,32,0,16.67,17.9
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Bogeys,,,,2.5,over,189,101,88,0,0.21,0.1
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Bogeys,,,,2.5,under,354,216,138,0,28.73,8.1
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Bogeys,,,,20.0,under,64,45,19,0,19.00,29.7
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Bogeys,,,,5.0,over,133,72,61,0,3.86,2.9
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Bogeys,,,,5.0,under,308,193,115,0,32.78,10.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Bogeys,,,,7.5,over,89,51,38,0,11.87,13.3
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Bogeys,,,,7.5,under,260,162,98,0,27.23,10.5
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Fairways hit,,,,0.0,over,178,84,94,0,-34.40,-19.3
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Fairways hit,,,,0.0,under,322,164,158,0,-21.22,-6.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Fairways hit,,,,10.0,over,50,24,26,0,-10.21,-20.4
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Fairways hit,,,,10.0,under,125,66,59,0,-1.88,-1.5
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Fairways hit,,,,12.5,over,34,16,18,0,-6.27,-18.4
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Fairways hit,,,,12.5,under,98,51,47,0,-3.52,-3.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Fairways hit,,,,15.0,over,23,10,13,0,-4.12,-17.9
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Fairways hit,,,,17.5,over,15,6,9,0,-3.79,-25.3
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Fairways hit,,,,2.5,over,140,73,67,0,-16.20,-11.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Fairways hit,,,,2.5,under,260,130,130,0,-22.52,-8.7
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Fairways hit,,,,20.0,over,10,5,5,0,-0.75,-7.5
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Fairways hit,,,,5.0,over,103,56,47,0,-9.25,-9.0
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Fairways hit,,,,5.0,under,206,105,101,0,-13.50,-6.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Fairways hit,,,,7.5,over,77,42,35,0,-6.52,-8.5
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Fairways hit,,,,7.5,under,154,83,71,0,0.91,0.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),GIR,,,,0.0,over,304,172,132,0,18.59,6.1
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),GIR,,,,0.0,under,247,144,103,0,12.85,5.2
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),GIR,,,,10.0,over,105,66,39,0,19.38,18.5
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),GIR,,,,10.0,under,114,78,36,0,27.65,24.3
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),GIR,,,,12.5,over,77,47,30,0,12.12,15.7
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),GIR,,,,15.0,over,49,29,20,0,5.57,11.4
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),GIR,,,,17.5,over,29,19,10,0,7.29,25.1
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),GIR,,,,2.5,over,252,140,112,0,9.93,3.9
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),GIR,,,,2.5,under,220,132,88,0,17.69,8.0
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),GIR,,,,20.0,over,21,12,9,0,2.58,12.3
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),GIR,,,,5.0,over,202,119,83,0,19.46,9.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),GIR,,,,5.0,under,187,119,68,0,28.87,15.4
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),GIR,,,,7.5,over,147,86,61,0,15.51,10.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),GIR,,,,7.5,under,149,96,53,0,25.07,16.8
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Pars,,,,0.0,over,294,169,125,0,22.79,7.8
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Pars,,,,10.0,over,29,14,15,0,-1.70,-5.9
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Pars,,,,12.5,over,13,5,8,0,-3.24,-24.9
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Pars,,,,15.0,over,8,4,4,0,-0.42,-5.2
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Pars,,,,17.5,over,2,0,2,0,-2.00,-100.0
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Pars,,,,2.5,over,175,100,75,0,13.42,7.7
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Pars,,,,5.0,over,93,48,45,0,-0.53,-0.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Pars,,,,7.5,over,44,21,23,0,-2.63,-6.0
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Total score,,,,0.0,over,1013,493,520,0,-94.59,-9.3
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Total score,,,,10.0,over,542,279,263,0,-22.21,-4.1
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Total score,,,,12.5,over,429,221,208,0,-17.18,-4.0
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Total score,,,,15.0,over,324,168,156,0,-9.84,-3.0
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Total score,,,,17.5,over,251,131,120,0,-6.61,-2.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Total score,,,,2.5,over,897,438,459,0,-80.78,-9.0
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Total score,,,,20.0,over,190,100,90,0,-2.96,-1.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Total score,,,,5.0,over,780,384,396,0,-64.29,-8.2
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Total score,,,,7.5,over,672,341,331,0,-36.28,-5.4
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Birdies,,,,0.0,over,270,141,129,0,-1.71,-0.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Birdies,,,,10.0,over,87,51,36,0,7.47,8.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Birdies,,,,12.5,over,71,42,29,0,7.00,9.9
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Birdies,,,,15.0,over,67,39,28,0,5.89,8.8
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Birdies,,,,2.5,over,233,123,110,0,2.26,1.0
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Birdies,,,,5.0,over,174,95,79,0,9.81,5.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Birdies,,,,7.5,over,111,66,45,0,15.43,13.9
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Fairways hit,,,,15.0,under,84,43,41,0,-3.67,-4.4
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Fairways hit,,,,17.5,under,74,38,36,0,-2.86,-3.9
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Pars,,,,0.0,under,169,75,94,0,-28.52,-16.9
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Pars,,,,2.5,under,100,39,61,0,-27.40,-27.4
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Pars,,,,5.0,under,42,17,25,0,-11.41,-27.2
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Pars,,,,7.5,under,22,9,13,0,-7.83,-35.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Total score,,,,0.0,under,226,144,82,0,43.61,19.3
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Total score,,,,10.0,under,147,104,43,0,48.20,32.8
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Total score,,,,12.5,under,134,95,39,0,44.66,33.3
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Total score,,,,15.0,under,107,76,31,0,36.97,34.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Total score,,,,17.5,under,84,62,22,0,32.90,39.2
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Total score,,,,2.5,under,202,132,70,0,44.78,22.2
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Total score,,,,20.0,under,72,53,19,0,28.09,39.0
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Total score,,,,5.0,under,181,121,60,0,45.95,25.4
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Total score,,,,7.5,under,165,112,53,0,45.47,27.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Bogeys,,,,10.0,over,61,37,24,0,13.31,21.8
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Bogeys,,,,12.5,over,44,27,17,0,9.05,20.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Bogeys,,,,15.0,over,28,17,11,0,6.07,21.7
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Bogeys,,,,17.5,over,16,8,8,0,2.28,14.2
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Bogeys,,,,20.0,over,7,4,3,0,2.98,42.6
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),GIR,,,,12.5,under,92,64,28,0,24.64,26.8
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),GIR,,,,15.0,under,69,50,19,0,21.36,31.0
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Pars,,,,10.0,under,2,0,2,0,-2.00,-100.0
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),GIR,,,,17.5,under,58,43,15,0,19.58,33.8
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),GIR,,,,20.0,under,48,37,11,0,18.57,38.7
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Fairways hit,,,,20.0,under,59,28,31,0,-6.03,-10.2
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Birdies,,,,17.5,over,63,36,27,0,4.45,7.1
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Birdies,,,,20.0,over,49,25,24,0,1.90,3.9
+ev_backtest_all,2026-08-07T04:03:05Z,,(all events),,,(all),(all),Pars,,,,20.0,over,1,0,1,0,-1.00,-100.0

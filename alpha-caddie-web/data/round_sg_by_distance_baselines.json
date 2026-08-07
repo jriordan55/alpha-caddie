@@ -6,7 +6,12 @@
     "rows_scanned": 5641503,
     "approach_shots": 1341563,
     "player_rounds": 79937,
-    "created_at": "2026-08-04T05:27:00.235Z"
+    "created_at": "2026-08-04T05:27:00.235Z",
+    "last_live_upsert_at": "2026-08-07T04:20:41.682Z",
+    "last_live_tournaments": [
+      "R2026013"
+    ],
+    "last_live_player_rounds": 147
   },
   "baselines": {
     "50_100_fw": {

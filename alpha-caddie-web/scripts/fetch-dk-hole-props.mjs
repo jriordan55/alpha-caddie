@@ -728,17 +728,13 @@ async function main() {
   mkdirSync(dirname(OUT), { recursive: true });
   writeFileSync(
     OUT,
-    `${JSON.stringify(
-      {
-        generated_at: new Date().toISOString(),
-        source: "draftkings",
-        error: error || null,
-        n: props.length,
-        props,
-      },
-      null,
-      2,
-    )}\n`,
+    `${JSON.stringify({
+      generated_at: new Date().toISOString(),
+      source: "draftkings",
+      error: error || null,
+      n: props.length,
+      props,
+    })}\n`,
   );
   console.log(`[draftkings-hole] wrote ${OUT} (${props.length})`);
   if (props[0]) console.log("sample", props[0]);

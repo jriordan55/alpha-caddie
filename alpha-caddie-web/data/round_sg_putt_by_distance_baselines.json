@@ -12,7 +12,12 @@
     "rows_scanned": 5641503,
     "putt_shots": 1859627,
     "player_rounds": 64630,
-    "created_at": "2026-08-04T05:20:04.919Z"
+    "created_at": "2026-08-04T05:20:04.919Z",
+    "last_live_upsert_at": "2026-08-07T04:22:02.179Z",
+    "last_live_tournaments": [
+      "R2026013"
+    ],
+    "last_live_player_rounds": 147
   },
   "baselines": {
     "putt_0_5ft": {

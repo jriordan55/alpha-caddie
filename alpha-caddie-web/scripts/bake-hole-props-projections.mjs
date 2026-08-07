@@ -379,17 +379,13 @@ async function loadOrFetchOdds(payload, targetRound) {
       mkdirSync(dirname(DK_ODDS), { recursive: true });
       writeFileSync(
         DK_ODDS,
-        `${JSON.stringify(
-          {
-            generated_at: new Date().toISOString(),
-            source: "draftkings",
-            error: dkError,
-            n: dkProps.length,
-            props: dkProps,
-          },
-          null,
-          2,
-        )}\n`,
+        `${JSON.stringify({
+          generated_at: new Date().toISOString(),
+          source: "draftkings",
+          error: dkError,
+          n: dkProps.length,
+          props: dkProps,
+        })}\n`,
       );
     } catch (e) {
       dkError = e?.message || String(e);
@@ -409,17 +405,13 @@ async function loadOrFetchOdds(payload, targetRound) {
       mkdirSync(dirname(UD_ODDS), { recursive: true });
       writeFileSync(
         UD_ODDS,
-        `${JSON.stringify(
-          {
-            generated_at: new Date().toISOString(),
-            source: "underdog",
-            error: udError,
-            n: udProps.length,
-            props: udProps,
-          },
-          null,
-          2,
-        )}\n`,
+        `${JSON.stringify({
+          generated_at: new Date().toISOString(),
+          source: "underdog",
+          error: udError,
+          n: udProps.length,
+          props: udProps,
+        })}\n`,
       );
     } catch (e) {
       udError = e?.message || String(e);
@@ -453,11 +445,14 @@ async function main() {
     course_key: boardMeta.course_key,
     hole_pars: boardMeta.hole_pars,
     coverage: boardMeta.coverage,
+    // Keep odds packs in dk_hole_props.json / ud_hole_props.json — do not embed (~2× size).
     odds: {
-      draftkings: dkProps,
-      underdog: udProps,
       dk_error: dkError,
       ud_error: udError,
+      n_dk: dkProps.length,
+      n_ud: udProps.length,
+      dk_path: "data/dk_hole_props.json",
+      ud_path: "data/ud_hole_props.json",
     },
     projections,
     meta: {
@@ -471,7 +466,8 @@ async function main() {
   };
 
   mkdirSync(dirname(OUT), { recursive: true });
-  writeFileSync(OUT, `${JSON.stringify(out, null, 2)}\n`);
+  // Compact JSON (no pretty-print) — UI fetches this every reload.
+  writeFileSync(OUT, `${JSON.stringify(out)}\n`);
 
   payload.hole_props = {
     generated_at: out.generated_at,

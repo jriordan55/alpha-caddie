@@ -439,8 +439,12 @@ $artifacts = @(
   "alpha-caddie-web/data/round_sg_by_distance_baselines.json",
   "alpha-caddie-web/data/round_sg_putt_by_distance.csv",
   "alpha-caddie-web/data/round_sg_putt_by_distance_baselines.json",
-  "alpha-caddie-web/data/player_course_hole_sg.csv",
+  # Slim hole-props publish only — full player_course_hole_sg.csv is gitignored (~29MB)
   "alpha-caddie-web/data/course_hole_sg_baselines.json",
+  "alpha-caddie-web/data/live_hole_props.json",
+  "alpha-caddie-web/data/dk_hole_props.json",
+  "alpha-caddie-web/data/ud_hole_props.json",
+  "website/public/data/live_hole_props.json",
   "alpha-caddie-web/data/historical_round_weather.json",
   "alpha-caddie-web/data/course_coordinates_cache.json",
   "alpha-caddie-web/hole_pars_from_shots.json",
