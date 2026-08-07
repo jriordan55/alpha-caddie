@@ -260,15 +260,52 @@ export function weatherLinearDelta(snap, wave = "", fit = DEFAULT_HIER_FIT) {
   return clamp(d, -1.8, 2.6);
 }
 
-export function weatherDeltaForMarket(market, stpDelta) {
+export function weatherDeltaForMarket(market, stpDelta, opts = {}) {
   const d = numOr(stpDelta, 0);
+  const priorMm = numOr(opts.priorPrecipMm, 0);
+  // Soft/wet turf: approaches hold (GIR↑) and drives stop in the short grass (FW↑).
+  let softGir = 0;
+  let softFw = 0;
+  if (priorMm >= 8) {
+    softGir = 0.45;
+    softFw = 0.35;
+  } else if (priorMm >= 5) {
+    softGir = 0.32;
+    softFw = 0.25;
+  } else if (priorMm >= 3) {
+    softGir = 0.2;
+    softFw = 0.15;
+  } else if (priorMm >= 1) {
+    softGir = 0.1;
+    softFw = 0.08;
+  }
+
   if (market === "Total score") return d;
   if (market === "Bogeys") return 0.45 * d;
   if (market === "Birdies") return -0.5 * d;
   if (market === "Pars") return 0.2 * d;
-  if (market === "GIR") return -0.22 * d;
-  if (market === "Fairways hit") return -0.14 * d;
+  if (market === "GIR") return -0.35 * d + softGir;
+  if (market === "Fairways hit") return -0.28 * d + softFw;
   return 0;
+}
+
+/**
+ * Direct skill × course effects on GIR / Fairways (count units), not STP-scaled.
+ * Soft setups amplify approach→GIR and mute miss-fairway penalty for good drivers.
+ */
+export function skillCourseInteractionCounts(playerSkill, traits, priorPrecipMm, fit = DEFAULT_HIER_FIT) {
+  if (!playerSkill || !traits) return { gir: 0, fairways: 0 };
+  const app = numOr(playerSkill.app, 0);
+  const ott = numOr(playerSkill.ott, 0);
+  const priorMm = numOr(priorPrecipMm, 0);
+  const soft = priorMm >= 5 ? 1.2 : priorMm >= 3 ? 1.1 : 1;
+  const gir = clamp((0.35 * app + 0.2 * app * Math.max(0, traits.firm_hold_z)) * soft, -0.4, 0.7);
+  const fw = clamp(
+    (0.3 * ott + 0.25 * ott * Math.max(0, traits.narrow_z) + 0.12 * (soft - 1) * Math.max(0, ott)) * soft,
+    -0.35,
+    0.65,
+  );
+  return { gir, fairways: fw };
 }
 
 /* ─── NegBin helpers ─────────────────────────────────────────────── */
@@ -371,6 +408,7 @@ export async function buildHierarchicalMuMapForEvent(opts) {
   const traits = loadCourseTraits(webRoot, courseName);
   const layout = resolveCourseLayout({
     coursePar18: Number.isFinite(num(opts.coursePar18, NaN)) ? num(opts.coursePar18, 72) : 72,
+    holePars: opts.holePars || null,
     courseUsed: courseName,
     eventName,
     webRoot,
@@ -378,7 +416,10 @@ export async function buildHierarchicalMuMapForEvent(opts) {
   const coursePar18 = Number.isFinite(num(opts.coursePar18, NaN))
     ? Math.round(num(opts.coursePar18, 70))
     : layout.course_par_18 || 70;
-  const fairwayHoles = layout.fairway_holes_modeled || N_FW;
+  // Prefer live projection basis FW holes (matches DK / venue averages) over par heuristic.
+  const fairwayHoles = Math.round(num(opts.fairwayHoles, NaN)) > 0
+    ? Math.round(num(opts.fairwayHoles, 14))
+    : layout.fairway_holes_modeled || N_FW;
 
   const { resolveWalkforwardWeather } = await import("./historical-walkforward-projections.mjs");
   const fieldWeatherSnap = resolveWalkforwardWeather({
@@ -428,6 +469,8 @@ export async function buildHierarchicalMuMapForEvent(opts) {
     const sk = scoreEff?.playerSkill?.get(dg);
     const ixStp = skillCourseInteractionStp(sk, traits, fit);
     const weatherStp = weatherLinearDelta(wxSnap, wave, fit);
+    const priorMm = weatherFeaturesFromSnapshot(wxSnap, wave).priorPrecipMm;
+    const ixCounts = skillCourseInteractionCounts(sk, traits, priorMm, fit);
 
     for (const market of DG_MARKETS) {
       const eff = effByMarket.get(market);
@@ -456,15 +499,16 @@ export async function buildHierarchicalMuMapForEvent(opts) {
           mu = Number.isFinite(mu) ? (1 - a) * mu + a * bob : bob;
         }
       } else if (market === "Fairways hit") {
+        // Blend skill residual with driving-acc level (don't 100% overwrite — keeps OTT skill).
         const acc = predictFairwaysAccLevel(prefix, dg, courseKey);
         if (Number.isFinite(acc)) {
-          const a = clamp(FAIRWAY_ACC_BLEND, 0, 1);
+          const a = clamp(Math.min(FAIRWAY_ACC_BLEND, 0.65), 0, 1);
           mu = Number.isFinite(mu) ? (1 - a) * mu + a * acc : acc;
         }
       } else if (market === "GIR") {
         const lvl = predictGirLevel(prefix, dg, courseKey);
         if (Number.isFinite(lvl)) {
-          const a = clamp(GIR_LEVEL_BLEND, 0, 1);
+          const a = clamp(Math.min(GIR_LEVEL_BLEND, 0.65), 0, 1);
           mu = Number.isFinite(mu) ? (1 - a) * mu + a * lvl : lvl;
         }
       } else if (market === "Bogeys") {
@@ -492,8 +536,10 @@ export async function buildHierarchicalMuMapForEvent(opts) {
 
       const formDelta = recentFormStpUpdate(prefix, dg, market, mu, fit);
       mu += formDelta;
-      mu += weatherDeltaForMarket(market, ixStp);
-      mu += weatherDeltaForMarket(market, weatherStp);
+      mu += weatherDeltaForMarket(market, ixStp, { priorPrecipMm: priorMm });
+      mu += weatherDeltaForMarket(market, weatherStp, { priorPrecipMm: priorMm });
+      if (market === "GIR") mu += ixCounts.gir;
+      if (market === "Fairways hit") mu += ixCounts.fairways;
       mu = clampMu(market, mu, coursePar18, fairwayHoles);
       if (Number.isFinite(mu)) mus.set(market, Math.round(mu * 1000) / 1000);
     }

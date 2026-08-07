@@ -153,6 +153,10 @@ async function main() {
     fieldDgIds,
     courseNameOverride: courseName,
     coursePar18: Math.round(num(proj.course_par_18, 70)) || 70,
+    fairwayHoles:
+      Math.round(num(proj.projection_course_basis?.fairway_holes_modeled ?? proj.meta?.projection_course_basis?.fairway_holes_modeled, NaN)) ||
+      14,
+    holePars: proj.hole_pars || null,
     weatherByDg,
     waveByDgOverride: waveByDg,
   });
