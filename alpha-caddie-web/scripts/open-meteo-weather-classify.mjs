@@ -54,9 +54,10 @@ export function openMeteoConditionFromHourSlice(codeWorst, maxPrecipProb, maxPre
 
 /**
  * Sum precip (mm) in the lookback hours ending at teeStartIdx (exclusive of the
- * tee window itself). Captures overnight + morning-before rain that softens turf.
+ * tee window itself). Captures yesterday + overnight rain that softens turf.
+ * Default 36h so afternoon tees still see prior-day storms.
  */
-export function priorPrecipMmBeforeTee(hourly, teeStartIdx, lookbackHours = 12) {
+export function priorPrecipMmBeforeTee(hourly, teeStartIdx, lookbackHours = 36) {
   const R = hourly?.precipitation;
   if (!Array.isArray(R) || !Number.isFinite(teeStartIdx) || teeStartIdx <= 0) return 0;
   const start = Math.max(0, Math.floor(teeStartIdx) - Math.max(1, lookbackHours));
@@ -127,8 +128,8 @@ export function summarizeHourlyWeatherSlice(hourly, startIdx, spanHours, opts = 
   const peakForCond = Math.max(peakWind, peakGust);
   const cond = openMeteoConditionFromHourSlice(worstCode, maxPP, maxMm, peakForCond);
   const lookback = Number.isFinite(num(opts.priorLookbackHours, NaN))
-    ? Math.round(num(opts.priorLookbackHours, 12))
-    : 12;
+    ? Math.round(num(opts.priorLookbackHours, 36))
+    : 36;
   const priorPrecipMm = priorPrecipMmBeforeTee(hourly, startIdx, lookback);
   return {
     tempF: sT / nt,

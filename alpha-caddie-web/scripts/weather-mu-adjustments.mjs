@@ -2,8 +2,13 @@
  * Weather → O/U μ adjustments (browser-safe; no Node/fs deps).
  * Negative difficulty delta = softer / easier scoring (more birdies, lower totals).
  *
+ * Round μ framing (tee-window weather piece of hierarchical score model):
+ *   μ(i,r) += weatherDifficultyDelta(tee window, prior precip)
+ * Prior precip is yesterday+overnight archive rain (soft turf); tee-window wind/temp
+ * are the during-play terms. Soak caps keep wet setups from reading as “playing hard.”
+ *
  * Calibrated on PGA rounds 2015+ joined to Open-Meteo archive weather:
- *   - Wind ≥5 mph: ~+0.10 strokes / mph excess over 5 (user + empirical slope ≈0.0997)
+ *   - Wind ≥5 mph: ~+0.10 strokes / mph excess over 5 (muted when turf is soaked)
  *   - Overnight / pre-tee rain softens turf (easier scoring) via priorPrecipMm
  *   - Afternoon wave ~+0.13 strokes vs morning (paired within-round AM/PM)
  */
@@ -52,15 +57,16 @@ export const WEATHER_CONDITION_SIGMA_DELTA = Object.freeze({
   storm: 0.14,
 });
 
-/** Overnight / pre-tee precip (mm) → stroke softener (negative = easier). */
+/** Overnight / pre-tee precip (mm) → stroke softener (negative = easier / softer turf). */
 export function priorRainSoftDeltaFromMm(priorPrecipMm) {
   const mm = num(priorPrecipMm, 0);
-  if (!(mm >= 0.4)) return 0;
-  if (mm < 1.5) return -0.12;
-  if (mm < 4) return -0.25;
-  if (mm < 8) return -0.35;
-  if (mm < 15) return -0.45;
-  return -0.55;
+  if (!(mm >= 0.3)) return 0;
+  if (mm < 1) return -0.2;
+  if (mm < 3) return -0.4;
+  if (mm < 6) return -0.65;
+  if (mm < 12) return -0.9;
+  if (mm < 20) return -1.1;
+  return -1.3;
 }
 
 export function windDifficultyDelta(windMph) {
@@ -108,22 +114,40 @@ export function weatherDifficultyDeltaFromSnapshot(w) {
   // Calm air: temperature bite is muted (less evaporative stress / less firm).
   if (wind < WIND_EFFECT_FLOOR_MPH && cond !== "windy" && cond !== "storm") tempAdj *= 0.35;
 
-  const windAdj = windDifficultyDelta(wind);
-  const humAdj = 0.006 * (hum - 55);
-
-  let d = tempAdj + windAdj + humAdj;
-  if (cond !== "default") d += WEATHER_CONDITION_MEAN_DELTA[cond] ?? 0;
-
-  // Overnight / morning-before rain softens turf → easier scoring.
   let priorMm = num(w.priorPrecipMm, NaN);
   if (!Number.isFinite(priorMm) && (w.priorRainSoft === true || w.priorRainSoft === 1)) {
     priorMm = 3; // boolean flag without mm → moderate soft
   }
+  if (!Number.isFinite(priorMm)) priorMm = 0;
+
+  // Soft turf: wind still moves the ball, but firmness/bounce penalty is muted.
+  let windAdj = windDifficultyDelta(wind);
+  if (priorMm >= 8) windAdj *= 0.7;
+  else if (priorMm >= 4) windAdj *= 0.82;
+  else if (priorMm >= 1.5) windAdj *= 0.9;
+
+  const humAdj = 0.006 * (hum - 55);
+
+  let d = tempAdj + windAdj + humAdj;
+  if (cond !== "default") {
+    let condD = WEATHER_CONDITION_MEAN_DELTA[cond] ?? 0;
+    // Already-soaked turf: in-play drizzle is not an extra hardness bump.
+    if (priorMm >= 4 && (cond === "rain" || cond === "storm")) condD *= 0.35;
+    d += condD;
+  }
+
+  // Overnight / yesterday rain softens turf → easier scoring (more birdies, lower totals).
   d += priorRainSoftDeltaFromMm(priorMm);
+
+  // After meaningful soak, do not let tee-window wind flip the round to "playing hard."
+  // Soft holds > firmness; wind still nudges dispersion via sigma, not a hard STP tax.
+  if (priorMm >= 8) d = Math.min(d, -0.55);
+  else if (priorMm >= 5) d = Math.min(d, -0.45);
+  else if (priorMm >= 3) d = Math.min(d, -0.15);
 
   // Mild calm-turf soft when dry overnight and not stormy (firmness ↔ hold tradeoff).
   if (
-    !(priorMm >= 0.4) &&
+    !(priorMm >= 0.3) &&
     wind < WIND_EFFECT_FLOOR_MPH &&
     cond !== "windy" &&
     cond !== "storm" &&
@@ -132,8 +156,8 @@ export function weatherDifficultyDeltaFromSnapshot(w) {
     d -= 0.08;
   }
 
-  // Allow full wind ladder (25 mph → +2.0) plus overnight soft.
-  return clamp(d, -1.2, 2.6);
+  // Allow full wind ladder plus meaningful overnight soft after heavy rain.
+  return clamp(d, -1.8, 2.6);
 }
 
 export function weatherSigmaMultiplierFromSnapshot(w) {

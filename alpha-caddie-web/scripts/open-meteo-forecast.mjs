@@ -164,10 +164,110 @@ export function openMeteoForecastUrl(lat, lon, timezone) {
   u.searchParams.set("windspeed_unit", "mph");
   u.searchParams.set("temperature_unit", "fahrenheit");
   u.searchParams.set("forecast_days", "8");
-  // Need overnight hours before morning tees for prior-rain soft.
-  u.searchParams.set("past_days", "1");
+  // Need yesterday + overnight hours before morning tees for prior-rain soft.
+  // Forecast `past_days` precip is often under-reported vs archive — see mergeArchivePrecipIntoHourly.
+  u.searchParams.set("past_days", "2");
   u.searchParams.set("timezone", timezone || "America/New_York");
   return u.href;
+}
+
+/** Default turf-soft lookback: yesterday afternoon through morning-before tee. */
+export const PRIOR_RAIN_LOOKBACK_HOURS = 36;
+
+export function openMeteoArchivePrecipUrl(lat, lon, startDate, endDate, timezone) {
+  const u = new URL("https://archive-api.open-meteo.com/v1/archive");
+  u.searchParams.set("latitude", String(lat));
+  u.searchParams.set("longitude", String(lon));
+  u.searchParams.set("start_date", startDate);
+  u.searchParams.set("end_date", endDate);
+  u.searchParams.set("hourly", "precipitation,weathercode");
+  u.searchParams.set("timezone", timezone || "America/New_York");
+  return u.href;
+}
+
+/**
+ * Overlay archive precipitation onto forecast hourly rows.
+ * Open-Meteo forecast `past_days` often reports ~0mm when archive shows real overnight rain
+ * (turf softener would never fire). Prefer archive mm whenever it is higher.
+ */
+export async function mergeArchivePrecipIntoHourly(hourly, lat, lon, timezone) {
+  const times = hourly?.time;
+  const precip = hourly?.precipitation;
+  if (!Array.isArray(times) || !times.length || !Array.isArray(precip)) {
+    return { hourly, archiveMerged: false, archivePrecipMm: 0 };
+  }
+  const startDate = String(times[0] || "").slice(0, 10);
+  // Archive rejects future end_date — clamp to venue-local today.
+  const todayYmd = isoLocalYmdGuess(timezone);
+  let endDate = todayYmd;
+  for (let i = Math.min(times.length - 1, 72); i >= 0; i--) {
+    const ymd = String(times[i] || "").slice(0, 10);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(ymd) && ymd <= todayYmd) {
+      endDate = ymd;
+      break;
+    }
+  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate) || !/^\d{4}-\d{2}-\d{2}$/.test(endDate) || endDate < startDate) {
+    return { hourly, archiveMerged: false, archivePrecipMm: 0 };
+  }
+  try {
+    const res = await fetch(openMeteoArchivePrecipUrl(lat, lon, startDate, endDate, timezone));
+    if (!res.ok) return { hourly, archiveMerged: false, archivePrecipMm: 0, archiveError: `http_${res.status}` };
+    const j = await res.json();
+    if (j?.error) {
+      return { hourly, archiveMerged: false, archivePrecipMm: 0, archiveError: String(j.reason || j.error) };
+    }
+    const aTimes = j?.hourly?.time;
+    const aPrecip = j?.hourly?.precipitation;
+    if (!Array.isArray(aTimes) || !Array.isArray(aPrecip) || !aTimes.length) {
+      return { hourly, archiveMerged: false, archivePrecipMm: 0 };
+    }
+    const byIso = new Map();
+    for (let i = 0; i < aTimes.length; i++) {
+      const k = String(aTimes[i] || "").slice(0, 16);
+      if (!k) continue;
+      const mm = num(aPrecip[i], 0);
+      if (Number.isFinite(mm)) byIso.set(k, mm);
+    }
+    let replaced = 0;
+    let archiveSum = 0;
+    const nextPrecip = precip.slice();
+    for (let i = 0; i < times.length; i++) {
+      const k = String(times[i] || "").slice(0, 16);
+      if (!byIso.has(k)) continue;
+      const arch = byIso.get(k);
+      archiveSum += Math.max(0, arch);
+      const fc = num(nextPrecip[i], 0);
+      // Prefer archive when it shows more rain (forecast past under-report).
+      if (arch > fc + 0.05 || (fc <= 0 && arch > 0)) {
+        nextPrecip[i] = arch;
+        replaced++;
+      }
+    }
+    if (!replaced) return { hourly, archiveMerged: false, archivePrecipMm: Math.round(archiveSum * 100) / 100 };
+    return {
+      hourly: { ...hourly, precipitation: nextPrecip },
+      archiveMerged: true,
+      archivePrecipMm: Math.round(archiveSum * 100) / 100,
+      archiveHoursOverlaid: replaced,
+    };
+  } catch (e) {
+    return { hourly, archiveMerged: false, archivePrecipMm: 0, archiveError: String(e?.message || e) };
+  }
+}
+
+/** Venue-local calendar day for archive end_date clamp. */
+function isoLocalYmdGuess(timezone) {
+  try {
+    return new Intl.DateTimeFormat("en-CA", {
+      timeZone: timezone || "America/New_York",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(new Date());
+  } catch {
+    return new Date().toISOString().slice(0, 10);
+  }
 }
 
 export function parseDgTeetimeParts(teetimeStr) {
@@ -217,7 +317,9 @@ export function hourlyIndexForDgTeetime(timesArr, teetimeStr) {
 }
 
 export function hourlySliceWeatherSnapshot(hourly, startIdx, spanHours) {
-  return summarizeHourlyWeatherSlice(hourly, startIdx, spanHours);
+  return summarizeHourlyWeatherSlice(hourly, startIdx, spanHours, {
+    priorLookbackHours: PRIOR_RAIN_LOOKBACK_HOURS,
+  });
 }
 
 function medianFinite(vals) {
@@ -408,7 +510,7 @@ function applyWeatherSnapshotToPlayer(p, snap) {
   p.weather_humidity = Math.round(snap.humidityPct);
   p.weather_condition = String(snap.condition || "default").toLowerCase();
   p.weather_prior_precip_mm = Math.round(priorPrecipMm * 100) / 100;
-  p.weather_prior_rain_soft = priorPrecipMm >= 0.4;
+  p.weather_prior_rain_soft = priorPrecipMm >= 0.3;
   return true;
 }
 
@@ -532,6 +634,17 @@ export async function bakeOpenMeteoWeatherIntoProjections(proj, opts = {}) {
     return { status: meta.forecast_weather_status, playerCount: players.length, playersWithWeather: 0, teeMatches: 0 };
   }
 
+  // Forecast past precip is unreliable — overlay archive so overnight rain softens μ.
+  const arch = await mergeArchivePrecipIntoHourly(hourly, coords.lat, coords.lon, tz);
+  hourly = arch.hourly;
+  meta.forecast_weather_archive_precip_merged = Boolean(arch.archiveMerged);
+  meta.forecast_weather_archive_precip_mm = num(arch.archivePrecipMm, 0);
+  if (Number.isFinite(num(arch.archiveHoursOverlaid, NaN))) {
+    meta.forecast_weather_archive_hours_overlaid = arch.archiveHoursOverlaid;
+  }
+  if (arch.archiveError) meta.forecast_weather_archive_error = arch.archiveError;
+  else delete meta.forecast_weather_archive_error;
+
   const timesArr = hourly?.time;
   if (!Array.isArray(timesArr) || !timesArr.length) {
     meta.forecast_weather_status = "empty_hourly";
@@ -582,6 +695,16 @@ export async function bakeOpenMeteoWeatherIntoProjections(proj, opts = {}) {
       : "no_tee_match";
   meta.forecast_weather_updated_at = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
   meta.forecast_weather_coords = { lat: coords.lat, lon: coords.lon, timezone: tz };
+  // Field-level turf soft signal (median prior precip across tee samples).
+  const priorSamples = perTeeSamples
+    .map((s) => num(s?.priorPrecipMm, NaN))
+    .filter((x) => Number.isFinite(x));
+  const fieldPrior =
+    priorSamples.length > 0
+      ? priorSamples.reduce((a, b) => a + b, 0) / priorSamples.length
+      : num(medianSnap?.priorPrecipMm, 0);
+  meta.forecast_weather_prior_precip_mm = Math.round(fieldPrior * 100) / 100;
+  meta.forecast_weather_turf_soft = fieldPrior >= 0.4;
   delete meta.forecast_weather_error;
 
   const forecastPlayers = players.filter((p) => playerRowMatchesForecastRound(p, forecastRound));

@@ -990,7 +990,9 @@ export function reconcileAllProjectionPlayerRows(payload, opts = {}) {
         displayRound: opts.displayRound ?? payload?.display_round,
         minPairs: opts.eventPropBookMinPairs,
       });
-  syncPreWeatherCountSnapshots(payload?.players);
+  if (opts.skipSyncPreWeather !== true) {
+    syncPreWeatherCountSnapshots(payload?.players);
+  }
   const parSpreadRows = enforceParHeavyFieldSpread(payload, {
     displayRound: opts.displayRound ?? payload?.display_round,
     minField: opts.minField,

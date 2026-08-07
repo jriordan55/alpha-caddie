@@ -158,6 +158,7 @@ export function applyWeatherBakedCountsToPlayer(p, meta) {
   }
 
   p._weather_bake_snapshot = { ...w };
+  p.weather_difficulty_delta = Math.round(weatherDifficultyDeltaFromSnapshot(w) * 1000) / 1000;
   p.weather_counts_baked = true;
   return true;
 }
@@ -170,6 +171,47 @@ export function applyWeatherBakedCountsToAllPlayers(proj, opts = {}) {
   const meta = projectionExportMeta(proj);
   const forecastRound = Math.round(num(opts.forecastRound, NaN));
   const preserveBaselines = opts.preserveBaselines === true;
+  const coursePar = num(meta?.course_par_18, 71);
+  const par18 = Number.isFinite(coursePar) ? coursePar : 71;
+
+  // Reconcile used to overwrite `_pre_weather_counts` with post-weather values, which
+  // makes re-bake restore a weathered baseline. Peel the last bake off first.
+  for (const p of players) {
+    if (!p?._weather_bake_snapshot || !p.weather_counts_baked) continue;
+    const preTs = num(p._pre_weather_counts?.total_score, NaN);
+    const curTs = num(p.total_score, NaN);
+    if (!Number.isFinite(curTs)) continue;
+    const preLooksSynced = !Number.isFinite(preTs) || Math.abs(preTs - curTs) < 0.02;
+    if (!preLooksSynced) continue;
+    const oldD = Number.isFinite(num(p.weather_difficulty_delta, NaN))
+      ? num(p.weather_difficulty_delta, NaN)
+      : weatherDifficultyDeltaFromSnapshot(p._weather_bake_snapshot);
+    if (!Number.isFinite(oldD) || Math.abs(oldD) < 1e-6) continue;
+    p.total_score = roundCountStat("Total score", curTs - oldD);
+    p.score_to_par = Math.round((p.total_score - par18) * 100) / 100;
+    for (const [market, field, k] of [
+      ["Birdies", "birdies", -0.5],
+      ["Bogeys", "bogeys", 0.45],
+      ["Pars", "pars", 0.2],
+      ["GIR", "gir", -0.22],
+      ["Fairways hit", "fairways", -0.14],
+      ["Putts", "putts", 0.35],
+    ]) {
+      const v = num(p[field], NaN);
+      if (!Number.isFinite(v)) continue;
+      p[field] = roundCountStat(market, v - k * oldD);
+    }
+    const baseMu = num(p.mu_sg ?? p.implied_mu_sg, NaN);
+    if (Number.isFinite(baseMu)) {
+      p.mu_sg = Math.round((baseMu - oldD * 0.12) * 1000) / 1000;
+      p.implied_mu_sg = p.mu_sg;
+    }
+    p._pre_weather_counts = snapshotPlayerCounts(p);
+    p.weather_counts_baked = false;
+    delete p._weather_bake_snapshot;
+    delete p.weather_difficulty_delta;
+  }
+
   let n = 0;
   for (const p of players) {
     if (preserveBaselines && p._pre_weather_counts) {
@@ -185,6 +227,8 @@ export function applyWeatherBakedCountsToAllPlayers(proj, opts = {}) {
       p.weather_wind_mph = null;
       p.weather_humidity = null;
       p.weather_condition = "";
+      p.weather_prior_precip_mm = null;
+      p.weather_prior_rain_soft = false;
       p.weather_counts_baked = false;
       continue;
     }
@@ -203,8 +247,13 @@ export function applyWeatherBakedCountsToAllPlayers(proj, opts = {}) {
       dkFieldOnly: opts.dkFieldOnly === true,
       dgFilter: opts.dkFieldOnly ? opts.dgFilter ?? draftKingsDgIdsFromProjections(proj) : null,
       skipFieldCalibrate: opts.skipFieldCalibrate === true || n <= 0,
+      // Weather is the course-setup difficulty signal — do not yank totals back to dry venue anchors.
+      skipVenueScoreCalibrate: true,
+      skipHistVenueScoreCalibrate: true,
       displayRound: opts.displayRound ?? proj?.display_round,
       skipMarketBookCalibration: true,
+      // Keep true pre-weather baselines for the next bake:weather pass.
+      skipSyncPreWeather: true,
     });
   }
   return n;
