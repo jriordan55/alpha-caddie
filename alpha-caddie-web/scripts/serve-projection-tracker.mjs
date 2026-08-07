@@ -44,7 +44,7 @@ if (!envTruthy("GOLF_SKIP_TRACKER_REFRESH")) {
   runRefreshScript("bake-both-side-roi.mjs", "Baking both-side ROI");
   runRefreshScript("report-walkforward-oos-roi.mjs", "Refreshing walkforward OOS ROI");
   runRefreshScript("apply-dg-methodology-to-projections.mjs", "Applying DG μ to live projections");
-  runRefreshScript("apply-both-side-bias-to-projections.mjs", "Applying both-side bias");
+  runRefreshScript("apply-hierarchical-mu-to-projections.mjs", "Applying hierarchical μ (no chrono bias)");
 } else {
   console.log("[projection-tracker] GOLF_SKIP_TRACKER_REFRESH=1 — using existing CSV / JSON on disk.");
 }

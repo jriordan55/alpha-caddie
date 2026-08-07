@@ -116,6 +116,11 @@ $env:GOLF_UNIFIED_BOUNCE_BACK_K = "0.12"
 $env:GOLF_WF_SKILL_MAX_ROUNDS = "36"
 $env:GOLF_MARKET_BOOK_CALIBRATION = "0"
 $env:GOLF_SKIP_MARKET_BOOK_CALIBRATION = "1"
+# Live μ = hierarchical process only (no sportsbook align, no chrono μ bias).
+$env:GOLF_HIERARCHICAL_MU = "1"
+$env:GOLF_DG_METHODOLOGY = "1"
+$env:GOLF_APPLY_BOTH_SIDE_BIAS = "0"
+$env:GOLF_SKIP_EVENT_PROP_BOOK_ALIGN = "1"
 # Round projections tab: require a fresh DraftKings scrape (no stale / empty publish).
 $env:GOLF_REQUIRE_DK_OU = "1"
 # DK / Caesars / FanDuel Nash-style APIs often block headless Playwright on desktop - headed Chromium.
@@ -140,6 +145,11 @@ if ($LiveWeekOnly) {
   Remove-Item Env:\GOLF_ALLOW_MISSING_WEATHER_COORDS -ErrorAction SilentlyContinue
   $env:GOLF_REFRESH_LIVE_SKIP_FINISH_TOOL = "1"
   $env:GOLF_SKIP_MARKET_BOOK_CALIBRATION = "1"
+  $env:GOLF_MARKET_BOOK_CALIBRATION = "0"
+  $env:GOLF_HIERARCHICAL_MU = "1"
+  $env:GOLF_DG_METHODOLOGY = "1"
+  $env:GOLF_APPLY_BOTH_SIDE_BIAS = "0"
+  $env:GOLF_SKIP_EVENT_PROP_BOOK_ALIGN = "1"
   $env:GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI = "1"
   $env:GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS = "0"
   # Trackers / matchup odds / hole-prop Playwright — too slow for mid-round pushes.
@@ -186,6 +196,7 @@ if ($LiveWeekOnly) {
   $env:GOLF_FIELD_DAY_COUNTING_LIFT_FRAC = "0"
   $env:GOLF_WITHIN_EVENT_COUNTING_BLEND = "0"
   Write-Host 'LiveWeekOnly (fast): projections + book odds + course-as-of repair + weather.'
+  Write-Host 'μ recipe: hierarchical (no book align, no both-side chrono bias).'
   Write-Host 'Skipped: history shards, trackers, hole-prop scrapes, SG-distance rebuild, CSV merges, finish-tool, book-cal, ROI backtests.'
   Write-Host 'Full rebuild (Trends/trackers/hole props): npm run push:all'
 } elseif (-not $NoFullHistory) {

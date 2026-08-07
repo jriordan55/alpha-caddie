@@ -231,6 +231,12 @@ async function main() {
   proj.projection_counts_weather_baked = n > 0;
   proj.projection_counts_weather_baked_round = targetRound;
   proj.projection_counts_weather_baked_at = proj.updated_at;
+  if (!proj.meta || typeof proj.meta !== "object") proj.meta = {};
+  proj.meta.projection_counts_weather_baked = n > 0;
+  proj.meta.projection_counts_weather_baked_round = targetRound;
+  proj.meta.projection_counts_weather_baked_at = proj.updated_at;
+  proj.meta.hierarchical_mu = proj.hierarchical_mu;
+  proj.meta.projection_recipe = "hierarchical_mu";
   delete proj.both_side_bias_applied;
 
   writeFileSync(PROJ, `${JSON.stringify(proj, null, 2)}\n`, "utf8");

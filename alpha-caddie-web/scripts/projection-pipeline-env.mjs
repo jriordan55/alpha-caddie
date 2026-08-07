@@ -89,6 +89,8 @@ export function liveProjectionPipelineEnv() {
     // Model μ is hierarchical process only — never shift toward posted book lines.
     GOLF_SKIP_EVENT_PROP_BOOK_ALIGN: process.env.GOLF_SKIP_EVENT_PROP_BOOK_ALIGN || "1",
     GOLF_MARKET_BOOK_CALIBRATION: "0",
+    // No chrono/loo μ bias on live projections (opt-in: GOLF_APPLY_BOTH_SIDE_BIAS=1).
+    GOLF_APPLY_BOTH_SIDE_BIAS: process.env.GOLF_APPLY_BOTH_SIDE_BIAS || "0",
   };
 }
 

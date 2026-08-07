@@ -708,12 +708,11 @@ if (String(process.env.GOLF_DG_METHODOLOGY || "1").trim() !== "0") {
 
 // Hierarchical stack: baseline (DG effects) + skill×course + form + tee/overnight weather + NegBin λ.
 // Runs after dg-methodology seed; owns weather so we do not double-bake.
+// Always required on live publish (not soft-optional) — otherwise DG-only μ ships without process weather.
 if (String(process.env.GOLF_HIERARCHICAL_MU || "1").trim() !== "0") {
   run(
     "apply-hierarchical-mu-to-projections.mjs",
     "Hierarchical μ (baseline + skill×course + form + weather + NegBin λ)",
-    {},
-    softOpt,
   );
 } else {
   run(
@@ -737,12 +736,19 @@ if (String(process.env.GOLF_DG_METHODOLOGY || "1").trim() !== "0") {
       softOpt,
     );
   }
-  run(
-    "apply-both-side-bias-to-projections.mjs",
-    "Both-side chrono/loo μ bias (apply:both-side-bias)",
-    {},
-    softOpt,
-  );
+  // μ stays pure hierarchical / DG — no chrono bias shifts on live projections.
+  if (envTruthy("GOLF_APPLY_BOTH_SIDE_BIAS", false)) {
+    run(
+      "apply-both-side-bias-to-projections.mjs",
+      "Both-side chrono/loo μ bias (opt-in via GOLF_APPLY_BOTH_SIDE_BIAS=1)",
+      {},
+      softOpt,
+    );
+  } else {
+    console.log(
+      "\n[refresh:live] Skipping both-side μ bias (GOLF_APPLY_BOTH_SIDE_BIAS≠1) — pure hierarchical μ.\n",
+    );
+  }
   run(
     "apply-both-side-bet-signals-to-projections.mjs",
     "Tracker bet YES/NO on DK props + round_projections.csv",
@@ -750,6 +756,12 @@ if (String(process.env.GOLF_DG_METHODOLOGY || "1").trim() !== "0") {
     softOpt,
   );
 }
+
+// Guard: published board must not carry chrono bias or book-alignment stamps.
+run(
+  "verify-live-projection-recipe.mjs",
+  "Guard live μ recipe (hierarchical, no book/chrono bias)",
+);
 
 mirrorWebsitePublicData();
 

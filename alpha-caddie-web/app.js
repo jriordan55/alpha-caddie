@@ -5191,7 +5191,13 @@ function weatherDifficultyDeltaFromSnapshot(w) {
 }
 
 function projectionCountsWeatherBaked(row) {
-  return Boolean(DATA?.meta?.projection_counts_weather_baked && row?.weather_counts_baked);
+  if (!row?.weather_counts_baked) return false;
+  const meta = DATA?.meta;
+  if (meta?.projection_counts_weather_baked) return true;
+  if (meta?.hierarchical_mu?.owns_weather) return true;
+  if (String(meta?.projection_recipe || "").includes("hierarchical_mu")) return true;
+  // Snapshot alone means export already baked weather into μ (hierarchical / bake:weather).
+  return Boolean(row._weather_bake_snapshot);
 }
 
 /** Weather difficulty delta: full snapshot, or incremental vs export bake when counts are baked in. */
@@ -5877,6 +5883,7 @@ function ouProjectedTotalScoreMean(row, opts = {}) {
   const liveRoundAdj = ouInPlayMuDeltaForTotalScore(row, opts);
   const baseMean = ouMeanCountingStat("Total score", row);
   const baseScalar = Number.isFinite(baseMean) ? baseMean : ouFallbackScalarForProjectedMean("Total score", row, ouStatRec("Total score"));
+  // When weather is already in total_score, statWeatherMuAdjustment is incremental (≈0).
   return (
     baseScalar +
     statWeatherMuAdjustment("Total score", row) +
