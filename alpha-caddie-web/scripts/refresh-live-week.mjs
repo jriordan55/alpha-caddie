@@ -182,6 +182,9 @@ const skipPostCsvMerge =
   fullRebuild ? false : envTruthy("GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE", false);
 const skipHistoryRebuild =
   fullRebuild ? false : envTruthy("GOLF_REFRESH_LIVE_SKIP_HISTORY_REBUILD", true);
+/** Skip field/course shard patches entirely (fast push:live — projections + course repair only). */
+const skipHistoryShards =
+  fullRebuild ? false : envTruthy("GOLF_REFRESH_LIVE_SKIP_HISTORY_SHARDS", false);
 const skipWeatherBackfill =
   fullRebuild ? false : envTruthy("GOLF_SKIP_ROUND_WEATHER_BACKFILL", true);
 const skipDg = envTruthy("GOLF_REFRESH_LIVE_SKIP_DG", false);
@@ -226,7 +229,12 @@ if (fullRebuild) {
   recentYears = String(process.env.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "25").trim();
 } else {
   console.log(
-    "\n[refresh:live] Lean live-week: projections + odds + Trends + tracker. Live Open-Meteo weather bake always runs (archive backfill skipped).\n",
+    "\n[refresh:live] Lean live-week: projections + odds + course-as-of. Live Open-Meteo weather bake always runs.\n",
+  );
+}
+if (skipHistoryShards) {
+  console.log(
+    "[refresh:live] GOLF_REFRESH_LIVE_SKIP_HISTORY_SHARDS=1 — skipping field/course history shard updates.\n",
   );
 }
 if (liveWeekSoft) {
@@ -614,7 +622,11 @@ if (!skipBacktestRoi) {
   );
 }
 
-if (skipHistoryRebuild) {
+if (skipHistoryShards) {
+  console.log(
+    "[refresh:live] Skipping field/course history shards (projections + course repair already applied).\n",
+  );
+} else if (skipHistoryRebuild) {
   run(
     "sync-field-history-from-csv.mjs",
     "Merge CSV rounds into field + recent prior-event player-history shards",
@@ -717,7 +729,9 @@ if (String(process.env.GOLF_DG_METHODOLOGY || "1").trim() !== "0") {
 mirrorWebsitePublicData();
 
 console.log("\n[refresh:live] Done.");
-if (skipHistoryRebuild) {
+if (skipHistoryShards) {
+  console.log("  • Fast live week: projections + course-as-of only (history shards untouched).");
+} else if (skipHistoryRebuild) {
   console.log("  • Live week updated; field shards + field-{year}.json refreshed for Historical Trends.");
   console.log("  • Full CSV/history rebuild: GOLF_REFRESH_LIVE_FULL_REBUILD=1 npm run refresh:live");
 } else {

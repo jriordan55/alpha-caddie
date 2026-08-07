@@ -128,32 +128,29 @@ if (-not $isCi -and ($IsWindows -or ($env:OS -match "Windows") -or $IsMacOS)) {
 }
 
 if ($LiveWeekOnly) {
-  # Lean mid-tournament publish: projections + book odds + prior-round Trends + tracker.
-  # Live Open-Meteo tee-time weather bake always runs (archive backfill is what is skipped).
-  # Not a full CSV/history/ROI rebuild (use push:all for that).
+  # Fast mid-tournament publish: projections + book odds + course-as-of repair only.
+  # Skips history shards, trackers, hole-prop scrapes, CSV merges (use push:all for those).
   Remove-Item Env:\GOLF_REFRESH_LIVE_FULL_REBUILD -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_HISTORICAL_ROUNDS_FULL_HISTORY -ErrorAction SilentlyContinue
   $env:GOLF_REFRESH_LIVE_SKIP_CSV_MERGE = "1"
-  # After live-in-play: merge recent DataGolf rounds into CSV so Historical Trends gets
-  # completed / prior-round rows (CI has no R/pgatouR). Must be "0" — unsetting still
-  # defaults skipPostCsvMerge=true in refresh-live-week.mjs.
-  $env:GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE = "0"
+  $env:GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE = "1"
   $env:GOLF_REFRESH_LIVE_SKIP_HISTORY_REBUILD = "1"
+  $env:GOLF_REFRESH_LIVE_SKIP_HISTORY_SHARDS = "1"
   $env:GOLF_SKIP_ROUND_WEATHER_BACKFILL = "1"
-  # Never allow lean mode to skip the live Open-Meteo bake.
   Remove-Item Env:\GOLF_ALLOW_MISSING_WEATHER_COORDS -ErrorAction SilentlyContinue
   $env:GOLF_REFRESH_LIVE_SKIP_FINISH_TOOL = "1"
   $env:GOLF_SKIP_MARKET_BOOK_CALIBRATION = "1"
   $env:GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI = "1"
-  # Incremental tracker updates on push:live (current-week O/U + matchups from last recorded date).
-  # Full prior O/U rebuild: set GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=1 or run projection-tracker:refresh.
   $env:GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS = "0"
-  $env:GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL = "0"
-  $env:GOLF_REQUIRE_TRACKER_REFRESH = "1"
+  # Trackers / matchup odds / hole-prop Playwright — too slow for mid-round pushes.
+  $env:GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL = "1"
+  $env:GOLF_REQUIRE_TRACKER_REFRESH = "0"
+  $env:GOLF_SKIP_MATCHUP_ODDS_UPDATE = "1"
+  $env:GOLF_SKIP_HOLE_PROPS = "1"
+  $env:GOLF_SKIP_SG_DISTANCE = "1"
   Remove-Item Env:\GOLF_MATCHUP_BACKTEST_SINCE -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_OU_BACKTEST_SINCE -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_ODDS_SINCE -ErrorAction SilentlyContinue
-  Remove-Item Env:\GOLF_SKIP_MATCHUP_ODDS_UPDATE -ErrorAction SilentlyContinue
   $env:GOLF_SKIP_DK_ROUND_AUDIT_CSV = "0"
   $env:GOLF_SKIP_PP_ROUND_AUDIT_CSV = "0"
   $env:GOLF_SKIP_SL_ROUND_AUDIT_CSV = "0"
@@ -161,7 +158,6 @@ if ($LiveWeekOnly) {
   $env:GOLF_SKIP_FD_ROUND_AUDIT_CSV = "0"
   $env:GOLF_SKIP_CZR_ROUND_AUDIT_CSV = "0"
   $env:GOLF_SKIP_KL_ROUND_AUDIT_CSV = "0"
-  # Round O/U books: DK + PP + SL + UD + FanDuel + Kalshi + Caesars (never skip on push:live).
   Remove-Item Env:\GOLF_SKIP_DK_OU -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_SKIP_PP_OU -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_SKIP_SL_OU -ErrorAction SilentlyContinue
@@ -175,7 +171,6 @@ if ($LiveWeekOnly) {
   $env:GOLF_SKIP_FD_OU = "0"
   $env:GOLF_SKIP_KL_OU = "0"
   $env:GOLF_SKIP_CZR_OU = "0"
-  # Soft: DK/Playwright flakiness and late optional steps must not kill the publish.
   $env:GOLF_LIVE_WEEK_SOFT = "1"
   $env:GOLF_REQUIRE_DK_OU = "0"
   $env:GOLF_REQUIRE_PP_OU = "0"
@@ -190,14 +185,9 @@ if ($LiveWeekOnly) {
   $env:GOLF_UNIFIED_TEE_WAVE_W = "0.30"
   $env:GOLF_FIELD_DAY_COUNTING_LIFT_FRAC = "0"
   $env:GOLF_WITHIN_EVENT_COUNTING_BLEND = "0"
-  Write-Host 'LiveWeekOnly (lean): projections + odds (DK/PP/SL/UD/FD/Kalshi/Caesars) + Trends patch + tracker.'
-  Write-Host 'Live Open-Meteo weather bake always runs on push:live (tee-time forecast into scores).'
-  Write-Host 'Historical Trends: post-live DataGolf rounds CSV merge + live-in-play shard patch (no full build:history).'
-  Write-Host 'Approach SG-by-distance: refresh shots (soft) + upsert current-event buckets onto history shards.'
-  Write-Host 'Both trackers incremental from last recorded date: O/U projection-tracker (DK/PP/SL/UD/FD/CZR/KL) + matchup-tracker.'
-  Write-Host 'Skill-first score (keep 1.0) + Detroit club hist pool when North/South exact hist is thin.'
-  Write-Host 'Skipped: pre-fetch full CSV merge, weather archive backfill, finish-tool, book-cal fit, odds ROI backtest, full prior O/U rebuild.'
-  Write-Host 'LiveWeekOnly markets: Birdies = birdies+eagles (or better), Bogeys = bogeys+doubles (or worse), same as DK/PP/SL/UD/FD/CZR.'
+  Write-Host 'LiveWeekOnly (fast): projections + book odds + course-as-of repair + weather.'
+  Write-Host 'Skipped: history shards, trackers, hole-prop scrapes, SG-distance rebuild, CSV merges, finish-tool, book-cal, ROI backtests.'
+  Write-Host 'Full rebuild (Trends/trackers/hole props): npm run push:all'
 } elseif (-not $NoFullHistory) {
   $env:GOLF_HISTORICAL_ROUNDS_FULL_HISTORY = "1"
   $env:GOLF_SKIP_HISTORY_ON_FETCH_DG = "1"
@@ -247,28 +237,19 @@ function Promote-RoundProjectionVsActualCsv([string] $AlphaCaddieWebRoot) {
 }
 
 # During rebase, --theirs is the local refresh commit being replayed (not origin/main).
-$script:RebaseDataConflictPaths = @(
-  "alpha-caddie-web/data/dk_round_projection_audit.csv",
-  "alpha-caddie-web/projections.json",
-  "website/public/data/projections.json",
-  "alpha-caddie-web/live-in-play.json",
-  "website/public/data/live-in-play.json"
-)
-
+# Live publishes churn hundreds of data/history files vs remote Actions — keep local for ALL conflicts.
 function Resolve-RebaseDataConflicts([string] $Root) {
   $conflicted = @(git -C $Root diff --name-only --diff-filter=U 2>$null | Where-Object { $_ -ne "" })
   if ($conflicted.Count -eq 0) { return $false }
-  $touched = $false
-  foreach ($p in $script:RebaseDataConflictPaths) {
-    if ($conflicted -contains $p) {
-      git -C $Root checkout --theirs -- $p
-      if ($LASTEXITCODE -ne 0) { continue }
-      git -C $Root add -- $p
-      Write-Host "Rebase: kept local refresh for $p"
-      $touched = $true
+  Write-Host "Rebase: resolving $($conflicted.Count) conflict(s) keeping local refresh (--theirs) ..."
+  git -C $Root checkout --theirs -- @conflicted
+  if ($LASTEXITCODE -ne 0) {
+    foreach ($p in $conflicted) {
+      git -C $Root checkout --theirs -- $p 2>$null
     }
   }
-  return $touched
+  git -C $Root add -- @conflicted
+  return $true
 }
 
 function Invoke-GitPullRebasePublish([string] $Root, [string] $Branch) {
@@ -449,7 +430,6 @@ $artifacts = @(
   "alpha-caddie-web/data/course_coordinates_cache.json",
   "alpha-caddie-web/hole_pars_from_shots.json",
   "alpha-caddie-web/player_shots_web.json",
-  "alpha-caddie-web/player-history",
   "website/public/data/projections.json",
   "website/public/data/course-table.json",
   "website/public/data/live-in-play.json",
@@ -460,6 +440,11 @@ $artifacts = @(
   "alpha-caddie-web/data/historical_rounds_all.csv",
   "alpha-caddie-web/player_round_history.json"
 )
+if (-not $LiveWeekOnly) {
+  $artifacts += @(
+    "alpha-caddie-web/player-history"
+  )
+}
 # NOTE: embedded-player-round-history.js is intentionally NOT published. Render serves over HTTP and
 # fetches player_round_history.json directly; the embed is only a file:// demo fallback. Committing it
 # added ~52 MB to every deploy transfer (and per-push churn) for a file the live site never loads.
@@ -476,6 +461,11 @@ if ($ArtifactsOnly) {
 } else {
   Write-Host "Staging all repo changes (plus forced data artifacts) ..."
   git -C $repoRoot add -A
+  if ($LiveWeekOnly) {
+    # Mass player-history shard churn vs remote Actions → 200+ rebase conflicts every push.
+    Write-Host "LiveWeekOnly: unstaging player-history shards (use push:all to publish Trends)."
+    git -C $repoRoot reset HEAD -- "alpha-caddie-web/player-history" 2>$null
+  }
 }
 
 git -C $repoRoot diff --cached --quiet
