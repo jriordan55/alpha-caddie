@@ -704,6 +704,31 @@ if (String(process.env.GOLF_DG_METHODOLOGY || "1").trim() !== "0") {
     {},
     softOpt,
   );
+}
+
+// Hierarchical stack: baseline (DG effects) + skill×course + form + tee/overnight weather + NegBin λ.
+// Runs after dg-methodology seed; owns weather so we do not double-bake.
+if (String(process.env.GOLF_HIERARCHICAL_MU || "1").trim() !== "0") {
+  run(
+    "apply-hierarchical-mu-to-projections.mjs",
+    "Hierarchical μ (baseline + skill×course + form + weather + NegBin λ)",
+    {},
+    softOpt,
+  );
+} else {
+  run(
+    "bake-weather-into-projections.mjs",
+    "Final Open-Meteo weather bake AFTER dg-μ (overnight soft + tee-window wind)",
+  );
+  run(
+    "reconcile-projection-counts.mjs",
+    "Reconcile counting stats after post-methodology weather bake",
+    {},
+    softOpt,
+  );
+}
+
+if (String(process.env.GOLF_DG_METHODOLOGY || "1").trim() !== "0") {
   if (!envTruthy("GOLF_SKIP_BAKE_BOTH_SIDE", false)) {
     run(
       "bake-both-side-roi.mjs",
@@ -725,19 +750,6 @@ if (String(process.env.GOLF_DG_METHODOLOGY || "1").trim() !== "0") {
     softOpt,
   );
 }
-
-// Weather MUST land after dg-methodology / both-side bias — those steps rewrite total_score
-// and would otherwise wipe overnight rain soft (board stuck near dry venue ~69).
-run(
-  "bake-weather-into-projections.mjs",
-  "Final Open-Meteo weather bake AFTER dg-μ (overnight soft + tee-window wind)",
-);
-run(
-  "reconcile-projection-counts.mjs",
-  "Reconcile counting stats after post-methodology weather bake",
-  {},
-  softOpt,
-);
 
 mirrorWebsitePublicData();
 

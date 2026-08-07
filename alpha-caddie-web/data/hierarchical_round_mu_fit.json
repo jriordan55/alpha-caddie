@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "form": {
+    "window": 8,
+    "priorN": 12,
+    "weight": 0.14,
+    "maxAbsStp": 0.55
+  },
+  "interactions": {
+    "ott_long": -0.22,
+    "ott_narrow": -0.28,
+    "app_firm_hold": -0.32,
+    "putt_demand": -0.18,
+    "maxAbsStp": 0.85
+  },
+  "weather": {
+    "wind_per_mph_over_5": 0.07819499111621304,
+    "rain_in_play": 0,
+    "storm_in_play": 0,
+    "temp_per_f_over_72": -0.01438460155028788,
+    "humidity_per_pct_over_55": -0.009423616590541906,
+    "afternoon_wave": 0.1,
+    "soak_mute_wind": true,
+    "prior_precip_per_mm": 0,
+    "intercept_resid": -0.5320279881979769
+  },
+  "negbin": {
+    "birdies_r": 8.5,
+    "bogeys_r": 7
+  },
+  "sigma": {
+    "score_floor": 2.6,
+    "score_ceil": 4.8,
+    "score_from_round_sd": true
+  },
+  "fitted_at": "2026-08-07T05:31:59.728Z",
+  "n_weather_rows": 76710,
+  "weather_ols": {
+    "beta": [
+      -0.5320279881979769,
+      0.07819499111621304,
+      -0.08029986704511072,
+      0,
+      -0.01438460155028788,
+      -0.009423616590541906,
+      0
+    ],
+    "n": 76710
+  }
+}
