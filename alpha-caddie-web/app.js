@@ -5195,9 +5195,19 @@ function projectionCountsWeatherBaked(row) {
   const meta = DATA?.meta;
   if (meta?.projection_counts_weather_baked) return true;
   if (meta?.hierarchical_mu?.owns_weather) return true;
-  if (String(meta?.projection_recipe || "").includes("hierarchical_mu")) return true;
+  if (String(meta?.projection_recipe || row?.projection_recipe || "").includes("hierarchical_mu")) return true;
   // Snapshot alone means export already baked weather into μ (hierarchical / bake:weather).
   return Boolean(row._weather_bake_snapshot);
+}
+
+/** Hierarchical export already includes weather + course/form — do not re-stack runtime overlays. */
+function hierarchicalMuOwnsRow(row) {
+  if (String(row?.projection_recipe || "").includes("hierarchical_mu")) return true;
+  if (DATA?.meta?.hierarchical_mu?.owns_weather) return true;
+  if (String(DATA?.meta?.projection_recipe || "").includes("hierarchical_mu") && row?.weather_counts_baked) {
+    return true;
+  }
+  return Number.isFinite(num(row?.hierarchical_weather_stp, NaN));
 }
 
 /** Weather difficulty delta: full snapshot, or incremental vs export bake when counts are baked in. */
@@ -5883,7 +5893,16 @@ function ouProjectedTotalScoreMean(row, opts = {}) {
   const liveRoundAdj = ouInPlayMuDeltaForTotalScore(row, opts);
   const baseMean = ouMeanCountingStat("Total score", row);
   const baseScalar = Number.isFinite(baseMean) ? baseMean : ouFallbackScalarForProjectedMean("Total score", row, ouStatRec("Total score"));
-  // When weather is already in total_score, statWeatherMuAdjustment is incremental (≈0).
+  // Hierarchical μ already has weather + skill×course + form baked in — show export μ (+ live thru only).
+  if (hierarchicalMuOwnsRow(row)) {
+    return (
+      baseScalar +
+      pinSheetMuAdjustment("Total score", row) +
+      liveRoundAdj +
+      ouInPlayCountingAdjust("Total score", row, opts).muDelta +
+      pricingStatMuAdjustment("Total score", dgId)
+    );
+  }
   return (
     baseScalar +
     statWeatherMuAdjustment("Total score", row) +
@@ -6306,23 +6325,25 @@ function ouProjectedMean(market, row, opts = {}) {
   }
 
   if (
-    row?.weather_counts_baked &&
-    (mKey === "Birdies" || mKey === "Pars" || mKey === "Bogeys")
+    row?.weather_counts_baked || hierarchicalMuOwnsRow(row)
   ) {
-    const base = ouMeanCountingStat(mKey, row);
-    if (Number.isFinite(base)) {
-      return (
-        base +
-        pinSheetMuAdjustment(mKey, row) +
-        countLive.muDelta +
-        pricingStatMuAdjustment(mKey, dgId)
-      );
+    if (mKey === "Birdies" || mKey === "Pars" || mKey === "Bogeys" || mKey === "GIR" || mKey === "Fairways hit") {
+      const base = ouMeanCountingStat(mKey, row);
+      if (Number.isFinite(base)) {
+        return (
+          base +
+          pinSheetMuAdjustment(mKey, row) +
+          countLive.muDelta +
+          pricingStatMuAdjustment(mKey, dgId)
+        );
+      }
     }
   }
 
   if (
     projectionCountsCoherentFromExport() &&
     !row?.weather_counts_baked &&
+    !hierarchicalMuOwnsRow(row) &&
     !row?._pin_adjusted &&
     !pinSheetAppliesToProjectionRow(row) &&
     (mKey === "Birdies" || mKey === "Pars" || mKey === "Bogeys" || mKey === "GIR" || mKey === "Fairways hit")

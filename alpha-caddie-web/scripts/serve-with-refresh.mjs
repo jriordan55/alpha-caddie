@@ -255,12 +255,21 @@ function loadApiKey() {
   return "";
 }
 
-/** After fetch:dg / book odds: display_round meta, weather, armed pin sheet (no-op if not armed). */
+/** After fetch:dg / book odds: display_round meta, DG μ, weather, hierarchical μ, armed pin sheet. */
 function runRenderProjectionPostProcess(env = {}) {
-  const bootEnv = { ...process.env, GOLF_MODEL_DIR: REPO_ROOT, ...env };
+  const bootEnv = {
+    ...process.env,
+    GOLF_MODEL_DIR: REPO_ROOT,
+    GOLF_DG_METHODOLOGY: process.env.GOLF_DG_METHODOLOGY || "1",
+    GOLF_HIERARCHICAL_MU: process.env.GOLF_HIERARCHICAL_MU || "1",
+    GOLF_APPLY_BOTH_SIDE_BIAS: process.env.GOLF_APPLY_BOTH_SIDE_BIAS || "0",
+    ...env,
+  };
   const steps = [
     ["merge-live-round-meta", "merge-live-round-meta-into-projections.mjs"],
+    ["apply-dg-methodology", "apply-dg-methodology-to-projections.mjs"],
     ["bake-weather", "bake-weather-into-projections.mjs"],
+    ["apply-hierarchical-mu", "apply-hierarchical-mu-to-projections.mjs"],
   ];
   if (String(process.env.GOLF_SKIP_PIN_SHEET || "").trim() !== "1") {
     steps.push(["apply-pin-sheet", "apply-pin-sheet-to-projections.mjs"]);
@@ -447,6 +456,8 @@ function refreshBeforeServe(opts = {}) {
     if (bo.status !== 0) {
       console.warn("[alpha-caddie-web] fetch:book-odds exited", bo.status, "— keeping existing projections.json.");
     }
+    // Book-odds / inline fetch:dg can wipe hierarchical μ — re-apply process stack.
+    runRenderProjectionPostProcess({ DATAGOLF_API_KEY: key });
   }
 
   const livePlay = path.join(WEB_ROOT, "scripts", "fetch-live-in-play.mjs");

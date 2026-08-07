@@ -38,6 +38,28 @@ if (wantHier) {
   if (recipe.includes("both_side_bias") && !allowBias) {
     errors.push(`recipe still includes both_side_bias: "${recipe}"`);
   }
+  const dr = Math.round(Number(proj.display_round || proj.meta?.display_round || 1)) || 1;
+  const rPlayers = (proj.players || []).filter((p) => Math.round(Number(p.round)) === dr);
+  const young = rPlayers.find((p) => String(p.player_name || "") === "Young, Cameron");
+  const sample = young || rPlayers[0];
+  const prior = Number(sample?.weather_prior_precip_mm ?? sample?.dg_auto_weather?.priorPrecipMm);
+  const wx = Number(sample?.hierarchical_weather_stp);
+  const ts = Number(sample?.total_score);
+  if (Number.isFinite(prior) && prior >= 4) {
+    if (!(Number.isFinite(wx) && wx <= -0.5)) {
+      errors.push(
+        `overnight soft missing: priorPrecipMm=${prior} but hierarchical_weather_stp=${wx} (want ≤ -0.5)`,
+      );
+    }
+    if (young && Number.isFinite(ts) && ts >= 68.0) {
+      errors.push(
+        `Young R${dr} total_score=${ts} still too hard with priorPrecipMm=${prior} (want < 68)`,
+      );
+    }
+  }
+  if (sample && !sample.weather_counts_baked) {
+    errors.push("display-round rows missing weather_counts_baked after hierarchical apply");
+  }
 }
 
 if (!allowBias && proj.both_side_bias_applied?.at) {

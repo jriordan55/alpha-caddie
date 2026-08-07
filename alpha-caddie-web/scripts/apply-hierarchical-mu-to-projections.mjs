@@ -109,34 +109,45 @@ async function main() {
     if (wave) waveByDg.set(dg, wave);
   }
 
-  // Ensure tee-window weather (incl. overnight precip) exists before hierarchical apply.
-  if (weatherByDg.size < Math.min(20, fieldDgIds.length * 0.3)) {
-    try {
-      const { bakeOpenMeteoWeatherIntoProjections } = await import("./open-meteo-forecast.mjs");
-      const livePath = join(WEB, "live-in-play.json");
-      let fieldUpdates = null;
-      if (existsSync(livePath)) {
-        const live = JSON.parse(readFileSync(livePath, "utf8"));
-        fieldUpdates = live?.field_updates || null;
-      }
-      await bakeOpenMeteoWeatherIntoProjections(proj, {
-        fieldUpdates,
-        skipFieldCalibrate: true,
-      });
-      // Re-collect snaps after bake (counts not yet hierarchical).
-      for (const p of players) {
-        if (Math.round(num(p.round, NaN)) !== targetRound) continue;
-        const dg = Math.round(num(p.dg_id, NaN));
-        if (!Number.isFinite(dg)) continue;
-        const snap = weatherSnapFromPlayer(p);
-        if (snap) weatherByDg.set(dg, snap);
-        const wave = teeWaveFromTeetimeAndLabel(p.dg_teetime_local, p.dg_tee_wave);
-        if (wave) waveByDg.set(dg, wave);
-      }
-      console.log(`[hier-mu] Open-Meteo tee weather ready (${weatherByDg.size} players)`);
-    } catch (e) {
-      console.warn("[hier-mu] weather pre-bake failed:", e?.message || e);
+  // Always refresh tee-window + overnight archive precip before hierarchical μ.
+  // Mid-pipeline snaps can lack priorPrecipMm even when temp/wind exist (size check alone is not enough).
+  try {
+    const { bakeOpenMeteoWeatherIntoProjections } = await import("./open-meteo-forecast.mjs");
+    const livePath = join(WEB, "live-in-play.json");
+    let fieldUpdates = null;
+    if (existsSync(livePath)) {
+      const live = JSON.parse(readFileSync(livePath, "utf8"));
+      fieldUpdates = live?.field_updates || null;
     }
+    await bakeOpenMeteoWeatherIntoProjections(proj, {
+      fieldUpdates,
+      skipFieldCalibrate: true,
+      // Keep dg-μ / prior totals as baselines; hier will overwrite display-round μ next.
+      preserveBaselines: true,
+    });
+    weatherByDg.clear();
+    waveByDg.clear();
+    for (const p of players) {
+      if (Math.round(num(p.round, NaN)) !== targetRound) continue;
+      const dg = Math.round(num(p.dg_id, NaN));
+      if (!Number.isFinite(dg)) continue;
+      const snap = weatherSnapFromPlayer(p);
+      if (snap) weatherByDg.set(dg, snap);
+      const wave = teeWaveFromTeetimeAndLabel(p.dg_teetime_local, p.dg_tee_wave);
+      if (wave) waveByDg.set(dg, wave);
+    }
+    const priors = [...weatherByDg.values()]
+      .map((s) => Number(s?.priorPrecipMm))
+      .filter((v) => Number.isFinite(v));
+    const medPrior =
+      priors.length > 0
+        ? [...priors].sort((a, b) => a - b)[Math.floor(priors.length / 2)]
+        : NaN;
+    console.log(
+      `[hier-mu] Open-Meteo tee weather ready (${weatherByDg.size} players, median priorPrecipMm=${Number.isFinite(medPrior) ? medPrior.toFixed(2) : "n/a"})`,
+    );
+  } catch (e) {
+    console.warn("[hier-mu] weather pre-bake failed:", e?.message || e);
   }
 
   console.log(
