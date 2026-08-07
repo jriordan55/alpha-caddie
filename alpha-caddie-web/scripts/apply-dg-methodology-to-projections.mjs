@@ -96,6 +96,11 @@ async function main() {
       if (Number.isFinite(total)) p.score_to_par = Math.round((total - par) * 100) / 100;
     }
     p.projection_recipe = "dg_methodology";
+    // Clear prior weather bake so the post-methodology weather pass starts from dg-μ baselines.
+    delete p.weather_counts_baked;
+    delete p._weather_bake_snapshot;
+    delete p.weather_difficulty_delta;
+    delete p._pre_weather_counts;
     n++;
   }
 
@@ -104,6 +109,9 @@ async function main() {
   proj.projection_recipe_note =
     "DataGolf predictive methodology: seq⊕time SG decay, OTT>APP>ARG>PUTT reweight, shrunk course fit/history; Birdies BoB blend + Fairways driving-acc";
   delete proj.both_side_bias_applied;
+  delete proj.projection_counts_weather_baked;
+  delete proj.projection_counts_weather_baked_round;
+  delete proj.projection_counts_weather_baked_at;
   writeFileSync(PROJ, `${JSON.stringify(proj)}\n`, "utf8");
   console.log(`[dg-mu] Updated ${n}/${players.length} players → ${PROJ}`);
 }

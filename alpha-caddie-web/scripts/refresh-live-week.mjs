@@ -726,6 +726,19 @@ if (String(process.env.GOLF_DG_METHODOLOGY || "1").trim() !== "0") {
   );
 }
 
+// Weather MUST land after dg-methodology / both-side bias — those steps rewrite total_score
+// and would otherwise wipe overnight rain soft (board stuck near dry venue ~69).
+run(
+  "bake-weather-into-projections.mjs",
+  "Final Open-Meteo weather bake AFTER dg-μ (overnight soft + tee-window wind)",
+);
+run(
+  "reconcile-projection-counts.mjs",
+  "Reconcile counting stats after post-methodology weather bake",
+  {},
+  softOpt,
+);
+
 mirrorWebsitePublicData();
 
 console.log("\n[refresh:live] Done.");
