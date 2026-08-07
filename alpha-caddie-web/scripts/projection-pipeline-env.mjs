@@ -86,6 +86,9 @@ export function liveProjectionPipelineEnv() {
     GOLF_FLAT_VENUE_PLAYER_SCORE: "0",
     GOLF_UNIFIED_BOUNCE_BACK_K: process.env.GOLF_UNIFIED_BOUNCE_BACK_K || "0.12",
     GOLF_SKIP_MARKET_BOOK_CALIBRATION: process.env.GOLF_SKIP_MARKET_BOOK_CALIBRATION || "1",
+    // Model μ is hierarchical process only — never shift toward posted book lines.
+    GOLF_SKIP_EVENT_PROP_BOOK_ALIGN: process.env.GOLF_SKIP_EVENT_PROP_BOOK_ALIGN || "1",
+    GOLF_MARKET_BOOK_CALIBRATION: "0",
   };
 }
 

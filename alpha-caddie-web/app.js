@@ -5158,9 +5158,11 @@ function weatherDifficultyDeltaFromSnapshot(w) {
   if (!Number.isFinite(priorMm) && (w.priorRainSoft === true || w.priorRainSoft === 1)) priorMm = 3;
   if (!Number.isFinite(priorMm)) priorMm = 0;
   let windAdj = Math.max(0, wind - WIND_EFFECT_FLOOR_MPH) * WIND_STROKES_PER_MPH;
-  if (priorMm >= 8) windAdj *= 0.7;
-  else if (priorMm >= 4) windAdj *= 0.82;
-  else if (priorMm >= 1.5) windAdj *= 0.9;
+  if (priorMm >= 8) windAdj *= 0.35;
+  else if (priorMm >= 5) windAdj *= 0.42;
+  else if (priorMm >= 3) windAdj *= 0.55;
+  else if (priorMm >= 1.5) windAdj *= 0.72;
+  else if (priorMm >= 0.5) windAdj *= 0.88;
   const humAdj = 0.006 * (hum - 55);
   let d = tempAdj + windAdj + humAdj;
   if (cond !== "default") {
@@ -5169,16 +5171,13 @@ function weatherDifficultyDeltaFromSnapshot(w) {
     d += condD;
   }
   if (priorMm >= 0.3) {
-    if (priorMm < 1) d -= 0.2;
-    else if (priorMm < 3) d -= 0.4;
-    else if (priorMm < 6) d -= 0.65;
-    else if (priorMm < 12) d -= 0.9;
-    else if (priorMm < 20) d -= 1.1;
-    else d -= 1.3;
+    if (priorMm < 1) d -= 0.35;
+    else if (priorMm < 3) d -= 0.7;
+    else if (priorMm < 6) d -= 1.2;
+    else if (priorMm < 12) d -= 1.5;
+    else if (priorMm < 20) d -= 1.7;
+    else d -= 1.9;
   }
-  if (priorMm >= 8) d = Math.min(d, -0.55);
-  else if (priorMm >= 5) d = Math.min(d, -0.45);
-  else if (priorMm >= 3) d = Math.min(d, -0.15);
   if (
     !(priorMm >= 0.3) &&
     wind < WIND_EFFECT_FLOOR_MPH &&
@@ -5188,7 +5187,7 @@ function weatherDifficultyDeltaFromSnapshot(w) {
   ) {
     d -= 0.08;
   }
-  return clamp(d, -1.8, 2.6);
+  return clamp(d, -2.2, 2.6);
 }
 
 function projectionCountsWeatherBaked(row) {
@@ -5268,8 +5267,8 @@ function statWeatherMuAdjustment(market, row) {
   if (market === "Birdies") return -0.5 * d;
   if (market === "Pars") return 0.2 * d;
   if (market === "Putts") return 0.35 * d;
-  if (market === "GIR") return -0.22 * d;
-  if (market === "Fairways hit") return -0.14 * d;
+  if (market === "GIR") return -0.5 * d;
+  if (market === "Fairways hit") return -0.4 * d;
   return 0;
 }
 

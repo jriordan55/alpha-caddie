@@ -37,11 +37,11 @@ import {
   GIR_LEVEL_BLEND,
   PARS_PAR_MACHINE_BLEND,
   SCORE_LEVEL_BLEND,
-  SCORE_BIAS_TRIM,
 } from "./dg-methodology-mu.mjs";
 import { teeWaveFromTeetimeAndLabel } from "./open-meteo-forecast.mjs";
 import {
   priorRainSoftDeltaFromMm,
+  soakMuteWindFactor,
   weatherDifficultyDeltaFromSnapshot,
   WIND_EFFECT_FLOOR_MPH,
 } from "./weather-mu-adjustments.mjs";
@@ -88,8 +88,8 @@ export const DEFAULT_HIER_FIT = Object.freeze({
     maxAbsStp: 0.85,
   },
   /**
-   * Weather design → STP (positive = harder). Overnight soft is also applied via
-   * priorRainSoftDeltaFromMm and soak caps in weatherLinearDelta.
+   * Weather design → STP (positive = harder). Overnight soft via
+   * priorRainSoftDeltaFromMm + soak-muted wind (no soak floors / book shifts).
    */
   weather: {
     wind_per_mph_over_5: 0.085,
@@ -232,76 +232,62 @@ export function weatherFeaturesFromSnapshot(snap, wave = "") {
   };
 }
 
-/** Hierarchical weather → STP (positive harder). Includes overnight soft soak caps. */
+/** Hierarchical weather → STP (positive harder). Overnight soft is the process term. */
 export function weatherLinearDelta(snap, wave = "", fit = DEFAULT_HIER_FIT) {
   const wcfg = fit.weather || DEFAULT_HIER_FIT.weather;
   const f = weatherFeaturesFromSnapshot(snap, wave);
   let windTerm = wcfg.wind_per_mph_over_5 * f.wind_excess;
-  if (wcfg.soak_mute_wind) {
-    if (f.priorPrecipMm >= 8) windTerm *= 0.7;
-    else if (f.priorPrecipMm >= 4) windTerm *= 0.82;
-    else if (f.priorPrecipMm >= 1.5) windTerm *= 0.9;
+  if (wcfg.soak_mute_wind !== false) {
+    windTerm *= soakMuteWindFactor(f.priorPrecipMm);
+  }
+  // In-play rain on already-soaked turf is not an extra hardness bump.
+  let rainTerm = wcfg.rain_in_play * f.rain;
+  let stormExtra = (wcfg.storm_in_play - wcfg.rain_in_play) * f.storm;
+  if (f.priorPrecipMm >= 4) {
+    rainTerm *= 0.35;
+    stormExtra *= 0.35;
   }
   let d =
     windTerm +
-    wcfg.rain_in_play * f.rain +
-    (wcfg.storm_in_play - wcfg.rain_in_play) * f.storm +
+    rainTerm +
+    stormExtra +
     wcfg.temp_per_f_over_72 * f.temp_dev +
     wcfg.humidity_per_pct_over_55 * f.humidity_dev +
     wcfg.afternoon_wave * f.afternoon;
 
   d += priorRainSoftDeltaFromMm(f.priorPrecipMm);
-
-  // Soak: wet turf must not read as playing hard.
-  if (f.priorPrecipMm >= 8) d = Math.min(d, -0.55);
-  else if (f.priorPrecipMm >= 5) d = Math.min(d, -0.45);
-  else if (f.priorPrecipMm >= 3) d = Math.min(d, -0.15);
-
-  return clamp(d, -1.8, 2.6);
+  return clamp(d, -2.2, 2.6);
 }
 
-export function weatherDeltaForMarket(market, stpDelta, opts = {}) {
+/**
+ * Map STP delta → market μ (positive STP = harder scoring).
+ * Soft/wet is already inside stpDelta via overnight precip — no additive overrides.
+ */
+export function weatherDeltaForMarket(market, stpDelta) {
   const d = numOr(stpDelta, 0);
-  const priorMm = numOr(opts.priorPrecipMm, 0);
-  // Soft/wet turf: approaches hold (GIR↑) and drives stop in the short grass (FW↑).
-  let softGir = 0;
-  let softFw = 0;
-  if (priorMm >= 8) {
-    softGir = 0.45;
-    softFw = 0.35;
-  } else if (priorMm >= 5) {
-    softGir = 0.32;
-    softFw = 0.25;
-  } else if (priorMm >= 3) {
-    softGir = 0.2;
-    softFw = 0.15;
-  } else if (priorMm >= 1) {
-    softGir = 0.1;
-    softFw = 0.08;
-  }
-
   if (market === "Total score") return d;
   if (market === "Bogeys") return 0.45 * d;
   if (market === "Birdies") return -0.5 * d;
   if (market === "Pars") return 0.2 * d;
-  if (market === "GIR") return -0.35 * d + softGir;
-  if (market === "Fairways hit") return -0.28 * d + softFw;
+  if (market === "GIR") return -0.5 * d;
+  if (market === "Fairways hit") return -0.4 * d;
   return 0;
 }
 
 /**
  * Direct skill × course effects on GIR / Fairways (count units), not STP-scaled.
- * Soft setups amplify approach→GIR and mute miss-fairway penalty for good drivers.
+ * Soft turf (prior precip) mildly amplifies approach→GIR and driving→FW hold.
  */
 export function skillCourseInteractionCounts(playerSkill, traits, priorPrecipMm, fit = DEFAULT_HIER_FIT) {
   if (!playerSkill || !traits) return { gir: 0, fairways: 0 };
   const app = numOr(playerSkill.app, 0);
   const ott = numOr(playerSkill.ott, 0);
-  const priorMm = numOr(priorPrecipMm, 0);
-  const soft = priorMm >= 5 ? 1.2 : priorMm >= 3 ? 1.1 : 1;
+  const priorMm = Math.max(0, numOr(priorPrecipMm, 0));
+  const soft = 1 + clamp(priorMm / 20, 0, 0.25);
   const gir = clamp((0.35 * app + 0.2 * app * Math.max(0, traits.firm_hold_z)) * soft, -0.4, 0.7);
   const fw = clamp(
-    (0.3 * ott + 0.25 * ott * Math.max(0, traits.narrow_z) + 0.12 * (soft - 1) * Math.max(0, ott)) * soft,
+    (0.3 * ott + 0.25 * ott * Math.max(0, traits.narrow_z) + 0.1 * Math.max(0, soft - 1) * Math.max(0, ott)) *
+      soft,
     -0.35,
     0.65,
   );
@@ -529,15 +515,12 @@ export async function buildHierarchicalMuMapForEvent(opts) {
           const a = clamp(SCORE_LEVEL_BLEND, 0, 1);
           mu = Number.isFinite(mu) ? (1 - a) * mu + a * lvl : lvl;
         }
-        if (Number.isFinite(SCORE_BIAS_TRIM) && SCORE_BIAS_TRIM !== 0) {
-          mu -= SCORE_BIAS_TRIM;
-        }
       }
 
       const formDelta = recentFormStpUpdate(prefix, dg, market, mu, fit);
       mu += formDelta;
-      mu += weatherDeltaForMarket(market, ixStp, { priorPrecipMm: priorMm });
-      mu += weatherDeltaForMarket(market, weatherStp, { priorPrecipMm: priorMm });
+      mu += weatherDeltaForMarket(market, ixStp);
+      mu += weatherDeltaForMarket(market, weatherStp);
       if (market === "GIR") mu += ixCounts.gir;
       if (market === "Fairways hit") mu += ixCounts.fairways;
       mu = clampMu(market, mu, coursePar18, fairwayHoles);

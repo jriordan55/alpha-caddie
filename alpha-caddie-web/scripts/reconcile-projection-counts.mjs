@@ -41,7 +41,9 @@ const { reconciled, calibrated, venueScoreCalibrated } = reconcileAllProjectionP
   minField: 8,
   skipHistVenueScoreCalibrate: flatVenuePlayerScoreAnchorEnabled(),
   skipMarketBookCalibration: true,
-  applyBayesianMarketCalibration: true,
+  // Never pull μ toward sportsbook / sharp lines — model process only.
+  applyBayesianMarketCalibration: false,
+  skipEventPropBookAlignment: true,
   displayRound: proj.display_round,
 });
 writeFileSync(projPath, `${JSON.stringify(proj, null, 2)}\n`);

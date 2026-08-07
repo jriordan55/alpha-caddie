@@ -5,7 +5,8 @@
  * Round μ framing (tee-window weather piece of hierarchical score model):
  *   μ(i,r) += weatherDifficultyDelta(tee window, prior precip)
  * Prior precip is yesterday+overnight archive rain (soft turf); tee-window wind/temp
- * are the during-play terms. Soak caps keep wet setups from reading as “playing hard.”
+ * are the during-play terms. Softness is the linear overnight-soft + muted-wind design —
+ * no soak floors and no sportsbook μ shifts.
  *
  * Calibrated on PGA rounds 2015+ joined to Open-Meteo archive weather:
  *   - Wind ≥5 mph: ~+0.10 strokes / mph excess over 5 (muted when turf is soaked)
@@ -61,12 +62,23 @@ export const WEATHER_CONDITION_SIGMA_DELTA = Object.freeze({
 export function priorRainSoftDeltaFromMm(priorPrecipMm) {
   const mm = num(priorPrecipMm, 0);
   if (!(mm >= 0.3)) return 0;
-  if (mm < 1) return -0.2;
-  if (mm < 3) return -0.4;
-  if (mm < 6) return -0.65;
-  if (mm < 12) return -0.9;
-  if (mm < 20) return -1.1;
-  return -1.3;
+  if (mm < 1) return -0.35;
+  if (mm < 3) return -0.7;
+  if (mm < 6) return -1.2;
+  if (mm < 12) return -1.5;
+  if (mm < 20) return -1.7;
+  return -1.9;
+}
+
+/** Soft-turf wind mute: soaked ground cuts firmness/bounce wind tax (keeps dispersion in σ). */
+export function soakMuteWindFactor(priorPrecipMm) {
+  const mm = num(priorPrecipMm, 0);
+  if (mm >= 8) return 0.35;
+  if (mm >= 5) return 0.42;
+  if (mm >= 3) return 0.55;
+  if (mm >= 1.5) return 0.72;
+  if (mm >= 0.5) return 0.88;
+  return 1;
 }
 
 export function windDifficultyDelta(windMph) {
@@ -122,9 +134,7 @@ export function weatherDifficultyDeltaFromSnapshot(w) {
 
   // Soft turf: wind still moves the ball, but firmness/bounce penalty is muted.
   let windAdj = windDifficultyDelta(wind);
-  if (priorMm >= 8) windAdj *= 0.7;
-  else if (priorMm >= 4) windAdj *= 0.82;
-  else if (priorMm >= 1.5) windAdj *= 0.9;
+  windAdj *= soakMuteWindFactor(priorMm);
 
   const humAdj = 0.006 * (hum - 55);
 
@@ -139,12 +149,6 @@ export function weatherDifficultyDeltaFromSnapshot(w) {
   // Overnight / yesterday rain softens turf → easier scoring (more birdies, lower totals).
   d += priorRainSoftDeltaFromMm(priorMm);
 
-  // After meaningful soak, do not let tee-window wind flip the round to "playing hard."
-  // Soft holds > firmness; wind still nudges dispersion via sigma, not a hard STP tax.
-  if (priorMm >= 8) d = Math.min(d, -0.55);
-  else if (priorMm >= 5) d = Math.min(d, -0.45);
-  else if (priorMm >= 3) d = Math.min(d, -0.15);
-
   // Mild calm-turf soft when dry overnight and not stormy (firmness ↔ hold tradeoff).
   if (
     !(priorMm >= 0.3) &&
@@ -156,8 +160,7 @@ export function weatherDifficultyDeltaFromSnapshot(w) {
     d -= 0.08;
   }
 
-  // Allow full wind ladder plus meaningful overnight soft after heavy rain.
-  return clamp(d, -1.8, 2.6);
+  return clamp(d, -2.2, 2.6);
 }
 
 export function weatherSigmaMultiplierFromSnapshot(w) {
@@ -185,7 +188,8 @@ export function statWeatherMuAdjustment(market, row) {
   if (market === "Birdies") return -0.5 * d;
   if (market === "Pars") return 0.2 * d;
   if (market === "Putts") return 0.35 * d;
-  if (market === "GIR") return -0.22 * d;
-  if (market === "Fairways hit") return -0.14 * d;
+  // Soft STP (negative d) → more holds / more fairways kept; linear only.
+  if (market === "GIR") return -0.5 * d;
+  if (market === "Fairways hit") return -0.4 * d;
   return 0;
 }
