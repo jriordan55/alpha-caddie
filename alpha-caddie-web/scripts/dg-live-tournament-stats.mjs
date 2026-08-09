@@ -9,7 +9,7 @@
 import { reconcileHoleCountsFromScore } from "./course-round-adjustments.mjs";
 
 export const DEFAULT_LIVE_TOURNAMENT_STATS =
-  "sg_ott,distance,accuracy,sg_app,gir,prox_fw,sg_putt,scrambling";
+  "sg_ott,distance,accuracy,sg_app,sg_arg,gir,prox_fw,sg_putt,sg_t2g,sg_total,scrambling";
 
 export function num(v) {
   const n = Number(v);

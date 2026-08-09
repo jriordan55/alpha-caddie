@@ -360,7 +360,7 @@ body {
   margin-left: 0;
 }
 
-/* +EV: which book can appear as “best book” for a row (compact select) */
+/* +EV: which book can appear as ?best book? for a row (compact select) */
 .ev-filter-books-toolbar-label {
   min-width: 0;
   max-width: min(420px, 100%);
@@ -371,7 +371,7 @@ body {
   max-width: min(420px, 100%);
 }
 
-/* Round projections — toolbar (round + golfer); legacy line tools may be hidden */
+/* Round projections ? toolbar (round + golfer); legacy line tools may be hidden */
 .ou-panel-head {
   display: flex;
   flex-wrap: wrap;
@@ -569,7 +569,7 @@ body {
   }
 }
 
-/* Model O/U — wrapper groups controls; inner grids use display:contents on desktop */
+/* Model O/U ? wrapper groups controls; inner grids use display:contents on desktop */
 .ou-filter-card {
   margin-bottom: 0;
 }
@@ -590,7 +590,7 @@ body {
   position: relative;
 }
 
-/* Results tab — match Historical Trends chart framing (bordered plot box, responsive canvas). */
+/* Results tab ? match Historical Trends chart framing (bordered plot box, responsive canvas). */
 .results-chart-wrap {
   position: relative;
   background: var(--golf-elevated);
@@ -653,7 +653,7 @@ body {
   }
 }
 
-/* Results — Polymarket-style KPI + chart row */
+/* Results ? Polymarket-style KPI + chart row */
 .results-hero {
   display: flex;
   flex-direction: row;
@@ -1877,7 +1877,7 @@ body {
   border-bottom: 1px solid var(--golf-border);
   background: var(--golf-surface-mid);
 }
-/* Leaderboard-style first column: do not apply to round O/U long rows (.ou-proj-td-golfer) or colspan detail cells — WebKit can mis-layout sticky + wide tables when max-width:0 hits the wrong td. */
+/* Leaderboard-style first column: do not apply to round O/U long rows (.ou-proj-td-golfer) or colspan detail cells ? WebKit can mis-layout sticky + wide tables when max-width:0 hits the wrong td. */
 #table-ou thead th:first-child:not(.ou-proj-th-golfer):not(.ou-proj-th-tee),
 #table-ou tbody td:first-child:not(.ou-proj-td-golfer):not(.ou-proj-td-tee):not(.ou-proj-detail-td) {
   width: 26%;
@@ -2018,7 +2018,7 @@ body {
   background-color: var(--golf-elevated-soft) !important;
 }
 
-/* Round projections — long rows (golfer × market × Over|Under) */
+/* Round projections ? long rows (golfer ? market ? Over|Under) */
 #table-ou.table-ou-projections tbody td.ou-proj-td-golfer .ou-player-flag {
   display: inline-block;
   width: 18px;
@@ -2756,7 +2756,7 @@ th.matchup-analysis-best-pick {
   background: #89bea8;
 }
 
-/* Matchup Analysis: `outrights-table-wrap` uses overflow-x: clip elsewhere — that hides columns on narrow viewports. */
+/* Matchup Analysis: `outrights-table-wrap` uses overflow-x: clip elsewhere ? that hides columns on narrow viewports. */
 #panel-matchup-analysis .outrights-table-wrap {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -3220,7 +3220,7 @@ th.matchup-analysis-best-pick {
 
 /* ---- Historical trends (round history chart) ---- */
 /* Let the page scroll as one column; nested max-height + flex was clipping the top-10 table. */
-/* Do not pair overflow-x: hidden with overflow-y: visible — spec forces visible → auto, which clips vertically. */
+/* Do not pair overflow-x: hidden with overflow-y: visible ? spec forces visible ? auto, which clips vertically. */
 #panel-props.panel.active {
   display: block !important;
   overflow: visible;
@@ -4284,7 +4284,7 @@ th.matchup-analysis-best-pick {
   color: var(--golf-text-muted);
 }
 
-/* +EV Devig — primary actions use app green accent */
+/* +EV Devig ? primary actions use app green accent */
 .ev-devig-btn-toolbar {
   align-self: center;
   background: var(--golf-green);
@@ -4817,7 +4817,7 @@ th.matchup-analysis-best-pick {
     padding-right: max(14px, env(safe-area-inset-right, 0px));
   }
 
-  /* One row of scrollable tabs — avoids awkward wraps on narrow phones */
+  /* One row of scrollable tabs ? avoids awkward wraps on narrow phones */
   .tabs {
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -4870,7 +4870,7 @@ th.matchup-analysis-best-pick {
     justify-content: center;
   }
 
-  /* Model O/U — one card, stacked sections, compact weather grid */
+  /* Model O/U ? one card, stacked sections, compact weather grid */
   .ou-filter-card {
     background: var(--golf-elevated);
     border: 1px solid var(--golf-border);
@@ -6399,25 +6399,13 @@ dialog,
   gap: 14px;
 }
 
-/* �� Live Stats (Live Course Insights) �� */
+/* ?? Live Stats (Live Course Insights) ?? */
 .live-stats-panel {
-  --ls-heat-pos-5-bg: #157a38;
-  --ls-heat-pos-5-fg: #fff;
-  --ls-heat-pos-4-bg: #3fa84f;
-  --ls-heat-pos-4-fg: #0a1a0c;
-  --ls-heat-pos-3-bg: #7ec86a;
-  --ls-heat-pos-3-fg: #0a1a0c;
-  --ls-heat-pos-2-bg: #b7e0a8;
-  --ls-heat-pos-2-fg: #122016;
-  --ls-heat-pos-1-bg: #dff3d6;
-  --ls-heat-pos-1-fg: #1a281c;
-  --ls-heat-zero-bg: transparent;
-  --ls-heat-neg-1-bg: #f3d0d0;
-  --ls-heat-neg-1-fg: #2a1212;
-  --ls-heat-neg-2-bg: #e8a8a8;
-  --ls-heat-neg-2-fg: #2a1212;
-  --ls-heat-neg-3-bg: #d97878;
-  --ls-heat-neg-3-fg: #1a0a0a;
+  --ls-heat-pos-bg: #1b8a3e;
+  --ls-heat-neg-bg: #c62828;
+  --ls-heat-zero-bg: #ffffff;
+  --ls-heat-zero-fg: #111111;
+  --ls-heat-on-color-fg: #ffffff;
   --ls-pill-active: #c9a227;
 }
 
@@ -6554,6 +6542,18 @@ dialog,
   text-transform: uppercase;
   background: rgba(255, 255, 255, 0.04);
 }
+.live-stats-table thead th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+.live-stats-table thead th.sortable:hover {
+  color: var(--golf-text);
+}
+.live-stats-table thead th[aria-sort="ascending"] .sort-up,
+.live-stats-table thead th[aria-sort="descending"] .sort-down {
+  opacity: 1;
+  color: var(--ls-pill-active);
+}
 .live-stats-table tbody td {
   white-space: nowrap;
   padding-top: 5px;
@@ -6579,17 +6579,29 @@ dialog,
   font-variant-numeric: tabular-nums;
   font-weight: 700;
   text-align: center;
-  border-radius: 2px;
 }
-.live-stats-table .ls-heat-pos-5 { background: var(--ls-heat-pos-5-bg); color: var(--ls-heat-pos-5-fg); }
-.live-stats-table .ls-heat-pos-4 { background: var(--ls-heat-pos-4-bg); color: var(--ls-heat-pos-4-fg); }
-.live-stats-table .ls-heat-pos-3 { background: var(--ls-heat-pos-3-bg); color: var(--ls-heat-pos-3-fg); }
-.live-stats-table .ls-heat-pos-2 { background: var(--ls-heat-pos-2-bg); color: var(--ls-heat-pos-2-fg); }
-.live-stats-table .ls-heat-pos-1 { background: var(--ls-heat-pos-1-bg); color: var(--ls-heat-pos-1-fg); }
-.live-stats-table .ls-heat-zero { background: var(--ls-heat-zero-bg); }
-.live-stats-table .ls-heat-neg-1 { background: var(--ls-heat-neg-1-bg); color: var(--ls-heat-neg-1-fg); }
-.live-stats-table .ls-heat-neg-2 { background: var(--ls-heat-neg-2-bg); color: var(--ls-heat-neg-2-fg); }
-.live-stats-table .ls-heat-neg-3 { background: var(--ls-heat-neg-3-bg); color: var(--ls-heat-neg-3-fg); }
+/* Beat striped-row backgrounds so heat cells stay readable */
+.live-stats-table tbody tr td.ls-heat-pos,
+.live-stats-table tbody tr:nth-child(even) td.ls-heat-pos,
+.live-stats-table tbody tr:nth-child(odd) td.ls-heat-pos,
+.live-stats-table tbody tr:hover td.ls-heat-pos {
+  background: var(--ls-heat-pos-bg) !important;
+  color: var(--ls-heat-on-color-fg) !important;
+}
+.live-stats-table tbody tr td.ls-heat-neg,
+.live-stats-table tbody tr:nth-child(even) td.ls-heat-neg,
+.live-stats-table tbody tr:nth-child(odd) td.ls-heat-neg,
+.live-stats-table tbody tr:hover td.ls-heat-neg {
+  background: var(--ls-heat-neg-bg) !important;
+  color: var(--ls-heat-on-color-fg) !important;
+}
+.live-stats-table tbody tr td.ls-heat-zero,
+.live-stats-table tbody tr:nth-child(even) td.ls-heat-zero,
+.live-stats-table tbody tr:nth-child(odd) td.ls-heat-zero,
+.live-stats-table tbody tr:hover td.ls-heat-zero {
+  background: var(--ls-heat-zero-bg) !important;
+  color: var(--ls-heat-zero-fg) !important;
+}
 .live-stats-footnote {
   margin-top: 8px;
 }
