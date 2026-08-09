@@ -9,7 +9,7 @@
  * no soak floors and no sportsbook μ shifts.
  *
  * Calibrated on PGA rounds 2015+ joined to Open-Meteo archive weather:
- *   - Wind ≥5 mph: ~+0.10 strokes / mph excess over 5 (muted when turf is soaked)
+ *   - Wind ≥5 mph: +0.10 strokes / mph excess over 5 (locked; muted only when turf is soaked)
  *   - Overnight / pre-tee rain softens turf (easier scoring) via priorPrecipMm
  *   - Afternoon wave ~+0.13 strokes vs morning (paired within-round AM/PM)
  */

@@ -504,6 +504,8 @@ function applyWeatherSnapshotToPlayer(p, snap) {
     condition: snap.condition,
     priorPrecipMm,
     priorRainSoft: priorPrecipMm >= 0.4 || Boolean(snap.priorRainSoft),
+    windMphPeak: Number.isFinite(snap.windMphPeak) ? snap.windMphPeak : undefined,
+    hourlyWinds: Array.isArray(snap.hourlyWinds) ? snap.hourlyWinds : undefined,
   };
   p.weather_temp_f = Math.round(snap.tempF * 10) / 10;
   p.weather_wind_mph = Math.round(snap.windMph * 10) / 10;
@@ -511,6 +513,11 @@ function applyWeatherSnapshotToPlayer(p, snap) {
   p.weather_condition = String(snap.condition || "default").toLowerCase();
   p.weather_prior_precip_mm = Math.round(priorPrecipMm * 100) / 100;
   p.weather_prior_rain_soft = priorPrecipMm >= 0.3;
+  if (Array.isArray(snap.hourlyWinds) && snap.hourlyWinds.length) {
+    p.weather_hourly_winds = snap.hourlyWinds;
+  } else {
+    delete p.weather_hourly_winds;
+  }
   return true;
 }
 

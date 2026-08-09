@@ -124,17 +124,30 @@ export function summarizeHourlyWeatherSlice(hourly, startIdx, spanHours, opts = 
   if (!nt) return null;
   const meanSustained = Number.isFinite(sW) && nt > 0 ? sW / nt : NaN;
   const maxGust = peakGust > 0 ? peakGust : peakWind;
-  const windMph = windMphFromMeanSustainedAndMaxGust(meanSustained, maxGust);
+  // μ wind = mean sustained 10m wind over the golfer's tee→play hours (not gust-blended).
+  const windMph = meanSustained;
   const peakForCond = Math.max(peakWind, peakGust);
   const cond = openMeteoConditionFromHourSlice(worstCode, maxPP, maxMm, peakForCond);
   const lookback = Number.isFinite(num(opts.priorLookbackHours, NaN))
     ? Math.round(num(opts.priorLookbackHours, 36))
     : 36;
   const priorPrecipMm = priorPrecipMmBeforeTee(hourly, startIdx, lookback);
+  const hourlyWinds = [];
+  for (let i = startIdx; i < end; i++) {
+    const wi = num(W?.[i], NaN);
+    if (!Number.isFinite(wi)) continue;
+    hourlyWinds.push({
+      time: String(times[i] || "").slice(0, 16),
+      windMph: Math.round(wi * 10) / 10,
+    });
+  }
   return {
     tempF: sT / nt,
-    /** Median of mean sustained 10 m wind and max gust in the tee-time window (mph). */
+    /** Mean sustained 10 m wind (mph) over tee-aligned play hours. */
     windMph,
+    windMphPeak: peakWind > 0 ? peakWind : NaN,
+    windMphGust: maxGust > 0 ? maxGust : NaN,
+    hourlyWinds,
     humidityPct: sH / nt,
     condition: cond,
     priorPrecipMm,

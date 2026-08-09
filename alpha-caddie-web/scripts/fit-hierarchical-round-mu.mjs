@@ -144,7 +144,8 @@ async function main() {
     // Map to weather config (STP). prior precip coefficient → scale softener strength.
     fit.weather = {
       ...DEFAULT_HIER_FIT.weather,
-      wind_per_mph_over_5: Math.max(0.04, Math.min(0.14, beta[1])),
+      // Locked design rule — never OLS-override wind ladder.
+      wind_per_mph_over_5: 0.1,
       rain_in_play: Math.max(0, Math.min(0.35, beta[2])),
       storm_in_play: Math.max(0, Math.min(0.5, beta[3] + beta[2])),
       temp_per_f_over_72: Math.max(-0.02, Math.min(0.05, beta[4])),

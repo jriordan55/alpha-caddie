@@ -44,6 +44,7 @@ import {
   soakMuteWindFactor,
   weatherDifficultyDeltaFromSnapshot,
   WIND_EFFECT_FLOOR_MPH,
+  WIND_STROKES_PER_MPH,
 } from "./weather-mu-adjustments.mjs";
 import { num } from "./round-projection-mu.mjs";
 
@@ -92,7 +93,8 @@ export const DEFAULT_HIER_FIT = Object.freeze({
    * priorRainSoftDeltaFromMm + soak-muted wind (no soak floors / book shifts).
    */
   weather: {
-    wind_per_mph_over_5: 0.085,
+    /** Locked design: +0.1 STP per mph over 5 (see WIND_STROKES_PER_MPH). */
+    wind_per_mph_over_5: 0.1,
     rain_in_play: 0.1,
     storm_in_play: 0.16,
     temp_per_f_over_72: 0.02,
@@ -236,7 +238,8 @@ export function weatherFeaturesFromSnapshot(snap, wave = "") {
 export function weatherLinearDelta(snap, wave = "", fit = DEFAULT_HIER_FIT) {
   const wcfg = fit.weather || DEFAULT_HIER_FIT.weather;
   const f = weatherFeaturesFromSnapshot(snap, wave);
-  let windTerm = wcfg.wind_per_mph_over_5 * f.wind_excess;
+  // Hard rule: +0.1 strokes per mph only after 5 mph (fit cannot override).
+  let windTerm = WIND_STROKES_PER_MPH * f.wind_excess;
   if (wcfg.soak_mute_wind !== false) {
     windTerm *= soakMuteWindFactor(f.priorPrecipMm);
   }
