@@ -5108,6 +5108,7 @@ function refreshPricingAffectedViews() {
   }
   if (tab === "live-prop") return void renderLivePropPredictor();
   if (tab === "course-fit") return void buildCourseFitTab();
+  if (tab === "live-stats") return void buildLiveStatsTab();
   if (tab === "parlay-pro" && window.ParlayPro) return void window.ParlayPro.render();
 }
 
@@ -25896,6 +25897,7 @@ async function loadProjections(opts = {}) {
       invalidateOuProjectionAvgCaches();
       HISTORY_ROUNDS_CHRONO_CACHE.clear();
       if (activeAppTabId() === "ou") scheduleBuildOuTable(true);
+      if (activeAppTabId() === "live-stats") void buildLiveStatsTab();
     });
     await refreshAll();
     updateStatusBar();
@@ -25984,6 +25986,588 @@ function setToolsChromeVisible(visible) {
   document.getElementById("content-wrapper")?.classList.toggle("content-wrapper--home", !visible);
 }
 
+/** Live Stats tab: Live Course Insights board (round pills + SG heat). */
+let liveStatsRoundFilter = "";
+let liveStatsViewMode = "values"; // values | ranks
+let liveStatsSortKey = "pos_sort";
+let liveStatsSortDir = 1;
+let liveStatsSortWired = false;
+let liveStatsUiWired = false;
+
+const LIVE_STATS_SG_KEYS = ["sg_putt", "sg_arg", "sg_app", "sg_ott", "sg_t2g", "sg_total"];
+
+async function ensureLiveStatsSourcesLoaded() {
+  await ensurePgatourEventRoundsLoaded();
+  if (lastLiveInPlayBundleForHistory || isFileProtocol()) return;
+  try {
+    const res = await fetch(cacheBustFetchUrl(liveInPlayJsonUrl()), { cache: "no-store" });
+    if (!res.ok) return;
+    const j = await res.json();
+    lastLiveInPlayBundleForHistory = liveInPlayHistoryBundleWithActuals(j);
+  } catch {
+    /* missing live file */
+  }
+}
+
+function liveStatsDefaultRoundFilter() {
+  const display = Math.round(num(DATA?.meta?.display_round ?? DATA?.display_round, NaN));
+  if (Number.isFinite(display) && display >= 1 && display <= 4) return String(display);
+  const cap = currentTournamentCompletedRoundCap();
+  if (Number.isFinite(cap) && cap >= 1 && cap <= 4) return String(cap);
+  return "1";
+}
+
+function liveStatsLtsByDgRound() {
+  /** @type {Map<string, object>} */
+  const map = new Map();
+  const bundle = lastLiveInPlayBundleForHistory;
+  const byRound = bundle?.live_tournament_stats_by_round;
+  if (!byRound || typeof byRound !== "object") return map;
+  for (const [rndKey, pack] of Object.entries(byRound)) {
+    const rnd = Math.round(num(rndKey, NaN));
+    if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
+    const stats = Array.isArray(pack?.live_stats) ? pack.live_stats : [];
+    for (const row of stats) {
+      const dg = Math.round(num(row?.dg_id ?? row?.dgId, NaN));
+      if (!Number.isFinite(dg)) continue;
+      map.set(`${dg}|${rnd}`, row);
+    }
+  }
+  return map;
+}
+
+function liveStatsInPlayByDg() {
+  /** @type {Map<number, object>} */
+  const map = new Map();
+  const bundle = lastLiveInPlayBundleForHistory;
+  if (!Array.isArray(bundle?.data)) return map;
+  for (const r of bundle.data) {
+    const dg = Math.round(num(r?.dg_id ?? r?.dgId, NaN));
+    if (!Number.isFinite(dg)) continue;
+    map.set(dg, r);
+  }
+  return map;
+}
+
+function liveStatsPlayerNameByDg() {
+  /** @type {Map<number, string>} */
+  const map = new Map();
+  for (const p of DATA?.players || []) {
+    const dg = Math.round(num(p?.dg_id ?? p?.dgId, NaN));
+    if (!Number.isFinite(dg)) continue;
+    const name = String(p?.player_name || p?.playerName || "").trim();
+    if (name && !map.has(dg)) map.set(dg, name);
+  }
+  for (const [dg, r] of liveStatsInPlayByDg()) {
+    if (map.has(dg)) continue;
+    const name = String(r?.player_name || r?.playerName || "").trim();
+    if (name) map.set(dg, name);
+  }
+  return map;
+}
+
+function liveStatsDisplayName(name) {
+  const s = String(name || "").trim();
+  const m = s.match(/^([^,]+),\s*(.+)$/);
+  if (m) return `${m[1].trim().toUpperCase()} ${m[2].trim()}`;
+  return s;
+}
+
+function liveStatsPosSort(pos) {
+  const s = String(pos || "").trim().toUpperCase();
+  if (!s || s === "—" || s === "CUT" || s === "WD" || s === "DQ") return 9999;
+  const m = s.match(/(\d+)/);
+  return m ? Number(m[1]) : 9999;
+}
+
+function liveStatsFmtToPar(v) {
+  if (!Number.isFinite(v)) return "—";
+  const x = Math.round(v);
+  if (x === 0) return "E";
+  return x > 0 ? `+${x}` : String(x);
+}
+
+function liveStatsFmtThru(thru) {
+  if (!Number.isFinite(thru) || thru <= 0) return "—";
+  if (thru >= 18) return "F";
+  return String(Math.round(thru));
+}
+
+function liveStatsFmtSg(v) {
+  if (!Number.isFinite(v)) return "—";
+  const x = Math.round(v * 100) / 100;
+  if (Math.abs(x) < 0.005) return "0.00";
+  return (x > 0 ? "+" : "") + x.toFixed(2);
+}
+
+function liveStatsFmtInt(v) {
+  return Number.isFinite(v) ? String(Math.round(v)) : "—";
+}
+
+function liveStatsFmtPct(v) {
+  if (!Number.isFinite(v)) return "—";
+  return `${(v * 100).toFixed(1)}%`;
+}
+
+/** Conditional formatting classes for strokes-gained cells (screenshot-style heat). */
+function liveStatsSgHeatClass(v) {
+  if (!Number.isFinite(v)) return "";
+  if (v >= 5) return "ls-heat ls-heat-pos-5";
+  if (v >= 3.5) return "ls-heat ls-heat-pos-4";
+  if (v >= 2) return "ls-heat ls-heat-pos-3";
+  if (v >= 1) return "ls-heat ls-heat-pos-2";
+  if (v > 0.05) return "ls-heat ls-heat-pos-1";
+  if (v >= -0.05) return "ls-heat ls-heat-zero";
+  if (v > -1.5) return "ls-heat ls-heat-neg-1";
+  if (v > -3) return "ls-heat ls-heat-neg-2";
+  return "ls-heat ls-heat-neg-3";
+}
+
+function liveStatsBuildSgParts(act, lts) {
+  const sgOtt = num(act?.sg_ott ?? lts?.sg_ott, NaN);
+  const sgApp = num(act?.sg_app ?? lts?.sg_app, NaN);
+  const sgArg = num(act?.sg_arg ?? lts?.sg_arg, NaN);
+  const sgPutt = num(act?.sg_putt ?? lts?.sg_putt, NaN);
+  let sgT2g = num(act?.sg_t2g ?? lts?.sg_t2g, NaN);
+  if (!Number.isFinite(sgT2g)) {
+    const parts = [sgOtt, sgApp, sgArg].filter((x) => Number.isFinite(x));
+    if (parts.length) sgT2g = parts.reduce((a, b) => a + b, 0);
+  }
+  let sgTotal = num(act?.sg_total ?? lts?.sg_total, NaN);
+  if (!Number.isFinite(sgTotal) && Number.isFinite(sgT2g) && Number.isFinite(sgPutt)) {
+    sgTotal = sgT2g + sgPutt;
+  } else if (!Number.isFinite(sgTotal)) {
+    const parts = [sgOtt, sgApp, sgArg, sgPutt].filter((x) => Number.isFinite(x));
+    if (parts.length >= 2) sgTotal = parts.reduce((a, b) => a + b, 0);
+  }
+  return { sg_ott: sgOtt, sg_app: sgApp, sg_arg: sgArg, sg_putt: sgPutt, sg_t2g: sgT2g, sg_total: sgTotal };
+}
+
+function collectLiveStatsRoundRows() {
+  const actuals = liveRoundActualsMapFromApp() || {};
+  const ltsMap = liveStatsLtsByDgRound();
+  const names = liveStatsPlayerNameByDg();
+  const inPlay = liveStatsInPlayByDg();
+  const fwHoles = fairwayHolesModeledFromData();
+  const par = num(DATA?.meta?.course_par_18, 70);
+  /** @type {object[]} */
+  const rows = [];
+  const dgSet = new Set([...names.keys(), ...inPlay.keys()]);
+  for (const k of Object.keys(actuals)) {
+    const dg = Math.round(num(k, NaN));
+    if (Number.isFinite(dg)) dgSet.add(dg);
+  }
+  for (const k of ltsMap.keys()) {
+    const dg = Math.round(num(String(k).split("|")[0], NaN));
+    if (Number.isFinite(dg)) dgSet.add(dg);
+  }
+
+  for (const dg of dgSet) {
+    const per = actuals[String(dg)] || actuals[dg] || {};
+    const ip = inPlay.get(dg) || null;
+    for (let rnd = 1; rnd <= 4; rnd++) {
+      const act = per[String(rnd)] || per[rnd] || null;
+      const lts = ltsMap.get(`${dg}|${rnd}`) || null;
+      const pg = pgatourEventRoundForDg(dg, rnd);
+      const scoreCand = [num(act?.round_score, NaN), num(pg?.round_score, NaN), num(ip?.[`R${rnd}`], NaN)];
+      let score = scoreCand.find((x) => Number.isFinite(x) && x > 0);
+      // LTS `round` is round to-par (not round number).
+      const roundToParLts = num(lts?.round, NaN);
+      if (!Number.isFinite(score) && Number.isFinite(roundToParLts)) score = par + roundToParLts;
+      if (!Number.isFinite(score)) score = NaN;
+
+      const thru = num(act?.thru ?? lts?.thru ?? (Math.round(num(ip?.round, NaN)) === rnd ? ip?.thru : NaN), NaN);
+      const hasPlay =
+        (Number.isFinite(score) && score > 0) ||
+        (Number.isFinite(thru) && thru > 0) ||
+        Number.isFinite(num(lts?.sg_ott, NaN)) ||
+        Number.isFinite(num(act?.fairways, NaN));
+      if (!hasPlay) continue;
+
+      const roundToPar = Number.isFinite(score) && Number.isFinite(par) ? score - par : roundToParLts;
+      const eventToPar = num(ip?.current_score ?? lts?.total, NaN);
+      const pos = String(ip?.current_pos || lts?.position || "").trim() || "—";
+      const sg = liveStatsBuildSgParts(act, lts);
+      const birdies = birdiesPlusEaglesFromRow(pg || act || {});
+      const pars = num(pg?.pars ?? act?.pars, NaN);
+      const fairways = Number.isFinite(num(act?.fairways, NaN))
+        ? historyGirOrFairwaysCount(act.fairways, fwHoles)
+        : Number.isFinite(num(lts?.accuracy, NaN))
+          ? Math.round(num(lts.accuracy, NaN) * fwHoles)
+          : NaN;
+      const gir = Number.isFinite(num(act?.gir, NaN))
+        ? historyGirOrFairwaysCount(act.gir, 18)
+        : Number.isFinite(num(lts?.gir, NaN)) && num(lts.gir, 0) <= 1.0001
+          ? Math.round(num(lts.gir, NaN) * 18)
+          : num(lts?.gir, NaN);
+      const drvAcc = num(lts?.accuracy, NaN);
+      const girPct =
+        Number.isFinite(num(lts?.gir, NaN)) && num(lts.gir, 0) <= 1.0001
+          ? num(lts.gir, NaN)
+          : Number.isFinite(gir)
+            ? gir / 18
+            : NaN;
+      const player =
+        names.get(dg) ||
+        String(lts?.player_name || ip?.player_name || pg?.player_name || "").trim() ||
+        `DG ${dg}`;
+
+      rows.push({
+        dg_id: dg,
+        player,
+        player_display: liveStatsDisplayName(player),
+        round: rnd,
+        pos,
+        pos_sort: liveStatsPosSort(pos),
+        event_to_par: eventToPar,
+        thru,
+        round_to_par: roundToPar,
+        score,
+        pars,
+        birdies,
+        fairways,
+        gir,
+        drv_acc: drvAcc,
+        gir_pct: girPct,
+        ...sg,
+      });
+    }
+  }
+  return rows;
+}
+
+function collectLiveStatsTournamentRows(roundRows) {
+  /** @type {Map<number, object>} */
+  const byDg = new Map();
+  for (const r of roundRows) {
+    let agg = byDg.get(r.dg_id);
+    if (!agg) {
+      agg = {
+        dg_id: r.dg_id,
+        player: r.player,
+        player_display: r.player_display,
+        round: 0,
+        pos: r.pos,
+        pos_sort: r.pos_sort,
+        event_to_par: r.event_to_par,
+        thru: NaN,
+        round_to_par: NaN,
+        score: NaN,
+        pars: 0,
+        birdies: 0,
+        fairways: 0,
+        gir: 0,
+        drv_acc: NaN,
+        gir_pct: NaN,
+        sg_putt: 0,
+        sg_arg: 0,
+        sg_app: 0,
+        sg_ott: 0,
+        sg_t2g: 0,
+        sg_total: 0,
+        _n: 0,
+        _n_pars: 0,
+        _n_bird: 0,
+        _n_fw: 0,
+        _n_gir: 0,
+        _n_acc: 0,
+        _acc_sum: 0,
+        _n_girpct: 0,
+        _girpct_sum: 0,
+      };
+      byDg.set(r.dg_id, agg);
+    }
+    if (Number.isFinite(r.event_to_par)) agg.event_to_par = r.event_to_par;
+    if (r.pos && r.pos !== "—") {
+      agg.pos = r.pos;
+      agg.pos_sort = r.pos_sort;
+    }
+    for (const k of LIVE_STATS_SG_KEYS) {
+      if (Number.isFinite(r[k])) agg[k] += r[k];
+    }
+    if (Number.isFinite(r.pars)) {
+      agg.pars += r.pars;
+      agg._n_pars++;
+    }
+    if (Number.isFinite(r.birdies)) {
+      agg.birdies += r.birdies;
+      agg._n_bird++;
+    }
+    if (Number.isFinite(r.fairways)) {
+      agg.fairways += r.fairways;
+      agg._n_fw++;
+    }
+    if (Number.isFinite(r.gir)) {
+      agg.gir += r.gir;
+      agg._n_gir++;
+    }
+    if (Number.isFinite(r.drv_acc)) {
+      agg._acc_sum += r.drv_acc;
+      agg._n_acc++;
+    }
+    if (Number.isFinite(r.gir_pct)) {
+      agg._girpct_sum += r.gir_pct;
+      agg._n_girpct++;
+    }
+    agg._n++;
+  }
+  return [...byDg.values()].map((a) => {
+    a.drv_acc = a._n_acc ? a._acc_sum / a._n_acc : NaN;
+    a.gir_pct = a._n_girpct ? a._girpct_sum / a._n_girpct : NaN;
+    if (!a._n_pars) a.pars = NaN;
+    if (!a._n_bird) a.birdies = NaN;
+    if (!a._n_fw) a.fairways = NaN;
+    if (!a._n_gir) a.gir = NaN;
+    return a;
+  });
+}
+
+function liveStatsApplyRanks(rows) {
+  const higherBetter = new Set([
+    "sg_putt",
+    "sg_arg",
+    "sg_app",
+    "sg_ott",
+    "sg_t2g",
+    "sg_total",
+    "birdies",
+    "fairways",
+    "gir",
+    "drv_acc",
+    "gir_pct",
+    "pars",
+  ]);
+  const lowerBetter = new Set(["event_to_par", "round_to_par", "pos_sort"]);
+  const keys = [...higherBetter, ...lowerBetter];
+  const out = rows.map((r) => ({ ...r }));
+  for (const key of keys) {
+    const ranked = out
+      .map((r, i) => ({ i, v: r[key] }))
+      .filter((x) => Number.isFinite(x.v))
+      .sort((a, b) => (higherBetter.has(key) ? b.v - a.v : a.v - b.v));
+    ranked.forEach((x, rank) => {
+      out[x.i][`${key}_rank`] = rank + 1;
+    });
+  }
+  return out;
+}
+
+function sortLiveStatsRows(rows) {
+  const key = liveStatsSortKey;
+  const dir = liveStatsSortDir;
+  const rankMode = liveStatsViewMode === "ranks";
+  return [...rows].sort((a, b) => {
+    if (key === "player" || key === "player_display") {
+      const c = String(a.player_display || a.player).localeCompare(String(b.player_display || b.player));
+      if (c) return c * dir;
+      return (a.round - b.round) * dir;
+    }
+    if (key === "pos") {
+      const d = a.pos_sort - b.pos_sort;
+      if (d) return d * dir;
+    }
+    const ak = rankMode && Number.isFinite(a[`${key}_rank`]) ? `${key}_rank` : key;
+    const bk = rankMode && Number.isFinite(b[`${key}_rank`]) ? `${key}_rank` : key;
+    const av = a[ak];
+    const bv = b[bk];
+    const aOk = Number.isFinite(av);
+    const bOk = Number.isFinite(bv);
+    if (aOk && bOk && av !== bv) return (av - bv) * dir;
+    if (aOk !== bOk) return aOk ? -1 : 1;
+    return a.pos_sort - b.pos_sort;
+  });
+}
+
+function liveStatsRenderThead(roundNum) {
+  const thead = document.getElementById("live-stats-thead");
+  if (!thead) return;
+  const rndLabel = Number.isFinite(roundNum) ? `R${roundNum}` : "—";
+  const th = (key, label, cls = "num") =>
+    `<th class="${cls} sortable" data-live-stats-sort="${key}" scope="col">${label}<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span></th>`;
+  thead.innerHTML = `<tr>
+    ${th("pos", "Pos", "ls-th-pos")}
+    ${th("player_display", "Player", "ls-th-player")}
+    ${th("event_to_par", "Score")}
+    ${th("thru", "Thru")}
+    ${th("round_to_par", rndLabel)}
+    ${th("sg_putt", "SG Putt")}
+    ${th("sg_arg", "SG ARG")}
+    ${th("sg_app", "SG App")}
+    ${th("sg_ott", "SG OTT")}
+    ${th("sg_t2g", "SG T2G")}
+    ${th("sg_total", "SG Total")}
+    ${th("pars", "Pars")}
+    ${th("birdies", "Birdie+")}
+    ${th("fairways", "FW")}
+    ${th("gir", "GIR")}
+    ${th("drv_acc", "Drv Acc%")}
+    ${th("gir_pct", "GIR%")}
+  </tr>`;
+}
+
+function liveStatsCell(key, row, rankMode) {
+  if (rankMode && Number.isFinite(row[`${key}_rank`])) {
+    return { html: String(row[`${key}_rank`]), cls: "num ls-rank" };
+  }
+  if (LIVE_STATS_SG_KEYS.includes(key)) {
+    const v = row[key];
+    return { html: liveStatsFmtSg(v), cls: `num ${liveStatsSgHeatClass(v)}` };
+  }
+  if (key === "event_to_par" || key === "round_to_par") {
+    const v = row[key];
+    const cls = Number.isFinite(v) && v < 0 ? "num ls-score-under" : "num";
+    return { html: liveStatsFmtToPar(v), cls };
+  }
+  if (key === "thru") return { html: liveStatsFmtThru(row.thru), cls: "num" };
+  if (key === "drv_acc" || key === "gir_pct") return { html: liveStatsFmtPct(row[key]), cls: "num" };
+  if (key === "pars" || key === "birdies" || key === "fairways" || key === "gir") {
+    return { html: liveStatsFmtInt(row[key]), cls: "num" };
+  }
+  return { html: "—", cls: "num" };
+}
+
+function wireLiveStatsUiOnce() {
+  if (liveStatsUiWired) return;
+  liveStatsUiWired = true;
+  if (!liveStatsRoundFilter || !["1", "2", "3", "4", "tournament"].includes(liveStatsRoundFilter)) {
+    liveStatsRoundFilter = liveStatsDefaultRoundFilter();
+  }
+  document.getElementById("live-stats-round-pills")?.addEventListener("click", (ev) => {
+    const btn = /** @type {HTMLElement} */ (ev.target)?.closest?.("[data-live-stats-round]");
+    if (!btn) return;
+    liveStatsRoundFilter = String(btn.getAttribute("data-live-stats-round") || "1");
+    buildLiveStatsTab();
+  });
+  document.querySelector(".live-stats-view-toggle")?.addEventListener("click", (ev) => {
+    const btn = /** @type {HTMLElement} */ (ev.target)?.closest?.("[data-live-stats-view]");
+    if (!btn) return;
+    liveStatsViewMode = String(btn.getAttribute("data-live-stats-view") || "values");
+    buildLiveStatsTab();
+  });
+  document.getElementById("live-stats-search")?.addEventListener("input", () => buildLiveStatsTab());
+  if (liveStatsSortWired) return;
+  liveStatsSortWired = true;
+  document.getElementById("table-live-stats")?.querySelector("thead")?.addEventListener("click", (ev) => {
+    const th = /** @type {HTMLElement} */ (ev.target)?.closest?.("th.sortable[data-live-stats-sort]");
+    if (!th) return;
+    const key = String(th.getAttribute("data-live-stats-sort") || "");
+    if (!key) return;
+    if (liveStatsSortKey === key) liveStatsSortDir *= -1;
+    else {
+      liveStatsSortKey = key === "pos" ? "pos_sort" : key;
+      liveStatsSortDir = key === "player_display" || key === "pos" ? 1 : -1;
+    }
+    buildLiveStatsTab();
+  });
+}
+
+async function buildLiveStatsTab() {
+  wireLiveStatsUiOnce();
+  const tbody = document.querySelector("#table-live-stats tbody");
+  const countEl = document.getElementById("live-stats-count");
+  if (!tbody) return;
+  await ensureLiveStatsSourcesLoaded();
+
+  if (!liveStatsRoundFilter || !["1", "2", "3", "4", "tournament"].includes(liveStatsRoundFilter)) {
+    liveStatsRoundFilter = liveStatsDefaultRoundFilter();
+  }
+
+  document.querySelectorAll("#live-stats-round-pills .live-stats-round-pill").forEach((btn) => {
+    const on = btn.getAttribute("data-live-stats-round") === liveStatsRoundFilter;
+    btn.classList.toggle("active", on);
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+  document.querySelectorAll(".live-stats-view-btn").forEach((btn) => {
+    const on = btn.getAttribute("data-live-stats-view") === liveStatsViewMode;
+    btn.classList.toggle("active", on);
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+
+  const isTournament = liveStatsRoundFilter === "tournament";
+  const roundNum = isTournament ? NaN : Math.round(num(liveStatsRoundFilter, NaN));
+  const titleRound = document.getElementById("live-stats-title-round");
+  if (titleRound) titleRound.textContent = isTournament ? "tournament" : `round ${roundNum}`;
+
+  liveStatsRenderThead(roundNum);
+
+  const allRoundRows = collectLiveStatsRoundRows();
+  let rows = isTournament
+    ? collectLiveStatsTournamentRows(allRoundRows)
+    : allRoundRows.filter((r) => r.round === roundNum);
+
+  const q = String(document.getElementById("live-stats-search")?.value || "")
+    .trim()
+    .toLowerCase();
+  if (q) {
+    rows = rows.filter(
+      (r) =>
+        String(r.player).toLowerCase().includes(q) ||
+        String(r.player_display).toLowerCase().includes(q),
+    );
+  }
+
+  rows = liveStatsApplyRanks(rows);
+  rows = sortLiveStatsRows(rows);
+
+  document.querySelectorAll("#table-live-stats thead th.sortable").forEach((th) => {
+    const key = th.getAttribute("data-live-stats-sort");
+    const activeKey = liveStatsSortKey === "pos_sort" ? "pos" : liveStatsSortKey;
+    th.setAttribute(
+      "aria-sort",
+      key === activeKey ? (liveStatsSortDir > 0 ? "ascending" : "descending") : "none",
+    );
+  });
+
+  const rankMode = liveStatsViewMode === "ranks";
+  if (countEl) {
+    countEl.textContent = `${rows.length} player${rows.length === 1 ? "" : "s"} · ${
+      rankMode ? "field ranks" : "raw values"
+    }`;
+  }
+
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="17">No live round stats yet for this filter.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = rows
+    .map((r) => {
+      const keys = [
+        "event_to_par",
+        "thru",
+        "round_to_par",
+        "sg_putt",
+        "sg_arg",
+        "sg_app",
+        "sg_ott",
+        "sg_t2g",
+        "sg_total",
+        "pars",
+        "birdies",
+        "fairways",
+        "gir",
+        "drv_acc",
+        "gir_pct",
+      ];
+      const cells = keys
+        .map((k) => {
+          // Tournament mode: hide per-round thru / round-to-par
+          if (isTournament && (k === "thru" || k === "round_to_par")) {
+            return `<td class="num">—</td>`;
+          }
+          const c = liveStatsCell(k, r, rankMode);
+          return `<td class="${c.cls}">${c.html}</td>`;
+        })
+        .join("");
+      return `<tr>
+        <td class="ls-pos">${escapeHtml(r.pos)}</td>
+        <td class="ls-player">${escapeHtml(r.player_display || r.player)}</td>
+        ${cells}
+      </tr>`;
+    })
+    .join("");
+}
+
 function showHomeView() {
   document.querySelectorAll(".tabs .tab").forEach((b) => {
     b.classList.remove("active");
@@ -26049,6 +26633,11 @@ function showAppTab(tab) {
   }
   if (tab === "course-breakdown") {
     requestAnimationFrame(() => buildCourseBreakdownTab());
+  }
+  if (tab === "live-stats") {
+    requestAnimationFrame(() => {
+      void buildLiveStatsTab();
+    });
   }
   if (tab === "ev") {
     requestAnimationFrame(() => {

@@ -128,7 +128,7 @@
     "dev:fast": "node scripts/serve-with-refresh.mjs --fast",
     "serve:only": "npx --yes serve . -p 5173",
     "projection-tracker": "node scripts/serve-projection-tracker.mjs",
-    "projection-tracker:refresh": "node scripts/patch-birdie-fairway-mu.mjs && node scripts/bake-both-side-roi.mjs && node scripts/report-walkforward-oos-roi.mjs && node scripts/apply-dg-methodology-to-projections.mjs && node scripts/apply-hierarchical-mu-to-projections.mjs",
+    "projection-tracker:refresh": "node scripts/export-round-projection-vs-actual-csv.mjs && node scripts/promote-round-projection-vs-actual-csv.mjs && node scripts/patch-birdie-fairway-mu.mjs && node scripts/bake-both-side-roi.mjs && node scripts/report-walkforward-oos-roi.mjs && node scripts/apply-dg-methodology-to-projections.mjs && node scripts/apply-hierarchical-mu-to-projections.mjs",
     "projection-tracker:refresh:full": "node scripts/export-round-projection-vs-actual-csv.mjs --full-backtest-rebuild && node scripts/promote-round-projection-vs-actual-csv.mjs && node scripts/patch-birdie-fairway-mu.mjs && node scripts/bake-both-side-roi.mjs && node scripts/report-walkforward-oos-roi.mjs && node scripts/apply-dg-methodology-to-projections.mjs && node scripts/apply-hierarchical-mu-to-projections.mjs",
     "projection-tracker:pages": "node scripts/assemble-projection-tracker-pages.mjs",
     "matchup-tracker": "node scripts/serve-matchup-tracker.mjs",

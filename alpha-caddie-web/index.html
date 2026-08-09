@@ -13,7 +13,7 @@
     onload="this.media='all'"
   />
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" /></noscript>
-  <link rel="stylesheet" href="styles.css?v=16" />
+  <link rel="stylesheet" href="styles.css?v=17" />
 </head>
 <body>
   <header class="app-nav">
@@ -48,6 +48,7 @@
       <button type="button" class="tab" data-tab="course-breakdown" role="tab">Course breakdown</button>
       <button type="button" class="tab" data-tab="matchup-analysis" role="tab">Matchup Analysis Tool</button>
       <button type="button" class="tab" data-tab="ev" role="tab">Odds Screen</button>
+      <button type="button" class="tab" data-tab="live-stats" role="tab">Live Stats</button>
     </nav>
 
     <p id="data-status-primary" class="data-status-primary note tools-only" aria-live="polite" hidden></p>
@@ -94,6 +95,11 @@
           <span class="home-card-icon" aria-hidden="true">EV</span>
           <span class="home-card-title">Odds Screen</span>
           <span class="home-card-desc">Best prices vs devigged market average and DataGolf fair odds.</span>
+        </button>
+        <button type="button" class="home-card" data-go-tab="live-stats" role="listitem">
+          <span class="home-card-icon" aria-hidden="true">LS</span>
+          <span class="home-card-title">Live Stats</span>
+          <span class="home-card-desc">Current tournament round-by-round: score, birdies, GIR, fairways, and strokes gained.</span>
         </button>
       </div>
     </section>
@@ -790,6 +796,55 @@
       </div>
     </section>
 
+    <!-- Live Stats -->
+    <section id="panel-live-stats" class="panel live-stats-panel" role="tabpanel" hidden>
+      <div class="ev-panel-head">
+        <h2 class="ev-devig-sr-only">Live Stats</h2>
+      </div>
+
+      <div class="live-stats-round-bar" role="group" aria-label="Filter stats by round">
+        <span class="live-stats-round-bar-label">Filter stats by round</span>
+        <div class="live-stats-round-pills" id="live-stats-round-pills">
+          <button type="button" class="live-stats-round-pill" data-live-stats-round="tournament">Tournament</button>
+          <button type="button" class="live-stats-round-pill" data-live-stats-round="1">Round 1</button>
+          <button type="button" class="live-stats-round-pill" data-live-stats-round="2">Round 2</button>
+          <button type="button" class="live-stats-round-pill" data-live-stats-round="3">Round 3</button>
+          <button type="button" class="live-stats-round-pill" data-live-stats-round="4">Round 4</button>
+        </div>
+      </div>
+
+      <div class="live-stats-toolbar">
+        <label class="live-stats-search-wrap">
+          <span class="live-stats-search-icon" aria-hidden="true">⌕</span>
+          <input
+            type="search"
+            id="live-stats-search"
+            class="live-stats-search"
+            placeholder="Search"
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="Search golfer"
+          />
+        </label>
+        <p class="live-stats-title" id="live-stats-title">
+          <span class="live-stats-live-dot" aria-hidden="true"></span>
+          Live Course Insights — <span id="live-stats-title-round">round 3</span>
+        </p>
+        <div class="live-stats-view-toggle" role="group" aria-label="Values or ranks">
+          <button type="button" class="live-stats-view-btn active" data-live-stats-view="values" aria-pressed="true">Values</button>
+          <button type="button" class="live-stats-view-btn" data-live-stats-view="ranks" aria-pressed="false">Ranks</button>
+        </div>
+      </div>
+
+      <div class="table-wrap leaderboard-card live-stats-table-wrap">
+        <table class="data-table live-stats-table" id="table-live-stats">
+          <thead id="live-stats-thead"></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="note live-stats-footnote" id="live-stats-count" aria-live="polite"></p>
+    </section>
+
     <!-- Odds screen -->
     <section id="panel-ev" class="panel" role="tabpanel" hidden>
       <div class="ev-panel-head">
@@ -1325,6 +1380,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=362"></script>
+  <script src="app.js?v=364"></script>
 </body>
 </html>

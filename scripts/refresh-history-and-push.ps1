@@ -196,6 +196,7 @@ if ($LiveWeekOnly) {
   $env:GOLF_FIELD_DAY_COUNTING_LIFT_FRAC = "0"
   $env:GOLF_WITHIN_EVENT_COUNTING_BLEND = "0"
   Write-Host 'LiveWeekOnly (fast): projections + book odds + course-as-of repair + weather.'
+  Write-Host 'Live Stats: refreshed via fetch:in-play + pgatouR (live-in-play.json + pgatour_event_rounds.json).'
   Write-Host 'μ recipe: hierarchical (no book align, no both-side chrono bias).'
   Write-Host 'Skipped: history shards, trackers, hole-prop scrapes, SG-distance rebuild, CSV merges, finish-tool, book-cal, ROI backtests.'
   Write-Host 'Full rebuild (Trends/trackers/hole props): npm run push:all'

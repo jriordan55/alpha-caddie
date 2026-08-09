@@ -195,8 +195,14 @@ function fillMarketSelects() {
     if ([...sel.options].some((o) => o.value === cur)) sel.value = cur;
   }
   const events = [...new Set((BETS?.bets || []).map((b) => b.event).filter(Boolean))];
+  const liveEv = String(BETS?.live_event || ROI?.excluded_live_event || "").trim();
   const order = ROI?.event_order || [];
   events.sort((a, b) => {
+    if (liveEv) {
+      const aLive = a === liveEv || /wyndham/i.test(a) && /wyndham/i.test(liveEv);
+      const bLive = b === liveEv || /wyndham/i.test(b) && /wyndham/i.test(liveEv);
+      if (aLive !== bLive) return aLive ? -1 : 1;
+    }
     const ia = order.indexOf(a);
     const ib = order.indexOf(b);
     if (ia >= 0 && ib >= 0) return ia - ib;
@@ -233,7 +239,8 @@ function histFiltered() {
 }
 
 function renderHist() {
-  const rows = histFiltered();
+  // Newest first so Fairways-first bake order doesn't fill the visible window alone.
+  const rows = sortBetsChrono(histFiltered()).reverse();
   let pnl = 0;
   let w = 0;
   let l = 0;
@@ -252,12 +259,22 @@ function renderHist() {
     <span>PnL <strong class="${clsSigned(pnl)}">${fmtMoney(pnl)}</strong></span>
     <span>ROI <strong class="${clsSigned(roi)}">${fmtPct(roi)}</strong></span>
   `;
-  const show = rows.slice(0, 500);
-  $("hist-table").querySelector("tbody").innerHTML = show
-    .map((b) => {
-      const resCls = b.result === "W" ? "pos" : b.result === "L" ? "neg" : "";
-      const bookLabel = b.book_label || b.book_id || "—";
-      return `<tr>
+  const show = rows.slice(0, 800);
+  const note = $("hist-table-note");
+  if (note) {
+    const liveN = rows.filter((b) => b.live_week).length;
+    const liveLabel = BETS?.live_event ? ` · ${liveN} ${BETS.live_event}` : liveN ? ` · ${liveN} live-week` : "";
+    note.textContent =
+      rows.length > show.length
+        ? `Showing ${show.length} of ${rows.length} graded bets (newest first, all markets mixed)${liveLabel}. Filter by market/event to focus.`
+        : `${rows.length} graded bets (newest first)${liveLabel}.`;
+  }
+  $("hist-table").querySelector("tbody").innerHTML = show.length
+    ? show
+        .map((b) => {
+          const resCls = b.result === "W" ? "pos" : b.result === "L" ? "neg" : "";
+          const bookLabel = b.book_label || b.book_id || "—";
+          return `<tr>
         <td>${b.event}</td>
         <td class="num">${b.round ?? ""}</td>
         <td>${b.player || ""}</td>
@@ -271,16 +288,26 @@ function renderHist() {
         <td class="${resCls}">${b.result}</td>
         <td class="num ${clsSigned(b.pnl)}">${fmtMoney(b.pnl)}</td>
       </tr>`;
-    })
-    .join("");
+        })
+        .join("")
+    : `<tr><td colspan="12">No graded bets for this filter.</td></tr>`;
 }
 
 function bookPropPack(book) {
   if (!LIVE_PROPS) return {};
-  const pre = LIVE_PROPS[`pre_round_${book.short}`];
-  const live = LIVE_PROPS[`live_${book.short}`];
-  if (pre && Object.keys(pre).length) return pre;
-  return live || {};
+  const pre = LIVE_PROPS[`pre_round_${book.short}`] || {};
+  const live = LIVE_PROPS[`live_${book.short}`] || {};
+  const rnd = Math.round(Number(PROJ?.display_round || 1)) || 1;
+  const packHasRound = (pack, r) =>
+    Object.keys(pack).some((k) => {
+      const parts = String(k).split("|");
+      return parts.length >= 3 && parts[1] === String(r);
+    });
+  // Prefer packs that match display_round (frozen pre_round R1 must not hide Sunday live lines).
+  if (packHasRound(live, rnd)) return live;
+  if (packHasRound(pre, rnd)) return pre;
+  if (Object.keys(live).length) return live;
+  return pre;
 }
 
 function livePicks() {
@@ -290,8 +317,10 @@ function livePicks() {
   const bookFilter = $("live-book")?.value || "";
   const gapMode = $("live-gap").value;
   const rnd = Math.round(Number(PROJ.display_round || 1)) || 1;
+  // Pure model μ by default — chrono live_bias only if baked into projections (legacy).
+  // When bias is not on the file, do NOT subtract live_bias in the UI.
   const biasAlreadyApplied = Boolean(PROJ?.both_side_bias_applied?.at);
-  const bias = biasAlreadyApplied ? {} : BETS?.live_bias || ROI?.live_bias || {};
+  const bias = {};
   const out = [];
   const books = bookFilter
     ? LIVE_BOOKS.filter((b) => b.id === bookFilter)
@@ -363,7 +392,7 @@ function renderLive() {
   if (!PROJ) {
     note.textContent = "No projections.json — run refresh:live / apply:dg-methodology.";
   } else {
-    note.textContent = `${PROJ.event_name || "Live"} · R${PROJ.display_round || "?"} · μ corrected by chrono bias · all sportsbooks · only both-side+ markets`;
+    note.textContent = `${PROJ.event_name || "Live"} · R${PROJ.display_round || "?"} · raw hierarchical μ (weather + wave) · all sportsbooks · only both-side+ markets`;
   }
   $("live-table").querySelector("tbody").innerHTML = picks.length
     ? picks
@@ -417,6 +446,10 @@ function anFiltered() {
 
 function sortBetsChrono(bets) {
   return [...bets].sort((a, b) => {
+    // Live-week grades after hist when timestamps missing/equal (newest-first UI reverses this).
+    const la = Boolean(a.live_week);
+    const lb = Boolean(b.live_week);
+    if (la !== lb) return la ? 1 : -1;
     const ta = betTs(a);
     const tb = betTs(b);
     const fa = Number.isFinite(ta);
@@ -722,7 +755,7 @@ function setTab(tab) {
     if (title) title.textContent = "Both-side edge";
     if (lede) {
       lede.textContent =
-        "Only markets where OVER and UNDER both print historically. Gap + bias from walk-forward bake.";
+        "Only markets where OVER and UNDER both print historically. Raw hierarchical μ (weather + tee wave) — no chrono/loo bias. Gap from walk-forward bake.";
     }
   }
   if (ACTIVE_TAB === "both-side") renderAnalytics();

@@ -106,8 +106,13 @@ export function evaluateBothSideBetSignal(opts = {}) {
   let mu = modelMuForRoiMarket(opts.player, roiMarket);
   if (!Number.isFinite(mu)) return empty("no_mu");
 
-  // Tracker subtracts live_bias from raw μ; skip if already baked into projections.
-  if (!opts.biasAlreadyApplied) {
+  // Chrono live_bias is opt-in only (GOLF_APPLY_BOTH_SIDE_BIAS=1).
+  // Default: pure hierarchical / DG μ — never subtract bias at bet time.
+  const applyLiveBias =
+    opts.applyLiveBias === true ||
+    (opts.applyLiveBias !== false &&
+      ["1", "true", "yes", "on"].includes(String(process.env.GOLF_APPLY_BOTH_SIDE_BIAS || "").trim().toLowerCase()));
+  if (applyLiveBias && !opts.biasAlreadyApplied) {
     const b = num(biasMap[roiMarket], 0);
     if (Number.isFinite(b)) mu -= b;
   }
@@ -268,8 +273,14 @@ export function syncLiveEventBookProps(payload, webRoot = WEB) {
     const live = byShort[b.short];
     if (Object.keys(live).length) {
       next[liveKey] = live;
-      // Freeze pre-round once set (same as historic DK behavior).
-      next[preKey] = prev[preKey] && Object.keys(prev[preKey] || {}).length ? prev[preKey] : live;
+      // Keep prior pre_round snapshot only if it already matches this display_round.
+      // Otherwise refresh pre_round so tracker live picks aren't stuck on R1 lines.
+      const prevPre = prev[preKey] || {};
+      const prevMatchesRound = Object.keys(prevPre).some((k) => {
+        const parts = String(k).split("|");
+        return parts.length >= 3 && parts[1] === String(displayRound);
+      });
+      next[preKey] = prevMatchesRound ? prevPre : live;
       total += Object.keys(live).length;
     }
   }

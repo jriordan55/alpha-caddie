@@ -6398,3 +6398,198 @@ dialog,
   flex-direction: column;
   gap: 14px;
 }
+
+/* —— Live Stats (Live Course Insights) —— */
+.live-stats-panel {
+  --ls-heat-pos-5-bg: #157a38;
+  --ls-heat-pos-5-fg: #fff;
+  --ls-heat-pos-4-bg: #3fa84f;
+  --ls-heat-pos-4-fg: #0a1a0c;
+  --ls-heat-pos-3-bg: #7ec86a;
+  --ls-heat-pos-3-fg: #0a1a0c;
+  --ls-heat-pos-2-bg: #b7e0a8;
+  --ls-heat-pos-2-fg: #122016;
+  --ls-heat-pos-1-bg: #dff3d6;
+  --ls-heat-pos-1-fg: #1a281c;
+  --ls-heat-zero-bg: transparent;
+  --ls-heat-neg-1-bg: #f3d0d0;
+  --ls-heat-neg-1-fg: #2a1212;
+  --ls-heat-neg-2-bg: #e8a8a8;
+  --ls-heat-neg-2-fg: #2a1212;
+  --ls-heat-neg-3-bg: #d97878;
+  --ls-heat-neg-3-fg: #1a0a0a;
+  --ls-pill-active: #c9a227;
+}
+
+.live-stats-round-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.18);
+}
+.live-stats-round-bar-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--golf-text-muted);
+}
+.live-stats-round-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.live-stats-round-pill {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--golf-text-muted);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 8px 12px 10px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  border-radius: 2px 2px 0 0;
+}
+.live-stats-round-pill:hover {
+  color: var(--golf-text);
+}
+.live-stats-round-pill.active {
+  color: var(--golf-text);
+  border-bottom-color: var(--ls-pill-active);
+}
+
+.live-stats-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+  margin: 0 0 12px;
+}
+.live-stats-search-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-width: min(220px, 100%);
+}
+.live-stats-search-icon {
+  position: absolute;
+  left: 10px;
+  color: var(--golf-text-muted);
+  pointer-events: none;
+  font-size: 0.9rem;
+}
+.live-stats-search {
+  width: 100%;
+  padding: 8px 10px 8px 28px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--golf-text);
+  font: inherit;
+}
+.live-stats-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--golf-text);
+}
+.live-stats-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e23b3b;
+  box-shadow: 0 0 0 3px rgba(226, 59, 59, 0.25);
+  flex: 0 0 auto;
+}
+.live-stats-view-toggle {
+  margin-left: auto;
+  display: inline-flex;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.2);
+}
+.live-stats-view-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--golf-text-muted);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 7px 14px;
+  cursor: pointer;
+}
+.live-stats-view-btn.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--golf-text);
+}
+
+.live-stats-table-wrap {
+  overflow-x: auto;
+}
+.live-stats-table {
+  font-size: 0.82rem;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.live-stats-table thead th {
+  white-space: nowrap;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.04);
+}
+.live-stats-table tbody td {
+  white-space: nowrap;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.live-stats-table .ls-player {
+  font-weight: 600;
+  text-align: left;
+}
+.live-stats-table .ls-pos {
+  font-variant-numeric: tabular-nums;
+  color: var(--golf-text-muted);
+}
+.live-stats-table .ls-score-under {
+  color: #e23b3b;
+  font-weight: 700;
+}
+.live-stats-table .ls-rank {
+  font-variant-numeric: tabular-nums;
+  color: var(--golf-text-muted);
+}
+.live-stats-table .ls-heat {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  text-align: center;
+  border-radius: 2px;
+}
+.live-stats-table .ls-heat-pos-5 { background: var(--ls-heat-pos-5-bg); color: var(--ls-heat-pos-5-fg); }
+.live-stats-table .ls-heat-pos-4 { background: var(--ls-heat-pos-4-bg); color: var(--ls-heat-pos-4-fg); }
+.live-stats-table .ls-heat-pos-3 { background: var(--ls-heat-pos-3-bg); color: var(--ls-heat-pos-3-fg); }
+.live-stats-table .ls-heat-pos-2 { background: var(--ls-heat-pos-2-bg); color: var(--ls-heat-pos-2-fg); }
+.live-stats-table .ls-heat-pos-1 { background: var(--ls-heat-pos-1-bg); color: var(--ls-heat-pos-1-fg); }
+.live-stats-table .ls-heat-zero { background: var(--ls-heat-zero-bg); }
+.live-stats-table .ls-heat-neg-1 { background: var(--ls-heat-neg-1-bg); color: var(--ls-heat-neg-1-fg); }
+.live-stats-table .ls-heat-neg-2 { background: var(--ls-heat-neg-2-bg); color: var(--ls-heat-neg-2-fg); }
+.live-stats-table .ls-heat-neg-3 { background: var(--ls-heat-neg-3-bg); color: var(--ls-heat-neg-3-fg); }
+.live-stats-footnote {
+  margin-top: 8px;
+}

@@ -15,7 +15,7 @@
       <div>
         <p class="eyebrow">AlphaCaddie</p>
         <h1 id="page-title">Both-side edge</h1>
-        <p class="lede" id="page-lede">Only markets where OVER and UNDER both print historically. Gap + bias from walk-forward bake.</p>
+        <p class="lede" id="page-lede">Only markets where OVER and UNDER both print historically. Raw hierarchical μ (weather + tee wave) — no chrono/loo bias. Gap from walk-forward bake.</p>
       </div>
       <div class="top-actions">
         <button type="button" class="btn" id="btn-reload">Reload</button>
@@ -144,7 +144,7 @@
       <section class="card">
         <div class="card-head">
           <h2>Graded both-side bets</h2>
-          <p class="note">Historical lines across all sportsbooks under each market’s recommended gap + bias. Flat $100.</p>
+          <p class="note">Historical lines across all sportsbooks under each market’s recommended gap on raw model μ (no bias). Flat $100.</p>
         </div>
         <div class="filters">
           <label>Market
@@ -165,6 +165,7 @@
           </label>
         </div>
         <div class="kpi-row" id="hist-kpis"></div>
+        <p class="note" id="hist-table-note"></p>
         <div class="table-scroll">
           <table id="hist-table">
             <thead>

@@ -1,10 +1,16 @@
 #!/usr/bin/env node
 /**
- * Sweep gap + optional μ bias so OVER and UNDER are both profitable vs all sportsbooks
- * (DraftKings, PrizePicks, Sleeper, Underdog, FanDuel, Caesars, Kalshi).
+ * Sweep gap (raw model μ — no chrono/loo bias) so OVER and UNDER are both profitable
+ * vs all sportsbooks (DraftKings, PrizePicks, Sleeper, Underdog, FanDuel, Caesars, Kalshi).
  *
  *   node scripts/bake-both-side-roi.mjs
  *   → data/both_side_roi.json + data/both_side_bets.json
+ *
+ * Policy fit excludes the live event in projections.json (no leakage into gap pick).
+ * Graded bets always include completed live-week rounds under the frozen policy.
+ *
+ * Bias modes are locked to "none" (raw hierarchical / export μ with weather + wave already in lines).
+ * Opt back into chrono/loo sweep: GOLF_BOTH_SIDE_BIAS_SWEEP=1
  */
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { Readable } from "stream";
@@ -48,8 +54,9 @@ const ASYM_GAPS = [
   [1.25, 0.75],
 ];
 const MIN_BETS_PER_SIDE = 40;
+/** Soft floor so GIR (39 overs at gap 0.5/0.75) can clear both-side+ without thinning other markets. */
+const MIN_BETS_SOFT = 35;
 const STAKE = 100;
-const EXCLUDE_EVENTS = ["Wyndham Championship", "Wyndham"];
 
 /**
  * Per-market American-odds floors swept with gap/bias.
@@ -60,7 +67,15 @@ const ODDS_RULE_SWEEPS = {
   Pars: [null, { under_min_american: 0 }, { under_min_american: -110 }, { over_min_american: -110 }],
 };
 
-const BIAS_MODES = ["none", "loo", "chrono"];
+const BIAS_MODES =
+  String(process.env.GOLF_BOTH_SIDE_BIAS_SWEEP || "")
+    .trim()
+    .toLowerCase() === "1" ||
+  String(process.env.GOLF_BOTH_SIDE_BIAS_SWEEP || "")
+    .trim()
+    .toLowerCase() === "true"
+    ? ["none", "loo", "chrono"]
+    : ["none"];
 
 /** All O/U sportsbooks present in round_projection_vs_actual.csv. */
 const BOOKS = [
@@ -99,14 +114,11 @@ function loadLiveEventName() {
   }
 }
 
-function shouldExcludeEvent(event, live) {
+function isLiveEvent(event, live) {
   const e = String(event || "").trim();
-  if (!e) return true;
-  if (live && eventsLikelySame(e, live)) return true;
-  for (const x of EXCLUDE_EVENTS) {
-    if (eventsLikelySame(e, x) || e.toLowerCase().includes("wyndham")) return true;
-  }
-  return false;
+  const L = String(live || "").trim();
+  if (!e || !L) return false;
+  return eventsLikelySame(e, L);
 }
 
 /** Flat $100 American-odds PnL. Push → 0. */
@@ -217,8 +229,8 @@ function evaluatePolicy(rows, gapOver, gapUnder = gapOver, oddsRule = null) {
   const o = sideStats(over);
   const u = sideStats(under);
   const bothOk =
-    o.bets >= MIN_BETS_PER_SIDE &&
-    u.bets >= MIN_BETS_PER_SIDE &&
+    o.bets >= MIN_BETS_SOFT &&
+    u.bets >= MIN_BETS_SOFT &&
     o.roi != null &&
     u.roi != null &&
     o.roi > 0 &&
@@ -289,18 +301,23 @@ function applyBias(rows, biasMode, eventOrder) {
 }
 
 function pickBest(results) {
-  const eligible = results.filter(
-    (x) =>
-      x.over.bets >= MIN_BETS_PER_SIDE &&
-      x.under.bets >= MIN_BETS_PER_SIDE &&
-      x.min_roi != null,
-  );
-  const bothPos = eligible.filter((x) => x.both_sides_positive);
-  const pool = bothPos.length ? bothPos : eligible;
+  const meets = (x, n) => x.over.bets >= n && x.under.bets >= n && x.min_roi != null;
+  const bothPos = results.filter((x) => x.both_sides_positive && meets(x, MIN_BETS_SOFT));
+  // Prefer hard sample (>=40/side) when any both-side+ policy clears it (keeps Bogeys/FW thick).
+  const bothHard = bothPos.filter((x) => meets(x, MIN_BETS_PER_SIDE));
+  const eligibleHard = results.filter((x) => meets(x, MIN_BETS_PER_SIDE));
+  const pool = bothHard.length
+    ? bothHard
+    : bothPos.length
+      ? bothPos
+      : eligibleHard;
   if (!pool.length) {
-    // Fall back to any result with max min_roi (even if thin)
     const all = [...results].sort((a, b) => (b.min_roi ?? -1e9) - (a.min_roi ?? -1e9));
-    return { best: all[0] || null, both_sides_achieved: false, note: "no policy with >=40 bets/side" };
+    return {
+      best: all[0] || null,
+      both_sides_achieved: false,
+      note: `no policy with >=${MIN_BETS_PER_SIDE} bets/side`,
+    };
   }
   pool.sort((a, b) => {
     const d = (b.min_roi ?? -1e9) - (a.min_roi ?? -1e9);
@@ -310,9 +327,11 @@ function pickBest(results) {
   return {
     best: pool[0],
     both_sides_achieved: Boolean(pool[0]?.both_sides_positive),
-    note: bothPos.length
+    note: bothHard.length
       ? null
-      : "no policy with both sides ROI>0 at >=40 bets; reporting best min(over,under) ROI",
+      : bothPos.length
+        ? `both-side+ at soft >=${MIN_BETS_SOFT} bets/side`
+        : `no policy with both sides ROI>0 at >=${MIN_BETS_SOFT} bets; reporting best min(over,under) ROI`,
   };
 }
 
@@ -336,10 +355,15 @@ async function loadRows() {
 
   /** @type {Record<string, object[]>} */
   const byMarket = Object.fromEntries(MARKETS.map((m) => [m.market, []]));
+  /** Live event rows — graded under frozen policy, never used in gap fit. */
+  /** @type {Record<string, object[]>} */
+  const byMarketLive = Object.fromEntries(MARKETS.map((m) => [m.market, []]));
   /** @type {Map<string, number>} */
   const eventTs = new Map();
   /** @type {Record<string, number>} */
   const bookCounts = Object.fromEntries(BOOKS.map((b) => [b.id, 0]));
+  /** @type {Record<string, number>} */
+  const bookCountsLive = Object.fromEntries(BOOKS.map((b) => [b.id, 0]));
 
   await new Promise((resolve, reject) => {
     Readable.from([aligned])
@@ -355,10 +379,13 @@ async function loadRows() {
         if (String(row.pricing_mode || "") !== "default") return;
         if (String(row.pricing_skill || "") !== "default") return;
         const event = String(row.event_name || "").trim();
-        if (shouldExcludeEvent(event, live)) return;
+        if (!event) return;
+        const liveWeek = isLiveEvent(event, live);
+        const dest = liveWeek ? byMarketLive : byMarket;
+        const counts = liveWeek ? bookCountsLive : bookCounts;
 
         const t = parseMs(row.projections_updated_at) || parseMs(row.exported_at);
-        if (Number.isFinite(t)) {
+        if (!liveWeek && Number.isFinite(t)) {
           const prev = eventTs.get(event);
           if (prev == null || t < prev) eventTs.set(event, t);
         }
@@ -387,8 +414,8 @@ async function loadRows() {
             if (!Number.isFinite(book)) continue;
             if (!Number.isFinite(overOdds) || !Number.isFinite(underOdds) || overOdds === 0 || underOdds === 0)
               continue;
-            bookCounts[bk.id]++;
-            byMarket[m.market].push({
+            counts[bk.id]++;
+            dest[m.market].push({
               event,
               round,
               dg_id,
@@ -402,6 +429,7 @@ async function loadRows() {
               book_id: bk.id,
               book_label: bk.label,
               t: Number.isFinite(t) ? t : 0,
+              live_week: liveWeek,
             });
           }
         }
@@ -425,11 +453,55 @@ async function loadRows() {
     }
   }
 
-  return { byMarket, eventOrder, live, bookCounts };
+  return { byMarket, byMarketLive, eventOrder, live, bookCounts, bookCountsLive };
+}
+
+/** Append policy-matching graded bets from rows into betRows. */
+function appendGradedBets(betRows, rows, rec, liveWeek) {
+  const gapOver = Number(rec.gap_over ?? rec.gap);
+  const gapUnder = Number(rec.gap_under ?? rec.gap);
+  const underMin = rec.odds_rule?.under_min_american;
+  const overMin = rec.odds_rule?.over_min_american;
+  for (const r of rows) {
+    const mu = Number.isFinite(r.adjModel) ? r.adjModel : r.model;
+    const delta = mu - r.book;
+    let side = null;
+    if (delta > gapOver) side = "OVER";
+    else if (delta < -gapUnder) side = "UNDER";
+    if (!side) continue;
+    const odds = side === "OVER" ? r.overOdds : r.underOdds;
+    if (side === "UNDER" && Number.isFinite(underMin) && !(odds >= underMin)) continue;
+    if (side === "OVER" && Number.isFinite(overMin) && !(odds >= overMin)) continue;
+    const result = gradeSide(r.actual, r.book, side);
+    if (!result) continue;
+    const pnl = americanPnlDollars(result, odds);
+    if (!Number.isFinite(pnl) && result !== "P") continue;
+    const ts = Number(r.t) || 0;
+    betRows.push({
+      event: r.event,
+      round: r.round,
+      date: ts ? new Date(ts).toISOString().slice(0, 10) : "",
+      ts: ts || null,
+      player: r.player,
+      dg_id: r.dg_id,
+      market: r.market,
+      book_id: r.book_id,
+      book_label: r.book_label,
+      side,
+      model: Math.round(mu * 100) / 100,
+      book: r.book,
+      gap: Math.round(delta * 100) / 100,
+      odds,
+      actual: r.actual,
+      result,
+      pnl: result === "P" ? 0 : Math.round(pnl * 100) / 100,
+      live_week: Boolean(liveWeek),
+    });
+  }
 }
 
 async function main() {
-  const { byMarket, eventOrder, live, bookCounts } = await loadRows();
+  const { byMarket, byMarketLive, eventOrder, live, bookCounts, bookCountsLive } = await loadRows();
   /** @type {object} */
   const out = {
     generated_at: new Date().toISOString(),
@@ -438,21 +510,27 @@ async function main() {
     pricing_skill: "default",
     books: BOOKS.map((b) => ({ id: b.id, label: b.label })),
     book_graded_rows: bookCounts,
+    book_graded_rows_live: bookCountsLive,
     stake_dollars: STAKE,
     min_bets_per_side: MIN_BETS_PER_SIDE,
     gaps: GAPS,
     asym_gaps: ASYM_GAPS,
     bias_modes: BIAS_MODES,
+    /** Live event is graded into bets but excluded from policy fit. */
+    excluded_live_event_from_fit: live || null,
     excluded_live_event: live || null,
-    excluded_hardcoded: EXCLUDE_EVENTS,
     event_order: eventOrder,
     markets: {},
     recommended: {},
   };
 
+  const liveFitRows = Object.values(byMarketLive).reduce((n, rows) => n + rows.length, 0);
   console.log("\nBoth-side ROI bake (model vs all sportsbooks, flat $100)\n");
   console.log(
-    `Graded book rows: ${BOOKS.map((b) => `${b.label}=${bookCounts[b.id] || 0}`).join(" · ")}\n`,
+    `Graded book rows (fit): ${BOOKS.map((b) => `${b.label}=${bookCounts[b.id] || 0}`).join(" · ")}`,
+  );
+  console.log(
+    `Graded book rows (live ${live || "—"}): ${BOOKS.map((b) => `${b.label}=${bookCountsLive[b.id] || 0}`).join(" · ")} (${liveFitRows} market rows)\n`,
   );
   console.log(
     `${"Market".padEnd(14)} ${"Both+".padEnd(6)} ${"Gap".padEnd(6)} ${"Bias".padEnd(8)} ${"O n".padStart(5)} ${"O ROI".padStart(8)} ${"U n".padStart(5)} ${"U ROI".padStart(8)} ${"minROI".padStart(8)} ${"CombPnL".padStart(10)}`,
@@ -496,6 +574,7 @@ async function main() {
     const { best, both_sides_achieved, note } = pickBest(sweep);
     out.markets[m.market] = {
       n_graded_rows: baseRows.length,
+      n_graded_rows_live: byMarketLive[m.market]?.length || 0,
       sweep: sweep.map(({ bias_by_event, ...rest }) => rest),
       best,
       both_sides_achieved,
@@ -540,7 +619,7 @@ async function main() {
     recommended_combined_bets: combinedBets,
   };
 
-  /** Live-week μ correction = chrono bias after seeing all graded history. */
+  /** Live-week μ correction — always 0 (raw hierarchical μ; weather/wave already in export lines). */
   /** @type {Record<string, number>} */
   const liveBias = {};
   /** @type {object[]} */
@@ -549,61 +628,34 @@ async function main() {
   for (const m of MARKETS) {
     const rec = out.recommended[m.market];
     if (!rec) continue;
-    const baseRows = byMarket[m.market].map((r) => ({ ...r }));
-    const biasMeta = applyBias(baseRows, rec.bias, eventOrder);
-    const biases = Object.values(biasMeta.biasByEvent || {}).filter((x) => Number.isFinite(x));
-    // Next-event (live) bias ≈ mean residual over all unique player×event×round rows.
-    // Pass full rows so uniqueModelRows can dedupe (stripping identity collapses to 1 row).
-    liveBias[m.market] =
-      rec.bias === "none"
-        ? 0
-        : biases.length
-          ? Math.round(meanBias(baseRows) * 1000) / 1000
-          : 0;
-
+    liveBias[m.market] = 0;
     if (!rec.both_sides_positive) continue;
-    const gapOver = Number(rec.gap_over ?? rec.gap);
-    const gapUnder = Number(rec.gap_under ?? rec.gap);
-    const underMin = rec.odds_rule?.under_min_american;
-    const overMin = rec.odds_rule?.over_min_american;
-    for (const r of baseRows) {
-      const mu = Number.isFinite(r.adjModel) ? r.adjModel : r.model;
-      const delta = mu - r.book;
-      let side = null;
-      if (delta > gapOver) side = "OVER";
-      else if (delta < -gapUnder) side = "UNDER";
-      if (!side) continue;
-      const odds = side === "OVER" ? r.overOdds : r.underOdds;
-      if (side === "UNDER" && Number.isFinite(underMin) && !(odds >= underMin)) continue;
-      if (side === "OVER" && Number.isFinite(overMin) && !(odds >= overMin)) continue;
-      const result = gradeSide(r.actual, r.book, side);
-      if (!result) continue;
-      const pnl = americanPnlDollars(result, odds);
-      if (!Number.isFinite(pnl) && result !== "P") continue;
-      const ts = Number(r.t) || 0;
-      betRows.push({
-        event: r.event,
-        round: r.round,
-        date: ts ? new Date(ts).toISOString().slice(0, 10) : "",
-        ts: ts || null,
-        player: r.player,
-        dg_id: r.dg_id,
-        market: m.market,
-        book_id: r.book_id,
-        book_label: r.book_label,
-        side,
-        model: Math.round(mu * 100) / 100,
-        book: r.book,
-        gap: Math.round(delta * 100) / 100,
-        odds,
-        actual: r.actual,
-        result,
-        pnl: result === "P" ? 0 : Math.round(pnl * 100) / 100,
-      });
-    }
+
+    const histRows = byMarket[m.market].map((r) => ({ ...r }));
+    applyBias(histRows, "none", eventOrder);
+    appendGradedBets(betRows, histRows, rec, false);
+
+    const liveRows = (byMarketLive[m.market] || []).map((r) => ({ ...r }));
+    applyBias(liveRows, "none", eventOrder);
+    appendGradedBets(betRows, liveRows, rec, true);
   }
 
+  const liveBetN = betRows.filter((b) => b.live_week).length;
   out.live_bias = liveBias;
+  // Newest first + market mix so UI head-slices aren't Fairways-only (bets are appended per market).
+  betRows.sort((a, b) => {
+    const ta = Number(a.ts) || Date.parse(a.date) || 0;
+    const tb = Number(b.ts) || Date.parse(b.date) || 0;
+    if (ta !== tb) return tb - ta;
+    // Live week first when timestamps collide / missing
+    if (Boolean(a.live_week) !== Boolean(b.live_week)) return a.live_week ? -1 : 1;
+    const rd = (Number(b.round) || 0) - (Number(a.round) || 0);
+    if (rd !== 0) return rd;
+    return (
+      String(a.market || "").localeCompare(String(b.market || "")) ||
+      String(a.player || "").localeCompare(String(b.player || ""))
+    );
+  });
   writeFileSync(OUT, `${JSON.stringify(out, null, 2)}\n`);
   const betsPath = join(WEB, "data", "both_side_bets.json");
   writeFileSync(
@@ -615,6 +667,8 @@ async function main() {
         policy: out.recommended,
         live_bias: liveBias,
         both_side_positive_markets: bothPlusMarkets,
+        live_event: live || null,
+        live_week_bets: liveBetN,
         bets: betRows,
       },
       null,
@@ -628,7 +682,7 @@ async function main() {
   console.log(
     `Overall combined PnL under recommended policies: ${fmtMoney(combinedAll)} on ${combinedBets} bets`,
   );
-  console.log(`Graded bet rows: ${betRows.length}`);
+  console.log(`Graded bet rows: ${betRows.length} (live week: ${liveBetN})`);
   console.log(`\nWrote ${OUT}`);
   console.log(`Wrote ${betsPath}\n`);
 }

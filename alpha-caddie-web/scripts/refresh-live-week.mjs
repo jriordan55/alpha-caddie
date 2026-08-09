@@ -5,6 +5,10 @@
  * within-event form, weather bake, unified factors, odds audit CSVs, vs-actual (projection tracker),
  * and prior-round Trends patches.
  *
+ * **Live Stats tab** is fed here: live-in-play.json (LTS SG/FW/GIR%/thru) +
+ * data/pgatour_event_rounds.json (birdies/pars) + projections `live_round_actuals_by_dg`.
+ * Keep fetch:in-play + pgatouR on every push:live.
+ *
  * Round O/U counting markets match sportsbooks:
  *   Birdies = birdies + eagles (Birdies or Better)
  *   Bogeys  = bogeys + doubles (Bogeys or Worse)
@@ -44,7 +48,7 @@
  *   DK_HEADLESS / CZR_HEADLESS / FD_HEADLESS =0 on Windows/macOS (dkOuScrapeEnv) — required for book sessions
  */
 import { spawnSync } from "child_process";
-import { copyFileSync, existsSync, mkdirSync } from "fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { fastHistoryBuildEnv } from "./historical-rounds-merge-env.mjs";
@@ -287,6 +291,32 @@ run(
   "fetch-live-in-play.mjs",
   "Live feeds: preds/in-play + field-updates + preds/live-tournament-stats (R1–R4) → live-in-play.json",
 );
+
+// Live Stats tab coverage (also used by Historical Trends live merge).
+try {
+  const livePath = path.join(WEB_ROOT, "live-in-play.json");
+  if (existsSync(livePath)) {
+    const live = JSON.parse(readFileSync(livePath, "utf8"));
+    const byRound = live?.live_tournament_stats_by_round || {};
+    const actuals = live?.live_round_actuals_by_dg || {};
+    const roundCounts = {};
+    for (const [k, pack] of Object.entries(byRound)) {
+      roundCounts[`R${k}`] = Array.isArray(pack?.live_stats) ? pack.live_stats.length : 0;
+    }
+    let scored = 0;
+    for (const per of Object.values(actuals)) {
+      if (!per || typeof per !== "object") continue;
+      for (const act of Object.values(per)) {
+        if (Number(act?.round_score) > 0) scored += 1;
+      }
+    }
+    console.log(
+      `[refresh:live] Live Stats sources: LTS ${JSON.stringify(roundCounts)} · scored actuals ${scored} · in-play field ${Array.isArray(live?.data) ? live.data.length : 0}\n`,
+    );
+  }
+} catch (e) {
+  console.warn(`[refresh:live] Live Stats coverage log failed: ${e?.message || e}\n`);
+}
 
 if (!skipPgatour) {
   run(

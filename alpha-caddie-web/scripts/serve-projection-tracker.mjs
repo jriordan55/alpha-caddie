@@ -30,6 +30,8 @@ function runRefreshScript(rel, label) {
     env: {
       ...process.env,
       GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL_XLSX: "1",
+      // Never full-rebuild priors on tracker boot — only refresh current week + bake.
+      GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS: "0",
     },
   });
   if (r.status !== 0) {
@@ -38,10 +40,12 @@ function runRefreshScript(rel, label) {
 }
 
 if (!envTruthy("GOLF_SKIP_TRACKER_REFRESH")) {
-  // Light refresh: keep patched counting/score μ; re-bake + OOS + live apply.
-  // Full CSV rebuild: GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=1 npm run projection-tracker:refresh
+  // Keep current-week graded actuals current, then re-bake both-side bets (live week included).
+  // Full prior rebuild: GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=1 npm run projection-tracker:refresh:full
+  runRefreshScript("export-round-projection-vs-actual-csv.mjs", "Exporting O/U vs actual (current week)");
+  runRefreshScript("promote-round-projection-vs-actual-csv.mjs", "Promoting vs-actual CSV");
   runRefreshScript("patch-birdie-fairway-mu.mjs", "Patching counting/score μ (as-of)");
-  runRefreshScript("bake-both-side-roi.mjs", "Baking both-side ROI");
+  runRefreshScript("bake-both-side-roi.mjs", "Baking both-side ROI (+ live week grades)");
   runRefreshScript("report-walkforward-oos-roi.mjs", "Refreshing walkforward OOS ROI");
   runRefreshScript("apply-dg-methodology-to-projections.mjs", "Applying DG μ to live projections");
   runRefreshScript("apply-hierarchical-mu-to-projections.mjs", "Applying hierarchical μ (no chrono bias)");
