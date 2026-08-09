@@ -11,9 +11,10 @@ import { reconcileHoleCountsFromScore } from "./course-round-adjustments.mjs";
 export const DEFAULT_LIVE_TOURNAMENT_STATS =
   "sg_ott,distance,accuracy,sg_app,sg_arg,gir,prox_fw,sg_putt,sg_t2g,sg_total,scrambling";
 
-export function num(v) {
+export function num(v, fallback = NaN) {
+  if (v == null || v === "") return fallback;
   const n = Number(v);
-  return Number.isFinite(n) ? n : NaN;
+  return Number.isFinite(n) ? n : fallback;
 }
 
 export function pickNum(row, aliases) {

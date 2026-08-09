@@ -6454,6 +6454,17 @@ dialog,
   color: var(--golf-text);
   border-bottom-color: var(--ls-pill-active);
 }
+.live-stats-round-pill:disabled,
+.live-stats-round-pill.is-disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+  border-bottom-color: transparent;
+}
+.live-stats-round-pill:disabled:hover,
+.live-stats-round-pill.is-disabled:hover {
+  color: var(--golf-text-muted);
+}
 
 .live-stats-toolbar {
   display: flex;

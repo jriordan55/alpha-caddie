@@ -557,6 +557,7 @@ const PROPS_COURSE_WINDOW_MAX_CHART_BARS = 96;
 const PROPS_COURSE_INDEX_PLAYER_CHUNK = 8;
 
 function num(v, d) {
+  if (v == null || v === "") return d;
   const n = Number(v);
   return Number.isFinite(n) ? n : d;
 }
@@ -25995,26 +25996,101 @@ let liveStatsSortWired = false;
 let liveStatsUiWired = false;
 
 const LIVE_STATS_SG_KEYS = ["sg_putt", "sg_arg", "sg_app", "sg_ott", "sg_t2g", "sg_total"];
+/** Columns colored vs field average (green better / red worse). */
+const LIVE_STATS_HEAT_KEYS = [
+  "event_to_par",
+  "round_to_par",
+  "sg_putt",
+  "sg_arg",
+  "sg_app",
+  "sg_ott",
+  "sg_t2g",
+  "sg_total",
+  "pars",
+  "birdies",
+  "bogeys",
+  "fairways",
+  "gir",
+  "drv_acc",
+  "gir_pct",
+];
+const LIVE_STATS_LOWER_BETTER = new Set(["event_to_par", "round_to_par", "bogeys", "pos_sort"]);
 
 async function ensureLiveStatsSourcesLoaded() {
   await ensurePgatourEventRoundsLoaded();
-  if (lastLiveInPlayBundleForHistory || isFileProtocol()) return;
-  try {
-    const res = await fetch(cacheBustFetchUrl(liveInPlayJsonUrl()), { cache: "no-store" });
-    if (!res.ok) return;
-    const j = await res.json();
-    lastLiveInPlayBundleForHistory = liveInPlayHistoryBundleWithActuals(j);
-  } catch {
-    /* missing live file */
+  if (!lastLiveInPlayBundleForHistory && !isFileProtocol()) {
+    try {
+      const res = await fetch(cacheBustFetchUrl(liveInPlayJsonUrl()), { cache: "no-store" });
+      if (res.ok) {
+        const j = await res.json();
+        lastLiveInPlayBundleForHistory = liveInPlayHistoryBundleWithActuals(j);
+      }
+    } catch {
+      /* missing live file */
+    }
+  }
+  // Soft-load field history so SG ARG can fill from completed-round CSV merges when LTS omits it.
+  if (!isFileProtocol() && (!HISTORY._ok || HISTORY._partial)) {
+    try {
+      await loadPlayerHistory();
+    } catch {
+      /* optional */
+    }
   }
 }
 
 function liveStatsDefaultRoundFilter() {
+  const started = liveStatsStartedRoundSet();
   const display = Math.round(num(DATA?.meta?.display_round ?? DATA?.display_round, NaN));
-  if (Number.isFinite(display) && display >= 1 && display <= 4) return String(display);
-  const cap = currentTournamentCompletedRoundCap();
-  if (Number.isFinite(cap) && cap >= 1 && cap <= 4) return String(cap);
+  if (Number.isFinite(display) && started.has(display)) return String(display);
+  const liveR = currentEventLiveRoundNum();
+  if (Number.isFinite(liveR) && started.has(liveR)) return String(liveR);
+  const maxStarted = Math.max(0, ...started);
+  if (maxStarted >= 1) return String(maxStarted);
   return "1";
+}
+
+/** Rounds that have at least one real posted score (not LTS ghosts for unplayed rounds). */
+function liveStatsStartedRoundSet() {
+  /** @type {Set<number>} */
+  const started = new Set();
+  const inPlay = liveStatsInPlayByDg();
+  for (const ip of inPlay.values()) {
+    for (let rnd = 1; rnd <= 4; rnd++) {
+      if (Number.isFinite(num(ip?.[`R${rnd}`], NaN)) && num(ip[`R${rnd}`], 0) > 0) started.add(rnd);
+    }
+  }
+  const actuals = liveRoundActualsMapFromApp() || {};
+  for (const per of Object.values(actuals)) {
+    if (!per || typeof per !== "object") continue;
+    for (const [rndKey, act] of Object.entries(per)) {
+      const rnd = Math.round(num(rndKey, NaN));
+      if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
+      if (Number.isFinite(num(act?.round_score, NaN)) && num(act.round_score, 0) > 0) started.add(rnd);
+    }
+  }
+  const pgRounds = Array.isArray(PGATOUR_EVENT_ROUNDS?.rounds) ? PGATOUR_EVENT_ROUNDS.rounds : [];
+  const eventName = String(DATA?.meta?.event_name || "").trim();
+  for (const r of pgRounds) {
+    if (!r?._from_pgatour) continue;
+    if (eventName && !pgatourRowBelongsToEvent(r, eventName)) continue;
+    const rnd = Math.round(num(r.round_num, NaN));
+    if (!Number.isFinite(rnd) || rnd < 1 || rnd > 4) continue;
+    if (Number.isFinite(num(r.round_score, NaN)) && num(r.round_score, 0) > 0) started.add(rnd);
+  }
+  return started;
+}
+
+function liveStatsSgFromHistory(dg, rnd) {
+  if (!HISTORY?._ok || !HISTORY.byDgId) return null;
+  const bucket = HISTORY.byDgId[String(dg)] || HISTORY.byDgId[dg];
+  const rounds = Array.isArray(bucket?.rounds) ? bucket.rounds : [];
+  for (const row of rounds) {
+    if (!historyRoundMatchesCurrentEvent(row)) continue;
+    if (Math.round(num(row.round_num ?? row.round, NaN)) !== rnd) continue;
+    return row;
+  }
+  return null;
 }
 
 function liveStatsLtsByDgRound() {
@@ -26117,13 +26193,60 @@ function liveStatsSgHeatClass(v) {
   return "ls-heat ls-heat-zero";
 }
 
-function liveStatsBuildSgParts(act, lts) {
-  const sgOtt = num(act?.sg_ott ?? lts?.sg_ott, NaN);
-  const sgApp = num(act?.sg_app ?? lts?.sg_app, NaN);
-  let sgArg = num(act?.sg_arg ?? lts?.sg_arg, NaN);
-  const sgPutt = num(act?.sg_putt ?? lts?.sg_putt, NaN);
-  let sgT2g = num(act?.sg_t2g ?? lts?.sg_t2g, NaN);
-  let sgTotal = num(act?.sg_total ?? lts?.sg_total, NaN);
+function liveStatsVsAvgClass(key, value, mean) {
+  if (!Number.isFinite(value) || !Number.isFinite(mean)) return "";
+  const lowerBetter = LIVE_STATS_LOWER_BETTER.has(key);
+  const spread = Math.abs(mean) > 1e-6 ? Math.abs(mean) * 0.02 : 0.05;
+  const eps = Math.max(0.02, spread);
+  if (lowerBetter) {
+    if (value < mean - eps) return "ls-heat ls-heat-pos";
+    if (value > mean + eps) return "ls-heat ls-heat-neg";
+  } else {
+    if (value > mean + eps) return "ls-heat ls-heat-pos";
+    if (value < mean - eps) return "ls-heat ls-heat-neg";
+  }
+  return "ls-heat ls-heat-zero";
+}
+
+function liveStatsFieldMeans(rows) {
+  /** @type {Record<string, number>} */
+  const means = {};
+  for (const key of LIVE_STATS_HEAT_KEYS) {
+    let s = 0;
+    let n = 0;
+    for (const r of rows) {
+      const v = num(r[key], NaN);
+      if (!Number.isFinite(v)) continue;
+      s += v;
+      n++;
+    }
+    means[key] = n ? s / n : NaN;
+  }
+  return means;
+}
+
+function liveStatsBuildSgParts(act, lts, histRow) {
+  const pick = (...vals) => {
+    for (const v of vals) {
+      if (v == null || v === "") continue;
+      const n = typeof v === "number" ? v : Number(v);
+      if (Number.isFinite(n)) return n;
+    }
+    return NaN;
+  };
+  const sgOtt = pick(act?.sg_ott, lts?.sg_ott, histRow?.sg_ott);
+  const sgApp = pick(act?.sg_app, lts?.sg_app, histRow?.sg_app);
+  let sgArg = pick(
+    act?.sg_arg,
+    lts?.sg_arg,
+    lts?.arg,
+    lts?.sg_around,
+    lts?.around_the_green,
+    histRow?.sg_arg,
+  );
+  const sgPutt = pick(act?.sg_putt, lts?.sg_putt, histRow?.sg_putt);
+  let sgT2g = pick(act?.sg_t2g, lts?.sg_t2g, histRow?.sg_t2g);
+  let sgTotal = pick(act?.sg_total, lts?.sg_total, histRow?.sg_total);
   // Derive missing ARG / T2G / Total when the feed only has a subset.
   if (!Number.isFinite(sgT2g) && Number.isFinite(sgTotal) && Number.isFinite(sgPutt)) {
     sgT2g = sgTotal - sgPutt;
@@ -26175,28 +26298,29 @@ function collectLiveStatsRoundRows() {
       const act = per[String(rnd)] || per[rnd] || null;
       const lts = ltsMap.get(`${dg}|${rnd}`) || null;
       const pg = pgatourEventRoundForDg(dg, rnd);
-      const scoreCand = [num(act?.round_score, NaN), num(pg?.round_score, NaN), num(ip?.[`R${rnd}`], NaN)];
-      let score = scoreCand.find((x) => Number.isFinite(x) && x > 0);
-      // LTS `round` is round to-par (not round number).
-      const roundToParLts = num(lts?.round, NaN);
-      if (!Number.isFinite(score) && Number.isFinite(roundToParLts)) score = par + roundToParLts;
-      if (!Number.isFinite(score)) score = NaN;
+      const histRow = liveStatsSgFromHistory(dg, rnd);
+      // Require a real posted score — LTS often echoes the prior round before R4 starts.
+      const scoreCand = [
+        num(ip?.[`R${rnd}`], NaN),
+        num(act?.round_score, NaN),
+        num(pg?.round_score, NaN),
+        num(histRow?.round_score, NaN),
+      ];
+      const score = scoreCand.find((x) => Number.isFinite(x) && x > 0);
+      if (!Number.isFinite(score)) continue;
 
-      const thru = num(act?.thru ?? lts?.thru ?? (Math.round(num(ip?.round, NaN)) === rnd ? ip?.thru : NaN), NaN);
-      const hasPlay =
-        (Number.isFinite(score) && score > 0) ||
-        (Number.isFinite(thru) && thru > 0) ||
-        Number.isFinite(num(lts?.sg_ott, NaN)) ||
-        Number.isFinite(num(act?.fairways, NaN));
-      if (!hasPlay) continue;
+      const roundToParLts = num(lts?.round, NaN);
+      let thru = num(act?.thru, NaN);
+      if (!Number.isFinite(thru) && Math.round(num(ip?.round, NaN)) === rnd) thru = num(ip?.thru, NaN);
+      if (!Number.isFinite(thru) && Number.isFinite(score)) thru = 18;
 
       const roundToPar = Number.isFinite(score) && Number.isFinite(par) ? score - par : roundToParLts;
       const eventToPar = num(ip?.current_score ?? lts?.total, NaN);
       const pos = String(ip?.current_pos || lts?.position || "").trim() || "—";
-      const sg = liveStatsBuildSgParts(act, lts);
-      const birdies = birdiesPlusEaglesFromRow(pg || act || {});
-      const bogeys = bogeysPlusDoublesFromRow(pg || act || {});
-      const pars = num(pg?.pars ?? act?.pars, NaN);
+      const sg = liveStatsBuildSgParts(act, lts, histRow);
+      const birdies = birdiesPlusEaglesFromRow(pg || histRow || act || {});
+      const bogeys = bogeysPlusDoublesFromRow(pg || histRow || act || {});
+      const pars = num(pg?.pars ?? histRow?.pars ?? act?.pars, NaN);
       const fairways = Number.isFinite(num(act?.fairways, NaN))
         ? historyGirOrFairwaysCount(act.fairways, fwHoles)
         : Number.isFinite(num(lts?.accuracy, NaN))
@@ -26424,23 +26548,29 @@ function liveStatsRenderThead(roundNum) {
   </tr>`;
 }
 
-function liveStatsCell(key, row, rankMode) {
+function liveStatsCell(key, row, rankMode, means) {
+  const heat =
+    LIVE_STATS_HEAT_KEYS.includes(key) && Number.isFinite(row[key])
+      ? liveStatsVsAvgClass(key, row[key], means?.[key])
+      : "";
   if (rankMode && Number.isFinite(row[`${key}_rank`])) {
-    return { html: String(row[`${key}_rank`]), cls: "num ls-rank" };
+    return { html: String(row[`${key}_rank`]), cls: `num ls-rank ${heat}`.trim() };
   }
   if (LIVE_STATS_SG_KEYS.includes(key)) {
     const v = row[key];
-    return { html: liveStatsFmtSg(v), cls: `num ${liveStatsSgHeatClass(v)}` };
+    return { html: liveStatsFmtSg(v), cls: `num ${heat || liveStatsSgHeatClass(v)}`.trim() };
   }
   if (key === "event_to_par" || key === "round_to_par") {
     const v = row[key];
-    const cls = Number.isFinite(v) && v < 0 ? "num ls-score-under" : "num";
-    return { html: liveStatsFmtToPar(v), cls };
+    const base = Number.isFinite(v) && v < 0 ? "num ls-score-under" : "num";
+    return { html: liveStatsFmtToPar(v), cls: `${base} ${heat}`.trim() };
   }
   if (key === "thru") return { html: liveStatsFmtThru(row.thru), cls: "num" };
-  if (key === "drv_acc" || key === "gir_pct") return { html: liveStatsFmtPct(row[key]), cls: "num" };
+  if (key === "drv_acc" || key === "gir_pct") {
+    return { html: liveStatsFmtPct(row[key]), cls: `num ${heat}`.trim() };
+  }
   if (key === "pars" || key === "birdies" || key === "bogeys" || key === "fairways" || key === "gir") {
-    return { html: liveStatsFmtInt(row[key]), cls: "num" };
+    return { html: liveStatsFmtInt(row[key]), cls: `num ${heat}`.trim() };
   }
   return { html: "—", cls: "num" };
 }
@@ -26453,7 +26583,7 @@ function wireLiveStatsUiOnce() {
   }
   document.getElementById("live-stats-round-pills")?.addEventListener("click", (ev) => {
     const btn = /** @type {HTMLElement} */ (ev.target)?.closest?.("[data-live-stats-round]");
-    if (!btn) return;
+    if (!btn || btn.disabled || btn.classList.contains("is-disabled")) return;
     liveStatsRoundFilter = String(btn.getAttribute("data-live-stats-round") || "1");
     buildLiveStatsTab();
   });
@@ -26497,7 +26627,13 @@ async function buildLiveStatsTab() {
   }
 
   document.querySelectorAll("#live-stats-round-pills .live-stats-round-pill").forEach((btn) => {
-    const on = btn.getAttribute("data-live-stats-round") === liveStatsRoundFilter;
+    const key = String(btn.getAttribute("data-live-stats-round") || "");
+    const started = liveStatsStartedRoundSet();
+    const disabled = key !== "tournament" && !started.has(Math.round(num(key, NaN)));
+    btn.disabled = disabled;
+    btn.classList.toggle("is-disabled", disabled);
+    btn.title = disabled ? "Round has not started" : "";
+    const on = key === liveStatsRoundFilter;
     btn.classList.toggle("active", on);
     btn.setAttribute("aria-pressed", on ? "true" : "false");
   });
@@ -26509,6 +26645,11 @@ async function buildLiveStatsTab() {
 
   const isTournament = liveStatsRoundFilter === "tournament";
   const roundNum = isTournament ? NaN : Math.round(num(liveStatsRoundFilter, NaN));
+  const started = liveStatsStartedRoundSet();
+  if (!isTournament && Number.isFinite(roundNum) && !started.has(roundNum)) {
+    liveStatsRoundFilter = liveStatsDefaultRoundFilter();
+    return void buildLiveStatsTab();
+  }
   const titleRound = document.getElementById("live-stats-title-round");
   if (titleRound) titleRound.textContent = isTournament ? "Tournament" : `Round ${roundNum}`;
 
@@ -26530,6 +26671,7 @@ async function buildLiveStatsTab() {
     );
   }
 
+  const means = liveStatsFieldMeans(rows);
   rows = liveStatsApplyRanks(rows);
   rows = sortLiveStatsRows(rows);
 
@@ -26546,11 +26688,15 @@ async function buildLiveStatsTab() {
   if (countEl) {
     countEl.textContent = `${rows.length} player${rows.length === 1 ? "" : "s"} · ${
       rankMode ? "field ranks" : "raw values"
-    }`;
+    } · green/red vs field average`;
   }
 
   if (!rows.length) {
-    tbody.innerHTML = `<tr><td colspan="18">No live round stats yet for this filter.</td></tr>`;
+    const emptyMsg =
+      !isTournament && Number.isFinite(roundNum) && !started.has(roundNum)
+        ? `Round ${roundNum} has not started yet.`
+        : "No live round stats yet for this filter.";
+    tbody.innerHTML = `<tr><td colspan="18">${emptyMsg}</td></tr>`;
     return;
   }
 
@@ -26580,7 +26726,7 @@ async function buildLiveStatsTab() {
           if (isTournament && (k === "thru" || k === "round_to_par")) {
             return `<td class="num">—</td>`;
           }
-          const c = liveStatsCell(k, r, rankMode);
+          const c = liveStatsCell(k, r, rankMode, means);
           return `<td class="${c.cls}">${c.html}</td>`;
         })
         .join("");
