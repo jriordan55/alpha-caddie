@@ -44,6 +44,11 @@ import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { parse } from "csv-parse";
 import { eventsLikelySame, foldComparableTitle } from "./dg-events-align.mjs";
+import {
+  findArchivedLiveBundleForEvent,
+  loadPriorEventLiveArchive,
+  countPostedRounds,
+} from "./prior-event-live-archive.mjs";
 import { resolveLiveRoundActualsByDg } from "./dg-live-tournament-stats.mjs";
 import { formatCourseLabelForDisplay } from "./course-name-key.mjs";
 import {
@@ -393,10 +398,90 @@ function csvCell(v) {
 }
 
 /**
+ * Prefer the detail row with richer completed actuals (do not let a thin audit
+ * backfill wipe R2–R4 rows that already graded in a prior export).
+ */
+function detailRowActualRichness(cells, colIndex) {
+  if (!cells || !colIndex) return 0;
+  let score = 0;
+  const rs = num(cells[colIndex.actual_round_score], NaN);
+  if (Number.isFinite(rs) && rs > 0) score += 10;
+  for (const c of [
+    "actual_birdies",
+    "actual_pars",
+    "actual_bogeys",
+    "actual_gir",
+    "actual_fairways",
+  ]) {
+    const i = colIndex[c];
+    if (i == null || i < 0) continue;
+    const v = String(cells[i] ?? "").trim();
+    if (v !== "" && Number.isFinite(Number(v))) score += 1;
+  }
+  const bird = num(cells[colIndex.actual_birdies], NaN);
+  const pars = num(cells[colIndex.actual_pars], NaN);
+  const bog = num(cells[colIndex.actual_bogeys], NaN);
+  // Stub triad (0/0/0) is worse than missing.
+  if (
+    Number.isFinite(rs) &&
+    rs > 0 &&
+    (!Number.isFinite(bird) || bird === 0) &&
+    (!Number.isFinite(pars) || pars === 0) &&
+    (!Number.isFinite(bog) || bog === 0)
+  ) {
+    score -= 3;
+  }
+  const rnd = Math.round(num(cells[colIndex.round], NaN));
+  if (Number.isFinite(rnd)) score += rnd * 0.01;
+  return score;
+}
+
+function detailRowDedupeKey(cells, colIndex) {
+  const ev = String(cells[colIndex.event_name] || "").trim();
+  const dg = String(cells[colIndex.dg_id] || "").trim();
+  const rnd = String(cells[colIndex.round] || "").trim();
+  const pm = String(cells[colIndex.pricing_mode] || "default").trim();
+  const ps = String(cells[colIndex.pricing_skill] || "default").trim();
+  return `${ev}\x1f${dg}\x1f${rnd}\x1f${pm}\x1f${ps}`;
+}
+
+/** Merge cached prior CSV lines with audit backfill; keep richer actuals per player-round. */
+function mergePriorDetailLineBlocks(cachedBlocks, backfillLines, headerLine = HEADER) {
+  const hdrCols = String(headerLine || HEADER)
+    .trim()
+    .split(",");
+  /** @type {Record<string, number>} */
+  const colIndex = {};
+  hdrCols.forEach((h, i) => {
+    colIndex[h] = i;
+  });
+  /** @type {Map<string, { richness: number, line: string }>} */
+  const best = new Map();
+  const consider = (line) => {
+    const raw = String(line || "").replace(/\r?\n$/, "");
+    if (!raw) return;
+    const cells = parseCsvRow(raw);
+    if (!cells.length) return;
+    const key = detailRowDedupeKey(cells, colIndex);
+    if (!key.startsWith("\x1f") && !String(cells[colIndex.event_name] || "").trim()) return;
+    const richness = detailRowActualRichness(cells, colIndex);
+    const prev = best.get(key);
+    if (!prev || richness > prev.richness) best.set(key, { richness, line: raw + "\n" });
+  };
+  for (const block of cachedBlocks || []) {
+    for (const line of String(block || "").split(/\r?\n/)) consider(line);
+  }
+  for (const line of backfillLines || []) consider(line);
+  return [...best.values()].map((x) => x.line);
+}
+
+/**
  * Read prior-event detail rows from the existing CSV so the detail tab accumulates across events.
  * Incremental mode (GOLF_OU_BACKTEST_SINCE / auto watermark): keep all prior-event rows except
  * events that appear in the DK audit on/after sinceIso (those are re-backfilled). Do not drop
  * rows based on exported_at — that wiped history after a couple of nightly re-exports.
+ * When an event is refreshed, **merge** audit backfill with cached rows (prefer richer actuals)
+ * so R2–R4 never disappear when backfill only returns a thin R1 slice.
  * Full rebuild: GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=1.
  * Returns { priorLines: string[], priorSummarySamples: object[] }.
  */
@@ -447,6 +532,58 @@ async function loadPriorEventRows(csvPath, summaryPath, currentEventName, opts =
     }
   }
 
+  // If a prior-event live archive has later posted rounds than the cached CSV (e.g. R4 after
+  // week rollover cleared live-in-play.json), force that event into the incremental refresh set.
+  try {
+    const arch = loadPriorEventLiveArchive();
+    const hdrCols = HEADER.trim().split(",");
+    const iRound = hdrCols.indexOf("round");
+    /** @type {Map<string, Set<number>>} */
+    const csvRoundsByEvent = new Map();
+    for (const ev of priorOrder) {
+      const block = priorByEventLines.get(ev) || "";
+      const rounds = new Set();
+      for (const line of String(block).split(/\r?\n/)) {
+        if (!line.trim()) continue;
+        const cells = parseCsvRow(line);
+        const rnd = Math.round(num(cells[iRound], NaN));
+        if (Number.isFinite(rnd) && rnd >= 1 && rnd <= 4) rounds.add(rnd);
+      }
+      csvRoundsByEvent.set(ev, rounds);
+    }
+    for (const rec of Object.values(arch.events || {})) {
+      const evName = String(rec?.event_name || "").trim();
+      if (!evName || eventsLikelySame(currentEventName, evName)) continue;
+      const posted = rec?.posted_rounds || countPostedRounds(rec?.bundle);
+      const maxPosted = Math.max(
+        0,
+        ...Object.entries(posted || {})
+          .filter(([, n]) => Number(n) > 0)
+          .map(([rnd]) => Number(rnd)),
+      );
+      if (maxPosted <= 0) continue;
+      let csvMax = 0;
+      let matchedEv = "";
+      for (const [ev, rounds] of csvRoundsByEvent) {
+        if (!eventsLikelySame(ev, evName)) continue;
+        matchedEv = ev;
+        csvMax = Math.max(0, ...rounds);
+        break;
+      }
+      if (maxPosted > csvMax) {
+        refreshEvents.add(matchedEv || evName);
+        console.log(
+          `[round-projection-vs-actual] archive has R${maxPosted} for "${evName}" but CSV max R${csvMax} — forcing refresh`,
+        );
+      }
+    }
+  } catch (e) {
+    console.warn("[round-projection-vs-actual] prior-event archive refresh check:", e?.message || e);
+  }
+
+  // Even without GOLF_OU_BACKTEST_SINCE, archive-driven refresh still re-backfills those events.
+  const archiveForcedRefresh = refreshEvents.size > 0 && !sinceIso;
+
   function eventNeedsRefresh(ev) {
     for (const re of refreshEvents) {
       if (eventsLikelySame(ev, re)) return true;
@@ -454,10 +591,16 @@ async function loadPriorEventRows(csvPath, summaryPath, currentEventName, opts =
     return false;
   }
 
+  /** @type {string[]} */
+  const refreshCachedBlocks = [];
   for (const ev of priorOrder) {
-    if (eventNeedsRefresh(ev)) continue;
     const block = priorByEventLines.get(ev) || "";
-    if (block) priorLines.push(block);
+    if (!block) continue;
+    if (eventNeedsRefresh(ev)) {
+      refreshCachedBlocks.push(block);
+      continue;
+    }
+    priorLines.push(block);
   }
 
   let summaryHasPrior = false;
@@ -482,28 +625,39 @@ async function loadPriorEventRows(csvPath, summaryPath, currentEventName, opts =
 
   const auditPath = auditPathEarly;
   const histPath = opts.histPath || resolveHistCsv();
-  if (!existsSync(auditPath)) return { priorLines, priorSummaryRows };
+  if (!existsSync(auditPath)) {
+    if (refreshCachedBlocks.length) priorLines.push(...refreshCachedBlocks);
+    return { priorLines, priorSummaryRows };
+  }
 
   const forceRebuild =
     String(process.env.GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS || "").trim() === "1";
 
-  // Incremental: re-backfill only recent events (since watermark), keep older cached rows.
-  if (!forceRebuild && sinceIso) {
-    const keptCount = priorLines.length;
+  // Incremental: re-backfill only recent events (since watermark), merge with cached rows.
+  // Also runs when prior-event live archive forces a refresh (e.g. missing R4 after week roll).
+  if (!forceRebuild && (sinceIso || archiveForcedRefresh)) {
+    const keptCount = priorLines.reduce((n, b) => n + String(b).split(/\r?\n/).filter(Boolean).length, 0);
     const backfill = await backfillFromAudit(auditPath, histPath, currentEventName, {
       fairwayHoles: opts.fairwayHoles || 14,
       livePath: opts.livePath || join(WEB_ROOT, "live-in-play.json"),
       onlyEvents: refreshEvents.size ? refreshEvents : null,
-      sinceIso,
+      sinceIso: sinceIso || undefined,
     });
-    if (backfill.lines.length > 0) {
-      priorLines.push(...backfill.lines);
+    const mergedRefresh = mergePriorDetailLineBlocks(refreshCachedBlocks, backfill.lines);
+    if (mergedRefresh.length) priorLines.push(...mergedRefresh);
+    else if (refreshCachedBlocks.length) priorLines.push(...refreshCachedBlocks);
+
+    if (backfill.lines.length > 0 || refreshCachedBlocks.length) {
+      const cachedN = refreshCachedBlocks.reduce(
+        (n, b) => n + String(b).split(/\r?\n/).filter(Boolean).length,
+        0,
+      );
       console.log(
-        `[round-projection-vs-actual] Incremental since ${sinceIso}: kept ${keptCount} older row(s), refreshed ${backfill.lines.length} recent prior-event row(s)`,
+        `[round-projection-vs-actual] Incremental${sinceIso ? ` since ${sinceIso}` : " (archive-forced)"}: kept ${keptCount} older row(s), merged refresh ${mergedRefresh.length} row(s) (cached ${cachedN} + backfill ${backfill.lines.length})`,
       );
     } else if (keptCount) {
       console.log(
-        `[round-projection-vs-actual] Incremental since ${sinceIso}: kept ${keptCount} prior-event row(s) (no recent audit backfill)`,
+        `[round-projection-vs-actual] Incremental${sinceIso ? ` since ${sinceIso}` : " (archive-forced)"}: kept ${keptCount} prior-event row(s) (no recent audit backfill)`,
       );
     }
     priorSummaryRows.push(...backfill.summaryRows);
@@ -511,6 +665,7 @@ async function loadPriorEventRows(csvPath, summaryPath, currentEventName, opts =
   }
 
   if (!forceRebuild) {
+    if (refreshCachedBlocks.length) priorLines.push(...refreshCachedBlocks);
     if (priorLines.length) {
       console.log(
         `[round-projection-vs-actual] Keeping ${priorLines.length} cached prior-event row(s) (no full audit backfill; set GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS=1 to rebuild)`,
@@ -720,14 +875,8 @@ function resolveAuditEventYear(evMap) {
 }
 
 /** When field_updates rolled to next week, preds/in-play still holds the prior event's results. */
-function overlayStaleLiveActualsForBackfill(allActuals, auditEventName, eventYear, livePath, fairwayHoles) {
-  if (!auditEventName || !existsSync(livePath)) return 0;
-  let live;
-  try {
-    live = JSON.parse(readFileSync(livePath, "utf8"));
-  } catch {
-    return 0;
-  }
+function applyLiveBundleActualsOverlay(allActuals, auditEventName, eventYear, live, fairwayHoles, sourceTag) {
+  if (!live || typeof live !== "object") return 0;
   const fu = live.field_updates && typeof live.field_updates === "object" ? live.field_updates : {};
   const { infoEvent, fuEvent } = readLiveBundleEvents(live);
   const staleWeek = infoEvent && fuEvent && !eventsLikelySame(infoEvent, fuEvent);
@@ -772,10 +921,47 @@ function overlayStaleLiveActualsForBackfill(allActuals, auditEventName, eventYea
       const key = actualsKey(auditEventName, eventYear, dg, rnd);
       const prev = allActuals.get(key) || {};
       const out = { ...prev, ...patch };
-      out.source = prev.source && patch.source ? `${prev.source}+${patch.source}` : patch.source || prev.source || "live_stale";
+      const tag = sourceTag || "live_stale";
+      out.source = prev.source && patch.source ? `${prev.source}+${patch.source}` : patch.source || prev.source || tag;
       allActuals.set(key, out);
       n++;
     }
+  }
+  return n;
+}
+
+function overlayStaleLiveActualsForBackfill(allActuals, auditEventName, eventYear, livePath, fairwayHoles) {
+  if (!auditEventName) return 0;
+  let n = 0;
+  if (existsSync(livePath)) {
+    try {
+      const live = JSON.parse(readFileSync(livePath, "utf8"));
+      n += applyLiveBundleActualsOverlay(allActuals, auditEventName, eventYear, live, fairwayHoles, "live_stale");
+    } catch {
+      /* ignore */
+    }
+  }
+  if (n > 0) return n;
+  // After week rollover, live-in-play.json is a pre-event skeleton — use archived completed week.
+  try {
+    const archived = findArchivedLiveBundleForEvent(auditEventName);
+    if (archived) {
+      n += applyLiveBundleActualsOverlay(
+        allActuals,
+        auditEventName,
+        eventYear,
+        archived,
+        fairwayHoles,
+        "live_archive",
+      );
+      if (n > 0) {
+        console.log(
+          `[round-projection-vs-actual] overlay archived live actuals for "${auditEventName}": ${n} player-round(s)`,
+        );
+      }
+    }
+  } catch {
+    /* ignore */
   }
   return n;
 }

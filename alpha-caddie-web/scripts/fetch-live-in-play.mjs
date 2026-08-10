@@ -39,6 +39,7 @@ import {
   fetchLiveTournamentStatsByRound,
   liveTournamentStatsUrl,
 } from "./dg-live-tournament-stats.mjs";
+import { archivePriorEventLiveBundle } from "./prior-event-live-archive.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -561,6 +562,23 @@ async function main() {
     // so Live Stats / Trends never keep last week's LTS+leaderboard under a new header.
     const fuAlignsProj = !!(projEv && fuEv && eventsLikelySame(projEv, fuEv));
     if (fuAlignsProj && fieldUpdates && typeof fieldUpdates === "object") {
+      // Keep completed prior-week R1–R4 actuals for projection-tracker backfill after we clear live.
+      try {
+        const archived = archivePriorEventLiveBundle(bundle, { eventName: infoEv });
+        if (archived?.ok) {
+          console.warn(
+            `[fetch-live-in-play] archived prior-event live bundle "${archived.eventName}" ` +
+              `(R1=${archived.posted?.["1"] || 0} R2=${archived.posted?.["2"] || 0} ` +
+              `R3=${archived.posted?.["3"] || 0} R4=${archived.posted?.["4"] || 0}) -> ${archived.path}`,
+          );
+        } else if (archived?.skipped) {
+          console.warn(
+            `[fetch-live-in-play] prior-event archive skip "${archived.eventName}" (${archived.reason})`,
+          );
+        }
+      } catch (e) {
+        console.warn("[fetch-live-in-play] prior-event archive failed:", e?.message || e);
+      }
       const skeleton = {
         data: [],
         info: {

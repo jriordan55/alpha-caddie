@@ -1,5 +1,5 @@
 /**
- * Lean both-side edge tracker — replaces the old multi-tab projection tracker.
+ * Model vs market tracker — projection μ performance against sportsbook lines.
  */
 const ROI_URL = "../data/both_side_roi.json";
 const BETS_URL = "../data/both_side_bets.json";
@@ -25,6 +25,15 @@ const PROP_MARKET = {
   GIR: "GIR",
   "Fairways hit": "Fairways hit",
 };
+
+const MARKET_ORDER = [
+  "Total score",
+  "Pars",
+  "Bogeys",
+  "GIR",
+  "Birdies",
+  "Fairways hit",
+];
 
 const LIVE_BOOKS = [
   { id: "draftkings", label: "DraftKings", short: "dk" },
@@ -79,8 +88,14 @@ async function loadJson(url) {
   return res.json();
 }
 
-function passingMarkets() {
-  return ROI?.overall?.both_side_positive_markets || [];
+/** All markets with a recommended gap policy (not both-side-only). */
+function trackedMarkets() {
+  const fromRoi = Array.isArray(ROI?.overall?.markets) ? ROI.overall.markets : [];
+  if (fromRoi.length) return fromRoi.filter((m) => ROI?.recommended?.[m]);
+  const rec = ROI?.recommended || {};
+  const keys = Object.keys(rec);
+  if (keys.length) return MARKET_ORDER.filter((m) => rec[m]).concat(keys.filter((m) => !MARKET_ORDER.includes(m)));
+  return [...new Set((BETS?.bets || []).map((b) => b.market).filter(Boolean))];
 }
 
 function bookCatalog() {
@@ -114,63 +129,66 @@ function fillBookSelects() {
 
 function renderHero() {
   const o = ROI?.overall || {};
-  const pass = o.both_side_positive_markets || [];
-  $("kpi-markets").textContent = String(pass.length);
+  const markets = trackedMarkets();
+  $("kpi-markets").textContent = String(markets.length || "—");
   const pnl = o.recommended_combined_pnl;
   const el = $("kpi-pnl");
   el.textContent = fmtMoney(pnl);
   el.className = clsSigned(pnl);
   $("kpi-bets").textContent = String(o.recommended_combined_bets ?? "—");
-  let minRoi = Infinity;
-  for (const m of pass) {
-    const r = ROI.recommended?.[m];
-    if (Number.isFinite(r?.min_roi)) minRoi = Math.min(minRoi, r.min_roi);
+  let combRoi = o.recommended_combined_roi;
+  if (!Number.isFinite(combRoi) && Number.isFinite(pnl) && o.recommended_combined_bets > 0) {
+    combRoi = pnl / (o.recommended_combined_bets * STAKE);
   }
   const mr = $("kpi-minroi");
-  if (!Number.isFinite(minRoi) || minRoi === Infinity) {
+  if (!Number.isFinite(combRoi)) {
     mr.textContent = "—";
     mr.className = "";
   } else {
-    mr.textContent = fmtPct(minRoi);
-    mr.className = clsSigned(minRoi);
+    mr.textContent = fmtPct(combRoi);
+    mr.className = clsSigned(combRoi);
   }
+}
+
+function gapLabelFor(r) {
+  const base =
+    r.gap_over != null && r.gap_under != null && r.gap_over !== r.gap_under
+      ? `${r.gap_over}/${r.gap_under}`
+      : typeof r.gap === "object"
+        ? `${r.gap.over}/${r.gap.under}`
+        : String(r.gap ?? "—");
+  const bits = [];
+  if (r.odds_rule?.under_min_american != null) bits.push(`U≥${r.odds_rule.under_min_american}`);
+  if (r.odds_rule?.over_min_american != null) bits.push(`O≥${r.odds_rule.over_min_american}`);
+  return bits.length ? `${base} · ${bits.join(" ")}` : base;
+}
+
+function combinedRoiFor(r) {
+  if (Number.isFinite(r?.combined_roi)) return r.combined_roi;
+  const bets = Number(r?.combined_bets);
+  const pnl = Number(r?.combined_pnl);
+  if (bets > 0 && Number.isFinite(pnl)) return pnl / (bets * STAKE);
+  return NaN;
 }
 
 function renderMarketTable() {
   const tbody = $("market-table").querySelector("tbody");
   const rec = ROI?.recommended || {};
-  const order = [
-    "Total score",
-    "Pars",
-    "Bogeys",
-    "GIR",
-    "Birdies",
-    "Fairways hit",
-  ];
+  const order = MARKET_ORDER.filter((m) => rec[m]).concat(
+    Object.keys(rec).filter((m) => !MARKET_ORDER.includes(m)),
+  );
   tbody.innerHTML = order
-    .filter((m) => rec[m])
     .map((m) => {
       const r = rec[m];
-      const ok = r.both_sides_positive;
-      const gapLabel =
-        r.gap_over != null && r.gap_under != null && r.gap_over !== r.gap_under
-          ? `${r.gap_over}/${r.gap_under}`
-          : typeof r.gap === "object"
-            ? `${r.gap.over}/${r.gap.under}`
-            : String(r.gap ?? "—");
-      const biasLabel = r.odds_rule?.under_min_american != null
-        ? `${r.bias} · U≥${r.odds_rule.under_min_american}`
-        : r.bias;
+      const comb = combinedRoiFor(r);
       return `<tr>
         <td>${m}</td>
-        <td><span class="badge ${ok ? "badge-on" : "badge-off"}">${ok ? "Both sides +" : "Off"}</span></td>
-        <td class="num">${gapLabel}</td>
-        <td>${biasLabel}</td>
+        <td class="num">${gapLabelFor(r)}</td>
         <td class="num">${r.over?.bets ?? "—"}</td>
         <td class="num ${clsSigned(r.over?.roi)}">${fmtPct(r.over?.roi)}</td>
         <td class="num">${r.under?.bets ?? "—"}</td>
         <td class="num ${clsSigned(r.under?.roi)}">${fmtPct(r.under?.roi)}</td>
-        <td class="num ${clsSigned(r.min_roi)}">${fmtPct(r.min_roi)}</td>
+        <td class="num ${clsSigned(comb)}">${fmtPct(comb)}</td>
         <td class="num ${clsSigned(r.combined_pnl)}">${fmtMoney(r.combined_pnl)}</td>
       </tr>`;
     })
@@ -178,20 +196,14 @@ function renderMarketTable() {
 }
 
 function fillMarketSelects() {
-  const pass = passingMarkets();
+  const markets = trackedMarkets();
   for (const id of ["live-market", "hist-market", "an-market"]) {
     const sel = $(id);
     if (!sel) continue;
     const cur = sel.value;
-    const allLabel =
-      id === "live-market"
-        ? "Both-side markets only"
-        : id === "an-market"
-          ? "All passing markets"
-          : "All passing markets";
     sel.innerHTML =
-      `<option value="">${allLabel}</option>` +
-      pass.map((m) => `<option value="${m}">${m}</option>`).join("");
+      `<option value="">All markets</option>` +
+      markets.map((m) => `<option value="${m}">${m}</option>`).join("");
     if ([...sel.options].some((o) => o.value === cur)) sel.value = cur;
   }
   const events = [...new Set((BETS?.bets || []).map((b) => b.event).filter(Boolean))];
@@ -199,8 +211,8 @@ function fillMarketSelects() {
   const order = ROI?.event_order || [];
   events.sort((a, b) => {
     if (liveEv) {
-      const aLive = a === liveEv || /wyndham/i.test(a) && /wyndham/i.test(liveEv);
-      const bLive = b === liveEv || /wyndham/i.test(b) && /wyndham/i.test(liveEv);
+      const aLive = a === liveEv;
+      const bLive = b === liveEv;
       if (aLive !== bLive) return aLive ? -1 : 1;
     }
     const ia = order.indexOf(a);
@@ -223,13 +235,13 @@ function fillMarketSelects() {
 }
 
 function histFiltered() {
-  const pass = new Set(passingMarkets());
+  const tracked = new Set(trackedMarkets());
   const mkt = $("hist-market").value;
   const side = $("hist-side").value;
   const ev = $("hist-event").value;
   const book = $("hist-book")?.value || "";
   return (BETS?.bets || []).filter((b) => {
-    if (!pass.has(b.market)) return false;
+    if (tracked.size && !tracked.has(b.market)) return false;
     if (mkt && b.market !== mkt) return false;
     if (side && String(b.side).toLowerCase() !== side) return false;
     if (ev && b.event !== ev) return false;
@@ -312,15 +324,11 @@ function bookPropPack(book) {
 
 function livePicks() {
   if (!PROJ?.players?.length) return [];
-  const pass = passingMarkets();
+  const markets = trackedMarkets();
   const mktFilter = $("live-market").value;
   const bookFilter = $("live-book")?.value || "";
   const gapMode = $("live-gap").value;
   const rnd = Math.round(Number(PROJ.display_round || 1)) || 1;
-  // Pure model μ by default — chrono live_bias only if baked into projections (legacy).
-  // When bias is not on the file, do NOT subtract live_bias in the UI.
-  const biasAlreadyApplied = Boolean(PROJ?.both_side_bias_applied?.at);
-  const bias = {};
   const out = [];
   const books = bookFilter
     ? LIVE_BOOKS.filter((b) => b.id === bookFilter)
@@ -330,14 +338,12 @@ function livePicks() {
     if (Math.round(Number(p.round)) !== rnd) continue;
     const dg = Math.round(Number(p.dg_id));
     const name = String(p.player_name || "");
-    for (const market of pass) {
+    for (const market of markets) {
       if (mktFilter && market !== mktFilter) continue;
       const rec = ROI.recommended?.[market];
-      if (!rec?.both_sides_positive) continue;
-      const rawMu = MARKET_TO_PLAYER[market]?.(p);
-      if (!Number.isFinite(rawMu)) continue;
-      const b = Number(bias[market]) || 0;
-      const mu = rawMu - b;
+      if (!rec) continue;
+      const mu = MARKET_TO_PLAYER[market]?.(p);
+      if (!Number.isFinite(mu)) continue;
       const gapOver = Number(rec.gap_over ?? rec.gap);
       const gapUnder = Number(rec.gap_under ?? rec.gap);
       const gapNeedOver = gapMode === "policy" ? gapOver : Number(gapMode);
@@ -392,7 +398,7 @@ function renderLive() {
   if (!PROJ) {
     note.textContent = "No projections.json — run refresh:live / apply:dg-methodology.";
   } else {
-    note.textContent = `${PROJ.event_name || "Live"} · R${PROJ.display_round || "?"} · raw hierarchical μ (weather + wave) · all sportsbooks · only both-side+ markets`;
+    note.textContent = `${PROJ.event_name || "Live"} · R${PROJ.display_round || "?"} · model μ vs sportsbook lines · all markets`;
   }
   $("live-table").querySelector("tbody").innerHTML = picks.length
     ? picks
@@ -411,7 +417,7 @@ function renderLive() {
       </tr>`,
         )
         .join("")
-    : `<tr><td colspan="9">No live props past policy gap for both-side markets.</td></tr>`;
+    : `<tr><td colspan="9">No live props past the selected gap.</td></tr>`;
 }
 
 function betTs(b) {
@@ -431,12 +437,12 @@ function fmtChartDate(ms) {
 }
 
 function anFiltered() {
-  const pass = new Set(passingMarkets());
+  const tracked = new Set(trackedMarkets());
   const mkt = $("an-market")?.value || "";
   const ev = $("an-event")?.value || "";
   const book = $("an-book")?.value || "";
   return (BETS?.bets || []).filter((b) => {
-    if (!pass.has(b.market)) return false;
+    if (tracked.size && !tracked.has(b.market)) return false;
     if (mkt && b.market !== mkt) return false;
     if (ev && b.event !== ev) return false;
     if (book && b.book_id !== book) return false;
@@ -752,10 +758,10 @@ function setTab(tab) {
         "Hole score, winner & matchup (DraftKings) plus holes 10–18 / 16–17–18 (Underdog). Model μ from course hole average + strokes gained.";
     }
   } else {
-    if (title) title.textContent = "Both-side edge";
+    if (title) title.textContent = "Model vs market";
     if (lede) {
       lede.textContent =
-        "Only markets where OVER and UNDER both print historically. Raw hierarchical μ (weather + tee wave) — no chrono/loo bias. Gap from walk-forward bake.";
+        "How model μ performs vs sportsbook lines at each market’s recommended gap. Flat $100 · raw hierarchical μ (weather + tee wave).";
     }
   }
   if (ACTIVE_TAB === "both-side") renderAnalytics();

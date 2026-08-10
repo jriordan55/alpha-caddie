@@ -1,18 +1,19 @@
-# Both-side edge tracker
+# Model vs market tracker
 
-Lean projection tracker: only markets where OVER and UNDER both print historically.
+Local UI: `http://localhost:5173/projection-tracker/`
 
 ## What it shows
-- **Market report card** — OVER and UNDER must both be ROI+ (≥40 bets/side)
-- **Live picks** — raw hierarchical μ (weather + tee wave already baked); policy gap only — **no chrono/loo bias**
-- **Graded bets** — historical flat $100 under gap policies on **raw model μ** (bias locked to `none`)
 
-## Commands
+- **Market report card** — OVER / UNDER / combined ROI for each O/U market at the recommended gap vs all sportsbooks
+- **Analytics** — cumulative PnL, bankroll, ROI on graded projection bets
+- **Live picks** — current-week model μ vs live book lines past the policy gap
+- **Graded projection bets** — historical flat $100 results under those gaps
+
+## Refresh
+
 ```bash
-npm run bake:both-side-roi          # gap sweep on raw μ (GOLF_BOTH_SIDE_BIAS_SWEEP=1 for old chrono/loo)
-npm run apply:hierarchical-mu       # live board = hierarchical + weather
-npm run apply:both-side-bet-signals # YES/NO on DK props (no live_bias subtract)
-npm run projection-tracker          # serves UI (GOLF_SKIP_TRACKER_REFRESH=1 to skip re-bake)
+npm run bake:both-side-roi          # gap sweep on raw μ → both_side_roi.json + both_side_bets.json
+npm run apply:both-side-bet-signals # YES/NO stamps on DK props
 ```
 
-Open `http://localhost:5173/projection-tracker/`
+Or via `npm run push:live` / `refresh:live` (bake runs after hierarchical μ).

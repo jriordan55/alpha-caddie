@@ -14,8 +14,8 @@
     <div class="top-inner">
       <div>
         <p class="eyebrow">AlphaCaddie</p>
-        <h1 id="page-title">Both-side edge</h1>
-        <p class="lede" id="page-lede">Only markets where OVER and UNDER both print historically. Raw hierarchical μ (weather + tee wave) — no chrono/loo bias. Gap from walk-forward bake.</p>
+        <h1 id="page-title">Model vs market</h1>
+        <p class="lede" id="page-lede">How model μ performs vs sportsbook lines at each market’s recommended gap. Flat $100 · raw hierarchical μ (weather + tee wave).</p>
       </div>
       <div class="top-actions">
         <button type="button" class="btn" id="btn-reload">Reload</button>
@@ -23,7 +23,7 @@
       </div>
     </div>
     <nav class="tab-nav" aria-label="Projection views">
-      <button type="button" class="tab-btn active" data-tab="both-side">Both-side edge</button>
+      <button type="button" class="tab-btn active" data-tab="both-side">Model vs market</button>
       <button type="button" class="tab-btn" data-tab="hole-props">Hole Props</button>
     </nav>
   </header>
@@ -33,28 +33,26 @@
 
     <div id="panel-both-side" class="tab-panel">
       <section class="hero-kpis" id="hero-kpis">
-        <div class="kpi"><span class="kpi-label">Both-side markets</span><strong id="kpi-markets">—</strong></div>
+        <div class="kpi"><span class="kpi-label">Markets</span><strong id="kpi-markets">—</strong></div>
         <div class="kpi"><span class="kpi-label">Combined PnL</span><strong id="kpi-pnl">—</strong></div>
         <div class="kpi"><span class="kpi-label">Bets</span><strong id="kpi-bets">—</strong></div>
-        <div class="kpi"><span class="kpi-label">Min side ROI</span><strong id="kpi-minroi">—</strong></div>
+        <div class="kpi"><span class="kpi-label">Combined ROI</span><strong id="kpi-minroi">—</strong></div>
       </section>
 
       <section class="card">
         <h2>Market report card</h2>
-        <p class="note">Green = OVER and UNDER both &gt; 0% ROI (≥40 bets/side). Red markets are disabled for live picks.</p>
+        <p class="note">OVER / UNDER ROI for the recommended gap vs all sportsbooks. Green ROI = profitable side.</p>
         <div class="table-scroll">
           <table id="market-table">
             <thead>
               <tr>
                 <th>Market</th>
-                <th>Status</th>
                 <th class="num">Gap</th>
-                <th>Bias</th>
                 <th class="num">Over bets</th>
                 <th class="num">Over ROI</th>
                 <th class="num">Under bets</th>
                 <th class="num">Under ROI</th>
-                <th class="num">Min ROI</th>
+                <th class="num">Combined ROI</th>
                 <th class="num">PnL ($100)</th>
               </tr>
             </thead>
@@ -66,11 +64,11 @@
       <section class="card">
         <div class="card-head">
           <h2>Analytics</h2>
-          <p class="note">Cumulative bankroll, drawdown, PnL, and ROI across graded both-side bets (all sportsbooks, chronological by date). Flat $100 stakes.</p>
+          <p class="note">Cumulative bankroll, drawdown, PnL, and ROI across graded projection bets (all markets &amp; sportsbooks, chronological). Flat $100 stakes.</p>
         </div>
         <div class="filters">
           <label>Market
-            <select id="an-market"><option value="">All passing markets</option></select>
+            <select id="an-market"><option value="">All markets</option></select>
           </label>
           <label>Book
             <select id="an-book"><option value="">All books</option></select>
@@ -106,7 +104,7 @@
         </div>
         <div class="filters">
           <label>Market
-            <select id="live-market"><option value="">Both-side markets only</option></select>
+            <select id="live-market"><option value="">All markets</option></select>
           </label>
           <label>Book
             <select id="live-book"><option value="">All books</option></select>
@@ -143,12 +141,12 @@
 
       <section class="card">
         <div class="card-head">
-          <h2>Graded both-side bets</h2>
-          <p class="note">Historical lines across all sportsbooks under each market’s recommended gap on raw model μ (no bias). Flat $100.</p>
+          <h2>Graded projection bets</h2>
+          <p class="note">Historical lines across all sportsbooks under each market’s recommended gap on model μ. Flat $100.</p>
         </div>
         <div class="filters">
           <label>Market
-            <select id="hist-market"><option value="">All passing markets</option></select>
+            <select id="hist-market"><option value="">All markets</option></select>
           </label>
           <label>Book
             <select id="hist-book"><option value="">All books</option></select>

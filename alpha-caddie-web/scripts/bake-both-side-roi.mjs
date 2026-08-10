@@ -346,6 +346,28 @@ function fmtMoney(x) {
   return `${sign}$${x.toFixed(0)}`;
 }
 
+/** Reject stub 0/0/0 counting actuals that falsely grade Pars UNDER as wins. */
+function countingActualTrusted(row, market, actual) {
+  if (!Number.isFinite(actual)) return false;
+  if (!["Pars", "Birdies", "Bogeys"].includes(market)) return true;
+  const score = num(row.actual_round_score, NaN);
+  const b = num(row.actual_birdies, NaN);
+  const p = num(row.actual_pars, NaN);
+  const bg = num(row.actual_bogeys, NaN);
+  if (Number.isFinite(score) && score > 0) {
+    const b0 = !Number.isFinite(b) || b === 0;
+    const p0 = !Number.isFinite(p) || p === 0;
+    const bg0 = !Number.isFinite(bg) || bg === 0;
+    if (b0 && p0 && bg0) return false;
+  }
+  // 0 pars with a completed score and few bird/bog holes is almost always a missing-stat stub.
+  if (market === "Pars" && actual === 0 && Number.isFinite(score) && score > 0) {
+    const sum = (Number.isFinite(b) ? b : 0) + (Number.isFinite(bg) ? bg : 0);
+    if (sum < 12) return false;
+  }
+  return true;
+}
+
 async function loadRows() {
   if (!existsSync(VS)) throw new Error(`Missing ${VS}`);
   const raw = readFileSync(VS, "utf8");
@@ -394,6 +416,7 @@ async function loadRows() {
           const model = num(row[m.modelCol], NaN);
           const actual = num(row[m.actualCol], NaN);
           if (!Number.isFinite(model) || !Number.isFinite(actual)) continue;
+          if (!countingActualTrusted(row, m.market, actual)) continue;
           const round = Math.round(num(row.round, NaN));
           const dg_id = Math.round(num(row.dg_id, NaN));
           const player = String(row.player_name || "").trim();
@@ -594,12 +617,14 @@ async function main() {
         min_roi: best.min_roi,
         combined_pnl: best.combined_pnl,
         combined_bets: best.combined_bets,
+        combined_roi:
+          best.combined_bets > 0 && Number.isFinite(best.combined_pnl)
+            ? Math.round((best.combined_pnl / (best.combined_bets * STAKE)) * 10000) / 10000
+            : null,
       };
-      if (best.both_sides_positive) {
-        combinedAll += best.combined_pnl;
-        combinedBets += best.combined_bets;
-        bothPlusMarkets.push(m.market);
-      }
+      combinedAll += best.combined_pnl;
+      combinedBets += best.combined_bets;
+      if (best.both_sides_positive) bothPlusMarkets.push(m.market);
     }
 
     const tag = both_sides_achieved ? "YES" : "no";
@@ -614,9 +639,13 @@ async function main() {
   }
 
   out.overall = {
+    /** @deprecated kept for older UI; prefer `markets` */
     both_side_positive_markets: bothPlusMarkets,
+    markets: Object.keys(out.recommended),
     recommended_combined_pnl: Math.round(combinedAll * 100) / 100,
     recommended_combined_bets: combinedBets,
+    recommended_combined_roi:
+      combinedBets > 0 ? Math.round((combinedAll / (combinedBets * STAKE)) * 10000) / 10000 : null,
   };
 
   /** Live-week μ correction — always 0 (raw hierarchical μ; weather/wave already in export lines). */
@@ -629,7 +658,6 @@ async function main() {
     const rec = out.recommended[m.market];
     if (!rec) continue;
     liveBias[m.market] = 0;
-    if (!rec.both_sides_positive) continue;
 
     const histRows = byMarket[m.market].map((r) => ({ ...r }));
     applyBias(histRows, "none", eventOrder);
