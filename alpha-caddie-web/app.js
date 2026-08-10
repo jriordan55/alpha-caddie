@@ -26065,6 +26065,8 @@ function liveStatsIsPreEventSkeleton() {
   const bundle = lastLiveInPlayBundleForHistory;
   return !!(bundle?.info?.pre_event || bundle?.live_stats_pre_event);
 }
+
+function liveStatsDefaultRoundFilter() {
   const started = liveStatsStartedRoundSet();
   const display = Math.round(num(DATA?.meta?.display_round ?? DATA?.display_round, NaN));
   if (Number.isFinite(display) && started.has(display)) return String(display);
