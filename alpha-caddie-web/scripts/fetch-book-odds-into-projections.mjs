@@ -347,6 +347,7 @@ async function main() {
 
   const matchupMarkets = ["tournament_matchups", "round_matchups", "3_balls"];
   const matchups = { ...(payload.matchups && typeof payload.matchups === "object" ? payload.matchups : {}) };
+  const projEventForMatchups = String(payload.event_name || "").trim();
   for (const m of matchupMarkets) {
     try {
       console.log(`Fetching betting-tools/matchups (${m})…`);
@@ -359,6 +360,24 @@ async function main() {
     } catch (e) {
       console.warn(`Matchups ${m} skipped:`, e.message);
     }
+  }
+  // Odds Screen must never keep last week's matchup board under a new projections event.
+  for (const m of matchupMarkets) {
+    const pack = matchups[m];
+    if (!pack || typeof pack !== "object") continue;
+    const mev = String(pack.event_name || "").trim();
+    if (!projEventForMatchups || !mev || eventsLikelySame(projEventForMatchups, mev)) continue;
+    console.warn(
+      `[fetch-book-odds] clearing stale ${m} ("${mev}" ≠ projections "${projEventForMatchups}")`,
+    );
+    matchups[m] = {
+      event_name: projEventForMatchups,
+      market: m,
+      match_list: [],
+      last_updated: new Date().toISOString(),
+      stale_cleared: true,
+      note: `DataGolf still returned ${mev}; cleared so Odds Screen does not show last week`,
+    };
   }
 
   const next = {

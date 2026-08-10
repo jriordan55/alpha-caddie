@@ -16,7 +16,9 @@
  *
  *   npm run refresh:live
  *
- * **Default (push:live lean):** projections + odds + current-event Trends patch + tracker.
+ * **Default (push:live lean):** projections + odds + tracker O/U + current-event Trends patch.
+ *   Always refreshes projection-tracker CSVs / walkforward_oos_roi and clears hybrid prior-week Live Stats.
+ *   GOLF_REQUIRE_LIVE_PUBLISH_INVARIANTS=1 fails the publish if live/odds/tracker drift.
  * Skips pre-fetch full CSV merge, weather archive backfill, and full build-player-history.
  * After live feeds: merges recent DataGolf rounds into CSV (post-live), then Trends via
  * sync-field-history + patch-current-event-history (live-in-play + matching pgatouR).
@@ -333,7 +335,8 @@ run(
   "fetch-book-odds-into-projections.mjs",
   "Sportsbook + DK + PP + SL + UD + FanDuel + Kalshi + Caesars round props (fetch:book-odds)",
   liveFastEnv,
-  softOpt,
+  // Required for Odds Screen — soft DK scrapes live inside the script; do not soft-skip the whole step.
+  {},
 );
 if (skipFinishTool) {
   console.log("[refresh:live] Skipping fetch:finish-tool (outrights already from fetch:dg + book-odds). Set GOLF_REFRESH_LIVE_SKIP_FINISH_TOOL=0 to re-run.\n");
@@ -793,6 +796,12 @@ if (String(process.env.GOLF_DG_METHODOLOGY || "1").trim() !== "0") {
 run(
   "verify-live-projection-recipe.mjs",
   "Guard live μ recipe (hierarchical, no book/chrono bias)",
+);
+
+run(
+  "verify-live-publish-invariants.mjs",
+  "Guard live publish: event-aligned Live Stats + Odds Screen + fresh projection-tracker",
+  { GOLF_REQUIRE_LIVE_PUBLISH_INVARIANTS: process.env.GOLF_REQUIRE_LIVE_PUBLISH_INVARIANTS || "1" },
 );
 
 mirrorWebsitePublicData();

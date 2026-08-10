@@ -133,8 +133,8 @@ if (-not $isCi -and ($IsWindows -or ($env:OS -match "Windows") -or $IsMacOS)) {
 }
 
 if ($LiveWeekOnly) {
-  # Fast mid-tournament publish: projections + book odds + course-as-of repair only.
-  # Skips history shards, trackers, hole-prop scrapes, CSV merges (use push:all for those).
+  # Fast mid-tournament publish: projections + book odds + course-as-of repair + trackers.
+  # Skips history shards / hole-prop scrapes / heavy ROI OOM backtest (use push:all for those).
   Remove-Item Env:\GOLF_REFRESH_LIVE_FULL_REBUILD -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_HISTORICAL_ROUNDS_FULL_HISTORY -ErrorAction SilentlyContinue
   $env:GOLF_REFRESH_LIVE_SKIP_CSV_MERGE = "1"
@@ -150,12 +150,14 @@ if ($LiveWeekOnly) {
   $env:GOLF_DG_METHODOLOGY = "1"
   $env:GOLF_APPLY_BOTH_SIDE_BIAS = "0"
   $env:GOLF_SKIP_EVENT_PROP_BOOK_ALIGN = "1"
+  # Heavy Odds.csv ROI walk-forward can OOM on Windows — still skip. Tracker O/U is separate and required.
   $env:GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI = "1"
   $env:GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS = "0"
-  # Trackers / matchup odds / hole-prop Playwright — too slow for mid-round pushes.
-  $env:GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL = "1"
-  $env:GOLF_REQUIRE_TRACKER_REFRESH = "0"
-  $env:GOLF_SKIP_MATCHUP_ODDS_UPDATE = "1"
+  # ALWAYS refresh projection-tracker (localhost:5173/projection-tracker) + Odds Screen matchups.
+  $env:GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL = "0"
+  $env:GOLF_REQUIRE_TRACKER_REFRESH = "1"
+  $env:GOLF_SKIP_MATCHUP_ODDS_UPDATE = "0"
+  $env:GOLF_REQUIRE_LIVE_PUBLISH_INVARIANTS = "1"
   $env:GOLF_SKIP_HOLE_PROPS = "1"
   $env:GOLF_SKIP_SG_DISTANCE = "1"
   Remove-Item Env:\GOLF_MATCHUP_BACKTEST_SINCE -ErrorAction SilentlyContinue
@@ -195,11 +197,12 @@ if ($LiveWeekOnly) {
   $env:GOLF_UNIFIED_TEE_WAVE_W = "0.30"
   $env:GOLF_FIELD_DAY_COUNTING_LIFT_FRAC = "0"
   $env:GOLF_WITHIN_EVENT_COUNTING_BLEND = "0"
-  Write-Host 'LiveWeekOnly (fast): projections + book odds + course-as-of repair + weather.'
-  Write-Host 'Live Stats: refreshed via fetch:in-play + pgatouR (live-in-play.json + pgatour_event_rounds.json).'
+  Write-Host 'LiveWeekOnly (fast): projections + book odds + course-as-of + weather + projection-tracker.'
+  Write-Host 'Live Stats: refreshed via fetch:in-play + pgatouR; hybrid prior-week LTS is cleared on event roll.'
   Write-Host 'μ recipe: hierarchical (no book align, no both-side chrono bias).'
-  Write-Host 'Skipped: history shards, trackers, hole-prop scrapes, SG-distance rebuild, CSV merges, finish-tool, book-cal, ROI backtests.'
-  Write-Host 'Full rebuild (Trends/trackers/hole props): npm run push:all'
+  Write-Host 'Required: tracker O/U CSV + walkforward_oos_roi, Odds Screen matchups aligned to event, live-publish invariants.'
+  Write-Host 'Skipped: history shards, hole-prop scrapes, SG-distance rebuild, CSV merges, finish-tool, book-cal, Odds.csv ROI backtest.'
+  Write-Host 'Full rebuild (Trends/history shards): npm run push:all'
 } elseif (-not $NoFullHistory) {
   $env:GOLF_HISTORICAL_ROUNDS_FULL_HISTORY = "1"
   $env:GOLF_SKIP_HISTORY_ON_FETCH_DG = "1"

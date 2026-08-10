@@ -23,7 +23,7 @@ Push-Location $WebRoot
 try {
   Write-Host "Running verify:web-deploy ..."
   # Soft mode: thin player/season canaries warn instead of fail (same as push:live refresh).
-  # Never abort the commit/push on verify - mid-tournament data often lags live feeds.
+  # Never abort the commit/push on verify:web-deploy - mid-tournament data often lags live feeds.
   $prevSoft = $env:GOLF_LIVE_VALIDATE_SOFT
   $env:GOLF_LIVE_VALIDATE_SOFT = "1"
   try {
@@ -37,6 +37,16 @@ try {
   }
   if ($LASTEXITCODE -ne 0) {
     Write-Warning "verify:web-deploy exited $($LASTEXITCODE) - continuing publish anyway"
+  }
+
+  # Hard gate: stale tracker / hybrid Live Stats / last-week Odds Screen must not publish.
+  Write-Host "Running verify:live-publish (hard) ..."
+  if (-not $env:GOLF_REQUIRE_LIVE_PUBLISH_INVARIANTS) {
+    $env:GOLF_REQUIRE_LIVE_PUBLISH_INVARIANTS = "1"
+  }
+  npm run verify:live-publish
+  if ($LASTEXITCODE -ne 0) {
+    throw "verify:live-publish failed - refusing to commit/push stale tracker, Odds Screen, or hybrid Live Stats. Fix with npm run refresh:live then retry push:live."
   }
 } finally {
   Pop-Location

@@ -88,6 +88,45 @@ async function main() {
     }
   }
   const prevTees = countTeeSlots(live.field_updates);
+  const liveInfoEv = String(live?.info?.event_name || "").trim();
+  const liveLtsEv = String(
+    live?.live_tournament_stats?.event_name || live?.info?.event_name || "",
+  ).trim();
+  const hybridPriorWeek =
+    !!(fuEvent && liveInfoEv && !eventsLikelySame(fuEvent, liveInfoEv)) ||
+    !!(
+      fuEvent &&
+      liveLtsEv &&
+      !eventsLikelySame(fuEvent, liveLtsEv) &&
+      Object.keys(live?.live_tournament_stats_by_round || {}).length
+    );
+
+  if (hybridPriorWeek) {
+    // Never leave last week's LTS/leaderboard under this week's field_updates — Live Stats reads those.
+    live = {
+      data: [],
+      info: {
+        event_name: fuEvent || projEvent,
+        current_round: Math.round(Number(fu?.current_round) || 0) || 0,
+        last_update: new Date().toISOString(),
+        pre_event: true,
+        note: `Cleared prior-week live stats (${liveInfoEv || liveLtsEv || "unknown"}) after field-updates rolled to ${fuEvent || projEvent}`,
+      },
+      field_updates: fu,
+      live_tournament_stats: null,
+      live_tournament_stats_by_round: {},
+      live_round_actuals_by_dg: {},
+      live_hole_stats: null,
+      live_stats_pre_event: true,
+      field_updates_refreshed_at: new Date().toISOString(),
+    };
+    writeFileSync(livePath, `${JSON.stringify(live, null, 2)}\n`, "utf8");
+    console.warn(
+      `[refresh-field-updates] reset live-in-play.json to pre-event skeleton for "${fuEvent || projEvent}" (was hybrid with "${liveInfoEv || liveLtsEv}")`,
+    );
+    return;
+  }
+
   live.field_updates = fu;
   live.field_updates_refreshed_at = new Date().toISOString();
   writeFileSync(livePath, `${JSON.stringify(live, null, 2)}\n`, "utf8");

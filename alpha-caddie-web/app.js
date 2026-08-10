@@ -26039,7 +26039,32 @@ async function ensureLiveStatsSourcesLoaded() {
   }
 }
 
-function liveStatsDefaultRoundFilter() {
+function liveStatsBundleEventName() {
+  const bundle = lastLiveInPlayBundleForHistory;
+  if (!bundle || typeof bundle !== "object") return "";
+  return String(
+    bundle.field_updates?.event_name ||
+      bundle.info?.event_name ||
+      bundle.live_tournament_stats?.event_name ||
+      "",
+  ).trim();
+}
+
+/** True when live LTS/data is still last week while projections already rolled. */
+function liveStatsFeedMatchesProjections() {
+  const modelEv = String(DATA?.meta?.event_name || DATA?.event_name || "").trim();
+  const liveEv = liveStatsBundleEventName();
+  if (!modelEv || !liveEv) return true;
+  return (
+    eventNameMatchesCurrentSchedule(liveEv, modelEv) ||
+    eventNameMatchesCurrentSchedule(modelEv, liveEv)
+  );
+}
+
+function liveStatsIsPreEventSkeleton() {
+  const bundle = lastLiveInPlayBundleForHistory;
+  return !!(bundle?.info?.pre_event || bundle?.live_stats_pre_event);
+}
   const started = liveStatsStartedRoundSet();
   const display = Math.round(num(DATA?.meta?.display_round ?? DATA?.display_round, NaN));
   if (Number.isFinite(display) && started.has(display)) return String(display);
@@ -26621,6 +26646,28 @@ async function buildLiveStatsTab() {
   const countEl = document.getElementById("live-stats-count");
   if (!tbody) return;
   await ensureLiveStatsSourcesLoaded();
+
+  const modelEv = String(DATA?.meta?.event_name || DATA?.event_name || "").trim();
+  const liveEv = liveStatsBundleEventName();
+  if (!liveStatsFeedMatchesProjections() || liveStatsIsPreEventSkeleton()) {
+    document.querySelectorAll("#live-stats-round-pills .live-stats-round-pill").forEach((btn) => {
+      const key = String(btn.getAttribute("data-live-stats-round") || "");
+      btn.disabled = key !== "tournament";
+      btn.classList.toggle("is-disabled", key !== "tournament");
+      btn.classList.toggle("active", key === "tournament");
+      btn.setAttribute("aria-pressed", key === "tournament" ? "true" : "false");
+    });
+    liveStatsRoundFilter = "tournament";
+    liveStatsRenderThead(NaN);
+    const titleRound = document.getElementById("live-stats-title-round");
+    if (titleRound) titleRound.textContent = "Tournament";
+    const why = liveStatsIsPreEventSkeleton()
+      ? `Waiting for live round stats for ${modelEv || "this event"}.`
+      : `Live Stats feed is still on ${liveEv || "prior event"} while projections are ${modelEv || "current"} — re-run push:live.`;
+    if (countEl) countEl.textContent = why;
+    tbody.innerHTML = `<tr><td colspan="18">${escapeHtml(why)}</td></tr>`;
+    return;
+  }
 
   if (!liveStatsRoundFilter || !["1", "2", "3", "4", "tournament"].includes(liveStatsRoundFilter)) {
     liveStatsRoundFilter = liveStatsDefaultRoundFilter();

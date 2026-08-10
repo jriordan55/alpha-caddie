@@ -551,11 +551,44 @@ async function main() {
   const pm = readProjectionsRoot();
   const infoEv = String(parsed?.info?.event_name || "").trim();
   const projEv = pm ? String(pm.event_name || "").trim() : "";
+  const fuEv = String(fieldUpdates?.event_name ?? fieldUpdates?.eventName ?? "").trim();
   const projInPlayEventMismatch = !!(projEv && infoEv && !eventsLikelySame(projEv, infoEv));
   if (projInPlayEventMismatch) {
     console.warn(
-      `[fetch-live-in-play] preds/in-play info.event_name "${infoEv}" vs projections "${projEv}" — stale in-play event metadata detected`
+      `[fetch-live-in-play] preds/in-play info.event_name "${infoEv}" vs projections "${projEv}" — stale in-play event metadata detected`,
     );
+    // When field-updates already rolled to the projections week, write a pre-event skeleton
+    // so Live Stats / Trends never keep last week's LTS+leaderboard under a new header.
+    const fuAlignsProj = !!(projEv && fuEv && eventsLikelySame(projEv, fuEv));
+    if (fuAlignsProj && fieldUpdates && typeof fieldUpdates === "object") {
+      const skeleton = {
+        data: [],
+        info: {
+          event_name: projEv,
+          current_round: Math.round(num(fieldUpdates.current_round, 0)) || 0,
+          last_update: new Date().toISOString(),
+          pre_event: true,
+          note: `Awaiting preds/in-play for ${projEv} (DataGolf still serving "${infoEv}")`,
+        },
+        field_updates: fieldUpdates,
+        live_tournament_stats: null,
+        live_tournament_stats_by_round: {},
+        live_round_actuals_by_dg: {},
+        live_hole_stats:
+          liveHoleStats &&
+          typeof liveHoleStats === "object" &&
+          eventsLikelySame(String(liveHoleStats.event_name || ""), projEv)
+            ? liveHoleStats
+            : null,
+        live_stats_pre_event: true,
+        field_updates_refreshed_at: new Date().toISOString(),
+      };
+      fs.writeFileSync(liveOutPath, JSON.stringify(skeleton, null, 2), "utf8");
+      console.warn(
+        `[fetch-live-in-play] wrote pre-event live-in-play.json for "${projEv}" (cleared stale "${infoEv}" LTS/data)`,
+      );
+      return;
+    }
     if (prevDiskBundle && pm) {
       const prevEv = String(
         prevDiskBundle?.field_updates?.event_name || prevDiskBundle?.info?.event_name || "",
