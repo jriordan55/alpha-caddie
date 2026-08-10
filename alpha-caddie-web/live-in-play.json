@@ -3095,270 +3095,36 @@
     "last_update": "2026-08-08 8:49 PM"
   },
   "field_updates": {
-    "course_name": "Sedgefield Country Club",
-    "current_round": 4,
-    "date_end": "2026-08-09",
-    "date_start": "2026-08-06",
-    "event_id": 13,
-    "event_name": "Wyndham Championship",
+    "course_name": "TPC Southwind",
+    "current_round": 1,
+    "date_end": "2026-08-16",
+    "date_start": "2026-08-13",
+    "event_id": 27,
+    "event_name": "FedEx St. Jude Championship",
     "field": [
       {
-        "am": 1,
-        "country": "USA",
-        "dg_id": 32652,
-        "dg_rank": 342,
-        "owgr_rank": null,
-        "player_name": "Akina, Kihei",
-        "player_num": 67118,
-        "pre_tourn_pageviews": 248,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 14:11",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 08:51",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 07:45",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 07:45",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": null
+        "am": 0,
+        "country": "SWE",
+        "dg_id": 23950,
+        "dg_rank": 12,
+        "owgr_rank": 16,
+        "player_name": "Aberg, Ludvig",
+        "player_num": 52955,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "10"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 19846,
-        "dg_rank": 110,
-        "owgr_rank": 159,
-        "player_name": "Bauchou, Zach",
-        "player_num": 48001,
-        "pre_tourn_pageviews": 575,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 14:00",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 08:40",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 12:10",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 12:30",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "93"
-      },
-      {
-        "am": 0,
-        "country": "RSA",
-        "dg_id": 18103,
-        "dg_rank": 71,
-        "owgr_rank": 98,
-        "player_name": "Bezuidenhout, Christiaan",
-        "player_num": 45522,
-        "pre_tourn_pageviews": 1491,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 08:18",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 13:38",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 07:05",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 11:20",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "92"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 17639,
-        "dg_rank": 86,
-        "owgr_rank": 143,
-        "player_name": "Blair, Zac",
-        "player_num": 40058,
-        "pre_tourn_pageviews": 1802,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 08:18",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 13:38",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "117"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 24956,
-        "dg_rank": 201,
-        "owgr_rank": 119,
-        "player_name": "Blanchet, Chandler",
-        "player_num": 54788,
-        "pre_tourn_pageviews": 771,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 13:49",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 08:29",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "106"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 13872,
-        "dg_rank": 34,
-        "owgr_rank": 45,
-        "player_name": "Bradley, Keegan",
-        "player_num": 33141,
-        "pre_tourn_pageviews": 2258,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 07:56",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 13:16",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 07:15",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 08:50",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "72"
+        "dg_id": 26096,
+        "dg_rank": 32,
+        "owgr_rank": 32,
+        "player_name": "Bhatia, Akshay",
+        "player_num": 56630,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "14"
       },
       {
         "am": 0,
@@ -3368,157 +3134,45 @@
         "owgr_rank": 58,
         "player_name": "Brennan, Michael",
         "player_num": 61522,
-        "pre_tourn_pageviews": 1561,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 07:23",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 12:43",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 13:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 13:55",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "105"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "47"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 32152,
-        "dg_rank": 73,
-        "owgr_rank": 94,
-        "player_name": "Brown, Blades",
-        "player_num": 66417,
-        "pre_tourn_pageviews": 2824,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 14:00",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 08:40",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": null
+        "dg_id": 29433,
+        "dg_rank": 33,
+        "owgr_rank": 30,
+        "player_name": "Bridgeman, Jacob",
+        "player_num": 60004,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "13"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 18628,
-        "dg_rank": 354,
-        "owgr_rank": 149,
-        "player_name": "Campbell, Brian",
-        "player_num": 46443,
-        "pre_tourn_pageviews": 935,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 07:45",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 13:05",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "161"
+        "dg_id": 19483,
+        "dg_rank": 5,
+        "owgr_rank": 11,
+        "player_name": "Burns, Sam",
+        "player_num": 47504,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "8"
       },
       {
         "am": 0,
-        "country": "PUR",
-        "dg_id": 12909,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Campos, Rafael",
-        "player_num": 32070,
-        "pre_tourn_pageviews": 217,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 12:32",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 07:12",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 11:40",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 10:55",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "175"
+        "country": "USA",
+        "dg_id": 15466,
+        "dg_rank": 13,
+        "owgr_rank": 39,
+        "player_name": "Cantlay, Patrick",
+        "player_num": 35450,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "42"
       },
       {
         "am": 0,
@@ -3528,46 +3182,9 @@
         "owgr_rank": 96,
         "player_name": "Castillo, Ricky",
         "player_num": 59440,
-        "pre_tourn_pageviews": 1112,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 07:56",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 13:16",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 09:55",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 09:10",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "66"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "68"
       },
       {
         "am": 0,
@@ -3577,126 +3194,21 @@
         "owgr_rank": 42,
         "player_name": "Cauley, Bud",
         "player_num": 34021,
-        "pre_tourn_pageviews": 2337,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 07:56",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 13:16",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 09:55",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 10:05",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "33"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "34"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 30620,
-        "dg_rank": 206,
-        "owgr_rank": 249,
-        "player_name": "Chatfield, Davis",
-        "player_num": 59006,
-        "pre_tourn_pageviews": 1419,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 08:29",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 13:49",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 07:05",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 09:00",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "138"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 32330,
-        "dg_rank": 235,
-        "owgr_rank": 269,
-        "player_name": "Clanton, Luke",
-        "player_num": 66743,
-        "pre_tourn_pageviews": 1196,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 08:40",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 14:00",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "147"
+        "dg_id": 23604,
+        "dg_rank": 19,
+        "owgr_rank": 10,
+        "player_name": "Clark, Wyndham",
+        "player_num": 51766,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "4"
       },
       {
         "am": 0,
@@ -3706,95 +3218,21 @@
         "owgr_rank": 74,
         "player_name": "Cole, Eric",
         "player_num": 47591,
-        "pre_tourn_pageviews": 1448,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 13:38",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 08:18",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 12:45",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 10:45",
-            "wave": "late"
-          }
-        ],
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
         "tour_rank": "45"
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 28077,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Collet, Tyler",
-        "player_num": 59570,
-        "pre_tourn_pageviews": 145,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 08:51",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 14:11",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 12:00",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 11:40",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": null
+        "country": "CAN",
+        "dg_id": 17576,
+        "dg_rank": 48,
+        "owgr_rank": 50,
+        "player_name": "Conners, Corey",
+        "player_num": 39997,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "59"
       },
       {
         "am": 0,
@@ -3804,272 +3242,9 @@
         "owgr_rank": 64,
         "player_name": "Coody, Pierceson",
         "player_num": 59836,
-        "pre_tourn_pageviews": 617,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 07:01",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "53"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 27780,
-        "dg_rank": 266,
-        "owgr_rank": 247,
-        "player_name": "Crowe, Trace",
-        "player_num": 52514,
-        "pre_tourn_pageviews": 527,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 14:22",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 09:02",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 11:20",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 08:40",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "156"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 14509,
-        "dg_rank": 188,
-        "owgr_rank": 211,
-        "player_name": "Dahmen, Joel",
-        "player_num": 34076,
-        "pre_tourn_pageviews": 907,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 13:38",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 08:18",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 11:30",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 11:50",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "119"
-      },
-      {
-        "am": 0,
-        "country": "AUS",
-        "dg_id": 17786,
-        "dg_rank": null,
-        "owgr_rank": 317,
-        "player_name": "Davis, Cam",
-        "player_num": 45157,
-        "pre_tourn_pageviews": 381,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 07:56",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 13:16",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "191"
-      },
-      {
-        "am": 0,
-        "country": "AUS",
-        "dg_id": 9771,
-        "dg_rank": 77,
-        "owgr_rank": 61,
-        "player_name": "Day, Jason",
-        "player_num": 28089,
-        "pre_tourn_pageviews": 809,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 13:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 07:45",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "75"
-      },
-      {
-        "am": 0,
-        "country": "CHN",
-        "dg_id": 16757,
-        "dg_rank": 138,
-        "owgr_rank": 189,
-        "player_name": "Dou, Zecheng",
-        "player_num": 37338,
-        "pre_tourn_pageviews": 430,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 08:51",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 14:11",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "115"
-      },
-      {
-        "am": 0,
-        "country": "BEL",
-        "dg_id": 22002,
-        "dg_rank": 149,
-        "owgr_rank": 180,
-        "player_name": "Dumont De Chassart, Adrien",
-        "player_num": 50497,
-        "pre_tourn_pageviews": 310,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 13:49",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 08:29",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "123"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 28270,
-        "dg_rank": 341,
-        "owgr_rank": 386,
-        "player_name": "Dunlap, Nick",
-        "player_num": 59866,
-        "pre_tourn_pageviews": 276,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 13:27",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 08:07",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "165"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "56"
       },
       {
         "am": 0,
@@ -4079,95 +3254,9 @@
         "owgr_rank": 59,
         "player_name": "Echavarria, Nico",
         "player_num": 51349,
-        "pre_tourn_pageviews": 1496,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 12:43",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 07:23",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 08:05",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 13:25",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "44"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 26653,
-        "dg_rank": 150,
-        "owgr_rank": 187,
-        "player_name": "Eckroat, Austin",
-        "player_num": 57362,
-        "pre_tourn_pageviews": 727,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 06:50",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 12:10",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 10:15",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 11:05",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "118"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "41"
       },
       {
         "am": 0,
@@ -4177,188 +3266,9 @@
         "owgr_rank": 36,
         "player_name": "English, Harris",
         "player_num": 34099,
-        "pre_tourn_pageviews": 1915,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 07:23",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 12:43",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "49"
-      },
-      {
-        "am": 0,
-        "country": "CAN",
-        "dg_id": 21883,
-        "dg_rank": 163,
-        "owgr_rank": 183,
-        "player_name": "Ewart, A.J.",
-        "player_num": 50286,
-        "pre_tourn_pageviews": 509,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 14:00",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 08:40",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "100"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 11676,
-        "dg_rank": 154,
-        "owgr_rank": 134,
-        "player_name": "Finau, Tony",
-        "player_num": 29725,
-        "pre_tourn_pageviews": 644,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 07:23",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 12:43",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 07:25",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 08:50",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "89"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 25094,
-        "dg_rank": 170,
-        "owgr_rank": 209,
-        "player_name": "Fishburn, Patrick",
-        "player_num": 54576,
-        "pre_tourn_pageviews": 766,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 14:11",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 08:51",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 09:20",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 10:15",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "145"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 26657,
-        "dg_rank": 158,
-        "owgr_rank": 86,
-        "player_name": "Fisk, Steven",
-        "player_num": 57123,
-        "pre_tourn_pageviews": 433,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 07:23",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 12:43",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "69"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "51"
       },
       {
         "am": 0,
@@ -4368,77 +3278,57 @@
         "owgr_rank": 68,
         "player_name": "Fitzpatrick, Alex",
         "player_num": 55721,
-        "pre_tourn_pageviews": 3112,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 07:45",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 13:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 10:45",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 08:05",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
         "tour_rank": "19"
       },
       {
         "am": 0,
+        "country": "ENG",
+        "dg_id": 17646,
+        "dg_rank": 4,
+        "owgr_rank": 4,
+        "player_name": "Fitzpatrick, Matt",
+        "player_num": 40098,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "2"
+      },
+      {
+        "am": 0,
+        "country": "ENG",
+        "dg_id": 12294,
+        "dg_rank": 3,
+        "owgr_rank": 6,
+        "player_name": "Fleetwood, Tommy",
+        "player_num": 30911,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "9"
+      },
+      {
+        "am": 0,
         "country": "USA",
-        "dg_id": 11451,
-        "dg_rank": 303,
-        "owgr_rank": 265,
-        "player_name": "Garnett, Brice",
-        "player_num": 29535,
-        "pre_tourn_pageviews": 343,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 08:29",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 13:49",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "131"
+        "dg_id": 12965,
+        "dg_rank": 31,
+        "owgr_rank": 41,
+        "player_name": "Fowler, Rickie",
+        "player_num": 32102,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "28"
+      },
+      {
+        "am": 0,
+        "country": "NZL",
+        "dg_id": 11889,
+        "dg_rank": 39,
+        "owgr_rank": 23,
+        "player_name": "Fox, Ryan",
+        "player_num": 29936,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "22"
       },
       {
         "am": 0,
@@ -4448,157 +3338,21 @@
         "owgr_rank": 25,
         "player_name": "Gerard, Ryan",
         "player_num": 59018,
-        "pre_tourn_pageviews": 4194,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 13:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 07:45",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
         "tour_rank": "16"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 24550,
-        "dg_rank": 64,
-        "owgr_rank": 155,
-        "player_name": "Ghim, Doug",
-        "player_num": 52375,
-        "pre_tourn_pageviews": 1960,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 12:10",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 06:50",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 13:45",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 10:35",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "97"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 7399,
-        "dg_rank": 172,
-        "owgr_rank": 100,
-        "player_name": "Glover, Lucas",
-        "player_num": 25900,
-        "pre_tourn_pageviews": 1626,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 13:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 07:45",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "96"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 23465,
-        "dg_rank": 103,
-        "owgr_rank": 84,
-        "player_name": "Greyserman, Max",
-        "player_num": 51977,
-        "pre_tourn_pageviews": 845,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 12:32",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 07:12",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 13:35",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 07:05",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "99"
+        "dg_id": 27774,
+        "dg_rank": 15,
+        "owgr_rank": 7,
+        "player_name": "Gotterup, Chris",
+        "player_num": 59095,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "5"
       },
       {
         "am": 0,
@@ -4608,90 +3362,9 @@
         "owgr_rank": 20,
         "player_name": "Griffin, Ben",
         "player_num": 54591,
-        "pre_tourn_pageviews": 3772,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 13:16",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 07:56",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
         "tour_rank": "36"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 15330,
-        "dg_rank": 277,
-        "owgr_rank": 233,
-        "player_name": "Griffin, Lanto",
-        "player_num": 35310,
-        "pre_tourn_pageviews": 259,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 08:18",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 13:38",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "155"
-      },
-      {
-        "am": 0,
-        "country": "ARG",
-        "dg_id": 12808,
-        "dg_rank": 79,
-        "owgr_rank": 99,
-        "player_name": "Grillo, Emiliano",
-        "player_num": 31646,
-        "pre_tourn_pageviews": 2271,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 13:38",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 08:18",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "104"
       },
       {
         "am": 0,
@@ -4701,46 +3374,9 @@
         "owgr_rank": 88,
         "player_name": "Hall, Harry",
         "player_num": 57975,
-        "pre_tourn_pageviews": 649,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 13:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 07:45",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 10:25",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 13:15",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "62"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "58"
       },
       {
         "am": 0,
@@ -4750,126 +3386,21 @@
         "owgr_rank": 60,
         "player_name": "Harman, Brian",
         "player_num": 27644,
-        "pre_tourn_pageviews": 2486,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 12:54",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 07:34",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "63"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "65"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 28469,
-        "dg_rank": 331,
-        "owgr_rank": 194,
-        "player_name": "Highsmith, Joe",
-        "player_num": 60067,
-        "pre_tourn_pageviews": 335,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 07:34",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 12:54",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 10:55",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 09:55",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "150"
-      },
-      {
-        "am": 0,
-        "country": "JPN",
-        "dg_id": 20954,
-        "dg_rank": 490,
-        "owgr_rank": 323,
-        "player_name": "Hirata, Kensei",
-        "player_num": 49120,
-        "pre_tourn_pageviews": 240,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 14:22",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 09:02",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 07:35",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 08:15",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "167"
+        "dg_id": 14578,
+        "dg_rank": 9,
+        "owgr_rank": 5,
+        "player_name": "Henley, Russell",
+        "player_num": 34098,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "15"
       },
       {
         "am": 0,
@@ -4879,464 +3410,45 @@
         "owgr_rank": 66,
         "player_name": "Hisatsune, Ryo",
         "player_num": 51287,
-        "pre_tourn_pageviews": 2322,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 13:27",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 08:07",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "42"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 25157,
-        "dg_rank": 120,
-        "owgr_rank": 130,
-        "player_name": "Hodges, Lee",
-        "player_num": 54628,
-        "pre_tourn_pageviews": 977,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 13:38",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 08:18",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 09:30",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 09:10",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "101"
-      },
-      {
-        "am": 0,
-        "country": "PHI",
-        "dg_id": 23504,
-        "dg_rank": 134,
-        "owgr_rank": 103,
-        "player_name": "Hoey, Rico",
-        "player_num": 51696,
-        "pre_tourn_pageviews": 738,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 07:12",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 12:32",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 13:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 11:20",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "112"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 15575,
-        "dg_rank": 185,
-        "owgr_rank": 124,
-        "player_name": "Hoge, Tom",
-        "player_num": 35532,
-        "pre_tourn_pageviews": 757,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 07:01",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 12:21",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 12:45",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 09:00",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "79"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "43"
       },
       {
         "am": 0,
         "country": "DEN",
-        "dg_id": 23838,
-        "dg_rank": 93,
-        "owgr_rank": 77,
-        "player_name": "Hojgaard, Rasmus",
-        "player_num": 52686,
-        "pre_tourn_pageviews": 1052,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 12:10",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 06:50",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 09:40",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 07:35",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "103"
+        "dg_id": 23602,
+        "dg_rank": 51,
+        "owgr_rank": 38,
+        "player_name": "Hojgaard, Nicolai",
+        "player_num": 52453,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "32"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 11276,
-        "dg_rank": 126,
-        "owgr_rank": 176,
-        "player_name": "Horschel, Billy",
-        "player_num": 29420,
-        "pre_tourn_pageviews": 2323,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 08:07",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 13:27",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 12:55",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 12:20",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "107"
+        "dg_id": 17538,
+        "dg_rank": 85,
+        "owgr_rank": 79,
+        "player_name": "Homa, Max",
+        "player_num": 39977,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "52"
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 15470,
-        "dg_rank": 137,
-        "owgr_rank": 165,
-        "player_name": "Hossler, Beau",
-        "player_num": 35461,
-        "pre_tourn_pageviews": 664,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 08:18",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 13:38",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 13:55",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 13:55",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "122"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 35195,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Hrabak, Cooper",
-        "player_num": 66830,
-        "pre_tourn_pageviews": 160,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 14:22",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 09:02",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": null
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 16333,
-        "dg_rank": 203,
-        "owgr_rank": 138,
-        "player_name": "Hubbard, Mark",
-        "player_num": 36801,
-        "pre_tourn_pageviews": 861,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 13:27",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 08:07",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "116"
-      },
-      {
-        "am": 0,
-        "country": "CAN",
-        "dg_id": 15556,
-        "dg_rank": 122,
-        "owgr_rank": 150,
-        "player_name": "Hughes, Mackenzie",
-        "player_num": 35506,
-        "pre_tourn_pageviews": 482,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 12:10",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 06:50",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 10:45",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 07:55",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "120"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 26597,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Huskey, Keenan",
-        "player_num": 56926,
-        "pre_tourn_pageviews": 150,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 08:40",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 14:00",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": null
+        "country": "NOR",
+        "dg_id": 18841,
+        "dg_rank": 20,
+        "owgr_rank": 14,
+        "player_name": "Hovland, Viktor",
+        "player_num": 46717,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "23"
       },
       {
         "am": 0,
@@ -5346,219 +3458,9 @@
         "owgr_rank": 75,
         "player_name": "Im, Sungjae",
         "player_num": 39971,
-        "pre_tourn_pageviews": 3052,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 07:34",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 12:54",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 10:05",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 11:50",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "57"
-      },
-      {
-        "am": 0,
-        "country": "GER",
-        "dg_id": 16394,
-        "dg_rank": 125,
-        "owgr_rank": 104,
-        "player_name": "Jaeger, Stephan",
-        "player_num": 36799,
-        "pre_tourn_pageviews": 619,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 12:43",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 07:23",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "77"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 29827,
-        "dg_rank": 98,
-        "owgr_rank": 353,
-        "player_name": "James, Ben",
-        "player_num": 57869,
-        "pre_tourn_pageviews": 1655,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 13:49",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 08:29",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 13:55",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 12:20",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "141"
-      },
-      {
-        "am": 0,
-        "country": "JPN",
-        "dg_id": 19729,
-        "dg_rank": 189,
-        "owgr_rank": 171,
-        "player_name": "Kanaya, Takumi",
-        "player_num": 47917,
-        "pre_tourn_pageviews": 410,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 06:50",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 12:10",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "143"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 21889,
-        "dg_rank": 380,
-        "owgr_rank": 275,
-        "player_name": "Kang, Jeffrey",
-        "player_num": 47393,
-        "pre_tourn_pageviews": 164,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 14:11",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 08:51",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "162"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 32457,
-        "dg_rank": 101,
-        "owgr_rank": 65,
-        "player_name": "Keefer, Johnny",
-        "player_num": 63454,
-        "pre_tourn_pageviews": 871,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 14:00",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 08:40",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "74"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "53"
       },
       {
         "am": 0,
@@ -5568,46 +3470,21 @@
         "owgr_rank": 51,
         "player_name": "Kim, Michael",
         "player_num": 39975,
-        "pre_tourn_pageviews": 2041,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 12:32",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 07:12",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 10:35",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 09:55",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "59"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "61"
+      },
+      {
+        "am": 0,
+        "country": "KOR",
+        "dg_id": 14609,
+        "dg_rank": 11,
+        "owgr_rank": 18,
+        "player_name": "Kim, Si Woo",
+        "player_num": 37455,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "7"
       },
       {
         "am": 0,
@@ -5617,242 +3494,33 @@
         "owgr_rank": 33,
         "player_name": "Kim, Tom",
         "player_num": 55182,
-        "pre_tourn_pageviews": 3980,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 08:07",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 13:27",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 12:20",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 13:45",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "34"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "26"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 12423,
-        "dg_rank": 102,
-        "owgr_rank": 105,
-        "player_name": "Kirk, Chris",
-        "player_num": 30926,
-        "pre_tourn_pageviews": 2218,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 12:43",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 07:23",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 09:40",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 08:05",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "127"
+        "dg_id": 21891,
+        "dg_rank": 28,
+        "owgr_rank": 37,
+        "player_name": "Kitayama, Kurt",
+        "player_num": 48117,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "33"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 13470,
-        "dg_rank": null,
-        "owgr_rank": 447,
-        "player_name": "Kizzire, Patton",
-        "player_num": 32757,
-        "pre_tourn_pageviews": 207,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 13:27",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 08:07",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 07:55",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 09:40",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "164"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 16243,
-        "dg_rank": 69,
-        "owgr_rank": 114,
-        "player_name": "Koepka, Brooks",
-        "player_num": 36689,
-        "pre_tourn_pageviews": 1666,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 07:56",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 13:16",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 12:00",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 07:45",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "86"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 16395,
-        "dg_rank": 57,
-        "owgr_rank": 108,
-        "player_name": "Kohles, Ben",
-        "player_num": 36884,
-        "pre_tourn_pageviews": 3418,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 08:29",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 13:49",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 07:00",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 12:10",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "95"
+        "dg_id": 19396,
+        "dg_rank": 43,
+        "owgr_rank": 48,
+        "player_name": "Knapp, Jake",
+        "player_num": 47420,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "40"
       },
       {
         "am": 0,
@@ -5862,330 +3530,45 @@
         "owgr_rank": 70,
         "player_name": "Koivun, Jackson",
         "player_num": 66701,
-        "pre_tourn_pageviews": 4184,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 12:54",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 07:34",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 10:25",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 12:45",
-            "wave": "late"
-          }
-        ],
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
         "tour_rank": "70"
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 6169,
-        "dg_rank": 133,
-        "owgr_rank": 182,
-        "player_name": "Kuchar, Matt",
-        "player_num": 23108,
-        "pre_tourn_pageviews": 745,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 13:16",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 07:56",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "142"
+        "country": "AUS",
+        "dg_id": 16841,
+        "dg_rank": 30,
+        "owgr_rank": 28,
+        "player_name": "Lee, Min Woo",
+        "player_num": 37378,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "17"
       },
       {
         "am": 0,
-        "country": "RSA",
-        "dg_id": 24343,
-        "dg_rank": null,
-        "owgr_rank": 300,
-        "player_name": "Lamprecht, Christo",
-        "player_num": 54422,
-        "pre_tourn_pageviews": 208,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 13:49",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 08:29",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "198"
+        "country": "IRL",
+        "dg_id": 13900,
+        "dg_rank": 29,
+        "owgr_rank": 49,
+        "player_name": "Lowry, Shane",
+        "player_num": 33204,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "62"
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 21943,
-        "dg_rank": 244,
-        "owgr_rank": 246,
-        "player_name": "Lebioda, Hank",
-        "player_num": 49766,
-        "pre_tourn_pageviews": 330,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 07:01",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 12:21",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "137"
-      },
-      {
-        "am": 0,
-        "country": "CHN",
-        "dg_id": 15310,
-        "dg_rank": 207,
-        "owgr_rank": 112,
-        "player_name": "Li, Haotong",
-        "player_num": 35296,
-        "pre_tourn_pageviews": 377,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 13:49",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 08:29",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "129"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 15980,
-        "dg_rank": 164,
-        "owgr_rank": 115,
-        "player_name": "Lipsky, David",
-        "player_num": 36326,
-        "pre_tourn_pageviews": 516,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 08:29",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 13:49",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "78"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 7960,
-        "dg_rank": 424,
-        "owgr_rank": null,
-        "player_name": "List, Luke",
-        "player_num": 27129,
-        "pre_tourn_pageviews": 242,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 07:01",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 12:21",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "190"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 17723,
-        "dg_rank": 321,
-        "owgr_rank": 285,
-        "player_name": "Lower, Justin",
-        "player_num": 40162,
-        "pre_tourn_pageviews": 372,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 08:18",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 13:38",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 08:50",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 10:25",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "174"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 14926,
-        "dg_rank": 429,
-        "owgr_rank": null,
-        "player_name": "Malnati, Peter",
-        "player_num": 34466,
-        "pre_tourn_pageviews": 415,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 13:38",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 08:18",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 07:45",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 07:00",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "170"
+        "country": "SCO",
+        "dg_id": 23323,
+        "dg_rank": 16,
+        "owgr_rank": 17,
+        "player_name": "MacIntyre, Robert",
+        "player_num": 52215,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "31"
       },
       {
         "am": 0,
@@ -6195,126 +3578,9 @@
         "owgr_rank": 24,
         "player_name": "Matsuyama, Hideki",
         "player_num": 32839,
-        "pre_tourn_pageviews": 4113,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 12:54",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 07:34",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 11:30",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 13:05",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "24"
-      },
-      {
-        "am": 0,
-        "country": "ITA",
-        "dg_id": 20844,
-        "dg_rank": 359,
-        "owgr_rank": 208,
-        "player_name": "Mazzoli, Stefano",
-        "player_num": 49037,
-        "pre_tourn_pageviews": 296,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 07:56",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 13:16",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": null
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 19870,
-        "dg_rank": 76,
-        "owgr_rank": 92,
-        "player_name": "McCarthy, Denny",
-        "player_num": 47993,
-        "pre_tourn_pageviews": 1829,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 07:12",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 12:32",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 12:30",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 11:30",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "84"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "20"
       },
       {
         "am": 0,
@@ -6324,108 +3590,21 @@
         "owgr_rank": 69,
         "player_name": "McCarty, Matt",
         "player_num": 59141,
-        "pre_tourn_pageviews": 1566,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 08:07",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 13:27",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 09:00",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 08:40",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "46"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "48"
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 12477,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "McGirt, William",
-        "player_num": 31202,
-        "pre_tourn_pageviews": 241,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 12:10",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 06:50",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "219"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 23505,
-        "dg_rank": 124,
-        "owgr_rank": 111,
-        "player_name": "McGreevy, Max",
-        "player_num": 51950,
-        "pre_tourn_pageviews": 784,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 13:27",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 08:07",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "121"
+        "country": "NIR",
+        "dg_id": 10091,
+        "dg_rank": 2,
+        "owgr_rank": 2,
+        "player_name": "McIlroy, Rory",
+        "player_num": 28237,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "12"
       },
       {
         "am": 0,
@@ -6435,108 +3614,9 @@
         "owgr_rank": 44,
         "player_name": "McNealy, Maverick",
         "player_num": 46442,
-        "pre_tourn_pageviews": 1850,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 07:34",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 12:54",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 10:55",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 07:55",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
         "tour_rank": "50"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 28159,
-        "dg_rank": 50,
-        "owgr_rank": 85,
-        "player_name": "Meissner, Mac",
-        "player_num": 59143,
-        "pre_tourn_pageviews": 3240,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 07:01",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 12:21",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "71"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 13367,
-        "dg_rank": 299,
-        "owgr_rank": 373,
-        "player_name": "Merritt, Troy",
-        "player_num": 32640,
-        "pre_tourn_pageviews": 122,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 12:21",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 07:01",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "178"
       },
       {
         "am": 0,
@@ -6546,108 +3626,21 @@
         "owgr_rank": 72,
         "player_name": "Mitchell, Keith",
         "player_num": 39546,
-        "pre_tourn_pageviews": 1088,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 12:21",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 07:01",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 08:15",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 08:15",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "47"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "49"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 29770,
-        "dg_rank": 132,
-        "owgr_rank": 136,
-        "player_name": "Mouw, William",
-        "player_num": 63121,
-        "pre_tourn_pageviews": 850,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 12:54",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 07:34",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "114"
-      },
-      {
-        "am": 0,
-        "country": "DEN",
-        "dg_id": 23841,
-        "dg_rank": 88,
-        "owgr_rank": 80,
-        "player_name": "Neergaard-Petersen, Rasmus",
-        "player_num": 52689,
-        "pre_tourn_pageviews": 927,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 08:40",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 14:00",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "94"
+        "dg_id": 22085,
+        "dg_rank": 8,
+        "owgr_rank": 8,
+        "player_name": "Morikawa, Collin",
+        "player_num": 50525,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "6"
       },
       {
         "am": 0,
@@ -6657,451 +3650,9 @@
         "owgr_rank": 27,
         "player_name": "Noren, Alex",
         "player_num": 27349,
-        "pre_tourn_pageviews": 2057,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 13:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 07:45",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 13:25",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 13:35",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "48"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 23475,
-        "dg_rank": 141,
-        "owgr_rank": 78,
-        "player_name": "Novak, Andrew",
-        "player_num": 51997,
-        "pre_tourn_pageviews": 743,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 12:43",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 07:23",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 09:30",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 11:05",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "91"
-      },
-      {
-        "am": 0,
-        "country": "SWE",
-        "dg_id": 25475,
-        "dg_rank": 308,
-        "owgr_rank": 259,
-        "player_name": "Nyholm, Pontus",
-        "player_num": 55851,
-        "pre_tourn_pageviews": 194,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 08:51",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 14:11",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 08:40",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 07:35",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "133"
-      },
-      {
-        "am": 0,
-        "country": "DEN",
-        "dg_id": 13412,
-        "dg_rank": 144,
-        "owgr_rank": 152,
-        "player_name": "Olesen, Thorbjorn",
-        "player_num": 33968,
-        "pre_tourn_pageviews": 451,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 06:50",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 12:10",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 09:10",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 10:15",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "166"
-      },
-      {
-        "am": 0,
-        "country": "TPE",
-        "dg_id": 15475,
-        "dg_rank": 348,
-        "owgr_rank": null,
-        "player_name": "Pan, C.T.",
-        "player_num": 29908,
-        "pre_tourn_pageviews": 347,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 13:27",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 08:07",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": null
-      },
-      {
-        "am": 0,
-        "country": "ENG",
-        "dg_id": 13764,
-        "dg_rank": 115,
-        "owgr_rank": 91,
-        "player_name": "Parry, John",
-        "player_num": 28723,
-        "pre_tourn_pageviews": 708,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 08:51",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 14:11",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 08:30",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 10:25",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "87"
-      },
-      {
-        "am": 0,
-        "country": "FRA",
-        "dg_id": 19960,
-        "dg_rank": 232,
-        "owgr_rank": 293,
-        "player_name": "Pavon, Matthieu",
-        "player_num": 48153,
-        "pre_tourn_pageviews": 374,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 12:32",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 07:12",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "125"
-      },
-      {
-        "am": 0,
-        "country": "CAN",
-        "dg_id": 17780,
-        "dg_rank": 151,
-        "owgr_rank": 95,
-        "player_name": "Pendrith, Taylor",
-        "player_num": 40250,
-        "pre_tourn_pageviews": 454,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 07:23",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 12:43",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 10:15",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 07:15",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "85"
-      },
-      {
-        "am": 0,
-        "country": "ENG",
-        "dg_id": 22465,
-        "dg_rank": 106,
-        "owgr_rank": 52,
-        "player_name": "Penge, Marco",
-        "player_num": 51003,
-        "pre_tourn_pageviews": 820,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 08:29",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 13:49",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 08:50",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 07:05",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "109"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 27164,
-        "dg_rank": 156,
-        "owgr_rank": 135,
-        "player_name": "Phillips, Chandler",
-        "player_num": 57900,
-        "pre_tourn_pageviews": 917,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 12:21",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 07:01",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 11:40",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 11:40",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "90"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "46"
       },
       {
         "am": 0,
@@ -7111,28 +3662,9 @@
         "owgr_rank": 35,
         "player_name": "Poston, J.T.",
         "player_num": 49771,
-        "pre_tourn_pageviews": 2228,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 08:07",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 13:27",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "29"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "30"
       },
       {
         "am": 0,
@@ -7142,108 +3674,9 @@
         "owgr_rank": 89,
         "player_name": "Potgieter, Aldrich",
         "player_num": 63343,
-        "pre_tourn_pageviews": 436,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 07:34",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 12:54",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "65"
-      },
-      {
-        "am": 0,
-        "country": "IRL",
-        "dg_id": 10104,
-        "dg_rank": 142,
-        "owgr_rank": 190,
-        "player_name": "Power, Seamus",
-        "player_num": 28252,
-        "pre_tourn_pageviews": 533,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 13:38",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 08:18",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "110"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 14704,
-        "dg_rank": 113,
-        "owgr_rank": 101,
-        "player_name": "Putnam, Andrew",
-        "player_num": 34256,
-        "pre_tourn_pageviews": 1061,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 12:10",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 06:50",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 08:30",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 09:30",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "73"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "67"
       },
       {
         "am": 0,
@@ -7253,126 +3686,21 @@
         "owgr_rank": 19,
         "player_name": "Rai, Aaron",
         "player_num": 46414,
-        "pre_tourn_pageviews": 4195,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 08:07",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 13:27",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 09:00",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 09:20",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
         "tour_rank": "35"
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 19840,
-        "dg_rank": 254,
-        "owgr_rank": 191,
-        "player_name": "Ramey, Chad",
-        "player_num": 47983,
-        "pre_tourn_pageviews": 221,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 12:32",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 07:12",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 12:55",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 09:40",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "132"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 19872,
-        "dg_rank": 313,
-        "owgr_rank": 116,
-        "player_name": "Riley, Davis",
-        "player_num": 47995,
-        "pre_tourn_pageviews": 837,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 12:54",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 07:34",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "108"
+        "country": "NOR",
+        "dg_id": 21407,
+        "dg_rank": 38,
+        "owgr_rank": 29,
+        "player_name": "Reitan, Kristoffer",
+        "player_num": 49855,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "18"
       },
       {
         "am": 0,
@@ -7382,250 +3710,45 @@
         "owgr_rank": 102,
         "player_name": "Rodgers, Patrick",
         "player_num": 36699,
-        "pre_tourn_pageviews": 617,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 12:32",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 07:12",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "64"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "66"
       },
       {
-        "am": 1,
-        "country": "USA",
-        "dg_id": 30043173,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Rodriguez, Lorenzo",
-        "player_num": 71059,
-        "pre_tourn_pageviews": 147,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 14:11",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 08:51",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": null
+        "am": 0,
+        "country": "ENG",
+        "dg_id": 6093,
+        "dg_rank": 27,
+        "owgr_rank": 12,
+        "player_name": "Rose, Justin",
+        "player_num": 22405,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "24"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 18424,
-        "dg_rank": 136,
-        "owgr_rank": 118,
-        "player_name": "Roy, Kevin",
-        "player_num": 39335,
-        "pre_tourn_pageviews": 644,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 07:12",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 12:32",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 11:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 12:30",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "88"
-      },
-      {
-        "am": 0,
-        "country": "COL",
-        "dg_id": 16591,
-        "dg_rank": null,
-        "owgr_rank": null,
-        "player_name": "Rozo, Marcelo",
-        "player_num": 37076,
-        "pre_tourn_pageviews": 195,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 08:29",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 13:49",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "201"
-      },
-      {
-        "am": 0,
-        "country": "FRA",
-        "dg_id": 14792,
-        "dg_rank": 227,
-        "owgr_rank": 140,
-        "player_name": "Saddier, Adrien",
-        "player_num": 34371,
-        "pre_tourn_pageviews": 285,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 14:00",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 08:40",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 11:20",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 07:25",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "179"
+        "dg_id": 19895,
+        "dg_rank": 7,
+        "owgr_rank": 9,
+        "player_name": "Schauffele, Xander",
+        "player_num": 48081,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "11"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 30814,
-        "dg_rank": 451,
-        "owgr_rank": 326,
-        "player_name": "Sargent, Gordon",
-        "player_num": 64442,
-        "pre_tourn_pageviews": 337,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 08:40",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 14:00",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "130"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 19477,
-        "dg_rank": 444,
-        "owgr_rank": 187,
-        "player_name": "Schenk, Adam",
-        "player_num": 47347,
-        "pre_tourn_pageviews": 288,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 07:23",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 12:43",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "157"
+        "dg_id": 18417,
+        "dg_rank": 1,
+        "owgr_rank": 1,
+        "player_name": "Scheffler, Scottie",
+        "player_num": 46046,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "1"
       },
       {
         "am": 0,
@@ -7635,224 +3758,21 @@
         "owgr_rank": 83,
         "player_name": "Schmid, Matti",
         "player_num": 48867,
-        "pre_tourn_pageviews": 553,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 06:50",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 12:10",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 13:15",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 08:30",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "67"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "69"
       },
       {
         "am": 0,
-        "country": "USA",
-        "dg_id": 32055,
-        "dg_rank": 233,
-        "owgr_rank": 207,
-        "player_name": "Shipley, Neal",
-        "player_num": 63807,
-        "pre_tourn_pageviews": 539,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 13:49",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 08:29",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 09:20",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 09:20",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "184"
-      },
-      {
-        "am": 0,
-        "country": "CAN",
-        "dg_id": 17381,
-        "dg_rank": 250,
-        "owgr_rank": 228,
-        "player_name": "Silverman, Ben",
-        "player_num": 39327,
-        "pre_tourn_pageviews": 291,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 08:18",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 13:38",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "136"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 11049,
-        "dg_rank": 221,
-        "owgr_rank": null,
-        "player_name": "Simpson, Webb",
-        "player_num": 29221,
-        "pre_tourn_pageviews": 810,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 07:34",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 12:54",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 07:25",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 12:10",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "181"
-      },
-      {
-        "am": 0,
-        "country": "ENG",
-        "dg_id": 10873,
-        "dg_rank": 252,
-        "owgr_rank": 274,
-        "player_name": "Skinns, David",
-        "player_num": 27139,
-        "pre_tourn_pageviews": 164,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 13:16",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 07:56",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 13:25",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 12:55",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "144"
+        "country": "AUS",
+        "dg_id": 6430,
+        "dg_rank": 41,
+        "owgr_rank": 53,
+        "player_name": "Scott, Adam",
+        "player_num": 24502,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "29"
       },
       {
         "am": 0,
@@ -7862,45 +3782,8 @@
         "owgr_rank": 46,
         "player_name": "Smalley, Alex",
         "player_num": 46340,
-        "pre_tourn_pageviews": 2135,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 13:16",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 07:56",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 13:15",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 13:45",
-            "wave": "late"
-          }
-        ],
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
         "tour_rank": "25"
       },
       {
@@ -7911,144 +3794,21 @@
         "owgr_rank": 76,
         "player_name": "Smith, Jordan",
         "player_num": 46464,
-        "pre_tourn_pageviews": 1996,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 06:50",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 12:10",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 13:45",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 13:15",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "68"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "64"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 22985,
-        "dg_rank": 225,
-        "owgr_rank": 107,
-        "player_name": "Smotherman, Austin",
-        "player_num": 50095,
-        "pre_tourn_pageviews": 879,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 06:50",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 12:10",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 07:35",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 10:35",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "76"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 8820,
-        "dg_rank": 179,
-        "owgr_rank": 127,
-        "player_name": "Snedeker, Brandt",
-        "player_num": 27649,
-        "pre_tourn_pageviews": 933,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 12:43",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 07:23",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 10:35",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 10:55",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "83"
+        "dg_id": 17536,
+        "dg_rank": 22,
+        "owgr_rank": 15,
+        "player_name": "Spaun, J.J.",
+        "player_num": 39324,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "21"
       },
       {
         "am": 0,
@@ -8058,126 +3818,9 @@
         "owgr_rank": 57,
         "player_name": "Spieth, Jordan",
         "player_num": 34046,
-        "pre_tourn_pageviews": 1921,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 13:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 07:45",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 07:55",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 12:00",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "55"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 21995,
-        "dg_rank": 268,
-        "owgr_rank": 309,
-        "player_name": "Springer, Hayden",
-        "player_num": 50484,
-        "pre_tourn_pageviews": 263,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 08:51",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 14:11",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 11:50",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 10:45",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "134"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 23048,
-        "dg_rank": 376,
-        "owgr_rank": 335,
-        "player_name": "Stanger, Jimmy",
-        "player_num": 51600,
-        "pre_tourn_pageviews": 219,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 14:11",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 08:51",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "135"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "54"
       },
       {
         "am": 0,
@@ -8187,28 +3830,9 @@
         "owgr_rank": 55,
         "player_name": "Stevens, Sam",
         "player_num": 55893,
-        "pre_tourn_pageviews": 661,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 07:12",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 12:32",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "52"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "55"
       },
       {
         "am": 0,
@@ -8218,188 +3842,9 @@
         "owgr_rank": 26,
         "player_name": "Straka, Sepp",
         "player_num": 49960,
-        "pre_tourn_pageviews": 1727,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 13:16",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 07:56",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
         "tour_rank": "37"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 8480,
-        "dg_rank": 276,
-        "owgr_rank": 407,
-        "player_name": "Streelman, Kevin",
-        "player_num": 27214,
-        "pre_tourn_pageviews": 308,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 07:45",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 13:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 10:05",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 10:05",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "153"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 29279,
-        "dg_rank": 100,
-        "owgr_rank": 109,
-        "player_name": "Suber, Jackson",
-        "player_num": 60019,
-        "pre_tourn_pageviews": 1396,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 08:40",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 14:00",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 12:20",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 11:30",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "82"
-      },
-      {
-        "am": 0,
-        "country": "CAN",
-        "dg_id": 13997,
-        "dg_rank": 330,
-        "owgr_rank": 475,
-        "player_name": "Svensson, Adam",
-        "player_num": 40115,
-        "pre_tourn_pageviews": 419,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 07:12",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 12:32",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "176"
-      },
-      {
-        "am": 0,
-        "country": "SWE",
-        "dg_id": 26850,
-        "dg_rank": 194,
-        "owgr_rank": 169,
-        "player_name": "Svensson, Jesper",
-        "player_num": 57586,
-        "pre_tourn_pageviews": 276,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 14:00",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 08:40",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "124"
       },
       {
         "am": 0,
@@ -8409,46 +3854,9 @@
         "owgr_rank": 73,
         "player_name": "Taylor, Nick",
         "player_num": 25493,
-        "pre_tourn_pageviews": 1409,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 12:43",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 07:23",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 08:05",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 07:15",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "61"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "63"
       },
       {
         "am": 0,
@@ -8458,46 +3866,9 @@
         "owgr_rank": 82,
         "player_name": "Theegala, Sahith",
         "player_num": 51634,
-        "pre_tourn_pageviews": 1230,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 12:54",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 07:34",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 13:35",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 12:55",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "43"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "44"
       },
       {
         "am": 0,
@@ -8507,508 +3878,45 @@
         "owgr_rank": 22,
         "player_name": "Thomas, Justin",
         "player_num": 33448,
-        "pre_tourn_pageviews": 3391,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 07:45",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 13:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 09:10",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 12:00",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "40"
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "39"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 27364,
-        "dg_rank": 60,
-        "owgr_rank": 123,
-        "player_name": "Thompson, Davis",
-        "player_num": 58168,
-        "pre_tourn_pageviews": 3365,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 07:34",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 12:54",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 12:30",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 13:35",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "81"
-      },
-      {
-        "am": 0,
-        "country": "ARG",
-        "dg_id": 17032,
-        "dg_rank": null,
-        "owgr_rank": 410,
-        "player_name": "Tosti, Alejandro",
-        "player_num": 38991,
-        "pre_tourn_pageviews": 244,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 14:11",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 08:51",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "186"
-      },
-      {
-        "am": 0,
-        "country": "RSA",
-        "dg_id": 17550,
-        "dg_rank": 190,
-        "owgr_rank": 198,
-        "player_name": "Van Rooyen, Erik",
-        "player_num": 40006,
-        "pre_tourn_pageviews": 330,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 07:01",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 12:21",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 11:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 13:05",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "146"
+        "dg_id": 26649,
+        "dg_rank": 35,
+        "owgr_rank": 40,
+        "player_name": "Thorbjornsen, Michael",
+        "player_num": 57364,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "38"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 25319,
-        "dg_rank": 322,
-        "owgr_rank": 297,
-        "player_name": "VanDerLaan, John",
-        "player_num": 55573,
-        "pre_tourn_pageviews": 176,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 08:40",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 14:00",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "168"
+        "dg_id": 12577,
+        "dg_rank": 66,
+        "owgr_rank": 43,
+        "player_name": "Woodland, Gary",
+        "player_num": 31323,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "27"
       },
       {
         "am": 0,
-        "country": "NOR",
-        "dg_id": 15651,
-        "dg_rank": 119,
-        "owgr_rank": 192,
-        "player_name": "Ventura, Kristoffer",
-        "player_num": 35658,
-        "pre_tourn_pageviews": 1179,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 08:51",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 14:11",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 08:40",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 09:30",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "102"
-      },
-      {
-        "am": 0,
-        "country": "AUS",
-        "dg_id": 24304,
-        "dg_rank": 213,
-        "owgr_rank": 197,
-        "player_name": "Vilips, Karl",
-        "player_num": 54304,
-        "pre_tourn_pageviews": 491,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 13:16",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 07:56",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "128"
-      },
-      {
-        "am": 0,
-        "country": "COL",
-        "dg_id": 9171,
-        "dg_rank": 389,
-        "owgr_rank": 473,
-        "player_name": "Villegas, Camilo",
-        "player_num": 27770,
-        "pre_tourn_pageviews": 235,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 07:12",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 12:32",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "194"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 25003,
-        "dg_rank": null,
-        "owgr_rank": 284,
-        "player_name": "Walker, Danny",
-        "player_num": 54607,
-        "pre_tourn_pageviews": 179,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 12:21",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 07:01",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 11:50",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 08:30",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "159"
-      },
-      {
-        "am": 0,
-        "country": "ENG",
-        "dg_id": 20706,
-        "dg_rank": 52,
-        "owgr_rank": 62,
-        "player_name": "Wallace, Matt",
-        "player_num": 48887,
-        "pre_tourn_pageviews": 1755,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 12:21",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 07:01",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 08:15",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 12:45",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "80"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 25908,
-        "dg_rank": 209,
-        "owgr_rank": 184,
-        "player_name": "Whaley, Vince",
-        "player_num": 51894,
-        "pre_tourn_pageviews": 262,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 12:21",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 07:01",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "169"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 22051,
-        "dg_rank": 432,
-        "owgr_rank": 460,
-        "player_name": "Wise, Aaron",
-        "player_num": 49964,
-        "pre_tourn_pageviews": 454,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 08:07",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 13:27",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "149"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 25002,
-        "dg_rank": 286,
-        "owgr_rank": 389,
-        "player_name": "Wu, Dylan",
-        "player_num": 54783,
-        "pre_tourn_pageviews": 226,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 12:10",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 06:50",
-            "wave": "early"
-          }
-        ],
-        "tour_rank": "160"
+        "country": "CAN",
+        "dg_id": 29925,
+        "dg_rank": 112,
+        "owgr_rank": 106,
+        "player_name": "Yellamaraju, Sudarshan",
+        "player_num": 60386,
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
+        "tour_rank": "57"
       },
       {
         "am": 0,
@@ -9018,101 +3926,15 @@
         "owgr_rank": 3,
         "player_name": "Young, Cameron",
         "player_num": 57366,
-        "pre_tourn_pageviews": 3539,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 10,
-            "teetime": "2026-08-06 07:45",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 1,
-            "teetime": "2026-08-07 13:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 07:15",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 07:25",
-            "wave": "early"
-          }
-        ],
+        "pre_tourn_pageviews": 0,
+        "teetimes": [],
         "tour_rank": "3"
-      },
-      {
-        "am": 0,
-        "country": "TPE",
-        "dg_id": 17881,
-        "dg_rank": 96,
-        "owgr_rank": 126,
-        "player_name": "Yu, Kevin",
-        "player_num": 45242,
-        "pre_tourn_pageviews": 785,
-        "teetimes": [
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 1,
-            "start_hole": 1,
-            "teetime": "2026-08-06 07:45",
-            "wave": "early"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 2,
-            "start_hole": 10,
-            "teetime": "2026-08-07 13:05",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 3,
-            "start_hole": 1,
-            "teetime": "2026-08-08 12:10",
-            "wave": "late"
-          },
-          {
-            "course_code": "",
-            "course_name": "Sedgefield Country Club",
-            "course_num": 752,
-            "round_num": 4,
-            "start_hole": 1,
-            "teetime": "2026-08-09 13:25",
-            "wave": "late"
-          }
-        ],
-        "tour_rank": "111"
       }
     ],
-    "last_updated": "2026-08-09 05:40:35 UTC",
+    "last_updated": "2026-08-10 03:10:34 UTC",
     "multi_course": "no",
     "tour": "pga",
-    "tz_offset": -14400
+    "tz_offset": -18000
   },
   "live_tournament_stats": {
     "course_name": "Sedgefield Country Club",
@@ -32237,5 +27059,5 @@
     "event_name": "Wyndham Championship",
     "last_update": "2026-08-08 8:49 PM"
   },
-  "field_updates_refreshed_at": "2026-08-09T05:43:07.335Z"
+  "field_updates_refreshed_at": "2026-08-10T03:14:15.075Z"
 }
