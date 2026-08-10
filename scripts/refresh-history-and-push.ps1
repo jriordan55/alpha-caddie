@@ -264,6 +264,16 @@ function Resolve-RebaseDataConflicts([string] $Root) {
     }
   }
   git -C $Root add -- @conflicted
+  foreach ($p in $conflicted) {
+    $full = Join-Path $Root $p
+    if (-not (Test-Path $full)) { continue }
+    if ($p -match '\.(json)$') {
+      $raw = Get-Content -LiteralPath $full -Raw -ErrorAction SilentlyContinue
+      if ($raw -match '^(<<<<<<<|=======|>>>>>>>)' -or $raw -match '(?m)^<<<<<<< ' -or $raw -match '(?m)^>>>>>>> ') {
+        throw "Rebase left conflict markers in $p — aborting publish. Resolve JSON manually and retry."
+      }
+    }
+  }
   return $true
 }
 

@@ -81,8 +81,30 @@ function main() {
     process.exit(requireHard ? 1 : 0);
   }
 
-  const proj = loadJson(projPath);
-  const live = loadJson(livePath);
+  let proj;
+  let live;
+  try {
+    const rawProj = readFileSync(projPath, "utf8");
+    if (/^<<<<<<< |^=======|^>>>>>>> /m.test(rawProj)) {
+      errors.push("projections.json contains unresolved git conflict markers");
+    }
+    proj = JSON.parse(rawProj);
+  } catch (e) {
+    errors.push(`projections.json is not valid JSON (${e?.message || e})`);
+  }
+  try {
+    const rawLive = readFileSync(livePath, "utf8");
+    if (/^<<<<<<< |^=======|^>>>>>>> /m.test(rawLive)) {
+      errors.push("live-in-play.json contains unresolved git conflict markers");
+    }
+    live = JSON.parse(rawLive);
+  } catch (e) {
+    errors.push(`live-in-play.json is not valid JSON (${e?.message || e})`);
+  }
+  if (errors.length || !proj || !live) {
+    for (const e of errors) console.error(`[verify:live-publish] FAIL: ${e}`);
+    process.exit(requireHard ? 1 : 0);
+  }
   const projEv = String(proj.event_name || "").trim();
   const liveEv = eventFromLive(live);
   const infoEv = String(live?.info?.event_name || "").trim();
