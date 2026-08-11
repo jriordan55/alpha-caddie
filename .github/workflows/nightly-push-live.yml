@@ -5,8 +5,8 @@
 #   - matchup-tracker (round matchups + 3-balls)
 # then pushes; "Projection Tracker Pages" rebuilds GitHub Pages from the new CSVs.
 #
-# Schedule: 01:00 UTC = 9:00 PM Eastern Daylight Time (EDT).
-#   During EST (winter) that is 8:00 PM Eastern — adjust cron if you need exact 9pm year-round.
+# Schedule: every day at 9:00 PM US Eastern (America/New_York), year-round.
+# GitHub cron is UTC-only, so we fire at 01:00 and 02:00 UTC and gate on ET hour 21.
 #
 # One-time setup (repo → Settings → Secrets and variables → Actions):
 #   DATAGOLF_API_KEY          (required)
@@ -21,8 +21,9 @@ name: Nightly push:live
 on:
   workflow_dispatch:
   schedule:
-    # 9:00 PM Eastern Daylight Time
+    # 9pm Eastern: 01:00 UTC during EDT, 02:00 UTC during EST (time gate picks the right one).
     - cron: "0 1 * * *"
+    - cron: "0 2 * * *"
 
 permissions:
   contents: write
@@ -41,7 +42,31 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Skip unless 9pm Eastern (scheduled runs only)
+        if: github.event_name == 'schedule'
+        id: et_gate
+        shell: pwsh
+        run: |
+          $tz = [TimeZoneInfo]::FindSystemTimeZoneById('Eastern Standard Time')
+          $et = [TimeZoneInfo]::ConvertTimeFromUtc([DateTime]::UtcNow, $tz)
+          if ($et.Hour -ne 21) {
+            Write-Host "::notice::Skipping scheduled run — Eastern time is $($et.ToString('yyyy-MM-dd HH:mm')), not 21:xx."
+            "skip=true" >> $env:GITHUB_OUTPUT
+          } else {
+            Write-Host "Eastern time is $($et.ToString('yyyy-MM-dd HH:mm')) — running nightly push:live."
+            "skip=false" >> $env:GITHUB_OUTPUT
+          }
+
+      - name: Require DATAGOLF_API_KEY
+        if: github.event_name != 'schedule' || steps.et_gate.outputs.skip != 'true'
+        shell: pwsh
+        run: |
+          if ([string]::IsNullOrWhiteSpace('${{ secrets.DATAGOLF_API_KEY }}')) {
+            Write-Error 'Missing repo secret DATAGOLF_API_KEY (Settings → Secrets and variables → Actions).'
+          }
+
       - name: Setup Node
+        if: github.event_name != 'schedule' || steps.et_gate.outputs.skip != 'true'
         uses: actions/setup-node@v4
         with:
           node-version: "20"
@@ -49,19 +74,23 @@ jobs:
           cache-dependency-path: alpha-caddie-web/package-lock.json
 
       - name: Install dependencies
+        if: github.event_name != 'schedule' || steps.et_gate.outputs.skip != 'true'
         working-directory: alpha-caddie-web
         run: npm ci
 
       - name: Install Playwright Chromium
+        if: github.event_name != 'schedule' || steps.et_gate.outputs.skip != 'true'
         working-directory: alpha-caddie-web
         run: npx playwright install --with-deps chromium
 
       - name: Git identity
+        if: github.event_name != 'schedule' || steps.et_gate.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: npm run push:live (multi-book O/U + matchup trackers)
+        if: github.event_name != 'schedule' || steps.et_gate.outputs.skip != 'true'
         working-directory: alpha-caddie-web
         env:
           GOLF_MODEL_DIR: ${{ github.workspace }}
@@ -79,6 +108,8 @@ jobs:
           # Always refresh both trackers (O/U + matchups/3-balls).
           GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL: "0"
           GOLF_REQUIRE_TRACKER_REFRESH: "1"
+          GOLF_SKIP_MATCHUP_ODDS_UPDATE: "0"
+          GOLF_REQUIRE_LIVE_PUBLISH_INVARIANTS: "1"
           GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS: "0"
           # Multi-book O/U props + audit CSVs for projection-tracker (never skip on nightly).
           GOLF_SKIP_DK_OU: "0"
