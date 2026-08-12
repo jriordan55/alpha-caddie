@@ -158,7 +158,7 @@ function explodeDetailBets(detailRows) {
     if (result === "W" && closeDec > 1) units = closeDec - 1;
     else if (result === "L") units = -1;
 
-    out.push({
+      out.push({
       ...row,
       side,
       edge,
@@ -256,8 +256,8 @@ function renderOverview() {
         <td class="num">${fmtPct(hitPct)}</td>
         <td class="num">${fmtNum(a.units, 1)}</td>
         <td class="num">${fmtPct(roiPct)}</td>
-      </tr>`;
-    })
+        </tr>`;
+      })
     .join("") || `<tr><td colspan="5">No bets for current filters.</td></tr>`;
 
   const byBook = aggregateBets(bets, (b) => String(b.book || "").toLowerCase());
@@ -271,8 +271,8 @@ function renderOverview() {
         <td class="num">${fmtPct(hitPct)}</td>
         <td class="num">${fmtNum(a.units, 1)}</td>
         <td class="num">${fmtPct(roiPct)}</td>
-      </tr>`;
-    })
+            </tr>`;
+          })
     .join("") || `<tr><td colspan="5">No bets for current filters.</td></tr>`;
 }
 
@@ -287,15 +287,15 @@ function renderAccuracy() {
   });
   document.querySelector("#accuracy-table tbody").innerHTML = rows
     .slice(0, 200)
-    .map(
-      (r) => `<tr>
+          .map(
+            (r) => `<tr>
       <td>${escapeHtml(r.event_name)}</td>
       <td>${escapeHtml(r.market)}</td>
       <td class="num">${escapeHtml(r.rmse || "—")}</td>
       <td class="num">${escapeHtml(r.mae || "—")}</td>
       <td class="num">${escapeHtml(r.n_line_pairs || "—")}</td>
-    </tr>`,
-    )
+      </tr>`,
+          )
     .join("") || `<tr><td colspan="5">No accuracy rows.</td></tr>`;
 }
 
@@ -317,9 +317,9 @@ function renderEv() {
 
   document.querySelector("#ev-table tbody").innerHTML = rows
     .slice(0, 300)
-    .map((r) => {
+        .map((r) => {
       const wlp = `${r.wins || 0}-${r.losses || 0}-${r.pushes || 0}`;
-      return `<tr>
+          return `<tr>
         <td>${escapeHtml(r.market)}</td>
         <td class="num">${escapeHtml(r.ev_threshold_pct)}</td>
         <td>${escapeHtml(r.bet_side)}</td>
@@ -328,7 +328,7 @@ function renderEv() {
         <td class="num">${escapeHtml(r.units_net)}</td>
         <td class="num">${escapeHtml(r.roi_pct)}${r.roi_pct ? "%" : ""}</td>
       </tr>`;
-    })
+        })
     .join("") || `<tr><td colspan="7">No EV rows.</td></tr>`;
 }
 
@@ -340,12 +340,12 @@ function fmtAmerican(am) {
 function renderBets() {
   const rows = state.bets.slice(0, 500);
   document.querySelector("#bets-table tbody").innerHTML = rows
-    .map((r) => {
+        .map((r) => {
       const opp =
         String(r.market || "") === "3-balls"
           ? [r.opponent_name, r.opponent2_name].filter(Boolean).join(" / ")
           : r.opponent_name;
-      return `<tr>
+          return `<tr>
         <td>${escapeHtml(r.event_name)}</td>
         <td>${escapeHtml(r.round)}</td>
         <td>${escapeHtml(r.market)}</td>
@@ -362,7 +362,7 @@ function renderBets() {
         <td>${escapeHtml(r.pick_side_at_10 || r.side)}</td>
         <td>${resultBadge(r.result)}</td>
       </tr>`;
-    })
+        })
     .join("") || `<tr><td colspan="15">No graded bets for filters.</td></tr>`;
 }
 
@@ -480,7 +480,7 @@ function wire() {
   ]) {
     document.getElementById(id)?.addEventListener("change", async () => {
       await loadLivePicks();
-      renderAll();
+    renderAll();
     });
   }
   document.getElementById("filter-player")?.addEventListener("input", () => {
