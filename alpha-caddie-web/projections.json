@@ -9,7 +9,7 @@
   "datagolf_field_current_round": 1,
   "display_round": 1,
   "display_round_label": "R1 — next Thursday (auto, America/New_York)",
-  "updated_at": "2026-08-12T05:39:58Z",
+  "updated_at": "2026-08-12T07:28:50Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -28838,7 +28838,7 @@
       "note": "DataGolf still returned Wyndham Championship; cleared so Odds Screen does not show last week"
     }
   },
-  "book_odds_refreshed_at": "2026-08-12T05:39:58Z",
+  "book_odds_refreshed_at": "2026-08-12T07:28:50Z",
   "dk_round_props_note": "Could not detect DK league id from page (set DK_LEAGUE_ID).",
   "datagolf_live_current_round": 1,
   "dg_teetimes_merged_at": "2026-08-10T19:01:26Z",
@@ -29631,5 +29631,5 @@
     },
     "projection_recipe": "hierarchical_mu"
   },
-  "dk_round_props_refreshed_at": "2026-08-12T05:39:58Z"
+  "dk_round_props_refreshed_at": "2026-08-12T07:28:50Z"
 }
