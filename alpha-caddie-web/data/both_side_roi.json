@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T20:57:44.288Z",
+  "generated_at": "2026-08-14T02:35:35.781Z",
   "source": "data/round_projection_vs_actual.csv",
   "pricing_mode": "default",
   "pricing_skill": "default",
@@ -44,12 +44,12 @@
   },
   "book_graded_rows_live": {
     "draftkings": 0,
-    "prizepicks": 0,
-    "sleeper": 0,
-    "underdog": 0,
+    "prizepicks": 176,
+    "sleeper": 153,
+    "underdog": 217,
     "fanduel": 0,
-    "caesars": 0,
-    "kalshi": 0
+    "caesars": 75,
+    "kalshi": 49
   },
   "stake_dollars": 100,
   "min_bets_per_side": 40,
@@ -151,7 +151,7 @@
   "markets": {
     "Fairways hit": {
       "n_graded_rows": 816,
-      "n_graded_rows_live": 0,
+      "n_graded_rows_live": 63,
       "sweep": [
         {
           "gap": 0,
@@ -904,7 +904,7 @@
     },
     "Total score": {
       "n_graded_rows": 2957,
-      "n_graded_rows_live": 0,
+      "n_graded_rows_live": 255,
       "sweep": [
         {
           "gap": 0,
@@ -1657,7 +1657,7 @@
     },
     "Birdies": {
       "n_graded_rows": 2812,
-      "n_graded_rows_live": 0,
+      "n_graded_rows_live": 188,
       "sweep": [
         {
           "gap": 0,
@@ -3937,7 +3937,7 @@
     },
     "Pars": {
       "n_graded_rows": 1326,
-      "n_graded_rows_live": 0,
+      "n_graded_rows_live": 56,
       "sweep": [
         {
           "gap": 0,
@@ -6975,7 +6975,7 @@
     },
     "Bogeys": {
       "n_graded_rows": 1312,
-      "n_graded_rows_live": 0,
+      "n_graded_rows_live": 79,
       "sweep": [
         {
           "gap": 0,
@@ -7731,7 +7731,7 @@
     },
     "GIR": {
       "n_graded_rows": 973,
-      "n_graded_rows_live": 0,
+      "n_graded_rows_live": 29,
       "sweep": [
         {
           "gap": 0,
