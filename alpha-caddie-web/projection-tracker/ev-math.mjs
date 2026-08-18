@@ -1,4 +1,9 @@
-/** Browser-safe O/U edge math (mirrors round-projection-mu.mjs). */
+/** Browser-safe O/U edge math (mirrors round-projection-mu.mjs + Prop Pricing Model). */
+
+import {
+  propPricingProbOver,
+  propPricingExpectedRoi,
+} from "../scripts/prop-pricing-model.mjs";
 
 export function num(v, fb = NaN) {
   const n = Number(v);
@@ -128,36 +133,15 @@ function binomialProbOver(mu, nTrials, line) {
   return clamp(1 - cdf, 0, 1);
 }
 
-const OUTCOME_SIGMA_SCALE = {
-  "Total score": 1.45,
-  Birdies: 0.945,
-  Bogeys: 0.945,
-  GIR: 1.449,
-  "Fairways hit": 1.45,
-};
-
-export function modelProbOver(market, mu, line, sigmaScale = 1, fairwayHoles = 14) {
+export function modelProbOver(market, mu, line, sigmaScale = 1, fairwayHoles = 14, row = null) {
   if (!Number.isFinite(mu) || !Number.isFinite(line)) return NaN;
-  const scale =
-    (Number.isFinite(sigmaScale) && sigmaScale > 0 ? sigmaScale : 1) *
-    (OUTCOME_SIGMA_SCALE[market] || 1);
-  // Sportsbook-style: discrete markets use count distributions; score stays normal.
-  if (market === "Birdies" || market === "Bogeys" || market === "Pars") {
-    const lam = Math.max(0.05, mu * Math.max(0.85, Math.min(1.25, scale)));
-    return poissonProbOver(lam, line);
-  }
-  if (market === "GIR") {
-    const m = Math.max(0.05, mu * Math.max(0.85, Math.min(1.25, scale)));
-    return binomialProbOver(m, 18, line);
-  }
-  if (market === "Fairways hit") {
-    const n = Math.round(num(fairwayHoles, 14)) || 14;
-    const m = Math.max(0.05, mu * Math.max(0.85, Math.min(1.25, scale)));
-    return binomialProbOver(m, n, line);
-  }
-  const sig = 2.75 * scale;
-  const z = (line - mu) / Math.max(0.35, sig);
-  return 1 - normalCdf(z);
+  const stub =
+    row && typeof row === "object"
+      ? row
+      : market === "Total score"
+        ? { total_score: mu, round_sd: num(sigmaScale, NaN) > 1 && sigmaScale < 10 ? sigmaScale : undefined }
+        : {};
+  return propPricingProbOver(market, mu, line, { row: stub, fairwayHoles });
 }
 
 export function modelEdgePctAtLine(market, mu, line, overOdds, underOdds, sigmaScale = 1, fairwayHoles = 14) {
@@ -171,30 +155,17 @@ export function modelEdgePctAtLine(market, mu, line, overOdds, underOdds, sigmaS
   return { edgeOver, edgeUnder, best: Math.max(edgeOver, edgeUnder) };
 }
 
-export function capDirectionalPostedEdges(edgeOver, edgeUnder, mu, line) {
-  let o = edgeOver;
-  let u = edgeUnder;
-  if (Number.isFinite(mu) && Number.isFinite(line)) {
-    if (mu <= line) o = Number.isFinite(o) ? Math.min(0, o) : o;
-    if (mu >= line) u = Number.isFinite(u) ? Math.min(0, u) : u;
-  }
-  return { edgeOver: o, edgeUnder: u };
+export function propPricingRoi(prob, americanOdds) {
+  return propPricingExpectedRoi(prob, americanOdds);
 }
 
-export function pickBetSide(edgeOver, edgeUnder, minEvPct, mu, line) {
+export function capDirectionalPostedEdges(edgeOver, edgeUnder, _mu, _line) {
+  return { edgeOver, edgeUnder };
+}
+
+export function pickBetSide(edgeOver, edgeUnder, minEvPct) {
   const th = num(minEvPct, 0);
   if (!Number.isFinite(edgeOver) || !Number.isFinite(edgeUnder)) return null;
-  if (Number.isFinite(mu) && Number.isFinite(line)) {
-    if (mu > line) {
-      if (edgeOver >= th) return { side: "over", edge: edgeOver };
-      return null;
-    }
-    if (mu < line) {
-      if (edgeUnder >= th) return { side: "under", edge: edgeUnder };
-      return null;
-    }
-    return null;
-  }
   if (edgeOver >= th && edgeOver >= edgeUnder) return { side: "over", edge: edgeOver };
   if (edgeUnder >= th && edgeUnder > edgeOver) return { side: "under", edge: edgeUnder };
   return null;

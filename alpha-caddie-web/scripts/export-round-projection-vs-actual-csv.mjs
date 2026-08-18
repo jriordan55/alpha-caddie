@@ -1394,16 +1394,16 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
       if (Number.isFinite(modelLine) && Number.isFinite(bookLine)) {
         const stubRow =
           spec.market === "Total score"
-            ? { total_score: modelLine, round_sd: 2.75 }
+            ? { total_score: modelLine, round_sd: num(pr?.round_sd, 2.75) }
             : spec.key === "birdies"
-              ? { birdies: modelLine }
+              ? { birdies: modelLine, dg_id: pr?.dg }
               : spec.key === "bogeys"
-                ? { bogeys: modelLine }
+                ? { bogeys: modelLine, dg_id: pr?.dg }
                 : spec.key === "gir"
-                  ? { gir: modelLine }
+                  ? { gir: modelLine, dg_id: pr?.dg }
                   : spec.key === "fairways"
-                    ? { fairways: modelLine }
-                    : { pars: modelLine };
+                    ? { fairways: modelLine, dg_id: pr?.dg }
+                    : { pars: modelLine, dg_id: pr?.dg };
         const meta = { projection_course_basis: { fairway_holes_modeled: fairwayHoles } };
         const edge = modelEdgePctAtLine(
           spec.market,

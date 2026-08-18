@@ -5,7 +5,6 @@
 import {
   americanToDecimal,
   computeStakeDollars,
-  capDirectionalPostedEdges,
   devigFairTwoWay,
   formatAmerican,
   impliedProbFromAmerican,
@@ -1396,6 +1395,9 @@ function explodeDetailBetForBook(row, spec, book) {
   const fair = modelEdgeVsFairAtLine(spec.market, mu, bookLine, overOdds, underOdds);
   const postedOver = impliedProbFromAmerican(overOdds);
   const postedUnder = impliedProbFromAmerican(underOdds);
+  const posted = modelEdgePctAtLine(spec.market, mu, bookLine, overOdds, underOdds);
+  let edgeOver = posted.edgeOver;
+  let edgeUnder = posted.edgeUnder;
   const priced = priceSidesAgainstBook({
     market: spec.market,
     pRawOver: fair.pOver,
@@ -1404,22 +1406,9 @@ function explodeDetailBetForBook(row, spec, book) {
     postedOver,
     postedUnder,
   });
-  // Confidence edge (calibrated P − fair) is the primary price signal.
-  let edgeOver = priced.confEdgeOver;
-  let edgeUnder = priced.confEdgeUnder;
-  if (!Number.isFinite(edgeOver) || !Number.isFinite(edgeUnder)) {
-    edgeOver = fair.edgeFairOver;
-    edgeUnder = fair.edgeFairUnder;
-  }
-  if (!Number.isFinite(edgeOver) || !Number.isFinite(edgeUnder)) {
-    const posted = modelEdgePctAtLine(spec.market, mu, bookLine, overOdds, underOdds);
-    edgeOver = posted.edgeOver;
-    edgeUnder = posted.edgeUnder;
-  }
-  ({ edgeOver, edgeUnder } = capDirectionalPostedEdges(edgeOver, edgeUnder, mu, bookLine));
-  const pModelOver = priced.pCalOver;
-  const pModelUnder = priced.pCalUnder;
-  const pick = pickBetSide(edgeOver, edgeUnder, state.minEv, mu, bookLine);
+  const pModelOver = Number.isFinite(fair.pOver) ? fair.pOver : priced.pRawOver;
+  const pModelUnder = Number.isFinite(fair.pUnder) ? fair.pUnder : priced.pRawUnder;
+  const pick = pickBetSide(edgeOver, edgeUnder, state.minEv);
   const bestSide =
     Number.isFinite(edgeOver) && Number.isFinite(edgeUnder)
       ? edgeOver >= edgeUnder
@@ -1441,8 +1430,8 @@ function explodeDetailBetForBook(row, spec, book) {
   const postedProb = side === "over" ? postedOver : side === "under" ? postedUnder : NaN;
   const modelProb = side === "over" ? pModelOver : side === "under" ? pModelUnder : NaN;
   const rawModelProb =
-    side === "over" ? priced.pRawOver : side === "under" ? priced.pRawUnder : NaN;
-  const edgeFairPick = side === "over" ? priced.confEdgeOver : side === "under" ? priced.confEdgeUnder : NaN;
+    side === "over" ? pModelOver : side === "under" ? pModelUnder : NaN;
+  const edgeFairPick = side === "over" ? fair.edgeFairOver : side === "under" ? fair.edgeFairUnder : NaN;
   const qualified =
     Boolean(pick) &&
     qualifiesBet({
@@ -1481,14 +1470,14 @@ function explodeDetailBetForBook(row, spec, book) {
       actual,
       edgeOver,
       edgeUnder,
-      edgeFairOver: priced.confEdgeOver,
-      edgeFairUnder: priced.confEdgeUnder,
-      fairOver: priced.fairOver,
-      fairUnder: priced.fairUnder,
+      edgeFairOver: fair.edgeFairOver,
+      edgeFairUnder: fair.edgeFairUnder,
+      fairOver: fair.fairOver,
+      fairUnder: fair.fairUnder,
       pModelOver,
       pModelUnder,
-      pRawOver: priced.pRawOver,
-      pRawUnder: priced.pRawUnder,
+      pRawOver: pModelOver,
+      pRawUnder: pModelUnder,
       pickSide: side,
       pickEdge: activePick?.edge ?? NaN,
       edgeFairPick,

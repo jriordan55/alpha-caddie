@@ -11,16 +11,17 @@ import {
 import { marketBookSigmaScale, eventPropBookAlignedMarket } from "./market-book-calibration.mjs";
 import { applyOutcomeMuDebias } from "./outcome-mu-debias.mjs";
 import {
-  binomialProbOver,
-  normalProbOver,
   outcomeSigmaScale,
-  poissonProbOver,
 } from "./projection-stat-model.mjs";
 import { courseTailoringMuAdjustment, sgImportanceFromMeta } from "./course-skill-tailoring.mjs";
 import {
   liveCurrentRoundTotalScoreMuDelta,
   livePartialRoundCountPropAdjust,
 } from "./live-in-play-pricing.mjs";
+import {
+  propPricingProbOver,
+  stdDevFromValues,
+} from "./prop-pricing-model.mjs";
 
 export { liveCurrentRoundTotalScoreMuDelta } from "./live-in-play-pricing.mjs";
 import {
@@ -786,30 +787,49 @@ function countingStubRowForMu(market, mu, row, fairwayHoles) {
   if (market === "Bogeys") return { ...base, bogeys: mu };
   if (market === "GIR") return { ...base, gir: mu };
   if (market === "Fairways hit") return { ...base, fairways: mu };
+  if (market === "Total score") return { ...base, total_score: mu };
   return base;
 }
 
-export function modelProbOver(market, mu, line, row, meta) {
+const HIST_STAT_FOR_MARKET = Object.freeze({
+  "Total score": (r) => num(r.round_score ?? r.total_score, NaN),
+  Birdies: (r) => num(r.birdies, NaN),
+  Pars: (r) => num(r.pars, NaN),
+  Bogeys: (r) => num(r.bogeys, NaN),
+  GIR: (r) => num(r.gir, NaN),
+  "Fairways hit": (r) => num(r.driving_acc ?? r.fairways, NaN),
+});
+
+/** Walk-forward player history SD before bet time (Layer 2). */
+export function playerHistStdDevForBacktest(market, dgId, beforeMs, historyByDgId) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id) || !historyByDgId || typeof historyByDgId !== "object") return NaN;
+  const rounds = historyByDgId[String(id)] || historyByDgId[id];
+  if (!Array.isArray(rounds) || !rounds.length) return NaN;
+  const fn = HIST_STAT_FOR_MARKET[market];
+  if (!fn) return NaN;
+  const vals = [];
+  for (const r of rounds) {
+    const t = Date.parse(String(r.event_completed || r.date || r.round_date || ""));
+    if (Number.isFinite(beforeMs) && Number.isFinite(t) && t >= beforeMs) continue;
+    const v = fn(r);
+    if (Number.isFinite(v)) vals.push(v);
+  }
+  return stdDevFromValues(vals.slice(0, 48));
+}
+
+export function modelProbOver(market, mu, line, row, meta, opts = {}) {
   if (!Number.isFinite(mu) || !Number.isFinite(line)) return NaN;
   const metaLive = liveProjectionMeta(meta);
   const fairwayHoles = Math.round(num(metaLive?.projection_course_basis?.fairway_holes_modeled, 14)) || 14;
-  const bookSig = marketBookSigmaScale(market);
-  // Sportsbook-style: Poisson bird/bog, binomial GIR/FW, normal total score.
-  if (market === "Birdies" || market === "Bogeys" || market === "Pars") {
-    const lam = Math.max(0.05, mu * clamp(bookSig, 0.85, 1.25));
-    return poissonProbOver(lam, line);
-  }
-  if (market === "GIR") {
-    const m = Math.max(0.05, mu * clamp(bookSig, 0.85, 1.25));
-    return binomialProbOver(m, 18, line);
-  }
-  if (market === "Fairways hit") {
-    const m = Math.max(0.05, mu * clamp(bookSig, 0.85, 1.25));
-    return binomialProbOver(m, fairwayHoles, line);
-  }
-  const muRow = row;
-  const sig = sigmaForOu(market, muRow, metaLive, fairwayHoles) * bookSig;
-  return normalProbOver(mu, line, sig);
+  const muRow = countingStubRowForMu(market, mu, row, fairwayHoles);
+  const playerHistSd =
+    Number.isFinite(num(opts.playerHistSd, NaN)) ? num(opts.playerHistSd, NaN) : NaN;
+  return propPricingProbOver(market, mu, line, {
+    row: muRow,
+    fairwayHoles,
+    playerHistSd,
+  });
 }
 
 /** W/L for over and under vs half-line (pushes blank). */

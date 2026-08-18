@@ -1165,7 +1165,9 @@
           <dt>DK / PP Line &amp; Odds</dt>
           <dd>DraftKings and PrizePicks posted lines and American prices for the side shown.</dd>
           <dt>DK Edge / PP Edge</dt>
-          <dd>Model probability minus implied probability from each book&apos;s odds (computed per book when a line is posted).</dd>
+          <dd>Model probability minus break-even at each book&apos;s posted odds (Prop Pricing Model: distribution-based P(over/under), not μ vs line). Positive = +EV.</dd>
+          <dt>Best</dt>
+          <dd>Book with the highest expected ROI among sides with positive edge; Kelly stake uses that price.</dd>
         </dl>
       </section>
       <section class="ev-help-section" aria-labelledby="tab-help-ou-pricing-h">
@@ -1173,6 +1175,8 @@
         <dl class="ev-help-dl">
           <dt>Course-adaptive</dt>
           <dd>One projection path: recent form, course history, and strokes gained weighted by what this course demands (from course table). No mode or skill picker.</dd>
+          <dt>Prop pricing</dt>
+          <dd>Edges use the Prop Pricing Model: player history SD when enough rounds exist, else league SD multiplier × projection; total score and bogeys use right-skew (log-normal). Edge = model P − break-even at posted odds; Best book = max expected ROI among +edge prices.</dd>
         </dl>
       </section>
       <footer class="ev-help-actions">
@@ -1380,6 +1384,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=368"></script>
+  <script src="app.js?v=369"></script>
 </body>
 </html>

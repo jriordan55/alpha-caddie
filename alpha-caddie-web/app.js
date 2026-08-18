@@ -6263,6 +6263,128 @@ function sigmaForOu(market, row) {
   return sig * weatherMult * liveShrink * outcomeScale;
 }
 
+/** Prop_Pricing_Model_2.xlsx — Round projections use distribution-based pricing (not μ-vs-line caps). */
+const PROP_PRICING_MIN_HISTORY_N = 8;
+
+function ouUsesPropPricingModel(opts = {}) {
+  return opts.useFullRoundBookMean === true || opts.usePropPricingModel === true;
+}
+
+function propPricingUsesLogNormalSkew(market) {
+  const mKey = ouModelMarketKey(market) || market;
+  return mKey === "Total score" || mKey === "Bogeys";
+}
+
+function propPricingLeagueSdMultiplier(market) {
+  const mKey = ouModelMarketKey(market) || "Total score";
+  const bench = ouPgaTourBenchmarkForMarket(mKey);
+  if (bench && Number.isFinite(bench.mean) && bench.mean > 0 && Number.isFinite(bench.sd) && bench.sd > 0) {
+    if (bench.unit === "rate" && (mKey === "GIR" || mKey === "Fairways hit")) {
+      const n = mKey === "GIR" ? 18 : fairwayHolesModeledFromData() || 14;
+      const muCount = bench.mean * n;
+      const sdCount = bench.sd * n;
+      if (muCount > 0) return sdCount / muCount;
+    }
+    return bench.sd / bench.mean;
+  }
+  const fallback = {
+    "Total score": 0.047,
+    Birdies: 0.52,
+    Bogeys: 0.68,
+    Pars: 0.27,
+    GIR: 0.19,
+    "Fairways hit": 0.21,
+  };
+  return fallback[mKey] || 0.35;
+}
+
+/** Layer 2 — measured round-to-round SD from player history (Game Log Builder analogue). */
+function ouPlayerMarketStdDev(market, player, windowMode = ouProjAvgWindowMode()) {
+  const mKey = ouModelMarketKey(market) || "Total score";
+  const rounds = ouPlayerMarketAvgSampleRounds(player, windowMode);
+  if (rounds.length < PROP_PRICING_MIN_HISTORY_N) return NaN;
+  const statKey = ouMarketRatingHistoryStatKey(mKey);
+  const vals = [];
+  for (const r of rounds) {
+    const v = ouMarketAvgValueForRoundRow(statKey, r);
+    if (Number.isFinite(v)) vals.push(v);
+  }
+  if (vals.length < PROP_PRICING_MIN_HISTORY_N) return NaN;
+  const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
+  const variance = vals.reduce((a, v) => a + (v - mean) ** 2, 0) / (vals.length - 1);
+  const sd = Math.sqrt(variance);
+  return Number.isFinite(sd) && sd > 0.05 ? sd : NaN;
+}
+
+function propPricingWeatherSigmaMult(row) {
+  return projectionCountsWeatherBaked(row)
+    ? 1
+    : weatherSigmaMultiplierFromSnapshot(effectiveWeatherForProjectionRow(row));
+}
+
+function propPricingSigmaForOu(market, row, mu, opts = {}) {
+  const mKey = ouModelMarketKey(market) || "Total score";
+  const rec = ouStatRec(mKey);
+  const weatherMult = propPricingWeatherSigmaMult(row);
+
+  if (mKey === "Total score" && rec.sdKey) {
+    const s = num(row[rec.sdKey], NaN);
+    if (Number.isFinite(s) && s > 0.05) return s * weatherMult;
+  }
+
+  const histSd = ouPlayerMarketStdDev(market, row);
+  if (Number.isFinite(histSd)) return histSd * weatherMult;
+
+  if (Number.isFinite(mu) && mu > 0) {
+    let sig = mu * propPricingLeagueSdMultiplier(mKey);
+    if (mKey === "GIR" || mKey === "Fairways hit") {
+      sig = Math.max(sig, sigmaOuDiscreteCounting(mKey, mu));
+    }
+    const bench = ouPgaTourBenchmarkForMarket(mKey);
+    if (bench && Number.isFinite(bench.sd) && bench.sd > 0) {
+      sig = Math.max(sig, bench.sd * 0.88);
+    }
+    return sig * weatherMult;
+  }
+
+  const legacy = sigmaForOu(market, row);
+  const outcomeScale = outcomeSigmaScaleForMarket(mKey);
+  return Number.isFinite(legacy) && outcomeScale > 0 ? legacy / outcomeScale : legacy;
+}
+
+function propPricingNormalProbOver(mu, sigma, line) {
+  if (!Number.isFinite(mu) || !Number.isFinite(sigma) || !Number.isFinite(line) || sigma <= 0) return NaN;
+  return 1 - normalCdf((line - mu) / sigma);
+}
+
+/** Layer 3 — right-skewed outcomes (total score, bogeys): log-normal P(over). */
+function propPricingLogNormalProbOver(mu, sigma, line) {
+  if (!Number.isFinite(mu) || !Number.isFinite(sigma) || !Number.isFinite(line)) return NaN;
+  if (mu <= 0 || sigma <= 0 || line <= 0) return NaN;
+  const sigmaLn2 = Math.log(1 + (sigma / mu) ** 2);
+  const sigmaLn = Math.sqrt(sigmaLn2);
+  const muLn = Math.log(mu) - sigmaLn2 / 2;
+  return 1 - normalCdf((Math.log(line) - muLn) / sigmaLn);
+}
+
+function propPricingProbOverMarket(market, row, line, opts = {}) {
+  const mKey = ouModelMarketKey(market) || "Total score";
+  const mu = ouProjectedMean(market, row, opts);
+  if (!Number.isFinite(mu)) return NaN;
+  const sig = propPricingSigmaForOu(market, row, mu, opts);
+  if (!Number.isFinite(sig) || sig <= 0) return NaN;
+  if (propPricingUsesLogNormalSkew(mKey)) return propPricingLogNormalProbOver(mu, sig, line);
+  return propPricingNormalProbOver(mu, sig, line);
+}
+
+/** Step 4 — expected ROI per unit staked at posted American odds. */
+function propPricingExpectedRoi(prob, americanOdds) {
+  const p = num(prob, NaN);
+  const d = decimalFromAmerican(americanOdds);
+  if (!Number.isFinite(p) || !Number.isFinite(d) || d <= 1) return NaN;
+  return p * d - 1;
+}
+
 /** Model vs DK props aligned this week — use baked export μ (+ in-round partials only). */
 function eventPropBookAlignedMarket(mKey) {
   const mk = mKey === "Total Score" ? "Total score" : mKey;
@@ -6410,6 +6532,7 @@ function ouProjectedMean(market, row, opts = {}) {
 }
 
 function modelProbOverMarket(market, row, line, opts = {}) {
+  if (ouUsesPropPricingModel(opts)) return propPricingProbOverMarket(market, row, line, opts);
   const mKey = ouModelMarketKey(market) || "Total score";
   const rec = ouStatRec(mKey);
   const mu = ouProjectedMean(market, row, opts);
@@ -7525,13 +7648,13 @@ function ouKellyStakeForProjectionSide(market, player, pick, side, bankroll, kel
 
 /** Round-proj books in column order (line / odds / edge / fair). */
 const OU_PROJ_BOOK_SPECS = Object.freeze([
-  { key: "draftkings", pick: "dkPick", edge: "dkEdge", kelly: "dkKelly", fair: "dkFairP", model: "dkModelP" },
-  { key: "prizepicks", pick: "ppPick", edge: "ppEdge", kelly: "ppKelly", fair: "ppFairP", model: "ppModelP" },
-  { key: "sleeper", pick: "slPick", edge: "slEdge", kelly: "slKelly", fair: "slFairP", model: "slModelP" },
-  { key: "underdog", pick: "udPick", edge: "udEdge", kelly: "udKelly", fair: "udFairP", model: "udModelP" },
-  { key: "fanduel", pick: "fdPick", edge: "fdEdge", kelly: "fdKelly", fair: "fdFairP", model: "fdModelP" },
-  { key: "kalshi", pick: "klPick", edge: "klEdge", kelly: "klKelly", fair: "klFairP", model: "klModelP" },
-  { key: "caesars", pick: "czrPick", edge: "czrEdge", kelly: "czrKelly", fair: "czrFairP", model: "czrModelP" },
+  { key: "draftkings", pick: "dkPick", edge: "dkEdge", roi: "dkRoi", kelly: "dkKelly", fair: "dkFairP", model: "dkModelP" },
+  { key: "prizepicks", pick: "ppPick", edge: "ppEdge", roi: "ppRoi", kelly: "ppKelly", fair: "ppFairP", model: "ppModelP" },
+  { key: "sleeper", pick: "slPick", edge: "slEdge", roi: "slRoi", kelly: "slKelly", fair: "slFairP", model: "slModelP" },
+  { key: "underdog", pick: "udPick", edge: "udEdge", roi: "udRoi", kelly: "udKelly", fair: "udFairP", model: "udModelP" },
+  { key: "fanduel", pick: "fdPick", edge: "fdEdge", roi: "fdRoi", kelly: "fdKelly", fair: "fdFairP", model: "fdModelP" },
+  { key: "kalshi", pick: "klPick", edge: "klEdge", roi: "klRoi", kelly: "klKelly", fair: "klFairP", model: "klModelP" },
+  { key: "caesars", pick: "czrPick", edge: "czrEdge", roi: "czrRoi", kelly: "czrKelly", fair: "czrFairP", model: "czrModelP" },
 ]);
 
 function ouProjSideAmerican(pick, side) {
@@ -7547,19 +7670,21 @@ function ouProjNoVigSideProb(pick, side) {
   return side === "over" ? nv : clampProb01(1 - nv);
 }
 
-/** Pick best available book for this side: max Kelly $, else longest price. */
+/** Pick best available book for this side: max expected ROI among +edge, else max Kelly $. */
 function ouProjPickBestBook(entries) {
   const priced = (entries || []).filter((e) => e && Number.isFinite(e.dec) && e.dec > 1);
   if (!priced.length) return null;
-  const withKelly = priced.filter((e) => num(e.kelly, 0) > 0);
-  const pool = withKelly.length ? withKelly : priced;
+  const withEdge = priced.filter((e) => num(e.edge, 0) > 0);
+  const pool = withEdge.length ? withEdge : priced;
   let best = pool[0];
   for (let i = 1; i < pool.length; i++) {
     const e = pool[i];
-    const bk = num(best.kelly, 0);
-    const ek = num(e.kelly, 0);
-    if (ek > bk + 1e-9) best = e;
-    else if (Math.abs(ek - bk) <= 1e-9 && e.dec > best.dec) best = e;
+    const broi = num(best.roi, -Infinity);
+    const eroi = num(e.roi, -Infinity);
+    if (eroi > broi + 1e-9) best = e;
+    else if (Math.abs(eroi - broi) <= 1e-9 && num(e.kelly, 0) > num(best.kelly, 0)) best = e;
+    else if (Math.abs(eroi - broi) <= 1e-9 && Math.abs(num(e.kelly, 0) - num(best.kelly, 0)) <= 1e-9 && e.dec > best.dec)
+      best = e;
   }
   return best;
 }
@@ -7571,10 +7696,12 @@ function ouEdgeForCell(market, p, L, pImpOver, pImpUnder, opts = {}) {
   const pUnder = clampProb01(1 - pOver);
   let edgeO = Number.isFinite(pImpOver) ? pOver - pImpOver : NaN;
   let edgeU = Number.isFinite(pImpUnder) ? pUnder - pImpUnder : NaN;
-  const mu = ouProjectedMean(market, p, opts);
-  if (eventPropBookAlignedMarket(mKey) && Number.isFinite(mu) && Number.isFinite(L)) {
-    if (mu <= L) edgeO = Number.isFinite(edgeO) ? Math.min(0, edgeO) : edgeO;
-    if (mu >= L) edgeU = Number.isFinite(edgeU) ? Math.min(0, edgeU) : edgeU;
+  if (!ouUsesPropPricingModel(opts)) {
+    const mu = ouProjectedMean(market, p, opts);
+    if (eventPropBookAlignedMarket(mKey) && Number.isFinite(mu) && Number.isFinite(L)) {
+      if (mu <= L) edgeO = Number.isFinite(edgeO) ? Math.min(0, edgeO) : edgeO;
+      if (mu >= L) edgeU = Number.isFinite(edgeU) ? Math.min(0, edgeU) : edgeU;
+    }
   }
   return { pOver, pUnder, edgeO, edgeU };
 }
@@ -7604,7 +7731,7 @@ function ouCellEdgeStackHtml(market, p, L, pImpOver, pImpUnder, viewMode, oddsOv
 }
 
 /** Default: same order as projections (expected total ↑, or stat ↓ for props-style markets). */
-let ouTableSort = { key: "pr-dk-edge", dir: -1 };
+let ouTableSort = { key: "pr-best-roi", dir: -1 };
 let ouTableSortInited = false;
 /** Last snapped O/U line; used while the line input is empty or mid-edit (avoid rewriting on every keystroke). */
 let ouLineCommitted = 70.5;
@@ -7803,8 +7930,8 @@ function ensureOuProjectionTableChrome() {
   hr.appendChild(avgFairTh);
   const bestTh = document.createElement("th");
   bestTh.className = "sortable ou-proj-long-th num ou-proj-th-best";
-  bestTh.dataset.sortKey = "pr-best";
-  bestTh.title = "Best available book for this side · Kelly $ only for that book";
+  bestTh.dataset.sortKey = "pr-best-roi";
+  bestTh.title = "Best available book for this side (max expected ROI among +edge books) · Kelly $ for that book";
   bestTh.innerHTML = `Best${sortInd}`;
   hr.appendChild(bestTh);
   const dAvgTh = document.createElement("th");
@@ -7863,6 +7990,7 @@ function initOuTableSortOnce() {
         key === "pr-czr-edge" ||
         key === "pr-kelly" ||
         key === "pr-best" ||
+        key === "pr-best-roi" ||
         key === "pr-fair" ||
         key === "pr-avg-fair" ||
         key === "pr-delta-avg" ||
@@ -7996,7 +8124,7 @@ function ouAttachProjectionRowMetrics(row) {
   const kellyFraction = ouProjKellyFractionFromUi();
 
   const edgeForPick = (pick) => {
-    if (!pick) return { edge: NaN, sortOdds: NaN, modelP: NaN, fairP: NaN };
+    if (!pick) return { edge: NaN, roi: NaN, sortOdds: NaN, modelP: NaN, fairP: NaN };
     const pImpOver = impliedProbFromAmerican(pick.over);
     const pImpUnder = impliedProbFromAmerican(pick.under);
     const { pOver, pUnder, edgeO, edgeU } = ouEdgeForCell(
@@ -8007,10 +8135,13 @@ function ouAttachProjectionRowMetrics(row) {
       pImpUnder,
       OU_PROJ_TABLE_MEAN_OPTS,
     );
+    const sideAm = side === "over" ? pick.over : pick.under;
+    const modelP = side === "over" ? pOver : pUnder;
     return {
       edge: side === "over" ? edgeO : edgeU,
-      sortOdds: side === "over" ? pick.over : pick.under,
-      modelP: side === "over" ? pOver : pUnder,
+      roi: propPricingExpectedRoi(modelP, sideAm),
+      sortOdds: sideAm,
+      modelP,
       fairP: ouProjNoVigSideProb(pick, side),
     };
   };
@@ -8029,6 +8160,13 @@ function ouAttachProjectionRowMetrics(row) {
   row.fdEdge = fdHit.edge;
   row.klEdge = klHit.edge;
   row.czrEdge = czrHit.edge;
+  row.dkRoi = dkHit.roi;
+  row.ppRoi = ppHit.roi;
+  row.slRoi = slHit.roi;
+  row.udRoi = udHit.roi;
+  row.fdRoi = fdHit.roi;
+  row.klRoi = klHit.roi;
+  row.czrRoi = czrHit.roi;
   row.dkSortOdds = dkHit.sortOdds;
   row.ppSortOdds = ppHit.sortOdds;
   row.slSortOdds = slHit.sortOdds;
@@ -8073,6 +8211,7 @@ function ouAttachProjectionRowMetrics(row) {
       fairP: num(row[spec.fair], NaN),
       modelP: num(row[spec.model], NaN),
       edge: num(row[spec.edge], NaN),
+      roi: num(row[spec.roi], NaN),
       kelly: num(row[spec.kelly], NaN),
     });
   }
@@ -8098,6 +8237,7 @@ function ouAttachProjectionRowMetrics(row) {
       ? best.modelP - impliedProbFromAmerican(best.am)
       : NaN;
   row.kellySort = Number.isFinite(row.bestKelly) ? row.bestKelly : 0;
+  row.bestRoi = best && Number.isFinite(best.roi) ? best.roi : NaN;
   row.edge = [dkHit.edge, ppHit.edge, slHit.edge, udHit.edge, fdHit.edge, klHit.edge, czrHit.edge].find((e) =>
     Number.isFinite(e),
   );
@@ -8175,6 +8315,7 @@ function ouProjectionFlatRowsCacheKey(players, cols) {
     `fp${playerDgFingerprint(players)}`,
     `ep${historyMutationEpoch}`,
     `rev${projectionsDataRev}`,
+    `ppv1`,
     `dk${ouDkRoundPropsCacheSig}`,
     `pp${ouPpRoundPropsCacheSig}`,
     `sl${ouSlRoundPropsCacheSig}`,
@@ -8318,7 +8459,8 @@ function ouTableSortValueProjRow(row, sortKey) {
     if (Number.isFinite(row.avgFairP)) return row.avgFairP;
     return NaN;
   }
-  if (sortKey === "pr-best" || sortKey === "pr-kelly") {
+  if (sortKey === "pr-best" || sortKey === "pr-kelly" || sortKey === "pr-best-roi") {
+    if (Number.isFinite(row.bestRoi)) return row.bestRoi;
     if (Number.isFinite(row.kellySort)) return row.kellySort;
     return NaN;
   }
@@ -8375,13 +8517,8 @@ function drawOuProjDetailDistribution(canvas, market, player, line) {
   const mKey = ouModelMarketKey(market) || "Total score";
   const mu = ouProjectedMean(market, player, OU_PROJ_TABLE_MEAN_OPTS);
   const countLive = ouInPlayCountingAdjust(mKey, player, OU_PROJ_TABLE_MEAN_OPTS);
-  let sig =
-    sigmaForOu(mKey, player) *
-    ouInPlaySigmaScaleForMarket(mKey, player, ouStatRec(mKey), OU_PROJ_TABLE_MEAN_OPTS) *
-    marketBookSigmaScale(mKey);
-  if (!Number.isFinite(sig) || sig < 0.06) {
-    sig = sigmaForOu(mKey, player) * marketBookSigmaScale(mKey);
-  }
+  let sig = propPricingSigmaForOu(market, player, mu, OU_PROJ_TABLE_MEAN_OPTS);
+  if (!Number.isFinite(sig) || sig < 0.06) sig = Math.max(0.55, Math.abs(mu) * 0.05);
   const dpr = Math.min(2, window.devicePixelRatio || 1);
   const cssW = 340;
   const cssH = 140;
@@ -8453,7 +8590,7 @@ function drawOuProjDetailDistribution(canvas, market, player, line) {
   ctx.fillStyle = "#6d7382";
   ctx.font = "8px DM Sans, system-ui, sans-serif";
   ctx.fillText(
-    `Normal approx · μ ${mu.toFixed(2)} · σ ${sig.toFixed(2)}${Number.isFinite(line) ? ` · line ${line}` : ""}`,
+    `${propPricingUsesLogNormalSkew(mKey) ? "Log-normal" : "Normal"} · μ ${mu.toFixed(2)} · σ ${sig.toFixed(2)}${Number.isFinite(line) ? ` · line ${line}` : ""}`,
     pad.l,
     10,
   );
@@ -8465,13 +8602,8 @@ function buildOuProjDetailPanel(player, col, side, mu, pick, rawName, dkPick, pp
   const mKey = ouModelMarketKey(col.market) || "Total score";
   const rec = ouStatRec(mKey);
   const countLive = ouInPlayCountingAdjust(mKey, player, OU_PROJ_TABLE_MEAN_OPTS);
-  let sig =
-    sigmaForOu(mKey, player) *
-    ouInPlaySigmaScaleForMarket(mKey, player, rec, OU_PROJ_TABLE_MEAN_OPTS) *
-    marketBookSigmaScale(mKey);
-  if (!Number.isFinite(sig) || sig < 0.06) {
-    sig = sigmaForOu(mKey, player) * marketBookSigmaScale(mKey);
-  }
+  let sig = propPricingSigmaForOu(col.market, player, mu, OU_PROJ_TABLE_MEAN_OPTS);
+  if (!Number.isFinite(sig) || sig < 0.06) sig = Math.max(0.55, Math.abs(mu) * 0.05);
   const baseField = num(player[rec.field], NaN);
 
   const chartCol = document.createElement("div");
@@ -8579,16 +8711,16 @@ function buildOuTable() {
   const cols = ouProjectionColumnsActive();
   syncOuProjMarketFilterOptions(cols);
   if (ouTableSort.key.startsWith("proj-") || ouTableSort.key.startsWith("mkt-")) {
-    ouTableSort = { key: "pr-dk-edge", dir: -1 };
+    ouTableSort = { key: "pr-best-roi", dir: -1 };
   }
-  if (ouTableSort.key === "pr-edge") ouTableSort.key = "pr-dk-edge";
+  if (ouTableSort.key === "pr-edge") ouTableSort.key = "pr-best-roi";
   if (ouTableSort.key === "pr-pmod" || ouTableSort.key === "pr-mkt-rating" || ouTableSort.key === "pr-course-rating") {
-    ouTableSort = { key: "pr-dk-edge", dir: -1 };
+    ouTableSort = { key: "pr-best-roi", dir: -1 };
   }
   if (ouTableSort.key === "golfer") ouTableSort.key = "pr-golfer";
   if (ouTableSort.key === "pr-line") ouTableSort.key = "pr-dk-line";
   if (ouTableSort.key === "pr-odds") ouTableSort.key = "pr-dk-odds";
-  if (ouTableSort.key === "pr-kelly") ouTableSort.key = "pr-best";
+  if (ouTableSort.key === "pr-kelly" || ouTableSort.key === "pr-best") ouTableSort.key = "pr-best-roi";
 
   const allRows = ouSortedPlayerRowsProjection(round);
   const pf = document.getElementById("ou-player-filter");
@@ -8686,6 +8818,13 @@ function buildOuTable() {
       fdEdge,
       klEdge,
       czrEdge,
+      dkRoi,
+      ppRoi,
+      slRoi,
+      udRoi,
+      fdRoi,
+      klRoi,
+      czrRoi,
       dkFairP,
       ppFairP,
       slFairP,
@@ -8849,20 +8988,21 @@ function buildOuTable() {
     klEdgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-kl-edge";
     const czrEdgeTd = document.createElement("td");
     czrEdgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-czr-edge";
-    const paintEdge = (td, bookPick, edge) => {
+    const paintEdge = (td, bookPick, edge, roi) => {
       if (bookPick && Number.isFinite(edge)) {
         td.textContent = formatEdgePct(edge);
+        if (Number.isFinite(roi)) td.title = `Edge ${formatEdgePct(edge)} · Exp ROI ${(roi * 100).toFixed(1)}%`;
         if (edge > 0) td.classList.add("pos");
         else if (edge < 0) td.classList.add("neg");
       } else td.textContent = "";
     };
-    paintEdge(dkEdgeTd, dkPick, dkEdge);
-    paintEdge(ppEdgeTd, ppPick, ppEdge);
-    paintEdge(slEdgeTd, slPick, slEdge);
-    paintEdge(udEdgeTd, udPick, udEdge);
-    paintEdge(fdEdgeTd, fdPick, fdEdge);
-    paintEdge(klEdgeTd, klPick, klEdge);
-    paintEdge(czrEdgeTd, czrPick, czrEdge);
+    paintEdge(dkEdgeTd, dkPick, dkEdge, dkRoi);
+    paintEdge(ppEdgeTd, ppPick, ppEdge, ppRoi);
+    paintEdge(slEdgeTd, slPick, slEdge, slRoi);
+    paintEdge(udEdgeTd, udPick, udEdge, udRoi);
+    paintEdge(fdEdgeTd, fdPick, fdEdge, fdRoi);
+    paintEdge(klEdgeTd, klPick, klEdge, klRoi);
+    paintEdge(czrEdgeTd, czrPick, czrEdge, czrRoi);
     tr.appendChild(dkEdgeTd);
     tr.appendChild(ppEdgeTd);
     tr.appendChild(slEdgeTd);
@@ -28004,7 +28144,7 @@ document.addEventListener("DOMContentLoaded", () => {
     refreshMatchupAnalysisKellyDisplay();
   });
   document.getElementById("ou-market-filter")?.addEventListener("change", () => {
-    ouTableSort = { key: "pr-dk-edge", dir: -1 };
+    ouTableSort = { key: "pr-best-roi", dir: -1 };
     const m = getOuMarket();
     const rng = OU_LINE_RANGES[m] || OU_LINE_RANGES["Total score"];
     const inp = document.getElementById("ou-line-filter");
@@ -28029,7 +28169,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   document.getElementById("ou-proj-market-filter")?.addEventListener("change", () => {
     ouProjExpandedKey = "";
-    ouTableSort = { key: "pr-dk-edge", dir: -1 };
+    ouTableSort = { key: "pr-best-roi", dir: -1 };
     scheduleBuildOuTable(true);
   });
   document.getElementById("ou-proj-avg-window")?.addEventListener("change", () => {
