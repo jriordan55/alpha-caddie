@@ -71,13 +71,16 @@
             <thead>
               <tr>
                 <th>Market</th>
-                <th class="num">Boost</th>
-                <th class="num">Base ROI</th>
-                <th class="num">Boost ROI</th>
-                <th class="num">Δ ROI</th>
-                <th class="num">Base MAE</th>
-                <th class="num">Boost MAE</th>
-                <th class="num">Bets</th>
+                <th class="num">β</th>
+                <th class="num">Base O</th>
+                <th class="num">Base U</th>
+                <th class="num">Base all</th>
+                <th class="num">Boost O</th>
+                <th class="num">Boost U</th>
+                <th class="num">Boost all</th>
+                <th class="num">O n</th>
+                <th class="num">U n</th>
+                <th class="num">MAE Δ</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -103,6 +106,18 @@
           </label>
           <label>Start bankroll ($)
             <input id="an-bankroll" type="number" min="100" step="100" value="10000" />
+          </label>
+          <label>Min edge %
+            <select id="an-min-ev">
+              <option value="any" selected>Any (baked)</option>
+              <option value="policy">Policy min EV</option>
+              <option value="0">0</option>
+              <option value="2.5">2.5</option>
+              <option value="5">5</option>
+              <option value="7.5">7.5</option>
+              <option value="10">10</option>
+              <option value="12.5">12.5</option>
+            </select>
           </label>
         </div>
         <div class="kpi-row" id="an-kpis"></div>
@@ -170,7 +185,7 @@
       <section class="card">
         <div class="card-head">
           <h2>Graded projection bets</h2>
-          <p class="note">Historical lines under each market’s Prop Pricing min EV on model μ, filtered by prior-round SG side (APP / OTT / PUTT / BoB% / GIR%). Flat $100.</p>
+          <p class="note">Prop Pricing graded bets. Filter by min edge % and prior-round field rank (SG APP, PUTT, FW%, GIR%, BoB%). Flat $100.</p>
         </div>
         <div class="filters">
           <label>Market
@@ -189,6 +204,43 @@
           <label>Event
             <select id="hist-event"><option value="">All events</option></select>
           </label>
+          <label>Min edge %
+            <select id="hist-min-ev">
+              <option value="any" selected>Any (baked)</option>
+              <option value="policy">Policy min EV</option>
+              <option value="0">0</option>
+              <option value="2.5">2.5</option>
+              <option value="5">5</option>
+              <option value="7.5">7.5</option>
+              <option value="10">10</option>
+              <option value="12.5">12.5</option>
+            </select>
+          </label>
+          <label>Prior rank metric
+            <select id="hist-rank-metric">
+              <option value="any" selected>Any</option>
+              <option value="app">SG approach</option>
+              <option value="putt">SG putting</option>
+              <option value="fw">Fairway hit %</option>
+              <option value="gir">GIR %</option>
+              <option value="bob">BoB %</option>
+            </select>
+          </label>
+          <label>Prior rank top
+            <select id="hist-rank-cutoff">
+              <option value="any" selected>Any</option>
+              <option value="top5">Top 5</option>
+              <option value="top10">Top 10</option>
+              <option value="top15">Top 15</option>
+              <option value="top20">Top 20</option>
+              <option value="top25">Top 25</option>
+              <option value="top30">Top 30</option>
+              <option value="top35">Top 35</option>
+              <option value="top40">Top 40</option>
+              <option value="top45">Top 45</option>
+              <option value="top50">Top 50</option>
+            </select>
+          </label>
         </div>
         <div class="kpi-row" id="hist-kpis"></div>
         <p class="note" id="hist-table-note"></p>
@@ -205,6 +257,8 @@
                 <th class="num">μ</th>
                 <th class="num">Line</th>
                 <th class="num">Odds</th>
+                <th class="num">Edge %</th>
+                <th class="num">Prior rank</th>
                 <th class="num">Actual</th>
                 <th>Result</th>
                 <th class="num">PnL</th>

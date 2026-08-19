@@ -1,7 +1,8 @@
 /**
  * Prior-round signals → allowed O/U side by market.
- * Birdies = prior BoB%; GIR = prior GIR%; others use SG categories.
+ * Birdies = prior BoB%; GIR = prior GIR%; Fairways = prior FW%; others use SG categories.
  */
+import { traditionalRate01 } from "./dg-traditional-stats.mjs";
 
 export const SG_STRONG = 0.35;
 export const SG_WEAK = -0.15;
@@ -13,6 +14,11 @@ export const BOB_PCT_WEAK = 0.11;
 /** ~12+ GIR; ~10 or fewer GIR. */
 export const GIR_PCT_STRONG = 12 / 18;
 export const GIR_PCT_WEAK = 10 / 18;
+
+/** ~10+ fairways on 14 FW holes; ~8 or fewer. */
+export const FW_PCT_STRONG = 10 / 14;
+export const FW_PCT_WEAK = 8 / 14;
+export const FW_HOLES_MODELED = 14;
 
 export function num(v, fb = NaN) {
   const n = Number(v);
@@ -36,6 +42,11 @@ export function bobPctFromHistRow(row) {
   const eagleAdd = Number.isFinite(eob) ? eob : Number.isFinite(eag) ? eag : 0;
   if (!Number.isFinite(bird) && !Number.isFinite(eob) && !Number.isFinite(eag)) return NaN;
   return ((Number.isFinite(bird) ? bird : 0) + Math.max(0, eagleAdd)) / 18;
+}
+
+/** Fairway hit rate 0–1 from driving_acc (fraction, count, or percent). */
+export function fairwayPctFromHistRow(row, fairwayHoles = FW_HOLES_MODELED) {
+  return traditionalRate01(row?.driving_acc, fairwayHoles);
 }
 
 /** @returns {"strong"|"weak"|"neutral"|null} */
@@ -69,6 +80,7 @@ export function priorSignalsFromRow(row = {}) {
     prev_sg_putt: num(row.prev_sg_putt, NaN),
     prev_gir_pct: num(row.prev_gir_pct, NaN),
     prev_bob_pct: num(row.prev_bob_pct, NaN),
+    prev_fairway_pct: num(row.prev_fairway_pct, NaN),
   };
 }
 
@@ -80,6 +92,7 @@ export function priorSignalsFromHistRow(row = {}) {
     prev_sg_putt: num(row.sg_putt, NaN),
     prev_gir_pct: girPctFromHistRow(row),
     prev_bob_pct: bobPctFromHistRow(row),
+    prev_fairway_pct: fairwayPctFromHistRow(row),
   };
 }
 
@@ -108,6 +121,7 @@ export function sgAllowedSides(market, signals = {}) {
   const putt = sgTier(signals.prev_sg_putt);
   const bob = rateTier(signals.prev_bob_pct, BOB_PCT_STRONG, BOB_PCT_WEAK);
   const gir = rateTier(signals.prev_gir_pct, GIR_PCT_STRONG, GIR_PCT_WEAK);
+  const fw = rateTier(signals.prev_fairway_pct, FW_PCT_STRONG, FW_PCT_WEAK);
 
   switch (String(market || "").trim()) {
     case "Total score":
@@ -117,7 +131,7 @@ export function sgAllowedSides(market, signals = {}) {
     case "Bogeys":
       return sidesFromTier(app, "weak", "strong", "prior SG approach");
     case "Fairways hit":
-      return sidesFromTier(ott, "strong", "weak", "prior SG off the tee");
+      return sidesFromTier(fw, "strong", "weak", "prior FW%");
     case "GIR":
       return sidesFromTier(gir, "strong", "weak", "prior GIR%");
     case "Pars": {

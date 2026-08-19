@@ -22,6 +22,10 @@ import { alignDetailCsvContent } from "./projection-context-signals.mjs";
 import { priorContextForBetRow, loadHistByKey } from "./prior-round-context.mjs";
 import { pickPropPricingSide } from "./prop-pricing-bet-pick.mjs";
 import {
+  buildBetRankLookupIndex,
+  buildPriorRoundFieldRankIndex,
+} from "./prior-round-field-ranks.mjs";
+import {
   EXPORT_MARKETS,
   num,
   parseDkBookLine,
@@ -506,6 +510,7 @@ function appendGradedBets(betRows, rows, rec, liveWeek) {
       prev_sg_putt: Number.isFinite(r.prev_sg_putt) ? r.prev_sg_putt : null,
       prev_gir_pct: Number.isFinite(r.prev_gir_pct) ? r.prev_gir_pct : null,
       prev_bob_pct: Number.isFinite(r.prev_bob_pct) ? r.prev_bob_pct : null,
+      prev_fairway_pct: Number.isFinite(r.prev_fairway_pct) ? r.prev_fairway_pct : null,
     });
   }
 }
@@ -676,7 +681,10 @@ async function main() {
       if (
         !Number.isFinite(r.prev_sg_app) &&
         !Number.isFinite(r.prev_sg_ott) &&
-        !Number.isFinite(r.prev_sg_putt)
+        !Number.isFinite(r.prev_sg_putt) &&
+        !Number.isFinite(r.prev_gir_pct) &&
+        !Number.isFinite(r.prev_bob_pct) &&
+        !Number.isFinite(r.prev_fairway_pct)
       ) {
         continue;
       }
@@ -686,6 +694,7 @@ async function main() {
         prev_sg_putt: r.prev_sg_putt,
         prev_gir_pct: r.prev_gir_pct,
         prev_bob_pct: r.prev_bob_pct,
+        prev_fairway_pct: r.prev_fairway_pct,
       };
     }
   }
@@ -693,6 +702,33 @@ async function main() {
     join(WEB, "data", "prev_round_sg_index.json"),
     `${JSON.stringify({ generated_at: out.generated_at, index: prevSgIndex }, null, 2)}\n`,
   );
+
+  if (existsSync(HIST)) {
+    const rankIndex = await buildPriorRoundFieldRankIndex(HIST);
+    const rankLookup = buildBetRankLookupIndex(rankIndex, betRows);
+    writeFileSync(
+      join(WEB, "data", "prior_round_field_ranks.json"),
+      `${JSON.stringify(
+        {
+          generated_at: out.generated_at,
+          source: "historical_rounds_all.csv",
+          metrics: {
+            app: "SG approach",
+            putt: "SG putting",
+            fw: "Fairway hit %",
+            gir: "GIR %",
+            bob: "BoB %",
+          },
+          cutoffs: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50],
+          n_keys: Object.keys(rankLookup).length,
+          index: rankLookup,
+        },
+        null,
+        2,
+      )}\n`,
+    );
+  }
+
   writeFileSync(
     betsPath,
     `${JSON.stringify(

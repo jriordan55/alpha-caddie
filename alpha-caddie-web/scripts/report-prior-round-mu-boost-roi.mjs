@@ -76,24 +76,43 @@ function gradeSide(actual, bookLine, side) {
   return under === "W" ? "W" : under === "L" ? "L" : "P";
 }
 
-function emptyStats() {
-  return { bets: 0, wins: 0, losses: 0, pushes: 0, pnl: 0, mae: 0, mae_n: 0 };
+function emptySideStats() {
+  return { bets: 0, wins: 0, losses: 0, pushes: 0, pnl: 0 };
 }
 
-function sideStats(s) {
+function emptyModeStats() {
+  return { over: emptySideStats(), under: emptySideStats(), combined: emptySideStats(), mae: 0, mae_n: 0 };
+}
+
+function finalizeSideStats(s) {
   const roi = s.bets > 0 ? s.pnl / (s.bets * STAKE) : null;
   return {
     ...s,
     roi,
     roi_pct: roi != null ? Math.round(roi * 10000) / 100 : null,
-    mae: s.mae_n > 0 ? s.mae / s.mae_n : null,
   };
 }
 
-function addMae(bucket, actual, mu) {
-  if (!Number.isFinite(actual) || !Number.isFinite(mu)) return;
-  bucket.mae += Math.abs(actual - mu);
-  bucket.mae_n++;
+function finalizeModeStats(m) {
+  return {
+    over: finalizeSideStats(m.over),
+    under: finalizeSideStats(m.under),
+    combined: finalizeSideStats(m.combined),
+    mae: m.mae_n > 0 ? m.mae / m.mae_n : null,
+  };
+}
+
+function recordBet(modeBucket, side, result, pnl) {
+  const key = side === "OVER" ? "over" : "under";
+  const b = modeBucket[key];
+  const c = modeBucket.combined;
+  for (const bucket of [b, c]) {
+    bucket.bets++;
+    if (result === "W") bucket.wins++;
+    else if (result === "L") bucket.losses++;
+    else bucket.pushes++;
+    bucket.pnl += pnl;
+  }
 }
 
 function pickAndGrade(r, mu, actual) {
@@ -179,56 +198,46 @@ async function loadRows() {
 function evaluate(rows) {
   /** @type {Record<string, { baseline: object, boosted: object }>} */
   const byMarket = {};
-  const overall = { baseline: emptyStats(), boosted: emptyStats() };
+  const overall = { baseline: emptyModeStats(), boosted: emptyModeStats() };
 
   for (const r of rows) {
     if (!byMarket[r.market]) {
-      byMarket[r.market] = { baseline: emptyStats(), boosted: emptyStats() };
+      byMarket[r.market] = { baseline: emptyModeStats(), boosted: emptyModeStats() };
     }
 
-    addMae(byMarket[r.market].baseline, r.actual, r.model);
-    addMae(byMarket[r.market].boosted, r.actual, r.boosted);
-    addMae(overall.baseline, r.actual, r.model);
-    addMae(overall.boosted, r.actual, r.boosted);
+    for (const [mode, mu] of [
+      ["baseline", r.model],
+      ["boosted", r.boosted],
+    ]) {
+      const bucket = byMarket[r.market][mode];
+      bucket.mae += Math.abs(r.actual - mu);
+      bucket.mae_n++;
+      overall[mode].mae += Math.abs(r.actual - mu);
+      overall[mode].mae_n++;
+    }
 
     const gBase = pickAndGrade(r, r.model, r.actual);
-    if (gBase) {
-      const b = byMarket[r.market].baseline;
-      b.bets++;
-      if (gBase.result === "W") b.wins++;
-      else if (gBase.result === "L") b.losses++;
-      else b.pushes++;
-      b.pnl += gBase.pnl;
-      overall.baseline.bets++;
-      if (gBase.result === "W") overall.baseline.wins++;
-      else if (gBase.result === "L") overall.baseline.losses++;
-      else overall.baseline.pushes++;
-      overall.baseline.pnl += gBase.pnl;
-    }
+    if (gBase) recordBet(byMarket[r.market].baseline, gBase.side, gBase.result, gBase.pnl);
+    if (gBase) recordBet(overall.baseline, gBase.side, gBase.result, gBase.pnl);
 
     const gBoost = pickAndGrade(r, r.boosted, r.actual);
-    if (gBoost) {
-      const t = byMarket[r.market].boosted;
-      t.bets++;
-      if (gBoost.result === "W") t.wins++;
-      else if (gBoost.result === "L") t.losses++;
-      else t.pushes++;
-      t.pnl += gBoost.pnl;
-      overall.boosted.bets++;
-      if (gBoost.result === "W") overall.boosted.wins++;
-      else if (gBoost.result === "L") overall.boosted.losses++;
-      else overall.boosted.pushes++;
-      overall.boosted.pnl += gBoost.pnl;
-    }
+    if (gBoost) recordBet(byMarket[r.market].boosted, gBoost.side, gBoost.result, gBoost.pnl);
+    if (gBoost) recordBet(overall.boosted, gBoost.side, gBoost.result, gBoost.pnl);
   }
 
   const markets = {};
   for (const [m, v] of Object.entries(byMarket)) {
-    markets[m] = { baseline: sideStats(v.baseline), boosted: sideStats(v.boosted) };
+    markets[m] = {
+      baseline: finalizeModeStats(v.baseline),
+      boosted: finalizeModeStats(v.boosted),
+    };
   }
   return {
     markets,
-    overall: { baseline: sideStats(overall.baseline), boosted: sideStats(overall.boosted) },
+    overall: {
+      baseline: finalizeModeStats(overall.baseline),
+      boosted: finalizeModeStats(overall.boosted),
+    },
   };
 }
 
@@ -251,26 +260,29 @@ async function main() {
 
   writeFileSync(OUT, JSON.stringify(out, null, 2));
 
+  const fmt = (v) => (Number.isFinite(v) ? `${(v * 100).toFixed(1)}%` : "—");
   const b = result.overall.baseline;
   const t = result.overall.boosted;
   console.log("\nPrior-round μ boost ROI (event-LOO, min EV 0%, SG filters)\n");
   console.log(
-    `${"Market".padEnd(14)} ${"Base ROI".padStart(9)} ${"Boost ROI".padStart(10)} ${"Base MAE".padStart(9)} ${"Boost MAE".padStart(10)} ${"Base n".padStart(7)} ${"Boost n".padStart(8)}`,
+    `${"Market".padEnd(14)} ${"β".padStart(8)} ${"B-O".padStart(7)} ${"B-U".padStart(7)} ${"B-All".padStart(7)} ${"T-O".padStart(7)} ${"T-U".padStart(7)} ${"T-All".padStart(7)} ${"On".padStart(5)} ${"Un".padStart(5)}`,
   );
-  console.log("-".repeat(72));
+  console.log("-".repeat(88));
   for (const m of Object.keys(result.markets).sort()) {
     const x = result.markets[m];
-    const fmt = (v) => (Number.isFinite(v) ? `${(v * 100).toFixed(1)}%` : "—");
-    const fmtM = (v) => (Number.isFinite(v) ? v.toFixed(3) : "—");
+    const bb = x.baseline;
+    const tb = x.boosted;
+    const beta = fit.markets?.[m]?.beta;
+    const betaStr = Number.isFinite(beta) ? beta.toFixed(3) : "—";
     console.log(
-      `${m.padEnd(14)} ${fmt(x.baseline.roi).padStart(9)} ${fmt(x.boosted.roi).padStart(10)} ${fmtM(x.baseline.mae).padStart(9)} ${fmtM(x.boosted.mae).padStart(10)} ${String(x.baseline.bets).padStart(7)} ${String(x.boosted.bets).padStart(8)}`,
+      `${m.padEnd(14)} ${betaStr.padStart(8)} ${fmt(bb.over.roi).padStart(7)} ${fmt(bb.under.roi).padStart(7)} ${fmt(bb.combined.roi).padStart(7)} ${fmt(tb.over.roi).padStart(7)} ${fmt(tb.under.roi).padStart(7)} ${fmt(tb.combined.roi).padStart(7)} ${String(tb.over.bets).padStart(5)} ${String(tb.under.bets).padStart(5)}`,
     );
   }
-  console.log("-".repeat(72));
+  console.log("-".repeat(88));
   console.log(
-    `${"OVERALL".padEnd(14)} ${((b.roi ?? 0) * 100).toFixed(1).padStart(8)}% ${((t.roi ?? 0) * 100).toFixed(1).padStart(9)}% ${(b.mae ?? 0).toFixed(3).padStart(9)} ${(t.mae ?? 0).toFixed(3).padStart(10)} ${String(b.bets).padStart(7)} ${String(t.bets).padStart(8)}`,
+    `${"OVERALL".padEnd(14)} ${"".padStart(8)} ${fmt(b.over.roi).padStart(7)} ${fmt(b.under.roi).padStart(7)} ${fmt(b.combined.roi).padStart(7)} ${fmt(t.over.roi).padStart(7)} ${fmt(t.under.roi).padStart(7)} ${fmt(t.combined.roi).padStart(7)} ${String(t.over.bets).padStart(5)} ${String(t.under.bets).padStart(5)}`,
   );
-  console.log(`\nWrote ${OUT}`);
+  console.log(`\nB = baseline μ · T = boosted μ · O/U = over/under side · n = boosted bet count\nWrote ${OUT}`);
 }
 
 main().catch((e) => {

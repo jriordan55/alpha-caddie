@@ -12,6 +12,7 @@ const PROJ_URL = "../projections.json";
 const LIVE_PROPS_URL = "../data/live_event_book_props.json";
 const HOLE_PROPS_URL = "../data/live_hole_props.json";
 const PREV_SG_URL = "../data/prev_round_sg_index.json";
+const PREV_RANK_URL = "../data/prior_round_field_ranks.json";
 
 const MARKET_TO_PLAYER = {
   "Total score": (p) => Number(p.total_score),
@@ -56,6 +57,7 @@ let BOOST_ROI = null;
 let BETS = null;
 /** @type {Record<string, { prev_sg_ott?: number, prev_sg_app?: number, prev_sg_putt?: number }>} */
 let PREV_SG_INDEX = {};
+let PREV_RANK_INDEX = {};
 let PROJ = null;
 let LIVE_PROPS = null;
 let HOLE_PROPS = null;
@@ -206,12 +208,23 @@ function boostCoefLabel(market, coef) {
   return `${sig}: β=${coef.beta.toFixed(4)}${coef.relative ? " rel" : " add"}`;
 }
 
+function modeRoi(mode, side) {
+  if (!mode) return NaN;
+  if (side === "over") return mode.over?.roi;
+  if (side === "under") return mode.under?.roi;
+  return mode.combined?.roi ?? mode.roi;
+}
+
+function modeMae(mode) {
+  return mode?.mae;
+}
+
 function renderBoostRoi() {
   const tbody = $("boost-roi-table")?.querySelector("tbody");
   const overallEl = $("boost-roi-overall");
   if (!tbody) return;
   if (!BOOST_ROI?.markets) {
-    tbody.innerHTML = `<tr><td colspan="8">No boost ROI data — run fit:prior-round-mu-boost then report:prior-round-mu-boost-roi.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="11">No boost ROI data — run fit:prior-round-mu-boost then report:prior-round-mu-boost-roi.</td></tr>`;
     if (overallEl) overallEl.textContent = "";
     return;
   }
@@ -222,19 +235,28 @@ function renderBoostRoi() {
   tbody.innerHTML = order
     .map((m) => {
       const x = BOOST_ROI.markets[m];
-      const b = x.baseline;
-      const t = x.boosted;
-      const dRoi =
-        Number.isFinite(b?.roi) && Number.isFinite(t?.roi) ? t.roi - b.roi : NaN;
+      const bb = x.baseline || {};
+      const tb = x.boosted || {};
+      const coef = coefs[m];
+      const beta =
+        coef && Number.isFinite(coef.beta) && !coef.shrunk
+          ? `${coef.beta.toFixed(3)}${coef.relative ? "" : " add"}`
+          : "—";
+      const bMae = modeMae(bb);
+      const tMae = modeMae(tb);
+      const maeDelta = Number.isFinite(bMae) && Number.isFinite(tMae) ? tMae - bMae : NaN;
       return `<tr>
         <td>${m}</td>
-        <td class="muted boost-coef">${boostCoefLabel(m, coefs[m])}</td>
-        <td class="num ${clsSigned(b?.roi)}">${fmtPct(b?.roi)}</td>
-        <td class="num ${clsSigned(t?.roi)}">${fmtPct(t?.roi)}</td>
-        <td class="num ${clsSigned(dRoi)}">${Number.isFinite(dRoi) ? fmtPct(dRoi) : "—"}</td>
-        <td class="num">${Number.isFinite(b?.mae) ? b.mae.toFixed(3) : "—"}</td>
-        <td class="num">${Number.isFinite(t?.mae) ? t.mae.toFixed(3) : "—"}</td>
-        <td class="num">${t?.bets ?? "—"}</td>
+        <td class="num muted">${beta}</td>
+        <td class="num ${clsSigned(modeRoi(bb, "over"))}">${fmtPct(modeRoi(bb, "over"))}</td>
+        <td class="num ${clsSigned(modeRoi(bb, "under"))}">${fmtPct(modeRoi(bb, "under"))}</td>
+        <td class="num ${clsSigned(modeRoi(bb, "combined"))}">${fmtPct(modeRoi(bb, "combined"))}</td>
+        <td class="num ${clsSigned(modeRoi(tb, "over"))}">${fmtPct(modeRoi(tb, "over"))}</td>
+        <td class="num ${clsSigned(modeRoi(tb, "under"))}">${fmtPct(modeRoi(tb, "under"))}</td>
+        <td class="num ${clsSigned(modeRoi(tb, "combined"))}">${fmtPct(modeRoi(tb, "combined"))}</td>
+        <td class="num">${tb.over?.bets ?? "—"}</td>
+        <td class="num">${tb.under?.bets ?? "—"}</td>
+        <td class="num ${clsSigned(-maeDelta)}">${Number.isFinite(maeDelta) ? (maeDelta >= 0 ? "+" : "") + maeDelta.toFixed(3) : "—"}</td>
       </tr>`;
     })
     .join("");
@@ -242,9 +264,9 @@ function renderBoostRoi() {
   const o = BOOST_ROI.overall || {};
   const ob = o.baseline || {};
   const ot = o.boosted || {};
-  const d = Number.isFinite(ob.roi) && Number.isFinite(ot.roi) ? ot.roi - ob.roi : NaN;
   if (overallEl) {
-    overallEl.textContent = `Overall (event LOO): baseline ${fmtPct(ob.roi)} → boosted ${fmtPct(ot.roi)} (${Number.isFinite(d) ? (d >= 0 ? "+" : "") + (d * 100).toFixed(1) + " pp" : "—"}) · ${ot.bets ?? 0} bets · MAE ${Number.isFinite(ob.mae) ? ob.mae.toFixed(3) : "—"} → ${Number.isFinite(ot.mae) ? ot.mae.toFixed(3) : "—"}`;
+    overallEl.textContent =
+      `Overall boosted: O ${fmtPct(modeRoi(ot, "over"))} (${ot.over?.bets ?? 0} bets) · U ${fmtPct(modeRoi(ot, "under"))} (${ot.under?.bets ?? 0} bets) · combined ${fmtPct(modeRoi(ot, "combined"))} · baseline combined ${fmtPct(modeRoi(ob, "combined"))}`;
   }
 }
 
@@ -287,6 +309,44 @@ function fillMarketSelects() {
   fillBookSelects();
 }
 
+function betPriorRanks(b) {
+  const k = `${String(b.event || "").trim()}|${Math.round(Number(b.dg_id))}|${Math.round(Number(b.round))}`;
+  return PREV_RANK_INDEX[k] || null;
+}
+
+const RANK_METRIC_LABELS = {
+  app: "SG APP",
+  putt: "SG PUTT",
+  fw: "FW%",
+  gir: "GIR%",
+  bob: "BoB%",
+};
+
+function betPassesRankFilter(b) {
+  const metric = $("hist-rank-metric")?.value || "any";
+  const cutoff = $("hist-rank-cutoff")?.value || "any";
+  if (metric === "any" || cutoff === "any") return true;
+  const ranks = betPriorRanks(b);
+  if (!ranks) return false;
+  const topN = Number(String(cutoff).replace(/^top/i, ""));
+  if (!Number.isFinite(topN)) return true;
+  const rank = Number(ranks[metric]);
+  return Number.isFinite(rank) && rank <= topN;
+}
+
+function minEvThresholdForBet(b, selectId) {
+  const mode = $(selectId)?.value || "any";
+  const edge = Number(b.edge_pct);
+  if (mode === "any") return true;
+  if (!Number.isFinite(edge)) return false;
+  if (mode === "policy") {
+    const rec = ROI?.recommended?.[b.market];
+    const th = Number.isFinite(rec?.min_ev_pct) ? rec.min_ev_pct : minEvForMarket(b.market, 0);
+    return edge >= th;
+  }
+  return edge >= Number(mode);
+}
+
 function histFiltered() {
   const tracked = new Set(trackedMarkets());
   const mkt = $("hist-market").value;
@@ -299,6 +359,8 @@ function histFiltered() {
     if (side && String(b.side).toLowerCase() !== side) return false;
     if (ev && b.event !== ev) return false;
     if (book && b.book_id !== book) return false;
+    if (!minEvThresholdForBet(b, "hist-min-ev")) return false;
+    if (!betPassesRankFilter(b)) return false;
     return true;
   });
 }
@@ -318,6 +380,14 @@ function renderHist() {
   }
   const staked = rows.length * 100;
   const roi = staked > 0 ? pnl / staked : NaN;
+  const evMode = $("hist-min-ev")?.value || "any";
+  const rankMetric = $("hist-rank-metric")?.value || "any";
+  const rankCut = $("hist-rank-cutoff")?.value || "any";
+  const evLabel = evMode === "any" ? "" : evMode === "policy" ? " · policy+ EV" : ` · edge ≥ ${evMode}%`;
+  const rankLabel =
+    rankMetric !== "any" && rankCut !== "any"
+      ? ` · ${RANK_METRIC_LABELS[rankMetric] || rankMetric} top ${String(rankCut).replace(/^top/i, "")}`
+      : "";
   $("hist-kpis").innerHTML = `
     <span>Bets <strong>${rows.length}</strong></span>
     <span>Record <strong>${w}W-${l}L-${p}P</strong></span>
@@ -331,14 +401,20 @@ function renderHist() {
     const liveLabel = BETS?.live_event ? ` · ${liveN} ${BETS.live_event}` : liveN ? ` · ${liveN} live-week` : "";
     note.textContent =
       rows.length > show.length
-        ? `Showing ${show.length} of ${rows.length} graded bets (newest first, all markets mixed)${liveLabel}. Filter by market/event to focus.`
-        : `${rows.length} graded bets (newest first)${liveLabel}.`;
+        ? `Showing ${show.length} of ${rows.length} graded bets (newest first, all markets mixed)${evLabel}${rankLabel}${liveLabel}. Filter by market/event to focus.`
+        : `${rows.length} graded bets (newest first)${evLabel}${rankLabel}${liveLabel}.`;
   }
   $("hist-table").querySelector("tbody").innerHTML = show.length
     ? show
         .map((b) => {
           const resCls = b.result === "W" ? "pos" : b.result === "L" ? "neg" : "";
           const bookLabel = b.book_label || b.book_id || "—";
+          const ranks = betPriorRanks(b);
+          const rankMetric = $("hist-rank-metric")?.value || "any";
+          const rankCell =
+            rankMetric !== "any" && ranks && Number.isFinite(ranks[rankMetric])
+              ? `${ranks[rankMetric]}/${ranks.field ?? "?"}`
+              : "—";
           return `<tr>
         <td>${b.event}</td>
         <td class="num">${b.round ?? ""}</td>
@@ -349,6 +425,8 @@ function renderHist() {
         <td class="num">${Number(b.model).toFixed(1)}</td>
         <td class="num">${b.book}</td>
         <td class="num">${b.odds > 0 ? "+" : ""}${b.odds}</td>
+        <td class="num ${clsSigned(b.edge_pct)}">${Number.isFinite(Number(b.edge_pct)) ? `${Number(b.edge_pct).toFixed(1)}%` : "—"}</td>
+        <td class="num">${rankCell}</td>
         <td class="num">${b.actual}</td>
         <td class="${resCls}">${b.result}</td>
         <td class="num ${clsSigned(b.pnl)}">${fmtMoney(b.pnl)}</td>
@@ -356,7 +434,7 @@ function renderHist() {
       </tr>`;
         })
         .join("")
-    : `<tr><td colspan="13">No graded bets for this filter.</td></tr>`;
+    : `<tr><td colspan="15">No graded bets for this filter.</td></tr>`;
 }
 
 function priorSgForLivePick(eventName, dgId, roundNum) {
@@ -368,6 +446,7 @@ function priorSgForLivePick(eventName, dgId, roundNum) {
     prev_sg_putt: hit.prev_sg_putt,
     prev_gir_pct: hit.prev_gir_pct,
     prev_bob_pct: hit.prev_bob_pct,
+    prev_fairway_pct: hit.prev_fairway_pct,
   };
 }
 
@@ -539,6 +618,7 @@ function anFiltered() {
     if (mkt && b.market !== mkt) return false;
     if (ev && b.event !== ev) return false;
     if (book && b.book_id !== book) return false;
+    if (!minEvThresholdForBet(b, "an-min-ev")) return false;
     return true;
   });
 }
@@ -996,13 +1076,14 @@ async function boot() {
   const err = $("error");
   err.hidden = true;
   try {
-    const [roi, bets, proj, liveProps, holeProps, prevSgPayload, boostRoi] = await Promise.all([
+    const [roi, bets, proj, liveProps, holeProps, prevSgPayload, prevRankPayload, boostRoi] = await Promise.all([
       loadJson(ROI_URL),
       loadJson(BETS_URL),
       loadJson(PROJ_URL).catch(() => null),
       loadJson(LIVE_PROPS_URL).catch(() => null),
       loadJson(HOLE_PROPS_URL).catch(() => null),
       loadJson(PREV_SG_URL).catch(() => null),
+      loadJson(PREV_RANK_URL).catch(() => null),
       loadJson(BOOST_ROI_URL).catch(() => null),
     ]);
     ROI = roi;
@@ -1011,6 +1092,7 @@ async function boot() {
     LIVE_PROPS = liveProps;
     HOLE_PROPS = holeProps;
     PREV_SG_INDEX = prevSgPayload?.index || {};
+    PREV_RANK_INDEX = prevRankPayload?.index || {};
     BOOST_ROI = boostRoi;
     renderAll();
   } catch (e) {
@@ -1023,13 +1105,13 @@ $("btn-reload")?.addEventListener("click", () => boot());
 document.querySelectorAll(".tab-btn").forEach((btn) => {
   btn.addEventListener("click", () => setTab(btn.dataset.tab));
 });
-for (const id of ["hist-market", "hist-side", "hist-event", "hist-book"]) {
+for (const id of ["hist-market", "hist-side", "hist-event", "hist-book", "hist-min-ev", "hist-rank-metric", "hist-rank-cutoff"]) {
   $(id)?.addEventListener("change", () => renderHist());
 }
 for (const id of ["live-market", "live-min-ev", "live-book"]) {
   $(id)?.addEventListener("change", () => renderLive());
 }
-for (const id of ["an-market", "an-event", "an-book"]) {
+for (const id of ["an-market", "an-event", "an-book", "an-min-ev"]) {
   $(id)?.addEventListener("change", () => renderAnalytics());
 }
 $("an-bankroll")?.addEventListener("change", () => renderAnalytics());

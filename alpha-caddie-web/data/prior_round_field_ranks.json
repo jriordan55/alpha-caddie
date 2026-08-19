@@ -1,0 +1,2538 @@
+{
+  "generated_at": "2026-08-19T04:14:24.043Z",
+  "source": "historical_rounds_all.csv",
+  "metrics": {
+    "app": "SG approach (prior round field rank)",
+    "putt": "SG putting",
+    "fw": "Fairway hit %",
+    "gir": "GIR %",
+    "bob": "BoB %"
+  },
+  "cutoffs": [
+    5,
+    10,
+    15,
+    20,
+    25,
+    30,
+    35,
+    40,
+    45,
+    50
+  ],
+  "n_keys": 314,
+  "index": {
+    "Rocket Classic|21501|2": {
+      "app": 143,
+      "putt": 141,
+      "fw": 131,
+      "gir": 145,
+      "bob": 144,
+      "field": 147
+    },
+    "Rocket Classic|27774|2": {
+      "app": 47,
+      "putt": 129,
+      "fw": 10,
+      "gir": 28,
+      "bob": 75,
+      "field": 147
+    },
+    "Rocket Classic|14578|2": {
+      "app": 23,
+      "putt": 59,
+      "fw": 15,
+      "gir": 16,
+      "bob": 32,
+      "field": 147
+    },
+    "Rocket Classic|13562|2": {
+      "app": 19,
+      "putt": 105,
+      "fw": 58,
+      "gir": 15,
+      "bob": 57,
+      "field": 147
+    },
+    "Rocket Classic|19895|2": {
+      "app": 60,
+      "putt": 18,
+      "fw": 46,
+      "gir": 104,
+      "bob": 42,
+      "field": 147
+    },
+    "Rocket Classic|14926|2": {
+      "app": 4,
+      "putt": 6,
+      "fw": 1,
+      "gir": 2,
+      "bob": 1,
+      "field": 147
+    },
+    "Rocket Classic|15466|2": {
+      "app": 39,
+      "putt": 9,
+      "fw": 17,
+      "gir": 40,
+      "bob": 13,
+      "field": 147
+    },
+    "Rocket Classic|23604|2": {
+      "app": 104,
+      "putt": 100,
+      "fw": 134,
+      "gir": 109,
+      "bob": 133,
+      "field": 147
+    },
+    "Rocket Classic|14577|2": {
+      "app": 109,
+      "putt": 20,
+      "fw": 59,
+      "gir": 63,
+      "bob": 85,
+      "field": 147
+    },
+    "Rocket Classic|12965|2": {
+      "app": 6,
+      "putt": 17,
+      "fw": 5,
+      "gir": 1,
+      "bob": 5,
+      "field": 147
+    },
+    "Rocket Classic|29767|2": {
+      "app": 55,
+      "putt": 1,
+      "fw": 110,
+      "gir": 29,
+      "bob": 9,
+      "field": 147
+    },
+    "Rocket Classic|24550|2": {
+      "app": 40,
+      "putt": 23,
+      "fw": 24,
+      "gir": 4,
+      "bob": 21,
+      "field": 147
+    },
+    "Rocket Classic|24968|2": {
+      "app": 78,
+      "putt": 40,
+      "fw": 122,
+      "gir": 51,
+      "bob": 49,
+      "field": 147
+    },
+    "Rocket Classic|23602|2": {
+      "app": 108,
+      "putt": 11,
+      "fw": 22,
+      "gir": 84,
+      "bob": 20,
+      "field": 147
+    },
+    "Rocket Classic|17536|2": {
+      "app": 68,
+      "putt": 42,
+      "fw": 18,
+      "gir": 19,
+      "bob": 63,
+      "field": 147
+    },
+    "Rocket Classic|26649|2": {
+      "app": 118,
+      "putt": 29,
+      "fw": 77,
+      "gir": 53,
+      "bob": 73,
+      "field": 147
+    },
+    "Rocket Classic|32457|2": {
+      "app": 94,
+      "putt": 16,
+      "fw": 84,
+      "gir": 97,
+      "bob": 26,
+      "field": 147
+    },
+    "Rocket Classic|22465|2": {
+      "app": 119,
+      "putt": 130,
+      "fw": 103,
+      "gir": 83,
+      "bob": 45,
+      "field": 147
+    },
+    "3M Open|24956|4": {
+      "app": 37,
+      "putt": 19,
+      "fw": 24,
+      "gir": 8,
+      "bob": 15,
+      "field": 66
+    },
+    "3M Open|21891|4": {
+      "app": 19,
+      "putt": 33,
+      "fw": 22,
+      "gir": 20,
+      "bob": 22,
+      "field": 66
+    },
+    "3M Open|19396|4": {
+      "app": 17,
+      "putt": 39,
+      "fw": 63,
+      "gir": 6,
+      "bob": 51,
+      "field": 66
+    },
+    "3M Open|17365|4": {
+      "app": 6,
+      "putt": 64,
+      "fw": 31,
+      "gir": 16,
+      "bob": 47,
+      "field": 66
+    },
+    "3M Open|18417|4": {
+      "app": 14,
+      "putt": 28,
+      "fw": 34,
+      "gir": 31,
+      "bob": 3,
+      "field": 66
+    },
+    "3M Open|16395|4": {
+      "app": 5,
+      "putt": 51,
+      "fw": 12,
+      "gir": 15,
+      "bob": 21,
+      "field": 66
+    },
+    "3M Open|17576|4": {
+      "app": 62,
+      "putt": 3,
+      "fw": 32,
+      "gir": 58,
+      "bob": 10,
+      "field": 66
+    },
+    "3M Open|25569|4": {
+      "app": 43,
+      "putt": 66,
+      "fw": 64,
+      "gir": 35,
+      "bob": 66,
+      "field": 66
+    },
+    "3M Open|16395|2": {
+      "app": 1,
+      "putt": 27,
+      "fw": 4,
+      "gir": 1,
+      "bob": 4,
+      "field": 144
+    },
+    "3M Open|11276|2": {
+      "app": 19,
+      "putt": 60,
+      "fw": 66,
+      "gir": 105,
+      "bob": 52,
+      "field": 144
+    },
+    "3M Open|27164|2": {
+      "app": 45,
+      "putt": 11,
+      "fw": 128,
+      "gir": 49,
+      "bob": 2,
+      "field": 144
+    },
+    "The Open Championship|24968|4": {
+      "app": 34,
+      "putt": 63,
+      "fw": 76,
+      "gir": 62,
+      "bob": 78,
+      "field": 78
+    },
+    "The Open Championship|16841|4": {
+      "app": 67,
+      "putt": 55,
+      "fw": 25,
+      "gir": 57,
+      "bob": 57,
+      "field": 78
+    },
+    "The Open Championship|19895|4": {
+      "app": 20,
+      "putt": 21,
+      "fw": 33,
+      "gir": 3,
+      "bob": 5,
+      "field": 78
+    },
+    "The Open Championship|19483|4": {
+      "app": 2,
+      "putt": 18,
+      "fw": 32,
+      "gir": 1,
+      "bob": 4,
+      "field": 78
+    },
+    "The Open Championship|29767|4": {
+      "app": 17,
+      "putt": 42,
+      "fw": 64,
+      "gir": 15,
+      "bob": 67,
+      "field": 78
+    },
+    "The Open Championship|17064|4": {
+      "app": 27,
+      "putt": 39,
+      "fw": 70,
+      "gir": 37,
+      "bob": 58,
+      "field": 78
+    },
+    "The Open Championship|14609|4": {
+      "app": 13,
+      "putt": 11,
+      "fw": 54,
+      "gir": 2,
+      "bob": 14,
+      "field": 78
+    },
+    "The Open Championship|29279|4": {
+      "app": 28,
+      "putt": 50,
+      "fw": 50,
+      "gir": 30,
+      "bob": 28,
+      "field": 78
+    },
+    "The Open Championship|17511|4": {
+      "app": 60,
+      "putt": 59,
+      "fw": 75,
+      "gir": 73,
+      "bob": 73,
+      "field": 78
+    },
+    "The Open Championship|21756|4": {
+      "app": 3,
+      "putt": 31,
+      "fw": 8,
+      "gir": 43,
+      "bob": 6,
+      "field": 78
+    },
+    "The Open Championship|24369|4": {
+      "app": 5,
+      "putt": 33,
+      "fw": 10,
+      "gir": 61,
+      "bob": 23,
+      "field": 78
+    },
+    "The Open Championship|12294|3": {
+      "app": 15,
+      "putt": 64,
+      "fw": 10,
+      "gir": 11,
+      "bob": 16,
+      "field": 155
+    },
+    "The Open Championship|11889|3": {
+      "app": 25,
+      "putt": 9,
+      "fw": 69,
+      "gir": 41,
+      "bob": 15,
+      "field": 155
+    },
+    "The Open Championship|14578|3": {
+      "app": 62,
+      "putt": 98,
+      "fw": 46,
+      "gir": 75,
+      "bob": 108,
+      "field": 155
+    },
+    "The Open Championship|16841|3": {
+      "app": 134,
+      "putt": 131,
+      "fw": 26,
+      "gir": 49,
+      "bob": 112,
+      "field": 155
+    },
+    "The Open Championship|23323|3": {
+      "app": 72,
+      "putt": 53,
+      "fw": 55,
+      "gir": 95,
+      "bob": 124,
+      "field": 155
+    },
+    "The Open Championship|22465|3": {
+      "app": 42,
+      "putt": 93,
+      "fw": 113,
+      "gir": 33,
+      "bob": 21,
+      "field": 155
+    },
+    "The Open Championship|21407|3": {
+      "app": 121,
+      "putt": 29,
+      "fw": 88,
+      "gir": 93,
+      "bob": 122,
+      "field": 155
+    },
+    "The Open Championship|10091|3": {
+      "app": 106,
+      "putt": 62,
+      "fw": 40,
+      "gir": 10,
+      "bob": 33,
+      "field": 155
+    },
+    "The Open Championship|17064|3": {
+      "app": 21,
+      "putt": 3,
+      "fw": 79,
+      "gir": 14,
+      "bob": 1,
+      "field": 155
+    },
+    "The Open Championship|17511|3": {
+      "app": 70,
+      "putt": 16,
+      "fw": 126,
+      "gir": 133,
+      "bob": 113,
+      "field": 155
+    },
+    "The Open Championship|14609|3": {
+      "app": 24,
+      "putt": 47,
+      "fw": 11,
+      "gir": 76,
+      "bob": 10,
+      "field": 155
+    },
+    "The Open Championship|19195|3": {
+      "app": 4,
+      "putt": 126,
+      "fw": 83,
+      "gir": 29,
+      "bob": 12,
+      "field": 155
+    },
+    "The Open Championship|19895|3": {
+      "app": 38,
+      "putt": 102,
+      "fw": 87,
+      "gir": 54,
+      "bob": 121,
+      "field": 155
+    },
+    "The Open Championship|26651|3": {
+      "app": 12,
+      "putt": 97,
+      "fw": 36,
+      "gir": 7,
+      "bob": 24,
+      "field": 155
+    },
+    "The Open Championship|9771|2": {
+      "app": 80,
+      "putt": 145,
+      "fw": 26,
+      "gir": 29,
+      "bob": 123,
+      "field": 156
+    },
+    "The Open Championship|10091|2": {
+      "app": 22,
+      "putt": 148,
+      "fw": 97,
+      "gir": 82,
+      "bob": 21,
+      "field": 156
+    },
+    "The Open Championship|18417|2": {
+      "app": 20,
+      "putt": 83,
+      "fw": 1,
+      "gir": 38,
+      "bob": 26,
+      "field": 156
+    },
+    "The Open Championship|19841|2": {
+      "app": 10,
+      "putt": 118,
+      "fw": 147,
+      "gir": 8,
+      "bob": 14,
+      "field": 156
+    },
+    "The Open Championship|14609|2": {
+      "app": 59,
+      "putt": 36,
+      "fw": 73,
+      "gir": 34,
+      "bob": 48,
+      "field": 156
+    },
+    "The Open Championship|21554|2": {
+      "app": 100,
+      "putt": 5,
+      "fw": 37,
+      "gir": 132,
+      "bob": 64,
+      "field": 156
+    },
+    "The Open Championship|22465|2": {
+      "app": 103,
+      "putt": 77,
+      "fw": 111,
+      "gir": 133,
+      "bob": 65,
+      "field": 156
+    },
+    "The Open Championship|19895|2": {
+      "app": 125,
+      "putt": 43,
+      "fw": 19,
+      "gir": 91,
+      "bob": 61,
+      "field": 156
+    },
+    "Genesis Scottish Open|20730|3": {
+      "app": 6,
+      "putt": 19,
+      "fw": 45,
+      "gir": 4,
+      "bob": 17,
+      "field": 156
+    },
+    "Genesis Scottish Open|22231|3": {
+      "app": 11,
+      "putt": 22,
+      "fw": 137,
+      "gir": 14,
+      "bob": 37,
+      "field": 156
+    },
+    "Genesis Scottish Open|14609|3": {
+      "app": 10,
+      "putt": 58,
+      "fw": 16,
+      "gir": 85,
+      "bob": 11,
+      "field": 156
+    },
+    "Genesis Scottish Open|26649|3": {
+      "app": 52,
+      "putt": 92,
+      "fw": 79,
+      "gir": 75,
+      "bob": 43,
+      "field": 156
+    },
+    "Genesis Scottish Open|18586|3": {
+      "app": 14,
+      "putt": 3,
+      "fw": 24,
+      "gir": 11,
+      "bob": 2,
+      "field": 156
+    },
+    "Genesis Scottish Open|23604|2": {
+      "app": 6,
+      "putt": 54,
+      "fw": 129,
+      "gir": 27,
+      "bob": 4,
+      "field": 156
+    },
+    "Genesis Scottish Open|17646|2": {
+      "app": 17,
+      "putt": 19,
+      "fw": 90,
+      "gir": 3,
+      "bob": 60,
+      "field": 156
+    },
+    "Genesis Scottish Open|14796|2": {
+      "app": 135,
+      "putt": 15,
+      "fw": 120,
+      "gir": 67,
+      "bob": 9,
+      "field": 156
+    },
+    "Genesis Scottish Open|21891|2": {
+      "app": 53,
+      "putt": 26,
+      "fw": 73,
+      "gir": 130,
+      "bob": 3,
+      "field": 156
+    },
+    "Genesis Scottish Open|14838|2": {
+      "app": 39,
+      "putt": 4,
+      "fw": 121,
+      "gir": 96,
+      "bob": 19,
+      "field": 156
+    },
+    "Genesis Scottish Open|19195|2": {
+      "app": 151,
+      "putt": 115,
+      "fw": 95,
+      "gir": 148,
+      "bob": 126,
+      "field": 156
+    },
+    "Genesis Scottish Open|12294|2": {
+      "app": 59,
+      "putt": 60,
+      "fw": 12,
+      "gir": 61,
+      "bob": 49,
+      "field": 156
+    },
+    "Genesis Scottish Open|23602|2": {
+      "app": 1,
+      "putt": 152,
+      "fw": 107,
+      "gir": 5,
+      "bob": 33,
+      "field": 156
+    },
+    "Genesis Scottish Open|14609|2": {
+      "app": 144,
+      "putt": 66,
+      "fw": 30,
+      "gir": 94,
+      "bob": 54,
+      "field": 156
+    },
+    "Genesis Scottish Open|10419|2": {
+      "app": 126,
+      "putt": 18,
+      "fw": 55,
+      "gir": 59,
+      "bob": 46,
+      "field": 156
+    },
+    "Genesis Scottish Open|20085|2": {
+      "app": 22,
+      "putt": 57,
+      "fw": 41,
+      "gir": 11,
+      "bob": 28,
+      "field": 156
+    },
+    "John Deere Classic|29197|2": {
+      "app": 3,
+      "putt": 49,
+      "fw": 67,
+      "gir": 1,
+      "bob": 31,
+      "field": 144
+    },
+    "John Deere Classic|22760|2": {
+      "app": 50,
+      "putt": 80,
+      "fw": 58,
+      "gir": 36,
+      "bob": 51,
+      "field": 144
+    },
+    "John Deere Classic|17543|2": {
+      "app": 126,
+      "putt": 71,
+      "fw": 138,
+      "gir": 119,
+      "bob": 129,
+      "field": 144
+    },
+    "John Deere Classic|17780|2": {
+      "app": 31,
+      "putt": 31,
+      "fw": 126,
+      "gir": 80,
+      "bob": 107,
+      "field": 144
+    },
+    "John Deere Classic|27900|2": {
+      "app": 144,
+      "putt": 40,
+      "fw": 131,
+      "gir": 131,
+      "bob": 60,
+      "field": 144
+    },
+    "John Deere Classic|16395|2": {
+      "app": 17,
+      "putt": 58,
+      "fw": 1,
+      "gir": 12,
+      "bob": 9,
+      "field": 144
+    },
+    "John Deere Classic|6986|2": {
+      "app": 15,
+      "putt": 34,
+      "fw": 22,
+      "gir": 7,
+      "bob": 5,
+      "field": 144
+    },
+    "John Deere Classic|17639|2": {
+      "app": 1,
+      "putt": 7,
+      "fw": 80,
+      "gir": 4,
+      "bob": 10,
+      "field": 144
+    },
+    "Travelers Championship|26096|4": {
+      "app": 29,
+      "putt": 51,
+      "fw": 22,
+      "gir": 41,
+      "bob": 35,
+      "field": 72
+    },
+    "Travelers Championship|29433|4": {
+      "app": 28,
+      "putt": 17,
+      "fw": 24,
+      "gir": 53,
+      "bob": 52,
+      "field": 72
+    },
+    "Travelers Championship|19483|4": {
+      "app": 26,
+      "putt": 19,
+      "fw": 33,
+      "gir": 29,
+      "bob": 19,
+      "field": 72
+    },
+    "Travelers Championship|15466|4": {
+      "app": 2,
+      "putt": 5,
+      "fw": 41,
+      "gir": 8,
+      "bob": 2,
+      "field": 72
+    },
+    "Travelers Championship|24968|4": {
+      "app": 24,
+      "putt": 53,
+      "fw": 13,
+      "gir": 12,
+      "bob": 34,
+      "field": 72
+    },
+    "Travelers Championship|14578|4": {
+      "app": 19,
+      "putt": 37,
+      "fw": 3,
+      "gir": 2,
+      "bob": 29,
+      "field": 72
+    },
+    "Travelers Championship|18841|4": {
+      "app": 31,
+      "putt": 14,
+      "fw": 20,
+      "gir": 28,
+      "bob": 9,
+      "field": 72
+    },
+    "Travelers Championship|23323|4": {
+      "app": 16,
+      "putt": 46,
+      "fw": 62,
+      "gir": 20,
+      "bob": 33,
+      "field": 72
+    },
+    "Travelers Championship|18417|4": {
+      "app": 9,
+      "putt": 57,
+      "fw": 31,
+      "gir": 26,
+      "bob": 30,
+      "field": 72
+    },
+    "Travelers Championship|14139|4": {
+      "app": 7,
+      "putt": 52,
+      "fw": 9,
+      "gir": 16,
+      "bob": 15,
+      "field": 72
+    },
+    "Travelers Championship|27774|4": {
+      "app": 33,
+      "putt": 12,
+      "fw": 36,
+      "gir": 1,
+      "bob": 7,
+      "field": 72
+    },
+    "Travelers Championship|13562|4": {
+      "app": 55,
+      "putt": 13,
+      "fw": 8,
+      "gir": 43,
+      "bob": 39,
+      "field": 72
+    },
+    "Travelers Championship|19895|4": {
+      "app": 43,
+      "putt": 69,
+      "fw": 21,
+      "gir": 11,
+      "bob": 62,
+      "field": 72
+    },
+    "Travelers Championship|26651|4": {
+      "app": 34,
+      "putt": 42,
+      "fw": 34,
+      "gir": 51,
+      "bob": 65,
+      "field": 72
+    },
+    "Travelers Championship|23950|4": {
+      "app": 13,
+      "putt": 43,
+      "fw": 63,
+      "gir": 30,
+      "bob": 51,
+      "field": 72
+    },
+    "Travelers Championship|14609|4": {
+      "app": 8,
+      "putt": 20,
+      "fw": 28,
+      "gir": 17,
+      "bob": 16,
+      "field": 72
+    },
+    "Travelers Championship|16841|4": {
+      "app": 3,
+      "putt": 65,
+      "fw": 42,
+      "gir": 24,
+      "bob": 41,
+      "field": 72
+    },
+    "Travelers Championship|17606|4": {
+      "app": 11,
+      "putt": 29,
+      "fw": 58,
+      "gir": 10,
+      "bob": 18,
+      "field": 72
+    },
+    "Travelers Championship|17576|4": {
+      "app": 12,
+      "putt": 64,
+      "fw": 11,
+      "gir": 3,
+      "bob": 59,
+      "field": 72
+    },
+    "Travelers Championship|22833|4": {
+      "app": 18,
+      "putt": 44,
+      "fw": 46,
+      "gir": 39,
+      "bob": 64,
+      "field": 72
+    },
+    "Travelers Championship|25362|4": {
+      "app": 15,
+      "putt": 23,
+      "fw": 5,
+      "gir": 31,
+      "bob": 11,
+      "field": 72
+    },
+    "Travelers Championship|12965|4": {
+      "app": 20,
+      "putt": 63,
+      "fw": 16,
+      "gir": 22,
+      "bob": 38,
+      "field": 72
+    },
+    "Travelers Championship|8825|4": {
+      "app": 6,
+      "putt": 36,
+      "fw": 6,
+      "gir": 6,
+      "bob": 13,
+      "field": 72
+    },
+    "Travelers Championship|17543|4": {
+      "app": 22,
+      "putt": 48,
+      "fw": 30,
+      "gir": 25,
+      "bob": 43,
+      "field": 72
+    },
+    "Travelers Championship|21891|4": {
+      "app": 25,
+      "putt": 39,
+      "fw": 45,
+      "gir": 18,
+      "bob": 49,
+      "field": 72
+    },
+    "Travelers Championship|13900|4": {
+      "app": 14,
+      "putt": 35,
+      "fw": 2,
+      "gir": 7,
+      "bob": 14,
+      "field": 72
+    },
+    "Travelers Championship|28635|4": {
+      "app": 1,
+      "putt": 32,
+      "fw": 51,
+      "gir": 21,
+      "bob": 24,
+      "field": 72
+    },
+    "Travelers Championship|22085|4": {
+      "app": 5,
+      "putt": 50,
+      "fw": 4,
+      "gir": 4,
+      "bob": 6,
+      "field": 72
+    },
+    "Travelers Championship|23475|4": {
+      "app": 23,
+      "putt": 47,
+      "fw": 47,
+      "gir": 49,
+      "bob": 50,
+      "field": 72
+    },
+    "Travelers Championship|6430|4": {
+      "app": 10,
+      "putt": 22,
+      "fw": 26,
+      "gir": 13,
+      "bob": 8,
+      "field": 72
+    },
+    "Travelers Championship|13126|4": {
+      "app": 27,
+      "putt": 15,
+      "fw": 17,
+      "gir": 15,
+      "bob": 1,
+      "field": 72
+    },
+    "U.S. Open|13562|4": {
+      "app": 24,
+      "putt": 69,
+      "fw": 13,
+      "gir": 61,
+      "bob": 51,
+      "field": 72
+    },
+    "U.S. Open|12808|4": {
+      "app": 23,
+      "putt": 1,
+      "fw": 12,
+      "gir": 7,
+      "bob": 2,
+      "field": 72
+    },
+    "U.S. Open|25569|4": {
+      "app": 2,
+      "putt": 35,
+      "fw": 68,
+      "gir": 12,
+      "bob": 39,
+      "field": 72
+    },
+    "U.S. Open|17646|4": {
+      "app": 50,
+      "putt": 26,
+      "fw": 55,
+      "gir": 32,
+      "bob": 57,
+      "field": 72
+    },
+    "U.S. Open|10091|4": {
+      "app": 58,
+      "putt": 29,
+      "fw": 64,
+      "gir": 60,
+      "bob": 8,
+      "field": 72
+    },
+    "U.S. Open|26096|3": {
+      "app": 4,
+      "putt": 120,
+      "fw": 32,
+      "gir": 43,
+      "bob": 31,
+      "field": 155
+    },
+    "U.S. Open|13872|3": {
+      "app": 26,
+      "putt": 118,
+      "fw": 41,
+      "gir": 6,
+      "bob": 127,
+      "field": 155
+    },
+    "U.S. Open|23604|3": {
+      "app": 20,
+      "putt": 57,
+      "fw": 83,
+      "gir": 12,
+      "bob": 68,
+      "field": 155
+    },
+    "U.S. Open|25362|3": {
+      "app": 5,
+      "putt": 115,
+      "fw": 2,
+      "gir": 15,
+      "bob": 30,
+      "field": 155
+    },
+    "U.S. Open|17646|3": {
+      "app": 62,
+      "putt": 81,
+      "fw": 131,
+      "gir": 77,
+      "bob": 98,
+      "field": 155
+    },
+    "U.S. Open|24968|3": {
+      "app": 51,
+      "putt": 102,
+      "fw": 59,
+      "gir": 26,
+      "bob": 103,
+      "field": 155
+    },
+    "U.S. Open|14796|3": {
+      "app": 9,
+      "putt": 15,
+      "fw": 128,
+      "gir": 7,
+      "bob": 48,
+      "field": 155
+    },
+    "U.S. Open|24766|3": {
+      "app": 68,
+      "putt": 30,
+      "fw": 9,
+      "gir": 61,
+      "bob": 28,
+      "field": 155
+    },
+    "U.S. Open|21891|3": {
+      "app": 35,
+      "putt": 61,
+      "fw": 26,
+      "gir": 11,
+      "bob": 63,
+      "field": 155
+    },
+    "U.S. Open|18634|3": {
+      "app": 34,
+      "putt": 40,
+      "fw": 80,
+      "gir": 22,
+      "bob": 10,
+      "field": 155
+    },
+    "U.S. Open|18554|3": {
+      "app": 11,
+      "putt": 48,
+      "fw": 7,
+      "gir": 2,
+      "bob": 9,
+      "field": 155
+    },
+    "U.S. Open|25569|3": {
+      "app": 14,
+      "putt": 79,
+      "fw": 84,
+      "gir": 16,
+      "bob": 71,
+      "field": 155
+    },
+    "U.S. Open|23014|3": {
+      "app": 50,
+      "putt": 38,
+      "fw": 28,
+      "gir": 42,
+      "bob": 3,
+      "field": 155
+    },
+    "U.S. Open|13562|3": {
+      "app": 105,
+      "putt": 29,
+      "fw": 73,
+      "gir": 127,
+      "bob": 89,
+      "field": 155
+    },
+    "U.S. Open|29197|3": {
+      "app": 45,
+      "putt": 113,
+      "fw": 64,
+      "gir": 5,
+      "bob": 109,
+      "field": 155
+    },
+    "U.S. Open|32457|3": {
+      "app": 55,
+      "putt": 87,
+      "fw": 10,
+      "gir": 28,
+      "bob": 116,
+      "field": 155
+    },
+    "U.S. Open|18079|3": {
+      "app": 1,
+      "putt": 13,
+      "fw": 105,
+      "gir": 1,
+      "bob": 1,
+      "field": 155
+    },
+    "U.S. Open|12422|2": {
+      "app": 5,
+      "putt": 23,
+      "fw": 16,
+      "gir": 11,
+      "bob": 1,
+      "field": 155
+    },
+    "U.S. Open|19841|2": {
+      "app": 122,
+      "putt": 4,
+      "fw": 23,
+      "gir": 40,
+      "bob": 24,
+      "field": 155
+    },
+    "U.S. Open|14577|2": {
+      "app": 93,
+      "putt": 19,
+      "fw": 102,
+      "gir": 77,
+      "bob": 115,
+      "field": 155
+    },
+    "U.S. Open|18841|2": {
+      "app": 27,
+      "putt": 147,
+      "fw": 110,
+      "gir": 38,
+      "bob": 149,
+      "field": 155
+    },
+    "U.S. Open|17536|2": {
+      "app": 104,
+      "putt": 135,
+      "fw": 106,
+      "gir": 104,
+      "bob": 146,
+      "field": 155
+    },
+    "U.S. Open|23602|2": {
+      "app": 138,
+      "putt": 9,
+      "fw": 132,
+      "gir": 111,
+      "bob": 125,
+      "field": 155
+    },
+    "U.S. Open|10419|2": {
+      "app": 153,
+      "putt": 31,
+      "fw": 2,
+      "gir": 127,
+      "bob": 66,
+      "field": 155
+    },
+    "U.S. Open|18417|2": {
+      "app": 114,
+      "putt": 57,
+      "fw": 22,
+      "gir": 107,
+      "bob": 23,
+      "field": 155
+    },
+    "U.S. Open|17511|2": {
+      "app": 142,
+      "putt": 2,
+      "fw": 5,
+      "gir": 103,
+      "bob": 21,
+      "field": 155
+    },
+    "U.S. Open|15466|2": {
+      "app": 101,
+      "putt": 81,
+      "fw": 18,
+      "gir": 79,
+      "bob": 40,
+      "field": 155
+    },
+    "U.S. Open|12294|2": {
+      "app": 48,
+      "putt": 24,
+      "fw": 70,
+      "gir": 76,
+      "bob": 15,
+      "field": 155
+    },
+    "U.S. Open|29767|2": {
+      "app": 106,
+      "putt": 26,
+      "fw": 136,
+      "gir": 117,
+      "bob": 132,
+      "field": 155
+    },
+    "U.S. Open|19895|2": {
+      "app": 134,
+      "putt": 16,
+      "fw": 111,
+      "gir": 59,
+      "bob": 43,
+      "field": 155
+    },
+    "RBC Canadian Open|19483|4": {
+      "app": 61,
+      "putt": 49,
+      "fw": 30,
+      "gir": 49,
+      "bob": 42,
+      "field": 75
+    },
+    "RBC Canadian Open|22085|4": {
+      "app": 65,
+      "putt": 18,
+      "fw": 62,
+      "gir": 67,
+      "bob": 20,
+      "field": 75
+    },
+    "RBC Canadian Open|29433|4": {
+      "app": 5,
+      "putt": 2,
+      "fw": 57,
+      "gir": 33,
+      "bob": 1,
+      "field": 75
+    },
+    "RBC Canadian Open|25362|4": {
+      "app": 28,
+      "putt": 45,
+      "fw": 55,
+      "gir": 16,
+      "bob": 51,
+      "field": 75
+    },
+    "RBC Canadian Open|11451|4": {
+      "app": 16,
+      "putt": 12,
+      "fw": 15,
+      "gir": 3,
+      "bob": 7,
+      "field": 75
+    },
+    "RBC Canadian Open|26850|4": {
+      "app": 4,
+      "putt": 54,
+      "fw": 56,
+      "gir": 55,
+      "bob": 24,
+      "field": 75
+    },
+    "RBC Canadian Open|26649|4": {
+      "app": 17,
+      "putt": 63,
+      "fw": 12,
+      "gir": 17,
+      "bob": 53,
+      "field": 75
+    },
+    "RBC Canadian Open|32330|4": {
+      "app": 57,
+      "putt": 9,
+      "fw": 5,
+      "gir": 63,
+      "bob": 37,
+      "field": 75
+    },
+    "RBC Canadian Open|27194|4": {
+      "app": 58,
+      "putt": 58,
+      "fw": 67,
+      "gir": 61,
+      "bob": 55,
+      "field": 75
+    },
+    "RBC Canadian Open|17365|4": {
+      "app": 68,
+      "putt": 53,
+      "fw": 19,
+      "gir": 66,
+      "bob": 39,
+      "field": 75
+    },
+    "RBC Canadian Open|21944|4": {
+      "app": 45,
+      "putt": 19,
+      "fw": 11,
+      "gir": 42,
+      "bob": 19,
+      "field": 75
+    },
+    "RBC Canadian Open|29770|4": {
+      "app": 48,
+      "putt": 29,
+      "fw": 13,
+      "gir": 34,
+      "bob": 26,
+      "field": 75
+    },
+    "RBC Canadian Open|17780|4": {
+      "app": 62,
+      "putt": 60,
+      "fw": 20,
+      "gir": 40,
+      "bob": 18,
+      "field": 75
+    },
+    "RBC Canadian Open|27900|4": {
+      "app": 54,
+      "putt": 15,
+      "fw": 73,
+      "gir": 70,
+      "bob": 56,
+      "field": 75
+    },
+    "RBC Canadian Open|21407|4": {
+      "app": 51,
+      "putt": 62,
+      "fw": 21,
+      "gir": 29,
+      "bob": 46,
+      "field": 75
+    },
+    "RBC Canadian Open|23604|2": {
+      "app": 134,
+      "putt": 47,
+      "fw": 85,
+      "gir": 120,
+      "bob": 122,
+      "field": 146
+    },
+    "RBC Canadian Open|22085|2": {
+      "app": 98,
+      "putt": 92,
+      "fw": 106,
+      "gir": 119,
+      "bob": 83,
+      "field": 146
+    },
+    "RBC Canadian Open|10419|2": {
+      "app": 119,
+      "putt": 64,
+      "fw": 69,
+      "gir": 111,
+      "bob": 103,
+      "field": 146
+    },
+    "RBC Canadian Open|23014|2": {
+      "app": 118,
+      "putt": 17,
+      "fw": 24,
+      "gir": 141,
+      "bob": 14,
+      "field": 146
+    },
+    "RBC Canadian Open|23602|2": {
+      "app": 19,
+      "putt": 107,
+      "fw": 143,
+      "gir": 39,
+      "bob": 121,
+      "field": 146
+    },
+    "RBC Canadian Open|18841|2": {
+      "app": 17,
+      "putt": 101,
+      "fw": 49,
+      "gir": 92,
+      "bob": 79,
+      "field": 146
+    },
+    "RBC Canadian Open|13126|2": {
+      "app": 68,
+      "putt": 19,
+      "fw": 74,
+      "gir": 53,
+      "bob": 33,
+      "field": 146
+    },
+    "RBC Canadian Open|21756|2": {
+      "app": 44,
+      "putt": 4,
+      "fw": 82,
+      "gir": 65,
+      "bob": 12,
+      "field": 146
+    },
+    "RBC Canadian Open|11676|2": {
+      "app": 71,
+      "putt": 21,
+      "fw": 72,
+      "gir": 50,
+      "bob": 2,
+      "field": 146
+    },
+    "RBC Canadian Open|12294|2": {
+      "app": 41,
+      "putt": 20,
+      "fw": 13,
+      "gir": 51,
+      "bob": 17,
+      "field": 146
+    },
+    "RBC Canadian Open|12808|2": {
+      "app": 72,
+      "putt": 8,
+      "fw": 14,
+      "gir": 3,
+      "bob": 7,
+      "field": 146
+    },
+    "RBC Canadian Open|27194|2": {
+      "app": 55,
+      "putt": 24,
+      "fw": 112,
+      "gir": 102,
+      "bob": 55,
+      "field": 146
+    },
+    "RBC Canadian Open|14502|2": {
+      "app": 108,
+      "putt": 87,
+      "fw": 41,
+      "gir": 85,
+      "bob": 108,
+      "field": 146
+    },
+    "RBC Canadian Open|17576|2": {
+      "app": 106,
+      "putt": 135,
+      "fw": 46,
+      "gir": 89,
+      "bob": 132,
+      "field": 146
+    },
+    "RBC Canadian Open|23465|2": {
+      "app": 97,
+      "putt": 30,
+      "fw": 54,
+      "gir": 7,
+      "bob": 45,
+      "field": 146
+    },
+    "RBC Canadian Open|17780|2": {
+      "app": 131,
+      "putt": 7,
+      "fw": 79,
+      "gir": 37,
+      "bob": 9,
+      "field": 146
+    },
+    "RBC Canadian Open|20722|2": {
+      "app": 125,
+      "putt": 43,
+      "fw": 104,
+      "gir": 62,
+      "bob": 42,
+      "field": 146
+    },
+    "RBC Canadian Open|26649|2": {
+      "app": 92,
+      "putt": 82,
+      "fw": 87,
+      "gir": 42,
+      "bob": 90,
+      "field": 146
+    },
+    "RBC Canadian Open|13126|4": {
+      "app": 75,
+      "putt": 66,
+      "fw": 24,
+      "gir": 73,
+      "bob": 63,
+      "field": 75
+    },
+    "the Memorial Tournament presented by Workday|13872|3": {
+      "app": 24,
+      "putt": 59,
+      "fw": 40,
+      "gir": 64,
+      "bob": 3,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|29767|3": {
+      "app": 7,
+      "putt": 2,
+      "fw": 61,
+      "gir": 21,
+      "bob": 7,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|18634|3": {
+      "app": 47,
+      "putt": 3,
+      "fw": 43,
+      "gir": 3,
+      "bob": 18,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|29433|3": {
+      "app": 2,
+      "putt": 13,
+      "fw": 13,
+      "gir": 6,
+      "bob": 24,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|19483|3": {
+      "app": 5,
+      "putt": 26,
+      "fw": 10,
+      "gir": 16,
+      "bob": 19,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|15466|3": {
+      "app": 19,
+      "putt": 49,
+      "fw": 2,
+      "gir": 2,
+      "bob": 13,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|23604|3": {
+      "app": 9,
+      "putt": 48,
+      "fw": 67,
+      "gir": 52,
+      "bob": 57,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|21756|3": {
+      "app": 6,
+      "putt": 16,
+      "fw": 23,
+      "gir": 5,
+      "bob": 2,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|25362|3": {
+      "app": 28,
+      "putt": 28,
+      "fw": 48,
+      "gir": 38,
+      "bob": 22,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|13900|3": {
+      "app": 22,
+      "putt": 50,
+      "fw": 62,
+      "gir": 45,
+      "bob": 4,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|10091|3": {
+      "app": 23,
+      "putt": 51,
+      "fw": 17,
+      "gir": 9,
+      "bob": 26,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|21554|3": {
+      "app": 3,
+      "putt": 1,
+      "fw": 44,
+      "gir": 4,
+      "bob": 1,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|18554|3": {
+      "app": 10,
+      "putt": 27,
+      "fw": 1,
+      "gir": 25,
+      "bob": 35,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|21407|3": {
+      "app": 1,
+      "putt": 54,
+      "fw": 5,
+      "gir": 1,
+      "bob": 21,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|19895|3": {
+      "app": 13,
+      "putt": 43,
+      "fw": 11,
+      "gir": 17,
+      "bob": 20,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|18417|3": {
+      "app": 27,
+      "putt": 11,
+      "fw": 42,
+      "gir": 57,
+      "bob": 34,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|26651|3": {
+      "app": 36,
+      "putt": 62,
+      "fw": 35,
+      "gir": 27,
+      "bob": 44,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|12294|3": {
+      "app": 56,
+      "putt": 31,
+      "fw": 19,
+      "gir": 62,
+      "bob": 50,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|27774|3": {
+      "app": 26,
+      "putt": 18,
+      "fw": 70,
+      "gir": 61,
+      "bob": 59,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|21891|3": {
+      "app": 40,
+      "putt": 9,
+      "fw": 6,
+      "gir": 59,
+      "bob": 37,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|17536|3": {
+      "app": 61,
+      "putt": 63,
+      "fw": 55,
+      "gir": 49,
+      "bob": 67,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|14577|3": {
+      "app": 64,
+      "putt": 10,
+      "fw": 21,
+      "gir": 31,
+      "bob": 63,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|14609|3": {
+      "app": 65,
+      "putt": 38,
+      "fw": 71,
+      "gir": 71,
+      "bob": 51,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|13562|3": {
+      "app": 32,
+      "putt": 22,
+      "fw": 52,
+      "gir": 29,
+      "bob": 31,
+      "field": 72
+    },
+    "the Memorial Tournament presented by Workday|10419|3": {
+      "app": 11,
+      "putt": 37,
+      "fw": 18,
+      "gir": 24,
+      "bob": 48,
+      "field": 72
+    },
+    "Charles Schwab Challenge|26096|3": {
+      "app": 22,
+      "putt": 8,
+      "fw": 126,
+      "gir": 108,
+      "bob": 12,
+      "field": 131
+    },
+    "Charles Schwab Challenge|13872|3": {
+      "app": 56,
+      "putt": 49,
+      "fw": 114,
+      "gir": 75,
+      "bob": 63,
+      "field": 131
+    },
+    "Charles Schwab Challenge|29767|3": {
+      "app": 2,
+      "putt": 71,
+      "fw": 37,
+      "gir": 5,
+      "bob": 32,
+      "field": 131
+    },
+    "Charles Schwab Challenge|8825|3": {
+      "app": 4,
+      "putt": 43,
+      "fw": 69,
+      "gir": 7,
+      "bob": 19,
+      "field": 131
+    },
+    "Charles Schwab Challenge|14578|3": {
+      "app": 14,
+      "putt": 17,
+      "fw": 23,
+      "gir": 16,
+      "bob": 22,
+      "field": 131
+    },
+    "Charles Schwab Challenge|22760|3": {
+      "app": 60,
+      "putt": 72,
+      "fw": 53,
+      "gir": 58,
+      "bob": 26,
+      "field": 131
+    },
+    "Charles Schwab Challenge|13562|3": {
+      "app": 36,
+      "putt": 45,
+      "fw": 8,
+      "gir": 29,
+      "bob": 8,
+      "field": 131
+    },
+    "Charles Schwab Challenge|28159|3": {
+      "app": 40,
+      "putt": 24,
+      "fw": 64,
+      "gir": 67,
+      "bob": 15,
+      "field": 131
+    },
+    "Charles Schwab Challenge|18474|3": {
+      "app": 43,
+      "putt": 7,
+      "fw": 117,
+      "gir": 38,
+      "bob": 70,
+      "field": 131
+    },
+    "Charles Schwab Challenge|18586|3": {
+      "app": 29,
+      "putt": 20,
+      "fw": 13,
+      "gir": 39,
+      "bob": 24,
+      "field": 131
+    },
+    "Charles Schwab Challenge|17536|3": {
+      "app": 21,
+      "putt": 86,
+      "fw": 29,
+      "gir": 36,
+      "bob": 46,
+      "field": 131
+    },
+    "Charles Schwab Challenge|26649|3": {
+      "app": 3,
+      "putt": 31,
+      "fw": 60,
+      "gir": 4,
+      "bob": 13,
+      "field": 131
+    },
+    "Charles Schwab Challenge|29197|3": {
+      "app": 32,
+      "putt": 9,
+      "fw": 110,
+      "gir": 92,
+      "bob": 6,
+      "field": 131
+    },
+    "Charles Schwab Challenge|26096|2": {
+      "app": 32,
+      "putt": 26,
+      "fw": 72,
+      "gir": 67,
+      "bob": 35,
+      "field": 132
+    },
+    "Charles Schwab Challenge|13562|2": {
+      "app": 12,
+      "putt": 12,
+      "fw": 120,
+      "gir": 23,
+      "bob": 22,
+      "field": 132
+    },
+    "Charles Schwab Challenge|14704|2": {
+      "app": 45,
+      "putt": 5,
+      "fw": 121,
+      "gir": 101,
+      "bob": 10,
+      "field": 132
+    },
+    "Charles Schwab Challenge|23950|4": {
+      "app": 39,
+      "putt": 41,
+      "fw": 39,
+      "gir": 15,
+      "bob": 22,
+      "field": 75
+    },
+    "Charles Schwab Challenge|29767|4": {
+      "app": 44,
+      "putt": 1,
+      "fw": 57,
+      "gir": 70,
+      "bob": 14,
+      "field": 75
+    },
+    "Charles Schwab Challenge|23323|4": {
+      "app": 37,
+      "putt": 35,
+      "fw": 24,
+      "gir": 11,
+      "bob": 42,
+      "field": 75
+    },
+    "Charles Schwab Challenge|14139|4": {
+      "app": 4,
+      "putt": 49,
+      "fw": 2,
+      "gir": 1,
+      "bob": 5,
+      "field": 75
+    },
+    "THE CJ CUP Byron Nelson|32152|4": {
+      "app": 6,
+      "putt": 26,
+      "fw": 34,
+      "gir": 5,
+      "bob": 7,
+      "field": 70
+    },
+    "THE CJ CUP Byron Nelson|23465|4": {
+      "app": 9,
+      "putt": 19,
+      "fw": 56,
+      "gir": 4,
+      "bob": 14,
+      "field": 70
+    },
+    "THE CJ CUP Byron Nelson|18417|4": {
+      "app": 18,
+      "putt": 15,
+      "fw": 25,
+      "gir": 3,
+      "bob": 5,
+      "field": 70
+    },
+    "THE CJ CUP Byron Nelson|29279|4": {
+      "app": 2,
+      "putt": 62,
+      "fw": 45,
+      "gir": 45,
+      "bob": 54,
+      "field": 70
+    },
+    "THE CJ CUP Byron Nelson|17550|4": {
+      "app": 11,
+      "putt": 52,
+      "fw": 22,
+      "gir": 34,
+      "bob": 46,
+      "field": 70
+    },
+    "THE CJ CUP Byron Nelson|17488|4": {
+      "app": 49,
+      "putt": 20,
+      "fw": 65,
+      "gir": 57,
+      "bob": 11,
+      "field": 70
+    },
+    "THE CJ CUP Byron Nelson|14636|4": {
+      "app": 46,
+      "putt": 66,
+      "fw": 18,
+      "gir": 65,
+      "bob": 58,
+      "field": 70
+    },
+    "THE CJ CUP Byron Nelson|11117|4": {
+      "app": 26,
+      "putt": 21,
+      "fw": 9,
+      "gir": 2,
+      "bob": 24,
+      "field": 70
+    },
+    "THE CJ CUP Byron Nelson|17381|4": {
+      "app": 14,
+      "putt": 13,
+      "fw": 40,
+      "gir": 13,
+      "bob": 45,
+      "field": 70
+    },
+    "THE CJ CUP Byron Nelson|29279|3": {
+      "app": 16,
+      "putt": 9,
+      "fw": 57,
+      "gir": 21,
+      "bob": 6,
+      "field": 146
+    },
+    "THE CJ CUP Byron Nelson|21944|3": {
+      "app": 100,
+      "putt": 117,
+      "fw": 127,
+      "gir": 91,
+      "bob": 130,
+      "field": 146
+    },
+    "THE CJ CUP Byron Nelson|21944|2": {
+      "app": 7,
+      "putt": 8,
+      "fw": 86,
+      "gir": 37,
+      "bob": 1,
+      "field": 147
+    },
+    "THE CJ CUP Byron Nelson|24550|4": {
+      "app": 24,
+      "putt": 35,
+      "fw": 30,
+      "gir": 19,
+      "bob": 34,
+      "field": 70
+    },
+    "THE CJ CUP Byron Nelson|24766|4": {
+      "app": 4,
+      "putt": 67,
+      "fw": 31,
+      "gir": 41,
+      "bob": 17,
+      "field": 70
+    },
+    "PGA Championship|17646|4": {
+      "app": 52,
+      "putt": 57,
+      "fw": 71,
+      "gir": 71,
+      "bob": 37,
+      "field": 82
+    },
+    "PGA Championship|13562|4": {
+      "app": 47,
+      "putt": 63,
+      "fw": 37,
+      "gir": 69,
+      "bob": 30,
+      "field": 82
+    },
+    "PGA Championship|22085|4": {
+      "app": 74,
+      "putt": 51,
+      "fw": 62,
+      "gir": 81,
+      "bob": 56,
+      "field": 82
+    },
+    "PGA Championship|27900|4": {
+      "app": 32,
+      "putt": 80,
+      "fw": 78,
+      "gir": 46,
+      "bob": 63,
+      "field": 82
+    },
+    "PGA Championship|14838|4": {
+      "app": 14,
+      "putt": 26,
+      "fw": 69,
+      "gir": 51,
+      "bob": 18,
+      "field": 82
+    },
+    "PGA Championship|6093|4": {
+      "app": 4,
+      "putt": 21,
+      "fw": 2,
+      "gir": 1,
+      "bob": 5,
+      "field": 82
+    },
+    "PGA Championship|19895|4": {
+      "app": 59,
+      "putt": 5,
+      "fw": 6,
+      "gir": 41,
+      "bob": 11,
+      "field": 82
+    },
+    "PGA Championship|14636|4": {
+      "app": 49,
+      "putt": 59,
+      "fw": 38,
+      "gir": 33,
+      "bob": 70,
+      "field": 82
+    },
+    "PGA Championship|21891|4": {
+      "app": 60,
+      "putt": 71,
+      "fw": 29,
+      "gir": 56,
+      "bob": 23,
+      "field": 82
+    },
+    "PGA Championship|16841|4": {
+      "app": 38,
+      "putt": 54,
+      "fw": 21,
+      "gir": 37,
+      "bob": 36,
+      "field": 82
+    },
+    "PGA Championship|26651|4": {
+      "app": 18,
+      "putt": 81,
+      "fw": 47,
+      "gir": 15,
+      "bob": 43,
+      "field": 82
+    },
+    "PGA Championship|23950|4": {
+      "app": 20,
+      "putt": 68,
+      "fw": 7,
+      "gir": 31,
+      "bob": 41,
+      "field": 82
+    },
+    "PGA Championship|14609|4": {
+      "app": 79,
+      "putt": 47,
+      "fw": 19,
+      "gir": 64,
+      "bob": 48,
+      "field": 82
+    },
+    "PGA Championship|18474|4": {
+      "app": 44,
+      "putt": 17,
+      "fw": 42,
+      "gir": 66,
+      "bob": 3,
+      "field": 82
+    },
+    "PGA Championship|15466|4": {
+      "app": 63,
+      "putt": 77,
+      "fw": 58,
+      "gir": 52,
+      "bob": 72,
+      "field": 82
+    },
+    "PGA Championship|14139|4": {
+      "app": 61,
+      "putt": 40,
+      "fw": 56,
+      "gir": 77,
+      "bob": 17,
+      "field": 82
+    },
+    "PGA Championship|17606|3": {
+      "app": 96,
+      "putt": 28,
+      "fw": 101,
+      "gir": 59,
+      "bob": 44,
+      "field": 156
+    },
+    "PGA Championship|29197|3": {
+      "app": 75,
+      "putt": 63,
+      "fw": 139,
+      "gir": 125,
+      "bob": 66,
+      "field": 156
+    },
+    "PGA Championship|15466|3": {
+      "app": 55,
+      "putt": 59,
+      "fw": 24,
+      "gir": 8,
+      "bob": 39,
+      "field": 156
+    },
+    "PGA Championship|17576|3": {
+      "app": 17,
+      "putt": 146,
+      "fw": 100,
+      "gir": 10,
+      "bob": 127,
+      "field": 156
+    },
+    "PGA Championship|9771|3": {
+      "app": 35,
+      "putt": 51,
+      "fw": 119,
+      "gir": 50,
+      "bob": 75,
+      "field": 156
+    },
+    "PGA Championship|24968|3": {
+      "app": 113,
+      "putt": 60,
+      "fw": 57,
+      "gir": 40,
+      "bob": 101,
+      "field": 156
+    },
+    "PGA Championship|8825|3": {
+      "app": 51,
+      "putt": 79,
+      "fw": 91,
+      "gir": 79,
+      "bob": 32,
+      "field": 156
+    },
+    "PGA Championship|23838|3": {
+      "app": 89,
+      "putt": 27,
+      "fw": 29,
+      "gir": 37,
+      "bob": 58,
+      "field": 156
+    },
+    "PGA Championship|15310|3": {
+      "app": 94,
+      "putt": 2,
+      "fw": 123,
+      "gir": 132,
+      "bob": 16,
+      "field": 156
+    },
+    "PGA Championship|13900|3": {
+      "app": 139,
+      "putt": 136,
+      "fw": 21,
+      "gir": 113,
+      "bob": 121,
+      "field": 156
+    },
+    "PGA Championship|10091|3": {
+      "app": 31,
+      "putt": 17,
+      "fw": 65,
+      "gir": 5,
+      "bob": 33,
+      "field": 156
+    },
+    "PGA Championship|23841|3": {
+      "app": 66,
+      "putt": 100,
+      "fw": 30,
+      "gir": 38,
+      "bob": 99,
+      "field": 156
+    },
+    "PGA Championship|21407|3": {
+      "app": 10,
+      "putt": 129,
+      "fw": 10,
+      "gir": 12,
+      "bob": 92,
+      "field": 156
+    },
+    "PGA Championship|18417|3": {
+      "app": 5,
+      "putt": 124,
+      "fw": 102,
+      "gir": 34,
+      "bob": 47,
+      "field": 156
+    },
+    "PGA Championship|25569|3": {
+      "app": 137,
+      "putt": 111,
+      "fw": 3,
+      "gir": 42,
+      "bob": 155,
+      "field": 156
+    },
+    "PGA Championship|13126|3": {
+      "app": 114,
+      "putt": 26,
+      "fw": 68,
+      "gir": 144,
+      "bob": 146,
+      "field": 156
+    },
+    "PGA Championship|23014|3": {
+      "app": 141,
+      "putt": 98,
+      "fw": 54,
+      "gir": 95,
+      "bob": 54,
+      "field": 156
+    },
+    "PGA Championship|19895|3": {
+      "app": 133,
+      "putt": 35,
+      "fw": 73,
+      "gir": 120,
+      "bob": 89,
+      "field": 156
+    },
+    "PGA Championship|12965|3": {
+      "app": 67,
+      "putt": 64,
+      "fw": 93,
+      "gir": 81,
+      "bob": 12,
+      "field": 156
+    },
+    "PGA Championship|28984|3": {
+      "app": 23,
+      "putt": 1,
+      "fw": 61,
+      "gir": 45,
+      "bob": 28,
+      "field": 156
+    },
+    "PGA Championship|14838|3": {
+      "app": 81,
+      "putt": 87,
+      "fw": 96,
+      "gir": 131,
+      "bob": 124,
+      "field": 156
+    },
+    "PGA Championship|6093|3": {
+      "app": 104,
+      "putt": 57,
+      "fw": 89,
+      "gir": 108,
+      "bob": 11,
+      "field": 156
+    },
+    "PGA Championship|14577|3": {
+      "app": 7,
+      "putt": 22,
+      "fw": 42,
+      "gir": 7,
+      "bob": 5,
+      "field": 156
+    },
+    "PGA Championship|14609|3": {
+      "app": 41,
+      "putt": 14,
+      "fw": 22,
+      "gir": 115,
+      "bob": 15,
+      "field": 156
+    },
+    "PGA Championship|21891|3": {
+      "app": 97,
+      "putt": 61,
+      "fw": 51,
+      "gir": 24,
+      "bob": 8,
+      "field": 156
+    },
+    "PGA Championship|13562|3": {
+      "app": 19,
+      "putt": 20,
+      "fw": 69,
+      "gir": 30,
+      "bob": 13,
+      "field": 156
+    },
+    "PGA Championship|18474|3": {
+      "app": 45,
+      "putt": 11,
+      "fw": 103,
+      "gir": 118,
+      "bob": 21,
+      "field": 156
+    },
+    "PGA Championship|19483|3": {
+      "app": 116,
+      "putt": 33,
+      "fw": 105,
+      "gir": 119,
+      "bob": 129,
+      "field": 156
+    },
+    "PGA Championship|23602|3": {
+      "app": 130,
+      "putt": 118,
+      "fw": 55,
+      "gir": 68,
+      "bob": 98,
+      "field": 156
+    },
+    "PGA Championship|10419|3": {
+      "app": 119,
+      "putt": 48,
+      "fw": 66,
+      "gir": 110,
+      "bob": 114,
+      "field": 156
+    },
+    "PGA Championship|13872|2": {
+      "app": 135,
+      "putt": 79,
+      "fw": 44,
+      "gir": 59,
+      "bob": 122,
+      "field": 156
+    },
+    "PGA Championship|17576|2": {
+      "app": 4,
+      "putt": 120,
+      "fw": 25,
+      "gir": 14,
+      "bob": 43,
+      "field": 156
+    },
+    "PGA Championship|9771|2": {
+      "app": 6,
+      "putt": 109,
+      "fw": 71,
+      "gir": 22,
+      "bob": 74,
+      "field": 156
+    },
+    "PGA Championship|14578|2": {
+      "app": 78,
+      "putt": 140,
+      "fw": 6,
+      "gir": 61,
+      "bob": 81,
+      "field": 156
+    },
+    "PGA Championship|17538|2": {
+      "app": 137,
+      "putt": 110,
+      "fw": 23,
+      "gir": 87,
+      "bob": 128,
+      "field": 156
+    },
+    "PGA Championship|13562|2": {
+      "app": 52,
+      "putt": 19,
+      "fw": 75,
+      "gir": 26,
+      "bob": 79,
+      "field": 156
+    },
+    "PGA Championship|10091|2": {
+      "app": 121,
+      "putt": 108,
+      "fw": 139,
+      "gir": 56,
+      "bob": 75,
+      "field": 156
+    },
+    "PGA Championship|23841|2": {
+      "app": 150,
+      "putt": 20,
+      "fw": 32,
+      "gir": 137,
+      "bob": 102,
+      "field": 156
+    },
+    "PGA Championship|21407|2": {
+      "app": 74,
+      "putt": 88,
+      "fw": 86,
+      "gir": 94,
+      "bob": 50,
+      "field": 156
+    },
+    "PGA Championship|26651|2": {
+      "app": 118,
+      "putt": 25,
+      "fw": 17,
+      "gir": 101,
+      "bob": 61,
+      "field": 156
+    },
+    "PGA Championship|19841|2": {
+      "app": 77,
+      "putt": 117,
+      "fw": 57,
+      "gir": 91,
+      "bob": 132,
+      "field": 156
+    },
+    "PGA Championship|14577|2": {
+      "app": 51,
+      "putt": 62,
+      "fw": 113,
+      "gir": 30,
+      "bob": 40,
+      "field": 156
+    },
+    "PGA Championship|23602|2": {
+      "app": 38,
+      "putt": 40,
+      "fw": 60,
+      "gir": 71,
+      "bob": 25,
+      "field": 156
+    },
+    "PGA Championship|16243|2": {
+      "app": 3,
+      "putt": 138,
+      "fw": 49,
+      "gir": 6,
+      "bob": 86,
+      "field": 156
+    },
+    "PGA Championship|22085|2": {
+      "app": 25,
+      "putt": 35,
+      "fw": 89,
+      "gir": 16,
+      "bob": 13,
+      "field": 156
+    },
+    "PGA Championship|14838|2": {
+      "app": 1,
+      "putt": 53,
+      "fw": 132,
+      "gir": 2,
+      "bob": 82,
+      "field": 156
+    },
+    "PGA Championship|6093|2": {
+      "app": 37,
+      "putt": 55,
+      "fw": 106,
+      "gir": 54,
+      "bob": 69,
+      "field": 156
+    },
+    "PGA Championship|14139|2": {
+      "app": 45,
+      "putt": 12,
+      "fw": 13,
+      "gir": 28,
+      "bob": 37,
+      "field": 156
+    },
+    "PGA Championship|18841|2": {
+      "app": 69,
+      "putt": 144,
+      "fw": 26,
+      "gir": 132,
+      "bob": 45,
+      "field": 156
+    },
+    "PGA Championship|19195|2": {
+      "app": 43,
+      "putt": 122,
+      "fw": 145,
+      "gir": 117,
+      "bob": 46,
+      "field": 156
+    },
+    "PGA Championship|19895|2": {
+      "app": 67,
+      "putt": 29,
+      "fw": 27,
+      "gir": 42,
+      "bob": 11,
+      "field": 156
+    },
+    "PGA Championship|17536|2": {
+      "app": 5,
+      "putt": 126,
+      "fw": 15,
+      "gir": 13,
+      "bob": 22,
+      "field": 156
+    },
+    "PGA Championship|12294|2": {
+      "app": 100,
+      "putt": 97,
+      "fw": 10,
+      "gir": 82,
+      "bob": 119,
+      "field": 156
+    }
+  }
+}

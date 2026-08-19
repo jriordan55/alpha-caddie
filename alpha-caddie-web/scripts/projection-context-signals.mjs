@@ -14,9 +14,9 @@ import {
   effectiveWeatherForRow,
   weatherDifficultyDeltaFromSnapshot,
 } from "./weather-projection-adjustments.mjs";
-import { bobPctFromHistRow, girPctFromHistRow } from "./sg-side-policy.mjs";
+import { bobPctFromHistRow, fairwayPctFromHistRow, girPctFromHistRow } from "./sg-side-policy.mjs";
 
-export { bobPctFromHistRow, girPctFromHistRow };
+export { bobPctFromHistRow, fairwayPctFromHistRow, girPctFromHistRow };
 
 export const EXPORT_SIGNAL_COLS = [
   "weather_wind_mph",
@@ -30,6 +30,7 @@ export const EXPORT_SIGNAL_COLS = [
   "prev_sg_putt",
   "prev_gir_pct",
   "prev_bob_pct",
+  "prev_fairway_pct",
   "tee_wave",
   "pin_sheet_active",
   "gir_minus_fw",
@@ -55,6 +56,7 @@ function fmtSignalCell(key, v) {
     key === "prev_sg_putt" ||
     key === "prev_gir_pct" ||
     key === "prev_bob_pct" ||
+    key === "prev_fairway_pct" ||
     key === "gir_minus_fw"
   ) {
     return String(Math.round(n * 1000) / 1000);
@@ -223,6 +225,7 @@ export function extractPrevRoundSgFromHist(histByKey, keyFn, eventName, eventYea
     prev_sg_putt: NaN,
     prev_gir_pct: NaN,
     prev_bob_pct: NaN,
+    prev_fairway_pct: NaN,
   };
   if (!Number.isFinite(dg) || !Number.isFinite(rnd) || rnd <= 1) {
     return empty;
@@ -237,6 +240,7 @@ export function extractPrevRoundSgFromHist(histByKey, keyFn, eventName, eventYea
     prev_sg_putt: num(prevRow.sg_putt, NaN),
     prev_gir_pct: girPctFromHistRow(prevRow),
     prev_bob_pct: bobPctFromHistRow(prevRow),
+    prev_fairway_pct: fairwayPctFromHistRow(prevRow),
   };
 }
 

@@ -64,5 +64,6 @@ export function priorContextForBetRow(histByKey, row) {
     prev_sg_putt: pickPriorCell(row.prev_sg_putt, fromHist.prev_sg_putt),
     prev_gir_pct: pickPriorCell(row.prev_gir_pct, fromHist.prev_gir_pct),
     prev_bob_pct: pickPriorCell(row.prev_bob_pct, fromHist.prev_bob_pct),
+    prev_fairway_pct: pickPriorCell(row.prev_fairway_pct, fromHist.prev_fairway_pct),
   };
 }

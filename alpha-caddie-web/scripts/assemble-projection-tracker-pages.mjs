@@ -49,6 +49,7 @@ const DATA_FILES = [
   "parlay_correlations.json",
   "win_prob_calibration.json",
   "prev_round_sg_index.json",
+  "prior_round_field_ranks.json",
 ];
 const SCRIPT_MODULES = [
   "projected-mean-live.mjs",

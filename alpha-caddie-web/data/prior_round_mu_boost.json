@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-19T03:54:36.003Z",
+  "generated_at": "2026-08-19T04:03:49.529Z",
   "source": "data/round_projection_vs_actual.csv",
   "method": "event_leave_one_out_continuous_ridge",
   "ridge_lambda": 0.02,
@@ -39,18 +39,18 @@
     },
     "Fairways hit": {
       "market": "Fairways hit",
-      "beta": -0.0039491161186327745,
-      "beta_raw": -0.004118170746998904,
+      "beta": 0.06575613401204282,
+      "beta_raw": 0.0685710370091337,
       "means": {
-        "prev_sg_ott": 0.3104589041095882
+        "prev_fairway_pct": 0.6164349315068499
       },
       "n": 1168,
       "relative": true,
       "features": [
-        "prev_sg_ott"
+        "prev_fairway_pct"
       ],
       "weights": null,
-      "label": "prev SG OTT"
+      "label": "prev FW%"
     },
     "Bogeys": {
       "market": "Bogeys",
@@ -138,18 +138,18 @@
         },
         "Fairways hit": {
           "market": "Fairways hit",
-          "beta": -0.005955220763557135,
-          "beta_raw": -0.006225666756452555,
+          "beta": 0.06329002102809585,
+          "beta_raw": 0.06616422725098849,
           "means": {
-            "prev_sg_ott": 0.3017593097184371
+            "prev_fairway_pct": 0.6113905540417807
           },
           "n": 1101,
           "relative": true,
           "features": [
-            "prev_sg_ott"
+            "prev_fairway_pct"
           ],
           "weights": null,
-          "label": "prev SG OTT"
+          "label": "prev FW%"
         },
         "Bogeys": {
           "market": "Bogeys",
@@ -237,18 +237,18 @@
         },
         "Fairways hit": {
           "market": "Fairways hit",
-          "beta": -0.004971276674560949,
-          "beta_raw": -0.005207105738819058,
+          "beta": 0.05342588260847498,
+          "beta_raw": 0.05596031726732104,
           "means": {
-            "prev_sg_ott": 0.314556925996204
+            "prev_fairway_pct": 0.6155398481973442
           },
           "n": 1054,
           "relative": true,
           "features": [
-            "prev_sg_ott"
+            "prev_fairway_pct"
           ],
           "weights": null,
-          "label": "prev SG OTT"
+          "label": "prev FW%"
         },
         "Bogeys": {
           "market": "Bogeys",
@@ -336,18 +336,18 @@
         },
         "Fairways hit": {
           "market": "Fairways hit",
-          "beta": -0.0039491161186327745,
-          "beta_raw": -0.004118170746998904,
+          "beta": 0.06575613401204282,
+          "beta_raw": 0.0685710370091337,
           "means": {
-            "prev_sg_ott": 0.3104589041095882
+            "prev_fairway_pct": 0.6164349315068499
           },
           "n": 1168,
           "relative": true,
           "features": [
-            "prev_sg_ott"
+            "prev_fairway_pct"
           ],
           "weights": null,
-          "label": "prev SG OTT"
+          "label": "prev FW%"
         },
         "Bogeys": {
           "market": "Bogeys",
@@ -435,18 +435,18 @@
         },
         "Fairways hit": {
           "market": "Fairways hit",
-          "beta": 0.0025430012284630332,
-          "beta_raw": 0.0026627282166204265,
+          "beta": 0.12895359964314274,
+          "beta_raw": 0.13502486139658637,
           "means": {
-            "prev_sg_ott": 0.31096233521657174
+            "prev_fairway_pct": 0.6259613935969871
           },
           "n": 1062,
           "relative": true,
           "features": [
-            "prev_sg_ott"
+            "prev_fairway_pct"
           ],
           "weights": null,
-          "label": "prev SG OTT"
+          "label": "prev FW%"
         },
         "Bogeys": {
           "market": "Bogeys",
@@ -534,18 +534,18 @@
         },
         "Fairways hit": {
           "market": "Fairways hit",
-          "beta": -0.004373858538361282,
-          "beta_raw": -0.0045672209847963515,
+          "beta": 0.06749830715699097,
+          "beta_raw": 0.07048231719929826,
           "means": {
-            "prev_sg_ott": 0.31363837312113096
+            "prev_fairway_pct": 0.6170229885057478
           },
           "n": 1131,
           "relative": true,
           "features": [
-            "prev_sg_ott"
+            "prev_fairway_pct"
           ],
           "weights": null,
-          "label": "prev SG OTT"
+          "label": "prev FW%"
         },
         "Bogeys": {
           "market": "Bogeys",
@@ -633,18 +633,18 @@
         },
         "Fairways hit": {
           "market": "Fairways hit",
-          "beta": -0.000988407105655726,
-          "beta_raw": -0.0010379264997266544,
+          "beta": 0.05567005229959395,
+          "beta_raw": 0.05845913307612672,
           "means": {
-            "prev_sg_ott": 0.30428256513025986
+            "prev_fairway_pct": 0.6253947895791588
           },
           "n": 998,
           "relative": true,
           "features": [
-            "prev_sg_ott"
+            "prev_fairway_pct"
           ],
           "weights": null,
-          "label": "prev SG OTT"
+          "label": "prev FW%"
         },
         "Bogeys": {
           "market": "Bogeys",
@@ -732,18 +732,18 @@
         },
         "Fairways hit": {
           "market": "Fairways hit",
-          "beta": -0.004498082911244324,
-          "beta_raw": -0.00470366256897944,
+          "beta": 0.061312764249073025,
+          "beta_raw": 0.06411499296246759,
           "means": {
-            "prev_sg_ott": 0.29514899451553855
+            "prev_fairway_pct": 0.6153674588665455
           },
           "n": 1094,
           "relative": true,
           "features": [
-            "prev_sg_ott"
+            "prev_fairway_pct"
           ],
           "weights": null,
-          "label": "prev SG OTT"
+          "label": "prev FW%"
         },
         "Bogeys": {
           "market": "Bogeys",
@@ -831,18 +831,18 @@
         },
         "Fairways hit": {
           "market": "Fairways hit",
-          "beta": -0.006878875100248707,
-          "beta_raw": -0.0071854203364451735,
+          "beta": 0.05600914319272645,
+          "beta_raw": 0.058505094315396966,
           "means": {
-            "prev_sg_ott": 0.30654278074866215
+            "prev_fairway_pct": 0.614907308377897
           },
           "n": 1122,
           "relative": true,
           "features": [
-            "prev_sg_ott"
+            "prev_fairway_pct"
           ],
           "weights": null,
-          "label": "prev SG OTT"
+          "label": "prev FW%"
         },
         "Bogeys": {
           "market": "Bogeys",
@@ -930,18 +930,18 @@
         },
         "Fairways hit": {
           "market": "Fairways hit",
-          "beta": -0.00505512073716728,
-          "beta_raw": -0.005292896877203371,
+          "beta": 0.056862619327347805,
+          "beta_raw": 0.05953724864660217,
           "means": {
-            "prev_sg_ott": 0.29878739416744976
+            "prev_fairway_pct": 0.6126886171213554
           },
           "n": 1063,
           "relative": true,
           "features": [
-            "prev_sg_ott"
+            "prev_fairway_pct"
           ],
           "weights": null,
-          "label": "prev SG OTT"
+          "label": "prev FW%"
         },
         "Bogeys": {
           "market": "Bogeys",
@@ -1029,18 +1029,18 @@
         },
         "Fairways hit": {
           "market": "Fairways hit",
-          "beta": -0.00013811249967796157,
-          "beta_raw": -0.00014515905578398,
+          "beta": 0.038925232065971295,
+          "beta_raw": 0.04091121329382697,
           "means": {
-            "prev_sg_ott": 0.3349102040816321
+            "prev_fairway_pct": 0.6318510204081634
           },
           "n": 980,
           "relative": true,
           "features": [
-            "prev_sg_ott"
+            "prev_fairway_pct"
           ],
           "weights": null,
-          "label": "prev SG OTT"
+          "label": "prev FW%"
         },
         "Bogeys": {
           "market": "Bogeys",
@@ -1128,18 +1128,18 @@
         },
         "Fairways hit": {
           "market": "Fairways hit",
-          "beta": -0.006272152940555184,
-          "beta_raw": -0.006554682352291904,
+          "beta": 0.07404666625390932,
+          "beta_raw": 0.07738210167075209,
           "means": {
-            "prev_sg_ott": 0.32446396396396304
+            "prev_fairway_pct": 0.6123531531531536
           },
           "n": 1110,
           "relative": true,
           "features": [
-            "prev_sg_ott"
+            "prev_fairway_pct"
           ],
           "weights": null,
-          "label": "prev SG OTT"
+          "label": "prev FW%"
         },
         "Bogeys": {
           "market": "Bogeys",
@@ -1227,18 +1227,18 @@
         },
         "Fairways hit": {
           "market": "Fairways hit",
-          "beta": -0.005452432668092191,
-          "beta_raw": -0.005722355077403685,
+          "beta": 0.06715156713354996,
+          "beta_raw": 0.07047590214016135,
           "means": {
-            "prev_sg_ott": 0.30219603960395997
+            "prev_fairway_pct": 0.5968801980198027
           },
           "n": 1010,
           "relative": true,
           "features": [
-            "prev_sg_ott"
+            "prev_fairway_pct"
           ],
           "weights": null,
-          "label": "prev SG OTT"
+          "label": "prev FW%"
         },
         "Bogeys": {
           "market": "Bogeys",
@@ -1326,18 +1326,18 @@
         },
         "Fairways hit": {
           "market": "Fairways hit",
-          "beta": -0.0039491161186327745,
-          "beta_raw": -0.004118170746998904,
+          "beta": 0.06575613401204282,
+          "beta_raw": 0.0685710370091337,
           "means": {
-            "prev_sg_ott": 0.3104589041095882
+            "prev_fairway_pct": 0.6164349315068499
           },
           "n": 1168,
           "relative": true,
           "features": [
-            "prev_sg_ott"
+            "prev_fairway_pct"
           ],
           "weights": null,
-          "label": "prev SG OTT"
+          "label": "prev FW%"
         },
         "Bogeys": {
           "market": "Bogeys",
@@ -1425,18 +1425,18 @@
         },
         "Fairways hit": {
           "market": "Fairways hit",
-          "beta": -0.004351835308369925,
-          "beta_raw": -0.00454559467205514,
+          "beta": 0.06104934829177275,
+          "beta_raw": 0.06376748490316067,
           "means": {
-            "prev_sg_ott": 0.31907836153161084
+            "prev_fairway_pct": 0.6189376669634914
           },
           "n": 1123,
           "relative": true,
           "features": [
-            "prev_sg_ott"
+            "prev_fairway_pct"
           ],
           "weights": null,
-          "label": "prev SG OTT"
+          "label": "prev FW%"
         },
         "Bogeys": {
           "market": "Bogeys",
@@ -1494,7 +1494,7 @@
   "signal_definitions": {
     "Birdies": "prev BoB%",
     "GIR": "prev GIR%",
-    "Fairways hit": "prev SG OTT",
+    "Fairways hit": "prev FW%",
     "Bogeys": "prev SG APP",
     "Total score": "prev SG APP",
     "Pars": "prev SG APP − PUTT"

@@ -22,9 +22,9 @@ export const MARKET_BOOST_SPEC = Object.freeze({
     label: "prev GIR%",
   },
   "Fairways hit": {
-    features: ["prev_sg_ott"],
+    features: ["prev_fairway_pct"],
     relative: true,
-    label: "prev SG OTT",
+    label: "prev FW%",
   },
   Bogeys: {
     features: ["prev_sg_app"],
