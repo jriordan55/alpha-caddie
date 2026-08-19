@@ -48,9 +48,8 @@ const DATA_FILES = [
   "course_table.csv",
   "parlay_correlations.json",
   "win_prob_calibration.json",
+  "prev_round_sg_index.json",
 ];
-
-/** Browser modules imported by projection-tracker via ../scripts/ (must ship on Pages). */
 const SCRIPT_MODULES = [
   "projected-mean-live.mjs",
   "weather-mu-adjustments.mjs",
@@ -60,6 +59,7 @@ const SCRIPT_MODULES = [
   "live-event-actuals-cap.mjs",
   "course-name-key.mjs",
   "prop-pricing-model.mjs",
+  "sg-side-policy.mjs",
 ];
 
 /** Main Alpha Caddie app (Round projections tab) — served at /app/ on GitHub Pages. */

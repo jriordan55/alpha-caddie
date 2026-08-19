@@ -19,6 +19,8 @@ import { fileURLToPath } from "url";
 import { parse } from "csv-parse";
 import { eventsLikelySame } from "./dg-events-align.mjs";
 import { alignDetailCsvContent } from "./projection-context-signals.mjs";
+import { priorContextForBetRow, loadHistByKey } from "./prior-round-context.mjs";
+import { priorSignalsFromRow, sgAllowedSides } from "./sg-side-policy.mjs";
 import {
   EXPORT_MARKETS,
   num,
@@ -29,6 +31,7 @@ import {
 
 const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
 const VS = join(WEB, "data", "round_projection_vs_actual.csv");
+const HIST = join(WEB, "data", "historical_rounds_all.csv");
 const PROJ = join(WEB, "projections.json");
 const OUT = join(WEB, "data", "both_side_roi.json");
 
@@ -132,6 +135,13 @@ function americanPnlDollars(result, americanOdds) {
 }
 
 /** Grade O/U vs book line: half-lines never push; whole lines push on exact. */
+function sideAllowedByPriorSg(market, side, row) {
+  const allowed = sgAllowedSides(market, priorSignalsFromRow(row));
+  if (side === "OVER") return allowed.over;
+  if (side === "UNDER") return allowed.under;
+  return false;
+}
+
 function gradeSide(actual, bookLine, side) {
   if (!Number.isFinite(actual) || !Number.isFinite(bookLine)) return null;
   const isHalf = Math.abs(bookLine * 2 - Math.round(bookLine * 2)) > 1e-9
@@ -208,6 +218,7 @@ function evaluatePolicy(rows, gapOver, gapUnder = gapOver, oddsRule = null) {
     if (edge > gapOver) side = "OVER";
     else if (edge < -gapUnder) side = "UNDER";
     else continue;
+    if (!sideAllowedByPriorSg(r.market, side, r)) continue;
 
     const odds = side === "OVER" ? r.overOdds : r.underOdds;
     if (side === "UNDER" && Number.isFinite(underMin) && !(odds >= underMin)) continue;
@@ -370,6 +381,7 @@ function countingActualTrusted(row, market, actual) {
 
 async function loadRows() {
   if (!existsSync(VS)) throw new Error(`Missing ${VS}`);
+  const histByKey = existsSync(HIST) ? await loadHistByKey(HIST) : new Map();
   const raw = readFileSync(VS, "utf8");
   const headerLine = `${raw.split(/\r?\n/).filter(Boolean)[0]}\n`;
   const aligned = alignDetailCsvContent(raw, headerLine);
@@ -438,6 +450,7 @@ async function loadRows() {
             if (!Number.isFinite(overOdds) || !Number.isFinite(underOdds) || overOdds === 0 || underOdds === 0)
               continue;
             counts[bk.id]++;
+            const prior = priorContextForBetRow(histByKey, row);
             dest[m.market].push({
               event,
               round,
@@ -453,6 +466,7 @@ async function loadRows() {
               book_label: bk.label,
               t: Number.isFinite(t) ? t : 0,
               live_week: liveWeek,
+              ...prior,
             });
           }
         }
@@ -492,6 +506,8 @@ function appendGradedBets(betRows, rows, rec, liveWeek) {
     if (delta > gapOver) side = "OVER";
     else if (delta < -gapUnder) side = "UNDER";
     if (!side) continue;
+    if (!sideAllowedByPriorSg(r.market, side, r)) continue;
+    const allowed = sgAllowedSides(r.market, priorSignalsFromRow(r));
     const odds = side === "OVER" ? r.overOdds : r.underOdds;
     if (side === "UNDER" && Number.isFinite(underMin) && !(odds >= underMin)) continue;
     if (side === "OVER" && Number.isFinite(overMin) && !(odds >= overMin)) continue;
@@ -519,6 +535,12 @@ function appendGradedBets(betRows, rows, rec, liveWeek) {
       result,
       pnl: result === "P" ? 0 : Math.round(pnl * 100) / 100,
       live_week: Boolean(liveWeek),
+      sg_reason: allowed.reason || "",
+      prev_sg_app: Number.isFinite(r.prev_sg_app) ? r.prev_sg_app : null,
+      prev_sg_ott: Number.isFinite(r.prev_sg_ott) ? r.prev_sg_ott : null,
+      prev_sg_putt: Number.isFinite(r.prev_sg_putt) ? r.prev_sg_putt : null,
+      prev_gir_pct: Number.isFinite(r.prev_gir_pct) ? r.prev_gir_pct : null,
+      prev_bob_pct: Number.isFinite(r.prev_bob_pct) ? r.prev_bob_pct : null,
     });
   }
 }
@@ -647,6 +669,12 @@ async function main() {
     recommended_combined_roi:
       combinedBets > 0 ? Math.round((combinedAll / (combinedBets * STAKE)) * 10000) / 10000 : null,
   };
+  out.sg_side_policy = {
+    enabled: true,
+    strong: 0.35,
+    weak: -0.15,
+    source: "prior in-event round (SG + GIR% + BoB% from historical_rounds)",
+  };
 
   /** Live-week μ correction — always 0 (raw hierarchical μ; weather/wave already in export lines). */
   /** @type {Record<string, number>} */
@@ -686,6 +714,32 @@ async function main() {
   });
   writeFileSync(OUT, `${JSON.stringify(out, null, 2)}\n`);
   const betsPath = join(WEB, "data", "both_side_bets.json");
+  /** @type {Record<string, object>} */
+  const prevSgIndex = {};
+  for (const rows of [...Object.values(byMarket), ...Object.values(byMarketLive)]) {
+    for (const r of rows) {
+      const k = `${r.event}|${r.dg_id}|${r.round}`;
+      if (prevSgIndex[k]) continue;
+      if (
+        !Number.isFinite(r.prev_sg_app) &&
+        !Number.isFinite(r.prev_sg_ott) &&
+        !Number.isFinite(r.prev_sg_putt)
+      ) {
+        continue;
+      }
+      prevSgIndex[k] = {
+        prev_sg_ott: r.prev_sg_ott,
+        prev_sg_app: r.prev_sg_app,
+        prev_sg_putt: r.prev_sg_putt,
+        prev_gir_pct: r.prev_gir_pct,
+        prev_bob_pct: r.prev_bob_pct,
+      };
+    }
+  }
+  writeFileSync(
+    join(WEB, "data", "prev_round_sg_index.json"),
+    `${JSON.stringify({ generated_at: out.generated_at, index: prevSgIndex }, null, 2)}\n`,
+  );
   writeFileSync(
     betsPath,
     `${JSON.stringify(
@@ -697,6 +751,7 @@ async function main() {
         both_side_positive_markets: bothPlusMarkets,
         live_event: live || null,
         live_week_bets: liveBetN,
+        sg_side_policy: out.sg_side_policy,
         bets: betRows,
       },
       null,

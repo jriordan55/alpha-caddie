@@ -14,6 +14,9 @@ import {
   effectiveWeatherForRow,
   weatherDifficultyDeltaFromSnapshot,
 } from "./weather-projection-adjustments.mjs";
+import { bobPctFromHistRow, girPctFromHistRow } from "./sg-side-policy.mjs";
+
+export { bobPctFromHistRow, girPctFromHistRow };
 
 export const EXPORT_SIGNAL_COLS = [
   "weather_wind_mph",
@@ -22,6 +25,11 @@ export const EXPORT_SIGNAL_COLS = [
   "weather_difficulty",
   "sg_ott",
   "sg_app",
+  "prev_sg_ott",
+  "prev_sg_app",
+  "prev_sg_putt",
+  "prev_gir_pct",
+  "prev_bob_pct",
   "tee_wave",
   "pin_sheet_active",
   "gir_minus_fw",
@@ -38,7 +46,17 @@ function fmtSignalCell(key, v) {
   if (key === "tee_wave" || key === "weather_condition") return v ? String(v) : "";
   if (!Number.isFinite(num(v, NaN))) return "";
   const n = num(v, NaN);
-  if (key === "weather_difficulty" || key === "sg_ott" || key === "sg_app" || key === "gir_minus_fw") {
+  if (
+    key === "weather_difficulty" ||
+    key === "sg_ott" ||
+    key === "sg_app" ||
+    key === "prev_sg_ott" ||
+    key === "prev_sg_app" ||
+    key === "prev_sg_putt" ||
+    key === "prev_gir_pct" ||
+    key === "prev_bob_pct" ||
+    key === "gir_minus_fw"
+  ) {
     return String(Math.round(n * 1000) / 1000);
   }
   if (key === "course_fw_width") return String(Math.round(n * 10) / 10);
@@ -192,6 +210,33 @@ export function extractSignalsFromPlayerRow(player, payload, webRoot) {
     pin_sheet_active: pinActive,
     gir_minus_fw: Number.isFinite(gir) && Number.isFinite(fw) ? gir - fw : NaN,
     course_fw_width: webRoot ? courseFwWidth(webRoot, payload?.course_used || meta?.course_used) : NaN,
+  };
+}
+
+/** Prior tournament round context (round N uses round N−1 within same event). */
+export function extractPrevRoundSgFromHist(histByKey, keyFn, eventName, eventYear, dgId, roundNum) {
+  const rnd = Math.round(num(roundNum, NaN));
+  const dg = Math.round(num(dgId, NaN));
+  const empty = {
+    prev_sg_ott: NaN,
+    prev_sg_app: NaN,
+    prev_sg_putt: NaN,
+    prev_gir_pct: NaN,
+    prev_bob_pct: NaN,
+  };
+  if (!Number.isFinite(dg) || !Number.isFinite(rnd) || rnd <= 1) {
+    return empty;
+  }
+  const prevRow = histByKey?.get?.(keyFn(eventName, eventYear, dg, rnd - 1));
+  if (!prevRow) {
+    return empty;
+  }
+  return {
+    prev_sg_ott: num(prevRow.sg_ott, NaN),
+    prev_sg_app: num(prevRow.sg_app, NaN),
+    prev_sg_putt: num(prevRow.sg_putt, NaN),
+    prev_gir_pct: girPctFromHistRow(prevRow),
+    prev_bob_pct: bobPctFromHistRow(prevRow),
   };
 }
 

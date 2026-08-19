@@ -1,0 +1,499 @@
+{
+  "generated_at": "2026-08-19T03:21:51.613Z",
+  "source": {
+    "bets": "round_projection_vs_actual.csv + both_side_roi.json gap policy",
+    "ranks": "historical_rounds_all.csv prior in-event round"
+  },
+  "excluded_live_event": "FedEx St. Jude Championship",
+  "dedupe": "one bet per event|round|player|market|side (DraftKings preferred)",
+  "baseline_all_gap_bets": {
+    "bets": 3763,
+    "wins": 2016,
+    "losses": 1714,
+    "pushes": 33,
+    "units": -14486.03,
+    "roi": -385,
+    "roi_pct": -384.96
+  },
+  "baseline_with_prior_rank": {
+    "bets": 2428,
+    "wins": 1303,
+    "losses": 1106,
+    "pushes": 19,
+    "units": -9739.94,
+    "roi": -401.2,
+    "roi_pct": -401.15
+  },
+  "cutoffs_tested": [
+    "top5",
+    "top10",
+    "top15",
+    "top25",
+    "top30",
+    "worse"
+  ],
+  "best_combined": {
+    "cutoff": "top5",
+    "bets": 102,
+    "wins": 60,
+    "losses": 41,
+    "pushes": 1,
+    "units": 443.85,
+    "roi": 435.1,
+    "roi_pct": 435.15,
+    "markets": {
+      "Fairways hit": {
+        "bets": 16,
+        "wins": 11,
+        "losses": 5,
+        "pushes": 0,
+        "units": 352.77,
+        "roi": 2204.8,
+        "roi_pct": 2204.83
+      },
+      "Total score": {
+        "bets": 16,
+        "wins": 11,
+        "losses": 5,
+        "pushes": 0,
+        "units": 370.16,
+        "roi": 2313.5,
+        "roi_pct": 2313.5
+      },
+      "Birdies": {
+        "bets": 20,
+        "wins": 9,
+        "losses": 11,
+        "pushes": 0,
+        "units": -409.96,
+        "roi": -2049.8,
+        "roi_pct": -2049.81
+      },
+      "Pars": {
+        "bets": 13,
+        "wins": 8,
+        "losses": 5,
+        "pushes": 0,
+        "units": 86.69,
+        "roi": 666.8,
+        "roi_pct": 666.84
+      },
+      "Bogeys": {
+        "bets": 19,
+        "wins": 13,
+        "losses": 6,
+        "pushes": 0,
+        "units": 287.24,
+        "roi": 1511.8,
+        "roi_pct": 1511.77
+      },
+      "GIR": {
+        "bets": 18,
+        "wins": 8,
+        "losses": 9,
+        "pushes": 1,
+        "units": -243.04,
+        "roi": -1350.2,
+        "roi_pct": -1350.24
+      }
+    }
+  },
+  "by_cutoff": [
+    {
+      "cutoff": "top5",
+      "bets": 102,
+      "wins": 60,
+      "losses": 41,
+      "pushes": 1,
+      "units": 443.85,
+      "roi": 435.1,
+      "roi_pct": 435.15,
+      "markets": {
+        "Fairways hit": {
+          "bets": 16,
+          "wins": 11,
+          "losses": 5,
+          "pushes": 0,
+          "units": 352.77,
+          "roi": 2204.8,
+          "roi_pct": 2204.83
+        },
+        "Total score": {
+          "bets": 16,
+          "wins": 11,
+          "losses": 5,
+          "pushes": 0,
+          "units": 370.16,
+          "roi": 2313.5,
+          "roi_pct": 2313.5
+        },
+        "Birdies": {
+          "bets": 20,
+          "wins": 9,
+          "losses": 11,
+          "pushes": 0,
+          "units": -409.96,
+          "roi": -2049.8,
+          "roi_pct": -2049.81
+        },
+        "Pars": {
+          "bets": 13,
+          "wins": 8,
+          "losses": 5,
+          "pushes": 0,
+          "units": 86.69,
+          "roi": 666.8,
+          "roi_pct": 666.84
+        },
+        "Bogeys": {
+          "bets": 19,
+          "wins": 13,
+          "losses": 6,
+          "pushes": 0,
+          "units": 287.24,
+          "roi": 1511.8,
+          "roi_pct": 1511.77
+        },
+        "GIR": {
+          "bets": 18,
+          "wins": 8,
+          "losses": 9,
+          "pushes": 1,
+          "units": -243.04,
+          "roi": -1350.2,
+          "roi_pct": -1350.24
+        }
+      }
+    },
+    {
+      "cutoff": "top15",
+      "bets": 319,
+      "wins": 190,
+      "losses": 128,
+      "pushes": 1,
+      "units": 1373.05,
+      "roi": 430.4,
+      "roi_pct": 430.42,
+      "markets": {
+        "Fairways hit": {
+          "bets": 61,
+          "wins": 36,
+          "losses": 25,
+          "pushes": 0,
+          "units": 103.8,
+          "roi": 170.2,
+          "roi_pct": 170.16
+        },
+        "Total score": {
+          "bets": 35,
+          "wins": 23,
+          "losses": 12,
+          "pushes": 0,
+          "units": 670.01,
+          "roi": 1914.3,
+          "roi_pct": 1914.32
+        },
+        "Birdies": {
+          "bets": 45,
+          "wins": 21,
+          "losses": 24,
+          "pushes": 0,
+          "units": -867.12,
+          "roi": -1926.9,
+          "roi_pct": -1926.93
+        },
+        "Pars": {
+          "bets": 45,
+          "wins": 30,
+          "losses": 15,
+          "pushes": 0,
+          "units": 707.37,
+          "roi": 1571.9,
+          "roi_pct": 1571.93
+        },
+        "Bogeys": {
+          "bets": 68,
+          "wins": 50,
+          "losses": 18,
+          "pushes": 0,
+          "units": 1770.95,
+          "roi": 2604.3,
+          "roi_pct": 2604.33
+        },
+        "GIR": {
+          "bets": 65,
+          "wins": 30,
+          "losses": 34,
+          "pushes": 1,
+          "units": -1011.96,
+          "roi": -1556.9,
+          "roi_pct": -1556.86
+        }
+      }
+    },
+    {
+      "cutoff": "top30",
+      "bets": 602,
+      "wins": 351,
+      "losses": 250,
+      "pushes": 1,
+      "units": 1071.69,
+      "roi": 178,
+      "roi_pct": 178.02,
+      "markets": {
+        "Fairways hit": {
+          "bets": 111,
+          "wins": 64,
+          "losses": 47,
+          "pushes": 0,
+          "units": -192.33,
+          "roi": -173.3,
+          "roi_pct": -173.27
+        },
+        "Total score": {
+          "bets": 81,
+          "wins": 52,
+          "losses": 29,
+          "pushes": 0,
+          "units": 1243.69,
+          "roi": 1535.4,
+          "roi_pct": 1535.42
+        },
+        "Birdies": {
+          "bets": 84,
+          "wins": 41,
+          "losses": 43,
+          "pushes": 0,
+          "units": -1108.8,
+          "roi": -1320,
+          "roi_pct": -1320
+        },
+        "Pars": {
+          "bets": 93,
+          "wins": 57,
+          "losses": 36,
+          "pushes": 0,
+          "units": 615.06,
+          "roi": 661.4,
+          "roi_pct": 661.36
+        },
+        "Bogeys": {
+          "bets": 122,
+          "wins": 80,
+          "losses": 42,
+          "pushes": 0,
+          "units": 1349.07,
+          "roi": 1105.8,
+          "roi_pct": 1105.79
+        },
+        "GIR": {
+          "bets": 111,
+          "wins": 57,
+          "losses": 53,
+          "pushes": 1,
+          "units": -835.01,
+          "roi": -752.3,
+          "roi_pct": -752.26
+        }
+      }
+    },
+    {
+      "cutoff": "top25",
+      "bets": 515,
+      "wins": 295,
+      "losses": 219,
+      "pushes": 1,
+      "units": 128.18,
+      "roi": 24.9,
+      "roi_pct": 24.89,
+      "markets": {
+        "Fairways hit": {
+          "bets": 100,
+          "wins": 56,
+          "losses": 44,
+          "pushes": 0,
+          "units": -524.73,
+          "roi": -524.7,
+          "roi_pct": -524.73
+        },
+        "Total score": {
+          "bets": 64,
+          "wins": 41,
+          "losses": 23,
+          "pushes": 0,
+          "units": 961.2,
+          "roi": 1501.9,
+          "roi_pct": 1501.88
+        },
+        "Birdies": {
+          "bets": 72,
+          "wins": 34,
+          "losses": 38,
+          "pushes": 0,
+          "units": -1101.1,
+          "roi": -1529.3,
+          "roi_pct": -1529.31
+        },
+        "Pars": {
+          "bets": 81,
+          "wins": 50,
+          "losses": 31,
+          "pushes": 0,
+          "units": 607.79,
+          "roi": 750.4,
+          "roi_pct": 750.36
+        },
+        "Bogeys": {
+          "bets": 102,
+          "wins": 68,
+          "losses": 34,
+          "pushes": 0,
+          "units": 1445.08,
+          "roi": 1416.7,
+          "roi_pct": 1416.74
+        },
+        "GIR": {
+          "bets": 96,
+          "wins": 46,
+          "losses": 49,
+          "pushes": 1,
+          "units": -1260.05,
+          "roi": -1312.6,
+          "roi_pct": -1312.56
+        }
+      }
+    },
+    {
+      "cutoff": "top10",
+      "bets": 210,
+      "wins": 119,
+      "losses": 90,
+      "pushes": 1,
+      "units": -167.23,
+      "roi": -79.6,
+      "roi_pct": -79.63,
+      "markets": {
+        "Fairways hit": {
+          "bets": 42,
+          "wins": 25,
+          "losses": 17,
+          "pushes": 0,
+          "units": 136.05,
+          "roi": 323.9,
+          "roi_pct": 323.93
+        },
+        "Total score": {
+          "bets": 25,
+          "wins": 15,
+          "losses": 10,
+          "pushes": 0,
+          "units": 219.25,
+          "roi": 877,
+          "roi_pct": 877
+        },
+        "Birdies": {
+          "bets": 38,
+          "wins": 19,
+          "losses": 19,
+          "pushes": 0,
+          "units": -525.31,
+          "roi": -1382.4,
+          "roi_pct": -1382.4
+        },
+        "Pars": {
+          "bets": 27,
+          "wins": 16,
+          "losses": 11,
+          "pushes": 0,
+          "units": 54.62,
+          "roi": 202.3,
+          "roi_pct": 202.31
+        },
+        "Bogeys": {
+          "bets": 40,
+          "wins": 27,
+          "losses": 13,
+          "pushes": 0,
+          "units": 588.3,
+          "roi": 1470.8,
+          "roi_pct": 1470.75
+        },
+        "GIR": {
+          "bets": 38,
+          "wins": 17,
+          "losses": 20,
+          "pushes": 1,
+          "units": -640.14,
+          "roi": -1684.6,
+          "roi_pct": -1684.59
+        }
+      }
+    },
+    {
+      "cutoff": "worse",
+      "bets": 1396,
+      "wins": 761,
+      "losses": 631,
+      "pushes": 4,
+      "units": -3294.57,
+      "roi": -236,
+      "roi_pct": -236,
+      "markets": {
+        "Fairways hit": {
+          "bets": 235,
+          "wins": 134,
+          "losses": 101,
+          "pushes": 0,
+          "units": -128.07,
+          "roi": -54.5,
+          "roi_pct": -54.5
+        },
+        "Total score": {
+          "bets": 178,
+          "wins": 102,
+          "losses": 75,
+          "pushes": 1,
+          "units": 594.19,
+          "roi": 333.8,
+          "roi_pct": 333.81
+        },
+        "Birdies": {
+          "bets": 164,
+          "wins": 81,
+          "losses": 83,
+          "pushes": 0,
+          "units": -1019.28,
+          "roi": -621.5,
+          "roi_pct": -621.51
+        },
+        "Pars": {
+          "bets": 174,
+          "wins": 99,
+          "losses": 75,
+          "pushes": 0,
+          "units": -173.55,
+          "roi": -99.7,
+          "roi_pct": -99.74
+        },
+        "Bogeys": {
+          "bets": 330,
+          "wins": 184,
+          "losses": 146,
+          "pushes": 0,
+          "units": -578.07,
+          "roi": -175.2,
+          "roi_pct": -175.17
+        },
+        "GIR": {
+          "bets": 315,
+          "wins": 161,
+          "losses": 151,
+          "pushes": 3,
+          "units": -1989.79,
+          "roi": -631.7,
+          "roi_pct": -631.68
+        }
+      }
+    }
+  ]
+}

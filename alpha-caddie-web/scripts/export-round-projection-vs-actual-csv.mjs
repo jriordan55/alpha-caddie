@@ -115,6 +115,7 @@ import {
   alignDetailCsvContent,
   extractSignalsFromHistRow,
   extractSignalsFromPlayerRow,
+  extractPrevRoundSgFromHist,
   loadCourseTableByKey,
   pinSheetActiveFor,
   signalCellsFromObject,
@@ -1462,6 +1463,10 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
         }),
       };
     }
+    sigObj = {
+      ...sigObj,
+      ...extractPrevRoundSgFromHist(histByKey, actualsKey, ev, eventYear, pr.dg, pr.rnd),
+    };
     const sigCells = signalCellsFromObject(sigObj);
 
     // Overlay PrizePicks / Sleeper / Underdog / FanDuel / Caesars / Kalshi pre-round lines.

@@ -15,7 +15,7 @@
       <div>
         <p class="eyebrow">AlphaCaddie</p>
         <h1 id="page-title">Model vs market</h1>
-        <p class="lede" id="page-lede">Model vs book lines using Prop Pricing Model edges (distribution-based P vs posted break-even). Flat $100 · raw hierarchical μ (weather + tee wave).</p>
+        <p class="lede" id="page-lede">Model vs book lines using Prop Pricing Model edges. Bets require prior-round side alignment: BoB% (Birdies), GIR% (GIR), SG APP/OTT/PUTT (other markets). Flat $100 · raw hierarchical μ.</p>
       </div>
       <div class="top-actions">
         <button type="button" class="btn" id="btn-reload">Reload</button>
@@ -41,7 +41,7 @@
 
       <section class="card">
         <h2>Market report card</h2>
-        <p class="note">OVER / UNDER ROI for the recommended gap vs all sportsbooks. Green ROI = profitable side.</p>
+        <p class="note">OVER / UNDER ROI at recommended gap vs all sportsbooks, with prior-round SG side filter applied to graded bets.</p>
         <div class="table-scroll">
           <table id="market-table">
             <thead>
@@ -132,6 +132,7 @@
                 <th class="num">Gap</th>
                 <th class="num">Odds</th>
                 <th class="num">Edge</th>
+                <th>SG signal</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -142,7 +143,7 @@
       <section class="card">
         <div class="card-head">
           <h2>Graded projection bets</h2>
-          <p class="note">Historical lines across all sportsbooks under each market’s recommended gap on model μ. Flat $100.</p>
+          <p class="note">Historical lines under each market’s recommended gap on model μ, filtered by prior-round SG side (APP / OTT / PUTT). Flat $100.</p>
         </div>
         <div class="filters">
           <label>Market
@@ -180,6 +181,7 @@
                 <th class="num">Actual</th>
                 <th>Result</th>
                 <th class="num">PnL</th>
+                <th>SG signal</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -263,6 +265,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-  <script type="module" src="app.js"></script>
+  <script type="module" src="app.js?v=sg2"></script>
 </body>
 </html>

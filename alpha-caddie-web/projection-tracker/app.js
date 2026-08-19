@@ -1,11 +1,14 @@
 /**
  * Model vs market tracker — projection μ performance against sportsbook lines.
  */
+import { sgAllowedSides } from "../scripts/sg-side-policy.mjs";
+
 const ROI_URL = "../data/both_side_roi.json";
 const BETS_URL = "../data/both_side_bets.json";
 const PROJ_URL = "../projections.json";
 const LIVE_PROPS_URL = "../data/live_event_book_props.json";
 const HOLE_PROPS_URL = "../data/live_hole_props.json";
+const PREV_SG_URL = "../data/prev_round_sg_index.json";
 
 const MARKET_TO_PLAYER = {
   "Total score": (p) => Number(p.total_score),
@@ -47,6 +50,8 @@ const LIVE_BOOKS = [
 
 let ROI = null;
 let BETS = null;
+/** @type {Record<string, { prev_sg_ott?: number, prev_sg_app?: number, prev_sg_putt?: number }>} */
+let PREV_SG_INDEX = {};
 let PROJ = null;
 let LIVE_PROPS = null;
 let HOLE_PROPS = null;
@@ -299,10 +304,31 @@ function renderHist() {
         <td class="num">${b.actual}</td>
         <td class="${resCls}">${b.result}</td>
         <td class="num ${clsSigned(b.pnl)}">${fmtMoney(b.pnl)}</td>
+        <td class="muted sg-reason" title="${b.sg_reason || ""}">${b.sg_reason || "—"}</td>
       </tr>`;
         })
         .join("")
-    : `<tr><td colspan="12">No graded bets for this filter.</td></tr>`;
+    : `<tr><td colspan="13">No graded bets for this filter.</td></tr>`;
+}
+
+function priorSgForLivePick(eventName, dgId, roundNum) {
+  const k = `${eventName}|${Math.round(Number(dgId))}|${Math.round(Number(roundNum))}`;
+  const hit = PREV_SG_INDEX[k] || {};
+  return {
+    prev_sg_ott: hit.prev_sg_ott,
+    prev_sg_app: hit.prev_sg_app,
+    prev_sg_putt: hit.prev_sg_putt,
+    prev_gir_pct: hit.prev_gir_pct,
+    prev_bob_pct: hit.prev_bob_pct,
+  };
+}
+
+function liveSideAllowedBySg(market, side, signals) {
+  const allowed = sgAllowedSides(market, signals);
+  const s = String(side || "").toUpperCase();
+  if (s === "OVER") return allowed.over;
+  if (s === "UNDER") return allowed.under;
+  return false;
 }
 
 function bookPropPack(book) {
@@ -369,6 +395,9 @@ function livePicks() {
         const overMin = rec.odds_rule?.over_min_american;
         if (side === "UNDER" && Number.isFinite(underMin) && !(odds >= underMin)) continue;
         if (side === "OVER" && Number.isFinite(overMin) && !(odds >= overMin)) continue;
+        const priorSg = priorSgForLivePick(PROJ.event_name, dg, rnd);
+        const sgAllowed = sgAllowedSides(market, priorSg);
+        if (!liveSideAllowedBySg(market, side, priorSg)) continue;
         const fair = americanToImplied(odds);
         const gapNeed = side === "OVER" ? gapNeedOver : gapNeedUnder;
         const edge = Math.abs(delta) - gapNeed;
@@ -384,6 +413,7 @@ function livePicks() {
           odds,
           fair,
           edge,
+          sg_reason: sgAllowed.reason || "",
         });
       }
     }
@@ -392,19 +422,25 @@ function livePicks() {
   return out;
 }
 
+function esc(s) {
+  return String(s ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/"/g, "&quot;");
+}
+
 function renderLive() {
   const picks = livePicks();
   const note = $("live-note");
   if (!PROJ) {
     note.textContent = "No projections.json — run refresh:live / apply:dg-methodology.";
   } else {
-    note.textContent = `${PROJ.event_name || "Live"} · R${PROJ.display_round || "?"} · model μ vs sportsbook lines · all markets`;
+    note.textContent = `${PROJ.event_name || "Live"} · R${PROJ.display_round || "?"} · model μ vs sportsbook lines · prior-rnd SG side filter · all markets`;
   }
   $("live-table").querySelector("tbody").innerHTML = picks.length
     ? picks
         .slice(0, 120)
-        .map(
-          (p) => `<tr>
+        .map((p) => `<tr title="${p.sg_reason ? esc(p.sg_reason) : ""}">
         <td>${p.player}</td>
         <td>${p.book_label}</td>
         <td>${p.market}</td>
@@ -414,10 +450,11 @@ function renderLive() {
         <td class="num ${clsSigned(p.gap)}">${p.gap > 0 ? "+" : ""}${p.gap.toFixed(2)}</td>
         <td class="num">${p.odds > 0 ? "+" : ""}${p.odds}</td>
         <td class="num">${p.edge.toFixed(2)}</td>
+        <td class="muted sg-reason">${p.sg_reason ? esc(p.sg_reason) : "—"}</td>
       </tr>`,
         )
         .join("")
-    : `<tr><td colspan="9">No live props past the selected gap.</td></tr>`;
+    : `<tr><td colspan="10">No live props past gap + prior-round SG side rules.</td></tr>`;
 }
 
 function betTs(b) {
@@ -902,13 +939,20 @@ async function boot() {
   const err = $("error");
   err.hidden = true;
   try {
-    [ROI, BETS, PROJ, LIVE_PROPS, HOLE_PROPS] = await Promise.all([
+    const [roi, bets, proj, liveProps, holeProps, prevSgPayload] = await Promise.all([
       loadJson(ROI_URL),
       loadJson(BETS_URL),
       loadJson(PROJ_URL).catch(() => null),
       loadJson(LIVE_PROPS_URL).catch(() => null),
       loadJson(HOLE_PROPS_URL).catch(() => null),
+      loadJson(PREV_SG_URL).catch(() => null),
     ]);
+    ROI = roi;
+    BETS = bets;
+    PROJ = proj;
+    LIVE_PROPS = liveProps;
+    HOLE_PROPS = holeProps;
+    PREV_SG_INDEX = prevSgPayload?.index || {};
     renderAll();
   } catch (e) {
     err.hidden = false;

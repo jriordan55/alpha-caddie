@@ -11,9 +11,9 @@ import {
   modelEdgePctAtLine,
   modelEdgeVsFairAtLine,
   num as nNum,
-  pickBetSide,
   pnlForResult,
 } from "./ev-math.mjs";
+import { pickBetSideWithSgPolicy, priorSignalsFromRow } from "../scripts/sg-side-policy.mjs";
 import { buildEdgeSignalInsights } from "./edge-signal-insights.mjs";
 import { patchDetailRowsFromLiveSources } from "./live-detail-patch.mjs";
 import { alignDetailCsvText } from "./detail-csv-align.mjs";
@@ -1408,7 +1408,7 @@ function explodeDetailBetForBook(row, spec, book) {
   });
   const pModelOver = Number.isFinite(fair.pOver) ? fair.pOver : priced.pRawOver;
   const pModelUnder = Number.isFinite(fair.pUnder) ? fair.pUnder : priced.pRawUnder;
-  const pick = pickBetSide(edgeOver, edgeUnder, state.minEv);
+  const pick = pickBetSideWithSgPolicy(edgeOver, edgeUnder, state.minEv, spec.market, row);
   const bestSide =
     Number.isFinite(edgeOver) && Number.isFinite(edgeUnder)
       ? edgeOver >= edgeUnder
@@ -1417,6 +1417,7 @@ function explodeDetailBetForBook(row, spec, book) {
       : null;
   const activePick = pick || (state.show === "all" ? bestSide : null);
   const side = activePick?.side || null;
+  const priorSg = priorSignalsFromRow(row);
   const graded =
     Number.isFinite(actual) && Number.isFinite(bookLine)
       ? ouSideResults(actual, bookLine)
@@ -1480,6 +1481,12 @@ function explodeDetailBetForBook(row, spec, book) {
       pRawUnder: pModelUnder,
       pickSide: side,
       pickEdge: activePick?.edge ?? NaN,
+      sgReason: pick?.sgReason || "",
+      prev_sg_ott: priorSg.prev_sg_ott,
+      prev_sg_app: priorSg.prev_sg_app,
+      prev_sg_putt: priorSg.prev_sg_putt,
+      prev_gir_pct: priorSg.prev_gir_pct,
+      prev_bob_pct: priorSg.prev_bob_pct,
       edgeFairPick,
       modelProb,
       rawModelProb,
@@ -1584,10 +1591,10 @@ function renderBets() {
     <div class="kpi-card">
       <div class="kpi-label">Rows shown</div>
       <div class="kpi-value">${rows.length}</div>
-      <div class="kpi-sub">${state.show === "bets" ? `conf edge ≥${state.minEv}%` : "all graded lines"}</div>
+      <div class="kpi-sub">${state.show === "bets" ? `prior-rnd SG side · edge ≥${state.minEv}%` : "all graded lines"}</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">Beat-book bets</div>
+      <div class="kpi-label">SG + edge bets</div>
       <div class="kpi-value">${bets}</div>
       <div class="kpi-sub">${wins}W · ${losses}L · ${pushes}P</div>
     </div>
@@ -1651,7 +1658,10 @@ function renderBets() {
     ? rows
         .map((r) => {
           const pickCls = r.qualified ? "pick-qualified" : "pick-muted";
-          const pickLabel = r.pickSide ? `<span class="${pickCls}">${r.pickSide}</span>` : "—";
+          const pickTitle = r.sgReason ? ` title="${esc(r.sgReason)}"` : "";
+          const pickLabel = r.pickSide
+            ? `<span class="${pickCls}"${pickTitle}>${r.pickSide}</span>`
+            : "—";
           const modelCell = fmtLine(r.modelLine, r.decimals);
           const openLineCell = fmtBookLineCell(r, r.openLine);
           const closeLineCell = fmtBookLineCell(r, r.bookLine);
