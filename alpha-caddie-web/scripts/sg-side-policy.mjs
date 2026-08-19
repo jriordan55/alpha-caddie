@@ -2,7 +2,6 @@
  * Prior-round signals → allowed O/U side by market.
  * Birdies = prior BoB%; GIR = prior GIR%; Fairways = prior FW%; others use SG categories.
  */
-import { traditionalRate01 } from "./dg-traditional-stats.mjs";
 
 export const SG_STRONG = 0.35;
 export const SG_WEAK = -0.15;
@@ -42,6 +41,17 @@ export function bobPctFromHistRow(row) {
   const eagleAdd = Number.isFinite(eob) ? eob : Number.isFinite(eag) ? eag : 0;
   if (!Number.isFinite(bird) && !Number.isFinite(eob) && !Number.isFinite(eag)) return NaN;
   return ((Number.isFinite(bird) ? bird : 0) + Math.max(0, eagleAdd)) / 18;
+}
+
+/** 0–1 fairway or GIR rate from a scalar (fraction, count on n holes, or 0–100 percent). Browser-safe (no Node fs). */
+function traditionalRate01(raw, nHoles = 18) {
+  const v = num(raw, NaN);
+  const nh = num(nHoles, 18);
+  if (!Number.isFinite(v) || !Number.isFinite(nh) || nh <= 0) return NaN;
+  if (v > 0.05 && v <= 1.0001) return v;
+  if (v > 1 && v <= nh + 0.51) return v / nh;
+  if (v > nh && v <= 100) return v / 100;
+  return NaN;
 }
 
 /** Fairway hit rate 0–1 from driving_acc (fraction, count, or percent). */

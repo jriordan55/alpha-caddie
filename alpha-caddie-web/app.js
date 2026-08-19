@@ -26336,6 +26336,48 @@ function liveStatsPlayerNameByDg() {
   return map;
 }
 
+/** Current-week field dg_ids for Stats lookback (projections + live bundle, not only in-play rows). */
+function liveStatsFieldDgIds() {
+  /** @type {Set<number>} */
+  const ids = new Set();
+  for (const dg of liveStatsPlayerNameByDg().keys()) ids.add(dg);
+  for (const dg of propsFieldPlayerDgIds()) ids.add(dg);
+  for (const dg of ouProjectionFieldPlayerDgIds()) ids.add(dg);
+  const fu = lastLiveInPlayBundleForHistory?.field_updates;
+  const flist = fu?.field ?? fu?.field_updates ?? fu?.players ?? fu?.data;
+  if (Array.isArray(flist)) {
+    for (const r of flist) {
+      const id = Math.round(num(r?.dg_id ?? r?.dgId, NaN));
+      if (Number.isFinite(id) && id > 0) ids.add(id);
+    }
+  }
+  return ids;
+}
+
+/** Career history shards for every golfer in this week's field (lookback needs cross-event rounds). */
+async function ensureLiveStatsLookbackHistoryLoaded() {
+  const ids = [...liveStatsFieldDgIds()];
+  if (!ids.length) return 0;
+  if (!isFileProtocol()) {
+    try {
+      if (!HISTORY._ok || HISTORY._partial) await loadPlayerHistory();
+    } catch {
+      /* optional monolith */
+    }
+  } else if (!HISTORY._ok || HISTORY._partial) {
+    await loadPlayerHistory();
+  }
+  const needCareer = ids.filter((id) => !historyBucketLoaded(id) || historyBucketIsSeasonSliceOnly(id));
+  if (!needCareer.length) return ids.length;
+  const batch = 28;
+  let ready = ids.length - needCareer.length;
+  for (let i = 0; i < needCareer.length; i += batch) {
+    await Promise.all(needCareer.slice(i, i + batch).map((id) => ensurePlayerCareerHistoryLoaded(id)));
+    ready += Math.min(batch, needCareer.length - i);
+  }
+  return ready;
+}
+
 function liveStatsDisplayName(name) {
   const s = String(name || "").trim();
   const m = s.match(/^([^,]+),\s*(.+)$/);
@@ -26707,13 +26749,11 @@ function collectLiveStatsLookbackRows(nRounds) {
   const names = liveStatsPlayerNameByDg();
   const inPlay = liveStatsInPlayByDg();
   const fwHoles = fairwayHolesModeledFromData();
-  const dgSet = new Set([...names.keys(), ...inPlay.keys()]);
+  const dgSet = liveStatsFieldDgIds();
   /** @type {object[]} */
   const rows = [];
   for (const dg of dgSet) {
-    const histRounds = historyRoundsChronoNewestFirst(dg)
-      .filter((r) => historyRoundCountsAsActual(r))
-      .slice(0, nRounds);
+    const histRounds = historyRoundsChronoNewestFirst(dg).slice(0, nRounds);
     if (!histRounds.length) continue;
     const mini = histRounds.map((hr) => liveStatsRowFromHistoryRound(dg, hr, names, fwHoles));
     const avg = averageLiveStatsHistoryRows(mini);
@@ -26721,11 +26761,13 @@ function collectLiveStatsLookbackRows(nRounds) {
     const roundsUsed = avg._lookback_rounds;
     delete avg._lookback_rounds;
     const ip = inPlay.get(dg) || null;
+    const histName = String(HISTORY.byDgId?.[String(dg)]?.player_name || "").trim();
     const pos = String(ip?.current_pos || "").trim() || "—";
+    const player = names.get(dg) || histName || mini[0]?.player || `DG ${dg}`;
     rows.push({
       dg_id: dg,
-      player: names.get(dg) || mini[0]?.player || `DG ${dg}`,
-      player_display: liveStatsDisplayName(names.get(dg) || mini[0]?.player || `DG ${dg}`),
+      player,
+      player_display: liveStatsDisplayName(player),
       round: 0,
       pos,
       pos_sort: liveStatsPosSort(pos),
@@ -26928,13 +26970,6 @@ async function buildLiveStatsTab() {
   });
 
   if (lookbackActive) {
-    if (!HISTORY._ok || HISTORY._partial) {
-      try {
-        await loadPlayerHistory();
-      } catch {
-        /* optional */
-      }
-    }
     document.querySelectorAll("#live-stats-round-pills .live-stats-round-pill").forEach((btn) => {
       btn.disabled = true;
       btn.classList.add("is-disabled");
@@ -26949,7 +26984,19 @@ async function buildLiveStatsTab() {
     if (liveDot) liveDot.hidden = true;
     liveStatsRenderThead(NaN, true);
 
-    if (!HISTORY._ok) {
+    const fieldN = liveStatsFieldDgIds().size;
+    if (!fieldN) {
+      if (countEl) countEl.textContent = "No field loaded yet — open Round projections or refresh live data.";
+      tbody.innerHTML = `<tr><td colspan="18">No field loaded yet.</td></tr>`;
+      return;
+    }
+
+    if (countEl) countEl.textContent = `Loading career history for ${fieldN} players…`;
+    tbody.innerHTML = `<tr><td colspan="18">Loading player history for the field…</td></tr>`;
+
+    const historyReady = await ensureLiveStatsLookbackHistoryLoaded();
+
+    if (!HISTORY._ok && historyReady <= 0) {
       if (countEl) countEl.textContent = "Player history not loaded yet.";
       tbody.innerHTML = `<tr><td colspan="18">Player history not loaded yet.</td></tr>`;
       return;
