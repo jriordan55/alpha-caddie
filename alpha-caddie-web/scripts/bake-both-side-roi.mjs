@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
- * Sweep gap (raw model μ — no chrono/loo bias) so OVER and UNDER are both profitable
+ * Sweep min EV % (Prop Pricing Model edge vs posted odds) so OVER and UNDER are both profitable
  * vs all sportsbooks (DraftKings, PrizePicks, Sleeper, Underdog, FanDuel, Caesars, Kalshi).
  *
  *   node scripts/bake-both-side-roi.mjs
  *   → data/both_side_roi.json + data/both_side_bets.json
  *
- * Policy fit excludes the live event in projections.json (no leakage into gap pick).
+ * Policy fit excludes the live event in projections.json (no leakage into min-EV pick).
  * Graded bets always include completed live-week rounds under the frozen policy.
  *
  * Bias modes are locked to "none" (raw hierarchical / export μ with weather + wave already in lines).
@@ -20,7 +20,7 @@ import { parse } from "csv-parse";
 import { eventsLikelySame } from "./dg-events-align.mjs";
 import { alignDetailCsvContent } from "./projection-context-signals.mjs";
 import { priorContextForBetRow, loadHistByKey } from "./prior-round-context.mjs";
-import { priorSignalsFromRow, sgAllowedSides } from "./sg-side-policy.mjs";
+import { pickPropPricingSide } from "./prop-pricing-bet-pick.mjs";
 import {
   EXPORT_MARKETS,
   num,
@@ -35,36 +35,14 @@ const HIST = join(WEB, "data", "historical_rounds_all.csv");
 const PROJ = join(WEB, "projections.json");
 const OUT = join(WEB, "data", "both_side_roi.json");
 
-const GAPS = [0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5];
-/** Optional asymmetric (gapOver, gapUnder) extras — helps tip near-miss markets. */
-const ASYM_GAPS = [
-  [0.5, 0.75],
-  [0.75, 1.0],
-  [0.5, 1.0],
-  [1.0, 0.75],
-  [0.75, 1.25],
-  [0.75, 0.9],
-  [0.6, 0.85],
-  [0.65, 0.9],
-  [0.7, 0.95],
-  [0.8, 1.0],
-  [0.9, 1.1],
-  // Birdies plus-money unders: wider over gap, tighter under gap
-  [1.0, 0.5],
-  [0.9, 0.5],
-  [1.0, 0.65],
-  [1.25, 0.5],
-  [1.25, 0.75],
-];
+/** Min Prop Pricing edge % (model P − implied) swept per market. */
+const MIN_EV_LEVELS = [0, 2.5, 5, 7.5, 10, 12.5, 15];
 const MIN_BETS_PER_SIDE = 40;
 /** Soft floor so GIR (39 overs at gap 0.5/0.75) can clear both-side+ without thinning other markets. */
 const MIN_BETS_SOFT = 35;
 const STAKE = 100;
 
-/**
- * Per-market American-odds floors swept with gap/bias.
- * Birdies: plus-money unders clear both-side+ (juiced under favorites were the leak).
- */
+/** Optional American-odds floors swept with min EV / bias. */
 const ODDS_RULE_SWEEPS = {
   Birdies: [null, { under_min_american: 0 }, { under_min_american: -110 }],
   Pars: [null, { under_min_american: 0 }, { under_min_american: -110 }, { over_min_american: -110 }],
@@ -134,14 +112,6 @@ function americanPnlDollars(result, americanOdds) {
   return o > 0 ? STAKE * (o / 100) : STAKE * (100 / Math.abs(o));
 }
 
-/** Grade O/U vs book line: half-lines never push; whole lines push on exact. */
-function sideAllowedByPriorSg(market, side, row) {
-  const allowed = sgAllowedSides(market, priorSignalsFromRow(row));
-  if (side === "OVER") return allowed.over;
-  if (side === "UNDER") return allowed.under;
-  return false;
-}
-
 function gradeSide(actual, bookLine, side) {
   if (!Number.isFinite(actual) || !Number.isFinite(bookLine)) return null;
   const isHalf = Math.abs(bookLine * 2 - Math.round(bookLine * 2)) > 1e-9
@@ -203,22 +173,20 @@ function sideStats(s) {
 }
 
 /**
- * Evaluate one (gapOver, gapUnder, biasMode) policy on graded rows with precomputed adjModel.
+ * Evaluate one (minEvPct, biasMode) Prop Pricing policy on graded rows with precomputed adjModel.
  */
-function evaluatePolicy(rows, gapOver, gapUnder = gapOver, oddsRule = null) {
+function evaluatePolicy(rows, minEvPct, oddsRule = null) {
   const over = emptySide();
   const under = emptySide();
   const underMin = oddsRule?.under_min_american;
   const overMin = oddsRule?.over_min_american;
   for (const r of rows) {
-    const model = r.adjModel;
-    if (!Number.isFinite(model) || !Number.isFinite(r.book) || !Number.isFinite(r.actual)) continue;
-    const edge = model - r.book;
-    let side = null;
-    if (edge > gapOver) side = "OVER";
-    else if (edge < -gapUnder) side = "UNDER";
-    else continue;
-    if (!sideAllowedByPriorSg(r.market, side, r)) continue;
+    if (!Number.isFinite(r.adjModel ?? r.model) || !Number.isFinite(r.book) || !Number.isFinite(r.actual)) {
+      continue;
+    }
+    const pick = pickPropPricingSide(r, minEvPct);
+    if (!pick) continue;
+    const side = pick.side;
 
     const odds = side === "OVER" ? r.overOdds : r.underOdds;
     if (side === "UNDER" && Number.isFinite(underMin) && !(odds >= underMin)) continue;
@@ -495,19 +463,15 @@ async function loadRows() {
 
 /** Append policy-matching graded bets from rows into betRows. */
 function appendGradedBets(betRows, rows, rec, liveWeek) {
-  const gapOver = Number(rec.gap_over ?? rec.gap);
-  const gapUnder = Number(rec.gap_under ?? rec.gap);
+  const minEvPct = Number(rec.min_ev_pct ?? 0);
   const underMin = rec.odds_rule?.under_min_american;
   const overMin = rec.odds_rule?.over_min_american;
   for (const r of rows) {
+    const pick = pickPropPricingSide(r, minEvPct);
+    if (!pick) continue;
+    const side = pick.side;
     const mu = Number.isFinite(r.adjModel) ? r.adjModel : r.model;
     const delta = mu - r.book;
-    let side = null;
-    if (delta > gapOver) side = "OVER";
-    else if (delta < -gapUnder) side = "UNDER";
-    if (!side) continue;
-    if (!sideAllowedByPriorSg(r.market, side, r)) continue;
-    const allowed = sgAllowedSides(r.market, priorSignalsFromRow(r));
     const odds = side === "OVER" ? r.overOdds : r.underOdds;
     if (side === "UNDER" && Number.isFinite(underMin) && !(odds >= underMin)) continue;
     if (side === "OVER" && Number.isFinite(overMin) && !(odds >= overMin)) continue;
@@ -530,12 +494,13 @@ function appendGradedBets(betRows, rows, rec, liveWeek) {
       model: Math.round(mu * 100) / 100,
       book: r.book,
       gap: Math.round(delta * 100) / 100,
+      edge_pct: Math.round(pick.edge * 100) / 100,
       odds,
       actual: r.actual,
       result,
       pnl: result === "P" ? 0 : Math.round(pnl * 100) / 100,
       live_week: Boolean(liveWeek),
-      sg_reason: allowed.reason || "",
+      sg_reason: pick.sgReason || "",
       prev_sg_app: Number.isFinite(r.prev_sg_app) ? r.prev_sg_app : null,
       prev_sg_ott: Number.isFinite(r.prev_sg_ott) ? r.prev_sg_ott : null,
       prev_sg_putt: Number.isFinite(r.prev_sg_putt) ? r.prev_sg_putt : null,
@@ -551,15 +516,14 @@ async function main() {
   const out = {
     generated_at: new Date().toISOString(),
     source: "data/round_projection_vs_actual.csv",
-    pricing_mode: "default",
+    pricing_mode: "prop_pricing_model",
     pricing_skill: "default",
     books: BOOKS.map((b) => ({ id: b.id, label: b.label })),
     book_graded_rows: bookCounts,
     book_graded_rows_live: bookCountsLive,
     stake_dollars: STAKE,
     min_bets_per_side: MIN_BETS_PER_SIDE,
-    gaps: GAPS,
-    asym_gaps: ASYM_GAPS,
+    min_ev_levels: MIN_EV_LEVELS,
     bias_modes: BIAS_MODES,
     /** Live event is graded into bets but excluded from policy fit. */
     excluded_live_event_from_fit: live || null,
@@ -578,7 +542,7 @@ async function main() {
     `Graded book rows (live ${live || "—"}): ${BOOKS.map((b) => `${b.label}=${bookCountsLive[b.id] || 0}`).join(" · ")} (${liveFitRows} market rows)\n`,
   );
   console.log(
-    `${"Market".padEnd(14)} ${"Both+".padEnd(6)} ${"Gap".padEnd(6)} ${"Bias".padEnd(8)} ${"O n".padStart(5)} ${"O ROI".padStart(8)} ${"U n".padStart(5)} ${"U ROI".padStart(8)} ${"minROI".padStart(8)} ${"CombPnL".padStart(10)}`,
+    `${"Market".padEnd(14)} ${"Both+".padEnd(6)} ${"MinEV".padEnd(6)} ${"Bias".padEnd(8)} ${"O n".padStart(5)} ${"O ROI".padStart(8)} ${"U n".padStart(5)} ${"U ROI".padStart(8)} ${"minROI".padStart(8)} ${"CombPnL".padStart(10)}`,
   );
   console.log("-".repeat(86));
 
@@ -595,18 +559,12 @@ async function main() {
       // Fresh copies so adjModel doesn't leak across modes
       const rows = baseRows.map((r) => ({ ...r }));
       const biasMeta = applyBias(rows, biasMode, eventOrder);
-      const gapPairs = [
-        ...GAPS.map((g) => [g, g]),
-        ...ASYM_GAPS,
-      ];
       const oddsRules = ODDS_RULE_SWEEPS[m.market] || [null];
       for (const oddsRule of oddsRules) {
-        for (const [gapOver, gapUnder] of gapPairs) {
-          const ev = evaluatePolicy(rows, gapOver, gapUnder, oddsRule);
+        for (const minEvPct of MIN_EV_LEVELS) {
+          const ev = evaluatePolicy(rows, minEvPct, oddsRule);
           sweep.push({
-            gap: gapOver === gapUnder ? gapOver : { over: gapOver, under: gapUnder },
-            gap_over: gapOver,
-            gap_under: gapUnder,
+            min_ev_pct: minEvPct,
             odds_rule: oddsRule,
             bias: biasMode,
             bias_by_event: biasMeta.biasByEvent,
@@ -628,9 +586,7 @@ async function main() {
 
     if (best) {
       out.recommended[m.market] = {
-        gap: best.gap,
-        gap_over: best.gap_over ?? (typeof best.gap === "number" ? best.gap : best.gap?.over),
-        gap_under: best.gap_under ?? (typeof best.gap === "number" ? best.gap : best.gap?.under),
+        min_ev_pct: best.min_ev_pct,
         odds_rule: best.odds_rule || null,
         bias: best.bias,
         both_sides_positive: best.both_sides_positive,
@@ -651,12 +607,9 @@ async function main() {
 
     const tag = both_sides_achieved ? "YES" : "no";
     const b = best;
-    const gapLabel =
-      b?.gap_over != null && b?.gap_under != null && b.gap_over !== b.gap_under
-        ? `${b.gap_over}/${b.gap_under}`
-        : String(b?.gap ?? "");
+    const evLabel = Number.isFinite(b?.min_ev_pct) ? `${b.min_ev_pct}%` : "—";
     console.log(
-      `${m.market.padEnd(14)} ${tag.padEnd(6)} ${gapLabel.padEnd(6)} ${String(b?.bias ?? "").padEnd(8)} ${String(b?.over?.bets ?? 0).padStart(5)} ${fmtPct(b?.over?.roi).padStart(8)} ${String(b?.under?.bets ?? 0).padStart(5)} ${fmtPct(b?.under?.roi).padStart(8)} ${fmtPct(b?.min_roi).padStart(8)} ${fmtMoney(b?.combined_pnl).padStart(10)}${note ? `  (${note})` : ""}`,
+      `${m.market.padEnd(14)} ${tag.padEnd(6)} ${evLabel.padEnd(6)} ${String(b?.bias ?? "").padEnd(8)} ${String(b?.over?.bets ?? 0).padStart(5)} ${fmtPct(b?.over?.roi).padStart(8)} ${String(b?.under?.bets ?? 0).padStart(5)} ${fmtPct(b?.under?.roi).padStart(8)} ${fmtPct(b?.min_roi).padStart(8)} ${fmtMoney(b?.combined_pnl).padStart(10)}${note ? `  (${note})` : ""}`,
     );
   }
 

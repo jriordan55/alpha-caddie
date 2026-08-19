@@ -144,8 +144,8 @@ export function modelProbOver(market, mu, line, sigmaScale = 1, fairwayHoles = 1
   return propPricingProbOver(market, mu, line, { row: stub, fairwayHoles });
 }
 
-export function modelEdgePctAtLine(market, mu, line, overOdds, underOdds, sigmaScale = 1, fairwayHoles = 14) {
-  const pOver = modelProbOver(market, mu, line, sigmaScale, fairwayHoles);
+export function modelEdgePctAtLine(market, mu, line, overOdds, underOdds, sigmaScale = 1, fairwayHoles = 14, row = null) {
+  const pOver = modelProbOver(market, mu, line, sigmaScale, fairwayHoles, row);
   if (!Number.isFinite(pOver)) return { edgeOver: NaN, edgeUnder: NaN, best: NaN };
   const pUnder = 1 - pOver;
   const pImpOver = Number.isFinite(num(overOdds, NaN)) ? impliedProbFromAmerican(overOdds) : 100 / 210;

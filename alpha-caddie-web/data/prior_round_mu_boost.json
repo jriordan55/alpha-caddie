@@ -1,0 +1,1504 @@
+{
+  "generated_at": "2026-08-19T03:54:36.003Z",
+  "source": "data/round_projection_vs_actual.csv",
+  "method": "event_leave_one_out_continuous_ridge",
+  "ridge_lambda": 0.02,
+  "shrink_k": 50,
+  "min_fit_samples": 15,
+  "enabled": true,
+  "markets": {
+    "Birdies": {
+      "market": "Birdies",
+      "beta": 0.10962815350264263,
+      "beta_raw": 0.11364089704227083,
+      "means": {
+        "prev_bob_pct": 0.30234260614934116
+      },
+      "n": 1366,
+      "relative": true,
+      "features": [
+        "prev_bob_pct"
+      ],
+      "weights": null,
+      "label": "prev BoB%"
+    },
+    "GIR": {
+      "market": "GIR",
+      "beta": -0.09071977148666796,
+      "beta_raw": -0.09460332334825478,
+      "means": {
+        "prev_gir_pct": 0.6909392123287659
+      },
+      "n": 1168,
+      "relative": true,
+      "features": [
+        "prev_gir_pct"
+      ],
+      "weights": null,
+      "label": "prev GIR%"
+    },
+    "Fairways hit": {
+      "market": "Fairways hit",
+      "beta": -0.0039491161186327745,
+      "beta_raw": -0.004118170746998904,
+      "means": {
+        "prev_sg_ott": 0.3104589041095882
+      },
+      "n": 1168,
+      "relative": true,
+      "features": [
+        "prev_sg_ott"
+      ],
+      "weights": null,
+      "label": "prev SG OTT"
+    },
+    "Bogeys": {
+      "market": "Bogeys",
+      "beta": 0.005632895187521821,
+      "beta_raw": 0.005874029399316419,
+      "means": {
+        "prev_sg_app": 0.5196027397260288
+      },
+      "n": 1168,
+      "relative": true,
+      "features": [
+        "prev_sg_app"
+      ],
+      "weights": null,
+      "label": "prev SG APP"
+    },
+    "Total score": {
+      "market": "Total score",
+      "beta": 0.047480896069048456,
+      "beta_raw": 0.04951346867474402,
+      "means": {
+        "prev_sg_app": 0.5196027397260288
+      },
+      "n": 1168,
+      "relative": false,
+      "features": [
+        "prev_sg_app"
+      ],
+      "weights": null,
+      "label": "prev SG APP"
+    },
+    "Pars": {
+      "market": "Pars",
+      "beta": -0.0011966337850470654,
+      "beta_raw": -0.0012478595463932581,
+      "means": {
+        "prev_sg_app": 0.5196027397260288,
+        "prev_sg_putt": 0.45027910958904055
+      },
+      "n": 1168,
+      "relative": true,
+      "features": [
+        "prev_sg_app",
+        "prev_sg_putt"
+      ],
+      "weights": [
+        1,
+        -1
+      ],
+      "label": "prev SG APP − PUTT"
+    }
+  },
+  "loo": {
+    "3M Open": {
+      "markets": {
+        "Birdies": {
+          "market": "Birdies",
+          "beta": 0.12345056855976091,
+          "beta_raw": 0.1282023225458949,
+          "means": {
+            "prev_bob_pct": 0.31793687451886066
+          },
+          "n": 1299,
+          "relative": true,
+          "features": [
+            "prev_bob_pct"
+          ],
+          "weights": null,
+          "label": "prev BoB%"
+        },
+        "GIR": {
+          "market": "GIR",
+          "beta": -0.1133795849903896,
+          "beta_raw": -0.11852852163845452,
+          "means": {
+            "prev_gir_pct": 0.6856575840145313
+          },
+          "n": 1101,
+          "relative": true,
+          "features": [
+            "prev_gir_pct"
+          ],
+          "weights": null,
+          "label": "prev GIR%"
+        },
+        "Fairways hit": {
+          "market": "Fairways hit",
+          "beta": -0.005955220763557135,
+          "beta_raw": -0.006225666756452555,
+          "means": {
+            "prev_sg_ott": 0.3017593097184371
+          },
+          "n": 1101,
+          "relative": true,
+          "features": [
+            "prev_sg_ott"
+          ],
+          "weights": null,
+          "label": "prev SG OTT"
+        },
+        "Bogeys": {
+          "market": "Bogeys",
+          "beta": 0.003577233453803464,
+          "beta_raw": 0.0037396872891260558,
+          "means": {
+            "prev_sg_app": 0.5063978201634889
+          },
+          "n": 1101,
+          "relative": true,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Total score": {
+          "market": "Total score",
+          "beta": 0.035870420651290036,
+          "beta_raw": 0.03749941341474553,
+          "means": {
+            "prev_sg_app": 0.5063978201634889
+          },
+          "n": 1101,
+          "relative": false,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Pars": {
+          "market": "Pars",
+          "beta": -0.00058772550106526,
+          "beta_raw": -0.0006144160324487868,
+          "means": {
+            "prev_sg_app": 0.5063978201634889,
+            "prev_sg_putt": 0.45152134423251544
+          },
+          "n": 1101,
+          "relative": true,
+          "features": [
+            "prev_sg_app",
+            "prev_sg_putt"
+          ],
+          "weights": [
+            1,
+            -1
+          ],
+          "label": "prev SG APP − PUTT"
+        }
+      }
+    },
+    "Charles Schwab Challenge": {
+      "markets": {
+        "Birdies": {
+          "market": "Birdies",
+          "beta": 0.13175462579138225,
+          "beta_raw": 0.13701639199710838,
+          "means": {
+            "prev_bob_pct": 0.26437699680511184
+          },
+          "n": 1252,
+          "relative": true,
+          "features": [
+            "prev_bob_pct"
+          ],
+          "weights": null,
+          "label": "prev BoB%"
+        },
+        "GIR": {
+          "market": "GIR",
+          "beta": -0.10317186830441136,
+          "beta_raw": -0.10806616945737205,
+          "means": {
+            "prev_gir_pct": 0.6916110056925979
+          },
+          "n": 1054,
+          "relative": true,
+          "features": [
+            "prev_gir_pct"
+          ],
+          "weights": null,
+          "label": "prev GIR%"
+        },
+        "Fairways hit": {
+          "market": "Fairways hit",
+          "beta": -0.004971276674560949,
+          "beta_raw": -0.005207105738819058,
+          "means": {
+            "prev_sg_ott": 0.314556925996204
+          },
+          "n": 1054,
+          "relative": true,
+          "features": [
+            "prev_sg_ott"
+          ],
+          "weights": null,
+          "label": "prev SG OTT"
+        },
+        "Bogeys": {
+          "market": "Bogeys",
+          "beta": 0.010700319620309045,
+          "beta_raw": 0.011207924915390119,
+          "means": {
+            "prev_sg_app": 0.5054592030360539
+          },
+          "n": 1054,
+          "relative": true,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Total score": {
+          "market": "Total score",
+          "beta": 0.0557128459903005,
+          "beta_raw": 0.058355770373142074,
+          "means": {
+            "prev_sg_app": 0.5054592030360539
+          },
+          "n": 1054,
+          "relative": false,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Pars": {
+          "market": "Pars",
+          "beta": -0.002053092632829828,
+          "beta_raw": -0.0021504879190172013,
+          "means": {
+            "prev_sg_app": 0.5054592030360539,
+            "prev_sg_putt": 0.4221992409867169
+          },
+          "n": 1054,
+          "relative": true,
+          "features": [
+            "prev_sg_app",
+            "prev_sg_putt"
+          ],
+          "weights": [
+            1,
+            -1
+          ],
+          "label": "prev SG APP − PUTT"
+        }
+      }
+    },
+    "FedEx St. Jude Championship": {
+      "markets": {
+        "Birdies": {
+          "market": "Birdies",
+          "beta": 0.11341418339238517,
+          "beta_raw": 0.11778298860780832,
+          "means": {
+            "prev_bob_pct": 0.3181818181818182
+          },
+          "n": 1298,
+          "relative": true,
+          "features": [
+            "prev_bob_pct"
+          ],
+          "weights": null,
+          "label": "prev BoB%"
+        },
+        "GIR": {
+          "market": "GIR",
+          "beta": -0.09071977148666796,
+          "beta_raw": -0.09460332334825478,
+          "means": {
+            "prev_gir_pct": 0.6909392123287659
+          },
+          "n": 1168,
+          "relative": true,
+          "features": [
+            "prev_gir_pct"
+          ],
+          "weights": null,
+          "label": "prev GIR%"
+        },
+        "Fairways hit": {
+          "market": "Fairways hit",
+          "beta": -0.0039491161186327745,
+          "beta_raw": -0.004118170746998904,
+          "means": {
+            "prev_sg_ott": 0.3104589041095882
+          },
+          "n": 1168,
+          "relative": true,
+          "features": [
+            "prev_sg_ott"
+          ],
+          "weights": null,
+          "label": "prev SG OTT"
+        },
+        "Bogeys": {
+          "market": "Bogeys",
+          "beta": 0.005632895187521821,
+          "beta_raw": 0.005874029399316419,
+          "means": {
+            "prev_sg_app": 0.5196027397260288
+          },
+          "n": 1168,
+          "relative": true,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Total score": {
+          "market": "Total score",
+          "beta": 0.047480896069048456,
+          "beta_raw": 0.04951346867474402,
+          "means": {
+            "prev_sg_app": 0.5196027397260288
+          },
+          "n": 1168,
+          "relative": false,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Pars": {
+          "market": "Pars",
+          "beta": -0.0011966337850470654,
+          "beta_raw": -0.0012478595463932581,
+          "means": {
+            "prev_sg_app": 0.5196027397260288,
+            "prev_sg_putt": 0.45027910958904055
+          },
+          "n": 1168,
+          "relative": true,
+          "features": [
+            "prev_sg_app",
+            "prev_sg_putt"
+          ],
+          "weights": [
+            1,
+            -1
+          ],
+          "label": "prev SG APP − PUTT"
+        }
+      }
+    },
+    "Genesis Scottish Open": {
+      "markets": {
+        "Birdies": {
+          "market": "Birdies",
+          "beta": 0.11325741107464796,
+          "beta_raw": 0.11775175278395938,
+          "means": {
+            "prev_bob_pct": 0.3277777777777778
+          },
+          "n": 1260,
+          "relative": true,
+          "features": [
+            "prev_bob_pct"
+          ],
+          "weights": null,
+          "label": "prev BoB%"
+        },
+        "GIR": {
+          "market": "GIR",
+          "beta": -0.10248857491088414,
+          "beta_raw": -0.107313837383148,
+          "means": {
+            "prev_gir_pct": 0.6902222222222208
+          },
+          "n": 1062,
+          "relative": true,
+          "features": [
+            "prev_gir_pct"
+          ],
+          "weights": null,
+          "label": "prev GIR%"
+        },
+        "Fairways hit": {
+          "market": "Fairways hit",
+          "beta": 0.0025430012284630332,
+          "beta_raw": 0.0026627282166204265,
+          "means": {
+            "prev_sg_ott": 0.31096233521657174
+          },
+          "n": 1062,
+          "relative": true,
+          "features": [
+            "prev_sg_ott"
+          ],
+          "weights": null,
+          "label": "prev SG OTT"
+        },
+        "Bogeys": {
+          "market": "Bogeys",
+          "beta": 0.005888289858664258,
+          "beta_raw": 0.006165516311520391,
+          "means": {
+            "prev_sg_app": 0.5184613935969873
+          },
+          "n": 1062,
+          "relative": true,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Total score": {
+          "market": "Total score",
+          "beta": 0.060181528231748375,
+          "beta_raw": 0.063014933515729,
+          "means": {
+            "prev_sg_app": 0.5184613935969873
+          },
+          "n": 1062,
+          "relative": false,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Pars": {
+          "market": "Pars",
+          "beta": -0.0005206505598231629,
+          "beta_raw": -0.0005451632980445925,
+          "means": {
+            "prev_sg_app": 0.5184613935969873,
+            "prev_sg_putt": 0.4315856873822969
+          },
+          "n": 1062,
+          "relative": true,
+          "features": [
+            "prev_sg_app",
+            "prev_sg_putt"
+          ],
+          "weights": [
+            1,
+            -1
+          ],
+          "label": "prev SG APP − PUTT"
+        }
+      }
+    },
+    "John Deere Classic": {
+      "markets": {
+        "Birdies": {
+          "market": "Birdies",
+          "beta": 0.11110539323852485,
+          "beta_raw": 0.11528543060641516,
+          "means": {
+            "prev_bob_pct": 0.3107599699021821
+          },
+          "n": 1329,
+          "relative": true,
+          "features": [
+            "prev_bob_pct"
+          ],
+          "weights": null,
+          "label": "prev BoB%"
+        },
+        "GIR": {
+          "market": "GIR",
+          "beta": -0.0960194196377202,
+          "beta_raw": -0.10026430998421534,
+          "means": {
+            "prev_gir_pct": 0.6900123784261699
+          },
+          "n": 1131,
+          "relative": true,
+          "features": [
+            "prev_gir_pct"
+          ],
+          "weights": null,
+          "label": "prev GIR%"
+        },
+        "Fairways hit": {
+          "market": "Fairways hit",
+          "beta": -0.004373858538361282,
+          "beta_raw": -0.0045672209847963515,
+          "means": {
+            "prev_sg_ott": 0.31363837312113096
+          },
+          "n": 1131,
+          "relative": true,
+          "features": [
+            "prev_sg_ott"
+          ],
+          "weights": null,
+          "label": "prev SG OTT"
+        },
+        "Bogeys": {
+          "market": "Bogeys",
+          "beta": 0.004961164299108012,
+          "beta_raw": 0.005180490749112787,
+          "means": {
+            "prev_sg_app": 0.5135941644562341
+          },
+          "n": 1131,
+          "relative": true,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Total score": {
+          "market": "Total score",
+          "beta": 0.048519766439127684,
+          "beta_raw": 0.050664760534579835,
+          "means": {
+            "prev_sg_app": 0.5135941644562341
+          },
+          "n": 1131,
+          "relative": false,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Pars": {
+          "market": "Pars",
+          "beta": -0.0010343442805521232,
+          "beta_raw": -0.0010800712602405458,
+          "means": {
+            "prev_sg_app": 0.5135941644562341,
+            "prev_sg_putt": 0.4473536693191861
+          },
+          "n": 1131,
+          "relative": true,
+          "features": [
+            "prev_sg_app",
+            "prev_sg_putt"
+          ],
+          "weights": [
+            1,
+            -1
+          ],
+          "label": "prev SG APP − PUTT"
+        }
+      }
+    },
+    "PGA Championship": {
+      "markets": {
+        "Birdies": {
+          "market": "Birdies",
+          "beta": 0.1662399956482569,
+          "beta_raw": 0.17318982824224757,
+          "means": {
+            "prev_bob_pct": 0.34531772575250835
+          },
+          "n": 1196,
+          "relative": true,
+          "features": [
+            "prev_bob_pct"
+          ],
+          "weights": null,
+          "label": "prev BoB%"
+        },
+        "GIR": {
+          "market": "GIR",
+          "beta": -0.060498496549475755,
+          "beta_raw": -0.0635294833505517,
+          "means": {
+            "prev_gir_pct": 0.6955751503005999
+          },
+          "n": 998,
+          "relative": true,
+          "features": [
+            "prev_gir_pct"
+          ],
+          "weights": null,
+          "label": "prev GIR%"
+        },
+        "Fairways hit": {
+          "market": "Fairways hit",
+          "beta": -0.000988407105655726,
+          "beta_raw": -0.0010379264997266544,
+          "means": {
+            "prev_sg_ott": 0.30428256513025986
+          },
+          "n": 998,
+          "relative": true,
+          "features": [
+            "prev_sg_ott"
+          ],
+          "weights": null,
+          "label": "prev SG OTT"
+        },
+        "Bogeys": {
+          "market": "Bogeys",
+          "beta": -0.002121260022033501,
+          "beta_raw": -0.0022275355742395887,
+          "means": {
+            "prev_sg_app": 0.5507795591182371
+          },
+          "n": 998,
+          "relative": true,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Total score": {
+          "market": "Total score",
+          "beta": 0.012380587012330444,
+          "beta_raw": 0.013000856902727762,
+          "means": {
+            "prev_sg_app": 0.5507795591182371
+          },
+          "n": 998,
+          "relative": false,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Pars": {
+          "market": "Pars",
+          "beta": 0.00009372718568999846,
+          "beta_raw": 0.00009842293647607053,
+          "means": {
+            "prev_sg_app": 0.5507795591182371,
+            "prev_sg_putt": 0.4717154308617229
+          },
+          "n": 998,
+          "relative": true,
+          "features": [
+            "prev_sg_app",
+            "prev_sg_putt"
+          ],
+          "weights": [
+            1,
+            -1
+          ],
+          "label": "prev SG APP − PUTT"
+        }
+      }
+    },
+    "RBC Canadian Open": {
+      "markets": {
+        "Birdies": {
+          "market": "Birdies",
+          "beta": 0.09884244946424821,
+          "beta_raw": 0.10266762165713707,
+          "means": {
+            "prev_bob_pct": 0.2631578947368421
+          },
+          "n": 1292,
+          "relative": true,
+          "features": [
+            "prev_bob_pct"
+          ],
+          "weights": null,
+          "label": "prev BoB%"
+        },
+        "GIR": {
+          "market": "GIR",
+          "beta": -0.08950711188945458,
+          "beta_raw": -0.09359793053156859,
+          "means": {
+            "prev_gir_pct": 0.6888720292504552
+          },
+          "n": 1094,
+          "relative": true,
+          "features": [
+            "prev_gir_pct"
+          ],
+          "weights": null,
+          "label": "prev GIR%"
+        },
+        "Fairways hit": {
+          "market": "Fairways hit",
+          "beta": -0.004498082911244324,
+          "beta_raw": -0.00470366256897944,
+          "means": {
+            "prev_sg_ott": 0.29514899451553855
+          },
+          "n": 1094,
+          "relative": true,
+          "features": [
+            "prev_sg_ott"
+          ],
+          "weights": null,
+          "label": "prev SG OTT"
+        },
+        "Bogeys": {
+          "market": "Bogeys",
+          "beta": 0.004717062457637144,
+          "beta_raw": 0.0049326503213317115,
+          "means": {
+            "prev_sg_app": 0.5276325411334563
+          },
+          "n": 1094,
+          "relative": true,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Total score": {
+          "market": "Total score",
+          "beta": 0.03852879211892908,
+          "beta_raw": 0.04028970583551633,
+          "means": {
+            "prev_sg_app": 0.5276325411334563
+          },
+          "n": 1094,
+          "relative": false,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Pars": {
+          "market": "Pars",
+          "beta": -0.0017198084601587867,
+          "beta_raw": -0.0017984103093433748,
+          "means": {
+            "prev_sg_app": 0.5276325411334563,
+            "prev_sg_putt": 0.45296435100548366
+          },
+          "n": 1094,
+          "relative": true,
+          "features": [
+            "prev_sg_app",
+            "prev_sg_putt"
+          ],
+          "weights": [
+            1,
+            -1
+          ],
+          "label": "prev SG APP − PUTT"
+        }
+      }
+    },
+    "Rocket Classic": {
+      "markets": {
+        "Birdies": {
+          "market": "Birdies",
+          "beta": 0.11554261067875979,
+          "beta_raw": 0.1199192247196219,
+          "means": {
+            "prev_bob_pct": 0.31287878787878787
+          },
+          "n": 1320,
+          "relative": true,
+          "features": [
+            "prev_bob_pct"
+          ],
+          "weights": null,
+          "label": "prev BoB%"
+        },
+        "GIR": {
+          "market": "GIR",
+          "beta": -0.09698826227442792,
+          "beta_raw": -0.10131037734904591,
+          "means": {
+            "prev_gir_pct": 0.6875311942958993
+          },
+          "n": 1122,
+          "relative": true,
+          "features": [
+            "prev_gir_pct"
+          ],
+          "weights": null,
+          "label": "prev GIR%"
+        },
+        "Fairways hit": {
+          "market": "Fairways hit",
+          "beta": -0.006878875100248707,
+          "beta_raw": -0.0071854203364451735,
+          "means": {
+            "prev_sg_ott": 0.30654278074866215
+          },
+          "n": 1122,
+          "relative": true,
+          "features": [
+            "prev_sg_ott"
+          ],
+          "weights": null,
+          "label": "prev SG OTT"
+        },
+        "Bogeys": {
+          "market": "Bogeys",
+          "beta": 0.007488749778975447,
+          "beta_raw": 0.007822473031157953,
+          "means": {
+            "prev_sg_app": 0.5090222816399299
+          },
+          "n": 1122,
+          "relative": true,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Total score": {
+          "market": "Total score",
+          "beta": 0.05700274601366989,
+          "beta_raw": 0.059542975336917214,
+          "means": {
+            "prev_sg_app": 0.5090222816399299
+          },
+          "n": 1122,
+          "relative": false,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Pars": {
+          "market": "Pars",
+          "beta": -0.0008843842854149347,
+          "beta_raw": -0.0009237953498273649,
+          "means": {
+            "prev_sg_app": 0.5090222816399299,
+            "prev_sg_putt": 0.4396024955436715
+          },
+          "n": 1122,
+          "relative": true,
+          "features": [
+            "prev_sg_app",
+            "prev_sg_putt"
+          ],
+          "weights": [
+            1,
+            -1
+          ],
+          "label": "prev SG APP − PUTT"
+        }
+      }
+    },
+    "THE CJ CUP Byron Nelson": {
+      "markets": {
+        "Birdies": {
+          "market": "Birdies",
+          "beta": 0.10279995753124944,
+          "beta_raw": 0.10687608590282952,
+          "means": {
+            "prev_bob_pct": 0.24900872323552736
+          },
+          "n": 1261,
+          "relative": true,
+          "features": [
+            "prev_bob_pct"
+          ],
+          "weights": null,
+          "label": "prev BoB%"
+        },
+        "GIR": {
+          "market": "GIR",
+          "beta": -0.08416715613540336,
+          "beta_raw": -0.08812610045033296,
+          "means": {
+            "prev_gir_pct": 0.6849764816556897
+          },
+          "n": 1063,
+          "relative": true,
+          "features": [
+            "prev_gir_pct"
+          ],
+          "weights": null,
+          "label": "prev GIR%"
+        },
+        "Fairways hit": {
+          "market": "Fairways hit",
+          "beta": -0.00505512073716728,
+          "beta_raw": -0.005292896877203371,
+          "means": {
+            "prev_sg_ott": 0.29878739416744976
+          },
+          "n": 1063,
+          "relative": true,
+          "features": [
+            "prev_sg_ott"
+          ],
+          "weights": null,
+          "label": "prev SG OTT"
+        },
+        "Bogeys": {
+          "market": "Bogeys",
+          "beta": 0.005091158826453665,
+          "beta_raw": 0.005330630078873876,
+          "means": {
+            "prev_sg_app": 0.4841476952022581
+          },
+          "n": 1063,
+          "relative": true,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Total score": {
+          "market": "Total score",
+          "beta": 0.04006120605732471,
+          "beta_raw": 0.04194555253226943,
+          "means": {
+            "prev_sg_app": 0.4841476952022581
+          },
+          "n": 1063,
+          "relative": false,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Pars": {
+          "market": "Pars",
+          "beta": -0.0022642515410485264,
+          "beta_raw": -0.002370754435735663,
+          "means": {
+            "prev_sg_app": 0.4841476952022581,
+            "prev_sg_putt": 0.4252502351834427
+          },
+          "n": 1063,
+          "relative": true,
+          "features": [
+            "prev_sg_app",
+            "prev_sg_putt"
+          ],
+          "weights": [
+            1,
+            -1
+          ],
+          "label": "prev SG APP − PUTT"
+        }
+      }
+    },
+    "The Open Championship": {
+      "markets": {
+        "Birdies": {
+          "market": "Birdies",
+          "beta": 0.15404793005008544,
+          "beta_raw": 0.1605864669792062,
+          "means": {
+            "prev_bob_pct": 0.35059422750424446
+          },
+          "n": 1178,
+          "relative": true,
+          "features": [
+            "prev_bob_pct"
+          ],
+          "weights": null,
+          "label": "prev BoB%"
+        },
+        "GIR": {
+          "market": "GIR",
+          "beta": -0.10219231150845266,
+          "beta_raw": -0.10740620495276147,
+          "means": {
+            "prev_gir_pct": 0.6951357142857123
+          },
+          "n": 980,
+          "relative": true,
+          "features": [
+            "prev_gir_pct"
+          ],
+          "weights": null,
+          "label": "prev GIR%"
+        },
+        "Fairways hit": {
+          "market": "Fairways hit",
+          "beta": -0.00013811249967796157,
+          "beta_raw": -0.00014515905578398,
+          "means": {
+            "prev_sg_ott": 0.3349102040816321
+          },
+          "n": 980,
+          "relative": true,
+          "features": [
+            "prev_sg_ott"
+          ],
+          "weights": null,
+          "label": "prev SG OTT"
+        },
+        "Bogeys": {
+          "market": "Bogeys",
+          "beta": 0.008199305565507008,
+          "beta_raw": 0.008617637482114509,
+          "means": {
+            "prev_sg_app": 0.5349561224489803
+          },
+          "n": 980,
+          "relative": true,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Total score": {
+          "market": "Total score",
+          "beta": 0.04038781396531415,
+          "beta_raw": 0.042448416718646506,
+          "means": {
+            "prev_sg_app": 0.5349561224489803
+          },
+          "n": 980,
+          "relative": false,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Pars": {
+          "market": "Pars",
+          "beta": -0.0020776343113654908,
+          "beta_raw": -0.0021836360619453626,
+          "means": {
+            "prev_sg_app": 0.5349561224489803,
+            "prev_sg_putt": 0.4944163265306115
+          },
+          "n": 980,
+          "relative": true,
+          "features": [
+            "prev_sg_app",
+            "prev_sg_putt"
+          ],
+          "weights": [
+            1,
+            -1
+          ],
+          "label": "prev SG APP − PUTT"
+        }
+      }
+    },
+    "Travelers Championship": {
+      "markets": {
+        "Birdies": {
+          "market": "Birdies",
+          "beta": 0.11871662554122492,
+          "beta_raw": 0.12325472284784666,
+          "means": {
+            "prev_bob_pct": 0.31574923547400613
+          },
+          "n": 1308,
+          "relative": true,
+          "features": [
+            "prev_bob_pct"
+          ],
+          "weights": null,
+          "label": "prev BoB%"
+        },
+        "GIR": {
+          "market": "GIR",
+          "beta": -0.08093774408375158,
+          "beta_raw": -0.0845835884118485,
+          "means": {
+            "prev_gir_pct": 0.6879027027027008
+          },
+          "n": 1110,
+          "relative": true,
+          "features": [
+            "prev_gir_pct"
+          ],
+          "weights": null,
+          "label": "prev GIR%"
+        },
+        "Fairways hit": {
+          "market": "Fairways hit",
+          "beta": -0.006272152940555184,
+          "beta_raw": -0.006554682352291904,
+          "means": {
+            "prev_sg_ott": 0.32446396396396304
+          },
+          "n": 1110,
+          "relative": true,
+          "features": [
+            "prev_sg_ott"
+          ],
+          "weights": null,
+          "label": "prev SG OTT"
+        },
+        "Bogeys": {
+          "market": "Bogeys",
+          "beta": 0.0048656631544278985,
+          "beta_raw": 0.00508483717039312,
+          "means": {
+            "prev_sg_app": 0.5360504504504514
+          },
+          "n": 1110,
+          "relative": true,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Total score": {
+          "market": "Total score",
+          "beta": 0.05953079295037746,
+          "beta_raw": 0.062212360200394466,
+          "means": {
+            "prev_sg_app": 0.5360504504504514
+          },
+          "n": 1110,
+          "relative": false,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Pars": {
+          "market": "Pars",
+          "beta": -0.0009264756431808886,
+          "beta_raw": -0.0009682087802611088,
+          "means": {
+            "prev_sg_app": 0.5360504504504514,
+            "prev_sg_putt": 0.47434144144144086
+          },
+          "n": 1110,
+          "relative": true,
+          "features": [
+            "prev_sg_app",
+            "prev_sg_putt"
+          ],
+          "weights": [
+            1,
+            -1
+          ],
+          "label": "prev SG APP − PUTT"
+        }
+      }
+    },
+    "U.S. Open": {
+      "markets": {
+        "Birdies": {
+          "market": "Birdies",
+          "beta": 0.11670476109834958,
+          "beta_raw": 0.12153525617692365,
+          "means": {
+            "prev_bob_pct": 0.24751655629139072
+          },
+          "n": 1208,
+          "relative": true,
+          "features": [
+            "prev_bob_pct"
+          ],
+          "weights": null,
+          "label": "prev BoB%"
+        },
+        "GIR": {
+          "market": "GIR",
+          "beta": -0.06806999478661037,
+          "beta_raw": -0.07143979650871979,
+          "means": {
+            "prev_gir_pct": 0.69918316831683
+          },
+          "n": 1010,
+          "relative": true,
+          "features": [
+            "prev_gir_pct"
+          ],
+          "weights": null,
+          "label": "prev GIR%"
+        },
+        "Fairways hit": {
+          "market": "Fairways hit",
+          "beta": -0.005452432668092191,
+          "beta_raw": -0.005722355077403685,
+          "means": {
+            "prev_sg_ott": 0.30219603960395997
+          },
+          "n": 1010,
+          "relative": true,
+          "features": [
+            "prev_sg_ott"
+          ],
+          "weights": null,
+          "label": "prev SG OTT"
+        },
+        "Bogeys": {
+          "market": "Bogeys",
+          "beta": 0.008831195692197197,
+          "beta_raw": 0.009268383597751513,
+          "means": {
+            "prev_sg_app": 0.5236465346534661
+          },
+          "n": 1010,
+          "relative": true,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Total score": {
+          "market": "Total score",
+          "beta": 0.05853828825647781,
+          "beta_raw": 0.061436223318679685,
+          "means": {
+            "prev_sg_app": 0.5236465346534661
+          },
+          "n": 1010,
+          "relative": false,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Pars": {
+          "market": "Pars",
+          "beta": -0.0018124595180188468,
+          "beta_raw": -0.001902185236732651,
+          "means": {
+            "prev_sg_app": 0.5236465346534661,
+            "prev_sg_putt": 0.44239306930693023
+          },
+          "n": 1010,
+          "relative": true,
+          "features": [
+            "prev_sg_app",
+            "prev_sg_putt"
+          ],
+          "weights": [
+            1,
+            -1
+          ],
+          "label": "prev SG APP − PUTT"
+        }
+      }
+    },
+    "Wyndham Championship": {
+      "markets": {
+        "Birdies": {
+          "market": "Birdies",
+          "beta": -0.03659167661972933,
+          "beta_raw": -0.03807192243767954,
+          "means": {
+            "prev_bob_pct": 0.33414239482200647
+          },
+          "n": 1236,
+          "relative": true,
+          "features": [
+            "prev_bob_pct"
+          ],
+          "weights": null,
+          "label": "prev BoB%"
+        },
+        "GIR": {
+          "market": "GIR",
+          "beta": -0.09071977148666796,
+          "beta_raw": -0.09460332334825478,
+          "means": {
+            "prev_gir_pct": 0.6909392123287659
+          },
+          "n": 1168,
+          "relative": true,
+          "features": [
+            "prev_gir_pct"
+          ],
+          "weights": null,
+          "label": "prev GIR%"
+        },
+        "Fairways hit": {
+          "market": "Fairways hit",
+          "beta": -0.0039491161186327745,
+          "beta_raw": -0.004118170746998904,
+          "means": {
+            "prev_sg_ott": 0.3104589041095882
+          },
+          "n": 1168,
+          "relative": true,
+          "features": [
+            "prev_sg_ott"
+          ],
+          "weights": null,
+          "label": "prev SG OTT"
+        },
+        "Bogeys": {
+          "market": "Bogeys",
+          "beta": 0.005632895187521821,
+          "beta_raw": 0.005874029399316419,
+          "means": {
+            "prev_sg_app": 0.5196027397260288
+          },
+          "n": 1168,
+          "relative": true,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Total score": {
+          "market": "Total score",
+          "beta": 0.047480896069048456,
+          "beta_raw": 0.04951346867474402,
+          "means": {
+            "prev_sg_app": 0.5196027397260288
+          },
+          "n": 1168,
+          "relative": false,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Pars": {
+          "market": "Pars",
+          "beta": -0.0011966337850470654,
+          "beta_raw": -0.0012478595463932581,
+          "means": {
+            "prev_sg_app": 0.5196027397260288,
+            "prev_sg_putt": 0.45027910958904055
+          },
+          "n": 1168,
+          "relative": true,
+          "features": [
+            "prev_sg_app",
+            "prev_sg_putt"
+          ],
+          "weights": [
+            1,
+            -1
+          ],
+          "label": "prev SG APP − PUTT"
+        }
+      }
+    },
+    "the Memorial Tournament presented by Workday": {
+      "markets": {
+        "Birdies": {
+          "market": "Birdies",
+          "beta": 0.10404921802279553,
+          "beta_raw": 0.10798749273978249,
+          "means": {
+            "prev_bob_pct": 0.2785768357305072
+          },
+          "n": 1321,
+          "relative": true,
+          "features": [
+            "prev_bob_pct"
+          ],
+          "weights": null,
+          "label": "prev BoB%"
+        },
+        "GIR": {
+          "market": "GIR",
+          "beta": -0.0810672727561275,
+          "beta_raw": -0.08467667937928545,
+          "means": {
+            "prev_gir_pct": 0.6959661620658935
+          },
+          "n": 1123,
+          "relative": true,
+          "features": [
+            "prev_gir_pct"
+          ],
+          "weights": null,
+          "label": "prev GIR%"
+        },
+        "Fairways hit": {
+          "market": "Fairways hit",
+          "beta": -0.004351835308369925,
+          "beta_raw": -0.00454559467205514,
+          "means": {
+            "prev_sg_ott": 0.31907836153161084
+          },
+          "n": 1123,
+          "relative": true,
+          "features": [
+            "prev_sg_ott"
+          ],
+          "weights": null,
+          "label": "prev SG OTT"
+        },
+        "Bogeys": {
+          "market": "Bogeys",
+          "beta": 0.004953314443508535,
+          "beta_raw": 0.005173853822115326,
+          "means": {
+            "prev_sg_app": 0.5282644701691908
+          },
+          "n": 1123,
+          "relative": true,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Total score": {
+          "market": "Total score",
+          "beta": 0.05638035926371547,
+          "beta_raw": 0.05889061568685507,
+          "means": {
+            "prev_sg_app": 0.5282644701691908
+          },
+          "n": 1123,
+          "relative": false,
+          "features": [
+            "prev_sg_app"
+          ],
+          "weights": null,
+          "label": "prev SG APP"
+        },
+        "Pars": {
+          "market": "Pars",
+          "beta": -0.0005447923705935925,
+          "beta_raw": -0.0005690484868266109,
+          "means": {
+            "prev_sg_app": 0.5282644701691908,
+            "prev_sg_putt": 0.45352448797862804
+          },
+          "n": 1123,
+          "relative": true,
+          "features": [
+            "prev_sg_app",
+            "prev_sg_putt"
+          ],
+          "weights": [
+            1,
+            -1
+          ],
+          "label": "prev SG APP − PUTT"
+        }
+      }
+    }
+  },
+  "signal_definitions": {
+    "Birdies": "prev BoB%",
+    "GIR": "prev GIR%",
+    "Fairways hit": "prev SG OTT",
+    "Bogeys": "prev SG APP",
+    "Total score": "prev SG APP",
+    "Pars": "prev SG APP − PUTT"
+  },
+  "n_rows": 7206,
+  "n_events": 14
+}

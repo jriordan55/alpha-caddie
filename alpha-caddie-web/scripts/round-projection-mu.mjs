@@ -3,7 +3,8 @@
  * Used by export-round-projection-vs-actual-csv.mjs — not loaded in the browser.
  */
 import { readFileSync, existsSync } from "fs";
-import { join } from "path";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 import { normCourseNameKey } from "./course-name-key.mjs";
 import {
   statWeatherMuAdjustment,
@@ -22,6 +23,8 @@ import {
   propPricingProbOver,
   stdDevFromValues,
 } from "./prop-pricing-model.mjs";
+import { applyPriorRoundMuBoost } from "./prior-round-mu-boost.mjs";
+import { priorSignalsFromRow } from "./sg-side-policy.mjs";
 
 export { liveCurrentRoundTotalScoreMuDelta } from "./live-in-play-pricing.mjs";
 import {
@@ -778,7 +781,33 @@ export function ouProjectedMeanForMode(market, row, meta, pricingMode, pricingSk
               : NaN),
     NaN,
   );
+  if (priorRoundMuBoostEnabled()) {
+    const fit = loadPriorRoundMuBoostFit(join(dirname(fileURLToPath(import.meta.url)), ".."));
+    if (fit?.enabled) {
+      mu = applyPriorRoundMuBoost(market, mu, priorSignalsFromRow(row), fit);
+    }
+  }
   return applyOutcomeMuDebias(market, mu, bookLine);
+}
+
+function priorRoundMuBoostEnabled() {
+  const v = String(process.env.GOLF_PRIOR_ROUND_MU_BOOST || "")
+    .trim()
+    .toLowerCase();
+  return v === "1" || v === "true" || v === "yes";
+}
+
+let _priorRoundMuBoostFit = null;
+function loadPriorRoundMuBoostFit(webRoot) {
+  if (_priorRoundMuBoostFit) return _priorRoundMuBoostFit;
+  const p = join(webRoot || process.cwd(), "data", "prior_round_mu_boost.json");
+  if (!existsSync(p)) return null;
+  try {
+    _priorRoundMuBoostFit = JSON.parse(readFileSync(p, "utf8"));
+    return _priorRoundMuBoostFit;
+  } catch {
+    return null;
+  }
 }
 
 function countingStubRowForMu(market, mu, row, fairwayHoles) {

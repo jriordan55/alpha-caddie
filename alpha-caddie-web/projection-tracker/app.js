@@ -1,9 +1,12 @@
 /**
  * Model vs market tracker — projection μ performance against sportsbook lines.
  */
-import { sgAllowedSides } from "../scripts/sg-side-policy.mjs";
+import { pickBetSideWithSgPolicy } from "../scripts/sg-side-policy.mjs";
+import { modelEdgePctAtLine, modelProbOver, propPricingRoi } from "./ev-math.mjs";
+import { minEvForMarket } from "./bet-policy.mjs";
 
 const ROI_URL = "../data/both_side_roi.json";
+const BOOST_ROI_URL = "../data/prior_round_mu_boost_roi.json";
 const BETS_URL = "../data/both_side_bets.json";
 const PROJ_URL = "../projections.json";
 const LIVE_PROPS_URL = "../data/live_event_book_props.json";
@@ -49,6 +52,7 @@ const LIVE_BOOKS = [
 ];
 
 let ROI = null;
+let BOOST_ROI = null;
 let BETS = null;
 /** @type {Record<string, { prev_sg_ott?: number, prev_sg_app?: number, prev_sg_putt?: number }>} */
 let PREV_SG_INDEX = {};
@@ -155,13 +159,8 @@ function renderHero() {
   }
 }
 
-function gapLabelFor(r) {
-  const base =
-    r.gap_over != null && r.gap_under != null && r.gap_over !== r.gap_under
-      ? `${r.gap_over}/${r.gap_under}`
-      : typeof r.gap === "object"
-        ? `${r.gap.over}/${r.gap.under}`
-        : String(r.gap ?? "—");
+function minEvLabelFor(r) {
+  const base = Number.isFinite(r.min_ev_pct) ? `${r.min_ev_pct}%` : "—";
   const bits = [];
   if (r.odds_rule?.under_min_american != null) bits.push(`U≥${r.odds_rule.under_min_american}`);
   if (r.odds_rule?.over_min_american != null) bits.push(`O≥${r.odds_rule.over_min_american}`);
@@ -188,7 +187,7 @@ function renderMarketTable() {
       const comb = combinedRoiFor(r);
       return `<tr>
         <td>${m}</td>
-        <td class="num">${gapLabelFor(r)}</td>
+        <td class="num">${minEvLabelFor(r)}</td>
         <td class="num">${r.over?.bets ?? "—"}</td>
         <td class="num ${clsSigned(r.over?.roi)}">${fmtPct(r.over?.roi)}</td>
         <td class="num">${r.under?.bets ?? "—"}</td>
@@ -198,6 +197,55 @@ function renderMarketTable() {
       </tr>`;
     })
     .join("");
+}
+
+function boostCoefLabel(market, coef) {
+  if (!coef || coef.shrunk) return "—";
+  if (!Number.isFinite(coef.beta) || Math.abs(coef.beta) < 1e-6) return "—";
+  const sig = coef.label || coef.features?.join(" − ") || market;
+  return `${sig}: β=${coef.beta.toFixed(4)}${coef.relative ? " rel" : " add"}`;
+}
+
+function renderBoostRoi() {
+  const tbody = $("boost-roi-table")?.querySelector("tbody");
+  const overallEl = $("boost-roi-overall");
+  if (!tbody) return;
+  if (!BOOST_ROI?.markets) {
+    tbody.innerHTML = `<tr><td colspan="8">No boost ROI data — run fit:prior-round-mu-boost then report:prior-round-mu-boost-roi.</td></tr>`;
+    if (overallEl) overallEl.textContent = "";
+    return;
+  }
+  const coefs = BOOST_ROI.coefficients || {};
+  const order = MARKET_ORDER.filter((m) => BOOST_ROI.markets[m]).concat(
+    Object.keys(BOOST_ROI.markets).filter((m) => !MARKET_ORDER.includes(m)),
+  );
+  tbody.innerHTML = order
+    .map((m) => {
+      const x = BOOST_ROI.markets[m];
+      const b = x.baseline;
+      const t = x.boosted;
+      const dRoi =
+        Number.isFinite(b?.roi) && Number.isFinite(t?.roi) ? t.roi - b.roi : NaN;
+      return `<tr>
+        <td>${m}</td>
+        <td class="muted boost-coef">${boostCoefLabel(m, coefs[m])}</td>
+        <td class="num ${clsSigned(b?.roi)}">${fmtPct(b?.roi)}</td>
+        <td class="num ${clsSigned(t?.roi)}">${fmtPct(t?.roi)}</td>
+        <td class="num ${clsSigned(dRoi)}">${Number.isFinite(dRoi) ? fmtPct(dRoi) : "—"}</td>
+        <td class="num">${Number.isFinite(b?.mae) ? b.mae.toFixed(3) : "—"}</td>
+        <td class="num">${Number.isFinite(t?.mae) ? t.mae.toFixed(3) : "—"}</td>
+        <td class="num">${t?.bets ?? "—"}</td>
+      </tr>`;
+    })
+    .join("");
+
+  const o = BOOST_ROI.overall || {};
+  const ob = o.baseline || {};
+  const ot = o.boosted || {};
+  const d = Number.isFinite(ob.roi) && Number.isFinite(ot.roi) ? ot.roi - ob.roi : NaN;
+  if (overallEl) {
+    overallEl.textContent = `Overall (event LOO): baseline ${fmtPct(ob.roi)} → boosted ${fmtPct(ot.roi)} (${Number.isFinite(d) ? (d >= 0 ? "+" : "") + (d * 100).toFixed(1) + " pp" : "—"}) · ${ot.bets ?? 0} bets · MAE ${Number.isFinite(ob.mae) ? ob.mae.toFixed(3) : "—"} → ${Number.isFinite(ot.mae) ? ot.mae.toFixed(3) : "—"}`;
+  }
 }
 
 function fillMarketSelects() {
@@ -323,14 +371,6 @@ function priorSgForLivePick(eventName, dgId, roundNum) {
   };
 }
 
-function liveSideAllowedBySg(market, side, signals) {
-  const allowed = sgAllowedSides(market, signals);
-  const s = String(side || "").toUpperCase();
-  if (s === "OVER") return allowed.over;
-  if (s === "UNDER") return allowed.under;
-  return false;
-}
-
 function bookPropPack(book) {
   if (!LIVE_PROPS) return {};
   const pre = LIVE_PROPS[`pre_round_${book.short}`] || {};
@@ -348,12 +388,21 @@ function bookPropPack(book) {
   return pre;
 }
 
+function liveMinEvForMarket(market, mode) {
+  const rec = ROI?.recommended?.[market];
+  if (mode === "policy") {
+    if (Number.isFinite(rec?.min_ev_pct)) return rec.min_ev_pct;
+    return minEvForMarket(market, 0);
+  }
+  return Number(mode);
+}
+
 function livePicks() {
   if (!PROJ?.players?.length) return [];
   const markets = trackedMarkets();
   const mktFilter = $("live-market").value;
   const bookFilter = $("live-book")?.value || "";
-  const gapMode = $("live-gap").value;
+  const minEvMode = $("live-min-ev").value;
   const rnd = Math.round(Number(PROJ.display_round || 1)) || 1;
   const out = [];
   const books = bookFilter
@@ -370,12 +419,10 @@ function livePicks() {
       if (!rec) continue;
       const mu = MARKET_TO_PLAYER[market]?.(p);
       if (!Number.isFinite(mu)) continue;
-      const gapOver = Number(rec.gap_over ?? rec.gap);
-      const gapUnder = Number(rec.gap_under ?? rec.gap);
-      const gapNeedOver = gapMode === "policy" ? gapOver : Number(gapMode);
-      const gapNeedUnder = gapMode === "policy" ? gapUnder : Number(gapMode);
+      const minEv = liveMinEvForMarket(market, minEvMode);
       const propMarket = PROP_MARKET[market];
       const key = `${dg}|${rnd}|${propMarket}`;
+      const pricingRow = { ...p, round_sd: p.round_sd };
 
       for (const book of books) {
         const props = bookPropPack(book);
@@ -384,23 +431,31 @@ function livePicks() {
         const over = Number(prop?.over);
         const under = Number(prop?.under);
         if (!Number.isFinite(line)) continue;
-        const delta = mu - line;
-        let side = null;
-        if (delta > gapNeedOver) side = "OVER";
-        else if (delta < -gapNeedUnder) side = "UNDER";
-        if (!side) continue;
+        const { edgeOver, edgeUnder } = modelEdgePctAtLine(
+          market,
+          mu,
+          line,
+          over,
+          under,
+          1,
+          14,
+          pricingRow,
+        );
+        const priorSg = priorSgForLivePick(PROJ.event_name, dg, rnd);
+        const pick = pickBetSideWithSgPolicy(edgeOver, edgeUnder, minEv, market, priorSg);
+        if (!pick) continue;
+        const side = pick.side === "under" ? "UNDER" : "OVER";
         const odds = side === "OVER" ? over : under;
         if (!Number.isFinite(odds)) continue;
         const underMin = rec.odds_rule?.under_min_american;
         const overMin = rec.odds_rule?.over_min_american;
         if (side === "UNDER" && Number.isFinite(underMin) && !(odds >= underMin)) continue;
         if (side === "OVER" && Number.isFinite(overMin) && !(odds >= overMin)) continue;
-        const priorSg = priorSgForLivePick(PROJ.event_name, dg, rnd);
-        const sgAllowed = sgAllowedSides(market, priorSg);
-        if (!liveSideAllowedBySg(market, side, priorSg)) continue;
-        const fair = americanToImplied(odds);
-        const gapNeed = side === "OVER" ? gapNeedOver : gapNeedUnder;
-        const edge = Math.abs(delta) - gapNeed;
+        const pModel =
+          side === "OVER"
+            ? modelProbOver(market, mu, line, 1, 14, pricingRow)
+            : 1 - modelProbOver(market, mu, line, 1, 14, pricingRow);
+        const expRoi = propPricingRoi(pModel, odds);
         out.push({
           player: name,
           book_id: book.id,
@@ -409,16 +464,16 @@ function livePicks() {
           side,
           mu: Math.round(mu * 10) / 10,
           line,
-          gap: Math.round(delta * 100) / 100,
+          gap: Math.round((mu - line) * 100) / 100,
           odds,
-          fair,
-          edge,
-          sg_reason: sgAllowed.reason || "",
+          edge_pct: Math.round(pick.edge * 100) / 100,
+          exp_roi: Number.isFinite(expRoi) ? Math.round(expRoi * 10000) / 100 : NaN,
+          sg_reason: pick.sgReason || "",
         });
       }
     }
   }
-  out.sort((a, b) => b.edge - a.edge);
+  out.sort((a, b) => b.edge_pct - a.edge_pct);
   return out;
 }
 
@@ -435,7 +490,7 @@ function renderLive() {
   if (!PROJ) {
     note.textContent = "No projections.json — run refresh:live / apply:dg-methodology.";
   } else {
-    note.textContent = `${PROJ.event_name || "Live"} · R${PROJ.display_round || "?"} · model μ vs sportsbook lines · prior-rnd SG side filter · all markets`;
+    note.textContent = `${PROJ.event_name || "Live"} · R${PROJ.display_round || "?"} · Prop Pricing Model edge vs posted odds · prior-rnd SG side filter · all markets`;
   }
   $("live-table").querySelector("tbody").innerHTML = picks.length
     ? picks
@@ -449,12 +504,13 @@ function renderLive() {
         <td class="num">${p.line}</td>
         <td class="num ${clsSigned(p.gap)}">${p.gap > 0 ? "+" : ""}${p.gap.toFixed(2)}</td>
         <td class="num">${p.odds > 0 ? "+" : ""}${p.odds}</td>
-        <td class="num">${p.edge.toFixed(2)}</td>
+        <td class="num ${clsSigned(p.edge_pct)}">${p.edge_pct.toFixed(1)}%</td>
+        <td class="num ${clsSigned(p.exp_roi)}">${Number.isFinite(p.exp_roi) ? `${p.exp_roi.toFixed(1)}%` : "—"}</td>
         <td class="muted sg-reason">${p.sg_reason ? esc(p.sg_reason) : "—"}</td>
       </tr>`,
         )
         .join("")
-    : `<tr><td colspan="10">No live props past gap + prior-round SG side rules.</td></tr>`;
+    : `<tr><td colspan="11">No live props past Prop Pricing min EV + prior-round SG side rules.</td></tr>`;
 }
 
 function betTs(b) {
@@ -770,6 +826,7 @@ function renderAnalytics() {
 function renderAll() {
   renderHero();
   renderMarketTable();
+  renderBoostRoi();
   fillMarketSelects();
   renderAnalytics();
   renderHist();
@@ -939,13 +996,14 @@ async function boot() {
   const err = $("error");
   err.hidden = true;
   try {
-    const [roi, bets, proj, liveProps, holeProps, prevSgPayload] = await Promise.all([
+    const [roi, bets, proj, liveProps, holeProps, prevSgPayload, boostRoi] = await Promise.all([
       loadJson(ROI_URL),
       loadJson(BETS_URL),
       loadJson(PROJ_URL).catch(() => null),
       loadJson(LIVE_PROPS_URL).catch(() => null),
       loadJson(HOLE_PROPS_URL).catch(() => null),
       loadJson(PREV_SG_URL).catch(() => null),
+      loadJson(BOOST_ROI_URL).catch(() => null),
     ]);
     ROI = roi;
     BETS = bets;
@@ -953,6 +1011,7 @@ async function boot() {
     LIVE_PROPS = liveProps;
     HOLE_PROPS = holeProps;
     PREV_SG_INDEX = prevSgPayload?.index || {};
+    BOOST_ROI = boostRoi;
     renderAll();
   } catch (e) {
     err.hidden = false;
@@ -967,7 +1026,7 @@ document.querySelectorAll(".tab-btn").forEach((btn) => {
 for (const id of ["hist-market", "hist-side", "hist-event", "hist-book"]) {
   $(id)?.addEventListener("change", () => renderHist());
 }
-for (const id of ["live-market", "live-gap", "live-book"]) {
+for (const id of ["live-market", "live-min-ev", "live-book"]) {
   $(id)?.addEventListener("change", () => renderLive());
 }
 for (const id of ["an-market", "an-event", "an-book"]) {

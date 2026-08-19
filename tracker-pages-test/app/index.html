@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>AlphaCaddie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap"
+    media="print"
+    onload="this.media='all'"
+  />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" /></noscript>
+  <link rel="stylesheet" href="styles.css?v=19" />
+</head>
+<body>
+  <header class="app-nav">
+    <div class="nav-inner">
+      <button type="button" class="nav-brand nav-brand-btn" id="nav-home-btn" aria-label="Home">
+        <span class="nav-logo" aria-hidden="true">
+          <svg class="nav-logo-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.5 28h5l-2.5-9.5-2.5 9.5Z" fill="#b8956a"/>
+            <path d="M14 18.5c0-1.1 2.7-2 6-2s6 .9 6 2" stroke="#d4b896" stroke-width="1.2" stroke-linecap="round"/>
+            <circle cx="20" cy="11.5" r="7.25" fill="#f8fafc"/>
+            <circle cx="17.2" cy="9.8" r="0.65" fill="#cbd5e1"/>
+            <circle cx="22.5" cy="10.2" r="0.55" fill="#cbd5e1"/>
+            <circle cx="20" cy="13.8" r="0.6" fill="#cbd5e1"/>
+            <circle cx="18" cy="12.2" r="0.45" fill="#e2e8f0"/>
+            <circle cx="22" cy="12.8" r="0.45" fill="#e2e8f0"/>
+            <path d="M13 11.5c2-3.5 10-3.5 14 0" stroke="rgba(255,255,255,0.35)" stroke-width="0.8"/>
+          </svg>
+        </span>
+        <div class="nav-brand-text">
+          <span class="nav-title">AlphaCaddie</span>
+          <span class="nav-subtitle">Model-driven projections &amp; edge tools</span>
+        </div>
+      </button>
+    </div>
+  </header>
+
+  <main class="content-wrapper content-wrapper--home" id="content-wrapper">
+    <nav class="tabs tabs--tool-nav" role="tablist" aria-label="Tools" hidden>
+      <button type="button" class="tab" data-tab="ou" role="tab" aria-selected="false">Round projections</button>
+      <button type="button" class="tab" data-tab="props" role="tab">Historical Trends</button>
+      <button type="button" class="tab" data-tab="course-fit" role="tab">Course fit</button>
+      <button type="button" class="tab" data-tab="course-breakdown" role="tab">Course breakdown</button>
+      <button type="button" class="tab" data-tab="matchup-analysis" role="tab">Matchup Analysis Tool</button>
+      <button type="button" class="tab" data-tab="ev" role="tab">Odds Screen</button>
+      <button type="button" class="tab" data-tab="live-stats" role="tab">Live Stats</button>
+    </nav>
+
+    <p id="data-status-primary" class="data-status-primary note tools-only" aria-live="polite" hidden></p>
+    <p id="file-protocol-banner" class="note text-warn file-protocol-banner" hidden>
+      <strong>Opened as a local file (<code>file://</code>).</strong> Browsers block loading <code>projections.json</code> from disk, so the app uses <strong>bundled demo data</strong> only.
+      To use live DataGolf output: in this folder run <code>npm run fetch:dg</code> then <code>npm start</code> and open <code>http://localhost:5173</code> (not the file path).
+    </p>
+    <p id="boot-error" class="note text-warn" hidden style="font-weight:600;"></p>
+
+    <!-- Home landing -->
+    <section id="panel-home" class="panel panel-home active" role="region" aria-label="Home">
+      <div class="home-hero">
+        <p class="home-eyebrow">This week</p>
+        <h1 class="home-title" id="home-event-line">Loading tournament…</h1>
+        <p class="home-lede" id="home-event-meta">Round projections, historical trends, course fit, and market odds for the current field.</p>
+      </div>
+      <div class="home-grid" role="list">
+        <button type="button" class="home-card" data-go-tab="ou" role="listitem">
+          <span class="home-card-icon" aria-hidden="true">RP</span>
+          <span class="home-card-title">Round projections</span>
+          <span class="home-card-desc">Model lines vs books — scores, birdies, GIR, and fairways with edge.</span>
+        </button>
+        <button type="button" class="home-card" data-go-tab="props" role="listitem">
+          <span class="home-card-icon" aria-hidden="true">HT</span>
+          <span class="home-card-title">Historical Trends</span>
+          <span class="home-card-desc">Player and field history at this course — back to 2004.</span>
+        </button>
+        <button type="button" class="home-card" data-go-tab="course-fit" role="listitem">
+          <span class="home-card-icon" aria-hidden="true">CF</span>
+          <span class="home-card-title">Course fit</span>
+          <span class="home-card-desc">Skill profile vs venue — radar, similar courses, past-event distributions.</span>
+        </button>
+        <button type="button" class="home-card" data-go-tab="course-breakdown" role="listitem">
+          <span class="home-card-icon" aria-hidden="true">CB</span>
+          <span class="home-card-title">Course breakdown</span>
+          <span class="home-card-desc">Course-specific insights — strokes gained mix, approach zones, and scoring profile.</span>
+        </button>
+        <button type="button" class="home-card" data-go-tab="matchup-analysis" role="listitem">
+          <span class="home-card-icon" aria-hidden="true">MA</span>
+          <span class="home-card-title">Matchup Analysis</span>
+          <span class="home-card-desc">Head-to-head and 3-ball model prices vs sportsbook lines.</span>
+        </button>
+        <button type="button" class="home-card" data-go-tab="ev" role="listitem">
+          <span class="home-card-icon" aria-hidden="true">EV</span>
+          <span class="home-card-title">Odds Screen</span>
+          <span class="home-card-desc">Best prices vs devigged market average and DataGolf fair odds.</span>
+        </button>
+        <button type="button" class="home-card" data-go-tab="live-stats" role="listitem">
+          <span class="home-card-icon" aria-hidden="true">LS</span>
+          <span class="home-card-title">Live Stats</span>
+          <span class="home-card-desc">Current tournament round-by-round: score, birdies, GIR, fairways, and strokes gained.</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Round projections (tab id ou) -->
+    <section id="panel-ou" class="panel" role="tabpanel" data-ou-view="projections" hidden>
+      <div class="ev-panel-head">
+        <h2 class="ev-devig-sr-only">Round projections</h2>
+        <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="ou" aria-label="Help: Round projections tab">?</button>
+      </div>
+      <div class="ou-filter-card">
+        <div class="ou-panel-head">
+          <div class="toolbar ou-toolbar ou-toolbar-projections">
+            <span class="toolbar-label muted ou-auto-round-line" id="auto-round" aria-live="polite">—</span>
+            <span class="toolbar-label muted ou-pricing-badge" id="ou-pricing-badge" title="Edges use Prop Pricing Model (distribution P vs posted break-even)">Prop pricing</span>
+            <label class="toolbar-label ou-filter-field ou-golfer-inline">Golfer
+              <span class="golfer-suggest-anchor">
+                <input
+                  type="search"
+                  id="ou-player-filter"
+                  class="golfer-combobox-input"
+                  placeholder="Search golfer…"
+                  title="Type to filter the table; pick a suggestion or clear for all golfers"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <div id="ou-player-filter-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Golfer suggestions"></div>
+              </span>
+            </label>
+            <label class="toolbar-label ou-filter-field">Tee wave
+              <select id="ou-tee-wave-filter" title="Filter to morning or afternoon tee times">
+                <option value="">All waves</option>
+                <option value="morning">Morning</option>
+                <option value="afternoon">Afternoon</option>
+              </select>
+            </label>
+            <label class="toolbar-label ou-filter-field">Market
+              <select id="ou-proj-market-filter" title="Filter table to one stat market">
+                <option value="">All markets</option>
+              </select>
+            </label>
+            <label class="toolbar-label ou-filter-field">Average
+              <select id="ou-proj-avg-window" title="Window for the Average column (player history for the selected market)">
+                <option value="season" selected>This season</option>
+                <option value="4">Last 4 rounds</option>
+                <option value="12">Last 12 rounds</option>
+                <option value="24">Last 24 rounds</option>
+                <option value="36">Last 36 rounds</option>
+                <option value="48">Last 48 rounds</option>
+                <option value="course">At this course</option>
+              </select>
+            </label>
+            <label class="toolbar-label ou-filter-field">Bankroll
+              <input
+                id="ou-proj-bankroll"
+                type="number"
+                min="1"
+                step="1"
+                value="1000"
+                title="Bankroll for Kelly stake sizing"
+              />
+            </label>
+            <label class="toolbar-label ou-filter-field">Kelly
+              <select id="ou-proj-kelly-fraction" title="Fraction of full Kelly to bet">
+                <option value="0.25" selected>¼ Kelly</option>
+                <option value="0.5">½ Kelly</option>
+                <option value="1">Full Kelly</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="ou-legacy-ou-controls" hidden aria-hidden="true">
+          <div class="ou-view-toggle-wrap" aria-label="O/U display mode">
+            <div class="ou-view-toggle" role="tablist">
+              <button type="button" class="ou-toggle-btn active" id="ou-mode-prob" role="tab" aria-selected="true" data-ou-mode="prob">Prob</button>
+              <button type="button" class="ou-toggle-btn" id="ou-mode-price" role="tab" aria-selected="false" data-ou-mode="price">Price</button>
+            </div>
+          </div>
+          <div class="ou-filters toolbar" aria-label="Legacy O/U line tools">
+            <label class="toolbar-label ou-filter-field ou-filter-span-full">Market
+              <select id="ou-market-filter">
+                <option value="Total score">Round score</option>
+                <option>Birdies</option>
+                <option>Bogeys</option>
+                <option>GIR</option>
+                <option>Fairways hit</option>
+              </select>
+            </label>
+            <label class="toolbar-label ou-filter-field ou-filter-span-full ou-filter-line-wrap">Line
+              <input id="ou-line-filter" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="70.5" />
+            </label>
+            <div class="ou-odds-pair" role="group" aria-label="Over and under odds">
+              <label class="toolbar-label ou-filter-field">Over odds
+                <input id="ou-odds-over-filter" type="text" inputmode="text" value="-110" />
+              </label>
+              <label class="toolbar-label ou-filter-field">Under odds
+                <input id="ou-odds-under-filter" type="text" inputmode="text" value="-110" />
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="toolbar weather-toolbar ou-weather-block" aria-label="Weather">
+          <span class="weather-toolbar-title ou-block-heading">Weather</span>
+          <div id="ou-weather-wave-summary" class="weather-auto-note text-muted" role="status" aria-live="polite"></div>
+        </div>
+      </div>
+      <p id="ou-dk-status-note" class="ou-dk-status-note muted" hidden role="status" aria-live="polite"></p>
+      <div class="ou-table-scroll-shell" id="ou-table-scroll-shell">
+        <button type="button" class="ou-table-scroll-btn ou-table-scroll-btn-left" id="ou-table-scroll-left" aria-label="Scroll table left" hidden>‹</button>
+        <button type="button" class="ou-table-scroll-btn ou-table-scroll-btn-right" id="ou-table-scroll-right" aria-label="Scroll table right" hidden>›</button>
+        <div class="table-wrap leaderboard-card ou-table-card" id="ou-table-scroll">
+          <table class="data-table table-ou-projections" id="table-ou">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="ou-chart-card leaderboard-card" id="ou-chart-card" hidden>
+        <div class="ou-chart-head">
+          <div class="ou-chart-head-text">
+            <span class="ou-chart-title" id="ou-chart-title">P(under) by line</span>
+          </div>
+        </div>
+        <div class="ou-chart-wrap">
+          <canvas id="ou-chart-canvas" width="800" height="240" aria-label="P(under) by line"></canvas>
+          <div id="ou-chart-tooltip" class="ou-chart-tooltip" hidden></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Historical trends (round history chart) -->
+    <section id="panel-props" class="panel props-viewport" role="tabpanel" hidden>
+      <div class="props-viewport-inner props-shell">
+      <div class="props-trends-top-bar" aria-label="Player and chart window">
+        <div class="props-trends-top-row">
+          <label class="props-sidebar-label props-trends-top-golfer">Golfer
+            <div class="golfer-combobox-wrap golfer-suggest-anchor">
+              <input
+                type="search"
+                id="prop-golfer-search"
+                class="golfer-combobox-input"
+                placeholder="Search golfer…"
+                autocomplete="off"
+                spellcheck="false"
+                aria-label="Golfer"
+              />
+              <div id="prop-golfer-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Golfer suggestions"></div>
+              <select id="prop-golfer" hidden></select>
+            </div>
+          </label>
+          <label class="props-sidebar-label props-trends-top-market">Stat
+            <select id="prop-stat">
+              <optgroup label="Scoring">
+                <option value="total">Round score</option>
+                <option value="birdies">Birdies</option>
+                <option value="pars">Pars</option>
+                <option value="bogeys">Bogeys</option>
+              </optgroup>
+              <optgroup label="Strokes gained">
+                <option value="sg_total">SG: Total</option>
+                <option value="sg_t2g">SG: Tee to green</option>
+                <option value="sg_ott">SG: Off the tee</option>
+                <option value="sg_app">SG: Approach</option>
+                <option value="sg_arg">SG: Around the green</option>
+                <option value="sg_putt">SG: Putting</option>
+              </optgroup>
+              <optgroup label="SG: Approach by distance">
+                <option value="sg_50_100_fw">SG: App 50–100 (FW)</option>
+                <option value="sg_100_150_fw">SG: App 100–150 (FW)</option>
+                <option value="sg_150_200_fw">SG: App 150–200 (FW)</option>
+                <option value="sg_over_200_fw">SG: App 200+ (FW)</option>
+                <option value="sg_under_150_rgh">SG: App &lt;150 (RGH)</option>
+                <option value="sg_over_150_rgh">SG: App 150+ (RGH)</option>
+                <option value="sg_app_dist_total">SG: App distance total</option>
+              </optgroup>
+              <optgroup label="SG: Putting by distance">
+                <option value="sg_putt_0_5ft">SG: Putt 0–5 ft</option>
+                <option value="sg_putt_5_10ft">SG: Putt 5–10 ft</option>
+                <option value="sg_putt_10_15ft">SG: Putt 10–15 ft</option>
+                <option value="sg_putt_15_25ft">SG: Putt 15–25 ft</option>
+                <option value="sg_putt_25plus_ft">SG: Putt 25+ ft</option>
+                <option value="sg_putt_dist_total">SG: Putt distance total</option>
+              </optgroup>
+              <optgroup label="Percentages">
+                <option value="gir_pct">GIR %</option>
+                <option value="fairways_pct">Fairways %</option>
+              </optgroup>
+              <optgroup label="Counts">
+                <option value="gir">GIR (count)</option>
+                <option value="fairways">Fairways hit (count)</option>
+              </optgroup>
+            </select>
+          </label>
+          <div class="props-stepper-block props-trends-top-rounds">
+            <span class="props-sidebar-label">Rounds</span>
+            <div class="props-stepper">
+              <button type="button" class="props-step-btn" id="props-win-minus" aria-label="Fewer rounds">−</button>
+              <input type="number" id="props-window-n" min="1" max="2000" step="1" value="50" />
+              <button type="button" class="props-step-btn" id="props-win-plus" aria-label="More rounds">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="props-trends-header" id="props-trends-header">
+        <h2 class="ev-devig-sr-only">Historical Trends</h2>
+        <img id="props-flag" class="props-country-flag" width="72" height="54" alt="" decoding="async" />
+        <div class="props-trends-head-text">
+          <div class="props-trends-title-row">
+            <p class="props-trends-title" id="props-trends-title">—</p>
+          </div>
+          <div id="props-trends-book-lines" class="props-trends-book-lines" aria-label="Book lines"></div>
+          <div id="props-trends-kpis" class="props-trends-kpis" aria-label="Summary averages"></div>
+        </div>
+        <button type="button" class="ev-help-btn tab-help-btn props-tab-help-btn" data-tab-help="props" aria-label="Help: Historical Trends tab">?</button>
+      </div>
+      <div class="props-trends-body">
+        <div class="props-trends-main-row">
+        <div class="props-trends-chart-wrap">
+          <canvas id="props-trend-canvas" width="800" height="220" aria-label="Historical round bar chart"></canvas>
+          <div id="props-chart-tooltip" class="props-chart-tooltip" hidden></div>
+          <p class="props-chart-line-legend" id="props-chart-line-legend" hidden><span class="props-chart-line-legend-chip" aria-hidden="true"></span> Line</p>
+          <p class="text-muted props-chart-empty" id="props-chart-empty" hidden>No history file.</p>
+          <div class="props-chart-steppers" aria-label="Comparison line">
+            <div class="props-stepper-block">
+              <span class="props-sidebar-label">Line</span>
+              <div class="props-stepper">
+                <button type="button" class="props-step-btn" id="props-line-minus" aria-label="Lower line">−</button>
+                <input type="number" id="prop-line" class="props-line-input" value="70.5" step="0.5" min="0" inputmode="decimal" />
+                <button type="button" class="props-step-btn" id="props-line-plus" aria-label="Raise line">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="props-trends-sidebar" aria-label="Historical trend filters">
+          <div class="toolbar weather-toolbar weather-toolbar-compact" aria-label="Historical trend filters">
+            <span class="weather-toolbar-title">Filters</span>
+            <div class="props-filter-temp-range-group">
+              <span class="props-filter-temp-range-title">Temp °F</span>
+              <div class="props-filter-temp-range-inputs">
+                <label class="toolbar-label">Min
+                  <input
+                    id="props-filter-temp-min"
+                    class="props-weather-filter-input"
+                    type="text"
+                    inputmode="decimal"
+                    autocomplete="off"
+                    placeholder="Any"
+                    title="Minimum °F (blank = no lower bound)"
+                  />
+                </label>
+                <label class="toolbar-label">Max
+                  <input
+                    id="props-filter-temp-max"
+                    class="props-weather-filter-input"
+                    type="text"
+                    inputmode="decimal"
+                    autocomplete="off"
+                    placeholder="Any"
+                    title="Maximum °F (blank = no upper bound)"
+                  />
+                </label>
+              </div>
+            </div>
+            <div class="props-filter-temp-range-group">
+              <span class="props-filter-temp-range-title">Wind mph</span>
+              <div class="props-filter-temp-range-inputs">
+                <label class="toolbar-label">Min
+                  <input
+                    id="props-filter-wind-min"
+                    class="props-weather-filter-input"
+                    type="text"
+                    inputmode="decimal"
+                    autocomplete="off"
+                    placeholder="Any"
+                    title="Minimum wind mph (blank = no lower bound)"
+                  />
+                </label>
+                <label class="toolbar-label">Max
+                  <input
+                    id="props-filter-wind-max"
+                    class="props-weather-filter-input"
+                    type="text"
+                    inputmode="decimal"
+                    autocomplete="off"
+                    placeholder="Any"
+                    title="Maximum wind mph (blank = no upper bound)"
+                  />
+                </label>
+              </div>
+            </div>
+            <div class="props-filter-temp-range-group">
+              <span class="props-filter-temp-range-title">Humidity %</span>
+              <div class="props-filter-temp-range-inputs">
+                <label class="toolbar-label">Min
+                  <input
+                    id="props-filter-humidity-min"
+                    class="props-weather-filter-input"
+                    type="text"
+                    inputmode="decimal"
+                    autocomplete="off"
+                    placeholder="Any"
+                    title="Minimum humidity % (blank = no lower bound)"
+                  />
+                </label>
+                <label class="toolbar-label">Max
+                  <input
+                    id="props-filter-humidity-max"
+                    class="props-weather-filter-input"
+                    type="text"
+                    inputmode="decimal"
+                    autocomplete="off"
+                    placeholder="Any"
+                    title="Maximum humidity % (blank = no upper bound)"
+                  />
+                </label>
+              </div>
+            </div>
+            <fieldset class="props-filter-check-group" aria-label="Weather conditions">
+              <legend class="props-filter-temp-range-title">Conditions</legend>
+              <div class="props-filter-check-row">
+                <label class="props-filter-row"><input type="checkbox" id="props-filter-cond-clear" checked /> Clear</label>
+                <label class="props-filter-row"><input type="checkbox" id="props-filter-cond-cloudy" checked /> Cloudy</label>
+                <label class="props-filter-row"><input type="checkbox" id="props-filter-cond-rainy" checked /> Rainy</label>
+                <label class="props-filter-row"><input type="checkbox" id="props-filter-cond-windy" checked /> Windy</label>
+              </div>
+            </fieldset>
+            <label class="toolbar-label">Tee wave
+              <select id="props-filter-tee-wave" title="Morning vs afternoon tee times">
+                <option value="">All waves</option>
+                <option value="morning">Morning</option>
+                <option value="afternoon">Afternoon</option>
+              </select>
+            </label>
+            <fieldset class="props-filter-check-group" aria-label="Round number">
+              <legend class="props-filter-temp-range-title">Round</legend>
+              <div class="props-filter-check-row">
+                <label class="props-filter-row"><input type="checkbox" id="props-filter-round-1" checked /> R1</label>
+                <label class="props-filter-row"><input type="checkbox" id="props-filter-round-2" checked /> R2</label>
+                <label class="props-filter-row"><input type="checkbox" id="props-filter-round-3" checked /> R3</label>
+                <label class="props-filter-row"><input type="checkbox" id="props-filter-round-4" checked /> R4</label>
+              </div>
+            </fieldset>
+            <label class="toolbar-label">Sample
+              <select id="props-filter-tail-mode" title="Which rounds to include: most recent, best, or worst">
+                <option value="recent">Most recent</option>
+                <option value="best">Best</option>
+                <option value="worst">Worst</option>
+              </select>
+            </label>
+            <label class="toolbar-label props-filter-row props-filter-average-row">
+              <input type="checkbox" id="props-filter-average" />
+              <span>Average</span>
+            </label>
+            <label class="toolbar-label" id="props-filter-avg-sort-wrap" hidden>
+              Sort
+              <select id="props-filter-avg-sort" title="Order golfers by averaged stat value">
+                <option value="asc">Low → high</option>
+                <option value="desc" selected>High → low</option>
+              </select>
+            </label>
+            <label class="toolbar-label">Year
+              <select id="props-filter-year" title="Limit to one calendar year">
+                <option value="">All years</option>
+              </select>
+            </label>
+            <label class="toolbar-label">Course
+              <select id="props-filter-course">
+                <option value="">All</option>
+              </select>
+            </label>
+            <div class="props-filter-course-window-group">
+              <label class="props-sidebar-label props-filter-row" for="props-filter-course-window">
+                <input type="checkbox" id="props-filter-course-window" />
+                <span>This week&apos;s field</span>
+              </label>
+            </div>
+          </div>
+          <label class="props-sidebar-label props-current-course-option" for="props-filter-current-course">
+            <span class="props-filter-row">
+              <input type="checkbox" id="props-filter-current-course" />
+              <span>Current course only</span>
+            </span>
+          </label>
+        </aside>
+        </div>
+        <div class="props-top-hits-section">
+        <div class="props-top-hits-head-row" aria-live="polite">
+          <button type="button" class="props-top-hits-emoji-toggle" id="props-top-hits-emoji-toggle">
+            <span class="props-top-hits-emoji" id="props-top-hits-emoji">🔥🔥🔥</span>
+          </button>
+          <div class="props-top-hits-meta">
+            <span id="props-top-hits-market" class="props-top-hits-market">Round score</span>
+            <span class="props-top-hits-meta-dot" aria-hidden="true">·</span>
+            <span id="props-top-hits-line-text" class="props-top-hits-line-text">Line 70.5</span>
+          </div>
+        </div>
+        <div class="table-wrap leaderboard-card props-top-hits-table-wrap">
+          <table class="data-table props-top-hits-table" id="table-props-top-hits" aria-label="Top hit rates by player">
+            <thead>
+              <tr>
+                <th class="num">#</th>
+                <th class="sortable props-top-sort-th" data-props-sort="name" scope="col" role="columnheader">Golfer<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span></th>
+                <th class="num sortable props-top-sort-th" data-props-sort="overRate" scope="col" role="columnheader">Over %<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span></th>
+                <th class="num sortable props-top-sort-th" data-props-sort="over" scope="col" role="columnheader">Overs / R<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span></th>
+                <th class="num sortable props-top-sort-th" data-props-sort="underRate" scope="col" role="columnheader">Under %<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span></th>
+                <th class="num sortable props-top-sort-th" data-props-sort="under" scope="col" role="columnheader">Unders / R<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <!-- Course fit -->
+    <section id="panel-course-fit" class="panel course-fit-panel" role="tabpanel" hidden>
+      <div class="course-fit-shell">
+        <div class="ev-panel-head course-fit-head">
+          <h2 class="ev-devig-sr-only">Course fit</h2>
+          <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="course-fit" aria-label="Help: Course fit tab">?</button>
+        </div>
+
+        <div class="course-fit-subtabs" role="tablist" aria-label="Views">
+          <button type="button" class="course-fit-subtab active" role="tab" aria-selected="true" data-course-fit-subtab="adjustments" id="course-fit-subtab-adjustments">Adjustments</button>
+          <button type="button" class="course-fit-subtab" role="tab" aria-selected="false" data-course-fit-subtab="distributions" id="course-fit-subtab-distributions">Past events</button>
+        </div>
+
+        <div id="course-fit-subpanel-adjustments" class="course-fit-subpanel">
+          <div class="course-fit-layout">
+            <aside class="leaderboard-card course-fit-sidebar">
+              <label class="course-fit-sidebar-label">Course
+                <select id="course-fit-venue" aria-label="Course for radar and similarity"></select>
+              </label>
+              <label class="course-fit-sidebar-label">Golfer
+                <div class="golfer-combobox-wrap golfer-suggest-anchor">
+                  <input
+                    type="search"
+                    id="course-fit-player-search"
+                    class="golfer-combobox-input"
+                    placeholder="Search golfer…"
+                    autocomplete="off"
+                    spellcheck="false"
+                    aria-label="Golfer for radar overlay"
+                  />
+                  <div id="course-fit-player-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Golfer suggestions"></div>
+                  <select id="course-fit-player" aria-label="Golfer for radar overlay" hidden></select>
+                </div>
+              </label>
+              <div class="course-fit-sidebar-block">
+                <h3 class="course-fit-sidebar-heading">Course similarity</h3>
+                <ol id="course-fit-similar-list" class="course-fit-similar-list"></ol>
+                <p id="course-fit-similar-empty" class="text-muted course-fit-empty" hidden>No similarity data (load player history).</p>
+              </div>
+            </aside>
+            <div class="leaderboard-card course-fit-radar-card">
+              <div class="course-fit-radar-head">
+                <span class="course-fit-radar-eyebrow">Radar</span>
+                <p class="course-fit-radar-sub" id="course-fit-radar-caption">—</p>
+              </div>
+              <div class="course-fit-radar-canvas-wrap">
+                <canvas id="course-fit-radar-canvas" width="520" height="420" aria-label="Course fit radar chart"></canvas>
+              </div>
+              <div class="course-fit-radar-legend" id="course-fit-radar-legend"></div>
+            </div>
+          </div>
+          <div class="leaderboard-card course-fit-table-card">
+            <h3 class="course-fit-table-title" id="course-fit-table-heading">Course ratings</h3>
+            <label class="course-fit-search-wrap">
+              <span class="course-fit-search-icon" aria-hidden="true">⌕</span>
+              <input type="search" id="course-fit-search" class="course-fit-search" placeholder="Find golfers…" autocomplete="off" />
+            </label>
+            <div class="table-wrap course-fit-table-wrap">
+              <table class="data-table course-fit-table" id="table-course-fit">
+                <thead><!-- headers built in app.js (per-spoke + course rating) --></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="course-fit-subpanel-distributions" class="course-fit-subpanel" hidden>
+          <div class="leaderboard-card course-fit-dist-card" id="course-fit-dist-card">
+            <div class="course-fit-dist-toolbar">
+              <div class="course-fit-dist-events-field">
+                <span class="course-fit-dist-toolbar-label">Analyze Past Events</span>
+                <div id="course-fit-past-events-host" class="course-fit-dist-events-host" role="group" aria-label="Past events at this course"></div>
+              </div>
+              <div class="course-fit-dist-round-field">
+                <span class="course-fit-dist-toolbar-label">Round</span>
+                <div class="course-fit-dist-round-toggle" role="group" aria-label="Round filter">
+                  <button type="button" class="course-fit-dist-round-btn active" data-cf-round="all">All</button>
+                  <button type="button" class="course-fit-dist-round-btn" data-cf-round="1">R1</button>
+                  <button type="button" class="course-fit-dist-round-btn" data-cf-round="2">R2</button>
+                  <button type="button" class="course-fit-dist-round-btn" data-cf-round="3">R3</button>
+                  <button type="button" class="course-fit-dist-round-btn" data-cf-round="4">R4</button>
+                </div>
+              </div>
+              <label class="course-fit-dist-golfer-field golfer-suggest-anchor">
+                <span class="course-fit-dist-toolbar-label">Golfer</span>
+                <input
+                  type="search"
+                  id="course-fit-dist-golfer"
+                  class="golfer-combobox-input course-fit-dist-golfer-input"
+                  placeholder="Select a golfer"
+                  autocomplete="off"
+                  spellcheck="false"
+                  aria-label="Golfer for individual rounds (also marked on tournament average)"
+                  required
+                />
+                <div id="course-fit-dist-golfer-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Golfer suggestions"></div>
+              </label>
+              <label class="course-fit-dist-prop-field">
+                <span class="course-fit-dist-toolbar-label">Round Prop</span>
+                <select id="course-fit-dist-prop" aria-label="Round prop for distributions">
+                  <option value="total" selected>Score</option>
+                  <option value="birdies">Birdies or Better</option>
+                  <option value="pars">Pars</option>
+                  <option value="bogeys">Bogeys or Worse</option>
+                  <option value="fairways">Fairways Hit</option>
+                  <option value="gir">Greens in Regulation</option>
+                </select>
+              </label>
+            </div>
+            <p id="course-fit-dist-empty" class="course-fit-dist-empty text-muted" hidden role="status">No data available for your chosen filters.</p>
+            <div class="course-fit-dist-charts" id="course-fit-dist-charts">
+              <div class="course-fit-dist-chart-card">
+                <h3 class="course-fit-dist-chart-title" id="course-fit-dist-avg-title">Score Distribution — Tournament Average</h3>
+                <div class="course-fit-dist-canvas-wrap">
+                  <canvas id="course-fit-dist-avg-canvas" class="course-fit-dist-canvas" width="560" height="320" aria-label="Round average distribution histogram"></canvas>
+                </div>
+                <dl class="course-fit-dist-stats" id="course-fit-dist-avg-stats"></dl>
+              </div>
+              <div class="course-fit-dist-chart-card">
+                <h3 class="course-fit-dist-chart-title" id="course-fit-dist-ind-title">Score Distribution — Individual Rounds</h3>
+                <div class="course-fit-dist-canvas-wrap">
+                  <canvas id="course-fit-dist-ind-canvas" class="course-fit-dist-canvas" width="560" height="320" aria-label="Individual round distribution histogram"></canvas>
+                </div>
+                <dl class="course-fit-dist-stats" id="course-fit-dist-ind-stats"></dl>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Course breakdown -->
+    <section id="panel-course-breakdown" class="panel" role="tabpanel" hidden>
+      <div class="course-breakdown-shell">
+        <div class="ev-panel-head">
+          <h2 class="ev-devig-sr-only">Course breakdown</h2>
+        </div>
+        <p class="course-breakdown-lede">Course-specific insights and player performance metrics</p>
+
+        <div class="leaderboard-card course-info-card">
+          <div class="course-info-head">
+            <span class="course-info-pin" aria-hidden="true">◈</span>
+            <span class="course-info-head-title">Course Info</span>
+          </div>
+          <div class="course-info-body">
+            <div class="course-info-identity">
+              <p class="course-info-name" id="course-info-name">—</p>
+              <p class="course-info-loc" id="course-info-loc"></p>
+              <p class="course-info-par" id="course-info-par"></p>
+            </div>
+            <div class="course-info-stats" id="course-info-stats"></div>
+          </div>
+        </div>
+
+        <div class="leaderboard-card course-breakdown-insights-card" id="course-breakdown-insights-card" hidden>
+          <div class="course-breakdown-insights-head">
+            <span class="course-breakdown-insights-icon" aria-hidden="true">✦</span>
+            <div>
+              <h3 class="course-breakdown-insights-title">Course Insights</h3>
+              <p class="course-breakdown-insights-sub">Venue analytics, course-table model, field SG, weather history, and event setup notes</p>
+            </div>
+          </div>
+          <div class="course-breakdown-insights-body" id="course-breakdown-insights-body"></div>
+        </div>
+
+        <div class="course-boxplot-grid" id="course-boxplot-grid" aria-label="Course stat distributions vs PGA Tour venues"></div>
+
+        <div id="course-boxplot-tooltip" class="course-boxplot-tooltip" hidden>
+          <p class="course-boxplot-tooltip-title">All PGA Tour Courses</p>
+          <dl class="course-boxplot-tooltip-stats"></dl>
+        </div>
+
+        <h3 class="course-breakdown-section-title course-breakdowns-heading">Course Breakdowns</h3>
+        <div class="course-skill-grid" id="course-skill-grid" aria-label="Course skill breakdowns by category"></div>
+
+        <div class="leaderboard-card course-breakdown-viz-card">
+          <h3 class="course-breakdown-section-title">Strokes Gained Distribution</h3>
+          <div class="course-breakdown-viz-grid">
+            <div class="course-breakdown-chart-col">
+              <canvas id="course-sg-donut" width="360" height="360" aria-label="Strokes gained distribution donut chart"></canvas>
+              <div class="course-breakdown-legend" id="course-sg-legend"></div>
+            </div>
+            <div class="course-breakdown-impact-col">
+              <h4 class="course-breakdown-impact-title">Strokes Gained Impact Analysis</h4>
+              <div class="course-breakdown-impact-course" id="course-sg-impact-course"></div>
+              <div class="course-breakdown-impact-list" id="course-sg-impact-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="leaderboard-card course-breakdown-viz-card">
+          <h3 class="course-breakdown-section-title">Approach Shot Distribution</h3>
+          <div class="course-breakdown-viz-grid">
+            <div class="course-breakdown-chart-col">
+              <canvas id="course-approach-donut" width="360" height="360" aria-label="Approach shot distribution donut chart"></canvas>
+              <div class="course-breakdown-legend" id="course-approach-legend"></div>
+            </div>
+            <div class="course-breakdown-impact-col">
+              <h4 class="course-breakdown-impact-title">Approach Shot Impact Analysis</h4>
+              <div class="course-breakdown-impact-course" id="course-approach-impact-course"></div>
+              <div class="course-breakdown-impact-list" id="course-approach-impact-list"></div>
+              <p class="course-breakdown-empty text-muted" id="course-approach-empty" hidden></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Matchup Analysis Tool -->
+    <section id="panel-matchup-analysis" class="panel" role="tabpanel" hidden>
+      <div class="ev-panel-head">
+        <h2 class="ev-devig-sr-only">Matchup Analysis Tool</h2>
+        <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="matchup-analysis" aria-label="Help: Matchup Analysis tab">?</button>
+      </div>
+      <div class="toolbar outrights-toolbar matchup-analysis-toolbar">
+        <label class="toolbar-label">Market
+          <select id="analysis-market">
+            <option value="round_matchups" selected>Round Matchups</option>
+            <option value="tournament_matchups">Tournament Matchups</option>
+            <option value="3_balls">3 Balls</option>
+          </select>
+        </label>
+        <label class="toolbar-label">Matchup
+          <div class="golfer-combobox-wrap golfer-suggest-anchor">
+            <input
+              type="search"
+              id="analysis-matchup-select-search"
+              class="golfer-combobox-input"
+              placeholder="Search by player name…"
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="Search matchups by player name"
+            />
+            <div id="analysis-matchup-select-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Matchup suggestions"></div>
+            <select id="analysis-matchup-select" aria-label="Choose matchup" hidden></select>
+          </div>
+        </label>
+        <label class="toolbar-label">Book
+          <select id="analysis-book-filter" title="Show matchup cards from one sportsbook only">
+            <option value="all" selected>All books</option>
+          </select>
+        </label>
+        <label class="toolbar-label ou-filter-field">Bankroll
+          <input
+            id="analysis-bankroll"
+            type="number"
+            min="1"
+            step="1"
+            value="1000"
+            title="Bankroll for Kelly stake sizing"
+          />
+        </label>
+        <label class="toolbar-label ou-filter-field">Kelly
+          <select id="analysis-kelly-fraction" title="Fraction of full Kelly to bet">
+            <option value="0.25" selected>¼ Kelly</option>
+            <option value="0.5">½ Kelly</option>
+            <option value="1">Full Kelly</option>
+          </select>
+        </label>
+        <p id="analysis-market-note" class="text-muted matchup-analysis-note" hidden></p>
+      </div>
+      <h3 class="section-heading">Matchup edges by book</h3>
+      <div id="matchup-analysis-pricing" class="matchup-analysis-pricing-wrap"></div>
+      <h3 class="section-heading" id="matchup-analysis-sg-heading">Strokes gained vs field</h3>
+      <div id="matchup-analysis-sg-wrap" class="table-wrap leaderboard-card outrights-table-wrap">
+        <table class="data-table data-table-outrights" id="table-matchup-analysis-sg">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th class="num" id="analysis-sg-player-a">Player A</th>
+              <th class="num">Field %</th>
+              <th class="num" id="analysis-sg-player-b">Player B</th>
+              <th class="num">Field %</th>
+              <th>Advantage</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Live Stats -->
+    <section id="panel-live-stats" class="panel live-stats-panel" role="tabpanel" hidden>
+      <div class="ev-panel-head">
+        <h2 class="ev-devig-sr-only">Live Stats</h2>
+      </div>
+
+      <div class="live-stats-round-bar" role="group" aria-label="Filter stats by round">
+        <span class="live-stats-round-bar-label">Filter stats by round</span>
+        <div class="live-stats-round-pills" id="live-stats-round-pills">
+          <button type="button" class="live-stats-round-pill" data-live-stats-round="tournament">Tournament</button>
+          <button type="button" class="live-stats-round-pill" data-live-stats-round="1">Round 1</button>
+          <button type="button" class="live-stats-round-pill" data-live-stats-round="2">Round 2</button>
+          <button type="button" class="live-stats-round-pill" data-live-stats-round="3">Round 3</button>
+          <button type="button" class="live-stats-round-pill" data-live-stats-round="4">Round 4</button>
+        </div>
+      </div>
+
+      <div class="live-stats-toolbar">
+        <label class="live-stats-search-wrap">
+          <span class="live-stats-search-icon" aria-hidden="true">⌕</span>
+          <input
+            type="search"
+            id="live-stats-search"
+            class="live-stats-search"
+            placeholder="Search"
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="Search golfer"
+          />
+        </label>
+        <p class="live-stats-title" id="live-stats-title">
+          <span class="live-stats-live-dot" aria-hidden="true"></span>
+          Live Course Insights — <span id="live-stats-title-round">Round 3</span>
+        </p>
+        <div class="live-stats-view-toggle" role="group" aria-label="Values or ranks">
+          <button type="button" class="live-stats-view-btn active" data-live-stats-view="values" aria-pressed="true">Values</button>
+          <button type="button" class="live-stats-view-btn" data-live-stats-view="ranks" aria-pressed="false">Ranks</button>
+        </div>
+      </div>
+
+      <div class="table-wrap leaderboard-card live-stats-table-wrap">
+        <table class="data-table live-stats-table" id="table-live-stats">
+          <thead id="live-stats-thead"></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="note live-stats-footnote" id="live-stats-count" aria-live="polite"></p>
+    </section>
+
+    <!-- Odds screen -->
+    <section id="panel-ev" class="panel" role="tabpanel" hidden>
+      <div class="ev-panel-head">
+        <h2 class="ev-devig-sr-only">Odds Screen</h2>
+        <button
+          type="button"
+          class="ev-help-btn"
+          id="btn-ev-help"
+          title="Help: odds screen and fair-price calculation"
+          aria-label="Help: Odds Screen tab"
+        >
+          ?
+        </button>
+      </div>
+      <div class="toolbar outrights-toolbar">
+        <label class="toolbar-label">Golfer
+          <div class="golfer-combobox-wrap golfer-suggest-anchor">
+            <input
+              type="search"
+              id="ev-filter-golfer-search"
+              class="golfer-combobox-input"
+              placeholder="Search golfer…"
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="Filter by golfer"
+            />
+            <div id="ev-filter-golfer-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Golfer suggestions"></div>
+            <select id="ev-filter-golfer" hidden>
+              <option value="">All</option>
+            </select>
+          </div>
+        </label>
+        <label class="toolbar-label">Market
+          <select id="ev-filter-market">
+            <option value="">All</option>
+          </select>
+        </label>
+        <label class="toolbar-label ev-filter-books-toolbar-label">Best books
+          <select id="ev-filter-books-select" class="ev-filter-books-select" aria-label="Filter by best book">
+            <option value="">All books</option>
+          </select>
+        </label>
+        <label class="toolbar-label">Max odds
+          <input id="ev-filter-max-odds" type="number" step="100" value="10000" title="Hide rows at this American price or longer. Default excludes +10000 and above." />
+        </label>
+        <label class="toolbar-label">Bankroll ($)
+          <input id="ev-bankroll" type="number" min="1" step="1" value="1000" title="Quarter Kelly, capped at 1 unit = 1% of bankroll (bankroll ÷ 100)" />
+        </label>
+        <label class="toolbar-label">Boost
+          <select id="ev-boost" title="Profit boost on winnings (e.g. sportsbook promo)">
+            <option value="none">None</option>
+            <option value="10">10%</option>
+            <option value="20">20%</option>
+            <option value="25">25%</option>
+            <option value="30">30%</option>
+            <option value="50">50%</option>
+            <option value="nosweat">No Sweat (~25%)</option>
+            <option value="custom">Custom…</option>
+          </select>
+        </label>
+        <label class="toolbar-label">Boost %
+          <input id="ev-boost-pct" type="number" min="0" max="500" step="1" value="25" disabled title="Used when Boost is Custom" />
+        </label>
+        <button type="button" class="ev-devig-btn-toolbar" id="btn-ev-devig" title="Fair-price source weights and devig method">Fair price</button>
+      </div>
+      <div class="table-wrap leaderboard-card">
+        <table class="data-table data-table-outrights" id="table-ev">
+          <thead>
+            <tr>
+              <th class="num" title="Best-price EV using the leave-one-out fair probability">EV</th>
+              <th class="ev-col-golfer">Golfer</th>
+              <th class="num">Kelly</th>
+              <th>Best price</th>
+              <th class="num" title="Fair American odds from other books after devig plus DataGolf">Fair odds</th>
+              <th class="num" title="Combined fair win probability">Fair %</th>
+              <th class="num" title="DataGolf fair American odds">DataGolf</th>
+              <th class="num" title="Average devigged fair odds from sportsbooks other than the best-price book">Market avg</th>
+              <th class="num" title="Number of independent sources used in fair price">Sources</th>
+              <th>Market</th>
+              <th>Bet</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+
+    <!-- Round Matchups: data from projections.json → matchups (npm run fetch:dg) -->
+    <section id="panel-matchups" class="panel" role="tabpanel" hidden>
+      <div class="ev-panel-head">
+        <h2 class="ev-devig-sr-only">Round Matchups</h2>
+        <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="matchups" aria-label="Help: Round Matchups tab">?</button>
+      </div>
+      <p class="text-muted">Prices are decimal odds from the loaded matchups board. The <strong>Model</strong> column follows the active tournament round on Round projections so it stays aligned with the rest of the sheet.</p>
+      <p class="text-muted" id="matchups-source-note" hidden></p>
+      <div class="toolbar outrights-toolbar">
+        <label class="toolbar-label">Market
+          <select id="matchups-market">
+            <option value="tournament_matchups">Tournament Matchups</option>
+            <option value="round_matchups" selected>Round Matchups</option>
+            <option value="3_balls">3 Balls</option>
+          </select>
+        </label>
+      </div>
+      <div class="table-wrap leaderboard-card outrights-table-wrap">
+        <table class="data-table data-table-outrights" id="table-matchups">
+          <thead><tr><th>Matchup</th><th>Player</th><th class="num">Model</th><th class="num">EV</th><th class="num">Best Book</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Outrights: model vs sportsbooks (needs outrights in projections.json from npm run fetch:dg) -->
+    <section id="panel-outrights" class="panel" role="tabpanel" hidden>
+      <div class="ev-panel-head">
+        <h2 class="ev-devig-sr-only">Outrights</h2>
+        <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="outrights" aria-label="Help: Outrights tab">?</button>
+      </div>
+      <p class="outrights-eyebrow">Outrights: model vs sportsbooks</p>
+      <p class="text-muted outrights-intro">Compare your model prices to current sportsbook odds for each market. Odds are for the loaded tournament field.</p>
+      <p class="text-muted" id="outrights-source-note" hidden></p>
+      <div class="toolbar outrights-toolbar">
+        <label class="toolbar-label">Market
+          <select id="outright-market">
+            <option value="win">Win</option>
+            <option value="top_5">Top 5</option>
+            <option value="top_10">Top 10</option>
+            <option value="top_20">Top 20</option>
+            <option value="make_cut">Make cut</option>
+            <option value="mc">Miss cut</option>
+          </select>
+        </label>
+        <button type="button" class="btn-primary" id="btn-refresh-outrights">Refresh projections</button>
+      </div>
+      <div class="table-wrap leaderboard-card outrights-table-wrap">
+        <table class="data-table data-table-outrights" id="table-outrights">
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th class="num">Model</th>
+              <th class="num">EV</th>
+              <th class="num">Best Book</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="ev-devig-dialog" class="ev-devig-dialog" aria-labelledby="ev-devig-title">
+    <div class="ev-devig-dialog-inner">
+      <header class="ev-devig-head">
+        <h3 class="ev-devig-title" id="ev-devig-title">Fair Price Settings</h3>
+        <button type="button" class="ev-devig-close-x" id="ev-devig-close-x" aria-label="Close">×</button>
+      </header>
+      <p class="ev-devig-lede text-muted">
+        Choose which sportsbooks contribute to the market-average fair price. The sportsbook offering the best actionable price is always excluded from that row's fair estimate; DataGolf remains an independent source. <strong>Apply &amp; rescan</strong> updates the odds screen.
+      </p>
+      <div class="ev-devig-toolbar-row">
+        <input
+          type="search"
+          id="ev-devig-search"
+          class="ev-devig-search"
+          placeholder="Search by book or percentage…"
+          autocomplete="off"
+        />
+        <label class="ev-devig-method-field">
+          <span class="ev-devig-method-label">Method</span>
+          <select id="ev-devig-method" class="ev-devig-select">
+            <option value="none">Standard (multiplicative)</option>
+            <option value="multiplicative">Multiplicative</option>
+            <option value="additive">Additive</option>
+            <option value="power">Power</option>
+            <option value="probit">Probit</option>
+            <option value="shin">Shin</option>
+            <option value="worst">Worst case</option>
+            <option value="average">Average</option>
+          </select>
+        </label>
+      </div>
+      <details class="ev-devig-method-help">
+        <summary>Picking a method</summary>
+        <div class="ev-devig-method-help-body text-muted">
+          <p>Methods affect two-way matchup and make/miss-cut vig removal. Three-balls and full-field placement markets use multiplicative normalization.</p>
+          <p><strong>Tip:</strong> Standard multiplicative devig is the default. Use <strong>Worst case</strong> for the most conservative fair probability.</p>
+        </div>
+      </details>
+
+      <section class="ev-devig-section" aria-labelledby="ev-devig-sec-default">
+        <h4 class="ev-devig-section-title" id="ev-devig-sec-default">Default</h4>
+        <label class="ev-devig-market-row">
+          <input type="radio" name="ev-consensus-mode" value="market" id="ev-cm-market" class="ev-devig-sr-only" checked />
+          <span class="ev-devig-radio-dot" aria-hidden="true"></span>
+          <span>Market Avg</span>
+        </label>
+      </section>
+
+      <section class="ev-devig-section" aria-labelledby="ev-devig-sec-full">
+        <h4 class="ev-devig-section-title" id="ev-devig-sec-full">100% weight</h4>
+        <p class="ev-devig-section-hint text-muted">One book carries full consensus weight.</p>
+        <input type="radio" name="ev-consensus-mode" value="single" id="ev-cm-single" class="ev-devig-sr-only" tabindex="-1" aria-hidden="true" />
+        <input type="hidden" id="ev-devig-single-key" value="" />
+        <div id="ev-devig-tiles" class="ev-devig-tiles" role="group" aria-label="Books at 100% weight"></div>
+      </section>
+
+      <section class="ev-devig-section" aria-labelledby="ev-devig-sec-split">
+        <h4 class="ev-devig-section-title" id="ev-devig-sec-split">Split weights</h4>
+        <label class="ev-devig-split-mode-row">
+          <input type="radio" name="ev-consensus-mode" value="split" id="ev-cm-split" class="ev-devig-sr-only" />
+          <span class="ev-devig-radio-dot" aria-hidden="true"></span>
+          <span>Custom — use checkboxes below</span>
+        </label>
+        <div class="ev-devig-split-quick">
+          <button type="button" class="ev-devig-pill" id="ev-devig-quick-market">Market avg</button>
+          <button type="button" class="ev-devig-pill ev-devig-pill-accent" id="ev-devig-quick-fddk">FD / DK 50% – Equal</button>
+        </div>
+        <div id="ev-devig-split-list" class="ev-devig-split-list"></div>
+      </section>
+
+      <p class="ev-devig-footnote text-muted">Apply saves preferences and rebuilds the Odds Screen.</p>
+      <footer class="ev-devig-actions">
+        <button type="button" class="ev-devig-btn-secondary" id="ev-devig-clear">Clear weights</button>
+        <button type="button" class="ev-devig-btn-apply" id="ev-devig-apply">Apply &amp; rescan</button>
+        <button type="button" class="ev-devig-btn-secondary" id="ev-devig-dismiss">Close</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog id="ev-help-dialog" class="ev-devig-dialog ev-help-dialog" aria-labelledby="ev-help-title">
+    <div class="ev-devig-dialog-inner ev-help-dialog-inner">
+      <header class="ev-devig-head">
+        <h3 class="ev-devig-title" id="ev-help-title">Odds Screen</h3>
+        <button type="button" class="ev-devig-close-x" id="ev-help-close-x" aria-label="Close help">×</button>
+      </header>
+      <p class="ev-help-intro text-muted">
+        Compare the best available sportsbook price with a leave-one-out fair price built from the other books after vig removal and DataGolf. Alpha Caddie's model is not used for EV on this screen.
+      </p>
+
+      <section class="ev-help-section" aria-labelledby="ev-help-toolbar-h">
+        <h4 class="ev-devig-section-title" id="ev-help-toolbar-h">Toolbar</h4>
+        <dl class="ev-help-dl">
+          <dt>Golfer</dt>
+          <dd>Limit the table to one player.</dd>
+          <dt>Market</dt>
+          <dd>Show only one product type (for example round matchups, tournament matchups, win, top 10).</dd>
+          <dt>Best books</dt>
+          <dd>Pick one sportsbook to keep only rows where the best price for that bet is there, or <strong>All books</strong> to show every book.</dd>
+          <dt>Max odds</dt>
+          <dd>Hide longshots at that American price or longer. The default <strong>10000</strong> keeps odds below +10000.</dd>
+          <dt>Bankroll ($)</dt>
+          <dd>Your bankroll for the <strong>quarter Kelly</strong> dollar suggestion (subject to the app’s stake caps).</dd>
+          <dt>Boost / Boost %</dt>
+          <dd>Turn on when a promo boosts profit on winning bets; EV and displayed best odds follow the boost.</dd>
+          <dt>Fair price</dt>
+          <dd>Opens source weights and the devig method used to remove sportsbook margin.</dd>
+        </dl>
+      </section>
+
+      <section class="ev-help-section" aria-labelledby="ev-help-cols-h">
+        <h4 class="ev-devig-section-title" id="ev-help-cols-h">Table columns</h4>
+        <dl class="ev-help-dl">
+          <dt>EV</dt>
+          <dd>Expected value of the best available price using the combined market/DataGolf fair probability.</dd>
+          <dt>Kelly</dt>
+          <dd>Suggested quarter Kelly stake in dollars from the bankroll above, using the boosted best price.</dd>
+          <dt>Best book</dt>
+          <dd>Where that best price lives; American odds (boosted when a boost is on).</dd>
+          <dt>Golfer</dt>
+          <dd>Who the bet is on.</dd>
+          <dt>Fair odds / Fair %</dt>
+          <dd>Combined fair price from devigged prices at books other than the best-price book, plus DataGolf.</dd>
+          <dt>DataGolf</dt>
+          <dd>DataGolf's fair price, shown separately and included as one independent fair source.</dd>
+          <dt>Market avg</dt>
+          <dd>Average fair price after each eligible competing sportsbook is devigged.</dd>
+          <dt>Sources</dt>
+          <dd>Number of independent prices used for the combined fair estimate.</dd>
+          <dt>Market</dt>
+          <dd>Whether the row is a matchup type or an outright market.</dd>
+          <dt>Bet</dt>
+          <dd>The exact matchup wording or outright label.</dd>
+        </dl>
+      </section>
+
+      <section class="ev-help-section" aria-labelledby="ev-help-devig-h">
+        <h4 class="ev-devig-section-title" id="ev-help-devig-h">Fair-price settings</h4>
+        <p class="text-muted ev-help-devig-lede">
+          Open <strong>Fair price</strong> to choose which competing books feed EV and Kelly. For every row, the best-price sportsbook is automatically left out of the fair estimate to prevent circular EV.
+        </p>
+        <p class="text-muted ev-help-devig-lede">
+          <strong>Tip:</strong> Try <strong>Average</strong> or <strong>Multiplicative</strong> first. Use <strong>Worst case</strong> when you want a cautious read on an edge.
+        </p>
+      </section>
+
+      <footer class="ev-help-actions">
+        <button type="button" class="ev-devig-btn-apply" id="ev-help-dismiss">Close</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog id="tab-help-dialog-ou" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-ou">
+    <div class="ev-devig-dialog-inner ev-help-dialog-inner">
+      <header class="ev-devig-head">
+        <h3 class="ev-devig-title" id="tab-help-title-ou">Round projections</h3>
+        <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
+      </header>
+      <section class="ev-help-section" aria-labelledby="tab-help-ou-cols-h">
+        <h4 class="ev-devig-section-title" id="tab-help-ou-cols-h">Columns</h4>
+        <dl class="ev-help-dl">
+          <dt>Golfer / Market / Side</dt>
+          <dd>Who, which stat, and Over or Under on the book line.</dd>
+          <dt>Proj</dt>
+          <dd>Model projection for that stat this round.</dd>
+          <dt>Average</dt>
+          <dd>Player historical average for that market in the selected window (This season, last N rounds, or at this course).</dd>
+          <dt>DK / PP Line &amp; Odds</dt>
+          <dd>DraftKings and PrizePicks posted lines and American prices for the side shown.</dd>
+          <dt>DK Edge / PP Edge</dt>
+          <dd>Model probability minus break-even at each book&apos;s posted odds (Prop Pricing Model: distribution-based P(over/under), not μ vs line). Positive = +EV.</dd>
+          <dt>Best</dt>
+          <dd>Book with the highest expected ROI among sides with positive edge; Kelly stake uses that price.</dd>
+        </dl>
+      </section>
+      <section class="ev-help-section" aria-labelledby="tab-help-ou-pricing-h">
+        <h4 class="ev-devig-section-title" id="tab-help-ou-pricing-h">Model</h4>
+        <dl class="ev-help-dl">
+          <dt>Course-adaptive</dt>
+          <dd>One projection path: recent form, course history, and strokes gained weighted by what this course demands (from course table). No mode or skill picker.</dd>
+          <dt>Prop pricing</dt>
+          <dd>Edges use the Prop Pricing Model: player history SD when enough rounds exist, else league SD multiplier × projection; total score and bogeys use right-skew (log-normal). Edge = model P − break-even at posted odds; Best book = max expected ROI among +edge prices.</dd>
+        </dl>
+      </section>
+      <footer class="ev-help-actions">
+        <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog id="tab-help-dialog-props" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-props">
+    <div class="ev-devig-dialog-inner ev-help-dialog-inner">
+      <header class="ev-devig-head">
+        <h3 class="ev-devig-title" id="tab-help-title-props">Historical Trends</h3>
+        <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
+      </header>
+      <section class="ev-help-section" aria-labelledby="tab-help-props-cols-h">
+        <h4 class="ev-devig-section-title" id="tab-help-props-cols-h">Chart &amp; KPIs</h4>
+        <dl class="ev-help-dl">
+          <dt>Bars</dt>
+          <dd>Actual result vs the line (green = under, red = over on score-like stats).</dd>
+          <dt>All-time / season / graph avg</dt>
+          <dd>Career mean, this season, and mean of rounds shown in the chart.</dd>
+          <dt>Course avg</dt>
+          <dd>Field average at this venue (season and all-time).</dd>
+          <dt>Over / under hit rate</dt>
+          <dd>How often the golfer beat the line in the selected window.</dd>
+        </dl>
+      </section>
+      <section class="ev-help-section" aria-labelledby="tab-help-props-filters-h">
+        <h4 class="ev-devig-section-title" id="tab-help-props-filters-h">Filters</h4>
+        <dl class="ev-help-dl">
+          <dt>This week&apos;s field</dt>
+          <dd>Chart every golfer in this week&apos;s projection field. Defaults to all rounds in the current season year (2026). Use Course, Year, Current course only, and optional From/To dates to narrow further.</dd>
+          <dt>Current course only</dt>
+          <dd>Limit to rounds at this week&apos;s venue (The Renaissance Club, etc.). Works in single-golfer mode and with This week&apos;s field.</dd>
+          <dt>Course dropdown</dt>
+          <dd>Limit to one course by name.</dd>
+          <dt>Weather filters</dt>
+          <dd>Optional temp, wind, and humidity bands.</dd>
+          <dt>Stat</dt>
+          <dd>Round score, counting stats, strokes gained (pillars plus approach-by-distance and putting-by-distance buckets from shot traces), GIR %, fairways %, or raw GIR/fairway counts. SG and % stats use 0.1 line steps; no sportsbook lines are posted for SG. Distance-bucket SG is available when shot data exists for that round (mostly 2022+).</dd>
+          <dt>Rounds / line</dt>
+          <dd>How many recent rounds to chart and which O/U line to test.</dd>
+        </dl>
+      </section>
+      <footer class="ev-help-actions">
+        <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog id="tab-help-dialog-matchup-analysis" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-matchup-analysis">
+    <div class="ev-devig-dialog-inner ev-help-dialog-inner">
+      <header class="ev-devig-head">
+        <h3 class="ev-devig-title" id="tab-help-title-matchup-analysis">Matchup Analysis Tool</h3>
+        <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
+      </header>
+      <p class="ev-help-intro text-muted">What each column header means on this tab.</p>
+      <section class="ev-help-section" aria-labelledby="tab-help-ma-price-cols-h">
+        <h4 class="ev-devig-section-title" id="tab-help-ma-price-cols-h">Prices &amp; edge</h4>
+        <dl class="ev-help-dl">
+          <dt>Golfer name</dt><dd class="text-muted">Column for that side of the matchup.</dd>
+          <dt>Model</dt><dd class="text-muted">Estimated win probability for that golfer.</dd>
+          <dt>Market</dt><dd class="text-muted">Implied win probability from the posted prices.</dd>
+          <dt>Edge</dt><dd class="text-muted">Expected value vs fair at the price shown (positive is favorable).</dd>
+          <dt>Odds</dt><dd class="text-muted">American odds for that golfer at the listed book.</dd>
+          <dt>Best Book</dt><dd class="text-muted">Best actionable decimal price among supported sportsbooks on the Odds Screen.</dd>
+        </dl>
+      </section>
+      <section class="ev-help-section" aria-labelledby="tab-help-ma-sg-cols-h">
+        <h4 class="ev-devig-section-title" id="tab-help-ma-sg-cols-h">Strokes gained vs field</h4>
+        <p class="text-muted ev-help-devig-lede">Shown for head-to-head markets only. The section is hidden for 3-balls.</p>
+        <dl class="ev-help-dl">
+          <dt>Metric</dt><dd class="text-muted">Stat being compared on that row.</dd>
+          <dt>Golfer columns</dt><dd class="text-muted">That golfer’s value for the metric, with a bar for scale.</dd>
+          <dt>Field %</dt><dd class="text-muted">Share of the field with a strictly lower value on that metric (higher is better).</dd>
+          <dt>Advantage</dt><dd class="text-muted">Which golfer leads and by how much on that row.</dd>
+        </dl>
+      </section>
+      <section class="ev-help-section" aria-labelledby="tab-help-ma-metrics-h">
+        <h4 class="ev-devig-section-title" id="tab-help-ma-metrics-h">Metric definitions</h4>
+        <dl class="ev-help-dl">
+          <dt>SG: Total</dt><dd class="text-muted">Overall DataGolf skill rating in strokes gained per round versus the field.</dd>
+          <dt>SG: Tee-to-Green</dt><dd class="text-muted">Combined non-putting skill: off the tee, approach, and around the green.</dd>
+          <dt>SG: Off the Tee</dt><dd class="text-muted">Driving skill after tee shots, including distance, accuracy, and position gained.</dd>
+          <dt>SG: Approach</dt><dd class="text-muted">Iron and approach-shot skill after the tee shot before short game or putting.</dd>
+          <dt>SG: Around Green</dt><dd class="text-muted">Short-game skill near the green, excluding putting.</dd>
+          <dt>SG: Putting</dt><dd class="text-muted">Putting skill measured as strokes gained on the greens.</dd>
+          <dt>Driving distance rating</dt><dd class="text-muted">DataGolf <strong>yards vs an average PGA Tour field</strong> (from skill-ratings); when live measured drives exist, the table can show absolute yards instead.</dd>
+          <dt>Accuracy rating</dt><dd class="text-muted">DataGolf skill-rating driving accuracy value, shown as points versus the field baseline.</dd>
+        </dl>
+      </section>
+      <footer class="ev-help-actions">
+        <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog id="tab-help-dialog-matchups" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-matchups">
+    <div class="ev-devig-dialog-inner ev-help-dialog-inner">
+      <header class="ev-devig-head">
+        <h3 class="ev-devig-title" id="tab-help-title-matchups">Round Matchups</h3>
+        <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
+      </header>
+      <p class="ev-help-intro text-muted">
+        Browse head-to-head and three-ball markets. Each row lists both players, a model win percentage, estimated EV, and the best posted price on the board.
+      </p>
+      <section class="ev-help-section" aria-labelledby="tab-help-matchups-model-h">
+        <h4 class="ev-devig-section-title" id="tab-help-matchups-model-h">Market and round</h4>
+        <p class="text-muted ev-help-devig-lede">Use <strong>Market</strong> to switch tournament, single-round, or three-ball lists. The active round matches Round projections automatically. Adjust <strong>Weather</strong> and <strong>Pricing</strong> on other tabs to update fair win chances here.</p>
+      </section>
+      <section class="ev-help-section" aria-labelledby="tab-help-matchups-pricing-h">
+        <h4 class="ev-devig-section-title" id="tab-help-matchups-pricing-h">Pricing</h4>
+        <p class="text-muted ev-help-devig-lede">The Pricing row mirrors the rest of the app: pick a mode when the read should lean on form, this course, or a skill pillar.</p>
+      </section>
+      <footer class="ev-help-actions">
+        <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog id="tab-help-dialog-outrights" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-outrights">
+    <div class="ev-devig-dialog-inner ev-help-dialog-inner">
+      <header class="ev-devig-head">
+        <h3 class="ev-devig-title" id="tab-help-title-outrights">Outrights</h3>
+        <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
+      </header>
+      <p class="ev-help-intro text-muted">
+        Choose a market (win, places, cut, and so on), then compare the <strong>Model</strong> column to each book. Tap headers to sort. Use <strong>Refresh projections</strong> after updating odds outside the app so the table matches the latest file.
+      </p>
+      <section class="ev-help-section" aria-labelledby="tab-help-outrights-global-h">
+        <h4 class="ev-devig-section-title" id="tab-help-outrights-global-h">Weather and pricing</h4>
+        <p class="text-muted ev-help-devig-lede">Weather and projection controls affect this model-driven matchup analysis. The Odds Screen is market-priced separately from this tool.</p>
+      </section>
+      <footer class="ev-help-actions">
+        <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog id="tab-help-dialog-course-fit" class="ev-devig-dialog ev-help-dialog tab-help-dialog" aria-labelledby="tab-help-title-course-fit">
+    <div class="ev-devig-dialog-inner ev-help-dialog-inner">
+      <header class="ev-devig-head">
+        <h3 class="ev-devig-title" id="tab-help-title-course-fit">Course fit</h3>
+        <button type="button" class="ev-devig-close-x tab-help-close-x" aria-label="Close help">×</button>
+      </header>
+      <p class="ev-help-intro text-muted">
+        This tab compares how players match the <strong>current field</strong> and how much this week’s <strong>venue profile</strong> stresses different parts of the game. Use it when you care whether someone’s strengths line up with what the track tends to reward or punish.
+      </p>
+      <section class="ev-help-section" aria-labelledby="tab-help-cf-subtabs-h">
+        <h4 class="ev-devig-section-title" id="tab-help-cf-subtabs-h">Two views</h4>
+        <p class="text-muted ev-help-devig-lede"><strong>Adjustments</strong> — Radar chart, course similarity, and the <strong>course ratings</strong> table (full field). <strong>Past events</strong> — Historical round-prop distributions at this course from archived tournament rounds.</p>
+      </section>
+      <section class="ev-help-section" aria-labelledby="tab-help-cf-adj-h">
+        <h4 class="ev-devig-section-title" id="tab-help-cf-adj-h">Adjustments</h4>
+        <dl class="ev-help-dl">
+          <dt>Golfer selector</dt>
+          <dd>Pick a golfer to overlay their profile on the radar. With no selection you still see how the venue curve differs from the field.</dd>
+          <dt>Course filter</dt>
+          <dd>Choose which venue’s historical profile drives the green venue curve and the similarity list; it defaults to this week’s course from projections.</dd>
+          <dt>Radar</dt>
+          <dd>Each spoke is a skill area (Driving Accuracy, Off Tee, Approach, Around Green, Putting, Driving Distance). The shapes show <strong>Field Avg</strong> (dashed baseline), the <strong>selected course</strong> profile (green), an optional <strong>comparison course</strong> from the similarity list (blue), and your <strong>selected golfer</strong> (gold). The chart uses normalized profiles (0–1), not strokes gained.</dd>
+          <dt>Course similarity</dt>
+          <dd>A ranked list of other venues whose historical shape is closest to this one. <strong>Click</strong> a row to highlight it and draw that course’s profile on the radar; click again to clear.</dd>
+        </dl>
+      </section>
+      <section class="ev-help-section" aria-labelledby="tab-help-cf-ratings-h">
+        <h4 class="ev-devig-section-title" id="tab-help-cf-ratings-h">Course ratings table</h4>
+        <p class="text-muted ev-help-devig-lede">
+          Lists <strong>every player</strong> in the current tournament field. All numeric cells are <strong>course-fit ratings</strong> (field-relative scores). They are <strong>not strokes gained</strong> and are not the same units as SG columns elsewhere in the app.
+        </p>
+        <dl class="ev-help-dl">
+          <dt>Golfer</dt>
+          <dd>Name only. Use the search box to filter.</dd>
+          <dt>Drv Acc, Off Tee, Approach, Arg, Putt, Distance</dt>
+          <dd>
+            One column per radar spoke. Each value is that player’s <strong>skill vs the field</strong> on that dimension (z-scored across everyone in the table).
+            <strong>0</strong> ≈ average; <strong>positive</strong> = stronger than the field on that spoke; <strong>negative</strong> = weaker. These are not strokes gained. See <strong>Course rating</strong> for overall fit to this venue’s radar profile.
+          </dd>
+          <dt>Course rating</dt>
+          <dd>
+            <strong>Overall</strong> fit to this venue: each spoke’s field z-score is weighted by that spoke’s demand on the green radar profile (Approach uses iron-play demand, not raw ARG splits), then z-scored across the field. Higher = skills that matter most here, relative to everyone else. Round projections still use the separate <code>course_table</code> SG×coefficient adjustment.
+          </dd>
+          <dt>Winner, Top 5, Top 10, Top 20</dt>
+          <dd>Best available sportsbook outright prices for that player (separate from the rating columns).</dd>
+          <dt>Sort</dt>
+          <dd>Click any column header to sort. Green/red coloring only highlights positive vs negative ratings, not EV or SG.</dd>
+        </dl>
+      </section>
+      <section class="ev-help-section" aria-labelledby="tab-help-cf-dist-h">
+        <h4 class="ev-devig-section-title" id="tab-help-cf-dist-h">Past events</h4>
+        <dl class="ev-help-dl">
+          <dt>Analyze Past Events</dt>
+          <dd>Select one or more prior tournaments played at the course in the sidebar (from <code>player-history/by-course</code> shards).</dd>
+          <dt>Round / Round Prop</dt>
+          <dd>Filter to a single round or all rounds, and pick the counting stat (score, birdies, pars, bogeys, fairways, GIR).</dd>
+          <dt>Tournament Average chart</dt>
+          <dd>One value per player per event: the mean of that stat across the selected round(s) at that tournament. With a golfer filter, you get one bar per year they played (e.g. 2024 avg 65.8, 2025 avg 68.5).</dd>
+          <dt>Individual Rounds chart</dt>
+          <dd>Every completed round in the filter. Means can differ from the tournament chart when one year has more rounds (missed cut vs weekend).</dd>
+        </dl>
+      </section>
+      <footer class="ev-help-actions">
+        <button type="button" class="ev-devig-btn-apply tab-help-dismiss">Close</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <script src="app.js?v=370"></script>
+</body>
+</html>

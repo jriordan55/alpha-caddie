@@ -108,6 +108,8 @@
     "fit:hierarchical-mu": "node scripts/fit-hierarchical-round-mu.mjs",
     "apply:hierarchical-mu": "node scripts/apply-hierarchical-mu-to-projections.mjs",
     "bake:both-side-roi": "node scripts/bake-both-side-roi.mjs",
+    "fit:prior-round-mu-boost": "node scripts/fit-prior-round-mu-boost.mjs",
+    "report:prior-round-mu-boost-roi": "node scripts/report-prior-round-mu-boost-roi.mjs",
     "sg-rank-cutoff-roi": "node scripts/sg-rank-cutoff-roi.mjs",
     "patch:birdie-fairway-mu": "node scripts/patch-birdie-fairway-mu.mjs",
     "apply:both-side-bias": "node scripts/apply-both-side-bias-to-projections.mjs",

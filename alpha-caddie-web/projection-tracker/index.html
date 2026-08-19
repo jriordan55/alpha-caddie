@@ -41,13 +41,13 @@
 
       <section class="card">
         <h2>Market report card</h2>
-        <p class="note">OVER / UNDER ROI at recommended gap vs all sportsbooks, with prior-round SG side filter applied to graded bets.</p>
+        <p class="note">OVER / UNDER ROI at recommended Prop Pricing min EV vs all sportsbooks, with prior-round SG side filter applied to graded bets.</p>
         <div class="table-scroll">
           <table id="market-table">
             <thead>
               <tr>
                 <th>Market</th>
-                <th class="num">Gap</th>
+                <th class="num">Min EV</th>
                 <th class="num">Over bets</th>
                 <th class="num">Over ROI</th>
                 <th class="num">Under bets</th>
@@ -59,6 +59,31 @@
             <tbody></tbody>
           </table>
         </div>
+      </section>
+
+      <section class="card" id="boost-roi-card">
+        <div class="card-head">
+          <h2>Prior-round μ boost (OOS)</h2>
+          <p class="note">Event leave-one-out continuous ridge: μ adjusts linearly with centered prior BoB%, GIR%, SG (β·z). Compares baseline vs boosted μ at min EV 0% with SG side filters. Run <code>npm run fit:prior-round-mu-boost</code> then <code>npm run report:prior-round-mu-boost-roi</code>.</p>
+        </div>
+        <div class="table-scroll">
+          <table id="boost-roi-table">
+            <thead>
+              <tr>
+                <th>Market</th>
+                <th class="num">Boost</th>
+                <th class="num">Base ROI</th>
+                <th class="num">Boost ROI</th>
+                <th class="num">Δ ROI</th>
+                <th class="num">Base MAE</th>
+                <th class="num">Boost MAE</th>
+                <th class="num">Bets</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="note" id="boost-roi-overall"></p>
       </section>
 
       <section class="card">
@@ -109,13 +134,14 @@
           <label>Book
             <select id="live-book"><option value="">All books</option></select>
           </label>
-          <label>Min |μ − line|
-            <select id="live-gap">
-              <option value="policy" selected>Policy gap</option>
-              <option value="0.5">0.5</option>
-              <option value="0.75">0.75</option>
-              <option value="1">1.0</option>
-              <option value="1.5">1.5</option>
+          <label>Min edge %
+            <select id="live-min-ev">
+              <option value="policy" selected>Policy min EV</option>
+              <option value="0">0</option>
+              <option value="2.5">2.5</option>
+              <option value="5">5</option>
+              <option value="7.5">7.5</option>
+              <option value="10">10</option>
             </select>
           </label>
         </div>
@@ -129,9 +155,10 @@
                 <th class="num">Side</th>
                 <th class="num">Model μ</th>
                 <th class="num">Line</th>
-                <th class="num">Gap</th>
+                <th class="num">Δμ</th>
                 <th class="num">Odds</th>
-                <th class="num">Edge</th>
+                <th class="num">Edge %</th>
+                <th class="num">Exp ROI</th>
                 <th>SG signal</th>
               </tr>
             </thead>
@@ -143,7 +170,7 @@
       <section class="card">
         <div class="card-head">
           <h2>Graded projection bets</h2>
-          <p class="note">Historical lines under each market’s recommended gap on model μ, filtered by prior-round SG side (APP / OTT / PUTT). Flat $100.</p>
+          <p class="note">Historical lines under each market’s Prop Pricing min EV on model μ, filtered by prior-round SG side (APP / OTT / PUTT / BoB% / GIR%). Flat $100.</p>
         </div>
         <div class="filters">
           <label>Market
