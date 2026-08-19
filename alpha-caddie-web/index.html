@@ -48,7 +48,7 @@
       <button type="button" class="tab" data-tab="course-breakdown" role="tab">Course breakdown</button>
       <button type="button" class="tab" data-tab="matchup-analysis" role="tab">Matchup Analysis Tool</button>
       <button type="button" class="tab" data-tab="ev" role="tab">Odds Screen</button>
-      <button type="button" class="tab" data-tab="live-stats" role="tab">Live Stats</button>
+      <button type="button" class="tab" data-tab="live-stats" role="tab">Stats</button>
     </nav>
 
     <p id="data-status-primary" class="data-status-primary note tools-only" aria-live="polite" hidden></p>
@@ -98,8 +98,8 @@
         </button>
         <button type="button" class="home-card" data-go-tab="live-stats" role="listitem">
           <span class="home-card-icon" aria-hidden="true">LS</span>
-          <span class="home-card-title">Live Stats</span>
-          <span class="home-card-desc">Current tournament round-by-round: score, birdies, GIR, fairways, and strokes gained.</span>
+          <span class="home-card-title">Stats</span>
+          <span class="home-card-desc">Tournament or rolling-round view: score, birdies, GIR, fairways, and strokes gained.</span>
         </button>
       </div>
     </section>
@@ -797,10 +797,22 @@
       </div>
     </section>
 
-    <!-- Live Stats -->
+    <!-- Stats -->
     <section id="panel-live-stats" class="panel live-stats-panel" role="tabpanel" hidden>
       <div class="ev-panel-head">
-        <h2 class="ev-devig-sr-only">Live Stats</h2>
+        <h2 class="ev-devig-sr-only">Stats</h2>
+      </div>
+
+      <div class="live-stats-round-bar" role="group" aria-label="Filter stats by lookback">
+        <span class="live-stats-round-bar-label">Lookback rounds</span>
+        <div class="live-stats-round-pills" id="live-stats-lookback-pills">
+          <button type="button" class="live-stats-round-pill active" data-live-stats-lookback="event" aria-pressed="true">This event</button>
+          <button type="button" class="live-stats-round-pill" data-live-stats-lookback="4" aria-pressed="false">Last 4</button>
+          <button type="button" class="live-stats-round-pill" data-live-stats-lookback="8" aria-pressed="false">Last 8</button>
+          <button type="button" class="live-stats-round-pill" data-live-stats-lookback="12" aria-pressed="false">Last 12</button>
+          <button type="button" class="live-stats-round-pill" data-live-stats-lookback="24" aria-pressed="false">Last 24</button>
+          <button type="button" class="live-stats-round-pill" data-live-stats-lookback="36" aria-pressed="false">Last 36</button>
+        </div>
       </div>
 
       <div class="live-stats-round-bar" role="group" aria-label="Filter stats by round">
@@ -829,7 +841,7 @@
         </label>
         <p class="live-stats-title" id="live-stats-title">
           <span class="live-stats-live-dot" aria-hidden="true"></span>
-          Live Course Insights — <span id="live-stats-title-round">Round 3</span>
+          Course Insights — <span id="live-stats-title-round">Round 3</span>
         </p>
         <div class="live-stats-view-toggle" role="group" aria-label="Values or ranks">
           <button type="button" class="live-stats-view-btn active" data-live-stats-view="values" aria-pressed="true">Values</button>

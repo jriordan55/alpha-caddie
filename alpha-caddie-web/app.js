@@ -26133,8 +26133,9 @@ function setToolsChromeVisible(visible) {
   document.getElementById("content-wrapper")?.classList.toggle("content-wrapper--home", !visible);
 }
 
-/** Live Stats tab: Live Course Insights board (round pills + SG heat). */
+/** Stats tab: Course Insights board (round pills + rolling lookback + SG heat). */
 let liveStatsRoundFilter = "";
+let liveStatsLookbackFilter = "event"; // event | 4 | 8 | 12 | 24 | 36
 let liveStatsViewMode = "values"; // values | ranks
 let liveStatsSortKey = "pos_sort";
 let liveStatsSortDir = 1;
@@ -26161,6 +26162,26 @@ const LIVE_STATS_HEAT_KEYS = [
   "gir_pct",
 ];
 const LIVE_STATS_LOWER_BETTER = new Set(["event_to_par", "round_to_par", "bogeys", "pos_sort"]);
+const LIVE_STATS_LOOKBACK_OPTIONS = Object.freeze([4, 8, 12, 24, 36]);
+const LIVE_STATS_COUNTING_KEYS = Object.freeze([
+  "pars",
+  "birdies",
+  "bogeys",
+  "fairways",
+  "gir",
+  "drv_acc",
+  "gir_pct",
+]);
+
+function liveStatsLookbackRoundCount() {
+  if (liveStatsLookbackFilter === "event" || !liveStatsLookbackFilter) return NaN;
+  const n = Math.round(num(liveStatsLookbackFilter, NaN));
+  return LIVE_STATS_LOOKBACK_OPTIONS.includes(n) ? n : NaN;
+}
+
+function liveStatsLookbackActive() {
+  return Number.isFinite(liveStatsLookbackRoundCount());
+}
 
 async function ensureLiveStatsSourcesLoaded() {
   await ensurePgatourEventRoundsLoaded();
@@ -26634,6 +26655,98 @@ function collectLiveStatsTournamentRows(roundRows) {
   });
 }
 
+function liveStatsRowFromHistoryRound(dg, histRow, names, fwHoles) {
+  const sg = liveStatsBuildSgParts(null, null, histRow);
+  const birdies = birdiesPlusEaglesFromRow(histRow);
+  const bogeys = bogeysPlusDoublesFromRow(histRow);
+  const pars = num(histRow.pars, NaN);
+  const fairways = historyGirOrFairwaysCount(histRow.fairways, fwHoles);
+  const gir = historyGirOrFairwaysCount(histRow.gir, 18);
+  const fwPct = actualForRoundRow("fairways_pct", histRow);
+  const girPctRaw = actualForRoundRow("gir_pct", histRow);
+  const drvAcc = Number.isFinite(fwPct) ? fwPct / 100 : NaN;
+  const girPct = Number.isFinite(girPctRaw) ? girPctRaw / 100 : Number.isFinite(gir) ? gir / 18 : NaN;
+  const player =
+    names.get(dg) || String(histRow.player_name || histRow.playerName || "").trim() || `DG ${dg}`;
+  return {
+    dg_id: dg,
+    player,
+    player_display: liveStatsDisplayName(player),
+    pars,
+    birdies,
+    bogeys,
+    fairways,
+    gir,
+    drv_acc: drvAcc,
+    gir_pct: girPct,
+    ...sg,
+  };
+}
+
+function averageLiveStatsHistoryRows(roundRows) {
+  if (!roundRows?.length) return null;
+  /** @type {Record<string, number>} */
+  const out = {};
+  const keys = [...LIVE_STATS_SG_KEYS, ...LIVE_STATS_COUNTING_KEYS];
+  for (const key of keys) {
+    let s = 0;
+    let n = 0;
+    for (const r of roundRows) {
+      const v = num(r[key], NaN);
+      if (!Number.isFinite(v)) continue;
+      s += v;
+      n++;
+    }
+    out[key] = n ? s / n : NaN;
+  }
+  out._lookback_rounds = roundRows.length;
+  return out;
+}
+
+function collectLiveStatsLookbackRows(nRounds) {
+  const names = liveStatsPlayerNameByDg();
+  const inPlay = liveStatsInPlayByDg();
+  const fwHoles = fairwayHolesModeledFromData();
+  const dgSet = new Set([...names.keys(), ...inPlay.keys()]);
+  /** @type {object[]} */
+  const rows = [];
+  for (const dg of dgSet) {
+    const histRounds = historyRoundsChronoNewestFirst(dg)
+      .filter((r) => historyRoundCountsAsActual(r))
+      .slice(0, nRounds);
+    if (!histRounds.length) continue;
+    const mini = histRounds.map((hr) => liveStatsRowFromHistoryRound(dg, hr, names, fwHoles));
+    const avg = averageLiveStatsHistoryRows(mini);
+    if (!avg) continue;
+    const roundsUsed = avg._lookback_rounds;
+    delete avg._lookback_rounds;
+    const ip = inPlay.get(dg) || null;
+    const pos = String(ip?.current_pos || "").trim() || "—";
+    rows.push({
+      dg_id: dg,
+      player: names.get(dg) || mini[0]?.player || `DG ${dg}`,
+      player_display: liveStatsDisplayName(names.get(dg) || mini[0]?.player || `DG ${dg}`),
+      round: 0,
+      pos,
+      pos_sort: liveStatsPosSort(pos),
+      event_to_par: num(ip?.current_score, NaN),
+      thru: NaN,
+      round_to_par: NaN,
+      score: NaN,
+      lookback_avg: true,
+      lookback_rounds_used: roundsUsed,
+      ...avg,
+    });
+  }
+  return rows;
+}
+
+function liveStatsFmtAvgCount(v) {
+  if (!Number.isFinite(v)) return "—";
+  const x = Math.round(v * 10) / 10;
+  return Number.isInteger(x) ? String(x) : x.toFixed(1);
+}
+
 function liveStatsApplyRanks(rows) {
   const higherBetter = new Set([
     "sg_putt",
@@ -26693,10 +26806,10 @@ function sortLiveStatsRows(rows) {
   });
 }
 
-function liveStatsRenderThead(roundNum) {
+function liveStatsRenderThead(roundNum, lookbackActive = false) {
   const thead = document.getElementById("live-stats-thead");
   if (!thead) return;
-  const rndLabel = Number.isFinite(roundNum) ? `R${roundNum}` : "—";
+  const rndLabel = lookbackActive ? "—" : Number.isFinite(roundNum) ? `R${roundNum}` : "—";
   const th = (key, label, cls = "num") =>
     `<th class="${cls} sortable" data-live-stats-sort="${key}" scope="col">${label}<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span></th>`;
   thead.innerHTML = `<tr>
@@ -26743,7 +26856,8 @@ function liveStatsCell(key, row, rankMode, means) {
     return { html: liveStatsFmtPct(row[key]), cls: `num ${heat}`.trim() };
   }
   if (key === "pars" || key === "birdies" || key === "bogeys" || key === "fairways" || key === "gir") {
-    return { html: liveStatsFmtInt(row[key]), cls: `num ${heat}`.trim() };
+    const fmt = row?.lookback_avg ? liveStatsFmtAvgCount : liveStatsFmtInt;
+    return { html: fmt(row[key]), cls: `num ${heat}`.trim() };
   }
   return { html: "—", cls: "num" };
 }
@@ -26758,6 +26872,12 @@ function wireLiveStatsUiOnce() {
     const btn = /** @type {HTMLElement} */ (ev.target)?.closest?.("[data-live-stats-round]");
     if (!btn || btn.disabled || btn.classList.contains("is-disabled")) return;
     liveStatsRoundFilter = String(btn.getAttribute("data-live-stats-round") || "1");
+    buildLiveStatsTab();
+  });
+  document.getElementById("live-stats-lookback-pills")?.addEventListener("click", (ev) => {
+    const btn = /** @type {HTMLElement} */ (ev.target)?.closest?.("[data-live-stats-lookback]");
+    if (!btn) return;
+    liveStatsLookbackFilter = String(btn.getAttribute("data-live-stats-lookback") || "event");
     buildLiveStatsTab();
   });
   document.querySelector(".live-stats-view-toggle")?.addEventListener("click", (ev) => {
@@ -26795,6 +26915,122 @@ async function buildLiveStatsTab() {
   if (!tbody) return;
   await ensureLiveStatsSourcesLoaded();
 
+  const lookbackN = liveStatsLookbackRoundCount();
+  const lookbackActive = Number.isFinite(lookbackN);
+  const titleRound = document.getElementById("live-stats-title-round");
+  const liveDot = document.querySelector("#live-stats-title .live-stats-live-dot");
+
+  document.querySelectorAll("#live-stats-lookback-pills .live-stats-round-pill").forEach((btn) => {
+    const key = String(btn.getAttribute("data-live-stats-lookback") || "event");
+    const on = key === (liveStatsLookbackFilter || "event");
+    btn.classList.toggle("active", on);
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+
+  if (lookbackActive) {
+    if (!HISTORY._ok || HISTORY._partial) {
+      try {
+        await loadPlayerHistory();
+      } catch {
+        /* optional */
+      }
+    }
+    document.querySelectorAll("#live-stats-round-pills .live-stats-round-pill").forEach((btn) => {
+      btn.disabled = true;
+      btn.classList.add("is-disabled");
+      btn.title = "Switch lookback to This event to filter by round";
+    });
+    document.querySelectorAll(".live-stats-view-btn").forEach((btn) => {
+      const on = btn.getAttribute("data-live-stats-view") === liveStatsViewMode;
+      btn.classList.toggle("active", on);
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    if (titleRound) titleRound.textContent = `Last ${lookbackN} rounds`;
+    if (liveDot) liveDot.hidden = true;
+    liveStatsRenderThead(NaN, true);
+
+    if (!HISTORY._ok) {
+      if (countEl) countEl.textContent = "Player history not loaded yet.";
+      tbody.innerHTML = `<tr><td colspan="18">Player history not loaded yet.</td></tr>`;
+      return;
+    }
+
+    let rows = collectLiveStatsLookbackRows(lookbackN);
+    const q = String(document.getElementById("live-stats-search")?.value || "")
+      .trim()
+      .toLowerCase();
+    if (q) {
+      rows = rows.filter(
+        (r) =>
+          String(r.player).toLowerCase().includes(q) ||
+          String(r.player_display).toLowerCase().includes(q),
+      );
+    }
+
+    const means = liveStatsFieldMeans(rows);
+    rows = liveStatsApplyRanks(rows);
+    rows = sortLiveStatsRows(rows);
+
+    document.querySelectorAll("#table-live-stats thead th.sortable").forEach((th) => {
+      const key = th.getAttribute("data-live-stats-sort");
+      const activeKey = liveStatsSortKey === "pos_sort" ? "pos" : liveStatsSortKey;
+      th.setAttribute(
+        "aria-sort",
+        key === activeKey ? (liveStatsSortDir > 0 ? "ascending" : "descending") : "none",
+      );
+    });
+
+    const rankMode = liveStatsViewMode === "ranks";
+    if (countEl) {
+      countEl.textContent = `${rows.length} player${rows.length === 1 ? "" : "s"} · per-round averages over last ${lookbackN} completed rounds · ${
+        rankMode ? "field ranks" : "raw values"
+      } · green/red vs field average`;
+    }
+
+    if (!rows.length) {
+      tbody.innerHTML = `<tr><td colspan="18">No history for this field in the last ${lookbackN} rounds.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = rows
+      .map((r) => {
+        const keys = [
+          "event_to_par",
+          "thru",
+          "round_to_par",
+          "sg_putt",
+          "sg_arg",
+          "sg_app",
+          "sg_ott",
+          "sg_t2g",
+          "sg_total",
+          "pars",
+          "birdies",
+          "bogeys",
+          "fairways",
+          "gir",
+          "drv_acc",
+          "gir_pct",
+        ];
+        const cells = keys
+          .map((k) => {
+            if (k === "thru" || k === "round_to_par") return `<td class="num">—</td>`;
+            const c = liveStatsCell(k, r, rankMode, means);
+            return `<td class="${c.cls}">${c.html}</td>`;
+          })
+          .join("");
+        return `<tr>
+        <td class="ls-pos">${escapeHtml(r.pos)}</td>
+        <td class="ls-player">${escapeHtml(r.player_display || r.player)}</td>
+        ${cells}
+      </tr>`;
+      })
+      .join("");
+    return;
+  }
+
+  if (liveDot) liveDot.hidden = false;
+
   const modelEv = String(DATA?.meta?.event_name || DATA?.event_name || "").trim();
   const liveEv = liveStatsBundleEventName();
   if (!liveStatsFeedMatchesProjections() || liveStatsIsPreEventSkeleton()) {
@@ -26807,11 +27043,10 @@ async function buildLiveStatsTab() {
     });
     liveStatsRoundFilter = "tournament";
     liveStatsRenderThead(NaN);
-    const titleRound = document.getElementById("live-stats-title-round");
     if (titleRound) titleRound.textContent = "Tournament";
     const why = liveStatsIsPreEventSkeleton()
       ? `Waiting for live round stats for ${modelEv || "this event"}.`
-      : `Live Stats feed is still on ${liveEv || "prior event"} while projections are ${modelEv || "current"} — re-run push:live.`;
+      : `Stats feed is still on ${liveEv || "prior event"} while projections are ${modelEv || "current"} — re-run push:live.`;
     if (countEl) countEl.textContent = why;
     tbody.innerHTML = `<tr><td colspan="18">${escapeHtml(why)}</td></tr>`;
     return;
@@ -26845,7 +27080,6 @@ async function buildLiveStatsTab() {
     liveStatsRoundFilter = liveStatsDefaultRoundFilter();
     return void buildLiveStatsTab();
   }
-  const titleRound = document.getElementById("live-stats-title-round");
   if (titleRound) titleRound.textContent = isTournament ? "Tournament" : `Round ${roundNum}`;
 
   liveStatsRenderThead(roundNum);
