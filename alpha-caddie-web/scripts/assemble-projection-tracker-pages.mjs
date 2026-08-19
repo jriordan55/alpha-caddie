@@ -59,6 +59,20 @@ const SCRIPT_MODULES = [
   "dg-events-align.mjs",
   "live-event-actuals-cap.mjs",
   "course-name-key.mjs",
+  "prop-pricing-model.mjs",
+];
+
+/** Main Alpha Caddie app (Round projections tab) — served at /app/ on GitHub Pages. */
+const CADDIE_APP_FILES = [
+  "index.html",
+  "app.js",
+  "styles.css",
+  "projections.json",
+  "live-in-play.json",
+  "course-table.json",
+  "hole_pars_from_shots.json",
+  "approach_skill_ytd.json",
+  "player_shots_web.json",
 ];
 
 const out = argOut();
@@ -67,6 +81,7 @@ mkdirSync(join(out, "data"), { recursive: true });
 mkdirSync(join(out, "scripts"), { recursive: true });
 mkdirSync(join(out, "projection-tracker"), { recursive: true });
 mkdirSync(join(out, "matchup-tracker"), { recursive: true });
+mkdirSync(join(out, "app"), { recursive: true });
 
 writeFileSync(join(out, ".nojekyll"), "");
 writeFileSync(
@@ -86,6 +101,7 @@ writeFileSync(
 <body>
   <h1>Alpha Caddie trackers</h1>
   <ul>
+    <li><a href="app/">Alpha Caddie app</a> — Round projections, live stats, course fit</li>
     <li><a href="projection-tracker/">Projection tracker</a> — round O/U vs actual</li>
     <li><a href="matchup-tracker/">Matchup tracker</a> — round matchups + 3-balls (DK / FanDuel / BetMGM)</li>
   </ul>
@@ -141,6 +157,18 @@ if (missingScripts.length) {
   process.exit(1);
 }
 
+const appDir = join(out, "app");
+let appCopied = 0;
+for (const name of CADDIE_APP_FILES) {
+  const src = join(WEB, name);
+  if (!existsSync(src)) {
+    console.warn("[assemble-tracker-pages] app file missing (skipped):", name);
+    continue;
+  }
+  copyFileSync(src, join(appDir, name));
+  appCopied++;
+}
+
 writeFileSync(
   join(out, "deploy-meta.json"),
   JSON.stringify(
@@ -149,6 +177,7 @@ writeFileSync(
       source: "alpha-caddie-web",
       data_files_copied: copied,
       script_modules_copied: scriptsCopied,
+      caddie_app_files_copied: appCopied,
     },
     null,
     2,
@@ -156,5 +185,5 @@ writeFileSync(
 );
 
 console.log(
-  `[assemble-tracker-pages] wrote ${out} (tracker + projections + ${copied} data files + ${scriptsCopied} scripts)`,
+  `[assemble-tracker-pages] wrote ${out} (tracker + app + projections + ${copied} data files + ${scriptsCopied} scripts)`,
 );

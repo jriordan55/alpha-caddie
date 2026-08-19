@@ -6267,7 +6267,12 @@ function sigmaForOu(market, row) {
 const PROP_PRICING_MIN_HISTORY_N = 8;
 
 function ouUsesPropPricingModel(opts = {}) {
-  return opts.useFullRoundBookMean === true || opts.usePropPricingModel === true;
+  if (opts.useFullRoundBookMean === true || opts.usePropPricingModel === true) return true;
+  try {
+    return activeAppTabId() === "ou";
+  } catch {
+    return false;
+  }
 }
 
 function propPricingUsesLogNormalSkew(market) {
@@ -7707,7 +7712,14 @@ function ouEdgeForCell(market, p, L, pImpOver, pImpUnder, opts = {}) {
 }
 
 function ouCellEdgeStackHtml(market, p, L, pImpOver, pImpUnder, viewMode, oddsOverAm, oddsUnderAm) {
-  const { pOver, pUnder, edgeO, edgeU } = ouEdgeForCell(market, p, L, pImpOver, pImpUnder);
+  const { pOver, pUnder, edgeO, edgeU } = ouEdgeForCell(
+    market,
+    p,
+    L,
+    pImpOver,
+    pImpUnder,
+    OU_PROJ_TABLE_MEAN_OPTS,
+  );
   const lineStr = String(L);
   const oddsTxtOver = formatAmerican(oddsOverAm);
   const oddsTxtUnder = formatAmerican(oddsUnderAm);
@@ -7746,7 +7758,7 @@ function ouTableSortValue(playerRow, market, lineSel, pImpOverSel, pImpUnderSel,
     const L = parseFloat(sortKey.slice(5));
     const pImpOver = ouBookImpliedForSortColumn(playerRow, market, L, lineSel, pImpOverSel, pImpUnderSel, propIdx, "over");
     const pImpUnder = ouBookImpliedForSortColumn(playerRow, market, L, lineSel, pImpOverSel, pImpUnderSel, propIdx, "under");
-    const { edgeO } = ouEdgeForCell(market, playerRow, L, pImpOver, pImpUnder);
+    const { edgeO } = ouEdgeForCell(market, playerRow, L, pImpOver, pImpUnder, OU_PROJ_TABLE_MEAN_OPTS);
     return Number.isFinite(edgeO) ? edgeO : -Infinity;
   }
   return 0;
@@ -8315,7 +8327,7 @@ function ouProjectionFlatRowsCacheKey(players, cols) {
     `fp${playerDgFingerprint(players)}`,
     `ep${historyMutationEpoch}`,
     `rev${projectionsDataRev}`,
-    `ppv1`,
+    `ppv2`,
     `dk${ouDkRoundPropsCacheSig}`,
     `pp${ouPpRoundPropsCacheSig}`,
     `sl${ouSlRoundPropsCacheSig}`,
@@ -9066,16 +9078,10 @@ function buildOuTable() {
 
     if (Number.isFinite(mu)) {
       const mKey = ouModelMarketKey(col.market) || "Total score";
-      const countLive = ouInPlayCountingAdjust(mKey, player, OU_PROJ_TABLE_MEAN_OPTS);
-      let sig =
-        sigmaForOu(mKey, player) *
-        ouInPlaySigmaScaleForMarket(mKey, player, ouStatRec(mKey), OU_PROJ_TABLE_MEAN_OPTS) *
-        marketBookSigmaScale(mKey);
-      if (!Number.isFinite(sig) || sig < 0.06) {
-        sig = sigmaForOu(mKey, player) * marketBookSigmaScale(mKey);
-      }
+      let sig = propPricingSigmaForOu(col.market, player, mu, OU_PROJ_TABLE_MEAN_OPTS);
+      if (!Number.isFinite(sig) || sig < 0.06) sig = Math.max(0.55, Math.abs(mu) * 0.05);
       if (Number.isFinite(sig)) {
-        tr.title = `${col.label} · μ ${mu.toFixed(2)} · σ ${sig.toFixed(2)} · ${side === "over" ? "Over" : "Under"}`;
+        tr.title = `${col.label} · μ ${mu.toFixed(2)} · σ ${sig.toFixed(2)} · ${side === "over" ? "Over" : "Under"} · Prop pricing`;
       }
     }
     ouTbodyFrag.appendChild(tr);

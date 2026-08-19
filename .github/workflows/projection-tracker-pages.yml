@@ -16,6 +16,9 @@ on:
     paths:
       - "alpha-caddie-web/projection-tracker/**"
       - "alpha-caddie-web/matchup-tracker/**"
+      - "alpha-caddie-web/app.js"
+      - "alpha-caddie-web/index.html"
+      - "alpha-caddie-web/styles.css"
       - "alpha-caddie-web/projections.json"
       - "alpha-caddie-web/data/round_projection_vs_actual.csv"
       - "alpha-caddie-web/data/round_projection_vs_actual_summary.csv"
