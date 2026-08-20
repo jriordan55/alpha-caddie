@@ -50,6 +50,7 @@ const LIVE_BOOKS = [
   { id: "fanduel", label: "FanDuel", short: "fd" },
   { id: "caesars", label: "Caesars", short: "czr" },
   { id: "kalshi", label: "Kalshi", short: "kl" },
+  { id: "hardrock", label: "Hard Rock", short: "hr" },
 ];
 
 let ROI = null;
@@ -158,6 +159,18 @@ function renderHero() {
   } else {
     mr.textContent = fmtPct(combRoi);
     mr.className = clsSigned(combRoi);
+  }
+  const cov = $("book-coverage-note");
+  if (cov) {
+    const graded = ROI?.book_graded_rows || {};
+    const books = ROI?.books?.length ? ROI.books : LIVE_BOOKS.map((b) => ({ id: b.id, label: b.label }));
+    const parts = books.map((b) => {
+      const n = graded[b.id];
+      return `${b.label} ${Number.isFinite(n) ? n.toLocaleString() : "0"}`;
+    });
+    cov.textContent = parts.length
+      ? `Graded lines by book (Birdies + Total score + other markets in backtest): ${parts.join(" · ")}. FanDuel = 0 until fd audit exists; Hard Rock from data/odds.csv.`
+      : "";
   }
 }
 

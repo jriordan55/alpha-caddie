@@ -20,8 +20,8 @@
  *   Always refreshes projection-tracker CSVs / walkforward_oos_roi and clears hybrid prior-week Live Stats.
  *   GOLF_REQUIRE_LIVE_PUBLISH_INVARIANTS=1 fails the publish if live/odds/tracker drift.
  * Skips pre-fetch full CSV merge, weather archive backfill, and full build-player-history.
- * After live feeds: merges recent DataGolf rounds into CSV (post-live), then Trends via
- * sync-field-history + patch-current-event-history (live-in-play + matching pgatouR).
+ * After live feeds: merges recent DataGolf rounds into CSV (post-live), patches field history shards,
+ * and publishes field by-dg shards on push:live (monolith stays on push:all — avoids >100MB GitHub limit).
  *
  * Full rebuild (slow, ~20-30 min) — use push:all or:
  *   GOLF_REFRESH_LIVE_FULL_REBUILD=1

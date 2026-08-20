@@ -178,6 +178,35 @@ function main() {
     warns.push("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL=1 — tracker freshness not enforced");
   }
 
+  // Historical Trends / Stats lookback: field shards must be patched this session (monolith is push:all only).
+  const skipHistShards = String(process.env.GOLF_REFRESH_LIVE_SKIP_HISTORY_SHARDS || "").trim() === "1";
+  if (!skipHistShards) {
+    try {
+      const players = Array.isArray(proj?.players) ? proj.players : [];
+      const sampleIds = players
+        .map((p) => Math.round(Number(p?.dg_id)))
+        .filter((id) => Number.isFinite(id) && id > 0)
+        .slice(0, 8);
+      let fresh = 0;
+      let checked = 0;
+      const now = Date.now();
+      for (const dg of sampleIds) {
+        const shardPath = join(WEB_ROOT, "player-history", "by-dg", `${dg}.json`);
+        if (!existsSync(shardPath)) continue;
+        checked += 1;
+        const tm = mtimeMs(shardPath);
+        if (Number.isFinite(tm) && (now - tm) / 60000 <= maxStaleMin) fresh += 1;
+      }
+      if (checked > 0 && fresh === 0) {
+        errors.push(
+          `stale field history shards (0/${checked} sample fresh; max ${maxStaleMin}m) — push:live must patch Trends history`,
+        );
+      }
+    } catch (e) {
+      warns.push(`field history shard freshness check skipped (${e?.message || e})`);
+    }
+  }
+
   for (const w of warns) console.warn(`[verify:live-publish] WARN: ${w}`);
   if (errors.length) {
     for (const e of errors) console.error(`[verify:live-publish] FAIL: ${e}`);

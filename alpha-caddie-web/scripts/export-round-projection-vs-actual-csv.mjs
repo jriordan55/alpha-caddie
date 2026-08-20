@@ -107,6 +107,10 @@ import {
   loadPreRoundUdPropsFromAudit,
 } from "./pickem-pre-round-props.mjs";
 import {
+  defaultOddsCsvPath,
+  loadPreRoundHrPropsFromOddsCsv,
+} from "./hr-pre-round-props-from-odds-csv.mjs";
+import {
   buildRoundProjectionVsActualSummary,
   writeRoundProjectionVsActualWorkbook,
 } from "./round-projection-vs-actual-summary.mjs";
@@ -1112,6 +1116,16 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
     const preIndex = await loadPreRoundDkPropsFromAudit(ev, auditPath, roundStart);
     if (preIndex.size) auditByEvent.set(ev, preIndex);
     for (const book of EXPORT_ALT_BOOKS) {
+      if (book.short === "hr") {
+        const idx = await loadPreRoundHrPropsFromOddsCsv(
+          ev,
+          defaultOddsCsvPath(),
+          roundStart,
+          { histRows },
+        );
+        if (idx.size) altAuditByBook.get(book.short).set(ev, idx);
+        continue;
+      }
       const loader = altLoaders[book.short];
       const path = altAuditPaths[book.short];
       if (!loader || !path) continue;
@@ -1500,7 +1514,7 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
           rowCells[book.closeAtCol] = isoFromMs(snap.capturedMs);
         }
       }
-      if (any) altSources[book.sourceCol] = "pre_round_audit";
+      if (any) altSources[book.sourceCol] = book.short === "hr" ? "odds_csv" : "pre_round_audit";
     }
 
     const rowOrder = detailRowOrderCells(
@@ -2143,55 +2157,59 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
   const preRoundDkIndex = await loadPreRoundDkPropsFromAudit(eventName, auditPath, roundStartUtcMs);
   const liveDkIndex = buildBookPropsIndex(payload);
 
-  const altBookRuntime = [
-    {
-      book: EXPORT_ALT_BOOKS[0],
-      pre: await loadPreRoundPpPropsFromAudit(eventName, opts.ppAuditPath || defaultPpAuditPath(WEB_ROOT), roundStartUtcMs),
-      live: buildPpPropsIndex(payload),
-    },
-    {
-      book: EXPORT_ALT_BOOKS[1],
-      pre: await loadPreRoundSlPropsFromAudit(eventName, opts.slAuditPath || defaultSlAuditPath(WEB_ROOT), roundStartUtcMs),
-      live: buildSlPropsIndex(payload),
-    },
-    {
-      book: EXPORT_ALT_BOOKS[2],
-      pre: await loadPreRoundUdPropsFromAudit(eventName, opts.udAuditPath || defaultUdAuditPath(WEB_ROOT), roundStartUtcMs),
-      live: buildUdPropsIndex(payload),
-    },
-    {
-      book: EXPORT_ALT_BOOKS[3],
-      pre: await loadPreRoundFdPropsFromAudit(eventName, opts.fdAuditPath || defaultFdAuditPath(WEB_ROOT), roundStartUtcMs),
-      live: buildFdPropsIndex(payload),
-    },
-    {
-      book: EXPORT_ALT_BOOKS[4],
-      pre: await loadPreRoundCzrPropsFromAudit(eventName, opts.czrAuditPath || defaultCzrAuditPath(WEB_ROOT), roundStartUtcMs),
-      live: buildCzrPropsIndex(payload),
-    },
-    {
-      book: EXPORT_ALT_BOOKS[5],
-      pre: await loadPreRoundKlPropsFromAudit(eventName, opts.klAuditPath || defaultKlAuditPath(WEB_ROOT), roundStartUtcMs),
-      live: buildKlPropsIndex(payload),
-    },
-  ];
+  const altBookResolved = await Promise.all(
+    EXPORT_ALT_BOOKS.map(async (book) => {
+      if (book.short === "hr") {
+        return {
+          book,
+          pre: await loadPreRoundHrPropsFromOddsCsv(eventName, defaultOddsCsvPath(), roundStartUtcMs),
+          live: new Map(),
+        };
+      }
+      const loaders = {
+        pp: loadPreRoundPpPropsFromAudit,
+        sl: loadPreRoundSlPropsFromAudit,
+        ud: loadPreRoundUdPropsFromAudit,
+        fd: loadPreRoundFdPropsFromAudit,
+        czr: loadPreRoundCzrPropsFromAudit,
+        kl: loadPreRoundKlPropsFromAudit,
+      };
+      const paths = {
+        pp: opts.ppAuditPath || defaultPpAuditPath(WEB_ROOT),
+        sl: opts.slAuditPath || defaultSlAuditPath(WEB_ROOT),
+        ud: opts.udAuditPath || defaultUdAuditPath(WEB_ROOT),
+        fd: opts.fdAuditPath || defaultFdAuditPath(WEB_ROOT),
+        czr: opts.czrAuditPath || defaultCzrAuditPath(WEB_ROOT),
+        kl: opts.klAuditPath || defaultKlAuditPath(WEB_ROOT),
+      };
+      const lives = {
+        pp: buildPpPropsIndex,
+        sl: buildSlPropsIndex,
+        ud: buildUdPropsIndex,
+        fd: buildFdPropsIndex,
+        czr: buildCzrPropsIndex,
+        kl: buildKlPropsIndex,
+      };
+      const loader = loaders[book.short];
+      const liveFn = lives[book.short];
+      return {
+        book,
+        pre: await loader(eventName, paths[book.short], roundStartUtcMs),
+        live: liveFn ? liveFn(payload) : new Map(),
+      };
+    }),
+  );
 
-  writeLiveEventBookPropsSnapshot(eventName, exported, {
-    pre_round_dk: preRoundDkIndex,
-    live_dk: liveDkIndex,
-    pre_round_pp: altBookRuntime[0].pre,
-    live_pp: altBookRuntime[0].live,
-    pre_round_sl: altBookRuntime[1].pre,
-    live_sl: altBookRuntime[1].live,
-    pre_round_ud: altBookRuntime[2].pre,
-    live_ud: altBookRuntime[2].live,
-    pre_round_fd: altBookRuntime[3].pre,
-    live_fd: altBookRuntime[3].live,
-    pre_round_czr: altBookRuntime[4].pre,
-    live_czr: altBookRuntime[4].live,
-    pre_round_kl: altBookRuntime[5].pre,
-    live_kl: altBookRuntime[5].live,
-  });
+  writeLiveEventBookPropsSnapshot(eventName, exported, Object.fromEntries(
+    [
+      ["pre_round_dk", preRoundDkIndex],
+      ["live_dk", liveDkIndex],
+      ...altBookResolved.flatMap((ab) => [
+        [`pre_round_${ab.book.short}`, ab.pre],
+        [`live_${ab.book.short}`, ab.live],
+      ]),
+    ],
+  ));
   const ctx = createProjectionContext({ ...payload, _webRoot: WEB_ROOT });
   const lines = [HEADER];
   const summarySamples = [];
@@ -2229,7 +2247,7 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
       for (const spec of EXPORT_MARKETS) {
         const dk = dkPropForExport(preRoundDkIndex, liveDkIndex, dg, rnd, spec.propsMarket, actuals);
         let mu = ouProjectedMeanForMode(spec.market, p, payload, pm.mode, pm.skill, ctx);
-        const altHits = altBookRuntime.map((ab) =>
+        const altHits = altBookResolved.map((ab) =>
           altPropForExport(ab.pre, ab.live, dg, rnd, spec.propsMarket, actuals, ab.book.liveOddsSource),
         );
         const auditSnap =
@@ -2264,8 +2282,8 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
             rowCells.book_odds_close_at = isoFromMs(dk.capturedMs);
           }
         }
-        for (let bi = 0; bi < altBookRuntime.length; bi++) {
-          const ab = altBookRuntime[bi];
+        for (let bi = 0; bi < altBookResolved.length; bi++) {
+          const ab = altBookResolved[bi];
           const hit = altHits[bi];
           if (!hit) continue;
           if (!rowAltOddsSources[ab.book.sourceCol]) rowAltOddsSources[ab.book.sourceCol] = hit.oddsSource;

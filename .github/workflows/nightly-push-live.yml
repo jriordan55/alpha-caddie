@@ -105,6 +105,7 @@ jobs:
           GOLF_SKIP_PROPS_CSV: "1"
           # Historical Trends: merge recent DataGolf rounds after live-in-play (lean push:live).
           GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE: "0"
+          GOLF_REFRESH_LIVE_SKIP_HISTORY_SHARDS: "0"
           # Always refresh both trackers (O/U + matchups/3-balls).
           GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL: "0"
           GOLF_REQUIRE_TRACKER_REFRESH: "1"

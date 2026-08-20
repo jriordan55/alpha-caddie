@@ -79,6 +79,7 @@
     "patch:current-event-history": "node scripts/patch-current-event-history-shards.mjs",
     "sync:missing-field-history": "node scripts/sync-missing-field-history-from-csv.mjs",
     "sync:field-history": "node scripts/sync-field-history-from-csv.mjs",
+    "sync:field-shards-into-monolith": "node scripts/sync-field-shards-into-monolith.mjs",
     "rebuild:field-season": "node scripts/rebuild-field-season-bundle.mjs",
     "patch:history-teetimes": "node scripts/patch-history-teetimes-from-csv.mjs",
     "backfill:history-teetimes": "node scripts/backfill-historical-teetimes.mjs",

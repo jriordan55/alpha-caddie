@@ -6331,14 +6331,16 @@ function propPricingSigmaForOu(market, row, mu, opts = {}) {
   const mKey = ouModelMarketKey(market) || "Total score";
   const rec = ouStatRec(mKey);
   const weatherMult = propPricingWeatherSigmaMult(row);
+  const liveSigScale = ouInPlaySigmaScaleForMarket(mKey, row, rec, opts);
+  const finish = (sig) => (Number.isFinite(sig) ? sig * liveSigScale : sig);
 
   if (mKey === "Total score" && rec.sdKey) {
     const s = num(row[rec.sdKey], NaN);
-    if (Number.isFinite(s) && s > 0.05) return s * weatherMult;
+    if (Number.isFinite(s) && s > 0.05) return finish(s * weatherMult);
   }
 
   const histSd = ouPlayerMarketStdDev(market, row);
-  if (Number.isFinite(histSd)) return histSd * weatherMult;
+  if (Number.isFinite(histSd)) return finish(histSd * weatherMult);
 
   if (Number.isFinite(mu) && mu > 0) {
     let sig = mu * propPricingLeagueSdMultiplier(mKey);
@@ -6349,12 +6351,12 @@ function propPricingSigmaForOu(market, row, mu, opts = {}) {
     if (bench && Number.isFinite(bench.sd) && bench.sd > 0) {
       sig = Math.max(sig, bench.sd * 0.88);
     }
-    return sig * weatherMult;
+    return finish(sig * weatherMult);
   }
 
   const legacy = sigmaForOu(market, row);
   const outcomeScale = outcomeSigmaScaleForMarket(mKey);
-  return Number.isFinite(legacy) && outcomeScale > 0 ? legacy / outcomeScale : legacy;
+  return finish(Number.isFinite(legacy) && outcomeScale > 0 ? legacy / outcomeScale : legacy);
 }
 
 function propPricingNormalProbOver(mu, sigma, line) {

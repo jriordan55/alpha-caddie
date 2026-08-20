@@ -29,6 +29,7 @@ export const BOOK_SOURCE_PACKS = [
   { source: "fanduel", short: "fd", label: "FanDuel" },
   { source: "caesars", short: "czr", label: "Caesars" },
   { source: "kalshi", short: "kl", label: "Kalshi" },
+  { source: "hardrock", short: "hr", label: "Hard Rock" },
 ];
 
 const BOOK_SOURCE_SET = new Set(BOOK_SOURCE_PACKS.map((b) => b.source));

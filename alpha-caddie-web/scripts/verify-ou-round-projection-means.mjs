@@ -106,7 +106,7 @@ const requiredPatterns = [
   /ouProjectedMean\("Total score", p, OU_PROJ_TABLE_MEAN_OPTS\)/,
   /ouEdgeForCell\([\s\S]*?OU_PROJ_TABLE_MEAN_OPTS/,
   /ouInPlayCountingAdjust\(mKey, player, OU_PROJ_TABLE_MEAN_OPTS\)/,
-  /ouInPlaySigmaScaleForMarket\(mKey, player[\s\S]*?OU_PROJ_TABLE_MEAN_OPTS/,
+  /(?:ouInPlaySigmaScaleForMarket\(mKey, player[\s\S]*?OU_PROJ_TABLE_MEAN_OPTS|propPricingSigmaForOu\([\s\S]*?OU_PROJ_TABLE_MEAN_OPTS)/,
 ];
 
 for (let i = 0; i < requiredPatterns.length; i++) {

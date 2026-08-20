@@ -9,6 +9,34 @@
 
 $ErrorActionPreference = "Stop"
 
+function Invoke-GitNative {
+  param(
+    [Parameter(Mandatory = $true)][string] $RepoRoot,
+    [Parameter(ValueFromRemainingArguments = $true)][string[]] $GitArgs
+  )
+  $prevEap = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    & git -C $RepoRoot @GitArgs 2>&1 | ForEach-Object {
+      if ($_ -is [System.Management.Automation.ErrorRecord]) {
+        $line = $_.ToString()
+        if ($line -match "^(hint:|warning:)") {
+          Write-Host $line
+        } else {
+          Write-Warning $line
+        }
+      } elseif ("$_".Trim() -ne "") {
+        Write-Host $_
+      }
+    }
+    if ($LASTEXITCODE -ne 0) {
+      throw "git $($GitArgs -join ' ') failed with exit code $LASTEXITCODE"
+    }
+  } finally {
+    $ErrorActionPreference = $prevEap
+  }
+}
+
 function Resolve-GolfRepoRoot([string] $ScriptsDir) {
   $gitOut = & git -C $ScriptsDir rev-parse --show-toplevel 2>$null
   if ($LASTEXITCODE -eq 0 -and $gitOut) {
@@ -138,9 +166,10 @@ if ($LiveWeekOnly) {
   Remove-Item Env:\GOLF_REFRESH_LIVE_FULL_REBUILD -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_HISTORICAL_ROUNDS_FULL_HISTORY -ErrorAction SilentlyContinue
   $env:GOLF_REFRESH_LIVE_SKIP_CSV_MERGE = "1"
-  $env:GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE = "1"
+  # Post-live CSV merge + Trends shard patch keep Stats / Historical Trends current (lean, not full build:history).
+  $env:GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE = "0"
   $env:GOLF_REFRESH_LIVE_SKIP_HISTORY_REBUILD = "1"
-  $env:GOLF_REFRESH_LIVE_SKIP_HISTORY_SHARDS = "1"
+  $env:GOLF_REFRESH_LIVE_SKIP_HISTORY_SHARDS = "0"
   $env:GOLF_SKIP_ROUND_WEATHER_BACKFILL = "1"
   Remove-Item Env:\GOLF_ALLOW_MISSING_WEATHER_COORDS -ErrorAction SilentlyContinue
   $env:GOLF_REFRESH_LIVE_SKIP_FINISH_TOOL = "1"
@@ -201,8 +230,9 @@ if ($LiveWeekOnly) {
   Write-Host 'Live Stats: refreshed via fetch:in-play + pgatouR; hybrid prior-week LTS is cleared on event roll.'
   Write-Host 'μ recipe: hierarchical (no book align, no both-side chrono bias).'
   Write-Host 'Required: tracker O/U CSV + walkforward_oos_roi, Odds Screen matchups aligned to event, live-publish invariants.'
-  Write-Host 'Skipped: history shards, hole-prop scrapes, SG-distance rebuild, CSV merges, finish-tool, book-cal, Odds.csv ROI backtest.'
-  Write-Host 'Full rebuild (Trends/history shards): npm run push:all'
+  Write-Host 'Trends: post-live CSV merge + field shard patch (field by-dg shards published; monolith on push:all only).'
+  Write-Host 'Skipped: full build:history, hole-prop scrapes, SG-distance rebuild, pre-fetch CSV merge, finish-tool, book-cal, Odds.csv ROI backtest.'
+  Write-Host 'Full depth history rebuild: npm run push:all'
 } elseif (-not $NoFullHistory) {
   $env:GOLF_HISTORICAL_ROUNDS_FULL_HISTORY = "1"
   $env:GOLF_SKIP_HISTORY_ON_FETCH_DG = "1"
@@ -277,16 +307,70 @@ function Resolve-RebaseDataConflicts([string] $Root) {
   return $true
 }
 
+function Discard-LiveWeekUnpublishedHistory([string] $RepoRoot) {
+  $dirty = @(git -C $RepoRoot status --porcelain -- "alpha-caddie-web/player-history" 2>$null | Where-Object { $_ -ne "" })
+  if ($dirty.Count -eq 0) { return }
+  Write-Host "LiveWeekOnly: reverting $($dirty.Count) unstaged player-history path(s) (only field shards were published) ..."
+  Invoke-GitNative $RepoRoot checkout -- "alpha-caddie-web/player-history"
+}
+
 function Invoke-GitPullRebasePublish([string] $Root, [string] $Branch) {
-  Write-Host "Pulling latest origin/$Branch with rebase ..."
-  git -C $Root pull --rebase origin $Branch
+  Write-Host "Pulling latest origin/$Branch with rebase (autostash unstaged) ..."
+  Invoke-GitNative $Root pull --rebase --autostash origin $Branch
   while ($LASTEXITCODE -ne 0) {
     if (Resolve-RebaseDataConflicts $Root) {
-      git -C $Root -c core.editor=true rebase --continue
+      Invoke-GitNative $Root -c core.editor=true rebase --continue
       continue
     }
     throw "git pull --rebase failed (resolve conflicts manually, then push)."
   }
+}
+
+function Stage-LiveWeekFieldHistoryShards([string] $RepoRoot, [string] $WebRoot) {
+  $projPath = Join-Path $WebRoot "projections.json"
+  if (-not (Test-Path $projPath)) {
+    Write-Host "LiveWeekOnly: no projections.json — skipping field history shard staging."
+    return
+  }
+  try {
+    $proj = Get-Content -LiteralPath $projPath -Raw -Encoding UTF8 | ConvertFrom-Json
+  } catch {
+    Write-Host "LiveWeekOnly: could not parse projections.json — skipping field history shard staging."
+    return
+  }
+  Write-Host "LiveWeekOnly: staging field player-history shards (not full shard tree) ..."
+  $staged = 0
+  foreach ($p in @($proj.players)) {
+    $dg = [int][Math]::Round([double]$p.dg_id)
+    if ($dg -le 0) { continue }
+    $rel = "alpha-caddie-web/player-history/by-dg/$dg.json"
+    $abs = Join-Path $RepoRoot $rel
+    if (Test-Path $abs) {
+      Invoke-GitNative $RepoRoot add -f -- $rel
+      $staged += 1
+    }
+  }
+  foreach ($rel in @(
+      "alpha-caddie-web/player-history/manifest.json",
+      "alpha-caddie-web/player-history/courses-manifest.json"
+    )) {
+    $abs = Join-Path $RepoRoot $rel
+    if (Test-Path $abs) {
+      Invoke-GitNative $RepoRoot add -f -- $rel
+    }
+  }
+  $fieldDir = Join-Path $WebRoot "player-history"
+  if (Test-Path $fieldDir) {
+    Get-ChildItem -LiteralPath $fieldDir -Filter "field-*.json" -File -ErrorAction SilentlyContinue | ForEach-Object {
+      $rel = "alpha-caddie-web/player-history/$($_.Name)"
+      Invoke-GitNative $RepoRoot add -f -- $rel
+    }
+    $byCourse = Join-Path $fieldDir "by-course"
+    if (Test-Path $byCourse) {
+      Invoke-GitNative $RepoRoot add -f -- "alpha-caddie-web/player-history/by-course"
+    }
+  }
+  Write-Host "LiveWeekOnly: staged $staged field by-dg shard(s) + field-{year} + by-course."
 }
 
 function Invoke-GitPushPublish([string] $Root, [string] $Branch, [switch] $SyncFirst) {
@@ -462,13 +546,15 @@ $artifacts = @(
   "website/public/data/approach_skill_l12.json",
   "website/public/data/parlay_correlations.json",
   "data/historical_rounds_all.csv",
-  "alpha-caddie-web/data/historical_rounds_all.csv",
-  "alpha-caddie-web/player_round_history.json"
+  "alpha-caddie-web/data/historical_rounds_all.csv"
 )
 if (-not $LiveWeekOnly) {
   $artifacts += @(
+    "alpha-caddie-web/player_round_history.json",
     "alpha-caddie-web/player-history"
   )
+} else {
+  # Field by-dg shards staged in Stage-LiveWeekFieldHistoryShards (not the full shard tree).
 }
 # NOTE: embedded-player-round-history.js is intentionally NOT published. Render serves over HTTP and
 # fetches player_round_history.json directly; the embed is only a file:// demo fallback. Committing it
@@ -485,11 +571,12 @@ if ($ArtifactsOnly) {
   Write-Host "ArtifactsOnly enabled: staging only generated data artifacts."
 } else {
   Write-Host "Staging all repo changes (plus forced data artifacts) ..."
-  git -C $repoRoot add -A
   if ($LiveWeekOnly) {
-    # Mass player-history shard churn vs remote Actions → 200+ rebase conflicts every push.
-    Write-Host "LiveWeekOnly: unstaging player-history shards (use push:all to publish Trends)."
-    git -C $repoRoot reset HEAD -- "alpha-caddie-web/player-history" 2>$null
+    # Exclude the full shard tree; Stage-LiveWeekFieldHistoryShards adds field players only.
+    Invoke-GitNative $repoRoot add --all -- . ":(exclude)alpha-caddie-web/player-history"
+    Stage-LiveWeekFieldHistoryShards $repoRoot $webRoot
+  } else {
+    Invoke-GitNative $repoRoot add -A
   }
 }
 
@@ -531,6 +618,9 @@ if ($SkipPush) {
 }
 
 $branch = git -C $repoRoot rev-parse --abbrev-ref HEAD
+if ($LiveWeekOnly) {
+  Discard-LiveWeekUnpublishedHistory $repoRoot
+}
 Invoke-GitPushPublish $repoRoot $branch -SyncFirst:$PullFirst
 
 Write-Host "Done: refreshed artifacts pushed (no Results build)."

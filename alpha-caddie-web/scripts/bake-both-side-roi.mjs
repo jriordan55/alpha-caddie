@@ -71,6 +71,7 @@ const BOOKS = [
   { id: "fanduel", label: "FanDuel", lineKey: "fdLineCol", overKey: "fdOverOddsCol", underKey: "fdUnderOddsCol", wholeLine: false },
   { id: "caesars", label: "Caesars", lineKey: "czrLineCol", overKey: "czrOverOddsCol", underKey: "czrUnderOddsCol", wholeLine: false },
   { id: "kalshi", label: "Kalshi", lineKey: "klLineCol", overKey: "klOverOddsCol", underKey: "klUnderOddsCol", wholeLine: false },
+  { id: "hardrock", label: "Hard Rock", lineKey: "hrLineCol", overKey: "hrOverOddsCol", underKey: "hrUnderOddsCol", wholeLine: false },
 ];
 
 const MARKETS = EXPORT_MARKETS.map((m) => ({

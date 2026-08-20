@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-19T03:56:46.216Z",
+  "generated_at": "2026-08-20T04:13:04.907Z",
   "source": "data/round_projection_vs_actual.csv",
   "pricing_mode": "prop_pricing_model",
   "pricing_skill": "default",
@@ -31,16 +31,21 @@
     {
       "id": "kalshi",
       "label": "Kalshi"
+    },
+    {
+      "id": "hardrock",
+      "label": "Hard Rock"
     }
   ],
   "book_graded_rows": {
-    "draftkings": 6512,
-    "prizepicks": 2352,
-    "sleeper": 662,
-    "underdog": 1037,
+    "draftkings": 6632,
+    "prizepicks": 2088,
+    "sleeper": 450,
+    "underdog": 683,
     "fanduel": 0,
-    "caesars": 367,
-    "kalshi": 231
+    "caesars": 268,
+    "kalshi": 134,
+    "hardrock": 205
   },
   "book_graded_rows_live": {
     "draftkings": 0,
@@ -49,7 +54,8 @@
     "underdog": 0,
     "fanduel": 0,
     "caesars": 0,
-    "kalshi": 0
+    "kalshi": 0,
+    "hardrock": 0
   },
   "stake_dollars": 100,
   "min_bets_per_side": 40,
@@ -85,7 +91,7 @@
   ],
   "markets": {
     "Fairways hit": {
-      "n_graded_rows": 1060,
+      "n_graded_rows": 932,
       "n_graded_rows_live": 0,
       "sweep": [
         {
@@ -93,108 +99,108 @@
           "odds_rule": null,
           "bias": "none",
           "over": {
-            "bets": 39,
-            "wins": 18,
-            "losses": 21,
+            "bets": 18,
+            "wins": 7,
+            "losses": 11,
             "pushes": 0,
-            "pnl": -560.08,
-            "roi": -0.1436,
-            "roi_pct": -14.36
+            "pnl": -446.68,
+            "roi": -0.2482,
+            "roi_pct": -24.82
           },
           "under": {
-            "bets": 44,
-            "wins": 22,
-            "losses": 22,
+            "bets": 103,
+            "wins": 63,
+            "losses": 40,
             "pushes": 0,
-            "pnl": -400.37,
-            "roi": -0.091,
-            "roi_pct": -9.1
+            "pnl": 1145.94,
+            "roi": 0.1113,
+            "roi_pct": 11.13
           },
           "both_sides_positive": false,
-          "min_roi": -0.1436,
-          "combined_pnl": -960.45,
-          "combined_bets": 83
+          "min_roi": -0.2482,
+          "combined_pnl": 699.26,
+          "combined_bets": 121
         },
         {
           "min_ev_pct": 2.5,
           "odds_rule": null,
           "bias": "none",
           "over": {
-            "bets": 30,
-            "wins": 15,
-            "losses": 15,
+            "bets": 15,
+            "wins": 7,
+            "losses": 8,
             "pushes": 0,
-            "pnl": -172.5,
-            "roi": -0.0575,
-            "roi_pct": -5.75
+            "pnl": -146.68,
+            "roi": -0.0978,
+            "roi_pct": -9.78
           },
           "under": {
-            "bets": 30,
-            "wins": 14,
-            "losses": 16,
+            "bets": 65,
+            "wins": 37,
+            "losses": 28,
             "pushes": 0,
-            "pnl": -367.42,
-            "roi": -0.1225,
-            "roi_pct": -12.25
+            "pnl": 490.44,
+            "roi": 0.0755,
+            "roi_pct": 7.55
           },
           "both_sides_positive": false,
-          "min_roi": -0.1225,
-          "combined_pnl": -539.92,
-          "combined_bets": 60
+          "min_roi": -0.0978,
+          "combined_pnl": 343.76,
+          "combined_bets": 80
         },
         {
           "min_ev_pct": 5,
           "odds_rule": null,
           "bias": "none",
           "over": {
-            "bets": 23,
-            "wins": 10,
-            "losses": 13,
+            "bets": 10,
+            "wins": 5,
+            "losses": 5,
             "pushes": 0,
-            "pnl": -359.71,
-            "roi": -0.1564,
-            "roi_pct": -15.64
+            "pnl": -0.56,
+            "roi": -0.0006,
+            "roi_pct": -0.06
           },
           "under": {
-            "bets": 21,
-            "wins": 10,
-            "losses": 11,
+            "bets": 47,
+            "wins": 27,
+            "losses": 20,
             "pushes": 0,
-            "pnl": -175.22,
-            "roi": -0.0834,
-            "roi_pct": -8.34
+            "pnl": 514.83,
+            "roi": 0.1095,
+            "roi_pct": 10.95
           },
           "both_sides_positive": false,
-          "min_roi": -0.1564,
-          "combined_pnl": -534.93,
-          "combined_bets": 44
+          "min_roi": -0.0006,
+          "combined_pnl": 514.27,
+          "combined_bets": 57
         },
         {
           "min_ev_pct": 7.5,
           "odds_rule": null,
           "bias": "none",
           "over": {
-            "bets": 12,
-            "wins": 5,
-            "losses": 7,
+            "bets": 7,
+            "wins": 4,
+            "losses": 3,
             "pushes": 0,
-            "pnl": -189.54,
-            "roi": -0.1579,
-            "roi_pct": -15.79
+            "pnl": 110.15,
+            "roi": 0.1574,
+            "roi_pct": 15.74
           },
           "under": {
-            "bets": 18,
-            "wins": 7,
-            "losses": 11,
+            "bets": 37,
+            "wins": 21,
+            "losses": 16,
             "pushes": 0,
-            "pnl": -437.83,
-            "roi": -0.2432,
-            "roi_pct": -24.32
+            "pnl": 397.11,
+            "roi": 0.1073,
+            "roi_pct": 10.73
           },
           "both_sides_positive": false,
-          "min_roi": -0.2432,
-          "combined_pnl": -627.37,
-          "combined_bets": 30
+          "min_roi": 0.1073,
+          "combined_pnl": 507.26,
+          "combined_bets": 44
         },
         {
           "min_ev_pct": 10,
@@ -205,50 +211,50 @@
             "wins": 1,
             "losses": 3,
             "pushes": 0,
-            "pnl": -178,
-            "roi": -0.445,
-            "roi_pct": -44.5
+            "pnl": -190,
+            "roi": -0.475,
+            "roi_pct": -47.5
           },
           "under": {
-            "bets": 11,
-            "wins": 5,
-            "losses": 6,
+            "bets": 29,
+            "wins": 18,
+            "losses": 11,
             "pushes": 0,
-            "pnl": -133.91,
-            "roi": -0.1217,
-            "roi_pct": -12.17
+            "pnl": 608.44,
+            "roi": 0.2098,
+            "roi_pct": 20.98
           },
           "both_sides_positive": false,
-          "min_roi": -0.445,
-          "combined_pnl": -311.91,
-          "combined_bets": 15
+          "min_roi": -0.475,
+          "combined_pnl": 418.44,
+          "combined_bets": 33
         },
         {
           "min_ev_pct": 12.5,
           "odds_rule": null,
           "bias": "none",
           "over": {
-            "bets": 3,
-            "wins": 1,
+            "bets": 2,
+            "wins": 0,
             "losses": 2,
             "pushes": 0,
-            "pnl": -78,
-            "roi": -0.26,
-            "roi_pct": -26
+            "pnl": -200,
+            "roi": -1,
+            "roi_pct": -100
           },
           "under": {
-            "bets": 5,
-            "wins": 3,
-            "losses": 2,
+            "bets": 17,
+            "wins": 11,
+            "losses": 6,
             "pushes": 0,
-            "pnl": 110.9,
-            "roi": 0.2218,
-            "roi_pct": 22.18
+            "pnl": 453.72,
+            "roi": 0.2669,
+            "roi_pct": 26.69
           },
           "both_sides_positive": false,
-          "min_roi": -0.26,
-          "combined_pnl": 32.9,
-          "combined_bets": 8
+          "min_roi": -1,
+          "combined_pnl": 253.72,
+          "combined_bets": 19
         },
         {
           "min_ev_pct": 15,
@@ -264,53 +270,53 @@
             "roi_pct": null
           },
           "under": {
-            "bets": 5,
-            "wins": 3,
-            "losses": 2,
+            "bets": 10,
+            "wins": 5,
+            "losses": 5,
             "pushes": 0,
-            "pnl": 110.9,
-            "roi": 0.2218,
-            "roi_pct": 22.18
+            "pnl": -90.04,
+            "roi": -0.09,
+            "roi_pct": -9
           },
           "both_sides_positive": false,
           "min_roi": null,
-          "combined_pnl": 110.9,
-          "combined_bets": 5
+          "combined_pnl": -90.04,
+          "combined_bets": 10
         }
       ],
       "best": {
-        "min_ev_pct": 2.5,
+        "min_ev_pct": 7.5,
         "odds_rule": null,
         "bias": "none",
         "bias_by_event": {},
         "over": {
-          "bets": 30,
-          "wins": 15,
-          "losses": 15,
+          "bets": 7,
+          "wins": 4,
+          "losses": 3,
           "pushes": 0,
-          "pnl": -172.5,
-          "roi": -0.0575,
-          "roi_pct": -5.75
+          "pnl": 110.15,
+          "roi": 0.1574,
+          "roi_pct": 15.74
         },
         "under": {
-          "bets": 30,
-          "wins": 14,
+          "bets": 37,
+          "wins": 21,
           "losses": 16,
           "pushes": 0,
-          "pnl": -367.42,
-          "roi": -0.1225,
-          "roi_pct": -12.25
+          "pnl": 397.11,
+          "roi": 0.1073,
+          "roi_pct": 10.73
         },
         "both_sides_positive": false,
-        "min_roi": -0.1225,
-        "combined_pnl": -539.92,
-        "combined_bets": 60
+        "min_roi": 0.1073,
+        "combined_pnl": 507.26,
+        "combined_bets": 44
       },
       "both_sides_achieved": false,
       "note": "no policy with >=40 bets/side"
     },
     "Total score": {
-      "n_graded_rows": 3723,
+      "n_graded_rows": 3305,
       "n_graded_rows_live": 0,
       "sweep": [
         {
@@ -318,162 +324,162 @@
           "odds_rule": null,
           "bias": "none",
           "over": {
-            "bets": 139,
-            "wins": 67,
-            "losses": 72,
-            "pushes": 0,
-            "pnl": -1389.42,
-            "roi": -0.1,
-            "roi_pct": -10
+            "bets": 291,
+            "wins": 156,
+            "losses": 132,
+            "pushes": 3,
+            "pnl": 210.96,
+            "roi": 0.0072,
+            "roi_pct": 0.72
           },
           "under": {
-            "bets": 218,
-            "wins": 117,
-            "losses": 100,
+            "bets": 319,
+            "wins": 171,
+            "losses": 147,
             "pushes": 1,
-            "pnl": 185.3,
-            "roi": 0.0085,
-            "roi_pct": 0.85
+            "pnl": 674.94,
+            "roi": 0.0212,
+            "roi_pct": 2.12
           },
-          "both_sides_positive": false,
-          "min_roi": -0.1,
-          "combined_pnl": -1204.12,
-          "combined_bets": 357
+          "both_sides_positive": true,
+          "min_roi": 0.0072,
+          "combined_pnl": 885.9,
+          "combined_bets": 610
         },
         {
           "min_ev_pct": 2.5,
           "odds_rule": null,
           "bias": "none",
           "over": {
-            "bets": 97,
-            "wins": 50,
-            "losses": 47,
-            "pushes": 0,
-            "pnl": -310.41,
-            "roi": -0.032,
-            "roi_pct": -3.2
+            "bets": 224,
+            "wins": 125,
+            "losses": 97,
+            "pushes": 2,
+            "pnl": 1198.87,
+            "roi": 0.0535,
+            "roi_pct": 5.35
           },
           "under": {
-            "bets": 157,
-            "wins": 85,
-            "losses": 72,
+            "bets": 226,
+            "wins": 123,
+            "losses": 103,
             "pushes": 0,
-            "pnl": 228.54,
-            "roi": 0.0146,
-            "roi_pct": 1.46
+            "pnl": 1034.73,
+            "roi": 0.0458,
+            "roi_pct": 4.58
           },
-          "both_sides_positive": false,
-          "min_roi": -0.032,
-          "combined_pnl": -81.87,
-          "combined_bets": 254
+          "both_sides_positive": true,
+          "min_roi": 0.0458,
+          "combined_pnl": 2233.6,
+          "combined_bets": 450
         },
         {
           "min_ev_pct": 5,
           "odds_rule": null,
           "bias": "none",
           "over": {
-            "bets": 76,
-            "wins": 44,
-            "losses": 32,
-            "pushes": 0,
-            "pnl": 696.38,
-            "roi": 0.0916,
-            "roi_pct": 9.16
+            "bets": 156,
+            "wins": 93,
+            "losses": 62,
+            "pushes": 1,
+            "pnl": 2121.34,
+            "roi": 0.136,
+            "roi_pct": 13.6
           },
           "under": {
-            "bets": 107,
-            "wins": 60,
-            "losses": 47,
+            "bets": 147,
+            "wins": 83,
+            "losses": 64,
             "pushes": 0,
-            "pnl": 571.2,
-            "roi": 0.0534,
-            "roi_pct": 5.34
+            "pnl": 1458.67,
+            "roi": 0.0992,
+            "roi_pct": 9.92
           },
           "both_sides_positive": true,
-          "min_roi": 0.0534,
-          "combined_pnl": 1267.58,
-          "combined_bets": 183
+          "min_roi": 0.0992,
+          "combined_pnl": 3580.01,
+          "combined_bets": 303
         },
         {
           "min_ev_pct": 7.5,
           "odds_rule": null,
           "bias": "none",
           "over": {
-            "bets": 57,
-            "wins": 35,
-            "losses": 22,
+            "bets": 103,
+            "wins": 62,
+            "losses": 41,
             "pushes": 0,
-            "pnl": 995.75,
-            "roi": 0.1747,
-            "roi_pct": 17.47
+            "pnl": 1651.13,
+            "roi": 0.1603,
+            "roi_pct": 16.03
           },
           "under": {
-            "bets": 75,
-            "wins": 46,
-            "losses": 29,
+            "bets": 94,
+            "wins": 56,
+            "losses": 38,
             "pushes": 0,
-            "pnl": 1080.1,
-            "roi": 0.144,
-            "roi_pct": 14.4
+            "pnl": 1424.18,
+            "roi": 0.1515,
+            "roi_pct": 15.15
           },
           "both_sides_positive": true,
-          "min_roi": 0.144,
-          "combined_pnl": 2075.85,
-          "combined_bets": 132
+          "min_roi": 0.1515,
+          "combined_pnl": 3075.31,
+          "combined_bets": 197
         },
         {
           "min_ev_pct": 10,
           "odds_rule": null,
           "bias": "none",
           "over": {
-            "bets": 39,
-            "wins": 22,
-            "losses": 17,
+            "bets": 50,
+            "wins": 30,
+            "losses": 20,
             "pushes": 0,
-            "pnl": 459.32,
-            "roi": 0.1178,
-            "roi_pct": 11.78
+            "pnl": 1029.97,
+            "roi": 0.206,
+            "roi_pct": 20.6
           },
           "under": {
-            "bets": 45,
-            "wins": 32,
-            "losses": 13,
+            "bets": 54,
+            "wins": 36,
+            "losses": 18,
             "pushes": 0,
-            "pnl": 1545.48,
-            "roi": 0.3434,
-            "roi_pct": 34.34
+            "pnl": 1571.48,
+            "roi": 0.291,
+            "roi_pct": 29.1
           },
           "both_sides_positive": true,
-          "min_roi": 0.1178,
-          "combined_pnl": 2004.8,
-          "combined_bets": 84
+          "min_roi": 0.206,
+          "combined_pnl": 2601.45,
+          "combined_bets": 104
         },
         {
           "min_ev_pct": 12.5,
           "odds_rule": null,
           "bias": "none",
           "over": {
-            "bets": 27,
-            "wins": 18,
+            "bets": 30,
+            "wins": 21,
             "losses": 9,
             "pushes": 0,
-            "pnl": 848.99,
-            "roi": 0.3144,
-            "roi_pct": 31.44
+            "pnl": 1186.99,
+            "roi": 0.3957,
+            "roi_pct": 39.57
           },
           "under": {
-            "bets": 23,
-            "wins": 18,
-            "losses": 5,
+            "bets": 28,
+            "wins": 21,
+            "losses": 7,
             "pushes": 0,
-            "pnl": 1102.78,
-            "roi": 0.4795,
-            "roi_pct": 47.95
+            "pnl": 1322.78,
+            "roi": 0.4724,
+            "roi_pct": 47.24
           },
           "both_sides_positive": false,
-          "min_roi": 0.3144,
-          "combined_pnl": 1951.77,
-          "combined_bets": 50
+          "min_roi": 0.3957,
+          "combined_pnl": 2509.77,
+          "combined_bets": 58
         },
         {
           "min_ev_pct": 15,
@@ -489,53 +495,53 @@
             "roi_pct": 38.54
           },
           "under": {
-            "bets": 9,
+            "bets": 10,
             "wins": 8,
-            "losses": 1,
+            "losses": 2,
             "pushes": 0,
-            "pnl": 569.08,
-            "roi": 0.6323,
-            "roi_pct": 63.23
+            "pnl": 469.08,
+            "roi": 0.4691,
+            "roi_pct": 46.91
           },
           "both_sides_positive": false,
           "min_roi": 0.3854,
-          "combined_pnl": 1339.87,
-          "combined_bets": 29
+          "combined_pnl": 1239.87,
+          "combined_bets": 30
         }
       ],
       "best": {
-        "min_ev_pct": 7.5,
+        "min_ev_pct": 10,
         "odds_rule": null,
         "bias": "none",
         "bias_by_event": {},
         "over": {
-          "bets": 57,
-          "wins": 35,
-          "losses": 22,
+          "bets": 50,
+          "wins": 30,
+          "losses": 20,
           "pushes": 0,
-          "pnl": 995.75,
-          "roi": 0.1747,
-          "roi_pct": 17.47
+          "pnl": 1029.97,
+          "roi": 0.206,
+          "roi_pct": 20.6
         },
         "under": {
-          "bets": 75,
-          "wins": 46,
-          "losses": 29,
+          "bets": 54,
+          "wins": 36,
+          "losses": 18,
           "pushes": 0,
-          "pnl": 1080.1,
-          "roi": 0.144,
-          "roi_pct": 14.4
+          "pnl": 1571.48,
+          "roi": 0.291,
+          "roi_pct": 29.1
         },
         "both_sides_positive": true,
-        "min_roi": 0.144,
-        "combined_pnl": 2075.85,
-        "combined_bets": 132
+        "min_roi": 0.206,
+        "combined_pnl": 2601.45,
+        "combined_bets": 104
       },
       "both_sides_achieved": true,
       "note": null
     },
     "Birdies": {
-      "n_graded_rows": 2689,
+      "n_graded_rows": 2700,
       "n_graded_rows_live": 0,
       "sweep": [
         {
@@ -543,363 +549,363 @@
           "odds_rule": null,
           "bias": "none",
           "over": {
-            "bets": 115,
-            "wins": 70,
-            "losses": 45,
+            "bets": 107,
+            "wins": 56,
+            "losses": 51,
             "pushes": 0,
-            "pnl": 1482.46,
-            "roi": 0.1289,
-            "roi_pct": 12.89
+            "pnl": 167.51,
+            "roi": 0.0157,
+            "roi_pct": 1.57
           },
           "under": {
-            "bets": 1068,
-            "wins": 572,
-            "losses": 466,
-            "pushes": 30,
-            "pnl": 1384.59,
-            "roi": 0.013,
-            "roi_pct": 1.3
+            "bets": 114,
+            "wins": 53,
+            "losses": 58,
+            "pushes": 3,
+            "pnl": -1086.13,
+            "roi": -0.0953,
+            "roi_pct": -9.53
           },
-          "both_sides_positive": true,
-          "min_roi": 0.013,
-          "combined_pnl": 2867.05,
-          "combined_bets": 1183
+          "both_sides_positive": false,
+          "min_roi": -0.0953,
+          "combined_pnl": -918.62,
+          "combined_bets": 221
         },
         {
           "min_ev_pct": 2.5,
           "odds_rule": null,
           "bias": "none",
           "over": {
-            "bets": 100,
-            "wins": 60,
-            "losses": 40,
+            "bets": 49,
+            "wins": 27,
+            "losses": 22,
             "pushes": 0,
-            "pnl": 1083.9,
-            "roi": 0.1084,
-            "roi_pct": 10.84
+            "pnl": 394.42,
+            "roi": 0.0805,
+            "roi_pct": 8.05
           },
           "under": {
-            "bets": 797,
-            "wins": 412,
-            "losses": 363,
-            "pushes": 22,
-            "pnl": -1518.21,
-            "roi": -0.019,
-            "roi_pct": -1.9
+            "bets": 95,
+            "wins": 41,
+            "losses": 51,
+            "pushes": 3,
+            "pnl": -1474.07,
+            "roi": -0.1552,
+            "roi_pct": -15.52
           },
           "both_sides_positive": false,
-          "min_roi": -0.019,
-          "combined_pnl": -434.31,
-          "combined_bets": 897
-        },
-        {
-          "min_ev_pct": 5,
-          "odds_rule": null,
-          "bias": "none",
-          "over": {
-            "bets": 83,
-            "wins": 50,
-            "losses": 33,
-            "pushes": 0,
-            "pnl": 912.09,
-            "roi": 0.1099,
-            "roi_pct": 10.99
-          },
-          "under": {
-            "bets": 560,
-            "wins": 288,
-            "losses": 257,
-            "pushes": 15,
-            "pnl": -1069.73,
-            "roi": -0.0191,
-            "roi_pct": -1.91
-          },
-          "both_sides_positive": false,
-          "min_roi": -0.0191,
-          "combined_pnl": -157.64,
-          "combined_bets": 643
-        },
-        {
-          "min_ev_pct": 7.5,
-          "odds_rule": null,
-          "bias": "none",
-          "over": {
-            "bets": 73,
-            "wins": 44,
-            "losses": 29,
-            "pushes": 0,
-            "pnl": 833.12,
-            "roi": 0.1141,
-            "roi_pct": 11.41
-          },
-          "under": {
-            "bets": 381,
-            "wins": 189,
-            "losses": 182,
-            "pushes": 10,
-            "pnl": -1815.16,
-            "roi": -0.0476,
-            "roi_pct": -4.76
-          },
-          "both_sides_positive": false,
-          "min_roi": -0.0476,
-          "combined_pnl": -982.04,
-          "combined_bets": 454
-        },
-        {
-          "min_ev_pct": 10,
-          "odds_rule": null,
-          "bias": "none",
-          "over": {
-            "bets": 70,
-            "wins": 42,
-            "losses": 28,
-            "pushes": 0,
-            "pnl": 822.62,
-            "roi": 0.1175,
-            "roi_pct": 11.75
-          },
-          "under": {
-            "bets": 225,
-            "wins": 106,
-            "losses": 110,
-            "pushes": 9,
-            "pnl": -1527.7,
-            "roi": -0.0679,
-            "roi_pct": -6.79
-          },
-          "both_sides_positive": false,
-          "min_roi": -0.0679,
-          "combined_pnl": -705.08,
-          "combined_bets": 295
-        },
-        {
-          "min_ev_pct": 12.5,
-          "odds_rule": null,
-          "bias": "none",
-          "over": {
-            "bets": 66,
-            "wins": 39,
-            "losses": 27,
-            "pushes": 0,
-            "pnl": 667.34,
-            "roi": 0.1011,
-            "roi_pct": 10.11
-          },
-          "under": {
-            "bets": 126,
-            "wins": 61,
-            "losses": 61,
-            "pushes": 4,
-            "pnl": -689.23,
-            "roi": -0.0547,
-            "roi_pct": -5.47
-          },
-          "both_sides_positive": false,
-          "min_roi": -0.0547,
-          "combined_pnl": -21.89,
-          "combined_bets": 192
-        },
-        {
-          "min_ev_pct": 15,
-          "odds_rule": null,
-          "bias": "none",
-          "over": {
-            "bets": 62,
-            "wins": 35,
-            "losses": 27,
-            "pushes": 0,
-            "pnl": 422.68,
-            "roi": 0.0682,
-            "roi_pct": 6.82
-          },
-          "under": {
-            "bets": 55,
-            "wins": 25,
-            "losses": 28,
-            "pushes": 2,
-            "pnl": -566.4,
-            "roi": -0.103,
-            "roi_pct": -10.3
-          },
-          "both_sides_positive": false,
-          "min_roi": -0.103,
-          "combined_pnl": -143.72,
-          "combined_bets": 117
-        },
-        {
-          "min_ev_pct": 0,
-          "odds_rule": {
-            "under_min_american": 0
-          },
-          "bias": "none",
-          "over": {
-            "bets": 115,
-            "wins": 70,
-            "losses": 45,
-            "pushes": 0,
-            "pnl": 1482.46,
-            "roi": 0.1289,
-            "roi_pct": 12.89
-          },
-          "under": {
-            "bets": 315,
-            "wins": 142,
-            "losses": 173,
-            "pushes": 0,
-            "pnl": -1028,
-            "roi": -0.0326,
-            "roi_pct": -3.26
-          },
-          "both_sides_positive": false,
-          "min_roi": -0.0326,
-          "combined_pnl": 454.46,
-          "combined_bets": 430
-        },
-        {
-          "min_ev_pct": 2.5,
-          "odds_rule": {
-            "under_min_american": 0
-          },
-          "bias": "none",
-          "over": {
-            "bets": 100,
-            "wins": 60,
-            "losses": 40,
-            "pushes": 0,
-            "pnl": 1083.9,
-            "roi": 0.1084,
-            "roi_pct": 10.84
-          },
-          "under": {
-            "bets": 237,
-            "wins": 103,
-            "losses": 134,
-            "pushes": 0,
-            "pnl": -1553,
-            "roi": -0.0655,
-            "roi_pct": -6.55
-          },
-          "both_sides_positive": false,
-          "min_roi": -0.0655,
-          "combined_pnl": -469.1,
-          "combined_bets": 337
-        },
-        {
-          "min_ev_pct": 5,
-          "odds_rule": {
-            "under_min_american": 0
-          },
-          "bias": "none",
-          "over": {
-            "bets": 83,
-            "wins": 50,
-            "losses": 33,
-            "pushes": 0,
-            "pnl": 912.09,
-            "roi": 0.1099,
-            "roi_pct": 10.99
-          },
-          "under": {
-            "bets": 174,
-            "wins": 77,
-            "losses": 97,
-            "pushes": 0,
-            "pnl": -893,
-            "roi": -0.0513,
-            "roi_pct": -5.13
-          },
-          "both_sides_positive": false,
-          "min_roi": -0.0513,
-          "combined_pnl": 19.09,
-          "combined_bets": 257
-        },
-        {
-          "min_ev_pct": 7.5,
-          "odds_rule": {
-            "under_min_american": 0
-          },
-          "bias": "none",
-          "over": {
-            "bets": 73,
-            "wins": 44,
-            "losses": 29,
-            "pushes": 0,
-            "pnl": 833.12,
-            "roi": 0.1141,
-            "roi_pct": 11.41
-          },
-          "under": {
-            "bets": 123,
-            "wins": 57,
-            "losses": 66,
-            "pushes": 0,
-            "pnl": -68,
-            "roi": -0.0055,
-            "roi_pct": -0.55
-          },
-          "both_sides_positive": false,
-          "min_roi": -0.0055,
-          "combined_pnl": 765.12,
-          "combined_bets": 196
-        },
-        {
-          "min_ev_pct": 10,
-          "odds_rule": {
-            "under_min_american": 0
-          },
-          "bias": "none",
-          "over": {
-            "bets": 70,
-            "wins": 42,
-            "losses": 28,
-            "pushes": 0,
-            "pnl": 822.62,
-            "roi": 0.1175,
-            "roi_pct": 11.75
-          },
-          "under": {
-            "bets": 74,
-            "wins": 37,
-            "losses": 37,
-            "pushes": 0,
-            "pnl": 621,
-            "roi": 0.0839,
-            "roi_pct": 8.39
-          },
-          "both_sides_positive": true,
-          "min_roi": 0.0839,
-          "combined_pnl": 1443.62,
+          "min_roi": -0.1552,
+          "combined_pnl": -1079.65,
           "combined_bets": 144
         },
         {
+          "min_ev_pct": 5,
+          "odds_rule": null,
+          "bias": "none",
+          "over": {
+            "bets": 26,
+            "wins": 15,
+            "losses": 11,
+            "pushes": 0,
+            "pnl": 342.89,
+            "roi": 0.1319,
+            "roi_pct": 13.19
+          },
+          "under": {
+            "bets": 69,
+            "wins": 27,
+            "losses": 39,
+            "pushes": 3,
+            "pnl": -1558.72,
+            "roi": -0.2259,
+            "roi_pct": -22.59
+          },
+          "both_sides_positive": false,
+          "min_roi": -0.2259,
+          "combined_pnl": -1215.83,
+          "combined_bets": 95
+        },
+        {
+          "min_ev_pct": 7.5,
+          "odds_rule": null,
+          "bias": "none",
+          "over": {
+            "bets": 12,
+            "wins": 7,
+            "losses": 5,
+            "pushes": 0,
+            "pnl": 134.73,
+            "roi": 0.1123,
+            "roi_pct": 11.23
+          },
+          "under": {
+            "bets": 58,
+            "wins": 21,
+            "losses": 34,
+            "pushes": 3,
+            "pnl": -1666.78,
+            "roi": -0.2874,
+            "roi_pct": -28.74
+          },
+          "both_sides_positive": false,
+          "min_roi": -0.2874,
+          "combined_pnl": -1532.05,
+          "combined_bets": 70
+        },
+        {
+          "min_ev_pct": 10,
+          "odds_rule": null,
+          "bias": "none",
+          "over": {
+            "bets": 8,
+            "wins": 5,
+            "losses": 3,
+            "pushes": 0,
+            "pnl": 224.23,
+            "roi": 0.2803,
+            "roi_pct": 28.03
+          },
+          "under": {
+            "bets": 42,
+            "wins": 18,
+            "losses": 21,
+            "pushes": 3,
+            "pnl": -582.69,
+            "roi": -0.1387,
+            "roi_pct": -13.87
+          },
+          "both_sides_positive": false,
+          "min_roi": -0.1387,
+          "combined_pnl": -358.46,
+          "combined_bets": 50
+        },
+        {
+          "min_ev_pct": 12.5,
+          "odds_rule": null,
+          "bias": "none",
+          "over": {
+            "bets": 3,
+            "wins": 2,
+            "losses": 1,
+            "pushes": 0,
+            "pnl": 122.09,
+            "roi": 0.407,
+            "roi_pct": 40.7
+          },
+          "under": {
+            "bets": 24,
+            "wins": 14,
+            "losses": 9,
+            "pushes": 1,
+            "pnl": 347.85,
+            "roi": 0.1449,
+            "roi_pct": 14.49
+          },
+          "both_sides_positive": false,
+          "min_roi": 0.1449,
+          "combined_pnl": 469.94,
+          "combined_bets": 27
+        },
+        {
+          "min_ev_pct": 15,
+          "odds_rule": null,
+          "bias": "none",
+          "over": {
+            "bets": 3,
+            "wins": 2,
+            "losses": 1,
+            "pushes": 0,
+            "pnl": 122.09,
+            "roi": 0.407,
+            "roi_pct": 40.7
+          },
+          "under": {
+            "bets": 13,
+            "wins": 8,
+            "losses": 5,
+            "pushes": 0,
+            "pnl": 159.72,
+            "roi": 0.1229,
+            "roi_pct": 12.29
+          },
+          "both_sides_positive": false,
+          "min_roi": 0.1229,
+          "combined_pnl": 281.81,
+          "combined_bets": 16
+        },
+        {
+          "min_ev_pct": 0,
+          "odds_rule": {
+            "under_min_american": 0
+          },
+          "bias": "none",
+          "over": {
+            "bets": 107,
+            "wins": 56,
+            "losses": 51,
+            "pushes": 0,
+            "pnl": 167.51,
+            "roi": 0.0157,
+            "roi_pct": 1.57
+          },
+          "under": {
+            "bets": 36,
+            "wins": 16,
+            "losses": 20,
+            "pushes": 0,
+            "pnl": -110,
+            "roi": -0.0306,
+            "roi_pct": -3.06
+          },
+          "both_sides_positive": false,
+          "min_roi": -0.0306,
+          "combined_pnl": 57.51,
+          "combined_bets": 143
+        },
+        {
+          "min_ev_pct": 2.5,
+          "odds_rule": {
+            "under_min_american": 0
+          },
+          "bias": "none",
+          "over": {
+            "bets": 49,
+            "wins": 27,
+            "losses": 22,
+            "pushes": 0,
+            "pnl": 394.42,
+            "roi": 0.0805,
+            "roi_pct": 8.05
+          },
+          "under": {
+            "bets": 31,
+            "wins": 12,
+            "losses": 19,
+            "pushes": 0,
+            "pnl": -435,
+            "roi": -0.1403,
+            "roi_pct": -14.03
+          },
+          "both_sides_positive": false,
+          "min_roi": -0.1403,
+          "combined_pnl": -40.58,
+          "combined_bets": 80
+        },
+        {
+          "min_ev_pct": 5,
+          "odds_rule": {
+            "under_min_american": 0
+          },
+          "bias": "none",
+          "over": {
+            "bets": 26,
+            "wins": 15,
+            "losses": 11,
+            "pushes": 0,
+            "pnl": 342.89,
+            "roi": 0.1319,
+            "roi_pct": 13.19
+          },
+          "under": {
+            "bets": 24,
+            "wins": 8,
+            "losses": 16,
+            "pushes": 0,
+            "pnl": -645,
+            "roi": -0.2687,
+            "roi_pct": -26.87
+          },
+          "both_sides_positive": false,
+          "min_roi": -0.2687,
+          "combined_pnl": -302.11,
+          "combined_bets": 50
+        },
+        {
+          "min_ev_pct": 7.5,
+          "odds_rule": {
+            "under_min_american": 0
+          },
+          "bias": "none",
+          "over": {
+            "bets": 12,
+            "wins": 7,
+            "losses": 5,
+            "pushes": 0,
+            "pnl": 134.73,
+            "roi": 0.1123,
+            "roi_pct": 11.23
+          },
+          "under": {
+            "bets": 16,
+            "wins": 4,
+            "losses": 12,
+            "pushes": 0,
+            "pnl": -706,
+            "roi": -0.4412,
+            "roi_pct": -44.12
+          },
+          "both_sides_positive": false,
+          "min_roi": -0.4412,
+          "combined_pnl": -571.27,
+          "combined_bets": 28
+        },
+        {
+          "min_ev_pct": 10,
+          "odds_rule": {
+            "under_min_american": 0
+          },
+          "bias": "none",
+          "over": {
+            "bets": 8,
+            "wins": 5,
+            "losses": 3,
+            "pushes": 0,
+            "pnl": 224.23,
+            "roi": 0.2803,
+            "roi_pct": 28.03
+          },
+          "under": {
+            "bets": 10,
+            "wins": 4,
+            "losses": 6,
+            "pushes": 0,
+            "pnl": -106,
+            "roi": -0.106,
+            "roi_pct": -10.6
+          },
+          "both_sides_positive": false,
+          "min_roi": -0.106,
+          "combined_pnl": 118.23,
+          "combined_bets": 18
+        },
+        {
           "min_ev_pct": 12.5,
           "odds_rule": {
             "under_min_american": 0
           },
           "bias": "none",
           "over": {
-            "bets": 66,
-            "wins": 39,
-            "losses": 27,
+            "bets": 3,
+            "wins": 2,
+            "losses": 1,
             "pushes": 0,
-            "pnl": 667.34,
-            "roi": 0.1011,
-            "roi_pct": 10.11
+            "pnl": 122.09,
+            "roi": 0.407,
+            "roi_pct": 40.7
           },
           "under": {
-            "bets": 42,
-            "wins": 21,
-            "losses": 21,
+            "bets": 7,
+            "wins": 4,
+            "losses": 3,
             "pushes": 0,
-            "pnl": 344,
-            "roi": 0.0819,
-            "roi_pct": 8.19
+            "pnl": 194,
+            "roi": 0.2771,
+            "roi_pct": 27.71
           },
-          "both_sides_positive": true,
-          "min_roi": 0.0819,
-          "combined_pnl": 1011.34,
-          "combined_bets": 108
+          "both_sides_positive": false,
+          "min_roi": 0.2771,
+          "combined_pnl": 316.09,
+          "combined_bets": 10
         },
         {
           "min_ev_pct": 15,
@@ -908,27 +914,27 @@
           },
           "bias": "none",
           "over": {
-            "bets": 62,
-            "wins": 35,
-            "losses": 27,
+            "bets": 3,
+            "wins": 2,
+            "losses": 1,
             "pushes": 0,
-            "pnl": 422.68,
-            "roi": 0.0682,
-            "roi_pct": 6.82
+            "pnl": 122.09,
+            "roi": 0.407,
+            "roi_pct": 40.7
           },
           "under": {
-            "bets": 15,
-            "wins": 9,
-            "losses": 6,
+            "bets": 1,
+            "wins": 1,
+            "losses": 0,
             "pushes": 0,
-            "pnl": 383,
-            "roi": 0.2553,
-            "roi_pct": 25.53
+            "pnl": 102,
+            "roi": 1.02,
+            "roi_pct": 102
           },
           "both_sides_positive": false,
-          "min_roi": 0.0682,
-          "combined_pnl": 805.68,
-          "combined_bets": 77
+          "min_roi": 0.407,
+          "combined_pnl": 224.09,
+          "combined_bets": 4
         },
         {
           "min_ev_pct": 0,
@@ -937,27 +943,27 @@
           },
           "bias": "none",
           "over": {
-            "bets": 115,
-            "wins": 70,
-            "losses": 45,
+            "bets": 107,
+            "wins": 56,
+            "losses": 51,
             "pushes": 0,
-            "pnl": 1482.46,
-            "roi": 0.1289,
-            "roi_pct": 12.89
+            "pnl": 167.51,
+            "roi": 0.0157,
+            "roi_pct": 1.57
           },
           "under": {
-            "bets": 410,
-            "wins": 193,
-            "losses": 217,
+            "bets": 51,
+            "wins": 24,
+            "losses": 27,
             "pushes": 0,
-            "pnl": -620.83,
-            "roi": -0.0151,
-            "roi_pct": -1.51
+            "pnl": -70.62,
+            "roi": -0.0138,
+            "roi_pct": -1.38
           },
           "both_sides_positive": false,
-          "min_roi": -0.0151,
-          "combined_pnl": 861.63,
-          "combined_bets": 525
+          "min_roi": -0.0138,
+          "combined_pnl": 96.89,
+          "combined_bets": 158
         },
         {
           "min_ev_pct": 2.5,
@@ -966,27 +972,27 @@
           },
           "bias": "none",
           "over": {
-            "bets": 100,
-            "wins": 60,
-            "losses": 40,
+            "bets": 49,
+            "wins": 27,
+            "losses": 22,
             "pushes": 0,
-            "pnl": 1083.9,
-            "roi": 0.1084,
-            "roi_pct": 10.84
+            "pnl": 394.42,
+            "roi": 0.0805,
+            "roi_pct": 8.05
           },
           "under": {
-            "bets": 314,
-            "wins": 145,
-            "losses": 169,
+            "bets": 41,
+            "wins": 18,
+            "losses": 23,
             "pushes": 0,
-            "pnl": -1087.31,
-            "roi": -0.0346,
-            "roi_pct": -3.46
+            "pnl": -277.44,
+            "roi": -0.0677,
+            "roi_pct": -6.77
           },
           "both_sides_positive": false,
-          "min_roi": -0.0346,
-          "combined_pnl": -3.41,
-          "combined_bets": 414
+          "min_roi": -0.0677,
+          "combined_pnl": 116.98,
+          "combined_bets": 90
         },
         {
           "min_ev_pct": 5,
@@ -995,27 +1001,27 @@
           },
           "bias": "none",
           "over": {
-            "bets": 83,
-            "wins": 50,
-            "losses": 33,
+            "bets": 26,
+            "wins": 15,
+            "losses": 11,
             "pushes": 0,
-            "pnl": 912.09,
-            "roi": 0.1099,
-            "roi_pct": 10.99
+            "pnl": 342.89,
+            "roi": 0.1319,
+            "roi_pct": 13.19
           },
           "under": {
-            "bets": 234,
-            "wins": 110,
-            "losses": 124,
+            "bets": 30,
+            "wins": 12,
+            "losses": 18,
             "pushes": 0,
-            "pnl": -491.24,
-            "roi": -0.021,
-            "roi_pct": -2.1
+            "pnl": -477.93,
+            "roi": -0.1593,
+            "roi_pct": -15.93
           },
           "both_sides_positive": false,
-          "min_roi": -0.021,
-          "combined_pnl": 420.85,
-          "combined_bets": 317
+          "min_roi": -0.1593,
+          "combined_pnl": -135.04,
+          "combined_bets": 56
         },
         {
           "min_ev_pct": 7.5,
@@ -1024,27 +1030,27 @@
           },
           "bias": "none",
           "over": {
-            "bets": 73,
-            "wins": 44,
-            "losses": 29,
+            "bets": 12,
+            "wins": 7,
+            "losses": 5,
             "pushes": 0,
-            "pnl": 833.12,
-            "roi": 0.1141,
-            "roi_pct": 11.41
+            "pnl": 134.73,
+            "roi": 0.1123,
+            "roi_pct": 11.23
           },
           "under": {
-            "bets": 163,
-            "wins": 77,
-            "losses": 86,
+            "bets": 22,
+            "wins": 8,
+            "losses": 14,
             "pushes": 0,
-            "pnl": -191.68,
-            "roi": -0.0118,
-            "roi_pct": -1.18
+            "pnl": -538.93,
+            "roi": -0.245,
+            "roi_pct": -24.5
           },
           "both_sides_positive": false,
-          "min_roi": -0.0118,
-          "combined_pnl": 641.44,
-          "combined_bets": 236
+          "min_roi": -0.245,
+          "combined_pnl": -404.2,
+          "combined_bets": 34
         },
         {
           "min_ev_pct": 10,
@@ -1053,27 +1059,27 @@
           },
           "bias": "none",
           "over": {
-            "bets": 70,
-            "wins": 42,
-            "losses": 28,
+            "bets": 8,
+            "wins": 5,
+            "losses": 3,
             "pushes": 0,
-            "pnl": 822.62,
-            "roi": 0.1175,
-            "roi_pct": 11.75
+            "pnl": 224.23,
+            "roi": 0.2803,
+            "roi_pct": 28.03
           },
           "under": {
-            "bets": 98,
-            "wins": 48,
-            "losses": 50,
+            "bets": 15,
+            "wins": 7,
+            "losses": 8,
             "pushes": 0,
-            "pnl": 341.57,
-            "roi": 0.0349,
-            "roi_pct": 3.49
+            "pnl": -33.27,
+            "roi": -0.0222,
+            "roi_pct": -2.22
           },
-          "both_sides_positive": true,
-          "min_roi": 0.0349,
-          "combined_pnl": 1164.19,
-          "combined_bets": 168
+          "both_sides_positive": false,
+          "min_roi": -0.0222,
+          "combined_pnl": 190.96,
+          "combined_bets": 23
         },
         {
           "min_ev_pct": 12.5,
@@ -1082,27 +1088,27 @@
           },
           "bias": "none",
           "over": {
-            "bets": 66,
-            "wins": 39,
-            "losses": 27,
+            "bets": 3,
+            "wins": 2,
+            "losses": 1,
             "pushes": 0,
-            "pnl": 667.34,
-            "roi": 0.1011,
-            "roi_pct": 10.11
+            "pnl": 122.09,
+            "roi": 0.407,
+            "roi_pct": 40.7
           },
           "under": {
-            "bets": 57,
-            "wins": 26,
-            "losses": 31,
+            "bets": 11,
+            "wins": 7,
+            "losses": 4,
             "pushes": 0,
-            "pnl": -196.34,
-            "roi": -0.0344,
-            "roi_pct": -3.44
+            "pnl": 366.73,
+            "roi": 0.3334,
+            "roi_pct": 33.34
           },
           "both_sides_positive": false,
-          "min_roi": -0.0344,
-          "combined_pnl": 471,
-          "combined_bets": 123
+          "min_roi": 0.3334,
+          "combined_pnl": 488.82,
+          "combined_bets": 14
         },
         {
           "min_ev_pct": 15,
@@ -1111,64 +1117,64 @@
           },
           "bias": "none",
           "over": {
-            "bets": 62,
-            "wins": 35,
-            "losses": 27,
+            "bets": 3,
+            "wins": 2,
+            "losses": 1,
             "pushes": 0,
-            "pnl": 422.68,
-            "roi": 0.0682,
-            "roi_pct": 6.82
+            "pnl": 122.09,
+            "roi": 0.407,
+            "roi_pct": 40.7
           },
           "under": {
-            "bets": 24,
-            "wins": 13,
-            "losses": 11,
+            "bets": 5,
+            "wins": 4,
+            "losses": 1,
             "pushes": 0,
-            "pnl": 248.32,
-            "roi": 0.1035,
-            "roi_pct": 10.35
+            "pnl": 274.73,
+            "roi": 0.5495,
+            "roi_pct": 54.95
           },
           "both_sides_positive": false,
-          "min_roi": 0.0682,
-          "combined_pnl": 671,
-          "combined_bets": 86
+          "min_roi": 0.407,
+          "combined_pnl": 396.82,
+          "combined_bets": 8
         }
       ],
       "best": {
-        "min_ev_pct": 10,
+        "min_ev_pct": 0,
         "odds_rule": {
-          "under_min_american": 0
+          "under_min_american": -110
         },
         "bias": "none",
         "bias_by_event": {},
         "over": {
-          "bets": 70,
-          "wins": 42,
-          "losses": 28,
+          "bets": 107,
+          "wins": 56,
+          "losses": 51,
           "pushes": 0,
-          "pnl": 822.62,
-          "roi": 0.1175,
-          "roi_pct": 11.75
+          "pnl": 167.51,
+          "roi": 0.0157,
+          "roi_pct": 1.57
         },
         "under": {
-          "bets": 74,
-          "wins": 37,
-          "losses": 37,
+          "bets": 51,
+          "wins": 24,
+          "losses": 27,
           "pushes": 0,
-          "pnl": 621,
-          "roi": 0.0839,
-          "roi_pct": 8.39
+          "pnl": -70.62,
+          "roi": -0.0138,
+          "roi_pct": -1.38
         },
-        "both_sides_positive": true,
-        "min_roi": 0.0839,
-        "combined_pnl": 1443.62,
-        "combined_bets": 144
+        "both_sides_positive": false,
+        "min_roi": -0.0138,
+        "combined_pnl": 96.89,
+        "combined_bets": 158
       },
-      "both_sides_achieved": true,
-      "note": null
+      "both_sides_achieved": false,
+      "note": "no policy with both sides ROI>0 at >=35 bets; reporting best min(over,under) ROI"
     },
     "Pars": {
-      "n_graded_rows": 1219,
+      "n_graded_rows": 1196,
       "n_graded_rows_live": 0,
       "sweep": [
         {
@@ -1176,13 +1182,13 @@
           "odds_rule": null,
           "bias": "none",
           "over": {
-            "bets": 32,
-            "wins": 18,
-            "losses": 14,
+            "bets": 36,
+            "wins": 21,
+            "losses": 15,
             "pushes": 0,
-            "pnl": 194.37,
-            "roi": 0.0607,
-            "roi_pct": 6.07
+            "pnl": 434.37,
+            "roi": 0.1207,
+            "roi_pct": 12.07
           },
           "under": {
             "bets": 60,
@@ -1193,10 +1199,10 @@
             "roi": 0.0818,
             "roi_pct": 8.18
           },
-          "both_sides_positive": false,
-          "min_roi": 0.0607,
-          "combined_pnl": 685.46,
-          "combined_bets": 92
+          "both_sides_positive": true,
+          "min_roi": 0.0818,
+          "combined_pnl": 925.46,
+          "combined_bets": 96
         },
         {
           "min_ev_pct": 2.5,
@@ -1367,13 +1373,13 @@
           },
           "bias": "none",
           "over": {
-            "bets": 32,
-            "wins": 18,
-            "losses": 14,
+            "bets": 36,
+            "wins": 21,
+            "losses": 15,
             "pushes": 0,
-            "pnl": 194.37,
-            "roi": 0.0607,
-            "roi_pct": 6.07
+            "pnl": 434.37,
+            "roi": 0.1207,
+            "roi_pct": 12.07
           },
           "under": {
             "bets": 27,
@@ -1385,9 +1391,9 @@
             "roi_pct": 9.56
           },
           "both_sides_positive": false,
-          "min_roi": 0.0607,
-          "combined_pnl": 452.37,
-          "combined_bets": 59
+          "min_roi": 0.0956,
+          "combined_pnl": 692.37,
+          "combined_bets": 63
         },
         {
           "min_ev_pct": 2.5,
@@ -1570,13 +1576,13 @@
           },
           "bias": "none",
           "over": {
-            "bets": 32,
-            "wins": 18,
-            "losses": 14,
+            "bets": 36,
+            "wins": 21,
+            "losses": 15,
             "pushes": 0,
-            "pnl": 194.37,
-            "roi": 0.0607,
-            "roi_pct": 6.07
+            "pnl": 434.37,
+            "roi": 0.1207,
+            "roi_pct": 12.07
           },
           "under": {
             "bets": 38,
@@ -1587,10 +1593,10 @@
             "roi": 0.1356,
             "roi_pct": 13.56
           },
-          "both_sides_positive": false,
-          "min_roi": 0.0607,
-          "combined_pnl": 709.64,
-          "combined_bets": 70
+          "both_sides_positive": true,
+          "min_roi": 0.1207,
+          "combined_pnl": 949.64,
+          "combined_bets": 74
         },
         {
           "min_ev_pct": 2.5,
@@ -1773,13 +1779,13 @@
           },
           "bias": "none",
           "over": {
-            "bets": 14,
-            "wins": 9,
-            "losses": 5,
+            "bets": 18,
+            "wins": 12,
+            "losses": 6,
             "pushes": 0,
-            "pnl": 429.6,
-            "roi": 0.3069,
-            "roi_pct": 30.69
+            "pnl": 669.6,
+            "roi": 0.372,
+            "roi_pct": 37.2
           },
           "under": {
             "bets": 60,
@@ -1792,8 +1798,8 @@
           },
           "both_sides_positive": false,
           "min_roi": 0.0818,
-          "combined_pnl": 920.69,
-          "combined_bets": 74
+          "combined_pnl": 1160.69,
+          "combined_bets": 78
         },
         {
           "min_ev_pct": 2.5,
@@ -1973,38 +1979,38 @@
       "best": {
         "min_ev_pct": 0,
         "odds_rule": {
-          "over_min_american": -110
+          "under_min_american": -110
         },
         "bias": "none",
         "bias_by_event": {},
         "over": {
-          "bets": 14,
-          "wins": 9,
-          "losses": 5,
+          "bets": 36,
+          "wins": 21,
+          "losses": 15,
           "pushes": 0,
-          "pnl": 429.6,
-          "roi": 0.3069,
-          "roi_pct": 30.69
+          "pnl": 434.37,
+          "roi": 0.1207,
+          "roi_pct": 12.07
         },
         "under": {
-          "bets": 60,
-          "wins": 33,
-          "losses": 27,
+          "bets": 38,
+          "wins": 21,
+          "losses": 17,
           "pushes": 0,
-          "pnl": 491.09,
-          "roi": 0.0818,
-          "roi_pct": 8.18
+          "pnl": 515.27,
+          "roi": 0.1356,
+          "roi_pct": 13.56
         },
-        "both_sides_positive": false,
-        "min_roi": 0.0818,
-        "combined_pnl": 920.69,
+        "both_sides_positive": true,
+        "min_roi": 0.1207,
+        "combined_pnl": 949.64,
         "combined_bets": 74
       },
-      "both_sides_achieved": false,
-      "note": "no policy with >=40 bets/side"
+      "both_sides_achieved": true,
+      "note": "both-side+ at soft >=35 bets/side"
     },
     "Bogeys": {
-      "n_graded_rows": 1284,
+      "n_graded_rows": 1238,
       "n_graded_rows_live": 0,
       "sweep": [
         {
@@ -2021,18 +2027,18 @@
             "roi_pct": -9.13
           },
           "under": {
-            "bets": 212,
-            "wins": 124,
-            "losses": 83,
+            "bets": 251,
+            "wins": 144,
+            "losses": 102,
             "pushes": 5,
-            "pnl": 1929.02,
-            "roi": 0.091,
-            "roi_pct": 9.1
+            "pnl": 1842.75,
+            "roi": 0.0734,
+            "roi_pct": 7.34
           },
           "both_sides_positive": false,
           "min_roi": -0.0913,
-          "combined_pnl": 1728.13,
-          "combined_bets": 234
+          "combined_pnl": 1641.86,
+          "combined_bets": 273
         },
         {
           "min_ev_pct": 2.5,
@@ -2048,18 +2054,18 @@
             "roi_pct": 3.54
           },
           "under": {
-            "bets": 152,
-            "wins": 91,
-            "losses": 59,
+            "bets": 179,
+            "wins": 105,
+            "losses": 72,
             "pushes": 2,
-            "pnl": 1412.23,
-            "roi": 0.0929,
-            "roi_pct": 9.29
+            "pnl": 1448.13,
+            "roi": 0.0809,
+            "roi_pct": 8.09
           },
           "both_sides_positive": false,
           "min_roi": 0.0354,
-          "combined_pnl": 1468.86,
-          "combined_bets": 168
+          "combined_pnl": 1504.76,
+          "combined_bets": 195
         },
         {
           "min_ev_pct": 5,
@@ -2075,18 +2081,18 @@
             "roi_pct": 19.13
           },
           "under": {
-            "bets": 107,
-            "wins": 64,
-            "losses": 42,
+            "bets": 124,
+            "wins": 73,
+            "losses": 50,
             "pushes": 1,
-            "pnl": 924.12,
-            "roi": 0.0864,
-            "roi_pct": 8.64
+            "pnl": 979.04,
+            "roi": 0.079,
+            "roi_pct": 7.9
           },
           "both_sides_positive": false,
-          "min_roi": 0.0864,
-          "combined_pnl": 1134.6,
-          "combined_bets": 118
+          "min_roi": 0.079,
+          "combined_pnl": 1189.52,
+          "combined_bets": 135
         },
         {
           "min_ev_pct": 7.5,
@@ -2102,18 +2108,18 @@
             "roi_pct": 21.16
           },
           "under": {
-            "bets": 73,
-            "wins": 43,
-            "losses": 29,
+            "bets": 81,
+            "wins": 47,
+            "losses": 33,
             "pushes": 1,
-            "pnl": 670.15,
-            "roi": 0.0918,
-            "roi_pct": 9.18
+            "pnl": 631.12,
+            "roi": 0.0779,
+            "roi_pct": 7.79
           },
           "both_sides_positive": false,
-          "min_roi": 0.0918,
-          "combined_pnl": 860.63,
-          "combined_bets": 82
+          "min_roi": 0.0779,
+          "combined_pnl": 821.6,
+          "combined_bets": 90
         },
         {
           "min_ev_pct": 10,
@@ -2129,18 +2135,18 @@
             "roi_pct": 10.06
           },
           "under": {
-            "bets": 53,
-            "wins": 31,
-            "losses": 21,
+            "bets": 58,
+            "wins": 33,
+            "losses": 24,
             "pushes": 1,
-            "pnl": 462.72,
-            "roi": 0.0873,
-            "roi_pct": 8.73
+            "pnl": 360.87,
+            "roi": 0.0622,
+            "roi_pct": 6.22
           },
           "both_sides_positive": false,
-          "min_roi": 0.0873,
-          "combined_pnl": 543.2,
-          "combined_bets": 61
+          "min_roi": 0.0622,
+          "combined_pnl": 441.35,
+          "combined_bets": 66
         },
         {
           "min_ev_pct": 12.5,
@@ -2156,18 +2162,18 @@
             "roi_pct": 11.87
           },
           "under": {
-            "bets": 34,
-            "wins": 18,
-            "losses": 16,
+            "bets": 36,
+            "wins": 19,
+            "losses": 17,
             "pushes": 0,
-            "pnl": -149.71,
-            "roi": -0.044,
-            "roi_pct": -4.4
+            "pnl": -147.71,
+            "roi": -0.041,
+            "roi_pct": -4.1
           },
           "both_sides_positive": false,
-          "min_roi": -0.044,
-          "combined_pnl": -90.38,
-          "combined_bets": 39
+          "min_roi": -0.041,
+          "combined_pnl": -88.38,
+          "combined_bets": 41
         },
         {
           "min_ev_pct": 15,
@@ -2198,38 +2204,38 @@
         }
       ],
       "best": {
-        "min_ev_pct": 7.5,
+        "min_ev_pct": 5,
         "odds_rule": null,
         "bias": "none",
         "bias_by_event": {},
         "over": {
-          "bets": 9,
-          "wins": 6,
-          "losses": 3,
+          "bets": 11,
+          "wins": 7,
+          "losses": 4,
           "pushes": 0,
-          "pnl": 190.48,
-          "roi": 0.2116,
-          "roi_pct": 21.16
+          "pnl": 210.48,
+          "roi": 0.1913,
+          "roi_pct": 19.13
         },
         "under": {
-          "bets": 73,
-          "wins": 43,
-          "losses": 29,
+          "bets": 124,
+          "wins": 73,
+          "losses": 50,
           "pushes": 1,
-          "pnl": 670.15,
-          "roi": 0.0918,
-          "roi_pct": 9.18
+          "pnl": 979.04,
+          "roi": 0.079,
+          "roi_pct": 7.9
         },
         "both_sides_positive": false,
-        "min_roi": 0.0918,
-        "combined_pnl": 860.63,
-        "combined_bets": 82
+        "min_roi": 0.079,
+        "combined_pnl": 1189.52,
+        "combined_bets": 135
       },
       "both_sides_achieved": false,
       "note": "no policy with >=40 bets/side"
     },
     "GIR": {
-      "n_graded_rows": 1186,
+      "n_graded_rows": 1089,
       "n_graded_rows_live": 0,
       "sweep": [
         {
@@ -2237,108 +2243,108 @@
           "odds_rule": null,
           "bias": "none",
           "over": {
-            "bets": 34,
-            "wins": 20,
-            "losses": 14,
+            "bets": 61,
+            "wins": 37,
+            "losses": 24,
             "pushes": 0,
-            "pnl": 512.69,
-            "roi": 0.1508,
-            "roi_pct": 15.08
+            "pnl": 918.34,
+            "roi": 0.1505,
+            "roi_pct": 15.05
           },
           "under": {
-            "bets": 49,
-            "wins": 20,
-            "losses": 29,
+            "bets": 63,
+            "wins": 28,
+            "losses": 35,
             "pushes": 0,
-            "pnl": -1109.21,
-            "roi": -0.2264,
-            "roi_pct": -22.64
+            "pnl": -972.69,
+            "roi": -0.1544,
+            "roi_pct": -15.44
           },
           "both_sides_positive": false,
-          "min_roi": -0.2264,
-          "combined_pnl": -596.52,
-          "combined_bets": 83
+          "min_roi": -0.1544,
+          "combined_pnl": -54.35,
+          "combined_bets": 124
         },
         {
           "min_ev_pct": 2.5,
           "odds_rule": null,
           "bias": "none",
           "over": {
-            "bets": 22,
-            "wins": 14,
-            "losses": 8,
+            "bets": 37,
+            "wins": 22,
+            "losses": 15,
             "pushes": 0,
-            "pnl": 571.1,
-            "roi": 0.2596,
-            "roi_pct": 25.96
+            "pnl": 617.48,
+            "roi": 0.1669,
+            "roi_pct": 16.69
           },
           "under": {
-            "bets": 43,
-            "wins": 19,
-            "losses": 24,
+            "bets": 55,
+            "wins": 26,
+            "losses": 29,
             "pushes": 0,
-            "pnl": -671.71,
-            "roi": -0.1562,
-            "roi_pct": -15.62
+            "pnl": -543.19,
+            "roi": -0.0988,
+            "roi_pct": -9.88
           },
           "both_sides_positive": false,
-          "min_roi": -0.1562,
-          "combined_pnl": -100.61,
-          "combined_bets": 65
+          "min_roi": -0.0988,
+          "combined_pnl": 74.29,
+          "combined_bets": 92
         },
         {
           "min_ev_pct": 5,
           "odds_rule": null,
           "bias": "none",
           "over": {
-            "bets": 14,
-            "wins": 9,
-            "losses": 5,
+            "bets": 21,
+            "wins": 13,
+            "losses": 8,
             "pushes": 0,
-            "pnl": 373.38,
-            "roi": 0.2667,
-            "roi_pct": 26.67
+            "pnl": 408.9,
+            "roi": 0.1947,
+            "roi_pct": 19.47
           },
           "under": {
-            "bets": 34,
-            "wins": 16,
-            "losses": 18,
+            "bets": 40,
+            "wins": 20,
+            "losses": 20,
             "pushes": 0,
-            "pnl": -316.88,
-            "roi": -0.0932,
-            "roi_pct": -9.32
+            "pnl": -148.35,
+            "roi": -0.0371,
+            "roi_pct": -3.71
           },
           "both_sides_positive": false,
-          "min_roi": -0.0932,
-          "combined_pnl": 56.5,
-          "combined_bets": 48
+          "min_roi": -0.0371,
+          "combined_pnl": 260.55,
+          "combined_bets": 61
         },
         {
           "min_ev_pct": 7.5,
           "odds_rule": null,
           "bias": "none",
           "over": {
-            "bets": 10,
-            "wins": 7,
+            "bets": 11,
+            "wins": 8,
             "losses": 3,
             "pushes": 0,
-            "pnl": 357.34,
-            "roi": 0.3573,
-            "roi_pct": 35.73
+            "pnl": 423.13,
+            "roi": 0.3847,
+            "roi_pct": 38.47
           },
           "under": {
-            "bets": 28,
-            "wins": 15,
-            "losses": 13,
+            "bets": 30,
+            "wins": 16,
+            "losses": 14,
             "pushes": 0,
-            "pnl": 59.12,
-            "roi": 0.0211,
-            "roi_pct": 2.11
+            "pnl": 69.12,
+            "roi": 0.023,
+            "roi_pct": 2.3
           },
           "both_sides_positive": false,
-          "min_roi": 0.0211,
-          "combined_pnl": 416.46,
-          "combined_bets": 38
+          "min_roi": 0.023,
+          "combined_pnl": 492.25,
+          "combined_bets": 41
         },
         {
           "min_ev_pct": 10,
@@ -2423,215 +2429,215 @@
         }
       ],
       "best": {
-        "min_ev_pct": 10,
+        "min_ev_pct": 0,
         "odds_rule": null,
         "bias": "none",
         "bias_by_event": {},
         "over": {
-          "bets": 3,
-          "wins": 3,
-          "losses": 0,
+          "bets": 61,
+          "wins": 37,
+          "losses": 24,
           "pushes": 0,
-          "pnl": 254.9,
-          "roi": 0.8497,
-          "roi_pct": 84.97
+          "pnl": 918.34,
+          "roi": 0.1505,
+          "roi_pct": 15.05
         },
         "under": {
-          "bets": 17,
-          "wins": 12,
-          "losses": 5,
+          "bets": 63,
+          "wins": 28,
+          "losses": 35,
           "pushes": 0,
-          "pnl": 577.63,
-          "roi": 0.3398,
-          "roi_pct": 33.98
+          "pnl": -972.69,
+          "roi": -0.1544,
+          "roi_pct": -15.44
         },
         "both_sides_positive": false,
-        "min_roi": 0.3398,
-        "combined_pnl": 832.53,
-        "combined_bets": 20
+        "min_roi": -0.1544,
+        "combined_pnl": -54.35,
+        "combined_bets": 124
       },
       "both_sides_achieved": false,
-      "note": "no policy with >=40 bets/side"
+      "note": "no policy with both sides ROI>0 at >=35 bets; reporting best min(over,under) ROI"
     }
   },
   "recommended": {
     "Fairways hit": {
-      "min_ev_pct": 2.5,
+      "min_ev_pct": 7.5,
       "odds_rule": null,
       "bias": "none",
       "both_sides_positive": false,
       "over": {
-        "bets": 30,
-        "wins": 15,
-        "losses": 15,
+        "bets": 7,
+        "wins": 4,
+        "losses": 3,
         "pushes": 0,
-        "pnl": -172.5,
-        "roi": -0.0575,
-        "roi_pct": -5.75
+        "pnl": 110.15,
+        "roi": 0.1574,
+        "roi_pct": 15.74
       },
       "under": {
-        "bets": 30,
-        "wins": 14,
+        "bets": 37,
+        "wins": 21,
         "losses": 16,
         "pushes": 0,
-        "pnl": -367.42,
-        "roi": -0.1225,
-        "roi_pct": -12.25
+        "pnl": 397.11,
+        "roi": 0.1073,
+        "roi_pct": 10.73
       },
-      "min_roi": -0.1225,
-      "combined_pnl": -539.92,
-      "combined_bets": 60,
-      "combined_roi": -0.09
+      "min_roi": 0.1073,
+      "combined_pnl": 507.26,
+      "combined_bets": 44,
+      "combined_roi": 0.1153
     },
     "Total score": {
-      "min_ev_pct": 7.5,
+      "min_ev_pct": 10,
       "odds_rule": null,
       "bias": "none",
       "both_sides_positive": true,
       "over": {
-        "bets": 57,
-        "wins": 35,
-        "losses": 22,
+        "bets": 50,
+        "wins": 30,
+        "losses": 20,
         "pushes": 0,
-        "pnl": 995.75,
-        "roi": 0.1747,
-        "roi_pct": 17.47
+        "pnl": 1029.97,
+        "roi": 0.206,
+        "roi_pct": 20.6
       },
       "under": {
-        "bets": 75,
-        "wins": 46,
-        "losses": 29,
+        "bets": 54,
+        "wins": 36,
+        "losses": 18,
         "pushes": 0,
-        "pnl": 1080.1,
-        "roi": 0.144,
-        "roi_pct": 14.4
+        "pnl": 1571.48,
+        "roi": 0.291,
+        "roi_pct": 29.1
       },
-      "min_roi": 0.144,
-      "combined_pnl": 2075.85,
-      "combined_bets": 132,
-      "combined_roi": 0.1573
+      "min_roi": 0.206,
+      "combined_pnl": 2601.45,
+      "combined_bets": 104,
+      "combined_roi": 0.2501
     },
     "Birdies": {
-      "min_ev_pct": 10,
+      "min_ev_pct": 0,
       "odds_rule": {
-        "under_min_american": 0
+        "under_min_american": -110
       },
       "bias": "none",
-      "both_sides_positive": true,
+      "both_sides_positive": false,
       "over": {
-        "bets": 70,
-        "wins": 42,
-        "losses": 28,
+        "bets": 107,
+        "wins": 56,
+        "losses": 51,
         "pushes": 0,
-        "pnl": 822.62,
-        "roi": 0.1175,
-        "roi_pct": 11.75
+        "pnl": 167.51,
+        "roi": 0.0157,
+        "roi_pct": 1.57
       },
       "under": {
-        "bets": 74,
-        "wins": 37,
-        "losses": 37,
+        "bets": 51,
+        "wins": 24,
+        "losses": 27,
         "pushes": 0,
-        "pnl": 621,
-        "roi": 0.0839,
-        "roi_pct": 8.39
+        "pnl": -70.62,
+        "roi": -0.0138,
+        "roi_pct": -1.38
       },
-      "min_roi": 0.0839,
-      "combined_pnl": 1443.62,
-      "combined_bets": 144,
-      "combined_roi": 0.1003
+      "min_roi": -0.0138,
+      "combined_pnl": 96.89,
+      "combined_bets": 158,
+      "combined_roi": 0.0061
     },
     "Pars": {
       "min_ev_pct": 0,
       "odds_rule": {
-        "over_min_american": -110
+        "under_min_american": -110
       },
       "bias": "none",
-      "both_sides_positive": false,
+      "both_sides_positive": true,
       "over": {
-        "bets": 14,
-        "wins": 9,
-        "losses": 5,
+        "bets": 36,
+        "wins": 21,
+        "losses": 15,
         "pushes": 0,
-        "pnl": 429.6,
-        "roi": 0.3069,
-        "roi_pct": 30.69
+        "pnl": 434.37,
+        "roi": 0.1207,
+        "roi_pct": 12.07
       },
       "under": {
-        "bets": 60,
-        "wins": 33,
-        "losses": 27,
+        "bets": 38,
+        "wins": 21,
+        "losses": 17,
         "pushes": 0,
-        "pnl": 491.09,
-        "roi": 0.0818,
-        "roi_pct": 8.18
+        "pnl": 515.27,
+        "roi": 0.1356,
+        "roi_pct": 13.56
       },
-      "min_roi": 0.0818,
-      "combined_pnl": 920.69,
+      "min_roi": 0.1207,
+      "combined_pnl": 949.64,
       "combined_bets": 74,
-      "combined_roi": 0.1244
+      "combined_roi": 0.1283
     },
     "Bogeys": {
-      "min_ev_pct": 7.5,
+      "min_ev_pct": 5,
       "odds_rule": null,
       "bias": "none",
       "both_sides_positive": false,
       "over": {
-        "bets": 9,
-        "wins": 6,
-        "losses": 3,
+        "bets": 11,
+        "wins": 7,
+        "losses": 4,
         "pushes": 0,
-        "pnl": 190.48,
-        "roi": 0.2116,
-        "roi_pct": 21.16
+        "pnl": 210.48,
+        "roi": 0.1913,
+        "roi_pct": 19.13
       },
       "under": {
-        "bets": 73,
-        "wins": 43,
-        "losses": 29,
+        "bets": 124,
+        "wins": 73,
+        "losses": 50,
         "pushes": 1,
-        "pnl": 670.15,
-        "roi": 0.0918,
-        "roi_pct": 9.18
+        "pnl": 979.04,
+        "roi": 0.079,
+        "roi_pct": 7.9
       },
-      "min_roi": 0.0918,
-      "combined_pnl": 860.63,
-      "combined_bets": 82,
-      "combined_roi": 0.105
+      "min_roi": 0.079,
+      "combined_pnl": 1189.52,
+      "combined_bets": 135,
+      "combined_roi": 0.0881
     },
     "GIR": {
-      "min_ev_pct": 10,
+      "min_ev_pct": 0,
       "odds_rule": null,
       "bias": "none",
       "both_sides_positive": false,
       "over": {
-        "bets": 3,
-        "wins": 3,
-        "losses": 0,
+        "bets": 61,
+        "wins": 37,
+        "losses": 24,
         "pushes": 0,
-        "pnl": 254.9,
-        "roi": 0.8497,
-        "roi_pct": 84.97
+        "pnl": 918.34,
+        "roi": 0.1505,
+        "roi_pct": 15.05
       },
       "under": {
-        "bets": 17,
-        "wins": 12,
-        "losses": 5,
+        "bets": 63,
+        "wins": 28,
+        "losses": 35,
         "pushes": 0,
-        "pnl": 577.63,
-        "roi": 0.3398,
-        "roi_pct": 33.98
+        "pnl": -972.69,
+        "roi": -0.1544,
+        "roi_pct": -15.44
       },
-      "min_roi": 0.3398,
-      "combined_pnl": 832.53,
-      "combined_bets": 20,
-      "combined_roi": 0.4163
+      "min_roi": -0.1544,
+      "combined_pnl": -54.35,
+      "combined_bets": 124,
+      "combined_roi": -0.0044
     }
   },
   "overall": {
     "both_side_positive_markets": [
       "Total score",
-      "Birdies"
+      "Pars"
     ],
     "markets": [
       "Fairways hit",
@@ -2641,9 +2647,9 @@
       "Bogeys",
       "GIR"
     ],
-    "recommended_combined_pnl": 5593.4,
-    "recommended_combined_bets": 512,
-    "recommended_combined_roi": 0.1092
+    "recommended_combined_pnl": 5290.41,
+    "recommended_combined_bets": 639,
+    "recommended_combined_roi": 0.0828
   },
   "sg_side_policy": {
     "enabled": true,

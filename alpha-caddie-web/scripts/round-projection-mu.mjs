@@ -42,7 +42,7 @@ import {
 
 /** @param {string} stem fairways|round_score|birdies|bogeys|gir */
 function altBookCols(stem) {
-  const books = ["pp", "sl", "ud", "fd", "czr", "kl"];
+  const books = ["pp", "sl", "ud", "fd", "czr", "kl", "hr"];
   /** @type {Record<string, string>} */
   const cols = {};
   for (const b of books) {
@@ -184,6 +184,12 @@ export const EXPORT_CZR_OPEN_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.czrOpe
 export const EXPORT_CZR_OPEN_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.czrOpenUnderOddsCol);
 export const EXPORT_KL_OPEN_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.klOpenOverOddsCol);
 export const EXPORT_KL_OPEN_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.klOpenUnderOddsCol);
+export const EXPORT_HR_LINE_COLS = EXPORT_MARKETS.map((m) => m.hrLineCol);
+export const EXPORT_HR_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.hrOverOddsCol);
+export const EXPORT_HR_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.hrUnderOddsCol);
+export const EXPORT_HR_OPEN_LINE_COLS = EXPORT_MARKETS.map((m) => m.hrOpenLineCol);
+export const EXPORT_HR_OPEN_OVER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.hrOpenOverOddsCol);
+export const EXPORT_HR_OPEN_UNDER_ODDS_COLS = EXPORT_MARKETS.map((m) => m.hrOpenUnderOddsCol);
 export const EXPORT_OVER_RESULT_COLS = EXPORT_MARKETS.map((m) => m.overCol);
 export const EXPORT_UNDER_RESULT_COLS = EXPORT_MARKETS.map((m) => m.underCol);
 
@@ -313,6 +319,27 @@ export const EXPORT_ALT_BOOKS = [
     openOverKey: "klOpenOverOddsCol",
     openUnderKey: "klOpenUnderOddsCol",
     liveOddsSource: "kalshi_live",
+    wholeLine: false,
+  },
+  {
+    id: "hardrock",
+    short: "hr",
+    sourceCol: "hr_book_odds_source",
+    openAtCol: "hr_book_odds_open_at",
+    closeAtCol: "hr_book_odds_close_at",
+    lineCols: EXPORT_HR_LINE_COLS,
+    overCols: EXPORT_HR_OVER_ODDS_COLS,
+    underCols: EXPORT_HR_UNDER_ODDS_COLS,
+    openLineCols: EXPORT_HR_OPEN_LINE_COLS,
+    openOverCols: EXPORT_HR_OPEN_OVER_ODDS_COLS,
+    openUnderCols: EXPORT_HR_OPEN_UNDER_ODDS_COLS,
+    lineKey: "hrLineCol",
+    overKey: "hrOverOddsCol",
+    underKey: "hrUnderOddsCol",
+    openLineKey: "hrOpenLineCol",
+    openOverKey: "hrOpenOverOddsCol",
+    openUnderKey: "hrOpenUnderOddsCol",
+    liveOddsSource: "hardrock_live",
     wholeLine: false,
   },
 ];
