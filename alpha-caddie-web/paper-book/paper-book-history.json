@@ -1,0 +1,34 @@
+{
+  "version": 2,
+  "updated_at": "2026-08-21T00:00:00.000Z",
+  "books": {
+    "draftkings": {
+      "bankroll": 1000,
+      "startingBankroll": 1000,
+      "playType": "power",
+      "stake": 10,
+      "history": []
+    },
+    "prizepicks": {
+      "bankroll": 1000,
+      "startingBankroll": 1000,
+      "playType": "power",
+      "stake": 10,
+      "history": []
+    },
+    "sleeper": {
+      "bankroll": 1000,
+      "startingBankroll": 1000,
+      "playType": "power",
+      "stake": 10,
+      "history": []
+    },
+    "underdog": {
+      "bankroll": 1000,
+      "startingBankroll": 1000,
+      "playType": "power",
+      "stake": 10,
+      "history": []
+    }
+  }
+}

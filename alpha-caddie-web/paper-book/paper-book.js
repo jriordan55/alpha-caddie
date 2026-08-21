@@ -21,6 +21,13 @@ import {
 } from "./book-payouts.mjs";
 import { gradeOuBet, buildOuGradeIndex } from "../projection-tracker/my-bets-grade.mjs";
 import { DETAIL_EXPORT_MARKETS } from "../projection-tracker/detail-market-specs.mjs";
+import {
+  applyBookSlice,
+  bookSlice,
+  downloadHistoryBackup,
+  importHistoryBackupFile,
+  loadPersistedState,
+} from "./paper-book-state.mjs";
 
 const MARKET_SPECS = DETAIL_EXPORT_MARKETS.map((m) => {
   const stem = m.key === "total" ? "round_score" : m.key === "fairways" ? "fairways" : m.key;
@@ -36,7 +43,6 @@ const MARKET_SPECS = DETAIL_EXPORT_MARKETS.map((m) => {
 const PROJECTIONS_URL = "../projections.json";
 const PAPER_BOOK_LINES_URL = "./paper-book-lines.json";
 const VS_ACTUAL_URL = "../data/round_projection_vs_actual.csv";
-const STORAGE_VERSION = 1;
 
 /** @type {object|null} */
 let projections = null;
@@ -44,6 +50,14 @@ let projections = null;
 let ouGradeIndex = null;
 /** @type {object|null} */
 let liveBuilt = null;
+
+/** @type {object|null} */
+let persisted = null;
+
+function readBookFromUrl() {
+  const q = new URLSearchParams(window.location.search).get("book");
+  return PAPER_BOOKS.some((b) => b.id === q) ? q : null;
+}
 
 const state = {
   bookId: readBookFromUrl() || "draftkings",
@@ -57,41 +71,28 @@ const state = {
   history: [],
 };
 
-function readBookFromUrl() {
-  const q = new URLSearchParams(window.location.search).get("book");
-  return PAPER_BOOKS.some((b) => b.id === q) ? q : null;
+function syncStateFromPersisted(bookId = state.bookId) {
+  const slice = bookSlice(persisted, bookId);
+  state.bankroll = slice.bankroll;
+  state.startingBankroll = slice.startingBankroll;
+  state.playType = slice.playType;
+  state.stake = slice.stake;
+  state.history = slice.history;
 }
 
-function storageKey(bookId) {
-  return `alphaCaddie_paperBook_${bookId}_v${STORAGE_VERSION}`;
-}
-
-function loadBookState(bookId) {
-  try {
-    const raw = localStorage.getItem(storageKey(bookId));
-    if (!raw) return;
-    const data = JSON.parse(raw);
-    state.bankroll = Math.max(0, Number(data.bankroll) || 1000);
-    state.startingBankroll = Math.max(100, Number(data.startingBankroll) || state.bankroll);
-    state.history = Array.isArray(data.history) ? data.history : [];
-    state.playType = data.playType === "flex" ? "flex" : "power";
-    state.stake = Math.max(1, Number(data.stake) || 10);
-  } catch {
-    /* ignore */
-  }
+function persistCurrentBook() {
+  if (!persisted) return;
+  persisted = applyBookSlice(persisted, state.bookId, {
+    bankroll: state.bankroll,
+    startingBankroll: state.startingBankroll,
+    playType: state.playType,
+    stake: state.stake,
+    history: state.history,
+  });
 }
 
 function saveBookState() {
-  localStorage.setItem(
-    storageKey(state.bookId),
-    JSON.stringify({
-      bankroll: state.bankroll,
-      startingBankroll: state.startingBankroll,
-      history: state.history,
-      playType: state.playType,
-      stake: state.stake,
-    }),
-  );
+  persistCurrentBook();
 }
 
 function esc(s) {
@@ -166,11 +167,10 @@ function paintBoard(built) {
 
 function setBook(bookId) {
   if (bookId === state.bookId) return;
-  saveBookState();
+  persistCurrentBook();
   state.bookId = bookId;
   state.slip = [];
-  liveBuilt = null;
-  loadBookState(bookId);
+  syncStateFromPersisted(bookId);
   const url = new URL(window.location.href);
   url.searchParams.set("book", bookId);
   window.history.replaceState({}, "", url);
@@ -664,14 +664,44 @@ function bindUi() {
     renderAll();
     showToast(`Bankroll reset to ${fmtUsd(v)}`);
   });
+
+  document.getElementById("btn-export-history")?.addEventListener("click", () => {
+    persistCurrentBook();
+    if (!persisted) return;
+    downloadHistoryBackup(persisted);
+    showToast("Downloaded paper-book-history.json — commit to GitHub to restore everywhere");
+  });
+
+  const importInput = document.getElementById("history-import-file");
+  document.getElementById("btn-import-history")?.addEventListener("click", () => {
+    importInput?.click();
+  });
+  importInput?.addEventListener("change", async () => {
+    const file = importInput.files?.[0];
+    importInput.value = "";
+    if (!file) return;
+    try {
+      persisted = await importHistoryBackupFile(file);
+      syncStateFromPersisted(state.bookId);
+      renderAll();
+      showToast("History imported");
+    } catch {
+      showToast("Could not import history file");
+    }
+  });
 }
 
 async function boot() {
-  loadBookState(state.bookId);
+  persisted = await loadPersistedState();
+  syncStateFromPersisted(state.bookId);
   applyBookTheme();
   bindUi();
   renderSlip();
   renderHistory();
+
+  window.addEventListener("beforeunload", () => {
+    persistCurrentBook();
+  });
 
   document.getElementById("props-board").innerHTML = `<div class="empty-board">Loading book odds…</div>`;
 

@@ -41,6 +41,7 @@ on:
       - "alpha-caddie-web/scripts/weather-mu-adjustments.mjs"
       - "alpha-caddie-web/scripts/live-in-play-pricing.mjs"
       - "alpha-caddie-web/paper-book/**"
+      - "alpha-caddie-web/paper-book/paper-book-history.json"
       - "alpha-caddie-web/scripts/bake-paper-book-lines.mjs"
       - "alpha-caddie-web/scripts/dg-events-align.mjs"
       - "alpha-caddie-web/scripts/live-event-actuals-cap.mjs"

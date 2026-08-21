@@ -518,6 +518,7 @@ $artifacts = @(
   "alpha-caddie-web/data/odds_model_roi_detail.csv",
   "alpha-caddie-web/data/odds_model_roi_lines.csv",
   "alpha-caddie-web/paper-book/paper-book-lines.json",
+  "alpha-caddie-web/paper-book/paper-book-history.json",
   "website/public/paper-book/paper-book-lines.json",
   "alpha-caddie-web/projection-tracker",
   "alpha-caddie-web/matchup-tracker",

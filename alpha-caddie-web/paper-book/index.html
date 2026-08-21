@@ -97,6 +97,12 @@
     <div class="history-stats" id="history-stats"></div>
     <div class="history-list" id="history-list"></div>
     <div class="history-actions">
+      <p class="history-sync-note">History saves in this browser automatically. Export the JSON, commit it as <code>paper-book/paper-book-history.json</code>, and push to restore on GitHub Pages.</p>
+      <div class="history-sync-btns">
+        <button type="button" class="text-btn" id="btn-export-history">Export history</button>
+        <button type="button" class="text-btn" id="btn-import-history">Import history</button>
+        <input type="file" id="history-import-file" accept="application/json,.json" hidden />
+      </div>
       <label>Starting bankroll
         <input type="number" id="bankroll-reset" min="100" step="100" value="1000" />
       </label>
@@ -106,6 +112,6 @@
 
   <div class="toast" id="toast" hidden></div>
 
-  <script type="module" src="paper-book.js?v=2"></script>
+  <script type="module" src="paper-book.js?v=3"></script>
 </body>
 </html>

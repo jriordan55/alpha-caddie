@@ -589,13 +589,30 @@ body.book-sleeper .place-btn { color: #000; }
 
 .history-actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: end;
+  flex-direction: column;
+  gap: 10px;
   padding: 16px;
   border-top: 1px solid var(--border);
   font-size: 0.82rem;
 }
+
+.history-sync-note {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.history-sync-note code {
+  font-size: 0.72rem;
+}
+
+.history-sync-btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .history-actions input {
   margin-left: 8px;
   padding: 6px 8px;
