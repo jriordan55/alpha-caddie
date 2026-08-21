@@ -8,7 +8,9 @@ import {
   formatLine,
   formatPostedOdds,
   lookupDirectCard,
+  lookupMatchupCard,
   marketShortLabel,
+  isMatchupBook,
   setBakedBookCatalog,
   sideBookOddsFromCard,
   sidePayoutMultiplierFromCard,
@@ -128,15 +130,46 @@ function pickLabel(book, side, line) {
 }
 
 function slipLineKey(leg) {
-  return leg.lineKey || `${leg.dg_id}|${leg.market}|${leg.side}`;
+  if (leg.lineKey) return leg.lineKey;
+  if (leg.cardKind === "matchup") return `${leg.cardKey}|${leg.side}`;
+  return `${leg.dg_id}|${leg.market}|${leg.side}`;
 }
 
 function legFromCard(card, side) {
+  if (card.cardKind === "matchup") {
+    const isP1 = side === "p1";
+    const bookOdds = sideBookOddsFromCard(card, side);
+    const payoutMultiplier = sidePayoutMultiplierFromCard(card, side);
+    const playerName = isP1 ? card.p1_player_name : card.p2_player_name;
+    const opponentName = isP1 ? card.p2_player_name : card.p1_player_name;
+    return {
+      lineKey: `${card.cardKey}|${side}`,
+      cardKey: card.cardKey,
+      cardKind: "matchup",
+      eventName: card.eventName,
+      round: card.round,
+      side,
+      p1_dg_id: card.p1_dg_id,
+      p2_dg_id: card.p2_dg_id,
+      p1_player_name: card.p1_player_name,
+      p2_player_name: card.p2_player_name,
+      playerName,
+      opponentName,
+      market: card.market,
+      bookOdds,
+      payoutMultiplier,
+      odds: bookOdds?.kind === "american" ? bookOdds.raw : undefined,
+      oddsSource: card.oddsSource,
+      fetchedAt: card.fetchedAt,
+    };
+  }
+
   const bookOdds = sideBookOddsFromCard(card, side);
   const payoutMultiplier = sidePayoutMultiplierFromCard(card, side);
   return {
     lineKey: `${card.dg_id}|${card.market}|${side}`,
     cardKey: card.cardKey,
+    cardKind: "ou",
     eventName: card.eventName,
     round: card.round,
     dg_id: card.dg_id,
@@ -150,6 +183,31 @@ function legFromCard(card, side) {
     oddsSource: card.oddsSource,
     fetchedAt: card.fetchedAt,
   };
+}
+
+function describeLegPick(book, leg) {
+  if (leg.cardKind === "matchup") {
+    return `${leg.playerName} vs ${leg.opponentName} · ${formatPostedOdds(book, leg.bookOdds)}`;
+  }
+  return `${pickLabel(book, leg.side, leg.line)} · ${marketShortLabel(leg.market)} · ${formatPostedOdds(book, leg.bookOdds)}`;
+}
+
+function lookupRoundScore(entry, dgId, playerName) {
+  if (!ouGradeIndex) return NaN;
+  const event = String(entry.eventName || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+  const round = Math.round(Number(entry.round));
+  const dg = Math.round(Number(dgId));
+  const player = String(playerName || "")
+    .trim()
+    .toLowerCase();
+  const byDg = Number.isFinite(dg) ? `${event}|${round}|dg:${dg}` : "";
+  const byName = player ? `${event}|${round}|${player}` : "";
+  const hit = (byDg && ouGradeIndex.get(byDg)) || (byName && ouGradeIndex.get(byName));
+  const score = Number(hit?.actual_round_score);
+  return Number.isFinite(score) ? score : NaN;
 }
 
 function refreshLiveBookLines() {
@@ -249,12 +307,22 @@ function placeBet() {
 
   const lockedLegs = [];
   for (const leg of state.slip) {
-    const card = lookupDirectCard(built.cards, leg.dg_id, leg.market);
-    if (!card) {
-      showToast(`${leg.playerName} — book line no longer posted`);
-      return;
+    let card;
+    if (leg.cardKind === "matchup") {
+      card = lookupMatchupCard(built.cards, leg.p1_dg_id, leg.p2_dg_id);
+      if (!card) {
+        showToast(`${leg.playerName} matchup — book line no longer posted`);
+        return;
+      }
+      lockedLegs.push(legFromCard(card, leg.side));
+    } else {
+      card = lookupDirectCard(built.cards, leg.dg_id, leg.market);
+      if (!card) {
+        showToast(`${leg.playerName} — book line no longer posted`);
+        return;
+      }
+      lockedLegs.push(legFromCard(card, leg.side));
     }
-    lockedLegs.push(legFromCard(card, leg.side));
   }
 
   state.bankroll -= stake;
@@ -277,6 +345,15 @@ function placeBet() {
 }
 
 function gradeLeg(leg, entry) {
+  if (leg.cardKind === "matchup") {
+    const s1 = lookupRoundScore(entry, leg.p1_dg_id, leg.p1_player_name);
+    const s2 = lookupRoundScore(entry, leg.p2_dg_id, leg.p2_player_name);
+    if (!Number.isFinite(s1) || !Number.isFinite(s2)) return null;
+    if (s1 === s2) return "P";
+    const p1Wins = s1 < s2;
+    const pickedP1 = leg.side === "p1";
+    return pickedP1 === p1Wins ? "W" : "L";
+  }
   if (!ouGradeIndex) return null;
   return gradeOuBet(
     {
@@ -442,18 +519,62 @@ function renderBoardSync() {
   if (state.market) cards = cards.filter((c) => c.market === state.market);
   if (state.search) {
     const q = state.search.toLowerCase();
-    cards = cards.filter(
-      (c) =>
+    cards = cards.filter((c) => {
+      if (c.cardKind === "matchup") {
+        return (
+          c.p1_player_name.toLowerCase().includes(q) ||
+          c.p2_player_name.toLowerCase().includes(q) ||
+          c.p1_short.toLowerCase().includes(q) ||
+          c.p2_short.toLowerCase().includes(q)
+        );
+      }
+      return (
         c.playerName.toLowerCase().includes(q) ||
         c.market.toLowerCase().includes(q) ||
-        marketShortLabel(c.market).toLowerCase().includes(q),
-    );
+        marketShortLabel(c.market).toLowerCase().includes(q)
+      );
+    });
   }
 
   const slipKeys = new Set(state.slip.map(slipLineKey));
 
   if (!cards.length) {
-    board.innerHTML = `<div class="empty-board">No ${book.label} props with book-posted odds.${built.fetchError ? ` ${built.fetchError}` : ""}</div>`;
+    board.innerHTML = `<div class="empty-board">No ${book.label} lines with book-posted odds.${built.fetchError ? ` ${built.fetchError}` : ""}</div>`;
+    return;
+  }
+
+  if (isMatchupBook(book)) {
+    board.innerHTML = cards
+      .map((card) => {
+        const inSlip = state.slip.some((l) => l.cardKey === card.cardKey);
+        const p1Sel = slipKeys.has(`${card.cardKey}|p1`);
+        const p2Sel = slipKeys.has(`${card.cardKey}|p2`);
+        const mkSide = (side, label, selected) => {
+          const bookOdds = sideBookOddsFromCard(card, side);
+          return `<button type="button" class="side-btn matchup-side ${side}${selected ? " selected" : ""}" data-side="${side}" data-card-key="${esc(card.cardKey)}">
+            <span class="side-label">${esc(label)}</span>
+            <span class="side-odds">${esc(formatPostedOdds(book, bookOdds))}</span>
+          </button>`;
+        };
+        return `<article class="prop-card matchup-card${inSlip ? " in-slip" : ""}">
+          <div class="prop-meta"><span class="prop-market">${esc(marketShortLabel(card.market))}</span></div>
+          <div class="matchup-sides">
+            ${mkSide("p1", card.p1_short, p1Sel)}
+            <span class="matchup-vs">vs</span>
+            ${mkSide("p2", card.p2_short, p2Sel)}
+          </div>
+        </article>`;
+      })
+      .join("");
+
+    board.querySelectorAll(".matchup-side").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const side = btn.getAttribute("data-side");
+        const cardKey = btn.getAttribute("data-card-key");
+        const card = cards.find((c) => c.cardKey === cardKey);
+        if (card) toggleSlipLeg(legFromCard(card, side));
+      });
+    });
     return;
   }
 
@@ -511,8 +632,9 @@ function renderSlip() {
   if (!state.slip.length) {
     legsEl.innerHTML = "";
     emptyEl.hidden = false;
-    emptyEl.textContent =
-      book.mode === "sportsbook"
+    emptyEl.textContent = isMatchupBook(book)
+      ? "Pick a golfer in a round matchup."
+      : book.mode === "sportsbook"
         ? "Select Over or Under on a prop."
         : `Pick ${book.minPicks}–${book.maxPicks} legs for your entry.`;
   } else {
@@ -522,7 +644,7 @@ function renderSlip() {
         (leg) => `<div class="slip-leg">
         <div class="slip-leg-main">
           <div class="slip-leg-player">${esc(leg.playerName)}</div>
-          <div class="slip-leg-pick">${esc(pickLabel(book, leg.side, leg.line))} · ${esc(marketShortLabel(leg.market))} · ${esc(formatPostedOdds(book, leg.bookOdds))}</div>
+          <div class="slip-leg-pick">${esc(describeLegPick(book, leg))}</div>
         </div>
         <button type="button" class="slip-leg-remove" data-line-key="${esc(slipLineKey(leg))}" aria-label="Remove">×</button>
       </div>`,
@@ -570,12 +692,7 @@ function renderHistory() {
       const status = entry.result;
       const pnl =
         status === "open" ? "pending" : `${(entry.pnl || 0) >= 0 ? "+" : ""}${fmtUsd(entry.pnl)}`;
-      const legsTxt = entry.legs
-        .map(
-          (l) =>
-            `${l.playerName.split(",")[0]} ${pickLabel(book, l.side, l.line)} (${formatPostedOdds(book, l.bookOdds || l.odds)})`,
-        )
-        .join(" · ");
+      const legsTxt = entry.legs.map((l) => describeLegPick(book, l)).join(" · ");
       return `<div class="history-entry">
         <div class="entry-head">
           <span>${fmtUsd(entry.stake)} · ${new Date(entry.placedAt).toLocaleDateString()}</span>
@@ -588,6 +705,7 @@ function renderHistory() {
 }
 
 function renderAll() {
+  document.getElementById("filter-market").closest(".toolbar-select").hidden = isMatchupBook(bookById(state.bookId));
   renderSlip();
   renderHistory();
   document.getElementById("bankroll-reset").value = String(state.startingBankroll);

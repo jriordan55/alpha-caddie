@@ -58,6 +58,32 @@ export const PAPER_BOOKS = Object.freeze([
     overLabel: "Higher",
     underLabel: "Lower",
   },
+  {
+    id: "kalshi",
+    label: "Kalshi",
+    short: "KL",
+    source: "kalshi",
+    mode: "sportsbook",
+    cardKind: "ou",
+    minPicks: 1,
+    maxPicks: 1,
+    wholeLine: false,
+    overLabel: "Over",
+    underLabel: "Under",
+  },
+  {
+    id: "dk_matchups",
+    label: "DK Matchups",
+    short: "DK·MU",
+    source: "draftkings",
+    mode: "sportsbook",
+    cardKind: "matchup",
+    minPicks: 1,
+    maxPicks: 1,
+    wholeLine: false,
+    overLabel: "Player 1",
+    underLabel: "Player 2",
+  },
 ]);
 
 export function bookById(id) {
@@ -118,5 +144,10 @@ export function marketShortLabel(market) {
   const m = String(market || "");
   if (m === "Total score") return "Round score";
   if (m === "Fairways hit") return "Fairways";
+  if (m === "Round matchup") return "Round matchup";
   return m;
+}
+
+export function isMatchupBook(book) {
+  return book?.cardKind === "matchup" || book?.id === "dk_matchups";
 }

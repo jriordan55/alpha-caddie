@@ -3,6 +3,7 @@
  */
 import { matchPlayerByGolferLabel } from "../scripts/golfer-name-match.mjs";
 import { canonicalRoundOuMarket, num, ROUND_OU_MARKETS } from "../scripts/pickem-ou-shared.mjs";
+import { matchupOddsTwoWayFromPack } from "../projection-tracker/matchup-math.mjs";
 import { bookById, liveTargetRound, playersForRound } from "./live-book-options-core.mjs";
 
 const SL_HEADERS = {
@@ -329,15 +330,15 @@ async function fetchUnderdogCards(projections, round, bookId) {
   return cards;
 }
 
-/** DraftKings — browser uses server-scraped projections (Playwright); odds are DK displayOdds american. */
-function fetchDraftKingsCards(projections, round, bookId) {
+function fetchOuPropsCards(projections, round, bookId, sourceId) {
   const players = playersForRound(projections, round);
   const eventName = String(projections?.event_name || "").trim();
+  const source = String(sourceId || bookId).toLowerCase();
   /** @type {object[]} */
   const cards = [];
 
   for (const row of Array.isArray(projections?.props) ? projections.props : []) {
-    if (String(row?.source || "").toLowerCase() !== "draftkings") continue;
+    if (String(row?.source || "").toLowerCase() !== source) continue;
     let rnd = Math.round(num(row.round_num ?? row.display_round, NaN));
     if (!Number.isFinite(rnd) || rnd < 1) rnd = round;
     if (rnd !== round) continue;
@@ -362,8 +363,110 @@ function fetchDraftKingsCards(projections, round, bookId) {
       round,
       eventName,
       bookId,
+      cardKind: "ou",
     });
   }
+  return cards;
+}
+
+/** DraftKings O/U — server-scraped projections; odds are DK displayOdds american. */
+function fetchDraftKingsCards(projections, round, bookId) {
+  return fetchOuPropsCards(projections, round, bookId, "draftkings");
+}
+
+/** Kalshi round-score O/U — merged into projections at fetch:book-odds. */
+function fetchKalshiCards(projections, round, bookId) {
+  let cards = fetchOuPropsCards(projections, round, bookId, "kalshi");
+  if (cards.length) return cards;
+
+  const roundCounts = new Map();
+  for (const row of Array.isArray(projections?.props) ? projections.props : []) {
+    if (String(row?.source || "").toLowerCase() !== "kalshi") continue;
+    let rnd = Math.round(num(row.round_num ?? row.display_round, NaN));
+    if (!Number.isFinite(rnd) || rnd < 1) rnd = 1;
+    roundCounts.set(rnd, (roundCounts.get(rnd) || 0) + 1);
+  }
+  if (!roundCounts.size) return cards;
+  const bestRound = [...roundCounts.entries()].sort((a, b) => b[1] - a[1] || b[0] - a[0])[0][0];
+  if (bestRound === round) return cards;
+  return fetchOuPropsCards(projections, bestRound, bookId, "kalshi");
+}
+
+function formatPlayerShort(name) {
+  const s = String(name || "").trim();
+  if (!s) return "—";
+  const parts = s.split(",").map((p) => p.trim());
+  if (parts.length >= 2) return `${parts[1]} ${parts[0]}`.trim();
+  return s;
+}
+
+function pushMatchupCard(out, ctx) {
+  const {
+    p1_dg_id,
+    p2_dg_id,
+    p1_player_name,
+    p2_player_name,
+    p1BookOdds,
+    p2BookOdds,
+    round,
+    eventName,
+    bookId,
+  } = ctx;
+  if (!p1BookOdds || !p2BookOdds) return;
+  if (!Number.isFinite(p1_dg_id) || !Number.isFinite(p2_dg_id)) return;
+
+  out.push({
+    cardKind: "matchup",
+    cardKey: `mu:${p1_dg_id}|${p2_dg_id}`,
+    eventName,
+    round,
+    market: "Round matchup",
+    p1_dg_id,
+    p2_dg_id,
+    p1_player_name: String(p1_player_name || "").trim(),
+    p2_player_name: String(p2_player_name || "").trim(),
+    p1_short: formatPlayerShort(p1_player_name),
+    p2_short: formatPlayerShort(p2_player_name),
+    p1BookOdds,
+    p2BookOdds,
+    p1PayoutMultiplier: legPayoutMultiplierFromBookOdds(p1BookOdds),
+    p2PayoutMultiplier: legPayoutMultiplierFromBookOdds(p2BookOdds),
+    oddsSource: "draftkings_matchups",
+    bookId,
+    gradeable: true,
+  });
+}
+
+/** DraftKings round matchups from DataGolf odds screen (decimal DK prices). */
+function fetchDraftKingsMatchupCards(projections, round, bookId) {
+  const eventName = String(projections?.event_name || "").trim();
+  const oddsFormat = String(projections?.meta?.matchups_odds_format || projections?.matchups_odds_format || "decimal");
+  const list = projections?.matchups?.round_matchups?.match_list;
+  /** @type {object[]} */
+  const cards = [];
+
+  for (const row of Array.isArray(list) ? list : []) {
+    const pack = row?.odds?.draftkings;
+    if (!pack) continue;
+    const { d1, d2 } = matchupOddsTwoWayFromPack(pack, oddsFormat);
+    const p1BookOdds = bookOddsFromDecimalRaw(d1);
+    const p2BookOdds = bookOddsFromDecimalRaw(d2);
+    if (!p1BookOdds || !p2BookOdds) continue;
+
+    pushMatchupCard(cards, {
+      p1_dg_id: Math.round(num(row.p1_dg_id, NaN)),
+      p2_dg_id: Math.round(num(row.p2_dg_id, NaN)),
+      p1_player_name: row.p1_player_name,
+      p2_player_name: row.p2_player_name,
+      p1BookOdds,
+      p2BookOdds,
+      round,
+      eventName,
+      bookId,
+    });
+  }
+
+  cards.sort((a, b) => a.p1_short.localeCompare(b.p1_short) || a.p2_short.localeCompare(b.p2_short));
   return cards;
 }
 
@@ -391,6 +494,10 @@ async function fetchDirectBookCardsUncached(projections, bookId) {
   try {
     if (book.id === "draftkings") {
       cards = fetchDraftKingsCards(projections, round, book.id);
+    } else if (book.id === "kalshi") {
+      cards = fetchKalshiCards(projections, round, book.id);
+    } else if (book.id === "dk_matchups") {
+      cards = fetchDraftKingsMatchupCards(projections, round, book.id);
     } else if (book.id === "sleeper") {
       cards = await fetchSleeperCards(projections, round, book.id);
     } else if (book.id === "underdog") {
@@ -405,10 +512,21 @@ async function fetchDirectBookCardsUncached(projections, bookId) {
 
   for (const c of cards) {
     c.fetchedAt = fetchedAt;
-    c.oddsSource = book.id === "draftkings" ? "draftkings_api_scrape" : "book_api_live";
+    if (!c.oddsSource) {
+      c.oddsSource =
+        book.id === "draftkings"
+          ? "draftkings_api_scrape"
+          : book.id === "kalshi"
+            ? "kalshi_api"
+            : book.id === "dk_matchups"
+              ? "draftkings_matchups"
+              : "book_api_live";
+    }
   }
 
-  cards.sort((a, b) => a.playerName.localeCompare(b.playerName));
+  if (book.id !== "dk_matchups") {
+    cards.sort((a, b) => String(a.playerName || "").localeCompare(String(b.playerName || "")));
+  }
 
   return {
     round,

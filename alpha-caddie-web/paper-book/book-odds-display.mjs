@@ -30,10 +30,16 @@ export function legPayoutMultiplierFromBookOdds(bookOdds) {
 }
 
 export function sideBookOddsFromCard(card, side) {
+  if (card?.cardKind === "matchup") {
+    return side === "p2" ? card.p2BookOdds : card.p1BookOdds;
+  }
   return side === "under" ? card.underBookOdds : card.overBookOdds;
 }
 
 export function sidePayoutMultiplierFromCard(card, side) {
+  if (card?.cardKind === "matchup") {
+    return side === "p2" ? card.p2PayoutMultiplier : card.p1PayoutMultiplier;
+  }
   return side === "under" ? card.underPayoutMultiplier : card.overPayoutMultiplier;
 }
 
@@ -43,10 +49,19 @@ export function lookupDirectCard(cards, dgId, market) {
   return (
     cards.find(
       (c) =>
+        c.cardKind !== "matchup" &&
         c.market === mkt &&
         (c.dg_id === id || String(c.dg_id) === String(id) || c.cardKey?.startsWith(`${id}|`)),
     ) || null
   );
+}
+
+export function lookupMatchupCard(cards, p1DgId, p2DgId) {
+  const a = Math.round(Number(p1DgId));
+  const b = Math.round(Number(p2DgId));
+  if (!Number.isFinite(a) || !Number.isFinite(b)) return null;
+  const key = `mu:${a}|${b}`;
+  return cards.find((c) => c.cardKind === "matchup" && c.cardKey === key) || null;
 }
 
 export function formatPostedOdds(_book, bookOddsOrAmerican) {

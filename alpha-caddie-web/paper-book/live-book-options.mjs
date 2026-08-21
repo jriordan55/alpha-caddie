@@ -6,6 +6,7 @@ import {
   formatBookOddsDisplay,
   formatPostedOdds,
   lookupDirectCard,
+  lookupMatchupCard,
   sideBookOddsFromCard,
   sidePayoutMultiplierFromCard,
 } from "./book-odds-display.mjs";
@@ -13,6 +14,7 @@ import {
 export {
   PAPER_BOOKS,
   bookById,
+  isMatchupBook,
   liveTargetRound,
   playersForRound,
   formatLine,
@@ -23,6 +25,7 @@ export {
   formatBookOddsDisplay,
   formatPostedOdds,
   lookupDirectCard,
+  lookupMatchupCard,
   sideBookOddsFromCard,
   sidePayoutMultiplierFromCard,
 };

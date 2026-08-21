@@ -97,6 +97,24 @@ body.book-underdog {
   --text: #fafafa;
 }
 
+body.book-kalshi {
+  --accent: #09c285;
+  --accent-dim: rgba(9, 194, 133, 0.15);
+  --header-bg: #0b1f17;
+  --place-btn: linear-gradient(180deg, #09c285, #078a60);
+  --btn-over: #09c285;
+  --btn-under: #1f2937;
+}
+
+body.book-dk_matchups {
+  --accent: #53d337;
+  --accent-dim: rgba(83, 211, 55, 0.12);
+  --header-bg: #000;
+  --place-btn: linear-gradient(180deg, #53d337, #3db828);
+  --btn-over: #53d337;
+  --btn-under: #374151;
+}
+
 .book-header {
   background: var(--header-bg);
   border-bottom: 1px solid var(--border);
@@ -322,6 +340,35 @@ body.book-draftkings .prop-card { border-left: 3px solid var(--accent); }
 body.book-prizepicks .prop-line { font-family: "Archivo Black", sans-serif; }
 
 .prop-sides { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.matchup-sides {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.matchup-vs {
+  align-self: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.matchup-card .side-btn.matchup-side {
+  min-height: 64px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
+}
+
+.matchup-card .side-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
 
 .side-btn {
   border: none;
