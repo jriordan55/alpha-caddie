@@ -80,6 +80,7 @@ function syncStateFromPersisted(bookId = state.bookId) {
   state.playType = slice.playType;
   state.stake = slice.stake;
   state.history = slice.history;
+  return slice;
 }
 
 function persistCurrentBook() {
@@ -325,7 +326,7 @@ function placeBet() {
   }
 
   state.bankroll -= stake;
-  state.history.unshift({
+  const entry = {
     id: crypto.randomUUID(),
     placedAt: new Date().toISOString(),
     bookId: book.id,
@@ -335,9 +336,11 @@ function placeBet() {
     playType: book.id === "prizepicks" ? state.playType : book.mode === "sportsbook" ? "single" : "parlay",
     result: "open",
     legs: lockedLegs,
-  });
+  };
+  state.history = [entry, ...state.history];
   state.slip = [];
   saveBookState();
+  syncStateFromPersisted(state.bookId);
   gradeOpenEntries();
   renderAll();
   showToast(`Placed ${fmtUsd(stake)} · ${book.label}`);
@@ -414,7 +417,10 @@ function gradeOpenEntries() {
     if (entry.result !== "open") continue;
     if (settleEntry(entry)) changed++;
   }
-  if (changed > 0) saveBookState();
+  if (changed > 0) {
+    saveBookState();
+    syncStateFromPersisted(state.bookId);
+  }
 }
 
 function parseCsvLine(line) {

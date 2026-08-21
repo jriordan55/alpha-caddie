@@ -86,6 +86,10 @@ function mergeHistories(localHist, remoteHist) {
   return [...byId.values()].sort((a, b) => String(b.placedAt || "").localeCompare(String(a.placedAt || "")));
 }
 
+function hasAnyHistory(state) {
+  return BOOK_IDS.some((id) => (state?.books?.[id]?.history?.length || 0) > 0);
+}
+
 export function mergePersistedStates(local, remote) {
   const a = normalizePersistedState(local);
   const b = normalizePersistedState(remote);
@@ -108,13 +112,17 @@ export function mergePersistedStates(local, remote) {
 
 export async function loadPersistedState() {
   let state = readLocal() || migrateV1() || emptyPersistedState();
+  const hadLocal = Boolean(readLocal() || migrateV1());
 
   try {
     const res = await fetch(`${HISTORY_URL}?t=${Date.now()}`, { cache: "no-store" });
     if (res.ok) {
       const remote = normalizePersistedState(await res.json());
-      state = mergePersistedStates(state, remote);
-      writePersistedState(state);
+      const seedFromRepo = !hadLocal || hasAnyHistory(remote);
+      if (seedFromRepo) {
+        state = mergePersistedStates(state, remote);
+        writePersistedState(state);
+      }
     }
   } catch {
     /* optional repo file */
@@ -135,12 +143,24 @@ export function writePersistedState(persisted) {
 }
 
 export function bookSlice(persisted, bookId) {
-  return normalizeBookState(persisted?.books?.[bookId]);
+  const slice = normalizeBookState(persisted?.books?.[bookId]);
+  return {
+    ...slice,
+    history: mergeHistories([], slice.history),
+  };
 }
 
 export function applyBookSlice(persisted, bookId, slice) {
-  const out = normalizePersistedState(persisted);
-  out.books[bookId] = normalizeBookState({ ...out.books[bookId], ...slice });
+  const latest = readLocal() || persisted;
+  const out = normalizePersistedState(latest);
+  const storedHistory = out.books[bookId]?.history || [];
+  const nextHistory =
+    slice?.history != null ? mergeHistories(storedHistory, slice.history) : storedHistory;
+  out.books[bookId] = normalizeBookState({
+    ...out.books[bookId],
+    ...slice,
+    history: nextHistory,
+  });
   return writePersistedState(out);
 }
 
