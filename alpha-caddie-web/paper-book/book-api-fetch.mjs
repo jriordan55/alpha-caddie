@@ -3,7 +3,7 @@
  */
 import { matchPlayerByGolferLabel } from "../scripts/golfer-name-match.mjs";
 import { canonicalRoundOuMarket, num, ROUND_OU_MARKETS } from "../scripts/pickem-ou-shared.mjs";
-import { matchupOddsTwoWayFromPack } from "../projection-tracker/matchup-math.mjs";
+import { decimalToAmerican, matchupOddsTwoWayFromPack } from "../projection-tracker/matchup-math.mjs";
 import { bookById, liveTargetRound, playersForRound } from "./live-book-options-core.mjs";
 
 const SL_HEADERS = {
@@ -437,7 +437,7 @@ function pushMatchupCard(out, ctx) {
   });
 }
 
-/** DraftKings round matchups from DataGolf odds screen (decimal DK prices). */
+/** DraftKings round matchups — DataGolf feed is decimal; store/display as American like DK sportsbook. */
 function fetchDraftKingsMatchupCards(projections, round, bookId) {
   const eventName = String(projections?.event_name || "").trim();
   const oddsFormat = String(projections?.meta?.matchups_odds_format || projections?.matchups_odds_format || "decimal");
@@ -449,8 +449,8 @@ function fetchDraftKingsMatchupCards(projections, round, bookId) {
     const pack = row?.odds?.draftkings;
     if (!pack) continue;
     const { d1, d2 } = matchupOddsTwoWayFromPack(pack, oddsFormat);
-    const p1BookOdds = bookOddsFromDecimalRaw(d1);
-    const p2BookOdds = bookOddsFromDecimalRaw(d2);
+    const p1BookOdds = bookOddsFromAmericanRaw(decimalToAmerican(d1));
+    const p2BookOdds = bookOddsFromAmericanRaw(decimalToAmerican(d2));
     if (!p1BookOdds || !p2BookOdds) continue;
 
     pushMatchupCard(cards, {
