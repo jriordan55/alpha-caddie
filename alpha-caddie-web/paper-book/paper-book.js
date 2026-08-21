@@ -211,7 +211,6 @@ function lookupRoundScore(entry, dgId, playerName) {
 }
 
 function refreshLiveBookLines() {
-  if (!projections) return null;
   liveBuilt = buildLivePropCards(projections, state.bookId);
   return liveBuilt;
 }
@@ -522,10 +521,10 @@ function renderBoardSync() {
     cards = cards.filter((c) => {
       if (c.cardKind === "matchup") {
         return (
-          c.p1_player_name.toLowerCase().includes(q) ||
-          c.p2_player_name.toLowerCase().includes(q) ||
-          c.p1_short.toLowerCase().includes(q) ||
-          c.p2_short.toLowerCase().includes(q)
+          String(c.p1_player_name || "").toLowerCase().includes(q) ||
+          String(c.p2_player_name || "").toLowerCase().includes(q) ||
+          String(c.p1_short || "").toLowerCase().includes(q) ||
+          String(c.p2_short || "").toLowerCase().includes(q)
         );
       }
       return (
@@ -559,9 +558,9 @@ function renderBoardSync() {
         return `<article class="prop-card matchup-card${inSlip ? " in-slip" : ""}">
           <div class="prop-meta"><span class="prop-market">${esc(marketShortLabel(card.market))}</span></div>
           <div class="matchup-sides">
-            ${mkSide("p1", card.p1_short, p1Sel)}
+            ${mkSide("p1", card.p1_short || card.p1_player_name, p1Sel)}
             <span class="matchup-vs">vs</span>
-            ${mkSide("p2", card.p2_short, p2Sel)}
+            ${mkSide("p2", card.p2_short || card.p2_player_name, p2Sel)}
           </div>
         </article>`;
       })
@@ -615,12 +614,6 @@ function renderBoardSync() {
 }
 
 function renderBoard() {
-  const board = document.getElementById("props-board");
-  if (!projections) {
-    board.innerHTML = `<div class="empty-board">Loading…</div>`;
-    return;
-  }
-
   paintBoard(buildLivePropCards(projections, state.bookId));
 }
 
