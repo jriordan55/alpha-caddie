@@ -1,7 +1,7 @@
 /**
  * Paper book only accepts odds returned directly from each book's API/scrape.
  */
-import { legPayoutMultiplierFromBookOdds } from "./book-api-fetch.mjs";
+import { legPayoutMultiplierFromBookOdds } from "./book-odds-display.mjs";
 
 export function isDirectBookOddsCard(card) {
   if (!card || typeof card !== "object") return false;

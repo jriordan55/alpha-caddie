@@ -21,7 +21,7 @@ export const PP_FLEX_MULT = Object.freeze({
   6: { 6: 25, 5: 2, 4: 0.4 },
 });
 
-import { legPayoutMultiplierFromBookOdds } from "./book-api-fetch.mjs";
+import { legPayoutMultiplierFromBookOdds } from "./book-odds-display.mjs";
 
 export function oddsToMultiplier(amOrLeg) {
   if (amOrLeg && typeof amOrLeg === "object" && amOrLeg.bookOdds) {

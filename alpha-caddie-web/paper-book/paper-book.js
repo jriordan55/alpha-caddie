@@ -672,22 +672,39 @@ async function boot() {
   bindUi();
   renderSlip();
   renderHistory();
+
+  document.getElementById("props-board").innerHTML = `<div class="empty-board">Loading book odds…</div>`;
+
   try {
-    await loadProjections();
-    await loadPaperBookLines();
-    gradeOpenEntries();
+    const linesOk = await loadPaperBookLines();
+    if (!linesOk) {
+      document.getElementById("props-board").innerHTML =
+        `<div class="empty-board">Missing paper-book-lines.json — run npm run push:live or npm run bake:paper-book</div>`;
+      return;
+    }
     renderAll();
-    refreshGradeDataInBackground();
   } catch (err) {
     document.getElementById("props-board").innerHTML = `<div class="empty-board">${esc(err.message)}</div>`;
     return;
   }
 
+  loadProjections()
+    .then(() => {
+      gradeOpenEntries();
+      refreshGradeDataInBackground();
+    })
+    .catch(() => {
+      /* grading optional */
+    });
+
   setInterval(async () => {
     try {
-      await Promise.all([loadProjections(), loadPaperBookLines()]);
-      gradeOpenEntries();
+      await loadPaperBookLines();
       renderAll();
+      if (projections) {
+        await loadProjections();
+        gradeOpenEntries();
+      }
     } catch {
       /* ignore poll errors */
     }

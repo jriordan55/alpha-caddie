@@ -1,13 +1,14 @@
 /**
- * Paper book prop cards — from baked paper-book-lines.json (push:live), not browser API calls.
+ * Paper book prop cards — from baked paper-book-lines.json (push:live).
  */
 import { bookById } from "./live-book-options-core.mjs";
 import {
   formatBookOddsDisplay,
+  formatPostedOdds,
   lookupDirectCard,
   sideBookOddsFromCard,
   sidePayoutMultiplierFromCard,
-} from "./book-api-fetch.mjs";
+} from "./book-odds-display.mjs";
 
 export {
   PAPER_BOOKS,
@@ -18,7 +19,13 @@ export {
   marketShortLabel,
 } from "./live-book-options-core.mjs";
 
-export { formatBookOddsDisplay, lookupDirectCard, sideBookOddsFromCard, sidePayoutMultiplierFromCard };
+export {
+  formatBookOddsDisplay,
+  formatPostedOdds,
+  lookupDirectCard,
+  sideBookOddsFromCard,
+  sidePayoutMultiplierFromCard,
+};
 
 /** @type {object|null} */
 let bakedCatalog = null;
@@ -31,10 +38,7 @@ export function getBakedBookCatalog() {
   return bakedCatalog;
 }
 
-/**
- * @param {object} _projections
- * @param {string} bookId
- */
+/** @param {object} _projections @param {string} bookId */
 export function buildLivePropCards(_projections, bookId) {
   const book = bookById(bookId);
   const entry = bakedCatalog?.books?.[bookId];
@@ -68,13 +72,4 @@ export function buildLivePropCards(_projections, bookId) {
     book,
     fromBaked: false,
   };
-}
-
-export function formatPostedOdds(_book, bookOddsOrAmerican) {
-  if (bookOddsOrAmerican && typeof bookOddsOrAmerican === "object" && bookOddsOrAmerican.kind) {
-    return formatBookOddsDisplay(bookOddsOrAmerican);
-  }
-  const am = Number(bookOddsOrAmerican);
-  if (!Number.isFinite(am) || am === 0) return "—";
-  return am > 0 ? `+${Math.round(am)}` : String(Math.round(am));
 }
