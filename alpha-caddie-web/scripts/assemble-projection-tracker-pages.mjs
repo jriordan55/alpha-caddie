@@ -83,6 +83,7 @@ mkdirSync(join(out, "scripts"), { recursive: true });
 mkdirSync(join(out, "projection-tracker"), { recursive: true });
 mkdirSync(join(out, "matchup-tracker"), { recursive: true });
 mkdirSync(join(out, "app"), { recursive: true });
+mkdirSync(join(out, "paper-book"), { recursive: true });
 
 writeFileSync(join(out, ".nojekyll"), "");
 writeFileSync(
@@ -105,6 +106,7 @@ writeFileSync(
     <li><a href="app/">Alpha Caddie app</a> — Round projections, live stats, course fit</li>
     <li><a href="projection-tracker/">Projection tracker</a> — round O/U vs actual</li>
     <li><a href="matchup-tracker/">Matchup tracker</a> — round matchups + 3-balls (DK / FanDuel / BetMGM)</li>
+    <li><a href="paper-book/">Paper trade book</a> — DK / PP / Sleeper / Underdog props (fake money)</li>
   </ul>
 </body>
 </html>
@@ -123,6 +125,14 @@ if (existsSync(matchupSrc)) {
   cpSync(matchupSrc, join(out, "matchup-tracker"), { recursive: true });
 } else {
   console.warn("[assemble-tracker-pages] matchup-tracker missing — Pages will omit matchup UI");
+}
+
+const paperBookSrc = join(WEB, "paper-book");
+if (existsSync(paperBookSrc)) {
+  cpSync(paperBookSrc, join(out, "paper-book"), { recursive: true });
+  console.log("[assemble-tracker-pages] copied paper-book/");
+} else {
+  console.warn("[assemble-tracker-pages] paper-book missing — Pages will omit paper trade book");
 }
 
 const projSrc = join(WEB, "projections.json");
