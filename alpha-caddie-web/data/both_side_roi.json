@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-20T04:13:04.907Z",
+  "generated_at": "2026-08-21T00:54:37.143Z",
   "source": "data/round_projection_vs_actual.csv",
   "pricing_mode": "prop_pricing_model",
   "pricing_skill": "default",
@@ -48,13 +48,13 @@
     "hardrock": 205
   },
   "book_graded_rows_live": {
-    "draftkings": 0,
-    "prizepicks": 0,
-    "sleeper": 0,
-    "underdog": 0,
+    "draftkings": 165,
+    "prizepicks": 148,
+    "sleeper": 123,
+    "underdog": 98,
     "fanduel": 0,
-    "caesars": 0,
-    "kalshi": 0,
+    "caesars": 75,
+    "kalshi": 50,
     "hardrock": 0
   },
   "stake_dollars": 100,
@@ -317,7 +317,7 @@
     },
     "Total score": {
       "n_graded_rows": 3305,
-      "n_graded_rows_live": 0,
+      "n_graded_rows_live": 230,
       "sweep": [
         {
           "min_ev_pct": 0,
@@ -542,7 +542,7 @@
     },
     "Birdies": {
       "n_graded_rows": 2700,
-      "n_graded_rows_live": 0,
+      "n_graded_rows_live": 208,
       "sweep": [
         {
           "min_ev_pct": 0,
@@ -1175,7 +1175,7 @@
     },
     "Pars": {
       "n_graded_rows": 1196,
-      "n_graded_rows_live": 0,
+      "n_graded_rows_live": 96,
       "sweep": [
         {
           "min_ev_pct": 0,
@@ -2011,7 +2011,7 @@
     },
     "Bogeys": {
       "n_graded_rows": 1238,
-      "n_graded_rows_live": 0,
+      "n_graded_rows_live": 125,
       "sweep": [
         {
           "min_ev_pct": 0,

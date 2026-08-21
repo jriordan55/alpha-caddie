@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Paper book · Golf props</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Archivo+Black&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="paper-book.css?v=1" />
+</head>
+<body class="book-draftkings" id="app-body">
+  <div class="paper-app">
+    <header class="book-header">
+      <div class="book-header-inner">
+        <a class="back-link" href="../" title="AlphaCaddie home">←</a>
+        <div class="book-brand" id="book-brand">
+          <span class="book-logo" id="book-logo" aria-hidden="true"></span>
+          <div>
+            <h1 class="book-title" id="book-title">DraftKings</h1>
+            <p class="book-sub" id="book-sub">Paper trade · fake money</p>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="balance-pill" id="balance-pill" title="Play bankroll">$1,000.00</div>
+          <button type="button" class="icon-btn" id="btn-history" title="Bet history">History</button>
+        </div>
+      </div>
+      <nav class="book-switcher" aria-label="Sportsbook">
+        <button type="button" class="book-tab active" data-book="draftkings">DraftKings</button>
+        <button type="button" class="book-tab" data-book="prizepicks">PrizePicks</button>
+        <button type="button" class="book-tab" data-book="sleeper">Sleeper</button>
+        <button type="button" class="book-tab" data-book="underdog">Underdog</button>
+      </nav>
+    </header>
+
+    <div class="event-bar" id="event-bar">
+      <span id="event-label">Loading…</span>
+      <span class="event-updated" id="event-updated"></span>
+    </div>
+
+    <p class="banner banner-warn" id="lines-banner" hidden></p>
+
+    <div class="toolbar">
+      <label class="toolbar-search">
+        <span class="sr-only">Search players</span>
+        <input type="search" id="filter-search" placeholder="Search golfers…" autocomplete="off" />
+      </label>
+      <label class="toolbar-select">
+        Market
+        <select id="filter-market">
+          <option value="">All</option>
+        </select>
+      </label>
+    </div>
+
+    <main class="main-layout">
+      <section class="props-board" id="props-board" aria-label="Available props"></section>
+
+      <aside class="slip-panel" id="slip-panel">
+        <div class="slip-head">
+          <h2 class="slip-title" id="slip-title">Bet slip</h2>
+          <button type="button" class="text-btn" id="btn-clear-slip">Clear</button>
+        </div>
+        <div class="pp-play-toggle" id="pp-play-toggle" hidden>
+          <button type="button" class="play-type active" data-play="power">Power Play</button>
+          <button type="button" class="play-type" data-play="flex">Flex Play</button>
+        </div>
+        <div class="slip-legs" id="slip-legs"></div>
+        <div class="slip-empty" id="slip-empty">Tap a side to add picks.</div>
+        <div class="slip-footer">
+          <div class="payout-preview" id="payout-preview">—</div>
+          <label class="stake-row">
+            <span>Entry amount</span>
+            <div class="stake-input-wrap">
+              <span class="stake-prefix">$</span>
+              <input type="number" id="stake-input" min="1" step="1" value="10" />
+            </div>
+          </label>
+          <div class="quick-stakes">
+            <button type="button" class="quick-stake" data-amt="5">$5</button>
+            <button type="button" class="quick-stake" data-amt="10">$10</button>
+            <button type="button" class="quick-stake" data-amt="25">$25</button>
+            <button type="button" class="quick-stake" data-amt="50">$50</button>
+          </div>
+          <button type="button" class="place-btn" id="btn-place" disabled>Place bet</button>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <dialog class="history-dialog" id="history-dialog">
+    <div class="history-head">
+      <h2>Bet history</h2>
+      <button type="button" class="icon-btn" id="btn-close-history">Close</button>
+    </div>
+    <div class="history-stats" id="history-stats"></div>
+    <div class="history-list" id="history-list"></div>
+    <div class="history-actions">
+      <label>Starting bankroll
+        <input type="number" id="bankroll-reset" min="100" step="100" value="1000" />
+      </label>
+      <button type="button" class="text-btn" id="btn-reset-bankroll">Reset bankroll</button>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script type="module" src="paper-book.js?v=1"></script>
+</body>
+</html>

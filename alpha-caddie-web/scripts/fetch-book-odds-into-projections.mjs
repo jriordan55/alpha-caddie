@@ -70,6 +70,7 @@ import { refreshKalshiRoundProps } from "./merge-kalshi-round-props.mjs";
 import { refreshPrizePicksRoundProps } from "./merge-pp-round-props.mjs";
 import { refreshSleeperRoundProps } from "./merge-sleeper-round-props.mjs";
 import { refreshUnderdogRoundProps } from "./merge-underdog-round-props.mjs";
+import { bakePaperBookLines } from "./bake-paper-book-lines.mjs";
 import { projectionExportMeta } from "./projection-export-meta.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -706,6 +707,14 @@ async function main() {
       } catch (e) {
         console.warn("[fetch-book-odds] DK round audit CSV:", e.message || e);
       }
+    }
+  }
+
+  if (String(process.env.GOLF_SKIP_PAPER_BOOK_BAKE || "").trim() !== "1") {
+    try {
+      await bakePaperBookLines(next);
+    } catch (e) {
+      console.warn("[fetch-book-odds] paper book bake:", e.message || e);
     }
   }
 }

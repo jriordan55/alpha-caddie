@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-20T04:11:15.106Z",
+  "generated_at": "2026-08-21T00:53:17.273Z",
   "methodology": {
     "grading": "walk_forward_oos_dollar_bankroll",
     "model_lines": "walk_forward_stat_model_no_dk_calibration",
@@ -10,9 +10,9 @@
   },
   "outcome_sigma_scales": {
     "Total score": 1.057,
-    "Birdies": 1.035,
-    "GIR": 1.106,
-    "Fairways hit": 1.356
+    "Birdies": 1.029,
+    "GIR": 1.103,
+    "Fairways hit": 1.359
   },
   "recommended_policy": {
     "min_ev_pct": 0,
@@ -79,7 +79,8 @@
     "3M Open",
     "Rocket Classic",
     "Wyndham Championship",
-    "FedEx St. Jude Championship"
+    "FedEx St. Jude Championship",
+    "BMW Championship"
   ],
   "oos_event_count": 14,
   "default_min_ev_pct": 0,
