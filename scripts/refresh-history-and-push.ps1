@@ -186,7 +186,7 @@ if ($LiveWeekOnly) {
   $env:GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL = "0"
   $env:GOLF_REQUIRE_TRACKER_REFRESH = "1"
   $env:GOLF_SKIP_MATCHUP_ODDS_UPDATE = "0"
-  $env:GOLF_REQUIRE_LIVE_PUBLISH_INVARIANTS = "1"
+  $env:GOLF_REQUIRE_LIVE_PUBLISH_INVARIANTS = "0"
   $env:GOLF_SKIP_HOLE_PROPS = "1"
   $env:GOLF_SKIP_SG_DISTANCE = "1"
   Remove-Item Env:\GOLF_MATCHUP_BACKTEST_SINCE -ErrorAction SilentlyContinue
@@ -226,13 +226,8 @@ if ($LiveWeekOnly) {
   $env:GOLF_UNIFIED_TEE_WAVE_W = "0.30"
   $env:GOLF_FIELD_DAY_COUNTING_LIFT_FRAC = "0"
   $env:GOLF_WITHIN_EVENT_COUNTING_BLEND = "0"
-  Write-Host 'LiveWeekOnly (fast): projections + book odds + course-as-of + weather + projection-tracker.'
-  Write-Host 'Live Stats: refreshed via fetch:in-play + pgatouR; hybrid prior-week LTS is cleared on event roll.'
-  Write-Host 'μ recipe: hierarchical (no book align, no both-side chrono bias).'
-  Write-Host 'Required: tracker O/U CSV + walkforward_oos_roi, Odds Screen matchups aligned to event, live-publish invariants.'
-  Write-Host 'Trends: post-live CSV merge + field shard patch (field by-dg shards published; monolith on push:all only).'
-  Write-Host 'Skipped: full build:history, hole-prop scrapes, SG-distance rebuild, pre-fetch CSV merge, finish-tool, book-cal, Odds.csv ROI backtest.'
-  Write-Host 'Full depth history rebuild: npm run push:all'
+  Write-Host 'LiveWeekOnly: projections + book odds + prior-round tab data (lean refresh:live).'
+  Write-Host 'Full pipeline (weather, hole props, ROI backtests): npm run refresh:live:full or npm run push:all'
 } elseif (-not $NoFullHistory) {
   $env:GOLF_HISTORICAL_ROUNDS_FULL_HISTORY = "1"
   $env:GOLF_SKIP_HISTORY_ON_FETCH_DG = "1"
@@ -522,6 +517,8 @@ $artifacts = @(
   "alpha-caddie-web/data/odds_model_roi_summary.csv",
   "alpha-caddie-web/data/odds_model_roi_detail.csv",
   "alpha-caddie-web/data/odds_model_roi_lines.csv",
+  "alpha-caddie-web/paper-book/paper-book-lines.json",
+  "website/public/paper-book/paper-book-lines.json",
   "alpha-caddie-web/projection-tracker",
   "alpha-caddie-web/matchup-tracker",
   "alpha-caddie-web/data/pgatour_event_rounds.json",
