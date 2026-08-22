@@ -9,7 +9,7 @@
   "datagolf_field_current_round": 3,
   "display_round": 3,
   "display_round_label": "R3 — Saturday (auto, America/New_York)",
-  "updated_at": "2026-08-22T02:00:28Z",
+  "updated_at": "2026-08-22T03:27:41Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -17214,8 +17214,21 @@
     },
     {
       "player_name": "Kim, Tom",
-      "line": 4.5,
+      "line": 4,
       "market": "Birdies",
+      "source": "prizepicks",
+      "dg_id": 24766,
+      "round_num": 3,
+      "over_odds": -136,
+      "under_odds": -136,
+      "p_over_implied": 0.576271186440678,
+      "p_under_implied": 0.576271186440678,
+      "pp_odds_method": "prizepicks_fixed"
+    },
+    {
+      "player_name": "Kim, Tom",
+      "line": 68.5,
+      "market": "Total Score",
       "source": "prizepicks",
       "dg_id": 24766,
       "round_num": 3,
@@ -18111,7 +18124,7 @@
     },
     {
       "player_name": "Fitzpatrick, Matt",
-      "line": 67.5,
+      "line": 68,
       "market": "Total Score",
       "source": "prizepicks",
       "dg_id": 17646,
@@ -19969,6 +19982,1449 @@
       "pp_odds_method": "prizepicks_fixed"
     },
     {
+      "player_name": "Bhatia, Akshay",
+      "line": 4.5,
+      "over_odds": 119,
+      "under_odds": -204,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.45662100456621,
+      "p_under_implied": 0.6710526315789473,
+      "dg_id": 26096,
+      "round_num": 3
+    },
+    {
+      "player_name": "Bhatia, Akshay",
+      "line": 2.5,
+      "over_odds": -132,
+      "under_odds": -125,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5689655172413793,
+      "p_under_implied": 0.5555555555555556,
+      "dg_id": 26096,
+      "round_num": 3
+    },
+    {
+      "player_name": "Bhatia, Akshay",
+      "line": 68.5,
+      "over_odds": -149,
+      "under_odds": -111,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5983935742971888,
+      "p_under_implied": 0.5260663507109005,
+      "dg_id": 26096,
+      "round_num": 3
+    },
+    {
+      "player_name": "Rai, Aaron",
+      "line": 3.5,
+      "over_odds": -192,
+      "under_odds": 112,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.6575342465753424,
+      "p_under_implied": 0.4716981132075472,
+      "dg_id": 18554,
+      "round_num": 3
+    },
+    {
+      "player_name": "Rai, Aaron",
+      "line": 68.5,
+      "over_odds": -135,
+      "under_odds": -122,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.574468085106383,
+      "p_under_implied": 0.5495495495495496,
+      "dg_id": 18554,
+      "round_num": 3
+    },
+    {
+      "player_name": "Fitzpatrick, Matt",
+      "line": 4.5,
+      "over_odds": -111,
+      "under_odds": -149,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5260663507109005,
+      "p_under_implied": 0.5983935742971888,
+      "dg_id": 17646,
+      "round_num": 3
+    },
+    {
+      "player_name": "Fitzpatrick, Matt",
+      "line": 1.5,
+      "over_odds": -238,
+      "under_odds": 133,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.7041420118343196,
+      "p_under_implied": 0.4291845493562232,
+      "dg_id": 17646,
+      "round_num": 3
+    },
+    {
+      "player_name": "Fitzpatrick, Matt",
+      "line": 67.5,
+      "over_odds": -154,
+      "under_odds": -106,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.6062992125984252,
+      "p_under_implied": 0.5145631067961165,
+      "dg_id": 17646,
+      "round_num": 3
+    },
+    {
+      "player_name": "Gotterup, Chris",
+      "line": 4.5,
+      "over_odds": -143,
+      "under_odds": -116,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.588477366255144,
+      "p_under_implied": 0.5370370370370371,
+      "dg_id": 27774,
+      "round_num": 3
+    },
+    {
+      "player_name": "Gotterup, Chris",
+      "line": 2.5,
+      "over_odds": -108,
+      "under_odds": -154,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5192307692307693,
+      "p_under_implied": 0.6062992125984252,
+      "dg_id": 27774,
+      "round_num": 3
+    },
+    {
+      "player_name": "Gotterup, Chris",
+      "line": 67.5,
+      "over_odds": -159,
+      "under_odds": -104,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.6138996138996139,
+      "p_under_implied": 0.5098039215686274,
+      "dg_id": 27774,
+      "round_num": 3
+    },
+    {
+      "player_name": "Cantlay, Patrick",
+      "line": 4.5,
+      "over_odds": -106,
+      "under_odds": -154,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5145631067961165,
+      "p_under_implied": 0.6062992125984252,
+      "dg_id": 15466,
+      "round_num": 3
+    },
+    {
+      "player_name": "Cantlay, Patrick",
+      "line": 2.5,
+      "over_odds": 127,
+      "under_odds": -222,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.44052863436123346,
+      "p_under_implied": 0.6894409937888198,
+      "dg_id": 15466,
+      "round_num": 3
+    },
+    {
+      "player_name": "Cantlay, Patrick",
+      "line": 67.5,
+      "over_odds": -159,
+      "under_odds": -104,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.6138996138996139,
+      "p_under_implied": 0.5098039215686274,
+      "dg_id": 15466,
+      "round_num": 3
+    },
+    {
+      "player_name": "Griffin, Ben",
+      "line": 4.5,
+      "over_odds": 107,
+      "under_odds": -179,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.4830917874396135,
+      "p_under_implied": 0.6415770609318996,
+      "dg_id": 24968,
+      "round_num": 3
+    },
+    {
+      "player_name": "Griffin, Ben",
+      "line": 68.5,
+      "over_odds": -109,
+      "under_odds": -152,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5215311004784688,
+      "p_under_implied": 0.6031746031746031,
+      "dg_id": 24968,
+      "round_num": 3
+    },
+    {
+      "player_name": "Morikawa, Collin",
+      "line": 4.5,
+      "over_odds": -114,
+      "under_odds": -145,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5327102803738317,
+      "p_under_implied": 0.5918367346938775,
+      "dg_id": 22085,
+      "round_num": 3
+    },
+    {
+      "player_name": "Morikawa, Collin",
+      "line": 2.5,
+      "over_odds": 116,
+      "under_odds": -200,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.46296296296296297,
+      "p_under_implied": 0.6666666666666666,
+      "dg_id": 22085,
+      "round_num": 3
+    },
+    {
+      "player_name": "Morikawa, Collin",
+      "line": 68.5,
+      "over_odds": 104,
+      "under_odds": -172,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.49019607843137253,
+      "p_under_implied": 0.6323529411764706,
+      "dg_id": 22085,
+      "round_num": 3
+    },
+    {
+      "player_name": "Scheffler, Scottie",
+      "line": 5.5,
+      "over_odds": -112,
+      "under_odds": -147,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5283018867924528,
+      "p_under_implied": 0.5951417004048583,
+      "dg_id": 18417,
+      "round_num": 3
+    },
+    {
+      "player_name": "Scheffler, Scottie",
+      "line": 1.5,
+      "over_odds": -118,
+      "under_odds": -139,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5412844036697247,
+      "p_under_implied": 0.5815899581589958,
+      "dg_id": 18417,
+      "round_num": 3
+    },
+    {
+      "player_name": "Scheffler, Scottie",
+      "line": 66.5,
+      "over_odds": -115,
+      "under_odds": -143,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5348837209302325,
+      "p_under_implied": 0.588477366255144,
+      "dg_id": 18417,
+      "round_num": 3
+    },
+    {
+      "player_name": "Knapp, Jake",
+      "line": 68.5,
+      "over_odds": -104,
+      "under_odds": -159,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5098039215686274,
+      "p_under_implied": 0.6138996138996139,
+      "dg_id": 19396,
+      "round_num": 3
+    },
+    {
+      "player_name": "Scott, Adam",
+      "line": 4.5,
+      "over_odds": -104,
+      "under_odds": -159,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5098039215686274,
+      "p_under_implied": 0.6138996138996139,
+      "dg_id": 6430,
+      "round_num": 3
+    },
+    {
+      "player_name": "Scott, Adam",
+      "line": 68.5,
+      "over_odds": -115,
+      "under_odds": -143,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5348837209302325,
+      "p_under_implied": 0.588477366255144,
+      "dg_id": 6430,
+      "round_num": 3
+    },
+    {
+      "player_name": "Smalley, Alex",
+      "line": 4.5,
+      "over_odds": 112,
+      "under_odds": -189,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.4716981132075472,
+      "p_under_implied": 0.6539792387543253,
+      "dg_id": 18474,
+      "round_num": 3
+    },
+    {
+      "player_name": "Smalley, Alex",
+      "line": 68.5,
+      "over_odds": -122,
+      "under_odds": -135,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5495495495495496,
+      "p_under_implied": 0.574468085106383,
+      "dg_id": 18474,
+      "round_num": 3
+    },
+    {
+      "player_name": "Fox, Ryan",
+      "line": 4.5,
+      "over_odds": 106,
+      "under_odds": -179,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.4854368932038835,
+      "p_under_implied": 0.6415770609318996,
+      "dg_id": 11889,
+      "round_num": 3
+    },
+    {
+      "player_name": "Fox, Ryan",
+      "line": 68.5,
+      "over_odds": -152,
+      "under_odds": -108,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.6031746031746031,
+      "p_under_implied": 0.5192307692307693,
+      "dg_id": 11889,
+      "round_num": 3
+    },
+    {
+      "player_name": "Straka, Sepp",
+      "line": 3.5,
+      "over_odds": -179,
+      "under_odds": 107,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.6415770609318996,
+      "p_under_implied": 0.4830917874396135,
+      "dg_id": 17511,
+      "round_num": 3
+    },
+    {
+      "player_name": "Straka, Sepp",
+      "line": 69.5,
+      "over_odds": 102,
+      "under_odds": -169,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.49504950495049505,
+      "p_under_implied": 0.6282527881040892,
+      "dg_id": 17511,
+      "round_num": 3
+    },
+    {
+      "player_name": "MacIntyre, Robert",
+      "line": 4.5,
+      "over_odds": -120,
+      "under_odds": -137,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5454545454545454,
+      "p_under_implied": 0.5780590717299579,
+      "dg_id": 23323,
+      "round_num": 3
+    },
+    {
+      "player_name": "MacIntyre, Robert",
+      "line": 2.5,
+      "over_odds": -147,
+      "under_odds": -111,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5951417004048583,
+      "p_under_implied": 0.5260663507109005,
+      "dg_id": 23323,
+      "round_num": 3
+    },
+    {
+      "player_name": "MacIntyre, Robert",
+      "line": 68.5,
+      "over_odds": -122,
+      "under_odds": -133,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5495495495495496,
+      "p_under_implied": 0.5708154506437768,
+      "dg_id": 23323,
+      "round_num": 3
+    },
+    {
+      "player_name": "Fowler, Rickie",
+      "line": 4.5,
+      "over_odds": 104,
+      "under_odds": -172,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.49019607843137253,
+      "p_under_implied": 0.6323529411764706,
+      "dg_id": 12965,
+      "round_num": 3
+    },
+    {
+      "player_name": "Fowler, Rickie",
+      "line": 68.5,
+      "over_odds": -109,
+      "under_odds": -152,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5215311004784688,
+      "p_under_implied": 0.6031746031746031,
+      "dg_id": 12965,
+      "round_num": 3
+    },
+    {
+      "player_name": "Fleetwood, Tommy",
+      "line": 4.5,
+      "over_odds": -119,
+      "under_odds": -137,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.54337899543379,
+      "p_under_implied": 0.5780590717299579,
+      "dg_id": 12294,
+      "round_num": 3
+    },
+    {
+      "player_name": "Fleetwood, Tommy",
+      "line": 1.5,
+      "over_odds": -204,
+      "under_odds": 117,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.6710526315789473,
+      "p_under_implied": 0.4608294930875576,
+      "dg_id": 12294,
+      "round_num": 3
+    },
+    {
+      "player_name": "Fleetwood, Tommy",
+      "line": 67.5,
+      "over_odds": -143,
+      "under_odds": -115,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.588477366255144,
+      "p_under_implied": 0.5348837209302325,
+      "dg_id": 12294,
+      "round_num": 3
+    },
+    {
+      "player_name": "Schauffele, Xander",
+      "line": 4.5,
+      "over_odds": -143,
+      "under_odds": -115,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.588477366255144,
+      "p_under_implied": 0.5348837209302325,
+      "dg_id": 19895,
+      "round_num": 3
+    },
+    {
+      "player_name": "Schauffele, Xander",
+      "line": 1.5,
+      "over_odds": -238,
+      "under_odds": 134,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.7041420118343196,
+      "p_under_implied": 0.42735042735042733,
+      "dg_id": 19895,
+      "round_num": 3
+    },
+    {
+      "player_name": "Schauffele, Xander",
+      "line": 67.5,
+      "over_odds": -122,
+      "under_odds": -133,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5495495495495496,
+      "p_under_implied": 0.5708154506437768,
+      "dg_id": 19895,
+      "round_num": 3
+    },
+    {
+      "player_name": "Kitayama, Kurt",
+      "line": 4.5,
+      "over_odds": -114,
+      "under_odds": -145,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5327102803738317,
+      "p_under_implied": 0.5918367346938775,
+      "dg_id": 21891,
+      "round_num": 3
+    },
+    {
+      "player_name": "Kitayama, Kurt",
+      "line": 68.5,
+      "over_odds": -102,
+      "under_odds": -161,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.504950495049505,
+      "p_under_implied": 0.6168582375478927,
+      "dg_id": 21891,
+      "round_num": 3
+    },
+    {
+      "player_name": "McIlroy, Rory",
+      "line": 4.5,
+      "over_odds": -161,
+      "under_odds": -102,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.6168582375478927,
+      "p_under_implied": 0.504950495049505,
+      "dg_id": 10091,
+      "round_num": 3
+    },
+    {
+      "player_name": "McIlroy, Rory",
+      "line": 2.5,
+      "over_odds": 123,
+      "under_odds": -213,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.4484304932735426,
+      "p_under_implied": 0.6805111821086262,
+      "dg_id": 10091,
+      "round_num": 3
+    },
+    {
+      "player_name": "McIlroy, Rory",
+      "line": 67.5,
+      "over_odds": -133,
+      "under_odds": -123,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5708154506437768,
+      "p_under_implied": 0.5515695067264574,
+      "dg_id": 10091,
+      "round_num": 3
+    },
+    {
+      "player_name": "Poston, J.T.",
+      "line": 3.5,
+      "over_odds": -208,
+      "under_odds": 120,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.6753246753246753,
+      "p_under_implied": 0.45454545454545453,
+      "dg_id": 21554,
+      "round_num": 3
+    },
+    {
+      "player_name": "Poston, J.T.",
+      "line": 68.5,
+      "over_odds": -141,
+      "under_odds": -118,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5850622406639004,
+      "p_under_implied": 0.5412844036697247,
+      "dg_id": 21554,
+      "round_num": 3
+    },
+    {
+      "player_name": "Spaun, J.J.",
+      "line": 4.5,
+      "over_odds": 101,
+      "under_odds": -167,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.4975124378109453,
+      "p_under_implied": 0.6254681647940075,
+      "dg_id": 17536,
+      "round_num": 3
+    },
+    {
+      "player_name": "Spaun, J.J.",
+      "line": 2.5,
+      "over_odds": -102,
+      "under_odds": -164,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.504950495049505,
+      "p_under_implied": 0.6212121212121212,
+      "dg_id": 17536,
+      "round_num": 3
+    },
+    {
+      "player_name": "Spaun, J.J.",
+      "line": 68.5,
+      "over_odds": -114,
+      "under_odds": -145,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5327102803738317,
+      "p_under_implied": 0.5918367346938775,
+      "dg_id": 17536,
+      "round_num": 3
+    },
+    {
+      "player_name": "Cole, Eric",
+      "line": 4.5,
+      "over_odds": 117,
+      "under_odds": -200,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.4608294930875576,
+      "p_under_implied": 0.6666666666666666,
+      "dg_id": 21756,
+      "round_num": 3
+    },
+    {
+      "player_name": "Cole, Eric",
+      "line": 68.5,
+      "over_odds": -152,
+      "under_odds": -108,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.6031746031746031,
+      "p_under_implied": 0.5192307692307693,
+      "dg_id": 21756,
+      "round_num": 3
+    },
+    {
+      "player_name": "Thorbjornsen, Michael",
+      "line": 4.5,
+      "over_odds": 100,
+      "under_odds": -167,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5,
+      "p_under_implied": 0.6254681647940075,
+      "dg_id": 26649,
+      "round_num": 3
+    },
+    {
+      "player_name": "Thorbjornsen, Michael",
+      "line": 2.5,
+      "over_odds": 105,
+      "under_odds": -175,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.4878048780487805,
+      "p_under_implied": 0.6363636363636364,
+      "dg_id": 26649,
+      "round_num": 3
+    },
+    {
+      "player_name": "Thorbjornsen, Michael",
+      "line": 68.5,
+      "over_odds": -110,
+      "under_odds": -149,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5238095238095238,
+      "p_under_implied": 0.5983935742971888,
+      "dg_id": 26649,
+      "round_num": 3
+    },
+    {
+      "player_name": "McNealy, Maverick",
+      "line": 4.5,
+      "over_odds": -112,
+      "under_odds": -147,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5283018867924528,
+      "p_under_implied": 0.5951417004048583,
+      "dg_id": 18634,
+      "round_num": 3
+    },
+    {
+      "player_name": "McNealy, Maverick",
+      "line": 2.5,
+      "over_odds": -105,
+      "under_odds": -156,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5121951219512195,
+      "p_under_implied": 0.609375,
+      "dg_id": 18634,
+      "round_num": 3
+    },
+    {
+      "player_name": "McNealy, Maverick",
+      "line": 68.5,
+      "over_odds": -108,
+      "under_odds": -152,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5192307692307693,
+      "p_under_implied": 0.6031746031746031,
+      "dg_id": 18634,
+      "round_num": 3
+    },
+    {
+      "player_name": "Gerard, Ryan",
+      "line": 4.5,
+      "over_odds": 102,
+      "under_odds": -169,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.49504950495049505,
+      "p_under_implied": 0.6282527881040892,
+      "dg_id": 29767,
+      "round_num": 3
+    },
+    {
+      "player_name": "Gerard, Ryan",
+      "line": 2.5,
+      "over_odds": 100,
+      "under_odds": -167,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5,
+      "p_under_implied": 0.6254681647940075,
+      "dg_id": 29767,
+      "round_num": 3
+    },
+    {
+      "player_name": "Gerard, Ryan",
+      "line": 68.5,
+      "over_odds": -115,
+      "under_odds": -143,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5348837209302325,
+      "p_under_implied": 0.588477366255144,
+      "dg_id": 29767,
+      "round_num": 3
+    },
+    {
+      "player_name": "Thomas, Justin",
+      "line": 4.5,
+      "over_odds": -112,
+      "under_odds": -147,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5283018867924528,
+      "p_under_implied": 0.5951417004048583,
+      "dg_id": 14139,
+      "round_num": 3
+    },
+    {
+      "player_name": "Thomas, Justin",
+      "line": 2.5,
+      "over_odds": 110,
+      "under_odds": -189,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.47619047619047616,
+      "p_under_implied": 0.6539792387543253,
+      "dg_id": 14139,
+      "round_num": 3
+    },
+    {
+      "player_name": "Thomas, Justin",
+      "line": 67.5,
+      "over_odds": -159,
+      "under_odds": -104,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.6138996138996139,
+      "p_under_implied": 0.5098039215686274,
+      "dg_id": 14139,
+      "round_num": 3
+    },
+    {
+      "player_name": "Woodland, Gary",
+      "line": 4.5,
+      "over_odds": -101,
+      "under_odds": -164,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5024875621890548,
+      "p_under_implied": 0.6212121212121212,
+      "dg_id": 12577,
+      "round_num": 3
+    },
+    {
+      "player_name": "Woodland, Gary",
+      "line": 2.5,
+      "over_odds": -123,
+      "under_odds": -133,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5515695067264574,
+      "p_under_implied": 0.5708154506437768,
+      "dg_id": 12577,
+      "round_num": 3
+    },
+    {
+      "player_name": "Woodland, Gary",
+      "line": 68.5,
+      "over_odds": -122,
+      "under_odds": -133,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5495495495495496,
+      "p_under_implied": 0.5708154506437768,
+      "dg_id": 12577,
+      "round_num": 3
+    },
+    {
+      "player_name": "Bridgeman, Jacob",
+      "line": 4.5,
+      "over_odds": 106,
+      "under_odds": -179,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.4854368932038835,
+      "p_under_implied": 0.6415770609318996,
+      "dg_id": 29433,
+      "round_num": 3
+    },
+    {
+      "player_name": "Bridgeman, Jacob",
+      "line": 2.5,
+      "over_odds": -104,
+      "under_odds": -159,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5098039215686274,
+      "p_under_implied": 0.6138996138996139,
+      "dg_id": 29433,
+      "round_num": 3
+    },
+    {
+      "player_name": "Bridgeman, Jacob",
+      "line": 68.5,
+      "over_odds": -119,
+      "under_odds": -137,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.54337899543379,
+      "p_under_implied": 0.5780590717299579,
+      "dg_id": 29433,
+      "round_num": 3
+    },
+    {
+      "player_name": "Burns, Sam",
+      "line": 2.5,
+      "over_odds": 135,
+      "under_odds": -244,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.425531914893617,
+      "p_under_implied": 0.7093023255813954,
+      "dg_id": 19483,
+      "round_num": 3
+    },
+    {
+      "player_name": "Burns, Sam",
+      "line": 67.5,
+      "over_odds": -135,
+      "under_odds": -122,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.574468085106383,
+      "p_under_implied": 0.5495495495495496,
+      "dg_id": 19483,
+      "round_num": 3
+    },
+    {
+      "player_name": "Hovland, Viktor",
+      "line": 2.5,
+      "over_odds": -102,
+      "under_odds": -161,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.504950495049505,
+      "p_under_implied": 0.6168582375478927,
+      "dg_id": 18841,
+      "round_num": 3
+    },
+    {
+      "player_name": "Hovland, Viktor",
+      "line": 67.5,
+      "over_odds": -159,
+      "under_odds": -104,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.6138996138996139,
+      "p_under_implied": 0.5098039215686274,
+      "dg_id": 18841,
+      "round_num": 3
+    },
+    {
+      "player_name": "Rose, Justin",
+      "line": 2.5,
+      "over_odds": -110,
+      "under_odds": -149,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5238095238095238,
+      "p_under_implied": 0.5983935742971888,
+      "dg_id": 6093,
+      "round_num": 3
+    },
+    {
+      "player_name": "Rose, Justin",
+      "line": 68.5,
+      "over_odds": -133,
+      "under_odds": -122,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5708154506437768,
+      "p_under_implied": 0.5495495495495496,
+      "dg_id": 6093,
+      "round_num": 3
+    },
+    {
+      "player_name": "Young, Cameron",
+      "line": 4.5,
+      "over_odds": -139,
+      "under_odds": -118,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5815899581589958,
+      "p_under_implied": 0.5412844036697247,
+      "dg_id": 26651,
+      "round_num": 3
+    },
+    {
+      "player_name": "Young, Cameron",
+      "line": 2.5,
+      "over_odds": 129,
+      "under_odds": -227,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.4366812227074236,
+      "p_under_implied": 0.6941896024464832,
+      "dg_id": 26651,
+      "round_num": 3
+    },
+    {
+      "player_name": "Young, Cameron",
+      "line": 67.5,
+      "over_odds": -147,
+      "under_odds": -111,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5951417004048583,
+      "p_under_implied": 0.5260663507109005,
+      "dg_id": 26651,
+      "round_num": 3
+    },
+    {
+      "player_name": "Henley, Russell",
+      "line": 4.5,
+      "over_odds": 101,
+      "under_odds": -167,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.4975124378109453,
+      "p_under_implied": 0.6254681647940075,
+      "dg_id": 14578,
+      "round_num": 3
+    },
+    {
+      "player_name": "Henley, Russell",
+      "line": 2.5,
+      "over_odds": 130,
+      "under_odds": -233,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.43478260869565216,
+      "p_under_implied": 0.6996996996996997,
+      "dg_id": 14578,
+      "round_num": 3
+    },
+    {
+      "player_name": "Henley, Russell",
+      "line": 68.5,
+      "over_odds": -103,
+      "under_odds": -159,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5073891625615764,
+      "p_under_implied": 0.6138996138996139,
+      "dg_id": 14578,
+      "round_num": 3
+    },
+    {
+      "player_name": "Lee, Min Woo",
+      "line": 4.5,
+      "over_odds": -112,
+      "under_odds": -145,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5283018867924528,
+      "p_under_implied": 0.5918367346938775,
+      "dg_id": 16841,
+      "round_num": 3
+    },
+    {
+      "player_name": "Lee, Min Woo",
+      "line": 68.5,
+      "over_odds": -104,
+      "under_odds": -159,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5098039215686274,
+      "p_under_implied": 0.6138996138996139,
+      "dg_id": 16841,
+      "round_num": 3
+    },
+    {
+      "player_name": "Matsuyama, Hideki",
+      "line": 4.5,
+      "over_odds": -112,
+      "under_odds": -145,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5283018867924528,
+      "p_under_implied": 0.5918367346938775,
+      "dg_id": 13562,
+      "round_num": 3
+    },
+    {
+      "player_name": "Matsuyama, Hideki",
+      "line": 67.5,
+      "over_odds": -169,
+      "under_odds": 102,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.6282527881040892,
+      "p_under_implied": 0.49504950495049505,
+      "dg_id": 13562,
+      "round_num": 3
+    },
+    {
+      "player_name": "McCarty, Matt",
+      "line": 3.5,
+      "over_odds": -172,
+      "under_odds": 103,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.6323529411764706,
+      "p_under_implied": 0.49261083743842365,
+      "dg_id": 28635,
+      "round_num": 3
+    },
+    {
+      "player_name": "McCarty, Matt",
+      "line": 69.5,
+      "over_odds": -103,
+      "under_odds": -159,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5073891625615764,
+      "p_under_implied": 0.6138996138996139,
+      "dg_id": 28635,
+      "round_num": 3
+    },
+    {
+      "player_name": "Noren, Alex",
+      "line": 4.5,
+      "over_odds": 120,
+      "under_odds": -208,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.45454545454545453,
+      "p_under_implied": 0.6753246753246753,
+      "dg_id": 10419,
+      "round_num": 3
+    },
+    {
+      "player_name": "Noren, Alex",
+      "line": 68.5,
+      "over_odds": -128,
+      "under_odds": -128,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5614035087719298,
+      "p_under_implied": 0.5614035087719298,
+      "dg_id": 10419,
+      "round_num": 3
+    },
+    {
+      "player_name": "Hisatsune, Ryo",
+      "line": 3.5,
+      "over_odds": -189,
+      "under_odds": 110,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.6539792387543253,
+      "p_under_implied": 0.47619047619047616,
+      "dg_id": 22760,
+      "round_num": 3
+    },
+    {
+      "player_name": "Hisatsune, Ryo",
+      "line": 68.5,
+      "over_odds": -152,
+      "under_odds": -108,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.6031746031746031,
+      "p_under_implied": 0.5192307692307693,
+      "dg_id": 22760,
+      "round_num": 3
+    },
+    {
+      "player_name": "Im, Sungjae",
+      "line": 4.5,
+      "over_odds": 107,
+      "under_odds": -179,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.4830917874396135,
+      "p_under_implied": 0.6415770609318996,
+      "dg_id": 17488,
+      "round_num": 3
+    },
+    {
+      "player_name": "Im, Sungjae",
+      "line": 2.5,
+      "over_odds": -104,
+      "under_odds": -159,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5098039215686274,
+      "p_under_implied": 0.6138996138996139,
+      "dg_id": 17488,
+      "round_num": 3
+    },
+    {
+      "player_name": "Im, Sungjae",
+      "line": 68.5,
+      "over_odds": -132,
+      "under_odds": -125,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5689655172413793,
+      "p_under_implied": 0.5555555555555556,
+      "dg_id": 17488,
+      "round_num": 3
+    },
+    {
+      "player_name": "Kim, Si Woo",
+      "line": 4.5,
+      "over_odds": -106,
+      "under_odds": -154,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5145631067961165,
+      "p_under_implied": 0.6062992125984252,
+      "dg_id": 14609,
+      "round_num": 3
+    },
+    {
+      "player_name": "Kim, Si Woo",
+      "line": 1.5,
+      "over_odds": -244,
+      "under_odds": 134,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.7093023255813954,
+      "p_under_implied": 0.42735042735042733,
+      "dg_id": 14609,
+      "round_num": 3
+    },
+    {
+      "player_name": "Kim, Si Woo",
+      "line": 68.5,
+      "over_odds": 102,
+      "under_odds": -169,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.49504950495049505,
+      "p_under_implied": 0.6282527881040892,
+      "dg_id": 14609,
+      "round_num": 3
+    },
+    {
+      "player_name": "Clark, Wyndham",
+      "line": 4.5,
+      "over_odds": -115,
+      "under_odds": -143,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5348837209302325,
+      "p_under_implied": 0.588477366255144,
+      "dg_id": 23604,
+      "round_num": 3
+    },
+    {
+      "player_name": "Clark, Wyndham",
+      "line": 2.5,
+      "over_odds": 102,
+      "under_odds": -169,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.49504950495049505,
+      "p_under_implied": 0.6282527881040892,
+      "dg_id": 23604,
+      "round_num": 3
+    },
+    {
+      "player_name": "Clark, Wyndham",
+      "line": 67.5,
+      "over_odds": -115,
+      "under_odds": -143,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5348837209302325,
+      "p_under_implied": 0.588477366255144,
+      "dg_id": 23604,
+      "round_num": 3
+    },
+    {
+      "player_name": "Reitan, Kristoffer",
+      "line": 4.5,
+      "over_odds": 101,
+      "under_odds": -169,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.4975124378109453,
+      "p_under_implied": 0.6282527881040892,
+      "dg_id": 21407,
+      "round_num": 3
+    },
+    {
+      "player_name": "Reitan, Kristoffer",
+      "line": 2.5,
+      "over_odds": -128,
+      "under_odds": -128,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5614035087719298,
+      "p_under_implied": 0.5614035087719298,
+      "dg_id": 21407,
+      "round_num": 3
+    },
+    {
+      "player_name": "Reitan, Kristoffer",
+      "line": 68.5,
+      "over_odds": -128,
+      "under_odds": -128,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5614035087719298,
+      "p_under_implied": 0.5614035087719298,
+      "dg_id": 21407,
+      "round_num": 3
+    },
+    {
+      "player_name": "Fitzpatrick, Alex",
+      "line": 4.5,
+      "over_odds": 119,
+      "under_odds": -204,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.45662100456621,
+      "p_under_implied": 0.6710526315789473,
+      "dg_id": 25362,
+      "round_num": 3
+    },
+    {
+      "player_name": "Fitzpatrick, Alex",
+      "line": 68.5,
+      "over_odds": -133,
+      "under_odds": -123,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5708154506437768,
+      "p_under_implied": 0.5515695067264574,
+      "dg_id": 25362,
+      "round_num": 3
+    },
+    {
+      "player_name": "Brennan, Michael",
+      "line": 4.5,
+      "over_odds": -132,
+      "under_odds": -125,
+      "market": "Birdies",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.5689655172413793,
+      "p_under_implied": 0.5555555555555556,
+      "dg_id": 29197,
+      "round_num": 3
+    },
+    {
+      "player_name": "Brennan, Michael",
+      "line": 2.5,
+      "over_odds": -152,
+      "under_odds": -109,
+      "market": "Bogeys",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.6031746031746031,
+      "p_under_implied": 0.5215311004784688,
+      "dg_id": 29197,
+      "round_num": 3
+    },
+    {
+      "player_name": "Brennan, Michael",
+      "line": 68.5,
+      "over_odds": -119,
+      "under_odds": -139,
+      "market": "Total Score",
+      "source": "sleeper",
+      "sl_odds_method": "sleeper_multiplier",
+      "p_over_implied": 0.54337899543379,
+      "p_under_implied": 0.5815899581589958,
+      "dg_id": 29197,
+      "round_num": 3
+    },
+    {
       "player_name": "Scheffler, Scottie",
       "line": 66.5,
       "over_odds": 101,
@@ -20049,13 +21505,13 @@
     {
       "player_name": "McIlroy, Rory",
       "line": 4.5,
-      "over_odds": -134,
-      "under_odds": 108,
+      "over_odds": -139,
+      "under_odds": 114,
       "market": "Birdies",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5726495726495726,
-      "p_under_implied": 0.4807692307692308,
+      "p_over_implied": 0.5815899581589958,
+      "p_under_implied": 0.4672897196261682,
       "dg_id": 10091,
       "round_num": 3
     },
@@ -20075,13 +21531,13 @@
     {
       "player_name": "McIlroy, Rory",
       "line": 8.5,
-      "over_odds": 122,
-      "under_odds": -150,
+      "over_odds": 125,
+      "under_odds": -154,
       "market": "Fairways hit",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.45045045045045046,
-      "p_under_implied": 0.6,
+      "p_over_implied": 0.4444444444444444,
+      "p_under_implied": 0.6062992125984252,
       "dg_id": 10091,
       "round_num": 3
     },
@@ -20244,13 +21700,13 @@
     {
       "player_name": "Thomas, Justin",
       "line": 4.5,
-      "over_odds": 108,
-      "under_odds": -134,
+      "over_odds": 106,
+      "under_odds": -130,
       "market": "Birdies",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.4807692307692308,
-      "p_under_implied": 0.5726495726495726,
+      "p_over_implied": 0.4854368932038835,
+      "p_under_implied": 0.5652173913043478,
       "dg_id": 14139,
       "round_num": 3
     },
@@ -20322,13 +21778,13 @@
     {
       "player_name": "Hovland, Viktor",
       "line": 12.5,
-      "over_odds": 109,
-      "under_odds": -134,
+      "over_odds": 110,
+      "under_odds": -136,
       "market": "GIR",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.4784688995215311,
-      "p_under_implied": 0.5726495726495726,
+      "p_over_implied": 0.47619047619047616,
+      "p_under_implied": 0.576271186440678,
       "dg_id": 18841,
       "round_num": 3
     },
@@ -20426,26 +21882,26 @@
     {
       "player_name": "Clark, Wyndham",
       "line": 67.5,
-      "over_odds": 101,
-      "under_odds": -124,
+      "over_odds": -112,
+      "under_odds": -112,
       "market": "Total Score",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.4975124378109453,
-      "p_under_implied": 0.5535714285714286,
+      "p_over_implied": 0.5283018867924528,
+      "p_under_implied": 0.5283018867924528,
       "dg_id": 23604,
       "round_num": 3
     },
     {
       "player_name": "Clark, Wyndham",
       "line": 4.5,
-      "over_odds": 104,
-      "under_odds": -127,
+      "over_odds": 108,
+      "under_odds": -134,
       "market": "Birdies",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.49019607843137253,
-      "p_under_implied": 0.5594713656387665,
+      "p_over_implied": 0.4807692307692308,
+      "p_under_implied": 0.5726495726495726,
       "dg_id": 23604,
       "round_num": 3
     },
@@ -20491,39 +21947,39 @@
     {
       "player_name": "Matsuyama, Hideki",
       "line": 67.5,
-      "over_odds": -148,
-      "under_odds": 121,
+      "over_odds": -136,
+      "under_odds": 111,
       "market": "Total Score",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5967741935483871,
-      "p_under_implied": 0.45248868778280543,
+      "p_over_implied": 0.576271186440678,
+      "p_under_implied": 0.47393364928909953,
       "dg_id": 13562,
       "round_num": 3
     },
     {
       "player_name": "Matsuyama, Hideki",
       "line": 4.5,
-      "over_odds": 116,
-      "under_odds": -143,
+      "over_odds": 108,
+      "under_odds": -134,
       "market": "Birdies",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.46296296296296297,
-      "p_under_implied": 0.588477366255144,
+      "p_over_implied": 0.4807692307692308,
+      "p_under_implied": 0.5726495726495726,
       "dg_id": 13562,
       "round_num": 3
     },
     {
       "player_name": "Matsuyama, Hideki",
       "line": 12.5,
-      "over_odds": 117,
-      "under_odds": -143,
+      "over_odds": 120,
+      "under_odds": -148,
       "market": "GIR",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.4608294930875576,
-      "p_under_implied": 0.588477366255144,
+      "p_over_implied": 0.45454545454545453,
+      "p_under_implied": 0.5967741935483871,
       "dg_id": 13562,
       "round_num": 3
     },
@@ -20541,19 +21997,6 @@
       "round_num": 3
     },
     {
-      "player_name": "Fitzpatrick, Matt",
-      "line": 67.5,
-      "over_odds": -157,
-      "under_odds": 128,
-      "market": "Total Score",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.6108949416342413,
-      "p_under_implied": 0.43859649122807015,
-      "dg_id": 17646,
-      "round_num": 3
-    },
-    {
       "player_name": "Im, Sungjae",
       "line": 68.5,
       "over_odds": -124,
@@ -20564,6 +22007,19 @@
       "p_over_implied": 0.5535714285714286,
       "p_under_implied": 0.4975124378109453,
       "dg_id": 17488,
+      "round_num": 3
+    },
+    {
+      "player_name": "Fitzpatrick, Matt",
+      "line": 67.5,
+      "over_odds": -136,
+      "under_odds": 111,
+      "market": "Total Score",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.576271186440678,
+      "p_under_implied": 0.47393364928909953,
+      "dg_id": 17646,
       "round_num": 3
     },
     {
@@ -20582,13 +22038,26 @@
     {
       "player_name": "Fitzpatrick, Matt",
       "line": 4.5,
-      "over_odds": 120,
-      "under_odds": -148,
+      "over_odds": 112,
+      "under_odds": -137,
       "market": "Birdies",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.45454545454545453,
-      "p_under_implied": 0.5967741935483871,
+      "p_over_implied": 0.4716981132075472,
+      "p_under_implied": 0.5780590717299579,
+      "dg_id": 17646,
+      "round_num": 3
+    },
+    {
+      "player_name": "Fitzpatrick, Matt",
+      "line": 12.5,
+      "over_odds": -136,
+      "under_odds": 110,
+      "market": "GIR",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.576271186440678,
+      "p_under_implied": 0.47619047619047616,
       "dg_id": 17646,
       "round_num": 3
     },
@@ -20603,19 +22072,6 @@
       "p_over_implied": 0.5283018867924528,
       "p_under_implied": 0.5238095238095238,
       "dg_id": 17488,
-      "round_num": 3
-    },
-    {
-      "player_name": "Fitzpatrick, Matt",
-      "line": 12.5,
-      "over_odds": -136,
-      "under_odds": 110,
-      "market": "GIR",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.576271186440678,
-      "p_under_implied": 0.47619047619047616,
-      "dg_id": 17646,
       "round_num": 3
     },
     {
@@ -20645,19 +22101,6 @@
       "round_num": 3
     },
     {
-      "player_name": "Im, Sungjae",
-      "line": 2.5,
-      "over_odds": 109,
-      "under_odds": -134,
-      "market": "Bogeys",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.4784688995215311,
-      "p_under_implied": 0.5726495726495726,
-      "dg_id": 17488,
-      "round_num": 3
-    },
-    {
       "player_name": "Fitzpatrick, Matt",
       "line": 1.5,
       "over_odds": -193,
@@ -20668,6 +22111,19 @@
       "p_over_implied": 0.658703071672355,
       "p_under_implied": 0.3937007874015748,
       "dg_id": 17646,
+      "round_num": 3
+    },
+    {
+      "player_name": "Im, Sungjae",
+      "line": 2.5,
+      "over_odds": 109,
+      "under_odds": -134,
+      "market": "Bogeys",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.4784688995215311,
+      "p_under_implied": 0.5726495726495726,
+      "dg_id": 17488,
       "round_num": 3
     },
     {
@@ -20816,13 +22272,13 @@
     {
       "player_name": "Henley, Russell",
       "line": 68.5,
-      "over_odds": 110,
-      "under_odds": -136,
+      "over_odds": 111,
+      "under_odds": -137,
       "market": "Total Score",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.47619047619047616,
-      "p_under_implied": 0.576271186440678,
+      "p_over_implied": 0.47393364928909953,
+      "p_under_implied": 0.5780590717299579,
       "dg_id": 14578,
       "round_num": 3
     },
@@ -21127,14 +22583,14 @@
     },
     {
       "player_name": "Kim, Tom",
-      "line": 67.5,
-      "over_odds": -145,
-      "under_odds": 119,
+      "line": 68.5,
+      "over_odds": -112,
+      "under_odds": -112,
       "market": "Total Score",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5918367346938775,
-      "p_under_implied": 0.45662100456621,
+      "p_over_implied": 0.5283018867924528,
+      "p_under_implied": 0.5283018867924528,
       "dg_id": 24766,
       "round_num": 3
     },
@@ -21154,13 +22610,13 @@
     {
       "player_name": "Kim, Tom",
       "line": 4.5,
-      "over_odds": 104,
-      "under_odds": -127,
+      "over_odds": 131,
+      "under_odds": -162,
       "market": "Birdies",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.49019607843137253,
-      "p_under_implied": 0.5594713656387665,
+      "p_over_implied": 0.4329004329004329,
+      "p_under_implied": 0.6183206106870229,
       "dg_id": 24766,
       "round_num": 3
     },
@@ -21245,13 +22701,13 @@
     {
       "player_name": "Kim, Si Woo",
       "line": 68.5,
-      "over_odds": 111,
-      "under_odds": -136,
+      "over_odds": 121,
+      "under_odds": -148,
       "market": "Total Score",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.47393364928909953,
-      "p_under_implied": 0.576271186440678,
+      "p_over_implied": 0.45248868778280543,
+      "p_under_implied": 0.5967741935483871,
       "dg_id": 14609,
       "round_num": 3
     },
@@ -21360,19 +22816,6 @@
       "round_num": 3
     },
     {
-      "player_name": "Griffin, Ben",
-      "line": 68.5,
-      "over_odds": 105,
-      "under_odds": -129,
-      "market": "Total Score",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.4878048780487805,
-      "p_under_implied": 0.5633187772925764,
-      "dg_id": 24968,
-      "round_num": 3
-    },
-    {
       "player_name": "Poston, J.T.",
       "line": 68.5,
       "over_odds": -120,
@@ -21387,14 +22830,14 @@
     },
     {
       "player_name": "Griffin, Ben",
-      "line": 4.5,
-      "over_odds": 124,
-      "under_odds": -152,
-      "market": "Birdies",
+      "line": 68.5,
+      "over_odds": 105,
+      "under_odds": -129,
+      "market": "Total Score",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.44642857142857145,
-      "p_under_implied": 0.6031746031746031,
+      "p_over_implied": 0.4878048780487805,
+      "p_under_implied": 0.5633187772925764,
       "dg_id": 24968,
       "round_num": 3
     },
@@ -21409,6 +22852,19 @@
       "p_over_implied": 0.42016806722689076,
       "p_under_implied": 0.6296296296296297,
       "dg_id": 21554,
+      "round_num": 3
+    },
+    {
+      "player_name": "Griffin, Ben",
+      "line": 4.5,
+      "over_odds": 124,
+      "under_odds": -152,
+      "market": "Birdies",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.44642857142857145,
+      "p_under_implied": 0.6031746031746031,
+      "dg_id": 24968,
       "round_num": 3
     },
     {
@@ -21438,19 +22894,6 @@
       "round_num": 3
     },
     {
-      "player_name": "Griffin, Ben",
-      "line": 8.5,
-      "over_odds": -105,
-      "under_odds": -118,
-      "market": "Fairways hit",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5121951219512195,
-      "p_under_implied": 0.5412844036697247,
-      "dg_id": 24968,
-      "round_num": 3
-    },
-    {
       "player_name": "Poston, J.T.",
       "line": 9.5,
       "over_odds": 132,
@@ -21461,6 +22904,19 @@
       "p_over_implied": 0.43103448275862066,
       "p_under_implied": 0.6183206106870229,
       "dg_id": 21554,
+      "round_num": 3
+    },
+    {
+      "player_name": "Griffin, Ben",
+      "line": 8.5,
+      "over_odds": -105,
+      "under_odds": -118,
+      "market": "Fairways hit",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.5121951219512195,
+      "p_under_implied": 0.5412844036697247,
+      "dg_id": 24968,
       "round_num": 3
     },
     {
@@ -21479,13 +22935,13 @@
     {
       "player_name": "McNealy, Maverick",
       "line": 4.5,
-      "over_odds": 102,
-      "under_odds": -125,
+      "over_odds": 103,
+      "under_odds": -127,
       "market": "Birdies",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.49504950495049505,
-      "p_under_implied": 0.5555555555555556,
+      "p_over_implied": 0.49261083743842365,
+      "p_under_implied": 0.5594713656387665,
       "dg_id": 18634,
       "round_num": 3
     },
@@ -21529,15 +22985,93 @@
       "round_num": 3
     },
     {
-      "player_name": "Young, Cameron",
-      "line": 67.5,
-      "over_odds": -136,
-      "under_odds": 111,
+      "player_name": "Cole, Eric",
+      "line": 68.5,
+      "over_odds": -132,
+      "under_odds": 107,
       "market": "Total Score",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.576271186440678,
-      "p_under_implied": 0.47393364928909953,
+      "p_over_implied": 0.5689655172413793,
+      "p_under_implied": 0.4830917874396135,
+      "dg_id": 21756,
+      "round_num": 3
+    },
+    {
+      "player_name": "Gotterup, Chris",
+      "line": 67.5,
+      "over_odds": -124,
+      "under_odds": 101,
+      "market": "Total Score",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.5535714285714286,
+      "p_under_implied": 0.4975124378109453,
+      "dg_id": 27774,
+      "round_num": 3
+    },
+    {
+      "player_name": "Spaun, J.J.",
+      "line": 68.5,
+      "over_odds": 101,
+      "under_odds": -124,
+      "market": "Total Score",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.4975124378109453,
+      "p_under_implied": 0.5535714285714286,
+      "dg_id": 17536,
+      "round_num": 3
+    },
+    {
+      "player_name": "Smalley, Alex",
+      "line": 68.5,
+      "over_odds": -106,
+      "under_odds": -117,
+      "market": "Total Score",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.5145631067961165,
+      "p_under_implied": 0.5391705069124424,
+      "dg_id": 18474,
+      "round_num": 3
+    },
+    {
+      "player_name": "Woodland, Gary",
+      "line": 68.5,
+      "over_odds": -114,
+      "under_odds": -108,
+      "market": "Total Score",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.5327102803738317,
+      "p_under_implied": 0.5192307692307693,
+      "dg_id": 12577,
+      "round_num": 3
+    },
+    {
+      "player_name": "Gerard, Ryan",
+      "line": 68.5,
+      "over_odds": 100,
+      "under_odds": -122,
+      "market": "Total Score",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.5,
+      "p_under_implied": 0.5495495495495496,
+      "dg_id": 29767,
+      "round_num": 3
+    },
+    {
+      "player_name": "Young, Cameron",
+      "line": 67.5,
+      "over_odds": -124,
+      "under_odds": 101,
+      "market": "Total Score",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.5535714285714286,
+      "p_under_implied": 0.4975124378109453,
       "dg_id": 26651,
       "round_num": 3
     },
@@ -21555,146 +23089,16 @@
       "round_num": 3
     },
     {
-      "player_name": "Gotterup, Chris",
-      "line": 67.5,
-      "over_odds": -136,
-      "under_odds": 111,
-      "market": "Total Score",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.576271186440678,
-      "p_under_implied": 0.47393364928909953,
-      "dg_id": 27774,
-      "round_num": 3
-    },
-    {
-      "player_name": "Knapp, Jake",
+      "player_name": "Fitzpatrick, Alex",
       "line": 68.5,
-      "over_odds": 110,
-      "under_odds": -136,
+      "over_odds": -114,
+      "under_odds": -108,
       "market": "Total Score",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.47619047619047616,
-      "p_under_implied": 0.576271186440678,
-      "dg_id": 19396,
-      "round_num": 3
-    },
-    {
-      "player_name": "Fox, Ryan",
-      "line": 68.5,
-      "over_odds": -130,
-      "under_odds": 106,
-      "market": "Total Score",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5652173913043478,
-      "p_under_implied": 0.4854368932038835,
-      "dg_id": 11889,
-      "round_num": 3
-    },
-    {
-      "player_name": "McCarty, Matt",
-      "line": 69.5,
-      "over_odds": 110,
-      "under_odds": -136,
-      "market": "Total Score",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.47619047619047616,
-      "p_under_implied": 0.576271186440678,
-      "dg_id": 28635,
-      "round_num": 3
-    },
-    {
-      "player_name": "Cole, Eric",
-      "line": 68.5,
-      "over_odds": -132,
-      "under_odds": 107,
-      "market": "Total Score",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5689655172413793,
-      "p_under_implied": 0.4830917874396135,
-      "dg_id": 21756,
-      "round_num": 3
-    },
-    {
-      "player_name": "Thorbjornsen, Michael",
-      "line": 68.5,
-      "over_odds": 104,
-      "under_odds": -127,
-      "market": "Total Score",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.49019607843137253,
-      "p_under_implied": 0.5594713656387665,
-      "dg_id": 26649,
-      "round_num": 3
-    },
-    {
-      "player_name": "Spaun, J.J.",
-      "line": 68.5,
-      "over_odds": 101,
-      "under_odds": -124,
-      "market": "Total Score",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.4975124378109453,
-      "p_under_implied": 0.5535714285714286,
-      "dg_id": 17536,
-      "round_num": 3
-    },
-    {
-      "player_name": "Gerard, Ryan",
-      "line": 68.5,
-      "over_odds": 100,
-      "under_odds": -122,
-      "market": "Total Score",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5,
-      "p_under_implied": 0.5495495495495496,
-      "dg_id": 29767,
-      "round_num": 3
-    },
-    {
-      "player_name": "Brennan, Michael",
-      "line": 68.5,
-      "over_odds": -104,
-      "under_odds": -120,
-      "market": "Total Score",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5098039215686274,
-      "p_under_implied": 0.5454545454545454,
-      "dg_id": 29197,
-      "round_num": 3
-    },
-    {
-      "player_name": "Reitan, Kristoffer",
-      "line": 68.5,
-      "over_odds": -113,
-      "under_odds": -109,
-      "market": "Total Score",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5305164319248826,
-      "p_under_implied": 0.5215311004784688,
-      "dg_id": 21407,
-      "round_num": 3
-    },
-    {
-      "player_name": "Hisatsune, Ryo",
-      "line": 68.5,
-      "over_odds": -130,
-      "under_odds": 106,
-      "market": "Total Score",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5652173913043478,
-      "p_under_implied": 0.4854368932038835,
-      "dg_id": 22760,
+      "p_over_implied": 0.5327102803738317,
+      "p_under_implied": 0.5192307692307693,
+      "dg_id": 25362,
       "round_num": 3
     },
     {
@@ -21711,16 +23115,55 @@
       "round_num": 3
     },
     {
-      "player_name": "Fitzpatrick, Alex",
-      "line": 68.5,
-      "over_odds": -114,
-      "under_odds": -108,
+      "player_name": "McCarty, Matt",
+      "line": 69.5,
+      "over_odds": 110,
+      "under_odds": -136,
       "market": "Total Score",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5327102803738317,
-      "p_under_implied": 0.5192307692307693,
-      "dg_id": 25362,
+      "p_over_implied": 0.47619047619047616,
+      "p_under_implied": 0.576271186440678,
+      "dg_id": 28635,
+      "round_num": 3
+    },
+    {
+      "player_name": "Knapp, Jake",
+      "line": 68.5,
+      "over_odds": 110,
+      "under_odds": -136,
+      "market": "Total Score",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.47619047619047616,
+      "p_under_implied": 0.576271186440678,
+      "dg_id": 19396,
+      "round_num": 3
+    },
+    {
+      "player_name": "Brennan, Michael",
+      "line": 68.5,
+      "over_odds": -104,
+      "under_odds": -120,
+      "market": "Total Score",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.5098039215686274,
+      "p_under_implied": 0.5454545454545454,
+      "dg_id": 29197,
+      "round_num": 3
+    },
+    {
+      "player_name": "Hisatsune, Ryo",
+      "line": 68.5,
+      "over_odds": -130,
+      "under_odds": 106,
+      "market": "Total Score",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.5652173913043478,
+      "p_under_implied": 0.4854368932038835,
+      "dg_id": 22760,
       "round_num": 3
     },
     {
@@ -21737,29 +23180,42 @@
       "round_num": 3
     },
     {
-      "player_name": "Woodland, Gary",
+      "player_name": "Fox, Ryan",
       "line": 68.5,
-      "over_odds": -114,
-      "under_odds": -108,
+      "over_odds": -130,
+      "under_odds": 106,
       "market": "Total Score",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5327102803738317,
-      "p_under_implied": 0.5192307692307693,
-      "dg_id": 12577,
+      "p_over_implied": 0.5652173913043478,
+      "p_under_implied": 0.4854368932038835,
+      "dg_id": 11889,
       "round_num": 3
     },
     {
-      "player_name": "Smalley, Alex",
+      "player_name": "Reitan, Kristoffer",
       "line": 68.5,
-      "over_odds": -106,
-      "under_odds": -117,
+      "over_odds": -113,
+      "under_odds": -109,
       "market": "Total Score",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5145631067961165,
-      "p_under_implied": 0.5391705069124424,
-      "dg_id": 18474,
+      "p_over_implied": 0.5305164319248826,
+      "p_under_implied": 0.5215311004784688,
+      "dg_id": 21407,
+      "round_num": 3
+    },
+    {
+      "player_name": "Thorbjornsen, Michael",
+      "line": 68.5,
+      "over_odds": 105,
+      "under_odds": -129,
+      "market": "Total Score",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.4878048780487805,
+      "p_under_implied": 0.5633187772925764,
+      "dg_id": 26649,
       "round_num": 3
     },
     {
@@ -21776,45 +23232,6 @@
       "round_num": 3
     },
     {
-      "player_name": "Reitan, Kristoffer",
-      "line": 4.5,
-      "over_odds": 117,
-      "under_odds": -143,
-      "market": "Birdies",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.4608294930875576,
-      "p_under_implied": 0.588477366255144,
-      "dg_id": 21407,
-      "round_num": 3
-    },
-    {
-      "player_name": "Kitayama, Kurt",
-      "line": 4.5,
-      "over_odds": 101,
-      "under_odds": -124,
-      "market": "Birdies",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.4975124378109453,
-      "p_under_implied": 0.5535714285714286,
-      "dg_id": 21891,
-      "round_num": 3
-    },
-    {
-      "player_name": "Young, Cameron",
-      "line": 4.5,
-      "over_odds": -105,
-      "under_odds": -118,
-      "market": "Birdies",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5121951219512195,
-      "p_under_implied": 0.5412844036697247,
-      "dg_id": 26651,
-      "round_num": 3
-    },
-    {
       "player_name": "McCarty, Matt",
       "line": 3.5,
       "over_odds": -143,
@@ -21825,45 +23242,6 @@
       "p_over_implied": 0.588477366255144,
       "p_under_implied": 0.4608294930875576,
       "dg_id": 28635,
-      "round_num": 3
-    },
-    {
-      "player_name": "Brennan, Michael",
-      "line": 4.5,
-      "over_odds": -117,
-      "under_odds": -106,
-      "market": "Birdies",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5391705069124424,
-      "p_under_implied": 0.5145631067961165,
-      "dg_id": 29197,
-      "round_num": 3
-    },
-    {
-      "player_name": "Bhatia, Akshay",
-      "line": 4.5,
-      "over_odds": 132,
-      "under_odds": -162,
-      "market": "Birdies",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.43103448275862066,
-      "p_under_implied": 0.6183206106870229,
-      "dg_id": 26096,
-      "round_num": 3
-    },
-    {
-      "player_name": "Smalley, Alex",
-      "line": 4.5,
-      "over_odds": 130,
-      "under_odds": -159,
-      "market": "Birdies",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.43478260869565216,
-      "p_under_implied": 0.6138996138996139,
-      "dg_id": 18474,
       "round_num": 3
     },
     {
@@ -21880,32 +23258,6 @@
       "round_num": 3
     },
     {
-      "player_name": "Bridgeman, Jacob",
-      "line": 4.5,
-      "over_odds": 119,
-      "under_odds": -145,
-      "market": "Birdies",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.45662100456621,
-      "p_under_implied": 0.5918367346938775,
-      "dg_id": 29433,
-      "round_num": 3
-    },
-    {
-      "player_name": "Fitzpatrick, Alex",
-      "line": 4.5,
-      "over_odds": 138,
-      "under_odds": -170,
-      "market": "Birdies",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.42016806722689076,
-      "p_under_implied": 0.6296296296296297,
-      "dg_id": 25362,
-      "round_num": 3
-    },
-    {
       "player_name": "Woodland, Gary",
       "line": 4.5,
       "over_odds": 117,
@@ -21916,32 +23268,6 @@
       "p_over_implied": 0.4608294930875576,
       "p_under_implied": 0.588477366255144,
       "dg_id": 12577,
-      "round_num": 3
-    },
-    {
-      "player_name": "Gotterup, Chris",
-      "line": 4.5,
-      "over_odds": -120,
-      "under_odds": -103,
-      "market": "Birdies",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5454545454545454,
-      "p_under_implied": 0.5073891625615764,
-      "dg_id": 27774,
-      "round_num": 3
-    },
-    {
-      "player_name": "Spaun, J.J.",
-      "line": 4.5,
-      "over_odds": 120,
-      "under_odds": -148,
-      "market": "Birdies",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.45454545454545453,
-      "p_under_implied": 0.5967741935483871,
-      "dg_id": 17536,
       "round_num": 3
     },
     {
@@ -21958,6 +23284,84 @@
       "round_num": 3
     },
     {
+      "player_name": "Reitan, Kristoffer",
+      "line": 4.5,
+      "over_odds": 117,
+      "under_odds": -143,
+      "market": "Birdies",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.4608294930875576,
+      "p_under_implied": 0.588477366255144,
+      "dg_id": 21407,
+      "round_num": 3
+    },
+    {
+      "player_name": "Gotterup, Chris",
+      "line": 4.5,
+      "over_odds": -120,
+      "under_odds": -103,
+      "market": "Birdies",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.5454545454545454,
+      "p_under_implied": 0.5073891625615764,
+      "dg_id": 27774,
+      "round_num": 3
+    },
+    {
+      "player_name": "Young, Cameron",
+      "line": 4.5,
+      "over_odds": -105,
+      "under_odds": -118,
+      "market": "Birdies",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.5121951219512195,
+      "p_under_implied": 0.5412844036697247,
+      "dg_id": 26651,
+      "round_num": 3
+    },
+    {
+      "player_name": "Fitzpatrick, Alex",
+      "line": 4.5,
+      "over_odds": 138,
+      "under_odds": -170,
+      "market": "Birdies",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.42016806722689076,
+      "p_under_implied": 0.6296296296296297,
+      "dg_id": 25362,
+      "round_num": 3
+    },
+    {
+      "player_name": "Smalley, Alex",
+      "line": 4.5,
+      "over_odds": 130,
+      "under_odds": -159,
+      "market": "Birdies",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.43478260869565216,
+      "p_under_implied": 0.6138996138996139,
+      "dg_id": 18474,
+      "round_num": 3
+    },
+    {
+      "player_name": "Spaun, J.J.",
+      "line": 4.5,
+      "over_odds": 120,
+      "under_odds": -148,
+      "market": "Birdies",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.45454545454545453,
+      "p_under_implied": 0.5967741935483871,
+      "dg_id": 17536,
+      "round_num": 3
+    },
+    {
       "player_name": "Fox, Ryan",
       "line": 4.5,
       "over_odds": 120,
@@ -21968,6 +23372,19 @@
       "p_over_implied": 0.45454545454545453,
       "p_under_implied": 0.5967741935483871,
       "dg_id": 11889,
+      "round_num": 3
+    },
+    {
+      "player_name": "Bhatia, Akshay",
+      "line": 4.5,
+      "over_odds": 132,
+      "under_odds": -162,
+      "market": "Birdies",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.43103448275862066,
+      "p_under_implied": 0.6183206106870229,
+      "dg_id": 26096,
       "round_num": 3
     },
     {
@@ -21984,6 +23401,32 @@
       "round_num": 3
     },
     {
+      "player_name": "Kitayama, Kurt",
+      "line": 4.5,
+      "over_odds": 101,
+      "under_odds": -124,
+      "market": "Birdies",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.4975124378109453,
+      "p_under_implied": 0.5535714285714286,
+      "dg_id": 21891,
+      "round_num": 3
+    },
+    {
+      "player_name": "Brennan, Michael",
+      "line": 4.5,
+      "over_odds": -117,
+      "under_odds": -106,
+      "market": "Birdies",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.5391705069124424,
+      "p_under_implied": 0.5145631067961165,
+      "dg_id": 29197,
+      "round_num": 3
+    },
+    {
       "player_name": "Knapp, Jake",
       "line": 4.5,
       "over_odds": -132,
@@ -21997,55 +23440,29 @@
       "round_num": 3
     },
     {
-      "player_name": "Bhatia, Akshay",
-      "line": 12.5,
-      "over_odds": 122,
-      "under_odds": -150,
-      "market": "GIR",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.45045045045045046,
-      "p_under_implied": 0.6,
-      "dg_id": 26096,
-      "round_num": 3
-    },
-    {
-      "player_name": "Reitan, Kristoffer",
-      "line": 12.5,
-      "over_odds": 125,
-      "under_odds": -154,
-      "market": "GIR",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.4444444444444444,
-      "p_under_implied": 0.6062992125984252,
-      "dg_id": 21407,
-      "round_num": 3
-    },
-    {
-      "player_name": "Young, Cameron",
-      "line": 12.5,
-      "over_odds": -125,
-      "under_odds": 103,
-      "market": "GIR",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5555555555555556,
-      "p_under_implied": 0.49261083743842365,
-      "dg_id": 26651,
-      "round_num": 3
-    },
-    {
-      "player_name": "Gerard, Ryan",
-      "line": 12.5,
+      "player_name": "Bridgeman, Jacob",
+      "line": 4.5,
       "over_odds": 119,
       "under_odds": -145,
-      "market": "GIR",
+      "market": "Birdies",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
       "p_over_implied": 0.45662100456621,
       "p_under_implied": 0.5918367346938775,
-      "dg_id": 29767,
+      "dg_id": 29433,
+      "round_num": 3
+    },
+    {
+      "player_name": "Gotterup, Chris",
+      "line": 12.5,
+      "over_odds": -105,
+      "under_odds": -117,
+      "market": "GIR",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.5121951219512195,
+      "p_under_implied": 0.5391705069124424,
+      "dg_id": 27774,
       "round_num": 3
     },
     {
@@ -22062,29 +23479,42 @@
       "round_num": 3
     },
     {
-      "player_name": "Gotterup, Chris",
-      "line": 12.5,
-      "over_odds": -105,
-      "under_odds": -117,
+      "player_name": "Brennan, Michael",
+      "line": 11.5,
+      "over_odds": -154,
+      "under_odds": 125,
       "market": "GIR",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5121951219512195,
-      "p_under_implied": 0.5391705069124424,
-      "dg_id": 27774,
+      "p_over_implied": 0.6062992125984252,
+      "p_under_implied": 0.4444444444444444,
+      "dg_id": 29197,
       "round_num": 3
     },
     {
-      "player_name": "Kitayama, Kurt",
+      "player_name": "Gerard, Ryan",
       "line": 12.5,
-      "over_odds": -105,
-      "under_odds": -117,
+      "over_odds": 119,
+      "under_odds": -145,
       "market": "GIR",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5121951219512195,
-      "p_under_implied": 0.5391705069124424,
-      "dg_id": 21891,
+      "p_over_implied": 0.45662100456621,
+      "p_under_implied": 0.5918367346938775,
+      "dg_id": 29767,
+      "round_num": 3
+    },
+    {
+      "player_name": "Bhatia, Akshay",
+      "line": 12.5,
+      "over_odds": 122,
+      "under_odds": -150,
+      "market": "GIR",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.45045045045045046,
+      "p_under_implied": 0.6,
+      "dg_id": 26096,
       "round_num": 3
     },
     {
@@ -22101,16 +23531,16 @@
       "round_num": 3
     },
     {
-      "player_name": "Brennan, Michael",
-      "line": 11.5,
-      "over_odds": -154,
-      "under_odds": 125,
+      "player_name": "Kitayama, Kurt",
+      "line": 12.5,
+      "over_odds": -105,
+      "under_odds": -117,
       "market": "GIR",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.6062992125984252,
-      "p_under_implied": 0.4444444444444444,
-      "dg_id": 29197,
+      "p_over_implied": 0.5121951219512195,
+      "p_under_implied": 0.5391705069124424,
+      "dg_id": 21891,
       "round_num": 3
     },
     {
@@ -22127,16 +23557,16 @@
       "round_num": 3
     },
     {
-      "player_name": "Spaun, J.J.",
+      "player_name": "Young, Cameron",
       "line": 12.5,
-      "over_odds": -139,
-      "under_odds": 113,
+      "over_odds": -125,
+      "under_odds": 103,
       "market": "GIR",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5815899581589958,
-      "p_under_implied": 0.4694835680751174,
-      "dg_id": 17536,
+      "p_over_implied": 0.5555555555555556,
+      "p_under_implied": 0.49261083743842365,
+      "dg_id": 26651,
       "round_num": 3
     },
     {
@@ -22153,120 +23583,42 @@
       "round_num": 3
     },
     {
-      "player_name": "Kitayama, Kurt",
-      "line": 8.5,
-      "over_odds": 105,
-      "under_odds": -129,
-      "market": "Fairways hit",
+      "player_name": "Reitan, Kristoffer",
+      "line": 12.5,
+      "over_odds": 125,
+      "under_odds": -154,
+      "market": "GIR",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.4878048780487805,
-      "p_under_implied": 0.5633187772925764,
-      "dg_id": 21891,
+      "p_over_implied": 0.4444444444444444,
+      "p_under_implied": 0.6062992125984252,
+      "dg_id": 21407,
       "round_num": 3
     },
     {
-      "player_name": "Bridgeman, Jacob",
-      "line": 8.5,
-      "over_odds": 105,
-      "under_odds": -129,
-      "market": "Fairways hit",
+      "player_name": "Spaun, J.J.",
+      "line": 12.5,
+      "over_odds": -139,
+      "under_odds": 113,
+      "market": "GIR",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.4878048780487805,
-      "p_under_implied": 0.5633187772925764,
-      "dg_id": 29433,
-      "round_num": 3
-    },
-    {
-      "player_name": "Young, Cameron",
-      "line": 8.5,
-      "over_odds": -113,
-      "under_odds": -109,
-      "market": "Fairways hit",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5305164319248826,
-      "p_under_implied": 0.5215311004784688,
-      "dg_id": 26651,
-      "round_num": 3
-    },
-    {
-      "player_name": "Gotterup, Chris",
-      "line": 7.5,
-      "over_odds": -122,
-      "under_odds": 100,
-      "market": "Fairways hit",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5495495495495496,
-      "p_under_implied": 0.5,
-      "dg_id": 27774,
+      "p_over_implied": 0.5815899581589958,
+      "p_under_implied": 0.4694835680751174,
+      "dg_id": 17536,
       "round_num": 3
     },
     {
       "player_name": "Fox, Ryan",
       "line": 7.5,
-      "over_odds": -137,
-      "under_odds": 112,
+      "over_odds": -141,
+      "under_odds": 114,
       "market": "Fairways hit",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5780590717299579,
-      "p_under_implied": 0.4716981132075472,
+      "p_over_implied": 0.5850622406639004,
+      "p_under_implied": 0.4672897196261682,
       "dg_id": 11889,
-      "round_num": 3
-    },
-    {
-      "player_name": "Bhatia, Akshay",
-      "line": 8.5,
-      "over_odds": 117,
-      "under_odds": -143,
-      "market": "Fairways hit",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.4608294930875576,
-      "p_under_implied": 0.588477366255144,
-      "dg_id": 26096,
-      "round_num": 3
-    },
-    {
-      "player_name": "Reitan, Kristoffer",
-      "line": 8.5,
-      "over_odds": -103,
-      "under_odds": -121,
-      "market": "Fairways hit",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5073891625615764,
-      "p_under_implied": 0.5475113122171946,
-      "dg_id": 21407,
-      "round_num": 3
-    },
-    {
-      "player_name": "Gerard, Ryan",
-      "line": 8.5,
-      "over_odds": -173,
-      "under_odds": 140,
-      "market": "Fairways hit",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.6336996336996337,
-      "p_under_implied": 0.4166666666666667,
-      "dg_id": 29767,
-      "round_num": 3
-    },
-    {
-      "player_name": "Brennan, Michael",
-      "line": 8.5,
-      "over_odds": -104,
-      "under_odds": -120,
-      "market": "Fairways hit",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5098039215686274,
-      "p_under_implied": 0.5454545454545454,
-      "dg_id": 29197,
       "round_num": 3
     },
     {
@@ -22283,16 +23635,16 @@
       "round_num": 3
     },
     {
-      "player_name": "Thorbjornsen, Michael",
-      "line": 8.5,
-      "over_odds": -132,
-      "under_odds": 107,
+      "player_name": "Gotterup, Chris",
+      "line": 7.5,
+      "over_odds": -122,
+      "under_odds": 100,
       "market": "Fairways hit",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5689655172413793,
-      "p_under_implied": 0.4830917874396135,
-      "dg_id": 26649,
+      "p_over_implied": 0.5495495495495496,
+      "p_under_implied": 0.5,
+      "dg_id": 27774,
       "round_num": 3
     },
     {
@@ -22310,67 +23662,106 @@
     },
     {
       "player_name": "Young, Cameron",
-      "line": 2.5,
-      "over_odds": 146,
-      "under_odds": -182,
-      "market": "Bogeys",
+      "line": 8.5,
+      "over_odds": -113,
+      "under_odds": -109,
+      "market": "Fairways hit",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.4065040650406504,
-      "p_under_implied": 0.6453900709219859,
+      "p_over_implied": 0.5305164319248826,
+      "p_under_implied": 0.5215311004784688,
       "dg_id": 26651,
       "round_num": 3
     },
     {
-      "player_name": "Gerard, Ryan",
-      "line": 2.5,
-      "over_odds": 113,
-      "under_odds": -139,
-      "market": "Bogeys",
+      "player_name": "Bhatia, Akshay",
+      "line": 8.5,
+      "over_odds": 117,
+      "under_odds": -143,
+      "market": "Fairways hit",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.4694835680751174,
-      "p_under_implied": 0.5815899581589958,
-      "dg_id": 29767,
+      "p_over_implied": 0.4608294930875576,
+      "p_under_implied": 0.588477366255144,
+      "dg_id": 26096,
       "round_num": 3
     },
     {
-      "player_name": "Spaun, J.J.",
-      "line": 2.5,
-      "over_odds": 113,
-      "under_odds": -139,
-      "market": "Bogeys",
+      "player_name": "Brennan, Michael",
+      "line": 8.5,
+      "over_odds": -104,
+      "under_odds": -120,
+      "market": "Fairways hit",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.4694835680751174,
-      "p_under_implied": 0.5815899581589958,
-      "dg_id": 17536,
+      "p_over_implied": 0.5098039215686274,
+      "p_under_implied": 0.5454545454545454,
+      "dg_id": 29197,
       "round_num": 3
     },
     {
       "player_name": "Reitan, Kristoffer",
-      "line": 2.5,
-      "over_odds": -110,
-      "under_odds": -112,
-      "market": "Bogeys",
+      "line": 8.5,
+      "over_odds": -103,
+      "under_odds": -121,
+      "market": "Fairways hit",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5238095238095238,
-      "p_under_implied": 0.5283018867924528,
+      "p_over_implied": 0.5073891625615764,
+      "p_under_implied": 0.5475113122171946,
       "dg_id": 21407,
       "round_num": 3
     },
     {
-      "player_name": "Thorbjornsen, Michael",
-      "line": 2.5,
-      "over_odds": 119,
-      "under_odds": -145,
-      "market": "Bogeys",
+      "player_name": "Bridgeman, Jacob",
+      "line": 8.5,
+      "over_odds": 106,
+      "under_odds": -130,
+      "market": "Fairways hit",
       "source": "underdog",
       "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.45662100456621,
-      "p_under_implied": 0.5918367346938775,
+      "p_over_implied": 0.4854368932038835,
+      "p_under_implied": 0.5652173913043478,
+      "dg_id": 29433,
+      "round_num": 3
+    },
+    {
+      "player_name": "Thorbjornsen, Michael",
+      "line": 8.5,
+      "over_odds": -132,
+      "under_odds": 107,
+      "market": "Fairways hit",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.5689655172413793,
+      "p_under_implied": 0.4830917874396135,
       "dg_id": 26649,
+      "round_num": 3
+    },
+    {
+      "player_name": "Kitayama, Kurt",
+      "line": 8.5,
+      "over_odds": 105,
+      "under_odds": -129,
+      "market": "Fairways hit",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.4878048780487805,
+      "p_under_implied": 0.5633187772925764,
+      "dg_id": 21891,
+      "round_num": 3
+    },
+    {
+      "player_name": "Gerard, Ryan",
+      "line": 8.5,
+      "over_odds": -173,
+      "under_odds": 140,
+      "market": "Fairways hit",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.6336996336996337,
+      "p_under_implied": 0.4166666666666667,
+      "dg_id": 29767,
       "round_num": 3
     },
     {
@@ -22384,19 +23775,6 @@
       "p_over_implied": 0.4854368932038835,
       "p_under_implied": 0.5652173913043478,
       "dg_id": 27774,
-      "round_num": 3
-    },
-    {
-      "player_name": "Woodland, Gary",
-      "line": 2.5,
-      "over_odds": -107,
-      "under_odds": -115,
-      "market": "Bogeys",
-      "source": "underdog",
-      "ud_odds_method": "underdog_api",
-      "p_over_implied": 0.5169082125603864,
-      "p_under_implied": 0.5348837209302325,
-      "dg_id": 12577,
       "round_num": 3
     },
     {
@@ -22439,43 +23817,121 @@
       "round_num": 3
     },
     {
+      "player_name": "Reitan, Kristoffer",
+      "line": 2.5,
+      "over_odds": -110,
+      "under_odds": -112,
+      "market": "Bogeys",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.5238095238095238,
+      "p_under_implied": 0.5283018867924528,
+      "dg_id": 21407,
+      "round_num": 3
+    },
+    {
+      "player_name": "Spaun, J.J.",
+      "line": 2.5,
+      "over_odds": 113,
+      "under_odds": -139,
+      "market": "Bogeys",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.4694835680751174,
+      "p_under_implied": 0.5815899581589958,
+      "dg_id": 17536,
+      "round_num": 3
+    },
+    {
+      "player_name": "Gerard, Ryan",
+      "line": 2.5,
+      "over_odds": 113,
+      "under_odds": -139,
+      "market": "Bogeys",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.4694835680751174,
+      "p_under_implied": 0.5815899581589958,
+      "dg_id": 29767,
+      "round_num": 3
+    },
+    {
+      "player_name": "Thorbjornsen, Michael",
+      "line": 2.5,
+      "over_odds": 119,
+      "under_odds": -145,
+      "market": "Bogeys",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.45662100456621,
+      "p_under_implied": 0.5918367346938775,
+      "dg_id": 26649,
+      "round_num": 3
+    },
+    {
+      "player_name": "Young, Cameron",
+      "line": 2.5,
+      "over_odds": 146,
+      "under_odds": -182,
+      "market": "Bogeys",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.4065040650406504,
+      "p_under_implied": 0.6453900709219859,
+      "dg_id": 26651,
+      "round_num": 3
+    },
+    {
+      "player_name": "Woodland, Gary",
+      "line": 2.5,
+      "over_odds": -107,
+      "under_odds": -115,
+      "market": "Bogeys",
+      "source": "underdog",
+      "ud_odds_method": "underdog_api",
+      "p_over_implied": 0.5169082125603864,
+      "p_under_implied": 0.5348837209302325,
+      "dg_id": 12577,
+      "round_num": 3
+    },
+    {
       "player_name": "Schauffele, Xander",
       "dg_id": 19895,
       "market": "Total Score",
       "line": 67.5,
-      "over_odds": -111,
-      "under_odds": 111,
+      "over_odds": -115,
+      "under_odds": 115,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-XSCH67",
-      "p_over_implied": 0.5260663507109005,
-      "p_under_implied": 0.47393364928909953
+      "p_over_implied": 0.5348837209302325,
+      "p_under_implied": 0.46511627906976744
     },
     {
       "player_name": "Kim, Si Woo",
       "dg_id": 14609,
       "market": "Total Score",
       "line": 68.5,
-      "over_odds": 156,
-      "under_odds": -156,
+      "over_odds": 163,
+      "under_odds": -163,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-WKIM68",
-      "p_over_implied": 0.390625,
-      "p_under_implied": 0.609375
+      "p_over_implied": 0.38022813688212925,
+      "p_under_implied": 0.6197718631178707
     },
     {
       "player_name": "Clark, Wyndham",
       "dg_id": 23604,
       "market": "Total Score",
       "line": 67.5,
-      "over_odds": -144,
-      "under_odds": 144,
+      "over_odds": -133,
+      "under_odds": 133,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-WCLA67",
-      "p_over_implied": 0.5901639344262295,
-      "p_under_implied": 0.4098360655737705
+      "p_over_implied": 0.5708154506437768,
+      "p_under_implied": 0.4291845493562232
     },
     {
       "player_name": "Hovland, Viktor",
@@ -22521,13 +23977,13 @@
       "dg_id": 23014,
       "market": "Total Score",
       "line": 68.5,
-      "over_odds": -144,
-      "under_odds": 144,
+      "over_odds": -141,
+      "under_odds": 141,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-STHE68",
-      "p_over_implied": 0.5901639344262295,
-      "p_under_implied": 0.4098360655737705
+      "p_over_implied": 0.5850622406639004,
+      "p_under_implied": 0.4149377593360996
     },
     {
       "player_name": "Straka, Sepp",
@@ -22560,26 +24016,26 @@
       "dg_id": 17488,
       "market": "Total Score",
       "line": 68.5,
-      "over_odds": 102,
-      "under_odds": -102,
+      "over_odds": -100,
+      "under_odds": -100,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-SIM68",
-      "p_over_implied": 0.49504950495049505,
-      "p_under_implied": 0.504950495049505
+      "p_over_implied": 0.5,
+      "p_under_implied": 0.5
     },
     {
       "player_name": "Burns, Sam",
       "dg_id": 19483,
       "market": "Total Score",
       "line": 67.5,
-      "over_odds": -106,
-      "under_odds": 106,
+      "over_odds": -108,
+      "under_odds": 108,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-SBUR67",
-      "p_over_implied": 0.5145631067961165,
-      "p_under_implied": 0.4854368932038835
+      "p_over_implied": 0.5192307692307693,
+      "p_under_implied": 0.4807692307692308
     },
     {
       "player_name": "McIlroy, Rory",
@@ -22625,39 +24081,39 @@
       "dg_id": 14578,
       "market": "Total Score",
       "line": 68.5,
-      "over_odds": 141,
-      "under_odds": -141,
+      "over_odds": 147,
+      "under_odds": -147,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-RHEN68",
-      "p_over_implied": 0.4149377593360996,
-      "p_under_implied": 0.5850622406639004
+      "p_over_implied": 0.4048582995951417,
+      "p_under_implied": 0.5951417004048583
     },
     {
       "player_name": "Gerard, Ryan",
       "dg_id": 29767,
       "market": "Total Score",
       "line": 69.5,
-      "over_odds": 213,
-      "under_odds": -212,
+      "over_odds": 217,
+      "under_odds": -217,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-RGER69",
-      "p_over_implied": 0.3194888178913738,
-      "p_under_implied": 0.6794871794871795
+      "p_over_implied": 0.31545741324921134,
+      "p_under_implied": 0.6845425867507886
     },
     {
       "player_name": "Fox, Ryan",
       "dg_id": 11889,
       "market": "Total Score",
       "line": 69.5,
-      "over_odds": 163,
-      "under_odds": -163,
+      "over_odds": 167,
+      "under_odds": -167,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-RFOX69",
-      "p_over_implied": 0.38022813688212925,
-      "p_under_implied": 0.6197718631178707
+      "p_over_implied": 0.37453183520599254,
+      "p_under_implied": 0.6254681647940075
     },
     {
       "player_name": "Fowler, Rickie",
@@ -22677,26 +24133,26 @@
       "dg_id": 15466,
       "market": "Total Score",
       "line": 67.5,
-      "over_odds": -141,
-      "under_odds": 141,
+      "over_odds": -138,
+      "under_odds": 138,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-PCAN67",
-      "p_over_implied": 0.5850622406639004,
-      "p_under_implied": 0.4149377593360996
+      "p_over_implied": 0.5798319327731093,
+      "p_under_implied": 0.42016806722689076
     },
     {
       "player_name": "Hojgaard, Nicolai",
       "dg_id": 23602,
       "market": "Total Score",
       "line": 68.5,
-      "over_odds": -100,
-      "under_odds": -100,
+      "over_odds": -108,
+      "under_odds": 108,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-NHOJ68",
-      "p_over_implied": 0.5,
-      "p_under_implied": 0.5
+      "p_over_implied": 0.5192307692307693,
+      "p_under_implied": 0.4807692307692308
     },
     {
       "player_name": "Echavarria, Nico",
@@ -22716,13 +24172,13 @@
       "dg_id": 26649,
       "market": "Total Score",
       "line": 68.5,
-      "over_odds": 106,
-      "under_odds": -106,
+      "over_odds": 104,
+      "under_odds": -104,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-MTHO68",
-      "p_over_implied": 0.4854368932038835,
-      "p_under_implied": 0.5145631067961165
+      "p_over_implied": 0.49019607843137253,
+      "p_under_implied": 0.5098039215686274
     },
     {
       "player_name": "McNealy, Maverick",
@@ -22755,52 +24211,52 @@
       "dg_id": 16841,
       "market": "Total Score",
       "line": 68.5,
-      "over_odds": 122,
-      "under_odds": -122,
+      "over_odds": 117,
+      "under_odds": -117,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-MLEE68",
-      "p_over_implied": 0.45045045045045046,
-      "p_under_implied": 0.5495495495495496
+      "p_over_implied": 0.4608294930875576,
+      "p_under_implied": 0.5391705069124424
     },
     {
       "player_name": "Fitzpatrick, Matt",
       "dg_id": 17646,
       "market": "Total Score",
       "line": 67.5,
-      "over_odds": -117,
-      "under_odds": 117,
+      "over_odds": -120,
+      "under_odds": 120,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-MFIT67",
-      "p_over_implied": 0.5391705069124424,
-      "p_under_implied": 0.4608294930875576
+      "p_over_implied": 0.5454545454545454,
+      "p_under_implied": 0.45454545454545453
     },
     {
       "player_name": "Brennan, Michael",
       "dg_id": 29197,
       "market": "Total Score",
       "line": 69.5,
-      "over_odds": 194,
-      "under_odds": -194,
+      "over_odds": 186,
+      "under_odds": -186,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-MBRE69",
-      "p_over_implied": 0.3401360544217687,
-      "p_under_implied": 0.6598639455782312
+      "p_over_implied": 0.34965034965034963,
+      "p_under_implied": 0.6503496503496503
     },
     {
       "player_name": "Aberg, Ludvig",
       "dg_id": 23950,
       "market": "Total Score",
       "line": 67.5,
-      "over_odds": -100,
-      "under_odds": -100,
+      "over_odds": -104,
+      "under_odds": 104,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-LABE67",
-      "p_over_implied": 0.5,
-      "p_under_implied": 0.5
+      "p_over_implied": 0.5098039215686274,
+      "p_under_implied": 0.49019607843137253
     },
     {
       "player_name": "Reitan, Kristoffer",
@@ -22820,117 +24276,117 @@
       "dg_id": 21891,
       "market": "Total Score",
       "line": 69.5,
-      "over_odds": 213,
-      "under_odds": -212,
+      "over_odds": 217,
+      "under_odds": -217,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-KKIT69",
-      "p_over_implied": 0.3194888178913738,
-      "p_under_implied": 0.6794871794871795
+      "p_over_implied": 0.31545741324921134,
+      "p_under_implied": 0.6845425867507886
     },
     {
       "player_name": "Thomas, Justin",
       "dg_id": 14139,
       "market": "Total Score",
       "line": 68.5,
-      "over_odds": 125,
-      "under_odds": -125,
+      "over_odds": 133,
+      "under_odds": -133,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-JTHO68",
-      "p_over_implied": 0.4444444444444444,
-      "p_under_implied": 0.5555555555555556
+      "p_over_implied": 0.4291845493562232,
+      "p_under_implied": 0.5708154506437768
     },
     {
       "player_name": "Spaun, J.J.",
       "dg_id": 17536,
       "market": "Total Score",
       "line": 68.5,
-      "over_odds": 122,
-      "under_odds": -122,
+      "over_odds": 135,
+      "under_odds": -135,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-JSPA68",
-      "p_over_implied": 0.45045045045045046,
-      "p_under_implied": 0.5495495495495496
+      "p_over_implied": 0.425531914893617,
+      "p_under_implied": 0.574468085106383
     },
     {
       "player_name": "Rose, Justin",
       "dg_id": 6093,
       "market": "Total Score",
       "line": 69.5,
-      "over_odds": 199,
-      "under_odds": -199,
+      "over_odds": 208,
+      "under_odds": -208,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-JROS69",
-      "p_over_implied": 0.33444816053511706,
-      "p_under_implied": 0.6655518394648829
+      "p_over_implied": 0.3246753246753247,
+      "p_under_implied": 0.6753246753246753
     },
     {
       "player_name": "Poston, J.T.",
       "dg_id": 21554,
       "market": "Total Score",
       "line": 69.5,
-      "over_odds": 160,
-      "under_odds": -160,
+      "over_odds": 167,
+      "under_odds": -167,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-JPOS69",
-      "p_over_implied": 0.38461538461538464,
-      "p_under_implied": 0.6153846153846154
+      "p_over_implied": 0.37453183520599254,
+      "p_under_implied": 0.6254681647940075
     },
     {
       "player_name": "Knapp, Jake",
       "dg_id": 19396,
       "market": "Total Score",
       "line": 68.5,
-      "over_odds": 125,
-      "under_odds": -125,
+      "over_odds": 117,
+      "under_odds": -117,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-JKNA68",
-      "p_over_implied": 0.4444444444444444,
-      "p_under_implied": 0.5555555555555556
+      "p_over_implied": 0.4608294930875576,
+      "p_under_implied": 0.5391705069124424
     },
     {
       "player_name": "Bridgeman, Jacob",
       "dg_id": 29433,
       "market": "Total Score",
       "line": 69.5,
-      "over_odds": 194,
-      "under_odds": -194,
+      "over_odds": 199,
+      "under_odds": -199,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-JBRI69",
-      "p_over_implied": 0.3401360544217687,
-      "p_under_implied": 0.6598639455782312
+      "p_over_implied": 0.33444816053511706,
+      "p_under_implied": 0.6655518394648829
     },
     {
       "player_name": "Matsuyama, Hideki",
       "dg_id": 13562,
       "market": "Total Score",
       "line": 67.5,
-      "over_odds": -127,
-      "under_odds": 127,
+      "over_odds": -130,
+      "under_odds": 130,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-HMAT67",
-      "p_over_implied": 0.5594713656387665,
-      "p_under_implied": 0.44052863436123346
+      "p_over_implied": 0.5652173913043478,
+      "p_under_implied": 0.43478260869565216
     },
     {
       "player_name": "Woodland, Gary",
       "dg_id": 12577,
       "market": "Total Score",
       "line": 69.5,
-      "over_odds": 163,
-      "under_odds": -163,
+      "over_odds": 167,
+      "under_odds": -167,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-GWOO69",
-      "p_over_implied": 0.38022813688212925,
-      "p_under_implied": 0.6197718631178707
+      "p_over_implied": 0.37453183520599254,
+      "p_under_implied": 0.6254681647940075
     },
     {
       "player_name": "Cole, Eric",
@@ -22950,26 +24406,26 @@
       "dg_id": 22085,
       "market": "Total Score",
       "line": 67.5,
-      "over_odds": -141,
-      "under_odds": 141,
+      "over_odds": -144,
+      "under_odds": 144,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-CMOR67",
-      "p_over_implied": 0.5850622406639004,
-      "p_under_implied": 0.4149377593360996
+      "p_over_implied": 0.5901639344262295,
+      "p_under_implied": 0.4098360655737705
     },
     {
       "player_name": "Gotterup, Chris",
       "dg_id": 27774,
       "market": "Total Score",
       "line": 67.5,
-      "over_odds": -141,
-      "under_odds": 141,
+      "over_odds": -135,
+      "under_odds": 135,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-CGOT67",
-      "p_over_implied": 0.5850622406639004,
-      "p_under_implied": 0.4149377593360996
+      "p_over_implied": 0.574468085106383,
+      "p_under_implied": 0.425531914893617
     },
     {
       "player_name": "Young, Cameron",
@@ -22989,13 +24445,13 @@
       "dg_id": 24968,
       "market": "Total Score",
       "line": 68.5,
-      "over_odds": 125,
-      "under_odds": -125,
+      "over_odds": 127,
+      "under_odds": -127,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-BGRI68",
-      "p_over_implied": 0.4444444444444444,
-      "p_under_implied": 0.5555555555555556
+      "p_over_implied": 0.44052863436123346,
+      "p_under_implied": 0.5594713656387665
     },
     {
       "player_name": "Cauley, Bud",
@@ -23015,13 +24471,13 @@
       "dg_id": 18474,
       "market": "Total Score",
       "line": 69.5,
-      "over_odds": 190,
-      "under_odds": -190,
+      "over_odds": 194,
+      "under_odds": -194,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-ASMA69",
-      "p_over_implied": 0.3448275862068966,
-      "p_under_implied": 0.6551724137931034
+      "p_over_implied": 0.3401360544217687,
+      "p_under_implied": 0.6598639455782312
     },
     {
       "player_name": "Scott, Adam",
@@ -23041,52 +24497,52 @@
       "dg_id": 18554,
       "market": "Total Score",
       "line": 68.5,
-      "over_odds": -115,
-      "under_odds": 115,
+      "over_odds": -106,
+      "under_odds": 106,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-ARAI68",
-      "p_over_implied": 0.5348837209302325,
-      "p_under_implied": 0.46511627906976744
+      "p_over_implied": 0.5145631067961165,
+      "p_under_implied": 0.4854368932038835
     },
     {
       "player_name": "Noren, Alex",
       "dg_id": 10419,
       "market": "Total Score",
       "line": 68.5,
-      "over_odds": 111,
-      "under_odds": -111,
+      "over_odds": 108,
+      "under_odds": -108,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-ANOR68",
-      "p_over_implied": 0.47393364928909953,
-      "p_under_implied": 0.5260663507109005
+      "p_over_implied": 0.4807692307692308,
+      "p_under_implied": 0.5192307692307693
     },
     {
       "player_name": "Fitzpatrick, Alex",
       "dg_id": 25362,
       "market": "Total Score",
       "line": 68.5,
-      "over_odds": -108,
-      "under_odds": 108,
+      "over_odds": -104,
+      "under_odds": 104,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-AFIT68",
-      "p_over_implied": 0.5192307692307693,
-      "p_under_implied": 0.4807692307692308
+      "p_over_implied": 0.5098039215686274,
+      "p_under_implied": 0.49019607843137253
     },
     {
       "player_name": "Bhatia, Akshay",
       "dg_id": 26096,
       "market": "Total Score",
       "line": 68.5,
-      "over_odds": -120,
-      "under_odds": 120,
+      "over_odds": -117,
+      "under_odds": 117,
       "round_num": 3,
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-BMC26R3-ABHA68",
-      "p_over_implied": 0.5454545454545454,
-      "p_under_implied": 0.45454545454545453
+      "p_over_implied": 0.5391705069124424,
+      "p_under_implied": 0.4608294930875576
     },
     {
       "player_name": "Henley, Russell",
@@ -23177,12 +24633,12 @@
       "dg_id": 12294,
       "market": "Total Score",
       "line": 67.5,
-      "over_odds": -145,
-      "under_odds": 115,
+      "over_odds": -135,
+      "under_odds": 105,
       "round_num": 3,
       "source": "caesars",
-      "p_over_implied": 0.5918367346938775,
-      "p_under_implied": 0.46511627906976744
+      "p_over_implied": 0.574468085106383,
+      "p_under_implied": 0.4878048780487805
     },
     {
       "player_name": "Im, Sungjae",
@@ -23249,12 +24705,12 @@
       "dg_id": 18417,
       "market": "Total Score",
       "line": 66.5,
-      "over_odds": -115,
-      "under_odds": -115,
+      "over_odds": -105,
+      "under_odds": -125,
       "round_num": 3,
       "source": "caesars",
-      "p_over_implied": 0.5348837209302325,
-      "p_under_implied": 0.5348837209302325
+      "p_over_implied": 0.5121951219512195,
+      "p_under_implied": 0.5555555555555556
     },
     {
       "player_name": "Reitan, Kristoffer",
@@ -23333,12 +24789,12 @@
       "dg_id": 12577,
       "market": "Total Score",
       "line": 68.5,
-      "over_odds": 105,
-      "under_odds": -135,
+      "over_odds": -105,
+      "under_odds": -125,
       "round_num": 3,
       "source": "caesars",
-      "p_over_implied": 0.4878048780487805,
-      "p_under_implied": 0.574468085106383
+      "p_over_implied": 0.5121951219512195,
+      "p_under_implied": 0.5555555555555556
     },
     {
       "player_name": "MacIntyre, Robert",
@@ -23405,12 +24861,12 @@
       "dg_id": 23950,
       "market": "Total Score",
       "line": 67.5,
-      "over_odds": -140,
-      "under_odds": 110,
+      "over_odds": -130,
+      "under_odds": 100,
       "round_num": 3,
       "source": "caesars",
-      "p_over_implied": 0.5833333333333334,
-      "p_under_implied": 0.47619047619047616
+      "p_over_implied": 0.5652173913043478,
+      "p_under_implied": 0.5
     },
     {
       "player_name": "Hovland, Viktor",
@@ -23753,12 +25209,12 @@
       "dg_id": 23604,
       "market": "Birdies",
       "line": 4.5,
-      "over_odds": -125,
-      "under_odds": -105,
+      "over_odds": -120,
+      "under_odds": -110,
       "round_num": 3,
       "source": "caesars",
-      "p_over_implied": 0.5555555555555556,
-      "p_under_implied": 0.5121951219512195
+      "p_over_implied": 0.5454545454545454,
+      "p_under_implied": 0.5238095238095238
     },
     {
       "player_name": "Woodland, Gary",
@@ -24052,25 +25508,25 @@
       "player_name": "Clark, Wyndham",
       "dg_id": 23604,
       "market": "Pars",
-      "line": 10.5,
-      "over_odds": -170,
-      "under_odds": 130,
+      "line": 11.5,
+      "over_odds": 127,
+      "under_odds": -165,
       "round_num": 3,
       "source": "caesars",
-      "p_over_implied": 0.6296296296296297,
-      "p_under_implied": 0.43478260869565216
+      "p_over_implied": 0.44052863436123346,
+      "p_under_implied": 0.6226415094339622
     },
     {
       "player_name": "Woodland, Gary",
       "dg_id": 12577,
       "market": "Pars",
       "line": 11.5,
-      "over_odds": 110,
-      "under_odds": -140,
+      "over_odds": 115,
+      "under_odds": -145,
       "round_num": 3,
       "source": "caesars",
-      "p_over_implied": 0.47619047619047616,
-      "p_under_implied": 0.5833333333333334
+      "p_over_implied": 0.46511627906976744,
+      "p_under_implied": 0.5918367346938775
     }
   ],
   "outrights": {
@@ -26882,13 +28338,13 @@
   "matchups": {
     "tournament_matchups": {
       "event_name": "BMW Championship",
-      "last_updated": "2026-08-22 01:31:00 UTC",
+      "last_updated": "2026-08-22 02:32:00 UTC",
       "market": "tournament_matchups",
       "match_list": "No tournament_matchups being offered right now."
     },
     "round_matchups": {
       "event_name": "BMW Championship",
-      "last_updated": "2026-08-22 01:31:00 UTC",
+      "last_updated": "2026-08-22 02:32:00 UTC",
       "market": "round_matchups",
       "match_list": [
         {
@@ -27099,6 +28555,10 @@
               "p1": 1.9,
               "p2": 1.9
             },
+            "betcris": {
+              "p1": 1.84034,
+              "p2": 1.9009
+            },
             "betmgm": {
               "p1": 1.87,
               "p2": 1.87
@@ -27274,6 +28734,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 2.11,
+              "p2": 1.70922
+            },
             "betmgm": {
               "p1": 2.15,
               "p2": 1.67
@@ -27331,6 +28795,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.65359,
+              "p2": 2.22
+            },
             "caesars": {
               "p1": 1.74074,
               "p2": 2.05
@@ -27380,9 +28848,13 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.84746,
+              "p2": 1.89286
+            },
             "betmgm": {
               "p1": 1.8,
-              "p2": 2
+              "p2": 1.95
             },
             "caesars": {
               "p1": 1.90909,
@@ -27437,6 +28909,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.66225,
+              "p2": 2.21
+            },
             "betmgm": {
               "p1": 1.59,
               "p2": 2.35
@@ -27494,6 +28970,14 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 2.41,
+              "p2": 1.5618
+            },
+            "betmgm": {
+              "p1": 2.4,
+              "p2": 1.56
+            },
             "caesars": {
               "p1": 2.4,
               "p2": 1.55556
@@ -27547,6 +29031,14 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.95238,
+              "p2": 1.8
+            },
+            "betmgm": {
+              "p1": 2.15,
+              "p2": 1.7
+            },
             "caesars": {
               "p1": 2.22,
               "p2": 1.64516
@@ -27600,6 +29092,14 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.86957,
+              "p2": 1.86957
+            },
+            "betmgm": {
+              "p1": 1.95,
+              "p2": 1.83
+            },
             "caesars": {
               "p1": 1.95238,
               "p2": 1.8
@@ -27653,6 +29153,14 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.51546,
+              "p2": 2.53
+            },
+            "betmgm": {
+              "p1": 1.59,
+              "p2": 2.35
+            },
             "caesars": {
               "p1": 1.52632,
               "p2": 2.5
@@ -27706,6 +29214,14 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 2.17,
+              "p2": 1.68027
+            },
+            "betmgm": {
+              "p1": 2.18,
+              "p2": 1.67
+            },
             "caesars": {
               "p1": 2.2,
               "p2": 1.66667
@@ -27763,9 +29279,17 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.95238,
+              "p2": 1.8
+            },
+            "betmgm": {
+              "p1": 1.95,
+              "p2": 1.83
+            },
             "betonline": {
-              "p1": 1.86957,
-              "p2": 1.95238
+              "p1": 1.95238,
+              "p2": 1.86957
             },
             "caesars": {
               "p1": 1.86957,
@@ -27824,6 +29348,14 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.60606,
+              "p2": 2.31
+            },
+            "betmgm": {
+              "p1": 1.59,
+              "p2": 2.35
+            },
             "caesars": {
               "p1": 1.57143,
               "p2": 2.35
@@ -27881,6 +29413,10 @@
         },
         {
           "odds": {
+            "betmgm": {
+              "p1": 1.44,
+              "p2": 2.8
+            },
             "caesars": {
               "p1": 1.38462,
               "p2": 3
@@ -27938,6 +29474,10 @@
         },
         {
           "odds": {
+            "betmgm": {
+              "p1": 1.3,
+              "p2": 3.5
+            },
             "caesars": {
               "p1": 1.3125,
               "p2": 3.4
@@ -27995,6 +29535,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 2.26,
+              "p2": 1.63291
+            },
             "caesars": {
               "p1": 2.27,
               "p2": 1.60606
@@ -28052,6 +29596,14 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 2.24,
+              "p2": 1.64103
+            },
+            "betmgm": {
+              "p1": 2.28,
+              "p2": 1.62
+            },
             "caesars": {
               "p1": 2.2,
               "p2": 1.66667
@@ -28109,6 +29661,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.58824,
+              "p2": 2.35
+            },
             "betmgm": {
               "p1": 1.6,
               "p2": 2.3
@@ -28170,6 +29726,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.97087,
+              "p2": 1.7874
+            },
             "betmgm": {
               "p1": 2.05,
               "p2": 1.75
@@ -28231,6 +29791,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.64103,
+              "p2": 2.24
+            },
             "betmgm": {
               "p1": 1.7,
               "p2": 2.16
@@ -28292,6 +29856,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.84034,
+              "p2": 1.9009
+            },
             "betonline": {
               "p1": 1.86957,
               "p2": 1.95238
@@ -28353,6 +29921,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.8,
+              "p2": 1.95238
+            },
             "betonline": {
               "p1": 1.79365,
               "p2": 2.06
@@ -28374,8 +29946,8 @@
               "p2": 1.909090909090909
             },
             "pinnacle": {
-              "p1": 1.877,
-              "p2": 1.943
+              "p1": 1.862,
+              "p2": 1.961
             },
             "unibet": {
               "p1": 1.81967,
@@ -28414,6 +29986,10 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 1.68966,
+              "p2": 2.15
+            },
             "caesars": {
               "p1": 1.55556,
               "p2": 2.4
@@ -28471,9 +30047,9 @@
         },
         {
           "odds": {
-            "betmgm": {
-              "p1": 1.7,
-              "p2": 2.15
+            "betcris": {
+              "p1": 1.64935,
+              "p2": 2.23
             },
             "caesars": {
               "p1": 1.64516,
@@ -28532,9 +30108,9 @@
         },
         {
           "odds": {
-            "betmgm": {
-              "p1": 2.1,
-              "p2": 1.72
+            "betcris": {
+              "p1": 2.06,
+              "p2": 1.73529
             },
             "caesars": {
               "p1": 2.1,
@@ -28580,8 +30156,8 @@
               "tie": 9.830425165888418
             },
             "pointsbet": {
-              "p1": 2.2,
-              "p2": 1.9091,
+              "p1": 2.25,
+              "p2": 1.8696,
               "tie": 7
             }
           },
@@ -28593,9 +30169,9 @@
         },
         {
           "odds": {
-            "betmgm": {
-              "p1": 2.15,
-              "p2": 1.67
+            "betcris": {
+              "p1": 2.24,
+              "p2": 1.64103
             },
             "caesars": {
               "p1": 2.05,
@@ -28610,8 +30186,8 @@
               "p2": 1.68493151
             },
             "fanduel": {
-              "p1": 2,
-              "p2": 1.8
+              "p1": 2.1,
+              "p2": 1.727272727272727
             },
             "pinnacle": {
               "p1": 2.22,
@@ -29114,6 +30690,40 @@
         },
         {
           "odds": {
+            "betcris": {
+              "p1": 2.65,
+              "p2": 1.47619
+            },
+            "datagolf": {
+              "p1": 2.74171629256375,
+              "p2": 1.5741463200806558
+            }
+          },
+          "p1_dg_id": 17646,
+          "p1_player_name": "Fitzpatrick, Matt",
+          "p2_dg_id": 18417,
+          "p2_player_name": "Scheffler, Scottie",
+          "ties": "void"
+        },
+        {
+          "odds": {
+            "betcris": {
+              "p1": 1.63694,
+              "p2": 2.25
+            },
+            "datagolf": {
+              "p1": 1.7391812296159275,
+              "p2": 2.3528482054659206
+            }
+          },
+          "p1_dg_id": 23323,
+          "p1_player_name": "MacIntyre, Robert",
+          "p2_dg_id": 28635,
+          "p2_player_name": "McCarty, Matt",
+          "ties": "void"
+        },
+        {
+          "odds": {
             "datagolf": {
               "p1": 1.9498554045943144,
               "p2": 2.0527918198529416
@@ -29236,17 +30846,18 @@
     },
     "3_balls": {
       "event_name": "BMW Championship",
-      "last_updated": "2026-08-22 01:31:00 UTC",
+      "last_updated": "2026-08-22 02:32:00 UTC",
       "market": "3_balls",
       "match_list": "No 3_balls being offered right now."
     }
   },
-  "book_odds_refreshed_at": "2026-08-22T01:59:01Z",
-  "dk_round_props_refreshed_at": "2026-08-22T01:59:01Z",
-  "pp_round_props_refreshed_at": "2026-08-22T01:59:01Z",
-  "ud_round_props_refreshed_at": "2026-08-22T01:59:01Z",
-  "kl_round_props_refreshed_at": "2026-08-22T01:59:01Z",
-  "czr_round_props_refreshed_at": "2026-08-22T01:59:01Z",
+  "book_odds_refreshed_at": "2026-08-22T03:26:27Z",
+  "dk_round_props_refreshed_at": "2026-08-22T03:26:27Z",
+  "pp_round_props_refreshed_at": "2026-08-22T03:26:27Z",
+  "sl_round_props_refreshed_at": "2026-08-22T03:26:27Z",
+  "ud_round_props_refreshed_at": "2026-08-22T03:26:27Z",
+  "kl_round_props_refreshed_at": "2026-08-22T03:26:27Z",
+  "czr_round_props_refreshed_at": "2026-08-22T03:26:27Z",
   "live_round_actuals_by_dg": {
     "6093": {
       "1": {
@@ -31050,14 +32661,14 @@
     }
   },
   "datagolf_live_current_round": 3,
-  "dg_teetimes_merged_at": "2026-08-22T02:00:25Z",
+  "dg_teetimes_merged_at": "2026-08-22T03:27:39Z",
   "forecast_weather_tee_times_merged": 150,
   "score_projection_recipe": "skill_first_club_pool",
   "score_skill_keep": 1,
   "venue_scoring_source": "rolling_4_course_rounds",
   "projection_counts_weather_baked": false,
   "projection_unified_factors": {
-    "applied_at": "2026-08-22T02:00:40.173Z",
+    "applied_at": "2026-08-22T03:27:47.998Z",
     "weights": {
       "courseTableFit": 0.16,
       "similarCourse": 0.1,
