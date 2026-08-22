@@ -276,30 +276,135 @@ function Promote-RoundProjectionVsActualCsv([string] $AlphaCaddieWebRoot) {
   }
 }
 
-# During rebase, --theirs is the local refresh commit being replayed (not origin/main).
-# Live publishes churn hundreds of data/history files vs remote Actions — keep local for ALL conflicts.
-function Resolve-RebaseDataConflicts([string] $Root) {
-  $conflicted = @(git -C $Root diff --name-only --diff-filter=U 2>$null | Where-Object { $_ -ne "" })
-  if ($conflicted.Count -eq 0) { return $false }
-  Write-Host "Rebase: resolving $($conflicted.Count) conflict(s) keeping local refresh (--theirs) ..."
-  git -C $Root checkout --theirs -- @conflicted
-  if ($LASTEXITCODE -ne 0) {
-    foreach ($p in $conflicted) {
-      git -C $Root checkout --theirs -- $p 2>$null
+function Invoke-GitQuiet {
+  param(
+    [Parameter(Mandatory = $true)][string] $RepoRoot,
+    [Parameter(ValueFromRemainingArguments = $true)][string[]] $GitArgs
+  )
+  & git -C $RepoRoot @GitArgs 2>&1 | ForEach-Object {
+    if ($_ -is [System.Management.Automation.ErrorRecord]) {
+      $line = $_.ToString()
+      if ($line -match "^(hint:|warning:)") {
+        Write-Host $line
+      } else {
+        Write-Warning $line
+      }
+    } elseif ("$_".Trim() -ne "") {
+      Write-Host $_
     }
   }
-  git -C $Root add -- @conflicted
-  foreach ($p in $conflicted) {
+  return $LASTEXITCODE
+}
+
+function Clear-InterruptedRebase([string] $Root) {
+  $rebaseMerge = Join-Path $Root ".git/rebase-merge"
+  $rebaseApply = Join-Path $Root ".git/rebase-apply"
+  if (-not (Test-Path $rebaseMerge) -and -not (Test-Path $rebaseApply)) { return $false }
+  Write-Warning "Aborting interrupted rebase — publish sync uses merge (local refresh wins), not rebase replay."
+  $code = Invoke-GitQuiet $Root rebase --abort
+  if ($code -ne 0) {
+    throw "Could not abort interrupted rebase (exit $code). Run: git rebase --abort"
+  }
+  return $true
+}
+
+function Get-GitConflictedPaths([string] $Root) {
+  $paths = @(git -C $Root diff --name-only --diff-filter=U 2>$null | Where-Object { $_ -ne "" })
+  if ($paths.Count -gt 0) { return $paths }
+  $status = @(git -C $Root status --porcelain 2>$null | Where-Object { $_ -match '^[ADU]{2} ' })
+  foreach ($line in $status) {
+    if ($line -match '^.. (.+)$') {
+      $paths += $Matches[1].Trim()
+    }
+  }
+  return @($paths | Select-Object -Unique)
+}
+
+function Test-RebaseInProgress([string] $Root) {
+  return (Test-Path (Join-Path $Root ".git/rebase-merge")) -or (Test-Path (Join-Path $Root ".git/rebase-apply"))
+}
+
+function Test-JsonConflictMarkers([string] $Root, [string[]] $Paths) {
+  foreach ($p in $Paths) {
+    if ($p -notmatch '\.(json)$') { continue }
     $full = Join-Path $Root $p
     if (-not (Test-Path $full)) { continue }
-    if ($p -match '\.(json)$') {
-      $raw = Get-Content -LiteralPath $full -Raw -ErrorAction SilentlyContinue
-      if ($raw -match '^(<<<<<<<|=======|>>>>>>>)' -or $raw -match '(?m)^<<<<<<< ' -or $raw -match '(?m)^>>>>>>> ') {
-        throw "Rebase left conflict markers in $p — aborting publish. Resolve JSON manually and retry."
+    $raw = Get-Content -LiteralPath $full -Raw -ErrorAction SilentlyContinue
+    if ($raw -match '(?m)^<<<<<<< ' -or $raw -match '(?m)^>>>>>>> ') {
+      throw "Publish sync left conflict markers in $p — close editors and retry push:live."
+    }
+  }
+}
+
+# Merge: --ours = local refresh. Rebase replay (legacy): --theirs = replayed refresh commit.
+function Resolve-PublishConflictsKeepLocal([string] $Root) {
+  $conflicted = @(Get-GitConflictedPaths $Root)
+  if ($conflicted.Count -eq 0) { return $false }
+
+  $pick = if (Test-RebaseInProgress $Root) { "--theirs" } else { "--ours" }
+  Write-Host "Publish sync: resolving $($conflicted.Count) conflict(s) keeping local refresh ($pick) ..."
+  $code = Invoke-GitQuiet $Root checkout $pick -- @conflicted
+  if ($code -ne 0) {
+    foreach ($p in $conflicted) {
+      Invoke-GitQuiet $Root checkout $pick -- $p | Out-Null
+    }
+  }
+  Invoke-GitQuiet $Root add -- @conflicted | Out-Null
+  Test-JsonConflictMarkers $Root $conflicted
+  return $true
+}
+
+function Invoke-GitAutostash([string] $Root, [scriptblock] $Action) {
+  $dirty = git -C $Root status --porcelain 2>$null
+  $stashed = $false
+  if ($dirty) {
+    Write-Host "Autostashing unstaged changes before publish sync ..."
+    $code = Invoke-GitQuiet $Root stash push -u -m "refresh-history-and-push autostash"
+    if ($code -eq 0) { $stashed = $true }
+  }
+  try {
+    & $Action
+  } finally {
+    if ($stashed) {
+      $pop = Invoke-GitQuiet $Root stash pop
+      if ($pop -ne 0) {
+        Write-Warning "Autostash pop had conflicts — resolve manually if needed (git stash list)."
       }
     }
   }
-  return $true
+}
+
+function Invoke-GitPullMergePublish([string] $Root, [string] $Branch) {
+  Clear-InterruptedRebase $Root | Out-Null
+
+  Invoke-GitAutostash $Root {
+    Write-Host "Fetching origin/$Branch ..."
+    Invoke-GitNative $Root fetch origin $Branch
+
+    $localSha = (git -C $Root rev-parse HEAD 2>$null).Trim()
+    $remoteSha = (git -C $Root rev-parse "origin/$Branch" 2>$null).Trim()
+    if ($localSha -eq $remoteSha) {
+      Write-Host "Already up to date with origin/$Branch."
+      return
+    }
+
+    git -C $Root merge-base --is-ancestor "origin/$Branch" HEAD 2>$null | Out-Null
+    if ($LASTEXITCODE -eq 0) {
+      Write-Host "Local branch ahead of origin/$Branch — merge not required."
+      return
+    }
+
+    Write-Host "Merging origin/$Branch (local refresh wins on conflicts) ..."
+    $mergeCode = Invoke-GitQuiet $Root merge --no-edit -X ours "origin/$Branch"
+    if ($mergeCode -eq 0) { return }
+
+    if (Resolve-PublishConflictsKeepLocal $Root) {
+      $commitCode = Invoke-GitQuiet $Root -c core.editor=true commit --no-edit
+      if ($commitCode -eq 0) { return }
+    }
+
+    throw "git merge origin/$Branch failed (exit $mergeCode). Close Excel/editors on data files and retry push:live."
+  }
 }
 
 function Discard-LiveWeekUnpublishedHistory([string] $RepoRoot) {
@@ -309,15 +414,19 @@ function Discard-LiveWeekUnpublishedHistory([string] $RepoRoot) {
   Invoke-GitNative $RepoRoot checkout -- "alpha-caddie-web/player-history"
 }
 
-function Invoke-GitPullRebasePublish([string] $Root, [string] $Branch) {
-  Write-Host "Pulling latest origin/$Branch with rebase (autostash unstaged) ..."
-  Invoke-GitNative $Root pull --rebase --autostash origin $Branch
-  while ($LASTEXITCODE -ne 0) {
-    if (Resolve-RebaseDataConflicts $Root) {
-      Invoke-GitNative $Root -c core.editor=true rebase --continue
-      continue
+function Invoke-GitPushPublish([string] $Root, [string] $Branch, [switch] $SyncFirst) {
+  if ($SyncFirst) {
+    Invoke-GitPullMergePublish $Root $Branch
+  }
+  Write-Host "Pushing origin $Branch ..."
+  git -C $Root push origin $Branch
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host "Push rejected (remote has newer commits - often GitHub Actions). Syncing with merge and retrying once ..."
+    Invoke-GitPullMergePublish $Root $Branch
+    git -C $Root push origin $Branch
+    if ($LASTEXITCODE -ne 0) {
+      throw "git push failed with exit code $LASTEXITCODE"
     }
-    throw "git pull --rebase failed (resolve conflicts manually, then push)."
   }
 }
 
@@ -366,22 +475,6 @@ function Stage-LiveWeekFieldHistoryShards([string] $RepoRoot, [string] $WebRoot)
     }
   }
   Write-Host "LiveWeekOnly: staged $staged field by-dg shard(s) + field-{year} + by-course."
-}
-
-function Invoke-GitPushPublish([string] $Root, [string] $Branch, [switch] $SyncFirst) {
-  if ($SyncFirst) {
-    Invoke-GitPullRebasePublish $Root $Branch
-  }
-  Write-Host "Pushing origin $Branch ..."
-  git -C $Root push origin $Branch
-  if ($LASTEXITCODE -ne 0) {
-    Write-Host "Push rejected (remote has newer commits - often DraftKings GitHub Action). Syncing and retrying once ..."
-    Invoke-GitPullRebasePublish $Root $Branch
-    git -C $Root push origin $Branch
-    if ($LASTEXITCODE -ne 0) {
-      throw "git push failed with exit code $LASTEXITCODE"
-    }
-  }
 }
 
 if ($LiveWeekOnly) {
@@ -588,8 +681,7 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host "No staged changes after cache-bust attempt; on-disk mirrors under website/public/data/ were still updated above."
     if (-not $SkipPush) {
       $branchEarly = git -C $repoRoot rev-parse --abbrev-ref HEAD
-      Write-Host "Pushing origin $branchEarly (in case local commits were already present) ..."
-      git -C $repoRoot push origin $branchEarly
+      Invoke-GitPushPublish $repoRoot $branchEarly -SyncFirst
     }
     exit 0
   }
@@ -619,6 +711,7 @@ $branch = git -C $repoRoot rev-parse --abbrev-ref HEAD
 if ($LiveWeekOnly) {
   Discard-LiveWeekUnpublishedHistory $repoRoot
 }
-Invoke-GitPushPublish $repoRoot $branch -SyncFirst:$PullFirst
+# Always merge-sync before push (local refresh wins). Avoids rebase replay failures on large data commits.
+Invoke-GitPushPublish $repoRoot $branch -SyncFirst
 
 Write-Host "Done: refreshed artifacts pushed (no Results build)."
