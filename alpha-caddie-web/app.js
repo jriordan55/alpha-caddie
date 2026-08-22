@@ -26556,26 +26556,41 @@ function collectLiveStatsRoundRows() {
       const eventToPar = num(ip?.current_score ?? lts?.total, NaN);
       const pos = String(ip?.current_pos || lts?.position || "").trim() || "—";
       const sg = liveStatsBuildSgParts(act, lts, histRow);
-      const birdies = birdiesPlusEaglesFromRow(pg || histRow || act || {});
-      const bogeys = bogeysPlusDoublesFromRow(pg || histRow || act || {});
-      const pars = num(pg?.pars ?? histRow?.pars ?? act?.pars, NaN);
-      const fairways = Number.isFinite(num(act?.fairways, NaN))
-        ? historyGirOrFairwaysCount(act.fairways, fwHoles)
-        : Number.isFinite(num(lts?.accuracy, NaN))
-          ? Math.round(num(lts.accuracy, NaN) * fwHoles)
-          : NaN;
-      const gir = Number.isFinite(num(act?.gir, NaN))
-        ? historyGirOrFairwaysCount(act.gir, 18)
-        : Number.isFinite(num(lts?.gir, NaN)) && num(lts.gir, 0) <= 1.0001
-          ? Math.round(num(lts.gir, NaN) * 18)
-          : num(lts?.gir, NaN);
-      const drvAcc = num(lts?.accuracy, NaN);
-      const girPct =
-        Number.isFinite(num(lts?.gir, NaN)) && num(lts.gir, 0) <= 1.0001
-          ? num(lts.gir, NaN)
-          : Number.isFinite(gir)
-            ? gir / 18
+      const mergedCountRow = {
+        dg_id: dg,
+        round_num: rnd,
+        round: rnd,
+        round_score: score,
+        ...(histRow || {}),
+        ...(pg || {}),
+        ...(act || {}),
+      };
+      const counting = liveStatsCountingFromHistoryRow(mergedCountRow);
+      let { pars, birdies, bogeys, fairways, gir, drv_acc: drvAcc, gir_pct: girPct } = counting;
+      if (!Number.isFinite(fairways)) {
+        fairways = Number.isFinite(num(act?.fairways, NaN))
+          ? historyGirOrFairwaysCount(act.fairways, fwHoles)
+          : Number.isFinite(num(lts?.accuracy, NaN))
+            ? Math.round(num(lts.accuracy, NaN) * fwHoles)
             : NaN;
+      }
+      if (!Number.isFinite(gir)) {
+        gir = Number.isFinite(num(act?.gir, NaN))
+          ? historyGirOrFairwaysCount(act.gir, 18)
+          : Number.isFinite(num(lts?.gir, NaN)) && num(lts.gir, 0) <= 1.0001
+            ? Math.round(num(lts.gir, NaN) * 18)
+            : num(lts?.gir, NaN);
+      }
+      if (!Number.isFinite(drvAcc)) drvAcc = num(lts?.accuracy, NaN);
+      if (!Number.isFinite(girPct)) {
+        girPct =
+          Number.isFinite(num(lts?.gir, NaN)) && num(lts.gir, 0) <= 1.0001
+            ? num(lts.gir, NaN)
+            : Number.isFinite(gir)
+              ? gir / 18
+              : NaN;
+      }
+      if (!Number.isFinite(gir) && Number.isFinite(girPct)) gir = girPct * 18;
       const player =
         names.get(dg) ||
         String(lts?.player_name || ip?.player_name || pg?.player_name || "").trim() ||
@@ -26699,30 +26714,37 @@ function collectLiveStatsTournamentRows(roundRows) {
   });
 }
 
-function liveStatsRowFromHistoryRound(dg, histRow, names, fwHoles) {
-  const sg = liveStatsBuildSgParts(null, null, histRow);
-  const birdies = birdiesPlusEaglesFromRow(histRow);
-  const bogeys = bogeysPlusDoublesFromRow(histRow);
-  const pars = num(histRow.pars, NaN);
-  const fairways = historyGirOrFairwaysCount(histRow.fairways, fwHoles);
-  const gir = historyGirOrFairwaysCount(histRow.gir, 18);
+/** Counting stats for Stats lookback — same enrichment/reconcile path as Trends + O/U actuals. */
+function liveStatsCountingFromHistoryRow(histRow) {
+  const birdies = actualForRoundRow("birdies", histRow);
+  const bogeys = actualForRoundRow("bogeys", histRow);
+  const pars = actualForRoundRow("pars", histRow);
+  const fairways = actualForRoundRow("fairways", histRow);
+  let gir = actualForRoundRow("gir", histRow);
   const fwPct = actualForRoundRow("fairways_pct", histRow);
   const girPctRaw = actualForRoundRow("gir_pct", histRow);
   const drvAcc = Number.isFinite(fwPct) ? fwPct / 100 : NaN;
-  const girPct = Number.isFinite(girPctRaw) ? girPctRaw / 100 : Number.isFinite(gir) ? gir / 18 : NaN;
+  let girPct = Number.isFinite(girPctRaw) ? girPctRaw / 100 : Number.isFinite(gir) ? gir / 18 : NaN;
+  if (!Number.isFinite(gir) && Number.isFinite(girPct)) gir = girPct * 18;
+  if (!Number.isFinite(girPct) && Number.isFinite(gir)) girPct = gir / 18;
+  return { birdies, bogeys, pars, fairways, gir, drv_acc: drvAcc, gir_pct: girPct };
+}
+
+function liveStatsRowFromHistoryRound(dg, histRow, names, fwHoles) {
+  const sg = liveStatsBuildSgParts(null, null, histRow);
+  const rowForCounting = {
+    ...histRow,
+    dg_id: num(histRow?.dg_id, dg),
+    round_num: num(histRow?.round_num ?? histRow?.round, NaN),
+  };
+  const counting = liveStatsCountingFromHistoryRow(rowForCounting);
   const player =
     names.get(dg) || String(histRow.player_name || histRow.playerName || "").trim() || `DG ${dg}`;
   return {
     dg_id: dg,
     player,
     player_display: liveStatsDisplayName(player),
-    pars,
-    birdies,
-    bogeys,
-    fairways,
-    gir,
-    drv_acc: drvAcc,
-    gir_pct: girPct,
+    ...counting,
     ...sg,
   };
 }
@@ -26762,6 +26784,7 @@ function collectLiveStatsLookbackRows(nRounds) {
     if (!avg) continue;
     const roundsUsed = avg._lookback_rounds;
     delete avg._lookback_rounds;
+    if (!Number.isFinite(avg.gir) && Number.isFinite(avg.gir_pct)) avg.gir = avg.gir_pct * 18;
     const ip = inPlay.get(dg) || null;
     const histName = String(HISTORY.byDgId?.[String(dg)]?.player_name || "").trim();
     const pos = String(ip?.current_pos || "").trim() || "—";
