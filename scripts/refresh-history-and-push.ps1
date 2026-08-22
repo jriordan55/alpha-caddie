@@ -571,6 +571,8 @@ if (Test-Path $parlayCorrSrc) {
   Write-Host "Mirrored parlay_correlations.json -> website/public/data/parlay_correlations.json"
 }
 
+Run-Npm "Grading paper book open bets from vs-actual CSV ..." run grade:paper-book
+
 Set-Location $repoRoot
 
 $artifacts = @(

@@ -17,32 +17,20 @@ import {
 } from "./live-book-options.mjs";
 import {
   describeEntryPayout,
-  calcDkSinglePnl,
-  calcPickemParlayPnl,
-  calcPrizePicksEntryPnl,
 } from "./book-payouts.mjs";
-import { gradeOuBet, buildOuGradeIndex } from "../projection-tracker/my-bets-grade.mjs";
-import { DETAIL_EXPORT_MARKETS } from "../projection-tracker/detail-market-specs.mjs";
 import {
   applyBookSlice,
   bookSlice,
   downloadHistoryBackup,
   importHistoryBackupFile,
   loadPersistedState,
+  writePersistedState,
 } from "./paper-book-state.mjs";
+import {
+  buildOuGradeIndexFromCsvText,
+  gradePersistedState,
+} from "./paper-book-grade.mjs";
 
-const MARKET_SPECS = DETAIL_EXPORT_MARKETS.map((m) => {
-  const stem = m.key === "total" ? "round_score" : m.key === "fairways" ? "fairways" : m.key;
-  return {
-    ...m,
-    bookCol: m.bookLineCol,
-    overRes: `${stem}_over`,
-    underRes: `${stem}_under`,
-    actual: m.key === "total" ? "actual_round_score" : `actual_${m.key === "fairways" ? "fairways" : m.key}`,
-  };
-});
-
-const PROJECTIONS_URL = "../projections.json";
 const PAPER_BOOK_LINES_URL = "./paper-book-lines.json";
 const VS_ACTUAL_URL = "../data/round_projection_vs_actual.csv";
 
@@ -193,22 +181,40 @@ function describeLegPick(book, leg) {
   return `${pickLabel(book, leg.side, leg.line)} · ${marketShortLabel(leg.market)} · ${formatPostedOdds(book, leg.bookOdds)}`;
 }
 
-function lookupRoundScore(entry, dgId, playerName) {
-  if (!ouGradeIndex) return NaN;
-  const event = String(entry.eventName || "")
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, " ");
-  const round = Math.round(Number(entry.round));
-  const dg = Math.round(Number(dgId));
-  const player = String(playerName || "")
-    .trim()
-    .toLowerCase();
-  const byDg = Number.isFinite(dg) ? `${event}|${round}|dg:${dg}` : "";
-  const byName = player ? `${event}|${round}|${player}` : "";
-  const hit = (byDg && ouGradeIndex.get(byDg)) || (byName && ouGradeIndex.get(byName));
-  const score = Number(hit?.actual_round_score);
-  return Number.isFinite(score) ? score : NaN;
+function legResultLabel(result) {
+  const r = String(result || "").toUpperCase();
+  if (r === "W") return "Win";
+  if (r === "L") return "Loss";
+  if (r === "P") return "Push";
+  return "";
+}
+
+function entryStatusLabel(entry) {
+  if (entry.result === "win") return "Win";
+  if (entry.result === "loss") return "Loss";
+  if (entry.result === "push") return "Push";
+  return "Open";
+}
+
+function describeEntryBet(entry) {
+  const book = bookById(entry.bookId);
+  return entry.legs
+    .map((leg) => {
+      const res = legResultLabel(leg.result);
+      const pick = describeLegPick(book, leg);
+      return res ? `${pick} → ${res}` : pick;
+    })
+    .join(" · ");
+}
+
+function gradeAllBooksInPersisted() {
+  if (!ouGradeIndex || !persisted) return 0;
+  const { persisted: graded, changedCount } = gradePersistedState(persisted, ouGradeIndex);
+  if (changedCount > 0) {
+    persisted = writePersistedState(graded);
+    syncStateFromPersisted(state.bookId);
+  }
+  return changedCount;
 }
 
 function refreshLiveBookLines() {
@@ -341,126 +347,19 @@ function placeBet() {
   state.slip = [];
   saveBookState();
   syncStateFromPersisted(state.bookId);
-  gradeOpenEntries();
+  gradeAllBooksInPersisted();
   renderAll();
   showToast(`Placed ${fmtUsd(stake)} · ${book.label}`);
-}
-
-function gradeLeg(leg, entry) {
-  if (leg.cardKind === "matchup") {
-    const s1 = lookupRoundScore(entry, leg.p1_dg_id, leg.p1_player_name);
-    const s2 = lookupRoundScore(entry, leg.p2_dg_id, leg.p2_player_name);
-    if (!Number.isFinite(s1) || !Number.isFinite(s2)) return null;
-    if (s1 === s2) return "P";
-    const p1Wins = s1 < s2;
-    const pickedP1 = leg.side === "p1";
-    return pickedP1 === p1Wins ? "W" : "L";
-  }
-  if (!ouGradeIndex) return null;
-  return gradeOuBet(
-    {
-      eventName: entry.eventName,
-      round: entry.round,
-      dg_id: leg.dg_id,
-      playerName: leg.playerName,
-      market: leg.market,
-      side: leg.side,
-      line: leg.line,
-    },
-    ouGradeIndex,
-  );
-}
-
-function settleEntry(entry) {
-  const book = bookById(entry.bookId);
-  const legs = entry.legs.map((leg) => ({
-    ...leg,
-    result: gradeLeg(leg, entry) || leg.result || "open",
-  }));
-
-  const allGraded = legs.every((l) => {
-    const r = String(l.result || "").toUpperCase();
-    return r === "W" || r === "L" || r === "P";
-  });
-  if (!allGraded) return false;
-
-  let pnl = 0;
-  let result = "loss";
-
-  if (book.mode === "sportsbook") {
-    const leg = legs[0];
-    const r = String(leg.result).toUpperCase();
-    pnl = calcDkSinglePnl(entry.stake, leg.odds, r);
-    if (r === "W") result = "win";
-    else if (r === "P") result = "push";
-    else result = "loss";
-  } else if (book.id === "prizepicks") {
-    pnl = calcPrizePicksEntryPnl(legs, entry.stake, entry.playType);
-    result = pnl > 0 ? "win" : "loss";
-  } else {
-    pnl = calcPickemParlayPnl(legs, entry.stake);
-    result = pnl > 0 ? "win" : "loss";
-  }
-
-  entry.legs = legs;
-  entry.result = result;
-  entry.pnl = pnl;
-  entry.settledAt = new Date().toISOString();
-  state.bankroll += entry.stake + pnl;
-  return true;
-}
-
-function gradeOpenEntries() {
-  if (!ouGradeIndex) return;
-  let changed = 0;
-  for (const entry of state.history) {
-    if (entry.result !== "open") continue;
-    if (settleEntry(entry)) changed++;
-  }
-  if (changed > 0) {
-    saveBookState();
-    syncStateFromPersisted(state.bookId);
-  }
-}
-
-function parseCsvLine(line) {
-  const out = [];
-  let cur = "";
-  let q = false;
-  for (const ch of line) {
-    if (ch === '"') {
-      q = !q;
-      continue;
-    }
-    if (ch === "," && !q) {
-      out.push(cur);
-      cur = "";
-      continue;
-    }
-    cur += ch;
-  }
-  out.push(cur);
-  return out;
 }
 
 async function loadGradeData() {
   try {
     const res = await fetch(`${VS_ACTUAL_URL}?t=${Date.now()}`, { cache: "no-store" });
-    if (!res.ok) return;
-    const text = await res.text();
-    const lines = text.split(/\r?\n/).filter(Boolean);
-    if (lines.length < 2) return;
-    const header = parseCsvLine(lines[0]);
-    const rows = [];
-    for (let i = 1; i < lines.length; i++) {
-      const cells = parseCsvLine(lines[i]);
-      const row = {};
-      for (let j = 0; j < header.length; j++) row[header[j]] = cells[j] ?? "";
-      rows.push(row);
-    }
-    ouGradeIndex = buildOuGradeIndex(rows, MARKET_SPECS);
+    if (!res.ok) return false;
+    ouGradeIndex = buildOuGradeIndexFromCsvText(await res.text());
+    return Boolean(ouGradeIndex);
   } catch {
-    /* optional */
+    return false;
   }
 }
 
@@ -472,12 +371,6 @@ async function loadPaperBookLines() {
   }
   setBakedBookCatalog(await res.json());
   return true;
-}
-
-async function loadProjections() {
-  const res = await fetch(`${PROJECTIONS_URL}?t=${Date.now()}`, { cache: "no-store" });
-  if (!res.ok) throw new Error("Could not load projections.json");
-  projections = await res.json();
 }
 
 function fetchHintForBook(bookId) {
@@ -688,16 +581,30 @@ function renderHistory() {
   list.innerHTML = state.history
     .map((entry) => {
       const book = bookById(entry.bookId);
-      const status = entry.result;
+      const statusKey = entry.result === "push" ? "push" : entry.result;
+      const statusText = entryStatusLabel(entry);
       const pnl =
-        status === "open" ? "pending" : `${(entry.pnl || 0) >= 0 ? "+" : ""}${fmtUsd(entry.pnl)}`;
-      const legsTxt = entry.legs.map((l) => describeLegPick(book, l)).join(" · ");
+        entry.result === "open"
+          ? ""
+          : `${(entry.pnl || 0) >= 0 ? "+" : ""}${fmtUsd(entry.pnl)}`;
+      const roundLabel = entry.round ? `R${entry.round}` : "";
+      const when = new Date(entry.placedAt).toLocaleString(undefined, {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      });
       return `<div class="history-entry">
         <div class="entry-head">
-          <span>${fmtUsd(entry.stake)} · ${new Date(entry.placedAt).toLocaleDateString()}</span>
-          <span class="entry-status ${status}">${status}${status !== "open" ? ` · ${pnl}` : ""}</span>
+          <div class="entry-title">
+            <span class="entry-book">${esc(book.label)}</span>
+            <span class="entry-stake">${fmtUsd(entry.stake)}</span>
+            ${roundLabel ? `<span class="entry-round">${esc(roundLabel)}</span>` : ""}
+          </div>
+          <span class="entry-status ${esc(statusKey)}">${esc(statusText)}${pnl ? ` · ${esc(pnl)}` : ""}</span>
         </div>
-        <div class="entry-legs">${esc(legsTxt)}</div>
+        <div class="entry-legs">${esc(describeEntryBet(entry))}</div>
+        <div class="entry-meta">${esc(entry.eventName || "Golf")} · ${esc(when)}</div>
       </div>`;
     })
     .join("");
@@ -712,9 +619,12 @@ function renderAll() {
 }
 
 async function refreshGradeDataInBackground() {
-  await loadGradeData();
-  gradeOpenEntries();
+  if (await loadGradeData()) {
+    const n = gradeAllBooksInPersisted();
+    if (n > 0) showToast(`Graded ${n} bet${n === 1 ? "" : "s"}`);
+  }
   renderHistory();
+  renderSlip();
 }
 
 function bindUi() {
@@ -823,35 +733,26 @@ async function boot() {
   document.getElementById("props-board").innerHTML = `<div class="empty-board">Loading book odds…</div>`;
 
   try {
-    const linesOk = await loadPaperBookLines();
+    const [linesOk] = await Promise.all([loadPaperBookLines(), loadGradeData()]);
     if (!linesOk) {
       document.getElementById("props-board").innerHTML =
         `<div class="empty-board">Missing paper-book-lines.json — run npm run push:live or npm run bake:paper-book</div>`;
       return;
     }
+    gradeAllBooksInPersisted();
     renderAll();
   } catch (err) {
     document.getElementById("props-board").innerHTML = `<div class="empty-board">${esc(err.message)}</div>`;
     return;
   }
 
-  loadProjections()
-    .then(() => {
-      gradeOpenEntries();
-      refreshGradeDataInBackground();
-    })
-    .catch(() => {
-      /* grading optional */
-    });
+  refreshGradeDataInBackground();
 
   setInterval(async () => {
     try {
       await loadPaperBookLines();
+      if (await loadGradeData()) gradeAllBooksInPersisted();
       renderAll();
-      if (projections) {
-        await loadProjections();
-        gradeOpenEntries();
-      }
     } catch {
       /* ignore poll errors */
     }

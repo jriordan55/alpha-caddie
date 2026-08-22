@@ -24,6 +24,7 @@
     "refresh:market-benchmarks": "node scripts/refresh-pga-tour-market-benchmarks.mjs",
     "fetch:book-odds": "node scripts/fetch-book-odds-into-projections.mjs",
     "bake:paper-book": "node scripts/bake-paper-book-lines.mjs",
+    "grade:paper-book": "node scripts/grade-paper-book-history.mjs",
     "update:dk-round-projections": "node scripts/update-dk-round-projections.mjs",
     "push:dk-round-projections": "node scripts/trigger-dk-round-projections-remote.mjs",
     "push:dk-round-projections:git": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/dk-round-projections-push-once.ps1",

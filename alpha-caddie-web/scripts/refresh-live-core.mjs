@@ -167,6 +167,7 @@ if (!envTruthy("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL", false)) {
     {},
     softOpt,
   );
+  run("grade-paper-book-history.mjs", "Grade paper book open bets (paper-book-history.json)", {}, softOpt);
 }
 
 // —— Tab data: Historical Trends prior-round shards (field only, not full rebuild) ——

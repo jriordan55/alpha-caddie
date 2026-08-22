@@ -6,6 +6,7 @@ export const STORAGE_VERSION = 2;
 export const HISTORY_URL = "./paper-book-history.json";
 
 const BOOK_IDS = ["draftkings", "prizepicks", "sleeper", "underdog", "kalshi", "dk_matchups"];
+export const PAPER_BOOK_IDS = BOOK_IDS;
 
 function storageKey() {
   return `alphaCaddie_paperBook_all_${location.hostname || "local"}_v${STORAGE_VERSION}`;

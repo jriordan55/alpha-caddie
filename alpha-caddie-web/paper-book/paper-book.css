@@ -617,8 +617,25 @@ body.book-sleeper .place-btn { color: #000; }
 .entry-head {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 8px;
   margin-bottom: 6px;
+}
+
+.entry-title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  font-weight: 600;
+}
+
+.entry-book { color: var(--text); }
+.entry-stake { color: var(--accent); }
+.entry-round {
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-weight: 600;
 }
 
 .entry-status {
@@ -631,8 +648,14 @@ body.book-sleeper .place-btn { color: #000; }
 .entry-status.open { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
 .entry-status.win { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
 .entry-status.loss { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+.entry-status.push { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
 
-.entry-legs { color: var(--muted); font-size: 0.78rem; line-height: 1.5; }
+.entry-legs { color: var(--text); font-size: 0.8rem; line-height: 1.5; margin-bottom: 4px; }
+
+.entry-meta {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
 
 .history-actions {
   display: flex;
