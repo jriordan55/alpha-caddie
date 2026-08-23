@@ -17968,7 +17968,11 @@
       "under_odds": -136,
       "p_over_implied": 0.576271186440678,
       "p_under_implied": 0.576271186440678,
-      "pp_odds_method": "prizepicks_fixed"
+      "pp_odds_method": "prizepicks_fixed",
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Griffin, Ben",
@@ -24969,7 +24973,11 @@
       "round_num": 4,
       "source": "caesars",
       "p_over_implied": 0.574468085106383,
-      "p_under_implied": 0.4878048780487805
+      "p_under_implied": 0.4878048780487805,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Brennan, Michael",
@@ -25317,7 +25325,11 @@
       "round_num": 4,
       "source": "caesars",
       "p_over_implied": 0.44052863436123346,
-      "p_under_implied": 0.6226415094339622
+      "p_under_implied": 0.6226415094339622,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "odds_floor"
     },
     {
       "player_name": "Bhatia, Akshay",
