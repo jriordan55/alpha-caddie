@@ -19,6 +19,7 @@ import {
   describeEntryPayout,
 } from "./book-payouts.mjs";
 import {
+  allHistory,
   applyBookSlice,
   bookSlice,
   downloadHistoryBackup,
@@ -560,25 +561,27 @@ function renderSlip() {
 }
 
 function renderHistory() {
-  const settled = state.history.filter((e) => e.result !== "open");
-  const open = state.history.filter((e) => e.result === "open");
+  // Show every book — switching tabs used to look like history was wiped.
+  const history = persisted ? allHistory(persisted) : state.history;
+  const settled = history.filter((e) => e.result !== "open");
+  const open = history.filter((e) => e.result === "open");
   const totalPnl = settled.reduce((s, e) => s + (Number(e.pnl) || 0), 0);
   const wins = settled.filter((e) => e.result === "win").length;
   const losses = settled.filter((e) => e.result === "loss").length;
 
   document.getElementById("history-stats").innerHTML = `
-    <div class="stat-box"><div class="stat-label">Balance</div><div class="stat-value">${fmtUsd(state.bankroll)}</div></div>
-    <div class="stat-box"><div class="stat-label">P/L</div><div class="stat-value ${totalPnl >= 0 ? "pos" : "neg"}">${totalPnl >= 0 ? "+" : ""}${fmtUsd(totalPnl)}</div></div>
+    <div class="stat-box"><div class="stat-label">This book</div><div class="stat-value">${fmtUsd(state.bankroll)}</div></div>
+    <div class="stat-box"><div class="stat-label">All P/L</div><div class="stat-value ${totalPnl >= 0 ? "pos" : "neg"}">${totalPnl >= 0 ? "+" : ""}${fmtUsd(totalPnl)}</div></div>
     <div class="stat-box"><div class="stat-label">Record</div><div class="stat-value">${wins}-${losses} · ${open.length} open</div></div>
   `;
 
   const list = document.getElementById("history-list");
-  if (!state.history.length) {
+  if (!history.length) {
     list.innerHTML = `<p class="empty-board">No bets yet.</p>`;
     return;
   }
 
-  list.innerHTML = state.history
+  list.innerHTML = history
     .map((entry) => {
       const book = bookById(entry.bookId);
       const statusKey = entry.result === "push" ? "push" : entry.result;
@@ -686,10 +689,10 @@ function bindUi() {
     const v = Math.max(100, Number(document.getElementById("bankroll-reset").value) || 1000);
     state.startingBankroll = v;
     state.bankroll = v;
-    state.history = [];
+    // Keep bet history — only reset cash for this book.
     saveBookState();
     renderAll();
-    showToast(`Bankroll reset to ${fmtUsd(v)}`);
+    showToast(`Bankroll reset to ${fmtUsd(v)} (history kept)`);
   });
 
   document.getElementById("btn-export-history")?.addEventListener("click", () => {

@@ -8,8 +8,14 @@ export const HISTORY_URL = "./paper-book-history.json";
 const BOOK_IDS = ["draftkings", "prizepicks", "sleeper", "underdog", "kalshi", "dk_matchups"];
 export const PAPER_BOOK_IDS = BOOK_IDS;
 
+/** Stable key — do not scope by hostname (localhost vs 127.0.0.1 vs Pages was wiping history). */
 function storageKey() {
-  return `alphaCaddie_paperBook_all_${location.hostname || "local"}_v${STORAGE_VERSION}`;
+  return `alphaCaddie_paperBook_all_v${STORAGE_VERSION}`;
+}
+
+function legacyHostnameKey() {
+  const host = typeof location !== "undefined" ? location.hostname || "local" : "local";
+  return `alphaCaddie_paperBook_all_${host}_v${STORAGE_VERSION}`;
 }
 
 function defaultBookState() {
@@ -51,11 +57,18 @@ export function normalizePersistedState(raw) {
   return out;
 }
 
-function readLocal() {
+function parseStored(raw) {
+  if (!raw) return null;
   try {
-    const raw = localStorage.getItem(storageKey());
-    if (!raw) return null;
     return normalizePersistedState(JSON.parse(raw));
+  } catch {
+    return null;
+  }
+}
+
+function readLocalRaw(key) {
+  try {
+    return localStorage.getItem(key);
   } catch {
     return null;
   }
@@ -76,6 +89,41 @@ function migrateV1() {
     }
   }
   return found ? normalizePersistedState({ books }) : null;
+}
+
+/** Collect every known local copy (stable key + old hostname keys + v1). */
+function collectLocalCandidates() {
+  /** @type {object[]} */
+  const found = [];
+  const seen = new Set();
+
+  const tryAdd = (state) => {
+    if (!state) return;
+    const sig = JSON.stringify(state);
+    if (seen.has(sig)) return;
+    seen.add(sig);
+    found.push(state);
+  };
+
+  tryAdd(parseStored(readLocalRaw(storageKey())));
+  tryAdd(parseStored(readLocalRaw(legacyHostnameKey())));
+
+  // Sweep other hostname-scoped v2 keys left from older builds
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (!key?.startsWith("alphaCaddie_paperBook_all_") || !key.endsWith(`_v${STORAGE_VERSION}`)) {
+        continue;
+      }
+      if (key === storageKey()) continue;
+      tryAdd(parseStored(readLocalRaw(key)));
+    }
+  } catch {
+    /* private mode */
+  }
+
+  tryAdd(migrateV1());
+  return found;
 }
 
 function mergeHistories(localHist, remoteHist) {
@@ -111,34 +159,49 @@ export function mergePersistedStates(local, remote) {
   return out;
 }
 
+function mergeMany(states) {
+  return states.reduce((acc, s) => mergePersistedStates(acc, s), emptyPersistedState());
+}
+
+export function readLocal() {
+  const candidates = collectLocalCandidates();
+  if (!candidates.length) return null;
+  return mergeMany(candidates);
+}
+
 export async function loadPersistedState() {
-  let state = readLocal() || migrateV1() || emptyPersistedState();
-  const hadLocal = Boolean(readLocal() || migrateV1());
+  let state = readLocal() || emptyPersistedState();
 
   try {
     const res = await fetch(`${HISTORY_URL}?t=${Date.now()}`, { cache: "no-store" });
     if (res.ok) {
       const remote = normalizePersistedState(await res.json());
-      const seedFromRepo = !hadLocal || hasAnyHistory(remote);
-      if (seedFromRepo) {
+      // Only merge repo JSON when it actually has bets. Empty committed file must never
+      // clobber browser history on first load after a hostname/key change.
+      if (hasAnyHistory(remote)) {
         state = mergePersistedStates(state, remote);
-        writePersistedState(state);
       }
     }
   } catch {
     /* optional repo file */
   }
 
+  // Always rewrite under the stable key so future loads find history
+  // (also migrates any hostname-scoped leftovers).
+  writePersistedState(state);
   return state;
 }
 
 export function writePersistedState(persisted) {
   const payload = normalizePersistedState(persisted);
   payload.updated_at = new Date().toISOString();
+  const json = JSON.stringify(payload);
   try {
-    localStorage.setItem(storageKey(), JSON.stringify(payload));
-  } catch {
-    /* quota / private mode */
+    localStorage.setItem(storageKey(), json);
+    // Keep legacy hostname key in sync so older tabs still see updates.
+    localStorage.setItem(legacyHostnameKey(), json);
+  } catch (err) {
+    console.warn("[paper-book] Could not save history to localStorage", err);
   }
   return payload;
 }
@@ -149,6 +212,19 @@ export function bookSlice(persisted, bookId) {
     ...slice,
     history: mergeHistories([], slice.history),
   };
+}
+
+/** Flat history across all books, newest first. */
+export function allHistory(persisted) {
+  const rows = [];
+  for (const id of BOOK_IDS) {
+    const hist = persisted?.books?.[id]?.history;
+    if (!Array.isArray(hist)) continue;
+    for (const e of hist) {
+      if (e?.id) rows.push({ ...e, bookId: e.bookId || id });
+    }
+  }
+  return mergeHistories(rows, []);
 }
 
 export function applyBookSlice(persisted, bookId, slice) {
