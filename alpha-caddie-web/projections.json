@@ -8349,7 +8349,11 @@
       "market": "Birdies",
       "round_num": 1,
       "dg_id": 14609,
-      "source": "draftkings"
+      "source": "draftkings",
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Scheffler, Scottie",
@@ -14005,7 +14009,11 @@
       "source": "kalshi",
       "kalshi_ticker": "KXPGAROUNDSCORE-TOC26R1-SSCH66",
       "p_over_implied": 0.5305164319248826,
-      "p_under_implied": 0.4694835680751174
+      "p_under_implied": 0.4694835680751174,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Burns, Sam",
@@ -14316,7 +14324,11 @@
       "round_num": 1,
       "source": "caesars",
       "p_over_implied": 0.4878048780487805,
-      "p_under_implied": 0.574468085106383
+      "p_under_implied": 0.574468085106383,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Young, Cameron",
@@ -14340,7 +14352,11 @@
       "round_num": 1,
       "source": "caesars",
       "p_over_implied": 0.5555555555555556,
-      "p_under_implied": 0.5121951219512195
+      "p_under_implied": 0.5121951219512195,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Gerard, Ryan",
@@ -14364,7 +14380,11 @@
       "round_num": 1,
       "source": "caesars",
       "p_over_implied": 0.5121951219512195,
-      "p_under_implied": 0.5555555555555556
+      "p_under_implied": 0.5555555555555556,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Schauffele, Xander",
@@ -14424,7 +14444,11 @@
       "round_num": 1,
       "source": "caesars",
       "p_over_implied": 0.5555555555555556,
-      "p_under_implied": 0.5121951219512195
+      "p_under_implied": 0.5121951219512195,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Reitan, Kristoffer",
@@ -14484,7 +14508,11 @@
       "round_num": 1,
       "source": "caesars",
       "p_over_implied": 0.47619047619047616,
-      "p_under_implied": 0.5833333333333334
+      "p_under_implied": 0.5833333333333334,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Smalley, Alex",
@@ -14604,7 +14632,11 @@
       "round_num": 1,
       "source": "caesars",
       "p_over_implied": 0.5555555555555556,
-      "p_under_implied": 0.5121951219512195
+      "p_under_implied": 0.5121951219512195,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Hovland, Viktor",
@@ -14904,7 +14936,11 @@
       "round_num": 1,
       "source": "caesars",
       "p_over_implied": 0.5918367346938775,
-      "p_under_implied": 0.46511627906976744
+      "p_under_implied": 0.46511627906976744,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Fleetwood, Tommy",
@@ -14940,7 +14976,11 @@
       "round_num": 1,
       "source": "caesars",
       "p_over_implied": 0.5121951219512195,
-      "p_under_implied": 0.5555555555555556
+      "p_under_implied": 0.5555555555555556,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Burns, Sam",
@@ -14964,7 +15004,11 @@
       "round_num": 1,
       "source": "caesars",
       "p_over_implied": 0.4878048780487805,
-      "p_under_implied": 0.574468085106383
+      "p_under_implied": 0.574468085106383,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Kim, Si Woo",
@@ -15036,7 +15080,11 @@
       "round_num": 1,
       "source": "caesars",
       "p_over_implied": 0.45454545454545453,
-      "p_under_implied": 0.6
+      "p_under_implied": 0.6,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "odds_floor"
     },
     {
       "player_name": "Fox, Ryan",
@@ -15108,7 +15156,11 @@
       "round_num": 1,
       "source": "caesars",
       "p_over_implied": 0.5121951219512195,
-      "p_under_implied": 0.5555555555555556
+      "p_under_implied": 0.5555555555555556,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Smalley, Alex",
@@ -15120,7 +15172,11 @@
       "round_num": 1,
       "source": "caesars",
       "p_over_implied": 0.5238095238095238,
-      "p_under_implied": 0.5454545454545454
+      "p_under_implied": 0.5454545454545454,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "odds_floor"
     },
     {
       "player_name": "Spaun, J.J.",
