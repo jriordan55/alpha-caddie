@@ -2992,96 +2992,6 @@ ev_backtest_all,2026-08-28T02:31:37Z,,(all events),,,(all),(all),Pars,,,,12.5,un
 ev_backtest_all,2026-08-28T02:31:37Z,,(all events),,,(all),(all),Pars,,,,15.0,under,14,5,9,0,-3.96,-28.3
 ev_backtest_all,2026-08-28T02:31:37Z,,(all events),,,(all),(all),Pars,,,,17.5,under,6,2,4,0,-2.00,-33.3
 ev_backtest_all,2026-08-28T02:31:37Z,,(all events),,,(all),(all),Pars,,,,20.0,under,1,0,1,0,-1.00,-100.0
-model_vs_book,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Birdies,0.280,0.203,30,,,,,,,,
-model_vs_book,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Bogeys,0.664,0.645,26,,,,,,,,
-model_vs_book,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Fairways hit,0.891,0.658,26,,,,,,,,
-model_vs_book,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,GIR,0.546,0.438,26,,,,,,,,
-model_vs_book,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Pars,0.458,0.388,26,,,,,,,,
-model_vs_book,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Total score,0.551,0.438,30,,,,,,,,
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Birdies,,,,0.0,over,16,8,8,0,0.38,2.4
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Birdies,,,,2.5,over,7,2,5,0,-2.95,-42.1
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Birdies,,,,5.0,over,5,2,3,0,-0.95,-19.0
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Birdies,,,,7.5,over,1,1,0,0,1.18,118.0
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Bogeys,,,,0.0,under,30,26,4,0,11.52,38.4
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Bogeys,,,,10.0,under,30,26,4,0,11.52,38.4
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Bogeys,,,,12.5,under,30,26,4,0,11.52,38.4
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Bogeys,,,,15.0,under,25,21,4,0,10.88,43.5
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Bogeys,,,,17.5,under,16,13,3,0,7.42,46.4
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Bogeys,,,,2.5,under,30,26,4,0,11.52,38.4
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Bogeys,,,,20.0,under,8,6,2,0,3.39,42.4
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Bogeys,,,,5.0,under,30,26,4,0,11.52,38.4
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Bogeys,,,,7.5,under,30,26,4,0,11.52,38.4
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Fairways hit,,,,0.0,over,18,12,6,0,3.92,21.8
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Fairways hit,,,,0.0,under,5,0,5,0,-5.00,-100.0
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Fairways hit,,,,10.0,over,9,8,1,0,5.82,64.7
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Fairways hit,,,,12.5,over,6,6,0,0,5.19,86.5
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Fairways hit,,,,15.0,over,4,4,0,0,3.35,83.8
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Fairways hit,,,,17.5,over,3,3,0,0,2.43,80.9
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Fairways hit,,,,2.5,over,16,12,4,0,5.92,37.0
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Fairways hit,,,,2.5,under,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Fairways hit,,,,20.0,over,2,2,0,0,1.27,63.3
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Fairways hit,,,,5.0,over,12,10,2,0,6.14,51.1
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Fairways hit,,,,5.0,under,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Fairways hit,,,,7.5,over,12,10,2,0,6.14,51.1
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,GIR,,,,0.0,over,4,3,1,0,1.71,42.7
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,GIR,,,,0.0,under,15,2,13,0,-11.41,-76.1
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,GIR,,,,2.5,over,2,1,1,0,-0.11,-5.4
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,GIR,,,,2.5,under,8,2,6,0,-4.41,-55.2
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,GIR,,,,5.0,under,5,2,3,0,-1.41,-28.3
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,GIR,,,,7.5,under,3,1,2,0,-1.11,-36.9
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Pars,,,,0.0,over,8,5,3,0,2.56,31.9
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Pars,,,,0.0,under,5,1,4,0,-4.00,-80.0
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Pars,,,,2.5,over,3,2,1,0,1.08,35.9
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Total score,,,,0.0,under,26,20,6,0,12.17,46.8
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Total score,,,,10.0,under,2,2,0,0,1.91,95.3
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Total score,,,,2.5,under,21,18,3,0,13.23,63.0
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Total score,,,,5.0,under,11,10,1,0,7.93,72.1
-ev_backtest,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,default,default,Total score,,,,7.5,under,6,6,0,0,5.45,90.9
-model_vs_book_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Birdies,0.280,0.203,30,,,,,,,,
-model_vs_book_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Bogeys,0.664,0.645,26,,,,,,,,
-model_vs_book_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Fairways hit,0.891,0.658,26,,,,,,,,
-model_vs_book_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),GIR,0.546,0.438,26,,,,,,,,
-model_vs_book_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Pars,0.458,0.388,26,,,,,,,,
-model_vs_book_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Total score,0.551,0.438,30,,,,,,,,
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Birdies,,,,0.0,over,16,8,8,0,0.38,2.4
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Birdies,,,,2.5,over,7,2,5,0,-2.95,-42.1
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Birdies,,,,5.0,over,5,2,3,0,-0.95,-19.0
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Birdies,,,,7.5,over,1,1,0,0,1.18,118.0
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Bogeys,,,,0.0,under,30,26,4,0,11.52,38.4
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Bogeys,,,,10.0,under,30,26,4,0,11.52,38.4
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Bogeys,,,,12.5,under,30,26,4,0,11.52,38.4
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Bogeys,,,,15.0,under,25,21,4,0,10.88,43.5
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Bogeys,,,,17.5,under,16,13,3,0,7.42,46.4
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Bogeys,,,,2.5,under,30,26,4,0,11.52,38.4
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Bogeys,,,,20.0,under,8,6,2,0,3.39,42.4
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Bogeys,,,,5.0,under,30,26,4,0,11.52,38.4
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Bogeys,,,,7.5,under,30,26,4,0,11.52,38.4
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Fairways hit,,,,0.0,over,18,12,6,0,3.92,21.8
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Fairways hit,,,,0.0,under,5,0,5,0,-5.00,-100.0
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Fairways hit,,,,10.0,over,9,8,1,0,5.82,64.7
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Fairways hit,,,,12.5,over,6,6,0,0,5.19,86.5
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Fairways hit,,,,15.0,over,4,4,0,0,3.35,83.8
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Fairways hit,,,,17.5,over,3,3,0,0,2.43,80.9
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Fairways hit,,,,2.5,over,16,12,4,0,5.92,37.0
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Fairways hit,,,,2.5,under,1,0,1,0,-1.00,-100.0
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Fairways hit,,,,20.0,over,2,2,0,0,1.27,63.3
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Fairways hit,,,,5.0,over,12,10,2,0,6.14,51.1
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Fairways hit,,,,5.0,under,1,0,1,0,-1.00,-100.0
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Fairways hit,,,,7.5,over,12,10,2,0,6.14,51.1
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),GIR,,,,0.0,over,4,3,1,0,1.71,42.7
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),GIR,,,,0.0,under,15,2,13,0,-11.41,-76.1
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),GIR,,,,2.5,over,2,1,1,0,-0.11,-5.4
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),GIR,,,,2.5,under,8,2,6,0,-4.41,-55.2
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),GIR,,,,5.0,under,5,2,3,0,-1.41,-28.3
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),GIR,,,,7.5,under,3,1,2,0,-1.11,-36.9
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Pars,,,,0.0,over,8,5,3,0,2.56,31.9
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Pars,,,,0.0,under,5,1,4,0,-4.00,-80.0
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Pars,,,,2.5,over,3,2,1,0,1.08,35.9
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Total score,,,,0.0,under,26,20,6,0,12.17,46.8
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Total score,,,,10.0,under,2,2,0,0,1.91,95.3
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Total score,,,,2.5,under,21,18,3,0,13.23,63.0
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Total score,,,,5.0,under,11,10,1,0,7.93,72.1
-ev_backtest_by_market,2026-08-28T02:54:06Z,2026-08-28T02:53:56Z,TOUR Championship,East Lake Golf Club,2,(all),(all),Total score,,,,7.5,under,6,6,0,0,5.45,90.9
 model_vs_book_all,2026-08-28T02:58:15Z,,(all events),,,(all),(all),Birdies,0.591,0.462,2037,,,,,,,,
 model_vs_book_all,2026-08-28T02:58:15Z,,(all events),,,(all),(all),Bogeys,0.716,0.575,1037,,,,,,,,
 model_vs_book_all,2026-08-28T02:58:15Z,,(all events),,,(all),(all),Fairways hit,0.728,0.567,816,,,,,,,,
@@ -3191,3 +3101,202 @@ ev_backtest_all,2026-08-28T02:58:15Z,,(all events),,,(all),(all),Pars,,,,12.5,un
 ev_backtest_all,2026-08-28T02:58:15Z,,(all events),,,(all),(all),Pars,,,,15.0,under,14,5,9,0,-3.96,-28.3
 ev_backtest_all,2026-08-28T02:58:15Z,,(all events),,,(all),(all),Pars,,,,17.5,under,6,2,4,0,-2.00,-33.3
 ev_backtest_all,2026-08-28T02:58:15Z,,(all events),,,(all),(all),Pars,,,,20.0,under,1,0,1,0,-1.00,-100.0
+model_vs_book,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Birdies,0.280,0.203,30,,,,,,,,
+model_vs_book,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Bogeys,0.664,0.645,26,,,,,,,,
+model_vs_book,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Fairways hit,0.891,0.658,26,,,,,,,,
+model_vs_book,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,GIR,0.546,0.438,26,,,,,,,,
+model_vs_book,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Pars,0.458,0.388,26,,,,,,,,
+model_vs_book,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Total score,0.551,0.438,30,,,,,,,,
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Birdies,,,,0.0,over,16,8,8,0,0.38,2.4
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Birdies,,,,2.5,over,7,2,5,0,-2.95,-42.1
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Birdies,,,,5.0,over,5,2,3,0,-0.95,-19.0
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Birdies,,,,7.5,over,1,1,0,0,1.18,118.0
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Bogeys,,,,0.0,under,30,26,4,0,11.52,38.4
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Bogeys,,,,10.0,under,30,26,4,0,11.52,38.4
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Bogeys,,,,12.5,under,30,26,4,0,11.52,38.4
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Bogeys,,,,15.0,under,25,21,4,0,10.88,43.5
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Bogeys,,,,17.5,under,16,13,3,0,7.42,46.4
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Bogeys,,,,2.5,under,30,26,4,0,11.52,38.4
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Bogeys,,,,20.0,under,8,6,2,0,3.39,42.4
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Bogeys,,,,5.0,under,30,26,4,0,11.52,38.4
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Bogeys,,,,7.5,under,30,26,4,0,11.52,38.4
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Fairways hit,,,,0.0,over,18,12,6,0,3.92,21.8
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Fairways hit,,,,0.0,under,5,0,5,0,-5.00,-100.0
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Fairways hit,,,,10.0,over,9,8,1,0,5.82,64.7
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Fairways hit,,,,12.5,over,6,6,0,0,5.19,86.5
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Fairways hit,,,,15.0,over,4,4,0,0,3.35,83.8
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Fairways hit,,,,17.5,over,3,3,0,0,2.43,80.9
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Fairways hit,,,,2.5,over,16,12,4,0,5.92,37.0
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Fairways hit,,,,2.5,under,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Fairways hit,,,,20.0,over,2,2,0,0,1.27,63.3
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Fairways hit,,,,5.0,over,12,10,2,0,6.14,51.1
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Fairways hit,,,,5.0,under,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Fairways hit,,,,7.5,over,12,10,2,0,6.14,51.1
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,GIR,,,,0.0,over,4,3,1,0,1.71,42.7
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,GIR,,,,0.0,under,15,2,13,0,-11.41,-76.1
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,GIR,,,,2.5,over,2,1,1,0,-0.11,-5.4
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,GIR,,,,2.5,under,8,2,6,0,-4.41,-55.2
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,GIR,,,,5.0,under,5,2,3,0,-1.41,-28.3
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,GIR,,,,7.5,under,3,1,2,0,-1.11,-36.9
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Pars,,,,0.0,over,8,5,3,0,2.56,31.9
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Pars,,,,0.0,under,5,1,4,0,-4.00,-80.0
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Pars,,,,2.5,over,3,2,1,0,1.08,35.9
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Total score,,,,0.0,under,26,20,6,0,12.17,46.8
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Total score,,,,10.0,under,2,2,0,0,1.91,95.3
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Total score,,,,2.5,under,21,18,3,0,13.23,63.0
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Total score,,,,5.0,under,11,10,1,0,7.93,72.1
+ev_backtest,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,default,default,Total score,,,,7.5,under,6,6,0,0,5.45,90.9
+model_vs_book_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Birdies,0.280,0.203,30,,,,,,,,
+model_vs_book_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Bogeys,0.664,0.645,26,,,,,,,,
+model_vs_book_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Fairways hit,0.891,0.658,26,,,,,,,,
+model_vs_book_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),GIR,0.546,0.438,26,,,,,,,,
+model_vs_book_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Pars,0.458,0.388,26,,,,,,,,
+model_vs_book_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Total score,0.551,0.438,30,,,,,,,,
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Birdies,,,,0.0,over,16,8,8,0,0.38,2.4
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Birdies,,,,2.5,over,7,2,5,0,-2.95,-42.1
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Birdies,,,,5.0,over,5,2,3,0,-0.95,-19.0
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Birdies,,,,7.5,over,1,1,0,0,1.18,118.0
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Bogeys,,,,0.0,under,30,26,4,0,11.52,38.4
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Bogeys,,,,10.0,under,30,26,4,0,11.52,38.4
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Bogeys,,,,12.5,under,30,26,4,0,11.52,38.4
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Bogeys,,,,15.0,under,25,21,4,0,10.88,43.5
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Bogeys,,,,17.5,under,16,13,3,0,7.42,46.4
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Bogeys,,,,2.5,under,30,26,4,0,11.52,38.4
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Bogeys,,,,20.0,under,8,6,2,0,3.39,42.4
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Bogeys,,,,5.0,under,30,26,4,0,11.52,38.4
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Bogeys,,,,7.5,under,30,26,4,0,11.52,38.4
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Fairways hit,,,,0.0,over,18,12,6,0,3.92,21.8
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Fairways hit,,,,0.0,under,5,0,5,0,-5.00,-100.0
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Fairways hit,,,,10.0,over,9,8,1,0,5.82,64.7
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Fairways hit,,,,12.5,over,6,6,0,0,5.19,86.5
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Fairways hit,,,,15.0,over,4,4,0,0,3.35,83.8
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Fairways hit,,,,17.5,over,3,3,0,0,2.43,80.9
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Fairways hit,,,,2.5,over,16,12,4,0,5.92,37.0
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Fairways hit,,,,2.5,under,1,0,1,0,-1.00,-100.0
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Fairways hit,,,,20.0,over,2,2,0,0,1.27,63.3
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Fairways hit,,,,5.0,over,12,10,2,0,6.14,51.1
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Fairways hit,,,,5.0,under,1,0,1,0,-1.00,-100.0
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Fairways hit,,,,7.5,over,12,10,2,0,6.14,51.1
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),GIR,,,,0.0,over,4,3,1,0,1.71,42.7
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),GIR,,,,0.0,under,15,2,13,0,-11.41,-76.1
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),GIR,,,,2.5,over,2,1,1,0,-0.11,-5.4
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),GIR,,,,2.5,under,8,2,6,0,-4.41,-55.2
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),GIR,,,,5.0,under,5,2,3,0,-1.41,-28.3
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),GIR,,,,7.5,under,3,1,2,0,-1.11,-36.9
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Pars,,,,0.0,over,8,5,3,0,2.56,31.9
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Pars,,,,0.0,under,5,1,4,0,-4.00,-80.0
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Pars,,,,2.5,over,3,2,1,0,1.08,35.9
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Total score,,,,0.0,under,26,20,6,0,12.17,46.8
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Total score,,,,10.0,under,2,2,0,0,1.91,95.3
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Total score,,,,2.5,under,21,18,3,0,13.23,63.0
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Total score,,,,5.0,under,11,10,1,0,7.93,72.1
+ev_backtest_by_market,2026-08-29T02:46:42Z,2026-08-29T02:46:30Z,TOUR Championship,East Lake Golf Club,3,(all),(all),Total score,,,,7.5,under,6,6,0,0,5.45,90.9
+model_vs_book_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Birdies,0.591,0.462,2037,,,,,,,,
+model_vs_book_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Bogeys,0.716,0.575,1037,,,,,,,,
+model_vs_book_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Fairways hit,0.728,0.567,816,,,,,,,,
+model_vs_book_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),GIR,0.928,0.728,865,,,,,,,,
+model_vs_book_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Pars,0.515,0.405,1041,,,,,,,,
+model_vs_book_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Total score,1.058,0.759,1813,,,,,,,,
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Birdies,,,,0.0,under,1178,565,501,112,-16.47,-1.4
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Birdies,,,,10.0,under,274,136,131,7,-9.89,-3.6
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Birdies,,,,12.5,under,142,67,74,1,-15.99,-11.3
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Birdies,,,,15.0,under,72,36,36,0,-4.95,-6.9
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Birdies,,,,17.5,under,30,14,16,0,-4.39,-14.6
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Birdies,,,,2.5,under,909,430,396,83,-26.40,-2.9
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Birdies,,,,20.0,under,15,8,7,0,0.25,1.7
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Birdies,,,,5.0,under,685,326,301,58,-20.69,-3.0
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Birdies,,,,7.5,under,461,228,206,27,-10.46,-2.3
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Bogeys,,,,0.0,over,254,107,109,38,-12.46,-4.9
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Bogeys,,,,0.0,under,513,285,203,25,2.87,0.6
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Bogeys,,,,10.0,over,103,48,50,5,-5.83,-5.7
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Bogeys,,,,12.5,over,62,30,30,2,-0.64,-1.0
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Bogeys,,,,2.5,over,199,84,87,28,-11.86,-6.0
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Bogeys,,,,2.5,under,407,231,159,17,0.35,0.1
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Bogeys,,,,5.0,over,164,70,76,18,-11.03,-6.7
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Bogeys,,,,5.0,under,324,196,117,11,13.64,4.2
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Bogeys,,,,7.5,over,128,58,58,12,-5.43,-4.2
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Bogeys,,,,7.5,under,256,165,83,8,22.20,8.7
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Fairways hit,,,,0.0,over,134,80,54,0,15.67,11.7
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Fairways hit,,,,0.0,under,468,259,209,0,-21.74,-4.6
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Fairways hit,,,,10.0,over,44,28,16,0,9.30,21.1
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Fairways hit,,,,10.0,under,142,76,66,0,2.09,1.5
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Fairways hit,,,,12.5,over,31,20,11,0,6.44,20.8
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Fairways hit,,,,15.0,over,20,14,6,0,6.60,33.0
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Fairways hit,,,,17.5,over,16,12,4,0,6.87,42.9
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Fairways hit,,,,2.5,over,100,61,39,0,13.57,13.6
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Fairways hit,,,,2.5,under,317,171,146,0,1.94,0.6
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Fairways hit,,,,5.0,over,76,48,28,0,13.31,17.5
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Fairways hit,,,,5.0,under,230,123,107,0,0.51,0.2
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Fairways hit,,,,7.5,over,59,36,23,0,8.64,14.6
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Fairways hit,,,,7.5,under,187,102,85,0,5.03,2.7
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),GIR,,,,0.0,over,61,34,27,0,5.43,8.9
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),GIR,,,,0.0,under,698,331,367,0,-110.92,-15.9
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),GIR,,,,10.0,under,288,162,126,0,11.80,4.1
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),GIR,,,,12.5,under,195,116,79,0,18.70,9.6
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),GIR,,,,15.0,under,152,90,62,0,14.72,9.7
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),GIR,,,,17.5,under,103,65,38,0,18.06,17.5
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),GIR,,,,2.5,over,35,22,13,0,8.35,23.9
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),GIR,,,,2.5,under,549,269,280,0,-52.58,-9.6
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),GIR,,,,5.0,over,18,13,5,0,7.47,41.5
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),GIR,,,,5.0,under,470,232,238,0,-39.33,-8.4
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),GIR,,,,7.5,over,9,6,3,0,2.65,29.4
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),GIR,,,,7.5,under,363,191,172,0,-8.47,-2.3
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Pars,,,,0.0,over,206,110,88,8,11.39,5.5
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Pars,,,,0.0,under,258,120,125,13,-33.27,-12.9
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Pars,,,,2.5,over,102,58,41,3,11.77,11.5
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Pars,,,,2.5,under,111,57,49,5,4.32,3.9
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Pars,,,,5.0,over,47,28,18,1,7.55,16.1
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Pars,,,,5.0,under,61,32,28,1,2.02,3.3
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Pars,,,,7.5,over,19,13,6,0,5.20,27.4
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Total score,,,,0.0,over,682,334,348,0,-58.63,-8.6
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Total score,,,,0.0,under,569,319,250,0,30.30,5.3
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Total score,,,,10.0,over,168,90,78,0,0.29,0.2
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Total score,,,,12.5,over,120,66,54,0,2.43,2.0
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Total score,,,,15.0,over,104,59,45,0,5.25,5.0
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Total score,,,,17.5,over,91,52,39,0,5.17,5.7
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Total score,,,,2.5,over,521,258,263,0,-39.92,-7.7
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Total score,,,,5.0,over,377,198,179,0,-8.14,-2.2
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Total score,,,,7.5,over,255,133,122,0,-7.63,-3.0
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Birdies,,,,0.0,over,265,125,136,4,-21.32,-8.0
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Birdies,,,,2.5,over,196,95,101,0,-16.04,-8.2
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Birdies,,,,5.0,over,149,70,79,0,-16.34,-11.0
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Bogeys,,,,10.0,under,204,138,63,3,20.90,10.2
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Bogeys,,,,12.5,under,168,119,49,0,19.15,11.4
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Bogeys,,,,15.0,under,89,66,23,0,29.69,33.4
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Fairways hit,,,,12.5,under,113,57,56,0,-4.55,-4.0
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Fairways hit,,,,15.0,under,91,47,44,0,-0.79,-0.9
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Fairways hit,,,,17.5,under,69,31,38,0,-8.32,-12.1
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Fairways hit,,,,20.0,under,46,20,26,0,-7.51,-16.3
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Pars,,,,10.0,over,6,4,2,0,0.96,16.0
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Total score,,,,10.0,under,145,101,44,0,47.51,32.8
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Total score,,,,12.5,under,101,74,27,0,39.47,39.1
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Total score,,,,15.0,under,81,60,21,0,32.10,39.6
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Total score,,,,2.5,under,418,245,173,0,41.92,10.0
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Total score,,,,5.0,under,294,180,114,0,46.16,15.7
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Total score,,,,7.5,under,210,138,72,0,51.00,24.3
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Bogeys,,,,17.5,under,66,50,16,0,26.12,39.6
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Bogeys,,,,20.0,under,49,36,13,0,18.07,36.9
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),GIR,,,,20.0,under,75,54,21,0,25.12,33.5
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Birdies,,,,10.0,over,90,48,42,0,1.79,2.0
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Birdies,,,,7.5,over,114,58,56,0,-3.72,-3.3
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),GIR,,,,10.0,over,4,3,1,0,1.41,35.3
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Total score,,,,17.5,under,64,48,16,0,26.06,40.7
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Bogeys,,,,15.0,over,39,21,18,0,1.42,3.6
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Bogeys,,,,17.5,over,17,11,6,0,2.52,14.8
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Total score,,,,20.0,over,82,45,37,0,1.45,1.8
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Birdies,,,,12.5,over,74,42,32,0,5.71,7.7
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Birdies,,,,15.0,over,63,35,28,0,4.10,6.5
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Birdies,,,,17.5,over,51,26,25,0,2.54,5.0
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Birdies,,,,20.0,over,36,17,19,0,2.26,6.3
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Pars,,,,12.5,over,3,2,1,0,0.35,11.7
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Total score,,,,20.0,under,60,44,16,0,23.17,38.6
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),GIR,,,,12.5,over,3,2,1,0,0.81,27.0
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),GIR,,,,15.0,over,2,2,0,0,1.81,90.5
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Pars,,,,7.5,under,36,17,19,0,-3.72,-10.3
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Fairways hit,,,,20.0,over,6,5,1,0,3.23,53.8
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Bogeys,,,,20.0,over,1,1,0,0,0.88,88.0
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Pars,,,,10.0,under,29,13,16,0,-4.33,-14.9
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Pars,,,,12.5,under,24,12,12,0,-1.04,-4.3
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Pars,,,,15.0,under,14,5,9,0,-3.96,-28.3
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Pars,,,,17.5,under,6,2,4,0,-2.00,-33.3
+ev_backtest_all,2026-08-29T02:48:45Z,,(all events),,,(all),(all),Pars,,,,20.0,under,1,0,1,0,-1.00,-100.0
