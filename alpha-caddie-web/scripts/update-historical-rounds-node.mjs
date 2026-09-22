@@ -6,7 +6,7 @@
  * Env:
  *   DATAGOLF_API_KEY or alpha-caddie-web/datagolf.local.json (apiKey)
  *   GOLF_MODEL_DIR — repo root (parent of alpha-caddie-web). Default: parent of this package.
- *   GOLF_HISTORICAL_ROUNDS_TOURS — comma-separated (default: pga,liv). Use "pga" for PGA only.
+ *   GOLF_HISTORICAL_ROUNDS_TOURS — comma-separated (default: pga,liv,euro). Use "pga" for PGA only.
  *   GOLF_HISTORICAL_ROUNDS_YEARS — override year list
  *   GOLF_HISTORICAL_ROUNDS_FULL_HISTORY=1 — merge every PGA year from 2004 through current (+ LIV rules); ignores
  *     RECENT_FETCH and LIGHT (slow; use on hosts like Render when you want full historical_rounds_all.csv).
@@ -106,7 +106,7 @@ function toursToFetch() {
   if (ex) {
     return [...new Set(ex.split(/[,;\s]+/).map((s) => s.trim().toLowerCase()).filter(Boolean))];
   }
-  return ["pga", "liv"];
+  return ["pga", "liv", "euro"];
 }
 
 function refreshYears() {

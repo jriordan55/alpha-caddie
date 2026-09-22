@@ -367,6 +367,179 @@ let DATA = {
   matchups: {},
 };
 
+/** Round projections tab only: PGA vs DP World Tour (DataGolf `euro`). Rest of app stays on DATA (PGA). */
+const OU_TOUR_STORAGE_KEY = "alphaCaddie.ouTour";
+const OU_TOUR_PROJECTIONS_URL = Object.freeze({
+  pga: "projections-pga.json",
+  euro: "projections-euro.json",
+});
+let ouProjectionsTour = (() => {
+  try {
+    const v = String(localStorage.getItem(OU_TOUR_STORAGE_KEY) || "pga").trim().toLowerCase();
+    return v === "euro" ? "euro" : "pga";
+  } catch (_) {
+    return "pga";
+  }
+})();
+let ouTourProjectionsData = null;
+let ouTourProjectionsLoadPromise = null;
+
+function ouProjectionsTourLabel(tour = ouProjectionsTour) {
+  return tour === "euro" ? "DP World Tour" : "PGA Tour";
+}
+
+function ouProjectionsPayload() {
+  if (ouProjectionsTour === "euro" && ouTourProjectionsData) return ouTourProjectionsData;
+  return DATA;
+}
+
+function ouProjectionsJsonUrlForTour(tour) {
+  const t = tour === "euro" ? "euro" : "pga";
+  return OU_TOUR_PROJECTIONS_URL[t] || "projections.json";
+}
+
+function invalidateOuTourProjectionCaches() {
+  ouTourProjectionsData = null;
+  ouTourProjectionsLoadPromise = null;
+  ouProjectionSortCacheSig = "";
+  ouProjectionSortCache = null;
+  ouProjectionFlatRowsCacheSig = "";
+  ouProjectionFlatRowsCache = null;
+  ouDkRoundPropsCacheSig = "";
+  ouDkRoundPropsCache = [];
+  ouPpRoundPropsCacheSig = "";
+  ouPpRoundPropsCache = [];
+  ouSlRoundPropsCacheSig = "";
+  ouSlRoundPropsCache = [];
+  ouUdRoundPropsCacheSig = "";
+  ouUdRoundPropsCache = [];
+  ouFdRoundPropsCacheSig = "";
+  ouFdRoundPropsCache = [];
+  ouKlRoundPropsCacheSig = "";
+  ouKlRoundPropsCache = [];
+  ouCzrRoundPropsCacheSig = "";
+  ouCzrRoundPropsCache = [];
+  invalidateOuProjectionAvgCaches();
+}
+
+function syncOuTourToggleUi() {
+  document.querySelectorAll("[data-proj-tour]").forEach((btn) => {
+    const t = String(btn.getAttribute("data-proj-tour") || "").trim().toLowerCase();
+    const on = t === ouProjectionsTour;
+    btn.classList.toggle("active", on);
+    btn.setAttribute("aria-selected", on ? "true" : "false");
+  });
+}
+
+async function loadOuTourProjections(tour, opts = {}) {
+  const want = tour === "euro" ? "euro" : "pga";
+  if (want === "pga") {
+    ouTourProjectionsData = null;
+    return DATA;
+  }
+  if (ouTourProjectionsData && !opts.force) return ouTourProjectionsData;
+  if (ouTourProjectionsLoadPromise && !opts.force) return ouTourProjectionsLoadPromise;
+  ouTourProjectionsLoadPromise = (async () => {
+    const urls = [ouProjectionsJsonUrlForTour("euro"), "projections.json"];
+    let lastErr = null;
+    for (const base of urls) {
+      try {
+        const res = await fetch(cacheBustFetchUrl(base), { cache: "no-store" });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const j = await res.json();
+        if (String(j?.datagolf_feed_tour || "").trim().toLowerCase() === "euro" || base.includes("euro")) {
+          ouTourProjectionsData = j;
+          return j;
+        }
+        if (base.includes("euro")) throw new Error("not euro payload");
+        ouTourProjectionsData = j;
+        return j;
+      } catch (e) {
+        lastErr = e;
+      }
+    }
+    throw lastErr || new Error("DP World projections unavailable");
+  })();
+  try {
+    return await ouTourProjectionsLoadPromise;
+  } finally {
+    ouTourProjectionsLoadPromise = null;
+  }
+}
+
+async function setOuProjectionsTour(tour) {
+  const next = tour === "euro" ? "euro" : "pga";
+  if (next === ouProjectionsTour) return;
+  ouProjectionsTour = next;
+  try {
+    localStorage.setItem(OU_TOUR_STORAGE_KEY, next);
+  } catch (_) {}
+  invalidateOuTourProjectionCaches();
+  syncOuTourToggleUi();
+  if (next === "euro") {
+    try {
+      await loadOuTourProjections("euro", { force: true });
+    } catch (e) {
+      console.warn("[ou-tour] DP World projections load failed:", e?.message || e);
+    }
+  }
+  updateRoundLabels();
+  scheduleBuildOuTable(true);
+}
+
+function ouTournamentDateStartIso() {
+  const m = ouProjectionsPayload()?.meta || {};
+  const fromMeta = String(m.datagolf_field_date_start || (m.meta && m.meta.datagolf_field_date_start) || "").trim();
+  if (fromMeta) return fromMeta;
+  if (ouProjectionsTour === "pga") return tournamentDateStartIso();
+  return "";
+}
+
+function ouEffectiveUiModelRoundFromMeta() {
+  if (eventTournamentWeekNotStarted()) return 1;
+  const m = ouProjectionsPayload()?.meta || {};
+  const ex = Math.round(num(m.display_round, NaN));
+  const live = Math.round(num(m.datagolf_live_current_round, NaN));
+  const field = Math.round(num(m.datagolf_field_current_round, NaN));
+  const ok = (x) => Number.isFinite(x) && x >= 1 && x <= 4;
+  const parts = [ex, live, field].filter(ok);
+  if (!parts.length) return NaN;
+  const mn = Math.min(...parts);
+  const mx = Math.max(...parts);
+  if (mx > mn && ok(live) && live === mn && ok(ex) && ok(field) && ex === field && field === mx) return mx;
+  return mn;
+}
+
+function ouCurrentEventLiveRoundNum() {
+  const payload = ouProjectionsPayload();
+  const mismatch = String(payload?.meta?.datagolf_live_event_mismatch || "").trim();
+  if (mismatch) return NaN;
+  let liveR = Math.round(num(payload?.meta?.datagolf_live_current_round, NaN));
+  return Number.isFinite(liveR) && liveR >= 1 && liveR <= 4 ? liveR : NaN;
+}
+
+function ouTournamentMaxEffectiveRound() {
+  const payload = ouProjectionsPayload();
+  const mm = String(payload?.meta?.datagolf_live_event_mismatch || "").trim();
+  const liveR = mm ? NaN : Math.round(num(payload?.meta?.datagolf_live_current_round, NaN));
+  const drEff = ouEffectiveUiModelRoundFromMeta();
+  const ou = Math.round(getOuRound());
+  const liveOk = Number.isFinite(liveR) && liveR >= 1 ? liveR : 0;
+  const drOk = Number.isFinite(drEff) && drEff >= 1 ? drEff : 0;
+  const ouOk = Number.isFinite(ou) && ou >= 1 ? ou : 0;
+  if (liveOk) return Math.max(liveOk, ouOk);
+  return Math.max(drOk, ouOk);
+}
+
+function ouTournamentPostCutListPhase() {
+  const mx = ouTournamentMaxEffectiveRound();
+  if (mx >= 3) return true;
+  if (mx < 2) return false;
+  const players = ouProjectionsPayload().players;
+  if (!Array.isArray(players)) return false;
+  return players.some((p) => isPlayerEliminatedFromEvent(p));
+}
+
 // Round history: loaded on demand from player_round_history.json. The embedded script is only a fallback
 // for file:// demos or unusual static hosts where JSON fetch is unavailable.
 // Assign: window.__ALPHA_CADDIE_EMBEDDED_ROUND_HISTORY__ = <object> (see embed script)
@@ -3159,7 +3332,8 @@ function dgIdsEliminatedFromEventPostCut() {
 
 function updateRoundLabels() {
   const ar = document.getElementById("auto-round");
-  const meta = DATA.meta || {};
+  const payload = ouProjectionsPayload();
+  const meta = payload.meta || {};
   const dr = ouDisplayRoundAuto();
   const exportedR = Math.round(num(meta.display_round, NaN));
   if (ar) {
@@ -3171,7 +3345,10 @@ function updateRoundLabels() {
     } else {
       label = `R${dr}`;
     }
-    ar.textContent = `Round · ${label}`;
+    const ev = String(payload.event_name || meta.event_name || "").trim();
+    const tourTag = ouProjectionsTourLabel();
+    const roundPart = label.startsWith("R") ? label : `R${dr}`;
+    ar.textContent = ev ? `${tourTag} · ${ev} · ${roundPart}` : `${tourTag} · ${roundPart}`;
   }
 }
 
@@ -3254,7 +3431,8 @@ const OU_PGA_TOUR_COURSE_BENCHMARK_FALLBACK = Object.freeze({
 });
 
 function ouProjectionsBenchmarksRoot() {
-  return DATA?.meta?.pga_tour_market_benchmarks ? DATA.meta : DATA;
+  const payload = ouProjectionsPayload();
+  return payload?.meta?.pga_tour_market_benchmarks ? payload.meta : payload;
 }
 
 function ouBenchmarkYearLabel(meta) {
@@ -4090,7 +4268,7 @@ const OU_PROJECTION_MARKETS = Object.freeze([
  * {@link ouProjectionColumnsActive} lists every standard market once `players` exist; these rows supply lines when present.
  */
 function ouRoundOuPropsForLines() {
-  const props = Array.isArray(DATA.props) ? DATA.props : [];
+  const props = Array.isArray(ouProjectionsPayload().props) ? ouProjectionsPayload().props : [];
   const merged = props.filter((r) => {
     const s = String(r.source || "").trim().toLowerCase();
     return (
@@ -4267,7 +4445,8 @@ function draftKingsHasMarketForRound(market, round) {
 }
 
 function ouProjectionColumnsActive() {
-  const players = Array.isArray(DATA.players) ? DATA.players : [];
+  const payload = ouProjectionsPayload();
+  const players = Array.isArray(payload.players) ? payload.players : [];
   if (players.length) {
     const round = getOuRound();
     return OU_PROJECTION_MARKETS.filter((col) => {
@@ -4278,7 +4457,7 @@ function ouProjectionColumnsActive() {
     });
   }
 
-  const props = Array.isArray(DATA.props) ? DATA.props : [];
+  const props = Array.isArray(payload.props) ? payload.props : [];
   const dk = props.filter((r) => String(r.source || "").trim().toLowerCase() === "draftkings");
   const pp = props.filter((r) => String(r.source || "").trim().toLowerCase() === "prizepicks");
   const nonDk = props.filter((r) => {
@@ -6713,12 +6892,13 @@ function scheduleBuildOuTable(immediate = false) {
 /** DraftKings round O/U rows only (Round projections tab). Default: toolbar round; `allRounds` keeps every round in DATA.props. */
 function draftKingsRoundPropsOnly(allRounds = false) {
   const wantR = allRounds ? NaN : Math.round(getOuRound());
-  const propsLen = Array.isArray(DATA.props) ? DATA.props.length : 0;
+  const props = ouProjectionsPayload().props;
+  const propsLen = Array.isArray(props) ? props.length : 0;
   const sig = `${allRounds ? "all" : `r${wantR}`}|n${propsLen}|rev${projectionsDataRev}`;
   if (!allRounds && ouDkRoundPropsCacheSig === sig) return ouDkRoundPropsCache;
 
   const filterForRound = (roundFilter) =>
-    (Array.isArray(DATA.props) ? DATA.props : []).filter((r) => {
+    (Array.isArray(props) ? props : []).filter((r) => {
       if (String(r.source || "").trim().toLowerCase() !== "draftkings") return false;
       const pr = Math.round(num(r.round_num, NaN));
       if (
@@ -6781,12 +6961,13 @@ let ouPpRoundPropsCache = [];
 /** PrizePicks round rows (same round filter as DraftKings). */
 function prizePicksRoundPropsOnly(allRounds = false) {
   const wantR = allRounds ? NaN : Math.round(getOuRound());
-  const propsLen = Array.isArray(DATA.props) ? DATA.props.length : 0;
+  const props = ouProjectionsPayload().props;
+  const propsLen = Array.isArray(props) ? props.length : 0;
   const sig = `${allRounds ? "all" : `r${wantR}`}|n${propsLen}|rev${projectionsDataRev}`;
   if (!allRounds && ouPpRoundPropsCacheSig === sig) return ouPpRoundPropsCache;
 
   const filterForRound = (roundFilter) =>
-    (Array.isArray(DATA.props) ? DATA.props : []).filter((r) => {
+    (Array.isArray(props) ? props : []).filter((r) => {
       if (String(r.source || "").trim().toLowerCase() !== "prizepicks") return false;
       const pr = Math.round(num(r.round_num, NaN));
       if (
@@ -6858,8 +7039,9 @@ let ouCzrRoundPropsCache = [];
 function roundPropsForSource(source, allRounds = false) {
   const wantSrc = String(source || "").trim().toLowerCase();
   const wantR = allRounds ? NaN : Math.round(getOuRound());
+  const props = ouProjectionsPayload().props;
   const filterForRound = (roundFilter) =>
-    (Array.isArray(DATA.props) ? DATA.props : []).filter((r) => {
+    (Array.isArray(props) ? props : []).filter((r) => {
       if (String(r.source || "").trim().toLowerCase() !== wantSrc) return false;
       const pr = Math.round(num(r.round_num, NaN));
       if (
@@ -6910,7 +7092,7 @@ function roundPropsForSource(source, allRounds = false) {
 
 function sleeperRoundPropsOnly(allRounds = false) {
   const wantR = allRounds ? NaN : Math.round(getOuRound());
-  const propsLen = Array.isArray(DATA.props) ? DATA.props.length : 0;
+  const propsLen = Array.isArray(ouProjectionsPayload().props) ? ouProjectionsPayload().props.length : 0;
   const sig = `${allRounds ? "all" : `r${wantR}`}|n${propsLen}|rev${projectionsDataRev}`;
   if (!allRounds && ouSlRoundPropsCacheSig === sig) return ouSlRoundPropsCache;
   const out = roundPropsForSource("sleeper", allRounds);
@@ -6923,7 +7105,7 @@ function sleeperRoundPropsOnly(allRounds = false) {
 
 function underdogRoundPropsOnly(allRounds = false) {
   const wantR = allRounds ? NaN : Math.round(getOuRound());
-  const propsLen = Array.isArray(DATA.props) ? DATA.props.length : 0;
+  const propsLen = Array.isArray(ouProjectionsPayload().props) ? ouProjectionsPayload().props.length : 0;
   const sig = `${allRounds ? "all" : `r${wantR}`}|n${propsLen}|rev${projectionsDataRev}`;
   if (!allRounds && ouUdRoundPropsCacheSig === sig) return ouUdRoundPropsCache;
   const out = roundPropsForSource("underdog", allRounds);
@@ -6936,7 +7118,7 @@ function underdogRoundPropsOnly(allRounds = false) {
 
 function fanduelRoundPropsOnly(allRounds = false) {
   const wantR = allRounds ? NaN : Math.round(getOuRound());
-  const propsLen = Array.isArray(DATA.props) ? DATA.props.length : 0;
+  const propsLen = Array.isArray(ouProjectionsPayload().props) ? ouProjectionsPayload().props.length : 0;
   const sig = `${allRounds ? "all" : `r${wantR}`}|n${propsLen}|rev${projectionsDataRev}`;
   if (!allRounds && ouFdRoundPropsCacheSig === sig) return ouFdRoundPropsCache;
   const out = roundPropsForSource("fanduel", allRounds);
@@ -6949,7 +7131,7 @@ function fanduelRoundPropsOnly(allRounds = false) {
 
 function kalshiRoundPropsOnly(allRounds = false) {
   const wantR = allRounds ? NaN : Math.round(getOuRound());
-  const propsLen = Array.isArray(DATA.props) ? DATA.props.length : 0;
+  const propsLen = Array.isArray(ouProjectionsPayload().props) ? ouProjectionsPayload().props.length : 0;
   const sig = `${allRounds ? "all" : `r${wantR}`}|n${propsLen}|rev${projectionsDataRev}`;
   if (!allRounds && ouKlRoundPropsCacheSig === sig) return ouKlRoundPropsCache;
   const out = roundPropsForSource("kalshi", allRounds);
@@ -6962,7 +7144,7 @@ function kalshiRoundPropsOnly(allRounds = false) {
 
 function caesarsRoundPropsOnly(allRounds = false) {
   const wantR = allRounds ? NaN : Math.round(getOuRound());
-  const propsLen = Array.isArray(DATA.props) ? DATA.props.length : 0;
+  const propsLen = Array.isArray(ouProjectionsPayload().props) ? ouProjectionsPayload().props.length : 0;
   const sig = `${allRounds ? "all" : `r${wantR}`}|n${propsLen}|rev${projectionsDataRev}`;
   if (!allRounds && ouCzrRoundPropsCacheSig === sig) return ouCzrRoundPropsCache;
   const out = roundPropsForSource("caesars", allRounds);
@@ -7002,9 +7184,9 @@ function draftKingsPostedRounds() {
 /** Default auto round: cap stale export/live with calendar week; prefer latest DK round within cap. */
 function preferredOuRoundForPicker() {
   if (eventTournamentWeekNotStarted()) return 1;
-  const cal = calendarTournamentRoundFromDateStart(tournamentDateStartIso());
-  const meta = effectiveUiModelRoundFromMeta();
-  const live = currentEventLiveRoundNum();
+  const cal = calendarTournamentRoundFromDateStart(ouTournamentDateStartIso());
+  const meta = ouEffectiveUiModelRoundFromMeta();
+  const live = ouCurrentEventLiveRoundNum();
   const dkRounds = draftKingsPostedRounds();
   const capParts = [cal, meta, live].filter((x) => Number.isFinite(x) && x >= 1 && x <= 4);
   const cap = capParts.length ? Math.min(...capParts) : Number.isFinite(cal) ? cal : 1;
@@ -8041,10 +8223,12 @@ function ouSortedPlayerRows(market, round) {
 
 /** Field for Model O/U projection grid: best (lowest) projected round score first. */
 function ouSortedPlayerRowsProjection(round) {
-  const postCut = tournamentPostCutListPhase() ? 1 : 0;
-  const sig = `r${round}|pc${postCut}|ep${historyMutationEpoch}|fp${playerDgFingerprint(DATA.players)}`;
+  const payload = ouProjectionsPayload();
+  const players = Array.isArray(payload.players) ? payload.players : [];
+  const postCut = ouTournamentPostCutListPhase() ? 1 : 0;
+  const sig = `t${ouProjectionsTour}|r${round}|pc${postCut}|ep${historyMutationEpoch}|fp${playerDgFingerprint(players)}`;
   if (ouProjectionSortCacheSig === sig && ouProjectionSortCache) return ouProjectionSortCache;
-  let rows = DATA.players.filter((p) => samePlayerRound(p, round));
+  let rows = players.filter((p) => samePlayerRound(p, round));
   if (postCut) rows = rows.filter((p) => !isPlayerEliminatedFromEvent(p));
   const scoreById = new Map();
   for (const p of rows) {
@@ -29276,8 +29460,25 @@ document.addEventListener("DOMContentLoaded", () => {
     void loadProjections({ silent: true, reloadSidecar: false });
   });
 
+  document.querySelectorAll("[data-proj-tour]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const t = String(btn.getAttribute("data-proj-tour") || "pga").trim().toLowerCase();
+      void setOuProjectionsTour(t);
+    });
+  });
+  syncOuTourToggleUi();
+
   void (async () => {
     await loadProjections();
+    if (ouProjectionsTour === "euro") {
+      try {
+        await loadOuTourProjections("euro");
+        updateRoundLabels();
+        if (activeAppTabId() === "ou") scheduleBuildOuTable(true);
+      } catch (e) {
+        console.warn("[ou-tour] initial DP World load failed:", e?.message || e);
+      }
+    }
     startProjectionsPolling();
   })();
 

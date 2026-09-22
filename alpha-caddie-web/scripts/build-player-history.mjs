@@ -39,6 +39,7 @@ import { createReadStream } from "fs";
 import { execFileSync } from "child_process";
 import { parse } from "csv-parse";
 import { eventsLikelySame, foldComparableTitle } from "./dg-events-align.mjs";
+import { isHistoryTour } from "./golf-tours.mjs";
 import {
   completedRoundCapFromPayload,
   pgatourRowBelongsToEvent,
@@ -1877,7 +1878,7 @@ async function streamRounds(allowedDgIds, pgaMetaOverlay, shotsAgg, roundWeather
     rowsScanned++;
     logCsvScanProgress("rounds CSV", rowsScanned, matchedRows);
     const tour = String(row.tour || "").toLowerCase();
-    if (tour !== "pga" && tour !== "liv") continue;
+    if (!isHistoryTour(tour)) continue;
     const yr = parseInt(row.year, 10);
     if (Number.isFinite(yr) && yr < MIN_YEAR) continue;
     const dg = Math.round(num(row.dg_id));
@@ -2224,7 +2225,7 @@ async function main() {
     console.warn(
       "[build-player-history] 0 players matched: projections have",
       allowed.size,
-      "dg_ids but CSV rows did not join (tour must be pga|liv, dg_id must match, MIN_YEAR filter, or CSV missing recent seasons — widen GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS / run full merge).",
+      "dg_ids but CSV rows did not join (tour must be pga|liv|euro, dg_id must match, MIN_YEAR filter, or CSV missing recent seasons — widen GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS / run full merge).",
     );
   }
 

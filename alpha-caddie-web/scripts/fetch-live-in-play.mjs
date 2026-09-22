@@ -29,7 +29,7 @@
  *   GOLF_SKIP_LIVE_IN_PLAY_PGA_ALIGN_FETCH_DG=1 — skip PGA-vs-projections week check (runs fetch:dg when snapshot is wrong tour).
  */
 import { spawnSync } from "child_process";
-import fs from "fs";
+import fs, { copyFileSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { eventsLikelySame, fieldWeekKey, fieldWeekKeysRoughMatch } from "./dg-events-align.mjs";
@@ -40,9 +40,11 @@ import {
   liveTournamentStatsUrl,
 } from "./dg-live-tournament-stats.mjs";
 import { archivePriorEventLiveBundle } from "./prior-event-live-archive.mjs";
+import { resolveProjectionPaths } from "./projection-paths.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
+const PROJECTION_PATHS = resolveProjectionPaths(WEB_ROOT);
 const GOLF_MODEL_ROOT = process.env.GOLF_MODEL_DIR?.trim()
   ? path.resolve(process.env.GOLF_MODEL_DIR.trim())
   : path.resolve(WEB_ROOT, "..");
@@ -50,7 +52,7 @@ const GOLF_MODEL_ROOT = process.env.GOLF_MODEL_DIR?.trim()
 /** Prefer tour chosen during fetch:dg (pga vs opp dual-field weeks). */
 function datagolfFeedTourFromProjections() {
   try {
-    const p = path.join(WEB_ROOT, "projections.json");
+    const p = PROJECTION_PATHS.projectionsPath;
     if (!fs.existsSync(p)) return "";
     const j = JSON.parse(fs.readFileSync(p, "utf8"));
     return String(j.datagolf_feed_tour || "").trim().toLowerCase();
@@ -60,7 +62,7 @@ function datagolfFeedTourFromProjections() {
 }
 
 function readProjectionsRoot() {
-  const p = path.join(WEB_ROOT, "projections.json");
+  const p = PROJECTION_PATHS.projectionsPath;
   if (!fs.existsSync(p)) return null;
   try {
     const j = JSON.parse(fs.readFileSync(p, "utf8"));
@@ -82,6 +84,7 @@ async function fetchJsonGet(href) {
  */
 async function maybeRebuildProjectionsIfPgaWeekMismatch(key) {
   if (String(process.env.GOLF_SKIP_LIVE_IN_PLAY_PGA_ALIGN_FETCH_DG || "").trim() === "1") return;
+  if (PROJECTION_PATHS.tour !== "pga") return;
   const proj = readProjectionsRoot();
   if (!proj) return;
   const projEvent = String(proj.event_name || "").trim();
@@ -454,7 +457,7 @@ async function main() {
     console.log(`[fetch-live-in-play] merged field-updates scores onto ${scoreMergeCount} in-play row(s)`);
   }
 
-  const liveOutPath = path.join(WEB_ROOT, "live-in-play.json");
+  const liveOutPath = PROJECTION_PATHS.liveInPlayPath;
   let prevDiskBundle = null;
   try {
     if (fs.existsSync(liveOutPath)) {
@@ -654,6 +657,13 @@ async function main() {
     }
   }
   fs.writeFileSync(liveOutPath, JSON.stringify(bundle, null, 2), "utf8");
+  if (
+    PROJECTION_PATHS.tour === "pga" &&
+    liveOutPath !== PROJECTION_PATHS.legacyLiveInPlayPath &&
+    fs.existsSync(liveOutPath)
+  ) {
+    copyFileSync(liveOutPath, PROJECTION_PATHS.legacyLiveInPlayPath);
+  }
   console.log(
     `[fetch-live-in-play] wrote ${liveOutPath} (${parsed.data.length} players, tour=${tourUsed}, odds_format=${oddsFormat}; field_scores=${scoreMergeCount > 0 ? "yes" : "no"}; live feeds=${liveTournamentStats ? "t" : "-"}${liveHoleStats ? "h" : "-"})`
   );

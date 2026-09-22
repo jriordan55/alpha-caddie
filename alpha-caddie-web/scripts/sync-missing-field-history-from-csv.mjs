@@ -8,6 +8,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { createReadStream } from "fs";
 import { parse } from "csv-parse";
+import { isHistoryTour } from "./golf-tours.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB = path.resolve(__dirname, "..");
@@ -91,7 +92,7 @@ async function loadCsvRowsForDg(dg) {
     );
     parser.on("data", (row) => {
       const tour = String(row.tour || "").toLowerCase();
-      if (tour !== "pga" && tour !== "liv") return;
+      if (!isHistoryTour(tour)) return;
       const yr = parseInt(row.year, 10);
       if (Number.isFinite(yr) && yr < MIN_YEAR) return;
       const id = Math.round(num(row.dg_id, NaN));

@@ -22,6 +22,7 @@ import {
   historyRoundChartUtcIsoDay,
   roundEventCompletedMdYFromEventEnd,
 } from "./history-round-dates.mjs";
+import { isHistoryTour } from "./golf-tours.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -217,7 +218,7 @@ async function streamCourseShardsFromCsv(enrichedIdx) {
       console.log(`[build:course-shards] …${rowsScanned.toLocaleString()} CSV rows, ${byCourse.size} course(s)`);
     }
     const tour = String(row.tour || "").toLowerCase();
-    if (tour !== "pga" && tour !== "liv") continue;
+    if (!isHistoryTour(tour)) continue;
     const yr = parseInt(row.year, 10);
     if (Number.isFinite(yr) && yr < MIN_YEAR) continue;
     const dg = Math.round(num(row.dg_id));

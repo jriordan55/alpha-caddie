@@ -22,6 +22,7 @@ import {
   roundWeatherFromHourly,
   roundWeatherKey,
 } from "./historical-round-weather.mjs";
+import { isHistoryTour } from "./golf-tours.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -54,7 +55,7 @@ async function collectRoundGroups(csvPath) {
 
   for await (const row of parser) {
     const tour = String(row.tour || "").toLowerCase();
-    if (tour !== "pga" && tour !== "liv") continue;
+    if (!isHistoryTour(tour)) continue;
     const yr = parseInt(row.year, 10);
     const minYear = Math.round(num(process.env.GOLF_HISTORY_MIN_YEAR)) || 2004;
     if (!Number.isFinite(yr) || yr < minYear) continue;

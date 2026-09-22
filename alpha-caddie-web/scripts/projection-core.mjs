@@ -13,6 +13,7 @@ import {
   num,
 } from "./dg-traditional-stats.mjs";
 import { derivedStatsFromRatesAndSg } from "./counting-from-rates-sg.mjs";
+import { isHistoryTour } from "./golf-tours.mjs";
 import { blendWeightsFromHistCalib } from "./optimized-counting-blend.mjs";
 
 export const RAW_ROUND_SD = Number(process.env.GOLF_RAW_ROUND_SD) || 3.0;
@@ -232,7 +233,7 @@ async function loadRollingTraditionalPctByDg(csvPath, dgIdSet, maxRoundsPerPlaye
     );
     parser.on("data", (row) => {
       const tour = String(row.tour || "").toLowerCase();
-      if (tour !== "pga" && tour !== "liv") return;
+      if (!isHistoryTour(tour)) return;
       const yr = parseInt(row.year, 10);
       if (Number.isFinite(yr) && yr < minYear) return;
       const id = Math.round(num(row.dg_id, NaN));
@@ -330,7 +331,7 @@ async function loadHistoricalCsvCalibration(modelRoot, courseKeyOpt) {
     );
     parser.on("data", (row) => {
       const tour = String(row.tour || "").toLowerCase();
-      if (tour !== "pga" && tour !== "liv") return;
+      if (!isHistoryTour(tour)) return;
       if (ckWant) {
         const ckRow = normCourseNameKey(row.course_name || row.Course_Name || "");
         if (!ckRow || ckRow !== ckWant) return;

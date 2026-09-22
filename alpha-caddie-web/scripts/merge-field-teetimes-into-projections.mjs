@@ -16,11 +16,13 @@ import {
   mergeFieldTeeTimesIntoProjections,
 } from "./open-meteo-forecast.mjs";
 import { flattenProjectionExportMeta, projectionExportMeta } from "./projection-export-meta.mjs";
+import { resolveProjectionPaths } from "./projection-paths.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
-const projPath = join(WEB_ROOT, "projections.json");
-const livePath = join(WEB_ROOT, "live-in-play.json");
+const PROJECTION_PATHS = resolveProjectionPaths(WEB_ROOT);
+const projPath = PROJECTION_PATHS.projectionsPath;
+const livePath = PROJECTION_PATHS.liveInPlayPath;
 
 function fieldUpdatesSafeToMerge(proj, fu) {
   if (!fu || typeof fu !== "object") return false;

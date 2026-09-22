@@ -26,6 +26,7 @@ import { resolveLiveRoundActualsByDg, sanitizeLiveRoundActualsByDg } from "./dg-
 import { ensureProjectionCoursePar } from "./projection-course-par.mjs";
 import { liveProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
+import { resolveProjectionPaths } from "./projection-paths.mjs";
 
 // Sportsbook-style defaults; honor already-set push:live / shell env.
 for (const [k, v] of Object.entries(liveProjectionPipelineEnv())) {
@@ -37,8 +38,9 @@ const WEB = join(__dirname, "..");
 const REPO_ROOT = process.env.GOLF_MODEL_DIR?.trim()
   ? resolve(process.env.GOLF_MODEL_DIR.trim())
   : resolve(WEB, "..");
-const path = join(WEB, "projections.json");
-const livePath = join(WEB, "live-in-play.json");
+const PROJECTION_PATHS = resolveProjectionPaths(WEB);
+const path = PROJECTION_PATHS.projectionsPath;
+const livePath = PROJECTION_PATHS.liveInPlayPath;
 
 const proj = JSON.parse(readFileSync(path, "utf8"));
 const parEnsure = ensureProjectionCoursePar(proj, { failOnMismatch: true });

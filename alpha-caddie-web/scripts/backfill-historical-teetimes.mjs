@@ -12,6 +12,7 @@ import { createReadStream } from "fs";
 import { parse } from "csv-parse";
 import { fileURLToPath } from "url";
 import { resolveGolfModelDir } from "./resolve-golf-model-dir.mjs";
+import { isHistoryTour } from "./golf-tours.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -32,7 +33,7 @@ async function yearsNeedingTeetimeBackfill(minCoverage = 0.95, minYear = 2014) {
     const y = parseInt(String(row.year || ""), 10);
     if (!Number.isFinite(y) || y < minYear) continue;
     const tour = String(row.tour || "pga").toLowerCase();
-    if (tour !== "pga" && tour !== "liv") continue;
+    if (!isHistoryTour(tour)) continue;
     if (!byYear.has(y)) byYear.set(y, { total: 0, withTee: 0 });
     const b = byYear.get(y);
     b.total++;

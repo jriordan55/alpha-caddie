@@ -21,6 +21,7 @@ import {
   applyT2gPuttParShape,
 } from "./optimized-counting-blend.mjs";
 import { venueBirdieSgScale } from "./projection-stat-model.mjs";
+import { isHistoryTour } from "./golf-tours.mjs";
 
 /** Player FW spread vs tour when course anchor is off (near 1 = pure driving accuracy). */
 const FAIRWAY_DRIVING_ACC_SPREAD = 0.94;
@@ -727,7 +728,7 @@ export async function buildRollingHoleCountRatesByDg(csvPath, dgIdSet, opts = {}
     )
       .on("data", (row) => {
         const tour = String(row.tour || "").toLowerCase();
-        if (tour !== "pga" && tour !== "liv") return;
+        if (!isHistoryTour(tour)) return;
         const yr = parseInt(row.year, 10);
         if (Number.isFinite(yr) && yr < minYearStale) return;
         const id = Math.round(num(row.dg_id, NaN));

@@ -50,7 +50,7 @@
  */
 
 import { spawnSync } from "child_process";
-import { createReadStream, existsSync, readFileSync, writeFileSync } from "fs";
+import { copyFileSync, createReadStream, existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { parse } from "csv-parse";
 import { fileURLToPath } from "url";
@@ -63,6 +63,8 @@ import {
   titleTokenOverlapRatio,
 } from "./dg-events-align.mjs";
 import { eventNameToDraftKingsSlug } from "./draftkings-league-url.mjs";
+import { fieldUpdatesTourCandidates, isHistoryTour } from "./golf-tours.mjs";
+import { resolveProjectionPaths } from "./projection-paths.mjs";
 import { fetchDataGolfOutrightsApi } from "./datagolf-outrights-api.mjs";
 import { applyOutrightSimProbsBake } from "./bake-outright-sim-probs.mjs";
 import {
@@ -155,6 +157,7 @@ import {
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
+const PROJECTION_PATHS = resolveProjectionPaths(ROOT);
 /** Honors GOLF_MODEL_DIR env (Render / monorepo); otherwise resolve-golf-model-dir.mjs heuristics. */
 const GOLF_MODEL_ROOT = resolveGolfModelDir(ROOT);
 
@@ -1126,7 +1129,7 @@ async function loadRollingTraditionalPctByDg(csvPath, dgIdSet, maxRoundsPerPlaye
     );
     parser.on("data", (row) => {
       const tour = String(row.tour || "").toLowerCase();
-      if (tour !== "pga" && tour !== "liv") return;
+      if (!isHistoryTour(tour)) return;
       const yr = parseInt(row.year, 10);
       if (Number.isFinite(yr) && yr < minYear) return;
       const id = Math.round(num(row.dg_id, NaN));
@@ -1224,7 +1227,7 @@ async function loadHistoricalCsvCalibration(modelRoot, courseKeyOpt) {
     );
     parser.on("data", (row) => {
       const tour = String(row.tour || "").toLowerCase();
-      if (tour !== "pga" && tour !== "liv") return;
+      if (!isHistoryTour(tour)) return;
       if (ckWant) {
         const ckRow = histCourseKeyFromRow(row);
         if (!ckRow || ckRow !== ckWant) return;
@@ -1733,19 +1736,8 @@ async function main() {
     process.exit(1);
   }
 
-  /** Dual-field weeks: `pga` feed may lag while `opp` already shows this week's opposite-field event. */
-  function fieldUpdateTourCandidates() {
-    const raw = String(process.env.GOLF_FIELD_UPDATES_TOUR_CANDIDATES || "").trim();
-    if (raw) {
-      const xs = [...new Set(raw.split(/[,;\s]+/).map((x) => x.trim().toLowerCase()).filter(Boolean))];
-      return xs.length ? xs : [TOUR];
-    }
-    /** Prefer `pga` before `opp` so timestamp ties favor the main tour field (opp can be another tour/week with a fresher clock). */
-    return TOUR === "pga" ? ["pga", "opp"] : [TOUR];
-  }
-
   console.log("Fetching field-updates (comparing tours)…");
-  const toursTry = fieldUpdateTourCandidates();
+  const toursTry = fieldUpdatesTourCandidates(TOUR);
   const minPlayers = Math.max(8, Number(process.env.GOLF_FIELD_UPDATES_MIN_PLAYERS || "30"));
   const scored = [];
   for (const tour of toursTry) {
@@ -2543,7 +2535,7 @@ async function main() {
       }
     }
   }
-  const projectionsOutPathEarly = join(ROOT, "projections.json");
+  const projectionsOutPathEarly = PROJECTION_PATHS.projectionsPath;
   const dkPropsEarly = tryPreservePropsFromDisk(projectionsOutPathEarly, event_name, course_used);
   const dkFieldEarly = draftKingsDgIdsFromProjections({ props: dkPropsEarly });
   const useDkFieldEarly = dkFieldEarly.size >= 8;
@@ -2962,7 +2954,7 @@ async function main() {
     }
   }
 
-  const projectionsOutPath = join(ROOT, "projections.json");
+  const projectionsOutPath = PROJECTION_PATHS.projectionsPath;
   const preservedProps = tryPreservePropsFromDisk(projectionsOutPath, event_name, course_used);
 
   const payload = {
@@ -3171,6 +3163,9 @@ async function main() {
   }
 
   writeFileSync(projectionsOutPath, JSON.stringify(payload, null, 2), "utf8");
+  if (PROJECTION_PATHS.tour === "pga" && projectionsOutPath !== PROJECTION_PATHS.legacyProjectionsPath) {
+    copyFileSync(projectionsOutPath, PROJECTION_PATHS.legacyProjectionsPath);
+  }
   if (!preservedProps.length) {
     console.log(
       "[fetch-dg] props[] empty — run `npm run fetch:book-odds` (DraftKings round O/U) after fetch:dg unless you set GOLF_RESET_PROPS=1 and intentionally cleared lines.",

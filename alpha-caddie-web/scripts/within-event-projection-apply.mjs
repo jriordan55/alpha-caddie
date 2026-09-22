@@ -6,6 +6,7 @@ import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { resolveLiveRoundActualsByDg } from "./dg-live-tournament-stats.mjs";
+import { resolveProjectionPaths } from "./projection-paths.mjs";
 import { eventsLikelySame } from "./dg-events-align.mjs";
 import { normCourseNameKey } from "./course-name-key.mjs";
 import {
@@ -326,8 +327,9 @@ export async function reapplyWithinEventFormOnProjections(proj, live, opts = {})
 }
 
 async function main() {
-  const projPath = join(WEB_ROOT, "projections.json");
-  const livePath = join(WEB_ROOT, "live-in-play.json");
+  const paths = resolveProjectionPaths(WEB_ROOT);
+  const projPath = paths.projectionsPath;
+  const livePath = paths.liveInPlayPath;
   if (!existsSync(projPath)) {
     console.warn("[within-event-form] missing projections.json — skip");
     process.exit(0);

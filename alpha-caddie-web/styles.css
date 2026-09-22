@@ -394,6 +394,21 @@ body {
   border: 1px solid var(--golf-border);
   border-radius: 12px;
 }
+.ou-toolbar-projections .ou-tour-toggle-wrap {
+  padding: 4px 8px;
+  gap: 8px;
+  border-radius: 999px;
+  background: var(--golf-elevated-soft);
+}
+.ou-toolbar-projections .ou-tour-toggle-wrap .ou-view-label {
+  font-size: 0.62rem;
+  margin-right: 2px;
+}
+.ou-toolbar-projections .ou-tour-toggle-wrap .ou-toggle-btn {
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  min-height: 0;
+}
 .ou-view-label {
   font-size: 0.68rem;
   font-weight: 700;

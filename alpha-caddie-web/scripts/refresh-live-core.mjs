@@ -14,6 +14,7 @@ import { fileURLToPath } from "url";
 import { spawnSync } from "child_process";
 import { dkOuScrapeEnv, liveProjectionPipelineEnv, requireDkOuEnv } from "./projection-pipeline-env.mjs";
 import { resolveOuIncrementalSinceIso } from "./tracker-incremental.mjs";
+import { LIVE_PROJECTION_TOURS } from "./golf-tours.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -87,6 +88,10 @@ function mirrorPublishArtifacts() {
   const pairs = [
     [path.join(WEB_ROOT, "live-in-play.json"), path.join(destDir, "live-in-play.json")],
     [path.join(WEB_ROOT, "projections.json"), path.join(destDir, "projections.json")],
+    [path.join(WEB_ROOT, "live-in-play-pga.json"), path.join(destDir, "live-in-play-pga.json")],
+    [path.join(WEB_ROOT, "projections-pga.json"), path.join(destDir, "projections-pga.json")],
+    [path.join(WEB_ROOT, "live-in-play-euro.json"), path.join(destDir, "live-in-play-euro.json")],
+    [path.join(WEB_ROOT, "projections-euro.json"), path.join(destDir, "projections-euro.json")],
     [path.join(WEB_ROOT, "course-table.json"), path.join(destDir, "course-table.json")],
     [
       path.join(WEB_ROOT, "paper-book", "paper-book-lines.json"),
@@ -115,38 +120,15 @@ console.log(
     "  (Full pipeline: npm run refresh:live:full)\n",
 );
 
-// —— Projections ——
-run("fetch-datagolf.mjs", "DataGolf field + projections (fetch:dg)");
-run("build-course-table-json.mjs", "Course table JSON (build:course-table)");
-
-// —— Live + prior round (Live Stats / Trends inputs) ——
-run("fetch-live-in-play.mjs", "Live in-play + LTS + round actuals → live-in-play.json");
-run(
-  "run-refresh-pgatour-event-rounds.mjs",
-  "pgatouR scorecards for current event (prior-round birdies/pars)",
-  {},
-  softOpt,
-);
-
-// —— Sportsbook odds (+ paper-book-lines.json bake inside fetch:book-odds) ——
-run(
-  "fetch-book-odds-into-projections.mjs",
-  "Sportsbook odds + DK/PP/SL/UD round props + paper book bake (fetch:book-odds)",
-);
-
-// —— Prior-round into projections (Round Projections / +EV tabs) ——
-run("merge-live-round-meta-into-projections.mjs", "Display round + prior-round course difficulty");
-run("merge-field-teetimes-into-projections.mjs", "Tee times → projections", {}, softOpt);
-run("repair-projection-course-basis.mjs", "Venue player/course history blend", {}, softOpt);
-run(
-  "within-event-projection-apply.mjs",
-  "Prior-round form from live-in-play",
-  { GOLF_WITHIN_EVENT_LIVE_ONLY: "1" },
-  softOpt,
-);
-run("apply-unified-projection-factors.mjs", "Course fit + tee wave on projections", {}, softOpt);
-run("merge-live-in-play-scratch-into-projections.mjs", "Live thru/scores → projections", {}, softOpt);
-run("reconcile-projection-counts.mjs", "Reconcile counting stats", {}, softOpt);
+// —— Per-tour projections (PGA + DP World) ——
+for (const tour of LIVE_PROJECTION_TOURS) {
+  run(
+    "refresh-live-tour.mjs",
+    `Live projections (${tour})`,
+    { GOLF_DATAGOLF_TOUR: tour, GOLF_TOUR: tour },
+    tour === "euro" ? softOpt : {},
+  );
+}
 
 // —— Tab data: projection tracker O/U CSV ——
 if (!envTruthy("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL", false)) {

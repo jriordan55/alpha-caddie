@@ -36,9 +36,11 @@ import {
   projectionDateStartIso,
 } from "./dg-display-round-from-bundle.mjs";
 import { resolveLiveRoundActualsByDg } from "./dg-live-tournament-stats.mjs";
+import { resolveProjectionPaths } from "./projection-paths.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
+const PROJECTION_PATHS = resolveProjectionPaths(WEB_ROOT);
 
 function displayRoundLabel(r, tz) {
   const lab =
@@ -69,8 +71,8 @@ function readPriorStrokeShiftsFromMeta(payload) {
 }
 
 async function main() {
-  const projPath = join(WEB_ROOT, "projections.json");
-  const livePath = join(WEB_ROOT, "live-in-play.json");
+  const projPath = PROJECTION_PATHS.projectionsPath;
+  const livePath = PROJECTION_PATHS.liveInPlayPath;
   if (!existsSync(projPath)) {
     console.warn("merge-live-round-meta: missing projections.json");
     process.exit(0);

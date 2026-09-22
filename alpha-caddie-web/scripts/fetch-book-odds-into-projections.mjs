@@ -72,6 +72,7 @@ import { refreshSleeperRoundProps } from "./merge-sleeper-round-props.mjs";
 import { refreshUnderdogRoundProps } from "./merge-underdog-round-props.mjs";
 import { bakePaperBookLines } from "./bake-paper-book-lines.mjs";
 import { projectionExportMeta } from "./projection-export-meta.mjs";
+import { resolveProjectionPaths } from "./projection-paths.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
 const GOLF_MODEL_ROOT = process.env.GOLF_MODEL_DIR?.trim()
@@ -208,7 +209,7 @@ async function main() {
     process.exit(1);
   }
 
-  const projPath = join(WEB_ROOT, "projections.json");
+  const projPath = resolveProjectionPaths(WEB_ROOT).projectionsPath;
   if (!existsSync(projPath)) {
     console.error("Missing", projPath);
     process.exit(1);

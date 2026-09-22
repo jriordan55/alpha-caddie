@@ -11,6 +11,7 @@
 import { createReadStream } from "fs";
 import { parse } from "csv-parse";
 import { existsSync } from "fs";
+import { isHistoryTour } from "./golf-tours.mjs";
 
 export const DG_TOUR_AVG_FAIRWAY_RATE = 0.6;
 export const DG_TOUR_AVG_GIR_RATE = 0.65;
@@ -145,7 +146,7 @@ export async function buildRollingTraditionalPctByDg(csvPath, dgIdSet, opts = {}
     );
     stream.on("data", (row) => {
       const tour = String(row.tour || "").toLowerCase();
-      if (tour !== "pga" && tour !== "liv") return;
+      if (!isHistoryTour(tour)) return;
       const yr = parseInt(row.year, 10);
       if (Number.isFinite(yr) && yr < minYear) return;
       const id = Math.round(num(row.dg_id, NaN));

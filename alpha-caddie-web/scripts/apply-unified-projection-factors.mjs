@@ -11,6 +11,7 @@ import { fileURLToPath } from "url";
 import { applyUnifiedProjectionFactors } from "./projection-unified-factors.mjs";
 import { flattenProjectionExportMeta } from "./projection-export-meta.mjs";
 import { liveProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
+import { resolveProjectionPaths } from "./projection-paths.mjs";
 
 Object.assign(
   process.env,
@@ -23,8 +24,9 @@ Object.assign(
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
-const projPath = join(WEB_ROOT, "projections.json");
-const livePath = join(WEB_ROOT, "live-in-play.json");
+const PROJECTION_PATHS = resolveProjectionPaths(WEB_ROOT);
+const projPath = PROJECTION_PATHS.projectionsPath;
+const livePath = PROJECTION_PATHS.liveInPlayPath;
 
 function readJson(p) {
   return JSON.parse(readFileSync(p, "utf8"));
@@ -47,7 +49,7 @@ async function main() {
   await applyUnifiedProjectionFactors(proj, { liveBundle });
   flattenProjectionExportMeta(proj);
   writeFileSync(projPath, `${JSON.stringify(proj, null, 2)}\n`, "utf8");
-  console.log("[apply:unified-factors] wrote projections.json");
+  console.log(`[apply:unified-factors] wrote ${PROJECTION_PATHS.projectionsFile}`);
 }
 
 main().catch((e) => {

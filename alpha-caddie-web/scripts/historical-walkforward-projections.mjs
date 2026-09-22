@@ -89,6 +89,7 @@ import {
 } from "./weather-mu-adjustments.mjs";
 import { teeWaveFromTeetimeAndLabel } from "./open-meteo-forecast.mjs";
 import { teeWaveStrokeShift, teeWaveCountingShifts } from "./projection-unified-factors.mjs";
+import { isHistoryTour } from "./golf-tours.mjs";
 
 function envOn(name, defaultOn = true) {
   const raw = String(process.env[name] ?? "").trim();
@@ -379,7 +380,7 @@ export function buildWalkForwardHistoryByDgId(histRows, cutoffMs, dgIds) {
     const t = rowTimeMs(row);
     if (Number.isFinite(cutoffMs) && Number.isFinite(t) && t >= cutoffMs) continue;
     const tour = String(row.tour || "").toLowerCase();
-    if (tour && tour !== "pga" && tour !== "liv") continue;
+    if (tour && !isHistoryTour(tour)) continue;
     const rs = num(row.round_score, NaN);
     if (!Number.isFinite(rs) || rs < 55 || rs > 95) continue;
 

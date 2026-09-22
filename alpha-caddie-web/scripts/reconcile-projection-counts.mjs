@@ -8,6 +8,7 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { reconcileAllProjectionPlayerRows, flatVenuePlayerScoreAnchorEnabled } from "./course-round-adjustments.mjs";
 import { liveProjectionPipelineEnv } from "./projection-pipeline-env.mjs";
+import { resolveProjectionPaths } from "./projection-paths.mjs";
 
 Object.assign(
   process.env,
@@ -20,7 +21,7 @@ Object.assign(
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB = join(__dirname, "..");
-const projPath = join(WEB, "projections.json");
+const projPath = resolveProjectionPaths(WEB).projectionsPath;
 
 const proj = JSON.parse(readFileSync(projPath, "utf8"));
 const nostradamusPath = join(WEB, "data", "gamedaymath_nostradamus_props.json");

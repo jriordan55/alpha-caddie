@@ -119,6 +119,13 @@
         <div class="ou-panel-head">
           <div class="toolbar ou-toolbar ou-toolbar-projections">
             <span class="toolbar-label muted ou-auto-round-line" id="auto-round" aria-live="polite">—</span>
+            <div class="ou-view-toggle-wrap ou-tour-toggle-wrap" aria-label="Tour">
+              <span class="ou-view-label">Tour</span>
+              <div class="ou-view-toggle" role="tablist">
+                <button type="button" class="ou-toggle-btn active" data-proj-tour="pga" role="tab" aria-selected="true">PGA</button>
+                <button type="button" class="ou-toggle-btn" data-proj-tour="euro" role="tab" aria-selected="false">DP World</button>
+              </div>
+            </div>
             <span class="toolbar-label muted ou-pricing-badge" id="ou-pricing-badge" title="Edges use Prop Pricing Model (distribution P vs posted break-even)">Prop pricing</span>
             <label class="toolbar-label ou-filter-field ou-golfer-inline">Golfer
               <span class="golfer-suggest-anchor">
@@ -1402,6 +1409,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=370"></script>
+  <script src="app.js?v=371"></script>
 </body>
 </html>
