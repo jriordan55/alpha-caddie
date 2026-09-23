@@ -9,7 +9,7 @@
   "datagolf_field_current_round": 1,
   "display_round": 1,
   "display_round_label": "R1 — next Thursday (auto, America/New_York)",
-  "updated_at": "2026-09-23T00:08:47Z",
+  "updated_at": "2026-09-23T07:32:03Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -10022,7 +10022,7 @@
       "note": "DataGolf still returned Biltmore Championship Asheville; cleared so Odds Screen does not show last week"
     }
   },
-  "book_odds_refreshed_at": "2026-09-23T00:08:47Z",
+  "book_odds_refreshed_at": "2026-09-23T07:32:03Z",
   "dk_round_props_note": "DraftKings has not posted round O/U props for this event yet (round page has no Birdies/Pars/GIR/etc. tabs).",
   "dk_round_ou_not_posted": true,
   "datagolf_live_current_round": 1,
@@ -10166,5 +10166,5 @@
       }
     }
   },
-  "dk_round_props_refreshed_at": "2026-09-23T00:08:47Z"
+  "dk_round_props_refreshed_at": "2026-09-23T07:32:03Z"
 }
