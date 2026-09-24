@@ -9,7 +9,7 @@
   "datagolf_field_current_round": 1,
   "display_round": 1,
   "display_round_label": "R1 — next Thursday (auto, America/New_York)",
-  "updated_at": "2026-09-24T03:35:58Z",
+  "updated_at": "2026-09-24T09:09:29Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -6129,7 +6129,7 @@
   "props": [
     {
       "player_name": "Scheffler, Scottie",
-      "line": 27.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -6149,7 +6149,7 @@
     },
     {
       "player_name": "Schauffele, Xander",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -6169,7 +6169,7 @@
     },
     {
       "player_name": "Burns, Sam",
-      "line": 27.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -6209,7 +6209,7 @@
     },
     {
       "player_name": "Kim, Tom",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -6249,7 +6249,7 @@
     },
     {
       "player_name": "Lee, Min Woo",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -6259,7 +6259,7 @@
     },
     {
       "player_name": "Koivun, Jackson",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -6339,7 +6339,7 @@
     },
     {
       "player_name": "Taylor, Nick",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -6349,7 +6349,7 @@
     },
     {
       "player_name": "Bezuidenhout, Christiaan",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -10032,7 +10032,7 @@
       "note": "DataGolf still returned Biltmore Championship Asheville; cleared so Odds Screen does not show last week"
     }
   },
-  "book_odds_refreshed_at": "2026-09-24T03:33:25Z",
+  "book_odds_refreshed_at": "2026-09-24T09:09:29Z",
   "dk_round_props_note": "DraftKings has not posted round O/U props for this event yet (round page has no Birdies/Pars/GIR/etc. tabs).",
   "dk_round_ou_not_posted": true,
   "datagolf_live_current_round": 1,
@@ -10175,5 +10175,6 @@
         "putts": {}
       }
     }
-  }
+  },
+  "dk_round_props_refreshed_at": "2026-09-24T09:09:29Z"
 }
