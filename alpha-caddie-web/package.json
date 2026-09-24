@@ -3,6 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "presidents-cup:report": "node ../presidents-cup-report/serve.mjs",
+    "presidents-cup:report:fast": "node ../presidents-cup-report/serve.mjs --fast",
     "fetch:dg": "node scripts/fetch-datagolf.mjs",
     "fetch:dg:all-tours": "node scripts/fetch-all-tours.mjs",
     "refresh:live-tour": "node scripts/refresh-live-tour.mjs",

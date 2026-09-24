@@ -40,6 +40,8 @@
     "push:all:pull-first": "npm run push:all:pull-first --prefix alpha-caddie-web",
     "push:artifacts-only": "npm run push:artifacts-only --prefix alpha-caddie-web",
     "push:live-once": "npm run push:live-once --prefix alpha-caddie-web",
-    "push:live-loop": "npm run push:live-loop --prefix alpha-caddie-web"
+    "push:live-loop": "npm run push:live-loop --prefix alpha-caddie-web",
+    "presidents-cup:report": "npm run presidents-cup:report --prefix alpha-caddie-web",
+    "presidents-cup:report:fast": "npm run presidents-cup:report:fast --prefix alpha-caddie-web"
   }
 }

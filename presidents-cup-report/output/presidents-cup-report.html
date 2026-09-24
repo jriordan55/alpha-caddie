@@ -1,0 +1,2039 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8"/>
+
+<title>Presidents Cup 2026 — Match-Play Model Report</title>
+
+<link rel="preconnect" href="https://www.presidentscup.com"/>
+
+<style>
+
+  @page { size: letter; margin: 0; }
+
+  * { box-sizing: border-box; }
+
+  :root {
+
+    --pc-red: #D9000A;
+
+    --pc-gold: #F5A81C;
+
+    --pc-gold-dark: #D67A27;
+
+    --pc-green: #006039;
+
+    --pc-black: #19191A;
+
+    --pc-gray: #63656A;
+
+    --pc-usa: #D9000A;
+
+    --pc-int: #0084FF;
+
+  }
+
+  body {
+
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+
+    color: var(--pc-black);
+
+    font-size: 10pt;
+
+    line-height: 1.45;
+
+    margin: 0;
+
+    background: #F2F2F2;
+
+  }
+
+  .hero {
+
+    position: relative;
+
+    min-height: 220px;
+
+    background: var(--pc-black) url("https://www.presidentscup.com/media_1e779a42e5fa047dc30056d3b05361c5cfc40755e.jpg?width=1600&format=jpg&optimize=medium") center/cover no-repeat;
+
+    color: #fff;
+
+    padding: 28px 36px 24px;
+
+    overflow: hidden;
+
+  }
+
+  .hero::before {
+
+    content: "";
+
+    position: absolute; inset: 0;
+
+    background: linear-gradient(135deg, rgba(25,25,26,.92) 0%, rgba(217,0,10,.55) 45%, rgba(0,96,57,.45) 100%);
+
+  }
+
+  .hero-inner { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+
+  .hero-badges { display: flex; gap: 12px; align-items: center; }
+
+  .hero-badges img { width: 56px; height: 56px; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(0,0,0,.4)); }
+
+  .hero h1 {
+
+    font-size: 26pt; font-weight: 800; margin: 0 0 4px;
+
+    letter-spacing: -0.03em; text-transform: uppercase;
+
+    background: linear-gradient(90deg, #fff 0%, var(--pc-gold) 100%);
+
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+
+    background-clip: text;
+
+  }
+
+  .hero .subtitle { font-size: 11pt; opacity: .92; margin: 0 0 8px; }
+
+  .hero .meta { font-size: 8.5pt; opacity: .75; max-width: 520px; }
+
+  .hero-date {
+
+    text-align: right; font-size: 9pt; opacity: .85;
+
+    border-left: 3px solid var(--pc-gold); padding-left: 14px;
+
+  }
+
+  .hero-date strong { display: block; font-size: 11pt; color: var(--pc-gold); }
+
+
+
+  .content { padding: 22px 32px 28px; }
+
+
+
+  .cup-showdown {
+
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: stretch;
+
+    margin: -36px 32px 20px; position: relative; z-index: 2;
+
+  }
+
+  .cup-team {
+
+    background: #fff; border-radius: 10px; padding: 16px 18px;
+
+    box-shadow: 0 4px 20px rgba(0,0,0,.12); text-align: center;
+
+    border-top: 4px solid var(--pc-gray);
+
+  }
+
+  .cup-team.usa { border-top-color: var(--pc-usa); }
+
+  .cup-team.int { border-top-color: var(--pc-int); }
+
+  .cup-team .pct { font-size: 28pt; font-weight: 800; line-height: 1; margin: 6px 0; }
+
+  .cup-team.usa .pct { color: var(--pc-usa); }
+
+  .cup-team.int .pct { color: var(--pc-int); }
+
+  .cup-team .lbl { font-size: 8pt; text-transform: uppercase; letter-spacing: .08em; color: var(--pc-gray); }
+
+  .cup-team img { width: 48px; height: 48px; object-fit: contain; }
+
+  .cup-vs {
+
+    display: flex; align-items: center; justify-content: center;
+
+    font-size: 18pt; font-weight: 900; color: var(--pc-gold-dark);
+
+  }
+
+
+
+  .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 0 0 18px; }
+
+  .kpi {
+
+    background: #fff; border-radius: 8px; padding: 12px 14px;
+
+    border: 1px solid #E3E3E3; border-bottom: 3px solid var(--pc-gold);
+
+  }
+
+  .kpi .label { font-size: 7.5pt; text-transform: uppercase; letter-spacing: .07em; color: var(--pc-gray); }
+
+  .kpi .value { font-size: 16pt; font-weight: 800; color: var(--pc-black); margin-top: 3px; }
+
+
+
+  h2 {
+
+    font-size: 12pt; margin: 20px 0 10px; color: var(--pc-black);
+
+    text-transform: uppercase; letter-spacing: .04em;
+
+    border-bottom: 2px solid var(--pc-gold); padding-bottom: 5px;
+
+  }
+
+  h2::before { content: "▸ "; color: var(--pc-red); }
+
+
+
+  .method {
+
+    background: #fff; border-left: 4px solid var(--pc-green);
+
+    padding: 12px 16px; margin: 12px 0; font-size: 9pt;
+
+    border-radius: 0 8px 8px 0; box-shadow: 0 1px 4px rgba(0,0,0,.06);
+
+  }
+
+
+
+  .edge-box {
+
+    background: linear-gradient(135deg, #fff 0%, #fff8f0 100%);
+
+    border: 1px solid var(--pc-gold); border-radius: 10px;
+
+    padding: 14px 18px; margin: 12px 0;
+
+  }
+
+  .edge-box ul { margin: 8px 0 0; padding-left: 0; list-style: none; }
+
+  .edge-box li { padding: 8px 0; border-bottom: 1px solid #E3E3E3; font-size: 9.5pt; }
+
+  .edge-box li:last-child { border-bottom: none; }
+
+  .market-tag {
+
+    display: inline-block; font-size: 7.5pt; background: var(--pc-black); color: #fff;
+
+    padding: 2px 6px; border-radius: 3px; margin-left: 4px; vertical-align: middle;
+
+  }
+
+
+
+  .rosters { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 14px 0; }
+
+  .roster-panel {
+
+    background: #fff; border-radius: 10px; overflow: hidden;
+
+    box-shadow: 0 2px 12px rgba(0,0,0,.08);
+
+  }
+
+  .roster-panel.usa { border-top: 4px solid var(--pc-usa); }
+
+  .roster-panel.int { border-top: 4px solid var(--pc-int); }
+
+  .roster-head {
+
+    display: flex; align-items: center; gap: 12px;
+
+    padding: 12px 14px; background: var(--pc-black); color: #fff;
+
+  }
+
+  .roster-panel.usa .roster-head { background: linear-gradient(90deg, #2a0809, var(--pc-black)); }
+
+  .roster-panel.int .roster-head { background: linear-gradient(90deg, #0a1a2e, var(--pc-black)); }
+
+  .team-badge { width: 40px; height: 40px; object-fit: contain; }
+
+  .roster-title { font-weight: 700; font-size: 11pt; }
+
+  .roster-sub { font-size: 8pt; opacity: .7; }
+
+  .roster-grid {
+
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 10px;
+
+  }
+
+  .roster-card {
+
+    text-align: center; border-radius: 8px; overflow: hidden;
+
+    background: #F2F2F2; border: 1px solid #E3E3E3;
+
+  }
+
+  .roster-card img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; background: #ddd; }
+
+  .roster-fallback {
+
+    width: 100%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+
+    font-size: 22pt; font-weight: 800; color: #fff;
+
+  }
+
+  .roster-card.usa .roster-fallback { background: var(--pc-usa); }
+
+  .roster-card.int .roster-fallback { background: var(--pc-int); }
+
+  .roster-name { font-size: 7.5pt; font-weight: 700; padding: 4px 4px 0; line-height: 1.2; }
+
+  .roster-sg { font-size: 7pt; color: var(--pc-gray); padding: 0 4px 6px; }
+
+
+
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 14px; font-size: 9pt; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,.06); }
+
+  th { text-align: left; background: var(--pc-black); color: #fff; padding: 7px 9px; font-weight: 700; font-size: 8pt; text-transform: uppercase; letter-spacing: .04em; }
+
+  th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  td { padding: 6px 9px; border-bottom: 1px solid #E3E3E3; vertical-align: middle; }
+
+  tr:nth-child(even) td { background: #fafafa; }
+
+  .usa-num { color: var(--pc-usa); font-weight: 600; }
+
+  .int-num { color: var(--pc-int); font-weight: 600; }
+
+
+
+  .player-cell { display: flex; align-items: center; gap: 8px; }
+
+  .headshot {
+
+    width: 32px; height: 32px; border-radius: 50%; object-fit: cover;
+
+    border: 2px solid #E3E3E3; flex-shrink: 0;
+
+  }
+
+  .headshot-fallback {
+
+    display: flex; align-items: center; justify-content: center;
+
+    font-size: 11pt; font-weight: 800; color: #fff;
+
+  }
+
+  .headshot-fallback.usa { background: var(--pc-usa); border-color: var(--pc-usa); }
+
+  .headshot-fallback.int { background: var(--pc-int); border-color: var(--pc-int); }
+
+
+
+  .team-tag {
+
+    display: inline-block; font-size: 7pt; font-weight: 800; padding: 2px 7px;
+
+    border-radius: 3px; letter-spacing: .05em;
+
+  }
+
+  .tag-usa { background: rgba(217,0,10,.12); color: var(--pc-usa); }
+
+  .tag-int { background: rgba(0,132,255,.12); color: var(--pc-int); }
+
+
+
+  .edge-pos { color: var(--pc-green); font-weight: 700; }
+
+  .edge-neg { color: var(--pc-red); font-weight: 700; }
+
+  .edge-neutral { color: var(--pc-gray); }
+
+
+
+  .course-banner {
+
+    margin: 16px 0; border-radius: 10px; overflow: hidden; height: 100px;
+
+    background: url("https://www.presidentscup.com/media_1e2ea93f51ff44c067f6e2449335e27a52f5dc59a.jpg?width=1200&format=jpg&optimize=medium") center/cover no-repeat;
+
+    position: relative;
+
+  }
+
+  .course-banner::after {
+
+    content: "Medinah Country Club · Chicago, IL · September 22–27, 2026";
+
+    position: absolute; inset: 0; display: flex; align-items: flex-end;
+
+    padding: 10px 14px; font-size: 9pt; font-weight: 700; color: #fff;
+
+    background: linear-gradient(transparent, rgba(0,0,0,.75));
+
+  }
+
+
+
+  .footer {
+
+    margin-top: 24px; padding: 14px 32px; background: var(--pc-black); color: rgba(255,255,255,.65);
+
+    font-size: 8pt;
+
+  }
+
+  .footer a { color: var(--pc-gold); }
+
+  .note { color: var(--pc-gray); font-size: 8.5pt; font-style: italic; }
+
+
+
+  @media print {
+
+    .page-break { page-break-before: always; }
+
+    .hero { min-height: 180px; }
+
+    .roster-grid { grid-template-columns: repeat(4, 1fr); }
+
+  }
+
+</style>
+
+</head>
+
+<body>
+
+  <div class="hero">
+
+    <div class="hero-inner">
+
+      <div>
+
+        <div class="hero-badges">
+
+          <img src="https://www.presidentscup.com/media_104b23ce8d42046c40e18d3fbe3c999d423191d30.png?width=400&amp;format=png&amp;optimize=medium" alt="USA"/>
+
+          <img src="https://www.presidentscup.com/media_1dfaefda33b4a39db3e2def94c5813bde8ea8afac.png?width=400&amp;format=png&amp;optimize=medium" alt="International"/>
+
+        </div>
+
+        <h1>Presidents Cup 2026</h1>
+
+        <p class="subtitle">Match-Play Monte Carlo Model · Medinah Country Club</p>
+
+        <p class="meta">8,000 simulations · Alpha Caddie · Methodology adapted from <a href="https://datagolf.com/ryder-cup-blog/" style="color:var(--pc-gold)">DataGolf</a></p>
+
+      </div>
+
+      <div class="hero-date">
+
+        <strong>September 22–27, 2026</strong>
+
+        Medinah Country Club<br/>Chicago, Illinois<br/>
+
+        <span style="opacity:.6">Generated 2026-09-22 17:19</span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="cup-showdown">
+
+    <div class="cup-team usa">
+
+      <img src="https://www.presidentscup.com/media_104b23ce8d42046c40e18d3fbe3c999d423191d30.png?width=400&amp;format=png&amp;optimize=medium" alt=""/>
+
+      <div class="lbl">U.S. Team wins Cup</div>
+
+      <div class="pct">64.0%</div>
+
+      <div class="lbl">60.5% outright · 7.0% retain</div>
+
+    </div>
+
+    <div class="cup-vs">VS</div>
+
+    <div class="cup-team int">
+
+      <img src="https://www.presidentscup.com/media_1dfaefda33b4a39db3e2def94c5813bde8ea8afac.png?width=400&amp;format=png&amp;optimize=medium" alt=""/>
+
+      <div class="lbl">International wins Cup</div>
+
+      <div class="pct">32.5%</div>
+
+      <div class="lbl">μ SG 0.90 vs USA 1.65</div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="content">
+
+    <div class="kpi-row">
+
+      <div class="kpi"><div class="label">Most likely score</div><div class="value">17-16</div></div>
+
+      <div class="kpi"><div class="label">USA Fri fourball</div><div class="value">49.8%</div></div>
+
+      <div class="kpi"><div class="label">USA Sun singles</div><div class="value">51.4%</div></div>
+
+      <div class="kpi"><div class="label">Top scorer</div><div class="value" style="font-size:11pt">Scottie Scheffler</div></div>
+
+      <div class="kpi"><div class="label">DK lines matched</div><div class="value">0</div></div>
+
+    </div>
+
+
+
+    <div class="course-banner"></div>
+
+
+
+    <div class="method">Hole-level scoring distributions are built from 2025–26 skill (μ SG), Medinah course-table scoring (−1.16 vs par, 199-round sample), and projected birdie/bogey rates. Singles matches use hole-by-hole match play; foursomes average partner distributions; fourballs take the better of two sampled scores per hole (DataGolf Ryder Cup blog). Lineup uncertainty: top-ranked players ~85% session play rate, bottom ~35%. 30 cup points across 5 sessions; USA retains on a tie.</div>
+
+
+
+    <h2>Recommended Edges vs DraftKings</h2>
+
+    <div class="edge-box"><ul><li>No positive edges ≥2% vs DraftKings on matched markets.</li></ul></div>
+
+    <p class="note">DK scrape skipped</p>
+
+
+
+    <h2>2026 Teams</h2>
+
+    <div class="rosters"><div class="roster-panel usa">
+
+    <div class="roster-head">
+
+      <img class="team-badge" src="https://www.presidentscup.com/media_104b23ce8d42046c40e18d3fbe3c999d423191d30.png?width=400&amp;format=png&amp;optimize=medium" alt="" />
+
+      <div><div class="roster-title">U.S. Team</div><div class="roster-sub">12 players</div></div>
+
+    </div>
+
+    <div class="roster-grid"><div class="roster-card usa">
+
+        <img src="https://www.presidentscup.com/media_1fda73d8d1c4115eff80b0c1ab3b59d6e38af89f1.png?width=220&amp;format=png&amp;optimize=medium" alt="Scottie Scheffler" />
+
+        <div class="roster-name">Scottie Scheffler</div>
+
+        <div class="roster-sg">3.08 μ SG</div>
+
+      </div><div class="roster-card usa">
+
+        <img src="https://www.presidentscup.com/media_191f153971c41f0934f9eb4eeb09f3355d678c28d.png?width=220&amp;format=png&amp;optimize=medium" alt="Chris Gotterup" />
+
+        <div class="roster-name">Chris Gotterup</div>
+
+        <div class="roster-sg">2.05 μ SG</div>
+
+      </div><div class="roster-card usa">
+
+        <img src="https://www.presidentscup.com/media_141835fb563cb8a0011fadfd90ca0f9f24d5d6fd5.png?width=220&amp;format=png&amp;optimize=medium" alt="Xander Schauffele" />
+
+        <div class="roster-name">Xander Schauffele</div>
+
+        <div class="roster-sg">1.78 μ SG</div>
+
+      </div><div class="roster-card usa">
+
+        <img src="https://www.presidentscup.com/media_15a70a45965267545d13365eb00e2d84e19520fdc.png?width=220&amp;format=png&amp;optimize=medium" alt="Cameron Young" />
+
+        <div class="roster-name">Cameron Young</div>
+
+        <div class="roster-sg">1.75 μ SG</div>
+
+      </div><div class="roster-card usa">
+
+        <img src="https://www.presidentscup.com/media_1f878d4b8a3ad38aa7dd04bc7f67fd359f1abeaa6.png?width=220&amp;format=png&amp;optimize=medium" alt="Sam Burns" />
+
+        <div class="roster-name">Sam Burns</div>
+
+        <div class="roster-sg">1.67 μ SG</div>
+
+      </div><div class="roster-card usa">
+
+        <img src="https://www.presidentscup.com/media_109b0faa61c3b06408090c5769ceb88970ec5dd88.png?width=220&amp;format=png&amp;optimize=medium" alt="Patrick Cantlay" />
+
+        <div class="roster-name">Patrick Cantlay</div>
+
+        <div class="roster-sg">1.59 μ SG</div>
+
+      </div><div class="roster-card usa">
+
+        <img src="https://www.presidentscup.com/media_15020cd0e2b08e8d853cc622f1af27cd78b67ca27.png?width=220&amp;format=png&amp;optimize=medium" alt="Collin Morikawa" />
+
+        <div class="roster-name">Collin Morikawa</div>
+
+        <div class="roster-sg">1.58 μ SG</div>
+
+      </div><div class="roster-card usa">
+
+        <img src="https://www.presidentscup.com/media_1b40f79a0917c61a7e5fb897b9c14102bdedbb4c2.png?width=220&amp;format=png&amp;optimize=medium" alt="Jacob Bridgeman" />
+
+        <div class="roster-name">Jacob Bridgeman</div>
+
+        <div class="roster-sg">1.39 μ SG</div>
+
+      </div><div class="roster-card usa">
+
+        <img src="https://www.presidentscup.com/media_19983ab5a85c6c2a26f3f3b2d1bdedd7d2a6a7599.png?width=220&amp;format=png&amp;optimize=medium" alt="Jackson Koivun" />
+
+        <div class="roster-name">Jackson Koivun</div>
+
+        <div class="roster-sg">1.29 μ SG</div>
+
+      </div><div class="roster-card usa">
+
+        <img src="https://www.presidentscup.com/media_13428103d025ec48c6186817cef5c95f989e4bc73.png?width=220&amp;format=png&amp;optimize=medium" alt="Justin Thomas" />
+
+        <div class="roster-name">Justin Thomas</div>
+
+        <div class="roster-sg">1.25 μ SG</div>
+
+      </div><div class="roster-card usa">
+
+        <img src="https://www.presidentscup.com/media_125045bc98a34353fec6969fd2db2ba3451ac7f09.png?width=220&amp;format=png&amp;optimize=medium" alt="Wyndham Clark" />
+
+        <div class="roster-name">Wyndham Clark</div>
+
+        <div class="roster-sg">1.24 μ SG</div>
+
+      </div><div class="roster-card usa">
+
+        <img src="https://www.presidentscup.com/media_18c97fbb7926a61a7a69bab358e5aff5b7e873049.png?width=220&amp;format=png&amp;optimize=medium" alt="Russell Henley" />
+
+        <div class="roster-name">Russell Henley</div>
+
+        <div class="roster-sg">1.09 μ SG</div>
+
+      </div></div>
+
+  </div><div class="roster-panel int">
+
+    <div class="roster-head">
+
+      <img class="team-badge" src="https://www.presidentscup.com/media_1dfaefda33b4a39db3e2def94c5813bde8ea8afac.png?width=400&amp;format=png&amp;optimize=medium" alt="" />
+
+      <div><div class="roster-title">International Team</div><div class="roster-sub">12 players</div></div>
+
+    </div>
+
+    <div class="roster-grid"><div class="roster-card int">
+
+        <img src="https://www.presidentscup.com/media_15019d5e51bea1b760e93edb8143e47281ea282e7.png?width=220&amp;format=png&amp;optimize=medium" alt="Si Woo Kim" />
+
+        <div class="roster-name">Si Woo Kim</div>
+
+        <div class="roster-sg">1.58 μ SG</div>
+
+      </div><div class="roster-card int">
+
+        <img src="https://www.presidentscup.com/media_164665a3a02ff61537e0f37592c0a0dead664b103.png?width=220&amp;format=png&amp;optimize=medium" alt="Tom Kim" />
+
+        <div class="roster-name">Tom Kim</div>
+
+        <div class="roster-sg">1.45 μ SG</div>
+
+      </div><div class="roster-card int">
+
+        <img src="https://www.presidentscup.com/media_196c0152dab120091bc98bc927ae2cc9c6465c190.png?width=220&amp;format=png&amp;optimize=medium" alt="Adam Scott" />
+
+        <div class="roster-name">Adam Scott</div>
+
+        <div class="roster-sg">1.40 μ SG</div>
+
+      </div><div class="roster-card int">
+
+        <img src="https://www.presidentscup.com/media_14ee88e30bc2aa3cffd901f39dadcc7bbf0a48f81.png?width=220&amp;format=png&amp;optimize=medium" alt="Hideki Matsuyama" />
+
+        <div class="roster-name">Hideki Matsuyama</div>
+
+        <div class="roster-sg">1.33 μ SG</div>
+
+      </div><div class="roster-card int">
+
+        <img src="https://www.presidentscup.com/media_1b7bb4e00727962fea441d8328ce822d8dbe7ca39.png?width=220&amp;format=png&amp;optimize=medium" alt="Min Woo Lee" />
+
+        <div class="roster-name">Min Woo Lee</div>
+
+        <div class="roster-sg">1.29 μ SG</div>
+
+      </div><div class="roster-card int">
+
+        <img src="https://www.presidentscup.com/media_1d8a4c84669f91374346cdb6046228b08a4320c19.png?width=220&amp;format=png&amp;optimize=medium" alt="Ryo Hisatsune" />
+
+        <div class="roster-name">Ryo Hisatsune</div>
+
+        <div class="roster-sg">1.01 μ SG</div>
+
+      </div><div class="roster-card int">
+
+        <img src="https://www.presidentscup.com/media_1abb45abac74bbf71cf7a78cb88e90d168cbb34ed.png?width=220&amp;format=png&amp;optimize=medium" alt="Corey Conners" />
+
+        <div class="roster-name">Corey Conners</div>
+
+        <div class="roster-sg">0.95 μ SG</div>
+
+      </div><div class="roster-card int">
+
+        <img src="https://www.presidentscup.com/media_171201ade4a49870b63a91ec0e516ae9766da7db6.png?width=220&amp;format=png&amp;optimize=medium" alt="Sungjae Im" />
+
+        <div class="roster-name">Sungjae Im</div>
+
+        <div class="roster-sg">0.84 μ SG</div>
+
+      </div><div class="roster-card int">
+
+        <img src="https://www.presidentscup.com/media_14e8ab87c91dd32770f5ca4bc4fe98cb731cfdd8d.png?width=220&amp;format=png&amp;optimize=medium" alt="Ryan Fox" />
+
+        <div class="roster-name">Ryan Fox</div>
+
+        <div class="roster-sg">0.59 μ SG</div>
+
+      </div><div class="roster-card int">
+
+        <img src="https://www.presidentscup.com/media_10d3070affab20175ad5d6abc6ae2d0ae68972bad.png?width=220&amp;format=png&amp;optimize=medium" alt="Nick Taylor" />
+
+        <div class="roster-name">Nick Taylor</div>
+
+        <div class="roster-sg">0.46 μ SG</div>
+
+      </div><div class="roster-card int">
+
+        <img src="https://www.presidentscup.com/media_184588751fabc0839d23e6b581be1bf924bc7d79b.png?width=220&amp;format=png&amp;optimize=medium" alt="Christiaan Bezuidenhout" />
+
+        <div class="roster-name">Christiaan Bezuidenhout</div>
+
+        <div class="roster-sg">0.25 μ SG</div>
+
+      </div><div class="roster-card int">
+
+        <img src="https://www.presidentscup.com/media_17280a6d6b2a9cd7621b67187b66dd852673f3092.png?width=220&amp;format=png&amp;optimize=medium" alt="Nico Echavarria" />
+
+        <div class="roster-name">Nico Echavarria</div>
+
+        <div class="roster-sg">-0.34 μ SG</div>
+
+      </div></div>
+
+  </div></div>
+
+
+
+    <div class="page-break"></div>
+
+    <h2>Team Ability Rankings</h2>
+
+    <table>
+
+      <thead><tr><th>Player</th><th>Team</th><th class="num">μ SG / round</th></tr></thead>
+
+      <tbody><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_1fda73d8d1c4115eff80b0c1ab3b59d6e38af89f1.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Scottie Scheffler</span></div></td>
+
+        <td><span class="team-tag tag-usa">USA</span></td>
+
+        <td class="num">3.077</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_191f153971c41f0934f9eb4eeb09f3355d678c28d.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Chris Gotterup</span></div></td>
+
+        <td><span class="team-tag tag-usa">USA</span></td>
+
+        <td class="num">2.048</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_141835fb563cb8a0011fadfd90ca0f9f24d5d6fd5.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Xander Schauffele</span></div></td>
+
+        <td><span class="team-tag tag-usa">USA</span></td>
+
+        <td class="num">1.785</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_15a70a45965267545d13365eb00e2d84e19520fdc.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Cameron Young</span></div></td>
+
+        <td><span class="team-tag tag-usa">USA</span></td>
+
+        <td class="num">1.746</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_1f878d4b8a3ad38aa7dd04bc7f67fd359f1abeaa6.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Sam Burns</span></div></td>
+
+        <td><span class="team-tag tag-usa">USA</span></td>
+
+        <td class="num">1.674</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_109b0faa61c3b06408090c5769ceb88970ec5dd88.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Patrick Cantlay</span></div></td>
+
+        <td><span class="team-tag tag-usa">USA</span></td>
+
+        <td class="num">1.595</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_15020cd0e2b08e8d853cc622f1af27cd78b67ca27.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Collin Morikawa</span></div></td>
+
+        <td><span class="team-tag tag-usa">USA</span></td>
+
+        <td class="num">1.584</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_15019d5e51bea1b760e93edb8143e47281ea282e7.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Si Woo Kim</span></div></td>
+
+        <td><span class="team-tag tag-int">INT</span></td>
+
+        <td class="num">1.579</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_164665a3a02ff61537e0f37592c0a0dead664b103.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Tom Kim</span></div></td>
+
+        <td><span class="team-tag tag-int">INT</span></td>
+
+        <td class="num">1.445</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_196c0152dab120091bc98bc927ae2cc9c6465c190.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Adam Scott</span></div></td>
+
+        <td><span class="team-tag tag-int">INT</span></td>
+
+        <td class="num">1.401</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_1b40f79a0917c61a7e5fb897b9c14102bdedbb4c2.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Jacob Bridgeman</span></div></td>
+
+        <td><span class="team-tag tag-usa">USA</span></td>
+
+        <td class="num">1.388</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_14ee88e30bc2aa3cffd901f39dadcc7bbf0a48f81.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Hideki Matsuyama</span></div></td>
+
+        <td><span class="team-tag tag-int">INT</span></td>
+
+        <td class="num">1.326</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_1b7bb4e00727962fea441d8328ce822d8dbe7ca39.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Min Woo Lee</span></div></td>
+
+        <td><span class="team-tag tag-int">INT</span></td>
+
+        <td class="num">1.292</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_19983ab5a85c6c2a26f3f3b2d1bdedd7d2a6a7599.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Jackson Koivun</span></div></td>
+
+        <td><span class="team-tag tag-usa">USA</span></td>
+
+        <td class="num">1.288</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_13428103d025ec48c6186817cef5c95f989e4bc73.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Justin Thomas</span></div></td>
+
+        <td><span class="team-tag tag-usa">USA</span></td>
+
+        <td class="num">1.255</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_125045bc98a34353fec6969fd2db2ba3451ac7f09.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Wyndham Clark</span></div></td>
+
+        <td><span class="team-tag tag-usa">USA</span></td>
+
+        <td class="num">1.243</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_18c97fbb7926a61a7a69bab358e5aff5b7e873049.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Russell Henley</span></div></td>
+
+        <td><span class="team-tag tag-usa">USA</span></td>
+
+        <td class="num">1.094</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_1d8a4c84669f91374346cdb6046228b08a4320c19.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Ryo Hisatsune</span></div></td>
+
+        <td><span class="team-tag tag-int">INT</span></td>
+
+        <td class="num">1.007</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_1abb45abac74bbf71cf7a78cb88e90d168cbb34ed.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Corey Conners</span></div></td>
+
+        <td><span class="team-tag tag-int">INT</span></td>
+
+        <td class="num">0.954</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_171201ade4a49870b63a91ec0e516ae9766da7db6.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Sungjae Im</span></div></td>
+
+        <td><span class="team-tag tag-int">INT</span></td>
+
+        <td class="num">0.836</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_14e8ab87c91dd32770f5ca4bc4fe98cb731cfdd8d.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Ryan Fox</span></div></td>
+
+        <td><span class="team-tag tag-int">INT</span></td>
+
+        <td class="num">0.589</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_10d3070affab20175ad5d6abc6ae2d0ae68972bad.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Nick Taylor</span></div></td>
+
+        <td><span class="team-tag tag-int">INT</span></td>
+
+        <td class="num">0.464</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_184588751fabc0839d23e6b581be1bf924bc7d79b.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Christiaan Bezuidenhout</span></div></td>
+
+        <td><span class="team-tag tag-int">INT</span></td>
+
+        <td class="num">0.253</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_17280a6d6b2a9cd7621b67187b66dd852673f3092.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Nico Echavarria</span></div></td>
+
+        <td><span class="team-tag tag-int">INT</span></td>
+
+        <td class="num">-0.339</td>
+
+      </tr></tbody>
+
+    </table>
+
+
+
+    <h2>Session Win Probabilities</h2>
+
+    <table>
+
+      <thead><tr><th>Session</th><th class="num">USA</th><th class="num">International</th><th class="num">Tie</th></tr></thead>
+
+      <tbody><tr><td>Friday — Foursomes</td><td class="num usa-num">48.2%</td><td class="num int-num">37.5%</td><td class="num">14.3%</td></tr><tr><td>Friday — Fourball</td><td class="num usa-num">49.8%</td><td class="num int-num">36.1%</td><td class="num">14.2%</td></tr><tr><td>Saturday — Foursomes</td><td class="num usa-num">48.9%</td><td class="num int-num">38.3%</td><td class="num">12.8%</td></tr><tr><td>Saturday — Fourball</td><td class="num usa-num">49.7%</td><td class="num int-num">36.0%</td><td class="num">14.4%</td></tr><tr><td>Sunday — Singles</td><td class="num usa-num">51.4%</td><td class="num int-num">36.3%</td><td class="num">12.3%</td></tr></tbody>
+
+    </table>
+
+
+
+    <h2>Top Cup Point Scorers</h2>
+
+    <table>
+
+      <thead><tr><th>Player</th><th>Team</th><th class="num">E[pts]</th><th class="num">Top scorer</th><th class="num">O 2.5 pts</th></tr></thead>
+
+      <tbody><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_1fda73d8d1c4115eff80b0c1ab3b59d6e38af89f1.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Scottie Scheffler</span></div></td>
+
+        <td><span class="team-tag tag-usa">USA</span></td>
+
+        <td class="num">2.66</td>
+
+        <td class="num">9.2%</td>
+
+        <td class="num">49.2%</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_191f153971c41f0934f9eb4eeb09f3355d678c28d.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Chris Gotterup</span></div></td>
+
+        <td><span class="team-tag tag-usa">USA</span></td>
+
+        <td class="num">2.50</td>
+
+        <td class="num">6.9%</td>
+
+        <td class="num">43.2%</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_141835fb563cb8a0011fadfd90ca0f9f24d5d6fd5.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Xander Schauffele</span></div></td>
+
+        <td><span class="team-tag tag-usa">USA</span></td>
+
+        <td class="num">2.45</td>
+
+        <td class="num">6.1%</td>
+
+        <td class="num">41.8%</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_1f878d4b8a3ad38aa7dd04bc7f67fd359f1abeaa6.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Sam Burns</span></div></td>
+
+        <td><span class="team-tag tag-usa">USA</span></td>
+
+        <td class="num">2.44</td>
+
+        <td class="num">6.0%</td>
+
+        <td class="num">40.9%</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_15a70a45965267545d13365eb00e2d84e19520fdc.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Cameron Young</span></div></td>
+
+        <td><span class="team-tag tag-usa">USA</span></td>
+
+        <td class="num">2.42</td>
+
+        <td class="num">5.8%</td>
+
+        <td class="num">40.0%</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_15020cd0e2b08e8d853cc622f1af27cd78b67ca27.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Collin Morikawa</span></div></td>
+
+        <td><span class="team-tag tag-usa">USA</span></td>
+
+        <td class="num">2.35</td>
+
+        <td class="num">5.1%</td>
+
+        <td class="num">37.2%</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_15019d5e51bea1b760e93edb8143e47281ea282e7.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Si Woo Kim</span></div></td>
+
+        <td><span class="team-tag tag-int">INT</span></td>
+
+        <td class="num">2.33</td>
+
+        <td class="num">5.4%</td>
+
+        <td class="num">36.7%</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_109b0faa61c3b06408090c5769ceb88970ec5dd88.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Patrick Cantlay</span></div></td>
+
+        <td><span class="team-tag tag-usa">USA</span></td>
+
+        <td class="num">2.32</td>
+
+        <td class="num">5.0%</td>
+
+        <td class="num">36.0%</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_164665a3a02ff61537e0f37592c0a0dead664b103.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Tom Kim</span></div></td>
+
+        <td><span class="team-tag tag-int">INT</span></td>
+
+        <td class="num">2.30</td>
+
+        <td class="num">5.1%</td>
+
+        <td class="num">35.4%</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_1b40f79a0917c61a7e5fb897b9c14102bdedbb4c2.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Jacob Bridgeman</span></div></td>
+
+        <td><span class="team-tag tag-usa">USA</span></td>
+
+        <td class="num">2.23</td>
+
+        <td class="num">4.4%</td>
+
+        <td class="num">33.3%</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_14ee88e30bc2aa3cffd901f39dadcc7bbf0a48f81.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Hideki Matsuyama</span></div></td>
+
+        <td><span class="team-tag tag-int">INT</span></td>
+
+        <td class="num">2.21</td>
+
+        <td class="num">4.1%</td>
+
+        <td class="num">32.8%</td>
+
+      </tr><tr>
+
+        <td><div class="player-cell"><img class="headshot" src="https://www.presidentscup.com/media_196c0152dab120091bc98bc927ae2cc9c6465c190.png?width=220&amp;format=png&amp;optimize=medium" alt="" /><span>Adam Scott</span></div></td>
+
+        <td><span class="team-tag tag-int">INT</span></td>
+
+        <td class="num">2.20</td>
+
+        <td class="num">4.3%</td>
+
+        <td class="num">31.8%</td>
+
+      </tr></tbody>
+
+    </table>
+
+
+
+    <h2>Most Likely Final Scorelines</h2>
+
+    <table>
+
+      <thead><tr><th>USA–INT points</th><th class="num">Probability</th></tr></thead>
+
+      <tbody><tr><td>17-16</td><td class="num">7.72%</td></tr><tr><td>18-15</td><td class="num">7.32%</td></tr><tr><td>17-15</td><td class="num">7.05%</td></tr><tr><td>16-16</td><td class="num">7.01%</td></tr><tr><td>19-14</td><td class="num">6.63%</td></tr><tr><td>18-14</td><td class="num">6.60%</td></tr><tr><td>16-17</td><td class="num">6.54%</td></tr><tr><td>15-17</td><td class="num">5.75%</td></tr><tr><td>19-13</td><td class="num">5.61%</td></tr><tr><td>20-13</td><td class="num">5.03%</td></tr><tr><td>15-18</td><td class="num">4.64%</td></tr><tr><td>14-18</td><td class="num">4.49%</td></tr><tr><td>20-12</td><td class="num">4.44%</td></tr><tr><td>14-19</td><td class="num">3.06%</td></tr><tr><td>21-12</td><td class="num">2.61%</td></tr></tbody>
+
+    </table>
+
+
+
+    <div class="page-break"></div>
+
+    <h2>Model vs Book — All Priced Markets</h2>
+
+    <table>
+
+      <thead><tr>
+
+        <th>Market</th><th>Selection</th>
+
+        <th class="num">Model %</th><th class="num">Model</th>
+
+        <th class="num">DK</th><th class="num">Edge</th><th class="num">EV/u</th>
+
+      </tr></thead>
+
+      <tbody><tr>
+
+        <td>Cup Winner</td>
+
+        <td>USA</td>
+
+        <td class="num">64.0%</td>
+
+        <td class="num">-178</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Winner</td>
+
+        <td>International</td>
+
+        <td class="num">32.5%</td>
+
+        <td class="num">+207</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Result</td>
+
+        <td>Tie (USA retains)</td>
+
+        <td class="num">7.0%</td>
+
+        <td class="num">+1326</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Result</td>
+
+        <td>Tie</td>
+
+        <td class="num">7.0%</td>
+
+        <td class="num">+1326</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Session Winner — fri_foursomes</td>
+
+        <td>USA</td>
+
+        <td class="num">48.2%</td>
+
+        <td class="num">+107</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Session Winner — fri_foursomes</td>
+
+        <td>International</td>
+
+        <td class="num">37.5%</td>
+
+        <td class="num">+167</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Session Winner — fri_fourball</td>
+
+        <td>USA</td>
+
+        <td class="num">49.8%</td>
+
+        <td class="num">+101</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Session Winner — fri_fourball</td>
+
+        <td>International</td>
+
+        <td class="num">36.1%</td>
+
+        <td class="num">+177</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Session Winner — sat_foursomes</td>
+
+        <td>USA</td>
+
+        <td class="num">48.9%</td>
+
+        <td class="num">+104</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Session Winner — sat_foursomes</td>
+
+        <td>International</td>
+
+        <td class="num">38.3%</td>
+
+        <td class="num">+161</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Session Winner — sat_fourball</td>
+
+        <td>USA</td>
+
+        <td class="num">49.7%</td>
+
+        <td class="num">+101</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Session Winner — sat_fourball</td>
+
+        <td>International</td>
+
+        <td class="num">36.0%</td>
+
+        <td class="num">+178</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Session Winner — sun_singles</td>
+
+        <td>USA</td>
+
+        <td class="num">51.4%</td>
+
+        <td class="num">-106</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Session Winner — sun_singles</td>
+
+        <td>International</td>
+
+        <td class="num">36.3%</td>
+
+        <td class="num">+175</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Top Cup Points Scorer</td>
+
+        <td>Scheffler, Scottie</td>
+
+        <td class="num">9.2%</td>
+
+        <td class="num">+989</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 2.5</td>
+
+        <td>Scheffler, Scottie Over 2.5</td>
+
+        <td class="num">49.2%</td>
+
+        <td class="num">+103</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 2.5</td>
+
+        <td>Scheffler, Scottie Under 2.5</td>
+
+        <td class="num">50.8%</td>
+
+        <td class="num">-103</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 3.5</td>
+
+        <td>Scheffler, Scottie Over 3.5</td>
+
+        <td class="num">17.7%</td>
+
+        <td class="num">+465</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 3.5</td>
+
+        <td>Scheffler, Scottie Under 3.5</td>
+
+        <td class="num">82.3%</td>
+
+        <td class="num">-465</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Top Cup Points Scorer</td>
+
+        <td>Gotterup, Chris</td>
+
+        <td class="num">6.9%</td>
+
+        <td class="num">+1357</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 2.5</td>
+
+        <td>Gotterup, Chris Over 2.5</td>
+
+        <td class="num">43.2%</td>
+
+        <td class="num">+132</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 2.5</td>
+
+        <td>Gotterup, Chris Under 2.5</td>
+
+        <td class="num">56.8%</td>
+
+        <td class="num">-132</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 3.5</td>
+
+        <td>Gotterup, Chris Over 3.5</td>
+
+        <td class="num">13.7%</td>
+
+        <td class="num">+630</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 3.5</td>
+
+        <td>Gotterup, Chris Under 3.5</td>
+
+        <td class="num">86.3%</td>
+
+        <td class="num">-630</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Top Cup Points Scorer</td>
+
+        <td>Schauffele, Xander</td>
+
+        <td class="num">6.1%</td>
+
+        <td class="num">+1546</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 2.5</td>
+
+        <td>Schauffele, Xander Over 2.5</td>
+
+        <td class="num">41.8%</td>
+
+        <td class="num">+139</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 2.5</td>
+
+        <td>Schauffele, Xander Under 2.5</td>
+
+        <td class="num">58.2%</td>
+
+        <td class="num">-139</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 3.5</td>
+
+        <td>Schauffele, Xander Over 3.5</td>
+
+        <td class="num">12.6%</td>
+
+        <td class="num">+696</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 3.5</td>
+
+        <td>Schauffele, Xander Under 3.5</td>
+
+        <td class="num">87.4%</td>
+
+        <td class="num">-696</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Top Cup Points Scorer</td>
+
+        <td>Burns, Sam</td>
+
+        <td class="num">6.0%</td>
+
+        <td class="num">+1576</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 2.5</td>
+
+        <td>Burns, Sam Over 2.5</td>
+
+        <td class="num">40.9%</td>
+
+        <td class="num">+144</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 2.5</td>
+
+        <td>Burns, Sam Under 2.5</td>
+
+        <td class="num">59.1%</td>
+
+        <td class="num">-144</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 3.5</td>
+
+        <td>Burns, Sam Over 3.5</td>
+
+        <td class="num">12.3%</td>
+
+        <td class="num">+712</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 3.5</td>
+
+        <td>Burns, Sam Under 3.5</td>
+
+        <td class="num">87.7%</td>
+
+        <td class="num">-712</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Top Cup Points Scorer</td>
+
+        <td>Young, Cameron</td>
+
+        <td class="num">5.8%</td>
+
+        <td class="num">+1624</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 2.5</td>
+
+        <td>Young, Cameron Over 2.5</td>
+
+        <td class="num">40.0%</td>
+
+        <td class="num">+150</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 2.5</td>
+
+        <td>Young, Cameron Under 2.5</td>
+
+        <td class="num">60.0%</td>
+
+        <td class="num">-150</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 3.5</td>
+
+        <td>Young, Cameron Over 3.5</td>
+
+        <td class="num">12.0%</td>
+
+        <td class="num">+731</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 3.5</td>
+
+        <td>Young, Cameron Under 3.5</td>
+
+        <td class="num">88.0%</td>
+
+        <td class="num">-731</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Top Cup Points Scorer</td>
+
+        <td>Morikawa, Collin</td>
+
+        <td class="num">5.1%</td>
+
+        <td class="num">+1851</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 2.5</td>
+
+        <td>Morikawa, Collin Over 2.5</td>
+
+        <td class="num">37.2%</td>
+
+        <td class="num">+169</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 2.5</td>
+
+        <td>Morikawa, Collin Under 2.5</td>
+
+        <td class="num">62.8%</td>
+
+        <td class="num">-169</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 3.5</td>
+
+        <td>Morikawa, Collin Over 3.5</td>
+
+        <td class="num">10.8%</td>
+
+        <td class="num">+828</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 3.5</td>
+
+        <td>Morikawa, Collin Under 3.5</td>
+
+        <td class="num">89.2%</td>
+
+        <td class="num">-828</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Top Cup Points Scorer</td>
+
+        <td>Kim, Si Woo</td>
+
+        <td class="num">5.4%</td>
+
+        <td class="num">+1760</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 2.5</td>
+
+        <td>Kim, Si Woo Over 2.5</td>
+
+        <td class="num">36.7%</td>
+
+        <td class="num">+173</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 2.5</td>
+
+        <td>Kim, Si Woo Under 2.5</td>
+
+        <td class="num">63.3%</td>
+
+        <td class="num">-173</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 3.5</td>
+
+        <td>Kim, Si Woo Over 3.5</td>
+
+        <td class="num">10.5%</td>
+
+        <td class="num">+852</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 3.5</td>
+
+        <td>Kim, Si Woo Under 3.5</td>
+
+        <td class="num">89.5%</td>
+
+        <td class="num">-852</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Top Cup Points Scorer</td>
+
+        <td>Cantlay, Patrick</td>
+
+        <td class="num">5.0%</td>
+
+        <td class="num">+1905</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 2.5</td>
+
+        <td>Cantlay, Patrick Over 2.5</td>
+
+        <td class="num">36.0%</td>
+
+        <td class="num">+178</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 2.5</td>
+
+        <td>Cantlay, Patrick Under 2.5</td>
+
+        <td class="num">64.0%</td>
+
+        <td class="num">-178</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 3.5</td>
+
+        <td>Cantlay, Patrick Over 3.5</td>
+
+        <td class="num">10.6%</td>
+
+        <td class="num">+842</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Cup Points O/U 3.5</td>
+
+        <td>Cantlay, Patrick Under 3.5</td>
+
+        <td class="num">89.4%</td>
+
+        <td class="num">-842</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr><tr>
+
+        <td>Top Cup Points Scorer</td>
+
+        <td>Kim, Tom</td>
+
+        <td class="num">5.1%</td>
+
+        <td class="num">+1845</td>
+
+        <td class="num">—</td>
+
+        <td class="num ">—</td>
+
+        <td class="num">—</td>
+
+      </tr></tbody>
+
+    </table>
+
+  </div>
+
+
+
+  <div class="footer">
+
+    Alpha Caddie match-play model · Inspired by <a href="https://www.presidentscup.com/">Presidents Cup</a> official branding · Not affiliated with PGA Tour, DataGolf, or DraftKings.<br/>
+
+    Player imagery &amp; team badges sourced from <a href="https://www.presidentscup.com/">presidentscup.com</a> · DK:  (0 lines)
+
+  </div>
+
+</body>
+
+</html>

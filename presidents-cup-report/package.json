@@ -1,0 +1,12 @@
+{
+  "name": "presidents-cup-report",
+  "private": true,
+  "type": "module",
+  "description": "Presidents Cup match-play Monte Carlo model + DK edge PDF (standalone)",
+  "scripts": {
+    "serve": "node serve.mjs",
+    "serve:fast": "node serve.mjs --fast",
+    "report": "node serve.mjs",
+    "report:fast": "node serve.mjs --fast"
+  }
+}

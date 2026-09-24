@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-22T16:28:16.793Z",
+  "updated_at": "2026-09-24T02:28:46.959Z",
   "event_name": "Presidents Cup",
   "round": 1,
   "round_label": "R1 — next Thursday (auto, America/New_York)",
@@ -8,37 +8,1463 @@
       "cards": [],
       "fetchError": "",
       "count": 0,
-      "fetchedAt": "2026-09-22T16:28:16.794Z"
+      "fetchedAt": "2026-09-24T02:28:46.960Z"
     },
     "prizepicks": {
       "cards": [],
       "fetchError": "PrizePicks partner API does not expose per-pick posted odds for standard lines",
       "count": 0,
-      "fetchedAt": "2026-09-22T16:28:16.795Z"
+      "fetchedAt": "2026-09-24T02:28:46.961Z"
     },
     "sleeper": {
-      "cards": [],
+      "cards": [
+        {
+          "cardKey": "sl:1540|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1540",
+          "playerName": "Adrien Saddier",
+          "market": "Birdies",
+          "line": 3.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.56,
+            "display": "1.56x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.07,
+            "display": "2.07x"
+          },
+          "overPayoutMultiplier": 1.56,
+          "underPayoutMultiplier": 2.07,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1540|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1540",
+          "playerName": "Adrien Saddier",
+          "market": "Total score",
+          "line": 70.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.7,
+            "display": "1.7x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.87,
+            "display": "1.87x"
+          },
+          "overPayoutMultiplier": 1.7,
+          "underPayoutMultiplier": 1.87,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1584|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1584",
+          "playerName": "Andy Sullivan",
+          "market": "Birdies",
+          "line": 3.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.49,
+            "display": "1.49x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.18,
+            "display": "2.18x"
+          },
+          "overPayoutMultiplier": 1.49,
+          "underPayoutMultiplier": 2.18,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1584|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1584",
+          "playerName": "Andy Sullivan",
+          "market": "Total score",
+          "line": 70.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.82,
+            "display": "1.82x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.74,
+            "display": "1.74x"
+          },
+          "overPayoutMultiplier": 1.82,
+          "underPayoutMultiplier": 1.74,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1032|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1032",
+          "playerName": "Angel Ayora Fanegas",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.19,
+            "display": "2.19x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.49,
+            "display": "1.49x"
+          },
+          "overPayoutMultiplier": 2.19,
+          "underPayoutMultiplier": 1.49,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1032|Bogeys",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1032",
+          "playerName": "Angel Ayora Fanegas",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.61,
+            "display": "1.61x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.98,
+            "display": "1.98x"
+          },
+          "overPayoutMultiplier": 1.61,
+          "underPayoutMultiplier": 1.98,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1032|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1032",
+          "playerName": "Angel Ayora Fanegas",
+          "market": "Total score",
+          "line": 70.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.9,
+            "display": "1.9x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.68,
+            "display": "1.68x"
+          },
+          "overPayoutMultiplier": 1.9,
+          "underPayoutMultiplier": 1.68,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1357|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1357",
+          "playerName": "Antoine Rozner",
+          "market": "Total score",
+          "line": 70.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.84,
+            "display": "1.84x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.72,
+            "display": "1.72x"
+          },
+          "overPayoutMultiplier": 1.84,
+          "underPayoutMultiplier": 1.72,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1084|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1084",
+          "playerName": "Bud Cauley",
+          "market": "Birdies",
+          "line": 3.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.5,
+            "display": "1.5x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.17,
+            "display": "2.17x"
+          },
+          "overPayoutMultiplier": 1.5,
+          "underPayoutMultiplier": 2.17,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1084|Bogeys",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1084",
+          "playerName": "Bud Cauley",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.76,
+            "display": "1.76x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.8,
+            "display": "1.8x"
+          },
+          "overPayoutMultiplier": 1.76,
+          "underPayoutMultiplier": 1.8,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1440|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1440",
+          "playerName": "Eugenio Lopez-Chacarra",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.06,
+            "display": "2.06x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.56,
+            "display": "1.56x"
+          },
+          "overPayoutMultiplier": 2.06,
+          "underPayoutMultiplier": 1.56,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1440|Bogeys",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1440",
+          "playerName": "Eugenio Lopez-Chacarra",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.75,
+            "display": "1.75x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.81,
+            "display": "1.81x"
+          },
+          "overPayoutMultiplier": 1.75,
+          "underPayoutMultiplier": 1.81,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1440|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1440",
+          "playerName": "Eugenio Lopez-Chacarra",
+          "market": "Total score",
+          "line": 69.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.65,
+            "display": "1.65x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.93,
+            "display": "1.93x"
+          },
+          "overPayoutMultiplier": 1.65,
+          "underPayoutMultiplier": 1.93,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1581|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1581",
+          "playerName": "Ewen Ferguson",
+          "market": "Birdies",
+          "line": 3.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.52,
+            "display": "1.52x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.12,
+            "display": "2.12x"
+          },
+          "overPayoutMultiplier": 1.52,
+          "underPayoutMultiplier": 2.12,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1581|Bogeys",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1581",
+          "playerName": "Ewen Ferguson",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.71,
+            "display": "1.71x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.86,
+            "display": "1.86x"
+          },
+          "overPayoutMultiplier": 1.71,
+          "underPayoutMultiplier": 1.86,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1583|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1583",
+          "playerName": "Francesco Laporta",
+          "market": "Birdies",
+          "line": 3.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.55,
+            "display": "1.55x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.08,
+            "display": "2.08x"
+          },
+          "overPayoutMultiplier": 1.55,
+          "underPayoutMultiplier": 2.08,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1049|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1049",
+          "playerName": "Guido Migliozzi",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.19,
+            "display": "2.19x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.48,
+            "display": "1.48x"
+          },
+          "overPayoutMultiplier": 2.19,
+          "underPayoutMultiplier": 1.48,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1049|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1049",
+          "playerName": "Guido Migliozzi",
+          "market": "Total score",
+          "line": 70.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.83,
+            "display": "1.83x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.73,
+            "display": "1.73x"
+          },
+          "overPayoutMultiplier": 1.83,
+          "underPayoutMultiplier": 1.73,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:2083|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "2083",
+          "playerName": "Jeff Winther",
+          "market": "Birdies",
+          "line": 3.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.5,
+            "display": "1.5x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.17,
+            "display": "2.17x"
+          },
+          "overPayoutMultiplier": 1.5,
+          "underPayoutMultiplier": 2.17,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1597|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1597",
+          "playerName": "Kristoffer Reitan",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.91,
+            "display": "1.91x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.67,
+            "display": "1.67x"
+          },
+          "overPayoutMultiplier": 1.91,
+          "underPayoutMultiplier": 1.67,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1597|Bogeys",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1597",
+          "playerName": "Kristoffer Reitan",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.74,
+            "display": "1.74x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.82,
+            "display": "1.82x"
+          },
+          "overPayoutMultiplier": 1.74,
+          "underPayoutMultiplier": 1.82,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1597|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1597",
+          "playerName": "Kristoffer Reitan",
+          "market": "Total score",
+          "line": 69.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.7,
+            "display": "1.7x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.87,
+            "display": "1.87x"
+          },
+          "overPayoutMultiplier": 1.7,
+          "underPayoutMultiplier": 1.87,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1144|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1144",
+          "playerName": "Ludvig Åberg",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.64,
+            "display": "1.64x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.95,
+            "display": "1.95x"
+          },
+          "overPayoutMultiplier": 1.64,
+          "underPayoutMultiplier": 1.95,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1144|Bogeys",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1144",
+          "playerName": "Ludvig Åberg",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.02,
+            "display": "2.02x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.59,
+            "display": "1.59x"
+          },
+          "overPayoutMultiplier": 2.02,
+          "underPayoutMultiplier": 1.59,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1144|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1144",
+          "playerName": "Ludvig Åberg",
+          "market": "Total score",
+          "line": 68.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.6,
+            "display": "1.6x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.01,
+            "display": "2.01x"
+          },
+          "overPayoutMultiplier": 1.6,
+          "underPayoutMultiplier": 2.01,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1572|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1572",
+          "playerName": "Manuel Elvira",
+          "market": "Birdies",
+          "line": 3.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.51,
+            "display": "1.51x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.14,
+            "display": "2.14x"
+          },
+          "overPayoutMultiplier": 1.51,
+          "underPayoutMultiplier": 2.14,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1572|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1572",
+          "playerName": "Manuel Elvira",
+          "market": "Total score",
+          "line": 70.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.69,
+            "display": "1.69x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.89,
+            "display": "1.89x"
+          },
+          "overPayoutMultiplier": 1.69,
+          "underPayoutMultiplier": 1.89,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1022|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1022",
+          "playerName": "Matt Fitzpatrick",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.78,
+            "display": "1.78x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.78,
+            "display": "1.78x"
+          },
+          "overPayoutMultiplier": 1.78,
+          "underPayoutMultiplier": 1.78,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1022|Bogeys",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1022",
+          "playerName": "Matt Fitzpatrick",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.18,
+            "display": "2.18x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.49,
+            "display": "1.49x"
+          },
+          "overPayoutMultiplier": 2.18,
+          "underPayoutMultiplier": 1.49,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1022|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1022",
+          "playerName": "Matt Fitzpatrick",
+          "market": "Total score",
+          "line": 69.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.01,
+            "display": "2.01x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.6,
+            "display": "1.6x"
+          },
+          "overPayoutMultiplier": 2.01,
+          "underPayoutMultiplier": 1.6,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1550|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1550",
+          "playerName": "Nathan Kimsey",
+          "market": "Birdies",
+          "line": 3.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.67,
+            "display": "1.67x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.91,
+            "display": "1.91x"
+          },
+          "overPayoutMultiplier": 1.67,
+          "underPayoutMultiplier": 1.91,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1550|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1550",
+          "playerName": "Nathan Kimsey",
+          "market": "Total score",
+          "line": 70.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.81,
+            "display": "1.81x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.75,
+            "display": "1.75x"
+          },
+          "overPayoutMultiplier": 1.81,
+          "underPayoutMultiplier": 1.75,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1248|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1248",
+          "playerName": "Romain Langasque",
+          "market": "Birdies",
+          "line": 3.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.59,
+            "display": "1.59x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.02,
+            "display": "2.02x"
+          },
+          "overPayoutMultiplier": 1.59,
+          "underPayoutMultiplier": 2.02,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1248|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1248",
+          "playerName": "Romain Langasque",
+          "market": "Total score",
+          "line": 70.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.72,
+            "display": "1.72x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.84,
+            "display": "1.84x"
+          },
+          "overPayoutMultiplier": 1.72,
+          "underPayoutMultiplier": 1.84,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1204|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1204",
+          "playerName": "Ryan Gerard",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.88,
+            "display": "1.88x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.69,
+            "display": "1.69x"
+          },
+          "overPayoutMultiplier": 1.88,
+          "underPayoutMultiplier": 1.69,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1204|Bogeys",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1204",
+          "playerName": "Ryan Gerard",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.99,
+            "display": "1.99x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.61,
+            "display": "1.61x"
+          },
+          "overPayoutMultiplier": 1.99,
+          "underPayoutMultiplier": 1.61,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1204|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1204",
+          "playerName": "Ryan Gerard",
+          "market": "Total score",
+          "line": 69.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.84,
+            "display": "1.84x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.73,
+            "display": "1.73x"
+          },
+          "overPayoutMultiplier": 1.84,
+          "underPayoutMultiplier": 1.73,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1465|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1465",
+          "playerName": "Sam Bairstow",
+          "market": "Birdies",
+          "line": 3.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.54,
+            "display": "1.54x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.09,
+            "display": "2.09x"
+          },
+          "overPayoutMultiplier": 1.54,
+          "underPayoutMultiplier": 2.09,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1465|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1465",
+          "playerName": "Sam Bairstow",
+          "market": "Total score",
+          "line": 70.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.71,
+            "display": "1.71x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.85,
+            "display": "1.85x"
+          },
+          "overPayoutMultiplier": 1.71,
+          "underPayoutMultiplier": 1.85,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1310|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1310",
+          "playerName": "Thomas Detry",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.09,
+            "display": "2.09x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.54,
+            "display": "1.54x"
+          },
+          "overPayoutMultiplier": 2.09,
+          "underPayoutMultiplier": 1.54,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1310|Bogeys",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1310",
+          "playerName": "Thomas Detry",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.6,
+            "display": "1.6x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2,
+            "display": "2x"
+          },
+          "overPayoutMultiplier": 1.6,
+          "underPayoutMultiplier": 2,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1310|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1310",
+          "playerName": "Thomas Detry",
+          "market": "Total score",
+          "line": 70.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.95,
+            "display": "1.95x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.64,
+            "display": "1.64x"
+          },
+          "overPayoutMultiplier": 1.95,
+          "underPayoutMultiplier": 1.64,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:2831|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "2831",
+          "playerName": "Thomas Pieters",
+          "market": "Birdies",
+          "line": 3.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.49,
+            "display": "1.49x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.19,
+            "display": "2.19x"
+          },
+          "overPayoutMultiplier": 1.49,
+          "underPayoutMultiplier": 2.19,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:2831|Bogeys",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "2831",
+          "playerName": "Thomas Pieters",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.61,
+            "display": "1.61x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.99,
+            "display": "1.99x"
+          },
+          "overPayoutMultiplier": 1.61,
+          "underPayoutMultiplier": 1.99,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:2831|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "2831",
+          "playerName": "Thomas Pieters",
+          "market": "Total score",
+          "line": 70.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.86,
+            "display": "1.86x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.71,
+            "display": "1.71x"
+          },
+          "overPayoutMultiplier": 1.86,
+          "underPayoutMultiplier": 1.71,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1635|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1635",
+          "playerName": "Tom Vaillant",
+          "market": "Birdies",
+          "line": 3.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.66,
+            "display": "1.66x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.92,
+            "display": "1.92x"
+          },
+          "overPayoutMultiplier": 1.66,
+          "underPayoutMultiplier": 1.92,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1635|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1635",
+          "playerName": "Tom Vaillant",
+          "market": "Total score",
+          "line": 70.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.76,
+            "display": "1.76x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.8,
+            "display": "1.8x"
+          },
+          "overPayoutMultiplier": 1.76,
+          "underPayoutMultiplier": 1.8,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1143|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1143",
+          "playerName": "Tommy Fleetwood",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.83,
+            "display": "1.83x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.73,
+            "display": "1.73x"
+          },
+          "overPayoutMultiplier": 1.83,
+          "underPayoutMultiplier": 1.73,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1143|Bogeys",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1143",
+          "playerName": "Tommy Fleetwood",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.31,
+            "display": "2.31x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.43,
+            "display": "1.43x"
+          },
+          "overPayoutMultiplier": 2.31,
+          "underPayoutMultiplier": 1.43,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1143|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1143",
+          "playerName": "Tommy Fleetwood",
+          "market": "Total score",
+          "line": 68.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.59,
+            "display": "1.59x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.02,
+            "display": "2.02x"
+          },
+          "overPayoutMultiplier": 1.59,
+          "underPayoutMultiplier": 2.02,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1598|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1598",
+          "playerName": "Ugo Coussaud",
+          "market": "Birdies",
+          "line": 3.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.56,
+            "display": "1.56x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.07,
+            "display": "2.07x"
+          },
+          "overPayoutMultiplier": 1.56,
+          "underPayoutMultiplier": 2.07,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1598|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1598",
+          "playerName": "Ugo Coussaud",
+          "market": "Total score",
+          "line": 70.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.71,
+            "display": "1.71x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.86,
+            "display": "1.86x"
+          },
+          "overPayoutMultiplier": 1.71,
+          "underPayoutMultiplier": 1.86,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1078|Bogeys",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1078",
+          "playerName": "Victor Perez",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.66,
+            "display": "1.66x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.92,
+            "display": "1.92x"
+          },
+          "overPayoutMultiplier": 1.66,
+          "underPayoutMultiplier": 1.92,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1078|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1078",
+          "playerName": "Victor Perez",
+          "market": "Total score",
+          "line": 70.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.96,
+            "display": "1.96x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.63,
+            "display": "1.63x"
+          },
+          "overPayoutMultiplier": 1.96,
+          "underPayoutMultiplier": 1.63,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1246|Birdies",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1246",
+          "playerName": "Viktor Hovland",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.78,
+            "display": "1.78x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.78,
+            "display": "1.78x"
+          },
+          "overPayoutMultiplier": 1.78,
+          "underPayoutMultiplier": 1.78,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1246|Bogeys",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1246",
+          "playerName": "Viktor Hovland",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.95,
+            "display": "1.95x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.64,
+            "display": "1.64x"
+          },
+          "overPayoutMultiplier": 1.95,
+          "underPayoutMultiplier": 1.64,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        },
+        {
+          "cardKey": "sl:1246|Total Score",
+          "eventName": "Presidents Cup",
+          "round": 1,
+          "dg_id": "1246",
+          "playerName": "Viktor Hovland",
+          "market": "Total score",
+          "line": 69.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.87,
+            "display": "1.87x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.7,
+            "display": "1.7x"
+          },
+          "overPayoutMultiplier": 1.87,
+          "underPayoutMultiplier": 1.7,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": false,
+          "fetchedAt": "2026-09-24T02:28:46.962Z"
+        }
+      ],
       "fetchError": "",
-      "count": 0,
-      "fetchedAt": "2026-09-22T16:28:16.796Z"
+      "count": 57,
+      "fetchedAt": "2026-09-24T02:28:46.962Z"
     },
     "underdog": {
       "cards": [],
       "fetchError": "Underdog API HTTP 426",
       "count": 0,
-      "fetchedAt": "2026-09-22T16:28:23.102Z"
+      "fetchedAt": "2026-09-24T02:28:47.995Z"
     },
     "kalshi": {
       "cards": [],
       "fetchError": "",
       "count": 0,
-      "fetchedAt": "2026-09-22T16:28:23.273Z"
+      "fetchedAt": "2026-09-24T02:28:48.127Z"
     },
     "dk_matchups": {
       "cards": [],
       "fetchError": "",
       "count": 0,
-      "fetchedAt": "2026-09-22T16:28:23.274Z"
+      "fetchedAt": "2026-09-24T02:28:48.130Z"
     }
   }
 }
