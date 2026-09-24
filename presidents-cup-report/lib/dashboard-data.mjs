@@ -102,7 +102,10 @@ function buildDkTabs(dkProps, ctx, manifest) {
   for (const tab of DK_TABS) {
     const tabProps = dkProps.filter((p) => {
       if (p.dk_subcategory !== tab.id) return false;
-      if (tab.id === "outrights" && /^tie$/i.test(String(p.selection || "").trim())) return false;
+      if (tab.id === "outrights") {
+        if (/^tie$/i.test(String(p.selection || "").trim())) return false;
+        if (/lift the trophy/i.test(String(p.market || ""))) return false;
+      }
       return true;
     });
     if (!tabProps.length) continue;

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-24T02:28:46.959Z",
+  "updated_at": "2026-09-24T03:35:47.615Z",
   "event_name": "Presidents Cup",
   "round": 1,
   "round_label": "R1 — next Thursday (auto, America/New_York)",
@@ -8,13 +8,13 @@
       "cards": [],
       "fetchError": "",
       "count": 0,
-      "fetchedAt": "2026-09-24T02:28:46.960Z"
+      "fetchedAt": "2026-09-24T03:35:47.616Z"
     },
     "prizepicks": {
       "cards": [],
       "fetchError": "PrizePicks partner API does not expose per-pick posted odds for standard lines",
       "count": 0,
-      "fetchedAt": "2026-09-24T02:28:46.961Z"
+      "fetchedAt": "2026-09-24T03:35:47.618Z"
     },
     "sleeper": {
       "cards": [
@@ -41,7 +41,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1540|Total Score",
@@ -66,7 +66,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1584|Birdies",
@@ -91,7 +91,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1584|Total Score",
@@ -116,7 +116,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1032|Birdies",
@@ -141,7 +141,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1032|Bogeys",
@@ -166,7 +166,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1032|Total Score",
@@ -178,20 +178,20 @@
           "line": 70.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.9,
-            "display": "1.9x"
+            "raw": 1.89,
+            "display": "1.89x"
           },
           "underBookOdds": {
             "kind": "multiplier",
             "raw": 1.68,
             "display": "1.68x"
           },
-          "overPayoutMultiplier": 1.9,
+          "overPayoutMultiplier": 1.89,
           "underPayoutMultiplier": 1.68,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1357|Total Score",
@@ -203,20 +203,20 @@
           "line": 70.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.84,
-            "display": "1.84x"
+            "raw": 1.85,
+            "display": "1.85x"
           },
           "underBookOdds": {
             "kind": "multiplier",
             "raw": 1.72,
             "display": "1.72x"
           },
-          "overPayoutMultiplier": 1.84,
+          "overPayoutMultiplier": 1.85,
           "underPayoutMultiplier": 1.72,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1084|Birdies",
@@ -241,7 +241,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1084|Bogeys",
@@ -253,20 +253,20 @@
           "line": 2.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.76,
-            "display": "1.76x"
+            "raw": 1.75,
+            "display": "1.75x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 1.8,
-            "display": "1.8x"
+            "raw": 1.81,
+            "display": "1.81x"
           },
-          "overPayoutMultiplier": 1.76,
-          "underPayoutMultiplier": 1.8,
+          "overPayoutMultiplier": 1.75,
+          "underPayoutMultiplier": 1.81,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1440|Birdies",
@@ -291,7 +291,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1440|Bogeys",
@@ -316,7 +316,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1440|Total Score",
@@ -328,20 +328,20 @@
           "line": 69.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.65,
-            "display": "1.65x"
+            "raw": 1.68,
+            "display": "1.68x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 1.93,
-            "display": "1.93x"
+            "raw": 1.89,
+            "display": "1.89x"
           },
-          "overPayoutMultiplier": 1.65,
-          "underPayoutMultiplier": 1.93,
+          "overPayoutMultiplier": 1.68,
+          "underPayoutMultiplier": 1.89,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1581|Birdies",
@@ -366,7 +366,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1581|Bogeys",
@@ -391,7 +391,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1583|Birdies",
@@ -416,7 +416,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1049|Birdies",
@@ -441,7 +441,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1049|Total Score",
@@ -453,20 +453,20 @@
           "line": 70.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.83,
-            "display": "1.83x"
+            "raw": 1.84,
+            "display": "1.84x"
           },
           "underBookOdds": {
             "kind": "multiplier",
             "raw": 1.73,
             "display": "1.73x"
           },
-          "overPayoutMultiplier": 1.83,
+          "overPayoutMultiplier": 1.84,
           "underPayoutMultiplier": 1.73,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:2083|Birdies",
@@ -483,15 +483,15 @@
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 2.17,
-            "display": "2.17x"
+            "raw": 2.16,
+            "display": "2.16x"
           },
           "overPayoutMultiplier": 1.5,
-          "underPayoutMultiplier": 2.17,
+          "underPayoutMultiplier": 2.16,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1597|Birdies",
@@ -516,7 +516,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1597|Bogeys",
@@ -541,7 +541,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1597|Total Score",
@@ -566,7 +566,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1144|Birdies",
@@ -591,7 +591,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1144|Bogeys",
@@ -616,7 +616,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1144|Total Score",
@@ -641,7 +641,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1572|Birdies",
@@ -666,7 +666,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1572|Total Score",
@@ -678,20 +678,20 @@
           "line": 70.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.69,
-            "display": "1.69x"
+            "raw": 1.7,
+            "display": "1.7x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 1.89,
-            "display": "1.89x"
+            "raw": 1.87,
+            "display": "1.87x"
           },
-          "overPayoutMultiplier": 1.69,
-          "underPayoutMultiplier": 1.89,
+          "overPayoutMultiplier": 1.7,
+          "underPayoutMultiplier": 1.87,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1022|Birdies",
@@ -716,7 +716,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1022|Bogeys",
@@ -741,7 +741,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1022|Total Score",
@@ -753,20 +753,20 @@
           "line": 69.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 2.01,
-            "display": "2.01x"
+            "raw": 2.02,
+            "display": "2.02x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 1.6,
-            "display": "1.6x"
+            "raw": 1.59,
+            "display": "1.59x"
           },
-          "overPayoutMultiplier": 2.01,
-          "underPayoutMultiplier": 1.6,
+          "overPayoutMultiplier": 2.02,
+          "underPayoutMultiplier": 1.59,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1550|Birdies",
@@ -791,7 +791,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1550|Total Score",
@@ -816,7 +816,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1248|Birdies",
@@ -841,7 +841,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1248|Total Score",
@@ -866,7 +866,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1204|Birdies",
@@ -891,7 +891,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1204|Bogeys",
@@ -903,20 +903,20 @@
           "line": 2.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.99,
-            "display": "1.99x"
+            "raw": 1.98,
+            "display": "1.98x"
           },
           "underBookOdds": {
             "kind": "multiplier",
             "raw": 1.61,
             "display": "1.61x"
           },
-          "overPayoutMultiplier": 1.99,
+          "overPayoutMultiplier": 1.98,
           "underPayoutMultiplier": 1.61,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1204|Total Score",
@@ -928,20 +928,20 @@
           "line": 69.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.84,
-            "display": "1.84x"
+            "raw": 1.85,
+            "display": "1.85x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 1.73,
-            "display": "1.73x"
+            "raw": 1.72,
+            "display": "1.72x"
           },
-          "overPayoutMultiplier": 1.84,
-          "underPayoutMultiplier": 1.73,
+          "overPayoutMultiplier": 1.85,
+          "underPayoutMultiplier": 1.72,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1465|Birdies",
@@ -966,7 +966,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1465|Total Score",
@@ -991,7 +991,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1310|Birdies",
@@ -1016,7 +1016,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1310|Bogeys",
@@ -1041,7 +1041,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1310|Total Score",
@@ -1066,7 +1066,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:2831|Birdies",
@@ -1091,7 +1091,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:2831|Bogeys",
@@ -1116,7 +1116,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:2831|Total Score",
@@ -1141,7 +1141,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1635|Birdies",
@@ -1166,7 +1166,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1635|Total Score",
@@ -1191,7 +1191,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1143|Birdies",
@@ -1203,20 +1203,20 @@
           "line": 4.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.83,
-            "display": "1.83x"
+            "raw": 1.84,
+            "display": "1.84x"
           },
           "underBookOdds": {
             "kind": "multiplier",
             "raw": 1.73,
             "display": "1.73x"
           },
-          "overPayoutMultiplier": 1.83,
+          "overPayoutMultiplier": 1.84,
           "underPayoutMultiplier": 1.73,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1143|Bogeys",
@@ -1241,7 +1241,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1143|Total Score",
@@ -1253,20 +1253,20 @@
           "line": 68.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.59,
-            "display": "1.59x"
+            "raw": 1.61,
+            "display": "1.61x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 2.02,
-            "display": "2.02x"
+            "raw": 2,
+            "display": "2x"
           },
-          "overPayoutMultiplier": 1.59,
-          "underPayoutMultiplier": 2.02,
+          "overPayoutMultiplier": 1.61,
+          "underPayoutMultiplier": 2,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1598|Birdies",
@@ -1291,7 +1291,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1598|Total Score",
@@ -1316,7 +1316,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1078|Bogeys",
@@ -1341,7 +1341,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1078|Total Score",
@@ -1353,20 +1353,20 @@
           "line": 70.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.96,
-            "display": "1.96x"
+            "raw": 1.98,
+            "display": "1.98x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 1.63,
-            "display": "1.63x"
+            "raw": 1.62,
+            "display": "1.62x"
           },
-          "overPayoutMultiplier": 1.96,
-          "underPayoutMultiplier": 1.63,
+          "overPayoutMultiplier": 1.98,
+          "underPayoutMultiplier": 1.62,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1246|Birdies",
@@ -1391,7 +1391,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1246|Bogeys",
@@ -1416,7 +1416,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         },
         {
           "cardKey": "sl:1246|Total Score",
@@ -1428,43 +1428,43 @@
           "line": 69.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.87,
-            "display": "1.87x"
+            "raw": 1.88,
+            "display": "1.88x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 1.7,
-            "display": "1.7x"
+            "raw": 1.69,
+            "display": "1.69x"
           },
-          "overPayoutMultiplier": 1.87,
-          "underPayoutMultiplier": 1.7,
+          "overPayoutMultiplier": 1.88,
+          "underPayoutMultiplier": 1.69,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": false,
-          "fetchedAt": "2026-09-24T02:28:46.962Z"
+          "fetchedAt": "2026-09-24T03:35:47.619Z"
         }
       ],
       "fetchError": "",
       "count": 57,
-      "fetchedAt": "2026-09-24T02:28:46.962Z"
+      "fetchedAt": "2026-09-24T03:35:47.619Z"
     },
     "underdog": {
       "cards": [],
       "fetchError": "Underdog API HTTP 426",
       "count": 0,
-      "fetchedAt": "2026-09-24T02:28:47.995Z"
+      "fetchedAt": "2026-09-24T03:35:50.549Z"
     },
     "kalshi": {
       "cards": [],
       "fetchError": "",
       "count": 0,
-      "fetchedAt": "2026-09-24T02:28:48.127Z"
+      "fetchedAt": "2026-09-24T03:35:50.677Z"
     },
     "dk_matchups": {
       "cards": [],
       "fetchError": "",
       "count": 0,
-      "fetchedAt": "2026-09-24T02:28:48.130Z"
+      "fetchedAt": "2026-09-24T03:35:50.680Z"
     }
   }
 }

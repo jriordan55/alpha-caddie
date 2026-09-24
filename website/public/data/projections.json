@@ -9,7 +9,7 @@
   "datagolf_field_current_round": 1,
   "display_round": 1,
   "display_round_label": "R1 — next Thursday (auto, America/New_York)",
-  "updated_at": "2026-09-24T02:28:54Z",
+  "updated_at": "2026-09-24T03:35:58Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -6129,7 +6129,7 @@
   "props": [
     {
       "player_name": "Scheffler, Scottie",
-      "line": 28.5,
+      "line": 27.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -6149,7 +6149,7 @@
     },
     {
       "player_name": "Schauffele, Xander",
-      "line": 29.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -6169,7 +6169,7 @@
     },
     {
       "player_name": "Burns, Sam",
-      "line": 28.5,
+      "line": 27.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -6209,7 +6209,7 @@
     },
     {
       "player_name": "Kim, Tom",
-      "line": 29.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -6249,7 +6249,7 @@
     },
     {
       "player_name": "Lee, Min Woo",
-      "line": 29.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -6259,7 +6259,7 @@
     },
     {
       "player_name": "Koivun, Jackson",
-      "line": 29.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -6339,7 +6339,7 @@
     },
     {
       "player_name": "Taylor, Nick",
-      "line": 29.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -6349,7 +6349,7 @@
     },
     {
       "player_name": "Bezuidenhout, Christiaan",
-      "line": 29.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -10011,7 +10011,7 @@
       "event_name": "Presidents Cup",
       "market": "tournament_matchups",
       "match_list": [],
-      "last_updated": "2026-09-24T02:26:28.557Z",
+      "last_updated": "2026-09-24T03:33:25.712Z",
       "stale_cleared": true,
       "note": "DataGolf still returned Biltmore Championship Asheville; cleared so Odds Screen does not show last week"
     },
@@ -10019,7 +10019,7 @@
       "event_name": "Presidents Cup",
       "market": "round_matchups",
       "match_list": [],
-      "last_updated": "2026-09-24T02:26:28.570Z",
+      "last_updated": "2026-09-24T03:33:25.715Z",
       "stale_cleared": true,
       "note": "DataGolf still returned Biltmore Championship Asheville; cleared so Odds Screen does not show last week"
     },
@@ -10027,23 +10027,23 @@
       "event_name": "Presidents Cup",
       "market": "3_balls",
       "match_list": [],
-      "last_updated": "2026-09-24T02:26:28.571Z",
+      "last_updated": "2026-09-24T03:33:25.715Z",
       "stale_cleared": true,
       "note": "DataGolf still returned Biltmore Championship Asheville; cleared so Odds Screen does not show last week"
     }
   },
-  "book_odds_refreshed_at": "2026-09-24T02:26:28Z",
+  "book_odds_refreshed_at": "2026-09-24T03:33:25Z",
   "dk_round_props_note": "DraftKings has not posted round O/U props for this event yet (round page has no Birdies/Pars/GIR/etc. tabs).",
   "dk_round_ou_not_posted": true,
   "datagolf_live_current_round": 1,
-  "dg_teetimes_merged_at": "2026-09-24T02:28:48Z",
+  "dg_teetimes_merged_at": "2026-09-24T03:35:51Z",
   "forecast_weather_tee_times_merged": 0,
   "score_projection_recipe": "skill_first_club_pool",
   "score_skill_keep": 1,
   "venue_scoring_source": "course_table",
   "projection_counts_weather_baked": false,
   "projection_unified_factors": {
-    "applied_at": "2026-09-24T02:29:13.682Z",
+    "applied_at": "2026-09-24T03:36:22.783Z",
     "weights": {
       "courseTableFit": 0.16,
       "similarCourse": 0.1,
@@ -10083,7 +10083,7 @@
     "reconciled": 96
   },
   "meta": {
-    "datagolf_live_last_update": "2026-09-24T02:25:49.515Z",
+    "datagolf_live_last_update": "2026-09-24T03:32:46.851Z",
     "course_par_18": 72,
     "projection_course_basis": {
       "fairway_holes_modeled": 14,
@@ -10175,6 +10175,5 @@
         "putts": {}
       }
     }
-  },
-  "dk_round_props_refreshed_at": "2026-09-23T22:50:05Z"
+  }
 }

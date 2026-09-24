@@ -218,16 +218,6 @@ function renderCupBar(data) {
     </div>`;
 }
 
-function renderKpis(data) {
-  const top = data.top_scorers[0];
-  const likely = data.score_bands[0];
-  return `
-    <div class="kpi"><div class="lbl">Most likely score</div><div class="val">${likely?.score || "—"}</div></div>
-    <div class="kpi"><div class="lbl">Top scorer (model)</div><div class="val">${top?.name?.split(" ")[0] || "—"}</div></div>
-    <div class="kpi"><div class="lbl">USA μ SG</div><div class="val">${data.cup.usa_skill.toFixed(2)}</div></div>
-    <div class="kpi"><div class="lbl">INT μ SG</div><div class="val">${data.cup.int_skill.toFixed(2)}</div></div>`;
-}
-
 async function init() {
   const root = $("#app");
   root.innerHTML = `<div class="loading">Loading model…</div>`;
@@ -259,7 +249,6 @@ async function init() {
       </header>
 
       <section class="cup-bar">${renderCupBar(data)}</section>
-      <section class="kpi-strip">${renderKpis(data)}</section>
 
       <nav class="tabs" id="tabs"></nav>
       <main class="main" id="panels"></main>`;
@@ -277,12 +266,9 @@ async function init() {
       const panel = document.createElement("div");
       panel.className = `panel${i === 0 ? " active" : ""}`;
       panel.id = `panel-${tab.id}`;
-      const withModel = tab.rows.filter((r) => r.model_pct != null).length;
-      const hint = `${tab.market_count || 0} markets · ${tab.rows.length} lines · ${withModel} modeled`;
-
       const head = document.createElement("div");
       head.className = "panel-head";
-      head.innerHTML = `<h2>${tab.label}</h2><span class="hint">${hint}</span>`;
+      head.innerHTML = `<h2>${tab.label}</h2>`;
       panel.appendChild(head);
       panel.appendChild(renderGroupedTables(tab.rows, data.badges, logos));
       panelsEl.appendChild(panel);
