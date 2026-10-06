@@ -1,31 +1,143 @@
 {
   "data": [],
   "info": {
-    "event_name": "Presidents Cup",
+    "event_name": "Baycurrent Classic",
     "current_round": 1,
-    "last_update": "2026-09-24T03:32:46.851Z",
+    "last_update": "2026-10-06T18:39:31.950Z",
     "pre_event": true,
-    "note": "Awaiting preds/in-play for Presidents Cup (DataGolf still serving \"Biltmore Championship Asheville\")"
+    "note": "Awaiting preds/in-play for Baycurrent Classic (DataGolf still serving \"Bank of Utah Championship\")"
   },
   "field_updates": {
-    "course_name": "Medinah Country Club (No. 3)",
+    "course_name": "Yokohama Country Club (West Course)",
     "current_round": 1,
-    "date_end": "2026-09-27",
-    "date_start": "2026-09-24",
-    "event_id": 500,
-    "event_name": "Presidents Cup",
+    "date_end": "2026-10-11",
+    "date_start": "2026-10-08",
+    "event_id": 527,
+    "event_name": "Baycurrent Classic",
     "field": [
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 19846,
+        "dg_rank": 71,
+        "owgr_rank": 151,
+        "player_name": "Bauchou, Zach",
+        "player_num": 48001,
+        "pre_tourn_pageviews": 265,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 10:46",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 09:40",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "81"
+      },
       {
         "am": 0,
         "country": "RSA",
         "dg_id": 18103,
-        "dg_rank": 75,
-        "owgr_rank": 104,
+        "dg_rank": 74,
+        "owgr_rank": 109,
         "player_name": "Bezuidenhout, Christiaan",
         "player_num": 45522,
-        "pre_tourn_pageviews": 293,
-        "teetimes": [],
+        "pre_tourn_pageviews": 248,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 09:51",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 08:45",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "99"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 13872,
+        "dg_rank": 40,
+        "owgr_rank": 51,
+        "player_name": "Bradley, Keegan",
+        "player_num": 33141,
+        "pre_tourn_pageviews": 327,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 10:35",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 09:29",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "79"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 29197,
+        "dg_rank": 30,
+        "owgr_rank": 33,
+        "player_name": "Brennan, Michael",
+        "player_num": 61522,
+        "pre_tourn_pageviews": 440,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 09:07",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 10:13",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "46"
       },
       {
         "am": 0,
@@ -35,189 +147,1268 @@
         "owgr_rank": 20,
         "player_name": "Bridgeman, Jacob",
         "player_num": 60004,
-        "pre_tourn_pageviews": 543,
-        "teetimes": [],
+        "pre_tourn_pageviews": 398,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 09:29",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 10:35",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "T4"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 19483,
-        "dg_rank": 2,
-        "owgr_rank": 8,
-        "player_name": "Burns, Sam",
-        "player_num": 47504,
-        "pre_tourn_pageviews": 555,
-        "teetimes": [],
-        "tour_rank": "T18"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 15466,
-        "dg_rank": 6,
-        "owgr_rank": 28,
-        "player_name": "Cantlay, Patrick",
-        "player_num": 35450,
-        "pre_tourn_pageviews": 533,
-        "teetimes": [],
-        "tour_rank": "T21"
+        "dg_id": 27819,
+        "dg_rank": 70,
+        "owgr_rank": 83,
+        "player_name": "Castillo, Ricky",
+        "player_num": 59440,
+        "pre_tourn_pageviews": 215,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 09:07",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 10:13",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "61"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 23604,
-        "dg_rank": 10,
+        "dg_rank": 11,
         "owgr_rank": 5,
         "player_name": "Clark, Wyndham",
         "player_num": 51766,
-        "pre_tourn_pageviews": 423,
-        "teetimes": [],
+        "pre_tourn_pageviews": 622,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 10:24",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 09:18",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "T21"
       },
       {
         "am": 0,
-        "country": "CAN",
-        "dg_id": 17576,
-        "dg_rank": 58,
-        "owgr_rank": 55,
-        "player_name": "Conners, Corey",
-        "player_num": 39997,
-        "pre_tourn_pageviews": 329,
-        "teetimes": [],
-        "tour_rank": "60"
+        "country": "USA",
+        "dg_id": 28309,
+        "dg_rank": 135,
+        "owgr_rank": 71,
+        "player_name": "Coody, Pierceson",
+        "player_num": 59836,
+        "pre_tourn_pageviews": 178,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 08:45",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 09:51",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "56"
       },
       {
         "am": 0,
         "country": "COL",
         "dg_id": 22833,
         "dg_rank": 126,
-        "owgr_rank": 61,
+        "owgr_rank": 63,
         "player_name": "Echavarria, Nico",
         "player_num": 51349,
-        "pre_tourn_pageviews": 260,
-        "teetimes": [],
+        "pre_tourn_pageviews": 347,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 09:18",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 10:24",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "45"
       },
       {
         "am": 0,
-        "country": "NZL",
-        "dg_id": 11889,
-        "dg_rank": 53,
-        "owgr_rank": 22,
-        "player_name": "Fox, Ryan",
-        "player_num": 29936,
-        "pre_tourn_pageviews": 361,
-        "teetimes": [],
-        "tour_rank": "26"
+        "country": "USA",
+        "dg_id": 11676,
+        "dg_rank": 228,
+        "owgr_rank": 158,
+        "player_name": "Finau, Tony",
+        "player_num": 29725,
+        "pre_tourn_pageviews": 263,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 10:24",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 09:18",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "104"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 27774,
-        "dg_rank": 12,
-        "owgr_rank": 7,
-        "player_name": "Gotterup, Chris",
-        "player_num": 59095,
-        "pre_tourn_pageviews": 357,
-        "teetimes": [],
-        "tour_rank": "T4"
+        "dg_id": 26657,
+        "dg_rank": 127,
+        "owgr_rank": 75,
+        "player_name": "Fisk, Steven",
+        "player_num": 57123,
+        "pre_tourn_pageviews": 258,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 10:13",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 09:07",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "67"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 14578,
-        "dg_rank": 5,
-        "owgr_rank": 6,
-        "player_name": "Henley, Russell",
-        "player_num": 34098,
-        "pre_tourn_pageviews": 377,
-        "teetimes": [],
-        "tour_rank": "T4"
+        "dg_id": 12965,
+        "dg_rank": 36,
+        "owgr_rank": 48,
+        "player_name": "Fowler, Rickie",
+        "player_num": 32102,
+        "pre_tourn_pageviews": 438,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 10:35",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 09:29",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "33"
+      },
+      {
+        "am": 0,
+        "country": "JPN",
+        "dg_id": 11773,
+        "dg_rank": null,
+        "owgr_rank": 398,
+        "player_name": "Fujimoto, Yoshinori",
+        "player_num": 29833,
+        "pre_tourn_pageviews": 93,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 09:51",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 08:45",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 29767,
+        "dg_rank": 23,
+        "owgr_rank": 23,
+        "player_name": "Gerard, Ryan",
+        "player_num": 59018,
+        "pre_tourn_pageviews": 516,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 10:24",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 09:18",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "3"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 24550,
+        "dg_rank": 35,
+        "owgr_rank": 103,
+        "player_name": "Ghim, Doug",
+        "player_num": 52375,
+        "pre_tourn_pageviews": 704,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 10:46",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 09:40",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "58"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 23465,
+        "dg_rank": 104,
+        "owgr_rank": 95,
+        "player_name": "Greyserman, Max",
+        "player_num": 51977,
+        "pre_tourn_pageviews": 482,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 08:56",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 10:02",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "98"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 8825,
+        "dg_rank": 55,
+        "owgr_rank": 68,
+        "player_name": "Harman, Brian",
+        "player_num": 27644,
+        "pre_tourn_pageviews": 268,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 10:35",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 09:29",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "73"
       },
       {
         "am": 0,
         "country": "JPN",
         "dg_id": 22760,
-        "dg_rank": 84,
-        "owgr_rank": 67,
+        "dg_rank": 89,
+        "owgr_rank": 70,
         "player_name": "Hisatsune, Ryo",
         "player_num": 51287,
-        "pre_tourn_pageviews": 299,
-        "teetimes": [],
+        "pre_tourn_pageviews": 376,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 10:02",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 08:56",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "47"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 25157,
+        "dg_rank": 113,
+        "owgr_rank": 137,
+        "player_name": "Hodges, Lee",
+        "player_num": 54628,
+        "pre_tourn_pageviews": 225,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 10:46",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 09:40",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "103"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 15575,
+        "dg_rank": 194,
+        "owgr_rank": 148,
+        "player_name": "Hoge, Tom",
+        "player_num": 35532,
+        "pre_tourn_pageviews": 177,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 10:35",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 09:29",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "89"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 17538,
+        "dg_rank": 67,
+        "owgr_rank": 78,
+        "player_name": "Homa, Max",
+        "player_num": 39977,
+        "pre_tourn_pageviews": 410,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 10:13",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 09:07",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "52"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 11276,
+        "dg_rank": 83,
+        "owgr_rank": 157,
+        "player_name": "Horschel, Billy",
+        "player_num": 29420,
+        "pre_tourn_pageviews": 314,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 09:07",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 10:13",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "94"
+      },
+      {
+        "am": 0,
+        "country": "JPN",
+        "dg_id": 25797,
+        "dg_rank": 296,
+        "owgr_rank": 266,
+        "player_name": "Hosono, Yusaku",
+        "player_num": 56165,
+        "pre_tourn_pageviews": 113,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 10:02",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 08:56",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 15470,
+        "dg_rank": 107,
+        "owgr_rank": 98,
+        "player_name": "Hossler, Beau",
+        "player_num": 35461,
+        "pre_tourn_pageviews": 182,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 08:45",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 09:51",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "77"
       },
       {
         "am": 0,
         "country": "KOR",
         "dg_id": 17488,
-        "dg_rank": 45,
-        "owgr_rank": 60,
+        "dg_rank": 47,
+        "owgr_rank": 61,
         "player_name": "Im, Sungjae",
         "player_num": 39971,
-        "pre_tourn_pageviews": 326,
-        "teetimes": [],
+        "pre_tourn_pageviews": 535,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 09:18",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 10:24",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "37"
       },
       {
         "am": 0,
-        "country": "KOR",
-        "dg_id": 14609,
-        "dg_rank": 9,
-        "owgr_rank": 14,
-        "player_name": "Kim, Si Woo",
-        "player_num": 37455,
-        "pre_tourn_pageviews": 415,
-        "teetimes": [],
-        "tour_rank": "T14"
+        "country": "JPN",
+        "dg_id": 25538,
+        "dg_rank": null,
+        "owgr_rank": 379,
+        "player_name": "Ishizaka, Tomohiro",
+        "player_num": 55908,
+        "pre_tourn_pageviews": 94,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 10:13",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 09:07",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": null
       },
       {
         "am": 0,
-        "country": "KOR",
-        "dg_id": 24766,
-        "dg_rank": 28,
-        "owgr_rank": 31,
-        "player_name": "Kim, Tom",
-        "player_num": 55182,
-        "pre_tourn_pageviews": 356,
-        "teetimes": [],
-        "tour_rank": "T14"
+        "country": "JPN",
+        "dg_id": 28203,
+        "dg_rank": 435,
+        "owgr_rank": 377,
+        "player_name": "Iwasaki, Aguri",
+        "player_num": 59743,
+        "pre_tourn_pageviews": 94,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 10:02",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 08:56",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "JPN",
+        "dg_id": 9099,
+        "dg_rank": 353,
+        "owgr_rank": 280,
+        "player_name": "Iwata, Hiroshi",
+        "player_num": 27747,
+        "pre_tourn_pageviews": 130,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 09:51",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 08:45",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "GER",
+        "dg_id": 16394,
+        "dg_rank": 139,
+        "owgr_rank": 127,
+        "player_name": "Jaeger, Stephan",
+        "player_num": 36799,
+        "pre_tourn_pageviews": 183,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 09:07",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 10:13",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "85"
+      },
+      {
+        "am": 0,
+        "country": "JPN",
+        "dg_id": 19729,
+        "dg_rank": 173,
+        "owgr_rank": 187,
+        "player_name": "Kanaya, Takumi",
+        "player_num": 47917,
+        "pre_tourn_pageviews": 383,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 09:40",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 10:46",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "142"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 32319,
-        "dg_rank": 22,
-        "owgr_rank": 57,
-        "player_name": "Koivun, Jackson",
-        "player_num": 66701,
-        "pre_tourn_pageviews": 508,
-        "teetimes": [],
-        "tour_rank": "62"
+        "dg_id": 32457,
+        "dg_rank": 68,
+        "owgr_rank": 62,
+        "player_name": "Keefer, Johnny",
+        "player_num": 63454,
+        "pre_tourn_pageviews": 352,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 09:51",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 08:45",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "72"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 17543,
+        "dg_rank": 56,
+        "owgr_rank": 64,
+        "player_name": "Kim, Michael",
+        "player_num": 39975,
+        "pre_tourn_pageviews": 298,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 08:45",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 09:51",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "64"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 21891,
+        "dg_rank": 27,
+        "owgr_rank": 41,
+        "player_name": "Kitayama, Kurt",
+        "player_num": 48117,
+        "pre_tourn_pageviews": 378,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 10:13",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 09:07",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "31"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 16395,
+        "dg_rank": 59,
+        "owgr_rank": 93,
+        "player_name": "Kohles, Ben",
+        "player_num": 36884,
+        "pre_tourn_pageviews": 398,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 08:45",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 09:51",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "84"
+      },
+      {
+        "am": 0,
+        "country": "JPN",
+        "dg_id": 14209,
+        "dg_rank": 311,
+        "owgr_rank": 440,
+        "player_name": "Kozuma, Jinichiro",
+        "player_num": 33689,
+        "pre_tourn_pageviews": 143,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 09:40",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 10:46",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": null
       },
       {
         "am": 0,
         "country": "AUS",
         "dg_id": 16841,
-        "dg_rank": 41,
-        "owgr_rank": 30,
+        "dg_rank": 42,
+        "owgr_rank": 31,
         "player_name": "Lee, Min Woo",
         "player_num": 37378,
-        "pre_tourn_pageviews": 349,
-        "teetimes": [],
+        "pre_tourn_pageviews": 464,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 09:18",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 10:24",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "T4"
+      },
+      {
+        "am": 0,
+        "country": "KOR",
+        "dg_id": 13923,
+        "dg_rank": 273,
+        "owgr_rank": 260,
+        "player_name": "Lee, Sang-hee",
+        "player_num": 33232,
+        "pre_tourn_pageviews": 169,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 08:56",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 10:02",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 15980,
+        "dg_rank": 216,
+        "owgr_rank": 136,
+        "player_name": "Lipsky, David",
+        "player_num": 36326,
+        "pre_tourn_pageviews": 178,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 10:46",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 09:40",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "87"
       },
       {
         "am": 0,
         "country": "JPN",
         "dg_id": 13562,
         "dg_rank": 16,
-        "owgr_rank": 27,
+        "owgr_rank": 26,
         "player_name": "Matsuyama, Hideki",
         "player_num": 32839,
-        "pre_tourn_pageviews": 426,
-        "teetimes": [],
+        "pre_tourn_pageviews": 532,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 10:35",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 09:29",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "T21"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 19870,
+        "dg_rank": 106,
+        "owgr_rank": 104,
+        "player_name": "McCarthy, Denny",
+        "player_num": 47993,
+        "pre_tourn_pageviews": 178,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 08:56",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 10:02",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "93"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 28635,
+        "dg_rank": 103,
+        "owgr_rank": 80,
+        "player_name": "McCarty, Matt",
+        "player_num": 59141,
+        "pre_tourn_pageviews": 273,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 09:07",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 10:13",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "50"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 18634,
+        "dg_rank": 25,
+        "owgr_rank": 49,
+        "player_name": "McNealy, Maverick",
+        "player_num": 46442,
+        "pre_tourn_pageviews": 295,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 09:18",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 10:24",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "42"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 28159,
+        "dg_rank": 84,
+        "owgr_rank": 91,
+        "player_name": "Meissner, Mac",
+        "player_num": 59143,
+        "pre_tourn_pageviews": 162,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 08:56",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 10:02",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "80"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 17365,
+        "dg_rank": 51,
+        "owgr_rank": 76,
+        "player_name": "Mitchell, Keith",
+        "player_num": 39546,
+        "pre_tourn_pageviews": 262,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 08:45",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 09:51",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "53"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 21944,
+        "dg_rank": 192,
+        "owgr_rank": 188,
+        "player_name": "Moore, Taylor",
+        "player_num": 49947,
+        "pre_tourn_pageviews": 181,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 10:02",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 08:56",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "110"
       },
       {
         "am": 0,
@@ -227,9 +1418,338 @@
         "owgr_rank": 11,
         "player_name": "Morikawa, Collin",
         "player_num": 50525,
-        "pre_tourn_pageviews": 433,
-        "teetimes": [],
+        "pre_tourn_pageviews": 676,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 09:29",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 10:35",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "T14"
+      },
+      {
+        "am": 1,
+        "country": "JPN",
+        "dg_id": 31582,
+        "dg_rank": null,
+        "owgr_rank": null,
+        "player_name": "Nagasaki, Koshin",
+        "player_num": 65922,
+        "pre_tourn_pageviews": 53,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 10:46",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 09:40",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "JPN",
+        "dg_id": 21074,
+        "dg_rank": 95,
+        "owgr_rank": 99,
+        "player_name": "Nakajima, Keita",
+        "player_num": 49228,
+        "pre_tourn_pageviews": 266,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 08:56",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 10:02",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "125"
+      },
+      {
+        "am": 0,
+        "country": "DEN",
+        "dg_id": 23841,
+        "dg_rank": 101,
+        "owgr_rank": 77,
+        "player_name": "Neergaard-Petersen, Rasmus",
+        "player_num": 52689,
+        "pre_tourn_pageviews": 208,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 09:51",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 08:45",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "106"
+      },
+      {
+        "am": 0,
+        "country": "ENG",
+        "dg_id": 13764,
+        "dg_rank": 117,
+        "owgr_rank": 106,
+        "player_name": "Parry, John",
+        "player_num": 28723,
+        "pre_tourn_pageviews": 174,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 09:40",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 10:46",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "92"
+      },
+      {
+        "am": 0,
+        "country": "CAN",
+        "dg_id": 17780,
+        "dg_rank": 161,
+        "owgr_rank": 110,
+        "player_name": "Pendrith, Taylor",
+        "player_num": 40250,
+        "pre_tourn_pageviews": 150,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 09:29",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 10:35",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "96"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 27164,
+        "dg_rank": 166,
+        "owgr_rank": 143,
+        "player_name": "Phillips, Chandler",
+        "player_num": 57900,
+        "pre_tourn_pageviews": 147,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 10:02",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 08:56",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "97"
+      },
+      {
+        "am": 0,
+        "country": "RSA",
+        "dg_id": 27900,
+        "dg_rank": 259,
+        "owgr_rank": 94,
+        "player_name": "Potgieter, Aldrich",
+        "player_num": 63343,
+        "pre_tourn_pageviews": 187,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 09:29",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 10:35",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "74"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 14704,
+        "dg_rank": 153,
+        "owgr_rank": 116,
+        "player_name": "Putnam, Andrew",
+        "player_num": 34256,
+        "pre_tourn_pageviews": 159,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 10:46",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 09:40",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "82"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 16283,
+        "dg_rank": 198,
+        "owgr_rank": 125,
+        "player_name": "Rodgers, Patrick",
+        "player_num": 36699,
+        "pre_tourn_pageviews": 144,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 10:02",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 08:56",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "71"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 18424,
+        "dg_rank": 99,
+        "owgr_rank": 113,
+        "player_name": "Roy, Kevin",
+        "player_num": 39335,
+        "pre_tourn_pageviews": 245,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 09:51",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 08:45",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "88"
       },
       {
         "am": 0,
@@ -239,80 +1759,504 @@
         "owgr_rank": 10,
         "player_name": "Schauffele, Xander",
         "player_num": 48081,
-        "pre_tourn_pageviews": 493,
-        "teetimes": [],
+        "pre_tourn_pageviews": 812,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 09:29",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 10:35",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "T14"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 18417,
-        "dg_rank": 1,
-        "owgr_rank": 1,
-        "player_name": "Scheffler, Scottie",
-        "player_num": 46046,
-        "pre_tourn_pageviews": 978,
-        "teetimes": [],
-        "tour_rank": "1"
       },
       {
         "am": 0,
         "country": "AUS",
         "dg_id": 6430,
-        "dg_rank": 23,
+        "dg_rank": 21,
         "owgr_rank": 45,
         "player_name": "Scott, Adam",
         "player_num": 24502,
-        "pre_tourn_pageviews": 620,
-        "teetimes": [],
+        "pre_tourn_pageviews": 468,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 10:24",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 09:18",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "T11"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 18474,
+        "dg_rank": 52,
+        "owgr_rank": 46,
+        "player_name": "Smalley, Alex",
+        "player_num": 46340,
+        "pre_tourn_pageviews": 402,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 09:18",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 10:24",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "27"
+      },
+      {
+        "am": 0,
+        "country": "ENG",
+        "dg_id": 18586,
+        "dg_rank": 72,
+        "owgr_rank": 73,
+        "player_name": "Smith, Jordan",
+        "player_num": 46464,
+        "pre_tourn_pageviews": 256,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 10:13",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 09:07",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "70"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 14636,
+        "dg_rank": 58,
+        "owgr_rank": 60,
+        "player_name": "Spieth, Jordan",
+        "player_num": 34046,
+        "pre_tourn_pageviews": 454,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 09:18",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 10:24",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "55"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 29279,
+        "dg_rank": 73,
+        "owgr_rank": 96,
+        "player_name": "Suber, Jackson",
+        "player_num": 60019,
+        "pre_tourn_pageviews": 315,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 09:40",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 10:46",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "76"
+      },
+      {
+        "am": 0,
+        "country": "JPN",
+        "dg_id": 19682,
+        "dg_rank": null,
+        "owgr_rank": 369,
+        "player_name": "Sunagawa, Kosuke",
+        "player_num": 47889,
+        "pre_tourn_pageviews": 98,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 09:40",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 10:46",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": null
       },
       {
         "am": 0,
         "country": "CAN",
         "dg_id": 13126,
-        "dg_rank": 74,
-        "owgr_rank": 85,
+        "dg_rank": 85,
+        "owgr_rank": 88,
         "player_name": "Taylor, Nick",
         "player_num": 25493,
-        "pre_tourn_pageviews": 220,
-        "teetimes": [],
-        "tour_rank": "65"
+        "pre_tourn_pageviews": 281,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 09:29",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 10:35",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "69"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 23014,
+        "dg_rank": 108,
+        "owgr_rank": 90,
+        "player_name": "Theegala, Sahith",
+        "player_num": 51634,
+        "pre_tourn_pageviews": 254,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 10:13",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 09:07",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "48"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 14139,
         "dg_rank": 26,
-        "owgr_rank": 25,
+        "owgr_rank": 27,
         "player_name": "Thomas, Justin",
         "player_num": 33448,
-        "pre_tourn_pageviews": 721,
-        "teetimes": [],
+        "pre_tourn_pageviews": 501,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 10:24",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 09:18",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "43"
       },
       {
         "am": 0,
         "country": "USA",
-        "dg_id": 26651,
-        "dg_rank": 14,
-        "owgr_rank": 3,
-        "player_name": "Young, Cameron",
-        "player_num": 57366,
-        "pre_tourn_pageviews": 415,
-        "teetimes": [],
-        "tour_rank": "T11"
+        "dg_id": 27364,
+        "dg_rank": 77,
+        "owgr_rank": 130,
+        "player_name": "Thompson, Davis",
+        "player_num": 58168,
+        "pre_tourn_pageviews": 262,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 10:35",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 09:29",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "86"
+      },
+      {
+        "am": 0,
+        "country": "USA",
+        "dg_id": 26649,
+        "dg_rank": 46,
+        "owgr_rank": 40,
+        "player_name": "Thorbjornsen, Michael",
+        "player_num": 57364,
+        "pre_tourn_pageviews": 548,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 09:07",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 10:13",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "44"
+      },
+      {
+        "am": 0,
+        "country": "NOR",
+        "dg_id": 15651,
+        "dg_rank": 122,
+        "owgr_rank": 194,
+        "player_name": "Ventura, Kristoffer",
+        "player_num": 35658,
+        "pre_tourn_pageviews": 290,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 08:56",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 10:02",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "109"
+      },
+      {
+        "am": 0,
+        "country": "ENG",
+        "dg_id": 20706,
+        "dg_rank": 32,
+        "owgr_rank": 54,
+        "player_name": "Wallace, Matt",
+        "player_num": 48887,
+        "pre_tourn_pageviews": 414,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 09:40",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 10:46",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "78"
+      },
+      {
+        "am": 0,
+        "country": "JPN",
+        "dg_id": 25739,
+        "dg_rank": 496,
+        "owgr_rank": 319,
+        "player_name": "Yonezawa, Ren",
+        "player_num": 56100,
+        "pre_tourn_pageviews": 137,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-10-08 08:45",
+            "wave": "early"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-10-09 09:51",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": null
+      },
+      {
+        "am": 0,
+        "country": "TPE",
+        "dg_id": 17881,
+        "dg_rank": 60,
+        "owgr_rank": 107,
+        "player_name": "Yu, Kevin",
+        "player_num": 45242,
+        "pre_tourn_pageviews": 322,
+        "teetimes": [
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-10-08 10:24",
+            "wave": "late"
+          },
+          {
+            "course_code": "",
+            "course_name": "Yokohama Country Club (West Course)",
+            "course_num": 936,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-10-09 09:18",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "91"
       }
     ],
-    "last_updated": "2026-09-24 03:31:03 UTC",
+    "last_updated": "2026-10-06 18:31:33 UTC",
     "multi_course": "no",
     "tour": "pga",
-    "tz_offset": -18000
+    "tz_offset": 32400
   },
   "live_tournament_stats": null,
   "live_tournament_stats_by_round": {},
   "live_round_actuals_by_dg": {},
   "live_hole_stats": null,
   "live_stats_pre_event": true,
-  "field_updates_refreshed_at": "2026-09-24T03:32:46.851Z"
+  "field_updates_refreshed_at": "2026-10-06T18:39:31.950Z"
 }

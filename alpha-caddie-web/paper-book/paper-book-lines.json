@@ -1,1470 +1,3589 @@
 {
-  "updated_at": "2026-09-24T03:35:47.615Z",
-  "event_name": "Presidents Cup",
+  "updated_at": "2026-10-06T18:44:19.087Z",
+  "event_name": "Baycurrent Classic",
   "round": 1,
   "round_label": "R1 — next Thursday (auto, America/New_York)",
   "books": {
     "draftkings": {
-      "cards": [],
+      "cards": [
+        {
+          "cardKey": "13872|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 13872,
+          "playerName": "Bradley, Keegan",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -122,
+          "underOdds": -115,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -122,
+            "display": "-122"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -115,
+            "display": "-115"
+          },
+          "overPayoutMultiplier": 1.819672131147541,
+          "underPayoutMultiplier": 1.8695652173913042,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "13872|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 13872,
+          "playerName": "Bradley, Keegan",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": 112,
+          "underOdds": -152,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 112,
+            "display": "+112"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -152,
+            "display": "-152"
+          },
+          "overPayoutMultiplier": 2.12,
+          "underPayoutMultiplier": 1.6578947368421053,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "29197|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 29197,
+          "playerName": "Brennan, Michael",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -150,
+          "underOdds": 106,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -150,
+            "display": "-150"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 106,
+            "display": "+106"
+          },
+          "overPayoutMultiplier": 1.6666666666666665,
+          "underPayoutMultiplier": 2.06,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "29197|Pars",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 29197,
+          "playerName": "Brennan, Michael",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -130,
+          "underOdds": -110,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -130,
+            "display": "-130"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -110,
+            "display": "-110"
+          },
+          "overPayoutMultiplier": 1.7692307692307692,
+          "underPayoutMultiplier": 1.9090909090909092,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "29197|Bogeys",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 29197,
+          "playerName": "Brennan, Michael",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overOdds": -118,
+          "underOdds": -122,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -118,
+            "display": "-118"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -122,
+            "display": "-122"
+          },
+          "overPayoutMultiplier": 1.847457627118644,
+          "underPayoutMultiplier": 1.819672131147541,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "29197|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 29197,
+          "playerName": "Brennan, Michael",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -154,
+          "underOdds": 115,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -154,
+            "display": "-154"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 115,
+            "display": "+115"
+          },
+          "overPayoutMultiplier": 1.6493506493506493,
+          "underPayoutMultiplier": 2.15,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "29433|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 29433,
+          "playerName": "Bridgeman, Jacob",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -144,
+          "underOdds": 100,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -144,
+            "display": "-144"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 100,
+            "display": "+100"
+          },
+          "overPayoutMultiplier": 1.6944444444444444,
+          "underPayoutMultiplier": 2,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "29433|Pars",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 29433,
+          "playerName": "Bridgeman, Jacob",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -168,
+          "underOdds": 118,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -168,
+            "display": "-168"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 118,
+            "display": "+118"
+          },
+          "overPayoutMultiplier": 1.5952380952380953,
+          "underPayoutMultiplier": 2.1799999999999997,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "29433|Bogeys",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 29433,
+          "playerName": "Bridgeman, Jacob",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overOdds": 116,
+          "underOdds": -164,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 116,
+            "display": "+116"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -164,
+            "display": "-164"
+          },
+          "overPayoutMultiplier": 2.16,
+          "underPayoutMultiplier": 1.6097560975609757,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "29433|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 29433,
+          "playerName": "Bridgeman, Jacob",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -134,
+          "underOdds": 100,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -134,
+            "display": "-134"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 100,
+            "display": "+100"
+          },
+          "overPayoutMultiplier": 1.7462686567164178,
+          "underPayoutMultiplier": 2,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "23604|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 23604,
+          "playerName": "Clark, Wyndham",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -168,
+          "underOdds": 118,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -168,
+            "display": "-168"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 118,
+            "display": "+118"
+          },
+          "overPayoutMultiplier": 1.5952380952380953,
+          "underPayoutMultiplier": 2.1799999999999997,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "23604|Pars",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 23604,
+          "playerName": "Clark, Wyndham",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -156,
+          "underOdds": 110,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -156,
+            "display": "-156"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 110,
+            "display": "+110"
+          },
+          "overPayoutMultiplier": 1.641025641025641,
+          "underPayoutMultiplier": 2.1,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "23604|Bogeys",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 23604,
+          "playerName": "Clark, Wyndham",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overOdds": 128,
+          "underOdds": -180,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 128,
+            "display": "+128"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -180,
+            "display": "-180"
+          },
+          "overPayoutMultiplier": 2.2800000000000002,
+          "underPayoutMultiplier": 1.5555555555555556,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "23604|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 23604,
+          "playerName": "Clark, Wyndham",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -114,
+          "underOdds": -118,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -114,
+            "display": "-114"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -118,
+            "display": "-118"
+          },
+          "overPayoutMultiplier": 1.8771929824561404,
+          "underPayoutMultiplier": 1.847457627118644,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "28309|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 28309,
+          "playerName": "Coody, Pierceson",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -106,
+          "underOdds": -134,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -106,
+            "display": "-106"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -134,
+            "display": "-134"
+          },
+          "overPayoutMultiplier": 1.9433962264150944,
+          "underPayoutMultiplier": 1.7462686567164178,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "28309|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 28309,
+          "playerName": "Coody, Pierceson",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": -124,
+          "underOdds": -108,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -124,
+            "display": "-124"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -108,
+            "display": "-108"
+          },
+          "overPayoutMultiplier": 1.8064516129032258,
+          "underPayoutMultiplier": 1.925925925925926,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "22833|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 22833,
+          "playerName": "Echavarria, Nico",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": 106,
+          "underOdds": -150,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 106,
+            "display": "+106"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -150,
+            "display": "-150"
+          },
+          "overPayoutMultiplier": 2.06,
+          "underPayoutMultiplier": 1.6666666666666665,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "22833|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 22833,
+          "playerName": "Echavarria, Nico",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": -130,
+          "underOdds": -104,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -130,
+            "display": "-130"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "overPayoutMultiplier": 1.7692307692307692,
+          "underPayoutMultiplier": 1.9615384615384617,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "26657|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 26657,
+          "playerName": "Fisk, Steven",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -102,
+          "underOdds": -138,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -102,
+            "display": "-102"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -138,
+            "display": "-138"
+          },
+          "overPayoutMultiplier": 1.9803921568627452,
+          "underPayoutMultiplier": 1.7246376811594204,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "26657|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 26657,
+          "playerName": "Fisk, Steven",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": -104,
+          "underOdds": -130,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -130,
+            "display": "-130"
+          },
+          "overPayoutMultiplier": 1.9615384615384617,
+          "underPayoutMultiplier": 1.7692307692307692,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "12965|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 12965,
+          "playerName": "Fowler, Rickie",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -112,
+          "underOdds": -125,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -112,
+            "display": "-112"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -125,
+            "display": "-125"
+          },
+          "overPayoutMultiplier": 1.8928571428571428,
+          "underPayoutMultiplier": 1.8,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "12965|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 12965,
+          "playerName": "Fowler, Rickie",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": 110,
+          "underOdds": -148,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 110,
+            "display": "+110"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -148,
+            "display": "-148"
+          },
+          "overPayoutMultiplier": 2.1,
+          "underPayoutMultiplier": 1.6756756756756757,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "29767|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 29767,
+          "playerName": "Gerard, Ryan",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -140,
+          "underOdds": -102,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -140,
+            "display": "-140"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -102,
+            "display": "-102"
+          },
+          "overPayoutMultiplier": 1.7142857142857144,
+          "underPayoutMultiplier": 1.9803921568627452,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "29767|Pars",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 29767,
+          "playerName": "Gerard, Ryan",
+          "market": "Pars",
+          "line": 11.5,
+          "overOdds": 125,
+          "underOdds": -175,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 125,
+            "display": "+125"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -175,
+            "display": "-175"
+          },
+          "overPayoutMultiplier": 2.25,
+          "underPayoutMultiplier": 1.5714285714285714,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "29767|Bogeys",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 29767,
+          "playerName": "Gerard, Ryan",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overOdds": 122,
+          "underOdds": -174,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 122,
+            "display": "+122"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -174,
+            "display": "-174"
+          },
+          "overPayoutMultiplier": 2.2199999999999998,
+          "underPayoutMultiplier": 1.5747126436781609,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "29767|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 29767,
+          "playerName": "Gerard, Ryan",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -132,
+          "underOdds": -102,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -132,
+            "display": "-132"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -102,
+            "display": "-102"
+          },
+          "overPayoutMultiplier": 1.7575757575757576,
+          "underPayoutMultiplier": 1.9803921568627452,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "8825|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 8825,
+          "playerName": "Harman, Brian",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": 108,
+          "underOdds": -152,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 108,
+            "display": "+108"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -152,
+            "display": "-152"
+          },
+          "overPayoutMultiplier": 2.08,
+          "underPayoutMultiplier": 1.6578947368421053,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "8825|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 8825,
+          "playerName": "Harman, Brian",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": -108,
+          "underOdds": -125,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -108,
+            "display": "-108"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -125,
+            "display": "-125"
+          },
+          "overPayoutMultiplier": 1.925925925925926,
+          "underPayoutMultiplier": 1.8,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "22760|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 22760,
+          "playerName": "Hisatsune, Ryo",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -110,
+          "underOdds": -128,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -110,
+            "display": "-110"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -128,
+            "display": "-128"
+          },
+          "overPayoutMultiplier": 1.9090909090909092,
+          "underPayoutMultiplier": 1.78125,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "22760|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 22760,
+          "playerName": "Hisatsune, Ryo",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": 100,
+          "underOdds": -136,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 100,
+            "display": "+100"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -136,
+            "display": "-136"
+          },
+          "overPayoutMultiplier": 2,
+          "underPayoutMultiplier": 1.7352941176470589,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "17538|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 17538,
+          "playerName": "Homa, Max",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -112,
+          "underOdds": -125,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -112,
+            "display": "-112"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -125,
+            "display": "-125"
+          },
+          "overPayoutMultiplier": 1.8928571428571428,
+          "underPayoutMultiplier": 1.8,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "17538|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 17538,
+          "playerName": "Homa, Max",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": -106,
+          "underOdds": -126,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -106,
+            "display": "-106"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -126,
+            "display": "-126"
+          },
+          "overPayoutMultiplier": 1.9433962264150944,
+          "underPayoutMultiplier": 1.7936507936507935,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "17488|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 17488,
+          "playerName": "Im, Sungjae",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -128,
+          "underOdds": -112,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -128,
+            "display": "-128"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -112,
+            "display": "-112"
+          },
+          "overPayoutMultiplier": 1.78125,
+          "underPayoutMultiplier": 1.8928571428571428,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "17488|Pars",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 17488,
+          "playerName": "Im, Sungjae",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -174,
+          "underOdds": 122,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -174,
+            "display": "-174"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 122,
+            "display": "+122"
+          },
+          "overPayoutMultiplier": 1.5747126436781609,
+          "underPayoutMultiplier": 2.2199999999999998,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "17488|Bogeys",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 17488,
+          "playerName": "Im, Sungjae",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overOdds": 105,
+          "underOdds": -148,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 105,
+            "display": "+105"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -148,
+            "display": "-148"
+          },
+          "overPayoutMultiplier": 2.05,
+          "underPayoutMultiplier": 1.6756756756756757,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "17488|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 17488,
+          "playerName": "Im, Sungjae",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -154,
+          "underOdds": 114,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -154,
+            "display": "-154"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 114,
+            "display": "+114"
+          },
+          "overPayoutMultiplier": 1.6493506493506493,
+          "underPayoutMultiplier": 2.1399999999999997,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "32457|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 32457,
+          "playerName": "Keefer, Johnny",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -132,
+          "underOdds": -108,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -132,
+            "display": "-132"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -108,
+            "display": "-108"
+          },
+          "overPayoutMultiplier": 1.7575757575757576,
+          "underPayoutMultiplier": 1.925925925925926,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "32457|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 32457,
+          "playerName": "Keefer, Johnny",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": 102,
+          "underOdds": -138,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 102,
+            "display": "+102"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -138,
+            "display": "-138"
+          },
+          "overPayoutMultiplier": 2.02,
+          "underPayoutMultiplier": 1.7246376811594204,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "17543|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 17543,
+          "playerName": "Kim, Michael",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -104,
+          "underOdds": -136,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -136,
+            "display": "-136"
+          },
+          "overPayoutMultiplier": 1.9615384615384617,
+          "underPayoutMultiplier": 1.7352941176470589,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "17543|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 17543,
+          "playerName": "Kim, Michael",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": -110,
+          "underOdds": -124,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -110,
+            "display": "-110"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -124,
+            "display": "-124"
+          },
+          "overPayoutMultiplier": 1.9090909090909092,
+          "underPayoutMultiplier": 1.8064516129032258,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "21891|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 21891,
+          "playerName": "Kitayama, Kurt",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -134,
+          "underOdds": -106,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -134,
+            "display": "-134"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -106,
+            "display": "-106"
+          },
+          "overPayoutMultiplier": 1.7462686567164178,
+          "underPayoutMultiplier": 1.9433962264150944,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "21891|Pars",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 21891,
+          "playerName": "Kitayama, Kurt",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -175,
+          "underOdds": 125,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -175,
+            "display": "-175"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 125,
+            "display": "+125"
+          },
+          "overPayoutMultiplier": 1.5714285714285714,
+          "underPayoutMultiplier": 2.25,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "21891|Bogeys",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 21891,
+          "playerName": "Kitayama, Kurt",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overOdds": 114,
+          "underOdds": -160,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 114,
+            "display": "+114"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -160,
+            "display": "-160"
+          },
+          "overPayoutMultiplier": 2.1399999999999997,
+          "underPayoutMultiplier": 1.625,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "21891|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 21891,
+          "playerName": "Kitayama, Kurt",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -142,
+          "underOdds": 106,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -142,
+            "display": "-142"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 106,
+            "display": "+106"
+          },
+          "overPayoutMultiplier": 1.704225352112676,
+          "underPayoutMultiplier": 2.06,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "16395|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 16395,
+          "playerName": "Kohles, Ben",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": 102,
+          "underOdds": -144,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 102,
+            "display": "+102"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -144,
+            "display": "-144"
+          },
+          "overPayoutMultiplier": 2.02,
+          "underPayoutMultiplier": 1.6944444444444444,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "16395|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 16395,
+          "playerName": "Kohles, Ben",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": -102,
+          "underOdds": -132,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -102,
+            "display": "-102"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -132,
+            "display": "-132"
+          },
+          "overPayoutMultiplier": 1.9803921568627452,
+          "underPayoutMultiplier": 1.7575757575757576,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "16841|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 16841,
+          "playerName": "Lee, Min Woo",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -154,
+          "underOdds": 108,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -154,
+            "display": "-154"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 108,
+            "display": "+108"
+          },
+          "overPayoutMultiplier": 1.6493506493506493,
+          "underPayoutMultiplier": 2.08,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "16841|Pars",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 16841,
+          "playerName": "Lee, Min Woo",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -146,
+          "underOdds": 102,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -146,
+            "display": "-146"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 102,
+            "display": "+102"
+          },
+          "overPayoutMultiplier": 1.6849315068493151,
+          "underPayoutMultiplier": 2.02,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "16841|Bogeys",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 16841,
+          "playerName": "Lee, Min Woo",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overOdds": 104,
+          "underOdds": -148,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 104,
+            "display": "+104"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -148,
+            "display": "-148"
+          },
+          "overPayoutMultiplier": 2.04,
+          "underPayoutMultiplier": 1.6756756756756757,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "16841|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 16841,
+          "playerName": "Lee, Min Woo",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -136,
+          "underOdds": 100,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -136,
+            "display": "-136"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 100,
+            "display": "+100"
+          },
+          "overPayoutMultiplier": 1.7352941176470589,
+          "underPayoutMultiplier": 2,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "13562|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 13562,
+          "playerName": "Matsuyama, Hideki",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -150,
+          "underOdds": 106,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -150,
+            "display": "-150"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 106,
+            "display": "+106"
+          },
+          "overPayoutMultiplier": 1.6666666666666665,
+          "underPayoutMultiplier": 2.06,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "13562|Pars",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 13562,
+          "playerName": "Matsuyama, Hideki",
+          "market": "Pars",
+          "line": 11.5,
+          "overOdds": 122,
+          "underOdds": -174,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 122,
+            "display": "+122"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -174,
+            "display": "-174"
+          },
+          "overPayoutMultiplier": 2.2199999999999998,
+          "underPayoutMultiplier": 1.5747126436781609,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "13562|Bogeys",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 13562,
+          "playerName": "Matsuyama, Hideki",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overOdds": 136,
+          "underOdds": -192,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 136,
+            "display": "+136"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -192,
+            "display": "-192"
+          },
+          "overPayoutMultiplier": 2.3600000000000003,
+          "underPayoutMultiplier": 1.5208333333333335,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "13562|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 13562,
+          "playerName": "Matsuyama, Hideki",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -120,
+          "underOdds": -114,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -120,
+            "display": "-120"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -114,
+            "display": "-114"
+          },
+          "overPayoutMultiplier": 1.8333333333333335,
+          "underPayoutMultiplier": 1.8771929824561404,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "28635|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 28635,
+          "playerName": "McCarty, Matt",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": 108,
+          "underOdds": -154,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 108,
+            "display": "+108"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -154,
+            "display": "-154"
+          },
+          "overPayoutMultiplier": 2.08,
+          "underPayoutMultiplier": 1.6493506493506493,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "28635|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 28635,
+          "playerName": "McCarty, Matt",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": -134,
+          "underOdds": -102,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -134,
+            "display": "-134"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -102,
+            "display": "-102"
+          },
+          "overPayoutMultiplier": 1.7462686567164178,
+          "underPayoutMultiplier": 1.9803921568627452,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "18634|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 18634,
+          "playerName": "McNealy, Maverick",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -136,
+          "underOdds": -104,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -136,
+            "display": "-136"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "overPayoutMultiplier": 1.7352941176470589,
+          "underPayoutMultiplier": 1.9615384615384617,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "18634|Pars",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 18634,
+          "playerName": "McNealy, Maverick",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -168,
+          "underOdds": 118,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -168,
+            "display": "-168"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 118,
+            "display": "+118"
+          },
+          "overPayoutMultiplier": 1.5952380952380953,
+          "underPayoutMultiplier": 2.1799999999999997,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "18634|Bogeys",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 18634,
+          "playerName": "McNealy, Maverick",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overOdds": 108,
+          "underOdds": -154,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 108,
+            "display": "+108"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -154,
+            "display": "-154"
+          },
+          "overPayoutMultiplier": 2.08,
+          "underPayoutMultiplier": 1.6493506493506493,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "18634|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 18634,
+          "playerName": "McNealy, Maverick",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -144,
+          "underOdds": 106,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -144,
+            "display": "-144"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 106,
+            "display": "+106"
+          },
+          "overPayoutMultiplier": 1.6944444444444444,
+          "underPayoutMultiplier": 2.06,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "17365|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 17365,
+          "playerName": "Mitchell, Keith",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -138,
+          "underOdds": -104,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -138,
+            "display": "-138"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "overPayoutMultiplier": 1.7246376811594204,
+          "underPayoutMultiplier": 1.9615384615384617,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "17365|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 17365,
+          "playerName": "Mitchell, Keith",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": 104,
+          "underOdds": -140,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 104,
+            "display": "+104"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -140,
+            "display": "-140"
+          },
+          "overPayoutMultiplier": 2.04,
+          "underPayoutMultiplier": 1.7142857142857144,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "22085|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 22085,
+          "playerName": "Morikawa, Collin",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -156,
+          "underOdds": 110,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -156,
+            "display": "-156"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 110,
+            "display": "+110"
+          },
+          "overPayoutMultiplier": 1.641025641025641,
+          "underPayoutMultiplier": 2.1,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "22085|Pars",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 22085,
+          "playerName": "Morikawa, Collin",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -170,
+          "underOdds": 120,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -170,
+            "display": "-170"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 120,
+            "display": "+120"
+          },
+          "overPayoutMultiplier": 1.5882352941176472,
+          "underPayoutMultiplier": 2.2,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "22085|Bogeys",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 22085,
+          "playerName": "Morikawa, Collin",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overOdds": 132,
+          "underOdds": -186,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 132,
+            "display": "+132"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -186,
+            "display": "-186"
+          },
+          "overPayoutMultiplier": 2.3200000000000003,
+          "underPayoutMultiplier": 1.5376344086021505,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "22085|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 22085,
+          "playerName": "Morikawa, Collin",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -118,
+          "underOdds": -114,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -118,
+            "display": "-118"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -114,
+            "display": "-114"
+          },
+          "overPayoutMultiplier": 1.847457627118644,
+          "underPayoutMultiplier": 1.8771929824561404,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "21074|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 21074,
+          "playerName": "Nakajima, Keita",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -112,
+          "underOdds": -126,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -112,
+            "display": "-112"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -126,
+            "display": "-126"
+          },
+          "overPayoutMultiplier": 1.8928571428571428,
+          "underPayoutMultiplier": 1.7936507936507935,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "21074|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 21074,
+          "playerName": "Nakajima, Keita",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": -102,
+          "underOdds": -134,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -102,
+            "display": "-102"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -134,
+            "display": "-134"
+          },
+          "overPayoutMultiplier": 1.9803921568627452,
+          "underPayoutMultiplier": 1.7462686567164178,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "19895|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 19895,
+          "playerName": "Schauffele, Xander",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": 125,
+          "underOdds": -175,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 125,
+            "display": "+125"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -175,
+            "display": "-175"
+          },
+          "overPayoutMultiplier": 2.25,
+          "underPayoutMultiplier": 1.5714285714285714,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "19895|Pars",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 19895,
+          "playerName": "Schauffele, Xander",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -152,
+          "underOdds": 108,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -152,
+            "display": "-152"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 108,
+            "display": "+108"
+          },
+          "overPayoutMultiplier": 1.6578947368421053,
+          "underPayoutMultiplier": 2.08,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "19895|Bogeys",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 19895,
+          "playerName": "Schauffele, Xander",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overOdds": -210,
+          "underOdds": 148,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -210,
+            "display": "-210"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 148,
+            "display": "+148"
+          },
+          "overPayoutMultiplier": 1.4761904761904763,
+          "underPayoutMultiplier": 2.48,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "19895|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 19895,
+          "playerName": "Schauffele, Xander",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": 108,
+          "underOdds": -146,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 108,
+            "display": "+108"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -146,
+            "display": "-146"
+          },
+          "overPayoutMultiplier": 2.08,
+          "underPayoutMultiplier": 1.6849315068493151,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "6430|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 6430,
+          "playerName": "Scott, Adam",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -142,
+          "underOdds": 100,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -142,
+            "display": "-142"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 100,
+            "display": "+100"
+          },
+          "overPayoutMultiplier": 1.704225352112676,
+          "underPayoutMultiplier": 2,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "6430|Pars",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 6430,
+          "playerName": "Scott, Adam",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -168,
+          "underOdds": 118,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -168,
+            "display": "-168"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 118,
+            "display": "+118"
+          },
+          "overPayoutMultiplier": 1.5952380952380953,
+          "underPayoutMultiplier": 2.1799999999999997,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "6430|Bogeys",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 6430,
+          "playerName": "Scott, Adam",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overOdds": 116,
+          "underOdds": -164,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 116,
+            "display": "+116"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -164,
+            "display": "-164"
+          },
+          "overPayoutMultiplier": 2.16,
+          "underPayoutMultiplier": 1.6097560975609757,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "6430|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 6430,
+          "playerName": "Scott, Adam",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -136,
+          "underOdds": 100,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -136,
+            "display": "-136"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 100,
+            "display": "+100"
+          },
+          "overPayoutMultiplier": 1.7352941176470589,
+          "underPayoutMultiplier": 2,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "18474|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 18474,
+          "playerName": "Smalley, Alex",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -112,
+          "underOdds": -128,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -112,
+            "display": "-112"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -128,
+            "display": "-128"
+          },
+          "overPayoutMultiplier": 1.8928571428571428,
+          "underPayoutMultiplier": 1.78125,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "18474|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 18474,
+          "playerName": "Smalley, Alex",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": 102,
+          "underOdds": -138,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 102,
+            "display": "+102"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -138,
+            "display": "-138"
+          },
+          "overPayoutMultiplier": 2.02,
+          "underPayoutMultiplier": 1.7246376811594204,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "18586|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 18586,
+          "playerName": "Smith, Jordan",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": 100,
+          "underOdds": -142,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 100,
+            "display": "+100"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -142,
+            "display": "-142"
+          },
+          "overPayoutMultiplier": 2,
+          "underPayoutMultiplier": 1.704225352112676,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "18586|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 18586,
+          "playerName": "Smith, Jordan",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": -110,
+          "underOdds": -122,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -110,
+            "display": "-110"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -122,
+            "display": "-122"
+          },
+          "overPayoutMultiplier": 1.9090909090909092,
+          "underPayoutMultiplier": 1.819672131147541,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "14636|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 14636,
+          "playerName": "Spieth, Jordan",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -124,
+          "underOdds": -115,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -124,
+            "display": "-124"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -115,
+            "display": "-115"
+          },
+          "overPayoutMultiplier": 1.8064516129032258,
+          "underPayoutMultiplier": 1.8695652173913042,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "14636|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 14636,
+          "playerName": "Spieth, Jordan",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": 108,
+          "underOdds": -146,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 108,
+            "display": "+108"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -146,
+            "display": "-146"
+          },
+          "overPayoutMultiplier": 2.08,
+          "underPayoutMultiplier": 1.6849315068493151,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "29279|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 29279,
+          "playerName": "Suber, Jackson",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -112,
+          "underOdds": -126,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -112,
+            "display": "-112"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -126,
+            "display": "-126"
+          },
+          "overPayoutMultiplier": 1.8928571428571428,
+          "underPayoutMultiplier": 1.7936507936507935,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "29279|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 29279,
+          "playerName": "Suber, Jackson",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": -102,
+          "underOdds": -132,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -102,
+            "display": "-102"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -132,
+            "display": "-132"
+          },
+          "overPayoutMultiplier": 1.9803921568627452,
+          "underPayoutMultiplier": 1.7575757575757576,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "14139|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 14139,
+          "playerName": "Thomas, Justin",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -156,
+          "underOdds": 110,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -156,
+            "display": "-156"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 110,
+            "display": "+110"
+          },
+          "overPayoutMultiplier": 1.641025641025641,
+          "underPayoutMultiplier": 2.1,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "14139|Pars",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 14139,
+          "playerName": "Thomas, Justin",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -160,
+          "underOdds": 114,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -160,
+            "display": "-160"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 114,
+            "display": "+114"
+          },
+          "overPayoutMultiplier": 1.625,
+          "underPayoutMultiplier": 2.1399999999999997,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "14139|Bogeys",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 14139,
+          "playerName": "Thomas, Justin",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overOdds": 122,
+          "underOdds": -172,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 122,
+            "display": "+122"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -172,
+            "display": "-172"
+          },
+          "overPayoutMultiplier": 2.2199999999999998,
+          "underPayoutMultiplier": 1.5813953488372094,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "14139|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 14139,
+          "playerName": "Thomas, Justin",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -124,
+          "underOdds": -108,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -124,
+            "display": "-124"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -108,
+            "display": "-108"
+          },
+          "overPayoutMultiplier": 1.8064516129032258,
+          "underPayoutMultiplier": 1.925925925925926,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "26649|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 26649,
+          "playerName": "Thorbjornsen, Michael",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -134,
+          "underOdds": -105,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -134,
+            "display": "-134"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -105,
+            "display": "-105"
+          },
+          "overPayoutMultiplier": 1.7462686567164178,
+          "underPayoutMultiplier": 1.9523809523809523,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "26649|Pars",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 26649,
+          "playerName": "Thorbjornsen, Michael",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -166,
+          "underOdds": 118,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -166,
+            "display": "-166"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 118,
+            "display": "+118"
+          },
+          "overPayoutMultiplier": 1.6024096385542168,
+          "underPayoutMultiplier": 2.1799999999999997,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "26649|Bogeys",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 26649,
+          "playerName": "Thorbjornsen, Michael",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overOdds": 106,
+          "underOdds": -150,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 106,
+            "display": "+106"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -150,
+            "display": "-150"
+          },
+          "overPayoutMultiplier": 2.06,
+          "underPayoutMultiplier": 1.6666666666666665,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "26649|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 26649,
+          "playerName": "Thorbjornsen, Michael",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -146,
+          "underOdds": 108,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -146,
+            "display": "-146"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 108,
+            "display": "+108"
+          },
+          "overPayoutMultiplier": 1.6849315068493151,
+          "underPayoutMultiplier": 2.08,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "20706|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 20706,
+          "playerName": "Wallace, Matt",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -125,
+          "underOdds": -112,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -125,
+            "display": "-125"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -112,
+            "display": "-112"
+          },
+          "overPayoutMultiplier": 1.8,
+          "underPayoutMultiplier": 1.8928571428571428,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "20706|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 20706,
+          "playerName": "Wallace, Matt",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": 115,
+          "underOdds": -154,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 115,
+            "display": "+115"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -154,
+            "display": "-154"
+          },
+          "overPayoutMultiplier": 2.15,
+          "underPayoutMultiplier": 1.6493506493506493,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "17881|Birdies",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 17881,
+          "playerName": "Yu, Kevin",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -118,
+          "underOdds": -120,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -118,
+            "display": "-118"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -120,
+            "display": "-120"
+          },
+          "overPayoutMultiplier": 1.847457627118644,
+          "underPayoutMultiplier": 1.8333333333333335,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        },
+        {
+          "cardKey": "17881|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 17881,
+          "playerName": "Yu, Kevin",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": 102,
+          "underOdds": -140,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 102,
+            "display": "+102"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -140,
+            "display": "-140"
+          },
+          "overPayoutMultiplier": 2.02,
+          "underPayoutMultiplier": 1.7142857142857144,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:19.088Z"
+        }
+      ],
       "fetchError": "",
-      "count": 0,
-      "fetchedAt": "2026-09-24T03:35:47.616Z"
+      "count": 96,
+      "fetchedAt": "2026-10-06T18:44:19.088Z"
     },
     "prizepicks": {
       "cards": [],
       "fetchError": "PrizePicks partner API does not expose per-pick posted odds for standard lines",
       "count": 0,
-      "fetchedAt": "2026-09-24T03:35:47.618Z"
+      "fetchedAt": "2026-10-06T18:44:19.135Z"
     },
     "sleeper": {
-      "cards": [
-        {
-          "cardKey": "sl:1540|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1540",
-          "playerName": "Adrien Saddier",
-          "market": "Birdies",
-          "line": 3.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.56,
-            "display": "1.56x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.07,
-            "display": "2.07x"
-          },
-          "overPayoutMultiplier": 1.56,
-          "underPayoutMultiplier": 2.07,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1540|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1540",
-          "playerName": "Adrien Saddier",
-          "market": "Total score",
-          "line": 70.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.7,
-            "display": "1.7x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.87,
-            "display": "1.87x"
-          },
-          "overPayoutMultiplier": 1.7,
-          "underPayoutMultiplier": 1.87,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1584|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1584",
-          "playerName": "Andy Sullivan",
-          "market": "Birdies",
-          "line": 3.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.49,
-            "display": "1.49x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.18,
-            "display": "2.18x"
-          },
-          "overPayoutMultiplier": 1.49,
-          "underPayoutMultiplier": 2.18,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1584|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1584",
-          "playerName": "Andy Sullivan",
-          "market": "Total score",
-          "line": 70.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.82,
-            "display": "1.82x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.74,
-            "display": "1.74x"
-          },
-          "overPayoutMultiplier": 1.82,
-          "underPayoutMultiplier": 1.74,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1032|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1032",
-          "playerName": "Angel Ayora Fanegas",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.19,
-            "display": "2.19x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.49,
-            "display": "1.49x"
-          },
-          "overPayoutMultiplier": 2.19,
-          "underPayoutMultiplier": 1.49,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1032|Bogeys",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1032",
-          "playerName": "Angel Ayora Fanegas",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.61,
-            "display": "1.61x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.98,
-            "display": "1.98x"
-          },
-          "overPayoutMultiplier": 1.61,
-          "underPayoutMultiplier": 1.98,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1032|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1032",
-          "playerName": "Angel Ayora Fanegas",
-          "market": "Total score",
-          "line": 70.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.89,
-            "display": "1.89x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.68,
-            "display": "1.68x"
-          },
-          "overPayoutMultiplier": 1.89,
-          "underPayoutMultiplier": 1.68,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1357|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1357",
-          "playerName": "Antoine Rozner",
-          "market": "Total score",
-          "line": 70.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.85,
-            "display": "1.85x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.72,
-            "display": "1.72x"
-          },
-          "overPayoutMultiplier": 1.85,
-          "underPayoutMultiplier": 1.72,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1084|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1084",
-          "playerName": "Bud Cauley",
-          "market": "Birdies",
-          "line": 3.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.5,
-            "display": "1.5x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.17,
-            "display": "2.17x"
-          },
-          "overPayoutMultiplier": 1.5,
-          "underPayoutMultiplier": 2.17,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1084|Bogeys",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1084",
-          "playerName": "Bud Cauley",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.75,
-            "display": "1.75x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.81,
-            "display": "1.81x"
-          },
-          "overPayoutMultiplier": 1.75,
-          "underPayoutMultiplier": 1.81,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1440|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1440",
-          "playerName": "Eugenio Lopez-Chacarra",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.06,
-            "display": "2.06x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.56,
-            "display": "1.56x"
-          },
-          "overPayoutMultiplier": 2.06,
-          "underPayoutMultiplier": 1.56,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1440|Bogeys",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1440",
-          "playerName": "Eugenio Lopez-Chacarra",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.75,
-            "display": "1.75x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.81,
-            "display": "1.81x"
-          },
-          "overPayoutMultiplier": 1.75,
-          "underPayoutMultiplier": 1.81,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1440|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1440",
-          "playerName": "Eugenio Lopez-Chacarra",
-          "market": "Total score",
-          "line": 69.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.68,
-            "display": "1.68x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.89,
-            "display": "1.89x"
-          },
-          "overPayoutMultiplier": 1.68,
-          "underPayoutMultiplier": 1.89,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1581|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1581",
-          "playerName": "Ewen Ferguson",
-          "market": "Birdies",
-          "line": 3.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.52,
-            "display": "1.52x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.12,
-            "display": "2.12x"
-          },
-          "overPayoutMultiplier": 1.52,
-          "underPayoutMultiplier": 2.12,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1581|Bogeys",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1581",
-          "playerName": "Ewen Ferguson",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.71,
-            "display": "1.71x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.86,
-            "display": "1.86x"
-          },
-          "overPayoutMultiplier": 1.71,
-          "underPayoutMultiplier": 1.86,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1583|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1583",
-          "playerName": "Francesco Laporta",
-          "market": "Birdies",
-          "line": 3.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.55,
-            "display": "1.55x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.08,
-            "display": "2.08x"
-          },
-          "overPayoutMultiplier": 1.55,
-          "underPayoutMultiplier": 2.08,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1049|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1049",
-          "playerName": "Guido Migliozzi",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.19,
-            "display": "2.19x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.48,
-            "display": "1.48x"
-          },
-          "overPayoutMultiplier": 2.19,
-          "underPayoutMultiplier": 1.48,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1049|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1049",
-          "playerName": "Guido Migliozzi",
-          "market": "Total score",
-          "line": 70.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.84,
-            "display": "1.84x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.73,
-            "display": "1.73x"
-          },
-          "overPayoutMultiplier": 1.84,
-          "underPayoutMultiplier": 1.73,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:2083|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "2083",
-          "playerName": "Jeff Winther",
-          "market": "Birdies",
-          "line": 3.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.5,
-            "display": "1.5x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.16,
-            "display": "2.16x"
-          },
-          "overPayoutMultiplier": 1.5,
-          "underPayoutMultiplier": 2.16,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1597|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1597",
-          "playerName": "Kristoffer Reitan",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.91,
-            "display": "1.91x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.67,
-            "display": "1.67x"
-          },
-          "overPayoutMultiplier": 1.91,
-          "underPayoutMultiplier": 1.67,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1597|Bogeys",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1597",
-          "playerName": "Kristoffer Reitan",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.74,
-            "display": "1.74x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.82,
-            "display": "1.82x"
-          },
-          "overPayoutMultiplier": 1.74,
-          "underPayoutMultiplier": 1.82,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1597|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1597",
-          "playerName": "Kristoffer Reitan",
-          "market": "Total score",
-          "line": 69.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.7,
-            "display": "1.7x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.87,
-            "display": "1.87x"
-          },
-          "overPayoutMultiplier": 1.7,
-          "underPayoutMultiplier": 1.87,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1144|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1144",
-          "playerName": "Ludvig Åberg",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.64,
-            "display": "1.64x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.95,
-            "display": "1.95x"
-          },
-          "overPayoutMultiplier": 1.64,
-          "underPayoutMultiplier": 1.95,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1144|Bogeys",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1144",
-          "playerName": "Ludvig Åberg",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.02,
-            "display": "2.02x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.59,
-            "display": "1.59x"
-          },
-          "overPayoutMultiplier": 2.02,
-          "underPayoutMultiplier": 1.59,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1144|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1144",
-          "playerName": "Ludvig Åberg",
-          "market": "Total score",
-          "line": 68.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.6,
-            "display": "1.6x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.01,
-            "display": "2.01x"
-          },
-          "overPayoutMultiplier": 1.6,
-          "underPayoutMultiplier": 2.01,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1572|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1572",
-          "playerName": "Manuel Elvira",
-          "market": "Birdies",
-          "line": 3.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.51,
-            "display": "1.51x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.14,
-            "display": "2.14x"
-          },
-          "overPayoutMultiplier": 1.51,
-          "underPayoutMultiplier": 2.14,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1572|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1572",
-          "playerName": "Manuel Elvira",
-          "market": "Total score",
-          "line": 70.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.7,
-            "display": "1.7x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.87,
-            "display": "1.87x"
-          },
-          "overPayoutMultiplier": 1.7,
-          "underPayoutMultiplier": 1.87,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1022|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1022",
-          "playerName": "Matt Fitzpatrick",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.78,
-            "display": "1.78x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.78,
-            "display": "1.78x"
-          },
-          "overPayoutMultiplier": 1.78,
-          "underPayoutMultiplier": 1.78,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1022|Bogeys",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1022",
-          "playerName": "Matt Fitzpatrick",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.18,
-            "display": "2.18x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.49,
-            "display": "1.49x"
-          },
-          "overPayoutMultiplier": 2.18,
-          "underPayoutMultiplier": 1.49,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1022|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1022",
-          "playerName": "Matt Fitzpatrick",
-          "market": "Total score",
-          "line": 69.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.02,
-            "display": "2.02x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.59,
-            "display": "1.59x"
-          },
-          "overPayoutMultiplier": 2.02,
-          "underPayoutMultiplier": 1.59,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1550|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1550",
-          "playerName": "Nathan Kimsey",
-          "market": "Birdies",
-          "line": 3.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.67,
-            "display": "1.67x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.91,
-            "display": "1.91x"
-          },
-          "overPayoutMultiplier": 1.67,
-          "underPayoutMultiplier": 1.91,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1550|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1550",
-          "playerName": "Nathan Kimsey",
-          "market": "Total score",
-          "line": 70.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.81,
-            "display": "1.81x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.75,
-            "display": "1.75x"
-          },
-          "overPayoutMultiplier": 1.81,
-          "underPayoutMultiplier": 1.75,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1248|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1248",
-          "playerName": "Romain Langasque",
-          "market": "Birdies",
-          "line": 3.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.59,
-            "display": "1.59x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.02,
-            "display": "2.02x"
-          },
-          "overPayoutMultiplier": 1.59,
-          "underPayoutMultiplier": 2.02,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1248|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1248",
-          "playerName": "Romain Langasque",
-          "market": "Total score",
-          "line": 70.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.72,
-            "display": "1.72x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.84,
-            "display": "1.84x"
-          },
-          "overPayoutMultiplier": 1.72,
-          "underPayoutMultiplier": 1.84,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1204|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1204",
-          "playerName": "Ryan Gerard",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.88,
-            "display": "1.88x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.69,
-            "display": "1.69x"
-          },
-          "overPayoutMultiplier": 1.88,
-          "underPayoutMultiplier": 1.69,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1204|Bogeys",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1204",
-          "playerName": "Ryan Gerard",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.98,
-            "display": "1.98x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.61,
-            "display": "1.61x"
-          },
-          "overPayoutMultiplier": 1.98,
-          "underPayoutMultiplier": 1.61,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1204|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1204",
-          "playerName": "Ryan Gerard",
-          "market": "Total score",
-          "line": 69.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.85,
-            "display": "1.85x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.72,
-            "display": "1.72x"
-          },
-          "overPayoutMultiplier": 1.85,
-          "underPayoutMultiplier": 1.72,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1465|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1465",
-          "playerName": "Sam Bairstow",
-          "market": "Birdies",
-          "line": 3.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.54,
-            "display": "1.54x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.09,
-            "display": "2.09x"
-          },
-          "overPayoutMultiplier": 1.54,
-          "underPayoutMultiplier": 2.09,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1465|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1465",
-          "playerName": "Sam Bairstow",
-          "market": "Total score",
-          "line": 70.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.71,
-            "display": "1.71x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.85,
-            "display": "1.85x"
-          },
-          "overPayoutMultiplier": 1.71,
-          "underPayoutMultiplier": 1.85,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1310|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1310",
-          "playerName": "Thomas Detry",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.09,
-            "display": "2.09x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.54,
-            "display": "1.54x"
-          },
-          "overPayoutMultiplier": 2.09,
-          "underPayoutMultiplier": 1.54,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1310|Bogeys",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1310",
-          "playerName": "Thomas Detry",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.6,
-            "display": "1.6x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2,
-            "display": "2x"
-          },
-          "overPayoutMultiplier": 1.6,
-          "underPayoutMultiplier": 2,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1310|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1310",
-          "playerName": "Thomas Detry",
-          "market": "Total score",
-          "line": 70.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.95,
-            "display": "1.95x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.64,
-            "display": "1.64x"
-          },
-          "overPayoutMultiplier": 1.95,
-          "underPayoutMultiplier": 1.64,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:2831|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "2831",
-          "playerName": "Thomas Pieters",
-          "market": "Birdies",
-          "line": 3.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.49,
-            "display": "1.49x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.19,
-            "display": "2.19x"
-          },
-          "overPayoutMultiplier": 1.49,
-          "underPayoutMultiplier": 2.19,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:2831|Bogeys",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "2831",
-          "playerName": "Thomas Pieters",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.61,
-            "display": "1.61x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.99,
-            "display": "1.99x"
-          },
-          "overPayoutMultiplier": 1.61,
-          "underPayoutMultiplier": 1.99,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:2831|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "2831",
-          "playerName": "Thomas Pieters",
-          "market": "Total score",
-          "line": 70.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.86,
-            "display": "1.86x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.71,
-            "display": "1.71x"
-          },
-          "overPayoutMultiplier": 1.86,
-          "underPayoutMultiplier": 1.71,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1635|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1635",
-          "playerName": "Tom Vaillant",
-          "market": "Birdies",
-          "line": 3.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.66,
-            "display": "1.66x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.92,
-            "display": "1.92x"
-          },
-          "overPayoutMultiplier": 1.66,
-          "underPayoutMultiplier": 1.92,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1635|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1635",
-          "playerName": "Tom Vaillant",
-          "market": "Total score",
-          "line": 70.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.76,
-            "display": "1.76x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.8,
-            "display": "1.8x"
-          },
-          "overPayoutMultiplier": 1.76,
-          "underPayoutMultiplier": 1.8,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1143|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1143",
-          "playerName": "Tommy Fleetwood",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.84,
-            "display": "1.84x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.73,
-            "display": "1.73x"
-          },
-          "overPayoutMultiplier": 1.84,
-          "underPayoutMultiplier": 1.73,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1143|Bogeys",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1143",
-          "playerName": "Tommy Fleetwood",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.31,
-            "display": "2.31x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.43,
-            "display": "1.43x"
-          },
-          "overPayoutMultiplier": 2.31,
-          "underPayoutMultiplier": 1.43,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1143|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1143",
-          "playerName": "Tommy Fleetwood",
-          "market": "Total score",
-          "line": 68.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.61,
-            "display": "1.61x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2,
-            "display": "2x"
-          },
-          "overPayoutMultiplier": 1.61,
-          "underPayoutMultiplier": 2,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1598|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1598",
-          "playerName": "Ugo Coussaud",
-          "market": "Birdies",
-          "line": 3.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.56,
-            "display": "1.56x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.07,
-            "display": "2.07x"
-          },
-          "overPayoutMultiplier": 1.56,
-          "underPayoutMultiplier": 2.07,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1598|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1598",
-          "playerName": "Ugo Coussaud",
-          "market": "Total score",
-          "line": 70.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.71,
-            "display": "1.71x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.86,
-            "display": "1.86x"
-          },
-          "overPayoutMultiplier": 1.71,
-          "underPayoutMultiplier": 1.86,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1078|Bogeys",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1078",
-          "playerName": "Victor Perez",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.66,
-            "display": "1.66x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.92,
-            "display": "1.92x"
-          },
-          "overPayoutMultiplier": 1.66,
-          "underPayoutMultiplier": 1.92,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1078|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1078",
-          "playerName": "Victor Perez",
-          "market": "Total score",
-          "line": 70.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.98,
-            "display": "1.98x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.62,
-            "display": "1.62x"
-          },
-          "overPayoutMultiplier": 1.98,
-          "underPayoutMultiplier": 1.62,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1246|Birdies",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1246",
-          "playerName": "Viktor Hovland",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.78,
-            "display": "1.78x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.78,
-            "display": "1.78x"
-          },
-          "overPayoutMultiplier": 1.78,
-          "underPayoutMultiplier": 1.78,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1246|Bogeys",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1246",
-          "playerName": "Viktor Hovland",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.95,
-            "display": "1.95x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.64,
-            "display": "1.64x"
-          },
-          "overPayoutMultiplier": 1.95,
-          "underPayoutMultiplier": 1.64,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        },
-        {
-          "cardKey": "sl:1246|Total Score",
-          "eventName": "Presidents Cup",
-          "round": 1,
-          "dg_id": "1246",
-          "playerName": "Viktor Hovland",
-          "market": "Total score",
-          "line": 69.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.88,
-            "display": "1.88x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.69,
-            "display": "1.69x"
-          },
-          "overPayoutMultiplier": 1.88,
-          "underPayoutMultiplier": 1.69,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-09-24T03:35:47.619Z"
-        }
-      ],
+      "cards": [],
       "fetchError": "",
-      "count": 57,
-      "fetchedAt": "2026-09-24T03:35:47.619Z"
+      "count": 0,
+      "fetchedAt": "2026-10-06T18:44:19.140Z"
     },
     "underdog": {
       "cards": [],
       "fetchError": "Underdog API HTTP 426",
       "count": 0,
-      "fetchedAt": "2026-09-24T03:35:50.549Z"
+      "fetchedAt": "2026-10-06T18:44:22.900Z"
     },
     "kalshi": {
-      "cards": [],
+      "cards": [
+        {
+          "cardKey": "29433|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 29433,
+          "playerName": "Bridgeman, Jacob",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": 156,
+          "underOdds": -156,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 156,
+            "display": "+156"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -156,
+            "display": "-156"
+          },
+          "overPayoutMultiplier": 2.56,
+          "underPayoutMultiplier": 1.641025641025641,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.097Z"
+        },
+        {
+          "cardKey": "23604|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 23604,
+          "playerName": "Clark, Wyndham",
+          "market": "Total score",
+          "line": 67.5,
+          "overOdds": -233,
+          "underOdds": -150,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -233,
+            "display": "-233"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -150,
+            "display": "-150"
+          },
+          "overPayoutMultiplier": 1.4291845493562232,
+          "underPayoutMultiplier": 1.6666666666666665,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.097Z"
+        },
+        {
+          "cardKey": "22833|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 22833,
+          "playerName": "Echavarria, Nico",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": 270,
+          "underOdds": -270,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 270,
+            "display": "+270"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -270,
+            "display": "-270"
+          },
+          "overPayoutMultiplier": 3.7,
+          "underPayoutMultiplier": 1.3703703703703702,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.097Z"
+        },
+        {
+          "cardKey": "12965|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 12965,
+          "playerName": "Fowler, Rickie",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -122,
+          "underOdds": 122,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -122,
+            "display": "-122"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 122,
+            "display": "+122"
+          },
+          "overPayoutMultiplier": 1.819672131147541,
+          "underPayoutMultiplier": 2.2199999999999998,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.097Z"
+        },
+        {
+          "cardKey": "29767|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 29767,
+          "playerName": "Gerard, Ryan",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": 141,
+          "underOdds": -141,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 141,
+            "display": "+141"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -141,
+            "display": "-141"
+          },
+          "overPayoutMultiplier": 2.41,
+          "underPayoutMultiplier": 1.7092198581560285,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.097Z"
+        },
+        {
+          "cardKey": "17538|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 17538,
+          "playerName": "Homa, Max",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -233,
+          "underOdds": -150,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -233,
+            "display": "-233"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -150,
+            "display": "-150"
+          },
+          "overPayoutMultiplier": 1.4291845493562232,
+          "underPayoutMultiplier": 1.6666666666666665,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.097Z"
+        },
+        {
+          "cardKey": "11276|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 11276,
+          "playerName": "Horschel, Billy",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": 163,
+          "underOdds": -163,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 163,
+            "display": "+163"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -163,
+            "display": "-163"
+          },
+          "overPayoutMultiplier": 2.63,
+          "underPayoutMultiplier": 1.6134969325153374,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.097Z"
+        },
+        {
+          "cardKey": "17488|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 17488,
+          "playerName": "Im, Sungjae",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -125,
+          "underOdds": 125,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -125,
+            "display": "-125"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 125,
+            "display": "+125"
+          },
+          "overPayoutMultiplier": 1.8,
+          "underPayoutMultiplier": 2.25,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.097Z"
+        },
+        {
+          "cardKey": "17543|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 17543,
+          "playerName": "Kim, Michael",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -223,
+          "underOdds": -163,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -223,
+            "display": "-223"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -163,
+            "display": "-163"
+          },
+          "overPayoutMultiplier": 1.4484304932735426,
+          "underPayoutMultiplier": 1.6134969325153374,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.097Z"
+        },
+        {
+          "cardKey": "21891|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 21891,
+          "playerName": "Kitayama, Kurt",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": 376,
+          "underOdds": -376,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 376,
+            "display": "+376"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -376,
+            "display": "-376"
+          },
+          "overPayoutMultiplier": 4.76,
+          "underPayoutMultiplier": 1.2659574468085106,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.097Z"
+        },
+        {
+          "cardKey": "13562|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 13562,
+          "playerName": "Matsuyama, Hideki",
+          "market": "Total score",
+          "line": 67.5,
+          "overOdds": -239,
+          "underOdds": -144,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -239,
+            "display": "-239"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -144,
+            "display": "-144"
+          },
+          "overPayoutMultiplier": 1.4184100418410042,
+          "underPayoutMultiplier": 1.6944444444444444,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.097Z"
+        },
+        {
+          "cardKey": "22085|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 22085,
+          "playerName": "Morikawa, Collin",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": 186,
+          "underOdds": -186,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 186,
+            "display": "+186"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -186,
+            "display": "-186"
+          },
+          "overPayoutMultiplier": 2.8600000000000003,
+          "underPayoutMultiplier": 1.5376344086021505,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.097Z"
+        },
+        {
+          "cardKey": "19895|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 19895,
+          "playerName": "Schauffele, Xander",
+          "market": "Total score",
+          "line": 67.5,
+          "overOdds": -208,
+          "underOdds": -186,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -208,
+            "display": "-208"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -186,
+            "display": "-186"
+          },
+          "overPayoutMultiplier": 1.4807692307692308,
+          "underPayoutMultiplier": 1.5376344086021505,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.097Z"
+        },
+        {
+          "cardKey": "6430|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 6430,
+          "playerName": "Scott, Adam",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": 133,
+          "underOdds": -133,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 133,
+            "display": "+133"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -133,
+            "display": "-133"
+          },
+          "overPayoutMultiplier": 2.33,
+          "underPayoutMultiplier": 1.7518796992481203,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.097Z"
+        },
+        {
+          "cardKey": "14636|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 14636,
+          "playerName": "Spieth, Jordan",
+          "market": "Total score",
+          "line": 69.5,
+          "overOdds": 355,
+          "underOdds": -355,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 355,
+            "display": "+355"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -355,
+            "display": "-355"
+          },
+          "overPayoutMultiplier": 4.55,
+          "underPayoutMultiplier": 1.2816901408450705,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.097Z"
+        },
+        {
+          "cardKey": "29279|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 29279,
+          "playerName": "Suber, Jackson",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -223,
+          "underOdds": -163,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -223,
+            "display": "-223"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -163,
+            "display": "-163"
+          },
+          "overPayoutMultiplier": 1.4484304932735426,
+          "underPayoutMultiplier": 1.6134969325153374,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.097Z"
+        },
+        {
+          "cardKey": "14139|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 14139,
+          "playerName": "Thomas, Justin",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": 153,
+          "underOdds": -153,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 153,
+            "display": "+153"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -153,
+            "display": "-153"
+          },
+          "overPayoutMultiplier": 2.5300000000000002,
+          "underPayoutMultiplier": 1.65359477124183,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.097Z"
+        },
+        {
+          "cardKey": "26649|Total score",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "dg_id": 26649,
+          "playerName": "Thorbjornsen, Michael",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": 163,
+          "underOdds": -163,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 163,
+            "display": "+163"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -163,
+            "display": "-163"
+          },
+          "overPayoutMultiplier": 2.63,
+          "underPayoutMultiplier": 1.6134969325153374,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.097Z"
+        }
+      ],
       "fetchError": "",
-      "count": 0,
-      "fetchedAt": "2026-09-24T03:35:50.677Z"
+      "count": 18,
+      "fetchedAt": "2026-10-06T18:44:23.097Z"
     },
     "dk_matchups": {
-      "cards": [],
+      "cards": [
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:6430|17488",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 6430,
+          "p2_dg_id": 17488,
+          "p1_player_name": "Scott, Adam",
+          "p2_player_name": "Im, Sungjae",
+          "p1_short": "Adam Scott",
+          "p2_short": "Sungjae Im",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -124,
+            "display": "-124"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -106,
+            "display": "-106"
+          },
+          "p1PayoutMultiplier": 1.8064516129032258,
+          "p2PayoutMultiplier": 1.9433962264150944,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.102Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:18474|21074",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 18474,
+          "p2_dg_id": 21074,
+          "p1_player_name": "Smalley, Alex",
+          "p2_player_name": "Nakajima, Keita",
+          "p1_short": "Alex Smalley",
+          "p2_short": "Keita Nakajima",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -115,
+            "display": "-115"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -114,
+            "display": "-114"
+          },
+          "p1PayoutMultiplier": 1.8695652173913042,
+          "p2PayoutMultiplier": 1.8771929824561404,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.102Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:16395|17538",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 16395,
+          "p2_dg_id": 17538,
+          "p1_player_name": "Kohles, Ben",
+          "p2_player_name": "Homa, Max",
+          "p1_short": "Ben Kohles",
+          "p2_short": "Max Homa",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -118,
+            "display": "-118"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -110,
+            "display": "-110"
+          },
+          "p1PayoutMultiplier": 1.847457627118644,
+          "p2PayoutMultiplier": 1.9090909090909092,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.102Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:22085|23604",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 22085,
+          "p2_dg_id": 23604,
+          "p1_player_name": "Morikawa, Collin",
+          "p2_player_name": "Clark, Wyndham",
+          "p1_short": "Collin Morikawa",
+          "p2_short": "Wyndham Clark",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -112,
+            "display": "-112"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -118,
+            "display": "-118"
+          },
+          "p1PayoutMultiplier": 1.8928571428571428,
+          "p2PayoutMultiplier": 1.847457627118644,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.102Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:13562|19895",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 13562,
+          "p2_dg_id": 19895,
+          "p1_player_name": "Matsuyama, Hideki",
+          "p2_player_name": "Schauffele, Xander",
+          "p1_short": "Hideki Matsuyama",
+          "p2_short": "Xander Schauffele",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": 106,
+            "display": "+106"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -140,
+            "display": "-140"
+          },
+          "p1PayoutMultiplier": 2.06,
+          "p2PayoutMultiplier": 1.7142857142857144,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.102Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:29433|29767",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 29433,
+          "p2_dg_id": 29767,
+          "p1_player_name": "Bridgeman, Jacob",
+          "p2_player_name": "Gerard, Ryan",
+          "p1_short": "Jacob Bridgeman",
+          "p2_short": "Ryan Gerard",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -116,
+            "display": "-116"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -114,
+            "display": "-114"
+          },
+          "p1PayoutMultiplier": 1.8620689655172413,
+          "p2PayoutMultiplier": 1.8771929824561404,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.102Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:14636|17365",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 14636,
+          "p2_dg_id": 17365,
+          "p1_player_name": "Spieth, Jordan",
+          "p2_player_name": "Mitchell, Keith",
+          "p1_short": "Jordan Spieth",
+          "p2_short": "Keith Mitchell",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -115,
+            "display": "-115"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -114,
+            "display": "-114"
+          },
+          "p1PayoutMultiplier": 1.8695652173913042,
+          "p2PayoutMultiplier": 1.8771929824561404,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.102Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:14139|24550",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 14139,
+          "p2_dg_id": 24550,
+          "p1_player_name": "Thomas, Justin",
+          "p2_player_name": "Ghim, Doug",
+          "p1_short": "Justin Thomas",
+          "p2_short": "Doug Ghim",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -120,
+            "display": "-120"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -108,
+            "display": "-108"
+          },
+          "p1PayoutMultiplier": 1.8333333333333335,
+          "p2PayoutMultiplier": 1.925925925925926,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.102Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:13872|26649",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 13872,
+          "p2_dg_id": 26649,
+          "p1_player_name": "Bradley, Keegan",
+          "p2_player_name": "Thorbjornsen, Michael",
+          "p1_short": "Keegan Bradley",
+          "p2_short": "Michael Thorbjornsen",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -108,
+            "display": "-108"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -122,
+            "display": "-122"
+          },
+          "p1PayoutMultiplier": 1.925925925925926,
+          "p2PayoutMultiplier": 1.819672131147541,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.102Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:17881|32457",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 17881,
+          "p2_dg_id": 32457,
+          "p1_player_name": "Yu, Kevin",
+          "p2_player_name": "Keefer, Johnny",
+          "p1_short": "Kevin Yu",
+          "p2_short": "Johnny Keefer",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -115,
+            "display": "-115"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -114,
+            "display": "-114"
+          },
+          "p1PayoutMultiplier": 1.8695652173913042,
+          "p2PayoutMultiplier": 1.8771929824561404,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.102Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:18634|29197",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 18634,
+          "p2_dg_id": 29197,
+          "p1_player_name": "McNealy, Maverick",
+          "p2_player_name": "Brennan, Michael",
+          "p1_short": "Maverick McNealy",
+          "p2_short": "Michael Brennan",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -120,
+            "display": "-120"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -108,
+            "display": "-108"
+          },
+          "p1PayoutMultiplier": 1.8333333333333335,
+          "p2PayoutMultiplier": 1.925925925925926,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.102Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:17543|23465",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 17543,
+          "p2_dg_id": 23465,
+          "p1_player_name": "Kim, Michael",
+          "p2_player_name": "Greyserman, Max",
+          "p1_short": "Michael Kim",
+          "p2_short": "Max Greyserman",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -120,
+            "display": "-120"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -110,
+            "display": "-110"
+          },
+          "p1PayoutMultiplier": 1.8333333333333335,
+          "p2PayoutMultiplier": 1.9090909090909092,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.102Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:16841|21891",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 16841,
+          "p2_dg_id": 21891,
+          "p1_player_name": "Lee, Min Woo",
+          "p2_player_name": "Kitayama, Kurt",
+          "p1_short": "Min Woo Lee",
+          "p2_short": "Kurt Kitayama",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -118,
+            "display": "-118"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -112,
+            "display": "-112"
+          },
+          "p1PayoutMultiplier": 1.847457627118644,
+          "p2PayoutMultiplier": 1.8928571428571428,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.102Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:12965|20706",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 12965,
+          "p2_dg_id": 20706,
+          "p1_player_name": "Fowler, Rickie",
+          "p2_player_name": "Wallace, Matt",
+          "p1_short": "Rickie Fowler",
+          "p2_short": "Matt Wallace",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -112,
+            "display": "-112"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -118,
+            "display": "-118"
+          },
+          "p1PayoutMultiplier": 1.8928571428571428,
+          "p2PayoutMultiplier": 1.847457627118644,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.102Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:26657|29279",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 26657,
+          "p2_dg_id": 29279,
+          "p1_player_name": "Fisk, Steven",
+          "p2_player_name": "Suber, Jackson",
+          "p1_short": "Steven Fisk",
+          "p2_short": "Jackson Suber",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -112,
+            "display": "-112"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -118,
+            "display": "-118"
+          },
+          "p1PayoutMultiplier": 1.8928571428571428,
+          "p2PayoutMultiplier": 1.847457627118644,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.102Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:19846|22760",
+          "eventName": "Baycurrent Classic",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 19846,
+          "p2_dg_id": 22760,
+          "p1_player_name": "Bauchou, Zach",
+          "p2_player_name": "Hisatsune, Ryo",
+          "p1_short": "Zach Bauchou",
+          "p2_short": "Ryo Hisatsune",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -126,
+            "display": "-126"
+          },
+          "p1PayoutMultiplier": 1.9615384615384617,
+          "p2PayoutMultiplier": 1.7936507936507935,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-10-06T18:44:23.102Z"
+        }
+      ],
       "fetchError": "",
-      "count": 0,
-      "fetchedAt": "2026-09-24T03:35:50.680Z"
+      "count": 16,
+      "fetchedAt": "2026-10-06T18:44:23.102Z"
     }
   }
 }
