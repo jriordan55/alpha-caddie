@@ -78,6 +78,7 @@ function csvRowToHistoryRec(row) {
     year: Number.isFinite(yr) ? yr : new Date().getFullYear(),
     event_name: String(row.event_name || "").trim(),
     event_id: String(row.event_id || ""),
+    tour: String(row.tour || "").trim().toLowerCase(),
     course_name: String(row.course_name || row.event_name || "").trim(),
     round_num: rnd,
     fin_text: String(row.fin_text || ""),
@@ -126,10 +127,11 @@ function csvRowToHistoryRec(row) {
   };
 }
 
-function roundDedupeKey(r) {
+function roundDedupeKey(r, ignoreTour = false) {
   const yr = parseInt(String(r?.year || ""), 10);
   const rnd = Math.round(num(r?.round_num, NaN));
-  return `${yr}|${normEvt(r?.event_name)}|${rnd}`;
+  const tour = ignoreTour ? "" : String(r?.tour || "").trim().toLowerCase();
+  return `${tour}|${yr}|${normEvt(r?.event_name)}|${rnd}`;
 }
 
 function fieldDgIds(proj) {
@@ -152,8 +154,21 @@ function existingShardDgIds() {
   return ids;
 }
 
-const proj = JSON.parse(fs.readFileSync(PROJ_JSON, "utf8"));
-const fieldIds = fieldDgIds(proj);
+function loadFieldIds() {
+  const ids = new Set();
+  for (const name of ["projections.json", "projections-pga.json", "projections-euro.json"]) {
+    const p = path.join(WEB, name);
+    if (!fs.existsSync(p)) continue;
+    try {
+      for (const id of fieldDgIds(JSON.parse(fs.readFileSync(p, "utf8")))) ids.add(id);
+    } catch {
+      /* skip a locked or partial file */
+    }
+  }
+  return ids;
+}
+
+const fieldIds = loadFieldIds();
 const shardIds = existingShardDgIds();
 const targetIds = new Set([...fieldIds, ...shardIds]);
 
@@ -231,8 +246,14 @@ for (const dg of targetIds) {
   let updated = 0;
   for (const rec of csvRows) {
     const key = roundDedupeKey(rec);
-    const hit = index.get(key);
+    const legacy = roundDedupeKey(rec, true);
+    let hit = index.get(key);
+    if (hit === undefined) {
+      const legacyHit = index.get(legacy);
+      if (legacyHit !== undefined && !String(shard.rounds[legacyHit]?.tour || "").trim()) hit = legacyHit;
+    }
     if (hit !== undefined) {
+      index.set(key, hit);
       const before = JSON.stringify(shard.rounds[hit]);
       shard.rounds[hit] = { ...shard.rounds[hit], ...rec };
       if (JSON.stringify(shard.rounds[hit]) !== before) updated += 1;

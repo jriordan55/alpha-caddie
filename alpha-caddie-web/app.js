@@ -367,7 +367,7 @@ let DATA = {
   matchups: {},
 };
 
-/** Round projections tab only: PGA vs DP World Tour (DataGolf `euro`). Rest of app stays on DATA (PGA). */
+/** Active league for every tab. PGA and DP World events stay in separate files; a player's history shards include both. */
 const OU_TOUR_STORAGE_KEY = "alphaCaddie.ouTour";
 const OU_TOUR_PROJECTIONS_URL = Object.freeze({
   pga: "projections-pga.json",
@@ -389,7 +389,6 @@ function ouProjectionsTourLabel(tour = ouProjectionsTour) {
 }
 
 function ouProjectionsPayload() {
-  if (ouProjectionsTour === "euro" && ouTourProjectionsData) return ouTourProjectionsData;
   return DATA;
 }
 
@@ -476,15 +475,7 @@ async function setOuProjectionsTour(tour) {
   } catch (_) {}
   invalidateOuTourProjectionCaches();
   syncOuTourToggleUi();
-  if (next === "euro") {
-    try {
-      await loadOuTourProjections("euro", { force: true });
-    } catch (e) {
-      console.warn("[ou-tour] DP World projections load failed:", e?.message || e);
-    }
-  }
-  updateRoundLabels();
-  scheduleBuildOuTable(true);
+  await loadProjections({ reloadSidecar: false });
 }
 
 function ouTournamentDateStartIso() {
@@ -1238,7 +1229,7 @@ function projectionsJsonUrl() {
     const q = new URLSearchParams(window.location.search).get("projections");
     if (q != null && String(q).trim()) return String(q).trim();
   } catch (_) {}
-  return "projections.json";
+  return ouProjectionsTour === "euro" ? "projections-euro.json" : "projections-pga.json";
 }
 
 /** Same-origin fetches can still reuse a cached body; bust query on polls so book odds / +EV stay current. */
@@ -1263,6 +1254,8 @@ function liveInPlayJsonUrl() {
   }
   const base = projectionsJsonUrl().trim();
   if (!base) return "live-in-play.json";
+  if (/projections-euro\.json(?:$|\?)/.test(base)) return base.replace(/projections-euro\.json/, "live-in-play-euro.json");
+  if (/projections-pga\.json(?:$|\?)/.test(base)) return base.replace(/projections-pga\.json/, "live-in-play-pga.json");
   try {
     const u = new URL(base, typeof location !== "undefined" ? location.href : undefined);
     u.pathname = u.pathname.replace(/[^/]+$/, "live-in-play.json");
@@ -26304,7 +26297,8 @@ function updateHomePage() {
   const ev = m.event_name ? String(m.event_name).trim() : "";
   const course = m.course_used ? formatCourseNameForDisplay(m.course_used) : "";
   const venue = metaEventVenueLabel();
-  lineEl.textContent = venue && venue !== "—" ? venue : ev || "AlphaCaddie";
+  const league = ouProjectionsTourLabel();
+  lineEl.textContent = venue && venue !== "—" ? `${league} · ${venue}` : ev || "AlphaCaddie";
   if (metaEl) {
     metaEl.textContent = ev && course
       ? `${ev} at ${course} — choose a tool below to explore projections, history, and edge.`
@@ -29471,15 +29465,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   void (async () => {
     await loadProjections();
-    if (ouProjectionsTour === "euro") {
-      try {
-        await loadOuTourProjections("euro");
-        updateRoundLabels();
-        if (activeAppTabId() === "ou") scheduleBuildOuTable(true);
-      } catch (e) {
-        console.warn("[ou-tour] initial DP World load failed:", e?.message || e);
-      }
-    }
     startProjectionsPolling();
   })();
 

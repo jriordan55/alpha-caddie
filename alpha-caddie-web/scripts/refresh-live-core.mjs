@@ -9,6 +9,7 @@
  *   npm run refresh:live:full
  */
 import { copyFileSync, existsSync, mkdirSync } from "fs";
+import { setTimeout as delay } from "timers/promises";
 import path from "path";
 import { fileURLToPath } from "url";
 import { spawnSync } from "child_process";
@@ -82,7 +83,7 @@ function run(rel, label, extraEnv = {}, opts = {}) {
   return true;
 }
 
-function mirrorPublishArtifacts() {
+async function mirrorPublishArtifacts() {
   const destDir = path.join(REPO_ROOT, "website", "public", "data");
   mkdirSync(destDir, { recursive: true });
   const pairs = [
@@ -105,7 +106,19 @@ function mirrorPublishArtifacts() {
       continue;
     }
     mkdirSync(path.dirname(dest), { recursive: true });
-    copyFileSync(src, dest);
+    let copied = false;
+    let lastErr = null;
+    for (let attempt = 1; attempt <= 6; attempt++) {
+      try {
+        copyFileSync(src, dest);
+        copied = true;
+        break;
+      } catch (e) {
+        lastErr = e;
+        await delay(400 * attempt);
+      }
+    }
+    if (!copied) throw lastErr;
     console.log(`[refresh:live]   ${path.relative(REPO_ROOT, src)} → ${path.relative(REPO_ROOT, dest)}`);
   }
 }
@@ -120,7 +133,13 @@ console.log(
     "  (Full pipeline: npm run refresh:live:full)\n",
 );
 
-// PGA round archive first, so the Bayesian fit sees rounds added since the last CSV update.
+// DP World seasons back to 2017, then the recent PGA + DP World merge.
+if (!envTruthy("GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE", false)) {
+  run(
+    "ensure-dp-world-history.mjs",
+    "DP World historical rounds from 2017 (missing seasons only)",
+  );
+}
 if (!envTruthy("GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE", false)) {
   const years = String(process.env.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "2").trim();
   run(
@@ -176,7 +195,7 @@ run(
   softOpt,
 );
 
-mirrorPublishArtifacts();
+await mirrorPublishArtifacts();
 
 console.log("\n[refresh:live] Done — projections, sportsbook odds, and prior-round tab data updated.");
 console.log("[refresh:live] Publish: npm run push:live (or git push if already committed)\n");

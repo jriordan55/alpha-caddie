@@ -13,7 +13,7 @@
     onload="this.media='all'"
   />
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" /></noscript>
-  <link rel="stylesheet" href="styles.css?v=19" />
+  <link rel="stylesheet" href="styles.css?v=20" />
 </head>
 <body>
   <header class="app-nav">
@@ -37,6 +37,10 @@
           <span class="nav-subtitle">Model-driven projections &amp; edge tools</span>
         </div>
       </button>
+      <div class="app-tour-toggle ou-view-toggle-wrap" role="tablist" aria-label="League">
+        <button type="button" class="ou-toggle-btn active" data-proj-tour="pga" role="tab" aria-selected="true">PGA</button>
+        <button type="button" class="ou-toggle-btn" data-proj-tour="euro" role="tab" aria-selected="false">DP World</button>
+      </div>
     </div>
   </header>
 
@@ -1409,6 +1413,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=372"></script>
+  <script src="app.js?v=373"></script>
 </body>
 </html>

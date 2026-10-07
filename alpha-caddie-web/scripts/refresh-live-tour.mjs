@@ -19,7 +19,10 @@ const WEB_ROOT = path.resolve(__dirname, "..");
 const REPO_ROOT = path.resolve(WEB_ROOT, "..");
 
 const tour = normalizeTourCode(process.env.GOLF_DATAGOLF_TOUR || process.env.GOLF_TOUR || "pga");
-const paths = resolveProjectionPaths(WEB_ROOT, { ...process.env, GOLF_DATAGOLF_TOUR: tour });
+const pathEnv = { ...process.env, GOLF_DATAGOLF_TOUR: tour, GOLF_TOUR: tour };
+delete pathEnv.GOLF_PROJECTIONS_FILE;
+delete pathEnv.GOLF_LIVE_IN_PLAY_FILE;
+const paths = resolveProjectionPaths(WEB_ROOT, pathEnv);
 
 function envTruthy(name, defaultVal) {
   const raw = process.env[name];
@@ -30,7 +33,6 @@ function envTruthy(name, defaultVal) {
 
 function buildBaseEnv() {
   const pipeline = liveProjectionPipelineEnv();
-  const skipDkForEuro = tour === "euro" && process.env.GOLF_SKIP_DK_OU === undefined;
   const e = {
     ...process.env,
     ...pipeline,
@@ -43,23 +45,13 @@ function buildBaseEnv() {
     GOLF_MODEL_DIR: process.env.GOLF_MODEL_DIR?.trim() || REPO_ROOT,
     GOLF_SKIP_HISTORY_ON_FETCH_DG: "1",
     GOLF_SKIP_OUTRIGHT_BAKE_ON_FETCH_DG: "1",
-    GOLF_SKIP_SPORTSBOOK_OUTRIGHT_SCRAPE: tour === "euro" ? "1" : process.env.GOLF_SKIP_SPORTSBOOK_OUTRIGHT_SCRAPE,
+    ...(process.env.GOLF_SKIP_SPORTSBOOK_OUTRIGHT_SCRAPE
+      ? { GOLF_SKIP_SPORTSBOOK_OUTRIGHT_SCRAPE: process.env.GOLF_SKIP_SPORTSBOOK_OUTRIGHT_SCRAPE }
+      : {}),
     GOLF_DEFER_DK_ROUND_AUDIT_UNTIL_REPAIR: "1",
     GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL_XLSX: "1",
     GOLF_SKIP_MARKET_BOOK_CALIBRATION: "1",
     GOLF_SKIP_PAPER_BOOK_BAKE: tour === "euro" ? "1" : "0",
-    ...(skipDkForEuro
-      ? {
-          GOLF_SKIP_DK_OU: "1",
-          GOLF_SKIP_PP_OU: "1",
-          GOLF_SKIP_SL_OU: "1",
-          GOLF_SKIP_UD_OU: "1",
-          GOLF_SKIP_FD_OU: "1",
-          GOLF_SKIP_KL_OU: "1",
-          GOLF_SKIP_CZR_OU: "1",
-          GOLF_REQUIRE_DK_OU: "0",
-        }
-      : {}),
   };
   for (const key of Object.keys(pipeline)) {
     if (process.env[key] !== undefined && String(process.env[key]).trim() !== "") {
@@ -131,7 +123,7 @@ run(
 run("apply-unified-projection-factors.mjs", "Course fit + tee wave", {}, softOpt);
 run("merge-live-in-play-scratch-into-projections.mjs", "Live thru/scores", {}, softOpt);
 run("reconcile-projection-counts.mjs", "Reconcile counting stats", {}, softOpt);
-if (tour === "pga" && envTruthy("GOLF_HIERARCHICAL_MU", true)) {
+if (envTruthy("GOLF_HIERARCHICAL_MU", true)) {
   run(
     "apply-bayesian-round-mu.mjs",
     "Bayesian hierarchical round μ (baseline + course + skill×traits + tee-window wind + form)",

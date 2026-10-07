@@ -87,6 +87,9 @@ body {
   min-height: 64px;
   gap: 16px;
 }
+.app-tour-toggle {
+  flex: 0 0 auto;
+}
 .nav-brand {
   display: flex;
   align-items: center;

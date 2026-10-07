@@ -12,6 +12,7 @@ import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import { normCourseNameKey } from "./course-name-key.mjs";
+import { normalizeTourCode, tourDisplayLabel } from "./golf-tours.mjs";
 import { resolveProjectionPaths } from "./projection-paths.mjs";
 import { bakeOpenMeteoWeatherIntoProjections } from "./open-meteo-forecast.mjs";
 import { hierarchicalMuEnabled } from "./hierarchical-round-mu.mjs";
@@ -88,6 +89,7 @@ export async function applyBayesianRoundMu(opts = {}) {
   const targetRound = Math.round(
     num(proj.display_round ?? proj.datagolf_field_current_round ?? proj.meta?.round, 1),
   );
+  const tour = normalizeTourCode(proj.datagolf_feed_tour || proj.meta?.datagolf_feed_tour || "pga");
   const courseName = String(proj.course_used || proj.course_name || "").trim();
   const ck = normCourseNameKey(courseName);
   const par = Math.round(num(proj.course_par_18, 72)) || 72;
@@ -95,12 +97,12 @@ export async function applyBayesianRoundMu(opts = {}) {
 
   console.log("[bayes-mu] loading history…");
   const wxFile = existsSync(WEATHER) ? JSON.parse(readFileSync(WEATHER, "utf8")) : { byKey: {} };
-  const rounds = await loadRounds(HIST, wxFile.byKey || {});
+  const rounds = await loadRounds(HIST, wxFile.byKey || {}, { tours: ["pga", "euro"] });
   const { byKey, moments } = loadCourseMoments(WEB);
   const traits = traitsForCourse(ck, byKey, moments);
   const courseN = rounds.filter((r) => r.ck === ck).length;
   console.log(
-    `[bayes-mu] ${rounds.length} PGA rounds · course "${ck}" · ${courseN} historical rounds · yardage_z=${num(traits.yardage_z, 0).toFixed(2)}`,
+    `[bayes-mu] ${tourDisplayLabel(tour)} event · ${rounds.length} PGA+DP rounds in the fit · course "${ck}" · ${courseN} historical rounds · yardage_z=${num(traits.yardage_z, 0).toFixed(2)}`,
   );
   const fit = fitRoundForward(rounds, byKey, { holdoutEvents: 12 });
   const courseEff = fit.coef.course?.score?.get(ck);
@@ -156,6 +158,7 @@ export async function applyBayesianRoundMu(opts = {}) {
       wx,
       ck,
       par,
+      league: tour,
       projSkill: {
         ott: num(p.sg_ott, 0),
         app: num(p.sg_app, 0),
@@ -219,6 +222,7 @@ export async function applyBayesianRoundMu(opts = {}) {
     applied_at: proj.updated_at,
     n_players: n,
     owns_weather: true,
+    tour,
     course_key: ck,
     course_rounds: courseN,
     course_effect_score: Number.isFinite(courseEff) ? r3(courseEff) : 0,

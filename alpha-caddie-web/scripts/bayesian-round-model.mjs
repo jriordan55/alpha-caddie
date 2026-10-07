@@ -328,6 +328,7 @@ function refit(state) {
   const snaps = state.snaps;
   const coef = {
     tour: {},
+    league: {},
     course: {},
     courseK: {},
     courseTau: {},
@@ -397,12 +398,31 @@ function refit(state) {
     }
     const tour = sw > 0 ? sy / sw : NaN;
     coef.tour[m.id] = tour;
+    const byLeague = new Map();
+    for (const s of snaps) {
+      if (!Number.isFinite(s.field[m.id])) continue;
+      const L = s.league || "pga";
+      const years = Math.max(0, (now - s.t) / (365.25 * 86400000));
+      const w = Math.exp((-Math.LN2 * years) / 2.5);
+      const wxEff = s.wx ? dot(beta, s.wx) : meanWxEff;
+      const o = byLeague.get(L) || { sw: 0, sy: 0 };
+      o.sw += w;
+      o.sy += w * (s.field[m.id] - wxEff);
+      byLeague.set(L, o);
+    }
+    const leagueMap = new Map();
+    for (const [L, o] of byLeague) {
+      if (o.sw > 0) leagueMap.set(L, o.sy / o.sw);
+    }
+    coef.league[m.id] = leagueMap;
 
     const byC = new Map();
     for (const s of snaps) {
-      if (!Number.isFinite(s.field[m.id]) || !Number.isFinite(tour)) continue;
+      const level = coef.league[m.id].get(s.league || "pga");
+      const anchor = Number.isFinite(level) ? level : tour;
+      if (!Number.isFinite(s.field[m.id]) || !Number.isFinite(anchor)) continue;
       const wxEff = s.wx ? dot(beta, s.wx) : meanWxEff;
-      const dev = s.field[m.id] - tour - wxEff;
+      const dev = s.field[m.id] - anchor - wxEff;
       const o = byC.get(s.ck) || { sum: 0, sumSq: 0, n: 0 };
       o.sum += dev;
       o.sumSq += dev * dev;
@@ -441,7 +461,7 @@ function refit(state) {
   return coef;
 }
 
-function predictOne(mkt, player, traits, wx, ck, par, coef) {
+function predictOne(mkt, player, traits, wx, ck, par, coef, league) {
   const spec = MARKETS.find((m) => m.id === mkt);
   const k = coef.kPlayer[mkt] || 24;
   const base = playerBaseline(player, mkt, k);
@@ -453,7 +473,8 @@ function predictOne(mkt, player, traits, wx, ck, par, coef) {
   const ix = x ? dot(coef.ix[mkt], x) : 0;
   const course = coef.course[mkt]?.get(ck) || 0;
   const weather = wx ? dot(coef.weather[mkt], wx) : 0;
-  const tour = coef.tour[mkt];
+  const leagueLevel = coef.league?.[mkt]?.get(league || "pga");
+  const tour = Number.isFinite(leagueLevel) ? leagueLevel : coef.tour[mkt];
   const mu = clampMu(mkt, tour + course + base + form + ix + weather, par);
   return { mu, base, form, ix, course, weather, tour, skillN: player.sgN || 0, n: player.n[mkt] || 0 };
 }
@@ -524,11 +545,15 @@ function recomputeSkillSd(players) {
 }
 
 /**
- * Load PGA rounds from 2017+ into compact records.
+ * Load one tour's rounds from 2017+ into compact records.
  * Counting stats: birdies and bogeys are the raw columns (not eagles/doubles).
  * GIR is greens (fraction × 18). Fairways are a 14-hole equivalent count (fraction × 14).
+ * `opts.tour` is one league. `opts.tours` loads several (player baselines then pool across them).
  */
-export async function loadRounds(csvPath, weatherByKey) {
+export async function loadRounds(csvPath, weatherByKey, opts = {}) {
+  const tourFilter = new Set(
+    (opts.tours || [opts.tour || "pga"]).map((t) => String(t || "").trim().toLowerCase()).filter(Boolean),
+  );
   /** @type {object[]} */
   const rows = [];
   await new Promise((resolve, reject) => {
@@ -541,7 +566,7 @@ export async function loadRounds(csvPath, weatherByKey) {
   const out = [];
   for (const r of rows) {
     const tour = String(r.tour || "").toLowerCase();
-    if (tour && tour !== "pga") continue;
+    if (tour && !tourFilter.has(tour)) continue;
     const year = Math.round(num(r.year, NaN));
     if (!Number.isFinite(year) || year < 2017) continue;
     const dg = Math.round(num(r.dg_id, NaN));
@@ -576,7 +601,8 @@ export async function loadRounds(csvPath, weatherByKey) {
       [sgOtt, sgApp, sgArg, sgPutt].every((v) => Number.isFinite(v))
         ? { ott: sgOtt, app: sgApp, arg: sgArg, putt: sgPutt }
         : null;
-    const event = `${String(r.event_id || r.event_name || "").trim()}|${year}`;
+    const league = tour || "pga";
+    const event = `${league}|${String(r.event_id || r.event_name || "").trim()}|${year}`;
     const wxKey = `${String(r.event_id || "").trim()}|${year}|${rnd}`;
     const snap = weatherByKey?.[wxKey] || null;
     const wx = snap ? weatherDesign({ ...snap, windBlend: num(snap.windMph, NaN) }) : null;
@@ -588,6 +614,7 @@ export async function loadRounds(csvPath, weatherByKey) {
       ck,
       par,
       event,
+      league,
       eventName: String(r.event_name || ""),
       vals,
       sg,
@@ -690,7 +717,7 @@ export function fitRoundForward(rounds, traitsByKey, opts = {}) {
           for (const m of MARKETS) {
             const y = row.vals[m.id];
             if (!Number.isFinite(y) || !Number.isFinite(field[m.id]) || pl.n[m.id] < 8) continue;
-            const pred = predictOne(m.id, pl, traits, row.wx, row.ck, row.par, coef);
+            const pred = predictOne(m.id, pl, traits, row.wx, row.ck, row.par, coef, row.league);
             const baseOnly = clampMu(
               m.id,
               pred.tour + pred.course + pred.base,
@@ -743,6 +770,7 @@ export function fitRoundForward(rounds, traitsByKey, opts = {}) {
           ck: group[0].ck,
           t: group[0].t,
           event: group[0].event,
+          league: group[0].league || "pga",
           field,
           wx: group[0].wx,
         });
@@ -832,7 +860,7 @@ export function fitRoundForward(rounds, traitsByKey, opts = {}) {
 }
 
 export function projectPlayer(fit, opts) {
-  const { dg, traits, wx, ck, par, projSkill } = opts;
+  const { dg, traits, wx, ck, par, projSkill, league } = opts;
   const player = fit.players.get(dg) || blankPlayer();
   // Thin history: treat the published skill rating as 12 rounds, only for the interaction.
   let skillPlayer = player;
@@ -851,8 +879,8 @@ export function projectPlayer(fit, opts) {
   }
   const out = {};
   for (const m of MARKETS) {
-    const histPred = predictOne(m.id, player, traits, wx, ck, par, fit.coef);
-    const skillPred = predictOne(m.id, skillPlayer, traits, wx, ck, par, fit.coef);
+    const histPred = predictOne(m.id, player, traits, wx, ck, par, fit.coef, league);
+    const skillPred = predictOne(m.id, skillPlayer, traits, wx, ck, par, fit.coef, league);
     const tourSd = fit.dispersion[m.id]?.sigma || Math.sqrt(m.sigma2) * 0.95;
     let sigma = m.dist === "normal" ? playerSigma(player, m.id, tourSd, 30) : NaN;
     if (m.id === "score") {

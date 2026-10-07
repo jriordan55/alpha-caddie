@@ -79,6 +79,7 @@ export const COURSE_COORDINATES_BY_NAME = {
   "medinah country club": { lat: 41.966, lon: -88.048, timezone: "America/Chicago" },
   "black desert resort": { lat: 37.1686, lon: -113.6794, timezone: "America/Denver" },
   "yokohama country club": { lat: 35.446, lon: 139.549, timezone: "Asia/Tokyo" },
+  "club de campo villa de madrid": { lat: 40.4474, lon: -3.7454, timezone: "Europe/Madrid" },
   "port royal golf course": { lat: 32.2543, lon: -64.8776, timezone: "Atlantic/Bermuda" },
   "vidanta vallarta": { lat: 20.6835, lon: -105.2664, timezone: "America/Mexico_City" },
   "el cardonal at diamante": { lat: 22.9017, lon: -109.985, timezone: "America/Mazatlan" },
