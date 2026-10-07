@@ -131,6 +131,12 @@ run(
 run("apply-unified-projection-factors.mjs", "Course fit + tee wave", {}, softOpt);
 run("merge-live-in-play-scratch-into-projections.mjs", "Live thru/scores", {}, softOpt);
 run("reconcile-projection-counts.mjs", "Reconcile counting stats", {}, softOpt);
+if (tour === "pga" && envTruthy("GOLF_HIERARCHICAL_MU", true)) {
+  run(
+    "apply-bayesian-round-mu.mjs",
+    "Bayesian hierarchical round μ (baseline + course + skill×traits + tee-window wind + form)",
+  );
+}
 
 mirrorLegacyAliases();
 console.log(`\n[refresh-live-tour] Done: ${tourDisplayLabel(tour)} → ${paths.projectionsFile}\n`);

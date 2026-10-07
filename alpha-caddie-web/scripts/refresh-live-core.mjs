@@ -120,6 +120,16 @@ console.log(
     "  (Full pipeline: npm run refresh:live:full)\n",
 );
 
+// PGA round archive first, so the Bayesian fit sees rounds added since the last CSV update.
+if (!envTruthy("GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE", false)) {
+  const years = String(process.env.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "2").trim();
+  run(
+    "merge-recent-historical-rounds.mjs",
+    `PGA rounds into historical_rounds_all.csv (last ${years} calendar years; older rows kept)`,
+    { GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS: years },
+  );
+}
+
 // —— Per-tour projections (PGA + DP World) ——
 for (const tour of LIVE_PROJECTION_TOURS) {
   run(

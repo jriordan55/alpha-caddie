@@ -78,6 +78,10 @@ async function main() {
     console.log("[hier-mu] GOLF_HIERARCHICAL_MU off — skip");
     return;
   }
+  // Round μ is the Bayesian hierarchical model (baseline + course + skill×traits + tee-window weather + form).
+  const { applyBayesianRoundMu } = await import("./apply-bayesian-round-mu.mjs");
+  await applyBayesianRoundMu();
+  return;
   if (!existsSync(PROJ)) throw new Error(`Missing ${PROJ}`);
 
   const proj = JSON.parse(readFileSync(PROJ, "utf8"));

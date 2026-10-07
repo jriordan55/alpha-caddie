@@ -7,6 +7,9 @@ const COURSE_NAME_CANONICAL_KEYS = {
   "sea island resort": "sea island golf club",
   "royal birkdale": "royal birkdale golf club",
   "royal birkdale gc": "royal birkdale golf club",
+  // Baycurrent history is "Yokohama Country Club". The live feed says West Course
+  // (16 West holes + 2 East holes). Same venue, same rounds.
+  "yokohama country club west course": "yokohama country club",
 };
 
 /**

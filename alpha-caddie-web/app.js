@@ -22441,6 +22441,7 @@ const COURSE_NAME_CANONICAL_KEYS = Object.freeze({
   "sea island resort": "sea island golf club",
   "royal birkdale": "royal birkdale golf club",
   "royal birkdale gc": "royal birkdale golf club",
+  "yokohama country club west course": "yokohama country club",
 });
 
 /** Pull North/South course side before stripping parentheses (must match course-name-key.mjs). */
