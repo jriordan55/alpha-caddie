@@ -25798,7 +25798,11 @@
       "market": "Birdies",
       "round_num": 2,
       "dg_id": 12965,
-      "source": "draftkings"
+      "source": "draftkings",
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Lee, Min Woo",
@@ -25888,7 +25892,11 @@
       "market": "Birdies",
       "round_num": 2,
       "dg_id": 21074,
-      "source": "draftkings"
+      "source": "draftkings",
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Clark, Wyndham",
@@ -25918,7 +25926,11 @@
       "market": "Birdies",
       "round_num": 2,
       "dg_id": 29433,
-      "source": "draftkings"
+      "source": "draftkings",
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Thomas, Justin",
@@ -25928,7 +25940,11 @@
       "market": "Birdies",
       "round_num": 2,
       "dg_id": 14139,
-      "source": "draftkings"
+      "source": "draftkings",
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Schauffele, Xander",
@@ -25978,7 +25994,11 @@
       "market": "Birdies",
       "round_num": 2,
       "dg_id": 17543,
-      "source": "draftkings"
+      "source": "draftkings",
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Coody, Pierceson",
@@ -26058,7 +26078,11 @@
       "market": "Birdies",
       "round_num": 2,
       "dg_id": 17365,
-      "source": "draftkings"
+      "source": "draftkings",
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Thorbjornsen, Michael",
@@ -26318,7 +26342,11 @@
       "market": "Pars",
       "round_num": 2,
       "dg_id": 29767,
-      "source": "draftkings"
+      "source": "draftkings",
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Thorbjornsen, Michael",
@@ -26578,7 +26606,11 @@
       "market": "Total Score",
       "round_num": 2,
       "dg_id": 28635,
-      "source": "draftkings"
+      "source": "draftkings",
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Brennan, Michael",
@@ -26598,7 +26630,11 @@
       "market": "Total Score",
       "round_num": 2,
       "dg_id": 22085,
-      "source": "draftkings"
+      "source": "draftkings",
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Schauffele, Xander",
@@ -26638,7 +26674,11 @@
       "market": "Total Score",
       "round_num": 2,
       "dg_id": 26649,
-      "source": "draftkings"
+      "source": "draftkings",
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Lipsky, David",
@@ -26668,7 +26708,11 @@
       "market": "Total Score",
       "round_num": 2,
       "dg_id": 18586,
-      "source": "draftkings"
+      "source": "draftkings",
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Coody, Pierceson",
@@ -26758,7 +26802,11 @@
       "market": "Total Score",
       "round_num": 2,
       "dg_id": 22760,
-      "source": "draftkings"
+      "source": "draftkings",
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Fisk, Steven",
@@ -27442,7 +27490,7 @@
     },
     {
       "player_name": "Fujimoto, Yoshinori",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -27582,7 +27630,7 @@
     },
     {
       "player_name": "Finau, Tony",
-      "line": 29.5,
+      "line": 30.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -27641,7 +27689,11 @@
       "under_odds": -136,
       "p_over_implied": 0.576271186440678,
       "p_under_implied": 0.576271186440678,
-      "pp_odds_method": "prizepicks_fixed"
+      "pp_odds_method": "prizepicks_fixed",
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Keefer, Johnny",
@@ -27693,7 +27745,11 @@
       "under_odds": -136,
       "p_over_implied": 0.576271186440678,
       "p_under_implied": 0.576271186440678,
-      "pp_odds_method": "prizepicks_fixed"
+      "pp_odds_method": "prizepicks_fixed",
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Hisatsune, Ryo",
@@ -27706,7 +27762,11 @@
       "under_odds": -136,
       "p_over_implied": 0.576271186440678,
       "p_under_implied": 0.576271186440678,
-      "pp_odds_method": "prizepicks_fixed"
+      "pp_odds_method": "prizepicks_fixed",
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Hisatsune, Ryo",
@@ -27719,7 +27779,11 @@
       "under_odds": -136,
       "p_over_implied": 0.576271186440678,
       "p_under_implied": 0.576271186440678,
-      "pp_odds_method": "prizepicks_fixed"
+      "pp_odds_method": "prizepicks_fixed",
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Hisatsune, Ryo",
@@ -27745,7 +27809,11 @@
       "under_odds": -136,
       "p_over_implied": 0.576271186440678,
       "p_under_implied": 0.576271186440678,
-      "pp_odds_method": "prizepicks_fixed"
+      "pp_odds_method": "prizepicks_fixed",
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Homa, Max",
@@ -27758,7 +27826,11 @@
       "under_odds": -136,
       "p_over_implied": 0.576271186440678,
       "p_under_implied": 0.576271186440678,
-      "pp_odds_method": "prizepicks_fixed"
+      "pp_odds_method": "prizepicks_fixed",
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Fisk, Steven",
@@ -27771,7 +27843,11 @@
       "under_odds": -136,
       "p_over_implied": 0.576271186440678,
       "p_under_implied": 0.576271186440678,
-      "pp_odds_method": "prizepicks_fixed"
+      "pp_odds_method": "prizepicks_fixed",
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Kitayama, Kurt",
@@ -27823,7 +27899,11 @@
       "under_odds": -136,
       "p_over_implied": 0.576271186440678,
       "p_under_implied": 0.576271186440678,
-      "pp_odds_method": "prizepicks_fixed"
+      "pp_odds_method": "prizepicks_fixed",
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Scott, Adam",
@@ -27836,7 +27916,11 @@
       "under_odds": -136,
       "p_over_implied": 0.576271186440678,
       "p_under_implied": 0.576271186440678,
-      "pp_odds_method": "prizepicks_fixed"
+      "pp_odds_method": "prizepicks_fixed",
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Thomas, Justin",
@@ -27862,7 +27946,11 @@
       "under_odds": -136,
       "p_over_implied": 0.576271186440678,
       "p_under_implied": 0.576271186440678,
-      "pp_odds_method": "prizepicks_fixed"
+      "pp_odds_method": "prizepicks_fixed",
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Clark, Wyndham",
@@ -27875,7 +27963,11 @@
       "under_odds": -136,
       "p_over_implied": 0.576271186440678,
       "p_under_implied": 0.576271186440678,
-      "pp_odds_method": "prizepicks_fixed"
+      "pp_odds_method": "prizepicks_fixed",
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Scott, Adam",
@@ -27927,7 +28019,11 @@
       "under_odds": -136,
       "p_over_implied": 0.576271186440678,
       "p_under_implied": 0.576271186440678,
-      "pp_odds_method": "prizepicks_fixed"
+      "pp_odds_method": "prizepicks_fixed",
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Scott, Adam",
@@ -27940,7 +28036,11 @@
       "under_odds": -136,
       "p_over_implied": 0.576271186440678,
       "p_under_implied": 0.576271186440678,
-      "pp_odds_method": "prizepicks_fixed"
+      "pp_odds_method": "prizepicks_fixed",
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Harman, Brian",
@@ -27979,7 +28079,11 @@
       "under_odds": -136,
       "p_over_implied": 0.576271186440678,
       "p_under_implied": 0.576271186440678,
-      "pp_odds_method": "prizepicks_fixed"
+      "pp_odds_method": "prizepicks_fixed",
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Matsuyama, Hideki",
@@ -28603,7 +28707,11 @@
       "under_odds": -136,
       "p_over_implied": 0.576271186440678,
       "p_under_implied": 0.576271186440678,
-      "pp_odds_method": "prizepicks_fixed"
+      "pp_odds_method": "prizepicks_fixed",
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Spieth, Jordan",
