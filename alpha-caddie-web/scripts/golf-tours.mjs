@@ -56,3 +56,26 @@ export function fieldUpdatesTourCandidates(tour, env = process.env) {
 export function tourFromEnv(env = process.env) {
   return normalizeTourCode(env.GOLF_DATAGOLF_TOUR || env.GOLF_TOUR || "pga");
 }
+
+/** `dp` / `dpworld` are the DP World Tour; DataGolf's code is `euro`. */
+export function canonicalLiveTour(tour) {
+  const t = normalizeTourCode(tour).replace(/[\s_-]+/g, "");
+  if (t === "dp" || t === "dpworld" || t === "dpworldtour" || t === "european" || t === "euro") return "euro";
+  if (t === "pga" || t === "pgatour") return "pga";
+  return "";
+}
+
+/**
+ * Tours for one live publish. Unset = both.
+ * `GOLF_LIVE_PROJECTION_TOURS=pga` or `euro` (also accepts `dp`).
+ */
+export function liveProjectionToursFromEnv(env = process.env) {
+  const raw = String(env.GOLF_LIVE_PROJECTION_TOURS || "").trim();
+  if (!raw) return [...LIVE_PROJECTION_TOURS];
+  const tours = [];
+  for (const part of raw.split(/[,;\s]+/)) {
+    const code = canonicalLiveTour(part);
+    if (code && !tours.includes(code)) tours.push(code);
+  }
+  return tours.length ? tours : [...LIVE_PROJECTION_TOURS];
+}

@@ -24,8 +24,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB = path.resolve(__dirname, "..");
 const SHARD_DIR = path.join(WEB, "player-history", "by-dg");
 const PGA_JSON = path.join(WEB, "data", "pgatour_event_rounds.json");
-const LIVE_JSON = path.join(WEB, "live-in-play.json");
-const PROJ_JSON = path.join(WEB, "projections.json");
+const liveFile = String(process.env.GOLF_LIVE_IN_PLAY_FILE || "live-in-play.json").trim() || "live-in-play.json";
+const projFile = String(process.env.GOLF_PROJECTIONS_FILE || "projections.json").trim() || "projections.json";
+const LIVE_JSON = path.join(WEB, liveFile);
+const PROJ_JSON = path.join(WEB, projFile);
 
 function num(v) {
   const n = Number(v);

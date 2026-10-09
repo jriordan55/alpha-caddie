@@ -12,7 +12,8 @@ import { validatePpOuLinesInProps } from "./pp-ou-line-sanity.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
-const projPath = join(WEB_ROOT, "projections.json");
+const projFile = String(process.env.GOLF_PROJECTIONS_FILE || "projections.json").trim() || "projections.json";
+const projPath = join(WEB_ROOT, projFile);
 
 const DK_CORE_MARKETS = ["Total Score", "Birdies", "Pars", "Bogeys"];
 /** Round O/U books allowed alongside DraftKings on core counting markets. */
@@ -78,7 +79,7 @@ function fail(msg) {
 }
 
 if (!existsSync(projPath)) {
-  console.error("[validate:projections] FAIL: missing projections.json");
+  console.error(`[validate:projections] FAIL: missing ${projFile}`);
   process.exit(1);
 }
 
@@ -86,7 +87,7 @@ let proj;
 try {
   proj = JSON.parse(readFileSync(projPath, "utf8"));
 } catch (e) {
-  console.error(`[validate:projections] FAIL: could not parse projections.json — ${e.message || e}`);
+  console.error(`[validate:projections] FAIL: could not parse ${projFile} — ${e.message || e}`);
   process.exit(1);
 }
 

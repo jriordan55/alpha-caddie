@@ -2512,6 +2512,8 @@ export function ensureRoundProjectionArtifactsPublished(
 }
 
 async function main() {
+  const projFile = String(process.env.GOLF_PROJECTIONS_FILE || "").trim();
+  const liveFile = String(process.env.GOLF_LIVE_IN_PLAY_FILE || "").trim();
   const {
     path,
     summaryPath,
@@ -2525,7 +2527,10 @@ async function main() {
     eventName,
     pricingModes,
     actualSources,
-  } = await writeRoundProjectionVsActualCsv();
+  } = await writeRoundProjectionVsActualCsv({
+    ...(projFile ? { projectionsPath: join(WEB_ROOT, projFile) } : {}),
+    ...(liveFile ? { livePath: join(WEB_ROOT, liveFile) } : {}),
+  });
   const src = actualSources || {};
   console.log(
     `[round-projection-vs-actual] Wrote ${rows} detail row(s)` +

@@ -150,6 +150,8 @@
     "export:matchup-backtest": "node scripts/export-matchup-backtest-csv.mjs",
     "push:all": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/refresh-history-and-push.ps1",
     "push:live": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/refresh-history-and-push.ps1 -LiveWeekOnly -PullFirst",
+    "push:live:pga": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/refresh-history-and-push.ps1 -LiveWeekOnly -PullFirst -Tour pga",
+    "push:live:dp": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/refresh-history-and-push.ps1 -LiveWeekOnly -PullFirst -Tour dp",
     "push:projections": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/push-projections-only.ps1 -SkipRefresh",
     "push all": "npm run push:all",
     "push:all:pull-first": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/refresh-history-and-push.ps1 -PullFirst",

@@ -4,7 +4,8 @@
   [switch] $LiveWeekOnly,
   [switch] $ArtifactsOnly,
   [switch] $PullFirst,
-  [string] $CommitMessage = ""
+  [string] $CommitMessage = "",
+  [string] $Tour = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -130,6 +131,21 @@ if (-not (Test-Path (Join-Path $webRoot "package.json"))) {
 }
 
 Set-Location $webRoot
+
+function Resolve-LivePublishTour([string] $Raw) {
+  $t = "$Raw".Trim().ToLower() -replace "[\s_-]", ""
+  if ($t -eq "") { return "" }
+  if ($t -in @("dp", "dpworld", "dpworldtour", "euro", "european")) { return "euro" }
+  if ($t -in @("pga", "pgatour")) { return "pga" }
+  throw "Tour must be pga or dp (got '$Raw')."
+}
+
+$livePublishTour = Resolve-LivePublishTour $Tour
+if ($livePublishTour) {
+  $env:GOLF_LIVE_PROJECTION_TOURS = $livePublishTour
+  $tourLabel = if ($livePublishTour -eq "euro") { "DP World" } else { "PGA" }
+  Write-Host "Live publish tour: $tourLabel ($livePublishTour). The other league's event files are left as they are."
+}
 
 # OOS winner: day/form + skill-36 (no soft book μ align — that hurt Birdies ROI).
 # Skill-first total score: full μ_SG keep; tiny player-course residual (Detroit club pool was flattening).
@@ -431,28 +447,43 @@ function Invoke-GitPushPublish([string] $Root, [string] $Branch, [switch] $SyncF
 }
 
 function Stage-LiveWeekFieldHistoryShards([string] $RepoRoot, [string] $WebRoot) {
-  $projPath = Join-Path $WebRoot "projections.json"
-  if (-not (Test-Path $projPath)) {
-    Write-Host "LiveWeekOnly: no projections.json — skipping field history shard staging."
-    return
+  $tour = "$env:GOLF_LIVE_PROJECTION_TOURS".Trim().ToLower()
+  $projNames = @()
+  if ($tour -eq "" -or $tour -match "pga") {
+    $projNames += @("projections.json", "projections-pga.json")
   }
-  try {
-    $proj = Get-Content -LiteralPath $projPath -Raw -Encoding UTF8 | ConvertFrom-Json
-  } catch {
-    Write-Host "LiveWeekOnly: could not parse projections.json — skipping field history shard staging."
-    return
+  if ($tour -eq "" -or $tour -match "euro") {
+    $projNames += "projections-euro.json"
   }
-  Write-Host "LiveWeekOnly: staging field player-history shards (not full shard tree) ..."
+  $seen = @{}
   $staged = 0
-  foreach ($p in @($proj.players)) {
-    $dg = [int][Math]::Round([double]$p.dg_id)
-    if ($dg -le 0) { continue }
-    $rel = "alpha-caddie-web/player-history/by-dg/$dg.json"
-    $abs = Join-Path $RepoRoot $rel
-    if (Test-Path $abs) {
-      Invoke-GitNative $RepoRoot add -f -- $rel
-      $staged += 1
+  $parsedAny = $false
+  Write-Host "LiveWeekOnly: staging field player-history shards (not full shard tree) ..."
+  foreach ($name in $projNames) {
+    $projPath = Join-Path $WebRoot $name
+    if (-not (Test-Path $projPath)) { continue }
+    try {
+      $proj = Get-Content -LiteralPath $projPath -Raw -Encoding UTF8 | ConvertFrom-Json
+    } catch {
+      Write-Host "LiveWeekOnly: could not parse $name — skipping that field."
+      continue
     }
+    $parsedAny = $true
+    foreach ($p in @($proj.players)) {
+      $dg = [int][Math]::Round([double]$p.dg_id)
+      if ($dg -le 0 -or $seen.ContainsKey($dg)) { continue }
+      $seen[$dg] = $true
+      $rel = "alpha-caddie-web/player-history/by-dg/$dg.json"
+      $abs = Join-Path $RepoRoot $rel
+      if (Test-Path $abs) {
+        Invoke-GitNative $RepoRoot add -f -- $rel
+        $staged += 1
+      }
+    }
+  }
+  if (-not $parsedAny) {
+    Write-Host "LiveWeekOnly: no projection file parsed — skipping field history shard staging."
+    return
   }
   foreach ($rel in @(
       "alpha-caddie-web/player-history/manifest.json",
@@ -691,7 +722,13 @@ if ($LASTEXITCODE -eq 0) {
 
 if ([string]::IsNullOrWhiteSpace($CommitMessage)) {
   if ($LiveWeekOnly) {
-    $CommitMessage = "chore(data): live-week refresh $(Get-Date -Format 'yyyy-MM-dd')"
+    if ($livePublishTour -eq "euro") {
+      $CommitMessage = "chore(data): DP World live-week refresh $(Get-Date -Format 'yyyy-MM-dd')"
+    } elseif ($livePublishTour -eq "pga") {
+      $CommitMessage = "chore(data): PGA live-week refresh $(Get-Date -Format 'yyyy-MM-dd')"
+    } else {
+      $CommitMessage = "chore(data): live-week refresh $(Get-Date -Format 'yyyy-MM-dd')"
+    }
   } else {
     $CommitMessage = "chore(data): full refresh + publish $(Get-Date -Format 'yyyy-MM-dd')"
   }

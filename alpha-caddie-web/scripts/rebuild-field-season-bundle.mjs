@@ -9,7 +9,8 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB = path.resolve(__dirname, "..");
 const SHARD_DIR = path.join(WEB, "player-history", "by-dg");
-const PROJ_JSON = path.join(WEB, "projections.json");
+const projFile = String(process.env.GOLF_PROJECTIONS_FILE || "projections.json").trim() || "projections.json";
+const PROJ_JSON = path.join(WEB, projFile);
 
 function num(v) {
   const n = Number(v);
@@ -58,9 +59,21 @@ function fieldDgIds(proj) {
   return ids;
 }
 
-const proj = JSON.parse(fs.readFileSync(PROJ_JSON, "utf8"));
+function loadProjection(filePath) {
+  try {
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
 const seasonYear = resolveFieldSeasonYearFromProjections();
-const ids = fieldDgIds(proj);
+const ids = new Set();
+for (const name of ["projections.json", "projections-pga.json", "projections-euro.json"]) {
+  const loaded = loadProjection(path.join(WEB, name));
+  if (!loaded) continue;
+  for (const id of fieldDgIds(loaded)) ids.add(id);
+}
 const byDgId = {};
 let roundCount = 0;
 

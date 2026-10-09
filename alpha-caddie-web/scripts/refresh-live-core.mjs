@@ -15,7 +15,7 @@ import { fileURLToPath } from "url";
 import { spawnSync } from "child_process";
 import { dkOuScrapeEnv, liveProjectionPipelineEnv, requireDkOuEnv } from "./projection-pipeline-env.mjs";
 import { resolveOuIncrementalSinceIso } from "./tracker-incremental.mjs";
-import { LIVE_PROJECTION_TOURS } from "./golf-tours.mjs";
+import { liveInPlayFilename, liveProjectionToursFromEnv, projectionsFilename } from "./golf-tours.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -127,14 +127,36 @@ const liveWeekSoft = envTruthy("GOLF_LIVE_WEEK_SOFT", true);
 const softOpt = liveWeekSoft ? { optional: true } : {};
 const ouInc = resolveOuIncrementalSinceIso({ overlapDays: 2, fallbackDays: 14 });
 const rebuildPriorVsActual = envTruthy("GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS", false);
+const tours = liveProjectionToursFromEnv();
+const singleTour = tours.length === 1 ? tours[0] : "";
+
+/** Point shared tab steps at this tour's files. PGA keeps the legacy projections.json alias. */
+function tourArtifactEnv() {
+  if (!singleTour) return {};
+  if (singleTour === "pga") {
+    return {
+      GOLF_DATAGOLF_TOUR: "pga",
+      GOLF_TOUR: "pga",
+      GOLF_PROJECTIONS_FILE: "projections.json",
+      GOLF_LIVE_IN_PLAY_FILE: "live-in-play.json",
+    };
+  }
+  return {
+    GOLF_DATAGOLF_TOUR: singleTour,
+    GOLF_TOUR: singleTour,
+    GOLF_PROJECTIONS_FILE: projectionsFilename(singleTour),
+    GOLF_LIVE_IN_PLAY_FILE: liveInPlayFilename(singleTour),
+  };
+}
 
 console.log(
   "\n[refresh:live] Core live publish: projections + book odds + prior-round tab data.\n" +
+    `  Tours: ${tours.join(", ")}\n` +
     "  (Full pipeline: npm run refresh:live:full)\n",
 );
 
-// DP World seasons back to 2017, then the recent PGA + DP World merge.
-if (!envTruthy("GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE", false)) {
+// DP World seasons back to 2017, then the recent merge for the tours in this run.
+if (!envTruthy("GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE", false) && tours.includes("euro")) {
   run(
     "ensure-dp-world-history.mjs",
     "DP World historical rounds from 2017 (missing seasons only)",
@@ -142,15 +164,19 @@ if (!envTruthy("GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE", false)) {
 }
 if (!envTruthy("GOLF_REFRESH_LIVE_SKIP_POST_CSV_MERGE", false)) {
   const years = String(process.env.GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS || "2").trim();
+  const historyTours = singleTour || "";
   run(
     "merge-recent-historical-rounds.mjs",
-    `PGA rounds into historical_rounds_all.csv (last ${years} calendar years; older rows kept)`,
-    { GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS: years },
+    `Recent rounds into historical_rounds_all.csv (last ${years} calendar years; ${historyTours || "pga,liv,euro"}; older rows kept)`,
+    {
+      GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS: years,
+      ...(historyTours ? { GOLF_HISTORICAL_ROUNDS_TOURS: historyTours } : {}),
+    },
   );
 }
 
-// —— Per-tour projections (PGA + DP World) ——
-for (const tour of LIVE_PROJECTION_TOURS) {
+// —— Per-tour projections ——
+for (const tour of tours) {
   run(
     "refresh-live-tour.mjs",
     `Live projections (${tour})`,
@@ -167,6 +193,7 @@ if (!envTruthy("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL", false)) {
       ? "Projection tracker O/U CSV (full prior rebuild + current week)"
       : `Projection tracker O/U CSV (incremental since ${ouInc.sinceIso})`,
     {
+      ...tourArtifactEnv(),
       GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS: rebuildPriorVsActual ? "1" : "0",
       GOLF_OU_BACKTEST_SINCE: rebuildPriorVsActual ? "" : ouInc.sinceIso,
     },
@@ -183,15 +210,17 @@ if (!envTruthy("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL", false)) {
 
 // —— Tab data: Historical Trends prior-round shards (field only, not full rebuild) ——
 if (!envTruthy("GOLF_REFRESH_LIVE_SKIP_HISTORY_SHARDS", false)) {
-  run("sync-field-history-from-csv.mjs", "CSV → field player-history shards", {}, softOpt);
-  run("patch-current-event-history-shards.mjs", "Patch live rows into field history shards", {}, softOpt);
-  run("rebuild-field-season-bundle.mjs", "Rebuild field-{year}.json for Trends", {}, softOpt);
+  run("sync-field-history-from-csv.mjs", "CSV → field player-history shards", tourArtifactEnv(), softOpt);
+  run("patch-current-event-history-shards.mjs", "Patch live rows into field history shards", tourArtifactEnv(), softOpt);
+  run("rebuild-field-season-bundle.mjs", "Rebuild field-{year}.json for Trends", tourArtifactEnv(), softOpt);
 }
 
 run(
   "validate-projections-for-publish.mjs",
   "Validate projections before publish",
-  liveWeekSoft ? { GOLF_LIVE_VALIDATE_SOFT: "1", GOLF_SKIP_DK_OU_VALIDATE: "1" } : {},
+  liveWeekSoft
+    ? { ...tourArtifactEnv(), GOLF_LIVE_VALIDATE_SOFT: "1", GOLF_SKIP_DK_OU_VALIDATE: "1" }
+    : tourArtifactEnv(),
   softOpt,
 );
 
