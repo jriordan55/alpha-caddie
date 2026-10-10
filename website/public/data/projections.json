@@ -9,7 +9,7 @@
   "datagolf_field_current_round": 3,
   "display_round": 3,
   "display_round_label": "R3 — Saturday (auto, America/New_York)",
-  "updated_at": "2026-10-10T10:17:21.195Z",
+  "updated_at": "2026-10-10T12:07:51Z",
   "source": "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
   "outrights_odds_format": "percent",
   "matchups_odds_format": "decimal",
@@ -27819,10 +27819,10 @@
       "round_num": 3,
       "dg_id": 18474,
       "source": "draftkings",
-      "bet_over": "NO",
-      "bet_under": "YES",
-      "bet_reason_over": "wrong_side",
-      "bet_reason_under": "policy"
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Matsuyama, Hideki",
@@ -28130,7 +28130,7 @@
     },
     {
       "player_name": "Matsuyama, Hideki",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -28150,7 +28150,7 @@
     },
     {
       "player_name": "Clark, Wyndham",
-      "line": 27.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -28570,7 +28570,7 @@
     },
     {
       "player_name": "McCarthy, Denny",
-      "line": 27.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -28610,7 +28610,7 @@
     },
     {
       "player_name": "Iwata, Hiroshi",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -28630,7 +28630,7 @@
     },
     {
       "player_name": "Hosono, Yusaku",
-      "line": 29.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -28720,7 +28720,7 @@
     },
     {
       "player_name": "Finau, Tony",
-      "line": 29.5,
+      "line": 30.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -29783,10 +29783,10 @@
       "p_over_implied": 0.576271186440678,
       "p_under_implied": 0.576271186440678,
       "pp_odds_method": "prizepicks_fixed",
-      "bet_over": "NO",
-      "bet_under": "YES",
-      "bet_reason_over": "wrong_side",
-      "bet_reason_under": "policy"
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Jaeger, Stephan",
@@ -30292,7 +30292,11 @@
       "p_over_implied": 0.5515695067264574,
       "p_under_implied": 0.5708154506437768,
       "dg_id": 16283,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Jaeger, Stephan",
@@ -30526,7 +30530,11 @@
       "p_over_implied": 0.49504950495049505,
       "p_under_implied": 0.6282527881040892,
       "dg_id": 17543,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Kim, Michael",
@@ -30590,7 +30598,11 @@
       "p_over_implied": 0.588477366255144,
       "p_under_implied": 0.5348837209302325,
       "dg_id": 15651,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Scott, Adam",
@@ -30603,7 +30615,11 @@
       "p_over_implied": 0.5815899581589958,
       "p_under_implied": 0.54337899543379,
       "dg_id": 6430,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Scott, Adam",
@@ -30616,7 +30632,11 @@
       "p_over_implied": 0.5283018867924528,
       "p_under_implied": 0.5951417004048583,
       "dg_id": 6430,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Scott, Adam",
@@ -30629,7 +30649,11 @@
       "p_over_implied": 0.6282527881040892,
       "p_under_implied": 0.49504950495049505,
       "dg_id": 6430,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Smalley, Alex",
@@ -30642,7 +30666,11 @@
       "p_over_implied": 0.5121951219512195,
       "p_under_implied": 0.609375,
       "dg_id": 18474,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Smalley, Alex",
@@ -30655,7 +30683,11 @@
       "p_over_implied": 0.5555555555555556,
       "p_under_implied": 0.5689655172413793,
       "dg_id": 18474,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Kohles, Ben",
@@ -30668,7 +30700,11 @@
       "p_over_implied": 0.4830917874396135,
       "p_under_implied": 0.6415770609318996,
       "dg_id": 16395,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Kohles, Ben",
@@ -30681,7 +30717,11 @@
       "p_over_implied": 0.5614035087719298,
       "p_under_implied": 0.5614035087719298,
       "dg_id": 16395,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Mitchell, Keith",
@@ -30694,7 +30734,11 @@
       "p_over_implied": 0.5689655172413793,
       "p_under_implied": 0.5555555555555556,
       "dg_id": 17365,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Mitchell, Keith",
@@ -30707,7 +30751,11 @@
       "p_over_implied": 0.5515695067264574,
       "p_under_implied": 0.5708154506437768,
       "dg_id": 17365,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Fowler, Rickie",
@@ -30720,7 +30768,11 @@
       "p_over_implied": 0.5348837209302325,
       "p_under_implied": 0.588477366255144,
       "dg_id": 12965,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Coody, Pierceson",
@@ -30733,7 +30785,11 @@
       "p_over_implied": 0.504950495049505,
       "p_under_implied": 0.6212121212121212,
       "dg_id": 28309,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Coody, Pierceson",
@@ -30746,7 +30802,11 @@
       "p_over_implied": 0.6212121212121212,
       "p_under_implied": 0.5,
       "dg_id": 28309,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Schauffele, Xander",
@@ -30759,7 +30819,11 @@
       "p_over_implied": 0.6539792387543253,
       "p_under_implied": 0.47619047619047616,
       "dg_id": 19895,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Schauffele, Xander",
@@ -30772,7 +30836,11 @@
       "p_over_implied": 0.4608294930875576,
       "p_under_implied": 0.6666666666666666,
       "dg_id": 19895,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Schauffele, Xander",
@@ -30785,7 +30853,11 @@
       "p_over_implied": 0.54337899543379,
       "p_under_implied": 0.5815899581589958,
       "dg_id": 19895,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Thorbjornsen, Michael",
@@ -30798,7 +30870,11 @@
       "p_over_implied": 0.5515695067264574,
       "p_under_implied": 0.5708154506437768,
       "dg_id": 26649,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Thorbjornsen, Michael",
@@ -30811,7 +30887,11 @@
       "p_over_implied": 0.5121951219512195,
       "p_under_implied": 0.609375,
       "dg_id": 26649,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "McNealy, Maverick",
@@ -30824,7 +30904,11 @@
       "p_over_implied": 0.5614035087719298,
       "p_under_implied": 0.5614035087719298,
       "dg_id": 18634,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "McNealy, Maverick",
@@ -30837,7 +30921,11 @@
       "p_over_implied": 0.5098039215686274,
       "p_under_implied": 0.6138996138996139,
       "dg_id": 18634,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Gerard, Ryan",
@@ -30850,7 +30938,11 @@
       "p_over_implied": 0.5689655172413793,
       "p_under_implied": 0.5555555555555556,
       "dg_id": 29767,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Gerard, Ryan",
@@ -30863,7 +30955,11 @@
       "p_over_implied": 0.6282527881040892,
       "p_under_implied": 0.49504950495049505,
       "dg_id": 29767,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Thomas, Justin",
@@ -30876,7 +30972,11 @@
       "p_over_implied": 0.588477366255144,
       "p_under_implied": 0.5348837209302325,
       "dg_id": 14139,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Thomas, Justin",
@@ -30889,7 +30989,11 @@
       "p_over_implied": 0.5215311004784688,
       "p_under_implied": 0.6031746031746031,
       "dg_id": 14139,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Thomas, Justin",
@@ -30902,7 +31006,11 @@
       "p_over_implied": 0.6168582375478927,
       "p_under_implied": 0.504950495049505,
       "dg_id": 14139,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Bridgeman, Jacob",
@@ -30915,7 +31023,11 @@
       "p_over_implied": 0.5708154506437768,
       "p_under_implied": 0.5515695067264574,
       "dg_id": 29433,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Bridgeman, Jacob",
@@ -30928,7 +31040,11 @@
       "p_over_implied": 0.5412844036697247,
       "p_under_implied": 0.5815899581589958,
       "dg_id": 29433,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Roy, Kevin",
@@ -30941,7 +31057,11 @@
       "p_over_implied": 0.4694835680751174,
       "p_under_implied": 0.6575342465753424,
       "dg_id": 18424,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Roy, Kevin",
@@ -30954,7 +31074,11 @@
       "p_over_implied": 0.6138996138996139,
       "p_under_implied": 0.5073891625615764,
       "dg_id": 18424,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Kanaya, Takumi",
@@ -30967,7 +31091,11 @@
       "p_over_implied": 0.6621621621621622,
       "p_under_implied": 0.46511627906976744,
       "dg_id": 19729,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Kanaya, Takumi",
@@ -30980,7 +31108,11 @@
       "p_over_implied": 0.5983935742971888,
       "p_under_implied": 0.5238095238095238,
       "dg_id": 19729,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Bezuidenhout, Christiaan",
@@ -30993,7 +31125,11 @@
       "p_over_implied": 0.6805111821086262,
       "p_under_implied": 0.45045045045045046,
       "dg_id": 18103,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Bezuidenhout, Christiaan",
@@ -31006,7 +31142,11 @@
       "p_over_implied": 0.6031746031746031,
       "p_under_implied": 0.5192307692307693,
       "dg_id": 18103,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Bradley, Keegan",
@@ -31019,7 +31159,11 @@
       "p_over_implied": 0.5370370370370371,
       "p_under_implied": 0.588477366255144,
       "dg_id": 13872,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Bradley, Keegan",
@@ -31032,7 +31176,11 @@
       "p_over_implied": 0.5370370370370371,
       "p_under_implied": 0.5850622406639004,
       "dg_id": 13872,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Harman, Brian",
@@ -31045,7 +31193,11 @@
       "p_over_implied": 0.4694835680751174,
       "p_under_implied": 0.6575342465753424,
       "dg_id": 8825,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Harman, Brian",
@@ -31058,7 +31210,11 @@
       "p_over_implied": 0.5689655172413793,
       "p_under_implied": 0.5555555555555556,
       "dg_id": 8825,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Harman, Brian",
@@ -31071,7 +31227,11 @@
       "p_over_implied": 0.5780590717299579,
       "p_under_implied": 0.54337899543379,
       "dg_id": 8825,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Ghim, Doug",
@@ -31084,7 +31244,11 @@
       "p_over_implied": 0.5689655172413793,
       "p_under_implied": 0.5555555555555556,
       "dg_id": 24550,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Ghim, Doug",
@@ -31097,7 +31261,11 @@
       "p_over_implied": 0.6282527881040892,
       "p_under_implied": 0.49504950495049505,
       "dg_id": 24550,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Fisk, Steven",
@@ -31110,7 +31278,11 @@
       "p_over_implied": 0.49504950495049505,
       "p_under_implied": 0.6282527881040892,
       "dg_id": 26657,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Fisk, Steven",
@@ -31123,7 +31295,11 @@
       "p_over_implied": 0.609375,
       "p_under_implied": 0.5145631067961165,
       "dg_id": 26657,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Lee, Min Woo",
@@ -31136,7 +31312,11 @@
       "p_over_implied": 0.5951417004048583,
       "p_under_implied": 0.5283018867924528,
       "dg_id": 16841,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Lee, Min Woo",
@@ -31149,7 +31329,11 @@
       "p_over_implied": 0.5555555555555556,
       "p_under_implied": 0.5689655172413793,
       "dg_id": 16841,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Lee, Min Woo",
@@ -31162,7 +31346,11 @@
       "p_over_implied": 0.49019607843137253,
       "p_under_implied": 0.6323529411764706,
       "dg_id": 16841,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Matsuyama, Hideki",
@@ -31175,7 +31363,11 @@
       "p_over_implied": 0.5708154506437768,
       "p_under_implied": 0.5495495495495496,
       "dg_id": 13562,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Matsuyama, Hideki",
@@ -31188,7 +31380,11 @@
       "p_over_implied": 0.49261083743842365,
       "p_under_implied": 0.6323529411764706,
       "dg_id": 13562,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Homa, Max",
@@ -31201,7 +31397,11 @@
       "p_over_implied": 0.5192307692307693,
       "p_under_implied": 0.6062992125984252,
       "dg_id": 17538,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Homa, Max",
@@ -31214,7 +31414,11 @@
       "p_over_implied": 0.6138996138996139,
       "p_under_implied": 0.5098039215686274,
       "dg_id": 17538,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Homa, Max",
@@ -31227,7 +31431,11 @@
       "p_over_implied": 0.574468085106383,
       "p_under_implied": 0.5495495495495496,
       "dg_id": 17538,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Echavarria, Nico",
@@ -31240,7 +31448,11 @@
       "p_over_implied": 0.47619047619047616,
       "p_under_implied": 0.6539792387543253,
       "dg_id": 22833,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Echavarria, Nico",
@@ -31253,7 +31465,11 @@
       "p_over_implied": 0.6254681647940075,
       "p_under_implied": 0.4975124378109453,
       "dg_id": 22833,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "McCarty, Matt",
@@ -31266,7 +31482,11 @@
       "p_over_implied": 0.46511627906976744,
       "p_under_implied": 0.6621621621621622,
       "dg_id": 28635,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "McCarty, Matt",
@@ -31279,7 +31499,11 @@
       "p_over_implied": 0.49019607843137253,
       "p_under_implied": 0.6323529411764706,
       "dg_id": 28635,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Wallace, Matt",
@@ -31292,7 +31516,11 @@
       "p_over_implied": 0.5370370370370371,
       "p_under_implied": 0.588477366255144,
       "dg_id": 20706,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Wallace, Matt",
@@ -31305,7 +31533,11 @@
       "p_over_implied": 0.5348837209302325,
       "p_under_implied": 0.588477366255144,
       "dg_id": 20706,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Hisatsune, Ryo",
@@ -31318,7 +31550,11 @@
       "p_over_implied": 0.5073891625615764,
       "p_under_implied": 0.6138996138996139,
       "dg_id": 22760,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Hisatsune, Ryo",
@@ -31331,7 +31567,11 @@
       "p_over_implied": 0.5614035087719298,
       "p_under_implied": 0.5614035087719298,
       "dg_id": 22760,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Im, Sungjae",
@@ -31344,7 +31584,11 @@
       "p_over_implied": 0.5454545454545454,
       "p_under_implied": 0.574468085106383,
       "dg_id": 17488,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Im, Sungjae",
@@ -31357,7 +31601,11 @@
       "p_over_implied": 0.5412844036697247,
       "p_under_implied": 0.5815899581589958,
       "dg_id": 17488,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Im, Sungjae",
@@ -31421,7 +31669,11 @@
       "p_over_implied": 0.47619047619047616,
       "p_under_implied": 0.6539792387543253,
       "dg_id": 15470,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Hossler, Beau",
@@ -31434,7 +31686,11 @@
       "p_over_implied": 0.588477366255144,
       "p_under_implied": 0.5348837209302325,
       "dg_id": 15470,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "YES",
+      "bet_reason_over": "wrong_side",
+      "bet_reason_under": "policy"
     },
     {
       "player_name": "Keefer, Johnny",
@@ -31515,7 +31771,11 @@
       "p_over_implied": 0.5918367346938775,
       "p_under_implied": 0.5327102803738317,
       "dg_id": 29197,
-      "round_num": 3
+      "round_num": 3,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Brennan, Michael",
@@ -38489,7 +38749,7 @@
       "round_num": 3
     }
   },
-  "book_odds_refreshed_at": "2026-10-10T10:13:42Z",
+  "book_odds_refreshed_at": "2026-10-10T12:07:51Z",
   "dk_round_props_note": "goto: page.goto: net::ERR_CONNECTION_TIMED_OUT at https://sportsbook.draftkings.com/leagues/golf/baycurrent-classic?category=round\nCall log:\n\u001b[2m  - navigating to \"https://sportsbook.draftkings.com/leagues/golf/baycurrent-classic?category=round\", waiting until \"domcontentloaded\"\u001b[22m",
   "pp_round_props_refreshed_at": "2026-10-10T10:13:42Z",
   "sl_round_props_refreshed_at": "2026-10-10T10:13:42Z",
@@ -46384,5 +46644,6 @@
       "birdies_r": 40,
       "bogeys_r": 40
     }
-  }
+  },
+  "dk_round_props_refreshed_at": "2026-10-10T12:07:51Z"
 }
