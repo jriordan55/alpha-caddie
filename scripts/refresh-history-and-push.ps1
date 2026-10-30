@@ -424,10 +424,35 @@ function Invoke-GitPullMergePublish([string] $Root, [string] $Branch) {
 }
 
 function Discard-LiveWeekUnpublishedHistory([string] $RepoRoot) {
-  $dirty = @(git -C $RepoRoot status --porcelain -- "alpha-caddie-web/player-history" 2>$null | Where-Object { $_ -ne "" })
+  $rel = "alpha-caddie-web/player-history"
+  $dirty = @(git -C $RepoRoot status --porcelain -- $rel 2>$null | Where-Object { $_ -ne "" })
   if ($dirty.Count -eq 0) { return }
   Write-Host "LiveWeekOnly: reverting $($dirty.Count) unstaged player-history path(s) (only field shards were published) ..."
-  Invoke-GitNative $RepoRoot checkout -- "alpha-caddie-web/player-history"
+  $still = $dirty
+  for ($attempt = 1; $attempt -le 6; $attempt++) {
+    $prevEap = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    try {
+      & git -C $RepoRoot checkout -- $rel 2>&1 | ForEach-Object {
+        $line = "$_"
+        if ($line.Trim() -eq "") { return }
+        if ($line -match "unable to unlink|Invalid argument|Permission denied|being used by another process") {
+          Write-Warning $line
+        } else {
+          Write-Host $line
+        }
+      }
+    } finally {
+      $ErrorActionPreference = $prevEap
+    }
+    $still = @(git -C $RepoRoot status --porcelain -- $rel 2>$null | Where-Object { $_ -ne "" })
+    if ($still.Count -eq 0) { return }
+    if ($attempt -lt 6) {
+      Write-Host "LiveWeekOnly: $($still.Count) player-history path(s) still locked. Retry $attempt/6 ..."
+      Start-Sleep -Seconds (2 * $attempt)
+    }
+  }
+  Write-Warning "LiveWeekOnly: $($still.Count) player-history path(s) stayed locked and were left unstaged. The commit is unchanged; push continues."
 }
 
 function Invoke-GitPushPublish([string] $Root, [string] $Branch, [switch] $SyncFirst) {

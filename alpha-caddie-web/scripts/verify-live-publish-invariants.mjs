@@ -152,11 +152,17 @@ function main() {
   }
 
   // Projection tracker artifacts must exist and have been refreshed this session (wall-clock).
+  // Lean push:live skips the heavy OOS backtest (GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI=1), so that
+  // JSON is allowed to stay at its last full-pipeline write.
   const trackerFiles = [
     join(WEB_ROOT, "data", "round_projection_vs_actual.csv"),
     join(WEB_ROOT, "data", "round_projection_vs_actual_summary.csv"),
-    join(WEB_ROOT, "data", "walkforward_oos_roi.json"),
   ];
+  if (!envTruthy("GOLF_SKIP_BACKTEST_ODDS_MODEL_ROI", false)) {
+    trackerFiles.push(join(WEB_ROOT, "data", "walkforward_oos_roi.json"));
+  } else {
+    warns.push("walkforward_oos_roi.json freshness skipped (OOS backtest off on this publish)");
+  }
   const skipTracker = envTruthy("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL", false);
   if (!skipTracker) {
     const now = Date.now();
