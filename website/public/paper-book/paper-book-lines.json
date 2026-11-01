@@ -1,68 +1,1787 @@
 {
-  "updated_at": "2026-10-30T01:53:49.586Z",
+  "updated_at": "2026-11-01T15:01:40.552Z",
   "event_name": "VidantaWorld Mexico Open",
-  "round": 1,
-  "round_label": "R1 — next Thursday (auto, America/New_York)",
+  "round": 4,
+  "round_label": "R4 — Sunday (auto, America/New_York)",
   "books": {
     "draftkings": {
       "cards": [],
       "fetchError": "",
       "count": 0,
-      "fetchedAt": "2026-10-30T01:53:49.586Z"
+      "fetchedAt": "2026-11-01T15:01:40.553Z"
     },
     "prizepicks": {
       "cards": [],
       "fetchError": "PrizePicks partner API does not expose per-pick posted odds for standard lines",
       "count": 0,
-      "fetchedAt": "2026-10-30T01:53:49.587Z"
+      "fetchedAt": "2026-11-01T15:01:40.559Z"
     },
     "sleeper": {
-      "cards": [],
+      "cards": [
+        {
+          "cardKey": "32652|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 32652,
+          "playerName": "Akina, Kihei",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.6,
+            "display": "1.6x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2,
+            "display": "2x"
+          },
+          "overPayoutMultiplier": 1.6,
+          "underPayoutMultiplier": 2,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "32652|Bogeys",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 32652,
+          "playerName": "Akina, Kihei",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.93,
+            "display": "1.93x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.65,
+            "display": "1.65x"
+          },
+          "overPayoutMultiplier": 1.93,
+          "underPayoutMultiplier": 1.65,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "32652|Total Score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 32652,
+          "playerName": "Akina, Kihei",
+          "market": "Total score",
+          "line": 68.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.67,
+            "display": "1.67x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.91,
+            "display": "1.91x"
+          },
+          "overPayoutMultiplier": 1.67,
+          "underPayoutMultiplier": 1.91,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "18103|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 18103,
+          "playerName": "Bezuidenhout, Christiaan",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.66,
+            "display": "1.66x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.92,
+            "display": "1.92x"
+          },
+          "overPayoutMultiplier": 1.66,
+          "underPayoutMultiplier": 1.92,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "18103|Bogeys",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 18103,
+          "playerName": "Bezuidenhout, Christiaan",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.33,
+            "display": "2.33x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.42,
+            "display": "1.42x"
+          },
+          "overPayoutMultiplier": 2.33,
+          "underPayoutMultiplier": 1.42,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "18103|Total Score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 18103,
+          "playerName": "Bezuidenhout, Christiaan",
+          "market": "Total score",
+          "line": 68.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.78,
+            "display": "1.78x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.78,
+            "display": "1.78x"
+          },
+          "overPayoutMultiplier": 1.78,
+          "underPayoutMultiplier": 1.78,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "18628|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 18628,
+          "playerName": "Campbell, Brian",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.98,
+            "display": "1.98x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.61,
+            "display": "1.61x"
+          },
+          "overPayoutMultiplier": 1.98,
+          "underPayoutMultiplier": 1.61,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "18628|Bogeys",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 18628,
+          "playerName": "Campbell, Brian",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.85,
+            "display": "1.85x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.72,
+            "display": "1.72x"
+          },
+          "overPayoutMultiplier": 1.85,
+          "underPayoutMultiplier": 1.72,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "18628|Total Score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 18628,
+          "playerName": "Campbell, Brian",
+          "market": "Total score",
+          "line": 69.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.86,
+            "display": "1.86x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.7,
+            "display": "1.7x"
+          },
+          "overPayoutMultiplier": 1.86,
+          "underPayoutMultiplier": 1.7,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "12909|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 12909,
+          "playerName": "Campos, Rafael",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.84,
+            "display": "1.84x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.72,
+            "display": "1.72x"
+          },
+          "overPayoutMultiplier": 1.84,
+          "underPayoutMultiplier": 1.72,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "32330|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 32330,
+          "playerName": "Clanton, Luke",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.5,
+            "display": "1.5x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.17,
+            "display": "2.17x"
+          },
+          "overPayoutMultiplier": 1.5,
+          "underPayoutMultiplier": 2.17,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "17576|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 17576,
+          "playerName": "Conners, Corey",
+          "market": "Birdies",
+          "line": 5.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.08,
+            "display": "2.08x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.55,
+            "display": "1.55x"
+          },
+          "overPayoutMultiplier": 2.08,
+          "underPayoutMultiplier": 1.55,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "28309|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 28309,
+          "playerName": "Coody, Pierceson",
+          "market": "Birdies",
+          "line": 5.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.19,
+            "display": "2.19x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.49,
+            "display": "1.49x"
+          },
+          "overPayoutMultiplier": 2.19,
+          "underPayoutMultiplier": 1.49,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "28309|Bogeys",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 28309,
+          "playerName": "Coody, Pierceson",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.96,
+            "display": "1.96x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.63,
+            "display": "1.63x"
+          },
+          "overPayoutMultiplier": 1.96,
+          "underPayoutMultiplier": 1.63,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "28309|Total Score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 28309,
+          "playerName": "Coody, Pierceson",
+          "market": "Total score",
+          "line": 68.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.78,
+            "display": "1.78x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.78,
+            "display": "1.78x"
+          },
+          "overPayoutMultiplier": 1.78,
+          "underPayoutMultiplier": 1.78,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "27780|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 27780,
+          "playerName": "Crowe, Trace",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.49,
+            "display": "1.49x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.19,
+            "display": "2.19x"
+          },
+          "overPayoutMultiplier": 1.49,
+          "underPayoutMultiplier": 2.19,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "22002|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 22002,
+          "playerName": "Dumont De Chassart, Adrien",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.63,
+            "display": "1.63x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.96,
+            "display": "1.96x"
+          },
+          "overPayoutMultiplier": 1.63,
+          "underPayoutMultiplier": 1.96,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "26657|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 26657,
+          "playerName": "Fisk, Steven",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.58,
+            "display": "1.58x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.04,
+            "display": "2.04x"
+          },
+          "overPayoutMultiplier": 1.58,
+          "underPayoutMultiplier": 2.04,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "26657|Bogeys",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 26657,
+          "playerName": "Fisk, Steven",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.2,
+            "display": "2.2x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.48,
+            "display": "1.48x"
+          },
+          "overPayoutMultiplier": 2.2,
+          "underPayoutMultiplier": 1.48,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "26657|Total Score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 26657,
+          "playerName": "Fisk, Steven",
+          "market": "Total score",
+          "line": 68.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.8,
+            "display": "1.8x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.76,
+            "display": "1.76x"
+          },
+          "overPayoutMultiplier": 1.8,
+          "underPayoutMultiplier": 1.76,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "24550|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 24550,
+          "playerName": "Ghim, Doug",
+          "market": "Birdies",
+          "line": 5.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.02,
+            "display": "2.02x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.59,
+            "display": "1.59x"
+          },
+          "overPayoutMultiplier": 2.02,
+          "underPayoutMultiplier": 1.59,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "24550|Bogeys",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 24550,
+          "playerName": "Ghim, Doug",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.53,
+            "display": "1.53x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.1,
+            "display": "2.1x"
+          },
+          "overPayoutMultiplier": 1.53,
+          "underPayoutMultiplier": 2.1,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "24550|Total Score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 24550,
+          "playerName": "Ghim, Doug",
+          "market": "Total score",
+          "line": 67.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.69,
+            "display": "1.69x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.88,
+            "display": "1.88x"
+          },
+          "overPayoutMultiplier": 1.69,
+          "underPayoutMultiplier": 1.88,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "23465|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 23465,
+          "playerName": "Greyserman, Max",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.49,
+            "display": "1.49x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.19,
+            "display": "2.19x"
+          },
+          "overPayoutMultiplier": 1.49,
+          "underPayoutMultiplier": 2.19,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "23465|Bogeys",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 23465,
+          "playerName": "Greyserman, Max",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.98,
+            "display": "1.98x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.61,
+            "display": "1.61x"
+          },
+          "overPayoutMultiplier": 1.98,
+          "underPayoutMultiplier": 1.61,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "23465|Total Score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 23465,
+          "playerName": "Greyserman, Max",
+          "market": "Total score",
+          "line": 68.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.8,
+            "display": "1.8x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.76,
+            "display": "1.76x"
+          },
+          "overPayoutMultiplier": 1.8,
+          "underPayoutMultiplier": 1.76,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "24968|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 24968,
+          "playerName": "Griffin, Ben",
+          "market": "Birdies",
+          "line": 5.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.05,
+            "display": "2.05x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.57,
+            "display": "1.57x"
+          },
+          "overPayoutMultiplier": 2.05,
+          "underPayoutMultiplier": 1.57,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "24968|Bogeys",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 24968,
+          "playerName": "Griffin, Ben",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.52,
+            "display": "1.52x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.14,
+            "display": "2.14x"
+          },
+          "overPayoutMultiplier": 1.52,
+          "underPayoutMultiplier": 2.14,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "24968|Total Score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 24968,
+          "playerName": "Griffin, Ben",
+          "market": "Total score",
+          "line": 67.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.66,
+            "display": "1.66x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.92,
+            "display": "1.92x"
+          },
+          "overPayoutMultiplier": 1.66,
+          "underPayoutMultiplier": 1.92,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "27194|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 27194,
+          "playerName": "Hall, Harry",
+          "market": "Birdies",
+          "line": 5.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.15,
+            "display": "2.15x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.51,
+            "display": "1.51x"
+          },
+          "overPayoutMultiplier": 2.15,
+          "underPayoutMultiplier": 1.51,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "20954|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 20954,
+          "playerName": "Hirata, Kensei",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.99,
+            "display": "1.99x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.61,
+            "display": "1.61x"
+          },
+          "overPayoutMultiplier": 1.99,
+          "underPayoutMultiplier": 1.61,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "20954|Bogeys",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 20954,
+          "playerName": "Hirata, Kensei",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.66,
+            "display": "1.66x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.92,
+            "display": "1.92x"
+          },
+          "overPayoutMultiplier": 1.66,
+          "underPayoutMultiplier": 1.92,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "20954|Total Score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 20954,
+          "playerName": "Hirata, Kensei",
+          "market": "Total score",
+          "line": 69.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.69,
+            "display": "1.69x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.89,
+            "display": "1.89x"
+          },
+          "overPayoutMultiplier": 1.69,
+          "underPayoutMultiplier": 1.89,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "15556|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 15556,
+          "playerName": "Hughes, Mackenzie",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.58,
+            "display": "1.58x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.04,
+            "display": "2.04x"
+          },
+          "overPayoutMultiplier": 1.58,
+          "underPayoutMultiplier": 2.04,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "15556|Bogeys",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 15556,
+          "playerName": "Hughes, Mackenzie",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.22,
+            "display": "2.22x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.47,
+            "display": "1.47x"
+          },
+          "overPayoutMultiplier": 2.22,
+          "underPayoutMultiplier": 1.47,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "15556|Total Score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 15556,
+          "playerName": "Hughes, Mackenzie",
+          "market": "Total score",
+          "line": 68.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.81,
+            "display": "1.81x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.75,
+            "display": "1.75x"
+          },
+          "overPayoutMultiplier": 1.81,
+          "underPayoutMultiplier": 1.75,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "24766|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 24766,
+          "playerName": "Kim, Tom",
+          "market": "Birdies",
+          "line": 5.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.03,
+            "display": "2.03x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.58,
+            "display": "1.58x"
+          },
+          "overPayoutMultiplier": 2.03,
+          "underPayoutMultiplier": 1.58,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "24766|Bogeys",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 24766,
+          "playerName": "Kim, Tom",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.53,
+            "display": "1.53x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.11,
+            "display": "2.11x"
+          },
+          "overPayoutMultiplier": 1.53,
+          "underPayoutMultiplier": 2.11,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "24766|Total Score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 24766,
+          "playerName": "Kim, Tom",
+          "market": "Total score",
+          "line": 67.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.67,
+            "display": "1.67x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.9,
+            "display": "1.9x"
+          },
+          "overPayoutMultiplier": 1.67,
+          "underPayoutMultiplier": 1.9,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "21074|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 21074,
+          "playerName": "Nakajima, Keita",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.53,
+            "display": "1.53x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.12,
+            "display": "2.12x"
+          },
+          "overPayoutMultiplier": 1.53,
+          "underPayoutMultiplier": 2.12,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "23841|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 23841,
+          "playerName": "Neergaard-Petersen, Rasmus",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.56,
+            "display": "1.56x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.07,
+            "display": "2.07x"
+          },
+          "overPayoutMultiplier": 1.56,
+          "underPayoutMultiplier": 2.07,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "23475|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 23475,
+          "playerName": "Novak, Andrew",
+          "market": "Birdies",
+          "line": 5.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.19,
+            "display": "2.19x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.48,
+            "display": "1.48x"
+          },
+          "overPayoutMultiplier": 2.19,
+          "underPayoutMultiplier": 1.48,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "23475|Bogeys",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 23475,
+          "playerName": "Novak, Andrew",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.14,
+            "display": "2.14x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.51,
+            "display": "1.51x"
+          },
+          "overPayoutMultiplier": 2.14,
+          "underPayoutMultiplier": 1.51,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "23475|Total Score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 23475,
+          "playerName": "Novak, Andrew",
+          "market": "Total score",
+          "line": 68.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.9,
+            "display": "1.9x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.68,
+            "display": "1.68x"
+          },
+          "overPayoutMultiplier": 1.9,
+          "underPayoutMultiplier": 1.68,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "19960|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 19960,
+          "playerName": "Pavon, Matthieu",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.68,
+            "display": "1.68x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.89,
+            "display": "1.89x"
+          },
+          "overPayoutMultiplier": 1.68,
+          "underPayoutMultiplier": 1.89,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "19960|Bogeys",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 19960,
+          "playerName": "Pavon, Matthieu",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.88,
+            "display": "1.88x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.69,
+            "display": "1.69x"
+          },
+          "overPayoutMultiplier": 1.88,
+          "underPayoutMultiplier": 1.69,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "19960|Total Score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 19960,
+          "playerName": "Pavon, Matthieu",
+          "market": "Total score",
+          "line": 68.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.61,
+            "display": "1.61x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.99,
+            "display": "1.99x"
+          },
+          "overPayoutMultiplier": 1.61,
+          "underPayoutMultiplier": 1.99,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "22465|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 22465,
+          "playerName": "Penge, Marco",
+          "market": "Birdies",
+          "line": 5.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.96,
+            "display": "1.96x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.63,
+            "display": "1.63x"
+          },
+          "overPayoutMultiplier": 1.96,
+          "underPayoutMultiplier": 1.63,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "27164|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 27164,
+          "playerName": "Phillips, Chandler",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.66,
+            "display": "1.66x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.92,
+            "display": "1.92x"
+          },
+          "overPayoutMultiplier": 1.66,
+          "underPayoutMultiplier": 1.92,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "17381|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 17381,
+          "playerName": "Silverman, Ben",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.78,
+            "display": "1.78x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.78,
+            "display": "1.78x"
+          },
+          "overPayoutMultiplier": 1.78,
+          "underPayoutMultiplier": 1.78,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "18586|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 18586,
+          "playerName": "Smith, Jordan",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.52,
+            "display": "1.52x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.13,
+            "display": "2.13x"
+          },
+          "overPayoutMultiplier": 1.52,
+          "underPayoutMultiplier": 2.13,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "21995|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 21995,
+          "playerName": "Springer, Hayden",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.57,
+            "display": "1.57x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.05,
+            "display": "2.05x"
+          },
+          "overPayoutMultiplier": 1.57,
+          "underPayoutMultiplier": 2.05,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "29279|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 29279,
+          "playerName": "Suber, Jackson",
+          "market": "Birdies",
+          "line": 5.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.16,
+            "display": "2.16x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.5,
+            "display": "1.5x"
+          },
+          "overPayoutMultiplier": 2.16,
+          "underPayoutMultiplier": 1.5,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "17550|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 17550,
+          "playerName": "Van Rooyen, Erik",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.63,
+            "display": "1.63x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.97,
+            "display": "1.97x"
+          },
+          "overPayoutMultiplier": 1.63,
+          "underPayoutMultiplier": 1.97,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "15651|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 15651,
+          "playerName": "Ventura, Kristoffer",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.5,
+            "display": "1.5x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.17,
+            "display": "2.17x"
+          },
+          "overPayoutMultiplier": 1.5,
+          "underPayoutMultiplier": 2.17,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "15651|Bogeys",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 15651,
+          "playerName": "Ventura, Kristoffer",
+          "market": "Bogeys",
+          "line": 2.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.31,
+            "display": "2.31x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.43,
+            "display": "1.43x"
+          },
+          "overPayoutMultiplier": 2.31,
+          "underPayoutMultiplier": 1.43,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "15651|Total Score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 15651,
+          "playerName": "Ventura, Kristoffer",
+          "market": "Total score",
+          "line": 68.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.93,
+            "display": "1.93x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.66,
+            "display": "1.66x"
+          },
+          "overPayoutMultiplier": 1.93,
+          "underPayoutMultiplier": 1.66,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "24304|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 24304,
+          "playerName": "Vilips, Karl",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.56,
+            "display": "1.56x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.07,
+            "display": "2.07x"
+          },
+          "overPayoutMultiplier": 1.56,
+          "underPayoutMultiplier": 2.07,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        },
+        {
+          "cardKey": "29925|Birdies",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 29925,
+          "playerName": "Yellamaraju, Sudarshan",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.56,
+            "display": "1.56x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.07,
+            "display": "2.07x"
+          },
+          "overPayoutMultiplier": 1.56,
+          "underPayoutMultiplier": 2.07,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:40.560Z"
+        }
+      ],
       "fetchError": "",
-      "count": 0,
-      "fetchedAt": "2026-10-30T01:53:49.588Z"
+      "count": 59,
+      "fetchedAt": "2026-11-01T15:01:40.560Z"
     },
     "underdog": {
       "cards": [],
       "fetchError": "Underdog API HTTP 426",
       "count": 0,
-      "fetchedAt": "2026-10-30T01:53:55.612Z"
+      "fetchedAt": "2026-11-01T15:01:49.280Z"
     },
     "kalshi": {
       "cards": [
         {
           "cardKey": "24956|Total score",
           "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
+          "round": 4,
           "dg_id": 24956,
           "playerName": "Blanchet, Chandler",
           "market": "Total score",
           "line": 69.5,
-          "overOdds": 115,
-          "underOdds": -115,
+          "overOdds": 104,
+          "underOdds": -104,
           "overBookOdds": {
             "kind": "american",
-            "raw": 115,
-            "display": "+115"
+            "raw": 104,
+            "display": "+104"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -115,
-            "display": "-115"
+            "raw": -104,
+            "display": "-104"
           },
-          "overPayoutMultiplier": 2.15,
-          "underPayoutMultiplier": 1.8695652173913042,
+          "overPayoutMultiplier": 2.04,
+          "underPayoutMultiplier": 1.9615384615384617,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.777Z"
+          "fetchedAt": "2026-11-01T15:01:49.420Z"
         },
         {
           "cardKey": "32152|Total score",
           "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
+          "round": 4,
           "dg_id": 32152,
           "playerName": "Brown, Blades",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": 133,
+          "underOdds": -133,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 133,
+            "display": "+133"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -133,
+            "display": "-133"
+          },
+          "overPayoutMultiplier": 2.33,
+          "underPayoutMultiplier": 1.7518796992481203,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:49.420Z"
+        },
+        {
+          "cardKey": "32330|Total score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 32330,
+          "playerName": "Clanton, Luke",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": 106,
+          "underOdds": -106,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 106,
+            "display": "+106"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -106,
+            "display": "-106"
+          },
+          "overPayoutMultiplier": 2.06,
+          "underPayoutMultiplier": 1.9433962264150944,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:49.420Z"
+        },
+        {
+          "cardKey": "17576|Total score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 17576,
+          "playerName": "Conners, Corey",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": 122,
+          "underOdds": -122,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 122,
+            "display": "+122"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -122,
+            "display": "-122"
+          },
+          "overPayoutMultiplier": 2.2199999999999998,
+          "underPayoutMultiplier": 1.819672131147541,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:49.420Z"
+        },
+        {
+          "cardKey": "24550|Total score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 24550,
+          "playerName": "Ghim, Doug",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": 144,
+          "underOdds": -144,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 144,
+            "display": "+144"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -144,
+            "display": "-144"
+          },
+          "overPayoutMultiplier": 2.44,
+          "underPayoutMultiplier": 1.6944444444444444,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:49.420Z"
+        },
+        {
+          "cardKey": "24968|Total score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 24968,
+          "playerName": "Griffin, Ben",
+          "market": "Total score",
+          "line": 67.5,
+          "overOdds": -127,
+          "underOdds": 127,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -127,
+            "display": "-127"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 127,
+            "display": "+127"
+          },
+          "overPayoutMultiplier": 1.7874015748031495,
+          "underPayoutMultiplier": 2.27,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:49.420Z"
+        },
+        {
+          "cardKey": "29827|Total score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 29827,
+          "playerName": "James, Ben",
+          "market": "Total score",
+          "line": 67.5,
+          "overOdds": -100,
+          "underOdds": -100,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -100,
+            "display": "-100"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -100,
+            "display": "-100"
+          },
+          "overPayoutMultiplier": 2,
+          "underPayoutMultiplier": 2,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:49.420Z"
+        },
+        {
+          "cardKey": "24766|Total score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 24766,
+          "playerName": "Kim, Tom",
+          "market": "Total score",
+          "line": 67.5,
+          "overOdds": 102,
+          "underOdds": -102,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 102,
+            "display": "+102"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -102,
+            "display": "-102"
+          },
+          "overPayoutMultiplier": 2.02,
+          "underPayoutMultiplier": 1.9803921568627452,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:49.420Z"
+        },
+        {
+          "cardKey": "23475|Total score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 23475,
+          "playerName": "Novak, Andrew",
+          "market": "Total score",
+          "line": 66.5,
+          "overOdds": -257,
+          "underOdds": 257,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -257,
+            "display": "-257"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 257,
+            "display": "+257"
+          },
+          "overPayoutMultiplier": 1.3891050583657587,
+          "underPayoutMultiplier": 3.57,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:49.420Z"
+        },
+        {
+          "cardKey": "19960|Total score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 19960,
+          "playerName": "Pavon, Matthieu",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -135,
+          "underOdds": 135,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -135,
+            "display": "-135"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 135,
+            "display": "+135"
+          },
+          "overPayoutMultiplier": 1.7407407407407407,
+          "underPayoutMultiplier": 2.35,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-11-01T15:01:49.420Z"
+        },
+        {
+          "cardKey": "22465|Total score",
+          "eventName": "VidantaWorld Mexico Open",
+          "round": 4,
+          "dg_id": 22465,
+          "playerName": "Penge, Marco",
           "market": "Total score",
           "line": 68.5,
           "overOdds": 108,
@@ -82,660 +1801,72 @@
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.777Z"
-        },
-        {
-          "cardKey": "32330|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "dg_id": 32330,
-          "playerName": "Clanton, Luke",
-          "market": "Total score",
-          "line": 68.5,
-          "overOdds": -122,
-          "underOdds": 122,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -122,
-            "display": "-122"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 122,
-            "display": "+122"
-          },
-          "overPayoutMultiplier": 1.819672131147541,
-          "underPayoutMultiplier": 2.2199999999999998,
-          "oddsSource": "book_api_live",
-          "bookId": "kalshi",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.777Z"
-        },
-        {
-          "cardKey": "23604|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "dg_id": 23604,
-          "playerName": "Clark, Wyndham",
-          "market": "Total score",
-          "line": 67.5,
-          "overOdds": -111,
-          "underOdds": 111,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -111,
-            "display": "-111"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 111,
-            "display": "+111"
-          },
-          "overPayoutMultiplier": 1.900900900900901,
-          "underPayoutMultiplier": 2.1100000000000003,
-          "oddsSource": "book_api_live",
-          "bookId": "kalshi",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.777Z"
-        },
-        {
-          "cardKey": "17576|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "dg_id": 17576,
-          "playerName": "Conners, Corey",
-          "market": "Total score",
-          "line": 68.5,
-          "overOdds": 125,
-          "underOdds": -125,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": 125,
-            "display": "+125"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -125,
-            "display": "-125"
-          },
-          "overPayoutMultiplier": 2.25,
-          "underPayoutMultiplier": 1.8,
-          "oddsSource": "book_api_live",
-          "bookId": "kalshi",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.777Z"
-        },
-        {
-          "cardKey": "24550|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "dg_id": 24550,
-          "playerName": "Ghim, Doug",
-          "market": "Total score",
-          "line": 68.5,
-          "overOdds": 127,
-          "underOdds": -127,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": 127,
-            "display": "+127"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -127,
-            "display": "-127"
-          },
-          "overPayoutMultiplier": 2.27,
-          "underPayoutMultiplier": 1.7874015748031495,
-          "oddsSource": "book_api_live",
-          "bookId": "kalshi",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.777Z"
-        },
-        {
-          "cardKey": "24968|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "dg_id": 24968,
-          "playerName": "Griffin, Ben",
-          "market": "Total score",
-          "line": 68.5,
-          "overOdds": 141,
-          "underOdds": -141,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": 141,
-            "display": "+141"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -141,
-            "display": "-141"
-          },
-          "overPayoutMultiplier": 2.41,
-          "underPayoutMultiplier": 1.7092198581560285,
-          "oddsSource": "book_api_live",
-          "bookId": "kalshi",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.777Z"
-        },
-        {
-          "cardKey": "17538|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "dg_id": 17538,
-          "playerName": "Homa, Max",
-          "market": "Total score",
-          "line": 68.5,
-          "overOdds": 104,
-          "underOdds": -104,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": 104,
-            "display": "+104"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -104,
-            "display": "-104"
-          },
-          "overPayoutMultiplier": 2.04,
-          "underPayoutMultiplier": 1.9615384615384617,
-          "oddsSource": "book_api_live",
-          "bookId": "kalshi",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.777Z"
-        },
-        {
-          "cardKey": "29827|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "dg_id": 29827,
-          "playerName": "James, Ben",
-          "market": "Total score",
-          "line": 67.5,
-          "overOdds": -125,
-          "underOdds": 125,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -125,
-            "display": "-125"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 125,
-            "display": "+125"
-          },
-          "overPayoutMultiplier": 1.8,
-          "underPayoutMultiplier": 2.25,
-          "oddsSource": "book_api_live",
-          "bookId": "kalshi",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.777Z"
-        },
-        {
-          "cardKey": "24766|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "dg_id": 24766,
-          "playerName": "Kim, Tom",
-          "market": "Total score",
-          "line": 67.5,
-          "overOdds": -115,
-          "underOdds": 115,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -115,
-            "display": "-115"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 115,
-            "display": "+115"
-          },
-          "overPayoutMultiplier": 1.8695652173913042,
-          "underPayoutMultiplier": 2.15,
-          "oddsSource": "book_api_live",
-          "bookId": "kalshi",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.777Z"
-        },
-        {
-          "cardKey": "23475|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "dg_id": 23475,
-          "playerName": "Novak, Andrew",
-          "market": "Total score",
-          "line": 68.5,
-          "overOdds": -111,
-          "underOdds": 111,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -111,
-            "display": "-111"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 111,
-            "display": "+111"
-          },
-          "overPayoutMultiplier": 1.900900900900901,
-          "underPayoutMultiplier": 2.1100000000000003,
-          "oddsSource": "book_api_live",
-          "bookId": "kalshi",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.777Z"
-        },
-        {
-          "cardKey": "22465|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "dg_id": 22465,
-          "playerName": "Penge, Marco",
-          "market": "Total score",
-          "line": 68.5,
-          "overOdds": 104,
-          "underOdds": -104,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": 104,
-            "display": "+104"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -104,
-            "display": "-104"
-          },
-          "overPayoutMultiplier": 2.04,
-          "underPayoutMultiplier": 1.9615384615384617,
-          "oddsSource": "book_api_live",
-          "bookId": "kalshi",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.777Z"
-        },
-        {
-          "cardKey": "27900|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "dg_id": 27900,
-          "playerName": "Potgieter, Aldrich",
-          "market": "Total score",
-          "line": 69.5,
-          "overOdds": 102,
-          "underOdds": -102,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": 102,
-            "display": "+102"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -102,
-            "display": "-102"
-          },
-          "overPayoutMultiplier": 2.02,
-          "underPayoutMultiplier": 1.9803921568627452,
-          "oddsSource": "book_api_live",
-          "bookId": "kalshi",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.777Z"
+          "fetchedAt": "2026-11-01T15:01:49.420Z"
         },
         {
           "cardKey": "32055|Total score",
           "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
+          "round": 4,
           "dg_id": 32055,
           "playerName": "Shipley, Neal",
           "market": "Total score",
           "line": 68.5,
-          "overOdds": -111,
-          "underOdds": 111,
+          "overOdds": 104,
+          "underOdds": -104,
           "overBookOdds": {
             "kind": "american",
-            "raw": -111,
-            "display": "-111"
+            "raw": 104,
+            "display": "+104"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": 111,
-            "display": "+111"
+            "raw": -104,
+            "display": "-104"
           },
-          "overPayoutMultiplier": 1.900900900900901,
-          "underPayoutMultiplier": 2.1100000000000003,
+          "overPayoutMultiplier": 2.04,
+          "underPayoutMultiplier": 1.9615384615384617,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.777Z"
+          "fetchedAt": "2026-11-01T15:01:49.420Z"
         },
         {
           "cardKey": "29279|Total score",
           "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
+          "round": 4,
           "dg_id": 29279,
           "playerName": "Suber, Jackson",
           "market": "Total score",
           "line": 68.5,
-          "overOdds": -106,
-          "underOdds": 106,
+          "overOdds": 113,
+          "underOdds": -113,
           "overBookOdds": {
             "kind": "american",
-            "raw": -106,
-            "display": "-106"
+            "raw": 113,
+            "display": "+113"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": 106,
-            "display": "+106"
+            "raw": -113,
+            "display": "-113"
           },
-          "overPayoutMultiplier": 1.9433962264150944,
-          "underPayoutMultiplier": 2.06,
+          "overPayoutMultiplier": 2.13,
+          "underPayoutMultiplier": 1.8849557522123894,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.777Z"
+          "fetchedAt": "2026-11-01T15:01:49.420Z"
         }
       ],
       "fetchError": "",
-      "count": 15,
-      "fetchedAt": "2026-10-30T01:53:55.777Z"
+      "count": 13,
+      "fetchedAt": "2026-11-01T15:01:49.420Z"
     },
     "dk_matchups": {
-      "cards": [
-        {
-          "cardKind": "matchup",
-          "cardKey": "mu:22002|24304",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "market": "Round matchup",
-          "p1_dg_id": 22002,
-          "p2_dg_id": 24304,
-          "p1_player_name": "Dumont De Chassart, Adrien",
-          "p2_player_name": "Vilips, Karl",
-          "p1_short": "Adrien Dumont De Chassart",
-          "p2_short": "Karl Vilips",
-          "p1BookOdds": {
-            "kind": "american",
-            "raw": -110,
-            "display": "-110"
-          },
-          "p2BookOdds": {
-            "kind": "american",
-            "raw": -120,
-            "display": "-120"
-          },
-          "p1PayoutMultiplier": 1.9090909090909092,
-          "p2PayoutMultiplier": 1.8333333333333335,
-          "oddsSource": "draftkings_matchups",
-          "bookId": "dk_matchups",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.799Z"
-        },
-        {
-          "cardKind": "matchup",
-          "cardKey": "mu:23475|27780",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "market": "Round matchup",
-          "p1_dg_id": 23475,
-          "p2_dg_id": 27780,
-          "p1_player_name": "Novak, Andrew",
-          "p2_player_name": "Crowe, Trace",
-          "p1_short": "Andrew Novak",
-          "p2_short": "Trace Crowe",
-          "p1BookOdds": {
-            "kind": "american",
-            "raw": -132,
-            "display": "-132"
-          },
-          "p2BookOdds": {
-            "kind": "american",
-            "raw": 100,
-            "display": "+100"
-          },
-          "p1PayoutMultiplier": 1.7575757575757576,
-          "p2PayoutMultiplier": 2,
-          "oddsSource": "draftkings_matchups",
-          "bookId": "dk_matchups",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.799Z"
-        },
-        {
-          "cardKind": "matchup",
-          "cardKey": "mu:19870|26657",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "market": "Round matchup",
-          "p1_dg_id": 19870,
-          "p2_dg_id": 26657,
-          "p1_player_name": "McCarthy, Denny",
-          "p2_player_name": "Fisk, Steven",
-          "p1_short": "Denny McCarthy",
-          "p2_short": "Steven Fisk",
-          "p1BookOdds": {
-            "kind": "american",
-            "raw": -105,
-            "display": "-105"
-          },
-          "p2BookOdds": {
-            "kind": "american",
-            "raw": -124,
-            "display": "-124"
-          },
-          "p1PayoutMultiplier": 1.9523809523809523,
-          "p2PayoutMultiplier": 1.8064516129032258,
-          "oddsSource": "draftkings_matchups",
-          "bookId": "dk_matchups",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.799Z"
-        },
-        {
-          "cardKind": "matchup",
-          "cardKey": "mu:24550|24766",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "market": "Round matchup",
-          "p1_dg_id": 24550,
-          "p2_dg_id": 24766,
-          "p1_player_name": "Ghim, Doug",
-          "p2_player_name": "Kim, Tom",
-          "p1_short": "Doug Ghim",
-          "p2_short": "Tom Kim",
-          "p1BookOdds": {
-            "kind": "american",
-            "raw": -115,
-            "display": "-115"
-          },
-          "p2BookOdds": {
-            "kind": "american",
-            "raw": -114,
-            "display": "-114"
-          },
-          "p1PayoutMultiplier": 1.8695652173913042,
-          "p2PayoutMultiplier": 1.8771929824561404,
-          "oddsSource": "draftkings_matchups",
-          "bookId": "dk_matchups",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.799Z"
-        },
-        {
-          "cardKind": "matchup",
-          "cardKey": "mu:21995|23505",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "market": "Round matchup",
-          "p1_dg_id": 21995,
-          "p2_dg_id": 23505,
-          "p1_player_name": "Springer, Hayden",
-          "p2_player_name": "McGreevy, Max",
-          "p1_short": "Hayden Springer",
-          "p2_short": "Max McGreevy",
-          "p1BookOdds": {
-            "kind": "american",
-            "raw": -110,
-            "display": "-110"
-          },
-          "p2BookOdds": {
-            "kind": "american",
-            "raw": -120,
-            "display": "-120"
-          },
-          "p1PayoutMultiplier": 1.9090909090909092,
-          "p2PayoutMultiplier": 1.8333333333333335,
-          "oddsSource": "draftkings_matchups",
-          "bookId": "dk_matchups",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.799Z"
-        },
-        {
-          "cardKind": "matchup",
-          "cardKey": "mu:18424|26653",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "market": "Round matchup",
-          "p1_dg_id": 18424,
-          "p2_dg_id": 26653,
-          "p1_player_name": "Roy, Kevin",
-          "p2_player_name": "Eckroat, Austin",
-          "p1_short": "Kevin Roy",
-          "p2_short": "Austin Eckroat",
-          "p1BookOdds": {
-            "kind": "american",
-            "raw": -120,
-            "display": "-120"
-          },
-          "p2BookOdds": {
-            "kind": "american",
-            "raw": -108,
-            "display": "-108"
-          },
-          "p1PayoutMultiplier": 1.8333333333333335,
-          "p2PayoutMultiplier": 1.925925925925926,
-          "oddsSource": "draftkings_matchups",
-          "bookId": "dk_matchups",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.799Z"
-        },
-        {
-          "cardKind": "matchup",
-          "cardKey": "mu:15556|29279",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "market": "Round matchup",
-          "p1_dg_id": 15556,
-          "p2_dg_id": 29279,
-          "p1_player_name": "Hughes, Mackenzie",
-          "p2_player_name": "Suber, Jackson",
-          "p1_short": "Mackenzie Hughes",
-          "p2_short": "Jackson Suber",
-          "p1BookOdds": {
-            "kind": "american",
-            "raw": 100,
-            "display": "+100"
-          },
-          "p2BookOdds": {
-            "kind": "american",
-            "raw": -130,
-            "display": "-130"
-          },
-          "p1PayoutMultiplier": 2,
-          "p2PayoutMultiplier": 1.7692307692307692,
-          "oddsSource": "draftkings_matchups",
-          "bookId": "dk_matchups",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.799Z"
-        },
-        {
-          "cardKind": "matchup",
-          "cardKey": "mu:22465|24968",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "market": "Round matchup",
-          "p1_dg_id": 22465,
-          "p2_dg_id": 24968,
-          "p1_player_name": "Penge, Marco",
-          "p2_player_name": "Griffin, Ben",
-          "p1_short": "Marco Penge",
-          "p2_short": "Ben Griffin",
-          "p1BookOdds": {
-            "kind": "american",
-            "raw": 100,
-            "display": "+100"
-          },
-          "p2BookOdds": {
-            "kind": "american",
-            "raw": -132,
-            "display": "-132"
-          },
-          "p1PayoutMultiplier": 2,
-          "p2PayoutMultiplier": 1.7575757575757576,
-          "oddsSource": "draftkings_matchups",
-          "bookId": "dk_matchups",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.799Z"
-        },
-        {
-          "cardKind": "matchup",
-          "cardKey": "mu:17538|28309",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "market": "Round matchup",
-          "p1_dg_id": 17538,
-          "p2_dg_id": 28309,
-          "p1_player_name": "Homa, Max",
-          "p2_player_name": "Coody, Pierceson",
-          "p1_short": "Max Homa",
-          "p2_short": "Pierceson Coody",
-          "p1BookOdds": {
-            "kind": "american",
-            "raw": -136,
-            "display": "-136"
-          },
-          "p2BookOdds": {
-            "kind": "american",
-            "raw": 102,
-            "display": "+102"
-          },
-          "p1PayoutMultiplier": 1.7352941176470589,
-          "p2PayoutMultiplier": 2.02,
-          "oddsSource": "draftkings_matchups",
-          "bookId": "dk_matchups",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.799Z"
-        },
-        {
-          "cardKind": "matchup",
-          "cardKey": "mu:32055|32152",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 1,
-          "market": "Round matchup",
-          "p1_dg_id": 32055,
-          "p2_dg_id": 32152,
-          "p1_player_name": "Shipley, Neal",
-          "p2_player_name": "Brown, Blades",
-          "p1_short": "Neal Shipley",
-          "p2_short": "Blades Brown",
-          "p1BookOdds": {
-            "kind": "american",
-            "raw": -110,
-            "display": "-110"
-          },
-          "p2BookOdds": {
-            "kind": "american",
-            "raw": -118,
-            "display": "-118"
-          },
-          "p1PayoutMultiplier": 1.9090909090909092,
-          "p2PayoutMultiplier": 1.847457627118644,
-          "oddsSource": "draftkings_matchups",
-          "bookId": "dk_matchups",
-          "gradeable": true,
-          "fetchedAt": "2026-10-30T01:53:55.799Z"
-        }
-      ],
+      "cards": [],
       "fetchError": "",
-      "count": 10,
-      "fetchedAt": "2026-10-30T01:53:55.799Z"
+      "count": 0,
+      "fetchedAt": "2026-11-01T15:01:49.423Z"
     }
   }
 }
