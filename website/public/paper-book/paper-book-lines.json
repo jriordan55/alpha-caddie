@@ -1,256 +1,2159 @@
 {
-  "updated_at": "2026-11-01T15:01:40.552Z",
-  "event_name": "VidantaWorld Mexico Open",
-  "round": 4,
-  "round_label": "R4 — Sunday (auto, America/New_York)",
+  "updated_at": "2026-11-05T04:01:46.077Z",
+  "event_name": "World Wide Technology Championship",
+  "round": 1,
+  "round_label": "R1 — next Thursday (auto, America/New_York)",
   "books": {
     "draftkings": {
-      "cards": [],
+      "cards": [
+        {
+          "cardKey": "19846|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 19846,
+          "playerName": "Bauchou, Zach",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -102,
+          "underOdds": -138,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -102,
+            "display": "-102"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -138,
+            "display": "-138"
+          },
+          "overPayoutMultiplier": 1.9803921568627452,
+          "underPayoutMultiplier": 1.7246376811594204,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "18103|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 18103,
+          "playerName": "Bezuidenhout, Christiaan",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -104,
+          "underOdds": -136,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -136,
+            "display": "-136"
+          },
+          "overPayoutMultiplier": 1.9615384615384617,
+          "underPayoutMultiplier": 1.7352941176470589,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "18103|Pars",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 18103,
+          "playerName": "Bezuidenhout, Christiaan",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -174,
+          "underOdds": 124,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -174,
+            "display": "-174"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 124,
+            "display": "+124"
+          },
+          "overPayoutMultiplier": 1.5747126436781609,
+          "underPayoutMultiplier": 2.24,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "18103|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 18103,
+          "playerName": "Bezuidenhout, Christiaan",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overOdds": -120,
+          "underOdds": -118,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -120,
+            "display": "-120"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -118,
+            "display": "-118"
+          },
+          "overPayoutMultiplier": 1.8333333333333335,
+          "underPayoutMultiplier": 1.847457627118644,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "18103|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 18103,
+          "playerName": "Bezuidenhout, Christiaan",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -104,
+          "underOdds": -130,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -130,
+            "display": "-130"
+          },
+          "overPayoutMultiplier": 1.9615384615384617,
+          "underPayoutMultiplier": 1.7692307692307692,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "32152|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 32152,
+          "playerName": "Brown, Blades",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -120,
+          "underOdds": -118,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -120,
+            "display": "-120"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -118,
+            "display": "-118"
+          },
+          "overPayoutMultiplier": 1.8333333333333335,
+          "underPayoutMultiplier": 1.847457627118644,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "32152|Pars",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 32152,
+          "playerName": "Brown, Blades",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -144,
+          "underOdds": 102,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -144,
+            "display": "-144"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 102,
+            "display": "+102"
+          },
+          "overPayoutMultiplier": 1.6944444444444444,
+          "underPayoutMultiplier": 2.02,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "32152|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 32152,
+          "playerName": "Brown, Blades",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overOdds": -132,
+          "underOdds": -108,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -132,
+            "display": "-132"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -108,
+            "display": "-108"
+          },
+          "overPayoutMultiplier": 1.7575757575757576,
+          "underPayoutMultiplier": 1.925925925925926,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "32152|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 32152,
+          "playerName": "Brown, Blades",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": 100,
+          "underOdds": -136,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 100,
+            "display": "+100"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -136,
+            "display": "-136"
+          },
+          "overPayoutMultiplier": 2,
+          "underPayoutMultiplier": 1.7352941176470589,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "32330|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 32330,
+          "playerName": "Clanton, Luke",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": 102,
+          "underOdds": -144,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 102,
+            "display": "+102"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -144,
+            "display": "-144"
+          },
+          "overPayoutMultiplier": 2.02,
+          "underPayoutMultiplier": 1.6944444444444444,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "28309|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 28309,
+          "playerName": "Coody, Pierceson",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -118,
+          "underOdds": -120,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -118,
+            "display": "-118"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -120,
+            "display": "-120"
+          },
+          "overPayoutMultiplier": 1.847457627118644,
+          "underPayoutMultiplier": 1.8333333333333335,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "26653|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 26653,
+          "playerName": "Eckroat, Austin",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": 102,
+          "underOdds": -144,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 102,
+            "display": "+102"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -144,
+            "display": "-144"
+          },
+          "overPayoutMultiplier": 2.02,
+          "underPayoutMultiplier": 1.6944444444444444,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "26657|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 26657,
+          "playerName": "Fisk, Steven",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -105,
+          "underOdds": -134,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -105,
+            "display": "-105"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -134,
+            "display": "-134"
+          },
+          "overPayoutMultiplier": 1.9523809523809523,
+          "underPayoutMultiplier": 1.7462686567164178,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "31343|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 31343,
+          "playerName": "Ford, David",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": 102,
+          "underOdds": -144,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 102,
+            "display": "+102"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -144,
+            "display": "-144"
+          },
+          "overPayoutMultiplier": 2.02,
+          "underPayoutMultiplier": 1.6944444444444444,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "29767|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 29767,
+          "playerName": "Gerard, Ryan",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -158,
+          "underOdds": 112,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -158,
+            "display": "-158"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 112,
+            "display": "+112"
+          },
+          "overPayoutMultiplier": 1.6329113924050633,
+          "underPayoutMultiplier": 2.12,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "29767|Pars",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 29767,
+          "playerName": "Gerard, Ryan",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -125,
+          "underOdds": -112,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -125,
+            "display": "-125"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -112,
+            "display": "-112"
+          },
+          "overPayoutMultiplier": 1.8,
+          "underPayoutMultiplier": 1.8928571428571428,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "29767|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 29767,
+          "playerName": "Gerard, Ryan",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overOdds": -108,
+          "underOdds": -132,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -108,
+            "display": "-108"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -132,
+            "display": "-132"
+          },
+          "overPayoutMultiplier": 1.925925925925926,
+          "underPayoutMultiplier": 1.7575757575757576,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "29767|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 29767,
+          "playerName": "Gerard, Ryan",
+          "market": "Total score",
+          "line": 67.5,
+          "overOdds": -134,
+          "underOdds": 100,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -134,
+            "display": "-134"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 100,
+            "display": "+100"
+          },
+          "overPayoutMultiplier": 1.7462686567164178,
+          "underPayoutMultiplier": 2,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "23465|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 23465,
+          "playerName": "Greyserman, Max",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -112,
+          "underOdds": -126,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -112,
+            "display": "-112"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -126,
+            "display": "-126"
+          },
+          "overPayoutMultiplier": 1.8928571428571428,
+          "underPayoutMultiplier": 1.7936507936507935,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "24968|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 24968,
+          "playerName": "Griffin, Ben",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -156,
+          "underOdds": 110,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -156,
+            "display": "-156"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 110,
+            "display": "+110"
+          },
+          "overPayoutMultiplier": 1.641025641025641,
+          "underPayoutMultiplier": 2.1,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "24968|Pars",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 24968,
+          "playerName": "Griffin, Ben",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -130,
+          "underOdds": -108,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -130,
+            "display": "-130"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -108,
+            "display": "-108"
+          },
+          "overPayoutMultiplier": 1.7692307692307692,
+          "underPayoutMultiplier": 1.925925925925926,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "24968|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 24968,
+          "playerName": "Griffin, Ben",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overOdds": -104,
+          "underOdds": -138,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -138,
+            "display": "-138"
+          },
+          "overPayoutMultiplier": 1.9615384615384617,
+          "underPayoutMultiplier": 1.7246376811594204,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "24968|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 24968,
+          "playerName": "Griffin, Ben",
+          "market": "Total score",
+          "line": 67.5,
+          "overOdds": -132,
+          "underOdds": -102,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -132,
+            "display": "-132"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -102,
+            "display": "-102"
+          },
+          "overPayoutMultiplier": 1.7575757575757576,
+          "underPayoutMultiplier": 1.9803921568627452,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "27194|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 27194,
+          "playerName": "Hall, Harry",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -118,
+          "underOdds": -120,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -118,
+            "display": "-118"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -120,
+            "display": "-120"
+          },
+          "overPayoutMultiplier": 1.847457627118644,
+          "underPayoutMultiplier": 1.8333333333333335,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "27194|Pars",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 27194,
+          "playerName": "Hall, Harry",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -144,
+          "underOdds": 100,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -144,
+            "display": "-144"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 100,
+            "display": "+100"
+          },
+          "overPayoutMultiplier": 1.6944444444444444,
+          "underPayoutMultiplier": 2,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "27194|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 27194,
+          "playerName": "Hall, Harry",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overOdds": -138,
+          "underOdds": -102,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -138,
+            "display": "-138"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -102,
+            "display": "-102"
+          },
+          "overPayoutMultiplier": 1.7246376811594204,
+          "underPayoutMultiplier": 1.9803921568627452,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "27194|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 27194,
+          "playerName": "Hall, Harry",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -104,
+          "underOdds": -132,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -132,
+            "display": "-132"
+          },
+          "overPayoutMultiplier": 1.9615384615384617,
+          "underPayoutMultiplier": 1.7575757575757576,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "15470|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 15470,
+          "playerName": "Hossler, Beau",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -102,
+          "underOdds": -140,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -102,
+            "display": "-102"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -140,
+            "display": "-140"
+          },
+          "overPayoutMultiplier": 1.9803921568627452,
+          "underPayoutMultiplier": 1.7142857142857144,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "15556|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 15556,
+          "playerName": "Hughes, Mackenzie",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": 104,
+          "underOdds": -148,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 104,
+            "display": "+104"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -148,
+            "display": "-148"
+          },
+          "overPayoutMultiplier": 2.04,
+          "underPayoutMultiplier": 1.6756756756756757,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "15556|Pars",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 15556,
+          "playerName": "Hughes, Mackenzie",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -160,
+          "underOdds": 112,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -160,
+            "display": "-160"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 112,
+            "display": "+112"
+          },
+          "overPayoutMultiplier": 1.625,
+          "underPayoutMultiplier": 2.12,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "15556|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 15556,
+          "playerName": "Hughes, Mackenzie",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overOdds": -156,
+          "underOdds": 110,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -156,
+            "display": "-156"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 110,
+            "display": "+110"
+          },
+          "overPayoutMultiplier": 1.641025641025641,
+          "underPayoutMultiplier": 2.1,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "15556|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 15556,
+          "playerName": "Hughes, Mackenzie",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -126,
+          "underOdds": -106,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -126,
+            "display": "-126"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -106,
+            "display": "-106"
+          },
+          "overPayoutMultiplier": 1.7936507936507935,
+          "underPayoutMultiplier": 1.9433962264150944,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "16394|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 16394,
+          "playerName": "Jaeger, Stephan",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -102,
+          "underOdds": -138,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -102,
+            "display": "-102"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -138,
+            "display": "-138"
+          },
+          "overPayoutMultiplier": 1.9803921568627452,
+          "underPayoutMultiplier": 1.7246376811594204,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "29827|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 29827,
+          "playerName": "James, Ben",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -140,
+          "underOdds": -102,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -140,
+            "display": "-140"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -102,
+            "display": "-102"
+          },
+          "overPayoutMultiplier": 1.7142857142857144,
+          "underPayoutMultiplier": 1.9803921568627452,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "29827|Pars",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 29827,
+          "playerName": "James, Ben",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -142,
+          "underOdds": 100,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -142,
+            "display": "-142"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 100,
+            "display": "+100"
+          },
+          "overPayoutMultiplier": 1.704225352112676,
+          "underPayoutMultiplier": 2,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "29827|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 29827,
+          "playerName": "James, Ben",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overOdds": -108,
+          "underOdds": -132,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -108,
+            "display": "-108"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -132,
+            "display": "-132"
+          },
+          "overPayoutMultiplier": 1.925925925925926,
+          "underPayoutMultiplier": 1.7575757575757576,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "29827|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 29827,
+          "playerName": "James, Ben",
+          "market": "Total score",
+          "line": 67.5,
+          "overOdds": -146,
+          "underOdds": 108,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -146,
+            "display": "-146"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 108,
+            "display": "+108"
+          },
+          "overPayoutMultiplier": 1.6849315068493151,
+          "underPayoutMultiplier": 2.08,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "32457|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 32457,
+          "playerName": "Keefer, Johnny",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -116,
+          "underOdds": -122,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -116,
+            "display": "-116"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -122,
+            "display": "-122"
+          },
+          "overPayoutMultiplier": 1.8620689655172413,
+          "underPayoutMultiplier": 1.819672131147541,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "17543|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 17543,
+          "playerName": "Kim, Michael",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -110,
+          "underOdds": -128,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -110,
+            "display": "-110"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -128,
+            "display": "-128"
+          },
+          "overPayoutMultiplier": 1.9090909090909092,
+          "underPayoutMultiplier": 1.78125,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "17543|Pars",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 17543,
+          "playerName": "Kim, Michael",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -148,
+          "underOdds": 104,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -148,
+            "display": "-148"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 104,
+            "display": "+104"
+          },
+          "overPayoutMultiplier": 1.6756756756756757,
+          "underPayoutMultiplier": 2.04,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "17543|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 17543,
+          "playerName": "Kim, Michael",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overOdds": -144,
+          "underOdds": 102,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -144,
+            "display": "-144"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 102,
+            "display": "+102"
+          },
+          "overPayoutMultiplier": 1.6944444444444444,
+          "underPayoutMultiplier": 2.02,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "17543|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 17543,
+          "playerName": "Kim, Michael",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -110,
+          "underOdds": -122,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -110,
+            "display": "-110"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -122,
+            "display": "-122"
+          },
+          "overPayoutMultiplier": 1.9090909090909092,
+          "underPayoutMultiplier": 1.819672131147541,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "12423|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 12423,
+          "playerName": "Kirk, Chris",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -104,
+          "underOdds": -136,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -136,
+            "display": "-136"
+          },
+          "overPayoutMultiplier": 1.9615384615384617,
+          "underPayoutMultiplier": 1.7352941176470589,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "12423|Pars",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 12423,
+          "playerName": "Kirk, Chris",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -162,
+          "underOdds": 115,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -162,
+            "display": "-162"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 115,
+            "display": "+115"
+          },
+          "overPayoutMultiplier": 1.617283950617284,
+          "underPayoutMultiplier": 2.15,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "12423|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 12423,
+          "playerName": "Kirk, Chris",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overOdds": -136,
+          "underOdds": -104,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -136,
+            "display": "-136"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "overPayoutMultiplier": 1.7352941176470589,
+          "underPayoutMultiplier": 1.9615384615384617,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "12423|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 12423,
+          "playerName": "Kirk, Chris",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -112,
+          "underOdds": -120,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -112,
+            "display": "-112"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -120,
+            "display": "-120"
+          },
+          "overPayoutMultiplier": 1.8928571428571428,
+          "underPayoutMultiplier": 1.8333333333333335,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "16395|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 16395,
+          "playerName": "Kohles, Ben",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": 104,
+          "underOdds": -146,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 104,
+            "display": "+104"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -146,
+            "display": "-146"
+          },
+          "overPayoutMultiplier": 2.04,
+          "underPayoutMultiplier": 1.6849315068493151,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "16395|Pars",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 16395,
+          "playerName": "Kohles, Ben",
+          "market": "Pars",
+          "line": 11.5,
+          "overOdds": 118,
+          "underOdds": -166,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 118,
+            "display": "+118"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -166,
+            "display": "-166"
+          },
+          "overPayoutMultiplier": 2.1799999999999997,
+          "underPayoutMultiplier": 1.6024096385542168,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "16395|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 16395,
+          "playerName": "Kohles, Ben",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overOdds": -118,
+          "underOdds": -120,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -118,
+            "display": "-118"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -120,
+            "display": "-120"
+          },
+          "overPayoutMultiplier": 1.847457627118644,
+          "underPayoutMultiplier": 1.8333333333333335,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "16395|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 16395,
+          "playerName": "Kohles, Ben",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -108,
+          "underOdds": -124,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -108,
+            "display": "-108"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -124,
+            "display": "-124"
+          },
+          "overPayoutMultiplier": 1.925925925925926,
+          "underPayoutMultiplier": 1.8064516129032258,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "32319|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 32319,
+          "playerName": "Koivun, Jackson",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -138,
+          "underOdds": -104,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -138,
+            "display": "-138"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "overPayoutMultiplier": 1.7246376811594204,
+          "underPayoutMultiplier": 1.9615384615384617,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "32319|Pars",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 32319,
+          "playerName": "Koivun, Jackson",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -146,
+          "underOdds": 102,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -146,
+            "display": "-146"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 102,
+            "display": "+102"
+          },
+          "overPayoutMultiplier": 1.6849315068493151,
+          "underPayoutMultiplier": 2.02,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "32319|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 32319,
+          "playerName": "Koivun, Jackson",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overOdds": -105,
+          "underOdds": -134,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -105,
+            "display": "-105"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -134,
+            "display": "-134"
+          },
+          "overPayoutMultiplier": 1.9523809523809523,
+          "underPayoutMultiplier": 1.7462686567164178,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "32319|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 32319,
+          "playerName": "Koivun, Jackson",
+          "market": "Total score",
+          "line": 67.5,
+          "overOdds": -146,
+          "underOdds": 108,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -146,
+            "display": "-146"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 108,
+            "display": "+108"
+          },
+          "overPayoutMultiplier": 1.6849315068493151,
+          "underPayoutMultiplier": 2.08,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "19870|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 19870,
+          "playerName": "McCarthy, Denny",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": 106,
+          "underOdds": -150,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 106,
+            "display": "+106"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -150,
+            "display": "-150"
+          },
+          "overPayoutMultiplier": 2.06,
+          "underPayoutMultiplier": 1.6666666666666665,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "17365|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 17365,
+          "playerName": "Mitchell, Keith",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -136,
+          "underOdds": -104,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -136,
+            "display": "-136"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "overPayoutMultiplier": 1.7352941176470589,
+          "underPayoutMultiplier": 1.9615384615384617,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "17365|Pars",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 17365,
+          "playerName": "Mitchell, Keith",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -116,
+          "underOdds": -122,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -116,
+            "display": "-116"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -122,
+            "display": "-122"
+          },
+          "overPayoutMultiplier": 1.8620689655172413,
+          "underPayoutMultiplier": 1.819672131147541,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "17365|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 17365,
+          "playerName": "Mitchell, Keith",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overOdds": -156,
+          "underOdds": 110,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -156,
+            "display": "-156"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 110,
+            "display": "+110"
+          },
+          "overPayoutMultiplier": 1.641025641025641,
+          "underPayoutMultiplier": 2.1,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "17365|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 17365,
+          "playerName": "Mitchell, Keith",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": 100,
+          "underOdds": -136,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 100,
+            "display": "+100"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -136,
+            "display": "-136"
+          },
+          "overPayoutMultiplier": 2,
+          "underPayoutMultiplier": 1.7352941176470589,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "23841|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 23841,
+          "playerName": "Neergaard-Petersen, Rasmus",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": 104,
+          "underOdds": -146,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 104,
+            "display": "+104"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -146,
+            "display": "-146"
+          },
+          "overPayoutMultiplier": 2.04,
+          "underPayoutMultiplier": 1.6849315068493151,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "22465|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 22465,
+          "playerName": "Penge, Marco",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -120,
+          "underOdds": -120,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -120,
+            "display": "-120"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -120,
+            "display": "-120"
+          },
+          "overPayoutMultiplier": 1.8333333333333335,
+          "underPayoutMultiplier": 1.8333333333333335,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "10104|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 10104,
+          "playerName": "Power, Seamus",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": 105,
+          "underOdds": -148,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 105,
+            "display": "+105"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -148,
+            "display": "-148"
+          },
+          "overPayoutMultiplier": 2.05,
+          "underPayoutMultiplier": 1.6756756756756757,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "32055|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 32055,
+          "playerName": "Shipley, Neal",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -102,
+          "underOdds": -138,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -102,
+            "display": "-102"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -138,
+            "display": "-138"
+          },
+          "overPayoutMultiplier": 1.9803921568627452,
+          "underPayoutMultiplier": 1.7246376811594204,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "18586|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 18586,
+          "playerName": "Smith, Jordan",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -114,
+          "underOdds": -125,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -114,
+            "display": "-114"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -125,
+            "display": "-125"
+          },
+          "overPayoutMultiplier": 1.8771929824561404,
+          "underPayoutMultiplier": 1.8,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "18586|Pars",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 18586,
+          "playerName": "Smith, Jordan",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -150,
+          "underOdds": 106,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -150,
+            "display": "-150"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 106,
+            "display": "+106"
+          },
+          "overPayoutMultiplier": 1.6666666666666665,
+          "underPayoutMultiplier": 2.06,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "18586|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 18586,
+          "playerName": "Smith, Jordan",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overOdds": -134,
+          "underOdds": -105,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -134,
+            "display": "-134"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -105,
+            "display": "-105"
+          },
+          "overPayoutMultiplier": 1.7462686567164178,
+          "underPayoutMultiplier": 1.9523809523809523,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "18586|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 18586,
+          "playerName": "Smith, Jordan",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -104,
+          "underOdds": -130,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -130,
+            "display": "-130"
+          },
+          "overPayoutMultiplier": 1.9615384615384617,
+          "underPayoutMultiplier": 1.7692307692307692,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "29279|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 29279,
+          "playerName": "Suber, Jackson",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -114,
+          "underOdds": -124,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -114,
+            "display": "-114"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -124,
+            "display": "-124"
+          },
+          "overPayoutMultiplier": 1.8771929824561404,
+          "underPayoutMultiplier": 1.8064516129032258,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "29279|Pars",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 29279,
+          "playerName": "Suber, Jackson",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -142,
+          "underOdds": 100,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -142,
+            "display": "-142"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 100,
+            "display": "+100"
+          },
+          "overPayoutMultiplier": 1.704225352112676,
+          "underPayoutMultiplier": 2,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "29279|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 29279,
+          "playerName": "Suber, Jackson",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overOdds": -146,
+          "underOdds": 104,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -146,
+            "display": "-146"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 104,
+            "display": "+104"
+          },
+          "overPayoutMultiplier": 1.6849315068493151,
+          "underPayoutMultiplier": 2.04,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "29279|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 29279,
+          "playerName": "Suber, Jackson",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -110,
+          "underOdds": -124,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -110,
+            "display": "-110"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -124,
+            "display": "-124"
+          },
+          "overPayoutMultiplier": 1.9090909090909092,
+          "underPayoutMultiplier": 1.8064516129032258,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "23816|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 23816,
+          "playerName": "Valimaki, Sami",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": 102,
+          "underOdds": -144,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 102,
+            "display": "+102"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -144,
+            "display": "-144"
+          },
+          "overPayoutMultiplier": 2.02,
+          "underPayoutMultiplier": 1.6944444444444444,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "15651|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 15651,
+          "playerName": "Ventura, Kristoffer",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": -110,
+          "underOdds": -130,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -110,
+            "display": "-110"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -130,
+            "display": "-130"
+          },
+          "overPayoutMultiplier": 1.9090909090909092,
+          "underPayoutMultiplier": 1.7692307692307692,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "15651|Pars",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 15651,
+          "playerName": "Ventura, Kristoffer",
+          "market": "Pars",
+          "line": 10.5,
+          "overOdds": -148,
+          "underOdds": 106,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -148,
+            "display": "-148"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 106,
+            "display": "+106"
+          },
+          "overPayoutMultiplier": 1.6756756756756757,
+          "underPayoutMultiplier": 2.06,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "15651|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 15651,
+          "playerName": "Ventura, Kristoffer",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overOdds": -144,
+          "underOdds": 102,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -144,
+            "display": "-144"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 102,
+            "display": "+102"
+          },
+          "overPayoutMultiplier": 1.6944444444444444,
+          "underPayoutMultiplier": 2.02,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        },
+        {
+          "cardKey": "15651|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 15651,
+          "playerName": "Ventura, Kristoffer",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -110,
+          "underOdds": -122,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -110,
+            "display": "-110"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -122,
+            "display": "-122"
+          },
+          "overPayoutMultiplier": 1.9090909090909092,
+          "underPayoutMultiplier": 1.819672131147541,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.078Z"
+        }
+      ],
       "fetchError": "",
-      "count": 0,
-      "fetchedAt": "2026-11-01T15:01:40.553Z"
+      "count": 76,
+      "fetchedAt": "2026-11-05T04:01:46.078Z"
     },
     "prizepicks": {
       "cards": [],
       "fetchError": "PrizePicks partner API does not expose per-pick posted odds for standard lines",
       "count": 0,
-      "fetchedAt": "2026-11-01T15:01:40.559Z"
+      "fetchedAt": "2026-11-05T04:01:46.110Z"
     },
     "sleeper": {
       "cards": [
         {
-          "cardKey": "32652|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 32652,
-          "playerName": "Akina, Kihei",
+          "cardKey": "19846|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 19846,
+          "playerName": "Bauchou, Zach",
           "market": "Birdies",
-          "line": 4.5,
+          "line": 5.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.6,
-            "display": "1.6x"
+            "raw": 1.88,
+            "display": "1.88x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 2,
-            "display": "2x"
+            "raw": 1.69,
+            "display": "1.69x"
           },
-          "overPayoutMultiplier": 1.6,
-          "underPayoutMultiplier": 2,
+          "overPayoutMultiplier": 1.88,
+          "underPayoutMultiplier": 1.69,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
-          "cardKey": "32652|Bogeys",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 32652,
-          "playerName": "Akina, Kihei",
-          "market": "Bogeys",
-          "line": 2.5,
+          "cardKey": "18103|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 18103,
+          "playerName": "Bezuidenhout, Christiaan",
+          "market": "Birdies",
+          "line": 5.5,
           "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.93,
-            "display": "1.93x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.65,
-            "display": "1.65x"
-          },
-          "overPayoutMultiplier": 1.93,
-          "underPayoutMultiplier": 1.65,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "32652|Total Score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 32652,
-          "playerName": "Akina, Kihei",
-          "market": "Total score",
-          "line": 68.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.67,
-            "display": "1.67x"
-          },
-          "underBookOdds": {
             "kind": "multiplier",
             "raw": 1.91,
             "display": "1.91x"
           },
-          "overPayoutMultiplier": 1.67,
-          "underPayoutMultiplier": 1.91,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "18103|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 18103,
-          "playerName": "Bezuidenhout, Christiaan",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
+          "underBookOdds": {
             "kind": "multiplier",
             "raw": 1.66,
             "display": "1.66x"
           },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.92,
-            "display": "1.92x"
-          },
-          "overPayoutMultiplier": 1.66,
-          "underPayoutMultiplier": 1.92,
+          "overPayoutMultiplier": 1.91,
+          "underPayoutMultiplier": 1.66,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
           "cardKey": "18103|Bogeys",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
           "dg_id": 18103,
           "playerName": "Bezuidenhout, Christiaan",
           "market": "Bogeys",
-          "line": 2.5,
+          "line": 1.5,
           "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.33,
-            "display": "2.33x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.42,
-            "display": "1.42x"
-          },
-          "overPayoutMultiplier": 2.33,
-          "underPayoutMultiplier": 1.42,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "18103|Total Score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 18103,
-          "playerName": "Bezuidenhout, Christiaan",
-          "market": "Total score",
-          "line": 68.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.78,
-            "display": "1.78x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.78,
-            "display": "1.78x"
-          },
-          "overPayoutMultiplier": 1.78,
-          "underPayoutMultiplier": 1.78,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "18628|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 18628,
-          "playerName": "Campbell, Brian",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.98,
-            "display": "1.98x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.61,
-            "display": "1.61x"
-          },
-          "overPayoutMultiplier": 1.98,
-          "underPayoutMultiplier": 1.61,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "18628|Bogeys",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 18628,
-          "playerName": "Campbell, Brian",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.85,
-            "display": "1.85x"
-          },
-          "underBookOdds": {
             "kind": "multiplier",
             "raw": 1.72,
             "display": "1.72x"
           },
-          "overPayoutMultiplier": 1.85,
-          "underPayoutMultiplier": 1.72,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "18628|Total Score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 18628,
-          "playerName": "Campbell, Brian",
-          "market": "Total score",
-          "line": 69.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.86,
-            "display": "1.86x"
-          },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 1.7,
-            "display": "1.7x"
+            "raw": 1.84,
+            "display": "1.84x"
           },
-          "overPayoutMultiplier": 1.86,
-          "underPayoutMultiplier": 1.7,
+          "overPayoutMultiplier": 1.72,
+          "underPayoutMultiplier": 1.84,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
-          "cardKey": "12909|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 12909,
-          "playerName": "Campos, Rafael",
-          "market": "Birdies",
-          "line": 4.5,
+          "cardKey": "18103|Total Score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 18103,
+          "playerName": "Bezuidenhout, Christiaan",
+          "market": "Total score",
+          "line": 68.5,
           "overBookOdds": {
             "kind": "multiplier",
             "raw": 1.84,
@@ -258,249 +2161,74 @@
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 1.72,
-            "display": "1.72x"
+            "raw": 1.73,
+            "display": "1.73x"
           },
           "overPayoutMultiplier": 1.84,
-          "underPayoutMultiplier": 1.72,
+          "underPayoutMultiplier": 1.73,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "32330|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 32330,
-          "playerName": "Clanton, Luke",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.5,
-            "display": "1.5x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.17,
-            "display": "2.17x"
-          },
-          "overPayoutMultiplier": 1.5,
-          "underPayoutMultiplier": 2.17,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "17576|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 17576,
-          "playerName": "Conners, Corey",
-          "market": "Birdies",
-          "line": 5.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.08,
-            "display": "2.08x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.55,
-            "display": "1.55x"
-          },
-          "overPayoutMultiplier": 2.08,
-          "underPayoutMultiplier": 1.55,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "28309|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 28309,
-          "playerName": "Coody, Pierceson",
-          "market": "Birdies",
-          "line": 5.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.19,
-            "display": "2.19x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.49,
-            "display": "1.49x"
-          },
-          "overPayoutMultiplier": 2.19,
-          "underPayoutMultiplier": 1.49,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "28309|Bogeys",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 28309,
-          "playerName": "Coody, Pierceson",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.96,
-            "display": "1.96x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.63,
-            "display": "1.63x"
-          },
-          "overPayoutMultiplier": 1.96,
-          "underPayoutMultiplier": 1.63,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "28309|Total Score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 28309,
-          "playerName": "Coody, Pierceson",
-          "market": "Total score",
-          "line": 68.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.78,
-            "display": "1.78x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.78,
-            "display": "1.78x"
-          },
-          "overPayoutMultiplier": 1.78,
-          "underPayoutMultiplier": 1.78,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "27780|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 27780,
-          "playerName": "Crowe, Trace",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.49,
-            "display": "1.49x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.19,
-            "display": "2.19x"
-          },
-          "overPayoutMultiplier": 1.49,
-          "underPayoutMultiplier": 2.19,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "22002|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 22002,
-          "playerName": "Dumont De Chassart, Adrien",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.63,
-            "display": "1.63x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.96,
-            "display": "1.96x"
-          },
-          "overPayoutMultiplier": 1.63,
-          "underPayoutMultiplier": 1.96,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
           "cardKey": "26657|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
           "dg_id": 26657,
           "playerName": "Fisk, Steven",
           "market": "Birdies",
-          "line": 4.5,
+          "line": 5.5,
           "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.03,
+            "display": "2.03x"
+          },
+          "underBookOdds": {
             "kind": "multiplier",
             "raw": 1.58,
             "display": "1.58x"
           },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.04,
-            "display": "2.04x"
-          },
-          "overPayoutMultiplier": 1.58,
-          "underPayoutMultiplier": 2.04,
+          "overPayoutMultiplier": 2.03,
+          "underPayoutMultiplier": 1.58,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
-          "cardKey": "26657|Bogeys",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 26657,
-          "playerName": "Fisk, Steven",
-          "market": "Bogeys",
-          "line": 2.5,
+          "cardKey": "29767|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 29767,
+          "playerName": "Gerard, Ryan",
+          "market": "Birdies",
+          "line": 5.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 2.2,
-            "display": "2.2x"
+            "raw": 1.59,
+            "display": "1.59x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 1.48,
-            "display": "1.48x"
+            "raw": 2.02,
+            "display": "2.02x"
           },
-          "overPayoutMultiplier": 2.2,
-          "underPayoutMultiplier": 1.48,
+          "overPayoutMultiplier": 1.59,
+          "underPayoutMultiplier": 2.02,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
-          "cardKey": "26657|Total Score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 26657,
-          "playerName": "Fisk, Steven",
-          "market": "Total score",
-          "line": 68.5,
+          "cardKey": "29767|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 29767,
+          "playerName": "Gerard, Ryan",
+          "market": "Bogeys",
+          "line": 1.5,
           "overBookOdds": {
             "kind": "multiplier",
             "raw": 1.8,
@@ -516,64 +2244,114 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
-          "cardKey": "24550|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 24550,
-          "playerName": "Ghim, Doug",
+          "cardKey": "29767|Total Score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 29767,
+          "playerName": "Gerard, Ryan",
+          "market": "Total score",
+          "line": 67.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.64,
+            "display": "1.64x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.95,
+            "display": "1.95x"
+          },
+          "overPayoutMultiplier": 1.64,
+          "underPayoutMultiplier": 1.95,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
+        },
+        {
+          "cardKey": "23465|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 23465,
+          "playerName": "Greyserman, Max",
           "market": "Birdies",
           "line": 5.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 2.02,
-            "display": "2.02x"
+            "raw": 1.83,
+            "display": "1.83x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 1.59,
-            "display": "1.59x"
+            "raw": 1.74,
+            "display": "1.74x"
           },
-          "overPayoutMultiplier": 2.02,
-          "underPayoutMultiplier": 1.59,
+          "overPayoutMultiplier": 1.83,
+          "underPayoutMultiplier": 1.74,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
-          "cardKey": "24550|Bogeys",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 24550,
-          "playerName": "Ghim, Doug",
+          "cardKey": "24968|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 24968,
+          "playerName": "Griffin, Ben",
+          "market": "Birdies",
+          "line": 5.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.58,
+            "display": "1.58x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.04,
+            "display": "2.04x"
+          },
+          "overPayoutMultiplier": 1.58,
+          "underPayoutMultiplier": 2.04,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
+        },
+        {
+          "cardKey": "24968|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 24968,
+          "playerName": "Griffin, Ben",
           "market": "Bogeys",
           "line": 1.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.53,
-            "display": "1.53x"
+            "raw": 1.89,
+            "display": "1.89x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 2.1,
-            "display": "2.1x"
+            "raw": 1.69,
+            "display": "1.69x"
           },
-          "overPayoutMultiplier": 1.53,
-          "underPayoutMultiplier": 2.1,
+          "overPayoutMultiplier": 1.89,
+          "underPayoutMultiplier": 1.69,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
-          "cardKey": "24550|Total Score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 24550,
-          "playerName": "Ghim, Doug",
+          "cardKey": "24968|Total Score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 24968,
+          "playerName": "Griffin, Ben",
           "market": "Total score",
           "line": 67.5,
           "overBookOdds": {
@@ -591,312 +2369,112 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
-          "cardKey": "23465|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 23465,
-          "playerName": "Greyserman, Max",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.49,
-            "display": "1.49x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.19,
-            "display": "2.19x"
-          },
-          "overPayoutMultiplier": 1.49,
-          "underPayoutMultiplier": 2.19,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "23465|Bogeys",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 23465,
-          "playerName": "Greyserman, Max",
+          "cardKey": "27194|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 27194,
+          "playerName": "Hall, Harry",
           "market": "Bogeys",
-          "line": 2.5,
+          "line": 1.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.98,
-            "display": "1.98x"
+            "raw": 1.6,
+            "display": "1.6x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 1.61,
-            "display": "1.61x"
+            "raw": 2.01,
+            "display": "2.01x"
           },
-          "overPayoutMultiplier": 1.98,
-          "underPayoutMultiplier": 1.61,
+          "overPayoutMultiplier": 1.6,
+          "underPayoutMultiplier": 2.01,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
-          "cardKey": "23465|Total Score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 23465,
-          "playerName": "Greyserman, Max",
+          "cardKey": "27194|Total Score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 27194,
+          "playerName": "Hall, Harry",
           "market": "Total score",
           "line": 68.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.8,
-            "display": "1.8x"
+            "raw": 1.87,
+            "display": "1.87x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 1.76,
-            "display": "1.76x"
+            "raw": 1.7,
+            "display": "1.7x"
           },
-          "overPayoutMultiplier": 1.8,
-          "underPayoutMultiplier": 1.76,
+          "overPayoutMultiplier": 1.87,
+          "underPayoutMultiplier": 1.7,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
-          "cardKey": "24968|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 24968,
-          "playerName": "Griffin, Ben",
+          "cardKey": "15470|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 15470,
+          "playerName": "Hossler, Beau",
           "market": "Birdies",
           "line": 5.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 2.05,
-            "display": "2.05x"
+            "raw": 2.06,
+            "display": "2.06x"
           },
           "underBookOdds": {
             "kind": "multiplier",
             "raw": 1.57,
             "display": "1.57x"
           },
-          "overPayoutMultiplier": 2.05,
+          "overPayoutMultiplier": 2.06,
           "underPayoutMultiplier": 1.57,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
-          "cardKey": "24968|Bogeys",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 24968,
-          "playerName": "Griffin, Ben",
+          "cardKey": "15556|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 15556,
+          "playerName": "Hughes, Mackenzie",
           "market": "Bogeys",
           "line": 1.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.52,
-            "display": "1.52x"
+            "raw": 1.62,
+            "display": "1.62x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 2.14,
-            "display": "2.14x"
+            "raw": 1.97,
+            "display": "1.97x"
           },
-          "overPayoutMultiplier": 1.52,
-          "underPayoutMultiplier": 2.14,
+          "overPayoutMultiplier": 1.62,
+          "underPayoutMultiplier": 1.97,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "24968|Total Score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 24968,
-          "playerName": "Griffin, Ben",
-          "market": "Total score",
-          "line": 67.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.66,
-            "display": "1.66x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.92,
-            "display": "1.92x"
-          },
-          "overPayoutMultiplier": 1.66,
-          "underPayoutMultiplier": 1.92,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "27194|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 27194,
-          "playerName": "Hall, Harry",
-          "market": "Birdies",
-          "line": 5.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.15,
-            "display": "2.15x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.51,
-            "display": "1.51x"
-          },
-          "overPayoutMultiplier": 2.15,
-          "underPayoutMultiplier": 1.51,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "20954|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 20954,
-          "playerName": "Hirata, Kensei",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.99,
-            "display": "1.99x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.61,
-            "display": "1.61x"
-          },
-          "overPayoutMultiplier": 1.99,
-          "underPayoutMultiplier": 1.61,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "20954|Bogeys",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 20954,
-          "playerName": "Hirata, Kensei",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.66,
-            "display": "1.66x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.92,
-            "display": "1.92x"
-          },
-          "overPayoutMultiplier": 1.66,
-          "underPayoutMultiplier": 1.92,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "20954|Total Score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 20954,
-          "playerName": "Hirata, Kensei",
-          "market": "Total score",
-          "line": 69.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.69,
-            "display": "1.69x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.89,
-            "display": "1.89x"
-          },
-          "overPayoutMultiplier": 1.69,
-          "underPayoutMultiplier": 1.89,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "15556|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 15556,
-          "playerName": "Hughes, Mackenzie",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.58,
-            "display": "1.58x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.04,
-            "display": "2.04x"
-          },
-          "overPayoutMultiplier": 1.58,
-          "underPayoutMultiplier": 2.04,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "15556|Bogeys",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 15556,
-          "playerName": "Hughes, Mackenzie",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.22,
-            "display": "2.22x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.47,
-            "display": "1.47x"
-          },
-          "overPayoutMultiplier": 2.22,
-          "underPayoutMultiplier": 1.47,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
           "cardKey": "15556|Total Score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
           "dg_id": 15556,
           "playerName": "Hughes, Mackenzie",
           "market": "Total score",
@@ -916,139 +2494,264 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
-          "cardKey": "24766|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 24766,
-          "playerName": "Kim, Tom",
+          "cardKey": "32457|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 32457,
+          "playerName": "Keefer, Johnny",
           "market": "Birdies",
           "line": 5.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 2.03,
-            "display": "2.03x"
+            "raw": 1.82,
+            "display": "1.82x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 1.58,
-            "display": "1.58x"
+            "raw": 1.74,
+            "display": "1.74x"
           },
-          "overPayoutMultiplier": 2.03,
-          "underPayoutMultiplier": 1.58,
+          "overPayoutMultiplier": 1.82,
+          "underPayoutMultiplier": 1.74,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
-          "cardKey": "24766|Bogeys",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 24766,
-          "playerName": "Kim, Tom",
+          "cardKey": "17543|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 17543,
+          "playerName": "Kim, Michael",
+          "market": "Birdies",
+          "line": 5.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.82,
+            "display": "1.82x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.74,
+            "display": "1.74x"
+          },
+          "overPayoutMultiplier": 1.82,
+          "underPayoutMultiplier": 1.74,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
+        },
+        {
+          "cardKey": "17543|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 17543,
+          "playerName": "Kim, Michael",
           "market": "Bogeys",
           "line": 1.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.53,
-            "display": "1.53x"
+            "raw": 1.58,
+            "display": "1.58x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 2.11,
-            "display": "2.11x"
+            "raw": 2.03,
+            "display": "2.03x"
           },
-          "overPayoutMultiplier": 1.53,
-          "underPayoutMultiplier": 2.11,
+          "overPayoutMultiplier": 1.58,
+          "underPayoutMultiplier": 2.03,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
-          "cardKey": "24766|Total Score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 24766,
-          "playerName": "Kim, Tom",
+          "cardKey": "17543|Total Score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 17543,
+          "playerName": "Kim, Michael",
+          "market": "Total score",
+          "line": 68.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.82,
+            "display": "1.82x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.74,
+            "display": "1.74x"
+          },
+          "overPayoutMultiplier": 1.82,
+          "underPayoutMultiplier": 1.74,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
+        },
+        {
+          "cardKey": "12423|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 12423,
+          "playerName": "Kirk, Chris",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.62,
+            "display": "1.62x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.97,
+            "display": "1.97x"
+          },
+          "overPayoutMultiplier": 1.62,
+          "underPayoutMultiplier": 1.97,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
+        },
+        {
+          "cardKey": "12423|Total Score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 12423,
+          "playerName": "Kirk, Chris",
+          "market": "Total score",
+          "line": 68.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.78,
+            "display": "1.78x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.78,
+            "display": "1.78x"
+          },
+          "overPayoutMultiplier": 1.78,
+          "underPayoutMultiplier": 1.78,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
+        },
+        {
+          "cardKey": "16395|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 16395,
+          "playerName": "Kohles, Ben",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.75,
+            "display": "1.75x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.82,
+            "display": "1.82x"
+          },
+          "overPayoutMultiplier": 1.75,
+          "underPayoutMultiplier": 1.82,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
+        },
+        {
+          "cardKey": "32319|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 32319,
+          "playerName": "Koivun, Jackson",
+          "market": "Birdies",
+          "line": 5.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.7,
+            "display": "1.7x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.87,
+            "display": "1.87x"
+          },
+          "overPayoutMultiplier": 1.7,
+          "underPayoutMultiplier": 1.87,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
+        },
+        {
+          "cardKey": "32319|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 32319,
+          "playerName": "Koivun, Jackson",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.85,
+            "display": "1.85x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.72,
+            "display": "1.72x"
+          },
+          "overPayoutMultiplier": 1.85,
+          "underPayoutMultiplier": 1.72,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
+        },
+        {
+          "cardKey": "32319|Total Score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 32319,
+          "playerName": "Koivun, Jackson",
           "market": "Total score",
           "line": 67.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.67,
-            "display": "1.67x"
+            "raw": 1.58,
+            "display": "1.58x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 1.9,
-            "display": "1.9x"
+            "raw": 2.04,
+            "display": "2.04x"
           },
-          "overPayoutMultiplier": 1.67,
-          "underPayoutMultiplier": 1.9,
+          "overPayoutMultiplier": 1.58,
+          "underPayoutMultiplier": 2.04,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
-          "cardKey": "21074|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 21074,
-          "playerName": "Nakajima, Keita",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.53,
-            "display": "1.53x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.12,
-            "display": "2.12x"
-          },
-          "overPayoutMultiplier": 1.53,
-          "underPayoutMultiplier": 2.12,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "23841|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 23841,
-          "playerName": "Neergaard-Petersen, Rasmus",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.56,
-            "display": "1.56x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.07,
-            "display": "2.07x"
-          },
-          "overPayoutMultiplier": 1.56,
-          "underPayoutMultiplier": 2.07,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "23475|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 23475,
-          "playerName": "Novak, Andrew",
+          "cardKey": "19870|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 19870,
+          "playerName": "McCarthy, Denny",
           "market": "Birdies",
           "line": 5.5,
           "overBookOdds": {
@@ -1066,191 +2769,191 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
-          "cardKey": "23475|Bogeys",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 23475,
-          "playerName": "Novak, Andrew",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.14,
-            "display": "2.14x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.51,
-            "display": "1.51x"
-          },
-          "overPayoutMultiplier": 2.14,
-          "underPayoutMultiplier": 1.51,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "23475|Total Score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 23475,
-          "playerName": "Novak, Andrew",
-          "market": "Total score",
-          "line": 68.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.9,
-            "display": "1.9x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.68,
-            "display": "1.68x"
-          },
-          "overPayoutMultiplier": 1.9,
-          "underPayoutMultiplier": 1.68,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "19960|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 19960,
-          "playerName": "Pavon, Matthieu",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.68,
-            "display": "1.68x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.89,
-            "display": "1.89x"
-          },
-          "overPayoutMultiplier": 1.68,
-          "underPayoutMultiplier": 1.89,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "19960|Bogeys",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 19960,
-          "playerName": "Pavon, Matthieu",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.88,
-            "display": "1.88x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.69,
-            "display": "1.69x"
-          },
-          "overPayoutMultiplier": 1.88,
-          "underPayoutMultiplier": 1.69,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "19960|Total Score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 19960,
-          "playerName": "Pavon, Matthieu",
-          "market": "Total score",
-          "line": 68.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.61,
-            "display": "1.61x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.99,
-            "display": "1.99x"
-          },
-          "overPayoutMultiplier": 1.61,
-          "underPayoutMultiplier": 1.99,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "22465|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 22465,
-          "playerName": "Penge, Marco",
+          "cardKey": "17365|Birdies",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 17365,
+          "playerName": "Mitchell, Keith",
           "market": "Birdies",
           "line": 5.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.96,
-            "display": "1.96x"
+            "raw": 1.7,
+            "display": "1.7x"
           },
           "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.87,
+            "display": "1.87x"
+          },
+          "overPayoutMultiplier": 1.7,
+          "underPayoutMultiplier": 1.87,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
+        },
+        {
+          "cardKey": "17365|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 17365,
+          "playerName": "Mitchell, Keith",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.51,
+            "display": "1.51x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.15,
+            "display": "2.15x"
+          },
+          "overPayoutMultiplier": 1.51,
+          "underPayoutMultiplier": 2.15,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
+        },
+        {
+          "cardKey": "17365|Total Score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 17365,
+          "playerName": "Mitchell, Keith",
+          "market": "Total score",
+          "line": 68.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.86,
+            "display": "1.86x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.71,
+            "display": "1.71x"
+          },
+          "overPayoutMultiplier": 1.86,
+          "underPayoutMultiplier": 1.71,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
+        },
+        {
+          "cardKey": "18586|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 18586,
+          "playerName": "Smith, Jordan",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overBookOdds": {
             "kind": "multiplier",
             "raw": 1.63,
             "display": "1.63x"
           },
-          "overPayoutMultiplier": 1.96,
-          "underPayoutMultiplier": 1.63,
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.96,
+            "display": "1.96x"
+          },
+          "overPayoutMultiplier": 1.63,
+          "underPayoutMultiplier": 1.96,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
-          "cardKey": "27164|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 27164,
-          "playerName": "Phillips, Chandler",
-          "market": "Birdies",
-          "line": 4.5,
+          "cardKey": "29279|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 29279,
+          "playerName": "Suber, Jackson",
+          "market": "Bogeys",
+          "line": 1.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.66,
-            "display": "1.66x"
+            "raw": 1.55,
+            "display": "1.55x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 1.92,
-            "display": "1.92x"
+            "raw": 2.08,
+            "display": "2.08x"
           },
-          "overPayoutMultiplier": 1.66,
-          "underPayoutMultiplier": 1.92,
+          "overPayoutMultiplier": 1.55,
+          "underPayoutMultiplier": 2.08,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         },
         {
-          "cardKey": "17381|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 17381,
-          "playerName": "Silverman, Ben",
-          "market": "Birdies",
-          "line": 4.5,
+          "cardKey": "29279|Total Score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 29279,
+          "playerName": "Suber, Jackson",
+          "market": "Total score",
+          "line": 68.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.82,
+            "display": "1.82x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.75,
+            "display": "1.75x"
+          },
+          "overPayoutMultiplier": 1.82,
+          "underPayoutMultiplier": 1.75,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
+        },
+        {
+          "cardKey": "15651|Bogeys",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 15651,
+          "playerName": "Ventura, Kristoffer",
+          "market": "Bogeys",
+          "line": 1.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.6,
+            "display": "1.6x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 2.01,
+            "display": "2.01x"
+          },
+          "overPayoutMultiplier": 1.6,
+          "underPayoutMultiplier": 2.01,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
+        },
+        {
+          "cardKey": "15651|Total Score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 15651,
+          "playerName": "Ventura, Kristoffer",
+          "market": "Total score",
+          "line": 68.5,
           "overBookOdds": {
             "kind": "multiplier",
             "raw": 1.78,
@@ -1266,254 +2969,56 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "18586|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 18586,
-          "playerName": "Smith, Jordan",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.52,
-            "display": "1.52x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.13,
-            "display": "2.13x"
-          },
-          "overPayoutMultiplier": 1.52,
-          "underPayoutMultiplier": 2.13,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "21995|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 21995,
-          "playerName": "Springer, Hayden",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.57,
-            "display": "1.57x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.05,
-            "display": "2.05x"
-          },
-          "overPayoutMultiplier": 1.57,
-          "underPayoutMultiplier": 2.05,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "29279|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 29279,
-          "playerName": "Suber, Jackson",
-          "market": "Birdies",
-          "line": 5.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.16,
-            "display": "2.16x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.5,
-            "display": "1.5x"
-          },
-          "overPayoutMultiplier": 2.16,
-          "underPayoutMultiplier": 1.5,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "17550|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 17550,
-          "playerName": "Van Rooyen, Erik",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.63,
-            "display": "1.63x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.97,
-            "display": "1.97x"
-          },
-          "overPayoutMultiplier": 1.63,
-          "underPayoutMultiplier": 1.97,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "15651|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 15651,
-          "playerName": "Ventura, Kristoffer",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.5,
-            "display": "1.5x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.17,
-            "display": "2.17x"
-          },
-          "overPayoutMultiplier": 1.5,
-          "underPayoutMultiplier": 2.17,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "15651|Bogeys",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 15651,
-          "playerName": "Ventura, Kristoffer",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.31,
-            "display": "2.31x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.43,
-            "display": "1.43x"
-          },
-          "overPayoutMultiplier": 2.31,
-          "underPayoutMultiplier": 1.43,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "15651|Total Score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 15651,
-          "playerName": "Ventura, Kristoffer",
-          "market": "Total score",
-          "line": 68.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.93,
-            "display": "1.93x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.66,
-            "display": "1.66x"
-          },
-          "overPayoutMultiplier": 1.93,
-          "underPayoutMultiplier": 1.66,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "24304|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 24304,
-          "playerName": "Vilips, Karl",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.56,
-            "display": "1.56x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.07,
-            "display": "2.07x"
-          },
-          "overPayoutMultiplier": 1.56,
-          "underPayoutMultiplier": 2.07,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
-        },
-        {
-          "cardKey": "29925|Birdies",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 29925,
-          "playerName": "Yellamaraju, Sudarshan",
-          "market": "Birdies",
-          "line": 4.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.56,
-            "display": "1.56x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.07,
-            "display": "2.07x"
-          },
-          "overPayoutMultiplier": 1.56,
-          "underPayoutMultiplier": 2.07,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:40.560Z"
+          "fetchedAt": "2026-11-05T04:01:46.114Z"
         }
       ],
       "fetchError": "",
-      "count": 59,
-      "fetchedAt": "2026-11-01T15:01:40.560Z"
+      "count": 36,
+      "fetchedAt": "2026-11-05T04:01:46.114Z"
     },
     "underdog": {
       "cards": [],
       "fetchError": "Underdog API HTTP 426",
       "count": 0,
-      "fetchedAt": "2026-11-01T15:01:49.280Z"
+      "fetchedAt": "2026-11-05T04:01:47.109Z"
     },
     "kalshi": {
       "cards": [
         {
-          "cardKey": "24956|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 24956,
-          "playerName": "Blanchet, Chandler",
+          "cardKey": "19846|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 19846,
+          "playerName": "Bauchou, Zach",
           "market": "Total score",
-          "line": 69.5,
+          "line": 68.5,
+          "overOdds": -335,
+          "underOdds": 335,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -335,
+            "display": "-335"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 335,
+            "display": "+335"
+          },
+          "overPayoutMultiplier": 1.2985074626865671,
+          "underPayoutMultiplier": 4.35,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:47.246Z"
+        },
+        {
+          "cardKey": "32152|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 32152,
+          "playerName": "Brown, Blades",
+          "market": "Total score",
+          "line": 68.5,
           "overOdds": 104,
           "underOdds": -104,
           "overBookOdds": {
@@ -1531,178 +3036,232 @@
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:49.420Z"
+          "fetchedAt": "2026-11-05T04:01:47.246Z"
         },
         {
-          "cardKey": "32152|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 32152,
-          "playerName": "Brown, Blades",
+          "cardKey": "26657|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 26657,
+          "playerName": "Fisk, Steven",
           "market": "Total score",
           "line": 68.5,
-          "overOdds": 133,
-          "underOdds": -133,
+          "overOdds": -182,
+          "underOdds": 182,
           "overBookOdds": {
             "kind": "american",
-            "raw": 133,
-            "display": "+133"
+            "raw": -182,
+            "display": "-182"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -133,
-            "display": "-133"
+            "raw": 182,
+            "display": "+182"
           },
-          "overPayoutMultiplier": 2.33,
-          "underPayoutMultiplier": 1.7518796992481203,
+          "overPayoutMultiplier": 1.5494505494505495,
+          "underPayoutMultiplier": 2.8200000000000003,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:49.420Z"
+          "fetchedAt": "2026-11-05T04:01:47.246Z"
         },
         {
-          "cardKey": "32330|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 32330,
-          "playerName": "Clanton, Luke",
+          "cardKey": "29767|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 29767,
+          "playerName": "Gerard, Ryan",
           "market": "Total score",
-          "line": 68.5,
-          "overOdds": 106,
-          "underOdds": -106,
+          "line": 67.5,
+          "overOdds": -120,
+          "underOdds": 120,
           "overBookOdds": {
             "kind": "american",
-            "raw": 106,
-            "display": "+106"
+            "raw": -120,
+            "display": "-120"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -106,
-            "display": "-106"
+            "raw": 120,
+            "display": "+120"
           },
-          "overPayoutMultiplier": 2.06,
-          "underPayoutMultiplier": 1.9433962264150944,
+          "overPayoutMultiplier": 1.8333333333333335,
+          "underPayoutMultiplier": 2.2,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:49.420Z"
+          "fetchedAt": "2026-11-05T04:01:47.246Z"
         },
         {
-          "cardKey": "17576|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 17576,
-          "playerName": "Conners, Corey",
+          "cardKey": "23465|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 23465,
+          "playerName": "Greyserman, Max",
           "market": "Total score",
           "line": 68.5,
-          "overOdds": 122,
-          "underOdds": -122,
+          "overOdds": -102,
+          "underOdds": 102,
           "overBookOdds": {
             "kind": "american",
-            "raw": 122,
-            "display": "+122"
+            "raw": -102,
+            "display": "-102"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -122,
-            "display": "-122"
+            "raw": 102,
+            "display": "+102"
           },
-          "overPayoutMultiplier": 2.2199999999999998,
-          "underPayoutMultiplier": 1.819672131147541,
+          "overPayoutMultiplier": 1.9803921568627452,
+          "underPayoutMultiplier": 2.02,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:49.420Z"
-        },
-        {
-          "cardKey": "24550|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 24550,
-          "playerName": "Ghim, Doug",
-          "market": "Total score",
-          "line": 68.5,
-          "overOdds": 144,
-          "underOdds": -144,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": 144,
-            "display": "+144"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -144,
-            "display": "-144"
-          },
-          "overPayoutMultiplier": 2.44,
-          "underPayoutMultiplier": 1.6944444444444444,
-          "oddsSource": "book_api_live",
-          "bookId": "kalshi",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:49.420Z"
+          "fetchedAt": "2026-11-05T04:01:47.246Z"
         },
         {
           "cardKey": "24968|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
           "dg_id": 24968,
           "playerName": "Griffin, Ben",
           "market": "Total score",
           "line": 67.5,
-          "overOdds": -127,
-          "underOdds": 127,
+          "overOdds": -138,
+          "underOdds": 138,
           "overBookOdds": {
             "kind": "american",
-            "raw": -127,
-            "display": "-127"
+            "raw": -138,
+            "display": "-138"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": 127,
-            "display": "+127"
+            "raw": 138,
+            "display": "+138"
           },
-          "overPayoutMultiplier": 1.7874015748031495,
-          "underPayoutMultiplier": 2.27,
+          "overPayoutMultiplier": 1.7246376811594204,
+          "underPayoutMultiplier": 2.38,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:49.420Z"
+          "fetchedAt": "2026-11-05T04:01:47.246Z"
+        },
+        {
+          "cardKey": "27194|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 27194,
+          "playerName": "Hall, Harry",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": 104,
+          "underOdds": -104,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 104,
+            "display": "+104"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "overPayoutMultiplier": 2.04,
+          "underPayoutMultiplier": 1.9615384615384617,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:47.246Z"
         },
         {
           "cardKey": "29827|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
           "dg_id": 29827,
           "playerName": "James, Ben",
           "market": "Total score",
-          "line": 67.5,
-          "overOdds": -100,
-          "underOdds": -100,
+          "line": 68.5,
+          "overOdds": 117,
+          "underOdds": -117,
           "overBookOdds": {
             "kind": "american",
-            "raw": -100,
-            "display": "-100"
+            "raw": 117,
+            "display": "+117"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -100,
-            "display": "-100"
+            "raw": -117,
+            "display": "-117"
           },
-          "overPayoutMultiplier": 2,
-          "underPayoutMultiplier": 2,
+          "overPayoutMultiplier": 2.17,
+          "underPayoutMultiplier": 1.8547008547008548,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:49.420Z"
+          "fetchedAt": "2026-11-05T04:01:47.246Z"
         },
         {
-          "cardKey": "24766|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 24766,
-          "playerName": "Kim, Tom",
+          "cardKey": "16395|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 16395,
+          "playerName": "Kohles, Ben",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -113,
+          "underOdds": 113,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -113,
+            "display": "-113"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 113,
+            "display": "+113"
+          },
+          "overPayoutMultiplier": 1.8849557522123894,
+          "underPayoutMultiplier": 2.13,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:47.246Z"
+        },
+        {
+          "cardKey": "32319|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 32319,
+          "playerName": "Koivun, Jackson",
           "market": "Total score",
           "line": 67.5,
+          "overOdds": -150,
+          "underOdds": 150,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -150,
+            "display": "-150"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 150,
+            "display": "+150"
+          },
+          "overPayoutMultiplier": 1.6666666666666665,
+          "underPayoutMultiplier": 2.5,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:47.246Z"
+        },
+        {
+          "cardKey": "17365|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 17365,
+          "playerName": "Mitchell, Keith",
+          "market": "Total score",
+          "line": 68.5,
           "overOdds": 102,
           "underOdds": -102,
           "overBookOdds": {
@@ -1720,153 +3279,417 @@
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:49.420Z"
-        },
-        {
-          "cardKey": "23475|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 23475,
-          "playerName": "Novak, Andrew",
-          "market": "Total score",
-          "line": 66.5,
-          "overOdds": -257,
-          "underOdds": 257,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -257,
-            "display": "-257"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 257,
-            "display": "+257"
-          },
-          "overPayoutMultiplier": 1.3891050583657587,
-          "underPayoutMultiplier": 3.57,
-          "oddsSource": "book_api_live",
-          "bookId": "kalshi",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:49.420Z"
-        },
-        {
-          "cardKey": "19960|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 19960,
-          "playerName": "Pavon, Matthieu",
-          "market": "Total score",
-          "line": 68.5,
-          "overOdds": -135,
-          "underOdds": 135,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -135,
-            "display": "-135"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 135,
-            "display": "+135"
-          },
-          "overPayoutMultiplier": 1.7407407407407407,
-          "underPayoutMultiplier": 2.35,
-          "oddsSource": "book_api_live",
-          "bookId": "kalshi",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:49.420Z"
+          "fetchedAt": "2026-11-05T04:01:47.246Z"
         },
         {
           "cardKey": "22465|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
           "dg_id": 22465,
           "playerName": "Penge, Marco",
           "market": "Total score",
           "line": 68.5,
-          "overOdds": 108,
-          "underOdds": -108,
+          "overOdds": -141,
+          "underOdds": 141,
           "overBookOdds": {
             "kind": "american",
-            "raw": 108,
-            "display": "+108"
+            "raw": -141,
+            "display": "-141"
           },
           "underBookOdds": {
+            "kind": "american",
+            "raw": 141,
+            "display": "+141"
+          },
+          "overPayoutMultiplier": 1.7092198581560285,
+          "underPayoutMultiplier": 2.41,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:47.246Z"
+        },
+        {
+          "cardKey": "10104|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 10104,
+          "playerName": "Power, Seamus",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -300,
+          "underOdds": 300,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -300,
+            "display": "-300"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 300,
+            "display": "+300"
+          },
+          "overPayoutMultiplier": 1.3333333333333333,
+          "underPayoutMultiplier": 4,
+          "oddsSource": "book_api_live",
+          "bookId": "kalshi",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:47.246Z"
+        },
+        {
+          "cardKey": "18586|Total score",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "dg_id": 18586,
+          "playerName": "Smith, Jordan",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": -108,
+          "underOdds": 108,
+          "overBookOdds": {
             "kind": "american",
             "raw": -108,
             "display": "-108"
           },
-          "overPayoutMultiplier": 2.08,
-          "underPayoutMultiplier": 1.925925925925926,
-          "oddsSource": "book_api_live",
-          "bookId": "kalshi",
-          "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:49.420Z"
-        },
-        {
-          "cardKey": "32055|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
-          "dg_id": 32055,
-          "playerName": "Shipley, Neal",
-          "market": "Total score",
-          "line": 68.5,
-          "overOdds": 104,
-          "underOdds": -104,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": 104,
-            "display": "+104"
-          },
           "underBookOdds": {
             "kind": "american",
-            "raw": -104,
-            "display": "-104"
+            "raw": 108,
+            "display": "+108"
           },
-          "overPayoutMultiplier": 2.04,
-          "underPayoutMultiplier": 1.9615384615384617,
+          "overPayoutMultiplier": 1.925925925925926,
+          "underPayoutMultiplier": 2.08,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:49.420Z"
+          "fetchedAt": "2026-11-05T04:01:47.246Z"
         },
         {
           "cardKey": "29279|Total score",
-          "eventName": "VidantaWorld Mexico Open",
-          "round": 4,
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
           "dg_id": 29279,
           "playerName": "Suber, Jackson",
           "market": "Total score",
           "line": 68.5,
-          "overOdds": 113,
-          "underOdds": -113,
+          "overOdds": -100,
+          "underOdds": -100,
           "overBookOdds": {
             "kind": "american",
-            "raw": 113,
-            "display": "+113"
+            "raw": -100,
+            "display": "-100"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -113,
-            "display": "-113"
+            "raw": -100,
+            "display": "-100"
           },
-          "overPayoutMultiplier": 2.13,
-          "underPayoutMultiplier": 1.8849557522123894,
+          "overPayoutMultiplier": 2,
+          "underPayoutMultiplier": 2,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-01T15:01:49.420Z"
+          "fetchedAt": "2026-11-05T04:01:47.246Z"
         }
       ],
       "fetchError": "",
-      "count": 13,
-      "fetchedAt": "2026-11-01T15:01:49.420Z"
+      "count": 15,
+      "fetchedAt": "2026-11-05T04:01:47.246Z"
     },
     "dk_matchups": {
-      "cards": [],
+      "cards": [
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:29827|32319",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 29827,
+          "p2_dg_id": 32319,
+          "p1_player_name": "James, Ben",
+          "p2_player_name": "Koivun, Jackson",
+          "p1_short": "Ben James",
+          "p2_short": "Jackson Koivun",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -114,
+            "display": "-114"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -114,
+            "display": "-114"
+          },
+          "p1PayoutMultiplier": 1.8771929824561404,
+          "p2PayoutMultiplier": 1.8771929824561404,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:47.250Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:16395|24968",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 16395,
+          "p2_dg_id": 24968,
+          "p1_player_name": "Kohles, Ben",
+          "p2_player_name": "Griffin, Ben",
+          "p1_short": "Ben Kohles",
+          "p2_short": "Ben Griffin",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": 122,
+            "display": "+122"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -160,
+            "display": "-160"
+          },
+          "p1PayoutMultiplier": 2.2199999999999998,
+          "p2PayoutMultiplier": 1.625,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:47.250Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:18103|27194",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 18103,
+          "p2_dg_id": 27194,
+          "p1_player_name": "Bezuidenhout, Christiaan",
+          "p2_player_name": "Hall, Harry",
+          "p1_short": "Christiaan Bezuidenhout",
+          "p2_short": "Harry Hall",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -114,
+            "display": "-114"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -115,
+            "display": "-115"
+          },
+          "p1PayoutMultiplier": 1.8771929824561404,
+          "p2PayoutMultiplier": 1.8695652173913042,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:47.250Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:29279|29767",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 29279,
+          "p2_dg_id": 29767,
+          "p1_player_name": "Suber, Jackson",
+          "p2_player_name": "Gerard, Ryan",
+          "p1_short": "Jackson Suber",
+          "p2_short": "Ryan Gerard",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": 118,
+            "display": "+118"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -156,
+            "display": "-156"
+          },
+          "p1PayoutMultiplier": 2.1799999999999997,
+          "p2PayoutMultiplier": 1.641025641025641,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:47.250Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:17365|32152",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 17365,
+          "p2_dg_id": 32152,
+          "p1_player_name": "Mitchell, Keith",
+          "p2_player_name": "Brown, Blades",
+          "p1_short": "Keith Mitchell",
+          "p2_short": "Blades Brown",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -114,
+            "display": "-114"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -115,
+            "display": "-115"
+          },
+          "p1PayoutMultiplier": 1.8771929824561404,
+          "p2PayoutMultiplier": 1.8695652173913042,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:47.250Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:19960|23505",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 19960,
+          "p2_dg_id": 23505,
+          "p1_player_name": "Pavon, Matthieu",
+          "p2_player_name": "McGreevy, Max",
+          "p1_short": "Matthieu Pavon",
+          "p2_short": "Max McGreevy",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -110,
+            "display": "-110"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -120,
+            "display": "-120"
+          },
+          "p1PayoutMultiplier": 1.9090909090909092,
+          "p2PayoutMultiplier": 1.8333333333333335,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:47.250Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:17543|22465",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 17543,
+          "p2_dg_id": 22465,
+          "p1_player_name": "Kim, Michael",
+          "p2_player_name": "Penge, Marco",
+          "p1_short": "Michael Kim",
+          "p2_short": "Marco Penge",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -118,
+            "display": "-118"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -110,
+            "display": "-110"
+          },
+          "p1PayoutMultiplier": 1.847457627118644,
+          "p2PayoutMultiplier": 1.9090909090909092,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:47.250Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:32055|32330",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 32055,
+          "p2_dg_id": 32330,
+          "p1_player_name": "Shipley, Neal",
+          "p2_player_name": "Clanton, Luke",
+          "p1_short": "Neal Shipley",
+          "p2_short": "Luke Clanton",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -122,
+            "display": "-122"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -108,
+            "display": "-108"
+          },
+          "p1PayoutMultiplier": 1.819672131147541,
+          "p2PayoutMultiplier": 1.925925925925926,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:47.250Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:23841|26653",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 23841,
+          "p2_dg_id": 26653,
+          "p1_player_name": "Neergaard-Petersen, Rasmus",
+          "p2_player_name": "Eckroat, Austin",
+          "p1_short": "Rasmus Neergaard-Petersen",
+          "p2_short": "Austin Eckroat",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -112,
+            "display": "-112"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -116,
+            "display": "-116"
+          },
+          "p1PayoutMultiplier": 1.8928571428571428,
+          "p2PayoutMultiplier": 1.8620689655172413,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:47.250Z"
+        },
+        {
+          "cardKind": "matchup",
+          "cardKey": "mu:23816|32457",
+          "eventName": "World Wide Technology Championship",
+          "round": 1,
+          "market": "Round matchup",
+          "p1_dg_id": 23816,
+          "p2_dg_id": 32457,
+          "p1_player_name": "Valimaki, Sami",
+          "p2_player_name": "Keefer, Johnny",
+          "p1_short": "Sami Valimaki",
+          "p2_short": "Johnny Keefer",
+          "p1BookOdds": {
+            "kind": "american",
+            "raw": -110,
+            "display": "-110"
+          },
+          "p2BookOdds": {
+            "kind": "american",
+            "raw": -120,
+            "display": "-120"
+          },
+          "p1PayoutMultiplier": 1.9090909090909092,
+          "p2PayoutMultiplier": 1.8333333333333335,
+          "oddsSource": "draftkings_matchups",
+          "bookId": "dk_matchups",
+          "gradeable": true,
+          "fetchedAt": "2026-11-05T04:01:47.250Z"
+        }
+      ],
       "fetchError": "",
-      "count": 0,
-      "fetchedAt": "2026-11-01T15:01:49.423Z"
+      "count": 10,
+      "fetchedAt": "2026-11-05T04:01:47.250Z"
     }
   }
 }
