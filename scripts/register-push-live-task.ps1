@@ -51,7 +51,7 @@ Register-ScheduledTask `
   -Trigger $trigger `
   -Settings $settings `
   -Principal $principal `
-  -Description "Alpha Caddie: npm run push:live at 9pm local, commit + push. Log: alpha-caddie-web/logs/push-live-scheduled.log" `
+  -Description "Alpha Caddie: npm run push:live at 9pm local (DK/PP/SL/UD/FD/KL/CZR/Onyx/Courtside round props), commit + push. Log: alpha-caddie-web/logs/push-live-scheduled.log" `
   -Force | Out-Null
 
 Write-Host "Registered scheduled task '$TaskName' daily at $TimeLocal local time."

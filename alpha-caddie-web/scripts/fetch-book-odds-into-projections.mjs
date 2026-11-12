@@ -25,7 +25,7 @@
  *      GOLF_SKIP_KL_OU=1 — do not pull Kalshi round-score props (see kalshi-ou-props.mjs).
  *      GOLF_SKIP_CZR_OU=1 — do not pull Caesars round props (see caesars-ou-props.mjs).
  *      GOLF_SKIP_OX_OU=1 — do not pull Onyx Odds round props (see onyx-ou-props.mjs).
- *      GOLF_SKIP_CS_OU=1 — do not pull Courtside round props (see courtside-ou-props.mjs; needs OPTICODDS_API_KEY).
+ *      GOLF_SKIP_CS_OU=1 — do not pull Courtside round props (see courtside-ou-props.mjs).
  *      GOLF_REQUIRE_DK_OU=1 — abort when DK scrape returns 0 fresh props (default on push:live / refresh:live).
  *      GOLF_REQUIRE_PP_OU=1 — abort when PrizePicks fetch returns 0 fresh props (optional).
  *      GOLF_REQUIRE_SL_OU=1 / GOLF_REQUIRE_UD_OU=1 — abort when Sleeper/Underdog return 0 rows (optional).
