@@ -50,7 +50,7 @@
  *   DK_HEADLESS / CZR_HEADLESS / FD_HEADLESS =0 on Windows/macOS (dkOuScrapeEnv) — required for book sessions
  */
 import { spawnSync } from "child_process";
-import { copyFileSync, existsSync, mkdirSync, readFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { fastHistoryBuildEnv } from "./historical-rounds-merge-env.mjs";
@@ -60,6 +60,7 @@ import {
   requireDkOuEnv,
 } from "./projection-pipeline-env.mjs";
 import { resolveMatchupIncrementalSinceIso, resolveOuIncrementalSinceIso } from "./tracker-incremental.mjs";
+import { robustMirrorPairs } from "./robust-copy-file.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -145,37 +146,35 @@ function runWeatherAndTeeTimesPass(phase, opts = {}) {
   );
 }
 
-function mirrorWebsitePublicData() {
+async function mirrorWebsitePublicData() {
   const destDir = path.join(REPO_ROOT, "website", "public", "data");
   mkdirSync(destDir, { recursive: true });
   const files = [
     "live-in-play.json",
     "projections.json",
+    "live-in-play-pga.json",
+    "projections-pga.json",
+    "live-in-play-euro.json",
+    "projections-euro.json",
     "course-table.json",
     "approach_skill_ytd.json",
     "approach_skill_l12.json",
   ];
   const dataFiles = ["parlay_correlations.json", "live_hole_props.json", "both_side_roi.json", "both_side_bets.json"];
   console.log("\n[refresh:live] Mirroring JSON → website/public/data/ …\n");
-  for (const name of files) {
-    const src = path.join(WEB_ROOT, name);
-    const dest = path.join(destDir, name);
-    if (!existsSync(src)) {
-      console.log(`[refresh:live] skip (missing): ${name}`);
-      continue;
-    }
-    copyFileSync(src, dest);
-    console.log(`[refresh:live]   ${name}`);
-  }
-  for (const name of dataFiles) {
-    const src = path.join(WEB_ROOT, "data", name);
-    const dest = path.join(destDir, name);
-    if (!existsSync(src)) {
-      console.log(`[refresh:live] skip (missing): data/${name}`);
-      continue;
-    }
-    copyFileSync(src, dest);
-    console.log(`[refresh:live]   data/${name}`);
+  const pairs = [
+    ...files.map((name) => [path.join(WEB_ROOT, name), path.join(destDir, name)]),
+    ...dataFiles.map((name) => [path.join(WEB_ROOT, "data", name), path.join(destDir, name)]),
+  ];
+  const { failed } = await robustMirrorPairs(pairs, {
+    soft: true,
+    attempts: 12,
+    log: (msg) => console.log(`[refresh:live]   ${msg}`),
+  });
+  if (failed) {
+    console.warn(
+      `[refresh:live] WARN: ${failed} website mirror(s) stayed locked — publish continues with alpha-caddie-web sources.`,
+    );
   }
 }
 
@@ -460,6 +459,24 @@ if (!envTruthy("GOLF_SKIP_KL_ROUND_AUDIT_CSV", false)) {
   run(
     "export-kl-round-model-audit-csv.mjs",
     "Kalshi round audit CSV (all KL lines/odds + model snapshots)",
+    {},
+    softOpt,
+  );
+}
+
+if (!envTruthy("GOLF_SKIP_OX_ROUND_AUDIT_CSV", false)) {
+  run(
+    "export-ox-round-model-audit-csv.mjs",
+    "Onyx round audit CSV (all OX lines/odds + model snapshots)",
+    {},
+    softOpt,
+  );
+}
+
+if (!envTruthy("GOLF_SKIP_CS_ROUND_AUDIT_CSV", false)) {
+  run(
+    "export-cs-round-model-audit-csv.mjs",
+    "Courtside round audit CSV (all CS lines/odds + model snapshots)",
     {},
     softOpt,
   );
@@ -804,7 +821,7 @@ run(
   { GOLF_REQUIRE_LIVE_PUBLISH_INVARIANTS: process.env.GOLF_REQUIRE_LIVE_PUBLISH_INVARIANTS || "1" },
 );
 
-mirrorWebsitePublicData();
+await mirrorWebsitePublicData();
 
 console.log("\n[refresh:live] Done.");
 if (skipHistoryShards) {

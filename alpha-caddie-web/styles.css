@@ -2117,7 +2117,11 @@ body {
 #table-ou.table-ou-projections .ou-proj-th-kl-line,
 #table-ou.table-ou-projections .ou-proj-td-kl-line,
 #table-ou.table-ou-projections .ou-proj-th-czr-line,
-#table-ou.table-ou-projections .ou-proj-td-czr-line {
+#table-ou.table-ou-projections .ou-proj-td-czr-line,
+#table-ou.table-ou-projections .ou-proj-th-ox-line,
+#table-ou.table-ou-projections .ou-proj-td-ox-line,
+#table-ou.table-ou-projections .ou-proj-th-cs-line,
+#table-ou.table-ou-projections .ou-proj-td-cs-line {
   min-width: 3rem;
   color: #f4ca3c;
   font-weight: 800;
@@ -2188,7 +2192,11 @@ body {
 #table-ou.table-ou-projections .ou-proj-th-kl-line,
 #table-ou.table-ou-projections .ou-proj-th-kl-odds,
 #table-ou.table-ou-projections .ou-proj-th-czr-line,
-#table-ou.table-ou-projections .ou-proj-th-czr-odds {
+#table-ou.table-ou-projections .ou-proj-th-czr-odds,
+#table-ou.table-ou-projections .ou-proj-th-ox-line,
+#table-ou.table-ou-projections .ou-proj-th-ox-odds,
+#table-ou.table-ou-projections .ou-proj-th-cs-line,
+#table-ou.table-ou-projections .ou-proj-th-cs-odds {
   text-align: center;
   vertical-align: middle;
   padding-left: 6px;
@@ -2237,7 +2245,11 @@ body {
 #table-ou.table-ou-projections .ou-proj-th-kl-odds,
 #table-ou.table-ou-projections .ou-proj-td-kl-odds,
 #table-ou.table-ou-projections .ou-proj-th-czr-odds,
-#table-ou.table-ou-projections .ou-proj-td-czr-odds {
+#table-ou.table-ou-projections .ou-proj-td-czr-odds,
+#table-ou.table-ou-projections .ou-proj-th-ox-odds,
+#table-ou.table-ou-projections .ou-proj-td-ox-odds,
+#table-ou.table-ou-projections .ou-proj-th-cs-odds,
+#table-ou.table-ou-projections .ou-proj-td-cs-odds {
   min-width: 3.5rem;
   font-weight: 700;
 }
@@ -2254,7 +2266,11 @@ body {
 #table-ou.table-ou-projections .ou-proj-th-kl-edge,
 #table-ou.table-ou-projections .ou-proj-td-kl-edge,
 #table-ou.table-ou-projections .ou-proj-th-czr-edge,
-#table-ou.table-ou-projections .ou-proj-td-czr-edge {
+#table-ou.table-ou-projections .ou-proj-td-czr-edge,
+#table-ou.table-ou-projections .ou-proj-th-ox-edge,
+#table-ou.table-ou-projections .ou-proj-td-ox-edge,
+#table-ou.table-ou-projections .ou-proj-th-cs-edge,
+#table-ou.table-ou-projections .ou-proj-td-cs-edge {
   min-width: 4rem;
   font-weight: 800;
 }
@@ -2335,6 +2351,8 @@ body {
 #table-ou.table-ou-projections td.ou-proj-td-fd-edge.pos,
 #table-ou.table-ou-projections td.ou-proj-td-kl-edge.pos,
 #table-ou.table-ou-projections td.ou-proj-td-czr-edge.pos,
+#table-ou.table-ou-projections td.ou-proj-td-ox-edge.pos,
+#table-ou.table-ou-projections td.ou-proj-td-cs-edge.pos,
 #table-ou.table-ou-projections td.ou-proj-td-delta-avg.pos,
 #table-ou.table-ou-projections td.ou-proj-td-delta-best.pos { color: #1ecf77; }
 #table-ou.table-ou-projections td.ou-proj-td-dk-edge.neg,
@@ -2344,6 +2362,8 @@ body {
 #table-ou.table-ou-projections td.ou-proj-td-fd-edge.neg,
 #table-ou.table-ou-projections td.ou-proj-td-kl-edge.neg,
 #table-ou.table-ou-projections td.ou-proj-td-czr-edge.neg,
+#table-ou.table-ou-projections td.ou-proj-td-ox-edge.neg,
+#table-ou.table-ou-projections td.ou-proj-td-cs-edge.neg,
 #table-ou.table-ou-projections td.ou-proj-td-delta-avg.neg,
 #table-ou.table-ou-projections td.ou-proj-td-delta-best.neg { color: #ff646f; }
 #table-ou.table-ou-projections td.ou-proj-empty-td {

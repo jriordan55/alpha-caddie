@@ -10,6 +10,7 @@ import { fileURLToPath } from "url";
 import { parse } from "csv-parse/sync";
 import { resolveGolfModelDir } from "./resolve-golf-model-dir.mjs";
 import { formatCourseLabelForDisplay } from "./course-name-key.mjs";
+import { robustWriteFileSync } from "./robust-copy-file.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -173,7 +174,8 @@ function main() {
   };
 
   const outPath = path.join(WEB_ROOT, "course-table.json");
-  fs.writeFileSync(outPath, JSON.stringify(payload), "utf8");
+  const wrote = robustWriteFileSync(outPath, JSON.stringify(payload));
+  if (!wrote.ok) throw wrote.error || new Error(`write failed: ${outPath}`);
   console.log("[build-course-table-json] wrote", outPath, `(${outRows.length} courses)`);
 }
 

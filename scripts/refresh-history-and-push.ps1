@@ -215,6 +215,8 @@ if ($LiveWeekOnly) {
   $env:GOLF_SKIP_FD_ROUND_AUDIT_CSV = "0"
   $env:GOLF_SKIP_CZR_ROUND_AUDIT_CSV = "0"
   $env:GOLF_SKIP_KL_ROUND_AUDIT_CSV = "0"
+  $env:GOLF_SKIP_OX_ROUND_AUDIT_CSV = "0"
+  $env:GOLF_SKIP_CS_ROUND_AUDIT_CSV = "0"
   Remove-Item Env:\GOLF_SKIP_DK_OU -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_SKIP_PP_OU -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_SKIP_SL_OU -ErrorAction SilentlyContinue
@@ -222,12 +224,16 @@ if ($LiveWeekOnly) {
   Remove-Item Env:\GOLF_SKIP_FD_OU -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_SKIP_KL_OU -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_SKIP_CZR_OU -ErrorAction SilentlyContinue
+  Remove-Item Env:\GOLF_SKIP_OX_OU -ErrorAction SilentlyContinue
+  Remove-Item Env:\GOLF_SKIP_CS_OU -ErrorAction SilentlyContinue
   $env:GOLF_SKIP_SL_OU = "0"
   $env:GOLF_SKIP_UD_OU = "0"
   $env:GOLF_SKIP_PP_OU = "0"
   $env:GOLF_SKIP_FD_OU = "0"
   $env:GOLF_SKIP_KL_OU = "0"
   $env:GOLF_SKIP_CZR_OU = "0"
+  $env:GOLF_SKIP_OX_OU = "0"
+  $env:GOLF_SKIP_CS_OU = "0"
   $env:GOLF_LIVE_WEEK_SOFT = "1"
   $env:GOLF_REQUIRE_DK_OU = "0"
   $env:GOLF_REQUIRE_PP_OU = "0"
@@ -236,6 +242,8 @@ if ($LiveWeekOnly) {
   $env:GOLF_REQUIRE_FD_OU = "0"
   $env:GOLF_REQUIRE_KL_OU = "0"
   $env:GOLF_REQUIRE_CZR_OU = "0"
+  $env:GOLF_REQUIRE_OX_OU = "0"
+  $env:GOLF_REQUIRE_CS_OU = "0"
   $env:GOLF_SKIP_DK_OU_VALIDATE = "1"
   $env:GOLF_FAIL_ON_PAR_MISMATCH = "0"
   $env:GOLF_LIVE_VALIDATE_SOFT = "1"
@@ -548,13 +556,17 @@ if ($LiveWeekOnly) {
   Remove-Item Env:\GOLF_SKIP_FD_OU -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_SKIP_KL_OU -ErrorAction SilentlyContinue
   Remove-Item Env:\GOLF_SKIP_CZR_OU -ErrorAction SilentlyContinue
+  Remove-Item Env:\GOLF_SKIP_OX_OU -ErrorAction SilentlyContinue
+  Remove-Item Env:\GOLF_SKIP_CS_OU -ErrorAction SilentlyContinue
   Remove-Item Env:\PERFECT_SKIP_FETCH_DK_OU -ErrorAction SilentlyContinue
   $env:GOLF_SKIP_FD_OU = "0"
   $env:GOLF_SKIP_KL_OU = "0"
   $env:GOLF_SKIP_CZR_OU = "0"
+  $env:GOLF_SKIP_OX_OU = "0"
+  $env:GOLF_SKIP_CS_OU = "0"
   $env:GOLF_DEFER_DK_ROUND_AUDIT_UNTIL_REPAIR = "1"
   # fetch:book-odds pulls DK round props (Birdies/Total Score/GIR/etc.) via Playwright - no separate fetch:dk-ou (would duplicate Chromium).
-  Run-Npm "Running fetch:book-odds (matchups, outrights, DK + PP + SL + UD + FD + Kalshi + Caesars round O/U props) ..." run fetch:book-odds
+  Run-Npm "Running fetch:book-odds (matchups, outrights, DK + PP + SL + UD + FD + Kalshi + Caesars + Onyx + Courtside round O/U props) ..." run fetch:book-odds
   Run-Npm 'Running fetch:finish-tool - outrights, same Scratch feed as DG Finish Position; runs after book-odds ...' run fetch:finish-tool
   Run-Npm "Merging live_hole_stats into projections (after book odds; preserves pars if book-odds ran inline fetch:dg) ..." run merge:live-hole-pars-into-projections
   Run-Npm "Bundled course_holes.json -> projections when live pars missing/wrong ..." run sync:bundled-hole-pars
@@ -581,51 +593,50 @@ if ($LiveWeekOnly) {
   Promote-RoundProjectionVsActualCsv $webRoot
 }
 
+function Copy-PublishMirror([string] $Src, [string] $Dest, [string] $Label) {
+  if (-not (Test-Path -LiteralPath $Src)) { return }
+  $destDir = Split-Path -Parent $Dest
+  if (-not (Test-Path -LiteralPath $destDir)) {
+    New-Item -ItemType Directory -Path $destDir -Force | Out-Null
+  }
+  for ($attempt = 1; $attempt -le 12; $attempt++) {
+    $tmp = "$Dest.tmp-$PID-$(Get-Random)"
+    try {
+      Copy-Item -LiteralPath $Src -Destination $tmp -Force -ErrorAction Stop
+      if (Test-Path -LiteralPath $Dest) {
+        Remove-Item -LiteralPath $Dest -Force -ErrorAction SilentlyContinue
+      }
+      Move-Item -LiteralPath $tmp -Destination $Dest -Force -ErrorAction Stop
+      Write-Host "Mirrored $Label"
+      return
+    } catch {
+      if (Test-Path -LiteralPath $tmp) {
+        Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue
+      }
+      if ($attempt -lt 12) {
+        Start-Sleep -Milliseconds (350 * $attempt)
+        continue
+      }
+      Write-Warning "Could not mirror $Label ($($_.Exception.Message)) — continuing publish with alpha-caddie-web source."
+    }
+  }
+}
+
 $webDataDir = Join-Path $repoRoot "website/public/data"
 if (-not (Test-Path $webDataDir)) {
   New-Item -ItemType Directory -Path $webDataDir -Force | Out-Null
 }
-$liveSrc = Join-Path $webRoot "live-in-play.json"
-$liveDest = Join-Path $webDataDir "live-in-play.json"
-if (Test-Path $liveSrc) {
-  Copy-Item -Path $liveSrc -Destination $liveDest -Force
-  Write-Host "Mirrored live-in-play.json -> website/public/data/live-in-play.json"
-}
-
-$projSrc = Join-Path $webRoot "projections.json"
-$projDest = Join-Path $webDataDir "projections.json"
-if (Test-Path $projSrc) {
-  Copy-Item -Path $projSrc -Destination $projDest -Force
-  Write-Host "Mirrored projections.json -> website/public/data/projections.json"
-}
-
-$courseTableSrc = Join-Path $webRoot "course-table.json"
-$courseTableDest = Join-Path $webDataDir "course-table.json"
-if (Test-Path $courseTableSrc) {
-  Copy-Item -Path $courseTableSrc -Destination $courseTableDest -Force
-  Write-Host "Mirrored course-table.json -> website/public/data/course-table.json"
-}
-
-$asSrc = Join-Path $webRoot "approach_skill_ytd.json"
-$asDest = Join-Path $webDataDir "approach_skill_ytd.json"
-if (Test-Path $asSrc) {
-  Copy-Item -Path $asSrc -Destination $asDest -Force
-  Write-Host "Mirrored approach_skill_ytd.json -> website/public/data/approach_skill_ytd.json"
-}
-
-$asL12Src = Join-Path $webRoot "approach_skill_l12.json"
-$asL12Dest = Join-Path $webDataDir "approach_skill_l12.json"
-if (Test-Path $asL12Src) {
-  Copy-Item -Path $asL12Src -Destination $asL12Dest -Force
-  Write-Host "Mirrored approach_skill_l12.json -> website/public/data/approach_skill_l12.json"
-}
-
-$parlayCorrSrc = Join-Path $webRoot "data/parlay_correlations.json"
-$parlayCorrDest = Join-Path $webDataDir "parlay_correlations.json"
-if (Test-Path $parlayCorrSrc) {
-  Copy-Item -Path $parlayCorrSrc -Destination $parlayCorrDest -Force
-  Write-Host "Mirrored parlay_correlations.json -> website/public/data/parlay_correlations.json"
-}
+Copy-PublishMirror (Join-Path $webRoot "live-in-play.json") (Join-Path $webDataDir "live-in-play.json") "live-in-play.json -> website/public/data/live-in-play.json"
+Copy-PublishMirror (Join-Path $webRoot "live-in-play-pga.json") (Join-Path $webDataDir "live-in-play-pga.json") "live-in-play-pga.json -> website/public/data/live-in-play-pga.json"
+Copy-PublishMirror (Join-Path $webRoot "live-in-play-euro.json") (Join-Path $webDataDir "live-in-play-euro.json") "live-in-play-euro.json -> website/public/data/live-in-play-euro.json"
+Copy-PublishMirror (Join-Path $webRoot "projections.json") (Join-Path $webDataDir "projections.json") "projections.json -> website/public/data/projections.json"
+Copy-PublishMirror (Join-Path $webRoot "projections-pga.json") (Join-Path $webDataDir "projections-pga.json") "projections-pga.json -> website/public/data/projections-pga.json"
+Copy-PublishMirror (Join-Path $webRoot "projections-euro.json") (Join-Path $webDataDir "projections-euro.json") "projections-euro.json -> website/public/data/projections-euro.json"
+Copy-PublishMirror (Join-Path $webRoot "course-table.json") (Join-Path $webDataDir "course-table.json") "course-table.json -> website/public/data/course-table.json"
+Copy-PublishMirror (Join-Path $webRoot "approach_skill_ytd.json") (Join-Path $webDataDir "approach_skill_ytd.json") "approach_skill_ytd.json -> website/public/data/approach_skill_ytd.json"
+Copy-PublishMirror (Join-Path $webRoot "approach_skill_l12.json") (Join-Path $webDataDir "approach_skill_l12.json") "approach_skill_l12.json -> website/public/data/approach_skill_l12.json"
+Copy-PublishMirror (Join-Path $webRoot "data/parlay_correlations.json") (Join-Path $webDataDir "parlay_correlations.json") "parlay_correlations.json -> website/public/data/parlay_correlations.json"
+Copy-PublishMirror (Join-Path $webRoot "paper-book/paper-book-lines.json") (Join-Path $repoRoot "website/public/paper-book/paper-book-lines.json") "paper-book-lines.json -> website/public/paper-book/"
 
 Run-Npm "Grading paper book open bets from vs-actual CSV ..." run grade:paper-book
 

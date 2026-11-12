@@ -45,6 +45,14 @@ export function isKalshiPropSource(source) {
   return String(source || "").trim().toLowerCase() === "kalshi";
 }
 
+export function isOnyxPropSource(source) {
+  return String(source || "").trim().toLowerCase() === "onyx";
+}
+
+export function isCourtsidePropSource(source) {
+  return String(source || "").trim().toLowerCase() === "courtside";
+}
+
 function normalizeIndexedPropLine(source, line) {
   const n = num(line, NaN);
   if (!Number.isFinite(n)) return NaN;
@@ -137,4 +145,14 @@ export function buildCzrPropsIndex(payload, opts = {}) {
 /** Kalshi-only index. */
 export function buildKlPropsIndex(payload, opts = {}) {
   return buildPropsIndexForSource(payload, { ...opts, source: "kalshi" });
+}
+
+/** Onyx Odds-only index. */
+export function buildOxPropsIndex(payload, opts = {}) {
+  return buildPropsIndexForSource(payload, { ...opts, source: "onyx" });
+}
+
+/** Courtside-only index. */
+export function buildCsPropsIndex(payload, opts = {}) {
+  return buildPropsIndexForSource(payload, { ...opts, source: "courtside" });
 }

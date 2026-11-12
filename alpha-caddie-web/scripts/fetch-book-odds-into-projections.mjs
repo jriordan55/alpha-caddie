@@ -24,10 +24,13 @@
  *      GOLF_SKIP_FD_OU=1 — do not pull FanDuel round props (see fanduel-ou-props.mjs).
  *      GOLF_SKIP_KL_OU=1 — do not pull Kalshi round-score props (see kalshi-ou-props.mjs).
  *      GOLF_SKIP_CZR_OU=1 — do not pull Caesars round props (see caesars-ou-props.mjs).
+ *      GOLF_SKIP_OX_OU=1 — do not pull Onyx Odds round props (see onyx-ou-props.mjs).
+ *      GOLF_SKIP_CS_OU=1 — do not pull Courtside round props (see courtside-ou-props.mjs; needs OPTICODDS_API_KEY).
  *      GOLF_REQUIRE_DK_OU=1 — abort when DK scrape returns 0 fresh props (default on push:live / refresh:live).
  *      GOLF_REQUIRE_PP_OU=1 — abort when PrizePicks fetch returns 0 fresh props (optional).
  *      GOLF_REQUIRE_SL_OU=1 / GOLF_REQUIRE_UD_OU=1 — abort when Sleeper/Underdog return 0 rows (optional).
  *      GOLF_REQUIRE_FD_OU=1 / GOLF_REQUIRE_KL_OU=1 / GOLF_REQUIRE_CZR_OU=1 — abort when those books return 0 (optional).
+ *      GOLF_REQUIRE_OX_OU=1 / GOLF_REQUIRE_CS_OU=1 — abort when Onyx / Courtside return 0 (optional).
  *      DK_HEADLESS=0 — headed Chromium on Windows/macOS (DK blocks headless Nash API).
  *      GOLF_SKIP_DK_ROUND_AUDIT_CSV=1 — do not append alpha-caddie-web/data/dk_round_projection_audit.csv after merge.
  *      GOLF_SKIP_MODEL_FALLBACK_OU=1 — do not synthesize GIR / fairways / putts from projections.players for players DK omits.
@@ -44,6 +47,7 @@ import { spawnSync } from "child_process";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
+import { robustWriteFile } from "./robust-copy-file.mjs";
 import {
   coursesClearlyDistinct,
   eventsLikelySame,
@@ -58,15 +62,19 @@ import { appendDkRoundProjectionAuditCsv } from "./export-dk-round-model-audit-c
 import { appendPpRoundProjectionAuditCsv } from "./export-pp-round-model-audit-csv.mjs";
 import {
   appendCzrRoundProjectionAuditCsv,
+  appendCsRoundProjectionAuditCsv,
   appendFdRoundProjectionAuditCsv,
   appendKlRoundProjectionAuditCsv,
+  appendOxRoundProjectionAuditCsv,
   appendSlRoundProjectionAuditCsv,
   appendUdRoundProjectionAuditCsv,
 } from "./export-pickem-round-model-audit-csv.mjs";
 import { refreshCaesarsRoundProps } from "./merge-caesars-round-props.mjs";
+import { refreshCourtsideRoundProps } from "./merge-courtside-round-props.mjs";
 import { refreshRoundProjectionProps } from "./merge-dk-round-props.mjs";
 import { refreshFanduelRoundProps } from "./merge-fanduel-round-props.mjs";
 import { refreshKalshiRoundProps } from "./merge-kalshi-round-props.mjs";
+import { refreshOnyxRoundProps } from "./merge-onyx-round-props.mjs";
 import { refreshPrizePicksRoundProps } from "./merge-pp-round-props.mjs";
 import { refreshSleeperRoundProps } from "./merge-sleeper-round-props.mjs";
 import { refreshUnderdogRoundProps } from "./merge-underdog-round-props.mjs";
@@ -684,15 +692,86 @@ async function main() {
     }
   }
 
+  if (String(process.env.GOLF_SKIP_OX_OU || "").trim() !== "1") {
+    try {
+      const { props: oxMerged, nOx, oxError } = await refreshOnyxRoundProps(next);
+      next.props = oxMerged;
+      if (nOx > 0) {
+        next.ox_round_props_refreshed_at = next.book_odds_refreshed_at;
+        console.log(
+          `[fetch-book-odds] Onyx round props: ${nOx} fresh rows (${oxMerged.length} total props)`,
+        );
+        try {
+          const oxAudit = appendOxRoundProjectionAuditCsv(next);
+          if (oxAudit.appended > 0) {
+            console.log(`[fetch-book-odds] OX round audit CSV +${oxAudit.appended} rows -> ${oxAudit.path}`);
+          }
+        } catch (e) {
+          console.warn("[fetch-book-odds] OX round audit CSV:", e.message || e);
+        }
+      } else if (oxError && !String(oxError).startsWith("skipped")) {
+        console.warn(`[fetch-book-odds] Onyx: ${oxError}`);
+      }
+      if (envTruthy("GOLF_REQUIRE_OX_OU") && nOx === 0) {
+        console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_OX_OU=1): ${oxError || "0 Onyx rows"}`);
+        process.exit(1);
+      }
+    } catch (e) {
+      console.warn("[fetch-book-odds] Onyx O/U skipped:", e.message || e);
+      if (envTruthy("GOLF_REQUIRE_OX_OU")) {
+        console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_OX_OU=1): ${e.message || e}`);
+        process.exit(1);
+      }
+    }
+  }
+
+  if (String(process.env.GOLF_SKIP_CS_OU || "").trim() !== "1") {
+    try {
+      const { props: csMerged, nCs, csError } = await refreshCourtsideRoundProps(next);
+      next.props = csMerged;
+      if (nCs > 0) {
+        next.cs_round_props_refreshed_at = next.book_odds_refreshed_at;
+        console.log(
+          `[fetch-book-odds] Courtside round props: ${nCs} fresh rows (${csMerged.length} total props)`,
+        );
+        try {
+          const csAudit = appendCsRoundProjectionAuditCsv(next);
+          if (csAudit.appended > 0) {
+            console.log(`[fetch-book-odds] CS round audit CSV +${csAudit.appended} rows -> ${csAudit.path}`);
+          }
+        } catch (e) {
+          console.warn("[fetch-book-odds] CS round audit CSV:", e.message || e);
+        }
+      } else if (csError && !String(csError).startsWith("skipped")) {
+        console.warn(`[fetch-book-odds] Courtside: ${csError}`);
+      }
+      if (envTruthy("GOLF_REQUIRE_CS_OU") && nCs === 0) {
+        console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_CS_OU=1): ${csError || "0 Courtside rows"}`);
+        process.exit(1);
+      }
+    } catch (e) {
+      console.warn("[fetch-book-odds] Courtside O/U skipped:", e.message || e);
+      if (envTruthy("GOLF_REQUIRE_CS_OU")) {
+        console.error(`[fetch-book-odds] FAIL (GOLF_REQUIRE_CS_OU=1): ${e.message || e}`);
+        process.exit(1);
+      }
+    }
+  }
+
   const outJson = JSON.stringify(next, null, 2);
-  writeFileSync(projPath, outJson, "utf8");
+  const wrote = await robustWriteFile(projPath, outJson);
+  if (!wrote.ok) {
+    console.error(`[fetch-book-odds] FAIL writing ${projPath}:`, wrote.error?.message || wrote.error);
+    process.exit(1);
+  }
   console.log("Wrote", projPath, "(outrights + matchups only; players unchanged)");
 
   const websiteDataDir = join(GOLF_MODEL_ROOT, "website", "public", "data");
   const websiteProj = join(websiteDataDir, "projections.json");
   if (existsSync(websiteDataDir)) {
-    writeFileSync(websiteProj, outJson, "utf8");
-    console.log("Wrote", websiteProj);
+    const mir = await robustWriteFile(websiteProj, outJson, { attempts: 6 });
+    if (mir.ok) console.log("Wrote", websiteProj);
+    else console.warn(`[fetch-book-odds] WARN: could not write ${websiteProj} (${mir.error?.message || mir.error})`);
   }
 
   if (String(process.env.GOLF_SKIP_DK_OU || "").trim() !== "1") {

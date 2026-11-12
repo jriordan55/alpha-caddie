@@ -93,15 +93,19 @@ import {
   pgatourRowBelongsToEvent,
 } from "./live-event-actuals-cap.mjs";
 import {
+  defaultCsAuditPath,
   defaultCzrAuditPath,
   defaultFdAuditPath,
   defaultKlAuditPath,
+  defaultOxAuditPath,
   defaultPpAuditPath,
   defaultSlAuditPath,
   defaultUdAuditPath,
+  loadPreRoundCsPropsFromAudit,
   loadPreRoundCzrPropsFromAudit,
   loadPreRoundFdPropsFromAudit,
   loadPreRoundKlPropsFromAudit,
+  loadPreRoundOxPropsFromAudit,
   loadPreRoundPpPropsFromAudit,
   loadPreRoundSlPropsFromAudit,
   loadPreRoundUdPropsFromAudit,
@@ -137,9 +141,11 @@ import {
 } from "./projection-pipeline-env.mjs";
 import {
   buildBookPropsIndex,
+  buildCsPropsIndex,
   buildCzrPropsIndex,
   buildFdPropsIndex,
   buildKlPropsIndex,
+  buildOxPropsIndex,
   buildPpPropsIndex,
   buildSlPropsIndex,
   buildUdPropsIndex,
@@ -1091,6 +1097,8 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
     fd: opts.fdAuditPath || defaultFdAuditPath(WEB_ROOT),
     czr: opts.czrAuditPath || defaultCzrAuditPath(WEB_ROOT),
     kl: opts.klAuditPath || defaultKlAuditPath(WEB_ROOT),
+    ox: opts.oxAuditPath || defaultOxAuditPath(WEB_ROOT),
+    cs: opts.csAuditPath || defaultCsAuditPath(WEB_ROOT),
   };
   const altLoaders = {
     pp: loadPreRoundPpPropsFromAudit,
@@ -1099,6 +1107,8 @@ async function backfillFromAudit(auditPath, histPath, currentEventName, opts = {
     fd: loadPreRoundFdPropsFromAudit,
     czr: loadPreRoundCzrPropsFromAudit,
     kl: loadPreRoundKlPropsFromAudit,
+    ox: loadPreRoundOxPropsFromAudit,
+    cs: loadPreRoundCsPropsFromAudit,
   };
 
   for (const ev of auditEvents) {
@@ -2173,6 +2183,8 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
         fd: loadPreRoundFdPropsFromAudit,
         czr: loadPreRoundCzrPropsFromAudit,
         kl: loadPreRoundKlPropsFromAudit,
+        ox: loadPreRoundOxPropsFromAudit,
+        cs: loadPreRoundCsPropsFromAudit,
       };
       const paths = {
         pp: opts.ppAuditPath || defaultPpAuditPath(WEB_ROOT),
@@ -2181,6 +2193,8 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
         fd: opts.fdAuditPath || defaultFdAuditPath(WEB_ROOT),
         czr: opts.czrAuditPath || defaultCzrAuditPath(WEB_ROOT),
         kl: opts.klAuditPath || defaultKlAuditPath(WEB_ROOT),
+        ox: opts.oxAuditPath || defaultOxAuditPath(WEB_ROOT),
+        cs: opts.csAuditPath || defaultCsAuditPath(WEB_ROOT),
       };
       const lives = {
         pp: buildPpPropsIndex,
@@ -2189,6 +2203,8 @@ export async function writeRoundProjectionVsActualCsv(opts = {}) {
         fd: buildFdPropsIndex,
         czr: buildCzrPropsIndex,
         kl: buildKlPropsIndex,
+        ox: buildOxPropsIndex,
+        cs: buildCsPropsIndex,
       };
       const loader = loaders[book.short];
       const liveFn = lives[book.short];

@@ -3519,6 +3519,8 @@ function ouProjectionFieldPlayerDgIds() {
     ...fanduelRoundPropsOnly(),
     ...kalshiRoundPropsOnly(),
     ...caesarsRoundPropsOnly(),
+    ...onyxRoundPropsOnly(),
+    ...courtsideRoundPropsOnly(),
   ]) {
     const id = Math.round(num(r.dg_id, NaN));
     if (Number.isFinite(id) && id > 0) ids.add(id);
@@ -4273,6 +4275,8 @@ function ouRoundOuPropsForLines() {
       s === "fanduel" ||
       s === "kalshi" ||
       s === "caesars" ||
+      s === "onyx" ||
+      s === "courtside" ||
       s === "csv" ||
       s === "model_fallback"
     );
@@ -4308,6 +4312,14 @@ function caesarsRoundPropOddsAvailable() {
   return caesarsRoundPropsOnly().length > 0;
 }
 
+function onyxRoundPropOddsAvailable() {
+  return onyxRoundPropsOnly().length > 0;
+}
+
+function courtsideRoundPropOddsAvailable() {
+  return courtsideRoundPropsOnly().length > 0;
+}
+
 function roundBookPropOddsAvailable() {
   return (
     draftKingsRoundPropOddsAvailable() ||
@@ -4316,7 +4328,9 @@ function roundBookPropOddsAvailable() {
     underdogRoundPropOddsAvailable() ||
     fanduelRoundPropOddsAvailable() ||
     kalshiRoundPropOddsAvailable() ||
-    caesarsRoundPropOddsAvailable()
+    caesarsRoundPropOddsAvailable() ||
+    onyxRoundPropOddsAvailable() ||
+    courtsideRoundPropOddsAvailable()
   );
 }
 
@@ -4379,7 +4393,9 @@ function ouBookPickRank(pick, canon) {
     String(pick.source || "").trim().toLowerCase() === "underdog" ||
     String(pick.source || "").trim().toLowerCase() === "fanduel" ||
     String(pick.source || "").trim().toLowerCase() === "kalshi" ||
-    String(pick.source || "").trim().toLowerCase() === "caesars"
+    String(pick.source || "").trim().toLowerCase() === "caesars" ||
+    String(pick.source || "").trim().toLowerCase() === "onyx" ||
+    String(pick.source || "").trim().toLowerCase() === "courtside"
   ) {
     return 2;
   }
@@ -4420,6 +4436,8 @@ function draftKingsHasMarketForRound(market, round) {
     ...fanduelRoundPropsOnly(true),
     ...kalshiRoundPropsOnly(true),
     ...caesarsRoundPropsOnly(true),
+    ...onyxRoundPropsOnly(true),
+    ...courtsideRoundPropsOnly(true),
   ];
   const needFieldMatch = canon === "GIR" || canon === "Fairways hit";
   const fieldPlayers = needFieldMatch ? roundProjectionPlayersForOuRound() : [];
@@ -6833,7 +6851,7 @@ let ouGolferSuggestLabelsSig = "";
 /** @type {string[]} */
 let ouGolferSuggestLabels = [];
 let ouProjTableChromeReady = false;
-const OU_PROJ_TABLE_CHROME_VER = 8;
+const OU_PROJ_TABLE_CHROME_VER = 9;
 let ouProjTableChromeBuiltVer = 0;
 let ouTableBuildRaf = 0;
 
@@ -7027,6 +7045,10 @@ let ouKlRoundPropsCacheSig = "";
 let ouKlRoundPropsCache = [];
 let ouCzrRoundPropsCacheSig = "";
 let ouCzrRoundPropsCache = [];
+let ouOxRoundPropsCacheSig = "";
+let ouOxRoundPropsCache = [];
+let ouCsRoundPropsCacheSig = "";
+let ouCsRoundPropsCache = [];
 
 /** Shared round filter for any props[].source (PrizePicks-style line value). */
 function roundPropsForSource(source, allRounds = false) {
@@ -7148,6 +7170,32 @@ function caesarsRoundPropsOnly(allRounds = false) {
   return out;
 }
 
+function onyxRoundPropsOnly(allRounds = false) {
+  const wantR = allRounds ? NaN : Math.round(getOuRound());
+  const propsLen = Array.isArray(ouProjectionsPayload().props) ? ouProjectionsPayload().props.length : 0;
+  const sig = `${allRounds ? "all" : `r${wantR}`}|n${propsLen}|rev${projectionsDataRev}`;
+  if (!allRounds && ouOxRoundPropsCacheSig === sig) return ouOxRoundPropsCache;
+  const out = roundPropsForSource("onyx", allRounds);
+  if (!allRounds) {
+    ouOxRoundPropsCacheSig = sig;
+    ouOxRoundPropsCache = out;
+  }
+  return out;
+}
+
+function courtsideRoundPropsOnly(allRounds = false) {
+  const wantR = allRounds ? NaN : Math.round(getOuRound());
+  const propsLen = Array.isArray(ouProjectionsPayload().props) ? ouProjectionsPayload().props.length : 0;
+  const sig = `${allRounds ? "all" : `r${wantR}`}|n${propsLen}|rev${projectionsDataRev}`;
+  if (!allRounds && ouCsRoundPropsCacheSig === sig) return ouCsRoundPropsCache;
+  const out = roundPropsForSource("courtside", allRounds);
+  if (!allRounds) {
+    ouCsRoundPropsCacheSig = sig;
+    ouCsRoundPropsCache = out;
+  }
+  return out;
+}
+
 /** DraftKings when posted; otherwise next available book lines for the Round projections tab. */
 function roundBookPropsOnly(allRounds = false) {
   const dk = draftKingsRoundPropsOnly(allRounds);
@@ -7162,7 +7210,11 @@ function roundBookPropsOnly(allRounds = false) {
   if (fd.length) return fd;
   const kl = kalshiRoundPropsOnly(allRounds);
   if (kl.length) return kl;
-  return caesarsRoundPropsOnly(allRounds);
+  const czr = caesarsRoundPropsOnly(allRounds);
+  if (czr.length) return czr;
+  const ox = onyxRoundPropsOnly(allRounds);
+  if (ox.length) return ox;
+  return courtsideRoundPropsOnly(allRounds);
 }
 
 function draftKingsPostedRounds() {
@@ -7837,6 +7889,8 @@ const OU_PROJ_BOOK_SPECS = Object.freeze([
   { key: "fanduel", pick: "fdPick", edge: "fdEdge", roi: "fdRoi", kelly: "fdKelly", fair: "fdFairP", model: "fdModelP" },
   { key: "kalshi", pick: "klPick", edge: "klEdge", roi: "klRoi", kelly: "klKelly", fair: "klFairP", model: "klModelP" },
   { key: "caesars", pick: "czrPick", edge: "czrEdge", roi: "czrRoi", kelly: "czrKelly", fair: "czrFairP", model: "czrModelP" },
+  { key: "onyx", pick: "oxPick", edge: "oxEdge", roi: "oxRoi", kelly: "oxKelly", fair: "oxFairP", model: "oxModelP" },
+  { key: "courtside", pick: "csPick", edge: "csEdge", roi: "csRoi", kelly: "csKelly", fair: "csFairP", model: "csModelP" },
 ]);
 
 function ouProjSideAmerican(pick, side) {
@@ -8098,6 +8152,10 @@ function ensureOuProjectionTableChrome() {
   hr.appendChild(ouProjMakeBookColumnTh("pr-kl-odds", "Odds", "ou-proj-th-kl-odds", "kalshi", sortInd));
   hr.appendChild(ouProjMakeBookColumnTh("pr-czr-line", "Line", "ou-proj-th-czr-line", "caesars", sortInd));
   hr.appendChild(ouProjMakeBookColumnTh("pr-czr-odds", "Odds", "ou-proj-th-czr-odds", "caesars", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-ox-line", "Line", "ou-proj-th-ox-line", "onyx", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-ox-odds", "Odds", "ou-proj-th-ox-odds", "onyx", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-cs-line", "Line", "ou-proj-th-cs-line", "courtside", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-cs-odds", "Odds", "ou-proj-th-cs-odds", "courtside", sortInd));
   hr.appendChild(ouProjMakeBookColumnTh("pr-dk-edge", "Edge", "ou-proj-th-dk-edge", "draftkings", sortInd));
   hr.appendChild(ouProjMakeBookColumnTh("pr-pp-edge", "Edge", "ou-proj-th-pp-edge", "prizepicks", sortInd));
   hr.appendChild(ouProjMakeBookColumnTh("pr-sl-edge", "Edge", "ou-proj-th-sl-edge", "sleeper", sortInd));
@@ -8105,6 +8163,8 @@ function ensureOuProjectionTableChrome() {
   hr.appendChild(ouProjMakeBookColumnTh("pr-fd-edge", "Edge", "ou-proj-th-fd-edge", "fanduel", sortInd));
   hr.appendChild(ouProjMakeBookColumnTh("pr-kl-edge", "Edge", "ou-proj-th-kl-edge", "kalshi", sortInd));
   hr.appendChild(ouProjMakeBookColumnTh("pr-czr-edge", "Edge", "ou-proj-th-czr-edge", "caesars", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-ox-edge", "Edge", "ou-proj-th-ox-edge", "onyx", sortInd));
+  hr.appendChild(ouProjMakeBookColumnTh("pr-cs-edge", "Edge", "ou-proj-th-cs-edge", "courtside", sortInd));
   const fairTh = document.createElement("th");
   fairTh.className = "sortable ou-proj-long-th num ou-proj-th-fair";
   fairTh.dataset.sortKey = "pr-fair";
@@ -8160,7 +8220,7 @@ function initOuTableSortOnce() {
       else if (key === "pr-tee-time") ouTableSort.dir = 1;
       else if (key === "pr-market" || key === "pr-side") ouTableSort.dir = 1;
       else if (key === "pr-mu" || key === "pr-avg") ouTableSort.dir = -1;
-      else if (key === "pr-line" || key === "pr-dk-line" || key === "pr-pp-line" || key === "pr-sl-line" || key === "pr-ud-line" || key === "pr-fd-line" || key === "pr-kl-line" || key === "pr-czr-line") ouTableSort.dir = 1;
+      else if (key === "pr-line" || key === "pr-dk-line" || key === "pr-pp-line" || key === "pr-sl-line" || key === "pr-ud-line" || key === "pr-fd-line" || key === "pr-kl-line" || key === "pr-czr-line" || key === "pr-ox-line" || key === "pr-cs-line") ouTableSort.dir = 1;
       else if (
         key === "pr-odds" ||
         key === "pr-dk-odds" ||
@@ -8170,6 +8230,8 @@ function initOuTableSortOnce() {
         key === "pr-fd-odds" ||
         key === "pr-kl-odds" ||
         key === "pr-czr-odds" ||
+        key === "pr-ox-odds" ||
+        key === "pr-cs-odds" ||
         key === "pr-dk-edge" ||
         key === "pr-pp-edge" ||
         key === "pr-sl-edge" ||
@@ -8177,6 +8239,8 @@ function initOuTableSortOnce() {
         key === "pr-fd-edge" ||
         key === "pr-kl-edge" ||
         key === "pr-czr-edge" ||
+        key === "pr-ox-edge" ||
+        key === "pr-cs-edge" ||
         key === "pr-kelly" ||
         key === "pr-best" ||
         key === "pr-best-roi" ||
@@ -8309,8 +8373,8 @@ function ouLookupBookPick(map, id, nameKey, canon) {
 }
 
 function ouAttachProjectionRowMetrics(row) {
-  const { player, col, side, dkPick, ppPick, slPick, udPick, fdPick, klPick, czrPick } = row;
-  row.pick = dkPick || ppPick || slPick || udPick || fdPick || klPick || czrPick;
+  const { player, col, side, dkPick, ppPick, slPick, udPick, fdPick, klPick, czrPick, oxPick, csPick } = row;
+  row.pick = dkPick || ppPick || slPick || udPick || fdPick || klPick || czrPick || oxPick || csPick;
   const bankroll = ouProjBankrollFromUi();
   const kellyFraction = ouProjKellyFractionFromUi();
 
@@ -8344,6 +8408,8 @@ function ouAttachProjectionRowMetrics(row) {
   const fdHit = edgeForPick(fdPick);
   const klHit = edgeForPick(klPick);
   const czrHit = edgeForPick(czrPick);
+  const oxHit = edgeForPick(oxPick);
+  const csHit = edgeForPick(csPick);
   row.dkEdge = dkHit.edge;
   row.ppEdge = ppHit.edge;
   row.slEdge = slHit.edge;
@@ -8351,6 +8417,8 @@ function ouAttachProjectionRowMetrics(row) {
   row.fdEdge = fdHit.edge;
   row.klEdge = klHit.edge;
   row.czrEdge = czrHit.edge;
+  row.oxEdge = oxHit.edge;
+  row.csEdge = csHit.edge;
   row.dkRoi = dkHit.roi;
   row.ppRoi = ppHit.roi;
   row.slRoi = slHit.roi;
@@ -8358,6 +8426,8 @@ function ouAttachProjectionRowMetrics(row) {
   row.fdRoi = fdHit.roi;
   row.klRoi = klHit.roi;
   row.czrRoi = czrHit.roi;
+  row.oxRoi = oxHit.roi;
+  row.csRoi = csHit.roi;
   row.dkSortOdds = dkHit.sortOdds;
   row.ppSortOdds = ppHit.sortOdds;
   row.slSortOdds = slHit.sortOdds;
@@ -8365,6 +8435,8 @@ function ouAttachProjectionRowMetrics(row) {
   row.fdSortOdds = fdHit.sortOdds;
   row.klSortOdds = klHit.sortOdds;
   row.czrSortOdds = czrHit.sortOdds;
+  row.oxSortOdds = oxHit.sortOdds;
+  row.csSortOdds = csHit.sortOdds;
   row.dkFairP = dkHit.fairP;
   row.ppFairP = ppHit.fairP;
   row.slFairP = slHit.fairP;
@@ -8372,6 +8444,8 @@ function ouAttachProjectionRowMetrics(row) {
   row.fdFairP = fdHit.fairP;
   row.klFairP = klHit.fairP;
   row.czrFairP = czrHit.fairP;
+  row.oxFairP = oxHit.fairP;
+  row.csFairP = csHit.fairP;
   row.dkModelP = dkHit.modelP;
   row.ppModelP = ppHit.modelP;
   row.slModelP = slHit.modelP;
@@ -8379,6 +8453,8 @@ function ouAttachProjectionRowMetrics(row) {
   row.fdModelP = fdHit.modelP;
   row.klModelP = klHit.modelP;
   row.czrModelP = czrHit.modelP;
+  row.oxModelP = oxHit.modelP;
+  row.csModelP = csHit.modelP;
   row.dkKelly = ouKellyStakeForProjectionSide(col.market, player, dkPick, side, bankroll, kellyFraction);
   row.ppKelly = ouKellyStakeForProjectionSide(col.market, player, ppPick, side, bankroll, kellyFraction);
   row.slKelly = ouKellyStakeForProjectionSide(col.market, player, slPick, side, bankroll, kellyFraction);
@@ -8386,6 +8462,8 @@ function ouAttachProjectionRowMetrics(row) {
   row.fdKelly = ouKellyStakeForProjectionSide(col.market, player, fdPick, side, bankroll, kellyFraction);
   row.klKelly = ouKellyStakeForProjectionSide(col.market, player, klPick, side, bankroll, kellyFraction);
   row.czrKelly = ouKellyStakeForProjectionSide(col.market, player, czrPick, side, bankroll, kellyFraction);
+  row.oxKelly = ouKellyStakeForProjectionSide(col.market, player, oxPick, side, bankroll, kellyFraction);
+  row.csKelly = ouKellyStakeForProjectionSide(col.market, player, csPick, side, bankroll, kellyFraction);
 
   const entries = [];
   for (const spec of OU_PROJ_BOOK_SPECS) {
@@ -8429,9 +8507,17 @@ function ouAttachProjectionRowMetrics(row) {
       : NaN;
   row.kellySort = Number.isFinite(row.bestKelly) ? row.bestKelly : 0;
   row.bestRoi = best && Number.isFinite(best.roi) ? best.roi : NaN;
-  row.edge = [dkHit.edge, ppHit.edge, slHit.edge, udHit.edge, fdHit.edge, klHit.edge, czrHit.edge].find((e) =>
-    Number.isFinite(e),
-  );
+  row.edge = [
+    dkHit.edge,
+    ppHit.edge,
+    slHit.edge,
+    udHit.edge,
+    fdHit.edge,
+    klHit.edge,
+    czrHit.edge,
+    oxHit.edge,
+    csHit.edge,
+  ].find((e) => Number.isFinite(e));
   return row;
 }
 
@@ -8448,6 +8534,8 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
   const fdPickMap = ouBuildBookPickMap(fanduelRoundPropsOnly(), resolvePlayer);
   const klPickMap = ouBuildBookPickMap(kalshiRoundPropsOnly(), resolvePlayer);
   const czrPickMap = ouBuildBookPickMap(caesarsRoundPropsOnly(), resolvePlayer);
+  const oxPickMap = ouBuildBookPickMap(onyxRoundPropsOnly(), resolvePlayer);
+  const csPickMap = ouBuildBookPickMap(courtsideRoundPropsOnly(), resolvePlayer);
 
   for (const player of players) {
     const id = Math.round(num(player.dg_id, NaN));
@@ -8462,7 +8550,9 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
       const fdPick = ouLookupBookPick(fdPickMap, id, nameKey, canon);
       const klPick = ouLookupBookPick(klPickMap, id, nameKey, canon);
       const czrPick = ouLookupBookPick(czrPickMap, id, nameKey, canon);
-      if (!dkPick && !ppPick && !slPick && !udPick && !fdPick && !klPick && !czrPick) continue;
+      const oxPick = ouLookupBookPick(oxPickMap, id, nameKey, canon);
+      const csPick = ouLookupBookPick(csPickMap, id, nameKey, canon);
+      if (!dkPick && !ppPick && !slPick && !udPick && !fdPick && !klPick && !czrPick && !oxPick && !csPick) continue;
       const mu = ouProjectedMean(col.market, player, OU_PROJ_TABLE_MEAN_OPTS);
       const mKey = ouModelMarketKey(col.market) || "Total score";
       const marketAvgHit = ouCachedPlayerMarketAverage(mKey, player, avgWindow);
@@ -8480,6 +8570,8 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
           fdPick,
           klPick,
           czrPick,
+          oxPick,
+          csPick,
           marketAvg: marketAvgHit.avg,
           marketAvgN: marketAvgHit.n,
           marketAvgSource: marketAvgHit.source,
@@ -8514,6 +8606,8 @@ function ouProjectionFlatRowsCacheKey(players, cols) {
     `fd${ouFdRoundPropsCacheSig}`,
     `kl${ouKlRoundPropsCacheSig}`,
     `czr${ouCzrRoundPropsCacheSig}`,
+    `ox${ouOxRoundPropsCacheSig}`,
+    `cs${ouCsRoundPropsCacheSig}`,
   ].join("|");
 }
 
@@ -8554,7 +8648,7 @@ function ouProjectionRowStatOrder(a, b) {
 }
 
 function ouTableSortValueProjRow(row, sortKey) {
-  const { player, col, colIdx, side, mu, dkPick, ppPick, slPick, udPick, fdPick, klPick, czrPick, pick } = row;
+  const { player, col, colIdx, side, mu, dkPick, ppPick, slPick, udPick, fdPick, klPick, czrPick, oxPick, csPick, pick } = row;
   if (sortKey === "pr-tee-time") return dgTeetimeSortMinutes(playerDgTeetimeForRound(player));
   if (sortKey === "pr-golfer" || sortKey === "golfer") {
     return displayGolferName(player.player_name || "").toLowerCase();
@@ -8572,6 +8666,8 @@ function ouTableSortValueProjRow(row, sortKey) {
   if (sortKey === "pr-fd-line") return fdPick && Number.isFinite(fdPick.line) ? fdPick.line : NaN;
   if (sortKey === "pr-kl-line") return klPick && Number.isFinite(klPick.line) ? klPick.line : NaN;
   if (sortKey === "pr-czr-line") return czrPick && Number.isFinite(czrPick.line) ? czrPick.line : NaN;
+  if (sortKey === "pr-ox-line") return oxPick && Number.isFinite(oxPick.line) ? oxPick.line : NaN;
+  if (sortKey === "pr-cs-line") return csPick && Number.isFinite(csPick.line) ? csPick.line : NaN;
   if (sortKey === "pr-odds" || sortKey === "pr-dk-odds") {
     if (Number.isFinite(row.dkSortOdds)) return row.dkSortOdds;
     if (!dkPick) return NaN;
@@ -8614,6 +8710,18 @@ function ouTableSortValueProjRow(row, sortKey) {
     const am = side === "over" ? czrPick.over : czrPick.under;
     return Number.isFinite(am) ? am : NaN;
   }
+  if (sortKey === "pr-ox-odds") {
+    if (Number.isFinite(row.oxSortOdds)) return row.oxSortOdds;
+    if (!oxPick) return NaN;
+    const am = side === "over" ? oxPick.over : oxPick.under;
+    return Number.isFinite(am) ? am : NaN;
+  }
+  if (sortKey === "pr-cs-odds") {
+    if (Number.isFinite(row.csSortOdds)) return row.csSortOdds;
+    if (!csPick) return NaN;
+    const am = side === "over" ? csPick.over : csPick.under;
+    return Number.isFinite(am) ? am : NaN;
+  }
   if (sortKey === "pr-dk-edge") {
     if (Number.isFinite(row.dkEdge)) return row.dkEdge;
     return NaN;
@@ -8642,6 +8750,14 @@ function ouTableSortValueProjRow(row, sortKey) {
     if (Number.isFinite(row.czrEdge)) return row.czrEdge;
     return NaN;
   }
+  if (sortKey === "pr-ox-edge") {
+    if (Number.isFinite(row.oxEdge)) return row.oxEdge;
+    return NaN;
+  }
+  if (sortKey === "pr-cs-edge") {
+    if (Number.isFinite(row.csEdge)) return row.csEdge;
+    return NaN;
+  }
   if (sortKey === "pr-fair") {
     if (Number.isFinite(row.modelFairP)) return row.modelFairP;
     return NaN;
@@ -8664,9 +8780,17 @@ function ouTableSortValueProjRow(row, sortKey) {
     return NaN;
   }
   if (sortKey === "pr-edge") {
-    const edges = [row.dkEdge, row.ppEdge, row.slEdge, row.udEdge, row.fdEdge, row.klEdge, row.czrEdge].map((e) =>
-      num(e, NaN),
-    );
+    const edges = [
+      row.dkEdge,
+      row.ppEdge,
+      row.slEdge,
+      row.udEdge,
+      row.fdEdge,
+      row.klEdge,
+      row.czrEdge,
+      row.oxEdge,
+      row.csEdge,
+    ].map((e) => num(e, NaN));
     return edges.find((e) => Number.isFinite(e)) ?? NaN;
   }
   return NaN;
@@ -8787,7 +8911,7 @@ function drawOuProjDetailDistribution(canvas, market, player, line) {
   );
 }
 
-function buildOuProjDetailPanel(player, col, side, mu, pick, rawName, dkPick, ppPick, slPick, udPick, fdPick, klPick, czrPick) {
+function buildOuProjDetailPanel(player, col, side, mu, pick, rawName, dkPick, ppPick, slPick, udPick, fdPick, klPick, czrPick, oxPick, csPick) {
   const wrap = document.createElement("div");
   wrap.className = "ou-proj-detail-wrap";
   const mKey = ouModelMarketKey(col.market) || "Total score";
@@ -8877,6 +9001,8 @@ function buildOuProjDetailPanel(player, col, side, mu, pick, rawName, dkPick, pp
   addBookLine("FD", fdPick);
   addBookLine("KL", klPick);
   addBookLine("CZR", czrPick);
+  addBookLine("OX", oxPick);
+  addBookLine("CS", csPick);
   modelCol.appendChild(h3);
   modelCol.appendChild(dl2);
 
@@ -8954,7 +9080,7 @@ function buildOuTable() {
     flatRows.sort(ouProjectionRowStatOrder);
   }
 
-  const projColCount = 32;
+  const projColCount = 38;
   const flatRowKeys = new Set(
     flatRows.map((rr) => ouProjMakeExpandKey(String(rr.player.player_name || ""), rr.col.label, rr.side)),
   );
@@ -9002,6 +9128,8 @@ function buildOuTable() {
       fdPick,
       klPick,
       czrPick,
+      oxPick,
+      csPick,
       dkEdge,
       ppEdge,
       slEdge,
@@ -9009,6 +9137,8 @@ function buildOuTable() {
       fdEdge,
       klEdge,
       czrEdge,
+      oxEdge,
+      csEdge,
       dkRoi,
       ppRoi,
       slRoi,
@@ -9016,6 +9146,8 @@ function buildOuTable() {
       fdRoi,
       klRoi,
       czrRoi,
+      oxRoi,
+      csRoi,
       dkFairP,
       ppFairP,
       slFairP,
@@ -9023,6 +9155,8 @@ function buildOuTable() {
       fdFairP,
       klFairP,
       czrFairP,
+      oxFairP,
+      csFairP,
       modelFairP,
       avgFairP,
       bestBookKey,
@@ -9165,6 +9299,26 @@ function buildOuTable() {
     paintOuProjOddsTd(czrOddsTd, czrPick, side, czrFairP);
     tr.appendChild(czrOddsTd);
 
+    const oxLineTd = document.createElement("td");
+    oxLineTd.className = "ou-cell ou-proj-long-td num ou-proj-td-ox-line";
+    oxLineTd.textContent = oxPick && Number.isFinite(oxPick.line) ? String(oxPick.line) : "";
+    tr.appendChild(oxLineTd);
+
+    const oxOddsTd = document.createElement("td");
+    oxOddsTd.className = "ou-cell ou-proj-long-td num ou-proj-td-ox-odds";
+    paintOuProjOddsTd(oxOddsTd, oxPick, side, oxFairP);
+    tr.appendChild(oxOddsTd);
+
+    const csLineTd = document.createElement("td");
+    csLineTd.className = "ou-cell ou-proj-long-td num ou-proj-td-cs-line";
+    csLineTd.textContent = csPick && Number.isFinite(csPick.line) ? String(csPick.line) : "";
+    tr.appendChild(csLineTd);
+
+    const csOddsTd = document.createElement("td");
+    csOddsTd.className = "ou-cell ou-proj-long-td num ou-proj-td-cs-odds";
+    paintOuProjOddsTd(csOddsTd, csPick, side, csFairP);
+    tr.appendChild(csOddsTd);
+
     const dkEdgeTd = document.createElement("td");
     dkEdgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-dk-edge";
     const ppEdgeTd = document.createElement("td");
@@ -9179,6 +9333,10 @@ function buildOuTable() {
     klEdgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-kl-edge";
     const czrEdgeTd = document.createElement("td");
     czrEdgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-czr-edge";
+    const oxEdgeTd = document.createElement("td");
+    oxEdgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-ox-edge";
+    const csEdgeTd = document.createElement("td");
+    csEdgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-cs-edge";
     const paintEdge = (td, bookPick, edge, roi) => {
       if (bookPick && Number.isFinite(edge)) {
         td.textContent = formatEdgePct(edge);
@@ -9194,6 +9352,8 @@ function buildOuTable() {
     paintEdge(fdEdgeTd, fdPick, fdEdge, fdRoi);
     paintEdge(klEdgeTd, klPick, klEdge, klRoi);
     paintEdge(czrEdgeTd, czrPick, czrEdge, czrRoi);
+    paintEdge(oxEdgeTd, oxPick, oxEdge, oxRoi);
+    paintEdge(csEdgeTd, csPick, csEdge, csRoi);
     tr.appendChild(dkEdgeTd);
     tr.appendChild(ppEdgeTd);
     tr.appendChild(slEdgeTd);
@@ -9201,6 +9361,8 @@ function buildOuTable() {
     tr.appendChild(fdEdgeTd);
     tr.appendChild(klEdgeTd);
     tr.appendChild(czrEdgeTd);
+    tr.appendChild(oxEdgeTd);
+    tr.appendChild(csEdgeTd);
 
     const fairTd = document.createElement("td");
     fairTd.className = "ou-cell ou-proj-long-td num ou-proj-td-fair";
@@ -9270,7 +9432,7 @@ function buildOuTable() {
       const dtd = document.createElement("td");
       dtd.colSpan = projColCount;
       dtd.className = "ou-proj-detail-td";
-      dtd.appendChild(buildOuProjDetailPanel(player, col, side, mu, pick, rawName, dkPick, ppPick, slPick, udPick, fdPick, klPick, czrPick));
+      dtd.appendChild(buildOuProjDetailPanel(player, col, side, mu, pick, rawName, dkPick, ppPick, slPick, udPick, fdPick, klPick, czrPick, oxPick, csPick));
       dtr.appendChild(dtd);
       ouTbodyFrag.appendChild(dtr);
     }
@@ -9624,6 +9786,8 @@ const SPORTSBOOK_META = {
   kalshi: { label: "Kalshi", short: "KL", domain: "kalshi.com" },
   betmgm: { label: "BetMGM", short: "MGM", domain: "betmgm.com" },
   caesars: { label: "Caesars", short: "CZR", domain: "caesars.com" },
+  onyx: { label: "Onyx Odds", short: "OX", domain: "onyxodds.com" },
+  courtside: { label: "Courtside", short: "CS", domain: "courtside.app" },
   bet365: { label: "Bet365", short: "365", domain: "bet365.com" },
   bovada: { label: "Bovada", short: "BOV", domain: "bovada.lv" },
   pointsbet: { label: "PointsBet", short: "PB", domain: "pointsbet.com" },

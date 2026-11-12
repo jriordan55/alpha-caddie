@@ -189,6 +189,14 @@ export function defaultKlAuditPath(webRoot) {
   return defaultPickemAuditPath(webRoot, "kl");
 }
 
+export function defaultOxAuditPath(webRoot) {
+  return defaultPickemAuditPath(webRoot, "ox");
+}
+
+export function defaultCsAuditPath(webRoot) {
+  return defaultPickemAuditPath(webRoot, "cs");
+}
+
 export async function loadPreRoundPpPropsFromAudit(eventName, auditPath, roundStartUtcMs) {
   return loadPreRoundPickemPropsFromAudit(eventName, auditPath, roundStartUtcMs, { lineCol: "pp_line" });
 }
@@ -215,4 +223,12 @@ export async function loadPreRoundCzrPropsFromAudit(eventName, auditPath, roundS
 
 export async function loadPreRoundKlPropsFromAudit(eventName, auditPath, roundStartUtcMs) {
   return loadPreRoundPickemPropsFromAudit(eventName, auditPath, roundStartUtcMs, { lineCol: "kl_line" });
+}
+
+export async function loadPreRoundOxPropsFromAudit(eventName, auditPath, roundStartUtcMs) {
+  return loadPreRoundPickemPropsFromAudit(eventName, auditPath, roundStartUtcMs, { lineCol: "ox_line" });
+}
+
+export async function loadPreRoundCsPropsFromAudit(eventName, auditPath, roundStartUtcMs) {
+  return loadPreRoundPickemPropsFromAudit(eventName, auditPath, roundStartUtcMs, { lineCol: "cs_line" });
 }

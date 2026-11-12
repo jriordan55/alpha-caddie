@@ -8,14 +8,14 @@
  * Full depth (weather archive, hole props, ROI backtests, full history rebuild):
  *   npm run refresh:live:full
  */
-import { copyFileSync, existsSync, mkdirSync } from "fs";
-import { setTimeout as delay } from "timers/promises";
+import { existsSync, mkdirSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { spawnSync } from "child_process";
 import { dkOuScrapeEnv, liveProjectionPipelineEnv, requireDkOuEnv } from "./projection-pipeline-env.mjs";
 import { resolveOuIncrementalSinceIso } from "./tracker-incremental.mjs";
 import { liveInPlayFilename, liveProjectionToursFromEnv, projectionsFilename } from "./golf-tours.mjs";
+import { robustMirrorPairs } from "./robust-copy-file.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -100,26 +100,17 @@ async function mirrorPublishArtifacts() {
     ],
   ];
   console.log("\n[refresh:live] Mirroring publish artifacts …\n");
-  for (const [src, dest] of pairs) {
-    if (!existsSync(src)) {
-      console.log(`[refresh:live] skip (missing): ${path.basename(src)}`);
-      continue;
-    }
-    mkdirSync(path.dirname(dest), { recursive: true });
-    let copied = false;
-    let lastErr = null;
-    for (let attempt = 1; attempt <= 6; attempt++) {
-      try {
-        copyFileSync(src, dest);
-        copied = true;
-        break;
-      } catch (e) {
-        lastErr = e;
-        await delay(400 * attempt);
-      }
-    }
-    if (!copied) throw lastErr;
-    console.log(`[refresh:live]   ${path.relative(REPO_ROOT, src)} → ${path.relative(REPO_ROOT, dest)}`);
+  // Soft: OneDrive/editor locks on website/public must never abort push:live.
+  // Source of truth already lives under alpha-caddie-web/; PowerShell retries the mirror next.
+  const { failed } = await robustMirrorPairs(pairs, {
+    soft: true,
+    attempts: 12,
+    log: (msg) => console.log(`[refresh:live]   ${msg}`),
+  });
+  if (failed) {
+    console.warn(
+      `[refresh:live] WARN: ${failed} website mirror(s) stayed locked — publish continues with alpha-caddie-web sources.`,
+    );
   }
 }
 
@@ -181,7 +172,8 @@ for (const tour of tours) {
     "refresh-live-tour.mjs",
     `Live projections (${tour})`,
     { GOLF_DATAGOLF_TOUR: tour, GOLF_TOUR: tour },
-    tour === "euro" ? softOpt : {},
+    // LiveWeekOnly / soft mode: OneDrive locks on live-in-play.json must not abort the nightly publish.
+    tour === "euro" || liveWeekSoft ? softOpt : {},
   );
 }
 

@@ -2,7 +2,7 @@
 # This only runs when the PC is on (or asleep with wake timers). For "PC off", use the
 # GitHub Action `.github/workflows/nightly-push-live.yml` instead.
 #
-# Run once in an elevated PowerShell (optional; Action is the PC-off path):
+# Run once:
 #   powershell -ExecutionPolicy Bypass -File scripts/register-push-live-task.ps1
 
 param(
@@ -36,12 +36,14 @@ $settings = New-ScheduledTaskSettingsSet `
   -DontStopIfGoingOnBatteries `
   -StartWhenAvailable `
   -WakeToRun `
+  -MultipleInstances IgnoreNew `
   -ExecutionTimeLimit (New-TimeSpan -Hours 3)
 
+# Interactive + Limited: no admin elevation required; runs when you are logged on.
 $principal = New-ScheduledTaskPrincipal `
   -UserId $env:USERNAME `
   -LogonType Interactive `
-  -RunLevel Highest
+  -RunLevel Limited
 
 Register-ScheduledTask `
   -TaskName $TaskName `
@@ -49,10 +51,13 @@ Register-ScheduledTask `
   -Trigger $trigger `
   -Settings $settings `
   -Principal $principal `
+  -Description "Alpha Caddie: npm run push:live at 9pm local, commit + push. Log: alpha-caddie-web/logs/push-live-scheduled.log" `
   -Force | Out-Null
 
 Write-Host "Registered scheduled task '$TaskName' daily at $TimeLocal local time."
 Write-Host "Wrapper: $wrapper"
+Write-Host "Log: $(Join-Path $logDir 'push-live-scheduled.log')"
 Write-Host ""
-Write-Host "IMPORTANT: WakeToRun only works from sleep/hibernate — not if the PC is fully powered off."
-Write-Host "For PC-off nights, enable GitHub Actions workflow 'Nightly push:live' and set secret DATAGOLF_API_KEY."
+Write-Host "WakeToRun works from sleep/hibernate, not if the PC is fully powered off."
+Write-Host "For PC-off nights, keep GitHub Actions workflow 'Nightly push:live' enabled with secret DATAGOLF_API_KEY."
+Write-Host "Remove: Unregister-ScheduledTask -TaskName '$TaskName' -Confirm:`$false"

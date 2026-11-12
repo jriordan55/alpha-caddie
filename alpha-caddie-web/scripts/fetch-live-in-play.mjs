@@ -29,10 +29,11 @@
  *   GOLF_SKIP_LIVE_IN_PLAY_PGA_ALIGN_FETCH_DG=1 — skip PGA-vs-projections week check (runs fetch:dg when snapshot is wrong tour).
  */
 import { spawnSync } from "child_process";
-import fs, { copyFileSync } from "fs";
+import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { eventsLikelySame, fieldWeekKey, fieldWeekKeysRoughMatch } from "./dg-events-align.mjs";
+import { robustCopyFile, robustWriteFileSync } from "./robust-copy-file.mjs";
 import {
   liveRoundActualsRoundCounts,
   resolveLiveRoundActualsByDg,
@@ -604,7 +605,8 @@ async function main() {
         live_stats_pre_event: true,
         field_updates_refreshed_at: new Date().toISOString(),
       };
-      fs.writeFileSync(liveOutPath, JSON.stringify(skeleton, null, 2), "utf8");
+      const wroteSkel = robustWriteFileSync(liveOutPath, JSON.stringify(skeleton, null, 2));
+      if (!wroteSkel.ok) throw wroteSkel.error || new Error(`write failed: ${liveOutPath}`);
       console.warn(
         `[fetch-live-in-play] wrote pre-event live-in-play.json for "${projEv}" (cleared stale "${infoEv}" LTS/data)`,
       );
@@ -656,13 +658,22 @@ async function main() {
       /* rewrite if parse fails */
     }
   }
-  fs.writeFileSync(liveOutPath, JSON.stringify(bundle, null, 2), "utf8");
+  const wrote = robustWriteFileSync(liveOutPath, JSON.stringify(bundle, null, 2));
+  if (!wrote.ok) throw wrote.error || new Error(`write failed: ${liveOutPath}`);
   if (
     PROJECTION_PATHS.tour === "pga" &&
     liveOutPath !== PROJECTION_PATHS.legacyLiveInPlayPath &&
     fs.existsSync(liveOutPath)
   ) {
-    copyFileSync(liveOutPath, PROJECTION_PATHS.legacyLiveInPlayPath);
+    const mir = await robustCopyFile(liveOutPath, PROJECTION_PATHS.legacyLiveInPlayPath, {
+      attempts: 8,
+      label: PROJECTION_PATHS.legacyLiveInPlayPath,
+    });
+    if (!mir.ok) {
+      console.warn(
+        `[fetch-live-in-play] WARN: could not mirror legacy live-in-play.json (${mir.error?.message || mir.error})`,
+      );
+    }
   }
   console.log(
     `[fetch-live-in-play] wrote ${liveOutPath} (${parsed.data.length} players, tour=${tourUsed}, odds_format=${oddsFormat}; field_scores=${scoreMergeCount > 0 ? "yes" : "no"}; live feeds=${liveTournamentStats ? "t" : "-"}${liveHoleStats ? "h" : "-"})`

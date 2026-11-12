@@ -9,10 +9,11 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import { spawnSync } from "child_process";
-import { copyFileSync, existsSync } from "fs";
+import { existsSync } from "fs";
 import { dkOuScrapeEnv, liveProjectionPipelineEnv, requireDkOuEnv } from "./projection-pipeline-env.mjs";
 import { resolveProjectionPaths } from "./projection-paths.mjs";
 import { normalizeTourCode, tourDisplayLabel } from "./golf-tours.mjs";
+import { robustCopyFile } from "./robust-copy-file.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, "..");
@@ -85,15 +86,24 @@ function run(rel, label, extraEnv = {}, opts = {}) {
   return true;
 }
 
-function mirrorLegacyAliases() {
+async function mirrorLegacyAliases() {
   if (tour !== "pga") return;
   for (const [src, dest] of [
     [paths.projectionsPath, paths.legacyProjectionsPath],
     [paths.liveInPlayPath, paths.legacyLiveInPlayPath],
   ]) {
     if (!existsSync(src)) continue;
-    copyFileSync(src, dest);
-    console.log(`[refresh-live-tour:pga] mirrored ${path.basename(src)} → ${path.basename(dest)}`);
+    const r = await robustCopyFile(src, dest, {
+      attempts: 12,
+      label: path.basename(dest),
+    });
+    if (r.ok) {
+      console.log(`[refresh-live-tour:pga] mirrored ${path.basename(src)} → ${path.basename(dest)}`);
+    } else {
+      console.warn(
+        `[refresh-live-tour:pga] WARN: could not mirror ${path.basename(src)} → ${path.basename(dest)} (${r.error?.message || r.error}) — continuing`,
+      );
+    }
   }
 }
 
@@ -106,7 +116,7 @@ run("fetch-datagolf.mjs", "DataGolf field + projections");
 if (tour === "pga") {
   run("build-course-table-json.mjs", "Course table JSON", {}, softOpt);
 }
-run("fetch-live-in-play.mjs", "Live in-play bundle");
+run("fetch-live-in-play.mjs", "Live in-play bundle", {}, softOpt);
 if (tour === "pga") {
   run("run-refresh-pgatour-event-rounds.mjs", "pgatouR scorecards", {}, softOpt);
 }
@@ -130,5 +140,5 @@ if (envTruthy("GOLF_HIERARCHICAL_MU", true)) {
   );
 }
 
-mirrorLegacyAliases();
+await mirrorLegacyAliases();
 console.log(`\n[refresh-live-tour] Done: ${tourDisplayLabel(tour)} → ${paths.projectionsFile}\n`);

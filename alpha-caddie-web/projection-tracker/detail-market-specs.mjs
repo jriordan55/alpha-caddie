@@ -1,7 +1,7 @@
 /** Browser-safe detail CSV market columns (subset of scripts/round-projection-mu.mjs). */
 
 function altBookCols(stem) {
-  const books = ["pp", "sl", "ud", "fd", "czr", "kl"];
+  const books = ["pp", "sl", "ud", "fd", "czr", "kl", "ox", "cs"];
   /** @type {Record<string, string>} */
   const cols = {};
   for (const b of books) {
@@ -193,6 +193,38 @@ export const TRACKER_OU_BOOKS = [
     openUnderKey: "klOpenUnderOddsCol",
     openAtCol: "kl_book_odds_open_at",
     closeAtCol: "kl_book_odds_close_at",
+    wholeLine: false,
+  },
+  {
+    id: "onyx",
+    label: "Onyx Odds",
+    liveLabel: "Onyx Odds (live)",
+    sourceCol: "ox_book_odds_source",
+    acceptSources: ["pre_round_audit", "onyx_live"],
+    lineKey: "oxLineCol",
+    overKey: "oxOverOddsCol",
+    underKey: "oxUnderOddsCol",
+    openLineKey: "oxOpenLineCol",
+    openOverKey: "oxOpenOverOddsCol",
+    openUnderKey: "oxOpenUnderOddsCol",
+    openAtCol: "ox_book_odds_open_at",
+    closeAtCol: "ox_book_odds_close_at",
+    wholeLine: false,
+  },
+  {
+    id: "courtside",
+    label: "Courtside",
+    liveLabel: "Courtside (live)",
+    sourceCol: "cs_book_odds_source",
+    acceptSources: ["pre_round_audit", "courtside_live"],
+    lineKey: "csLineCol",
+    overKey: "csOverOddsCol",
+    underKey: "csUnderOddsCol",
+    openLineKey: "csOpenLineCol",
+    openOverKey: "csOpenOverOddsCol",
+    openUnderKey: "csOpenUnderOddsCol",
+    openAtCol: "cs_book_odds_open_at",
+    closeAtCol: "cs_book_odds_close_at",
     wholeLine: false,
   },
 ];

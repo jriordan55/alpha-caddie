@@ -3,10 +3,11 @@
  * Keeps R4 (etc.) actuals available for round_projection_vs_actual backfill after live-in-play.json
  * is cleared to a pre-event skeleton for the new week.
  */
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { eventsLikelySame } from "./dg-events-align.mjs";
+import { robustWriteFileSync } from "./robust-copy-file.mjs";
 
 const WEB_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const PRIOR_EVENT_LIVE_ARCHIVE_PATH = join(WEB_ROOT, "data", "prior_event_live_archive.json");
@@ -81,7 +82,8 @@ export function archivePriorEventLiveBundle(bundle, opts = {}) {
   };
   arch.updated_at = new Date().toISOString();
   mkdirSync(dirname(path), { recursive: true });
-  writeFileSync(path, `${JSON.stringify(arch, null, 2)}\n`, "utf8");
+  const wrote = robustWriteFileSync(path, `${JSON.stringify(arch, null, 2)}\n`);
+  if (!wrote.ok) throw wrote.error || new Error(`write failed: ${path}`);
   return { ok: true, eventName, posted, path };
 }
 

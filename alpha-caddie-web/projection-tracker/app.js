@@ -51,6 +51,8 @@ const LIVE_BOOKS = [
   { id: "caesars", label: "Caesars", short: "czr" },
   { id: "kalshi", label: "Kalshi", short: "kl" },
   { id: "hardrock", label: "Hard Rock", short: "hr" },
+  { id: "onyx", label: "Onyx Odds", short: "ox" },
+  { id: "courtside", label: "Courtside", short: "cs" },
 ];
 
 let ROI = null;

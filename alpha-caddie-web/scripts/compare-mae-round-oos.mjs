@@ -54,7 +54,7 @@ const BOOK_STEM = {
   GIR: "gir",
   "Fairways hit": "fairways",
 };
-const ALT_BOOKS = ["pp", "sl", "ud", "fd", "czr", "kl"];
+const ALT_BOOKS = ["pp", "sl", "ud", "fd", "czr", "kl", "ox", "cs"];
 
 function nnum(v, fb = NaN) {
   const n = Number(v);

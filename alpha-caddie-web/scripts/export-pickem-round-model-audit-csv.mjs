@@ -63,7 +63,11 @@ export function appendPickemRoundProjectionAuditCsv(payload, opts) {
               ? "czr"
               : source === "kalshi"
                 ? "kl"
-                : source.slice(0, 2);
+                : source === "onyx"
+                  ? "ox"
+                  : source === "courtside"
+                    ? "cs"
+                    : source.slice(0, 2);
   const short = String(opts.short || shortFromSource).trim() || shortFromSource;
   const outPath = opts.outPath || join(WEB_ROOT, "data", `${short}_round_projection_audit.csv`);
   const props = Array.isArray(payload?.props) ? payload.props : [];
@@ -179,6 +183,28 @@ export function appendKlRoundProjectionAuditCsv(payload, opts = {}) {
     skipEnv: "GOLF_SKIP_KL_ROUND_AUDIT_CSV",
     refreshedAtKey: "kl_round_props_refreshed_at",
     lineCol: "kl_line",
+    ...opts,
+  });
+}
+
+export function appendOxRoundProjectionAuditCsv(payload, opts = {}) {
+  return appendPickemRoundProjectionAuditCsv(payload, {
+    source: "onyx",
+    short: "ox",
+    skipEnv: "GOLF_SKIP_OX_ROUND_AUDIT_CSV",
+    refreshedAtKey: "ox_round_props_refreshed_at",
+    lineCol: "ox_line",
+    ...opts,
+  });
+}
+
+export function appendCsRoundProjectionAuditCsv(payload, opts = {}) {
+  return appendPickemRoundProjectionAuditCsv(payload, {
+    source: "courtside",
+    short: "cs",
+    skipEnv: "GOLF_SKIP_CS_ROUND_AUDIT_CSV",
+    refreshedAtKey: "cs_round_props_refreshed_at",
+    lineCol: "cs_line",
     ...opts,
   });
 }
