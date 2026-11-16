@@ -1,256 +1,435 @@
 {
-  "updated_at": "2026-11-15T02:07:53.704Z",
+  "updated_at": "2026-11-16T13:46:30.871Z",
   "event_name": "Austin Championship presented by Compliance Solutions",
   "round": 4,
   "round_label": "R4 — Sunday (auto, America/New_York)",
   "books": {
     "draftkings": {
-      "cards": [],
+      "cards": [
+        {
+          "cardKey": "17639|Total score",
+          "eventName": "Austin Championship presented by Compliance Solutions",
+          "round": 4,
+          "dg_id": 17639,
+          "playerName": "Blair, Zac",
+          "market": "Total score",
+          "line": 71.5,
+          "overOdds": 108,
+          "underOdds": -146,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 108,
+            "display": "+108"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -146,
+            "display": "-146"
+          },
+          "overPayoutMultiplier": 2.08,
+          "underPayoutMultiplier": 1.6849315068493151,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-16T13:46:30.872Z"
+        },
+        {
+          "cardKey": "32152|Total score",
+          "eventName": "Austin Championship presented by Compliance Solutions",
+          "round": 4,
+          "dg_id": 32152,
+          "playerName": "Brown, Blades",
+          "market": "Total score",
+          "line": 70.5,
+          "overOdds": -104,
+          "underOdds": -130,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -130,
+            "display": "-130"
+          },
+          "overPayoutMultiplier": 1.9615384615384617,
+          "underPayoutMultiplier": 1.7692307692307692,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-16T13:46:30.872Z"
+        },
+        {
+          "cardKey": "27780|Total score",
+          "eventName": "Austin Championship presented by Compliance Solutions",
+          "round": 4,
+          "dg_id": 27780,
+          "playerName": "Crowe, Trace",
+          "market": "Total score",
+          "line": 71.5,
+          "overOdds": -106,
+          "underOdds": -126,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -106,
+            "display": "-106"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -126,
+            "display": "-126"
+          },
+          "overPayoutMultiplier": 1.9433962264150944,
+          "underPayoutMultiplier": 1.7936507936507935,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-16T13:46:30.872Z"
+        },
+        {
+          "cardKey": "23465|Total score",
+          "eventName": "Austin Championship presented by Compliance Solutions",
+          "round": 4,
+          "dg_id": 23465,
+          "playerName": "Greyserman, Max",
+          "market": "Total score",
+          "line": 70.5,
+          "overOdds": -150,
+          "underOdds": 112,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -150,
+            "display": "-150"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 112,
+            "display": "+112"
+          },
+          "overPayoutMultiplier": 1.6666666666666665,
+          "underPayoutMultiplier": 2.12,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-16T13:46:30.872Z"
+        },
+        {
+          "cardKey": "16395|Total score",
+          "eventName": "Austin Championship presented by Compliance Solutions",
+          "round": 4,
+          "dg_id": 16395,
+          "playerName": "Kohles, Ben",
+          "market": "Total score",
+          "line": 70.5,
+          "overOdds": -125,
+          "underOdds": -108,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -125,
+            "display": "-125"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -108,
+            "display": "-108"
+          },
+          "overPayoutMultiplier": 1.8,
+          "underPayoutMultiplier": 1.925925925925926,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-16T13:46:30.872Z"
+        },
+        {
+          "cardKey": "28159|Total score",
+          "eventName": "Austin Championship presented by Compliance Solutions",
+          "round": 4,
+          "dg_id": 28159,
+          "playerName": "Meissner, Mac",
+          "market": "Total score",
+          "line": 70.5,
+          "overOdds": -142,
+          "underOdds": 105,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -142,
+            "display": "-142"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 105,
+            "display": "+105"
+          },
+          "overPayoutMultiplier": 1.704225352112676,
+          "underPayoutMultiplier": 2.05,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-16T13:46:30.872Z"
+        },
+        {
+          "cardKey": "19840|Total score",
+          "eventName": "Austin Championship presented by Compliance Solutions",
+          "round": 4,
+          "dg_id": 19840,
+          "playerName": "Ramey, Chad",
+          "market": "Total score",
+          "line": 71.5,
+          "overOdds": -104,
+          "underOdds": -128,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -128,
+            "display": "-128"
+          },
+          "overPayoutMultiplier": 1.9615384615384617,
+          "underPayoutMultiplier": 1.78125,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-16T13:46:30.872Z"
+        },
+        {
+          "cardKey": "18586|Total score",
+          "eventName": "Austin Championship presented by Compliance Solutions",
+          "round": 4,
+          "dg_id": 18586,
+          "playerName": "Smith, Jordan",
+          "market": "Total score",
+          "line": 70.5,
+          "overOdds": -114,
+          "underOdds": -118,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -114,
+            "display": "-114"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -118,
+            "display": "-118"
+          },
+          "overPayoutMultiplier": 1.8771929824561404,
+          "underPayoutMultiplier": 1.847457627118644,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-16T13:46:30.872Z"
+        },
+        {
+          "cardKey": "22985|Total score",
+          "eventName": "Austin Championship presented by Compliance Solutions",
+          "round": 4,
+          "dg_id": 22985,
+          "playerName": "Smotherman, Austin",
+          "market": "Total score",
+          "line": 70.5,
+          "overOdds": -128,
+          "underOdds": -105,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -128,
+            "display": "-128"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -105,
+            "display": "-105"
+          },
+          "overPayoutMultiplier": 1.78125,
+          "underPayoutMultiplier": 1.9523809523809523,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-16T13:46:30.872Z"
+        },
+        {
+          "cardKey": "23816|Total score",
+          "eventName": "Austin Championship presented by Compliance Solutions",
+          "round": 4,
+          "dg_id": 23816,
+          "playerName": "Valimaki, Sami",
+          "market": "Total score",
+          "line": 71.5,
+          "overOdds": 105,
+          "underOdds": -142,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 105,
+            "display": "+105"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -142,
+            "display": "-142"
+          },
+          "overPayoutMultiplier": 2.05,
+          "underPayoutMultiplier": 1.704225352112676,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-16T13:46:30.872Z"
+        },
+        {
+          "cardKey": "17550|Total score",
+          "eventName": "Austin Championship presented by Compliance Solutions",
+          "round": 4,
+          "dg_id": 17550,
+          "playerName": "Van Rooyen, Erik",
+          "market": "Total score",
+          "line": 71.5,
+          "overOdds": -104,
+          "underOdds": -130,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -130,
+            "display": "-130"
+          },
+          "overPayoutMultiplier": 1.9615384615384617,
+          "underPayoutMultiplier": 1.7692307692307692,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-16T13:46:30.872Z"
+        },
+        {
+          "cardKey": "25319|Total score",
+          "eventName": "Austin Championship presented by Compliance Solutions",
+          "round": 4,
+          "dg_id": 25319,
+          "playerName": "VanDerLaan, John",
+          "market": "Total score",
+          "line": 71.5,
+          "overOdds": -118,
+          "underOdds": -114,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -118,
+            "display": "-118"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -114,
+            "display": "-114"
+          },
+          "overPayoutMultiplier": 1.847457627118644,
+          "underPayoutMultiplier": 1.8771929824561404,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-16T13:46:30.872Z"
+        },
+        {
+          "cardKey": "15651|Total score",
+          "eventName": "Austin Championship presented by Compliance Solutions",
+          "round": 4,
+          "dg_id": 15651,
+          "playerName": "Ventura, Kristoffer",
+          "market": "Total score",
+          "line": 70.5,
+          "overOdds": -125,
+          "underOdds": -108,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -125,
+            "display": "-125"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -108,
+            "display": "-108"
+          },
+          "overPayoutMultiplier": 1.8,
+          "underPayoutMultiplier": 1.925925925925926,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-16T13:46:30.872Z"
+        },
+        {
+          "cardKey": "17881|Total score",
+          "eventName": "Austin Championship presented by Compliance Solutions",
+          "round": 4,
+          "dg_id": 17881,
+          "playerName": "Yu, Kevin",
+          "market": "Total score",
+          "line": 71.5,
+          "overOdds": 114,
+          "underOdds": -152,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 114,
+            "display": "+114"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -152,
+            "display": "-152"
+          },
+          "overPayoutMultiplier": 2.1399999999999997,
+          "underPayoutMultiplier": 1.6578947368421053,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-16T13:46:30.872Z"
+        }
+      ],
       "fetchError": "",
-      "count": 0,
-      "fetchedAt": "2026-11-15T02:07:53.705Z"
+      "count": 14,
+      "fetchedAt": "2026-11-16T13:46:30.872Z"
     },
     "prizepicks": {
       "cards": [],
       "fetchError": "PrizePicks partner API does not expose per-pick posted odds for standard lines",
       "count": 0,
-      "fetchedAt": "2026-11-15T02:07:53.705Z"
+      "fetchedAt": "2026-11-16T13:46:30.914Z"
     },
     "sleeper": {
       "cards": [
         {
-          "cardKey": "27780|Birdies",
+          "cardKey": "21883|Birdies",
           "eventName": "Austin Championship presented by Compliance Solutions",
           "round": 4,
-          "dg_id": 27780,
-          "playerName": "Crowe, Trace",
+          "dg_id": 21883,
+          "playerName": "Ewart, A.J.",
           "market": "Birdies",
           "line": 3.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.62,
-            "display": "1.62x"
+            "raw": 1.56,
+            "display": "1.56x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 1.97,
-            "display": "1.97x"
+            "raw": 2.07,
+            "display": "2.07x"
           },
-          "overPayoutMultiplier": 1.62,
-          "underPayoutMultiplier": 1.97,
+          "overPayoutMultiplier": 1.56,
+          "underPayoutMultiplier": 2.07,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-15T02:07:53.705Z"
+          "fetchedAt": "2026-11-16T13:46:30.915Z"
         },
         {
-          "cardKey": "27780|Total Score",
+          "cardKey": "23505|Total Score",
           "eventName": "Austin Championship presented by Compliance Solutions",
           "round": 4,
-          "dg_id": 27780,
-          "playerName": "Crowe, Trace",
+          "dg_id": 23505,
+          "playerName": "McGreevy, Max",
           "market": "Total score",
           "line": 71.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.65,
-            "display": "1.65x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.93,
-            "display": "1.93x"
-          },
-          "overPayoutMultiplier": 1.65,
-          "underPayoutMultiplier": 1.93,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-15T02:07:53.705Z"
-        },
-        {
-          "cardKey": "16395|Birdies",
-          "eventName": "Austin Championship presented by Compliance Solutions",
-          "round": 4,
-          "dg_id": 16395,
-          "playerName": "Kohles, Ben",
-          "market": "Birdies",
-          "line": 3.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.47,
-            "display": "1.47x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.21,
-            "display": "2.21x"
-          },
-          "overPayoutMultiplier": 1.47,
-          "underPayoutMultiplier": 2.21,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-15T02:07:53.705Z"
-        },
-        {
-          "cardKey": "16395|Total Score",
-          "eventName": "Austin Championship presented by Compliance Solutions",
-          "round": 4,
-          "dg_id": 16395,
-          "playerName": "Kohles, Ben",
-          "market": "Total score",
-          "line": 71.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.85,
-            "display": "1.85x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.71,
-            "display": "1.71x"
-          },
-          "overPayoutMultiplier": 1.85,
-          "underPayoutMultiplier": 1.71,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-15T02:07:53.705Z"
-        },
-        {
-          "cardKey": "19840|Birdies",
-          "eventName": "Austin Championship presented by Compliance Solutions",
-          "round": 4,
-          "dg_id": 19840,
-          "playerName": "Ramey, Chad",
-          "market": "Birdies",
-          "line": 3.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.71,
-            "display": "1.71x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.85,
-            "display": "1.85x"
-          },
-          "overPayoutMultiplier": 1.71,
-          "underPayoutMultiplier": 1.85,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-15T02:07:53.705Z"
-        },
-        {
-          "cardKey": "19840|Total Score",
-          "eventName": "Austin Championship presented by Compliance Solutions",
-          "round": 4,
-          "dg_id": 19840,
-          "playerName": "Ramey, Chad",
-          "market": "Total score",
-          "line": 72.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.01,
-            "display": "2.01x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.6,
-            "display": "1.6x"
-          },
-          "overPayoutMultiplier": 2.01,
-          "underPayoutMultiplier": 1.6,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-15T02:07:53.705Z"
-        },
-        {
-          "cardKey": "sl:1192|Birdies",
-          "eventName": "Austin Championship presented by Compliance Solutions",
-          "round": 4,
-          "dg_id": "1192",
-          "playerName": "Sami Välimäki",
-          "market": "Birdies",
-          "line": 3.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.57,
-            "display": "1.57x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.04,
-            "display": "2.04x"
-          },
-          "overPayoutMultiplier": 1.57,
-          "underPayoutMultiplier": 2.04,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-11-15T02:07:53.705Z"
-        },
-        {
-          "cardKey": "sl:1192|Total Score",
-          "eventName": "Austin Championship presented by Compliance Solutions",
-          "round": 4,
-          "dg_id": "1192",
-          "playerName": "Sami Välimäki",
-          "market": "Total score",
-          "line": 71.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.65,
-            "display": "1.65x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.93,
-            "display": "1.93x"
-          },
-          "overPayoutMultiplier": 1.65,
-          "underPayoutMultiplier": 1.93,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": false,
-          "fetchedAt": "2026-11-15T02:07:53.705Z"
-        },
-        {
-          "cardKey": "17550|Birdies",
-          "eventName": "Austin Championship presented by Compliance Solutions",
-          "round": 4,
-          "dg_id": 17550,
-          "playerName": "Van Rooyen, Erik",
-          "market": "Birdies",
-          "line": 3.5,
-          "overBookOdds": {
-            "kind": "multiplier",
-            "raw": 1.57,
-            "display": "1.57x"
-          },
-          "underBookOdds": {
-            "kind": "multiplier",
-            "raw": 2.04,
-            "display": "2.04x"
-          },
-          "overPayoutMultiplier": 1.57,
-          "underPayoutMultiplier": 2.04,
-          "oddsSource": "book_api_live",
-          "bookId": "sleeper",
-          "gradeable": true,
-          "fetchedAt": "2026-11-15T02:07:53.705Z"
-        },
-        {
-          "cardKey": "17550|Total Score",
-          "eventName": "Austin Championship presented by Compliance Solutions",
-          "round": 4,
-          "dg_id": 17550,
-          "playerName": "Van Rooyen, Erik",
-          "market": "Total score",
-          "line": 72.5,
           "overBookOdds": {
             "kind": "multiplier",
             "raw": 1.97,
@@ -266,18 +445,68 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-15T02:07:53.705Z"
+          "fetchedAt": "2026-11-16T13:46:30.915Z"
+        },
+        {
+          "cardKey": "18586|Birdies",
+          "eventName": "Austin Championship presented by Compliance Solutions",
+          "round": 4,
+          "dg_id": 18586,
+          "playerName": "Smith, Jordan",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.73,
+            "display": "1.73x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.83,
+            "display": "1.83x"
+          },
+          "overPayoutMultiplier": 1.73,
+          "underPayoutMultiplier": 1.83,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-16T13:46:30.915Z"
+        },
+        {
+          "cardKey": "22985|Birdies",
+          "eventName": "Austin Championship presented by Compliance Solutions",
+          "round": 4,
+          "dg_id": 22985,
+          "playerName": "Smotherman, Austin",
+          "market": "Birdies",
+          "line": 4.5,
+          "overBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.73,
+            "display": "1.73x"
+          },
+          "underBookOdds": {
+            "kind": "multiplier",
+            "raw": 1.83,
+            "display": "1.83x"
+          },
+          "overPayoutMultiplier": 1.73,
+          "underPayoutMultiplier": 1.83,
+          "oddsSource": "book_api_live",
+          "bookId": "sleeper",
+          "gradeable": true,
+          "fetchedAt": "2026-11-16T13:46:30.915Z"
         }
       ],
       "fetchError": "",
-      "count": 10,
-      "fetchedAt": "2026-11-15T02:07:53.705Z"
+      "count": 4,
+      "fetchedAt": "2026-11-16T13:46:30.915Z"
     },
     "underdog": {
       "cards": [],
       "fetchError": "Underdog API HTTP 426",
       "count": 0,
-      "fetchedAt": "2026-11-15T02:07:57.224Z"
+      "fetchedAt": "2026-11-16T13:46:31.752Z"
     },
     "kalshi": {
       "cards": [
@@ -306,7 +535,7 @@
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-15T02:07:57.357Z"
+          "fetchedAt": "2026-11-16T13:46:32.014Z"
         },
         {
           "cardKey": "31343|Total score",
@@ -333,7 +562,7 @@
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-15T02:07:57.357Z"
+          "fetchedAt": "2026-11-16T13:46:32.014Z"
         },
         {
           "cardKey": "23504|Total score",
@@ -360,7 +589,7 @@
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-15T02:07:57.357Z"
+          "fetchedAt": "2026-11-16T13:46:32.014Z"
         },
         {
           "cardKey": "22465|Total score",
@@ -387,7 +616,7 @@
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-15T02:07:57.357Z"
+          "fetchedAt": "2026-11-16T13:46:32.014Z"
         },
         {
           "cardKey": "18586|Total score",
@@ -414,18 +643,18 @@
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-15T02:07:57.357Z"
+          "fetchedAt": "2026-11-16T13:46:32.014Z"
         }
       ],
       "fetchError": "",
       "count": 5,
-      "fetchedAt": "2026-11-15T02:07:57.357Z"
+      "fetchedAt": "2026-11-16T13:46:32.014Z"
     },
     "dk_matchups": {
       "cards": [],
       "fetchError": "",
       "count": 0,
-      "fetchedAt": "2026-11-15T02:07:57.358Z"
+      "fetchedAt": "2026-11-16T13:46:32.016Z"
     }
   }
 }
