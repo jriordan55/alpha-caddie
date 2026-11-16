@@ -41689,7 +41689,7 @@
     },
     {
       "player_name": "Crowe, Trace",
-      "line": 28.5,
+      "line": 27.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -41729,7 +41729,7 @@
     },
     {
       "player_name": "Suber, Jackson",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -41829,7 +41829,7 @@
     },
     {
       "player_name": "Thompson, Davis",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -41849,7 +41849,7 @@
     },
     {
       "player_name": "Power, Seamus",
-      "line": 27.5,
+      "line": 28.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -42089,7 +42089,7 @@
     },
     {
       "player_name": "Ramey, Chad",
-      "line": 28.5,
+      "line": 27.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -42329,7 +42329,7 @@
     },
     {
       "player_name": "Mouw, William",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -42379,7 +42379,7 @@
     },
     {
       "player_name": "Highsmith, Joe",
-      "line": 28.5,
+      "line": 29.5,
       "over_odds": -110,
       "under_odds": -110,
       "market": "Putts",
@@ -43504,7 +43504,11 @@
       "round_num": 4,
       "source": "caesars",
       "p_over_implied": 0.4166666666666667,
-      "p_under_implied": 0.6428571428571429
+      "p_under_implied": 0.6428571428571429,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Ewart, A.J.",
@@ -43516,7 +43520,11 @@
       "round_num": 4,
       "source": "caesars",
       "p_over_implied": 0.6,
-      "p_under_implied": 0.45454545454545453
+      "p_under_implied": 0.45454545454545453,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Shipley, Neal",
@@ -43540,7 +43548,11 @@
       "round_num": 4,
       "source": "caesars",
       "p_over_implied": 0.44052863436123346,
-      "p_under_implied": 0.6226415094339622
+      "p_under_implied": 0.6226415094339622,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Kang, Jeffrey",
@@ -43588,7 +43600,11 @@
       "round_num": 4,
       "source": "caesars",
       "p_over_implied": 0.6,
-      "p_under_implied": 0.45454545454545453
+      "p_under_implied": 0.45454545454545453,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Smith, Jordan",
@@ -43612,7 +43628,11 @@
       "round_num": 4,
       "source": "caesars",
       "p_over_implied": 0.5555555555555556,
-      "p_under_implied": 0.5121951219512195
+      "p_under_implied": 0.5121951219512195,
+      "bet_over": "NO",
+      "bet_under": "NO",
+      "bet_reason_over": "market_off",
+      "bet_reason_under": "market_off"
     },
     {
       "player_name": "Hojgaard, Rasmus",
@@ -43852,7 +43872,11 @@
       "round_num": 4,
       "source": "caesars",
       "p_over_implied": 0.6,
-      "p_under_implied": 0.45454545454545453
+      "p_under_implied": 0.45454545454545453,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Ewart, A.J.",
@@ -43876,7 +43900,11 @@
       "round_num": 4,
       "source": "caesars",
       "p_over_implied": 0.5833333333333334,
-      "p_under_implied": 0.47619047619047616
+      "p_under_implied": 0.47619047619047616,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Kang, Jeffrey",
@@ -43900,7 +43928,11 @@
       "round_num": 4,
       "source": "caesars",
       "p_over_implied": 0.5833333333333334,
-      "p_under_implied": 0.47619047619047616
+      "p_under_implied": 0.47619047619047616,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Maas, Christiaan",
@@ -43924,7 +43956,11 @@
       "round_num": 4,
       "source": "caesars",
       "p_over_implied": 0.5555555555555556,
-      "p_under_implied": 0.5121951219512195
+      "p_under_implied": 0.5121951219512195,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Neergaard-Petersen, Rasmus",
@@ -43984,7 +44020,11 @@
       "round_num": 4,
       "source": "caesars",
       "p_over_implied": 0.574468085106383,
-      "p_under_implied": 0.4878048780487805
+      "p_under_implied": 0.4878048780487805,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Meissner, Mac",
@@ -44020,7 +44060,11 @@
       "round_num": 4,
       "source": "caesars",
       "p_over_implied": 0.5918367346938775,
-      "p_under_implied": 0.46511627906976744
+      "p_under_implied": 0.46511627906976744,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Ventura, Kristoffer",
@@ -44056,7 +44100,11 @@
       "round_num": 4,
       "source": "caesars",
       "p_over_implied": 0.5348837209302325,
-      "p_under_implied": 0.5348837209302325
+      "p_under_implied": 0.5348837209302325,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Campos, Rafael",
@@ -44080,7 +44128,11 @@
       "round_num": 4,
       "source": "caesars",
       "p_over_implied": 0.574468085106383,
-      "p_under_implied": 0.4878048780487805
+      "p_under_implied": 0.4878048780487805,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Blair, Zac",
@@ -44104,7 +44156,11 @@
       "round_num": 4,
       "source": "caesars",
       "p_over_implied": 0.5555555555555556,
-      "p_under_implied": 0.5121951219512195
+      "p_under_implied": 0.5121951219512195,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Gordon, Will",
@@ -44116,7 +44172,11 @@
       "round_num": 4,
       "source": "caesars",
       "p_over_implied": 0.5833333333333334,
-      "p_under_implied": 0.47619047619047616
+      "p_under_implied": 0.47619047619047616,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Van Rooyen, Erik",
@@ -44128,7 +44188,11 @@
       "round_num": 4,
       "source": "caesars",
       "p_over_implied": 0.5555555555555556,
-      "p_under_implied": 0.5121951219512195
+      "p_under_implied": 0.5121951219512195,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Kohles, Ben",
@@ -44140,7 +44204,11 @@
       "round_num": 4,
       "source": "caesars",
       "p_over_implied": 0.5833333333333334,
-      "p_under_implied": 0.47619047619047616
+      "p_under_implied": 0.47619047619047616,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Greyserman, Max",
@@ -44164,7 +44232,11 @@
       "round_num": 4,
       "source": "caesars",
       "p_over_implied": 0.6078431372549019,
-      "p_under_implied": 0.45045045045045046
+      "p_under_implied": 0.45045045045045046,
+      "bet_over": "YES",
+      "bet_under": "NO",
+      "bet_reason_over": "policy",
+      "bet_reason_under": "wrong_side"
     },
     {
       "player_name": "Ramey, Chad",
