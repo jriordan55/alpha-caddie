@@ -3,7 +3,7 @@
   "info": {
     "event_name": "The RSM Classic",
     "current_round": 1,
-    "last_update": "2026-11-17T02:11:05.276Z",
+    "last_update": "2026-11-18T02:04:19.604Z",
     "pre_event": true,
     "note": "Awaiting preds/in-play for The RSM Classic (DataGolf still serving \"Austin Championship presented by Compliance Solutions\")"
   },
@@ -23,32 +23,89 @@
         "owgr_rank": 592,
         "player_name": "Atkins, Matt",
         "player_num": 47125,
-        "pre_tourn_pageviews": 11,
-        "teetimes": [],
+        "pre_tourn_pageviews": 76,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:36",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:42",
+            "wave": "late"
+          }
+        ],
         "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 19846,
-        "dg_rank": 72,
-        "owgr_rank": 135,
+        "dg_rank": 84,
+        "owgr_rank": 139,
         "player_name": "Bauchou, Zach",
         "player_num": 48001,
-        "pre_tourn_pageviews": 107,
-        "teetimes": [],
+        "pre_tourn_pageviews": 265,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 10:20",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:14",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "83"
       },
       {
         "am": 0,
         "country": "RSA",
         "dg_id": 18103,
-        "dg_rank": 69,
-        "owgr_rank": 109,
+        "dg_rank": 73,
+        "owgr_rank": 114,
         "player_name": "Bezuidenhout, Christiaan",
         "player_num": 45522,
-        "pre_tourn_pageviews": 111,
-        "teetimes": [],
+        "pre_tourn_pageviews": 311,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:09",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:03",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "100"
       },
       {
@@ -59,44 +116,120 @@
         "owgr_rank": null,
         "player_name": "Bide, Francisco",
         "player_num": 36964,
-        "pre_tourn_pageviews": 17,
-        "teetimes": [],
+        "pre_tourn_pageviews": 69,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 10:20",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:14",
+            "wave": "early"
+          }
+        ],
         "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 17639,
-        "dg_rank": 99,
-        "owgr_rank": 136,
+        "dg_rank": 83,
+        "owgr_rank": 134,
         "player_name": "Blair, Zac",
         "player_num": 40058,
-        "pre_tourn_pageviews": 139,
-        "teetimes": [],
+        "pre_tourn_pageviews": 381,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 08:30",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:36",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "119"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 24956,
-        "dg_rank": 293,
-        "owgr_rank": 140,
+        "dg_rank": 290,
+        "owgr_rank": 146,
         "player_name": "Blanchet, Chandler",
         "player_num": 54788,
-        "pre_tourn_pageviews": 52,
-        "teetimes": [],
+        "pre_tourn_pageviews": 154,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:25",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:31",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "112"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 13872,
-        "dg_rank": 49,
-        "owgr_rank": 56,
+        "dg_rank": 50,
+        "owgr_rank": 59,
         "player_name": "Bradley, Keegan",
         "player_num": 33141,
-        "pre_tourn_pageviews": 112,
-        "teetimes": [],
+        "pre_tourn_pageviews": 375,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:03",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:09",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "94"
       },
       {
@@ -104,35 +237,92 @@
         "country": "USA",
         "dg_id": 10423,
         "dg_rank": null,
-        "owgr_rank": 1324,
+        "owgr_rank": 1329,
         "player_name": "Brehm, Ryan",
         "player_num": 28420,
-        "pre_tourn_pageviews": 14,
-        "teetimes": [],
+        "pre_tourn_pageviews": 83,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:09",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:03",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "206"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 29197,
-        "dg_rank": 25,
+        "dg_rank": 26,
         "owgr_rank": 18,
         "player_name": "Brennan, Michael",
         "player_num": 61522,
-        "pre_tourn_pageviews": 194,
-        "teetimes": [],
+        "pre_tourn_pageviews": 521,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 10:09",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:03",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "46"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 32152,
-        "dg_rank": 44,
-        "owgr_rank": 62,
+        "dg_rank": 34,
+        "owgr_rank": 54,
         "player_name": "Brown, Blades",
         "player_num": 66417,
-        "pre_tourn_pageviews": 288,
-        "teetimes": [],
+        "pre_tourn_pageviews": 719,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:58",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 08:52",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "55"
       },
       {
@@ -140,83 +330,247 @@
         "country": "USA",
         "dg_id": 6931,
         "dg_rank": 395,
-        "owgr_rank": 629,
+        "owgr_rank": 632,
         "player_name": "Byrd, Jonathan",
         "player_num": 24925,
-        "pre_tourn_pageviews": 35,
-        "teetimes": [],
+        "pre_tourn_pageviews": 115,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:36",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 08:30",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "198"
       },
       {
         "am": 0,
         "country": "PUR",
         "dg_id": 12909,
-        "dg_rank": 457,
-        "owgr_rank": 621,
+        "dg_rank": 372,
+        "owgr_rank": 536,
         "player_name": "Campos, Rafael",
         "player_num": 32070,
-        "pre_tourn_pageviews": 64,
-        "teetimes": [],
+        "pre_tourn_pageviews": 157,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:58",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 08:41",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "158"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 27819,
-        "dg_rank": 74,
-        "owgr_rank": 88,
+        "dg_rank": 80,
+        "owgr_rank": 92,
         "player_name": "Castillo, Ricky",
         "player_num": 59440,
-        "pre_tourn_pageviews": 137,
-        "teetimes": [],
+        "pre_tourn_pageviews": 336,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:09",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 08:52",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "70"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 14502,
-        "dg_rank": 71,
-        "owgr_rank": 47,
+        "dg_rank": 70,
+        "owgr_rank": 46,
         "player_name": "Cauley, Bud",
         "player_num": 34021,
-        "pre_tourn_pageviews": 120,
-        "teetimes": [],
+        "pre_tourn_pageviews": 279,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 08:52",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:58",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "34"
       },
       {
         "am": 0,
         "country": "USA",
+        "dg_id": 23542,
+        "dg_rank": null,
+        "owgr_rank": 458,
+        "player_name": "Champ, Cameron",
+        "player_num": 52372,
+        "pre_tourn_pageviews": 107,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 08:41",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:47",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "207"
+      },
+      {
+        "am": 0,
+        "country": "USA",
         "dg_id": 30620,
-        "dg_rank": 320,
-        "owgr_rank": 298,
+        "dg_rank": 322,
+        "owgr_rank": 307,
         "player_name": "Chatfield, Davis",
         "player_num": 59006,
-        "pre_tourn_pageviews": 50,
-        "teetimes": [],
+        "pre_tourn_pageviews": 121,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 10:31",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:25",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "145"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 32330,
-        "dg_rank": 157,
-        "owgr_rank": 263,
+        "dg_rank": 170,
+        "owgr_rank": 269,
         "player_name": "Clanton, Luke",
         "player_num": 66743,
-        "pre_tourn_pageviews": 122,
-        "teetimes": [],
+        "pre_tourn_pageviews": 297,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:25",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 10:31",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "130"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 21756,
-        "dg_rank": 82,
-        "owgr_rank": 83,
+        "dg_rank": 104,
+        "owgr_rank": 87,
         "player_name": "Cole, Eric",
         "player_num": 47591,
-        "pre_tourn_pageviews": 190,
-        "teetimes": [],
+        "pre_tourn_pageviews": 496,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:20",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:03",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "49"
       },
       {
@@ -224,59 +578,185 @@
         "country": "USA",
         "dg_id": 28077,
         "dg_rank": null,
-        "owgr_rank": 1383,
+        "owgr_rank": 1387,
         "player_name": "Collet, Tyler",
         "player_num": 59570,
-        "pre_tourn_pageviews": 18,
-        "teetimes": [],
+        "pre_tourn_pageviews": 67,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:31",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:25",
+            "wave": "early"
+          }
+        ],
         "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 28309,
-        "dg_rank": 107,
-        "owgr_rank": 74,
+        "dg_rank": 87,
+        "owgr_rank": 73,
         "player_name": "Coody, Pierceson",
         "player_num": 59836,
-        "pre_tourn_pageviews": 215,
-        "teetimes": [],
+        "pre_tourn_pageviews": 404,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:36",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 08:30",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "59"
       },
       {
         "am": 0,
         "country": "USA",
+        "dg_id": 18579,
+        "dg_rank": null,
+        "owgr_rank": 1016,
+        "player_name": "Cook, Austin",
+        "player_num": 46435,
+        "pre_tourn_pageviews": 59,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 08:52",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:58",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "217"
+      },
+      {
+        "am": 0,
+        "country": "USA",
         "dg_id": 27780,
-        "dg_rank": 131,
-        "owgr_rank": 162,
+        "dg_rank": 88,
+        "owgr_rank": 108,
         "player_name": "Crowe, Trace",
         "player_num": 52514,
-        "pre_tourn_pageviews": 232,
-        "teetimes": [],
+        "pre_tourn_pageviews": 469,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:14",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:20",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "87"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 14509,
-        "dg_rank": 220,
-        "owgr_rank": 264,
+        "dg_rank": 168,
+        "owgr_rank": 237,
         "player_name": "Dahmen, Joel",
         "player_num": 34076,
-        "pre_tourn_pageviews": 145,
-        "teetimes": [],
+        "pre_tourn_pageviews": 366,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 08:41",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:47",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "126"
       },
       {
         "am": 0,
         "country": "AUS",
         "dg_id": 17786,
-        "dg_rank": 402,
-        "owgr_rank": 405,
+        "dg_rank": 462,
+        "owgr_rank": 417,
         "player_name": "Davis, Cam",
         "player_num": 45157,
-        "pre_tourn_pageviews": 60,
-        "teetimes": [],
+        "pre_tourn_pageviews": 158,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 08:52",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:58",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "173"
       },
       {
@@ -284,71 +764,185 @@
         "country": "USA",
         "dg_id": 33994,
         "dg_rank": null,
-        "owgr_rank": 1359,
+        "owgr_rank": 1365,
         "player_name": "Donohue, Muzzy",
         "player_num": 67287,
-        "pre_tourn_pageviews": 6,
-        "teetimes": [],
+        "pre_tourn_pageviews": 70,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:42",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:25",
+            "wave": "early"
+          }
+        ],
         "tour_rank": null
       },
       {
         "am": 0,
         "country": "CHN",
         "dg_id": 16757,
-        "dg_rank": 163,
-        "owgr_rank": 197,
+        "dg_rank": 165,
+        "owgr_rank": 198,
         "player_name": "Dou, Zecheng",
         "player_num": 37338,
-        "pre_tourn_pageviews": 56,
-        "teetimes": [],
+        "pre_tourn_pageviews": 124,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:14",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:20",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "118"
       },
       {
         "am": 0,
         "country": "BEL",
         "dg_id": 22002,
-        "dg_rank": 160,
-        "owgr_rank": 219,
+        "dg_rank": 202,
+        "owgr_rank": 224,
         "player_name": "Dumont De Chassart, Adrien",
         "player_num": 50497,
-        "pre_tourn_pageviews": 53,
-        "teetimes": [],
+        "pre_tourn_pageviews": 154,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:42",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:25",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "128"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 18187,
-        "dg_rank": 333,
-        "owgr_rank": 412,
+        "dg_rank": 326,
+        "owgr_rank": 411,
         "player_name": "Duncan, Tyler",
         "player_num": 45609,
-        "pre_tourn_pageviews": 64,
-        "teetimes": [],
+        "pre_tourn_pageviews": 146,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:14",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:20",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "180"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 28270,
-        "dg_rank": 399,
-        "owgr_rank": 471,
+        "dg_rank": 414,
+        "owgr_rank": 484,
         "player_name": "Dunlap, Nick",
         "player_num": 59866,
-        "pre_tourn_pageviews": 70,
-        "teetimes": [],
+        "pre_tourn_pageviews": 185,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 10:09",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:03",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "168"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 26653,
-        "dg_rank": 140,
-        "owgr_rank": 235,
+        "dg_rank": 133,
+        "owgr_rank": 236,
         "player_name": "Eckroat, Austin",
         "player_num": 57362,
-        "pre_tourn_pageviews": 99,
-        "teetimes": [],
+        "pre_tourn_pageviews": 286,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 08:30",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:36",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "124"
       },
       {
@@ -356,167 +950,402 @@
         "country": "USA",
         "dg_id": 14577,
         "dg_rank": 57,
-        "owgr_rank": 46,
+        "owgr_rank": 47,
         "player_name": "English, Harris",
         "player_num": 34099,
-        "pre_tourn_pageviews": 125,
-        "teetimes": [],
+        "pre_tourn_pageviews": 314,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 08:52",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:58",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "69"
       },
       {
         "am": 0,
         "country": "CAN",
         "dg_id": 21883,
-        "dg_rank": 231,
-        "owgr_rank": 206,
+        "dg_rank": 196,
+        "owgr_rank": 204,
         "player_name": "Ewart, A.J.",
         "player_num": 50286,
-        "pre_tourn_pageviews": 63,
-        "teetimes": [],
+        "pre_tourn_pageviews": 189,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 10:31",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:25",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "104"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 11676,
-        "dg_rank": 210,
-        "owgr_rank": 182,
+        "dg_rank": 213,
+        "owgr_rank": 188,
         "player_name": "Finau, Tony",
         "player_num": 29725,
-        "pre_tourn_pageviews": 86,
-        "teetimes": [],
+        "pre_tourn_pageviews": 187,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:03",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 10:09",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "114"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 25094,
-        "dg_rank": 186,
-        "owgr_rank": 286,
+        "dg_rank": 198,
+        "owgr_rank": 292,
         "player_name": "Fishburn, Patrick",
         "player_num": 54576,
-        "pre_tourn_pageviews": 52,
-        "teetimes": [],
+        "pre_tourn_pageviews": 132,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 10:31",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:25",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "157"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 26657,
-        "dg_rank": 112,
+        "dg_rank": 115,
         "owgr_rank": 69,
         "player_name": "Fisk, Steven",
         "player_num": 57123,
-        "pre_tourn_pageviews": 85,
-        "teetimes": [],
+        "pre_tourn_pageviews": 248,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:09",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 08:52",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "58"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 31343,
-        "dg_rank": 133,
-        "owgr_rank": 177,
+        "dg_rank": 140,
+        "owgr_rank": 176,
         "player_name": "Ford, David",
         "player_num": 65256,
-        "pre_tourn_pageviews": 118,
-        "teetimes": [],
+        "pre_tourn_pageviews": 299,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:25",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:31",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "116"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 11451,
-        "dg_rank": 263,
-        "owgr_rank": 313,
+        "dg_rank": 259,
+        "owgr_rank": 317,
         "player_name": "Garnett, Brice",
         "player_num": 29535,
-        "pre_tourn_pageviews": 45,
-        "teetimes": [],
+        "pre_tourn_pageviews": 129,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:36",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 08:30",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "140"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 24550,
-        "dg_rank": 31,
-        "owgr_rank": 91,
+        "dg_rank": 32,
+        "owgr_rank": 90,
         "player_name": "Ghim, Doug",
         "player_num": 52375,
-        "pre_tourn_pageviews": 196,
-        "teetimes": [],
+        "pre_tourn_pageviews": 570,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:14",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 10:20",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "62"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 7399,
-        "dg_rank": 218,
-        "owgr_rank": 143,
+        "dg_rank": 240,
+        "owgr_rank": 152,
         "player_name": "Glover, Lucas",
         "player_num": 25900,
-        "pre_tourn_pageviews": 70,
-        "teetimes": [],
+        "pre_tourn_pageviews": 207,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:03",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 10:09",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "117"
-      },
-      {
-        "am": 0,
-        "country": "MEX",
-        "dg_id": 28016,
-        "dg_rank": 319,
-        "owgr_rank": 331,
-        "player_name": "Gonzalez, Emilio",
-        "player_num": 59567,
-        "pre_tourn_pageviews": 44,
-        "teetimes": [],
-        "tour_rank": "194"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 26660,
-        "dg_rank": 464,
-        "owgr_rank": 431,
+        "dg_rank": 371,
+        "owgr_rank": 401,
         "player_name": "Gordon, Will",
         "player_num": 56762,
-        "pre_tourn_pageviews": 89,
-        "teetimes": [],
+        "pre_tourn_pageviews": 214,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:47",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 08:41",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "170"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 23465,
-        "dg_rank": 116,
-        "owgr_rank": 99,
+        "dg_rank": 98,
+        "owgr_rank": 101,
         "player_name": "Greyserman, Max",
         "player_num": 51977,
-        "pre_tourn_pageviews": 155,
-        "teetimes": [],
+        "pre_tourn_pageviews": 322,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 08:30",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:36",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "91"
       },
       {
         "am": 0,
         "country": "ARG",
         "dg_id": 12808,
-        "dg_rank": 117,
-        "owgr_rank": 126,
+        "dg_rank": 110,
+        "owgr_rank": 125,
         "player_name": "Grillo, Emiliano",
         "player_num": 31646,
-        "pre_tourn_pageviews": 137,
-        "teetimes": [],
+        "pre_tourn_pageviews": 334,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 08:30",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:36",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "113"
       },
       {
         "am": 0,
         "country": "CAN",
         "dg_id": 13965,
-        "dg_rank": 285,
-        "owgr_rank": 338,
+        "dg_rank": 288,
+        "owgr_rank": 337,
         "player_name": "Hadwin, Adam",
         "player_num": 33399,
-        "pre_tourn_pageviews": 58,
-        "teetimes": [],
+        "pre_tourn_pageviews": 148,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 08:41",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:47",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "178"
       },
       {
@@ -527,32 +1356,89 @@
         "owgr_rank": 71,
         "player_name": "Hall, Harry",
         "player_num": 57975,
-        "pre_tourn_pageviews": 143,
-        "teetimes": [],
+        "pre_tourn_pageviews": 398,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:09",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 08:52",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "63"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 19865,
-        "dg_rank": 412,
-        "owgr_rank": 686,
+        "dg_rank": 434,
+        "owgr_rank": 696,
         "player_name": "Hardy, Nick",
         "player_num": 47988,
-        "pre_tourn_pageviews": 45,
-        "teetimes": [],
+        "pre_tourn_pageviews": 119,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:31",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:14",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "195"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 8825,
-        "dg_rank": 47,
-        "owgr_rank": 70,
+        "dg_rank": 48,
+        "owgr_rank": 71,
         "player_name": "Harman, Brian",
         "player_num": 27644,
-        "pre_tourn_pageviews": 229,
-        "teetimes": [],
+        "pre_tourn_pageviews": 696,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:03",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:09",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "71"
       },
       {
@@ -560,215 +1446,557 @@
         "country": "RSA",
         "dg_id": 24342,
         "dg_rank": 273,
-        "owgr_rank": 152,
+        "owgr_rank": 154,
         "player_name": "Higgo, Garrick",
         "player_num": 54421,
-        "pre_tourn_pageviews": 44,
-        "teetimes": [],
+        "pre_tourn_pageviews": 137,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:03",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 10:09",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "175"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 14140,
-        "dg_rank": 484,
-        "owgr_rank": 418,
+        "dg_rank": 482,
+        "owgr_rank": 424,
         "player_name": "Higgs, Harry",
         "player_num": 33597,
-        "pre_tourn_pageviews": 44,
-        "teetimes": [],
+        "pre_tourn_pageviews": 114,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:47",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 08:41",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "187"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 28469,
-        "dg_rank": 374,
-        "owgr_rank": 308,
+        "dg_rank": 389,
+        "owgr_rank": 320,
         "player_name": "Highsmith, Joe",
         "player_num": 60067,
-        "pre_tourn_pageviews": 46,
-        "teetimes": [],
+        "pre_tourn_pageviews": 135,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:03",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:09",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "171"
       },
       {
         "am": 0,
         "country": "JPN",
         "dg_id": 20954,
-        "dg_rank": 334,
-        "owgr_rank": 281,
+        "dg_rank": 353,
+        "owgr_rank": 283,
         "player_name": "Hirata, Kensei",
         "player_num": 49120,
-        "pre_tourn_pageviews": 87,
-        "teetimes": [],
+        "pre_tourn_pageviews": 214,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:25",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 10:31",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "138"
       },
       {
         "am": 0,
         "country": "JPN",
         "dg_id": 22760,
-        "dg_rank": 93,
+        "dg_rank": 96,
         "owgr_rank": 78,
         "player_name": "Hisatsune, Ryo",
         "player_num": 51287,
-        "pre_tourn_pageviews": 116,
-        "teetimes": [],
+        "pre_tourn_pageviews": 276,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:31",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:14",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "47"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 25157,
-        "dg_rank": 166,
-        "owgr_rank": 154,
+        "dg_rank": 154,
+        "owgr_rank": 159,
         "player_name": "Hodges, Lee",
         "player_num": 54628,
-        "pre_tourn_pageviews": 125,
-        "teetimes": [],
+        "pre_tourn_pageviews": 339,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 08:30",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:36",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "105"
       },
       {
         "am": 0,
         "country": "PHI",
         "dg_id": 23504,
-        "dg_rank": 101,
-        "owgr_rank": 106,
+        "dg_rank": 114,
+        "owgr_rank": 110,
         "player_name": "Hoey, Rico",
         "player_num": 51696,
-        "pre_tourn_pageviews": 90,
-        "teetimes": [],
+        "pre_tourn_pageviews": 211,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 10:09",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:03",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "111"
       },
       {
         "am": 0,
         "country": "DEN",
         "dg_id": 23838,
-        "dg_rank": 162,
-        "owgr_rank": 84,
+        "dg_rank": 153,
+        "owgr_rank": 86,
         "player_name": "Hojgaard, Rasmus",
         "player_num": 52686,
-        "pre_tourn_pageviews": 93,
-        "teetimes": [],
+        "pre_tourn_pageviews": 233,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 08:30",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:36",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "122"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 11276,
-        "dg_rank": 87,
-        "owgr_rank": 173,
+        "dg_rank": 89,
+        "owgr_rank": 172,
         "player_name": "Horschel, Billy",
         "player_num": 29420,
-        "pre_tourn_pageviews": 125,
-        "teetimes": [],
+        "pre_tourn_pageviews": 373,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:03",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:09",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "101"
       },
       {
         "am": 0,
         "country": "JPN",
         "dg_id": 19190,
-        "dg_rank": 436,
-        "owgr_rank": 583,
+        "dg_rank": 410,
+        "owgr_rank": 586,
         "player_name": "Hoshino, Rikuya",
         "player_num": 47056,
-        "pre_tourn_pageviews": 39,
-        "teetimes": [],
+        "pre_tourn_pageviews": 104,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:36",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:42",
+            "wave": "late"
+          }
+        ],
         "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 16333,
-        "dg_rank": 299,
-        "owgr_rank": 187,
+        "dg_rank": 278,
+        "owgr_rank": 184,
         "player_name": "Hubbard, Mark",
         "player_num": 36801,
-        "pre_tourn_pageviews": 56,
-        "teetimes": [],
+        "pre_tourn_pageviews": 150,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:58",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 08:41",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "132"
       },
       {
         "am": 0,
         "country": "CAN",
         "dg_id": 15556,
-        "dg_rank": 118,
-        "owgr_rank": 159,
+        "dg_rank": 130,
+        "owgr_rank": 164,
         "player_name": "Hughes, Mackenzie",
         "player_num": 35506,
-        "pre_tourn_pageviews": 145,
-        "teetimes": [],
+        "pre_tourn_pageviews": 386,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:47",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 08:41",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "108"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 29827,
-        "dg_rank": 32,
-        "owgr_rank": 54,
+        "dg_rank": 31,
+        "owgr_rank": 55,
         "player_name": "James, Ben",
         "player_num": 57869,
-        "pre_tourn_pageviews": 187,
-        "teetimes": [],
+        "pre_tourn_pageviews": 606,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:58",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 08:52",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "53"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 15120,
-        "dg_rank": 179,
-        "owgr_rank": 251,
+        "dg_rank": 185,
+        "owgr_rank": 257,
         "player_name": "Johnson, Michael",
         "player_num": 34643,
-        "pre_tourn_pageviews": 18,
-        "teetimes": [],
+        "pre_tourn_pageviews": 106,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:25",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:31",
+            "wave": "late"
+          }
+        ],
         "tour_rank": null
       },
       {
         "am": 0,
         "country": "JPN",
         "dg_id": 19729,
-        "dg_rank": 219,
-        "owgr_rank": 200,
+        "dg_rank": 241,
+        "owgr_rank": 203,
         "player_name": "Kanaya, Takumi",
         "player_num": 47917,
-        "pre_tourn_pageviews": 55,
-        "teetimes": [],
+        "pre_tourn_pageviews": 149,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:36",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 08:30",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "144"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 21889,
-        "dg_rank": 371,
-        "owgr_rank": 361,
+        "dg_rank": 362,
+        "owgr_rank": 360,
         "player_name": "Kang, Jeffrey",
         "player_num": 47393,
-        "pre_tourn_pageviews": 41,
-        "teetimes": [],
+        "pre_tourn_pageviews": 101,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:25",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 10:31",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "176"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 32457,
-        "dg_rank": 97,
-        "owgr_rank": 73,
+        "dg_rank": 107,
+        "owgr_rank": 74,
         "player_name": "Keefer, Johnny",
         "player_num": 63454,
-        "pre_tourn_pageviews": 117,
-        "teetimes": [],
+        "pre_tourn_pageviews": 290,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:14",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 10:20",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "78"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 12423,
-        "dg_rank": 64,
-        "owgr_rank": 105,
+        "dg_rank": 81,
+        "owgr_rank": 112,
         "player_name": "Kirk, Chris",
         "player_num": 30926,
-        "pre_tourn_pageviews": 136,
-        "teetimes": [],
+        "pre_tourn_pageviews": 388,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:58",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 08:52",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "107"
       },
       {
@@ -776,119 +2004,309 @@
         "country": "USA",
         "dg_id": 11328,
         "dg_rank": null,
-        "owgr_rank": 1239,
+        "owgr_rank": 1253,
         "player_name": "Kisner, Kevin",
         "player_num": 29478,
-        "pre_tourn_pageviews": 75,
-        "teetimes": [],
+        "pre_tourn_pageviews": 208,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 08:41",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:47",
+            "wave": "late"
+          }
+        ],
         "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 13470,
-        "dg_rank": 396,
-        "owgr_rank": 507,
+        "dg_rank": 405,
+        "owgr_rank": 504,
         "player_name": "Kizzire, Patton",
         "player_num": 32757,
-        "pre_tourn_pageviews": 53,
-        "teetimes": [],
+        "pre_tourn_pageviews": 138,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 08:41",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:47",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "165"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 16243,
-        "dg_rank": 83,
-        "owgr_rank": 114,
+        "dg_rank": 86,
+        "owgr_rank": 120,
         "player_name": "Koepka, Brooks",
         "player_num": 36689,
-        "pre_tourn_pageviews": 211,
-        "teetimes": [],
+        "pre_tourn_pageviews": 504,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:58",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 08:52",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "115"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 16395,
-        "dg_rank": 56,
-        "owgr_rank": 92,
+        "dg_rank": 42,
+        "owgr_rank": 68,
         "player_name": "Kohles, Ben",
         "player_num": 36884,
-        "pre_tourn_pageviews": 317,
-        "teetimes": [],
+        "pre_tourn_pageviews": 827,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:47",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 08:41",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "61"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 32319,
-        "dg_rank": 33,
+        "dg_rank": 43,
         "owgr_rank": 60,
         "player_name": "Koivun, Jackson",
         "player_num": 66701,
-        "pre_tourn_pageviews": 208,
-        "teetimes": [],
+        "pre_tourn_pageviews": 467,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 08:52",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:58",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "73"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 6169,
-        "dg_rank": 187,
-        "owgr_rank": 254,
+        "dg_rank": 227,
+        "owgr_rank": 260,
         "player_name": "Kuchar, Matt",
         "player_num": 23108,
-        "pre_tourn_pageviews": 93,
-        "teetimes": [],
+        "pre_tourn_pageviews": 209,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:58",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 08:52",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "161"
+      },
+      {
+        "am": 0,
+        "country": "SCO",
+        "dg_id": 9586,
+        "dg_rank": 416,
+        "owgr_rank": 608,
+        "player_name": "Laird, Martin",
+        "player_num": 27936,
+        "pre_tourn_pageviews": 75,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:20",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:03",
+            "wave": "early"
+          }
+        ],
+        "tour_rank": "200"
       },
       {
         "am": 0,
         "country": "RSA",
         "dg_id": 24343,
         "dg_rank": null,
-        "owgr_rank": 441,
+        "owgr_rank": 444,
         "player_name": "Lamprecht, Christo",
         "player_num": 54422,
-        "pre_tourn_pageviews": 31,
-        "teetimes": [],
+        "pre_tourn_pageviews": 81,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:20",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:14",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "202"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 21943,
-        "dg_rank": 346,
-        "owgr_rank": 345,
+        "dg_rank": 333,
+        "owgr_rank": 343,
         "player_name": "Lebioda, Hank",
         "player_num": 49766,
-        "pre_tourn_pageviews": 36,
-        "teetimes": [],
+        "pre_tourn_pageviews": 97,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 08:41",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:47",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "152"
-      },
-      {
-        "am": 0,
-        "country": "KOR",
-        "dg_id": 13497,
-        "dg_rank": null,
-        "owgr_rank": 1073,
-        "player_name": "Lee, K.H.",
-        "player_num": 32791,
-        "pre_tourn_pageviews": 39,
-        "teetimes": [],
-        "tour_rank": null
       },
       {
         "am": 0,
         "country": "CHN",
         "dg_id": 15310,
         "dg_rank": 193,
-        "owgr_rank": 133,
+        "owgr_rank": 137,
         "player_name": "Li, Haotong",
         "player_num": 35296,
-        "pre_tourn_pageviews": 82,
-        "teetimes": [],
+        "pre_tourn_pageviews": 191,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:25",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:31",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "134"
       },
       {
@@ -899,8 +2317,27 @@
         "owgr_rank": null,
         "player_name": "Lindheim, Nicholas",
         "player_num": 37278,
-        "pre_tourn_pageviews": 24,
-        "teetimes": [],
+        "pre_tourn_pageviews": 80,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:25",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:31",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "222"
       },
       {
@@ -908,23 +2345,61 @@
         "country": "SWE",
         "dg_id": 14815,
         "dg_rank": null,
-        "owgr_rank": 1528,
+        "owgr_rank": 1533,
         "player_name": "Lingmerth, David",
         "player_num": 34409,
-        "pre_tourn_pageviews": 25,
-        "teetimes": [],
+        "pre_tourn_pageviews": 79,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:36",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 08:30",
+            "wave": "early"
+          }
+        ],
         "tour_rank": null
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 15980,
-        "dg_rank": 242,
-        "owgr_rank": 147,
+        "dg_rank": 254,
+        "owgr_rank": 148,
         "player_name": "Lipsky, David",
         "player_num": 36326,
-        "pre_tourn_pageviews": 63,
-        "teetimes": [],
+        "pre_tourn_pageviews": 140,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:36",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 08:30",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "97"
       },
       {
@@ -932,59 +2407,154 @@
         "country": "USA",
         "dg_id": 7960,
         "dg_rank": null,
-        "owgr_rank": 574,
+        "owgr_rank": 577,
         "player_name": "List, Luke",
         "player_num": 27129,
-        "pre_tourn_pageviews": 27,
-        "teetimes": [],
+        "pre_tourn_pageviews": 94,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 08:41",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:47",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "197"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 17723,
-        "dg_rank": 294,
-        "owgr_rank": 367,
+        "dg_rank": 286,
+        "owgr_rank": 359,
         "player_name": "Lower, Justin",
         "player_num": 40162,
-        "pre_tourn_pageviews": 46,
-        "teetimes": [],
+        "pre_tourn_pageviews": 120,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:47",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 08:41",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "163"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 14926,
-        "dg_rank": 300,
-        "owgr_rank": 460,
+        "dg_rank": 303,
+        "owgr_rank": 463,
         "player_name": "Malnati, Peter",
         "player_num": 34466,
-        "pre_tourn_pageviews": 49,
-        "teetimes": [],
+        "pre_tourn_pageviews": 142,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:47",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 08:30",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "151"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 14007,
-        "dg_rank": 347,
-        "owgr_rank": 496,
+        "dg_rank": 315,
+        "owgr_rank": 472,
         "player_name": "Martin, Ben",
         "player_num": 33413,
-        "pre_tourn_pageviews": 39,
-        "teetimes": [],
+        "pre_tourn_pageviews": 145,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:14",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 10:20",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "162"
       },
       {
         "am": 0,
         "country": "ITA",
         "dg_id": 20844,
-        "dg_rank": 388,
-        "owgr_rank": 224,
+        "dg_rank": 384,
+        "owgr_rank": 226,
         "player_name": "Mazzoli, Stefano",
         "player_num": 49037,
-        "pre_tourn_pageviews": 39,
-        "teetimes": [],
+        "pre_tourn_pageviews": 113,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 08:52",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:58",
+            "wave": "late"
+          }
+        ],
         "tour_rank": null
       },
       {
@@ -992,23 +2562,61 @@
         "country": "USA",
         "dg_id": 19870,
         "dg_rank": 66,
-        "owgr_rank": 102,
+        "owgr_rank": 104,
         "player_name": "McCarthy, Denny",
         "player_num": 47993,
-        "pre_tourn_pageviews": 206,
-        "teetimes": [],
+        "pre_tourn_pageviews": 532,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:14",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 10:20",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "79"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 23505,
-        "dg_rank": 143,
-        "owgr_rank": 146,
+        "dg_rank": 148,
+        "owgr_rank": 151,
         "player_name": "McGreevy, Max",
         "player_num": 51950,
-        "pre_tourn_pageviews": 109,
-        "teetimes": [],
+        "pre_tourn_pageviews": 275,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 08:30",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:36",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "131"
       },
       {
@@ -1016,131 +2624,309 @@
         "country": "USA",
         "dg_id": 18634,
         "dg_rank": 35,
-        "owgr_rank": 50,
+        "owgr_rank": 51,
         "player_name": "McNealy, Maverick",
         "player_num": 46442,
-        "pre_tourn_pageviews": 139,
-        "teetimes": [],
+        "pre_tourn_pageviews": 406,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 08:52",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:58",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "42"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 28159,
-        "dg_rank": 89,
-        "owgr_rank": 98,
+        "dg_rank": 76,
+        "owgr_rank": 95,
         "player_name": "Meissner, Mac",
         "player_num": 59143,
-        "pre_tourn_pageviews": 140,
-        "teetimes": [],
+        "pre_tourn_pageviews": 387,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:14",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:20",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "82"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 13367,
-        "dg_rank": 403,
-        "owgr_rank": 433,
+        "dg_rank": 401,
+        "owgr_rank": 430,
         "player_name": "Merritt, Troy",
         "player_num": 32640,
-        "pre_tourn_pageviews": 29,
-        "teetimes": [],
+        "pre_tourn_pageviews": 111,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 08:41",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:47",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "186"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 17365,
-        "dg_rank": 34,
-        "owgr_rank": 55,
+        "dg_rank": 33,
+        "owgr_rank": 57,
         "player_name": "Mitchell, Keith",
         "player_num": 39546,
-        "pre_tourn_pageviews": 142,
-        "teetimes": [],
+        "pre_tourn_pageviews": 410,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 08:52",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:58",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "52"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 21944,
-        "dg_rank": 171,
-        "owgr_rank": 179,
+        "dg_rank": 190,
+        "owgr_rank": 187,
         "player_name": "Moore, Taylor",
         "player_num": 49947,
-        "pre_tourn_pageviews": 72,
-        "teetimes": [],
+        "pre_tourn_pageviews": 179,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:14",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 10:20",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "98"
-      },
-      {
-        "am": 0,
-        "country": "USA",
-        "dg_id": 29770,
-        "dg_rank": 181,
-        "owgr_rank": 170,
-        "player_name": "Mouw, William",
-        "player_num": 63121,
-        "pre_tourn_pageviews": 58,
-        "teetimes": [],
-        "tour_rank": "137"
       },
       {
         "am": 0,
         "country": "DEN",
         "dg_id": 23841,
-        "dg_rank": 113,
-        "owgr_rank": 82,
+        "dg_rank": 105,
+        "owgr_rank": 83,
         "player_name": "Neergaard-Petersen, Rasmus",
         "player_num": 52689,
-        "pre_tourn_pageviews": 84,
-        "teetimes": [],
+        "pre_tourn_pageviews": 245,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:36",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 08:30",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "106"
       },
       {
         "am": 0,
         "country": "KOR",
         "dg_id": 11117,
-        "dg_rank": 326,
-        "owgr_rank": 385,
+        "dg_rank": 320,
+        "owgr_rank": 383,
         "player_name": "Noh, S.Y.",
         "player_num": 29289,
-        "pre_tourn_pageviews": 22,
-        "teetimes": [],
+        "pre_tourn_pageviews": 98,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:47",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 08:30",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "184"
       },
       {
         "am": 0,
         "country": "SWE",
         "dg_id": 11657,
-        "dg_rank": 473,
-        "owgr_rank": 608,
+        "dg_rank": 475,
+        "owgr_rank": 616,
         "player_name": "Norlander, Henrik",
         "player_num": 30163,
-        "pre_tourn_pageviews": 20,
-        "teetimes": [],
+        "pre_tourn_pageviews": 106,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:47",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 08:30",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "210"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 23475,
-        "dg_rank": 63,
-        "owgr_rank": 61,
+        "dg_rank": 78,
+        "owgr_rank": 62,
         "player_name": "Novak, Andrew",
         "player_num": 51997,
-        "pre_tourn_pageviews": 130,
-        "teetimes": [],
+        "pre_tourn_pageviews": 320,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 10:09",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:03",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "54"
       },
       {
         "am": 0,
         "country": "SWE",
         "dg_id": 25475,
-        "dg_rank": 437,
-        "owgr_rank": 337,
+        "dg_rank": 491,
+        "owgr_rank": 345,
         "player_name": "Nyholm, Pontus",
         "player_num": 55851,
-        "pre_tourn_pageviews": 35,
-        "teetimes": [],
+        "pre_tourn_pageviews": 86,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 10:20",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:14",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "149"
       },
       {
@@ -1148,167 +2934,433 @@
         "country": "USA",
         "dg_id": 10498,
         "dg_rank": null,
-        "owgr_rank": 907,
+        "owgr_rank": 912,
         "player_name": "Overton, Jeff",
         "player_num": 28475,
-        "pre_tourn_pageviews": 21,
-        "teetimes": [],
+        "pre_tourn_pageviews": 89,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 10:09",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:03",
+            "wave": "early"
+          }
+        ],
         "tour_rank": null
       },
       {
         "am": 0,
         "country": "ENG",
         "dg_id": 13764,
-        "dg_rank": 129,
-        "owgr_rank": 112,
+        "dg_rank": 169,
+        "owgr_rank": 111,
         "player_name": "Parry, John",
         "player_num": 28723,
-        "pre_tourn_pageviews": 70,
-        "teetimes": [],
+        "pre_tourn_pageviews": 193,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 08:30",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:36",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "96"
       },
       {
         "am": 0,
         "country": "GER",
         "dg_id": 22087,
-        "dg_rank": 456,
-        "owgr_rank": 344,
+        "dg_rank": 452,
+        "owgr_rank": 346,
         "player_name": "Paul, Jeremy",
         "player_num": 50582,
-        "pre_tourn_pageviews": 35,
-        "teetimes": [],
+        "pre_tourn_pageviews": 94,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:36",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:42",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "189"
       },
       {
         "am": 0,
         "country": "FRA",
         "dg_id": 19960,
-        "dg_rank": 195,
-        "owgr_rank": 243,
+        "dg_rank": 218,
+        "owgr_rank": 245,
         "player_name": "Pavon, Matthieu",
         "player_num": 48153,
-        "pre_tourn_pageviews": 56,
-        "teetimes": [],
+        "pre_tourn_pageviews": 141,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:31",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:14",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "136"
       },
       {
         "am": 0,
         "country": "CAN",
         "dg_id": 17780,
-        "dg_rank": 228,
-        "owgr_rank": 134,
+        "dg_rank": 233,
+        "owgr_rank": 140,
         "player_name": "Pendrith, Taylor",
         "player_num": 40250,
-        "pre_tourn_pageviews": 77,
-        "teetimes": [],
+        "pre_tourn_pageviews": 173,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 08:52",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:58",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "109"
       },
       {
         "am": 0,
         "country": "ENG",
         "dg_id": 22465,
-        "dg_rank": 124,
-        "owgr_rank": 57,
+        "dg_rank": 159,
+        "owgr_rank": 61,
         "player_name": "Penge, Marco",
         "player_num": 51003,
-        "pre_tourn_pageviews": 82,
-        "teetimes": [],
+        "pre_tourn_pageviews": 206,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:14",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:20",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "120"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 16341,
-        "dg_rank": 238,
-        "owgr_rank": 307,
+        "dg_rank": 237,
+        "owgr_rank": 311,
         "player_name": "Peterson, Paul",
         "player_num": 36824,
-        "pre_tourn_pageviews": 57,
-        "teetimes": [],
+        "pre_tourn_pageviews": 159,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:25",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:31",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "154"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 27164,
-        "dg_rank": 190,
-        "owgr_rank": 149,
+        "dg_rank": 203,
+        "owgr_rank": 150,
         "player_name": "Phillips, Chandler",
         "player_num": 57900,
-        "pre_tourn_pageviews": 50,
-        "teetimes": [],
+        "pre_tourn_pageviews": 146,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:09",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:03",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "102"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 21554,
-        "dg_rank": 43,
-        "owgr_rank": 36,
+        "dg_rank": 46,
+        "owgr_rank": 37,
         "player_name": "Poston, J.T.",
         "player_num": 49771,
-        "pre_tourn_pageviews": 194,
-        "teetimes": [],
+        "pre_tourn_pageviews": 558,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 08:52",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:58",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "32"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 14704,
-        "dg_rank": 154,
-        "owgr_rank": 120,
+        "dg_rank": 162,
+        "owgr_rank": 127,
         "player_name": "Putnam, Andrew",
         "player_num": 34256,
-        "pre_tourn_pageviews": 90,
-        "teetimes": [],
+        "pre_tourn_pageviews": 229,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 08:41",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:47",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "90"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 19840,
-        "dg_rank": 180,
-        "owgr_rank": 211,
+        "dg_rank": 120,
+        "owgr_rank": 100,
         "player_name": "Ramey, Chad",
         "player_num": 47983,
-        "pre_tourn_pageviews": 794,
-        "teetimes": [],
+        "pre_tourn_pageviews": 1101,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:03",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 10:09",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "68"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 19872,
-        "dg_rank": 367,
-        "owgr_rank": 150,
+        "dg_rank": 413,
+        "owgr_rank": 158,
         "player_name": "Riley, Davis",
         "player_num": 47995,
-        "pre_tourn_pageviews": 53,
-        "teetimes": [],
+        "pre_tourn_pageviews": 135,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:03",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 10:09",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "129"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 16283,
-        "dg_rank": 222,
-        "owgr_rank": 132,
+        "dg_rank": 235,
+        "owgr_rank": 136,
         "player_name": "Rodgers, Patrick",
         "player_num": 36699,
-        "pre_tourn_pageviews": 80,
-        "teetimes": [],
+        "pre_tourn_pageviews": 220,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 08:30",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:36",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "77"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 18424,
-        "dg_rank": 120,
-        "owgr_rank": 122,
+        "dg_rank": 145,
+        "owgr_rank": 126,
         "player_name": "Roy, Kevin",
         "player_num": 39335,
-        "pre_tourn_pageviews": 58,
-        "teetimes": [],
+        "pre_tourn_pageviews": 148,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:36",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 08:30",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "93"
       },
       {
@@ -1316,23 +3368,61 @@
         "country": "COL",
         "dg_id": 16591,
         "dg_rank": null,
-        "owgr_rank": 681,
+        "owgr_rank": 671,
         "player_name": "Rozo, Marcelo",
         "player_num": 37076,
-        "pre_tourn_pageviews": 30,
-        "teetimes": [],
+        "pre_tourn_pageviews": 95,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:42",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:25",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "203"
       },
       {
         "am": 0,
         "country": "FRA",
         "dg_id": 14792,
-        "dg_rank": 286,
-        "owgr_rank": 174,
+        "dg_rank": 334,
+        "owgr_rank": 181,
         "player_name": "Saddier, Adrien",
         "player_num": 34371,
-        "pre_tourn_pageviews": 44,
-        "teetimes": [],
+        "pre_tourn_pageviews": 103,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 10:20",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:14",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "188"
       },
       {
@@ -1340,11 +3430,30 @@
         "country": "USA",
         "dg_id": 35395,
         "dg_rank": null,
-        "owgr_rank": 1408,
+        "owgr_rank": 1415,
         "player_name": "Sanderson, Calen",
         "player_num": 69319,
-        "pre_tourn_pageviews": 17,
-        "teetimes": [],
+        "pre_tourn_pageviews": 54,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:20",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:14",
+            "wave": "early"
+          }
+        ],
         "tour_rank": null
       },
       {
@@ -1352,11 +3461,30 @@
         "country": "USA",
         "dg_id": 30814,
         "dg_rank": 366,
-        "owgr_rank": 312,
+        "owgr_rank": 306,
         "player_name": "Sargent, Gordon",
         "player_num": 64442,
-        "pre_tourn_pageviews": 51,
-        "teetimes": [],
+        "pre_tourn_pageviews": 138,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:25",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 10:31",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "139"
       },
       {
@@ -1364,71 +3492,185 @@
         "country": "USA",
         "dg_id": 19477,
         "dg_rank": null,
-        "owgr_rank": 256,
+        "owgr_rank": 265,
         "player_name": "Schenk, Adam",
         "player_num": 47347,
-        "pre_tourn_pageviews": 44,
-        "teetimes": [],
+        "pre_tourn_pageviews": 124,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:58",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 08:52",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "177"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 32055,
-        "dg_rank": 153,
-        "owgr_rank": 163,
+        "dg_rank": 142,
+        "owgr_rank": 165,
         "player_name": "Shipley, Neal",
         "player_num": 63807,
-        "pre_tourn_pageviews": 86,
-        "teetimes": [],
+        "pre_tourn_pageviews": 211,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:25",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 10:31",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "123"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 23482,
-        "dg_rank": 248,
-        "owgr_rank": 486,
+        "dg_rank": 251,
+        "owgr_rank": 496,
         "player_name": "Sigg, Greyson",
         "player_num": 51890,
-        "pre_tourn_pageviews": 84,
-        "teetimes": [],
+        "pre_tourn_pageviews": 254,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:47",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 08:41",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "191"
       },
       {
         "am": 0,
         "country": "CAN",
         "dg_id": 17381,
-        "dg_rank": 172,
-        "owgr_rank": 231,
+        "dg_rank": 178,
+        "owgr_rank": 233,
         "player_name": "Silverman, Ben",
         "player_num": 39327,
-        "pre_tourn_pageviews": 61,
-        "teetimes": [],
+        "pre_tourn_pageviews": 186,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 08:30",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:36",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "121"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 11049,
-        "dg_rank": 196,
-        "owgr_rank": 519,
+        "dg_rank": 199,
+        "owgr_rank": 527,
         "player_name": "Simpson, Webb",
         "player_num": 29221,
-        "pre_tourn_pageviews": 54,
-        "teetimes": [],
+        "pre_tourn_pageviews": 176,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 08:52",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:58",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "181"
       },
       {
         "am": 0,
         "country": "ENG",
         "dg_id": 10873,
-        "dg_rank": 282,
-        "owgr_rank": 297,
+        "dg_rank": 319,
+        "owgr_rank": 303,
         "player_name": "Skinns, David",
         "player_num": 27139,
-        "pre_tourn_pageviews": 29,
-        "teetimes": [],
+        "pre_tourn_pageviews": 86,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 08:30",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:36",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "143"
       },
       {
@@ -1439,44 +3681,120 @@
         "owgr_rank": 48,
         "player_name": "Smalley, Alex",
         "player_num": 46340,
-        "pre_tourn_pageviews": 165,
-        "teetimes": [],
+        "pre_tourn_pageviews": 423,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:03",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:09",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "27"
       },
       {
         "am": 0,
         "country": "ENG",
         "dg_id": 18586,
-        "dg_rank": 48,
-        "owgr_rank": 67,
+        "dg_rank": 38,
+        "owgr_rank": 65,
         "player_name": "Smith, Jordan",
         "player_num": 46464,
-        "pre_tourn_pageviews": 199,
-        "teetimes": [],
+        "pre_tourn_pageviews": 617,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 10:20",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:14",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "56"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 22985,
-        "dg_rank": 106,
-        "owgr_rank": 51,
+        "dg_rank": 79,
+        "owgr_rank": 50,
         "player_name": "Smotherman, Austin",
         "player_num": 50095,
-        "pre_tourn_pageviews": 330,
-        "teetimes": [],
+        "pre_tourn_pageviews": 651,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:58",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 08:52",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "51"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 21995,
-        "dg_rank": 208,
-        "owgr_rank": 295,
+        "dg_rank": 152,
+        "owgr_rank": 229,
         "player_name": "Springer, Hayden",
         "player_num": 50484,
-        "pre_tourn_pageviews": 105,
-        "teetimes": [],
+        "pre_tourn_pageviews": 249,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:31",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:25",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "127"
       },
       {
@@ -1484,107 +3802,309 @@
         "country": "USA",
         "dg_id": 23048,
         "dg_rank": null,
-        "owgr_rank": 391,
+        "owgr_rank": 396,
         "player_name": "Stanger, Jimmy",
         "player_num": 51600,
-        "pre_tourn_pageviews": 32,
-        "teetimes": [],
+        "pre_tourn_pageviews": 97,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:31",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:25",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "153"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 25569,
-        "dg_rank": 151,
-        "owgr_rank": 76,
+        "dg_rank": 143,
+        "owgr_rank": 82,
         "player_name": "Stevens, Sam",
         "player_num": 55893,
-        "pre_tourn_pageviews": 102,
-        "teetimes": [],
+        "pre_tourn_pageviews": 229,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 08:41",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:47",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "72"
       },
       {
         "am": 0,
         "country": "AUT",
         "dg_id": 17511,
-        "dg_rank": 109,
-        "owgr_rank": 39,
+        "dg_rank": 113,
+        "owgr_rank": 40,
         "player_name": "Straka, Sepp",
         "player_num": 49960,
-        "pre_tourn_pageviews": 191,
-        "teetimes": [],
+        "pre_tourn_pageviews": 525,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:03",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 10:09",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "40"
       },
       {
         "am": 0,
         "country": "USA",
+        "dg_id": 14852,
+        "dg_rank": null,
+        "owgr_rank": 1298,
+        "player_name": "Streb, Robert",
+        "player_num": 34431,
+        "pre_tourn_pageviews": 89,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 08:30",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:36",
+            "wave": "late"
+          }
+        ],
+        "tour_rank": "209"
+      },
+      {
+        "am": 0,
+        "country": "USA",
         "dg_id": 8480,
-        "dg_rank": 251,
-        "owgr_rank": 327,
+        "dg_rank": 228,
+        "owgr_rank": 314,
         "player_name": "Streelman, Kevin",
         "player_num": 27214,
-        "pre_tourn_pageviews": 58,
-        "teetimes": [],
+        "pre_tourn_pageviews": 153,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 10:20",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:14",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "142"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 29279,
-        "dg_rank": 96,
-        "owgr_rank": 107,
+        "dg_rank": 112,
+        "owgr_rank": 115,
         "player_name": "Suber, Jackson",
         "player_num": 60019,
-        "pre_tourn_pageviews": 90,
-        "teetimes": [],
+        "pre_tourn_pageviews": 232,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:47",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 08:41",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "86"
       },
       {
         "am": 0,
         "country": "CAN",
         "dg_id": 13997,
-        "dg_rank": 365,
-        "owgr_rank": 548,
+        "dg_rank": 367,
+        "owgr_rank": 551,
         "player_name": "Svensson, Adam",
         "player_num": 40115,
-        "pre_tourn_pageviews": 68,
-        "teetimes": [],
+        "pre_tourn_pageviews": 194,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:47",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 08:41",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "183"
       },
       {
         "am": 0,
         "country": "SWE",
         "dg_id": 26850,
-        "dg_rank": 223,
-        "owgr_rank": 202,
+        "dg_rank": 271,
+        "owgr_rank": 207,
         "player_name": "Svensson, Jesper",
         "player_num": 57586,
-        "pre_tourn_pageviews": 63,
-        "teetimes": [],
+        "pre_tourn_pageviews": 136,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 10:31",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:25",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "135"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 27364,
-        "dg_rank": 90,
-        "owgr_rank": 138,
+        "dg_rank": 102,
+        "owgr_rank": 149,
         "player_name": "Thompson, Davis",
         "player_num": 58168,
-        "pre_tourn_pageviews": 108,
-        "teetimes": [],
+        "pre_tourn_pageviews": 289,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 08:52",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:58",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "99"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 26649,
-        "dg_rank": 52,
-        "owgr_rank": 40,
+        "dg_rank": 54,
+        "owgr_rank": 41,
         "player_name": "Thorbjornsen, Michael",
         "player_num": 57364,
-        "pre_tourn_pageviews": 185,
-        "teetimes": [],
+        "pre_tourn_pageviews": 523,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:58",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 08:52",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "44"
       },
       {
@@ -1592,95 +4112,247 @@
         "country": "USA",
         "dg_id": 12425,
         "dg_rank": null,
-        "owgr_rank": 1531,
+        "owgr_rank": 1213,
         "player_name": "Todd, Brendon",
         "player_num": 30927,
-        "pre_tourn_pageviews": 44,
-        "teetimes": [],
+        "pre_tourn_pageviews": 158,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:14",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 10:20",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "205"
       },
       {
         "am": 0,
         "country": "ARG",
         "dg_id": 17032,
-        "dg_rank": 408,
-        "owgr_rank": 449,
+        "dg_rank": 425,
+        "owgr_rank": 455,
         "player_name": "Tosti, Alejandro",
         "player_num": 38991,
-        "pre_tourn_pageviews": 42,
-        "teetimes": [],
+        "pre_tourn_pageviews": 110,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:20",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:14",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "174"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 22986,
-        "dg_rank": 419,
-        "owgr_rank": 595,
+        "dg_rank": null,
+        "owgr_rank": 603,
         "player_name": "Tuten, Shad",
         "player_num": 49399,
-        "pre_tourn_pageviews": 16,
-        "teetimes": [],
+        "pre_tourn_pageviews": 115,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 10:31",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:25",
+            "wave": "early"
+          }
+        ],
         "tour_rank": null
       },
       {
         "am": 0,
         "country": "FIN",
         "dg_id": 23816,
-        "dg_rank": 139,
-        "owgr_rank": 89,
+        "dg_rank": 103,
+        "owgr_rank": 85,
         "player_name": "Valimaki, Sami",
         "player_num": 52666,
-        "pre_tourn_pageviews": 331,
-        "teetimes": [],
+        "pre_tourn_pageviews": 714,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 10:09",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:03",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "150"
       },
       {
         "am": 0,
         "country": "RSA",
         "dg_id": 17550,
-        "dg_rank": 199,
-        "owgr_rank": 220,
+        "dg_rank": 149,
+        "owgr_rank": 177,
         "player_name": "Van Rooyen, Erik",
         "player_num": 40006,
-        "pre_tourn_pageviews": 158,
-        "teetimes": [],
+        "pre_tourn_pageviews": 336,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:47",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 08:41",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "125"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 25319,
-        "dg_rank": 289,
-        "owgr_rank": 319,
+        "dg_rank": 242,
+        "owgr_rank": 295,
         "player_name": "VanDerLaan, John",
         "player_num": 55573,
-        "pre_tourn_pageviews": 61,
-        "teetimes": [],
+        "pre_tourn_pageviews": 145,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:25",
+            "wave": "early"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 10:31",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "147"
       },
       {
         "am": 0,
         "country": "NOR",
         "dg_id": 15651,
-        "dg_rank": 86,
-        "owgr_rank": 142,
+        "dg_rank": 72,
+        "owgr_rank": 135,
         "player_name": "Ventura, Kristoffer",
         "player_num": 35658,
-        "pre_tourn_pageviews": 169,
-        "teetimes": [],
+        "pre_tourn_pageviews": 377,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 10:31",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:25",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "74"
       },
       {
         "am": 0,
         "country": "AUS",
         "dg_id": 24304,
-        "dg_rank": 194,
-        "owgr_rank": 241,
+        "dg_rank": 195,
+        "owgr_rank": 254,
         "player_name": "Vilips, Karl",
         "player_num": 54304,
-        "pre_tourn_pageviews": 57,
-        "teetimes": [],
+        "pre_tourn_pageviews": 150,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:03",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:09",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "141"
       },
       {
@@ -1688,100 +4360,221 @@
         "country": "COL",
         "dg_id": 9171,
         "dg_rank": null,
-        "owgr_rank": 603,
+        "owgr_rank": 598,
         "player_name": "Villegas, Camilo",
         "player_num": 27770,
-        "pre_tourn_pageviews": 48,
-        "teetimes": [],
+        "pre_tourn_pageviews": 126,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:14",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 10:20",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "199"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 25003,
-        "dg_rank": 427,
-        "owgr_rank": 334,
+        "dg_rank": 455,
+        "owgr_rank": 340,
         "player_name": "Walker, Danny",
         "player_num": 54607,
-        "pre_tourn_pageviews": 44,
-        "teetimes": [],
+        "pre_tourn_pageviews": 113,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 08:41",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:47",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "148"
       },
       {
         "am": 0,
         "country": "ENG",
         "dg_id": 20706,
-        "dg_rank": 45,
-        "owgr_rank": 58,
+        "dg_rank": 47,
+        "owgr_rank": 56,
         "player_name": "Wallace, Matt",
         "player_num": 48887,
-        "pre_tourn_pageviews": 119,
-        "teetimes": [],
+        "pre_tourn_pageviews": 328,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 09:58",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 08:41",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "95"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 25908,
-        "dg_rank": 311,
+        "dg_rank": 300,
         "owgr_rank": 248,
         "player_name": "Whaley, Vince",
         "player_num": 51894,
-        "pre_tourn_pageviews": 68,
-        "teetimes": [],
+        "pre_tourn_pageviews": 183,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 10,
+            "teetime": "2026-11-19 10:20",
+            "wave": "late"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 1,
+            "teetime": "2026-11-20 09:03",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "169"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 22051,
-        "dg_rank": null,
-        "owgr_rank": 506,
+        "dg_rank": 495,
+        "owgr_rank": 468,
         "player_name": "Wise, Aaron",
         "player_num": 49964,
-        "pre_tourn_pageviews": 49,
-        "teetimes": [],
+        "pre_tourn_pageviews": 157,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:58",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 08:52",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "167"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 25002,
-        "dg_rank": 290,
-        "owgr_rank": 430,
+        "dg_rank": 283,
+        "owgr_rank": 410,
         "player_name": "Wu, Dylan",
         "player_num": 54783,
-        "pre_tourn_pageviews": 40,
-        "teetimes": [],
+        "pre_tourn_pageviews": 109,
+        "teetimes": [
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 08:41",
+            "wave": "early"
+          },
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 09:47",
+            "wave": "late"
+          }
+        ],
         "tour_rank": "155"
       },
       {
         "am": 0,
         "country": "USA",
         "dg_id": 23656,
-        "dg_rank": 183,
-        "owgr_rank": 209,
+        "dg_rank": 187,
+        "owgr_rank": 211,
         "player_name": "Young, Carson",
         "player_num": 52513,
-        "pre_tourn_pageviews": 34,
-        "teetimes": [],
+        "pre_tourn_pageviews": 117,
+        "teetimes": [
+          {
+            "course_code": "PL",
+            "course_name": "Sea Island Golf Club (Plantation Course)",
+            "course_num": 889,
+            "round_num": 1,
+            "start_hole": 1,
+            "teetime": "2026-11-19 09:36",
+            "wave": "late"
+          },
+          {
+            "course_code": "SS",
+            "course_name": "Sea Island Golf Club (Seaside Course)",
+            "course_num": 776,
+            "round_num": 2,
+            "start_hole": 10,
+            "teetime": "2026-11-20 08:30",
+            "wave": "early"
+          }
+        ],
         "tour_rank": "201"
-      },
-      {
-        "am": 0,
-        "country": "TPE",
-        "dg_id": 17881,
-        "dg_rank": 150,
-        "owgr_rank": 115,
-        "player_name": "Yu, Kevin",
-        "player_num": 45242,
-        "pre_tourn_pageviews": 87,
-        "teetimes": [],
-        "tour_rank": "92"
       }
     ],
-    "last_updated": "2026-11-17 01:40:37 UTC",
-    "multi_course": "no",
+    "last_updated": "2026-11-18 02:00:52 UTC",
+    "multi_course": "yes",
     "tour": "pga",
     "tz_offset": -18000
   },
@@ -1790,5 +4583,5 @@
   "live_round_actuals_by_dg": {},
   "live_hole_stats": null,
   "live_stats_pre_event": true,
-  "field_updates_refreshed_at": "2026-11-17T02:11:05.276Z"
+  "field_updates_refreshed_at": "2026-11-18T02:04:19.604Z"
 }
