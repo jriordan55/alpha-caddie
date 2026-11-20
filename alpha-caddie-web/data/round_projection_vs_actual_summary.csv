@@ -6966,3 +6966,198 @@ ev_backtest_all,2026-11-19T02:15:49Z,,(all events),,,(all),(all),Pars,,,,12.5,un
 ev_backtest_all,2026-11-19T02:15:49Z,,(all events),,,(all),(all),Pars,,,,15.0,under,14,5,9,0,-3.96,-28.3
 ev_backtest_all,2026-11-19T02:15:49Z,,(all events),,,(all),(all),Pars,,,,17.5,under,6,2,4,0,-2.00,-33.3
 ev_backtest_all,2026-11-19T02:15:49Z,,(all events),,,(all),(all),Pars,,,,20.0,under,1,0,1,0,-1.00,-100.0
+model_vs_book,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Birdies,1.094,0.919,36,,,,,,,,
+model_vs_book,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Bogeys,1.123,1.069,16,,,,,,,,
+model_vs_book,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Pars,0.577,0.503,16,,,,,,,,
+model_vs_book,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Total score,1.837,1.751,36,,,,,,,,
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Birdies,,,,0.0,under,36,23,13,0,4.90,13.6
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Birdies,,,,10.0,under,12,5,7,0,-3.99,-33.2
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Birdies,,,,12.5,under,12,5,7,0,-3.99,-33.2
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Birdies,,,,15.0,under,12,5,7,0,-3.99,-33.2
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Birdies,,,,17.5,under,11,5,6,0,-2.99,-27.2
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Birdies,,,,2.5,under,32,20,12,0,4.12,12.9
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Birdies,,,,20.0,under,7,4,3,0,-0.56,-8.0
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Birdies,,,,5.0,under,22,14,8,0,3.08,14.0
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Birdies,,,,7.5,under,17,9,8,0,-1.58,-9.3
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Bogeys,,,,0.0,over,15,6,9,0,-5.43,-36.2
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Bogeys,,,,0.0,under,20,14,6,0,-6.00,-30.0
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Bogeys,,,,10.0,over,10,4,6,0,-3.52,-35.2
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Bogeys,,,,10.0,under,20,14,6,0,-6.00,-30.0
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Bogeys,,,,12.5,over,6,2,4,0,-2.63,-43.8
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Bogeys,,,,12.5,under,20,14,6,0,-6.00,-30.0
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Bogeys,,,,15.0,over,2,0,2,0,-2.00,-100.0
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Bogeys,,,,17.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Bogeys,,,,2.5,over,15,6,9,0,-5.43,-36.2
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Bogeys,,,,2.5,under,20,14,6,0,-6.00,-30.0
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Bogeys,,,,5.0,over,14,6,8,0,-4.43,-31.6
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Bogeys,,,,5.0,under,20,14,6,0,-6.00,-30.0
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Bogeys,,,,7.5,over,13,5,8,0,-5.03,-38.7
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Bogeys,,,,7.5,under,20,14,6,0,-6.00,-30.0
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Fairways hit,,,,0.0,under,36,12,24,0,-24.00,-66.7
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,GIR,,,,0.0,under,36,13,23,0,-23.00,-63.9
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Pars,,,,0.0,over,1,1,0,0,1.18,118.0
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Pars,,,,0.0,under,30,7,23,0,-19.22,-64.1
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Pars,,,,2.5,under,9,4,5,0,-1.22,-13.5
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Pars,,,,5.0,under,7,3,4,0,-1.02,-14.5
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Pars,,,,7.5,under,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Total score,,,,0.0,over,36,19,17,0,0.09,0.3
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Total score,,,,10.0,over,33,18,15,0,1.01,3.1
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Total score,,,,12.5,over,28,16,12,0,2.58,9.2
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Total score,,,,15.0,over,25,15,10,0,3.58,14.3
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Total score,,,,17.5,over,23,14,9,0,3.83,16.6
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Total score,,,,2.5,over,36,19,17,0,0.09,0.3
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Total score,,,,20.0,over,19,12,7,0,4.00,21.1
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Total score,,,,5.0,over,36,19,17,0,0.09,0.3
+ev_backtest,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,default,default,Total score,,,,7.5,over,35,18,17,0,-0.99,-2.8
+model_vs_book_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Birdies,1.094,0.919,36,,,,,,,,
+model_vs_book_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Bogeys,1.123,1.069,16,,,,,,,,
+model_vs_book_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Pars,0.577,0.503,16,,,,,,,,
+model_vs_book_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Total score,1.837,1.751,36,,,,,,,,
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Birdies,,,,0.0,under,36,23,13,0,4.90,13.6
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Birdies,,,,10.0,under,12,5,7,0,-3.99,-33.2
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Birdies,,,,12.5,under,12,5,7,0,-3.99,-33.2
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Birdies,,,,15.0,under,12,5,7,0,-3.99,-33.2
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Birdies,,,,17.5,under,11,5,6,0,-2.99,-27.2
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Birdies,,,,2.5,under,32,20,12,0,4.12,12.9
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Birdies,,,,20.0,under,7,4,3,0,-0.56,-8.0
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Birdies,,,,5.0,under,22,14,8,0,3.08,14.0
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Birdies,,,,7.5,under,17,9,8,0,-1.58,-9.3
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Bogeys,,,,0.0,over,15,6,9,0,-5.43,-36.2
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Bogeys,,,,0.0,under,20,14,6,0,-6.00,-30.0
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Bogeys,,,,10.0,over,10,4,6,0,-3.52,-35.2
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Bogeys,,,,10.0,under,20,14,6,0,-6.00,-30.0
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Bogeys,,,,12.5,over,6,2,4,0,-2.63,-43.8
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Bogeys,,,,12.5,under,20,14,6,0,-6.00,-30.0
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Bogeys,,,,15.0,over,2,0,2,0,-2.00,-100.0
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Bogeys,,,,17.5,over,1,0,1,0,-1.00,-100.0
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Bogeys,,,,2.5,over,15,6,9,0,-5.43,-36.2
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Bogeys,,,,2.5,under,20,14,6,0,-6.00,-30.0
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Bogeys,,,,5.0,over,14,6,8,0,-4.43,-31.6
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Bogeys,,,,5.0,under,20,14,6,0,-6.00,-30.0
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Bogeys,,,,7.5,over,13,5,8,0,-5.03,-38.7
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Bogeys,,,,7.5,under,20,14,6,0,-6.00,-30.0
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Fairways hit,,,,0.0,under,36,12,24,0,-24.00,-66.7
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),GIR,,,,0.0,under,36,13,23,0,-23.00,-63.9
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Pars,,,,0.0,over,1,1,0,0,1.18,118.0
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Pars,,,,0.0,under,30,7,23,0,-19.22,-64.1
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Pars,,,,2.5,under,9,4,5,0,-1.22,-13.5
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Pars,,,,5.0,under,7,3,4,0,-1.02,-14.5
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Pars,,,,7.5,under,1,0,1,0,-1.00,-100.0
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Total score,,,,0.0,over,36,19,17,0,0.09,0.3
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Total score,,,,10.0,over,33,18,15,0,1.01,3.1
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Total score,,,,12.5,over,28,16,12,0,2.58,9.2
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Total score,,,,15.0,over,25,15,10,0,3.58,14.3
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Total score,,,,17.5,over,23,14,9,0,3.83,16.6
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Total score,,,,2.5,over,36,19,17,0,0.09,0.3
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Total score,,,,20.0,over,19,12,7,0,4.00,21.1
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Total score,,,,5.0,over,36,19,17,0,0.09,0.3
+ev_backtest_by_market,2026-11-20T02:45:30Z,2026-11-20T02:45:26.969Z,The RSM Classic,Sea Island Golf Club Sea Island Golf Club,2,(all),(all),Total score,,,,7.5,over,35,18,17,0,-0.99,-2.8
+model_vs_book_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Birdies,0.590,0.455,2256,,,,,,,,
+model_vs_book_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Bogeys,0.704,0.568,1156,,,,,,,,
+model_vs_book_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Fairways hit,0.730,0.567,841,,,,,,,,
+model_vs_book_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),GIR,0.931,0.732,890,,,,,,,,
+model_vs_book_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Pars,0.519,0.415,1160,,,,,,,,
+model_vs_book_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Total score,1.047,0.753,2017,,,,,,,,
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Birdies,,,,0.0,under,1320,647,561,112,-6.61,-0.5
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Birdies,,,,10.0,under,288,142,139,7,-13.78,-4.8
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Birdies,,,,12.5,under,154,72,81,1,-19.98,-13.0
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Birdies,,,,15.0,under,84,41,43,0,-8.94,-10.6
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Birdies,,,,17.5,under,41,19,22,0,-7.38,-18.0
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Birdies,,,,2.5,under,995,481,431,83,-15.91,-1.6
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Birdies,,,,20.0,under,22,12,10,0,-0.31,-1.4
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Birdies,,,,5.0,under,724,350,316,58,-15.10,-2.1
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Birdies,,,,7.5,under,483,239,217,27,-12.98,-2.7
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Bogeys,,,,0.0,over,269,113,118,38,-17.89,-6.7
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Bogeys,,,,0.0,under,715,376,314,25,-65.94,-9.2
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Bogeys,,,,10.0,over,113,52,56,5,-9.35,-8.3
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Bogeys,,,,12.5,over,68,32,34,2,-3.27,-4.8
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Bogeys,,,,2.5,over,214,90,96,28,-17.29,-8.1
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Bogeys,,,,2.5,under,605,319,269,17,-69.98,-11.6
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Bogeys,,,,5.0,over,178,76,84,18,-15.46,-8.7
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Bogeys,,,,5.0,under,520,284,225,11,-54.69,-10.5
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Bogeys,,,,7.5,over,141,63,66,12,-10.46,-7.4
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Bogeys,,,,7.5,under,441,248,185,8,-43.44,-9.9
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Fairways hit,,,,0.0,over,146,89,57,0,20.21,13.8
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Fairways hit,,,,0.0,under,667,358,309,0,-120.30,-18.0
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Fairways hit,,,,10.0,over,49,32,17,0,11.85,24.2
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Fairways hit,,,,10.0,under,142,76,66,0,2.09,1.5
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Fairways hit,,,,12.5,over,34,23,11,0,9.19,27.0
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Fairways hit,,,,15.0,over,23,17,6,0,9.35,40.7
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Fairways hit,,,,17.5,over,18,14,4,0,8.63,47.9
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Fairways hit,,,,2.5,over,111,69,42,0,17.01,15.3
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Fairways hit,,,,2.5,under,318,171,147,0,0.94,0.3
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Fairways hit,,,,5.0,over,87,56,31,0,16.75,19.3
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Fairways hit,,,,5.0,under,231,123,108,0,-0.49,-0.2
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Fairways hit,,,,7.5,over,68,43,25,0,12.51,18.4
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Fairways hit,,,,7.5,under,188,102,86,0,4.03,2.1
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),GIR,,,,0.0,over,61,34,27,0,5.43,8.9
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),GIR,,,,0.0,under,917,437,480,0,-213.46,-23.3
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),GIR,,,,10.0,under,300,165,135,0,5.01,1.7
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),GIR,,,,12.5,under,205,118,87,0,12.08,5.9
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),GIR,,,,15.0,under,160,92,68,0,10.10,6.3
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),GIR,,,,17.5,under,109,66,43,0,13.84,12.7
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),GIR,,,,2.5,over,35,22,13,0,8.35,23.9
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),GIR,,,,2.5,under,570,280,290,0,-53.38,-9.4
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),GIR,,,,5.0,over,18,13,5,0,7.47,41.5
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),GIR,,,,5.0,under,487,239,248,0,-43.55,-8.9
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),GIR,,,,7.5,over,9,6,3,0,2.65,29.4
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),GIR,,,,7.5,under,378,196,182,0,-14.34,-3.8
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Pars,,,,0.0,over,228,121,99,8,10.46,4.6
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Pars,,,,0.0,under,371,159,199,13,-102.64,-27.7
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Pars,,,,2.5,over,110,62,45,3,11.51,10.5
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Pars,,,,2.5,under,120,61,54,5,3.10,2.6
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Pars,,,,5.0,over,50,30,19,1,8.66,17.3
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Pars,,,,5.0,under,68,35,32,1,1.00,1.5
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Pars,,,,7.5,over,20,13,7,0,4.20,21.0
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Total score,,,,0.0,over,748,370,378,0,-57.39,-7.7
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Total score,,,,0.0,under,658,362,296,0,12.81,1.9
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Total score,,,,10.0,over,201,108,93,0,1.30,0.6
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Total score,,,,12.5,over,148,82,66,0,5.01,3.4
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Total score,,,,15.0,over,129,74,55,0,8.83,6.8
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Total score,,,,17.5,over,114,66,48,0,9.00,7.9
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Total score,,,,2.5,over,579,287,292,0,-43.64,-7.5
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Total score,,,,5.0,over,426,224,202,0,-8.20,-1.9
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Total score,,,,7.5,over,294,152,142,0,-10.95,-3.7
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Birdies,,,,0.0,over,269,126,139,4,-23.16,-8.6
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Birdies,,,,2.5,over,196,95,101,0,-16.04,-8.2
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Birdies,,,,5.0,over,149,70,79,0,-16.34,-11.0
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Bogeys,,,,10.0,under,370,211,156,3,-42.67,-11.5
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Bogeys,,,,12.5,under,324,185,139,0,-47.29,-14.6
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Bogeys,,,,15.0,under,184,102,82,0,-12.00,-6.5
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Fairways hit,,,,12.5,under,113,57,56,0,-4.55,-4.0
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Fairways hit,,,,15.0,under,91,47,44,0,-0.79,-0.9
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Fairways hit,,,,17.5,under,69,31,38,0,-8.32,-12.1
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Fairways hit,,,,20.0,under,46,20,26,0,-7.51,-16.3
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Pars,,,,10.0,over,6,4,2,0,0.96,16.0
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Total score,,,,10.0,under,159,108,51,0,46.86,29.5
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Total score,,,,12.5,under,103,75,28,0,39.24,38.1
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Total score,,,,15.0,under,82,60,22,0,31.10,37.9
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Total score,,,,2.5,under,491,280,211,0,25.43,5.2
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Total score,,,,5.0,under,327,195,132,0,41.42,12.7
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Total score,,,,7.5,under,233,147,86,0,45.14,19.4
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Bogeys,,,,17.5,under,119,69,50,0,4.07,3.4
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Bogeys,,,,20.0,under,78,48,30,0,10.34,13.3
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),GIR,,,,20.0,under,79,54,25,0,21.12,26.7
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Birdies,,,,10.0,over,90,48,42,0,1.79,2.0
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Birdies,,,,7.5,over,114,58,56,0,-3.72,-3.3
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),GIR,,,,10.0,over,4,3,1,0,1.41,35.3
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Total score,,,,17.5,under,64,48,16,0,26.06,40.7
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Bogeys,,,,15.0,over,41,21,20,0,-0.58,-1.4
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Bogeys,,,,17.5,over,18,11,7,0,1.52,8.4
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Total score,,,,20.0,over,101,57,44,0,5.45,5.4
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Birdies,,,,12.5,over,74,42,32,0,5.71,7.7
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Birdies,,,,15.0,over,63,35,28,0,4.10,6.5
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Birdies,,,,17.5,over,51,26,25,0,2.54,5.0
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Birdies,,,,20.0,over,36,17,19,0,2.26,6.3
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Pars,,,,12.5,over,3,2,1,0,0.35,11.7
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Total score,,,,20.0,under,60,44,16,0,23.17,38.6
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),GIR,,,,12.5,over,3,2,1,0,0.81,27.0
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),GIR,,,,15.0,over,2,2,0,0,1.81,90.5
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Pars,,,,7.5,under,37,17,20,0,-4.72,-12.8
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Fairways hit,,,,20.0,over,8,7,1,0,4.99,62.4
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Bogeys,,,,20.0,over,1,1,0,0,0.88,88.0
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Pars,,,,10.0,under,29,13,16,0,-4.33,-14.9
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Pars,,,,12.5,under,24,12,12,0,-1.04,-4.3
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Pars,,,,15.0,under,14,5,9,0,-3.96,-28.3
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Pars,,,,17.5,under,6,2,4,0,-2.00,-33.3
+ev_backtest_all,2026-11-20T02:48:19Z,,(all events),,,(all),(all),Pars,,,,20.0,under,1,0,1,0,-1.00,-100.0
